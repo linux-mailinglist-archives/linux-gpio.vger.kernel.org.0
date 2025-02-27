@@ -1,164 +1,187 @@
-Return-Path: <linux-gpio+bounces-16682-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16683-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34FAFA47988
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 10:51:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3389A47A0E
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 11:22:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2BF813B2BC8
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 09:51:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBDFC16E931
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 10:22:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C44CE227EA8;
-	Thu, 27 Feb 2025 09:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 512D2229B10;
+	Thu, 27 Feb 2025 10:22:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xmztMTrP"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ESKW0prr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AE8227B94
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 09:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F4A1527B4;
+	Thu, 27 Feb 2025 10:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740649894; cv=none; b=lqg63P5ccbEHrpEOc8mEkzg+/a1ZrSBWEDYcf7w7XFWUci9K5DgV0unyeXMrQPhlFgcVO3sDVf80vaSL5uj4XNxb1XSU40IrgvXdJX7caZ2ibAQ6V1v1OyKtp/1yIg5tkHDSef21Rcv/VxFi1q9/w/DD13dVwa64aX24rB4ADYo=
+	t=1740651722; cv=none; b=bfKmbrsV9pma+bZ7vOWaBQlWBuT1rsJ1YUPMtDocmffqC+LfbFqqHhzVDvw7tIDPLOkRMJHuu1enm6UpToFX8VtijI4mUDk+etU/8f47KTnKQxfYttk4qKykB3NhTHNBcZmpLKjBvyhhRhJdya5U7QmabgybLC4icfsCxGYq9JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740649894; c=relaxed/simple;
-	bh=nIdCJYwmuSe5QLt8/tDk5Es1wOqwuMzghxIYXnADvt8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IBvycB8SHal08MEMUs/UNBY8kOGV/YeCMzdYMMx0rQEUYQOTjKSh+a4NNwEawHVgm6fPHQGEs9ZkzJ77ThstSYtWYnDBwPGFevlns6eK8PqihyA9QxawYHhJnmEEis8a5Xgyk+qAmQvSQWMxVfFbPmF2C2mkzDMkNkbT3czmHBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xmztMTrP; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30b7f91218cso7425931fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 01:51:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740649891; x=1741254691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MPTKCDlIl7OJpWbanUGrKwVYW5alvhhnOctJNOYGL3I=;
-        b=xmztMTrPqstlTj4VF63nNxleMDLZJOzAf9y7fU/C17X826HvKNou+RxWM/Leq/YthS
-         pSaobA2iHp8xbzl98vD2kDCK8E+IIcVQdwRtrz7gsBDsUitGcoXeMeQHVkvGQLVA0HrM
-         Y42Vcypkowh4isqC1GZNUOzjwnGc1D0ZYljmEPAmSxst8h2+ANrW4WpOyzSQjdJ/SwV8
-         g87ZNOlQsAft5ifNp+FYL0AIxE3y0LaCh2Kj2TiWCX7iDYNCJQDAW8Xc4/3uFPiaNO9t
-         M3A7CYq78pbgRkdkd5XdHmUcI8u52gYscnhSJ4L9htYCu7s8j+Xt3NzC3jJtZgIYlPto
-         46bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740649891; x=1741254691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MPTKCDlIl7OJpWbanUGrKwVYW5alvhhnOctJNOYGL3I=;
-        b=o4dmtHEMquGaMDeUlvYtobrCdNjSkl4YJQcPU13yY/bSEskpBbOlS4DN9UNbLZOTiy
-         /wqLWB/Yt+DpTXoEewQDzZ/ryqTubgTDbpI520U8oPkLX/BHyuGpU+48C/gpeaRwlOCC
-         MGX9iw1LIg02mjj94hnyntuqQeNbATevc6NVcFTUj9bnfm/qvroO0CCNHUXRCrmwcNE+
-         r+jfZKQwbt773o+di/4isNF2B0iz6HrfYcQ/C7mieEmk6CGC0xSh8xnA0nA7tI0ouiBC
-         3AdNuagP7sBnFM7MPtMDm48WP3fCe4cKYZ2m4yqdeaIoVd91rKUpX6sRdL3m5anXqr/7
-         5hzw==
-X-Gm-Message-State: AOJu0YwIHA/K8cUv/CTlsPJ1f/+O3mfmnieYIFo3KaO0lAYROLQjg//k
-	LTh5sqqi0vT1C521mfIUB+74yKX/EQA3+kyisY2Yav7T3Mw0TMBA7ys75Hg6cYob3gs/xfRGAFC
-	oQC2pysgjCzZ+K8SITRmmXL+PqyCwSQ7RjSFb4Q==
-X-Gm-Gg: ASbGncsr6mWCQC/UDfgTz5KoiBtNcMm/Wd0gj/+ecTiD5KcLnsVcc1XLVtf3EtOWtay
-	MiwdoFyJ43KsTPSyNzi8m33fcbD91yMHCq4QrqXQoWyTrBoccSK0elkTvGQvjLQ3YmYgkZkAiEp
-	iPRpHtRAjGGmTJIs2I9n/3A9ATOAf5irZlUoH6lQg=
-X-Google-Smtp-Source: AGHT+IHV94SNADU7TM0uXP0JNqa+v7Y/6UlvILj/sEpRtNH+X9zo9+97/YsgMeUyVxKY1oza4xTRi3YQuEbXYQdK8Hg=
-X-Received: by 2002:a2e:8748:0:b0:308:ec9d:d9c3 with SMTP id
- 38308e7fff4ca-30a80c69428mr59844531fa.26.1740649890993; Thu, 27 Feb 2025
- 01:51:30 -0800 (PST)
+	s=arc-20240116; t=1740651722; c=relaxed/simple;
+	bh=z2ZONAcTO4/VFmsehrdrGBrDbKACe9ZikOhKLCiSbtg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HqLu3o7EX8uyXRHzIl6ovabFzUclWzv7Lb9NakZMmSCFPPa8QdJepzjl2Jf/osRtycXgdAOmdBS64laQd0RFjeYBgb7NMBrI/Cx/UzfCePfMTPwuKbRJfEdpA8/vX76KPim6iXlomq2hRJYb7DWjssgDxnwfot8FYHShGW8g/0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ESKW0prr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3DF4D4320A;
+	Thu, 27 Feb 2025 10:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740651716;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xGkIsh7TjTL/9bGJ7x2Ta9onvI4MRkvdjoCpRvx7sFE=;
+	b=ESKW0prrWD2Pdxk1065FrSvfAUuEyQr/FkEw8zlFSM/e8GtZ4wIQe24vC96T2cnuTfzXvr
+	zrI4tySKNzcAdhJPvXqfQixWY7W23PgrcvslX7Fut++IRxr3iggwtUfBG2HzmMGICJil9Q
+	tNaa5MHWo6uUhyQL5sHIYHuZ2ECZLM2ryNu1BOzSLlICRj9SaWJfBsgZjjDIqJeoLb8c2d
+	5UCN0WYWw6BWmXCsAuFTDHtfhQeqwK6BJtOOISPf9NzYvXugGVK+BHzQNW6HhXBCduGrDw
+	gB8DGmCQdeE0bUNMQxyC38XjRxDl4FzFeZTyxX760Ic63el2dhuYAbFolIQpsA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH v8 0/9] misc: Support TI FPC202 dual-port controller
+Date: Thu, 27 Feb 2025 11:21:48 +0100
+Message-Id: <20250227-fpc202-v8-0-b7994117fbe2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224143134.3024598-1-koichiro.den@canonical.com> <20250224143134.3024598-2-koichiro.den@canonical.com>
-In-Reply-To: <20250224143134.3024598-2-koichiro.den@canonical.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 27 Feb 2025 10:51:20 +0100
-X-Gm-Features: AQ5f1Jr-SH-EZfbLqCfhrIpSm7vW10gLX-r5qO1PN-AmJ0AgvQUuhvPoXa45nGc
-Message-ID: <CAMRc=MegKxwX-RjQQcWMGe_JQyRCv82WRRbD0naYkeXshTGXGQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/9] gpio: aggregator: protect driver attr handlers
- against module unload
-To: Koichiro Den <koichiro.den@canonical.com>, geert+renesas@glider.be
-Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org, 
-	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL08wGcC/2XQzW7DIAwH8FepOI8JjPnaae8x7QAEVqQtqZIq2
+ lTl3ed0apKJm434/bG5sSmPNU/s5XRjY57rVIeeGvd0Yukc+o/Ma0c9AwEohbS8XBLV3BQRrfJ
+ UW8fo8mXMpX7fg97eqT/X6TqMP/fcWa6nfxFSuEfELLngJSMk411MHl7jMFw/a/+chi+2hsxwg
+ HKHQNAiZizSQ4CuheoAQW9QEVSYnYkp6qhNC3GHoMQGcX3RyAjedjSubaF+QC2OO2qCAZUP0Xv
+ f6dBCc4ByH9UQ7NAGhY7+WKsW2h2CwA3adVQXMbqgdCryP1yW5RcN9loF9AEAAA==
+X-Change-ID: 20241017-fpc202-6f0b739c2078
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Romain Gantois <romain.gantois@bootlin.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekjedvudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeeggeegheffueefieevffefleeuieegveejhfeiudelkeegleelgeduveefkeeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddufegnpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkv
+ ghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepughrrghgrghnrdgtvhgvthhitgesrghmugdrtghomh
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Mon, Feb 24, 2025 at 3:31=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
-l.com> wrote:
->
-> Both new_device_store and delete_device_store touch module global
-> resources (e.g. gpio_aggregator_lock). To prevent race conditions with
-> module unload, a reference needs to be held.
->
-> Add try_module_get() in these handlers.
->
-> For new_device_store, this eliminates what appears to be the most dangero=
-us
-> scenario: if an id is allocated from gpio_aggregator_idr but
-> platform_device_register has not yet been called or completed, a concurre=
-nt
-> module unload could fail to unregister/delete the device, leaving behind =
-a
-> dangling platform device/GPIO forwarder. This can result in various issue=
-s.
-> The following simple reproducer demonstrates these problems:
->
->   #!/bin/bash
->   while :; do
->     # note: whether 'gpiochip0 0' exists or not does not matter.
->     echo 'gpiochip0 0' > /sys/bus/platform/drivers/gpio-aggregator/new_de=
-vice
->   done &
->   while :; do
->     modprobe gpio-aggregator
->     modprobe -r gpio-aggregator
->   done &
->   wait
->
->   Starting with the following warning, several kinds of warnings will app=
-ear
->   and the system may become unstable:
->
->   ------------[ cut here ]------------
->   list_del corruption, ffff888103e2e980->next is LIST_POISON1 (dead000000=
-000100)
->   WARNING: CPU: 1 PID: 1327 at lib/list_debug.c:56 __list_del_entry_valid=
-_or_report+0xa3/0x120
->   [...]
->   RIP: 0010:__list_del_entry_valid_or_report+0xa3/0x120
->   [...]
->   Call Trace:
->    <TASK>
->    ? __list_del_entry_valid_or_report+0xa3/0x120
->    ? __warn.cold+0x93/0xf2
->    ? __list_del_entry_valid_or_report+0xa3/0x120
->    ? report_bug+0xe6/0x170
->    ? __irq_work_queue_local+0x39/0xe0
->    ? handle_bug+0x58/0x90
->    ? exc_invalid_op+0x13/0x60
->    ? asm_exc_invalid_op+0x16/0x20
->    ? __list_del_entry_valid_or_report+0xa3/0x120
->    gpiod_remove_lookup_table+0x22/0x60
->    new_device_store+0x315/0x350 [gpio_aggregator]
->    kernfs_fop_write_iter+0x137/0x1f0
->    vfs_write+0x262/0x430
->    ksys_write+0x60/0xd0
->    do_syscall_64+0x6c/0x180
->    entry_SYSCALL_64_after_hwframe+0x76/0x7e
->    [...]
->    </TASK>
->   ---[ end trace 0000000000000000 ]---
->
-> Fixes: 828546e24280 ("gpio: Add GPIO Aggregator")
-> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> ---
+Hello everyone,
 
-Geert, does this look good to you? I'd like to send this fix upstream
-first and backport it to stable.
+This is version eight of my series which adds support for the TI FPC202
+dual-port controller. This is an unusual kind of device which is used as a
+low-speed signal aggregator for various types of SFP-like hardware ports.
 
-Bartosz
+The FPC202 exposes an I2C, or SPI (not supported in this series) control
+interface, which can be used to access two downstream I2C busses, along
+with a set of low-speed GPIO signals for each port. It also has I2C address
+translation (ATR) features, which allow multiple I2C devices with the same
+address (e.g. SFP EEPROMs at address 0x50) to be accessed from the upstream
+control interface on different addresses.
+
+I've chosen to add this driver to the misc subsystem, as it doesn't
+strictly belong in either the i2c or gpio sybsystem, and as far as I know
+it is the first device of its kind to be added to the kernel.
+
+Along with the FPC202 driver itself, this series also adds support for
+dynamic address translation to the i2c-atr module. This allows I2C address
+translators to update their translation table on-the-fly when they receive
+transactions to unmapped clients. This feature is needed by the FPC202
+driver to access up to three logical I2C devices per-port, given that the
+FPC202 address translation table only has two address slots.
+
+Best Regards,
+
+Romain
+
+Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+---
+Changes in v8:
+- Changed from a "depends on I2C_ATR" to a "select I2C_ATR"
+- Link to v7: https://lore.kernel.org/r/20250204-fpc202-v7-0-78b4b8a35cf1@bootlin.com
+
+Changes in v7:
+- Removed a superfluous log message
+- Link to v6: https://lore.kernel.org/r/20250115-fpc202-v6-0-d47a34820753@bootlin.com
+
+Changes in v6:
+- Replaced spaces with tabs in misc Makefile
+- Link to v5: https://lore.kernel.org/r/20250108-fpc202-v5-0-a439ab999d5a@bootlin.com
+
+Changes in v5:
+- Used mutex guards in ub960 and fpc202 drivers
+- Changed wording of some i2c-atr logs
+- Link to v4: https://lore.kernel.org/r/20241230-fpc202-v4-0-761b297dc697@bootlin.com
+
+Changes in v4:
+- Fixed unbalanced refcounting in FPC202 port probing path
+- Fixed KASAN bug by setting alias_pool "shared" flag properly
+- Dropped requirement for both FPC202 ports to be described in the DT
+- Enabled dynamic translation by default, dropped support for non dynamic translation
+- Used aliased_addrs list instead of insufficient bitmap in ub960 driver
+- Added i2c_atr_destroy_c2a() function matching i2c_atr_create_c2a()
+- Fixed list corruption bug in dynamic address translation
+- Indented Kconfig entry with tabs instead of spaces
+- Link to v3: https://lore.kernel.org/r/20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com
+
+Changes in v3:
+- Described the "reg" property of downstream ports in the FPC202 bindings
+- Link to v2: https://lore.kernel.org/r/20241118-fpc202-v2-0-744e4f192a2d@bootlin.com
+
+Changes in v2:
+- Renamed port nodes to match i2c adapter bindings.
+- Declared atr ops struct as static const.
+- Free downstream ports during FPC202 removal.
+- Link to v1: https://lore.kernel.org/r/20241108-fpc202-v1-0-fe42c698bc92@bootlin.com
+
+---
+Romain Gantois (9):
+      dt-bindings: misc: Describe TI FPC202 dual port controller
+      media: i2c: ds90ub960: Replace aliased clients list with address list
+      media: i2c: ds90ub960: Protect alias_use_mask with a mutex
+      i2c: use client addresses directly in ATR interface
+      i2c: move ATR alias pool to a separate struct
+      i2c: rename field 'alias_list' of struct i2c_atr_chan to 'alias_pairs'
+      i2c: support per-channel ATR alias pools
+      i2c: Support dynamic address translation
+      misc: add FPC202 dual port controller driver
+
+ .../devicetree/bindings/misc/ti,fpc202.yaml        |  94 ++++
+ MAINTAINERS                                        |   7 +
+ drivers/i2c/i2c-atr.c                              | 483 ++++++++++++++-------
+ drivers/media/i2c/ds90ub913.c                      |   9 +-
+ drivers/media/i2c/ds90ub953.c                      |   9 +-
+ drivers/media/i2c/ds90ub960.c                      |  49 ++-
+ drivers/misc/Kconfig                               |  11 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/ti_fpc202.c                           | 438 +++++++++++++++++++
+ include/linux/i2c-atr.h                            |  54 ++-
+ 10 files changed, 964 insertions(+), 191 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20241017-fpc202-6f0b739c2078
+
+Best regards,
+-- 
+Romain Gantois <romain.gantois@bootlin.com>
+
 
