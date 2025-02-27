@@ -1,98 +1,108 @@
-Return-Path: <linux-gpio+bounces-16680-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16681-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E413A478F9
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 10:23:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B24CA47983
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 10:50:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 704997A5E4A
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 09:22:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6A2547A3916
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 09:49:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0DE227B95;
-	Thu, 27 Feb 2025 09:23:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55983227EA0;
+	Thu, 27 Feb 2025 09:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vQfM+RrJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983D715DBB3
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 09:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4852A22617F
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 09:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740648183; cv=none; b=dNXvSDZvq9kzHeNPKnVNdWVHdO2ZPRXiLCLBq45iAiCounxaaS+7BSsT8o93P25+WQgCAJP7f2wOvq1eupqqLWN0JxYXKUzh+QpL28UPBKZ4zqUVXt0eFteHjWeOLiuadtDHE8dew2MyOTx57zgTwxs6wzq068TPaAY0OggSv6w=
+	t=1740649849; cv=none; b=Yd/V3ly7JKYjCc1pkyXk2hjHa5Cv69TSsXvCAZgP0VRmn3DvTsOkah9ZOJeXXSCrVr5M5HgawoTT1QXJmoKqHxK2BvkeAYg8ClKt3VsltocmumczL+OBeybklKMbg+IjnwhnVYfWQXeMZ+gCeedQGwYSFnKh4zxxNaGFTkLxt1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740648183; c=relaxed/simple;
-	bh=eOp/FD4D8eR0d0RGSRsU2yTkVoBv0KN5V+bju7bAM00=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KER1HHkvjoE2BcD8dq1MuILO+J6LDDhb8xOBcRmjiDuEBPMrEIJF9rzFt7qu4inXb4vrA1PEzXQxC59DpK++Dnod+QdW/k749MCGKGHKunLzIC5tfs2KBUiM7TVMX2igelntqTodhgHOdAuAxXkwL+nG8CB8o+1rGCk5Vmz0P/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 652a27b3-f4ec-11ef-9d7a-005056bd6ce9;
-	Thu, 27 Feb 2025 11:22:42 +0200 (EET)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 27 Feb 2025 11:22:41 +0200
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] gpiolib: use the required minimum set of headers
-Message-ID: <Z8Au4WwXDlPQwfn2@surfacebook.localdomain>
-References: <20250225095210.25910-1-brgl@bgdev.pl>
- <Z72fBfM4afo5SL0m@smile.fi.intel.com>
- <20250226214613.1e814f9a@pumpkin>
+	s=arc-20240116; t=1740649849; c=relaxed/simple;
+	bh=JhprjhNGU63msoAiOGmeriNLaEZHK7YZiOP8jQzP/dw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=idtH0Y12YeezBgFxxgSpohusTqIQHc1vmUhXieCxfdPlcyrUfr8FYYhxm8GTkbPKTp5M2paLgP8DXjiWIaBavz1S4pU+IVTKfKzvY9iMpCj3LCCTWb5Dy8okIJPU9ABXGRX9WcEFZSkHG6JbXrdBNANaf8kXQdBT6Z5U8kM5iPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vQfM+RrJ; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54843052bcdso633787e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 01:50:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740649845; x=1741254645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JhprjhNGU63msoAiOGmeriNLaEZHK7YZiOP8jQzP/dw=;
+        b=vQfM+RrJHr0dn/DTCcnS66eHSde0IIF/AgYsLtgK6zufLndANnU9tYgZpX1OH9mcTA
+         kvKjDIDTVbA0UFMeyth6MZ4Wd86e0naavGpM/VHs+duydVdF1RjQnkjC1vM9fP+D0qnG
+         h3NadhMGDzuLjLKXSWkfEu/rnktvkPHMV7oLnTkK8fxYZLawdwPvtDBIwvVfiqs68qRJ
+         UMvsGLPDOZ4PTQFnLxBfjHKnzWK3NGQxnIlKSV/r9hk2IMrlvEqA/rNxk1R45CQP0Rgw
+         Bejrn4huqi68orDqUAW1UxE0xnfMnnUm4XoUxN+gNtau1h81dsr7f4rHzM3nQ5U+4CkZ
+         EcLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740649845; x=1741254645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JhprjhNGU63msoAiOGmeriNLaEZHK7YZiOP8jQzP/dw=;
+        b=I0tu7OCqNOnMZzh0HYeQtOJvJaI1EKdXhCYr+CqhTVGSwQV2+OtYmGBdMPpoLFPMYs
+         GfKTatPEolGZMKqnsL9YrmN/7K6jwqC0wFemoxAonHiNO1wFFMUeH3JgPmyvJunBkeXp
+         Vf/LRaeopFAsFApyjrqB+CHa97c5PcMOc6xPnBJh1EsgVwV21QnkhMX3LJLg585ftTed
+         eZMHrlbQiwcRXSydD0lQi0X36yyHsUNXFsYPO/S7qkL/zfQIiLietjw0kGRa5vrAWP/Y
+         uSp3YcVM+P99p4WGBOnyoTSJLB7WcD7e5vqPozN5IWnaJzEaAgFGcN+Pxzw7wPRiyzNB
+         tVsg==
+X-Gm-Message-State: AOJu0YwAS6vsuOkoiOBc+UmxIgRrQTIvni04RjV8DMiQwHwqpf9WJco4
+	lNMIK/VDFHnnvpWecY7iL6k/gUaE29Mq4o5w+h8qiQk0IwOQFZ0OpQVf8pW252zgxdsv6Nne4Ki
+	wy6SA5tpIUN8gjIK13t5HMkru1jZJFkYLY5sRWA==
+X-Gm-Gg: ASbGnctVoqtmovqyHEXHf7nKAqLE8mab1rdqxs+k59H+8RJ6QID+bS/OA8OCN+pUZGP
+	ug3KQ9API7croFfuAFInWMA1TpgwTSNcB0wRqE79et7whTNxUiTLUCYfJW786Nth71jBodZuUEm
+	LpLg24RfsTMEg0un67LzWBfkBgk+zyaPNQPbGD1Hk=
+X-Google-Smtp-Source: AGHT+IFbiJvRVzoFwDbFSVd5B6zTEFgxYcsfW1YUePY1yNBsqtfbnEYxBx+5bOe20D59I3fbVQMpb6DVvjkY8l21f1E=
+X-Received: by 2002:a05:6512:1245:b0:545:fba:8a57 with SMTP id
+ 2adb3069b0e04-548510ce6d7mr6071935e87.8.1740649845214; Thu, 27 Feb 2025
+ 01:50:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226214613.1e814f9a@pumpkin>
+References: <20250224143134.3024598-1-koichiro.den@canonical.com> <20250224143134.3024598-6-koichiro.den@canonical.com>
+In-Reply-To: <20250224143134.3024598-6-koichiro.den@canonical.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 27 Feb 2025 10:50:34 +0100
+X-Gm-Features: AQ5f1Jo6s8T3_PtewdIHwaG73e4cupz4e0rAlKoBC6UPcHdC26Lg0W52n3dCQRc
+Message-ID: <CAMRc=MdoMKdqyzGMFDa3aMz3h=vfZ0OtwARxY7FdsPKcBu9HQA@mail.gmail.com>
+Subject: Re: [PATCH v5 5/9] gpio: aggregator: add 'name' attribute for custom
+ GPIO line names
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Wed, Feb 26, 2025 at 09:46:13PM +0000, David Laight kirjoitti:
-> On Tue, 25 Feb 2025 12:44:21 +0200
-> Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> 
-> > On Tue, Feb 25, 2025 at 10:52:10AM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > 
-> > > Andy suggested we should keep a fine-grained scheme for includes and
-> > > only pull in stuff required within individual ifdef sections. Let's
-> > > revert commit dea69f2d1cc8 ("gpiolib: move all includes to the top of
-> > > gpio/consumer.h") and make the headers situation even more fine-grained
-> > > by only including the first level headers containing requireded symbols
-> > > except for bug.h where checkpatch.pl warns against including asm/bug.h.  
-> > 
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > 
-> > FWIW, I have checked the current state of affairs of linux/bug.h vs. asm/bug.h
-> > and found no possible issues with the dependencies. While linux/bug.h drags
-> > more than needed into this header it won't prevent cleaning up the rest of
-> > the headers. So for now we can stick with linux/bug.h, but at some point it
-> > would be better to be more pedantic on this.
-> > 
-> 
-> A 'fun' activity is to pick a random file add "#define _IOW xxx" at the
-> top and see where ioctl.h is is first included from.
-> (I've not got a build machine up at the moment.)
-> 
-> Then start fixing that include sequence.
-> Moving a few headers around is otherwise pretty pointless.
+On Mon, Feb 24, 2025 at 3:32=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
+>
+> Previously, there was no way to assign names to GPIO lines exported
+> through the aggregator when the device was created via sysfs.
+>
+> Allow users to set custom line names via a 'name' attribute and
+> expose them using swnode.
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> ---
 
-Have you tried to help with reviewing this?
+IMO this should be part of the previous commit, there's no reason to
+split the configfs implementation. But only change that if there'll be
+a v6, otherwise I'll take it as is.
 
-https://lwn.net/ml/linux-kernel/YdIfz+LMewetSaEB@gmail.com/
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
