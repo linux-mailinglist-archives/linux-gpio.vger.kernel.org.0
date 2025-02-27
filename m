@@ -1,143 +1,124 @@
-Return-Path: <linux-gpio+bounces-16718-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16719-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E891A484C7
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 17:24:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DB28A48589
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 17:46:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 258E6170F64
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 16:16:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD9FB17E0DD
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 16:32:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6670225EF9C;
-	Thu, 27 Feb 2025 16:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 105141C5489;
+	Thu, 27 Feb 2025 16:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="eidkHi4r"
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="WPCGCACC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E691A83E6
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 16:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D3A1B21B5
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 16:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740672777; cv=none; b=Fi54Hqz0KJ6Kf8P2pLyVEKKdfjZXY4r4CFhKy8/Cygrs00qCIU/OCgq3rixgB1bhdpAvaRGKqmlOjjlpLWJsiEYHX1r0QLPo/1c5sMMrNPiCuaP4kKj2M/K5yUVt6lFyfG5qw9rgsosoRPM8ixospvBiM/WaWE9dMIbsFsE3AVM=
+	t=1740673887; cv=none; b=ECikNQAUxHzGSATWcsXI3qThYJx6wQAmAZOAFvoEEPtFb38w+LLjVUOghfbnC1fCyQ1fEwCW/FwBuhTZvIZsc+WeusufDLFpQ7Zbvbw56doMXwmD/ycryLyFG62Om9cA3tkTFfHDR/ajNy8ksOZgXrHmYLjVzYrNJ+JatKABPb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740672777; c=relaxed/simple;
-	bh=u/jEDuM2cZEF60dp/4fSw3VAkOYWYed4gReCbmcZt2E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GbFQNZqD3/PM1DsBbgBj8J3t1VeiwCrI1ZHexyw86Gs+hG7ud057jUwOyUBRp0XWvSykMG8Fr8+hhqIXdVeMZai66oyKbpTyXUpVeNjM/AdnLwESWW033P9+WSH0Gd05roXJxDHby7CDBDXzzaDVYq9cuWByCkxJNhTU9xlIj2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=eidkHi4r; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d191bfeafbso4654235ab.0
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 08:12:54 -0800 (PST)
+	s=arc-20240116; t=1740673887; c=relaxed/simple;
+	bh=1nsRb1XE68pAoDOedgqpujvZ5YurZyAb7Ed9b/zZEqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VZXXwgeP2hw8nscslj3ADdWBkLBuVRJtyC3Hq71giZ1MimvC5K7qYDPq+/Fn3pGfzyBYaK8+CmPp574jrOpAtoNzef99MUpXn9Kzs67USkp6rxDDYfnxWUGs6WSs902PQfSzsxffAkd9B4G8bntZvUXXSznKrrxVsHLXcpHtAjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=WPCGCACC; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54529e15643so2120963e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 08:31:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1740672774; x=1741277574; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A4a+PIYpn9cYVWDOKIU06eghAJvUip+lThQ1gAkAfoE=;
-        b=eidkHi4r87Fldfjn8a20pDRsC5czfcZEKFOpY4yI9jU3uuvB/0NPzEwwHG0HK7V0uz
-         Px9JEXICNZ7IUq3XNhB9eNDggzSNiAxdP6spz0YpSt0eVMf8q+Q2uAz6242vrs+cXpda
-         ZW1pSPKmHmVTf6W8Tfx7BISbP5dtXecGlRMnvRJlDAUqJgdZ/Fvlmxs7RzUz64MLDKOu
-         zgYhspehtPd+Wk0KhKkPmIfKFoMxv3mq31cWgtabi1yoR1QHSokfnJwVU7m9w9plrlpx
-         38H3S0RRrtpnGwl14RB6HeYtD1wlSI7w1enZ1GOW4gTvwkvU3SbxSfXhCGs/FAV9giUP
-         ETSQ==
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1740673884; x=1741278684; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9GeYTXENMr3flP3ciwo2GiPqCMR91G8nXsrWmZtyddE=;
+        b=WPCGCACCTAkoQB8BQ4PvbLddE0fMiPEQr4SjVJU1SRxhxISQJK1zBOkYXMbXqCVxui
+         aduIJvVsu3k3HW/g0q1Va3bpxCn35qKl5gsiJPC9x1lL2CGQvKt3qU+YCtwpDKzzhyxN
+         Q4uoMSBlV5aSI5keieTXoLhHLX7xHpuNM/2s5GLD9+3jW1hCNOHoUkWZdlOAEiJ5vkiD
+         lKWfcb0Xsr1fpanECEoA2fvnQcfUtdyiTyeKCZs/+x9vgcRBe4BIBVyVjRt6X0kRnoRJ
+         O3a07KDX8S+Cr8/KClx4TF8X8NLzSQtmA95BrcbM95ymY6aNiye73Gi0vGvEejZCR+WX
+         cRBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740672774; x=1741277574;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A4a+PIYpn9cYVWDOKIU06eghAJvUip+lThQ1gAkAfoE=;
-        b=e51PnqUcA7q8LPpe445bBi9b2wdBJl5x0zYsC116j+OS6BIEM8okolznoCcHe2ZfwL
-         d4LU+u/M3AnvKUVmXxIMTOx9pUivRzJyHgS4wJmhmlFxFE1TF9Vda2o5D0zS2PFJl/6z
-         dQNcAWv8oEcYBOXIUTpd1NJwv1NhiJ0VHMKq8EbQZHDz4sHgx1n5FL5xPm7PbleHwK4+
-         KoTL5w9hKmX4a+Kj3skyVDBVuRCmwuEgjE66w3HdCpciThrb9e08uTAMFTxBJe+wTENq
-         WrawpEOOVNdlQ3jd7FAHopX84X5lplXYD9yYnMuND0eZyH4q1f1PNor4+/Vz4Y7n7hPh
-         2RIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcDnamZnNb0axA8pvAIrrC6QeoDU9xjHnZRC7eXlox/S+Ar2LTW0dJ292rPMg9dz40YpcVycT4fx0Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCoWfCg3Gtgok8/qnK9Qc+DxkI3iLHV8ol/n8clqde7HSTc03J
-	4ZozBo0KI9eo+v90BmgBsHd2DiJi+z6xsORb5mp11eL4ev9y0hCGBNsDirU9VGY=
-X-Gm-Gg: ASbGncvTxAuZVXvf+Gj+ZUeZuRv9SKVNbblzgw3IdnT+mKP277uuGEK1AOdxAlDPUAc
-	hJToNbVvqszVYMIefbPZgE0tHN2HHpQUIwRFiBhPvYP3K5ZNFEF0PxRZBQzrteVx5oJUI/ycqOg
-	rKLUQ4axYiPP9jaaDay4PrAECicdRFEC6yWzKUm7+hWhIKadovhL+UXN1aPJFLwiyCjpxBCaYrD
-	C5BJYwk8OFoS2xtIDWG9d2kgxHlLBBpf5PQGmh9HZRDiT+SOEnn+0+ZgYa2d+iinFIsvJNw2gYe
-	L7hN1k3qLgPyp0ufSIpguXeA+jzBxrSChiuqLPYlUmLnzUUzI1Gjcp/7Q01gCZdhcg==
-X-Google-Smtp-Source: AGHT+IECEOEF/3IgUpjExo3hn+o7d72t1ArCxVXIIzsvV1Vpk9+T4m/ul07rs6wpKxf4ijf45waAXQ==
-X-Received: by 2002:a92:c545:0:b0:3d1:79ec:bef2 with SMTP id e9e14a558f8ab-3d2fecce699mr113973395ab.6.1740672773762;
-        Thu, 27 Feb 2025 08:12:53 -0800 (PST)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d3deeca7ffsm3742305ab.53.2025.02.27.08.12.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 08:12:53 -0800 (PST)
-Message-ID: <8fce8a9c-7946-4e3c-bbf3-25f8b4f4466f@riscstar.com>
-Date: Thu, 27 Feb 2025 10:12:51 -0600
+        d=1e100.net; s=20230601; t=1740673884; x=1741278684;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9GeYTXENMr3flP3ciwo2GiPqCMR91G8nXsrWmZtyddE=;
+        b=A5mnYliKfxI/vz/M5Xu1iOsICgPz7qvZJmWboDjgQQKu7AbfagSCCMcMzbnU/uxRKy
+         JIrrnFNk7ulSIAsZIMTNBMcUXlQSRtNT5tkRZdqj5jtF3XdX5poG5XeUMtDPYMZOTpcE
+         39PcpvP2ESxYKff175Lnw9DqYOjp72v7KfD52c6Jd3SuIz9C9f2iDi3zNpzab5Zxgbp2
+         o/23HXbjt8aXideipqEMx8gGpsyavy6PQ9oIDcyhe07rGhi/OKTWjp3oCewQtR7xxh/y
+         li7uQjDHSViZensnJ5p/fTmJ8snI5TMr/5n2tNc5i8gnZHehXW6LjEAbPmuaSHvi2roN
+         MVYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnOvdcfKZHDeycG2CTNILe/nlQJsmeM/2PDcKx72P8VggmGiGomB1cC03IH0u3XIV3w7yRh68ZwFlj@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpOLst0m90dTSyValna/OTPsYiOLSg6+W3BcsYQjiAwdSLobT6
+	odzVVd2oNGOVgRtr8+J2AeeP3aH8e9nsBPkT5ZAUjA7TN9EuZ8Gy/sEUuUdwtZ3/IF3jFuDRNWw
+	8Nvt2rMRCZy12QhylaD/oAqAkGzp901A8qDD4Uw==
+X-Gm-Gg: ASbGncsi738bHYHvb5XkAlZlNecpsetplBPPjWFMcxXdXvVuk7FuM7k3F1jcY/JlEUL
+	hAjOCutRWuNXDU1/KxMRRPqBlKe0Q9p0wQkUEj2PXiQLMgJk3cX+0+g8oJc6G/+mm7HFu8Omh6i
+	xM4HHx2f3FFeGI64zh8b8FBllsG+BlSnhM4S+lqA==
+X-Google-Smtp-Source: AGHT+IEUbAC3kjl5eNNXKnBI/MMkmVbVJWoGnJKM7ezHnOTqe5P7XXqY0IVO/n+TvmfZpG/9CNbmwSisZkbfQ+rFnfw=
+X-Received: by 2002:a05:6512:281d:b0:545:d54:2ebf with SMTP id
+ 2adb3069b0e04-5494c107e76mr52906e87.3.1740673883880; Thu, 27 Feb 2025
+ 08:31:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] irqdomain: support three-cell scheme interrupts
-To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
- spacemit@lists.linux.dev
-References: <20250227-04-gpio-irq-threecell-v1-0-4ae4d91baadc@gentoo.org>
- <20250227-04-gpio-irq-threecell-v1-1-4ae4d91baadc@gentoo.org>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20250227-04-gpio-irq-threecell-v1-1-4ae4d91baadc@gentoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250204194115.3899174-1-ninad@linux.ibm.com> <20250204194115.3899174-2-ninad@linux.ibm.com>
+ <fd92f75620e48957c2875cdcfd1285c33d3176e6.camel@codeconstruct.com.au>
+In-Reply-To: <fd92f75620e48957c2875cdcfd1285c33d3176e6.camel@codeconstruct.com.au>
+From: Corey Minyard <corey@minyard.net>
+Date: Thu, 27 Feb 2025 10:31:12 -0600
+X-Gm-Features: AQ5f1JrxG1t1lSqYDcbZpYZ-TVphariQNf3aM6dUFwiyKs1tLOEBbUdBR-9V5Rs
+Message-ID: <CAB9gMfqkRZY3y5V+WDyxvyrdzWNWu2gjmyEnj8mygo85hjX8sw@mail.gmail.com>
+Subject: Re: [PATCH v9 1/9] dt-bindings: ipmi: Add binding for IPMB device
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Ninad Palsule <ninad@linux.ibm.com>, minyard@acm.org, andrew@lunn.ch, brgl@bgdev.pl, 
+	linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, openipmi-developer@lists.sourceforge.net, joel@jms.id.au, 
+	devicetree@vger.kernel.org, eajames@linux.ibm.com, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/27/25 5:24 AM, Yixun Lan wrote:
-> The is a prerequisite patch to support parsing three-cell
-> interrupts which encoded as <instance hwirq irqflag>,
-> the translate function will always retrieve irq number and
-> flag from last two cells.
-> 
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
->   kernel/irq/irqdomain.c | 11 +++++++++--
->   1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index ec6d8e72d980f604ded2bfa2143420e0e0095920..cb874ab5e54a4763d601122becd63b6d759e55d2 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -1208,10 +1208,17 @@ int irq_domain_translate_twocell(struct irq_domain *d,
->   				 unsigned long *out_hwirq,
->   				 unsigned int *out_type)
->   {
+Oops.
 
-This function is meant for "twocell".  There is also another function
-irq_domain_translate_onecell().  Why don't you just create
-irq_domain_translate_threecell" instead?
+Go ahead and take it through the BMC tree.
 
-					-Alex
+Acked-by: Corey Minyard <corey@minyard.net>
 
-
-> +	u32 irq, type;
-> +
->   	if (WARN_ON(fwspec->param_count < 2))
->   		return -EINVAL;
-> -	*out_hwirq = fwspec->param[0];
-> -	*out_type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-> +
-> +	irq = fwspec->param_count - 2;
-> +	type = fwspec->param_count - 1;
-> +
-> +	*out_hwirq = fwspec->param[irq];
-> +	*out_type = fwspec->param[type] & IRQ_TYPE_SENSE_MASK;
-> +
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(irq_domain_translate_twocell);
-> 
-
+On Tue, Feb 4, 2025 at 6:01=E2=80=AFPM Andrew Jeffery
+<andrew@codeconstruct.com.au> wrote:
+>
+> Hi Corey,
+>
+> On Tue, 2025-02-04 at 13:41 -0600, Ninad Palsule wrote:
+> > Add device tree binding document for the IPMB device interface.
+> > This device is already in use in both driver and .dts files.
+> >
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+> > ---
+> >  .../devicetree/bindings/ipmi/ipmb-dev.yaml    | 56
+> > +++++++++++++++++++
+> >  1 file changed, 56 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/ipmi/ipmb-
+> > dev.yaml
+>
+> Would you like to take this through the IPMI tree? Otherwise I'm happy
+> to take it through the BMC tree with your ack.
+>
+> Andrew
+>
 
