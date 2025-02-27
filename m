@@ -1,124 +1,109 @@
-Return-Path: <linux-gpio+bounces-16734-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16735-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BBCFA48C7A
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 00:13:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51659A48C81
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 00:14:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F31B8165A1A
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 23:13:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AEBF1890A40
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 23:15:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 132AB27292D;
-	Thu, 27 Feb 2025 23:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91E472309A3;
+	Thu, 27 Feb 2025 23:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XipCgQP5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vHPArRCv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE019272903
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 23:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E341272903
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 23:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740697984; cv=none; b=JqDPjRqvkcltnSrBAgune6CUdUUhuAetA48NKVQUbkZ7U5e45OcsoAoDYc8XFyPVRV5c2QrmH6aHRkYbVDHdChus8B3qUPP4UaOWPgQtSzcERO8HQe0YbDQzA5ufkImzNxaJ6m9IrwfcbJU5BHjdMaTosKW7BXdGHdXLZR8N7oc=
+	t=1740698088; cv=none; b=g+ZhE6c+J+GeACit9KorT8A0u73qPtUVj2jcVVNkXaH16Vl/HIBY5Mj9qlS6Jg6o/5X2W7CFV1VWChHjv9F6VC2aCyPERaOhQchj/XsJiFBjxEMfUe4xPmqsgAlMmmKMLmGxAcZxWz0l4ft7g5Yuag7AoFMzitRL8RVLfytoEV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740697984; c=relaxed/simple;
-	bh=VrMyULN9yRhX0362jZvsXqzL/blFpYThDTo1AkO/c30=;
+	s=arc-20240116; t=1740698088; c=relaxed/simple;
+	bh=AnuRApjr8EMi+iloki6ORcjaT87Gp2iSLXaCOHdnddU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E9MvKPOHO8lASXYiEqgkbOoNseYXmimB80+Qnj4/eYxg+1ZdkuunPl9VxmFUWfRykdue9zl4qpaNFYIEFHp1cE/WLCH4XPkW2KSdr+yzzoFKVpA2h2Z9MFnHuYzPSFf4Cnr5Ta4FHymzo/4OHwnpgGGwO7U+m7RnkcdXOdK94YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XipCgQP5; arc=none smtp.client-ip=209.85.167.50
+	 To:Cc:Content-Type; b=KXeILkxV4fYlNNt44KhDlbqFH5MilEtkj92udT5NVcNhD5MYZQRsmSZsfcNpqtLz3JJkkIyzZEVfDxYQFXa2yvslN+2UjpZuj2p8RRSmy3E1EcJN7ECTdoZRmMnFTpmXmX3jLyy8vY+gwsOtfv3LoIApTJCUyqF1k7lVwslQ878=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vHPArRCv; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-543d8badc30so1651263e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 15:13:02 -0800 (PST)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54524740032so1481011e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 15:14:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740697981; x=1741302781; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740698085; x=1741302885; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YmkybCOSFne6yK3kY+Du84AtHtcKYiWZlsF8gbRhEyU=;
-        b=XipCgQP5AMF9HQZrYR98rzjGwiwORxjbfuqc08WQYkF5sJfbva3dXBMA18/bZAYruq
-         lYzFIm066i1nKA/I7Wzwj6MRBy+0n/39lK+vm6FC6CVRgGDu7WVqIrB8ipuDCvhsn2zX
-         gv0fpICwmOY5QulyxYLrcoOFj5IBGXjw4THDC8H5KzFtAVKQ4BSA0oM7EMfJbsaTTsxD
-         VZVNpjtUVnbHGmSynxMcIgz16aEeDQ4C2vuh5WGjDtLxJlH3J37QUF3px8FPH2CV6ejF
-         XHzz6NQx80JJCWwT0F7ydmGCbLFt4WTzVd+9gutJtxv6qDO2V0i8yvXAaddp2Q2ZPUFr
-         Z/gA==
+        bh=jkUpLsB+tWxeVtC8e1hLrjEnl5f+xvYNaekBrtnharA=;
+        b=vHPArRCvoWnCjZC7BJoinlnnqZlv8mjwP+Z8qkW/Ti6O+ElXLL8MQjaW5v5Lpo50WO
+         8jxqLHUklmXYVyvTSryVg8IaxNd1stv+m5PLYu+kL4aKyaOuUgIvFPdYmpAL+QmzKAgS
+         ZkohwPFQF310bYKY6QTkW3gH/G/lmtHbLYQp1lBWAsL64DJv5VbCwWt445x8bCAOQJOo
+         KyCaCdCZhcejFUmAoVKoLUFzvtw1tCpCVT/E5LaWxaUZuEKGe3OwP/j5MgY4z2EQNaQt
+         /0KKGqiEQYS9Grj9yJnNXlVEO5IsRXVrVjfA3+d7OJjYkKKKVdVHDFgE01sev4By92q4
+         1PNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740697981; x=1741302781;
+        d=1e100.net; s=20230601; t=1740698085; x=1741302885;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YmkybCOSFne6yK3kY+Du84AtHtcKYiWZlsF8gbRhEyU=;
-        b=sN1wYNYiMqPKFSZzB49rcCA3Og/u8kEvDOF9UqV/duiw0CI1x0c53rUA61BTqFwZgm
-         7HVPtCis+tA++VspzORj11vWWlHJzcGO6pAjhZa7YbdJtUI0AGgxzfRWAgqKZFLP94jH
-         u4F+XDciezupj1hMeweDaejv1ZrS7JTzorz5j2xuHl/ByBo3DUZ7G/FIPsZlFJmiotK9
-         2j5kao5IeEXrRDKrNShuTtI4FT0UM3RGezgBl1Hu68vEFuUfXDwIUxIoEX/QjH6WFIgy
-         vUsWSjzjuH/3Yy46hS7dKa59FWeuQOsFFiz2xwE2yu7mw6vJUOuQ94fD4g7BMYvqhRwy
-         nu8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUX5d+JJilfQcGM7Q9iuyPj2LC4AfmJ0GIhBi7gd6kb8wu4wtp6O0SYKRsV5QbXu3mMcOO6yOTw8CnL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHT6sbkiSrAzcttLGPmRsA1qEdZaxXMWyPgwSJpeIzUNfCY7RY
-	/re/0p9IIKvZBPKToj1OVc+wlheCozGtgYo26W2zEXcARK5fPMBscS3ParpdAvmOpzElWtFYN7z
-	yZKeWV3o0ictYHHzUvZpbvEc0PlkJkNHN6riAyQ==
-X-Gm-Gg: ASbGncvQEgJVHxNKeR5rm4SXSvyeJh13LvHxBJ3T9GNxqU/QwOMXPWVlmxH7Y/x1L1y
-	gZRLSNrv673U3o3kZ9e7+aQIF5bcuCe7aWB5knVYtLgEtOx/WrHK9eGX7DWdm6/KDb9LO6LkTGU
-	9GZ4uxMl4=
-X-Google-Smtp-Source: AGHT+IHLcUchRQ5RHejMZKQOgPdGa2RgldlYInULBrGmDbyHiaxGOnJDGcYbTPdwNuvGN5wuzKGCGgT0iWuzwLntJq0=
-X-Received: by 2002:ac2:4e0e:0:b0:545:2fa9:8cf5 with SMTP id
- 2adb3069b0e04-5494c354e58mr578980e87.49.1740697980909; Thu, 27 Feb 2025
- 15:13:00 -0800 (PST)
+        bh=jkUpLsB+tWxeVtC8e1hLrjEnl5f+xvYNaekBrtnharA=;
+        b=KWMXuTEuMKjBCdxb0ewykhchkcIoQBeFsn0QlbMjn4fsl3rAW9moK3e9KsC9HiPKHG
+         6odJ/3xg6KIBcpXO7J8vk44ODz1VMTT4JbgUia7IdPAhP/WmCmAZ/SpaOuNQWeZwl2Nm
+         LOShsRsC1bWEZY2cCBDJsiRzR9yy1poaW93lELErk8EbHZrd08VZuzIyYb2TMaqqYpK5
+         KVNU2avzn9T9Vw4lpUlH3kK5lEJTrwyllmWYVCys1Gbg30672+wZi45JFukLHN+TX5Rl
+         gDhEvKXUuI8OA/g8a47JB3Qs4JxwvOdNemUd+NgRuWi6samC2RRPqlav0A1xa9rrv3iX
+         olnA==
+X-Gm-Message-State: AOJu0Yx1LszEXI5OCfSyg+KBXCW5GK4Tf8hgSUrJkjQJVeihU+V45rUB
+	+YOBpQy6uMAZs5GktOPj21lizs4lN4GBLnPXWfn7WQRP07BNjj4EdWQ1Ddwju2qjxwAoVVA1l2w
+	penaguPgZvPBmb9lH9Wx+ldspODMu4+IkbVhfTA==
+X-Gm-Gg: ASbGncsoo/BXMXhTq2X5/oSKKlaViObJMuvvwYnohUwSUU6Tet2H7QK6T/tkVD/NLTA
+	PqY1+YOKGyWHJbNABCR+PxRKS5Iz64jScOmzSvV8iyOgpRMDo8rhVoffavqumrWtc5K/2nk1qGQ
+	Hqab5CXRA=
+X-Google-Smtp-Source: AGHT+IHZluLxn/bf6cpXOKGWEyqUac+5KCT4ifo6lWibr2coM7mUN1dentZWywii8b7k2GRtSbindSr/ckho352WQ5E=
+X-Received: by 2002:a05:6512:281d:b0:545:56c:36c7 with SMTP id
+ 2adb3069b0e04-5494c3521famr548226e87.41.1740698084625; Thu, 27 Feb 2025
+ 15:14:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com> <20250221-rmv_return-v1-15-cc8dff275827@quicinc.com>
-In-Reply-To: <20250221-rmv_return-v1-15-cc8dff275827@quicinc.com>
+References: <cover.1740157176.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1740157176.git.geert+renesas@glider.be>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 28 Feb 2025 00:12:48 +0100
-X-Gm-Features: AQ5f1Jra6Y1TNly1NYmSkFPtENvNIwlGHtsux17X3bXg-g3qhlo7h9G9hMQoxr8
-Message-ID: <CACRpkdZV4EHGxYrX77FgsZvPrHohCEixXX6dkEoVSYSsaAzbYg@mail.gmail.com>
-Subject: Re: [PATCH *-next 15/18] mfd: db8500-prcmu: Remove needless return in
- three void APIs
-To: Zijun Hu <quic_zijuhu@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S. Miller" <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Johannes Berg <johannes@sipsolutions.net>, Jamal Hadi Salim <jhs@mojatatu.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Lee Jones <lee@kernel.org>, Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Zijun Hu <zijun_hu@icloud.com>, linux-arch@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-mtd@lists.infradead.org
+Date: Fri, 28 Feb 2025 00:14:33 +0100
+X-Gm-Features: AQ5f1Jp9E0NSS-IJffWh9Wl4UjBU0iqQJd0gDAq8jLGonF3nfq7IUtVCYMpAPkI
+Message-ID: <CACRpkdaBuFm=xEs=39n9pboV1J-SjRKUyKo8GPY_EjRKuUvAsQ@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.15
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 2:03=E2=80=AFPM Zijun Hu <quic_zijuhu@quicinc.com> =
-wrote:
+On Fri, Feb 21, 2025 at 6:02=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> Remove needless 'return' in the following void APIs:
+> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f0=
+5b:
 >
->  prcmu_early_init()
->  prcmu_system_reset()
->  prcmu_modem_reset()
+>   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 >
-> Since both the API and callee involved are void functions.
+> are available in the Git repository at:
 >
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v6.15-tag1
+>
+> for you to fetch changes up to ea4065345643f3163e812e58ed8add2c75c3ee46:
+>
+>   pinctrl: renesas: rzg2l: Suppress binding attributes (2025-02-20 17:33:=
+08 +0100)
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Pulled in for v6.15, thanks Geert!
 
 Yours,
 Linus Walleij
