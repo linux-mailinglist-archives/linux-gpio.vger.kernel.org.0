@@ -1,128 +1,136 @@
-Return-Path: <linux-gpio+bounces-16715-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16716-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31E22A480C3
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 15:17:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 723A8A480DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 15:21:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E83033A75BB
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 14:16:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C24123B6B29
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 14:19:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 085C8231A30;
-	Thu, 27 Feb 2025 14:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xdbx9PVo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 993B2236440;
+	Thu, 27 Feb 2025 14:18:28 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FC4270047
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 14:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69B1235360
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 14:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665450; cv=none; b=qWBE5C6znhgoX2xeu3KoFueDkmER1EUGVt5L7JX+8lveUfPVOzxw9uUcsSOOGtcFIG5HIqqdNInnPVaY4LAqJpoNOL1W3Yv9M2nh6Hmh/Is/p6OMMLeWmkchit24Fm8HsBLfIBQRl9Y7DgXbK3cS2sJFLT/fVGrw7W1yGpUzUb0=
+	t=1740665908; cv=none; b=efIaVk9uoxzgO4d8Tmks32XeHGOgtxAuUQmjyXdVBF9dJBkrBKytqseWjCrmVUG1enZhErG0a3KngRM+oibslcsC7GEJEcHo37eG5p+uIJWc27JijxkbmrSWoVHX1DiIwkH9v9SJ3LTUlkn2s2X2H3qtJwFx54f75aK4uQs2EMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740665450; c=relaxed/simple;
-	bh=HvD0GdHLA3qGwMXFiIknEZVlkedmf7OUeodMIEjbRR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UbQUwNeCvFTfTMs3PHw5SG77FwFJ/MXQeR3ELC+PQSnDXutSBuKW5uhnU9/se885N28rs+zMm40GHvuvPlNbrTUGZ1tMZaKWcfhqYy9oNg0KRUmPaa91OT5O8zw7xrAyDRxmCLM125YNPo0bdRL1kd9CtvctGOZwbocFPUODoxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xdbx9PVo; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54843052bcdso847678e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 06:10:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740665447; x=1741270247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=juDHI0+8fEGnnjQA1BeXYd6MutVRHJOKOY+enn7+/qU=;
-        b=xdbx9PVoAZAMRWQPjJvtrKmGBAL2x5O/m4RRtAILMgOHADoiu2jKWmh4JFP2FUkWVv
-         QqpDn3/hbCIEcrptEh8PutNJ4AR2Lxrsbqcaf1vqVHZTB76KCQ+/a+6kCWOOHkT4waF2
-         w3KjjlLOeXFNtdxurGgYaoSb+M6QBcZliWhr7cwaPODtLtrq1/qb2XfPaAw4yafC9hVy
-         95pL72YLBSN/m87BCb5Wluic/UGprCotalgLUqYuJjzUD2maDTCkzhYSAxXQDaxXNOn/
-         S2SHmZNt8r5YjYwBQoqSD0ROT5DeP+DtXE6PVHfdi1val6ELy8DFu1yIF7gVCGINeZ4W
-         8bRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740665447; x=1741270247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=juDHI0+8fEGnnjQA1BeXYd6MutVRHJOKOY+enn7+/qU=;
-        b=VYC5uz6a30UsS7BgewAyEj5EGBkNYgPPx9BFf7FqlJ7Qp4IWQ+XQsOXlBvshWvxCZc
-         88ICwiE/nvlIP1LKRP5SuS4vlZe9Y1KMWaL/8g5oYEG+qVLXyr9bZzwHGa28zk8jCUD5
-         wdrfCO3aoRHFm+cIm7E/X5khZ2Z+lLbv1PNbCemy1dkPkVJlHOUYSP80IWG7wpRZgNfP
-         s5IVzArIz0wd25Ha4jq0bFJHhyUWzK1n4TnkGS/gksgWF8v/LSmziD38al8cBHqcBVgd
-         lBsUA9fnsIsnM3tPRcuupU3xURKryZOgSwfVHvSd7Yag+TvY2DbfyPpuyHVMoXWfD/dP
-         +PTA==
-X-Forwarded-Encrypted: i=1; AJvYcCURYNkq6U+V5PDEDWNH7hg28z+b4dB/qg4XwfaPad4Yuze+vWw/OwqOU4zH8SLv4Wzq8QnBV11Pkz5/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDndnPkOBSBH+13fqnJqckaW31KlZQAouTlffW2iu+DOsl/D3/
-	KBV57h43QD07IUPrfhWCBwedCbZb1V6UKBJDOjiU1gJDeKT0L4KwcV6AO3w7Ia+iSYDRqQA+5xk
-	vmxhbCMvplt2jtUcbVSl+2UYCzbJdzEWaSTbTgw==
-X-Gm-Gg: ASbGncuAGojR1VEEpxvFrPJjZMISI5WSImHu9j3/8QNJ55IBIaKofEdbaRzAzOMzkq8
-	0JY77jmwkfNe0LjrsGzm3sUHH6BP8xzxjCOeVBEWGD/3l+wrkWBg6ZZLPBltpkE7oTG+b21UuE1
-	VgzQdFmzgWb6PBki/qmPmPzC45g4ftoEtcDxhaWLA=
-X-Google-Smtp-Source: AGHT+IGtNGS5FduT7L3EZWOi1jJ+2DJDrbFGiQz7I+jgi0UOPNmby3BbFiuvhopvsKBURmlm7v0tD/b9aNnGJLrVrls=
-X-Received: by 2002:a05:6512:1389:b0:545:c9d:ef26 with SMTP id
- 2adb3069b0e04-54851108679mr6710310e87.46.1740665446954; Thu, 27 Feb 2025
- 06:10:46 -0800 (PST)
+	s=arc-20240116; t=1740665908; c=relaxed/simple;
+	bh=LxGqDDciDNPai+yMXfQ6y3up7TsSxsnZOwf8EJYTN8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XohfvCcGhnXAsI8NpwQtN4paYQxtaHv05/oXj1ZjbhUTTlO+3ChTDQgiexoTVdFuWPBU62kpSLyNz1gvu3Zd01fodqHGIitOB7O6ZhBQwJCtBebszPhi5XrudBzAM1UOV6ob+1HWp8fSRiY0wIK8j7ji1JS/JK8B3K3wiSd9gMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tnehz-0003GQ-MD; Thu, 27 Feb 2025 15:17:51 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tnehw-0038i4-0Z;
+	Thu, 27 Feb 2025 15:17:48 +0100
+Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id C00033CD6A6;
+	Thu, 27 Feb 2025 14:17:47 +0000 (UTC)
+Date: Thu, 27 Feb 2025 15:17:47 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Ming Yu <a0282524688@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, tmyu0@nuvoton.com, lee@kernel.org, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com
+Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
+Message-ID: <20250227-gregarious-garrulous-echidna-ca7975-mkl@pengutronix.de>
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-5-a0282524688@gmail.com>
+ <a32b4ca1-0bcf-48e4-87ab-61fbd077a3c3@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
- <CGME20250227140054eucas1p2bf6e3f2416e11e3c62a704682bf052bf@eucas1p2.samsung.com>
- <20250220-gpio-set-retval-v2-5-bc4cfd38dae3@linaro.org> <ab3e42c0-70fa-48e0-ac93-ecbffef63507@samsung.com>
-In-Reply-To: <ab3e42c0-70fa-48e0-ac93-ecbffef63507@samsung.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 27 Feb 2025 15:10:35 +0100
-X-Gm-Features: AQ5f1JruPIGRSMvfqfGJCo4M_sF2CtpTvVrdot0dr0pbOujavSKKEh_CTipp8d0
-Message-ID: <CAMRc=McnzfHHLUyYczaza1ao-9iPMoQNOmV3Bm2DSMULCmYBTA@mail.gmail.com>
-Subject: Re: [PATCH v2 05/15] gpiolib: introduce gpio_chip setters that return values
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Michael Walle <mwalle@kernel.org>, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="i5nv6d7na7xl5d3b"
+Content-Disposition: inline
+In-Reply-To: <a32b4ca1-0bcf-48e4-87ab-61fbd077a3c3@wanadoo.fr>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+
+
+--i5nv6d7na7xl5d3b
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
+MIME-Version: 1.0
 
-On Thu, Feb 27, 2025 at 3:00=E2=80=AFPM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
->
-> On 20.02.2025 10:57, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Add new variants of the set() and set_multiple() callbacks that have
-> > integer return values allowing to indicate failures to users of the GPI=
-O
-> > consumer API. Until we convert all GPIO providers treewide to using
-> > them, they will live in parallel to the existing ones.
-> >
-> > Make sure that providers cannot define both. Prefer the new ones and
-> > only use the old ones as fallback.
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >       lockdep_assert_held(&gc->gpiodev->srcu);
-> >
-> > -     if (WARN_ON(unlikely(!gc->set_multiple && !gc->set)))
-> > +     if (WARN_ON(unlikely(!gc->set_multiple && !gc->set_multiple_rv)))
-> >               return -EOPNOTSUPP;
->
-> The above change issues a warning on gpio controllers that doesn't
-> support set_multiple() callbacks at all. I think that this wasn't intende=
-d.
->
+On 27.02.2025 11:08:50, Vincent Mailhol wrote:
+> > +static int nct6694_can_stop(struct net_device *ndev)
+> > +{
+> > +	struct nct6694_can_priv *priv =3D netdev_priv(ndev);
+> > +
+> > +	priv->can.ctrlmode =3D CAN_CTRLMODE_LISTENONLY;
+>=20
+> Hmmm, when Marc asked you to put the device in listen only mode, I think
+> he meant that you set it on the device side (i.e. flag
+> NCT6694_CAN_SETTING_CTRL1_MON) and not on the driver side. If you set
+> CAN_CTRLMODE_LISTENONLY flag, that will be reported in the netlink
+> interface. So you should not change that flag.
 
-Eek, not at all, thanks for the report, I'll fix it.
+ACK
 
-Bartosz
+> But before that, did you check the datasheet? Don't you have a device
+> flag to actually turn the device off (e.g. sleep mode)?
+
+Please test that the ifup -> ifdown -> ifup sequence works properly,
+even on a busy bus and on a bus without with a 2nd CAN station that is
+sending and you are the only receiver.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--i5nv6d7na7xl5d3b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfAdAgACgkQDHRl3/mQ
+kZxjHQf/cl+NPaGA6wNUTa68Le8AS6tbcg6UkzWcAd8AS8/6CWkgPeebGEbmzKvl
+iENWrgc7mfiuy346ubOPufojybeeXMdOHLiwDPEkVgZegMycqUnS+2F/mTCm50fR
+vf9mETJuODrqvL4I265jS9Z+SUA/R/pzTcs0pQItMSzfUwGJ5nv9JQS8mv3MOQhM
+zOqyOMX1bv3+0Ov9ZTpjaV2JoOmTqpDFIYuN2DyqGl+NlJfZyHCp/Z8UJ7MyQykL
+Nzk53OPw0yb1MC6RT8m5ijRnpiVzfV5Et+2/FEXSW0aE/SXBRailPfDqdEmxXFnf
+f4DOoo4Z+H6xhf0L7EUZ1HcmpU+ckA==
+=2o2X
+-----END PGP SIGNATURE-----
+
+--i5nv6d7na7xl5d3b--
 
