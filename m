@@ -1,110 +1,144 @@
-Return-Path: <linux-gpio+bounces-16735-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16736-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51659A48C81
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 00:14:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33A0BA48C91
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 00:18:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AEBF1890A40
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 23:15:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55B843B1537
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 23:17:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91E472309A3;
-	Thu, 27 Feb 2025 23:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vHPArRCv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADB9927424C;
+	Thu, 27 Feb 2025 23:17:17 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E341272903
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 23:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A158277803;
+	Thu, 27 Feb 2025 23:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698088; cv=none; b=g+ZhE6c+J+GeACit9KorT8A0u73qPtUVj2jcVVNkXaH16Vl/HIBY5Mj9qlS6Jg6o/5X2W7CFV1VWChHjv9F6VC2aCyPERaOhQchj/XsJiFBjxEMfUe4xPmqsgAlMmmKMLmGxAcZxWz0l4ft7g5Yuag7AoFMzitRL8RVLfytoEV4=
+	t=1740698237; cv=none; b=sWHczUQ2GHCer7l/9imNCRpkwAmVJ9OyDI7pHLUNXnWAt+j6qaPIlOTh2cctAX7/EWwuQC0WUJHNC7yZ3ONvA7yGehOKN/+r24wvoI6yu4DyteatLoBfeD637DDVz6a+/pr31AU8Ps+LYjuq22Tz6/mcIIoUJn+8QOGyS/9tK/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698088; c=relaxed/simple;
-	bh=AnuRApjr8EMi+iloki6ORcjaT87Gp2iSLXaCOHdnddU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KXeILkxV4fYlNNt44KhDlbqFH5MilEtkj92udT5NVcNhD5MYZQRsmSZsfcNpqtLz3JJkkIyzZEVfDxYQFXa2yvslN+2UjpZuj2p8RRSmy3E1EcJN7ECTdoZRmMnFTpmXmX3jLyy8vY+gwsOtfv3LoIApTJCUyqF1k7lVwslQ878=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vHPArRCv; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54524740032so1481011e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 15:14:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740698085; x=1741302885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jkUpLsB+tWxeVtC8e1hLrjEnl5f+xvYNaekBrtnharA=;
-        b=vHPArRCvoWnCjZC7BJoinlnnqZlv8mjwP+Z8qkW/Ti6O+ElXLL8MQjaW5v5Lpo50WO
-         8jxqLHUklmXYVyvTSryVg8IaxNd1stv+m5PLYu+kL4aKyaOuUgIvFPdYmpAL+QmzKAgS
-         ZkohwPFQF310bYKY6QTkW3gH/G/lmtHbLYQp1lBWAsL64DJv5VbCwWt445x8bCAOQJOo
-         KyCaCdCZhcejFUmAoVKoLUFzvtw1tCpCVT/E5LaWxaUZuEKGe3OwP/j5MgY4z2EQNaQt
-         /0KKGqiEQYS9Grj9yJnNXlVEO5IsRXVrVjfA3+d7OJjYkKKKVdVHDFgE01sev4By92q4
-         1PNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740698085; x=1741302885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jkUpLsB+tWxeVtC8e1hLrjEnl5f+xvYNaekBrtnharA=;
-        b=KWMXuTEuMKjBCdxb0ewykhchkcIoQBeFsn0QlbMjn4fsl3rAW9moK3e9KsC9HiPKHG
-         6odJ/3xg6KIBcpXO7J8vk44ODz1VMTT4JbgUia7IdPAhP/WmCmAZ/SpaOuNQWeZwl2Nm
-         LOShsRsC1bWEZY2cCBDJsiRzR9yy1poaW93lELErk8EbHZrd08VZuzIyYb2TMaqqYpK5
-         KVNU2avzn9T9Vw4lpUlH3kK5lEJTrwyllmWYVCys1Gbg30672+wZi45JFukLHN+TX5Rl
-         gDhEvKXUuI8OA/g8a47JB3Qs4JxwvOdNemUd+NgRuWi6samC2RRPqlav0A1xa9rrv3iX
-         olnA==
-X-Gm-Message-State: AOJu0Yx1LszEXI5OCfSyg+KBXCW5GK4Tf8hgSUrJkjQJVeihU+V45rUB
-	+YOBpQy6uMAZs5GktOPj21lizs4lN4GBLnPXWfn7WQRP07BNjj4EdWQ1Ddwju2qjxwAoVVA1l2w
-	penaguPgZvPBmb9lH9Wx+ldspODMu4+IkbVhfTA==
-X-Gm-Gg: ASbGncsoo/BXMXhTq2X5/oSKKlaViObJMuvvwYnohUwSUU6Tet2H7QK6T/tkVD/NLTA
-	PqY1+YOKGyWHJbNABCR+PxRKS5Iz64jScOmzSvV8iyOgpRMDo8rhVoffavqumrWtc5K/2nk1qGQ
-	Hqab5CXRA=
-X-Google-Smtp-Source: AGHT+IHZluLxn/bf6cpXOKGWEyqUac+5KCT4ifo6lWibr2coM7mUN1dentZWywii8b7k2GRtSbindSr/ckho352WQ5E=
-X-Received: by 2002:a05:6512:281d:b0:545:56c:36c7 with SMTP id
- 2adb3069b0e04-5494c3521famr548226e87.41.1740698084625; Thu, 27 Feb 2025
- 15:14:44 -0800 (PST)
+	s=arc-20240116; t=1740698237; c=relaxed/simple;
+	bh=AhVk55YoRVf85XaAGMEST2pp9suKqyiCIdDCxJlVfDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uvl8ZPYrP1W4fnUN4GgC2lvsnUNfZQ2WBF1vdo86Dan/fml40rn+RX9xQxhYcCerZvDzPjYzlzIGnH9YDUCrioD1GdRDOKoPa0y6BCXc5usQhnCtRd4oQcKAVDxxRdNZyYKRTo8hN6B450QrNtS4R7A5eqflYuJZ4wtvlQRYl/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B1C31516;
+	Thu, 27 Feb 2025 15:17:28 -0800 (PST)
+Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D5C13F673;
+	Thu, 27 Feb 2025 15:17:11 -0800 (PST)
+From: Andre Przywara <andre.przywara@arm.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/8] pinctrl: sunxi: Add Allwinner A523 support
+Date: Thu, 27 Feb 2025 23:14:39 +0000
+Message-ID: <20250227231447.20161-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.46.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1740157176.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1740157176.git.geert+renesas@glider.be>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 28 Feb 2025 00:14:33 +0100
-X-Gm-Features: AQ5f1Jp9E0NSS-IJffWh9Wl4UjBU0iqQJd0gDAq8jLGonF3nfq7IUtVCYMpAPkI
-Message-ID: <CACRpkdaBuFm=xEs=39n9pboV1J-SjRKUyKo8GPY_EjRKuUvAsQ@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.15
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 6:02=E2=80=AFPM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+Hi,
 
-> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f0=
-5b:
->
->   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
- tags/renesas-pinctrl-for-v6.15-tag1
->
-> for you to fetch changes up to ea4065345643f3163e812e58ed8add2c75c3ee46:
->
->   pinctrl: renesas: rzg2l: Suppress binding attributes (2025-02-20 17:33:=
-08 +0100)
+this is the third drop of the series introducing pinctrl support for the
+Allwinner A523 family of SoCs (comprising A523, A527, T527, H728). [1]
+Only small changes this time: renaming a symbol, fixing the DT binding
+example, add adding the accrued tags. Many thanks to the reviewers, in
+particular Jernej for biting the bullet and looking at patch 5/8!
+Changelog below.
 
-Pulled in for v6.15, thanks Geert!
+==============
+The first four patches extend the sunxi pinctrl core code to deal with
+some specialities of the new SoC: it uses every of the 11 possible banks
+except the first one, which required some register remapping. The first
+patch here is some cleanup, which we should take regardless, I think,
+since it fixes some hack we introduced with the D1 support.
 
-Yours,
-Linus Walleij
+The main feature is actually patch 5, which introduces a new way to
+express the required pinmux values for each function/pin pair. 
+Traditionally, we dumped a rather large table of data into the (single
+image!) kernel for that, but this approach now puts that value into
+the DT, and builds the table at runtime. This patch was posted twice
+before [2][3], the last time LinusW seemed to be fine with the idea,
+just complained about the abuse of the generic pinmux property. I changed
+that to allwinner,pinmux now.
+
+The rest of the patches are the usual suspects: the two files for the
+two pinctrl instances of the new SoC (now very small), and the DT
+binding.
+
+Based on v6.14-rc1. Please have a look, review and test!
+
+Cheers,
+Andre
+
+[1] https://linux-sunxi.org/A523#Family_of_sun55iw3
+[2] https://patchwork.ozlabs.org/project/linux-gpio/cover/20171113012523.2328-1-andre.przywara@arm.com/
+[3] https://lore.kernel.org/linux-arm-kernel/20221110014255.20711-1-andre.przywara@arm.com/
+
+Changelog v2 .. v3:
+- rename POW_MOD_SEL symbol
+- drop CCU binding header inclusion in DT binding example
+- add review tags (with thanks!)
+
+Changelog v1 .. v2:
+- rebased on v6.14-rc1
+- extend regulator array to cover PortK as well
+- increase number of pins in A523 PortJ from 18 to 28
+- extend comment for new pinctrl DT code
+- move DT binding into separate yaml file
+- Add Jernej's Reviewed-by (with thanks!)
+
+
+Andre Przywara (8):
+  pinctrl: sunxi: refactor pinctrl variants into flags
+  pinctrl: sunxi: increase number of GPIO bank regulators
+  pinctrl: sunxi: move bank K register offset
+  pinctrl: sunxi: support moved power configuration registers
+  pinctrl: sunxi: allow reading mux values from DT
+  dt-bindings: pinctrl: add compatible for Allwinner A523/T527
+  pinctrl: sunxi: Add support for the Allwinner A523
+  pinctrl: sunxi: Add support for the secondary A523 GPIO ports
+
+ .../allwinner,sun55i-a523-pinctrl.yaml        | 175 ++++++++
+ drivers/pinctrl/sunxi/Kconfig                 |  10 +
+ drivers/pinctrl/sunxi/Makefile                |   3 +
+ drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c     |   6 +-
+ drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c     |   8 +-
+ drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c |  54 +++
+ drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c   |  54 +++
+ drivers/pinctrl/sunxi/pinctrl-sun5i.c         |   8 +-
+ drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c     |   8 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c     |   7 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c      | 374 ++++++++++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  54 ++-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |  47 ++-
+ 13 files changed, 758 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c
+
+-- 
+2.46.3
+
 
