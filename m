@@ -1,596 +1,300 @@
-Return-Path: <linux-gpio+bounces-16692-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16693-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EA9BA47A43
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 11:25:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B6C2A47B13
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 12:00:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 114B37A78AB
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 10:23:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 908523ABEAF
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 11:00:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C8422E3F9;
-	Thu, 27 Feb 2025 10:22:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48D21218AAF;
+	Thu, 27 Feb 2025 11:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FSsX7GL3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B13kmnek"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588D622D4FE;
-	Thu, 27 Feb 2025 10:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740651731; cv=none; b=Rp05ZDnVkyVrxjCG36DJkoivfwzL+SrA5qogsO0TgYa5NjmWfAXMYhXatKcsG/3+5uwiNfaC729vluwEXJABJOkRmXlYIy6gtTE7MesDGlKSNrYtepgKt28G5R3s0IONw7JAuvB9I0mK5uemEEXrxPvjk+pIMUYhcuipJ5LmhZY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740651731; c=relaxed/simple;
-	bh=yU5/hAfCCjGD+kEzGfS92z/j4tYFgtCBHBXyA3FCvcg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=miD5tAihtoJO5Mh+X0Ml7LiGocdyYwpnabvakeNjxRiMArNLeHQkc4wpKg6wON6M0emzcFDIpk80ulzcj+kxEdxbqZrJDx+7ekmTbCVjdcf2FxPB5bwYJiAVDKcYyacCMCbH+RrjrtO9DOYdwzCW9iNFHeRHbEfQsDjy+upb0Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FSsX7GL3; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A9F634321E;
-	Thu, 27 Feb 2025 10:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740651726;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1aSoWNkJBaWPApIjLZMQuvo/YlrcNWEH8D62BgvqD3M=;
-	b=FSsX7GL3kfuOKPrN/h3oWz0SP76GVDAD7nxunecNvEupxUFY7oVl4UglILgRZc3VxxpO7J
-	/FO3wYyxnHnWti9fSah/dqBlJSo1hFnVIHdyxZS2gwAYOi8pu1ZO+4iJqIlnMdK2GH6qIv
-	/aflga69f4gyPr/GEabIr5HfWiBxT50p+/h7IIHhSRaa5kSK35TfZ6addi0LDQCwg5t0Ik
-	PM8cO/+jAJuGiYg3BasNHiUE0jj0Lq0LmdfgBJYs288I111UTUjFjqQX9tqiBzEGk2PCya
-	SvTVOh6ix3EoQ7r2LpO4fxorUzYfljJQimhDa85wLY+uy76VZiZb49r7NEvRIg==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Thu, 27 Feb 2025 11:21:57 +0100
-Subject: [PATCH v8 9/9] misc: add FPC202 dual port controller driver
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5950EEBB
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 11:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740654027; cv=fail; b=tzxoELTAZ/wQfcyZnENKfD/yQ7hjCFnAp+Kf0y6tieGlmtSB4OryAwEfRXu8EPxlXg1fO2FMq+QM/6tYxz+BztYhb+InMMvMGlJ/0wHPMb7eDX6I4hftWyyVtl4+crN+oJyiSFm4uWmSphFIAVOrH8BWSQ1SzfQYU9J9jVu8YU4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740654027; c=relaxed/simple;
+	bh=qXMcG9JvxMQpkACw/1UoWaPQerwpsCyDKRzvzw4RAIQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HMCzEU+HCeZhG9uSu2+jOFZo0YEM0IK9TgLOLhEOCakLfE9gExkGhe8ZgCSPgDdNbfg+df5NOBgEsRMYK+sYOuqBt0l6c7Q9WX9jOXB79CBQ+FJB7563TSH/ohChMEUE6aPTreCKZp4mg8axkrl4kxQerkdZk1thqsQ38/+wpEA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B13kmnek; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740654024; x=1772190024;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=qXMcG9JvxMQpkACw/1UoWaPQerwpsCyDKRzvzw4RAIQ=;
+  b=B13kmnekDgu9aPOHVoJWJhsKm2NGUETBD4o2y+KOzMqvAlIxJr1cosK1
+   mWCJApIjTWZXqVD1LuYPaEr+oz1f9V2ZPBYC2aJIvX3Zb8raw94F3Kkir
+   pb9BSgf9Jh688+hFKaMRVYmYJlBDgkTEcqFRe+ygjnqVlRwQaII/O8EUe
+   s6jhOhITzpK2kz7HH4RUFFT1b9DmgFZrHqiAXFTzkGF/34ogHgyI4QxSy
+   uEBVZqK5WlsVGA5NlenRn6y8az7L7YJxah/GF1Ok8g1s+KaloEPbsi7W9
+   eiahXjzI6pIIz/Bv2wapEfHfS+K8x06zxtap2bnIM/jHafQH63E9eFVKo
+   g==;
+X-CSE-ConnectionGUID: utncDDRFTzCkE+HyolLDmQ==
+X-CSE-MsgGUID: lR+SYeTCTfGOy+iTqCVCjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="44362975"
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="44362975"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 03:00:23 -0800
+X-CSE-ConnectionGUID: XgXQRdGsS32HrldcElPjoA==
+X-CSE-MsgGUID: /hxQA2hVRP2k1JqgO7AJlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="116766732"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 03:00:23 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.14; Thu, 27 Feb 2025 03:00:22 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 27 Feb 2025 03:00:22 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 27 Feb 2025 03:00:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QzraHejerHB4e2TrQamQY7VV5nj2NT4wxMz8yN4xXwa+GiscP27n4hdD20CMh+eSkWQ4dtbY4uL1htWgghxHH52TS2NyrY+VqahiCkDILQo4rMssKZ2/mpEbYV2e0W8VvG7cBFm5m8BOCIKI91cFs2LZkKpLWYp1oe39ezTZ4lKwHTmFiK9FqXhXP+nbEE+jL+tjADqD5JhBAyJjOsO1uEOLVOjpxgaM+9/6SZO5clhhJoMwdmVwOFLAPWre58AU1hb+WrVr8Avvzd0EGb8PJGjXFz/n5Yb/dzqBVBV6hxcDlxcHSQFhvlUInILgxTRrOO0zIS+wq/F+7ErKT0mBHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qXMcG9JvxMQpkACw/1UoWaPQerwpsCyDKRzvzw4RAIQ=;
+ b=A0XgdHEz4epMXj4fVAyoPiv1hYgSd+9y0bqKvCoDDg4spR+osl1YFGwTXUSotELMe+NMKBU+MqnvvGG6v+HVOm84ee/E+EF/WbsOK5KAM5ECzp3Pq+BfiZN6YXI+mvOuuQFWniaAQnEqXk4eG+j+gEibdyPiFHCczR/u/7tktPnWm3eBfZ249QG3eHW0GXCcIdlENfaRSwE5aWEsnEAmRThMfT0pjlr5irrw+dUwBLsd6wMp6XZpaIQ9BvmpdlR3kpR4RJDc63ypQeeLkJSXMmIQVSr7NUWscSbGCZz3n0GBOfo1RYi2vksISXEfwiKk9y+fJrMAwo/B869fZnLLvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6129.namprd11.prod.outlook.com (2603:10b6:a03:488::12)
+ by MN0PR11MB6277.namprd11.prod.outlook.com (2603:10b6:208:3c3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Thu, 27 Feb
+ 2025 10:59:53 +0000
+Received: from SJ1PR11MB6129.namprd11.prod.outlook.com
+ ([fe80::21c3:4b36:8cc5:b525]) by SJ1PR11MB6129.namprd11.prod.outlook.com
+ ([fe80::21c3:4b36:8cc5:b525%5]) with mapi id 15.20.8466.016; Thu, 27 Feb 2025
+ 10:59:53 +0000
+From: "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+CC: "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, "Kurmi,
+ Suresh Kumar" <suresh.kumar.kurmi@intel.com>, "Saarinen, Jani"
+	<jani.saarinen@intel.com>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>
+Subject: RE: Regression on linux-next (next-20250225)
+Thread-Topic: Regression on linux-next (next-20250225)
+Thread-Index: AduIhrAOw3T8Vde6R/Kk4U8loKNURwAZtumAAAZEuOA=
+Date: Thu, 27 Feb 2025 10:59:53 +0000
+Message-ID: <SJ1PR11MB6129C85643FCB6E153714210B9CD2@SJ1PR11MB6129.namprd11.prod.outlook.com>
+References: <SJ1PR11MB612979B35DD84F5AFFB789D5B9C22@SJ1PR11MB6129.namprd11.prod.outlook.com>
+ <CACMJSeseiRfAHQX0+vjL0DO+Xd-+RwW5rs4RkYHCfP6NKz2DLA@mail.gmail.com>
+In-Reply-To: <CACMJSeseiRfAHQX0+vjL0DO+Xd-+RwW5rs4RkYHCfP6NKz2DLA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6129:EE_|MN0PR11MB6277:EE_
+x-ms-office365-filtering-correlation-id: f7409688-d1d7-4279-d473-08dd571ddd0f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?OGpMazl1Y3AxRmVxZUhFSEg5TC91THo4NVdoaFB3aXljbjU1MStBV2ZOTXlK?=
+ =?utf-8?B?ZTBqRHpOaW9vQmVBd2p4Z29CY0czU0JtWm5LOUlMb0IrMm84K2hNQlh0WmZE?=
+ =?utf-8?B?cHFtTXRDektrR2VPTjhZakV4dHdxOFF4UHg0NGtzeXlieUxtd1hFNXZtOGl0?=
+ =?utf-8?B?aGtwV0VXQVdJZS9zSXM3Unl3VGZrK1F3MHdzYXNWZ1BBam1uMSsxNW1kZG1M?=
+ =?utf-8?B?Rm0xUzhCWWhRcnY2VUVMcUJ1K2ExeXVwMHN6YmNaZGFYajZDa1ptMGFqTmtW?=
+ =?utf-8?B?RTkrcXUxSDYrVFRhMUI3UzY5WGJDS2paSzdERTdnMlFMT0RMQlRVNkR3Ym5U?=
+ =?utf-8?B?eHpPL1M0U1FrQUM3OWVqWXZpTkFZa0VYeThIbjBDb1VVeHJwYVNTUU84bk5V?=
+ =?utf-8?B?UHJNM3JVbldteGNtT1BXamRsZlZndmhZRXRaMzM4ZFJkY1pOYUpLZFdCTGVS?=
+ =?utf-8?B?M2J1QUIzQk8yWllET0ZJZXUxTmYybGVMUTVHSVAwdmlGMzNoMmRwQUlnUnhZ?=
+ =?utf-8?B?STIzblJSaWxxRXBtT3pQQ2xJdHM4T1NhSU9WRkJFN1RCSDdNTUpSMWpGM0pM?=
+ =?utf-8?B?RGlTWTRrSzNXelEzMzcwWXVRSHdSUEs0aE5nYVg1N1h0MSs2RjB1NU5xc2g1?=
+ =?utf-8?B?QjhzSEJ6SDRDaFBkS1ZZMzJNWlF5OVhpSlY1b2F1cVA5YjMzRHd0N1FUSlVR?=
+ =?utf-8?B?disvUk9oU0k1MjZrcklGYVJpR2V4M2RwNVhDOHdUemw4VDVzK0grUm5KYWtx?=
+ =?utf-8?B?V1hMSmF6UHZyR2N1NUh6THFieWNueGFSMG1nVHRYem1SSENLK0VhMmx1TnRa?=
+ =?utf-8?B?UnZ0VVZmbVZUczdialpiUVVORzZ3Ym9FTEpIWlk1QVR1T1lhUmpzaHpJdEcw?=
+ =?utf-8?B?V2xnMTFHRGJOYUxVbE1NamgzVGNhVWhOaUQ5L21qdFNkWWF5c0lWVEZWd0w2?=
+ =?utf-8?B?ZzhIOFhOdmdTd2NwcXU1clF1VGJIcEN2VmJDY1BiL09iRDBGOWV2UEhvRG55?=
+ =?utf-8?B?OFpIWVlNYmpyVE5RWFM1YVNXSUVVVFlLY0lrNVRYeFpaTnlaS2JNeTdpWFVE?=
+ =?utf-8?B?TDlsSEVvVkZPazBBWmVVYmtUUjZlTzkxY242TE1POEVNRjdvOXlIbXd0dWZq?=
+ =?utf-8?B?Z1lqc0grTGxRTjJpWlF1bVZYSFo3cER3WThiamZuK1AzVmxxRHVua294QnFL?=
+ =?utf-8?B?dzN6U0xrcmR3b2lIRVBqVVF1a2tFOWUxYWtEU293aTE5NkQrekVZajhmamUw?=
+ =?utf-8?B?M25relcyUDZEUEliYnJKQnduL2lPMGEwS1FESUFzTGxTbDdMOHM1cTZLeW9K?=
+ =?utf-8?B?b2FISkR6endRUE9TZFEzUUFkWUtsVHBCMWpEaEtyeWZzQ2JhSnZZNk03cXN1?=
+ =?utf-8?B?WVUxTXc1QUJPRStpQ0VZL0drSDRRNE9objU5eHlSbWhmNUJFYk92aGNXaXRV?=
+ =?utf-8?B?cWloK1h3SHRjWitRTGh0aGQ4ODNoTWZJN1BVakV3N29oaEV5aWpRek9UNFZB?=
+ =?utf-8?B?YzhCTlpsZ3RTeDNjUDBIWnRxcVB4ZzNnTG1wVmVnSnNEQllnOUVmSXF6VFl0?=
+ =?utf-8?B?dWhVR3ZIZ25Ea0ljNWxENG4vQzVWSjRrajFEQlQ2RlBLK2xWd3lZWUwyQmtt?=
+ =?utf-8?B?YmFtSEgvVUY1Q2RqRkpGMm9Gck1qMndFSitVSjdyOGFvSXBKR2VvTGd6cHo5?=
+ =?utf-8?B?MVBHSUxDaFNpQkl5WkdNOTFTc2VFeVJSMDlkcENsTkVGK2hnZmZZVENUOUEx?=
+ =?utf-8?B?QVpFSXBoeEJNT0lGYWYvSnM3Sk1qNktRV2c1aURJemo1ZUpBUk5IYXZvcWtv?=
+ =?utf-8?B?NVY5VWQzeXR5aXQzUEo5SDVheVhaSWhFMS8wemhMZ0J1dEN4WHJsYlVQMzFG?=
+ =?utf-8?B?elJOOUdDN3BnOVl0R0xwbjVYVUVCU2pMcVU5THhzSW5DV1RPaUhjOXdlcjBr?=
+ =?utf-8?Q?eucsUdWsnSuMdTzdTPwIYjvnEz9gGqNL?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6129.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YnhjSUw5VHN1dnpkUXhBUnJ3VWFRUUNoWnZhK0tIbmx4OGJEU3RWSi85d1Uz?=
+ =?utf-8?B?c21yaGtCZHYwaTlJakFnc2VEQnoxODM2c3o1Sm9LV2NkWjBhWkVsS3VpTDZl?=
+ =?utf-8?B?YVNJamd0ZDRYL1Nqanh1OEFMejh3Tkw4RkFGRGkwL2RHc0I2cG8rTXYxT2la?=
+ =?utf-8?B?THpxZytpc1BYeFYxdS9sSjhyenNhNXU2ZmRITXdUOVJKVG1sQWxNTzdCZjNV?=
+ =?utf-8?B?K2Y0TkdlY3VWcnd0S1AwV0x3WnpmbWVBdmdTeHFCcUR0cFFvZ3BVNEVGcnpF?=
+ =?utf-8?B?S1oyb2lrRHE0cFZyQllGOFBLNXVuSnE1WTEwQlZaZUlhT1cyOVFnSDlnSml3?=
+ =?utf-8?B?U1pSd1VMNzZCaHYyTTJiaWtjWkZULzlRQ05UZzR1SUFqMk9NV2d6dzk5aFVE?=
+ =?utf-8?B?SnZVQ2dWdDhsakRxWTBGMllyb1hRNDJya1lZdHhMSUFVK0NDeTU5UHNsd3hu?=
+ =?utf-8?B?Rmk5bCtEdS90YnpHTWFjeFp6a2tJd3YzMEdFVTkrVEN2bDA0WHFhR1IwNlBw?=
+ =?utf-8?B?anAxWUVQMDJ1MkpGUG1ySFlreDdYNG5yWFNSZjNySVljNzlHem45ZG4zY0xv?=
+ =?utf-8?B?bFRoRmlBU01MS1EyMDlzaXdFdVk3VUFMeER4NWN2MDJEYzhYcVFUeldKUnl4?=
+ =?utf-8?B?dUxneU1SL1VmWStHNXFrRzNEeVp1WjRTMURhOCtNOUNWTGhMdENoSHh2UjR0?=
+ =?utf-8?B?UVBGSWFSSkFnR0J2TzZEN1JzVzBWSmtyT1FlbVBGRElUWkI1MCtoU2lTcExN?=
+ =?utf-8?B?OGVtWW5TMUhXcGgxTm1oSkpiZlpRV3QydUFmYndOUFo0L0lPakpsMm84ck1H?=
+ =?utf-8?B?U1FxZGVJek5LbEs5c3h6aTl0b0F2citaZEVBbVRINmhhTHpnVEVwcS90bWpy?=
+ =?utf-8?B?dEM3VjQ3bTFMalptaE9ZMDhrZGEyMmRCRlNwOEJEZUJEb1A2UlU3TC9SeXJm?=
+ =?utf-8?B?Z2s2VmlHdDlFL0xMNGRuU3l3bythRkltWlE2dEZGamVZRlpWZ1hobFFqZGti?=
+ =?utf-8?B?S0dKVGc0c01IMExEWWYrWWU4cC9qZVBkWGNGcExZc1NDOGl6YmJZeFZjU2Fh?=
+ =?utf-8?B?T1cyaUpPd3dGZ2hLNVY3ckpQaDUzT2F0NzdsOWlFcmR4NDNSR3NjZGx3N1g5?=
+ =?utf-8?B?cGRWSndxejF4MmNhcitrQlF2bEU3aGRTSzJ6RlExUEcySnM3SytTRzlsZ1Jm?=
+ =?utf-8?B?ZE41eWlHd3dpd3g4RFV3VExwZ0FlTEw2VUZibTJiMnhnR09VTzI0bkd6RWJS?=
+ =?utf-8?B?MEZOMytKU0xBWmNUZ0E4V0JMYUN4RXU4dzJ4UnFSRFJrc0lMSnpsbXZjeWdu?=
+ =?utf-8?B?MEZXbEo3TVNzTENaaFl1Y3hqQmFVZkQzd0ZzUU5CUWgxWWwwTk54eHpwaG43?=
+ =?utf-8?B?UnBUUW5QRlc1NlFzaWIwWkcvYnZGam8xYUl1NTkrSFFUUXFQV1lDVUJ0SVhh?=
+ =?utf-8?B?OXU2ZHQ3bmorSkgraFZZbys5OVhEbm1QZHpFSmJCbkZjNEV5UURWUjRjUGZX?=
+ =?utf-8?B?UytyUDFtRWpudkt2d2xORm42eGtuSGlQL3pXZDJvSWtHcXFrZ0FrK1grdEI2?=
+ =?utf-8?B?T1FUeURtSWovbExvTC9xVWgrMUhLREVpVkJILzhFZnFLT0ZUS3J0TkQvOEtQ?=
+ =?utf-8?B?Zkkrb1NRV2VLRlpKRWxyOWJPU0toak5XNzVNaFJsMmhSY3AyVDBHaDI1NEoy?=
+ =?utf-8?B?Nkk2RElocktpOXNjRzZMWXJoQ2hrekhiQnNKSFJzcmk3amJrSys2QmZ0TTNH?=
+ =?utf-8?B?empVUkRybk5NZmQyVi9qQ2Q1M1BjUitUUTNLZTJueTB4dFNCbTZ6aFNqNG9o?=
+ =?utf-8?B?NElURXFtVVdVK21tcG5lWGUweWE5T0ErNERBUkFGUVQ3L1RmZkFlRGZHMmpw?=
+ =?utf-8?B?VWpmcWJLZlo4NnB4NGk4bmdDNjRnOTMvUXdENllnMmxGOUxGZ3NiY0NKYTNF?=
+ =?utf-8?B?ZVBaajlRTnE0Q3kwUkZxUi9sdlZmWnQyM1RzRzh2REx0OUdXd2VqVzQ1NSti?=
+ =?utf-8?B?akxsWENtd2RFVVI5b0pNOFdlVjZHOWFnWm8xMUcvUGNvd0JBWlJmRkRBbmlO?=
+ =?utf-8?B?ZGhWd0RpNllEOUVXYzJLSkx3T1VKT0Q0aTBpYlZnUEp4VjdBc1ZZY3V3eDk4?=
+ =?utf-8?B?TGVqS2JQMW9Cd0hybFBCY0RtNi9jL1JBMDdMbFNrTDJsU0dXcmFNZ1lTNkZa?=
+ =?utf-8?B?V1E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-fpc202-v8-9-b7994117fbe2@bootlin.com>
-References: <20250227-fpc202-v8-0-b7994117fbe2@bootlin.com>
-In-Reply-To: <20250227-fpc202-v8-0-b7994117fbe2@bootlin.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
- Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Romain Gantois <romain.gantois@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekjedvudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeelieefteelffeuheevtdetkefhfffhteffkefgtefhkeevudeutdeugfffheegnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudefngdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepr
- ghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurhgrghgrnhdrtghvvghtihgtsegrmhgurdgtohhm
-X-GND-Sasl: romain.gantois@bootlin.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6129.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7409688-d1d7-4279-d473-08dd571ddd0f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2025 10:59:53.0673
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oiBT7TpkahnN6B4TicVBB7alXd6BS6OpWWOdUiaSB2gfQGtI1BF2t8cGCoIXjjw2wVbN31k05Y56GmKG454Znl183b2A7/wHMTrc66qMHPQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6277
+X-OriginatorOrg: intel.com
 
-The TI FPC202 dual port controller serves as a low-speed signal aggregator
-for common port types such as SFP, QSFP, Mini-SAS HD, and others.
-
-It aggregates GPIO and I2C signals across two downstream ports, acting as
-both a GPIO controller and an I2C address translator for up to two logical
-devices per port.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
----
- MAINTAINERS              |   1 +
- drivers/misc/Kconfig     |  11 ++
- drivers/misc/Makefile    |   1 +
- drivers/misc/ti_fpc202.c | 438 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 451 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4bb13de2b8ebad5180e2bde607dac40f35c51782..7d2b08d0b0ad5390eb8528eb7ddc9da8b2729026 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23714,6 +23714,7 @@ M:	Romain Gantois <romain.gantois@bootlin.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/misc/ti,fpc202.yaml
-+F:	drivers/misc/ti_fpc202.c
- 
- TI FPD-LINK DRIVERS
- M:	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 56bc72c7ce4a998f6b9b3ed90a0845b52715f405..aa2cc5c29239781bd5579f65f398885cddaffe3f 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -114,6 +114,17 @@ config RPMB
- 
- 	  If unsure, select N.
- 
-+config TI_FPC202
-+	tristate "TI FPC202 Dual Port Controller"
-+	select GPIOLIB
-+	select I2C_ATR
-+	help
-+	  If you say yes here you get support for the Texas Instruments FPC202
-+	  Dual Port Controller.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called fpc202.
-+
- config TIFM_CORE
- 	tristate "TI Flash Media interface support"
- 	depends on PCI
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 545aad06d088563aaddf7d2f3b82d995e817fde0..2e27d4b7590313fab8da3dc311f492359ef44ee8 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_ATMEL_SSC)		+= atmel-ssc.o
- obj-$(CONFIG_DUMMY_IRQ)		+= dummy-irq.o
- obj-$(CONFIG_ICS932S401)	+= ics932s401.o
- obj-$(CONFIG_LKDTM)		+= lkdtm/
-+obj-$(CONFIG_TI_FPC202)		+= ti_fpc202.o
- obj-$(CONFIG_TIFM_CORE)       	+= tifm_core.o
- obj-$(CONFIG_TIFM_7XX1)       	+= tifm_7xx1.o
- obj-$(CONFIG_PHANTOM)		+= phantom.o
-diff --git a/drivers/misc/ti_fpc202.c b/drivers/misc/ti_fpc202.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..b9c9ee4bfc4edba102b3bf7ae33a2b68c19c83ec
---- /dev/null
-+++ b/drivers/misc/ti_fpc202.c
-@@ -0,0 +1,438 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ti_fpc202.c - FPC202 Dual Port Controller driver
-+ *
-+ * Copyright (C) 2024 Bootlin
-+ *
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/i2c-atr.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+
-+#define FPC202_NUM_PORTS 2
-+#define FPC202_ALIASES_PER_PORT 2
-+
-+/*
-+ * GPIO: port mapping
-+ *
-+ * 0: P0_S0_IN_A
-+ * 1: P0_S1_IN_A
-+ * 2: P1_S0_IN_A
-+ * 3: P1_S1_IN_A
-+ * 4: P0_S0_IN_B
-+ * ...
-+ * 8: P0_S0_IN_C
-+ * ...
-+ * 12: P0_S0_OUT_A
-+ * ...
-+ * 16: P0_S0_OUT_B
-+ * ...
-+ * 19: P1_S1_OUT_B
-+ *
-+ */
-+
-+#define FPC202_GPIO_COUNT 20
-+#define FPC202_GPIO_P0_S0_IN_B  4
-+#define FPC202_GPIO_P0_S0_OUT_A 12
-+
-+#define FPC202_REG_IN_A_INT    0x6
-+#define FPC202_REG_IN_C_IN_B   0x7
-+#define FPC202_REG_OUT_A_OUT_B 0x8
-+
-+#define FPC202_REG_OUT_A_OUT_B_VAL 0xa
-+
-+#define FPC202_REG_MOD_DEV(port, dev) (0xb4 + ((port) * 4) + (dev))
-+#define FPC202_REG_AUX_DEV(port, dev) (0xb6 + ((port) * 4) + (dev))
-+
-+/*
-+ * The FPC202 doesn't support turning off address translation on a single port.
-+ * So just set an invalid I2C address as the translation target when no client
-+ * address is attached.
-+ */
-+#define FPC202_REG_DEV_INVALID 0
-+
-+/* Even aliases are assigned to device 0 and odd aliases to device 1 */
-+#define fpc202_dev_num_from_alias(alias) ((alias) % 2)
-+
-+struct fpc202_priv {
-+	struct i2c_client *client;
-+	struct i2c_atr *atr;
-+	struct gpio_desc *en_gpio;
-+	struct gpio_chip gpio;
-+
-+	/* Lock REG_MOD/AUX_DEV and addr_caches during attach/detach */
-+	struct mutex reg_dev_lock;
-+
-+	/* Cached device addresses for both ports and their devices */
-+	u8 addr_caches[2][2];
-+
-+	/* Keep track of which ports were probed */
-+	DECLARE_BITMAP(probed_ports, FPC202_NUM_PORTS);
-+};
-+
-+static void fpc202_fill_alias_table(struct i2c_client *client, u16 *aliases, int port_id)
-+{
-+	u16 first_alias;
-+	int i;
-+
-+	/*
-+	 * There is a predefined list of aliases for each FPC202 I2C
-+	 * self-address.  This allows daisy-chained FPC202 units to
-+	 * automatically take on different sets of aliases.
-+	 * Each port of an FPC202 unit is assigned two aliases from this list.
-+	 */
-+	first_alias = 0x10 + 4 * port_id + 8 * ((u16)client->addr - 2);
-+
-+	for (i = 0; i < FPC202_ALIASES_PER_PORT; i++)
-+		aliases[i] = first_alias + i;
-+}
-+
-+static int fpc202_gpio_get_dir(int offset)
-+{
-+	return offset < FPC202_GPIO_P0_S0_OUT_A ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int fpc202_read(struct fpc202_priv *priv, u8 reg)
-+{
-+	int val;
-+
-+	val = i2c_smbus_read_byte_data(priv->client, reg);
-+	return val;
-+}
-+
-+static int fpc202_write(struct fpc202_priv *priv, u8 reg, u8 value)
-+{
-+	return i2c_smbus_write_byte_data(priv->client, reg, value);
-+}
-+
-+static void fpc202_set_enable(struct fpc202_priv *priv, int enable)
-+{
-+	if (!priv->en_gpio)
-+		return;
-+
-+	gpiod_set_value(priv->en_gpio, enable);
-+}
-+
-+static void fpc202_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			    int value)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	int ret;
-+	u8 val;
-+
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_IN)
-+		return;
-+
-+	ret = fpc202_read(priv, FPC202_REG_OUT_A_OUT_B_VAL);
-+	if (ret < 0) {
-+		dev_err(&priv->client->dev, "Failed to set GPIO %d value! err %d\n", offset, ret);
-+		return;
-+	}
-+
-+	val = (u8)ret;
-+
-+	if (value)
-+		val |= BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+	else
-+		val &= ~BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+
-+	fpc202_write(priv, FPC202_REG_OUT_A_OUT_B_VAL, val);
-+}
-+
-+static int fpc202_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	u8 reg, bit;
-+	int ret;
-+
-+	if (offset < FPC202_GPIO_P0_S0_IN_B) {
-+		reg = FPC202_REG_IN_A_INT;
-+		bit = BIT(4 + offset);
-+	} else if (offset < FPC202_GPIO_P0_S0_OUT_A) {
-+		reg = FPC202_REG_IN_C_IN_B;
-+		bit = BIT(offset - FPC202_GPIO_P0_S0_IN_B);
-+	} else {
-+		reg = FPC202_REG_OUT_A_OUT_B_VAL;
-+		bit = BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+	}
-+
-+	ret = fpc202_read(priv, reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	return !!(((u8)ret) & bit);
-+}
-+
-+static int fpc202_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_OUT)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int fpc202_gpio_direction_output(struct gpio_chip *chip, unsigned int offset,
-+					int value)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	int ret;
-+	u8 val;
-+
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_IN)
-+		return -EINVAL;
-+
-+	fpc202_gpio_set(chip, offset, value);
-+
-+	ret = fpc202_read(priv, FPC202_REG_OUT_A_OUT_B);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = (u8)ret | BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+
-+	return fpc202_write(priv, FPC202_REG_OUT_A_OUT_B, val);
-+}
-+
-+/*
-+ * Set the translation table entry associated with a port and device number.
-+ *
-+ * Each downstream port of the FPC202 has two fixed aliases corresponding to
-+ * device numbers 0 and 1. If one of these aliases is found in an incoming I2C
-+ * transfer, it will be translated to the address given by the corresponding
-+ * translation table entry.
-+ */
-+static int fpc202_write_dev_addr(struct fpc202_priv *priv, u32 port_id, int dev_num, u16 addr)
-+{
-+	int ret, reg_mod, reg_aux;
-+	u8 val;
-+
-+	guard(mutex)(&priv->reg_dev_lock);
-+
-+	reg_mod = FPC202_REG_MOD_DEV(port_id, dev_num);
-+	reg_aux = FPC202_REG_AUX_DEV(port_id, dev_num);
-+	val = addr & 0x7f;
-+
-+	ret = fpc202_write(priv, reg_mod, val);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The FPC202 datasheet is unclear about the role of the AUX registers.
-+	 * Empirically, writing to them as well seems to be necessary for
-+	 * address translation to function properly.
-+	 */
-+	ret = fpc202_write(priv, reg_aux, val);
-+
-+	priv->addr_caches[port_id][dev_num] = val;
-+
-+	return ret;
-+}
-+
-+static int fpc202_attach_addr(struct i2c_atr *atr, u32 chan_id,
-+			      u16 addr, u16 alias)
-+{
-+	struct fpc202_priv *priv = i2c_atr_get_driver_data(atr);
-+
-+	dev_dbg(&priv->client->dev, "attaching address 0x%02x to alias 0x%02x\n", addr, alias);
-+
-+	return fpc202_write_dev_addr(priv, chan_id, fpc202_dev_num_from_alias(alias), addr);
-+}
-+
-+static void fpc202_detach_addr(struct i2c_atr *atr, u32 chan_id,
-+			       u16 addr)
-+{
-+	struct fpc202_priv *priv = i2c_atr_get_driver_data(atr);
-+	int dev_num, reg_mod, val;
-+
-+	for (dev_num = 0; dev_num < 2; dev_num++) {
-+		reg_mod = FPC202_REG_MOD_DEV(chan_id, dev_num);
-+
-+		mutex_lock(&priv->reg_dev_lock);
-+
-+		val = priv->addr_caches[chan_id][dev_num];
-+
-+		mutex_unlock(&priv->reg_dev_lock);
-+
-+		if (val < 0) {
-+			dev_err(&priv->client->dev, "failed to read register 0x%x while detaching address 0x%02x\n",
-+				reg_mod, addr);
-+			return;
-+		}
-+
-+		if (val == (addr & 0x7f)) {
-+			fpc202_write_dev_addr(priv, chan_id, dev_num, FPC202_REG_DEV_INVALID);
-+			return;
-+		}
-+	}
-+}
-+
-+static const struct i2c_atr_ops fpc202_atr_ops = {
-+	.attach_addr = fpc202_attach_addr,
-+	.detach_addr = fpc202_detach_addr,
-+};
-+
-+static int fpc202_probe_port(struct fpc202_priv *priv, struct device_node *i2c_handle, int port_id)
-+{
-+	u16 aliases[FPC202_ALIASES_PER_PORT] = { };
-+	struct device *dev = &priv->client->dev;
-+	struct i2c_atr_adap_desc desc = { };
-+	int ret = 0;
-+
-+	desc.chan_id = port_id;
-+	desc.parent = dev;
-+	desc.bus_handle = of_node_to_fwnode(i2c_handle);
-+	desc.num_aliases = FPC202_ALIASES_PER_PORT;
-+
-+	fpc202_fill_alias_table(priv->client, aliases, port_id);
-+	desc.aliases = aliases;
-+
-+	ret = i2c_atr_add_adapter(priv->atr, &desc);
-+	if (ret)
-+		return ret;
-+
-+	set_bit(port_id, priv->probed_ports);
-+
-+	ret = fpc202_write_dev_addr(priv, port_id, 0, FPC202_REG_DEV_INVALID);
-+	if (ret)
-+		return ret;
-+
-+	return fpc202_write_dev_addr(priv, port_id, 1, FPC202_REG_DEV_INVALID);
-+}
-+
-+static void fpc202_remove_port(struct fpc202_priv *priv, int port_id)
-+{
-+	i2c_atr_del_adapter(priv->atr, port_id);
-+	clear_bit(port_id, priv->probed_ports);
-+}
-+
-+static int fpc202_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct device_node *i2c_handle;
-+	struct fpc202_priv *priv;
-+	int ret, port_id;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->reg_dev_lock);
-+
-+	priv->client = client;
-+	i2c_set_clientdata(client, priv);
-+
-+	priv->en_gpio = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_HIGH);
-+	if (IS_ERR(priv->en_gpio)) {
-+		ret = PTR_ERR(priv->en_gpio);
-+		dev_err(dev, "failed to fetch enable GPIO! err %d\n", ret);
-+		goto destroy_mutex;
-+	}
-+
-+	priv->gpio.label = "gpio-fpc202";
-+	priv->gpio.base = -1;
-+	priv->gpio.direction_input = fpc202_gpio_direction_input;
-+	priv->gpio.direction_output = fpc202_gpio_direction_output;
-+	priv->gpio.set = fpc202_gpio_set;
-+	priv->gpio.get = fpc202_gpio_get;
-+	priv->gpio.ngpio = FPC202_GPIO_COUNT;
-+	priv->gpio.parent = dev;
-+	priv->gpio.owner = THIS_MODULE;
-+
-+	ret = gpiochip_add_data(&priv->gpio, priv);
-+	if (ret) {
-+		priv->gpio.parent = NULL;
-+		dev_err(dev, "failed to add gpiochip err %d\n", ret);
-+		goto disable_gpio;
-+	}
-+
-+	priv->atr = i2c_atr_new(client->adapter, dev, &fpc202_atr_ops, 2);
-+	if (IS_ERR(priv->atr)) {
-+		ret = PTR_ERR(priv->atr);
-+		dev_err(dev, "failed to create i2c atr err %d\n", ret);
-+		goto disable_gpio;
-+	}
-+
-+	i2c_atr_set_driver_data(priv->atr, priv);
-+
-+	bitmap_zero(priv->probed_ports, FPC202_NUM_PORTS);
-+
-+	for_each_child_of_node(dev->of_node, i2c_handle) {
-+		ret = of_property_read_u32(i2c_handle, "reg", &port_id);
-+		if (ret) {
-+			if (ret == -EINVAL)
-+				continue;
-+
-+			dev_err(dev, "failed to read 'reg' property of child node, err %d\n", ret);
-+			goto unregister_chans;
-+		}
-+
-+		if (port_id > FPC202_NUM_PORTS) {
-+			dev_err(dev, "port ID %d is out of range!\n", port_id);
-+			ret = -EINVAL;
-+			goto unregister_chans;
-+		}
-+
-+		ret = fpc202_probe_port(priv, i2c_handle, port_id);
-+		if (ret) {
-+			dev_err(dev, "Failed to probe port %d, err %d\n", port_id, ret);
-+			goto unregister_chans;
-+		}
-+	}
-+
-+	goto out;
-+
-+unregister_chans:
-+	for_each_set_bit(port_id, priv->probed_ports, FPC202_NUM_PORTS)
-+		fpc202_remove_port(priv, port_id);
-+
-+	i2c_atr_delete(priv->atr);
-+disable_gpio:
-+	fpc202_set_enable(priv, 0);
-+	gpiochip_remove(&priv->gpio);
-+destroy_mutex:
-+	mutex_destroy(&priv->reg_dev_lock);
-+out:
-+	return ret;
-+}
-+
-+static void fpc202_remove(struct i2c_client *client)
-+{
-+	struct fpc202_priv *priv = i2c_get_clientdata(client);
-+	int port_id;
-+
-+	for_each_set_bit(port_id, priv->probed_ports, FPC202_NUM_PORTS)
-+		fpc202_remove_port(priv, port_id);
-+
-+	mutex_destroy(&priv->reg_dev_lock);
-+
-+	i2c_atr_delete(priv->atr);
-+
-+	fpc202_set_enable(priv, 0);
-+	gpiochip_remove(&priv->gpio);
-+}
-+
-+static const struct of_device_id fpc202_of_match[] = {
-+	{ .compatible = "ti,fpc202" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, fpc202_of_match);
-+
-+static struct i2c_driver fpc202_driver = {
-+	.driver = {
-+		.name = "fpc202",
-+		.of_match_table = fpc202_of_match,
-+	},
-+	.probe = fpc202_probe,
-+	.remove = fpc202_remove,
-+};
-+
-+module_i2c_driver(fpc202_driver);
-+
-+MODULE_AUTHOR("Romain Gantois <romain.gantois@bootlin.com>");
-+MODULE_DESCRIPTION("TI FPC202 Dual Port Controller driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("I2C_ATR");
-
--- 
-2.48.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFydG9zeiBHb2xhc3pl
+d3NraSA8YmFydG9zei5nb2xhc3pld3NraUBsaW5hcm8ub3JnPg0KPiBTZW50OiBUaHVyc2RheSwg
+RmVicnVhcnkgMjcsIDIwMjUgMTozMCBQTQ0KPiBUbzogQm9yYWgsIENoYWl0YW55YSBLdW1hciA8
+Y2hhaXRhbnlhLmt1bWFyLmJvcmFoQGludGVsLmNvbT4NCj4gQ2M6IGludGVsLWdmeEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmc7IGludGVsLXhlQGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgS3VybWksDQo+
+IFN1cmVzaCBLdW1hciA8c3VyZXNoLmt1bWFyLmt1cm1pQGludGVsLmNvbT47IFNhYXJpbmVuLCBK
+YW5pDQo+IDxqYW5pLnNhYXJpbmVuQGludGVsLmNvbT47IGxpbnV4LWdwaW9Admdlci5rZXJuZWwu
+b3JnDQo+IFN1YmplY3Q6IFJlOiBSZWdyZXNzaW9uIG9uIGxpbnV4LW5leHQgKG5leHQtMjAyNTAy
+MjUpDQo+IA0KPiBPbiBXZWQsIDI2IEZlYiAyMDI1IGF0IDIxOjI5LCBCb3JhaCwgQ2hhaXRhbnlh
+IEt1bWFyDQo+IDxjaGFpdGFueWEua3VtYXIuYm9yYWhAaW50ZWwuY29tPiB3cm90ZToNCj4gPg0K
+PiA+IEhlbGxvIEJhcnRvc3osDQo+ID4NCj4gPiBIb3BlIHlvdSBhcmUgZG9pbmcgd2VsbC4gSSBh
+bSBDaGFpdGFueWEgZnJvbSB0aGUgbGludXggZ3JhcGhpY3MgdGVhbSBpbg0KPiBJbnRlbC4NCj4g
+Pg0KPiA+IFRoaXMgbWFpbCBpcyByZWdhcmRpbmcgYSByZWdyZXNzaW9uIHdlIGFyZSBzZWVpbmcg
+aW4gb3VyIENJIHJ1bnNbMV0gb24gbGludXgtDQo+IG5leHQgcmVwb3NpdG9yeS4NCj4gPg0KPiA+
+IFNpbmNlIHRoZSB2ZXJzaW9uIG5leHQtMjAyNTAyMjUgWzJdLCB3ZSBhcmUgc2VlaW5nIHRoZSBm
+b2xsb3dpbmcNCj4gPiByZWdyZXNzaW9uDQo+ID4NCj4gPiBgYGBgYGBgYGBgYGBgYGBgYGBgYGBg
+YGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBg
+YGANCj4gPiA8ND5bICAgIDguNDgzNDIxXSBncGlvIGdwaW9jaGlwMTogZ3Bpb2NoaXBfYWRkX2Rh
+dGFfd2l0aF9rZXk6DQo+IGdldF9kaXJlY3Rpb24gZmFpbGVkOiAtMjINCj4gPiA8ND5bICAgIDgu
+NDgzNDI3XSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCj4gPiA8ND5bICAg
+IDguNDgzNDI4XSBXQVJOSU5HOiBDUFU6IDIwIFBJRDogNDQ0IGF0IGRyaXZlcnMvZ3Bpby9ncGlv
+bGliLmM6MzQ5DQo+IGdwaW9jaGlwX2dldF9kaXJlY3Rpb24rMHg2My8weDkwDQo+ID4gPDQ+WyAg
+ICA4LjQ4MzQzMF0gTW9kdWxlcyBsaW5rZWQgaW46IGludGVsX2lzaF9pcGMoKykgZTEwMDBlKCsp
+IHNwaV9pbnRlbCgrKQ0KPiBpMmNfc21idXMgaWRtYTY0KCspIG1laSBpbnRlbF9pc2h0cCByZWFs
+dGVrKCspDQo+IHByb2Nlc3Nvcl90aGVybWFsX2RldmljZV9wY2koKykgcHJvY2Vzc29yX3RoZXJt
+YWxfZGV2aWNlDQo+IHByb2Nlc3Nvcl90aGVybWFsX3d0X2hpbnQgdmlkZW8gcHJvY2Vzc29yX3Ro
+ZXJtYWxfcmZpbSBpbnQzNDAzX3RoZXJtYWwNCj4gaW50ZWxfcG1jX2NvcmUoKykgcHJvY2Vzc29y
+X3RoZXJtYWxfcmFwbCBpbnRlbF9yYXBsX2NvbW1vbiBpbnRlbF92cHUNCj4gcHJvY2Vzc29yX3Ro
+ZXJtYWxfd3RfcmVxIHVjc2lfYWNwaSgrKSBwcm9jZXNzb3JfdGhlcm1hbF9wb3dlcl9mbG9vcg0K
+PiBkcm1fc2htZW1faGVscGVyIHBtdF90ZWxlbWV0cnkgcHJvY2Vzc29yX3RoZXJtYWxfbWJveCBw
+bXRfY2xhc3MNCj4gdHlwZWNfdWNzaSBpbnQzNDAwX3RoZXJtYWwgZHJtX2ttc19oZWxwZXIgYWNw
+aV90YWQgaW50ZWxfaGlkDQo+IGludDM0MHhfdGhlcm1hbF96b25lIHRodW5kZXJib2x0KCspIGFj
+cGlfdGhlcm1hbF9yZWwgaW50ZWxfdnNlYyB0eXBlYw0KPiBwaW5jdHJsX21ldGVvcnBvaW50KCsp
+IHNwYXJzZV9rZXltYXAgd21pIHBpbmN0cmxfbWV0ZW9ybGFrZSBhY3BpX3BhZA0KPiBkbV9tdWx0
+aXBhdGggbXNyIG52bWVfZmFicmljcyBmdXNlIGVmaV9wc3RvcmUgbmZuZXRsaW5rIGlwX3RhYmxl
+cyB4X3RhYmxlcw0KPiBhdXRvZnM0DQo+ID4gPDQ+WyAgICA4LjQ4MzQ2NV0gQ1BVOiAyMCBVSUQ6
+IDAgUElEOiA0NDQgQ29tbTogKHVkZXYtd29ya2VyKSBUYWludGVkOiBHDQo+IFcgICAgICAgICAg
+Ni4xNC4wLXJjNC1uZXh0LTIwMjUwMjI1LW5leHQtMjAyNTAyMjUtZzAyMjZkMGNlOThhNCsgIzEN
+Cj4gPiA8ND5bICAgIDguNDgzNDY3XSBUYWludGVkOiBbV109V0FSTg0KPiA+IDw0PlsgICAgOC40
+ODM0NjddIEhhcmR3YXJlIG5hbWU6IEludGVsIENvcnBvcmF0aW9uIEFycm93IExha2UgQ2xpZW50
+DQo+IFBsYXRmb3JtL01UTC1TIFVESU1NIDJEUEMgRVZDUkIsIEJJT1MNCj4gTVRMU0ZXSTEuUjAw
+LjQ0MDAuRDg1LjI0MTAxMDAwMDcgMTAvMTAvMjAyNA0KPiA+IDw0PlsgICAgOC40ODM0NjhdIFJJ
+UDogMDAxMDpncGlvY2hpcF9nZXRfZGlyZWN0aW9uKzB4NjMvMHg5MA0KPiA+IDw0PlsgICAgOC40
+ODM0NzBdIENvZGU6IGY4IDAyIDVkIDBmIDRkIGMyIDMxIGQyIDMxIGY2IDMxIGZmIGMzIGNjIGNj
+IGNjIGNjIDQ4IDhiDQo+IDQ3IDA4IGJlIGZmIGZmIGZmIGZmIDQ4IDhkIGI4IGMwIDA2IDAwIDAw
+IGU4IDMxIDJkIDk1IDAwIDg1IGMwIDc1IGI5IDwwZj4gMGIgNDgNCj4gOGIgNDMgMzggNDggODUg
+YzAgNzUgYjcgMGYgMGIgYjggYTEgZmYgZmYgZmYgNWIgNDEgNWMgNWQNCj4gPiA8ND5bICAgIDgu
+NDgzNDcyXSBSU1A6IDAwMTg6ZmZmZmM5MDAwMjA2ZjU5MCBFRkxBR1M6IDAwMDEwMjQ2DQo+ID4g
+PDQ+WyAgICA4LjQ4MzQ3M10gUkFYOiAwMDAwMDAwMDAwMDAwMDAwIFJCWDogZmZmZjg4ODEwODc5
+NjRkMCBSQ1g6DQo+IDAwMDAwMDAwMDAwMDAwMDANCj4gPiA8ND5bICAgIDguNDgzNDc0XSBSRFg6
+IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDAwIFJESToNCj4gMDAwMDAwMDAw
+MDAwMDAwMA0KPiA+IDw0PlsgICAgOC40ODM0NzZdIFJCUDogZmZmZmM5MDAwMjA2ZjVhMCBSMDg6
+IDAwMDAwMDAwMDAwMDAwMDAgUjA5Og0KPiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gPDQ+WyAgICA4
+LjQ4MzQ3N10gUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDAwMCBSMTI6
+DQo+IDAwMDAwMDAwMDAwMDAxYTQNCj4gPiA8ND5bICAgIDguNDgzNDc4XSBSMTM6IGZmZmZmZmZm
+ODdmMzk3ODAgUjE0OiBmZmZmODg4MTA4Nzk2NGQwIFIxNToNCj4gMDAwMDAwMDAwMDAwMDFhNA0K
+PiA+IDw0PlsgICAgOC40ODM0NzldIEZTOiAgMDAwMDdmNGRmN2U2ZjhjMCgwMDAwKSBHUzpmZmZm
+ODg4OGRiZjA5MDAwKDAwMDApDQo+IGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCj4gPiA8ND5bICAg
+IDguNDgzNDgwXSBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUw
+MDMzDQo+ID4gPDQ+WyAgICA4LjQ4MzQ4MV0gQ1IyOiAwMDAwN2Y0ZGY4MDAzOTY2IENSMzogMDAw
+MDAwMDExODUyMjAwNSBDUjQ6DQo+IDAwMDAwMDAwMDBmNzBlZjANCj4gPiA8ND5bICAgIDguNDgz
+NDgyXSBEUjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAwMDAwMDAwMDAwMDAwIERSMjoNCj4g
+MDAwMDAwMDAwMDAwMDAwMA0KPiA+IDw0PlsgICAgOC40ODM0ODNdIERSMzogMDAwMDAwMDAwMDAw
+MDAwMCBEUjY6IDAwMDAwMDAwZmZmZjA3ZjAgRFI3Og0KPiAwMDAwMDAwMDAwMDAwNDAwDQo+ID4g
+PDQ+WyAgICA4LjQ4MzQ4NF0gUEtSVTogNTU1NTU1NTQNCj4gPiA8ND5bICAgIDguNDgzNDg1XSBD
+YWxsIFRyYWNlOg0KPiA+IDw0PlsgICAgOC40ODM0ODZdICA8VEFTSz4NCj4gPiA8ND5bICAgIDgu
+NDgzNDg3XSAgPyBzaG93X3JlZ3MrMHg2Yy8weDgwDQo+ID4gPDQ+WyAgICA4LjQ4MzQ5MF0gID8g
+X193YXJuKzB4OTMvMHgxYzANCj4gPiA8ND5bICAgIDguNDgzNDkyXSAgPyBncGlvY2hpcF9nZXRf
+ZGlyZWN0aW9uKzB4NjMvMHg5MA0KPiA+IGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBg
+YGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGANCj4gPiBgYGBgYGBgYGBgYA0K
+PiA+IERldGFpbGVkIGxvZyBjYW4gYmUgZm91bmQgaW4gWzNdLg0KPiA+DQo+ID4gQWZ0ZXIgYmlz
+ZWN0aW5nIHRoZSB0cmVlLCB0aGUgZm9sbG93aW5nIHBhdGNoIFs0XSBzZWVtcyB0byBiZSB0aGUg
+Zmlyc3QgImJhZCINCj4gPiBjb21taXQNCj4gPg0KPiA+IGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBg
+YGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGANCj4gPiBgYGBg
+YGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYA0KPiA+IGNvbW1pdCBlNjIzYzQzMDNlZDEx
+MmExZmMyMGFlYzg0MjdiYTg0MDdlMjg0MmU2DQo+ID4gQXV0aG9yOiBCYXJ0b3N6IEdvbGFzemV3
+c2tpIG1haWx0bzpiYXJ0b3N6LmdvbGFzemV3c2tpQGxpbmFyby5vcmcNCj4gPiBEYXRlOiAgIE1v
+biBGZWIgMTAgMTE6NTI6MDIgMjAyNSArMDEwMA0KPiA+DQo+ID4gICAgIGdwaW9saWI6IHNhbml0
+aXplIHRoZSByZXR1cm4gdmFsdWUgb2YgZ3Bpb19jaGlwOjpnZXRfZGlyZWN0aW9uKCkNCj4gPiBg
+YGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBg
+YGBgYGBgYGBgYGBgDQo+ID4gYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGANCj4g
+Pg0KPiA+IFdlIGFsc28gdmVyaWZpZWQgdGhhdCBpZiB3ZSByZXZlcnQgdGhlIHBhdGNoIHRoZSBp
+c3N1ZSBpcyBub3Qgc2Vlbi4NCj4gPg0KPiA+IENvdWxkIHlvdSBwbGVhc2UgY2hlY2sgd2h5IHRo
+ZSBwYXRjaCBjYXVzZXMgdGhpcyByZWdyZXNzaW9uIGFuZCBwcm92aWRlIGENCj4gZml4IGlmIG5l
+Y2Vzc2FyeT8NCj4gPg0KPiANCj4gSGkhDQo+IA0KPiBUaGlzIGlzIGZpeGVkIGluIG15IHRyZWUg
+YW5kIHNob3VsZCBiZSBpbiBuZXh0IHRvbW9ycm93LCBzb3JyeSBmb3IgdGhlIHRyb3VibGUuDQo+
+IA0KDQpUaGFuayB5b3UsIEJhcnRvc3osIGZvciB5b3VyIHJlcGx5LiBXZSB3aWxsIHdhaXQgZm9y
+IHRvbW9ycm93J3MgcmVzdWx0cy4NCg0KUmVnYXJkcw0KDQpDaGFpdGFueWENCg0KPiBCYXJ0b3N6
+DQo=
 
