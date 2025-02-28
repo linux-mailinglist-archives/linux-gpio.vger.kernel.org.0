@@ -1,134 +1,119 @@
-Return-Path: <linux-gpio+bounces-16748-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16750-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D89F3A48D83
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 01:45:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9CF6A48DCA
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 02:19:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCB5716DD7B
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 00:45:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3975C16E466
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 01:19:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD3754C91;
-	Fri, 28 Feb 2025 00:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4583A76025;
+	Fri, 28 Feb 2025 01:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YjiO7Vcl"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JHtjn/D8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B2923CB;
-	Fri, 28 Feb 2025 00:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAE85A4D5;
+	Fri, 28 Feb 2025 01:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740703500; cv=none; b=awIa1YQ34dqG21dX41cvHyraZcdVLHd75uRUN2H2OMr0TOCt98V7dCnFNjlBsGNtZ2GVPSs79wUc3ryyc9Dr6aMB9dbp2uKdcj7BVQq8Bn/d178++vMQgm/mVnwNGYHbJs/ltoBXfGLPqJ+tMb1FCEUpTBhWCbGkYzY9rSP+c4Y=
+	t=1740705564; cv=none; b=NHYDCpjkQIttSARLI5P4WMUxbkTiK6syvbCMFjhYyDcns4T1jLT4kOwK4Xiq1n6dSSME9XKfZrBP7mwfsae1D5CuTQyZQ0al6yAH2duYqRHMZv3DCiifaMPg+YOc+NCcibCA3ObcFKcBKirDab2gwpQrjw+WKIHK0sRo8vZnzHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740703500; c=relaxed/simple;
-	bh=+BVA+LhlE0N6RUI8eaEd7kBrq7vA6h/z55gK4qTsgNc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pOsaQhFZIMFK9XLyeoAdaUQ3Yn9De2u6r9Pt3PjJTMDwMGp43x8odk/ifkbni469Eo/0Hmukmnu71ohLCatgdnOZNfpAxmjDqrUDknGt2vTRSbTEo+F4OdcO9TN59EwStFsg5VSeaUBHC3rrDjtuYVja1WAEqE9AbaYf2ELwZnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YjiO7Vcl; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e8978cca96so12679806d6.0;
-        Thu, 27 Feb 2025 16:44:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740703498; x=1741308298; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gLTJSgWRvjc6CoalvvtWWj0Jwj6OQsGx1YUrViRKarI=;
-        b=YjiO7VclNZMKrlsxvFqpnMczAgg2SflgNeJwWub3BaF+Lb5RbXs3Dn8RG/bUzOH5Qq
-         v6RuJpsXEHN/HX4ekajW8v57qrETGNKWqzZxrWQUeluluv2XaZAmuFgmGEHR2+LX00rH
-         KkMsotYwcQJdY4laBOo5AbEvIjoNl6d6NS0ZhKvtAGznkcqCi9NlhmY7tHHcyx9FHAK/
-         ztpwsqWq7P4kJlQR/apInQCtHm5PvemxwG+yV8SEeZUf1eswGDm3oQH7XWdJJOVYTnXI
-         U+EUCsgK5G5oDQpaPQ5KeGz8rvS/K8+EUjTpIefk5TEMdEe/ttKRjbP8B6sE3OQgVueT
-         Cj/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740703498; x=1741308298;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gLTJSgWRvjc6CoalvvtWWj0Jwj6OQsGx1YUrViRKarI=;
-        b=W4VXyLiFHJfuQJFIUTHW/tKG78S4kMPuYFJ1pTchu8HfaSQ9Rjf7hZiX8ssgXdM2qs
-         35YJL/3zfibU0BTq07WgBcH7Bt/mzrv4Z6jLNqTcdfg/0r2qOvBnedOsB1bZs5eIPDkB
-         WyhrDGQt+4Ejj338JQpdWp7DSUr8TTs+MaZ+plrlS8wrMi9JPU0uFHZZ1yYbvmO4mcX6
-         S0vc3xu1yvhoXb3Aq7HdWb05Oh7xNocHYZMYPPT8PsYz5VxS6tXG03Zu6I8025l094pT
-         Am04n0+7xzNu1/yuK8divOEDoTOjCE3fGVfm01bUt7x0tmIxzny6Ji+Y6/X1poDvtNId
-         8uXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmKa20jmEOomOYW0m8/SRU40PFPIiflzrGijxpyL8Ty7psU/3MaftKsil6QEahs4Qyx/DkrORxEEqt9pp8@vger.kernel.org, AJvYcCUzrMhK+1LFMCuP7BXrsHv5YgGNkLNWUnrqIkcM3kGK0tpJQn6eDvZdvk6+Vgjsk77eNXkp2k+JHyQc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvhey7/+CmfPst7NyBaY3HMZjyhfCCRfXsfenjaaev7ifwC8DN
-	fWx21H31s8vRMjrbRbMNB1yfRpxOaGQuAiiMudfmCBNZGMhpCBz7
-X-Gm-Gg: ASbGnctgqqdEJhdCOGGa44HI6olKSPvEFomQoYUAY3emcyoKcK9PUXn7SDromGPoopw
-	CP5brxLxXqKIeyrQCjshDL9i9BWyjWEBCkSONLmKrObECemudM+idMnh0xClgH0eeM+MB/0qNkF
-	njPGHSXeZ+1dgSuKt5JMDUA+nMUBiIvBRCrB4mMrqvfZuVS1Z1+FCxtmbdT8XKarZ7BiIvCpxlg
-	1A56sW8GuIdt4qj/Z9UdPYgLD0+ochxOdn5jfaY4rk7guO4N+UJ2BI7pCHp1hcTavxShOMqrEuG
-	pg==
-X-Google-Smtp-Source: AGHT+IExRXiQaZ4T0Z6y1z1z0/2ROPkgKVD3wTCSJ4mh6iYNzRlAMui0YNy9pihJ29SSMbnFSyJyCA==
-X-Received: by 2002:a05:6214:f2d:b0:6e4:5b6a:9d48 with SMTP id 6a1803df08f44-6e8958a275emr85405086d6.7.1740703498090;
-        Thu, 27 Feb 2025 16:44:58 -0800 (PST)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e897651074sm16039276d6.29.2025.02.27.16.44.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 16:44:57 -0800 (PST)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Guo Ren <guoren@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: (subset) [PATCH v2 0/8] riscv: sophgo: Add pinctrl support for SG2042
-Date: Fri, 28 Feb 2025 08:44:32 +0800
-Message-ID: <174070346793.192886.6076012325463673162.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250211051801.470800-1-inochiama@gmail.com>
-References: <20250211051801.470800-1-inochiama@gmail.com>
+	s=arc-20240116; t=1740705564; c=relaxed/simple;
+	bh=nxAZo/OMAzvInHQzAVxo8oOko4quys441uMwzu7wIT8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QsMD9sXpV2KKImuL0DPvI3hXr6XDCb4mViqVYySLpqhd2J6OEgyYN6A0cQg01f50J0FuuLL4+gO8er2Xw1FzNGtpN0kYGRiW1mDp3vdIZFP+1e/DYS8VC9I0dKA/HRupFyViEpVtwdkBRrFnH/mlwtabMuheo65S7pBEXC/gy2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=JHtjn/D8; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: fed651a8f57111efaae1fd9735fae912-20250228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=oegyJYedlbzffGL4cDafdK/VAO0ZgOIByVceTitr8z4=;
+	b=JHtjn/D8nhQKsfceIgXXm0AgqcBNdqh7tcnOuQbLVgd91lbPEE9XQ/JJ1EKxqxWJDRKAvdpF3tr337cI1N/EQXzGOHRrBFBGfC35wzuG0eE8RFiFJBf7ef55hYuFldb6nKLE3XCIplP7HrJJsC0QQRz4WavW6KjgpNUSuh+w1Zk=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:ad350bee-1628-4955-94d1-55f7c7f5e8f8,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:60aa074,CLOUDID:9e8f5929-e0f8-414e-b8c3-b75c08217be8,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: fed651a8f57111efaae1fd9735fae912-20250228
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+	(envelope-from <ot_cathy.xu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 2085863763; Fri, 28 Feb 2025 09:19:02 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 28 Feb 2025 09:19:01 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Fri, 28 Feb 2025 09:19:00 +0800
+From: Cathy Xu <ot_cathy.xu@mediatek.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>
+CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Yong Mao <yong.mao@mediatek.com>, "Axe
+ Yang" <axe.yang@mediatek.com>, Wenbin Mei <wenbin.mei@mediatek.com>, Lei Xue
+	<lei.xue@mediatek.com>, Cathy Xu <ot_cathy.xu@mediatek.com>
+Subject: [PATCH v4 0/3] pinctrl: mediatek: Add pinctrl driver on mt8196
+Date: Fri, 28 Feb 2025 09:16:24 +0800
+Message-ID: <20250228011702.16493-1-ot_cathy.xu@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, 11 Feb 2025 13:17:48 +0800, Inochi Amaoto wrote:
-> SG2042 has a simple pinctrl device for all configurable pins.
-> It supports setting pull up/down, drive strength and input schmitt
-> trigger.
-> 
-> Add support for SG2042 and SG2044 pinctrl device.
-> 
-> Changed from v1:
-> - https://lore.kernel.org/all/20241024064356.865055-1-inochiama@gmail.com/
-> 1. Fix the binding documentation error.
-> 2. Refactor the cv18xx code so SG2042 can uses the same code.
-> 3. Add SG2044 pinctrl support as it has the same layout.
-> 
-> [...]
+Changes in v4:
+- Add rsel-resistence-in-si-unit and remove RSEL macro magic
+  number in mediatek,mt8196-pinctrl.yaml.
+- Add values in SI units option to |struct mtk_pin_soc| in
+  pinctrl-mt8196.c.
+- Move pinmux macro header file to arch/arm64/boot/dts/mediatek.
 
-Applied to for-next, thanks!
+Changes in v3:
+- Remove drive-strength-microamp & rsel-resistence-in-si-unit
+  related description in mediatek,mt8196-pinctrl.yaml.
+- Use pm_sleep_ptr() in pinctrl-mt8196.c to fix build error.
 
-[8/8] riscv: dts: sophgo: sg2042: add pinctrl support
-      https://github.com/sophgo/linux/commit/5277657d53834cfbdbb9444088c1448b29bdfe98
+Changes in v2:
+- Fix driver file's coding style.
+- Add pinctrl binding document.
 
-Thanks,
-Inochi
+Cathy Xu (3):
+  dt-bindings: pinctrl: mediatek: Add support for mt8196
+  arm64: dts: mediatek: mt8196: Add pinmux macro header file
+  pinctrl: mediatek: Add pinctrl driver on mt8196
+
+ .../pinctrl/mediatek,mt8196-pinctrl.yaml      |  241 ++
+ arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h | 1572 ++++++++++
+ drivers/pinctrl/mediatek/Kconfig              |   12 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8196.c     | 1857 +++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h | 2789 +++++++++++++++++
+ 6 files changed, 6472 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8196.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h
+
+-- 
+2.45.2
 
 
