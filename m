@@ -1,107 +1,140 @@
-Return-Path: <linux-gpio+bounces-16815-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16816-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6A6DA49A75
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 14:23:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1BC8A49A91
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 14:34:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A33D23BCBC2
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 13:23:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFBE2172E2B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 13:34:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B20F26D5BF;
-	Fri, 28 Feb 2025 13:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A8726E142;
+	Fri, 28 Feb 2025 13:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2TW0NcZu"
+	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QJkOEMCn";
+	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QtpN3u/x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE02026B95B
-	for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 13:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740748992; cv=none; b=FNiQBtCAHMS12jLRDoVUj7WixrYNDYR0J9PccNJumFjnc/4/p5Lw3cgEbEpRsANEfdYeKjapuutGMaDVimGbr3cw2iD/K+qs4pU78R+MqPPqCczoEriIXqXFf1G+BxYJlZqvKPeURiUOwAyASzafpw78hZOGUuAIJCyz4qJ4JyA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740748992; c=relaxed/simple;
-	bh=If0d7NN5kjSN572AyOMZb3XK1hJUdzqjfhdjSdkdsgM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PO4kjcUYCfXIOx3B2RSfYDZIngPjivdcr8lTsQnVS+NKwMQF8hSHdv38S2JSF0UIZCt3KRSXA0JVkodEOkrh5d1kIAtCZT03HOejJQLdJsyWGcSjd5Ep8UwaT4i1GNN7WLhvi+lZFTCEdmEYl3KkRzWZJrhQFVoFdLcDE9KFIfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2TW0NcZu; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5495078cd59so644316e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 05:23:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740748988; x=1741353788; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=If0d7NN5kjSN572AyOMZb3XK1hJUdzqjfhdjSdkdsgM=;
-        b=2TW0NcZuAWJxQmu68kmnIzrrXB+pHlRyO0PLzm24ctmmY7DGQhmUVbWUzrxBe5YSH0
-         D+PzGNXnaURxrNkk8DXwV/I1o11ikZJXdW/7gtLAWGHqPn8/33expOgp+ie5v36rjqsK
-         ByhJi/2ojsMuoiINEVCRRaPHxwJRNJz1ZaVVCjkiCG6PQIQ1sNN8g54cLGE+eQwIEFpp
-         nTid2Wet2L9PmFwu20lfqEVxXzv/CmxGxysSDjdJGJrEdNG1t5nnrCeD9rtb+c98cup0
-         JA/YtPsCCieYIIdtHELTeg731cIaDNfUOvHWPvRBq1vmEpP53EpnXwJYeTm5/S3Puk0F
-         /TGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740748988; x=1741353788;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=If0d7NN5kjSN572AyOMZb3XK1hJUdzqjfhdjSdkdsgM=;
-        b=pi7nfr5/o1h6Gc9VC3AvwSIg+vN6xlyZkxboaIfLeI4Vz2U9uPZQgyu6E4I7pdqdST
-         W0AMsbvhiIY98NnaMzAMLW2Qk5D1o4TptgCe/h070iEpOR3Ec4qfhkbRXK4WiM8I6yYb
-         bWUCC5x4NXN63rZhRzV/XkIIHF3rmt1ws5noL1RUR7xOyLHoXIT3LvOUx7/UmA9mxCeG
-         el9FFo98r+t84lSm/baXrA5qUHyIcjFWrbD7qMD/atjtGpxBVK0aFKovy9ugQEUkHjvw
-         FNbUsXCXtZDwTyTuhLPN+tb27+PXGO0CG0MfqRDE0CTTDXWfB3BuJ4WKFXKSPALmR9/A
-         jHOw==
-X-Gm-Message-State: AOJu0YwfF83UkADR94gZ/pIK9rEqT4OgJweb91aZUejIxrDdUQWDgHFm
-	IW/jDl4qUMd97nLgXe2IfUwFu2wfQAX2pLK4ArcNHv9NQbg2yZkbW0d/0/vs506uWo8S/7Ajhe3
-	1RverU9NU6LjTJyfNyLMPsOBMN5RiX1equPRAHA==
-X-Gm-Gg: ASbGnctpVPR+j3gdLhvtOTKq1FdeF1oa5rRqTVUQS0ayIzzfNRaRSZJ4ReJXbCP/YCp
-	vz62EUc3Ail1f9K1i2rTDQFwolPnDxtrXzJs0AMDRugKailSmc5m7PlKbikKtTJsoFK+e2zUK37
-	1+OuiwUBL2WfQxOs4G9dMaBKHFL7IVgGd2scmIuNg=
-X-Google-Smtp-Source: AGHT+IGZT0/tQv+gIzMhv0A9Hxob+1QwbeITp1xdVCZxlswN+zg7+qkX7IhJoIdsa7VpquKEjHURQxjaCYXSU7nfhkI=
-X-Received: by 2002:a05:6512:3406:b0:545:271d:f8e with SMTP id
- 2adb3069b0e04-5494c3317c9mr1180931e87.29.1740748987626; Fri, 28 Feb 2025
- 05:23:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638071DFFD;
+	Fri, 28 Feb 2025 13:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740749669; cv=pass; b=trm8YbbVFkwX/e/QJy9jy/ex3x3AZWv2ESDyJQKckwAg7lv+rVer0jriLxs1MjYVhEgWnRMay8t/yIhWnaP2m3PDj+3bUsIlcUI87JwIBTpb2ZsytfcrihNelsiOgMhzf0Tg1FnEPDvIEilT3cmvWgwx6ESUhkwPD/mXkR8FJkk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740749669; c=relaxed/simple;
+	bh=+QXAJ6Due7ag8DHLEXxVo8vqZ5mIDBhxyds7hwve2Q0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jYFXHhZPpAMiBXKEjMDgSbL0/uB9mQPzkZxDro+HeViREU9XjHBu23FHpL/ZboxHC9kKvNUfIuPOfuuLXuir7YmXobKluTXLGZmn41FKZlQ/gUau5qo58oL3wFHIKiRzUbgBeetJ9VZxhPcYxA3ry7hDGEP2PRxu0vDhmZ+Rv28=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=QJkOEMCn; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=QtpN3u/x; arc=pass smtp.client-ip=81.169.146.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
+ARC-Seal: i=1; a=rsa-sha256; t=1740749646; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=gu0k9z8hn8hUecmD9At9LzEpjLxSCS7r+xLTpNibxLisE7z9YmeJ34c3IfjZWZ2Bon
+    HUWfzMSUl1uebiAd/mLyiCIWQI71iu+lydHQO+gwWfJVuEPGDCNAWJTKlbDbQSRxxisI
+    fhwbcwZ1ZAvbyO+9v2p5v3mnupHzLk4V85avsxWl2TaLgvNjvQxxg7EWAsLJXgCoVHUA
+    MYrwun7LAM8MlVcljIAHm14cNSvlahuX71jcpagppgNUEOBgpPfEukI07rQmlYZqq73C
+    bM/h6N6GG61HOd04pf3/KMPEdVWdOrk4Pi/GyVsavnY7/r5H9YQd93P14NU8P0jVF5i1
+    s9eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740749646;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=v7NCNzZEF8ezbYStZO8Aa+bw52ePCswc3Dd8SuRG7mc=;
+    b=ApwrsgJ30AKDqNsI7AJJrA0zzavnKv6nFpoQpvgotz8CI60x/hXhQ/V+8rhluyV1DL
+    3b95GrPp9tlC6mteAjqVP1O1uz5hhrTz3s/iPGLIC9s4XYFd1HAQKl3E9zF9HY2zTcxd
+    ivt1e3ZMgTl1PVi4fwxpeGwfX9w/Wt0bYn/lYkq90viG8z03546imJDJNPCat57qmK9t
+    XOMHyY4odj00lpu2WI20n+oA1LMHQ+ajXfMmV4N2WSlTNW9WqyS3a1KzVIdTxPEaaPqM
+    L7qnhzR78fnGG4uEDvZnt7YWI+WCFyEQd1oJf69JKg49xtNsSSfrpdpkhIUE+iTxWL9y
+    s54w==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740749646;
+    s=strato-dkim-0002; d=goldelico.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=v7NCNzZEF8ezbYStZO8Aa+bw52ePCswc3Dd8SuRG7mc=;
+    b=QJkOEMCnMV1B2t8jyB97UK7yArDMgQm872W/Mttm4HPhmU6A1VnuPkChCV5rbRbdWc
+    b1lJIMNZ/bAqvMJsaU+3JQsIGfQGTh+Mp+ocf1SBpMb6TEUpyKkhv5VPTsoYjkNfIDiT
+    gLl/oX93MK9z/yDUBhJd2idqGF1AyuJF3X/R9vEWSF3iD55a2TT+kKZxQW48suKMmh1J
+    5c+g2WG3RUSlBtaM1+OTVWSi3xCYjWzIhMn2ea72kf7Y1x0Olv/fmtuAansW1preSUG1
+    uDO8fbKSSRU1Ttc9BeHnfUE4AaipYY+kCDGaR0pltNabeCZ4kqnAU/rGT4Jj/QX9+4x4
+    hydg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740749646;
+    s=strato-dkim-0003; d=goldelico.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=v7NCNzZEF8ezbYStZO8Aa+bw52ePCswc3Dd8SuRG7mc=;
+    b=QtpN3u/xY0+eUOx6/YOgUWfP7vPwXZHTz5d+H28Iqirj0c5UTKF3KbBYY+CcM1rWf0
+    o0V3/zh+Fc+sBEHV25Cw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yeTkZ"
+Received: from localhost.localdomain
+    by smtp.strato.de (RZmta 51.3.0 DYNA|AUTH)
+    with ESMTPSA id Q56adc11SDY5L5U
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Fri, 28 Feb 2025 14:34:05 +0100 (CET)
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>
+Cc: Andreas Kemnade <andreas@kemnade.info>,
+	Paul Boddie <paul@boddie.org.uk>,
+	Tim Bysun <tim.bysun@ingenic.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	letux-kernel@openphoenux.org,
+	kernel@pyra-handheld.com,
+	"H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2 0/4] pinctrl: ingenic: add support for x1600 SoC and MII and I2S for jz4730
+Date: Fri, 28 Feb 2025 14:33:54 +0100
+Message-ID: <cover.1740749637.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4af4f6c5-d7da-4735-9ef5-ee3c34f7eae6@cyberdanube.com>
-In-Reply-To: <4af4f6c5-d7da-4735-9ef5-ee3c34f7eae6@cyberdanube.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 28 Feb 2025 14:22:55 +0100
-X-Gm-Features: AQ5f1JqCZphAcLC2uj6b2ZsE5pirTL_Hr9RgFe3TDYQq803J7XXBZBD9cLOit4w
-Message-ID: <CAMRc=Mes3EmqfPtMBNZfTPV2cpyfsH13hS4bad5AwgTUbdVCPQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: added configfs option for static base
-To: Sebastian Dietz <s.dietz@cyberdanube.com>
-Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Feb 28, 2025 at 1:46=E2=80=AFPM Sebastian Dietz <s.dietz@cyberdanub=
-e.com> wrote:
->
-> To replicate gpio mappings of systems it is sometimes needed to have
-> the base at static values.
->
+PATCH V2 2025-02-28 14:33:57:
+Fix pwm5/pwm6/pwm7 pin groups (each one can be muxed to one of two
+pads while pwm0-4 have only one pad) for X1600.
 
-Can you give me more info on why you'd need that? Static base is
-largely a legacy and deprecated feature, there's ongoing effort to
-remove it from the kernel.
+PATCH V1 2025-02-26 18:14:53:
+This series expands pinctrl support for some Ingenic/Lumissil SoC.
+For the jz4730 we add MII and I2S pinctrl and general x1600 support.
 
-> base is treated as unsigned as there doesn't happen to be a
-> fwnode_property_read_s32().
->
+The x1600 parts were jointly developed.
 
-Ha! That's interesting, I wonder why that is. We do have signed
-variants for OF-specific properties.
+Code was tested on LX16 board (x1600) and Alpha400 (jz4730) and
+on CI20 (jz4780).
 
-Bart
+Co-authored-by: Andreas Kemnade <andreas@kemnade.info>
+Co-authored-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+
+H. Nikolaus Schaller (3):
+  bindings: ingenic,pinctrl: add x1600
+  pinctrl: ingenic: jz4730: add pinmux for MII
+  pinctrl: ingenic: jz4730: add pinmux for I2S interface
+
+Paul Boddie (1):
+  pinctrl: ingenic: add x1600 support
+
+ .../bindings/pinctrl/ingenic,pinctrl.yaml     |   2 +
+ drivers/pinctrl/pinctrl-ingenic.c             | 261 +++++++++++++++++-
+ 2 files changed, 261 insertions(+), 2 deletions(-)
+
+-- 
+2.47.0
+
 
