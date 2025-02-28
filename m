@@ -1,179 +1,154 @@
-Return-Path: <linux-gpio+bounces-16812-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16813-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2EF1A49A1D
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 14:01:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7EDBA49A27
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 14:04:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1DF53B296D
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 13:01:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCCA6188C3AF
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 13:04:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB31826A1D9;
-	Fri, 28 Feb 2025 13:01:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F46726B2C7;
+	Fri, 28 Feb 2025 13:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gs/8PV+g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rYeDt1yY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3E82F41;
-	Fri, 28 Feb 2025 13:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB652F41
+	for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 13:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740747709; cv=none; b=XD2mzqn9+xke9ouYB8VPuYX0Tq4Mlq6Ng9Yx1aC+y6ZsuTQl/0nsjgGedP271zkPgNb+FT5sLY3oBNHLRAUEdbykWi3lwCeHk1BNaIhyz8LP8tzpTsHA1Gzyi0DvuOmc2jmGJrIBsrlKYnelpUCZ45ubMNNfcyj/lkL97KlQ4D0=
+	t=1740747835; cv=none; b=AhJx7OoYbeeIFppTDMcCQNkyltzM3p39Fp7cB+VyFm3HjB15uHI252BK1JigfuGlG8n0PwlMNVR9J1xpu7QeboUbtAm//cVx9Va43U0pyMOyoyHjorlBO3AgNAXDUWll/d0yElE84bdILzNnGu9ZUkPmLRSIQjZFlTQt6dNyWS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740747709; c=relaxed/simple;
-	bh=lqnR+JheswhvgrFJM6KyRTYNfvwJMuW0EW4T0IeIFF0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sxsy+C+GBWfdL/jF99bzeWyUNScl6pWgkfXIzN/Zn7qMgxRQ1ALGTug0IJzCoxKhqryV77bguICCkEJgX8bIBRUUfCC3BkJXQonYPZgUOH3opCKLRVai6HmNDwhl44/BVALeDi7kjNKZfLeE6Kmxe+WwpQomNMLrvu0dyxp/95M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gs/8PV+g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3EFC4CEE9;
-	Fri, 28 Feb 2025 13:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740747709;
-	bh=lqnR+JheswhvgrFJM6KyRTYNfvwJMuW0EW4T0IeIFF0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Gs/8PV+gdhuqgRbRq3PWjR3X7flzk5Sve8/pUNLfAw1jQyg46GaipmTQE1u7rL9KI
-	 cC8DRRVmSMQ/maxG43w/CCFfvrgMfBO286h9OoQMJCu029WsOjx7jXnOtit9wUTJ2m
-	 LL0LhSAx8yHebaGiZAusP9sUL9bjehVR4Qmz3PP8ZswaIDDwESVk2yBWOkdfFgTvqa
-	 Jt2pVvAVS95SHofj/HczhBM9c3gAcDW1mTu/BRhbUgAEW9tQ0y8hEdMREN7Dq0ywAd
-	 xXmzv+kqWC2B3uL7MB20vnyrHyrh/i9M+R3Y00WgK0HqlmMUnQScr2qKg0coCu66aH
-	 J84bAXsnYzvSw==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e0373c7f55so3089500a12.0;
-        Fri, 28 Feb 2025 05:01:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVKt4VjA6jSdf8HixjSv8FZ2Jok8LIJLcD5QMkoe5IL9QGLsj5n8y5VQbI1SVC5vkFT2XuV/2Cpw98Gapvh@vger.kernel.org, AJvYcCWOFFE7n6eR+6Dr+f8vMgFq3c+12QRdP/hdVWbhilNv/BDpyN4Ssu7aSS8qxaUr8OM7rCQ3kbKcHZAsBg==@vger.kernel.org, AJvYcCX7qIV4O9qUBpMXDctToiTaLSlxQimwmd1h8x4s/hmjPclwK2eP0a+nsE6m+SGhr6zwM4EB8PC1mzL6/zKXAK8d@vger.kernel.org, AJvYcCXeCrl/b5jec72yhIYBLeR8yaR5Fn8EdeRPECv0UeRqDayYanX+s5XPMnLBv/DHUCZx7GH4OVik5fZm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyxy9j3iz84o6m1ADyTRWTNojSQWMxwqRYA0eX0G2vsKR/l1sGl
-	eolASQHN7jg7NAUalcr4lWqjrqR0yTfmLIyI3o9X80Tu28UDMYWwfBxiHGvO6yerNNKV1NOQXBD
-	oU6AUsWcnUIedTwKGOFheVcm+2Q==
-X-Google-Smtp-Source: AGHT+IE3NVig6fcg7AWmf0LSZkEe9NZzSMZOtu4y73Ybn5vbLk/MQ08kJCOadYw8rDMrC7ULMWJhx6pGL/o+kHXgo3E=
-X-Received: by 2002:a17:907:6e87:b0:ab7:d537:91cb with SMTP id
- a640c23a62f3a-abf261f98e3mr316126266b.7.1740747707559; Fri, 28 Feb 2025
- 05:01:47 -0800 (PST)
+	s=arc-20240116; t=1740747835; c=relaxed/simple;
+	bh=Z8rGjEwAbkQIKDGpIgchx0Zd6LwZtQmZVWPouVyY5Tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LDsxoQvivqfxKkg/9aXjNv/mUoItZ7LNuU1pfkv3LgPHIArY00LpvL4AvZS4uXVYpuICSIcz4xIvdw1pGQH5borNmQpsR4MWZtRnKuvoT9pk32ErZ5LNccTwrCEhb0QOfO8jyJ7mH7p3cwfUnNdEpIOxruQoj8MJ7W9hGB7ycxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rYeDt1yY; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abb7f539c35so387661466b.1
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 05:03:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740747831; x=1741352631; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O1trOWLfDHP4Lned1Ql8h/v5AxbpHf6CxozuPbBuR2Y=;
+        b=rYeDt1yYp8TRWQlyv/1WOgwNdTFiHjsN4qf70XLnziYZMlypo+0sBYTbjA/PPzUxJT
+         LJuGD4br2HWN3rlYuLdanl96GMbQlmYNUvJ2oDihL9ftMABophzYNU1UQefe8MRxfiPw
+         Qi/wQtzgWW/UEoABmT/qnULU1kQJ0HJmEc9HjBtKz0gA90J22U6Bfi5ri4y06OlrjjCV
+         vnYwmbt4roDaK6aiJ6fnTPxYONpuY5hJmrHs/LM3ySilM1URWf0h/3JcO5pEHS2Vv5Lm
+         r/kQEa+bgjlqYVY7JDonOztK0RfPLDU5517AdEvszoDrieM+ZovmQOZo09PXwHsOFFYD
+         JOvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740747831; x=1741352631;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O1trOWLfDHP4Lned1Ql8h/v5AxbpHf6CxozuPbBuR2Y=;
+        b=sO17wDiBA6FkMb4Iv5VayimkLK8L+Mwb8w/44i/aOexK5NkeBOHBj1kH0psK9+sr7C
+         dX1bIaGivxo4AJ7MrQqz1c08WAUCcS/ke/Jd0jFMpkvZl7qID66m6A5GdbPU/wqorPk9
+         T/CirckMIMXcek12XZaCC1H46iYorsDtNPAGitNWfqcvZ3CJTEEMhOzXqxBQ7vWjlyNm
+         J0xOxLT+5X+MjD3Qyfl7bvmfDvuPkfmvzLoTFSw/P9dgzi5H+JyXbTaRTqk2ro8MZ+9W
+         h6J+fRHDygPFMsYQJhrhXASYOG5E3jcIZVwz/l9raZBa978kROKnACRBliKYhEisK+ML
+         oWdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZMETL/lyvfda9xf4UB5bxC/jkYYXygFTF44REPwRuywmWdP2dLcd4JYhI8oZ2ketpIQjoRoogGZ0h@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS6fe9EXEokJqauEFFer4qpMIbibAxuEUlqipFKKT+bJoSc5Jq
+	vwNgaZejDrjVjKSCQPwZD0AYz54Dz2Yay+JTWvVj4UBFL1P5CGa4J4UXDvhNqtk=
+X-Gm-Gg: ASbGnctsxW8jlI8SmyRPOVH5Ow1nXZhMbXEpNbbDSnJqomRKr2FbsDsm87CZFp60TNH
+	S+hvEfnPu2BblkNNDKfKAJtOT5lt/hQMZRgF7eJfilTaQ4zMqyKJHV5Xf7ziI3oxzZeqWNTP1Xu
+	XESH5wVcIzHWz/dOoIbDmVCmuIU3JhiWGwuuvrINTdK0Aw4EPFvSkzoxBA4xXms7HjwHxRb7zOH
+	8TysPSjlhryv3WQq+9+BDDtDZtJhrhKNeGwBm1TAyQ7vjs4u8Uqo4zICjRSRXbw86PGX/b1Uwi4
+	xms3INQDDNrbiiCXq7jihbuX0Wj1ol8=
+X-Google-Smtp-Source: AGHT+IGI0U1QQ6xl3jx/qP6oyTFFJ0RWte83MkP/j58HtoWMmmQKVFraR3Usn8taD2oS4b7G6pMqgA==
+X-Received: by 2002:a17:907:9450:b0:abb:b092:dad9 with SMTP id a640c23a62f3a-abf265b809amr329695066b.37.1740747831479;
+        Fri, 28 Feb 2025 05:03:51 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abf0c756f6csm290365066b.141.2025.02.28.05.03.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 05:03:51 -0800 (PST)
+Date: Fri, 28 Feb 2025 16:03:47 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] gpiolib: Fix Oops in gpiod_direction_input_nonotify()
+Message-ID: <254f3925-3015-4c9d-aac5-bb9b4b2cd2c5@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
- <20250226-max77759-mfd-v2-3-a65ebe2bc0a9@linaro.org> <20250227130451.GA1783593-robh@kernel.org>
- <503e105b71fa4271f40a2d3ca18ba13ed7d45a65.camel@linaro.org>
-In-Reply-To: <503e105b71fa4271f40a2d3ca18ba13ed7d45a65.camel@linaro.org>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 28 Feb 2025 07:01:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK-_rPZqt_vRv75dSWDLUAyZ-LB=qz5J=Kse=7bO4q8sA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo7EndHwP8BRLSbmoeH26pdkVjNoOZvQIz2llEEQ2ewDNuDr81I38wLGHg
-Message-ID: <CAL_JsqK-_rPZqt_vRv75dSWDLUAyZ-LB=qz5J=Kse=7bO4q8sA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] dt-bindings: mfd: add max77759 binding
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Thu, Feb 27, 2025 at 7:14=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@l=
-inaro.org> wrote:
->
-> On Thu, 2025-02-27 at 07:04 -0600, Rob Herring wrote:
-> > On Wed, Feb 26, 2025 at 05:51:22PM +0000, Andr=C3=A9 Draszik wrote:
-> > > The Maxim MAX77759 is a companion PMIC for USB Type-C applications an=
-d
-> > > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> > > Port Controller (TCPC), NVMEM, and a GPIO expander.
-> > >
-> > > This describes the top-level device.
-> > >
-> > > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > >
-> > > ---
-> > > v2:
-> > > * rename expected nvmem subdev nodename to 'nvmem-0'
-> > >   I'd have preferred just 'nvmem', but that matches nvmem-consumer.ya=
-ml
-> > >   and fails validation.
-> > >
-> > > Note: MAINTAINERS doesn't need updating, the binding update for the
-> > > first leaf device (gpio) adds a wildcard matching all max77759 bindin=
-gs
-> > > ---
-> > >  .../devicetree/bindings/mfd/maxim,max77759.yaml    | 104 +++++++++++=
-++++++++++
-> > >  1 file changed, 104 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mfd/maxim,max77759.yam=
-l b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-> > > new file mode 100644
-> > > index 0000000000000000000000000000000000000000..87e3737896a289998a18b=
-67932dbccacfb8e3150
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-> > > @@ -0,0 +1,104 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mfd/maxim,max77759.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Maxim Integrated MAX77759 PMIC for USB Type-C applications
-> > > +
-> > > +maintainers:
-> > > +  - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > > +
-> > > +description: |
-> > > +  This is a part of device tree bindings for the MAX77759 companion =
-Power
-> > > +  Management IC for USB Type-C applications.
-> > > +
-> > > +  The MAX77759 includes Battery Charger, Fuel Gauge, temperature sen=
-sors, USB
-> > > +  Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: maxim,max77759
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupt-controller: true
-> > > +
-> > > +  "#interrupt-cells":
-> > > +    const: 2
-> > > +
-> > > +  gpio-controller: true
-> > > +
-> > > +  "#gpio-cells":
-> > > +    const: 2
-> >
-> > Why do you have GPIO properties here and in the child node? Either woul=
-d
-> > be valid, but both probably not. Putting them here is actually
-> > preferred.
->
-> That's an oversight, I meant to put them into the child only, not here,
-> since the child is the one providing the gpio functionality.
->
-> What's the reason to have it preferred inside this parent node?
+The gpiod_direction_input_nonotify() function is supposed to return zero
+if the direction for the pin is input.  But instead it accidentally
+returns GPIO_LINE_DIRECTION_IN (1) which will be cast into an ERR_PTR()
+in gpiochip_request_own_desc().  The callers dereference it and it leads
+to a crash.
 
-It really depends whether the GPIO block is a separate sub-block which
-is going to get reused or has its own resources or not. It's the same
-thing in system controllers which are often just a collection of
-leftover control bits.
+I changed gpiod_direction_output_raw_commit() just for consistency but
+returning GPIO_LINE_DIRECTION_OUT (0) is fine.
 
-We just don't want child nodes created just for the ease of
-instantiating drivers in Linux. While it's nice if drivers and nodes
-are 1 to 1, but that's specific to an OS.
+Cc: stable@vger.kernel.org
+Fixes: 9d846b1aebbe ("gpiolib: check the return value of gpio_chip::get_direction()")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+v2: Rebased on top of v6.14-rc4 to make this easier to backport.
 
-You already need other child nodes here, so I don't care too much in this c=
-ase.
+ drivers/gpio/gpiolib.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-Rob
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index fc19df5a64c2..3aee877c8aa1 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2740,12 +2740,14 @@ int gpiod_direction_input_nonotify(struct gpio_desc *desc)
+ 		ret = guard.gc->direction_input(guard.gc,
+ 						gpio_chip_hwgpio(desc));
+ 	} else if (guard.gc->get_direction) {
+-		ret = guard.gc->get_direction(guard.gc,
++		int dir;
++
++		dir = guard.gc->get_direction(guard.gc,
+ 					      gpio_chip_hwgpio(desc));
+-		if (ret < 0)
+-			return ret;
++		if (dir < 0)
++			return dir;
+ 
+-		if (ret != GPIO_LINE_DIRECTION_IN) {
++		if (dir != GPIO_LINE_DIRECTION_IN) {
+ 			gpiod_warn(desc,
+ 				   "%s: missing direction_input() operation and line is output\n",
+ 				    __func__);
+@@ -2788,12 +2790,14 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
+ 	} else {
+ 		/* Check that we are in output mode if we can */
+ 		if (guard.gc->get_direction) {
+-			ret = guard.gc->get_direction(guard.gc,
++			int dir;
++
++			dir = guard.gc->get_direction(guard.gc,
+ 						      gpio_chip_hwgpio(desc));
+-			if (ret < 0)
+-				return ret;
++			if (dir < 0)
++				return dir;
+ 
+-			if (ret != GPIO_LINE_DIRECTION_OUT) {
++			if (dir != GPIO_LINE_DIRECTION_OUT) {
+ 				gpiod_warn(desc,
+ 					   "%s: missing direction_output() operation\n",
+ 					   __func__);
+-- 
+2.47.2
+
 
