@@ -1,152 +1,110 @@
-Return-Path: <linux-gpio+bounces-16804-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16805-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4422AA4985F
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 12:37:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7616A498F0
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 13:14:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 271183B8BAB
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 11:37:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B68E21687F1
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 12:14:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F05825F98C;
-	Fri, 28 Feb 2025 11:37:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F3C226B0A1;
+	Fri, 28 Feb 2025 12:13:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tBpIfaFz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EacrAzqy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A323225CC8C
-	for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 11:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E542326AA8D;
+	Fri, 28 Feb 2025 12:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740742655; cv=none; b=Fyxs2UDx3YcHPX7oObEINDPecqVt6GwU33DxGBKYYI45bxmO1cCQHie6ce2xkUXR/r6/bybvOCJ1RVFFBTdHXOswh7/pZNwDIXqH//Qp5JfG3rlLEjsWZkpNkSFFlR5qWSk7FMNKRLkpdJ3d0ctoqO7W9Gh3iH330ADA5n/IeDg=
+	t=1740744807; cv=none; b=BebqIy2nLqWmcOajT3v5bqoE/g+mv0UYf5XP+cil73HbOAbmGoXb8R4OpVwpb/0WbUayj+xkCaIxDUYNb1yYlc3hmxijsOigrw6jbQbM0nVZOETUew5543UouziBXoEkvHqC3H8yYfxxcu5SeyrGuU9BjbupvSXIbzSywYPmC7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740742655; c=relaxed/simple;
-	bh=4WphRhmBskEe1O7l/TMn/svQYxnNymiR11yGWly6ZMM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bEHy8ffjexeb8eqe8pyXWHti/KaMZ9edqwyfgX0HDpZitaLyvu0e9a/9ZZySieLhPda3/zVHyOWMuILi455KfoONhN74DJsuWDPPh7gs6sYztTB/uSSudkuT/x/sdsc0RC0l2Y4rx8LPhG/fdOM+G8awp4HMLg5C+UWTySfXSXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tBpIfaFz; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-390ec7c2cd8so493997f8f.1
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 03:37:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740742652; x=1741347452; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=c/hLcQeQYuvt7E85+DEnVuGUhxPnEJoXJywDNJlyKbY=;
-        b=tBpIfaFzaVmaa5dwaNhMVYXeKYuDf7UFytIFGBW8nkpK4WR4CedTBHyMkhyJ+i9NYt
-         QD8scUSA4ANlJZTz9YZJD97Fal/qElbhx0BAFml571t+6fgJm/LtC/iLUaM7mhg4IXEe
-         XMnftJpK3xsRszjUFg2ke5SvYXfsa7Gr5Nsjs/u6nFoH4A8wQNK2Dg4/+N7qjiaAGjIM
-         9DasUd2rsk/V0oLvNNvWpOe8gz5jn+eXL0scLLeUIUJOFayLl9B6g8dnluB511rHhMn1
-         KGe+4gr95gJo+Jv2R2kFi7tlIgZQ5tXnYFkivqJ9rSWZgzk6rB3BDB2kdQj2K43NdkVK
-         1Bnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740742652; x=1741347452;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c/hLcQeQYuvt7E85+DEnVuGUhxPnEJoXJywDNJlyKbY=;
-        b=EIFd1sZbZvvDL4Ssdy8Qn71uL48LrGroBjnuFQWYGigJM281JrlmLB4iNM0ABPlghh
-         fKIqFONrA7lm1xx2fNIF12PsiVE1soNw8ME/i58PvFIgz2LXm7lXkzQguA5ecmfrOBVh
-         gRoUcfPYTtzIOUHB60DUYg15oaNTyr3ArzfZDEQUrLHZYlGwpQCIIwAjW64FGGBBGOW1
-         og/uC0iyDXp5EbreGLcub7ksR++QFAP+kYvWbu9viIRF2bDXyWmCvnIfuEJ3zXtxfFRo
-         W+cXSOfb5u6NM5gE5Tkznwzs/1GnKlW1xW7/PUF9xRdAvbyO9AiF/YrJCsrTtmW8AGwC
-         YWRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXuedElbL+HhXoN27lfDh+ODZD+3WPhffo4VG7YdRJh9aR+HACBFMVgVYDewvtPPM/dHs77s56O5eZu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5blcB7LGnj1oW0sLiEhR1LOlDn+FhbcSvUkUiNeuUB+ORJc7N
-	LtHZQGcFzWCuGbXlp89a7+0g+WBjiT+yO5wN+23kpfnsCF0vFMBzKAy2mgMaylM=
-X-Gm-Gg: ASbGncvhkjFPGQNOHMeCBG+l1oXdjSrz5YvLIvkfATiMSOyRWf9uXe/EgwRjFIBUpZc
-	J3yzX/4GF6dDgY/caRilU0ke1+jegKQwH3UpXWs0A5Qsh37caeiNfqj0gu482g9Wh4BKwSC90fb
-	1mYkjj+xYYLUUyXeQYME0cy2OfwVJyYc3SKpWhWfU8i4eoQd4Hdg48GhwsLq49QQ8s2ziQZGqsT
-	j8kNawpfzXwNYhkTplcyUUs8e0j3WDNs7S3dDts69WRjStPdOrUOMeV05TmvccnltzP3PmWgzm0
-	1NAmHrX1gycE+vXZZz9Bc58XWYZ/JA==
-X-Google-Smtp-Source: AGHT+IHzUCNP7VmFKJ2Rw0oWiCLeL/Benysg+yxlWGkjt2D4Yc4YzpTklR4JnbSyxhhE1CRgClygig==
-X-Received: by 2002:a5d:64cf:0:b0:38f:483f:8319 with SMTP id ffacd0b85a97d-390eca53bd4mr2309089f8f.51.1740742651971;
-        Fri, 28 Feb 2025 03:37:31 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485db82sm4831015f8f.88.2025.02.28.03.37.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 03:37:31 -0800 (PST)
-Message-ID: <e6ab03fb87c14b1596c4f201485b49d0602c91b7.camel@linaro.org>
-Subject: Re: [PATCH v2 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+	s=arc-20240116; t=1740744807; c=relaxed/simple;
+	bh=MZOh/BEyXhy9QpLpvX6QrFoMONASFhvLsh4Crc2wUMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XSxVMzuqjcOA3hE50jrsqgS848w3KWNYhPNi2X02JqR+Dr/amaKArUse67YDN+zjmSGQ8K0BE0hodWX4ALocUK0sYTLlkCpUTtI/S0KyDH4ZgxveiId9oGB17apO6ZTTRcG/Kh8r74QuUMWiVarT3g7fQHSj5WOFf2Z4TbnEwdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EacrAzqy; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740744806; x=1772280806;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=MZOh/BEyXhy9QpLpvX6QrFoMONASFhvLsh4Crc2wUMI=;
+  b=EacrAzqyraXidtPPihAqwy/tyiwMJByDebCmT2q3eiPULWT8Pm3y+G+r
+   5upyjCDIKoavo3w5AoFLSrIEPrR6JD5tW0wkNTXkyxgyf+7VcmTCFjhlh
+   ZsrbAwIB4s2fsClzhkThdnxxchLBbEksDInwRLnJks12k5m8q9Oa7QkR8
+   axMj9zN0OenNyvwEfFa6KSwhJeG5KpDgGVY0PVwfGNHuV0Ur4FFeB++XG
+   KsIkOTz9VEH2k1ESleJEN8lIPJ0h7rJ6k52dx7gkQLNQHO8od+SUQb6uC
+   JA3ctjy1HaHrSBdQa6pFHwwGN0RCjqHAKCTtFsCwvB94dubxU0Pz2NnjO
+   g==;
+X-CSE-ConnectionGUID: ZiVBuRKaRu+1ttoE8C5ZNA==
+X-CSE-MsgGUID: dIDzWzTeSaO14u/B4ide6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45321182"
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="45321182"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:13:24 -0800
+X-CSE-ConnectionGUID: CEXLI9B3TsyP1BSLtGZLjA==
+X-CSE-MsgGUID: MHTcmSvjQFOs2h7RfXYlTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="117357535"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:13:22 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tnzF1-0000000FwL9-1YGd;
+	Fri, 28 Feb 2025 14:13:19 +0200
+Date: Fri, 28 Feb 2025 14:13:19 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>,  Srinivas Kandagatla
- <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva"	 <gustavoars@kernel.org>, Peter Griffin
- <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
- McVicker <willmcvicker@google.com>, 	kernel-team@android.com,
- linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
-Date: Fri, 28 Feb 2025 11:37:30 +0000
-In-Reply-To: <d06058296a194a4f2c9fcbcc5c24816ecb1f51b1.camel@linaro.org>
-References: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
-		 <20250226-max77759-mfd-v2-5-a65ebe2bc0a9@linaro.org>
-		 <CACRpkdYoWuJzjqiKrSNzdXV+5N9Gp0n+pdCwSZgocwy0JHo7Vw@mail.gmail.com>
-	 <d06058296a194a4f2c9fcbcc5c24816ecb1f51b1.camel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+Cc: Linux pin control <linux-gpio@vger.kernel.org>,
+	linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [GIT PULL] ib-devres-iio-input-pinctrl-v6.15
+Message-ID: <Z8GoX6GxvdEEU_n5@smile.fi.intel.com>
+References: <Z7xGpz3Q4Zj6YHx7@black.fi.intel.com>
+ <CACRpkda19xw3YSO3wL4FaDVHz4KV5Vrp4vR7PSHn3yLqK20PGw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkda19xw3YSO3wL4FaDVHz4KV5Vrp4vR7PSHn3yLqK20PGw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 2025-02-28 at 10:58 +0000, Andr=C3=A9 Draszik wrote:
-> Hi Linus,
->=20
-> Thanks for you review!
->=20
-> On Fri, 2025-02-28 at 08:10 +0100, Linus Walleij wrote:
-> > Hi Andr=C3=A9,
-> >=20
-> > thanks for your patch!
-> >=20
-> > mostly looks fine, given the MFD design is accepted.
-> > Nitpicks below:
-> >=20
-> > On Wed, Feb 26, 2025 at 6:51=E2=80=AFPM Andr=C3=A9 Draszik <andre.drasz=
-ik@linaro.org> wrote:
-> >=20
-> > > +static irqreturn_t max77759_gpio_irqhandler(int irq, void *data)
-> > > +{
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int handled =3D 0;
-> >=20
-> > bool handled =3D false;
-> >=20
-> > (...)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 for_each_set_bit(offset, &pending, MAX77759_N_GPIOS) {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned=
- int virq;
-> >=20
-> > I usually just call this "irq", as it's not any more virtual than any o=
-ther
-> > Linux magic number, and it can confuse people working with
-> > actual virtualization when we call things virtual like this.
->=20
-> Calling it 'irq' would shadow the first argument of this irq
-> handler function, which is also and usually called irq and which
-> I'd like to avoid shadowing.
->=20
-> Are you OK with 'subirq'? Or any other preference?
+On Fri, Feb 28, 2025 at 12:20:18AM +0100, Linus Walleij wrote:
+> On Mon, Feb 24, 2025 at 11:15 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Here is an immutable tag of the "Split devres APIs to device/devres.h and
+> > introduce devm_kmemdup_array()" series [1], please pull if needed.
+> 
+> Will the pinctrl changes come in from some other tree if I don't do
+> anything?
+> 
+> Then I prefer to just chill :D
 
-Actually, there's no real need for that variable, I'll just
-drop it altogether:
+This will come inside Intel pin control PR as usual, you don't need to do
+anything special.
 
-			handle_nested_irq(irq_find_mapping(gc->irq.domain,
-							   offset));
+-- 
+With Best Regards,
+Andy Shevchenko
 
-A.
 
 
