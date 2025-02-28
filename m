@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-16809-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16810-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7BB9A4996F
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 13:36:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A680A49976
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 13:37:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1F3D173B1D
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 12:36:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D13E93BCC54
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 12:36:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB23026B97A;
-	Fri, 28 Feb 2025 12:36:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A431626B2CB;
+	Fri, 28 Feb 2025 12:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipQWeIzw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvKbxYYg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DDD25E471;
-	Fri, 28 Feb 2025 12:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910D426A1B8;
+	Fri, 28 Feb 2025 12:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740746170; cv=none; b=Flp4YFLhMqB08NXeea1Tn6OlAaTJSvCP0QLdVO6aQtcOCk+TkY2Gq5H7YEnwnea3BpHuBbaCsnWC/k51RlGswx7OKgjcAbxd8E7tZLsfWep/vohSv5zEpJ+OigTgaftyNlgJTITsp1exzeaNmIYWR2DGYENA4hQb+LE8SdCH/vE=
+	t=1740746182; cv=none; b=mK/7rmojO9RByjWrf5oyRznVEBkporJmuGw08qRHxvWqwHW/owk2B5l525SDGqJrRJyyn1WottZy1TH0yRGSwq4fkehedXs35SN8ZQeUjy3DQcYIHrwpnWf+q2IuwuGt5d4L8ZQ4I5HI+8Xe5+7XV1D1J42jP6siFZNeb6PAgzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740746170; c=relaxed/simple;
-	bh=Q4mIv6d1Xkm+34bu8KlWTvemG9bsWxb2/7JMr1FQ7gM=;
+	s=arc-20240116; t=1740746182; c=relaxed/simple;
+	bh=hgAoXiSsc+i7JQLjoeynzodXDo0HVOSNd05Y1e+nnHw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dG0JWWkaaIJQryFriDE9AwbKUc+99oWOH528VUwC0cdyah6I5nhEJJQZZ+nVkrfsAk0n2c1HNuWEFiehYMPv4o38f/HwQLiP1PHcyJ6cl/pS+FHkDNHkztKgZkjJp/NRxMXLxm4bjhAR9vVUMJNKnxs7xvtfHfzam/XFfjpp8yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipQWeIzw; arc=none smtp.client-ip=209.85.208.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=WVoTrjnfjpBUPp6LCG4x4B02CbRKwoAJwP1NWsd4U4fPt0xb/n7BN4BZBbt1ggxbJ/lOdE+MITaBaHTSql7DddFeY1xvSzgB11TSdpfLQLsbAt+oxfDtLJeFxepTstAVdhlx/8z9BXthT4PdqKo8wbYpdaQSj3UF0X10A/VdIec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kvKbxYYg; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30a69c1a8d3so21347351fa.3;
-        Fri, 28 Feb 2025 04:36:08 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30a28bf1baaso20162701fa.3;
+        Fri, 28 Feb 2025 04:36:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740746167; x=1741350967; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740746179; x=1741350979; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/iowLL7+2kEroYZoI4bPOoU1drVuTgJ8hI6YhqKSW8g=;
-        b=ipQWeIzwnyHUwIjBihakOJ7GVCqxc/MSkqzelUQPe6sXxyz/wIVO91uUN0GzJ9UPtJ
-         /4rnpsz/Rlo7hf2dTEYmFmWlGs/IeTSZgkgjUs7bbQrR8iSjpnnSrIXQV90fTW1dRcVH
-         y9z11ZW2Ikjg0vjwbjksDtTJxDY/5/M2kCbfH2wTvt9w24YMi0QcC9DeKcqCinX2mzkB
-         wSArpylWiaWh2z0xgcG/pP5JUj8K1QUqr+zuvYgNbq/3BlO9Q/jkI+G+ISS5ElK567o0
-         Ns1Nea4r/6hZEh2S0N1KQNMGDbAZUvaegC9vEpxstvtikvT2wxLcnZ5ZAAzIL4pM3eTG
-         H1cQ==
+        bh=sp1xO9Mn5bqjcagii+SKLYOzVF9oGiH93/ipjJeXRUI=;
+        b=kvKbxYYgn4k8SljWDgSyMtzqx9jVdam06GB1NJGCQd5pW7k8GLYg7gveUez8svSsen
+         hh/yVKcPeASfUY5HFK9nYxmQqk34GFNPim3AaVbg/qlTY3W+qDI8YVqPByDmKq0u/JX8
+         fSBrUN3mjAfE0ZVtjlSHfhSo5fksmVphWK1PSRDO0qcbmfwSCxoKc5Iu5aYcdmTGKsot
+         JhWiGE5b+jgymViZQYiy4sk0sKClLalLN1p8E16TtCYMzZGQ2N3awHQe3LmAsPv61oyR
+         skhfbp5KV1nEX5Fd7RXHXaPjrSLlwimjhSXVesMcz37EyaLsgD+f9YUpqSfJGBox/s/E
+         vDew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740746167; x=1741350967;
+        d=1e100.net; s=20230601; t=1740746179; x=1741350979;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/iowLL7+2kEroYZoI4bPOoU1drVuTgJ8hI6YhqKSW8g=;
-        b=h09karSQjpqUXGZLEkj5lgWNgeS83I0vmtCdO7dIX3oLz3e7ZAni9lIegjDn3fE6fM
-         c/MqCEPqs+sX95UpUIlCspRm1IEdJ9M1yN2umbYnue7tnUIchFh7Z9wb2wMxcVUY4z34
-         ZMxUcSzcPNVB+dIotvYqX2CmI4S+aXT7vfNoiwMETqzgHv88wS2PGIdqdDf1BrgDJUVH
-         /lbv2EvyfRvgFhXSt15iThhNUW/m1xVvwkRXWEkcWNaZv2vJ3QIfSO0UWS0awtyC1nMq
-         NJoxI8KCd8Sb7/4iFF8gHlfT5+A/LFyQQYYBGIBxQeX+RFsHX3XWMgSFzczfRxfXE6LT
-         W4oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCcipaJGiZZBcRHMR3BApJOLQUfBQJk+5ADyvWWS0YCkiLkMZODfv0LD58Jc1YnkRy71AOaWD24dqQ@vger.kernel.org, AJvYcCWm3NY4SEa3rom+F8PIccKlo91Hdhcw2jfQ/v7Lbs+gSnje3SqHdTB7kCMlGJ4bW9LFUCjaaxT8vgbW34Fv@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys9zl6Flx4BrgRdtXXMv6ptVt3Q2VFiXuSUE6lyx2JoACJGqGP
-	eutxRJx40DrVeXhfZ1S7ylxe+ADFVKUZpD3D7SVQqRZXpXI7zjkW
-X-Gm-Gg: ASbGnctsK9qxP1Bid13bPAwP6tgRD1bm2cYQWXpVZ6WNiow9wH7bZ+idLZ78zKlw1hJ
-	10aNu/gr9YXaAmIuK0k8JfvcEWwNbcjVGBW6mBefhiUr0UTDYO9tC9J3DbU8d/FmQT4sNRWLmj1
-	FprMlIShhsVk0UTAURSf63jMQqpVMYMyS6p+LeX9Tq1Pz5MiAAYKLn7n4bsNUNNpLme4GfLTNRI
-	vq/4ySY8z1/9nvgk6t0HMTwTaUQUt5gPyzt2YfcN0t2+pr7PjApH96St+awGwIK0as8cabD2bV8
-	ICDBcxuAsLWqq4gAmuNpqvCKMqlHvmQM
-X-Google-Smtp-Source: AGHT+IGxcEuoGdguSv+9314BpRKdqdkNtk0mDD8xaq2UpZ7Gax/H11fwZGMXE190GtnkyyipBPUO2A==
-X-Received: by 2002:a05:651c:1541:b0:307:2bc6:5eb4 with SMTP id 38308e7fff4ca-30b931f9d32mr10004901fa.3.1740746166565;
-        Fri, 28 Feb 2025 04:36:06 -0800 (PST)
+        bh=sp1xO9Mn5bqjcagii+SKLYOzVF9oGiH93/ipjJeXRUI=;
+        b=MNHRAyq6Pz7i4wHurnxCwwm4QrZTAIFNq9CsFq2Or+xO/zB5jeO/FiGG5BxXuWVzWr
+         MPCjgfqocKuu17h42ju3RrI/RCfZjCgow1cwvmOcDOdFi4PM73viJjTmqKNxPH4xGAgD
+         LBF/VAz1LqzZDOGxNGerkixoOARxl3J0QUICRtZwZl3F3qw1e5mSN513kbsFF7wavhI2
+         z608speSGmEPBMA2vvH9HEKa5RKBstD/a0UNOar/bAsvlejepiifJyoik3WnebPQBT2N
+         EwbqWH7SJH8mxkmregYjP3oOHRvzq9R7nEfdzqTgvt2m/b9OF9UR+dXUOVT4NaekDNsQ
+         H78Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW4NGM8RPJUut5eGN9zvPldefKB4BUM0tlamu0RKQEbYOW1GaBTD/PuBqcEct6LcNsd+Tw9Y/YS5kIqtOdk@vger.kernel.org, AJvYcCW8I0p8ZeeZDbDTC6OusWKhaw5wIm1XCdesUq8vnKBOVeJ5qD7EiPKu2JMYSqRoo0EWQu9sLzGLgPxL@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmewbZR+ZAV8Wz+nEhEh7DoB7OM6IDXhR6oGkY+vbBkzViULmY
+	Xlkwss4YbmT8SgG5Fe7/UrIsshHTsS3DaQlYUxqbqd0r8h4bBbGz
+X-Gm-Gg: ASbGnct6mx+USBovMvraO6uFMqNtHnmMEfB26L2Uh8kby9hF8U0twbUg1O64NAhyTUq
+	JLTiCjBX+i9Q9wYwGvIagshHlz/kTAYJV4MXITYRcbIC9rpDhjc3kv97+uz281sQabagWJRK8o6
+	p4Rl0+lDuZlM4cnxU09STz/D4QQjGIZrk5hIjKMQRPS/IKZt+ITEWu/n9pUmNtNuTFzf2d5MlhI
+	Iw5Y65ZH/ll86JPRpzBsxT3eEl5sfZtakdy7xIrywDpGINjwLdZiypzwwZZd0JIh6S1/DJT0WV4
+	MTnGYitnN0JcbP42kIufYv6AuZUQm3I2
+X-Google-Smtp-Source: AGHT+IGBcgWI/bexpJdf4f8HpHcrS1lKA3Kg40w7t5fluuwaYQ2HlFpr9aed0iQibuZhuL7JdKO4SA==
+X-Received: by 2002:a2e:be21:0:b0:300:317c:9b75 with SMTP id 38308e7fff4ca-30b93215452mr10899461fa.12.1740746178530;
+        Fri, 28 Feb 2025 04:36:18 -0800 (PST)
 Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b867c8f64sm4938531fa.50.2025.02.28.04.36.05
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b867c8be8sm4981141fa.47.2025.02.28.04.36.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 04:36:05 -0800 (PST)
-Date: Fri, 28 Feb 2025 14:36:01 +0200
+        Fri, 28 Feb 2025 04:36:17 -0800 (PST)
+Date: Fri, 28 Feb 2025 14:36:13 +0200
 From: Matti Vaittinen <mazziesaccount@gmail.com>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
 	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
@@ -79,8 +79,8 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
 	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2 3/4] gpio: gpio-rcar: Drop direct use of valid_mask
-Message-ID: <fae20f205d4d3c9f0bafb133e51dd115f68de84d.1740745270.git.mazziesaccount@gmail.com>
+Subject: [PATCH v2 4/4] gpio: Hide valid_mask from direct assignments
+Message-ID: <fe08d70938b63206421dd39ab71cdedd5dc458a1.1740745270.git.mazziesaccount@gmail.com>
 References: <cover.1740745270.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -89,105 +89,170 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tBXZ0PzyD4qk4GD4"
+	protocol="application/pgp-signature"; boundary="Q3M9IPmBWmVzg7mP"
 Content-Disposition: inline
 In-Reply-To: <cover.1740745270.git.mazziesaccount@gmail.com>
 
 
---tBXZ0PzyD4qk4GD4
+--Q3M9IPmBWmVzg7mP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 The valid_mask member of the struct gpio_chip is unconditionally written
-by the GPIO core at driver registration. It should not be directly
-populated by the drivers. Hiding the valid_mask in struct gpio_device
-makes it clear it is not meant to be directly populated by drivers. This
-means drivers should not access it directly from the struct gpio_chip.
+by the GPIO core at driver registration. Current documentation does not
+mention this but just says the valid_mask is used if it's not NULL. This
+lured me to try populating it directly in the GPIO driver probe instead
+of using the init_valid_mask() callback. It took some retries with
+different bitmaps and eventually a bit of code-reading to understand why
+the valid_mask was not obeyed. I could've avoided this trial and error if
+the valid_mask was hidden in the struct gpio_device instead of being a
+visible member of the struct gpio_chip.
 
-The gpio-rcar checks the valid mask in set/get_multiple() operations.
-This is no longer needed [1]. Drop these checks.
+Help the next developer who decides to directly populate the valid_mask
+in struct gpio_chip by hiding the valid_mask in struct gpio_device and
+keep it internal to the GPIO core.
 
-Additionally, the valid_mask is needed for enabling the GPIO inputs at
-probe time. Use the new valid_mask -getter function instead of accessing
-it directly from the struct gpio_chip.
-
+Suggested-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 ---
-Please note that this change is compile-tested only. All reviewing and
-testing is highly appreciated.
-
 Revision history:
 v1 =3D> v2:
- - New patch
-
-[1]: https://lore.kernel.org/all/TY3PR01MB11346EC54C8672C4D28F931F686CC2@TY=
-3PR01MB11346.jpnprd01.prod.outlook.com/
+ - Hide the valid_mask instead of documenting it as internal to GPIO
+   core as suggested by Linus W.
+https://lore.kernel.org/all/Z71qphikHPGB0Yuv@mva-rohm/
 ---
- drivers/gpio/gpio-rcar.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/gpio/gpiolib.c      | 16 ++++++++--------
+ drivers/gpio/gpiolib.h      |  3 +++
+ include/linux/gpio/driver.h |  8 --------
+ 3 files changed, 11 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-index 2ecee3269a0c..e32d731d0473 100644
---- a/drivers/gpio/gpio-rcar.c
-+++ b/drivers/gpio/gpio-rcar.c
-@@ -336,9 +336,6 @@ static int gpio_rcar_get_multiple(struct gpio_chip *chi=
-p, unsigned long *mask,
- 	unsigned long flags;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 7e36894bab11..37e1f277b0a8 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -652,7 +652,7 @@ static int gpiochip_apply_reserved_ranges(struct gpio_c=
+hip *gc)
+ 		if (start >=3D gc->ngpio || start + count > gc->ngpio)
+ 			continue;
 =20
- 	bankmask =3D mask[0] & GENMASK(chip->ngpio - 1, 0);
--	if (chip->valid_mask)
--		bankmask &=3D chip->valid_mask[0];
--
- 	if (!bankmask)
+-		bitmap_clear(gc->valid_mask, start, count);
++		bitmap_clear(gc->gpiodev->valid_mask, start, count);
+ 	}
+=20
+ 	kfree(ranges);
+@@ -666,8 +666,8 @@ static int gpiochip_init_valid_mask(struct gpio_chip *g=
+c)
+ 	if (!(gpiochip_count_reserved_ranges(gc) || gc->init_valid_mask))
  		return 0;
 =20
-@@ -380,9 +377,6 @@ static void gpio_rcar_set_multiple(struct gpio_chip *ch=
-ip, unsigned long *mask,
- 	u32 val, bankmask;
+-	gc->valid_mask =3D gpiochip_allocate_mask(gc);
+-	if (!gc->valid_mask)
++	gc->gpiodev->valid_mask =3D gpiochip_allocate_mask(gc);
++	if (!gc->gpiodev->valid_mask)
+ 		return -ENOMEM;
 =20
- 	bankmask =3D mask[0] & GENMASK(chip->ngpio - 1, 0);
--	if (chip->valid_mask)
--		bankmask &=3D chip->valid_mask[0];
--
- 	if (!bankmask)
- 		return;
+ 	ret =3D gpiochip_apply_reserved_ranges(gc);
+@@ -676,7 +676,7 @@ static int gpiochip_init_valid_mask(struct gpio_chip *g=
+c)
 =20
-@@ -482,10 +476,13 @@ static int gpio_rcar_parse_dt(struct gpio_rcar_priv *=
-p, unsigned int *npins)
- static void gpio_rcar_enable_inputs(struct gpio_rcar_priv *p)
+ 	if (gc->init_valid_mask)
+ 		return gc->init_valid_mask(gc,
+-					   gc->valid_mask,
++					   gc->gpiodev->valid_mask,
+ 					   gc->ngpio);
+=20
+ 	return 0;
+@@ -684,7 +684,7 @@ static int gpiochip_init_valid_mask(struct gpio_chip *g=
+c)
+=20
+ static void gpiochip_free_valid_mask(struct gpio_chip *gc)
  {
- 	u32 mask =3D GENMASK(p->gpio_chip.ngpio - 1, 0);
-+	const unsigned long *valid_mask;
-+
-+	valid_mask =3D gpiochip_query_valid_mask(&p->gpio_chip);
-=20
- 	/* Select "Input Enable" in INEN */
--	if (p->gpio_chip.valid_mask)
--		mask &=3D p->gpio_chip.valid_mask[0];
-+	if (valid_mask)
-+		mask &=3D valid_mask[0];
- 	if (mask)
- 		gpio_rcar_write(p, INEN, gpio_rcar_read(p, INEN) | mask);
+-	gpiochip_free_mask(&gc->valid_mask);
++	gpiochip_free_mask(&gc->gpiodev->valid_mask);
  }
+=20
+ static int gpiochip_add_pin_ranges(struct gpio_chip *gc)
+@@ -715,7 +715,7 @@ static int gpiochip_add_pin_ranges(struct gpio_chip *gc)
+  */
+ const unsigned long *gpiochip_query_valid_mask(const struct gpio_chip *gc)
+ {
+-	return gc->valid_mask;
++	return gc->gpiodev->valid_mask;
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_query_valid_mask);
+=20
+@@ -723,9 +723,9 @@ bool gpiochip_line_is_valid(const struct gpio_chip *gc,
+ 				unsigned int offset)
+ {
+ 	/* No mask means all valid */
+-	if (likely(!gc->valid_mask))
++	if (likely(!gc->gpiodev->valid_mask))
+ 		return true;
+-	return test_bit(offset, gc->valid_mask);
++	return test_bit(offset, gc->gpiodev->valid_mask);
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
+=20
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 147156ec502b..b9a4f161db53 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -32,6 +32,8 @@
+  * @chip: pointer to the corresponding gpiochip, holding static
+  * data for this device
+  * @descs: array of ngpio descriptors.
++ * @valid_mask: If not %NULL, holds bitmask of GPIOs which are valid to be
++ * used from the chip.
+  * @desc_srcu: ensures consistent state of GPIO descriptors exposed to use=
+rs
+  * @ngpio: the number of GPIO lines on this GPIO device, equal to the size
+  * of the @descs array.
+@@ -65,6 +67,7 @@ struct gpio_device {
+ 	struct module		*owner;
+ 	struct gpio_chip __rcu	*chip;
+ 	struct gpio_desc	*descs;
++	unsigned long		*valid_mask;
+ 	struct srcu_struct	desc_srcu;
+ 	unsigned int		base;
+ 	u16			ngpio;
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 7dfb8341b0e2..0e8621be7272 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -499,14 +499,6 @@ struct gpio_chip {
+ 	struct gpio_irq_chip irq;
+ #endif /* CONFIG_GPIOLIB_IRQCHIP */
+=20
+-	/**
+-	 * @valid_mask:
+-	 *
+-	 * If not %NULL, holds bitmask of GPIOs which are valid to be used
+-	 * from the chip.
+-	 */
+-	unsigned long *valid_mask;
+-
+ #if defined(CONFIG_OF_GPIO)
+ 	/*
+ 	 * If CONFIG_OF_GPIO is enabled, then all GPIO controllers described in
 --=20
 2.48.1
 
 
---tBXZ0PzyD4qk4GD4
+--Q3M9IPmBWmVzg7mP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfBrbEACgkQeFA3/03a
-ocVVOwf+MFzFGoU6nJwi4F8sg8/YsmS31B3LHAiwrgc7H3OPaadYuBRTKLZHBvz8
-ahCf7UcEZ/MO/iOwvTRF/vJJ5M8WsuyuZPHVb/66DIzL1KEh1u93P7O0cpkqWbk1
-IlD6tz1LyA0s78M/O35gl9XeEXuK/IR7PKprRqhmbH/YhdhrNBVIG7az9lpIX2uc
-k3nalkoB02b+WT+9gWjC3DaovunI6P4JLy9g0QUeeA4WjM9OU1zvcf19xlrkq0UE
-RSqoyglSswcfYC6Yk9qk+jQ+CiZLspC+cLhGFN1iZ+m+hrbI+2Ot6ONxOTLyUOsR
-cKXkRmw33ruy8CgepanhgK2kb//ocQ==
-=tCpa
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfBrbwACgkQeFA3/03a
+ocUEHwgAyiqWUdo6ce0xEBrarfJnZoJ60RNYjvSqK2iWH9uW4VCqdSy2mh/vEIlq
+eczDYPs6G1H6KE0WxZ3FBWfuGiM7GLQ8Bj4mBAnduMz5G/1IDvoi2606Yxp8BwJR
+phmVlpbJhB08zUIgZJDfmXBfoRNzCDY3f3jnokRa9hgL2b1vIxLKI8slcVHHcGN2
+g9MQAu9tbVscUehxbN5FBVy8aknxqeNV8Sbr2DMU3SIXggXsrvpLQQn94HPvAn1i
+3BHEG0O6SuY/Vbnme8MLUrHrR1ZHIVS2IMMD1Iphdo4TxDvIVlQtQGQ246FnkJvQ
+PZFFhxV3XjlnYfrlzycJ/X12H3sA5g==
+=l5tR
 -----END PGP SIGNATURE-----
 
---tBXZ0PzyD4qk4GD4--
+--Q3M9IPmBWmVzg7mP--
 
