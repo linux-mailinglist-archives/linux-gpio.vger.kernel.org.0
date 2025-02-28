@@ -1,206 +1,103 @@
-Return-Path: <linux-gpio+bounces-16766-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16767-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBC03A49272
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 08:50:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C818A4927D
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 08:53:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A2643B6855
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 07:50:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E388C7A5CE1
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 07:52:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D158B1C3F0A;
-	Fri, 28 Feb 2025 07:50:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ABC41C8636;
+	Fri, 28 Feb 2025 07:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w2ky+cMv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="M36+h/1W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992E8276D12
-	for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 07:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340B5276D12;
+	Fri, 28 Feb 2025 07:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740729009; cv=none; b=d05qMHB8KS+pAQ82RRqgd1pV+m7iZ39/pfuhdxOWKl8nyBfafJ3bX7zffCkU6xnGGlNH0B2OUBWqjvbcxmqeVht/x0jDoB7lg5KafXeE1vDE3+ZW68XZMw+7gthTONPJNNVlqWxOXM7K6mXPqzr+mdmtkyP+KgNwZdvX4oRQtwY=
+	t=1740729217; cv=none; b=VfYMswSpdZRxInkrQGJ/MoGxhrd+LEVKHE8SwIMes9dptx7OkWIMwXPES/HJKLXtdQgZISJBHcJ11lzWh2as0bV/d3msjH1bt/Z+IADEhorTfI4KgX5ykiV1xv40iiIhcnc7c9TNCcew5W6SQ9RTbjV5+Gq3qWuN5rKgbIlJfiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740729009; c=relaxed/simple;
-	bh=/3GBKzOT/gRclru4KX8SYURHad1u929/9c4Rm6V1GPQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SVZtjWdhMcDrCVxFDjNomNu+rOZldXUChtLS6UumNlnxO7v++wAOTWBs6xm6cE21tpMHbx3CcuPsmfhG+NAPLaK4a75zuJSuyHFu++AvuxPl/OK6iYVXqR1IHg57AfOOmXB2ORJjxMWseH1gBPbJgAuNB1GbjVUxUY8p99UZvDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w2ky+cMv; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-307c13298eeso22124051fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 23:50:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740729006; x=1741333806; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C0hgOMj0qireb4PrK1Eb2MG9HXljYP0f368BgGE+m/Y=;
-        b=w2ky+cMvefccWzG0p8Ju5eXux2M6EX3XYTZ624QxoWC4OlWmZNqFkeXu/uaHoOvqqx
-         26025dRBGPF0kWkfHfSMyNJN4BRWd8pfwwy0eMxETTbsVLFtapLEk3wPYbtMpDZ/uHKk
-         j2fXOr4qCWlJ3+U6nIIeBMfNBL5Xmu5suIY1KxBshH/45jcmtt2Uv5+npzX8R3I5qOyG
-         aus5h+tUEAFNhp94p8zPhIgqrTCwz3zOBt9PpVe1ZWH7Pa90q4SWDBpbKQR3efCWqgi3
-         gEPtLob1SALQFfc/jf18VEclfMmys9/32K8HZwQiOvIbCDNleJLbsFOIqB+pqCivZbDG
-         Sk2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740729006; x=1741333806;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C0hgOMj0qireb4PrK1Eb2MG9HXljYP0f368BgGE+m/Y=;
-        b=l9Its2PI7233e7buXRLbrz8ouPQWRS7qNbmFY0UvMyTA7/qgihxiDErBX482oeWoYS
-         lw4RscosMARrQH6/MdZfxMvkuF58pQJsJD6frjOXrV5HwpFs8hPVZ61V94lTn7lwqWOG
-         64P4zmdtZKW7D4mZbuktTGA9EVXZQoVeATEd9T4m8mMmxhTweLuHa5ln0U48RMzSaHKf
-         VZl26hHckIYPnfSFrF1qID6rJPm8rrorVA6xiTyGAJ/2M7DosQ+9hDQRfoV5ngIHLQgP
-         yeSLaUgYD/UdVzJHHLTngObe1nA3Al0uoQBuoQqeAZwTlh4KQwzPC6GtwNZB9rIZYiKF
-         PlXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrK2BrlBewPYBLV6cKhVdDqM4hHrJvntiLTF6undqp+K4pPzpEFQvjywDgGgMLbyAjMUwctrLAjchl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv9W8t5Y4w2iPcBlZVZkNlJN+CD5eyb9OTlknE+3mQYrRuRPc+
-	eJdvXKz6m58Nte2CmDblcac2rT/j2TRkgRgSMz0dl29wnFiiK8yO05pv9rmqLjMGa7It+wjfOrb
-	Ze9X99kQ8LhuIJaM06ETgS20LFK7xoMUBHpHMpg==
-X-Gm-Gg: ASbGncv1UogVZbnWU5nBZep5VtxJqtWVIa6DDhl6c8Dxc46AbLbTDSvXNdqINos5DNy
-	gltl/nJOwFZ8rEny6o/wfAF0qMArKMTxrXeOyM4gkpbjsQ2qbtC8Ftf+mf9eLhY73s8DM4zoB1D
-	DCoe/LBH8=
-X-Google-Smtp-Source: AGHT+IF4eV9f4IaZ1Sq1xeYPdxbr8LBc3UDMXq5e9qCcD/2Q0dPCkI5IfOf28Uj/35wHIkaSMeXzLhmny9S1zh18OBY=
-X-Received: by 2002:a05:651c:509:b0:302:2cb3:bb1d with SMTP id
- 38308e7fff4ca-30b90a1da2amr7601021fa.12.1740729005508; Thu, 27 Feb 2025
- 23:50:05 -0800 (PST)
+	s=arc-20240116; t=1740729217; c=relaxed/simple;
+	bh=zzS8CQISV+5yhlCP3batqFzbj2l/A2CILvpJfZUPa1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h3c1Y1GpQPnLwzzN0PHE8oFNEZ5sERJci0FE963ll1kQR5FFswgcMVkdOBM1QSueGDD0g2LNMjKTomfD3pzsaDH2y4x7YNALvT+M/46sKGDCL3QDphHOw62OKuu7QiD/dbWJ+tTS+QaOixbrXlOnehA06CdJet+xgpuXpXgr378=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=M36+h/1W; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=F+JzjQxRNFL6yDNf9+7cJLcCGEom5mmTMhziYT1IXJM=; b=M36+h/1W2S0DYGTc6rbsLXw8jq
+	EcXI1tKGOGxAGW/eebzYTorjwGwTrVzsOwSQQNsB+MJAnd7xsE0MDjzel/cbK3ppft++P2TZJnk6O
+	xy56vOwsKsAWvTL4+fc9nNidH2IZw7Lmy7dv/U1Akb6mSfd9yS4O7i/p+GvXe6CaiPB9wPYMtd8h3
+	et4xXv5E88NOCku21rX1X8T1HBxLFcwud4y26eqbvpRFYCOqSEN6nAtd5H7hEgM5X47IcsyuLcXp8
+	28S3ByUVbsOWLtZPjqiitBwZifc1sOrQn2AYTn4X5HXphmjgpBLnjOclGxts8TACa8FIsYnHTX5d1
+	8DPgpYLw==;
+Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tnvBV-0007Zk-Qn; Fri, 28 Feb 2025 08:53:25 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jonas Karlman <jonas@kwiboo.se>
+Cc: Yao Zi <ziyao@disroot.org>, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Jonas Karlman <jonas@kwiboo.se>
+Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: Add pinctrl support for RK3528
+Date: Fri, 28 Feb 2025 08:53:24 +0100
+Message-ID: <13293325.ZYm5mLc6kN@diego>
+In-Reply-To: <20250228064024.3200000-3-jonas@kwiboo.se>
+References:
+ <20250228064024.3200000-1-jonas@kwiboo.se>
+ <20250228064024.3200000-3-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
- <CACRpkdZXm9eFJ2nzb5Gsm_ddirt6XZTQyu2G+vX2FB+=L6Lttw@mail.gmail.com>
- <e5bdcca6-4d1b-451c-8fde-990db9db23d8@denx.de> <CACRpkdaGeV3v80QuWwus5rg9GfKkT_gzhvRgfOobnDMUO2cPEQ@mail.gmail.com>
- <d29f36d1-53e0-42d3-beed-cc228553f658@denx.de>
-In-Reply-To: <d29f36d1-53e0-42d3-beed-cc228553f658@denx.de>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 28 Feb 2025 08:49:54 +0100
-X-Gm-Features: AQ5f1JoONNZHHfESIv1Of2mSmjlsaI3ZfK30xRWi4aMzHdT6Y0JWMRw_h18OkKc
-Message-ID: <CACRpkda-0+9u1mu8gJPwE_2ykY0TeoDS3t2_D-HoPgUQ45gfiw@mail.gmail.com>
-Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
-To: Marek Vasut <marex@denx.de>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
-	Kent Gibson <warthog618@gmail.com>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Feb 26, 2025 at 1:43=E2=80=AFPM Marek Vasut <marex@denx.de> wrote:
+Am Freitag, 28. Februar 2025, 07:40:08 MEZ schrieb Jonas Karlman:
+> Add compatible string for RK3528 pin controller.
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 
-> That's really all this is about, get rid of the defects of the old sysfs
-> API, but keep the tooling requirements to minimum.
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-I understand.
+> ---
+>  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> index 80a2b1934849..960758dc417f 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> @@ -44,6 +44,7 @@ properties:
+>        - rockchip,rk3328-pinctrl
+>        - rockchip,rk3368-pinctrl
+>        - rockchip,rk3399-pinctrl
+> +      - rockchip,rk3528-pinctrl
+>        - rockchip,rk3562-pinctrl
+>        - rockchip,rk3568-pinctrl
+>        - rockchip,rk3576-pinctrl
+> 
 
-We should however understand that there are defects in
-the sysfs ABI that cannot be designed away:
 
-- The chardev uses the Linux file handler clean-up when an
-  applications dies, often sysfs programs poke around and
-  export stuff left and right, then if they crash (as bash scripts
-  do) then it is left in an undefined state. With the chardev all
-  GPIOs get released and cleaned up when this happens.
 
-- The chardev has an "event pipe" using KFIFO which is
-  *fast* and provides timestamps (this is why IIO is using it)
-  and things such as signal processing in userspace can
-  never rely on GPIO events being fast or timestamped
-  unless they use the chardev ABI.
 
-- Topology is inherently unstable (also with the current
-  global numberspace) so scripts using sysfs actually need
-  to do proper topology discovery before using GPIOs,
-  and this is an inherent design in sysfs. An example is
-  GPIOs on USB expanders, say that you plug in two
-  of them, which one gets probed first, really? Which one
-  becomes gpiochip0 and which one is gpiochip1?
-  It will be the same driver so the label will be the same.
-  Most people
-  I think currently just ignores this problem and hope their
-  system will probe in a certain order despite the
-  deferred probe etc has made the global numberspace
-  quite shaky.
-
-> Also note that API "v2" attribute layout could differ from API "v1" ,
-> that is not a problem.
-
-But does this "v2" include interrupt handling?
-
-I think interrupts should not be part of "v2" in that case. It is
-just too shaky and unreliable. Direction/getting/setting is fine (just
-does not clean up very well).
-
-The current IRQ crap in sysfs uses sysfs_notify_dirent() which
-will squash 100 or 1000 IRQs into one notification if they are
-fast and userspace does not react in time and that *will* miss
-interrupts and there is no way to design around that.
-
-I think fs notify is not very synchronous, these "IRQs"
-will be delivered the next time the system schedules,
-or something like that.
-
-It's not very nice for the GPIO maintainers that people
-rely on this and then come to us and complain that they
-are missing IRQs in userspace, and what shall we say?
-Shrug?
-
-> > I understand, I'm fine with sysfs if it needs to be a "support forever"
-> > ABI, as long as it's:
-> >
-> > - Using the per-chip HW numberspace
->
-> This is no issue for me.
->
-> > - Doesn't need any echo NN > export to see the lines in
-> >    sysfs.
->
-> Can we really make do without export/unexport ?
-
-I was more thinking that we should not need export/unexport
-just to see the line. Propsal elsewhere in this thread:
-
-/sys/bus/gpio/gpiochip0
-/sys/bus/gpio/gpiochip0/gpio0
-/sys/bus/gpio/gpiochip0/gpio0/userspace
-/sys/bus/gpio/gpiochip0/gpio0/value
-/sys/bus/gpio/gpiochip0/gpio1
-/sys/bus/gpio/gpiochip0/gpio1/userspace
-/sys/bus/gpio/gpiochip0/gpio1/value
-
-Take a GPIO, shake it, give it back to the kernel:
-echo 1 > /sys/bus/gpio/gpiochip0/gpio1/userspace
-echo 0 > /sys/bus/gpio/gpiochip0/gpio1/value
-sleep 1
-echo 1 > /sys/bus/gpio/gpiochip0/gpio1/value
-echo 0 > /sys/bus/gpio/gpiochip0/gpio1/userspace
-
-So we can always "see" this GPIO line, instead of
-exporting/unexporting there is a knob to assign/unassign
-it to userspace.
-
-> Consider this scenario:
->
-> - User open()s and write()s /sys/bus/gpio/gpiochip0/gpio0/value
-> - User keeps FD to /sys/bus/gpio/gpiochip0/gpio0/value open
-> - Kernel module gets loaded, binds to DT node which references the same G=
-PIO
-> - User write()s /sys/bus/gpio/gpiochip0/gpio0/value open again
->
-> I wonder if this could pose a problem ?
->
-> I suspect the kernel module loading should fail , right ?
-
-Yes the sysfs reserves the GPIO so no kernel module
-can come in and use it so this is protected by design,
-also in the current sysfs.
-
-Yours,
-Linus Walleij
 
