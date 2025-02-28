@@ -1,139 +1,164 @@
-Return-Path: <linux-gpio+bounces-16791-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16792-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7522A49599
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 10:44:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8759CA495FB
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 10:53:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7106165947
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 09:42:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 415591883F53
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 09:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F199F2580F9;
-	Fri, 28 Feb 2025 09:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYFEQmqd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C40CD258CE4;
+	Fri, 28 Feb 2025 09:53:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCC91FDA8B;
-	Fri, 28 Feb 2025 09:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2D31FDA8B
+	for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 09:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740735756; cv=none; b=t7G8J2RnJUJweonL5RQV5ZVa2WzAjhIw3iMVyRBjIt7DJbS6OLkaqdsqH+Nf53pxA0dJhQkJkf3AzXCQmn+ReByDHPyWjeNXSW/kRb5MilygK0Sjuq6N+vuJCTrbkyVCh5PCxS6SbfGjptmb7SVk9mM9FcI6qPirOtF/MSSSkyQ=
+	t=1740736414; cv=none; b=naJdR56Tn5pOPWG4uVzL2EcT+r077SptWZmKRhNG0gA/KatlXfb3QZaMGGszcEb5OgXjBh5Tn0iS6FwF7sq4cxukWaY9tpTUDdEvUV5OlRcSR/VqWxpMNut55mO2rXahK829e4+DUkrVltuFtqnpbAB6aRS8R25n3HN7eDLeyXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740735756; c=relaxed/simple;
-	bh=urGBaZuu0T7CAnSTlkAsDfspCqisN3IYW6woecbyi1c=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pzsKaYvQ7iVqp4+/OsmgshcSRVrkLIao+WaR/ffSR7EEq9R8cGDPaHtorRXUa1SSpB/dSCqXaZouD7cYMNBYMuOqHkdpYTq1rEWxl/DZJ2yLEFHrT7/QJ9pvVXcFfu67cI5+KBaBPz+rnxOI/9G9Wy2q2mYMMBIohmWjTs/hD+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mYFEQmqd; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1740736414; c=relaxed/simple;
+	bh=HD3h1ngRIMEGjSTyvGr4QE4UKE3Uw7zUm8P2uGscJX4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gMKCpz78pWM5zJx6DeG6K9V56/IOEo32MGKqMy2rTKdmIS2vPu8B9C05zGdrQN6nd52/J1SF9y+I3Lwf93UqAgOtdlOWIQRfZeydHRQtE9CiNFDk0XJ57/DfYPpn0E9a2GXAFnfXSswUlG5d+n/xBU1iEMElWIOvarPvdzaH9fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5454f00fc8dso1747634e87.0;
-        Fri, 28 Feb 2025 01:42:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740735753; x=1741340553; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WS5bBDK2Hm/BZdU3oZ1FmM1LCXpliOCIUFGYpHOR07A=;
-        b=mYFEQmqdnBrkEfLB9Hx1WSAf4gqIjONE7Xb5ST1VJfo9IvtiH4QPQPkhaq6ONMZco0
-         c9bNaWj4SnJ4QH3uw93WL9vGXvzqryWHmd04zB1JdMh7qChWfqZAe8Lqf2Bk1qkL5poK
-         CpClJGeTkgny1K/ukqyrY25FC+TmGE3ZojvYOMGsxMkne22hzS88gkCgymfGKjvzqdH7
-         vU+gqJIy8H98d7wFGuvWmLytfbXgdP+UkaUItNfEi2br9mCdYxhtM0WjwgsI6eQomHNc
-         YyyrfjtWe0fWXQgOsDB/VfVKvj18efbCSC8TLD/u2DPvvE1ObgSlMWtiiGGPVvAlytkh
-         7Kuw==
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-52364925cfeso177068e0c.0
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 01:53:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740735753; x=1741340553;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WS5bBDK2Hm/BZdU3oZ1FmM1LCXpliOCIUFGYpHOR07A=;
-        b=W1MXF57gMLARAokLpHmZ4ZBCyRiHsMJM+cz43xJMmP0mAlnKKTiJ7VGIUvdo112HWH
-         Aw7Py1a61jbvVkDRQRYPJjFWK1KE8foVjiphD3rlf9mOxU5kBFRp4zBl3rvgTLP2AmeQ
-         n2O7kKGRTgB+xlxmcJM0Bcwt1jFvfRYbYincIdd1YAIJfoeCvZniLGCQPhsqNImarAEZ
-         ArqK9YEK6aRRB146r6pPI1QLpbDnY/92dbFOAxScDsmM7huNixfhrIknMIiyOyMREQUh
-         Evljr5fr/4SwASEvAYsDi9/tykzKbcVJhfO41fMdvyVPWexlU2X/sEB0MZD0ZXtBymk9
-         S56g==
-X-Forwarded-Encrypted: i=1; AJvYcCWNAg+Sc0AzqoJLT2ZGsy7YMePXEz3lI7gSHzZ45YpqKF4QGjccaFsAaXjc924U9cHeQ/vhW45gO87EHGtW@vger.kernel.org, AJvYcCX/pBG+CmxxmaRupcphu9Z+JP0VHpiDsHtAdMkb4ROceErNmkdi00jQI8ZKSP129SNqmloC1VRCld+F@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMPXPrxFRRDnMthVdPa4PCNwRDDNOvgA/lMyhl8t1bbrRW/nDU
-	sHLkI33os1yg58MaJc0iYdkoQyxXHII7mUEs4nCJzhY57crSETYSnRdl5g==
-X-Gm-Gg: ASbGncu6e7ICPZqM+tKvZV0/PA25YK/sybCXuziaFCg6ZW5/QRSgmiYc5J7SM1R0T/V
-	NXYPqhM9jf9jRE4tGFA4WhsOAruPYbS0hFpIUXiJfOMpFnrVDS75RcW7FNYvLtCJRsGOFiRIBjS
-	72lrKPwlNg5gRDtYUQXb+BxYRrBn0C8bg9nLxL1GPKTP1R0ODP9Ez022YjUjQBrBG8q1f7OKrmB
-	e+CE7Dr3EfHyFQGyOY7Wogv3jO9vXZ3EFDE7y/W7ob7fxoF3/F601TEfuZEYZf8KxGC3N7HnpI3
-	A1UGQeVrl6boMTwWeNf0YqTihTUSwxMHOHwFViHS6sAi2HCOuSqteyFDwoU6iPKbLDQonqDKSbX
-	oCm4NAR8=
-X-Google-Smtp-Source: AGHT+IGF8M0O7huZzjQ6LFWkfz1SRtYAUP4VIrHmN07fG89dvMchCd7M1Mrp85i1fQMqNnnGxyMYTw==
-X-Received: by 2002:a05:6512:e8b:b0:545:1d96:d6dd with SMTP id 2adb3069b0e04-5494c330ae4mr860880e87.26.1740735752835;
-        Fri, 28 Feb 2025 01:42:32 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5494ca38eaesm218255e87.124.2025.02.28.01.42.29
+        d=1e100.net; s=20230601; t=1740736410; x=1741341210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Urp0DothUuULu6O/qAKGb/7MRWY6JHLjcJaYhr5l87c=;
+        b=vDKiWFsbouMK+Y/8bkbCafruGRxQFuBuAogN22X87xouSbkoE41fw8aVEcl6EM+BzE
+         84qzLX3ivySQY4z+YFqY5aiYF+vAOecUQAeHw7xSFdY/OnaorEMHrmQEt14Aj7ZKDSEJ
+         pBk6e9pcGfdPVjoGQtkv7AvrW6f/feSx6WRkeXpNdXCWxv3cBIafWVp31sSVOwWihQiX
+         otDkr9CjdPOdwqnwnntxiYreIC7aqNdCf+238d4NtS9M0B87h0QPU0rO3Y9E3fv4V5hp
+         CUJYdf8ksK1dRMHEU3Z9QjzQF/raB1mB05vjJg1Rra6IyZCSZnYByf0uDk5Jklu2aaY+
+         97FA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJmg128mW5ecpN5D2MUs50i32yMzzPmsnC9C+g2ireXU8j+LZaJE6wK/3pNjlGuy/vH9tWXUEWBTKV@vger.kernel.org
+X-Gm-Message-State: AOJu0YySz1k0MJ+FA2CDHoqs+i4plonDXuwLCoON4q0AAnIie7f8cIR+
+	bFcuSvGYlqRL3/nGHlixiQHpX13D+lDw0ES8ChDf4/NLFDHpDjKIQlkcEVTQ
+X-Gm-Gg: ASbGncudPc3QHTZ9MiE6dHsvKChRKNPZV5UfMFEhHno+tJJScIWVTaQuVlLXvA7I/KS
+	pJpoTBR9Sg5cnWOB6WEcRbSDTn7OSncr0bdqjNk3/m060mbfJpEF132ampe3LS6fFGKXAyoYl62
+	BWMptmS7x6JT9HjUZKQ/7UaflP7M4915Qc4qUL9/xJZMtQuEXqh2i+sLoCmHjBq42Np+gk78SV6
+	pLSfnHmimjP99BFErLbPTKfj8X0Ouye/9VX9ivqHj6Uzls5i33/9aF6ce8PkthIYjFVazescKGX
+	A0707T6o2lFL8FLgqZ9GM11Ey5wgksNL0uG6bGE6H5BMGe/lH9PVfgp4rI5GD266sd2q
+X-Google-Smtp-Source: AGHT+IFx0X93ZLoxJ6DzqRdvg3fNzMyybPtW3gwSL1SfD4G6aOvesV//RJkR4WbK7UANdR3CfRvvLQ==
+X-Received: by 2002:ac5:c38e:0:b0:521:b3ee:4970 with SMTP id 71dfb90a1353d-523495a8720mr3523875e0c.2.1740736409655;
+        Fri, 28 Feb 2025 01:53:29 -0800 (PST)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5234bf41809sm523694e0c.24.2025.02.28.01.53.28
+        for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2025 01:42:31 -0800 (PST)
-Message-ID: <6cb71da0-18cd-4ecc-8b7d-822e85987216@gmail.com>
-Date: Fri, 28 Feb 2025 11:42:28 +0200
+        Fri, 28 Feb 2025 01:53:29 -0800 (PST)
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52364925cfeso177032e0c.0
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 01:53:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVOWpuiSaZ5GMXXeSEax5UM8IsGgYP80bcg8Eq+I1VjSwV6o/BEQRw7IxZKATdJYZgE7Eg8piVvOav1@vger.kernel.org
+X-Received: by 2002:ac5:c5b3:0:b0:520:f35e:1a42 with SMTP id
+ 71dfb90a1353d-523496fa272mr3158493e0c.4.1740736408591; Fri, 28 Feb 2025
+ 01:53:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: Document the 'valid_mask' being internal
-From: Matti Vaittinen <mazziesaccount@gmail.com>
+References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
+ <CACRpkdZXm9eFJ2nzb5Gsm_ddirt6XZTQyu2G+vX2FB+=L6Lttw@mail.gmail.com>
+ <e5bdcca6-4d1b-451c-8fde-990db9db23d8@denx.de> <CACRpkdaGeV3v80QuWwus5rg9GfKkT_gzhvRgfOobnDMUO2cPEQ@mail.gmail.com>
+ <d29f36d1-53e0-42d3-beed-cc228553f658@denx.de> <CACRpkda-0+9u1mu8gJPwE_2ykY0TeoDS3t2_D-HoPgUQ45gfiw@mail.gmail.com>
+ <CAMuHMdW=bttP01Jigtn1DPyzVzTNr3GguNTo4Kw=NOBhhhthRA@mail.gmail.com> <CACRpkdZ4XOrcSOawd551tNx7qzexOguzboaA_6Z36QPfK7a0vA@mail.gmail.com>
+In-Reply-To: <CACRpkdZ4XOrcSOawd551tNx7qzexOguzboaA_6Z36QPfK7a0vA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 28 Feb 2025 10:53:16 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXbY6J9HGM_WP+9tJ8LDaZP0=XrE3dciWX8Qmiss2spZw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq6a-YcbJZbLyEgBfvgmGVFzjjG2tQnRR0KcK6jTvzcVdq9Rj0anR-wlKA
+Message-ID: <CAMuHMdXbY6J9HGM_WP+9tJ8LDaZP0=XrE3dciWX8Qmiss2spZw@mail.gmail.com>
+Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
-References: <Z71qphikHPGB0Yuv@mva-rohm>
- <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
- <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
- <CACRpkdZtWLGAn0K+xENY+RF6CsWPn0m7R--W9EaH+xTKazALFg@mail.gmail.com>
- <8979f8d4-8768-40b0-a3a7-6638ddb626cd@gmail.com>
- <a7ab9d47-cd17-4098-b2ba-d53dfc19dbed@gmail.com>
- <CACRpkdafJfmuO++XXSFha51Q5=9DrqqRtxOpNeUsmvy7BHrC2g@mail.gmail.com>
- <f3984cfc-3e3f-47d9-a734-3af7f072c22b@gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-In-Reply-To: <f3984cfc-3e3f-47d9-a734-3af7f072c22b@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Cc: Marek Vasut <marex@denx.de>, Bartosz Golaszewski <brgl@bgdev.pl>, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
+	Kent Gibson <warthog618@gmail.com>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28/02/2025 11:28, Matti Vaittinen wrote:
-> 
-> CC: Geert (because, I think he was asked about the Rcar GPIO check before).
-> 
-> On 28/02/2025 10:23, Linus Walleij wrote:
->> On Thu, Feb 27, 2025 at 9:24 AM Matti Vaittinen
->> <mazziesaccount@gmail.com> wrote:
+Hi Linus,
 
->> The call graph should look like this:
->>
->> devm_gpiod_get_array()
->>      gpiod_get_array()
->>          gpiod_get_index(0...n)
->>              gpiod_find_and_request()
->>                  gpiod_request()
->>                      gpiod_request_commit()
-> 
-> Here in my setup the guard.gc->request == NULL. Thus the code never goes 
-> to the branch with the validation. And just before you ask me why the 
-> guard.gc->request is NULL - what do you call a blind bambi? :)
->   - No idea.
+On Fri, 28 Feb 2025 at 09:56, Linus Walleij <linus.walleij@linaro.org> wrot=
+e:
+> On Fri, Feb 28, 2025 at 9:50=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > > /sys/bus/gpio/gpiochip0
+> > > /sys/bus/gpio/gpiochip0/gpio0
+> > > /sys/bus/gpio/gpiochip0/gpio0/userspace
+> > > /sys/bus/gpio/gpiochip0/gpio0/value
+> > > /sys/bus/gpio/gpiochip0/gpio1
+> > > /sys/bus/gpio/gpiochip0/gpio1/userspace
+> > > /sys/bus/gpio/gpiochip0/gpio1/value
+> > >
+> > > Take a GPIO, shake it, give it back to the kernel:
+> > > echo 1 > /sys/bus/gpio/gpiochip0/gpio1/userspace
+> > > echo 0 > /sys/bus/gpio/gpiochip0/gpio1/value
+> > > sleep 1
+> > > echo 1 > /sys/bus/gpio/gpiochip0/gpio1/value
+> > > echo 0 > /sys/bus/gpio/gpiochip0/gpio1/userspace
+> > >
+> > > So we can always "see" this GPIO line, instead of
+> > > exporting/unexporting there is a knob to assign/unassign
+> > > it to userspace.
+> >
+> > Why would you want to always "see" all GPIO lines?
+> > What is the use case for that? What am I missing?
+>
+> Because in the current ABI the user has to implicitly
+> know how many GPIOs there is on a gpiochip in order
+> to know which lines can be requested, and that's not
+> good.
 
-Oh, I suppose the 'guard.gc' is just the chip structure. So, these 
-validity checks are only applied if the gc provides the request 
-callback? As far as I understand, the request callback is optional, and 
-thus the validity check for GPIOs may be omitted.
+Doesn't the ngpio virtual file tell you that?
 
-> 
->>                          gpiochip_line_is_valid()
-> 
-> Eg, This is never called.
-> 
+> You know you can probably request gpio 0 but can
+> you request GPIO 104?
 
-Yours,
-	-- Matti
+I guess most people who play/mess/... with GPIOs directly know by
+heart how many GPIOs there are on their gpiochips (at least I do ;-)
+
+> Also sysfs is explicitly for topology and this is topology,
+> by the book.
+>
+> > If it is recommended not to use this interface, I think all GPIOs
+> > should be invisible by default.  Hence I still prefer the (un)export
+> > interface.
+>
+> I think the whole point of the thread is that this so-called
+> sysfs v2 is supposed to be recommendable because users
+> want something like this.
+
+Let's keep it simple, and similar/identical to the existing API?
+
+Is there anything in Documentation/ABI/obsolete/sysfs-gpio
+we can drop? edge?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
