@@ -1,132 +1,118 @@
-Return-Path: <linux-gpio+bounces-16832-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16833-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB8A4A49DD3
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 16:45:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1309A49DDE
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 16:46:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 481A23BE1EE
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 15:43:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90DE1165DDD
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2025 15:45:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7D4A26E17F;
-	Fri, 28 Feb 2025 15:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800E2270EB9;
+	Fri, 28 Feb 2025 15:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="quDq1Cp6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+kxnesL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D7A25DAE6
-	for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 15:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FA5186E20;
+	Fri, 28 Feb 2025 15:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740757408; cv=none; b=YiVvaoc9eDIzF+ZmRr3VbvS7zpBTkNzIijrDhiR9bbBAVZLxutA2cCyg7g08HOwDHpL9k5Yrrm5FErZ9xnagMPFtp/YRSKCW2gVWNG33oREyinq7WiOenqo/jpIeGsHR/LEC5si70jFherLzprnGBzmHNAYkwTxv9ouk4/UULfQ=
+	t=1740757547; cv=none; b=MinqEgwWIkR23wbCOdRODXAqgoWbZXoUZH0EyU6YwbatpfMph6CgpDrqd8XkDFhPWSaGzQNVrkYnduuYBFGODMo7mbM80u2SuMr7EL1EkNTI4nGga4WLeUS/WEzfpQihNhlol4Vytz5NQZfXm2YQuTJ8AZQjHbKvSqwoJsxGKx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740757408; c=relaxed/simple;
-	bh=xv6c4NXqxyAKN6zGbE26fx4JV1OI6COMvLEE285A9JM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vlf0MeN/Z+CSSXvAQ2u52NYJ2GZuH/ln5zqQTE52LNwmyZfmgohpQUe9/HH0TVJiom+3jUTlET5p8wZiZrTHCj+Apjd2OtjTFz4wEbFWGAWmRhUKAX+xY5gfsjYps/YqvzRWGMmycWUWE8idJ14jSQoSnW3o338MTVzKgXMfOUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=quDq1Cp6; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54957f0c657so239339e87.0
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2025 07:43:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740757405; x=1741362205; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xv6c4NXqxyAKN6zGbE26fx4JV1OI6COMvLEE285A9JM=;
-        b=quDq1Cp6AP6i0otMhfN0Dn+79cyP51lovFOMpKNjmdsp8M76HPNWmVmQQlD2aI7RzE
-         jLf+lySv8bXEC2rfhscpNs2IJySZn3sLQ7xZIFSIed/Jvubg5tt8fcovV+HiUqbYxRPy
-         WOkNUNhZh4+uch8izQSXVlpckfru+oz6SGThoKcJMKWTvqXoqlnml8MgsMCfZkc5rMoh
-         A1sMdUo4laV21pqMyWAWCHMhqBKSndWOa5GBRdIzoMnVcWiDH8a9+4DjXF80I5JMSkCs
-         /cbU6EPhidkqSjyOvqihsoRAufxsA0U6Eg4SbMrkHfR44gjnV0HTgmFw60C9R5T23qZ8
-         b3SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740757405; x=1741362205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xv6c4NXqxyAKN6zGbE26fx4JV1OI6COMvLEE285A9JM=;
-        b=nL0fESfF+ZZgIELjFQDsTpkwITW1NCDm8gJWJMlqM1SrXIxQXF89BmXXcDqsUjX3WJ
-         nJrT7ySg7/K2zLci9omkxI39OdQoAs1wUU2mH0poxsaDWMECiMPIaguMHiJWXjIW1+ud
-         1gx+5xn0z4k6Pu5xEiwD8j37wF/xDqThG2fR9LDhIbQrPhqxG/F4spHu0rsLT3xnjzt+
-         mHOTwghcM1SafVZzdfwn8jc+iTFy0mHsjUR1Y/BMAP2vU/aEGMndFkgsmFZ+QA9Wa2ZM
-         kiGs6dHDUOkK01LI/FdP8b9GjRKGuSxikWxmbTVgjo+W6nFVLCerFuHlP8mKK2IUt0Z0
-         A/rQ==
-X-Gm-Message-State: AOJu0Yx0/dPEX/+0WVQpf9G10PahQLQqAapmOuxRK6wcBnG3k47i+sW2
-	5jPRmuTFJ3uiD299OzwSOFNSIZoj7uwMJ/LZdI97q0MurdfJ2pFMjnl4fFOo17NG3kCfLQVMBzB
-	QEh328Msp3+6Pzvpbrj6rWBD6SlqDrROAWPvDfRaj7IdNiu8bbE0=
-X-Gm-Gg: ASbGncubAgTIi8VNonxr04J2YFjogAym+LvdiyqyxWCdSkkkbO5vr26vuow26iXaGbc
-	dPODZT9Asjf17+gUPwE3MR9CrrXF/pm2yiZUSkPMUDe9pxjEAvdTVKZj0C1YtKoLf69EWLcJMSV
-	L95Cwb493dgUAaBitC94wB87VeWyWx3VhVhpkJeeY=
-X-Google-Smtp-Source: AGHT+IHUxgnFb1PqqvSn4NoMY04CA/QPQIpUs05a01qxvsyVOXUVRibI0Q1jEd5DkMvu7r3XRx3/IyWHb0rvgN60QwY=
-X-Received: by 2002:a05:6512:308c:b0:545:4f00:f92a with SMTP id
- 2adb3069b0e04-5494332104amr3254779e87.20.1740757405023; Fri, 28 Feb 2025
- 07:43:25 -0800 (PST)
+	s=arc-20240116; t=1740757547; c=relaxed/simple;
+	bh=5nP7KH7x87oSyhZzLyi7xNGYya5Yqe7l7kW9rlTyesA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=ocjxmdAePQHVurCWuhqwyMsvqqcD/AHpPppdYiW0PM2r2VYDd5wUByArVqJhSQGrE/MVNFAz6vQw2znjZE1BTchcwQ03nrZUGZA/KupsP/7TnlWtK1ZriHY3UQgSMxm4qxAaZwOtQwMVldNLDX2OweudhGZgtV62lm+J4j3sl70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+kxnesL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0BFC4CEE2;
+	Fri, 28 Feb 2025 15:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740757546;
+	bh=5nP7KH7x87oSyhZzLyi7xNGYya5Yqe7l7kW9rlTyesA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=g+kxnesLwcgC5KTH48/RY+ddqXaR4y3mKzA3ebnf2/i7cks+pv43VpOt5MpO+DYgT
+	 6D1Hf5/2VoeGuhlLV05Fg/IcZi/wfCfyQeEvN1erUotxi26cp3bdKWtVoycAfCSyIA
+	 lX+KzxlLNGBNrZthg9K2K3V8y7ExhPosmenjJcv5iXE01ZMaUU1osC6UbMtNn/rICl
+	 EtiduL6YBSZGLYrbgYMTPDCJkopaM6OGSq5KLg75uoeWxodbzzEBqVBeexe5eNZ58n
+	 sDx9vDKL8EK6GbYs42XhTl/sbJzWD7gWYHyuGJLEmUPRXtgd0nD1T6WqRKA57Oufdl
+	 OEPS7MHmaQu3Q==
+Date: Fri, 28 Feb 2025 09:45:44 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4af4f6c5-d7da-4735-9ef5-ee3c34f7eae6@cyberdanube.com>
- <CAMRc=Mes3EmqfPtMBNZfTPV2cpyfsH13hS4bad5AwgTUbdVCPQ@mail.gmail.com> <661c2ee0-013b-4ee1-8c53-51729a172cce@cyberdanube.com>
-In-Reply-To: <661c2ee0-013b-4ee1-8c53-51729a172cce@cyberdanube.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 28 Feb 2025 16:43:14 +0100
-X-Gm-Features: AQ5f1JpsBsPlu4wG6QxOzzosKXYcT1-U9doEokHofEyfVBxhaiPvAJaRyGT4tvA
-Message-ID: <CAMRc=Mcx4=9u9n2CoX=ErxjEidEHH-+ALz976ir1P0NMnzAQvA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: added configfs option for static base
-To: Sebastian Dietz <s.dietz@cyberdanube.com>
-Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-gpio@vger.kernel.org, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ kernel-team@android.com, linux-hardening@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Will McVicker <willmcvicker@google.com>, devicetree@vger.kernel.org
+To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+In-Reply-To: <20250228-max77759-mfd-v3-1-0c3627d42526@linaro.org>
+References: <20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org>
+ <20250228-max77759-mfd-v3-1-0c3627d42526@linaro.org>
+Message-Id: <174075754372.2982326.17447607347334540253.robh@kernel.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: gpio: add max77759 binding
 
-On Fri, Feb 28, 2025 at 2:54=E2=80=AFPM Sebastian Dietz <s.dietz@cyberdanub=
-e.com> wrote:
->
-> On 28.02.25 14:22, Bartosz Golaszewski wrote:
-> > On Fri, Feb 28, 2025 at 1:46=E2=80=AFPM Sebastian Dietz <s.dietz@cyberd=
-anube.com> wrote:
-> >>
-> >> To replicate gpio mappings of systems it is sometimes needed to have
-> >> the base at static values.
-> >>
-> >
-> > Can you give me more info on why you'd need that? Static base is
-> > largely a legacy and deprecated feature, there's ongoing effort to
-> > remove it from the kernel.
-> >
-> >> base is treated as unsigned as there doesn't happen to be a
-> >> fwnode_property_read_s32().
-> >>
-> >
-> > Ha! That's interesting, I wonder why that is. We do have signed
-> > variants for OF-specific properties.
-> >
-> > Bart
->
-> We are building digital twins for embedded devices for security research.=
- The
-> firmware of these devices often export static gpio pins which we simulate
-> using gpio-sim. With this patch we are able to satisfy these conditions.
->
-> While the feature may be deprecated, i would argue that it makes sense an=
-d
-> fits the nature of a simulator to be able to configure it manually.
->
-> BR,
-> Sebastian
 
-What kind of digital twins? Using qemu? In any case - I really dislike
-the idea of extending the configfs interface of gpio-sim with an
-attribute to support an option that we're actively trying to remove
-from GPIO core. Unless you can give me a really convincing argument, I
-will allow myself to use my maintainers' right to NAK this one.
+On Fri, 28 Feb 2025 14:25:15 +0000, André Draszik wrote:
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+> 
+> This describes its GPIO module.
+> 
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+> v2:
+> * drop 'interrupts' property and sort properties alphabetically
+> ---
+>  .../bindings/gpio/maxim,max77759-gpio.yaml         | 44 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 +++
+>  2 files changed, 50 insertions(+)
+> 
 
-Bart
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+
+
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250228-max77759-mfd-v3-1-0c3627d42526@linaro.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
