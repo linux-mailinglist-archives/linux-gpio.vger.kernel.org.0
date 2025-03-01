@@ -1,124 +1,144 @@
-Return-Path: <linux-gpio+bounces-16856-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16861-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3F9AA4A990
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Mar 2025 08:46:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78C0DA4AA2A
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Mar 2025 11:04:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 955231899FBF
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Mar 2025 07:46:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46C243B90A1
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Mar 2025 10:03:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57031CAA86;
-	Sat,  1 Mar 2025 07:46:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55EB81D7E5B;
+	Sat,  1 Mar 2025 10:03:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3i25GKd"
+	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="YCSL+ZCX";
+	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="wcqUjdTw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661791EF1D;
-	Sat,  1 Mar 2025 07:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740815199; cv=none; b=hpg2OPj8x75gciIpVMwPXI3XEtfWwfezgfF8XGeFMpVd+rvngwIr9MK7q6Qa+eYM/epUGtp6P+FG8u904ZrdV6cWD9R2XlCCEzIoBbaoavbhLB1FvYeE49FVaBC9lo4VtZ7+m4E/NLoSZm5meRsuBFr/gHx17AjmyQgpbGPzn5g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740815199; c=relaxed/simple;
-	bh=T+ZH6Z4xoVhm2ILQyatQsfA4AMSbIyFGfcFpAnT/ieA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EZvYTZuq6sgf35QhpKMW/cFPQcjg7WVdHcPBOw8EmT7YNsguqryDDRegbNuseSx2InNc5/T8/5amN4QTE2n69uSqy4lIEs0/rBrzwCR2rtgkPf7RyDJFd0GPJeH0rl7vM7ogyNTA/yBQF/bTzOT6KyRm/RHDzLErUWApKqmpmwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3i25GKd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFF6C4CEDD;
-	Sat,  1 Mar 2025 07:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740815198;
-	bh=T+ZH6Z4xoVhm2ILQyatQsfA4AMSbIyFGfcFpAnT/ieA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N3i25GKdnVaDdTmjSfJpe2iMJNj55lWgOKVg3AlcRj9lhyMMYyOHb2aJHl39UATns
-	 jLr3VqN7kuijX1JwFfBHMsksWI63V2TZ322h8opfiTgkFOMBHW7KwnegB4mbsT5a7m
-	 V6yQNJcUOLnnLCQIzXoSj+vw3Na9BOOehaMoyjh/9HGnf5+zgH8R02DeDRzGQX1vZQ
-	 yPKi3u/LgCd/QS5uyrcJsFlpLT2WHDcgSL/h+ilR42xTmBzjwuHNKi+AjaXZZ7nvr/
-	 nV4+EkEFDwHolP0WJCbMCESuiWLAWFSFJmZdPFvz0f1tFg0nLjyy87hgUohKXO9NP/
-	 Bt3mP81UxrADA==
-From: Will Deacon <will@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B031D6DC8;
+	Sat,  1 Mar 2025 10:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740823436; cv=pass; b=pKiElAUIXMmsVhOtvQT6IgrIgHHZ+rSsuHGiAtmwRbKhT0CZ0o27xQ541G8GGvmRbDD2HlSwuS+Ij8WhdB8ZxIp3E02dCXkx2BUc4t3EsE6T43jrnWRtORMeQHuFlbYwgfnmOcho/qSIUDcwQM5pstEI2LdX/Eqzr4gAoKvxJd8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740823436; c=relaxed/simple;
+	bh=Rn/w/lrOPl+6Z/ejlk3nn0vA6sXamygIoAjnNZ6QoL4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GMK2+MkFC5dhzKTs+4InvjY37dq0a3dYEGIMon6K0OhWUUwDe8R9mxYO6yeynuQgdVLw87vxU5KKC7ZeJPk0uP7Qh83r4djoA9F/OKw/rmsnNZ38eWG6wKeNcBT0i/Q4PZhaAew3V1aMwl0ENktkDSQqUhCfy5p83Hz3ACkNw7A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=YCSL+ZCX; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=wcqUjdTw; arc=pass smtp.client-ip=85.215.255.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
+ARC-Seal: i=1; a=rsa-sha256; t=1740823244; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=VfGLBiyuuul7M5Jh4cuZyMbLX48q2HddResoH33nydVhvupAHaLjbd+fQwTygLu3xd
+    xQcK+rz54QnUCGEP7PvUmzj4qIc7NE+zgVMQnvLC1FfsgZ6o1WeWmbNr3y83WeaTb1l4
+    Qsu5aoipVHWePuQ83IDJdcJ9eEScC6IqS7t8U/cpxIHhUQrY77Y0Yjgj84/dfqgg6huj
+    gidh9rXRglovd9s+TiEu8tzOcjMOzKgCvizjenapxJ8brTOXcvhncNhUuckBLrWH0M5r
+    6eGvqJKshk4altmp/zIC60nmP/1jVLnQqxH1PhBkBkSLuqd9Wupdxdl1fFIwm7HYC1EH
+    sVAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740823244;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=jQHkoK6XIUS+W/XJnNra9kSPHkGbD84yfUBClpEfK14=;
+    b=owU9sDCrg3+r9Qe9omYgoNZObZ3GUHd+/YYbtFLwdflvTXi9/06XZBIVbQVdyLKYBl
+    HpPjL5Tb0StQHs4RFCQ11CD0goKi5kVy4pQMj2QiX2D2eJOMb1nAIOjyFUFeiryVlcSj
+    tfk1vBylRl5BSqrHrSckciTEuIDNatEfCCOgC2890q/NQf3GC4oBBhUiDyju5SHTbp2B
+    HPUfTxiDdRCGEceNTsSVQtZodqU20kx39AOdWxn+MVuNFjQ7mbTHXzm4+C40UDiY/d6H
+    HvB4prxUgvt85PBDdUjMq4+BUikOOyb342bWnFbP6+/NBvJt304YOaTNvNDFNHKbG53d
+    TaEw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740823244;
+    s=strato-dkim-0002; d=goldelico.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=jQHkoK6XIUS+W/XJnNra9kSPHkGbD84yfUBClpEfK14=;
+    b=YCSL+ZCX1HMFEZz0lYwmft2xiKDXGknLSxammPr/P93NuBVBDPMHj3fdnva4afNSx+
+    PfUjryNeVZkebUjnaJn/McDNyUTDySQsmWqYV50GJQlAZCPPJ76oNzEQDoVjuCuvS/Yo
+    WE2AyV1z0ELj3xMAlMJdJru4/xZ6AG4rhGtgQyQOu33/hD6hDIHzYBln6l/feE+0cAkD
+    y4+v1clU2BAmvqR3EPIVrxCwAtBbADkZ2n6kmBM+5TeRChOyRxgS5MtYtt0n0r5PtEag
+    WKXWRYqAqYeqqoZBvmKJR+DE9ljDFJdHDoyz32Q5JI1Xwb+3nPHZS1G2VPvbd38Ty/7C
+    FoAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740823244;
+    s=strato-dkim-0003; d=goldelico.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=jQHkoK6XIUS+W/XJnNra9kSPHkGbD84yfUBClpEfK14=;
+    b=wcqUjdTw7TB0GskEKt703SipSmVMBCBl7OhgFwLkja9cGIzoyL3FExijRRWlXg3q8N
+    ywFNz5gv51mfYqD+HmCQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yfjEZ"
+Received: from localhost.localdomain
+    by smtp.strato.de (RZmta 51.3.0 DYNA|AUTH)
+    with ESMTPSA id Q56adc121A0hbff
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sat, 1 Mar 2025 11:00:43 +0100 (CET)
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Stephan Gerhold <stephan@gerhold.net>,
-	=?UTF-8?q?Otto=20Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lee Jones <lee@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Joerg Roedel <joro@8bytes.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
+	Paul Cercueil <paul@crapouillou.net>
+Cc: Andreas Kemnade <andreas@kemnade.info>,
+	Paul Boddie <paul@boddie.org.uk>,
+	Tim Bysun <tim.bysun@ingenic.com>,
+	linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	iommu@lists.linux.dev,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	Daniil Titov <daniilt971@gmail.com>,
-	Dang Huynh <danct12@riseup.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Adam Skladowski <a39.skl@gmail.com>
-Subject: Re: [PATCH v3 0/8] Initial support of MSM8937 and Xiaomi Redmi 3S
-Date: Sat,  1 Mar 2025 07:46:25 +0000
-Message-Id: <174081358091.1616995.4166112946005132135.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250224-msm8937-v3-0-dad7c182cccb@mainlining.org>
-References: <20250224-msm8937-v3-0-dad7c182cccb@mainlining.org>
+	linux-mips@vger.kernel.org,
+	letux-kernel@openphoenux.org,
+	kernel@pyra-handheld.com,
+	"H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v3 0/4] pinctrl: ingenic: add support for x1600 SoC and MII and I2S for jz4730
+Date: Sat,  1 Mar 2025 11:00:37 +0100
+Message-ID: <cover.1740823241.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, 24 Feb 2025 02:56:15 +0100, Barnabás Czémán wrote:
-> This patch series add initial support for MSM8937 SoC
-> and Xiaomi Redmi 3S (land).
-> 
-> The series is extending the MSM8917 gcc and pinctrl drivers
-> because they are sibling SoCs.
-> MSM8937 have 4 more A53 cores and have one more dsi port then
-> MSM8917.
-> It implements little-big architecture and uses Adreno 505.
-> 
-> [...]
+PATCH V3 2025-03-01 11:00:41:
+Fix some nits reported by Conor and Paul during their review and add
+their acked/reviewed-by.
 
-Applied SMMU bindings change to iommu (arm/smmu/bindings), thanks!
+PATCH V2 2025-02-28 14:33:57:
+Fix pwm5/pwm6/pwm7 pin groups (each one can be muxed to one of two
+pads while pwm0-4 have only one pad) for X1600.
 
-[4/8] dt-bindings: iommu: qcom,iommu: Add MSM8937 IOMMU to SMMUv1 compatibles
-      https://git.kernel.org/iommu/c/7506be7d253f
+PATCH V1 2025-02-26 18:14:53:
+This series expands pinctrl support for some Ingenic/Lumissil SoC.
+For the jz4730 we add MII and I2S pinctrl and general x1600 support.
 
-Cheers,
+The x1600 parts were jointly developed.
+
+Code was tested on LX16 board (x1600) and Alpha400 (jz4730) and
+on CI20 (jz4780).
+
+Co-authored-by: Andreas Kemnade <andreas@kemnade.info>
+Co-authored-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+
+H. Nikolaus Schaller (3):
+  bindings: pinctrl: ingenic: add x1600
+  pinctrl: ingenic: jz4730: add pinmux for MII
+  pinctrl: ingenic: jz4730: add pinmux for I2S interface
+
+Paul Boddie (1):
+  pinctrl: ingenic: add x1600 support
+
+ .../bindings/pinctrl/ingenic,pinctrl.yaml     |   2 +
+ drivers/pinctrl/pinctrl-ingenic.c             | 262 +++++++++++++++++-
+ 2 files changed, 262 insertions(+), 2 deletions(-)
+
 -- 
-Will
+2.47.0
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
 
