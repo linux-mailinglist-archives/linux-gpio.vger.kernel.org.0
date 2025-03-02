@@ -1,181 +1,189 @@
-Return-Path: <linux-gpio+bounces-16885-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16886-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FF5EA4B2F3
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Mar 2025 17:10:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83366A4B40F
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Mar 2025 19:30:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB3863B29D2
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Mar 2025 16:09:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14821188EA34
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Mar 2025 18:30:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E5191E9B1D;
-	Sun,  2 Mar 2025 16:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A48271C5D50;
+	Sun,  2 Mar 2025 18:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="jYb+tFVV"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JhEE6Sy9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cnsHIUzQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152481E9B18;
-	Sun,  2 Mar 2025 16:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07191B87EE;
+	Sun,  2 Mar 2025 18:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740931764; cv=none; b=iIoGkJenBSe1jtU4/oOUoLATbdztNVu9LCyGKu0F4FOz5HD8hkwdNlHjini/abHHeHV6acPLgv6QBLbvY30BtBpQAgeIUJPGTq5/4GAh6fNZ/lt3v0TNjIHvk+0WVK7Hj+TXRCH6rAnDrIcDK8S7jOpDp6KWbED4vByXRHJCcq0=
+	t=1740940212; cv=none; b=f3TOs2ff1DxL8BhqlfazkqdZQyeqahtuUCyz9RwirS+ryVVElu9NclsQdI1umedufVM8m/Kk5j/eafWFFnmCvee2M7jR3SLPXP8i2Qm4bdWLgjqFdy3xN3htoUjyAgDMr9ECz/gjlvtBhCdYojO64r/7so4vBmwnYoSQuUN8kLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740931764; c=relaxed/simple;
-	bh=SuCW7erPuPRWso4GqZRpWS+3gl1BI6ZPagbPAaY4PKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dui2A1qjqRiragVJhtZ/l3lxW0WHHBizq64Qj7wYJcps6BtNesRXvGjdwJa2fpyqpEkl8lcyeMmeO7uXjdTxVYcriyIWdnB37VMmj/Zroj2gM8b6peJk4Trz3umbgmhZGA9KWIA5OErDWEPnxlQSn/msN8k8Q6NTzbdwCqECObY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=jYb+tFVV; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id ED48C20746;
-	Sun,  2 Mar 2025 17:09:19 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id viBQlnlcbeEl; Sun,  2 Mar 2025 17:09:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1740931755; bh=SuCW7erPuPRWso4GqZRpWS+3gl1BI6ZPagbPAaY4PKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jYb+tFVVVYmJwA66Yg/pXiup5NL0cltofMdg5DTZnjV9xaIOWy24o1bTjj2wdVs7a
-	 lDQkbqjVfoZ3GIOiETO6LrOmk2D9ssn1q/2SwweEmwTG27FXPnDRNd1scetAqtQe9J
-	 fJUwG58qBhgcVgXNJ/p/v7GDDjH6VeQdH9k3VjBu7AGfcr7X0wuI4QJrIfv34jFDsz
-	 WFwOak66AoS0NZiR+5pQhOBbNxqKBOJF98sWjc1R1Ch+BSbpxqzz24vicYsNzQ8aj8
-	 2ta4xRx2THhrzsg6nKxjgYhSUxlqUbQcw9JPvogdtzkr8EmK4RpYJSn53PUlo0ESUf
-	 S5LhLFJBGT15g==
-Date: Sun, 2 Mar 2025 16:09:01 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-	Jonas Karlman <jonas@kwiboo.se>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] arm64: dts: rockchip: Add pinctrl and gpio nodes for
- RK3528
-Message-ID: <Z8SCnfZxH-H0iGwf@pie.lan>
-References: <20250228064024.3200000-1-jonas@kwiboo.se>
- <Z8GT3rUEyXrTUgtJ@pie.lan>
- <3f0cd767-1fd8-4c65-b8b4-e948288cd02a@kwiboo.se>
- <116104909.nniJfEyVGO@diego>
+	s=arc-20240116; t=1740940212; c=relaxed/simple;
+	bh=bY35PyefGpfNSi+6VAM8+WPE41caGN+ArZK2Kj84gcA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mFkEDhS0lKgaqFtRbOW4uziyU9KPORB4PwfUgvHUfkD9B4tLL+UF2FSpcI8P6wsTfmyMjAbDasLWQFRwie977neWZNsgCjh5WVp4KhDPBqguAcOydD/SCzpgA8nkSvNGjS2YP/UQXR5DOjDRQ+D/KsPJ5wt8sxM3mvgFAh/ZB4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JhEE6Sy9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cnsHIUzQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740940203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OggkcNn0CKOnNyjOJiAOPJdtTYiXPnknmr72FoMHxZc=;
+	b=JhEE6Sy92xvRpi//F5igT/6cPmqXPmLe/QshCEQQ3REbTHsRQr4nre5lJ1WCun3DjdYG6F
+	KKyg66ToZ42msupKberz8GFdM+QuLl7DrvgjQY7DV1+SiEHf4s6QbegDwAhbpuTCn53t77
+	uMM9hRM4LQDfabTuG1cflmukMKaY6b+ktMTdz6iE5RlbwufQvMsh6TBM1nAVO+KR3Sm7Ta
+	AkSCREWwwElbR6MwrDG9v6Unet7jv8Y95sBSmAYR6p7BV4y3pQQsafOYfGSd/I9iiTq2jA
+	B4e9PNywJsvTy9RL4o9DHsaHLGd3QA+/XeMkJDaUQQoe7TSZdxotOy+sVIsfxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740940203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OggkcNn0CKOnNyjOJiAOPJdtTYiXPnknmr72FoMHxZc=;
+	b=cnsHIUzQ8LaG99IMzMzRq3TW5s/YJNrrnQrjXdu6MZqsbYBoGVwGrCgqcGvwd0dlwP1LmQ
+	xSlaxbgGOJWtvdBQ==
+To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, Yixun Lan
+ <dlan@gentoo.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] irqdomain: support three-cell scheme interrupts
+In-Reply-To: <20250302-04-gpio-irq-threecell-v2-1-34f13ad37ea4@gentoo.org>
+References: <20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org>
+ <20250302-04-gpio-irq-threecell-v2-1-34f13ad37ea4@gentoo.org>
+Date: Sun, 02 Mar 2025 19:30:02 +0100
+Message-ID: <87jz97cml1.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <116104909.nniJfEyVGO@diego>
+Content-Type: text/plain
 
-On Sun, Mar 02, 2025 at 12:52:18PM +0100, Heiko Stübner wrote:
-> Am Sonntag, 2. März 2025, 12:14:48 MEZ schrieb Jonas Karlman:
-> > Hi Yao Zi,
-> > 
-> > On 2025-02-28 11:46, Yao Zi wrote:
-> > > On Fri, Feb 28, 2025 at 06:40:10AM +0000, Jonas Karlman wrote:
-> > >> Add pinctrl and gpio nodes for RK3528 and import rk3528-pinctrl.dtsi
-> > >> from vendor linux-6.1-stan-rkr5 kernel with the hdmi-pins-idle node
-> > >> removed due to missing label reference to pcfg_output_low_pull_down.
-> > >>
-> > >> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> > >> ---
-> > >> This was mostly imported from vendor kernel, however the main commit [1]
-> > >> list 28 signed-off-by tags, unclear who I should use as author and what
-> > >> signed-off-by tags to include.
-> > >>
-> > >> [1] https://github.com/rockchip-linux/kernel/commit/c17d6325959f0ec1af901e8a17919163454190a2
-> > >> ---
-> > >>  .../boot/dts/rockchip/rk3528-pinctrl.dtsi     | 1397 +++++++++++++++++
-> > >>  arch/arm64/boot/dts/rockchip/rk3528.dtsi      |   82 +
-> > >>  2 files changed, 1479 insertions(+)
-> > >>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3528-pinctrl.dtsi
-> > >>
-> > > 
-> > >> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> > >> index 0fb90f5c291c..d3e2a64ff2d5 100644
-> > >> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> > >> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> > >> @@ -4,8 +4,10 @@
-> > >>   * Copyright (c) 2024 Yao Zi <ziyao@disroot.org>
-> > >>   */
-> > >>  
-> > >> +#include <dt-bindings/gpio/gpio.h>
-> > >>  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > >>  #include <dt-bindings/interrupt-controller/irq.h>
-> > >> +#include <dt-bindings/pinctrl/rockchip.h>
-> > >>  #include <dt-bindings/clock/rockchip,rk3528-cru.h>
-> > >>  #include <dt-bindings/reset/rockchip,rk3528-cru.h>
-> > >>  
-> > >> @@ -17,6 +19,11 @@ / {
-> > >>  	#size-cells = <2>;
-> > >>  
-> > >>  	aliases {
-> > >> +		gpio0 = &gpio0;
-> > >> +		gpio1 = &gpio1;
-> > >> +		gpio2 = &gpio2;
-> > >> +		gpio3 = &gpio3;
-> > >> +		gpio4 = &gpio4;
-> > >>  		serial0 = &uart0;
-> > >>  		serial1 = &uart1;
-> > >>  		serial2 = &uart2;
-> > >> @@ -166,6 +173,11 @@ cru: clock-controller@ff4a0000 {
-> > >>  			#reset-cells = <1>;
-> > >>  		};
-> > >>  
-> > >> +		ioc_grf: syscon@ff540000 {
-> > >> +			compatible = "rockchip,rk3528-ioc-grf", "syscon";
-> > >> +			reg = <0x0 0xff540000 0x0 0x40000>;
-> > >> +		};
-> > >> +
-> > >>  		uart0: serial@ff9f0000 {
-> > >>  			compatible = "rockchip,rk3528-uart", "snps,dw-apb-uart";
-> > >>  			reg = <0x0 0xff9f0000 0x0 0x100>;
-> > >> @@ -264,5 +276,75 @@ saradc: adc@ffae0000 {
-> > >>  			#io-channel-cells = <1>;
-> > >>  			status = "disabled";
-> > >>  		};
-> > >> +
-> > >> +		pinctrl: pinctrl {
-> > >> +			compatible = "rockchip,rk3528-pinctrl";
-> > >> +			rockchip,grf = <&ioc_grf>;
-> > >> +			#address-cells = <2>;
-> > >> +			#size-cells = <2>;
-> > >> +			ranges;
-> > > 
-> > > I doubt whether the pincontroller should be placed under simple-bus:
-> > > without a reg property, it doesn't look like a MMIO device.
-> > > 
-> > > Actually it is, although all the registers stay in the ioc grf. Maybe
-> > > it should be considered as child of the grf.
-> > 
-> > This follows how pinctrl was added for RK3576 and what is proposed for
-> > RK3562 [2]. I have too little knowledge to know if this needs to change
-> > or if this should follow similar SoCs.
-> > 
-> > [2] https://lore.kernel.org/r/20250227111913.2344207-15-kever.yang@rock-chips.com
-> 
-> The reg address shouldn't matter here I think.
-> 
-> The "soc"-bus describes the elements contained in the soc (surrounding the
-> cpu cores) and the pinctrl controller definitly is part of the soc itself.
-> 
-> So when looking at the scope, it does belong there and also the
->  gpio-controller elements do have mmio addresses :-)
+On Sun, Mar 02 2025 at 07:15, Yixun Lan wrote:
+> The is a prerequisite patch to support parsing three-cell
+> interrupts which encoded as <instance hwirq irqflag>,
+> the translate function will always retrieve irq number and
+> flag from last two cells.
+>
+> In this patch, we introduce a generic interrupt cells translation
+> function, others functions will be inline version.
 
-Thanks for the explanation, it makes sense to me.
+Please read:
 
-> Heiko
-> 
+  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
+  https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-changes
 
-Best regards,
-Yao Zi
+> +int irq_domain_translate_cells(struct irq_domain *d,
+> +			       struct irq_fwspec *fwspec,
+> +			       unsigned long *out_hwirq,
+> +			       unsigned int *out_type);
 
+Please get rid of the extra line breaks. You have 100 (99) characters available.
+
+> +static inline int irq_domain_translate_onecell(struct irq_domain *d,
+> +					       struct irq_fwspec *fwspec,
+> +					       unsigned long *out_hwirq,
+> +					       unsigned int *out_type)
+> +{
+> +	return irq_domain_translate_cells(d, fwspec, out_hwirq, out_type);
+> +}
+> +
+> +static inline int irq_domain_translate_twocell(struct irq_domain *d,
+> +					       struct irq_fwspec *fwspec,
+> +					       unsigned long *out_hwirq,
+> +					       unsigned int *out_type)
+> +{
+> +	return irq_domain_translate_cells(d, fwspec, out_hwirq, out_type);
+> +}
+> +
+> +static inline int irq_domain_translate_threecell(struct irq_domain *d,
+> +						 struct irq_fwspec *fwspec,
+> +						 unsigned long *out_hwirq,
+> +						 unsigned int *out_type)
+> +{
+> +	return irq_domain_translate_cells(d, fwspec, out_hwirq, out_type);
+> +}
+
+What's this for? It's not used. The onecell/twocell wrappers are just
+there to keep the current code working.
+  
+> +int irq_domain_translate_cells(struct irq_domain *d,
+> +			       struct irq_fwspec *fwspec,
+> +			       unsigned long *out_hwirq,
+> +			       unsigned int *out_type)
+
+Please remove the extra line breaks.
+
+int irq_domain_translate_cells(struct irq_domain *d, struct irq_fwspec *fwspec,
+			       unsigned long *out_hwirq, unsigned int *out_type)
+
+is perfectly fine.
+
+>  {
+> -	if (WARN_ON(fwspec->param_count < 1))
+> -		return -EINVAL;
+> -	*out_hwirq = fwspec->param[0];
+> -	*out_type = IRQ_TYPE_NONE;
+> -	return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(irq_domain_translate_onecell);
+> +	unsigned int cells = fwspec->param_count;
+>  
+> -/**
+> - * irq_domain_translate_twocell() - Generic translate for direct two cell
+> - * bindings
+> - * @d:		Interrupt domain involved in the translation
+> - * @fwspec:	The firmware interrupt specifier to translate
+> - * @out_hwirq:	Pointer to storage for the hardware interrupt number
+> - * @out_type:	Pointer to storage for the interrupt type
+> - *
+> - * Device Tree IRQ specifier translation function which works with two cell
+> - * bindings where the cell values map directly to the hwirq number
+> - * and linux irq flags.
+> - */
+> -int irq_domain_translate_twocell(struct irq_domain *d,
+> -				 struct irq_fwspec *fwspec,
+> -				 unsigned long *out_hwirq,
+> -				 unsigned int *out_type)
+> -{
+> -	if (WARN_ON(fwspec->param_count < 2))
+> +	switch (cells) {
+> +	case 1:
+> +		*out_hwirq = fwspec->param[0];
+> +		*out_type = IRQ_TYPE_NONE;
+> +		return 0;
+> +	case 2 ... 3:
+
+I have second thoughts about this when looking deeper.
+
+The current one/two cell implementations validate that param_count is at
+least the number of parameters. Which means that the parameter count
+could be larger, but only evaluates the first one or the first two.
+
+I have no idea whether this matters or not, but arguably a two cell
+fwspec could be successfully fed into translate_onecell(), no?
+
+And that triggers a related question.
+
+Why is the three cell translation not following the one/two cell scheme
+and has the parameters at the same place (index 0,1), i.e. adding the
+extra information at the end? That makes sense to me as the extra cell
+is obviously not directly related to the interrupt mapping.
+
+Thanks,
+
+        tglx
 
