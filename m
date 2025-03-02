@@ -1,177 +1,126 @@
-Return-Path: <linux-gpio+bounces-16882-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16883-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 423B6A4B147
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Mar 2025 12:52:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F033EA4B162
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Mar 2025 13:04:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F14018915A8
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Mar 2025 11:52:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96BC53AC261
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Mar 2025 12:04:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 086D61DC074;
-	Sun,  2 Mar 2025 11:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3EA1DF980;
+	Sun,  2 Mar 2025 12:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="jNFLVHYG"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vVEwMdHV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC82623F362;
-	Sun,  2 Mar 2025 11:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382D678F52
+	for <linux-gpio@vger.kernel.org>; Sun,  2 Mar 2025 12:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740916354; cv=none; b=ddwvfllA8vIP1duhkREtPx4zmEP2/yInQxGq5fLE0klOurMcaBD7G2xRnSe921ZXzr59r/M2qrXaQfapol1os2WMRSDI2ZmuyA2DwcpAzJLj+MQtpM/RHVurrJRumaPD9m9O6ONRIptrfJu9GQgJJ1khL4Uf2Lufd5NOiJl5O1c=
+	t=1740917068; cv=none; b=EGl1SJDnUk/L7/+NkCgX7f6umgA9DAanMyyuq4Jm0flBWDXXrfHkpxXPrQOBiIHri1sV+Aifj3PKLE5aafiGK9ZzKemz7el4md6nEwsU+oIUzxpE7xXFy1IyD5ACPlN9tiIy+6zTEDm+j7yrcOloC0m73a8PFUVj2uDpGiB/y7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740916354; c=relaxed/simple;
-	bh=ZZoLR+4gRG2huYnIBWUOHqpuRemTLVgz35uxJX22fXg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kHQbXH9fGSnEa+2lAZSt+fJqnqVhsZ3TkWW0arN3Y8CmK4xLR00/Pr9A5IeVGZ2ytTzPB+CysUPcXOAKUc4wRykBOaJ0UeUMJGJqGIhjLdbFC1l1n+eBnY6iQI9mUjkg0F7IZkCXodHAJ5XSGmw8VYnvXlI6DkRFYrkdjdCGkyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=jNFLVHYG; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=p1wO1tJNUWST5/aSO5B+d0Qst9czfwzaKgHwJnlCm8U=; b=jNFLVHYGlFE6ZGeuKX7kSTL6m3
-	5TMkL2oYxZW/PF9kfo2/t7Y52OJYoAjimFiuALIFyeHLYGC12FOM+bUmkSUcdqN9UUTYStk3sfM6q
-	b3oqJHViq35eiD9g0VW6Fw+LOSBBX4KP/ffom4beXhI7HjykR3uWdLTXtc+BW7sTCrTob9yWo/tAR
-	RCRFF4z8ZmEzqN1pjrpqUR1LYCZYklM15XDvRED48m8dlTMsuKhOMeynb/TbkDwqEyU5WVgPo0dV0
-	1+rfixyDTntDyfH+0m7LPAmDfduBwJm+BiloqDrdr4DaDfHDwfSo3qjHSpjyslEq9kF/ZhWFhOn0R
-	rYzKOOAA==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tohrn-0001yN-P2; Sun, 02 Mar 2025 12:52:19 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Yao Zi <ziyao@disroot.org>, Jonas Karlman <jonas@kwiboo.se>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 4/7] arm64: dts: rockchip: Add pinctrl and gpio nodes for RK3528
-Date: Sun, 02 Mar 2025 12:52:18 +0100
-Message-ID: <116104909.nniJfEyVGO@diego>
-In-Reply-To: <3f0cd767-1fd8-4c65-b8b4-e948288cd02a@kwiboo.se>
-References:
- <20250228064024.3200000-1-jonas@kwiboo.se> <Z8GT3rUEyXrTUgtJ@pie.lan>
- <3f0cd767-1fd8-4c65-b8b4-e948288cd02a@kwiboo.se>
+	s=arc-20240116; t=1740917068; c=relaxed/simple;
+	bh=JY2SMHuBAeQA5ymjsS5TI2bhfemIjAsjx0CTHtgqxv0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jZ8ItPLPCBvUVB6so5LxKW915Cx2FyQK1j0Dd5X1gMcUK8jrmr3dvs7dMr3/nRiMSwPtHc22vhOjkNqJB1ZTgx9+pCNE/LIKUiion++6yS7TA7vdOW4rh3nF9zp813GWC67zzj7PISimcYtVnsUnPzUrq7mo41hE58E3M3rMcFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vVEwMdHV; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-390eebcc331so1117810f8f.1
+        for <linux-gpio@vger.kernel.org>; Sun, 02 Mar 2025 04:04:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740917064; x=1741521864; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E1qy2jLougotV3caTX4Ep2cJ4NAMVmZ8tLXJeXGlG68=;
+        b=vVEwMdHVUQlSITNi3K+AfdgGK9jwdHrfAjPio47pfPuyd0IQevJ5cTicHKcZi/vw11
+         dwPTQ6O9lveA171y9jwcG7jQKF+I5c4WMPFOy+6cqJR5uwIrSg3WB2mQusfWJlhftjQ8
+         xcm7gQRAauWyAkL9tQ8EhJ0zLPmdejE91w7Ja0qfaXVUh9a+H2hEQ3QOfnQdR4/6YnS1
+         dyzBJtMbgocRxo/zABmLwQfljGdCLzNoeafOwO78mNmHUnSRw/NdAHbJ+4zjSvG8Hf6A
+         lb0Y64BHwos/oLJ+IOYzqhjKZ1waOrDElt0yZzyYHytvj8vxYZwsExZ6jJD2cHZlDGSM
+         YAzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740917064; x=1741521864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E1qy2jLougotV3caTX4Ep2cJ4NAMVmZ8tLXJeXGlG68=;
+        b=fYWq620MlSzchBiUbanOz11Ce6gU3SwB7+xWSSA0bfd1GqP0vfLYWGMsa4whNrr7Q1
+         vEWuzvZlM6WaSeDAaNlrOhOYAP+iuq3K3pK1ll1phibNlOH4AbVRHoBpZxjDFmaWbA/f
+         LMCTLjjGVHTZpTy27vyxbxCr+ImHiZx4RxQ8ouBv+EARpKYlobAPZXpjgZ+1klkMDRvV
+         Jz+WrPmtK/5b4Knh+lio/e8Vh6VW/C7esxwaXFtS/a+7GsxVjtNdDGX17RRE2gyarp4C
+         rmeDE3Pd/OkuRdH4c/O4Z2+fCrpNMnbrEvEuQ1pSWn+qjhYUhId1pFOaGvlXQPeg2uz4
+         BwMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm2RWsze5cxNtuGyVrXyuzRqFlONmFdhgWLe4TUp0HFpHEzBvIJ3vWXFofqsW9RXxA1bfKlieylLmO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFj2+f2NBvbT/oH/jq7ILYZDc1fmq7ul/c9ppkHorRO6TrC6QY
+	EbYwnTYzGMNAg2UG7LFTEbqUPtCG8deOH7I1vOfN3/pkWvW+u4m97r0UWZFChxImHpPl6nSEJHw
+	p
+X-Gm-Gg: ASbGncs9h9WsT+YoQtOhXqdFdVFjT5xnVfoR3r6egJ9QQeS6fLQAE9q+6q4cz3zVdj3
+	VQWRDOXZguQHec1NJohLz0/RmZu6VpXB8RRp+a9uP+akNK9eEe+2Z8mhIsRLzYzhCNn069gsS+U
+	YoUBAoPJ+yyQrIsxyboJexSs2K84jjuHTU6HMgczfYXPgpXE1GFtxiBxr422Die1tRw1DzwlD1P
+	Z2ULtYHe5nx6PJBtyhOeYApkEAhuQKBG9/kp6C6pJ2LEJA5TkM5eRIs2iNoJIaL9OOvYC+U9fOT
+	Gmp9bYls0afbG7rVMveSFUF4OaAUpahB++ZgFhQPGDoPDruvdAw59hPq+RNz0OrxVkJWr9lInpZ
+	3+OMdV68kUN4i/4PHduzJUvIqTUpF
+X-Google-Smtp-Source: AGHT+IHR3hYe7lOWShj1M4Lnoxwgm4CAjYEMp+mZTw1yhNs6P9tuRCYrU+0kbP1EGX8xC7w5mMYf4A==
+X-Received: by 2002:a05:6000:188d:b0:390:f8b9:7b18 with SMTP id ffacd0b85a97d-390f8b97d3emr4041145f8f.12.1740917064292;
+        Sun, 02 Mar 2025 04:04:24 -0800 (PST)
+Received: from brgl-pocket.. (2a02-8440-e500-b74f-e98c-3c2c-6d88-f923.rev.sfr.net. [2a02:8440:e500:b74f:e98c:3c2c:6d88:f923])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b7d69sm11436906f8f.60.2025.03.02.04.04.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 04:04:23 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc5
+Date: Sun,  2 Mar 2025 13:04:10 +0100
+Message-ID: <20250302120410.5600-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Am Sonntag, 2. M=C3=A4rz 2025, 12:14:48 MEZ schrieb Jonas Karlman:
-> Hi Yao Zi,
->=20
-> On 2025-02-28 11:46, Yao Zi wrote:
-> > On Fri, Feb 28, 2025 at 06:40:10AM +0000, Jonas Karlman wrote:
-> >> Add pinctrl and gpio nodes for RK3528 and import rk3528-pinctrl.dtsi
-> >> from vendor linux-6.1-stan-rkr5 kernel with the hdmi-pins-idle node
-> >> removed due to missing label reference to pcfg_output_low_pull_down.
-> >>
-> >> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> >> ---
-> >> This was mostly imported from vendor kernel, however the main commit [=
-1]
-> >> list 28 signed-off-by tags, unclear who I should use as author and what
-> >> signed-off-by tags to include.
-> >>
-> >> [1] https://github.com/rockchip-linux/kernel/commit/c17d6325959f0ec1af=
-901e8a17919163454190a2
-> >> ---
-> >>  .../boot/dts/rockchip/rk3528-pinctrl.dtsi     | 1397 +++++++++++++++++
-> >>  arch/arm64/boot/dts/rockchip/rk3528.dtsi      |   82 +
-> >>  2 files changed, 1479 insertions(+)
-> >>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3528-pinctrl.dtsi
-> >>
-> >=20
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boo=
-t/dts/rockchip/rk3528.dtsi
-> >> index 0fb90f5c291c..d3e2a64ff2d5 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> >> @@ -4,8 +4,10 @@
-> >>   * Copyright (c) 2024 Yao Zi <ziyao@disroot.org>
-> >>   */
-> >> =20
-> >> +#include <dt-bindings/gpio/gpio.h>
-> >>  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>  #include <dt-bindings/interrupt-controller/irq.h>
-> >> +#include <dt-bindings/pinctrl/rockchip.h>
-> >>  #include <dt-bindings/clock/rockchip,rk3528-cru.h>
-> >>  #include <dt-bindings/reset/rockchip,rk3528-cru.h>
-> >> =20
-> >> @@ -17,6 +19,11 @@ / {
-> >>  	#size-cells =3D <2>;
-> >> =20
-> >>  	aliases {
-> >> +		gpio0 =3D &gpio0;
-> >> +		gpio1 =3D &gpio1;
-> >> +		gpio2 =3D &gpio2;
-> >> +		gpio3 =3D &gpio3;
-> >> +		gpio4 =3D &gpio4;
-> >>  		serial0 =3D &uart0;
-> >>  		serial1 =3D &uart1;
-> >>  		serial2 =3D &uart2;
-> >> @@ -166,6 +173,11 @@ cru: clock-controller@ff4a0000 {
-> >>  			#reset-cells =3D <1>;
-> >>  		};
-> >> =20
-> >> +		ioc_grf: syscon@ff540000 {
-> >> +			compatible =3D "rockchip,rk3528-ioc-grf", "syscon";
-> >> +			reg =3D <0x0 0xff540000 0x0 0x40000>;
-> >> +		};
-> >> +
-> >>  		uart0: serial@ff9f0000 {
-> >>  			compatible =3D "rockchip,rk3528-uart", "snps,dw-apb-uart";
-> >>  			reg =3D <0x0 0xff9f0000 0x0 0x100>;
-> >> @@ -264,5 +276,75 @@ saradc: adc@ffae0000 {
-> >>  			#io-channel-cells =3D <1>;
-> >>  			status =3D "disabled";
-> >>  		};
-> >> +
-> >> +		pinctrl: pinctrl {
-> >> +			compatible =3D "rockchip,rk3528-pinctrl";
-> >> +			rockchip,grf =3D <&ioc_grf>;
-> >> +			#address-cells =3D <2>;
-> >> +			#size-cells =3D <2>;
-> >> +			ranges;
-> >=20
-> > I doubt whether the pincontroller should be placed under simple-bus:
-> > without a reg property, it doesn't look like a MMIO device.
-> >=20
-> > Actually it is, although all the registers stay in the ioc grf. Maybe
-> > it should be considered as child of the grf.
->=20
-> This follows how pinctrl was added for RK3576 and what is proposed for
-> RK3562 [2]. I have too little knowledge to know if this needs to change
-> or if this should follow similar SoCs.
->=20
-> [2] https://lore.kernel.org/r/20250227111913.2344207-15-kever.yang@rock-c=
-hips.com
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The reg address shouldn't matter here I think.
+Linus,
 
-The "soc"-bus describes the elements contained in the soc (surrounding the
-cpu cores) and the pinctrl controller definitly is part of the soc itself.
+Please pull a follow-up fix for a previous commit that introduced a
+potential crash and was already backported to stable.
 
-So when looking at the scope, it does belong there and also the
- gpio-controller elements do have mmio addresses :-)
+Thanks,
+Bartosz
 
+The following changes since commit d082ecbc71e9e0bf49883ee4afd435a77a5101b6:
 
-Heiko
+  Linux 6.14-rc4 (2025-02-23 12:32:57 -0800)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc5
+
+for you to fetch changes up to 64407f4b5807dc9dec8135e1bfd45d2cb11b4ea0:
+
+  gpiolib: Fix Oops in gpiod_direction_input_nonotify() (2025-02-28 16:30:48 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.14-rc5
+
+- fix a buggy get_direction() retval check
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      gpiolib: Fix Oops in gpiod_direction_input_nonotify()
+
+ drivers/gpio/gpiolib.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
