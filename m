@@ -1,118 +1,103 @@
-Return-Path: <linux-gpio+bounces-16959-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16960-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF3BCA4C66A
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 17:14:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99C91A4C6A1
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 17:19:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65D581898410
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 16:12:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 78A1F7A9816
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 16:13:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EE22215F6B;
-	Mon,  3 Mar 2025 16:06:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6DA423498F;
+	Mon,  3 Mar 2025 16:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="N6yCfVR8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fU2yHPpv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42497215043;
-	Mon,  3 Mar 2025 16:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317AC21B9C3;
+	Mon,  3 Mar 2025 16:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741017999; cv=none; b=STIGNtFCr/yVMmMPgpb9pDkI64Vxxu1SkstaH2/1geeZaH9BYZd+EDvZ9R6mM5G8yldewoy9SD/pHKagTVzbpHpAgeC1bUv5JN350+skCXKXSmzMCgLU4b9BswZUEyCDhXjIpuqixngppQyv3SDlUj1ygJjF3Zm75PSdmG4Pyf0=
+	t=1741018168; cv=none; b=XJ0P+pfR08YVpHDoeIjSoGOFbGgzglfcOsp15CMC1MYHzKbiUM/MHOra7Fq9bV1eDtwDY8IE8aTOChpTK7em+D+0CVJJbmPqurdLF4HIzzXN1Ji4eVm8STU06M7EWkl88uHjt+x5UDxVkfV13PN21bWhxYgwu6rnggXLjrzNtAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741017999; c=relaxed/simple;
-	bh=0o/eLy1rhcIG2D9DbO5Vv2RfGE5XdW9XH+TnUEAbStY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FUzpDv+jD04v366otnpqquhY0yo6X3/tkBs/EGZzVggEGAq14+ZHWKINlE6NVnPIiAr+cI0qggmktKpBY7NZgmwjNtgHBVBJFE96QiwFfMSshgrOBcLR0PaOTaYMmhuUFCrgx2St406ZDTNvKrXdr20yGx2lMD1Vzuu2JSu9WjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=N6yCfVR8; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1A55444319;
-	Mon,  3 Mar 2025 16:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741017994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t5ZXzMX1/ykUU6pr/kSKc0XUxU+Kw7kuEgt8sySazL0=;
-	b=N6yCfVR852JO4sAGmx+EWlLVcGPCi4iQqEr3qvnd6nWeZO1PAaXRIvYad5O0oOwOJZs7vN
-	OsczmmoAOyH8/VIjNDHU3Mb/lqqQzzHU3nZAGoUBX8XwRtNyaXfhy9orvJ5BbywOv6IaWv
-	H116Fzl2m98+fQuI5aRfAniIbVCSea6sFoZQ6t0h32ipfRh8tuwhckRp48Wu69L1WBLyVI
-	47KtN7nyc+9+bvDrfR2EfEiVMS0cjhNqHgW+gelli50yR2qZ/tJ3cMjqeO2Ck8oya5zReM
-	cAo6Jx2ozblE91/XmM/71ChfwyJ3YwvxDl5UFgvF8S2w8YTHiwYerPpBWQPy7g==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-wpan@vger.kernel.org,  netdev@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-gpio@vger.kernel.org,  Alexander
- Aring <alex.aring@gmail.com>,  Stefan Schmidt <stefan@datenfreihafen.org>,
-  Andrew Lunn <andrew+netdev@lunn.ch>,  "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Linus
- Walleij <linus.walleij@linaro.org>,  Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH net-next v1 1/2] ieee802154: ca8210: Use proper setter
- and getters for bitwise types
-In-Reply-To: <20250303150855.1294188-2-andriy.shevchenko@linux.intel.com>
-	(Andy Shevchenko's message of "Mon, 3 Mar 2025 17:07:39 +0200")
-References: <20250303150855.1294188-1-andriy.shevchenko@linux.intel.com>
-	<20250303150855.1294188-2-andriy.shevchenko@linux.intel.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 03 Mar 2025 17:06:32 +0100
-Message-ID: <87mse285fb.fsf@bootlin.com>
+	s=arc-20240116; t=1741018168; c=relaxed/simple;
+	bh=Bbur522PKr26lQbrZOuRbC4ZeP7+GMbA+yItAhu0OzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jb8cFzeAdrYFqFLO1QDeibyP+fToql5LDIvqdN4qaeEtrzE2la2clQc5l3U222fkaFVU3noc4DQDvYc+vWAj754EUJi/yOIhZ8msO9ESr/EOVbS7Cn0PLHTtxmAGmBSx1Rh/kEdOZAVPj4olMe8MUmt277dns+FRFE4+JFzZpK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fU2yHPpv; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741018167; x=1772554167;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Bbur522PKr26lQbrZOuRbC4ZeP7+GMbA+yItAhu0OzY=;
+  b=fU2yHPpvMk2JVU32C70zwaDT/0Wb9hzzp/VnQXxZklenSE2uzd5Tfypx
+   wfGUGnrZZ/2mfXd2HKanJwxuLMvwe9TlYngiTXYUs/7PgNf6lPO0XIj7b
+   bQGIAx0SOUCQ4Xe16fAjrRcoZiRs8IXY6AJ2SRKXC4lpUZzKTrdyCn94s
+   cg37+fUE6Bmrhn+zLFeV74xvABVc3OPp2k2nY+XZVaDfooAwzztgVtvve
+   KwAqAeOqWK4YqxlYHRaovrTNbuckxMFGzABn1ce9+Cjv5vWw/pdJbc6Zx
+   AvlYgEypf2cONScMxG5/49wYa3G/EqmrXe00RjYc9j+dQojcm7cH9STZ8
+   A==;
+X-CSE-ConnectionGUID: y7F99MkNRUGvuifpG3+02w==
+X-CSE-MsgGUID: Sq3p52W7SJKBKxaF41fi/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="52878159"
+X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
+   d="scan'208";a="52878159"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 08:09:26 -0800
+X-CSE-ConnectionGUID: INAV7lvPQAGOgLyCQawUfg==
+X-CSE-MsgGUID: cN8iAshRSJiqrvq4nqT8vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
+   d="scan'208";a="118065042"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 08:09:24 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tp8M5-0000000GrJe-45zn;
+	Mon, 03 Mar 2025 18:09:21 +0200
+Date: Mon, 3 Mar 2025 18:09:21 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Kent Gibson <warthog618@gmail.com>
+Subject: Re: [PATCH v1 3/3] gpiolib: Rename gpio_do_set_config() -->
+ gpiod_do_set_config()
+Message-ID: <Z8XUMRAlR3H13zha@smile.fi.intel.com>
+References: <20250303160341.1322640-1-andriy.shevchenko@linux.intel.com>
+ <20250303160341.1322640-4-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelleehjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepiedtleehfeeggeegtddvgffftdeutdetiedvgfelgeegkeefieefgfffieeuheffnecuffhomhgrihhnpegtrghstghouggrrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdifphgrnhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrr
- dhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrrghrihhnghesghhmrghilhdrtghomhdprhgtphhtthhopehsthgvfhgrnhesuggrthgvnhhfrhgvihhhrghfvghnrdhorhhgpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthh
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303160341.1322640-4-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
+On Mon, Mar 03, 2025 at 06:00:34PM +0200, Andy Shevchenko wrote:
+> In order to reduce the 'gpio' namespace when operate over GPIO descriptor
+> rename gpio_do_set_config() to gpiod_do_set_config().
 
-On 03/03/2025 at 17:07:39 +02, Andy Shevchenko <andriy.shevchenko@linux.int=
-el.com> wrote:
+This change was made against my custom tree and I forgot about that.
+I will wait for the overall response to this series and if okay I
+may issue the correct patch.
 
-> Sparse complains that the driver doesn't respect the bitwise types:
->
-> drivers/net/ieee802154/ca8210.c:1796:27: warning: incorrect type in assig=
-nment (different base types)
-> drivers/net/ieee802154/ca8210.c:1796:27:    expected restricted __le16 [a=
-ddressable] [assigned] [usertype] pan_id
-> drivers/net/ieee802154/ca8210.c:1796:27:    got unsigned short [usertype]
-> drivers/net/ieee802154/ca8210.c:1801:25: warning: incorrect type in assig=
-nment (different base types)
-> drivers/net/ieee802154/ca8210.c:1801:25:    expected restricted __le16 [a=
-ddressable] [assigned] [usertype] pan_id
-> drivers/net/ieee802154/ca8210.c:1801:25:    got unsigned short [usertype]
-> drivers/net/ieee802154/ca8210.c:1928:28: warning: incorrect type in argum=
-ent 3 (different base types)
-> drivers/net/ieee802154/ca8210.c:1928:28:    expected unsigned short [user=
-type] dst_pan_id
-> drivers/net/ieee802154/ca8210.c:1928:28:    got restricted __le16 [addres=
-sable] [usertype] pan_id
->
-> Use proper setter and getters for bitwise types.
->
-> Note, in accordance with [1] the protocol is little endian.
->
-> Link: https://www.cascoda.com/wp-content/uploads/2018/11/CA-8210_datashee=
-t_0418.pdf [1]
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Looks correct indeed,
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Thanks,
-Miqu=C3=A8l
 
