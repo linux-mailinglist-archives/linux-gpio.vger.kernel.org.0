@@ -1,134 +1,107 @@
-Return-Path: <linux-gpio+bounces-16895-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16896-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA565A4B894
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 08:53:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41914A4B905
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 09:21:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 745653B097B
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 07:53:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62E6A169281
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 08:21:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2C91EA7D4;
-	Mon,  3 Mar 2025 07:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFC031EF08A;
+	Mon,  3 Mar 2025 08:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gz50eZ79"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QHSENisG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B334C85;
-	Mon,  3 Mar 2025 07:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128C51EEA37;
+	Mon,  3 Mar 2025 08:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740988402; cv=none; b=Vh+jwNPVrJfzmyUYg+I3+y2uUo4JO++yoO5tAjbWZerpRPYQni1XDB6mwa2RfIfpUEnyN8+If1UGoEVoj4SS28VoFP/9EHDsw+ZsVUpyqbNDomDgHa2KucXHreUnXsK4ju4z9aNDKDSc51Xrux6z+BvJbXYAxcEGhfyfgxlLENU=
+	t=1740990080; cv=none; b=gs5fJW50takPlpyW9JaU0qqzeqXxPaRHuFcHnptgENnz85S6G5oQmXHQ5ymzX51I8M6PtmE3GemEXOWrydvwwzVMjT1pTMkXOFYB/FaP1XlM32nE8cBGfWrQnyN2IdPAKyhuGQbduKdKvACJDAO4SM+NSPiOMpVLZ4qRbxlZGbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740988402; c=relaxed/simple;
-	bh=5Fy1JHZwgirUMzgviaoNnoeqtcdMUPjkKfMSR5S3E1U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CuK+X3Wr07BADokO3ayCPDCU+/EyVfJMmWY0OQCnKo4g45e4TgaMUqqI0HTTtA7BSFxMSaYxzcSwTUzqp0n4VDWKhJSt6/zyHF1jysXXbrGfrNMO8YzDqdeP/YeKb0d+kff5P6V3vlcmTvOistIYj44zpJgG1VBmZH9hKqqjdGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gz50eZ79; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 05138C4CEE4;
-	Mon,  3 Mar 2025 07:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740988402;
-	bh=5Fy1JHZwgirUMzgviaoNnoeqtcdMUPjkKfMSR5S3E1U=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=gz50eZ79yZpQQ4AlK7w5ZxlkSinjqxwbRqqnh+Ktb9l76fhDJU841cYkRnJvHgluW
-	 AK8NP3k+0DUAn8zZsjJhu3+19L3JLAYNE4qcSuFU4iMnRAsEnd5JljG503MrS5cylW
-	 iJRN7/Yt/vlGkj1TQNSy1+F75kXw4IdBzd2mjmWk9rbgVKQTiQ6gPSB0W6/0741hHo
-	 J2zzjYc7UWJCxpYXzFCj+3H8u27sizt95iE0wGym8mNqiF1FbRQZQvf3+rBY32Pz3E
-	 4Du6Ylb3icoap3+GzS173u7Nn8UXvGQac2QrRyK2+WITeIpBWY3IxQ58/p6SsU6XIC
-	 hMbI/8ku0iMXg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8269C282C5;
-	Mon,  3 Mar 2025 07:53:21 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Mon, 03 Mar 2025 15:53:20 +0800
-Subject: [PATCH] pinctrl: meson: fix pin input property for a4
+	s=arc-20240116; t=1740990080; c=relaxed/simple;
+	bh=N9mZl4TD3z0y0yE+U4uxZdByy4waB69DBjZwBEDVK0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YXWjaz6tBqVMryOVu3hfIC3+AuJFnNlrOjT7PGuIk6L6xou9tQR8VFfW7ABpAm/F/b/ekeranwpNvddmRM5IeuF2SIgxoAq5XSfsfvexc8AKCkmTXL2TOnORrjECgmq/B+x+NO0tM8wNT/Bs890QD9UVgIfMQt47AELVWcHpiHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHSENisG; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740990079; x=1772526079;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N9mZl4TD3z0y0yE+U4uxZdByy4waB69DBjZwBEDVK0s=;
+  b=QHSENisGlf/P1/vlyD6SApEXNHQJkWY20TlJYqH1FZC/Bh9T8nyP4Nft
+   dgTH4OpTZohvcW2Nj19rlcmC7F0+v52HaOLhUuDFLjRuVD0szL8aCmq+s
+   DWf32KIQ6f6DW7tvvmFuMo1BLgqeNdGL4+VqyEuhPARi9ol2mvjJhuRw/
+   qHV8exm9TbSghvvFjh+3aXJqPgJq398MMvxs6zuce0O0kmpC7kTXlGFGk
+   zXNczbuE3vULP4C/omPsTYZG7kgzpDsJPVImEVPylaPUrt1NGbc4tcKcI
+   AAchiUTrG00DW1+TWqod1xpfRv3KfPH7Xvafrgsh7xtNazGztAVp8vS21
+   g==;
+X-CSE-ConnectionGUID: PZlu3JROTVu1UWbU2Mn6Sw==
+X-CSE-MsgGUID: bxck2UHdSAmiEmA5UYIWlQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="41741002"
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="41741002"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:21:18 -0800
+X-CSE-ConnectionGUID: 97up0/dCQbWEIlFstbw+Gg==
+X-CSE-MsgGUID: VKhMROqeTjyq46TDp4kIKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="122947971"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:21:17 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tp133-0000000Gkip-2FPH;
+	Mon, 03 Mar 2025 10:21:13 +0200
+Date: Mon, 3 Mar 2025 10:21:13 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
+	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
+ MFD_INTEL_EHL_PSE_GPIO
+Message-ID: <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
+References: <20250303044745.268964-1-raag.jadav@intel.com>
+ <20250303044745.268964-3-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-fix-a4-pinctl-v1-1-6579888b4272@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIAO9fxWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYwNj3bTMCt1EE92CzLzkkhxdkyQjQ9M04zRLEwsLJaCegqJUoAKwedG
- xtbUAl0BJTl8AAAA=
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740988400; l=1905;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=8KAlxGwDBrTjecjGM2UBSMoeZW/HVDXc337RfYbdpLs=;
- b=lSCzkCPO4V0PMaYz3RHyLMVvoDIJFa+ttEleYaHx84tqa5hPPEuIuhBgqPVQxEuCkdXP9TslC
- bIGD/OzMizrAHgH73PTjU+OBpqW5wF23nSa2kAG3qyHAmbGpcSMfPcW
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303044745.268964-3-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
+> Now that we have Intel MFD driver for PSE GPIO, depend on it.
 
-The register of pin input attribute means the opposite.
-value of reigster meaning is 1 for input and 0 for output.
-So fix it.
+...
 
-Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>  config GPIO_ELKHARTLAKE
+>  	tristate "Intel Elkhart Lake PSE GPIO support"
+> -	depends on X86 || COMPILE_TEST
+> +	depends on (X86 && MFD_INTEL_EHL_PSE_GPIO) || COMPILE_TEST
+>  	select GPIO_TANGIER
 
-diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-index a5218e8f1e03..35d5540b8eaa 100644
---- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-+++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-@@ -775,7 +775,7 @@ static int aml_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
- 	if (ret)
- 		return ret;
- 
--	return BIT(bit) & val ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
-+	return BIT(bit) & val ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
- }
- 
- static int aml_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
-@@ -785,7 +785,7 @@ static int aml_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
- 
- 	aml_gpio_calc_reg_and_bit(bank, AML_REG_DIR, gpio, &reg, &bit);
- 
--	return regmap_update_bits(bank->reg_gpio, reg, BIT(bit), 0);
-+	return regmap_update_bits(bank->reg_gpio, reg, BIT(bit), BIT(bit));
- }
- 
- static int aml_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
-@@ -796,7 +796,7 @@ static int aml_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
- 	int ret;
- 
- 	aml_gpio_calc_reg_and_bit(bank, AML_REG_DIR, gpio, &reg, &bit);
--	ret = regmap_update_bits(bank->reg_gpio, reg, BIT(bit), BIT(bit));
-+	ret = regmap_update_bits(bank->reg_gpio, reg, BIT(bit), 0);
- 	if (ret < 0)
- 		return ret;
- 
+Looking on how GPIO PMIC drivers are written, I would redo this as
 
----
-base-commit: 73e4ffb27bb8a093d557bb2dac1a271474cca99c
-change-id: 20250303-fix-a4-pinctl-4b215f3f9488
+	depends on (X86 || COMPILE_TEST) && MFD_INTEL_EHL_PSE_GPIO
 
-Best regards,
 -- 
-Xianwei Zhao <xianwei.zhao@amlogic.com>
+With Best Regards,
+Andy Shevchenko
 
 
 
