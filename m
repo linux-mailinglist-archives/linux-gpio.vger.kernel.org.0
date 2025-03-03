@@ -1,185 +1,146 @@
-Return-Path: <linux-gpio+bounces-16942-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16945-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22AC2A4C207
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 14:34:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F189A4C267
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 14:51:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 651CE1894193
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 13:33:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A98817137C
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 13:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BFFD212B04;
-	Mon,  3 Mar 2025 13:31:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9AAF211A11;
+	Mon,  3 Mar 2025 13:51:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WN4HsvEL"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="F6wdiybK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDDE21148E
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Mar 2025 13:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0A42101B3;
+	Mon,  3 Mar 2025 13:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741008681; cv=none; b=JrDeolmQlaE+EbgeqbXLnUoj+P4bmyT9YUzJxThenvSvRNrNi1OeOMIAr4PKOy0kobtInnHxJCU3HniY5YxDgFoIhwuW3iQDXj7r7o6LGXS26MM1p3VJgbV+NcRRX8ij6wRk/klfXSm/VvBPy/hweDsC+qolfHakRNiwN8eMuKc=
+	t=1741009894; cv=none; b=n5oeRv8t8YvWcmycuwu66QrnhA2VOkKrmMNjUnmNwON8wEem3kRVuRFhr4Ln+9HYBFfI7a1r9qqkuebMKSaXfdKsOgT16DKTY0oU+6ZepL80cO4rXavIGA6wtR8DmWGwNN3N5YV25MqBkoOfRrM1R0pWhp9tPD6M20ZPrX1oYak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741008681; c=relaxed/simple;
-	bh=R/TM49oZWGdLbpHQHKmc9AX9+Vwi8afVDcJ3MJ+BDeU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pSN6FBTt+Yf9tZm4bJgsnTtMBsjD5ypXWPKNEYBWLQuy2zzFDJMsCNr/l5UdFLM5cIliSZD44qaxkCiDoq9fjQRDwo5V+mALviIP9xltAVxIm60NnNNktloQPUmwAmqY20t01sGaMkorJwF6jFVdiLUGv/ORHLx5QivYquq1+Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WN4HsvEL; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30b8cbbac91so34549871fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Mar 2025 05:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741008677; x=1741613477; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R/TM49oZWGdLbpHQHKmc9AX9+Vwi8afVDcJ3MJ+BDeU=;
-        b=WN4HsvEL91e4KVi0HMbEgYFiHF+eB1nc5SDXyDwPoDYREV4crwghpycnanqqyO9G3A
-         VzsvhaCnEjYgFj9ZLe58jjMV+7NGQxB7yVlqUin4Gi6BCxEurQKWyEbTKbn9EC9XhyPk
-         QInLZ36EPuSug24XH/G2y/Lx4X6wVgsCLF7QzNZ30AeIp4O52KEkk4ksEsXf7hOPZUZh
-         KsoUuERxpePmM6LnlzzNCsOYFV6mt4bvZYbc1YRoAvsxjqCkix7wv2QZAEiMl3A/b947
-         1KZaIXe0ChsUj7dJF232JGPJ6IxAVE2eucVnmA/TX8fpoA7E8qax6zmkD+74Jl8FVzou
-         q5ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741008677; x=1741613477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R/TM49oZWGdLbpHQHKmc9AX9+Vwi8afVDcJ3MJ+BDeU=;
-        b=NwiVvuRcLx6Qm5cE5OLTKuvsXhTw00GLBfg11jbi1IvzYaSRHnAgEjbpqrqh+Qp001
-         iHXFVhg1EpQgXN63Tr+FqbsKqqVARRPlkchCci7L3PPzOiKb80v6yDFlbERWmjxPgWKV
-         NJYs3+hJb/gEvFVq7lpPmahWa5B6mhF2zTNBjXeIoFq9doEcbOpG5KvbPZP0W7edIQnc
-         brFtsDXmNECYzJe8qnK1612PEMQNDsBDRPtFISr+jP7fKDWNpTD6yi5lhJo3nKLcFzaZ
-         i9Y6cpyyuO+XE1HH/BAfU5Cd5M7j7zkw1UPnKw/qJkedkeq3CppjHrt53VCSGOcHIkr9
-         EYqQ==
-X-Gm-Message-State: AOJu0YzHxj397O1R9eqsvDkSjTOQ/+Tbbz8IQQImNFE1DS69tFnWBO7p
-	D48mAxXNpxwA6RRphcdzt9yh2Xs8jaIbQwI3ANnXd03YUUmfu9dnKIUiWCFvfhfEofUk5ynujW3
-	fiHvC065mveBVArEgZVyq8TMfjl4us5od6317pQ==
-X-Gm-Gg: ASbGncvPyd0GeYEbdLZo/45evK7J5070chNegc1kVK0CMc3zI0PPtrlO/CGkDZYtv7H
-	5d+ce4ZtFezvaHLs5c58hegicKKfrR0kHludaLrvvYUiqO7Ugpfxxr06kpOrub2x1tagga4kCs1
-	xmgIXE2l41y/IIPkduJSXE3/vNRq4JZco3lMEmTZaE1WrWZP6MwhHK8mFneQ==
-X-Google-Smtp-Source: AGHT+IEVWBT1YPXtdlWjE7JR74LN9l06k8yqVsU2GBGmmFdgMB/KpYgiUWm2TOaIJf8TNTNTlJ0TEPrpLB7pycWcOhE=
-X-Received: by 2002:a05:651c:2229:b0:308:e587:ca8e with SMTP id
- 38308e7fff4ca-30b90a0e97amr47240721fa.11.1741008677532; Mon, 03 Mar 2025
- 05:31:17 -0800 (PST)
+	s=arc-20240116; t=1741009894; c=relaxed/simple;
+	bh=p4DhxoHd3mXOHoZ4y5+57jK7IJPUhj8owFfMXypcf4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qXUTT1wOALP7LRFsUG1SNOEhjXy+LodUvfLPM/YhoaO+pitqwkY3YUyVIFUZwzIZ7LKfjnISEXRfnhlPp2pTKkLha7/tOSENfsN4+cA272PH57fMGLU8eEvfL/p6TtO/UBxRlKoMMP931tzCSwJDJsr8/xJWIfvcrviP2Orv6r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=F6wdiybK; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5236w7Hs006077;
+	Mon, 3 Mar 2025 07:33:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=ofmnRVwI5AT62ptxh8zklk/N01TYJ0oFg8f5/KIUZRw=; b=
+	F6wdiybK2ED4uAxZOAJ/RRTtc+TbrgGGRp7AsLBjfNmeL1wxKEJe1gpttdgFAZQQ
+	aygpqZQDL0He9/cn7WEOggadA7TgBV94vVupVnreLa1ZfKSWLnpeNovjZ0o9eyC/
+	BDOwxgQ9w5V98ZV5k7y2uCBojEfbl6eO8A9BVEphTGXn+nG98/KF+LmSaCxm5QxL
+	gwZnIK/MUTFJNIPctafUXvydaEtKH/23TqUrELy/xlvQCOc7TIdT+iOC9LnuDmW3
+	q+w2QcBUh3Vxi31LaC6G+AMvTrlFW3vech1ZZUmPbzC0V4UbwTPa7El2/5x0XEV8
+	jDLmZRWhEvTMuB7mDkGsEg==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 453yhmcw74-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Mar 2025 07:33:11 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 3 Mar
+ 2025 13:33:10 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Mon, 3 Mar 2025 13:33:10 +0000
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id E67B2820248;
+	Mon,  3 Mar 2025 13:33:09 +0000 (UTC)
+Message-ID: <84b7c543-7e81-4a20-9f58-7ddf6b2001e5@opensource.cirrus.com>
+Date: Mon, 3 Mar 2025 13:33:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4af4f6c5-d7da-4735-9ef5-ee3c34f7eae6@cyberdanube.com>
- <CAMRc=Mes3EmqfPtMBNZfTPV2cpyfsH13hS4bad5AwgTUbdVCPQ@mail.gmail.com>
- <661c2ee0-013b-4ee1-8c53-51729a172cce@cyberdanube.com> <CAMRc=Mcx4=9u9n2CoX=ErxjEidEHH-+ALz976ir1P0NMnzAQvA@mail.gmail.com>
- <230bae96-2cac-48a8-869f-0e664cd8e049@cyberdanube.com>
-In-Reply-To: <230bae96-2cac-48a8-869f-0e664cd8e049@cyberdanube.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 3 Mar 2025 14:31:05 +0100
-X-Gm-Features: AQ5f1Jqu3s2adTb2dJ5lEYL1G75vg2g6QPwSS2GNo1lJPXv_oYi2YlgVrY6i44g
-Message-ID: <CAMRc=MdV5tvARvjS-6n7n37ekYs6hUAX-X4y736-1t1N-U0zfA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: added configfs option for static base
-To: Sebastian Dietz <s.dietz@cyberdanube.com>
-Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/15] gpio: arizona: use new line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mun Yew Tham
+	<mun.yew.tham@intel.com>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery
+	<andrew@codeconstruct.com.au>
+CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
+ <20250303-gpiochip-set-conversion-v1-11-1d5cceeebf8b@linaro.org>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <20250303-gpiochip-set-conversion-v1-11-1d5cceeebf8b@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: CRfd2hqIDBqS4F2QrofR-T9cJdEBrOGR
+X-Authority-Analysis: v=2.4 cv=UeirSLSN c=1 sm=1 tr=0 ts=67c5af97 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=w1d2syhTAAAA:8 a=IHiEukr3ZQpEQQ-4GLUA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-GUID: CRfd2hqIDBqS4F2QrofR-T9cJdEBrOGR
+X-Proofpoint-Spam-Reason: safe
 
-On Fri, Feb 28, 2025 at 10:02=E2=80=AFPM Sebastian Dietz
-<s.dietz@cyberdanube.com> wrote:
->
-> On 28.02.25 16:43, Bartosz Golaszewski wrote:
-> > On Fri, Feb 28, 2025 at 2:54=E2=80=AFPM Sebastian Dietz <s.dietz@cyberd=
-anube.com> wrote:
-> >>
-> >> On 28.02.25 14:22, Bartosz Golaszewski wrote:
-> >>> On Fri, Feb 28, 2025 at 1:46=E2=80=AFPM Sebastian Dietz <s.dietz@cybe=
-rdanube.com> wrote:
-> >>>>
-> >>>> To replicate gpio mappings of systems it is sometimes needed to have
-> >>>> the base at static values.
-> >>>>
-> >>>
-> >>> Can you give me more info on why you'd need that? Static base is
-> >>> largely a legacy and deprecated feature, there's ongoing effort to
-> >>> remove it from the kernel.
-> >>>
-> >>>> base is treated as unsigned as there doesn't happen to be a
-> >>>> fwnode_property_read_s32().
-> >>>>
-> >>>
-> >>> Ha! That's interesting, I wonder why that is. We do have signed
-> >>> variants for OF-specific properties.
-> >>>
-> >>> Bart
-> >>
-> >> We are building digital twins for embedded devices for security resear=
-ch. The
-> >> firmware of these devices often export static gpio pins which we simul=
-ate
-> >> using gpio-sim. With this patch we are able to satisfy these condition=
-s.
-> >>
-> >> While the feature may be deprecated, i would argue that it makes sense=
- and
-> >> fits the nature of a simulator to be able to configure it manually.
-> >>
-> >> BR,
-> >> Sebastian
-> >
-> > What kind of digital twins? Using qemu? In any case - I really dislike
-> > the idea of extending the configfs interface of gpio-sim with an
-> > attribute to support an option that we're actively trying to remove
-> > from GPIO core. Unless you can give me a really convincing argument, I
-> > will allow myself to use my maintainers' right to NAK this one.
-> >
-> > Bart
->
-> Exactly, we are analysing the firmware and re-host it in a qemu instance =
-with a
-> newer kernel.
->
-> First of all thanks for giving me the oppertunity to pitch the option.
->
-> Gpio-sim provides a way to create chips for testing purposes. Some embedd=
-ed
-> device developers still rely on sysfs. While the ABI is certainly obsolet=
-e and
-> not actively developed, it is still actively maintained - Which means tha=
-t in
-> real-world testing scenarios, it remains relevant. Our experience has sho=
-wn
-> that these firmware images are often build with hardcoded sysfs paths in =
-mind
-> and do not use the character device interface.
->
-
-My experience is that even when using drivers without a hardcoded GPIO
-base, people tend to rely on specific sysfs paths just because they
-tend to remain the same unless some dynamic GPIO expanders come into
-play. This is of course dangerous.
-
-> This feature wouldn't encourage new use of static bases - it would just m=
-ake
-> testing existing setups less of a headache.
->
-
-This is not what I mean. We want to remove the "base" attribute from
-struct gpio_chip. If we expose it in gpio-sim in its supposedly stable
-configfs interface, then we'll implicitly agree to keep it around
-forever. I don't want to do it.
-
-> Given that gpio-sim is meant for testing, shouldn't it provide the flexib=
-ility
-> to test in this scenarios?
->
-
-gpio-sim is for testing the GPIO uAPI interface and any user-space
-tools. Maybe you should just simulate whatever device you need
-directly in qemu?
-
-Bartosz
+On 03/03/2025 1:18 pm, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>   drivers/gpio/gpio-arizona.c | 9 +++++----
+>   1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+> index c15fda99120a..e530c94dcce8 100644
+> --- a/drivers/gpio/gpio-arizona.c
+> +++ b/drivers/gpio/gpio-arizona.c
+> @@ -121,7 +121,8 @@ static int arizona_gpio_direction_out(struct gpio_chip *chip,
+>   				  ARIZONA_GPN_DIR | ARIZONA_GPN_LVL, value);
+>   }
+>   
+> -static void arizona_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+> +static int arizona_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> +			    int value)
+>   {
+>   	struct arizona_gpio *arizona_gpio = gpiochip_get_data(chip);
+>   	struct arizona *arizona = arizona_gpio->arizona;
+> @@ -129,8 +130,8 @@ static void arizona_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+>   	if (value)
+>   		value = ARIZONA_GPN_LVL;
+>   
+> -	regmap_update_bits(arizona->regmap, ARIZONA_GPIO1_CTRL + offset,
+> -			   ARIZONA_GPN_LVL, value);
+> +	return regmap_update_bits(arizona->regmap, ARIZONA_GPIO1_CTRL + offset,
+> +				  ARIZONA_GPN_LVL, value);
+>   }
+>   
+>   static const struct gpio_chip template_chip = {
+> @@ -139,7 +140,7 @@ static const struct gpio_chip template_chip = {
+>   	.direction_input	= arizona_gpio_direction_in,
+>   	.get			= arizona_gpio_get,
+>   	.direction_output	= arizona_gpio_direction_out,
+> -	.set			= arizona_gpio_set,
+> +	.set_rv			= arizona_gpio_set,
+>   	.can_sleep		= true,
+>   };
+>   
+> 
+Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 
