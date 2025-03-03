@@ -1,132 +1,102 @@
-Return-Path: <linux-gpio+bounces-16912-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16913-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44E33A4BE8C
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 12:30:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F2E2A4BEEA
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 12:38:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C160C1885722
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 11:30:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 128BD7A42D9
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 11:37:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 781091F8937;
-	Mon,  3 Mar 2025 11:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05461FFC4E;
+	Mon,  3 Mar 2025 11:38:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="M9LNaQQM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C9TWqZ5w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mr85p00im-hyfv06021401.me.com (mr85p00im-hyfv06021401.me.com [17.58.23.190])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA951F872C
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Mar 2025 11:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213CE1FFC41;
+	Mon,  3 Mar 2025 11:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741001435; cv=none; b=MlSyve2erj4PfUgftZ5jKFNbVWItiqp57aey053ZvohVghks7HZqLXten0iJhZXFusE9to8vwekjFJXKMoE/jK74lPqyNBeaYmPR7zAMyAHgYid8sbQnBEVW2gey+g/DFamkHOaHqAYLKooYKR28oGBkvTyzRQV2xL+wV0AR+o4=
+	t=1741001902; cv=none; b=EFhO/ob7h8EtVkKkOX3zWKvN8VMu0hBxdmB9bhOayJE9bhbbi9hhvPrvO40NjvuNr27bfCMqbGIg5MxoCsXwN+3M5UYa1KD79uty8b1drpQTGIhQTzF8r4gG+SFQpiJEpQYVsVQaMnV9oVi3FYg7b25iv8YdIAw16slM//OwAbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741001435; c=relaxed/simple;
-	bh=X0LU3aYn4lUmJVogH7zjqoCFEavVUNcoV5t1PZiDF6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YRlBYnEOp9BpHZlxSLftsnzJOf5yx4zpNOF/qiXN/bWzlWOHAlAFD0pxyhdZCpSWYp6MwRPxGl21dxl37TdIUSTf1P0deMT4xv4KXOIBzu36Zn5doWFpXm2Qgm5UTMJvoAmxwst4Jw2Ak1iQbo+ax4/UvEjtQdGLqKy9wzORLrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=M9LNaQQM; arc=none smtp.client-ip=17.58.23.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=OZOLugLSboUaxk503olOimdjHThkYZSt/rnUocHx7qo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=M9LNaQQMBVnDvn7O9dkyxfqENe+n3CTiJTPQ2UQFIHq6HOYn5yqN3iDQ3RVhMcn23
-	 RYbgEyO7lbqW+H+rJi6eLqXyW0ofbGlb2TozfcwQt+N3LDxfRINewpBQO64R70O6JP
-	 Fj4pbqb3B74JtNoj/kfZRb0TgXmhRDVBpuDr2nHUHUnQnsoslms9i4lxHUEqE597f0
-	 dsKBFbP0qhEmAOCAG72w3Jw4tGGCdcmaS+BdhFHar4cmpTgkAp9kjNy3bhZerCy1fm
-	 yb4VLYz3eRYNRP0qJgIXtuCQgNCwAPfOp2U/Lehb0PDMMPAW6dfU3J1HAJf8t1L7ga
-	 V8U2HDDNFoYsA==
-Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-hyfv06021401.me.com (Postfix) with ESMTPSA id D31F830384C0;
-	Mon,  3 Mar 2025 11:30:17 +0000 (UTC)
-Message-ID: <ca719ca0-ee14-4022-bf61-5794d7ec8d3a@icloud.com>
-Date: Mon, 3 Mar 2025 19:30:13 +0800
+	s=arc-20240116; t=1741001902; c=relaxed/simple;
+	bh=8g5XkS3p3EZERMkZa1Ftfxp/zc6MGGaz7kerN0DV6OA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=otSuvoKnzPEe/Bly4I9urMmohWIHIw49oSCO4teS5GEOaYlINv4+CSExrzLTLoQslyRYNMngB4KTcmAFe9zrMQD28R0yuC4n8weP7VbnylcqOiTKKVpvC21viHPUP9XET1tmohP9eX5Pu/JmIJ1oHr6LwQsfdoXQ3Ebhb4cm0x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C9TWqZ5w; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741001901; x=1772537901;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8g5XkS3p3EZERMkZa1Ftfxp/zc6MGGaz7kerN0DV6OA=;
+  b=C9TWqZ5wyu6TD7iYNuTymBUgb0mSxWE1yBNE0MVy1Kr0JyFY0aj44OXo
+   jGb2iwSnkAOKU9V44V+eSWnxn4zpmIgXI0ky2FDWMa9s446CYDexm58e6
+   0PrbISUhW4ap0XD3BJzpgnFyMUnXVCBhZieVqAaWn6YzZDbiqKpkmNIgr
+   JtZcRP+OK+82RgWrJw4jSBgEyxmUvxzZsnHaOnc2bcXQEtY48yqMJhgq8
+   cMz/XoVqWHOROgVof+5jTb42jAY9wmXd8eQZcNqJhWGvATud/GV0lDSKc
+   z00Abb5cr4W9VOY6aes7Uzh5Vo4hAXzH0aPJklUj/RxBUUwSWzLk2Rr5o
+   g==;
+X-CSE-ConnectionGUID: Qqzi7w7XSfOAO0qQfYa+NA==
+X-CSE-MsgGUID: rk8++g69Q/qry/JKlN5QCQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="53278247"
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="53278247"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 03:38:19 -0800
+X-CSE-ConnectionGUID: u66U2HclQ1utJWcMzl7seg==
+X-CSE-MsgGUID: MGNIbsWgQoCauMM2L36Q7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="117969709"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 03:38:18 -0800
+Date: Mon, 3 Mar 2025 13:38:15 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
+	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
+ MFD_INTEL_EHL_PSE_GPIO
+Message-ID: <Z8WUpzDHbhp0aMoN@black.fi.intel.com>
+References: <20250303044745.268964-1-raag.jadav@intel.com>
+ <20250303044745.268964-3-raag.jadav@intel.com>
+ <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH *-next 00/18] Remove weird and needless 'return' for void
- APIs
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Johannes Berg <johannes@sipsolutions.net>,
- Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
- Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, iommu@lists.linux.dev,
- linux-mtd@lists.infradead.org
-References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
- <46d17d84-5298-4460-96b0-9c62672167a0@icloud.com>
- <20250227130347.GA5880@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20250227130347.GA5880@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: VRiK2BwrsvBlqf3istvRC36nkjOjRITT
-X-Proofpoint-GUID: VRiK2BwrsvBlqf3istvRC36nkjOjRITT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-03_07,2025-03-03_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 adultscore=0 clxscore=1015 mlxlogscore=855 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2503030088
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
 
-On 2025/2/27 21:03, Peter Zijlstra wrote:
->> C) perhaps, most ordinary developers don't known the function mentioned
->>    by B), and also feel strange for the usage
-> It is quite common to do kernel wide updates using scripts / cocinelle.
+On Mon, Mar 03, 2025 at 10:21:13AM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
+> > Now that we have Intel MFD driver for PSE GPIO, depend on it.
 > 
-> If you have a specialization that wraps a function to fill out a default
-> value, then you want the return types to keep matching.
+> ...
 > 
-> Ex.
+> >  config GPIO_ELKHARTLAKE
+> >  	tristate "Intel Elkhart Lake PSE GPIO support"
+> > -	depends on X86 || COMPILE_TEST
+> > +	depends on (X86 && MFD_INTEL_EHL_PSE_GPIO) || COMPILE_TEST
+> >  	select GPIO_TANGIER
 > 
-> return_type foo(type1 a1, type2 a2);
+> Looking on how GPIO PMIC drivers are written, I would redo this as
 > 
-> return_type my_foo(type1 a1)
-> {
-> 	return foo(a1, value);
-> }
-> 
-> is a normal thing to do. The whole STD C cannot return void bollocks
-> breaks that when return_type := void, so in that regards I would call
-> this a STD C defect.
+> 	depends on (X86 || COMPILE_TEST) && MFD_INTEL_EHL_PSE_GPIO
 
-The usage is a GCC extension.
-but the usage is prone to be used within *inappropriate* context, take
-this patch series for an example:
+True, but perhaps allow independent COMPILE_TEST where possible?
 
-1)  both foo() and my_foo() are in the same module
-2)  or it seems return type void is the best type for foo(). so no good
-reason to track its type.
-
-
+Raag
 
