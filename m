@@ -1,121 +1,164 @@
-Return-Path: <linux-gpio+bounces-17038-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17053-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 459C4A4DDB1
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 13:19:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B6D4A4E1FA
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 15:58:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7FA33A60EC
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 12:19:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC57617E3DC
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 14:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 453A4201116;
-	Tue,  4 Mar 2025 12:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C2C20A5C4;
+	Tue,  4 Mar 2025 14:47:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mUmEGZLJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QHSENisG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from beeline1.cc.itu.edu.tr (beeline1.cc.itu.edu.tr [160.75.25.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DF51FFC69
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 12:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB41205E0E
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 14:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.115
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741099660; cv=pass; b=A/7zCRSfNgdaBVy7L0+uA4LZyH6lbfaKH9gijt8HjXS6i5o7zLt82ndd5E1WJ9h4LXAzAwpL/k3nQ/2QLhF2JMV22jT3aqUgd72KOarSabbtOAnGt4xfTSwn/fv+q1Ip4QJ3NySekk0rtbBtOJny69LLtz3VgmDMVj5E9c8MtSU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741099660; c=relaxed/simple;
+	bh=N9mZl4TD3z0y0yE+U4uxZdByy4waB69DBjZwBEDVK0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FTTSd+SYMvR2uWy6pH/pxOiewiSWwoBaFqQHnmox4KwGGdBVsOBlK53N3zmoZEusZO24qNq3qKBT79XF1KdbwOeW5j9Kls9GLH0PA7uwPoSEWUfzslsoTspS8BYTSl+3r+LBV8R3P7FzBl6c76cvGul8rTU6ib4S+t/MNthEgP4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHSENisG; arc=none smtp.client-ip=192.198.163.17; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; arc=pass smtp.client-ip=160.75.25.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline1.cc.itu.edu.tr (Postfix) with ESMTPS id 62C1340D0597
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 17:47:37 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Authentication-Results: lesvatest1.cc.itu.edu.tr;
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QHSENisG
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6dmM1fRNzFxd8
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 17:46:27 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id 0F0994272F; Tue,  4 Mar 2025 17:46:20 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHSENisG
+X-Envelope-From: <linux-kernel+bounces-541134-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHSENisG
+Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
+	by le2 (Postfix) with ESMTP id 3174B428D6
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:21:36 +0300 (+03)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by fgw2.itu.edu.tr (Postfix) with SMTP id 101852DCE0
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:21:36 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C13E518904C9
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 08:21:39 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DEBC1EEA4D;
+	Mon,  3 Mar 2025 08:21:23 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128C51EEA37;
+	Mon,  3 Mar 2025 08:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741090795; cv=none; b=VR0FGw+aLsHM602F4PD41CItUaNnGoSAvzHcD5qSQASjn39cBh6iT2VJVYn6Ki+5OsgU4brYC/uF5pSQGXr84B08y9+lcgiyXt6SHMZqILQCNZz/pCVfJdjUQ4GNGAKZu6TM2hG9l2dyVxLUj8EJrhl0ZdAmm/wpfQ3BUuZvodE=
+	t=1740990080; cv=none; b=gs5fJW50takPlpyW9JaU0qqzeqXxPaRHuFcHnptgENnz85S6G5oQmXHQ5ymzX51I8M6PtmE3GemEXOWrydvwwzVMjT1pTMkXOFYB/FaP1XlM32nE8cBGfWrQnyN2IdPAKyhuGQbduKdKvACJDAO4SM+NSPiOMpVLZ4qRbxlZGbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741090795; c=relaxed/simple;
-	bh=Fv8Rek+UuYwdZW3i4FBy7zfZCimtjlxs25N6M1Blkhw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rv5hNDOuxRiw5Ms9+xiphZUblGw25wzQfpCUcK6egCUnMnN34mUzHpkv7+EuFm7CUVoSqfxEFs9CiDVhUiR6CylMoLBOllmDn5yAt/YzgK7OhGfgJ+vSZIaadqHivyqefSaWWCfM8yjXLvIp65tJMJ6RPCF0BaflO3slDNDbrIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mUmEGZLJ; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54963160818so3042674e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Mar 2025 04:19:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741090790; x=1741695590; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oXh2mt1+51Iizx4GGl3f/xWLu8nQ3RKpG09yGRKQ5og=;
-        b=mUmEGZLJJhgAoyUaUTu+97JmzbJB5BOABws0xMfW0XcraI9pp/9YWNztuSq0HLg80h
-         9sRZLwBK9zcZT8D32J6eUc2VwmmQq3k8XhCxvfnVN3MFUhtXcX+xSYCZQ0l3ZKeho94M
-         GCbGndxNrZgUI0wDzmVTm1YeWptfi6ECXXzo7ltOFYemF8SIPOAvGXyj7C4hzCTV4FB4
-         Hl0eWai07sUAn1wHhx4jtboHyuFMl/Yk++CNoTsqbyja4WJEGiqkTZPFaw42I6ciKphG
-         qa6oegD+SGa4J8vdaLomwNLRrYEUKm13xn7pgOt5SpjtRmHqqOeEX3HUz4SR40g5aqM2
-         xvkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741090790; x=1741695590;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oXh2mt1+51Iizx4GGl3f/xWLu8nQ3RKpG09yGRKQ5og=;
-        b=rvKyZJK9QXBVFJqIJzBkLppjU1LVLU4eoDSp0Px44sW41XcCOJcSNN6N37uZO9Bvw7
-         NEfqjrP3OTmQ3593vMXOTy+Hi/DV0qaCaHVcrqtQ2eYgGi2dO1QHwithRp4xyAW/PjsO
-         FpUvasZgasXuiRuoKMVWYfGsd08WwJhEzyAymeYpRg0xmDpSe+GHgneLd0DLKANZVuqV
-         OyilvODC7e8axpvLpL+hvRAPXfMi/U1h8mLq8ZL1lRF5eZNO+YTKpScGrLJVowFjPxCR
-         19IwsdnnXkeIwKcTL5FalMO7xNsb6tEjiJtMr4wkKtEFwzdxFNL+HTl56nqcDJLpQ1iu
-         dy4w==
-X-Gm-Message-State: AOJu0YxUL2zutRuSLhtjAJk4HOLkoQNtzgla5hj2rx28uCjt0XCw5IIe
-	5UygAIGdzlP3CzRx2e7ZajOOCT5mrclrp0zywSunS5l8l/kKIW1EBGMpvegXqHeyzH2nmx8wDGu
-	nAJh2QICSEO88go+dZcNr3qg0Ju1f+g/LUT15Fw==
-X-Gm-Gg: ASbGncujU0/YtgIKFcfhONXjipVNkQOtbUQFKZ4jcneAOVKK+pU0506O4n/78HJwnhp
-	8H+U+2ISBsXCDJf/mJdRSO8I6zcB9I/ywLs3jPZNwMM7GzGqivA/3rui1NvUsZ8pKrEV6UiYquV
-	pKTB1BOoefPembf8qaI9BVDJb9321eXjl6drPZ5rfq/Dhnlz9f0CVfTgth8A==
-X-Google-Smtp-Source: AGHT+IFq5tNiX4+sA+k/8DP0bPkZKFyB11zRAnNiXhvg2rUMrwwThmtzti3WlWnN1V9dZXtX4zQMI/vvg5ipxVlym0o=
-X-Received: by 2002:ac2:4641:0:b0:549:54f7:e54 with SMTP id
- 2adb3069b0e04-54954f70ecfmr5262461e87.50.1741090790542; Tue, 04 Mar 2025
- 04:19:50 -0800 (PST)
+	s=arc-20240116; t=1740990080; c=relaxed/simple;
+	bh=N9mZl4TD3z0y0yE+U4uxZdByy4waB69DBjZwBEDVK0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YXWjaz6tBqVMryOVu3hfIC3+AuJFnNlrOjT7PGuIk6L6xou9tQR8VFfW7ABpAm/F/b/ekeranwpNvddmRM5IeuF2SIgxoAq5XSfsfvexc8AKCkmTXL2TOnORrjECgmq/B+x+NO0tM8wNT/Bs890QD9UVgIfMQt47AELVWcHpiHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHSENisG; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740990079; x=1772526079;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N9mZl4TD3z0y0yE+U4uxZdByy4waB69DBjZwBEDVK0s=;
+  b=QHSENisGlf/P1/vlyD6SApEXNHQJkWY20TlJYqH1FZC/Bh9T8nyP4Nft
+   dgTH4OpTZohvcW2Nj19rlcmC7F0+v52HaOLhUuDFLjRuVD0szL8aCmq+s
+   DWf32KIQ6f6DW7tvvmFuMo1BLgqeNdGL4+VqyEuhPARi9ol2mvjJhuRw/
+   qHV8exm9TbSghvvFjh+3aXJqPgJq398MMvxs6zuce0O0kmpC7kTXlGFGk
+   zXNczbuE3vULP4C/omPsTYZG7kgzpDsJPVImEVPylaPUrt1NGbc4tcKcI
+   AAchiUTrG00DW1+TWqod1xpfRv3KfPH7Xvafrgsh7xtNazGztAVp8vS21
+   g==;
+X-CSE-ConnectionGUID: PZlu3JROTVu1UWbU2Mn6Sw==
+X-CSE-MsgGUID: bxck2UHdSAmiEmA5UYIWlQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="41741002"
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="41741002"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:21:18 -0800
+X-CSE-ConnectionGUID: 97up0/dCQbWEIlFstbw+Gg==
+X-CSE-MsgGUID: VKhMROqeTjyq46TDp4kIKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="122947971"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:21:17 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tp133-0000000Gkip-2FPH;
+	Mon, 03 Mar 2025 10:21:13 +0200
+Date: Mon, 3 Mar 2025 10:21:13 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
+	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
+ MFD_INTEL_EHL_PSE_GPIO
+Message-ID: <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
+References: <20250303044745.268964-1-raag.jadav@intel.com>
+ <20250303044745.268964-3-raag.jadav@intel.com>
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227-gpio-mmio-more-v1-0-0ea4ad43d304@linaro.org>
-In-Reply-To: <20250227-gpio-mmio-more-v1-0-0ea4ad43d304@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 4 Mar 2025 13:19:38 +0100
-X-Gm-Features: AQ5f1JrhSLtlnnm9zfVGdIlnEVlNkYr8OEjXYNYNov5Jio8OX4tvgAIKCXGt2KE
-Message-ID: <CAMRc=Me9Gioqd3uvF6j2gXvjjXWv-deCt=YR4d14jk5Q9U=hdQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] gpio: Use generic MMIO GPIO some more
-To: Linus Walleij <linus.walleij@linaro.org>, Mun Yew Tham <mun.yew.tham@intel.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303044745.268964-3-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6dmM1fRNzFxd8
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741704393.07751@pwZVicw1RG4F2aGfmOY6sg
+X-ITU-MailScanner-SpamCheck: not spam
 
-On Thu, Feb 27, 2025 at 10:18=E2=80=AFAM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
->
-> I found that the Altera driver is easy to convert to
-> use GPIO MMIO.
->
-> Only compile tested, I do not have this device.
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Linus Walleij (3):
->       gpio: devres: Use devres parent if undefined
->       gpio: altera: User gc helper variable
->       gpio: altera: Use generic MMIO GPIO
->
->  drivers/gpio/Kconfig          |   1 +
->  drivers/gpio/gpio-altera.c    | 109 ++++++++++--------------------------=
-------
->  drivers/gpio/gpiolib-devres.c |   7 +++
->  3 files changed, 34 insertions(+), 83 deletions(-)
-> ---
-> base-commit: 4d478accec99c9b23bd5deccb58996867bd0aa7a
-> change-id: 20250227-gpio-mmio-more-990eb0d68d5b
->
-> Best regards,
-> --
-> Linus Walleij <linus.walleij@linaro.org>
->
+On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
+> Now that we have Intel MFD driver for PSE GPIO, depend on it.
 
-Mun: this is quite a big change - would you be able to test this
-series and leave your tag here?
+...
 
-Bartosz
+>  config GPIO_ELKHARTLAKE
+>  	tristate "Intel Elkhart Lake PSE GPIO support"
+> -	depends on X86 || COMPILE_TEST
+> +	depends on (X86 && MFD_INTEL_EHL_PSE_GPIO) || COMPILE_TEST
+>  	select GPIO_TANGIER
+
+Looking on how GPIO PMIC drivers are written, I would redo this as
+
+	depends on (X86 || COMPILE_TEST) && MFD_INTEL_EHL_PSE_GPIO
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
+
 
