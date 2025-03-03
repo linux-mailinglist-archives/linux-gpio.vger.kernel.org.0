@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-16891-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16892-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30D04A4B73D
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 05:48:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FD8AA4B73E
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 05:48:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F8B93B048C
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 04:48:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 593281888E84
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Mar 2025 04:48:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E78471E5B6F;
-	Mon,  3 Mar 2025 04:48:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F5DA1E7C32;
+	Mon,  3 Mar 2025 04:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQcPQTy7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EbOTC9QV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040751E5706;
-	Mon,  3 Mar 2025 04:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92541E5714;
+	Mon,  3 Mar 2025 04:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740977280; cv=none; b=LqxHNwJE2d7f6Umi2ALP0uBsd/X1GzOpi4MOjkuVUnG2j7/kVZt9aXzmm/NaGMspLB2zFKC98/YjN/BZmfxYOuqtVRUB0wkK7KwYAjOspgkzUwckkCQP6BKKNICzWScpt7iSiUxpk7MsZUWGSzb1cHHV3zUN6C5LGbZcLfQZ5O0=
+	t=1740977283; cv=none; b=qZDouUakLpjL+UM71i4JD+GQtS5qooY50emPzID5TRFrFeUlfoJ5Dke1ledn2cGijDXiNqh+ORrI/QsPgruEua1qJXV/PS5eLITVUqp+LwjOlWUxQDBFM/DVF2MVVgwywBMup3aLMf1pzO8rUwUUrMmcv5U6euL9f9+ywzzmJMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740977280; c=relaxed/simple;
-	bh=hFUryWsDI/x1+UyJwD1J1wtnUu6+KwV5oMs/3+d9nec=;
+	s=arc-20240116; t=1740977283; c=relaxed/simple;
+	bh=yRACNcqql97q+efeIS5QfsCUY4jQh++OfyCum2WBK0A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uPTtWMdBK7QDRPRJomCVIF4+HjTWlrixgsGDg4gLbzXpy5tQWgyP41iC/TBTNU+9AJAg9VlnrgYGILTZyMHb192Zsj17VkpzXE4Ztwe1FdkDjqMutk5drF3mYUKetHLU+xMmk9zXDYG3iXOCZ6Op9bXDEW2I2uNR9wTxozLznzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQcPQTy7; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=Xjp/EU3cMviRNsC2l0iKUigjWvYhsJ/l8cozFmGxU1r6HNZh2eRmB7qH7S8xWcBjgyN1kRKTFFufCphhumgSL099YLzzfopCHXpZ4YQ0E+OHv6Nd44gFb7mb8CUxzHNlgKuQvHfEAPbSo1eU+UFiRChBbaXbyGOkpTuRYMgZlH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EbOTC9QV; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740977279; x=1772513279;
+  t=1740977281; x=1772513281;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hFUryWsDI/x1+UyJwD1J1wtnUu6+KwV5oMs/3+d9nec=;
-  b=BQcPQTy7wnO9tgNVd0ZLMQlvHabn5T8DJLuLcvfW4JLwUMQ4Co5FI2Fd
-   iFwDK+NtaXTrHoxGbRQj/BRGl91ok4ZzukqezYAUYP+1ao7E0XiL4O74h
-   l6PaRbzH8ggIHWveA6UsN7XL17eGhdCbuMrovGuE0LLXejt9/1pZXwAQN
-   wvQYg/jSlcJR6P4lMvDWD+2x5EIk+8WJK8azFHmhcDkJiim9dwurU/W5E
-   Li1LmcbtV/OyLc6+tjJRZHF7gC+tarIeh7sjadyQnqUvfk8nlDjk3IjOf
-   60IT+nslbznya2ObN1x6Hdk+nJQBPFR6cBk3kSJpyCu26LqvbCRwFfAf2
-   Q==;
-X-CSE-ConnectionGUID: /QrkII0wQTqJekX2LmRjAw==
-X-CSE-MsgGUID: 94/fSLAwTLubO0Yfbpga7Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="59382085"
+  bh=yRACNcqql97q+efeIS5QfsCUY4jQh++OfyCum2WBK0A=;
+  b=EbOTC9QVfp3FyfmeOf3PqOd8OghrWD6jM2/+m2L3kL7qPcNKsu8L8xXH
+   ZvCYKG99vluz2ueQjeu/iflZ0TFmtLdgQpMbx3h/YIKE8HEoSV4lXK38B
+   CKxrp904GlKqyrAXaNk1FDrw+z4mv0SZWTkXaMp4XbaA3dLVErzKWywOx
+   PVCgJmGNhbZ9MLTl/mng9Tc5JHd+mluULhbY/T/L5CvSGQwmI+hIeApi+
+   VXefMGDGRuHry9sK58Q9CVW7W9sGgHntMhlI9Loq5oQgjaS0MMBFi77hO
+   5DOW4TJGhLhrKn138n5tS15LeS3rWYj/xAxX1PZbdx0jatMKMf/a1x/xe
+   g==;
+X-CSE-ConnectionGUID: WJCQsNdoR12bpFPFP7Yg9w==
+X-CSE-MsgGUID: 2BCNiu2QT1m4D5BQSBsYPg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="59382092"
 X-IronPort-AV: E=Sophos;i="6.13,328,1732608000"; 
-   d="scan'208";a="59382085"
+   d="scan'208";a="59382092"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 20:47:58 -0800
-X-CSE-ConnectionGUID: qD23Thi5Ram65Z9cuXRtWw==
-X-CSE-MsgGUID: UlEJPod2TwyXiIBMmFrWBg==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 20:48:01 -0800
+X-CSE-ConnectionGUID: zHKP/mAXRAO72IJRguYZDg==
+X-CSE-MsgGUID: C+lMtO/6S8CkGHObHw5qwQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123123964"
+   d="scan'208";a="123123972"
 Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa005.jf.intel.com with ESMTP; 02 Mar 2025 20:47:56 -0800
+  by orviesa005.jf.intel.com with ESMTP; 02 Mar 2025 20:47:59 -0800
 From: Raag Jadav <raag.jadav@intel.com>
 To: lee@kernel.org,
 	giometti@enneenne.com,
@@ -67,9 +67,9 @@ To: lee@kernel.org,
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2 4/5] pps: generators: tio: move to match_data() model
-Date: Mon,  3 Mar 2025 10:17:44 +0530
-Message-Id: <20250303044745.268964-5-raag.jadav@intel.com>
+Subject: [PATCH v2 5/5] pps: generators: tio: Introduce Intel Elkhart Lake PSE TIO
+Date: Mon,  3 Mar 2025 10:17:45 +0530
+Message-Id: <20250303044745.268964-6-raag.jadav@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250303044745.268964-1-raag.jadav@intel.com>
 References: <20250303044745.268964-1-raag.jadav@intel.com>
@@ -81,158 +81,89 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use device_get_match_data() which allows configuring platform
-specific data like number of pins and MMIO registers for TIO.
+Add initial support for Intel Elkhart Lake PSE TIO controller.
 
 Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 Acked-by: Rodolfo Giometti <giometti@enneenne.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pps/generators/pps_gen_tio.c | 33 ++++++++++++++++++++--------
- drivers/pps/generators/pps_gen_tio.h | 19 +++++++++++++---
- 2 files changed, 40 insertions(+), 12 deletions(-)
+ drivers/pps/generators/Kconfig       |  2 +-
+ drivers/pps/generators/pps_gen_tio.c | 17 ++++++++++++++++-
+ drivers/pps/generators/pps_gen_tio.h |  5 +++++
+ 3 files changed, 22 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/pps/generators/Kconfig b/drivers/pps/generators/Kconfig
+index b3f340ed3163..83aada693ad2 100644
+--- a/drivers/pps/generators/Kconfig
++++ b/drivers/pps/generators/Kconfig
+@@ -33,7 +33,7 @@ config PPS_GENERATOR_PARPORT
+ 
+ config PPS_GENERATOR_TIO
+ 	tristate "TIO PPS signal generator"
+-	depends on X86 && CPU_SUP_INTEL
++	depends on X86 && CPU_SUP_INTEL && MFD_INTEL_EHL_PSE_GPIO
+ 	help
+ 	  If you say yes here you get support for a PPS TIO signal generator
+ 	  which generates a pulse at a prescribed time based on the system clock.
 diff --git a/drivers/pps/generators/pps_gen_tio.c b/drivers/pps/generators/pps_gen_tio.c
-index 7f2aab1219af..6e3a4b198259 100644
+index 6e3a4b198259..a2a23cdc2568 100644
 --- a/drivers/pps/generators/pps_gen_tio.c
 +++ b/drivers/pps/generators/pps_gen_tio.c
-@@ -14,6 +14,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/pps_gen_kernel.h>
-+#include <linux/property.h>
- #include <linux/timekeeping.h>
- #include <linux/types.h>
+@@ -231,6 +231,14 @@ static const struct pps_tio_data pmc_data = {
+ 	},
+ };
  
-@@ -28,7 +29,7 @@ static inline u32 pps_tio_read(u32 offset, struct pps_tio *tio)
- 
- static inline void pps_ctl_write(u32 value, struct pps_tio *tio)
- {
--	writel(value, tio->base + TIOCTL);
-+	writel(value, tio->base + tio->regs.ctl);
- }
- 
- /*
-@@ -37,7 +38,7 @@ static inline void pps_ctl_write(u32 value, struct pps_tio *tio)
-  */
- static inline void pps_compv_write(u64 value, struct pps_tio *tio)
- {
--	hi_lo_writeq(value, tio->base + TIOCOMPV);
-+	hi_lo_writeq(value, tio->base + tio->regs.compv);
- }
- 
- static inline ktime_t first_event(struct pps_tio *tio)
-@@ -49,7 +50,7 @@ static u32 pps_tio_disable(struct pps_tio *tio)
- {
- 	u32 ctrl;
- 
--	ctrl = pps_tio_read(TIOCTL, tio);
-+	ctrl = pps_tio_read(tio->regs.ctl, tio);
- 	pps_compv_write(0, tio);
- 
- 	ctrl &= ~TIOCTL_EN;
-@@ -63,7 +64,7 @@ static void pps_tio_enable(struct pps_tio *tio)
- {
- 	u32 ctrl;
- 
--	ctrl = pps_tio_read(TIOCTL, tio);
-+	ctrl = pps_tio_read(tio->regs.ctl, tio);
- 	ctrl |= TIOCTL_EN;
- 	pps_ctl_write(ctrl, tio);
- 	tio->pps_gen->enabled = true;
-@@ -112,7 +113,7 @@ static enum hrtimer_restart hrtimer_callback(struct hrtimer *timer)
- 	 * Check if any event is missed.
- 	 * If an event is missed, TIO will be disabled.
- 	 */
--	event_count = pps_tio_read(TIOEC, tio);
-+	event_count = pps_tio_read(tio->regs.ec, tio);
- 	if (tio->prev_count && tio->prev_count == event_count)
- 		goto err;
- 	tio->prev_count = event_count;
-@@ -172,6 +173,7 @@ static int pps_tio_get_time(struct pps_gen_device *pps_gen,
- static int pps_gen_tio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	const struct pps_tio_data *data;
- 	struct pps_tio *tio;
- 
- 	if (!(cpu_feature_enabled(X86_FEATURE_TSC_KNOWN_FREQ) &&
-@@ -184,6 +186,11 @@ static int pps_gen_tio_probe(struct platform_device *pdev)
- 	if (!tio)
- 		return -ENOMEM;
- 
-+	data = device_get_match_data(dev);
-+	if (!data)
-+		return -ENODEV;
-+
-+	tio->regs = data->regs;
- 	tio->gen_info.use_system_clock = true;
- 	tio->gen_info.enable = pps_tio_gen_enable;
- 	tio->gen_info.get_time = pps_tio_get_time;
-@@ -216,11 +223,19 @@ static void pps_gen_tio_remove(struct platform_device *pdev)
- 	pps_gen_unregister_source(tio->pps_gen);
- }
- 
-+static const struct pps_tio_data pmc_data = {
++static const struct pps_tio_data ehl_pse_data = {
 +	.regs = {
-+		.ctl = TIOCTL_PMC,
-+		.compv = TIOCOMPV_PMC,
-+		.ec = TIOEC_PMC,
++		.ctl = TIOCTL_PSE,
++		.compv = TIOCOMPV_PSE,
++		.ec = TIOEC_PSE,
 +	},
 +};
 +
  static const struct acpi_device_id intel_pmc_tio_acpi_match[] = {
--	{ "INTC1021" },
--	{ "INTC1022" },
--	{ "INTC1023" },
--	{ "INTC1024" },
-+	{ "INTC1021", (kernel_ulong_t)&pmc_data },
-+	{ "INTC1022", (kernel_ulong_t)&pmc_data },
-+	{ "INTC1023", (kernel_ulong_t)&pmc_data },
-+	{ "INTC1024", (kernel_ulong_t)&pmc_data },
- 	{}
+ 	{ "INTC1021", (kernel_ulong_t)&pmc_data },
+ 	{ "INTC1022", (kernel_ulong_t)&pmc_data },
+@@ -240,9 +248,16 @@ static const struct acpi_device_id intel_pmc_tio_acpi_match[] = {
  };
  MODULE_DEVICE_TABLE(acpi, intel_pmc_tio_acpi_match);
+ 
++static const struct platform_device_id pps_gen_tio_ids[] = {
++	{ "pps-gen-tio", (kernel_ulong_t)&ehl_pse_data },
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, pps_gen_tio_ids);
++
+ static struct platform_driver pps_gen_tio_driver = {
+ 	.probe          = pps_gen_tio_probe,
+ 	.remove         = pps_gen_tio_remove,
++	.id_table	= pps_gen_tio_ids,
+ 	.driver         = {
+ 		.name                   = "intel-pps-gen-tio",
+ 		.acpi_match_table       = intel_pmc_tio_acpi_match,
+@@ -255,5 +270,5 @@ MODULE_AUTHOR("Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>");
+ MODULE_AUTHOR("Pandith N <pandith.n@intel.com>");
+ MODULE_AUTHOR("Thejesh Reddy T R <thejesh.reddy.t.r@intel.com>");
+ MODULE_AUTHOR("Subramanian Mohan <subramanian.mohan@intel.com>");
+-MODULE_DESCRIPTION("Intel PMC Time-Aware IO Generator Driver");
++MODULE_DESCRIPTION("Intel Time-Aware IO Generator Driver");
+ MODULE_LICENSE("GPL");
 diff --git a/drivers/pps/generators/pps_gen_tio.h b/drivers/pps/generators/pps_gen_tio.h
-index 5033d5efdf92..4329b6dbd598 100644
+index 4329b6dbd598..509bd2633dfb 100644
 --- a/drivers/pps/generators/pps_gen_tio.h
 +++ b/drivers/pps/generators/pps_gen_tio.h
-@@ -18,9 +18,10 @@
+@@ -18,6 +18,11 @@
  
  struct device;
  
--#define TIOCTL			0x00
--#define TIOCOMPV		0x10
--#define TIOEC			0x30
-+/* PMC Registers */
-+#define TIOCTL_PMC			0x00
-+#define TIOCOMPV_PMC			0x10
-+#define TIOEC_PMC			0x30
- 
- /* Control Register */
- #define TIOCTL_EN			BIT(0)
-@@ -36,9 +37,21 @@ struct device;
- #define MAGIC_CONST			(NSEC_PER_SEC - SAFE_TIME_NS)
- #define ART_HW_DELAY_CYCLES		2
- 
-+struct pps_tio_regs {
-+	u32 ctl;
-+	u32 compv;
-+	u32 ec;
-+};
++/* EHL PSE Registers */
++#define TIOCTL_PSE			0x00
++#define TIOCOMPV_PSE			0x04
++#define TIOEC_PSE			0x24
 +
-+struct pps_tio_data {
-+	struct pps_tio_regs regs;
-+	u32 num_pins;
-+};
-+
- struct pps_tio {
- 	struct pps_gen_source_info gen_info;
- 	struct pps_gen_device *pps_gen;
-+	struct pps_tio_regs regs;
- 	struct hrtimer timer;
- 	void __iomem *base;
- 	u32 prev_count;
+ /* PMC Registers */
+ #define TIOCTL_PMC			0x00
+ #define TIOCOMPV_PMC			0x10
 -- 
 2.34.1
 
