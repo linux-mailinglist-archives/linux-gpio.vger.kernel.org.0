@@ -1,127 +1,130 @@
-Return-Path: <linux-gpio+bounces-17069-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17056-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0613A4E73B
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 17:59:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 434C8A4E36E
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 16:32:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E28747A0739
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 16:55:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B807887623
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 15:20:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D01327CCEC;
-	Tue,  4 Mar 2025 16:34:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491A827C140;
+	Tue,  4 Mar 2025 15:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pA/y60mj"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AgGcwQpK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from beeline1.cc.itu.edu.tr (beeline1.cc.itu.edu.tr [160.75.25.115])
+Received: from beeline2.cc.itu.edu.tr (beeline2.cc.itu.edu.tr [160.75.25.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E59D2517AB
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 16:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8309827780C
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 15:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.116
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741106046; cv=pass; b=r+L1cU1g70aULsMwVZTgiLEZPpElue2fC8Kcd5xpRXj505TQl+mKoAzWBe+v0cDqiBgvFOYpEsG9LeHYVpBVF2NgrbTEsFsPd51rkebyMupjOefhRPjcrQmZXKVP2U/qXfeeoUjSlvWqcqAjkIKufE4ZtAdRn+0pHRLuJD62jyU=
+	t=1741101303; cv=pass; b=crmB13KZUAT08Eig3FkRWzP+NkRanzWyYWUk7B0X7py3GWaRl+KXOBYO15d+Kle2AazBAufv6YRSXAiN7UNJD6HmRp84kIJMe138R8Xxbx2ZyKz8NCQEVGvsy4KuIb/YnLd5o8jY27COxZQ6AMF2vHzTqbPThB4qcxIuvKEX/1M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741106046; c=relaxed/simple;
-	bh=xE+GYYb8RqNByXe+j/oss04d8olPqhLTWGg+X/7h734=;
+	s=arc-20240116; t=1741101303; c=relaxed/simple;
+	bh=N3wQh8T8R+oyQquFXErkUP6hlk+nCAPLdOcYJoj+EBQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YmRnvjAiv9aYI8369hOw3KhGStqpQ0WLeyWNyimMj1s4PVaeKp4CEj7mf2uuCGH6E2yhrTXtcOIw3QVABKCmpE2tFNUEuwqxgllk9N3/1uaolRT1LiQyB/tVMmYs2k1jmfpg5OrENxFCMokM3OqgX7u0xaLA+oQatF/0sYqsBnM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pA/y60mj; arc=none smtp.client-ip=209.85.128.47; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; arc=pass smtp.client-ip=160.75.25.115
+	 In-Reply-To:To:Cc; b=Dy1ylITTPnmjdhEnz2m9a8BfbLM0VMzm7BHf0WqeOyktv9ZWS/9PvuDG0anUtnByQfB4S/S7tLaCn6Jc0iCQC/JpopUrQPqCmZuA0CDn+pL9+EAOSE2Wn2lKtHK8hfUNBbkfUF8x5m9cvOwg9o6nlyXZ3YgKMFQtGnPqjxaOl5k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AgGcwQpK; arc=none smtp.client-ip=209.85.128.42; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; arc=pass smtp.client-ip=160.75.25.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
-Received: from lesvatest1.cc.itu.edu.tr (unknown [10.146.128.1])
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by beeline1.cc.itu.edu.tr (Postfix) with ESMTPS id B43F940D9753
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 19:34:02 +0300 (+03)
+	by beeline2.cc.itu.edu.tr (Postfix) with ESMTPS id BE54640F1CEB
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 18:14:59 +0300 (+03)
 X-Envelope-From: <root@cc.itu.edu.tr>
+Authentication-Results: lesvatest1.cc.itu.edu.tr;
+	dkim=pass (2048-bit key, unprotected) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=AgGcwQpK
 Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6h4y63rWzG3DZ
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 19:30:58 +0300 (+03)
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6fM40ZGVzFypr
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 18:13:04 +0300 (+03)
 Received: by le1 (Postfix, from userid 0)
-	id 91B8F42728; Tue,  4 Mar 2025 19:30:47 +0300 (+03)
+	id CBA564273C; Tue,  4 Mar 2025 18:12:51 +0300 (+03)
 Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pA/y60mj
-X-Envelope-From: <linux-kernel+bounces-541789-bozkiru=itu.edu.tr@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AgGcwQpK
+X-Envelope-From: <linux-kernel+bounces-541790-bozkiru=itu.edu.tr@vger.kernel.org>
 Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pA/y60mj
-Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
-	by le2 (Postfix) with ESMTP id D8F7941C5E
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:21:24 +0300 (+03)
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by fgw2.itu.edu.tr (Postfix) with SMTP id B05C72DCDE
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:21:24 +0300 (+03)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AgGcwQpK
+Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
+	by le2 (Postfix) with ESMTP id 5C4274205A
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:21:28 +0300 (+03)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by fgw1.itu.edu.tr (Postfix) with SMTP id E71D33063EFC
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:21:27 +0300 (+03)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89327188AEBD
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:21:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E59B3A9C34
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:21:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BAEE21480F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D503D214A73;
 	Mon,  3 Mar 2025 13:18:52 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAFE2135B8
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC512139D7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007927; cv=none; b=X8rxxIWvsxvMP5EJ+uL06wlah95rK1bJUQGyxX95Egw/vsuoFxNxf8lnnRgr7HrMpndLkkYm/7Hhpg0IybGpfzr3Kq/juXVD3LdWdJxl4NQgQfP11xn/iC/EjyDWvX3l10qN26u9R2XGCDx5s4PuLPmmBW1JqxR7dpLu+J3iR/A=
+	t=1741007928; cv=none; b=gKb+tkE5t6+ByNrh254dClXTzEp+k9YVf3uiqjV2reC0cCDraOWz51jvU6+7BAjLV6GfTzDTAgdZ3SwP/qiqCJw9RO9gkZPy+4yirabA3WXQKn3ssSWjLTvUM+NBx8jLgzUdOLUekQG6DK31k0apXKZe8JWyyNBm+LP+o158U7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741007927; c=relaxed/simple;
-	bh=xE+GYYb8RqNByXe+j/oss04d8olPqhLTWGg+X/7h734=;
+	s=arc-20240116; t=1741007928; c=relaxed/simple;
+	bh=N3wQh8T8R+oyQquFXErkUP6hlk+nCAPLdOcYJoj+EBQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GN8qvTTEqr6qt9CZ3QsktThJSy09245aVsc09kBJ+5YLZ1EBxoVBxkOo6GcnZoz6Bab7kg8iDVlEyPUuAHfNHM0d24hwMBySOxTypmZRgErjeMoIeww8ckGnswPnDJTIl8yFT9U/7/nItZfl14azFkSo7qLYAAMzUuhZ9HiHCCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pA/y60mj; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=GjWa8RcUlPjvKnXmG5e7fJ9vTrs/JiR1YBFrbiHuWUOtbDblINTHxImByn6k9hKkLqAOreq6jJN+3ENjFNRV/oPCMMCo6Cmwov1kzup0cGKG0mxmxW8MAglq5FN90EPLOAGv0sYpKmS75fm91BQhwwKsj3o9mb2Ww4XNX92/IEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AgGcwQpK; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4394036c0efso27991085e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:18:45 -0800 (PST)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-439ac3216dcso30219925e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:18:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741007924; x=1741612724; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741007925; x=1741612725; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vBMDp7aHXRNt/RwICrg1q5Lp1fT8OK4mUnztK4V4pSU=;
-        b=pA/y60mjG7h+aiCmK/LAfDv9gwjzDB9moFONdvRbeoKDDnq1K/WLsdn0mWO5s0m1Ld
-         lfzxGUIcuJkvC0L2hvLcnxehf9jqHVG+oAq0fKvipjt3mZ1mbxnc875L1VXslMKAtZwH
-         oV4Cldq7DDi7+iWnB+TBLuiN2SWlMVrY8VMLsRPv5dsfjFPBm2k/xdNlOwmZ0Y9y3BZx
-         dxzsI7+/ezH9WAjuQOEHkhoJcGdGWaNn0qaGd+tD07R+7NgXKNf+F+BYtFE2FNhbhLOJ
-         cJYA90c89S21tnqEmXFuhTNuRVWiciTFsTtD09VBZueMgTNDDXqsVdY4kWPUTNPvpfA4
-         jP2Q==
+        bh=gz+znbWREsKmtzW3OBAmXUrUOCp/yw4x3Y/d/8vV1Bs=;
+        b=AgGcwQpKYe+mQ1azxQmPmDBCxDUX1YZ41OESIfHlHsHcCiMMBuvhlABAUiLe7ck8kG
+         ayw1+7AO2ztPuGvgC7c1nS3pal0slKg9CevHYN4nl6ULPqqohgw/0VDLU3ImCWRpPVK/
+         N2i36bnaEkZP0ogUl+DlbN1xZnuIM3RK5L/XP96WIBklAhC6ipuwEUJaMHAssgKmI38Q
+         nrLsX1mkqIRuguYTuDp6+9o1FV6s1/jzUCt+iscnuTqDV5a8VFH6dzd5JvGhNIQgt3uz
+         PWCfn6b+0uvosNuA8L+mj/7CtgrZGVJMR/Nsw9toc2HYtkFpmnKe8EtPlH0l+SnhgNky
+         4/yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741007924; x=1741612724;
+        d=1e100.net; s=20230601; t=1741007925; x=1741612725;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vBMDp7aHXRNt/RwICrg1q5Lp1fT8OK4mUnztK4V4pSU=;
-        b=uzyMSIzi46KcefkppbhO31gaaHGtsTaIqpba5B9VKK0CDmm72TOAUv9M8psqc70/L8
-         phI9w8sFGWXitiBT1mG1OC6M8QVyybdkbRxzeb0b/Clv5ihTsovRGe4pEnTvvQLseT6f
-         NvwzQm86uDm3ixNoTLWmgJk2uA3r8cOc/Mqx/J5fZlxaWJXyIZRNvmxYViEwbT/kqmYe
-         FbDkyh3nB9DQpGsWiavfhOdCULKhwRUokdkukL8K2VLtpF9AlSvyBRSUwFJIc/8AinSC
-         Ujka7RAZmQwGH6yBTpqJ8YTqMbmEcIwCqee3U8GpZw7zRhSpmR3Ji9Y8aBzCiVJBHNsx
-         1/wA==
-X-Forwarded-Encrypted: i=1; AJvYcCUePPbrG3Cznubz6i4PKOBGplhV/X7n0dfCgQlpyrbPlkiQ3kQ/lrJ3dP9ZEuboknZthPVlKZELXBiXT9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI+AtV9Gl6/I4Ax/Hi1JGf/R0GktUHo53CJMcojmGGNIRp3D6n
-	9Fcgfl9xTRgPeOt5pq5GLoY3zUN7A8eyTC4Fm2s0NMrmO57YGGt4YDjVLihaVWc=
-X-Gm-Gg: ASbGncv+goHnnXPgcy91EWDsRPkRxBKsxwRouRYfu10EDLu4cHBDhA7uQ8JL0OhLqUv
-	Y0dWtQLS7/7NA1QLDsBMa6AwKhMl/OHLb2mUOuXGi7MfkBJEVz6k+l8XXNqEiqF9KsCeYdhWCNh
-	sxNYuNLRKVn72ICpC+kyx9ZZyvOAjoeHq4kEml681GZMeqAcdhYd6t8QtQXEsQfxjH7BOdgVqxx
-	CvEFbMRoZxucp4qOmQk/pdashZ8aYPYrS8bRJPrjlgWdwNaEdBacJvsAlyx+IAzP98WEengrK3h
-	+xf1kY61hTfoFN+8yrR/PU89Qrf0G3V/orAhxw==
-X-Google-Smtp-Source: AGHT+IGbJY5Jo+WiS4mPjsCw+ExPOHOSH2GviMjPeJvWFYMKh5onFXn1ZivjmcF8FlnAaeL3hMO2aw==
-X-Received: by 2002:a05:600c:3b97:b0:43b:c7ad:55c2 with SMTP id 5b1f17b1804b1-43bc7ad56cbmr14809505e9.6.1741007924329;
-        Mon, 03 Mar 2025 05:18:44 -0800 (PST)
+        bh=gz+znbWREsKmtzW3OBAmXUrUOCp/yw4x3Y/d/8vV1Bs=;
+        b=EO/S4MxrLud8HMdS/ZLW958EVPYukpYSPK3wAkuWRRRdzwbnwvXNLgs+S9go02x+gw
+         aFyp5yT7WG5RLfv5BKrN9yZrQKcdnc8Uv6/B4FztkqpLLU+s65AjmOgfxT7Z1K/SyWEK
+         CH2DzbeIVDbDkxWCY1dDK3g4axqRMUWZv07iNA0kdIepFLurpsGAug10PVCcCmzRdTYR
+         4/GlOoQXCSYrAaOcQGKTL2GbILp9YaZt1zjCFPr5oYYlBjIFMh9lNHjt9Of3IUfd1XaS
+         Ghi2xqeYEBTQzq0M5mEvx7iz70gKnk/+WSfomOMvSIVpTSA7PAHDwrMioQPuwr+Y4CbK
+         lXrw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKQt0Z+aRoJoE6gQmGrSefZ0ZPeXGPu146KN408Pi7CbbzISOP0mKmzwVP6QVWW9cYrD2uC7PE0N8P9vs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZtgsngE2QiZ8LlJrXr5Q8T3oMtJDHRiNA4hNtUANUwFjQWYrE
+	WKWMu2NVqHeNtOrNugPOoGAF7VaiV27G51OFhJu2sIqMD+ylhzTqZ3fxjtSkbDs=
+X-Gm-Gg: ASbGncsWB3j4M4DXZboUp+bd/Z0Pb9j0swnQRUGmQqp8tO92b0EVSdC9kpi79Sy1yC3
+	bN/DVd2T0C0bLnPnW8vJw6DDHpBqdLwRnsKLUdQaSiWj1kgxFe0ChMP8CWLD4xGiUabyDoQl6Q7
+	/gHCChTavVmWfK+pQMeTOMiAw2AXIEtXpPS3ZOcupUaMERsSElDHHwrFh7ICaW1/pLYBtnzDfGF
+	JqlKD8yfotp8KV82oDsrkyBqFwJiiIRVBxTJM7vrnwmRgooletAMhUCab2mnZdwwwIfa/qsKqcT
+	WvgWsdLLwsvb8FcRs9qpFYpCnJLeaPV7YeYVjw==
+X-Google-Smtp-Source: AGHT+IEQW7YZHCrSLWSEknFmca2KCALoGeG/H70z0XerHtGSCpqthigF58jSy3FNcBdb29iDiMLtqA==
+X-Received: by 2002:a05:600c:5493:b0:43b:c3af:3304 with SMTP id 5b1f17b1804b1-43bc3af34c2mr18251825e9.28.1741007925218;
+        Mon, 03 Mar 2025 05:18:45 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:664a:9e92:6aa8:6007])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba538b9fsm194821915e9.17.2025.03.03.05.18.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba538b9fsm194821915e9.17.2025.03.03.05.18.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 05:18:43 -0800 (PST)
+        Mon, 03 Mar 2025 05:18:44 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 03 Mar 2025 14:18:31 +0100
-Subject: [PATCH 06/15] gpio: adp5585: use new line value setter callbacks
+Date: Mon, 03 Mar 2025 14:18:32 +0100
+Subject: [PATCH 07/15] gpio: altera-a10sr: use new line value setter
+ callbacks
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -131,7 +134,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-gpiochip-set-conversion-v1-6-1d5cceeebf8b@linaro.org>
+Message-Id: <20250303-gpiochip-set-conversion-v1-7-1d5cceeebf8b@linaro.org>
 References: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
 In-Reply-To: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -145,28 +148,28 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1676;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1769;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=rFPESwnteTAwQY6BOrgrkBqbk+imePLRfwcTrSAG+yU=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnxawqPjfHUJ4WPy8suyZvHErNCeJlzfCBlVJei
- RnIRKpHR8aJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ8WsKgAKCRARpy6gFHHX
- ctpjEACiBsM6B6IoFrKlVbwDZcEaVstk/hylqUDuoVuEF8O+FEE9xkLlNz44NsSw8kzO+pguH4u
- HKN9AaGuVpIcI4vAQv5lislBsX3xuBv2zHzm49rk+yv935TLT4MKXOAnVI9S2TLfvlEFdCUqjYy
- xakIdKPXiHkiWCmNrwmy3tqB5HwwbQ9p2NEM8l2+W/TCkmT+Pz2NJ3R4yT6JAjSeZr+2k0d5a0u
- eB6gdaikIt6DKTSX6pjOtXYEszgjOhzEYBmgB4l0cF5S7EuY3tn9Dnr9UA+YHaCbQ80J5IrMP8d
- lRK3fBqv5nJHcj51oVIgAUqYZ6xp0rXFaFCfTNRpbgYiojTCkRsX5kp/E0AMt0pPzA7HhXfsdvw
- 0i6HG/qKEnEk6oOw+kUQKCQKZMKIkHKjvuNgPz0i6mVcAoXFGcP8qSyMEVBIGPdpMlBVkTXxqk8
- HI4W0A+4wV2DnsAZIfTNrPfj5kzl/PZ5znHY9+rglJipUo9/pnLLBDLrvwNtJUAtRrJEqVpJcRf
- Dt7hopEPcrdBWBcaJdswJw2xmw1GScQ6wfnCpvkjveGWaZFpnijBCLytD96kbhMOzY8qneMcr1t
- yXEogC9FoR/nvMjtW9skEXcr1twoXt1t66yuuNXqbz3LYy6olZT9klECCt3qO5JXfkKmt6lzIW0
- 4rFJI+Vr50GJimg==
+ bh=92motqkZmcdTqKDZ0pbU5Fpe7KR5fxlrz4Z+U7eO+v4=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnxawqQygDSg3gkaKutuN+SS1W5PBDPQ7axtGpJ
+ lUog7E6preJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ8WsKgAKCRARpy6gFHHX
+ cuH1EACxW2kuBBYKDwQHK83+US5eYzcAEXawXkCLyQoz2XEfFhdxD1QimIFJm1EqYBPUh5CBWOL
+ zxkL3aKSAQoJY9jWFS1zvyq4/gZPTJycJKRXlu+HFjzqz/79hvUZXEuHFyTtXR54uhXDFki5Mb0
+ 4o2PkqsrKtU6lKxwTvH0+TS2/iEM0KOfbz/v95WtFK1jQdXS3aQ4h8CWtCMk38CElYwAVbvkEin
+ FUO2PFSqtIULt6+l0Pz2dCU4CyDlX1gtFbx8WCGsAqEZpCVy8auMyCJxXJKdb+OxQLaHuBviW6t
+ WYshDG8yH/A4XF8qXXQVjKun41VUgQERbIG39PWLFzBy57Mt2aPTwQK2+++qcUzuu0WOIRqiuoA
+ pX58nz5K2Ygn+zXT35ywaDi1a2P0G8L8+ErRo2EuKTZ8Jb20BR8tf7oeKLNu3Bls/15jxGHfaS1
+ mO8QBHt3R0bLpwCpgNeRiBtS6N7cLl3iqAqhdn7k21X7n8mvTszallAnm3vrD7sYz9ocWHaSA4c
+ CvGPG6EjE+KhtsbPaTm87Z918cA8JFDaq8Ey0dvM2ITRG/Kw7hUBZw7T61YBjIXYTWgun/siEhN
+ QHSXI0VHOtUW40UFWOcUyoi9vM6C3GVuTarMHdLs2kvL7JyDDe/b6yX/ILTUitQx3Bm6dWAdZ33
+ MEJlJpdfI9kdwAg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6h4y63rWzG3DZ
+X-ITU-Libra-ESVA-ID: 4Z6fM40ZGVzFypr
 X-ITU-Libra-ESVA: No virus found
 X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741710760.90681@2Xpih0xnnPE6vVEX548q9w
+X-ITU-Libra-ESVA-Watermark: 1741706005.05011@L5NkMbuBNBcnK3Nlfe2ihg
 X-ITU-MailScanner-SpamCheck: not spam
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -177,42 +180,44 @@ them.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpio-adp5585.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-altera-a10sr.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpio/gpio-adp5585.c b/drivers/gpio/gpio-adp5585.c
-index 000d31f09671..d5c0f1b267c8 100644
---- a/drivers/gpio/gpio-adp5585.c
-+++ b/drivers/gpio/gpio-adp5585.c
-@@ -86,14 +86,16 @@ static int adp5585_gpio_get_value(struct gpio_chip *chip, unsigned int off)
- 	return !!(val & bit);
+diff --git a/drivers/gpio/gpio-altera-a10sr.c b/drivers/gpio/gpio-altera-a10sr.c
+index 11edf1fe6c90..77a674cf99e4 100644
+--- a/drivers/gpio/gpio-altera-a10sr.c
++++ b/drivers/gpio/gpio-altera-a10sr.c
+@@ -35,15 +35,15 @@ static int altr_a10sr_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ 	return !!(val & BIT(offset - ALTR_A10SR_LED_VALID_SHIFT));
  }
  
--static void adp5585_gpio_set_value(struct gpio_chip *chip, unsigned int off, int val)
-+static int adp5585_gpio_set_value(struct gpio_chip *chip, unsigned int off,
-+				  int val)
+-static void altr_a10sr_gpio_set(struct gpio_chip *chip, unsigned int offset,
+-				int value)
++static int altr_a10sr_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			       int value)
  {
- 	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
- 	unsigned int bank = ADP5585_BANK(off);
- 	unsigned int bit = ADP5585_BIT(off);
+ 	struct altr_a10sr_gpio *gpio = gpiochip_get_data(chip);
  
--	regmap_update_bits(adp5585_gpio->regmap, ADP5585_GPO_DATA_OUT_A + bank,
--			   bit, val ? bit : 0);
-+	return regmap_update_bits(adp5585_gpio->regmap,
-+				  ADP5585_GPO_DATA_OUT_A + bank,
-+				  bit, val ? bit : 0);
+-	regmap_update_bits(gpio->regmap, ALTR_A10SR_LED_REG,
+-			   BIT(ALTR_A10SR_LED_VALID_SHIFT + offset),
+-			   value ? BIT(ALTR_A10SR_LED_VALID_SHIFT + offset)
+-			   : 0);
++	return regmap_update_bits(gpio->regmap, ALTR_A10SR_LED_REG,
++				  BIT(ALTR_A10SR_LED_VALID_SHIFT + offset),
++				  value ?
++				  BIT(ALTR_A10SR_LED_VALID_SHIFT + offset) : 0);
  }
  
- static int adp5585_gpio_set_bias(struct adp5585_gpio_dev *adp5585_gpio,
-@@ -192,7 +194,7 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
- 	gc->direction_input = adp5585_gpio_direction_input;
- 	gc->direction_output = adp5585_gpio_direction_output;
- 	gc->get = adp5585_gpio_get_value;
--	gc->set = adp5585_gpio_set_value;
-+	gc->set_rv = adp5585_gpio_set_value;
- 	gc->set_config = adp5585_gpio_set_config;
- 	gc->can_sleep = true;
- 
+ static int altr_a10sr_gpio_direction_input(struct gpio_chip *gc,
+@@ -69,7 +69,7 @@ static const struct gpio_chip altr_a10sr_gc = {
+ 	.label = "altr_a10sr_gpio",
+ 	.owner = THIS_MODULE,
+ 	.get = altr_a10sr_gpio_get,
+-	.set = altr_a10sr_gpio_set,
++	.set_rv = altr_a10sr_gpio_set,
+ 	.direction_input = altr_a10sr_gpio_direction_input,
+ 	.direction_output = altr_a10sr_gpio_direction_output,
+ 	.can_sleep = true,
 
 -- 
 2.45.2
