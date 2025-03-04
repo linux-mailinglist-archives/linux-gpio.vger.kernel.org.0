@@ -1,109 +1,136 @@
-Return-Path: <linux-gpio+bounces-16982-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16983-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD93EA4CF9B
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 01:04:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84A2EA4D2EB
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 06:22:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A219D3A1EAF
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 00:03:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF17D1710DC
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 05:22:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4CF4522A;
-	Tue,  4 Mar 2025 00:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C34041F3FE8;
+	Tue,  4 Mar 2025 05:22:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EqdAS/SX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lo0xFvW8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DCE2111
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 00:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FCD1DC985;
+	Tue,  4 Mar 2025 05:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741046636; cv=none; b=KW165y/pjhJxGf085frCD3YNwbdueN+pK+v2s7WUt/Wz4C0EV6P+3oki2yo2slxeKvyNxDZqUPL2X7QS1eh3zBde1pikMD7CNrsYaTfHNrQjC4bEo8I1XzxGql/gFiXoUzbJSOz1dO+0lREzwi+dAFr6DFAV4MqF/OhravcAWI0=
+	t=1741065751; cv=none; b=o35E9xkGL7O2GK3Z7/Gs8vmr0vt9BHqGgkBpt+V+rjjoSVakWRvSLhs2OM0A2oTxm6AOtMNsaxTmQYic1BMzCo9MA8Eec0Y40UeSr9L7icCpLQrjGt7FJ0spqSWGdXvTDl5ijKnGIH1nxiNigIZhQURzNBj7s5gjxUQXa+tKoTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741046636; c=relaxed/simple;
-	bh=C/LfSpekGkcQBqzcVBoT+8ef+/NIGmgDTXMdDSp2KH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kZEybC0fujh8I1zmTJxOFi28aNp2DVrJrMJkY3L4OrEVYxmOrxvvws3oztYh8Zuj4wXoXHW5kHmHx6WawNIyDoqQuujMdfJL4k7a2d2qoIlLGyBJBmrTMBGqSRk/Vqy2A/EZe7wyyl72yWt7skEDSgDWDfHAccdbFGHx1bPfDgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EqdAS/SX; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30613802a59so57721561fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Mar 2025 16:03:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741046633; x=1741651433; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C/LfSpekGkcQBqzcVBoT+8ef+/NIGmgDTXMdDSp2KH0=;
-        b=EqdAS/SX1cNZTPEopGRn/ftTbaYzlpkYYur946VDRWoj00RW3RDDO8j/ft3yZdOdth
-         fwKkbezcExtBYnOFIGVBOnMpIdFg6pvId4WvJpni43+cy/ieXkBk7HZ7mUO/GKJzeacV
-         3ilD14W0in27CViA/3KtXcrWyRxCa3IJ3CnWQ7z8Ln+HPa/UUxlXT4iU0ldPZ9gqdzE4
-         kBdvGA5OkZcNmK77gZFYzyrSu8KDlMuX0Y0PZPdDG295qR4uS9LTPIUOjlO1jDVJO/4t
-         2nHIv/3zuQjN1hLi/I6VDIte/+82buQbCgfGEofT4f6F8nOE1zw4pZOIAU4W9Or4i/kL
-         Aw7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741046633; x=1741651433;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C/LfSpekGkcQBqzcVBoT+8ef+/NIGmgDTXMdDSp2KH0=;
-        b=QwscudYpFfDSqwXt4gQOkM+Yg/bnyArpQP3HK7oNdzgAS03ivyJM1eY03+VY15JJA7
-         VkaBnfrE8KYtkaz1viH8En5LJea4v2HlX+iuymRuvTvTJ4k1YKVqTt7qPgPqW/DgF6Xb
-         z5pStnVQMkuwqP8tvbl8ThK3PYGAIw0iA4wlG/A+hU9DAlthHzq05XcZaV3gjhj/01kI
-         rjIX4TbLWuXfVjDATfQn8npnhpAaQUZST2EtvTzpTFsNLLZ8twMwqkNl0MkstOwRfZ92
-         HldiKvDB6g79z8RDDU3VoNw2XNd161Bwo5nqeFsROuPfUURtLpjX0rvs+McZb4IdADvR
-         TlpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMjOmbDuc5pfOikLv5tT0rBq4tGQBLav1S6WGEqP/zMpulfE7/FWAZOPwQcUENPoFHkgrNYZjvErYE@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvaYntLvBX1Vg6fnwkKAQv1Th9ckBgKEqAOz05GGdFwdfzJhaE
-	PSUMxHqmVdP/gbUv55hzYW7vsq2C9SFTpNa44X7ddPjq26RmRQNjpG6X4H1Z8s52/6/78OVGP40
-	+DRUsxPhkYZeJZoQtOQGVasOeTqA+px5q/Vmg/A==
-X-Gm-Gg: ASbGnctwASY/kMj4NJsWeI3oNUQKz8hKH6kBAesZ+FUT3OjHT5UDYRD1gFGgYFvPjTb
-	mgzH6MlKhwSy2607QBuS4ltyHLEzNbDRREJc4gLSTh5yMCPTqWMbx2OTxrlj6jTwyuRpSrGobOe
-	RYcSoXMF5Bs1lGyZRm4DYpsc6ygA==
-X-Google-Smtp-Source: AGHT+IGrydCSg/lI1uzAKwGHugbQGvBBzjG9s3mdXfZC6EYIplaWRQ795GqrXmFtWsW5Su7ME7vIhfLoaVp40Qd8SR4=
-X-Received: by 2002:a2e:be03:0:b0:309:1d7b:f027 with SMTP id
- 38308e7fff4ca-30b9320f37bmr66066201fa.9.1741046632848; Mon, 03 Mar 2025
- 16:03:52 -0800 (PST)
+	s=arc-20240116; t=1741065751; c=relaxed/simple;
+	bh=IPlsvJ/wH9LhkF368ELMZRmGKbIn1DHgRW3ZtwACyUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jpx877jjGTZx5o6i4r5nRGz+cQFH16L5c5p8P/nnhmObt4MfdNb5A/oh5RaPY9lVq8cBsDkc3767cCpeMTktyCDFDx26R0CUp7MYq8kT1huMJpB4Ob/KlcAu/0b1+sTE3MiDU6Bsk1xrUU0OYxzEdxlUK/oowRCoJwhXnFUM6To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lo0xFvW8; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741065750; x=1772601750;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IPlsvJ/wH9LhkF368ELMZRmGKbIn1DHgRW3ZtwACyUE=;
+  b=Lo0xFvW8EuY9D29ayoO57zXzmls7PjJmPqDj9AiXLJUt6P0nQ0q4nYY+
+   YR3pBYNXoTqHCjW+jbXidM6OCtbXmqa1yx5Nl6BaLtfu4gabaIXfwCJk1
+   liXNrto1F+1deW0zOCZp3HyDyIalw/7xjyJDd2o0Kp6LzeS1eFvU2wBzh
+   OnIZhiVOKF7LXid4TrajkgXo418UwhUzN8Kfm3S0gCZthkej0Fg8neOhk
+   2GPkuzZ+7ofJBMcc2fyd1HZpe0yWXmnQj4PoUsmdpE/e3bahmnRvV0y/A
+   iMlN80Eadds9cKRmADcVusYht2AtT2j61StbT+vuM2/VdGqlf9bDfUEmU
+   Q==;
+X-CSE-ConnectionGUID: GDwkOwZcSkCjMuGelBmyfA==
+X-CSE-MsgGUID: 7gWZBclsRw6uZT/6GiPy9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="53360406"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="53360406"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:22:29 -0800
+X-CSE-ConnectionGUID: t+siOAbfRHeUJ73VGNlfzw==
+X-CSE-MsgGUID: 6TSrAiS8TEeque2+44l3dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="118279260"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:22:27 -0800
+Date: Tue, 4 Mar 2025 07:22:23 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
+	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
+ MFD_INTEL_EHL_PSE_GPIO
+Message-ID: <Z8aOD7qCzp-a0M1A@black.fi.intel.com>
+References: <20250303044745.268964-3-raag.jadav@intel.com>
+ <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
+ <Z8WUpzDHbhp0aMoN@black.fi.intel.com>
+ <Z8WWNHL1rZKV4c4o@smile.fi.intel.com>
+ <Z8Wc73OytMx3khP_@black.fi.intel.com>
+ <Z8We4_FJvxTxegpN@smile.fi.intel.com>
+ <Z8WkoPVk2SsSj5aR@black.fi.intel.com>
+ <Z8WsfXV1vMlRxzLi@smile.fi.intel.com>
+ <Z8W2R0DUS6lctU8v@black.fi.intel.com>
+ <Z8W6mIl0z1Wxgv4c@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303164928.1466246-1-andriy.shevchenko@linux.intel.com>
- <20250303164928.1466246-4-andriy.shevchenko@linux.intel.com>
- <CACRpkdbCfhqRGOGrCgP-e3AnK_tmHX+eUpZKjitbfemzAXCcWg@mail.gmail.com> <Z8YThNku95-oPPNB@surfacebook.localdomain>
-In-Reply-To: <Z8YThNku95-oPPNB@surfacebook.localdomain>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 4 Mar 2025 01:03:41 +0100
-X-Gm-Features: AQ5f1Jpd0GEUB6MlVioV71j1v6rfMl3pu_k3_4FUFebcVwfwl0boXwZuTwUA1vQ
-Message-ID: <CACRpkdbqYoY1vYGii1SyPL1mkULGXYX7vFwu+U9u2w9--EYAsQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 3/3] ieee802154: ca8210: Switch to using gpiod API
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-wpan@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>, 
-	Stefan Schmidt <stefan@datenfreihafen.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8W6mIl0z1Wxgv4c@smile.fi.intel.com>
 
-On Mon, Mar 3, 2025 at 9:39=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Mon, Mar 03, 2025 at 04:20:08PM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 03, 2025 at 04:01:43PM +0200, Raag Jadav wrote:
+> > On Mon, Mar 03, 2025 at 03:19:57PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Mar 03, 2025 at 02:46:24PM +0200, Raag Jadav wrote:
+> > > > On Mon, Mar 03, 2025 at 02:21:55PM +0200, Andy Shevchenko wrote:
+> > > > > On Mon, Mar 03, 2025 at 02:13:35PM +0200, Raag Jadav wrote:
+> > > > > > On Mon, Mar 03, 2025 at 01:44:52PM +0200, Andy Shevchenko wrote:
+> > > > > > > On Mon, Mar 03, 2025 at 01:38:15PM +0200, Raag Jadav wrote:
+> > > > > > > > On Mon, Mar 03, 2025 at 10:21:13AM +0200, Andy Shevchenko wrote:
+> > > > > > > > > On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
+> 
+> ...
+> 
+> > > > > > Better CI coverage?
+> > > > > 
+> > > > > How? I do not see the difference, can you elaborate?
+> > > > > (Assuming that CIs are using the merge_config.sh approach or alike)
+> > > > 
+> > > > That is my understanding of it.
+> > > > 
+> > > > config COMPILE_TEST
+> > > >         bool "Compile also drivers which will not load"
+> > > >         depends on HAS_IOMEM
+> > > >         help
+> > > >           Some drivers can be compiled on a different platform than they are
+> > > >           intended to be run on. Despite they cannot be loaded there (or even
+> > > >           when they load they cannot be used due to missing HW support),
+> > > >           developers still, opposing to distributors, might want to build such
+> > > >           drivers to compile-test them.
+> > > 
+> > > Yes, and how does my suggestion prevent from this happening?
+> > 
+> > Nothing's preventing it, but since we have an opportunity to allow
+> > a wider build test (even without arch or mfd dependency), shouldn't
+> > we allow it?
+> 
+> I don't see much benefit out of this. If MFD is not available, the other
+> drivers may be built, but it won't make any practical sense except build for
+> the sake of build. I think when they are all together, it makes real sense
+> to compile test. MFD driver here is like a subsubsystem dependecy, we don't
+> usually compile the drivers without subsystem being enabled.
 
-> > Maybe add a comment in the code that this is wrong and the
-> > driver and DTS files should be fixed.
->
-> Or maybe fix in the driver and schema and add a quirk to gpiolib-of.c?
+I thought the point of COMPILE_TEST is to do exactly that, but sure if
+you insist.
 
-Even better!
-
-Yours,
-Linus Walleij
+Raag
 
