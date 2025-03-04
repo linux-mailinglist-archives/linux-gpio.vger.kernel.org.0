@@ -1,139 +1,106 @@
-Return-Path: <linux-gpio+bounces-17049-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17050-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C21CDA4E0DD
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 15:29:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A89FA4E123
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 15:37:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57EAA1797FF
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 14:26:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D3E01886F93
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 14:33:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F6CC20766E;
-	Tue,  4 Mar 2025 14:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01E1B25D20E;
+	Tue,  4 Mar 2025 14:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i29LHU8q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TTThw6LO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761482066CE;
-	Tue,  4 Mar 2025 14:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167F225CC9A;
+	Tue,  4 Mar 2025 14:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741098293; cv=none; b=ubC9PbjuGK1S5yIyCy9u/sq91gh8YyHAZFmszO+pnEvraFDVFcScQ15yg7XzwxlHN3pLW5VP9rXLh2nZHjCegyfcJxRvqyhYc4pb6vCXbW4Pj5eZHFX7gaq0Yxg972R/lgu06SMYlpHb0dq+XKRqZYACp4xsJTwaADZIOWjRVSk=
+	t=1741098685; cv=none; b=Ws47y9uCjdrSK8pP3ELWPeQxuwE+qd8qXEPYFl9VtsIwVwYLCTR6cuGBRtrW6LZ9Cz6VjCuA811yNEqiZcS8JphVo6QkS8GnnKgKX1IrfvDc5yqzCTUW+T7vSz5YyZnJNDtnOI0BXGGZIgaMUIK49IPLTI73jjFRREE7s/C0gK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741098293; c=relaxed/simple;
-	bh=wg2HTDH+GhCY1HuZynJsDoXu0dgUu5HmFEb9Fd89oeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDxUDdF1tb5JQ6bxAkPn7tcbC9RKajk612ZM3KAtIgXxH8ljxePLmx9K4I8el/I2P2aINOsJRN2JmC3AfXI7h/0zHGXxbbxO3RoahdevjamxoW1y3lzsrwGIVpqn+pMEc8DlFsudaLpal6uR0fRrO8/F0Z1dA28bExIoMznw8qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i29LHU8q; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1741098685; c=relaxed/simple;
+	bh=0JUk0DCDRh3TUcCv++gk4WNLQRgMRu2NMHQHfZboClM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UMjShAHMqyD/28si4me1VI1h/yrkTgCgJ3+eZ2y4QaR0eFxFKLr1qW5riS8p0syeiox04MUa4dOEi7XOkae/vKige8nmkEZfU89rUgmxwwz5uFSuU0BZFgkX++ADk/QWR53IsOu70KozmSuDM4iAESZtBiKk3+kFgd/HEpUHDxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TTThw6LO; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741098291; x=1772634291;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wg2HTDH+GhCY1HuZynJsDoXu0dgUu5HmFEb9Fd89oeE=;
-  b=i29LHU8qL0SMz46b3EgvfaVjvUv4U2c9qlOPDVyTocT1fl47aY8T6eSL
-   ofttRDmLmRvKQMUqG2lkRtWLGVe0IMhg54tSy7vkiHjVtCzbbZyHKkyjE
-   v9GeauMjGaO9cNmwZEpv4UiEJUTgMbsmZMUYUuHWv+uiLaNMVJ+k0VxGY
-   RSEyRi5GhO2rkQFUDOUaevfvYErJQJ7N4AiyIXPvAAWJfaza4gEI9QE1V
-   +sXKGd02ihySw+YMNS5ABQMPPI387+DZWqzwCJgUL/YtGucmbE+O8eBEM
-   W+re3YsJnkGJav1gAU+c6F98IhyjfrxUgaPoj9ouNFIS0pzR6aImHpRAI
-   Q==;
-X-CSE-ConnectionGUID: rgpIGLpuQYSO3iv84PvzOQ==
-X-CSE-MsgGUID: B+0h+9NJTT6DAMcRmPuvUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53419577"
+  t=1741098684; x=1772634684;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0JUk0DCDRh3TUcCv++gk4WNLQRgMRu2NMHQHfZboClM=;
+  b=TTThw6LO7+0nMaJqt2K3x3XI2tUlB0nligkotrb/kPUCj2QanhQUck6t
+   OOqnL8URsXIFSkfyvbmczQiMrkk2LhPtEUKfmQU/ZHtFBXC7cnM8HVhUj
+   w9+iKLVv4EVN00Byb9SmjYycKh81G7b5zHPwRaYIBaXd39APwOyw1FAq1
+   OxIHQ8mWKQ/1ilZEEp4SxDNsiBLLTjnIvRi3W8P4BP4v79eGeV9qRxr10
+   Ewjmg8AhvsXlEU4VeCE1Tc0ivPjqlvYkjV7+l1e+fpXfvXHB0Dkk/wcnA
+   ccOe/mYbqM8T+0FS8a5pji5/uFrRKdUJUq2sgzqqMkqczjwydg4Qm40Ac
+   A==;
+X-CSE-ConnectionGUID: r3RWjMP9TMiwdJ2bPZm7HQ==
+X-CSE-MsgGUID: SZL7kIJlTtSbBqpej2n2KA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52662444"
 X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="53419577"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:24:50 -0800
-X-CSE-ConnectionGUID: mkkJ+bYxQyKCGZikjCSwgA==
-X-CSE-MsgGUID: yrH2c8RtT1CBUnM+5PEMSQ==
+   d="scan'208";a="52662444"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:31:23 -0800
+X-CSE-ConnectionGUID: hYhul2DrSD2QjKwno/QDTA==
+X-CSE-MsgGUID: 1QWI6P1UQfepxNTrIAdXwA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123587289"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:24:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tpTCP-0000000H9Du-4B7m;
-	Tue, 04 Mar 2025 16:24:45 +0200
-Date: Tue, 4 Mar 2025 16:24:45 +0200
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="118394499"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 04 Mar 2025 06:31:22 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 317BF27D; Tue, 04 Mar 2025 16:31:19 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
-	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
- MFD_INTEL_EHL_PSE_GPIO
-Message-ID: <Z8cNLcTIrPZ6AoRd@smile.fi.intel.com>
-References: <20250303044745.268964-1-raag.jadav@intel.com>
- <20250303044745.268964-3-raag.jadav@intel.com>
- <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
- <Z8WUpzDHbhp0aMoN@black.fi.intel.com>
- <Z8WWNHL1rZKV4c4o@smile.fi.intel.com>
- <Z8Wc73OytMx3khP_@black.fi.intel.com>
- <Z8We4_FJvxTxegpN@smile.fi.intel.com>
- <Z8WkoPVk2SsSj5aR@black.fi.intel.com>
- <Z8WsfXV1vMlRxzLi@smile.fi.intel.com>
- <Z8W2R0DUS6lctU8v@black.fi.intel.com>
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 1/1] gpiolib-acpi: Drop unneeded ERR_CAST() in __acpi_find_gpio()
+Date: Tue,  4 Mar 2025 16:31:19 +0200
+Message-ID: <20250304143119.1816463-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8W2R0DUS6lctU8v@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 03, 2025 at 04:01:43PM +0200, Raag Jadav wrote:
-> On Mon, Mar 03, 2025 at 03:19:57PM +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 03, 2025 at 02:46:24PM +0200, Raag Jadav wrote:
-> > > On Mon, Mar 03, 2025 at 02:21:55PM +0200, Andy Shevchenko wrote:
-> > > > On Mon, Mar 03, 2025 at 02:13:35PM +0200, Raag Jadav wrote:
-> > > > > On Mon, Mar 03, 2025 at 01:44:52PM +0200, Andy Shevchenko wrote:
-> > > > > > On Mon, Mar 03, 2025 at 01:38:15PM +0200, Raag Jadav wrote:
-> > > > > > > On Mon, Mar 03, 2025 at 10:21:13AM +0200, Andy Shevchenko wrote:
-> > > > > > > > On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
+The checked type by PTR_ERR() is the same as returned by __acpi_find_gpio().
+Hence there is no need to cast, drop it.
 
-...
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > > > > Better CI coverage?
-> > > > 
-> > > > How? I do not see the difference, can you elaborate?
-> > > > (Assuming that CIs are using the merge_config.sh approach or alike)
-> > > 
-> > > That is my understanding of it.
-> > > 
-> > > config COMPILE_TEST
-> > >         bool "Compile also drivers which will not load"
-> > >         depends on HAS_IOMEM
-> > >         help
-> > >           Some drivers can be compiled on a different platform than they are
-> > >           intended to be run on. Despite they cannot be loaded there (or even
-> > >           when they load they cannot be used due to missing HW support),
-> > >           developers still, opposing to distributors, might want to build such
-> > >           drivers to compile-test them.
-> > 
-> > Yes, and how does my suggestion prevent from this happening?
-> 
-> Nothing's preventing it, but since we have an opportunity to allow
-> a wider build test (even without arch or mfd dependency), shouldn't
-> we allow it?
-
-We are going circles here. My point that there is a little sense to do that
-without MFD as it's impractical. On top of that this is inconsistent to other
-drivers with similar design.
-
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 2aa88ace5868..90db393377fc 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -993,7 +993,7 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
+ 			desc = acpi_get_gpiod_from_data(fwnode,
+ 							propname, idx, info);
+ 		if (PTR_ERR(desc) == -EPROBE_DEFER)
+-			return ERR_CAST(desc);
++			return (desc);
+ 
+ 		if (!IS_ERR(desc))
+ 			return desc;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.2
 
 
