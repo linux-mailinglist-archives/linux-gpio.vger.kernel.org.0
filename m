@@ -1,71 +1,71 @@
-Return-Path: <linux-gpio+bounces-17007-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17008-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 266FAA4D788
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 10:11:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B14EA4D7A6
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 10:14:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BEA93A5295
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 09:11:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E73218849A1
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 09:12:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B5C11FAC29;
-	Tue,  4 Mar 2025 09:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14F021FAC5A;
+	Tue,  4 Mar 2025 09:11:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNoir0bm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTDPe3Sz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0EF1EE7AD;
-	Tue,  4 Mar 2025 09:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61AC1F5404;
+	Tue,  4 Mar 2025 09:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741079467; cv=none; b=r4PfLlsstbykvmTkFxlBuZgIm+mwyexFHv97PrxNSHZJ4KlOcx8yzq/CnsfFT6IZuhRzPknaqdnmu7gOIff7hgQm1n5X67S0O/2Qc78NW7S8A1/glLsvoQMEhqOzarzgzaizITsC8vD+DUjuOIehyO9Ix/9Ke0tFo79W2ams/kA=
+	t=1741079507; cv=none; b=tDdVkmzUei7/QfSOfziswkEoH9IoyH4jpG8u6Yx5+U5kPyR7As9zpsPKzNO++CeTQmxfUF20dAtKwUs3bmRdLC1wbo8vTYbKEO6CYNf6IG6HHXLSv1yK8P4dCbSWK6K5qp8RnQqYhW40av2uIOO1iNyuRhctzmYCHkPXYF9zfs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741079467; c=relaxed/simple;
-	bh=UT3DZW0qrtnSLRpPQbxgZcg9zC1mvmI5AY4kfZKp4Uo=;
+	s=arc-20240116; t=1741079507; c=relaxed/simple;
+	bh=d+d0C1+Evp1tTj8t+lX/Ji2f3+9xo5brEkgfzdJtkko=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rhWAr05vDBM6boswCOxQH3f0Lm9ZDJdpd+Pgkq7paj59X0k8yrkDhrb6fJjgIsT0dTfYgHiTzwjFLPTxXmgfFDWQ+OqaePC9iJABLDa7NKB+sGmw2NzYZIfUX34x7mntGZqh1J5Ur53EV5LdckMpTc0SnjuLqCsAZ4gJBz3mJ+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNoir0bm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FC57C4CEEE;
-	Tue,  4 Mar 2025 09:11:07 +0000 (UTC)
+	 To:Cc:Content-Type; b=HxSaRyV3QNbrYJtLn/qQYxW94AmEQeWPLicdwiKF982pLUOpFo6xHIBtIdX/ccC6WKxiTfgdSb5MOi7EmbA715fq2oLQs7oNPxc6nDeQbsbYKIGSlNbMphVw0qQmE5XPeC+k3gUBplOSCGNK6IAif8y6zyrw2jWBOQHRCFch1xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTDPe3Sz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58197C4CEEA;
+	Tue,  4 Mar 2025 09:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741079467;
-	bh=UT3DZW0qrtnSLRpPQbxgZcg9zC1mvmI5AY4kfZKp4Uo=;
+	s=k20201202; t=1741079507;
+	bh=d+d0C1+Evp1tTj8t+lX/Ji2f3+9xo5brEkgfzdJtkko=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JNoir0bmNZtBhlSLmXEv8LvfZmIQqWL/qcP+PvhLXUS0raVcUbdxiJeChBptO15Ck
-	 bmsQ3pdTHo1chnFsmsVySDWKltENXd9yuvIBFoKSJzweVM6TJq5/PdYyASj96jDU9j
-	 DHOsRVPd4uHkGZZPoYV3ne/L3ZGiLsqnnjmDAtbsIWZKoXYS3OXaIFiuYmqHmAhzUO
-	 gpjV3hIuODgZTLsXuGdPoqV74S31UDHRdR6J218dxC6Dgb+LxI4cgO8XSM6Fy8Dcjq
-	 qojePriCmUhyEU3slikc4s/Fe/qCldpU83TGIdcwrXCljUoXhe4MxvL2RxNRQp2q9K
-	 DgoIhq7xSkfSg==
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43bbb440520so22294555e9.2;
-        Tue, 04 Mar 2025 01:11:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVoTjGSw26dk5x9/aiGMOmH9UC7v+EQKo28/suYWMCD99nwlNsGEoyJMYdF4dGFA8LZUpda4/+q9X4sHg==@vger.kernel.org, AJvYcCVsxap4cUHZcwh95B8fAnVBjmtdDopEnAUz8eYBYhu+gjifIUMU+MKfoZTYVwxdyLk2guqh6q7Y9p1m@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpiPVVvodFkVJcw3MlU/ngtdaJNI9BOeqxmroR+7VXgk1tv8bv
-	UKqbJswPewuzeBR4qK9Zy8MydidQ/llIOuTXzlcHeBfQJQEeyr7Ja4j3lFvQ45B9CCjlkvyl0sW
-	ulFUSsFXRwV+OvIVzX9ussFTj4gI=
-X-Google-Smtp-Source: AGHT+IGNa78YTaKI2c9B/e6pR2w/0xN8cSsgHJm24/chyQag/klHP70SVhmNCWWP1teRy3o/80vTbf6FJ3c18DJVMZQ=
-X-Received: by 2002:a5d:6d09:0:b0:391:4f9:a048 with SMTP id
- ffacd0b85a97d-39104f9a5d5mr6173906f8f.4.1741079465855; Tue, 04 Mar 2025
- 01:11:05 -0800 (PST)
+	b=pTDPe3SzqaoHNye7XnmJowfZmfekkTzUsqLXXhIxYTKCWmSDERSQ+g7rB62dclgro
+	 QdUNPjMX4wybjy3Cz64neKzA09bM/Er6Hc37IVh/qSU0WEWcgAZVBK/3fVakr24IIM
+	 fzfwcCtok6GKyjg/sGdAS0UcvFOagxVjqBqoHue3gv5dN6VEybpL8FnXotmWr0nkQC
+	 e+dFZa6Y8SP/5FDlKVDb6aOGSyfowe/2erP0Mz403Sv1rq6qw8v6HXU6ROOt1LkfGi
+	 nsyzhWxdoZ+u6tWKpz1Dk9gyz5Cdu9IDTFMhp4Rs8IyFTaaWEZ+xbv/cxfqlDt2j16
+	 yot9CdaNIG2Qw==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e4cbade42aso8088563a12.1;
+        Tue, 04 Mar 2025 01:11:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUy6/NMDaCXXXFvDAg0mW38erhs1+GPMUNtZFsTmqnLC93hS4bPpX7N54J99P9pfMYG8o/9lwsfdJjI@vger.kernel.org, AJvYcCXlcu2HzPceWDijj2gSVjpiQm963bxNVoFs4w10Bz9lwRtv3YQ1CDN7DC7b1qQygxd/AkS1d5oHmmdMTg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGflrhO/b7+QcXeTUrnP5c+LCIL9uybhaUIyLDHWnJxpsNtKCB
+	vlrOGpDOHf1Wx35ElkYR2saSBLtBhrv8+POEEut6dGZtzHgTTGSLWZMOsbTFxqWaZAkwH9mI2Vm
+	/VCYHG0H8UG2SpsLNBodFHdRBixI=
+X-Google-Smtp-Source: AGHT+IGCVqrktFJMhN8KD803z1dPo0zhcB3zfSS36FFM1z1Y4PIom+eNY2L0x7T3Tklz7Kvg7ddvQ3AVjzH8oKAMDlc=
+X-Received: by 2002:a17:907:3e92:b0:abf:427f:7216 with SMTP id
+ a640c23a62f3a-ac1f0e6e95cmr214652566b.1.1741079505964; Tue, 04 Mar 2025
+ 01:11:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303074552.3335186-1-zhoubinbin@loongson.cn> <CACRpkdbrOC1ONZKFetvWQACmSKYopabgpCkip1ub_14XdrP0hA@mail.gmail.com>
-In-Reply-To: <CACRpkdbrOC1ONZKFetvWQACmSKYopabgpCkip1ub_14XdrP0hA@mail.gmail.com>
+References: <20250303074552.3335186-1-zhoubinbin@loongson.cn>
+ <20250303074552.3335186-2-zhoubinbin@loongson.cn> <CACRpkdage9PLDURkh5A3Zqi_BN6POva5yNdSRbf5u8p5q0qnHQ@mail.gmail.com>
+In-Reply-To: <CACRpkdage9PLDURkh5A3Zqi_BN6POva5yNdSRbf5u8p5q0qnHQ@mail.gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 4 Mar 2025 17:10:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H75rQpxYvL927P7YY99dLDqqP+N-dvpGV+G3RY843mQkQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jqbzj3xEm4xMRO5mpw6_pB1VQyqjHOVIjHofr7WKzVpeuRpP0aGW03KCGM
-Message-ID: <CAAhV-H75rQpxYvL927P7YY99dLDqqP+N-dvpGV+G3RY843mQkQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: loongson: Add new loongson gpio
- chip compatible
+Date: Tue, 4 Mar 2025 17:11:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Z5yrRqnWD4XPAsuCuxEAux6-sMvMHSP=8TPBH5JvrQw@mail.gmail.com>
+X-Gm-Features: AQ5f1JohiKW0WSzqg2VU1xVfalcgCjeEjTgRQ0k1TxRF_9mQXmKgDwAauGexH0E
+Message-ID: <CAAhV-H6Z5yrRqnWD4XPAsuCuxEAux6-sMvMHSP=8TPBH5JvrQw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: loongson-64bit: Add more gpio chip support
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
 	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
@@ -82,8 +82,8 @@ org> wrote:
 > On Mon, Mar 3, 2025 at 8:46=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
 n> wrote:
 >
-> > Add the devicetree compatibles for Loongson-7A2000 and Loongson-3A6000
-> > gpio chip.
+> > The Loongson-7A2000 and Loongson-3A6000 share the same gpio chip model.
+> > Just add them through driver_data.
 > >
 > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 >
