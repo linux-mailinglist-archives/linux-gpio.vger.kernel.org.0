@@ -1,98 +1,126 @@
-Return-Path: <linux-gpio+bounces-17024-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17025-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 711A7A4DC50
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 12:20:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A13DA4DC51
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 12:21:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EEC03A3FEA
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 11:17:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75CF517A49A
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 11:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AA6A203707;
-	Tue,  4 Mar 2025 11:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A55D1FC7F8;
+	Tue,  4 Mar 2025 11:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ESTqqWze"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50211FF7B0;
-	Tue,  4 Mar 2025 11:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5BA1FF7CA;
+	Tue,  4 Mar 2025 11:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741086827; cv=none; b=VCfRT8jeaUlqG2TW6tBCyyWR3RYCUm8eDIQsai8KBaBTCRURMCt2imoYi4h7A7TdHJxlx4kkJdoWtzui4bwUu1ORBeB4fK9o3Oxz/1YQPaGTkpvU5rwSXWBvG5eNE4djAOs/pJjFyV8JpVWjjJSaq3VjDTVjs6QQG9jWYoIaM7U=
+	t=1741087021; cv=none; b=k9RmJ/39ySuBwg+gHpmT3QlwMOirVqcSDnZEl/xMV3MIQI3aghKNDfcOIn5yw0z4HdgW20Q46iqFZP20fQYN8/VmhV0UgGj6RauBvqhG4v0xa8Kgc4+lIJacPO1g2+JLgLI204JVnImenTy689IR6R9otU9biOAr9MRbgQno8w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741086827; c=relaxed/simple;
-	bh=1XrR23gtRCCWnn8HjV8+1EZ/Y4XWuQSeZP4DSP6Nyjs=;
+	s=arc-20240116; t=1741087021; c=relaxed/simple;
+	bh=4/ismWdfnkMWExfouaTmKfv4VPmt/pQOLhoR6IrLNCI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kapT5Zbf48LDHxp+PNmv7ObuSjOTP+MP4yR9+O+F69nn3iNhJIYCXDnXVT56/pVTqAwXiwq1l3RnP1QcujLDdFeSRuxkIEfhVvKPMTf5B3ANKy0jh3i5UW5Q0oPAtIIswNTX+t9+1Mii+YPNlg35h6D95PyGEQwcb6TcXVTGMOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: /X2zx7coRQ60GdqhuuFsLQ==
-X-CSE-MsgGUID: NVgJkUvlRv2sF66I1jpSFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="44806818"
+	 Content-Type:Content-Disposition:In-Reply-To; b=BdNZpe3YK13vAkhpXi5Idy53u4cmhqETit+LFBUt+GUJtW+uCpYipssAyu3J1JCLFiRdXEu+tfWFTQX/M9KyxFs/AbxAjXJ3kJmsGdQ0/WSDvdkN8RDhSnEkqDCJtmx9okO5jAAAd4CDp3IVAzSDxKAd9o15uP4NDK+IGFfUyMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ESTqqWze; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741087020; x=1772623020;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4/ismWdfnkMWExfouaTmKfv4VPmt/pQOLhoR6IrLNCI=;
+  b=ESTqqWzeuZv+QqtfWwPz8xcC2MmrAhkCty8Fi7fPhKtPe+95mFbo0LGV
+   b5NdVJby2mRkG3SnSQoUKenq7taTq21sxOxz4BTYmUbXYNrwN2vtqJAo9
+   WE7znoLVtHOHUMTF6Rq25rkTcxkb6ze6xwCdxaO717FNtxwsxT6EvA+/4
+   gL2TAMj9n9jvOE5O4vBxvSWkK2xyWrlewTH35lTpaR22AgLdUJCefz9C3
+   HoMlrXCG4y5rPO6RaiMumQ5jh8HUa60TStgqUO9+N+8JHD+559z/0sBZ1
+   TzNNZbqs7kPylJmZa1PB4XcpW6HaWmGXTby5V/PHIzqFf9L9e+bVgCC5V
+   A==;
+X-CSE-ConnectionGUID: r8A0ooQGQBO9VnOCSX9ZKQ==
+X-CSE-MsgGUID: YnGO5Oo+T5OEtCqp2hyGfg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41177149"
 X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="44806818"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:13:43 -0800
-X-CSE-ConnectionGUID: 8kpm7LFaQ0KZUprkU+NvXA==
-X-CSE-MsgGUID: rcobdrylR/qFJ27MTu/dpQ==
+   d="scan'208";a="41177149"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:16:59 -0800
+X-CSE-ConnectionGUID: U0/IBW+3TKqbq5A0AP+ZJA==
+X-CSE-MsgGUID: 9JysdFC6Q+eSZEr9AV/APA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="119033059"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="149277539"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:13:39 -0800
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:16:57 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1tpQDQ-0000000H6My-19Lz;
-	Tue, 04 Mar 2025 13:13:36 +0200
-Date: Tue, 4 Mar 2025 13:13:36 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH net-next v2 3/3] ieee802154: ca8210: Switch to using
- gpiod API
-Message-ID: <Z8bgYFUds3UU96Mo@smile.fi.intel.com>
-References: <20250303164928.1466246-1-andriy.shevchenko@linux.intel.com>
- <20250303164928.1466246-4-andriy.shevchenko@linux.intel.com>
- <CACRpkdbCfhqRGOGrCgP-e3AnK_tmHX+eUpZKjitbfemzAXCcWg@mail.gmail.com>
- <Z8YThNku95-oPPNB@surfacebook.localdomain>
- <CACRpkdbqYoY1vYGii1SyPL1mkULGXYX7vFwu+U9u2w9--EYAsQ@mail.gmail.com>
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tpQGc-0000000H6Px-3QxS;
+	Tue, 04 Mar 2025 13:16:54 +0200
+Date: Tue, 4 Mar 2025 13:16:54 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Kent Gibson <warthog618@gmail.com>
+Subject: Re: [PATCH v1 2/3] gpiolib: Rename gpio_set_debounce_timeout() to
+ gpiod_do_set_debounce()
+Message-ID: <Z8bhJq3kn_uw3iYE@smile.fi.intel.com>
+References: <20250303160341.1322640-1-andriy.shevchenko@linux.intel.com>
+ <20250303160341.1322640-3-andriy.shevchenko@linux.intel.com>
+ <20250304091804.GG3713119@black.fi.intel.com>
+ <Z8bdDQGg_xcamZv2@smile.fi.intel.com>
+ <20250304111157.GJ3713119@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbqYoY1vYGii1SyPL1mkULGXYX7vFwu+U9u2w9--EYAsQ@mail.gmail.com>
+In-Reply-To: <20250304111157.GJ3713119@black.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Mar 04, 2025 at 01:03:41AM +0100, Linus Walleij wrote:
-> On Mon, Mar 3, 2025 at 9:39 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> 
-> > > Maybe add a comment in the code that this is wrong and the
-> > > driver and DTS files should be fixed.
-> >
-> > Or maybe fix in the driver and schema and add a quirk to gpiolib-of.c?
-> 
-> Even better!
+On Tue, Mar 04, 2025 at 01:11:57PM +0200, Mika Westerberg wrote:
+> On Tue, Mar 04, 2025 at 12:59:25PM +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 04, 2025 at 11:18:04AM +0200, Mika Westerberg wrote:
+> > > On Mon, Mar 03, 2025 at 06:00:33PM +0200, Andy Shevchenko wrote:
+> > > > In order to reduce the 'gpio' namespace when operate over GPIO descriptor
+> > > > rename gpio_set_debounce_timeout() to gpiod_do_set_debounce().
+> > > 
+> > > To me anything that has '_do_' in their name sounds like an internal static
+> > > function that gets wrapped by the actual API function(s).
+> > > 
+> > > For instance it could be 
+> > > 
+> > >   int gpio_set_debounce_timeout()
+> > >   {
+> > >   	...
+> > > 	gpiod_do_set_debounce()
+> > > 	...
+> > > 
+> > > However, gpiod_set_debounce_timeout() or gpiod_set_debounce() sounds good
+> > > to me.
+> > 
+> > Then please propose the second name for gpiod_set_config_XXX to follow
+> > the same pattern. The series unifies naming and reduces the current
+> > inconsistency.
 
-I am about to send a v3, I'm going to leave your tag despite a few changes as
-discussed. I hope this is okay with you.
+> gpiod_set_config()?
+
+The problem is that
+
+gpiod_set_debounce() and gpiod_set_config() are _existing_ public APIs.
+That's why I considered "_do_" fitting the purpose.
 
 -- 
 With Best Regards,
