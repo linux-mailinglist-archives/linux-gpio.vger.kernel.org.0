@@ -1,121 +1,122 @@
-Return-Path: <linux-gpio+bounces-17015-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17016-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4E0FA4DB36
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 11:47:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62B45A4DB46
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 11:48:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E199C3AE50E
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 10:44:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5BD33B0AC1
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 10:45:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB566202C56;
-	Tue,  4 Mar 2025 10:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9DFE1FF7B4;
+	Tue,  4 Mar 2025 10:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lXUofKZw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mRXN6/bR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CE1202C39
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 10:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E0E1FF7AD
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 10:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084802; cv=none; b=fU0voKzDXjKAQwjzkohbaWh2Ur+/RKKlQQ9aMxyxce196F0SnYepSqsEpcTZiZqXElwqHW0DJfl35TiDjYXaLbfuMOZyrG5ZWobhBBotmI3AH//K/2E1uGhk+3wA3g9MTMsCEORLrSRvrQsTbgUfpP9zt3bBGs+agR2vfguKgLM=
+	t=1741084916; cv=none; b=aOlicv1JEoQw5VIaC8MM799x3a3KnHHS0S8P92nos5bbK/rssled8J3i487cAaOzXbaGPYfrh6vZ714Wp/jtnXXSebsCkgpz4hrv4vo09M4LjnGIL8YZ3sLsf4fB5e7puDpxzTtk1Afxx4p11EEvttGY515ZWDT01d0AERrxoDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084802; c=relaxed/simple;
-	bh=nzgcasT8XlfuMCUiPfV4W/V1AJ9l8OcLLCDvCjZ+wh8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AOWeVj70yuIEYcfVAPrtx364GFqjAF2zrHuCQC3FKCsBP5Olzq9ET7HRyWkqJinJdwMpZbtGKDbpY5tT2Nvlc2ku4yUDlf7cVvV0etFpXL2ylpgynO9Un5a7u3nxB+PJULonKn6Hg8hMNHMlcamPIcIw3mHiTJxsiCWU5i9aWPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lXUofKZw; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1741084916; c=relaxed/simple;
+	bh=5eAsQdrocIwsuEZIEV2Bk/wteURhMPFY7Aeo37o/jJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JCO7BmWWFNcoOidpLB3kChB4LhkoKfNo2mAFPTFzJgszD3A8kZf+N+VWVo9asDsE0ncqrL+wbi4C8qr7SUbGbxlMUcdtojCSpfuDhzWjD8ZFwSCMbMgTOCPYihui3WNTZmW9ttcWWORdPhSdJoqrIJkP24XGY4Zq+k/IVJiyq50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mRXN6/bR; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so3297515f8f.0
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Mar 2025 02:39:59 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5496301c6afso2377857e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Mar 2025 02:41:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741084798; x=1741689598; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741084912; x=1741689712; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I4NRBkDX3tmF4bL4mAlAFQOe0WTBDnxQ2hATnqOky0M=;
-        b=lXUofKZwkeg5fvE/WuQp2lxCVJSFmUWajPm+wtvu+oMFDi0Y15yee0mX3AZNSTBkRD
-         Djr8pva31HiMPD7CHIP4r2gRjj7t8UY+/Q6gHZab5NjFZm9WWkdlJLDRgQlWo+EwgoSh
-         NrKNVeB3ifTsGZ32kv3wWJPfWQO1seOwiD4+E7y5nYGRqZ/IkCccg0y7Bq36LTwj9x/K
-         3ayaxs8JJXRmqaceCRa3K8aS7EljOB2kVef+RHXsxB4wHzQtgHznZGCiQosVetVhHw3p
-         dpIbKcN7Efob2ZtLvwLmfx5G++/OozelcfHcLLSB3KsqhGVhRyTdzSngyJ9tH3tZLkpI
-         eQ5g==
+        bh=J+CLe9wyo94MK43cR0KkLcVm2hrSOi/FbrLlXKM/n+c=;
+        b=mRXN6/bR1i4T3/VBrnDcfW/caVKxhkYUzYG3l+EQE7aVbuo7VSuRoVH0lhy1LtC7Vt
+         dPDI8/GavowU/sxF3iiJSVuwFmqH5JN3lqvkcAyeZ76ahL819BoVnJqww6M0pxG4YnJr
+         tZ4sZEe4knfmZNnLz8eEYS0oqtU/C4C225LH4WEv4fMJoT+Cfoa0jCgE7rqF2QBgeDuU
+         iYjzGCvkY2ivIEo+i7EMHX0ZMZ3u+DkbXARG+BmD7D+VCjAHtHmk/6j7xpt4FNA7BRli
+         sHRBQHadiE/j3jeqLQZSKzca6Z3WR0zqlTi6RH1jCoRe9jvgNiL12ETenLOTeTbj8Rmi
+         cSYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741084798; x=1741689598;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741084912; x=1741689712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I4NRBkDX3tmF4bL4mAlAFQOe0WTBDnxQ2hATnqOky0M=;
-        b=oK2hR6LstoWPrDEOqtxkYhu4ToOLiFC6k2xMyEIP+0YJHHiPFXzgTtlj947ZItTm4a
-         B/o5ac31Ww4L8D6477i04v14V7vTMVI1pWWTYZdhPq8K5hcT2Iu68JANAKJd9RYUqo7b
-         Auka0qziSPjIX6Nk2qrvOX0RjXWpmy5HpMrqMfCGg9W1E4jI9GW6Xa/x2M7GASKYVUZm
-         1rmBWlHMwff+Z2Moxq2+tPustyTG0gqVPtuaOsE9cEUYMbjuEacbWEiHhvnMLEr0UREW
-         YgTRVj4SWcZQg70BxSRlPYfFgsFIzfvGirfDbs+1+PuxAAFvJiRbjGSdaufmmFHvOds5
-         AcpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtl/MHUsJVOWeP9V0rxRjI3YinYEE3AjwNvEW4c1NP3hARIAk78u0wAYtUjrDh5Ty+7Pnc5Gn3aipE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/0P67YoXNKp9H2vNvQyJ4bm/lKInn5HynJzIQqNeqR1kJuMFM
-	UsBbnjEKjk+AcWJ6NRen+wfxD20Q9xnKEYxa5UbFm12hhxaFz9pJtoGfwgz8skU=
-X-Gm-Gg: ASbGnctu/X/LF1ssL9O/qy2WScYScb0K4uw5YaUfhXLmUXdAfn5wniZm5qwzRGgRyhE
-	JmPc8UR4aZd2r6dTfRz64DHVZ/hfERLxx7IfvZ2eB27XzP/TysHs3YDBZeghlt6Fn0AkcvLeDRZ
-	9FMV6f1Y2ScNgEWaUzNV6ShSGhOc7SlIyf69mPmUCMEG+LeRFJmPSuJWim3k+OOs6XUF5xIIJqJ
-	SzcSTOFvH9y4gMpW2nypmUIlHGz/A+/H4RM3+vHJHfG1ztymBRf9iqQqLPCaSfIZ42udSJnDhTX
-	uo9KYl1q4ZumegOkGigFGitSe7Ny/IoHsINoxtq1Hxk0
-X-Google-Smtp-Source: AGHT+IGI5YinM0Fmil/KbrQRp+7dyNZtKk6Cw3iHPUYwQZ6EfkAXgPjAmvyLHMyqzvMus9tjQNoGAw==
-X-Received: by 2002:a05:6000:2805:b0:390:fb37:1ca with SMTP id ffacd0b85a97d-390fb3705aamr7047086f8f.53.1741084798504;
-        Tue, 04 Mar 2025 02:39:58 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6018:7257:350d:e85e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e484451fsm17602859f8f.63.2025.03.04.02.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 02:39:58 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-pwm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: gpio: mvebu: Add missing 'gpio-ranges' property and hog nodes
-Date: Tue,  4 Mar 2025 11:39:56 +0100
-Message-ID: <174108479375.31979.16946190179335788449.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250227175132.3734524-1-robh@kernel.org>
-References: <20250227175132.3734524-1-robh@kernel.org>
+        bh=J+CLe9wyo94MK43cR0KkLcVm2hrSOi/FbrLlXKM/n+c=;
+        b=q6DThXIDKZFxpTCIStync+cv1DvLxYz49NZTIyaN6tACDVzaWjVmKM22NRsiOq4hI1
+         QugIUIOIr0i/nSEdmTyYxCGQ2PM+tyQA6DdeDAV488d1UOlmCrzi9FuMFWcZeQXUOVpg
+         1adxO4bHK/s+us/i3wpvm+nHKDZBf+d0SQoATozFeDjEv/ul93b5AojtMYi/9MD0Zu5C
+         v0hLjq3SFCZ89IxK4wC/seF5FrmrFwTuYVmdFUIfSMI2I2gTnoBDzDjNQqfUU7rXldAC
+         xUi8pR4yC/axXsAOpyITTYcURU0Rdfr7zE92YGOjF5d8JSmarEJkPZ9IHD/qkj6Tm5nQ
+         4taw==
+X-Forwarded-Encrypted: i=1; AJvYcCVr4Beketa6y+KCtYDzXcAnzrJTxV+W4cszaGY0MjF8C1v/r+PcKaReJ4urqrG/XmWghChquaDZ+jIU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA+kfOa0MoHtYUfnX3/jUlmTxrVQSftNZ3Zz8EojE5N9Z+glZi
+	OG8IzrZ8+Yq2185UZY0UX6y8+PoIE/yHcYJTl9bBo4N4Ns/MLfycDaaqP0gObhvzHfeJOKIb5fe
+	mevRY96yc1FMlP+1ciVTx+5a3I0qe0PPXb/AdfQ==
+X-Gm-Gg: ASbGncvWWTaqyaU8PUCJObBc715MMPwYtXbWLiacP4fLLkNUfqlLX1cjgnYKQHiG5Tm
+	r7gCU787O9XcrT5iOKO8hcpJD2yYzCNx48R9zzc/WuI8sVltVBO6S95/5nQasLyKJgb237UDY8s
+	DKkgwYkl5JBFLDT+0CLHoM+qQ/5rO72aa0pfhpz9vGruFpPMrH8xDXoRg4AA==
+X-Google-Smtp-Source: AGHT+IFW1dwugcBOwVBAmZrS6CMIuhv8KAFq4W6OW9+G0v4HXawDePl2UapUTtV4ZF3rFz9ZUUYtAhog6ikYaHBlhNI=
+X-Received: by 2002:a05:6512:a93:b0:545:dc8:9376 with SMTP id
+ 2adb3069b0e04-549756bb8b2mr865753e87.5.1741084912286; Tue, 04 Mar 2025
+ 02:41:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250303-samsung-codecs-v1-0-56a2299dd928@linaro.org> <20250303-samsung-codecs-v1-1-56a2299dd928@linaro.org>
+In-Reply-To: <20250303-samsung-codecs-v1-1-56a2299dd928@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 4 Mar 2025 11:41:40 +0100
+X-Gm-Features: AQ5f1JrTREE44_9-N9d1KpC5QVfqU80Q79Wuacg5Co0HVa8QMpwM4g47c1JzBGY
+Message-ID: <CAMRc=MevrFnw4BGRgwKrg+wj+saEmVmk+diGj=+sveE2P_hwYw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] ASoC: samsung: bells: Drop unused include
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Mar 3, 2025 at 9:41=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
+org> wrote:
+>
+> This file does not use the symbols from the legacy
+> <linux/gpio.h> header, so let's drop it.
+>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  sound/soc/samsung/bells.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/sound/soc/samsung/bells.c b/sound/soc/samsung/bells.c
+> index 365b1aca4855c885e0b59a1101475d8edb86374f..b4c0857ae35134b58a125b074=
+6af07a5fff040fa 100644
+> --- a/sound/soc/samsung/bells.c
+> +++ b/sound/soc/samsung/bells.c
+> @@ -7,7 +7,6 @@
+>  #include <sound/soc.h>
+>  #include <sound/soc-dapm.h>
+>  #include <sound/jack.h>
+> -#include <linux/gpio.h>
+>  #include <linux/module.h>
+>
+>  #include "../codecs/wm5102.h"
+>
+> --
+> 2.48.1
+>
 
-
-On Thu, 27 Feb 2025 11:51:32 -0600, Rob Herring (Arm) wrote:
-> The Marvell mvebu binding users already use 'gpio-ranges' and have hog
-> nodes, so add them to the binding.
-> 
-> 
-
-Applied, thanks!
-
-[1/1] dt-bindings: gpio: mvebu: Add missing 'gpio-ranges' property and hog nodes
-      commit: f2f3d5d62f6fbdaef46d1991086265a497b3e24f
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
