@@ -1,121 +1,117 @@
-Return-Path: <linux-gpio+bounces-16991-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16992-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5942A4D563
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 08:53:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 45117A4D573
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 08:56:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD1741883382
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 07:53:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 677FF188D3B2
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 07:56:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D06F41F4720;
-	Tue,  4 Mar 2025 07:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 916D01F875B;
+	Tue,  4 Mar 2025 07:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bzzdgt4J"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LpHpgR04"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA8A1F5617
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 07:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990531F7914
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Mar 2025 07:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741074798; cv=none; b=NE6ptLkMu+VfbBaVcWFpn/Ksb5hmY8LLqsM+Rlo0z7EkbMlEONxLy6jV0ycguxEht4dBtZK4J4j82bwAeHoeqvEGUJQLQ+4fa8I6VrnxP9E20mx0vmSj27cgiFkjonUPPnCX5JlCz8F62hsBNzuOAIWJ4OEL11BlNJv2Zduk8CY=
+	t=1741074957; cv=none; b=B+1Wccn/XYOzy00KqPbjdGGclqHPMZrG0AH7/loMk6jR2S9S61gUemC365lebwECTc90d8G66uSs7gIQtI/XeQHWsGlCy29WeiNeUVSobPguS0DrRYimxKWArVxT6JdY1bAmqRVsV3N5QDnc2hz29IoJM4f4/lr3FnKj30th5o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741074798; c=relaxed/simple;
-	bh=BVJSFhPr+MWcVdsQvQ4e5j7EsE3f4zAOy5yVDG+t3BI=;
+	s=arc-20240116; t=1741074957; c=relaxed/simple;
+	bh=wMro+oQYT8L3eIKeDTeKQmWxyrhEKtJYvqmJAViAmFk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oOL47RDZH/vktZ29Ym91OOfPWt4Pr5a+qogdLYqhwoPPPPdj1Tt0xG1u3aBiDOy5At/wdsniURnhdoFbOYgn2DTQF+YNbx+SCtHrX6o+lxCLWAWA1oFM2eLaC3G7NBKnyB9QCrhnK2ac1VrBdtMxRjgh5ngmmiYCdNzhw/CT2bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bzzdgt4J; arc=none smtp.client-ip=209.85.167.42
+	 To:Cc:Content-Type; b=IfhtklY8wd2+odGvM0ekTI24qWb61jShzt8RF+fMjVBRjYiNPc8QYsZO1vPMOPFr8doixdITrwe75NFzAo1VJaPb2+SQhByW1CgkLTfR6YxmcfOUU+q5UesaqJzQ+I8+e0MjUx2cPCcj3976/4NBlODb615Qw/FL5tCivdmroPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LpHpgR04; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-549490e290dso4032670e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Mar 2025 23:53:16 -0800 (PST)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bb2fdbb09so21334101fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Mar 2025 23:55:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741074795; x=1741679595; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741074953; x=1741679753; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BVJSFhPr+MWcVdsQvQ4e5j7EsE3f4zAOy5yVDG+t3BI=;
-        b=bzzdgt4Jddv57DDM9/XJp5vg22xYr//tW5r6EorBC6CtS+UtHLMdTUSoKB61L3hS3C
-         CrLFeeijxXBXKpXJPxBX9AFgLIWAAa5UYRixM3QV9ZC6oNLwVZr3Df6kpZfwXBubOdY4
-         yhBlTyYcFzjkJzmOdcUeBc75jeCSRdAVQbWAdbm5JxabjWcvOlxN1Rj3hhf9e96fX6T0
-         bW/DH/o4yRmvijclPwFvVlKJ+N9Q2yjgSTcTBD6sqQ035qQiKmivyOaVdj0W7rjFv5EP
-         YybQXmu8fPrZC1Gohb/tGjwAlXzmYWMv5UZn4Cy+/zQdkoF1VOJUXR0q7OsNuQwXPCuC
-         ZAZg==
+        bh=dZ9DDcCt9QUtQRCh/VCueix6q79R8Gu4pWj0lHBrn+E=;
+        b=LpHpgR04YegxvVXXkteciN3cJ0lKUmaPebPmFhaA7R86fg/6KuBYzk8SIEPZ7matho
+         Bn9whmBBZrrZJnF6Ilnltyu2kBRi7G40t7ZlKMFHqVCyk731U8Y92iuQzIf1xSK357pX
+         R7DVfkZ4p6Z0ZVbfDmkqbqYuvQtuSToM1Jy0k2tmmGSveSpMQeTyUik/Z9Hu4c9p2XHM
+         /UJpok8T44oxaosD7ZKLg36XxE0zoeAgNL6osIl06fWuL4BB7gpmPpvcbOnFEANZjm0h
+         APgob62LWlPkT0L2slXDnUYHOuYywQfk1HXiTWyfVGr2btTXQL3E+rMT06GIlFi6sTBa
+         ++1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741074795; x=1741679595;
+        d=1e100.net; s=20230601; t=1741074953; x=1741679753;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BVJSFhPr+MWcVdsQvQ4e5j7EsE3f4zAOy5yVDG+t3BI=;
-        b=k4KV/JXuUXnO5zXrDyTmwrn8FGRpwtIbz79JIh/pfSVLZ5tmmmnrzb/FSMb5pmzjOc
-         Rg/wKH5UStHyQ6yI2aNUew1QB2RuCsgAJjsfNElNp+J2ESZPbhBM9ScxRwM+6In7x95X
-         o4OnQJScAxIdrhCy79YzuRkzQvf860LsSuTrB0aJcYyD0V78cMso3jvqsL37Cli+7SWb
-         ThpIDE32YSIyMsxHSn57AQ7m3ZR6bRgjztx+0Fc/U5Ak/FEP031GhY+sKTB5aw9oxP7V
-         hXei/IHns0BMT5hxAvCjbwYBd0BcTs5WXc8LxCIR3r/u4KUH8Ia/FjMwDW5PJUl5609h
-         n4tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRLA/5dssVIOA976IBsFXuuikw+JAppbEpDFCEroIhAxGE4+3P//Vd3BWdj/6CSWKMFLQ8XfYMoOCW@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXCxGQemFmn837VBN3MxY4/HSoisg3IN9nGDzAgpg9YUEpfRZs
-	9wlfhLnGbGp5/NtePnmNycK57eKi9CyYeKs/VRr8/+fYmqc6tnoa5METhcCcbtcOG53lc1Ea1rQ
-	wU9LNxh5a6BRDNMSRLAY9nE6GTR0eQvhN76kOaQ==
-X-Gm-Gg: ASbGncsovIV34tPB/fJvTdJAvbvaG3fGQP+YMQtFQYuozYZr5tFTxyBayNKQ5japVO4
-	a9imQi9wQTciBmRO6alVytPoVoBBhqgiz+PD2wVYo8eKKrlNFjfSv4gpF2kPWgnQH8VMNlnoucM
-	Z1x267EKmPrbZw2uzKTSEF3er4fA==
-X-Google-Smtp-Source: AGHT+IGo7kPW6t6mFBR3/sTMivZuqhRH0SeEyZ9ok1vnRKx+3P9ggktEPjyopRkd13VsV+wua67se3lgNpjzpez8VHk=
-X-Received: by 2002:a05:6512:1044:b0:545:2efc:745d with SMTP id
- 2adb3069b0e04-5494c3546d1mr5523229e87.46.1741074794798; Mon, 03 Mar 2025
- 23:53:14 -0800 (PST)
+        bh=dZ9DDcCt9QUtQRCh/VCueix6q79R8Gu4pWj0lHBrn+E=;
+        b=gD4P4P3tCdKEiilaPawy8lcplvY3Xb+M3uj9gvHchZbiUi6buvV36ULUEKlrGtJCtB
+         eO8In/DWzZ/59sUhozQHOe+GjhBSIEosE0LWRj6oDuE75FIeRiBMEstjjokKe+j18qh9
+         sFNSyeuC/HThO3D5+tUOuXAF3iBwE8L0qwrKl7sIFh4hK2l5FbUgiZ8oad/6ePTj9w0s
+         pmtkjrZTE104vfTzm94Ddfk3C33so57xMNurP/+9vfDs3K8bFG0ZKiQlLh3sINEJ8zkq
+         sTZ/G1kOLV/8TMnOlpwXiBbNFNCOn1gBCUKjtZ6PXWjohwIagSK6yPAZRSi3KovoZJV0
+         ZSQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCXtAhDGovzXNX8LbMBY14+o2zN4wjiX5Hzt7+VqV3dC9JCAB5bva3O/6LwNjHjZRjoxpmIUasE70x@vger.kernel.org
+X-Gm-Message-State: AOJu0YyREa6SHj1UJRBd0Mb8k+ufH2z5ORSKMRhN4Rm9vcFN8SfhKr1s
+	LiSrZJP1xgu9+E9yCMZ6SD+oIZ77GWSmMGCnc1f8MTRJnxY0OoeC1GrHGaA8ooxUqadlcoBn8ud
+	XvmsLWjWjzfsrakUlvdffxk5KC2yIEPuQyY7cXw==
+X-Gm-Gg: ASbGncsWYnq1cBuyuxg22NaHm0AZP7xz2bCggeTb8ST+6RkwruJd+u7L0GMiKz37uDU
+	ztf7t+cqEwC+oGjE0JzMNxS3KijhQ8QY1lYOqxWBcRIyFP7++TrST8R1Dt4FXElcx679S1/2+RC
+	+Fn70RcdDCOobtggc2eO4/18GsPQ==
+X-Google-Smtp-Source: AGHT+IHzVd8RaIZzzyr6YTNF8GY5ofx0PywPASYXwtX0erFZJL3oJT+GFdH/GWC223tClxws6TZBUM7lp+ECMgXu1vE=
+X-Received: by 2002:a05:651c:503:b0:30b:b204:6b70 with SMTP id
+ 38308e7fff4ca-30bb2047363mr34222911fa.10.1741074953543; Mon, 03 Mar 2025
+ 23:55:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219102750.38519-1-brgl@bgdev.pl>
-In-Reply-To: <20250219102750.38519-1-brgl@bgdev.pl>
+References: <cover.1740745270.git.mazziesaccount@gmail.com> <e50cf74a587b33cae3133a6b9e0081062f771249.1740745270.git.mazziesaccount@gmail.com>
+In-Reply-To: <e50cf74a587b33cae3133a6b9e0081062f771249.1740745270.git.mazziesaccount@gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 4 Mar 2025 08:53:03 +0100
-X-Gm-Features: AQ5f1JoUOBReXAYnYf9thqIoVITthD3dUEJajNI_puN1-yLNkKw6af5pX77JOew
-Message-ID: <CACRpkdYeBM6V+61-cbX1g_wLAVHvQQrtPb=5qjTdUw--+J+E4g@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH] pinctrl: bcm2835: don't -EINVAL on alternate
- funcs from get_direction()
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, 
-	Liao Chen <liaochen4@huawei.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, linux-gpio@vger.kernel.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Tue, 4 Mar 2025 08:55:42 +0100
+X-Gm-Features: AQ5f1Jpy987oPMQI8JiveGzipXCGjOLloV363WVv3DPMAv-V3aTk6ejZsBcPGkg
+Message-ID: <CACRpkdZE2mtOB2BkKudQHq5-=-dyK6S2Se2hXUH+_equXhqwdw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] gpio: Respect valid_mask when requesting GPIOs
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 11:27=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+On Fri, Feb 28, 2025 at 1:35=E2=80=AFPM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> When GPIOs were requested the validity of GPIOs were checked only when
+> the GPIO-chip had the request -callback populated. This made using
+> masked GPIOs possible.
 >
-> Since commit 9d846b1aebbe ("gpiolib: check the return value of
-> gpio_chip::get_direction()") we check the return value of the
-> get_direction() callback as per its API contract. This driver returns
-> -EINVAL if the pin in question is set to one of the alternative
-> (non-GPIO) functions. This isn't really an error that should be
-> communicated to GPIOLIB so default to returning the "safe" value of
-> INPUT in this case. The GPIO subsystem does not have the notion of
-> "unknown" direction.
+> The GPIO chip driver authors may find it difficult to understand the
+> relation of enforsing the GPIO validity and the 'request' -callback
+> because the current documentation for the 'request' callback does not
+> mention this. It only states:
 >
-> Fixes: 9d846b1aebbe ("gpiolib: check the return value of gpio_chip::get_d=
-irection()")
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Closes: https://lore.kernel.org/all/Z7VFB1nST6lbmBIo@finisterre.sirena.or=
-g.uk/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>  * @request: optional hook for chip-specific activation, such as
+>  *      enabling module power and clock; may sleep
+>
+> The validity of the GPIO line should be checked whether the driver
+> provides the 'request' callback or not.
+>
+> Unconditionally check the GPIO validity when GPIO is being requested.
+>
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
-Patch applied!
+Good catch!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
