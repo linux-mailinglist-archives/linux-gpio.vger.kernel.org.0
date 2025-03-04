@@ -1,82 +1,81 @@
-Return-Path: <linux-gpio+bounces-16983-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16984-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84A2EA4D2EB
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 06:22:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C4A1A4D2F3
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 06:25:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF17D1710DC
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 05:22:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7BD6A18972F2
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Mar 2025 05:25:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C34041F3FE8;
-	Tue,  4 Mar 2025 05:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38E8B1F4617;
+	Tue,  4 Mar 2025 05:25:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lo0xFvW8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZkdgDOLL"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FCD1DC985;
-	Tue,  4 Mar 2025 05:22:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463551DC985;
+	Tue,  4 Mar 2025 05:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741065751; cv=none; b=o35E9xkGL7O2GK3Z7/Gs8vmr0vt9BHqGgkBpt+V+rjjoSVakWRvSLhs2OM0A2oTxm6AOtMNsaxTmQYic1BMzCo9MA8Eec0Y40UeSr9L7icCpLQrjGt7FJ0spqSWGdXvTDl5ijKnGIH1nxiNigIZhQURzNBj7s5gjxUQXa+tKoTI=
+	t=1741065908; cv=none; b=HBUw8/VtzMMJZEmrZ9jNBT8HKJa70GqqTsDvs544UcYuqouUiIAEihuRj9UbOWlChwyKy1oZdmXCSrYzhLOdxJL0/18xs/KPizGBBVWm9kbSFxyiqpGvlxGtXa62uY1AwXZalLsi42M8y79GpLdRIMxJjyCsS9EjftX+cvJnLkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741065751; c=relaxed/simple;
-	bh=IPlsvJ/wH9LhkF368ELMZRmGKbIn1DHgRW3ZtwACyUE=;
+	s=arc-20240116; t=1741065908; c=relaxed/simple;
+	bh=Nuj/rRdVlqjzVrQJ/x7RSKV21fO+f6WegxjKPVLjjAA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jpx877jjGTZx5o6i4r5nRGz+cQFH16L5c5p8P/nnhmObt4MfdNb5A/oh5RaPY9lVq8cBsDkc3767cCpeMTktyCDFDx26R0CUp7MYq8kT1huMJpB4Ob/KlcAu/0b1+sTE3MiDU6Bsk1xrUU0OYxzEdxlUK/oowRCoJwhXnFUM6To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lo0xFvW8; arc=none smtp.client-ip=198.175.65.12
+	 Content-Type:Content-Disposition:In-Reply-To; b=eNtjzai6P8j5oqgMVPllejhdyl4Vd0/3QGHr+Y/LgVEYTqrGMY44Vv8u+TMcep/rYU1euubyjh9Jhkojn1Hlod3/lhE6sECJMpswN+Ma9DIgKJloAApGm5N+kt63tKm14zDSCOv82WzCI2Q5zPIGichRvZjBwR8s19epp1WXgRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZkdgDOLL; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741065750; x=1772601750;
+  t=1741065906; x=1772601906;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=IPlsvJ/wH9LhkF368ELMZRmGKbIn1DHgRW3ZtwACyUE=;
-  b=Lo0xFvW8EuY9D29ayoO57zXzmls7PjJmPqDj9AiXLJUt6P0nQ0q4nYY+
-   YR3pBYNXoTqHCjW+jbXidM6OCtbXmqa1yx5Nl6BaLtfu4gabaIXfwCJk1
-   liXNrto1F+1deW0zOCZp3HyDyIalw/7xjyJDd2o0Kp6LzeS1eFvU2wBzh
-   OnIZhiVOKF7LXid4TrajkgXo418UwhUzN8Kfm3S0gCZthkej0Fg8neOhk
-   2GPkuzZ+7ofJBMcc2fyd1HZpe0yWXmnQj4PoUsmdpE/e3bahmnRvV0y/A
-   iMlN80Eadds9cKRmADcVusYht2AtT2j61StbT+vuM2/VdGqlf9bDfUEmU
-   Q==;
-X-CSE-ConnectionGUID: GDwkOwZcSkCjMuGelBmyfA==
-X-CSE-MsgGUID: 7gWZBclsRw6uZT/6GiPy9Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="53360406"
+  bh=Nuj/rRdVlqjzVrQJ/x7RSKV21fO+f6WegxjKPVLjjAA=;
+  b=ZkdgDOLLzZlCeEW8rPeSk5J6+C40gJ+AsJAppW5zx+t/fKIU5pC7iVLj
+   flRfBiTczCL1fytD5XYOIeN/pA/yfCXJd2YbRll0I0WxHEFPknUXgaqnq
+   thdxDfkl+lCyNIoLeK1yKKg+CifPbR+TmEuhH0EIZyBVcwNfRg5emIN+1
+   L0bA4FQT86mUk8be7rU/xuVfTz7O+FeUwUQ5WWXVAuaO6ISLoiAEXKBHm
+   To/cwC7gAobNb/3H9stOYw+au0+S/VZmdL9bnTgdoxJVMvpvbthcvzqz9
+   9fbmg2gsslweE2U/lBtkxCsHRs8wLOTA+Hp9soo3E+w5ESG6Rw1VmRGEJ
+   A==;
+X-CSE-ConnectionGUID: w9nFod3ZSCiGsw13NjgiWw==
+X-CSE-MsgGUID: WzjKGnmMTMmPbbg0X16ZTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="53360665"
 X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="53360406"
+   d="scan'208";a="53360665"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:22:29 -0800
-X-CSE-ConnectionGUID: t+siOAbfRHeUJ73VGNlfzw==
-X-CSE-MsgGUID: 6TSrAiS8TEeque2+44l3dA==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:25:06 -0800
+X-CSE-ConnectionGUID: //lqGTv2Q+qRq25W1Oq2Fw==
+X-CSE-MsgGUID: p5Z1iYeZQ/WiPbghYtBB0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="118279260"
+   d="scan'208";a="118279700"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:22:27 -0800
-Date: Tue, 4 Mar 2025 07:22:23 +0200
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:25:04 -0800
+Date: Tue, 4 Mar 2025 07:25:00 +0200
 From: Raag Jadav <raag.jadav@intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
 	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
- MFD_INTEL_EHL_PSE_GPIO
-Message-ID: <Z8aOD7qCzp-a0M1A@black.fi.intel.com>
-References: <20250303044745.268964-3-raag.jadav@intel.com>
- <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
- <Z8WUpzDHbhp0aMoN@black.fi.intel.com>
- <Z8WWNHL1rZKV4c4o@smile.fi.intel.com>
- <Z8Wc73OytMx3khP_@black.fi.intel.com>
- <Z8We4_FJvxTxegpN@smile.fi.intel.com>
- <Z8WkoPVk2SsSj5aR@black.fi.intel.com>
- <Z8WsfXV1vMlRxzLi@smile.fi.intel.com>
- <Z8W2R0DUS6lctU8v@black.fi.intel.com>
- <Z8W6mIl0z1Wxgv4c@smile.fi.intel.com>
+Subject: Re: [PATCH v2 1/5] mfd: intel_ehl_pse_gpio: Introduce Intel Elkhart
+ Lake PSE GPIO and TIO
+Message-ID: <Z8aOrCmmfm4rn0k3@black.fi.intel.com>
+References: <20250303044745.268964-1-raag.jadav@intel.com>
+ <20250303044745.268964-2-raag.jadav@intel.com>
+ <Z8VnSyH_DBuJpW2o@smile.fi.intel.com>
+ <Z8WU5NiIsu34Gz-Z@black.fi.intel.com>
+ <Z8WWXxTrd1e5V3qb@smile.fi.intel.com>
+ <Z8WdK7wkNnAerkCO@black.fi.intel.com>
+ <Z8WfESNmu4MjEbcx@smile.fi.intel.com>
+ <Z8Wk4dj7MvrW1-Ou@black.fi.intel.com>
+ <Z8WsjP-cuE2CAbjg@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,52 +84,39 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z8W6mIl0z1Wxgv4c@smile.fi.intel.com>
+In-Reply-To: <Z8WsjP-cuE2CAbjg@smile.fi.intel.com>
 
-On Mon, Mar 03, 2025 at 04:20:08PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 03, 2025 at 04:01:43PM +0200, Raag Jadav wrote:
-> > On Mon, Mar 03, 2025 at 03:19:57PM +0200, Andy Shevchenko wrote:
-> > > On Mon, Mar 03, 2025 at 02:46:24PM +0200, Raag Jadav wrote:
-> > > > On Mon, Mar 03, 2025 at 02:21:55PM +0200, Andy Shevchenko wrote:
-> > > > > On Mon, Mar 03, 2025 at 02:13:35PM +0200, Raag Jadav wrote:
-> > > > > > On Mon, Mar 03, 2025 at 01:44:52PM +0200, Andy Shevchenko wrote:
-> > > > > > > On Mon, Mar 03, 2025 at 01:38:15PM +0200, Raag Jadav wrote:
-> > > > > > > > On Mon, Mar 03, 2025 at 10:21:13AM +0200, Andy Shevchenko wrote:
-> > > > > > > > > On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
+On Mon, Mar 03, 2025 at 03:20:12PM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 03, 2025 at 02:47:29PM +0200, Raag Jadav wrote:
+> > On Mon, Mar 03, 2025 at 02:22:41PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Mar 03, 2025 at 02:14:35PM +0200, Raag Jadav wrote:
+> > > > On Mon, Mar 03, 2025 at 01:45:35PM +0200, Andy Shevchenko wrote:
+> > > > > On Mon, Mar 03, 2025 at 01:39:16PM +0200, Raag Jadav wrote:
+> > > > > > On Mon, Mar 03, 2025 at 10:24:43AM +0200, Andy Shevchenko wrote:
+> > > > > > > On Mon, Mar 03, 2025 at 10:17:41AM +0530, Raag Jadav wrote:
 > 
 > ...
 > 
-> > > > > > Better CI coverage?
+> > > > > > > > +INTEL GPIO MFD DRIVER
+> > > > > > > 
+> > > > > > > This also needs to be more precise and follow the name. We have more Intel GPIO
+> > > > > > > drivers, and MFD doesn't ring any bell about the platform or so. Are you going
+> > > > > > > to support all of them (existing and comining)?
+> > > > > > 
+> > > > > > Not that it is planned as of now but I wouldn't mind :)
 > > > > > 
-> > > > > How? I do not see the difference, can you elaborate?
-> > > > > (Assuming that CIs are using the merge_config.sh approach or alike)
+> > > > > It sounds like solving the problem that even might never appear :-)
 > > > > 
-> > > > That is my understanding of it.
-> > > > 
-> > > > config COMPILE_TEST
-> > > >         bool "Compile also drivers which will not load"
-> > > >         depends on HAS_IOMEM
-> > > >         help
-> > > >           Some drivers can be compiled on a different platform than they are
-> > > >           intended to be run on. Despite they cannot be loaded there (or even
-> > > >           when they load they cannot be used due to missing HW support),
-> > > >           developers still, opposing to distributors, might want to build such
-> > > >           drivers to compile-test them.
+> > > > Right, somehow that sounds familiar :D
 > > > 
-> > > Yes, and how does my suggestion prevent from this happening?
+> > > So, can we rename the MAINTAINERS record as the result of our discussion?
 > > 
-> > Nothing's preventing it, but since we have an opportunity to allow
-> > a wider build test (even without arch or mfd dependency), shouldn't
-> > we allow it?
+> > Yep, but perhaps wait a few days for review comments.
 > 
-> I don't see much benefit out of this. If MFD is not available, the other
-> drivers may be built, but it won't make any practical sense except build for
-> the sake of build. I think when they are all together, it makes real sense
-> to compile test. MFD driver here is like a subsubsystem dependecy, we don't
-> usually compile the drivers without subsystem being enabled.
+> Sure.
 
-I thought the point of COMPILE_TEST is to do exactly that, but sure if
-you insist.
+Or can we just add it under INTEL GPIO DRIVERS? With that I think it'll
+be in much better hands.
 
 Raag
 
