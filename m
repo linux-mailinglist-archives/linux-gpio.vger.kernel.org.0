@@ -1,126 +1,85 @@
-Return-Path: <linux-gpio+bounces-17122-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17123-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77436A504D5
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 17:30:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7907BA50528
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 17:39:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 234543B15BE
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 16:28:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38DFB16940D
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 16:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 194BC252907;
-	Wed,  5 Mar 2025 16:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5D2z9Lw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12DA19CC31;
+	Wed,  5 Mar 2025 16:38:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC8818A95E;
-	Wed,  5 Mar 2025 16:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF28761FFE;
+	Wed,  5 Mar 2025 16:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741192050; cv=none; b=a/oJmGZ1Evf3/8LQAacGtj+tK9nhK1Wi/UpcndunW7KlyjJ5mavflWK79JzeKnz3KGs9Nf6Psk+xBMorTdNxn3W7ma3wVUYkM9+969GQtuW9Pm6jnEtPYIOEN08hsD84lYaR4BKgHKhNzUsZ4ZOJGb5Aw18hHjy/9FAszaxLbAc=
+	t=1741192684; cv=none; b=LaUpORajKcLxLqwra8gjvEofVqNy1ty+qZJdVb7Zof907wZBvcZl7FYCi05gZmSVO/8No7ZIjXBIS9plTjgN2th7m2eGrZOfsY53+seGBrU6gP1FCKKWFUjV+qL10gczRMPpMTlEM4HNFLQWJYMlEWoZRD40oyPw3SQWCjpbB90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741192050; c=relaxed/simple;
-	bh=bGRDGRFMQzRHd1CL7i1uKLog2VzAOFSif0V7FQ+SqpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWSX4NQX+Y/G7lzIxg9JQz2Rl97NRSGMhltaAA9bbSMDFitbFxUtQWncN900b0V0do/Af8ZLXNoyCOiFU2iCqVy8tgBwOAsPwcu+pUFbkCCG325MFP423ICmqjFHBSU77WJL+CvqV+IZdVvpWVV6iB3HUuw9PyhRHRcfNdOElVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5D2z9Lw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BECF7C4CED1;
-	Wed,  5 Mar 2025 16:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741192050;
-	bh=bGRDGRFMQzRHd1CL7i1uKLog2VzAOFSif0V7FQ+SqpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q5D2z9Lw1hCeQXQtrrhz6FjEEq6Du60xFweZGdwpcxgsgX7GOUaqC73T4weKLwFpF
-	 kITN2be0XodG7T5hW2dbx7Pd/BtNjX7X0a03FRnXA1eadbYHG0DUP27uMS2cq9szt6
-	 uIm9IA4mVmR1PYI2mx5FAdgxxNnCGc1QMBlOSCAp8bF9ptzIELWL4NTqxDY/FTbKCy
-	 CQPLRLjDGNTebnDXWjzEwHoy9fHY0dOltAXljzLnAqWO0+eEPYLXePmNUdO6ZLEO3z
-	 HUSMIAXctjaE9gpCjwSSuYaC7m39C5hQxZbCV40kIw6QLGWU2tJF/d7qOKKAu1S651
-	 t6kBDrm1kYEcw==
-Date: Wed, 5 Mar 2025 16:27:24 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+	s=arc-20240116; t=1741192684; c=relaxed/simple;
+	bh=giLIi6y7FvFYbBs9vIN3Xqh8DeWtMAnSCL0PVoXkYkc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S1Dsk3WiCSkAQpHk587J1XuWmVbGKFM7fsBnQXsTTHcWy75/b5u/FbNUSgGpSqT8FC4rsd3tkFOwnl13uRaAKYvMDiK6mYqfmwatStTkKiQ6JgRXA8gxU1dEarea9OqojpIn2mzyoJiwsYMDUTaqFQJqUI0djTQ8xEkXgg/Wdjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: b9yQW58+RVaD2eeU0F/wwg==
+X-CSE-MsgGUID: zYIpf+EdRmKxTc4e0XLElA==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 06 Mar 2025 01:38:00 +0900
+Received: from mulinux.home (unknown [10.226.92.17])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 748C4400F792;
+	Thu,  6 Mar 2025 01:37:56 +0900 (JST)
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>
-Subject: Re: [PATCH net-next v4 4/4] dt-bindings: ieee802154: ca8210: Update
- polarity of the reset pin
-Message-ID: <20250305-primp-snowdrop-9af58ace1727@spud>
-References: <20250305105656.2133487-1-andriy.shevchenko@linux.intel.com>
- <20250305105656.2133487-5-andriy.shevchenko@linux.intel.com>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Simon Horman <horms+renesas@verge.net.au>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Chris Brandt <chris.brandt@renesas.com>,
+	Jacopo Mondi <jacopo+renesas@jmondi.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH 0/4] Fix missing of_node_put() calls
+Date: Wed,  5 Mar 2025 16:37:49 +0000
+Message-Id: <20250305163753.34913-1-fabrizio.castro.jz@renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HMd4nwnQLMa+4aQ7"
-Content-Disposition: inline
-In-Reply-To: <20250305105656.2133487-5-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
+Dear All,
 
---HMd4nwnQLMa+4aQ7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series is to fix a missing call to of_node_put() from
+some of Renesas pinctrl/gpio drivers.
 
-On Wed, Mar 05, 2025 at 12:55:37PM +0200, Andy Shevchenko wrote:
-> The code has been updated to follow what datasheet says about
-> the polarity of the reset pin, which is active-low. Update
-> the device tree bindings accordingly.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/devicetree/bindings/net/ieee802154/ca8210.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt =
-b/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
-> index a1046e636fa1..f1bd07a0097d 100644
-> --- a/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
-> +++ b/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
-> @@ -20,7 +20,7 @@ Example:
->  		reg =3D <0>;
->  		spi-max-frequency =3D <3000000>;
->  		spi-cpol;
-> -		reset-gpio =3D <&gpio1 1 GPIO_ACTIVE_HIGH>;
-> +		reset-gpio =3D <&gpio1 1 GPIO_ACTIVE_LOW>;
+Cheers,
+Fab
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Fabrizio Castro (4):
+  gpio: rcar: Fix missing of_node_put() call
+  pinctrl: renesas: rzg2l: Fix missing of_node_put() call
+  pinctrl: renesas: rzv2m: Fix missing of_node_put() call
+  pinctrl: renesas: rza2: Fix missing of_node_put() call
 
->  		irq-gpio =3D <&gpio1 2 GPIO_ACTIVE_HIGH>;
->  		extclock-enable;
->  		extclock-freq =3D 16000000;
-> --=20
-> 2.47.2
->=20
+ drivers/gpio/gpio-rcar.c                | 7 ++++++-
+ drivers/pinctrl/renesas/pinctrl-rza2.c  | 2 ++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 ++
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c | 2 ++
+ 4 files changed, 12 insertions(+), 1 deletion(-)
 
---HMd4nwnQLMa+4aQ7
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.34.1
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8h7bAAKCRB4tDGHoIJi
-0uP0AQDb+MXWjkA7voiyssiVTT6Ix0clY4wz8p9AJT5dGwZfNwEAk+Rrk9mYIqxG
-2PQ7K9oWTBd9bBhuyeWnmwp/dUp1HgM=
-=r10L
------END PGP SIGNATURE-----
-
---HMd4nwnQLMa+4aQ7--
 
