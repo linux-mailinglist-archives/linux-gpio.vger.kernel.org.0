@@ -1,64 +1,65 @@
-Return-Path: <linux-gpio+bounces-17107-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17106-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C584EA4FCF5
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 11:57:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1F7DA4FCF2
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 11:57:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F91B169298
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 10:57:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A197166089
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 10:57:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71C1822D4FF;
-	Wed,  5 Mar 2025 10:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0F8D226863;
+	Wed,  5 Mar 2025 10:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YPilVwMw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jU/U3HHl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9638221F25;
-	Wed,  5 Mar 2025 10:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AA420C497;
+	Wed,  5 Mar 2025 10:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741172227; cv=none; b=e7kHlLEW2aGQE5lAD66IOwVYMq9Mb9TWci5hlVdZLSuXa8a6nUzJXDD3aQeS9H5g4o9BOEkJZMqm5vpvKRkPdhLwo8mUB9h4nrWUXfAqbpUlhWvTJ3QLZqCZI+Pwvtsh4LTLBhI1U1uzaG8u2qxGMVGCOmL07YIMvUH8MqAKLcA=
+	t=1741172225; cv=none; b=kSQIs+kfJC43cjLH2DYfjwB8iKfnlJ0ZQIhXm0ufOy2PDI3nHIYek8LY+VllsK1YjoBut+zqKgUwjR3ZNxK+yyic2ocLTBvNANY/Goe98Yfx3ukFzN3noz4ioHqLP0xj6V+UARhmr1un6bNY+Zna1OcR8mq5NCq252G3B2ZbeZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741172227; c=relaxed/simple;
-	bh=BjIOGsCQRES/ExqNCYJJO+XG6bSvGhNddzBXGqV6COw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e1SmHEECo6PnZgdRbQEg8i+iEv4WvhTcqJsgxMFYzbRK/76y+Gy5uZwJoppMN1nrW5lfvwfpOZmkMnN2hZN3NQUHxWEsP8T3dMnpn2KHUaDqZTDYF8Bpw5alJtd4ktvYIPZ/WjMUoWTuklasGDGi6AqboNGQ831u5zwZOlfGH5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YPilVwMw; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1741172225; c=relaxed/simple;
+	bh=RSx3iAtB8qEjTFC1vJZKBwt/OD98kvw3pGfE1JEQ6Kc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OCicHEn1gnCI93lO1sXk1JS8yCO6XZxUllFxO07F9hNPWp7czzm0cvB/b+PFTpM+5GtgXKznLWDl4amRx2qEa/cDUwOOh8wX3qitEU87kc9bnw75e+QgxsUZARSxB0NOi3MduCIoKlaXPMDvdtITPdzc+tleQNZSYhDbO7bollc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jU/U3HHl; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741172226; x=1772708226;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BjIOGsCQRES/ExqNCYJJO+XG6bSvGhNddzBXGqV6COw=;
-  b=YPilVwMwrtxFyBnzRpKJumvJ/p6SnaZ2cukrZm3FRYBNO38EmOZNM2ZT
-   e8ni7yItXNFvs4RqeIjsx4JG9WGRb+YNitHX7j8mEs/it5Zc9tFFaU0nL
-   1bHdwA2MV3hMzXnUcWyKoJteG6sXNiekz1FP1H7myX7i2xd25PT53yTau
-   C1Ky+bK5V6zlCzWJS8dypK8SXccZ3wXZ7SR9O/3w4rq8gfcQC66OPu0Fj
-   FMiNwnx5lA0da0XfId7ICYv3ZVobCMS6mNhBI3rYQOjBYWwtDTEB44+qu
-   QgwADTIA6hPeBJTQBcEuGwHA1HJ9q5He/AJGWwrQwOG8hy9FIdaHb45Sr
+  t=1741172224; x=1772708224;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=RSx3iAtB8qEjTFC1vJZKBwt/OD98kvw3pGfE1JEQ6Kc=;
+  b=jU/U3HHlKkraeFK8fvl+lvYHi+l9CoZRilGQ7l1/aTgP1yjUUDfvGAqN
+   naCtO2qTpFIjk+FWlIGKfIQjv+ReszphOjDB4kvpZAqaBrmx1MFyEpzRK
+   GqU4XIx/St2cUZYzmtZLgX0r5DpolGSnMHCsvGKbD+1jXnFK/w8rGkYaV
+   7HtOB4KybCss4Hxrkin3j4Ao+I4TOBurg6OEoQkVnSOb3LGFrCTLN+uOd
+   vsdtzYL4F+VZHzega16BklyBsjdzeytxkEwE/9Nf9RldsjYXyQJ0hF2JY
+   b9t/n9DKmQ2Gf32lhfKzvN7CAy7NsU96VXnGQk/BP/egozXQNisr8mmgN
    Q==;
-X-CSE-ConnectionGUID: 8r1dx8A9RG+YKoNpSjKMWQ==
-X-CSE-MsgGUID: H9rGOT7KRw+pjabX9V8QIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="45783918"
+X-CSE-ConnectionGUID: V7FdItoKQ7ytFBbyBEb1UA==
+X-CSE-MsgGUID: /YB2AByNTMqsVbBI7pBA2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="67497627"
 X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="45783918"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:57:04 -0800
-X-CSE-ConnectionGUID: TgDlQLKUS0qbOj309VqQ9g==
-X-CSE-MsgGUID: z2IATWY8TNGmnBaneidGEw==
+   d="scan'208";a="67497627"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:57:02 -0800
+X-CSE-ConnectionGUID: ib2IBscjQoqkM/xZqFXrDA==
+X-CSE-MsgGUID: blUSDORYTqe4xLO375bbGQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="123245747"
+   d="scan'208";a="118483427"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 05 Mar 2025 02:56:58 -0800
+  by fmviesa006.fm.intel.com with ESMTP; 05 Mar 2025 02:56:58 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7334521F; Wed, 05 Mar 2025 12:56:57 +0200 (EET)
+	id 884D21FD; Wed, 05 Mar 2025 12:56:57 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -79,10 +80,12 @@ Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Alexander Aring <alex.aring@gmail.com>,
 	Stefan Schmidt <stefan@datenfreihafen.org>
-Subject: [PATCH net-next v4 0/4] ieee802154: ca8210: Sparse fix and GPIOd conversion
-Date: Wed,  5 Mar 2025 12:55:33 +0200
-Message-ID: <20250305105656.2133487-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH net-next v4 1/4] ieee802154: ca8210: Use proper setters and getters for bitwise types
+Date: Wed,  5 Mar 2025 12:55:34 +0200
+Message-ID: <20250305105656.2133487-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250305105656.2133487-1-andriy.shevchenko@linux.intel.com>
+References: <20250305105656.2133487-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -91,36 +94,68 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The main part is the patch 3 that converts the driver to GPIO descriptor APIs,
-the first one is just an ad-hoc fix WRT sparse complains on the bitwise
-types misuse. The second one is a small cleanup that helps patch 3 to be nicer.
+Sparse complains that the driver doesn't respect the bitwise types:
 
-In v4:
-- split DT patch (Krzysztof)
-- collected tags (Miquel)
+drivers/net/ieee802154/ca8210.c:1796:27: warning: incorrect type in assignment (different base types)
+drivers/net/ieee802154/ca8210.c:1796:27:    expected restricted __le16 [addressable] [assigned] [usertype] pan_id
+drivers/net/ieee802154/ca8210.c:1796:27:    got unsigned short [usertype]
+drivers/net/ieee802154/ca8210.c:1801:25: warning: incorrect type in assignment (different base types)
+drivers/net/ieee802154/ca8210.c:1801:25:    expected restricted __le16 [addressable] [assigned] [usertype] pan_id
+drivers/net/ieee802154/ca8210.c:1801:25:    got unsigned short [usertype]
+drivers/net/ieee802154/ca8210.c:1928:28: warning: incorrect type in argument 3 (different base types)
+drivers/net/ieee802154/ca8210.c:1928:28:    expected unsigned short [usertype] dst_pan_id
+drivers/net/ieee802154/ca8210.c:1928:28:    got restricted __le16 [addressable] [usertype] pan_id
 
-In v3:
-- inverted polarity of the reset line in accordance with datasheet (Linus)
-- added quirk for the out-of-tree admittedly wrong DTS implementations
-- collected tags (Linus)
+Use proper setters and getters for bitwise types.
 
-In v2:
-- split and extended cleanup pieces into patch 2 (Miquel)
-- updated kernel doc for changed members (Miquel)
-- unfolded PTR_ERR_OR_ZERO() to the preferred pattern (Miquel)
-- collected tags (Miquel)
+Note, in accordance with [1] the protocol is little endian.
 
-Andy Shevchenko (4):
-  ieee802154: ca8210: Use proper setters and getters for bitwise types
-  ieee802154: ca8210: Get platform data via dev_get_platdata()
-  ieee802154: ca8210: Switch to using gpiod API
-  dt-bindings: ieee802154: ca8210: Update polarity of the reset pin
+Link: https://www.cascoda.com/wp-content/uploads/2018/11/CA-8210_datasheet_0418.pdf [1]
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/net/ieee802154/ca8210.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
- .../bindings/net/ieee802154/ca8210.txt        |  2 +-
- drivers/gpio/gpiolib-of.c                     |  9 +++
- drivers/net/ieee802154/ca8210.c               | 78 ++++++++-----------
- 3 files changed, 41 insertions(+), 48 deletions(-)
-
+diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
+index 753215ebc67c..a036910f6082 100644
+--- a/drivers/net/ieee802154/ca8210.c
++++ b/drivers/net/ieee802154/ca8210.c
+@@ -1446,8 +1446,7 @@ static u8 mcps_data_request(
+ 	command.pdata.data_req.src_addr_mode = src_addr_mode;
+ 	command.pdata.data_req.dst.mode = dst_address_mode;
+ 	if (dst_address_mode != MAC_MODE_NO_ADDR) {
+-		command.pdata.data_req.dst.pan_id[0] = LS_BYTE(dst_pan_id);
+-		command.pdata.data_req.dst.pan_id[1] = MS_BYTE(dst_pan_id);
++		put_unaligned_le16(dst_pan_id, command.pdata.data_req.dst.pan_id);
+ 		if (dst_address_mode == MAC_MODE_SHORT_ADDR) {
+ 			command.pdata.data_req.dst.address[0] = LS_BYTE(
+ 				dst_addr->short_address
+@@ -1795,12 +1794,12 @@ static int ca8210_skb_rx(
+ 	}
+ 	hdr.source.mode = data_ind[0];
+ 	dev_dbg(&priv->spi->dev, "srcAddrMode: %#03x\n", hdr.source.mode);
+-	hdr.source.pan_id = *(u16 *)&data_ind[1];
++	hdr.source.pan_id = cpu_to_le16(get_unaligned_le16(&data_ind[1]));
+ 	dev_dbg(&priv->spi->dev, "srcPanId: %#06x\n", hdr.source.pan_id);
+ 	memcpy(&hdr.source.extended_addr, &data_ind[3], 8);
+ 	hdr.dest.mode = data_ind[11];
+ 	dev_dbg(&priv->spi->dev, "dstAddrMode: %#03x\n", hdr.dest.mode);
+-	hdr.dest.pan_id = *(u16 *)&data_ind[12];
++	hdr.dest.pan_id = cpu_to_le16(get_unaligned_le16(&data_ind[12]));
+ 	dev_dbg(&priv->spi->dev, "dstPanId: %#06x\n", hdr.dest.pan_id);
+ 	memcpy(&hdr.dest.extended_addr, &data_ind[14], 8);
+ 
+@@ -1927,7 +1926,7 @@ static int ca8210_skb_tx(
+ 	status =  mcps_data_request(
+ 		header.source.mode,
+ 		header.dest.mode,
+-		header.dest.pan_id,
++		le16_to_cpu(header.dest.pan_id),
+ 		(union macaddr *)&header.dest.extended_addr,
+ 		skb->len - mac_len,
+ 		&skb->data[mac_len],
 -- 
 2.47.2
 
