@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-17114-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17115-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E80CA50053
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 14:21:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D9E1A5004D
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 14:21:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E6463BB438
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 13:14:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C41A93B5AE9
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 13:14:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5322475F2;
-	Wed,  5 Mar 2025 13:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C37C248876;
+	Wed,  5 Mar 2025 13:13:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHPv1B91"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hVRcSRqb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581A4246348;
-	Wed,  5 Mar 2025 13:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E7B247DDD;
+	Wed,  5 Mar 2025 13:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741180377; cv=none; b=AobnfrRqFNdB/OABoohS5m5o3RpVW5+11GK4R2V5Lc27sYhBaTgoP5IlfdUxs0ThvlX9VlD4ht+vdbAKzHgUtZnNwNBSBzCTi4WuOeUym3m+JhgWv3CmL6oMfhqZi3tz0QKXWhpJzShIr2QdxTMpeFZhQnE0IqIAyXQAZwuBIcM=
+	t=1741180389; cv=none; b=luOHcBNnQqve5WCAAeflDvJso/mTcB9iql60X08WbnPoBE1j86CowYj92tBCcTKSiyclUt63bpaCr+NYCbcihaE5HD9T0AZzJf068AGPKiP9X3IPDXu84iUr3fmd6+74D8MtJkeDpZbQ8AitiPYGtFjQG8bJk2pM6wVZ7pxIuII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741180377; c=relaxed/simple;
-	bh=mUxt3qz/KgBZE3PjFr5uM4Dh49iWXqqoo3enjTOs7KI=;
+	s=arc-20240116; t=1741180389; c=relaxed/simple;
+	bh=uvmG5QJWZ2Ye2xa3dR6GgdJ0KCYJpB1tdF5a0t9tvV4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJbT8it8j1dPvwm0MwUXE5HMdms3HektR1v7b7U0cve37/9KB3aQcbC6T26uJI2railq3kQv+inYgQfHejNxaI+yY9F9VxJlV9/pC3t+hdoEE1FElinCwwuZwyh1rYalzAlLDb1jhU/YgUkdCQjrDga+M/QigxTmHb40pyWKR28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NHPv1B91; arc=none smtp.client-ip=209.85.167.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2xmtwRbSFySgpTSMywk2Urt5zobpgzudmtu2YqfVU+NlO7RgjUc3tXdBaw/SOgsE2gECBR4F2SAimVelsHSamYQvfSEcZUaK3NP3kx5+rOwJUZ8Ef2ufcFe4T0iMkdJ8ep7HcY501eggOBP++ffSke+LQZZg6yJoq1hFZwbs2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hVRcSRqb; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-543d8badc30so7819127e87.0;
-        Wed, 05 Mar 2025 05:12:55 -0800 (PST)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so7533743e87.1;
+        Wed, 05 Mar 2025 05:13:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741180373; x=1741785173; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741180385; x=1741785185; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=++P8OGgocPeaMuo16xEVHYoWSjDiToMa6HFnAtyYwNg=;
-        b=NHPv1B91uD9cLuvHnLCsRz8lEEkmQMYVfDOC/ehMfQqe9uWARzrgsI7hXl14kc8qEr
-         4GKoqCW2QDt2GX2EmUWY7SBQN8zRbWWGwuVXHAx0fom8MuKFWDJyAQcK+n274fI0xnwL
-         YScVvPRu3PvvkF42qT5qXGBdMn7Iw7c0SkfyRf0aGknyQbJVgHxcWcLpweY50a+r5y0A
-         bbVgMHwvOsqsKk6A5wqM5tceoYJcg5Sfs0bP7GWAUx6vBWAPVMiCBOq0NTFOQ8RBcIam
-         zzi+fNAByiLprhmy7zRdD87UUufAMTERiiINNsGwgC6YIoixd6jM3v0fz2VgcMfHNOnF
-         f/ug==
+        bh=hHvBs8LqDr1CyCcVZ4KGUWjU6v/QgTZS9xOG0QkppUU=;
+        b=hVRcSRqbrt9GtTiHrugfkjIUJJtd+XpJqZ0fyRvHX+kiIWD2BnHGQ1zJiPNkODKXkm
+         rrCc7rhiYMc8nqVBI65Tsx99P/Pfmk0FJY0Jw9m2BqZX2TrchVeMC70290n0ZPYtSSEw
+         bR7zZlYtNNCYMR5VqmgQFsmTpkoVbEb3V76zZhKnA8ZlrOo4ueRZeOCgrenw+bFPWmDS
+         bKiqBGQaJalSixzK5fUdokJSnT4PDyTtKUsK1VDIWD5C2F9iS9f1fPLijJM9JyRz534w
+         F+4OnqXzyody4DxQT23EOfKkkXVysmNDJXuPqSNsw5pwaGnMrZnJE3n6L+uQlCODnQFA
+         c4rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741180373; x=1741785173;
+        d=1e100.net; s=20230601; t=1741180385; x=1741785185;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=++P8OGgocPeaMuo16xEVHYoWSjDiToMa6HFnAtyYwNg=;
-        b=YtkANrMw84NvmuSDNGR30uirpmq8np+J4aWOX5jV1VYW7BKNjMbyznJhUMUMQ9hE/S
-         naCuNJXHvczQHDuJZvkjnpGLQgoaEFvVwEalqse9JbwrOuCkKhyno9OFiQLlmpQTdiSP
-         wqNvPmKiGEZPbxLeaLAanVCuuqkgtL/Z/nRhzQLKx7YBVjUxgg/urEEgsgB5VDAJTn8o
-         qg4sD/v5g2nufOl/13ZwGdkrBimpCu5HPzD2Je+DWJDRSZ0eAfLjrtmkMHa+lDDRERiv
-         9jvJ+0c3QYfMfqG3HL9UhmbsllUr6C/L2CJvKKtHEPs/Ff/ODpURW9J01kmhEu+e7DyD
-         HjLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUE96ObT4uAjrdQS7fAi49JOMfrD7cJcTtnn94PZ425nx0xsjLsa84gDYcOphQKDTJ5W2vDQce1fTOm@vger.kernel.org, AJvYcCW95s+iGg6hvYHirWLWRSBYrMynYnv6tcVpjVARBQ+mTawNhInnEwsNdKHCADsyoRczDAfUye5cpp1Sk3L2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrbubvGYiUgWZsaHDGcT7Deou1N93vFjLH4vdpI9XnGGhKiCw8
-	vL49U7BDJiAfQj2Y87od97Z3qQ0wrPkLmD5eDv9KcvPkqnTyoHo8
-X-Gm-Gg: ASbGncsySCow+zqXoySecXUHR8CJRwVSDeY+N5lhtONOHaVNRCOLI8VGODcMPjmkKdW
-	ys3r0K4i+Fl82A4QM2sDxzI3fcid1s+gW9VAbd0CeSIecNf+zE8qKGwAYtdZWG7R3JgB86wcx6z
-	0CAQpyA8qvWZLh7Pdr72AsnKRyDeNr/rUgH1YgcUghS9sKjixnlWLQTFmqLuVLZ1df4cKEPj+4L
-	Dv0kVPq30tsubWcizlFkZdEf4HAmun0jr57+GDHT835++7iExqetx+yMUx97EJnHFjv6ZX1JI1K
-	WemgtWBMsCmB/Y47WrSdQg4hR4O7ZsPvQCTQ9SnZIvStOMIWa3Q=
-X-Google-Smtp-Source: AGHT+IFYgjh5om1P5ziCBs0tJzVpk/HRJSyxUZGxqLx1i5ZMB3Kd10x6efZ0KfXI/YJhWGvtIHBvzw==
-X-Received: by 2002:a05:6512:acd:b0:545:8a1:5379 with SMTP id 2adb3069b0e04-5497d389e46mr1302102e87.43.1741180373178;
-        Wed, 05 Mar 2025 05:12:53 -0800 (PST)
+        bh=hHvBs8LqDr1CyCcVZ4KGUWjU6v/QgTZS9xOG0QkppUU=;
+        b=le3+L6O1su7LrMa2E7sT01cTE5CeZDY8jtuL2bco0Z+AKzf/eHjtR671CzmR8Hcwv9
+         e5oIUlVleNYi6vHEcMi3W7qQVqZRpaj/NzXt0tnMP+VfgXdbl1wyfVcrhkM6S75qPBAV
+         KdqevIVaOFA9qH8hI4kj5w3qR4u2mj/8YiN1LPKtgyoglBX54m3nW02VpshAc88n2eSb
+         esGuhusOcjrYV3lMVIPQEqj3HaB89FGu3T7qGsCnvgLpFY0JpDQyUw0pUNxwqMm5GUjI
+         h8YXAEmTBDWDpwxQM5l7ByRFybuWkgyurOFRZD7/AyvPGMqDrvxzHFs1drHm3cDJoZWW
+         7u8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXLk0vlVLPToVY2HiGMdoeQ2Ft5YDHufry0HWpQ1guFoxzA2F4t7wWdzkAYPquQL3xPAJulOsYAVdeTfptK@vger.kernel.org, AJvYcCXbOzDONFws0H9lOn7fkzyxjVGkrISRFzTOZyGQRKBvZLP8EONrdn9kV6SiHUR6SER51Pq17lTLZRNy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4nV2IJR2cRxcg2nrVHYEwq9tk2uALXMlBn3QbVPaslEihPbq0
+	e46UE+LdOl4jsDYcOkXvdRxGCjYPGqR67lBT/Bo7G1IfbwTx3HQC
+X-Gm-Gg: ASbGncvlUDyRN5nNYvcNKDEK1zgEU5A8v/qo3X0Gp7rmECd3V1KfUnlitA7gcEfBUow
+	dKSPTpMJLaizC63Rr3i4GcVRcfhcwQhsIe4omv4WTmxGqz7oIpsD6Xoi58T+hsAPiqzyPj2DG2c
+	h898PVDBxplztgHF2yh5piCfSAGBRCt7sodKFahTGpVSIjXYN6KDPPjNjq0xmH/i0QBA+7L00i0
+	Un6Q/FFRY6AdASk5zjlXW4ycRI+tteEmw20g5WQ+s2V7v6fPDJC9MwYafzwH2wKJXQ/P3HwXWIx
+	2jMG+RFj9lUX4ESduAcSWjD1+qtes8Yb64ayBXfSKWuk1aHDqOQ=
+X-Google-Smtp-Source: AGHT+IF25Q3LO1//ZI187Q5Vs3Za5Zt5D7e2lU8WSZqluXp3dyXsXaTJkHllLhzz99SR/KOlX7Lxgw==
+X-Received: by 2002:a05:6512:3089:b0:549:7394:2cd0 with SMTP id 2adb3069b0e04-5497d337e68mr1064479e87.19.1741180385016;
+        Wed, 05 Mar 2025 05:13:05 -0800 (PST)
 Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54950deac8bsm1543956e87.237.2025.03.05.05.12.49
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5494bff2636sm1674670e87.219.2025.03.05.05.13.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 05:12:52 -0800 (PST)
-Date: Wed, 5 Mar 2025 15:12:45 +0200
+        Wed, 05 Mar 2025 05:13:04 -0800 (PST)
+Date: Wed, 5 Mar 2025 15:13:00 +0200
 From: Matti Vaittinen <mazziesaccount@gmail.com>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
 	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
@@ -79,8 +79,8 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
 	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v3 1/4] gpio: Respect valid_mask when requesting GPIOs
-Message-ID: <cd5e067b80e1bb590027bc3bfa817e7f794f21c3.1741180097.git.mazziesaccount@gmail.com>
+Subject: [PATCH v3 2/4] gpio: Add a valid_mask getter
+Message-ID: <026f9d78502eca883bfe3faeb684e23d5d6c5e84.1741180097.git.mazziesaccount@gmail.com>
 References: <cover.1741180097.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -89,32 +89,23 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KAykzEu+FXuHmRBM"
+	protocol="application/pgp-signature"; boundary="ep+lPcCHAsNg9p+A"
 Content-Disposition: inline
 In-Reply-To: <cover.1741180097.git.mazziesaccount@gmail.com>
 
 
---KAykzEu+FXuHmRBM
+--ep+lPcCHAsNg9p+A
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-When GPIOs were requested the validity of GPIOs were checked only when
-the GPIO-chip had the request -callback populated. This made using
-masked GPIOs possible.
+The valid_mask member of the struct gpio_chip is unconditionally written
+by the GPIO core at driver registration. It shouldn't be directly
+populated by drivers. This can be prevented by moving it from the struct
+gpio_chip to struct gpio_device, which is internal to the GPIO core.
 
-The GPIO chip driver authors may find it difficult to understand the
-relation of enforsing the GPIO validity and the 'request' -callback
-because the current documentation for the 'request' callback does not
-mention this. It only states:
-
- * @request: optional hook for chip-specific activation, such as
- *      enabling module power and clock; may sleep
-
-The validity of the GPIO line should be checked whether the driver
-provides the 'request' callback or not.
-
-Unconditionally check the GPIO validity when GPIO is being requested.
+As a preparatory step, provide a getter function which can be used by
+those drivers which need the valid_mask information.
 
 Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
@@ -123,59 +114,75 @@ Revision history:
 v2 =3D> v3:
  - Rebase to gpio/for-next
 v1 =3D> v2:
- - New patch (born as a spin-off from the discussion to v1:
-   https://lore.kernel.org/all/Z71qphikHPGB0Yuv@mva-rohm/
-
-I'm not sure if this warrants a Fixes -tag.
+  - New patch
+  (spin-off from discussion to v1:
+   https://lore.kernel.org/all/Z71qphikHPGB0Yuv@mva-rohm/)
 ---
- drivers/gpio/gpiolib.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpio/gpiolib.c      | 16 ++++++++++++++++
+ include/linux/gpio/driver.h |  1 +
+ 2 files changed, 17 insertions(+)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 8724c7d8459e..b5f472beb3bd 100644
+index b5f472beb3bd..4c15a70d4d80 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -2358,16 +2358,16 @@ static int gpiod_request_commit(struct gpio_desc *d=
-esc, const char *label)
- 	if (test_and_set_bit(FLAG_REQUESTED, &desc->flags))
- 		return -EBUSY;
+@@ -723,6 +723,22 @@ static int gpiochip_add_pin_ranges(struct gpio_chip *g=
+c)
+ 	return 0;
+ }
 =20
-+	offset =3D gpio_chip_hwgpio(desc);
-+	if (!gpiochip_line_is_valid(guard.gc, offset))
-+		return -EINVAL;
++/**
++ * gpiochip_query_valid_mask - return the GPIO validity information
++ * @gc:	gpio chip which validity information is queried
++ *
++ * Returns: bitmap representing valid GPIOs or NULL if all GPIOs are valid
++ *
++ * Some GPIO chips may support configurations where some of the pins aren't
++ * available. These chips can have valid_mask set to represent the valid
++ * GPIOs. This function can be used to retrieve this information.
++ */
++const unsigned long *gpiochip_query_valid_mask(const struct gpio_chip *gc)
++{
++	return gc->valid_mask;
++}
++EXPORT_SYMBOL_GPL(gpiochip_query_valid_mask);
 +
- 	/* NOTE:  gpio_request() can be called in early boot,
- 	 * before IRQs are enabled, for non-sleeping (SOC) GPIOs.
- 	 */
+ bool gpiochip_line_is_valid(const struct gpio_chip *gc,
+ 				unsigned int offset)
+ {
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 83e0a7e86962..e3b59fda62e0 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -720,6 +720,7 @@ bool gpiochip_line_is_open_source(struct gpio_chip *gc,=
+ unsigned int offset);
+ /* Sleep persistence inquiry for drivers */
+ bool gpiochip_line_is_persistent(struct gpio_chip *gc, unsigned int offset=
+);
+ bool gpiochip_line_is_valid(const struct gpio_chip *gc, unsigned int offse=
+t);
++const unsigned long *gpiochip_query_valid_mask(const struct gpio_chip *gc);
 =20
- 	if (guard.gc->request) {
--		offset =3D gpio_chip_hwgpio(desc);
--		if (gpiochip_line_is_valid(guard.gc, offset))
--			ret =3D guard.gc->request(guard.gc, offset);
--		else
--			ret =3D -EINVAL;
-+		ret =3D guard.gc->request(guard.gc, offset);
- 		if (ret > 0)
- 			ret =3D -EBADE;
- 		if (ret)
+ /* get driver data */
+ void *gpiochip_get_data(struct gpio_chip *gc);
 --=20
 2.48.1
 
 
---KAykzEu+FXuHmRBM
+--ep+lPcCHAsNg9p+A
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfITc0ACgkQeFA3/03a
-ocUA7Qf/ZRFY9W+g5Sf7I2fazEDhkCPghF1Q249ECBlqOWHM7QtaXPd3PMFS4uEr
-iqXOpWZxwxfMqS39pMameGe569WXQ6s741Hyy+yAg3avRSiY474dk7tTXpgcUsgm
-puwYgPNjDRWWJNsBaAL65ssCJjeKRQTcxpjDLlQameuHk3Dh1QYSX2LBtTpNfuxX
-ub6MrnoAXPTs223560on0CZZDBwmgSyqBD9e/XVs8TOrJ8a4JjF7puMwAluIFk3N
-xfZnm3HehnDaWIukr4kHstgBRsTJ85jfGcRLPpLoONR67t94duCZspzO2m3aMATT
-G4NDqT4iKMG5fzPxOtHh+SO8tqxCBQ==
-=zILn
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfITdwACgkQeFA3/03a
+ocUo4gf/Q+NC0QKnIMARZo9X2BFgPG5YZtjjw0Dmr5GKLHWjEKAPF4fJkBYhRLzo
+5EZaSC50CGZyOGFpNdPmhvgUWRmMGG7XiqP4dNxY4ioUwUfXpTLB5oZurYHzxUzc
+XHbd1hrcot7q8/lUe6fdJ0PffDYsqvQnjGpgjhAEBafUjuYuaOR6sD57/8IZPBL+
+xeF/w7JCczQZDPLzn65TgcMFOrkcXVg7Ma5wyfwXSP+Z0PFb39ym7WQ6NfXYIa4f
+O/kbzz3CCRuD9Tvh79sLsyz/z3eRtRQ2To0dO8V4RhaVQbcDusqiTIjFuJGTpqIr
+vHD0jXVktgBJz7PgD3Q2Banhei8moA==
+=zAIr
 -----END PGP SIGNATURE-----
 
---KAykzEu+FXuHmRBM--
+--ep+lPcCHAsNg9p+A--
 
