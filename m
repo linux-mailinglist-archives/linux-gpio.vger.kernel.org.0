@@ -1,130 +1,167 @@
-Return-Path: <linux-gpio+bounces-17112-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17113-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF70FA4FF00
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 13:50:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C9AAA50038
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 14:19:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2E853ACD74
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 12:50:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B48FD16EAB0
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Mar 2025 13:13:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACEC2441A3;
-	Wed,  5 Mar 2025 12:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A3A24A061;
+	Wed,  5 Mar 2025 13:12:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="sJETZT0d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R60PGt1w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFED013633F
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Mar 2025 12:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFDF2451C3;
+	Wed,  5 Mar 2025 13:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741179029; cv=none; b=PMl9TnB6WF7x6mrJCRMykhPpIZNKB4pPHVC1o76oRcmJZao4OXt5DIQqqU7xwGnTf/KxQnIvm1vDzFssRl/h10IMMl/Nb5ghfTnHtWBvPYcvQJEy1HorsJqh15ndx0F9M/fHiKgzT8ykEHKkM3aQCBsMxG+Ha2suNX6CNW6d0r8=
+	t=1741180330; cv=none; b=m9nFENSgrroIMrCuP+h/tUkhdqsIWaVc9y4Gi/u7AWXzkvKDVwMDuR6bjlZOovzvfuzRhg9vBIH+yug3OWi1psI9x0fXCFzD1+LLgH1awD3nkb+CU9fUfa0YSfAwy4kNyk6kfFxp4tVdH8fvKuzPAJQyXexOjrwdtE7bnVXoXV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741179029; c=relaxed/simple;
-	bh=yO9RSssbgEUbbG6Eui7gZpTUFd8pnSYgqrFrmf0GkAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P5NFQ9/+/ZBCXbISqJmm25xd+FPRg86JQo0uS67eSS0Wpq2OtqBkuUSXQIefRxvTFFTUAX2MYbN1Fh8Y8xrlRiVU6Li43iSKjlbTkfW8ReyuwgFZiHBMGYkGqnwWa5fczgI2xpc0zGymITSbT4LzUlObgS0e32yDrotsPP7CHCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=sJETZT0d; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 3C3F83F85A
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Mar 2025 12:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1741178691;
-	bh=urCwtfpYBHrLbpDpp7U+vepeooaJV4Q4tWy+4UvDFzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=sJETZT0dmmtDqVpxunBVGXvxh3A3ncpsrIflMBlHW/QCpj8RYYF/i2DdQN3u9Ylho
-	 uEcVqykXxnzZiECvpW/jT6Pjulc+/2CGsMVevZiTmX86Pdhoamj0aQubPIr2+PURH/
-	 qOM0t/8K+gWJPHJeKMDS95c+5OLB4AgsPqE7LEgRn0Kzhd8RoCozf+tTne4evbHMUF
-	 6E/oZCWPYh6xqetTaWMp0pXIHoQUD0rPlszhwEDldW2JgLEN8mLsV3Lj26kC85EbcN
-	 2Qtj9P9R21CuHz/TT6fcAM9Ia4CPeOlswtsM8LriT7FgsqeQx69nNNuTNxsjZ0m+BU
-	 TTUD8lDPqNURA==
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-22328fb6cbfso122442405ad.2
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Mar 2025 04:44:51 -0800 (PST)
+	s=arc-20240116; t=1741180330; c=relaxed/simple;
+	bh=XWF57BRJqLXtDAxpbZWGOksNU1jAu11Lx+Q5UfiE1yU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UCQ72AZyA3n9rgUVqo6+1Ct2EojjNYmxUA8xZN037q0DpLGJEzrqGX4JjSbJzFHkbzNm9A/rx/nDnQJ5Lah9igyfSTFFPpe3d1NbBPnOJGC2YS8qc7jWZ2NsCcfXGpXZ8Bp0yPbiViIa3FVLhgUCOKwM9ejsO+mRHIhubm+lWTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R60PGt1w; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5495c1e1b63so4637136e87.0;
+        Wed, 05 Mar 2025 05:12:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741180327; x=1741785127; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gLyVk1H/T+BaRA8M8WKbV1btpn7yJl6bT0EpGKc3d14=;
+        b=R60PGt1wAuShsO4bskwNHL6qLLTalzcn5y9kzBrli/4Eb9PvyjpiWV5/pzGMQYUXz4
+         dOFkRWeCyEt+VEoZVKHWtoBisEzOLaLlFK9hutrrNiHQUFUbUb2HiIHLgeczhDTPyzoe
+         4a2hRlfGNyfgFzq08w1KKu2f4e7eACqxW3ncVZkLx6lHWcM+XQ223pMeNxchCuM7jJqE
+         ppB+TqWttlPGGEjH2hgTBARkl7erv0DMrKsu+QodYrTAg12AArsom9YHeT6oqngx0+Qn
+         IojiQa9/MTSohzbIL2xTXt9QIPQauiLvtPit52ROipNQk0pw41LoAzxoKlkuQRjgABTA
+         B/TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741178689; x=1741783489;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1741180327; x=1741785127;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=urCwtfpYBHrLbpDpp7U+vepeooaJV4Q4tWy+4UvDFzE=;
-        b=oEX4XqdC1XzGvuL/hw+XEY3Y2r/nJXpkRb2mEkGCaI9biHWx8Xk6h8fcBrZeoIctGb
-         h71jvcSfm0Z6QeaBPGbzUVwfJiHTcKKBBf8QVPo6QCT/8A/o2HX+ZzrDbLRGkh5hCiyV
-         B0CLjW43lnZ8OugkPIz++DUJFVhHISgPds0ZvkSahsiQLhCxcx2E7gwxHxWdyea+qVbv
-         mg58pE0RCoRqRLqeGaCiLaO9UrSggd1lgIYPu3f3+1TLeJG02lE9hR1ahr73z7Uspooj
-         PTv9PvOmToU8xNP5UT6v7gFCylx2j50xPli9BrtbeNaGgHOcYNiNCQRd4OABIDJXWArT
-         ZUDg==
-X-Gm-Message-State: AOJu0YwDvgMIYtOqjgJ9F04M1FJCfrlOaVoIl3Bxmm0HYJ9LosmhEfFf
-	cYs7EVMGHgNOl6Aqodezv1dNGxhep3S9M7vlJ/aTJoGBEBVqJPcMbmcz+wM97JL3ul2Erl1N+bx
-	K5T7IRFBsZ/7mcFtQp9rj2JFu9ojWdliX/XbJn/xKwljr7bwZwRilQ/cbg2wSGQCVB4/XeMH5Lc
-	w=
-X-Gm-Gg: ASbGncvx8gkp9D0z1V+5IzGJEuGCG6D5FygSlBpmvmpi/UQSC84aTdIgZwUhoMDawKw
-	Y3v2/XirMgOMPnbneTOdGvoZQu+stI81nicy8GUcFH70cO8ZjCRLubTnqa98fLQfPpAsoMvZThz
-	7TKrWi1aujPvVrZ7Liaj5ErVgbDw2aIK0xjIKcDInMdh10q6GNIzywWl5Eye5zLuDpjvJhfkVJj
-	UlAgmm2ffn0pP/qvY3tl9+bWqsU6t9Hs+IFqzemkyZTKJSZrXW3sIkiyalCjoPrdE5+E4X2w4n1
-	sqUIZNQPqUuelwr+
-X-Received: by 2002:a17:903:1aa8:b0:223:5645:8e1a with SMTP id d9443c01a7336-223f1d24c43mr39977645ad.51.1741178689713;
-        Wed, 05 Mar 2025 04:44:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFDAT8zt0xy6LiC4EWYqcnGzlPoc6M+Lwdom0HGZWoZiXyYU2ER+E9bGNsMCb2zeHuOhGe9Mw==
-X-Received: by 2002:a17:903:1aa8:b0:223:5645:8e1a with SMTP id d9443c01a7336-223f1d24c43mr39977395ad.51.1741178689425;
-        Wed, 05 Mar 2025 04:44:49 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:b58:f691:f9bf:7104])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2235050f11fsm112505365ad.196.2025.03.05.04.44.48
+        bh=gLyVk1H/T+BaRA8M8WKbV1btpn7yJl6bT0EpGKc3d14=;
+        b=Ke08VrkdfTUAZn9xfTU2BeTUlnnmRiqQIGF4tDcn6lPNVcW8VpIyqIjoEbSmWG9QDS
+         bR8dzQ2X8YRkFb5RZuW1ZMc4XDDkAmS98IW6NnQ1/mki8cR8A4s0mkl75dsoC5GzV/vQ
+         N3r4BewJ1TEWlNczx2u463v6LXyTEGEHkd8UVbgalzhOX/TXypq1FXIiEDJSjV8QytO8
+         KHyta6SOo0w0hVfKMnnWbQBqqxkLPkXT0uZqHbBac8BptZUyElZ3FQybuNgRf08j7BbV
+         L+89l9j+X9RCXRs7H8Hm/fvFg/XvwUWViTi+FNZIE1geL+9Y/uvKa/TOzobhPjBdpEcn
+         1Imw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAthtmQ5Huy5r5en438C8DtwK8WQ+Kqr3c4AgKThUFATy6vfy4FXNARDYg9ScV00/ni4KCSWCgLXQQ@vger.kernel.org, AJvYcCVclL+l+RkvfSMGZ2eIjxFRUcyt474yx9DJOcF79TlWcucu7Vnu26ZT67bCrVkLxnX0NGkWjo462Sndf2v0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzknL5x3V9u4069FD7nnlJusVCXXowPinKPJ+VVtmoiAM4Fqy18
+	mITERSrGP611ntMbU8vqa0Ul3KvmCHra3HvXGzRgzs5W3gwSkVAg
+X-Gm-Gg: ASbGncs0FFXnZt+RhKUHru2ng884ehH/2pQel2MtAE/cQOgvVKvO2T/+ZziBce+S23O
+	hJRvuzXHVLyxzA8iZlNiYZmgDUiBIylKEChcIMye8EApM92wLb/7yYhrA1sBqwf9byJWCj+z5W/
+	niM0Oq/vmIh3m3rlgUWvTLlqWVAP9qX+KoKqLR4aKfGzSuq+wra6Y687Dd3RfgNzSIkIdQHfBLL
+	/oXDWo5rX4lnVDxZUSQG7TV+tzDYzp4fpODYqL4kD904Eez/LPZnOBxs1z12ULrIvQ/9jbSiwJQ
+	e6X0QM2D73l+eW2wxUN4nWvnLrFldnbS8Mi4Oi1sgNurAuYo8bY=
+X-Google-Smtp-Source: AGHT+IFao0mdp4tr2pV/DdXUxmXZ4x0RoXao+mBWttv10JeWmGGD3KDJ0aWVgLE7O7OQ9NrH515YWg==
+X-Received: by 2002:ac2:5f19:0:b0:549:7d6e:fe84 with SMTP id 2adb3069b0e04-5497d6efeaemr813260e87.53.1741180326307;
+        Wed, 05 Mar 2025 05:12:06 -0800 (PST)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5495c261ab3sm1180860e87.57.2025.03.05.05.12.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 04:44:49 -0800 (PST)
-Date: Wed, 5 Mar 2025 21:44:47 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/9] gpio: aggregator: add 'name' attribute for custom
- GPIO line names
-Message-ID: <m3a6hcsh2a3j3rcw7x2f3tn3gif6mtor7bfxdmwkgp435vmxpg@upgh5b2t3ukh>
-References: <20250224143134.3024598-1-koichiro.den@canonical.com>
- <20250224143134.3024598-6-koichiro.den@canonical.com>
- <CAMRc=MdoMKdqyzGMFDa3aMz3h=vfZ0OtwARxY7FdsPKcBu9HQA@mail.gmail.com>
+        Wed, 05 Mar 2025 05:12:05 -0800 (PST)
+Date: Wed, 5 Mar 2025 15:11:59 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v3 0/4] gpio: Hide and obey valid_mask
+Message-ID: <cover.1741180097.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wijtUninmDGEfi6/"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdoMKdqyzGMFDa3aMz3h=vfZ0OtwARxY7FdsPKcBu9HQA@mail.gmail.com>
 
-On Thu, Feb 27, 2025 at 10:50:34AM GMT, Bartosz Golaszewski wrote:
-> On Mon, Feb 24, 2025 at 3:32 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > Previously, there was no way to assign names to GPIO lines exported
-> > through the aggregator when the device was created via sysfs.
-> >
-> > Allow users to set custom line names via a 'name' attribute and
-> > expose them using swnode.
-> >
-> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > ---
-> 
-> IMO this should be part of the previous commit, there's no reason to
-> split the configfs implementation. But only change that if there'll be
-> a v6, otherwise I'll take it as is.
 
-Honestly, I held off replying here, hoping to get some input on:
-https://lore.kernel.org/all/CAMRc=MegKxwX-RjQQcWMGe_JQyRCv82WRRbD0naYkeXshTGXGQ@mail.gmail.com/
-since I thought the decision on sending v6 might depend on the feedback.
-Anyhow, thank you for reviewing.
+--wijtUninmDGEfi6/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Koichiro
+GPIO controllers may have some pins which can be excluded from the GPIO
+usage on certain hardware configurations. The valid_mask member of the
+struct gpio_chip has been used to denote usable pins if some pins should
+be excluded.
 
-> 
-> Bart
+The GPIO request should fail for GPIOs which are masked. Under certain
+conditions this was only done when GPIO chip provided the 'request'
+callback. We fix this to be always done.
+
+The valid_mask member of the gpio_chip should no longer be directly
+populated by the drivers but GPIO core does this (unconditionally,
+overwriting any mask set directly by the drivers). Drivers are intended
+to populate the valid_mask using the init_valid_mask -callback.
+
+This series enforces using the init_valid_mask by hiding the valid_mask
+in structure which is internal to the GPIO core. A single in-tree driver
+was found to access the valid_mask directly. This series also removes
+those direct accesses as has been discussed [1]. Additionally, we
+introduce a getter-function which can be used to obtain the valid_mask.
+
+[1]: https://lore.kernel.org/all/TY3PR01MB11346EC54C8672C4D28F931F686CC2@TY=
+3PR01MB11346.jpnprd01.prod.outlook.com/
+
+Revision history:
+v2 =3D> v3:
+ - Rebased on top of the gpio/for-next
+v1 =3D> v2:
+ - Hide the 'valid_mask' instead of documenting it to be internal
+ - Make the gpio_request() to obey the valid_mask whether the gpio_chip
+   has the 'request' -callback populated or not.
+
+---
+
+
+Matti Vaittinen (4):
+  gpio: Respect valid_mask when requesting GPIOs
+  gpio: Add a valid_mask getter
+  gpio: gpio-rcar: Drop direct use of valid_mask
+  gpio: Hide valid_mask from direct assignments
+
+ drivers/gpio/gpio-rcar.c    | 13 +++++-------
+ drivers/gpio/gpiolib.c      | 40 ++++++++++++++++++++++++++-----------
+ drivers/gpio/gpiolib.h      |  3 +++
+ include/linux/gpio/driver.h |  9 +--------
+ 4 files changed, 37 insertions(+), 28 deletions(-)
+
+
+base-commit: 44fe79020b91a1a8620e44d4f361b389e8fc552f
+--=20
+2.48.1
+
+
+--wijtUninmDGEfi6/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfITZoACgkQeFA3/03a
+ocW4JAf9EF0LAaL2gaAgx4U+/eJCSJKQAi+v0TTvPaUTpSjpY7d5KoyGhJpOe5ZO
+g4Vajk42ZVaGWc3yyhLmML3ESGNuC0dlGA7zTKoubLclUerwsFDqFk4y6MTCOFCD
+uizCndmdyxQCo2zBpcKdAmTSrCCZYiQbE111vfzOZjmJloMNIjk+xqhs+H3xL9Kj
+LH8UH3AGV4mnKJpdIUMiqkUuOT/P/+k/Y9Kwu9e32ZJvJeQBK7+Q5mMn4mFxBi5U
+05+CKtb5iMU5N0aFzufh3glMFaHKhmSCpwFYrG6aP8d9p6Eat9aCjE3n4EPnW7Ei
+w0KRvTRqYwZu9lozkYI39z+w5S+zyA==
+=rjrC
+-----END PGP SIGNATURE-----
+
+--wijtUninmDGEfi6/--
 
