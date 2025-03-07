@@ -1,77 +1,78 @@
-Return-Path: <linux-gpio+bounces-17260-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17261-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FBA3A56ACA
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 15:48:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 72043A56B7C
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 16:15:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 980561899BDB
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 14:48:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7D771885A54
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 15:15:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93A861A727D;
-	Fri,  7 Mar 2025 14:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 564CD17583;
+	Fri,  7 Mar 2025 15:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzaxJD32"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ciNWFTMf"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79438BE5;
-	Fri,  7 Mar 2025 14:48:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935D221CC54;
+	Fri,  7 Mar 2025 15:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741358906; cv=none; b=TaFUC5ntItqNEzmnbIF9fX6LpMDErzd8+YMb1R0bDXdHCQ/aG9ocom/Iouu8ZvB1gbOABEy2D3KtRYDhru7eF3vgYtfqu8Ak/8TOw6cR3adHC2S2nYbh8TXabZyx82Syy1yX3RnStQewhaAJE7MrKGOHcaop8a6LEWOlxhWjNf4=
+	t=1741360293; cv=none; b=LOgVQ32THdTdiJW/X4VGaMC5d4eIDIQeqVMZT1Ia2DKuZu8SdHbGELnQcvxguQ59iQXu/eXk5y6d85cg542vdlikPCnH1vqNqylxn/BgC87ETtWuxjtJJe5VF4OnTu2sVo9DKtw+uik4nzZlSYC3BbaDdQVRJZDIkXcnN59Al0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741358906; c=relaxed/simple;
-	bh=M2OkvnNxpvzS165+JIvvwSlevm5ozmXGBdo6NJjOt2A=;
+	s=arc-20240116; t=1741360293; c=relaxed/simple;
+	bh=68PYA1EofC70Yl9+ZYYWiPFB1L+1AgWZwF/BIm3DqIU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K+OLeKf0ZEUGUQI1XRIf87tevylAP+PT/83Wwhd6GXu4u8BX7fuXBXzht/L5cxzFqB5U9kGDhDnfU12M/tWi6ha0jOufGURkyy9/4UV4ErPfRy2ipkCyEDYEmto6Y5M2dbmB5+QPjapWkJBqO06QOUqLOjd+WYejWIE4L6BXWOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzaxJD32; arc=none smtp.client-ip=209.85.214.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=nMBNZdcvACGz2G4QCj9iaRDdP6LHQdCCifI7hrSJ9BvIf063Eqsm8A5XJ3B0K0snXeFL7/8NxGenHCe0G/HiuBRbpII+MPadfSo2FsmddjzkvxJyTFgxnrzlOJxhpbPZvMswXGtMXZ2sTWSEMy7xrmCUedySl1C5xUumE+NeIdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ciNWFTMf; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22334203781so58691845ad.0;
-        Fri, 07 Mar 2025 06:48:24 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223fb0f619dso40036225ad.1;
+        Fri, 07 Mar 2025 07:11:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741358904; x=1741963704; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ioh5SQLz7gpii5kUXtkklEFD5Pb6kb4fEtFbn053urw=;
-        b=LzaxJD32+UkUgrCdNoMhRm+GABvA+07kuOQsr47l+x/2h6jXUDRLYKDkpfu6YxTtl0
-         tY2WFq+RfEGB6+l+sudMN8pwQqDQD9KE2OS8KvZb0+edTDe45V1igHMNEhXupNYs8czE
-         TjaBO18dBkvtpp/p+N89paWi7UbGsLLFV5BoJdlZyJY6CKWmGv5eqpzukVyKgAmD29ag
-         E+fyasH/yM8vwhY9MetJyTnKnNpeGXLsMpm6pEuM892zJjcpEJusSju4kkcBezcVz93E
-         1GMUucg+nrDc/fIFPgAsxNnJcMTLOClhwX/U1C4wAWE0ewXF820l/8ADPrsqbj/Tqks3
-         gQ0g==
+        d=gmail.com; s=20230601; t=1741360291; x=1741965091; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Z0smMQNuibFTABZ6w1NkSzGMBPcRi3Tk4bDjmrxiWek=;
+        b=ciNWFTMfK2AKyH+0KifL7CKVCX0AOjNUra7V5iruX44CeXaqGlUPq3fkJAVnSyOA8m
+         I+NgdZEw0E46Bc9fPDpwzUPoWIXXlrRY4KmrDM10uUGEu9WnChZ5BfpDPzdQwTwsrcLC
+         k/NdbAyciEF8dZtxC8r1txZyy3b2OvqxukNdYcwhstgfYHO4iEbOmz6FTL+l+17dwzZq
+         dQJDwBrcEmE8tOSxmp0GWbuha3RjdfhrqcGHqj7KocALAPr8PtCFUrNKHIgrIC0A4rfA
+         twTnXR3ZP23GrlXs6tGULCLNUOGq5Aks/rFaWcuymNdlahsB9a90q/2A3hZT9SX1amZW
+         d1Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741358904; x=1741963704;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ioh5SQLz7gpii5kUXtkklEFD5Pb6kb4fEtFbn053urw=;
-        b=SyfinIGAsVwkZEj+G8qsrL+snNWFAjywL2qBuCrQNIRViAkXkWuqT2fdSfzzYoqY+m
-         HoG/GoQ2JLnMMwCWS8yK+QuiPZOkAsOxqxmFf7HVpKRTPh2isWe1AVsTHif2f7MPU3Q7
-         XaQXMRvyMpVvO9AvrXaqCFFFwylSeQdaWeATxtg5nZbI69k9DcoJJa3HF8JcZF6SifOi
-         szLnjQ9Uyj8W8Xe5+4rZ6ozbiKtzQFJgUEW3S4Yf+2TfyjV4ROWA+dvgBV4A7t9jQN8z
-         jTgNUJaIhOnDAyG74zpodRI7WHB1kHE9cPikBUP9M86vUtK28eIHL8uSBcTfmZvnrI22
-         ZzpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUA+e7eguWyZ2sXHjTNMHfFEQt+qnrxjmOA7iE/SMyotDHJ1cxPucq8ZccyebDojBNFXNywlOdqASIn@vger.kernel.org, AJvYcCUYqv5HcJ7F2EIVxUnzYq4tofmCyXgPSsuhNYcspZebOUU+hjXvM7ohxYwNLQby8ekVUoOX/EcRw3EIyprB@vger.kernel.org, AJvYcCXlhpVR2WyJMapR1BEHRD4rt3qzQM6gv+9ZaY0Ked8C5eYnONUP1K+TWQ9XlR+dvraed73XM3MLYOoxMA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3mNU9nQTpVjj+x1mDLIUyQrwnabQxJxyLbvCHpm6kJsbh7mq7
-	LPOYsF4PTE1n4fLMHfAcEaPEjOCdnw7FOgn0g6e7/atcXRnKeuEF
-X-Gm-Gg: ASbGncupXqB6KtbK/HT3Bcfk/XphrU3ssKyUcpusWTaICJ/Lx2NhPvqqNIDkGu8QKl2
-	dBNBfJfKSBA6B59TM6OhqaQ0kaQHyMGcs1QhNopom2UwK53Mb8vN+FH53omLqIgG0X/szoBeNIh
-	xAF2fO6pORyaHOM4DIl35YRJ9qLFc27dzHBlvFGdGcb+097sXz6qvJQXWwSAj6MI3+8osewUfS9
-	yhqbB28TMuMFY/01e4gKt5C5mfRMP7lCFX5FhIvcUq5U+TVz6Y5dTlbkWm6dwCm7kFrzjyjojLv
-	hqcqI0KNxhRGvB9W39vNwWiYv/P9gKD5bVAu+JgJv9mT0s/8p52ESw==
-X-Google-Smtp-Source: AGHT+IHRcx0iwE4iShkhV9lEkg6KwfBUXIIAw+cZOq0H8/XJhguouoeDBfKO+SVgxCD51qwrQMXK2A==
-X-Received: by 2002:a05:6a00:1816:b0:732:706c:c4ff with SMTP id d2e1a72fcca58-73693f731b2mr13179089b3a.7.1741358903972;
-        Fri, 07 Mar 2025 06:48:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741360291; x=1741965091;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z0smMQNuibFTABZ6w1NkSzGMBPcRi3Tk4bDjmrxiWek=;
+        b=Xb6hffvZ1QyA+qKTAc2qOLRF7JLC5WKPzKUNdtysi2ZX5iZf5CX1m/kh7kgEoEqQFU
+         i1LHRjlMhMny60uiwwERqgTV8Pt3Cm3TkIRQHaml2rmHkzduqCH9IhdkvzI8qS1F9Dcn
+         vvbFyGKY3AUiX8csyh3EadxUkxNyzsfJ31ZumiGYcht4ma0V60XzLPYf8ZcCnVd6E04g
+         q279iJM52CUqhlL92++JnbgDG1xPuyUkYPtGk2yUd72jxVYPLS6qw74xyQ5asydIJkjS
+         kMuWyn/kTvR7aj25IPUxtv5gJGWC3pmUV/FTrE49bOVjOuUGjSsKWT1ng/5qcD4svVzb
+         huZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmlcUEPD/ZMEk83fNT7FGZN7P6XnF7uqRI2tNNkuvfnroBgSKXQ7NXwhrnU7X4lEwleNJTBGkh7Aj1@vger.kernel.org, AJvYcCVnxH9bTPmYVyohiNUwzt952JA9uDGOB19ccv/hSkV31Hbpgk4cXZtG4oa5xJjdB26NGm+ZG2DbCSV8hUXs@vger.kernel.org, AJvYcCWf0B7OyzIqFtST1Q9PP8HTj2T93smDfCNl5E1j9PDvf4T3BVEYdkXZs3w32OyvJpSYIdneq6nNg/9xpQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3KOJk4hJ3pAb5EGRsFqKRuj25lujdsEHqSsa6S+Q1XIgvEnad
+	KR/feZpFwltS//BcHWuT/CISWTgo0oH4CSWdNXUE6BoM9DRzcxRz
+X-Gm-Gg: ASbGncuusJ7qpIvKdwAtkehJ9Aeq+an1euwAZn5eDNzHr2ynpXbnoH6oKkCWhJP17iK
+	d00NbLp1qN7ToZ1yXSkLjDznXGdL2UaS1P5Z+Vcx1w31kW/8iBuVGwuJSRVSxqvwN/gQEnntpI/
+	2LGtRVQcB2FzTMJLGJhCzpdHqn4HP6A9H0gPTHhcM/STWKzVyprBniC4ZYRWtN+KwZeeLDNgP+n
+	qtAlwTakpHeeHFTa3ycLCwvzwQiGR9qkTT1hUjUuz7a+Uv8+PYOj8J8HS0sCqB8eNy1NLDxHmju
+	oBR5tr1ipT/Tx/DVQTYmDoCTArmZo+tvdUZzp6O4QnSeZPlcF9KA3g==
+X-Google-Smtp-Source: AGHT+IHrwpXL0L5f6em3IgAisRt8eToY4WUgHZ+JzvFiYSU/OoqGtox7zmG/M0KzUZdedDUwYqS0Jw==
+X-Received: by 2002:a17:903:32ce:b0:224:1074:63af with SMTP id d9443c01a7336-22428bdb76amr63670315ad.34.1741360290644;
+        Fri, 07 Mar 2025 07:11:30 -0800 (PST)
 Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7369824402bsm3299375b3a.49.2025.03.07.06.48.22
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22410a907adsm31000575ad.160.2025.03.07.07.11.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 06:48:23 -0800 (PST)
-Date: Fri, 7 Mar 2025 11:49:16 -0300
+        Fri, 07 Mar 2025 07:11:29 -0800 (PST)
+Date: Fri, 7 Mar 2025 12:12:22 -0300
 From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 To: Jonathan Santos <Jonathan.Santos@analog.com>
 Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
@@ -81,164 +82,109 @@ Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
 	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
 	brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
 	dlechner@baylibre.com, jonath4nns@gmail.com
-Subject: Re: [PATCH v4 15/17] iio: adc: ad7768-1: replace manual attribute
- declaration
-Message-ID: <Z8sHbNJcxtlAJHn7@debian-BULLSEYE-live-builder-AMD64>
+Subject: Re: [PATCH v4 17/17] iio: adc: ad7768-1: add low pass -3dB cutoff
+ attribute
+Message-ID: <Z8sM1uW7pxJVmVN6@debian-BULLSEYE-live-builder-AMD64>
 References: <cover.1741268122.git.Jonathan.Santos@analog.com>
- <6d429bf18851e9e423e90252d351db550b2da536.1741268122.git.Jonathan.Santos@analog.com>
+ <2aa347a97e7ea974951609b0bdf81cad0b21b993.1741268122.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6d429bf18851e9e423e90252d351db550b2da536.1741268122.git.Jonathan.Santos@analog.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2aa347a97e7ea974951609b0bdf81cad0b21b993.1741268122.git.Jonathan.Santos@analog.com>
+
+Looks good. Minor comment inline.
 
 On 03/06, Jonathan Santos wrote:
-> Use read_avail callback from struct iio_info to replace the manual
-> declaration of sampling_frequency_available attribute.
+> Ad7768-1 has a different -3db frequency multiplier depending on
+> the filter type configured. The cutoff frequency also varies according
+> to the current ODR.
+> 
+> Add a readonly low pass -3dB frequency cutoff attribute to clarify to
+> the user which bandwidth is being allowed depending on the filter
+> configurations.
 > 
 > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
 
 Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
-> ---
 > v4 Changes:
-> * Added ad7768_fill_samp_freq_tbl() helper function.
-> * Sampling frequency table is precomputed at probe.
+> * None
 > 
 > v3 Changes:
-> * New patch in v3.
+> * None
+> 
+> v2 Changes:
+> * New patch in v2.
 > ---
->  drivers/iio/adc/ad7768-1.c | 63 +++++++++++++++++++-------------------
->  1 file changed, 31 insertions(+), 32 deletions(-)
+>  drivers/iio/adc/ad7768-1.c | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index c48d3e0af985..0bdf2ae903c6 100644
+> index 664d0b535340..9ba00e9089bd 100644
 > --- a/drivers/iio/adc/ad7768-1.c
 > +++ b/drivers/iio/adc/ad7768-1.c
-> @@ -187,6 +187,7 @@ static const struct iio_chan_spec ad7768_channels[] = {
+> @@ -150,6 +150,17 @@ enum ad7768_scan_type {
+>  	AD7768_SCAN_TYPE_HIGH_SPEED,
+>  };
+>  
+> +/*
+> + * -3dB cutoff frequency multipliers (relative to ODR) for
+> + * each filter type. Values are multiplied by 1000.
+> + */
+> +static const int ad7768_filter_3db_odr_multiplier[] = {
+> +	[AD7768_FILTER_SINC5] = 204,
+> +	[AD7768_FILTER_SINC3] = 261,
+> +	[AD7768_FILTER_SINC3_REJ60] = 261,
+
+Are these constants from ADAQ7768-1 datasheet?
+There it says "the sinc3 filter has a −3 dB bandwidth of 0.2617 × ODR."
+If so, maybe use 262 as SINC3 multiplier?
+
+> +	[AD7768_FILTER_WIDEBAND] = 433,
+> +};
+> +
+>  static const int ad7768_mclk_div_rates[4] = {
+>  	16, 8, 4, 2,
+>  };
+> @@ -228,7 +239,8 @@ static const struct iio_chan_spec ad7768_channels[] = {
+>  		.type = IIO_VOLTAGE,
 >  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
->  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+>  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
+> -					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+> +					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
+> +					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
+>  		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
 >  		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-> +		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
->  		.indexed = 1,
->  		.channel = 0,
->  		.scan_index = 0,
-> @@ -208,6 +209,7 @@ struct ad7768_state {
->  	unsigned int mclk_freq;
->  	unsigned int dec_rate;
->  	unsigned int samp_freq;
-> +	unsigned int samp_freq_avail[ARRAY_SIZE(ad7768_clk_config)];
->  	struct completion completion;
->  	struct iio_trigger *trig;
->  	struct gpio_desc *gpio_sync_in;
-> @@ -306,6 +308,15 @@ static int ad7768_send_sync_pulse(struct ad7768_state *st)
->  	return 0;
->  }
->  
-> +static void ad7768_fill_samp_freq_tbl(struct ad7768_state *st)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ad7768_clk_config); i++)
-> +		st->samp_freq_avail[i] = DIV_ROUND_CLOSEST(st->mclk_freq,
-> +							   ad7768_clk_config[i].clk_div);
-> +}
-> +
->  static int ad7768_set_mode(struct ad7768_state *st,
->  			   enum ad7768_conv_mode mode)
+>  		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> @@ -762,7 +774,7 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
 >  {
-> @@ -566,28 +577,6 @@ static int ad7768_set_freq(struct ad7768_state *st,
->  	return 0;
->  }
+>  	struct ad7768_state *st = iio_priv(indio_dev);
+>  	const struct iio_scan_type *scan_type;
+> -	int scale_uv, ret;
+> +	int scale_uv, ret, temp;
 >  
-> -static ssize_t ad7768_sampling_freq_avail(struct device *dev,
-> -					  struct device_attribute *attr,
-> -					  char *buf)
-> -{
-> -	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> -	struct ad7768_state *st = iio_priv(indio_dev);
-> -	unsigned int freq;
-> -	int i, len = 0;
-> -
-> -	for (i = 0; i < ARRAY_SIZE(ad7768_clk_config); i++) {
-> -		freq = DIV_ROUND_CLOSEST(st->mclk_freq,
-> -					 ad7768_clk_config[i].clk_div);
-> -		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ", freq);
-> -	}
-> -
-> -	buf[len - 1] = '\n';
-> -
-> -	return len;
-> -}
-> -
-> -static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(ad7768_sampling_freq_avail);
-> -
->  static int ad7768_read_raw(struct iio_dev *indio_dev,
->  			   struct iio_chan_spec const *chan,
->  			   int *val, int *val2, long info)
-> @@ -635,6 +624,24 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
->  	return -EINVAL;
->  }
+>  	scan_type = iio_get_current_scan_type(indio_dev, chan);
+>  	if (IS_ERR(scan_type))
+> @@ -802,6 +814,12 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		*val = st->oversampling_ratio;
 >  
-> +static int ad7768_read_avail(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan,
-> +			     const int **vals, int *type, int *length,
-> +			     long info)
-> +{
-> +	struct ad7768_state *st = iio_priv(indio_dev);
+> +		return IIO_VAL_INT;
 > +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*vals = (int *)st->samp_freq_avail;
-> +		*length = ARRAY_SIZE(ad7768_clk_config);
-> +		*type = IIO_VAL_INT;
-> +		return IIO_AVAIL_LIST;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
+> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> +		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
+> +		*val = DIV_ROUND_CLOSEST(temp, 1000);
 > +
->  static int ad7768_write_raw(struct iio_dev *indio_dev,
->  			    struct iio_chan_spec const *chan,
->  			    int val, int val2, long info)
-> @@ -657,15 +664,6 @@ static int ad7768_read_label(struct iio_dev *indio_dev,
->  	return sprintf(label, "%s\n", st->labels[chan->channel]);
->  }
+>  		return IIO_VAL_INT;
+>  	}
 >  
-> -static struct attribute *ad7768_attributes[] = {
-> -	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-> -	NULL
-> -};
-> -
-> -static const struct attribute_group ad7768_group = {
-> -	.attrs = ad7768_attributes,
-> -};
-> -
->  static int ad7768_get_current_scan_type(const struct iio_dev *indio_dev,
->  					const struct iio_chan_spec *chan)
->  {
-> @@ -676,8 +674,8 @@ static int ad7768_get_current_scan_type(const struct iio_dev *indio_dev,
->  }
->  
->  static const struct iio_info ad7768_info = {
-> -	.attrs = &ad7768_group,
->  	.read_raw = &ad7768_read_raw,
-> +	.read_avail = &ad7768_read_avail,
->  	.write_raw = &ad7768_write_raw,
->  	.read_label = ad7768_read_label,
->  	.get_current_scan_type = &ad7768_get_current_scan_type,
-> @@ -1134,6 +1132,7 @@ static int ad7768_probe(struct spi_device *spi)
->  		return PTR_ERR(st->mclk);
->  
->  	st->mclk_freq = clk_get_rate(st->mclk);
-> +	ad7768_fill_samp_freq_tbl(st);
->  
->  	indio_dev->channels = ad7768_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(ad7768_channels);
 > -- 
 > 2.34.1
 > 
