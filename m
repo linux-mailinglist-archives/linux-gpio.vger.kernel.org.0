@@ -1,123 +1,267 @@
-Return-Path: <linux-gpio+bounces-17222-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17223-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD5FFA56168
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 08:04:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 392F0A562D8
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 09:45:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D46BF7A9434
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 07:03:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A8DA16FD81
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 08:45:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DD341A314A;
-	Fri,  7 Mar 2025 07:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69C6115746E;
+	Fri,  7 Mar 2025 08:45:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NBpNOax/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mvqVIw8H"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B400A19D8A4
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Mar 2025 07:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947B11A5B89
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Mar 2025 08:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741331041; cv=none; b=gyY4tGIgaWfOSdF2HcuI/hTv7/WpISI5s8CcVgfR6j1fA33q7d13b2pl7K08PgvYP56yxyb3K9bbx92XfOoo3wMTDfz0qf76hZeTcSOywhkxOfib4fWCIsTTQSdZ3Ov4MRlWUrUdZBiKdZJnjwmSTsce9sTDZPdT864e7OUL1Rw=
+	t=1741337122; cv=none; b=Amzc2h2DcqLufAIR5tyNYq/6hu7ckNGb3CYJScmF+e7qUnONrR3HyXGxB2PdSsuCY8tvBaOOxbHZrU5MAZAJHJiNL4lJbUGUhnbdZ30z7ZJYgRXWx9SiTPuNyZRl2CeXy9YYLJV/T/wqdH+R9k9OlVncD4f/idtZe8NL2lygkBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741331041; c=relaxed/simple;
-	bh=8nAP95098N8VvC8hTlm0/7kaa5VzZNLWpFxVGQC8zIY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zxr1fdtrAup9gRNx7mBXrgheqKCaKSbo6Lguv8Y8IUOjOFgHhuaUrLTVj+/DA8BsCShcmcbYDTMCgpoIME1b2yre9kbPU2r9KAT+1NmAHfzAgjeDErseQ5516hA7U994RK1vATFqvgiq4YnNv7cH3WwXe7jzLBQriGN5DHmTTxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NBpNOax/; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549662705ffso1670008e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Mar 2025 23:03:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741331037; x=1741935837; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d8LoLRLGkxYV0alNGYR4F1xsTkZ1FzcA8kkUjGyENl4=;
-        b=NBpNOax/CZHtsObwQ+j9vkhKb73k8QXBUXREtiC78ss0qZSbHFhODQIDFK8TpN4Gb7
-         SDzBNR9toP7ylsS5y1BJBldZcrbQu84d7HK8HoMUOJsT9j8yBZOaiNEoXRruv4cxAkOb
-         Jni4ggK+sBXSovS2MnKggxUT0w79wHRVl77bewo8rL9BDP0sWFphrRxVEdrHHkeic+ml
-         tAWYAS9JZPfe9g0ta1Ta0kwdfxZcnrHCu5scbsc8E6YPfR8iZ9920SgU34vS/ywgYPjW
-         bubUv7rD3HcK6UbBDyaU1RJJ4svI3zPMFfra3cy6x1jAD3g9ty8nyLrdyiDdzqgxx1A4
-         dg2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741331037; x=1741935837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d8LoLRLGkxYV0alNGYR4F1xsTkZ1FzcA8kkUjGyENl4=;
-        b=PSFun6esKIg/yQe0pTVC9lsA7ziFA+dRm6+oCmWZShOA0x2oWxXF31BC3wOxDLgTe6
-         mEJgfPvdsWoZdy72TLC/g/J+xSapHbws7jux6sjj9j1yvJZAQSH1v58l+XtiCydZDqBl
-         5FFjEx2JkDKnzdjTsNwysl8Nn/4bvXNWT68P5NRrzYNI72its0RSylmk56mCue1lJcjW
-         TtMXfIsbjXkZejUgZdBgEw0OcKl1QZQpqTZbC9yiPEjcwhFrFK/BW/alZmsbrz5dU7kf
-         44vGlTCsGpvdSAAWdBQpVzWyqn1nhcPTb9Xervu2nhsSca2RKckLBL3vUz3fDRIPA5fe
-         NvDA==
-X-Forwarded-Encrypted: i=1; AJvYcCU86Obw59Z3rcmx2BaHOVvN4ESyWc0XZSPyK6sHHAKbcXUJgic5qsuaP2V22Nf5AKSXmfDiYZYquw0V@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAFIQCIKJ1FtIZ/NwVRFOjKkiiS8fef8oB8pZX9kwyIXLD+Ji1
-	68BM1b4ERkHphOFq3QYrVUJpkyv0Mzg4DgZXrrO8liHcpS2+8QC8t6/RviZDJnTKFG5P6pIRC7c
-	QS1RCjqq6N8B0IazqgafrWEMikwWJZdOMp4j0gAcWhs40fLlWbgA=
-X-Gm-Gg: ASbGncsSouRKFrf43/7K3oGhJwOqmMLmGROKxuxbwMLjyeJyUGc+AdXZ48t6Mr7L8Ug
-	BqsAXdRt5qu1deA4KgPUJavT5PCO9KZobvWfIqc4Kc6ygTqY9LTSoRZFFZwBjj7vlqtrVobhoaJ
-	y+TWiMJVUEtt7j/qB6oSqJkXUwraFyG+n8OusLYMMrT/lWTSrOJFNgOfP4
-X-Google-Smtp-Source: AGHT+IGLPbU3KJLosa62LrFtSyjSM1FYRo5hnluiTpHzUxw8rr6zT37TRHuDWK6vB1cV68vxHCUY1m2s2IV4pZHIHLY=
-X-Received: by 2002:a05:6512:281b:b0:545:2f0d:8836 with SMTP id
- 2adb3069b0e04-54990eaae1amr630800e87.40.1741331036524; Thu, 06 Mar 2025
- 23:03:56 -0800 (PST)
+	s=arc-20240116; t=1741337122; c=relaxed/simple;
+	bh=EQDPh2GlIEJFBYkBCNx6fvhSI27Fh7wtpC/L+q+4gmI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ClYsGhhbBogmiiB4v2GwvQeFKrsRVEgh13YXLapCshQEQsA/z3T4+a/P+npIfJx6ldNtW8vyzoYWAd+lJ8JPgNaXYmHQDZTn6hl0aX+ieVXC33+VxlQ0Wn5g0KWC9ASR/potrCgXc7JtzkLzVMjj9tK4vLxq7f2F6V4mlYSRJU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mvqVIw8H; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741337119; x=1772873119;
+  h=date:from:to:cc:subject:message-id;
+  bh=EQDPh2GlIEJFBYkBCNx6fvhSI27Fh7wtpC/L+q+4gmI=;
+  b=mvqVIw8HynqZABmC8M/jq7AVM/0myrJdqSA8vRAPJGUZysjRg25yBbGt
+   o/nPs4snH6golr4ASpWM/bWKc46D1+Tz768v32Ie+GAVJx+O6TMYGdrI4
+   f8NMp2U7pZ9ux3Qv2gTmq6soR2wdEWGIzanmtrMKlqkd7/S/o/h1PI4dc
+   HLS+vx9z++kcvaB5KDrUP3vVpxygOccnrf/CHvQNbf8iT7Sr/EfgG/UHm
+   ia+8/+6kMOB9LIANz2QicNJIMYtFJzzNHRPo3bA0tWrk1LVFoN4PDdwNQ
+   adC5ryGDbbR3tin1qrepYpEhvdzs6jNR3BgHcrRq1WBDLOJ7OcJiP8Egh
+   w==;
+X-CSE-ConnectionGUID: dUr9iJPwSiaS2n94Llh1nw==
+X-CSE-MsgGUID: eW5lHKYDQoqxEt/vHNeVGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="53019739"
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="53019739"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 00:45:19 -0800
+X-CSE-ConnectionGUID: PbpQIhVES3CqdjF4o0EkvQ==
+X-CSE-MsgGUID: xNYl7nMgQSSN6RIOxhryog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="124189337"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 07 Mar 2025 00:45:17 -0800
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tqTKV-0000BP-1L;
+	Fri, 07 Mar 2025 08:45:15 +0000
+Date: Fri, 07 Mar 2025 16:44:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 9b443b68d97983dfb9a92009a5c951364fa35985
+Message-ID: <202503071611.PVJPjY2y-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
- <20250220-gpio-set-retval-v2-1-bc4cfd38dae3@linaro.org> <174130146134.987559.8662566490718210141.b4-ty@kernel.org>
-In-Reply-To: <174130146134.987559.8662566490718210141.b4-ty@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Mar 2025 08:03:45 +0100
-X-Gm-Features: AQ5f1JrsRCTzGeQkxb8NcRBJre4S54OYANop1Qs9itP8zmv8yOQ5lBl5rfQBlgo
-Message-ID: <CAMRc=MdQcxtXMUCt00=JbGY47cMMWcW8=r3-ZrMKjQkViqnxvA@mail.gmail.com>
-Subject: Re: (subset) [PATCH v2 01/15] leds: aw200xx: don't use return with
- gpiod_set_value() variants
-To: Lee Jones <lee@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Michael Walle <mwalle@kernel.org>, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Pavel Machek <pavel@kernel.org>, 
-	linux-leds@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 6, 2025 at 11:51=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Thu, 20 Feb 2025 10:56:58 +0100, Bartosz Golaszewski wrote:
-> > While gpiod_set_value() currently returns void, it will soon be convert=
-ed
-> > to return an integer instead. Don't do `return gpiod_set...`.
-> >
-> >
->
-> Applied, thanks!
->
-> [01/15] leds: aw200xx: don't use return with gpiod_set_value() variants
->         commit: 5d5e2a6f15a6c5e0c431c1388fd90e14b448da1e
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 9b443b68d97983dfb9a92009a5c951364fa35985  gpiolib: fix kerneldoc
 
-Hi Lee!
+Warning ids grouped by kconfigs:
 
-Can you please drop it from your tree? You acked v1 of this patch
-after I had already sent v2 (this patch remained unchanged) folded
-into a respin of the bigger GPIO series that had triggered build bots
-to point this issue out in the first place. I picked the entire series
-up and this commit is already in next as
-129fdfe25ac513018d5fe85b0c493025193ef19f.
+recent_errors
+|-- arm-randconfig-051-20250307
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|-- arm-randconfig-052-20250307
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|-- arm-randconfig-053-20250307
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|-- arm-randconfig-054-20250307
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|-- i386-randconfig-141-20250307
+|   `-- drivers-gpio-gpiolib.c-gpiochip_set_multiple()-error:uninitialized-symbol-ret-.
+`-- x86_64-randconfig-161-20250307
+    `-- drivers-gpio-gpiolib.c-gpiochip_set_multiple()-error:uninitialized-symbol-ret-.
 
-Thanks,
-Bartosz
+elapsed time: 1451m
+
+configs tested: 106
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250306    gcc-13.2.0
+arc                   randconfig-002-20250306    gcc-13.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                           h3600_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250306    gcc-14.2.0
+arm                   randconfig-002-20250306    gcc-14.2.0
+arm                   randconfig-003-20250306    gcc-14.2.0
+arm                   randconfig-004-20250306    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250306    gcc-14.2.0
+arm64                 randconfig-002-20250306    gcc-14.2.0
+arm64                 randconfig-003-20250306    gcc-14.2.0
+arm64                 randconfig-004-20250306    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250306    gcc-14.2.0
+csky                  randconfig-002-20250306    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250306    clang-21
+hexagon               randconfig-002-20250306    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386        buildonly-randconfig-001-20250306    clang-19
+i386        buildonly-randconfig-002-20250306    clang-19
+i386        buildonly-randconfig-003-20250306    clang-19
+i386        buildonly-randconfig-004-20250306    gcc-12
+i386        buildonly-randconfig-005-20250306    gcc-12
+i386        buildonly-randconfig-006-20250306    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250306    gcc-14.2.0
+loongarch             randconfig-002-20250306    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                  cavium_octeon_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250306    gcc-14.2.0
+nios2                 randconfig-002-20250306    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250306    gcc-14.2.0
+parisc                randconfig-002-20250306    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                     asp8347_defconfig    clang-21
+powerpc                      ep88xc_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250306    clang-21
+powerpc               randconfig-002-20250306    clang-18
+powerpc               randconfig-003-20250306    gcc-14.2.0
+powerpc64             randconfig-001-20250306    clang-18
+powerpc64             randconfig-002-20250306    clang-21
+powerpc64             randconfig-003-20250306    clang-18
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250306    clang-18
+riscv                 randconfig-002-20250306    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250306    gcc-14.2.0
+s390                  randconfig-002-20250306    clang-19
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                        dreamcast_defconfig    gcc-14.2.0
+sh                ecovec24-romimage_defconfig    gcc-14.2.0
+sh                         ecovec24_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250306    gcc-14.2.0
+sh                    randconfig-002-20250306    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250306    gcc-14.2.0
+sparc                 randconfig-002-20250306    gcc-14.2.0
+sparc64               randconfig-001-20250306    gcc-14.2.0
+sparc64               randconfig-002-20250306    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250306    gcc-12
+um                    randconfig-002-20250306    clang-16
+x86_64                            allnoconfig    clang-19
+x86_64      buildonly-randconfig-001-20250306    gcc-11
+x86_64      buildonly-randconfig-002-20250306    clang-19
+x86_64      buildonly-randconfig-003-20250306    clang-19
+x86_64      buildonly-randconfig-004-20250306    clang-19
+x86_64      buildonly-randconfig-005-20250306    clang-19
+x86_64      buildonly-randconfig-006-20250306    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250306    gcc-14.2.0
+xtensa                randconfig-002-20250306    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
