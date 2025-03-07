@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-17264-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17265-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB76EA56BCC
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 16:21:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B835A56BD1
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 16:22:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFCB9179A47
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 15:21:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8425A3B5C04
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 15:22:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8216A21CA18;
-	Fri,  7 Mar 2025 15:20:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AA2221CC49;
+	Fri,  7 Mar 2025 15:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F9ZZrbjw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRs6WJ19"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345AA218AB4;
-	Fri,  7 Mar 2025 15:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1FF21B90F;
+	Fri,  7 Mar 2025 15:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741360858; cv=none; b=VKSL5KZ7QTcb19rySAOntImmCIcRRhVhgCxmWFJxdCB28m/lG+gFkS+jK7pYgwT/tfpQhoeq8MO/xyfeAlhdf+5guNJQmnZ0bqhghvfS60Dbobms1BIHB+SZod9zkwvrp2c4iMgKmwNYzZWcnmJaYA1OJa7Bjb+EymiLZEBzsDA=
+	t=1741360928; cv=none; b=In2i5Q2P3KlYaWR4yfSrE0YEoQoO+5nhhROII5OexFPniiUGF0JKeeQxrYhrAChVUKp1gGe6Xm6/eDSLjSylMk1G+wS1NMDWJe3aDyo9t2S86GtRJxlJjEKKiIeJGk6Hgh9/I1/dleA1gvuI+BJ/mqrk9dyp3VpHupRaOXFkMXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741360858; c=relaxed/simple;
-	bh=lSpJmdxkOwjvYgxpiaJiuRUeELAjADsEF0WUZBUJHm8=;
+	s=arc-20240116; t=1741360928; c=relaxed/simple;
+	bh=YA8C0J31UV/dkU0jT8//MR5vNBHEqT503gqEdmk09E8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cjA8D9IQZ3wyKAa0H9C+VBfcrSvQaBxVMHrktHrwb2yr/F+HasSmMQceBZMHQrM4J58cYVTqvT9mcWWTz4lX0e/a8jvo0N9xesYu3iweu/xaFVy5CKms8rZdPUjcD43F9npRCC9ONKla5vqdsu2Y3r+zlA9BS2Bvpvt3pjJanxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F9ZZrbjw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D511C4CED1;
-	Fri,  7 Mar 2025 15:20:51 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=tV1w++LQocOhtrDI/oWQ4HRqKr0MSUvD2fUpzWbtIeX6gl6Jejbf3jqTl8MJjruRs3JDcid2PmekLBE6CZZ7gXX7/aYIP4LQXJV2bflRhBSRaoouDD0NNXOdAxuRxjFNOafwqxtOo5XbczlDsV5DsHnGlVxliLF6DRHvwkx0ZfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRs6WJ19; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4247FC4CED1;
+	Fri,  7 Mar 2025 15:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741360857;
-	bh=lSpJmdxkOwjvYgxpiaJiuRUeELAjADsEF0WUZBUJHm8=;
+	s=k20201202; t=1741360928;
+	bh=YA8C0J31UV/dkU0jT8//MR5vNBHEqT503gqEdmk09E8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F9ZZrbjwxVX+0fyMl2ACr1OxabTHNVE4hBogasGOhTrYUZT9ks0wFeYWnSznBjQGA
-	 Hy6Gac0a5zqhP60XR8qTMvzURZlU3Wbmt7Q77/NCqaUTfnvBiuMZP4s6OJYFMQGe7e
-	 E5P8zgdd6CM36FaWTDOlYniKM1D0E1dzbceK9R3MgzNJbe2WDXGWx8U5pZSYgy91FV
-	 OHPUwU8SwGOJxwc2QoAhWnnJh/co55nUd9p+DZf0Dr1LnNnl4cEgtI3J74ocxRFWOk
-	 ofLrJ8qWb07t4l7GPeW/AF+xXW1i/z9aSp+VZsvsTC65kGNsgdSaUtD1rHuqZbgUxv
-	 20OLYZQVzPCPQ==
-Message-ID: <8a855e37-b7cf-41ef-8d97-f2ff506a5750@kernel.org>
-Date: Fri, 7 Mar 2025 16:20:48 +0100
+	b=ZRs6WJ19u0ePeh3vRZXfle8qIT3wgqDB51Rj6lq16ZcgPqKwIpbhk4CmXJE6d5MoF
+	 0oiSkVaYjfWUDpOccb1WEcZNJvahIMIcnJ+XBrSDUOofW9/UNcFPxLDuR2A6k9nUIp
+	 2/XcOe0GQ2U1LWIEx8OZvdzKkWkjqbD3AH88EUl8r1boC9deO1ZzTXAYqjtaBMEuUd
+	 EwDuBM6/0lTC+JE1YlPuwkzhOtW3gjFrfFssHfdZW1xVzU9PxiQFEIVzifqiFaijtZ
+	 A5HOsU+r/7U6oqVCBaDFxDPUwxMIOgEVHQL1ZBo43MRPt+7HYbDl9zAmwqqFgtGoP4
+	 D/WCtSChwMonA==
+Message-ID: <7b967651-1368-42f1-af23-adc3c94c88ca@kernel.org>
+Date: Fri, 7 Mar 2025 16:21:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/14] ASoC: mediatek: common: modify mtk afe common
+Subject: Re: [PATCH 02/14] ASoC: mediatek: common: modify mtk afe platform
  driver for mt8196
 To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
  <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
@@ -64,7 +64,7 @@ Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 References: <20250307124841.23777-1-darren.ye@mediatek.com>
- <20250307124841.23777-2-darren.ye@mediatek.com>
+ <20250307124841.23777-3-darren.ye@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,66 +110,41 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250307124841.23777-2-darren.ye@mediatek.com>
+In-Reply-To: <20250307124841.23777-3-darren.ye@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 07/03/2025 13:47, Darren.Ye wrote:
 > From: Darren Ye <darren.ye@mediatek.com>
 > 
-> Export register read and write interface, add sample reate interface, and
-> update the mtk_memif_set_channel interface for the mt8196 platform.
+> Mofify the pcm pointer interface to support 64-bit address access.
 > 
 > Signed-off-by: Darren Ye <darren.ye@mediatek.com>
 > ---
->  sound/soc/mediatek/common/mtk-afe-fe-dai.c | 30 ++++++++++++++--------
->  sound/soc/mediatek/common/mtk-afe-fe-dai.h |  6 +++++
->  sound/soc/mediatek/common/mtk-base-afe.h   | 13 ++++++++++
->  3 files changed, 38 insertions(+), 11 deletions(-)
+>  .../mediatek/common/mtk-afe-platform-driver.c | 63 ++++++++++++++-----
+>  .../mediatek/common/mtk-afe-platform-driver.h |  5 ++
+>  2 files changed, 52 insertions(+), 16 deletions(-)
 > 
-> diff --git a/sound/soc/mediatek/common/mtk-afe-fe-dai.c b/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-> index 3809068f5620..c36dae520f04 100644
-> --- a/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-> +++ b/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-> @@ -18,7 +18,7 @@
->  
->  #define AFE_BASE_END_OFFSET 8
->  
-> -static int mtk_regmap_update_bits(struct regmap *map, int reg,
-> +int mtk_regmap_update_bits(struct regmap *map, int reg,
-
-You need kerneldoc for all exported functions.
-
->  			   unsigned int mask,
->  			   unsigned int val, int shift)
->  {
-> @@ -26,13 +26,16 @@ static int mtk_regmap_update_bits(struct regmap *map, int reg,
->  		return 0;
->  	return regmap_update_bits(map, reg, mask << shift, val << shift);
+> diff --git a/sound/soc/mediatek/common/mtk-afe-platform-driver.c b/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> index 6b6330583941..5d8f4421e665 100644
+> --- a/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> +++ b/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> @@ -77,6 +77,16 @@ int mtk_afe_add_sub_dai_control(struct snd_soc_component *component)
 >  }
-> +EXPORT_SYMBOL(mtk_regmap_update_bits);
+>  EXPORT_SYMBOL_GPL(mtk_afe_add_sub_dai_control);
+>  
+> +int mtk_afe_pcm_open(struct snd_soc_component *component,
 
-GPL
+How adding this is related with 64-bit addresses? It's not even used here.
 
-
+> +		     struct snd_pcm_substream *substream)
+> +{
+> +	/* set the wait_for_avail to 2 sec*/
+> +	substream->wait_time = msecs_to_jiffies(2 * 1000);
 > +
-> +int mtk_regmap_write(struct regmap *map, int reg, unsigned int val)
->  
-
-Why blank line?
-
-> -static int mtk_regmap_write(struct regmap *map, int reg, unsigned int val)
-
-Missing kerneldoc
-
->  {
->  	if (reg < 0)
->  		return 0;
->  	return regmap_write(map, reg, val);
->  }
-> +EXPORT_SYMBOL(mtk_regmap_write);
-
-GPL
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(mtk_afe_pcm_open);
 
 
 Best regards,
