@@ -1,92 +1,91 @@
-Return-Path: <linux-gpio+bounces-17254-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17255-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80652A56969
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 14:52:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 09428A56A68
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 15:32:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A1CD3ACD61
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 13:51:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E65583B3D24
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 14:31:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E5421ADBC;
-	Fri,  7 Mar 2025 13:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FCD921ABDC;
+	Fri,  7 Mar 2025 14:32:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4kO8eNT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Actd3/V4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D00721ABA6;
-	Fri,  7 Mar 2025 13:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADBA1547C0;
+	Fri,  7 Mar 2025 14:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741355500; cv=none; b=JZxe0Q57i8dXvTt/TD7a3FXKoEoTlfPJkNOAu2zwPRFqFbKJ0+HocXMf8dbUGJJJKhj+z5A72m5BRzKPfJiixWHIHQUFfxpoyJsw4RqdHepLSv3PUXXER+0TvXalUnpnf0QPt+Vo47G7GGC7oKOEe1CVBzH5712V8inwYPNbXYw=
+	t=1741357925; cv=none; b=P25fIOA4VBxzMFzVwKiueQlU5bO5QYI9NygpZ4ItMvLacTmibyNtqk7Wvt4ppV9J0HEuVhKxSr9fUZDrgZa4Yd3MMzHhnMe3UPyiXagtWPpFHYgaCsU2uL+BUnffVMYb1FM1sIOBa9ei55bFcMAXYR+VvWbUuANCLRUrXEiW+Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741355500; c=relaxed/simple;
-	bh=P92GJowE3+xop7nioIlnBSiVvcN8Lu72zS16CGODbKw=;
+	s=arc-20240116; t=1741357925; c=relaxed/simple;
+	bh=D7PjqOAh9SKjXHiL9afXsgsvVJDJHo2uy8CQAes/kWc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ek7dBbc1VB1afpCNDBoUYjIjA9x9ERkIwhEi4h9tYNy7WoRtK34DnJc2weBkDeQp1aVjBOQ5tp3tujcT7yNdgVFkq9OLQ6XcF4h5xpLt3cyEKP9QTdM1RJdQl2MG+UYgTE/byxi35CfgvgpajJrhP79FciFe4fiU8yck8BxvoWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e4kO8eNT; arc=none smtp.client-ip=209.85.216.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=OgUB8jqtbKADklNkzz3BBlbhqZp6nvDlyu/00JJkK2beOS1SxVSs8Bu646ouwyXeDpIHl+KbgEaFCoe1h5l19nQmwQaDZo36yKmoK77IYeVDotMAu+3I6PtMV5n2eTnv5DsC52XFkwpY+8jnbEu8lONougIiX072VaL87njhIkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Actd3/V4; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so3400817a91.3;
-        Fri, 07 Mar 2025 05:51:39 -0800 (PST)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2234bec7192so5365585ad.2;
+        Fri, 07 Mar 2025 06:32:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741355498; x=1741960298; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741357923; x=1741962723; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GsYXGuW9uswGocW86oiWeIN4F7hDphJu+gAUcgsVqKc=;
-        b=e4kO8eNTyWKGQC4Gr3N944KHw3m4eazWQ9N5ZGJT6vnbsEVZhbl23KlYgdTNckzb67
-         K3ZRLQ3piNmWT1fbdppoQ47WXqCip5Wb+JET6XMoPZP104A4Hsd3e7SXRUdoD4h3gJpu
-         7W56f0cT9HxSWEW0FpuxHBEeV5eeLq/BncMTWP5cfuZ54XRq+TBkHTPt53hdfuy/rfaK
-         dISY9jdQN76KYRGcyMVNUDUWeNw0XVqHDjEQZNjYkrkgqVr02nj36c3q0oKO4Ucx+rJT
-         SRv3hM/2VgWuTvdmIVaWAyVrgmOsqaQ1LCXFaGolUwNvaqnOD/IIHrQTXUObW7CqYGzn
-         KHRQ==
+        bh=lkjFWxvpSWuoPGTgzoz3W9lo19IOJLxr0YDfumLq/hY=;
+        b=Actd3/V4BgTMljq6BWX7sw8oRWfKeFRDdAQKEKnXIoBRjmZdQ/t8xiaVrRure2a6UT
+         ftctRVbLd3Hnpo2naLRDyZQqXQ/vfzHLvJU3qLkg9V8s7iVXtHM5QjXFX+AwuoRaudV5
+         OyZNGn0/mUXyLWHTjBZf3M4MQPgy2HiWtaGoqlcZKc+uZNNOP/jFVbqETyFgn+zyuKGs
+         DkkDl8craKFK+LBXgHN6HGiLZ3SR3OCjWkTwqCm27qlmJ2tOAiCDFzvnK5zPxGdR7Xwb
+         TTTEZMw9PBkWazBgTKqY9Aw42bwtX1526VyOA+8TJY/5WYIKTHgBwfgzw3p+YgGK9WDD
+         zPew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741355498; x=1741960298;
+        d=1e100.net; s=20230601; t=1741357923; x=1741962723;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GsYXGuW9uswGocW86oiWeIN4F7hDphJu+gAUcgsVqKc=;
-        b=Frs1RXPL3Ou+cM7jmB/rcb9G/opl7fzmyWJuQZTyEMkDHiMleiqQwtUkulMFC5TQqM
-         E9ddZTZhpIhuHpDarJrb+uF7UsuIyK9PAWsYPtHPxykcU4JKSLMnHtFmpfj0eG8tk0Gf
-         4pO5wX4ygCdQp7kHBbFvcDdQvIiEvdnxlBSrISvN7ZHZWsKYA2t3LRhai2gxM2H149qb
-         7gwdxUC00qFc6UB6atGyOTNl1m0zOZP2iaevgW2SXleXk/DepPlV0uKiqk98UOQnI8TL
-         OEpeCZZYyic8FxLxMGBlU/1TT0Ypq0D+EOEKz3XbNgx5wvol9xmCr0eOubsfixqfPzQH
-         nbMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWG0o2QiLfUiGxk0cCeoS+NYeYpdiQr1Y7ozFG7u9alZPqh3EbLmLeH5dhRHBVb2L5MAV2rs/1vDQ4R@vger.kernel.org, AJvYcCX/EpofVely2XnqF3QnkOWzU1IVh1Qfi44NTyORolBszxB/qMYTxBmAcvNrHcYz+cpvgKrx53KcjAtmKw==@vger.kernel.org, AJvYcCXvFcqtaNniZoBbXU+vKB9blGylv9660sZxBxjKu1ZCvTLUXSyRoBY6Fo5w8zxzwGRffKFGjueCNsoR/AIh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG4M//lPRMew+QY5VWj8bWjjnwnf7UzcWGh1+Ak8W2v9WtjHyt
-	xoX/o1Up5A0gqX04W2RmJZhyF2e5eSisWZiGe/oAUjryLYQOTTB4
-X-Gm-Gg: ASbGncupIxJz8rluu0QzPM5b1C3reKQhUzAvYpUK5xb0SQF+q5onJsA1ksH6Rwi+xvA
-	WkveOaK8fLQpqCH1qOR0ucD+VE5ckmLvaOsP1ac4MCFpFCJ8gA8QzmDi4WigmF4PegM27jrCZgP
-	g0ogUQ2hlfYM/s6JPqmjhJcPTaNLKKuiIoBus7FWlZR4NDitvrOo172nS6F9uu6Jq5Guiq2m8it
-	O2+589JrZNsK+PYMZ6GdH/9R7ryD2IyzUPwjOL+UvTwn4tnrcKjylFmsEvvF3nqGC5zqwAL92Dn
-	pxo2OdAds9x/ofCzHxRma1liKT6IQoiDyPI9XMIT4KZ7RMfju5e/qw==
-X-Google-Smtp-Source: AGHT+IG111djafDJeUEZJzxG4Q6hK3LuycWp707Rg+oLSJoKZFiWESbFt8TBFWsdR/+ya+3HFFV8Ow==
-X-Received: by 2002:a17:90a:d2c6:b0:2ff:6608:78e2 with SMTP id 98e67ed59e1d1-2ff7cea99b3mr6342874a91.16.1741355498482;
-        Fri, 07 Mar 2025 05:51:38 -0800 (PST)
+        bh=lkjFWxvpSWuoPGTgzoz3W9lo19IOJLxr0YDfumLq/hY=;
+        b=jgf9Qdo4biNzWBoD+a3Lur+y8z65th1CXJGswxNLxuQl9a3uUuKLeCIHCyh5uKp+4N
+         MfCCYGVtNxuwff2lOSvY8pb83HB2eqI8oArH8H4Br4ViePqkjKfBJuwDgEQeiyhezj1o
+         4tXvrWXiOj03r81kC3m/VrwIDe06U3ZLp8Z/j/OAL7VkPj5OM1QK8zZ6IYBlUxnHvFRZ
+         wdVMqi8519EKgcR/3XD51XCKWOOMJkmcI3k9djA6s0G1HFVPwuHAFHlsUnZ8MoDM/3Tj
+         y4hUB1XvQBuNScVufETtd4gwoD4NJrbv5jOpTOFHbyfL4Vu9TnYgVR4gFouU5e5bsMwW
+         Mylg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6x26alKCZob7Yfp0nFQDGH4Vk3w4vhH5UJkPZCjHMUONq+XHk5ndNI9c513z1SavFxfb3B58RrBMtww==@vger.kernel.org, AJvYcCUtq9shV7KzcYtZlluAcTklh/Ho422v3ivPaOv2sgit9HpPKEy0u+7JPzQ79R7QjgQH9f3T/4KTqWWq@vger.kernel.org, AJvYcCXdfWO/FXGlRAmMTgIOeQB1enFE5kVkaCBNjLSuGLJTityasH8A7n06hdzF7yUyq/vqp5Qp4WX3xm8xwKzl@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxP/BuEWdWtchzQVQYzHHlhhg/yTlwtlTW6zYgG0TDIpkt/7Hc
+	IVuEHV+0l81NfRPHcJqniiqXVIokHAsghcwW5oiAuCW0e8c1uiHG
+X-Gm-Gg: ASbGncvs5bknk0/4qmCcBoq36XismmFeXh04QJnOnzIECsfgKJlziHUOcuYJiZpZ7+z
+	3UixuExcogxHeS2XJHWZB5kmPGI7fxSc9MPiHycUj2MVM03Fl8ZDAHFa+HpsJNZ/tC/2GpQSdiO
+	PAveGJ/yiMk+ud+MR6L9rJTyguyCDrvy/3e+stewQIQYbWQtzgiP6vGEbD4JdXJzmchFdOrGzWv
+	KFyiZs1XwZBDGPIfJNLA5sxykm4B9oEEOvex7iYcXScQL1l46+rp37HKLBz+DQ4X4T+gYv0/wwo
+	8HTW+zmV71L3XZFfJqtpNgsJaMoAJtSVg0ngxof7MMzEzZe1lGziDg==
+X-Google-Smtp-Source: AGHT+IEGhrQ335K3XW6S574DK86uaSTUMYHRtvp9Cj7tim0GA1sP3eT0MXM02+TNiSPz6pbU1kJPUA==
+X-Received: by 2002:a05:6a21:6d97:b0:1e1:e2d9:7f0a with SMTP id adf61e73a8af0-1f544c60385mr7121808637.34.1741357923419;
+        Fri, 07 Mar 2025 06:32:03 -0800 (PST)
 Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2ff693e73b9sm3033124a91.38.2025.03.07.05.51.37
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af28126dc75sm2593446a12.50.2025.03.07.06.32.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 05:51:37 -0800 (PST)
-Date: Fri, 7 Mar 2025 10:52:31 -0300
+        Fri, 07 Mar 2025 06:32:02 -0800 (PST)
+Date: Fri, 7 Mar 2025 11:32:54 -0300
 From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 To: Jonathan Santos <Jonathan.Santos@analog.com>
 Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, lars@metafoo.de,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
-	lgirdwood@gmail.com, broonie@kernel.org, dlechner@baylibre.com,
-	jonath4nns@gmail.com
-Subject: Re: [PATCH v4 10/17] iio: adc: ad7768-1: Move buffer allocation to a
- separate function
-Message-ID: <Z8r6H40mTKO_QF9Y@debian-BULLSEYE-live-builder-AMD64>
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
+	dlechner@baylibre.com, jonath4nns@gmail.com
+Subject: Re: [PATCH v4 11/17] iio: adc: ad7768-1: add regulator to control
+ VCM output
+Message-ID: <Z8sDlsOX0Elauabg@debian-BULLSEYE-live-builder-AMD64>
 References: <cover.1741268122.git.Jonathan.Santos@analog.com>
- <d078cdcf3a8bdd60ec3b9b6822e9705bf3f98bfa.1741268122.git.Jonathan.Santos@analog.com>
+ <40c586006b5cee0570ae577db2b58e6e7e36a6e6.1741268122.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -95,103 +94,283 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d078cdcf3a8bdd60ec3b9b6822e9705bf3f98bfa.1741268122.git.Jonathan.Santos@analog.com>
+In-Reply-To: <40c586006b5cee0570ae577db2b58e6e7e36a6e6.1741268122.git.Jonathan.Santos@analog.com>
+
+Looks ok. One minor commnet inline.
 
 On 03/06, Jonathan Santos wrote:
-> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> The VCM output voltage can be used as a common-mode voltage within the
+> amplifier preconditioning circuits external to the AD7768-1.
 > 
-> This change moves the buffer allocation in a separate function, making
-> space for adding another type of iio buffer if needed.
+> This change allows the user to configure VCM output using the regulator
+> framework.
 > 
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+
+Acked-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+
 > ---
-LGTM
-
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-
 > v4 Changes:
-> * None.
+> * Added iio_device_claim_direct_mode() to regulator callbacks to avoid register access
+>   while in buffered mode.
+> * Changed regulator name to "ad7768-1-vcm".
+> * When regulator enable is called, it will set the last voltage selector configured.
+> * Disabled regulator before configuring it.
+> * Adressed other nits.
 > 
 > v3 Changes:
-> * Added missing SoB.
+> * Register VCM output via the regulator framework for improved flexibility
+>   and external integration.
 > 
 > v2 Changes:
-> * Interrupt and completion moved out from ad7768_triggered_buffer_alloc(). 
+> * VCM output support is now defined by a devicetree property, instead of 
+>   and IIO attribute.
 > ---
->  drivers/iio/adc/ad7768-1.c | 44 ++++++++++++++++++++++----------------
->  1 file changed, 26 insertions(+), 18 deletions(-)
+>  drivers/iio/adc/Kconfig    |   1 +
+>  drivers/iio/adc/ad7768-1.c | 181 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 182 insertions(+)
 > 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index a2fdb7e03a66..d8f2ed477ba7 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -277,6 +277,7 @@ config AD7766
+>  config AD7768_1
+>  	tristate "Analog Devices AD7768-1 ADC driver"
+>  	depends on SPI
+> +	select REGULATOR
+>  	select REGMAP_SPI
+>  	select IIO_BUFFER
+>  	select IIO_TRIGGER
 > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index 86f44d28c478..e88e9431bb7a 100644
+> index e88e9431bb7a..2a6317f5b582 100644
 > --- a/drivers/iio/adc/ad7768-1.c
 > +++ b/drivers/iio/adc/ad7768-1.c
-> @@ -619,6 +619,31 @@ static int ad7768_set_channel_label(struct iio_dev *indio_dev,
->  	return 0;
+> @@ -12,8 +12,10 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/regulator/driver.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/spi/spi.h>
+>  
+> @@ -80,9 +82,15 @@
+>  #define AD7768_CONV_MODE_MSK		GENMASK(2, 0)
+>  #define AD7768_CONV_MODE(x)		FIELD_PREP(AD7768_CONV_MODE_MSK, x)
+>  
+> +/* AD7768_REG_ANALOG2 */
+> +#define AD7768_REG_ANALOG2_VCM_MSK	GENMASK(2, 0)
+> +#define AD7768_REG_ANALOG2_VCM(x)	FIELD_PREP(AD7768_REG_ANALOG2_VCM_MSK, x)
+
+Should we enforce macro argument evaluation here?
+#define AD7768_REG_ANALOG2_VCM(x)	FIELD_PREP(AD7768_REG_ANALOG2_VCM_MSK, (x))
+
+> +
+>  #define AD7768_RD_FLAG_MSK(x)		(BIT(6) | ((x) & 0x3F))
+>  #define AD7768_WR_FLAG_MSK(x)		((x) & 0x3F)
+>  
+> +#define AD7768_VCM_OFF			0x07
+> +
+>  enum ad7768_conv_mode {
+>  	AD7768_CONTINUOUS,
+>  	AD7768_ONE_SHOT,
+> @@ -160,6 +168,8 @@ struct ad7768_state {
+>  	struct regmap *regmap;
+>  	struct regmap *regmap24;
+>  	struct regulator *vref;
+> +	struct regulator_dev *vcm_rdev;
+> +	unsigned int vcm_output_sel;
+>  	struct clk *mclk;
+>  	unsigned int mclk_freq;
+>  	unsigned int samp_freq;
+> @@ -644,6 +654,172 @@ static int ad7768_triggered_buffer_alloc(struct iio_dev *indio_dev)
+>  					       &ad7768_buffer_ops);
 >  }
 >  
-> +static int ad7768_triggered_buffer_alloc(struct iio_dev *indio_dev)
+> +static int ad7768_vcm_enable(struct regulator_dev *rdev)
 > +{
+> +	struct iio_dev *indio_dev = rdev_get_drvdata(rdev);
 > +	struct ad7768_state *st = iio_priv(indio_dev);
-> +	int ret;
+> +	int ret, regval;
 > +
-> +	st->trig = devm_iio_trigger_alloc(indio_dev->dev.parent, "%s-dev%d",
-> +					  indio_dev->name,
-> +					  iio_device_id(indio_dev));
-> +	if (!st->trig)
-> +		return -ENOMEM;
+> +	if (!indio_dev)
+> +		return -EINVAL;
 > +
-> +	st->trig->ops = &ad7768_trigger_ops;
-> +	iio_trigger_set_drvdata(st->trig, indio_dev);
-> +	ret = devm_iio_trigger_register(indio_dev->dev.parent, st->trig);
+> +	ret = iio_device_claim_direct_mode(indio_dev);
 > +	if (ret)
 > +		return ret;
 > +
-> +	indio_dev->trig = iio_trigger_get(st->trig);
+> +	/* To enable, set the last selected output */
+> +	regval = AD7768_REG_ANALOG2_VCM(st->vcm_output_sel + 1);
+> +	ret = regmap_update_bits(st->regmap, AD7768_REG_ANALOG2,
+> +				 AD7768_REG_ANALOG2_VCM_MSK, regval);
+> +	iio_device_release_direct_mode(indio_dev);
 > +
-> +	return devm_iio_triggered_buffer_setup(indio_dev->dev.parent, indio_dev,
-> +					       &iio_pollfunc_store_time,
-> +					       &ad7768_trigger_handler,
-> +					       &ad7768_buffer_ops);
+> +	return ret;
+> +}
+> +
+> +static int ad7768_vcm_disable(struct regulator_dev *rdev)
+> +{
+> +	struct iio_dev *indio_dev = rdev_get_drvdata(rdev);
+> +	struct ad7768_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (!indio_dev)
+> +		return -EINVAL;
+> +
+> +	ret = iio_device_claim_direct_mode(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(st->regmap, AD7768_REG_ANALOG2,
+> +				 AD7768_REG_ANALOG2_VCM_MSK, AD7768_VCM_OFF);
+> +	iio_device_release_direct_mode(indio_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ad7768_vcm_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	struct iio_dev *indio_dev = rdev_get_drvdata(rdev);
+> +	struct ad7768_state *st = iio_priv(indio_dev);
+> +	int ret, val;
+> +
+> +	if (!indio_dev)
+> +		return -EINVAL;
+> +
+> +	ret = iio_device_claim_direct_mode(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->regmap, AD7768_REG_ANALOG2, &val);
+> +	if (ret)
+> +		goto err_release;
+> +
+> +	ret = FIELD_GET(AD7768_REG_ANALOG2_VCM_MSK, val) != AD7768_VCM_OFF;
+> +err_release:
+> +	iio_device_release_direct_mode(indio_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ad7768_set_voltage_sel(struct regulator_dev *rdev,
+> +				  unsigned int selector)
+> +{
+> +	unsigned int regval = AD7768_REG_ANALOG2_VCM(selector + 1);
+> +	struct iio_dev *indio_dev = rdev_get_drvdata(rdev);
+> +	struct ad7768_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (!indio_dev)
+> +		return -EINVAL;
+> +
+> +	ret = iio_device_claim_direct_mode(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(st->regmap, AD7768_REG_ANALOG2,
+> +				 AD7768_REG_ANALOG2_VCM_MSK, regval);
+> +	iio_device_release_direct_mode(indio_dev);
+> +	st->vcm_output_sel = selector;
+> +
+> +	return ret;
+> +}
+> +
+> +static int ad7768_get_voltage_sel(struct regulator_dev *rdev)
+> +{
+> +	struct iio_dev *indio_dev = rdev_get_drvdata(rdev);
+> +	struct ad7768_state *st = iio_priv(indio_dev);
+> +	int ret, val;
+> +
+> +	if (!indio_dev)
+> +		return -EINVAL;
+> +
+> +	ret = iio_device_claim_direct_mode(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->regmap, AD7768_REG_ANALOG2, &val);
+> +	if (ret)
+> +		goto err_release;
+> +
+> +	val = FIELD_GET(AD7768_REG_ANALOG2_VCM_MSK, val);
+> +	ret = clamp(val, 1, (int)rdev->desc->n_voltages) - 1;
+> +err_release:
+> +	iio_device_release_direct_mode(indio_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct regulator_ops vcm_regulator_ops = {
+> +	.enable = ad7768_vcm_enable,
+> +	.disable = ad7768_vcm_disable,
+> +	.is_enabled = ad7768_vcm_is_enabled,
+> +	.list_voltage = regulator_list_voltage_table,
+> +	.set_voltage_sel = ad7768_set_voltage_sel,
+> +	.get_voltage_sel = ad7768_get_voltage_sel,
+> +};
+> +
+> +static const unsigned int vcm_voltage_table[] = {
+> +	2500000,
+> +	2050000,
+> +	1650000,
+> +	1900000,
+> +	1100000,
+> +	900000,
+> +};
+> +
+> +static const struct regulator_desc vcm_desc = {
+> +	.name = "ad7768-1-vcm",
+> +	.of_match = of_match_ptr("vcm-output"),
+> +	.regulators_node = of_match_ptr("regulators"),
+> +	.n_voltages = ARRAY_SIZE(vcm_voltage_table),
+> +	.volt_table = vcm_voltage_table,
+> +	.ops = &vcm_regulator_ops,
+> +	.type = REGULATOR_VOLTAGE,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int ad7768_register_regulators(struct device *dev, struct ad7768_state *st,
+> +				      struct iio_dev *indio_dev)
+> +{
+> +	struct regulator_config config = {
+> +		.dev = dev,
+> +		.driver_data = indio_dev,
+> +	};
+> +	int ret;
+> +
+> +	/* Disable the regulator before registering it */
+> +	ret = regmap_update_bits(st->regmap, AD7768_REG_ANALOG2,
+> +				 AD7768_REG_ANALOG2_VCM_MSK, AD7768_VCM_OFF);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	st->vcm_rdev = devm_regulator_register(dev, &vcm_desc, &config);
+> +	if (IS_ERR(st->vcm_rdev))
+> +		return dev_err_probe(dev, PTR_ERR(st->vcm_rdev),
+> +				     "failed to register VCM regulator\n");
+> +
+> +	return 0;
 > +}
 > +
 >  static int ad7768_probe(struct spi_device *spi)
 >  {
 >  	struct ad7768_state *st;
-> @@ -689,20 +714,6 @@ static int ad7768_probe(struct spi_device *spi)
->  		return ret;
->  	}
+> @@ -708,6 +884,11 @@ static int ad7768_probe(struct spi_device *spi)
+>  	indio_dev->info = &ad7768_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
 >  
-> -	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-dev%d",
-> -					  indio_dev->name,
-> -					  iio_device_id(indio_dev));
-> -	if (!st->trig)
-> -		return -ENOMEM;
-> -
-> -	st->trig->ops = &ad7768_trigger_ops;
-> -	iio_trigger_set_drvdata(st->trig, indio_dev);
-> -	ret = devm_iio_trigger_register(&spi->dev, st->trig);
-> -	if (ret)
-> -		return ret;
-> -
-> -	indio_dev->trig = iio_trigger_get(st->trig);
-> -
->  	init_completion(&st->completion);
->  
->  	ret = ad7768_set_channel_label(indio_dev, ARRAY_SIZE(ad7768_channels));
-> @@ -716,10 +727,7 @@ static int ad7768_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> -	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-> -					      &iio_pollfunc_store_time,
-> -					      &ad7768_trigger_handler,
-> -					      &ad7768_buffer_ops);
-> +	ret = ad7768_triggered_buffer_alloc(indio_dev);
->  	if (ret)
->  		return ret;
->  
+> +	/* Register VCM output regulator */
+> +	ret = ad7768_register_regulators(&spi->dev, st, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = ad7768_setup(st);
+>  	if (ret < 0) {
+>  		dev_err(&spi->dev, "AD7768 setup failed\n");
 > -- 
 > 2.34.1
 > 
