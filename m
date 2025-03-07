@@ -1,146 +1,167 @@
-Return-Path: <linux-gpio+bounces-17231-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17232-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD7B4A56584
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 11:36:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0E15A5677B
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 13:06:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 268891895D02
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 10:36:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A1BA77A98C5
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 12:05:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BFFF20E018;
-	Fri,  7 Mar 2025 10:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CA02185BC;
+	Fri,  7 Mar 2025 12:06:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jo2Ui7RS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWBY/ML3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178453398B;
-	Fri,  7 Mar 2025 10:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A8E192D7C;
+	Fri,  7 Mar 2025 12:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741343778; cv=none; b=uUFNe6d5cO65ZEdgay0NkwCruyy9RAVl5pASLpAiJpjKaI5ZtDWZEv8MiGex8rPSEk6coK4yGFuC6I6rSGwBLuyLc3pRgWL40z/hbaz5hJZdbVAlUVPd6Q9sXhnnRIXhNuv+yE/SVsrq7uezHV4QjUd2DK8g8L/a1kdF9LGxMVg=
+	t=1741349159; cv=none; b=cARSpt1IiFqAe7H26CmkyL0pIV/WaqKFvMyG41EZTqsKTOo4ARhN5UBbC30KLXV2CrRifwQe+FUOCTjCEFAbAn5eXI4RO+5mGGneJ00JXJ17ouVxctEFhun//3b1GJxgHbh+5R9rq19uOOwu1UmZ8mrhVLLFPM5e4QDmfPk0si4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741343778; c=relaxed/simple;
-	bh=xpz0JnTO8EjnXprVVDznWVVBFkSwf2xO+/6B8EcHiYk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p7LrqBmOrYwu6WR0ji6yjHJbIfrnx/xb15IhTzukKHEjU/eEvLbO3SxNZaL8LJi1vqVLz1r+Xfk1bJv/qNqY45Tt/fdCdoy1xn8dFacQiw7sKskERXtsm6U2NAp+CONHenivgltx9T4GjPVONfNvgjTxPlUWWx1DKpc/bpXH+XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jo2Ui7RS; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 527Aa3fT3942355
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 7 Mar 2025 04:36:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741343763;
-	bh=cvgYwkrSX3m7pHovfj4EkqP0IQAfEUDayUzafJ2vb1I=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=jo2Ui7RSC0ZEqlQEvafSN1F50gheE8QOeksiKYoEV3x+lcXTQE8xlZhkV5Pl2+9vM
-	 pZYqPQ6USz0DZN+vdwVTlKn7RfswUlCKhqeSIEh2kgWq8BGPw36NY5UrDmySJUR+Be
-	 T6AuIReVOfJuCbMUeX5mv73HXLmT03g+l8U33WAY=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 527Aa3O8029218;
-	Fri, 7 Mar 2025 04:36:03 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
- Mar 2025 04:36:02 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 7 Mar 2025 04:36:02 -0600
-Received: from uda0132425.dhcp.ti.com (dhcp-10-24-69-250.dhcp.ti.com [10.24.69.250])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 527AZwbc079336;
-	Fri, 7 Mar 2025 04:35:59 -0600
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz
- Golaszewski <brgl@bgdev.pl>,
-        Jared McArthur <j-mcarthur@ti.com>, Michael
- Walle <mwalle@kernel.org>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: ti: k3-am62p: fix pinctrl settings
-Date: Fri, 7 Mar 2025 16:05:55 +0530
-Message-ID: <174133309361.1072814.8037717583251450140.b4-ty@ti.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250221091447.595199-1-mwalle@kernel.org>
-References: <20250221091447.595199-1-mwalle@kernel.org>
+	s=arc-20240116; t=1741349159; c=relaxed/simple;
+	bh=o4JarWW/MUbOyvdB3aVz3LV8uhCJAFPqTqIujRLiLC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O1YvTuYu5Y0xrBeBs5H2sLl5R+nVy4scASkRObaU1BOVv6X4TZyuLvQ6pNHUFfqm6a4JjeMaUrljZN6LEK1tkNe3kIKr2Xk70lRrfejdxDwOnB5Hq7HpAU4hmcucJkXo/q0eW8inKmvnPNANUj2JPedsYDKdmQrczxaehpsIOZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWBY/ML3; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-223378e2b0dso25140085ad.0;
+        Fri, 07 Mar 2025 04:05:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741349158; x=1741953958; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FrmrTRS8Hu1HqQv6SIP179ZqkMWR94/wJgTSiRfF+20=;
+        b=KWBY/ML3bQ7fPg21g9eTzxC99gwQqWj1LcrJT37P+NZ5dLHI3QgMFu9eAZjay8g667
+         8RIGzXetIJXQAiWr9sNvf+ZpgF1ngY0wptPFtcSD5sst506F/gVLTJNdIAIb2U0ja8YZ
+         h+VjE7kigrBADkE0xvzg+5YieLTJCTASjFIplFCu28UHSCzHZMD3JOnoQJ0F8Up24do1
+         UWtf/7QonXiCxzSVDKFftnZBa9EswBaCC45YV8pZwvcf5yta2KEwDLD1WKH58f5tShE+
+         OJdQm8Qiov0YOwkP1HAoS68QwPwg8f7pQol5N5Ar9OsUcS8W9L+y0UTRX4RezIxmI7yL
+         h+4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741349158; x=1741953958;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FrmrTRS8Hu1HqQv6SIP179ZqkMWR94/wJgTSiRfF+20=;
+        b=nB6wG9ue00eQQ0oj6BwkpbOgHo8RGzxK5xKh18tq//zTjmJEc2B2wgSgFm2259e39l
+         kcXs35pCVpTJcKi6eZwVZXW7hv40lHms8RlmpO5yhtefy66h+GzSCIH3obbGyrXX4QNA
+         lH4bAM/FY3L+pQrJbdxRjKsqoRFUze3mO46wM9BJaNa0XNhM0tlGPWjsQBAzucwjH+AC
+         nrCvWXsltUu3Qiro3spUkiJK9VOHlKU/csVhD/U+TJ9wy05DZqmPCI+2L4pXL8I9JnGO
+         Dvn/MTvdzN9Jq+pwJSHomNRrb+OyLVVXRnq59VSnSRIiuUOhgQ4TtmSt5UX6D8ivPUMx
+         c/HA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMoGeei4fHIq5FYjCockWTEzIPnlkort4ayS2ittgm4SuV9tdulgfxLkYec6aK1gd45n9vk/JAEUNR@vger.kernel.org, AJvYcCUOCgm6WsZFLxd7YvC67YxDtcBnk7UpktFGWGnCyrSZfozOAz6QvMX4PsABCSjAwn4qS0OMy26brgpKiYPU@vger.kernel.org, AJvYcCX2RjEk0hnuQYt8anG2kR/g1c+RqjLiTtM7k5RJ4PlQqkBaLiTo3Dc+CiH5leTiTqu1HQ9LLygt+YRMVg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9YruFjzYYPxYNC/edOUXumI83wV/6dHflDf02VpkhVZZ8SHPu
+	82cMdb75zhUKnrJOaocMEZzn8VjF0TkLUoNR2N9pXNPMX5W7x1s2
+X-Gm-Gg: ASbGncuaWSToyrxHEaZ8Ikvay3kh3ZY4k0lUIu3x1h6JctDVXauTfcz9wvUaPEasIGE
+	Kl/Ichtt9aJhMgka3ck4hmHwAsDjXs9JtW93qoAuu/FZ0rfz0FZMeKW11zlWOeqXfICu+nBChrI
+	l+tC/uENb+0fy11z/itjObDy2kSnMbmLd91105BmotHzTAJr0H9CXwVXwvyAMkEhB9vC2r4LWlm
+	X6b/YdYnnnIqDh7xHHOVqo83/h8yLcAYAhmQESs/p3NbYpEJRcQXS3RO3JMsh10RJPGB5XrrN/d
+	hpzs/JAeYiBsVN4Mn2bME4cnSbxq/kdT5xWSeIe7v3OgU+VBUQh1Wg==
+X-Google-Smtp-Source: AGHT+IH7hW6CQv7KXxiwAEKf27FKpfxNgGTgX9XMOGE2DCZirz393uzNz0ltsUEj3zWjPg31mHD2yQ==
+X-Received: by 2002:a17:903:22cc:b0:224:76f:9e59 with SMTP id d9443c01a7336-22428886833mr53916435ad.10.1741349157554;
+        Fri, 07 Mar 2025 04:05:57 -0800 (PST)
+Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-224109e944csm28368535ad.74.2025.03.07.04.05.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 04:05:56 -0800 (PST)
+Date: Fri, 7 Mar 2025 09:06:48 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
+	dlechner@baylibre.com, jonath4nns@gmail.com
+Subject: Re: [PATCH v4 02/17] iio: adc: ad7768-1: set MOSI idle state to
+ prevent accidental reset
+Message-ID: <Z8rhWLz32fdySDyN@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+ <c2a2b0f3d54829079763a5511359a1fa80516cfb.1741268122.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c2a2b0f3d54829079763a5511359a1fa80516cfb.1741268122.git.Jonathan.Santos@analog.com>
 
-Hi Michael Walle,
-
-On Fri, 21 Feb 2025 10:14:46 +0100, Michael Walle wrote:
-> It appears that pinctrl-single is misused on this SoC to control both
-> the mux and the input and output and bias settings. This results in
-> non-working pinctrl configurations for GPIOs within the device tree.
+On 03/06, Jonathan Santos wrote:
+> Datasheet recommends Setting the MOSI idle state to high in order to
+> prevent accidental reset of the device when SCLK is free running.
+> This happens when the controller clocks out a 1 followed by 63 zeros
+> while the CS is held low.
 > 
-> This is what happens:
->  (1) During startup the pinctrl settings are applied according to the
->      device tree. I.e. the pin is configured as output and with
->      pull-ups enabled.
->  (2) During startup a device driver requests a GPIO.
->  (3) pinctrl-single is applying the default GPIO setting according to
->      the pinctrl-single,gpio-range property.
+> Check if SPI controller supports SPI_MOSI_IDLE_HIGH flag and set it.
 > 
-> [...]
+> Fixes: a5f8c7da3dbe ("iio: adc: Add AD7768-1 ADC basic support")
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
 
-> Maybe one could also switch the pinctrl-single to a pinconf-single node
-> which is able to control all the bias settings and restrict
-> "pinctrl-single,function-mask" to just the actual function. Not
-> sure
+LGTM
 
-I agree, we should probably migrate to pinconf-single bindings in long
-term. There is just too much legacy code and tools relying on current
-bindings though. Something for look at for next SoC. Thanks for the
-patch!
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
+> v4 Changes:
+> * None.
+> 
+> v3 Changes:
+> * Patch moved closer to the start of the patch set.
+> 
+> v2 Changes:
+> * Only setup SPI_MOSI_IDLE_HIGH flag if the controller supports it, otherwise the driver
+>   continues the same. I realized that using bits_per_word does not avoid the problem that
+>   MOSI idle state is trying to solve. If the controller drives the MOSI low between bytes
+>   during a transfer, nothing happens.
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
+When you say nothing happens if the controller drives MOSI low between data
+bytes you mean the data is still good in that case? Just trying to understand
+the device behavior.
 
-[1/2] arm64: dts: ti: k3-am62p: fix pinctrl settings
-      commit: 33bab9d84e52188cf73c3573fd7cf3ec0e01d007
-[2/2] arm64: dts: ti: k3-j722s: fix pinctrl settings
-      commit: 06daad327d043c23bc1ab4cdb519f589094b9e98
+Thanks,
+Marcelo
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
-
+> ---
+>  drivers/iio/adc/ad7768-1.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> index c3cf04311c40..2e2d50ccb744 100644
+> --- a/drivers/iio/adc/ad7768-1.c
+> +++ b/drivers/iio/adc/ad7768-1.c
+> @@ -574,6 +574,21 @@ static int ad7768_probe(struct spi_device *spi)
+>  		return -ENOMEM;
+>  
+>  	st = iio_priv(indio_dev);
+> +	/*
+> +	 * Datasheet recommends SDI line to be kept high when data is not being
+> +	 * clocked out of the controller and the spi clock is free running,
+> +	 * to prevent accidental reset.
+> +	 * Since many controllers do not support the SPI_MOSI_IDLE_HIGH flag
+> +	 * yet, only request the MOSI idle state to enable if the controller
+> +	 * supports it.
+> +	 */
+> +	if (spi->controller->mode_bits & SPI_MOSI_IDLE_HIGH) {
+> +		spi->mode |= SPI_MOSI_IDLE_HIGH;
+> +		ret = spi_setup(spi);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+>  	st->spi = spi;
+>  
+>  	st->vref = devm_regulator_get(&spi->dev, "vref");
+> -- 
+> 2.34.1
+> 
 
