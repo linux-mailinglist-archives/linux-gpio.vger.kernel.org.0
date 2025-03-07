@@ -1,139 +1,105 @@
-Return-Path: <linux-gpio+bounces-17270-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17271-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43B3DA56C30
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 16:34:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69BEFA56C83
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 16:48:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D7EC3B4F0F
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 15:33:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 336BD18903F1
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Mar 2025 15:48:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4296021CFFA;
-	Fri,  7 Mar 2025 15:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZ/JP1O2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41CBF194C78;
+	Fri,  7 Mar 2025 15:48:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cantor.telenet-ops.be (cantor.telenet-ops.be [195.130.132.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E869B218827;
-	Fri,  7 Mar 2025 15:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B5ADF71
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Mar 2025 15:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741361611; cv=none; b=Doywtphm/V8iZhmeYf2vo6/Wbv58+kf1eBCmGIYHbZK9VDxjbfehWG/C9+HvsPct6GV1PWw4/dusUiE2cAf0EUhikKjg5GFOQp+uQQuZEp7vCFZ0KeM3pM3srUwrN6uUiwRK3tHYHFKKIPwIAwVCwhzvCDtp/C6tidtQRfwKC1o=
+	t=1741362491; cv=none; b=Fz8GQ+XVbnDt0VeXAIcMXl6wzLLF4XxUq6ehzQPhx9R3HzDrkzqbjnCMgSOxElxk76ElpKvpt0kPUVz4z7W32aBp+YTkawoAHVxb0KopcjvuNnFc6otgXdtl3NjuoDv91+Gio8IDOwe4U5b3fipzh4hoQkRF1VT+UnEAf7pE3tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741361611; c=relaxed/simple;
-	bh=fucjhRt4B4i0MTYMnz37VVRApNqvklUwdMNx/EW2P5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fer5Plhafs0dcuWPdikV4tGg8tnl1lsEJo3f2HotoYfKLCmYAcTKj5w4s7OShec8KDPjA0/EMzAPSES3AYS066oLNCebG9h4rItJbUClJpKEriLyTwETxGpXdu+28PlIjHt2PEUBeG6WPzsH9xYo0pqtsDhemAszmLXUdGcfpx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZ/JP1O2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF8EC4CEE3;
-	Fri,  7 Mar 2025 15:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741361610;
-	bh=fucjhRt4B4i0MTYMnz37VVRApNqvklUwdMNx/EW2P5Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QZ/JP1O2zukR7U7fBlk9fa48mjUe5AXkUXRMmycfdndQ1qw2DCMMPm9dvJrrXRXkd
-	 JWIP9KeMxkEXY9AEGh93YG1IVUO/72+K6yrhwp4Reh6tto37Q7kW+6zg1AAVZ4iVNQ
-	 5FWVR/g0cRoNm2il2BCh9XYz7ndB2+Cb/cRA75+/blUj0BysXNcdiltZx0Rfrgmszt
-	 yv6u+NDa/CoUOwtmGc6OXrlru9mgsNIMg4vsBc1l86ZoEGNn2n0by71x4nQ2IVWgbi
-	 YPZl87JZJLqTdu65mHhmwfGputu1IA3P6R3j2CzyyNLti0Dc8fMJTjDD/CCcwXe0y3
-	 n2+a9whRnFTug==
-Message-ID: <40bb42ca-52f5-4579-a9c7-58e6ff5dbbb5@kernel.org>
-Date: Fri, 7 Mar 2025 16:33:22 +0100
+	s=arc-20240116; t=1741362491; c=relaxed/simple;
+	bh=DOsj7nEOuzETluVCrKZYnhe2iQa3sgQWkcgQfOPCCKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pyh1oJ+JGrrOPPhUSo2K0u7aqywdi15wKCcIuTOppMVexjesA0Hv9d27DO6/9T7bG0Fc6GwLDlCET7pVzO3PIpKEwn9IWLUp1I52pTKSMYc9oGz9uslnfEFdW1A9WIr5lAaHujPt2NENJRgPMv9+TnMkQ7rVxarOZ8kN4qm9MkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+	by cantor.telenet-ops.be (Postfix) with ESMTPS id 4Z8W005Y7wz4xHdF
+	for <linux-gpio@vger.kernel.org>; Fri, 07 Mar 2025 16:48:00 +0100 (CET)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:d269:b36f:7a12:a76f])
+	by andre.telenet-ops.be with cmsmtp
+	id Mrnt2E0042m8Uyj01rntjQ; Fri, 07 Mar 2025 16:47:53 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tqZv9-0000000DBku-3Z9o;
+	Fri, 07 Mar 2025 16:47:53 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tqZvU-00000009ssk-41VH;
+	Fri, 07 Mar 2025 16:47:52 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v6.15 (take two)
+Date: Fri,  7 Mar 2025 16:47:51 +0100
+Message-ID: <cover.1741362226.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/14] ASoC: mediatek: mt8196: support CM in platform
- driver
-To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-References: <20250307124841.23777-1-darren.ye@mediatek.com>
- <20250307124841.23777-11-darren.ye@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250307124841.23777-11-darren.ye@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07/03/2025 13:47, Darren.Ye wrote:
-> +int mt8196_enable_cm_bypass(struct mtk_base_afe *afe, int id, bool en)
-> +{
-> +	int reg = AFE_CM0_CON0 + 0x10 * id;
-> +
-> +	mtk_regmap_update_bits(afe->regmap, reg, AFE_CM_BYPASS_MODE_MASK,
-> +			       en, AFE_CM_BYPASS_MODE_SFT);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(mt8196_enable_cm_bypass);
-> +
-> +MODULE_DESCRIPTION("Mediatek afe cm");
-> +MODULE_AUTHOR("darren ye <darren.ye@mediatek.com>");
-> +MODULE_LICENSE("GPL");
+	Hi Linus,
 
-If this is module, where is Makefile and Kconfig?
+The following changes since commit ea4065345643f3163e812e58ed8add2c75c3ee46:
 
-All previous comments about missing kerneldoc also apply.
+  pinctrl: renesas: rzg2l: Suppress binding attributes (2025-02-20 17:33:08 +0100)
 
-Best regards,
-Krzysztof
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.15-tag2
+
+for you to fetch changes up to abcdeb4e299a11ecb5a3ea0cce00e68e8f540375:
+
+  pinctrl: renesas: rza2: Fix missing of_node_put() call (2025-03-06 16:41:46 +0100)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v6.15 (take two)
+
+  - Add missing of_node_put() calls.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Fabrizio Castro (3):
+      pinctrl: renesas: rzg2l: Fix missing of_node_put() call
+      pinctrl: renesas: rzv2m: Fix missing of_node_put() call
+      pinctrl: renesas: rza2: Fix missing of_node_put() call
+
+ drivers/pinctrl/renesas/pinctrl-rza2.c  | 2 ++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 ++
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c | 2 ++
+ 3 files changed, 6 insertions(+)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
