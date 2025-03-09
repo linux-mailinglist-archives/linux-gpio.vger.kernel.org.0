@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-17322-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17323-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10AA9A5822F
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Mar 2025 09:49:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63DD9A58233
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Mar 2025 09:49:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4CDB16B177
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Mar 2025 08:49:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C13D3AD5A6
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Mar 2025 08:49:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4E31A3177;
-	Sun,  9 Mar 2025 08:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B1AD1AA1C8;
+	Sun,  9 Mar 2025 08:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1gmk7Rp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9DbCEd2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D630119DF52;
-	Sun,  9 Mar 2025 08:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635D81A83F4;
+	Sun,  9 Mar 2025 08:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741510113; cv=none; b=eHyxv4HVWSGOrdbh9DwlveIGG4lxYklpvuTCw+bZYicvJAan49A6MAg6rwjlGAqczq6e7uJso03iCSNrN0AftnS4/+ZOIPhlyxjob7tnRC4oaju8IXMAT04dxdLafNUXmfk4J2reSfaoJfEkfmCVxg6G2z9U2fX/AjoL4VWkD38=
+	t=1741510117; cv=none; b=d6R2Hkf/u9koqNAu8p/0+p27KBc4m1+ogmef68kwoXIF4/Y0bX3SSvXcxx9ua7YssHEjVvjxLDgEabqlTNvQ/Kqpc3xJIZJw8Fw4E6U07baWxIPTmqrQEAD4lK9AeHgPjljsZJm3WuUNLLNWOv1XrsDWerGtdUs6dxX1lO4NTt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741510113; c=relaxed/simple;
-	bh=AbuPWLIU45qyQVYNe0RinxFUH4fVcFJyxnkCgDaB8A0=;
+	s=arc-20240116; t=1741510117; c=relaxed/simple;
+	bh=OhQYB9SpCW5H9sXdAUEdJKF1vtNpU1SdEIqDFNjZy/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=unYL94TRxafCSOCShYO9+COU0AHwnJ6fyuz8GM0+QIfYEgKTsMqpyOAwVz4Z7k9kBlvUGuSy02Q3oQUpnFmjYeS0S8HtlXp+WDJygtYoU0TbkVZV1kFXACYAsQUeR9aecOEMm9pghlR/ZimL03bmqLipi2VnDBlAG4Rm5JwMcoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1gmk7Rp; arc=none smtp.client-ip=209.85.218.54
+	 MIME-Version; b=oVq17moMnJg4Imkclk0IT8ouOTQuUp3Bi5NYewvoeFk1YN3H4F3xSJIsol+fv3DPEkHEAYLKEjN9NmYoR4YD5YIw+9ZIw9rYNwcX22p+ZkQUjn2qb8vzpGkS5/N2DIFzBesdwb370Yp63ixHqTgi9WhPNGEmR+ptwir6MM/dFrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D9DbCEd2; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abf615d5f31so630106066b.2;
-        Sun, 09 Mar 2025 00:48:31 -0800 (PST)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-abf3d64849dso380915766b.3;
+        Sun, 09 Mar 2025 00:48:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741510110; x=1742114910; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741510114; x=1742114914; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mkDL/nUvpfh1eHpxumsRvR86QwXqar6N/bhFMrxJa6g=;
-        b=H1gmk7RpHYEDU77TW6Io0wbqRGZX41eDGrD6l4SjavfXjFBIWbcw+tTtoqQ0ud+lRX
-         FowPu0hB29/HYZb5icBQE6V0wNJW8Gb9VNSINpfrWg3qIKp49vvN3s50opOy3FFa60Hj
-         3Qw29+lENrcg44ut64+MUP3+HhhmE7HJvnuxqtZY3PrlJEiyPvUtjoPGph8dzvjMVTHv
-         eF3jU1rYhyLigJKqMjIt/1UcSgXRg9NbuaCgqSSiYeJk1T2eqBlrNsZxLhuCly5dmR/H
-         In1tlRwM+U1Yn7Jvxeymr9r0fL4fcIdTOx6ufcRwhG9FU9Mw9qqrPwaeQevO9l3QwQut
-         bcMA==
+        bh=kj7QL9uAss+Ow9zk6InOH2HUb1Xra8s/78xy7RSYR54=;
+        b=D9DbCEd2alvytap+8a+S2zyJeJ9ILzzPQWUmzI6o0W2HbJUHtdMeuP/lFRdIOMy1Nn
+         fw1ODFeqgYRlGc/Ye1N8VujclQCqQIRX32ELpgQiwB4vZblzFfFiv2TMhH/cw5JT8MDI
+         rGQDw3ViEMaS+25vBLMTVXRZdvCRrpEjHL+AOZ+MWVdiD141FcjP7YICl7uuAlkmE5P3
+         ODdeoN2adSJaJic0EkVF06ifSth1escPcIwLpVLaVomonY2t+g4Rv97S6o+aLOoqeljE
+         /rO+EUsuKj44gkZEWAEIJeCccyFuTDnFKz+WcR1bCmE8s7pwPl7w8ql9N704avvi3y6H
+         eV1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741510110; x=1742114910;
+        d=1e100.net; s=20230601; t=1741510114; x=1742114914;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mkDL/nUvpfh1eHpxumsRvR86QwXqar6N/bhFMrxJa6g=;
-        b=vY/So/SMRRCgc9zEv3xWBruM+5Qxoopg9krwfhXPt5VDmXdgmYg+4LN9KQ/Fb5GEAb
-         gFt7SZNgkekqnAKVo/mXavonPY0FynA69pY7o94JmCULIb+eeqrDcGAtwIn5X5bK91Sg
-         8QuszP3nCT56yKnLtXOCpCHorVS0vd43m/eQz25psM9XPFIeuuPTS+kU1nlGcboQZewF
-         weoCnOryAsAFs17n3NjY9nhYqNHQgWmC/irCgxKIv5d5l3BDleJxeuoneJXEvijmwhUf
-         w/a1BoZ9niUFWM7FL2CwIM7sukBUkG5bucgoTv+otxgIlVsOtsecDFf2R/BsvAAfPkgP
-         1Pyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdcQUwxggvfGOuKqOsNru8I+iCXwAyP6JgwOdJ4dKjA55hmol1b+LVqL/yfgnh1Oki2tTWegZoLOcaWhJq@vger.kernel.org, AJvYcCUheU/fPeVjID0v489lUTotxYtjF2p3GbL3CZ4VJ3U6zZ/HWPLxWdgA0cLdEZzyLXRmHmKyr8+OH6Tl2nE=@vger.kernel.org, AJvYcCUmbIID3iEoXtenxBId5JWBcyWcLn5+ajsKHqgIalgQQYm5lSVqOqCE7Kl86xWXlFI9S5/XLC9mytQR@vger.kernel.org, AJvYcCWxeAWTUX1cCdzurUwRr9NJjQqhBhZOUuvorNaEoWcVkaT9x7IxzMwivq2TNJpW2bMGSWyq9b86hBNbTQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdlByD6X8GZGp4VPfW57AM8wAOY7j8ZEuE8TGWaK+D1AZqK9op
-	bIWtc34f7stmomrW9oCTjsCf3xDaI/XdmYwysYdgVUDUYTiJfu9i
-X-Gm-Gg: ASbGnctItwafQO35CHacPILxRJaEKcyLhi/mqD3jwat/11Fn8jRrXBFuA7jYDK4ybp0
-	OL67z4EIOYSP+jTRiAggN21M9EH7Xgh10hmZEwk5jXNmFFs/pPpDegtu0bmYKajVjzAZ97Y+79Z
-	pwTHDgogdRtoZqu8ruFjfocMgBoa2il84aVl+tl+OmImsdwjPT6I3geK0zVwsEwSYxrDXNzGlae
-	PvDeQ8LFzfUJ1tVqLGdfSElbm7bQyCV/3OZvzqtkpxPF7y4c4M53R4wEwvvHcnlNfN+q8bbyRNL
-	XlvCZ2iv/iz0AEWkLxPjPlOMgQjRzxe7poJ/BjwSIM0jRT+AbVmVoblByQ==
-X-Google-Smtp-Source: AGHT+IEfjqH7txw3ZNGvVC8ODURGsipO9FHidgAsOnuk5C0y4Kr3jGdwpFvRT4Ar0+alm3pK0kJ5Aw==
-X-Received: by 2002:a17:907:6e8e:b0:ab7:1012:3ccb with SMTP id a640c23a62f3a-ac252628ecamr1038989766b.14.1741510110006;
-        Sun, 09 Mar 2025 00:48:30 -0800 (PST)
+        bh=kj7QL9uAss+Ow9zk6InOH2HUb1Xra8s/78xy7RSYR54=;
+        b=ArBU5HGsXzwLLnZQFo6LTN1bjf7EStWX/NEZSxnU9p1H2EtvUHNY69xtTJ3BlBiP73
+         e0xEXO6hObviv3gxCp+sc/CoKpC/RE1iBqIb5wZmDIy859TYhSJe/SqIPOsH7qaiADpw
+         ZwASJ5Jre9xvC3KGr33C4aAzGfstZdvY/Lje7UF6deQVaSFxOpSD+AZSmEy6ELw/iUeS
+         2C0yOUk5teGTI/ug/bNIi3i+37jUxmi6JTjTzonIbGB2Mti9XeP9RvGLwSWcviD14vvL
+         P5RYHvUzsXCiEuLC2AMY+eqqdW57KhT1h9WrluTR36hWsUkgPmu3G+QD4EXYV365payi
+         BOmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUswVsoM0BsHXqEbcQxpZpN998ET23H9ITqdAEbh5Ekl+URRBd8UNfTr8a5qo73FQL2u5OQW8Vcbb4NWoYt@vger.kernel.org, AJvYcCV67KfmnGkUGmdaqVBatQJ4eP41AVXHvreLOWRZigAbUzbEGAA0g6VbLWP0FhCP9uwMtTkNOstJsuPO2h4=@vger.kernel.org, AJvYcCVzE7AzIzWQHsdXA9LaHUvYh3FnkL4QmfLR179P471cYrZD79+iAVfbEdgRLhUBgS3sFIJfkgvISuo7@vger.kernel.org, AJvYcCW6ey2JVyQY8+VpN/Znus75jbK6QGSUisXZ9M5IXxbjZ6MABDB3aB3d502lzmyJsnpM5OGQOayY4Hp69w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWBWVh7YaiJ5pWkyQbvUfJij3EsSwp3NQrtw1YHmVAEz7Pq1HT
+	vjw75o/aostogC2C3rGmo/sp8Vn2YDYamkHH6DNTOYrOefJPptEN
+X-Gm-Gg: ASbGncu/AEczpXUJPvC9aCu6G0vMCJNsALzpBwXUkLzGAVxX3M5gwIV3D4vi8endvWp
+	zf0OtH0C/t1zyVn2lLGenvrQOWBzT3x11k8BhdWutlVU00UsMCiAVuNUdkVxK0/cvFZ3yGBI8mJ
+	XQY0Z05C4BD0RWGKW0cdV9oo6fSY0adGyqi9PJPAFH7BuNvQqvIngVvUiZKAW/TK19fiuq0nziL
+	WMB9VYGcl73wlP52jjjNxfOJbac+SzoIkKvOw3dYsJ7bVShH7+CnBQVUroCFrwzRLQ0j30tPfTx
+	w1F3VlbxhhTYr2QMJ8Cu4t2DR+5XD7RojqDLbbnYGMrgND1rprmo1Q/wqg==
+X-Google-Smtp-Source: AGHT+IFm2koHNN7A12mxTDrUb8gVHG703Y2Y9Icivhx2dsCJHeZ/vLMfvZOA/IpeXYW5hItMXuZP+w==
+X-Received: by 2002:a05:6402:268a:b0:5e0:49e4:2180 with SMTP id 4fb4d7f45d1cf-5e5e24688d1mr25168696a12.25.1741510113522;
+        Sun, 09 Mar 2025 00:48:33 -0800 (PST)
 Received: from demon-pc.localdomain ([188.27.130.21])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239736153sm566347466b.108.2025.03.09.00.48.27
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239736153sm566347466b.108.2025.03.09.00.48.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Mar 2025 00:48:29 -0800 (PST)
+        Sun, 09 Mar 2025 00:48:32 -0800 (PST)
 From: Cosmin Tanislav <demonsingur@gmail.com>
 To: 
 Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
@@ -118,9 +118,9 @@ Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	linux-staging@lists.linux.dev,
 	linux-gpio@vger.kernel.org,
 	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [RFC PATCH v2 02/16] dt-bindings: media: i2c: max96717: reflow text
-Date: Sun,  9 Mar 2025 10:47:54 +0200
-Message-ID: <20250309084814.3114794-3-demonsingur@gmail.com>
+Subject: [RFC PATCH v2 03/16] dt-bindings: media: i2c: max96717: add support for I2C ATR
+Date: Sun,  9 Mar 2025 10:47:55 +0200
+Message-ID: <20250309084814.3114794-4-demonsingur@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250309084814.3114794-1-demonsingur@gmail.com>
 References: <20250309084814.3114794-1-demonsingur@gmail.com>
@@ -132,43 +132,73 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This text is using weird line lengths. Fix it.
+MAX96717 is capable of address translation for the connected I2C slaves.
+
+Add support for I2C ATR while keeping I2C gate for compatibility to
+support this usecase.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 ---
- .../bindings/media/i2c/maxim,max96717.yaml    | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ .../bindings/media/i2c/maxim,max96717.yaml    | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-index 15ab37702a92..1026678a17a7 100644
+index 1026678a17a7..dd28cc397674 100644
 --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
 +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-@@ -12,16 +12,15 @@ maintainers:
-   - Cosmin Tanislav <cosmin.tanislav@analog.com>
+@@ -91,6 +91,30 @@ properties:
+       incoming GMSL2 link. Therefore, it supports an i2c-gate
+       subnode to configure a sensor.
  
- description:
--  The MAX96717 serializer converts MIPI CSI-2 D-PHY formatted input
--  into GMSL2 serial outputs. The device allows the GMSL2 link to
--  simultaneously transmit bidirectional control-channel data while forward
--  video transmissions are in progress. The MAX96717 can connect to one
--  remotely located deserializer using industry-standard coax or STP
--  interconnects. The device cans operate in pixel or tunnel mode. In pixel mode
--  the MAX96717 can select the MIPI datatype, while the tunnel mode forward all the MIPI
--  data received by the serializer.
--  The MAX96717 supports Reference Over Reverse (channel),
--  to generate a clock output for the sensor from the GMSL reverse channel.
-+  The MAX96717 serializer converts MIPI CSI-2 D-PHY formatted input into GMSL2
-+  serial outputs. The device allows the GMSL2 link to simultaneously transmit
-+  bidirectional control-channel data while forward video transmissions are in
-+  progress. The MAX96717 can connect to one remotely located deserializer using
-+  industry-standard coax or STP interconnects. The device cans operate in pixel
-+  or tunnel mode. In pixel mode the MAX96717 can select the MIPI datatype, while
-+  the tunnel mode forward all the MIPI data received by the serializer.
-+  The MAX96717 supports Reference Over Reverse (channel), to generate a clock
-+  output for the sensor from the GMSL reverse channel.
++  i2c-alias-pool:
++    maxItems: 2
++
++  i2c-atr:
++    type: object
++    additionalProperties: false
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    patternProperties:
++      '^i2c@0':
++        $ref: /schemas/i2c/i2c-controller.yaml#
++        unevaluatedProperties: false
++        properties:
++          reg:
++            items:
++              minimum: 0
++              maximum: 1
++
+ required:
+   - compatible
+   - reg
+@@ -98,6 +122,21 @@ required:
  
-   The GMSL2 serial link operates at a fixed rate of 3Gbps or 6Gbps in the
-   forward direction and 187.5Mbps in the reverse direction.
+ additionalProperties: false
+ 
++allOf:
++  - $ref: /schemas/i2c/i2c-atr.yaml#
++
++  - anyOf:
++      - oneOf:
++          - required: [i2c-atr]
++          - required: [i2c-gate]
++
++      - not:
++          required: [i2c-atr, i2c-gate]
++
++dependentRequired:
++  i2c-atr: [i2c-alias-pool]
++  i2c-alias-pool: [i2c-atr]
++
+ examples:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
 -- 
 2.48.1
 
