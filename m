@@ -1,143 +1,98 @@
-Return-Path: <linux-gpio+bounces-17347-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17348-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEA73A58CC9
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 08:23:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BFE7A58FA5
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 10:29:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 323977A5482
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 07:22:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A687F188A44B
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 09:29:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE1E11D5ADB;
-	Mon, 10 Mar 2025 07:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="H65XTLmq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UG9NfcuG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AC4A21D599;
+	Mon, 10 Mar 2025 09:29:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from flow-a1-smtp.messagingengine.com (flow-a1-smtp.messagingengine.com [103.168.172.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220331D5AA0;
-	Mon, 10 Mar 2025 07:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2EBA224B08;
+	Mon, 10 Mar 2025 09:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741591368; cv=none; b=h0I6UDI+fQwq/N4FUoQdb9wwSjQPAD0iEjK8J2F2YkqdUxoHhO/HYGq9MG+4ns9qq0cMupawXdOg+NVEYhtAXgczM0I/+AACjr6RF84UDe/ukLvO4nXFx7nZJ/b8oi5zgPx9XCHPQHBDzquAYcrrJ1xf0ubwvfjTJ2ZJr8Pbdu0=
+	t=1741598949; cv=none; b=cjqTiBxaVV6TaHpkGkP21RyJHv+2zMxwT+EhNnwn99Y6yO4faTlP5CZMQSbJ9KzgtluxwoQSLWEZhs7iDGkEe8Fq7uuS7kQA2eN9TEeDQG8S6ENdgbCfuiP+i/XY1sBVcjL5zIU9gKTBsYwmg1HD0OJmfFH97trcDc8K3LR7/XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741591368; c=relaxed/simple;
-	bh=J3sQCA9DV6phIpiLDA9JI9hyBB3YMuMwciQ5P6V/ybU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Efdq+3EKNCFv7SAjcKo2G1B1gnEvsm3BeoTSFJ+eXToMJJsdeBBbimC9FWjJU6cG7A7YvewVXOcweNPJ9vdnKWuuyf7Ci68V4692AHY5NVzEzYNL2Y8ekruRCtZyN3ceJEJew+qeWy7PhsGGGuV+CNyKv6D1CxC7UHvqccXbc+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=H65XTLmq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UG9NfcuG; arc=none smtp.client-ip=103.168.172.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailflow.phl.internal (Postfix) with ESMTP id EF1C720144D;
-	Mon, 10 Mar 2025 03:22:44 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Mon, 10 Mar 2025 03:22:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741591364;
-	 x=1741598564; bh=J3sQCA9DV6phIpiLDA9JI9hyBB3YMuMwciQ5P6V/ybU=; b=
-	H65XTLmqz5qqZeAmNdbjspDs4350aSTpjHT3M0l79hDMl4pnq2pe5PjFjK98dCwv
-	o4LrfOeYYEDjkMaoDLHe88BSZrhiSJdl5IeWm8j1Y5V1cLKRqLWVUJgDtKi3AqWC
-	KfuRma0iaGw+QcjCNImKXIR0+Eey/QuwGWzHp6NTvtwDaKGZZKlGkiEAkuF92KGr
-	pO9m14kWbgKum5NvRFnxzdcu5loSw067bd2SrtA5NEDdn09Jr1WgKpfMC0kXMiyV
-	gySoW7yibIaEIvsQ1wRt/mQUUrE+75ikoTj3/4sr/IHS3726Hqs5z8Gi4oJhQMa6
-	xX3GPhTPoAZ25WWOWHZm4Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741591364; x=
-	1741598564; bh=J3sQCA9DV6phIpiLDA9JI9hyBB3YMuMwciQ5P6V/ybU=; b=U
-	G9NfcuGL1pSUTtjpSHWgR7DtaRlOQQcEfxFpbFhGPWHrFQ72V5NqMHJoDTKyxndw
-	2azGp917nTShs3jYuUCDjUk/j0yF/Dkyz8td3bEeyPjOVkVvX8PVbU3vbTjZCGWl
-	rlRzl3GTL+Hbwm5fcmWrqIw2i4p43osRuubAsklPeSTD4uODiVOmZjMN5CmBP/qD
-	n3i79b7PFhg3h+UucgxAepa2G3BCmKR7ZSWs0RMmvepSamdm06VCk3q272zrAZ0T
-	hErjLISfVFplQVNus9lPhlIgK5TcLYttPnCIjOHExATCmHsyMn7LipJqEEosu6Ee
-	juTt0ySZvua262WfAFfkw==
-X-ME-Sender: <xms:RJPOZ6mBamNSP9M62JjinqZGhLUwhetd7MpHVJQ8c2akNeIW7jFsfQ>
-    <xme:RJPOZx0nmWLSy_Mz_QN0eTDK8IgqkGq_CCsfYR8or1flR3vYZCUEaMlep8G4KNv5v
-    LGmwhLzeoRM_LV54P0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudekjeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeej
-    feekkeelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopedvuddpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgt
-    phhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheprghlvgigrghnughrvg
-    drsggvlhhlohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegumhhithhrhidr
-    thhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhinhhgohhohhgrnh
-    dusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdr
-    tghomhdprhgtphhtthhopeguvghllhgvrhesghhmgidruggvpdhrtghpthhtohepsghroh
-    honhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghltheskhgvrhhn
-    vghlrdhorhhg
-X-ME-Proxy: <xmx:RJPOZ4oNdsCVwdwBC1kejn_hiUWULMuszBBeFu3P1XFG2SOVcQq4Yg>
-    <xmx:RJPOZ-kriW5mwdM3YFKa1QEM4zUdOrhgF9EjCIQihVWPJAXdavqkqw>
-    <xmx:RJPOZ43M6hITEMrBvmPyYXUHsNOjK4DlkC__GIdg4uCgnY9xPGHwlQ>
-    <xmx:RJPOZ1tioloLuOdFS7WnMtHjOWPdjL7vMzeeieApRc97UPovDDeF5Q>
-    <xmx:RJPOZw4mIeXgUDIjrdONTNNcGYk--e8ZCokZRYbNMKAedh8jYizIJJyJ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id ED50C2220072; Mon, 10 Mar 2025 03:22:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1741598949; c=relaxed/simple;
+	bh=uZM3lp58dqP9fRo8T3M/Fyf3CLx9G0+yBPauwPD1UJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HBnzcIe80e8tOrQboyez21m2q75YLDeeF/gbhYxr1j9YghPv4CKPDhEVADUcO5ALJcDzZFgZ+HNQpPY6UO9WDDxvP+mAAvZbvnN8aaQdDVIpHSAkEaFE7IKzR90cBYk/zf+ifyAGM2KvFRmxDdQ4YuedVcrssxnE6sJ/oZrihSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F97815A1;
+	Mon, 10 Mar 2025 02:29:18 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D59473F5A1;
+	Mon, 10 Mar 2025 02:29:03 -0700 (PDT)
+Date: Mon, 10 Mar 2025 09:29:01 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>, <arm-scmi@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<imx@lists.linux.dev>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
+ scmi cpufreq
+Message-ID: <Z86w3ZRS6T2MvV3X@bogus>
+References: <Z6uFMW94QNpFxQLK@bogus>
+ <20250212070120.GD15796@localhost.localdomain>
+ <Z6x8cNyDt8rJ73_B@bogus>
+ <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
+ <Z65U2SMwSiOFYC0v@pluto>
+ <20250218010949.GB22580@nxa18884-linux>
+ <Z7Rf9GPdO2atP89Z@bogus>
+ <20250218133619.GA22647@nxa18884-linux>
+ <Z7Wvyn1QJQMVigf9@bogus>
+ <Z7Z-ZnztmvUxWoQJ@NXL53680.wbi.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 10 Mar 2025 08:22:23 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: linux <linux@treblig.org>, "Lee Jones" <lee@kernel.org>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Sebastian Reichel" <sre@kernel.org>, lgirdwood@gmail.com,
- "Mark Brown" <broonie@kernel.org>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>, danielt@kernel.org,
- jingoohan1@gmail.com, "Helge Deller" <deller@gmx.de>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org, linux-input@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <26cd328d-efb6-4fab-969a-320a3968ea29@app.fastmail.com>
-In-Reply-To: <20250309193612.251929-1-linux@treblig.org>
-References: <20250309193612.251929-1-linux@treblig.org>
-Subject: Re: [PATCH 0/9] Remove pcf50633
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7Z-ZnztmvUxWoQJ@NXL53680.wbi.nxp.com>
 
-On Sun, Mar 9, 2025, at 20:36, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Thu, Feb 20, 2025 at 08:59:18AM +0800, Peng Fan wrote:
 >
-> The pcf50633 was used as part of the OpenMoko devices but
-> the support for its main chip was recently removed in:
-> commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
+> Sorry, if I misunderstood.
 >
-> See https://lore.kernel.org/all/Z8z236h4B5A6Ki3D@gallifrey/
+> I will give a look on this and propose a RFC.
 >
-> Remove it.
+> DT maintainers may ask for a patchset including binding change and
+> driver changes to get a whole view on the compatible stuff.
 >
-> I've split this up based on the subcomponents to make the size
-> of each patch sensible.
+> BTW, Cristian, Saravana if you have any objections/ideas or would take on this
+> effort, please let me know.
 >
-> Dave
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Looks all good to me. Whole series
+Can you point me to the DTS with which you are seeing this issue ?
+I am trying to reproduce the issue but so far not successful. I did
+move to power-domains for CPUFreq on Juno. IIUC all we need is both cpufreq
+and performance genpd drivers in the kernel and then GPU using perf genpd
+fails with probe deferral right ? I need pointers to reproduce the issue
+so that I can check if what I have cooked up as a solution really works.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+--
+Regards,
+Sudeep
 
