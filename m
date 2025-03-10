@@ -1,119 +1,128 @@
-Return-Path: <linux-gpio+bounces-17354-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17355-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B31EA5920C
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 11:57:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAA3BA5935A
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 13:03:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BEA011890FD2
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 10:57:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D72DC1892560
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 12:02:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55D7622A4C2;
-	Mon, 10 Mar 2025 10:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IiFUYj1e"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C660229B2A;
+	Mon, 10 Mar 2025 11:59:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAA9226D01
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 10:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77CC3229B17;
+	Mon, 10 Mar 2025 11:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741604144; cv=none; b=Q3CqeRMwpzFCGvjmriHYPC2jYVRrBZ+UovFB7vQcUMAnx7xqHrp9ICOOtrLzL4IflVo2rDkCY7jDEd2moFTjVEUYy7UJVeac294FZuvtS8YJmTmP39xNjjuaIJ7BVbdPAId0v6ZIMBlvUgFHHCYai9mLal7KKeWZdcOot5wVsUI=
+	t=1741607981; cv=none; b=mjDFw74DxkUguXWI/pW0Z/VTzHwOGHihW1Fg8EHi0ZExgR1wBgc6I2pQcL/Yq4cXjbgjmgE3A87ur7gTzC5zpRxxV5wARCCOVXQAkl7TW5ilpv3OoURkDDYuEAZi9rLsONuhJdMvWUOo5eOBRRrfzWSdh9NIyDyRLr9IZuQ6doQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741604144; c=relaxed/simple;
-	bh=Z+q9hKKalJHtE4aTYKlxZn8Dz4ZgOsFcPddQrOazVM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WE3ACKcRkSpCEVOrPkKQ1tBN3i91iOg8FkxdNbIuINRmtH6bmaH2CfOiNXzJV4ukHJXcrgPJ1iUe7hoTs9WgTK0OPiUrzZTCrlHimKMK30JC65iiR8bhI2HccEZLgDORhXKjMTN9cTD+3MNz7aqR0XygnUzqP69jdyAhe+8nNgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IiFUYj1e; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso354260f8f.2
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 03:55:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741604141; x=1742208941; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rCXbQ0vSkso3Eekd9AOru/DhCIZmWQ4i9u+wlY/Itpc=;
-        b=IiFUYj1eMHFGNcClHcaXFtGV+5ph7rFkMOYWGS63sQ8/YvCQBQ/kGe8h1FlSUcg+m1
-         IBrUkJKRdSeCrqiLjE6EdeucQk2KtB0NqzMJo+L4t8tWB4FiwkpWkTv8Qre1mukxYXtb
-         nLOaDCZSnExn/84JZzJtDTCbhBlByl/2GD7w9sTh/pYsUn8f3pF0RSQRAnPFxPz0XcJj
-         E1PC9ZlJXz9+XvAGHLdU55FZTUownHYhOrhJWovJ/uQCfhnTdDqf8R6AwkYQPIGBVzq+
-         QPWUOdTSaQf/+/GfSA12GRER99tLDr3HmyYkdTSUhOr02z0HO2zcf80qHejG4w2Q0lfM
-         l78w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741604141; x=1742208941;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rCXbQ0vSkso3Eekd9AOru/DhCIZmWQ4i9u+wlY/Itpc=;
-        b=hgewgjbgSsw8gdpOGh2msQ8eSKnzCpG9yB9+wrrvzRjMsCDtBXUc6RlHuY4tEfU2A6
-         FTFZW+Z9S0T0fZ/88iz57vro2VKK3N1yP0etwIKSpvpUVkHObZeTRTLSnBMQr4u/EY6s
-         aCqZ2+vQqjkLmsL+GcUhhmFxJO/89T0MMcxMBCuZMcNFFKsA3j7vpZXapfxg6Zat03h4
-         C0zSiB5j7u8kKTPdyzSK5lkyFzGZ+h+1sSbt7XtL/XX4LMEepyFNvh1ZhfFR3B/Prije
-         ZOwY4cAUAnI2TRKQFnRZqc6PS/uW/2Vj2Ln2PRy/LLH2FJIIpaeL1hqypaeX4f0yNePL
-         S2Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUVpvd75qwz/UWah7apVqMjbrMVbsTAROeBsdpT0zg7qiralJRGCC6RW0zXAVZKsxHXbcOglcZ6PNc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMMB4FXQs1qH41aPv0Ang6lRQXadZDIZE9VGQi5Dcon9HXBFSz
-	eUfc5St4+n4xEqQLTKGh+nJV/c5l4/1yxid0TfS7pUyzw5xtiWuxXDLot1apKZ0=
-X-Gm-Gg: ASbGncvqGFcnmbDGAYX+Fex2a4b++QRwW73H/JQRd8cCVGnj+GnqWGrclAg7E/HBDBU
-	hRG9B1FhyxAqIRDYHO0j4wSWbt368givTvLsQxOIJrx0FJwOG7G3iGp+hH4cMiX2wWZW/FVlgDa
-	yqsHIwRzLQYvxkFLL40G+5wl93ybSVCiAIQJNooEOq+eRyhYR0ZJzncQokum/fmSAlu/IYn0lFz
-	itgZcW+n53KOommcwnn+gOpGQhnvBL4dnzp/Pz1B5H3T5KJ5XK+QKjUIVdf6M0q6dq7IcQDw70g
-	KQ5CvuMp6CxPMm4gjMoN9L+PomthBOOUpUUvUUohVl1d
-X-Google-Smtp-Source: AGHT+IGkPK1E201LnEu5m0Av/cBIQyI/BiBo6QN6lt53sRq5ZCBebKSvYVzHP+5Q1RjgXwXaGU2cxg==
-X-Received: by 2002:a05:6000:18a3:b0:391:2e19:9ab with SMTP id ffacd0b85a97d-39132da8e5dmr7258133f8f.47.1741604140838;
-        Mon, 10 Mar 2025 03:55:40 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2711:39c0:fb51:b639])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfba888sm14720641f8f.16.2025.03.10.03.55.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 03:55:40 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] gpio: convert more drivers to using the new value setters
-Date: Mon, 10 Mar 2025 11:55:35 +0100
-Message-ID: <174160410511.24364.12512158073290549923.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250306-gpiochip-set-conversion-v2-0-a76e72e21425@linaro.org>
-References: <20250306-gpiochip-set-conversion-v2-0-a76e72e21425@linaro.org>
+	s=arc-20240116; t=1741607981; c=relaxed/simple;
+	bh=JdTtNW4KV9x3208UN40VO7s75L7zCHPjuhDtsTLEx4Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekknl8N/WZiOo+i32/7AltwtW13qtZswqg4/YDGgM4pV2HdNHN+DjYk/aa7OOjbosRfD9xTlMmoXaT9IkpDFSpx5uTj2ocSM0zja/a/HvSBcZKkaKObMFithq+MaMOmxbI+5Pvxe8oR8x8hvIgJP4AEjwgKSxcW4V8GYgLElJbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 481C71516;
+	Mon, 10 Mar 2025 04:59:50 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9B693F5A1;
+	Mon, 10 Mar 2025 04:59:35 -0700 (PDT)
+Date: Mon, 10 Mar 2025 11:59:33 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Aisheng Dong <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
+ scmi cpufreq
+Message-ID: <Z87UJdhiTWhssnbl@bogus>
+References: <Z6x8cNyDt8rJ73_B@bogus>
+ <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
+ <Z65U2SMwSiOFYC0v@pluto>
+ <20250218010949.GB22580@nxa18884-linux>
+ <Z7Rf9GPdO2atP89Z@bogus>
+ <20250218133619.GA22647@nxa18884-linux>
+ <Z7Wvyn1QJQMVigf9@bogus>
+ <Z7Z-ZnztmvUxWoQJ@NXL53680.wbi.nxp.com>
+ <Z86w3ZRS6T2MvV3X@bogus>
+ <DB9PR04MB84614FBF96E7BC0D125D97F688D62@DB9PR04MB8461.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB9PR04MB84614FBF96E7BC0D125D97F688D62@DB9PR04MB8461.eurprd04.prod.outlook.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Mar 10, 2025 at 10:45:44AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting
+> > fwnode for scmi cpufreq
+> > 
+> > On Thu, Feb 20, 2025 at 08:59:18AM +0800, Peng Fan wrote:
+> > >
+> > > Sorry, if I misunderstood.
+> > >
+> > > I will give a look on this and propose a RFC.
+> > >
+> > > DT maintainers may ask for a patchset including binding change and
+> > > driver changes to get a whole view on the compatible stuff.
+> > >
+> > > BTW, Cristian, Saravana if you have any objections/ideas or would
+> > take
+> > > on this effort, please let me know.
+> > >
+> > 
+> > Can you point me to the DTS with which you are seeing this issue ?
+> > I am trying to reproduce the issue but so far not successful. I did move
+> > to power-domains for CPUFreq on Juno. IIUC all we need is both
+> > cpufreq and performance genpd drivers in the kernel and then GPU
+> > using perf genpd fails with probe deferral right ? I need pointers to
+> > reproduce the issue so that I can check if what I have cooked up as a
+> > solution really works.
+>
+> This is in downstream tree:
+> https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L2971
+> https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L3043
+> https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx95.dtsi#L80
+>
+> we are using "power-domains" property for cpu perf and gpu/vpu perf.
+>
+> If cpufreq.off=1 is set in bootargs, the vpu/gpu driver will defer probe.
+>
 
+OK, does the probe of these drivers get called or they don't as the driver
+core doesn't allow that ? I just have a dummy driver for mali on Juno
+which just does dev_pm_domain_attach_list() in the probe and it seem to
+succeed even when cpufreq.off=1 is passed. I see scmi-cpufreq failing
+with -ENODEV as expected.
 
-On Thu, 06 Mar 2025 18:19:25 +0100, Bartosz Golaszewski wrote:
-> I don't want to spam people's inboxes so I'm resending just the patches
-> that caused build warnings. The other ones will be picked up from v1.
-> 
-> New variants of set() and set_multiple() callbacks allow drivers to
-> indicate failures back to callers. Convert more GPIO drivers to using
-> them as the old ones are now deprecated.
-> 
-> [...]
+I need to follow the code and check if I can somehow reproduce. Also are
+you sure this is not with anything in the downstream code ? Also have you
+tried this with v6.14-rc* ? Are you sure all the fw_devlink code is backported
+in the tree you pointed me which is v6.6-stable ?
 
-Applied, thanks!
-
-[1/2] gpio: adnp: use lock guards for the I2C lock
-      commit: c7fe19ed39730c121449bdae11e030f02c7071a8
-[2/2] gpio: adnp: use new line value setter callbacks
-      commit: 21c853ad93097619c7966542e838c54c37f57c90
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+--
+Regards,
+Sudeep
 
