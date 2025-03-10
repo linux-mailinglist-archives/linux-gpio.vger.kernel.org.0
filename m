@@ -1,89 +1,83 @@
-Return-Path: <linux-gpio+bounces-17352-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17353-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A886A591D4
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 11:52:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2A05A59203
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 11:56:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC6823AB6AE
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 10:51:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68F1F3B0859
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 10:55:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6819229B36;
-	Mon, 10 Mar 2025 10:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE8F4229B1D;
+	Mon, 10 Mar 2025 10:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QCwiqut4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QhNEV+Ds"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04E3226D1A
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 10:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7808229B13
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 10:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741603725; cv=none; b=kDzY1AEMdKfNbREGOvQdgnTYqpOAY07pLEYk0dzkoCOa4lPX6cwJzbaIXKcwPjViMu/aAjWL4zRNFs/yRlSjyH8pJp6Eu2BWojMQy4gH8/uhM2ih+FUZK5oRPEyKJDHViv7ZmIt90z90ERNzH1C4lUzgpsranFqGHmjqHjKXHSQ=
+	t=1741603935; cv=none; b=dpDGODb+yhy8iIbLuBKn5O0DvlOssl5Ov9F7wDHTTafcvBob3twgi0XYQqezjFtrvyCebwscXV/riTkHkywYsLi6PpmDTV/bi0GXp9O4POV4CGfcVIW0aBaAOlYhMJBMOdE0u2a+v+HrPTqDFYptVyFQjXZqa1zxWwXLHu+dNPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741603725; c=relaxed/simple;
-	bh=ThNQa8FfIWCfCjBqxfnY7Y6HddW97gUTMSNhwoQo/9c=;
+	s=arc-20240116; t=1741603935; c=relaxed/simple;
+	bh=vVKnwODUdAiwe/gid9w0DRJv5TpgZa3pSP8IVebCvGA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JNC8slP4tPiDJIzXmLeo1KDDuIekHLDkS8q/q3hs1NOjq6OJd7IaAdbkqWSKwAEGV1FPFAU6hRz6HxR9d9q7WwHtgs+UPGs/BfrVz8dgc4e1gHlm5qZxATBBwoYzvWNq/FbYDIYsCmNwkE9Jh4Y2qqBDE+BC2hpj8uNSvoKJdE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QCwiqut4; arc=none smtp.client-ip=209.85.128.46
+	 Content-Disposition; b=FZGygpIo9aHi5yv7R/4i9kZQH9Cbr23T48b0gPc9ZUA710gAOyxHNGpuHpJ7gSrCqF7nQvqzYQH1rg/BEmjfQIlDG3DhX1mMn0yjQPJ2ZiAfHSxOE23TsT25q7SB72SJ+FgZsq+g72cJTX9YeDXAYOb06wRHXStJOucUqpUsf8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QhNEV+Ds; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso23270555e9.0
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 03:48:43 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-391342fc0b5so3236486f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 03:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741603722; x=1742208522; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741603931; x=1742208731; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=P4FBTBE+KNOkM+Qcs2aGG4D+zzTC9l6YOpjrjTql9Ko=;
-        b=QCwiqut4grrDAhnmpyyWOGtoPFSLlO6LwON7v336QIUYd6H34bIxpWF1qu4Cj5u6Gu
-         D4exXJWcPTqAN/BTxUscdwV4Tm6W162STr8QWJGPyWznqJXEMllOCwgQ8Q1XegGwhWXQ
-         Kqf0pjumGWzC6WkyHEgyvIlWbXhHLrN0zUfSBYSvuUOHtumBcwWb2kDmez9mYMwadwze
-         j7Cpr8cnrCvJj4ZbGQ5G1/KnnSwSP+pgnJvTbnW6SRYt3RNzppGwxwXkOudvDzqChLZI
-         uAKKBdNTbqIiIpvT3FPBiuKdJh7ETxQ+G2J3OR1wWDvb+m6WQuisczeh/lYtUjtw3zs7
-         /zpw==
+        bh=T60o6gi3usu2ntppRywUa3E8NpwOZr/s4pv7rr3CEFs=;
+        b=QhNEV+DsQHmMFF/3V3N/rzgReacxeQcne8aEUk2tC7Vas5wbteFmTJWVIIfrPdSN5f
+         TWcvtXZaHO8jm9WeefqnmRybkZOkTs2gRfhfMJpoIXDB0bQiO8kGnbJMXGSK2RNQKe9D
+         XnG6PtuUl5c8a87o0PF7REyKQY1LBHCm+B0DmDED6kwpu7pNBgHO9CU540QBGHa/Ga9R
+         N5i5f9pyZZrvJT/WOH0dOp48s2L2Ermc5yM8SXVzikbQrJKg/MZLvKSKq+stou4J5kDO
+         LXz46UB8l/egDb2ug+8B3ylcNRNkLqdrkkzXDCsI7XugvvYXUwWx4mmQtpr7tgXUJvfU
+         qUYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741603722; x=1742208522;
+        d=1e100.net; s=20230601; t=1741603931; x=1742208731;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P4FBTBE+KNOkM+Qcs2aGG4D+zzTC9l6YOpjrjTql9Ko=;
-        b=iiv4QSzwTPk23UQuEBpULEU6a+z0VYzqG1nrWlE5sbFfk3OYiq3MGkrhDmQc8wDjbF
-         wLxy1zH/cDxVj2Bmsm34bmjxzWNT8bf6JEickVMX57/086/QURB1cdZuQOEAi9hxZYu4
-         NjbQ4bJPuQaFBi3Qy10Szn3jXX/aGyUW/ppJ6RcAZ+3rFcD804jlHMTOyB3m5enTN1nr
-         Np6uInVysOMKtbps4imlD4xc4PbR2juXtBFE+JoUSpfoi+eVoxerT2+n6lOuGqiSm8as
-         +54h8b6+G8WVsP5cghebH/bPAuxMO0NYoiwT4wVtBXpBoWBbf/UNkEJ4TiZCAkSxuqgU
-         EJ/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUD4E3gaG5znjH4ewg8g/q3Tjgfm8lg48lljFG3I9vSY2sP8LqxMrTagGM1E1uX89jGSeN4dnGIJwda@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzuzz1LFmXe1oGvJIyB3RJa9Nfh4LNIFwzEGUpAgfSRKbS+GNUY
-	v/TUbjdgAOjcK91veLQDy+dIEvcXWd2MLP8WCwSkhGJUKxcKmJ3XYZzlRZcv738=
-X-Gm-Gg: ASbGnctZEXgNT/xkUW6zyMwsP6JA/dK+2ZeMZ0v35LFlIwuGT7qAIZHFKsyhyfWGGhD
-	bwYjBgc3/XMIju33tPtpA/NBLDQT5Xo0W2JTD11DuQrIDRdmb2S9WLB5szGf0Fl16wQlhvF4De4
-	+826JC3sMPFHcn5PpoEo57ehk5ivCOhpK4pSW67LuA8W+RDYzZG7AKRzWmXCjOvYfPpDtMzEwBy
-	X5xnqlVVacJGGPmD48QBlWBRJPlZlnDtvfb+SOkScQu4RODz93zxj8nEWjw4Ci1sWHk91w+aOWc
-	TK1Hj5vn9pz7R19cRhWjOHIYc3/2ihYBEpmo1uSaT7vgl3ZhFw==
-X-Google-Smtp-Source: AGHT+IETFwDZNdnH20Q7Y3z4UlrnseZbh1WDkk70tSsdvhJaGXXT+NyRi65tIbPyOgQrBEERRB/G5Q==
-X-Received: by 2002:a05:600c:510d:b0:43b:c0fa:f9bc with SMTP id 5b1f17b1804b1-43c601d93e7mr74449995e9.12.1741603722155;
-        Mon, 10 Mar 2025 03:48:42 -0700 (PDT)
+        bh=T60o6gi3usu2ntppRywUa3E8NpwOZr/s4pv7rr3CEFs=;
+        b=PYoKW7/Tuj46uo5axH8QsPUBM5D4KIuoXT3VvAlr+oeKyIQTdgZQyvZ2dRDROFYd+X
+         4fXwQtvxMOwd9gEmrJsa/hb0P3c/558mP0Kv3ObkEnFkS/u0zHGDvZiPeXcAuEhI8KIP
+         MatbcguR6vN/gGLrY+Xl9DSWt1EKxRMKlJojLFJk1RdKbr6JK4pg9vMP2aTWyznlSY8X
+         KUtavQounL+rTdHQSjwy4eUvvaeNykFpjPieyV3/w4kdxGdmnFyWPKA8LOds96hu7KlG
+         sHQFMwdZ5cjZa0s/3LbgLY9FNyUAAVlXC7pE1kKvrPjljbrfwmQ4KuYuXAW+Vd8kYIa0
+         K3+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU1S1/oupy6l6eBvj0vQ6RrjuClDKZHslngDGm+dCgHbcZZQQ+1TiCIar1RJXI0JPG4f38dU7KATdcU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2lQk1u7Ma1yLUXt7cOxEEsWGh8JIgkeIeIFaFIErF4WRCplST
+	BeNv1+pzMd3RpOMBo774GO1eTe3SGyqAFvEc9O9Nlu4GqhhWFUknsohA2nE+Zh0=
+X-Gm-Gg: ASbGnctRJA1ANlnXs1CadmigaEIkE0G2kGsF3GImQtg+1OKBLwq2zE8jONcV7PrW+Q9
+	q3QSTNhkfOhQOdF5a9p58O61l5gMkDeSjEJDk8HhDjeBe0c68CmQfbos2Askx4/BLKkZCvSOd8j
+	4QrSzVe26NkDU/65tZKHZbZ0yEcnCxrdm7O8C9Vctv/rEivA5pSmwS6VBiuw3AG/XqMPjjLtuy3
+	/pYWRxGkNVEGi+zCOuN0UsY6is/fDQMGFlP9SQceK0PU3ZYqur0w+gJk+4iov1CnJTK1L3WBQRU
+	QneKqbNqwGfVvDN1GZdOSDrIx6/SK2LPBEUAr/0Y3Jr0SQGVaA==
+X-Google-Smtp-Source: AGHT+IG9NsSyCGpPSYGknbpw3bJVRYQjo38717W7yKTXqETR+ruZNlHceeFZwXiH5qt7jRD0fRgUGg==
+X-Received: by 2002:adf:cb01:0:b0:38f:3245:21fc with SMTP id ffacd0b85a97d-39132db1fdamr8297936f8f.50.1741603931088;
+        Mon, 10 Mar 2025 03:52:11 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ce3f573f6sm57354855e9.0.2025.03.10.03.48.41
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912c0e2bacsm14468396f8f.78.2025.03.10.03.52.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 03:48:41 -0700 (PDT)
-Date: Mon, 10 Mar 2025 13:48:34 +0300
+        Mon, 10 Mar 2025 03:52:10 -0700 (PDT)
+Date: Mon, 10 Mar 2025 13:52:05 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] pinctrl: bcm281xx: Add missing assignment in
- bcm21664_pinctrl_lock_all()
-Message-ID: <dfc15d59-7fa9-4f96-aacb-37c3df6d420d@stanley.mountain>
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH next] pinctrl: amd: isp411: Fix IS_ERR() vs NULL check in
+ probe()
+Message-ID: <617f4c77-7837-4e24-9f4d-620ecfedf924@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -94,31 +88,30 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-The next line checks if this regmap_write() failed, but it doesn't
-work because the assignment was accidentally left out.  Add the
-assignment.
+The platform_get_resource() returns NULL on error.  It doesn't
+return error pointers.  Fix the error checking to match.
 
-Fixes: 60d69769c851 ("pinctrl: bcm281xx: Add support for BCM21664 pinmux")
+Fixes: e97435ab09f3 ("pinctrl: amd: isp411: Add amdisp GPIO pinctrl")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 4 ++--
+ drivers/pinctrl/pinctrl-amdisp.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-index 7c8f8bd7da12..9ea20fde3a24 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-@@ -1498,8 +1498,8 @@ static int bcm21664_pinctrl_lock_all(struct bcm281xx_pinctrl_data *pdata)
- 				rc);
- 			return rc;
- 		}
--		regmap_write(pdata->regmap, BCM21664_ACCESS_LOCK_OFFSET(i),
--			     0xffffffff);
-+		rc = regmap_write(pdata->regmap, BCM21664_ACCESS_LOCK_OFFSET(i),
-+				  0xffffffff);
- 		if (rc) {
- 			dev_err(pdata->dev, "Failed to write access lock: %d\n",
- 				rc);
+diff --git a/drivers/pinctrl/pinctrl-amdisp.c b/drivers/pinctrl/pinctrl-amdisp.c
+index ce21ed84b929..9256ed67bb20 100644
+--- a/drivers/pinctrl/pinctrl-amdisp.c
++++ b/drivers/pinctrl/pinctrl-amdisp.c
+@@ -183,8 +183,8 @@ static int amdisp_pinctrl_probe(struct platform_device *pdev)
+ 	pdev->dev.init_name = DRV_NAME;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (IS_ERR(res))
+-		return PTR_ERR(res);
++	if (!res)
++		return -EINVAL;
+ 
+ 	pctrl->gpiobase = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(pctrl->gpiobase))
 -- 
 2.47.2
 
