@@ -1,120 +1,205 @@
-Return-Path: <linux-gpio+bounces-17393-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17394-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB058A59BC3
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 17:56:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC828A5A020
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 18:47:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A55743A10A5
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 16:56:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E76EF172119
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 17:46:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E2CF230BDF;
-	Mon, 10 Mar 2025 16:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89A50233732;
+	Mon, 10 Mar 2025 17:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZbnvJvpZ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VZrBsfMH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F287E158538;
-	Mon, 10 Mar 2025 16:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4186518FDAB
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 17:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741625780; cv=none; b=ShQBdjB9/MW4r31sTrRoKU6Ml6ckelkpnItLvgqCKMZD0vdUcUBD3nLRgx3KdIdnrliOdZFZikGqCpqaXs1ZfAqrp1li6/bCYDToFTxpNbVfCqUzTxkFj5Rjd6/RNh17bsvvcP7dLa8hc8/u1bAKgPOroCMqfUs+LXD3/jTHz/A=
+	t=1741628802; cv=none; b=iZ9FUYTgUfI3+Gxc4ZaEVAdYreFN+4WszMSxyUEWUm6Dt8liEfja1x+JxcwlqIr37Tov/D04Pr9FfN+t3EpmV0P1BK7hFi03sSglFavHG+I++ve18IjVOTKzGCT+taSK80gQj0lR7JyHVVavj47+a8tTAEg8JtKJiXkaHc5gHMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741625780; c=relaxed/simple;
-	bh=Ezrb2dDSxROW84dqyY1v4CU/Kk64AT53I36HDbsTtQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJ08ezdM/magf97BPZUswS1Ds/OCYLGfWJwtV+4ZZCYQChb9gx8QWSuKX3w30rpJY6faOYtrz8oHBL+W4dseMY8PZ3fEqfucMIDaBYPHEhptXI1WVZ3aEBL9jWi1EUQMTgQpAaqvQ2xEgQ3AmcA3Rf/d12xr+oWMAotmN0fkunE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZbnvJvpZ; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22355618fd9so82303125ad.3;
-        Mon, 10 Mar 2025 09:56:18 -0700 (PDT)
+	s=arc-20240116; t=1741628802; c=relaxed/simple;
+	bh=4uLltCACvYicVxRYPpWKm4SAqCoW23xsWjuTWnGbSuc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fqswFt3GnCDuAkTSR3+XOTiGXQFlVkaoe260TnMj21MIrZey7+S1NE/ocedJUjrI/4IFpdg+bi2XPPT7qVnIGQMUGM1TaLv1yeonLcydVXyS2X4F9/TL8ahzMYv6IP5Y8FJPo7e3H2kPEw68ySCS1V4HZ4RffMRw1HbJavaAy/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VZrBsfMH; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30bee1cb370so40647271fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 10:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741625778; x=1742230578; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=APYb9FkXg1vRuxJSuYQo7eXa16DnhsCOqDRxqHiUv+k=;
-        b=ZbnvJvpZrR/6OyWLVffVa+1G+W+uUjqkFBDzc4RSK8/q5OnQikw1dcQKpCovEt4fXT
-         noLpdp3k/4pOz2kt0jJsBkUHTIqVnlsqaVVV6Wgb2Dr28VJbTkiz2O4zToa5yfVgWrUH
-         Y2EzbOh4OheaYEGBzR9b+j54DcH5IAdBoW8a+iMWEbdbI4v1Lz8DuIXqiv8g1WVfgJJT
-         ihM6OR4DS0T4stqcnZcGFncFgmn9G8KV6/xtcBC+tXbphiCB5q4B0Y0dL2rCIZRe1dW+
-         8pw+TAjvy+rah4q1GyJBlQBXGsNolBLRMPQ69wmEP01MGJ25OWBDXU9SzkgDAwrcKwkf
-         gSmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741625778; x=1742230578;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741628798; x=1742233598; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=APYb9FkXg1vRuxJSuYQo7eXa16DnhsCOqDRxqHiUv+k=;
-        b=XB1qIz/UAEgE+WfDXgYJlKUQ1UKPxPUiQWO7Zs1RFRGuYR5Ik24nGxlFEtENXcw7HF
-         iE4GvgFXfMf+852PMfJykf7xScqN9KJOKk7AJvbOxXUZrcg7W4MlKkk7CWBzYHw0C9Zy
-         s9Ut/ds6L6gpCOJXmervkatLL3QiRFOoko09qR2odKYO3QVwlE2AgYWFS2ZpjI9lWwJw
-         ZAc7lhDKIsVoz8ZF2U6dkXU/UU7rm6KENpKMG2g56JI5ZsjX+GavURWbFA5uF0HSay10
-         2wCithAzjxeZjB+uTviq4HxC/QSo+qmHwhHfYlg7uU2G/RhSErIJlXXxwEfxQLjMsLEJ
-         TjuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJTb9up35aQvuRgA7Xniw1/u9+uiFQERbRlAdwgj9ejtM2YYVaR+1Fnte2ICLRbLJk4/3pERa4BCo=@vger.kernel.org, AJvYcCUVtJ2MykojNbAk5VTUWvKJhI7zRCn1NsnqityaEzJxPtV7tzj2n6pl/KKCgXAj+K+TVj4agg1oIGNMENHZ@vger.kernel.org, AJvYcCUurg6P4ucTLcGCIa8q5KZDBlnRufl0kbNZQ4isqT4Y1jb2trUoKWk52/OIXde8jH35TCVz5q4LLWFzsA==@vger.kernel.org, AJvYcCVe3g6DXfsRZVLaXvqKzYh+sM/Ej5V4eXEzItymWyElzMO3BoF3fjFSfBI9nlFr9vbxHWW6LSQh70GYEQ==@vger.kernel.org, AJvYcCXHq5ZhmjDDbF6YNMtOX/JVlUrwBMX5i1BzdCqHAaIvRzgmRwCL3Hi54jV9ZrhaAs/ZYqcWJM83CJMV4Ms=@vger.kernel.org, AJvYcCXYE95uRPwvio9bsJzEHdR7EnGrfuT7v+LcWFSmhd3l20zSlZawvPUBqzIaPEKf/lHF4GQwsXhk6csp@vger.kernel.org, AJvYcCXuYKzrZiE0bQRL+VZ6ItAUlM8T8umWkr9Snh1frX4tIRKWW5LwqPcezp+03+17SiIMZEhtsOng5LTyGw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqr+roQoIfhlwJ3SBZELwazs789um9PmJ41r99aqHb+Ribc1gr
-	aRl7rG1YsYIdDq0AuTXEUAqVPAA3B0lFv89tFxpMMO8VXcmn1ZHReC90TQ==
-X-Gm-Gg: ASbGncurFjlNPQOZs3629vKQ4xJACKuCPRx6T8g/ERO6qqMDVJP27C8XzCGYi8k+coz
-	fUHA5OA1UmPZuRPItYR64d9VGJFmeq3DiSgMq6pdeXHju4YbIyg1UpoFM8p2x1ALUqMlIafsaTW
-	92uyVEyvTEF3UGcfPcY+3Nu7/Rf2kFeAmnwO6Y8/3tXAekmIh9Nh9oNqc3TvaXWUFAViGyrCWm7
-	qfX4/WkyhR3ceoqIZbm9uwMJzfS2j3j5ACmaZg5k2f9I/q/ZbQ8TaYoSwxthfUBsQOp3YeIIoVd
-	55hJQN/Rqe+txuqxsX15yk18rK9zFh2XpU4Jmg1nwjT0
-X-Google-Smtp-Source: AGHT+IHYlGgo1/vzV4si4Qn81FbyVTTf4l8pjPxaAUEx+//suEtoprSuUAAYpRMpt6VXcEwCFKWneQ==
-X-Received: by 2002:a05:6a20:db0c:b0:1f3:4427:74ae with SMTP id adf61e73a8af0-1f58cb46b0amr604930637.25.1741625777842;
-        Mon, 10 Mar 2025 09:56:17 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:eb9f:29c2:9ede:46d])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af28126e09dsm7864964a12.53.2025.03.10.09.56.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 09:56:17 -0700 (PDT)
-Date: Mon, 10 Mar 2025 09:56:14 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: linux@treblig.org
-Cc: arnd@arndb.de, lee@kernel.org, sre@kernel.org, lgirdwood@gmail.com,
-	broonie@kernel.org, alexandre.belloni@bootlin.com,
-	danielt@kernel.org, jingoohan1@gmail.com, deller@gmx.de,
-	linus.walleij@linaro.org, brgl@bgdev.pl, tsbogend@alpha.franken.de,
-	linux-mips@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] Input: pcf50633-input - Remove
-Message-ID: <Z88ZroxO32c0HLV0@google.com>
-References: <20250309193612.251929-1-linux@treblig.org>
- <20250309193612.251929-6-linux@treblig.org>
+        bh=hUpU501ei/PNPOm4yAAqXvMJC86phg8k2kbGDUH1pM0=;
+        b=VZrBsfMHI+7r1NE6p07nRq2ij1KlmTpuKyAG7rYKmMruww8Q9xnPl699V0Yn5SimjF
+         VKNIQYs1+0nnRZdHHnZvZPTJ7a/tOFUUt0QTxP6Vc8QHZmR1Mo7p8U2oj4j6Df5dY0mL
+         LdQ250Z2V+A8edCIblRfGWB4dBg5YB39hJ06nBbzQO3MgWGIlDhivjmmdMa8MMRZWuCI
+         B7v+tpbEXLxfTNWM26OR6Nf5oOdfYRhUnsu0TSk+OMtWSSsZauz1usF2rapOzBi4crJ0
+         wMbmZzcT7ZvVy++Ogfqm8H7bFyBkGA5CZ10XGptuLgjv8U9wQYlPvvzs15jA9Fhk3Wm/
+         xwPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741628798; x=1742233598;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hUpU501ei/PNPOm4yAAqXvMJC86phg8k2kbGDUH1pM0=;
+        b=MLQSDZ+yVXnlQRetahDkSR5gD26DHOxZ32NTTALjpmxVtZuAC22p2t0pQ6vuPwjjDx
+         L8n7PQamkVwfFbHz6wNyXHb5fsKS5Y2MK6Zqpqw7huMeY21nrR69GwmffnR8eepJTQh1
+         Q7SEy2Bf7sV3P62hyreTd0w8xcGU3+jYSfeZCu7ASQ73zxzO4UVmN63g7IQ07gzrvNYc
+         zyY64cZrJZOFVLIzx1mkI2xb1UizlLxFseQuCZPNeFHdXO5q5SrOJEkpqAsF6W+t9thb
+         omHuABgYX6S4Yvm7Cnq2TVSXnNtOmMtSe/cOKlF5yEVkLo3NvgodkIUtFKvnyhQlFYXy
+         pIdA==
+X-Gm-Message-State: AOJu0YwIcI25o62XQRxHxSbMbm9uZ7KfqhQpVkzFBxnonGugJDbLWqyG
+	JOXpnngjXPL0I9+3ZEB4CvTYZv0p8KJO3R7pN+yx0uoSNACjyZCVdu4blacbjIplKa52KDDa99W
+	cZ29J1CCol/GUxRLzqLXE1p78fZaMq6oNzcLeeA==
+X-Gm-Gg: ASbGncsHPL7VOsrMOl6oUsbKbGXYkIA4mUp6fGy3/csWebFN08Xdly19IVpF75LQaRq
+	SV4qSFHDfwy6oBFIfBMTdBJu1wJUCIxPhIbaxdGVm+GMdNOinToOaaNX51grpZ0VBpOXhiBdrk2
+	B8bpL8j+uuQSzw1GCzw/U6nLlBhmpb0Wxvv3fcSMIVV8t2IcnM3ZfvfcPt9w==
+X-Google-Smtp-Source: AGHT+IFBYfM32AsdMmFXT9vtQetZdXZh1+deTDuBbcq70QsLY8zmEDuV/m0LqhHjEKW7jAdx3a4Xe0OqnTyM3+NW79M=
+X-Received: by 2002:a05:6512:2391:b0:549:58d5:f899 with SMTP id
+ 2adb3069b0e04-54990eadc5cmr5088857e87.37.1741628798130; Mon, 10 Mar 2025
+ 10:46:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309193612.251929-6-linux@treblig.org>
+References: <20250224143134.3024598-1-koichiro.den@canonical.com>
+ <CAMRc=Me9_EvVj2U-wGWjoVyH_igZBtUs1ymtE=4_r2EkSBAAcA@mail.gmail.com>
+ <oedikhiegt3iqj7xg4vtfhlqxihicd7bdtaglk73q2m3c42zla@roh336fpkszm>
+ <CAMRc=MeHBYngume_k-tfqEnkrkt3-axWKXKS1xkxkyH-6QFSkQ@mail.gmail.com> <n25f2iho3yn7ahx6isnm55g2cw5ox34rhqukhvgohzmtq22vzl@p5pptw6lw7ln>
+In-Reply-To: <n25f2iho3yn7ahx6isnm55g2cw5ox34rhqukhvgohzmtq22vzl@p5pptw6lw7ln>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 10 Mar 2025 18:46:25 +0100
+X-Gm-Features: AQ5f1JoXjZe310pFyU4_3kJ4B-XZJIfs-9I-yEIT3zLopRXY2AGupZ8pUJdT7IE
+Message-ID: <CAMRc=MdPLpQTeebDPk0+5ovuFCjcpNdb3BN5c7ADAxStE08JBQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Introduce configfs-based interface for gpio-aggregator
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 09, 2025 at 07:36:08PM +0000, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> The pcf50633 was used as part of the OpenMoko devices but
-> the support for its main chip was recently removed in:
-> commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
-> 
-> See https://lore.kernel.org/all/Z8z236h4B5A6Ki3D@gallifrey/
-> 
-> Remove it.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+On Mon, Mar 10, 2025 at 5:28=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
+>
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+[snip!]
 
-Please merge with the rest of the changes.
+Please remove unnecessary context from responses. You attached
+hundreds of lines of stack traces here. :(
 
-Thanks.
+>
+> Thanks, I've confirmed it. It seems I overlooked it because somehow
+> lockdep and kasan were not enabled for a while.
+>
+> Assuming the v5 patch series rebased onto the latest gpio/for-next
+> 21c853ad9309 ("gpio: adnp: use new line value setter callbacks"),
+> the following follow-up patch should suffice.
+>
+> ------------8<--------------8<---------------
+> diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregato=
+r.c
+> index df34d8fcb79a..56f0fde8c843 100644
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -207,7 +207,18 @@ static void aggr_free_lines(struct gpio_aggregator *=
+aggr)
+>
+>         list_for_each_entry_safe(line, tmp, &aggr->list_head, entry) {
+>                 configfs_unregister_group(&line->group);
+> -               aggr_line_del(aggr, line);
+> +               /*
+> +                * Normally, we acquire aggr->lock within the configfs
+> +                * callback. However, in the legacy sysfs interface case,
+> +                * calling configfs_(un)register_group while holding
+> +                * aggr->lock could cause a deadlock. Fortunately, this i=
+s
+> +                * unnecessary because the new_device/delete_device path
+> +                * and the module unload path are mutually exclusive,
+> +                * thanks to an explicit try_module_get. That's why this
+> +                * minimal scoped_guard suffices here.
+> +                */
+> +               scoped_guard(mutex, &aggr->lock)
+> +                       aggr_line_del(aggr, line);
+>                 kfree(line->key);
+>                 kfree(line);
+>         }
+> @@ -926,8 +937,6 @@ static void gpio_aggr_device_release(struct config_it=
+em *item)
+>  {
+>         struct gpio_aggregator *aggr =3D to_gpio_aggregator(item);
+>
+> -       guard(mutex)(&aggr->lock);
+> -
+>         /*
+>          * At this point, aggr is neither active nor activating,
+>          * so calling aggr_deactivate() is always unnecessary.
+> @@ -1072,7 +1081,8 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+>                                                         &line->group);
+>                         if (error)
+>                                 goto err;
+> -                       aggr_line_add(aggr, line);
+> +                       scoped_guard(mutex, &aggr->lock)
+> +                               aggr_line_add(aggr, line);
+>
+>                         error =3D aggr_add_gpio(aggr, key, U16_MAX, &n);
+>                         if (error)
+> @@ -1101,7 +1111,8 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+>                                                         &line->group);
+>                         if (error)
+>                                 goto err;
+> -                       aggr_line_add(aggr, line);
+> +                       scoped_guard(mutex, &aggr->lock)
+> +                               aggr_line_add(aggr, line);
+>
+>                         error =3D aggr_add_gpio(aggr, key, i, &n);
+>                         if (error)
+> @@ -1205,8 +1216,10 @@ static DRIVER_ATTR_WO(new_device);
+>
+>  static void gpio_aggregator_free(struct gpio_aggregator *aggr)
+>  {
+> -       if (aggr_is_activating(aggr) || aggr_is_active(aggr))
+> -               aggr_deactivate(aggr);
+> +       scoped_guard(mutex, &aggr->lock) {
+> +               if (aggr_is_activating(aggr) || aggr_is_active(aggr))
+> +                       aggr_deactivate(aggr);
+> +       }
+>         aggr_free_lines(aggr);
+>         configfs_unregister_group(&aggr->group);
+>         kfree(aggr);
+> ------------8<--------------8<---------------
+>
+>
+> * The second hunk should be squashed into
+>   [PATCH v5 4/9] gpio: aggregator: introduce basic configfs interface
+>
+> * The rest of the hunks should be squashed into
+>   [PATCH v5 8/9] gpio: aggregator: expose aggregator created via legacy s=
+ysfs to configfs
+>
+> If you agree with the above approach, I'll send out v6,
+> while also addressing your feedback here:
+> https://lore.kernel.org/all/CAMRc=3DMdoMKdqyzGMFDa3aMz3h=3DvfZ0OtwARxY7Fd=
+sPKcBu9HQA@mail.gmail.com/
+>
+> Koichiro
+>
 
--- 
-Dmitry
+I won't be testing in-line diff chunks. Please, just fix these issues
+and send a v6. Also: please do write some sort of a script to automate
+the testing of this driver if possible. Ideally: add test script to
+selftests.
+
+Bart
 
