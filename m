@@ -1,347 +1,465 @@
-Return-Path: <linux-gpio+bounces-17383-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17384-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA719A59775
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 15:22:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4817CA597BE
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 15:36:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C009E3ADBDC
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 14:21:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C97E93AB5FA
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Mar 2025 14:36:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3B222D4FE;
-	Mon, 10 Mar 2025 14:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A5FA22D4C7;
+	Mon, 10 Mar 2025 14:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="RkhgdW9P"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UO0eVHy9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAD822CBD9
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 14:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F73F22C336;
+	Mon, 10 Mar 2025 14:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741616479; cv=none; b=JrPCXlnPC/6ODTMzFgm4xr8ggewLMUuaR1LPrG93euUYe+k49iJRVxn4lCsy0UStn4lirWHvqJwhI0ZFUzK2RIygplJJLwukJ8J6I8sqE5nyaDYW4bt6Pl7f9p135k6cVbyjSKhZJp56xOeYMWkm406hDt2hzAivISpTORZcHfo=
+	t=1741617331; cv=none; b=ov+TRnkalLJcp9LgYOuqX15OOtQnse8nvkeSMPUOXKRayS9k+YQENOH9wtd+NxgcktrMV1ohipjPK9J+nhhxZZXBxatas5udEV9C63JabR7noHdfzebZpRmAMSvyFX9i35C+Ee6xiBvEYxmZwRg/7TsM2rc3I0BNvbx3rOz0904=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741616479; c=relaxed/simple;
-	bh=hDf2FiSrtEj6EocOxr+BFVJaxfoKsKNjxTKvFI3oJLw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l/x8OD/7cePIRC+n7U9I7u1tNnRUZTvQWzIQmSGMMFl9TW+ULUw/c8zQ0IDc4GC3jUsOtTcPi2pJVmePBGL29Kf+JqwkCvXnE2F75t2VaMMXofOG6w+oFxFg7mnpfUMQP57Evuf6HUpBfkuXUr7BQBzC4rQZO7os45hPbB/AjA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=RkhgdW9P; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso6502403a91.1
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Mar 2025 07:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1741616477; x=1742221277; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0aa0jZ9AchGlp5yWV6WZT3t8mQdLgGg2qOoZKac8GrA=;
-        b=RkhgdW9PW/CiOSfkcHyyuL5LTd9HcbgS/g7QGck4GkJ1CE1QttpvcYZJEiYYhtloW/
-         s3viIj/egQufHUyLb/24K7rwZ8+KDiGcJTjvCWoWGQD05NMg/llWCh81tv7Xdani0FG5
-         BCMzv0AM1jRJj+NvaYzJPI578x1+fu5ifmhEiG40QkkAZG7NSlmIB3X6EfSYwZ77nC52
-         Fe71mnj68zxldPp+QS6jep9qk0pJIW36wLnqdF25ge1utdxpXu6huvLua6YXWmFmimTW
-         NY0lcvb23JmRJbuZ3unOBIKxCohnpz7cxp625HMJZj7SLrQZfa6S/YXoN3Nspz0FBd9C
-         ryRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741616477; x=1742221277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0aa0jZ9AchGlp5yWV6WZT3t8mQdLgGg2qOoZKac8GrA=;
-        b=Rj6jDh0FtQ/k+av0SNa/1wdtSHwRHA6Z/KiZrZK/Bmu38kWJm8VxbXtiXgh1kf9uD8
-         KtJ2u16Yj2ZtKU9bQOa+/mWb2Fw0YP061CPfqrnu5Y6j2RYLXPKLxc435fcqGLre+7RR
-         qX3xDUaxXxcyA/H9bfZ0xyYm1qOK6QVETOFx7RWv2N9IB25B4WmQJSBNqaIk+khqbiKh
-         zM2D6to4JnGaawePHJ5BYoZiCPeKmKgvAyLxnoHhZ1oS23HxYTkyJIZtkd3mmepejKGu
-         OCnf0QMV4l2T6sjw665zZa670bGi+0VJ5mFDuNLJcLJ8grfqYU34swsMVXdohvmrYgsD
-         SA5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVz5DKDVDc4sLzkp8tgAnJzUdrtCJucR5m9zaAC/8sqyACDXThEvrOLgmlq9omlRbDWSm8vMyTHqeA8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj9WIwIhLfdTiGwdc8A0OEgt1gDBJiu+eOAguSSL+VddaERbb0
-	2LtH3HO87x1ZWeV4pwfFLuzCvptGuFLM1YGGH5XTqfLZ37wJeyEvAAqav/jzXOPiKxxWVeivkpL
-	wmjJ/5JeA2XVbje5hjJQb7hTeowjl97FvGwMwTQ==
-X-Gm-Gg: ASbGnctmisX3PpadGzKtNJkN4m6AnE/eD+uvGeUJVZGtsGB6003LHzBtRepI1QI3gKW
-	3h9l5eqTVTR4yluQ356szUfkPpER7DWfUiAXNQz5/8oY7iNJ2EA6kS7PTjHfSVjNK9SiHHRTnXx
-	LHmq7qjGEk8oJfbPgl45hLpuhtRJtJCFbDWVGeeP4kPGgwGIePelgcQgpQvA==
-X-Google-Smtp-Source: AGHT+IHzhHPEKiwQV8/xTAzjm8IBmtIaoF+M1g5Rq1eq3z20HMMIT/cwN5htca9XmOSUGb0vkHd2gBWPFVvEM90AB+Y=
-X-Received: by 2002:a17:90b:2e90:b0:2ee:d7d3:3019 with SMTP id
- 98e67ed59e1d1-2ff7ce8e50amr26081042a91.12.1741616476890; Mon, 10 Mar 2025
- 07:21:16 -0700 (PDT)
+	s=arc-20240116; t=1741617331; c=relaxed/simple;
+	bh=scTgTI97LOmlYfEX/xtjOk2MiTl0YxM/ai+wSTZVgW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N50O/nWLpQjqXgM3hgwC3Nlfg2ToaYrymNBcTlJpiwMB6Dyw4/2ZGzkcioRwk9unAgQwUOQy5NaNyzFKLJegga/vx0ymtGMpWsT3dMwmgOyQlI1mW25Bq3WAJdQxeCQi26GlYkSJLzy7/2MLLJCabrX2pxw0QgOAXn9sjLgfDPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UO0eVHy9; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 015692047E;
+	Mon, 10 Mar 2025 14:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741617325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JXZxLypH3NpWH5t4QzSGNdDStiV5GmuC1zGbaaCJlcs=;
+	b=UO0eVHy9OVWknTQs4y+zyzl+bVoU3CxbMoyKvk4/vaxix7cjZF0e5foQEHOhEFdbhbdR9M
+	Lq3xZgWrf5KMDMqWJi0zUAUoycAILzp4tu4DQ5UNo3Jj/AKmXOeQECjJS0NnG5wgGISuXX
+	4/+GBxU8N/O4G19567EoWWCtdAg6DNCKn1fB1o2TRVoTcLV+KtZ+tQBEX17EXof5uchQE4
+	gswVhZwTxlICjPsPNy7ycgzia7zd19JfjkvHJknt/XXA4Jgu5FdsEZXaZ/4S0H6XgOtdQR
+	9huo/Fxn6B1i66KiWmqAjMUsDApLebhuN3CiJwaSakB1YjYxN9QL2qUH2+pEcw==
+Date: Mon, 10 Mar 2025 15:35:23 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: linux@treblig.org
+Cc: arnd@arndb.de, lee@kernel.org, dmitry.torokhov@gmail.com,
+	sre@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+	danielt@kernel.org, jingoohan1@gmail.com, deller@gmx.de,
+	linus.walleij@linaro.org, brgl@bgdev.pl, tsbogend@alpha.franken.de,
+	linux-mips@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/9] rtc: pcf50633: Remove
+Message-ID: <202503101435233d80842a@mail.local>
+References: <20250309193612.251929-1-linux@treblig.org>
+ <20250309193612.251929-4-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
- <20250213171435.1c2ce376@bootlin.com> <CAMEGJJ1++aeE7WWLVVesbujME+r2WicEkK+CQgigRRp2grYf=A@mail.gmail.com>
- <Z87wTfChRC5Ruwc0@apocalypse>
-In-Reply-To: <Z87wTfChRC5Ruwc0@apocalypse>
-From: Phil Elwell <phil@raspberrypi.com>
-Date: Mon, 10 Mar 2025 14:21:05 +0000
-X-Gm-Features: AQ5f1JpdsttO77vWem7lsOAk9ydjGfL3diQWsedrl91N1zA3FWs-hfYV843PSmU
-Message-ID: <CAMEGJJ0f4YUgdWBhxvQ_dquZHztve9KO7pvQjoDWJ3=zd3cgcg@mail.gmail.com>
-Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device using
- a DT overlay
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, andrew@lunn.ch, Arnd Bergmann <arnd@arndb.de>, 
-	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com, brgl@bgdev.pl, 
-	Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com, 
-	devicetree@vger.kernel.org, dragan.cvetic@amd.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org, kw@linux.com, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, lpieralisi@kernel.org, 
-	luca.ceresoli@bootlin.com, manivannan.sadhasivam@linaro.org, 
-	masahiroy@kernel.org, Michael Turquette <mturquette@baylibre.com>, 
-	Rob Herring <robh@kernel.org>, saravanak@google.com, Stephen Boyd <sboyd@kernel.org>, 
-	thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, 
-	Will Deacon <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309193612.251929-4-linux@treblig.org>
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelieduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeijeefhfffkeejueehveeuveejvdelveejteduffehuedtffdufeejudffuedvtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtoheplhhinhhugiesthhrvggslhhighdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepu
+ ghmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehsrhgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlghhirhgufihoohgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghltheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-Hi Andrea,
+Hello,
 
-On Mon, 10 Mar 2025 at 13:58, Andrea della Porta <andrea.porta@suse.com> wr=
-ote:
->
-> Hi,
->
-> On 16:27 Thu 13 Feb     , Phil Elwell wrote:
-> > Hi Herv=C3=A9,
-> >
-> > On Thu, 13 Feb 2025 at 16:14, Herve Codina <herve.codina@bootlin.com> w=
-rote:
-> > >
-> > > Hi Phil,
-> > >
-> > > On Thu, 13 Feb 2025 15:18:45 +0000
-> > > Phil Elwell <phil@raspberrypi.com> wrote:
-> > >
-> > > > Hi Andrea,
-> > > >
-> > > > The problem with this approach (loading an overlay from the RP1 PCI=
-e
-> > > > driver), and it's one that I have raised with you offline, is that
-> > > > (unless anyone can prove otherwise) it becomes impossible to create=
- a
-> > > > Pi 5 DTS file which makes use of the RP1's resources. How do you
-> > > > declare something as simple as a button wired to an RP1 GPIO, or fa=
-n
-> > > > connected to a PWM output?
-> > >
-> > > The driver could be improved in a second step.
-> > > For instance, it could load the dtbo from user-space using request_fi=
-rmare()
-> > > instead of loading the embedded dtbo.
-> > >
-> > > >
-> > > > If this is the preferred route to upstream adoption, I would prefer=
- it
-> > > > if rp1.dtso could be split in two - an rp1.dtsi similar to what we
-> > > > have downstream, and an rp1.dtso that #includes it. In this way we =
-can
-> > > > keep the patching and duplication to a minimum.
-> > >
-> > > Indeed, having a rp1.dtsi avoid duplication but how the rp1.dtso in
-> > > the the kernel sources could include user customization (button, fan,=
- ...)
-> > > without being modified ?
-> > > At least we have to '#include <my_rp1_customizations.dtsi>'.
-> > >
-> > > Requesting the dtbo from user-space allows to let the user to create
-> > > its own dtso without the need to modify the one in kernel sources.
-> > >
-> > > Does it make sense ?
-> >
-> > I think I understand what you are saying, but at this point the RP1
-> > overlay would no longer be an RP1 overlay - it would be an
-> > RP1-and-everything-connected-to-it overlay, which is inherently
-> > board-specific. Which user-space process do you think would be
-> > responsible for loading this alternative overlay, choosing carefully
-> > based on the platform it is running on? Doesn't that place quite a
-> > burden on all the OS maintainers who up to now have just needed a
-> > kernel and a bunch of dtb files?
-> >
-> > If it is considered essential that the upstream Pi 5 dts file does not
-> > include RP1 and its children, then Raspberry Pi are going to have to
-> > walk a different path until we've seen how that can work. By splitting
-> > rp1.dtso as I suggested, and perhaps providing an alternative helper
-> > function that only applies the built-in overlay if the device node
-> > doesn't already exist, we get to stay as close to upstream as
-> > possible.
-> >
-> > Phil
->
-> So, the problem is twofold: the first is due to the fact that downstream
-> expects the dtb to be fully declared at fw load time (I'll call that
-> *monolithic* dtb from now on), the second is about how to represent depen=
-dencies
-> between board dtb and rp1 overlay which arises only when using overlays i=
-nstead
-> of a monolithic dtb.
->
-> The former issue must be solved first in order for the latter to even exi=
-sts
-> (if we don't use overlay, the dependencies are fully exposed in the dtb s=
-ince
-> the beginning), so I'll concentrate on the former for now.
->
-> There are 3 possible scenarios to be reconciled:
->
->
-> 1 - MONOLITHIC DTB
->
-> This is the downstream case, where it's advisable to have only one dtb bl=
-ob
-> containing everything (rp1 included) loaded by the fw. In this case the
-> resulting devicetree would looks like:
->
->   axi {
->     pcie@120000 {
->       rp1_nexus {
->         pci-ep-bus@1 {
->              ...
->         }
->       }
->     }
->   }
+On 09/03/2025 19:36:06+0000, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> The pcf50633 was used as part of the OpenMoko devices but
+> the support for its main chip was recently removed in:
+> commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
+> 
+> See https://lore.kernel.org/all/Z8z236h4B5A6Ki3D@gallifrey/
+> 
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  drivers/mfd/pcf50633-core.c       |   2 -
+>  drivers/rtc/Kconfig               |   7 -
+>  drivers/rtc/Makefile              |   1 -
+>  drivers/rtc/rtc-pcf50633.c        | 284 ------------------------------
+>  include/linux/mfd/pcf50633/core.h |   1 -
+>  5 files changed, 295 deletions(-)
+>  delete mode 100644 drivers/rtc/rtc-pcf50633.c
 
-This is indeed our current DT usage for the Pi 5 family - a single DTB
-describing each board - although I would like to make it clear that
-overlays can then be applied on top of it describing the attached
-peripherals.
+If you would separate by subsystem, this would be easier to apply. I
+don't think the mfd changes are necessary from a bisection point of
+view.
 
-> 2 - RP1 LOADED FROM OVERLAY BY THE FW
->
-> In this case the rp1 dt node is loaded from overlay directly by the fw an=
-d the
-> resulting devicetree is exactly equal to the monolithic dtb scenario.
-> In order for that overlay to be loaded by fw, just add 'dtoverlay=3Drp1' =
-in
-> 'config.txt'.
+> 
+> diff --git a/drivers/mfd/pcf50633-core.c b/drivers/mfd/pcf50633-core.c
+> index 08aa68ef2fbc..d991a77f6dd2 100644
+> --- a/drivers/mfd/pcf50633-core.c
+> +++ b/drivers/mfd/pcf50633-core.c
+> @@ -208,7 +208,6 @@ static int pcf50633_probe(struct i2c_client *client)
+>  
+>  	/* Create sub devices */
+>  	pcf50633_client_dev_register(pcf, "pcf50633-input", &pcf->input_pdev);
+> -	pcf50633_client_dev_register(pcf, "pcf50633-rtc", &pcf->rtc_pdev);
+>  	pcf50633_client_dev_register(pcf, "pcf50633-mbc", &pcf->mbc_pdev);
+>  
+>  
+> @@ -259,7 +258,6 @@ static void pcf50633_remove(struct i2c_client *client)
+>  	pcf50633_irq_free(pcf);
+>  
+>  	platform_device_unregister(pcf->input_pdev);
+> -	platform_device_unregister(pcf->rtc_pdev);
+>  	platform_device_unregister(pcf->mbc_pdev);
+>  
+>  	for (i = 0; i < PCF50633_NUM_REGULATORS; i++)
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 0bbbf778ecfa..838bdc138ffe 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1321,13 +1321,6 @@ config RTC_DRV_SPEAR
+>  	 If you say Y here you will get support for the RTC found on
+>  	 spear
+>  
+> -config RTC_DRV_PCF50633
+> -	depends on MFD_PCF50633
+> -	tristate "NXP PCF50633 RTC"
+> -	help
+> -	  If you say yes here you get support for the RTC subsystem of the
+> -	  NXP PCF50633 used in embedded systems.
+> -
+>  config RTC_DRV_AB8500
+>  	tristate "ST-Ericsson AB8500 RTC"
+>  	depends on AB8500_CORE
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> index 489b4ab07068..31473b3276d9 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -126,7 +126,6 @@ obj-$(CONFIG_RTC_DRV_PALMAS)	+= rtc-palmas.o
+>  obj-$(CONFIG_RTC_DRV_PCAP)	+= rtc-pcap.o
+>  obj-$(CONFIG_RTC_DRV_PCF2123)	+= rtc-pcf2123.o
+>  obj-$(CONFIG_RTC_DRV_PCF2127)	+= rtc-pcf2127.o
+> -obj-$(CONFIG_RTC_DRV_PCF50633)	+= rtc-pcf50633.o
+>  obj-$(CONFIG_RTC_DRV_PCF85063)	+= rtc-pcf85063.o
+>  obj-$(CONFIG_RTC_DRV_PCF8523)	+= rtc-pcf8523.o
+>  obj-$(CONFIG_RTC_DRV_PCF85363)	+= rtc-pcf85363.o
+> diff --git a/drivers/rtc/rtc-pcf50633.c b/drivers/rtc/rtc-pcf50633.c
+> deleted file mode 100644
+> index c019c4d91c7d..000000000000
+> --- a/drivers/rtc/rtc-pcf50633.c
+> +++ /dev/null
+> @@ -1,284 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-or-later
+> -/* NXP PCF50633 RTC Driver
+> - *
+> - * (C) 2006-2008 by Openmoko, Inc.
+> - * Author: Balaji Rao <balajirrao@openmoko.org>
+> - * All rights reserved.
+> - *
+> - * Broken down from monstrous PCF50633 driver mainly by
+> - * Harald Welte, Andy Green and Werner Almesberger
+> - */
+> -
+> -#include <linux/kernel.h>
+> -#include <linux/module.h>
+> -#include <linux/init.h>
+> -#include <linux/device.h>
+> -#include <linux/slab.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/rtc.h>
+> -#include <linux/bcd.h>
+> -#include <linux/err.h>
+> -
+> -#include <linux/mfd/pcf50633/core.h>
+> -
+> -#define PCF50633_REG_RTCSC	0x59 /* Second */
+> -#define PCF50633_REG_RTCMN	0x5a /* Minute */
+> -#define PCF50633_REG_RTCHR	0x5b /* Hour */
+> -#define PCF50633_REG_RTCWD	0x5c /* Weekday */
+> -#define PCF50633_REG_RTCDT	0x5d /* Day */
+> -#define PCF50633_REG_RTCMT	0x5e /* Month */
+> -#define PCF50633_REG_RTCYR	0x5f /* Year */
+> -#define PCF50633_REG_RTCSCA	0x60 /* Alarm Second */
+> -#define PCF50633_REG_RTCMNA	0x61 /* Alarm Minute */
+> -#define PCF50633_REG_RTCHRA	0x62 /* Alarm Hour */
+> -#define PCF50633_REG_RTCWDA	0x63 /* Alarm Weekday */
+> -#define PCF50633_REG_RTCDTA	0x64 /* Alarm Day */
+> -#define PCF50633_REG_RTCMTA	0x65 /* Alarm Month */
+> -#define PCF50633_REG_RTCYRA	0x66 /* Alarm Year */
+> -
+> -enum pcf50633_time_indexes {
+> -	PCF50633_TI_SEC,
+> -	PCF50633_TI_MIN,
+> -	PCF50633_TI_HOUR,
+> -	PCF50633_TI_WKDAY,
+> -	PCF50633_TI_DAY,
+> -	PCF50633_TI_MONTH,
+> -	PCF50633_TI_YEAR,
+> -	PCF50633_TI_EXTENT /* always last */
+> -};
+> -
+> -struct pcf50633_time {
+> -	u_int8_t time[PCF50633_TI_EXTENT];
+> -};
+> -
+> -struct pcf50633_rtc {
+> -	int alarm_enabled;
+> -	int alarm_pending;
+> -
+> -	struct pcf50633 *pcf;
+> -	struct rtc_device *rtc_dev;
+> -};
+> -
+> -static void pcf2rtc_time(struct rtc_time *rtc, struct pcf50633_time *pcf)
+> -{
+> -	rtc->tm_sec = bcd2bin(pcf->time[PCF50633_TI_SEC]);
+> -	rtc->tm_min = bcd2bin(pcf->time[PCF50633_TI_MIN]);
+> -	rtc->tm_hour = bcd2bin(pcf->time[PCF50633_TI_HOUR]);
+> -	rtc->tm_wday = bcd2bin(pcf->time[PCF50633_TI_WKDAY]);
+> -	rtc->tm_mday = bcd2bin(pcf->time[PCF50633_TI_DAY]);
+> -	rtc->tm_mon = bcd2bin(pcf->time[PCF50633_TI_MONTH]) - 1;
+> -	rtc->tm_year = bcd2bin(pcf->time[PCF50633_TI_YEAR]) + 100;
+> -}
+> -
+> -static void rtc2pcf_time(struct pcf50633_time *pcf, struct rtc_time *rtc)
+> -{
+> -	pcf->time[PCF50633_TI_SEC] = bin2bcd(rtc->tm_sec);
+> -	pcf->time[PCF50633_TI_MIN] = bin2bcd(rtc->tm_min);
+> -	pcf->time[PCF50633_TI_HOUR] = bin2bcd(rtc->tm_hour);
+> -	pcf->time[PCF50633_TI_WKDAY] = bin2bcd(rtc->tm_wday);
+> -	pcf->time[PCF50633_TI_DAY] = bin2bcd(rtc->tm_mday);
+> -	pcf->time[PCF50633_TI_MONTH] = bin2bcd(rtc->tm_mon + 1);
+> -	pcf->time[PCF50633_TI_YEAR] = bin2bcd(rtc->tm_year % 100);
+> -}
+> -
+> -static int
+> -pcf50633_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+> -{
+> -	struct pcf50633_rtc *rtc = dev_get_drvdata(dev);
+> -	int err;
+> -
+> -	if (enabled)
+> -		err = pcf50633_irq_unmask(rtc->pcf, PCF50633_IRQ_ALARM);
+> -	else
+> -		err = pcf50633_irq_mask(rtc->pcf, PCF50633_IRQ_ALARM);
+> -
+> -	if (err < 0)
+> -		return err;
+> -
+> -	rtc->alarm_enabled = enabled;
+> -
+> -	return 0;
+> -}
+> -
+> -static int pcf50633_rtc_read_time(struct device *dev, struct rtc_time *tm)
+> -{
+> -	struct pcf50633_rtc *rtc;
+> -	struct pcf50633_time pcf_tm;
+> -	int ret;
+> -
+> -	rtc = dev_get_drvdata(dev);
+> -
+> -	ret = pcf50633_read_block(rtc->pcf, PCF50633_REG_RTCSC,
+> -					    PCF50633_TI_EXTENT,
+> -					    &pcf_tm.time[0]);
+> -	if (ret != PCF50633_TI_EXTENT) {
+> -		dev_err(dev, "Failed to read time\n");
+> -		return -EIO;
+> -	}
+> -
+> -	dev_dbg(dev, "PCF_TIME: %02x.%02x.%02x %02x:%02x:%02x\n",
+> -		pcf_tm.time[PCF50633_TI_DAY],
+> -		pcf_tm.time[PCF50633_TI_MONTH],
+> -		pcf_tm.time[PCF50633_TI_YEAR],
+> -		pcf_tm.time[PCF50633_TI_HOUR],
+> -		pcf_tm.time[PCF50633_TI_MIN],
+> -		pcf_tm.time[PCF50633_TI_SEC]);
+> -
+> -	pcf2rtc_time(tm, &pcf_tm);
+> -
+> -	dev_dbg(dev, "RTC_TIME: %ptRr\n", tm);
+> -
+> -	return 0;
+> -}
+> -
+> -static int pcf50633_rtc_set_time(struct device *dev, struct rtc_time *tm)
+> -{
+> -	struct pcf50633_rtc *rtc;
+> -	struct pcf50633_time pcf_tm;
+> -	int alarm_masked, ret = 0;
+> -
+> -	rtc = dev_get_drvdata(dev);
+> -
+> -	dev_dbg(dev, "RTC_TIME: %ptRr\n", tm);
+> -
+> -	rtc2pcf_time(&pcf_tm, tm);
+> -
+> -	dev_dbg(dev, "PCF_TIME: %02x.%02x.%02x %02x:%02x:%02x\n",
+> -		pcf_tm.time[PCF50633_TI_DAY],
+> -		pcf_tm.time[PCF50633_TI_MONTH],
+> -		pcf_tm.time[PCF50633_TI_YEAR],
+> -		pcf_tm.time[PCF50633_TI_HOUR],
+> -		pcf_tm.time[PCF50633_TI_MIN],
+> -		pcf_tm.time[PCF50633_TI_SEC]);
+> -
+> -
+> -	alarm_masked = pcf50633_irq_mask_get(rtc->pcf, PCF50633_IRQ_ALARM);
+> -
+> -	if (!alarm_masked)
+> -		pcf50633_irq_mask(rtc->pcf, PCF50633_IRQ_ALARM);
+> -
+> -	/* Returns 0 on success */
+> -	ret = pcf50633_write_block(rtc->pcf, PCF50633_REG_RTCSC,
+> -					     PCF50633_TI_EXTENT,
+> -					     &pcf_tm.time[0]);
+> -
+> -	if (!alarm_masked)
+> -		pcf50633_irq_unmask(rtc->pcf, PCF50633_IRQ_ALARM);
+> -
+> -	return ret;
+> -}
+> -
+> -static int pcf50633_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+> -{
+> -	struct pcf50633_rtc *rtc;
+> -	struct pcf50633_time pcf_tm;
+> -	int ret = 0;
+> -
+> -	rtc = dev_get_drvdata(dev);
+> -
+> -	alrm->enabled = rtc->alarm_enabled;
+> -	alrm->pending = rtc->alarm_pending;
+> -
+> -	ret = pcf50633_read_block(rtc->pcf, PCF50633_REG_RTCSCA,
+> -				PCF50633_TI_EXTENT, &pcf_tm.time[0]);
+> -	if (ret != PCF50633_TI_EXTENT) {
+> -		dev_err(dev, "Failed to read time\n");
+> -		return -EIO;
+> -	}
+> -
+> -	pcf2rtc_time(&alrm->time, &pcf_tm);
+> -
+> -	return rtc_valid_tm(&alrm->time);
+> -}
+> -
+> -static int pcf50633_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+> -{
+> -	struct pcf50633_rtc *rtc;
+> -	struct pcf50633_time pcf_tm;
+> -	int alarm_masked, ret = 0;
+> -
+> -	rtc = dev_get_drvdata(dev);
+> -
+> -	rtc2pcf_time(&pcf_tm, &alrm->time);
+> -
+> -	/* do like mktime does and ignore tm_wday */
+> -	pcf_tm.time[PCF50633_TI_WKDAY] = 7;
+> -
+> -	alarm_masked = pcf50633_irq_mask_get(rtc->pcf, PCF50633_IRQ_ALARM);
+> -
+> -	/* disable alarm interrupt */
+> -	if (!alarm_masked)
+> -		pcf50633_irq_mask(rtc->pcf, PCF50633_IRQ_ALARM);
+> -
+> -	/* Returns 0 on success */
+> -	ret = pcf50633_write_block(rtc->pcf, PCF50633_REG_RTCSCA,
+> -				PCF50633_TI_EXTENT, &pcf_tm.time[0]);
+> -	if (!alrm->enabled)
+> -		rtc->alarm_pending = 0;
+> -
+> -	if (!alarm_masked || alrm->enabled)
+> -		pcf50633_irq_unmask(rtc->pcf, PCF50633_IRQ_ALARM);
+> -	rtc->alarm_enabled = alrm->enabled;
+> -
+> -	return ret;
+> -}
+> -
+> -static const struct rtc_class_ops pcf50633_rtc_ops = {
+> -	.read_time		= pcf50633_rtc_read_time,
+> -	.set_time		= pcf50633_rtc_set_time,
+> -	.read_alarm		= pcf50633_rtc_read_alarm,
+> -	.set_alarm		= pcf50633_rtc_set_alarm,
+> -	.alarm_irq_enable	= pcf50633_rtc_alarm_irq_enable,
+> -};
+> -
+> -static void pcf50633_rtc_irq(int irq, void *data)
+> -{
+> -	struct pcf50633_rtc *rtc = data;
+> -
+> -	rtc_update_irq(rtc->rtc_dev, 1, RTC_AF | RTC_IRQF);
+> -	rtc->alarm_pending = 1;
+> -}
+> -
+> -static int pcf50633_rtc_probe(struct platform_device *pdev)
+> -{
+> -	struct pcf50633_rtc *rtc;
+> -
+> -	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
+> -	if (!rtc)
+> -		return -ENOMEM;
+> -
+> -	rtc->pcf = dev_to_pcf50633(pdev->dev.parent);
+> -	platform_set_drvdata(pdev, rtc);
+> -	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, "pcf50633-rtc",
+> -				&pcf50633_rtc_ops, THIS_MODULE);
+> -
+> -	if (IS_ERR(rtc->rtc_dev))
+> -		return PTR_ERR(rtc->rtc_dev);
+> -
+> -	pcf50633_register_irq(rtc->pcf, PCF50633_IRQ_ALARM,
+> -					pcf50633_rtc_irq, rtc);
+> -	return 0;
+> -}
+> -
+> -static void pcf50633_rtc_remove(struct platform_device *pdev)
+> -{
+> -	struct pcf50633_rtc *rtc;
+> -
+> -	rtc = platform_get_drvdata(pdev);
+> -	pcf50633_free_irq(rtc->pcf, PCF50633_IRQ_ALARM);
+> -}
+> -
+> -static struct platform_driver pcf50633_rtc_driver = {
+> -	.driver = {
+> -		.name = "pcf50633-rtc",
+> -	},
+> -	.probe = pcf50633_rtc_probe,
+> -	.remove = pcf50633_rtc_remove,
+> -};
+> -
+> -module_platform_driver(pcf50633_rtc_driver);
+> -
+> -MODULE_DESCRIPTION("PCF50633 RTC driver");
+> -MODULE_AUTHOR("Balaji Rao <balajirrao@openmoko.org>");
+> -MODULE_LICENSE("GPL");
+> -
+> diff --git a/include/linux/mfd/pcf50633/core.h b/include/linux/mfd/pcf50633/core.h
+> index 42e0412fa98f..f5ab3e64c230 100644
+> --- a/include/linux/mfd/pcf50633/core.h
+> +++ b/include/linux/mfd/pcf50633/core.h
+> @@ -146,7 +146,6 @@ struct pcf50633 {
+>  
+>  	int onkey1s_held;
+>  
+> -	struct platform_device *rtc_pdev;
+>  	struct platform_device *mbc_pdev;
+>  	struct platform_device *input_pdev;
+>  	struct platform_device *regulator_pdev[PCF50633_NUM_REGULATORS];
+> -- 
+> 2.48.1
+> 
 
-This halfway house combines the advantages and disadvantages of
-scenarios 1 and 3. Compared to scenario 3 it gains support for
-applying overlays that make use of interfaces provided by RP1 - I2C,
-SPI, UARTs etc. Compared to scenario 1 it loses the ability for the
-base DTB to refer to elements of RP1, other than by replacing these
-DTB elements with overlays that must be loaded after the RP1 overlay.
-As such, we would see that as a backwards step and not use it.
-
-> 3 - RP1 LOADED FROM OVERLAY AT RUNTIME
->
-> Here it's the rp1 driver that loads the overlay at runtime, which is the =
-case
-> that this patchset originally proposed. The devicetree ends up like this:
->
->   axi {
->     pcie@120000 {
->       pci@0,0 {
->         dev@0,0 {
->           pci-ep-bus@1 {
->                ...
->           }
->         }
->       }
->     }
->   }
->
-> and this is exepcially useful to cope with the case in which there's no D=
-T
-> natively used, e.g. on ACPI systems.
->
->
-> In order for all those 3 mentioned scenatios to work, I propose the follo=
-wing
-> inclusion scheme for for the dts files (the arrow points to the includer)=
-:
->
->
->  rp1-pci.dtso         rp1.dtso
->      ^                    ^
->      |                    |
-> rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b-MONOLITHIC.dts
->
->
-> where those dts are defined as follows (omitting the internal properties =
-for
-> clarity sake):
->
->
-> - rp1-common.dtsi ------- // definition of core rp1 and its peripherals, =
-common
->                           // for all cases
->
->         pci_ep_bus: pci-ep-bus@1
->         {
->                 rp1_clocks { };
->
->                 rp1_gpio { };
->
->                 rp1_eth { };
->         };
->
-> - rp1-pci.dtso ---------- // ovl linked in the rp1 driver code to be load=
-ed at
->                           // runtime from rp1 driver. Only for case 3
->
->         /plugin/;
->         fragment@0 {
->                 target-path=3D"";
->                 __overlay__ {
->                         #include "rp1-common.dtsi"
->                 };
->         }
->
-> - rp1-nexus.dtsi ------- // adapter to decouple rp1 ranges for non runtim=
-e-loaded
->                          // overlay case (i.e. only for case 1 and 2)
->
->         rp1_nexus {
->                 ranges =3D ...
->
->                  #include "rp1-common.dtsi"
->         };
->
-> - rp1.dtso ------------ // overlay to be loaded by fw (case 2)
->
->         /plugin/;
->         &pcie2 {
->                 #include "rp1-nexus.dtsi"
->         };
->
-> - bcm2712-rpi-5-b-MONOLITHIC.dts --- // monolithic dtb to avoid any overl=
-ay use
->                                      // (case 1)
->
->         / {
->                 ... all rpi5 board dts ...
->                 &pcie2 {
->                         #include "rp1-nexus.dtsi"
->                 };
->         };
->
->
-> with only minimal changes to the rp1 driver code, I can confirm that all =
-those
-> scenarios can coexits and are working fine. Before processding with a new=
- patchset
-> I'd like to have some thoughts about that, do you think this is a viable =
-approach?
-
-Thank you for this - the creation of a core RP1 declaration that can
-be tailored to multiple applications using different wrappers is
-exactly what I had in mind. I agree that your partitioning scheme can
-cater for the 3 usage scenarios, but for the reasons outlined above I
-think scenario 2 is not useful to us, although it isn't impossible
-that U-boot might see things differently; I see no harm in having it
-supported, but I wouldn't want anyone to go to unnecessary effort to
-make it work.
-
-Phil
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
