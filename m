@@ -1,132 +1,117 @@
-Return-Path: <linux-gpio+bounces-17461-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17462-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C573BA5CFED
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:50:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 020C6A5D071
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 21:08:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85E5C189DA39
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:50:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B55C3B3FB9
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:07:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11F652627E3;
-	Tue, 11 Mar 2025 19:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2230E264615;
+	Tue, 11 Mar 2025 20:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KZ7s4Db3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tjeq6X04"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC15C1EDA06
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 19:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D098C2641C3;
+	Tue, 11 Mar 2025 20:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741722636; cv=none; b=qtykIpLuZU1cxfVesT27fXpStK764L9lDwTI2q3lIpA8Flg+BeLaLKo+CE/KNLBkepHuJ/TTZXY9XxNOGI8SvFwBWHUA9oQQBVYnW56llIG7olhTTXGBipbxXtuc7KdvdWYyARHAHWzmZPWbGO1rBSxHEiO5KTdzM3thupuNeIo=
+	t=1741723668; cv=none; b=NXNDRoPNWQIPSv5yY0d9jx0r+GO0jcWjyJ0GgyyKNMvlmo7bIj5+WwF85fDarEvkVrln3qSOCIYskAaCiXY6PfJYVF3MlR77Jxwe4tdq+NHT3BuMGsJefFZSv32F3S2axsj1Ypr3nNtqQ01v8nvN2qfSVk3HEmT4FQMKYce8OcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741722636; c=relaxed/simple;
-	bh=HBKTIcJdBDO7yrFqGw1sqxIWrbOaXehqkaEPlSp2hVY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J0JGDJWfhqQruLiYLeV94nqCIdjvzl/yI/V6/XkafuJDckFc+dMsxFm3t2zeGMrOJZFUuSySg9ocizGQVdkvOWbcupaUmtZPrn22gotGRr2Zh6ritAdZNxZEGCet0cHdXR4QHDp610pU/J62nRTf9MhbJOtB6gUqdTk55DMvTMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KZ7s4Db3; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30761be8fcfso65526171fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 12:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741722633; x=1742327433; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iq/JcpFJHDUT1Ef+/IWGp9CZQdsUBpGs0X2x21xxyGQ=;
-        b=KZ7s4Db3uOrggZZcVh3LgOEchZsQEBdmVx+gw89X7PPW0Q7akXTMGU7QV5oC3wDog5
-         g18bC2bQfG/YLuPYQVmNA2S5wuwkneqjjP0xiI/bKb+wASaFfnxXFVxmyd2dgeaza/OZ
-         qh/SEiHC+tYjE8KEvZMyE6JB7cXFQcd4jugXNI/mijxXLPJQHHNd73D9j2lKo0+wsnkd
-         91EJvteARRa7O2UK60mVQ3RUKwUkgHSFmbDpBmk2IcRxVfYcD8HwLufMuHGbjDHgg4x2
-         pXqAy1xSg1PJglvhWB7cWXapbm3Ipjr8P04X0EC30LLSGuZTLZ0/lZjZi7pXQ3o9Bgxo
-         ZXXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741722633; x=1742327433;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iq/JcpFJHDUT1Ef+/IWGp9CZQdsUBpGs0X2x21xxyGQ=;
-        b=vIWEwYViA8VvXW/68IXy21/LuACn19ZVdxBfE65kCWhPg+iSLuxGn7mc+V5wdgZv5c
-         50Xd6SSCKG6rqyIrrT4dZ3jaOkumWiRO8mEVwrGygAkQjkSMo98/J8Pw38Bg+FCw2xIi
-         MrbylNa/oN4PBw+aquHwY2aS5RFzinkL35WzTwm/H4JriSm76vDXNBVtc0A0EFzfx5OB
-         nVoCJPtQiSGif6Q0Pv4sefDlkHL7do7PDCS8KvQS5TzI9nfVtzjmiZnLoBZQrrC/Zso2
-         RKiUYXPn6kH/cQ//2QpCt985/mjwwbWc28YaINhTFzuNXTkLAtlyIOTwow1gV2syhpzm
-         guoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpley4ZMbt4X/gvAhgmCTGnkjiIEfREkFCVsFNDNGDQaVpoN8W7MWW/gN6++sFyUO1IMaL3hmRM5Wv@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyulr3BnTb2R9m1CdiD2yPqdXv5zQYJZn5bm+3Dvl9BrF0J+xF7
-	fkBlgfKN9CHCTxV44ESDCkSRj1uH0b/xBdX1XsuAkYbGwELhIo4MGbDOsyVYu3po+HBOh9OfEKT
-	Ad98YdSBuTCi2zbOnYZ/erzzNLFnAlf74KwU75A==
-X-Gm-Gg: ASbGncv8GCQIdKhAc1inPSiUroCOIF4AVm6HjiEyCc6nPKBa2gLmXmAbhNQ9TFy0++r
-	miuKr4dZS6BJCudQWGoBTXnVWIx4fjn+nf6wlnB0JeqLtbkOD+DIRty38VnrXQeh5oAqnQj/lC6
-	P7InqoKVfRaNYtlqMMNY+06Q+x5QhzkFnkXrSfQtDRpI8OuDthvzW65Un2JS0KfQAWOrI=
-X-Google-Smtp-Source: AGHT+IHl6j5j5SomjINRchvsfly9h9XFFnxscFB20My2s2QskmtbkaNSy5APBp3ZYvQD2cCDToM/l5u5NAuBTBHOcaM=
-X-Received: by 2002:a05:6512:12c3:b0:549:4df0:76 with SMTP id
- 2adb3069b0e04-54990e2bfa4mr6513966e87.4.1741722632539; Tue, 11 Mar 2025
- 12:50:32 -0700 (PDT)
+	s=arc-20240116; t=1741723668; c=relaxed/simple;
+	bh=kypsoT+y8Xwt8jAYhLNEnwar1djrWfc1JLO5IbchjC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B523K5qL4TWgucpbsXhFpGb807S/k44+ArhKBZwcy6cq/TcAfgo+VOhFR+rGKaS6M9mlVQS5SLG6YG0bVPQodXsHxFqLWEQaglYYpk0Ir6I6bSrKVaQ0aqKCcXQGlDCiAnpPHqNFzoLlLmW11dW1yitl6I9NZljIRcpYHOGeapA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tjeq6X04; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF50C4CEE9;
+	Tue, 11 Mar 2025 20:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741723668;
+	bh=kypsoT+y8Xwt8jAYhLNEnwar1djrWfc1JLO5IbchjC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tjeq6X0429QkGYOfvtTSP68hCTEAk7tXifXZWYmaYPtIW1yT3Z41d3tlZ6tAEBjV6
+	 Nu5ijlgHQ8JR3KznPZcuksAkqMTzcrY0zIikKCMTg9syTFJy/7+Sd5RSy63wTFYru0
+	 4b87SAF4Ki23rjhuGrZV/ndPPHutoLSxxVBdiShjCDPfg01YMYUslYfTknrK/mqRyu
+	 kr2vBuysMCVssvx/2bGh2sClVnz81+Y36YPSlAuKj8angw/Kx9mARrh7Gxbbr5IJIg
+	 MoU+KZjksqaamOCy4qFUJF8+2Aia6G7AuovSHoL3JC1GLRErJqW0/4dtK7h4BXEOKB
+	 gysic/nHt3nUQ==
+Date: Tue, 11 Mar 2025 21:07:45 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] Add gpio-ranges property for EN7581 gpio controller
+Message-ID: <Z9CYEZloamPhVdBS@lore-desk>
+References: <20250307-en7581-gpio-range-v1-0-de1262105428@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
- <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
- <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com> <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
-In-Reply-To: <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Mar 2025 20:50:21 +0100
-X-Gm-Features: AQ5f1Jo19ld-vhsqDYYCbpt69VQo96FJpDSZ9T2vPMH-p0ylVgk4jG9zzAiuio8
-Message-ID: <CAMRc=McPdfMM85GMgMChUzZSJzrpELNZZFMiOrBkM_Hy0ovHFg@mail.gmail.com>
-Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
- get_direction failed
-To: Genes Lists <lists@sapience.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="icN7TOB+24o1XSzr"
+Content-Disposition: inline
+In-Reply-To: <20250307-en7581-gpio-range-v1-0-de1262105428@kernel.org>
+
+
+--icN7TOB+24o1XSzr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2025 at 8:30=E2=80=AFPM Genes Lists <lists@sapience.com> wr=
-ote:
->
-> On Tue, 2025-03-11 at 10:40 -0700, Bartosz Golaszewski wrote:
-> > On Tue, 11 Mar 2025 15:03:59 +0100, Genes Lists <lists@sapience.com>
-> > said:
-> > > On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:
-> > > >
-> > > >  gpio gpiochip0: gpiochip_add_data_with_key: get_direction
-> > > > failed: -
-> > > > 22
-> >
-> > Hi Gene!
-> >
-> > There are two problems here. The issue you're seeing is fixed in next
-> > but
-> > not in mainline due to my omission. I will send a patch for that.
-> >
-> > On the other hand, the pinctrl driver in question should be fixed
-> > too.
-> > Can you try the following change:
-> > ...
->
-> > Bart
->
->
-> Thank you Bart.
->
-> I tested your pinctl patch on mainline (on commit
-> 0b46b049d6eccd947c361018439fcb596e741d7a) and the same messages are
-> logged.  Presumably I also need the other patch from next as well.
->
+> Introduce missing gpio-ranges property for Airoha EN7581 evaluation
+> board
+>=20
 
-No, they are independent. The other one should fix your issue. Could
-you please test it[1] and leave your Tested-by under it on the list?
+Hi Linus and Angelo,
 
-Bartosz
+is it fine if this series goes via linux-mediatek tree?
+en7581_pinctrl node is only defined there for the moment.
 
-[1] https://lore.kernel.org/all/20250311175631.83779-1-brgl@bgdev.pl/
+Regards,
+Lorenzo
+
+> ---
+> Lorenzo Bianconi (2):
+>       dt-bindings: pinctrl: airoha: Add missing gpio-ranges property
+>       arm64: dts: airoha: en7581: Add gpio-ranges property for gpio contr=
+oller
+>=20
+>  Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.yaml | 3=
+ +++
+>  arch/arm64/boot/dts/airoha/en7581-evb.dts                            | 4=
+ ++++
+>  2 files changed, 7 insertions(+)
+> ---
+> base-commit: a8a297e8bb3dd304cac77f7c435a4983d885a657
+> change-id: 20250307-en7581-gpio-range-fceb30c7e2c9
+>=20
+> Best regards,
+> --=20
+> Lorenzo Bianconi <lorenzo@kernel.org>
+>=20
+
+--icN7TOB+24o1XSzr
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ9CYEQAKCRA6cBh0uS2t
+rMEWAP46Y725zv4QZ2O/ml8GZ0JZ2mc8jhx0fJFGt3Hkmmo2AAD/aNhB7oE+OqvP
+7D82+qP5g/4Qg6+HtlRX/B6Gk78LYQg=
+=nXDU
+-----END PGP SIGNATURE-----
+
+--icN7TOB+24o1XSzr--
 
