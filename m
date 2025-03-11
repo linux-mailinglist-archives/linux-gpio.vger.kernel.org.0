@@ -1,136 +1,227 @@
-Return-Path: <linux-gpio+bounces-17427-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17428-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F828A5C2C3
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:32:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42A56A5C311
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:54:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 301E4171F09
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 13:32:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB1C53B358D
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 13:54:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75FA1C5D59;
-	Tue, 11 Mar 2025 13:32:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D1E253B64;
+	Tue, 11 Mar 2025 13:54:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjUGOna9"
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="RwdRgjPw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919551487E9;
-	Tue, 11 Mar 2025 13:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7508B24EF97
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 13:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741699964; cv=none; b=Wj64mCmbCbkKqDYPGc8ANA5TAQpx3vPvFDDMFGf7oOQzCbUt9fHEDoWeSUrtDE9iczlVQIhhiyw1zqYFDdQh5Q0WQrnZIKdeAY5Fwit2hqXcCRagH+bxWBBlMzuw2lrFXxuutv3zITRCfhabsu1OXmOy17ARO/qmISdrGfbyNIo=
+	t=1741701254; cv=none; b=DeWqnmmAX8j2W4MTqiyZEKlgOVV23xfqLRmoQCVH+QeTDcN3sMwK0AE/djvukNzX+GetI10vhkUUl3VMosfXCKwzrY6SND90I8JKknJ9mFdzjbadkzwBTWVPC5YPNY9PKa4XagO+TzOfFLL4s87FmqPM4nI7DU66oodBcx8sN4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741699964; c=relaxed/simple;
-	bh=foFBmGFbc+QCSONoZVpR+givHeN3h/c5aJuICUYGiE0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DXNuSj4+ueC4+4VILS36C8qLSsy+Ke6mtZjwPpHczd70V4caUSDwjheL0xWSv8u0WWI3y5cqMQ2KmRajk7Sz/13SiM4nWk9C4i6/PYhu16jzIZ1WnGbk3w8gpv9qtGVsi3CQRaPB3FK4KDWC8Kk/+L9bKDhlQsL5XFEOHH9By2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjUGOna9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B2A3C4CEF3;
-	Tue, 11 Mar 2025 13:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741699964;
-	bh=foFBmGFbc+QCSONoZVpR+givHeN3h/c5aJuICUYGiE0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IjUGOna96P6PIijXA/JopSCd1d/VyKBBN+ce/Ed0nBiLhKysYuXMOO8ntjKoNJFoo
-	 KvvRKcBWnITLYLhGRnSUQitn+rIdSSRK2Cpm5n6Mn/118FAtbrimE5jYp/UXlZTfql
-	 gprF+LsaUajaD4mfZOL8d+MWXSTnEbYoMmCi0oUOd2lKGUmCmlD38v+i4Wiq5Pmpjr
-	 ayzyPa2JHPukyRerL2/P8O+UDUAqMM7QygXATRowtyikvNNz/2O+EBnThkGFsw2KTR
-	 mnRaXP7EryYvf+2VABTSHwEZzyziKQIuYIaobgi/ftZzS8lPgE5Ag3aYBUTqbdFhEr
-	 HnFlBeThaEv+w==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so8324312a12.3;
-        Tue, 11 Mar 2025 06:32:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVE/etq7yYVR731//mLbIx6fuz4N3WBsp/taDv6DUAdjSAvEFKqUOOcbNyt/mjSFvGPbId9zBqo21EC1w==@vger.kernel.org, AJvYcCVFFxWXi1G8EDjZ5tpKHuBLeDYh4rjTO2HNngx05BKIuJGzRJWd0LGcG/kHH0ZIDsQJKt2BCiE2koKJ@vger.kernel.org, AJvYcCW8UgNm2ORV6uv3gidMyg8hIgmUN1Lt9mJoi+wO2yxk3H2Rn4pAsnqQt1dohVxqKOsczdONO8z4Tw5a@vger.kernel.org, AJvYcCXkMokhN/355TGe12OSjeljQvVcn00quRImZ2ljZ6tIYzQ4VTmMH7PvgM8LtAe7ue13DOn99RcbuXyV@vger.kernel.org, AJvYcCXsHpk+Kco0TOlhTmQxQXJOw/sJn9QgRvlPYy+FAXFETqK6kuxts8w7ztT6RQVlVCkfabZPUZ8p2Ny2wNuE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvnou1cphY4sdaDF6XuvRYP/txe/G9yT/v+J9yb9bKE0VqXdDN
-	KvnBxlQ8CXvCoJnhV1poU82s4+iFqTkRNkkMVcKGumV5WsZTjOlXsmeX06w6v9K1ITKFtPLZnjO
-	2tXt6e1OYEiuildher/TYDvdidw==
-X-Google-Smtp-Source: AGHT+IEifrCmqJfikkidIDTYr2jS6o8iDBri/VlKwu/FWmzn0+fbwXWdCCMBLNQSNY6IZ7RZHzcbstx5Fj81dc05srU=
-X-Received: by 2002:a05:6402:2353:b0:5e5:c5f5:f82 with SMTP id
- 4fb4d7f45d1cf-5e5e211e1f1mr21034407a12.0.1741699962525; Tue, 11 Mar 2025
- 06:32:42 -0700 (PDT)
+	s=arc-20240116; t=1741701254; c=relaxed/simple;
+	bh=AGcHUb372Qb4xp3PIIbgqrFpbsdhvyHF+3MvUWkEIUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VxeRRmuHaKOKGxXJObvd4kIfzFnXm5otZTQIMUxZORnmhiBKTIeyW65kVi1G5g9uO1N0W3e4dLnADQybG51W7W97v+4p57hSZsG9fW7teGMVUMx0fAPOsQ4yw2V2Q16amw9W+W/iGyOS4+iiCAC/KSolvHywNjzCyAmvW8qhiPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=RwdRgjPw; arc=none smtp.client-ip=94.124.121.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=xus23xtK3M/qRjR6KMXHiICpWAcFs8WV4zaduJRJqis=;
+	b=RwdRgjPw84rYbU0uTbR5bXlPAUGBNjN0JVROqGEG+jZACXgHamTSYK22FqvqEXyMXbYLeGPp7r71v
+	 UVDxvkIaqvmG+ofG70jSoQ7Cr8QS3HZo6zc/rcxe+Wy8tQo5Ucmbhp/fvQeU5CiTMVnUKHHN/D/OA1
+	 dTUybv0heA5IJbWYz4KfXpZguGUFOy3nZ3j5IiGjdmGGjOX9MtBW7cB1k9NJUsV7hyZKUNTuKGaLkg
+	 qKDByLICJDRTBCi8EI1hgKjBmsAA8nQGfe9NmEUq7IKvbMwjgNMSWkYOzy1HKj6BWC7DMGRdiHLLuE
+	 bbvyyXZd3XPpO/PYw1hUr8mlqedJf6A==
+X-MSG-ID: 4da3203a-fe80-11ef-a3a3-00505681446f
+Date: Tue, 11 Mar 2025 14:54:07 +0100
+From: David Jander <david@protonic.nl>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH RFT] gpio: cdev: use raw notifier
+Message-ID: <20250311145407.7e05b5d9@erd003.prtnl>
+In-Reply-To: <20250311-gpiolib-line-state-raw-notifier-v1-1-d0fa44fd67cc@linaro.org>
+References: <20250311-gpiolib-line-state-raw-notifier-v1-1-d0fa44fd67cc@linaro.org>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738963156.git.andrea.porta@suse.com> <c0acc51a7210fb30cae7b26f4ad1f0449beed95e.1738963156.git.andrea.porta@suse.com>
- <20250310212125.GB2377483@rocinante>
-In-Reply-To: <20250310212125.GB2377483@rocinante>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 11 Mar 2025 08:32:28 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKPGOdS_8KDggO5tBHAnC-NTLAC5iS9GANm9BuxBfQUsw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpFqtVYiSlkH0QD-dTfJ4bf9VAjFuYNndnQ1jy7PeA-IWSalDclsIDbfBA
-Message-ID: <CAL_JsqKPGOdS_8KDggO5tBHAnC-NTLAC5iS9GANm9BuxBfQUsw@mail.gmail.com>
-Subject: Re: [PATCH v7 03/11] dt-bindings: pci: Add common schema for devices
- accessible through PCI BARs
-To: Krzysztof Wilczynski <kw@linux.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
-	Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 10, 2025 at 4:21=E2=80=AFPM Krzysztof Wilczynski <kw@linux.com>=
- wrote:
->
-> Hello,
->
-> [...]
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index d45c88955072..af2e4652bf3b 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -19752,6 +19752,7 @@ RASPBERRY PI RP1 PCI DRIVER
-> >  M:   Andrea della Porta <andrea.porta@suse.com>
-> >  S:   Maintained
-> >  F:   Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.ya=
-ml
-> > +F:   Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
-> >  F:   Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.ya=
-ml
-> >  F:   include/dt-bindings/clock/rp1.h
-> >  F:   include/dt-bindings/misc/rp1.h
->
-> I would be happy to pick this via the PCI tree as per the standard
-> operating procedure.  However, the MAINTAINERS changes do not exist
-> for us yet, and are added in the first patch of the series, which is
-> not ideal.
->
-> I can add the missing dependency manually, but that would cause issues
-> for linux-next tree, which is also not ideal.
->
-> I saw some review feedback, as such, when you are going to be sending
-> another version, can you make MAINTAINERS changes to be the last patch,
-> perhaps.  Basically, something standalone that perhaps whoever will pick
-> the misc patch could also pick and apply at the same time.
->
-> Alternatively, someone else picking up the PCI dt-bindings would work, to=
-o.
->
-> Your thoughts?
+On Tue, 11 Mar 2025 14:19:40 +0100
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-I guess I missed this in review, but why is a common schema buried in
-a device maintainer entry? Also, an entry in MAINTAINERS is redundant
-anyway because get_maintainers.pl can fetch maintainers from the
-schema file.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Atomic notifiers call rcu_synchronize() in
+> atomic_notifier_chain_unregister() causing a considerable delay in some
+> circumstances. Replace the atomic notifier with the raw variant and
+> provide synchronization with a read-write spinlock.
+> 
+> Fixes: fcc8b637c542 ("gpiolib: switch the line state notifier to atomic")
+> Reported-by: David Jander <david@protonic.nl>
+> Closes: https://lore.kernel.org/all/20250311110034.53959031@erd003.prtnl/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 15 +++++++++------
+>  drivers/gpio/gpiolib.c      |  8 +++++---
+>  drivers/gpio/gpiolib.h      |  5 ++++-
+>  3 files changed, 18 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index 40f76a90fd7d..107d75558b5a 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -2729,8 +2729,9 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
+>  	cdev->gdev = gpio_device_get(gdev);
+>  
+>  	cdev->lineinfo_changed_nb.notifier_call = lineinfo_changed_notify;
+> -	ret = atomic_notifier_chain_register(&gdev->line_state_notifier,
+> -					     &cdev->lineinfo_changed_nb);
+> +	scoped_guard(write_lock_irqsave, &gdev->line_state_lock)
+> +		ret = raw_notifier_chain_register(&gdev->line_state_notifier,
+> +						  &cdev->lineinfo_changed_nb);
+>  	if (ret)
+>  		goto out_free_bitmap;
+>  
+> @@ -2754,8 +2755,9 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
+>  	blocking_notifier_chain_unregister(&gdev->device_notifier,
+>  					   &cdev->device_unregistered_nb);
+>  out_unregister_line_notifier:
+> -	atomic_notifier_chain_unregister(&gdev->line_state_notifier,
+> -					 &cdev->lineinfo_changed_nb);
+> +	scoped_guard(write_lock_irqsave, &gdev->line_state_lock)
+> +		raw_notifier_chain_unregister(&gdev->line_state_notifier,
+> +					      &cdev->lineinfo_changed_nb);
+>  out_free_bitmap:
+>  	gpio_device_put(gdev);
+>  	bitmap_free(cdev->watched_lines);
+> @@ -2779,8 +2781,9 @@ static int gpio_chrdev_release(struct inode *inode, struct file *file)
+>  
+>  	blocking_notifier_chain_unregister(&gdev->device_notifier,
+>  					   &cdev->device_unregistered_nb);
+> -	atomic_notifier_chain_unregister(&gdev->line_state_notifier,
+> -					 &cdev->lineinfo_changed_nb);
+> +	scoped_guard(write_lock_irqsave, &gdev->line_state_lock)
+> +		raw_notifier_chain_unregister(&gdev->line_state_notifier,
+> +					      &cdev->lineinfo_changed_nb);
+>  	bitmap_free(cdev->watched_lines);
+>  	gpio_device_put(gdev);
+>  	kfree(cdev);
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index e5eb3f0ee071..b8197502a5ac 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1075,7 +1075,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  		}
+>  	}
+>  
+> -	ATOMIC_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+> +	rwlock_init(&gdev->line_state_lock);
+> +	RAW_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+>  	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+>  
+>  	ret = init_srcu_struct(&gdev->srcu);
+> @@ -4361,8 +4362,9 @@ EXPORT_SYMBOL_GPL(gpiod_set_array_value_cansleep);
+>  
+>  void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action)
+>  {
+> -	atomic_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -				   action, desc);
+> +	guard(read_lock_irqsave)(&desc->gdev->line_state_lock);
+> +
+> +	raw_notifier_call_chain(&desc->gdev->line_state_notifier, action, desc);
+>  }
+>  
+>  /**
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index a738e6c647d8..58f64056de77 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -16,6 +16,7 @@
+>  #include <linux/gpio/driver.h>
+>  #include <linux/module.h>
+>  #include <linux/notifier.h>
+> +#include <linux/spinlock.h>
+>  #include <linux/srcu.h>
+>  #include <linux/workqueue.h>
+>  
+> @@ -47,6 +48,7 @@
+>   * @list: links gpio_device:s together for traversal
+>   * @line_state_notifier: used to notify subscribers about lines being
+>   *                       requested, released or reconfigured
+> + * @line_state_lock: RW-spinlock protecting the line state notifier
+>   * @line_state_wq: used to emit line state events from a separate thread in
+>   *                 process context
+>   * @device_notifier: used to notify character device wait queues about the GPIO
+> @@ -75,7 +77,8 @@ struct gpio_device {
+>  	const char		*label;
+>  	void			*data;
+>  	struct list_head        list;
+> -	struct atomic_notifier_head line_state_notifier;
+> +	struct raw_notifier_head line_state_notifier;
+> +	rwlock_t		line_state_lock;
+>  	struct workqueue_struct	*line_state_wq;
+>  	struct blocking_notifier_head device_notifier;
+>  	struct srcu_struct	srcu;
+> 
+> ---
+> base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
+> change-id: 20250311-gpiolib-line-state-raw-notifier-70c1ad3e99eb
+> 
+> Best regards,
 
-Rob
+Tested-by: David Jander <david@protonic.nl>
+
+Thanks!
+
+Seems to work correctly under some basic testing.
+
+$ time gpiofind LPOUT0
+gpiochip7 9
+real    0m 0.02s
+user    0m 0.00s
+sys     0m 0.01s
+
+$ time gpiodetect
+gpiochip0 [GPIOA] (16 lines)
+gpiochip1 [GPIOB] (16 lines)
+gpiochip10 [GPIOK] (8 lines)
+gpiochip11 [GPIOZ] (8 lines)
+gpiochip12 [unknown] (22 lines)
+gpiochip13 [mcp23s17.0] (16 lines)
+gpiochip14 [0-0020] (16 lines)
+gpiochip15 [0-0021] (16 lines)
+gpiochip2 [GPIOC] (16 lines)
+gpiochip3 [GPIOD] (16 lines)
+gpiochip4 [GPIOE] (16 lines)
+gpiochip5 [GPIOF] (16 lines)
+gpiochip6 [GPIOG] (16 lines)
+gpiochip7 [GPIOH] (16 lines)
+gpiochip8 [GPIOI] (16 lines)
+gpiochip9 [GPIOJ] (16 lines)
+real    0m 0.03s
+user    0m 0.00s
+sys     0m 0.01s
+
+Best regards,
+
+-- 
+David Jander
 
