@@ -1,133 +1,189 @@
-Return-Path: <linux-gpio+bounces-17416-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17417-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CB8DA5BE40
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 11:53:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5B30A5BE70
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 12:04:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F01716E78B
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 10:52:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C7217A4E53
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 11:03:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DBFD2505C5;
-	Tue, 11 Mar 2025 10:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F19D4250C1C;
+	Tue, 11 Mar 2025 11:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="o4ZTKhG3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp28.bhosted.nl (smtp28.bhosted.nl [94.124.121.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0752D2505AF
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 10:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F7E235C15
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 11:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741690376; cv=none; b=is6Hz52j2v+WyR/0JkYo1uIuy611DTxkqB1uJ2D3NllhzWWX6J66MHCyx8zg8NHUfhq4XIycAiSMGVKFCLU+bjroRDOqwtrL75ZLDXJ2Q5zE6uTHD+xE31QvFtwZdEpWaWbWAwX1dwjhtIQofq6SYTN2CmZZqfJ+lmCN5euOkPo=
+	t=1741691038; cv=none; b=EZWwlFn8gFM7eBrzyQY7M5e/6oeRKVORE5Umlxo2IPvlT86dcg8g4sBQAXURS+6tUfY6tiumc496NLomq+3JfjH0KMw63jtMhf3edBt+lhAOuUU2vsXdUI8PZ64K6jXuqNfxcFnj8kBDaDcgR2v+ANlnNgDckoNX5KW6VVUL/rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741690376; c=relaxed/simple;
-	bh=gmNI7VVQha7Z+eFdYoMLyllxBH6ItQ/ta4/T4rcGPqk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kQY0NYVfAcq+Li7xyhZCLSAxgEbEqTTgzdyb8C3Ob/TIVUb4hwF+k96ppwaTO5xwge/IcOlJnr/HvgiLI65lWwIKMJ62VS3NAw+0sJuIm2eIqAu6U+JUDsh7t/q/uE+gl/9BBHw0qkxpiySXLwhAh9eZAPYU2OYFslCC4nmB3z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-51eb1a6ca1bso2170300e0c.1
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 03:52:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741690370; x=1742295170;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fGAHl6tMue89g5EW7kXwynu+8ote30GHCobzq/hXjLM=;
-        b=Juskrm05DYFkzC5ADTFRKRoO2ZyiQkjltvlUcsCtRWZErBPcRSyG3tgGOLLsxa8FXl
-         /rWEHpvP8wWxdVJg2CsLZF0Wta+4w4QiWLfP7tNgV9LY0Ohmcn8+/prDF1hw4D4rgHFJ
-         IwKvBrbRLpw9CvwxSfMu61ykqHjd6RP2YPY0dNlgZBclnfrfj1towDsydsxArykJTlvZ
-         GlKCXk2fCj5hFNNMBOcH53c4YYvuccpFuDf1Nw/wEqPSXH/1JRV1E6W0cFBfWRnAZVDH
-         C9ZDaPLCVGjjlEpX7ZuNZWWDFsMNiM01qLpc9TXQ6hdvwtrd6znNod9HrxKmEKgrLEgE
-         b8tw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpPcH/WaEalVWw+720YD1Mub862pMuZHDzO5Rtp5nRvBnwcwkau00Pks7NAaSNC+OaeLSx+nWQtgN+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw62xEiTIsshO0GoU5GbkPpGheihJZ6YDPFsySSVlK5UfooteJD
-	3jQ7zBUThGnTjtAl4mGKIYNrrI9J99SwSKhIy0552nzHlSckp07afOI0xRRM
-X-Gm-Gg: ASbGnctxSQLE4EIufwoOrP5rF4vtxsoV9NbR48rTb5mcq64ga5oJRwelZuFnj0jnqk7
-	nbRg2taLZ8l+M/fIHfd1qFZbTg0RdFAklTR3mppTYElYEoEcVAthDsxArqUjd9D2WOftSnjEx43
-	Sjgoh7/PkqlVpdgjl4ydxKlayfxiCqkIXsSiisIgZs3px16DxMxHsoO8EiHd29UTvpUOL4UQEsT
-	V/Ceq2P2LZPNUuvFTuE/2i09FuvU07HmeGR0KC0dIKdKbY5imPZu1x0dyma/PrfMj0vDT6RXTDp
-	wuOYCmloWpirEmCEprZUoLBjm6M6JVQX4h4rolvA4U7ciiuBc+TrR30sjbPirAEZhl9CLsmyR/m
-	iV9HRLkc=
-X-Google-Smtp-Source: AGHT+IG6tdRNrf3Bk9nFQbGsABIQMauXPWKDTViXpOs1GamimglB5cmKG4IlAtWEDUAEwmJ66c5shg==
-X-Received: by 2002:a05:6122:2011:b0:520:42d3:91aa with SMTP id 71dfb90a1353d-523e3ff118fmr11267106e0c.2.1741690370075;
-        Tue, 11 Mar 2025 03:52:50 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-523d8ac1ec7sm1748677e0c.11.2025.03.11.03.52.49
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Mar 2025 03:52:49 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so993752241.2
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 03:52:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/0aBCYiq/uXss3eamfyQmVfz3yq/0UT8f3mmbkPF59MkgI/gBMyFmPJ24RTHuTj47Anos9koSWHkd@vger.kernel.org
-X-Received: by 2002:a05:6102:1606:b0:4c1:9cb2:8389 with SMTP id
- ada2fe7eead31-4c30a50195bmr9794872137.2.1741690369014; Tue, 11 Mar 2025
- 03:52:49 -0700 (PDT)
+	s=arc-20240116; t=1741691038; c=relaxed/simple;
+	bh=c6gsWuE9KbTB/AbCzr5g1BWhPggo9fdPNPaTriurqeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P80pZpfET95KXsq2JBjlRrBUEGGzggPkXYnRJ2jnOH75n1ek6M9DSArUBO8O2r8FVbyB9AFnT9wauMnA4I1zop9GkDmlkvIUtPatfBd25w66ge+Cr1TFaFCT4EwI52J+5doXQxkKMUvUeZ2eGE2dTnTpszz6ykLYqpc9td7KyZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=o4ZTKhG3; arc=none smtp.client-ip=94.124.121.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=ZZMF97YcPvm5C1er0iirc7cTdLB5XykMCEDCq40QqHU=;
+	b=o4ZTKhG3T4SWH3ep4AOVowkxR/jOzYE9if7g5cLPT7GnO0qTy1ytEpzr4vMC/uVxtH2nS2zGyKb0R
+	 ovF2R9y+aaerrmvRLOVg/0py8SLCsTUzTgX0Ysty4RJc7Z8m094rko4kNilteyeILCuiV4tfsKHYMC
+	 LyjM3O+2QDrP2uvqkRWedrdtz5Qg4pm59+aeULQHZHbyyEH06wO6QcnSHHBug03o3j68NeeuoMlKg4
+	 O7ZC5jam1NkSXiyIEYLvf0Zbl6wW91BrgDfVMRFRHNVeYixzA4hnu5OWCnkEyMC5Z09GLtRwlsUMs7
+	 uUocogmya6Oepvj5LRiHRLaPqFIUTkg==
+X-MSG-ID: 8165c850-fe68-11ef-b5cf-0050568164d1
+Date: Tue, 11 Mar 2025 12:03:46 +0100
+From: David Jander <david@protonic.nl>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson
+ <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: regression: gpiolib: switch the line state notifier to atomic
+ unexpected impact on performance
+Message-ID: <20250311120346.21ba086d@erd003.prtnl>
+In-Reply-To: <CAMRc=MeWp=m1Bi_t_FCrxFOtiv3s8fSjiBjDk4pOB+_RuN=KGg@mail.gmail.com>
+References: <20250311110034.53959031@erd003.prtnl>
+	<CAMRc=MeWp=m1Bi_t_FCrxFOtiv3s8fSjiBjDk4pOB+_RuN=KGg@mail.gmail.com>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
- <CACRpkdZXm9eFJ2nzb5Gsm_ddirt6XZTQyu2G+vX2FB+=L6Lttw@mail.gmail.com>
- <e5bdcca6-4d1b-451c-8fde-990db9db23d8@denx.de> <CACRpkdaGeV3v80QuWwus5rg9GfKkT_gzhvRgfOobnDMUO2cPEQ@mail.gmail.com>
- <d29f36d1-53e0-42d3-beed-cc228553f658@denx.de> <CACRpkda-0+9u1mu8gJPwE_2ykY0TeoDS3t2_D-HoPgUQ45gfiw@mail.gmail.com>
- <CAMuHMdW=bttP01Jigtn1DPyzVzTNr3GguNTo4Kw=NOBhhhthRA@mail.gmail.com>
- <CACRpkdZ4XOrcSOawd551tNx7qzexOguzboaA_6Z36QPfK7a0vA@mail.gmail.com>
- <CAMuHMdXbY6J9HGM_WP+9tJ8LDaZP0=XrE3dciWX8Qmiss2spZw@mail.gmail.com> <CAMRc=MeqG9-15-KCpXc2NCqj9X3Hj2m1rjUmPWLNV3Kdzv_Sfg@mail.gmail.com>
-In-Reply-To: <CAMRc=MeqG9-15-KCpXc2NCqj9X3Hj2m1rjUmPWLNV3Kdzv_Sfg@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Mar 2025 11:52:35 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXbEQDdgDie_EDbF8RrNejkXQrPxNmpvKaQcaAQFxWeNg@mail.gmail.com>
-X-Gm-Features: AQ5f1JoUAWEmKfsClIp5BphmG-bTdTWLFHq1ge50O3fwIu3v0b9svNIBL3DTTHo
-Message-ID: <CAMuHMdXbEQDdgDie_EDbF8RrNejkXQrPxNmpvKaQcaAQFxWeNg@mail.gmail.com>
-Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Marek Vasut <marex@denx.de>, 
-	Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
-	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz,
 
-On Tue, 11 Mar 2025 at 11:28, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Fri, Feb 28, 2025 at 10:53=E2=80=AFAM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > > I think the whole point of the thread is that this so-called
-> > > sysfs v2 is supposed to be recommendable because users
-> > > want something like this.
+Dear Bartosz,
+
+On Tue, 11 Mar 2025 11:21:10 +0100
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> On Tue, Mar 11, 2025 at 11:01=E2=80=AFAM David Jander <david@protonic.nl>=
+ wrote:
 > >
-> > Let's keep it simple, and similar/identical to the existing API?
 > >
-> > Is there anything in Documentation/ABI/obsolete/sysfs-gpio
-> > we can drop? edge?
->
-> I would like to object here: I really *don't* want a fourth interface
-> to support. I don't agree to a "sysfs v2" ABI. What I proposed is a
-> backward-compatible *extension* of the existing interface and then
-> gradual removal of unwanted features over time.
+> > Dear Bartosz,
+> >
+> > I noticed this because after updating the kernel from 6.11 to 6.14 a
+> > user-space application that uses GPIOs heavily started getting extremel=
+y slow,
+> > to the point that I will need to heavily modify this application in ord=
+er to
+> > be usable again.
+> > I traced the problem down to the following patch that went into 6.13:
+> >
+> > fcc8b637c542 gpiolib: switch the line state notifier to atomic
+> >
+> > What happens here, is that gpio_chrdev_release() now calls
+> > atomic_notifier_chain_unregister(), which uses RCU, and as such must ca=
+ll
+> > synchronize_rcu(). synchronize_rcu() waits for the RCU grace time to ex=
+pire
+> > before returning and according to the documentation can cause a delay o=
+f up to
+> > several milliseconds. In fact it seems to take between 8-10ms on my sys=
+tem (an
+> > STM32MP153C single-core Cortex-A7).
+> >
+> > This has the effect that the time it takes to call close() on a /dev/gp=
+iochipX
+> > takes now ~10ms each time. If I git-revert this commit, close() will ta=
+ke less
+> > than 1ms.
+> > =20
+>=20
+> Thanks for the detailed report!
 
-That is exactly what I meant: do not invent with a new sysfs API, but
-remove from the existing one, and simplify its backend where possible.
+Thanks to you for making this patch in such a way that it is easy to revert
+without breaking stuff! That was a read time-saver while diagnosing.
 
-Gr{oetje,eeting}s,
+> > 10ms doesn't sound like much, but it is more ~10x the time it tool befo=
+re,
+> > and unfortunately libgpiod code calls this function very often in some =
+places,
+> > especially in find_line() if your board has many gpiochips (mine has 16
+> > chardevs). =20
+>=20
+> Yeah, I imagine it can affect the speed of execution of gpiofind,
+> gpiodetect and any other program that iterates over all character
+> devices.
 
-                        Geert
+Indeed, it does. My application is written in python and uses the python gp=
+iod
+module. Even in such an environment the impact is killing.
+
+> > The effect can easily be reproduced with the gpiofind tool:
+> >
+> > Running on kernel 6.12:
+> >
+> > $ time gpiofind LPOUT0
+> > gpiochip7 9
+> > real    0m 0.02s
+> > user    0m 0.00s
+> > sys     0m 0.01s
+> >
+> > Running on kernel 6.13:
+> >
+> > $ time gpiofind LPOUT0
+> > gpiochip7 9
+> > real    0m 0.19s
+> > user    0m 0.00s
+> > sys     0m 0.01s
+> >
+> > That is almost a 10x increase in execution time of the whole program!!
+> >
+> > On kernel 6.13, after git revert -n fcc8b637c542 time is back to what i=
+t was
+> > on 6.12.
+> >
+> > Unfortunately I can't come up with an easy solution to this problem, th=
+at's
+> > why I don't have a patch to propose. Sorry for that.
+> >
+> > I still think it is a bit alarming this change has such a huge impact. =
+IMHO it
+> > really shouldn't. What can be done about this? Is it maybe possible to =
+defer
+> > unregistering and freeing to a kthread and return from the release func=
+tion
+> > earlier?
+> > =20
+>=20
+> This was my first idea too. Alternatively we can switch to using a raw
+> notifier and provide a spinlock ourselves.
+
+That would probably be a good alternative, although gpiod_line_state_notify=
+()
+wouldn't benefit from the zero-lock RCU implementation and incur a spin_lock
+penalty. Arguably, this is probably a lot more performance-critical than
+closing the chardev, so maybe the atomic notifier isn't a bad idea... we ju=
+st
+need to deal with the writing side so that user-space doesn't have to wait =
+for
+the RCU grace period?
+
+Certainly, I suppose switching to the raw notifier is the easier fix.
+
+OTOH, I know from my own experience that the penalty of a spin-lock does
+matter sometimes and not having it in the performance critical path is
+probably nice to have.
+
+Best regards,
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+David Jander
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
