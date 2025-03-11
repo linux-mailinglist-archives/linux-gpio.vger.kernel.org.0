@@ -1,324 +1,213 @@
-Return-Path: <linux-gpio+bounces-17431-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17432-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0F23A5C349
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 15:09:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43479A5C3AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 15:20:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C930516B78A
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:09:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 752D016D037
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:20:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5938125B674;
-	Tue, 11 Mar 2025 14:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA4E25BAAE;
+	Tue, 11 Mar 2025 14:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="IDBC+HDO"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eLRiegRk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp16.bhosted.nl (smtp16.bhosted.nl [94.124.121.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD531D88A4
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 14:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D8D1C3BF9
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 14:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741702167; cv=none; b=XuNVEWBthuTkJe0U2cCwKFWAUQRdn7mZVAPmDtHgb6EVkuDxORXnoZYDAXjmXhcN0K1HvyLbWEDDiBY37GSKfv5sHBpYVAG86EhwNkN+b5dB8noSbQwQlsAlAHvi201heVQ+X5UVG2GvjFe3fnnwXXYuI3dasv3kahwk0hALyK4=
+	t=1741702809; cv=none; b=fFBXsYijZU7Qmjf86dLtcwLzkmZ10Kh5OF/6Za88BpFdkxcSFoxhNyAuAo1LaKNsn+TIWtRBaDl9Qj9LhYnQBxZNsZUrIaOqEPETa2dE+DtSSOklF29tVrUDN+1SaVaqG4t8SQb910LLaSfbyxZ1usvvbHelnZhSPoOlF9kxV0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741702167; c=relaxed/simple;
-	bh=yvQXTOenIw/rexLmtAwi2lUo0l516FbJ6cYE4QbYS8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D3JJ9b+i49/xqnyfzKFyZNlDOaYNO8ID8Q2YVl0mi9BKEXKooeTyufhFZNzxUsEnAmO+bPvnLmocx78Ym3h4HpNfKy6X1xg6RY088HFu21aH0w1rIOR3kSflXuS9CqbK1K6QXl5k6+7Y0QgP+42aLu8jalFU2XlkQxxVIDcwDSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=IDBC+HDO; arc=none smtp.client-ip=94.124.121.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+	s=arc-20240116; t=1741702809; c=relaxed/simple;
+	bh=cmoBnmYROyr1vTCfbv4khA9GTiVhMeUO3b4dsrEgK2k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=H7PYWsUg9vJj4e8vklYKZHaJrXqCMSBv1kuujfdG/TqJDDfv+EIUCxURb1PYTHgovCBwWWjb6lhFwRXt42Aiawv6b/trcYBNr3nDSpKfQJpyGFXYInSZ8YE5PawMavWeorS5Q4BwyZqds0f4dz70ZndbI22doNG6LlmYbF6Ep/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eLRiegRk; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso5364395e9.0
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 07:20:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=protonic.nl; s=202111;
-	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
-	 message-id:subject:cc:to:from:date:from;
-	bh=sHJ/I/NwKEVR+tvM07hrs9JoMkywpmUnIKANpoAFlq4=;
-	b=IDBC+HDOwmi/OnqaXdVV2t8/VymuRBIOrzerJ2kk+ZMmK8hBrsSnXRecbq5ANpkA0zSa4Oq+OOMlZ
-	 qwNQ4VNNJo7MXtwtBL9COwcYUYA9CIkLpn0icSghrazT4rrBM4lKFydbG1nq/W+IaMd0196QfYCDKI
-	 5Be3ufPmc9/LOrU2ZpByyEYMc4euw+nvwJ9zLjAUnfhIhWFuJ+wQEZ6KbfQvKZY0TWpx49ILSC+PGw
-	 ix5DkoXsWKjVWOLe/ZfdZN94CmwY4v2yNPxZ5Htw8OpCa22Pc9q44Ot1g7jvAx4LZK6Sb+KFA1Cvkz
-	 a3ZvuP36LTY1RJVL9TIeGZVLck+hYkw==
-X-MSG-ID: 6bfec4b5-fe82-11ef-8b4f-005056817704
-Date: Tue, 11 Mar 2025 15:09:17 +0100
-From: David Jander <david@protonic.nl>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson
- <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: regression: gpiolib: switch the line state notifier to atomic
- unexpected impact on performance
-Message-ID: <20250311150917.3c11421a@erd003.prtnl>
-In-Reply-To: <CAMRc=McLEtiF4tfGpOGW+agA8-BK_qU6UWjvq1BOgthWXXym3A@mail.gmail.com>
-References: <20250311110034.53959031@erd003.prtnl>
-	<CAMRc=MewC-7XFfWxPS7cmMycxo-62NDrUKFyjnnCbwqXQXWuZw@mail.gmail.com>
-	<20250311133010.760abd61@erd003.prtnl>
-	<CAMRc=McLEtiF4tfGpOGW+agA8-BK_qU6UWjvq1BOgthWXXym3A@mail.gmail.com>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741702804; x=1742307604; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m6ajwEUDxB1mv9ikaPpTiM6Af18J/u+Q+MVbC1QE0kg=;
+        b=eLRiegRksI9Uxv1YZkjHfGpeJ8HRV0TWWaze5yRX6WIth78wd7Z53z4jlG1fCJJiT2
+         CZq11pQbBgWOgimHvCPamBeBnK3QvDUIA7OAIwclE/gbxsStYkVgh5fnuHkCSDQKlgQG
+         e4v8DSqVCaBYd5zCqyLdORlbv/XSU3vZ6PqD/5SJv45fQSDzPVeLepPXQNmKrjOd+jfs
+         Zuai9OAEDzw+R0lu9o39RHIXGZYiBMiCcU7pGmg8982NOV2HVRDUhzAZCls+80/fm3qK
+         lgWZsK971zQOIeQfjZGyx2ZR8ujcYgLkfpbrn26qQqxTkWtqi4XKCsQ98dujzDM+WahJ
+         Odjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741702804; x=1742307604;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m6ajwEUDxB1mv9ikaPpTiM6Af18J/u+Q+MVbC1QE0kg=;
+        b=YWsfEDYd+zxydl3PY8/A6SRRyecGGHmo8YLA4N8ro97t+uAQ9USG0sFHENI5g48XCc
+         4k9R/kownHGHCBpCZd/3x4pL7JckAmC9G/xKv6kbmFezwASP9u0B13aTVPZQxCV8MEh7
+         0dTbQRLY9+xMohnCmZlYo+XcDFAj6tcHA8lSou16w02pJ2mg+udr6gdtQfp+A4qsh33A
+         1senuTWSg3TqYkrd1t5KfsTM4QK+0JYcJhx8Db1cYslIMAoesfMmI6vq71GodrfLZQbG
+         nkn3GEiCCB7xQGklmUbZp/wUtNaueJ3wHTnHhOhm2ayfucy5QuRPUZS7Ph9SA7CGiXHC
+         FJGQ==
+X-Gm-Message-State: AOJu0Ywbej6y3TwDZAS0hGaR+m8h53UJ26CghCjmRubA5OA1Ih7gKDjD
+	wx6ABQ2cim9VLnG/SLE8sGUqR8oblgcRI3Rk3dJfr5OcWvnmP/bAQk4ueuOx/Dw=
+X-Gm-Gg: ASbGncvAF2aLz/5Bs8JqXyTzNcn2/HEpRxwuktVlEUW6aToQDE9y/s5W/6plgcKwFv5
+	bwgg/A7gtToy6jk6Z5q7OEjqlVfU1dBU+4dCkUW+iMmn2YxwEV4SReQcrreX3sC4zaRxfVvvwQo
+	ZBFDNflYazoLeq0t6MS6+2gf5yKObHQ4VvqEFd8FPwJvdeuwUBvgEQ+AIPJGc6PmdEfuaG6DrBH
+	q1BO1pwLYVDtKxy4MQfZLA++aCHmc0TMaZY4m1yeh7uGD7Al2K2DIY1VsqELyhJyZUFEOZyUFqM
+	WbYJcCUBNBYeSXk7KlJ4+Ss+4PO3V0QFQ6G7
+X-Google-Smtp-Source: AGHT+IEC45NYHRE2fvrpMgbBacd2HbN8g4QiPFZ2DzbZrET5lw5lJdvYj+StfFG1LHsSLXOsGFsGGA==
+X-Received: by 2002:a05:600c:1c22:b0:439:8634:9909 with SMTP id 5b1f17b1804b1-43d01d50313mr46305895e9.14.1741702803632;
+        Tue, 11 Mar 2025 07:20:03 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:5946:3143:114d:3f3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cf85f2359sm72333765e9.27.2025.03.11.07.20.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 07:20:02 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 11 Mar 2025 15:19:51 +0100
+Subject: [PATCH] gpiolib: don't allow setting values on input lines
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250311-gpio-set-check-output-v1-1-d971bca9e6fa@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAIZG0GcC/x3MQQqAIBBA0avErBtolKC6SrQIm3QIUtQikO6et
+ HyL/wskjsIJpqZA5FuS+LOC2gaMW0/LKFs1qE71nSZCG8Rj4ozGsTnQXzlcGQetyNDQjytrqG2
+ IvMvzf+flfT/CfOfWZwAAAA==
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3338;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=5ZfF6iWBiiBJbZn8mf1Ew+4qYOUTKuHr1XALe0cVmmw=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn0EaSIs8WFMJ8+wZxg6gDL1dsFCswJ1bNWBZJI
+ EhaRPwwkvSJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ9BGkgAKCRARpy6gFHHX
+ ckBLD/9pQ4RFnqUq3lijtQHM0IdgfpAFUF36AKwikYFe4Uh1PNZkTrpyUnFq1jcBjupqvBhT2P9
+ EBu0CgHkug/1CpCAHnuk33nfc9n+7BT4E+VSrknSW2eDADlBDEVXRifHFEZPqb49ySZYOFtF+Kr
+ GvbD7pxXymDXg+78fo8xhJZCg5cc62jmE94nhccwC7ii/5bEVCTgk7uGVKw4SYIuxfKUChan6Q4
+ h3kzJ8+MdtWuhhf6UWP3j2F3CpL5JsizVg3g3RF2HLl/HlfYjJugTJYNCeEYkl3loUp3TaHl7Ws
+ ifBMowBJmB1H59dFzJNcwPrpzeylUOa+Qqo7Zl65e0EKrO1Llid/SXGRQsOv40znTZK68O2AuM+
+ s0wwONBorZNoRbPUH9IU+PYQfN9dHi64iAT4xzoqrR6TakGlFJBP9fLPn0Kh37CWl4WRtgh1SqQ
+ uIy97acYi7j6sxmHY+qRiW+5Hx2u1As0zkAL/6ap6OILniF15UjTCpJdzhoeaWwHhdqMJ+HTt1f
+ 8WDB3gn4Aw46phcebyBge6XXa/HQZnWpJn6XJBYT5J4mmUmH9jyHQ/1W3Ru9U5UFXe33ZvZcQgR
+ zg7GBJPo97uOOUxKZidfDm9eixvZOdSQMrm7J8n7ZIawZY1lxwak7sA94pl+9cu4P6d/x2XOrgT
+ kMcSVNcjbtTASzQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Tue, 11 Mar 2025 14:21:37 +0100
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> On Tue, Mar 11, 2025 at 1:30=E2=80=AFPM David Jander <david@protonic.nl> =
-wrote:
-> >
-> > On Tue, 11 Mar 2025 12:45:51 +0100
-> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > =20
-> > > On Tue, Mar 11, 2025 at 11:01=E2=80=AFAM David Jander <david@protonic=
-.nl> wrote: =20
-> > > >
-> > > > On kernel 6.13, after git revert -n fcc8b637c542 time is back to wh=
-at it was
-> > > > on 6.12.
-> > > > =20
-> > >
-> > > Interestingly: I cannot reproduce it. Obviously gpiofind doesn't exist
-> > > in libgpiod v2 but I'm running gpiodetect with and without reverting
-> > > these changes and am getting roughly the same results: ~0.050s real
-> > > time for 1 up to 4 chips.
-> > >
-> > > Any idea why that could be? Can you reproduce it with libgpiod v2 (I
-> > > don't know why that wouldn't be the case but worth double checking). =
-=20
-> >
-> >
-> > Can you describe your platform? Is it a multi-core or single-core CPU? =
-What
-> > RCU implementation does it use? Tree or tiny? If it is multi-core, is t=
-here a
-> > difference if you disable all but one core?
-> > Maybe some kernel CONFIG option that makes a difference? I am not an ex=
-pert in
-> > RCU (in fact I barely know what it does), so maybe I am missing somethi=
-ng that
-> > makes this problem go away?
-> > =20
->=20
-> I'm testing on a qemu VM - SMP and single core. RCU algo is tree.=20
+Some drivers as well as the character device and sysfs code check
+whether the line actually is in output mode before allowing the user to
+set a value.
 
-I haven't followed deep into the RCU code, but I had the impression that the
-synchronize_rcu code sets a completion and waits for it, so I suspect the b=
-ulk
-of the delay coming from context switches. Maybe on qemu this behaves
-differently than on real hardware in terms of timing and overhead?
+However, GPIO value setters now return integer values and can indicate
+failures. This allows us to move these checks into the core code.
 
-Btw, there is also another way this can be made visible:
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib-cdev.c  |  3 ---
+ drivers/gpio/gpiolib-sysfs.c | 12 +++++-------
+ drivers/gpio/gpiolib.c       | 12 ++++++++++++
+ 3 files changed, 17 insertions(+), 10 deletions(-)
 
-$ strace -r gpiodetect
-     0.000000 execve("/usr/bin/gpiodetect", ["gpiodetect"], 0x7eec5d94 /* 1=
-3 vars */) =3D 0
-     0.017348 brk(NULL)                 =3D 0xc21000
-     0.000689 access("/etc/ld.so.preload", R_OK) =3D -1 ENOENT (No such fil=
-e or directory)
-...
-     0.000677 openat(AT_FDCWD, "/dev/gpiochip9", O_RDWR|O_CLOEXEC) =3D 18
-     0.000741 statx(AT_FDCWD, "/dev/gpiochip9", AT_STATX_SYNC_AS_STAT|AT_SY=
-MLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_BASIC_STATS, {stx_mask=3DSTATX_BASIC_=
-STATS|STATX_MNT_ID, stx_attributes=3D0, stx_mode=3DS_IFCHR|0600, stx_size=
-=3D0, ...}) =3D 0
-     0.000794 statx(AT_FDCWD, "/dev/gpiochip9", AT_STATX_SYNC_AS_STAT|AT_NO=
-_AUTOMOUNT, STATX_BASIC_STATS, {stx_mask=3DSTATX_BASIC_STATS|STATX_MNT_ID, =
-stx_attributes=3D0, stx_mode=3DS_IFCHR|0600, stx_size=3D0, ...}) =3D 0
-     0.000794 access("/sys/bus/gpio/devices/gpiochip9/dev", R_OK) =3D 0
-     0.000738 openat(AT_FDCWD, "/sys/bus/gpio/devices/gpiochip9/dev", O_RDO=
-NLY) =3D 19
-     0.000754 read(19, "254:9\n", 15)   =3D 6
-     0.000597 close(19)                 =3D 0
-     0.000569 ioctl(18, GPIO_GET_CHIPINFO_IOCTL, {name=3D"gpiochip9", label=
-=3D"GPIOJ", lines=3D16}) =3D 0
-     0.000631 statx(1, "", AT_STATX_SYNC_AS_STAT|AT_NO_AUTOMOUNT|AT_EMPTY_P=
-ATH, STATX_BASIC_STATS, {stx_mask=3DSTATX_BASIC_STATS|STATX_MNT_ID, stx_att=
-ributes=3D0, stx_mode=3DS_IFCHR|0600, stx_size=3D0, ...}) =3D 0
-     0.000778 ioctl(1, TCGETS, {c_iflag=3DICRNL|IXON|IXOFF|IUTF8, c_oflag=
-=3DNL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=3DB1500000|CS8|CREAD|HUPCL=
-|CLOCAL, c_lflag=3DISIG|ICANON|ECHO|ECHOE|ECHOK|ECHOKE, ...}) =3D 0
-     0.001941 write(1, "gpiochip0 [GPIOA] (16 lines)\n", 29gpiochip0 [GPIOA=
-] (16 lines)
-) =3D 29
-     0.000670 close(3)                  =3D 0
-     0.006162 write(1, "gpiochip1 [GPIOB] (16 lines)\n", 29gpiochip1 [GPIOB=
-] (16 lines)
-) =3D 29
-     0.000655 close(4)                  =3D 0
-     0.006250 write(1, "gpiochip10 [GPIOK] (8 lines)\n", 29gpiochip10 [GPIO=
-K] (8 lines)
-) =3D 29
-     0.000667 close(5)                  =3D 0
-     0.006338 write(1, "gpiochip11 [GPIOZ] (8 lines)\n", 29gpiochip11 [GPIO=
-Z] (8 lines)
-) =3D 29
-     0.000661 close(6)                  =3D 0
-     0.006321 write(1, "gpiochip12 [unknown] (22 lines)\n", 32gpiochip12 [u=
-nknown] (22 lines)
-) =3D 32
-     0.000662 close(7)                  =3D 0
-     0.006365 write(1, "gpiochip13 [mcp23s17.0] (16 line"..., 35gpiochip13 =
-[mcp23s17.0] (16 lines)
-) =3D 35
-     0.000672 close(8)                  =3D 0
-     0.006389 write(1, "gpiochip14 [0-0020] (16 lines)\n", 31gpiochip14 [0-=
-0020] (16 lines)
-) =3D 31
-     0.000641 close(9)                  =3D 0
-     0.006268 write(1, "gpiochip15 [0-0021] (16 lines)\n", 31gpiochip15 [0-=
-0021] (16 lines)
-) =3D 31
-     0.000677 close(10)                 =3D 0
-     0.006330 write(1, "gpiochip2 [GPIOC] (16 lines)\n", 29gpiochip2 [GPIOC=
-] (16 lines)
-) =3D 29
-     0.000648 close(11)                 =3D 0
-     0.006358 write(1, "gpiochip3 [GPIOD] (16 lines)\n", 29gpiochip3 [GPIOD=
-] (16 lines)
-) =3D 29
-     0.000655 close(12)                 =3D 0
-     0.006333 write(1, "gpiochip4 [GPIOE] (16 lines)\n", 29gpiochip4 [GPIOE=
-] (16 lines)
-) =3D 29
-     0.000669 close(13)                 =3D 0
-     0.006332 write(1, "gpiochip5 [GPIOF] (16 lines)\n", 29gpiochip5 [GPIOF=
-] (16 lines)
-) =3D 29
-     0.000653 close(14)                 =3D 0
-     0.006359 write(1, "gpiochip6 [GPIOG] (16 lines)\n", 29gpiochip6 [GPIOG=
-] (16 lines)
-) =3D 29
-     0.000653 close(15)                 =3D 0
-     0.006332 write(1, "gpiochip7 [GPIOH] (16 lines)\n", 29gpiochip7 [GPIOH=
-] (16 lines)
-) =3D 29
-     0.000657 close(16)                 =3D 0
-     0.006344 write(1, "gpiochip8 [GPIOI] (16 lines)\n", 29gpiochip8 [GPIOI=
-] (16 lines)
-) =3D 29
-     0.000661 close(17)                 =3D 0
-     0.006343 write(1, "gpiochip9 [GPIOJ] (16 lines)\n", 29gpiochip9 [GPIOJ=
-] (16 lines)
-) =3D 29
-     0.000654 close(18)                 =3D 0
-     0.006394 exit_group(0)             =3D ?
-     0.001335 +++ exited with 0 +++
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 40f76a90fd7d..8da9c28d57f6 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -1366,9 +1366,6 @@ static long linereq_set_values(struct linereq *lr, void __user *ip)
+ 	/* scan requested lines to determine the subset to be set */
+ 	for (num_set = 0, i = 0; i < lr->num_lines; i++) {
+ 		if (lv.mask & BIT_ULL(i)) {
+-			/* setting inputs is not allowed */
+-			if (!test_bit(FLAG_IS_OUT, &lr->lines[i].desc->flags))
+-				return -EPERM;
+ 			/* add to compacted values */
+ 			if (lv.bits & BIT_ULL(i))
+ 				__set_bit(num_set, vals);
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 1acfa43bf1ab..4a3aa09dad9d 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -134,16 +134,14 @@ static ssize_t value_store(struct device *dev,
+ 	long value;
+ 
+ 	status = kstrtol(buf, 0, &value);
+-
+-	guard(mutex)(&data->mutex);
+-
+-	if (!test_bit(FLAG_IS_OUT, &desc->flags))
+-		return -EPERM;
+-
+ 	if (status)
+ 		return status;
+ 
+-	gpiod_set_value_cansleep(desc, value);
++	guard(mutex)(&data->mutex);
++
++	status = gpiod_set_value_cansleep(desc, value);
++	if (status)
++		return status;
+ 
+ 	return size;
+ }
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e5eb3f0ee071..a4b746e80e57 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3592,6 +3592,9 @@ static int gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value)
+ 
+ static int gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
+ {
++	if (unlikely(!test_bit(FLAG_IS_OUT, &desc->flags)))
++		return -EPERM;
++
+ 	CLASS(gpio_chip_guard, guard)(desc);
+ 	if (!guard.gc)
+ 		return -ENODEV;
+@@ -3663,6 +3666,12 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 		if (!can_sleep)
+ 			WARN_ON(array_info->gdev->can_sleep);
+ 
++		for (i = 0; i < array_size; i++) {
++			if (unlikely(!test_bit(FLAG_IS_OUT,
++					       &desc_array[i]->flags)))
++				return -EPERM;
++		}
++
+ 		guard(srcu)(&array_info->gdev->srcu);
+ 		gc = srcu_dereference(array_info->gdev->chip,
+ 				      &array_info->gdev->srcu);
+@@ -3722,6 +3731,9 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 			int hwgpio = gpio_chip_hwgpio(desc);
+ 			int value = test_bit(i, value_bitmap);
+ 
++			if (unlikely(!test_bit(FLAG_IS_OUT, &desc->flags)))
++				return -EPERM;
++
+ 			/*
+ 			 * Pins applicable for fast input but not for
+ 			 * fast output processing may have been already
 
-I hope this is readable. Notice the long relative time-stamp of the syscall
-immediately preceding each of the close() calls that close a gpiochip chard=
-ev.
-
-For comparison, here's the output after applying your patch:
-
-...
-     0.000474 close(3)                  =3D 0
-     0.000472 write(1, "gpiochip1 [GPIOB] (16 lines)\n", 29gpiochip1 [GPIOB=
-] (16 lines)
-) =3D 29
-     0.000426 close(4)                  =3D 0
-     0.000406 write(1, "gpiochip10 [GPIOK] (8 lines)\n", 29gpiochip10 [GPIO=
-K] (8 lines)
-) =3D 29
-     0.000418 close(5)                  =3D 0
-     0.000354 write(1, "gpiochip11 [GPIOZ] (8 lines)\n", 29gpiochip11 [GPIO=
-Z] (8 lines)
-) =3D 29
-     0.000454 close(6)                  =3D 0
-     0.000359 write(1, "gpiochip12 [unknown] (22 lines)\n", 32gpiochip12 [u=
-nknown] (22 lines)
-) =3D 32
-     0.000457 close(7)                  =3D 0
-     0.000433 write(1, "gpiochip13 [mcp23s17.0] (16 line"..., 35gpiochip13 =
-[mcp23s17.0] (16 lines)
-) =3D 35
-     0.000412 close(8)                  =3D 0
-     0.000422 write(1, "gpiochip14 [0-0020] (16 lines)\n", 31gpiochip14 [0-=
-0020] (16 lines)
-) =3D 31
-     0.000416 close(9)                  =3D 0
-     0.000416 write(1, "gpiochip15 [0-0021] (16 lines)\n", 31gpiochip15 [0-=
-0021] (16 lines)
-) =3D 31
-     0.000408 close(10)                 =3D 0
-     0.000358 write(1, "gpiochip2 [GPIOC] (16 lines)\n", 29gpiochip2 [GPIOC=
-] (16 lines)
-) =3D 29
-     0.000441 close(11)                 =3D 0
-     0.000359 write(1, "gpiochip3 [GPIOD] (16 lines)\n", 29gpiochip3 [GPIOD=
-] (16 lines)
-) =3D 29
-     0.000443 close(12)                 =3D 0
-     0.000359 write(1, "gpiochip4 [GPIOE] (16 lines)\n", 29gpiochip4 [GPIOE=
-] (16 lines)
-) =3D 29
-     0.000394 close(13)                 =3D 0
-     0.000413 write(1, "gpiochip5 [GPIOF] (16 lines)\n", 29gpiochip5 [GPIOF=
-] (16 lines)
-) =3D 29
-     0.000396 close(14)                 =3D 0
-     0.000479 write(1, "gpiochip6 [GPIOG] (16 lines)\n", 29gpiochip6 [GPIOG=
-] (16 lines)
-) =3D 29
-     0.000431 close(15)                 =3D 0
-     0.000431 write(1, "gpiochip7 [GPIOH] (16 lines)\n", 29gpiochip7 [GPIOH=
-] (16 lines)
-) =3D 29
-     0.000471 close(16)                 =3D 0
-     0.000381 write(1, "gpiochip8 [GPIOI] (16 lines)\n", 29gpiochip8 [GPIOI=
-] (16 lines)
-) =3D 29
-     0.000484 close(17)                 =3D 0
-     0.000374 write(1, "gpiochip9 [GPIOJ] (16 lines)\n", 29gpiochip9 [GPIOJ=
-] (16 lines)
-) =3D 29
-     0.000480 close(18)                 =3D 0
-     0.000418 exit_group(0)             =3D ?
-     0.001373 +++ exited with 0 +++
-
-> In
-> any case: I've just sent you an RFT patch that switches to using the
-> raw notifier. Could you see what results you're getting with it?
-
-Thanks! This was quick :-)
-
-Like I also replied to the patch email (kernel 6.13 and libgpiod 1.6.3):
-
-$ time gpiofind LPOUT0
-gpiochip7 9
-real    0m 0.02s
-user    0m 0.00s
-sys     0m 0.01s
-
-$ time gpiodetect
-gpiochip0 [GPIOA] (16 lines)
-gpiochip1 [GPIOB] (16 lines)
-gpiochip10 [GPIOK] (8 lines)
-gpiochip11 [GPIOZ] (8 lines)
-gpiochip12 [unknown] (22 lines)
-gpiochip13 [mcp23s17.0] (16 lines)
-gpiochip14 [0-0020] (16 lines)
-gpiochip15 [0-0021] (16 lines)
-gpiochip2 [GPIOC] (16 lines)
-gpiochip3 [GPIOD] (16 lines)
-gpiochip4 [GPIOE] (16 lines)
-gpiochip5 [GPIOF] (16 lines)
-gpiochip6 [GPIOG] (16 lines)
-gpiochip7 [GPIOH] (16 lines)
-gpiochip8 [GPIOI] (16 lines)
-gpiochip9 [GPIOJ] (16 lines)
-real    0m 0.03s
-user    0m 0.00s
-sys     0m 0.01s
+---
+base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
+change-id: 20250311-gpio-set-check-output-8321c1859ae3
 
 Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---=20
-David Jander
 
