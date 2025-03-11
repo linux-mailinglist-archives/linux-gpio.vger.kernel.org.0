@@ -1,133 +1,136 @@
-Return-Path: <linux-gpio+bounces-17426-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17427-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC88BA5C273
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:23:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F828A5C2C3
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:32:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7EBC3B1F6E
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 13:22:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 301E4171F09
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 13:32:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B909D1BB6BA;
-	Tue, 11 Mar 2025 13:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75FA1C5D59;
+	Tue, 11 Mar 2025 13:32:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XPi+u4lk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjUGOna9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA778192D96
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 13:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919551487E9;
+	Tue, 11 Mar 2025 13:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741699311; cv=none; b=KaHuDc0QPOuSqPKVPWoE1tIM6DopBdfpSE9FHH+oETVmds7LkP7ev6OrFYjNMlto4qRJkuF+yNqNkhAHx7kc6lHbJthVaE5JjwpO38HcCkn9yeT3LF9CVJ1+MGbnDfmCHhgJLIbZathGPyO+Lz+abVnmqtld1TwT3x9sL7NBeo8=
+	t=1741699964; cv=none; b=Wj64mCmbCbkKqDYPGc8ANA5TAQpx3vPvFDDMFGf7oOQzCbUt9fHEDoWeSUrtDE9iczlVQIhhiyw1zqYFDdQh5Q0WQrnZIKdeAY5Fwit2hqXcCRagH+bxWBBlMzuw2lrFXxuutv3zITRCfhabsu1OXmOy17ARO/qmISdrGfbyNIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741699311; c=relaxed/simple;
-	bh=Qd07Q4VGPkFidTJBRui/iWcevj6QeWcKXSoFsfCfUnc=;
+	s=arc-20240116; t=1741699964; c=relaxed/simple;
+	bh=foFBmGFbc+QCSONoZVpR+givHeN3h/c5aJuICUYGiE0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kQ+dfQOONRaH8HS10GcHtNc2M4EzsrtabBNIuCsKkCgfbWhHE2rirZO9H888z385IsA/z3J0BUT5UuI14Su6viVnOuiiYOgzqcY0BLp9smcqaQnLPXiJLZJmrqQVnys9RbNLCvRuCmrBi17TrIwvJzT9aaXduS3XUiOmQchxDcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XPi+u4lk; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-548409cd2a8so5264241e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 06:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741699308; x=1742304108; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qd07Q4VGPkFidTJBRui/iWcevj6QeWcKXSoFsfCfUnc=;
-        b=XPi+u4lk27GEgdRxJCB9vu8EWp7aKd69bCV4J/ECSl8Ddp2etEmJLue7jFnwkElMev
-         v6j4GuHlb7BsQjMyHMkVrOqQHNY1merU84Wq3dZoT1Qw0HU1cPMRA+3bsaMacqserH0Q
-         v+Buk9Atz4GpVaLslNr7kRtG/o1BxmNdmRwA0SrW4Y8Ox/vw0K0lKoNzHhvewc6hQtlq
-         myf3NbeM1zz4UKq+0yNoOQBdm4MH4gvKJiPNk0IgR/G2GJo4ndppHJ0GG2UzF4kqaZ0G
-         By/LYVVBJscVPNRIAmojW1zuIgbEMX9jGBBdmtp70rm3rda6xPAMdI/XNZlcdZ0YD0kl
-         kapg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741699308; x=1742304108;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qd07Q4VGPkFidTJBRui/iWcevj6QeWcKXSoFsfCfUnc=;
-        b=DrUObScPLH3O3viDZDXhkR+sIolV4ENy+tIgHX1CCd3WL5qWi4EfTHPS7T2g3IsApb
-         qv8iITmBYxjT8oPaYnp2abAsHbJjYoyzrpRYqdZeCTY/bSlHrv1aCmqbsGappi7alKOE
-         DgLgvQkpaTOQEtrb23lQ84b2/o6LN+Dn1GcIpIcLcnDO9RB/5EjbrXaAW9cocYpr8DA/
-         1ahvVlMkKFPGxXzmiz1GWFZM0VpO03usmO0hFo5vBhFOVGVd0oOIy2SEKwtjtQ/quP/c
-         twGL8ASJs8r/Z9a9gulTD4WtIrV+i2WEYOnu69zcCdT54XMO6rRofQogSmMtUxxDw3+f
-         dLiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRe+JrX/5DKGd18t1OJcK1oojkC6kVnR/47WesgRfKBoolDJXFoZn91C4O/1W5yVpjFscHhlWSzHeO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2V4L9qaa5vgeRW+G50jbAHe41DmEM7/CZDP4fUEbIS1GhA24p
-	nKWyB7hCGwY0LWh68CJ8kTE2n68oNg8aQMe1lExiESb1Qd9HY6tgrmKo4FCB5oa5XLEtE1uR6N7
-	4uXYWOVpCXW7FSTBgQR7YYuWG3BCv8j1jTDWA4g==
-X-Gm-Gg: ASbGncukZBNTlVLNFvRX3tIcSTJE7XEG4j7JPFDYHFOeCg6A96W/rC1fKCcrmahLO16
-	mUtCxOobgpgK3tWlNBG2i5nWHNsBsfA067pJ72qE9QOJ7wWjv6cKx9XmjU6uz7ToM+DNieEOOlA
-	vCG7FZtCXGM+MBY8hcS7xGx6Qrs6PPuaJ9JmWsvWmVWUEdQAAP5vVwW55n
-X-Google-Smtp-Source: AGHT+IFfdhddh1gHpzqLS8IWLTpedfRgy013YVoiUYXZPF94QYiG23Y1yOKbxXbCrswWfXfhwXoVw/1pv2z+tdow0S8=
-X-Received: by 2002:a05:6512:39c7:b0:542:28b4:23ad with SMTP id
- 2adb3069b0e04-54990e5da4dmr7596422e87.16.1741699308040; Tue, 11 Mar 2025
- 06:21:48 -0700 (PDT)
+	 To:Cc:Content-Type; b=DXNuSj4+ueC4+4VILS36C8qLSsy+Ke6mtZjwPpHczd70V4caUSDwjheL0xWSv8u0WWI3y5cqMQ2KmRajk7Sz/13SiM4nWk9C4i6/PYhu16jzIZ1WnGbk3w8gpv9qtGVsi3CQRaPB3FK4KDWC8Kk/+L9bKDhlQsL5XFEOHH9By2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjUGOna9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B2A3C4CEF3;
+	Tue, 11 Mar 2025 13:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741699964;
+	bh=foFBmGFbc+QCSONoZVpR+givHeN3h/c5aJuICUYGiE0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IjUGOna96P6PIijXA/JopSCd1d/VyKBBN+ce/Ed0nBiLhKysYuXMOO8ntjKoNJFoo
+	 KvvRKcBWnITLYLhGRnSUQitn+rIdSSRK2Cpm5n6Mn/118FAtbrimE5jYp/UXlZTfql
+	 gprF+LsaUajaD4mfZOL8d+MWXSTnEbYoMmCi0oUOd2lKGUmCmlD38v+i4Wiq5Pmpjr
+	 ayzyPa2JHPukyRerL2/P8O+UDUAqMM7QygXATRowtyikvNNz/2O+EBnThkGFsw2KTR
+	 mnRaXP7EryYvf+2VABTSHwEZzyziKQIuYIaobgi/ftZzS8lPgE5Ag3aYBUTqbdFhEr
+	 HnFlBeThaEv+w==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so8324312a12.3;
+        Tue, 11 Mar 2025 06:32:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVE/etq7yYVR731//mLbIx6fuz4N3WBsp/taDv6DUAdjSAvEFKqUOOcbNyt/mjSFvGPbId9zBqo21EC1w==@vger.kernel.org, AJvYcCVFFxWXi1G8EDjZ5tpKHuBLeDYh4rjTO2HNngx05BKIuJGzRJWd0LGcG/kHH0ZIDsQJKt2BCiE2koKJ@vger.kernel.org, AJvYcCW8UgNm2ORV6uv3gidMyg8hIgmUN1Lt9mJoi+wO2yxk3H2Rn4pAsnqQt1dohVxqKOsczdONO8z4Tw5a@vger.kernel.org, AJvYcCXkMokhN/355TGe12OSjeljQvVcn00quRImZ2ljZ6tIYzQ4VTmMH7PvgM8LtAe7ue13DOn99RcbuXyV@vger.kernel.org, AJvYcCXsHpk+Kco0TOlhTmQxQXJOw/sJn9QgRvlPYy+FAXFETqK6kuxts8w7ztT6RQVlVCkfabZPUZ8p2Ny2wNuE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvnou1cphY4sdaDF6XuvRYP/txe/G9yT/v+J9yb9bKE0VqXdDN
+	KvnBxlQ8CXvCoJnhV1poU82s4+iFqTkRNkkMVcKGumV5WsZTjOlXsmeX06w6v9K1ITKFtPLZnjO
+	2tXt6e1OYEiuildher/TYDvdidw==
+X-Google-Smtp-Source: AGHT+IEifrCmqJfikkidIDTYr2jS6o8iDBri/VlKwu/FWmzn0+fbwXWdCCMBLNQSNY6IZ7RZHzcbstx5Fj81dc05srU=
+X-Received: by 2002:a05:6402:2353:b0:5e5:c5f5:f82 with SMTP id
+ 4fb4d7f45d1cf-5e5e211e1f1mr21034407a12.0.1741699962525; Tue, 11 Mar 2025
+ 06:32:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311110034.53959031@erd003.prtnl> <CAMRc=MewC-7XFfWxPS7cmMycxo-62NDrUKFyjnnCbwqXQXWuZw@mail.gmail.com>
- <20250311133010.760abd61@erd003.prtnl>
-In-Reply-To: <20250311133010.760abd61@erd003.prtnl>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Mar 2025 14:21:37 +0100
-X-Gm-Features: AQ5f1JqUOVL3X2gCgcmbpAbT0fy5j2-XGgHTJB1Eycy9onj9r36vOwUAw_3p1l0
-Message-ID: <CAMRc=McLEtiF4tfGpOGW+agA8-BK_qU6UWjvq1BOgthWXXym3A@mail.gmail.com>
-Subject: Re: regression: gpiolib: switch the line state notifier to atomic
- unexpected impact on performance
-To: David Jander <david@protonic.nl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <cover.1738963156.git.andrea.porta@suse.com> <c0acc51a7210fb30cae7b26f4ad1f0449beed95e.1738963156.git.andrea.porta@suse.com>
+ <20250310212125.GB2377483@rocinante>
+In-Reply-To: <20250310212125.GB2377483@rocinante>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 11 Mar 2025 08:32:28 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKPGOdS_8KDggO5tBHAnC-NTLAC5iS9GANm9BuxBfQUsw@mail.gmail.com>
+X-Gm-Features: AQ5f1JpFqtVYiSlkH0QD-dTfJ4bf9VAjFuYNndnQ1jy7PeA-IWSalDclsIDbfBA
+Message-ID: <CAL_JsqKPGOdS_8KDggO5tBHAnC-NTLAC5iS9GANm9BuxBfQUsw@mail.gmail.com>
+Subject: Re: [PATCH v7 03/11] dt-bindings: pci: Add common schema for devices
+ accessible through PCI BARs
+To: Krzysztof Wilczynski <kw@linux.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
+	Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Andrew Lunn <andrew@lunn.ch>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2025 at 1:30=E2=80=AFPM David Jander <david@protonic.nl> wr=
-ote:
+On Mon, Mar 10, 2025 at 4:21=E2=80=AFPM Krzysztof Wilczynski <kw@linux.com>=
+ wrote:
 >
-> On Tue, 11 Mar 2025 12:45:51 +0100
-> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> Hello,
 >
-> > On Tue, Mar 11, 2025 at 11:01=E2=80=AFAM David Jander <david@protonic.n=
-l> wrote:
-> > >
-> > > On kernel 6.13, after git revert -n fcc8b637c542 time is back to what=
- it was
-> > > on 6.12.
-> > >
-> >
-> > Interestingly: I cannot reproduce it. Obviously gpiofind doesn't exist
-> > in libgpiod v2 but I'm running gpiodetect with and without reverting
-> > these changes and am getting roughly the same results: ~0.050s real
-> > time for 1 up to 4 chips.
-> >
-> > Any idea why that could be? Can you reproduce it with libgpiod v2 (I
-> > don't know why that wouldn't be the case but worth double checking).
+> [...]
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index d45c88955072..af2e4652bf3b 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -19752,6 +19752,7 @@ RASPBERRY PI RP1 PCI DRIVER
+> >  M:   Andrea della Porta <andrea.porta@suse.com>
+> >  S:   Maintained
+> >  F:   Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.ya=
+ml
+> > +F:   Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> >  F:   Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.ya=
+ml
+> >  F:   include/dt-bindings/clock/rp1.h
+> >  F:   include/dt-bindings/misc/rp1.h
 >
+> I would be happy to pick this via the PCI tree as per the standard
+> operating procedure.  However, the MAINTAINERS changes do not exist
+> for us yet, and are added in the first patch of the series, which is
+> not ideal.
 >
-> Can you describe your platform? Is it a multi-core or single-core CPU? Wh=
-at
-> RCU implementation does it use? Tree or tiny? If it is multi-core, is the=
-re a
-> difference if you disable all but one core?
-> Maybe some kernel CONFIG option that makes a difference? I am not an expe=
-rt in
-> RCU (in fact I barely know what it does), so maybe I am missing something=
- that
-> makes this problem go away?
+> I can add the missing dependency manually, but that would cause issues
+> for linux-next tree, which is also not ideal.
 >
+> I saw some review feedback, as such, when you are going to be sending
+> another version, can you make MAINTAINERS changes to be the last patch,
+> perhaps.  Basically, something standalone that perhaps whoever will pick
+> the misc patch could also pick and apply at the same time.
+>
+> Alternatively, someone else picking up the PCI dt-bindings would work, to=
+o.
+>
+> Your thoughts?
 
-I'm testing on a qemu VM - SMP and single core. RCU algo is tree. In
-any case: I've just sent you an RFT patch that switches to using the
-raw notifier. Could you see what results you're getting with it?
+I guess I missed this in review, but why is a common schema buried in
+a device maintainer entry? Also, an entry in MAINTAINERS is redundant
+anyway because get_maintainers.pl can fetch maintainers from the
+schema file.
 
-Bart
+Rob
 
