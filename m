@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-17448-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17449-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F4CCA5CDCB
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:23:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4467BA5CDF0
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:30:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 168D3189EC31
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 18:23:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A6977A889C
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 18:29:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68D2626389D;
-	Tue, 11 Mar 2025 18:23:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB5FD2627E6;
+	Tue, 11 Mar 2025 18:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fexKVTeF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5w30VCq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BA51D79BE;
-	Tue, 11 Mar 2025 18:23:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8867E156F3C;
+	Tue, 11 Mar 2025 18:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741717387; cv=none; b=en9tvNSCn5f2DNXwCPIG7KcKu8BQR0e25ExQ95jrZtIGi1j+wGFZMzIPvMStLuRHt0EmqN5KHvSKwOTtcQh4canuzE9Jl5DTXi+t921wHzdAyzeryeVMj2brMkgp5JLxYCVN417aqmNVYHxPV03aWb6XqxjSJw65yfSf5GEaXhU=
+	t=1741717831; cv=none; b=gyC+DaCefS2t+/C90wSBicjQ92zI7cGVfeclMOnukYXBPHcK+nJa8oObE7RYoLE26SSk7wsOxazZ5uKPb9U6DOmBHKL0RR6bpU/GIX4y+T/eZnPKuJlDAb8sPrc+poqk7prhcyJ5GlcAv8E+tItG0KmXEI3Q9HSijFTbksl8tPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741717387; c=relaxed/simple;
-	bh=OKgUmyfCm5KWfufOmtbwO7y0D8vMs8o5fmUjqAFAc2Y=;
+	s=arc-20240116; t=1741717831; c=relaxed/simple;
+	bh=LfsP1qD1UixHyLWZ+BVqcc7KJb/AoO47XMtQU9zN91U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HHPhJEyx/sZGGD43rrmcxT/UuIz3CTy2n+Huh79B/PeCqMS0W0GFyzY9eXne9u9VkH02wXX3dCx2L3lm7TC1A1/LhuH+RMeWKA07YtLac4sdZ6WOR0S8YJEoS5VG+mMs4O8P+UbOsdqeGyEL/0soP1RtgoRfEj6fBObUuyYPA/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fexKVTeF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6097AC4CEE9;
-	Tue, 11 Mar 2025 18:23:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lbSrdBLee+takxefujRq5kFqZ2aftCZN6iASkUNOVQqBjmJFR6qyogwKQfy0oggQ8DpnL0Id7Dvb8utBDI05nVWTyFx0ShvFhc8fdizclKNDHlscx7PNNAYMYdbOZakPQ2w0XTVKjGj9ZavLM17cEDlECyo+rAVyXyfMN+oCsVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5w30VCq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D87C4CEEB;
+	Tue, 11 Mar 2025 18:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741717386;
-	bh=OKgUmyfCm5KWfufOmtbwO7y0D8vMs8o5fmUjqAFAc2Y=;
+	s=k20201202; t=1741717831;
+	bh=LfsP1qD1UixHyLWZ+BVqcc7KJb/AoO47XMtQU9zN91U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fexKVTeF0ZI1hyXWGq0/Oex33Rpv/AAqnN33eDYnZ7GB34N/YakJ2uNyTI8L7QEDP
-	 tzWgBIdvmOTes9rM9d4MH91vK1kHM7v3qJEVIL4z2/9o/Ot1vLgKFAxLMNu7j+1yLe
-	 KJEx+KpPnKkJzev3lAtR/OZpOd1nog29HDuHqCe13qLdxonElVUIGmHPNAozGheWFT
-	 e8w6kueMdUBY4AmfGrd6V5I4rFYmvNU9SFGLV9qr62Y2FeMA8iaCoUn4IM6o570MPc
-	 DU995SibTurpmIHWQ4YTt9sFJ7nk+fK4eDJfL6raIRYicB3T8UkMknqI/fbmJQXuBv
-	 xAVlSmqw6Lifw==
-Date: Tue, 11 Mar 2025 13:23:04 -0500
+	b=P5w30VCq3PkMpKSWE5/3EWYD1W9vpCIoatlFxl35rE5UabEOZHWhQ//an4RBbs72V
+	 tOiAdDKyID0cT0PqoSo+FBxKHjNjH9+zcUjtE8+pCCuOxCwiKNRmU588sNAJSfUX7u
+	 CmSrBZUENaNraghVqc4b4ROIRXnfI2ARvCDLVaKR3peh2O01RYTm1C3QAFgkzQvZOi
+	 j45PaaT32l5jMyIxeohinGAQ9Sqm/1iSEuh5btVnz5LFKGU3+l/Mp5TgWA1i57hSe2
+	 zvBuAu0q1jCBR5o0+5AvNQhKeTNjbPE92gBmHklCugPBSjzvSwssXnPv4eB0UtoDa9
+	 W4aJl288c7wug==
+Date: Tue, 11 Mar 2025 13:28:13 -0500
 From: Rob Herring <robh@kernel.org>
 To: Cosmin Tanislav <demonsingur@gmail.com>
 Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
@@ -82,11 +82,11 @@ Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: Re: [RFC PATCH v2 04/16] dt-bindings: media: i2c: max96717: add
- support for pinctrl/pinconf
-Message-ID: <20250311182304.GA3925099-robh@kernel.org>
+Subject: Re: [RFC PATCH v2 05/16] dt-bindings: media: i2c: max96717: add
+ support for MAX9295A
+Message-ID: <20250311182813.GA3934398-robh@kernel.org>
 References: <20250309084814.3114794-1-demonsingur@gmail.com>
- <20250309084814.3114794-5-demonsingur@gmail.com>
+ <20250309084814.3114794-6-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -95,137 +95,42 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250309084814.3114794-5-demonsingur@gmail.com>
+In-Reply-To: <20250309084814.3114794-6-demonsingur@gmail.com>
 
-On Sun, Mar 09, 2025 at 10:47:56AM +0200, Cosmin Tanislav wrote:
-> MAX96717 is capable of configuring various pin properties.
+On Sun, Mar 09, 2025 at 10:47:57AM +0200, Cosmin Tanislav wrote:
+> MAX9295A is an older variant of the MAX96717 which does not support
+> tunnel mode.
 > 
-> Add pinctrl/pinconf properties to support this usecase.
+> Document the compatibility.
 > 
 > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 > ---
->  .../media/i2c/maxim,max96717-pinctrl.yaml     | 71 +++++++++++++++++++
->  .../bindings/media/i2c/maxim,max96717.yaml    | 16 ++++-
->  MAINTAINERS                                   |  1 +
->  3 files changed, 87 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max96717-pinctrl.yaml
+>  .../devicetree/bindings/media/i2c/maxim,max96717.yaml          | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717-pinctrl.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..347e66a5320c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717-pinctrl.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2025 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/maxim,max96717-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim GMSL2 Serializer Pinctrl
-> +
-> +maintainers:
-> +  - Cosmin Tanislav <cosmin.tanislav@analog.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pinctrl/pincfg-node.yaml#
-> +  - $ref: /schemas/pinctrl/pinmux-node.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +properties:
-> +  function: true
-> +  pins: true
-> +  drive-open-drain: true
-> +  drive-push-pull: true
-> +  bias-disable: true
-> +  bias-pull-up: true
-> +  bias-pull-down: true
-> +  output-disable: true
-> +  output-enable: true
-> +  output-low: true
-> +  output-high: true
-> +  slew-rate: true
-> +  input-enable: true
-> +
-> +  maxim,jitter-compensation:
-> +    type: boolean
-> +    description: Enables jitter compensation.
-> +
-> +  maxim,gmsl-tx:
-> +    type: boolean
-> +    description: Enable transmitting pin value to GMSL link.
-> +
-> +  maxim,gmsl-rx:
-> +    type: boolean
-> +    description: Enable receiving pin value from GMSL link.
-> +
-> +  maxim,gmsl-tx-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Identifier used while transmitting value to GMSL link.
-> +      Default value matches the pin number.
-
-Use normally wrapping or blank line between paragraphs.
-
-> +    minimum: 0
-> +    maximum: 31
-> +
-> +  maxim,gmsl-rx-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Identifier used while receiving value from GMSL link.
-> +      Default value matches the pin number.
-> +    minimum: 0
-> +    maximum: 31
-> +
-> +  maxim,rclkout-clock:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Clock value.
-> +      0 - XTAL / 1 = 25MHz
-> +      1 - XTAL / 2 = 12.5MHz
-> +      2 - XTAL / 4 = 6.25MHz
-> +      3 - Reference PLL output
-> +    minimum: 0
-> +    maximum: 3
 > diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> index dd28cc397674..0a43582168a8 100644
+> index 0a43582168a8..31fb62debdc7 100644
 > --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
 > +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> @@ -120,7 +120,21 @@ required:
->    - reg
->    - ports
+> @@ -24,11 +24,14 @@ description:
 >  
-> -additionalProperties: false
-> +additionalProperties:
-> +  anyOf:
-> +    - type: object
-> +      allOf:
-> +        - $ref: /schemas/media/i2c/maxim,max96717-pinctrl.yaml#
-
-You can drop the allOf here.
-
+>    The GMSL2 serial link operates at a fixed rate of 3Gbps or 6Gbps in the
+>    forward direction and 187.5Mbps in the reverse direction.
 > +
-> +      unevaluatedProperties: false
-> +
-> +    - type: object
-> +      additionalProperties:
-> +        type: object
-> +        allOf:
-> +          - $ref: /schemas/media/i2c/maxim,max96717-pinctrl.yaml#
+>    MAX96717F only supports a fixed rate of 3Gbps in the forward direction.
+> +  MAX9295A only supports pixel mode.
+>  
+>  properties:
+>    compatible:
+>      oneOf:
+> +      - const: maxim,max9295a
+>        - const: maxim,max96717f
 
-And here.
+Make these 2 a single 'enum'.
 
-> +
-> +        unevaluatedProperties: false
-
-Do you really need to support 2 forms?
-
-This also allows the node names to be anything. We do that for existing 
-cases, but for new ones you should define some prefix or suffix. 
-Typically, '-pins$' is used.
-
-Rob
+>        - items:
+>            - enum:
+> -- 
+> 2.48.1
+> 
 
