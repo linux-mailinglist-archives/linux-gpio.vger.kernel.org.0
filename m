@@ -1,117 +1,108 @@
-Return-Path: <linux-gpio+bounces-17462-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17463-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 020C6A5D071
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 21:08:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B25DBA5D081
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 21:12:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B55C3B3FB9
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:07:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01FD17AAEC5
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:11:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2230E264615;
-	Tue, 11 Mar 2025 20:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8617264631;
+	Tue, 11 Mar 2025 20:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tjeq6X04"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjZifLhP"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D098C2641C3;
-	Tue, 11 Mar 2025 20:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCA1217719;
+	Tue, 11 Mar 2025 20:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741723668; cv=none; b=NXNDRoPNWQIPSv5yY0d9jx0r+GO0jcWjyJ0GgyyKNMvlmo7bIj5+WwF85fDarEvkVrln3qSOCIYskAaCiXY6PfJYVF3MlR77Jxwe4tdq+NHT3BuMGsJefFZSv32F3S2axsj1Ypr3nNtqQ01v8nvN2qfSVk3HEmT4FQMKYce8OcY=
+	t=1741723941; cv=none; b=D74qqKGSPeV+zc5ZG6v3S2Z7k/5XAIjLPHpwepn1GLPqvVTTJHWa4gZqUnUtWjwNs7RJWyr7jeGlcq4QucG6LCnv4Sn9iMTSVSY4GN6XHwfnYwF8C5w9rDpQyDskluXU2i0yGs3ZJRtGhEAIYdEXnVD2dE85fSaFIGuNtHhzhDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741723668; c=relaxed/simple;
-	bh=kypsoT+y8Xwt8jAYhLNEnwar1djrWfc1JLO5IbchjC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B523K5qL4TWgucpbsXhFpGb807S/k44+ArhKBZwcy6cq/TcAfgo+VOhFR+rGKaS6M9mlVQS5SLG6YG0bVPQodXsHxFqLWEQaglYYpk0Ir6I6bSrKVaQ0aqKCcXQGlDCiAnpPHqNFzoLlLmW11dW1yitl6I9NZljIRcpYHOGeapA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tjeq6X04; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF50C4CEE9;
-	Tue, 11 Mar 2025 20:07:47 +0000 (UTC)
+	s=arc-20240116; t=1741723941; c=relaxed/simple;
+	bh=3+OnOIdluvq4El08WnHUY5Y/kcwnOu3x4aGLqAkuCrs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mJi6Ph36P4CRqkih9JaByc5rcMhPy+ZXiNQJTNA1bO0aRcMPj6Pqn/Tm96p5pq0eqj9js6ovGDw+p7HYRoHeOtK7IrtcDn9ic2+UCCXs0omxwKNCd3gIDRMJjPLguQg2wr2nz0amzxq0s9G+7lSCVEaIYpObqB+o/dmZGT0tBAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjZifLhP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D47A7C4CEE9;
+	Tue, 11 Mar 2025 20:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741723668;
-	bh=kypsoT+y8Xwt8jAYhLNEnwar1djrWfc1JLO5IbchjC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tjeq6X0429QkGYOfvtTSP68hCTEAk7tXifXZWYmaYPtIW1yT3Z41d3tlZ6tAEBjV6
-	 Nu5ijlgHQ8JR3KznPZcuksAkqMTzcrY0zIikKCMTg9syTFJy/7+Sd5RSy63wTFYru0
-	 4b87SAF4Ki23rjhuGrZV/ndPPHutoLSxxVBdiShjCDPfg01YMYUslYfTknrK/mqRyu
-	 kr2vBuysMCVssvx/2bGh2sClVnz81+Y36YPSlAuKj8angw/Kx9mARrh7Gxbbr5IJIg
-	 MoU+KZjksqaamOCy4qFUJF8+2Aia6G7AuovSHoL3JC1GLRErJqW0/4dtK7h4BXEOKB
-	 gysic/nHt3nUQ==
-Date: Tue, 11 Mar 2025 21:07:45 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] Add gpio-ranges property for EN7581 gpio controller
-Message-ID: <Z9CYEZloamPhVdBS@lore-desk>
-References: <20250307-en7581-gpio-range-v1-0-de1262105428@kernel.org>
+	s=k20201202; t=1741723941;
+	bh=3+OnOIdluvq4El08WnHUY5Y/kcwnOu3x4aGLqAkuCrs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=gjZifLhPPGXcer1ZAWIyK1S2tH/lt04SIftXSYzZKGfP4lXtZMsmn0Eayh4HpB96b
+	 9/WqmOe6ugZVmY0LQ5SSZW9kBXMR2lxu5SNeNjoFIMide30s/REq6ZNBAcdJlrVORp
+	 he21oJCRdGMpi/X6dYz0x6Og1QgILShA9Vtz4Zfqdtms9SIwKr6HEFsbEAuMctd6Sf
+	 BS0G/1eyAkCusG9Gt/HbcO5zM24U61hX4ZUeBvWsFP2u4HRO5jy6CgLN+tuJGbunvQ
+	 dvSLNH9QnttCUnXihzQwUAmxtSH/2kN0drCOaMIev3rf7vlKgSyJqUbc/XYZSod+Vo
+	 HijI7bZDk9tuQ==
+From: Mark Brown <broonie@kernel.org>
+To: arnd@arndb.de, lee@kernel.org, dmitry.torokhov@gmail.com, 
+ sre@kernel.org, lgirdwood@gmail.com, alexandre.belloni@bootlin.com, 
+ danielt@kernel.org, jingoohan1@gmail.com, deller@gmx.de, 
+ linus.walleij@linaro.org, brgl@bgdev.pl, tsbogend@alpha.franken.de, 
+ linux@treblig.org
+Cc: linux-mips@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250309193612.251929-1-linux@treblig.org>
+References: <20250309193612.251929-1-linux@treblig.org>
+Subject: Re: (subset) [PATCH 0/9] Remove pcf50633
+Message-Id: <174172393659.371198.1480937233663952854.b4-ty@kernel.org>
+Date: Tue, 11 Mar 2025 20:12:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="icN7TOB+24o1XSzr"
-Content-Disposition: inline
-In-Reply-To: <20250307-en7581-gpio-range-v1-0-de1262105428@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
+On Sun, 09 Mar 2025 19:36:03 +0000, linux@treblig.org wrote:
+> The pcf50633 was used as part of the OpenMoko devices but
+> the support for its main chip was recently removed in:
+> commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
+> 
+> See https://lore.kernel.org/all/Z8z236h4B5A6Ki3D@gallifrey/
+> 
+> Remove it.
+> 
+> [...]
 
---icN7TOB+24o1XSzr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-> Introduce missing gpio-ranges property for Airoha EN7581 evaluation
-> board
->=20
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-Hi Linus and Angelo,
+Thanks!
 
-is it fine if this series goes via linux-mediatek tree?
-en7581_pinctrl node is only defined there for the moment.
+[6/9] regulator: pcf50633-regulator: Remove
+      commit: 248bc01138b11ff3af38c3b4a39cb8db7aae6eb6
 
-Regards,
-Lorenzo
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> ---
-> Lorenzo Bianconi (2):
->       dt-bindings: pinctrl: airoha: Add missing gpio-ranges property
->       arm64: dts: airoha: en7581: Add gpio-ranges property for gpio contr=
-oller
->=20
->  Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.yaml | 3=
- +++
->  arch/arm64/boot/dts/airoha/en7581-evb.dts                            | 4=
- ++++
->  2 files changed, 7 insertions(+)
-> ---
-> base-commit: a8a297e8bb3dd304cac77f7c435a4983d885a657
-> change-id: 20250307-en7581-gpio-range-fceb30c7e2c9
->=20
-> Best regards,
-> --=20
-> Lorenzo Bianconi <lorenzo@kernel.org>
->=20
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---icN7TOB+24o1XSzr
-Content-Type: application/pgp-signature; name=signature.asc
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ9CYEQAKCRA6cBh0uS2t
-rMEWAP46Y725zv4QZ2O/ml8GZ0JZ2mc8jhx0fJFGt3Hkmmo2AAD/aNhB7oE+OqvP
-7D82+qP5g/4Qg6+HtlRX/B6Gk78LYQg=
-=nXDU
------END PGP SIGNATURE-----
+Thanks,
+Mark
 
---icN7TOB+24o1XSzr--
 
