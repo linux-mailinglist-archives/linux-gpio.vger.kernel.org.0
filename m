@@ -1,119 +1,183 @@
-Return-Path: <linux-gpio+bounces-17435-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17436-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 129FDA5C3D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 15:32:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF92FA5C3EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 15:35:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A61D16FD22
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:32:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB5DE7A8F88
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:34:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567D22580DD;
-	Tue, 11 Mar 2025 14:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15B51925AF;
+	Tue, 11 Mar 2025 14:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cHY8ImlW"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GU3jOMES"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE23158A13
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 14:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8882678F47
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 14:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741703567; cv=none; b=YOtSNE3gssmhyKNCKNVFyClM17Lz8fxK+dqyRTkF8O/mMNGXwQtYxMEY16szLKyZJCZ7BGRXyAVTXOlstVxluoXkHbGEeYxDSN36jXc8OJBWNXbg8zlwJswDIcnf1UNd6u3rq/hvlJhEw3dQ3pDaYS7rAODoshQ7ph+QaOINKMs=
+	t=1741703747; cv=none; b=XUZzM/dJCN1jxl7FZX/rVMZWbhNhMTcJCLEhNkn3GdO18FgHI2IVu3HG0Khx/wzZjmRhZwSUjHo8gvkn9NrbZPyw4KkQfk6D0ZbSzB5ofR48JZ+VX2yBksFil5NHPbdjegFYdMLrIhUNYazs3x4JJOCejZX5D+8PZrC0nCK9PoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741703567; c=relaxed/simple;
-	bh=Zr6WgAlS6R5yGOn9CKEM1IoFRIXy8zA6M9eSlXDYnpU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u2Q9pWYTj+1akTQD7Tnwxp6NGChpR+b/jIkDZDYDkMx9n63rZdm44zEfhAzcDUgFM6bNsey889QW484qDeCbFIqOjGDFFBdv7VFwFv7N3b51i2U/rFd3lJp82WCVqaJR79mlZ+PcJ2YP6uGa5XWmibXqrv+61aRLis3WpSQWF3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cHY8ImlW; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30c05fd126cso27427641fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 07:32:45 -0700 (PDT)
+	s=arc-20240116; t=1741703747; c=relaxed/simple;
+	bh=rty27olN5qtT2FiJsZAnVeMcI3IQWlc6A0m+F2XfCzA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rep7xNVo0R7J9kgGDXXudge6SBr1axYZ+T2K1QCJ+TnMJ8Tyg+rOaifXJ3GiNv0wgj/BLv2DilfhpAv4Lo+akYlkFh+1ay8mhcHwFNFFnYVM4WfSt3vIrqHN/Mu9lM/yBOMZ03bRdBN9FFVBh8+ofjcPuen+xs+zRuJ0CvEVsZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GU3jOMES; arc=none smtp.client-ip=209.85.218.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-abec8b750ebso941290066b.0
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 07:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741703564; x=1742308364; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zr6WgAlS6R5yGOn9CKEM1IoFRIXy8zA6M9eSlXDYnpU=;
-        b=cHY8ImlWfn1KKucrOuLSvRQJkROEQ8NPIPwNcEOlG4K9VBdUNsngaABubLvMZqF/mc
-         smgDyFfmtOY3pWTyN1HaRjGcRXmd/eP8M4tx6fg6TRQGoCsGc5frhYajUKvE4imld3SX
-         l1ppS/GScSELEbXWsXZddIDnIjpVJzKE2r9sHIWtmkurLp+FFT/IiflU8BJIL9oLHib3
-         tay/C3oQYtgNt7+zK3OKT+zxcH2HDJ5hs+RqPLvfKaGO5LjEW8KXfPguxhzQdboAMxbi
-         geRcWm93C3WoEhfyFRK6tHsfzzeaRjcm64SGQ/fQ3BoOonWFX/K8rm+mXWVlqGojEWO+
-         2J0A==
+        d=suse.com; s=google; t=1741703744; x=1742308544; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hlcozNRCUn2cDnJKUvdb8kPLVFjOiAX9tvU5DyWpFbs=;
+        b=GU3jOMESekZDdTWy5z1Z3dpQgkXwFi6DXlPpnvBhmzJ7I2BBkGP4aDHIhYYp2cl/H1
+         Jb09vev6yW/KF5JPE0/4XtrPgauwJDhYr0OhGS12+qPy/Llo/sMH2jRnaXa/0NgpmdbM
+         MTftcdpClpyKf54p2vFufW7gQ49ecO1YPksWebiwWsUzUnA4EMOJst1yMmb60lG1qugf
+         ckz0zalrLXHu6UrY/RJJh9Bv/IVR9we8MEJWyYcivSaMJpky3h/JHlzjzqljeiHyBLUk
+         4pviQhS7SYOV1LlEHPEdK3IlpMXgZ1dPKsfSUv1gJoCNIamLzqqfbe0HEV3Vgpt6vxxH
+         tTtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741703564; x=1742308364;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zr6WgAlS6R5yGOn9CKEM1IoFRIXy8zA6M9eSlXDYnpU=;
-        b=t8+yK87SfSj3wjP9y5o3BcYskUHFcqM21u51T81fgoYf5ULWkcFTPH9RpBRlEKzIeY
-         XB3vB3iNDqln3yVhNvTeV64iPIbH+zLOG8LsNVuNOY8BBAodpfq7Vxh6aj5W8pYrF43o
-         LqAmGhvFlUgSngxvtp9lyBLI9oX5eXps/jpkU7h0gVFSPGqhIJWCjYAq8Cv71IZSLkFQ
-         Qg1KDM3yQ4+xyOQEyeWRx7KmfDTPqOLZgIc6+UqriHY2pV9ElMyOzHvaCTg3hLjE+T7O
-         CWeKGMCkf61juBLO/khVDnhSlNTlYKhkmeRQoTJGPM3/vyShwWOya0Q6F+AZLrI+jlRJ
-         La+Q==
-X-Gm-Message-State: AOJu0YzB36thbTE5cS3/SHVxokvqXezWZqS07gxFLsT0j5Yw+zwdn3vK
-	ER70qEzji4m8oVaGYO/E2EQndMkSpjq4RW7q7i8lxB+lBBYJ9o2ywOGqixdkhDdye6rm5DRtOQB
-	CU/boeA4egQl3yRAXZYBB+CCCz0sNm+BX41UBWA==
-X-Gm-Gg: ASbGnctnevkCU/Uydz/kdluJljAn/9FvXfGiMT3Ue22MTxgH2EnCV/WkwDWuJwM5fW2
-	ktWPjHa82WeRjujkwUWE5xoXsz5YpFympNJQatFkSLxAHP9S99Jl716Mz9gqgtUBf839KvNpCq/
-	3ud4R/37uWIyrR+nMQxYduU4HHw7bj0NiNxx7arqMVdBndVgSuXuSykhiB
-X-Google-Smtp-Source: AGHT+IEisI8Neqlj/Ik9FhV+05dwHOtFWei1CfbzlpUHAJT3kEAwnn1YOghnbkv8ficWwHYaID9U7+mw+S4I+MdiIko=
-X-Received: by 2002:a2e:8752:0:b0:30b:be53:bdd4 with SMTP id
- 38308e7fff4ca-30bf452d00emr56997631fa.20.1741703563437; Tue, 11 Mar 2025
- 07:32:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741703744; x=1742308544;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hlcozNRCUn2cDnJKUvdb8kPLVFjOiAX9tvU5DyWpFbs=;
+        b=FAgWS5Y9TPXg0mAsUWgGqjfsYCVbEjAqxSrzPwxiRnihhjGEwxJUdvB1mQ4xtwRBDQ
+         tBUcMWNzqvgsFdqx0AwQwrl7pjVh4yRTVM0xqiJFC4Qx/uBMA5gpSjR9/BHXhd8vpBwn
+         0zzos/azEI/dP/qzytQvSF6EAZuLfzaw/2/HrMLiMr6JdQaeWVzlX+isaUnWNhLoUKxe
+         8A+4lWrIS6IblGSNfBbRGUUkicmkwAr3XtciEIuY8LFg+XrpuKYZX772NJvFjwpjP5iJ
+         hk1tMpI2ot7zIuoaoX9yRT5WyibqlAQbgW12bYIYZA/pMiWUHj2ORTjwqi7E5rmNazeI
+         CeEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBLIcgndrtyde2vh6KM0siaEwhS50eTLobemYvHdixFpnMNIDZrllrpkluAatTPZ6ZcY5hHJtTnh4i@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFUkcAdQlwL6+UR3n4GPv23koiA8sSDBeFIVICk1IL/vWH81S6
+	c8wugg0VvNM7zRPsp/vh89UJoP3TveF3hxALwr/Q4EKOdRU5G0s/+ugheZoSE08=
+X-Gm-Gg: ASbGncsCD/Rd6FLaMBsSi29TF91/y4YkIC1wpPYNg/SPa/1K6+JzXT8LdY/GsAXRkEO
+	NRLSammYFbp2yQUsXR12UZ81R9ABNAlXRaXu8ib3UQlK8rCuonrku+nlHxVTGYEfMBfq7rH/B0x
+	u9Hnf2KvqE4WX56iN0bG8+YrPNXuZQUa2Ur9qHacpitAb4+UYsG4e6XgI7ak/p3wuy/ImUb+zEG
+	ecLvYiNmj8QZeiTjRza+DeUE/0etR7hEMqmVgo04m+Xbqsca2kYaP1sVJNVQEgB5EOrWginBzqU
+	u/fikU3KEMVyp5+N+GoZb5bx2beHAUf6wQ9msfL0qPC5XY+/eCUGZ4+fSHnExqU7l/ZAWUFef94
+	yBirRTgC7fWnL
+X-Google-Smtp-Source: AGHT+IFLdM9vCnSAq2tyDNO5yPeJsNiGhv4R/i7mo9dqAzSuL9h81HaDVtVXHdqZ5ge8YgeZcopV0g==
+X-Received: by 2002:a17:907:d27:b0:ac2:9e1a:bf95 with SMTP id a640c23a62f3a-ac29e1ac5camr1178043966b.18.1741703743784;
+        Tue, 11 Mar 2025 07:35:43 -0700 (PDT)
+Received: from localhost (host-87-14-236-98.retail.telecomitalia.it. [87.14.236.98])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2a96a22d8sm278255366b.158.2025.03.11.07.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 07:35:43 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 11 Mar 2025 15:36:53 +0100
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Wilczynski <kw@linux.com>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 03/11] dt-bindings: pci: Add common schema for devices
+ accessible through PCI BARs
+Message-ID: <Z9BKhR5exw13yN36@apocalypse>
+References: <cover.1738963156.git.andrea.porta@suse.com>
+ <c0acc51a7210fb30cae7b26f4ad1f0449beed95e.1738963156.git.andrea.porta@suse.com>
+ <20250310212125.GB2377483@rocinante>
+ <CAL_JsqKPGOdS_8KDggO5tBHAnC-NTLAC5iS9GANm9BuxBfQUsw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311-gpiolib-line-state-raw-notifier-v2-1-138374581e1e@linaro.org>
-In-Reply-To: <20250311-gpiolib-line-state-raw-notifier-v2-1-138374581e1e@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Mar 2025 15:32:32 +0100
-X-Gm-Features: AQ5f1JoL2IvysYQ6AfSqrcf2OfHt89YRbBogJ_WeAFJSM_ju5h8hWF3NagavEQQ
-Message-ID: <CAMRc=McJPStp5UcvRN23yHWL3LHuREvOtQVe2iodeQj85KCojA@mail.gmail.com>
-Subject: Re: [PATCH RFT v2] gpio: cdev: use raw notifier for line state events
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, David Jander <david@protonic.nl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKPGOdS_8KDggO5tBHAnC-NTLAC5iS9GANm9BuxBfQUsw@mail.gmail.com>
 
-On Tue, Mar 11, 2025 at 3:31=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> We use a notifier to implement the mechanism of informing the user-space
-> about changes in GPIO line status. We register with the notifier when
-> the GPIO character device file is opened and unregister when the last
-> reference to the associated file descriptor is dropped.
->
-> Since commit fcc8b637c542 ("gpiolib: switch the line state notifier to
-> atomic") we use the atomic notifier variant. Atomic notifiers call
-> rcu_synchronize in atomic_notifier_chain_unregister() which caused a
-> significant performance regression in some circumstances, observed by
-> user-space when calling close() on the GPIO device file descriptor.
->
-> Replace the atomic notifier with the raw variant and provide
-> synchronization with a read-write spinlock.
->
-> Fixes: fcc8b637c542 ("gpiolib: switch the line state notifier to atomic")
-> Reported-by: David Jander <david@protonic.nl>
-> Closes: https://lore.kernel.org/all/20250311110034.53959031@erd003.prtnl/
-> Tested-by: David Jander <david@protonic.nl>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+Hi Rob,
 
-Ah, dang it, I didn't drop the RFT prefix from b4 config...
+On 08:32 Tue 11 Mar     , Rob Herring wrote:
+> On Mon, Mar 10, 2025 at 4:21 PM Krzysztof Wilczynski <kw@linux.com> wrote:
+> >
+> > Hello,
+> >
+> > [...]
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index d45c88955072..af2e4652bf3b 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -19752,6 +19752,7 @@ RASPBERRY PI RP1 PCI DRIVER
+> > >  M:   Andrea della Porta <andrea.porta@suse.com>
+> > >  S:   Maintained
+> > >  F:   Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > +F:   Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> > >  F:   Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+> > >  F:   include/dt-bindings/clock/rp1.h
+> > >  F:   include/dt-bindings/misc/rp1.h
+> >
+> > I would be happy to pick this via the PCI tree as per the standard
+> > operating procedure.  However, the MAINTAINERS changes do not exist
+> > for us yet, and are added in the first patch of the series, which is
+> > not ideal.
+> >
+> > I can add the missing dependency manually, but that would cause issues
+> > for linux-next tree, which is also not ideal.
+> >
+> > I saw some review feedback, as such, when you are going to be sending
+> > another version, can you make MAINTAINERS changes to be the last patch,
+> > perhaps.  Basically, something standalone that perhaps whoever will pick
+> > the misc patch could also pick and apply at the same time.
+> >
+> > Alternatively, someone else picking up the PCI dt-bindings would work, too.
+> >
+> > Your thoughts?
+> 
+> I guess I missed this in review, but why is a common schema buried in
+> a device maintainer entry? Also, an entry in MAINTAINERS is redundant
+> anyway because get_maintainers.pl can fetch maintainers from the
+> schema file.
 
-Bart
+Oh nice, I've added all that .yaml entries in MAINTAINERS because I saw many
+reference already existing there, so I was thinking that was a good behaviour.
+Now I guess I can get rid of all .yaml references in MAINTAINERS file from all my
+patches, since they will be solved automatically by get_mainatainer.pl... 
+There's only one minor caveat though: I have a middle name, and it turns out
+that get_maintainer.pl is skipping my first name. Unluckily I'm not a Perl guy
+so I guess I have to dive a little bit in Perl regex and send a separate patch
+for that.
+
+Many thanks,
+Andrea
+
+> 
+> Rob
 
