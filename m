@@ -1,174 +1,134 @@
-Return-Path: <linux-gpio+bounces-17429-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17430-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5064A5C330
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 15:03:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E9D7A5C332
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 15:04:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3813C1892DFB
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:03:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDE4D1682E6
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 14:04:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0453F25A642;
-	Tue, 11 Mar 2025 14:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2E3254857;
+	Tue, 11 Mar 2025 14:04:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AcK2GK8d"
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="zftlI627";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="kIONNL+C"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BFE25B67F
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 14:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741701753; cv=none; b=T1rqPpX5Jx5ZVvU0tejooJprkVBo2vdZChvleQL/+c4EruXrX9q/5x0wMBZnO7sBrC20gyW3WKJhOxcEpq4rZsr1auHrAqBs4+txehlmoc5GyAG45VLHsVaD+wQ5rscsOqd3brOZg39xZRsrvbJ5jrA1Ksh0/VGx3XzDp9z0WwU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741701753; c=relaxed/simple;
-	bh=wovlUknCbjLtJ7E0dYTE6d0SdIAz+QQhU7+RXFbLgyw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dFSt4WjTv3ryo7MA/ix8aGNaqfSaF9+OEeo9Ya5fQwjEkXeKnPBYeivVUZO5cRhdGft7eCjDbOc/61CresN4jG1+vETX797Zr/sJ6CpqB/fx9SsVVkypWY7QvIT4AC/Mlc2jKWtpH60q/IyUmojpNT3cv8BDflD8+uzM1yTpAoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AcK2GK8d; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-390f5f48eafso2722588f8f.0
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 07:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741701750; x=1742306550; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hXwjAuPml5bkPhhDdkMy+BAtbFG+Kreb/9IQjZLjvtI=;
-        b=AcK2GK8dFnA1XNlQW+NS9gEuOIoLKvYsbnx3MM0Jcfv9oyfuVyWovYkLIwTBwuVOqF
-         N27rQ5WACofk2v/WkFgreovJ6fnki2gPmmOAwoftA8B7d7kAq9VCetgVW1sFTwQ3EEhQ
-         Y3uvDODb/Vjy1gkwD0CvHYZv9ADcTwH/YknNhclBuNEjZxj5g8R51PPSqPes+kcvoxaF
-         mdYJWkDWO8Tuwvv3rO36lhre9xsYJK2id1v8nrtd0Zl71IXGrjePBxbfWHDtOwNCeech
-         vlIxR1L6V3W6jaitNTRLHR2UsptqSvGvihR1BYqhbR7WpbwND9BxSff9jqf+iwP64efH
-         2sBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741701750; x=1742306550;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hXwjAuPml5bkPhhDdkMy+BAtbFG+Kreb/9IQjZLjvtI=;
-        b=fn5Zl7P5EkL1AmHzRq6T0qOSpQ92MxizLE4aMUCv8NGrYAku0io2v3JWBCAYSdS77n
-         VetFMG1ue8rhIboIKEgLXkWfaMz4GDq9hJSFBHZKY4loP8Dierlx/nltleYVRTGup6Ph
-         6P1iP09LhIu0DOiP/knkORjDy9mCn3fF+a80CrIJ4i7qzW2/1nTLmn59EbnUvh7U5spU
-         1ttKY8yWyaTqFNPwukhl6ZSsla9MpgmvOq6SoawBtCT8EnyQJmFyJi28ux44w9o1BAK3
-         98wLrsqvogV/b1QPPimE2BMwHLoFR17bASG9HqmFiUbqO1nWfA7JxKwXVX2rHuwWaufH
-         sJFQ==
-X-Gm-Message-State: AOJu0Yyx7fC1/v4OPyb22ZIrTfGuucwjO3L8NOHwoiJXMpov5eHlhL7K
-	XebWtd4NArBPXKne92ryArJt/V5UAz/pUHr2wGDDcw0l1kG/BwdOhivMebHsuCk=
-X-Gm-Gg: ASbGncseYGZWBrxIkQKc3G9SPNUJxR8YcC/K2vpKd+6lBeSPqC9g/gt80XVgcNNvBFi
-	XrfVehdSkte86TfnrOEYuv+JpNGFxLpgRa+eaMhl6AYkJLykvezDzSfJV+Ro1hIwwN+VRGny1wR
-	x6F6FxJ2HSFS0EDuLbkfyTHC1INpwCGklJ//TL0hEWxXmbUcsEo5J4rgVujtOfcikSEYKyVRG5w
-	SohVbp0YO/dZXuhAv+v8MQXeiZSijRZVvmvEES/FdENTG2wd4782eCQnK1iSdNUVE+CVgh2LjZu
-	Yz25t8jnY+6btLdnPGS0W2DUyTnO+Nf0Yj1zb8NkzKq00yOUAVzq6Q==
-X-Google-Smtp-Source: AGHT+IGAgWjbNLs8CQJ0RZHn3qMqf88yC5Wtucbjza0pbfUhvsqFko7Sn64/I/LH5vZt54IyKKQt9g==
-X-Received: by 2002:a5d:47c7:0:b0:391:481a:5e75 with SMTP id ffacd0b85a97d-391481a8d7amr8470519f8f.22.1741701749747;
-        Tue, 11 Mar 2025 07:02:29 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:5946:3143:114d:3f3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c106a1asm18146297f8f.100.2025.03.11.07.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 07:02:28 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Vincent Fazio <vfazio@xes-inc.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH] doc: clarify the differences between building from git and tarballs
-Date: Tue, 11 Mar 2025 15:01:47 +0100
-Message-ID: <20250311140147.66484-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4017156C62;
+	Tue, 11 Mar 2025 14:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741701849; cv=fail; b=UohutipeW5hMMVFuaeg9EVVV8RodONyonntnSu2m8xwJdFuBCq53vzKsqjbNLCSP8TwZFF+MkPBZJkd7O+ERlglBcq131rhqd68n1H6hWD6fusSNQ93OcSJOJCf7deQER8cE25Y9jpuj0jrtBYNQCPbuprMtOPlsmumriWLsHTE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741701849; c=relaxed/simple;
+	bh=6nHrDQ8cOrPo5pjs0rTrD6/mUY7oQ1PLh8so96EyNMg=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LIMkmMHX7b8lX50ARNHogvo5fw4Eckyv0c9hskPNS+J2uymhOXyyWQvwvo19ku2ZLmWR1LWtZN5+kwaccxTFK8O9PQywAJHlKBSHQRzL8sRz5+YDcbTExRxHcyjN/BN8uc1GDPylMJGhtgiXcm0WtEQHJZ6M/hCyLRda857AX/Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=zftlI627; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=kIONNL+C; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id 25F03480A55;
+	Tue, 11 Mar 2025 10:04:00 -0400 (EDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1741701840;
+ h=message-id : subject : from : to : date : in-reply-to : references :
+ content-type : mime-version : from;
+ bh=6nHrDQ8cOrPo5pjs0rTrD6/mUY7oQ1PLh8so96EyNMg=;
+ b=zftlI627L73r95AFYNp807CYMsIaV6h+R2fSUXU/5Wavd/CmttrJoVrbS+KSuGBsrThPa
+ 4Tp5djCnTnj87eHCw==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1741701840;
+	cv=none; b=gxz8Zsj+HMxZQLCSi9rBr3fP669bjFSWMaPcL8JXoPMLj2YV/q6jmQRkm4D+5E4ak1dEWd/HHFvptiPz/twGvfh/2022tMyShe2vAtLASrIYaMCrnIVk5CRmeFsEtlxKUXrzSEl0py+Ucx0c/XVfRbc42pdfGSa3EqRZjjAGBOOjviFMv8yeTSlBkCnxnhHKg5qWkTXjnePYMO/zXd3nECnPdmWkw9ab4ST1QADBZnJPZTLKCeesmFaSmecu+/MjpzYF2pvZe90KFFmQiSzX0rWs8CdzoLtoBK0EyRVvLX2bKQs6r/UvTZQuovA2inE7dS2Vtpq2t3eEhIK8JF3gAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1741701840; c=relaxed/simple;
+	bh=6nHrDQ8cOrPo5pjs0rTrD6/mUY7oQ1PLh8so96EyNMg=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=QZnx8Jb868Q21oaWSJJeTt7o6pNKWvCzROMpmCYoCExvjY4sAaa6MAOjpInoUIK9FMhKMUveryL9bxCLrfNjNdG8+HQGBuMW+qxl2bdqcbiruP8aOCyc3QpSov+D3jyEDmrd0DrlvhNW6cCNf0amjzYOJRPuJ8lGZnnpUs/ehYx/8MeiNjKhAHNiPrIccQPTyg3Cma04DEDv8YxPa6SBt+5z4fNQBemVXzPq2FeeacpamZeDjKJeeQi/T2cGvmUoHkTuGmACJbm7x9WZd3tAlC36+cgynp6d7yL9MsShaAc0yuKVSEYn6RAVnEoIkd9aybJznb6HV4SRUvS1aCJEZg==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1741701840;
+ h=message-id : subject : from : to : date : in-reply-to : references :
+ content-type : mime-version : from;
+ bh=6nHrDQ8cOrPo5pjs0rTrD6/mUY7oQ1PLh8so96EyNMg=;
+ b=kIONNL+CDk+TCIuVvZvAH6VE4BVzkTCYzTRCIj43mvPA+BTWEKkK7th4wI2xSiU0+gA8D
+ tMnOg+VdE5Ded2QomLURiUD/ShIxurQPMIRxPedfFjwg/LG2qKIvhu/2gByEOjRr+8ehw59
+ a11NEHfkfUJZ64Dt0EPx6GmY+AWzX0UAqcxVm4d7uxJiajMOY73DRMXM0Q/YIa+pZ/vPCPo
+ 71J9bVUtupNpBxDb+iHjl2madGzl6JmrdtduZrgjdEO6tCwU175WC7arBO4I/0ez444yn43
+ B8BY7NWfMao9FpBV+HvpjpfzsCW66EblwJ+IbqbuO8LbWSEwVf2SgVOh6Jhw==
+Received: by srv8.prv.sapience.com (Postfix) id ED97428003C;
+	Tue, 11 Mar 2025 10:03:59 -0400 (EDT)
+Message-ID: <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
+Subject: Re: rc4 and later  log message:  gpiochip_add_data_with_key:
+ get_direction failed
+From: Genes Lists <lists@sapience.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+	 <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 11 Mar 2025 10:03:59 -0400
+In-Reply-To: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
+References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-53Et8eAPGW0HeO1swSaM"
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Several users reported having trouble understanding the "building"
-section of the docs and being confused on whether they should use
-autogen.sh or configure. Clarify these bits in the docs.
+--=-53Et8eAPGW0HeO1swSaM
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- docs/building.rst | 46 +++++++++++++++++++++++++++++++++-------------
- 1 file changed, 33 insertions(+), 13 deletions(-)
+On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:
+> ...
+>=20
+> there are now 194 lines logged on boot with:
+> =C2=A0=C2=A0=C2=A0=20
+> =C2=A0gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -
+> 22
+>=20
 
-diff --git a/docs/building.rst b/docs/building.rst
-index 958c6fb..aae07d4 100644
---- a/docs/building.rst
-+++ b/docs/building.rst
-@@ -21,8 +21,21 @@ together with
- Building
- --------
- 
--This is a pretty standard autotools project. The core C library does not have
--any external dependencies other than the standard C library with GNU extensions.
-+The core C library does not have any external dependencies other than the
-+standard C library with GNU extensions.
-+
-+The project is built using GNU autotools. In the general case, the steps needed
-+to download a source tarball, unpack it, build the library together with the
-+command-line tools and install the resulting binaries are as follows:
-+
-+.. code-block:: none
-+
-+   wget https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/libgpiod-x.y.z.tar.xz
-+   tar -xvf ./libgpiod-x.y.z.tar.xz
-+   cd ./libgpiod-x.y.z/
-+   ./configure --enable-tools
-+   make
-+   sudo make install
- 
- The build system requires the following packages to be installed on the host
- system for the basic build:
-@@ -37,23 +50,30 @@ system for the basic build:
-    selected options. The configure script will report any missing additional
-    required dependencies.
- 
--To build the project (including command-line utilities) run:
--
--.. code-block:: none
--
--   ./autogen.sh --enable-tools=yes
--   make
--
- .. note::
-    The command-line tools optionally depend on libedit for the interactive
-    feature.
- 
--The autogen script will execute ``./configure`` and pass all the command-line
--arguments to it.
-+The project can also be built directly from the git repository. However in this
-+case the configure script does not exist and must be created first - either by
-+calling ``autoreconf``:
-+
-+.. code-block:: none
-+
-+   autoreconf -ifv
-+   ./configure --enable-tools
-+   make
-+
-+Or by executing the provided ``autogen.sh`` script directly from the git tree:
-+
-+.. code-block:: none
-+
-+   ./autogen.sh --enable-tools
-+   make
- 
- .. note::
--   If building from release tarballs, the configure script is already provided
--   and there's no need to invoke autogen.sh.
-+   The autogen script will execute ``./configure`` and pass all the
-+   command-line arguments to it.
- 
- For all configure features, see: ``./configure --help``.
- 
--- 
-2.45.2
 
+For completeness - same log noise with rc5 and through commit
+4d872d51bc9d7b899c1f61534e3dbde72613f627.
+
+
+--=20
+Gene
+
+
+--=-53Et8eAPGW0HeO1swSaM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ9BCzwAKCRA5BdB0L6Ze
+2yD4AQC78vhEEx2EVj4M/Jy2vbWBo1bxnZ5yI3pGEDX53Bz2swEAmQe+4sVUSevx
+6bSZ6+lMA36uj9Mvt9/dDD7dCP6VaQI=
+=Md/g
+-----END PGP SIGNATURE-----
+
+--=-53Et8eAPGW0HeO1swSaM--
 
