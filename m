@@ -1,70 +1,114 @@
-Return-Path: <linux-gpio+bounces-17419-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17420-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D257A5BED5
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 12:23:25 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E7F4A5BF28
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 12:36:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5876516DA91
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 11:23:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 717DB7A899B
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 11:34:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39BA22512C9;
-	Tue, 11 Mar 2025 11:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044C6221F11;
+	Tue, 11 Mar 2025 11:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FlYvAtbW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B52632505AC;
-	Tue, 11 Mar 2025 11:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916B7252913
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 11:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741692200; cv=none; b=O+UXQzvmqcWYZ3nRpJ3jlsD0iCZ3KkaXbO+slR6/5t30W65vVGz9nDhrXNeCae10i1zxRlTRtCxEeN03C5XeJ/3pohBPI30Y+7TfC6xhFuQjdeJp+KWvMCrzZbrvuY86yIUiiS9vOrZeaq+M58X5O9l9ZF1a1sV+RfRJwVmOaww=
+	t=1741692953; cv=none; b=e+PCs93k5HckkuoTPhW+AM+EuErafZnprS9i9+jcpBwtAcSJ8uRHOEq3L+F1xE7r1Hf08v+6/X/H/9WGWxvKcWY69GyM2u8hGZiFXv4pfD276+p+5LOn3wfhP1hOMBPxtfgRFsmPOm/IEktoyID/T2zBeeaNphZmXJ0ohNeJ020=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741692200; c=relaxed/simple;
-	bh=ZpalmG4T9OY6m/3LwzKKa9/c72xUEFW6lIUVnjnmeAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RRv3FNU/rXWQk8Zf+9WFbIvyd3Cdjd67AieqnWSQYrgc1P2/+anUQjMGt83b6uqcwdvn+Q+0/9L10d2lJAArp4TSWv8AjwtRMzF2TUBqH/HslynWF27EIY2vQdQyY/gFY0h0lxA1rVSvlr29Gs8gmc9etbjVPfLzoM3yugga0WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6DFB152B;
-	Tue, 11 Mar 2025 04:23:28 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9EC73F673;
-	Tue, 11 Mar 2025 04:23:14 -0700 (PDT)
-Date: Tue, 11 Mar 2025 11:23:12 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+	s=arc-20240116; t=1741692953; c=relaxed/simple;
+	bh=H8WHtwt8NwohMFMSJyOYCpjReRpfvizxw55BJZSel9E=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ORBjlkciBGmELjtU77691MU2Lb3oNhjvBD/3RKRj0Pbi8UnUxiSsHFUn9hCItBCNjY0Fk2V/M4+ImJcsaSDn7y846Bvq8FGA5xYPHYStWThk9jAFXNf/j6qh5ViKF12ySm5JpAmu5eYLXuCT3roWCcPoShoIA3OmCIqiulCqcMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FlYvAtbW; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab78e6edb99so808657066b.2
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Mar 2025 04:35:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741692950; x=1742297750; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YRhhFOV50S8nkiKWbxOQjhnR/D7pnJ4RjNLNNRoG574=;
+        b=FlYvAtbWUQ783/BLA7JdmBN+i3taWgiMQfwzZ3MEwXpGQr5NXq59uc5Lys34D6Xqd2
+         KgFi0rEeyRNHRWcHVedFgHoLfiDJB+yYrlvS88+uMh8x5je/gnuyUBdUF14wybfr46Gg
+         lo5jWxagxDkLNH19pX/MyWbrFCBSwbMkj4soo1HKlN/6NmoKbp1vo0PBps4bC4WwQucA
+         gdyLsrnJVokl1sU+7ZwSaGnImjSMFDat3BNRpBdf7BpDq3SjxQsnDlJWTCTLgWObUTcR
+         PzhHG0vz+Feq6HFnQvARiEmpqNcCwzUSGSkYmsPQBQcncT4QF6FZAzSrkL0yJZ8pESs+
+         iGog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741692950; x=1742297750;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YRhhFOV50S8nkiKWbxOQjhnR/D7pnJ4RjNLNNRoG574=;
+        b=TtYjk8YuC7GCYGrnrEQry+EzRulUAz1bQfqA/orr4XKKaNjYpglunxljcfXz3VSVmM
+         mWs/IWuOSnqFJRCEnXODJuLdCcPuM+ArOcv51NpODqyMxW/i47N/ih1Uce8I571pQZqh
+         eL2lX7cA6ZoA3dekZkUtiB01uk6kW1ZQKk4bUsnGq5EmcDfBJv+PLeDJPcZTuxO2EIq4
+         aekBWe5Vqt6T/KvNVati4F0Tc1Cwc5Ih1xVBKKxQBj6DtnGywonidP+G3NE1yuUgaHtx
+         g/cEZ5OqXpYJ2bX5l4fY8jIdGoGcrnWtZabWYAwZ+8uK76hmEt2rSoIBqLW2yoWMzu5x
+         /+1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWQBChSUrmby7xBazFGitoHaYU6uwlG+xiAzJrn/h2GzFt2FbeWoIuV05w2r+HP34Au15jM7oE5NWgg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/7VzCpjV3rvmgb3+WFM/VzrfYugPvRPnnNEfGXgbuIs1iF4Ts
+	t0sAtJO+YD5kknRTEj+siBtMkiitP8ZlHcbhhpZuX1tcZpmmc/7AWQXEyEn8KGw=
+X-Gm-Gg: ASbGnctIVLgUlsiUxhDJoE7Q+lCpXGa48eiTMn8ht4cQvJOjkL9Z2X74IwNyPHdzdge
+	we8/W0PEcjtlGwBXdc9ZpPcW4yiG7DB7FKllR6KSo5XwUWJTSlEyNU9wjnCee5+xV8TQEwupquA
+	1BMVvLVL+2+WLbL5K07e1G2jkrhY5GUUJjaTxdGF2s8FvgZd7VBwiyXSYTqt1qwn5AOYF6cOpNZ
+	Nk2ODMpI5G2/ZGD7+Jxw3yKuEbNsXUAQGb4K4Jr6TjAPNsoOz64ZhYfU+7Eu2V7S9UMTTBNgooX
+	vgYuaiohS6v+zpjbotRJEZ/vplgM0VIaoKD+YVGy5lzMBkeEpoy1/HywOlSNZpuANNSu8VYe57p
+	eHjWnZZk07bVW
+X-Google-Smtp-Source: AGHT+IGVJsJ/tQDtRk3D58VsHDhx/tt/Tli65otubVC+55JrPtE5bG4yX5BvCZyT6vnF2dPKlEKCgA==
+X-Received: by 2002:a17:907:3e16:b0:abf:fb78:6743 with SMTP id a640c23a62f3a-ac252fa0fedmr2145428366b.35.1741692949753;
+        Tue, 11 Mar 2025 04:35:49 -0700 (PDT)
+Received: from localhost (host-87-14-236-98.retail.telecomitalia.it. [87.14.236.98])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2a65c7f7esm277405266b.117.2025.03.11.04.35.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 04:35:49 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 11 Mar 2025 12:36:59 +0100
+To: Krzysztof Wilczynski <kw@linux.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Aisheng Dong <aisheng.dong@nxp.com>,
-	"Fabio Estevam" <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	"Sascha Hauer" <s.hauer@pengutronix.de>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z9AdICiyaCmzKh-N@bogus>
-References: <Z7Rf9GPdO2atP89Z@bogus>
- <20250218133619.GA22647@nxa18884-linux>
- <Z7Wvyn1QJQMVigf9@bogus>
- <Z7Z-ZnztmvUxWoQJ@NXL53680.wbi.nxp.com>
- <Z86w3ZRS6T2MvV3X@bogus>
- <DB9PR04MB84614FBF96E7BC0D125D97F688D62@DB9PR04MB8461.eurprd04.prod.outlook.com>
- <Z87UJdhiTWhssnbl@bogus>
- <Z87sGF_jHKau_FMe@bogus>
- <PAXPR04MB8459EA5C7898393E51C246AD88D12@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <PAXPR04MB8459A73179FFF0ED0C9A51E488D12@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 03/11] dt-bindings: pci: Add common schema for devices
+ accessible through PCI BARs
+Message-ID: <Z9AgW1TEiJ3G9dvh@apocalypse>
+References: <cover.1738963156.git.andrea.porta@suse.com>
+ <c0acc51a7210fb30cae7b26f4ad1f0449beed95e.1738963156.git.andrea.porta@suse.com>
+ <20250310212125.GB2377483@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,47 +117,52 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459A73179FFF0ED0C9A51E488D12@PAXPR04MB8459.eurprd04.prod.outlook.com>
+In-Reply-To: <20250310212125.GB2377483@rocinante>
 
-On Tue, Mar 11, 2025 at 11:12:45AM +0000, Peng Fan wrote:
-> Based on linux-next, I added below node:
->
-> +
-> +               test@4f000000 {
-> +                       compatible = "fsl,imx-test";
-> +                       power-domains = <&scmi_devpd IMX95_PD_VPU>, <&scmi_perf IMX95_PERF_VPU>;
-> +                       power-domain-names = "vpumix", "vpuperf";
-> +               };
->
-> I not write a driver for it, so just check devlink information from sysfs interface.
->
-> From below sys directory, this test device takes scmi_dev.4 and scmi_dev.3 as supplier.
-> root@imx95evk:/sys/bus/platform/devices/soc:test@4f000000# ls
-> driver_override  of_node  subsystem                          supplier:scmi_protocol:scmi_dev.4  waiting_for_supplier
-> modalias         power    supplier:scmi_protocol:scmi_dev.3  uevent
->
-> Checking scmi_dev.4 below, it is scmi cpufreq, not the scmi perf device.
-> scmi_dev.3 is correct, it is genpd.
->
-> root@imx95evk:/sys/bus/platform/devices/soc:test@4f000000# cat /sys/bus/scmi_protocol/devices/scmi_dev.4/modalias
-> scmi_dev.4:13:cpufreq
-> root@imx95evk:/sys/bus/platform/devices/soc:test@4f000000# cat /sys/bus/scmi_protocol/devices/scmi_dev.3/modalias
-> scmi_dev.3:11:genpd
-> root@imx95evk:/sys/bus/platform/devices/soc:test@4f000000#
->
->
-> So it is clear that wrong fw_devlink is created, it is because scmi cpufreq device is
-> created earlier and when device_add, the below logic makes the fwnode pointer points
-> to scmi cpufreq device.
->         if (dev->fwnode && !dev->fwnode->dev) {
->                 dev->fwnode->dev = dev;
->                 fw_devlink_link_device(dev);
->         }
->
+Hi Krzysztof,
 
-Thanks, looks like simple way to reproduce the issue. I will give it a try.
+On 06:21 Tue 11 Mar     , Krzysztof Wilczynski wrote:
+> Hello,
+> 
+> [...]
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index d45c88955072..af2e4652bf3b 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -19752,6 +19752,7 @@ RASPBERRY PI RP1 PCI DRIVER
+> >  M:	Andrea della Porta <andrea.porta@suse.com>
+> >  S:	Maintained
+> >  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > +F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> >  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+> >  F:	include/dt-bindings/clock/rp1.h
+> >  F:	include/dt-bindings/misc/rp1.h
+> 
+> I would be happy to pick this via the PCI tree as per the standard
+> operating procedure.  However, the MAINTAINERS changes do not exist
+> for us yet, and are added in the first patch of the series, which is
+> not ideal.
+> 
+> I can add the missing dependency manually, but that would cause issues
+> for linux-next tree, which is also not ideal.
+> 
+> I saw some review feedback, as such, when you are going to be sending
+> another version, can you make MAINTAINERS changes to be the last patch,
+> perhaps.  Basically, something standalone that perhaps whoever will pick
+> the misc patch could also pick and apply at the same time.
 
---
-Regards,
-Sudeep
+Sure, I will split the changes for MAINTAINERS file to its own separate
+patch in the next revision.
+
+Many thanks,
+Andrea
+
+> 
+> Alternatively, someone else picking up the PCI dt-bindings would work, too.
+> 
+> Your thoughts?
+> 
+> Thank you!
+> 
+> 	Krzysztof
 
