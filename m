@@ -1,133 +1,178 @@
-Return-Path: <linux-gpio+bounces-17457-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17459-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FC8DA5CF72
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:33:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 309FEA5CF86
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:36:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 711091744D2
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:33:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC4551895C15
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:36:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16C3C2638B5;
-	Tue, 11 Mar 2025 19:32:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798D32641F5;
+	Tue, 11 Mar 2025 19:36:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="u1x9L7ey";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="fqOmzWlM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxdC68on"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741BA25C6E9;
-	Tue, 11 Mar 2025 19:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741721577; cv=fail; b=AOM0WZNzFT+rcPy4mJXllz4P5f4+EdScdfT1oWyllVq64x2uwUcaOEgD7vLgiZH7sp2YN8x50hTnf147P/mGuPpy+n6EI2u2Vv1uK4QWBtWG6stgoydCkpshLvUPw3JsK2wxqIgqPts+cVQNFZpLcIBk1QX0OkUyPGAvWPXcj90=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741721577; c=relaxed/simple;
-	bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m0cEUPh3eRdDx1DWxbqJhomQTf5aQB/QeU4wxk4b11cz2uYbFopziNmtrAzu//+NRP/VwUK5tWs84PHoNZvFb2d9445G2SXupG45yKl//FENeyPh733Mkg+aVA7Rqb72EQBY0h3NnnW06ncjut7d0YaDZQJuldu6WqtyjaCx+MU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=u1x9L7ey; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=fqOmzWlM; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id 6B993480A55;
-	Tue, 11 Mar 2025 15:32:55 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1741721575;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
- b=u1x9L7eyfhDDNBjHtzMNLaqMDFMyKZRD2nfztEb/9MisNOEqcbViC+p7xJEJbbXalkZIX
- ybj6VTdcmRL5h9BCg==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1741721575;
-	cv=none; b=XxFPAuK6Knwt22rlC/01coV1a1TeKd5uUiU4oSOAmzFyf/xkehDy/MeMo7EyjRoPOP1gLr4gz4s3h1fFEnsEfsrXpOUNZ5gVLl/8IztovK8C2mRfhZCrnrT+3+PsscmN5Py5pYdoRshCpaQkRCP6TfGoOcjLyS3NWkBmjG++lyVisZylD5P4SmoC5VfIXgX2CCBQgDvfg5J+N+EtpEuCcMLUHNU0EGS+KxzOSeeX1d3WibH/IXFQLtiIHZS5vq/uMx+H54LwQm9g1VE+LVziurceS6jjjRzw9kFmizZ+e4Hv9g0vjBApVeY3jW/q9hTmMlPUTR0otsR4GvG2Oj1mpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1741721575; c=relaxed/simple;
-	bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=vBv6OSskje2UvHAPgNLoW9Sn/ODwrLiIUn4zjXyuhTkAWqi+fq0IhTO+jxKz+/M0mAapxMJBXhu+MNiKp5J+eDGero9Ac/pcIRgSmPloAnqB8cJYAWnZCe6f7nDdwod6LZb1GzKgVomJ0sWkM+Yo0rkx3+2ImZ0rP28Wpuj1nY2vP0QhhxP2oE3rz1ACF4fLyYrWgFSKgp0kEJAzyXGABb1J5AQBCcVix4HQFlrQb13Mi7/Uyfm7XToNERRC2ZR/l/EFETORVFqZdLzIMk8OcREiVc+Vc7UhKWgzvSrGwnUQqED44O2EaYWZPCjuEcg7CWErWzwzQ5CnEZQsT6QdYQ==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1741721575;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
- b=fqOmzWlM6BJCSw3pwY6xfQA2DA4fjqdAsUhOfT07jzA3BvDF72xM6tBd8j01EL4uyh6JY
- SMF7m9ol+0lNGlRavQC8HB2ndh+kUgDcYsFVkkultyK4tEXLCFAyG9r6X+eentaq3RerVSl
- AnNmZSHr6opkiAceebMBTkhmihY2egP/lT6fDBMAQ0EzQOqGXejQftvqU32n7avy794quEv
- L7xFUWeiR0NbiRt7ZCcnCkquFkGVY0l5go8onn12NQXzQqzaPfMfV5a9gzvCjlWvufkaE82
- MTa2BxsQvU6pWXwaAOAs1IxKS4+Nc+Kdejj2L9h6eFQMjJm2Plzr+P6M/cAQ==
-Received: by srv8.prv.sapience.com (Postfix) id 3F94E28003C;
-	Tue, 11 Mar 2025 15:32:55 -0400 (EDT)
-Message-ID: <aadd3bef2732a99cf611323aa1a3a39b655376fc.camel@sapience.com>
-Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
- get_direction failed
-From: Genes Lists <lists@sapience.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Tue, 11 Mar 2025 15:32:55 -0400
-In-Reply-To: <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
-References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
-			 <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
-			 <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com>
-	 <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-krYBO8OLqVZriyabkDaA"
-User-Agent: Evolution 3.54.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225862641D8;
+	Tue, 11 Mar 2025 19:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741721793; cv=none; b=p/4U4oXz27tjtqvftN1pcRmeSFUkt+rnQo3N6tkgkeT0/oOERHmoY4KKZ64F+o2KIVI9jsH4Sy1Xcer0dqQKplJTMP2J+RxuuRDTwVSNoN3ba1QQZOXLNF9fkPgkUxrbB53d8DdENIsocHdqh2I+OV7z/6Vuy5CqWuZNGHvlAGI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741721793; c=relaxed/simple;
+	bh=HzBNDlXMTztZoutzNhdPP6DcQ+A1fzUrUCvrBZMcus4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nNLEw/FwHp8B9gd40LBPhktcJNWJj3Y3Vzj21dzIcgxYorT+3xy1XRRPZ4CUL3kMBdeHOY6ROez1MkHXWibw6STaoCzLCokH8XAr7BhMeIQLqojMrNkAdxcrC0ReDmcynO6+rOR4UUZJ5l1vw59fL5Bc34h53ECaioGMlruUPzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxdC68on; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC05C4CEE9;
+	Tue, 11 Mar 2025 19:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741721792;
+	bh=HzBNDlXMTztZoutzNhdPP6DcQ+A1fzUrUCvrBZMcus4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VxdC68onNvMSFdA0jMYGsDR36mn7TceaTkqhc7sM3+znQU7VNMqJiFMPp177ICwyH
+	 sAeaFVFMRD+6bkUoEpbUqhVSx5iQ8Lp8q9Wyz/45vGAmj4uXST6tPKOWySjltSzxc5
+	 90tG+TSoS5lkHXvq4ytuTrBe1vMMcjAZ1R3kUbkryItzo7p4Rr1tCiJQLaIAiT5jDn
+	 roz+nNjNCYD28L6bvK7EfJ1mwQIS+tshFt9XH+Y7FH4XfZWNwovKaFtZ7gN6V8V91y
+	 DetS5l2xs/kZsIEcPnwfDW9KbWfb97K1a0vv0X+e92otmakn7+Ei6qOI3qelmMBZ7K
+	 3GEPHzvdgPEPg==
+Message-ID: <59a1a6eb-d719-49bd-a4b5-bfb9c2817f08@kernel.org>
+Date: Tue, 11 Mar 2025 20:36:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/4] pinctrl: samsung: add gs101 specific eint
+ suspend/resume callbacks
+To: Peter Griffin <peter.griffin@linaro.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com,
+ semen.protsenko@linaro.org, kernel-team@android.com,
+ jaewon02.kim@samsung.com, stable@vger.kernel.org
+References: <20250307-pinctrl-fltcon-suspend-v4-0-2d775e486036@linaro.org>
+ <20250307-pinctrl-fltcon-suspend-v4-3-2d775e486036@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250307-pinctrl-fltcon-suspend-v4-3-2d775e486036@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On 07/03/2025 11:29, Peter Griffin wrote:
+> gs101 differs to other SoCs in that fltcon1 register doesn't
+> always exist. Additionally the offset of fltcon0 is not fixed
+> and needs to use the newly added eint_fltcon_offset variable.
+> 
+> Fixes: 4a8be01a1a7a ("pinctrl: samsung: Add gs101 SoC pinctrl configuration")
+> Cc: stable@vger.kernel.org
+
+It looks this depends on previous commit, right? That's really not
+optimal, although I understand that if you re-order patches this code
+would be soon changed, just like you changed other suspend/resume
+callbacks in patch #2?
 
 
---=-krYBO8OLqVZriyabkDaA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> Reviewed-by: André Draszik <andre.draszik@linaro.org>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+> Changes since v2:
+> * make it clear exynos_set_wakeup(bank) is conditional on bank type (Andre)
+> * align style where the '+' is placed (Andre)
+> * remove unnecessary braces (Andre)
+> ---
 
-On Tue, 2025-03-11 at 15:30 -0400, Genes Lists wrote:
->=20
-> Thank you Bart.
->=20
-Sorry - I forgot to mention that the number of warnings with your
-pinctl patch =C2=A0is down to 87 from 194.
-=C2=A0
+...
 
-thanks
---=20
-Gene
+> +void gs101_pinctrl_suspend(struct samsung_pin_bank *bank)
+> +{
+> +	struct exynos_eint_gpio_save *save = bank->soc_priv;
+> +	const void __iomem *regs = bank->eint_base;
+> +
+> +	if (bank->eint_type == EINT_TYPE_GPIO) {
+> +		save->eint_con = readl(regs + EXYNOS_GPIO_ECON_OFFSET
+> +				       + bank->eint_offset);
+> +
+> +		save->eint_fltcon0 = readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+> +					   + bank->eint_fltcon_offset);
+> +
+> +		/* fltcon1 register only exists for pins 4-7 */
+> +		if (bank->nr_pins > 4)
+> +			save->eint_fltcon1 = readl(regs +
+> +						EXYNOS_GPIO_EFLTCON_OFFSET
+> +						+ bank->eint_fltcon_offset + 4);
+> +
+> +		save->eint_mask = readl(regs + bank->irq_chip->eint_mask
+> +					+ bank->eint_offset);
+> +
+> +		pr_debug("%s: save     con %#010x\n",
+> +			 bank->name, save->eint_con);
+> +		pr_debug("%s: save fltcon0 %#010x\n",
+> +			 bank->name, save->eint_fltcon0);
+> +		if (bank->nr_pins > 4)
+> +			pr_debug("%s: save fltcon1 %#010x\n",
+> +				 bank->name, save->eint_fltcon1);
+> +		pr_debug("%s: save    mask %#010x\n",
+> +			 bank->name, save->eint_mask);
+> +	} else if (bank->eint_type == EINT_TYPE_WKUP)
+> +		exynos_set_wakeup(bank);
+
+Missing {}. Run checkpatch --strict.
 
 
---=-krYBO8OLqVZriyabkDaA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ9CP5wAKCRA5BdB0L6Ze
-2715AQC1UrvvteMiysF/cbWkAVWl+dGBmdsaVMzb31cn9qMl1gEAyxEBMbvhnnoj
-e0IkzB8P2R3QHdDMbtQ9+rikcX30sgQ=
-=QDp1
------END PGP SIGNATURE-----
-
---=-krYBO8OLqVZriyabkDaA--
+Best regards,
+Krzysztof
 
