@@ -1,91 +1,92 @@
-Return-Path: <linux-gpio+bounces-17451-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17452-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DAF5A5CE42
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:54:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91862A5CE66
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:00:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0BAF189CED0
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 18:54:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 30F5F3B213C
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:00:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB675263C8B;
-	Tue, 11 Mar 2025 18:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06B23263F37;
+	Tue, 11 Mar 2025 19:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTDlUznV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="noD6Dzl6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A67C26158C;
-	Tue, 11 Mar 2025 18:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C3A15820C;
+	Tue, 11 Mar 2025 19:00:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741719265; cv=none; b=gOMWcBFJQMT1Vhw+jfW8UM8Kyk0+Zi8877G3LDnilccvIJKBcAseKjNBBTiC0/ug5qRwvTdc7SmkT3++4Sb6BGos4iSVYLTxdxSPX6vE1ssRoohydzcX1dT+ZTStzRkMi4dss1XmrszmQvIw3UDs3s9TDmkGVOBTzq8u7hWsL5Q=
+	t=1741719645; cv=none; b=FHZChmrMSPYU4YnqXjZMqAlaumfPekyUu+naRpeT4GgZJ8+v2mIc8DA6FEyjFeogWG0MuoYdV/YS8OVQ1LJEYlcvT93NB2G+PS2uPGJDLu0/epach0Z9rLU3BbNk0Jwna+1q1o5ZKKcaDhSqXS91JqHqU/VVhyJNEfOhJk4zdDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741719265; c=relaxed/simple;
-	bh=DkxbPGCo5A/e7lDRlK6FKH/uxZlqGSzRqfvmnVsyDRY=;
+	s=arc-20240116; t=1741719645; c=relaxed/simple;
+	bh=DJE3hrk9AdamWIG94xUchIGvrt68FJeglEzl24bMVIE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X62AhwJOYRzITdg6EUwEJ/Ajco/ig9lvLq+J7WwAyTKChueWHGnvaOGVtRu8P3Y4yVgo06s8oa5t6+gbFYgVHvNCfdACOatlzab2RzMhoPDIauXm64e2Tj6HAKx95tzXe1CQ79ZyWhkiw9/PuCkYGopj0+exmMZ2kqqw1dglTUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTDlUznV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5CABC4CEE9;
-	Tue, 11 Mar 2025 18:54:22 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=kVEw82/Ci2uGDLroQP0bpBaO4re3ZJFvhgIAIOivLVXgik1KSfkMb4/s6zZEPz+b3hF+JVKl9AEeNueEElQOUP4OrVfRqBi6DzmTIgZDLeb37xr1XB3dS4WG3VWQQvFydvXdoXhVKM1THDCaCu6DsQ7RAyFVjw4nBNLbR2C+5FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=noD6Dzl6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D776FC4CEF5;
+	Tue, 11 Mar 2025 19:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741719264;
-	bh=DkxbPGCo5A/e7lDRlK6FKH/uxZlqGSzRqfvmnVsyDRY=;
+	s=k20201202; t=1741719645;
+	bh=DJE3hrk9AdamWIG94xUchIGvrt68FJeglEzl24bMVIE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rTDlUznVD4Cj7FZ/kaNJUVwzonfwXS0c1KgC58c+1coh7IMQFvCkz3vbJ/U8udX+M
-	 9oSXhuPOzssLUsV9aiIG4Q3dywrNW9JkLNscaearhpYFtQgboZBChhYoS4VzwrnD77
-	 ARbSi3erLuagq9m13Joh9cXbMc2GB+B7ZIELq1PlsZX+zfX94eDTtoJ5BSduYFjcgW
-	 5ko5NRDgQdlL1e1LUnJBWovGDwI+NLhi08i7aXN/dT/szi0MnDc1CQuIEy33vmDpqT
-	 Pu9YwP62K8bBjNeXbnsKNF0cw2lKUe+gDfWfJteCVcNbNU88PPY528WARi06hRQoSV
-	 9EPO71I7F9yow==
-Date: Tue, 11 Mar 2025 13:54:21 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
+	b=noD6Dzl6CI/9uwK7fCzJAuLvtMDhUifR+zkPqMtS82Pbm3M/HB43Gvb3uUjktjPSQ
+	 3p9P8RphfJrCAlmTjDb47syFRwFczUq9TmWfrkkkAJUXqA4UNfxIQPR27ojOegA73S
+	 20A/hH2NQ9XNesAzO3EUIE5WiNQ90Q/qfwZfeUx3XvRInbaultpVpizrR/vSxD+4UX
+	 wkbvjTxBnjjOj5mMuIei4wspAPJtR53NpQAZyoXhlBDBJzYzmhW+1xkptCrZjQF6Z9
+	 Z883MEpS7mQiCtLWJgokj4AMw8AOcbxIzxWdotiB2/+ntvMeWXOk49aq/zM32mB8K7
+	 jqZu54PpSj7Bw==
+Date: Tue, 11 Mar 2025 14:00:43 -0500
+From: Rob Herring <robh@kernel.org>
 To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-staging@lists.linux.dev,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Javier Carrasco <javier.carrasco@wolfvision.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Biju Das <biju.das.jz@bp.renesas.com>, devicetree@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>, Zhi Mao <zhi.mao@mediatek.com>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Ross Burton <ross.burton@arm.com>,
-	Dongcheng Yan <dongcheng.yan@intel.com>,
-	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Ihor Matushchak <ihor.matushchak@foobox.net>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Taniya Das <quic_tdas@quicinc.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	Julien Massot <julien.massot@collabora.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>
-Subject: Re: [RFC PATCH v2 07/16] dt-bindings: media: i2c: max96712: add
- myself as maintainer
-Message-ID: <174171926101.3971802.12167410956543937006.robh@kernel.org>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>, Taniya Das <quic_tdas@quicinc.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Javier Carrasco <javier.carrasco@wolfvision.net>,
+	Ross Burton <ross.burton@arm.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Zhi Mao <zhi.mao@mediatek.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Dongcheng Yan <dongcheng.yan@intel.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ihor Matushchak <ihor.matushchak@foobox.net>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+Subject: Re: [RFC PATCH v2 08/16] dt-bindings: media: i2c: max96712: use
+ pattern properties for ports
+Message-ID: <20250311190043.GA3972023-robh@kernel.org>
 References: <20250309084814.3114794-1-demonsingur@gmail.com>
- <20250309084814.3114794-8-demonsingur@gmail.com>
+ <20250309084814.3114794-9-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -94,21 +95,82 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250309084814.3114794-8-demonsingur@gmail.com>
+In-Reply-To: <20250309084814.3114794-9-demonsingur@gmail.com>
 
-
-On Sun, 09 Mar 2025 10:47:59 +0200, Cosmin Tanislav wrote:
-> Analog Devices is taking responsability for the maintenance of the Maxim
-> GMSL2/3 devices.
-> Add myself to the maintainers list and to the device tree bindings.
+On Sun, Mar 09, 2025 at 10:48:00AM +0200, Cosmin Tanislav wrote:
+> The MAX96712 and MAX96724 support up to 4 separate PHYs, depending on
+> the selected PHY configuration. Use patternProperties to document this.
+> 
+> The input ports are all the same, use patternProperties for them.
 > 
 > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 > ---
->  Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml | 1 +
->  MAINTAINERS                                                     | 1 +
->  2 files changed, 2 insertions(+)
+>  .../bindings/media/i2c/maxim,max96712.yaml    | 29 +++++++------------
+>  1 file changed, 10 insertions(+), 19 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+> index efdece2b33b9..bf8c861c836b 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+> @@ -40,27 +40,15 @@ properties:
+>    ports:
+>      $ref: /schemas/graph.yaml#/properties/ports
+>  
+> -    properties:
+> -      port@0:
+> +    patternProperties:
+> +      '^port@[0-3]$':
+>          $ref: /schemas/graph.yaml#/properties/port
+> -        description: GMSL Input 0
+> +        description: GMSL Input port
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+GMSL Inputs 0-3
 
+Though generally every port needs to be documented. So really, this was 
+correct before.
+
+>  
+> -      port@1:
+> -        $ref: /schemas/graph.yaml#/properties/port
+> -        description: GMSL Input 1
+> -
+> -      port@2:
+> -        $ref: /schemas/graph.yaml#/properties/port
+> -        description: GMSL Input 2
+> -
+> -      port@3:
+> -        $ref: /schemas/graph.yaml#/properties/port
+> -        description: GMSL Input 3
+> -
+> -      port@4:
+> +      '^port@[4-7]$':
+>          $ref: /schemas/graph.yaml#/$defs/port-base
+>          unevaluatedProperties: false
+> -        description: CSI-2 Output
+> +        description: CSI-2 Output port
+
+The input port numbers are 1:1 with Input numbering. I imagine that's 
+not the case here, so the relationship of port #s to outputs needs to be 
+documented.
+
+>  
+>          properties:
+>            endpoint:
+> @@ -78,8 +66,11 @@ properties:
+>                - data-lanes
+>                - bus-type
+>  
+> -    required:
+> -      - port@4
+> +    anyOf:
+> +      - required: [port@4]
+> +      - required: [port@5]
+> +      - required: [port@6]
+> +      - required: [port@7]
+>  
+>  required:
+>    - compatible
+> -- 
+> 2.48.1
+> 
 
