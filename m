@@ -1,144 +1,133 @@
-Return-Path: <linux-gpio+bounces-17458-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17457-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23028A5CF75
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:33:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FC8DA5CF72
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 20:33:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56A0516F61D
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:33:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 711091744D2
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Mar 2025 19:33:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 098AB2641F9;
-	Tue, 11 Mar 2025 19:32:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16C3C2638B5;
+	Tue, 11 Mar 2025 19:32:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLbLn+j1"
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="u1x9L7ey";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="fqOmzWlM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63182641D7;
-	Tue, 11 Mar 2025 19:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741721578; cv=none; b=kidyBCwVV1z2fXb6flezy2+O4W8OnhjtQ8VWnIrLGRInURSZVBZv77PU/DrBaQ0Z9oUcQJuLTSGgO9dFxnC6hylGLUBWNML9mbKL44gR8urvAd9lArUuS8HZ0mf7mDWCWW4lWItRBc2tEG0TvgVrs1PJTiBsyKXoSIo6YAFEEDE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741721578; c=relaxed/simple;
-	bh=Wxt9plsY76hBns2l6MjcqJuJ40OKk7QprTRvYCqzogs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JFqNI0YgT7QRIhR7hx1GmeHYm/UUAy3enO7o+5td7ccshQzUCQQr1wcErhUy6kZ6ddWP0zf6FLmAl+gNi3YtYaBjFATDaOpQhaUJ7nQS/TML/Fv02LYpBuaSx/Rj1GhK1WAkP36AfylqWruB6o1lPwHAkGvWWTPx644V1Jbbw3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLbLn+j1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40690C4CEE9;
-	Tue, 11 Mar 2025 19:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741721578;
-	bh=Wxt9plsY76hBns2l6MjcqJuJ40OKk7QprTRvYCqzogs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SLbLn+j1kXoKbh1UW+AgREKRKt2XTzF3SpnlVXJDCJog0MZUtwXU+P/GjLLFT/jMd
-	 uFeHq7WdvKhWfIN3XwhtV/fxtqFxCSSYTy3ZYHxUyexg9svxLKWj92muJ5cbyccchd
-	 LEQPMBr1eAzdxS7oA3exHBJbaO7I1pizhNfWih3ht7CcEAhWncGb+gs2IX45bA3Wyu
-	 62B8SqydwDl/kmsHvy30oyQBKwIwoHyL2inYJcR7gX+xhB3J7/6Jn+J8+u9RGqVZdH
-	 k/vXIAsxCp05zz07xxe+BK1K7JkdnCY/spbfpAep6UytmBHCs6tbs1MMrMw4iStLIG
-	 R/HQ5xRTyrQVw==
-Message-ID: <c2e2c78c-e85e-406a-90a7-07d5b4fa82a6@kernel.org>
-Date: Tue, 11 Mar 2025 20:32:50 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741BA25C6E9;
+	Tue, 11 Mar 2025 19:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741721577; cv=fail; b=AOM0WZNzFT+rcPy4mJXllz4P5f4+EdScdfT1oWyllVq64x2uwUcaOEgD7vLgiZH7sp2YN8x50hTnf147P/mGuPpy+n6EI2u2Vv1uK4QWBtWG6stgoydCkpshLvUPw3JsK2wxqIgqPts+cVQNFZpLcIBk1QX0OkUyPGAvWPXcj90=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741721577; c=relaxed/simple;
+	bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=m0cEUPh3eRdDx1DWxbqJhomQTf5aQB/QeU4wxk4b11cz2uYbFopziNmtrAzu//+NRP/VwUK5tWs84PHoNZvFb2d9445G2SXupG45yKl//FENeyPh733Mkg+aVA7Rqb72EQBY0h3NnnW06ncjut7d0YaDZQJuldu6WqtyjaCx+MU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=u1x9L7ey; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=fqOmzWlM; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id 6B993480A55;
+	Tue, 11 Mar 2025 15:32:55 -0400 (EDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1741721575;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
+ b=u1x9L7eyfhDDNBjHtzMNLaqMDFMyKZRD2nfztEb/9MisNOEqcbViC+p7xJEJbbXalkZIX
+ ybj6VTdcmRL5h9BCg==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1741721575;
+	cv=none; b=XxFPAuK6Knwt22rlC/01coV1a1TeKd5uUiU4oSOAmzFyf/xkehDy/MeMo7EyjRoPOP1gLr4gz4s3h1fFEnsEfsrXpOUNZ5gVLl/8IztovK8C2mRfhZCrnrT+3+PsscmN5Py5pYdoRshCpaQkRCP6TfGoOcjLyS3NWkBmjG++lyVisZylD5P4SmoC5VfIXgX2CCBQgDvfg5J+N+EtpEuCcMLUHNU0EGS+KxzOSeeX1d3WibH/IXFQLtiIHZS5vq/uMx+H54LwQm9g1VE+LVziurceS6jjjRzw9kFmizZ+e4Hv9g0vjBApVeY3jW/q9hTmMlPUTR0otsR4GvG2Oj1mpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1741721575; c=relaxed/simple;
+	bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=vBv6OSskje2UvHAPgNLoW9Sn/ODwrLiIUn4zjXyuhTkAWqi+fq0IhTO+jxKz+/M0mAapxMJBXhu+MNiKp5J+eDGero9Ac/pcIRgSmPloAnqB8cJYAWnZCe6f7nDdwod6LZb1GzKgVomJ0sWkM+Yo0rkx3+2ImZ0rP28Wpuj1nY2vP0QhhxP2oE3rz1ACF4fLyYrWgFSKgp0kEJAzyXGABb1J5AQBCcVix4HQFlrQb13Mi7/Uyfm7XToNERRC2ZR/l/EFETORVFqZdLzIMk8OcREiVc+Vc7UhKWgzvSrGwnUQqED44O2EaYWZPCjuEcg7CWErWzwzQ5CnEZQsT6QdYQ==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1741721575;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=3npwjNufxhciOd0zlHArPhSA/VZY6Z/ta2Lvun4MYGI=;
+ b=fqOmzWlM6BJCSw3pwY6xfQA2DA4fjqdAsUhOfT07jzA3BvDF72xM6tBd8j01EL4uyh6JY
+ SMF7m9ol+0lNGlRavQC8HB2ndh+kUgDcYsFVkkultyK4tEXLCFAyG9r6X+eentaq3RerVSl
+ AnNmZSHr6opkiAceebMBTkhmihY2egP/lT6fDBMAQ0EzQOqGXejQftvqU32n7avy794quEv
+ L7xFUWeiR0NbiRt7ZCcnCkquFkGVY0l5go8onn12NQXzQqzaPfMfV5a9gzvCjlWvufkaE82
+ MTa2BxsQvU6pWXwaAOAs1IxKS4+Nc+Kdejj2L9h6eFQMjJm2Plzr+P6M/cAQ==
+Received: by srv8.prv.sapience.com (Postfix) id 3F94E28003C;
+	Tue, 11 Mar 2025 15:32:55 -0400 (EDT)
+Message-ID: <aadd3bef2732a99cf611323aa1a3a39b655376fc.camel@sapience.com>
+Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
+ get_direction failed
+From: Genes Lists <lists@sapience.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 11 Mar 2025 15:32:55 -0400
+In-Reply-To: <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
+References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
+			 <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
+			 <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com>
+	 <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-krYBO8OLqVZriyabkDaA"
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] pinctrl: samsung: add dedicated SoC eint
- suspend/resume callbacks
-To: Peter Griffin <peter.griffin@linaro.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com,
- semen.protsenko@linaro.org, kernel-team@android.com, jaewon02.kim@samsung.com
-References: <20250307-pinctrl-fltcon-suspend-v4-0-2d775e486036@linaro.org>
- <20250307-pinctrl-fltcon-suspend-v4-2-2d775e486036@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250307-pinctrl-fltcon-suspend-v4-2-2d775e486036@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 07/03/2025 11:29, Peter Griffin wrote:
-> gs101 needs it's own suspend/resume callbacks to use the newly
-> added eint_fltcon_offset for saving & restoring fltcon0 & fltcon1
-> registers. It also differs to previous SoCs in that fltcon1
-> register doesn't always exist for each bank.
-> 
-> exynosautov920 also has dedicated logic for using eint_con_offset
-> and eint_mask_offset for saving & restoring it's registers.
-> 
-> Refactor the existing platform specific suspend/resume callback
-> so that each SoC variant has their own callback containing the
-> SoC specific logic.
-> 
 
 
-> Additionally we now call drvdata->suspend() & drvdata->resume()
-> from within the loop that iterates the banks in
-> samsung_pinctrl_suspend() and samsung_pinctrl_resume().
->
-> This simplifies the logic, and allows us to remove the
-> clk_enable() and clk_disable() from the callbacks.
+--=-krYBO8OLqVZriyabkDaA
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Can you make this a separate commit? This would be nicely self-contained
-and without any functional impact.
+On Tue, 2025-03-11 at 15:30 -0400, Genes Lists wrote:
+>=20
+> Thank you Bart.
+>=20
+Sorry - I forgot to mention that the number of warnings with your
+pinctl patch =C2=A0is down to 87 from 194.
+=C2=A0
 
-Getting own suspend/resume would be the next commit.
+thanks
+--=20
+Gene
 
 
-Best regards,
-Krzysztof
+--=-krYBO8OLqVZriyabkDaA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ9CP5wAKCRA5BdB0L6Ze
+2715AQC1UrvvteMiysF/cbWkAVWl+dGBmdsaVMzb31cn9qMl1gEAyxEBMbvhnnoj
+e0IkzB8P2R3QHdDMbtQ9+rikcX30sgQ=
+=QDp1
+-----END PGP SIGNATURE-----
+
+--=-krYBO8OLqVZriyabkDaA--
 
