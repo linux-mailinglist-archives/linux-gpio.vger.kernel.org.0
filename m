@@ -1,155 +1,192 @@
-Return-Path: <linux-gpio+bounces-17499-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17500-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B48D0A5DC0E
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 12:56:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3C1CA5DC5D
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 13:11:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA0891799CD
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 11:56:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21173168A28
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 12:11:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6CD82405F9;
-	Wed, 12 Mar 2025 11:56:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F946241689;
+	Wed, 12 Mar 2025 12:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RlQrrYbc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flylkczT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690A241C8B;
-	Wed, 12 Mar 2025 11:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18B123C367;
+	Wed, 12 Mar 2025 12:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741780582; cv=none; b=XZarz9GOwKVmtEUwbASjk64wqmgJtg9PbyHC5wy/0BIho9eOz/vdgfuIDB9fjjiU24k2jU7e6IuU7MZcGFzT30Lv4OEpzLXZL6Pl/cbQfPpOYmU+geo9ndbFIqVHtZBYotiEYUek+lK3BpR//x8BNGBVeN1e0Z9oP/s+FEDsjmI=
+	t=1741781461; cv=none; b=bJIY0l/gDQ8kG9UXzVafKK5yLMXzcgUOgko83alsMdaXzDCV3bm+LjKDU6P2Lafka5QSpM9RSzpzSYXWjuZQbcA4uIOnipLLrIB6MSrfYC+W5lmCbkyi3rnIZI+0oLJ7vJ+h+FAb34MM9fHWdJMsKsRno2zrASFYOsQ/MXOz978=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741780582; c=relaxed/simple;
-	bh=VETkLINRI8hcNJRpuez892xea1lFBVqg7ZWvjLXYyZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uh8B9+QPdLC6tRTWeu53zaTZHPC9sBuuEmJRqB3w7rC+wkSbTrwgz81SHKEn6+V5OHu9kh3WnZJCFryh1MPJjEkXLWSLIV3SHP/f+q2YBkWii7qkJK14ed9qplcdQozQyVDVgn7S0Gexk4TUmydh4JRbgm/1HItLS/IKLFh+hvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RlQrrYbc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1805AC4CEED;
-	Wed, 12 Mar 2025 11:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741780581;
-	bh=VETkLINRI8hcNJRpuez892xea1lFBVqg7ZWvjLXYyZI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RlQrrYbc+mQyR0zAoC1RAtoBY1ZqSo2cq+DOkxMfK52zQgeQNc4eaaZlndSyJ2pJD
-	 GHNEw7huNhJZ/HRlvyZ60LLbota9C9dhT3hyhvbbj/v0g+OoRfnNsghuLZI53rt8EW
-	 RLVchYzwI5o0Gt4tVKxP0oqeilv/wj/d+t7Iv0KMu6iPrWjFyUaP7p7WG9FDoJ1OMN
-	 hvHyNmC6q3HOTMmDMpRlnEVL8lIPtkLBeT47QfyLOgU7RjW5vO+Irp3VaGWPd0b7Vb
-	 zGiL/igrRb+UaFG3dSuaTaWRhxm3t+eEdd/05hLLPc0Jc0gQogNKGnICZpbAc1ydif
-	 vS+ZeT5X+hw3w==
-Message-ID: <328d89da-4246-4c75-a277-b06934e4a9d9@kernel.org>
-Date: Wed, 12 Mar 2025 12:56:13 +0100
+	s=arc-20240116; t=1741781461; c=relaxed/simple;
+	bh=G3OqaY1Gicv/x4SjV6Vd/Pl/al4g9sI8+gDB7w0RZ/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KfHoMhjhz84464XPEiBgj3WI5H4LngL9a21NdgJCFz4qS6kflloB86H9CaNHBp5GuKV3y97qt9h17/sKN23u7w52zs5K+a2NSZVNuHm5fSu3sFMx4SvJaVqWOQqgzhchtZZyIe4RPENMbYvhLZcSNY/9+Ee3Jo/dkIbNN2b7GO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flylkczT; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so9684354a91.2;
+        Wed, 12 Mar 2025 05:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741781459; x=1742386259; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t9vjbuAgqMI9GnyLKDVz7Tbvm0vj9IFr9mKzPfId+Hg=;
+        b=flylkczTk9mMQG5ItLCtdLZx2jhC8o7ZNSLuNKv3oQUEQO1KIF/MLOVzMzTh3GlWl7
+         WQksGIE4v7ooZTCogzYgANA6YAHpu0iQPCBggO0Azmb4gBedvMtmzw53cGI1rdnuH4f3
+         YnKtySzx4jy4NcTUPKy+pKZXx3F0Iaxoeo3XxP7NXPK5AMse7TXFQL4XQgHkPGJ97++T
+         fCarllkyKbpRSYOL7ddNCh9atetQjIkaBzYqqVTWcNcnTj6PjD1qgO9vxL2HHu5Icw6U
+         2CdFxL+ESAYxEGBlXpyAI7sivKjS9KUMsDRyYJtWF5YsF2kML5mDAHjyjQvpj8AWacM3
+         FqJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741781459; x=1742386259;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t9vjbuAgqMI9GnyLKDVz7Tbvm0vj9IFr9mKzPfId+Hg=;
+        b=HND/zkixD8+LZ03J6YPaJkfiVJa+fmXtMIymuRb4Ir+SAJuBcRxrsNR0t14my4AXOn
+         Ec0/dnnltNPuxanL8sbvaTlgJU2aU3ebdwikGrWWrtIUA2lQY5IKVew8ty4cg1ITBWiV
+         gorv7BAVd4DY/9GyV0bOrsEOfHb8uMocwyqMRGgmX0JtTE8Lt4s1Zwv7/D12ShfO8U0I
+         9f7hElZiOSxqhFxIcZM19NLxV3xd33hJmOItxKD5Opi3ZLrkX1E95cNPSrGMrlyzJlrZ
+         3zs/nOZOE6nal/ioB5aXWy+0hqWmSePfDKP0BN9vkkuHUCbSst4vfqpy0JwAXfV2Xzbc
+         fDUg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+dGltspE7ym+tof66W9Cli92XJsiF335jsFMd6r8tFjBIwJ1/XOhnztFvTUz4/SFRbx2VUTZIOrhR@vger.kernel.org, AJvYcCXm4xLeI06I89EwKmdmCUFGhj9TXnY1iD/9Y6o6pRe93cDukpoAVD5jZoclVbS0m4/in3XGH76KD114UqXu@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCPyJLuQgcwOLhkYZKuNmdYx7bvGvtOuyZhi7nHbMXJUzJgnEt
+	QC0a2kvEfiZZteZq8c3vLBcV57tuG0gN6/Vd/8NHujrPKVPjDloe
+X-Gm-Gg: ASbGncsXsYGwHNZFfUVwTGrMoc4xAwCCqNisQSa+f4uDyDEHJPXnvP3HMllF4WEdjBo
+	2Rk3HQOP8H/tEkKn8G1jnZcG+4fd5vBOWH0l307JZH+AvTuzc6VSrzT9tflXg/99AmrRVnuxHZm
+	BQyDEd0dYf6j2R061ampMh66Lq0zO0rvYzKwcjPcuuL5SwZG4YW4sZw41tgaC2pt9YaBuzYcn7d
+	FcjuCkswBxYrUIxpfyAmeENJu3XSWN9OBlUsQupn/WpqIeD8kswLxlupH28OS2ZXlgbCkt8D/gB
+	SYWwe+22z8/apGuUYIZbGFbBN1oFkJ33VFJfMw5a6S3P4moJkkheRKrJVUJNPoByouJm
+X-Google-Smtp-Source: AGHT+IFMb1nFJh0Qb+5WSWxAfc35Vv8vdN87tpMqjEEUuMtALWohiO85EyZHCxIC5I+xXtlHAFsm/w==
+X-Received: by 2002:a17:90b:164f:b0:2fe:a0ac:5fcc with SMTP id 98e67ed59e1d1-2ff7cf3e3eamr25087822a91.34.1741781458872;
+        Wed, 12 Mar 2025 05:10:58 -0700 (PDT)
+Received: from rigel (27-32-83-166.static.tpgi.com.au. [27.32.83.166])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3011821816esm1585981a91.5.2025.03.12.05.10.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 05:10:58 -0700 (PDT)
+Date: Wed, 12 Mar 2025 20:10:53 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: David Jander <david@protonic.nl>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: regression: gpiolib: switch the line state notifier to atomic
+ unexpected impact on performance
+Message-ID: <20250312121053.GA132624@rigel>
+References: <20250311110034.53959031@erd003.prtnl>
+ <CAMRc=MeWp=m1Bi_t_FCrxFOtiv3s8fSjiBjDk4pOB+_RuN=KGg@mail.gmail.com>
+ <20250311120346.21ba086d@erd003.prtnl>
+ <20250312013256.GB27058@rigel>
+ <20250312090829.5de823b7@erd003.prtnl>
+ <20250312091056.GA105343@rigel>
+ <20250312112401.5e292612@erd003.prtnl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] pinctrl: samsung: add gs101 specific eint
- suspend/resume callbacks
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com,
- semen.protsenko@linaro.org, kernel-team@android.com,
- jaewon02.kim@samsung.com, stable@vger.kernel.org
-References: <20250307-pinctrl-fltcon-suspend-v4-0-2d775e486036@linaro.org>
- <20250307-pinctrl-fltcon-suspend-v4-3-2d775e486036@linaro.org>
- <59a1a6eb-d719-49bd-a4b5-bfb9c2817f08@kernel.org>
- <CADrjBPqYoHckqr43y1z8UtthZ9DOG15TJWSv_707Jbyf1yforw@mail.gmail.com>
- <CADrjBPqSSbt=xM7u12BU2nsF2xvyXe_+bLSCxCPBTfCc07VpuQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CADrjBPqSSbt=xM7u12BU2nsF2xvyXe_+bLSCxCPBTfCc07VpuQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250312112401.5e292612@erd003.prtnl>
 
-On 12/03/2025 12:39, Peter Griffin wrote:
-> Hi Krzysztof,
-> 
-> On Wed, 12 Mar 2025 at 11:31, Peter Griffin <peter.griffin@linaro.org> wrote:
->>
->> Hi Krzysztof,
->>
->> Thanks for the review feedback.
->>
->> On Tue, 11 Mar 2025 at 19:36, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>
->>> On 07/03/2025 11:29, Peter Griffin wrote:
->>>> gs101 differs to other SoCs in that fltcon1 register doesn't
->>>> always exist. Additionally the offset of fltcon0 is not fixed
->>>> and needs to use the newly added eint_fltcon_offset variable.
->>>>
->>>> Fixes: 4a8be01a1a7a ("pinctrl: samsung: Add gs101 SoC pinctrl configuration")
->>>> Cc: stable@vger.kernel.org
->>>
->>> It looks this depends on previous commit, right?
->>
->> Yes that's right, it depends on the refactoring in the previous patch.
->> To fix the bug (which is an Serror on suspend for gs101), we need the
->> dedicated gs101 callback so it can have the knowledge that fltcon1
->> doesn't always exist and it's varying offset.
-> 
-> and also dependent on the first patch that adds the eint_fltcon_offset :)
+On Wed, Mar 12, 2025 at 11:24:01AM +0100, David Jander wrote:
+> >
+> > Ok, if the issue is purely the name -> (chip,offset) mapping it is pretty
+> > safe to assume that line names are immutable - though not unique, so
+> > caching the mapping should be fine.
+>
+> On our board that would be fine, but what about hot-pluggable GPIO
+> chips/devices, or modules that are loaded at a later time? I was thinking
+> about libgpiod in general...
+>
 
+Indeed.  A general solution suitable for libgpiod is a hard problem.
+It is probably something better left to a higher layer.
 
-That would be fine because it's a fix as well. Ah, well, let's keep the
-dependency, but then I think syntax would be:
+> > The kernel can already tell userspace about a number of changes.
+> > What changes are you concerned about - adding/removing chips?
+>
+> Yes, since the patches from Bartosz I understand that is indeed possible now
+> ;-)
+> No special concern, just thinking about general applicability of caching such
+> information in libgpiod (especially considering the old version I am using
+> presumably from long before the kernel could do this).
+>
 
-Cc: <stable@vger.kernel.org> # depends on the previous three patches
+The change notifiers you are referring to have been there for some time
+- they were first introduced late in uAPI v1.
+I was also thinking of udev events for when devices are added or removed.
+Though again, not something core libgpiod should be getting involved with.
 
+> > > If this had been this slow always (even before 6.13), I would probably have
+> > > done things a bit differently and cached the config requests to then "find"
+> > > the lines in batches directly working on the character devices instead of
+> > > using gpiod, so I could open/close each one just once for finding many
+> > > different lines each time.
+> >
+> > The libgpiod v2 tools do just that - they scan the chips once rather
+> > than once per line.  But that functionality is not exposed in the
+> > libgpiod v2 API as the C interface is hideous and it is difficult to
+> > provide well defined behaviour (e.g. in what order are the chips scanned?).
+> > So it is left to the application to determine how they want to do it.
+> > There isn't even a find_line() equivalent in v2, IIRC.
+>
+> I think I should move to v2 as soon as I find the time to do it. ;-)
+>
 
-Best regards,
-Krzysztof
+You certainly should - the v2 Python bindings are much more pythonic and
+easier to use.
+
+> In any case, I also could reproduce the issue with the gpiodetect tool from
+> v2. You can visually see each found chips being printed individually on the
+> terminal with kernel v6.13, while with 6.12 all chip names would appear
+> "instantly". Hard to describe with words, but you could in fact tell which
+> kernel was running just by looking at the terminal output of "gpiodetect"
+> while it was being executed... my board has 16 gpio chips, so you can really
+> see it "scrolling" up as it prints them with kernel 6.13.
+>
+
+For sure - the close() issue is a real issue.
+
+> > > > Generally an application should request the lines it requires once and hold
+> > > > them for the duration.  Similarly functions such as find_line() should be
+> > > > performed once per line.
+> > >
+> > > Of course it does that ;-)
+> > > This board has a large amount of GPIO lines, and like I said, it is during the
+> > > initial configuration phase of the application that I am seeing this problem.
+> > >
+> >
+> > Good to hear - from your earlier description I was concerned that
+> > you might be doing it continuously.
+>
+> Thanks. Tbh, I am quite proud of the efficiency and speed of the application
+> itself. Being written in pure python and running on a rather slow Cortex-A7,
+> it is surprisingly fast, controlling 16 stepper motors, reacting to 26 sensor
+> inputs changing at a blazing high pace and continuously sampling several IIO
+> adcs at 16kHz sample rate, all with rather low CPU usage (in python!). It makes
+> heavy use of asyncio an thus of course the epoll() event mechanisms the kernel
+> provides for GPIOs, IIO, LMC and other interfaces.
+
+You can do some surprising things with Python.
+
+> So you may understand that I was a bit triggered by your suggestion of
+> inefficiency initially. Sorry ;-)
+>
+
+No problems - I've seen people do some silly things and just wanted
+to be sure you weren't one of them ;-).
+Glad everything is working for you.
+
+Cheers,
+Kent.
 
