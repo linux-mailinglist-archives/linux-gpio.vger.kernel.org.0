@@ -1,217 +1,111 @@
-Return-Path: <linux-gpio+bounces-17488-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17489-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AE51A5D9CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 10:45:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2705FA5DA14
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 11:01:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55B24189C7A0
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 09:45:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CCE73A8586
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 10:01:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C83FF23AE95;
-	Wed, 12 Mar 2025 09:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B2A223CEFC;
+	Wed, 12 Mar 2025 10:01:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fo8fYdXw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LM+WMKTE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D131323BFA9
-	for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 09:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE79236451
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 10:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741772713; cv=none; b=Ziui1YkVvF2lQgktLosN1vP7beUFd/pOWWf5LaBl8HOvNIc/XjFF4Yyd0isUeZjYTecMWtMQQrY8vNMRhWqdBzl6dQHPuHD83g+tn8gkovoZnuKRyBEVD+Ws5e8JnylVMQf6+9BmSCmDZNQSxmEIWaSuU4sq8tqJzWGAk/8Wq/U=
+	t=1741773675; cv=none; b=LK/1GCt8oWx37qHL3bHUdJRfVbZw1BspvhCv8z7Jqd7OuRRteKfnPlNYa4+7P+//EcjGnTsTry5cnIpl3XwEqm9QDFHy8bWGebVhPCPnKfzAE1xc90/Rxu2emT4+eKfHs8MXUpLAm3dUgWMjB802P8xyNgiCYFA8Rvp3jstsFd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741772713; c=relaxed/simple;
-	bh=GI3+tHirpIJcTSJgxDUrd/qzuJ2XhQ+4ZfZtXpmp238=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=f7LRZGlHLt9a1BZB9y4KhoWcfSKsBws1pA3/7BEFr+vXaDBDgy6oLCvbdbcBnTI3cOgsoQue7+Yt3GEZ7g0tQb4+7AX2fbcywSEzXYshR+IgvrkuaudoMeD5A4NuMdRPa9IFkMQsx24lT3mOUAwsF/LuMQZT5tBf8ok/MrLTAMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fo8fYdXw; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741772712; x=1773308712;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GI3+tHirpIJcTSJgxDUrd/qzuJ2XhQ+4ZfZtXpmp238=;
-  b=fo8fYdXwZPP4MJZOeYvnE3yA/feWJMyS/9FIQ6dLBS5Z8wJzj7Rmvdxj
-   5vq3T3op0Ruz7K/7d3y0jehCzzOxSRyWDMew73SHfy0XLhUbF59J+rvOa
-   kXnHakEUEXD/mZ3UMHZ5B9KaUrRdXY+++Qu8CUaVYP0EvA0Cmzz4Fzsk5
-   TRIvE+8W/uBNZSJgLbG+hJYDaK1BIpdEmZ4Bm/MeEsKzaZo+7BVAIvUTt
-   U6galq+j8m7X/7q5zjcyCPnEd9UeAvbKqQ2FLNtmqzQpDNWD9taMf2f4J
-   cUJl3cJjfn0wHnSkOgkjmuZfuk4qDMGBMvNdNyVTVy75CpJHZE836quux
-   g==;
-X-CSE-ConnectionGUID: enzHHHs+RtiEhPRGUSJgJw==
-X-CSE-MsgGUID: HLKmZlSlSwW27/lYNHW3cw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="42009659"
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="42009659"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 02:45:11 -0700
-X-CSE-ConnectionGUID: kG6LIeXFSXudjflSe33qeQ==
-X-CSE-MsgGUID: lKbuFwH0QNm6IGa6SVgJNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="120535769"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 12 Mar 2025 02:45:09 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id AFFED1F2; Wed, 12 Mar 2025 11:45:07 +0200 (EET)
-Date: Wed, 12 Mar 2025 11:45:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linux pin control <linux-gpio@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 6.15-1
-Message-ID: <Z9FXo5qO8RCZCKzk@black.fi.intel.com>
+	s=arc-20240116; t=1741773675; c=relaxed/simple;
+	bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W7wk1HL5khNmDTHgZLkihTKVf2jM7/1QNoQU/MpPCJ3/RjOKIFZ59HOgGOaOm91BV29objxP8WWaMQg+vuq8J+KjU97ypjILQczl/zUxzKoJvi2aFj4joLC4zEtQrld8BKufEFg0HqkeVveA72fYeKtbYAVOsbPit17YHxX0268=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LM+WMKTE; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5499c5d9691so3930701e87.2
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 03:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741773672; x=1742378472; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
+        b=LM+WMKTEtBro67ucRHGFG82QurBUVVTKueWjq6fDb4ct1i3KejryugfkoRLxmXodsT
+         gEpX5bmbXgc0Pia5+kYM/u22mb5eE2PU965J+nKcNzU+gnD5g0qPMC+AGwDIvQNU6OvV
+         4gMhJu81ak6Plrm7PcR85qREnu0ChRdO7Emv1PqiXCRAnO4HUygSvj4GME7wukOG4JqE
+         nNvagmkxB0k4nQPKYBG9kk4nnP3qFHWfkRXv4BzJq1kZiCUbpYTyee0J/hz4Ljbj0zUU
+         mRyJzAftdRRvSOocXvmTHIPX+TQQJF6mMMuI2P28z22iLTQX56T6IOJLTq83PNJ5WsYz
+         J8xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741773672; x=1742378472;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
+        b=RN2DcQ+UnxA8Wps3Ya4XeHsWnuanbwO2hC+IerWT5VtCJynD0M9+rmbb+xI410GO7H
+         56VP39YiEtBewTQeGnNbm58aUctqwkWobRavv26Tzz2SDSzJsvl2xIvag4zAacYzXicd
+         YmMiujQ7yUg2WVQqeTyC/4UtkMviuwJsugyejXs3rsIsyBsbt17ivZfx2qSruPODlGIz
+         a2bTSPIEYE2SWaDaLI8guZU01zkUZHA4xs61djYVukcGpnbINvboxZZymvVaReSeCRv+
+         DDdkqtq29vLGoiTqnbNrxUGA+TVW02qaKEs8PTLEdIZOEsACR2RLSC23tA39fh4OcKu8
+         EfRg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1xCFxRt47ZCVoVM1Wc1w+E3bGeg71BMrB0JnDTpAco8UxQIKFYjgnKb2yZJ2a7vejsTjnnzl2WJud@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNOxi14Y8fZlvUIo3l/AVv+jic3ufEPU/co+wH/zee8BKkXbfW
+	tOweK0xMpskgCXPvA5NQbIg9lWWDIaaaPM5pD4ZrTf3EE5IfubEp2eFPrxDVhq6oLGtkGzbPv0w
+	3s8BHGI5AFy8SRZjWdDCNhSPT8eT0sJlQ1cvOey9Ru9x/O03O
+X-Gm-Gg: ASbGnctknDkVcjuTWbuP7YVkQYJTnYn0xQTX02l4yKsg7rkm0Xcpsk5+fMDMgwR928S
+	HBXLKCiG4UY0v0YPZAh8eH1JvYm2rRi6h+AIlggxYelSMx5biocPiiV0B4U7malFlAPvPPLNSYS
+	S48G0UFHqGy5jqIZRuVYYZ6ArKasR6HhcidGrIiKmK17z2FzHPziugZ7xT9A==
+X-Google-Smtp-Source: AGHT+IF3JsnGDmtC8cFGGo9UJ3LwBpBWNU0LU9dhkqF7FdQC0xv6vW0juUcQgoshe4Cj7uKAJnjHv9k5v01339Iy9Rw=
+X-Received: by 2002:a05:6512:220a:b0:545:49d:547a with SMTP id
+ 2adb3069b0e04-54990e5dac1mr7224533e87.18.1741773671774; Wed, 12 Mar 2025
+ 03:01:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org> <20250312-max77759-mfd-v4-1-b908d606c8cb@linaro.org>
+In-Reply-To: <20250312-max77759-mfd-v4-1-b908d606c8cb@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 12 Mar 2025 11:01:00 +0100
+X-Gm-Features: AQ5f1Jp2A-9h5YN6Ed4bZKIBT4UotjU0jd3UNyhUp6pXeEy9BD3imBjHO6ZUslo
+Message-ID: <CAMRc=Mddcku1vokKQzxyJOtvpdJSjM2TFvG9r0tnZ_qY7HBGJA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: gpio: add max77759 binding
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linux pin control  maintainers,
+On Wed, Mar 12, 2025 at 10:26=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@=
+linaro.org> wrote:
+>
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+>
+> This describes its GPIO module.
+>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> ---
 
-A batch of the updates to the Intel pin control driver. Due to driver core
-changes some other subsystem drivers were touched and the respective
-maintainers provided needed tags. The changes were in Linux Next for a few
-weeks without any problems reported. Please, pull for v6.15-rc1.
-
-Thanks,
-
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
-
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v6.15-1
-
-for you to fetch changes up to 0ee2261d08aa21a7327f145cbf1bfb6ac2205c7d:
-
-  pinctrl: intel: drop repeated config dependency (2025-03-03 16:20:51 +0200)
-
-----------------------------------------------------------------
-intel-pinctrl for v6.15-1
-
-* Introduce devm_kmemdup_array() and convert Intel pin control drivers
-* Update PWM handling for the cases when it's provided by Intel pin control
-* Miscellaneous fixes, updates, and cleanups
-
-The following is an automated git shortlog grouped by driver:
-
-baytrail:
- -  copy communities using devm_kmemdup_array()
- -  Use dedicated helpers for chained IRQ handlers
-
-cherryview:
- -  use devm_kmemdup_array()
-
-devres:
- -  Introduce devm_kmemdup_array()
-
-driver core:
- -  Split devres APIs to device/devres.h
-
-err.h:
- -  move IOMEM_ERR_PTR() to err.h
-
-iio:
- -  adc: xilinx-xadc-core: use devm_kmemdup_array()
- -  imu: st_lsm9ds0: Replace device.h with what is needed
-
-input:
- -  ipaq-micro-keys: use devm_kmemdup_array()
- -  sparse-keymap: use devm_kmemdup_array()
-
-intel:
- -  drop repeated config dependency
- -  copy communities using devm_kmemdup_array()
- -  Fix wrong bypass assignment in intel_pinctrl_probe_pwm()
- -  Import PWM_LPSS namespace for devm_pwm_lpss_probe()
-
-lynxpoint:
- -  Use dedicated helpers for chained IRQ handlers
-
-MAINTAINERS:
- -  Add pin control and GPIO to the Intel MID record
-
-pwm:
- -  lpss: Clarify the bypass member semantics in struct pwm_lpss_boardinfo
- -  lpss: Actually use a module namespace by defining the namespace earlier
-
-pxa2xx:
- -  use devm_kmemdup_array()
-
-tangier:
- -  use devm_kmemdup_array()
-
-----------------------------------------------------------------
-Andy Shevchenko (9):
-      pinctrl: baytrail: Use dedicated helpers for chained IRQ handlers
-      pinctrl: lynxpoint: Use dedicated helpers for chained IRQ handlers
-      MAINTAINERS: Add pin control and GPIO to the Intel MID record
-      pwm: lpss: Clarify the bypass member semantics in struct pwm_lpss_boardinfo
-      pinctrl: intel: Fix wrong bypass assignment in intel_pinctrl_probe_pwm()
-      driver core: Split devres APIs to device/devres.h
-      iio: imu: st_lsm9ds0: Replace device.h with what is needed
-      Merge patch series "Split devres APIs to device/devres.h and introduce devm_kmemdup_array()"
-      Merge tag 'ib-devres-iio-input-pinctrl-v6.15' into intel/pinctrl
-
-Raag Jadav (11):
-      err.h: move IOMEM_ERR_PTR() to err.h
-      devres: Introduce devm_kmemdup_array()
-      pinctrl: intel: copy communities using devm_kmemdup_array()
-      pinctrl: baytrail: copy communities using devm_kmemdup_array()
-      pinctrl: cherryview: use devm_kmemdup_array()
-      pinctrl: tangier: use devm_kmemdup_array()
-      pinctrl: pxa2xx: use devm_kmemdup_array()
-      iio: adc: xilinx-xadc-core: use devm_kmemdup_array()
-      input: sparse-keymap: use devm_kmemdup_array()
-      input: ipaq-micro-keys: use devm_kmemdup_array()
-      pinctrl: intel: drop repeated config dependency
-
-Uwe Kleine-König (2):
-      pinctrl: intel: Import PWM_LPSS namespace for devm_pwm_lpss_probe()
-      pwm: lpss: Actually use a module namespace by defining the namespace earlier
-
- MAINTAINERS                                 |   7 ++
- drivers/iio/adc/xilinx-xadc-core.c          |   4 +-
- drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c |   2 +-
- drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_spi.c |   2 +-
- drivers/input/keyboard/ipaq-micro-keys.c    |   5 +-
- drivers/input/sparse-keymap.c               |   3 +-
- drivers/pinctrl/intel/Kconfig               |   2 -
- drivers/pinctrl/intel/pinctrl-baytrail.c    |  11 +--
- drivers/pinctrl/intel/pinctrl-cherryview.c  |   5 +-
- drivers/pinctrl/intel/pinctrl-intel.c       |   8 +-
- drivers/pinctrl/intel/pinctrl-lynxpoint.c   |   5 +-
- drivers/pinctrl/intel/pinctrl-tangier.c     |   5 +-
- drivers/pinctrl/pxa/pinctrl-pxa2xx.c        |   8 +-
- drivers/pwm/pwm-lpss.c                      |   4 +-
- include/linux/device.h                      | 119 +------------------------
- include/linux/device/devres.h               | 129 ++++++++++++++++++++++++++++
- include/linux/err.h                         |   3 +
- include/linux/io.h                          |   2 -
- include/linux/platform_data/x86/pwm-lpss.h  |  33 ++++++-
- 19 files changed, 200 insertions(+), 157 deletions(-)
- create mode 100644 include/linux/device/devres.h
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
