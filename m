@@ -1,192 +1,203 @@
-Return-Path: <linux-gpio+bounces-17500-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17501-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3C1CA5DC5D
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 13:11:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CDF9A5DDCE
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 14:21:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21173168A28
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 12:11:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2603818853A4
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 13:20:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F946241689;
-	Wed, 12 Mar 2025 12:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C0024291B;
+	Wed, 12 Mar 2025 13:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flylkczT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvEuz8kA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18B123C367;
-	Wed, 12 Mar 2025 12:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3A14A01
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 13:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741781461; cv=none; b=bJIY0l/gDQ8kG9UXzVafKK5yLMXzcgUOgko83alsMdaXzDCV3bm+LjKDU6P2Lafka5QSpM9RSzpzSYXWjuZQbcA4uIOnipLLrIB6MSrfYC+W5lmCbkyi3rnIZI+0oLJ7vJ+h+FAb34MM9fHWdJMsKsRno2zrASFYOsQ/MXOz978=
+	t=1741785587; cv=none; b=DNwM6htIHudKcBa4PIlJmd2AGhZEs5yu9lTbBBse3QyCHtPx3qKjP5K6vxrXJ0rwWjSTRm0OiVZqvZTsr4wbSrmkAWnkT+Mwzxfi/K1aTxF36ZmAiP1WIzIk5YtIoS08YPe2UJnDl27rISZ8bVSdcwnz991vq2w4jk+ItOTDGRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741781461; c=relaxed/simple;
-	bh=G3OqaY1Gicv/x4SjV6Vd/Pl/al4g9sI8+gDB7w0RZ/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KfHoMhjhz84464XPEiBgj3WI5H4LngL9a21NdgJCFz4qS6kflloB86H9CaNHBp5GuKV3y97qt9h17/sKN23u7w52zs5K+a2NSZVNuHm5fSu3sFMx4SvJaVqWOQqgzhchtZZyIe4RPENMbYvhLZcSNY/9+Ee3Jo/dkIbNN2b7GO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flylkczT; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so9684354a91.2;
-        Wed, 12 Mar 2025 05:10:59 -0700 (PDT)
+	s=arc-20240116; t=1741785587; c=relaxed/simple;
+	bh=bOvM3Rb1c7XkWvdeF62rAy/ws7BeWUWiDQbJ7997piQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EMsqRCJYFo6wtp7ueP4JI/LvoRH5shln6TWMyhJTp+ASXbHUw6N2I2bsn94/dWNXxJPJfIKpNftrg6RuDso8iMOw5AffRKu9/kSDp8c8+UP9yFQG4yDRGUlEXBBRzfpQyDvkvJRfgqVMANoOiwt6n2bGXbKdErWtRkC+C5hONsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CvEuz8kA; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso10404891a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 06:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741781459; x=1742386259; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t9vjbuAgqMI9GnyLKDVz7Tbvm0vj9IFr9mKzPfId+Hg=;
-        b=flylkczTk9mMQG5ItLCtdLZx2jhC8o7ZNSLuNKv3oQUEQO1KIF/MLOVzMzTh3GlWl7
-         WQksGIE4v7ooZTCogzYgANA6YAHpu0iQPCBggO0Azmb4gBedvMtmzw53cGI1rdnuH4f3
-         YnKtySzx4jy4NcTUPKy+pKZXx3F0Iaxoeo3XxP7NXPK5AMse7TXFQL4XQgHkPGJ97++T
-         fCarllkyKbpRSYOL7ddNCh9atetQjIkaBzYqqVTWcNcnTj6PjD1qgO9vxL2HHu5Icw6U
-         2CdFxL+ESAYxEGBlXpyAI7sivKjS9KUMsDRyYJtWF5YsF2kML5mDAHjyjQvpj8AWacM3
-         FqJw==
+        d=linaro.org; s=google; t=1741785584; x=1742390384; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TwOPRwvTyGZCimlRP4ylKx/o2Mk7nBeIZKavoovqttg=;
+        b=CvEuz8kASDgLAhMlcNIZMcz83jTRpDqAAzgyoZtyngJe7Pew3c1NrRJ6Lz75WJacq/
+         kwwabH2gSE0p3CbmR+zTwkLKdLDdcc8DXb/dLJ3dCCV7w4gvm8welOy8vIKsGANsJabH
+         M1xSXX1xXHeq8+iP/SbUhGg4pK97xTd7wbzfFi8UIp8l7nRXnYI8ghUf7TYVIzGTpSwM
+         TSBws/Xk2AM4d+/LTUJU6wl1c07y2NEnEVyhujFuXH9dRPqRI9eiiYLb4lTN7Z5JDpLW
+         8tR86DSunSOjagMRgyMp9k8bWLE+MhVDeYCDhihbqaWoKbTe8H17ig4A+a8iXUv3t7Mi
+         g/oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741781459; x=1742386259;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t9vjbuAgqMI9GnyLKDVz7Tbvm0vj9IFr9mKzPfId+Hg=;
-        b=HND/zkixD8+LZ03J6YPaJkfiVJa+fmXtMIymuRb4Ir+SAJuBcRxrsNR0t14my4AXOn
-         Ec0/dnnltNPuxanL8sbvaTlgJU2aU3ebdwikGrWWrtIUA2lQY5IKVew8ty4cg1ITBWiV
-         gorv7BAVd4DY/9GyV0bOrsEOfHb8uMocwyqMRGgmX0JtTE8Lt4s1Zwv7/D12ShfO8U0I
-         9f7hElZiOSxqhFxIcZM19NLxV3xd33hJmOItxKD5Opi3ZLrkX1E95cNPSrGMrlyzJlrZ
-         3zs/nOZOE6nal/ioB5aXWy+0hqWmSePfDKP0BN9vkkuHUCbSst4vfqpy0JwAXfV2Xzbc
-         fDUg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+dGltspE7ym+tof66W9Cli92XJsiF335jsFMd6r8tFjBIwJ1/XOhnztFvTUz4/SFRbx2VUTZIOrhR@vger.kernel.org, AJvYcCXm4xLeI06I89EwKmdmCUFGhj9TXnY1iD/9Y6o6pRe93cDukpoAVD5jZoclVbS0m4/in3XGH76KD114UqXu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCPyJLuQgcwOLhkYZKuNmdYx7bvGvtOuyZhi7nHbMXJUzJgnEt
-	QC0a2kvEfiZZteZq8c3vLBcV57tuG0gN6/Vd/8NHujrPKVPjDloe
-X-Gm-Gg: ASbGncsXsYGwHNZFfUVwTGrMoc4xAwCCqNisQSa+f4uDyDEHJPXnvP3HMllF4WEdjBo
-	2Rk3HQOP8H/tEkKn8G1jnZcG+4fd5vBOWH0l307JZH+AvTuzc6VSrzT9tflXg/99AmrRVnuxHZm
-	BQyDEd0dYf6j2R061ampMh66Lq0zO0rvYzKwcjPcuuL5SwZG4YW4sZw41tgaC2pt9YaBuzYcn7d
-	FcjuCkswBxYrUIxpfyAmeENJu3XSWN9OBlUsQupn/WpqIeD8kswLxlupH28OS2ZXlgbCkt8D/gB
-	SYWwe+22z8/apGuUYIZbGFbBN1oFkJ33VFJfMw5a6S3P4moJkkheRKrJVUJNPoByouJm
-X-Google-Smtp-Source: AGHT+IFMb1nFJh0Qb+5WSWxAfc35Vv8vdN87tpMqjEEUuMtALWohiO85EyZHCxIC5I+xXtlHAFsm/w==
-X-Received: by 2002:a17:90b:164f:b0:2fe:a0ac:5fcc with SMTP id 98e67ed59e1d1-2ff7cf3e3eamr25087822a91.34.1741781458872;
-        Wed, 12 Mar 2025 05:10:58 -0700 (PDT)
-Received: from rigel (27-32-83-166.static.tpgi.com.au. [27.32.83.166])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3011821816esm1585981a91.5.2025.03.12.05.10.55
+        d=1e100.net; s=20230601; t=1741785584; x=1742390384;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TwOPRwvTyGZCimlRP4ylKx/o2Mk7nBeIZKavoovqttg=;
+        b=IoWLAVAlULC6vz+/mc2GVjMH/XoHHB57tvdRmNp1YxXOp0Cl7RvgDeT5qn8CWGDHtS
+         3qRj6ibcDyict7ZtvXMUHB/R4VgWZyDG7egpGF021Lmbi8i/XeFh1e7TvhLxk8mSRg0d
+         uVOr9HJDU/ySw6FQUKX1tjZFWNsB2JtDfFzmEb+T9fuxS/2492eWnV5OnGx7E6tFTZCF
+         Db4idsaAFBNmoOLNvwmTRxljSxHnFsv3ogwGvqYBk+ycbPAi0hmzgzZIXh7dLG7PCyhr
+         SYvQNrzwmTu+24+6ac5rs2d+OnK45nCxORS9vB10YAX2sJ+lM5hxZCo4E7QyR74lcRhO
+         hX+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUM1lNJcmGZP9UBIneVL8xDXqZZLwOxma33B1bGju/9eo4riBRmXOldv77LnAS3VgXZihZ+MW1zjxTE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqzJuv+kNYQdOSg1mP3ZjK8sv34aj8m5TaG71nAvosSqfj1rSp
+	vTnqVbgPYOJ/Z2egFJtDcNc9+o4B8LdHEgfrURQY54RnjkpWjmC6uV71BVDhAIM=
+X-Gm-Gg: ASbGncspzotM82jNrXNipVtGZrL557QIgHAQpS94UIzx5ATftMRoMC6gi+IGTBVMc+R
+	OuWMXRqCZwM5yK1bep4o4r7gbbEzXGHmhutouUwlSQsuumEU7/hxNhAmbDj9mak++qsREfr8z97
+	Nqyz2eg7cOwERMDhxVunXdkfKpu3viy40XYAxiYTvbr7gdxtpq2K7LshfvvCieDYnVo2FSb9zdg
+	U49RND0Rlw3lnS+mKhM2h2BvR/6GRvh1PbMldQ2WmxfzMm4ldT812emeuQnG8rgSPw/qamZXcCk
+	67MewneJCMOsOUYb2fA+nX0L6B5/K5dDfXge99jBuB31ki25HTLPwgGnI3c=
+X-Google-Smtp-Source: AGHT+IFzsh4BD3ATv/xGrDU3lT987ULOwDI2KQNLC/6p9B+kW/K648uP7PICWdPatgLjkwI5X/NRIw==
+X-Received: by 2002:a17:907:9490:b0:ab7:9df1:e562 with SMTP id a640c23a62f3a-ac252fe7196mr2436981766b.48.1741785583831;
+        Wed, 12 Mar 2025 06:19:43 -0700 (PDT)
+Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:f2c4:b081:2e8a:cec5])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2773e8641sm735182466b.165.2025.03.12.06.19.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 05:10:58 -0700 (PDT)
-Date: Wed, 12 Mar 2025 20:10:53 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: David Jander <david@protonic.nl>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: regression: gpiolib: switch the line state notifier to atomic
- unexpected impact on performance
-Message-ID: <20250312121053.GA132624@rigel>
-References: <20250311110034.53959031@erd003.prtnl>
- <CAMRc=MeWp=m1Bi_t_FCrxFOtiv3s8fSjiBjDk4pOB+_RuN=KGg@mail.gmail.com>
- <20250311120346.21ba086d@erd003.prtnl>
- <20250312013256.GB27058@rigel>
- <20250312090829.5de823b7@erd003.prtnl>
- <20250312091056.GA105343@rigel>
- <20250312112401.5e292612@erd003.prtnl>
+        Wed, 12 Mar 2025 06:19:43 -0700 (PDT)
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+Date: Wed, 12 Mar 2025 14:19:27 +0100
+Subject: [PATCH] pinctrl: qcom: Clear latched interrupt status when
+ changing IRQ type
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312112401.5e292612@erd003.prtnl>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250312-pinctrl-msm-type-latch-v1-1-ce87c561d3d7@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAN6J0WcC/x3MQQqAIBBA0avErBtQo8KuEi1EpxooE5UoorsnL
+ d/i/wcSRaYEQ/VApJMTH75A1hXY1fiFkF0xKKFa0UiJgb3NccM97ZjvQLiZbFfshNaGHPVOKyh
+ xiDTz9Y/H6X0/npgpj2gAAAA=
+X-Change-ID: 20250311-pinctrl-msm-type-latch-6099aede7d92
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Maulik Shah <quic_mkshah@quicinc.com>, Stephen Boyd <swboyd@chromium.org>, 
+ linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, 
+ Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
 
-On Wed, Mar 12, 2025 at 11:24:01AM +0100, David Jander wrote:
-> >
-> > Ok, if the issue is purely the name -> (chip,offset) mapping it is pretty
-> > safe to assume that line names are immutable - though not unique, so
-> > caching the mapping should be fine.
->
-> On our board that would be fine, but what about hot-pluggable GPIO
-> chips/devices, or modules that are loaded at a later time? I was thinking
-> about libgpiod in general...
->
+When submitting the TLMM test driver, Bjorn reported that some of the test
+cases are failing for GPIOs that not are backed by PDC (i.e. "non-wakeup"
+GPIOs that are handled directly in pinctrl-msm). Basically, lingering
+latched interrupt state is still being delivered at IRQ request time, e.g.:
 
-Indeed.  A general solution suitable for libgpiod is a hard problem.
-It is probably something better left to a higher layer.
+  ok 1 tlmm_test_silent_rising
+  tlmm_test_silent_falling: ASSERTION FAILED at drivers/pinctrl/qcom/tlmm-test.c:178
+  Expected atomic_read(&priv->intr_count) == 0, but
+      atomic_read(&priv->intr_count) == 1 (0x1)
+  not ok 2 tlmm_test_silent_falling
+  tlmm_test_silent_low: ASSERTION FAILED at drivers/pinctrl/qcom/tlmm-test.c:178
+  Expected atomic_read(&priv->intr_count) == 0, but
+      atomic_read(&priv->intr_count) == 1 (0x1)
+  not ok 3 tlmm_test_silent_low
+  ok 4 tlmm_test_silent_high
 
-> > The kernel can already tell userspace about a number of changes.
-> > What changes are you concerned about - adding/removing chips?
->
-> Yes, since the patches from Bartosz I understand that is indeed possible now
-> ;-)
-> No special concern, just thinking about general applicability of caching such
-> information in libgpiod (especially considering the old version I am using
-> presumably from long before the kernel could do this).
->
+Whether to report interrupts that came in while the IRQ was unclaimed
+doesn't seem to be well-defined in the Linux IRQ API. However, looking
+closer at these specific cases, we're actually reporting events that do not
+match the interrupt type requested by the driver:
 
-The change notifiers you are referring to have been there for some time
-- they were first introduced late in uAPI v1.
-I was also thinking of udev events for when devices are added or removed.
-Though again, not something core libgpiod should be getting involved with.
+ 1. After "ok 1 tlmm_test_silent_rising", the GPIO is in low state and
+    configured for IRQF_TRIGGER_RISING.
 
-> > > If this had been this slow always (even before 6.13), I would probably have
-> > > done things a bit differently and cached the config requests to then "find"
-> > > the lines in batches directly working on the character devices instead of
-> > > using gpiod, so I could open/close each one just once for finding many
-> > > different lines each time.
-> >
-> > The libgpiod v2 tools do just that - they scan the chips once rather
-> > than once per line.  But that functionality is not exposed in the
-> > libgpiod v2 API as the C interface is hideous and it is difficult to
-> > provide well defined behaviour (e.g. in what order are the chips scanned?).
-> > So it is left to the application to determine how they want to do it.
-> > There isn't even a find_line() equivalent in v2, IIRC.
->
-> I think I should move to v2 as soon as I find the time to do it. ;-)
->
+ 2. (a) In preparation for "tlmm_test_silent_falling", the GPIO is switched
+        to high state. The rising interrupt gets latched.
+    (b) The GPIO is re-configured for IRQF_TRIGGER_FALLING, but the latched
+        interrupt isn't cleared.
+    (c) The IRQ handler is called for the latched interrupt, but there
+        wasn't any falling edge.
 
-You certainly should - the v2 Python bindings are much more pythonic and
-easier to use.
+ 3. (a) For "tlmm_test_silent_low", the GPIO remains in high state.
+    (b) The GPIO is re-configured for IRQF_TRIGGER_LOW. This seems to
+        result in a phantom interrupt that gets latched.
+    (c) The IRQ handler is called for the latched interrupt, but the GPIO
+        isn't in low state.
 
-> In any case, I also could reproduce the issue with the gpiodetect tool from
-> v2. You can visually see each found chips being printed individually on the
-> terminal with kernel v6.13, while with 6.12 all chip names would appear
-> "instantly". Hard to describe with words, but you could in fact tell which
-> kernel was running just by looking at the terminal output of "gpiodetect"
-> while it was being executed... my board has 16 gpio chips, so you can really
-> see it "scrolling" up as it prints them with kernel 6.13.
->
+ 4. (a) For "tlmm_test_silent_high", the GPIO is switched to low state.
+    (b) This doesn't result in a latched interrupt, because RAW_STATUS_EN
+        was cleared when masking the level-triggered interrupt.
 
-For sure - the close() issue is a real issue.
+Fix this by clearing the interrupt state whenever making any changes to the
+interrupt configuration. This includes previously disabled interrupts, but
+also any changes to interrupt polarity or detection type.
 
-> > > > Generally an application should request the lines it requires once and hold
-> > > > them for the duration.  Similarly functions such as find_line() should be
-> > > > performed once per line.
-> > >
-> > > Of course it does that ;-)
-> > > This board has a large amount of GPIO lines, and like I said, it is during the
-> > > initial configuration phase of the application that I am seeing this problem.
-> > >
-> >
-> > Good to hear - from your earlier description I was concerned that
-> > you might be doing it continuously.
->
-> Thanks. Tbh, I am quite proud of the efficiency and speed of the application
-> itself. Being written in pure python and running on a rather slow Cortex-A7,
-> it is surprisingly fast, controlling 16 stepper motors, reacting to 26 sensor
-> inputs changing at a blazing high pace and continuously sampling several IIO
-> adcs at 16kHz sample rate, all with rather low CPU usage (in python!). It makes
-> heavy use of asyncio an thus of course the epoll() event mechanisms the kernel
-> provides for GPIOs, IIO, LMC and other interfaces.
+With this change, all 16 test cases are now passing for the non-wakeup
+GPIOs in the TLMM.
 
-You can do some surprising things with Python.
+Cc: stable@vger.kernel.org
+Fixes: cf9d052aa600 ("pinctrl: qcom: Don't clear pending interrupts when enabling")
+Reported-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Closes: https://lore.kernel.org/r/20250227-tlmm-test-v1-1-d18877b4a5db@oss.qualcomm.com/
+Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> So you may understand that I was a bit triggered by your suggestion of
-> inefficiency initially. Sorry ;-)
->
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 47daa47153c970190b0d469dc8d245b3cbeace5e..82f0cc43bbf4f4d24f078af2d0a515d3a03b961a 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1045,8 +1045,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	const struct msm_pingroup *g;
+ 	u32 intr_target_mask = GENMASK(2, 0);
+ 	unsigned long flags;
+-	bool was_enabled;
+-	u32 val;
++	u32 val, oldval;
+ 
+ 	if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
+ 		set_bit(d->hwirq, pctrl->dual_edge_irqs);
+@@ -1108,8 +1107,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	 * internal circuitry of TLMM, toggling the RAW_STATUS
+ 	 * could cause the INTR_STATUS to be set for EDGE interrupts.
+ 	 */
+-	val = msm_readl_intr_cfg(pctrl, g);
+-	was_enabled = val & BIT(g->intr_raw_status_bit);
++	val = oldval = msm_readl_intr_cfg(pctrl, g);
+ 	val |= BIT(g->intr_raw_status_bit);
+ 	if (g->intr_detection_width == 2) {
+ 		val &= ~(3 << g->intr_detection_bit);
+@@ -1162,9 +1160,11 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	/*
+ 	 * The first time we set RAW_STATUS_EN it could trigger an interrupt.
+ 	 * Clear the interrupt.  This is safe because we have
+-	 * IRQCHIP_SET_TYPE_MASKED.
++	 * IRQCHIP_SET_TYPE_MASKED. When changing the interrupt type, we could
++	 * also still have a non-matching interrupt latched, so clear whenever
++	 * making changes to the interrupt configuration.
+ 	 */
+-	if (!was_enabled)
++	if (val != oldval)
+ 		msm_ack_intr_status(pctrl, g);
+ 
+ 	if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
 
-No problems - I've seen people do some silly things and just wanted
-to be sure you weren't one of them ;-).
-Glad everything is working for you.
+---
+base-commit: e058c5f49ceff38bf1579a679a5ca20842718579
+change-id: 20250311-pinctrl-msm-type-latch-6099aede7d92
 
-Cheers,
-Kent.
+Best regards,
+-- 
+Stephan Gerhold <stephan.gerhold@linaro.org>
+
 
