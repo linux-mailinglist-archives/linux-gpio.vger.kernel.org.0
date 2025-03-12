@@ -1,220 +1,120 @@
-Return-Path: <linux-gpio+bounces-17475-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17477-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9DD0A5D746
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 08:25:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9109AA5D7DD
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 09:09:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B4C5189DC94
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 07:25:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B37A1884427
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 08:08:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C7E41EB199;
-	Wed, 12 Mar 2025 07:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C4C230BD0;
+	Wed, 12 Mar 2025 08:08:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="f5IJ4gs8"
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="L0LqdTO7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEE51E9B07;
-	Wed, 12 Mar 2025 07:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE12320C003
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 08:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741764322; cv=none; b=agg1BQphMJTg9qJiJI+plFZym5OEmISYEDAiKyJf7BLwo61tIgA6L5cN3kV9MxNksVVIl+s2fg7fYS+Hq8ZHZI2Pjyo4YW6flcc12XvIuYPpxHS6gRLq6mjHF9NlLamjWipuZDePnsMUdRYdoZZhBojvU32IrztngeznzhyJsQA=
+	t=1741766921; cv=none; b=hClUTPL3mH/hh7eGeJWV+R7PAce9ScHMDfHe0zGoCxDPL1ZQfDn4gRNkqFH+mPQ5cJ8LzEGfeamD9eXN0FiMJqwxIllJFZIlzhDAjLNU/Za6b9yZ81jqDCitBMztxlY0ba9CZ/Q6jGwbhfMTzJLvLlo2kPGmh59a6J9YYM8xDC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741764322; c=relaxed/simple;
-	bh=2c0+JHwi+qY6or2xq9N1fNnvpdrvJrseUPM3R3/nFJM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uvCNdpkxqW3ELFjTJN8T7/8VfJUaJSE4bYg0m007QoO9hsh1T8cS8FJvrbw//9Oo4RoPfzmT9aTjEZE7+GR93m3dOPSOG7KMit467TgtG5H+6hlaLb1T6qQe032XCQjnuBXLR6kJInR4JuO2Ba5NBJGYsiX2OxhdXDrIYDrztgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=f5IJ4gs8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BMHBMk027307;
-	Wed, 12 Mar 2025 07:25:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=6EWfZDdHFy/
-	7OqI1IzcsJqufQJ5B25RCLzOxbZxhIHM=; b=f5IJ4gs8e3CrZbUeQ7FKZpbDn2I
-	YqK0MD0KL9H8wBSwr/DdNIURZmt5NCYB3EMzQXIbFiicr9Wss47+B+AMYnETbm/Q
-	MjaSGqhznNHcmiHlA05APvbIDcUlacIu+e5ZL7iO5h0UEqB6a8NIuEyhVAvBAwZX
-	HZ343+kfmMDKPx/3VQJf9AwaaZEYymT2fm52wmu9H5NGOYQxR4hqOfcqfqjWHNdy
-	M1AdNqkcW7ewzYTybaYL8NqQIe1GRphD6COjsnLxH9aJQXO1X5sVBo+EkjIV9BX0
-	Z3urc96nxbHaEdWr6QhuSgIqPxMTQu3j40j0I0x8KvD7xPdQtFXyO0mC5NA==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2psfsx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 07:25:16 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52C7PCkP032140;
-	Wed, 12 Mar 2025 07:25:12 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 458yn3ehmj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 07:25:12 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52C7KJRA026186;
-	Wed, 12 Mar 2025 07:25:12 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 52C7PBF8032119
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 07:25:12 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id 37D95B36; Wed, 12 Mar 2025 12:55:11 +0530 (+0530)
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@quicinc.com, Wasim Nazir <quic_wasimn@quicinc.com>
-Subject: [PATCH v2 2/2] pinctrl: qcom: sa8775p: Enable egpio function
-Date: Wed, 12 Mar 2025 12:55:09 +0530
-Message-ID: <20250312072509.3247885-3-quic_wasimn@quicinc.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250312072509.3247885-1-quic_wasimn@quicinc.com>
-References: <20250312072509.3247885-1-quic_wasimn@quicinc.com>
+	s=arc-20240116; t=1741766921; c=relaxed/simple;
+	bh=FpEhhkI8c7BI2Z6lsduabkQ7J35+wwRfmf1EoCFh4fw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=McTmnA3/RosOJSirU2j6vOickI95Mgh1LR9b7B7x5d/LPGw8w0uqMQ0hWNDEvEYO42+xyAi1EgO62kcHqgtrh2xNRIq96zeS4nnYLbDj3D+ZNWuVS0W8wzFUnwxhiFlYGf2/btPVlP4jjZ101K8GpVuc+qw313z70x1DzV/JAqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=L0LqdTO7; arc=none smtp.client-ip=94.124.121.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=8bwWEGrJaKEtAP4w9gQVDnba3twzD8Qvfz5OXjGd88o=;
+	b=L0LqdTO7a1++IbV4OvZeFXI+miitsQ9M9X944lXLyUosRFzkP2OdKIith/6lfpJiyCO4okrPAPsAk
+	 pbiPryC7qUb2gboURPf7cEnlXvAU9leNMxdxB/QzuK4ljm1bXRzVdxHoRybLyl5MeHi9LWadpIYPdb
+	 JYp3ehkeZoQmk1bXuabD6np5363ghBLX7nPUoscF7Z3eRzJMYlc7mV4VGtxQM+HCk/lmY7eay187wC
+	 LfIA2d9MFo7+Vsa9SThsNwraD0yYVQbegzX5STkDgWP3EBOfzPX2WcAD0xTwgee/APm1onLmqSgGO/
+	 TrZ+Yuf01FqgJkmlNzCRiEgab+c8/sA==
+X-MSG-ID: 2f4c367f-ff19-11ef-a3a3-00505681446f
+Date: Wed, 12 Mar 2025 09:08:29 +0100
+From: David Jander <david@protonic.nl>
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>, Linus Walleij <linus.walleij@linaro.org>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: regression: gpiolib: switch the line state notifier to atomic
+ unexpected impact on performance
+Message-ID: <20250312090829.5de823b7@erd003.prtnl>
+In-Reply-To: <20250312013256.GB27058@rigel>
+References: <20250311110034.53959031@erd003.prtnl>
+	<CAMRc=MeWp=m1Bi_t_FCrxFOtiv3s8fSjiBjDk4pOB+_RuN=KGg@mail.gmail.com>
+	<20250311120346.21ba086d@erd003.prtnl>
+	<20250312013256.GB27058@rigel>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=P506hjAu c=1 sm=1 tr=0 ts=67d136dd cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=usWrcR5wvQOp3e3uLQkA:9 a=RVmHIydaz68A:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: T5Ytnp1sdlyHYMbep0Qft8yxvCeC8SlU
-X-Proofpoint-ORIG-GUID: T5Ytnp1sdlyHYMbep0Qft8yxvCeC8SlU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-12_02,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
- mlxscore=0 spamscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503120049
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Egpio feature allows IsLand Domain IOs to be reused as TLMM GPIOs.
-sa8775p supports egpio feature for GPIOs ranging from 126 to 148.
+On Wed, 12 Mar 2025 09:32:56 +0800
+Kent Gibson <warthog618@gmail.com> wrote:
 
-Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-sa8775p.c | 58 +++++++++++++++-----------
- 1 file changed, 34 insertions(+), 24 deletions(-)
+> On Tue, Mar 11, 2025 at 12:03:46PM +0100, David Jander wrote:
+> >
+> > Indeed, it does. My application is written in python and uses the python gpiod
+> > module. Even in such an environment the impact is killing.
+> 
+> Interesting - the only reason I could think of for an application
+> requesting/releasing GPIOs at a high rate was it if was built on top of
+> the libgpiod tools and so was unable to hold the request fd.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-index 8fdea25d8d67..a5b38221aea8 100644
---- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2022,2025, Qualcomm Innovation Center, Inc. All rights reserved.
-  * Copyright (c) 2023, Linaro Limited
-  */
+I didn't want to bother the list with the details, but this is during the
+configuration phase of the application. It receives many configuration messages
+for different IO objects at a fast pace. Most of those objects use one or more
+GPIO lines identified by their label. So the application calls
+gpiod.find_line(label) on each of them. Apparently libgiod (version 1.6.3 in
+our case) isn't very efficient, since it will open and close each of the
+gpiodev devices in order to query for each of the gpio lines. I wouldn't blame
+libgpiod (python bindings) for doing it that way, since open()/close() of a
+chardev are expected to be fast, and caching this information is probably
+error prone anyway, since AFAIK user space cannot yet be informed of changes
+to gpio chips from kernel space.
 
-@@ -467,6 +467,7 @@ enum sa8775p_functions {
- 	msm_mux_edp2_lcd,
- 	msm_mux_edp3_hot,
- 	msm_mux_edp3_lcd,
-+	msm_mux_egpio,
- 	msm_mux_emac0_mcg0,
- 	msm_mux_emac0_mcg1,
- 	msm_mux_emac0_mcg2,
-@@ -744,6 +745,13 @@ static const char * const edp3_lcd_groups[] = {
- 	"gpio49",
- };
+If this had been this slow always (even before 6.13), I would probably have
+done things a bit differently and cached the config requests to then "find"
+the lines in batches directly working on the character devices instead of
+using gpiod, so I could open/close each one just once for finding many
+different lines each time.
 
-+static const char *const egpio_groups[] = {
-+	"gpio126", "gpio127", "gpio128", "gpio129", "gpio130", "gpio131",
-+	"gpio132", "gpio133", "gpio134", "gpio135", "gpio136", "gpio137",
-+	"gpio138", "gpio139", "gpio140", "gpio141", "gpio142", "gpio143",
-+	"gpio144", "gpio145", "gpio146", "gpio147", "gpio148",
-+};
-+
- static const char * const emac0_mcg0_groups[] = {
- 	"gpio12",
- };
-@@ -1209,6 +1217,7 @@ static const struct pinfunction sa8775p_functions[] = {
- 	MSM_PIN_FUNCTION(edp2_lcd),
- 	MSM_PIN_FUNCTION(edp3_hot),
- 	MSM_PIN_FUNCTION(edp3_lcd),
-+	MSM_PIN_FUNCTION(egpio),
- 	MSM_PIN_FUNCTION(emac0_mcg0),
- 	MSM_PIN_FUNCTION(emac0_mcg1),
- 	MSM_PIN_FUNCTION(emac0_mcg2),
-@@ -1454,29 +1463,29 @@ static const struct msm_pingroup sa8775p_groups[] = {
- 	[123] = PINGROUP(123, hs2_mi2s, phase_flag, _, _, _, _, _, _, _),
- 	[124] = PINGROUP(124, hs2_mi2s, phase_flag, _, _, _, _, _, _, _),
- 	[125] = PINGROUP(125, hs2_mi2s, phase_flag, _, _, _, _, _, _, _),
--	[126] = PINGROUP(126, _, _, _, _, _, _, _, _, _),
--	[127] = PINGROUP(127, _, _, _, _, _, _, _, _, _),
--	[128] = PINGROUP(128, _, _, _, _, _, _, _, _, _),
--	[129] = PINGROUP(129, _, _, _, _, _, _, _, _, _),
--	[130] = PINGROUP(130, _, _, _, _, _, _, _, _, _),
--	[131] = PINGROUP(131, _, _, _, _, _, _, _, _, _),
--	[132] = PINGROUP(132, _, _, _, _, _, _, _, _, _),
--	[133] = PINGROUP(133, _, _, _, _, _, _, _, _, _),
--	[134] = PINGROUP(134, _, _, _, _, _, _, _, _, _),
--	[135] = PINGROUP(135, _, _, _, _, _, _, _, _, _),
--	[136] = PINGROUP(136, _, _, _, _, _, _, _, _, _),
--	[137] = PINGROUP(137, _, _, _, _, _, _, _, _, _),
--	[138] = PINGROUP(138, _, _, _, _, _, _, _, _, _),
--	[139] = PINGROUP(139, _, _, _, _, _, _, _, _, _),
--	[140] = PINGROUP(140, _, _, _, _, _, _, _, _, _),
--	[141] = PINGROUP(141, _, _, _, _, _, _, _, _, _),
--	[142] = PINGROUP(142, _, _, _, _, _, _, _, _, _),
--	[143] = PINGROUP(143, _, _, _, _, _, _, _, _, _),
--	[144] = PINGROUP(144, dbg_out, _, _, _, _, _, _, _, _),
--	[145] = PINGROUP(145, _, _, _, _, _, _, _, _, _),
--	[146] = PINGROUP(146, _, _, _, _, _, _, _, _, _),
--	[147] = PINGROUP(147, _, _, _, _, _, _, _, _, _),
--	[148] = PINGROUP(148, _, _, _, _, _, _, _, _, _),
-+	[126] = PINGROUP(126, _, _, _, _, _, _, _, _, egpio),
-+	[127] = PINGROUP(127, _, _, _, _, _, _, _, _, egpio),
-+	[128] = PINGROUP(128, _, _, _, _, _, _, _, _, egpio),
-+	[129] = PINGROUP(129, _, _, _, _, _, _, _, _, egpio),
-+	[130] = PINGROUP(130, _, _, _, _, _, _, _, _, egpio),
-+	[131] = PINGROUP(131, _, _, _, _, _, _, _, _, egpio),
-+	[132] = PINGROUP(132, _, _, _, _, _, _, _, _, egpio),
-+	[133] = PINGROUP(133, _, _, _, _, _, _, _, _, egpio),
-+	[134] = PINGROUP(134, _, _, _, _, _, _, _, _, egpio),
-+	[135] = PINGROUP(135, _, _, _, _, _, _, _, _, egpio),
-+	[136] = PINGROUP(136, _, _, _, _, _, _, _, _, egpio),
-+	[137] = PINGROUP(137, _, _, _, _, _, _, _, _, egpio),
-+	[138] = PINGROUP(138, _, _, _, _, _, _, _, _, egpio),
-+	[139] = PINGROUP(139, _, _, _, _, _, _, _, _, egpio),
-+	[140] = PINGROUP(140, _, _, _, _, _, _, _, _, egpio),
-+	[141] = PINGROUP(141, _, _, _, _, _, _, _, _, egpio),
-+	[142] = PINGROUP(142, _, _, _, _, _, _, _, _, egpio),
-+	[143] = PINGROUP(143, _, _, _, _, _, _, _, _, egpio),
-+	[144] = PINGROUP(144, dbg_out, _, _, _, _, _, _, _, egpio),
-+	[145] = PINGROUP(145, _, _, _, _, _, _, _, _, egpio),
-+	[146] = PINGROUP(146, _, _, _, _, _, _, _, _, egpio),
-+	[147] = PINGROUP(147, _, _, _, _, _, _, _, _, egpio),
-+	[148] = PINGROUP(148, _, _, _, _, _, _, _, _, egpio),
- 	[149] = UFS_RESET(ufs_reset, 0x1a2000),
- 	[150] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x199000, 15, 0),
- 	[151] = SDC_QDSD_PINGROUP(sdc1_clk, 0x199000, 13, 6),
-@@ -1511,6 +1520,7 @@ static const struct msm_pinctrl_soc_data sa8775p_pinctrl = {
- 	.ngpios = 150,
- 	.wakeirq_map = sa8775p_pdc_map,
- 	.nwakeirq_map = ARRAY_SIZE(sa8775p_pdc_map),
-+	.egpio_func = 9,
- };
+> Generally an application should request the lines it requires once and hold
+> them for the duration.  Similarly functions such as find_line() should be
+> performed once per line.
 
- static int sa8775p_pinctrl_probe(struct platform_device *pdev)
---
-2.48.1
+Of course it does that ;-)
+This board has a large amount of GPIO lines, and like I said, it is during the
+initial configuration phase of the application that I am seeing this problem.
 
+> From a performance perspective, NOT having to re-request a line is
+> considerably faster than requesting it - even with Bart's fix.
+> 
+> Is there something unusual about your app that requires the lines be
+> released?
+
+See above.
+
+Best regards,
+
+-- 
+David Jander
 
