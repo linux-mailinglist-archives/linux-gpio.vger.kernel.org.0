@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-17504-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17505-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80779A5DE07
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D4DDA5DE06
 	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 14:32:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 56A007AC917
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 13:31:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70484169FBA
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Mar 2025 13:32:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0355F2459C2;
-	Wed, 12 Mar 2025 13:32:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78B9E2459DC;
+	Wed, 12 Mar 2025 13:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P/rsYzAl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MpXKQhev"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D80242912
-	for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 13:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6713424501B
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 13:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741786322; cv=none; b=gQtjY7bA+ZGgYv2iuRBJxWL2jE0FT+EH4zt5GlweaqnSJzodMipXeRb1JbhTMafefqgwDaWLXnMNXdJAFNZ00kw8cWNilq/JPlTe18SORGAbNKI624u73/yfhOnd4jextfmkQx/imjsJNYCvkOus99rmJDdjbI08JQs9e1n3iSY=
+	t=1741786324; cv=none; b=HXh/Veo2/lym9VS5Hz9mdbZBAUuBlooXKclehFGlXO84VjTo1cYZihSw5lYglG4r8njU9t/4pJSz6co053HWRMROimh2T6vL+L2YBDqw4vmnQ4fbNLxZnOyybkwhmdG83Hlk0RsTrfMrdeNuvyTt4PwzWjWbPZmUmSKl6c4UWTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741786322; c=relaxed/simple;
-	bh=B2zg89GIjP4Vel9rjY60WJg2IxDwXSUmQq5358BYne8=;
+	s=arc-20240116; t=1741786324; c=relaxed/simple;
+	bh=OKx2k02z23zEcvhATOXAT7P378GIrQR3T0tzoq4hdxM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LLYG6C03FW0haX3z1NWPDvXWmTekJixDh8QPaBW90SBtjjPrUyiS1NcO2VtcHJnUPfhgWMeuiFMSl6uptqlGNvHBOItOQeiCYJssXXoGX7e2WHEW00s5oxNtvnFASr0Rr/a2aOvn4T2ow9Z31H5NRl3lW2dKbs1/hXHRFukhIQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P/rsYzAl; arc=none smtp.client-ip=209.85.167.49
+	 In-Reply-To:To:Cc; b=Ns1QBAzdXRlJ3bR4kXOKFSs3YtnlwuWyd8ytGn4xN+mD9bofPbmTW8BF1zIIObxD2NsgmUABTf5XhS7dK0q1NnNkH+vzOS9gBhpgwl6SO4K8E8VgZ+A9U0Rvxc08bE3elGJkKJv56ug0N4fOoRc1oOxrBqCKgi6A7jZNjB2vmz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MpXKQhev; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5499659e669so5853235e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 06:32:00 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-549946c5346so5440960e87.2
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Mar 2025 06:32:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741786319; x=1742391119; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741786320; x=1742391120; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rhEAQfn62WOeRCSbphjKXE9NxiHRh23KMe48CXfTNhE=;
-        b=P/rsYzAlGsx4IP/leeQuVQV/uH8fdhRh9JyUxFmp5MYITIuqPIKI7HyiJNgxV5lF2J
-         RPtTfbVw4EqUnG+s8C2BBZQi3jmf2jVhfXOCRv+5dV5NXuRuaGdzBVXjq4y3RfxtXRvE
-         tQh96atuTvoTFFhanoYUT5uXl31cum9gUjcBe0xHcjRb+K2tTyXaSG8IkHnJ3lMbYM+f
-         r+AQnDexG+jzE/uwlHQtknFo0FHGW285ZA+0acc80pTBMkvAT+SN9HEwRfdFPl+jlRi1
-         0crnExtP97a0HvxCW1WkA4noZvB9vB2MlMoVQXIKyfnADMXyUCtU12fNVq1isUN0Bmpi
-         bLaw==
+        bh=d6227D3p3P0gwc0KnsTIE+k7HQimstZwQXxJIFYQCaY=;
+        b=MpXKQhevzkYAPR0eiTFlGxAUeEUHi+1ZCHrtfun8JkgV4YDe9XVpNZl4Tg3c119fDF
+         UwKviwTUlRAfnPPUFe5pNuShM2rNDVMG14wzbny/5RhJMg0+WMtOTbUKnS6P9d/2Kqg/
+         8ScFb7/t0//ww/LvZ9lAb53Gw9yOJh94RLcssE879Y9zDSHpZ1td0YEBbqOJBNGdRh7a
+         ZhK+vVcpYD117S/mw7jRKRCUW2E7z6bJrz9FY94DaTQA4qMxhufkGTt/Zrks2BRy9gcD
+         a9iEJjozeYX+jEQK2wOApdJH6+0sFz2KzpEn/frOv8NrDEYmpwurgJQq54PQFEzPMTtO
+         GaWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741786319; x=1742391119;
+        d=1e100.net; s=20230601; t=1741786320; x=1742391120;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rhEAQfn62WOeRCSbphjKXE9NxiHRh23KMe48CXfTNhE=;
-        b=syd4UMaGRtMvg/Q12xqzdF0K5GhuzO1MSpS24Wi4uHqQ1UjweHsOAem1mwwCpDQy18
-         4Sd7H2ZvRNnG7P7uJ9wunonSIdx1Oz0305TgH0hjsTJ7icWSje9fdtnyW3BiXvKtiNIM
-         xLAH+CJk4KjbEnESc62gFW3tFwvY4EN7jrBRagCm49jymB9zgvP9P4ITiuohmCIlToQj
-         RS9SnJIpCS0Ojal2b+b9mvieY3/Cw/UgK7Hmy2Ay/CrUVGfc8hxa8MHfR+5FTX9OZIgT
-         f2PgTeBWdoYb3A6yrD7mI3f7ChUvJ+WxnvV0FSQ7j0XKKRvpo+0e9opyIOXtgnmNLTAU
-         /puQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXctd1vYStRuUl/jHKGeAJ0CfFDsBX2okbUi4gdMCzWEQ2zUDiy/VDNjDvOa7Cewo7JP+VtSpnFPD3/@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywax7K5CZ0aEXUrmjOOcj+m/f1ZMWi7YK+m1rf0d0AHvrUQTEVv
-	giCe4Yz5GUMjn+mSzVKwRfJaa/wUtDI9FoPe1WSn8oF6ku0m6r3gFPv/UQDOouo=
-X-Gm-Gg: ASbGncs49l67sUUL8JuSn1fRTRU/MTFvzGnGEdlFZoyogZkuAGmTBZhqvRMdCNN8fnB
-	zPnbAelK82hTLmLdXZaN+LlJw1vY6bO5LCVSNn3Kf8IRs/ZCqcR7odXP4QNq+FtGUN2E76JsLny
-	HISvF9M+8kEP6RY3QIKC2zAejlWgHNuzHWIqgTSZ3zZ9JAkAm+oGi5yO5xO3CCHLzmQFj30GkNT
-	SDqecJWyJX/yKoxhp+Uf/oweOep8Lv287dprf+Rj47rUMYTNSh43fkPh7NM35WhVL0f7DvGJB70
-	RB/NChWUvOw/DIbut4h6FOCAujuMBPL2Zh7F1tsSv+RGMrFWdYg9vXo=
-X-Google-Smtp-Source: AGHT+IHWnYCBrhTvqZlyPcM3tIeZ8BhMfC97IsTwkUhgOge8nCWIzSOCXKGn/GCNcPGwk8qaNI9Vyw==
-X-Received: by 2002:ac2:5b04:0:b0:549:91db:c14b with SMTP id 2adb3069b0e04-549abaaad27mr2034068e87.8.1741786318790;
-        Wed, 12 Mar 2025 06:31:58 -0700 (PDT)
+        bh=d6227D3p3P0gwc0KnsTIE+k7HQimstZwQXxJIFYQCaY=;
+        b=tkPErltxDDHwjOjrqGbGfjmDuCEiWJkf4k4vewBDYsbYQwn6k0dwkxuE/srn/1AvI+
+         j2sLkJCa7rXLnJdKg38/xAVMztt8+hCmcReIhS6xVSONhNu2i8/xDuIFOI5S+1iosnib
+         6gKoRwO1Qyl4t+llz5b8EukuMc0vHzPXfrD4qkC7oesUCF5PBEdvZSuxn8wtyIkMP+PR
+         05ksihxP+yGm0jWOatKvedUbHmWf1cQkZ8mKegVzfJ+dJ/mCqXcV8tbSHscIeYe3ZSEr
+         wZc62mnBCzhipWfeA1wAgdf1i4HVjSiJBsn0HVnFtLQ4RXS+pbwhEfmUy/ga7ts0hFQi
+         0SVg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0wwFMCsbwa2AGpv9j5/bFJkkUTy285HJAQvCPYZOgGAveQSC0aeNBLgZ+Yajsooa6kr/v+pHiX/w+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkkwKFZOKq94cAC+7qbvkyZ1BfC/w++oNn7LJx6OyPu13QR7Ps
+	9vV4tKI68BMGwGX6KvrA3AkPk7tOtE19RwifCFwzSQtY5+NDUSErTdNV+zJA340=
+X-Gm-Gg: ASbGncsErTXJgi64J4Hktehf9aoTs01+TogeyrcIuYRpucIS9OQfvbEc50ThFReSznN
+	zcuVTChNPXPOLzMAJxa8Tb69bKsiLQc6q4xMAOjpE1M38cmJLsH9eV9TrXQaUyaklDm549UVE1H
+	EEFaVmQ0UZMfPVaszRgbNd3BPKUJLDM9jfjZxOtgYdCcH4AJI3F472s8gaC2/6V/LiorYX+JoDF
+	78IwYFNi5CjI0vrXmUTQrElYYVHc6YwpSJPB/mEetjhpSwA00OVL3GKh8FsAirqYDDk3SSPH1Nl
+	7zJA9CtUuL0wk/zIjIxpSKAfq/b+F3sWa9WYwbfJx/GxQLVcqcKxE3Gzz93pfaqE2g==
+X-Google-Smtp-Source: AGHT+IG+ADSPCoGqvuEtats2T3CM9fitXUnTzvBoqRBCavMLmRzv5GI1OBEpjzCqM7eEbpTXVT3w1w==
+X-Received: by 2002:a05:6512:3da4:b0:549:39b1:65c6 with SMTP id 2adb3069b0e04-54990eaa699mr7963530e87.34.1741786320407;
+        Wed, 12 Mar 2025 06:32:00 -0700 (PDT)
 Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498ae460desm2121858e87.24.2025.03.12.06.31.57
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498ae460desm2121858e87.24.2025.03.12.06.31.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 06:31:57 -0700 (PDT)
+        Wed, 12 Mar 2025 06:31:59 -0700 (PDT)
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 12 Mar 2025 14:31:51 +0100
-Subject: [PATCH 2/3] ASoC: pcm3008: Convert to GPIO descriptors
+Date: Wed, 12 Mar 2025 14:31:52 +0100
+Subject: [PATCH 3/3] ASoC: pcm6240: Drop bogus code handling IRQ as GPIO
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +83,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250312-pcm-codecs-v1-2-41ffc4f8fc5c@linaro.org>
+Message-Id: <20250312-pcm-codecs-v1-3-41ffc4f8fc5c@linaro.org>
 References: <20250312-pcm-codecs-v1-0-41ffc4f8fc5c@linaro.org>
 In-Reply-To: <20250312-pcm-codecs-v1-0-41ffc4f8fc5c@linaro.org>
 To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
@@ -94,162 +94,122 @@ Cc: linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
  Linus Walleij <linus.walleij@linaro.org>
 X-Mailer: b4 0.14.2
 
-This converts the PCM3008 driver to look up the GPIO lines
-using descriptors.
+The current code for the IRQ in pcm6240 makes no sense:
+it looks up an IRQ with of_irq_get(), treat it as a GPIO
+by issuing gpio_request(), gpio_direction_input()
+and gpio_to_irq() on it.
 
-Apparently there are no in-tree users of the platform data
-struct, so users need to adopt.
+This is just wrong, if the device tree assigns the IRQ
+from a GPIO number this is just incorrect: it is clearly
+stated that GPIO providers and IRQ providers are
+orthogonal.
 
-New users can associate the GPIO lines with the platform
-device "pcm3008-codec".
+It is possible to look up an IRQ to a corresponding GPIO
+line but this is taking an IRQ and pretending it's a
+GPIO, which is just semantically wrong.
+
+Drop the offending code and treat the IRQ that we get
+from the device tree as any other IRQ, see for example
+other codec drivers.
+
+The DT bindings for this codec does not have any in-tree
+DTS files, which may explain why things are weird.
+
+As a bonus, this moves the driver away from the legacy
+<linux/gpio.h> include.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- sound/soc/codecs/pcm3008.c | 61 ++++++++++++++++++++++++----------------------
- sound/soc/codecs/pcm3008.h | 19 ---------------
- 2 files changed, 32 insertions(+), 48 deletions(-)
+ sound/soc/codecs/pcm6240.c | 28 +++++++---------------------
+ sound/soc/codecs/pcm6240.h |  7 +------
+ 2 files changed, 8 insertions(+), 27 deletions(-)
 
-diff --git a/sound/soc/codecs/pcm3008.c b/sound/soc/codecs/pcm3008.c
-index 09c6c1326833d66dd12c60ff243c9bd9ffda36d9..d3d2e7f40170c8335f5f8ca4d20863accb638c61 100644
---- a/sound/soc/codecs/pcm3008.c
-+++ b/sound/soc/codecs/pcm3008.c
+diff --git a/sound/soc/codecs/pcm6240.c b/sound/soc/codecs/pcm6240.c
+index 4ff39e0b95b272c9c6b6f5cca50f595ae39ef056..b2bd2f172ae76e6baa7e6f4ef5fe894701ea4385 100644
+--- a/sound/soc/codecs/pcm6240.c
++++ b/sound/soc/codecs/pcm6240.c
 @@ -14,7 +14,7 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/device.h>
+ 
+ #include <linux/unaligned.h>
+ #include <linux/firmware.h>
 -#include <linux/gpio.h>
 +#include <linux/gpio/consumer.h>
- #include <linux/slab.h>
+ #include <linux/i2c.h>
  #include <linux/module.h>
- #include <sound/core.h>
-@@ -22,17 +22,22 @@
- #include <sound/initval.h>
- #include <sound/soc.h>
+ #include <linux/of_irq.h>
+@@ -2035,10 +2035,8 @@ static const struct regmap_config pcmdevice_i2c_regmap = {
  
--#include "pcm3008.h"
-+struct pcm3008 {
-+	struct gpio_desc *dem0_pin;
-+	struct gpio_desc *dem1_pin;
-+	struct gpio_desc *pdad_pin;
-+	struct gpio_desc *pdda_pin;
-+};
- 
- static int pcm3008_dac_ev(struct snd_soc_dapm_widget *w,
- 			  struct snd_kcontrol *kcontrol,
- 			  int event)
+ static void pcmdevice_remove(struct pcmdevice_priv *pcm_dev)
  {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
--	struct pcm3008_setup_data *setup = component->dev->platform_data;
-+	struct pcm3008 *pcm = component->dev->platform_data;
- 
--	gpio_set_value_cansleep(setup->pdda_pin,
--				SND_SOC_DAPM_EVENT_ON(event));
-+	gpiod_set_value_cansleep(pcm->pdda_pin,
-+				 SND_SOC_DAPM_EVENT_ON(event));
- 
- 	return 0;
- }
-@@ -42,10 +47,10 @@ static int pcm3008_adc_ev(struct snd_soc_dapm_widget *w,
- 			  int event)
- {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
--	struct pcm3008_setup_data *setup = component->dev->platform_data;
-+	struct pcm3008 *pcm = component->dev->platform_data;
- 
--	gpio_set_value_cansleep(setup->pdad_pin,
--				SND_SOC_DAPM_EVENT_ON(event));
-+	gpiod_set_value_cansleep(pcm->pdad_pin,
-+				 SND_SOC_DAPM_EVENT_ON(event));
- 
- 	return 0;
- }
-@@ -106,11 +111,13 @@ static const struct snd_soc_component_driver soc_component_dev_pcm3008 = {
- 
- static int pcm3008_codec_probe(struct platform_device *pdev)
- {
--	struct pcm3008_setup_data *setup = pdev->dev.platform_data;
--	int ret;
-+	struct device *dev = &pdev->dev;
-+	struct pcm3008 *pcm;
- 
--	if (!setup)
--		return -EINVAL;
-+	pcm = devm_kzalloc(dev, sizeof(*pcm), GFP_KERNEL);
-+	if (!pcm)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, pcm);
- 
- 	/* DEM1  DEM0  DE-EMPHASIS_MODE
- 	 * Low   Low   De-emphasis 44.1 kHz ON
-@@ -120,30 +127,26 @@ static int pcm3008_codec_probe(struct platform_device *pdev)
- 	 */
- 
- 	/* Configure DEM0 GPIO (turning OFF DAC De-emphasis). */
--	ret = devm_gpio_request_one(&pdev->dev, setup->dem0_pin,
--				    GPIOF_OUT_INIT_HIGH, "codec_dem0");
--	if (ret != 0)
--		return ret;
-+	pcm->dem0_pin = devm_gpiod_get(dev, "dem0", GPIOD_OUT_HIGH);
-+	if (IS_ERR(pcm->dem0_pin))
-+		return PTR_ERR(pcm->dem0_pin);
- 
- 	/* Configure DEM1 GPIO (turning OFF DAC De-emphasis). */
--	ret = devm_gpio_request_one(&pdev->dev, setup->dem1_pin,
--				    GPIOF_OUT_INIT_LOW, "codec_dem1");
--	if (ret != 0)
--		return ret;
-+	pcm->dem1_pin = devm_gpiod_get(dev, "dem1", GPIOD_OUT_LOW);
-+	if (IS_ERR(pcm->dem1_pin))
-+		return PTR_ERR(pcm->dem1_pin);
- 
- 	/* Configure PDAD GPIO. */
--	ret = devm_gpio_request_one(&pdev->dev, setup->pdad_pin,
--				    GPIOF_OUT_INIT_LOW, "codec_pdad");
--	if (ret != 0)
--		return ret;
-+	pcm->pdad_pin = devm_gpiod_get(dev, "pdad", GPIOD_OUT_LOW);
-+	if (IS_ERR(pcm->pdad_pin))
-+		return PTR_ERR(pcm->pdad_pin);
- 
- 	/* Configure PDDA GPIO. */
--	ret = devm_gpio_request_one(&pdev->dev, setup->pdda_pin,
--				    GPIOF_OUT_INIT_LOW, "codec_pdda");
--	if (ret != 0)
--		return ret;
-+	pcm->pdda_pin = devm_gpiod_get(dev, "pdda", GPIOD_OUT_LOW);
-+	if (IS_ERR(pcm->pdda_pin))
-+		return PTR_ERR(pcm->pdda_pin);
- 
--	return devm_snd_soc_register_component(&pdev->dev,
-+	return devm_snd_soc_register_component(dev,
- 			&soc_component_dev_pcm3008, &pcm3008_dai, 1);
+-	if (gpio_is_valid(pcm_dev->irq_info.gpio)) {
+-		gpio_free(pcm_dev->irq_info.gpio);
+-		free_irq(pcm_dev->irq_info.nmb, pcm_dev);
+-	}
++	if (pcm_dev->irq)
++		free_irq(pcm_dev->irq, pcm_dev);
+ 	mutex_destroy(&pcm_dev->codec_lock);
  }
  
-diff --git a/sound/soc/codecs/pcm3008.h b/sound/soc/codecs/pcm3008.h
-deleted file mode 100644
-index f7f4fbbd89db2bd4fb8d29059bf404d34d939dad..0000000000000000000000000000000000000000
---- a/sound/soc/codecs/pcm3008.h
-+++ /dev/null
-@@ -1,19 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * PCM3008 ALSA SoC Layer
-- *
-- * Author:	Hugo Villeneuve
-- * Copyright (C) 2008 Lyrtech inc
-- */
+@@ -2109,7 +2107,7 @@ static int pcmdevice_i2c_probe(struct i2c_client *i2c)
+ 		ndev = 1;
+ 		dev_addrs[0] = i2c->addr;
+ 	}
+-	pcm_dev->irq_info.gpio = of_irq_get(np, 0);
++	pcm_dev->irq = of_irq_get(np, 0);
+ 
+ 	for (i = 0; i < ndev; i++)
+ 		pcm_dev->addr[i] = dev_addrs[i];
+@@ -2132,22 +2130,10 @@ static int pcmdevice_i2c_probe(struct i2c_client *i2c)
+ 
+ 	if (pcm_dev->chip_id == PCM1690)
+ 		goto skip_interrupt;
+-	if (gpio_is_valid(pcm_dev->irq_info.gpio)) {
+-		dev_dbg(pcm_dev->dev, "irq-gpio = %d", pcm_dev->irq_info.gpio);
 -
--#ifndef __LINUX_SND_SOC_PCM3008_H
--#define __LINUX_SND_SOC_PCM3008_H
+-		ret = gpio_request(pcm_dev->irq_info.gpio, "PCMDEV-IRQ");
+-		if (!ret) {
+-			int gpio = pcm_dev->irq_info.gpio;
 -
--struct pcm3008_setup_data {
--	unsigned dem0_pin;
--	unsigned dem1_pin;
--	unsigned pdad_pin;
--	unsigned pdda_pin;
+-			gpio_direction_input(gpio);
+-			pcm_dev->irq_info.nmb = gpio_to_irq(gpio);
+-
+-		} else
+-			dev_err(pcm_dev->dev, "%s: GPIO %d request error\n",
+-				__func__, pcm_dev->irq_info.gpio);
++	if (pcm_dev->irq) {
++		dev_dbg(pcm_dev->dev, "irq = %d", pcm_dev->irq);
+ 	} else
+-		dev_err(pcm_dev->dev, "Looking up irq-gpio failed %d\n",
+-			pcm_dev->irq_info.gpio);
++		dev_err(pcm_dev->dev, "No irq provided\n");
+ 
+ skip_interrupt:
+ 	ret = devm_snd_soc_register_component(&i2c->dev,
+diff --git a/sound/soc/codecs/pcm6240.h b/sound/soc/codecs/pcm6240.h
+index 1e125bb97286030f7e6006970d0be9f40348e952..2d8f9e798139ac7df30606c0e5381a7b24d84728 100644
+--- a/sound/soc/codecs/pcm6240.h
++++ b/sound/soc/codecs/pcm6240.h
+@@ -208,11 +208,6 @@ struct pcmdevice_regbin {
+ 	struct pcmdevice_config_info **cfg_info;
+ };
+ 
+-struct pcmdevice_irqinfo {
+-	int gpio;
+-	int nmb;
 -};
 -
--#endif
+ struct pcmdevice_priv {
+ 	struct snd_soc_component *component;
+ 	struct i2c_client *client;
+@@ -221,7 +216,7 @@ struct pcmdevice_priv {
+ 	struct gpio_desc *hw_rst;
+ 	struct regmap *regmap;
+ 	struct pcmdevice_regbin regbin;
+-	struct pcmdevice_irqinfo irq_info;
++	int irq;
+ 	unsigned int addr[PCMDEVICE_MAX_I2C_DEVICES];
+ 	unsigned int chip_id;
+ 	int cur_conf;
 
 -- 
 2.48.1
