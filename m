@@ -1,88 +1,105 @@
-Return-Path: <linux-gpio+bounces-17551-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17552-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F7D1A5F90F
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 15:53:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F597A5F9F1
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 16:31:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F340616F230
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 14:53:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91A3B19C4FFA
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 15:31:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F3382686A5;
-	Thu, 13 Mar 2025 14:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765B6269D1A;
+	Thu, 13 Mar 2025 15:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlk75RX4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smpKKLRw"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC397126C1E;
-	Thu, 13 Mar 2025 14:53:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A90026A0D0;
+	Thu, 13 Mar 2025 15:29:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741877592; cv=none; b=EgdmLkew8yPkINVLAPKfI8XXrglktUXBKBjGqxVjTKr4XpDzyOJRn/XfH5pk6J78MYtU2Zav1ZPNLTCUmessy+JT0TFk8dTxve6oSckPPD8knEfmKqvcsO9MHI2/m7iNBHnWtYrdqbW4BX2hAmPP6YUCwtv3/R6eESbLcR5oNKc=
+	t=1741879767; cv=none; b=t52dB/Yuvp1PaziCY+dhJ1N93Bz1N7hNHKKek7PUzPcAHs+q4m5yfZmZRvAZevZnNq4VagpmaTuIZ6jXj8e0KFPLkR0Ufv+RWn2vHvpSgf4icCeodd8D9bGKRFPNYnxBDC6eXZGfm3xmN7bpkdJz3yFKN/uuiSmVuJlrOq79Zk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741877592; c=relaxed/simple;
-	bh=w52BMGEb/zNW6DRdLAa5vip7+Q6bfilfvxV8/qdG/Ak=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Mb3E5Mt2Zi0arT7cWVva/w6YOThhNxFwb8Hn4MQuJWFMVnlT3sm99ylNpsAeSbBK7LzCoasD3UwnC59ee/xIDHQlWoHYK/gR1dgMTmvtpkHkaxGxDVVz4quWnskvfOXsaQvhD3RpjI+n9DdH04ewuSH3GXVbUejwHGAhJutL3XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlk75RX4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4519BC4CEDD;
-	Thu, 13 Mar 2025 14:53:07 +0000 (UTC)
+	s=arc-20240116; t=1741879767; c=relaxed/simple;
+	bh=z1F/N+uyen+sKYPadxbDvEvh55FfdtiKufmg7gfJL8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tppDc4vvED6+eQgTPDfmvLhFVpY5Zy9DN701rS1HWxem0ivc+eV7S9EXlXmMZtj3Duqd1wn0Kfh6KTS9LzhLja1+IAWuUGtcjs1KR3orE/H5ZA0XKmKQn84sEyQmSuJs06/lr2z0+f+NmWKIW0WxpSv9yYlP42w6E+WAzB67rMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smpKKLRw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7179C4CEDD;
+	Thu, 13 Mar 2025 15:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741877591;
-	bh=w52BMGEb/zNW6DRdLAa5vip7+Q6bfilfvxV8/qdG/Ak=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=dlk75RX4BJJymKAK8ib8Bfq9GxVJVC5iw3D4UtFdjm3m2z8Pg2Q0X5iVmpCQ0sOnh
-	 uCT6cH49pKZGgqc62hABR3U7O1RQ5siUeNePNUP6Rq0fBAdTqYIriSK/ZoNx4Ai4ea
-	 pXhb/F+3VhgbaATFUYtUDKS6Ma968EHvM7riUwkHra5//pnsNNS/3akhiVw7GGCOIi
-	 aL+xpG5U+UgWe8c3YYiaykJg8kZhQDlU6Mxg501HsmyBYhfpBOeQaJSNZEc+Bxt5a7
-	 tAzNeP3CJQrOG15HT62bQh47ak3koZanZsE9XgkKjU7/pDnDSC8NiiVpSAsfhq1/B3
-	 EOlmQNs44gKaw==
+	s=k20201202; t=1741879766;
+	bh=z1F/N+uyen+sKYPadxbDvEvh55FfdtiKufmg7gfJL8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=smpKKLRwdX+gAfBcRd2DR093HqdYCRagRFXKRMiEUQhQQW6yEfyq0+zNf21V/HcOF
+	 QoZ15W3A/eGWCWrseJNV8gFs6rLyRzSSlhFgtLszBMmaI6uMbJ0oF2jIfpADOLmPyG
+	 2XlJK8Z7zeVjkZex0RSJ9owzaoqSWysX7sjj/PJ+z0QJ3R6CR+45xkGS0khu0jo5he
+	 y7vUe5Md/b9+aaL6nw0Ybq8N22z+NmDDc0k+S+RUTyrp7brnEdQquCVsJcUdsnZty9
+	 ouJJ+cHesTccyWAYSUNnavpORIBS/MRGFZ2Bbfm714dgtkSckdY6ITmn0BIU1PSwCn
+	 7PdOUts+as7+g==
+Date: Thu, 13 Mar 2025 15:29:21 +0000
 From: Lee Jones <lee@kernel.org>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
- claudiu.beznea@tuxon.dev, mturquette@baylibre.com, sboyd@kernel.org, 
- arnd@arndb.de, Ryan.Wanner@microchip.com
-Cc: dharma.b@microchip.com, mihai.sain@microchip.com, 
- romain.sioen@microchip.com, varshini.rajendran@microchip.com, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <9656d46ee0255b9aba404d77d2d204376a9cb248.1736522006.git.Ryan.Wanner@microchip.com>
-References: <cover.1736522006.git.Ryan.Wanner@microchip.com>
- <9656d46ee0255b9aba404d77d2d204376a9cb248.1736522006.git.Ryan.Wanner@microchip.com>
-Subject: Re: (subset) [PATCH v6 3/3] dt-bindings: mfd:
- atmel,sama5d2-flexcom: add microchip,sama7d65-flexcom
-Message-Id: <174187758697.3701280.18234838828113464973.b4-ty@kernel.org>
-Date: Thu, 13 Mar 2025 14:53:06 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Bamvor Jian Zhang <bamv2005@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Keerthy <j-keerthy@ti.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: Re: (subset) [PATCH v2 01/15] leds: aw200xx: don't use return with
+ gpiod_set_value() variants
+Message-ID: <20250313152921.GB3645863@google.com>
+References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
+ <20250220-gpio-set-retval-v2-1-bc4cfd38dae3@linaro.org>
+ <174130146134.987559.8662566490718210141.b4-ty@kernel.org>
+ <CAMRc=MdQcxtXMUCt00=JbGY47cMMWcW8=r3-ZrMKjQkViqnxvA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-510f9
+In-Reply-To: <CAMRc=MdQcxtXMUCt00=JbGY47cMMWcW8=r3-ZrMKjQkViqnxvA@mail.gmail.com>
 
-On Fri, 10 Jan 2025 08:25:42 -0700, Ryan.Wanner@microchip.com wrote:
-> Add flexcom binding documentation for sama7d65.
+On Fri, 07 Mar 2025, Bartosz Golaszewski wrote:
+
+> On Thu, Mar 6, 2025 at 11:51 PM Lee Jones <lee@kernel.org> wrote:
+> >
+> > On Thu, 20 Feb 2025 10:56:58 +0100, Bartosz Golaszewski wrote:
+> > > While gpiod_set_value() currently returns void, it will soon be converted
+> > > to return an integer instead. Don't do `return gpiod_set...`.
+> > >
+> > >
+> >
+> > Applied, thanks!
+> >
+> > [01/15] leds: aw200xx: don't use return with gpiod_set_value() variants
+> >         commit: 5d5e2a6f15a6c5e0c431c1388fd90e14b448da1e
+> >
 > 
-> Consolidated entries into one enum to match proper coding style.
+> Hi Lee!
 > 
-> 
+> Can you please drop it from your tree? You acked v1 of this patch
+> after I had already sent v2 (this patch remained unchanged) folded
+> into a respin of the bigger GPIO series that had triggered build bots
+> to point this issue out in the first place. I picked the entire series
+> up and this commit is already in next as
+> 129fdfe25ac513018d5fe85b0c493025193ef19f.
 
-Applied, thanks!
+Unapplied, thanks.
 
-[3/3] dt-bindings: mfd: atmel,sama5d2-flexcom: add microchip,sama7d65-flexcom
-      commit: c37ee2ed38391eef476fea6af8eccd0d31f5ed98
-
---
+-- 
 Lee Jones [李琼斯]
-
 
