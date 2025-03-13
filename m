@@ -1,163 +1,109 @@
-Return-Path: <linux-gpio+bounces-17527-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17528-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADEBBA5F44D
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 13:25:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBDEDA5F531
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 14:04:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2D3F17E7F3
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 12:25:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AED573BFAE2
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 13:04:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68AF12676E0;
-	Thu, 13 Mar 2025 12:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27856267B76;
+	Thu, 13 Mar 2025 13:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e3846Q+V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3n7WI2+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FB22676D2;
-	Thu, 13 Mar 2025 12:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920BA267B13;
+	Thu, 13 Mar 2025 13:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741868724; cv=none; b=G68H22ObCfAklP6ef9fCA+ncorE23RXXBTHlAkdY+rOF8r9PyjIP9/DlespMK+7NSAfWHOfoznmVhFd10G/g2j5yRMak3rre0LalB4wakEoYHwoY+/rp6HmMEwelo2mmzwR83vzrJICTeQDVzZUgvpuzJeHHdZMmeHk/IXorqZM=
+	t=1741871024; cv=none; b=Xa2vtqLJL5L+pnMi7JHf0IOiLX2IiVTj/mgyh+ANN2sFRaCMn3Hfoi17oAfhPR4B2JpM3iEpERUUBEYyh8XCwigfw8gjjNxLxqI21UZkMh3Uo6caTwO1XXMMR4W+Gq/tYZC8OKyzfZXZXmFme6JlXQGbnXb4plDmTNmO4Tpbg/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741868724; c=relaxed/simple;
-	bh=qtso+QylSCMYkJlmOyQHdWoGgp+Hq5bh4XDeml5Lx2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YEkoYHiA6/rJzC1XZvfYVoWHqcAV0gApLICDXTzKHLXr505mvam1Q0tj/JO28Wum/QbxeYkcXudN6nXcBVCb9ukXE3ANGjxsQLfOUkJkK+kOc2GQmiUKOkam3PN+hKLZncP+PJYEjei9FjbaEO1lutCed5sTa1/nQeCEOAuBKM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e3846Q+V; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741868723; x=1773404723;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qtso+QylSCMYkJlmOyQHdWoGgp+Hq5bh4XDeml5Lx2c=;
-  b=e3846Q+V9eH+jFV1iYyf15u7w/aywF2EfzRmFBs914lP6NaWi/zKelcs
-   GRAK2C6tVJIcMHz+8jY4ozB87tiRPxL7hfMNsJudTjWAhEng7tS5ZKMKi
-   UAn13nZq6Tn9hIkxFW6RIAyAFLg6fZe4KrtnOkvVPxHNJfTEBlkE32/hx
-   /7HFs53Ub57dGeHO63nKiD/xP4su7j/AyVT/mRv3Ib4g6bMjFQYlsHwRe
-   GA2h3CCLN9H+xUmFkG2ADdWsq7/vFRjZRxg/jhLCTDx5PSHXxNCHcGPoa
-   DA3AsXyXV5sWT44k5NjI6oJo9rhGqxwIaA22D7oVmFWQlahzTUrgVASUL
-   w==;
-X-CSE-ConnectionGUID: KFsSEPxuREictRu/Wwx/hA==
-X-CSE-MsgGUID: tEslKlfHQ9OahTgGAihn/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="43113244"
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="43113244"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 05:25:22 -0700
-X-CSE-ConnectionGUID: KGpsUbEJQs2MVyUdlNP4KA==
-X-CSE-MsgGUID: BX9hJvZwTXqJh109+wTkSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="151782413"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 05:25:12 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 004C311F96E;
-	Thu, 13 Mar 2025 14:25:09 +0200 (EET)
-Date: Thu, 13 Mar 2025 12:25:09 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, Taniya Das <quic_tdas@quicinc.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Javier Carrasco <javier.carrasco@wolfvision.net>,
-	Ross Burton <ross.burton@arm.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Zhi Mao <zhi.mao@mediatek.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Dongcheng Yan <dongcheng.yan@intel.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Ihor Matushchak <ihor.matushchak@foobox.net>,
-	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: Re: [RFC PATCH v2 06/16] dt-bindings: media: i2c: max96717: add
- support for MAX96793
-Message-ID: <Z9LOpR5yiILj6KsT@kekkonen.localdomain>
-References: <20250309084814.3114794-1-demonsingur@gmail.com>
- <20250309084814.3114794-7-demonsingur@gmail.com>
+	s=arc-20240116; t=1741871024; c=relaxed/simple;
+	bh=cSyffy+PWmVQesGeNOfjRD3854cMxOy2XIo3+guxtEk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nSpF6ydcVzqrFewG8iJvKy9K8bXE5fSTuSU9I7GhLr1wVttOh9vJaA/UASPTIrXtWw7sGDB6+K00BVcMisNgVbooyyuVjwEj2ObwvlhsVOZLDVg6Wi0IBJpcVzWLYhYzshzmjypd4aMwBlI86rEX5kLgJSx41Bzxgjr3CrFXRMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3n7WI2+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6E8C4CEDD;
+	Thu, 13 Mar 2025 13:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741871024;
+	bh=cSyffy+PWmVQesGeNOfjRD3854cMxOy2XIo3+guxtEk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=W3n7WI2+kNBRhRstzjeL3M06/rCnf1LzWx2YyBLD01j8VmFJANn56CrImwA8yW2+T
+	 S0sch8ELktEv1lgKKdJE8batVk23w+yl7Go8YUO4NPYFP3oR+x6ZlO7uJb/jlanFvX
+	 S7ZjZTXv/idYIrZSik396jx+G+Yrzt4aKXk/agPeTHfga4jUvCgUIBaYVPj9qEB7u9
+	 zFE7QK8bZEplyvWlCoOpYD10A3xrxtVXiRkIZRvB6lxI7GnFZqr67QFT9R/jWP/dS4
+	 BRO2/qxom67N+cLtVTodyDfZllKLzMgiaZThXp0n9imUIQcuY7xDNHmMOvwHFRcqNF
+	 SCzy9gFfTB/iA==
+From: Lee Jones <lee@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+ Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, 
+ Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Robin Murphy <robin.murphy@arm.com>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-arch@vger.kernel.org, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+ linux-mtd@lists.infradead.org
+In-Reply-To: <20250221-rmv_return-v1-15-cc8dff275827@quicinc.com>
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+ <20250221-rmv_return-v1-15-cc8dff275827@quicinc.com>
+Subject: Re: (subset) [PATCH *-next 15/18] mfd: db8500-prcmu: Remove
+ needless return in three void APIs
+Message-Id: <174187101580.3629935.6842247156301298100.b4-ty@kernel.org>
+Date: Thu, 13 Mar 2025 13:03:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309084814.3114794-7-demonsingur@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-Hi Cosmin,
-
-On Sun, Mar 09, 2025 at 10:47:58AM +0200, Cosmin Tanislav wrote:
-> MAX96793 is a newer variant of the MAX96717 which also supports GMSL3
-> links.
+On Fri, 21 Feb 2025 05:02:20 -0800, Zijun Hu wrote:
+> Remove needless 'return' in the following void APIs:
 > 
-> Document this compatibility.
+>  prcmu_early_init()
+>  prcmu_system_reset()
+>  prcmu_modem_reset()
 > 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> Since both the API and callee involved are void functions.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> index 31fb62debdc7..02857f0364c4 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> @@ -27,6 +27,7 @@ description:
->  
->    MAX96717F only supports a fixed rate of 3Gbps in the forward direction.
->    MAX9295A only supports pixel mode.
-> +  MAX96793 also supports GMSL3 mode.
+> [...]
 
-Fits on the previous line. Same goes for some of the commit messages in the
-set: the limit is 75 characters per line.
+Applied, thanks!
 
->  
->  properties:
->    compatible:
-> @@ -36,6 +37,7 @@ properties:
->        - items:
->            - enum:
->                - maxim,max96717
-> +              - maxim,max96793
->            - const: maxim,max96717f
->  
->    '#gpio-cells':
+[15/18] mfd: db8500-prcmu: Remove needless return in three void APIs
+        commit: ccf5c7a8e5b9fe7c36d8c384f8f7c495f45c63a0
 
--- 
-Regards,
+--
+Lee Jones [李琼斯]
 
-Sakari Ailus
 
