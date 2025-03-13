@@ -1,112 +1,123 @@
-Return-Path: <linux-gpio+bounces-17518-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17519-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2112A5ED38
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 08:45:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54E76A5EDD9
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 09:20:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B8F97A790E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 07:44:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9767517BDA7
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 08:20:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC251C860E;
-	Thu, 13 Mar 2025 07:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A626D25FA2F;
+	Thu, 13 Mar 2025 08:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="BObLBsrE"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jKtdhVlm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from forward500d.mail.yandex.net (forward500d.mail.yandex.net [178.154.239.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BBA3A8D2
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Mar 2025 07:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7500D1EE013
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Mar 2025 08:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741851932; cv=none; b=hiasICaOORS86FCUYLhWgIrdEnKujwkZX02FFzIvZ2lXmSyrd200OaMa9EakbKeUZHiBoKOEJMXg6zY6bj9+OAH01eESZxCr0B5BXqb1PD4hmGO8O6yEDO00sPZo4aCHbfsXaYVlKORhTI3+UgS2JBTZHJt4ciD+G6CpRKOv+lk=
+	t=1741854043; cv=none; b=E9/vef2IODQqB3tsi8f0tEYyjPzOUITsMZDO33moFSZWlB8z+euDVMX82ESB/HmKdyAwzSMXs6AlOyoixQ0mQPtYhaPHSXfxCfLBmHR8YeczSF4C/YRMb2IKasOnB9SfNlTihWJC54CLrmV8/rEmbR5AbxPLAzDno+GYEn+eJqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741851932; c=relaxed/simple;
-	bh=w5/WVVVxyvk7Djrlb0ht2kGGIZelcHVkOyzgdm5Wnaw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JMgYJ4vCUIDp+yv4Ix6DZD3/nwqMeqCFSzGNazOK9rd8K99oDK3bhoxfMnyCx2RyTUQI+B8V/hRWt32oqLiAl42J9BRQAp/mexPtolWNZ6RLZyrGeh1kswNKC9+aKpThan53SSi7yGus/GKrXQq31bE34mLf+mrnCQ4U3GNkJfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=BObLBsrE; arc=none smtp.client-ip=178.154.239.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
-Received: from mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net [IPv6:2a02:6b8:c43:c14:0:640:86a6:0])
-	by forward500d.mail.yandex.net (Yandex) with ESMTPS id C32D86115D;
-	Thu, 13 Mar 2025 10:39:24 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id Ld7US9XLk8c0-I58P5V7m;
-	Thu, 13 Mar 2025 10:39:23 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1741851564; bh=A20s7mospYwoMutjh3srjwHTDHgDhq9CGMZZ8avn6VY=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=BObLBsrExnMTi/bHhPqAs10jRQ8DLdTt0d682boseMKsVfKKWoeVRGZ8Cu0jsZCAu
-	 8JygciM7EZZe0M4/VXrpvTKtlvBcFD/WYbmoHf0/w3cVaGG5Po8dsJnDIVdlJJu47O
-	 bJczVjPpDJmlxGCX88prRKmIsRRwS8X70tS94hfo=
-Authentication-Results: mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <5372f57d61f31ac681e295964cacf2e23df3b3ed.camel@maquefel.me>
-Subject: Re: Question about ASPEED GPIO value/direction set order
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley
- <joel@jms.id.au>
-Cc: linux-gpio@vger.kernel.org
-Date: Thu, 13 Mar 2025 10:39:24 +0300
-In-Reply-To: <4878ed9cfd9ff20550cf0d9d8933ec993f4b288c.camel@codeconstruct.com.au>
-References: <3cd0fe0ff42a751fd0738dacf16badcaa8ff51fb.camel@maquefel.me>
-	 <4878ed9cfd9ff20550cf0d9d8933ec993f4b288c.camel@codeconstruct.com.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 
+	s=arc-20240116; t=1741854043; c=relaxed/simple;
+	bh=Hy+xSuVofnwueySGzw2wHE0q2UL2HSvh3hUYR0Xn/ko=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tVBaO8VUbwOcv5GkMxyFj0DFW9K/FtSrIhbMYDaajW4gZcfxvovKbrkx8yBb1I/MtkTkTd8Gg0ASwNThB31p3FmN0fgfTHKqxmohyT74WwIr+J9uZlZvO3Ge1FOhUOe2B/cwJz/QGpH0JFtb9RIxKI34Hep8trjUSuSokrB/sy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jKtdhVlm; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso5508285e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Mar 2025 01:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741854039; x=1742458839; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lNbTO5TjicLjBY2S6bO59mh/PAXU4LLxrsvGBXuMbkE=;
+        b=jKtdhVlmMwPyE2+sppV3ay+nJcv+9tPETYnXdKA9fmcG1Gs0fFpC2koFTNVHhyxvLT
+         E5zCacAOaCLUZ1aVWjhv0ME96TbKnOv7BgoQ6KEs8ZqNwcephA4prbe6jms1w3Lt5KcL
+         UN+1Qfv8Yf1ruROCb+54956b5G0WRUUeZjBnzvOBugpsIqYJCpLLvEQu27VE/6D3Z2Kx
+         jfH1SCihNWkaR3V5oaNU0LJS8dm0CxCpS+wFylMKQqMSoQMEjg2q1BSmT23RyyOCFXU1
+         U5n+kdt3BMVjlrHO2BqHGexQY6jbCxTNWBJXSZ2pqsLUuT+Nb+J7VDpE6Ar1t4ZPiOgh
+         +Qgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741854039; x=1742458839;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lNbTO5TjicLjBY2S6bO59mh/PAXU4LLxrsvGBXuMbkE=;
+        b=bz8D/9fEGCyy3W3+5As2DzFychViY80vdjCLltvkzFHs/GQFp4zIA+AqdZEB+jtZ/M
+         FKY+EEveDbdwNfQjpZgPJJIbnlJaUx+7eiIUw+ReedOnd57o06mETIYP2bE7uJ27FvNT
+         ln7IOSZJku2+FZjnlzgH3i262WsSXEI0jEOxG2OVekvpDYwP8BNV1eQ2zG3LnuDdrA+9
+         IN09pZEV5sdOaaBQJnWRGiKKDpI8Z7NTSD7wW756zP/kznpUqQFbqtPV0SHfgcQoZvd2
+         TRNDbwWWS/G/S7nm7C5eQgj90sYgfo84zztRyjysTKCprbpsSmduCaQ7rrP6tqrC4Nbt
+         3gjA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0waesRbiU/4dbsBaTDaS0dZHVzgtg8QYLEv+R0AEbbNqW50+vu4xMkHrf1u8fYpcUwDu4jSdCaRC7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxW2JC7FFxkPtFpz0AOwq3JlZb5YWhRIOY+uwOW5JLwZ4E56RG
+	JnPvvouM19A1l0Z/RXuvSKi7eiqZ/+AC95GAdUX5r3mrKtAXfyFY5DzzOOqIrVI=
+X-Gm-Gg: ASbGnctJhOCcg+uOvIiP0JSuv4bi+yapNJ0STWpTuZ/L1ng0j6G6xUeWQdTxssvR5h6
+	OCtBNgZgRtmmiEH4tUzYPO7LTDRzh6zWXcanexyfrk2lOrOFkGOMPKeHETeri4ky2gXH2NP9Ed/
+	eqkE3dWqhPpy/OANaPllzmA07cvlXYg8jL/XkJ/8M46oVrAKnhvnMcJ1Q/KumL592IxYSaUXqUo
+	1Mt13lLaPhuQBOTT/KUqBBN/kA4Qzz1AT59sHVuv0DmXlrNJvCJcfyA2plrf+2NwHzoyw0wsmfn
+	Ic0Ac7vrQLveCVz0x9nvhyDVGVE8TWXyoAxI3o2hs4N2QKijPTXajno=
+X-Google-Smtp-Source: AGHT+IGrcDtQowxkrSkzeof6W2aS9uYKvk3LTW2BB4YIJuRbMAtEH7ewNad2BvzkhFhHtn4QOTOMdA==
+X-Received: by 2002:a05:600c:3554:b0:43c:fffc:787b with SMTP id 5b1f17b1804b1-43cfffc7b0fmr139852135e9.12.1741854039440;
+        Thu, 13 Mar 2025 01:20:39 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:90f7:ca4b:a5e1:8693])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d0a8d068esm45070275e9.33.2025.03.13.01.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 01:20:39 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Genes Lists <lists@sapience.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] gpiolib: don't check the retval of get_direction() when registering a chip
+Date: Thu, 13 Mar 2025 09:20:36 +0100
+Message-ID: <174185403526.7115.15257225871449545065.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250311175631.83779-1-brgl@bgdev.pl>
+References: <20250311175631.83779-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Andrew, thank you for quick answer.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The reason i am asking this is that in QEMU the first time we set pin,
-all below if (diff) in aspeed_gpio_update() won't be triggered due to
-direction is set after the value itself (so no qemu_set_irq()
-triggers):
 
-https://elixir.bootlin.com/qemu/v9.2.2/source/hw/gpio/aspeed_gpio.c#L314
+On Tue, 11 Mar 2025 18:56:31 +0100, Bartosz Golaszewski wrote:
+> During chip registration we should neither check the return value of
+> gc->get_direction() nor hold the SRCU lock when calling it. The former
+> is because pin controllers may have pins set to alternate functions and
+> return errors from their get_direction() callbacks. That's alright - we
+> should default to the safe INPUT state and not bail-out. The latter is
+> not needed because we haven't registered the chip yet so there's nothing
+> to protect against dynamic removal. In fact: we currently hit a lockdep
+> splat. Revert to calling the gc->get_direction() callback directly and
+> *not* checking its value.
+> 
+> [...]
 
-aspeed # gpioset 0 8=3D1
-aspeed_gpio_write offset: 0x1c value 0x100
-aspeed_gpio_write offset: 0x0 value 0x100       <-- VALUE
-aspeed_gpio_write offset: 0x4 value 0x100       <-- DIRECTION
+Applied, thanks!
 
-And i doubted if it's a QEMU or Linux driver flaw.
+[1/1] gpiolib: don't check the retval of get_direction() when registering a chip
+      commit: 0102fbf52b93e609fec0dab53b1fb4fe69113f5e
 
-Thank you for the clarification!
-
-On Thu, 2025-03-13 at 16:51 +1030, Andrew Jeffery wrote:
-> Hi Nikita,
->=20
-> On Tue, 2025-03-11 at 15:40 +0300, Nikita Shubin wrote:
-> > Hi Joel and Andrew !
-> >=20
-> > I am observing "strange" behaviour when pin direction is set AFTER
-> > the
-> > value itself:
-> >=20
-> > ```
-> > aspeed_gpio_dir_out:
-> >=20
-> > __aspeed_gpio_set(gc, offset, val);
-> > gpio->config->llops->reg_bit_set(gpio, offset, reg_dir, 1);
-> > ```
-> >=20
-> > Is this as intended ?
->=20
-> Yes; you tend to set the value only when using the GPIO for output,
-> and
-> by setting the value before setting the direction, we avoid the
-> potential value glitch which occurs under the opposite order.
->=20
-> Andrew
->=20
-
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
