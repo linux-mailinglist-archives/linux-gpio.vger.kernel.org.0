@@ -1,130 +1,165 @@
-Return-Path: <linux-gpio+bounces-17530-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17531-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1B6BA5F71F
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 15:00:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA1BAA5F77A
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 15:19:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC90B19C21A6
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 14:00:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03C92420B5B
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 14:19:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6F5911CA9;
-	Thu, 13 Mar 2025 14:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE94B267F66;
+	Thu, 13 Mar 2025 14:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZJJeY8A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/J0MeeR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00C426770E;
-	Thu, 13 Mar 2025 14:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D22842077;
+	Thu, 13 Mar 2025 14:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741874408; cv=none; b=kpYTei+y2ea8wkgNaBqGbvXZ72M7mGO5c+skQIgS/Y2MLXysJIzeMRXs9yY7QMGKdChM3xqtstYVkHkrQZDHxI9VNC3yKcDANyErOllfl3eydgUFtJk/Sy3QfRU9UWSwXxJ1WvNkjP4mLqjlJ+q85T+mCK2FNTEpz4Uvc/yzMuI=
+	t=1741875557; cv=none; b=DmtRPO1uWQS3xmMTqsPqYSfSk6oeyylKdOu5ZjY9ubqEIdzS0NfyNxTh2F1Dzb3pm77VJdHV5gOklcKtf+Di+UQWk6dl3YCYhNfj+G3wShxXaYkeAnpdpngskvUfeD4VitLw1/lcNr0VDIDV9K67Ail2oZy8T4IG+cGim5AyAJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741874408; c=relaxed/simple;
-	bh=sUVQ7XZyhgDlaxx4SkEh499D6uLm9wuMV2Qxd21NbIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ekc9tDYKAj5//rC2cBS2krkTRUwxp+CK12e/V3Hsd8xZByxA75tbMiPAsuDs7qtSSmraGhPumx3oxDUTJ7y9FGYsBDlcodO0TfqbXgIBjBzgCKM4AXXNqfm4V5yYsN8dVc473L92dIB08thX/wBg7P2EYb26edAIC19uNUX7tjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZJJeY8A; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741874407; x=1773410407;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sUVQ7XZyhgDlaxx4SkEh499D6uLm9wuMV2Qxd21NbIY=;
-  b=nZJJeY8AwXAC3tJ9QerQsJX9XSUpP5mp11wnGZ7WLc0grvWbWG0/Ah4a
-   g/mhyD7W46DTnkGcsaCB5lFy+ILijTibzShKHhlZh3zSdtioOZfOL8xts
-   OVRKxIe9MC1Lz1ffQsMpMCwa0/KkrTNRUN15OW7LGFZJqZBChNUrEugKP
-   m+XGy32qaeySQRZ7EhmnW2yfkpb2muRaLd89z+bYVU8tipVdwMabyW7E/
-   vAfT4RDU4VFnAzO28KZ4JaPqvQQmvlqFfW3ekRbKuVjIRV19ZnduJVoQG
-   cdjSrZKRXHhJ0QX2VFRTHaBBsQgxi8fAjMQGFY0PLrH2UZMLeH629trMn
-   A==;
-X-CSE-ConnectionGUID: 7OYyNStwT82I0BFGz3Xpnw==
-X-CSE-MsgGUID: Rh5ebv9oTAuApUXZVjQG7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="42241543"
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="42241543"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:00:06 -0700
-X-CSE-ConnectionGUID: XsgXMK46TvO1CDi73/STDg==
-X-CSE-MsgGUID: lFO0idrySbibY47t/qecbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="120953904"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:00:05 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tsj6P-00000002C2v-2hJi;
-	Thu, 13 Mar 2025 16:00:01 +0200
-Date: Thu, 13 Mar 2025 16:00:01 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
-	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] gpio: elkhartlake: depend on
- MFD_INTEL_EHL_PSE_GPIO
-Message-ID: <Z9Lk4e_09UbGFnid@smile.fi.intel.com>
-References: <20250307052231.551737-1-raag.jadav@intel.com>
- <20250307052231.551737-3-raag.jadav@intel.com>
- <Z8_aJqNKK9AgBnK8@black.fi.intel.com>
- <Z9FpU0Ik_4yCU9XB@smile.fi.intel.com>
- <Z9G-RSfcRmALtgJe@black.fi.intel.com>
- <Z9HTU2BlXIa95S0V@smile.fi.intel.com>
- <Z9KjIAMfRIegA2vI@black.fi.intel.com>
+	s=arc-20240116; t=1741875557; c=relaxed/simple;
+	bh=1hmYFCYRlnFEnOVA+8j1hptv02veyE2YwfRsJCXsjL4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OjEBwA8btYYPvaIgg9n5EG2bIFc7ysQglQBouN8ZX1yao1GZWGK/DICIjuS+pm4+7JLpfpdp2ZvhDvcWKlc/UxJU0Ev1uOj4EfeJ+rucQlh48W8H/jPGDt1C6HvL6S/FokvzZBXCAyH16LMVG2ek6En5Bl7a5/86ltxpTzqPnDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/J0MeeR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 44272C4CEEB;
+	Thu, 13 Mar 2025 14:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741875557;
+	bh=1hmYFCYRlnFEnOVA+8j1hptv02veyE2YwfRsJCXsjL4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=T/J0MeeRFpV6kuvJc2wFRZW5+InTiZiBs5wpHWZU9pp3uBRRL611Mvw5HUrkUdHZl
+	 T0eic7qKHXsHuFQgoIZD9Q8XWbUJcNjwVYVxbGkCoVkWqHSAFdo4qVNAykKMdVPOAR
+	 Wcku3mKRUbUcLrLcADd1aNuVkk8AM5eWn71e8T8rukykkBOBMiKJV8GEB5nIm/OQEH
+	 pjIjNSdH7Wc2ozqdLphVmmb5SwQDTOZDLINj6GJY8fl3Uhg1C+KKID1OV59ez/64Kr
+	 Y1/g780EVCdeSgtfVuRib5XDjCj5c5sX5WE8imuMn5yCjicCSZnejFw3ONUq3y1EbR
+	 D7iwETtQ91XHg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366CCC282EC;
+	Thu, 13 Mar 2025 14:19:17 +0000 (UTC)
+From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
+Subject: [PATCH 00/18] mfd: adp5585: support keymap events and drop legacy
+ Input driver
+Date: Thu, 13 Mar 2025 14:19:17 +0000
+Message-Id: <20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9KjIAMfRIegA2vI@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAGbp0mcC/x3MQQqAIBBA0avErBtQ06iuEi1Ex5qNhUIF4t2Tl
+ m/xf4FMiSnD0hVIdHPmMzbIvgN32LgTsm8GJZQRg5To6UbrL2OmGcODJLQLftZGTSO06EoU+P2
+ H61brB2w0KPRgAAAA
+X-Change-ID: 20250311-dev-adp5589-fw-e04cfd945286
+To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Liu Ying <victor.liu@nxp.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741875561; l=3601;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=1hmYFCYRlnFEnOVA+8j1hptv02veyE2YwfRsJCXsjL4=;
+ b=HO4x96uZcuESctomGU8fatWdFsgoQn9KLUeut0G8836eRXN3jvJMzSkjvrZOH486P6BzuEohr
+ QbgRIWaUh1RD8yCObB7uHdwzu2js9lzPZHXjqenm/x/MH8Whl/wHbit
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
+ auth_id=100
+X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Reply-To: nuno.sa@analog.com
 
-On Thu, Mar 13, 2025 at 11:19:28AM +0200, Raag Jadav wrote:
-> On Wed, Mar 12, 2025 at 08:32:51PM +0200, Andy Shevchenko wrote:
-> > On Wed, Mar 12, 2025 at 07:03:01PM +0200, Raag Jadav wrote:
-> > > On Wed, Mar 12, 2025 at 01:00:35PM +0200, Andy Shevchenko wrote:
-> > > > On Tue, Mar 11, 2025 at 08:37:26AM +0200, Raag Jadav wrote:
-> > > > > On Fri, Mar 07, 2025 at 10:52:28AM +0530, Raag Jadav wrote:
-> > > > > > Now that we have Intel MFD driver for PSE GPIO, depend on it.
-> > > > 
-> > > > > Andy, any guidance on GPIO?
-> > > > 
-> > > > I'm not sure what we are waiting here from me. Hadn't I reviewed your GPIO
-> > > > part already?
-> > > 
-> > > Ah, I added MFD dependency for leaf drivers after your v1 review.
-> > > So this one seems missing the tag. Can I add it?
-> > 
-> > I see, but this can be added later on.
-> > And on the second thought, do we accept the configurations
-> > when user wants to have GPIO on EHL, and doesn't care about TIO?
-> 
-> Yes, here we're making the leaf driver (GPIO) depend on MFD regardless
-> of what TIO config is.
-> 
-> > Maybe this patch is not needed after all?
-> 
-> My understanding is that GPIO should depend on MFD. Not much point in
-> adding a standalone leaf driver right?
+The adp5585 MFD driver was introduced in 6.11 adding support for gpio
+and PWM. However, the gpio part of it was already supported as part of
+the keyboard driver:
 
-Ah, indeed, we have no other means to enumerate it (as we don't have any board
-file that does direct creation of the device), this patch is correct.
+https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/input/keyboard/adp5589-keys.c#L532
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On top of that it also overlapped with my refactoring of the above driver [1]
+to drop usage of platform data and use FW properties instead.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Now, it actually makes sense for this device to be supported under MFD
+and since the "legacy" input device depends on platform data that is not
+defined anywhere the plan in this series is to add support for the
+keyboard and adp5589 devices as part of the MFD driver. Once the MFD
+driver supports all that's supported in the Input one, we drop it...
+
+For DT Maintainers:
+
+The compatible for adp5589 is part of trivial devices. To me, it makes
+sense to remove it in the patch where we drop the driver but doing so
+would result in a warning when adding the same compatible for the MFD
+bindings. Hence, I remove it in that patch. Is that ok?
+
+Uwe:
+
+In my eval board, I could see that reading the GPIO value (when
+configured as input) does not work when OSC_EN is not set. Therefore,
+commit ("pwm: adp5585: don't control OSC_EN in the pwm driver") could
+very well have a Fixes tag. However I'm not 100% sure it's a real issue
+or something special to my eval board.
+
+It would be nice if Laurent or Liu could test the PWM bits or even
+check that the above is also an issue for their platform.
+
+[1]: https://lore.kernel.org/linux-input/d1395bd61ce58b3734121bca4e09605a3e997af3.camel@gmail.com/
+
+---
+Nuno Sá (18):
+      dt-bindings: mfd: adp5585: ease on the required properties
+      mfd: adp5585: enable oscilator during probe
+      pwm: adp5585: don't control OSC_EN in the pwm driver
+      mfd: adp5585: make use of MFD_CELL_NAME()
+      dt-bindings: mfd: adp5585: document adp5589 I/O expander
+      mfd: adp5585: add support for adp5589
+      gpio: adp5585: add support for the ad5589 expander
+      pwm: adp5585: add support for adp5589
+      dt-bindings: mfd: adp5585: add properties for input events
+      mfd: adp5585: add support for key events
+      gpio: adp5585: support gpi events
+      Input: adp5585: Add Analog Devices ADP5585/89 support
+      Input: adp5589: remove the driver
+      mfd: adp5585: support getting vdd regulator
+      dt-bindings: mfd: adp5585: document reset gpio
+      mfd: adp5585: add support for a reset pin
+      pwm: adp5585: make sure to include mod_devicetable.h
+      gpio: adp5585: make sure to include mod_devicetable.h
+
+ .../devicetree/bindings/mfd/adi,adp5585.yaml       |  243 ++++-
+ .../devicetree/bindings/trivial-devices.yaml       |    2 -
+ MAINTAINERS                                        |    1 +
+ drivers/gpio/Kconfig                               |    1 +
+ drivers/gpio/gpio-adp5585.c                        |  299 +++++-
+ drivers/input/keyboard/Kconfig                     |   21 +-
+ drivers/input/keyboard/Makefile                    |    2 +-
+ drivers/input/keyboard/adp5585-keys.c              |  221 ++++
+ drivers/input/keyboard/adp5589-keys.c              | 1066 --------------------
+ drivers/mfd/adp5585.c                              |  799 ++++++++++++++-
+ drivers/pwm/pwm-adp5585.c                          |   57 +-
+ include/linux/mfd/adp5585.h                        |  153 ++-
+ 12 files changed, 1703 insertions(+), 1162 deletions(-)
+---
+base-commit: 4d395cb071a343196ca524d3694790f06978fe91
+change-id: 20250311-dev-adp5589-fw-e04cfd945286
+--
+
+Thanks!
+- Nuno Sá
 
 
 
