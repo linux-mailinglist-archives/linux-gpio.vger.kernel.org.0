@@ -1,225 +1,218 @@
-Return-Path: <linux-gpio+bounces-17554-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17555-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B33AA5FCD5
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 18:00:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1238DA5FD0C
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 18:07:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62C77189C1A7
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 17:00:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17F6B188541E
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 17:07:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6CD9268FDB;
-	Thu, 13 Mar 2025 17:00:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6512676FD;
+	Thu, 13 Mar 2025 17:07:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Q6DWMT4W"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f9YXGkic"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A469155382
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Mar 2025 17:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2B782866;
+	Thu, 13 Mar 2025 17:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741885224; cv=none; b=Bx+V9a6IWTvE/gIWJV+5N2qFrfzyPf7VNI9fVi7gSv1MrFQfuJMzXIhXNzP+A3pyCp6/pQLbyUvA5WCCLWFPhjrCYD0SqZzg/h29OC269//zAZr/1WkRDh7gjqefM3kEgthbPHvfJDZWXahwC73zIkRCfcqbZWQ943rZnPHG6pg=
+	t=1741885629; cv=none; b=DXE25jQ89o/hgBjqcnoc+1i4r4wBWC1Qzv4PGB7THIGKuTld9oHqFXFTVpTNzpoIS0QIAFu6KBAG/EyaTw/GpsrE+DYmr8g9k8EGc65sXnEcgE0+XQSl2ODygDGSpVYn/77gUwHnATR+ERc907K2AMmUx+jhzDQmZsTykZIvetc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741885224; c=relaxed/simple;
-	bh=RYxSqwzI/2EnMBRnPRSSojkRPyxDGmcJUxa+ewzJoU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dR61/7+bSNaDT6c/m9yLVjtbBJQScXjIpFG13f8e1+kMBpMqRYegp/yKZE9yaqL/j0YxbeM2rEMlyLcW9o3v3BvF5torOmTdLHRDXcxCHY2hRceLZj0vw6yU4/VO1/NOnCCERMVEPRGPBwjCo6p80hleYeQS/xHCAXnauuld1Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Q6DWMT4W; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id E223B3F68D
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Mar 2025 17:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1741885217;
-	bh=fUoJ0YlwG+ODRfDs+U2h4d0BcQxrChC2nMxkx+ZtzpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=Q6DWMT4W1QkIXBodh0etMRc2nNllX7OfxpUOhEVNhhScqdjvKGCYrKc0m7VECRDpJ
-	 rr5Nb9xFNtCH4XuYYygmz+ju32dzCka4cKFa6hWjEZaLtlJnEa0y4ZQhvHm+6+9U7n
-	 r3V8TrX7NuqLm5ifibWvocAvL02clmUGWUBCUzIzMNMv0lOEJN91lmlphANQ9W+Ude
-	 DtdYDf6Tq7/Yfyj5450uMKbyHDcvLxhHfjtrLlzitjCWNTGXC4ESGB+DPbr8gRqUzY
-	 HpGIuE0VV/T1/3wnTWQsch5Z0tEPPhtc/K7H7k1dVofRXQtNaOWDJRuiaEsivsrtXQ
-	 6IRcW8kW/rygw==
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso2084106a91.0
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Mar 2025 10:00:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741885216; x=1742490016;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fUoJ0YlwG+ODRfDs+U2h4d0BcQxrChC2nMxkx+ZtzpA=;
-        b=CdSlH4h5G26L0pl1C9APqhQkl1EIvu//HRJNEFzUcvDGoei0E7TI4RYRzYTWCSVwmx
-         c3zK6cG5SM09V5PW5W+HsLU+mKJXq00XFa1r9xhZuMn3TbEd/2TOVj36BuN6UrE4tUaU
-         gaia58nCW9qB8eGsCja4O/HvxgrOWapIAauTVqsn+kyzFJqNkRP0gZR+Ll1eaI3C1hDS
-         fam9WfR50CpGRd6aL6IF/WTkan2Z/iZtLN+BJRvagGm7LysGBSfTR1hTF6SA7IMeQG/E
-         8Gz5OiJB4328n6QllpoVwr87WHGT9OEoU1KNSmADSTi4QeGrD+jbbgswlgwh2rYBBr/Z
-         klBw==
-X-Gm-Message-State: AOJu0YweQLY3ShmT8tt9aS4NXe7dPXPqtLz3U84oykWbUfmgYsvxoFoT
-	I3PWdYSaM8OFeUOD0MpE1ild/yisG7T888TB+GpJWInbWjvkkI8AKkwgOFtNE7R9uwnrKCLyzKd
-	UHQj9tdYRqL64/ba8CHeeCMaEkJ/asceQLRSN7po58l2JsRpNFRonbK1E40aFs4YPr6ykxZIlgr
-	w=
-X-Gm-Gg: ASbGncswD1L/34SbikjrRox5PtxLsN5AWYuPLdP9S/Ztk7desbEYhQfMi9+lDaEYgwL
-	/cEgqXDs027gzPFGCz2Q1dHLplNChclyX2YAbmzKCXHLhmGaqCTAjsczjwF26xUMWMrnigqo8UN
-	YiIioClO1yBvz0S43BAAaz9xGV0GHlfF9NqsRZqbll4Oxi8ja4SiUo6hiF5N2bt5yAJIGAkDPeR
-	dj9hAFa6tRFUyEVI1WRjqVXIjdhutDP09hHIVilqAic4+VfxM5BILfI1aHDi3DD6JRBhlYXx/7l
-	XXBp5buXjYgIqV3f
-X-Received: by 2002:a05:6a00:a16:b0:736:53ce:a32c with SMTP id d2e1a72fcca58-736eb87c234mr14988256b3a.17.1741885215969;
-        Thu, 13 Mar 2025 10:00:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZKXbfIRDv2S58V3wGzrMBxEA6UOye0xO53GmJmkmtt9ccYnOJCbY4VXHrfLoqoPoutlG3VQ==
-X-Received: by 2002:a05:6a00:a16:b0:736:53ce:a32c with SMTP id d2e1a72fcca58-736eb87c234mr14988216b3a.17.1741885215540;
-        Thu, 13 Mar 2025 10:00:15 -0700 (PDT)
-Received: from localhost ([240f:74:7be:1:4ca:c54c:f4ea:3eea])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73711695ad4sm1607514b3a.132.2025.03.13.10.00.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 10:00:15 -0700 (PDT)
-Date: Fri, 14 Mar 2025 02:00:13 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/9] Introduce configfs-based interface for
- gpio-aggregator
-Message-ID: <4xyrmml7f2urxjjkeurnlus375phzhxfqej5dnzdxlrhx7jn5z@5iizxyft4cht>
-References: <20250224143134.3024598-1-koichiro.den@canonical.com>
- <CAMRc=Me9_EvVj2U-wGWjoVyH_igZBtUs1ymtE=4_r2EkSBAAcA@mail.gmail.com>
- <oedikhiegt3iqj7xg4vtfhlqxihicd7bdtaglk73q2m3c42zla@roh336fpkszm>
- <CAMRc=MeHBYngume_k-tfqEnkrkt3-axWKXKS1xkxkyH-6QFSkQ@mail.gmail.com>
- <n25f2iho3yn7ahx6isnm55g2cw5ox34rhqukhvgohzmtq22vzl@p5pptw6lw7ln>
- <CAMRc=MdPLpQTeebDPk0+5ovuFCjcpNdb3BN5c7ADAxStE08JBQ@mail.gmail.com>
+	s=arc-20240116; t=1741885629; c=relaxed/simple;
+	bh=vkOsjnIORLiASLqr6cdadJ2D+eTpDu50byGNU1MrW6g=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=rrhIEet2FVRpHepsVZvefkWbm37T7Cy0JsImdFxKVfWHZmtZwsvlnFzFV/j60aCHxDcExUGgQT2N6gblGci2MUOBjHyqL1lmq4OZFeXXhQLjVbn2viZS1BfKOdXph+2T8a3Y5gmsSv3sIEFCHE4QbWJecRuO1LJUeJHQYww64ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f9YXGkic; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D7A27442C0;
+	Thu, 13 Mar 2025 17:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741885624;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NuP7Qu6XVahPWDXCilj3JK1+JDBx3eCUFtnTEr6FYhE=;
+	b=f9YXGkicpzSQULa82kjSTsGvh/az/3b3pJHsqQIqYf90pBx+cwWb+RnOyu6KYHk9EljSNC
+	uu0P4ngdnDbwAMJqBKRgbzQq8+PzgzTdzIPYQqLKzT+fFSs0GE7YyLAdGF/kS7/qU7yfXs
+	3x70Jn2oJiD5EBzH/YmP7lD7VoUj4ypbtlfjvspLahue1fZgbMNwCXQrzkh7yrdocUbIoV
+	YXIBht0AuY2wR/FxJnY9Oy9Ks+JbY4D1JeaitU43GkhUnGE7E6zZ7fKJeltpOhPieASMnp
+	NEzIQbkBTo4OrmRk7oea+L+LL3+RqIesneYhrvLfMyMS4UYBtGL6FplbNaD1Kw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdPLpQTeebDPk0+5ovuFCjcpNdb3BN5c7ADAxStE08JBQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 13 Mar 2025 18:07:03 +0100
+Message-Id: <D8FAX4E29LZK.3VUK90WB04MV2@bootlin.com>
+Subject: Re: [PATCH v4 07/10] gpio: max7360: Add MAX7360 gpio support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-7-8a35c6dbb966@bootlin.com>
+ <Z69oa8_LKFxUacbj@smile.fi.intel.com>
+In-Reply-To: <Z69oa8_LKFxUacbj@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdekheduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Mon, Mar 10, 2025 at 06:46:25PM GMT, Bartosz Golaszewski wrote:
-> On Mon, Mar 10, 2025 at 5:28 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> 
-> [snip!]
-> 
-> Please remove unnecessary context from responses. You attached
-> hundreds of lines of stack traces here. :(
+On Fri Feb 14, 2025 at 4:59 PM CET, Andy Shevchenko wrote:
+> On Fri, Feb 14, 2025 at 12:49:57PM +0100, Mathieu Dubois-Briand wrote:
+> > Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
+>
+> ...
+> > +
+> > +	/*
+> > +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad deboun=
+ce
+> > +	 * timings and gpos/keypad columns repartition. Only the later is
+> > +	 * modified here.
+> > +	 */
+> > +	val =3D FIELD_PREP(MAX7360_PORTS, ngpios);
+> > +	ret =3D regmap_write_bits(regmap, MAX7360_REG_DEBOUNCE, MAX7360_PORTS=
+, val);
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to write max7360 columns/gpos configuration");
+> > +		return ret;
+> > +	}
+>
+> Shouldn't this be configured via ->set_config() callback?
+>
 
-Right, this will never happen. Sorry for inconvenience.
+I believe this comment has been a bit outdated by our discussion on
+using GPIO valid mask, but I believe we could not use the ->set_config()
+callback here: this callback is made to configure a single pin while the
+gpos/keypad columns repartition is global.
 
-> 
-> >
-> > Thanks, I've confirmed it. It seems I overlooked it because somehow
-> > lockdep and kasan were not enabled for a while.
-> >
-> > Assuming the v5 patch series rebased onto the latest gpio/for-next
-> > 21c853ad9309 ("gpio: adnp: use new line value setter callbacks"),
-> > the following follow-up patch should suffice.
-> >
-> > ------------8<--------------8<---------------
-> > diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-> > index df34d8fcb79a..56f0fde8c843 100644
-> > --- a/drivers/gpio/gpio-aggregator.c
-> > +++ b/drivers/gpio/gpio-aggregator.c
-> > @@ -207,7 +207,18 @@ static void aggr_free_lines(struct gpio_aggregator *aggr)
-> >
-> >         list_for_each_entry_safe(line, tmp, &aggr->list_head, entry) {
-> >                 configfs_unregister_group(&line->group);
-> > -               aggr_line_del(aggr, line);
-> > +               /*
-> > +                * Normally, we acquire aggr->lock within the configfs
-> > +                * callback. However, in the legacy sysfs interface case,
-> > +                * calling configfs_(un)register_group while holding
-> > +                * aggr->lock could cause a deadlock. Fortunately, this is
-> > +                * unnecessary because the new_device/delete_device path
-> > +                * and the module unload path are mutually exclusive,
-> > +                * thanks to an explicit try_module_get. That's why this
-> > +                * minimal scoped_guard suffices here.
-> > +                */
-> > +               scoped_guard(mutex, &aggr->lock)
-> > +                       aggr_line_del(aggr, line);
-> >                 kfree(line->key);
-> >                 kfree(line);
-> >         }
-> > @@ -926,8 +937,6 @@ static void gpio_aggr_device_release(struct config_item *item)
-> >  {
-> >         struct gpio_aggregator *aggr = to_gpio_aggregator(item);
-> >
-> > -       guard(mutex)(&aggr->lock);
-> > -
-> >         /*
-> >          * At this point, aggr is neither active nor activating,
-> >          * so calling aggr_deactivate() is always unnecessary.
-> > @@ -1072,7 +1081,8 @@ static int aggr_parse(struct gpio_aggregator *aggr)
-> >                                                         &line->group);
-> >                         if (error)
-> >                                 goto err;
-> > -                       aggr_line_add(aggr, line);
-> > +                       scoped_guard(mutex, &aggr->lock)
-> > +                               aggr_line_add(aggr, line);
-> >
-> >                         error = aggr_add_gpio(aggr, key, U16_MAX, &n);
-> >                         if (error)
-> > @@ -1101,7 +1111,8 @@ static int aggr_parse(struct gpio_aggregator *aggr)
-> >                                                         &line->group);
-> >                         if (error)
-> >                                 goto err;
-> > -                       aggr_line_add(aggr, line);
-> > +                       scoped_guard(mutex, &aggr->lock)
-> > +                               aggr_line_add(aggr, line);
-> >
-> >                         error = aggr_add_gpio(aggr, key, i, &n);
-> >                         if (error)
-> > @@ -1205,8 +1216,10 @@ static DRIVER_ATTR_WO(new_device);
-> >
-> >  static void gpio_aggregator_free(struct gpio_aggregator *aggr)
-> >  {
-> > -       if (aggr_is_activating(aggr) || aggr_is_active(aggr))
-> > -               aggr_deactivate(aggr);
-> > +       scoped_guard(mutex, &aggr->lock) {
-> > +               if (aggr_is_activating(aggr) || aggr_is_active(aggr))
-> > +                       aggr_deactivate(aggr);
-> > +       }
-> >         aggr_free_lines(aggr);
-> >         configfs_unregister_group(&aggr->group);
-> >         kfree(aggr);
-> > ------------8<--------------8<---------------
-> >
-> >
-> > * The second hunk should be squashed into
-> >   [PATCH v5 4/9] gpio: aggregator: introduce basic configfs interface
-> >
-> > * The rest of the hunks should be squashed into
-> >   [PATCH v5 8/9] gpio: aggregator: expose aggregator created via legacy sysfs to configfs
-> >
-> > If you agree with the above approach, I'll send out v6,
-> > while also addressing your feedback here:
-> > https://lore.kernel.org/all/CAMRc=MdoMKdqyzGMFDa3aMz3h=vfZ0OtwARxY7FdsPKcBu9HQA@mail.gmail.com/
-> >
-> > Koichiro
-> >
-> 
-> I won't be testing in-line diff chunks. Please, just fix these issues
-> and send a v6. Also: please do write some sort of a script to automate
-> the testing of this driver if possible. Ideally: add test script to
-> selftests.
+>
+> ...
+>
+> > +		if (irq < 0)
+> > +			return dev_err_probe(dev, irq, "Failed to get IRQ\n");
+> > +
+> > +		irq_chip =3D devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
+> > +		if (!irq_chip)
+> > +			return -ENOMEM;
+> > +
+> > +		irq_chip->name =3D dev_name(dev);
+> > +		irq_chip->status_base =3D MAX7360_REG_GPIOIN;
+> > +		irq_chip->num_regs =3D 1;
+> > +		irq_chip->num_irqs =3D MAX7360_MAX_GPIO;
+> > +		irq_chip->irqs =3D max7360_regmap_irqs;
+> > +		irq_chip->handle_mask_sync =3D max7360_handle_mask_sync;
+> > +		irq_chip->status_is_level =3D true;
+> > +		irq_chip->irq_drv_data =3D regmap;
+> > +
+> > +		for (unsigned int i =3D 0; i < MAX7360_MAX_GPIO; i++) {
+> > +			regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+> > +					  MAX7360_PORT_CFG_INTERRUPT_EDGES,
+> > +					  MAX7360_PORT_CFG_INTERRUPT_EDGES);
+> > +		}
+> > +
+> > +		flags =3D IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED;
+> > +		ret =3D devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev), regmap=
+, irq, flags, 0,
+> > +						      irq_chip, &irq_chip_data);
+>
+> Right.
+>
+> What I mean in previous discussion is to update gpio-regmap to call this =
+from inside.
+> You need to add irq_chip pointer and irq_chip_data pointer to the regmap =
+configuration
+> and if they are set (or the first one, I dunno if this is supported by IR=
+Q chip core)
+> call this function and assign domain. This should be called after GPIO ch=
+ip is
+> added, but before IRQ domain attachment.
+>
 
-Sorry for the delayed response, I've been so tied up with other tasks this
-week. Ok, I'll introduce a kselftest for gpio-aggregator. Actually I've
-wanted that from the beginning.. I believe it should rely on gpio-sim for
-convenience, but please let me know if you don't think so.
+Ok, this is a bit more clear to me now. So I came up with something, it
+will be part of the next iteration, probably during the next week.
 
-Thanks.
+This required to add a few additional fields to the gpio_regmap_config
+structure, specifying the IRQ configuration:
 
-> 
-> Bart
++ * @regmap_irq_chip:   (Optional) Pointer on an regmap_irq_chip structure.=
+ If
++ *                     set, a regmap-irq device will be created and the IR=
+Q
++ *                     domain will be set accordingly.
++ * @regmap_irq_chip_data: (Optional) Pointer on an regmap_irq_chip_data
++ *                      structure pointer. If set, it will be populated wi=
+th a
++ *                      pointer on allocated regmap_irq data.
++ * @regmap_irq_irqno   (Optional) The IRQ the device uses to signal interr=
+upts.
++ * @regmap_irq_flags   (Optional) The IRQF_ flags to use for the interrupt=
+.
+
+>
+> ...
+>
+> > +
+> > +		regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+> > +	}
+> > +
+> > +	/* Add gpio device. */
+> > +	gpio_config.parent =3D dev;
+> > +	gpio_config.regmap =3D regmap;
+>
+> > +	if (gpio_function =3D=3D MAX7360_GPIO_PORT) {
+> > +		gpio_config.ngpio =3D MAX7360_MAX_GPIO;
+>
+> Why this case can't be managed also via ngpios property? Maybe at the end=
+ of
+> the day you rather need to have another property to tell where the split =
+is?
+>
+> This will help a lot and removes unneeded sharing of ngpios here and ther=
+e.
+>
+> What I read from this code is like you are trying to put _two_in_one_ sem=
+antics
+> on the shoulders of "ngpios".
+>
+
+So as I reworked the keypad columns GPIOs, PORT GPIOs and the COL GPIOs
+are a bit more similar on this point. So far I now use a constant value
+assigned in the driver for both, as I believe there is no way the number
+of GPIOs could be a different. Yet I can easily switch back to a value
+provided by a device property.
+
+Thanks again for your review.
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
