@@ -1,78 +1,113 @@
-Return-Path: <linux-gpio+bounces-17526-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17527-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45E40A5EF6C
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 10:19:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADEBBA5F44D
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 13:25:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E2201897A30
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 09:19:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2D3F17E7F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Mar 2025 12:25:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3806F263C7C;
-	Thu, 13 Mar 2025 09:19:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68AF12676E0;
+	Thu, 13 Mar 2025 12:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fm+FYXMG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e3846Q+V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E922C80;
-	Thu, 13 Mar 2025 09:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FB22676D2;
+	Thu, 13 Mar 2025 12:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741857576; cv=none; b=cdxvLuC+uxgrjuXw5i9PKbRJa/mpFAFKiTFJJGIUd+T9gZMR93NoY4w9CMN8daEXDbnWyOar/hrZNLOT3+BFeMLEdWaBvz2AU35vDd1fAAHDf8MWpa+j5cpdOmfFITCTVZmjecftc0zhgF9fHreMgw49teE8ieP/lBINrTNIZuM=
+	t=1741868724; cv=none; b=G68H22ObCfAklP6ef9fCA+ncorE23RXXBTHlAkdY+rOF8r9PyjIP9/DlespMK+7NSAfWHOfoznmVhFd10G/g2j5yRMak3rre0LalB4wakEoYHwoY+/rp6HmMEwelo2mmzwR83vzrJICTeQDVzZUgvpuzJeHHdZMmeHk/IXorqZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741857576; c=relaxed/simple;
-	bh=5buOl5HRVkX0rlEUW5blnF61KqXtRuzagl4PFP8Z7lg=;
+	s=arc-20240116; t=1741868724; c=relaxed/simple;
+	bh=qtso+QylSCMYkJlmOyQHdWoGgp+Hq5bh4XDeml5Lx2c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GpFgDMhe/N/F7bwNaesYQu24ZRd6eU4oIkuwZ05qa8XzU938Yxgy48xDqzGFuUCpZHxqFa5spr8ttkaIsA/gqPIjsYMwiRcQyQGlL/KmsY9hwqf1BhxUfrWhrYocKQ7OGC5IfHG5BUYdd03/P7pCw9L2vorS74hleCRna0nC8+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fm+FYXMG; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YEkoYHiA6/rJzC1XZvfYVoWHqcAV0gApLICDXTzKHLXr505mvam1Q0tj/JO28Wum/QbxeYkcXudN6nXcBVCb9ukXE3ANGjxsQLfOUkJkK+kOc2GQmiUKOkam3PN+hKLZncP+PJYEjei9FjbaEO1lutCed5sTa1/nQeCEOAuBKM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e3846Q+V; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741857574; x=1773393574;
+  t=1741868723; x=1773404723;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=5buOl5HRVkX0rlEUW5blnF61KqXtRuzagl4PFP8Z7lg=;
-  b=fm+FYXMGwv7c4b3BPRdg0ugym8ih/IHO7VtNHNLatguDh32AQG17P8Ps
-   FMu+8DWJ0yOIoSLFc8t0yW4O78aSXm3fyK3oy34PfogfZo1aq0wYN2Llm
-   hU8S2m1mTi1oeGgcLs2OfkgE1iQ3qEHOLPr9dQv7u8JHDStg3ek5cG5/x
-   m+BC2Kxfl5npMVoMB1hNU2WC3vcZ5pMXGdgUidhcSr5IkPRct3Te+CSuF
-   3nSe3DRlylb5hOfqZJchWEd70VyVYPZGwm4iebOmQ/XBNCQQuwLtGPBIh
-   OEWKrnd9su5IZpeFeIocuzsl/z+l2JsWm5h/p91wn9sQz4AD32o8tL2uS
-   Q==;
-X-CSE-ConnectionGUID: DZL3+Zq+Rn2qPS94PHY5zA==
-X-CSE-MsgGUID: 6eOrnNxDSv6A85u7cx5PmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42843965"
+  bh=qtso+QylSCMYkJlmOyQHdWoGgp+Hq5bh4XDeml5Lx2c=;
+  b=e3846Q+V9eH+jFV1iYyf15u7w/aywF2EfzRmFBs914lP6NaWi/zKelcs
+   GRAK2C6tVJIcMHz+8jY4ozB87tiRPxL7hfMNsJudTjWAhEng7tS5ZKMKi
+   UAn13nZq6Tn9hIkxFW6RIAyAFLg6fZe4KrtnOkvVPxHNJfTEBlkE32/hx
+   /7HFs53Ub57dGeHO63nKiD/xP4su7j/AyVT/mRv3Ib4g6bMjFQYlsHwRe
+   GA2h3CCLN9H+xUmFkG2ADdWsq7/vFRjZRxg/jhLCTDx5PSHXxNCHcGPoa
+   DA3AsXyXV5sWT44k5NjI6oJo9rhGqxwIaA22D7oVmFWQlahzTUrgVASUL
+   w==;
+X-CSE-ConnectionGUID: KFsSEPxuREictRu/Wwx/hA==
+X-CSE-MsgGUID: tEslKlfHQ9OahTgGAihn/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="43113244"
 X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="42843965"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:19:33 -0700
-X-CSE-ConnectionGUID: /McIbDYgRE2AHQ6LGYM7bA==
-X-CSE-MsgGUID: tBR3Hcn+QQiQesms5Vxg+Q==
+   d="scan'208";a="43113244"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 05:25:22 -0700
+X-CSE-ConnectionGUID: KGpsUbEJQs2MVyUdlNP4KA==
+X-CSE-MsgGUID: BX9hJvZwTXqJh109+wTkSQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="125061786"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:19:31 -0700
-Date: Thu, 13 Mar 2025 11:19:28 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
-	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] gpio: elkhartlake: depend on
- MFD_INTEL_EHL_PSE_GPIO
-Message-ID: <Z9KjIAMfRIegA2vI@black.fi.intel.com>
-References: <20250307052231.551737-1-raag.jadav@intel.com>
- <20250307052231.551737-3-raag.jadav@intel.com>
- <Z8_aJqNKK9AgBnK8@black.fi.intel.com>
- <Z9FpU0Ik_4yCU9XB@smile.fi.intel.com>
- <Z9G-RSfcRmALtgJe@black.fi.intel.com>
- <Z9HTU2BlXIa95S0V@smile.fi.intel.com>
+   d="scan'208";a="151782413"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 05:25:12 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 004C311F96E;
+	Thu, 13 Mar 2025 14:25:09 +0200 (EET)
+Date: Thu, 13 Mar 2025 12:25:09 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	Julien Massot <julien.massot@collabora.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>, Taniya Das <quic_tdas@quicinc.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Javier Carrasco <javier.carrasco@wolfvision.net>,
+	Ross Burton <ross.burton@arm.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Zhi Mao <zhi.mao@mediatek.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Dongcheng Yan <dongcheng.yan@intel.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ihor Matushchak <ihor.matushchak@foobox.net>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+Subject: Re: [RFC PATCH v2 06/16] dt-bindings: media: i2c: max96717: add
+ support for MAX96793
+Message-ID: <Z9LOpR5yiILj6KsT@kekkonen.localdomain>
+References: <20250309084814.3114794-1-demonsingur@gmail.com>
+ <20250309084814.3114794-7-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -81,34 +116,48 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9HTU2BlXIa95S0V@smile.fi.intel.com>
+In-Reply-To: <20250309084814.3114794-7-demonsingur@gmail.com>
 
-On Wed, Mar 12, 2025 at 08:32:51PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 12, 2025 at 07:03:01PM +0200, Raag Jadav wrote:
-> > On Wed, Mar 12, 2025 at 01:00:35PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Mar 11, 2025 at 08:37:26AM +0200, Raag Jadav wrote:
-> > > > On Fri, Mar 07, 2025 at 10:52:28AM +0530, Raag Jadav wrote:
-> > > > > Now that we have Intel MFD driver for PSE GPIO, depend on it.
-> > > 
-> > > > Andy, any guidance on GPIO?
-> > > 
-> > > I'm not sure what we are waiting here from me. Hadn't I reviewed your GPIO
-> > > part already?
-> > 
-> > Ah, I added MFD dependency for leaf drivers after your v1 review.
-> > So this one seems missing the tag. Can I add it?
+Hi Cosmin,
+
+On Sun, Mar 09, 2025 at 10:47:58AM +0200, Cosmin Tanislav wrote:
+> MAX96793 is a newer variant of the MAX96717 which also supports GMSL3
+> links.
 > 
-> I see, but this can be added later on.
-> And on the second thought, do we accept the configurations
-> when user wants to have GPIO on EHL, and doesn't care about TIO?
+> Document this compatibility.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> index 31fb62debdc7..02857f0364c4 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> @@ -27,6 +27,7 @@ description:
+>  
+>    MAX96717F only supports a fixed rate of 3Gbps in the forward direction.
+>    MAX9295A only supports pixel mode.
+> +  MAX96793 also supports GMSL3 mode.
 
-Yes, here we're making the leaf driver (GPIO) depend on MFD regardless
-of what TIO config is.
+Fits on the previous line. Same goes for some of the commit messages in the
+set: the limit is 75 characters per line.
 
-> Maybe this patch is not needed after all?
+>  
+>  properties:
+>    compatible:
+> @@ -36,6 +37,7 @@ properties:
+>        - items:
+>            - enum:
+>                - maxim,max96717
+> +              - maxim,max96793
+>            - const: maxim,max96717f
+>  
+>    '#gpio-cells':
 
-My understanding is that GPIO should depend on MFD. Not much point in
-adding a standalone leaf driver right?
+-- 
+Regards,
 
-Raag
+Sakari Ailus
 
