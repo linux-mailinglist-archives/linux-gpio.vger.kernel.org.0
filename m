@@ -1,109 +1,192 @@
-Return-Path: <linux-gpio+bounces-17610-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17609-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 335B9A60F1C
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 11:36:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7539BA60F19
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 11:36:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12C927A57CA
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 10:35:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A99CB173AD5
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 10:36:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A781F5413;
-	Fri, 14 Mar 2025 10:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87FF1F473A;
+	Fri, 14 Mar 2025 10:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="omDiJGhD"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="o8Jm4H04"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA62B2F4A
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Mar 2025 10:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608361F3FD3;
+	Fri, 14 Mar 2025 10:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741948563; cv=none; b=fW7g7T4cSXuU8sVXjgc7hyK+1MmW+dXDeMYN+57DJynRIf/xulScRYeHCdOSTYUCaKdmArlUVY0m91IyF1LAmZZi8t/CYI0UwCoPHMVauvDyaXTkUYZiqCMufON/EFFqHq7Uxmws0YOTNGyj7i/fyJce5CBPAy8Jnyn+dLOTEvo=
+	t=1741948562; cv=none; b=e/J49SZXO8EktCqTCZjRCtzNq4sRhFkYU8L5KFWaqdgxZBqJ1EGfkI6IYYaDqFfz724z5C4Q6RvebgWpcucw1RGmUrTKIM2wD8NNdL09n6B/NNV+Rel4YyHgXlUNqh9+gh2mCTZNTzFNBZhe9ANKVyEp6+X7sW/Co+zuIQd7c9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741948563; c=relaxed/simple;
-	bh=oNB6/brWRYGDcdPEdCxCrOD4XLyJDxlEhSU5P3Fiuf8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jw1qem2vUf04svg8DspkoDmg7sqmPcCT7JFtm4ETSuqzWtyHDLEGQrN2MGcXVuwuMFXC/LrMADC2V89H6pYuhFo4LJrOt9u++NhiwQBjVnOs6HISMYo5kzhwjHMePzB9TuL51ZxKl0UxOeKJwQuZZNE8G2+cxXHw00MeumOrFzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=omDiJGhD; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-549b159c84cso1929657e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Mar 2025 03:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741948558; x=1742553358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PBq11ylwu5R382gZxqzXZy+KZY3NpzkBPWG/tVivh9M=;
-        b=omDiJGhDxS3+hUgKz1Y1jnh68d8j7Ok/WVf+jrxI8Ejn8Yip4r5u01KlomR63wMrOD
-         pJT0cu5XpUWXcmotKerqrpMkYZwkjmD3nqb1tNPPasnPjTUmYKDMhtQ5Ov+Ay4ETGTEr
-         cAHuDPoM3vwxx5nOC69sR8qf8fex88zpMk3765hQnpsjNqqI7FtYzuIk54SwWtOj+tAP
-         fXGoulDMTPdlvoe6WCIwA1NWxgLjgXM8OQ86jdbGaAKiNrLvNI1iuxg0s19Vkrc54mQY
-         vFT3Tag2hNGU2pKnt9jE8TbZbWpRu+LuXspJ1N1NNBK6In2S4uX3L9UbMYSiimQ7Hf8f
-         ppXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741948558; x=1742553358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PBq11ylwu5R382gZxqzXZy+KZY3NpzkBPWG/tVivh9M=;
-        b=WnD9/3bf6UScBNwSWMUnmwbQRaK0Fwrdow8+kbPp0FKX0yHCfI2dDDilF/FUlYhVUN
-         FM9afBixPfyLqf+PP697iKtjKOBLaPS8wk9n5zh4Kt6jflRRx0A9CIaVFXW5poGcsXC9
-         6q0poAP9awVqsOGf3ifo3NUHUDHayP6hZqWyTgUH4B+jDZ3XnWnqGIOMd9v4blq+ygVs
-         gJoa8i0WbD1P6lkJzH6rB2mn62fkC1XHWyiVwrG4c73Ed3UwKRNsbs2wTEA5BGVKz7+F
-         bbDxe04TkcKWPhDdnCG/ipWalSwG2it7DgTK4wNoOeqdEGjVOBpII5Q9FTGG03YZci9W
-         uErQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkwZ6hdcBWL21sGDaJ2rQgYnCLBb3EaV7WAiCi4xCi0p2zhknWix5P31AWNW9W96asxR+oJmGgqRq0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBKhI27mDQ8HUR35ZPZasWt2XqLNu7IjwqladmX7lrE7pw2QwW
-	eJywxTK22H8xfhQ3Muut8FA4tKbBUG7zn7PqBzSMYSMKqptLIkL24TSmwT/O0LfVQtUckExqf0t
-	JtO42QewOl8UFo2LLbSCajYiT7n6jn7anuHiwgA==
-X-Gm-Gg: ASbGnctJVj8kqccjFzxviTL99m4a0FPr1Rqex5KGNwJXhnGh7TmhBijK7CyglMk5xnL
-	lhTJfvOhAEj/bh9yhD4dtqIVUJCT2vrzYfNyvZV6KMaJYZHFtD5S+iN1uklPbd3uURyawv+DNFY
-	eMA3WqDq4AF0kEBiXPb6qrPPQ=
-X-Google-Smtp-Source: AGHT+IFo7a8aP8LrtXsMzS05IJF+N+ZjJx5DRyPZKzboYtcGh7BYc7nkwi3Kg4DoP3cYib1OWjtVARzILEhT3JyV8rs=
-X-Received: by 2002:a05:6512:2350:b0:545:2b24:c714 with SMTP id
- 2adb3069b0e04-549c3911e6bmr755718e87.18.1741948557930; Fri, 14 Mar 2025
- 03:35:57 -0700 (PDT)
+	s=arc-20240116; t=1741948562; c=relaxed/simple;
+	bh=LRk5FiXCZAm/QLOqWOprpG9wIHqysVDkW9SPn6Y74UY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mumjIPcPAo9afu3HhhiiffOg/B95Dn3v9c2HiyCAS64AJsZoViLlw47hRn16JloKtXqOuq96IzGq15fbALnZgafjpakyyRv+9uvjdEJXednm8Pollj/vP2l0p7bY5Dtffo41lgUdGIGtwyTi+RCHPeMARm3pO9x1ETwPVlYl1Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=o8Jm4H04; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741948558;
+	bh=LRk5FiXCZAm/QLOqWOprpG9wIHqysVDkW9SPn6Y74UY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=o8Jm4H0499PVZUsmP41hbpJxEZtW+GATf073GkU3+PVx0hzH0NaAHMax6kJ4rVO4R
+	 p7OiUuBgIMoXxI7pQALVCzDvtwFNq/Tr4yyUMtScGddFL4MBsgNm5zrscSh3t7eA7S
+	 PhSWlOTThdGgqc2sW2NL0i1AA1+WD3Es7980ZMTkQlcHnq1Q36Eph+Ny8n3DVltn8b
+	 zyHKWwtgyL4jqKWxxN9amhMZ1kTBjV50WJcKgpD4uf3wBNpdKkyt9YCE0oEn92R/dC
+	 8/RT3RrUKLY5dM+NfW1qZcWTrmLgoKztvozDvd0a5yW588jt1zRoJBgtK7YzIGWWMs
+	 yHnNmzH52vTzg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id F131717E0CA6;
+	Fri, 14 Mar 2025 11:35:56 +0100 (CET)
+Message-ID: <d4b3bc28-b96b-4b11-a99d-d3492ad19438@collabora.com>
+Date: Fri, 14 Mar 2025 11:35:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <dfc15d59-7fa9-4f96-aacb-37c3df6d420d@stanley.mountain>
-In-Reply-To: <dfc15d59-7fa9-4f96-aacb-37c3df6d420d@stanley.mountain>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 14 Mar 2025 11:35:45 +0100
-X-Gm-Features: AQ5f1JpewYNdVReOE7yOz7Jhb_-0BXB-6RAsfqpo9dfZwpZcAV2B4PUacGG94IY
-Message-ID: <CACRpkdYkvTr9ijyEVSzevHdHFDb0iJTOzCS_3gQG0eNcpR7tcw@mail.gmail.com>
-Subject: Re: [PATCH next] pinctrl: bcm281xx: Add missing assignment in bcm21664_pinctrl_lock_all()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Artur Weber <aweber.kernel@gmail.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, linux-gpio@vger.kernel.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] dt-bindings: pmic: mediatek: Add pmic documents
+To: Krzysztof Kozlowski <krzk@kernel.org>, "Lu.Tang" <Lu.Tang@mediatek.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, Chen Zhong <chen.zhong@mediatek.com>,
+ Sen Chu <shen.chu@mediatek.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-gpio@vger.kernel.org, Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20250314073307.25092-1-Lu.Tang@mediatek.com>
+ <20250314073307.25092-6-Lu.Tang@mediatek.com>
+ <19ddb133-7f11-4c1b-b0e1-91523d42040c@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <19ddb133-7f11-4c1b-b0e1-91523d42040c@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 10, 2025 at 11:48=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
+Il 14/03/25 11:32, Krzysztof Kozlowski ha scritto:
+> On 14/03/2025 08:32, Lu.Tang wrote:
+> 
+> Please use subject prefixes matching the subsystem. You can get them for
+> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+> your patch is touching. For bindings, the preferred subjects are
+> explained here:
+> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+> 
+> There is no subsystem "pmic".
+> 
+>> Add new pmic mfd and adc documents for mt8196
+>>
+>> Signed-off-by: Lu.Tang <Lu.Tang@mediatek.com>
+> 
+> Are you sure Latin transcription of your name includes '.' or you just
+> copy-paste email address?
+> 
+> 
+> ...
+> 
+>> +  - Lu Tang <lu.tang@mediatek.com>
+>> +
+>> +description:
+>> +  The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
+>> +  in some MediaTek PMICs, performing various PMIC related measurements
+>> +  such as battery and PMIC internal voltage regulators temperatures,
+>> +  other than voltages for various PMIC internal components.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - mediatek,mt6363-auxadc
+>> +      - mediatek,mt6373-auxadc
+> 
+> Just fold the device to the parent node.
+> 
+> 
+> 
+> ..
+> 
+> 
+> 
+>> diff --git a/Documentation/devicetree/bindings/mfd/mediatek,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/mediatek,spmi-pmic.yaml
+>> new file mode 100644
+>> index 000000000000..a8f1231623cf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/mediatek,spmi-pmic.yaml
+> 
+> Filename matching one of the compatibles, e.g. the oldest one.
+> 
 
-> The next line checks if this regmap_write() failed, but it doesn't
-> work because the assignment was accidentally left out.  Add the
-> assignment.
->
-> Fixes: 60d69769c851 ("pinctrl: bcm281xx: Add support for BCM21664 pinmux"=
-)
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Yeah but besides that I don't see valid reasons why this should be a different
+binding (and also why this should use a different driver, fwiw) - when it can
+most probably just extend the current PMIC MFD driver... and the same goes for
+the PMIC AUXADC: there's a mt6359-auxadc binding and driver that can be extended
+to 6363 and 6373 rather easily.
 
-Patch applied!
+There's nothing "really special" about those.....
 
-Yours,
-Linus Walleij
+Cheers
+
+>> @@ -0,0 +1,173 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mfd/mediatek,spmi-pmic.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: MediaTek SPMI PMICs multi-function device
+>> +
+>> +maintainers:
+>> +  - Lu Tang <lu.tang@mediatek.com>
+>> +
+>> +description: |
+>> +  Some Mediatek PMICs are interfaced to the chip via the SPMI (System Power
+>> +  Management Interface) bus.
+>> +
+>> +  The Mediatek SPMI series includes the MT6363, MT6373, MT6316 and other
+>> +  PMICs.Please see the sub-modules below for supported features.
+>> +
+>> +   MT6363/MT6373 is a multifunction device with the following sub modules:
+>> +  - Regulators
+>> +  - ADC
+>> +  - GPIO
+>> +  - Keys
+>> +   MT6316 is a multifunction device with the following sub modules:
+>> +  - Regulators
+> 
+> I don't get why they are in the same schema. It would result in
+> unnecessary big if:then with half of children not applicable for other
+> variants.
+> 
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - enum:
+>> +          - mediatek,mt6363
+>> +          - mediatek,mt6373
+>> +          - mediatek,mt6316
+> Sort these with alphanumeric order.
+> 
+> Best regards,
+> Krzysztof
+
+
+
 
