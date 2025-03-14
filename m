@@ -1,106 +1,110 @@
-Return-Path: <linux-gpio+bounces-17612-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEF28A60F37
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 11:41:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7073A60F59
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 11:54:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C024C7A982B
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 10:40:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 409803BAE28
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 10:53:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F18D1FA851;
-	Fri, 14 Mar 2025 10:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80C241FA272;
+	Fri, 14 Mar 2025 10:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NLY7fyiJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ts5UoW2Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD4E1F8EF7
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Mar 2025 10:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFD41FCFD4
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Mar 2025 10:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741948859; cv=none; b=qBf7WGsCO4985tDIdUiJ5/vOkMSEvLzGdNRpIDcbFPVM4ddyJZOvDugEh9VmA7bN/CYsDwxAnGnek1zm+SyrJpNK3KRUNuDf5UewgAPhbcHgHCJNnnObbnI4gbjEGDtwpKVCtEWePy4EgQ0P410YPhQMF5PcryQhkKQiescS6Vo=
+	t=1741949639; cv=none; b=XxGj7lw+gpdRjZ88ITM6M8IjLH6cUn8UYOgDExu+3GNvnUTreFGfZ0735lztj4EmIvCKeGbe3Y2/RHmtbnYIfDEU0Hhbatsl9VPUE2wb605KNMr9CpdxgSMejMtwZsAVy/R274Pc2o/lq4IgRULiPyxBxoPfQbLzzPH9z0yMvG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741948859; c=relaxed/simple;
-	bh=7Tabw9Z4bIh3i478fwUir3sqjYhIhXJXxI7g2bFV4tk=;
+	s=arc-20240116; t=1741949639; c=relaxed/simple;
+	bh=TdjrUj2ENKDpO8QMmgpWcHwmqWwffwTY4fDD4PrBuM8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UbbaV8/aScbXcg7bC8DAQO09toGq/aaK27WbQgHi6lfErIMGFGjrZJSlR4368FVEKP4z5TyiXnOvMh8YUS4G4iiHnl8xxuEGbETeXJrs0/kZw5Vef4a6TPMKR2fp+qD4mo231+bfHOwW1hM3vVnTUvAtzJV9SvAASXKMgvfq5yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NLY7fyiJ; arc=none smtp.client-ip=209.85.167.41
+	 To:Cc:Content-Type; b=tEI7XLc3x5+wW5FJDAyHDBgi3/3xm9YRnasztFPvd30kVdYytny8R199+fZP4WrGhrFUXO/ykcluPTY+FtVRlwE7ZiCg28Yy/dvCzFQViwJXYtB5YqfNb2SddDpSb0S04JtlCUjf0ViqUdEE2sng/oFMF9KmA/KUIdrMOCWnQe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ts5UoW2Q; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so2056730e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Mar 2025 03:40:57 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso18890601fa.3
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Mar 2025 03:53:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741948855; x=1742553655; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741949634; x=1742554434; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7Tabw9Z4bIh3i478fwUir3sqjYhIhXJXxI7g2bFV4tk=;
-        b=NLY7fyiJkeLn6pr9e4N2PdnDYnshP8G6vTlmXFZbDt8JwzN+e35XZVeW+14Fn0F4zR
-         IcPMhkJ3CTI0TPgp6WF1thIJ8rv32PYOZVOuSUP8TFsSLX2Jd4508G3q9pVfzo5n6OrI
-         qVJ/qg1iLx4S6TC/I1uX72Z0sYO7+q0I5d6X0GhSbPbUkwHtq875Tl4axgUx4Xfo93Jz
-         FYlS/FcEedMBKYFTeCqcDqTqQ5oh6JNbnEfwblGTBAShhu3DZnNUUq//sa6y3gUuTPs4
-         iqyCSdLYzH4XJ9fpeOG+LgKrYqUkeAWGfi95JplNgmzQmeTyv9qS7NaACxksEg9G2lVT
-         K7Bg==
+        bh=TdjrUj2ENKDpO8QMmgpWcHwmqWwffwTY4fDD4PrBuM8=;
+        b=ts5UoW2QyXh5vBfN5rcptPygxva1UOMQcvJJl3YF7SN3js9KkNVcC5CSs2I4yR5WEC
+         nkWFW6y354+sOI5aep1y+kapzuDq1dPCA3Vp/Rt1kd9ckl62vom5aWk8c1J9yvxHvPo6
+         /+6M1EgwyUiDAQhDFGBW7tDzrrJVPmuky6/4T1ecyG9tmk4MGyzuUgYr6S+urcCBLny5
+         Umh60qOF0XoRFlEtUjaMY1MFLsaT5BEbeuuQlF4zmzpkCaSNKFKFdUENhS/woA27wdPb
+         zKyquqR4IZwQh2Xwglpa8p3SX52ZHbk5x9+nz3JIpRtmL9TDVo/JU8hIPpkEsoRmtHsb
+         r6ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741948855; x=1742553655;
+        d=1e100.net; s=20230601; t=1741949634; x=1742554434;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7Tabw9Z4bIh3i478fwUir3sqjYhIhXJXxI7g2bFV4tk=;
-        b=ZqPO+ZL1cTOVONLe88QZ+hQ812qUWMC+bOCpJliM40Dg0ZtatKj6iL0l9Wwa70ot5q
-         Rze3OZEIw/3nZ60lN0bUUOKm8gvAX6/ZJ6Q5oRG4G+4rbF43CxI834k0xJFFUc7kj9h8
-         v2dskTi7bVtLDl2N/A9K4+k0PI3WyXIMvoE4iM0qOUf5kJEqrsCYWJUJsJHaOEQHB4fi
-         hPSww8uZjYwjhQT79C84TDfhqm97UfmxHtK5ZOTQTqGwLaIpQfbZQyjtOTopXEIH6sXl
-         S0COORLdV9yNKpsQa4/6EytBHPEP4YZylNGBILrcRQYsG+qplV6HKNlURvsZ4dAbv4dR
-         1LRg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2WiymviuX9LhUBAPhFDJ45B662sh1LIkqFas7VqRwAqFbU7mlRaKIcEqN32/W7Cu/vggIrsW/4G2H@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKifn0dmvEApnQO6bbpqdOsEh9U7Y8pujCVTbTN+GJVDBlF/oU
-	wntS1N6GDXHZ4yIH206bw3neeyB3kqYVbkEMR7Z3+yQcD5ChtxsV7ihN3Fzr9u0H06W3YQ3geX+
-	0Cb5a5My8ddhIXEqeghcOXQqRuHA0HHiZPK1SYg==
-X-Gm-Gg: ASbGncvdD94P3vGk6be/qrcXp2hu4PjrGkZ7fCXbY1NwBxcI+lzEBSAS+wRJ/2BRxoz
-	4ypb1LOvBuiYoEasz4ZwQqd7/HHRtt2ecwYvEYH59r73I75dqkEBwQwJUYJi8sCl82Ii3N3dPj+
-	pcEBIPsR+2vO1wGj7zNRB4Px4=
-X-Google-Smtp-Source: AGHT+IGA8lu4+YUGRbMGDeqXVRC8S3Eh82gixaqk7ULSw2GQfS2l/K24FNsAjmYoMd/QI6TcqRWxeO06lBY+iwQoWKM=
-X-Received: by 2002:a05:6512:b0d:b0:545:154:52b0 with SMTP id
- 2adb3069b0e04-549c3911fdamr634456e87.22.1741948855425; Fri, 14 Mar 2025
- 03:40:55 -0700 (PDT)
+        bh=TdjrUj2ENKDpO8QMmgpWcHwmqWwffwTY4fDD4PrBuM8=;
+        b=uIHO6+Il3cLtyd6/jkh5Pv7JkDBIoNwfDHnvYDyRn/lUnUr4BKO+IXiSVjlGnCSuv8
+         cPySrhcy4TJPdkIJ43jTQ1hghytFLbf7FrNynvlFcGNs271yBRWTiTZdF6qzModeuWGV
+         E188Bp+Lw4+z8HaDSSG74keksgHJ6fVU+ifxfGxao9vnVyW0nc/zyCiE1sX9ZFKQP/vK
+         N5LjIEIpE5ss9OUgAMTHq9GzIuIfNmoyNExIK55ETwJVDbYyegxND2yokedGIqjDSjnO
+         CqWLt/PcpnIH0MDxftLOh5z7wWqssihhIJ088aBTEjPflhzolADgM769JOB0z7xm7yRY
+         M1Lw==
+X-Gm-Message-State: AOJu0Yw/zVh4rWQ3EOonxbR6ZDWFSoJ38QSoG882HqGmOBPcHjCtHC9D
+	Gagwkg59mhPdNieioeFhaOdMbX5Xn+nPAI0DABPIiVGWZxM84qUu6pRK3nuj/nZsepDroh9olBV
+	tUPSMaC2VDgDtV7bkf/3aq837d9OFI125+r+lsg==
+X-Gm-Gg: ASbGnctI46w7lTstduVoIHRadHzGmRKKGv870zNmizHFYM+Z9eE8Rc2LJ/Qaxlv7da0
+	tcQOxMV/Kwi9H0PlQo/OiGkEf++srVg8JuV+hDcekQgPHjNptw8ktKDeGAXIiB17r7B2RCNwDRK
+	MXXTx3rpemBEhsDPJ4hw8WJCoIkxmDUoksow==
+X-Google-Smtp-Source: AGHT+IGyZcjGQVRXdmPf+HFRkYlkCyfk9cxA0ikymLJVaBdq4csHhKzWdrWNXA3EtIAdbabIZKVRbXn3G++rpQeYfIs=
+X-Received: by 2002:a05:6512:2350:b0:545:2b24:c714 with SMTP id
+ 2adb3069b0e04-549c3911e6bmr776230e87.18.1741949634058; Fri, 14 Mar 2025
+ 03:53:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-en7581-gpio-range-v1-0-de1262105428@kernel.org> <Z9CYEZloamPhVdBS@lore-desk>
-In-Reply-To: <Z9CYEZloamPhVdBS@lore-desk>
+References: <20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com> <20250313-dev-adp5589-fw-v1-7-20e80d4bd4ea@analog.com>
+In-Reply-To: <20250313-dev-adp5589-fw-v1-7-20e80d4bd4ea@analog.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 14 Mar 2025 11:40:43 +0100
-X-Gm-Features: AQ5f1Jrsfi01k9a9ZZG_NbGUIuQtjx3Ff3ESsGiVH3198fMHG_n5Ix8wLorhDCk
-Message-ID: <CACRpkdagLPe8Mt1imjeBhMuxn5rUMMgsF0KceQpGyQE9ECoJGg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Add gpio-ranges property for EN7581 gpio controller
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date: Fri, 14 Mar 2025 11:53:42 +0100
+X-Gm-Features: AQ5f1Jos35lQGGapvP68CdJghmgF62TRmPj48uDq9_6LrGBWABanTI3P7iIbNwU
+Message-ID: <CACRpkdZd1b-D76n2oYMwg79BewV70FGaNcxbYfq1GDGOHm_BDQ@mail.gmail.com>
+Subject: Re: [PATCH 07/18] gpio: adp5585: add support for the ad5589 expander
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org, 
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2025 at 9:07=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.or=
-g> wrote:
+On Thu, Mar 13, 2025 at 3:19=E2=80=AFPM Nuno S=C3=A1 via B4 Relay
+<devnull+nuno.sa.analog.com@kernel.org> wrote:
 
-> is it fine if this series goes via linux-mediatek tree?
-> en7581_pinctrl node is only defined there for the moment.
+> From: Nuno S=C3=A1 <nuno.sa@analog.com>
+>
+> Support the adp5589 I/O expander which supports up to 19 pins. We need
+> to add a chip_info based struct since accessing register "banks"
+> and "bits" differs between devices.
+>
+> Also some register addresses are different.
+>
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-I applied 1/2 to the pinctrl tree.
-
-Take 2/2 through the mediatek tree.
-
-It will all land nicely upstream and works in linux-next.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
