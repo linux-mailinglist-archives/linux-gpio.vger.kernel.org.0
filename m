@@ -1,212 +1,112 @@
-Return-Path: <linux-gpio+bounces-17605-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17606-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA792A60F09
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 11:34:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D64F6A60F0B
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 11:34:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D3B1462495
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 10:34:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BE6C1B61A39
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Mar 2025 10:34:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB0EC1FC7DB;
-	Fri, 14 Mar 2025 10:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F731F1312;
+	Fri, 14 Mar 2025 10:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naYBomTg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U+42rafU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BFC1FC7C9;
-	Fri, 14 Mar 2025 10:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F951DDA33
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Mar 2025 10:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741948345; cv=none; b=L2tkwlCDQUbI4DIo8CqG0WODgtdAtukVwLQus1cQORmeKjlYT6tC9H7eff6irBe1gryTv0buf2lJGQdi3tAp3t1EBRMN0LAKh4LZCMbqlimmtgAkX5qgkdBd1fYgRjAidY0pcvtSxazUT9bSUqDfBsyl2ewzf/Q4bdTL84aWLPk=
+	t=1741948402; cv=none; b=lGNvnNFsO+jVLm7Xd1yvgRa35IXMEn59O9mtAr/dYBi4JEb+S7K8oewr0nhGSnDEE8SqOPYvBpA09VJdUGhIXsf9yUuFfJF+41k1XJw9lJDV/tNr386rG6VSmIjMYiB5W3gM6AP4PFvzYw+m5vqoDvjycWB9S7QdrT1rp9j1E3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741948345; c=relaxed/simple;
-	bh=fNvNDqVEbRp/SUOH8DN2J2EdftYPKxBHy32M6zxTM9I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V/DSUAjqhLP7qn59cgYaSEIPOJwQ7TRA2oUANuoBuJkwvgyPxXM9DYk90MB1iNI/DrRN1A/jnKfszwWRW6nt1eLAA5vpjFYoMIJlh92yE/lthbYCHyLWy4p+oHqj1WSJmTay/Vv1na4irIifqQdGvoy8cWC2eBKnZucavYztCSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=naYBomTg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA27CC4CEE3;
-	Fri, 14 Mar 2025 10:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741948345;
-	bh=fNvNDqVEbRp/SUOH8DN2J2EdftYPKxBHy32M6zxTM9I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=naYBomTgPGZbIg5N19AAYOb4jjzvS+OurVkqTiN/o2E46M+WWwbK0wxDrB+w0AaP6
-	 dCQS3tL9/Pi68+rBvn4AsggnZgUvPpvuZzwZUpI6zGeUrq4EUbKfRFl9T4P2HAwBW5
-	 1C6425kADzUzfterlxQMykmGE6TAJCzwzoR+SFw4Ia9u6ztyjq2/lcgZoth6SNNpPR
-	 gNwcnWZ/Fh6MvKLIecXyoJsh7YrncAol26Hi2GCBdZQJOMQ5OQ7FknBUJJmos43YL7
-	 rHVuaG6/0EC0u2Y61LYPUl8EBLhoV1/u8XjYm5bBA3jQOYY/zrQJbf5gAGB7TX/PVi
-	 OaqO+q556XM0g==
-Message-ID: <19ddb133-7f11-4c1b-b0e1-91523d42040c@kernel.org>
-Date: Fri, 14 Mar 2025 11:32:13 +0100
+	s=arc-20240116; t=1741948402; c=relaxed/simple;
+	bh=8jDwQMECFixq9MaG68bBgH3KZBs3RcUZfE5f7etKyzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=twk5YzEZUWAKhTeO/0VnbHEgXI5CIllByJOtrc2CWRIZuSgrqTJQSQoox3rvrueJ4QY0pdYG/oZehraiWB40XPMMRfwJls9zhOY0qpWOo6sZulDma//5pITvm6TSLlqoYK26za5/jXZCBgPei9eMLWN3NMFkMWhTa7HgAknoA0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U+42rafU; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54998f865b8so1720470e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Mar 2025 03:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741948398; x=1742553198; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8jDwQMECFixq9MaG68bBgH3KZBs3RcUZfE5f7etKyzw=;
+        b=U+42rafUbi2dJhbHiZe+O3pvrYyoR7pKuvSZwkZNCyMP3u5E4zrxMJA+VFrmGaYV7f
+         Fmham0BkBBD26A/f/LiTy/a+uD27W7HjEO9ok5yrT/FeQzY0wWczbNptSf+PL8XiGXqQ
+         NUvgMKMm84q3fEEb5llBJZQA1GRcGhJ8G418umdPRozgbK/sR4Xf+5qjUIDtSPEgwVeY
+         g/JG+iB0Q4RCXz1Rc/i2jv77jGDF53WTywriSxTAcjCxYb5Vz8TDqZiqNdvFiOJivVl4
+         1R+2cPgZ8robNBOGfjqCiRxyP2Qulx5vEmWa0yqQ9bn18qFlJgzytvUJ303sajp6DvT9
+         e5ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741948398; x=1742553198;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8jDwQMECFixq9MaG68bBgH3KZBs3RcUZfE5f7etKyzw=;
+        b=Fc6XfECk2xsHZ+62dTgS7Lx6dPT/9ZCcClnrqnPsmrJQMb4C2xhgdNAIj3q+v0MGGs
+         KYVmj23VFQs5MXbesZiCeRnLwrDNgmv2rj+fO/VqlyRqBFk+ZoPq+PMmbCIW3I8qfaVM
+         BOqVI6+NT9UPJYZ/0xPiHYXAnWOcsrQ3NQ7mrHNF463Um71uTMJidnazipLDMpxyz627
+         GB/yUz2CyK/rEKjRge+yyc99GfwS4n7QJM67x+t4heGLuw2/upNfUlZ610CuVRKXR5Ul
+         SDBIu2yEF1fUK2u8V4WsFx4D/iPX7dVP8vJ8Pe8T+nfv/jPaPoLr5PllebLjDqT10nhI
+         QnjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvj7u+tlKAjtYIOpOPiqlztm5OvEFImlRIPggthc4ZRJrZqNQAfpCpSM0bsgg3VeeTCnzUxt0/WwcS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/32yqpKOYp8cxWR72dxFPFKi28nQ+pVw5Km9B9zR+ETCzMNZ+
+	TCxwUOubS1yn/+9abts7zgGzrinzYs39IHlV2vSl3ugr/2OwqzL01jcDiAHQbvX04KindeTSQIr
+	4trNX2QlHGLzUJuBBHSkd6G2p9aNnQDbZ3rEfQt7I+HArSrlbB6c=
+X-Gm-Gg: ASbGncuX7Efzo2Rq455Toi3SJxp8LUBpEnuIdoOm//6cb8MWCFrSjHqUoKcgJM0dIsI
+	jjHK282jkcPXLqjZcFu6rld+wfzKVyg+tmj+BMOTwRUT/L2sv8OxHTuEiX3oyoQpJFIOVBQxXqA
+	iUTH1Mpp7qeAxxOBCInDedbIw=
+X-Google-Smtp-Source: AGHT+IGtqk2ik/CPpDc90bj+smq95l82Bzc6EWenGi5B2VmayKFtrsLwXbMyd14GNPNzK/DKOBVpCH1Aaby9BEky7GA=
+X-Received: by 2002:a05:6512:3b0a:b0:549:57ae:ab44 with SMTP id
+ 2adb3069b0e04-549c390adc7mr632860e87.26.1741948398166; Fri, 14 Mar 2025
+ 03:33:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] dt-bindings: pmic: mediatek: Add pmic documents
-To: "Lu.Tang" <Lu.Tang@mediatek.com>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Lee Jones <lee@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>, Chen Zhong <chen.zhong@mediatek.com>,
- Sen Chu <shen.chu@mediatek.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-gpio@vger.kernel.org, Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20250314073307.25092-1-Lu.Tang@mediatek.com>
- <20250314073307.25092-6-Lu.Tang@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250314073307.25092-6-Lu.Tang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250311-gpio-set-check-output-v1-1-d971bca9e6fa@linaro.org>
+In-Reply-To: <20250311-gpio-set-check-output-v1-1-d971bca9e6fa@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 14 Mar 2025 11:33:06 +0100
+X-Gm-Features: AQ5f1JrKBbyLL78LSKIMxNtypSjTHWlWYVSHLg-a2lppZ0MT75HoAlTpAVlGExk
+Message-ID: <CACRpkdYujYhF8VP-_6O4Bt2tWL-NO-GgQPr=DeqE9QwCq12gqg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't allow setting values on input lines
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 14/03/2025 08:32, Lu.Tang wrote:
+On Tue, Mar 11, 2025 at 3:20=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Some drivers as well as the character device and sysfs code check
+> whether the line actually is in output mode before allowing the user to
+> set a value.
+>
+> However, GPIO value setters now return integer values and can indicate
+> failures. This allows us to move these checks into the core code.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-There is no subsystem "pmic".
+Makes sense, if there are regressions let's smoke them out
+in linux-next.
 
-> Add new pmic mfd and adc documents for mt8196
-> 
-> Signed-off-by: Lu.Tang <Lu.Tang@mediatek.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Are you sure Latin transcription of your name includes '.' or you just
-copy-paste email address?
-
-
-...
-
-> +  - Lu Tang <lu.tang@mediatek.com>
-> +
-> +description:
-> +  The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
-> +  in some MediaTek PMICs, performing various PMIC related measurements
-> +  such as battery and PMIC internal voltage regulators temperatures,
-> +  other than voltages for various PMIC internal components.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt6363-auxadc
-> +      - mediatek,mt6373-auxadc
-
-Just fold the device to the parent node.
-
-
-
-..
-
-
-
-> diff --git a/Documentation/devicetree/bindings/mfd/mediatek,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/mediatek,spmi-pmic.yaml
-> new file mode 100644
-> index 000000000000..a8f1231623cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mediatek,spmi-pmic.yaml
-
-Filename matching one of the compatibles, e.g. the oldest one.
-
-> @@ -0,0 +1,173 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/mediatek,spmi-pmic.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek SPMI PMICs multi-function device
-> +
-> +maintainers:
-> +  - Lu Tang <lu.tang@mediatek.com>
-> +
-> +description: |
-> +  Some Mediatek PMICs are interfaced to the chip via the SPMI (System Power
-> +  Management Interface) bus.
-> +
-> +  The Mediatek SPMI series includes the MT6363, MT6373, MT6316 and other
-> +  PMICs.Please see the sub-modules below for supported features.
-> +
-> +   MT6363/MT6373 is a multifunction device with the following sub modules:
-> +  - Regulators
-> +  - ADC
-> +  - GPIO
-> +  - Keys
-> +   MT6316 is a multifunction device with the following sub modules:
-> +  - Regulators
-
-I don't get why they are in the same schema. It would result in
-unnecessary big if:then with half of children not applicable for other
-variants.
-
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - mediatek,mt6363
-> +          - mediatek,mt6373
-> +          - mediatek,mt6316
-Sort these with alphanumeric order.
-
-Best regards,
-Krzysztof
+Yours,
+Linus Walleij
 
