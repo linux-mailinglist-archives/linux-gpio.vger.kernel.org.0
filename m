@@ -1,534 +1,230 @@
-Return-Path: <linux-gpio+bounces-17645-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17646-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA0E4A62EBF
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Mar 2025 15:59:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1518FA63022
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Mar 2025 17:41:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04E5716DF71
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Mar 2025 14:59:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 417F4176AE9
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Mar 2025 16:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A0C205516;
-	Sat, 15 Mar 2025 14:58:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D92AD204596;
+	Sat, 15 Mar 2025 16:41:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="j8zaOfYU"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="oM4FXyIf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6949C2054EC;
-	Sat, 15 Mar 2025 14:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5FDD26D
+	for <linux-gpio@vger.kernel.org>; Sat, 15 Mar 2025 16:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742050706; cv=none; b=FfsXoE+6JYJU0ZhPPgXya5vFOyGAOYKIgptZKQb+DhxHGWmocjszXNYBz+WeotDytRYA6eq2C67Hn40RWK8yPezKZf8St0LEERLieWrL6RB8K/eCzl5/6ydSxNc66MdJ8AQevYOlwDyMzXQwqqKbJz8P1XzR1eJI+AWSuxmKV4s=
+	t=1742056904; cv=none; b=T7BS0RQIapeADuH1kOefc8kaFMs7Qwbo/zDLUY95AJOa5L0efLo2laFVCxAG22CWjr48cscVRSR45udGTWEptRPbLwf/BKKi88dPZgcKcWKttWzTYPYE4fNvlg6mG4GN9TWKGvwLRORAA5DlRh5yaqPWxeJ2DyOKuWgdESDHAZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742050706; c=relaxed/simple;
-	bh=+HuoQ7+khvt8Q/9RqKy8lO27A0aQwJDpBzU6owbO4To=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KJGtfif4xQbCyJBYvwdY53VViVBCDjqK8HlTbZSBWjPfX35EITZpNL+bqDQL60B4YvRgwFpk8784wBswIM6lfVKWeMR+Z2HEqDlMxcUToNRIjwwyCZg2NdvvMdjipx5gcExrsBSfrRXdGeAAzAPA4M5Phv9G5F5QZIdAr1P4aJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=j8zaOfYU; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-Received: from [192.168.183.162] (254C339A.nat.pool.telekom.hu [37.76.51.154])
-	by mail.mainlining.org (Postfix) with ESMTPSA id EA20EBBAF3;
-	Sat, 15 Mar 2025 14:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1742050702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9nJ3LhLv08i7DTY7aOh17kaASTibwNqm+QEAGMT6JMM=;
-	b=j8zaOfYUjCfPep7SOQhNsP4gTSHWqKD+d/RJKR6b3FvpFGFmEBgEEieRFsBWuUMt+SL8gF
-	kQpYXkbpHubpfhYnuIvR6mIlXAiOjGkHTWI9M+wE9pcPoi1JToA7lB3j7IM0rEDR+s2eam
-	ByOsQmUQrnlBHe93b4QGkSkPzVVT9dbs6D2S/Yhc4o2KDXSUfaFWIXh4E4+KeIir21hgWu
-	OdCSnCBd1aODh+Luq1Vz6r9UbHhVy201dr1TzWu5mG1FzgvTFHmuhRS1S2QHOMyFIAjpyZ
-	Bcn9KsdVDJcdJ0rcptnnjRC31TfRj9gAbtRCVIhUR0wKY59+PQjdGvOfPgrwAA==
-From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Date: Sat, 15 Mar 2025 15:57:40 +0100
-Subject: [PATCH v4 6/6] arm64: dts: qcom: Add Xiaomi Redmi 3S
+	s=arc-20240116; t=1742056904; c=relaxed/simple;
+	bh=Z++6unUzD7r2i7Ald3FvHt8fiDQX2+T3QIsDOBUYxWA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eG1ciGI7EcLdjqeB6nzT/NFOhHdZk0I1u1quE8Wc4MnujVvXDpwxJOshslRRzp5vUCltImX9UBS4lXW7icXu3nBhYrySOR3YwtBtuqgc2z3ndrUcQ22q0N106nVgdGnEfDEnASwnypp502lyj39610GU29kH3FvEuVcgK01ZPbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=oM4FXyIf; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8D0DE3F2B1
+	for <linux-gpio@vger.kernel.org>; Sat, 15 Mar 2025 16:41:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1742056894;
+	bh=a7gC6InKkSZunt4RwI6mh+p9wkYGFvKYJwvCSiCnLdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=oM4FXyIfLsQjZ0esSxn5JlANaGWqXV7GGV6LM93AB+49f2gbzUAxJZ67sWfoJFOrT
+	 wmdP5zfo+PcSEdMtEfrw6ftKBL7pg2De2MqlW+A2RwZKh+X/FsA94s3OnTP4Hf5d4w
+	 8tK1GyRFM3eGTEES4uCxhwcAETmvWSy0ayLDV0xa11jPxFN6XE6mMnETARl6fIA9Jr
+	 VwXv8JF5Dh3jUQmcZOcKJhJ2re7swZBSgUbvg/naw4kcgmN9GsfzOm0kyztjwt24al
+	 XBN04otH9YxTrMtXdRRsd+yLZvs8LGa4/eJIjng6z5/0nYg919A3++7ypAK4aSs1uL
+	 lw194/QlUu5bg==
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-223a2770b75so58381275ad.1
+        for <linux-gpio@vger.kernel.org>; Sat, 15 Mar 2025 09:41:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742056893; x=1742661693;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a7gC6InKkSZunt4RwI6mh+p9wkYGFvKYJwvCSiCnLdw=;
+        b=u9xYVOgg6qoWeAng7fjL56HFYTylS4a7wbfijRnyeXzf3JpZMenqSNIF7VUlONm7Km
+         dGh+/z9c6+TFtEhrCzI/wWA9UeQzDYzG6TGfrk8/LrAFSe/FuQzKUYh2DFpCLXBrYQqm
+         RDlDYWoxJvZ0K1e9Htn3ryfLIWaSirSrgPYVBuKPJh+Lf4JKOVKI2fTowrb8P/RjXzyF
+         FXBIltf+hHSmRdjxjvp6Bv+mnHOOsEhnpzfPB2/g0ohno9TNQLzFrk4azjSOTo8guoNt
+         FcsN9TibYCm6XOBb+/9GYH3Bc368LQgA+qdzVuevKtxfFL2GcsYVPh0ZFukz7M0PWna4
+         hR5g==
+X-Gm-Message-State: AOJu0YwipiDp4sqDzFlkrk5KCuQud1q3Z/IOVsRUKoyn0LvWZ0SI2CWz
+	Bnqns2FRNWYjXgCilWJNDdIEVt3LMNeMozBg7OyFkkdr3kiQ93ptNGdNkUOskPe/haN0Z73CT5J
+	OgYDi28Lv7pOVhLJ/DVYcNJp+8+j1BX86sKRyWP+Pg1osZPxE0pk71+zHkFY7R7F8TsRq7SW+H2
+	04hEkyqwY=
+X-Gm-Gg: ASbGncuIndErOJCu2LNGxmA2sQM9BN5T+alLswH6SHlfxJC7mmfM9FrEzeoFtKs8DJN
+	29dQ1CvwTc1OZJhF4hnCTyVXLTvWFcVJzSoLKtzesTuTOBsPF05zrg94bKxZW5LtcE50Z5GtFQ8
+	cBOy6gKTGCicijQvhCo3kAQVCr9pZWuYcEnMeH8K+47OY5GSb7pqMG3kBMYWCaibX4l0V5S2dgP
+	MLdHgzvToP53zf9+zEVu+mlAV6aaaI+oFFspQ3pJILJibZxlzxZvrAQwQ9gk5LwMpVDDI2J+KhR
+	2fnyHRYUsimWr/if
+X-Received: by 2002:a05:6a00:3981:b0:736:3fa8:cf7b with SMTP id d2e1a72fcca58-73722380967mr6778389b3a.13.1742056892756;
+        Sat, 15 Mar 2025 09:41:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHuymFzG/Jpdc8Uehgh10jJ41sXtPIFgAmKjlQiY40nHN6Rd1NKGJR14VYZh8fQmO8mdBd6PQ==
+X-Received: by 2002:a05:6a00:3981:b0:736:3fa8:cf7b with SMTP id d2e1a72fcca58-73722380967mr6778371b3a.13.1742056892356;
+        Sat, 15 Mar 2025 09:41:32 -0700 (PDT)
+Received: from z790sl.. ([240f:74:7be:1:83e6:3590:3498:db44])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371155e3a9sm4637104b3a.71.2025.03.15.09.41.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Mar 2025 09:41:32 -0700 (PDT)
+From: Koichiro Den <koichiro.den@canonical.com>
+To: linux-gpio@vger.kernel.org
+Cc: brgl@bgdev.pl,
+	geert+renesas@glider.be,
+	linus.walleij@linaro.org,
+	maciej.borzecki@canonical.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/9] Introduce configfs-based interface for gpio-aggregator
+Date: Sun, 16 Mar 2025 01:41:14 +0900
+Message-ID: <20250315164123.1855142-1-koichiro.den@canonical.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250315-msm8937-v4-6-1f132e870a49@mainlining.org>
-References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
-In-Reply-To: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, 
- =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
- Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Dmitry Baryshkov <lumag@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- linux@mainlining.org, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742050685; l=10374;
- i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=+HuoQ7+khvt8Q/9RqKy8lO27A0aQwJDpBzU6owbO4To=;
- b=LAPf9RGhLW3PKABIGdUHuZ1MENg91FXqQocEg6s2VC6wDffKs+AWSEn07g76jIxYiAL0gow68
- RfX/n+t32g2DVcziUNigsr2hK1BMqW7rzmmx2Ps22mQTSBMyeVPSU4B
-X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
- pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-Add initial support for Xiaomi Redmi 3S (land).
+This patch series introduces a configfs-based interface to gpio-aggregator
+to address limitations in the existing 'new_device' interface.
 
-Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
----
- arch/arm64/boot/dts/qcom/Makefile                |   1 +
- arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts | 408 +++++++++++++++++++++++
- 2 files changed, 409 insertions(+)
+The existing 'new_device' interface has several limitations:
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index b54f45b3bec812f4f029c5a991ad3ea30585d4e5..52fdfef605de2dc0d1e5538f4358be0b5afab21e 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -64,6 +64,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-wingtech-wt88047.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-yiming-uz801v3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8917-xiaomi-riva.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8929-wingtech-wt82918hd.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8937-xiaomi-land.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-huawei-kiwi.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-longcheer-l9100.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-samsung-a7.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts b/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..a68b8cd23a6c97c80e2cbd9c39f3817f5b6f8a2b
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts
-@@ -0,0 +1,408 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024, Barnabas Czeman
-+ */
-+/dts-v1/;
-+
-+#include <dt-bindings/arm/qcom,ids.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+
-+#include "msm8937.dtsi"
-+#include "pm8937.dtsi"
-+#include "pmi8950.dtsi"
-+
-+/delete-node/ &qseecom_mem;
-+
-+/ {
-+	model = "Xiaomi Redmi 3S (land)";
-+	compatible = "xiaomi,land", "qcom,msm8937";
-+	chassis-type = "handset";
-+
-+	qcom,msm-id = <QCOM_ID_MSM8937 0x0>;
-+	qcom,board-id = <0x1000b 1>, <0x2000b 1>;
-+
-+	aliases {
-+		mmc0 = &sdhc_1;
-+		mmc1 = &sdhc_2;
-+	};
-+
-+	speaker_amp: audio-amplifier {
-+		compatible = "awinic,aw8738";
-+		mode-gpios = <&tlmm 124 GPIO_ACTIVE_HIGH>;
-+		awinic,mode = <5>;
-+		sound-name-prefix = "Speaker Amp";
-+		pinctrl-0 = <&speaker_amp_default>;
-+		pinctrl-names = "default";
-+	};
-+
-+	headphones_switch: audio-switch {
-+		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&tlmm 129 GPIO_ACTIVE_HIGH>;
-+		sound-name-prefix = "Headphones Switch";
-+		pinctrl-0 = <&headphones_switch_default>;
-+		pinctrl-names = "default";
-+	};
-+
-+	battery: battery {
-+		compatible = "simple-battery";
-+
-+		charge-full-design-microamp-hours = <4100000>;
-+		constant-charge-current-max-microamp = <1000000>;
-+		voltage-min-design-microvolt = <3400000>;
-+		voltage-max-design-microvolt = <4400000>;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		stdout-path = "framebuffer0";
-+
-+		framebuffer0: framebuffer@8dd01000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0x0 0x8dd01000 0x0 (720 * 1280 * 3)>;
-+			width = <720>;
-+			height = <1280>;
-+			stride = <(720 * 3)>;
-+			format = "r8g8b8";
-+
-+			clocks = <&gcc GCC_MDSS_AHB_CLK>,
-+				 <&gcc GCC_MDSS_AXI_CLK>,
-+				 <&gcc GCC_MDSS_VSYNC_CLK>,
-+				 <&gcc GCC_MDSS_MDP_CLK>,
-+				 <&gcc GCC_MDSS_BYTE0_CLK>,
-+				 <&gcc GCC_MDSS_PCLK0_CLK>,
-+				 <&gcc GCC_MDSS_ESC0_CLK>;
-+			power-domains = <&gcc MDSS_GDSC>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&gpio_keys_default>;
-+		pinctrl-names = "default";
-+
-+		key-volup {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&tlmm 91 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <15>;
-+		};
-+	};
-+
-+	irled {
-+		compatible = "gpio-ir-tx";
-+		gpios = <&tlmm 45 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reserved-memory {
-+		reserved@84a00000 {
-+			reg = <0x0 0x84a00000 0x0 0x1900000>;
-+			no-map;
-+		};
-+
-+		framebuffer: memory@8dd01000 {
-+			reg = <0x0 0x8dd01000 0x0 (720 * 1280 * 3)>;
-+			no-map;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&blsp1_i2c2 {
-+	status = "okay";
-+
-+	led-controller@45 {
-+		compatible = "awinic,aw2013";
-+		reg = <0x45>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vcc-supply = <&pm8937_l10>;
-+		vio-supply = <&pm8937_l5>;
-+
-+		led@0 {
-+			reg = <0>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@1 {
-+			reg = <1>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@2 {
-+			reg = <2>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+};
-+
-+&blsp1_i2c3 {
-+	status = "okay";
-+
-+	touchscreen@3e {
-+		compatible = "edt,edt-ft5306";
-+		reg = <0x3e>;
-+
-+		interrupts-extended = <&tlmm 65 IRQ_TYPE_LEVEL_LOW>;
-+		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-+		vcc-supply = <&pm8937_l10>;
-+		iovcc-supply = <&pm8937_l5>;
-+
-+		pinctrl-0 = <&tsp_int_rst_default>;
-+		pinctrl-names = "default";
-+
-+		touchscreen-size-x = <720>;
-+		touchscreen-size-y = <1280>;
-+	};
-+};
-+
-+&pm8937_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+	status = "okay";
-+};
-+
-+&pm8937_spmi_regulators {
-+	/* APC */
-+	pm8937_s5: s5 {
-+		regulator-min-microvolt = <1050000>;
-+		regulator-max-microvolt = <1350000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&pmi8950_wled {
-+	qcom,num-strings = <2>;
-+	qcom,external-pfet;
-+	qcom,current-limit-microamp = <20000>;
-+	qcom,ovp-millivolt = <29600>;
-+
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators-0 {
-+		compatible = "qcom,rpm-pm8937-regulators";
-+
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+
-+		vdd_l1_l19-supply = <&pm8937_s3>;
-+		vdd_l2_l23-supply = <&pm8937_s3>;
-+		vdd_l3-supply = <&pm8937_s3>;
-+		vdd_l4_l5_l6_l7_l16-supply = <&pm8937_s4>;
-+		vdd_l8_l11_l12_l17_l22-supply = <&vph_pwr>;
-+		vdd_l9_l10_l13_l14_l15_l18-supply = <&vph_pwr>;
-+
-+		pm8937_s1: s1 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+
-+		pm8937_s3: s3 {
-+			regulator-min-microvolt = <1300000>;
-+			regulator-max-microvolt = <1300000>;
-+		};
-+
-+		pm8937_s4: s4 {
-+			regulator-min-microvolt = <2050000>;
-+			regulator-max-microvolt = <2050000>;
-+		};
-+
-+		pm8937_l2: l2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+
-+		pm8937_l5: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l6: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l7: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l8: l8 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8937_l9: l9 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l10: l10 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		pm8937_l11: l11 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-allow-set-load;
-+			regulator-system-load = <200000>;
-+		};
-+
-+		pm8937_l12: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8937_l13: l13 {
-+			regulator-min-microvolt = <3075000>;
-+			regulator-max-microvolt = <3075000>;
-+		};
-+
-+		pm8937_l14: l14 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l15: l15 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l16: l16 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l17: l17 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8937_l19: l19 {
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1350000>;
-+		};
-+
-+		pm8937_l22: l22 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+		};
-+
-+		pm8937_l23: l23 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+	};
-+};
-+
-+&sdc2_cmd_default {
-+	drive-strength = <12>;
-+};
-+
-+&sdc2_data_default {
-+	drive-strength = <12>;
-+};
-+
-+&sdhc_1 {
-+	vmmc-supply = <&pm8937_l8>;
-+	vqmmc-supply = <&pm8937_l5>;
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	cd-gpios = <&tlmm 67 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&pm8937_l11>;
-+	vqmmc-supply = <&pm8937_l12>;
-+	pinctrl-0 = <&sdc2_default &sdc2_cd_default>;
-+	pinctrl-1 = <&sdc2_sleep &sdc2_cd_default>;
-+	pinctrl-names = "default", "sleep";
-+	status = "okay";
-+};
-+
-+&sleep_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <20 4>;
-+
-+	gpio_keys_default: gpio-keys-default-state {
-+		pins = "gpio91";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
-+	headphones_switch_default: headphones-switch-default-state {
-+		pins = "gpio129";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	sdc2_cd_default: sdc2-cd-default-state {
-+		pins = "gpio67";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	speaker_amp_default: speaker-amp-default-state {
-+		pins = "gpio124";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	tsp_int_rst_default: tsp-int-rst-default-state {
-+		pins = "gpio64", "gpio65";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&wcnss {
-+	vddpx-supply = <&pm8937_l5>;
-+	status = "okay";
-+};
-+
-+&wcnss_iris {
-+	compatible = "qcom,wcn3620";
-+	vddxo-supply = <&pm8937_l7>;
-+	vddrfa-supply = <&pm8937_l19>;
-+	vddpa-supply = <&pm8937_l9>;
-+	vdddig-supply = <&pm8937_l5>;
-+};
-+
-+&wcnss_mem {
-+	status = "okay";
-+};
-+
-+&xo_board {
-+	clock-frequency = <19200000>;
-+};
+  Issue#1. No way to determine when GPIO aggregator creation is complete.
+  Issue#2. No way to retrieve errors when creating a GPIO aggregator.
+  Issue#3. No way to trace a GPIO line of an aggregator back to its
+           corresponding physical device.
+  Issue#4. The 'new_device' echo does not indicate which virtual
+           gpiochip<N> was created.
+  Issue#5. No way to assign names to GPIO lines exported through an
+           aggregator.
+
+Although Issue#1 to #3 could technically be resolved easily without
+configfs, using configfs offers a streamlined, modern, and extensible
+approach, especially since gpio-sim and gpio-virtuser already utilize
+configfs.
+
+This v6 patch series includes 9 patches:
+
+  Patch#1: Fix an issue that was spotted during v3 preparation.
+           (Not present in gpio/for-next, so retained in v6.)
+  Patch#2: Reorder functions to prepare for configfs introduction.
+  Patch#3: Add aggr_alloc() to reduce code duplication.
+  Patch#4: Introduce basic configfs interface. Address Issue#1 to #5.
+  Patch#5: Prepare for Patch#6.
+  Patch#6: Expose devices created with sysfs to configfs.
+  Patch#7: Suppress deferred probe for purely configfs-based aggregators.
+  Patch#8: Documentation for the new configfs interface.
+  Patch#9: Selftest for gpio-aggregator.
+
+N.B. This submission is targeting at gpio/for-next and is based on:
+     commit 21c853ad9309 ("gpio: adnp: use new line value setter callbacks")
+
+v5->v6 changes:
+  - Addressed feedback from Bartosz:
+    * Resolved issues spotted with lockdep and kasan.
+    * Added kselftest for gpio-aggregator.
+  - Fixed a memory leak in aggr_free_line() (missing kfree(line->name)).
+  - Fixed a bug I mistakenly added in aggr_parse() (misplaced scnprintf()).
+  - Eliminated a potential lock inversion deadlock by removing
+    gpio_aggregator_lock acquisition in gpio_aggregator_remove_all(), which
+    became unnecessary after the upstream commit 12f65d120350 ("gpio:
+    aggregator: protect driver attr handlers against module unload").
+
+v4->v5 changes:
+  - Rebased off of the latest gpio/for-next, that includes the patch series:
+    "Add synchronous fake device creation utility for GPIO drivers"
+    (https://lore.kernel.org/all/20250221133501.2203897-1-koichiro.den@canonical.com/)
+
+v3->v4 changes:
+  - Split off the introduction of gpio-pseudo.[ch] and conversions.
+  - Reordered commits to place a fix commit first.
+  - Squashed the trivial update for gpio-aggregator's conversion to gpio-pseudo
+    into the primary commit "gpio: aggregator: introduce basic configfs interface"
+    as it is only meaningful when combined.
+
+v2->v3 changes:
+  - Addressed feedback from Bartosz:
+    * Factored out the common mechanism for synchronizing platform device
+      probe by adding gpio-pseudo.[ch].
+    * Renamed "_auto." prefix to "_sysfs." for auto-generated
+      configfs entries corresponding to sysfs-created devices.
+    * Squashed v2 Patch#3 into its predecessor.
+  - Addressed feedback from Geert:
+    * Factored out duplicate code in struct gpio_aggregator initialization
+      by adding gpio_alloc()/gpio_free() functions. Note that v2 Patch#7
+      was dropped for other reasons as mentioned below, so aggr_free() in
+      v3 is unrelated to the same-named function in v2.
+    * Removed redundant parsing of gpio-line-names and unnecessary
+      chip->names assignments; squashed v2 Patch#4 + v2 Patch#5 into v3
+      Patch#9.
+    * Updated to use sysfs_emit().
+    * Updated Kconfig (select CONFIGFS_FS).
+    * Fixed typos, coding style issues, missing const qualifiers, and other
+      minor issues.
+  - Resolved an issue that was spotted during v3 preparation. See Patch#2.
+  - Reordered resource initialization order in gpio_aggregator_init() to
+    both eliminate a potential race condition (as noted in the source code
+    comment) and simplify the code. See Patch#8. This enabled:
+    * Removal of v2 Patch#7.
+    * Merging of aggr_unregister_lines() and aggr_free_lines() into a
+      unified function.
+  - Disabled 'delete_device' functionality for devices created via configfs
+    for simplicity. It was mistakenly allowed in v2 and proved buggy. See
+    Patch #8.
+
+RFC->v2 changes:
+  - Addressed feedback from Bartosz:
+    * Expose devices created with sysfs to configfs.
+    * Drop 'num_lines' attribute.
+    * Fix bugs and crashes.
+    * Organize internal symbol prefixes more cleanly.
+  - Split diffs for improved reviewability.
+  - Update kernel doc to reflect the changes.
+
+v5: https://lore.kernel.org/all/20250224143134.3024598-1-koichiro.den@canonical.com/
+v4: https://lore.kernel.org/all/20250217143531.541185-1-koichiro.den@canonical.com/
+v3: https://lore.kernel.org/all/20250216125816.14430-1-koichiro.den@canonical.com/
+v2: https://lore.kernel.org/all/20250203031213.399914-1-koichiro.den@canonical.com/
+RFC (v1): https://lore.kernel.org/linux-gpio/20250129155525.663780-1-koichiro.den@canonical.com/T/#u
+
+
+Koichiro Den (9):
+  gpio: aggregator: protect driver attr handlers against module unload
+  gpio: aggregator: reorder functions to prepare for configfs
+    introduction
+  gpio: aggregator: add aggr_alloc()/aggr_free()
+  gpio: aggregator: introduce basic configfs interface
+  gpio: aggregator: rename 'name' to 'key' in aggr_parse()
+  gpio: aggregator: expose aggregator created via legacy sysfs to
+    configfs
+  gpio: aggregator: cancel deferred probe for devices created via
+    configfs
+  Documentation: gpio: document configfs interface for gpio-aggregator
+  selftests: gpio: add test cases for gpio-aggregator
+
+ .../admin-guide/gpio/gpio-aggregator.rst      |  107 ++
+ drivers/gpio/Kconfig                          |    2 +
+ drivers/gpio/gpio-aggregator.c                | 1155 ++++++++++++++---
+ tools/testing/selftests/gpio/Makefile         |    2 +-
+ tools/testing/selftests/gpio/config           |    1 +
+ .../testing/selftests/gpio/gpio-aggregator.sh |  723 +++++++++++
+ 6 files changed, 1800 insertions(+), 190 deletions(-)
+ create mode 100755 tools/testing/selftests/gpio/gpio-aggregator.sh
 
 -- 
-2.48.1
+2.45.2
 
 
