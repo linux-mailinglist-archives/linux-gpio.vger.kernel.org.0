@@ -1,171 +1,317 @@
-Return-Path: <linux-gpio+bounces-17635-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17636-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B181A627CF
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Mar 2025 08:07:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9722FA62C0B
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Mar 2025 12:45:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33F6017DF31
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Mar 2025 07:07:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D9CF189D410
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Mar 2025 11:45:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E80DF1C8601;
-	Sat, 15 Mar 2025 07:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46A7A1DC9BE;
+	Sat, 15 Mar 2025 11:45:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BKQgro62"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ijm7MKQw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D4FEC0
-	for <linux-gpio@vger.kernel.org>; Sat, 15 Mar 2025 07:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAE42E3386
+	for <linux-gpio@vger.kernel.org>; Sat, 15 Mar 2025 11:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742022437; cv=none; b=kkh42C/K6BgAvHLUeb/cJaRpEjWIe8dG5N1vzzecABVrhluX+7GeEg0U7fbjJSk3BRtguRtjAJuYIW+GdVlZ2zfpWzeeRj/GqVQ5WJCJ4rG2E6XP+doQIf1Kut3qvI4qo+a7v/oo++ZFa3miJFCfTO8rbSTJ2Zcdl+pwvDbVIcE=
+	t=1742039137; cv=none; b=OTYV2Bv5ztyOCt8HP/+Rl3QLKJgRI2IowVc5Kh4SqarLi3ltSO1dGlaz+2mdE6d+W4QSgq+j8m6J/IWhicVedx4oRTwaVVkrj9EwHBCpPBGX6l9Kak1SjgPDr1EQhvplLJh6s+0nyG6TTrAzkTc1OrYkEUgL18QMBzSf5JO8gHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742022437; c=relaxed/simple;
-	bh=l44nqQH8YBJzGUStut/yFw78rWnhW3ZRfip+/2J7eVE=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WZ9Lhu/ByXHHkaLHnFp5jXpVRgELdcHavLzNcl8MJiFZpXzAHbSpLkDuR3Y2DrgzIVaot6pqfel5I/m0auH5iafISHPvatXySAz4X4LtWqQAd3xcst7sVJhh085RCNc8wJzBaGNenqa60x+YkCJIhnsut5Cm9gkog3Wc8x52D8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BKQgro62; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-476a720e806so25562721cf.0
-        for <linux-gpio@vger.kernel.org>; Sat, 15 Mar 2025 00:07:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742022435; x=1742627235; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XjVzOUnttHUcBAW3CLxbvzOw9L6lvEcZu1MM1KPevq8=;
-        b=BKQgro62y1rXOf6gM9cqTGvPnQtoy8y1CmVSDu+BYwapQTsLAdj6oKyg7ZyfQsgp4u
-         pwGcMtnaw4t3Tq25D7Ylypt4ZnOzFni9w/lszVC0jWXnGigN0YR5QgHr/JS8EEm3z1Cc
-         2ki0r1/FSMxMeJzQLGBy6RbeCs2TOZl9huqD8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742022435; x=1742627235;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XjVzOUnttHUcBAW3CLxbvzOw9L6lvEcZu1MM1KPevq8=;
-        b=Cm2NHYVvcI79mDamMX5kO63hKic0RMCtmLr1mhjIzFUfELRcc7Be0MrqGhgqLFARkD
-         Bk4ngeyccfLFqizL58K/VTcGcNeQZfRweDtCCw1nhyrgNXuFsoon3w8nL2oqyMMFZYk7
-         ixGJD85uk28PDDW2hdK4xvjnnhsjbJh4ASQpXspKPJds6Y8rUpKsUABJ86xLEalVYJZd
-         OLpo2A5rCJghrUdZ5/1xCFQaHMHzuN602tEIEzZz4mmJ1d0iaXsAnskk7vf4pYR8qrFC
-         5LK1x9r4589OCKzUcGw4Jjp+JJ3hHEzHsXUO5XwMTh9sXfTI8hy/Ou8/yBcbboin34Du
-         Ccqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPlaSalFmdZ8Omit/z0LQ3qaxKES0kKuefp02lkyE37Hxl8C/ujszEt0b28Ary6FrmHsBzv+LGIovA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2IAEplIxdX+DXhhi3E/zm6KUYBOVvSR49j8B8MAt74FfK1XFF
-	RETTD1Z2dS88xM0Zdqvl1SAqMj73NeKIQO8b5MiVeiggdTKvR1CEE6ZJB9Zz41FJbFg5evktu+C
-	RLKK3lwQwwaGfDkgi1JL1HvfkZfFtlCvZOLjM
-X-Gm-Gg: ASbGncvOW1OhXDeJhPwe+o/W8n3Kux/ZPieu7C9WLu/RDvPTi2GaOV3BaPepnzYgwZs
-	a20TD/NGiE2LHIdkBgYdkxEhTDXLSypSxwQCGsJhNM7W79Ls4JJbXcLSPmz7fmyFNqeW6JKwsrP
-	6+uOu1+hUnFnxNm0dudXMzwTeEKCZ+0pCSdqiy48n46F4SN7mVhZIAsg==
-X-Google-Smtp-Source: AGHT+IFazD/VhnOW7WkEdkQSLdsRPgxP9gTso6PzXQXfv060q0Fz/c9DNts5WDCHx2SEB6flNxzx/kWuR5dL2XtIhIs=
-X-Received: by 2002:a05:6214:5192:b0:6d8:af66:6344 with SMTP id
- 6a1803df08f44-6eaea9f485emr88982206d6.2.1742022434934; Sat, 15 Mar 2025
- 00:07:14 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 15 Mar 2025 00:07:14 -0700
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 15 Mar 2025 00:07:14 -0700
+	s=arc-20240116; t=1742039137; c=relaxed/simple;
+	bh=V0V3eF1gwRKBl1mQX6OhEuprHOY8F3ZfIG5Wg8fcJBU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ewhYCY/EhifaeF79HDfntO8x+02iO/ioqkF/OVM1oO4XCuTfesaE8XQwgEgkwWFEfPjHe0wPRnNcEM5RI4r0TBT22nRCs4az/YSOmNvIriRznauw7WoP6BuS72xqoXUuLywxdJiz+Y9JiXgA8RSmMs59M63ImROwbsZPDlLoBck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ijm7MKQw; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742039135; x=1773575135;
+  h=date:from:to:cc:subject:message-id;
+  bh=V0V3eF1gwRKBl1mQX6OhEuprHOY8F3ZfIG5Wg8fcJBU=;
+  b=ijm7MKQwjgWhPcSgFsQuPPZ8ECAHsNO1Z6hctAPpHrxR86gnqFPsuCIu
+   nGOF1JppwVYC+xjnVw9PdbRLshal/asmYWPvOu72AkDH+kbKzP8OWDatX
+   lHfKnrTy28LfCg2lwmYwq6qrh/S/VI1wNdjqPAhlcnBNA/2uqO3aBwGJ7
+   TK46X5pucQO8a7RhFBH/K5IQ1mQILHosACD5gXhi5UyoRvp5rYKL72/l6
+   h2xiP2hwYcLo/NQ7zLp2PFAeexNxPLaMJlZkHU17WYpFTRGV8TJhTBR1i
+   vioHK/788NY7mlVr65/rsl7nASdRiHuQjCvhJz42WXl/Uz9iz4rZzpKab
+   Q==;
+X-CSE-ConnectionGUID: QlREwROhSZW0iaK5bkC30A==
+X-CSE-MsgGUID: 1wpdolgLQU+3qlV3o+oDig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="68548972"
+X-IronPort-AV: E=Sophos;i="6.14,250,1736841600"; 
+   d="scan'208";a="68548972"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2025 04:45:35 -0700
+X-CSE-ConnectionGUID: dPW/7ECNSQObGR3xnVAPAg==
+X-CSE-MsgGUID: jB5fUMQISIO7ywz1Rv9+pA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,250,1736841600"; 
+   d="scan'208";a="122028953"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 15 Mar 2025 04:45:33 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ttPxL-000BJd-1t;
+	Sat, 15 Mar 2025 11:45:31 +0000
+Date: Sat, 15 Mar 2025 19:45:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ fde88c7bdbd6394ac6388ca060648c0d3e3a94ae
+Message-ID: <202503151923.naad1Trc-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250312-pinctrl-msm-type-latch-v1-1-ce87c561d3d7@linaro.org>
-References: <20250312-pinctrl-msm-type-latch-v1-1-ce87c561d3d7@linaro.org>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.12.dev8+g17a99a841c4b
-Date: Sat, 15 Mar 2025 00:07:14 -0700
-X-Gm-Features: AQ5f1JpCKT0sF_JUksZ7UaMO469RCUq8lI0lzOKZ3AiDfi8fFBP8n4rTUCTg8A8
-Message-ID: <CAE-0n50siGEgY+NQvqBdjqg-7FaqzOUR7L9u24UiUhux1uMZcw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Clear latched interrupt status when
- changing IRQ type
-To: Linus Walleij <linus.walleij@linaro.org>, Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
-	Maulik Shah <quic_mkshah@quicinc.com>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Johan Hovold <johan@kernel.org>, Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Quoting Stephan Gerhold (2025-03-12 06:19:27)
-> When submitting the TLMM test driver, Bjorn reported that some of the test
-> cases are failing for GPIOs that not are backed by PDC (i.e. "non-wakeup"
-> GPIOs that are handled directly in pinctrl-msm). Basically, lingering
-> latched interrupt state is still being delivered at IRQ request time, e.g.:
->
->   ok 1 tlmm_test_silent_rising
->   tlmm_test_silent_falling: ASSERTION FAILED at drivers/pinctrl/qcom/tlmm-test.c:178
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: fde88c7bdbd6394ac6388ca060648c0d3e3a94ae  Merge branch 'devel' into for-next
 
-I wish it was called pinctrl-msm-test.c but oh well!
+elapsed time: 1447m
 
->   Expected atomic_read(&priv->intr_count) == 0, but
->       atomic_read(&priv->intr_count) == 1 (0x1)
->   not ok 2 tlmm_test_silent_falling
->   tlmm_test_silent_low: ASSERTION FAILED at drivers/pinctrl/qcom/tlmm-test.c:178
->   Expected atomic_read(&priv->intr_count) == 0, but
->       atomic_read(&priv->intr_count) == 1 (0x1)
->   not ok 3 tlmm_test_silent_low
->   ok 4 tlmm_test_silent_high
->
-> Whether to report interrupts that came in while the IRQ was unclaimed
-> doesn't seem to be well-defined in the Linux IRQ API. However, looking
-> closer at these specific cases, we're actually reporting events that do not
-> match the interrupt type requested by the driver:
->
->  1. After "ok 1 tlmm_test_silent_rising", the GPIO is in low state and
->     configured for IRQF_TRIGGER_RISING.
->
->  2. (a) In preparation for "tlmm_test_silent_falling", the GPIO is switched
->         to high state. The rising interrupt gets latched.
+configs tested: 224
+configs skipped: 3
 
-Is the interrupt unmasked here while the test is driving the GPIO line
-high and the interrupt trigger is IRQF_TRIGGER_RISING? If so, this is
-correct behavior.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Why wouldn't the trigger be set to IRQF_TRIGGER_FALLING, then the GPIO
-driven high, and then the GPIO driven low for the test to confirm
-falling edges work?
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                   randconfig-001-20250314    gcc-13.2.0
+arc                   randconfig-001-20250315    gcc-14.2.0
+arc                   randconfig-002-20250314    gcc-13.2.0
+arc                   randconfig-002-20250315    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    gcc-14.2.0
+arm                          exynos_defconfig    clang-21
+arm                            hisi_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250314    clang-21
+arm                   randconfig-001-20250315    gcc-14.2.0
+arm                   randconfig-002-20250314    gcc-14.2.0
+arm                   randconfig-002-20250315    gcc-14.2.0
+arm                   randconfig-003-20250314    gcc-14.2.0
+arm                   randconfig-003-20250315    gcc-14.2.0
+arm                   randconfig-004-20250314    gcc-14.2.0
+arm                   randconfig-004-20250315    gcc-14.2.0
+arm                        vexpress_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250314    gcc-14.2.0
+arm64                 randconfig-001-20250315    gcc-14.2.0
+arm64                 randconfig-002-20250314    clang-21
+arm64                 randconfig-002-20250315    gcc-14.2.0
+arm64                 randconfig-003-20250314    clang-15
+arm64                 randconfig-003-20250315    gcc-14.2.0
+arm64                 randconfig-004-20250314    clang-21
+arm64                 randconfig-004-20250315    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250314    gcc-14.2.0
+csky                  randconfig-001-20250315    gcc-14.2.0
+csky                  randconfig-002-20250314    gcc-14.2.0
+csky                  randconfig-002-20250315    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-18
+hexagon                             defconfig    gcc-14.2.0
+hexagon               randconfig-001-20250314    clang-21
+hexagon               randconfig-001-20250315    gcc-14.2.0
+hexagon               randconfig-002-20250314    clang-21
+hexagon               randconfig-002-20250315    gcc-14.2.0
+i386                             allmodconfig    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-19
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-19
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250314    clang-19
+i386        buildonly-randconfig-001-20250315    clang-19
+i386        buildonly-randconfig-002-20250314    clang-19
+i386        buildonly-randconfig-002-20250315    clang-19
+i386        buildonly-randconfig-003-20250314    gcc-12
+i386        buildonly-randconfig-003-20250315    clang-19
+i386        buildonly-randconfig-004-20250314    gcc-12
+i386        buildonly-randconfig-004-20250315    clang-19
+i386        buildonly-randconfig-005-20250314    gcc-12
+i386        buildonly-randconfig-005-20250315    clang-19
+i386        buildonly-randconfig-006-20250314    gcc-12
+i386        buildonly-randconfig-006-20250315    clang-19
+i386                                defconfig    clang-19
+i386                  randconfig-001-20250315    clang-19
+i386                  randconfig-002-20250315    clang-19
+i386                  randconfig-003-20250315    clang-19
+i386                  randconfig-004-20250315    clang-19
+i386                  randconfig-005-20250315    clang-19
+i386                  randconfig-006-20250315    clang-19
+i386                  randconfig-007-20250315    clang-19
+i386                  randconfig-011-20250315    gcc-12
+i386                  randconfig-012-20250315    gcc-12
+i386                  randconfig-013-20250315    gcc-12
+i386                  randconfig-014-20250315    gcc-12
+i386                  randconfig-015-20250315    gcc-12
+i386                  randconfig-016-20250315    gcc-12
+i386                  randconfig-017-20250315    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250314    gcc-14.2.0
+loongarch             randconfig-001-20250315    gcc-14.2.0
+loongarch             randconfig-002-20250314    gcc-14.2.0
+loongarch             randconfig-002-20250315    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                          multi_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+microblaze                      mmu_defconfig    clang-21
+mips                              allnoconfig    gcc-14.2.0
+mips                        bcm63xx_defconfig    clang-21
+mips                        qi_lb60_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250314    gcc-14.2.0
+nios2                 randconfig-001-20250315    gcc-14.2.0
+nios2                 randconfig-002-20250314    gcc-14.2.0
+nios2                 randconfig-002-20250315    gcc-14.2.0
+openrisc                          allnoconfig    clang-15
+openrisc                            defconfig    gcc-12
+parisc                            allnoconfig    clang-15
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250314    gcc-14.2.0
+parisc                randconfig-001-20250315    gcc-14.2.0
+parisc                randconfig-002-20250314    gcc-14.2.0
+parisc                randconfig-002-20250315    gcc-14.2.0
+parisc64                            defconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-15
+powerpc                       holly_defconfig    clang-21
+powerpc                    mvme5100_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250314    clang-21
+powerpc               randconfig-001-20250315    gcc-14.2.0
+powerpc               randconfig-002-20250314    gcc-14.2.0
+powerpc               randconfig-002-20250315    gcc-14.2.0
+powerpc               randconfig-003-20250314    gcc-14.2.0
+powerpc               randconfig-003-20250315    gcc-14.2.0
+powerpc64             randconfig-001-20250314    gcc-14.2.0
+powerpc64             randconfig-001-20250315    gcc-14.2.0
+powerpc64             randconfig-002-20250314    clang-17
+powerpc64             randconfig-002-20250315    gcc-14.2.0
+powerpc64             randconfig-003-20250314    clang-21
+powerpc64             randconfig-003-20250315    gcc-14.2.0
+riscv                             allnoconfig    clang-15
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250314    clang-19
+riscv                 randconfig-001-20250315    gcc-14.2.0
+riscv                 randconfig-002-20250314    gcc-14.2.0
+riscv                 randconfig-002-20250315    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250314    gcc-14.2.0
+s390                  randconfig-001-20250315    gcc-14.2.0
+s390                  randconfig-002-20250314    gcc-14.2.0
+s390                  randconfig-002-20250315    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250314    gcc-14.2.0
+sh                    randconfig-001-20250315    gcc-14.2.0
+sh                    randconfig-002-20250314    gcc-14.2.0
+sh                    randconfig-002-20250315    gcc-14.2.0
+sh                           se7619_defconfig    gcc-14.2.0
+sh                           se7724_defconfig    clang-21
+sh                   secureedge5410_defconfig    gcc-14.2.0
+sh                           sh2007_defconfig    clang-21
+sh                   sh7770_generic_defconfig    gcc-14.2.0
+sh                            shmin_defconfig    clang-21
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250314    gcc-14.2.0
+sparc                 randconfig-001-20250315    gcc-14.2.0
+sparc                 randconfig-002-20250314    gcc-14.2.0
+sparc                 randconfig-002-20250315    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250314    gcc-14.2.0
+sparc64               randconfig-001-20250315    gcc-14.2.0
+sparc64               randconfig-002-20250314    gcc-14.2.0
+sparc64               randconfig-002-20250315    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-15
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250314    gcc-12
+um                    randconfig-001-20250315    gcc-14.2.0
+um                    randconfig-002-20250314    gcc-12
+um                    randconfig-002-20250315    gcc-14.2.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250314    clang-19
+x86_64      buildonly-randconfig-001-20250315    clang-19
+x86_64      buildonly-randconfig-002-20250314    clang-19
+x86_64      buildonly-randconfig-002-20250315    clang-19
+x86_64      buildonly-randconfig-003-20250314    gcc-12
+x86_64      buildonly-randconfig-003-20250315    clang-19
+x86_64      buildonly-randconfig-004-20250314    clang-19
+x86_64      buildonly-randconfig-004-20250315    clang-19
+x86_64      buildonly-randconfig-005-20250314    gcc-12
+x86_64      buildonly-randconfig-005-20250315    clang-19
+x86_64      buildonly-randconfig-006-20250314    gcc-12
+x86_64      buildonly-randconfig-006-20250315    clang-19
+x86_64                              defconfig    clang-19
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-19
+x86_64                randconfig-001-20250315    clang-19
+x86_64                randconfig-002-20250315    clang-19
+x86_64                randconfig-003-20250315    clang-19
+x86_64                randconfig-004-20250315    clang-19
+x86_64                randconfig-005-20250315    clang-19
+x86_64                randconfig-006-20250315    clang-19
+x86_64                randconfig-007-20250315    clang-19
+x86_64                randconfig-008-20250315    clang-19
+x86_64                randconfig-071-20250315    clang-19
+x86_64                randconfig-072-20250315    clang-19
+x86_64                randconfig-073-20250315    clang-19
+x86_64                randconfig-074-20250315    clang-19
+x86_64                randconfig-075-20250315    clang-19
+x86_64                randconfig-076-20250315    clang-19
+x86_64                randconfig-077-20250315    clang-19
+x86_64                randconfig-078-20250315    clang-19
+x86_64                               rhel-9.4    clang-19
+xtensa                           alldefconfig    gcc-14.2.0
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250314    gcc-14.2.0
+xtensa                randconfig-001-20250315    gcc-14.2.0
+xtensa                randconfig-002-20250314    gcc-14.2.0
+xtensa                randconfig-002-20250315    gcc-14.2.0
 
-Have you seen the big comment in msm_gpio_irq_mask() and how it says we
-want to latch edge interrupts even when the interrupt is masked?
-
->     (b) The GPIO is re-configured for IRQF_TRIGGER_FALLING, but the latched
->         interrupt isn't cleared.
->     (c) The IRQ handler is called for the latched interrupt, but there
->         wasn't any falling edge.
->
->  3. (a) For "tlmm_test_silent_low", the GPIO remains in high state.
->     (b) The GPIO is re-configured for IRQF_TRIGGER_LOW. This seems to
->         result in a phantom interrupt that gets latched.
->     (c) The IRQ handler is called for the latched interrupt, but the GPIO
->         isn't in low state.
-
-Is the test causing phantom behavior by writing to the interrupt
-hardware?
-
->
->  4. (a) For "tlmm_test_silent_high", the GPIO is switched to low state.
->     (b) This doesn't result in a latched interrupt, because RAW_STATUS_EN
->         was cleared when masking the level-triggered interrupt.
->
-> Fix this by clearing the interrupt state whenever making any changes to the
-> interrupt configuration. This includes previously disabled interrupts, but
-> also any changes to interrupt polarity or detection type.
-
-How do we avoid the case where an interrupt happens to come in while the
-polarity is being changed? Won't we ignore such an interrupt now? If
-these are edge interrupts that's quite bad because we may never see the
-interrupt again.
-
-I think we erred on the side of caution here and let extra edge
-interrupts through because a rising or falling edge usually means the
-interrupt handler just wants to run when there's some event and it will
-do the work to find out if it was spurious or not. It's been years
-though so I may have forgotten how this hardware works. It just makes me
-very nervous that we're going to miss edges now that we always clear the
-interrupt.
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
