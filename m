@@ -1,142 +1,122 @@
-Return-Path: <linux-gpio+bounces-17680-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17681-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EE95A64F72
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 13:41:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 61114A64FEC
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 13:56:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68804188FC22
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 12:41:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F96F1887C1D
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 12:56:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BAE323BCF9;
-	Mon, 17 Mar 2025 12:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B418F23A563;
+	Mon, 17 Mar 2025 12:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpw8Ef9f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22C923A9AA;
-	Mon, 17 Mar 2025 12:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20F4238145
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Mar 2025 12:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742215293; cv=none; b=N6yr1F/gyk39jHV4w1BfCtpzQGy6z3YPATFb9CSFfOyB2oGsLNC830v0NmVnzyw14sL4vFsbiS/6Utmpd5jP+YrGTF8b0LP6SZltyI1iJTIMxwZnJwNvJubHnc1fpBxMqm6T4NgdQZMgfTbTDx2zH9pvb7wgLutWRxXQkYfjewk=
+	t=1742216197; cv=none; b=OTvHPbB4+YpDZ/BUXNBKGdndk7gTp4HxlLOHwmNhfDk7hl9ZIz395KGDzrKd/LKb9Wu7OVlle5Gwqe8zRzqSRpy1OpSoeywv2KEYY5fn5WwTAd25nsspInKnc2dNgXqIPK6KzmC5PIpLvhUzyN+0VRtcwJawLjzAZTYfrB0rd6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742215293; c=relaxed/simple;
-	bh=NTIMa/JLkLsU+CMNlhQWrTBB6VsnbivcBYfYYl4V/44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oBHpZooJ+2S1SQ+2jSCu5oVBEWDRDpyPK+6xApWOZRaTke9xVjtf9NXs3m/F5bBtd+hBQQVpFJBAqtxW03ikIPLtwFVOsG20A3h7iyXeqDXtDKckPAjXJxj366xqqO+waxH8bB2lAoQtRtZMDF659/K6UJKoOYUHq+Hmr8ADPOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.18.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 9FEFE3432D6;
-	Mon, 17 Mar 2025 12:41:30 +0000 (UTC)
-Date: Mon, 17 Mar 2025 12:41:20 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, spacemit@lists.linux.dev,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Alex Elder <elder@riscstar.com>
-Subject: Re: [PATCH v3] pinctrl: spacemit: enable config option
-Message-ID: <20250317124120-GYA1983@gentoo>
-References: <20250218-k1-pinctrl-option-v3-1-36e031e0da1b@gentoo.org>
- <CAMuHMdV4xWLEuCvCC54GBfCdELE=QSHqaOyUPD-ezE0QLYRnVA@mail.gmail.com>
+	s=arc-20240116; t=1742216197; c=relaxed/simple;
+	bh=qhR+stvQyKNFKrc3dX73Q0Oj9bJ1GSmvzUPtxWmpD7I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Uzei5Yl6EglA+XUsFRhJseANb5iOwLg13A9DGXLMSvyHFgoVAOQ+bYr1YDTzb/uulpFmYGzI8yMFb+utEwa3A9dvBvSpBcaE3QF4Ubpnx7QzhmAo4uD6lHpg9W0t23HCkeJh5pptqmeJfNIfmvrSu1Js7diUS1UWohx/GdX5Hlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dpw8Ef9f; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742216194;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pLLA8B7Q6RruRJ/SeEP0F06UuUK/GekT/XdbY6Zuva8=;
+	b=dpw8Ef9fZMrNYIlqz5K7dGdJoS+7uFtQcPQgZDId4Sjlk4ccdU2o+aKI6mLF6GB16WjOGR
+	7sZV1nVK/v7xUxmVXZJgcrxb76/F36vdhGBMI6RSGwsaJY55KTKkywRKWAieuveJzA1DAa
+	2xTV0QHrUvMr08QEgNDC+gYP9TSyIe4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-584-LDSulizzNSG3POXKDChZ-A-1; Mon, 17 Mar 2025 08:56:33 -0400
+X-MC-Unique: LDSulizzNSG3POXKDChZ-A-1
+X-Mimecast-MFC-AGG-ID: LDSulizzNSG3POXKDChZ-A_1742216192
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-394bbefc98cso2874668f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Mar 2025 05:56:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742216192; x=1742820992;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pLLA8B7Q6RruRJ/SeEP0F06UuUK/GekT/XdbY6Zuva8=;
+        b=lm06Zp+NeX0lT4cbXABrGq6InNWL7Qpzi2ZKAqQz64ec+aZTaii3Y1AI/zrFe9plhr
+         FcTFAAIb6RogbyNIaAjPdGuwv0LhX5rq493BncJ0cu9bEUAMdEs+yfULZyGl29eBB/j6
+         jzSwLmOJnTi+dy3+SfyO8bzyvy805FfbioaFCALQEg5MeHNxjmEC9pbXr4FkFDzGNz+q
+         h3v3QivD/t23znqciZ//xtEPY8X+GDTnljS0LBT3HoWSfHzqjwqzyTusQ2iOTt9mKHby
+         B9WUgfU9d4NB/mFNLRR04drHC0Rn8be78IBPW5GhqxXu5a0CoFudX/qVQVAkcKP5f1mo
+         qA3A==
+X-Gm-Message-State: AOJu0Yyf2otuBgMj7uDHPmYxpg6EP9GJd7xa0vYIqxAxsHstZdu5QCR+
+	NubqzUz8e1rsVecn5C7iwL399TFk94K0ZsO/nlDpeu921qhcJsuUWlahGpTEvucx7JIZVSVKshp
+	+nJSP0Jnh87PHdXg/Y4NRn8Zri12+ZuV02oSVt1bbCMaL8a6lQaRF3LbyeIg=
+X-Gm-Gg: ASbGncvc50ZVmbmuDPxz9lbiXQrcZc/F2fZsWtxVPy/BupNEPQhZaaNn6eMKCzQVsDd
+	tcVyv446qC/s3PHyUyfWzidHdWk1Nbgv5Wxh4faxZN4DBJ5wb5Nalse5A+LgZFhnCP3T9a9Ns5f
+	fNfi3m4rb7rWpY/5kHNlT87yoFutMFIRQuABMpHCMr0ycOQWHpzGBqY1t7opagIwYUMIf680XRd
+	DZ2IaGfLN0wToSQr9zsRZSsAEeUtnYdyhthqrWiUKKTuLZ5aYxsKWOrS9zGfRhM03frUM6ewSBf
+	BaE5b9k76cWR6IzVS+15vZztSPOBTZhZFVuwx1u4z+aFXoIPFsjyeg6lF+XBxDlsSe48AXRRAQ=
+	=
+X-Received: by 2002:adf:a189:0:b0:391:2a9a:4796 with SMTP id ffacd0b85a97d-3971e2ae2fdmr9145129f8f.18.1742216192254;
+        Mon, 17 Mar 2025 05:56:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIpr8LRCQQZUxAWE1Jo22GeaEAUfQFRwAkofiJzd6KgF5dHT33ZaPc1Wl2+/7G725sqDyAdQ==
+X-Received: by 2002:adf:a189:0:b0:391:2a9a:4796 with SMTP id ffacd0b85a97d-3971e2ae2fdmr9145110f8f.18.1742216191872;
+        Mon, 17 Mar 2025 05:56:31 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1fdda32fsm104214085e9.4.2025.03.17.05.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 05:56:31 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij
+ <linus.walleij@linaro.org>, Yixun Lan <dlan@gentoo.org>, Conor Dooley
+ <conor.dooley@microchip.com>
+Cc: linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] pinctrl: spacemit: PINCTRL_SPACEMIT_K1 should not
+ default to y unconditionally
+In-Reply-To: <6881b8d1ad74ac780af8a974e604b5ef3f5d4aad.1742198691.git.geert+renesas@glider.be>
+References: <6881b8d1ad74ac780af8a974e604b5ef3f5d4aad.1742198691.git.geert+renesas@glider.be>
+Date: Mon, 17 Mar 2025 13:56:29 +0100
+Message-ID: <87msdjdddu.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV4xWLEuCvCC54GBfCdELE=QSHqaOyUPD-ezE0QLYRnVA@mail.gmail.com>
+Content-Type: text/plain
 
-Hi Geert:
+Geert Uytterhoeven <geert+renesas@glider.be> writes:
 
-On 09:18 Mon 17 Mar     , Geert Uytterhoeven wrote:
-> Hi Yixun,
-> 
-> Thanks for your patch, which is now commit 7ff4faba63571c51
-> ("pinctrl: spacemit: enable config option") in v6.14-rc7.
-> 
-> On Tue, 18 Feb 2025 at 01:32, Yixun Lan <dlan@gentoo.org> wrote:
-> > Pinctrl is an essential driver for SpacemiT's SoC,
-> > The uart driver requires it, same as sd card driver,
-> > so let's enable it by default for this SoC.
-> >
-> > The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-> > 'make defconfig' to select kernel configuration options.
-> > This result in a broken uart driver where fail at probe()
-> > stage due to no pins found.
-> 
-> Perhaps this is an issue with the uart driver?
-> I just disabled CONFIG_PINCTRL_RZA2 on RZA2MEVB (which is one of the
-> few Renesas platforms where the pin control driver is not enabled by
-> default, for saving memory), and the system booted fine into a Debian
-> nfsroot.  Probe order of some devices did change, and "Trying to
-> probe devices needed for running init" was printed.
-> 
-my problem was CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled, result as
-# CONFIG_PINCTRL_SPACEMIT_K1 is not set
+Hello Geert,
 
-for your case, is CONFIG_PINCTRL_RZA2 built as module? 
-it should work for uart driver with deferred probe mechanism..
+> Merely enabling compile-testing should not enable additional
+> functionality.
+>
+> Fixes: 7ff4faba63571c51 ("pinctrl: spacemit: enable config option")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
 
-> > Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
-> > Reported-by: Alex Elder <elder@kernel.org>
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > Tested-by: Alex Elder <elder@riscstar.com>
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> 
-> > --- a/drivers/pinctrl/spacemit/Kconfig
-> > +++ b/drivers/pinctrl/spacemit/Kconfig
-> > @@ -4,9 +4,10 @@
-> >  #
-> >
-> >  config PINCTRL_SPACEMIT_K1
-> > -       tristate "SpacemiT K1 SoC Pinctrl driver"
-> > +       bool "SpacemiT K1 SoC Pinctrl driver"
-> >         depends on ARCH_SPACEMIT || COMPILE_TEST
-> >         depends on OF
-> > +       default y
-> 
-> Ouch, fix sent...
-> "[PATCH] pinctrl: spacemit: PINCTRL_SPACEMIT_K1 should not default to
-> y unconditionally"
-> https://lore.kernel.org/6881b8d1ad74ac780af8a974e604b5ef3f5d4aad.1742198691.git.geert+renesas@glider.be
-> 
-I got suggestion in v1
-https://lore.kernel.org/all/20250211-nature-kilt-9882e53e5a3f@spud/
+Indeed.
 
-so for COMPILE_TEST case, ARCH_SPACEMIT config won't be enabled? then neither PINCTRL_SPACEMIT_K1
-anyway, I'm fine with either way, thanks
-
-> >         select GENERIC_PINCTRL_GROUPS
-> >         select GENERIC_PINMUX_FUNCTIONS
-> >         select GENERIC_PINCONF
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
 
