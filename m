@@ -1,65 +1,69 @@
-Return-Path: <linux-gpio+bounces-17675-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17676-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBF44A64A78
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 11:42:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AE74A64B1E
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 11:55:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4E377A1900
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 10:41:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56D743BBAED
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 10:50:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68EDF224B12;
-	Mon, 17 Mar 2025 10:41:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EC002356D5;
+	Mon, 17 Mar 2025 10:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P43g9F1h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTMTEiay"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A4F19F40A;
-	Mon, 17 Mar 2025 10:41:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0861993BD;
+	Mon, 17 Mar 2025 10:49:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742208119; cv=none; b=ZsihMNV0nj1x4q1Revi0PZSFGJ6ZEKEpeQjnq7WyvaDumabUz8melBE/ZWLYRT+BSVsVGjPfIoZS7XurGBAopKc7t7JBMdegFyRyoGTPyEhQYY4DKyHnTtKiZBLFYEI6d3n5Sm9Dmb0cEWiTJ58PYpImkV5zVTNZKlof1IdOCN0=
+	t=1742208570; cv=none; b=uwerHvGdRkHMUgYXCRnXAz1PfJRzZm79e1PjA82uBoDqGeqQBWqbgGjET3dwZgf/1Io7B+f0oa3k/WulQimby1mZ3pD303foQRarxal8OIOZ7TD8VkI4ihb+A4v3luwoesRBHsV5iknn0Mjvi80ir4Wch7TybKDeOEqvI3lMv8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742208119; c=relaxed/simple;
-	bh=S+bZrXRRNuLrRLZQZmTxgx9Qoh5vMQnkLn0jPOAmkiA=;
+	s=arc-20240116; t=1742208570; c=relaxed/simple;
+	bh=DHLKtqKokb5/ORaPjnoa21RvlOzXzzI+TwJQN4jKmm8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ea3z1V6WrCYd967Z7ZYD6W/3d3Is4v66zDIhIj7OCDRYip6PCOKJ+7Z5/wDaajDV87YFtlnOlOme7zGFQ4VN/2xtaI/M5zKLE8y1k7zC/rtcbwpb0HUKzV1k8IE6cF3QojVO2+uBpeMxxSUdgtZZqdKGzNvbFBTdNq3yWxTReIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P43g9F1h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB8B3C4CEE3;
-	Mon, 17 Mar 2025 10:41:57 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=XKhgCSzcGFNrDoh3u35jdNaCtDKZgLs+8x23SqdHmbJRtRIAy92MnpaQjXg6hlzqVicqgAszuOztMb74KxiWBxDOuFtVRRKs4eJAaoyjYCaBjyuG93hYVFNbGVluPSlR46618iLBDskF0dbWJPAyuUMWD87ey1BYWSUtRfqm5mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTMTEiay; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BD1C4CEE3;
+	Mon, 17 Mar 2025 10:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742208118;
-	bh=S+bZrXRRNuLrRLZQZmTxgx9Qoh5vMQnkLn0jPOAmkiA=;
+	s=k20201202; t=1742208569;
+	bh=DHLKtqKokb5/ORaPjnoa21RvlOzXzzI+TwJQN4jKmm8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P43g9F1hhHqEa4tOz/U0oniq0b1kcSvTV3H/SdC3tsl9GwtDNMA2d9+q4Ct1mw5PC
-	 iieDGr5wMMUOxCNVvfFxHaL/q7hhCnO0JW8bELKkQkYkIimLelgEVpz7XRzGMGqLYD
-	 m4+aKNkpFS7bEniSNqjYifP0q2D3+J2YBTxvhBjK9xfhIoKDTrXkJZ2nNPYkvnfJ0J
-	 bPuiGH0RCveLmpNSA5z1lL+cB1Oyzx2btW+qPXbeW/eNIHx9yxvGKbl7epNgnXDuEv
-	 tORcIBR5c3oNZ5664Ga8KShH9AxslzKbRKim+FiM1Z0tvb4PtWDv7PIMTtxFdb72KD
-	 dD5JKl9xkB9wg==
-Date: Mon, 17 Mar 2025 11:41:53 +0100
+	b=FTMTEiayCOljtv8GLrylo8HGHweUsQRLbmaUiKxoofC4/CYB8N2vxqCoTaE1F5Z6D
+	 A2k5slyoogC1NQGauUeuQTMSB4yYKO+KrpsOJqfiHJLQDZBfQdlJJCwcGRiwGzMuN/
+	 Hy3m/rCrQPwnptuswFLkxHEzWN2b4U+hha7f8aEn9/uT4elbWZYqcjGej2yWiDPskr
+	 WfJuU8/qfKryhJoH3KcgN5y2dWHwn7x02FTiz6DXznKfslnJBwlQwxCEw2mWVWmMT9
+	 7dF9xr3GXqRs+0Na8zNmlP5ny5KLkY+VRdQ5fHl0TaTdbRdRI3msX75tfZo8dahRl7
+	 bM+FkVf599Q3Q==
+Date: Mon, 17 Mar 2025 11:49:24 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, linux-gpio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, 
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+To: Lu Tang =?utf-8?B?KOaxpOeSkCk=?= <Lu.Tang@mediatek.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH 05/18] dt-bindings: mfd: adp5585: document adp5589 I/O
- expander
-Message-ID: <20250317-noisy-handsome-worm-b5c3f0@krzk-bin>
-References: <20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com>
- <20250313-dev-adp5589-fw-v1-5-20e80d4bd4ea@analog.com>
- <20250314-outstanding-futuristic-cat-5d8240@krzk-bin>
- <c59477b2a94cbd10bc530809fbcdc0f2d1b79d07.camel@gmail.com>
- <f1ccbdc1-3f47-46a8-bcc2-ca6135882392@kernel.org>
- <ae74d31e8b3874da91ec5c2c9a20274358073266.camel@gmail.com>
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Chen Zhong =?utf-8?B?KOmSn+i+sCk=?= <Chen.Zhong@mediatek.com>, Sen Chu =?utf-8?B?KOWCqOajrik=?= <Sen.Chu@mediatek.com>, 
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH 5/5] dt-bindings:
+ pmic: mediatek: Add pmic documents
+Message-ID: <20250317-mighty-dolphin-of-downpour-e7a9f5@krzk-bin>
+References: <20250314073307.25092-1-Lu.Tang@mediatek.com>
+ <20250314073307.25092-6-Lu.Tang@mediatek.com>
+ <SEZPR03MB6891E21CD04880AB1AC91BFC80D22@SEZPR03MB6891.apcprd03.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,42 +73,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ae74d31e8b3874da91ec5c2c9a20274358073266.camel@gmail.com>
+In-Reply-To: <SEZPR03MB6891E21CD04880AB1AC91BFC80D22@SEZPR03MB6891.apcprd03.prod.outlook.com>
 
-On Mon, Mar 17, 2025 at 09:30:37AM +0000, Nuno S=C3=A1 wrote:
-> Now, I have:
+On Fri, Mar 14, 2025 at 09:01:11AM +0000, Lu Tang (=E6=B1=A4=E7=92=90) wrot=
+e:
+> Update email
 >=20
-> - if:
->       properties:
->         compatible:
->           contains:
->             const: adi,adp5585-01
->     then:
->       properties:
->         gpio-reserved-ranges: false
->     else:
->       if:
->         properties:
->           compatible:
->             contains:
->               enum:
->                 - adi,adp5585-00
->                 - adi,adp5585-02
->                 - adi,adp5585-03
->                 - adi,adp5585-04
->       then:
->         properties:
->           gpio-reserved-ranges:
->             maxItems: 1
->             items:
->               items:
->                 - const: 5
->                 - const: 1
+> -----=E9=82=AE=E4=BB=B6=E5=8E=9F=E4=BB=B6-----
+> =E5=8F=91=E4=BB=B6=E4=BA=BA: Lu.Tang <Lu.Tang@mediatek.com>=20
+> =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2025=E5=B9=B43=E6=9C=8814=E6=97=A5 =
+15:33
+> =E6=94=B6=E4=BB=B6=E4=BA=BA: Jonathan Cameron <jic23@kernel.org>; Lars-Pe=
+ter Clausen <lars@metafoo.de>; Rob Herring <robh@kernel.org>; Krzysztof Koz=
+lowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Dmitry Tor=
+okhov <dmitry.torokhov@gmail.com>; Lee Jones <lee@kernel.org>; Matthias Bru=
+gger <matthias.bgg@gmail.com>; AngeloGioacchino Del Regno <angelogioacchino=
+=2Edelregno@collabora.com>; Sean Wang <sean.wang@kernel.org>; Linus Walleij=
+ <linus.walleij@linaro.org>; Liam Girdwood <lgirdwood@gmail.com>; Mark Brow=
+n <broonie@kernel.org>; Stephen Boyd <sboyd@kernel.org>; Chen Zhong (=E9=92=
+=9F=E8=BE=B0) <Chen.Zhong@mediatek.com>; Sen Chu <shen.chu@mediatek.com>
+> =E6=8A=84=E9=80=81: linux-iio@vger.kernel.org; devicetree@vger.kernel.org=
+; linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; linux-arm-kern=
+el@lists.infradead.org; linux-mediatek@lists.infradead.org; linux-gpio@vger=
+=2Ekernel.org; Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_=
+Upstream_Group@mediatek.com>; Lu Tang (=E6=B1=A4=E7=92=90) <Lu.Tang@mediate=
+k.com>
+> =E4=B8=BB=E9=A2=98: [PATCH 5/5] dt-bindings: pmic: mediatek: Add pmic doc=
+uments
 
-Yes, you are right. The diff context confused me, so I thought these are
-different.
-
-It's fine.
+The amount of errors shown by checkpatch on this is just shocking.
 
 Best regards,
 Krzysztof
