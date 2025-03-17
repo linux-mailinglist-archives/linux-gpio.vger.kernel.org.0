@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-17673-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17674-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57407A647FD
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 10:49:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49CBCA64862
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 10:57:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DC811890C3A
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 09:49:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DE4618853B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 09:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E238822689C;
-	Mon, 17 Mar 2025 09:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 836DA22DF91;
+	Mon, 17 Mar 2025 09:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="HjKaTdPy"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="nkfwHgNI"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4611AAA32;
-	Mon, 17 Mar 2025 09:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAD222C355;
+	Mon, 17 Mar 2025 09:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742204938; cv=none; b=Iqj7l9jLQZWcDrkjch6huJIPQNyt/JXVjB/bi8uTp6a5n7kr/o02ele6DIQ0dTXkdRd2BwUhlbRnGvYrsMLvtMbChdL/QpNHVIvCBqKQIGwmg+Ryxq151VxAldfaegpoRN1B+e4YdOCGvuqDne6oHuwdZRS6RnEVm2/PxeuuHA8=
+	t=1742205472; cv=none; b=FrZWCa8Cwch7FvcDfJfD91j+Bso3TiMpzzO2DfaeIIU9yMLACNcHpBcOy20dj9QJ6goVTVeYDvrIwa99jfWOu9oqbEuP8DLMZz0BpJLIo95AGYQhL+ND8L9hQyv62L7kkamSHrgptkYXNzm7gy+xQdW+aSEgbm2+XIqeGA0hkUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742204938; c=relaxed/simple;
-	bh=h7GyFVQU2oi/Oh20M0uqm+bW9goiwku7FOLQNxE2IvQ=;
+	s=arc-20240116; t=1742205472; c=relaxed/simple;
+	bh=u4gGQHQyXKmcD/n4B9Coibe/2rVi6aB/7qBpOdGg5FU=;
 	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=rw1+TI+Fc8k0omuF1oa0M8LeWRfwuFOH8QJwfHeq9KzvJ4ts1SfGscb391LZllTZkE5NEj3HNNtHGk4X/upva1SrXmY7pUZTtRPQcIP1qF4QE/qguLYhRv2PsREuvZ6l5Oobk6hRuv1vRUG+Yqg/l31oFcPssY4t3K/s7ebeyZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=HjKaTdPy; arc=none smtp.client-ip=5.75.144.95
+	 MIME-Version:Content-Type; b=p+ZW75W3IcAYoJRGo5xf9XtG3h9Osvhg0cWTNh3BxbquXXvmnJWhdgaR1kiFx95sDgUC3jyv7k8NC8/9YOaKPjckRn7n/nJuPPqjeKHAViWzC5cV5px8lzQVTIbKZPlvYOObXlEpzwIXsv7/PLqVbqwiTzWOOjwALu3KFVuRaEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=nkfwHgNI; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Received: from [127.0.0.1] (254C1C5A.nat.pool.telekom.hu [37.76.28.90])
-	by mail.mainlining.org (Postfix) with ESMTPSA id C8F94BBAC4;
-	Mon, 17 Mar 2025 09:48:48 +0000 (UTC)
+	by mail.mainlining.org (Postfix) with ESMTPSA id B53F0BBAC4;
+	Mon, 17 Mar 2025 09:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1742204929;
+	s=psm; t=1742205468;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KQUc1TIqImv/gjsL1SsdE5mqG9ewHx8AMbVf5J90/JE=;
-	b=HjKaTdPyYIaSu2gQhXv0c2GnzmfZhGAMCKxZ8Uzv2knIpTsW44IwlfaN142YjxS6Iv4BkT
-	BOI+LRkkwuL9s7HKOfzGxRyBrhgO1jGgBMhSRvmqRMQOwuG1mp1bfy31tASnmODSUpT1FJ
-	hxrEu0LsLpBqMONxp69RU4XxSj68pQFGpLhacpQni5tiRINKPHc0ihgpJ029CyxqbtaLfu
-	JkyQQRm+MwhZK5/wSUDyBxA0sfU3IJXwu/yqtSwxPosBKCl1HhRBNOhVYFBCX9zihrgjmv
-	FJEHe2Qj3fyJPNV4drbURK+9avdc7rgSkmwvyENBwh5cPImGI/kwMBJ5ERHPJw==
-Date: Mon, 17 Mar 2025 10:48:47 +0100
+	bh=FhlrRtgQ29uAkg57Izvory2SkjADGQMOEcn3oIaEafg=;
+	b=nkfwHgNIkMw6drNJf+qwgVofGWU+RQr5cydxMVJUZvLcx3uT/yiIjF68d2I6B9d2H1DydP
+	AmymPLAI6g2lw7kEDLY+0D3uDkoP9QAUPFh6TEeG/dpXpr6lEisnrxIYknRRnEID3jHCtQ
+	N7MZ+vsQz5FHOYKqC1J89V2skPUC++82H33O3InzwoQO5ZmDaFg0uwmVqxqTsBqmeJG1AS
+	lcvUWqbfk29XZM0NjItqztSvwYQH6wtwYVBMjOYLAuZB8fFOHSsD/BKYZpMHFwGxb8SSof
+	8QBPprrFFrZjZ6wirsgCU+OShkqiFfLOD11BURS2ICwXmBXo27u7e81uiLmRvw==
+Date: Mon, 17 Mar 2025 10:57:45 +0100
 From: =?ISO-8859-1?Q?Barnab=E1s_Cz=E9m=E1n?= <barnabas.czeman@mainlining.org>
 To: Krzysztof Kozlowski <krzk@kernel.org>
 CC: Bjorn Andersson <andersson@kernel.org>,
@@ -69,14 +69,13 @@ CC: Bjorn Andersson <andersson@kernel.org>,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org,
- Adam Skladowski <a39.skl@gmail.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v4_3/6=5D_dt-bindings=3A_drm/msm/g?=
- =?US-ASCII?Q?pu=3A_Document_AON_clock_for_A505/A506/A510?=
+ ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v4_1/6=5D_dt-bindings=3A_clock=3A_q?=
+ =?US-ASCII?Q?com=3A_Add_MSM8937_Global_Clock_Controller?=
 User-Agent: Thunderbird for Android
-In-Reply-To: <20250317-hypnotic-weightless-mosquito-f489ad@krzk-bin>
-References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org> <20250315-msm8937-v4-3-1f132e870a49@mainlining.org> <20250317-hypnotic-weightless-mosquito-f489ad@krzk-bin>
-Message-ID: <73631B5F-0916-4F81-AAB4-C8E2F4B999EC@mainlining.org>
+In-Reply-To: <20250317-hot-obedient-sturgeon-394cb8@krzk-bin>
+References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org> <20250315-msm8937-v4-1-1f132e870a49@mainlining.org> <20250317-hot-obedient-sturgeon-394cb8@krzk-bin>
+Message-ID: <11695D76-7CBE-41CE-A8DD-D6845D01670C@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,47 +88,134 @@ Content-Transfer-Encoding: quoted-printable
 
 
 
-On March 17, 2025 10:21:50 AM GMT+01:00, Krzysztof Kozlowski <krzk@kernel=
+On March 17, 2025 10:17:46 AM GMT+01:00, Krzysztof Kozlowski <krzk@kernel=
 =2Eorg> wrote:
->On Sat, Mar 15, 2025 at 03:57:37PM +0100, Barnab=C3=A1s Cz=C3=A9m=C3=A1n =
+>On Sat, Mar 15, 2025 at 03:57:35PM +0100, Barnab=C3=A1s Cz=C3=A9m=C3=A1n =
 wrote:
->> From: Adam Skladowski <a39=2Eskl@gmail=2Ecom>
+>> Add device tree bindings for the global clock controller on Qualcomm
+>> MSM8937 platform=2E
 >>=20
->> Adreno 505 (MSM8937), Adreno 506(MSM8953) and Adreno 510(MSM8976)
->> require Always-on branch clock to be enabled, describe it=2E
->>=20
->> Signed-off-by: Adam Skladowski <a39=2Eskl@gmail=2Ecom>
->> [reword commit, move alwayson on the first place]
 >> Signed-off-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <barnabas=2Eczeman@mainli=
 ning=2Eorg>
 >> ---
->>  Documentation/devicetree/bindings/display/msm/gpu=2Eyaml | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>  =2E=2E=2E/bindings/clock/qcom,gcc-msm8937=2Eyaml           | 75 ++++++=
+++++++++++++++++
+>>  include/dt-bindings/clock/qcom,gcc-msm8917=2Eh       | 17 +++++
+>>  2 files changed, 92 insertions(+)
 >>=20
->> diff --git a/Documentation/devicetree/bindings/display/msm/gpu=2Eyaml b=
-/Documentation/devicetree/bindings/display/msm/gpu=2Eyaml
->> index 6ddc72fd85b04537ea270754a897b4e7eb269641=2E=2E5028398cc3b517e404a=
-92a2c30688f72eab4c1b3 100644
->> --- a/Documentation/devicetree/bindings/display/msm/gpu=2Eyaml
->> +++ b/Documentation/devicetree/bindings/display/msm/gpu=2Eyaml
->> @@ -152,11 +152,13 @@ allOf:
->>        properties:
->>          clocks:
->>            minItems: 2
->> -          maxItems: 7
->> +          maxItems: 8
->> =20
->>          clock-names:
->>            items:
->>              anyOf:
->> +              - const: alwayson
->> +                description: GPU Always-On clock
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-msm8937=
+=2Eyaml b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8937=2Eyaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000=2E=2E3c3f6756048e195671f=
+542b3a6cd09057558eafa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8937=2Eyaml
+>> @@ -0,0 +1,75 @@
+>> +# SPDX-License-Identifier: (GPL-2=2E0-only OR BSD-2-Clause)
+>> +%YAML 1=2E2
+>> +---
+>> +$id: http://devicetree=2Eorg/schemas/clock/qcom,gcc-msm8937=2Eyaml#
+>> +$schema: http://devicetree=2Eorg/meta-schemas/core=2Eyaml#
+>> +
+>> +title: Qualcomm Global Clock & Reset Controller on MSM8937
+>> +
+>> +maintainers:
+>> +  - Barnabas Czeman <barnabas=2Eczeman@mainlining=2Eorg>
+>> +
+>> +description: |
+>> +  Qualcomm global clock control module provides the clocks, resets and=
+ power
+>> +  domains on MSM8937=2E
 >
->Are you adding bindings for devices which were not described previously?
->Then don't grow this pattern, but create if:then: with a strictly
->ordered list for them (and keeping order of other variants)=2E
+>This is exactly like msm8953, so why it cannot be there?
 >
-8956, 8976, 8953 schemas are failing because of missing always-on clock=2E
+Not exactly clock names are different, msm8953 have sleep msm8937 have sle=
+ep_clk=2E
+>> +
+>> +  See also::
+>> +    include/dt-bindings/clock/qcom,gcc-msm8917=2Eh
+>
+>typo, 8937
+>
+No
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: qcom,gcc-msm8937
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: XO source
+>> +      - description: Sleep clock source
+>> +      - description: DSI phy instance 0 dsi clock
+>> +      - description: DSI phy instance 0 byte clock
+>> +      - description: DSI phy instance 1 dsi clock
+>> +      - description: DSI phy instance 1 byte clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: xo
+>> +      - const: sleep_clk
+>> +      - const: dsi0pll
+>> +      - const: dsi0pllbyte
+>> +      - const: dsi1pll
+>> +      - const: dsi1pllbyte
+>> +
+>> +required:
+>> +  - compatible
+>> +  - clocks
+>> +  - clock-names
+>> +  - '#power-domain-cells'
+>> +
+>> +allOf:
+>> +  - $ref: qcom,gcc=2Eyaml#
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/qcom,rpmcc=2Eh>
+>> +
+>> +    clock-controller@1800000 {
+>> +      compatible =3D "qcom,gcc-msm8937";
+>> +      reg =3D <0x01800000 0x80000>;
+>> +      #clock-cells =3D <1>;
+>> +      #reset-cells =3D <1>;
+>> +      #power-domain-cells =3D <1>;
+>> +      clocks =3D <&rpmcc RPM_SMD_XO_CLK_SRC>,
+>> +               <&sleep_clk>,
+>> +               <&dsi0_phy 1>,
+>> +               <&dsi0_phy 0>,
+>> +               <&dsi1_phy 1>,
+>> +               <&dsi1_phy 0>;
+>> +      clock-names =3D "xo",
+>> +                    "sleep_clk",
+>> +                    "dsi0pll",
+>> +                    "dsi0pllbyte",
+>> +                    "dsi1pll",
+>> +                    "dsi1pllbyte";
+>> +    };
+>> +=2E=2E=2E
+>> diff --git a/include/dt-bindings/clock/qcom,gcc-msm8917=2Eh b/include/d=
+t-bindings/clock/qcom,gcc-msm8917=2Eh
+>> index 4b421e7414b50bef2e2400f868ae5b7212a427bb=2E=2Eec1f0b261dd5ccfe489=
+6a00ffa9cf86de98b9cb3 100644
+>> --- a/include/dt-bindings/clock/qcom,gcc-msm8917=2Eh
+>> +++ b/include/dt-bindings/clock/qcom,gcc-msm8917=2Eh
+>> @@ -170,6 +170,22 @@
+>>  #define VFE1_CLK_SRC				163
+>>  #define VSYNC_CLK_SRC				164
+>>  #define GPLL0_SLEEP_CLK_SRC			165
+>> +#define BLSP1_QUP1_I2C_APPS_CLK_SRC		166
+>> +#define BLSP1_QUP1_SPI_APPS_CLK_SRC		167
+>> +#define BLSP2_QUP4_I2C_APPS_CLK_SRC		168
+>> +#define BLSP2_QUP4_SPI_APPS_CLK_SRC		169
+>
+>Why are you adding bindings to 8917? Nothing in commit msg explains
+>that=2E
+Because msm8917 driver was expanded with 8937 bits, i will expand the comm=
+it message=2E
+>
 >Best regards,
 >Krzysztof
 >
