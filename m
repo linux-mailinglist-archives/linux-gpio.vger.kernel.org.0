@@ -1,152 +1,150 @@
-Return-Path: <linux-gpio+bounces-17684-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17685-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CDA7A65121
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 14:32:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B562A651D7
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 14:52:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23F051751E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 13:32:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1EA0174B8D
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 13:52:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB89B24A05D;
-	Mon, 17 Mar 2025 13:30:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C353523FC41;
+	Mon, 17 Mar 2025 13:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E/NFBWzO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118F523FC54;
-	Mon, 17 Mar 2025 13:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DAE23F277;
+	Mon, 17 Mar 2025 13:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742218202; cv=none; b=LZRhfNRMczn5nrxmHggT3eLIYWHARfPy4ALbe8LuyQ4pu3Wds6iTuRHzD5Mz1NRRcLD7ISqajTsdbUTsakLwHPwXUrQeFqWUCBSNV+roRIEJnp471H5b0K4wowyBL/nA5wvqBlwK/JbgdoU6nQ0gFajL2ZES/FVAAMPhbB3CD4I=
+	t=1742219502; cv=none; b=YoveTpzkIHgt0pzCdCovsx9RAk92vQFXspkxvYZhxjSj9mtvuy1gyJMDnd6FVJpR8vvrUuXctCT80J8zU3bqvHqQlxVedlBElhMsz0k/Wb9wH19GU26hMNKajZs/K+oKBkgVwxhnOoPXd1ii5USX7gDESByo7MsW6g7cLtmMijA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742218202; c=relaxed/simple;
-	bh=GG9/8jbQy5nQY9MAlj9xXlX93pIOtqAetS5raHA83BI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YLTCaxQOV1bALAjM1oSlrXd4cMXNd1aBJdaMQkkPDeVovZrhDieUSgLZej0yrGmDEX6A2heGeraXoanQN9O/A7Z6Nv0xB7zo8Lm+j9BQ2Rv0uETqAJ5CuUmLJo5DSUKgrlTTxGitgMttGUq+bcEBaxlVAKl+e+9gNXajnwMvxXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.18.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id EE6493432A1;
-	Mon, 17 Mar 2025 13:29:59 +0000 (UTC)
-Date: Mon, 17 Mar 2025 13:29:55 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, spacemit@lists.linux.dev,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Alex Elder <elder@riscstar.com>
-Subject: Re: [PATCH v3] pinctrl: spacemit: enable config option
-Message-ID: <20250317132955-GYC1983@gentoo>
-References: <20250218-k1-pinctrl-option-v3-1-36e031e0da1b@gentoo.org>
- <CAMuHMdV4xWLEuCvCC54GBfCdELE=QSHqaOyUPD-ezE0QLYRnVA@mail.gmail.com>
- <20250317124120-GYA1983@gentoo>
- <CAMuHMdWM5ymPVRe36+Atr0cDAdRGyw39jFJvE+9PWTUUiiMfCg@mail.gmail.com>
+	s=arc-20240116; t=1742219502; c=relaxed/simple;
+	bh=6tXJmTOt9OvwD8ihnhNqIpB4znJb/dP1SVDxN15PS74=;
+	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:Mime-Version:
+	 References:In-Reply-To; b=bcBe/gAtHOl5vBrm+vcB+6yk6MmQqMA/wWFct9zZ++x1dOKo4EoUewkTObJVO3sa3VyV1hpsbbgQZCqzMLC71yRC0ovOe67M+2sJPT4Q6EiYUn3yBvLOHLy4XUVjZuUeyYyDA0vw5PMROEyCdkGqe0yvX2Wb7iwCCfEVrwiX5T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E/NFBWzO; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DB8272058A;
+	Mon, 17 Mar 2025 13:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742219492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1NtgX5jhncJhxgIK5qQ5c2DwATuhUFn7mLC9sGWQROE=;
+	b=E/NFBWzO3FHEBo7S/3dO98+JMqDNe/1qg+t5woNWhbfaghH3VMCjyHrUA7GTJV9tRLimnv
+	BuLsyy+l9/4x9wSl1bSz7Niu88SAABfKR3Yng2iRswM6ixflGqoyZcC9XNESQ1oX+JCEYd
+	FADlidkLQez+Q5ZNqSQcQQIbRIjlHw3U+Cbn2uIvOCANgfxKRiQrLpSu/lXdYdtE5WTa6b
+	T7UCV6HBdO267bibsLhOULgnm5r0WKvKd3cfEgBizGQoNp1n45/9bh3G91GHaMBBBv60Ao
+	DoPKoNz84I5Mx3H6CYWmiVl1QRd9+wnquYTBFWoNWG1k1SgVwPeXInflFoqPgw==
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 17 Mar 2025 14:51:30 +0100
+Message-Id: <D8IL9KSYUQZK.MB94IIL9FUL1@bootlin.com>
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, "Michael Walle" <mwalle@kernel.org>, "Mark
+ Brown" <broonie@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Linus Walleij"
+ <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 03/10] pwm: max7360: Add MAX7360 PWM support
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWM5ymPVRe36+Atr0cDAdRGyw39jFJvE+9PWTUUiiMfCg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
+ <e7epeegrp6cz27s63gnqe7b6me7h3rn5d6mo7mbd6rwgnwyys6@j7f6cy4uy3wq>
+In-Reply-To: <e7epeegrp6cz27s63gnqe7b6me7h3rn5d6mo7mbd6rwgnwyys6@j7f6cy4uy3wq>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeelieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtfffkvefhvffuggfgofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelfeetjeetffegkeeukeehvdegleeklefggfdtieduvdfgkeeggefhfeekffefhfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrr
+ hhordhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Hi Geert:
+On Thu Mar 13, 2025 at 10:03 PM CET, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Mathieu,
+>
+> On Fri, Feb 14, 2025 at 12:49:53PM +0100, mathieu.dubois-briand@bootlin.c=
+om wrote:
+> > diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
+> > new file mode 100644
+> > index 000000000000..f1257c20add2
+> ...
+> > +
+> > +static void max7360_pwm_free(struct pwm_chip *chip, struct pwm_device =
+*pwm)
+> > +{
+> > +	struct max7360_pwm *max7360_pwm;
+> > +
+> > +	max7360_pwm =3D max7360_pwm_from_chip(chip);
+> > +	max7360_port_pin_request(max7360_pwm->parent, pwm->hwpwm, false);
+>
+> Would be nice if pinmuxing would be abstracted as a pinctrl driver. Not
+> sure how much effort that is. Maybe Linus has an idea?
+>
 
-On 13:59 Mon 17 Mar     , Geert Uytterhoeven wrote:
-> Hi Yixun,
-> 
-> On Mon, 17 Mar 2025 at 13:41, Yixun Lan <dlan@gentoo.org> wrote:
-> > On 09:18 Mon 17 Mar     , Geert Uytterhoeven wrote:
-> > > Thanks for your patch, which is now commit 7ff4faba63571c51
-> > > ("pinctrl: spacemit: enable config option") in v6.14-rc7.
-> > >
-> > > On Tue, 18 Feb 2025 at 01:32, Yixun Lan <dlan@gentoo.org> wrote:
-> > > > Pinctrl is an essential driver for SpacemiT's SoC,
-> > > > The uart driver requires it, same as sd card driver,
-> > > > so let's enable it by default for this SoC.
-> > > >
-> > > > The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-> > > > 'make defconfig' to select kernel configuration options.
-> > > > This result in a broken uart driver where fail at probe()
-> > > > stage due to no pins found.
-> > >
-> > > Perhaps this is an issue with the uart driver?
-> > > I just disabled CONFIG_PINCTRL_RZA2 on RZA2MEVB (which is one of the
-> > > few Renesas platforms where the pin control driver is not enabled by
-> > > default, for saving memory), and the system booted fine into a Debian
-> > > nfsroot.  Probe order of some devices did change, and "Trying to
-> > > probe devices needed for running init" was printed.
-> > >
-> > my problem was CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled, result as
-> > # CONFIG_PINCTRL_SPACEMIT_K1 is not set
-> >
-> > for your case, is CONFIG_PINCTRL_RZA2 built as module?
-> > it should work for uart driver with deferred probe mechanism..
-> 
-> No, CONFIG_PINCTRL_RZA2 was disabled in my testing.
-> 
-emm, this is interesting, there might be problem that uart driver
-fail to have correct pin settings without pre initialization..
+Yes, I got some similar comments previously and I've been working on it:
+the next version will gain a pinctrl driver.
 
-which uart driver is used in RZA2MEVB platform? any pinctrl dts property?
-different hardware may vary..
+> > +}
+> > +
+> > [...]
+> > +
+> > +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
+> > +				      struct pwm_device *pwm,
+> > +				      const void *_wfhw)
+> > +{
+> > +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> > +	struct max7360_pwm *max7360_pwm;
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	max7360_pwm =3D max7360_pwm_from_chip(chip);
+> > +
+> > +	val =3D (wfhw->duty_steps =3D=3D 0) ? 0 : MAX7360_PWM_CTRL_ENABLE(pwm=
+->hwpwm);
+>
+> Does not setting MAX7360_PWM_CTRL_ENABLE result in the pin going to
+> Hi-Z? If yes: That's wrong. You're only supposed to do that if
+> period_length_ns =3D 0 was requested. If no: This needs a comment why
+> duty_steps =3D 0 is special here.
+>
 
-> > > > --- a/drivers/pinctrl/spacemit/Kconfig
-> > > > +++ b/drivers/pinctrl/spacemit/Kconfig
-> > > > @@ -4,9 +4,10 @@
-> > > >  #
-> > > >
-> > > >  config PINCTRL_SPACEMIT_K1
-> > > > -       tristate "SpacemiT K1 SoC Pinctrl driver"
-> > > > +       bool "SpacemiT K1 SoC Pinctrl driver"
-> > > >         depends on ARCH_SPACEMIT || COMPILE_TEST
-> > > >         depends on OF
-> > > > +       default y
-> > >
-> > > Ouch, fix sent...
-> > > "[PATCH] pinctrl: spacemit: PINCTRL_SPACEMIT_K1 should not default to
-> > > y unconditionally"
-> > > https://lore.kernel.org/6881b8d1ad74ac780af8a974e604b5ef3f5d4aad.1742198691.git.geert+renesas@glider.be
-> > >
-> > I got suggestion in v1
-> > https://lore.kernel.org/all/20250211-nature-kilt-9882e53e5a3f@spud/
-> 
-> Yeah, I read that, but only after I noticed the issue in v6.14-rc7.
-> 
-> > so for COMPILE_TEST case, ARCH_SPACEMIT config won't be enabled? then neither PINCTRL_SPACEMIT_K1
-> > anyway, I'm fine with either way, thanks
-> >
-> > > >         select GENERIC_PINCTRL_GROUPS
-> > > >         select GENERIC_PINMUX_FUNCTIONS
-> > > >         select GENERIC_PINCONF
-> 
-> It depends. ARCH_SPACEMIT can be enabled only when building for
-> RISC-V, while COMPILE_TEST can be enabled everywhere.
-> 
-Ok, good to know
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+Ok, I confirm this does set the pin in Hi-Z, I'm fixing it.
 
--- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+...
+
+>
+> Best regards
+> Uwe
+
+Thanks for your review.
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
