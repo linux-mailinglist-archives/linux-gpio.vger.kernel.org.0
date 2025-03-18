@@ -1,172 +1,128 @@
-Return-Path: <linux-gpio+bounces-17737-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17738-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13CB7A674D0
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 14:19:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0DD8A67563
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 14:42:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DE511882B34
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 13:18:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D5433A7B9B
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 13:42:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 179D820CCCD;
-	Tue, 18 Mar 2025 13:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6842420D4EF;
+	Tue, 18 Mar 2025 13:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sfk7Ul3D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WYjgZU31"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04788206F22
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Mar 2025 13:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A555020B21A;
+	Tue, 18 Mar 2025 13:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742303917; cv=none; b=E76hPuy/SwMXkKxPetddaTEptTSG+v26OJWfbC8VYgg/cSjPHGMgt7Vyad0rlw5kqX6ddCp8NhHyjTDWwmrsCfex8NVwNnkKL2xNMgG0ESmPMEX9KQgq5BzD9fJUJIdh57w9tEOkjGN1PZByF8zrgGEO7KbAZbFGGhs26sY8Fl0=
+	t=1742305352; cv=none; b=eePKmM2WR6kz8sRDNIp0rnyZ4QVBRs/eH0j2l0ShiVIpwIoxaCYTs+RdV/xuhgrLVMSM18n2Tve8LFvx/kJAOI3/bUMH88QltI62qai5IIv8kj91ULtN7jII/TbI9yYjzU/4HQeVoB/cadRV8oU8DmsJGYAfhs3zoGf4A1+oH3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742303917; c=relaxed/simple;
-	bh=sqzk860TzGLwIqBAeSxldygCO4vMRjBINf/+azmCItQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MlBib6PbxK3fzuXJao9B5rli/1WW9q1dY7MyVhVuLNbdeplau8m7edcjLkUd2xJ2018Zh8tEZEcfkk/gq9GxpPo2QRPr1hsy9n7gECzGDCEs3h3VrHW1jATid9scPvHpYPr6vXKt9XVoagQhcjqLm7X1tXUgqkBoqPcsSW5Qx6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sfk7Ul3D; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso61014831fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Mar 2025 06:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742303913; x=1742908713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8GkJMmlJtow9MnFIgmyAm/anD0TC49/pahD7NCkZncw=;
-        b=sfk7Ul3DKfhvdyebnCEiaVQDpMpNaHqTSO6bbvMrx1NbTNfluwf4WalC0fQnQOn4Xz
-         x+W6meqA7GbW9fS4WU7XdEFsu6MdHn8rR7OyPv4NMyhLZQv++YXSrMfQOBLj5GwqurXm
-         RfV9IubY1fraUIVPKAl9uovCKnlYhQXR1loenlYQJJHnDgVLM2uW6NcbGev9LY/TrCDw
-         sFRl9p1KOOQ4IC8ctGATQJ5gUse0cT6Sx50xTpgivvJgDvFos4JNzbvog66zxRwTZVl6
-         anG81qW10aiXbmb3bDOzRPZTp3tyYsZTtv+SPzC30+PYX3xKoqg6aTiYiIg/vzTaqoqx
-         CgUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742303913; x=1742908713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8GkJMmlJtow9MnFIgmyAm/anD0TC49/pahD7NCkZncw=;
-        b=JSpvQlho9n6XNsP3LpHqQGc5hnjIbj/n9SNKIBjf0ZfsGGZUC8RJlbn3D9gaED7OaJ
-         7fr6wBlfl9HNLtnNWvOlYNxJiCBWzKUUKVz9ZtO6Xqrt+nE3NNkNuBC9IuSZxWqpLpbG
-         HJhbS9lrR9E5K04nHkecln4UNtuDcad47HM2wwWuJkzeMNzLXU6rurKtdKVH2o6QIWcR
-         J8D2A6Evh5YTk7XBCjJvFONw0D/SQfaxrszHWWWEUhADfhQi5IdtpvoNvhZYh7bQL3RF
-         ZiwQA0cLLiclSpD3oncGhT+D6lcrqIk4VYeYnMQe6aG/rZIeY7ByAH4B3kAnHJJwEDAu
-         HqEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWncLTayAxJbJNMNpjPINxHz9ev8ksfRTcWApTnqAV8omZKyw6ijn/pLzfmpewPIeMtxJ3pALzz0NEp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym+zgFp6kTqvixUkf0JoL/bv1dhpNt8iDraZApWH9w2aAFBV/D
-	bz2Qk7UjetcX682crMr6KaTE2hxuN3qtEDqh8ZVS+ZQKDcNy9QYp2WDJTVtdZTr5065xqBT9srs
-	1lT+4+sgk6pFfkNpoHTRNSmIyFvnMDhP+vaMFhA==
-X-Gm-Gg: ASbGncu/3w9JpBo+zX0GQaU3aQFeJ0cGrcVne2HlD0QOthkVs9gwiJHoJiTRdmuPxR1
-	I2mjAtljxtXkqFM3CQylh5NiSJWH7ocy99k6wduECRSgYc85ZHCBz7Ik8lUiD9u4VkT+B+isiAc
-	cuQo9WhecZ3NGGJ06Y0PdOPjbXVSO9kYul7/Wf52zB7S4puFRYLgfVzD4ZOA==
-X-Google-Smtp-Source: AGHT+IGIpv5bULe1uU4cvo5lmBxtIwJqi9lemqqFJYwj8tz25wV0gRTtEE2ULA3kl3ruG+2IKNYXj0LmK7kc240suJE=
-X-Received: by 2002:a05:6512:4029:b0:549:8b24:9892 with SMTP id
- 2adb3069b0e04-549c3637866mr9791793e87.0.1742303912860; Tue, 18 Mar 2025
- 06:18:32 -0700 (PDT)
+	s=arc-20240116; t=1742305352; c=relaxed/simple;
+	bh=y3YYBQxE6Pi8b1Gs2Cz7fhOvcqgaZix7CEOA616y3t4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I1KtlmkvtoHf/OK3c2lPndnVCsQYHTviLLY7oDe2ke5PMeTNPD0BlqGq0DT5VyxvAUOWP/EBCGigbxA1zhf3xb3RTOCm8n+G+5OrHVetwlz4o37MwQO27MCC+xaBabIOieHcKVARID3fu20KeK/kzSMfSmoZBHBtiIk3vTrSgjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WYjgZU31; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742305350; x=1773841350;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=y3YYBQxE6Pi8b1Gs2Cz7fhOvcqgaZix7CEOA616y3t4=;
+  b=WYjgZU31gvMUrrJfTkRefc694uQEJSq2jN5g0IVXk5zYrbYPQJjV40Ql
+   +UZrkUhYknotEXS0U/DKHIkCkCzS5b+T6tnZkFpBHT0AdCncjMjAtd4Z0
+   LhAS2eX2qNxmL/aGUyTHPWrHHn2mh74C00G3bxX03Fro6HRDKrh/6A6ZB
+   4obIW/IevTGfhl/Ws7HEAAjq1YHPwPeBbYsVbsvQul2fow5IcqSxoJsEi
+   PaN7XRI0OrDdxA70F6SqzfvpomLVLUw20T14j4VKnLNFyHj0CXAqJ70g6
+   T9CA60mZwh8ZFGtyeknt4y1d/VRWZU8idB5SakiET4Yt86ZM/WmDhWqwD
+   Q==;
+X-CSE-ConnectionGUID: Rzm2rj51QBSx9mD/dai94w==
+X-CSE-MsgGUID: 4h8Jz5UtRpKsDRFQajVOCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43583214"
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="43583214"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 06:42:30 -0700
+X-CSE-ConnectionGUID: 3HJ57cDLSzeglBHIN89uNw==
+X-CSE-MsgGUID: M7wA4lfnTFS8UnrypWJmdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="126934731"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 06:42:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tuXD6-00000003dNM-3I7m;
+	Tue, 18 Mar 2025 15:42:24 +0200
+Date: Tue, 18 Mar 2025 15:42:24 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"krzk@kernel.org" <krzk@kernel.org>,
+	"lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+	"broonie@kernel.org" <broonie@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] regulator: s5m8767: Convert to GPIO descriptors
+Message-ID: <Z9l4QBJQkOaMxw73@smile.fi.intel.com>
+References: <20250318052709.1731747-1-peng.fan@oss.nxp.com>
+ <Z9lJETLh2y27934q@black.fi.intel.com>
+ <PAXPR04MB8459A44864B9213E8265137188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com>
- <20250317-aaeon-up-board-pinctrl-support-v2-5-36126e30aa62@bootlin.com>
-In-Reply-To: <20250317-aaeon-up-board-pinctrl-support-v2-5-36126e30aa62@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 18 Mar 2025 14:18:20 +0100
-X-Gm-Features: AQ5f1Jpso2z-FoYjW2nryy3p2GrEapYy3G_jZz-K_v24ydyb1K1fXKcO3Si-9Ug
-Message-ID: <CAMRc=Md9HsE9nOzFGqJ2mrKx--ZbFa0na6cnz_AiHG+5Qi5NTg@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 5/6] gpio: aggregator: add possibility to attach
- data to the forwarder
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB8459A44864B9213E8265137188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Mar 17, 2025 at 4:38=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> Add a data pointer to store private data in the forwarder.
->
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
->  drivers/gpio/gpio-aggregator.c | 6 ++++--
->  include/linux/gpio/gpio-fwd.h  | 3 ++-
->  2 files changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregato=
-r.c
-> index b9026ff2bfdc1..3c78c47ce40ae 100644
-> --- a/drivers/gpio/gpio-aggregator.c
-> +++ b/drivers/gpio/gpio-aggregator.c
-> @@ -556,7 +556,7 @@ int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *f=
-wd, struct gpio_desc *desc,
->  }
->  EXPORT_SYMBOL_GPL(gpiochip_fwd_add_gpio_desc);
->
-> -int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
-> +int gpiochip_fwd_register(struct gpiochip_fwd *fwd, void *data)
->  {
->         struct gpio_chip *chip =3D &fwd->chip;
->         struct device *dev =3D fwd->dev;
-> @@ -579,6 +579,8 @@ int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
+On Tue, Mar 18, 2025 at 12:38:15PM +0000, Peng Fan wrote:
 
-I see Andy already requested some renaming but can you also use a
-gpio_fwd_ prefix for these exported interfaces?
+...
 
-Bart
+> > Also the commit message doesn't tell anything about the existing DTS
+> > files.
+> > Do we have this device described in any in the kernel? Do we have any
+> > googled examples? Why I'm asking because often the issue is the
+> > incorrect setting of the polarity, which needs to be carefully checked,
+> > esp. for the voltage regulators case.
+> 
+> Under arch/arm/boot/dts/samsung/, a few dtsi files have the property 
+> with results from output of
+> `grep "s5m8767" ./arch/arm/boot/dts/samsung/ -rn | grep gpios`
 
->         else
->                 spin_lock_init(&fwd->slock);
->
-> +       fwd->data =3D data;
-> +
->         error =3D devm_gpiochip_add_data(dev, chip, fwd);
->
->         return error;
-> @@ -625,7 +627,7 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struc=
-t device *dev,
->                         return ERR_PTR(error);
->         }
->
-> -       error =3D gpiochip_fwd_register(fwd);
-> +       error =3D gpiochip_fwd_register(fwd, NULL);
->         if (error)
->                 return ERR_PTR(error);
->
-> diff --git a/include/linux/gpio/gpio-fwd.h b/include/linux/gpio/gpio-fwd.=
-h
-> index 80ec34ee282fc..c242cc1888180 100644
-> --- a/include/linux/gpio/gpio-fwd.h
-> +++ b/include/linux/gpio/gpio-fwd.h
-> @@ -10,6 +10,7 @@ struct gpiochip_fwd_timing {
->  struct gpiochip_fwd {
->         struct device *dev;
->         struct gpio_chip chip;
-> +       void *data;
->         struct gpio_desc **descs;
->         union {
->                 struct mutex mlock;     /* protects tmp[] if can_sleep */
-> @@ -50,6 +51,6 @@ int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *fwd=
-,
->                                struct gpio_desc *desc,
->                                unsigned int offset);
->
-> -int gpiochip_fwd_register(struct gpiochip_fwd *fwd);
-> +int gpiochip_fwd_register(struct gpiochip_fwd *fwd, void *data);
->
->  #endif
->
-> --
-> 2.39.5
->
+Side note: `git grep -n s5m8767` is a better command. You can just look for the
+exact GPIOs, usually not so bit amount of them, or do it recursively with
+
+`git grep -n 'gpios' -- $(git grep -lw s5m8767 -- Documentation/devicetree/bindings)`
+
+> Exynos5250-spring.dts uses GPIO_ACTIVE_LOW.
+> Others use GPIO_ACTIVE_HIGH.
+
+So, one of this needs to be fixed.
+
+> The current changing to using GPIO descriptors should be ok per
+> my understanding.
+> 
+> Not able to find any public datasheet for this pmic (:
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
