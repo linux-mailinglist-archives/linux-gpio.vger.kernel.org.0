@@ -1,99 +1,95 @@
-Return-Path: <linux-gpio+bounces-17708-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17709-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30AADA6610D
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 22:56:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92E46A66417
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 01:48:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BCDD3B8F56
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Mar 2025 21:56:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6EA016A3C5
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 00:48:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22D212046AF;
-	Mon, 17 Mar 2025 21:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7905222EE5;
+	Tue, 18 Mar 2025 00:48:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LlHMBRN4"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="mxfwYheI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FEF1FDE2E;
-	Mon, 17 Mar 2025 21:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6832518E1A
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Mar 2025 00:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742248579; cv=none; b=rr2SqkIKuoJrxAsKYaJ5ywOdPMu7uZOxPaFG9QOoPDD1IQ7N2KTE+Sl4725FS9BAChMXUumhUEwYeP2cyNNL2F/aEHksuhTKXG9cMIq9Uj7Xp7AjGYu0MiOOJu2A4WJuYC8XBgLmv1aPzyhOdyrrAkpM4QMGEdMt4r9RB4HKfSQ=
+	t=1742258898; cv=none; b=NC36DgQEeoLcQqnt2tj3HH8Ez5hsTFN8N8TkxEqzI3sILF8T1DBnHcoLLW9Ej9HwEPpyPoUcxF99ZramoGU/yKjJb624qIyniZhXMc2LL2iODv688tXCp4ncnjCwZW/xyCxzYsfAqYgEgR+JIHyDe3kMKsWoy8AR+hZ1xR6OEN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742248579; c=relaxed/simple;
-	bh=inAtUwWXZw6O+qaTrGoLKXAeQwhcqR+I5Hy9wJp/Kto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s4ZNDGGRu0FZ+XYp3LWRT29proHaolmhUoOewzEQ3p3e5w+5YEvZ70nlaxQFt7s8EQRN/UTOe9GUQjkZO+JhkF/IDLkn7PfrMQKRHLRf2/5xusmKvGsnOZAzzdBEehpPq3WYuJiUSru90X4XvokO33X/1Fasy9cqJ7iF5Fmng0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LlHMBRN4; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8FEF32057C;
-	Mon, 17 Mar 2025 21:56:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742248573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2+2T3UFKZNQqzYcppRSeRT40EIToHYWw5aJ/ZTMJlsg=;
-	b=LlHMBRN4dd1wr3rT/5fl9FvLjlU9W0MrimdfbNvbBLmagR523h+WFWVHELxVrwnr0AfKe8
-	ukIUFAYhDvBj14lILUTc8VuKNOeQFbdP6N31lMeCB4rgKBTFhfnLu0UNK4UEiV9x4b2J8z
-	FODZFbe0VD3kW/Fe0/x/2OSWKJSok7HbxuwLO8aX/OGP+sQ/57sLDj0U2NSAMytvG4ozlw
-	MMAkehhE4kvQHPoYD4sXllnsp7IqWM5rJSm1tESA9G0kq76sLK5m0A7HTknvrio+tWCebf
-	VYStkCnS/CxnZo0zorWUmQgBwRrEVqrP+mCb+1lDaJ9mNFAIaeVZHXYdaDnfdQ==
-Date: Mon, 17 Mar 2025 22:56:12 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: arnd@arndb.de, lee@kernel.org, dmitry.torokhov@gmail.com,
-	sre@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-	danielt@kernel.org, jingoohan1@gmail.com, deller@gmx.de,
-	linus.walleij@linaro.org, brgl@bgdev.pl, tsbogend@alpha.franken.de,
-	linux@treblig.org
-Cc: linux-mips@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 2/9] rtc: pcf50633: Remove
-Message-ID: <174224855863.1587763.1321316355670597238.b4-ty@bootlin.com>
-References: <20250311014959.743322-1-linux@treblig.org>
- <20250311014959.743322-3-linux@treblig.org>
+	s=arc-20240116; t=1742258898; c=relaxed/simple;
+	bh=v2CO4TxTFLaHlHXsp64wi5Bonh0U5j8YWCIUsyAYMQg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EvLeUwAcVdjEzh1+4OV2/q+fEGyOUacvNaWB6YHY/UU80ZNHm+oDzcKPVO8FFKagIIA3KLiHbAxD440cUQuoopodp0Tmj/dasijpHySNN+7x96gdS3iet2RCxykdx+8ZhqOg8U4qMPA3Z9wy83MKyK2O5ENdom+M+PQLZxF/MNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=mxfwYheI; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1742258894;
+	bh=v2CO4TxTFLaHlHXsp64wi5Bonh0U5j8YWCIUsyAYMQg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=mxfwYheIL1RFJUexCjsK8ww7S62u8nGYf/qObDqOsqcbuvRJgceVR+zarPNkTms/2
+	 jjlyyHNTqrLQ0AqNxllG4FiuHjfkmfYARwCwCW45Ia2pDB0/PlnjnRE+WG2CToNbbw
+	 vYvlGg9Mmjn01iPxTbaKu+J7vWCsPTKNpOiQNb0Bxu73t0cn87y15kduLz2SCvsOkT
+	 bfhDJw9ZyY5++iOmIqViUa6nDgscJE5cHMtvV3cAHWiHUou1XhJRdXfS1bffFAfrnl
+	 EGhivetLME5STCPHWpCpAjI2tvHT5TjRyE0p+jtSrjGHj/bad01ljfzXixwx3CRWo4
+	 ECOoIR5yZWt9g==
+Received: from [192.168.68.112] (unknown [180.150.112.225])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 35A2C77BB4;
+	Tue, 18 Mar 2025 08:48:12 +0800 (AWST)
+Message-ID: <0d0c60dcd2eae1d8bc6113a4678f5e362c3244fd.camel@codeconstruct.com.au>
+Subject: Re: Question about ASPEED GPIO value/direction set order
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Nikita Shubin <nikita.shubin@maquefel.me>, Joel Stanley <joel@jms.id.au>
+Cc: linux-gpio@vger.kernel.org
+Date: Tue, 18 Mar 2025 11:18:12 +1030
+In-Reply-To: <5372f57d61f31ac681e295964cacf2e23df3b3ed.camel@maquefel.me>
+References: <3cd0fe0ff42a751fd0738dacf16badcaa8ff51fb.camel@maquefel.me>
+	 <4878ed9cfd9ff20550cf0d9d8933ec993f4b288c.camel@codeconstruct.com.au>
+	 <5372f57d61f31ac681e295964cacf2e23df3b3ed.camel@maquefel.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311014959.743322-3-linux@treblig.org>
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedtieeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeijeefhfffkeejueehveeuveejvdelveejteduffehuedtffdufeejudffuedvtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemvgdtrgemvdgumeeifeejtdemjeekvgdtmegttdgvkeemvdektdeimeekrggtieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdgumeeifeejtdemjeekvgdtmegttdgvkeemvdektdeimeekrggtiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpt
- hhtohepshhrvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjihhnghhoohhhrghnudesghhmrghilhdrtghomh
-X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Tue, 11 Mar 2025 01:49:52 +0000, linux@treblig.org wrote:
-> The pcf50633 was used as part of the OpenMoko devices but
-> the support for its main chip was recently removed in:
-> commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
-> 
-> See https://lore.kernel.org/all/Z8z236h4B5A6Ki3D@gallifrey/
-> 
-> Remove it.
-> 
-> [...]
+Hi Nikita,
 
-Applied, thanks!
+On Thu, 2025-03-13 at 10:39 +0300, Nikita Shubin wrote:
+> Hi Andrew, thank you for quick answer.
+>=20
+> The reason i am asking this is that in QEMU the first time we set
+> pin,
+> all below if (diff) in aspeed_gpio_update() won't be triggered due to
+> direction is set after the value itself (so no qemu_set_irq()
+> triggers):
+>=20
+> https://elixir.bootlin.com/qemu/v9.2.2/source/hw/gpio/aspeed_gpio.c#L314
+>=20
+> aspeed # gpioset 0 8=3D1
+> aspeed_gpio_write offset: 0x1c value 0x100
+> aspeed_gpio_write offset: 0x0 value 0x100=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 <-- VALUE
+> aspeed_gpio_write offset: 0x4 value 0x100=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 <-- DIRECTION
+>=20
+> And i doubted if it's a QEMU or Linux driver flaw.
 
-[2/9] rtc: pcf50633: Remove
-      https://git.kernel.org/abelloni/c/0a243de9d009
+That sounds like a bug in the qemu model. Please send a patch to the
+qemu lists for discussion.
 
-Best regards,
+Thanks,
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Andrew
 
