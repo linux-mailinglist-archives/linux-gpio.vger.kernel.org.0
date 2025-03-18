@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-17762-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17763-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B131A67D20
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 20:28:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D62B0A67D4D
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 20:48:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 21D937A7758
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 19:27:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 987E37AAABC
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 19:47:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF0B01E1E03;
-	Tue, 18 Mar 2025 19:28:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4901E51FC;
+	Tue, 18 Mar 2025 19:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANb1eiUm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMI6rMYz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B4F1DF247;
-	Tue, 18 Mar 2025 19:28:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC6E17A30B;
+	Tue, 18 Mar 2025 19:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742326113; cv=none; b=IUJWPmdsmTWrkCBlgHlA/ADfTdzJCZRP8ukT8CpJdArCV84J7eflPLdiW18blFxTsTyybyqa4szBlK93bT3t3jMK5LiYfFP8k+VlDdQrYHkxXnbByAIsd1CTW2KTO8fnHlMO08cHB281qRi6SPVpCwi8PaYIFmFz1jxCn1oDkFI=
+	t=1742327275; cv=none; b=pxJ0fQjV4m5QFHBJyWmnotkruo8EtalzqNonKBAVF7o2xtpkP0/wFwb6pM7sV3TKiak1IcgFOIIwxZBjnUYcVHKastrriKQ66uuCWppawlyRkS37v7+LbqF1OIyPiEuIYfuQYTFCuvfDnUa5VG530GIhpg6QuVaR55nNItaAYfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742326113; c=relaxed/simple;
-	bh=7LYIJU9zrIeD7qsda5EeEl4d9QdiYjSeLPX6TOyN8g8=;
+	s=arc-20240116; t=1742327275; c=relaxed/simple;
+	bh=dFS4pl/4sy8BZRtwnSnognCsKFnhbc5h4Elykdy92aw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U8ObTWn9Hm6/yFdorfNOUfYlO31GMM3n560YN/iz9QOShl+1TYDeS3kNsOdiMns9WArtBsPBzp5CnXtlOA9Dqa944iHWhAKlQOYjCfpZS+hs3uAJy5YqQ2C6TQAO4LNt4IvZFsz6GhgKR6F0HNNnCi0cqhzAMiCup6wfuypPXQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANb1eiUm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 657A8C4CEDD;
-	Tue, 18 Mar 2025 19:28:27 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=mEgzADyNdPa936PCpAXQKJKNtFNMOb2MvoJCl875TP6Mi93mjoGBa6HVwj417ErJtRAXOqBLkT+05v4UMwvVu5ZEFFt7ZgHXfCua69VrlrIeUaPprx1OZGc5pjg2ij+wJK+AZj7J7w8jl609hf6R9wEfvR6WwEcO4xUybcIH3Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMI6rMYz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D797C4CEDD;
+	Tue, 18 Mar 2025 19:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742326113;
-	bh=7LYIJU9zrIeD7qsda5EeEl4d9QdiYjSeLPX6TOyN8g8=;
+	s=k20201202; t=1742327275;
+	bh=dFS4pl/4sy8BZRtwnSnognCsKFnhbc5h4Elykdy92aw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ANb1eiUm4N1G9x3vbVWxGgqTcYRI24OwlIH8eP79gnwO8lrYGDLYwtUByJpyVYHSw
-	 oUO3/hytdx1DlFTDl+pMGJVsIpcZOdvVUv9VBwDzR+b4+mYY3BFXkHznNBz4LPL7E/
-	 TaaJpuP66U+hngKaXysTWmI5Mw8Y6mpsxOrRQaZw+hPbH42uBfm29hUYIsPDJuIf8m
-	 wSAWOiRsUeqy+3SqAV3hIAWmDq4yrAV4ztcKPboJwT5DQHKx/5Z3HKWISpr30glM6x
-	 qm1dVGqIj2RFcoDlE89TKx9tVOUmtdq3ieBcvtm3pAcT2mC8/WQ1UeaKtT6snBTUzj
-	 EDoL/JKeakfAg==
-Message-ID: <40eb446b-6531-4a73-b47b-55e609fb4d64@kernel.org>
-Date: Tue, 18 Mar 2025 20:28:25 +0100
+	b=sMI6rMYzCjhn0kSukwMOEzlshenueJLzySVgYPx599Xjiw7OGx33J9MKvTlgM2Rn3
+	 os32xddBS7q5gfJYm0SDxmli1vrZktT8XQ82irpNyrvzTzDWEQ2+JSRmIJjkLHb3xc
+	 n3f+GFkIgrUnnw+/hlIRYRw06hIuX0WrhBYi9Puw7V9QXNW8xJBAPlMUAaxAOMlHF/
+	 NJyzxwvwKW1newvOSOMSc8jqy1pYCkDat0ybewUD0gvuxj3HmLwZhvu0+91+aOnwSS
+	 Zuy+Ql3Se/k1sFRJCjRaRnqGSzTwdqeVQbxEFGZBuxAujGOIqQ9F9NP4XQoYQQRY4X
+	 RmwFKQuKu20vA==
+Message-ID: <5ff8d26d-65bd-4b99-90b1-ae01f0ee9eb7@kernel.org>
+Date: Tue, 18 Mar 2025 20:47:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/5] pinctrl: samsung: add support for
- eint_fltcon_offset
+Subject: Re: [PATCH v5 2/5] pinctrl: samsung: refactor drvdata suspend &
+ resume callbacks
 To: Peter Griffin <peter.griffin@linaro.org>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
  Alim Akhtar <alim.akhtar@samsung.com>,
@@ -59,10 +59,9 @@ To: Peter Griffin <peter.griffin@linaro.org>,
 Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com,
- semen.protsenko@linaro.org, kernel-team@android.com,
- jaewon02.kim@samsung.com, stable@vger.kernel.org
+ semen.protsenko@linaro.org, kernel-team@android.com, jaewon02.kim@samsung.com
 References: <20250312-pinctrl-fltcon-suspend-v5-0-d98d5b271242@linaro.org>
- <20250312-pinctrl-fltcon-suspend-v5-1-d98d5b271242@linaro.org>
+ <20250312-pinctrl-fltcon-suspend-v5-2-d98d5b271242@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,29 +107,88 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250312-pinctrl-fltcon-suspend-v5-1-d98d5b271242@linaro.org>
+In-Reply-To: <20250312-pinctrl-fltcon-suspend-v5-2-d98d5b271242@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 12/03/2025 22:58, Peter Griffin wrote:
-> On gs101 SoC the fltcon0 (filter configuration 0) offset
-> isn't at a fixed offset like previous SoCs as the fltcon1
-> register only exists when there are more than 4 pins in the
-> bank.
-> 
-> Add a eint_fltcon_offset and new GS101_PIN_BANK_EINT*
-> macros that take an additional fltcon_offs variable.
-> 
-> This can then be used in suspend/resume callbacks to
-> save and restore the fltcon0 and fltcon1 registers.
-> 
-> Fixes: 4a8be01a1a7a ("pinctrl: samsung: Add gs101 SoC pinctrl configuration")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: André Draszik <andre.draszik@linaro.org>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
+> Move the call of drvdata->suspend()/resume into the loop which is
+> iterating drvdata for each bank.
 
-Please rebase on next and send incremental patch fixing previous, if needed.
+
+Side effect is that now each drvdata->suspend will be called before
+saving registers. Please mention it here and this lead me to one more
+comment.
+
+> This allows the clk_enable() and clk_disable() logic to be removed
+
+
+For suspend path - yes. For resume path - nothing changed, because
+drvdata->resume(drvdata) was called with clock enabled.
+
+> from each callback, and also avoids iterating the same loop again
+> in the next function.
+
+...
+
+> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> index 963060920301ec90affb2ee6d758d3d602ffb4a9..375634d8cc79d6533603e3eed562452181e2ee25 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> @@ -1349,6 +1349,9 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
+>  		const u8 *widths = bank->type->fld_width;
+>  		enum pincfg_type type;
+>  
+> +		if (drvdata->suspend)
+> +			drvdata->suspend(bank);
+
+Here suspend() is called before saving common register state (was
+*after*)...
+
+> +
+>  		/* Registers without a powerdown config aren't lost */
+>  		if (!widths[PINCFG_TYPE_CON_PDN])
+>  			continue;
+> @@ -1373,8 +1376,6 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
+>  
+>  	clk_disable(drvdata->pclk);
+>  
+> -	if (drvdata->suspend)
+> -		drvdata->suspend(drvdata);
+>  	if (drvdata->retention_ctrl && drvdata->retention_ctrl->enable)
+>  		drvdata->retention_ctrl->enable(drvdata);
+>  
+> @@ -1406,9 +1407,6 @@ static int __maybe_unused samsung_pinctrl_resume(struct device *dev)
+>  		return ret;
+>  	}
+>  
+> -	if (drvdata->resume)
+> -		drvdata->resume(drvdata);
+> -
+>  	for (i = 0; i < drvdata->nr_banks; i++) {
+>  		struct samsung_pin_bank *bank = &drvdata->pin_banks[i];
+>  		void __iomem *reg = bank->pctl_base + bank->pctl_offset;
+> @@ -1416,6 +1414,9 @@ static int __maybe_unused samsung_pinctrl_resume(struct device *dev)
+>  		const u8 *widths = bank->type->fld_width;
+>  		enum pincfg_type type;
+>  
+> +		if (drvdata->resume)
+> +			drvdata->resume(bank);
+
+But this is not symmetrically reversed now - resume() is before
+restoring from saved state.
+
+Maybe this change is intentional, but then it should be expressed in
+commit msg and in commit why this was chosen.
+
+I guess you decided to do that way only because of code:
+	if (!widths[PINCFG_TYPE_CON_PDN])
+
+This code should be symmetrically reversed, otherwise it just raises
+questions. For saving register state, it does not really matter, but in
+general if we assume driver-specific suspend callback is run the last,
+then driver-specific resume callback should be first, no?
+
 
 Best regards,
 Krzysztof
