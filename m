@@ -1,137 +1,93 @@
-Return-Path: <linux-gpio+bounces-17739-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17740-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8413A67586
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 14:48:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25D6FA675C4
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 15:01:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D01F16120A
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 13:48:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF82988205F
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 13:59:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A6B20D4FE;
-	Tue, 18 Mar 2025 13:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGVJ8H4e"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660C620DD65;
+	Tue, 18 Mar 2025 13:58:52 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F3A20C030;
-	Tue, 18 Mar 2025 13:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1210420DD7D
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Mar 2025 13:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742305693; cv=none; b=lujTgRN1fHUmhaO/gDSq2ncE9cIRG51DoQ+2JpBtJrkhc/mYpeID0IugjWbZ/UpLEVyZF/VD2rQ0MfnP79m89h7IQLVzmzD+1exRiPR6pRnhjtfj3/7vS6Bw8Bt0FtPeQisXwrLDJKf+KhGNK8jHkE9mQIPNKXlRh9RbF9/4llg=
+	t=1742306332; cv=none; b=jaSRgFML5n6VhrczAJvp4P46X+LavwyN3/TcW6WsJilb4v9f+bkngdI9ZmDu1jEi5TTN5jr7PZxWLE8bSjK50ePdx11JCMZlgh9Kb6wCvI7qvpnpifyFtqVwlcTZI93TiHkgKC8ngyXG2HGZEpRGPQk8pdf2aFslVeCfAYQgRhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742305693; c=relaxed/simple;
-	bh=h/EuhGrH0PIQblMJgGKwYrojTphVCdZ+DS9FajtTK/o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LpDR81WFmsCXxAPwOfeSBO4cRZuUGVVepV2cbwyJOyY519NYDw1AYQk3UbGB1OKXKHPGhB26INEX2HXVmRN0UfhPiZYA4jEByuCrEZVqklx/Ax+a1X3LPD81sIyDYLfq4GfKRrryKNbn+x8CMn+/GlsRDw7mXlVbT+RMaZTlEPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGVJ8H4e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D999C4CEE3;
-	Tue, 18 Mar 2025 13:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742305693;
-	bh=h/EuhGrH0PIQblMJgGKwYrojTphVCdZ+DS9FajtTK/o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aGVJ8H4eqGtWzU6rQzAtvfqUsTjh4lv77fo5l2NBSwR1kSwW/KepWysyw3XToPsbw
-	 1ZApMvomMMZ+L4BsXq0UYa1xyqTfnoA/7WlVimuRxTH2CVhSgzJFVYUwJAyctcYqep
-	 xNQCQAGBq+3hkiBEE1PFSBAfybtk8DwBiAyqHXbQvGPmS3r0QWmU9iBZAXrjik7fzI
-	 1oZWGkJcf6fKV0TjeRaqG7rzYWHMMOvAkAwNwAwpfcKox74Inii5u0CgOFKkik29Yu
-	 nxXKQJAQeEuuy5KnA0jGz7A/CA/bs4QYCfng5xX+lQ43cGBHhLyFP/7PtEriWWzhpK
-	 NWHaDRd2tvtKw==
-Message-ID: <e3abe8cc-357c-471f-b489-e1a8625933e0@kernel.org>
-Date: Tue, 18 Mar 2025 14:48:05 +0100
+	s=arc-20240116; t=1742306332; c=relaxed/simple;
+	bh=2QToEdbpL6+FocBQLJ7TEfWyDI8PLPgnryVNeyWaCFk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K2K1QbP6thiRuEfE+zUMdzdTdooRv9D0HOnWYVn/3SMg+qxtPMrFlbx4C4qnP/YJzgBfln6QaCw3fu+nRVWFPaBQcBEOwPPBpdyJfZAbznDC5EcIsWeFFpsNut82C9sTJADZb835tnAMG4rdcqrCt61XjOkDCIY6/ayQuoSlIq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:2568:e3d1:1e11:17f3])
+	by laurent.telenet-ops.be with cmsmtp
+	id SDyj2E0091Mz0fJ01Dyj30; Tue, 18 Mar 2025 14:58:43 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tuXSS-0000000EecJ-1JM6;
+	Tue, 18 Mar 2025 14:58:43 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tuXSt-0000000AJqr-1H6O;
+	Tue, 18 Mar 2025 14:58:43 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>,
+	Benjamin Chan <benjamin.chan@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: linux-gpio@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] pinctrl: PINCTRL_AMDISP should depend on DRM_AMD_ISP
+Date: Tue, 18 Mar 2025 14:58:40 +0100
+Message-ID: <3685561e8e3cd1d94bce220eeb6001d659da615c.1742306024.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator: s5m8767: Convert to GPIO descriptors
-To: Peng Fan <peng.fan@nxp.com>, Andy Shevchenko
- <andriy.shevchenko@intel.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
- "broonie@kernel.org" <broonie@kernel.org>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "brgl@bgdev.pl" <brgl@bgdev.pl>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <20250318052709.1731747-1-peng.fan@oss.nxp.com>
- <Z9lJETLh2y27934q@black.fi.intel.com>
- <PAXPR04MB8459A44864B9213E8265137188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <PAXPR04MB8459A44864B9213E8265137188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 18/03/2025 13:38, Peng Fan wrote:
->> Also the commit message doesn't tell anything about the existing DTS
->> files.
->> Do we have this device described in any in the kernel? Do we have any
->> googled examples? Why I'm asking because often the issue is the
->> incorrect setting of the polarity, which needs to be carefully checked,
->> esp. for the voltage regulators case.
-> 
-> 
-> Under arch/arm/boot/dts/samsung/, a few dtsi files have the property 
-> with results from output of
-> `grep "s5m8767" ./arch/arm/boot/dts/samsung/ -rn | grep gpios`
-> 
-> Exynos5250-spring.dts uses GPIO_ACTIVE_LOW.
-> Others use GPIO_ACTIVE_HIGH.
-> 
-These are old devices and not many people are actually providing tests,
-so you need to preserve existing ABI. IOW, if previously GPIO flags were
-ignored, meaning "1" is ACTIVE_HIGH, then you must preserve this behavior.
+The AMD Image Signal Processor GPIO pin control functionality is only
+present on AMD platforms with ISP support, and its platform device is
+instantiated by the AMD ISP driver.  Hence add a dependency on
+DRM_AMD_ISP, to prevent asking the user about this driver when
+configuring a kernel that does not support the AMD ISP.
 
-Best regards,
-Krzysztof
+Fixes: e97435ab09f3ad7b ("pinctrl: amd: isp411: Add amdisp GPIO pinctrl")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/pinctrl/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index cbb81f65c6eb22f0..0b355a7e7eeec412 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -51,6 +51,7 @@ config PINCTRL_AMD
+ 
+ config PINCTRL_AMDISP
+ 	tristate "AMDISP GPIO pin control"
++	depends on DRM_AMD_ISP || COMPILE_TEST
+ 	depends on HAS_IOMEM
+ 	select GPIOLIB
+ 	select PINCONF
+-- 
+2.43.0
+
 
