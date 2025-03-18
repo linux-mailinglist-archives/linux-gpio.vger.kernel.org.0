@@ -1,80 +1,52 @@
-Return-Path: <linux-gpio+bounces-17744-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17745-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EC6DA6783E
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 16:47:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3672A67987
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 17:32:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5AA6A16DE61
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 15:46:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 975113B3A8A
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 16:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12E3720F091;
-	Tue, 18 Mar 2025 15:46:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDD3320F07B;
+	Tue, 18 Mar 2025 16:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7LbW7Vn"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R+LAmh/v"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6700D207A01;
-	Tue, 18 Mar 2025 15:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AEE20ADF4;
+	Tue, 18 Mar 2025 16:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742312799; cv=none; b=j34/8LZVOYSkiR8Wb9KHHsxr1QHEAKZ3Kxbn24NVjvC8X+JYaxoGTjmsCot0MH7BLRMTOLmOMq3AaT9ZbdypFbBfWnmzjUR3Khvh8mVnGBwJc4obolwIl15MpwtRNdpiv5PjjF2X7dsTPvcKkEzy/kjiLy908Z6optBbsGFgeNc=
+	t=1742315211; cv=none; b=BtnaF/WYqdMAmCXw69ZMCwS5WQH9iFhGsPXckEPGOC6rNMoArmtuALOktP59D4wpXL2vjH6Brmt+TuuoKqmEzFYSQuC9qWp+xkaAQ5QdBysd5XXOsEQ7Gdf1AwZdP22Jtl4llJ4cDJK9xUI7Ge359vn8A3HWSCUlAYpJ0TTbc/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742312799; c=relaxed/simple;
-	bh=TePDezQLPcN0tcOqSmvjFu28rr9FfjBOdxnQ0WBu8qQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pFFVynvbQw+Sk5bIcxdOTksb6v7QLi3KKWN1aImHKMf5VfzeZsldajQg7y+n7Kr+8fc4O0yG3aiT8zU51dZrp8CJG80gk1FggrbblQD5DnTGZFVeVKNaqbSJzMCzu7L304j/jy3Um7UxdBjkZwfWTbzO/1fMkbeuJD3CjTKA0nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7LbW7Vn; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2241053582dso14424855ad.1;
-        Tue, 18 Mar 2025 08:46:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742312797; x=1742917597; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bZkEPbYcygIt00AczwOB2AOW3qxQNoMiOJEJIj5BPYo=;
-        b=W7LbW7VnyxLKjWon4XAzUZAEHsr8hwMmNRBMR7sZuxBoMAphHSLoMJKFjyxEGqukzj
-         OwteqbB05lRJiGPT3s7OBU82YmTK5XdUdPFknFH6HuNmCNBH4uYcSf+8L8ZJywkdxWL9
-         uVQqBgGSuEu2qc+B3fcK70dnQWl5RlE1zy6+208qeH89+xqpclEL2KfUh86dyiOanFJS
-         4fGW3edzAZ7W9zM8nfLlD7ING2jGuT91fP+dWk1uaZRt6MM0PEO2Dk1fegBkGL43pqyB
-         3cI7Fd4rhcxPzs2FQmv2MjE4mWDqcB1zRSK+LUYlNC6Dctg8Z0QK5Pfluu/CTk9TlsNj
-         Yexg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742312797; x=1742917597;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bZkEPbYcygIt00AczwOB2AOW3qxQNoMiOJEJIj5BPYo=;
-        b=nm28uxwVokYCweDiG6iwt0xIv9EqBDNF2Isl7C3PLF0ecXbaXEWNSUK7XRDqGLrueh
-         xieLbNidN3kGZfC9rgn2aWjcGldlEeWrphGjC0ljZPmbZZOJgdDA1Anabgi3ScNN+zJO
-         +XUz92jW5pEJa2O3syXsI9TFbld+KaUS9EQvhySXkAuL7iRgvF0b3p3NQ1Pq4Wi6P22M
-         QAxdObUqcAyr909U2oFZMgBsgpeiRJiZtLNVMGsgUJC8fEYHq42qMyQsFY+j98WTF/hj
-         viS77C2XJJrljzWGa0KKjSAv0N/1xd6qDNuxkX/3LLCFXqLhA5oYRkO8mDpj2mF1e1Ia
-         GPIA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8gDThD5sVEmU/mk7f05LD9v+FbkFsF6u9JC5mL8L+ncNeFrfXbcsGSs249dYLp9VDFFT9pQINDfbYuUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1khP2dMtmdrREl2pSK/YCTJqWzQC65x6gYPtTyvM4WK1VvigC
-	Q008D9P0tLNoukQcJ2efNHvXHNTsHAKh17D3rUCSMZcc5ytFdjNkhueNuA==
-X-Gm-Gg: ASbGncsmj9MkYaDtRgusQ0Ny5rJZr/31Um9taGxDTcTmHarV+7DZZIFJoDB9vBMRbOW
-	VKm0jMWwjI9XU267/FnS9Q9qPECKhN6WTNzRmd/dpk9K3Iv7z5r7nEnH7taUBINzkPtuMJv81r2
-	3JuDw05wyma84lTpcaE+BwnC5Q35e7Wyy27O4Hop0DYvBJz2Sgnubs+3YEbqEVXYuMV8IPCgKth
-	q/w27I5qPKO97zeDYv65Uuvzj3Be/KRHkXuO9+FykVNMywRwz878euEpyn7KcjFtKjNLMLXEMiB
-	YWzbwjKDIOxg6PbKx9K5Va3DyYfUdpb24Af01B/mTQl/TOfG2ARoxTXJxdlsgEZSNh61wZedJw+
-	LaFjrFNPw2rfBNCax7e24nA==
-X-Google-Smtp-Source: AGHT+IGc4phUFqvFR1hCHFocoOIbcCcBgnK6/AwfhfBGnDWYymXvUAlRNdbHEENJmbEgniQ0puYP9A==
-X-Received: by 2002:a17:902:f693:b0:21d:3bd7:afdd with SMTP id d9443c01a7336-225e0868050mr223420325ad.0.1742312797129;
-        Tue, 18 Mar 2025 08:46:37 -0700 (PDT)
-Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba712asm95434305ad.131.2025.03.18.08.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 08:46:36 -0700 (PDT)
-From: Potin Lai <potin.lai.pt@gmail.com>
-Date: Tue, 18 Mar 2025 23:44:19 +0800
-Subject: [PATCH v2] gpio: pca953x: Add support for level-triggered
- interrupts
+	s=arc-20240116; t=1742315211; c=relaxed/simple;
+	bh=q/AieX/7kB6mSPgXM4t5kwiuJs/qADs3hg/ldWRzCgM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jCfWrLqxdA3L+5mVlr18UFP1SobHBHSLOHW4BVnnH8jOoTOWRU4R+mgf4JMgPqdJy+5JsBx62gRgkptAP6XhwBNnahTbXLT3lr14jmIcAivc3HiYLGCBFC+TwJaH+TEnmqZbRcDoB54jKboLzhMSZrDOsAk97waLPzhC/tYRg/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R+LAmh/v; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EB393442B9;
+	Tue, 18 Mar 2025 16:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742315206;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=45zCDv9E6VLY+ONuZj3J5CDqCgWno6ibgDXhT+Cl9eI=;
+	b=R+LAmh/v8E+5i3BY2GRajMbhJhhSDFW8V3zbcf7YZm06BGoTv89xo2y5CLBSXaHRI3v66f
+	9NG6QBkDU1vwAdnJdHYzQDvKsRqrUzdN+jAFWKMpJbXReSon97vTFKfZihTpWHMFICeJNv
+	lBD3JGIr6CdETssDrbcrRU8fa0fEXLmY3D8JlP1x9ntQCH80J4CGQX0dmM3+gK1Jswmz12
+	jLJN/It6JHuMCliPfJ06kBizDlFTXly2+SqhqmUHJQAIbzMrBhpNB0vHthEtGvovgu+6eS
+	M8J3UNjZijIERub2Lx4skS1PeKO1A/cgwHVrrAJ9F6GaHOu+bGspZaryYk/RJw==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: [PATCH v5 00/11] Add support for MAX7360
+Date: Tue, 18 Mar 2025 17:26:16 +0100
+Message-Id: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,139 +55,142 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-gpio-pca953x-level-triggered-irq-v2-1-c8bae60e7e17@gmail.com>
-X-B4-Tracking: v=1; b=H4sIANKU2WcC/5WNQQ6CMBAAv0L27BpaqIon/2E41LKUTYDWljQYw
- t+t/MDjzGFmg0iBKcK92CBQ4shuziBPBZhBz5aQu8wgS6nKStzQenbojW5UteJIiUZcAltLgTr
- k8EZl+msvjH6pi4Cc8YF6Xo/Fs808cFxc+BzHJH72j3gSKLA0dVNXXSNrqR520jyejZug3ff9C
- 6FN02LQAAAA
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Patrick Williams <patrick@stwcx.xyz>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>, 
- Potin Lai <potin.lai.pt@gmail.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742312795; l=4669;
- i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
- bh=TePDezQLPcN0tcOqSmvjFu28rr9FfjBOdxnQ0WBu8qQ=;
- b=9MwxR/VZWAilJWq3CVIvJM45CkSaE+W4NgEYFgvL5KdqjCI9xskKnV4Jit8cSPaLftutXuo9r
- mqcsetOtZiBB0Kz8EdZwBG4iTIF1mA+JbGOt559RKUVtuRidbUOA96g
-X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
- pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
+X-B4-Tracking: v=1; b=H4sIAKme2WcC/33PzU7DMAwH8FeZciYotpM03Yn3mHbIFywSbaqkV
+ ENT3510EgJE4fi37J/tG6uxpFjZ8XBjJS6ppjy2oB4OzF/s+BJ5Ci0zFCgBoedDcHyw14604PV
+ tmnKZOSJZ46NUzhJrk1OJz+l6V0/nli+pzrm835cssFX/9xbggptoCDpltrYnl/P8msZHnwe2i
+ Qt+U5D2FWwKddYERE86ht8KfSpKAPyhUFN6Bb2T1jvhdm6RXwqC3Ffk9pEl5XVwrtf6p7Ku6we
+ bq97JigEAAA==
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742315204; l=4823;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=q/AieX/7kB6mSPgXM4t5kwiuJs/qADs3hg/ldWRzCgM=;
+ b=4orGU7PiaImPJMi7UseFvHChJHUf8hlu/tVPn1XHwRMcQHEOWBXpdXY5NlVDFNBelAK8YhRex
+ RGsB/RmOgcxCiOCly8mxM6JxTv5sIaYhp3YSk2mba1SdLETrNaogjEK
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedvledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhkeffueegvdekiefhfeejueeukeekgeegjeeghefgvdekveevvdekieetkeelveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpddugedqrhgtvddrqdhlihhnkhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehlihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepu
+ ggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Adds support for level-triggered interrupts in the PCA953x GPIO
-expander driver. Previously, the driver only supported edge-triggered
-interrupts, which could lead to missed events in scenarios where an
-interrupt condition persists until it is explicitly cleared.
+This series implements a set of drivers allowing to support the Maxim
+Integrated MAX7360 device.
 
-By enabling level-triggered interrupts, the driver can now detect and
-respond to sustained interrupt conditions more reliably.
+The MAX7360 is an I2C key-switch and led controller, with following
+functionalities:
+- Keypad controller for a key matrix of up to 8 rows and 8 columns.
+- Rotary encoder support, for a single rotary encoder.
+- Up to 8 PWM outputs.
+- Up to 8 GPIOs with support for interrupts and 6 GPOs.
 
-Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
+Chipset pins are shared between all functionalities, so all cannot be
+used at the same time.
+
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
-Adds support for level-triggered interrupts in the PCA953x GPIO
-expander driver.
----
+Changes in v5:
+- Add pinctrl driver to replace the previous use of request()/free()
+  callbacks for PORT pins.
+- Remove ngpios property from GPIO device tree bindings.
+- Use GPIO valid_mask to mark unusable keypad columns GPOs, instead of
+  changing ngpios.
+- Drop patches adding support for request()/free() callbacks in GPIO
+  regmap and gpio_regmap_get_ngpio().
+- Allow gpio_regmap_register() to create the associated regmap IRQ.
+- Various fixes in MFD, PWM, GPIO and KEYPAD drivers.
+- Link to v4: https://lore.kernel.org/r/20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com
+
+Changes in v4:
+- Modified the GPIO driver to use gpio-regmap and regmap-irq.
+- Add support for request()/free() callbacks in gpio-regmap.
+- Add support for status_is_level in regmap-irq.
+- Switched the PWM driver to waveform callbacks.
+- Various small fixes in MFD, PWM, GPIO drivers and dt bindings.
+- Rebased on v6.14-rc2.
+- Link to v3: https://lore.kernel.org/r/20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com
+
+Changes in v3:
+- Fix MFD device tree binding to add gpio child nodes.
+- Fix various small issues in device tree bindings.
+- Add missing line returns in error messages.
+- Use dev_err_probe() when possible.
+- Link to v2: https://lore.kernel.org/r/20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com
+
 Changes in v2:
-- fix error of irq_trig_level_high & irq_trig_level_low check
-- Link to v1: https://lore.kernel.org/r/20250318-gpio-pca953x-level-triggered-irq-v1-1-0c4943d92425@gmail.com
----
- drivers/gpio/gpio-pca953x.c | 32 +++++++++++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index be4c9981ebc4..6ca882493839 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -215,6 +215,8 @@ struct pca953x_chip {
- 	DECLARE_BITMAP(irq_stat, MAX_LINE);
- 	DECLARE_BITMAP(irq_trig_raise, MAX_LINE);
- 	DECLARE_BITMAP(irq_trig_fall, MAX_LINE);
-+	DECLARE_BITMAP(irq_trig_level_high, MAX_LINE);
-+	DECLARE_BITMAP(irq_trig_level_low, MAX_LINE);
- #endif
- 	atomic_t wakeup_path;
- 
-@@ -773,6 +775,8 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
- 
- 	bitmap_or(irq_mask, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
-+	bitmap_or(irq_mask, irq_mask, chip->irq_trig_level_high, gc->ngpio);
-+	bitmap_or(irq_mask, irq_mask, chip->irq_trig_level_low, gc->ngpio);
- 	bitmap_complement(reg_direction, reg_direction, gc->ngpio);
- 	bitmap_and(irq_mask, irq_mask, reg_direction, gc->ngpio);
- 
-@@ -790,13 +794,15 @@ static int pca953x_irq_set_type(struct irq_data *d, unsigned int type)
- 	struct device *dev = &chip->client->dev;
- 	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 
--	if (!(type & IRQ_TYPE_EDGE_BOTH)) {
-+	if (!(type & IRQ_TYPE_SENSE_MASK)) {
- 		dev_err(dev, "irq %d: unsupported type %d\n", d->irq, type);
- 		return -EINVAL;
- 	}
- 
- 	assign_bit(hwirq, chip->irq_trig_fall, type & IRQ_TYPE_EDGE_FALLING);
- 	assign_bit(hwirq, chip->irq_trig_raise, type & IRQ_TYPE_EDGE_RISING);
-+	assign_bit(hwirq, chip->irq_trig_level_low, type & IRQ_TYPE_LEVEL_LOW);
-+	assign_bit(hwirq, chip->irq_trig_level_high, type & IRQ_TYPE_LEVEL_HIGH);
- 
- 	return 0;
- }
-@@ -809,6 +815,8 @@ static void pca953x_irq_shutdown(struct irq_data *d)
- 
- 	clear_bit(hwirq, chip->irq_trig_raise);
- 	clear_bit(hwirq, chip->irq_trig_fall);
-+	clear_bit(hwirq, chip->irq_trig_level_low);
-+	clear_bit(hwirq, chip->irq_trig_level_high);
- }
- 
- static void pca953x_irq_print_chip(struct irq_data *data, struct seq_file *p)
-@@ -839,6 +847,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
- 	DECLARE_BITMAP(cur_stat, MAX_LINE);
- 	DECLARE_BITMAP(new_stat, MAX_LINE);
- 	DECLARE_BITMAP(trigger, MAX_LINE);
-+	DECLARE_BITMAP(edges, MAX_LINE);
- 	int ret;
- 
- 	if (chip->driver_data & PCA_PCAL) {
-@@ -875,13 +884,26 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
- 
- 	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
- 
--	if (bitmap_empty(trigger, gc->ngpio))
--		return false;
-+	if (bitmap_empty(chip->irq_trig_level_high, gc->ngpio) &&
-+	    bitmap_empty(chip->irq_trig_level_low, gc->ngpio)) {
-+		if (bitmap_empty(trigger, gc->ngpio))
-+			return false;
-+	}
- 
- 	bitmap_and(cur_stat, chip->irq_trig_fall, old_stat, gc->ngpio);
- 	bitmap_and(old_stat, chip->irq_trig_raise, new_stat, gc->ngpio);
--	bitmap_or(new_stat, old_stat, cur_stat, gc->ngpio);
--	bitmap_and(pending, new_stat, trigger, gc->ngpio);
-+	bitmap_or(edges, old_stat, cur_stat, gc->ngpio);
-+	bitmap_and(pending, edges, trigger, gc->ngpio);
-+
-+	bitmap_and(cur_stat, new_stat, chip->irq_trig_level_high, gc->ngpio);
-+	bitmap_and(cur_stat, cur_stat, chip->irq_mask, gc->ngpio);
-+	bitmap_or(pending, pending, cur_stat, gc->ngpio);
-+
-+	bitmap_complement(cur_stat, new_stat, gc->ngpio);
-+	bitmap_and(cur_stat, cur_stat, reg_direction, gc->ngpio);
-+	bitmap_and(old_stat, cur_stat, chip->irq_trig_level_low, gc->ngpio);
-+	bitmap_and(old_stat, old_stat, chip->irq_mask, gc->ngpio);
-+	bitmap_or(pending, pending, old_stat, gc->ngpio);
- 
- 	return !bitmap_empty(pending, gc->ngpio);
- }
+- Removing device tree subnodes for keypad, rotary encoder and pwm
+  functionalities.
+- Fixed dt-bindings syntax and naming.
+- Fixed missing handling of requested period in PWM driver.
+- Cleanup of the code
+- Link to v1: https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com
 
 ---
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250318-gpio-pca953x-level-triggered-irq-5cf7f1cab561
+Kamel Bouhara (2):
+      mfd: Add max7360 support
+      pwm: max7360: Add MAX7360 PWM support
+
+Mathieu Dubois-Briand (9):
+      dt-bindings: mfd: gpio: Add MAX7360
+      pinctrl: Add MAX7360 pinctrl driver
+      regmap: irq: Add support for chips without separate IRQ status
+      gpio: regmap: Allow to allocate regmap-irq device
+      gpio: regmap: Allow to provide init_valid_mask callback
+      gpio: max7360: Add MAX7360 gpio support
+      input: keyboard: Add support for MAX7360 keypad
+      input: misc: Add support for MAX7360 rotary
+      MAINTAINERS: Add entry on MAX7360 driver
+
+ .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 +++++++
+ .../devicetree/bindings/mfd/maxim,max7360.yaml     | 170 +++++++++++++
+ MAINTAINERS                                        |  13 +
+ drivers/base/regmap/regmap-irq.c                   |  97 +++++---
+ drivers/gpio/Kconfig                               |  12 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max7360.c                        | 246 +++++++++++++++++++
+ drivers/gpio/gpio-regmap.c                         |  26 +-
+ drivers/input/keyboard/Kconfig                     |  12 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/max7360-keypad.c            | 264 +++++++++++++++++++++
+ drivers/input/misc/Kconfig                         |  11 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/max7360-rotary.c                | 161 +++++++++++++
+ drivers/mfd/Kconfig                                |  14 ++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max7360.c                              | 185 +++++++++++++++
+ drivers/pinctrl/Kconfig                            |  11 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-max7360.c                  | 195 +++++++++++++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-max7360.c                          | 194 +++++++++++++++
+ include/linux/gpio/regmap.h                        |  22 ++
+ include/linux/mfd/max7360.h                        | 112 +++++++++
+ include/linux/regmap.h                             |   3 +
+ 26 files changed, 1813 insertions(+), 35 deletions(-)
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20241219-mdb-max7360-support-223a8ce45ba3
 
 Best regards,
 -- 
-Potin Lai <potin.lai.pt@gmail.com>
+Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 
 
