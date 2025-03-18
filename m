@@ -1,125 +1,114 @@
-Return-Path: <linux-gpio+bounces-17724-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17725-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB8B8A670D6
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 11:11:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46931A670D1
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 11:11:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4B1D3B0719
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 10:11:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 494BE42120C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 10:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCFFA207E00;
-	Tue, 18 Mar 2025 10:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E928B2080DA;
+	Tue, 18 Mar 2025 10:11:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J+7u70KU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UXikAOnb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDAF207E0E
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Mar 2025 10:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F792080CD
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Mar 2025 10:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742292654; cv=none; b=Hmcn1nK07YfICsvLYlCwvRDN9XAhHCGFnS0BZ4lxAlKv5aSK1MiHGnVqggRPFhX9LKrOGfp67FoK68+YTETli7vXysGZESXazjWDFmIq23acnyXEemADQMyNWxZzHpvUuwhyu5Wo5DSQsNK3fmBR0kJpY9xETIJANdL1vCRub3A=
+	t=1742292672; cv=none; b=t//qrViw/SI7y5attDCXIhyDFVwUC4ZSAz75RlUCqtvn6bN8lggc2pWPy6A3jsVBEOWarvrCW2Ldj7JG/PHWcZUJfmWNwTCzP9BDnTGwxAJI1d1nWOVa+wTki5JD65mw5ZIAD+n8VPOneNyldHOcLCkCK+ubO7I1IRnVvWeuTz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742292654; c=relaxed/simple;
-	bh=+HNr0OUUg/pet6wF5/pds7FuLgRzJRiTTxJAIbvCZY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EccyShBVlSYoqbLdZDuP+W8X3KEpsan2RDs3+weiRJv0UGlw1Zgy52i9m3+0hlxQr7+4gvUoczYYX9uA2NExKOxZC7sd6TMHUqrFuUuYqL9bGm7ckaGtS4DAkQSxQiqRHkUHfnuk+u2l4O0Owk9fWPp7jpILkLdHOJLujR7S4Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J+7u70KU; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742292653; x=1773828653;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+HNr0OUUg/pet6wF5/pds7FuLgRzJRiTTxJAIbvCZY4=;
-  b=J+7u70KUz+mmU1yUB+z984UmpgIl+JSrVLxhXJ8aQfyXkJrBMnszed+j
-   B22mJcMClVnK6W27X+0CKl4ITzKgH32paRfAcnnwu1YyBKczLYhqEsBKv
-   nmVXJLv1ji6S/3PhRq3Dwcq8ZBkskYWBFqB4p12S986XXx1F8iT7SAwqK
-   hr0ZK8dprq+jJW+fdS35NAGgT+xTHTeOF4mxp5CCiQcASZ+GMAtSHIW4f
-   TiHk8XujUKfNbC+TaHSOnjAxQKaJ2SO1iwd9gPYOkLeLmcNSl39UyE4TZ
-   ywnClQlmYf9R/SXXmhGNuVyGLEUNq1lyFY4BD/a9TrhDk/Ezf/MVTxxGY
-   A==;
-X-CSE-ConnectionGUID: h81BiJYhQFqilgrZ+P8oRA==
-X-CSE-MsgGUID: 1zsHzIV8SHq7lFOl9XHcfw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="42674139"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="42674139"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 03:10:51 -0700
-X-CSE-ConnectionGUID: /m0VV5uBQmusXdolfYOAjw==
-X-CSE-MsgGUID: q1KeQLK5SbaiOse7zOci3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="127252793"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 03:10:50 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tuTuJ-00000003aQk-3Ow8;
-	Tue, 18 Mar 2025 12:10:47 +0200
-Date: Tue, 18 Mar 2025 12:10:47 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Linus W <linus.walleij@linaro.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: GPIO TODO
-Message-ID: <Z9lGp8soCgPUYLQ2@smile.fi.intel.com>
-References: <PAXPR04MB8459BEB700FB66FE693EF1CF88DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <Z9k7cL8W-TCBLK1f@smile.fi.intel.com>
- <PAXPR04MB8459E4734C7390AB4F83178E88DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1742292672; c=relaxed/simple;
+	bh=yKQqeVn0btUdtS+qPzT5gdetvTkb3UZO+pyG1ZeZ+mo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bnkmo/JCre/mzqvmck9+hwBwrH6um8orjq2JjCIwzHCedGRqxLCaltxKEaUqAa0OeVt7D1xi7rarIrLuRQXSbWATzDoxeoylNyeCPtLHpw9PG/Aexd0KnKg4rQem2FojPWym0JY2mF1OPPM7VDnJqGKx+8Tni6tApiai9Hn0AP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UXikAOnb; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54998f865b8so4798880e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Mar 2025 03:11:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742292669; x=1742897469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qVUpvtTBLHRQ7RrqjSGWWvP5ToHEThWrbkH7ADEWZ7k=;
+        b=UXikAOnbm8TH+gFEHGyCBEvUGM/HaqI6axbdWnHLn3fyHyBj9MoFp9LMdEq6pirp9X
+         x6kOfOqeediFjUcwlkumwAklWCmmXh3A7Cy11obEaf0AEhcqLAdP+o6nP1rFkyKejdjz
+         UIoq8tsWfsTz9xaJPRV1LEUp8ARev/47Id7BQtooL/c5eX+otuZUqBCSCcbK1Y8o+Yau
+         unW0JUcBVa7UK23weMWrk68j5p24dBoeRgzqXj4VXf58Y2DxeLFT0HbQLc688Nlje4L+
+         QsLG09iy37qXf4xU89EiJsNwX6Tlhx5TAogG6gtb8AiPIeapfNDp/e+zHufjFmcEKzyq
+         /7Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742292669; x=1742897469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qVUpvtTBLHRQ7RrqjSGWWvP5ToHEThWrbkH7ADEWZ7k=;
+        b=l1jQGAYVtgNkFWpEZDBv7sL2EB9CrWTpySfRRNd0ErXrWQDApCdi0vlTXophQ05hor
+         5/ZPuucNap3Qbt1iOd9mdE0t7/kPdG5w5LXVXEZrPPNjnQnR1ijIFRi9Lo7VQFQpZXvi
+         l7esU1gJ5T4gN5PymLdld474EwhKcwvqmGi5rGfdUBpT7CMXKENClzaTX7vpb5QX7PYy
+         U2WbrFqoID+1Eyc7o0rSdq/rstoRXeI0ZWzUEtaeHxUb7ki33cjMCJHwvLN9EPeSsmE9
+         ZAO965NqDrSaylBNSftOddG1P1JIo8XzSD9/iO/mRcKnpihB5SGF0DKg03Synuo/kwfM
+         D5Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeEGuvwrktsgw8xrw8V1sIwKxQlzR77SBCldcXAb302kgGnL+JKQEqynwA2dzTV3shD56GmVEt1AS9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/TJXpf507IsBZcOHOAItqmg9c19dtIhghoQT3VvR3KSwsb8Hx
+	F8/bWVMMVcYCeEmB3YUtrJatv6BsloI2REqovgjC57owP1YP1ko0OI0yFxZW9cejN6OpXLerVrV
+	0ZawO3IJTvK5cLV4NfJhRobh/BrormKJJK1Ac0g==
+X-Gm-Gg: ASbGncszeWpNyujoti12tSPABNHdhoaXi4n73d2hJkUCSkC+jBKcV1MkCnmFOGQlrhG
+	HFN4HAlCPVaUuTWhWsHthU/0SG6BglacgMl6RuMxfDwF5IJNbcqKjqRzS6M73J+N9aT+JLhFTx8
+	ldImdNkj8m6b7U+W5I2fSrBNxH9A==
+X-Google-Smtp-Source: AGHT+IGaqrncYYUr4sfyRfLFzOEWIoUn1i0mOansd4z1qNbCCAzVBUKQPVLdXhHFFByp6tsLCBEDJwkAWjabnBVbVpk=
+X-Received: by 2002:a05:6512:3b99:b0:549:b0f3:439f with SMTP id
+ 2adb3069b0e04-54a03ba664emr2114093e87.25.1742292668868; Tue, 18 Mar 2025
+ 03:11:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459E4734C7390AB4F83178E88DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250316143108.17045-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250316143108.17045-1-krzysztof.kozlowski@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 18 Mar 2025 11:10:57 +0100
+X-Gm-Features: AQ5f1JpKJfFS7YVV371lRPx1Y2xc562AW9pLo6dBt2VW6OJo1Hlc7eGeR9sMzjI
+Message-ID: <CACRpkdac0zZtB=85Y+Fu=TYwf9qTjNog90-P4SBjQ-oB7X5Vag@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: samsung: drivers for v6.15
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sylwester Nawrocki <snawrocki@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2025 at 09:58:43AM +0000, Peng Fan wrote:
-> > On Tue, Mar 18, 2025 at 07:37:59AM +0000, Peng Fan wrote:
-> > >
-> > > I did two patches to drop of_gpio.h for drivers/spi/spi-stm32-ospi.c
-> > > and drivers/regulator/s5m8767.c.
-> > 
-> > Dropping of_gpio.h from the latter is not just that, one needs to
-> > convert it to use GPIO descriptor APIs first.
-> 
-> Yes, I did that. Not have device to test, just my best practice to
-> do the convertion.
-> https://lore.kernel.org/all/20250318052709.1731747-1-peng.fan@oss.nxp.com/
+On Sun, Mar 16, 2025 at 3:31=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-As far as I can tell this needs a bit more work and also have you checked
-the existing DTS files? What about polarity?
+> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f0=
+5b:
+>
+>   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+>
+> are available in the Git repository at:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tag=
+s/samsung-pinctrl-6.15
+>
+> for you to fetch changes up to 701d0e910955627734917c3587258aa7e73068bb:
+>
+>   pinctrl: samsung: add support for eint_fltcon_offset (2025-03-11 20:37:=
+29 +0100)
 
-> > > But when I search lore.kernel.org, I see Andy did some work on the
-> > > cleanup, hope there is no duplication with your work, and I wonder
-> > do
-> > > you plan to cleanup the remaining ones under drivers/net/
-> > drivers/nfc
-> > > sound/ ?
-> > 
-> > There is no duplication for sure, any help will be appreciated.
-> 
-> My pleasure, just have spare time on various stuff.
-> 
-> > > Besides the of_gpio.h, anyone working on immutable irq_chip?
-> > 
-> > As far as I know that work has been staled. Again, it would be nice to
-> > continue.
-> 
-> I will give a look.
+Pulled in, thanks for taking care of the Samsung drivers!
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
 
