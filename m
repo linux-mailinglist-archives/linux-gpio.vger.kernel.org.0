@@ -1,84 +1,103 @@
-Return-Path: <linux-gpio+bounces-17713-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17714-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E8ECA664FD
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 02:27:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6CE3A666B6
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 04:08:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E703617BD6C
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 01:27:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D894719A0F3B
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Mar 2025 03:08:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9324E1474CC;
-	Tue, 18 Mar 2025 01:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="MQWYmk8T"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E55151991A9;
+	Tue, 18 Mar 2025 03:08:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E1F5695;
-	Tue, 18 Mar 2025 01:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B10187332;
+	Tue, 18 Mar 2025 03:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742261258; cv=none; b=o8RFo3QmXpnrwkbKXYVii+UX09D/ElqFjutp4KG9uJIBOCJ/sbrQJ/jXoGyy2+MpYpi8dclCpCNkM4BbOEkJAmVplo1yVS6DGQS8wr0Pj2fRx/RPZwUqFYIHpRepLFXVjTLpf5cI5eJJjC5Z25fylfdW6qIfbz9ZPjWszzYUj24=
+	t=1742267288; cv=none; b=RWSave215EdGFPPgcGKTaG//1A1epPuPv2XgFQZp7xe8zBf2/uNp8r+IqHbqBTjTTmIDOR0jiDu8uAG+6zyVwfxQ4qqibsB87Ad+w3AETgeVjSK9h6bp+iwLfKAQceNzWZQ1yWMeHAWofcuW7vB32256vGBMSq4AjfHLcRC5qlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742261258; c=relaxed/simple;
-	bh=lPmp4bTaoMgGyxKWDl4hyootOO3DyrJbTpPjEsI959o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FURlElQ51nMPZ2SDINUADop+gutE6wRqlXfycX/iNyU8lZ5mTbKbgd3HTf1JpDll3vhNoXhTDvzmaF51sZmnTIGuDHuaHw7GiW+BbOMCLLbnshflRWVNeBN/tEg0YyvspQUq8zQPF1a2etxXvSYW1OQHuzIs34q4NZPgWfhmFzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=MQWYmk8T; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1742261254;
-	bh=lPmp4bTaoMgGyxKWDl4hyootOO3DyrJbTpPjEsI959o=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=MQWYmk8TcQXao5iPuOHm2Zq43lqT1nc6k8aJyHOAOo+sXf9VN+kI/vmVrUw5RSa7d
-	 KvsGQu8yN7QRfG1FxY95hlna5/EgKwrNLPKgsTWoNkTjz8qwafWIR8ezrvstFUE60J
-	 aLR0rKR5FTbQ2K/k3bjTOCkbxAgEOum5VzvjFppbmGxmf7BCRwXLGSpFhB64KsZejS
-	 X8ftTyvDt8mtHEHAtjbEWInsnJwCJC9uWlhUWC0ML3u+wTjghbynsrEBkmqonjmMrB
-	 bTvn0Epz445EkXjvyKYZDj/Bm+nKkJhL1c5vh6WyUl14Wrw6HidfYlpWzxOLfSdW66
-	 2LEOz+VgXTp0Q==
-Received: from [192.168.68.112] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 9D1227A5D7;
-	Tue, 18 Mar 2025 09:27:33 +0800 (AWST)
-Message-ID: <91090eae4f8f4843139ba0a0baf9215965cd44d6.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 15/15] gpio: aspeed-sgpio: use new line value setter
- callbacks
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
- <linus.walleij@linaro.org>, Michael Hennerich
- <michael.hennerich@analog.com>,  Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Mun Yew Tham <mun.yew.tham@intel.com>,
- Joel Stanley <joel@jms.id.au>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pwm@vger.kernel.org, patches@opensource.cirrus.com, 
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Tue, 18 Mar 2025 11:57:33 +1030
-In-Reply-To: <20250303-gpiochip-set-conversion-v1-15-1d5cceeebf8b@linaro.org>
-References: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
-	 <20250303-gpiochip-set-conversion-v1-15-1d5cceeebf8b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1742267288; c=relaxed/simple;
+	bh=oxHbshbWQklPIplVOc/43p07WNv4BFL+N2LmaHuyIvU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WhIJB5oB3xORzgvdZs0eSeFb9yJpY+bKR8SfLIyv2AeLQqkrIqbW4hlCYXx95dBGnahvM9xeZjgPqOBRs5Qc17RV2sDj65b+ubjdwvr6O9uTF1CfMb+ejjSToIwJfbr+AKUKITGF8NxiadLkiaqZ985KVq30KTkhF74wwpsq57Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-03 (Coremail) with SMTP id rQCowACHjlp449hniT8tFg--.15841S2;
+	Tue, 18 Mar 2025 11:07:41 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: ludovic.desroches@microchip.com,
+	linus.walleij@linaro.org,
+	nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com
+Cc: claudiu.beznea@tuxon.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH] pinctrl: at91: Add error handling for pinctrl_utils_add_map_mux()
+Date: Tue, 18 Mar 2025 11:07:17 +0800
+Message-ID: <20250318030717.781-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowACHjlp449hniT8tFg--.15841S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF4fWrW8uw4xury5tF4kCrg_yoWkArg_Ga
+	yjyF97XrWI9ry2vr12qw1avFW0kFW8WryIqr1vqF1aka47X3WxKr95uF1UCw1kCry8Gry5
+	J39rZrySqr1xCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
+	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
+	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_Jw0_
+	GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ4EA2fYYxtqtgABsa
 
-On Mon, 2025-03-03 at 14:18 +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In atmel_pctl_dt_subnode_to_map(), the return value of
+pinctrl_utils_add_map_mux() needs to be checked, for the function
+will fail to associate group when the group map is full. Add error
+handling for pinctrl_utils_add_map_mux() to return immediately and
+propagate the error code to caller function when the function fails.
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/pinctrl/pinctrl-at91-pio4.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index 8b01d312305a..4dcaebc20d99 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -609,8 +609,10 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		if (ret)
+ 			goto exit;
+ 
+-		pinctrl_utils_add_map_mux(pctldev, map, reserved_maps, num_maps,
++		ret = pinctrl_utils_add_map_mux(pctldev, map, reserved_maps, num_maps,
+ 					  group, func);
++		if (ret)
++			goto exit;
+ 
+ 		if (num_configs) {
+ 			ret = pinctrl_utils_add_map_configs(pctldev, map,
+-- 
+2.42.0.windows.2
+
 
