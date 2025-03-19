@@ -1,94 +1,63 @@
-Return-Path: <linux-gpio+bounces-17805-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17806-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1C70A69C1D
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Mar 2025 23:34:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BDD06A69CD6
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 00:47:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F7328842F0
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Mar 2025 22:34:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52D073A4CFA
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Mar 2025 23:46:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE7721C183;
-	Wed, 19 Mar 2025 22:34:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32C7C22371F;
+	Wed, 19 Mar 2025 23:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I/cnx18F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXo2K4+1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20C921859F;
-	Wed, 19 Mar 2025 22:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B9C290F;
+	Wed, 19 Mar 2025 23:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742423683; cv=none; b=rn2r7lk3p5/Ap3uBsVfV+PSQ5mzuQ8wmPp7PFJSGdlvj/FD95S0ua+5T6zzx0h6VwYekLul035YZXn6NOSuw3EuaOjPxm2PhnrM9IdaDCzwJ+3VWzUwOSVJ9cQoYjN+jjEvpsuxvjn8bs7U1+nePYyl2Oznh8qTJ/Yvoalq6juw=
+	t=1742428019; cv=none; b=PxkXQHXjLqwgLnV0zT848wI2eg2CWvCNcdTm4W6TLhk92IHRYySx+g9k30ipIf3bBKtkoSyb0whLTDnA2E4vAZ5yHheYr0scP3jAKLtcNq3ZkoA5cOhjyGwW26KHooLxacg3yN7Tqz5MPTvoktmm0eiTuZXEsVbJgjbEUX+yWR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742423683; c=relaxed/simple;
-	bh=KCy7t8Yz0VMqKbVcqZL+O6hHMwl4B/WS992u8Lny0Kg=;
+	s=arc-20240116; t=1742428019; c=relaxed/simple;
+	bh=798Ih5yzvMQU6lYpe+ZBQ5F9xOjwj5zqAJyQfdmFkkw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WqGjJgewvBlt+rIYzGQ9aAejSdaQ8N5VKeElbm8XzNPnNjVojq9jXSq0nYw/gWjQebCEZ1cJiNlioRsjk1HlfcrTUMqYagkFUjFtgpsCwu6sIFdKTznlcVq0Yfuf3Ahqx5Fmmle/50J86MNyl+Cxv4MyjqLqOKtqaOPD0bae9R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I/cnx18F; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742423681; x=1773959681;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KCy7t8Yz0VMqKbVcqZL+O6hHMwl4B/WS992u8Lny0Kg=;
-  b=I/cnx18FPa1ChEEgs9fJJeUywZoIyt+KC1X9nQwl7LEL24aP124qu0i+
-   Ny+8l9wyUiHSCrIVr41AGeDikF8ZvHQiI/5LEzqN/sQA1+9K4g8P5ojED
-   VN/ndewqzb42CGW0apJGZDh4DlamC9bae0xwQJlPc8p2LBRcTm8RPNImL
-   p+aJPC9ZnSK+lT77DkiGiQ7srAKNdSjCyU7XTRtVGIDa1IHll0QjM4iy+
-   o2uYjucb3pMuY7io8NF0Y6jHA0B46P/FDekbiG+uOQimQMPkyFTq+kX0p
-   ecwCVGij3N0Z3GSVLkTEy4i3NIgIqowOnlJlB9pTpfGkRZUxAAes/u3me
-   Q==;
-X-CSE-ConnectionGUID: piZcfzYoSyOkzVXxH7ZO/Q==
-X-CSE-MsgGUID: 87U0rLZ2S6KOFWy30P5aQg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="47291528"
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="47291528"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 15:34:40 -0700
-X-CSE-ConnectionGUID: kICRZPFERJ2rAPiyNjOawA==
-X-CSE-MsgGUID: b+aJhSqARFSmGqGIMsFwgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="122823583"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 19 Mar 2025 15:34:34 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tv1zc-000FiY-07;
-	Wed, 19 Mar 2025 22:34:32 +0000
-Date: Thu, 20 Mar 2025 06:34:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Subject: Re: [PATCH v5 08/11] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <202503200617.h8re2FlY-lkp@intel.com>
-References: <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkpY/LcSxqVLwIFQswOZ8SiMcXqDNlflDM/gc9X5sPi39SvYVaYLuMlIp+PQpoW7yfCANBz2qQv+76MXxs/86sdYljWd0H9iI7avRuZ9sFdbwS2S3o3HbIDfSLjUPTFPlwiJ2mOgkMEMrePGL6jERvHTBoMnbhO8naEKbOXNGcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXo2K4+1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8994C4CEE4;
+	Wed, 19 Mar 2025 23:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742428017;
+	bh=798Ih5yzvMQU6lYpe+ZBQ5F9xOjwj5zqAJyQfdmFkkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RXo2K4+1q8pOnw93gz1wbyn2rt+YDESBMFwbGIAgzp4Brt8q/Ev4rrGM0FDqiz7uI
+	 Lo920Hegde800RPe2WKDD6PaZDgKn9RBRfnqClmFnKDt/5eG7/Z7ZZdebS08npa1vf
+	 UZbu5/MuNYbq9Q1RU1hkSNSC+pX2+a92NGZovSzMtu2xNsg3qqqriWfwj48uL18kST
+	 5O9M96ELoSAt/76B+q23BPobREeERb00zi67M9xh0DkcttFYpJc2iO72GDBB3fYpNb
+	 86FIoxeG7SyGQDitofKQhfq7TQMQUV3TKq74vuLkBx0IU2P9P6e34WGyHCGO4TBLJn
+	 5OUIKH6Zz1Hng==
+Date: Thu, 20 Mar 2025 00:46:53 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Kory Maincent <kory.maincent@bootlin.com>, 
+	Cosmin Tanislav <demonsingur@gmail.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v9 0/9] misc: Support TI FPC202 dual-port controller
+Message-ID: <avat6oilygpkcngtpuyentyvjqifav4f3zzvrtnsdybfl6uqja@i2surd4ywu73>
+References: <20250306-fpc202-v9-0-2779af6780f6@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -97,34 +66,40 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
+In-Reply-To: <20250306-fpc202-v9-0-2779af6780f6@bootlin.com>
 
-Hi Mathieu,
+Hi,
 
-kernel test robot noticed the following build warnings:
+> Romain Gantois (9):
+>       dt-bindings: misc: Describe TI FPC202 dual port controller
+>       media: i2c: ds90ub960: Replace aliased clients list with address list
+>       media: i2c: ds90ub960: Protect alias_use_mask with a mutex
+>       i2c: use client addresses directly in ATR interface
+>       i2c: move ATR alias pool to a separate struct
+>       i2c: rename field 'alias_list' of struct i2c_atr_chan to 'alias_pairs'
+>       i2c: support per-channel ATR alias pools
+>       i2c: Support dynamic address translation
+>       misc: add FPC202 dual port controller driver
+> 
+>  .../devicetree/bindings/misc/ti,fpc202.yaml        |  94 ++++
+>  MAINTAINERS                                        |   7 +
+>  drivers/i2c/i2c-atr.c                              | 483 ++++++++++++++-------
+>  drivers/media/i2c/ds90ub913.c                      |   9 +-
+>  drivers/media/i2c/ds90ub953.c                      |   9 +-
+>  drivers/media/i2c/ds90ub960.c                      |  49 ++-
+>  drivers/misc/Kconfig                               |  12 +
+>  drivers/misc/Makefile                              |   1 +
+>  drivers/misc/ti_fpc202.c                           | 438 +++++++++++++++++++
+>  include/linux/i2c-atr.h                            |  54 ++-
+>  10 files changed, 965 insertions(+), 191 deletions(-)
 
-[auto build test WARNING on a64dcfb451e254085a7daee5fe51bf22959d52d3]
+how are we going to take this? I think we are at the last bits of
+reviews and it's time to plan merging this series.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-mfd-gpio-Add-MAX7360/20250319-003750
-base:   a64dcfb451e254085a7daee5fe51bf22959d52d3
-patch link:    https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-8-fb20baf97da0%40bootlin.com
-patch subject: [PATCH v5 08/11] gpio: max7360: Add MAX7360 gpio support
-config: nios2-kismet-CONFIG_PINCTRL_MAX7360-CONFIG_GPIO_MAX7360-0-0 (https://download.01.org/0day-ci/archive/20250320/202503200617.h8re2FlY-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250320/202503200617.h8re2FlY-lkp@intel.com/reproduce)
+Do we need to wait for media and then take i2c? Or shall wee take
+everything via i2c.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503200617.h8re2FlY-lkp@intel.com/
+I had a look at the whole series and looks quite all right to me.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for PINCTRL_MAX7360 when selected by GPIO_MAX7360
-   WARNING: unmet direct dependencies detected for PINCTRL_MAX7360
-     Depends on [n]: PINCTRL [=n] && MFD_MAX7360 [=y]
-     Selected by [y]:
-     - GPIO_MAX7360 [=y] && GPIOLIB [=y] && MFD_MAX7360 [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Andi
 
