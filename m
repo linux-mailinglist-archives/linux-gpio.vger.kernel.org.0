@@ -1,170 +1,130 @@
-Return-Path: <linux-gpio+bounces-17804-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17805-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DA05A69B74
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Mar 2025 22:54:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1C70A69C1D
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Mar 2025 23:34:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EBAE4820AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Mar 2025 21:54:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F7328842F0
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Mar 2025 22:34:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E2A221D86;
-	Wed, 19 Mar 2025 21:51:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE7721C183;
+	Wed, 19 Mar 2025 22:34:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P5V1HG+u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I/cnx18F"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A87421E0BD
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Mar 2025 21:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20C921859F;
+	Wed, 19 Mar 2025 22:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742421105; cv=none; b=S5wED0kIJJy2WyWsdxDdO1LM5tuYVoXqEPd7J5JQVegeGUj0raa5c59X/eI0XHqO0pcygNpYfwTEV7olgoB+09+V2e3v/HKtc6cJndKEwFvvVFPjLzaYLCslIyQrKu2TRBTuVFgl65AaKO+/NckI6r8LUaoo2SFZPrWVGyiJU9U=
+	t=1742423683; cv=none; b=rn2r7lk3p5/Ap3uBsVfV+PSQ5mzuQ8wmPp7PFJSGdlvj/FD95S0ua+5T6zzx0h6VwYekLul035YZXn6NOSuw3EuaOjPxm2PhnrM9IdaDCzwJ+3VWzUwOSVJ9cQoYjN+jjEvpsuxvjn8bs7U1+nePYyl2Oznh8qTJ/Yvoalq6juw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742421105; c=relaxed/simple;
-	bh=ZHGs6I7q3Tsyi9kzoh4U5cxC19XY6HnWZ9uwmmvUT2Q=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ro5IAkdTt7UF/ZJEWecDm1fPuR0SXoLSTCSUn2EJ+ZOrZ6tMB+tTqoXpiqRLPEeNWMVaaVu/dPtVn7XIShWEE0W6FvQAYN10dEsrXo8r8ptWOIoYxzQOWzuu3NN9e3w7pOwD143p+CAn+uYZ6doVmHZKe62VWI6ltVseUZzTvxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P5V1HG+u; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaeec07b705so24743366b.2
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Mar 2025 14:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742421100; x=1743025900; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hon0A+RaNlvqPfqyKNkIXyr+XGvXZKWonIIqQqeswT0=;
-        b=P5V1HG+ulPDbgraGKjpTHEUqniY1hrRZcEWRfY5LXZCbLbV1qm1sJs9Z+YUkaW7OLW
-         Wo4HnKDwoRzDrNNL7XHWZnjSJ4726aJfMsGKc9rQDK89HH6rW+oAGqycuujxOAeMJoNB
-         clSXIA5VC1S0ZcR+quBpJef8B4mTb3PQuUouXFfB1X/raCnWP7esAUa1GkPL2xB3sSTs
-         DD4waHVdpUreOlQfYAaEPDSUWi87WnmmywL8R+lT1cV19iBx1sSx8BtTjQQ61xm/mWoA
-         LvS+f65F9K+ghEt2BA1HaLbLKhXAbVdZbyTIiuz7HuDwscIJm2NuesiE4A9DUoIXgSJ/
-         acag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742421100; x=1743025900;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hon0A+RaNlvqPfqyKNkIXyr+XGvXZKWonIIqQqeswT0=;
-        b=kRxYaVrdzL9Gq1VnatO3uh28JQ81Joi4RKTupvLtZ1z+AcUEGGgos5j0RkWDA0iVJz
-         5AjE3CG1ikxTCFzItcXQo3ed8wnIZneNu5vKmUjJPkaOZpxuRtLhaR33kdSHiSdmFAna
-         RXyygE4xLLA6ebmgWoIAbKECJSn0pUAHV6c0qOra5HnF9Evrlm+EDH9wVzxxujGJ3Z9O
-         daVqqKPYM+vWde/jmIxyrf4/Umz5TEJoIRQwRtX8SnQ0BCRolYz2B1s+1Dcz25t46DB0
-         UTdtuBQZ8ic87TTIacxxfjUljqTHElxRuksEm3HBzucg36IvVBimBCQ9zFPDrR4tWKGY
-         EBqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXnTLg6apFPgE3UiP3irsndPfTv9DfNGxeoWagMyj/2y3wI6XcKLkfPnecpqJpv4tMH3k/jSxyL0620@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpuSaPG1nbLiqpM9aNxDNCr5ZtFf6FWeyHVtg1eon0epVmZzFF
-	N8xvBXjgoCSDY+HqrBW+46oqmilg4vc2cCkF+SGdld2HyJU/e3IcFUI1EJ9ZF3w=
-X-Gm-Gg: ASbGnctr/KAc706KPaXtT0UAdIE1Gilv0VPNEsZstRvepSuB+vOp3bTUwSGIx5yxwO6
-	estHvDrzgIiPBPdWyTDGU7Yhu0ys2750glIdrZcY5H+rRK1fcseyRBVDDvCv+yVrnM1j3AJUycP
-	6Pl5GjU08+FTMT9DtS4D2XFsYhnFOSVvsDFHzoNmgG7U5Bx43AkTBduO6H+MOvhKdjWvtDM3DIc
-	YXuolTysKxn0KmzyXT37/m0k0IFyJpyDN9fUBjvJu8znxCHokjHBhuk0yXvIeHR1KTN8/Kz9uCJ
-	1aYcJeYY0MrUGV5XP4ThNaYRgwCBVvGL/x39OF0NmIWGO//UNbnvV3/SntfkZ5ERhD6NMlTxFGw
-	AWlaqVDWx7A==
-X-Google-Smtp-Source: AGHT+IEubZjv6HNcMkLRF8KIKKnDt5E7yfE5umLCedVB6lCh54dmHwyuBtrf8bjfetPJOMQZhmUQZw==
-X-Received: by 2002:a17:907:96a8:b0:ac1:e1da:8744 with SMTP id a640c23a62f3a-ac3b7ed0692mr400259166b.38.1742421099920;
-        Wed, 19 Mar 2025 14:51:39 -0700 (PDT)
-Received: from localhost (host-87-4-238-14.retail.telecomitalia.it. [87.4.238.14])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149ced82sm1045348366b.123.2025.03.19.14.51.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 14:51:39 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	s=arc-20240116; t=1742423683; c=relaxed/simple;
+	bh=KCy7t8Yz0VMqKbVcqZL+O6hHMwl4B/WS992u8Lny0Kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WqGjJgewvBlt+rIYzGQ9aAejSdaQ8N5VKeElbm8XzNPnNjVojq9jXSq0nYw/gWjQebCEZ1cJiNlioRsjk1HlfcrTUMqYagkFUjFtgpsCwu6sIFdKTznlcVq0Yfuf3Ahqx5Fmmle/50J86MNyl+Cxv4MyjqLqOKtqaOPD0bae9R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I/cnx18F; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742423681; x=1773959681;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KCy7t8Yz0VMqKbVcqZL+O6hHMwl4B/WS992u8Lny0Kg=;
+  b=I/cnx18FPa1ChEEgs9fJJeUywZoIyt+KC1X9nQwl7LEL24aP124qu0i+
+   Ny+8l9wyUiHSCrIVr41AGeDikF8ZvHQiI/5LEzqN/sQA1+9K4g8P5ojED
+   VN/ndewqzb42CGW0apJGZDh4DlamC9bae0xwQJlPc8p2LBRcTm8RPNImL
+   p+aJPC9ZnSK+lT77DkiGiQ7srAKNdSjCyU7XTRtVGIDa1IHll0QjM4iy+
+   o2uYjucb3pMuY7io8NF0Y6jHA0B46P/FDekbiG+uOQimQMPkyFTq+kX0p
+   ecwCVGij3N0Z3GSVLkTEy4i3NIgIqowOnlJlB9pTpfGkRZUxAAes/u3me
+   Q==;
+X-CSE-ConnectionGUID: piZcfzYoSyOkzVXxH7ZO/Q==
+X-CSE-MsgGUID: 87U0rLZ2S6KOFWy30P5aQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="47291528"
+X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
+   d="scan'208";a="47291528"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 15:34:40 -0700
+X-CSE-ConnectionGUID: kICRZPFERJ2rAPiyNjOawA==
+X-CSE-MsgGUID: b+aJhSqARFSmGqGIMsFwgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
+   d="scan'208";a="122823583"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa006.jf.intel.com with ESMTP; 19 Mar 2025 15:34:34 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tv1zc-000FiY-07;
+	Wed, 19 Mar 2025 22:34:32 +0000
+Date: Thu, 20 Mar 2025 06:34:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	andriy.shevchenko@intel.com,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: [PATCH v8 13/13] arm64: defconfig: Enable OF_OVERLAY option
-Date: Wed, 19 Mar 2025 22:52:34 +0100
-Message-ID: <9d5b41bf6d1565f0de96c7c1680bd404cba40189.1742418429.git.andrea.porta@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1742418429.git.andrea.porta@suse.com>
-References: <cover.1742418429.git.andrea.porta@suse.com>
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: Re: [PATCH v5 08/11] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <202503200617.h8re2FlY-lkp@intel.com>
+References: <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
 
-The RP1 driver uses the infrastructure enabled by OF_OVERLAY config
-option. Enable that option in defconfig in order to produce a kernel
-usable on RaspberryPi5 avoiding to enable it separately.
+Hi Mathieu,
 
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
----
-The following metrics should help to decide whether this patch is
-acceptable or not. The defconfig kernel with CONFIG_OF_OVERLAY=y
-added (wrt to the defconfig one without that set) has:
+kernel test robot noticed the following build warnings:
 
-- same uncompressed kernel image size (due to ELF section alignment I guess)
+[auto build test WARNING on a64dcfb451e254085a7daee5fe51bf22959d52d3]
 
-- ~7Kb bigger Image.gz
+url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-mfd-gpio-Add-MAX7360/20250319-003750
+base:   a64dcfb451e254085a7daee5fe51bf22959d52d3
+patch link:    https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-8-fb20baf97da0%40bootlin.com
+patch subject: [PATCH v5 08/11] gpio: max7360: Add MAX7360 gpio support
+config: nios2-kismet-CONFIG_PINCTRL_MAX7360-CONFIG_GPIO_MAX7360-0-0 (https://download.01.org/0day-ci/archive/20250320/202503200617.h8re2FlY-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250320/202503200617.h8re2FlY-lkp@intel.com/reproduce)
 
-- 3 new modules (all related to RP1, i.e.: clk-rp1, pinctrl-rp1 and rp1-pci)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503200617.h8re2FlY-lkp@intel.com/
 
-- 27 added symbols, of which 5 exported
- 
-hoping this is enough to gather a rough idea of the impact.
-Please note that OF_OVERLAY has to be defined in a way or another,
-otherwise the RP1 driver won't work correctly in case the dtb overlay
-embedded into the driver is used.
-Another way would be to add a phony target to the arm64 makefile which
-just add that config option to the target.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for PINCTRL_MAX7360 when selected by GPIO_MAX7360
+   WARNING: unmet direct dependencies detected for PINCTRL_MAX7360
+     Depends on [n]: PINCTRL [=n] && MFD_MAX7360 [=y]
+     Selected by [y]:
+     - GPIO_MAX7360 [=y] && GPIOLIB [=y] && MFD_MAX7360 [=y]
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index cc70793e97ef..ca492fbd2773 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1643,6 +1643,7 @@ CONFIG_FPGA_BRIDGE=m
- CONFIG_ALTERA_FREEZE_BRIDGE=m
- CONFIG_FPGA_REGION=m
- CONFIG_OF_FPGA_REGION=m
-+CONFIG_OF_OVERLAY=y
- CONFIG_TEE=y
- CONFIG_OPTEE=y
- CONFIG_MUX_GPIO=m
 -- 
-2.35.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
