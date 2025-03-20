@@ -1,123 +1,259 @@
-Return-Path: <linux-gpio+bounces-17829-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17830-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 409BBA6A8FF
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 15:48:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28AEEA6A935
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 15:59:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A1A23BF1CA
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 14:48:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 912A719C2AD2
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 14:51:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB6D41E47B7;
-	Thu, 20 Mar 2025 14:48:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C81201E0E13;
+	Thu, 20 Mar 2025 14:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sDKs5kIF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRPpkYlD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19C71DEFE4;
-	Thu, 20 Mar 2025 14:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AA01876;
+	Thu, 20 Mar 2025 14:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742482104; cv=none; b=Nav6zE5IrWEgj2FU+fAsKx22Lb9AjRJZl+kls1up1QaeXMIEEyPoKQz6qWWLWdsz3CB29u6NvrtpeR/4+g9kW6W41TDBehMvkCNk5GVomw2/AHMu+PEqDMRWzijRBh3DgCFzFR8lTBV93SPnHMc/xGUoXncWIk5TXVI2IUPkob4=
+	t=1742482250; cv=none; b=up2lDjrIAJCtLBoWZ8e0GjNAfPgFQCQ4m+q4jitmx3YciWFDai+tyqZAlhq2EX2IOG1kLMB9I9JTkjFxV2Ria+gc34VMxfF/QYxvFeOymYsw90T/XJoHdAT1Zcypt8gCRZyyer1MsQkcW/JUi/JWWvRQSgpf8e6G8z5sMISixqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742482104; c=relaxed/simple;
-	bh=zPezT8El2e4h3o7yjH4jTAgyKaMCD49/Uzh6Mq5DaW0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=E9Pj88s3v1LPePbUlRhpBc0zH+foD2uu5Ha7Qe+AvPS0SfSBbAk4q1ELtLMqqmwxII9cRr8aCMX1HV2hhiaKKJtWBsDqFH67Pt1+vMPGeK1eEqKz9WXWqadCDskKT78+DmU8q9XmwRIJMMkar0I+e6M6M3j/ip6U9gPxrXqnNk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sDKs5kIF; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742482098; x=1743086898; i=markus.elfring@web.de;
-	bh=DfZoeGXnC8fbARD3b+igjeNU0yxDHdtiopyfZfd2L6Y=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=sDKs5kIF7lvFISqdnWdsUo7Q19Yr3e3giqX4Kd+Ny2reakJb+vVULaV1qaWhI0Tu
-	 RthkGZsbijtxlJyDdcrASbATnReAjT7dABuZhywMvK889TElkz+foEn6rk+MzO4AO
-	 wn46oY30nC4acPUJNKZcA1w63FPWEkkqpeGgIy2ATA4SbqrKY5dkjkQtrNa7c9Ihp
-	 KY35BD7uHZFWIhpplbziBQEDe0bya28G09Lk8tvPMTS1Af77c8H0PWfeSsTDT21BM
-	 BYM5P5XLEgrTEUXaXK9SHyMBIv7FcKVCacBhBYvUIk3bsK4pzqgpUUVB1lFeNYuvS
-	 byEsLCO9Rtr8/BF3ug==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.46]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MbTH3-1tKHcJ17hB-00aFwu; Thu, 20
- Mar 2025 15:48:18 +0100
-Message-ID: <79b776fe-7fcf-4cf8-9d3f-bd5f4e66344e@web.de>
-Date: Thu, 20 Mar 2025 15:48:16 +0100
+	s=arc-20240116; t=1742482250; c=relaxed/simple;
+	bh=VgHP2YZFJFqQDq6X1Enrko29eUy4PpuSIOCuvJw0JKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JU23vf56yCSeynELKQGf7YpeU/z+eYk3tketxRSKHr/rVPQhhaaOyr5KVUbQpdEzCyu1PJDjdBs2QwpO8pEKOxmRlNvq4F7CffqBwP6Ib8lB3SFVBxktwzv0dQ444X/CS7n+3M00yR4ais1xB5Hm0dBmxLaMNZK0+nc0Ov51FKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRPpkYlD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE15C4CEDD;
+	Thu, 20 Mar 2025 14:50:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742482250;
+	bh=VgHP2YZFJFqQDq6X1Enrko29eUy4PpuSIOCuvJw0JKI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nRPpkYlDUBw1gjGtXjQDSei78Js5SiMhGUtyttvW9CgAqns2tTOPY8/wNVO3igUrp
+	 d9zHAHmBrA+CESjTE8Vd+xoH+NF8JxkVjkUXZY2rGxmW3pfhS8VkKdGG8xyARuj0FL
+	 gQHgAnh715xQCL8AM6m35smLKWm66L881RKbWs2YrcLzTdo+SZBv0gIAnBp529LrWk
+	 2TpFQUzC/HZ9ygyk+1qefsxhF1q9kjA4qEWPS0OL1ov41GqjdVgXiAkgQNedHqDO0I
+	 4AydkziQDb1uW2b3VKIQ3E28ix5DltoIbnT+ryX4BT5beobsVaihxlLPX0QJow5foT
+	 821ydGI3nYYkQ==
+Date: Thu, 20 Mar 2025 14:50:42 +0000
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	andi.shyti@kernel.org, mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+	jdelvare@suse.com, alexandre.belloni@bootlin.com,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v8 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250320145042.GS3890718@google.com>
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-2-a0282524688@gmail.com>
+ <20250307011542.GE8350@google.com>
+ <CAOoeyxUgiTqtSksfHopEDhZHwNkUq9+d-ojo8ma3PX2dosuwyQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: vulab@iscas.ac.cn, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ludovic Desroches <ludovic.desroches@microchip.com>
-References: <20250318030717.781-1-vulab@iscas.ac.cn>
-Subject: Re: [PATCH] pinctrl: at91: Add error handling for
- pinctrl_utils_add_map_mux()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250318030717.781-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Jv9YEG5A6IYdFMMjFJhbkMP4K6fj4hm+m/+jMG29jkDhR3DufXP
- fao5en0fLSRCMR/fTiyIrAEvL8JhX541DSKF9jUFjNoK+7fP9sLOI7F2fCxmPCo8nYt5rLb
- iN9GLL1Ll05eZG3hwdD3wOxiUXLVxNkujPeWB9TGvh4fTtdkQBtuEnqm4VSKt9umtB8GKit
- in295Z82kqqeJ5fjvZj8g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Icd6NZo/SxA=;bXndP2xuCTpikrk/MEyGXGzNVW0
- CneKGLPmvCp6YnKQTW2CXUHE16pLlTKUg3wFdKTaF8Z3ad0k1JzsvcvO0tAvi94y3CM91YiUs
- lK/2Fy0NI0ptapr73mJQ0y0mRC1MdZnRialJiLDXXBKUnRlMcqij8IA6pGlyM+hzf6q3dO6vM
- 9ZAXV8X13Yg+7hKYqYkrc4/C8L68hxwxqbyGF2Kwln+Sb4OQppKMyL8Zib89wd3IW4Fzv58HA
- J4Erb+2POAnlvkpSzT2V1RuRoomtXdOE0Z5rL5lvkI2zEHQ4e5sF/mVEn7YCggfeLRKhhib7a
- LLIsQjd5NBLmbijxxGkVJbQGhkpVkjNANLSIHq361VEo0F4teKl4BMI0Va83HP/rjcgZvxo/U
- WJCWDAYxmf2r9rLkMmlvE0YbkGMPvFMY4OErCdPFpaNNrA4hqXIjS9vB3TZ+Nexd4+cyNkqp1
- s39zVmBlH16WDMlSRtf2IjC4LUsBTvxjQSNF722xGl2YoIbLEV0WKEhe0l3auvgf1Witqg3CQ
- T6MT1CcWRm1NmzNtbkvt297hCvbcu0Sx5d7Y9daEDCk4HjZUG+3i6DrKXGobkszQQR660AhMj
- WZoT5g8jv7IAr6aFGMDRPQUlW23nYY7eKupqLgGtozNOcTSWGdLyCfx/KLKK+hITqKdWKMeB7
- BbLQm4jPPpAYXpQkicl8qGGWhnmYw9gk5aq+/cDx/aTYluAsRVbdt+8iEHe3tbYHr8Ci+Qq9N
- pCcLelwn3AVIm6mPbi+uXbz8wluwHAbghf3KSVBs0sS3+IWLijJp17C8jOcfkZ8qLV1h9U9KM
- 5Ypm+gcjjk3Wc1VWC/vG0aq6vXmTezAgkZ3Oa901yYMcVWUj86+nA0RwS6keXPYX9vqTyh0I3
- Gd028Egn4Y9Js810uzZ5k969hYGBZhd3NgV493D0XYtancDR/mrL+wXhMzvlC19S+8sr4DLBw
- WefoueVnGwekTd8C47aoqsSP/HiIv+a8v1rmvk4R6XWkzwUaEYdZA2Oo4MkBCn0q7GosHgdxs
- tJumdQKOPJzhfpfeeK95D/uKlpO0ol78aIi9UWrKJVmvNEveutmqiD2QG5/uxMwGO/bmE5/mP
- +yoj84Ol8yJYQ1LzXDaVY7b9mS0H7+8aM9TSHDtahKeKdn8F6yGsEtWdx4VIfxSvm+t1nW+J3
- JX1szufteAnz4358o5q7S+NoTeVMOfiJI4wqVgLZCz7bpZfb87lA/9BkunFFSGL8tzDPmok6/
- EiDMsn/5i5rLZAK1b4E1GfZ1w2L62yWh3wOeh33Kqa2aKCQBHsoDrQkV6NUnNNSjJcnbJOH0s
- lfWAJNQXZicbOvQR6bBzqJfB+kjjcxEwHABsLw87/mpBUP2zQiMoourAFq16A4aPxZ4IpDnmB
- UiKTN5mMnK1E+q4RnBFohs9XuBRwmaTCjaawqH/DBNimwgeSAY2NkO0B7G46ponZUBvt7rvCV
- lgWqrJ9HkKa5o7CtgnGOpwnGUqzZtOkDpWzjJHGv6xsTJPT1XB7KdTeNHei5u9QPy/hVqhQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxUgiTqtSksfHopEDhZHwNkUq9+d-ojo8ma3PX2dosuwyQ@mail.gmail.com>
 
-> In atmel_pctl_dt_subnode_to_map(), the return value of
-> pinctrl_utils_add_map_mux() needs to be checked, for the function
-> will fail to associate group when the group map is full. =E2=80=A6
+On Mon, 17 Mar 2025, Ming Yu wrote:
 
-Please improve such a change description another bit.
+> Dear Lee,
+> 
+> Thank you for reviewing,
+> 
+> Lee Jones <lee@kernel.org> 於 2025年3月7日 週五 上午9:15寫道：
+> >
+> > On Tue, 25 Feb 2025, Ming Yu wrote:
+> >
+> > > The Nuvoton NCT6694 is a peripheral expander with 16 GPIO chips,
+> > > 6 I2C controllers, 2 CANfd controllers, 2 Watchdog timers, ADC,
+> > > PWM, and RTC.
+> >
+> > This needs to go into the Kconfig help passage.
+> >
+> 
+> Okay, I will move these to Kconfig in the next patch.
+> 
+> > > This driver implements USB device functionality and shares the
+> > > chip's peripherals as a child device.
+> >
+> > This driver doesn't implement USB functionality.
+> >
+> 
+> Fix it in v9.
+> 
+> > > Each child device can use the USB functions nct6694_read_msg()
+> > > and nct6694_write_msg() to issue a command. They can also request
+> > > interrupt that will be called when the USB device receives its
+> > > interrupt pipe.
+> > >
+> > > Signed-off-by: Ming Yu <a0282524688@gmail.com>
+> >
+> > Why aren't you signing off with your work address?
+> >
+> 
+> Fix it in v9.
+> 
+> > > ---
+> > >  MAINTAINERS                 |   7 +
+> > >  drivers/mfd/Kconfig         |  18 ++
+> > >  drivers/mfd/Makefile        |   2 +
+> > >  drivers/mfd/nct6694.c       | 378 ++++++++++++++++++++++++++++++++++++
+> > >  include/linux/mfd/nct6694.h | 102 ++++++++++
+> > >  5 files changed, 507 insertions(+)
+> > >  create mode 100644 drivers/mfd/nct6694.c
+> > >  create mode 100644 include/linux/mfd/nct6694.h
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 873aa2cce4d7..c700a0b96960 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -16918,6 +16918,13 @@ F:   drivers/nubus/
+> > >  F:   include/linux/nubus.h
+> > >  F:   include/uapi/linux/nubus.h
+> > >
+> > > +NUVOTON NCT6694 MFD DRIVER
+> > > +M:   Ming Yu <tmyu0@nuvoton.com>
+> > > +L:   linux-kernel@vger.kernel.org
+> >
+> > This is the default list.  You shouldn't need to add that here.
+> 
+> Remove it in v9.
 
+Please snip everything that you agree with.
 
-> propagate the error code to caller function when the function fails.
+> > > +S:   Supported
+> > > +F:   drivers/mfd/nct6694.c
+> > > +F:   include/linux/mfd/nct6694.h
+> > > +
+> > >  NVIDIA (rivafb and nvidiafb) FRAMEBUFFER DRIVER
+> > >  M:   Antonino Daplas <adaplas@gmail.com>
+> > >  L:   linux-fbdev@vger.kernel.org
 
-                                                                call faile=
-d?
+[...]
 
-How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and =
-=E2=80=9CCc=E2=80=9D) accordingly?
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.14-rc7#n145
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x1),
+> >
+> > IDs are usually given in base-10.
+> >
+> 
+> Fix it in v9.
+> 
+> > Why are you manually adding the device IDs?
+> >
+> > PLATFORM_DEVID_AUTO doesn't work for you?
+> >
+> 
+> I need to manage these IDs to ensure that child devices can be
+> properly utilized within their respective modules.
 
-Regards,
-Markus
+How?  Please explain.
+
+This numbering looks sequential and arbitrary.
+
+What does PLATFORM_DEVID_AUTO do differently such that it is not useful?
+
+> 
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x2),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x3),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x4),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x5),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x6),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x7),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x8),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x9),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xA),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xB),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xC),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xD),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xE),
+> > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xF),
+
+> > > +
+> > > +     MFD_CELL_BASIC("i2c-nct6694", NULL, NULL, 0, 0x0),
+> > > +     MFD_CELL_BASIC("i2c-nct6694", NULL, NULL, 0, 0x1),
+> > > +     MFD_CELL_BASIC("i2c-nct6694", NULL, NULL, 0, 0x2),
+> > > +     MFD_CELL_BASIC("i2c-nct6694", NULL, NULL, 0, 0x3),
+> > > +     MFD_CELL_BASIC("i2c-nct6694", NULL, NULL, 0, 0x4),
+> > > +     MFD_CELL_BASIC("i2c-nct6694", NULL, NULL, 0, 0x5),
+> > > +
+> > > +     MFD_CELL_BASIC("nct6694_canfd", NULL, NULL, 0, 0x0),
+> >
+> > Why has the naming convention changed here?
+> >
+> 
+> I originally expected the child devices name to directly match its
+> driver name. Do you think it would be better to standardize the naming
+> as "nct6694-xxx" ?
+
+Yes, that is the usual procedure.
+
+> > > +     MFD_CELL_BASIC("nct6694_canfd", NULL, NULL, 0, 0x1),
+> > > +
+> > > +     MFD_CELL_BASIC("nct6694_wdt", NULL, NULL, 0, 0x0),
+> > > +     MFD_CELL_BASIC("nct6694_wdt", NULL, NULL, 0, 0x1),
+> > > +
+> > > +     MFD_CELL_NAME("nct6694-hwmon"),
+> > > +     MFD_CELL_NAME("rtc-nct6694"),
+> >
+> > There doesn't seem to be any consistency here.
+> >
+> 
+> Do you think these two should be changed to use MFD_CELL_BASIC()?
+
+No.  I mean with the device nomenclature.
+
+[...]
+
+> > > +static void usb_int_callback(struct urb *urb)
+> > > +{
+> > > +     struct nct6694 *nct6694 = urb->context;
+> > > +     unsigned int *int_status = urb->transfer_buffer;
+> > > +     int ret;
+> > > +
+> > > +     switch (urb->status) {
+> > > +     case 0:
+> > > +             break;
+> > > +     case -ECONNRESET:
+> > > +     case -ENOENT:
+> > > +     case -ESHUTDOWN:
+> > > +             return;
+> > > +     default:
+> > > +             generic_handle_irq_safe(irq_find_mapping(nct6694->domain, irq));
+> > > +             *int_status &= ~BIT(irq);
+> > > +     }
+> > > +
+> > > +resubmit:
+> > > +     ret = usb_submit_urb(urb, GFP_ATOMIC);
+> > > +     if (ret)
+> > > +             dev_dbg(nct6694->dev, "%s: Failed to resubmit urb, status %pe",
+> >
+> > Why debug?
+> >
+> 
+> Excuse me, do you think it should change to dev_err()?
+
+Probably a dev_warn() since you are not propagating the error.
+
+Is this okay by the way?  Is it okay to fail?
+
+-- 
+Lee Jones [李琼斯]
 
