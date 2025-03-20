@@ -1,121 +1,129 @@
-Return-Path: <linux-gpio+bounces-17822-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17823-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F925A6A2EA
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 10:46:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4154DA6A410
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 11:48:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D39C63B2365
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 09:46:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DB38189C97F
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 10:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48D59221DBD;
-	Thu, 20 Mar 2025 09:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C76F3224258;
+	Thu, 20 Mar 2025 10:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUDszkGw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O7iLOW5O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607DD220687;
-	Thu, 20 Mar 2025 09:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8497C2080D9;
+	Thu, 20 Mar 2025 10:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742463969; cv=none; b=tO4Z/IlKVa5wXm2bFbq0tDPaYF+XePcMmKHE7TDoqpT86f80nZx/PL/TedOfUFwClLiiQFHhHNTNVn8rqjAaJnWLIKe7VjlelSuKxk7cb158kUfxOwDeMFXpGut7rXK4iCIOdr8JKCwfM9pIPmdXtfuAGo5rBHErqz0lAaqoOaA=
+	t=1742467712; cv=none; b=B8CBwvW54leWMUGgqH5SzY9UNAx1kEE5EDJFFW4lLSf7BGD8VyQVhRZJnu84Z0TTZcq3LuIZ1Yvw9yJA8PMsWPqLwBQCE8tbm6jMJNd7RVOQMeHB7Uj9kxLuYByUTzZhOuS7yHU0C+i1qqi4ZZJHs66wU4iByQ/reyBjhtpCvvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742463969; c=relaxed/simple;
-	bh=9KEnR66BBq0/OEh9u1+50TsTpEWKW5YWZxaSBSaTBiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VJLiHbJWLKO/PuaEAGWKGv6fcPHDJaEZE4xsrGePGfReSp0CPjxv7yoOQezvNrfdo8WsaZrveMYLbqbLAQsVxKJRQFMrOmYaMWOkEbzEw9IjQuKuOap0JNUwk5eC1NfFBYybHc0B5cbnny7dete9yKIX7ov2sLquZaSnfygq57E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUDszkGw; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2963dc379so101240266b.2;
-        Thu, 20 Mar 2025 02:46:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742463964; x=1743068764; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9KEnR66BBq0/OEh9u1+50TsTpEWKW5YWZxaSBSaTBiA=;
-        b=MUDszkGwFMj8AuVudQ41vCczeoEnb9lOCDWELKk1A/sLDWb/2Z8sZRIZuDvLjzV586
-         8cHAoDlcaFPL6kDXQJsh5pGlx3xYIKfTs44NSEfYvcPKhJh1VgsXUk5ju4m7drDbem0s
-         SiZuLGAYBCuGu73N/Hm/KzfBq9htGwpRTZCgqlLT3Jsa+RpKm8q5JwNWQftznmvkwx95
-         Oztj/2aXuGK+ZliHC/N4k+1frRxkIsztXMwKcTg+EX1Ti2FLKiOGuvkb6Hb+9Mra7i2b
-         7tADp3loj/LkwByw9i3+KL3dZL7X963TJS9he6olJMTrjywsA3Zd3Anl2rNkpyBFkCiQ
-         xTAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742463964; x=1743068764;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9KEnR66BBq0/OEh9u1+50TsTpEWKW5YWZxaSBSaTBiA=;
-        b=R3phdFU5vExbTdrGkd/2TTGHN6NYjwDliNAO7VB4oVAvH3Cn2DE/V4riCPgU0JmWA4
-         N0ngUwhVhOGTZSqSeLxP78m4vt+o6J4Z7qnSDigpACdRvpLXihSp84J7mI23uOvOvQdF
-         HFlgnrJgi5RiUix8oqzDmi6VzK5WfQ3N+wgoPVvwQBg+j0NOYuhCuj+3UxOenUMbEBYW
-         9JEqjOYVa1Zo2CF+t8BGfoyU66FJ4pZt/LOLq3jwrxGnFq6B6eFasa5E595+gKMMbSlo
-         h2KwZc4lIi3k2Vp3QVlVo11K4Ef4i9iWQ9h7wUmnlvmOL0cIPRESfOo2xlHvFPBbM3pU
-         i5FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyX5XUPmw+Gzd/rBkzlXxVQ481vbteVK4p8Yc5Cb2CUt3oZ9L5ak0t6rhYvHxx2oc7ixnKTOyDjAW7@vger.kernel.org, AJvYcCXmvEp210Lc8GCycM5lp3mPCsxUbqpDs4I9jAARuoLn6ycKnliFR6PJti7ZYxKt1Hc4+XHnU9SsEqRQWSAw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyTrl12G4CwM7v1wnjx6dto8Carx0fy8MGfwtLErIyzCbg3wYX
-	RP9Br6NdjeSxfuMmpleml3rUBKM12lWFuwx0/3Y91QN6kGMGllTEO9yzd7WS1Z27OTKEVDC9ZNg
-	fYruaR1E8D+03W2jqZdFASq0YZAd+gGjghr8HKw==
-X-Gm-Gg: ASbGnctHouC1znGnQzC/vuQNjsJPUCDkilRQxpNwN4NB+FN8+2Z5fG0j2Tnu5WWDspE
-	J1NuD8IgTwnQ0OTNHaZLKdVCap9JDPAIJPgyW60nlcHx00YZsDUBSn8mIvgR1AuGuqjH4jyhxBR
-	97SdJ1/DQSaj4j9B6EME0F9b2XlpqoIYKyFX6W
-X-Google-Smtp-Source: AGHT+IH0WgeCzcPbZMZ7RcmmYI5xx52o7t7ZMdyfRJZKbVhCltB5dB5p47huOWOMje9qXnxDbQEClo4vl/rS3uHSu3A=
-X-Received: by 2002:a17:907:980f:b0:ac3:cad2:9e53 with SMTP id
- a640c23a62f3a-ac3cad29f08mr325129066b.55.1742463964281; Thu, 20 Mar 2025
- 02:46:04 -0700 (PDT)
+	s=arc-20240116; t=1742467712; c=relaxed/simple;
+	bh=YXf76glTiVLhkyc7lbXE2+pKrx3GYsR3bIlNF0cGzTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4VYU6MZKypxLHA0B4KCYvjTyVPSA6VAKet97azpA5hdGszKZ5iPCKmrydulq8neByUrpEwwbCYOThMem9l212fI7cnLdao1tlbIAYq+4uELQl96f1kf/7qSUhgK3gZshj6GQebDjDAV1Q3+HyTZAs2ijpEjoA3jn7g2eKtYxHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O7iLOW5O; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742467711; x=1774003711;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=YXf76glTiVLhkyc7lbXE2+pKrx3GYsR3bIlNF0cGzTo=;
+  b=O7iLOW5OmmxTKKl8e8BrTlqBfLv9X0YUzA4jKDEjWzrLXxlpUlBaPcQQ
+   7c7tTihnIlYYhmL2jqYjmv/pJHNkqi/ZdRF2e5DtpvVkXXy12xjgoC4Eo
+   zNPf6X81jB4Kw/fsT0aDpbeEXwQGIj32mvg5RKMCj5hAh6SLmnjtt9HXW
+   7cGspFC0gsJmJgbBIVHEGuFMr1bILWl8thHBGea3lixjJCmCrvZbW4xv8
+   +hhQhtR1aJUkHNsbKIMs5tWne0bHynRY0o3AR9wD2qNF3ZgWReqeNjqc5
+   6Rd4eH6a7SixRGwfVnSarSwiFLwHmSXFlFgqBWxMbV6shIbGdLrsDeZXX
+   A==;
+X-CSE-ConnectionGUID: WvGSGFJdS/iEeGU9B2QbDw==
+X-CSE-MsgGUID: 7my3w65pSfGe7m3hchTrXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="55067736"
+X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
+   d="scan'208";a="55067736"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 03:48:30 -0700
+X-CSE-ConnectionGUID: 8e2ihiKmRAKcZ+OnwvAfXQ==
+X-CSE-MsgGUID: Pl152daVTTKnuQ8fxUuEhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
+   d="scan'208";a="122778298"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 03:48:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tvDRl-00000004CLa-2QSo;
+	Thu, 20 Mar 2025 12:48:21 +0200
+Date: Thu, 20 Mar 2025 12:48:21 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: mathieu.dubois-briand@bootlin.com, Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <Z9vydaUguJiVaHtU@smile.fi.intel.com>
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+ <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
+ <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318105932.2090926-1-andriy.shevchenko@linux.intel.com> <CACRpkdbTKytFgdqyDajpcfENagSXPZhG5hbpQiGF23VHqLd9_A@mail.gmail.com>
-In-Reply-To: <CACRpkdbTKytFgdqyDajpcfENagSXPZhG5hbpQiGF23VHqLd9_A@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 20 Mar 2025 11:45:28 +0200
-X-Gm-Features: AQ5f1JoOVMLoM1UFlrLmLsYwzq3tsN7OH81VeBc-t7MFZOdMOMyvVlUp33ImP1g
-Message-ID: <CAHp75Ve_cF=zdZuZxSO6H1FXrCbAc1EXyHhCWw8K3Tc_Q2p8tA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] pinctrl: nuvoton: A few cleanups and a fix
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Tomer Maimon <tmaimon77@gmail.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	openbmc@lists.ozlabs.org, Shan-Chun Hung <schung@nuvoton.com>, 
-	Avi Fishman <avifishman70@gmail.com>, Tali Perry <tali.perry1@gmail.com>, 
-	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
-	Benjamin Fair <benjaminfair@google.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Mar 20, 2025 at 10:15=E2=80=AFAM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
-> On Tue, Mar 18, 2025 at 11:59=E2=80=AFAM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Mar 20, 2025 at 08:50:00AM +0100, Uwe Kleine-König wrote:
+> On Wed, Mar 19, 2025 at 01:18:50PM +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.com wrote:
 
-> > Convert Nuvoton drivers to use pin control provided data types
-> > and more of device property APIs.
-> >
-> > While doing that, fix one non-critical issue that sparse complains abou=
-t.
-> >
-> > Compile tested only.
->
-> Patches LGTM and we are close to the merge window so I have
-> just applied them.
->
-> If there are any issues we can surely fix it up in -next.
->
-> Thanks Andy!
+...
 
-Thank you!
+> > > +	chip = devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
+> > 
+> > This is quite worrying. The devm_ to parent makes a lot of assumptions that may
+> > not be realised. If you really need this, it has to have a very good comment
+> > explaining why and object lifetimes.
+> 
+> Pretty sure this is broken. This results for example in the device link
+> being created on the parent. So if the pwm devices goes away a consumer
+> might not notice (at least in the usual way). I guess this was done to
+> ensure that #pwm-cells is parsed from the right dt node? If so, that
+> needs a different adaption. That will probably involve calling
+> device_set_of_node_from_dev().
 
+It's an MFD based driver, and MFD core cares about propagating fwnode by
+default. I believe it should just work if we drop that '->parent' part.
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
 
