@@ -1,204 +1,103 @@
-Return-Path: <linux-gpio+bounces-17827-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17828-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 518A0A6A6F4
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 14:18:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D3E2FA6A890
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 15:31:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B65D74623CA
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 13:18:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19651486910
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 14:30:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C8A2135DE;
-	Thu, 20 Mar 2025 13:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64207155398;
+	Thu, 20 Mar 2025 14:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P+w94z9M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b3oCv5rp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A6D290F
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 13:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7262638FB0
+	for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 14:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742476687; cv=none; b=l5Zch6n7XiRnfmwULR/6+4iWQutBifZW/FvxvC2y8jVNRKNFH+bywlARyqa4s6vBEVasW5/LiBwe8Xqsn5k88qGv35oZfO833xlM8vYcsuA39m6epzjpuc+hPhbdEREm9RD+DpON8k9PWj0BnGv+EamZxDEQIggChebAlgp138s=
+	t=1742481046; cv=none; b=gLEqFw2YoZwKdDLcRs6dq7iZ/RqF7fYDqg+wgQf6q6tfVJ2HrTy/8xURtIZz+A0SSmPhO7OVks5ZHOT5qWz7K1VgKdP/b/V8IlIk+SRjxYqEv05meEQvPbpC/jyuE9sRe+nGxuk61DzK4kzxhiynUx5FdbcErp83yuhFoQti+WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742476687; c=relaxed/simple;
-	bh=21DqpUGodccfEY/ZfoWYzc7r5EAcAprM67s5qKGMtuA=;
+	s=arc-20240116; t=1742481046; c=relaxed/simple;
+	bh=HtaZt1pdvIMw+/r2UyjpYL962NSzFMuw3Sp0l7Zj8r0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BZn+3uNMZel1EFqx2e0PkMVbFWYOpqSn2E9Z+K6hyhl+Zstqv9Kanh8pBuIsXqElR8MpN+qkhV1dO0N3yGi/2I5DSQHtdaGn+z5sgNsdrrgCa/gJawX/rpPFBWQUyPzDaeqrp/foA0tKuuUbbh5CI6Nu2ewwIKbfwUtpn57M2kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P+w94z9M; arc=none smtp.client-ip=209.85.161.48
+	 To:Cc:Content-Type; b=b1u6cC+TgwUeiyt5LATsAFGpC00ZKIuUyM1X20WdFszMYwZPp0BcElIAjugABaI+6pUSFctGPbpneMTcSlAxUNhxH3GWGGTRSkevC0vxScYXcnsJ2Ygnw0rYF0QPjdxEDa8vs6NC7ZafZNkcLugUeSRcBtnUz+q+Pzl9hyFRb7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b3oCv5rp; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-601c12ac8d0so363195eaf.2
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 06:18:04 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5497590ffbbso998040e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 07:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742476684; x=1743081484; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O12nadUsyPqdQjwO9PDc6yNGkFbb7eWIfLGfjGH84dE=;
-        b=P+w94z9MX246o72PiKE+6ES6ISinsCbyniE0GZznGZE+ph5oqsbeBHmwehsquowj3L
-         oMt3Fp1qwSUYea/w2wOI7F80gMoZ26MGM5n+M2yidKXbtH//Vv2FJeLSkCQ1quHbBVmF
-         SbWOyi1dfakZuE3pFthNYysL2R52iRCY4a+HPhWY9Q5e8MthfRw4mFGLY/KGp8bf5MdP
-         xMFE0Dj3BWXlV4lqN+1QIs+u87trw0R4V7xDZU/fq1CS3nz6FNOMqZ6So0F1HCOgIePD
-         3/at7KkIvMN5ouNrFeyP5zN8vfROrp8m2kgs5UTDE8yl2tx/jTaPzCZlSp+7uyeuRcf9
-         yeIg==
+        d=linaro.org; s=google; t=1742481041; x=1743085841; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HtaZt1pdvIMw+/r2UyjpYL962NSzFMuw3Sp0l7Zj8r0=;
+        b=b3oCv5rp5vePs8p3DyggA8ZIeRSuEj6xgDWIgndtyj9MZvp9yB1owYyiCkNpIO98ye
+         xukE2nZBex0+20r1XlDDnwGJ+OYiARYYstVVR03qptzYoUdDUr4BcBnATjEIR+L+Xhp6
+         xeJSuDYM8duDCCJamD45TL4ycRvAVCp4qE6TecYczv3inOsbD4rwHlg9fQ+VqSr3ekOJ
+         +LEx4GSViMq5FA8LDoZcylmMQti+53elt4xMOnzEah1l+IYAXVlbatyTykS9/UdVATzb
+         /91LHJYNLWgr38xZyJ7xVRhrizk2bWHreZKovqoYMKAQNlYkRA2HwWj5q2/XsVq4Jz+y
+         FpFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742476684; x=1743081484;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O12nadUsyPqdQjwO9PDc6yNGkFbb7eWIfLGfjGH84dE=;
-        b=Y1Dro9v5MrTew5QuabGymTjirGeKJGk4grfUnTKgAf45sjlxtGOaaLBsWCLhjk8IGX
-         HU3vMTXxzc0PqX7zVrzPT0HixpcKYLMVnOhb5w9G3cNE0qI+6t+UwKuolN8uhhRyD3VS
-         Ct7iwSijux3HIwjjNtEDo3tJD40QPrOKHitsW1oWq+wGxJlqxsbB9j7qtggpSoNjJXWd
-         kMlUI9LhO9rH9L5Th8eH7ASSjjDL81/0q/CA1kNOdoaxnCMN3e9Vf8hP86WDCByWBYwa
-         DXk2g2cR87zsjttdz3nX7UDPCx89Ci46QgxMIfXHoJAxtjX1+51gNZ6k4nCZkDYqf9bM
-         vNGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVu7NmDFlbgWUcQoWT3vTS8Kr0pdlOqrz1VgHiKNROzSLMrrHuEppHN4un13Q3Rd6nunLV+z5nolUC4@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZR1m/P2KuQyBz55bSyGYggHw8j0tyx6rhVDK9HkW8A3FVIzif
-	ufAH7mp9eTG7KlaqeIrDASjgHF3MVIVIosgpkiqme8LfhWkUtPL52C41WCxYQNCVSOQK/FnmVdl
-	L2xUCU0y9xahQu3pcTOcjlcqpZHcRhgZVQc8Xzw==
-X-Gm-Gg: ASbGncsLEOtfvZB7Q8t6FcAXYHgX9OdSAq9GgusrdaXkBB08d2HNTMwoeE1JUP/NIa+
-	U3s6S1SS0HV/O8Y7VuRAVXkmAtmU9pb7Tp4pEQBZNFNFXRt6NwS+ofNN6q8JOqt8YvfOUp7+ywV
-	L3K8M/1fpEci5mFPw/u8ge0u6KzDHFrrdvOyetUHQ=
-X-Google-Smtp-Source: AGHT+IG6aW5Q3y/RnifIpaEjK5ULxNior0oiMNhU0YpdBqJfjRMwWIEcYmRkJPDhVpVmvt+kqwBSuw6+FqH3T0ivSDo=
-X-Received: by 2002:a05:6820:610b:b0:602:2bd5:121c with SMTP id
- 006d021491bc7-6022bd5268bmr902498eaf.3.1742476684008; Thu, 20 Mar 2025
- 06:18:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742481041; x=1743085841;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HtaZt1pdvIMw+/r2UyjpYL962NSzFMuw3Sp0l7Zj8r0=;
+        b=SCB/EO0tw/ZeHqI8j86J5RtWg6TAvkzV3IrPokNEj0+LLLxh4GzuwFnEVNHNHjFarW
+         ChGMmEjN1V6oZrkad9jun5QjJl4RKh8ztScQF5eqtEGjIyXIqstpFg/dNPNp3fOv/gtG
+         flUsYTv/C5U28HDpAAz1TUgCYZpx4pxNqTfawM8VeRLl3nFYGLvmbX2yCXHrU5ZfcN0V
+         un0QH82jJEpaxpFnrTaeXoLibmlIC5PJvnbZUcXS3/WZcV0V5xyAAY+aKThyd60hJ3rb
+         m8RrYwLV2nrYwoB9duu5VnpplM6YOOTy70LC9xnvqpj+CtqAyCE+EV2fd11TAV3CQb5b
+         0R1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVol4SxWcK5Pg0c13Mmj0dN8e1A0wEXMXpA7Ckhxzn+zShtESqhSaH4GVzxsPO/lEyZe695rdkW4vMm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnWx/dQRA1GYOoC8wi+4IKqR2qw1wHWhmlaMsCyMkSwyXPzU15
+	fZfzuwww7LQD5s082/8iwjixgW7Ao9ZBPOUdxHjUtfqGFu8B4WInRdqzaZoNO13k0Z70OQ4kbGr
+	cLubU0Is5FOGyQEXpCNdKhcBjHgrxRXlTVPgA46Luqi2dYAdH
+X-Gm-Gg: ASbGnctzkIuX2HnbUtfvwlJQdgLp0Jz736et2iyrt7HZUjGiVJhnmfZi8KaeQFFvN/I
+	V6n9xXWalXo6lWHqJ6Hr19By1gpkyP3GPbpXvSNlam58mBVCSMNOBU9SaFmoxqjPZn4qOygiXwU
+	j+/cg1q7CQhESD/jTXI3oJ/DA=
+X-Google-Smtp-Source: AGHT+IET8DYooDeg9qUjIiQRVG4fHBWkFzaxPik2uWctRlPPDxeN/VkNHLY2SmqfTOdLGIlEKYoRBwnSeQbXDk7G0W0=
+X-Received: by 2002:a05:6512:2344:b0:549:6cac:6717 with SMTP id
+ 2adb3069b0e04-54ad067ef93mr786026e87.53.1742481041305; Thu, 20 Mar 2025
+ 07:30:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250312-pinctrl-fltcon-suspend-v5-0-d98d5b271242@linaro.org>
- <20250312-pinctrl-fltcon-suspend-v5-2-d98d5b271242@linaro.org> <5ff8d26d-65bd-4b99-90b1-ae01f0ee9eb7@kernel.org>
-In-Reply-To: <5ff8d26d-65bd-4b99-90b1-ae01f0ee9eb7@kernel.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Thu, 20 Mar 2025 13:17:53 +0000
-X-Gm-Features: AQ5f1JrZuFp1AMZqE3M2XuIbs3bdr_wxjPoi_Wqa3MiIrQKNXKZzHtSEuRK2C30
-Message-ID: <CADrjBPqPRR+yH=B_pSFNMTqqvQaHZPckw=OaeGZa34icb0WbFw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] pinctrl: samsung: refactor drvdata suspend &
- resume callbacks
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, andre.draszik@linaro.org, 
-	tudor.ambarus@linaro.org, willmcvicker@google.com, semen.protsenko@linaro.org, 
-	kernel-team@android.com, jaewon02.kim@samsung.com
+References: <PAXPR04MB8459BEB700FB66FE693EF1CF88DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <CACRpkdbHr_CpoqGwE+mXxV0My30ZcBRJmK9313fXN0rbPDPbDA@mail.gmail.com>
+ <86v7s6myka.wl-maz@kernel.org> <PAXPR04MB84590CCC9DA69172B665B71188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB84590CCC9DA69172B665B71188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 20 Mar 2025 15:30:30 +0100
+X-Gm-Features: AQ5f1JpqvGEmXPhYRqMVtqTJwsHUXpAhFsu-q4a3U4muWb14ebpKTU7UaGIAWi4
+Message-ID: <CACRpkdb+tow5a1wmbW9aUjDfuevWNyiFQHJ6rT=NpBWVfaTYCQ@mail.gmail.com>
+Subject: Re: GPIO TODO
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Marc Zyngier <maz@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"brgl@bgdev.pl" <brgl@bgdev.pl>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+On Tue, Mar 18, 2025 at 3:51=E2=80=AFPM Peng Fan <peng.fan@nxp.com> wrote:
 
-Thanks for the review feedback.
+> I will do my best to add IRQCHIP_IMMUTABLE support
+> for remaining irq_chips created by gpio drivers.
 
-On Tue, 18 Mar 2025 at 19:47, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On 12/03/2025 22:58, Peter Griffin wrote:
-> > Move the call of drvdata->suspend()/resume into the loop which is
-> > iterating drvdata for each bank.
->
->
-> Side effect is that now each drvdata->suspend will be called before
-> saving registers. Please mention it here and this lead me to one more
-> comment.
+Sweet, I have fixed all the easy ones (I think).
+Those that remain probably require a one-by-one approach,
+and some tinkering.
 
-Yes drvdata->suspend() gets called slightly earlier after this patch.
-I can mention that in the commit message
-
->
-> > This allows the clk_enable() and clk_disable() logic to be removed
->
->
-> For suspend path - yes. For resume path - nothing changed, because
-> drvdata->resume(drvdata) was called with clock enabled.
-
-The clk_enable() / clk_disable() has been removed from both the
-drvdata->suspend() and drvdata->resume() callbacks
-
->
-> > from each callback, and also avoids iterating the same loop again
-> > in the next function.
->
-> ...
->
-> > diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> > index 963060920301ec90affb2ee6d758d3d602ffb4a9..375634d8cc79d6533603e3eed562452181e2ee25 100644
-> > --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-> > +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> > @@ -1349,6 +1349,9 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
-> >               const u8 *widths = bank->type->fld_width;
-> >               enum pincfg_type type;
-> >
-> > +             if (drvdata->suspend)
-> > +                     drvdata->suspend(bank);
->
-> Here suspend() is called before saving common register state (was
-> *after*)...
->
-> > +
-> >               /* Registers without a powerdown config aren't lost */
-> >               if (!widths[PINCFG_TYPE_CON_PDN])
-> >                       continue;
-> > @@ -1373,8 +1376,6 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
-> >
-> >       clk_disable(drvdata->pclk);
-> >
-> > -     if (drvdata->suspend)
-> > -             drvdata->suspend(drvdata);
-> >       if (drvdata->retention_ctrl && drvdata->retention_ctrl->enable)
-> >               drvdata->retention_ctrl->enable(drvdata);
-> >
-> > @@ -1406,9 +1407,6 @@ static int __maybe_unused samsung_pinctrl_resume(struct device *dev)
-> >               return ret;
-> >       }
-> >
-> > -     if (drvdata->resume)
-> > -             drvdata->resume(drvdata);
-> > -
-> >       for (i = 0; i < drvdata->nr_banks; i++) {
-> >               struct samsung_pin_bank *bank = &drvdata->pin_banks[i];
-> >               void __iomem *reg = bank->pctl_base + bank->pctl_offset;
-> > @@ -1416,6 +1414,9 @@ static int __maybe_unused samsung_pinctrl_resume(struct device *dev)
-> >               const u8 *widths = bank->type->fld_width;
-> >               enum pincfg_type type;
-> >
-> > +             if (drvdata->resume)
-> > +                     drvdata->resume(bank);
->
-> But this is not symmetrically reversed now - resume() is before
-> restoring from saved state.
->
-> Maybe this change is intentional, but then it should be expressed in
-> commit msg and in commit why this was chosen.
->
-> I guess you decided to do that way only because of code:
->         if (!widths[PINCFG_TYPE_CON_PDN])
-
-Yes exactly it was the above line, and trying to avoid iterating the
-loop a second time.
-
-> This code should be symmetrically reversed, otherwise it just raises
-> questions. For saving register state, it does not really matter, but in
-> general if we assume driver-specific suspend callback is run the last,
-> then driver-specific resume callback should be first, no?
-
-As you say it's just saving/restoring some registers so I don't
-believe the ordering matters. But if you would like it to be kept
-symmetrically reversed I could switch back to calling it in almost the
-same place as before this patch (just moving it a couple lines up
-before the clk_disable() and iterate the loop again.
-
-for (i = 0; i < drvdata->nr_banks; i++)
-    drvdata->suspend(bank);
-
-and similar for drvdata->resume(). Then the ordering should be exactly
-the same as prior to this patch.
-
-Thanks,
-
-Peter
+Yours,
+Linus Walleij
 
