@@ -1,61 +1,94 @@
-Return-Path: <linux-gpio+bounces-17807-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17808-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5562EA69D00
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 00:59:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC9CDA69D4B
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 01:30:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBC1D884A52
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Mar 2025 23:58:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8958B3B1FE3
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 00:30:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79B32248BA;
-	Wed, 19 Mar 2025 23:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5D8C1A841F;
+	Thu, 20 Mar 2025 00:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEs3QJCh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WgGfDUd3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4034F1DE3A9;
-	Wed, 19 Mar 2025 23:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C892F28;
+	Thu, 20 Mar 2025 00:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742428693; cv=none; b=Ndoj6luz0+1V47TvDMU8A9SAhUnYbgXrpXC19oLWh9GppfgWp5VrRNgheaQhZuf9tOGi9jxFAa0HPGJisqeDTLXSGpHJztfgCo67nL91WwwLMYVyOuGNLFCUUZn781S2EEPaxJ6NWN+Mi7BgGsMtAJIE5RKenp32LrKBodwB+bc=
+	t=1742430651; cv=none; b=TLRur3lNbyy62xiTkxGBWODUitUiayj+9YPOKD/maWkNRuJ72rNzUQw4fKfUf7VQgY7copxg3RDdbg8FCm3wXK6SO3Fo6ffq6rqqfexhGxHz+Sr61shI0B0542ETuE4rbYAokxWtN9wq6PpJzFjbpvJMHtQfYTV5tY9HIRiNKq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742428693; c=relaxed/simple;
-	bh=ZZKfA84RzRDEAliz95nfjz5QwDog7cyZVSrWYTw/zI8=;
+	s=arc-20240116; t=1742430651; c=relaxed/simple;
+	bh=TSqTPn2zV1wuz0UVtcBTLSVgBIk87jiVeuZ75T61nSk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nXLJj2x84gKvXdTOhljDJhSM5yr7bzeu76svY0Y1Q2dmiB6q9DJqFoC+K5wFpieUB20t80s0PX4Cg8cnWTxkCn76rYVsxjdcbCoXQQ32Ps/0IjVz5w39AWPna44nrdh4cPP9c1i4c+fEM439NUGZozmDZtzA808PA8yManRo5D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEs3QJCh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458ACC4CEE4;
-	Wed, 19 Mar 2025 23:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742428692;
-	bh=ZZKfA84RzRDEAliz95nfjz5QwDog7cyZVSrWYTw/zI8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aEs3QJChJFcdnPOHTauCmOrZ6IULAT7ZHAPKR4zUQKWpU4fVfq9xjjqMYvsI+BjnY
-	 tGhOwI9ScxsMy66k/+abaRY04I7+m9j1tjEdH9fAhcXCSi4LivrGhOBfVFXXTzlwMI
-	 p6De/RCvhON6CzIS0tGTyTbJuvO/FmRVGYyS9qC2+lu2dN/kngG4jI+E5IYPUo5gkM
-	 HheOzDF+CuZXuwayiJHFY7XfsiLvcbIecQPzGP0Uq9g85V4ym5K4eDIuM35vhUNiP3
-	 c/51O56HdxpGl/vDaGjSfPHxwvJ+8zacziTn2x/482i+A/8y3atJDVk6Ur1lsSqNve
-	 C0gP39TapTPrQ==
-Date: Thu, 20 Mar 2025 00:58:09 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v8 3/7] i2c: Add Nuvoton NCT6694 I2C support
-Message-ID: <jpaqx2z5io2bvtluexnzrkz4zcvea7qqgpa6bdhm4yzby2rjgb@izncuolmv7tl>
-References: <20250225081644.3524915-1-a0282524688@gmail.com>
- <20250225081644.3524915-4-a0282524688@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PECoeFlvr6CCLBP02g14CBSCFbj6fkZhXdtveHD8Rr/765aoVDoQmFwEp9+G08iR22SewWIRbRvYheSBvssDNafoTyF+iEZTITDtR8hdu7yNx4X6qw55FY+4vOxO689nzCtW0FR4c6978/TDOKYRFbZDFutAOHrb6BJTvvVKtCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WgGfDUd3; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742430650; x=1773966650;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TSqTPn2zV1wuz0UVtcBTLSVgBIk87jiVeuZ75T61nSk=;
+  b=WgGfDUd3mxoOB84Hxo1YUUtsyENNXYfA41cD2evZVLUAnmj/rRKP4ouc
+   IXDNkU1WnBOiyJioq3XRFGFwv6eMBb5aBEnujnBCo4Q6ByK+HYoAsAWck
+   lb7eu/eT/A5WoeJutDaDiYkud4VLMgcir+C4/jz3AEA6J+ltSYqvT1e3t
+   4gOkN+CoQ7iqn8iDrIpd4d3Lt7Zy/sI3XQhAiKLuSE52kQ1Ic6glCm7rq
+   +Q+1nY5snukH/jjZDRBiv5TsJtJ2S4v5CKNZQDQz5gxNd+DDeeMOCDwVR
+   IArAqI2LHOjGvNG5PJIqm00EHEVAerCkyE/CHGNfWp1uIxtJCAULYMgDf
+   A==;
+X-CSE-ConnectionGUID: o8G/qV94RdGU5nyYwVF2Kg==
+X-CSE-MsgGUID: H/4opU1TTHeFh9+I0po/6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="69001052"
+X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
+   d="scan'208";a="69001052"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 17:30:49 -0700
+X-CSE-ConnectionGUID: lFtDldXFTw+3zJ3w4kc1Zw==
+X-CSE-MsgGUID: TSp3a5+uSDmlYvDyRsFznQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
+   d="scan'208";a="123044914"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 19 Mar 2025 17:30:43 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tv3nr-00002Z-0X;
+	Thu, 20 Mar 2025 00:30:33 +0000
+Date: Thu, 20 Mar 2025 08:29:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	andriy.shevchenko@intel.com,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: Re: [PATCH v5 10/11] input: misc: Add support for MAX7360 rotary
+Message-ID: <202503200825.rmtamLkh-lkp@intel.com>
+References: <20250318-mdb-max7360-support-v5-10-fb20baf97da0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,26 +97,34 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250225081644.3524915-4-a0282524688@gmail.com>
+In-Reply-To: <20250318-mdb-max7360-support-v5-10-fb20baf97da0@bootlin.com>
 
-Hi Ming,
+Hi Mathieu,
 
-...
+kernel test robot noticed the following build warnings:
 
-> +enum i2c_baudrate {
-> +	I2C_BR_25K = 0,
-> +	I2C_BR_50K,
-> +	I2C_BR_100K,
-> +	I2C_BR_200K,
-> +	I2C_BR_400K,
-> +	I2C_BR_800K,
-> +	I2C_BR_1M
-> +};
+[auto build test WARNING on a64dcfb451e254085a7daee5fe51bf22959d52d3]
 
-do we need all these frequencies? I don't see them use anywhere.
+url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-mfd-gpio-Add-MAX7360/20250319-003750
+base:   a64dcfb451e254085a7daee5fe51bf22959d52d3
+patch link:    https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-10-fb20baf97da0%40bootlin.com
+patch subject: [PATCH v5 10/11] input: misc: Add support for MAX7360 rotary
+config: nios2-kismet-CONFIG_PINCTRL_MAX7360-CONFIG_INPUT_MAX7360_ROTARY-0-0 (https://download.01.org/0day-ci/archive/20250320/202503200825.rmtamLkh-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250320/202503200825.rmtamLkh-lkp@intel.com/reproduce)
 
-Besides, can you please use a proper prefix? I2C_BR_* prefix
-doesn't belong to this driver.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503200825.rmtamLkh-lkp@intel.com/
 
-Andi
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for PINCTRL_MAX7360 when selected by INPUT_MAX7360_ROTARY
+   WARNING: unmet direct dependencies detected for PINCTRL_MAX7360
+     Depends on [n]: PINCTRL [=n] && MFD_MAX7360 [=y]
+     Selected by [y]:
+     - INPUT_MAX7360_ROTARY [=y] && INPUT [=y] && INPUT_MISC [=y] && MFD_MAX7360 [=y]
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
