@@ -1,102 +1,140 @@
-Return-Path: <linux-gpio+bounces-17818-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17819-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 824BCA6A195
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 09:41:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7B89A6A1AD
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 09:45:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 613A5188B4AD
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 08:39:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE6AD3B33CD
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 08:45:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE22920FA8B;
-	Thu, 20 Mar 2025 08:38:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EE27215171;
+	Thu, 20 Mar 2025 08:45:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J9YSdxbt"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L/6eYEZ2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02012063DF
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 08:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281E9130A73;
+	Thu, 20 Mar 2025 08:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742459933; cv=none; b=cdA5+e+Dg/2jD1vMfcjSTnJj3FO1yukmbwZBg8t+xHmiM/2sQCrYA+ivT17+OIy/YtTqYHcMmR4XmzBivWWVJd4X9skNRL6CAO5LsQXytWsR7kD/+2LsmHtHro2ZrGKN1xoq1QpATKYzd9c56Lg+SJPwoYdGoFKamrjSzd0J5F0=
+	t=1742460335; cv=none; b=ZzMTlwqiKvri3q6XGHfOoypJkYLHhEMshCucb9mCd239z9D48XlLMgxqD05NlcQL687Iid7HjaRBQhcrC2K+9Bxh4XSEdRzs9L67/9xcxHCb0P0CE2kWF5TjXApZ0Z/FgU+5BRKwtVqMMxhsrzIehDURy3ynnxD9zQe8qOBuqBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742459933; c=relaxed/simple;
-	bh=Hjnm6h6VbKdAmP+BYdeTLnUhxywAbAPx3ODECnQc050=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vn2SXvH3O5l1I1LQLMwhz7loP/+LpWDkST4is4H9efUnnLFgz/ejMBdhQdajItz/25zpD5nyRXSrz4945ahohplV5EvJ51PNgyhL4c8P0n9PTCPmdqTmHFHvWjw5TRWBmsUooBHHJi+lgUCJzpII+utFy/X9sMhXIadlbrcEtvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J9YSdxbt; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so5700311fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 01:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742459930; x=1743064730; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hjnm6h6VbKdAmP+BYdeTLnUhxywAbAPx3ODECnQc050=;
-        b=J9YSdxbtHHUXIMaW8mrL0B3EeZIhVYTY8JbFpyFB9nk6ovBFGenKhl/Pi/5g42DD36
-         rZ02aUr3nLTw85a6hy5rp5VxTJQDZ3/6ve6ezDSURsOK46kViehK4vFBQt+TSPa/5Bkw
-         V9kls1s1tOy5aXj94BZ4SjPdvUmhZhM2qNuk73dnQ8enUyopwmBazqyUauyROA9XEOsq
-         PGkBSBXHECboTJRiu7yDIJFqbxL+SAhqqOPtwDRatvKe/g5GVBSCinETGkWhK1ZHeDRt
-         rNrk35eqxRYLIvciqBtDc+07I2fuB53INXz5ImhN4zKbvx/Lev/nEvWCR334md91PWSH
-         kPKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742459930; x=1743064730;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hjnm6h6VbKdAmP+BYdeTLnUhxywAbAPx3ODECnQc050=;
-        b=YwLmAdx18x60oIGEiX2X7bJ8cWxuAxqHPo2WDjazNzO41q4oOZXw3MPzjnsv+Ox/7B
-         Y3318NLDtCtSKpIv8GHiJnBZw8Jmzl9+JsmWCyAVi+rAWERW8f1EftnSLPTUBMsV+9hD
-         hlRmpJ0J9Fqr3wuenWyZRM1uSQ3A81HccvOonHTcz7p1v1Ss00+X34ymSw2s7r8MC3D9
-         psuM4wmiQRNREaxmzYXBZ3LLzCBHVDz/UApncdVTdhZXxdyFYZ7raci5CyOXG7AbFl5H
-         mSR9tbERpA9vNYyENLMHq5gSKTY8SKd0EToE6Tm+s+4a5xjES3XX4iOw/10BX9poQxPf
-         cCUw==
-X-Forwarded-Encrypted: i=1; AJvYcCXo9w/w159xeIhKV+7jneK1ZLhaYYw6yDxIS5wX8+1ev5F1Z5lgU1tlpr21F+RCSFxGZMFcZgzPg1qr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFy8qp5CIYahKOBYb0tEhlnPqQu8CQX3Fb1a4NdmkC+N8KCQxC
-	1t+ahkPvNu7kqdO4n+Pix6xNkbo7655kE6Olp1WlrRjU58nRCBYTFFuQjWkoOA7YlOTs8D+LIdK
-	P1KOatGFt2KGT6rEQuLDnECo5bSsxIg1KW+RA0w==
-X-Gm-Gg: ASbGncvcfnUFphXcgtpqek1LuAWNfM3P9sDMO99GMeXYIZqHqe7YWiKAgCufuGTOorj
-	0ioJm03+mzM2PKn1LPKIIf0ShBjNaxizUFnu+TUF928RvC5nQuGWW4incMdcuBa/4H70WNkFzU5
-	IeFeLrB0I2Jg5QmNQC1dFRcUM=
-X-Google-Smtp-Source: AGHT+IFD4w4hNXYvruLDdSQP6C1+rIqqCVvC3QD11WfLjDdRrOARbFWNTEqGlnQSTwkwpoQx+WoFOIViXCqCm2xtkIg=
-X-Received: by 2002:a05:6512:1255:b0:545:2fa9:8cf5 with SMTP id
- 2adb3069b0e04-54acb22df99mr2287327e87.49.1742459929900; Thu, 20 Mar 2025
- 01:38:49 -0700 (PDT)
+	s=arc-20240116; t=1742460335; c=relaxed/simple;
+	bh=uRy9sQef2mfIzmTtKIHoT2rO8SzOJ8M3K5MCAVMCx9U=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=oz9snywhOk9EqdW9ke0bJMILuKKacztMDUuvfxsHpgFtRO+pmlGdTQeTPBNovNM+1XwbKGwiHpt9Xvv+SU+YYWFn9JVV0/z+UGT25GApMmPJK1cAE9mGkWZ7XDcgYLXUrq2bxPd3GrHNRRzOOH08qmE9Cg6hKXXxd598OscRIuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L/6eYEZ2; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3ED652057A;
+	Thu, 20 Mar 2025 08:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742460330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3/MOKCaazGQ+7IgrYNdLGkngEevazyJ/NSGVFcYF2io=;
+	b=L/6eYEZ2aYVxXq4zrN7XHtnzbAllroxK4oze2qe3b1OOdHCIHcQx+yGnY+ZUx6lBEM2TOH
+	VY75xAIJfhiOp9aNUgi9p5t0v/zZvQkFtLu66leRIsxq3FN9GnYIsuPrRuGDq6nEk2qcdo
+	SmWQBA6wloJupAELJAWdCigv8+UrApjzP3Cqjr/Oj7RqO+iOIP83JINZodO6m0SHgBTmw2
+	ltnu5DBQxX1c9KML7m4taTloVkL8/Q8CCZazm5/fUrpJVMLLvJMVkxzj/4bf9k/zEuxBHM
+	cgo3F5SGccuPchuTsIap5tgZFzhQTEKEcWmu9s5uJT5dmAT5ItN069P11Z/Uxw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250319092951.37667-1-jirislaby@kernel.org> <20250319092951.37667-48-jirislaby@kernel.org>
-In-Reply-To: <20250319092951.37667-48-jirislaby@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 20 Mar 2025 09:38:59 +0100
-X-Gm-Features: AQ5f1JoIspSXlQN4dIKbOu1jN3twH_3GYAyvghW85Pzo3hZCWpBv2464HnjyEHk
-Message-ID: <CACRpkdbJ-SryFs=dhjJMtUXRP8LLOyu4wYVcu3T--OwagQx_Cg@mail.gmail.com>
-Subject: Re: [PATCH v2 47/57] irqdomain: pinctrl: Switch to irq_find_mapping()
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org, 
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 20 Mar 2025 09:45:28 +0100
+Message-Id: <D8KYMWA0B1AD.3J83HQJAXF929@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 05/11] regmap: irq: Add support for chips without
+ separate IRQ status
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-5-fb20baf97da0@bootlin.com>
+ <Z9mh0ENc1kDFrJlQ@smile.fi.intel.com>
+In-Reply-To: <Z9mh0ENc1kDFrJlQ@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeejjeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvffuvefhofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeethfeiheehheegheekueeigfekffdvheegfeeivefgkeeftdehhfdthfehueejfeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmegrieeimeefudektdemtgdtsggvmegslegrkeemvgehledvmeeirgeffhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemrgeiieemfedukedtmegttdgsvgemsgelrgekmegvheelvdemiegrfehfpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvr
+ hhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Wed, Mar 19, 2025 at 10:33=E2=80=AFAM Jiri Slaby (SUSE) <jirislaby@kerne=
-l.org> wrote:
-
-> irq_linear_revmap() is deprecated, so remove all its uses and supersede
-> them by an identical call to irq_find_mapping().
+On Tue Mar 18, 2025 at 5:39 PM CET, Andy Shevchenko wrote:
+> On Tue, Mar 18, 2025 at 05:26:21PM +0100, Mathieu Dubois-Briand wrote:
+> > Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
+> > provide an IRQ status for each separate line: only the current gpio
+> > level can be retrieved.
+> >=20
+> > Add support for these chips, emulating IRQ status by comparing GPIO
+> > levels with the levels during the previous interrupt.
 >
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+>
+> Some nit-picks below, but either way
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> ...
+>
+> >  			default:
+> >  				BUG();
+> > -				goto exit;
+> > +				return ret;
+>
+> Hmm... BUG() implies unreachable, perhaps just a precursor patch to drop =
+this
+> goto completely?
+>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Ok, I will add a separate patch to remove the goto.
 
-Yours,
-Linus Walleij
+> ...
+>
+> > +	/* Store current levels */
+> > +	if (chip->status_is_level) {
+> > +		ret =3D read_irq_data(d);
+> > +		if (ret < 0)
+> > +			goto err_alloc;
+> > +
+> > +		memcpy(d->prev_status_buf, d->status_buf,
+> > +		       d->chip->num_regs * sizeof(d->prev_status_buf[0]));
+>
+> Perhaps array_size()?
+>
+
+OK
+
+> > +	}
+
+Thanks for your review, and thanks for the tag.
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
