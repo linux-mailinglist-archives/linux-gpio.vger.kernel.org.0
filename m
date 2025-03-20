@@ -1,151 +1,145 @@
-Return-Path: <linux-gpio+bounces-17810-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17811-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DAFCA69FB0
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 07:11:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 112AFA6A0C3
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 08:50:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CF7E175E87
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 06:11:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04F803B790A
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 07:50:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C2D41E1E0C;
-	Thu, 20 Mar 2025 06:11:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D2ED20A5C2;
+	Thu, 20 Mar 2025 07:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjsrycH9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDmxdIKD"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333641DE4FB;
-	Thu, 20 Mar 2025 06:11:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC17204F85;
+	Thu, 20 Mar 2025 07:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742451086; cv=none; b=XNgXIBOcl1z31gCfIGUQQConHBTeePmL/YtJ713BMZHbBNCD56H2kRynZ3LrURRnGVGspBdxndWysxWM/dANMOJFi7NCUKKq7Srh2yD77ovn32rsVx0oqU3kqVCSSWhGpyOfVQFMmTxPslPZmicHaZ84fLZdWbh5xoniWtLFaDk=
+	t=1742457004; cv=none; b=BfuD3DmkQL9RRMeewP0rSkxYuiddiSkaRKRoTmDUWDG0yvnc9zBWMqJnyV/KlR8SrZVarz9Rv/aDwI1DJstwVJ8fg5jb+IjZnRR3uIFI22Iln2hOpOMOgmBu71MpOO8k6rOWZJ8QsWAP6q2bapI8cW/WiASszDLQuvNq8mGC7+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742451086; c=relaxed/simple;
-	bh=B9pxkTyS8FCwcEXwhuG9eptnAHpaChigopqI6GfQ8pc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WHFpymOK/dsRypiHtf1uSlQ2d9PSvEPN6ECLvRIw3uX9Ioi2VYZfKVgMY4BRe3HyesoibaaJgnqHoY9MGB6UCkR0qEVltKUZC8oqgAkoTsqUPynI5c5shx6AFr+lCMyP7s1s+cLoaa6U+7wTgJZaBxvkPQpZp7j0ntQKaG3j/ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjsrycH9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3610C4CEDD;
-	Thu, 20 Mar 2025 06:11:21 +0000 (UTC)
+	s=arc-20240116; t=1742457004; c=relaxed/simple;
+	bh=5HaHlb3LdE5BLe3N6Wb1gvDWqG3ehdRcH7l+nIy3zx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BjCE2ordkQ+uUVsh0mqtNp0FH8/ox3a0nFfa3GsIk/zk42AYGKIJBbudbEsJF7zk8ECzj1HirtlyXRwLlj6rpneMqtaUe5abz9wZhU+QF3zc77ghpx/wDOdlcRUkO/lVaVn7+LQOWUVSwRBfZ25TPUJkYUqPbldujMEZ6ta1bAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDmxdIKD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C58CC4CEDD;
+	Thu, 20 Mar 2025 07:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742451085;
-	bh=B9pxkTyS8FCwcEXwhuG9eptnAHpaChigopqI6GfQ8pc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QjsrycH9dIa4zdhzJ7pW98BzIFliJkxnLmvIemvDdzliRnpB3lVYOFspjj+wRbSNF
-	 KIw8Xz/RrPnVTjfoNdi2w1ItHr1N4qnh4CBpwUW6zXvbEHVH0XHVWtd/v3R5/8VDVD
-	 WtBcPf7XJELH7Kx2qgHHbAB4C7v6bx2bel86idhasEgIbwLedXjNorrfa5Uzvkn6sj
-	 jRwPKl8Z1NSLyU3arh2DKt0/Yi1aEUlNoVz9w46S6IJWnwKtzNhmq9OweN1/ie6iSs
-	 2pCW/Ai55Xb4Yahl7PVjW4NkaQAq7vf+EoZ7sITho5vBrBANjU4wJwefaxacgWpI5U
-	 s8oVKunDV0u7g==
-Message-ID: <62e44051-1c53-4a3b-995e-8ad7f9e86f01@kernel.org>
-Date: Thu, 20 Mar 2025 07:11:20 +0100
+	s=k20201202; t=1742457004;
+	bh=5HaHlb3LdE5BLe3N6Wb1gvDWqG3ehdRcH7l+nIy3zx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lDmxdIKD6oIAzIPEFVVhiYrsavGtsRLKkRyi7uissXoXY2JMuKPGcQBV6/FIqKJNN
+	 ORMeruO9kQQPPLlmL50LtR1oCTGJiQlFTZhs2ZeFeCuEpFUxdFQXmmRCTSK0cWliSI
+	 MWwEx8ZRr6nVNC5MouJLCq1uwYmu7oUNbPXtkVcwxrwvHsmUk9YCj3pUC8zgWKotm3
+	 Zw4AC0oKWQJob/qGsSpVIOlMY97LK0qQGbg19K7rQKnsWbH+WAfcGkEZDdbjHCRZ2f
+	 DC3QLXuOcb2sHJujPTbyS23JZpTy7yHEPHBmTVCTjQkvZqN6vgOk/n4B1o/4k2INom
+	 eSgl9rViiHPfQ==
+Date: Thu, 20 Mar 2025 08:50:00 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+ <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 17/57] irqdomain: gpio: Switch to irq_domain_create_*()
-To: Andy Shevchenko <andy@kernel.org>
-Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
- Doug Berger <opendmb@gmail.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Keerthy <j-keerthy@ti.com>,
- Vladimir Zapolskiy <vz@mleia.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>,
- Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org
-References: <20250319092951.37667-1-jirislaby@kernel.org>
- <20250319092951.37667-18-jirislaby@kernel.org>
- <Z9qfIQ2TEhkgLT2Q@smile.fi.intel.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <Z9qfIQ2TEhkgLT2Q@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kfurgyfqcymyt52d"
+Content-Disposition: inline
+In-Reply-To: <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
 
-On 19. 03. 25, 11:40, Andy Shevchenko wrote:
-> On Wed, Mar 19, 2025 at 10:29:10AM +0100, Jiri Slaby (SUSE) wrote:
->> irq_domain_add_*() interfaces are going away as being obsolete now.
->> Switch to the preferred irq_domain_create_*() ones. Those differ in the
->> node parameter: They take more generic struct fwnode_handle instead of
->> struct device_node. Therefore, of_fwnode_handle() is added around the
->> original parameter.
->>
->> Note some of the users can likely use dev->fwnode directly instead of
->> indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
->> guaranteed to be set for all, so this has to be investigated on case to
->> case basis (by people who can actually test with the HW).
-> 
-> ...
-> 
->>   	/**
->>   	 * @first:
->>   	 *
->> -	 * Required for static IRQ allocation. If set, irq_domain_add_simple()
-> 
->> -	 * will allocate and map all IRQs during initialization.
-> 
-> Can we leave this untouched? The new name will make the string 81 characters
-> long and I don't think we care about that, on the pros side it will reduce
-> a churn in this patch.
 
-Sure -- fixed.
+--kfurgyfqcymyt52d
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+MIME-Version: 1.0
 
-thanks,
--- 
-js
-suse labs
+On Wed, Mar 19, 2025 at 01:18:50PM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.c=
+om wrote:
+> > +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+> > +					   struct pwm_device *pwm,
+> > +					   const struct pwm_waveform *wf,
+> > +					   void *_wfhw)
+>=20
+> I would expect other way around, i.e. naming with leading underscore(s) t=
+o be
+> private / local. Ditto for all similar cases.
+
+I guess that one of the other waveform drivers is the source of that. I
+chose to name the void pointer with the underscore because I consider
+that the strange one that has the void* type for technical reasons.
+That's obviously subjective, but I'm happy with that choice.
+
+> > +static int max7360_pwm_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev =3D &pdev->dev;
+> > +	struct pwm_chip *chip;
+> > +	struct regmap *regmap;
+> > +	int ret;
+> > +
+> > +	if (!dev->parent)
+> > +		return dev_err_probe(dev, -ENODEV, "no parent device\n");
+>=20
+> Why? Code most likely will fail on the regmap retrieval. Just do that fir=
+st.
+>=20
+> > +	chip =3D devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
+>=20
+> This is quite worrying. The devm_ to parent makes a lot of assumptions th=
+at may
+> not be realised. If you really need this, it has to have a very good comm=
+ent
+> explaining why and object lifetimes.
+
+Pretty sure this is broken. This results for example in the device link
+being created on the parent. So if the pwm devices goes away a consumer
+might not notice (at least in the usual way). I guess this was done to
+ensure that #pwm-cells is parsed from the right dt node? If so, that
+needs a different adaption. That will probably involve calling
+device_set_of_node_from_dev().
+
+Best regards
+Uwe
+
+--kfurgyfqcymyt52d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfbyKYACgkQj4D7WH0S
+/k7SWgf/dyLm21zpgsxSkf/1BAmivq9bOQ2nUPl3FWsik+NtKVmzdlk1AFAoqgyN
+5dbrTDXRFgrSsdvgMXLu9YIROWv7Auf4dqevkB2MplneL4PoUaZlLerqP5DAGtZ/
+1Kh0N/XbcwUG+tLqYVF0Qy31biUuKYqWlLhttZkAjCwBenc6gLGOKp+8HxRzJRQ/
+ZJgVgL09M3ZI9xU0mFtUoMIcuvbHl0ydcEMa95to8R7L923FKgKZdXCF1181yv8O
+kfG/RQFBryfg/PvsTorRfPaCt29yrAa9njCy7sQsGzsZaGEb2YZlaEcs2OFsik2l
+deVtif5NH/HD3szq2pMLvWSyTNf9Bg==
+=mUp7
+-----END PGP SIGNATURE-----
+
+--kfurgyfqcymyt52d--
 
