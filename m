@@ -1,103 +1,123 @@
-Return-Path: <linux-gpio+bounces-17828-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17829-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3E2FA6A890
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 15:31:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 409BBA6A8FF
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 15:48:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19651486910
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 14:30:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A1A23BF1CA
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 14:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64207155398;
-	Thu, 20 Mar 2025 14:30:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB6D41E47B7;
+	Thu, 20 Mar 2025 14:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b3oCv5rp"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sDKs5kIF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7262638FB0
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 14:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19C71DEFE4;
+	Thu, 20 Mar 2025 14:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742481046; cv=none; b=gLEqFw2YoZwKdDLcRs6dq7iZ/RqF7fYDqg+wgQf6q6tfVJ2HrTy/8xURtIZz+A0SSmPhO7OVks5ZHOT5qWz7K1VgKdP/b/V8IlIk+SRjxYqEv05meEQvPbpC/jyuE9sRe+nGxuk61DzK4kzxhiynUx5FdbcErp83yuhFoQti+WQ=
+	t=1742482104; cv=none; b=Nav6zE5IrWEgj2FU+fAsKx22Lb9AjRJZl+kls1up1QaeXMIEEyPoKQz6qWWLWdsz3CB29u6NvrtpeR/4+g9kW6W41TDBehMvkCNk5GVomw2/AHMu+PEqDMRWzijRBh3DgCFzFR8lTBV93SPnHMc/xGUoXncWIk5TXVI2IUPkob4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742481046; c=relaxed/simple;
-	bh=HtaZt1pdvIMw+/r2UyjpYL962NSzFMuw3Sp0l7Zj8r0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b1u6cC+TgwUeiyt5LATsAFGpC00ZKIuUyM1X20WdFszMYwZPp0BcElIAjugABaI+6pUSFctGPbpneMTcSlAxUNhxH3GWGGTRSkevC0vxScYXcnsJ2Ygnw0rYF0QPjdxEDa8vs6NC7ZafZNkcLugUeSRcBtnUz+q+Pzl9hyFRb7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b3oCv5rp; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5497590ffbbso998040e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 07:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742481041; x=1743085841; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HtaZt1pdvIMw+/r2UyjpYL962NSzFMuw3Sp0l7Zj8r0=;
-        b=b3oCv5rp5vePs8p3DyggA8ZIeRSuEj6xgDWIgndtyj9MZvp9yB1owYyiCkNpIO98ye
-         xukE2nZBex0+20r1XlDDnwGJ+OYiARYYstVVR03qptzYoUdDUr4BcBnATjEIR+L+Xhp6
-         xeJSuDYM8duDCCJamD45TL4ycRvAVCp4qE6TecYczv3inOsbD4rwHlg9fQ+VqSr3ekOJ
-         +LEx4GSViMq5FA8LDoZcylmMQti+53elt4xMOnzEah1l+IYAXVlbatyTykS9/UdVATzb
-         /91LHJYNLWgr38xZyJ7xVRhrizk2bWHreZKovqoYMKAQNlYkRA2HwWj5q2/XsVq4Jz+y
-         FpFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742481041; x=1743085841;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HtaZt1pdvIMw+/r2UyjpYL962NSzFMuw3Sp0l7Zj8r0=;
-        b=SCB/EO0tw/ZeHqI8j86J5RtWg6TAvkzV3IrPokNEj0+LLLxh4GzuwFnEVNHNHjFarW
-         ChGMmEjN1V6oZrkad9jun5QjJl4RKh8ztScQF5eqtEGjIyXIqstpFg/dNPNp3fOv/gtG
-         flUsYTv/C5U28HDpAAz1TUgCYZpx4pxNqTfawM8VeRLl3nFYGLvmbX2yCXHrU5ZfcN0V
-         un0QH82jJEpaxpFnrTaeXoLibmlIC5PJvnbZUcXS3/WZcV0V5xyAAY+aKThyd60hJ3rb
-         m8RrYwLV2nrYwoB9duu5VnpplM6YOOTy70LC9xnvqpj+CtqAyCE+EV2fd11TAV3CQb5b
-         0R1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVol4SxWcK5Pg0c13Mmj0dN8e1A0wEXMXpA7Ckhxzn+zShtESqhSaH4GVzxsPO/lEyZe695rdkW4vMm@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnWx/dQRA1GYOoC8wi+4IKqR2qw1wHWhmlaMsCyMkSwyXPzU15
-	fZfzuwww7LQD5s082/8iwjixgW7Ao9ZBPOUdxHjUtfqGFu8B4WInRdqzaZoNO13k0Z70OQ4kbGr
-	cLubU0Is5FOGyQEXpCNdKhcBjHgrxRXlTVPgA46Luqi2dYAdH
-X-Gm-Gg: ASbGnctzkIuX2HnbUtfvwlJQdgLp0Jz736et2iyrt7HZUjGiVJhnmfZi8KaeQFFvN/I
-	V6n9xXWalXo6lWHqJ6Hr19By1gpkyP3GPbpXvSNlam58mBVCSMNOBU9SaFmoxqjPZn4qOygiXwU
-	j+/cg1q7CQhESD/jTXI3oJ/DA=
-X-Google-Smtp-Source: AGHT+IET8DYooDeg9qUjIiQRVG4fHBWkFzaxPik2uWctRlPPDxeN/VkNHLY2SmqfTOdLGIlEKYoRBwnSeQbXDk7G0W0=
-X-Received: by 2002:a05:6512:2344:b0:549:6cac:6717 with SMTP id
- 2adb3069b0e04-54ad067ef93mr786026e87.53.1742481041305; Thu, 20 Mar 2025
- 07:30:41 -0700 (PDT)
+	s=arc-20240116; t=1742482104; c=relaxed/simple;
+	bh=zPezT8El2e4h3o7yjH4jTAgyKaMCD49/Uzh6Mq5DaW0=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=E9Pj88s3v1LPePbUlRhpBc0zH+foD2uu5Ha7Qe+AvPS0SfSBbAk4q1ELtLMqqmwxII9cRr8aCMX1HV2hhiaKKJtWBsDqFH67Pt1+vMPGeK1eEqKz9WXWqadCDskKT78+DmU8q9XmwRIJMMkar0I+e6M6M3j/ip6U9gPxrXqnNk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sDKs5kIF; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1742482098; x=1743086898; i=markus.elfring@web.de;
+	bh=DfZoeGXnC8fbARD3b+igjeNU0yxDHdtiopyfZfd2L6Y=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=sDKs5kIF7lvFISqdnWdsUo7Q19Yr3e3giqX4Kd+Ny2reakJb+vVULaV1qaWhI0Tu
+	 RthkGZsbijtxlJyDdcrASbATnReAjT7dABuZhywMvK889TElkz+foEn6rk+MzO4AO
+	 wn46oY30nC4acPUJNKZcA1w63FPWEkkqpeGgIy2ATA4SbqrKY5dkjkQtrNa7c9Ihp
+	 KY35BD7uHZFWIhpplbziBQEDe0bya28G09Lk8tvPMTS1Af77c8H0PWfeSsTDT21BM
+	 BYM5P5XLEgrTEUXaXK9SHyMBIv7FcKVCacBhBYvUIk3bsK4pzqgpUUVB1lFeNYuvS
+	 byEsLCO9Rtr8/BF3ug==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.46]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MbTH3-1tKHcJ17hB-00aFwu; Thu, 20
+ Mar 2025 15:48:18 +0100
+Message-ID: <79b776fe-7fcf-4cf8-9d3f-bd5f4e66344e@web.de>
+Date: Thu, 20 Mar 2025 15:48:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <PAXPR04MB8459BEB700FB66FE693EF1CF88DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <CACRpkdbHr_CpoqGwE+mXxV0My30ZcBRJmK9313fXN0rbPDPbDA@mail.gmail.com>
- <86v7s6myka.wl-maz@kernel.org> <PAXPR04MB84590CCC9DA69172B665B71188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
-In-Reply-To: <PAXPR04MB84590CCC9DA69172B665B71188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 20 Mar 2025 15:30:30 +0100
-X-Gm-Features: AQ5f1JpqvGEmXPhYRqMVtqTJwsHUXpAhFsu-q4a3U4muWb14ebpKTU7UaGIAWi4
-Message-ID: <CACRpkdb+tow5a1wmbW9aUjDfuevWNyiFQHJ6rT=NpBWVfaTYCQ@mail.gmail.com>
-Subject: Re: GPIO TODO
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Marc Zyngier <maz@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"brgl@bgdev.pl" <brgl@bgdev.pl>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: vulab@iscas.ac.cn, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Ludovic Desroches <ludovic.desroches@microchip.com>
+References: <20250318030717.781-1-vulab@iscas.ac.cn>
+Subject: Re: [PATCH] pinctrl: at91: Add error handling for
+ pinctrl_utils_add_map_mux()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250318030717.781-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Jv9YEG5A6IYdFMMjFJhbkMP4K6fj4hm+m/+jMG29jkDhR3DufXP
+ fao5en0fLSRCMR/fTiyIrAEvL8JhX541DSKF9jUFjNoK+7fP9sLOI7F2fCxmPCo8nYt5rLb
+ iN9GLL1Ll05eZG3hwdD3wOxiUXLVxNkujPeWB9TGvh4fTtdkQBtuEnqm4VSKt9umtB8GKit
+ in295Z82kqqeJ5fjvZj8g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Icd6NZo/SxA=;bXndP2xuCTpikrk/MEyGXGzNVW0
+ CneKGLPmvCp6YnKQTW2CXUHE16pLlTKUg3wFdKTaF8Z3ad0k1JzsvcvO0tAvi94y3CM91YiUs
+ lK/2Fy0NI0ptapr73mJQ0y0mRC1MdZnRialJiLDXXBKUnRlMcqij8IA6pGlyM+hzf6q3dO6vM
+ 9ZAXV8X13Yg+7hKYqYkrc4/C8L68hxwxqbyGF2Kwln+Sb4OQppKMyL8Zib89wd3IW4Fzv58HA
+ J4Erb+2POAnlvkpSzT2V1RuRoomtXdOE0Z5rL5lvkI2zEHQ4e5sF/mVEn7YCggfeLRKhhib7a
+ LLIsQjd5NBLmbijxxGkVJbQGhkpVkjNANLSIHq361VEo0F4teKl4BMI0Va83HP/rjcgZvxo/U
+ WJCWDAYxmf2r9rLkMmlvE0YbkGMPvFMY4OErCdPFpaNNrA4hqXIjS9vB3TZ+Nexd4+cyNkqp1
+ s39zVmBlH16WDMlSRtf2IjC4LUsBTvxjQSNF722xGl2YoIbLEV0WKEhe0l3auvgf1Witqg3CQ
+ T6MT1CcWRm1NmzNtbkvt297hCvbcu0Sx5d7Y9daEDCk4HjZUG+3i6DrKXGobkszQQR660AhMj
+ WZoT5g8jv7IAr6aFGMDRPQUlW23nYY7eKupqLgGtozNOcTSWGdLyCfx/KLKK+hITqKdWKMeB7
+ BbLQm4jPPpAYXpQkicl8qGGWhnmYw9gk5aq+/cDx/aTYluAsRVbdt+8iEHe3tbYHr8Ci+Qq9N
+ pCcLelwn3AVIm6mPbi+uXbz8wluwHAbghf3KSVBs0sS3+IWLijJp17C8jOcfkZ8qLV1h9U9KM
+ 5Ypm+gcjjk3Wc1VWC/vG0aq6vXmTezAgkZ3Oa901yYMcVWUj86+nA0RwS6keXPYX9vqTyh0I3
+ Gd028Egn4Y9Js810uzZ5k969hYGBZhd3NgV493D0XYtancDR/mrL+wXhMzvlC19S+8sr4DLBw
+ WefoueVnGwekTd8C47aoqsSP/HiIv+a8v1rmvk4R6XWkzwUaEYdZA2Oo4MkBCn0q7GosHgdxs
+ tJumdQKOPJzhfpfeeK95D/uKlpO0ol78aIi9UWrKJVmvNEveutmqiD2QG5/uxMwGO/bmE5/mP
+ +yoj84Ol8yJYQ1LzXDaVY7b9mS0H7+8aM9TSHDtahKeKdn8F6yGsEtWdx4VIfxSvm+t1nW+J3
+ JX1szufteAnz4358o5q7S+NoTeVMOfiJI4wqVgLZCz7bpZfb87lA/9BkunFFSGL8tzDPmok6/
+ EiDMsn/5i5rLZAK1b4E1GfZ1w2L62yWh3wOeh33Kqa2aKCQBHsoDrQkV6NUnNNSjJcnbJOH0s
+ lfWAJNQXZicbOvQR6bBzqJfB+kjjcxEwHABsLw87/mpBUP2zQiMoourAFq16A4aPxZ4IpDnmB
+ UiKTN5mMnK1E+q4RnBFohs9XuBRwmaTCjaawqH/DBNimwgeSAY2NkO0B7G46ponZUBvt7rvCV
+ lgWqrJ9HkKa5o7CtgnGOpwnGUqzZtOkDpWzjJHGv6xsTJPT1XB7KdTeNHei5u9QPy/hVqhQ==
 
-On Tue, Mar 18, 2025 at 3:51=E2=80=AFPM Peng Fan <peng.fan@nxp.com> wrote:
+> In atmel_pctl_dt_subnode_to_map(), the return value of
+> pinctrl_utils_add_map_mux() needs to be checked, for the function
+> will fail to associate group when the group map is full. =E2=80=A6
 
-> I will do my best to add IRQCHIP_IMMUTABLE support
-> for remaining irq_chips created by gpio drivers.
+Please improve such a change description another bit.
 
-Sweet, I have fixed all the easy ones (I think).
-Those that remain probably require a one-by-one approach,
-and some tinkering.
 
-Yours,
-Linus Walleij
+> propagate the error code to caller function when the function fails.
+
+                                                                call faile=
+d?
+
+How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and =
+=E2=80=9CCc=E2=80=9D) accordingly?
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/submitting-patches.rst?h=3Dv6.14-rc7#n145
+
+Regards,
+Markus
 
