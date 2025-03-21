@@ -1,206 +1,147 @@
-Return-Path: <linux-gpio+bounces-17835-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17836-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8C6EA6B0AB
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 23:21:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D320A6B301
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 03:36:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C80F83AA7EC
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Mar 2025 22:20:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D9BE3AB5F1
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 02:35:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB015229B37;
-	Thu, 20 Mar 2025 22:20:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF6F91E25EF;
+	Fri, 21 Mar 2025 02:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hR0yA7Jw"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="K/mHHBl9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1431B422A
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 22:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DF818A6CF
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 02:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742509249; cv=none; b=SFMd9s08Vhp4H9gPY3XOOW3zbCj3QbzVUhu2MMPznZUC2C7nODpLU36gynHEo1ll6DntIB4D86zdBASwicmKsmFfANxIuoHkyUgnbYYXp8I+MtNahVmquB7CAW/9ORA0dc+D24bUPdXI6h8JJnBKVapepUm2q1Du6Iu5iYzh6Ro=
+	t=1742524557; cv=none; b=NsKpu8a6BAg+mzUqWPI1bk0RbWBkE2WN9KlJowoFT85628co+GzkMFxeSkZCnWFpee7EJwkX0+A4V7uO4BJyKTT1KJQHJ9PLZo7G1cThObK14Wi/jtGAyXgLj7v8PiddFc+ENUvCsg2BkQQqIUswDUn4W5fVa9cOyVxT9rWu/vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742509249; c=relaxed/simple;
-	bh=+2qG8+3DECwZv3aAOMzlkgKolqnp6+4JTj8Ia17yVMM=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fzXVo7FVHNNF5dq4LFNc6kzo8AhkdH3MM1iWKl60QzxOsJj0cyLGawFODPdfB/HAsxsRpHzzVNzBirPfrFGXG7z1eEJJ/VqYHX6GzDNbKgIrGlu5L+X3WrHQ+zDd2KQ3lePmELjUHqxvvrHGv7z+JWoRpq/cyJOVFB3vKqPMvCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hR0yA7Jw; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8fca43972so12978686d6.1
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 15:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742509246; x=1743114046; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Az0r/TWDgp850iHhb9eHID4HVESO6vqcKLNQrrl8rcc=;
-        b=hR0yA7Jwn/LFN4q7yoiORDOCOGF+mPWooJK7cg0ZelMSOyH1O+wuwsdLXIWObGCKlt
-         C3ij26aNaHGliMSpx39I6MCa3e5AgOMzQX0lAXtMiSkQqJLqJRPmIfrraEL4ftaAHzgF
-         wCEw0VgmkAZMCi223WJKImVTNv4FmLBY0gNYU=
+	s=arc-20240116; t=1742524557; c=relaxed/simple;
+	bh=BE8jlk33PSooCmmTKi3YitnAtNd4pRxBjaru26b720c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BRtEzmPlCzexnKQ64/WYnGlOG6i9vjNpw1wfvAZDWvHTw2T1NZRLm6KkoiM2PnXEIDWxc42wrkc3IvQBrgOhj5bZ367RLNOG3K+bVD2QeWUZcCeiYk7arD8p/J5BhuS6qS8mtgXMmhXvYNamLEYDJ/dfpSlPIgNp1W1RRJQa1s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=K/mHHBl9; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 589A23FCC7
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 02:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1742524552;
+	bh=+59sSS/+H+AM/QNXIwPCiTuvLYKPkjZvDqMYqhJDfO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=K/mHHBl9x0EjGX1+rMZ64eM0/Wt3Jq9M7hPM3j4FrndrYmhbVQxP0jfwUOVb2Cw9V
+	 EP5ESvmaLJ1Z8/GLK6lp9/dDFsWphQ3S52uYoZf0bL6d8g9U8mZPiSTAyDGwcHjKOg
+	 IEf9A4n2rDWHEsCfuLLQzISIKG4Yl75C4jNvxV18svARZf7KUSnCYx1KabRNzf8F2V
+	 cARttQqp0uSNy+WQRGq4CBi4KycXxglII4c8Zlt031lLMKiotEJ1Ks2suG4AzT04Si
+	 tBTnDDk48PlcKpqKxAgzhf+IgFaMSTnmEZyr7fBGcT1K1BMwjTYHgRQLAh6wJ76zOU
+	 AZaUUxRupA/qQ==
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so2246787a91.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Mar 2025 19:35:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742509246; x=1743114046;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Az0r/TWDgp850iHhb9eHID4HVESO6vqcKLNQrrl8rcc=;
-        b=FboqQX1goeh0Iq9AOaUj6+O1TNonpnXeA0RKxRzfX2y3LDN9OBEpCKp4wQG63QfqU5
-         LLHLBlg4X2laeewXHE5Sbl+95rlLTkK2Lz7RPsxETLZ1S4SP7MmgUJv5tuQ1T1ataajS
-         IBENIfZu1lZKPYV0yaR78LDPIXBscIE6u4fYa9W222hTA1HibpUvewEOfij2X2Ig9zNe
-         Ci2RPk+7KJNbQ2GZzCoj48vO4fgAvCYk7c/iZ+Zz7TAoDeQLxZeWXaSpCud5gikh9Xql
-         ou5BYVQhalTHYtNeV08CQSy47nELtLqrYgP0qKUR/80ZPHOm1brW5MamJ5GpWcLxchp9
-         OANA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhUJcsrC3I3FaQb/XLdZkQdrdIokaEcoP7EGjkAAPijSgWCzbOJkVjIIVSt4IL05FcOJAKZUysQewE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU7YtjErlfHjsnTxYUuJBCn9GwtYz5mXnpdR8QoZj0rERM2cMc
-	g5+qhNufEliyguddv7BfXNh8g+fYbPDHiQWmNdTtLQ7sXAT+HLiVFk6TbZ5A2YPlVxM8Ffkk2FG
-	bVgrBQ5YkfqtEuZ4BneVuR60aSLpF1dbSRs7s
-X-Gm-Gg: ASbGncsVJS1szQ3Y9pRjCPv60IOKZv6+IVVY4VlfyTNS0o+x/5gwrgdeEC3fe8BRmTL
-	bSfELM4gr3r/0j+DyFkofj1OiQZvh04tYlKyM+G5sgE2THBHrieAHFViyPyI7TnnLhUyfLfQZrr
-	JKvPrhzNTR/MK22Wf7sG2zuXqXy/+U3DMdYIC6qN+cUltm3/dSlOPGPQ==
-X-Google-Smtp-Source: AGHT+IFPqQhanvZUvGP0TzFL/eR5WoiUrUoN+q34bzdllgTplWUh5VMehzNTX2VYoMxRc5JUWn6sBTz6PVMB3FxU2po=
-X-Received: by 2002:a05:6214:2a87:b0:6eb:28e4:8519 with SMTP id
- 6a1803df08f44-6eb3f2e9925mr16199696d6.21.1742509246356; Thu, 20 Mar 2025
- 15:20:46 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 20 Mar 2025 17:20:45 -0500
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 20 Mar 2025 17:20:45 -0500
+        d=1e100.net; s=20230601; t=1742524550; x=1743129350;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+59sSS/+H+AM/QNXIwPCiTuvLYKPkjZvDqMYqhJDfO0=;
+        b=QEYdJB5eNk9slgPOj3UhaYxeYStURH5NaN66+/7/qTDJjz6EjHFCjwi9cswmygDm8A
+         evwnAjDEobSWiFzVEAA0xBbt37J0wwsPnozshoPhPms3HA3lOGXykz1SdWquSqavA5Cc
+         wqeYFpfKpRDJRI3yV2uDFKKMihtjVnu0ILG6mlALvKOWK2wBoPMXkrEJDCnwqP9ZT0fl
+         EDcvyh8trrZ1O83ZLqhy7Tp1Q9zL4M9rn8eEt5SwIf3B6rYrE65qaYrlxbMwcIyrLk8C
+         dXWKxVL6uKcsMirn0jLXujgXot4N7EnnFdcBXAR/00MTs7FsZ/ISNIfiZ8FXJy0zMPPF
+         5aJA==
+X-Gm-Message-State: AOJu0YxUtwXJ641SrwemG7ujTfSFgCIC/HeUXWg8d3HJuyI6Uutf7LdP
+	4rnfZh3LXmYepwkW2lHw2rNtihkOk9pbEkZ8mGSn9Ga7wLOWhvRlP8AQ+TDYhdzSzuQAXJT8gLc
+	DVRLx036ndh2Ju5jNPL1kEQ4D6QD5H3O9tkonwmHGlGBNLouJGoSX/oFZTLT6jT98dlisT9TxfL
+	k=
+X-Gm-Gg: ASbGncvbPN9mo9gB7xNg0CeLmYfIGRtiVeCeKhxon2Yn/0vL7QMMQtt1wXu8goIg6t0
+	FjoVpedcdr7Zul7D/uskuPNkYbYbKbihlSBSHs81yVwoqHVJK7t11toG9RcV1cFu8FtpiTFYkQ7
+	JHlai2Q5C6JUWW8Kr2/BF5owi6kHnTcLvn6kJdeJDbZyGLSiy4Y37egymQXK+WwHAjC6JqLQA4n
+	rl3D9w7GcttQnrgz5pAF9oIoS+xIxuWAaLlDQ0nwp/WW1HnoQCfNqYu9RaO/XPkx//4Q1VQcCZC
+	by93SweHy86QPqGi4w==
+X-Received: by 2002:a17:90b:28c4:b0:2fe:a742:51b0 with SMTP id 98e67ed59e1d1-3031002af0fmr2361493a91.31.1742524550521;
+        Thu, 20 Mar 2025 19:35:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGsivSswYTsxCGRVr+akOaH/124FWuyZyG9yFJTLTdUNp/4V3EIGzgEeFD5Wz4qmuJPl9nqjQ==
+X-Received: by 2002:a17:90b:28c4:b0:2fe:a742:51b0 with SMTP id 98e67ed59e1d1-3031002af0fmr2361354a91.31.1742524550126;
+        Thu, 20 Mar 2025 19:35:50 -0700 (PDT)
+Received: from localhost ([240f:74:7be:1:2dba:1af7:27b6:24fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811e34dasm5396765ad.199.2025.03.20.19.35.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 19:35:49 -0700 (PDT)
+Date: Fri, 21 Mar 2025 11:35:47 +0900
+From: Koichiro Den <koichiro.den@canonical.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/9] gpio: aggregator: introduce basic configfs
+ interface
+Message-ID: <6mcl34zdx37gjh3a3y4lc5kgb2vv5notvs355oewiwogpgg5g7@jcuukymbifnm>
+References: <20250315164123.1855142-1-koichiro.den@canonical.com>
+ <20250315164123.1855142-5-koichiro.den@canonical.com>
+ <CAMRc=MdOSsakJm4H5=cqVzdKDrrMFO2t-wKVWRCU83saozepxQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <eu4zyuikust6o6ybmk4f6mxbygxa3rxijylfmskxe3q7kv7d3v@bf56p3esuvqc>
-References: <20250312-pinctrl-msm-type-latch-v1-1-ce87c561d3d7@linaro.org>
- <CAE-0n50siGEgY+NQvqBdjqg-7FaqzOUR7L9u24UiUhux1uMZcw@mail.gmail.com> <eu4zyuikust6o6ybmk4f6mxbygxa3rxijylfmskxe3q7kv7d3v@bf56p3esuvqc>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.12.dev8+g17a99a841c4b
-Date: Thu, 20 Mar 2025 17:20:45 -0500
-X-Gm-Features: AQ5f1JrIyWLHcKzBqnY8aufiDIsXgNc5mt__zW6a8a9K4H11a4VtcQKPhPTSVDA
-Message-ID: <CAE-0n51R3B4HfD9dFqu4k5z6iD5dp_RGHMC5GBwqrEmx_E2fBg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Clear latched interrupt status when
- changing IRQ type
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Douglas Anderson <dianders@chromium.org>, Maulik Shah <quic_mkshah@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, 
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdOSsakJm4H5=cqVzdKDrrMFO2t-wKVWRCU83saozepxQ@mail.gmail.com>
 
-Quoting Bjorn Andersson (2025-03-16 19:49:01)
-> On Sat, Mar 15, 2025 at 12:07:14AM -0700, Stephen Boyd wrote:
-> > Quoting Stephan Gerhold (2025-03-12 06:19:27)
-> > >
-> > > Whether to report interrupts that came in while the IRQ was unclaimed
-> > > doesn't seem to be well-defined in the Linux IRQ API. However, looking
-> > > closer at these specific cases, we're actually reporting events that do not
-> > > match the interrupt type requested by the driver:
-> > >
-> > >  1. After "ok 1 tlmm_test_silent_rising", the GPIO is in low state and
-> > >     configured for IRQF_TRIGGER_RISING.
-> > >
-> > >  2. (a) In preparation for "tlmm_test_silent_falling", the GPIO is switched
-> > >         to high state. The rising interrupt gets latched.
+On Thu, Mar 20, 2025 at 04:54:26PM GMT, Bartosz Golaszewski wrote:
+> On Sat, Mar 15, 2025 at 5:41 PM Koichiro Den <koichiro.den@canonical.com> wrote:
 > >
-> > Is the interrupt unmasked here while the test is driving the GPIO line
-> > high and the interrupt trigger is IRQF_TRIGGER_RISING? If so, this is
-> > correct behavior.
+> > ---(snip)---
 > >
-> > Why wouldn't the trigger be set to IRQF_TRIGGER_FALLING, then the GPIO
-> > driven high, and then the GPIO driven low for the test to confirm
-> > falling edges work?
+> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> > ---
 > >
->
-> So you're saying that the interrupt consumer needs to take into
-> consideration any previous interrupt handler being setup for this GPIO?
-
-No.
-
->
-> Test #1 request the interrupt as rising then releases the interrupt,
-> then before initiating test #2 the GPIO line is driven high, the
-> interrupt is requested FALLING and the test is that we don't get any
-> interrupts.
-
-Ok. In this case maybe we should mask the irq in struct
-irq_chip::irq_shutdown() and clear out any interrupt that comes in
-because we touched the TLMM hardware. I don't see why we want to
-continue to monitor the GPIO when the interrupt handler is removed.
-
->
-> > Have you seen the big comment in msm_gpio_irq_mask() and how it says we
-> > want to latch edge interrupts even when the interrupt is masked?
+> > @@ -90,6 +124,70 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *key,
+> >         return 0;
+> >  }
 > >
->
-> So if the bootloader (or hardware default?) configures an interrupt for
-> e.g. RISING, and sometime during boot there's a rising edge, then a
-> client driver should expect to get a spurious interrupt?
+> > +static bool aggr_is_active(struct gpio_aggregator *aggr)
+> 
+> Series-wide: I would prefer a different prefix: why not
+> gpio_aggregator or at least gpio_aggr?
 
-No? If there isn't an interrupt handler registered we shouldn't be
-latching the interrupt.
+Actually, that naming was intentional, but perhaps I could say this is just my
+personal preference. Here is a breakdown of the function name prefixes:
 
->
-> > >     (b) The GPIO is re-configured for IRQF_TRIGGER_FALLING, but the latched
-> > >         interrupt isn't cleared.
-> > >     (c) The IRQ handler is called for the latched interrupt, but there
-> > >         wasn't any falling edge.
-> > >
-> > >  3. (a) For "tlmm_test_silent_low", the GPIO remains in high state.
-> > >     (b) The GPIO is re-configured for IRQF_TRIGGER_LOW. This seems to
-> > >         result in a phantom interrupt that gets latched.
-> > >     (c) The IRQ handler is called for the latched interrupt, but the GPIO
-> > >         isn't in low state.
-> >
-> > Is the test causing phantom behavior by writing to the interrupt
-> > hardware?
-> >
-> > >
-> > >  4. (a) For "tlmm_test_silent_high", the GPIO is switched to low state.
-> > >     (b) This doesn't result in a latched interrupt, because RAW_STATUS_EN
-> > >         was cleared when masking the level-triggered interrupt.
-> > >
-> > > Fix this by clearing the interrupt state whenever making any changes to the
-> > > interrupt configuration. This includes previously disabled interrupts, but
-> > > also any changes to interrupt polarity or detection type.
-> >
-> > How do we avoid the case where an interrupt happens to come in while the
-> > polarity is being changed? Won't we ignore such an interrupt now? If
-> > these are edge interrupts that's quite bad because we may never see the
-> > interrupt again.
-> >
->
-> Are you referring to the "both edge"-detection dance we're doing in the
-> driver?
+  Before this patch series:
+  * forwarder:        gpiochip_fwd_* + gpio_fwd_*
+  * sysfs interface:  new_device/delete_device + aggr_*
+  * platform device:  gpio_aggregator_*
+  * module init/exit: gpio_aggregator_*
 
-No I'm thinking of gpio-keys driver where it changes the irq type during
-suspend to get the wakeup event. I worry that the gpio-keys driver is
-going to miss the edge now that there's a possibility the interrupt is
-going to be ignored and we'll never wakeup. But maybe that isn't a
-problem because PDC behavior works per your tests?
+  After this patch series:
+  * common utils:     aggr_*
+  * forwarder:        gpiochip_fwd_* + gpio_fwd_*  <-- _Unchanged_
+  * configfs:         gpio_aggr_*
+  * sysfs interface:  new_device/delete_device     <-- _Unchanged_
+  * platform device:  gpio_aggregator_*            <-- _Unchanged_
+  * module init/exit: gpio_aggregator_*            <-- _Unchanged_
 
->
-> > I think we erred on the side of caution here and let extra edge
-> > interrupts through because a rising or falling edge usually means the
-> > interrupt handler just wants to run when there's some event and it will
-> > do the work to find out if it was spurious or not. It's been years
-> > though so I may have forgotten how this hardware works. It just makes me
-> > very nervous that we're going to miss edges now that we always clear the
-> > interrupt.
->
-> I'm not saying that you're wrong, or that your concerns are unwarranted.
-> I wrote some simple tests to validate the behavior I expected to see. I
-> didn't expect to see different results between wakeup (PDC) GPIOs and
-> non-wakeup GPIOs, and now both passes the test case as written.
->
+Do you still see the need to change as you suggested and send v7?
 
-I suspect PDC based GPIOs are working better because PDC sits in between
-the GIC and the TLMM hardware and we actually mask the interrupts in PDC
-properly instead of letting the summary line toggle all the time. Thanks
-for writing hardware tests in KUnit, it's nice.
+Koichiro
+
+> 
+> Other than that, looks good to me!
+> 
+> Bartosz
 
