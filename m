@@ -1,100 +1,99 @@
-Return-Path: <linux-gpio+bounces-17857-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17858-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F16F3A6BB49
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 13:58:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFD50A6BB52
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 13:59:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D5BD1629EF
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 12:58:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C54F1895228
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 12:59:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D05F22A1FA;
-	Fri, 21 Mar 2025 12:58:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 597CC227EB6;
+	Fri, 21 Mar 2025 12:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="r46ZbeFb"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="kMeDgQ38"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C682A22577D
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 12:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A411C2DB2
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 12:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742561891; cv=none; b=R3nhJEqbwF6+OC6dI8mL5Zv3iu2HNhDaR5qfuwlXCV7Ky7G2kRqUjgaE6ejpe3w0ybS1hWD6m4LUZZwDBj7qdJF0dQGoUTRLj+eRNhL1GAqv7CBn+mV0vRD6yUvrJfqvqb+sTzSVRlWto5P4mh5ltfk3hTCAKCW4GtzWfC+AZ34=
+	t=1742561945; cv=none; b=bEOWZC89TQcAKQl5qoz9cDtPic2kC3JgAozqD9I7Ta3iePHutgnn5+gzsAC8nqCBZrAAgyUjAa1aKMBRRU81WHbNzKLKBMNwXw+AKEot0nhguPt+rt8Xro5J/UWgU+ePLZ3ifOuPGmOeueVbSiTxcuSwf9W72lFt+hVXiBkIEsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742561891; c=relaxed/simple;
-	bh=z280nvWzjqH8OYHL1W8OEOgilfnYgC2eoWxNHeg0wg8=;
+	s=arc-20240116; t=1742561945; c=relaxed/simple;
+	bh=2AypnsfEZK0HQE0xayGd1WKAB0ro1U2cwGWl6BbqFRU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oCHUyE2TajY7CjQy49+ErCV44pQIBj+4PdCUbJ8IlV2DfIZMcyshkJm9G1YwBxZuhp5vSu6hkchhuwOZ4q410NUQwD3Ddl5AlzWlyxoU8nTadBuvvX82QL/+71SHvDCe8jFyD10vbYNx8vyCgNT7JtqK+RdgtItAaJZVznEzDSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=r46ZbeFb; arc=none smtp.client-ip=185.125.188.122
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xs7n7u4NrIoCKjxyfDK9TXCVGW2awwK2iFjJQ1DEikX6XT5MrR4eYHm2XN2aRBettjF/3EFzyArwGc9+tqTAwT6I4NDxaNStD8MaQe93JKzhiRm4dyR8BHAtyutrbQeeCyL4yDaxWblYs+eVm2wPjwKxDsOfDgBHA9YzVuXCUIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=kMeDgQ38; arc=none smtp.client-ip=185.125.188.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 308333FCD3
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 12:58:06 +0000 (UTC)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2D4F13F322
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 12:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1742561886;
-	bh=X+ZxtkB2s36Lzp8qMWZfvuM9LlrSk+y4q9/dnnBXlIc=;
+	s=20210705; t=1742561941;
+	bh=Ur9GZcKoz9oFVWJP3Qo6Cr98Nr93p5FvgDanizSXDfw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
 	 Content-Type:In-Reply-To;
-	b=r46ZbeFbaQc2s1U2rGVptHh4X3X4AcR1SpsE+LgaJd0z2exSuBYYFC4uCNES1NDIG
-	 8x99jE0tUC7ShekFzwSMcfgZWs6v+Cq+BXXyfpymJ/ykGuf91IDAQzqVzcyovf6wL8
-	 G5EUubddt8G3iQ9KUW8jDoZEOnyhsOxpF/R9spN04fo2rdtbRJFSKqXN2Eg/oPNeKf
-	 Qt7Uy7XauYqEW67lipH3qYdhlcdg4FasUhOC0xmBqAHyE0GbIMxmKNeDCXBZ1uwq+z
-	 H8Jr+DuGsVPYfiCiuGi7baMab42ye5/N25NKu6piY2CxyDVONDKDHYApw7TwmX+U9E
-	 mxeByENxtwXjg==
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so3121279a91.1
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 05:58:06 -0700 (PDT)
+	b=kMeDgQ38tOBJae8HajjVQQoM7zCGEt6Z1j2fYTHu8PY1TEguiiTjr9ZbI0EmjHR+C
+	 X+EM2IFDWs1uSWusx/JPf8zZuBvb+ukZsuy/nN47hd1/uGK+IuMY4rKIwY76U0Kpp2
+	 B2Vdf3EaWV8PVQgYINyTCKvoq1cjkzMYZ6rdnIGwT//Wo8/iTKTICFiUVmsCDzxHbL
+	 Q6oIIJoySbTh0azwY/D7H13euW9o7+1blQ4ZdyKer8BivzAREvX09oWs1/J1fCEFcS
+	 gHtDWTtbX1IaHxcJD/dNhNv9E0SDNBFrXZUjzR8k4ccQpkP6r64ZqpWOc0me7NqzhG
+	 oa0ZhFI8tDbSA==
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-224364f2492so28452785ad.3
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 05:59:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742561884; x=1743166684;
+        d=1e100.net; s=20230601; t=1742561938; x=1743166738;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X+ZxtkB2s36Lzp8qMWZfvuM9LlrSk+y4q9/dnnBXlIc=;
-        b=cbtl521PB8DgfTTn98BSVY9CzCxOIUA4TOKgbww8MraGYa2/49++WGKtK/x2HAzoda
-         dDXiNxsd6Sb4TsyRM3ZmXeUkIxw3cHJmDVmqaPNkxvDdJ0zQVRvvQZOzaN9JSkGcCUtJ
-         6f1rSZhikgReXNQDpIUjte2fpLm2s+wzuODBpvGtPbUBVaVv0lZiOZmZunQrhO4CIavx
-         IBFODYqRht5zz/eXX7Lh2eWj0N2feeFCOHDMJ/lZXz6Iie/OT6xjgxJY2O8YKu50jCbR
-         zi7Wpp/5AtrM5S73t1UFFtMtlAzgyHxxuyI8NTrE4eSOpo5+6qAvi9r9JtbkmITGiJrq
-         /9nQ==
-X-Gm-Message-State: AOJu0YyZKnjlbCbsYFk2Wi3P+FsRHx8YGieBaTcuR+nmlPX2ITHU//c8
-	zaRKGaxjpB20sTghLbBzbNcLO10bfwB2A2WrcHjErECVoUv2/HMc79DFVZl8reqvM+UCeMt3xxd
-	44hfWtDdPEKRTY0fitK0FnBpy6cidMVopOPiKVkkSFWogzYcuSy8I4q0nbnw6k6QtIGhE29Msn/
-	hVNxfpPps=
-X-Gm-Gg: ASbGncsI+k1DFW6s36GmMoJ3F2AyFO81LJpYLcrLdIfNTJtJFTaraWrM3PoisyswJ0E
-	vjFAA3O7kBPfT1wY9jzJwSBx0WDBGasrSQ/m3KyuDPBqWIu3/4lI2f6pciaksQzCGSMbygG5CuE
-	uJsHPnib35qWH6P9eBDNjbZxj4UOwyps5x4GQfaZfCY360M3Zr2mQ19f6AZ1pFGpqX6iGkyaOqw
-	JKAxG7JhWxyTX4dnlBm8acOITnYRIkkRxQoTD1LaQzURVDYAITaqcM9tfelEnKRHF3oHNzkj2Uv
-	SqBBBsAwGRDUKZLXhg==
-X-Received: by 2002:a05:6a20:12d4:b0:1f5:7ba7:69d3 with SMTP id adf61e73a8af0-1fe42f2c7d7mr5640355637.15.1742561884002;
-        Fri, 21 Mar 2025 05:58:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGAEIXvDR9YkcYynUamT4Rrj+f3xywPdxSw4vlWDu7dDWi1/XRMEfsrj2VE7GMw5RZlAgHBMQ==
-X-Received: by 2002:a05:6a20:12d4:b0:1f5:7ba7:69d3 with SMTP id adf61e73a8af0-1fe42f2c7d7mr5640313637.15.1742561883547;
-        Fri, 21 Mar 2025 05:58:03 -0700 (PDT)
+        bh=Ur9GZcKoz9oFVWJP3Qo6Cr98Nr93p5FvgDanizSXDfw=;
+        b=huUwSBCq3iORtmBRzqIt6AnJTZyBVklNivFxgZvlQwQEa4lgK2Iyy/u9S6gwRrri0b
+         bxDHSBNk8PyobRbkQrkNClt0+qqF375nwbevMvC7AIQ7pDGgTgFatZBn62vCOTqKAwWW
+         gV0Def9MBfv7omf0slEPvBPKifWRUcvXIP1OIBqGMAhXwmczy0w+OqxtObSaNv7MN7ym
+         +B7zwmoQmIoRd5IOQ2eej1rw+ARK/jnimFOu4WF8PN8UYqVmjqFps1YF2tXXAMF2tVnm
+         dkngGa6mLcMRqG/CFTwV/yCLG9NQ6hYE41kexrF8e6JWlk29Rn755ezrfyjhuGMUgSDV
+         yUUA==
+X-Gm-Message-State: AOJu0YzQISCK3Fs7w6jqv/RH7GxZdPLilNcRBwgiKwDTyF0BA6y5ITqP
+	IxFfvS8ZZtc/GA6gcgSVfbyup+zEDyVDo8shhaf4lotal0DCy0Agf6Ykmw82oggccTqJP8nfFzM
+	iuWiHvRFhYCHZvDOM8EHV064S9IzF32nSfVzOkPKqSrizeVuvDrc7APE34SWAnryr5UjSUNZlN/
+	c=
+X-Gm-Gg: ASbGnct0iKrrXQOERjg0t8MRD17sdcxHPos305IJELgkpXmadfRfqNMSbGBFLDKpScI
+	gZri1FJulfbpWqEBz/F6FXIrtjCVSy1CkDyQB90EBA9p1Je4FwdyuMtTNkUgzrUki1a9VmY+1GP
+	pJ5XmuMJ0DJYlHBnc5eOiOtUIW2z7gPyWKZrzBD79ZPPoVYvGjcG1SJoskVqyvzMH1WVNfGciaQ
+	36fmwAq+SSzu8IopxoC6P4IhuiSoAMBdzWD8PZows4fa34OGUb0Ad+F/R5fShmnOSMDsvKV+Z/J
+	S6AvJORKioCDx65y6A==
+X-Received: by 2002:a17:902:e846:b0:21f:6546:9af0 with SMTP id d9443c01a7336-22780e5fee3mr50369015ad.44.1742561938503;
+        Fri, 21 Mar 2025 05:58:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEj/3qxzpE7Sgmb4xcUIB8XVrV4316tAaPXM0uLVUpdJEWI450/xgrnX3VW3Bzmy83Kdd+Hrg==
+X-Received: by 2002:a17:902:e846:b0:21f:6546:9af0 with SMTP id d9443c01a7336-22780e5fee3mr50368745ad.44.1742561938229;
+        Fri, 21 Mar 2025 05:58:58 -0700 (PDT)
 Received: from localhost ([240f:74:7be:1:2dba:1af7:27b6:24fd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73906158066sm1770268b3a.150.2025.03.21.05.58.02
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811f6549sm15521175ad.208.2025.03.21.05.58.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 05:58:03 -0700 (PDT)
-Date: Fri, 21 Mar 2025 21:58:01 +0900
+        Fri, 21 Mar 2025 05:58:57 -0700 (PDT)
+Date: Fri, 21 Mar 2025 21:58:55 +0900
 From: Koichiro Den <koichiro.den@canonical.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
 	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/9] gpio: aggregator: introduce basic configfs
- interface
-Message-ID: <ufka2h6gbtjdvg3fokmhx3ql5h4chrbu7cooi6ej6vhxcblrog@j4gxuzb64atv>
+Subject: Re: [PATCH v6 3/9] gpio: aggregator: add aggr_alloc()/aggr_free()
+Message-ID: <zyao5vbhjt6o5duickgtgknou7j5nalyfa3nezgga7qzmmzkva@v7cbkag6yxm3>
 References: <20250315164123.1855142-1-koichiro.den@canonical.com>
- <20250315164123.1855142-5-koichiro.den@canonical.com>
- <CAMRc=MdOSsakJm4H5=cqVzdKDrrMFO2t-wKVWRCU83saozepxQ@mail.gmail.com>
- <6mcl34zdx37gjh3a3y4lc5kgb2vv5notvs355oewiwogpgg5g7@jcuukymbifnm>
- <CAMRc=McpqUsEsMSfwo+WrzWdaW6YnMbptpj3fAoS-JfVhSm9mQ@mail.gmail.com>
- <oneoncbyv3iwb54kvjvmerv4xxhixgeqp44ubeikvy4yst3az3@g5c7uxgkonbx>
- <CAMRc=Mfg1aNUQ+HeJurEH15+6e8dhmDS480SLOcmwOGP1u+iyg@mail.gmail.com>
+ <20250315164123.1855142-4-koichiro.den@canonical.com>
+ <CAMRc=Md8nB1U--qcZxpcKVzxTcON2hi-pmsUKFn+aBEqHuBzcQ@mail.gmail.com>
+ <llbybv6dpkfrtir75dveqnphrj6nuephvkoyywy6tx6vfbunl2@ft5io3thby6v>
+ <CAMRc=Mcng+jW2WrAREOf-GC1mCbGEyAiMP_Ms9B3BzXnCoFGFQ@mail.gmail.com>
+ <t4lng24vhim7pid6c5gafdk3mawnvcit36hqsa64qoe2gozdz3@jcjsh5b7c3bx>
+ <CAMRc=MeLkqM_Fhfdvi_aQp411WEJagP8GSwpFaKNa-s9BJbrCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -104,58 +103,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mfg1aNUQ+HeJurEH15+6e8dhmDS480SLOcmwOGP1u+iyg@mail.gmail.com>
+In-Reply-To: <CAMRc=MeLkqM_Fhfdvi_aQp411WEJagP8GSwpFaKNa-s9BJbrCg@mail.gmail.com>
 
-On Fri, Mar 21, 2025 at 01:42:49PM GMT, Bartosz Golaszewski wrote:
-> On Fri, Mar 21, 2025 at 1:33 PM Koichiro Den <koichiro.den@canonical.com> wrote:
+On Fri, Mar 21, 2025 at 01:45:45PM GMT, Bartosz Golaszewski wrote:
+> On Fri, Mar 21, 2025 at 1:41 PM Koichiro Den <koichiro.den@canonical.com> wrote:
 > >
+> > > >
+> > > > Thanks for the review. Should I send v7 for this change?
+> > > >
+> > >
+> > > You should send one anyway once v6.15-rc1 is tagged.
 > >
-> > Actually I wasn't aware of [1]. So let me summarize: does this match what
-> > you have in mind?
-> >
-> >   Before this patch series:
-> >   * forwarder:        gpiochip_fwd_* + gpio_fwd_*
-> >   * sysfs interface:  new_device/delete_device + aggr_*
-> >   * platform device:  gpio_aggregator_*
-> >   * module init/exit: gpio_aggregator_*
-> >
-> >   After this patch series:
-> >   * common utils:     gpio_aggregator_*
-> >   * forwarder:        gpio_forwarder_*
+> > Alright. Please let me confirm:
+> > - After gpio-updates-for-v6.15-rc1, will something like
+> >   gpio-updates-for-v6.15-rc2 follow?
 > 
-> Best don't change it in this series unless you touch the code. If you
-> do, then yes, gpio_forwarder_ works.
+> No. I'm not sure if I made myself clear. This series *will not* make
+> v6.15. The merge window for v6.15 starts next week. I'll send my PR
+> tagged as gpio-updates-for-v6.15-rc1 during the merge window. Once
+> it's closed, Linus will tag v6.15-rc1 and we'll start a new
+> development cycle gathering patches for v6.16 in my gpio/for-next
+> branch. This is where your series will go and I'll send it upstream
+> for v6.16.
 
-This patch series does not touch GPIO forwarder code, while touching all
-the other things to some extent. Ok, I won't change prefixes for forwarder
-codes.
+Alright, that makes sense.
 
 > 
-> >   * configfs:         gpio_aggregator_*
-> >   * sysfs interface:  new_device/delete_device     <-- _Unchanged_
+> Only send v7 in three weeks, after Linus tags RC1.
 > 
-> Do change this one to also use the gpio_aggregator_ prefix.
+> > - If yes, after v6.15-rc1 is tagged, I'll _quickly_ send v7 rebased onto
+> >   gpio-updates-for-v6.15-rc1, right?
+> >
+> 
+> No, you'll send your series rebases on top of v6.15-rc1 tag from
+> Torvalds' master branch.
 
-Alright, so what you want is: everything except GPIO forwarder code should
-be prefixed with gpio_aggregator_ (perhaps except for some small exceptions
-e.g.  to_gpio_aggregator()), right?
-
-Thanks,
+Alright, thank you!
 
 Koichiro
 
 > 
-> >   * platform device:  gpio_aggregator_*            <-- _Unchanged_
-> >   * module init/exit: gpio_aggregator_*            <-- _Unchanged_
-> >
-> > Thanks,
-> >
-> > Koichiro
-> >
-> > >
-> > > Bartosz
-> > >
-> > > [1] https://lore.kernel.org/all/20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com/
-> 
-> Bartosz
+> Bart
 
