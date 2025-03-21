@@ -1,80 +1,79 @@
-Return-Path: <linux-gpio+bounces-17866-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17867-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 912DDA6BEAD
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 16:50:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F6B0A6BEB0
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 16:50:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E59FC3B8387
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 15:49:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CBE73B8A60
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Mar 2025 15:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC60A221DA1;
-	Fri, 21 Mar 2025 15:49:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC54227E99;
+	Fri, 21 Mar 2025 15:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xtcma/df"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oje+pfty"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2981D6DDD
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 15:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EB64A00
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 15:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742572191; cv=none; b=fsEENuTuB9hgdyBzDyykZifj5XGYb2ZXUSp/vVyxjsH3OtOjJmCi1lYYzdWCkPVjK+ZTNr40dXtYrLRapTSmC5Sin1OblSOeOncciOmP86tB+bZfIeWYLPr7UyNHewzO+ffTfxnf/jvjReNOkW+HIBT/FN71qWxHPFyy3Lyaa+4=
+	t=1742572193; cv=none; b=cal8LpskL0rM6SV3gP+viMvIPsQUxulLC7ZO37XE3I20p5REMb/lNolra5hWnyIvDHrggom8KMEx3vldcncVUUDMOJ7u2p8hmL/G+cFPdrbPgvzAmcaB/vSsOycmcGFUaOTyozS0Mlaehk0D4zwvdP8WYzmpO7+U30X8NDgiXlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742572191; c=relaxed/simple;
-	bh=wCeSz2KOSGVmdMZOiZU8W8jgejAZEJTjS3rVeVs1xl0=;
+	s=arc-20240116; t=1742572193; c=relaxed/simple;
+	bh=xfFNU31W60ls5/B0+qZld8bL1H0RP3qxyrF5eUJ3AEc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ll0lqgr4T0NwVdeEY86jl2+EyFnDqs0RxB3jqmzufOUWYDnfI9hatCy0pDOlinoV/leIB9Mxf6FK5JogECiuvnkHX6ioniaf9Yqo+stCNgnaVeDAqjnt+W/Fa7whflcs9YocmnZMy3kfwZJ5dayPrRwYqKLkuJPFIa4+yrejDng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xtcma/df; arc=none smtp.client-ip=209.85.221.46
+	 In-Reply-To:To:Cc; b=eanE87n9cuyknDvxLouMjuBFIQkdyQR5daViPN/+Zqzstr4G76V5KQTsJw204ujhtZbdPj5omDGdAi3p0JtJXkVAJAd5loP/kiBMGFJzH2V25idxn3d8C0Bm2HdpdQQ3z80YLlF9wDjAhu3Q6Qz5vlH5aS/1u0i89fhJcioSxjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oje+pfty; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912e96c8e8so1317585f8f.2
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 08:49:49 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so12777155e9.2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Mar 2025 08:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742572188; x=1743176988; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742572190; x=1743176990; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SWFCHXs1mgub0TbB9Hn2Mniy/vRwxESdKz1h7VjDaWc=;
-        b=xtcma/df3IUcWr/xqv1jO+TTFDN2kw45cPh3pTCgvBB2ZwrEaFgwXmZfobybwtK1Go
-         Z82FGHyjnwXJezDXymgFL0AABkl9oFR5R6ehOCDxXusa9yLxW6NAuFL5yXjjMdhHyPhG
-         DpZxouqJvww5ESeWPCNzqi17z8knE1IQzG3vIav1x1ekwWQa3v7aY+BOG4zHa+ng46Nu
-         +Q98p1Ecf2gOtxy61NmUsvIcC1pY/rlIkuVl6EJRp1iNSuuKKQQdinNdDpuw+7Rj+nqy
-         8QSxylatQPMLEeEjIYBH8FbIEhiQggWfiWu7IkDo/M5kOQeCKxDX4x4yPts4Aa5uuX5P
-         Grlg==
+        bh=HWUyEMW5KQjAKQoUCWTi97VpcXQaHbmA9ju/RhUyagc=;
+        b=oje+pftyFAgF5k9UaDWtv/TAD2ZW0pic0er5NMUutxsfDyKFHKpKiyPCknj6BD3Nh4
+         A/3N+kejgT+qBM1dxDSRLpHSZJcA2MfOqkDVIeMOykGyYmR6yj/685GaPl2Ds0zT/l86
+         rHrZsmDND0U9tpnTIfUmgbhxEwPx073JTWC14lsu5OEXHUQ9J1PP1/oZo2wYjgXNgtJi
+         T5XvwYfrROtHA5Zha5tjqebslMlXG/hrK7o4pk4nr/uYFLh3Ft3MnOEg8mk8xbw+FTqi
+         IcJoUqVL68DUTSR2QOuJRYcJ6rYaXDxf+xDk/Y70XjaCUNic7PfS6YBoOj7pGvaGho/E
+         ImkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742572188; x=1743176988;
+        d=1e100.net; s=20230601; t=1742572190; x=1743176990;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SWFCHXs1mgub0TbB9Hn2Mniy/vRwxESdKz1h7VjDaWc=;
-        b=VoZsFpT+lYs+GfzayYOxLtnIoUeAdb8vgW4acTOnHJ5bFuXah9GDk5y1YLB12yE6BM
-         mnpgUPrTCb3QvNnFi3INSXCsSlYJNnx7VmVv1lQ44/F6tr6t9oslDojkiJsmSB4aHgLC
-         qxUhtdssEJHrvEy4IWBz7Ix09RIU9h6TMZjp7fzanpt/4b+moZaZrKnx8n+NRsDGEMCQ
-         dx/4T4yxmHe6upnWcmDaY7fzH/3AGR5qx02kZfHaPPrOAfcEY2Dr5XthRrfm47sCKgaH
-         mUGZcfTZhA02eNwxS1ArHnyYC4DOb140CO3q+ww/0cMkvXUEWQGJ9R24J6KOYb+wpSbZ
-         tdwg==
-X-Gm-Message-State: AOJu0YxEvP/6ys1SPCB5XVQRXPlAKb5r6A62pahoKbkFNR2Qx8LgGfN9
-	FcgGDPyVKQ4614w30YB0BD5C8NQwOvIlv+x9sktChPirMhRFvplZjxyRpREJRzu6qDBDohQTwqh
-	D
-X-Gm-Gg: ASbGncuylXcYpT1SHmbLsnxvahnBkLM8NcjFTAEduODR/5RdwEt8vqBaXO/+fx/JWB3
-	nwKc3RzHSoA9xpaaau3IVke+8yOJ72VhTNVfVjsfcI25nAC8XoLdMXLR3Cx6+auNJYI+Hr9PiNA
-	W1X8U8ckwlMyT0ra5mtdy0KAMNH3LtC8eTgGz/h7MD+uT5him60NQCf0p1RBzcIqvjLHmOLv8vu
-	FkOJr1KhVLOu0T9tKOcQJVeMTW7TeHp2PJBcmm/ZE9YgVRsQ9sSQOB8dnxMc4fkcRWeScEg1QL3
-	FmPXybpbZwt2Jp3D6pRNelCKOGopj4qo/JMqhQ==
-X-Google-Smtp-Source: AGHT+IHhtq1BnYFSnAx+hQUldveVt8mQWVWOnxup2iKacPQKCdLxIWbQZ1BsfJD3AfGXvy0PBof5Ig==
-X-Received: by 2002:a05:6000:178d:b0:391:2c0c:126b with SMTP id ffacd0b85a97d-3997f909b3amr3044992f8f.23.1742572188033;
-        Fri, 21 Mar 2025 08:49:48 -0700 (PDT)
+        bh=HWUyEMW5KQjAKQoUCWTi97VpcXQaHbmA9ju/RhUyagc=;
+        b=feoxbRaq5CtMkQk43NqcbRn9FkblgHqHC7nhx9JLfBGLH/71fVPz25qm/2NqwjlkL7
+         SE/LlKXuP5tWUPujyCzM+NgL6DQbp5ZyV1pJ2otAgGDjnJe/7s2O+6Ah5FSjXj0oKNyh
+         9nu4kq58nvxWqAhpxFZW46+E/4RfNAjrhoqujCgAXunPCUbu/yyNAu67sXDM4eD/zkxD
+         aytED7Ekyd0lk4w1tj84cfw3qTd9eryalQ44+IbCMPyXR9G/RH0nJ0iLaHH+EDkn2TJA
+         8DSHO9x+A12nw11Gh4uaf0DCZ83A85Yn+hf2f32sSE/7Vpe9m8a8T2F9UAvlULH7/2LV
+         D3GA==
+X-Gm-Message-State: AOJu0YyH+JR0qwpiV9sRLg2PMDzJ7U6aoBZJNfVO1fk2aFV16qqZeroj
+	uMbZvuEticuLeOznXjHt9NjAGd2GFlJewaCtTXsz/wjoghlGvy5YcI0NOuuJ+X0=
+X-Gm-Gg: ASbGncttbeKpeGWoXKcqo0xt4TE6NdychvqU1XOap6Y1VKHESX/wVUCMz3D55YZ37TK
+	qKR1g5pfjW0CdDocE1n4pjsTGiTE+t7HD9WJU9iKToUtpc4BJmOFghBNgVzwDaTIGgVySyaU2MU
+	gtZdSJngteuHiaPRzaJI7RrwhVFBjx1amtY3S7oIOJ1LArhslbS3q9Rb/1MLWEFM2OSfNabisdO
+	AUGEeOcpSQroY5BnTWfbYshVxNZcYsoDtFciFvn3BZEXOhfCx1vKLhdNcrCWrGQ1WKo7MYT9q4g
+	K8/K+tl6hZbI5u4+sYctT4QPYU2VZTkmYIHjrRorzfL4JkIC
+X-Google-Smtp-Source: AGHT+IE9lsPNP1ZpJFXQ7VFz7zhG//tQlNCV7FJUrZF3RN9Uf96S8er9qf9JKofSiXbIQXaI/6aa/Q==
+X-Received: by 2002:a05:600c:34cc:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-43d50a3cb58mr36631715e9.28.1742572189203;
+        Fri, 21 Mar 2025 08:49:49 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:1aa4:f3ec:847a:32d1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3b4bsm2664406f8f.25.2025.03.21.08.49.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3b4bsm2664406f8f.25.2025.03.21.08.49.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 08:49:47 -0700 (PDT)
+        Fri, 21 Mar 2025 08:49:48 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 21 Mar 2025 16:49:34 +0100
-Subject: [PATCH 2/6] gpio: TODO: remove task duplication
+Date: Fri, 21 Mar 2025 16:49:35 +0100
+Subject: [PATCH 3/6] gpio: TODO: remove the pinctrl integration task
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +82,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-gpio-todo-updates-v1-2-7b38f07110ee@linaro.org>
+Message-Id: <20250321-gpio-todo-updates-v1-3-7b38f07110ee@linaro.org>
 References: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
 In-Reply-To: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -91,55 +90,70 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1024;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1896;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=3OXtQ/TM3u4P6aWQ0VLana8z2BYniuHiDEU4Ow69oxo=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn3YqZAtbyd4w8ChdhqRb6d9B1Lx25V2PE39afQ
- GvVFC3Q1oOJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ92KmQAKCRARpy6gFHHX
- cibgEADWd2wS0zrLjqLVLT88hL0yhhDlmU6PEog+zjF15b1fZEAaK2DgSRBGGibhLDlCfzKgSXj
- 07yuSf+zDdWSID976vbSHT/QTqWiFI4EWkToYXzDgcZx5EmH8qXGGgfhx/vvPR1awBUYrQL+2jU
- 1Yb62BXMMq+SPiNkb7XAtjTcJTif0WYSPKsj+HvFAMXtLvOM47U3MEYVrDAtJ7/C5XCqyK9Nbeb
- xfUFD43wi7TCMVq5kE6ghFvf/vnNsayItrnW08LKyhL/FEM8vowJD0KpDxjVld/fGtdjBLdg0+F
- yg5AgfAN16UHPsicmfzDo8wu74L1IZAbB4jYyW+hmVBYuhUxDCwxp6fJmkdwlxYFFRIDmMuIDOs
- NnjKSx0YDLHOMzZ227DS7ze1otfjChmkbCdU0A4Z7aEQi0o54rT9sFRwcIRa758aaqxeoL/PYdH
- m5h7UkXDb9JnGlOWijZI5pM6JRGxdsipkYNvoyooOa5DyXQrHGt1LONewNMF/qLTHy8gFNKHyHW
- gd6tKPVIyjznUc1sOjVtF003zm9V5ruLsRdjQbyb+tTRQyp2dztetRD0Mlk1QMBWriuJIaibZHd
- C1LddJcPlt7PLzL/lpDofCOuOpFE0j5cdmr+MF57fuv6BpMAhN7XbFPgKdUi0KdU37aHmRxlPb0
- LSJUxIRbU0s2xgg==
+ bh=VovuR27EPmJKuj6f4avilmOJ1pGh2kyGMd0etNsaBCQ=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn3YqZ1tkYpRWno3Z/Y7xshya85wixSLxYkf9iP
+ ifdoWP+JJuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ92KmQAKCRARpy6gFHHX
+ cjfAEADAGfmoFuMkJrBJZEyLGkaBMd/6Cj8ZPvX58vT6O8BaGZkaC+lBSp8InOv2z9XyVJyS10n
+ GNl0DTkFCxVIhrNv5VZWVHEfgwlGD5OH4+vrDAzgYm2Aw/bkFG1d0Emq8972i4eeAHswc2WZN4c
+ EOpQuAgr7dShPxj7rSlnjuxfFbruv/GOfrIhN0slV+RAGLQjpVfwEz1W5+e0eIP8MHFMuMP9j8g
+ nXOYAAF1ieiCBFQ5JQU+9LxE1ZV1QDYvBAJ26ebTY3t4t3bvyAi2LNKs+1k+4l2klCi6uNevlGM
+ AQhTYug1G8IMIotFTA3vkVmqAcPH3NRuyADRFyyarWcNFJ+Wlx6dSrC+ZCzJ1Utgx+WnaBv6IzA
+ 0Z0j5q7DnE6UNW4KXIa9CrREOP0b4StVrDFZZYIl+1YPoDS6MxHNxnnon3vaY7Dn/lSZQ38Lcmh
+ fyvpJxrDFzRqXh9qjHJfT9bwKy7ZF+XS9WJDayximKvpjLY9ykW2mJEpXrV0ZOJd74W08MOJZm7
+ zdnBTgKAz6YYMtM1FG+pOvB23e4U70ONxP5erYWarNlPiLfzzm98gO1ZBoFyc0ikQgdXOeQLoP0
+ ypHEf++QEq8mhnowtadu9hHDEdx/f//Hg+9C77sTIEAIqlHwD4stlkBOGOTBG1O2eQ7UeX48h3F
+ E4lyHVDbMnvAhKg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The removal of linux/gpio.h is already tracked by the item about
-converting drivers to using the descriptor-based API. Remove the
-duplicate.
+While there are surely some arguments in favor of integrating the GPIO
+and pinctrl subsystems into one, I believe this is not the right
+approach.
+
+The GPIO subsystem uses intricate locking with SRCU to handle the fact
+that both consumers and providers may run in different contexts.
+Pin-controller drivers are always meant to run in process context. This
+alone is a huge obstacle to any attempt at integration as evident by
+many problems we already encountered during the hotplug rework.
+
+The current glue code is pretty minimal and for most part already allows
+GPIO controllers to query pinctrl about the information they need.
+
+I suggest to drop this task and keep the subsystems separate even if
+many pin-controllers implement GPIO functionality in addition to pin
+functions.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/TODO | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/gpio/TODO | 11 -----------
+ 1 file changed, 11 deletions(-)
 
 diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index 9cf7b84cdb869..ff955befd0ccf 100644
+index ff955befd0ccf..08ff60c65abbb 100644
 --- a/drivers/gpio/TODO
 +++ b/drivers/gpio/TODO
-@@ -86,15 +86,6 @@ Work items:
-   CONFIG_OF_GPIO_MM_GPIOCHIP from the kernel.
+@@ -136,17 +136,6 @@ try to cover any generic kind of irqchip cascaded from a GPIO.
+   dry-code conversions to gpiolib irqchip for maintainers to test
  
  
--Get rid of <linux/gpio.h>
+-Increase integration with pin control
 -
--This legacy header is a one stop shop for anything GPIO is closely tied
--to the global GPIO numberspace. The endgame of the above refactorings will
--be the removal of <linux/gpio.h> and from that point only the specialized
--headers under <linux/gpio/*.h> will be used. This requires all the above to
--be completed and is expected to take a long time.
+-There are already ways to use pin control as back-end for GPIO and
+-it may make sense to bring these subsystems closer. One reason for
+-creating pin control as its own subsystem was that we could avoid any
+-use of the global GPIO numbers. Once the above is complete, it may
+-make sense to simply join the subsystems into one and make pin
+-multiplexing, pin configuration, GPIO, etc selectable options in one
+-and the same pin control and GPIO subsystem.
 -
 -
- Collect drivers
+ Moving over to immutable irq_chip structures
  
- Collect GPIO drivers from arch/* and other places that should be placed
+ Most of the gpio chips implementing interrupt support rely on gpiolib
 
 -- 
 2.45.2
