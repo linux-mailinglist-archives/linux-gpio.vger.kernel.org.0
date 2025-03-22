@@ -1,85 +1,86 @@
-Return-Path: <linux-gpio+bounces-17878-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17879-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B4F4A6CC35
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Mar 2025 21:29:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7ABB0A6CC41
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Mar 2025 21:30:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 03EE87A5CA0
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Mar 2025 20:28:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07E741888006
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Mar 2025 20:30:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9750D233729;
-	Sat, 22 Mar 2025 20:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E35092343D4;
+	Sat, 22 Mar 2025 20:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HxFysXxh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tWEKMJvQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4272191F7F
-	for <linux-gpio@vger.kernel.org>; Sat, 22 Mar 2025 20:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0ECF158D8B
+	for <linux-gpio@vger.kernel.org>; Sat, 22 Mar 2025 20:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742675348; cv=none; b=L2I1UFR1fcIkZ6nnm8jEd1ziFZSVIiPKIK3tKOLhMu3R47lvoEoyBqXU1H6j+VOalL3bdcGqonBSJP3OB0xk0hsUB/wAS+QE2V3LPxSCy2HvRlnWcepOX+P1B1/oZxY0JzzV9Tl2ohuRCILatYym6akSfbFD9/SoKWkYN0eEklo=
+	t=1742675443; cv=none; b=iduApMdXaGOgjGIu5lr0XluPsq1jO5F2/GXin1TI8sDLtKme+cdsRfd35fWcMY7ldspk68LxrEmGBVYtp7cJGtqsDR062Q5zEKeaCssTPzLUZzxTxt6RwM1mlaA/seBh2RSilsCAxQmRn3LbLq30zgvtnprdJZN5ESjh7Cahbnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742675348; c=relaxed/simple;
-	bh=KHWFdlZ5NopWz5JtmK2NAcSudHEsFBasqGr4YPt9k0U=;
+	s=arc-20240116; t=1742675443; c=relaxed/simple;
+	bh=xAH+X0TSigWj+DvmaHEG+ngrQBhPB54MrJD5OazRsak=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FqovN4E8FRqdRN2C92okW2ty5FCd28qxGbvvoMampDQtv/Ffc3WbOssBFQmOPimgY+PHock1+IDqQ9oB3Q1PO/+zs7fHuRuJTkflGdBC7KzN8mGOuCPDAUOi/qCO4YXEFKiN/kzulNslYdlxKeCI9/xGbFMueD481ugQ+J4E/eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HxFysXxh; arc=none smtp.client-ip=209.85.167.42
+	 To:Cc:Content-Type; b=BJZjxScCIGVknmTt0ZOHwA7HSbAO8ODTRggDrSmKr92OPa2zdS6LZLV7efgugUPUX+rNjNMWYN4UV23fJAmOM8orIwgGfRizXShU/CvRsj3OdEDF/EqX6CZZBhySbmvbm8aoJKbxIJmBw2YbbZUHVmWGeIewd6nhaIWgE2L/z6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tWEKMJvQ; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so3559518e87.1
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Mar 2025 13:29:06 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so3242733e87.2
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Mar 2025 13:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742675345; x=1743280145; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1742675440; x=1743280240; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KHWFdlZ5NopWz5JtmK2NAcSudHEsFBasqGr4YPt9k0U=;
-        b=HxFysXxh+q7EcMXLSjcJLWWrsZ42xa74FLZuJWHFwRTlIV0DAoxjnVc+HrqzMj6NrW
-         7p4msISCfsPNOhSb3RJFfAc4WhRA+l42xf35e1+/AFwmRhNGlSMe4r/B78Fi/5pj8MmU
-         y3/5IAh+B8bQ2Y+28ZbdUaBtg0Rg8gOl2Jfwerr7LIQ+w1fNJNlPGanh3oAcb3J1lR5r
-         jupHqt7Qr0g+cuZAl9YMUmx3Cconb2qQZmKl1bkA7sx36xMudbdbDEzv8u57DMXmnkOy
-         928/cA4foy1PK5l0hoTYJQbJMALHIm0ZSekYv1U/iz4euUCMxSaUK5EaSzHaP53lyRg8
-         Zs8w==
+        bh=xAH+X0TSigWj+DvmaHEG+ngrQBhPB54MrJD5OazRsak=;
+        b=tWEKMJvQey509fLkv8vIOXHsDyC9nVKkIT6IJyBgg1YugK08t2O5RL93qc3mR5U3ch
+         3q0Za4Uu0MO1NgtNlneLM91PXwFtlLgGxnwfQd2VY5Ab17fQVCTPunS4uUCWvey/pH3x
+         w6tBi2VhZ2vOz7/SWSSrIyyBn1reI+c3JTRqS8+C7rvmPQ/T5AHOG0FZAfCQUBBV8Xzg
+         LjalobkjPnnVvIBf6bhz4IO0fqP4he6dLlznxI6uYdl2b76JsULwsOCSiUW9XBalIjbU
+         nncy/Q4lNRmSd5lK/+jDw++sPH3c55V3N4EOpBPLwHK+PK3q7pBR8do5soaqbpeRLjn4
+         Zr5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742675345; x=1743280145;
+        d=1e100.net; s=20230601; t=1742675440; x=1743280240;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KHWFdlZ5NopWz5JtmK2NAcSudHEsFBasqGr4YPt9k0U=;
-        b=F670ZCcK5sren1j4tSqdlL0V3zQP71W511o2WMAe9K5cpA5owl2IviSGwP4snFKbNw
-         deN+L8ojNYidvOpi4Z6I+zPZs5L5CNEV+jqUR5tNZiPm/yD48dtXNwTX7g7i/QdIi/2c
-         klDAH11TKxObpliSjeFRYbZtj12Q0bDYAD2VGGBc0s79aI6vNfB3FZFTTiUW8wF+Xbu8
-         V5kPUmGEFLE45KpXDukEQoPnpBHEWkyGmj6FJUxlFp5ykGWc00FeNINM6+dnh52ClZH9
-         DhP042Qx1No74W/a6wgI4lXrauy0DMTHYWGsivuBQLocirSJfmX7dgQpay8RqMHqLIqN
-         Uf9g==
-X-Gm-Message-State: AOJu0YyWRcp7Hlq7H4nwvs19abSceBK6p/mvxq7iNEMueetBeo3b/pze
-	9jvKF7zrv7m2O/nqVEV93MbMXC7AxI39HpCGwfAfvjBrMnO1Hu6r0naCWZ5D0TctVfghpZpm8xB
-	bZYF/Bx8WZ6JkJ4eQJdGp4SGzLeocEBTb6D4KpQ==
-X-Gm-Gg: ASbGncvyQDTscEMefw/A32bTiXTT/ltynZXkn8QySPn6XkXf0HrdgoaBHbeBtVzODTA
-	AdfeSeTQ9jwO4cMe4ME5l4HO5HECkTaOC6G09zsOPHWCT5gMelQDPI3GJdeNGNoJ8Ji4inqv53z
-	zVTM5NoIrg0q9IkT/ZaFnHmG4=
-X-Google-Smtp-Source: AGHT+IF2q6jwtXEXdISMrTEJsZHuwMHpkZMrd/gSEhHtVx1XTuAURdVMpBsW+SbKy9wbfa02UJPs70fKEdTSL8nUrvc=
-X-Received: by 2002:a05:6512:1190:b0:54a:c835:cc44 with SMTP id
- 2adb3069b0e04-54ad65097dbmr2877513e87.46.1742675344711; Sat, 22 Mar 2025
- 13:29:04 -0700 (PDT)
+        bh=xAH+X0TSigWj+DvmaHEG+ngrQBhPB54MrJD5OazRsak=;
+        b=QONqQB1pElJap2U2U11ZVZS3hJKvFEzINSQyqkMgkVjjRm2UFe48cNsoGxN/9fIMdr
+         DXPW9sWtTw6RSfZFwZs3n2b+p8q9QdYIXW7fjR7BQdUmzJeNRA1AbFzJEpO6GWpEfhOB
+         MN3rjcXPPmJzjGpNcvATXo47fnP0D2vMEXxDikmajMmIZLX4YPX8K9mHRbbgy0yxHp9M
+         YqP8GeTravC3MsxmfdgFzf6ODvGurDfgP8kmQnYRd22N6utdt/A2+Yd0kX10YyVq5fjF
+         M2lFLZSz54BscQ1J/QPr5C5xTkdxmt1WcLVojmUn5vzCLqK94N6SweQel5OITo1jeEXT
+         fRAA==
+X-Gm-Message-State: AOJu0Yyj0X85YuE82nvvNydWL9fqIb5TrkcfDSuoBXYHMqFdzo6DECDc
+	BOX6flEfRjeJPPpNjcG55MqEd3pEvl7rEhyrO5YXYxzTlKUv2gYKeuMduRSXEt9vI3+/EwA10W7
+	zFH6ExiDd7CG/9DH8ZNl8XrTui2+7Lmnyf7jt1vGgSmmMpl6ONZw=
+X-Gm-Gg: ASbGncseeF1J28gEZ3KB/57Bt0ptiaXkGtTXUqdDoNuP1rO0PIL8TOzJ9uB+Euoy5gb
+	IX5PIoFjzf6/wRLR/Dv97hnx/2AzOaWxJeQJPUTfftI/1A4k7Z9oOQG++myznl/vODkDDMP39B8
+	8iDarNCcifI3gnBLivHcr+5LI=
+X-Google-Smtp-Source: AGHT+IF/GWmh8Ou5LJqhKHFAZOmgUY9hbM0XF89CWCW9NVNXwMa3CK8yFvaZl4QoPX9YQzDKGAz5z9etUT+hR1WK5VI=
+X-Received: by 2002:a05:6512:3da8:b0:545:f69:1d10 with SMTP id
+ 2adb3069b0e04-54ad6470acamr2374738e87.8.1742675440022; Sat, 22 Mar 2025
+ 13:30:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org> <20250321-gpio-todo-updates-v1-4-7b38f07110ee@linaro.org>
-In-Reply-To: <20250321-gpio-todo-updates-v1-4-7b38f07110ee@linaro.org>
+References: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org> <20250321-gpio-todo-updates-v1-5-7b38f07110ee@linaro.org>
+In-Reply-To: <20250321-gpio-todo-updates-v1-5-7b38f07110ee@linaro.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 22 Mar 2025 21:28:53 +0100
-X-Gm-Features: AQ5f1Jo1LvJv_MJPBONuBG0dLKXQjmXaUgF9Pv6wuPi1WRfXl51LTlK5Z0RR9nQ
-Message-ID: <CACRpkdaW2JRYH6UTRy04VZ4mtV4bD6LFeU+G3fX0j1vkShjc4g@mail.gmail.com>
-Subject: Re: [PATCH 4/6] gpio: TODO: add delimiters between tasks for better readability
+Date: Sat, 22 Mar 2025 21:30:29 +0100
+X-Gm-Features: AQ5f1JpofkWM1B_yZUX2sRCI3yZe2efMMWyWAKdrqNWZ2K8pTgr-x2kchrW8xEY
+Message-ID: <CACRpkdZD2nJ9Fg25MuezJ3iPn6Eb+Qdu9z3P7S5wg4LxJ7G09w@mail.gmail.com>
+Subject: Re: [PATCH 5/6] gpio: TODO: add an item to track the conversion to
+ the new value setters
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -91,11 +92,16 @@ On Fri, Mar 21, 2025 at 4:49=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
 
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> For better readability of the TODO, let's add some graphical delimiters
-> between tasks.
+> Add an item tracking the treewide conversion of GPIO drivers to using
+> the new line value setter callbacks in struct gpio_chip instead of the
+> old ones that don't allow drivers to signal failures to callers.
 >
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+Actually I have memories of thinking "we should really fix this" ages
+ago, but didn't want to put it on my TBD because there were so
+overwhelmingly many things to fix already. Then I forgot to add it
+here instead. So:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
