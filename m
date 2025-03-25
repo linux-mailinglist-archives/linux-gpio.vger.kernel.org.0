@@ -1,109 +1,159 @@
-Return-Path: <linux-gpio+bounces-17981-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17982-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3818AA70BC4
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 21:50:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B8A3A70BFD
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 22:19:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AD45188EE59
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 20:50:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8758D16AAE0
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 21:19:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ABAD266B41;
-	Tue, 25 Mar 2025 20:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B00C81EFFBE;
+	Tue, 25 Mar 2025 21:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AAJDdt+s"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ghwJKhCT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D15942A82
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 20:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74B319ABD8
+	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 21:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742935796; cv=none; b=MsRF+7fyhaKXQRPk/U4L/gWg28/2YfRYpCd6YqrdJhN/3U5K2VuH2u5KB03uvaZEK/3XdgjbK1dbWZZApBL3PB/CyJZ/UAGBpUkfw6yXo2Sh3iz1zIQvN6CqjwQSxXJ9gs6E2I3CTSWn9nsb6BvY6GGIpxlfkPL4JBu+N53Rz8k=
+	t=1742937585; cv=none; b=eqEg9ZCkK7Kw3cYZkJKxrSj9EhjkcjwNGMaaFXghfHY2iqHMgTl0WwbK5evR+gtBn6hr6GDBvCdShsqeDRrYJpZ/bY5qRUerwWg3l6Ads3w6+uQ5lxffQBcKwNfsS3zWc3jLHfQWMRoDzUoFEakDWt0KGSCfQevZIfI6DNmolwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742935796; c=relaxed/simple;
-	bh=aSGZCgSZyiCMLm45nefLbWbreHawZ4HrRM/1I0jgflI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rshqG01h+bdMA8uhFbCJL6FHIy6hPzuF0NyOZJviLAZl/1icKRjFci4jyc3ZQuIaSq7wa3iKwQvFPB0b6JlFqSylDKdCSDOwx/FF8QYHCeX5BnM6KE0Y2CH9UO5CLDxWsrC0F98JikN+WpQKbxQN6b5wkGwh1KCx/Y67VRn29CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AAJDdt+s; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5499c8fa0f3so6994495e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 13:49:54 -0700 (PDT)
+	s=arc-20240116; t=1742937585; c=relaxed/simple;
+	bh=NQnbD776Zb8ERF4HsMHcXnwkS/TO5s/52zWgVm5NNQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WGn4eBOB4PD9zuxtvcrZWP0t2mG7HJbjiCfyKHOanarS/h6KcWSbOSH4FXbhO7xH8UfDUujUwlupYJgiVV+n5oRV/X4811Q0PVkWukOE49ZVyrEQPQ0MkaiF+jRWheV+XnIZTyHWBdzu7zY01peuXM7UwTlUpRjWoTGkKkMky7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ghwJKhCT; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85e73f7ba09so45951139f.3
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 14:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742935792; x=1743540592; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aSGZCgSZyiCMLm45nefLbWbreHawZ4HrRM/1I0jgflI=;
-        b=AAJDdt+sXp4FdLqbKqwWtcEA1l8IEToRLd2MRSBSujtcJiTSFyk5GZ+dX1iuBCGUL3
-         cFJAUJ0qg4TmQ1Jt067OtI/JAL90eXjeapQrNJQyHfOyYoPa9U/b4ESy+YHUefK1atgp
-         n6vpOWmCTE70yvkSr8umlCdl5bVoVtx6aLfNvD9HFN8NQsCL2+aHjAxygQj4wmJOyY+y
-         e0L6IyXVXl5cp9mr8oiPG+1D42ByGT/SzI4GbNqXKr2+ZWDvms4b5tbYT1boKtM2vzBW
-         W+7R2YC57yzQ/mqskZBQDQSgi8LcBXs8rJ2nIOOjaykg5B+rsg4kIEZipD/F00l6kuQv
-         /ceA==
+        d=sifive.com; s=google; t=1742937583; x=1743542383; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mKG8KtS1PtfoFoAQY05FHNouuuEBpDMQ8ANK42hHsEk=;
+        b=ghwJKhCTXyRH2muFJhSV27I5BgoFf4RiIMZmSRLr7Q1Xk3yBt8SJTfVibbuC32YsRU
+         Z38S6RKL2eyxecuGDU372y3mEXSNog5lZwWpM2rS3gmtdyZYUgMZa3/CSPNbRRR0+Ove
+         75mRkDkaGLUO4KPgNZVNUvBGRL+dGmFPxz2pQWf5K4HalCB7cdq766NfbOw+NnK/BE97
+         AcDJ1KnuH13PxiWU/4zY24bCOdvKE6tr/hZaz4tE+QKfDZuaJHNXNxcH2Y+qXZJo2vSh
+         mVBdJdW3Bg6FV2zoAsxTcNtC7Qh3vY1D8TadKDERNVuq+14LYaVdTFnnptuR/odiFST6
+         /F5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742935792; x=1743540592;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aSGZCgSZyiCMLm45nefLbWbreHawZ4HrRM/1I0jgflI=;
-        b=cAwjIiemFMOWEFifO+ZzCw4VSu/bTuIpL+s0MJgEB/Y1nQ8BqNmkiUkKUlys6Oc93T
-         fxnARhsoKFIWg6bhW73vjcid6lC7tAQXryt980ed1m4AJ/Sn8NFpZFRwa2ezRTHlIBH7
-         vQg8AMPlK4bepYXeHZhLhsmH+yCSQfjStOaeqT3XhmEy7lK+hqOvIMSvEZmcbAUscs+z
-         7f9X84NR+CVxD7Tqnx8kuu5fcPSs7OmHaOLy4ezLJovjw4PzHSWo5jqMzITD0J/Y2mnD
-         1WNI6dirHiH7NaX91xCE639kPhqXI3EsuGB+rZAkmpUULIJ1i+j1alR2J7xIJRp9cPfs
-         MgbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYSzwG4b4bj8Br/AiS/qm3wgpklPEjyZJbiYGVQVFYQU+bsuXYo2YgVFNlERySD5OHJCqXRx2aGuCG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxC5AVPR1R5eJUSxhcHwb4ud3o94G1jzc+4C55qo8rRrbyyJmW
-	L/M3vJ43J7qjvAb4AszY0hVJq/LgwEfkzEKrpdvJKoGTlwQYfeNhjmlCAYyc2wS0R3n4LhwW3pY
-	D8p5nzGwDE6Kc2nRvHEdIwh47Cctdzmekgza/ZQ==
-X-Gm-Gg: ASbGncsJ7KLqxWW1fdqM3NTMn01D+F+DbYuo/f2PYhc1+Zcz86Vyr8HknFzJjJMsMMF
-	qM/Q22O/6JWEuqK4UF0ooRqRXKK0krEUqE+5aMpiihd5Vw/XvxQR4oX92MkNIHM4eBs0kxLQZTx
-	MKaH9p0X1ZinqzjIStvy6hxAs=
-X-Google-Smtp-Source: AGHT+IEF7yyIMMixqctwMg+s9HwHl4A28PDbdusJ+Jzb/Ti0VnewpkU2St5hBerQF3oHbdQtAZyOW4J2NRWiTUU6A4k=
-X-Received: by 2002:a05:6512:ea8:b0:549:b0f3:439b with SMTP id
- 2adb3069b0e04-54ad6494351mr7341343e87.16.1742935792230; Tue, 25 Mar 2025
- 13:49:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742937583; x=1743542383;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mKG8KtS1PtfoFoAQY05FHNouuuEBpDMQ8ANK42hHsEk=;
+        b=PDUndR93+W6EdjfD5dOo3su93VfvB+jCLx6/7bXG/M3Z7CWtIVCvdNpLK1MixEAoq4
+         CDJnNhd+v/Rl0RZfzNTfdNjzd9mTZkqsnCe4VXHj16G8lPnStmq6EycCDnPO3sbeq11W
+         SYYgRguUvfMqrS91vaWZXKviNcccI2aB7Wee+TVmsi1ruhY4YVgSlf5KNU0FVhDmkUXD
+         EThXPJti5jNLeyY0hI72dCFe8EaUS8onMAbFm5LjNo2eTp3CLcvywrpulLI826dIjDJ8
+         gA8faSzIndwv1b1iYk3WSmh5G+P3ie4vIOeSAzFmfW/lQitrjGLtdEYfTIhRQpGA3AyU
+         u/8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXCzkWB1yqz3b7on2CCEOx8iHC9GfhHeS7QC7k9fdQVZirl8SLoWQ8KvXlDNrwwRGbCYFYTdlMrfcyW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcqpb5+FvAhA50LdCyyCU14yNoaLjphGlnIDl5RxLeupv1p568
+	+TL/2px0eQ4kR6IEfM7h+CA4x5sHtqzyLc3QWdeD6BSGJUQs/9nkUplHggY6HWY=
+X-Gm-Gg: ASbGncsWkmykrIbf5yGnWbvLvqw3C1n3qLCm1SPfsMwkk91Vvc/Kc/9F5xQ40qkWPym
+	JTfNFFRsyXzaKf7frltwUwUHZivbr5nHeqPlVoAZTsKiMVL+S+z1KlZL8ZrBrDR6aOV0W8fraDR
+	1MzCTogkXz5Pnjq44g752mQrB5Or1EC8YELzJSc+HVS82JHVGtLeybaHs43Gj64fkmGTdIApnJU
+	4rxkVGJeaLHcGq0Wf0FrtzPy6/+t3pCY2prZsXxAzeSpWeDzdGnEKUmt9vFgGVKVJVb3dTlLN7d
+	sqbKoUHjgM1nMaZ+n2HwBDg6y2LUnjjeQm4f5LByXRvevbug5AwVgSragcy2+w==
+X-Google-Smtp-Source: AGHT+IFJ9ei+dbxpqumX89NY7ke1+osmRH5g+C2Bjhwac4EqYyI6bFrpBXPDDYMUEUIaTXB7SW5t8w==
+X-Received: by 2002:a6b:6806:0:b0:85e:2e53:ed27 with SMTP id ca18e2360f4ac-85e2e53f5e9mr1462507639f.3.1742937582760;
+        Tue, 25 Mar 2025 14:19:42 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.6.166])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbed215asm2531270173.136.2025.03.25.14.19.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 14:19:42 -0700 (PDT)
+Message-ID: <4a45df45-b2b1-4da9-b829-c5310cf32b5f@sifive.com>
+Date: Tue, 25 Mar 2025 16:19:40 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325141311.758787-1-emil.renner.berthing@canonical.com> <20250325141311.758787-2-emil.renner.berthing@canonical.com>
-In-Reply-To: <20250325141311.758787-2-emil.renner.berthing@canonical.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 25 Mar 2025 21:49:41 +0100
-X-Gm-Features: AQ5f1Jr_QmG228mTrT4635Lxbqc8kIEzoAGcZXgVlRpA7Hs97jG_kwma8QcfMxU
-Message-ID: <CACRpkdaJPXbc_83PdhjFDbmqcrV61k2NgtPjyA7gQnoBGRPgcA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: pinctrl: Add eswin,eic7700-pinctrl binding
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>, 
-	Pritesh Patel <pritesh.patel@einfochips.com>, Min Lin <linmin@eswincomputing.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/4] ESWIN EIC7700 pinctrl driver
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+ Pritesh Patel <pritesh.patel@einfochips.com>,
+ Min Lin <linmin@eswincomputing.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, =?UTF-8?B?6bKB546J5p6X?=
+ <luyulin@eswincomputing.com>, =?UTF-8?B?5a6B5a6H?=
+ <ningyu@eswincomputing.com>, Lin Feng <fenglin@eswincomputing.com>
+References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+From: Samuel Holland <samuel.holland@sifive.com>
+Content-Language: en-US
+In-Reply-To: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 25, 2025 at 3:13=E2=80=AFPM Emil Renner Berthing
-<emil.renner.berthing@canonical.com> wrote:
+Hi Emil,
 
-> Add device tree binding for the pin controller on the ESWIN EIC7700
-> RISC-V SoC.
->
-> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+On 2025-03-25 9:13 AM, Emil Renner Berthing wrote:
+> Hi Pinkesh et. al
+> 
+> It's great to see you've begun upstreaming support for the EIC7700. I
+> read some of the data sheet for the SoC and noticed the pinctrl is quite
+> simple and could benefit from using the same model as the TH1520 pinctrl
+> driver. This version should do the same as the vendor driver, but in
+> less than 2/3 the code.
+> 
+> I hope you'll consider switching to this version once the basic
+> support[1] lands. This patchset also depends on that series.
 
-This looks good to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks for your efforts here. We are working with ESWIN (CCed) to simplify and
+prepare their driver for upstreaming, and we have ended up with something
+similar to what you include here. We were hoping to send out a first version of
+the driver soon. There are still some differences between the two drivers, so
+ideally we can coordinate on which series to move forward with.
 
-Yours,
-Linus Walleij
+Regards,
+Samuel
+
+> [1]: https://lore.kernel.org/all/20250320105449.2094192-1-pinkesh.vaghela@einfochips.com/
+> 
+> Emil Renner Berthing (4):
+>   dt-bindings: pinctrl: Add eswin,eic7700-pinctrl binding
+>   pinctrl: Add driver for the ESWIN EIC7700 RISC-V SoC
+>   riscv: dts: Add EIC7700 pin controller node
+>   riscv: dts: eswin: Add HiFive Premier UART pin control
+> 
+>  .../pinctrl/eswin,eic7700-pinctrl.yaml        | 141 +++
+>  .../dts/eswin/eic7700-hifive-premier-p550.dts |  46 +
+>  arch/riscv/boot/dts/eswin/eic7700.dtsi        |  17 +
+>  drivers/pinctrl/Kconfig                       |  14 +
+>  drivers/pinctrl/Makefile                      |   1 +
+>  drivers/pinctrl/pinctrl-eic7700.c             | 802 ++++++++++++++++++
+>  6 files changed, 1021 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+>  create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
+> 
+> 
+> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+> prerequisite-patch-id: 2e5cc67f66a8cfe463ec73b98cd17130d4094a86
+> prerequisite-patch-id: e39d6867f89c605fd1e3621937c8c91a6cfbe7c8
+> prerequisite-patch-id: 5d2232bb3ce3d7d4e23477c2ad3db30424fee33c
+> prerequisite-patch-id: 946719f43a0cc23ffe82e996e076de2221dcd8db
+> prerequisite-patch-id: c2c2bc1b676b1e15165e107515b380318e9ca941
+> prerequisite-patch-id: aa4a955dd99d0796973fedb78bea269ebab73b6b
+> prerequisite-patch-id: 1cd27ddae721cc1e6c52723f8b360b09b5e712c7
+> prerequisite-patch-id: 237813218e54e0c7cbed8d72e30eb649ffd9ecd4
+> prerequisite-patch-id: 8e687755e898e71c80b0294b90deac71fe05c421
+> prerequisite-patch-id: 05622d10a27ba9cba36b3d194e51a2d8d7b7b783
+
 
