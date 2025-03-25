@@ -1,86 +1,86 @@
-Return-Path: <linux-gpio+bounces-17966-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17968-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8908A70376
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 15:20:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E29D8A7035A
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 15:15:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66F453BD2C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 14:13:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA68016A27E
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 14:14:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A5AF25A359;
-	Tue, 25 Mar 2025 14:13:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE4225B67E;
+	Tue, 25 Mar 2025 14:13:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="rcUlCT2d"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Gb7nXLQV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AFA259C90
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 14:13:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3077225A2BB
+	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 14:13:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742912015; cv=none; b=XGeMNz7xmsWCevF0lb0na9fP46Vv4MZSLEhhpk1H3h9o8hMsORhVfDjTlYXiyXw9fZoNUhYxREHiqtCH4iMt4+u4rLePQGR6pSajttTy80euyhd8JBtsJ8bP9ZTxP7dicH+0f4ELIonzvoxJlSgpzELqhkqt6bDvLXWTno8eS5k=
+	t=1742912021; cv=none; b=hqFZTVW+7mXWldka4LaKi4aVaIMOCSE6rooitija5WTT9Q+WUs5GxtO6Z+WUbzrgYg8P3qgDHKFCsDTnWYlF7k365cN4m3hsZjzDqqUlDk5cwyD+ejAkHp+ljIg7zyzafYIfskZykgA1qcqDVVuYVVhmdRg6cRNN7LY6d66q0cI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742912015; c=relaxed/simple;
-	bh=nJ76qnpAiA1hIrK3TfkbYTYfWRCX/J8sNAMB6mmLa10=;
+	s=arc-20240116; t=1742912021; c=relaxed/simple;
+	bh=D2seTNqsA+k60CiwsBqeP8HOf191uyBjDvtVghGiw5I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uJPZh/aUufurvwUiF3BSViCcAJ5p/GGQq5d9FmQzItAmN1Euz82WrT13ZN5AiCo/E6AF8JptS3aEOJ7LSaj6yVyuJ2wsankhlTNsge8eqyPxzJ8c9N8rQVLCEBj9lbH30DpuXNxIyjouX2n0nD0EGtgOGw4cwq+tHVpg8Nisdls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=rcUlCT2d; arc=none smtp.client-ip=185.125.188.123
+	 MIME-Version; b=L73BQ7nckFeUXx258BMfZgdqPo6psFRB53HbkkDmFfiBc2D6fPMu9qE9jXVGyB7fqCOXi9MgFFFOP3zcnnyJ8vs5Imq37YA1cn1OaGBAEBYRDhdLSDKKpae+4PRiN7XXIZnaukUf/OCygNxpAJp5H4tDzSsVgeR8Om92TqwAEF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Gb7nXLQV; arc=none smtp.client-ip=185.125.188.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 42A9A403F7
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 14:13:19 +0000 (UTC)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C4D0940407
+	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 14:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1742911999;
-	bh=ruY4mx+ycuBPq+bKcBygbtDAkYa1zJT+mxxboy0e/q8=;
+	s=20210705; t=1742912005;
+	bh=z1YltY4DUAOKhOrYaqFTN+9X4KCj1NX0eIOCMrmZPFU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version;
-	b=rcUlCT2dFVZ+4HeiYFAIm07G3TOlpGtKv8q4WqzRom+aZhSdY0hShWYe+THsaz0yb
-	 jocWf2d36qtKjT+bzn/94Fpc9hLf11Tj/9VDvp/zL9i1Xm+Sk2REpIY0GM2yVsN+v1
-	 INWseXESGCu83xTrq0s8+1nqY7+faEkT3tpL8KvC3y/xS6TQNj3/sdZzGPlGTcvRXb
-	 MINFspTdgJVT7X8SN4t9JbkoaZ+V7s+Sa6UNs3MOnVvVWt7e26w6C9x0WcmZQlkiHt
-	 L5SogMZLOAiXtFn85J8js/kTO/cpZQjMi6q1PNRhWJn7D3T15zxfx/p9NRJMyH049l
-	 N7UxEyEDYwkJw==
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3914bc0cc4aso2894685f8f.3
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 07:13:19 -0700 (PDT)
+	b=Gb7nXLQVW8mGxHbzaIfg40Cy9E4lNQZt9c6rlkVYBb9zrMT2tlX2gC7uT8Fwu6vE8
+	 xpNxSK8mX157lKgKbTasKZeTwl6sSEoRw5VVs1DlAuVkbFVgu1Vu2k+rdLC7MdC6bk
+	 hsHddpGSkNtgrywSbuS5gfP7bETJpRU6PWp5tqLRAqB99SykV//7PUBfIMSlQggpzm
+	 kiNI7hY970R4jL9I/x4ymS2v8+aOd/65iZtfgdGrTQ/Tfi/4dfCkqEv5msLcXXeO14
+	 MPVL0+w0t0X23prM/neLbFRUfnzTCnlvS3ZCH1k7/6jx3ORT61M1LCcDxzUySw0S2w
+	 eRpZ8ilDNuzQw==
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3913d8d7c3eso2943190f8f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 07:13:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742911997; x=1743516797;
+        d=1e100.net; s=20230601; t=1742911999; x=1743516799;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ruY4mx+ycuBPq+bKcBygbtDAkYa1zJT+mxxboy0e/q8=;
-        b=aREQ9CCum64P3Wy0S0mesP4FsTpP98Z+FIR09yB/QeRX/ws5W6d6sld21KAYB4TSns
-         1U3xvX2TUP1/k2WBiUognrYJ9wwqyhmGXCDBFvTmr41ECebCGOQrR5GL3pSxJSgKULVL
-         /NZFyGHttmfzVgmmvlE/PRk03N704PKuYWP55XiT+HpUkf1C79eK5jF+f7ZBDyn8w9Il
-         VLQrR0ofuzIsCnDwa+hHqc+Mmcn9yv4BQy4XLCwe7t3PQjdX33GTQC4h08KAkmbQoMwY
-         y00BmgwLDw1AVCyuI1h2g4K+15Y0pH5zu+GMF6e+pVfWVlsnbTiiavMTsozQTCYQkzmp
-         I8XA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdLMhHiDr0rQMTHmHVh7Op9SSrlx00LubKvBMGFmsjBRKgpMaMiohONABzAt9zHG/eK4sn8giaO0v7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy665rfNyDlFSH54e/7Lc1jrVcnWolkhUwmO+mNfeDVOj9dS6yZ
-	xdIclzM8vRa/g2lm/YbnhFn4Ry7GBOB/vpJv8M0+1D16QEr+WB8QxXaN5x6RsjiqNs8ChFJqUeM
-	rsqzx7slq1XBZvi0GAZ68/dUCkLLV3H82ODDkN3u0gS6LgCUDPArrgd8+yvQGhzFbWicHf2l2us
-	8=
-X-Gm-Gg: ASbGncvOl34SXrL9Fm/J9QSsiURCl2AluEhMJIJCywxmbNEahL+qbJLxcFWeF90raya
-	n8f+i8RsrjuSM7OTyg2gPjfXCkAx1OZPa0LgoPllqn4P4dzXTAmbF//2DJ+Zu74r/DHZpYbl/BD
-	blMbWpHpEjVkWEFltsZ+KGg6dTbkiTbeJ+NniC526jiILkrVwSA7QhRcAH/gUOAnqQu8j45TnPa
-	2xJp4zOToxF7WUFH0RFVB6RxB6toYdRF9ojq5V7d7PQqKSMOvLPEtZluRAhO1jr4ed17HaYXgyt
-	ZgnRTJ0OhPqHms+qJSXsjn6n3uqWcw==
-X-Received: by 2002:a05:6000:1a8d:b0:38f:2a32:abbb with SMTP id ffacd0b85a97d-3997f8f9d54mr13315754f8f.4.1742911997508;
-        Tue, 25 Mar 2025 07:13:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHIxyJ37OZghcxQ+a/pWrQYrdFkF1ltdT3GNn4+fygXg02/lhRChSV9UcnQAQLd+3Joudp+Ag==
-X-Received: by 2002:a05:6000:1a8d:b0:38f:2a32:abbb with SMTP id ffacd0b85a97d-3997f8f9d54mr13315703f8f.4.1742911997011;
-        Tue, 25 Mar 2025 07:13:17 -0700 (PDT)
+        bh=z1YltY4DUAOKhOrYaqFTN+9X4KCj1NX0eIOCMrmZPFU=;
+        b=h8i7leJy1sudi2VXLymFPL1F6ILNanT4mzsc5JvEdJGhYvTefc5r8lEwij8xc/gOrX
+         5Ub2RVsfR0Jn74I9lVRbXIBWAZCr3hgP1YWJxpHiTvtJovLW0Gbks5ffjbFMi+Fn8tIm
+         +D8mM2C36avRFjLBdREihf9zsmAHX/6ziqRknycaAlQ4NJEvj3TXomKEAnrDmYX1gTKR
+         cHrtHsxN8SlrXA3oTJn8/kItpN5F55n2bgHzsTNNs8BOfLHr28ALgATNkClrybhxxQxh
+         G+xeVfgOcs/gdxFa3CWP1AwLwuP8w6u7qY2UvtmV0ibCcVP547uh9GhUmQWt5dElkGaO
+         29UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpD2p1K3S64DHm1T6QeZGUmxphTja7FYKHiBxgtGkQnSi726aSU993Dih4cCjjZEiRcv8yA1KEtCsJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvfubFmjD5IpwSzBrZ2cCS3JAks7ZvXP6Mo7spAhEtMuOYlfiA
+	Ul/jEU6tSfep2d3ZAG2XeJK+5U8WCAexDfd/7os8S7SeSGUeMUzx6eApn/otXlvyXyU4itdx3WI
+	nc22b1Cqw93MA2I7qFtdFtiPRFguo5/SunQvGtrIivRCJ6z7N7L5tcX6mm1PccuL1PX90FdTaOk
+	A=
+X-Gm-Gg: ASbGnct8qlUq22cEzA/iJLhE3uyyH6jNKwQW3CldCXvV2Po7iktALgB4E5lK0LAODbp
+	yCnABOFKSZi2kpOZa5cyW4tSFZ73EFdajf9ceyDLsKftLi2NuCP9yOGBShMUu02Q7+2WY/Dp+Nr
+	ype4mJ55z+LuZeGviHuntKKygSkMbifHEfoDc51o4NxAgViUhQk2mozRcz2Ie//R6zwpzZHU2MD
+	8HIcy/8N/KCS20wUv25dA0dGl+hW2LOTQYNen6GpVs+NgkFtX61SidqMb7mXXUp/Iwo0TKeb1DZ
+	F6iV6es4AGLbGl+1IW8DSomVYmrUOA==
+X-Received: by 2002:a5d:64c3:0:b0:391:4bcb:828f with SMTP id ffacd0b85a97d-3997f903714mr13947094f8f.14.1742911999490;
+        Tue, 25 Mar 2025 07:13:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHI6KEgZoCtSliU6E0BwKfVc69vn7sSR/m3U6awSJRdbl6af8gLXmNSZGr1/IgpSiG8Z6CDew==
+X-Received: by 2002:a5d:64c3:0:b0:391:4bcb:828f with SMTP id ffacd0b85a97d-3997f903714mr13947058f8f.14.1742911999075;
+        Tue, 25 Mar 2025 07:13:19 -0700 (PDT)
 Received: from stitch.. ([80.71.142.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm13532091f8f.29.2025.03.25.07.13.15
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm13532091f8f.29.2025.03.25.07.13.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 07:13:16 -0700 (PDT)
+        Tue, 25 Mar 2025 07:13:18 -0700 (PDT)
 From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 To: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
 	Pritesh Patel <pritesh.patel@einfochips.com>,
@@ -98,9 +98,9 @@ Cc: Samuel Holland <samuel.holland@sifive.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [RFC PATCH 3/4] riscv: dts: Add EIC7700 pin controller node
-Date: Tue, 25 Mar 2025 15:13:05 +0100
-Message-ID: <20250325141311.758787-4-emil.renner.berthing@canonical.com>
+Subject: [RFC PATCH 4/4] riscv: dts: eswin: Add HiFive Premier UART pin control
+Date: Tue, 25 Mar 2025 15:13:06 +0100
+Message-ID: <20250325141311.758787-5-emil.renner.berthing@canonical.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
 References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
@@ -112,65 +112,74 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add node for the pin controller on the ESWIN EIC7700 SoC and gpio-ranges
-properties mapping GPIOs to pins.
+Add pin control for UART0 and UART2 in the HiFive Premier P550 device
+tree.
 
 Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 ---
- arch/riscv/boot/dts/eswin/eic7700.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ .../dts/eswin/eic7700-hifive-premier-p550.dts | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/eswin/eic7700.dtsi b/arch/riscv/boot/dts/eswin/eic7700.dtsi
-index 9cef940f07e4..7226647919b7 100644
---- a/arch/riscv/boot/dts/eswin/eic7700.dtsi
-+++ b/arch/riscv/boot/dts/eswin/eic7700.dtsi
-@@ -312,6 +312,13 @@ porta: gpio-port@0 {
- 					<324>, <325>, <326>, <327>, <328>, <329>, <330>,
- 					<331>, <332>, <333>, <334>;
- 				gpio-controller;
-+				gpio-ranges = <&pinctrl  0 12  1>,
-+					      <&pinctrl  1 14 12>,
-+					      <&pinctrl 13  1  4>,
-+					      <&pinctrl 17 32  1>,
-+					      <&pinctrl 18 40  5>,
-+					      <&pinctrl 23 51  7>,
-+					      <&pinctrl 30 68  2>;
- 				ngpios = <32>;
- 				#gpio-cells = <2>;
- 			};
-@@ -320,6 +327,9 @@ portb: gpio-port@1 {
- 				compatible = "snps,dw-apb-gpio-port";
- 				reg = <1>;
- 				gpio-controller;
-+				gpio-ranges = <&pinctrl  0 70  3>,
-+					      <&pinctrl  3 79  7>,
-+					      <&pinctrl 10 89 22>;
- 				ngpios = <32>;
- 				#gpio-cells = <2>;
- 			};
-@@ -328,6 +338,7 @@ portc: gpio-port@2 {
- 				compatible = "snps,dw-apb-gpio-port";
- 				reg = <2>;
- 				gpio-controller;
-+				gpio-ranges = <&pinctrl 0 111 32>;
- 				ngpios = <32>;
- 				#gpio-cells = <2>;
- 			};
-@@ -336,9 +347,15 @@ portd: gpio-port@3 {
- 				compatible = "snps,dw-apb-gpio-port";
- 				reg = <3>;
- 				gpio-controller;
-+				gpio-ranges = <&pinctrl 0 143 16>;
- 				ngpios = <16>;
- 				#gpio-cells = <2>;
- 			};
- 		};
-+
-+		pinctrl: pinctrl@51600080 {
-+			compatible = "eswin,eic7700-pinctrl";
-+			reg = <0x0 0x51600080 0x0 0xff80>;
-+		};
+diff --git a/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts b/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
+index 131ed1fc6b2e..c278695dcb2d 100644
+--- a/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
++++ b/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
+@@ -20,10 +20,56 @@ chosen {
  	};
+ };
+ 
++&pinctrl {
++	uart0_pins: uart0-0 {
++		tx-pins {
++			pins = "UART0_TX";
++			function = "uart";
++			bias-disable;
++			drive-strength-microamp = <6700>;
++			input-disable;
++			input-schmitt-disable;
++		};
++
++		rx-pins {
++			pins = "UART0_RX";
++			function = "uart";
++			bias-disable;
++			drive-strength-microamp = <6700>;
++			input-enable;
++			input-schmitt-disable;
++		};
++	};
++
++	uart2_pins: uart2-0 {
++		tx-pins {
++			pins = "UART2_TX";
++			function = "uart";
++			bias-disable;
++			drive-strength-microamp = <6700>;
++			input-disable;
++			input-schmitt-disable;
++		};
++
++		rx-pins {
++			pins = "UART2_RX";
++			function = "uart";
++			bias-disable;
++			drive-strength-microamp = <6700>;
++			input-enable;
++			input-schmitt-disable;
++		};
++	};
++};
++
+ &uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
+ 	status = "okay";
+ };
+ 
+ &uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins>;
+ 	status = "okay";
  };
 -- 
 2.43.0
