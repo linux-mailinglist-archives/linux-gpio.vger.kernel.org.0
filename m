@@ -1,187 +1,194 @@
-Return-Path: <linux-gpio+bounces-17968-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17969-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E29D8A7035A
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 15:15:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F427A703B0
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 15:30:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA68016A27E
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 14:14:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 830D47A2659
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 14:28:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE4225B67E;
-	Tue, 25 Mar 2025 14:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7CD25A332;
+	Tue, 25 Mar 2025 14:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Gb7nXLQV"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oAHnWyak"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3077225A2BB
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 14:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD2525A2DF;
+	Tue, 25 Mar 2025 14:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742912021; cv=none; b=hqFZTVW+7mXWldka4LaKi4aVaIMOCSE6rooitija5WTT9Q+WUs5GxtO6Z+WUbzrgYg8P3qgDHKFCsDTnWYlF7k365cN4m3hsZjzDqqUlDk5cwyD+ejAkHp+ljIg7zyzafYIfskZykgA1qcqDVVuYVVhmdRg6cRNN7LY6d66q0cI=
+	t=1742912965; cv=none; b=biiQV+GaDxPzpuETiZD8JN2PHp7vJzn9lncZtkjy1rZkxE55QaInE4nC3FmI/e6PmvWI8pL8uUBJECESET6XCu65IQh9guZOhaOpsldZRxf2RcnqGp7KQJM9K8WEFXNm/0NA8ax9BAntabU8wAjTmlbEHj4DjuG8bl2ju69I0po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742912021; c=relaxed/simple;
-	bh=D2seTNqsA+k60CiwsBqeP8HOf191uyBjDvtVghGiw5I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L73BQ7nckFeUXx258BMfZgdqPo6psFRB53HbkkDmFfiBc2D6fPMu9qE9jXVGyB7fqCOXi9MgFFFOP3zcnnyJ8vs5Imq37YA1cn1OaGBAEBYRDhdLSDKKpae+4PRiN7XXIZnaukUf/OCygNxpAJp5H4tDzSsVgeR8Om92TqwAEF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Gb7nXLQV; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C4D0940407
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 14:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1742912005;
-	bh=z1YltY4DUAOKhOrYaqFTN+9X4KCj1NX0eIOCMrmZPFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version;
-	b=Gb7nXLQVW8mGxHbzaIfg40Cy9E4lNQZt9c6rlkVYBb9zrMT2tlX2gC7uT8Fwu6vE8
-	 xpNxSK8mX157lKgKbTasKZeTwl6sSEoRw5VVs1DlAuVkbFVgu1Vu2k+rdLC7MdC6bk
-	 hsHddpGSkNtgrywSbuS5gfP7bETJpRU6PWp5tqLRAqB99SykV//7PUBfIMSlQggpzm
-	 kiNI7hY970R4jL9I/x4ymS2v8+aOd/65iZtfgdGrTQ/Tfi/4dfCkqEv5msLcXXeO14
-	 MPVL0+w0t0X23prM/neLbFRUfnzTCnlvS3ZCH1k7/6jx3ORT61M1LCcDxzUySw0S2w
-	 eRpZ8ilDNuzQw==
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3913d8d7c3eso2943190f8f.0
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 07:13:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742911999; x=1743516799;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z1YltY4DUAOKhOrYaqFTN+9X4KCj1NX0eIOCMrmZPFU=;
-        b=h8i7leJy1sudi2VXLymFPL1F6ILNanT4mzsc5JvEdJGhYvTefc5r8lEwij8xc/gOrX
-         5Ub2RVsfR0Jn74I9lVRbXIBWAZCr3hgP1YWJxpHiTvtJovLW0Gbks5ffjbFMi+Fn8tIm
-         +D8mM2C36avRFjLBdREihf9zsmAHX/6ziqRknycaAlQ4NJEvj3TXomKEAnrDmYX1gTKR
-         cHrtHsxN8SlrXA3oTJn8/kItpN5F55n2bgHzsTNNs8BOfLHr28ALgATNkClrybhxxQxh
-         G+xeVfgOcs/gdxFa3CWP1AwLwuP8w6u7qY2UvtmV0ibCcVP547uh9GhUmQWt5dElkGaO
-         29UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpD2p1K3S64DHm1T6QeZGUmxphTja7FYKHiBxgtGkQnSi726aSU993Dih4cCjjZEiRcv8yA1KEtCsJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvfubFmjD5IpwSzBrZ2cCS3JAks7ZvXP6Mo7spAhEtMuOYlfiA
-	Ul/jEU6tSfep2d3ZAG2XeJK+5U8WCAexDfd/7os8S7SeSGUeMUzx6eApn/otXlvyXyU4itdx3WI
-	nc22b1Cqw93MA2I7qFtdFtiPRFguo5/SunQvGtrIivRCJ6z7N7L5tcX6mm1PccuL1PX90FdTaOk
-	A=
-X-Gm-Gg: ASbGnct8qlUq22cEzA/iJLhE3uyyH6jNKwQW3CldCXvV2Po7iktALgB4E5lK0LAODbp
-	yCnABOFKSZi2kpOZa5cyW4tSFZ73EFdajf9ceyDLsKftLi2NuCP9yOGBShMUu02Q7+2WY/Dp+Nr
-	ype4mJ55z+LuZeGviHuntKKygSkMbifHEfoDc51o4NxAgViUhQk2mozRcz2Ie//R6zwpzZHU2MD
-	8HIcy/8N/KCS20wUv25dA0dGl+hW2LOTQYNen6GpVs+NgkFtX61SidqMb7mXXUp/Iwo0TKeb1DZ
-	F6iV6es4AGLbGl+1IW8DSomVYmrUOA==
-X-Received: by 2002:a5d:64c3:0:b0:391:4bcb:828f with SMTP id ffacd0b85a97d-3997f903714mr13947094f8f.14.1742911999490;
-        Tue, 25 Mar 2025 07:13:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHI6KEgZoCtSliU6E0BwKfVc69vn7sSR/m3U6awSJRdbl6af8gLXmNSZGr1/IgpSiG8Z6CDew==
-X-Received: by 2002:a5d:64c3:0:b0:391:4bcb:828f with SMTP id ffacd0b85a97d-3997f903714mr13947058f8f.14.1742911999075;
-        Tue, 25 Mar 2025 07:13:19 -0700 (PDT)
-Received: from stitch.. ([80.71.142.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm13532091f8f.29.2025.03.25.07.13.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 07:13:18 -0700 (PDT)
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-To: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
-	Pritesh Patel <pritesh.patel@einfochips.com>,
-	Min Lin <linmin@eswincomputing.com>
-Cc: Samuel Holland <samuel.holland@sifive.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [RFC PATCH 4/4] riscv: dts: eswin: Add HiFive Premier UART pin control
-Date: Tue, 25 Mar 2025 15:13:06 +0100
-Message-ID: <20250325141311.758787-5-emil.renner.berthing@canonical.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
-References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+	s=arc-20240116; t=1742912965; c=relaxed/simple;
+	bh=Vl3vvuU3EXqhhL0Aq4L5M6JCpv6r2cjM4xNvae15GQk=;
+	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:Mime-Version:
+	 References:In-Reply-To; b=Ir+ZXJvD8UuOYVS3P4QCNltVYzobPR2UJgm+/7nBSR6sKsHwjs8CM2ThWulY1DORIykukc1lc0aYnvpkvswJhNopYPQTWmtvD2aFzQReWK9tuye2JQtzH/XkoIKlRVxwWFR592FA36yp/xLhVhkYBbiG98HsBwtSnoXj4hft5ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oAHnWyak; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2305244297;
+	Tue, 25 Mar 2025 14:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742912960;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9/w2I/hCM+TADHxxC0YZFOVsXPy5gKaRLqo80ZlcyTM=;
+	b=oAHnWyaktVUyy0V9/uFdjA0D7NqFeMOTOABLtlGA/LYMCAHfnqVveZBXIbm9Yl/izlprG/
+	GbOtt0+uvmzukhKHZgJ7tN+MiXIqmN1R6zQtQi/uXq8bZuzxBHfPZtGRxfK1Xw4qHYY1wS
+	IFuePgNdYj4Y/Dq8aHLygwhQM5i3ckF9nUUgF6O+yRT9xQB0mCrox6VzPY5sM5p0/6GGLk
+	kAaGk6GFgCulOKC19E7nNRhixE6YoY3M1CVsX0RMXdUsCk7PwrhE1p/vFYn0jfZeSkQ3WR
+	YOWUaA/Kq3eABtnf208DEndGf24IUcouW3StcgqEQdMmNm2BtLTi0gbduRLR/w==
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 25 Mar 2025 15:29:18 +0100
+Message-Id: <D8PF2VNMJ0TC.396PL4OJTTBOU@bootlin.com>
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+ <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
+In-Reply-To: <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtfffkvefhvffuggfgofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelfeetjeetffegkeeukeehvdegleeklefggfdtieduvdfgkeeggefhfeekffefhfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Add pin control for UART0 and UART2 in the HiFive Premier P550 device
-tree.
+On Wed Mar 19, 2025 at 12:18 PM CET, Andy Shevchenko wrote:
+> On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.c=
+om wrote:
+> > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> >=20
+> > Add driver for Maxim Integrated MAX7360 PWM controller, supporting up t=
+o
+> > 8 independent PWM outputs.
+>
+> ...
+>
+>
+> > +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+> > +					   struct pwm_device *pwm,
+> > +					   const struct pwm_waveform *wf,
+> > +					   void *_wfhw)
+>
+> I would expect other way around, i.e. naming with leading underscore(s) t=
+o be
+> private / local. Ditto for all similar cases.
 
-Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
----
- .../dts/eswin/eic7700-hifive-premier-p550.dts | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
+I get the point, but the 2 existing drivers based on pwm_ops structure
+name it that way: drivers/pwm/pwm-axi-pwmgen.c and
+drivers/pwm/pwm-stm32.c.
 
-diff --git a/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts b/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
-index 131ed1fc6b2e..c278695dcb2d 100644
---- a/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
-+++ b/arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
-@@ -20,10 +20,56 @@ chosen {
- 	};
- };
- 
-+&pinctrl {
-+	uart0_pins: uart0-0 {
-+		tx-pins {
-+			pins = "UART0_TX";
-+			function = "uart";
-+			bias-disable;
-+			drive-strength-microamp = <6700>;
-+			input-disable;
-+			input-schmitt-disable;
-+		};
-+
-+		rx-pins {
-+			pins = "UART0_RX";
-+			function = "uart";
-+			bias-disable;
-+			drive-strength-microamp = <6700>;
-+			input-enable;
-+			input-schmitt-disable;
-+		};
-+	};
-+
-+	uart2_pins: uart2-0 {
-+		tx-pins {
-+			pins = "UART2_TX";
-+			function = "uart";
-+			bias-disable;
-+			drive-strength-microamp = <6700>;
-+			input-disable;
-+			input-schmitt-disable;
-+		};
-+
-+		rx-pins {
-+			pins = "UART2_RX";
-+			function = "uart";
-+			bias-disable;
-+			drive-strength-microamp = <6700>;
-+			input-enable;
-+			input-schmitt-disable;
-+		};
-+	};
-+};
-+
- &uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
- 	status = "okay";
- };
- 
- &uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
- 	status = "okay";
- };
--- 
-2.43.0
+Also, the parameter is mostly unusable as-is, as it is a void*, so I
+believe it also makes sense to have no underscore for the correctly
+casted one, that we will be using in the function body (wfhw).
+
+>
+> ...
+>
+> > +static int max7360_pwm_read_waveform(struct pwm_chip *chip,
+> > +				     struct pwm_device *pwm,
+> > +				     void *_wfhw)
+> > +{
+> > +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> > +	struct regmap *regmap;
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	regmap =3D pwmchip_get_drvdata(chip);
+> > +
+> > +	ret =3D regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (val & BIT(pwm->hwpwm)) {
+> > +		wfhw->enabled =3D true;
+>
+> Also can be (but up to you)
+>
+> 	wfhw->enabled =3D val & BIT(pwm->hwpwm);
+> 	if (wfhw->enabled) {
+>
+> And also see below. Perhaps it is not a good suggestion after all.
+>
+> > +		ret =3D regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
+> > +		wfhw->duty_steps =3D val;
+>
+> Set to a garbage in case of error, why?
+>
+
+Ok, I'm fixing the whole block of code.
+
+> > +	} else {
+> > +		wfhw->enabled =3D false;
+> > +		wfhw->duty_steps =3D 0;
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+>
+> ...
+>
+> > +static int max7360_pwm_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev =3D &pdev->dev;
+> > +	struct pwm_chip *chip;
+> > +	struct regmap *regmap;
+> > +	int ret;
+> > +
+> > +	if (!dev->parent)
+> > +		return dev_err_probe(dev, -ENODEV, "no parent device\n");
+>
+> Why? Code most likely will fail on the regmap retrieval. Just do that fir=
+st.
+>
+> > +	chip =3D devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
+>
+> This is quite worrying. The devm_ to parent makes a lot of assumptions th=
+at may
+> not be realised. If you really need this, it has to have a very good comm=
+ent
+> explaining why and object lifetimes.
+>
+
+Thanks, I'm fixing this in this driver and similar code in keypad,
+rotary and pinctrl. More details in the child mail.
+
+Thanks for your review!
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
