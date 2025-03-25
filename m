@@ -1,175 +1,134 @@
-Return-Path: <linux-gpio+bounces-17984-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17985-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5336A70C62
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 22:49:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF8E6A70C87
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 23:08:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 556D37A2BE8
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 21:48:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 556C7188ED78
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Mar 2025 22:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE3A266B77;
-	Tue, 25 Mar 2025 21:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JIZDf1IB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B74E126980C;
+	Tue, 25 Mar 2025 22:07:56 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4731A8F60
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 21:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3893C253B5D;
+	Tue, 25 Mar 2025 22:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742939359; cv=none; b=Ml1LNjlpiRaPD3/f0rODFdfKQ5tN/UzgsrgQbJziR0DCxcvDaYfw5yL4fug3y7KzZ0iuhNaU5wauoz3ISEwhtTzzOjdEBb75gkioMEakFhAQ9NGb0MExVZNJMAk2gtr7HXIFjxkFAf7E2iYhciHgGu+VgbugvLz6tc5898Q7eKA=
+	t=1742940476; cv=none; b=F8DN2lvr8uQQX76ejtz7vKyut7QL8JORDmW7gAitcXDEmjRx0YDWwShZhy5HRN9VSqlFu7FIGWevgBcwYfovPUUIHzoDAks5UFeDXw5V+wchpIA0bXFyINvfMJlyv1ZQ1Kz1R9q0wr7ok4Lnh19NdwGTnIAkVV+MNaIwDvHJ73U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742939359; c=relaxed/simple;
-	bh=nwPA9SIOejPkzpLh4ULI5UAZazEYdl1cPdB+6K4iWgA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q6yPR5QKGyQ0BKxudx38VrVBl3O5GjwVlZFtCfASB9/yiVqkMOFZGEvcidj/OWifUEINqdteLi1pAyjCBbApONL1DbGhj96oEbXfAH2oAa77z1piSyw5G0NVv8N9S1cO/TzkRWnh6fdNDDYhC1YwbrHdj96em0IgdNzIuKhmP4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=JIZDf1IB; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85db3475637so9805539f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Mar 2025 14:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1742939356; x=1743544156; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3q3oNbCpD8Yr3ggdluYQ7Oxw70IpYfziH8ybf4Z46oM=;
-        b=JIZDf1IBK6HRknqS/sEe4rhtGMl/yx8f7Pzs+nD/xM0r/y+7YzzjqmRa58iaGCQiOR
-         yz7yDUaUw8qGsbNnJTtyrrmM+cRcKpq2GjdfDJTTTQFaGslA19DpP5iPjGLAkXtaVPxJ
-         ujJDo8nSE62ff4soKYBtrB6bnvQmjMhjAvmbzl6TUJYRo4awdJ7XPxVnqEPV6099zjIn
-         bCbZMx/hQpJObCxsFgdb4Js5mvGNG47DSi6v9553csCBN5NthIqktyDZsstHua04jnL6
-         4uJL61p3HfdGWlUTWVhs+onO9SOcMO8iSBgVj5gyEpuvflXUYvnuT8omussBVMaL28k7
-         12Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742939356; x=1743544156;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3q3oNbCpD8Yr3ggdluYQ7Oxw70IpYfziH8ybf4Z46oM=;
-        b=XDVn5C1cSI70z/CnGq3H3ZXVkVy8eVbI6FvZZAV7xOm1q3am9KDG8hgyH2O8h1JIXP
-         5D4IPjWmPvn/nATSH7WTW2T7QptRCqX8BYrzAYoa8iKuBZswnXBb81MHRjYqhoWuS6EE
-         91xhGwDbw+dtOfHTXtNf2dQaytATkN7zLpfdprO9EfpY70gmoIgOZoR5Jke0xKiZUkoV
-         LIofSIsvbd6SMRqOSeaG2YIcQfK5AczVkUQ9wU2wKpFHuI7OmQTHMA45jKjeGzs2Dy3W
-         BFkC5kJvpAARKKwf9cA8zWM/0u1PDUuQA89nb2HOzRH7ooG+Ip9oYh05/4gbQMNYhdF8
-         9W/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUlc8nTyuEx6lI48q7PV7SMKqKAv4vjXYB6s63eud8rw1nqa5VG2y42YIMmYpYTfA7Ry6Fh2naHANn2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3XRTnR14I4xSQH8dWaTYzqYzGO/k4C7CE179WNHWF0EmEql4E
-	uq3EkCg3g3hlFuhW7plyprOQ8qh1TFk9V+/y/6LYZiOk/Ajty8zQ5bHo/gwWsTg=
-X-Gm-Gg: ASbGncuhetsRZGYwURmbIeGjewvY93pAFego3+HC8W+zyUlzwsBlLeVzo4MUzMdR+A4
-	6y9TSt3aMiGq44Mh7t6nvAup7woZ8DWGv5C1/EvAw9MWEUW2DP9DeAa866FNw8zi115kDlG4ZHL
-	kuCsZUPSKd2/tB8N1UU+nti0houArnoX4ir/vM/5jg1p+KApCyH4Vmod43Hi5qN0xo0Qld/VdY4
-	7bM0OSW9w273pPejIWtfbUwTcTdXE9t3NS9dqvpr3NbDvKVhM5A9SLrunoBepQKZDgAZpsGldIR
-	13AJsraVOeBB3wMH7ugBqdYpiaTKVibpMjJN73RwgttyesoIZzE87ecpIFJzPQ==
-X-Google-Smtp-Source: AGHT+IFj7uKpDfJR5Iim77+HbZSnDjrxpbs+tP0WU77QjYNPslcMwQz6BHnLAD6zLR0ygkvZ39o04g==
-X-Received: by 2002:a05:6e02:4401:20b0:3d1:4a69:e58f with SMTP id e9e14a558f8ab-3d5c20b2c25mr15007025ab.2.1742939356043;
-        Tue, 25 Mar 2025 14:49:16 -0700 (PDT)
-Received: from [100.64.0.1] ([170.85.6.166])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdcfeffsm2556607173.30.2025.03.25.14.49.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 14:49:15 -0700 (PDT)
-Message-ID: <a20d5849-770e-420d-b707-83a50c37810b@sifive.com>
-Date: Tue, 25 Mar 2025 16:49:14 -0500
+	s=arc-20240116; t=1742940476; c=relaxed/simple;
+	bh=J5rfOXpVIm3owZCLUBgmfVivf5Y0iNB6x9OABKbRCpg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Pp4xK2Z9X2E4jLNO5eQBsDp8QQXJdNJrEnR17toFqOlAOcAyrJ5O2KJx8rEEmyU2eESngSniYk2FRXY+/gEke9bEZqBEluk7240cMotIvHU3Ots7LSGj6+Ikr9RGHXu0+pO6oO8u0yJcI7ijOaKxiH0AnVsvR/37c5KrPJvSHTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.48.233])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id BF8D63433D9;
+	Tue, 25 Mar 2025 22:07:51 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH v3 0/2] gpio: irq: support describing three-cell interrupts
+Date: Wed, 26 Mar 2025 06:06:18 +0800
+Message-Id: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/4] riscv: dts: Add EIC7700 pin controller node
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
- Pritesh Patel <pritesh.patel@einfochips.com>,
- Min Lin <linmin@eswincomputing.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, =?UTF-8?B?6bKB546J5p6X?=
- <luyulin@eswincomputing.com>, =?UTF-8?B?5a6B5a6H?=
- <ningyu@eswincomputing.com>, Lin Feng <fenglin@eswincomputing.com>
-References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
- <20250325141311.758787-4-emil.renner.berthing@canonical.com>
-From: Samuel Holland <samuel.holland@sifive.com>
-Content-Language: en-US
-In-Reply-To: <20250325141311.758787-4-emil.renner.berthing@canonical.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAMp42cC/4WPy26DMBBFfwV5XVd+Y1jlP6ouBnsASwlObIISR
+ fx7DSzaLqou7x3dozMvkjEFzKStXiThEnKIUwnyrSJuhGlAGnzJRDChmRA1ZYoO1xBpSDc6jwn
+ R4flMjUGOrJbOMkPK9pqwD4+d+/F55IS3e8HPR0k6yEhdvFzC3FaCceUaDX2hocTaOFCgTaMNN
+ NKgkMLKnumO/NTaZpsUrw+jtPWZ9vGedierrbXgBW88tIskm8cY8hzTc3934bvIP58tnDKqAJV
+ veAfg3WnAaY7xPaZhRy7iGyOZ+AtTDlSqnkvwskZQvzDrun4Bd9JOZ4oBAAA=
+X-Change-ID: 20250227-04-gpio-irq-threecell-66e1e073c806
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2039; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=J5rfOXpVIm3owZCLUBgmfVivf5Y0iNB6x9OABKbRCpg=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBn4ykteD52FYX8CMWYp2wA+M2dpCR+GilBReyWa
+ kduqmFUEtuJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ+MpLV8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277XkpEACDY0Ikr7DxW4Gkvj
+ zHDZmR3TuLaqaEZ/MCKmXMOiE98vOUFdXq44xB7vGpQeOR3XEHa8bH21JKPggYtHlB/Y4iwGiBr
+ p+0H7lthulKUD4GW552L8EZronwcNWDp6ZFa8RPUyHpDjqlGn9uN3glGlecv54mDxDJtXESlcSV
+ lKhCIHsYJssheSwBt6+G3RsXDWySsahdpLxeHxLSskNSYyqzEFsF/n3oRXuiJjpkSKu61t+vkox
+ gw1OMyWV9jPf0Uoj5bDGAkCj9ZFYNIbr07e5dCKZs5PfMgI3GDxh7Mz1LpCgy6CtFhxT7XeiAoE
+ jngw/QG7yLIw70HK5FhpmSX5dSRCo0NeI3qF2Aa/ap4ibDOdPI4Qx9p+OD4MuDoXZlP11pha+do
+ MpKPTSXsdRMameuHqM+nzqUHJDpupEgxPv+k8KnA+qdF3hvZE9uSizR9EQEok5P0pNFOWcbNW1r
+ H9sqrV99T79wcnOjrCGdGN++kTWF1ljG5khj/2rBIA9bPwvSTuXgXqbgDr9+3t+omLmyr6CC+rU
+ bHLmsb8Enfedq0S4Siu0G+9Y6M37s3dv4FRq6xRteTc3ujExK2lWIFarmUsTYu/ojKDK8HtqnCX
+ a3PjlnKi34/whCfu8gdN5zETShVUcCp74wh3wVX1yBIiyhlx51/c5b2DqZn5Va+U2WCw==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On 2025-03-25 9:13 AM, Emil Renner Berthing wrote:
-> Add node for the pin controller on the ESWIN EIC7700 SoC and gpio-ranges
-> properties mapping GPIOs to pins.
-> 
-> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> ---
->  arch/riscv/boot/dts/eswin/eic7700.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/eswin/eic7700.dtsi b/arch/riscv/boot/dts/eswin/eic7700.dtsi
-> index 9cef940f07e4..7226647919b7 100644
-> --- a/arch/riscv/boot/dts/eswin/eic7700.dtsi
-> +++ b/arch/riscv/boot/dts/eswin/eic7700.dtsi
-> @@ -312,6 +312,13 @@ porta: gpio-port@0 {
->  					<324>, <325>, <326>, <327>, <328>, <329>, <330>,
->  					<331>, <332>, <333>, <334>;
->  				gpio-controller;
-> +				gpio-ranges = <&pinctrl  0 12  1>,
-> +					      <&pinctrl  1 14 12>,
-> +					      <&pinctrl 13  1  4>,
-> +					      <&pinctrl 17 32  1>,
-> +					      <&pinctrl 18 40  5>,
-> +					      <&pinctrl 23 51  7>,
-> +					      <&pinctrl 30 68  2>;
->  				ngpios = <32>;
->  				#gpio-cells = <2>;
->  			};
-> @@ -320,6 +327,9 @@ portb: gpio-port@1 {
->  				compatible = "snps,dw-apb-gpio-port";
->  				reg = <1>;
->  				gpio-controller;
-> +				gpio-ranges = <&pinctrl  0 70  3>,
-> +					      <&pinctrl  3 79  7>,
-> +					      <&pinctrl 10 89 22>;
->  				ngpios = <32>;
->  				#gpio-cells = <2>;
->  			};
-> @@ -328,6 +338,7 @@ portc: gpio-port@2 {
->  				compatible = "snps,dw-apb-gpio-port";
->  				reg = <2>;
->  				gpio-controller;
-> +				gpio-ranges = <&pinctrl 0 111 32>;
->  				ngpios = <32>;
->  				#gpio-cells = <2>;
->  			};
-> @@ -336,9 +347,15 @@ portd: gpio-port@3 {
->  				compatible = "snps,dw-apb-gpio-port";
->  				reg = <3>;
->  				gpio-controller;
-> +				gpio-ranges = <&pinctrl 0 143 16>;
->  				ngpios = <16>;
->  				#gpio-cells = <2>;
->  			};
->  		};
-> +
-> +		pinctrl: pinctrl@51600080 {
-> +			compatible = "eswin,eic7700-pinctrl";
-> +			reg = <0x0 0x51600080 0x0 0xff80>;
+In this patch [1], the GPIO controller add support for describing
+hardware with a three-cell scheme:
 
-Per the TRM, the MMIO range is 2M-128B large, so the size should be 0x1fff80.
-Other than that, the rest looks good (especially, the GPIO ranges match what I
-have), so:
+    gpios = <&gpio instance offset flags>;
 
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+It also result describing interrupts in three-cell as this in DT:
 
-> +		};
->  	};
->  };
+    node {
+            interrupt-parent = <&gpio>;
+            interrupts = <instance hwirq irqflag>;
+    }
+
+This series try to extend describing interrupts with three-cell scheme.
+
+The first patch will add capability for parsing irq number and flag
+from last two cells which eventually will support the three-cells
+interrupt, the second patch support finding irqdomain according to
+interrupt instance index.
+
+Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [1]
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+Changes in v3:
+- explicitly introduce *_twothreecell() to support 3 cell interrupt
+- Link to v2: https://lore.kernel.org/r/20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org
+
+Changes in v2:
+- introduce generic irq_domain_translate_cells(), other inline cells function 
+- hide the OF-specific things into gpiolib-of.c|h
+- Link to v1: https://lore.kernel.org/r/20250227-04-gpio-irq-threecell-v1-0-4ae4d91baadc@gentoo.org
+
+---
+Yixun Lan (2):
+      irqdomain: support three-cell scheme interrupts
+      gpiolib: support parsing gpio three-cell interrupts scheme
+
+ drivers/gpio/gpiolib-of.c |  8 +++++++
+ drivers/gpio/gpiolib-of.h |  6 +++++
+ drivers/gpio/gpiolib.c    | 22 +++++++++++++++----
+ include/linux/irqdomain.h | 20 ++++++++---------
+ kernel/irq/irqdomain.c    | 56 +++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 98 insertions(+), 14 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250227-04-gpio-irq-threecell-66e1e073c806
+prerequisite-change-id: 20250217-gpio-ranges-fourcell-85888ad219da:v3
+prerequisite-patch-id: 9d4c8b05cc56d25bfb93f3b06420ba6e93340d31
+prerequisite-patch-id: 7949035abd05ec02a9426bb17819d9108e66e0d7
+
+Best regards,
+-- 
+Yixun Lan
 
 
