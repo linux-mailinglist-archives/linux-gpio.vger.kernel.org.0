@@ -1,143 +1,199 @@
-Return-Path: <linux-gpio+bounces-18021-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18022-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30DD0A71939
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 15:47:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B873A7195D
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 15:51:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 709B63BF53A
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 14:43:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91A8C188A1CE
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 14:46:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22B591FE45D;
-	Wed, 26 Mar 2025 14:40:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9E9A1F3D3E;
+	Wed, 26 Mar 2025 14:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOPuQ9Qn"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CKi9cPvQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941A31FCFC2;
-	Wed, 26 Mar 2025 14:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7D51DF74B;
+	Wed, 26 Mar 2025 14:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000020; cv=none; b=jsRx2plXYl1yyKsdi+crNs1SmJD9/gSLMogIs3FQ4ldG85aTxsQ1ePPB5lh0gFvUPrI7FEtMzvOEUpEkP1UZoFF8690JLzuwj+vaccnA3dI1RV65tC7gUx0al445jBBKoBRas94i8ZQpjfGhRsJRjgR7rjgoeWwUfDPabBqGh9s=
+	t=1743000274; cv=none; b=jDsGQSJB+kU8nzCewMgrKsInlLVqUxpq7GUYovww2Ejj8eN2BxCcIZ87VLoZ/ZjZa0CxRqs4H0ud3PQE5JbsbIMj4unWA/9U3BdpUw4doFIzP48Ev3Vxw5/UbuV6Z54I2HUAIRuiY18GC/6CqxoASaLX2IZOAr6+H4yukP3zDuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000020; c=relaxed/simple;
-	bh=TWUDBBZnu1BkI2OqASq4QWH769tWlcTAxmoohiQh0G4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UlPnGEhzLVVWFIdMxP67CjR2U8AcD0s5Tnq8y/ZespCyuDAZFFFPuZsaV8Y/FM5MQ+nNPtoIESgbE4LHmQIJZpZstm4FjUdw0+A4ATwYsRTAQTU7uRjvf4WmWQWl4B476h3XeTsmrwBjFCKtK5itCC4jlr80Z3loMwBt80zKs+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOPuQ9Qn; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so67814045e9.1;
-        Wed, 26 Mar 2025 07:40:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743000017; x=1743604817; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Oh3CNNvRBoX7TVXDcHJxqkfkaJkOwYjEATrQz4KoURc=;
-        b=fOPuQ9QnMSY/K4Qt5vy7m/6qfVlrvxP5IKZPvAASd/6TD0JLZiRds1q5SlYZDqvzB4
-         s+if6FtFlpsDbTz7HN/qzLu3E4eIIosZGhRn/8rfaSLj246xN80XQ5Wy42ttnF/QAmy4
-         b5497Gzo3X4opRPXawheYF9PQGpAuzXdWy400s4d8luypJSolDyASJ9au5tjRvK/Um36
-         Md/IvdWhlqHz26AE6H5fN3xB8R6vR4ug0bQRciXLHpZdZIoOxXTCD+l48XILK2hchj3V
-         tX+MbFTDyTgzefeCHBfREs/iEZtJCRwI/6fvpun5YU84V9+imeK4c7Ta5HSSJyqm8axs
-         uQgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743000017; x=1743604817;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oh3CNNvRBoX7TVXDcHJxqkfkaJkOwYjEATrQz4KoURc=;
-        b=PeoO8Dsu9u4T2f+Xe3ieTZ4nToW55ZBNGfzNh6P9jvX8iNrCtzip3xHd1FjrSC6I8+
-         e5dq+CqZ8lDbdlGx7xkRFQTOfSICrODtIAE8mQ2R0XpCcuYL6wjYqoGlBZnh+Clek6NN
-         S8oPjumXjKwcC/xSr0kYMFxDOohCDsn5R0qXdewwdBnslrW9u4XZzAXC+5NudPIRXXD/
-         U2BJaJey8zLSSrONe0Gl7V8NAuJCMqmMcoidDzMEXzPm/I2T2GrG+JGPkrbJzhquIvCt
-         TiHrWe0AUnNlELlnve5iIgaB3SCHo0MrU9UaZDfB77isW6VSKxlRNPsn/8iGctGmVySX
-         C7wA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHEcd/j+QhBj+WGFUz3TQtMCpJfocq1sVONsjJIyh1MhsstrsvW30Jj09MB+ZwGPxiXnsAZJUWX/SFXw==@vger.kernel.org, AJvYcCV/GtpPBgEDQHYIZviOWYvKY1YQF9VUS7DlcCCM2kmbBc4UGciHReM7c2oAK2CgSP6/t82Gm57e7tEb@vger.kernel.org, AJvYcCW3PxguF4IxiihEJwB+ULRIoFRCxWCfjUrlsYcNAsiD9U/HVoTcrxxoEbUrbiw74z4rmBC537PUEsxO@vger.kernel.org, AJvYcCW9dDLryzUgT/tM2+pRTICXfy4IGTZmBDEz0yds/WukEg9CnGliS/+D6u1jv78VwAE9uN+Ez6ZBTRek@vger.kernel.org, AJvYcCWId/CmijaHwIrbfdgEPzgYWkuFaUlUREHNO1/tfYzCe12m49uOVeNzaJ//2HfP1G6Tuphr6Z8OKzNefLl2@vger.kernel.org, AJvYcCXNivMKKgwNuw8H1WV3Qu+jLkseE9DcPjSo0HPBHzmplpkQ/10keS+BkBNwxdOEkYYdhYtH/o1/orljFMeJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0/oPf0fq+KvKBvSnx4RJ+pIMkH5f4Ru2YyVwGuaGZxTm9r8L1
-	0HcAgDyWiLRlJ1wIF6vCF6LFzJ3dZaBpGqz0X88ceKpNLqxdfGFm
-X-Gm-Gg: ASbGncs0z89f0CYvj0m4dbnBthFdXs29K4O0izYbo5VT7JcHF8jj307kx0VMgZAaT63
-	DHZ739mxEIvk84+3oGeYK9dFe+r7DZsuD/jHA/217g3y+ftf58ENE3PR/ZVNdl+j61j4ccnzJBr
-	cz5L/qFs6b1psqo2iRFbyZrnQp9M/LlgmRC31MtSYFeJR+igRq/FBfvt8b6aNYP05V1Pvrwkp2V
-	Mf/K8Wor3Cpeg7/xcl1qZW2AtsUh4QaLjk+xsJUY4SY30odne2cn+sMKtD8370zO3EwbbvQiQKk
-	PdUFIpZTqrlKdJpO38Q290Vmkb2T2dszUTqNRFHSNbGGpgE/W4BNJ+FZIu9HMLHgNMxzj9odKqY
-	VATc=
-X-Google-Smtp-Source: AGHT+IFS3943lenVZZ8F3Rv9er/EfJngMgScjrNWzlOZgNty3csF8GqBJtNIJJuQ2lTosciCzIcFdg==
-X-Received: by 2002:a05:600c:5ca:b0:43d:49eb:9675 with SMTP id 5b1f17b1804b1-43d52a8ff36mr137475145e9.22.1743000016374;
-        Wed, 26 Mar 2025 07:40:16 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:e63e:b0d:9aa3:d18d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.40.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 07:40:15 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
-Date: Wed, 26 Mar 2025 14:39:45 +0000
-Message-ID: <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1743000274; c=relaxed/simple;
+	bh=MRFbHFYyoyMaTfUFcp1d9FWNu6nUYKgM6cyNPev6wac=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=jl8/YPOKpdNzJyl51AK80IYAi4eAr2Mi9Kp11aQxdM/z7YPEoiwYaM+c4eyFDDSMoUkT4TP8SCF3Yd4eOsV6a6Cs7rzE0FjfcUyGkAC89o5JUuMscBOQTnby+C/ENaYfxZjaSZCHdCDqafDbgc3spLr97kt+6TsKBeV8AWNLMwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CKi9cPvQ; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CB964441AD;
+	Wed, 26 Mar 2025 14:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743000269;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y0lbkNHAn2CaamDzuCJgBrXafC1b0VIzMu7nshNJuMY=;
+	b=CKi9cPvQk6lyHYxyEVClQbnylCgh5fl8DfDVmLtPRv3GqxMfN8pQdPyEg8N7L7CCHlsgV6
+	bikMtmCOeeqX171M/0wWMabEMOuUId8HmJUexDwrQfdryTgAF8HogfEnVY7zdg6A1/p7v5
+	eeMgocO6zOYbvF9flBDbokxB85kcYR09ujdCipaUv8F+nHvUWyMU1ixFj3c5QWVwBiGFsz
+	jaBTYyGjk2TsczvRZVMiyw/nJ0TpJMps2zY9kuwSUPuFVhg5R3Fl2HEtwZ6rLkwlhcdAyY
+	RjcdrCDkKVEWNOGpv1CuBW3f+lNmtxJqyufpSQWyDqLrAPq6gf/aeODRpPD7Ig==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 26 Mar 2025 15:44:28 +0100
+Message-Id: <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Lee Jones"
+ <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, "Michael Walle" <mwalle@kernel.org>, "Mark
+ Brown" <broonie@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+ <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
+ <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
+ <Z9vydaUguJiVaHtU@smile.fi.intel.com>
+ <D8PF958QL5AK.2JIE4F1N1NI0F@bootlin.com>
+ <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
+In-Reply-To: <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieehkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmegrieeimeefudektdemtgdtsggvmegslegrkeemvgehledvmeeirgeffhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemrgeiieemfedukedtmegttdgsvgemsgelrgekmegvheelvdemiegrfehfpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue Mar 25, 2025 at 4:56 PM CET, Andy Shevchenko wrote:
+> On Tue, Mar 25, 2025 at 03:37:29PM +0100, Mathieu Dubois-Briand wrote:
+> > On Thu Mar 20, 2025 at 11:48 AM CET, Andy Shevchenko wrote:
+> > > On Thu, Mar 20, 2025 at 08:50:00AM +0100, Uwe Kleine-K=C3=B6nig wrote=
+:
+> > > > On Wed, Mar 19, 2025 at 01:18:50PM +0200, Andy Shevchenko wrote:
+> > > > > On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@b=
+ootlin.com wrote:
+>
+> ...
+>
+> > > > > > +	chip =3D devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0)=
+;
+> > > > >=20
+> > > > > This is quite worrying. The devm_ to parent makes a lot of assump=
+tions that may
+> > > > > not be realised. If you really need this, it has to have a very g=
+ood comment
+> > > > > explaining why and object lifetimes.
+> > > >=20
+> > > > Pretty sure this is broken. This results for example in the device =
+link
+> > > > being created on the parent. So if the pwm devices goes away a cons=
+umer
+> > > > might not notice (at least in the usual way). I guess this was done=
+ to
+> > > > ensure that #pwm-cells is parsed from the right dt node? If so, tha=
+t
+> > > > needs a different adaption. That will probably involve calling
+> > > > device_set_of_node_from_dev().
+> > >
+> > > It's an MFD based driver, and MFD core cares about propagating fwnode=
+ by
+> > > default. I believe it should just work if we drop that '->parent' par=
+t.
+> >=20
+> > Are you sure about that?
+>
+> Yes and no. If your DT looks like (pseudo code as I don't know
+> DTS syntax by heart):
+>
+> 	device: {
+> 		parent-property =3D value;
+> 		child0:
+> 			...
+> 		child1:
+> 			...
+> 	}
+>
+> the parent-property value is automatically accessible via fwnode API,
+> but I don't know what will happen to the cases when each of the children
+> has its own compatible string. This might be your case, but again,
+> I'm not an expert in DT.
+>
 
-Enable support for the Renesas RZ/V2N (R9A09G056) SoC in the ARM64
-defconfig.
+On my side:
+- Some MFD child do have a child node in the device tree, with an
+  associated compatible value. No problem for these, they do get correct
+  of_node/fwnode values pointing on the child device tree node.
+- Some MFD child do not have any node in the device tree, and for these,
+  they have to use properties from the parent (MFD) device tree node.
+  And here we do have some problems.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> > On my side it does not work if I just drop the '->parent', this is why =
+I
+> > ended whit this (bad) pattern.
+>
+> > Now it does work if I do call device_set_of_node_from_dev() manually,
+>
+> AFAICT, this is wrong API to be called in the children. Are you talking a=
+bout
+> parent code?
+>
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 11e7d0ad8656..c7b41f86c128 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1483,6 +1483,7 @@ CONFIG_ARCH_R9A07G054=y
- CONFIG_ARCH_R9A08G045=y
- CONFIG_ARCH_R9A09G011=y
- CONFIG_ARCH_R9A09G047=y
-+CONFIG_ARCH_R9A09G056=y
- CONFIG_ARCH_R9A09G057=y
- CONFIG_ROCKCHIP_IODOMAIN=y
- CONFIG_ARCH_TEGRA_132_SOC=y
--- 
-2.49.0
+I believe I cannot do it in the parent code, as I would need to do it
+after the call to devm_mfd_add_devices(), and so it might happen after
+the probe. I still tried to see how it behaved, and it looks like PWM
+core really did not expect to get an of_node assigned to the device
+after adding the PWM device.
+
+So either I can do something in MFD core or in sub devices probe(), or I
+need to come with a different way to do things.
+
+> > so it's definitely better. But I believe the MFD core is not propagatin=
+g
+> > OF data, and I did not find where it would do that in the code. Yet it
+> > does something like this for ACPI in mfd_acpi_add_device(). Or maybe we
+> > do something bad in our MFD driver?
+>
+> ...or MFD needs something to have... Dunno.
+
+I have something working with a very simple change in mfd-core.c, but
+I'm really not confident it won't break anything else. I wish I could
+get some insights from an MFD expert.
+
+@@ -210,6 +210,8 @@ static int mfd_add_device(struct device *parent, int id=
+,
+                if (!pdev->dev.of_node)
+                        pr_warn("%s: Failed to locate of_node [id: %d]\n",
+                                cell->name, platform_id);
++       } else if (IS_ENABLED(CONFIG_OF) && parent->of_node) {
++               device_set_of_node_from_dev(&pdev->dev, parent);
+        }
+
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
