@@ -1,78 +1,77 @@
-Return-Path: <linux-gpio+bounces-18017-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18018-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D866CA7190D
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 15:44:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D3E13A71911
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 15:44:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C8511794A8
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 14:43:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D10917838C
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 14:43:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A23951FBE83;
-	Wed, 26 Mar 2025 14:40:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B9791FC7C5;
+	Wed, 26 Mar 2025 14:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRFjUKte"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OP/gs54w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4407A1F9F70;
-	Wed, 26 Mar 2025 14:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80CD1FBC89;
+	Wed, 26 Mar 2025 14:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000015; cv=none; b=PKLpTz27f6J4pILxlDiWwV1zwIAU3SwjteohbL0tbq3hLH6h5loDHEqxl9T2IjgENjzhzv7JmM5Njb9d7D+rHMehv5HqHCptr1+/wlpxl/AzG0GkkLzeedqyw1xFXmJfP3cm9Dk4CopwE1kCS9zmnKfWGsH6ZYo+wNqezGGh9zo=
+	t=1743000017; cv=none; b=hwrb+Itr1r4l2f4slfIeJQ5GAMDCZVSFFCnGUn5eQFw0tfaF9J/ctUod8ScpT5FvP8wYLmwRD/INaOCovYDI0RuY3avbAJMlESTfYJ0iT5rdhHhCJDHH5uxskwAD/ec7dZT48amsc1B3ZQ0Uq1Mogfzz4OhtReOZmnvnlBwndQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000015; c=relaxed/simple;
-	bh=uoersSX0rR7OKoFV4lC+SCpJcNumJDxwESTf/Qh1qIk=;
+	s=arc-20240116; t=1743000017; c=relaxed/simple;
+	bh=o5hgzM4VQ5OJeGEXkCVX1VygAU/9FrnkB/FemZCGrts=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xy5qxO7UundDtWmjQzEbjrhY6SrFZuy+yRkaJfolzzJbNG5TqhSDTjhWewWX+/oGcCeNst2evZE9TqJK3XrCdPArMJyl3xfJoCwfv0VoABYB2LB7pGHBGCnF1+BfZZGvXt4zRpflyXQdCXW3Ejp0Z0dpa2cKmuyEwBDvfB7gcnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRFjUKte; arc=none smtp.client-ip=209.85.128.54
+	 MIME-Version; b=qtrCEzQE65i6gFvseZ9Ls0IsgKbpAyDBrW8iGahqVCHNH+8HJokQ+mm1PIgq8uHnTRG+fVhgzg8LBPRZDYUDMd3TNzyuZb9DJQmFA20I8zTQm7O4nrC86uwJXMmSg7HLxhixLUglayjGX/my3VnXAmD/jTNqlswGqeX5ivMbcrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OP/gs54w; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso6714095e9.0;
-        Wed, 26 Mar 2025 07:40:13 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39ac56756f6so2712934f8f.2;
+        Wed, 26 Mar 2025 07:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743000011; x=1743604811; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743000013; x=1743604813; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r/lomG6J/G1Z46g4mIoWdtRmMOjFhTy33WeBBrymFoI=;
-        b=QRFjUKteoYqQAsynFo4DhQEE36GcpZMxhK6lbemdefOKgOporW7XawvDRvKXj2tL5w
-         bzsN9gUBngGCrwpUljfE0auZNtyk4wQyEiCB92nkYvZ6O3u7TPVbjgIKz+qtwVR6k1Qy
-         DDpA3gfP4nKVou/yJO/hNZZxeUwdicyFlMgBKXbzlBnCA8QVvfuHwslbd/dQwkXddant
-         VNGtXUJGB5wOrJW441njaly3QNiougn5Z4NUaZtXPwzoDd+1DZtNAre9jQKUb6twhyiW
-         nxoAWXTwE74ArpLnGs+atO/0jgdTJeJ8dtHoUOlgot8RNwIfJJQCJVQ/hvfg01Jh0c07
-         Q2+A==
+        bh=C6hfLsSuXXkQW+oQprMpqK3KHzdpSf8DxnzIWa6RWKI=;
+        b=OP/gs54w5Z1Z+soZcS12XJrcEM2ELQGu9DScYlalcvnIIlyeEfGDycOsi+SY0JLPNB
+         YBuJo5q583QX/GSzCwH25hqtF7YBO2CQMiYMmkGWr0lRFeGBbiYmCae4qR032R3MI/m+
+         VDsZRY2X9OCP7HjUPuXxKZRJ9TRw1atH+NkcLVZNms1TjqFbizVzWc1hU67tmocJrHTD
+         bdxtsnCooijKIOUIUk29fl3Vn6DJpecdMKka8esIjRYcuiONS2hcgF9cJlvvKeMD03lz
+         i6rh71+e1xBJXdt5kph21eSVxb4X+NJPhEUun53eUtUUc0RKL+x4TZS+/kyhYRKFXatj
+         HwDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743000011; x=1743604811;
+        d=1e100.net; s=20230601; t=1743000013; x=1743604813;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r/lomG6J/G1Z46g4mIoWdtRmMOjFhTy33WeBBrymFoI=;
-        b=tytvmTthsIRga59f+uQreR/+LYnPW8MPCdbkADfqXQWELBXrHdCd6F7sjU97g6UZW6
-         5TtnHuwThW1lM3/sULlojlr7ICWzZ9QLRldARXE3HUa9Sj4my0nEGqXQzLaNNrwEom3Q
-         gexQ9eRzTHL3nw3kMrMElHJXgXkliIwDENUM//39Z4zWeAfHR1J+AZdwU1EBNz1adTlk
-         U5SWjhMMXQ5jNdleyP1PiO2LyZtkEcQO6k+WNHpLhWiaj6WV1VZJBVASGxhDSnqbt8oR
-         h8bXs2Uli22qzaDk92lYcL6rl3uZv5vqdezo56aFru3+2pQiRhb13+caxuOjoDLFnyzK
-         Oy5A==
-X-Forwarded-Encrypted: i=1; AJvYcCU34E7yLZ7XaD+dhEOFvYRqgM05GJASUNOt5PHuQeSw8x8iEwQvCULI40FRCRlzYJyOqDNVI8zEilNi@vger.kernel.org, AJvYcCVqcPxaCM4mHtpu7Lpw7l9CVtiSQzGfsyYeBLUu68zj+DsoZbrOZkoBNvnfQNBtqrvHdRooJyKU4C5z@vger.kernel.org, AJvYcCW84Uwax+UqK6QYBGxhNiy/QMFDCO8ON8eJz46WJa/8JhQz4oWRyN8HRNdSEm+kiArbp9CrYqaeS70hkcLQ@vger.kernel.org, AJvYcCW9qrvinurHDV3A8Z80zkKeQYJnvrh01J5fdP8vEuQfhWHYsSrwaJonk7lhyAT/5oIwPZiIkKkvBUF7@vger.kernel.org, AJvYcCWJdP2/8SgQ3w6UQLFujR/0O7OsYjdzQnvIjWrDjrKrCJSoz/TL7CTgloA+OMnISPac6o5fqJN207LAh7kJ@vger.kernel.org, AJvYcCXSTPPrTFeBlBmn/SPGtCKpz5wddl2S64ccNkUNin4yOkclj/1XNrLXLZNDxbwjmShSJhDQ/PJCBDMWSw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+6y6x5fUC2Db/vCAQ+XEKjcIx23449D+D4UTgJxeUAL5B7wwE
-	y6QLJ27Jbk0tIKNabKWlpH1/iL4RcF4uVy1RErgI+u8qT8utLFfx
-X-Gm-Gg: ASbGnctHls24uCcG/1MncbSACjLv1lxZGY4kFwmVpFudDueKkpESKIIip8n7VYmcxQU
-	hTO/ZFHYj/1obdx1ljv+ap79I+en9Z365GlUSJxQUhx5VKnab2+sbuX9LoFN5drg9WTcQYMz7ih
-	H3D9rlEVNLSbCRd5nEudMckNFgrUJC9ida2kwiQt/GyBjF6GQ/RxVnhYfNDWXAKYB5ng4p7qrDi
-	ajgYmjcryJpPgzxN8JBMGOIH1tn229TJldhF2aKM1l/2tpkoTXw2x/W1mX7ywAZXdtn9LTtsJjv
-	YUpDlSmYTuMdln+4jmQ/Ap0kiJ3+i5v2eSQuvzku6S8mPEx37inN61HcKFXsknfXITmRG665EuP
-	1wV8=
-X-Google-Smtp-Source: AGHT+IEIcUFLZuJ+CZrWTt/yKGPAxWem+MKUwzWCtkifX+BMYe55mgN/WTi1vPZkmR0ezxHKuAOQsg==
-X-Received: by 2002:a05:600c:1c07:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-43d77643440mr34306375e9.12.1743000011301;
-        Wed, 26 Mar 2025 07:40:11 -0700 (PDT)
+        bh=C6hfLsSuXXkQW+oQprMpqK3KHzdpSf8DxnzIWa6RWKI=;
+        b=F7isUU8tjSUpF7dk3HSblhCjJAzq9SRlBhOvcckb4UNJYNpjcvNTTg4CGD+1SPvTp7
+         LLX1imvFi07saTld5u7rQXQwY67dVGXL6WPOp3tq6Mfd6INDenzMbOq+rNkS0QuMyRfA
+         NU7UUQuLSihWq6rV+pb67GTbirChdmktAl9PFjB+Yw0Wl2GWnSv3/BX/A+9YesU7hCSY
+         qLToi+f3a5Qi6vbNwGZbtc5sJGybUpn2O13LYpBj59ym0tme+kmP1HWFCd5kPzXQ1Ln3
+         WZH//96uUi9nbwSsghxj976WDqxa7U97He+Eb859Cm2KQwSR7rF7c481kBJd/CIcd5RO
+         +CRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFKatmHLXoL6rEA6LaJ02qkHNU3aiM/QWfIw5lKVL/5MluEMGqNnsU8+8iuwRm2MQjkkYc+k5xtr7yV2FX@vger.kernel.org, AJvYcCV1nhF/1s03PozkmImGgzN6HTZYGAv74McNUVhCYGAkdRtCm3ciCVQ1OKDMIMt+D7TA6A9GHA9fn5MA@vger.kernel.org, AJvYcCVVS4RI7++P55el0xyOewPdlUrOeTLP6phZI9F4cEMlynNVtBtCtCfoOE0O5S9yzzsAiuwnbkqBgwMe@vger.kernel.org, AJvYcCVkKuEsLrYLW7LM5b492kta3ix8CK+KsSjlNU/BWaxn4u7DUHfdpOYhY3F9T8UpA/qLtP62b6nHJBfijQ==@vger.kernel.org, AJvYcCWXTZWYPUOdq0pdURqDH75HLwsOi++RtnstSwnbUNm7Ekf3GSqBXhvv6Tt4OSa01+3Av5zzF55HXnbF@vger.kernel.org, AJvYcCXzIMsMVMwD7p7kEOH7Lg6OlHHrgWL6b+YIsxe5j2ViLDB8eeNOYI/cS1JN/KCdWcYj3qjgmZewrJ7yfbJU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzueyocH0Vs/sAnK6B+vQIUYRZwPfxjaa7NwM+U6v6PoYqsFTe
+	OrxeDh71SBIdm32Yw3A4RuzYQvcnaoWvTkV4joULxUJLC4ZcDAi7
+X-Gm-Gg: ASbGncvKp9eS9Pz4/GEsKZrzaAoj3U3Fm4LmFOLEK7r56TOTPpRUquR4Mw0nSclqrqX
+	BC5fqyUcoyRf/rqYxcgzPMeHTuB26DThwtYNrxrkIStb3tUS1ScZ7tIziumuMdzjLw7BHy7IYqn
+	xwT7cB+ngNbRMt6ea1bb6ncG57hia60xxpPH5xOlnrB7KSbcyz2TNALDHN2RwiKsyTvztqSJlw9
+	lAD0MDf97h6l0b+8dafT7Z9KjCwQilxMA6TxOm9iQvXsAyMs++Q9uTzGKbku/qgbBnAdoOifH1C
+	bqhxoxd3aEWzzYJzemvthVnf7uQxGBG+0BE9cjh+MlfYuJmMxHJT2WmcFhfsjsrJhIuY
+X-Google-Smtp-Source: AGHT+IE4qtcNDA9+68gnJpQW7sH+JjJZJUZhlD6D7jXeTF/bWc027ggNQ2cK9NDwA9P5cuQE+xB1mA==
+X-Received: by 2002:a05:6000:2cd:b0:390:fc5a:91c8 with SMTP id ffacd0b85a97d-3997f940ec2mr19210115f8f.53.1743000012657;
+        Wed, 26 Mar 2025 07:40:12 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:e63e:b0d:9aa3:d18d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.40.10
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.40.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 07:40:10 -0700 (PDT)
+        Wed, 26 Mar 2025 07:40:11 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -101,9 +100,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 11/15] dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
-Date: Wed, 26 Mar 2025 14:39:41 +0000
-Message-ID: <20250326143945.82142-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 12/15] pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+Date: Wed, 26 Mar 2025 14:39:42 +0000
+Message-ID: <20250326143945.82142-13-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -117,80 +116,100 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add documentation for the pin controller found on the Renesas RZ/V2N
-(R9A09G056) SoC. The RZ/V2N PFC differs slightly from the RZ/G2L family
-and is almost identical to the RZ/V2H(P) SoC, except that the RZ/V2H(P) SoC
-has an additional dedicated pin.
+Add pinctrl support for the Renesas RZ/V2N SoC by reusing the existing
+RZ/V2H(P) pin configuration data. The PFC block is nearly identical, with
+the only difference being the absence of `PCIE1_RSTOUTB` on RZ/V2N.
 
-To account for this, a SoC-specific compatible string,
-'renesas,r9a09g056-pinctrl', is introduced for the RZ/V2N SoC.
-
-Also add `renesas,r9a09g056-pinctrl.h` header file which define pins
-that will be used by the driver and board DTS files.
+To accommodate this, move the `PCIE1_RSTOUTB` entry to the end of the
+`rzv2h_dedicated_pins` array and set `.n_dedicated_pins` to
+`ARRAY_SIZE(rzv2h_dedicated_pins) - 1` in the RZ/V2N OF data.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  2 ++
- .../pinctrl/renesas,r9a09g056-pinctrl.h       | 30 +++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 include/dt-bindings/pinctrl/renesas,r9a09g056-pinctrl.h
+ drivers/pinctrl/renesas/Kconfig         |  1 +
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 36 ++++++++++++++++++++++++-
+ 2 files changed, 36 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-index 768bb3c2b456..5156d54b240b 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-@@ -27,6 +27,7 @@ properties:
-               - renesas,r9a07g044-pinctrl # RZ/G2{L,LC}
-               - renesas,r9a08g045-pinctrl # RZ/G3S
-               - renesas,r9a09g047-pinctrl # RZ/G3E
-+              - renesas,r9a09g056-pinctrl # RZ/V2N
-               - renesas,r9a09g057-pinctrl # RZ/V2H(P)
+diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
+index 3c18d908b21e..e16034fc1bbf 100644
+--- a/drivers/pinctrl/renesas/Kconfig
++++ b/drivers/pinctrl/renesas/Kconfig
+@@ -42,6 +42,7 @@ config PINCTRL_RENESAS
+ 	select PINCTRL_RZG2L if ARCH_RZG2L
+ 	select PINCTRL_RZV2M if ARCH_R9A09G011
+ 	select PINCTRL_RZG2L if ARCH_R9A09G047
++	select PINCTRL_RZG2L if ARCH_R9A09G056
+ 	select PINCTRL_RZG2L if ARCH_R9A09G057
+ 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
+ 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index c72e250f4a15..ae5e040f3276 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -2304,7 +2304,6 @@ static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
+ 	{ "SD1DAT3", RZG2L_SINGLE_PIN_PACK(0xc, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+ 						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
+ 	{ "PCIE0_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
+-	{ "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
+ 	{ "ET0_MDIO", RZG2L_SINGLE_PIN_PACK(0xf, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+ 						     PIN_CFG_IEN | PIN_CFG_PUPD)) },
+ 	{ "ET0_MDC", RZG2L_SINGLE_PIN_PACK(0xf, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+@@ -2359,6 +2358,14 @@ static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
+ 	{ "ET1_RXD1", RZG2L_SINGLE_PIN_PACK(0x14, 5, (PIN_CFG_PUPD)) },
+ 	{ "ET1_RXD2", RZG2L_SINGLE_PIN_PACK(0x14, 6, (PIN_CFG_PUPD)) },
+ 	{ "ET1_RXD3", RZG2L_SINGLE_PIN_PACK(0x14, 7, (PIN_CFG_PUPD)) },
++
++	/*
++	 * This pin is only available on the RZ/V2H(P) SoC and not on the RZ/V2N.
++	 * Since this array is shared with the RZ/V2N SoC, this entry should be placed
++	 * at the end. This ensures that on the RZ/V2N, we can set
++	 * `.n_dedicated_pins = ARRAY_SIZE(rzv2h_dedicated_pins) - 1,`.
++	 */
++	{ "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
+ };
  
-       - items:
-@@ -145,6 +146,7 @@ allOf:
-           contains:
-             enum:
-               - renesas,r9a09g047-pinctrl
-+              - renesas,r9a09g056-pinctrl
-               - renesas,r9a09g057-pinctrl
-     then:
-       properties:
-diff --git a/include/dt-bindings/pinctrl/renesas,r9a09g056-pinctrl.h b/include/dt-bindings/pinctrl/renesas,r9a09g056-pinctrl.h
-new file mode 100644
-index 000000000000..206bba07c288
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/renesas,r9a09g056-pinctrl.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * This header provides constants for Renesas RZ/V2N SoC pinctrl bindings.
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corp.
-+ */
+ static struct rzg2l_dedicated_configs rzg3e_dedicated_pins[] = {
+@@ -3349,6 +3356,29 @@ static struct rzg2l_pinctrl_data r9a09g047_data = {
+ 	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
+ };
+ 
++static struct rzg2l_pinctrl_data r9a09g056_data = {
++	.port_pins = rzv2h_gpio_names,
++	.port_pin_configs = r9a09g057_gpio_configs,
++	.n_ports = ARRAY_SIZE(r9a09g057_gpio_configs),
++	.dedicated_pins = rzv2h_dedicated_pins,
++	.n_port_pins = ARRAY_SIZE(r9a09g057_gpio_configs) * RZG2L_PINS_PER_PORT,
++	.n_dedicated_pins = ARRAY_SIZE(rzv2h_dedicated_pins) - 1,
++	.hwcfg = &rzv2h_hwcfg,
++	.variable_pin_cfg = r9a09g057_variable_pin_cfg,
++	.n_variable_pin_cfg = ARRAY_SIZE(r9a09g057_variable_pin_cfg),
++	.num_custom_params = ARRAY_SIZE(renesas_rzv2h_custom_bindings),
++	.custom_params = renesas_rzv2h_custom_bindings,
++#ifdef CONFIG_DEBUG_FS
++	.custom_conf_items = renesas_rzv2h_conf_items,
++#endif
++	.pwpr_pfc_lock_unlock = &rzv2h_pwpr_pfc_lock_unlock,
++	.pmc_writeb = &rzv2h_pmc_writeb,
++	.oen_read = &rzv2h_oen_read,
++	.oen_write = &rzv2h_oen_write,
++	.hw_to_bias_param = &rzv2h_hw_to_bias_param,
++	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
++};
 +
-+#ifndef __DT_BINDINGS_PINCTRL_RENESAS_R9A09G056_PINCTRL_H__
-+#define __DT_BINDINGS_PINCTRL_RENESAS_R9A09G056_PINCTRL_H__
-+
-+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
-+
-+/* RZV2N_Px = Offset address of PFC_P_mn  - 0x20 */
-+#define RZV2N_P0	0
-+#define RZV2N_P1	1
-+#define RZV2N_P2	2
-+#define RZV2N_P3	3
-+#define RZV2N_P4	4
-+#define RZV2N_P5	5
-+#define RZV2N_P6	6
-+#define RZV2N_P7	7
-+#define RZV2N_P8	8
-+#define RZV2N_P9	9
-+#define RZV2N_PA	10
-+#define RZV2N_PB	11
-+
-+#define RZV2N_PORT_PINMUX(b, p, f)	RZG2L_PORT_PINMUX(RZV2N_P##b, p, f)
-+#define RZV2N_GPIO(port, pin)		RZG2L_GPIO(RZV2N_P##port, pin)
-+
-+#endif /* __DT_BINDINGS_PINCTRL_RENESAS_R9A09G056_PINCTRL_H__ */
+ static struct rzg2l_pinctrl_data r9a09g057_data = {
+ 	.port_pins = rzv2h_gpio_names,
+ 	.port_pin_configs = r9a09g057_gpio_configs,
+@@ -3389,6 +3419,10 @@ static const struct of_device_id rzg2l_pinctrl_of_table[] = {
+ 		.compatible = "renesas,r9a09g047-pinctrl",
+ 		.data = &r9a09g047_data,
+ 	},
++	{
++		.compatible = "renesas,r9a09g056-pinctrl",
++		.data = &r9a09g056_data,
++	},
+ 	{
+ 		.compatible = "renesas,r9a09g057-pinctrl",
+ 		.data = &r9a09g057_data,
 -- 
 2.49.0
 
