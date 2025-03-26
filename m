@@ -1,100 +1,212 @@
-Return-Path: <linux-gpio+bounces-18005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18006-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A58EA717C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 14:51:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C3A6A718BF
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 15:40:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5280170B5B
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 13:51:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BFA63B8FB5
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 14:40:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6820C1EEA59;
-	Wed, 26 Mar 2025 13:51:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A941F3D49;
+	Wed, 26 Mar 2025 14:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OO19TWv4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3RLpIUo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3011E1DEE;
-	Wed, 26 Mar 2025 13:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588B11F12F3;
+	Wed, 26 Mar 2025 14:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742997105; cv=none; b=pE0DHMnS6vSVn4rPm3Mw6dTFfa2roAvd7PFtTls+xBsyLGZEbQHx4jbiLmctwkwk2ujakUzZwd/sFrM8liWTk0mJ7GQ2a355oFN9dRvg/5ERtXthaHvZCCVY1AMbM0+EZLEoTyW6AU0keN/ZLGfbDbOudj9wi+QTOHvPSmRacoc=
+	t=1743000001; cv=none; b=AzEJwdV/xk4Qngwgi2+XspNCNBu7VfxMPR9rNtU1B/2HYnjHgMNnSTqFl0OiIllUnUa2CufQQrPNqoFhN7YpGWbaQelxwnWONHiu2ldB2EYf2MbEALrbUdOFMBC/g+AXkR8tHSt0PkoyZhdNUQlo5/6opGhtmcAtlPcBaIztkVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742997105; c=relaxed/simple;
-	bh=0emlILhDt50Wd14Lf4Ha0ayGkkJ90W2Le45aaT8IgI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c2jM+iBOHep1Jk7nKlQdQV6WEhzk8CHsZhYqKaxIuajPVDgVbmz1SIZ6yxMP1db1uDI5x0/NKJgrtaJFY0mhRjgg7phBGCfP7azqkTiuF3Yhb8dR32Ap1LUtrZPZ5tniQgcQnLihTxPpcwrGuEShWmmiz9550poBjufPu4BupIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OO19TWv4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE5CC4CEE5;
-	Wed, 26 Mar 2025 13:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742997104;
-	bh=0emlILhDt50Wd14Lf4Ha0ayGkkJ90W2Le45aaT8IgI4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OO19TWv4oD/Ga5VbGNTBP2DcziPpSOdI3luLMW6mnsuE1kTyMeT+5nHJSz6gdETDg
-	 WxaNeUGP7UbtOUlxeRTnIYBLVdaw37/XAuAry5d32DwolRQDWFGqI9HeRI3TUoPadq
-	 Kv/C8ILiny7IFQbC4zk7uW/bW69RqQ+pjOmtCHCM=
-Date: Wed, 26 Mar 2025 09:50:19 -0400
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Raag Jadav <raag.jadav@intel.com>, Lee Jones <lee@kernel.org>,
-	giometti@enneenne.com, raymond.tan@intel.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] mfd: intel_ehl_pse_gpio: Introduce Intel Elkhart
- Lake PSE GPIO and TIO
-Message-ID: <2025032609-query-limit-491b@gregkh>
-References: <20250307052231.551737-1-raag.jadav@intel.com>
- <20250307052231.551737-2-raag.jadav@intel.com>
- <20250314124450.GP3890718@google.com>
- <Z9QxqH3DJvyW3sjo@smile.fi.intel.com>
- <20250314135735.GQ3890718@google.com>
- <Z9z49lfWV6LjUnaI@black.fi.intel.com>
- <2025032115-gloomily-cubbyhole-dd8e@gregkh>
- <Z91oHCpfOkvgJmzP@smile.fi.intel.com>
- <2025032514-ipad-schilling-9928@gregkh>
- <Z-PCgJY8qBPBWKVN@smile.fi.intel.com>
+	s=arc-20240116; t=1743000001; c=relaxed/simple;
+	bh=xNcdD4MukR9BXxT1Xn891EkJMtOzk3jHRuQfj1K76Oo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ii74MNxIaXNcpR6S6rn1vrDwXRPtfXHM2gFn1pohmbPie6eJzBDWApHKkGRXThNDltE/bbJ7DTwnt2YsFq8VASdfoEgRutam61nn7mEFZfaOo4vJtCzM+UQAX4+Hv6VAORCFO0mkzMUgIQ5Qf4eLlJAjb16nLmznn6Vbajj2RFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3RLpIUo; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso72316845e9.3;
+        Wed, 26 Mar 2025 07:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742999997; x=1743604797; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w2escYwrmWHZI04j1+ZmCi0mw73OS6dWdYk3lX1suGw=;
+        b=l3RLpIUoeSSvH5lPp35TN8OcBk90zM8ekDOqtaRQdUXhY7WXU2shMOiqwOv85OPJvG
+         RdN+7Pz9U3X0PkNfXiSDJeMLpAYlkPOLLuUGEeWdosa4BbV5wQaK9nlZadzXj8ifAEMo
+         aSyeq8hgsXLYx3mpR5Vgk6NdNpX1sZ6WE1+gvDbQPoqqI9z7iBywKQbra0TbRAukVhr6
+         cNBsO8a5IwcVPb4oeCWAHTwr1LNweFl6fEtCHyMiC3ScNAm/j4vPavQIqWWAsqiiqVE/
+         NuEyqaYSCN2pd89+3XlAH1fvl1Ecbklj2ZM4TNGx0YBKkP4AVlPYghbMaK8N9ua5Nlg/
+         KUtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742999997; x=1743604797;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w2escYwrmWHZI04j1+ZmCi0mw73OS6dWdYk3lX1suGw=;
+        b=Tf8hE0FyQR55SpSQygxX6sO7bTAa9wjktbkwdn1Y9T+kJvfMJs4Sxn7atX+lj/NkN6
+         cEGWh44Ep1Y8AtqG7wifUoQHWOpMxEf990pYErakq0NI+tsp9u08qNHJusLe57+Aq5Ya
+         N1g0tMs4IO4xnMNSr0X4zW5iR55dqHF/lDLdvyrX5S4OJ91Ioiw/qmt3NC06hmxuYcOa
+         kOl2gVp/6azx/HSKxBOdDSWnc4zZXTe4gTMUvPCR6uVrmd6KMlrTINgaXC8MIBIe1k6S
+         KHng5ClZI0jxRoY8rUEXNq35OIsaiV8TFchU0b9GCOQJw9AJ2OFhgpz9N/Luq/2eN7rp
+         5SDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURIdwhox0gTHP/6O2SMigIXJMCQX2xfH3olvUTawz1mc1kecFubOLskBie9dCwn9np1QY7onbN/+gdnA==@vger.kernel.org, AJvYcCV6MdFCwiNolvMTg3h1HE7uCWWOVy9RCGIlBEWHqAxBbcoGQHk+R2iBd4w7TqoVjgesjVQ2k3Jq9nKK@vger.kernel.org, AJvYcCVFmGNJFs41Gb9vCVVv7rvLsOJFiDHfUFI/qgQyNcFLbhG0l7RfZmkJjZy52WLSbbZxKmbJi9B4n3+Kxq8s@vger.kernel.org, AJvYcCWOBRIf9jae2MGzwjzLnMLVPgmP9eDMx0Ub6UJKr7gUnulQxEF5s7ZLV8oCh9YemnSLkotC44ehUyOp@vger.kernel.org, AJvYcCWXQErbeXn0RNvSfVnSsFFzBMubjocVc1AH05ckr7XwhXwF+I9a5DLOA19Hnr9SeCXIac4cwkAdH2kZ@vger.kernel.org, AJvYcCWa4v2SvDTqDxPZiq1yjvqWTv4Tj41K+up2mip7+aEuWcVzVmf0JRrCj5Swnr8uynuOi3k+ZlwdDWJn8D53@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjph1bPHEz+4if0cGSOqvCfmsvHtYOLV9KqVdcC3YpdeE1qNdv
+	vOZsGah/u6Y/usnlIQfpLWEyO0+8FuDUDRpl4Ya+Y+Ly0uSmSMOc
+X-Gm-Gg: ASbGnctf0268BbGPMdsr6prkngpc78lwNmPBVsyx6bVdRCoCAfboqTKuiJBbRMzJZzp
+	zdhMSG/VLxm+SwQzRnFu2sC114lS600AXB2gKWLmdR7FnyQ4j6n/gWSD00dhc3BPeldM43PNT/g
+	8o05hHsEGrVb3fAmguLz1rlYZp0x05ooVm1AklWBZiAWjOvNlZFi36RUGbofC3dqB5RtuZLJQaq
+	nvFRYnVavB9PCdR3CKnAyCkn87CcrM2DamjvcmvSFuwN4nObwL/w4vDAnSTltVEsUQK/HoVOw4w
+	Ug4gphfNrFgaHeqxFMe4xOrKLgDjNJV/EYoEWIfFQNQSBHcFdvwZkM6DfuaZJSpYJMTD
+X-Google-Smtp-Source: AGHT+IGdl4gZEs10PQlzsN+VIaU/DUCwY0IWNIT2HC33rcyjm98sYqp/GuDO9Lr86yE82SREs/oVZQ==
+X-Received: by 2002:a05:600c:5849:b0:43c:f81d:f with SMTP id 5b1f17b1804b1-43d52a2068emr136915965e9.8.1742999997100;
+        Wed, 26 Mar 2025 07:39:57 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:e63e:b0d:9aa3:d18d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.39.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 07:39:56 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/15] Add support for Renesas RZ/V2N SoC and EVK
+Date: Wed, 26 Mar 2025 14:39:30 +0000
+Message-ID: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-PCgJY8qBPBWKVN@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 26, 2025 at 11:01:52AM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 25, 2025 at 08:45:29PM -0400, Greg KH wrote:
-> > On Fri, Mar 21, 2025 at 03:22:36PM +0200, Andy Shevchenko wrote:
-> > > On Fri, Mar 21, 2025 at 06:04:38AM -0700, Greg KH wrote:
-> > > > On Fri, Mar 21, 2025 at 07:28:22AM +0200, Raag Jadav wrote:
-> > > > > On Fri, Mar 14, 2025 at 01:57:35PM +0000, Lee Jones wrote:
-> > > > > > On Fri, 14 Mar 2025, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > > > > > Also, Greg has been quite vocal about converting PCI devices to Platform
-> > > > > > ones in the past.  We may wish to run this past him before continuing.
-> > > > > 
-> > > > > Greg, any objections on moving forward with platform device?
-> > > > 
-> > > > I have no context here at all, why would a PCI device EVER be a platform
-> > > > device?  That feels wrong on so many levels...
-> > > 
-> > > It's a multi-functional device, in other words that device provides a set of
-> > > (dependent or independent) subdevices. But do you have other suggestion?
-> > > The auxiliary bus?
-> > 
-> > Yes, that is exactly what the auxiliary bus code was designed and
-> > written for.
-> 
-> Lee, what do you think of extending mfd to cover this case, i.e. specifically
-> for the PCI devices? Or maybe it makes sense to go to the auxiliary bus
-> completely (I think this may break a lot of things on legacy systems, though).
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Don't change existing drivers, only do it for new ones please.
+This patch series adds initial support for the Renesas RZ/V2N (R9A09G056)
+SoC and its evaluation board (EVK). The Renesas RZ/V2N is a vision AI
+microprocessor (MPU) designed for power-efficient AI inference and
+real-time vision processing. It features Renesas' proprietary AI
+accelerator (DRP-AI3), delivering up to 15 TOPS AI performance, making
+it ideal for applications such as Driver Monitoring Systems (DMS),
+industrial monitoring cameras, and mobile robots.
+
+Key features of the RZ/V2N SoC:
+  Processing Power:
+    - Quad Arm Cortex-A55 cores at 1.8GHz for high-performance computing
+    - Single Arm Cortex-M33 core at 200MHz for real-time processing
+    - 1.5MB on-chip SRAM for fast data access
+    - LPDDR4/LPDDR4X memory interface for high-speed RAM access
+
+  AI and Vision Processing:
+    - DRP-AI3 accelerator for low-power, high-efficiency AI inference
+    - Arm Mali-C55 ISP (optional) for image signal processing
+    - Dual MIPI CSI-2 camera interfaces for multi-camera support
+
+  High-Speed Interfaces:
+    - PCIe Gen3 (2-lane) 1ch for external device expansion
+    - USB 3.2 (Gen2) 1ch (Host-only) for high-speed data transfer
+    - USB 2.0 (Host/Function) 1ch for legacy connectivity
+    - Gigabit Ethernet (2 channels) for network communication
+
+  Industrial and Automotive Features:
+    - 6x CAN FD channels for automotive and industrial networking
+    - 24-channel ADC for sensor data acquisition
+
+LINK: https://tinyurl.com/renesas-rz-v2n-soc
+
+The series introduces:
+- Device tree bindings for various subsystems (SYS, SCIF, SDHI, CPG, pinctrl).
+- RZ/V2N SoC identification support.
+- Clock and pinctrl driver updates for RZ/V2N.
+- Initial DTSI and device tree for the RZ/V2N SoC and EVK.
+- Enabling RZ/V2N SoC support in `arm64 defconfig`.
+
+These patches have been tested on the RZ/V2N EVK with v6.14,
+logs can be found here https://pastebin.com/8i3jgVby 
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (15):
+  dt-bindings: soc: renesas: Document Renesas RZ/V2N SoC variants
+  dt-bindings: soc: renesas: Document RZ/V2N EVK board
+  soc: renesas: Add config option for RZ/V2N (R9A09G056) SoC
+  dt-bindings: soc: renesas: Document SYS for RZ/V2N SoC
+  soc: renesas: sysc: Add SoC identification for RZ/V2N SoC
+  dt-bindings: serial: renesas: Document RZ/V2N SCIF
+  dt-bindings: mmc: renesas,sdhi: Document RZ/V2N support
+  dt-bindings: clock: renesas: Document RZ/V2N SoC CPG
+  clk: renesas: rzv2h-cpg: Sort compatible list based on SoC part number
+  clk: renesas: rzv2h: Add support for RZ/V2N SoC
+  dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
+  pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+  arm64: dts: renesas: Add initial SoC DTSI for RZ/V2N
+  arm64: dts: renesas: Add initial device tree for RZ/V2N EVK
+  arm64: defconfig: Enable Renesas RZ/V2N SoC
+
+ .../bindings/clock/renesas,rzv2h-cpg.yaml     |   5 +-
+ .../devicetree/bindings/mmc/renesas,sdhi.yaml |   4 +-
+ .../pinctrl/renesas,rzg2l-pinctrl.yaml        |   2 +
+ .../bindings/serial/renesas,scif.yaml         |   1 +
+ .../soc/renesas/renesas,r9a09g057-sys.yaml    |   1 +
+ .../bindings/soc/renesas/renesas.yaml         |  15 +
+ arch/arm64/boot/dts/renesas/Makefile          |   2 +
+ arch/arm64/boot/dts/renesas/r9a09g056.dtsi    | 264 ++++++++++++++++++
+ .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 115 ++++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/clk/renesas/Kconfig                   |   5 +
+ drivers/clk/renesas/Makefile                  |   1 +
+ drivers/clk/renesas/r9a09g056-cpg.c           | 152 ++++++++++
+ drivers/clk/renesas/rzv2h-cpg.c               |  18 +-
+ drivers/clk/renesas/rzv2h-cpg.h               |   1 +
+ drivers/pinctrl/renesas/Kconfig               |   1 +
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       |  36 ++-
+ drivers/soc/renesas/Kconfig                   |  10 +
+ drivers/soc/renesas/Makefile                  |   1 +
+ drivers/soc/renesas/r9a09g056-sys.c           | 107 +++++++
+ drivers/soc/renesas/rz-sysc.c                 |   3 +
+ drivers/soc/renesas/rz-sysc.h                 |   1 +
+ .../dt-bindings/clock/renesas,r9a09g056-cpg.h |  24 ++
+ .../pinctrl/renesas,r9a09g056-pinctrl.h       |  30 ++
+ 24 files changed, 790 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g056.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+ create mode 100644 drivers/clk/renesas/r9a09g056-cpg.c
+ create mode 100644 drivers/soc/renesas/r9a09g056-sys.c
+ create mode 100644 include/dt-bindings/clock/renesas,r9a09g056-cpg.h
+ create mode 100644 include/dt-bindings/pinctrl/renesas,r9a09g056-pinctrl.h
+
+-- 
+2.49.0
+
 
