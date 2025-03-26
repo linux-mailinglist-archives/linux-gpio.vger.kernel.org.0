@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-18008-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18009-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF9E1A718FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 15:43:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E135A71901
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 15:43:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6992189605D
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 14:40:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CE2C1899036
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 14:41:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C0D1F419D;
-	Wed, 26 Mar 2025 14:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D24F1F4632;
+	Wed, 26 Mar 2025 14:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoIGKs4B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZTESSew"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0001F3FD9;
-	Wed, 26 Mar 2025 14:40:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329311F131C;
+	Wed, 26 Mar 2025 14:40:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000003; cv=none; b=UO+98zPAVIl2ppo1VI9eeAyJSEhkN5DUDHZc/Hm5Vtu7NY4yqQY76cAXhR8+F/Mu6VXOuLASVSO+AO+5GQ9P/uuSJY7kOgtAci0YoJmEfsq+nSWln59MNXDuLgCcDT3sCDowZm2z7O5vP6KbB12qH/rgoiftdUVxMHEa96q1Wfs=
+	t=1743000004; cv=none; b=nqfTDnmTxRS4Gpf82O4zn/5PDUUlLjlbIa9gv5eD3dbb816hSSJMWEFVYmCCvoBqSFsk+sUGx6gY5vPVJPKgP83jCNy7vC5iKdTr3KqgWJwCiCjaF4m75ua8EL0G0IhTPcj/AruxP1xlVzs/9/9yalMvv7SP8ovVvcpg2/aXp3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000003; c=relaxed/simple;
-	bh=MjetRzEw9atYbiZV33wWHMWx8SJT7X1CSDA/az7euos=;
+	s=arc-20240116; t=1743000004; c=relaxed/simple;
+	bh=Nmk76CaoJMOrx+LZHhJxsLabnunUZrZNLVDdV88pNSs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IAo7jPVKI5YIczPHMPezjv9mP+8N/HwD23ZafXh/8neSAqoa8P4SxtQ6MENJJfchgmZ9Wwcr7JPAUYkxHMr7tcuzN+h4DLysXG6Ht1jXvFeqYtlzomn3C7rHhXsNQeEWez5Q9SaAqn71+SLrQvNsNKiE+LXaF6qaTODn8HnjfWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eoIGKs4B; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=dczTDNcWLxlWiLpF/DQD1r3uGiCD0UBZvU7DeB0syfz9meZfkeS84cv+tBhxK8IHa7saHD05iqJtnQpuHHatLUfZjdld9CYXVw+gMYUOUf/vdUfAjO3hA6ON+RGiuupcVDdH4DC8sJ5dyaQ2fXP5en4cE7rmINMAg4016DVt538=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mZTESSew; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso53476935e9.2;
-        Wed, 26 Mar 2025 07:40:01 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf680d351so6067105e9.0;
+        Wed, 26 Mar 2025 07:40:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743000000; x=1743604800; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743000001; x=1743604801; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PmNfwSAKSGPZhhRnskxRS7VGBq4lfQUQS0GhmNutj3I=;
-        b=eoIGKs4Bz5/nEYqk9/jb4H4S5rbL16Wt8vx/ud7g+6q+E+kIbakJgIV173a5x+BiQC
-         md95VF83pPdn2cMmuoCMTN0DIMxwMKnTP0GX00sEwc/Bnih+ucpL4D6cIKJDdzRjngl1
-         AXeEYlWEw1IrfLqMbmLcA4CslxgRsAhlTBVubxboHTG/l6XBvJvOF8c9EaXO4eJgYIaJ
-         gka4KYgPx5Id7k+PM14fT9dlgusQjSN86mxBnOKRWy4jqVRVkLpdETZ2c5T3QKnu+cwy
-         W6ur6wLCP+fRY+gaaYOjgJwCMMpMUpNDTvtEnxUUr/jDM4QAI3RcVX73PDaXhzg9Jv7l
-         ehjQ==
+        bh=GqsDr19JXvidHyyqxIyci4BA4wq1OiK0LXdbSrmZDL0=;
+        b=mZTESSewpO5ZDAbvthCp5XwmAAuvNamku+ZZ8KtaDN5uqXtyzYH3rPE2Vo+9TkQ1Pi
+         DBz6xte9xKOtrRV7oDAixnAdjKFerK223VKhN+olwgBLVMb/InI3P6th7/XSKw07ZeyA
+         LUnHaHgNoyDKJvjPkjzfkWYwqMlxpsxsPzgQdveWx9FXmnBVmhQBaH8PBHG5SHiplfZF
+         R/ylEnxFE1SR6smkvHi/Xt6zfg7Tt9CQoBQcTXMo+ZNVDzalJJTupDZLq7PZNdz2Bcea
+         aTAkN4y4p+Vx2iPfg+/tZLpfSQZ03GIHtR1tPWe+4OJsNOxIps9ygWS8AagzbGaWJb4l
+         Fnaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743000000; x=1743604800;
+        d=1e100.net; s=20230601; t=1743000001; x=1743604801;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PmNfwSAKSGPZhhRnskxRS7VGBq4lfQUQS0GhmNutj3I=;
-        b=HPfSK0sZCnk7dN6GJwKj8GPmUE9SBgEzBJVQfmRQAnb7v66zWKAOBALL2JqNuFDedi
-         zF8kizRPi8vVVye31zy6de4Rn1Zvf0DL2XPGpPaz4Im6oqMaCVeDX+C4+GdUrlzfPWJY
-         DFfWLtk77HnVp9vY1T0Sy/OCQFDP0NYAG40Gck5XeK5FI97UhiPqhbI+kJ0ZlnUJuxTJ
-         syVc+MJEdxCFYXu/cJJhZi9BDSSj7Ajz/T6pAPN7REh79ZOKkvrg8XmBZhID+zg1G2Ky
-         elrAUVkM7tlzY3zaiVYbgwXXc2/+whsnxtenxHV/uzclIRU2ifodsuQIcX8JmjwkeEWH
-         kAaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJovPw0D0lNlMsVyhbaAgoAo9dPf/1JMAbXojkobtddbpClZ0xvUfCUVRi40EkC+Rt4QPnsCEqn/5o@vger.kernel.org, AJvYcCUVVZBb4OzelyXq1vk9oW7embGV1zHEMIA5vN3UsSnbXgRTuUj71TFKscKqHzEQr9S2agom7X9RsVjbh2fc@vger.kernel.org, AJvYcCUX4r+2x+WJ81ucjuR8J9ZJVu7Kv248q772dj+//stHYwfgruw+RIz1UZDYjZwPsltcsgVf34uRy3i7@vger.kernel.org, AJvYcCWFHHKnXfljuKb3W0fy3VUm/kHJzyGvIteFKeL5qykDeIAguOpsFE/+Ui7TcWf18qzT4gnii6GpuTnc@vger.kernel.org, AJvYcCXDlBhzXTE057sX3g3+2ubjpyn5xSB5BBhjZ0quPsmFZFXjVz35VRfEhQW2mdIbFvJ73WdB4M2XwFX0yY7r@vger.kernel.org, AJvYcCXKJWyuQbQprPVpbhWeWR+AiPwPuETdq18snS73hq/Ww/pBed7blFzXDw5YY8vCUsP53PiwBH6h72NrPg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq3yTz6TrbhREg/CZ7ngKcwPwj8hMwOmOo8g8OsLUoPWRnIY4p
-	llc3mTPBiRv4vCrGGeChHM2XeJU7xWawMKtfpdDXlXcYjRfCfgqU
-X-Gm-Gg: ASbGncuOKbaJks0clplkd7Xw2dN2DWu5A95pIpC7z7qLpt9EV+z5VPdpNWTlqtopQi6
-	DecXN8pb9xkpI58S78m0qcI+kNh0+7o8aubJ2dqIGAzCewz9tMYq1mEROCGEQJSfqlMuGiTL+a3
-	pz7G5Yc8pvjI32g0H+Vb5ocYrHX8dly9IR0yqoxZTtKxZ3WEtBfI+i6tavpYZwr4FQX4M77q0rG
-	n4t3t+YM2khPn+7kvFuHysF/HoE2nLI15qwOrt7B7bQj/1wJobw3DA4cxoqj47dIYy2VRny8r3l
-	BktPmtSTSivRGHPZ8/0ABCWTXYU7q32mazyGTj6ozQlbfnRamwTPN9Zt5kaI4lRj0F0l
-X-Google-Smtp-Source: AGHT+IFW4brLWtC9uniriyV99C+jcMPdP/8oJA+VeJMpM/RrrFNh6VS98vM0nsOkR0ZMiWAoC4oFKA==
-X-Received: by 2002:a05:600c:3c9a:b0:43c:f4b3:b094 with SMTP id 5b1f17b1804b1-43d509e189bmr202063825e9.6.1742999999885;
-        Wed, 26 Mar 2025 07:39:59 -0700 (PDT)
+        bh=GqsDr19JXvidHyyqxIyci4BA4wq1OiK0LXdbSrmZDL0=;
+        b=toj8rJjjFxkZsxA3xYHULrxQAYz11XimfgbsoDjeHC/RmrEf5dzzVmd+RKwjfRJoz7
+         ZUGVksvhggzRT0zllN8QG8tdIrkL6K0taR1++Y4DbOY3IqzOvDEUA2A5AaHs1VH2hgh5
+         tjEOmd1JCwZKAq6rYnjO57Rzc0S0x3ZMI4sOiDqNxEteuEvNOeaWIAqfTOBGAYlhVbUO
+         YmCUu0TyTUbb+F6r1u0Qli769CiY5tyRG3SLV9ngv906fHGAioYuZj2ez2S5HJl4tlhn
+         odvpa4YqvSNZ/trO4hlhu2WKE8RpSeosU9pFUkkKOTS7GRl6+K0WjSd4RvsWuO/gzXYv
+         LLMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUP4deDVfU7kNsXO73HcaBTU3uW7OCQwCmmapx+uE+vNVQC4pCYReYmfmPtJzy7vQ/ZujIgjF5o+KcPEOHo@vger.kernel.org, AJvYcCVIVWCj9ZhF5jBTnb4LimqIhYxvh6H/VGBoSC3ohFUIAqZ0dMyRWE3W3N1qSAziswGjfnuVpZnz40Pz@vger.kernel.org, AJvYcCVP2GTOcyiOPWBlyRWj79h/UKrD/yOcxc+2OxCxos6F/AaspzctaYWshUhmsiQHr8nwGqCv75orxuVJ@vger.kernel.org, AJvYcCVfXNTqULjWDu4uD3dCvW5Co92l/fROcCoh1G9OA3x0/DLnLeu3760rLn13i0Ki0C7MmnUi23V65XuRwJYc@vger.kernel.org, AJvYcCWCGJuVQmRfdJ3AStiVM7Q78bNg7oEznMNXvcpcwlzf5xIq4GUpQsI+up0t2Yi9jI1WxZ4juu8f8UVT@vger.kernel.org, AJvYcCXMH6Un+lWYYwMnOAJx83Yu6OBdnyOy8Phy9JWvcK6tMq4Dh4xChmq11wNnzpZqsH6wiont4dHh0K4Mmw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhbRyaMxFDsndonWfsSBiZP6xtEjwbFR7zxT2ATIvRF4Lsp5tF
+	HEsG8RJSzRACdg0A0mRqNC8+ej46Yzuwx/Xnsxoq9iHS3tAv9PWt
+X-Gm-Gg: ASbGncv9VIQEEKU87lhHYtRp1TVClZGZijZnyR1ikpg3Gt6sLQjSxdRCd8TKNDk8psR
+	8sapsWvfCSYiX7hmKiYpSYDmqq6EjGtevWPFM2sKxQU3pPTG72XA7RfrVycAMYgs1rASP/ToUG/
+	fz9dXnsQYVt/f6dukGZUZg4avtZyH8cuS5YZkYc9BpmFeh4zRbsUGSZJnSIEMX+/n+TVWggFK0R
+	rSNtOp4hbWPJ4Osai1DNaWIS5mV/JcDPeR+MAoVHepqOFSBT4UMegd4TQ9YGCCLCs3wKgd2ZOBg
+	35PXvJQM6KOs6Ch5pkkT5LL21W6ErOEPVwDU+YYlU6PinD7pEag81Z9hk3mzCLUhVmG6
+X-Google-Smtp-Source: AGHT+IGhxObQ8qqvBlkojpEfVbwey9liws3lzPxH9s7ZyCGPh8xlJSvklFG6Hxw2YfZBFS9UCG8znw==
+X-Received: by 2002:a05:600c:5126:b0:43b:c7f0:6173 with SMTP id 5b1f17b1804b1-43d846b0f81mr454215e9.4.1743000001044;
+        Wed, 26 Mar 2025 07:40:01 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:e63e:b0d:9aa3:d18d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.39.58
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.40.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 07:39:59 -0700 (PDT)
+        Wed, 26 Mar 2025 07:40:00 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -100,9 +100,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 02/15] dt-bindings: soc: renesas: Document RZ/V2N EVK board
-Date: Wed, 26 Mar 2025 14:39:32 +0000
-Message-ID: <20250326143945.82142-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 03/15] soc: renesas: Add config option for RZ/V2N (R9A09G056) SoC
+Date: Wed, 26 Mar 2025 14:39:33 +0000
+Message-ID: <20250326143945.82142-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -116,27 +116,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add "renesas,rzv2n-evk" which targets the Renesas RZ/V2N ("R9A09G056")
-EVK board.
+Add a configuration option for the RZ/V2N (R9A09G056) SoC.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/soc/renesas/renesas.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soc/renesas/Kconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-index 3e61ce372a57..3e3987c9a82e 100644
---- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-+++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-@@ -553,6 +553,8 @@ properties:
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 49648cf28bd2..764aba6d1ae6 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -352,6 +352,11 @@ config ARCH_R9A09G047
+ 	help
+ 	  This enables support for the Renesas RZ/G3E SoC variants.
  
-       - description: RZ/V2N (R9A09G056)
-         items:
-+          - enum:
-+              - renesas,rzv2n-evk # RZ/V2N EVK
-           - enum:
-               - renesas,r9a09g056n41 # RZ/V2N
-               - renesas,r9a09g056n42 # RZ/V2N with Mali-G31 support
++config ARCH_R9A09G056
++	bool "ARM64 Platform support for RZ/V2N"
++	help
++	  This enables support for the Renesas RZ/V2N SoC variants.
++
+ config ARCH_R9A09G057
+ 	bool "ARM64 Platform support for RZ/V2H(P)"
+ 	select RENESAS_RZV2H_ICU
 -- 
 2.49.0
 
