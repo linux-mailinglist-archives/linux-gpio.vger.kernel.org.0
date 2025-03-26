@@ -1,174 +1,106 @@
-Return-Path: <linux-gpio+bounces-18024-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18025-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1552A71D54
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 18:39:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24ADCA71D56
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 18:39:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B8F084179F
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 17:36:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DE5D7A63A8
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 17:38:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC4923C8C7;
-	Wed, 26 Mar 2025 17:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC3723C8D1;
+	Wed, 26 Mar 2025 17:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="oEOnQeXv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EF123C8B8
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Mar 2025 17:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B7F22E400;
+	Wed, 26 Mar 2025 17:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743010587; cv=none; b=TsZpGHWZ21ou+qGuYYIzOUIM+PXnxzUohnRoFjL/AyWBtPZ5zAqzaaGhcmj7J1NXMCLmWNSJWdNMg7GpdEtcU/F8uSo1BZK8JQRwigZoLV5I9YmqnpO5svg0dCo0xWw8UFZGvKObGkvV//0TJxi3TtmKJAfAoOnhUJzukg0Jx1A=
+	t=1743010731; cv=none; b=jBkOZKBfN2a4LX2MynI8ig7qEoqpadfwEHRlEKFHAqEHZzdLVn1EzY8NKTHRo+fWNH2KigQ9IuJ94H/dHdEBh+ciGnuzlsUq/4NNyYacYHPULfbn+3gEWt2OKmAMaIRm/bxthh78o0aGyvlTKs0jWxbv2kLMDKUwK/3hFLgai/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743010587; c=relaxed/simple;
-	bh=1VrlRkek0WqK4HdrG8gRnbeBPzHFXN/BnW7I901OUcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NjQpRwbRCI/+vcZh5qY+FQmmY+vi2CjeQbxg0XCez/V2dFS7TZoEQqk6X8NdX09aF9O1aKbknfx+wHgRTTE1INtbLLrP130MeD4HURv5LoV1bA5UcJge804pBk1B/GsqkQIkShIXW5t2O+gBu/soo7nXsKeG5ydC0ZpB3m9yfk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1txUfR-0000ck-SV; Wed, 26 Mar 2025 18:35:53 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1txUfO-001nHx-0b;
-	Wed, 26 Mar 2025 18:35:50 +0100
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id B6C7C3E7719;
-	Wed, 26 Mar 2025 17:35:49 +0000 (UTC)
-Date: Wed, 26 Mar 2025 18:35:47 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
-Message-ID: <20250326-utopian-mega-scallop-5f6899-mkl@pengutronix.de>
-References: <20250225081644.3524915-1-a0282524688@gmail.com>
- <20250225081644.3524915-5-a0282524688@gmail.com>
- <20250317-outrageous-helpful-agama-39476f-mkl@pengutronix.de>
- <CAOoeyxVF9baa8UKJKWcbTLzvMo3Ma=GRCbdnBSoGOw0Lk5j4sA@mail.gmail.com>
+	s=arc-20240116; t=1743010731; c=relaxed/simple;
+	bh=yl0t+HWGTi+COmrHFYzrfcaopHMXF6yjTDk8RhvcoA8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jQb/xtG1npIkEKB9X4mjm0DJkhXnq14EYeREUZB3nfBwtbxpSteP2aghcf+I0I45zxb2pMNHV94GyNqtHJlmtu2/cgx1bJ7fRcYqnwlIATpN+kxnzVw5/oTHztO9l/QUZ3xosGGEr6+YZOsNszQ5bxTQ+umyvfcsKuo13m7uCjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=oEOnQeXv; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 2DABF1FB9C;
+	Wed, 26 Mar 2025 18:38:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1743010725;
+	bh=sLJ+3DY8jmPT6Dfy0q0w2XM67M9sQ9k+sTABADH9eMs=; h=From:To:Subject;
+	b=oEOnQeXvd1e9Xxep3C/I27MhIB4t1DSnzuuyvsQCBToAVGZw2rAbtrw9WY0VE5Q/K
+	 XkqM14XNZ64tTJ8l5HXSLCd4eNB6FrgjwMyGbSwdMdzJ9Ake5Ea60XfCUSv2aKLxx8
+	 23+8ersQwM6Czqii91w4/Cd0RrePiq/AwRTWY6tqKbOoH7ecS/nEO8ENWgybj+9rPY
+	 LXECmzhOpePpIb2duijq077tJo/25nbxWFyq0AFmkpRbM0aI+fpOlbAC6tff5dA3Em
+	 Ixz1iCcloR142daI6QSnd0TN07HqVv6RylX+ts/rXaeFcoTePzmYwBU6i7oD15lpAu
+	 YkdHKkAIdknXw==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marek Vasut <marek.vasut@gmail.com>,
+	stable@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: [PATCH v1] gpio: pca953x: fix IRQ storm on system wake up
+Date: Wed, 26 Mar 2025 18:38:38 +0100
+Message-Id: <20250326173838.4617-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3fo4gps22dugmrwp"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxVF9baa8UKJKWcbTLzvMo3Ma=GRCbdnBSoGOw0Lk5j4sA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
---3fo4gps22dugmrwp
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
-MIME-Version: 1.0
+If an input changes state during wake-up and is used as an interrupt
+source, the IRQ handler reads the volatile input register to clear the
+interrupt mask and deassert the IRQ line. However, the IRQ handler is
+triggered before access to the register is granted, causing the read
+operation to fail.
 
-On 26.03.2025 10:37:11, Ming Yu wrote:
-> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B43=E6=9C=881=
-7=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=888:01=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> > > +static int nct6694_can_start(struct net_device *ndev)
-> > > +{
-> > > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
-> > > +     const struct can_bittiming *d_bt =3D &priv->can.data_bittiming;
-> > > +     const struct can_bittiming *n_bt =3D &priv->can.bittiming;
-> > > +     struct nct6694_can_setting *setting __free(kfree) =3D NULL;
-> > > +     const struct nct6694_cmd_header cmd_hd =3D {
-> > > +             .mod =3D NCT6694_CAN_MOD,
-> > > +             .cmd =3D NCT6694_CAN_SETTING,
-> > > +             .sel =3D ndev->dev_port,
-> > > +             .len =3D cpu_to_le16(sizeof(*setting))
-> > > +     };
-> > > +     int ret;
-> > > +
-> > > +     setting =3D kzalloc(sizeof(*setting), GFP_KERNEL);
-> > > +     if (!setting)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     setting->nbr =3D cpu_to_le32(n_bt->bitrate);
-> > > +     setting->dbr =3D cpu_to_le32(d_bt->bitrate);
-> >
-> > I just noticed one thing that needs clarification/documentation.
-> >
-> > You have nct6694_can_bittiming_nominal_const and
-> > nct6694_can_bittiming_data_const, but only pass the bit rates to your
-> > device.
-> >
-> > Do the bit timing const really reflect the HW limitations of your
-> > device?
-> >
-> > Are you sure your device uses the same algorithm as the kernel and
-> > calculates the same bit timing parameters as the kernel, so that the
-> > values given to the user space reflects the bit timing parameter chosen
-> > by your device?
-> >
->=20
-> Originally, I only intended to provide NBR and DBR for user
-> configuration. In the next patch, I will add code to configure
-> NBTP(Nominal Bit Timing Prescaler) and DBTP(Data Bit Timing Prescaler)
-> based on the setting of nct6694_can_bittiming_nominal_const and
-> nct6694_can_bittiming_data_const.
+As a result, the IRQ handler enters a loop, repeatedly printing the
+"failed reading register" message, until `pca953x_resume` is eventually
+called, which restores the driver context and enables access to
+registers.
 
-Sounds good, but this doesn't answer my questions:
+Fix by using DEFINE_NOIRQ_DEV_PM_OPS which ensures that `pca953x_resume`
+is called before the IRQ handler is called.
 
-You have nct6694_can_bittiming_nominal_const and
-nct6694_can_bittiming_data_const, but only pass the bit rates and the
-prescaler to your device.
+Fixes: b76574300504 ("gpio: pca953x: Restore registers after suspend/resume cycle")
+Cc: stable@vger.kernel.org
+Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+---
+ drivers/gpio/gpio-pca953x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Do the bit timing const really reflect the HW limitations of your
-device?
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index d63c1030e6ac..d39bdc125cfc 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1252,7 +1252,7 @@ static int pca953x_resume(struct device *dev)
+ 	return ret;
+ }
+ 
+-static DEFINE_SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x_resume);
++static DEFINE_NOIRQ_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x_resume);
+ 
+ /* convenience to stop overlong match-table lines */
+ #define OF_653X(__nrgpio, __int) ((void *)(__nrgpio | PCAL653X_TYPE | __int))
+-- 
+2.39.5
 
-Are you sure your device uses the same algorithm as the kernel and
-calculates the same bit timing parameters as the kernel, so that the
-values given to the user space reflects the bit timing parameter chosen
-by your device?
-
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---3fo4gps22dugmrwp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfkOvEACgkQDHRl3/mQ
-kZzpHQgAgGRAJKZUC90pxD/IpTMDutPBbTPEyhq69hM419fjym5rJ4HxuM6meZHF
-MCGE5zEy8fsC05K8QdtwmiAmvaGYg8b/Ky/4MTwj0R5AjFqfWFghJJ5hrypphQzB
-ZKiyvcnkIAxTgkEZlMg9MBQf+OdN5Q3Z/nHLPvfk0OHrsz44UqxPAfWuMI6HWoaN
-RTSbxLxlKoAWEDTzmyT6YAyehq42fVSdsC+FK82lQmloaAkq7dkQAUmaJn1pTEHL
-+ea6VayK34n+e3kzz2OkTDrOIvJwDSdX0lMrIT9A97ju+hgzdQSY839BL5xOvDEe
-9TFcEhv92TjknvV5PdmFfiwnNLDNHg==
-=T1kB
------END PGP SIGNATURE-----
-
---3fo4gps22dugmrwp--
 
