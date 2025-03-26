@@ -1,195 +1,127 @@
-Return-Path: <linux-gpio+bounces-17998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-17999-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C7E2A7128C
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 09:21:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEDA9A71348
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 10:02:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0BB33BAE18
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 08:20:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD6463AE665
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 09:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016F11A2398;
-	Wed, 26 Mar 2025 08:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A03019D8A2;
+	Wed, 26 Mar 2025 09:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHQ7sKWP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kYEkHW6V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2893191F84;
-	Wed, 26 Mar 2025 08:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C641D142E67;
+	Wed, 26 Mar 2025 09:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742977209; cv=none; b=PnJ0KqwpvaH6oHaWAOrE+0MUqAOPnOC12UOUGQmTS1wMcGckdS2iM26Ai6dmXS8UjIs4ntWEzSo6Iwsop31pbPrY9Z4JwM0JVi49Fg/bmmi9ugIgRXr2COkRKsKxellL6D2f8oqEZ/Fusc3o0YgY/l4zfyhb872z2B0MdpRgXvU=
+	t=1742979719; cv=none; b=AaJrGL1NRM8yQm8k9eQihCjKM2M4gW8+2WWpbPa5KveBzuYQ1CBazUSa2fPDO0ztHkqi/4R4LDFmOYxc5Kp3tZu4xANs/Os4o5kmGs7dxeSN9eYMWSI21H+zEjaxDKegqj82GYb+1uJr3Ddq8f/GwOWuF7acf57Y/DIbNrI/s94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742977209; c=relaxed/simple;
-	bh=e7hTra+jevl2B8uxxtnN9m+T7DIhVwGcC9yda51Yf5E=;
+	s=arc-20240116; t=1742979719; c=relaxed/simple;
+	bh=2b7ZPn7TkWiDo8qXQCI9WFvZnqHvXoB8IqYreHMHXiw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i0vGTMKgvKldc1e5UfgwMtqqqWdOdtYJPTx8HQLcunh+zflR/9B/beS91zfeNnfyd+nv/037dkHqle57ys8tlMEhKVTQSje0GQkItm8nTn3S4kZTW7zIMBeQ22t5bFbNjjchcV0gDmyV3qt6dHbRAqTyJgm+e6hypqahMwZ0c8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHQ7sKWP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2767EC4CEE2;
-	Wed, 26 Mar 2025 08:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742977209;
-	bh=e7hTra+jevl2B8uxxtnN9m+T7DIhVwGcC9yda51Yf5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pHQ7sKWPyzNnOX3+F9rTKTkdH3F4FUhPYjldAwzOUzNQ4KaKzoaYSQiLBwJn3mR1C
-	 uK1U28f52jVATYdvAr1lwmDmJ1V0Ixu7zureEUJ6hRm9LI9ZipAdnTgOLPLBkXmW+I
-	 DHYuBWOaQXL20YdFrbDQt1EvegpuZqaj61GVLVo+Ah0pP9ZYi+f0UlpYEmTVf/s+15
-	 mzRcGPTOmBgIRGX8Sb8E0HAYxehBNqs+U8pXpsFLE5r1qvh9fUwIqBkQP5k9GBjuan
-	 /xMSXoTZw0XI2YaNy5dJe4TsFa90PcEKvUkibn3G15mfe+cpDLrAEMo2piYSbmJmVb
-	 txW4fKA8wQ+jw==
-Date: Wed, 26 Mar 2025 09:20:04 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>, 
-	Pritesh Patel <pritesh.patel@einfochips.com>, Min Lin <linmin@eswincomputing.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [RFC PATCH 1/4] dt-bindings: pinctrl: Add eswin,eic7700-pinctrl
- binding
-Message-ID: <20250326-owl-of-algebraic-wealth-61aeda@krzk-bin>
-References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
- <20250325141311.758787-2-emil.renner.berthing@canonical.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BRdAxS/zxz0p2PnLcXRAdt1bjr9r/gueVX0lbajelVcnoXkCABHj0zfmqwZrrX6n6PM4VnuwDocqOnDCRIOmQehwAEfu6VX1hHpAVHHSgVeqFTAveCGIdNiNryb9Fed7LJtX6H4toolZPtt3CSzqWy6RGOeB+rNRNi+pfLkTr40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kYEkHW6V; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742979718; x=1774515718;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2b7ZPn7TkWiDo8qXQCI9WFvZnqHvXoB8IqYreHMHXiw=;
+  b=kYEkHW6VwS2lqkY064AMVYzq6PGAaQQGPDjLc17t1sidD2dzfG38+aB7
+   tuxaiuGpP+p6bAa89MG1mygCmJDaiUfcOf3Pt8+LwzZJr0gf5NVRNkn8j
+   Ng4LTCeaR/42olv9d0lv2mt30DSqVwcxrs99YeyiozOsh4BzhwoWThcCk
+   xsVvUlTcD8aK9FoMpiTijLPSezEaTrvaedQWZZJBlZdS+ZmkYuP3JgNMV
+   vc5b8JzrVAFwLnPa/5ZlNSMm+yVKbSTreaqcJNDOB/6GkCZKCkbV0lx9d
+   1eGYarCe7x42wxS/8qT8jxCgLiGkbekJTY8Y3uMzEDVwGpqfjeqGCTY7Y
+   g==;
+X-CSE-ConnectionGUID: 05C97YsxRfCYMxcP70RN+Q==
+X-CSE-MsgGUID: vQIhDZN7SLiveYKXXEcPdw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="69618799"
+X-IronPort-AV: E=Sophos;i="6.14,277,1736841600"; 
+   d="scan'208";a="69618799"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 02:01:57 -0700
+X-CSE-ConnectionGUID: gjuPDlERRz6SYGcokLWDjg==
+X-CSE-MsgGUID: DDKyhVFcQo6Yxl/zpHtrnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,277,1736841600"; 
+   d="scan'208";a="124434914"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 02:01:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1txMe0-000000061LP-3JV1;
+	Wed, 26 Mar 2025 11:01:52 +0200
+Date: Wed, 26 Mar 2025 11:01:52 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Raag Jadav <raag.jadav@intel.com>, Lee Jones <lee@kernel.org>,
+	giometti@enneenne.com, raymond.tan@intel.com,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] mfd: intel_ehl_pse_gpio: Introduce Intel Elkhart
+ Lake PSE GPIO and TIO
+Message-ID: <Z-PCgJY8qBPBWKVN@smile.fi.intel.com>
+References: <20250307052231.551737-1-raag.jadav@intel.com>
+ <20250307052231.551737-2-raag.jadav@intel.com>
+ <20250314124450.GP3890718@google.com>
+ <Z9QxqH3DJvyW3sjo@smile.fi.intel.com>
+ <20250314135735.GQ3890718@google.com>
+ <Z9z49lfWV6LjUnaI@black.fi.intel.com>
+ <2025032115-gloomily-cubbyhole-dd8e@gregkh>
+ <Z91oHCpfOkvgJmzP@smile.fi.intel.com>
+ <2025032514-ipad-schilling-9928@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250325141311.758787-2-emil.renner.berthing@canonical.com>
+In-Reply-To: <2025032514-ipad-schilling-9928@gregkh>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Mar 25, 2025 at 03:13:03PM +0100, Emil Renner Berthing wrote:
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - eswin,eic7700-pinctrl
+On Tue, Mar 25, 2025 at 08:45:29PM -0400, Greg KH wrote:
+> On Fri, Mar 21, 2025 at 03:22:36PM +0200, Andy Shevchenko wrote:
+> > On Fri, Mar 21, 2025 at 06:04:38AM -0700, Greg KH wrote:
+> > > On Fri, Mar 21, 2025 at 07:28:22AM +0200, Raag Jadav wrote:
+> > > > On Fri, Mar 14, 2025 at 01:57:35PM +0000, Lee Jones wrote:
+> > > > > On Fri, 14 Mar 2025, Andy Shevchenko wrote:
 
-Blank line
+...
 
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
+> > > > > Also, Greg has been quite vocal about converting PCI devices to Platform
+> > > > > ones in the past.  We may wish to run this past him before continuing.
+> > > > 
+> > > > Greg, any objections on moving forward with platform device?
+> > > 
+> > > I have no context here at all, why would a PCI device EVER be a platform
+> > > device?  That feels wrong on so many levels...
+> > 
+> > It's a multi-functional device, in other words that device provides a set of
+> > (dependent or independent) subdevices. But do you have other suggestion?
+> > The auxiliary bus?
+> 
+> Yes, that is exactly what the auxiliary bus code was designed and
+> written for.
 
-required: goes after patternProperties.
+Lee, what do you think of extending mfd to cover this case, i.e. specifically
+for the PCI devices? Or maybe it makes sense to go to the auxiliary bus
+completely (I think this may break a lot of things on legacy systems, though).
 
-> +  - compatible
-> +  - reg
-> +
-> +patternProperties:
-> +  '-[0-9]+$':
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Recommended is to have more meaningful prefix or suffix, e.g.
--grp/-group. I also don't get why it has to end with number.
-
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +        allOf:
-> +          - $ref: /schemas/pinctrl/pincfg-node.yaml#
-> +          - $ref: /schemas/pinctrl/pinmux-node.yaml#
-> +
-> +        additionalProperties: false
-> +
-> +        description:
-> +          A pinctrl node should contain at least one subnode describing one
-> +          or more pads and their associated pinmux and pinconf settings.
-> +
-> +        properties:
-> +          pins:
-> +            items:
-> +              enum: [ CHIP_MODE, MODE_SET0, MODE_SET1, MODE_SET2, MODE_SET3,
-> +                      XIN, RTC_XIN, RST_OUT_N, KEY_RESET_N, GPIO0, POR_SEL,
-> +                      JTAG0_TCK, JTAG0_TMS, JTAG0_TDI, JTAG0_TDO, GPIO5, SPI2_CS0_N,
-> +                      JTAG1_TCK, JTAG1_TMS, JTAG1_TDI, JTAG1_TDO, GPIO11, SPI2_CS1_N,
-> +                      PCIE_CLKREQ_N, PCIE_WAKE_N, PCIE_PERST_N, HDMI_SCL, HDMI_SDA,
-> +                      HDMI_CEC, JTAG2_TRST, RGMII0_CLK_125, RGMII0_TXEN,
-> +                      RGMII0_TXCLK, RGMII0_TXD0, RGMII0_TXD1, RGMII0_TXD2,
-> +                      RGMII0_TXD3, I2S0_BCLK, I2S0_WCLK, I2S0_SDI, I2S0_SDO,
-> +                      I2S_MCLK, RGMII0_RXCLK, RGMII0_RXDV, RGMII0_RXD0, RGMII0_RXD1,
-> +                      RGMII0_RXD2, RGMII0_RXD3, I2S2_BCLK, I2S2_WCLK, I2S2_SDI,
-> +                      I2S2_SDO, GPIO27, GPIO28, GPIO29, RGMII0_MDC, RGMII0_MDIO,
-> +                      RGMII0_INTB, RGMII1_CLK_125, RGMII1_TXEN, RGMII1_TXCLK,
-> +                      RGMII1_TXD0, RGMII1_TXD1, RGMII1_TXD2, RGMII1_TXD3, I2S1_BCLK,
-> +                      I2S1_WCLK, I2S1_SDI, I2S1_SDO, GPIO34, RGMII1_RXCLK,
-> +                      RGMII2_RXDV, RGMII2_RXD0, RGMII2_RXD1, RGMII2_RXD2,
-> +                      RGMII2_RXD3, SPI1_CS0_N, SPI1_CLK, SPI1_D0, SPI1_D1, SPI1_D2,
-> +                      SPI1_D3, SPI1_CS1_N, RGMII1_MDC, RGMII1_MDIO, RGMII1_INTB,
-> +                      USB0_PWREN, USB1_PWREN, I2C0_SCL, I2C0_SDA, I2C1_SCL, I2C1_SDA,
-> +                      I2C2_SCL, I2C2_SDA, I2C3_SCL, I2C3_SDA, I2C4_SCL, I2C4_SDA,
-> +                      I2C5_SCL, I2C5_SDA, UART0_TX, UART0_RX, UART1_TX, UART1_RX,
-> +                      UART1_CTS, UART1_RTS, UART2_TX, UART2_RX, JTAG2_TCK, JTAG2_TMS,
-> +                      JTAG2_TDI, JTAG2_TDO, FAN_PWM, FAN_TACH, MIPI_CSI0_XVS,
-> +                      MIPI_CSI0_XHS, MIPI_CSI0_MCLK, MIPI_CSI1_XVS, MIPI_CSI1_XHS,
-> +                      MIPI_CSI1_MCLK, MIPI_CSI2_XVS, MIPI_CSI2_XHS, MIPI_CSI2_MCLK,
-> +                      MIPI_CSI3_XVS, MIPI_CSI3_XHS, MIPI_CSI3_MCLK, MIPI_CSI4_XVS,
-> +                      MIPI_CSI4_XHS, MIPI_CSI4_MCLK, MIPI_CSI5_XVS, MIPI_CSI5_XHS,
-> +                      MIPI_CSI5_MCLK, SPI3_CS_N, SPI3_CLK, SPI3_DI, SPI3_DO, GPIO92,
-> +                      GPIO93, S_MODE, GPIO95, SPI0_CS_N, SPI0_CLK, SPI0_D0, SPI0_D1,
-> +                      SPI0_D2, SPI0_D3, I2C10_SCL, I2C10_SDA, I2C11_SCL, I2C11_SDA,
-> +                      GPIO106, BOOT_SEL0, BOOT_SEL1, BOOT_SEL2, BOOT_SEL3, GPIO111,
-> +                      LPDDR_REF_CLK ]
-
-All these should be lowercase.
-
-> +            description: List of pads that properties in the node apply to.
-> +
-> +          function:
-> +            enum: [ csi, debug, ddr, fan, gpio, hdmi, i2c, i2s, jtag, mipi,
-> +                    mode, oscillator, pci, pwm, rgmii, reset, sata, spi, sdio,
-> +                    uart, usb ]
-> +            description: The mux function to select for the given pins.
-> +
-> +          bias-disable: true
-> +
-> +          bias-pull-up:
-> +            oneOf:
-> +              - type: boolean
-> +              - const: 25000
-> +            description: Enable internal 25kOhm pull-up
-
-Why bool and fixed value? Do they have different meaning? Description
-says they are the same.
-
-Anyway, don't repeat constraints in free form text.
-
-> +
-> +          bias-pull-down:
-> +            oneOf:
-> +              - type: boolean
-> +              - const: 22000
-> +            description: Enable internal 22kOhm pull-down
-
-Same questions
-
-> +
-> +          drive-strength-microamp:
-> +            enum: [ 3100, 6700, 9600, 12900, 18000, 20900, 23200, 25900 ]
-> +
-> +          input-enable: true
-> +
-> +          input-disable: true
-> +
-> +          input-schmitt-enable: true
-> +
-> +          input-schmitt-disable: true
-> +
-> +        required:
-> +          - pins
-
-Best regards,
-Krzysztof
 
 
