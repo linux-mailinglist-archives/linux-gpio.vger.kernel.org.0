@@ -1,217 +1,174 @@
-Return-Path: <linux-gpio+bounces-18023-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18024-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C7EEA71B1E
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 16:53:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1552A71D54
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 18:39:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DA3B1889287
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 15:49:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B8F084179F
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 17:36:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F034C1F418C;
-	Wed, 26 Mar 2025 15:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnLMm6aX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC4923C8C7;
+	Wed, 26 Mar 2025 17:36:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9501D1E5218;
-	Wed, 26 Mar 2025 15:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EF123C8B8
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Mar 2025 17:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743004157; cv=none; b=ULD51/PApv+frwDl22E5+7/cTxZpHwdIyN2xB6nw9IIMUEPLggFtFCce3gT9n5oOoust9XxmeYwqI9vA6LGj9tFJDKruXG4jxLEZ4DKD/rcouCXTSjpX6NqyeIXOfRw6GLZosVk2rl1VePm3/z7oul7Sd8QpZ9lCH8F+ofg2pLQ=
+	t=1743010587; cv=none; b=TsZpGHWZ21ou+qGuYYIzOUIM+PXnxzUohnRoFjL/AyWBtPZ5zAqzaaGhcmj7J1NXMCLmWNSJWdNMg7GpdEtcU/F8uSo1BZK8JQRwigZoLV5I9YmqnpO5svg0dCo0xWw8UFZGvKObGkvV//0TJxi3TtmKJAfAoOnhUJzukg0Jx1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743004157; c=relaxed/simple;
-	bh=4SiJKCGFVk/RgiIHAT0ZRcmzlDQVoYeyJE7nNH3ZfAY=;
+	s=arc-20240116; t=1743010587; c=relaxed/simple;
+	bh=1VrlRkek0WqK4HdrG8gRnbeBPzHFXN/BnW7I901OUcI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NlmTO4fXu6oPmkRaD/MQ6gg7GsgF1AaAIUvMzxM/j+5T9Qr2oSH/E1JEo0NToQZ8H9v9e9UGCTUhXW3m4AjvxBXu1eFOKM1KriIZKTAXDF73qgDvZiBaFdz5kqWeWdkV8QeV9RPD+8eTlAxza6/Z7vXbZf2gIn1CinXlX1dE/Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnLMm6aX; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743004156; x=1774540156;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4SiJKCGFVk/RgiIHAT0ZRcmzlDQVoYeyJE7nNH3ZfAY=;
-  b=hnLMm6aX5dLGGCWzIjgKcOWyK7D1nJzkotgPb9toUL3sxuQlWp7BqPXi
-   iuulnRM+jzihnqRqImwjMDSXmXrcVMgoP0RuRmMimc3t16kZbG7k5DrpY
-   w7Fgq9oAGWMudFGI/JWa32bvhPsazbP33qM7PG0qYbiDHAmT3+zTZc7rx
-   VP4L6BGeJSho8llIO44bc0lc3K983vLjq5DprBgxhIVSgHq7WU9GL72tz
-   2tWMHvP+ZSC+nwjnK9CT6D3dstX4yKqzRnBliBcIrwKCmMEV5SF9sEn87
-   GzvFGAhbq+sXdvCbhvb7UrDTYDUBlXsMsixL9AguSzw/DZDtZqye/Skse
-   Q==;
-X-CSE-ConnectionGUID: QUf+AjSQQ7e4F5VtNMMsIg==
-X-CSE-MsgGUID: KRrNWFnlTn+R6l9HDFLajw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="31907559"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="31907559"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:49:15 -0700
-X-CSE-ConnectionGUID: N0GZ6pBfQsSv9luc5yjGjQ==
-X-CSE-MsgGUID: W5mgZRriTMe9FFedmg8r6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="124613665"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:49:10 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1txT07-000000067d1-1VGB;
-	Wed, 26 Mar 2025 17:49:07 +0200
-Date: Wed, 26 Mar 2025 17:49:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
-Message-ID: <Z-Qh8yBMaCMhv_Ny@smile.fi.intel.com>
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
- <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
- <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
- <Z9vydaUguJiVaHtU@smile.fi.intel.com>
- <D8PF958QL5AK.2JIE4F1N1NI0F@bootlin.com>
- <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
- <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NjQpRwbRCI/+vcZh5qY+FQmmY+vi2CjeQbxg0XCez/V2dFS7TZoEQqk6X8NdX09aF9O1aKbknfx+wHgRTTE1INtbLLrP130MeD4HURv5LoV1bA5UcJge804pBk1B/GsqkQIkShIXW5t2O+gBu/soo7nXsKeG5ydC0ZpB3m9yfk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1txUfR-0000ck-SV; Wed, 26 Mar 2025 18:35:53 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1txUfO-001nHx-0b;
+	Wed, 26 Mar 2025 18:35:50 +0100
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id B6C7C3E7719;
+	Wed, 26 Mar 2025 17:35:49 +0000 (UTC)
+Date: Wed, 26 Mar 2025 18:35:47 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
+Message-ID: <20250326-utopian-mega-scallop-5f6899-mkl@pengutronix.de>
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-5-a0282524688@gmail.com>
+ <20250317-outrageous-helpful-agama-39476f-mkl@pengutronix.de>
+ <CAOoeyxVF9baa8UKJKWcbTLzvMo3Ma=GRCbdnBSoGOw0Lk5j4sA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3fo4gps22dugmrwp"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAOoeyxVF9baa8UKJKWcbTLzvMo3Ma=GRCbdnBSoGOw0Lk5j4sA@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Wed, Mar 26, 2025 at 03:44:28PM +0100, Mathieu Dubois-Briand wrote:
-> On Tue Mar 25, 2025 at 4:56 PM CET, Andy Shevchenko wrote:
-> > On Tue, Mar 25, 2025 at 03:37:29PM +0100, Mathieu Dubois-Briand wrote:
-> > > On Thu Mar 20, 2025 at 11:48 AM CET, Andy Shevchenko wrote:
-> > > > On Thu, Mar 20, 2025 at 08:50:00AM +0100, Uwe Kleine-König wrote:
-> > > > > On Wed, Mar 19, 2025 at 01:18:50PM +0200, Andy Shevchenko wrote:
-> > > > > > On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.com wrote:
 
-...
+--3fo4gps22dugmrwp
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
+MIME-Version: 1.0
 
-> > > > > > > +	chip = devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
-> > > > > > 
-> > > > > > This is quite worrying. The devm_ to parent makes a lot of assumptions that may
-> > > > > > not be realised. If you really need this, it has to have a very good comment
-> > > > > > explaining why and object lifetimes.
-> > > > > 
-> > > > > Pretty sure this is broken. This results for example in the device link
-> > > > > being created on the parent. So if the pwm devices goes away a consumer
-> > > > > might not notice (at least in the usual way). I guess this was done to
-> > > > > ensure that #pwm-cells is parsed from the right dt node? If so, that
-> > > > > needs a different adaption. That will probably involve calling
-> > > > > device_set_of_node_from_dev().
-> > > >
-> > > > It's an MFD based driver, and MFD core cares about propagating fwnode by
-> > > > default. I believe it should just work if we drop that '->parent' part.
-> > > 
-> > > Are you sure about that?
+On 26.03.2025 10:37:11, Ming Yu wrote:
+> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B43=E6=9C=881=
+7=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=888:01=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > +static int nct6694_can_start(struct net_device *ndev)
+> > > +{
+> > > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
+> > > +     const struct can_bittiming *d_bt =3D &priv->can.data_bittiming;
+> > > +     const struct can_bittiming *n_bt =3D &priv->can.bittiming;
+> > > +     struct nct6694_can_setting *setting __free(kfree) =3D NULL;
+> > > +     const struct nct6694_cmd_header cmd_hd =3D {
+> > > +             .mod =3D NCT6694_CAN_MOD,
+> > > +             .cmd =3D NCT6694_CAN_SETTING,
+> > > +             .sel =3D ndev->dev_port,
+> > > +             .len =3D cpu_to_le16(sizeof(*setting))
+> > > +     };
+> > > +     int ret;
+> > > +
+> > > +     setting =3D kzalloc(sizeof(*setting), GFP_KERNEL);
+> > > +     if (!setting)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     setting->nbr =3D cpu_to_le32(n_bt->bitrate);
+> > > +     setting->dbr =3D cpu_to_le32(d_bt->bitrate);
 > >
-> > Yes and no. If your DT looks like (pseudo code as I don't know
-> > DTS syntax by heart):
+> > I just noticed one thing that needs clarification/documentation.
 > >
-> > 	device: {
-> > 		parent-property = value;
-> > 		child0:
-> > 			...
-> > 		child1:
-> > 			...
-> > 	}
+> > You have nct6694_can_bittiming_nominal_const and
+> > nct6694_can_bittiming_data_const, but only pass the bit rates to your
+> > device.
 > >
-> > the parent-property value is automatically accessible via fwnode API,
-> > but I don't know what will happen to the cases when each of the children
-> > has its own compatible string. This might be your case, but again,
-> > I'm not an expert in DT.
+> > Do the bit timing const really reflect the HW limitations of your
+> > device?
 > >
-> 
-> On my side:
-> - Some MFD child do have a child node in the device tree, with an
->   associated compatible value. No problem for these, they do get correct
->   of_node/fwnode values pointing on the child device tree node.
-> - Some MFD child do not have any node in the device tree, and for these,
->   they have to use properties from the parent (MFD) device tree node.
->   And here we do have some problems.
-> 
-> > > On my side it does not work if I just drop the '->parent', this is why I
-> > > ended whit this (bad) pattern.
+> > Are you sure your device uses the same algorithm as the kernel and
+> > calculates the same bit timing parameters as the kernel, so that the
+> > values given to the user space reflects the bit timing parameter chosen
+> > by your device?
 > >
-> > > Now it does work if I do call device_set_of_node_from_dev() manually,
-> >
-> > AFAICT, this is wrong API to be called in the children. Are you talking about
-> > parent code?
-> >
-> 
-> I believe I cannot do it in the parent code, as I would need to do it
-> after the call to devm_mfd_add_devices(), and so it might happen after
-> the probe. I still tried to see how it behaved, and it looks like PWM
-> core really did not expect to get an of_node assigned to the device
-> after adding the PWM device.
-> 
-> So either I can do something in MFD core or in sub devices probe(), or I
-> need to come with a different way to do things.
-> 
-> > > so it's definitely better. But I believe the MFD core is not propagating
-> > > OF data, and I did not find where it would do that in the code. Yet it
-> > > does something like this for ACPI in mfd_acpi_add_device(). Or maybe we
-> > > do something bad in our MFD driver?
-> >
-> > ...or MFD needs something to have... Dunno.
-> 
-> I have something working with a very simple change in mfd-core.c, but
-> I'm really not confident it won't break anything else. I wish I could
-> get some insights from an MFD expert.
-> 
-> @@ -210,6 +210,8 @@ static int mfd_add_device(struct device *parent, int id,
->                 if (!pdev->dev.of_node)
->                         pr_warn("%s: Failed to locate of_node [id: %d]\n",
->                                 cell->name, platform_id);
-> +       } else if (IS_ENABLED(CONFIG_OF) && parent->of_node) {
-> +               device_set_of_node_from_dev(&pdev->dev, parent);
+>=20
+> Originally, I only intended to provide NBR and DBR for user
+> configuration. In the next patch, I will add code to configure
+> NBTP(Nominal Bit Timing Prescaler) and DBTP(Data Bit Timing Prescaler)
+> based on the setting of nct6694_can_bittiming_nominal_const and
+> nct6694_can_bittiming_data_const.
 
-The use of this API is inappropriate here AFAICT. It drops the parent refcount
-and on the second call to it you will have a warning from refcount library.
+Sounds good, but this doesn't answer my questions:
 
-It should be as simple as device_set_node().
+You have nct6694_can_bittiming_nominal_const and
+nct6694_can_bittiming_data_const, but only pass the bit rates and the
+prescaler to your device.
 
->         }
+Do the bit timing const really reflect the HW limitations of your
+device?
 
-With that, the conditional becomes
+Are you sure your device uses the same algorithm as the kernel and
+calculates the same bit timing parameters as the kernel, so that the
+values given to the user space reflects the bit timing parameter chosen
+by your device?
 
-	} else if (is_of_node(fwnode)) {
-		device_set_node(&pdev->dev, fwnode);
-	}
+Marc
 
-where fwnode is something like
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-	struct fwnode_handle *fwnode = dev_fwnode(parent);
+--3fo4gps22dugmrwp
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-With Best Regards,
-Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfkOvEACgkQDHRl3/mQ
+kZzpHQgAgGRAJKZUC90pxD/IpTMDutPBbTPEyhq69hM419fjym5rJ4HxuM6meZHF
+MCGE5zEy8fsC05K8QdtwmiAmvaGYg8b/Ky/4MTwj0R5AjFqfWFghJJ5hrypphQzB
+ZKiyvcnkIAxTgkEZlMg9MBQf+OdN5Q3Z/nHLPvfk0OHrsz44UqxPAfWuMI6HWoaN
+RTSbxLxlKoAWEDTzmyT6YAyehq42fVSdsC+FK82lQmloaAkq7dkQAUmaJn1pTEHL
++ea6VayK34n+e3kzz2OkTDrOIvJwDSdX0lMrIT9A97ju+hgzdQSY839BL5xOvDEe
+9TFcEhv92TjknvV5PdmFfiwnNLDNHg==
+=T1kB
+-----END PGP SIGNATURE-----
 
+--3fo4gps22dugmrwp--
 
