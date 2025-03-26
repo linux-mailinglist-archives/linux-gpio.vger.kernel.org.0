@@ -1,106 +1,156 @@
-Return-Path: <linux-gpio+bounces-18025-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18026-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24ADCA71D56
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 18:39:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 950F3A71D88
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 18:43:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DE5D7A63A8
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 17:38:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EBD51888BEE
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 17:42:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC3723C8D1;
-	Wed, 26 Mar 2025 17:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="oEOnQeXv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43F0A23E337;
+	Wed, 26 Mar 2025 17:41:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B7F22E400;
-	Wed, 26 Mar 2025 17:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AD123E336
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Mar 2025 17:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743010731; cv=none; b=jBkOZKBfN2a4LX2MynI8ig7qEoqpadfwEHRlEKFHAqEHZzdLVn1EzY8NKTHRo+fWNH2KigQ9IuJ94H/dHdEBh+ciGnuzlsUq/4NNyYacYHPULfbn+3gEWt2OKmAMaIRm/bxthh78o0aGyvlTKs0jWxbv2kLMDKUwK/3hFLgai/E=
+	t=1743010915; cv=none; b=DfEMu8ReVddx802Fgb7bOzRPiqU8e4GLb+1TPJ9MY/dLO1my7DlS2LGtVddramTVNpLIs+UIfXaQAq6u/2Vt6MHrMk1edN6znleXLE9KH46Kz+7HVEyzgALBVdBeFjzrMIqkn6F9KPYgmj+0GZADmrGDHe5m3tFdzD8nNJXrZAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743010731; c=relaxed/simple;
-	bh=yl0t+HWGTi+COmrHFYzrfcaopHMXF6yjTDk8RhvcoA8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jQb/xtG1npIkEKB9X4mjm0DJkhXnq14EYeREUZB3nfBwtbxpSteP2aghcf+I0I45zxb2pMNHV94GyNqtHJlmtu2/cgx1bJ7fRcYqnwlIATpN+kxnzVw5/oTHztO9l/QUZ3xosGGEr6+YZOsNszQ5bxTQ+umyvfcsKuo13m7uCjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=oEOnQeXv; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 2DABF1FB9C;
-	Wed, 26 Mar 2025 18:38:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1743010725;
-	bh=sLJ+3DY8jmPT6Dfy0q0w2XM67M9sQ9k+sTABADH9eMs=; h=From:To:Subject;
-	b=oEOnQeXvd1e9Xxep3C/I27MhIB4t1DSnzuuyvsQCBToAVGZw2rAbtrw9WY0VE5Q/K
-	 XkqM14XNZ64tTJ8l5HXSLCd4eNB6FrgjwMyGbSwdMdzJ9Ake5Ea60XfCUSv2aKLxx8
-	 23+8ersQwM6Czqii91w4/Cd0RrePiq/AwRTWY6tqKbOoH7ecS/nEO8ENWgybj+9rPY
-	 LXECmzhOpePpIb2duijq077tJo/25nbxWFyq0AFmkpRbM0aI+fpOlbAC6tff5dA3Em
-	 Ixz1iCcloR142daI6QSnd0TN07HqVv6RylX+ts/rXaeFcoTePzmYwBU6i7oD15lpAu
-	 YkdHKkAIdknXw==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marek Vasut <marek.vasut@gmail.com>,
-	stable@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v1] gpio: pca953x: fix IRQ storm on system wake up
-Date: Wed, 26 Mar 2025 18:38:38 +0100
-Message-Id: <20250326173838.4617-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1743010915; c=relaxed/simple;
+	bh=Z+kmXHGClhFpLj7Nta6mCo6WFt55JgT1HnxwLsMrksk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tAfKN/fUxnaxXoZmsVSnbcjYcitTWMSaGanwTgp/TcD4QURtv+FquPsDt9hc6UknAHQRxIiVNhUtWnHlIHCdHwCBaNDsYIRY3yQJ9WM1Jz50pT2HZL6W/ms4n0q1eC/46KcZxJF0pjPAYeDIWKnNwU8Ruq1SYGYZ61f9vwc1GXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1txUky-0001hP-Qx; Wed, 26 Mar 2025 18:41:36 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1txUky-001nIV-1O;
+	Wed, 26 Mar 2025 18:41:36 +0100
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id D680D3E7735;
+	Wed, 26 Mar 2025 17:41:35 +0000 (UTC)
+Date: Wed, 26 Mar 2025 18:41:35 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
+Message-ID: <20250326-inventive-lavender-carp-1efca5-mkl@pengutronix.de>
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-5-a0282524688@gmail.com>
+ <20250227-spicy-grebe-of-dignity-68c847-mkl@pengutronix.de>
+ <CAOoeyxWSsy0Q0Y7iJE8-DZM5Yvcdto8mncFkM8X4BvVMEgfUiQ@mail.gmail.com>
+ <20250317-cuttlefish-of-simple-champagne-ee666c-mkl@pengutronix.de>
+ <CAOoeyxXSC3rjeB0g5BtHKvKy-Y9Dszd5X9WuHeBeH1bk39d_Eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r56ki5hqfoc5hcq4"
+Content-Disposition: inline
+In-Reply-To: <CAOoeyxXSC3rjeB0g5BtHKvKy-Y9Dszd5X9WuHeBeH1bk39d_Eg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
-If an input changes state during wake-up and is used as an interrupt
-source, the IRQ handler reads the volatile input register to clear the
-interrupt mask and deassert the IRQ line. However, the IRQ handler is
-triggered before access to the register is granted, causing the read
-operation to fail.
+--r56ki5hqfoc5hcq4
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
+MIME-Version: 1.0
 
-As a result, the IRQ handler enters a loop, repeatedly printing the
-"failed reading register" message, until `pca953x_resume` is eventually
-called, which restores the driver context and enables access to
-registers.
+On 26.03.2025 10:27:03, Ming Yu wrote:
+> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B43=E6=9C=881=
+7=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=885:21=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> >
+> > > > > +     priv->can.clock.freq =3D can_clk;
+> > > > > +     priv->can.bittiming_const =3D &nct6694_can_bittiming_nomina=
+l_const;
+> > > > > +     priv->can.data_bittiming_const =3D &nct6694_can_bittiming_d=
+ata_const;
+> > > > > +     priv->can.do_set_mode =3D nct6694_can_set_mode;
+> > > > > +     priv->can.do_get_berr_counter =3D nct6694_can_get_berr_coun=
+ter;
+> > > > > +     priv->can.ctrlmode_supported =3D CAN_CTRLMODE_LOOPBACK |
+> > > > > +             CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_BERR_REPORTI=
+NG |
+> > > > > +             CAN_CTRLMODE_FD | CAN_CTRLMODE_FD_NON_ISO;
+> > > >
+> > > > Does your device run in CAN-FD mode all the time? If so, please use
+> > > > can_set_static_ctrlmode() to set it after priv->can.ctrlmode_suppor=
+ted
+> > > > and remove CAN_CTRLMODE_FD from ctrlmode_supported.
+> > > >
+> > >
+> > > Our device is designed to allow users to dynamically switch between
+> > > Classical CAN and CAN-FD mode via ip link set ... fd on/off.
+> > > Therefore, CAN_CTRLMODE_FD needs to remain in ctrlmode_supported, and
+> > > can_set_static_ctrlmode() is not suitable in this case.
+> > > Please let me know if you have any concerns about this approach.
+> >
+> > Where do you evaluate if the user has configured CAN_CTRLMODE_FD or not?
+> >
+>=20
+> Sorry, I was previously confused about our device's control mode. I
+> will use can_set_static_ctrlmode() to set CAN_FD mode in the next
+> patch.
 
-Fix by using DEFINE_NOIRQ_DEV_PM_OPS which ensures that `pca953x_resume`
-is called before the IRQ handler is called.
+Does your device support CAN-CC only mode? Does your device support to
+switch between CAN-CC only and CAN-FD mode?
 
-Fixes: b76574300504 ("gpio: pca953x: Restore registers after suspend/resume cycle")
-Cc: stable@vger.kernel.org
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- drivers/gpio/gpio-pca953x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+regards,
+Marc
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index d63c1030e6ac..d39bdc125cfc 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -1252,7 +1252,7 @@ static int pca953x_resume(struct device *dev)
- 	return ret;
- }
- 
--static DEFINE_SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x_resume);
-+static DEFINE_NOIRQ_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x_resume);
- 
- /* convenience to stop overlong match-table lines */
- #define OF_653X(__nrgpio, __int) ((void *)(__nrgpio | PCAL653X_TYPE | __int))
--- 
-2.39.5
+--r56ki5hqfoc5hcq4
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfkPEwACgkQDHRl3/mQ
+kZwXaAf/a0RArL3RY/rCsvGqnhAz/Nk1ljI1/sjXn6b6BRnEzwSev7b8LpGNMeTK
+ygCzVEDcFHwfjhcV2/C2irc0XtxnLLmh3YqpNF54IY/vAAFDzqPGqzOHYPiOE+Al
+ZFK6zjj26zmBDh011lfjyWk9EYvhDUfZNCUAX6N8Cdic+9wNGDiN9HKVfz6cUj9K
+oGTTUPVTU0Nh7bwnuHLuj5IIruIQlTPH6w0Yd56Uv4TvGZ0cQ+S9hgGvY2J6v4f8
+tdvZIe+xMQTR2d4kaK/HU+wA0iMdSoxKyu9sCszU3tWGH/Yb+UAF1/gcdc0f5Gk6
+0X0j7uJgXLMbbdpHbsWypGiIkORpqQ==
+=mUFO
+-----END PGP SIGNATURE-----
+
+--r56ki5hqfoc5hcq4--
 
