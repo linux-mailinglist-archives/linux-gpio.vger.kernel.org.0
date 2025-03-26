@@ -1,127 +1,107 @@
-Return-Path: <linux-gpio+bounces-17999-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18000-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEDA9A71348
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 10:02:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 754C8A71356
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 10:10:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD6463AE665
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 09:01:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5814317197F
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Mar 2025 09:09:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A03019D8A2;
-	Wed, 26 Mar 2025 09:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C2C21A5B8E;
+	Wed, 26 Mar 2025 09:09:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kYEkHW6V"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uhu/tHoo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C641D142E67;
-	Wed, 26 Mar 2025 09:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333B03D6A
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Mar 2025 09:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742979719; cv=none; b=AaJrGL1NRM8yQm8k9eQihCjKM2M4gW8+2WWpbPa5KveBzuYQ1CBazUSa2fPDO0ztHkqi/4R4LDFmOYxc5Kp3tZu4xANs/Os4o5kmGs7dxeSN9eYMWSI21H+zEjaxDKegqj82GYb+1uJr3Ddq8f/GwOWuF7acf57Y/DIbNrI/s94=
+	t=1742980146; cv=none; b=A+8Ag8vYj0uX9wUheJxmqT/sRNnS0kQIJJ9Sdm8RFXXVZDMvy5zkz7HFVKSThohMuWyUTl44jcn9n8QrDz5TKaSm8/fi0scDjUATiTfmhmL9HJk6FhIvUHv9yRgR9qoPSExiVndJ0FOuZKyYdo1svLqjDXTjPHZiYKtiUgqjS80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742979719; c=relaxed/simple;
-	bh=2b7ZPn7TkWiDo8qXQCI9WFvZnqHvXoB8IqYreHMHXiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BRdAxS/zxz0p2PnLcXRAdt1bjr9r/gueVX0lbajelVcnoXkCABHj0zfmqwZrrX6n6PM4VnuwDocqOnDCRIOmQehwAEfu6VX1hHpAVHHSgVeqFTAveCGIdNiNryb9Fed7LJtX6H4toolZPtt3CSzqWy6RGOeB+rNRNi+pfLkTr40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kYEkHW6V; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742979718; x=1774515718;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2b7ZPn7TkWiDo8qXQCI9WFvZnqHvXoB8IqYreHMHXiw=;
-  b=kYEkHW6VwS2lqkY064AMVYzq6PGAaQQGPDjLc17t1sidD2dzfG38+aB7
-   tuxaiuGpP+p6bAa89MG1mygCmJDaiUfcOf3Pt8+LwzZJr0gf5NVRNkn8j
-   Ng4LTCeaR/42olv9d0lv2mt30DSqVwcxrs99YeyiozOsh4BzhwoWThcCk
-   xsVvUlTcD8aK9FoMpiTijLPSezEaTrvaedQWZZJBlZdS+ZmkYuP3JgNMV
-   vc5b8JzrVAFwLnPa/5ZlNSMm+yVKbSTreaqcJNDOB/6GkCZKCkbV0lx9d
-   1eGYarCe7x42wxS/8qT8jxCgLiGkbekJTY8Y3uMzEDVwGpqfjeqGCTY7Y
-   g==;
-X-CSE-ConnectionGUID: 05C97YsxRfCYMxcP70RN+Q==
-X-CSE-MsgGUID: vQIhDZN7SLiveYKXXEcPdw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="69618799"
-X-IronPort-AV: E=Sophos;i="6.14,277,1736841600"; 
-   d="scan'208";a="69618799"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 02:01:57 -0700
-X-CSE-ConnectionGUID: gjuPDlERRz6SYGcokLWDjg==
-X-CSE-MsgGUID: DDKyhVFcQo6Yxl/zpHtrnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,277,1736841600"; 
-   d="scan'208";a="124434914"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 02:01:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1txMe0-000000061LP-3JV1;
-	Wed, 26 Mar 2025 11:01:52 +0200
-Date: Wed, 26 Mar 2025 11:01:52 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Raag Jadav <raag.jadav@intel.com>, Lee Jones <lee@kernel.org>,
-	giometti@enneenne.com, raymond.tan@intel.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] mfd: intel_ehl_pse_gpio: Introduce Intel Elkhart
- Lake PSE GPIO and TIO
-Message-ID: <Z-PCgJY8qBPBWKVN@smile.fi.intel.com>
-References: <20250307052231.551737-1-raag.jadav@intel.com>
- <20250307052231.551737-2-raag.jadav@intel.com>
- <20250314124450.GP3890718@google.com>
- <Z9QxqH3DJvyW3sjo@smile.fi.intel.com>
- <20250314135735.GQ3890718@google.com>
- <Z9z49lfWV6LjUnaI@black.fi.intel.com>
- <2025032115-gloomily-cubbyhole-dd8e@gregkh>
- <Z91oHCpfOkvgJmzP@smile.fi.intel.com>
- <2025032514-ipad-schilling-9928@gregkh>
+	s=arc-20240116; t=1742980146; c=relaxed/simple;
+	bh=iyXMi6oBTLDvy9aUdNS3eE+LZyuLKsMTqtaOeBV5QPs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=onyhfWOh+ATl9uJGge9CkkDEBD6hOlcgC7bbROe6cdsA1RjF3k0nZIfGaBFIsYCinVXGmGESjeBHrsfWA0vQLw3J8cmyYj0cuhcFz80hozfLC/70AILQ42DD4ctDyCzx6Ipj2K/FMrrz30O94/Cth3zGxOqPx2EsIvl1dQy+urE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uhu/tHoo; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54acc04516cso7086426e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Mar 2025 02:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742980142; x=1743584942; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oUZngTTEzguKiucAB//HYWOGFVEX9dZzFTDX1IRyF68=;
+        b=uhu/tHoo+JtNdeXk9CQ2Y99zjr9w8V2CFkvX4+nV+lywMVqwIU1mXmhSuzk5FfRq6q
+         YlSqA4Dt0ydW8FTlR5/1AaWFBksjQ2dCpyPDpdnp5/RrhSLvc0mrttgHa9k2Rn+H7t0k
+         Da7/r86AexyzXPji0P8eQPA25YyGzNpv3DPgEdE2RO/jGhnpoxkyGuoFNiVSsSJGsAgX
+         EWhZSHiyTtlejU3/mzlmAHuNvjzntSJjxpexRh3L0lOqTT7vAPAC72OmXHOWCIcjbcTG
+         DNK8G2tVtX5+BhzENikNSie/uGSRG0MGCQ+PcIEceWDWt9mi/D9R+NRpcEQTA1ZfhaiX
+         IoWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742980142; x=1743584942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oUZngTTEzguKiucAB//HYWOGFVEX9dZzFTDX1IRyF68=;
+        b=syNYm31G/67evzSliCCHevatK5lKMOD2tQ6YhLb/kMD006lkH83djxuek34CAYAYD9
+         xXc3Y+86QS6u4JaydU3FvNu7xSQHrEy6rcmcT+98IHemBab6Td2vaAV1T1fMGLIyuiZv
+         zN32nKAaBayA5SDfKSmO2ILuOB9ELhO3IwKp51ByxpxeSnZA2xSSuuBxaPMSjuQ0VAwI
+         M2khvgGgVcw/0fa1Hjt/BJEhfckMucPXbmIVUgxAbG9Q6ZSFqOWLsMJw4iKuWshdRmD+
+         w/j0EcIY5IwptmIgq9CvkQ+rjLO9Lkm6o+/ULcnVk4Fb1oHAAT0nxR5r8PWPD2XtNrCy
+         llUg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0mPqHgdf1in81TEeOYSRAlGhs+08C4QtEbLNNspI6KNuUk9SgLbFVGPlJF/Kf7Z5EjmZClGa6zb0I@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9+wB9Zir7+2QP3dzZNwIyeD+Ym7M7uHg/1UaTwB4AE7D6lfAd
+	qFI5pU2hl179E5GFxm/SAvZWnAqwilrIC4ZLJGN8LjcFdtWAnqP7zuBPWtFCtlesfWrFEAgCO6H
+	uHYm5GCpcCHOPd/nBgprxgJ2bWEq5GIpu5O7lyw==
+X-Gm-Gg: ASbGnctGIQe8dvWw3CUwvERfza7//AnU9XYm1NMiI4VE52C4qawGWxBjgOxVAYKewS+
+	a3yGuRcjzzmdGYXwq2+N3XQGDpRTeaR6Cn4WqHrjyk54cubpt0E2ZVtwd8jpnwSu05IZlli6znA
+	vt0UvK03+DdLOnukf8wx8jVV39NNNyREGLa7uOOje8oIONZ94rPTb7/WWMbg==
+X-Google-Smtp-Source: AGHT+IEbF509AwwvF9uBzm/NQEb5CElWoFhmCLujCLM8AfO9baXd1EsZbD77B4ufLQManBlNueN8EKZ9MbxuVPXXcBg=
+X-Received: by 2002:a05:6512:1149:b0:549:7c13:e895 with SMTP id
+ 2adb3069b0e04-54ad650075bmr6781599e87.47.1742980142162; Wed, 26 Mar 2025
+ 02:09:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025032514-ipad-schilling-9928@gregkh>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250326063214.50577-1-kanie@linux.alibaba.com>
+In-Reply-To: <20250326063214.50577-1-kanie@linux.alibaba.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 26 Mar 2025 10:08:50 +0100
+X-Gm-Features: AQ5f1JoCNnYkGIC4tglRhBZLc89xzcfRbive5WlMNXNsvF3qnSYnwZ1en9jcvv0
+Message-ID: <CAMRc=MfNhDLV4GSmA4gNZLv3Lu=Wjh_=J1L=DCo8FPUMDVz_JA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: tegra186: fix resource handling in ACPI probe path
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, linux-gpio@vger.kernel.org, 
+	linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2025 at 08:45:29PM -0400, Greg KH wrote:
-> On Fri, Mar 21, 2025 at 03:22:36PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 21, 2025 at 06:04:38AM -0700, Greg KH wrote:
-> > > On Fri, Mar 21, 2025 at 07:28:22AM +0200, Raag Jadav wrote:
-> > > > On Fri, Mar 14, 2025 at 01:57:35PM +0000, Lee Jones wrote:
-> > > > > On Fri, 14 Mar 2025, Andy Shevchenko wrote:
+On Wed, Mar 26, 2025 at 7:32=E2=80=AFAM Guixin Liu <kanie@linux.alibaba.com=
+> wrote:
+>
+> When the Tegra186 GPIO controller is probed through ACPI matching,
+> the driver emits two error messages during probing:
+>   "tegra186-gpio NVDA0508:00: invalid resource (null)"
+>   "tegra186-gpio NVDA0508:00: invalid resource (null)"
+>
+> Fix this by getting resource first and then do the ioremap.
+>
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> ---
 
-...
+Please add Cc: stable and Fixes: tags.
 
-> > > > > Also, Greg has been quite vocal about converting PCI devices to Platform
-> > > > > ones in the past.  We may wish to run this past him before continuing.
-> > > > 
-> > > > Greg, any objections on moving forward with platform device?
-> > > 
-> > > I have no context here at all, why would a PCI device EVER be a platform
-> > > device?  That feels wrong on so many levels...
-> > 
-> > It's a multi-functional device, in other words that device provides a set of
-> > (dependent or independent) subdevices. But do you have other suggestion?
-> > The auxiliary bus?
-> 
-> Yes, that is exactly what the auxiliary bus code was designed and
-> written for.
-
-Lee, what do you think of extending mfd to cover this case, i.e. specifically
-for the PCI devices? Or maybe it makes sense to go to the auxiliary bus
-completely (I think this may break a lot of things on legacy systems, though).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
