@@ -1,146 +1,142 @@
-Return-Path: <linux-gpio+bounces-18048-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18049-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35701A72BD6
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 09:55:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A985CA72BDD
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 09:55:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 259501897ACF
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 08:55:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A4F45189A6AE
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 08:55:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A906920B1FE;
-	Thu, 27 Mar 2025 08:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IqdVU7g1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2B7220B7E1;
+	Thu, 27 Mar 2025 08:55:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D500E4C62
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Mar 2025 08:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE8E5A79B;
+	Thu, 27 Mar 2025 08:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743065717; cv=none; b=t4byFuDuEmFHSy/1HVecnYawWWLjz0IepcXhjHS8aHNjpufPgdWIz1WUgEBk5LssnSygdsmK+IHaMHQ9aOwKwK6O+gdYbtkRISqoQXwoQUpGtIUUGb7U+H7JKygOq5CV/+slADf+XukJhC9j1Fmq+MjgsWUmQB4V//5xLX654/A=
+	t=1743065737; cv=none; b=hRvMj6vCeCVsrVm5gDiFvsMc72IyGspTR9xqWpxQwTFq5ejSUgcbXd/K2jHxDeUvSZsQ3mlHEqgt0Ex7yp1wrJTyB2fdbgDGnzdTiwPeuf/oaCDd6yMH94vB4/Wwgi5HCG/zB7rQ0uF0LfJadsHnhcmBE7yl4b2SFqngWkSXz9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743065717; c=relaxed/simple;
-	bh=+uDTvw0NAiJshNKjCFWBDchrHudSaZlgESjIlq6pqXI=;
+	s=arc-20240116; t=1743065737; c=relaxed/simple;
+	bh=wvP8K5jCDRc2bxGl9NjMTxlO/EqRfqfDWOCnH7CiRSc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pq0kbv8rDMFmRTsNSv5lJqz8uVSEgez8CmwSlvqS8zugr1TNnDX36Es8PAYmsquiuN779i1VXe/p99IXJvnFa4VH8OgG4FuJ2qw+TnMcCq8CK+pO8DxCFdd/o7M6+K+ePNq+JObawHcVNrUU4uRyV+RTa9m4dUlZ2Lukn1Rl+M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IqdVU7g1; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30613802a6bso7787731fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Mar 2025 01:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743065714; x=1743670514; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xX7zOJmIvIc+c8CVP1kOsZxrERdgtODAYGQ6WCW63GA=;
-        b=IqdVU7g1Xz13ZgqO4JK3tYrV8oHwpXhJZ7ooi7U6/PSoq05JIDqIpAM4dapKpQ5+8T
-         /tpZpdolEnH4zF+0nT0WBLqr6olcKJrHc/r/j6FlrMmBGY+IVKqRO7qFobJ4opyr5IhM
-         v7sTOeRrZbE7n5WPRwEYLlZjfpcrIP+/NsekQJrYM6PlC+vyMRWBa0Xs1M4zGJWm4PZG
-         36J45HDizuCsbovrtn/C2XooJuCi2JUPBpJR7tUNsuiWBMVRsVaKlqyShE5kRL7//vLZ
-         g/msJu1E7DtiTKQZ3HlUQL5nlRWcZ6xgQyHE1VWgGsIc7ADcIctoU3e6ZmC0fr0fmP2i
-         S37g==
+	 To:Cc:Content-Type; b=PJEUyrKbYcrq7Z2RW1DBMcDvL0oCMzt4WxwqE0hxC0lSmiOtkE0KRVy1UpLyLcBgs5nbrs+sgSS/2/P3AsQt5d87QBjag/C3lD02wJKUOQ8RIABCXFfdbF+e1HCeGmhrkJuaNfj2ZVpivpEL/6b2rh8Vpt+VO09EhrdnfsLKXEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86715793b1fso330781241.0;
+        Thu, 27 Mar 2025 01:55:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743065714; x=1743670514;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xX7zOJmIvIc+c8CVP1kOsZxrERdgtODAYGQ6WCW63GA=;
-        b=xSdcYyyRecMJXjk6ldXsxZFAPJJLbf9g+gOOdcFwkG9zbJV0gRDI4Fwt1h9ZOKfFuR
-         j6T5gAbBu3wcTpvbATjgvEEu0IYkmmYLPjGnkfYvZcyvEQ9s0EisBlwvFNE50IBJg49+
-         mQ7jx0cZE68w+8dNAspyGlazWVY+LNkwGkivTzISxqMmDnfSEffK3HsHJCxt9ot+HYed
-         dz/MHFt2paBUxuMbIB/KqSAH9fL2SAPAs17TByTBBUO9ZkPkH+qWvJkf+XKDyqGJfovE
-         NTMyYTV+Gtu/ORCJY0fR/8dYxHoogJccfhrnjDcw0I4aRNrnYgLDKNj89PYdx8zy+bTE
-         49YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdcEKlbnoSkuLSBt/j27qjK3b5LY1TgW6FJCzO22Z+buC1FxDeBUE0uxPzCMPqWJtS59QoyKapV4MM@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDWqE+4xUc8NIz3X8Ln2ao10+OXG7ornf/RW5gr/sGm01feuNL
-	NNryAI2U1nl/v1iL43E+K4ihtddb0rA3od68G9Vz442wjjpZ+e2PpIp0Ptbn68W3RYskD+YCdnH
-	aouIas/fj8RPZvahiVI6DN5syZ4PGM9fMusb7xA==
-X-Gm-Gg: ASbGncsIj51rCf0PlKIPXDNybwrljXGy5lOQoFLPuc4UVPgt+DkgN89F52R9OVSBIpv
-	sRBu5iC8cCglkpttjOiqTnd5Apkag/EQCi3VoOqAzXhrhN80fKUnA9VIX4lcHDl7k1d03zXGQd2
-	jf225aJW72sLhQXH7GOrYQtAgPlzX+Ik2M0pMRyVx6BkDSAxM5xpvcU1Akhg==
-X-Google-Smtp-Source: AGHT+IHuWctoQSNtfRvqowbNw6/p2JfMs654EQsPOQDnh4CHiSDaXjQHp2k71yGY5aW9byJLFzlKPfX/Zmi4wUmU4J0=
-X-Received: by 2002:a2e:a548:0:b0:30b:ee81:9622 with SMTP id
- 38308e7fff4ca-30dc5f45824mr11654211fa.31.1743065714014; Thu, 27 Mar 2025
- 01:55:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743065733; x=1743670533;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wK9lKk51F8Ig4IUd/YTVgiulwDpAR89rwMrTX7A/kVQ=;
+        b=hka/0wOydXRExKl0IaJ/Fvix/LnUTmlLWn5gfqs2U3t0D9u24U4CJGPYgWZVUgEGpv
+         bHgYnxFL5p3TS+8mfbDvBi6yz+jf9U8EbQ27CIRerI/SRotIrSl8GiHNQdYNVV0agp8y
+         IgwbSerQrQGNTR5z7cHPLQnTUOxoWtgeDq1mVHzUAmgLSzFpyyQA/gZHKleynwYTsscG
+         3zQxz7gn/z/29oJSK5NoxqlLRM13Xy5nrABOsu8dxIOfXPUXxXOW08hWt9057n1Z0FtH
+         /oEwpnFPa4yaq4u5XohNThfyh+ZFpS+6Tk4zb0429fPBwVxCtlrUzdsFFlIhEMobcCJf
+         7FSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUM8NWH6R1lOFgd1L+rOS5Vt8B53tba3xW3DztwAznChxF2PXPQ54CdDxUYvPeANG5MZZtMFQkG3hmUglC@vger.kernel.org, AJvYcCUv9w2Kz6gZdWNg8J6cdfLY/RNP+wPDMKNmpRA8F+NXWjDWIuD2N8SUqhssczX7vASj4yojRiyFgzmc@vger.kernel.org, AJvYcCV8uNsFB3DIKdyYVxiH7BKpSXGLrEIAG1wxcTjR9Wv/5vfjh1O5Cq7Ft9DRYVG06SexYKz7EzJhLmbJ1g==@vger.kernel.org, AJvYcCV9IBU+q0/NFZAlmTQKMcJ++qr6wzQtKfsbT6FihdT00ZxvKIbbsvxkVMV2xF6sg+uByIBAOu/RN77olT4n@vger.kernel.org, AJvYcCWjjd2pi2H3VW1GbC7mdn/Hn/edP4qTPzyT0KJW37a2KOeAiCMb/oSVOE3bDEWY+srYO3DxGMrPO4pS@vger.kernel.org, AJvYcCWkW4wYU/RnzEbyjAMIERJR67cSwc4UJVqqVgHVhWz7Qj25drUhFfIZRQOU/vH2MBaqtk8tCTS4QczQ@vger.kernel.org, AJvYcCXBQv6aELkSFmtpMu9P/d2jxLYeoyqC2TOmlgOoSe9TZCbmYnMh3JZTRE3HLNzUMFUtsRTWN6ARZ2KVO3pXpOx8ZyA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUat5BP9mV1o8OMihgN0es+CSJsMp+u0x8HiH3nr7HYE0DHT/r
+	Gcz07VHtFAwvIp5dxB4XXNT3ul0k1/FPIgqV2eLUeJxI4s5/vQfk3lQxBNtv2ik=
+X-Gm-Gg: ASbGnctl7XYluZmZ0vnYJXnSZd1aQPQlwrbbkWbru+FHav0YsuMP0lpXGVInCRBQBLe
+	CUS7sdyy+d8eI6vpsEO5oqPpmYML++dUeQ3uQIJSEDnY80+is9KK8V28M7xpQutUFVuwN7jjBJK
+	TJ3ze0qx4qDEU6zmNfLxgBbCyzm/iyZhrfwmvGn7geyITbiUyTsYnMSve0v5ILTLU+fXPHSUFXE
+	WNSQ0QqtWAwO5WaOudyZw29aaVzZI6ztJsVn3ohx64Wbr5w0CH9oQnoLYxxt7mhsNFv2O5LvJr8
+	R4wcEZclvdz/7rrNsnx6yy53lCj+YvH9nFiuqWCuTYFVF1iwhBHSzotXZH/eDAj1mtHbnDt4x4E
+	jOLj9HoY=
+X-Google-Smtp-Source: AGHT+IEIGZkAkfBiG5Ncpc2NKTQbIdtxmpakKbyQefAVcKv5OwG0DYQ8p0OcMmD0J0t+DXrL8xhiBw==
+X-Received: by 2002:a05:6102:162c:b0:4c2:d9d3:2aae with SMTP id ada2fe7eead31-4c5870aefdbmr2195083137.21.1743065732597;
+        Thu, 27 Mar 2025 01:55:32 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c50bc55ad1sm2734817137.18.2025.03.27.01.55.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 01:55:30 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86b9ea43955so300916241.2;
+        Thu, 27 Mar 2025 01:55:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5r1xHpXGn5TS3L+RAFQdsT+yFi8tf4WNwY6PM341IIKcQieV8xi0eAGTY+e0EWRv5pw+JRmb1il7K@vger.kernel.org, AJvYcCUiUqJhMWkoL6fjrarxlLYZa5y31jr34z6YZE1gd9kAzirqGlpxLrwqaeqEVta+DY6mN3vWD8it0kZHYc74@vger.kernel.org, AJvYcCVFNFnkK1KakRrDi5Jh0Vc+VG0DMLibmcom2P47acf8IBlikUXQm7pP8cLwPpfZ6X666DAURdq1gk3T@vger.kernel.org, AJvYcCVgA0qHBYp2IbSYti3Jm9i1ItBMx45ypqtSrHo2LMj3lahztzASTQj5na49bLUBEa+KKvnEnAh+kZ0Fm6gEoDLNc1Q=@vger.kernel.org, AJvYcCWqJ9WpvGUa6uduKI8nFUZica+3WDZ0F3fvBB9pwjR14pnfnVsH98JR0f9RyLXR5QwQ91WtkXHXLiNJC0Jt@vger.kernel.org, AJvYcCX2palGYjuidhqxgraiRNG0WUZisYOA+flLRMC7NF0DVVXWZPgx2qllh2w3+czwxRoHHfXvjCij4k0B@vger.kernel.org, AJvYcCXjpI/gj9BghIP4YkfWcp0+osOpe9/croDa46dJ3YemH/xH+7m4UfJCRsXota+k3fVjQaB9QSo29U0zwQ==@vger.kernel.org
+X-Received: by 2002:a05:6102:50a5:b0:4ba:971a:41fd with SMTP id
+ ada2fe7eead31-4c587074bf4mr2444666137.19.1743065729369; Thu, 27 Mar 2025
+ 01:55:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327004945.563765-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20250327004945.563765-1-peng.fan@oss.nxp.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 27 Mar 2025 09:55:03 +0100
-X-Gm-Features: AQ5f1JrNDKi6eoVNVGn9D2px89ZzGel4NmYjoMJzgLZI_iKwInQJa47frSxKq4I
-Message-ID: <CAMRc=Me8YdNcU1CHH23Bsi8yp33OL8a00-MiMNwA7skD7S0Jbw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] gpiolib: of: Add polarity quirk for s5m8767
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, broonie@kernel.org
-Cc: linus.walleij@linaro.org, krzk@kernel.org, lgirdwood@gmail.com, 
-	andriy.shevchenko@intel.com, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	Peng Fan <peng.fan@nxp.com>
+References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com> <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
+In-Reply-To: <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 27 Mar 2025 09:55:17 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVKfL-FRhDaFfOACV8R=ziqXdhmeW7Xd4WYXqHnSbR0ZA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp1SYp8iWPpWJ6Tj5rp6ScglN-F4PfZy1-_zatQI8UsxeHgk8YvFPlKy5w
+Message-ID: <CAMuHMdVKfL-FRhDaFfOACV8R=ziqXdhmeW7Xd4WYXqHnSbR0ZA@mail.gmail.com>
+Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Prabhakar <prabhakar.csengg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 1:50=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> This is prepare patch for switching s5m8767 regulator driver to
-> use GPIO descriptor. DTS for exynos5250 spring incorrectly specifies
-> "active low" polarity for the DVS and DS line. But per datasheet,
-> they are actually active high. So add polarity quirk for it.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->
-> V2:
->  New patch
->
->  drivers/gpio/gpiolib-of.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index eb667f8f1ead..83559dd24f32 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -222,6 +222,15 @@ static void of_gpio_try_fixup_polarity(const struct =
-device_node *np,
->                  */
->                 { "lantiq,pci-xway",    "gpio-reset",   false },
->  #endif
-> +#if IS_ENABLED(CONFIG_REGULATOR_S5M8767)
-> +               /*
-> +                * According to S5M8767, the DVS and DS pin are
-> +                * active-high signals. However, exynos5250-spring.dts us=
-e
-> +                * active-low setting.
-> +                */
-> +               { "samsung,s5m8767-pmic", "s5m8767,pmic-buck-dvs-gpios", =
-true },
-> +               { "samsung,s5m8767-pmic", "s5m8767,pmic-buck-ds-gpios", t=
-rue },
-> +#endif
->  #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
->                 /*
->                  * DTS for Nokia N900 incorrectly specified "active high"
-> --
-> 2.37.1
->
+Hi Krzysztof,
 
-Mark,
+On Thu, 27 Mar 2025 at 08:43, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On 26/03/2025 15:39, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Enable support for the Renesas RZ/V2N (R9A09G056) SoC in the ARM64
+> > defconfig.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  arch/arm64/configs/defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 11e7d0ad8656..c7b41f86c128 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -1483,6 +1483,7 @@ CONFIG_ARCH_R9A07G054=y
+> >  CONFIG_ARCH_R9A08G045=y
+> >  CONFIG_ARCH_R9A09G011=y
+> >  CONFIG_ARCH_R9A09G047=y
+> > +CONFIG_ARCH_R9A09G056=y
+>
+> So the pattern will keep growing and none of you will ever bother to fix
+> it, because you have your patchset to throw over the wall.
 
-Once v6.15-rc1 is tagged, I'd like to pick it up and provide you with
-an immutable tag so that you can take the corresponding regulator
-patch through your tree, does it sound good to you?
+Yes, the pattern will keep on growing.
+Just like the minimum kernel size will keep on growing, especially if
+you can no longer compile a kernel without support for SoCs you do not
+intend to run the kernel on.  Not everyone has GiBs of RAM to spare...
 
-Bartosz
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
