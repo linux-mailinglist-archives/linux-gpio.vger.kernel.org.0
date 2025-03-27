@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-18043-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18044-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D6F2A72AC6
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 08:44:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1469AA72AD0
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 08:48:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CDD73A3E8C
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 07:44:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E13203B06C0
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 07:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B33BD1FF7CC;
-	Thu, 27 Mar 2025 07:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 129241FF7D7;
+	Thu, 27 Mar 2025 07:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6rgApyM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+RkPguD"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D58D42069;
-	Thu, 27 Mar 2025 07:44:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A3D2BAF8;
+	Thu, 27 Mar 2025 07:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743061450; cv=none; b=ozB3VlwojrgbP2Lu83ljL/HK5I/TzBEk4RpnMs67/nKOEumej5pHKGIZGHgN38Cv3fpNIumpmpeIj7ZJ0IW1U7zYt83/4rgkck4tBzmFTaqU2RN8rSI0C4d6ep/vcnMvkOINbHG4b/wBzfj9yznXvHLaG3O2ZiNBTapA90iVR+E=
+	t=1743061713; cv=none; b=KS67w2qSk3qgJMq6WupdiG+GyRc4ITgJsQUjxBTlrP4B7MUVsqMOAElwcZECfb8htriLFoJVLIkXAFZDEe4opFvpOdUWMVNJX8iuYkjsHnsO4MMqNAqulXhrRlKCxYDouHECZkXqM9Jeq7r6HpquE9Hxeo1BLW6m9S8BHq3K/hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743061450; c=relaxed/simple;
-	bh=D4zjTIHcLq8iQiP0/yjuFO9hy9HuuiEq1/XitREfj68=;
+	s=arc-20240116; t=1743061713; c=relaxed/simple;
+	bh=qqI5Zw8XhX5HfkSAsrvFKk8Fvy8YvdFkG6C2QodO7aQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R4FQWNh/XF4pKgE1Wmwe/Tl/+8Uno2qRFvQ6v+9DWmWjqEtMnfW0Sl6p2zM/xVUFJf7ZnRenLs+dQhHzUlEufbIEiQTvd0tJI4y8K8dbSWfUJJ4ZRxfHiQaT9irSLiQrZh46O8KX9d8iIc0NTeovg8dyYB/xlnN4ZxEnsjIbM9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6rgApyM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90ACC4CEE5;
-	Thu, 27 Mar 2025 07:44:01 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=pH0uKXkjDkpn/fXFY2orBLyfwVbs0bjXD6qPUtXw52XE0EdBxM3b21WiwFN8yQZrLP6J7tAmU8aTw6ZfAZfY4uzNyEGvUOcmSAyeD5VqFOHFXz2lZiKXfHDDbxdVf40o/afpPiVz5O49dWCM5MdIAY3eEh/4EI0LVSIpidU+IXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+RkPguD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C99C4CEDD;
+	Thu, 27 Mar 2025 07:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743061449;
-	bh=D4zjTIHcLq8iQiP0/yjuFO9hy9HuuiEq1/XitREfj68=;
+	s=k20201202; t=1743061713;
+	bh=qqI5Zw8XhX5HfkSAsrvFKk8Fvy8YvdFkG6C2QodO7aQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L6rgApyMKYPx/FOT+K6ftJmeoRtKsu4gXYjgCICT+kIkK8N13tzdsQ2X6IPae4ErB
-	 SJQLEu48GAGnCdfW/GhZA/H+uPIXandYdKH41dVY0Gop0D/2o/zPXlRuD6cIbn0z2k
-	 NwVLEtbDNstbNrr4Nbc+cO7HSIObGoFWzJcthaD+abymtCVw5soMCl0oEo+T2G5Ps+
-	 AgHw9BNYwUeVgGCXX55TsXHhBiuMMW2j+nLw4JvHFw2zWKowozVKjNLU/LqtRzpxpr
-	 Oipj8U6fAgyRtlKqLbBiLkwMkgFIJJDHccLUcQ9/UH1Fl2zsZ5PaOBdm2ytO/oXmyl
-	 C4pf9y2940U9g==
-Message-ID: <dab9b294-b635-4bd4-986d-0c0671eae6a2@kernel.org>
-Date: Thu, 27 Mar 2025 08:43:59 +0100
+	b=C+RkPguDoj1M92d+kO+gfE5mwL+J7YatTlZQJlxkHk3GQbSrlnDOHIJBo6N/3CEQv
+	 lfPkZtCaY5rPsEOLLCgaerEyrWUHxZVVqU/yRkUfmpyoCEa95lD5881XqhC1ctt/Pd
+	 VtY+Xyb2TqHPKR0sw4HWRryfXj2Ji2d6gbDFm1cgVtIip1N+rV1EN7LfD/mV5LFGdc
+	 vfviqJDYFHg7v0O5bvHhxQjwOPe1vXTHo/zTS73UqeUPTkduknSCK/vP99XaIl0YeB
+	 /A9WCwhj+3r04cCi2MFuTGtHlcY1GXuWQVeejz6cs5aSMR9Juo56mwI+j1RYK1N3H5
+	 xcj4KpuNY+iLg==
+Message-ID: <3d88eee6-1401-4ffc-85bb-3ea91f28d186@kernel.org>
+Date: Thu, 27 Mar 2025 08:48:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/15] arm64: dts: renesas: Add initial device tree for
- RZ/V2N EVK
+Subject: Re: [PATCH 11/15] dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
 To: Prabhakar <prabhakar.csengg@gmail.com>,
  Geert Uytterhoeven <geert+renesas@glider.be>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
@@ -71,7 +70,7 @@ Cc: linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
  Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
  Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-15-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250326143945.82142-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -117,22 +116,36 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250326143945.82142-15-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250326143945.82142-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 26/03/2025 15:39, Prabhakar wrote:
+> +#define RZV2N_P3	3
+> +#define RZV2N_P4	4
+> +#define RZV2N_P5	5
+> +#define RZV2N_P6	6
+> +#define RZV2N_P7	7
+> +#define RZV2N_P8	8
+> +#define RZV2N_P9	9
+> +#define RZV2N_PA	10
+> +#define RZV2N_PB	11
+
+Same comments as before - not useful to repeat the name.
+
+It is the third patch in this patchset, which receives exactly the same
+comments as given before.
+
+I expect that given feedback somehow stays within group of contributions
+or company in form of internal knowledge. Or just read other people's
+patchset to learn from them and do not make the same mistakes.
+
 > +
-> +	sd1-pwr-en-hog {
-> +		gpio-hog;
-> +		gpios = <RZV2N_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
-> +		output-high;
-> +		line-name = "sd1_pwr_en";
-> +	};
-> +
-> +	sdhi1_pins: sd1 {
-> +		sd1_dat_cmd {
-Follow DTS coding style.
+> +#define RZV2N_PORT_PINMUX(b, p, f)	RZG2L_PORT_PINMUX(RZV2N_P##b, p, f)
+> +#define RZV2N_GPIO(port, pin)		RZG2L_GPIO(RZV2N_P##port, pin)
+
+Not a binding. If you claim otherwise, point me to the line of driver
+code using this binding.
 
 Best regards,
 Krzysztof
