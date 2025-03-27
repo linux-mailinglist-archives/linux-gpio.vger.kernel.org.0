@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-18065-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18066-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C01CA733CB
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 15:01:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23250A73446
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 15:22:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A1671889947
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 14:00:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21B8716EFCE
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 14:22:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0432F21765B;
-	Thu, 27 Mar 2025 14:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81648217733;
+	Thu, 27 Mar 2025 14:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mknVJBFK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PkV2x2n+"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D952165E8;
-	Thu, 27 Mar 2025 14:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1696B217659;
+	Thu, 27 Mar 2025 14:22:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743084032; cv=none; b=E4jWIEOGb2xToBmp+tL8t4Vl439G3MY5TwVEWvoAXnmmJMUP4gV911AxLMbR7UeEpBYP+3xlaLjvM6nLr8nYujGQnyog+EIGOOn4yIXCYsjs2QmkGdBOLKdEpyH2rdBcJNX6HyewBgzLiER3nK7H+JxQdcsvIFrob+dmC7mV8wY=
+	t=1743085333; cv=none; b=FVtUsOc7m/S4QFIS2mnTNi6phZ9boBBOTSDDLF5quN0fftps3G4Z4/0gupOcg7nh3CB3CbtcQD1b8JtzJL5Erwtn3GytpTBJmVT90j2Y7bc1T3zivqEws9HpnXE+rpR8zfkLAYoVGk4leeRTGDBAFXL6sN5xmy8cXzysPm5UZe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743084032; c=relaxed/simple;
-	bh=0DEjehgeaLwlV0hjwbCmSOv1Dk9R6yQTEMo9pEXA26w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gh2Bk0MRgG6Gj13O8WIUkeE1ntvWUChEiFoqHFjeSjDzWQoidcsUmzar3Ctd2vWkfsbSQHlh2Ac1O4pvxeEbgyCam0Xcv4f19FNCUx27beVXuuwctRr4wtmuU6Tt8jqRxLJDIW3s1a9W28wYzbO80xccvPLPaljZ6PZpDpXJvFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mknVJBFK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C71C4CEDD;
-	Thu, 27 Mar 2025 14:00:23 +0000 (UTC)
+	s=arc-20240116; t=1743085333; c=relaxed/simple;
+	bh=LEj52uowgJsKujWeqH5GpaYqptWRzUuqaXmevxVGRzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mR612YIJBjM/CEXgz0v/W+aXTCYd0zllJx/nRD+8JOk5gLzqiDE+7pRpa7VCSXD0RFLaIlNVhjHK4WmWKTbKNJKtFseuO8xDgPUBOtR4Hss3lRYdMNlTrSA7F1LnUUDCnBKhVaATRQpiJid6vxZs9FBcsvTvWBpjiSiO4XAIf90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PkV2x2n+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C34C4CEDD;
+	Thu, 27 Mar 2025 14:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743084032;
-	bh=0DEjehgeaLwlV0hjwbCmSOv1Dk9R6yQTEMo9pEXA26w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mknVJBFKoZVBjuvI19ERWu32hcx03AjNMF93ym/TxTM9XgCpsZQRE2bbCQW0IynZS
-	 9F6/rt36BwesC1Z2JktL17lDtApoiDmYSoL3kzE9ly6evoPNHn5vH01yOHaN/UE1Dm
-	 E80A13M6jmXhL9l4YV8XXUc9p5yvI9/4OqheI/GZ1+7neTREP95tJj3eDxOlg5uvLD
-	 U2MXR5gUPK0HW88d2EMyowhY9znHS16TRJ3hdYzHOhD4WkjG6cjrNruCNSpCA/t9xg
-	 PxZ1v6T8u7ClepyZkcG8WtVJ/bWAOmFao7MXVmy7rTi11PqpXN89QQv+xfA1FLj+sY
-	 ZscSRTrQq0Jng==
-Message-ID: <01d8b588-528f-4b50-a4ec-35645bb5f3cd@kernel.org>
-Date: Thu, 27 Mar 2025 15:00:20 +0100
+	s=k20201202; t=1743085332;
+	bh=LEj52uowgJsKujWeqH5GpaYqptWRzUuqaXmevxVGRzA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=PkV2x2n+G6Jef8KX+kINXWadaPiWj0VzjRVVEAd5kKaLmtQSzrSScrYRkCfUGb1RV
+	 faZkdsCr7vnBFOuj/eDljg02ixf/SHaQV0QyjKIHH+s+RwYE+1GzKp4OTsvsywpYl5
+	 sE89fLlId5VgT3IFCVbXnnmDUBvVWEeoMX14AB6/naz5DyvuD3rJ9R1z1hZEd1cNgc
+	 CFJojTp18IsEHkU28jvjFvibAv44i0F7AaSEGTnpwRhKqYD/gHyUbA6nOtfMrLaOvc
+	 UuMXe3skIueo4URNj+7AMW8Uv7+cwJaF2MGGywq+3niezFTUx3RLcr0fIppTTPXx5S
+	 yYtixBelfyeWg==
+Message-ID: <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org>
+Date: Thu, 27 Mar 2025 15:22:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -51,8 +51,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Prabhakar <prabhakar.csengg@gmail.com>,
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Prabhakar <prabhakar.csengg@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -61,7 +62,6 @@ Cc: Prabhakar <prabhakar.csengg@gmail.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
  linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
@@ -71,9 +71,7 @@ Cc: Prabhakar <prabhakar.csengg@gmail.com>,
  Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
  <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
- <CAMuHMdVKfL-FRhDaFfOACV8R=ziqXdhmeW7Xd4WYXqHnSbR0ZA@mail.gmail.com>
- <CAMuHMdU5HSt5cRN8WFB5DrOZjo+Fc55X5bB6V6GzFT_Akiqdrw@mail.gmail.com>
+ <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org> <Z-VETFWFT5NksD7J@ninjato>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -119,48 +117,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CAMuHMdU5HSt5cRN8WFB5DrOZjo+Fc55X5bB6V6GzFT_Akiqdrw@mail.gmail.com>
+In-Reply-To: <Z-VETFWFT5NksD7J@ninjato>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/03/2025 10:08, Geert Uytterhoeven wrote:
-> On Thu, 27 Mar 2025 at 09:55, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> On Thu, 27 Mar 2025 at 08:43, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>> On 26/03/2025 15:39, Prabhakar wrote:
->>>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>>>
->>>> Enable support for the Renesas RZ/V2N (R9A09G056) SoC in the ARM64
->>>> defconfig.
->>>>
->>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>>> ---
->>>>  arch/arm64/configs/defconfig | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->>>> index 11e7d0ad8656..c7b41f86c128 100644
->>>> --- a/arch/arm64/configs/defconfig
->>>> +++ b/arch/arm64/configs/defconfig
->>>> @@ -1483,6 +1483,7 @@ CONFIG_ARCH_R9A07G054=y
->>>>  CONFIG_ARCH_R9A08G045=y
->>>>  CONFIG_ARCH_R9A09G011=y
->>>>  CONFIG_ARCH_R9A09G047=y
->>>> +CONFIG_ARCH_R9A09G056=y
->>>
->>> So the pattern will keep growing and none of you will ever bother to fix
->>> it, because you have your patchset to throw over the wall.
->>
->> Yes, the pattern will keep on growing.
->> Just like the minimum kernel size will keep on growing, especially if
->> you can no longer compile a kernel without support for SoCs you do not
->> intend to run the kernel on.  Not everyone has GiBs of RAM to spare...
+On 27/03/2025 13:27, Wolfram Sang wrote:
 > 
-> <pling! :->
+>> So the pattern will keep growing and none of you will ever bother to fix
+>> it, because you have your patchset to throw over the wall.
 > 
-> /me remembers
-> https://lore.kernel.org/all/6323eb7a-03e9-4678-ac4f-f90052d0aace@kernel.org/
+> I dare to say us Renesas people are not too bad at fixing stuff. In this
+> particular case, I don't see a wide consensus that the above stuff is
+> considered broken? Please point me to it if there is such. We are happy
+> to discuss.
+> 
 
-Exactly that discussion and that outcome.
+You did not object to last discussion about this (a month ago) - neither
+to my comments nor to resolution - so this patchset repeating the same
+pattern from the same folks while ignoring previous talk is
+contradicting "not too bad at fixing stuff".
+
+Although of course no particular bug is here to fix - I should have used
+"change". Anyway, it was long time ago consensus that arm64 does not
+receive top-level ARCH_XXX per each SoC. And this is what is being added
+here in this patchset.
 
 Best regards,
 Krzysztof
