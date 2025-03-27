@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-18041-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18042-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A87FFA72AAC
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 08:41:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90AC9A72ABC
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 08:43:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9691C1893145
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 07:42:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F3EE177ABF
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 07:43:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 405651FF7B5;
-	Thu, 27 Mar 2025 07:41:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189341FF7CD;
+	Thu, 27 Mar 2025 07:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsGdFSEG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIU4Yw+0"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AFF4A1A;
-	Thu, 27 Mar 2025 07:41:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEA31FF7AA;
+	Thu, 27 Mar 2025 07:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743061308; cv=none; b=XIetazAXihqNLJfLSSdXe4wXfuA1FHoJuamSwQJ0XqdcolGSYG3cmTBij83wqsto9p0+Ge3LA7EyLml6mlyGJJQnwcyMSA5heefzgjusPFLsGYncROup0ClzCIkDCf7nfrNfji+5l6A2iWIPiMixhBlNQ/T+QxETvLg3cyK2Txg=
+	t=1743061409; cv=none; b=ORNzLqzdTGRBLDgOPpTbPJTrqqd5vANysBxjNliDhlJoiV8nwgq4MoKrIuZTJTFa634iXLBvlBkbFpIXw4VrIRy5kwuQAMZ8+ZfC+3eYYvWDnT5fXVCepy/fV6zEHEo7iwpc7g6Grnc1Xap+M0NtCgM12pYBmoiw/OVmespYU4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743061308; c=relaxed/simple;
-	bh=Bh6/RRvEhVCy63Dl9uu9YiFZkaMSa2LbMfOGh2afyWE=;
+	s=arc-20240116; t=1743061409; c=relaxed/simple;
+	bh=fk7AOpk0VvMGYt6VzHrHLD09g5SsvkwwjT6ts+Df2TQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EzWBmdxmq+V8/bnbWL5eHWJ0BjOeDS8OZ+zWdAE/UcAekD+ZgizPMYw2JVZz2WH98Y1TJjow4OIJO2vhZrlgLZPbCeNbumRKNq81yflrvws3L86WeIR/FCLJEgzUjr+PAmLmh69nJxwHcRBX4wPCF236BIHZUh2oyPPGa9x36T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsGdFSEG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5064C4CEDD;
-	Thu, 27 Mar 2025 07:41:38 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=k+4LtuFbzd9TFZQtRlSCma2CsvSP1JDfbo1uhNMMfmgYSQKMr126vAR5ueiBrSyQxlCH4Sc2jliUrgaLk6p8CtPrwGMEfaujwgnr82/6LQ+jzbo7mL4gTHxdzDvstsea9rDVvzh/fqSNvRJVtYiS9Iiac5JJh2GdU5F4ajKuPyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIU4Yw+0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3690FC4CEDD;
+	Thu, 27 Mar 2025 07:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743061307;
-	bh=Bh6/RRvEhVCy63Dl9uu9YiFZkaMSa2LbMfOGh2afyWE=;
+	s=k20201202; t=1743061409;
+	bh=fk7AOpk0VvMGYt6VzHrHLD09g5SsvkwwjT6ts+Df2TQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PsGdFSEGk289ZE00JkndtlPd6vIHyRYoR4pSOZLOgyI2PQVBjmAH5in1vciPlznA4
-	 Ew4SAfHiKTf0K1cQmIDuGo828fI1QMZYLPziCCY71MmNc+dVCfanAp9LbT2+1M4gMU
-	 4meQyD4u3sGW5RIGL3zHxqH3qiXScrGdAPW1WMg79LMSVe31w4Qa3qKkeE+17g31m6
-	 TudrCcI3HFCFloZuobnIY/C/KRGGSADFjb0ABjOxvY6ikiBnrTe95uO2B9ix65VawH
-	 LGqtGrd9ddygL05uqOOLi216jmMl78R4lc20FMA1YExGF/0DPXeELmWPXxXa6km3Z4
-	 /fObKFy/lBkwg==
-Message-ID: <f03c3a6a-aa6c-47be-8a03-7486131f6d32@kernel.org>
-Date: Thu, 27 Mar 2025 08:41:36 +0100
+	b=UIU4Yw+0rSVQZqN4kvxJRh/X+KE/mcmDKZIZX5VSRO+pNntIjW4eee3VTqXgC4Zz4
+	 6aPoCZhFNEKWfZQDJgLA1bVk8T8PRiViaKrhwPmff+MHzeRlu8uPTmZeKIdJTqCRyd
+	 uM6CNTz1dy68R+uhvqVIFq++b/6lwoHL7pBXU2Btfi4WU9L3nAtcJ2ewfmqUQPy1i0
+	 wy/vANge24lEAUw3nF5wG462r4QGd288nCfgXeDMv/XXF/9dbtEvULB9Y0Fnfa6wru
+	 UX6OY7ZpoWU2tdQmeTwn7pzAAIWllmdfByOeN8auTAFVqX3ykgPHD67hFNYtmUHJ1A
+	 KY0Wps3G7h7Rw==
+Message-ID: <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
+Date: Thu, 27 Mar 2025 08:43:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/15] dt-bindings: soc: renesas: Document RZ/V2N EVK
- board
+Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
 To: Prabhakar <prabhakar.csengg@gmail.com>,
  Geert Uytterhoeven <geert+renesas@glider.be>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
@@ -71,9 +70,9 @@ Cc: linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
  Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
  Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Language: en-US
+ <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -117,21 +116,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250326143945.82142-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 26/03/2025 15:39, Prabhakar wrote:
 > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> Add "renesas,rzv2n-evk" which targets the Renesas RZ/V2N ("R9A09G056")
-> EVK board.
+> Enable support for the Renesas RZ/V2N (R9A09G056) SoC in the ARM64
+> defconfig.
 > 
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
-Squash, previous patch makes no sense on its own.
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 11e7d0ad8656..c7b41f86c128 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -1483,6 +1483,7 @@ CONFIG_ARCH_R9A07G054=y
+>  CONFIG_ARCH_R9A08G045=y
+>  CONFIG_ARCH_R9A09G011=y
+>  CONFIG_ARCH_R9A09G047=y
+> +CONFIG_ARCH_R9A09G056=y
 
-You, Renesas, already received exactly that feedback!
+So the pattern will keep growing and none of you will ever bother to fix
+it, because you have your patchset to throw over the wall.
+
+My previous comments stand.
+
+NAK
 
 Best regards,
 Krzysztof
