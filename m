@@ -1,61 +1,62 @@
-Return-Path: <linux-gpio+bounces-18031-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18032-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35B7DA727E3
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 01:51:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CC6EA727E6
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 01:51:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA4BA1771F9
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 00:51:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D0211892197
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 00:51:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2A1FC133;
-	Thu, 27 Mar 2025 00:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B54C4208CA;
+	Thu, 27 Mar 2025 00:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="FFjEMNp4"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="qPTR+xx9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2065.outbound.protection.outlook.com [40.107.241.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B6923CE;
-	Thu, 27 Mar 2025 00:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8B2C2E0;
+	Thu, 27 Mar 2025 00:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743036662; cv=fail; b=f67vcf/xMJdoJ1r9/tLvj6osTZ2f8gDDPcTg8xh8tXDHGsmynszxYT2enuv3Z/WAniwi2s02aaHHOhEBLpOS6U9jz1i+rLvsGizNzE5laGJr1eAhcangx8qBY6t+1iGWXCKDS57SVvz+IBBj3boBvr/E2MQJBWU0RsIjoHRIqvo=
+	t=1743036665; cv=fail; b=GLtFYAJ1Efd2e0KKX0CTlSpq8bSf7Q4JXenpafyEXzV3joJUUDKtzzLAQK1ELINQf6Nw31uS8Xpmchjy74pyjP2TlLmMC6Qgsw9Jvjb/V+01Hdi5IlnUt8p8fjMp22S8IhwEk+I4Ylb/HI/JhnYvUXZDgbXSZhfOzCW/MtMsSdU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743036662; c=relaxed/simple;
-	bh=BjSMvoiAnFzvzUqzJq4QP2cm4zUTQMossZsQgAqi20w=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=VFEGgBQgzLPR9Hw3/HLs7d8FZMQVsV4ssC1RzGCwuH1IlYP92PHLuLoZyKub/bC7+hYLW3H/d8rKw5+iajdxuBnYujZg/VxJ1q9VfcKGBy0wRjy9+BSHZgX0zr0krQP5dsZlcPHs82jxM66scokGgNRhGNsIJ5FPwIzwCZX/k1Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=FFjEMNp4; arc=fail smtp.client-ip=40.107.241.65
+	s=arc-20240116; t=1743036665; c=relaxed/simple;
+	bh=4Z3IrBoQV5F1jcwcv63Bxs98dlQ0u1RR1VsFiyMdJJA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=L7rjnXW83Njpg9CaaZ7CqdfO5kVdsWHcj38ct2hvMxnzZOi0P1C5Moxdj2F7d8qynaBGhMMxqVkhZgvXVSxbFfxok5FTqgrj00jAbzThlMS4tbOwjqskmD8WGSvhpM0YokqAfCeq/19+WQlxc8mvRHWyh3F94/GF0dNvCeYkecg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=qPTR+xx9; arc=fail smtp.client-ip=40.107.241.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NdYwP4PbQlxBM/m0LuE7PQl4xZQxAD0ihGEfOyOHg/3JJajcoDR4hz5JLDUpkHHCTifITOr76wDn+zBO9QUbuJb5ElRNabqHdv7KHp+riHz5JKWrwW3KdsaOfOeP8HFK0OgbvW+LgWHdlBLt7WXiqyIXjuYQSg9LyZ2PfhyTx61KesfrZvLTwgxAeVFvUOfYuBXR9kTV2TBBqUGPrTbLUhH+T4JKm736POgfuSD75MX2wwq1trnlCGJ+2Wwn5jE6C+9vC5d3uVPdb4J9sJpXDRL4yGomTPZFvdxGTFa72El3X+nvPEJXFLy0dPPh3AqguKbuEACECQQ3XGfOK2ReIg==
+ b=Tul3HWCf1U0TRoyhFHFY7/0codGagNn4os/QcARMbndPaPuikx0PotxvoZGHlfIrLKxVw6sWoVrjk+tCu7ihnvPzSmorjORRy9ht0akyzAEc4+OunKYTos/ZJtaWyDvy9m+czqyf0lJapKQHqNrarBL3pSicpxVbx9KaKZGXyMw0C6nvxr6v7XFBZMMakQ//pIFt8fFxUHW5/tMkv/NkEw8+jfLtMeIBDt11tT5+uy+KSq+BvmD5OgPaUMaMjFY6yJXsHeqCWnGs4nVtBE95vEC5RRZluGwZ5JzwXWK6n/nTbTozgW8vWLhCjDhPwZXhTMtApA6km9y/y++rCTyeWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/Usr858JYEuF2vOHvB0fr0aDL7xSPT/qlWbvw4e/EKE=;
- b=EMR3u4jaXgl6EeBkdSOmcEA1x+OPiecGFeEzgv3oVYM6+tzt/lAfVe5hRmtJjKwbLS6qRd03usMHZ/Nbxfo6LkfxeQaiR6dEJA+VWUbB+zL11EWPxryQKVJaTxrqkQyQd6DXfxm+tWOCVA2ej9d8Y/XJCkKGTqGZDQVf7n8MYJGzIg7HoSWz8HzZCr0ozaJRY3S4C5o1RKzj3iZyOORklHpiCJktDqq0cO/h1cajnWtmReGMb9Rhzw9AwUodzaUaNZQ0kROkEqXRsVrH/bZmuSp8DXrpsWl/aS/ix/hL2Ef2g0Za38aPmSKBLfykHAEvA1lTDZfYlh4uK3rUn3Ajlg==
+ bh=xU+gcbRkmZdBApCxYTuh0F8s39N8XUE733O5zh+nofs=;
+ b=OVSeOONXzQ5z60GC609D4D3CUxaxXb4DK50myFl6jO8ffEBlnqKmVraATtIlSsbEEaIJ7C7sz6qddzyOdyW1rcURjm0VXqg3uBmbwXJCFLmXEFFzdeVP6Ev31BccJ4QPe2RUmunJ9Tww9DBxOxTQD7qPy3XUn15dtuP7WqrT/tkCohyMazGqJrUcJMPiyivjZqq+U6WnNaBdSBsawcSFVbuddQpWO9rtMSX1qGJY72oRgETgvYrlOFnPgh+vlQweI6nihWxVArQPFoHl+zktr9zIw1VOFB0C14OXvk3XZ3bZwtjLsD1Y8uuYNM1nx3AKvONUAChNaoknhL4Wrcb3og==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/Usr858JYEuF2vOHvB0fr0aDL7xSPT/qlWbvw4e/EKE=;
- b=FFjEMNp4nG/KB1gTl2TmtE16H6RKZuz6UAm5SpclpDDiNbcKlMTOXN4TvAum6wcfVLY/hMpWHDH+ttjDXnps+XCyTNoC9rGs0LLAeJ4JCFUG1UPrwEOKCUZ0mTl0X/0NFx5K5ExQX4J2W+JdhHIfIIVFUOits0oUec6hZtisDxxYHi6StTXLjDGlJd2VL07LHwoh2ZlF/rSqQvWjctKasx27OrAMDnKeZ7EYclfAij9KePDxrx2PuLZsIjq36ifWCjDIPcqvZlM5SeAubBoAb4UYy5Bdj3cm+mGByyJmeltkKhN96tMmmpzTvRzZOA2z+2nhqAV5siE67hmwFx759g==
+ bh=xU+gcbRkmZdBApCxYTuh0F8s39N8XUE733O5zh+nofs=;
+ b=qPTR+xx9Jmg7/NRahxauiGiyencMBqygBSCaX09N2EpRxnVwy0mQGXadTpoHo9UxHzGH4D5jiog4NyVDp9M/My+nDbprAOTYvBYkYwMH+7Gp55yx0qOWMgPf3s/u1fl+lbyJfSzwJKBN/CX08Y9HAuwu7Jp6la4WMEHx34PGkYnjM5VigEpQPEx/mxTsl1LPRYSz6i7curuj3d+0prOAYsLQ76nzRKzPo2+Q0aOKsvstJpq4YmT4wSndifjxekSRqumCAHyFR+VJkoAbiA5HJ/WReLNOFCpRuIgZc+CSbTIYc7+uOLHT3TlSq0hCm2JKy5BseOM067uUsvT3sjxlSQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
  by DU2PR04MB8726.eurprd04.prod.outlook.com (2603:10a6:10:2dd::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 00:50:55 +0000
+ 2025 00:50:59 +0000
 Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
  ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
  ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8534.040; Thu, 27 Mar 2025
- 00:50:55 +0000
+ 00:50:59 +0000
 From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
 To: linus.walleij@linaro.org,
 	brgl@bgdev.pl,
@@ -67,10 +68,12 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-samsung-soc@vger.kernel.org,
 	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 1/2] gpiolib: of: Add polarity quirk for s5m8767
-Date: Thu, 27 Mar 2025 08:49:44 +0800
-Message-Id: <20250327004945.563765-1-peng.fan@oss.nxp.com>
+Subject: [PATCH V2 2/2] regulator: s5m8767: Convert to GPIO descriptors
+Date: Thu, 27 Mar 2025 08:49:45 +0800
+Message-Id: <20250327004945.563765-2-peng.fan@oss.nxp.com>
 X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20250327004945.563765-1-peng.fan@oss.nxp.com>
+References: <20250327004945.563765-1-peng.fan@oss.nxp.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: SI2PR06CA0004.apcprd06.prod.outlook.com
@@ -85,117 +88,338 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DU2PR04MB8726:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b9c271f-7603-447c-ec92-08dd6cc96de3
+X-MS-Office365-Filtering-Correlation-Id: bc5ffbd6-109e-4fde-9a94-08dd6cc97042
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/HRYNKBDzYfNyWwbi/DmAU6hQwPGPN5SPk9B9SG4gW4uCaLoDTZ2nIgnoee/?=
- =?us-ascii?Q?eK0ZNk+//gkGZWh2rfgsmZPjB0QvDqY4WCC5FJHd+erxxgaMMRVaTjd67zWg?=
- =?us-ascii?Q?zf8ItjmSR7gymmez1OpF6EVjNHflEOD5ZIofHFaSOXZlN73Z/OyRysUQthne?=
- =?us-ascii?Q?8zW1Fp7FOJcnKy7gT2bDOr5sbZ7cyTC1KzVAvofdY7eRugbggn0e/g4wiRQN?=
- =?us-ascii?Q?zqRdpDpL+qe5Q3rdf1c/UVTvZAesadRlLGUZMlZZ4NBorUIMFFqV+FKYGb7l?=
- =?us-ascii?Q?gUAlNHHqzFVjoVkveFNfboTvuHF0ILFrhf94viFQKsoHwefUMdnHcOoty6cf?=
- =?us-ascii?Q?/tT62yt9VpLLL9tYELwYiorToj/TJjUlwmlXUGQsV+lC+L2hGRDwCdkP8f7Z?=
- =?us-ascii?Q?qDma5g2GXouTtVHtKw99tDpuBNp5NojCKiALyOeInvfsY6Nq85+Wj235bov2?=
- =?us-ascii?Q?/Ljb/Web/MZfjzYkDS5RgJG7CtU0ltfw0qp+cAq3QLHB29zFTvOJI3BdSaAs?=
- =?us-ascii?Q?+gHMbHj5iTHoL7XdRFoYcfW7qTYpLhoJY6F2opW70YMJqChdkw6s9r2wjNh4?=
- =?us-ascii?Q?R7L+/ngeZE7MvyJ77k931xasPKeBB8T+ygmYU+98fWaQmRWQ9cEKvscWSpir?=
- =?us-ascii?Q?9AnzQ28ugzP02ZArxhfymg70RtTR4cKnKzc5khTeODXnYQWTXqMZM56ZVSAS?=
- =?us-ascii?Q?MCc5ApdZEIcd2UQB4JNFb07dYUWYyz/ji/Ih6s4jv89Ji6Dus3Nq2eIYhIXL?=
- =?us-ascii?Q?pWCF728eBxgXmZ8yx9zZOa24tljyZ4tmKsOhak5Ceyug1lIlWOOixKdfT4Uc?=
- =?us-ascii?Q?gI2WZsr5Mh95qJ9Q0GKbodtWqZCYFutL17+8QQENyE9oqQIQyj+8Oapcg7nl?=
- =?us-ascii?Q?05aa8XqOzJutWjdOmODyr+J/4zwkFLEvmAXxv9VACbqD5D+4Ytx7CRIG7Bgi?=
- =?us-ascii?Q?Y71Rxf3tan7IuxAa+0dmYXsaohlLEcIwJJ/I/cFlQND4Ao7Qa+PgwQ7TXS4g?=
- =?us-ascii?Q?0tLYNXq+dyoZVX7iViCkcfZ1Mrj+RSHqJpK5f0HExORpxuT4vjJg4akhO0tt?=
- =?us-ascii?Q?hZayj8k+Lg9Dc1jFbF9j8HUBBc4HZzfBolIfebi3sxhcBAVD7fcEmMlpF6KF?=
- =?us-ascii?Q?YbcedNBPpOTErlftcZ+N5XlDiF7e/6XyL2bJV9wXVcR9ooq/pk4H6B4xGMXr?=
- =?us-ascii?Q?bMDUyZACtF0qqgLOLmJk21OMcdUwXrEo3nX4ng6ylJ8jV2xOk/w8Lf0F4oYo?=
- =?us-ascii?Q?D8Q0Ev9mxPniCZEcF2nfT/IiGHKINHBXheYptiG0sLswdukqaZpmPvc+mlKe?=
- =?us-ascii?Q?E0w56UvI/F9snTrT58eINMNr+j9PMBsYLgYH0qRUgrFc/l00nJG2jio27ujW?=
- =?us-ascii?Q?92kfKC0lan8WrqCKntSusASxd5AGqhQDBYPswIfTarNe9swKWOM9PDANcDl2?=
- =?us-ascii?Q?osSmbSgJGbLAS37b8dueO76CBp8nIqMS?=
+	=?us-ascii?Q?qimuT/kzd9voqsXoOZnmGcWfjmUTeVJkQTSXqqfj6OcE6SKmsJsuYo5YGdG4?=
+ =?us-ascii?Q?IATUgXEfOUL0X0JMtArCzsezvjhN30B1Hwf7YTPXixoaOMa8hXfudsmGWrJD?=
+ =?us-ascii?Q?ve2uhUyGEL4hok5fkI0T2506fyqFvhGrm2oNhlOyRNl9eeJgvHgyKOH5Nvxv?=
+ =?us-ascii?Q?emjFAoIv3E+iNLVNAPG3zpzxZv44m5SxE4s266Tdf0U9zZ746yoUsEUuXGwr?=
+ =?us-ascii?Q?rkbeKaA1jXwBx2ikzKt6fI06t2CJBuz2C2/jvg3BKMBJSpHJhvU3DvP5MojT?=
+ =?us-ascii?Q?9k0F04Jo8i+ejEC3STG3/qHCv1NblIY6BGSW3hWxd2aTY+RJtj4rKxCGxn//?=
+ =?us-ascii?Q?mU1gPkN4Qj7A5XqW/ceu/8ZvYM4nPyosJJnCpe8gBP+RF73eM4E4sZ4m8oJc?=
+ =?us-ascii?Q?inAdWzkNmLecKqnuKy8nLjjfJf4u5LxtTrj6xQnTAJRuLmocX+2yJf+oPUsF?=
+ =?us-ascii?Q?s3RbaebEdvdptL0OGY6Z7U2puIoQTjaoi4urzA8HBEcAjv0Xft3AGx1pgk6Q?=
+ =?us-ascii?Q?J3mxIXsGc/jFMOAOcARPHb2RQXocHpm7Mq2WDvzN4yOcbk3SzGeOiiWNFIn0?=
+ =?us-ascii?Q?FHH3TORGA6GafriWTrvCNVSPWg4L4xDWe0jJ5X7Y3DaO6cJk3TDE8yfQfsac?=
+ =?us-ascii?Q?BOmjTsL6K5PnMhDnS7ywoCHjDx090cKnY5IM4y5nbBIoBtHMVvLvz+EslAh9?=
+ =?us-ascii?Q?x8RcGMAM/tW1MXevDdvsHE462SLJD/7ep+XBKDym3rLKUK+k1lKVww8YYTKy?=
+ =?us-ascii?Q?u34PcnVHb9HWw1L5R6huIoIq7Lz64yvgie3ljoAvIf+qmEqkcur8crPxEpX5?=
+ =?us-ascii?Q?xMnQLmMAOIpmemxF8o2ruaBPLjz+hRygJx1WGGx9o1VxqrAbnMaYv3ikuQFP?=
+ =?us-ascii?Q?o5buTXYieVwrwGiTPiRtFunS/QcRt214PlwZXqESzrXX/E0rPNBjWJL9rV6I?=
+ =?us-ascii?Q?AbMov3AQY/LHKg3LC+1RQDauM8qlVTskUr8eb1k4esTGtcu6+93KzOQc/4P1?=
+ =?us-ascii?Q?NfMr2GEqdiE0gZIgiW7OsTl5Wkyi5XqVJjnyKMeiuQw7nDQvZ2ZWbiLjZSh/?=
+ =?us-ascii?Q?gt01Y8ow4bq55DGa8kIZwQV6UMW5RnVbq6ibAUUCTNK9MavU07xamNrztAz+?=
+ =?us-ascii?Q?aJvfO0kFgyLukWXVG1iVMPRH6su3j45vlATQgim/hU4vXPQrmn9VvemTf3Sq?=
+ =?us-ascii?Q?5hG/IBVnSPSPqLBVE4D5NxdWJiT6n4YQ4lOtFgiH/Qsyo8EkAG/HZKWgm1ti?=
+ =?us-ascii?Q?tqKJnT/ltFeFX5cIrWiYtYUpEti3KhQQVOLAgtImt18sjwUPNI8RJUYC2qk4?=
+ =?us-ascii?Q?EySfMppqQ5bngzldLP8kwFiEuIVYaCfzE2oyu8/nC5OX9rw+dEPP1GeXfaqp?=
+ =?us-ascii?Q?QrcTDDeWW9ZTJHi1CApyWZCTY/0F0T2kCHEzqk1fz0VaymYTCpZXU7ZjSK8t?=
+ =?us-ascii?Q?9qAXpoxav82uHZoczMchrom6uP9A4VFB?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?s64dX482XKp3rXC8M2IcJRV6y7BIaMH95E01d9y/CeHGcHH+pEZDSL8em9EW?=
- =?us-ascii?Q?6u/wJ/Rdto7iNg46fd47l5J67b1Wdz1s/z7jSCugaF8Z5SLBpMm+IBaJ1tRh?=
- =?us-ascii?Q?FFeufY7r1uJpkLU6/Zal9waJw2kDmYpkAtBmUCxZq8mNl4OKVl0XaMCrutwV?=
- =?us-ascii?Q?twOxunKbg076m0n6hAjGPgrCv9O0m6Ecwy+vIInT0IzN2RMjJL7mBHe6hsoD?=
- =?us-ascii?Q?hENdjOPWbFHauJ+5X1Eqsv4yAu/hURxQDJalNIW9HXszhTniaTJKNE0v+06l?=
- =?us-ascii?Q?q3FUIWzsTWdh2ERPqXvbFMU6un41w2cOdyv6iR8+7MQpCJPRXnq8JVEvD3r1?=
- =?us-ascii?Q?Jv+GSRspLJIeZq04n3wLnzY7f2DCvqKWSX1LZSYpiRVLPnEeTUOnkdn74j/y?=
- =?us-ascii?Q?ZNkKt556PPzgdGDIUUrYHvFysRqcbPqkNjOAeUmKuNHtrzye6GmBs/Jz4LW3?=
- =?us-ascii?Q?xOkOtvA0qBO3gBv+uuVA/+sIHuANfJs3/bIbQSe66Vfutnz3a2kWtqCt2Z6v?=
- =?us-ascii?Q?yiF4opqqVu6GMfS730HIT7w4FByG3mgK+kdOVwhZBIQQarJTohI87qCTVJEh?=
- =?us-ascii?Q?TYV/qgeuOuS7VJCC4CkmBiF4KhXohOA7iuffLeUtxgfqDDMD3875Pa0WCpua?=
- =?us-ascii?Q?Lkd9QwNGGKAd9RUQrpU9kAWUl22maMIcPDmR4EPI6F7WvKbysITnzgtnMLeJ?=
- =?us-ascii?Q?4UUhJ1Kdf6wZFb1crQ1EnocMFn01oEIKclaeFAxM4pYpAMfI/YywWRFKYliM?=
- =?us-ascii?Q?6KMhHrZXlj9cP0rpNocK0Je9okOc7UbglNCffnI5DNyWpt2clp1rH0s4f4Mo?=
- =?us-ascii?Q?cICYpI1i1VC3MZQC0JYvmINc8QGhhlZ4ruQQjfv+1fNIaenz01RNw2jadDvT?=
- =?us-ascii?Q?DmGImFl9IeTS6BvraxMKGgfB5Sr8+ImCsfICDLRYznAnSiQXeZZv7l5uZhQL?=
- =?us-ascii?Q?QBFqIU34Kal6thetSGiOE4aMieK9+f5nBRai9yLkownBYBCGtD9xxJ4+sHjb?=
- =?us-ascii?Q?Kz2QNCDTrZwEgyPYxbkbLFZchD8E9f2M1eMtXGgiHqZ9wNf5q3Ub5vkYJOr5?=
- =?us-ascii?Q?xMSPYb57DTmTvCcDxqfbwPM3TVLhnFsBNIOUFEsgmubwsaq78Bypf9IDJmxu?=
- =?us-ascii?Q?Oq6Xn9XmfgrCejS87SrIjcYx6V9stjmQZe2GpNDDQCZISrxJ+R0KDXJnJRkZ?=
- =?us-ascii?Q?OowWITKT4hCl+8KGeasw3XqP1fQWQapSgXN5PUQn5FvRR2NQ9CJvOrAcHgRE?=
- =?us-ascii?Q?R/u+ibU/EpvQfSGNBCt4vUPBgw8MQE+UsATKfT8egw0iohjykk/4lZnjjV66?=
- =?us-ascii?Q?jEapQdADu54sz4M+eWq4rnVG+6nRSIcqOZpkusDnCIrrJR2ssQdnH1XrlOKR?=
- =?us-ascii?Q?+ox+B3QnedWWBApvKkjRV4RcExEVOAzrWMa+Ib8g/D0b8Gc+aK678iXLFMW6?=
- =?us-ascii?Q?eyuPTm0jvgGjmBwHB/RJifkMX9Tpf+jC59TB1NiF7Xhs/mZ06M8+Ms/uwBs0?=
- =?us-ascii?Q?gewu4RU5GbigTtdyif2ua0p3T//dsO27XCpOhKkOlr3dF7XVgoVCDP/cn6Wp?=
- =?us-ascii?Q?tXci0Gp3u6nJJq0DTEnXHEtyhyBVxy6hT++RG9aQ?=
+	=?us-ascii?Q?qqQseNcMx5hXhN19sqCGuPKhSagiJcV7MvoIDGaNdKCp1YCmQekXj3ZWGPSp?=
+ =?us-ascii?Q?8QMikLwo5kantXfWOLQplNTt3UKdFG2NsVx16sBqmmidTymI5dAi0tlAyKsZ?=
+ =?us-ascii?Q?wYKJFo+BvC7xA1AtIv36Oqazu2ufOjeuSMEJpdni4K1nePpSeEYuMhdTO6IL?=
+ =?us-ascii?Q?tNZJDwg7/rrSG770oENPNTGz4EgW/aaXPABL0nfkplVlBVPk9+6+HNPrtX6C?=
+ =?us-ascii?Q?rvITmxriYNg/jNmd7T4gTNNn0RB51IKN+KtG7trXs8GP/15e7i8a+KgZphGG?=
+ =?us-ascii?Q?JZqvU1bnKv4ZjFWH84LZ1ijLnYxkz78RzjPdbmzz9XftPG3OakOqV45k3ePm?=
+ =?us-ascii?Q?i6CZbMtTnZmbwsFOUUUfdalRuMRzLB9SIvFjbhl7J1tdqGlFpxkK89M47BQq?=
+ =?us-ascii?Q?RdRmQsjITpMXUqnxMiCjYl14RBMwOmVn5+CaXNlrRdS64XeVBEGqyhMrR3cy?=
+ =?us-ascii?Q?iyzNtCCXH/VOlgJKb8kgH1xkOzmrYjhL7lkgV6qI6kRSyqbEje9kwI7aTwsq?=
+ =?us-ascii?Q?hWi5NVPy6r3Iw6lO2TrKA2dNLF/MWlMiFSg6ZLVdN9rsEPT/1Tx4Y38AIwys?=
+ =?us-ascii?Q?+iTu4wJRpI+3vG7eHlaoHajtv7HgPNT4e42esG88WggBUtVh6HaTZS9WHfkj?=
+ =?us-ascii?Q?uuAsfSGkxCtOd4qPEzqkxmHSMAOrsfdtx2OGpR2odYFOuvFO4pmzjTHvgwQf?=
+ =?us-ascii?Q?+nPjmUgiCr8QMxRKitACOjapMZqw8Y93bkloxRwjOC7QF82Lsd9uw8q95HIr?=
+ =?us-ascii?Q?TkPZhTGlk9BMo5d00K0j3b3TgxQmdEPRwrsh+kQT8vvYRD/JYhR2v5wt7fqE?=
+ =?us-ascii?Q?7AmmOTm+lp0gHVEiSFmsGChc07L/lR3gUxZIHy45tgznWhmVuLOwG9Z0PBN7?=
+ =?us-ascii?Q?VgUPDd2caTl/kfFqKc57gySw2qelMkjr46kIhUx45Z+fSLVZGcMtNfaTH2R1?=
+ =?us-ascii?Q?LsU39sCyUSLmlJUP8rB03X3SaHFBKNyMUFCFGsaMkztQQhMYvG1HO5AYrDDi?=
+ =?us-ascii?Q?DvEEIgcZ0gghCwOt9sZb9qJDBNxuE6XZTxOPQ2N15loC2dj+UNeP7+HcOIE0?=
+ =?us-ascii?Q?ir4CuU+I6Mfb/dR+NPLUZdLQHIHJdRiWBzAyrZ/86QzugiGgmYS6BJfOu5oG?=
+ =?us-ascii?Q?lspo8s1G3BoKsab+uYGgpm9RiAdSE3iPulIwAwDcYMLTRj1mKCKn1EmmHn6V?=
+ =?us-ascii?Q?54oyIlCGC8nKzouxQtmWhjhZ6+sKxOWIs1dl3wx4iFCD8MmLgVziWR4P8Ysx?=
+ =?us-ascii?Q?sKqWTqA4UjUsZPmbvZl6lpZUDiMklkYURr4cI6Ls1OLu8BLCOn+6UVoqpj3p?=
+ =?us-ascii?Q?EZP8AJAy95Dz06e/xH5bDHJmOckYt7M9GDrs3pIohCR9N46sC4kLU+hghUVH?=
+ =?us-ascii?Q?SZTJFrvtQMHJoLRwqLuohxTFxf2k0R0T739N2c4HU4d4dwo8xNGdHZuY1VSi?=
+ =?us-ascii?Q?PyimrlMmWz3gUzHdJm7MxjI48g8gkjlfyCehIvug6Hv2jPULBIxrICeKqU4o?=
+ =?us-ascii?Q?LsZa9N0ceBSNQJa4b4DlC+jC4SWfBm5EJxSdnKHTJRPWHoPRJJxjMlvVB72o?=
+ =?us-ascii?Q?z+EHKKsW0MzvdXhrauwyhtsfQIRyz7ecc+7uG8s8?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b9c271f-7603-447c-ec92-08dd6cc96de3
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc5ffbd6-109e-4fde-9a94-08dd6cc97042
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 00:50:55.1604
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 00:50:59.3777
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: il/7V9tt6fXN4kOxZoYgWCjZsQrzxua10eK+l/dJwGD+M8F4zjZMtWR+iFoH5T9SA+h7K8YYch7wAQMedC3i4w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: oVAllKbfX/H08N5h6B6UNdCH/wCloNDNTfwf9r7dbzWR03CIYCAMGanZQCUfcC4F12mzGfCKP8GmnY5pDCQevA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8726
 
 From: Peng Fan <peng.fan@nxp.com>
 
-This is prepare patch for switching s5m8767 regulator driver to
-use GPIO descriptor. DTS for exynos5250 spring incorrectly specifies
-"active low" polarity for the DVS and DS line. But per datasheet,
-they are actually active high. So add polarity quirk for it.
+Update the driver to fetch buck_gpio and buck_ds as GPIO descriptors.
+Then drop the usage of 'of_gpio.h' which should be deprecated.
+Based on commit 84618d5e31cf ("regulator: max8997:
+Convert to GPIO descriptors") as a reference to make the changes.
+
+With the quirk fix for s5m8767 in of_gpio_try_fixup_polarity,
+the polarity will be active-high, even if exynos5250 spring DTS
+wrongly use active-low polarity. So using GPIO descriptors,
+it should work as before.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
 
 V2:
- New patch
+ To address Andy's comments:
+  Typo fix
+  Format update
+  Use !!(temp_index & BIT(x))
 
- drivers/gpio/gpiolib-of.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+  I not have devices to test, just my best practice to work out this patch.
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index eb667f8f1ead..83559dd24f32 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -222,6 +222,15 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
- 		 */
- 		{ "lantiq,pci-xway",	"gpio-reset",	false },
- #endif
-+#if IS_ENABLED(CONFIG_REGULATOR_S5M8767)
-+		/*
-+		 * According to S5M8767, the DVS and DS pin are
-+		 * active-high signals. However, exynos5250-spring.dts use
-+		 * active-low setting.
-+		 */
-+		{ "samsung,s5m8767-pmic", "s5m8767,pmic-buck-dvs-gpios", true },
-+		{ "samsung,s5m8767-pmic", "s5m8767,pmic-buck-ds-gpios", true },
-+#endif
- #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
- 		/*
- 		 * DTS for Nokia N900 incorrectly specified "active high"
+ drivers/regulator/s5m8767.c | 146 ++++++++++--------------------------
+ 1 file changed, 38 insertions(+), 108 deletions(-)
+
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index d25cd81e3f36..fe2631378ccd 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -5,7 +5,7 @@
+ 
+ #include <linux/cleanup.h>
+ #include <linux/err.h>
+-#include <linux/of_gpio.h>
++#include <linux/of.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -35,8 +35,8 @@ struct s5m8767_info {
+ 	u8 buck2_vol[8];
+ 	u8 buck3_vol[8];
+ 	u8 buck4_vol[8];
+-	int buck_gpios[3];
+-	int buck_ds[3];
++	struct gpio_desc *buck_gpios[3];
++	struct gpio_desc *buck_ds[3];
+ 	int buck_gpioindex;
+ };
+ 
+@@ -272,9 +272,9 @@ static inline int s5m8767_set_high(struct s5m8767_info *s5m8767)
+ {
+ 	int temp_index = s5m8767->buck_gpioindex;
+ 
+-	gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[0], !!(temp_index & BIT(2)));
++	gpiod_set_value(s5m8767->buck_gpios[1], !!(temp_index & BIT(1)));
++	gpiod_set_value(s5m8767->buck_gpios[2], !!(temp_index & BIT(0)));
+ 
+ 	return 0;
+ }
+@@ -283,9 +283,9 @@ static inline int s5m8767_set_low(struct s5m8767_info *s5m8767)
+ {
+ 	int temp_index = s5m8767->buck_gpioindex;
+ 
+-	gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[2], !!(temp_index & BIT(0)));
++	gpiod_set_value(s5m8767->buck_gpios[1], !!(temp_index & BIT(1)));
++	gpiod_set_value(s5m8767->buck_gpios[0], !!(temp_index & BIT(2)));
+ 
+ 	return 0;
+ }
+@@ -482,42 +482,6 @@ static int s5m8767_enable_ext_control(struct s5m8767_info *s5m8767,
+ 
+ 
+ #ifdef CONFIG_OF
+-static int s5m8767_pmic_dt_parse_dvs_gpio(struct sec_pmic_dev *iodev,
+-			struct sec_platform_data *pdata,
+-			struct device_node *pmic_np)
+-{
+-	int i, gpio;
+-
+-	for (i = 0; i < 3; i++) {
+-		gpio = of_get_named_gpio(pmic_np,
+-					"s5m8767,pmic-buck-dvs-gpios", i);
+-		if (!gpio_is_valid(gpio)) {
+-			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
+-			return -EINVAL;
+-		}
+-		pdata->buck_gpios[i] = gpio;
+-	}
+-	return 0;
+-}
+-
+-static int s5m8767_pmic_dt_parse_ds_gpio(struct sec_pmic_dev *iodev,
+-			struct sec_platform_data *pdata,
+-			struct device_node *pmic_np)
+-{
+-	int i, gpio;
+-
+-	for (i = 0; i < 3; i++) {
+-		gpio = of_get_named_gpio(pmic_np,
+-					"s5m8767,pmic-buck-ds-gpios", i);
+-		if (!gpio_is_valid(gpio)) {
+-			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
+-			return -EINVAL;
+-		}
+-		pdata->buck_ds[i] = gpio;
+-	}
+-	return 0;
+-}
+-
+ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 					struct sec_platform_data *pdata)
+ {
+@@ -525,7 +489,7 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 	struct device_node *pmic_np, *reg_np;
+ 	struct sec_regulator_data *rdata;
+ 	struct sec_opmode_data *rmode;
+-	unsigned int i, dvs_voltage_nr = 8, ret;
++	unsigned int i, dvs_voltage_nr = 8;
+ 
+ 	pmic_np = iodev->dev->of_node;
+ 	if (!pmic_np) {
+@@ -635,10 +599,6 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 
+ 	if (pdata->buck2_gpiodvs || pdata->buck3_gpiodvs ||
+ 						pdata->buck4_gpiodvs) {
+-		ret = s5m8767_pmic_dt_parse_dvs_gpio(iodev, pdata, pmic_np);
+-		if (ret)
+-			return -EINVAL;
+-
+ 		if (of_property_read_u32(pmic_np,
+ 				"s5m8767,pmic-buck-default-dvs-idx",
+ 				&pdata->buck_default_idx)) {
+@@ -652,10 +612,6 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 		}
+ 	}
+ 
+-	ret = s5m8767_pmic_dt_parse_ds_gpio(iodev, pdata, pmic_np);
+-	if (ret)
+-		return -EINVAL;
+-
+ 	pdata->buck2_ramp_enable = of_property_read_bool(pmic_np, "s5m8767,pmic-buck2-ramp-enable");
+ 	pdata->buck3_ramp_enable = of_property_read_bool(pmic_np, "s5m8767,pmic-buck3-ramp-enable");
+ 	pdata->buck4_ramp_enable = of_property_read_bool(pmic_np, "s5m8767,pmic-buck4-ramp-enable");
+@@ -684,6 +640,8 @@ static int s5m8767_pmic_probe(struct platform_device *pdev)
+ 	struct regulator_config config = { };
+ 	struct s5m8767_info *s5m8767;
+ 	int i, ret, buck_init;
++	const char *gpiods_names[3] = { "S5M8767 DS2", "S5M8767 DS3", "S5M8767 DS4" };
++	const char *gpiodvs_names[3] = { "S5M8767 SET1", "S5M8767 SET2", "S5M8767 SET3" };
+ 
+ 	if (!pdata) {
+ 		dev_err(pdev->dev.parent, "Platform data not supplied\n");
+@@ -731,12 +689,6 @@ static int s5m8767_pmic_probe(struct platform_device *pdev)
+ 	s5m8767->buck2_gpiodvs = pdata->buck2_gpiodvs;
+ 	s5m8767->buck3_gpiodvs = pdata->buck3_gpiodvs;
+ 	s5m8767->buck4_gpiodvs = pdata->buck4_gpiodvs;
+-	s5m8767->buck_gpios[0] = pdata->buck_gpios[0];
+-	s5m8767->buck_gpios[1] = pdata->buck_gpios[1];
+-	s5m8767->buck_gpios[2] = pdata->buck_gpios[2];
+-	s5m8767->buck_ds[0] = pdata->buck_ds[0];
+-	s5m8767->buck_ds[1] = pdata->buck_ds[1];
+-	s5m8767->buck_ds[2] = pdata->buck_ds[2];
+ 
+ 	s5m8767->ramp_delay = pdata->buck_ramp_delay;
+ 	s5m8767->buck2_ramp = pdata->buck2_ramp_enable;
+@@ -787,58 +739,36 @@ static int s5m8767_pmic_probe(struct platform_device *pdev)
+ 
+ 	if (pdata->buck2_gpiodvs || pdata->buck3_gpiodvs ||
+ 						pdata->buck4_gpiodvs) {
++		for (i = 0; i < 3; i++) {
++			enum gpiod_flags flags;
+ 
+-		if (!gpio_is_valid(pdata->buck_gpios[0]) ||
+-			!gpio_is_valid(pdata->buck_gpios[1]) ||
+-			!gpio_is_valid(pdata->buck_gpios[2])) {
+-			dev_err(&pdev->dev, "GPIO NOT VALID\n");
+-			return -EINVAL;
+-		}
+-
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
+-					"S5M8767 SET1");
+-		if (ret)
+-			return ret;
+-
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
+-					"S5M8767 SET2");
+-		if (ret)
+-			return ret;
+-
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
+-					"S5M8767 SET3");
+-		if (ret)
+-			return ret;
++			if (s5m8767->buck_gpioindex & BIT(2 - i))
++				flags = GPIOD_OUT_HIGH;
++			else
++				flags = GPIOD_OUT_LOW;
++
++			s5m8767->buck_gpios[i] = devm_gpiod_get_index(iodev->dev,
++								      "s5m8767,pmic-buck-dvs", i,
++								      flags);
++			if (IS_ERR(s5m8767->buck_gpios[i])) {
++				return dev_err_probe(iodev->dev, PTR_ERR(s5m8767->buck_gpios[i]),
++						     "invalid gpio[%d]\n", i);
++			}
+ 
+-		/* SET1 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[0],
+-				(s5m8767->buck_gpioindex >> 2) & 0x1);
+-		/* SET2 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[1],
+-				(s5m8767->buck_gpioindex >> 1) & 0x1);
+-		/* SET3 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[2],
+-				(s5m8767->buck_gpioindex >> 0) & 0x1);
++			gpiod_set_consumer_name(s5m8767->buck_gpios[i], gpiodvs_names[i]);
++		}
+ 	}
+ 
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[0], "S5M8767 DS2");
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[1], "S5M8767 DS3");
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[2], "S5M8767 DS4");
+-	if (ret)
+-		return ret;
+-
+-	/* DS2 GPIO */
+-	gpio_direction_output(pdata->buck_ds[0], 0x0);
+-	/* DS3 GPIO */
+-	gpio_direction_output(pdata->buck_ds[1], 0x0);
+-	/* DS4 GPIO */
+-	gpio_direction_output(pdata->buck_ds[2], 0x0);
++	for (i = 0; i < 3; i++) {
++		s5m8767->buck_ds[i] = devm_gpiod_get_index(iodev->dev,
++							   "s5m8767,pmic-buck-ds", i,
++							   GPIOD_OUT_LOW);
++		if (IS_ERR(s5m8767->buck_ds[i])) {
++			return dev_err_probe(iodev->dev, PTR_ERR(s5m8767->buck_ds[i]),
++					     "can't get GPIO %d\n", i);
++		}
++		gpiod_set_consumer_name(s5m8767->buck_ds[i], gpiods_names[i]);
++	}
+ 
+ 	regmap_update_bits(s5m8767->iodev->regmap_pmic,
+ 			   S5M8767_REG_BUCK2CTRL, 1 << 1,
 -- 
 2.37.1
 
