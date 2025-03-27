@@ -1,164 +1,201 @@
-Return-Path: <linux-gpio+bounces-18070-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18071-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE77FA7373C
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 17:47:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 901B6A7375F
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 17:53:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 761F517E024
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 16:44:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FA3D3B49FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Mar 2025 16:52:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 031CF1CB51F;
-	Thu, 27 Mar 2025 16:44:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E7A22185AA;
+	Thu, 27 Mar 2025 16:52:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="PibiQl0U"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uE1ia/7E"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905891C6889
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Mar 2025 16:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FCB1CB51F;
+	Thu, 27 Mar 2025 16:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093874; cv=none; b=qXTbeZq7uLGebcVS/5Xq6Zwt/lKn+rOe8AgVeIXfTxGfpWn39VVkaAm93L9Hol/h1zKr7fnJJLcH9YnRPXidl6aro0cZe0DxNifp0AIClAbuNg6VIA9cHO5QJiv4RGWGdSXfM7oVXF2PNW3xUEqQSc4W0X+MumJZjzQa4VrG+nc=
+	t=1743094332; cv=none; b=YWt3oekEt82eq5jk0EEfdsS0DdxwQhCW1jvB1pmLjYFHnAUvfUiHpNIARlIsy6U0oE2/ITfoqZ0y9jmZjM5XvJiN0Itnyqla/vvQQxzuFFCVQ7OtC0QwqpoP8HiFS44tPxBOcaA4h9nyBNiEz4Xw0dP0V0blWSaus+DanwhiYfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093874; c=relaxed/simple;
-	bh=zvcbSyO9PwWfz46UMsJf4c401+BJRbxXhYnxCIV0uZY=;
+	s=arc-20240116; t=1743094332; c=relaxed/simple;
+	bh=Q6l0WxcvGA33qOdr8wp9swxuv9Bj+Qu0ZUvn1W+I7YY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ui1A72y+E+WnuJsdczmPeQw0WSBUJZQHzSpphOFu6SI+ZtK6O+/kcKgbz9E32eIu+8GLF79FuKtoZiOCLigx9R/OHaJnopNtTLKM1DN4K1mqjqaP/Y7IOPVKPJmBDq/zbvWFoc7tMEpku7QwtoRF16A6qSqz/hP17UFEGPGgYrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=PibiQl0U; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=hbwx
-	FimHjuyQqZmQbnUDmSjTT9QuBUrE9kGrrCegsl8=; b=PibiQl0UGvs02bQfzYYI
-	pkF7He1ovGQgWonPfhrXuPMoW8iOuyZLOUpnHNzzREGLMqHvW9XP70wFtIvAEX5e
-	cFMngdPs6iBpu2m3iNe0EQf14Dm/7XsPgTFm/9PzHVh0zJukwfDvxasKDPupxuS7
-	OshgLMyM9K0/YzNRomYpV2u/njpqUVhCNLZLcW048GCFkMNU9gMgxytwmKBfQP3u
-	f11qEJsnNOOOEEJI/HwrQrzrM57urM8B6hdwZbHXWxcmbpiLJzpKkSMkGJPonHLd
-	p8GwEP7/Wg1nVPgGGjJWuwq7xGWLheHbOmzrTo6QTZO17nrAkPe8w1Grbzwf1Vab
-	YA==
-Received: (qmail 4083466 invoked from network); 27 Mar 2025 17:44:24 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Mar 2025 17:44:24 +0100
-X-UD-Smtp-Session: l3s3148p1@gtWOqlUxgJEujnsv
-Date: Thu, 27 Mar 2025 17:44:23 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Prabhakar <prabhakar.csengg@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXizhma1sPQF67vcAku/qkFLlM0XVSVLSOesEfkNf6u2JtuZaY3O0BohZp/tF/PkoecgFUSVbjuBiAL+UebVAOjc5kCA4e5uscXnahO20Fpr3t3NZrIcTFzwm8D+nPLRSj0tMv4Hx+qQAPS81w6sLh0hry2Huq6qnLONJw2lNWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uE1ia/7E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E64C4CEE5;
+	Thu, 27 Mar 2025 16:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743094331;
+	bh=Q6l0WxcvGA33qOdr8wp9swxuv9Bj+Qu0ZUvn1W+I7YY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uE1ia/7EcYXSQKPYqeHjXJ92g8XJaSXmJKG7Nm5xJg7UTxZu/e1bohqfu/55LCnuN
+	 /N/9mSlT4h5YH748aokVV5f7NUQEhCPC3G8wJkIh/IwyoW4L+iZG1/2ivh6+KuQqO6
+	 Ows792/CLe26HSPWU1jIqtbMOFUqpFHciMtiwicDVIRrmAYcm8rsKIBNK+ibfnxK1V
+	 UeMGkeJa3C0ZhzDKdUH6kECN+KWfGOg1KDsbRjLCNx2RWLMl1x6SIadt/1DvVX2IYR
+	 d5YZjc+LYt3GT1scHaCn6HJATCC3B9ECch8wkbmlUv6CTq370urK3SRvKXaKreAzEZ
+	 fZuUwdSg0NcrQ==
+Date: Thu, 27 Mar 2025 16:52:06 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+	James Cowgill <james.cowgill@blaize.com>,
+	Matt Redfearn <matthew.redfearn@blaize.com>,
+	Neil Jones <neil.jones@blaize.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
-Message-ID: <Z-WAZ_IlMBB3XbTN@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
- <Z-VETFWFT5NksD7J@ninjato>
- <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org>
+	Will Deacon <will@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Document Blaize BLZP1600 GPIO driver
+Message-ID: <20250327-scribble-boogeyman-22788dda387f@spud>
+References: <20250327-kernel-upstreaming-add_gpio_support-v2-0-bbe51f8d66da@blaize.com>
+ <20250327-kernel-upstreaming-add_gpio_support-v2-1-bbe51f8d66da@blaize.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="c/EJiR+H9xTHY3mL"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KHT+zneIcFZM3R2g"
 Content-Disposition: inline
-In-Reply-To: <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org>
+In-Reply-To: <20250327-kernel-upstreaming-add_gpio_support-v2-1-bbe51f8d66da@blaize.com>
 
 
---c/EJiR+H9xTHY3mL
+--KHT+zneIcFZM3R2g
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Mar 27, 2025 at 11:27:04AM +0000, Nikolaos Pasaloukos wrote:
+> This is a custom silicon GPIO driver provided by VeriSilicon
+> Microelectronics. It has 32 input/output ports which can be
+> configured as edge or level triggered interrupts. It also provides
+> a de-bounce feature.
+> This controller is used on the Blaize BLZP1600 SoC.
+>=20
+> Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+> ---
+>  .../bindings/gpio/blaize,blzp1600-gpio.yaml        | 77 ++++++++++++++++=
+++++++
+>  1 file changed, 77 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.=
+yaml b/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..8b7842331a22b7b9fbfa42b9c=
+711da99227de2e4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/blaize,blzp1600-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Blaize BLZP1600 GPIO controller
+> +
+> +description:
+> +  Blaize BLZP1600 GPIO controller is a design of VeriSilicon APB GPIO v0=
+=2E2
+> +  IP block. It has 32 ports each of which are intended to be represented
+> +  as child noeds with the generic GPIO-controller properties as described
+> +  in this binding's file.
+> +
+> +maintainers:
+> +  - Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+> +  - James Cowgill <james.cowgill@blaize.com>
+> +  - Matt Redfearn <matt.redfearn@blaize.com>
+> +  - Neil Jones <neil.jones@blaize.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^gpio@[0-9a-f]+$"
+> +
+> +  compatible:
+> +    enum:
+> +      - blaize,blzp1600-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  ngpios:
+> +    default: 32
+> +    minimum: 1
+> +    maximum: 32
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  gpio-line-names: true
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +
+> +dependencies:
+> +  interrupt-controller: [ interrupts ]
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    gpio: gpio@4c0000 {
 
-> You did not object to last discussion about this (a month ago) - neither
-> to my comments nor to resolution - so this patchset repeating the same
+Label is unused, please drop it if you respin.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Because I cannot follow every Renesas patch series there is. You are
-long enough around to know that large companies have different entities,
-groups whatsoever. It is quite a challenge to streamline this via one
-group, we need to share work. We do try hard, though, and have a
-ARM/RISC-V/RENESAS ARCHITECTURE maintainer. Geert does a *hell of a job*
-getting all these submission into shape, and he surely does not accept
-code thrown over the wall. And geez, the patch series was just sent
-yesterday, you didn't give us even time to raise the issue internally.
+> +      compatible =3D "blaize,blzp1600-gpio";
+> +      reg =3D <0x004c0000 0x1000>;
+> +      gpio-controller;
+> +      #gpio-cells =3D <2>;
+> +      ngpios =3D <32>;
+> +      interrupt-controller;
+> +      #interrupt-cells =3D <2>;
+> +      interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +...
+>=20
+> --=20
+> 2.43.0
+>=20
 
-> pattern from the same folks while ignoring previous talk is
-> contradicting "not too bad at fixing stuff".
-
-First, being a maintainer myself, I do understand the frustration of
-patch review not being honored. I can also agree that this series did
-not work out perfectly. But that does not mean that we don't care, in
-general.  Despite all imperfection and possibly different opinions, we
-try hard to be a good citizen and spend considerable time on doing
-things right. Accusing us of throwing just "code over the wall" because
-there is an issue somewhere which hasn't been worked on in one month is
-plain unfair.
-
-That all being said, we will fix it eventually.
-
-
---c/EJiR+H9xTHY3mL
+--KHT+zneIcFZM3R2g
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmflgGMACgkQFA3kzBSg
-KbZxSA/9Gqszzc/JQdPg5lFILYUjNMR2rLsA7Uc53vk3WyEcVSWmUaBjeGLU+ZkO
-2OkaPe6x+ULk1vXzpJYmHK8J93cMHK7/tXR8YBFXno9cL1s+/XdwWuLWq0xlMfc5
-weFwNN/e3mz8emxJWhi8AJ0sMhC6OTBL4qghprYH6ElZfxgpliuGWw59ei1gKnsX
-/p5mOmGEETy4DIbiJEYth/Jypl4NrhfZdMmTUWBTqAj7/HuaBvY1psifuwDtAe5F
-mY3FY3ES+6Hfzl76tsBQ6JEmRW9E+rZFR4Dv3M8XXaEYsZZ8fR1cwgQ1WXNbdmz/
-1QOmex7GF5ceEJWdhEqAVJhz+aN6+Ot0Zxv0BCpxJzEoIGg7SXYpfkVBrTSL66a5
-1trcWPmelNgqCRc65t+mvUmAfsELLXUE7h96hKtqDCQ0GNokdbqS0PuRCief56/b
-VwXftmqvTstdTB7zMf9qfg9uTCeQycuzAsZQOdNynvDKML9olp6di/+curLvv5BW
-M45znbdpzss7Ilwj3qbgIkFT2O0v8PGdqsn+1gQ8mgahnCe9OAtZl1hd8o0WDmnJ
-2sbZcCcYMLgZVa+bI8/20Vba8uOnMMLVWZ/jk8c8LiRu8mqtYNAFGM8ClHFfh31u
-hLSV0vYp+GarLkjMqXezTYhnugy344QNVLOm2atmMGI69u8dtWA=
-=0lVg
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+WCNgAKCRB4tDGHoIJi
+0l1GAP432iQj+leyJvycy9SxPrvJzxLLNYJJwPTn6loEoxhTKAD+Jwg9EBUrtu+9
+xCJkgglUDVinhTMxrhKB0CyuJghf0Qo=
+=QRox
 -----END PGP SIGNATURE-----
 
---c/EJiR+H9xTHY3mL--
+--KHT+zneIcFZM3R2g--
 
