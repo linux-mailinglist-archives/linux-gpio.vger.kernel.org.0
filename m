@@ -1,162 +1,173 @@
-Return-Path: <linux-gpio+bounces-18080-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18081-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AA3EA74529
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Mar 2025 09:13:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3418A745CF
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Mar 2025 09:58:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C3E97A6631
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Mar 2025 08:12:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B113C1B6088B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Mar 2025 08:58:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0490212FA7;
-	Fri, 28 Mar 2025 08:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2AA72135CE;
+	Fri, 28 Mar 2025 08:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TGw4g1GH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8Qpccc+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F2B212B2D;
-	Fri, 28 Mar 2025 08:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDE721147C;
+	Fri, 28 Mar 2025 08:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743149604; cv=none; b=AlGUes2mST9cEWFW3/ZFM/3Ha6qOyZeYlDAYjjM/LoN0GNq+Uz0ewA9RJvaatVWnbcuPPdqrvNmzVDL52PtYmF9XA++YXEJNsK9gfusCZauf6+rxd86v/2xZW3AHM+iG+V2hwVA4aBEnI1Kha2ihD0FH/FvPCKfevD5eXjNP30c=
+	t=1743152280; cv=none; b=LOXJyiarJz+Jx0AL2+5m454NwHDTMrQp+pE1jvUjyUeWL6Bw1nzOgRv95uOQM6GlGMtv2QGW6F47fnrpu3hDCSywvX90OFo8ZLTZJLj2gmMM9JpLCW0FjKorHGCJ8B3rbtfv/9tZD+lN48jqZUsyXqDyxWh51lW+gsYutS2/x+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743149604; c=relaxed/simple;
-	bh=RyvNWz0sMdrFpEUWP+y0PIBVy1EY5vpDKot95FF/a9w=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=P01u7GMPuU1lyZwu7SzFvjiTZoPXWwZh+ewdOFOfeguR0OQ4h43/avOcmqos0fc9N9g9uGDforegpIfDyQ9t6bCwbWkAAivsm+YztUOgmaWz371NqLD0dHP/BDz3Yy7qCcMRcxzAIGABYDW2f57gcgZatouF9VBVicWi+QUwRkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TGw4g1GH; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4C7D1442A4;
-	Fri, 28 Mar 2025 08:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743149594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q1l7rwlWipHxE1nh0I+e9gf68ZY10wQc1Xc25v8rX8k=;
-	b=TGw4g1GHdma+JykKfwDiay4yYSZJ4teJAeb8kc784F4azipDQAmMitNJINtnz6XDoF2NEu
-	Hz+p8bpj+hSPLBOJ+lJVskJXArLoYU2WNQhHJJd0w1n381T/pLSR0ZWJki01G0+jZvwECa
-	Awt6H9sArSI1aCDApuTHDP623C6Ek2I4p4/BO0uH8GyDvhSyjh9h6C31VVfzF6Fu4UDC4Z
-	5oGCRzZgacYonyyplvOS3wPzOlwDxL+4HfrDwVLoosWsJF+/tb1JrKPa7EmSC9gtJ1wmut
-	MnhuCczQqU1+3Vn+vRG2fCua3bB/eBzIyFgbyrc931QyWBMdq7/cUxsNEVujEg==
+	s=arc-20240116; t=1743152280; c=relaxed/simple;
+	bh=xYLXywumfYcBE2gdZINxZy+YFrU0fq7kxGGQ+cSsn0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KHvJeB6S44PwmYQzyUL57vUSfmVX6BBYGuKBygwl8NUSZCrRogqyPFt4ZshENAvzc8LGEji1zMVsVqCuKF1MeClf1xlMMAEsr8+YrzREj9rU9Y0OJVsoz7AJFP6yrS7llwSzJfOnkGeO0Ug7Rdl4tPwSZj7U9Nf+rpSfAhV3Ddg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8Qpccc+; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e461015fbd4so1577430276.2;
+        Fri, 28 Mar 2025 01:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743152277; x=1743757077; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jWPb1mI/9upCcqkogSbWtUh32Sdpc2DRyu7FzyouqhI=;
+        b=c8Qpccc+IDLMbbKQiG+H7j0cwHx6h97nUuOE7O3ItKoqzSvIai/Vu2Q56+3+WXz5yM
+         73VhaIaDXeIIHZGllYkK0l2ZtyMCfgj5UMoXmoVJdflnNajUERagkMX9jiChSR84PLRy
+         YJOs0qANhcZ2t0ROPNdGCloscM4jfrOg5Ai7SjghZkDaoGO7vTtCtj3FILN/zdph1Xum
+         Q9dnStoRp6ectxCBhRqeiI+nMTTXEeuKBLyKcuOqp3zayxE8LI5JQ2ZOBwJWH6T8V6fC
+         Ny+wxbHflHxaHh8DOvBM3VAOFFlw8GHOU4JQoF5fjPexWHY09mQ23T0e+TKw3eWiPLKC
+         /nyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743152277; x=1743757077;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jWPb1mI/9upCcqkogSbWtUh32Sdpc2DRyu7FzyouqhI=;
+        b=Vj9gCBGo4DTTTYPLVEA5fCcP2jNdBOYRO7ucBCCSSMbcWatKTiE+EaahppMgORY2fF
+         kgdCDEqb9U0FJkh5CGoffTWdJYWHry3xC0devzUBuaziQi/rainIUSWxBCXoULtTRBgp
+         PFv0sRtkevCwB9NDSIjC9ak/5RF3FSL5IIZIud2bSWLYRf+qqIADwvBrisKz4dTRn89v
+         GhHB5MaGewBnZBgdWI85VscqBMadfNzkGckEP40rOfDhGelVxYD/MvB7sPXCm2T5HWDH
+         8EFFO1BsedVYrzeBj9lATsfq9BV1AQbYXwQgoV7O51w46FipkBYWvRfWn9UsS3CpPMRP
+         ZCnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAOzt0TW8eVFcrxBVbuXusSEBimiolrjHVY6HbJcM2Hyx2/c0nQSwEhMXHT71KJcnzTCwx259ucE2Xnxuex/0=@vger.kernel.org, AJvYcCUZeAejiXHTXarfHUd1pSMkmJqFuCLfYj+qRZOT9h/UCsTjB3I8Ya9aR/MT9dHhyvvvrhQQuEsb@vger.kernel.org, AJvYcCUyPDbZ5gawXisjKDq3Q1vc4JIrlbWNetx7I8BSjIbEJ1mrjabhe1K0pEP3kKsHi25OPnrMSSDzCJQ9PMU=@vger.kernel.org, AJvYcCVds2TmvnvNRKsPTzT0RtqlAtcxsJHAh/kQvo9tlwayJ6SB3J4Ifvj3XErxzuG3usmAka6wUQ0qmz0=@vger.kernel.org, AJvYcCViS8wmhHrxfo8WSiaO+urahGvGdruMWhwsARHoZJcB/Jxj/4D98JftYnaal/k1y6Kx5lGd55i7b6nB@vger.kernel.org, AJvYcCWfSM+LC00bloVC/dK9JpSUSQNMx6ZuD4T8J0uYYp14Y9RxKv2Q4AWacykD7O3Y5DyBgl7u6KQD8aQA@vger.kernel.org, AJvYcCWkyfLP7RnvkyRR1/h8gXEBXFfO/1nowZCk2ckq3d4yzoBIV5CyKBz0iVcfrQJs/lYHpwCrgsM7U6A0@vger.kernel.org, AJvYcCWxmWgwF5imLVmCINyH5tPZi+peEcj+0qnb/h/cDVk5+5T8AeTJy5JO41OmPWgRhCc6A6B4KQSkAc0kEA==@vger.kernel.org, AJvYcCXKZqclMosWzW7Wx/kdNFpq88Z/ON48TNA/rfEJThGTASQIwPJqiE4NxChRnhOvTJHJxYr22YDO9E9iKaLH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx91q8QHscCj7o997BN12xXshS2Ba3hbFIos32EZ72ydQ6hb7CX
+	1kOZ2bliLgVDYSRx6VCkJaCYjtnZmcAnn7uIFg2DC2XtDfi9lp3S+TmDDIKUV7LmvP5MAES3IoQ
+	e8iSma/ICi7ChSXRqW1jqr2mHIks=
+X-Gm-Gg: ASbGncvsznS1oiGZG3nDH3qzkjP0VF4thqM7ge9K9oUz1ajTEGCatCmPC9J1LAu+jpI
+	DuFwL91FUaZErTTP1mz0s1XybXrgHYjI4o9yaxD3lT5Rhn0lTvpRy6Y1wYOPWG2uol2AZsFRXPN
+	5BE6D7dy1jDPn1HKuhFKFyF4lGMxgOu80PSqDj9JOhaQbuvlfd1SmtppFz
+X-Google-Smtp-Source: AGHT+IFLLC9PtZXtkSzNtOYuXckibCE5a+SweHKkkBiwOPRXFXjjbhxDt6SFVeqrDzFpbxVVVSlFSPuYln+B4xj4Dd8=
+X-Received: by 2002:a05:6902:2806:b0:e5d:ddd2:8acf with SMTP id
+ 3f1490d57ef6-e69437fd4afmr7959068276.38.1743152277453; Fri, 28 Mar 2025
+ 01:57:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-5-a0282524688@gmail.com> <20250227-spicy-grebe-of-dignity-68c847-mkl@pengutronix.de>
+ <CAOoeyxWSsy0Q0Y7iJE8-DZM5Yvcdto8mncFkM8X4BvVMEgfUiQ@mail.gmail.com>
+ <20250317-cuttlefish-of-simple-champagne-ee666c-mkl@pengutronix.de>
+ <CAOoeyxXSC3rjeB0g5BtHKvKy-Y9Dszd5X9WuHeBeH1bk39d_Eg@mail.gmail.com>
+ <20250326-inventive-lavender-carp-1efca5-mkl@pengutronix.de>
+ <CAOoeyxXw1x2HVXQYzxc1OuGimn7XPfCjj-aB=jAAfw733b_9OQ@mail.gmail.com>
+ <20250327-awesome-mutant-cuscus-0f0314-mkl@pengutronix.de>
+ <CAOoeyxWa5sB+YS6W=oG7xUeizXxigkdw3b=7w9aGftCWzWsw2A@mail.gmail.com> <20250328-smart-thundering-asp-2536b0-mkl@pengutronix.de>
+In-Reply-To: <20250328-smart-thundering-asp-2536b0-mkl@pengutronix.de>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Fri, 28 Mar 2025 16:57:46 +0800
+X-Gm-Features: AQ5f1JqFFh94KtgZpMrBv-osA_XLKd_POUmZCUtvpqZF_h4Uo1CEEcQaSnNuCO4
+Message-ID: <CAOoeyxWy7n32iD03sr+8jPwf5OpHaCe_itkRnzOQK8GC32A9+A@mail.gmail.com>
+Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 28 Mar 2025 09:13:12 +0100
-Message-Id: <D8RQYJXP0KMK.3L8A8YVZKID89@bootlin.com>
-Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Lee Jones"
- <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, "Michael Walle" <mwalle@kernel.org>, "Mark
- Brown" <broonie@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
- <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
- <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
- <Z9vydaUguJiVaHtU@smile.fi.intel.com>
- <D8PF958QL5AK.2JIE4F1N1NI0F@bootlin.com>
- <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
- <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
- <Z-Qh8yBMaCMhv_Ny@smile.fi.intel.com>
- <D8R4B2PKIWSU.2LWTN50YP7SMX@bootlin.com>
- <Z-WQAC8Fc90C1Ax6@smile.fi.intel.com>
-In-Reply-To: <Z-WQAC8Fc90C1Ax6@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkv
- ghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Thu Mar 27, 2025 at 6:50 PM CET, Andy Shevchenko wrote:
-> On Thu, Mar 27, 2025 at 03:28:08PM +0100, Mathieu Dubois-Briand wrote:
-> > On Wed Mar 26, 2025 at 4:49 PM CET, Andy Shevchenko wrote:
+Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B43=E6=9C=8828=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:22=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 >
-> > > The use of this API is inappropriate here AFAICT. It drops the parent=
- refcount
-> > > and on the second call to it you will have a warning from refcount li=
-brary.
+> > > > > > > > > > +     priv->can.clock.freq =3D can_clk;
+> > > > > > > > > > +     priv->can.bittiming_const =3D &nct6694_can_bittim=
+ing_nominal_const;
+> > > > > > > > > > +     priv->can.data_bittiming_const =3D &nct6694_can_b=
+ittiming_data_const;
+> > > > > > > > > > +     priv->can.do_set_mode =3D nct6694_can_set_mode;
+> > > > > > > > > > +     priv->can.do_get_berr_counter =3D nct6694_can_get=
+_berr_counter;
+> > > > > > > > > > +     priv->can.ctrlmode_supported =3D CAN_CTRLMODE_LOO=
+PBACK |
+> > > > > > > > > > +             CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_BE=
+RR_REPORTING |
+> > > > > > > > > > +             CAN_CTRLMODE_FD | CAN_CTRLMODE_FD_NON_ISO=
+;
+> > > > > > > > >
+> > > > > > > > > Does your device run in CAN-FD mode all the time? If so, =
+please use
+> > > > > > > > > can_set_static_ctrlmode() to set it after priv->can.ctrlm=
+ode_supported
+> > > > > > > > > and remove CAN_CTRLMODE_FD from ctrlmode_supported.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > Our device is designed to allow users to dynamically switch=
+ between
+> > > > > > > > Classical CAN and CAN-FD mode via ip link set ... fd on/off=
+.
+> > > > > > > > Therefore, CAN_CTRLMODE_FD needs to remain in ctrlmode_supp=
+orted, and
+> > > > > > > > can_set_static_ctrlmode() is not suitable in this case.
+> > > > > > > > Please let me know if you have any concerns about this appr=
+oach.
+> > > > > > >
+> > > > > > > Where do you evaluate if the user has configured CAN_CTRLMODE=
+_FD or not?
+> > > > > > >
+> > > > > >
+> > > > > > Sorry, I was previously confused about our device's control mod=
+e. I
+> > > > > > will use can_set_static_ctrlmode() to set CAN_FD mode in the ne=
+xt
+> > > > > > patch.
+> > > > >
+> > > > > Does your device support CAN-CC only mode? Does your device suppo=
+rt to
+> > > > > switch between CAN-CC only and CAN-FD mode?
+> > > > >
+> > > >
+> > > > Our device supports both CAN-CC and CAN-FD mode.
 > > >
-> > > It should be as simple as device_set_node().
+> > > This doesn't answer my question:
 > > >
-> > > >         }
-> > >
-> > > With that, the conditional becomes
-> > >
-> > > 	} else if (is_of_node(fwnode)) {
-> > > 		device_set_node(&pdev->dev, fwnode);
-> > > 	}
-> > >
-> > > where fwnode is something like
-> > >
-> > > 	struct fwnode_handle *fwnode =3D dev_fwnode(parent);
-> >=20
-> > I tried to use device_set_node(), but then I got some other issue: as w=
-e
-> > now have several devices with the same firmware node, they all share th=
-e
-> > same properties. In particular, if we do use pinctrl- properties to
-> > apply some pinmmuxing, all devices will try to apply this pinmuxing and
-> > of course all but one will fail.
-> >=20
-> > And this makes me think again about the whole thing, maybe copying the
-> > fwnode or of_node from the parent is not the way to go.
-> >=20
-> > So today we rely on the parent node for four drivers:
-> > - keypad and rotary, just to ease a bit the parsing of some properties,
-> >   such as the keymap with matrix_keypad_build_keymap(). I can easily do
-> >   it another way.
-> > - PWM and pinctrl drivers, are a bit more complicated, as in both case
-> >   the device tree node associated with the device is used internally. I=
-n
-> >   one case to find the correct PWM device for PWM clients listed in the
-> >   device tree, in the other case to find the pinctrl device when
-> >   applying pinctrl described in the device tree.
-> >=20
-> > So maybe I have to find a better way for have this association. One way
-> > would be to modify the device tree bindings to add a PWM and a pinctrl
-> > node, with their own compatible, so they are associated to the
-> > corresponding device. But maybe there is a better way to do it.
+> > > Does your device support CAN-CC only mode?
+> >
+> > It can dynamically switch between CAN-CC and CAN-FD mode when
+> > trasmitting or receiving, depending on whether the nct6694_can_frame
+> > passs the flag with NCT6694_CAN_FRAME_FLAG_FD.
 >
-> Okay, so the main question now, why do the device share their properties
-> to begin with? It can be done via fwnode graph or similar APIs (in case
-> it is _really_ needed).
+> Ok, but what about the receive path? Does the device support CAN-CC only
+> mode? Will it throw an error, if it receives a CAN-FD frame?
+>
 
-I wouldn't say the properties are shared: we have a single node in the
-device tree as this is just one device. But as we create several
-(software) devices in the MFD driver, we now have several devices linked
-with a single device tree node.
-
-One solution would be to create more subnodes in the device tree, one
-for pinctrl and one for PWM, but this feels a bit like describing our
-software implementation in the device tree instead of describing the
-hardware.
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+No, it can receive both CAN-CC and CAN-FD frames, if the hardware
+receives a CAN-FD frame, the firmware will set the
+NCT6694_CAN_FRAME_FLAG_FD flag.
 
