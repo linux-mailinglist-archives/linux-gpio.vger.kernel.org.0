@@ -1,168 +1,131 @@
-Return-Path: <linux-gpio+bounces-18093-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18094-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03C5CA74B87
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Mar 2025 14:50:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E106A74D1B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Mar 2025 15:50:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57E2117D8AE
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Mar 2025 13:45:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 304103A3B2F
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Mar 2025 14:48:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 365751BC073;
-	Fri, 28 Mar 2025 13:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 374A81C4609;
+	Fri, 28 Mar 2025 14:48:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lW2VJaEb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEaxdXBM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6521B4259;
-	Fri, 28 Mar 2025 13:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874F44B5AE;
+	Fri, 28 Mar 2025 14:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168802; cv=none; b=IbdUBRiAlXh03uk66w5TUtBG4Lh5BmwwZhuioMGjAcH8/TldiV+b5G9TCOcIL6c/KflN9TQcsLEW4RIvhTxcDrF9RWsUnUzXK5esJSFhpAYPSJUH1NZaQYF9mHf1d5UljFz0SJ28/Sj/oc6s6KJUF71BUcT5vLxZGoZYDDVMXbM=
+	t=1743173305; cv=none; b=ZFW5c6kxPsbof/mEA/9An6/0hD6PCCOtPimdtbyxZJpSWOZSRbH0TA1Zs0Xy3u0Yz8zq0sFb9rqlfU25JS/QWEKUgy65mbvCwUGGb2u+vy9BxvfzOOHp559TGtBoYo9s0lR1H7U6xGLJITQXOfOyqBYUw/2lpdFrVYXZiNPw3Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168802; c=relaxed/simple;
-	bh=aFJGxokIFQiJirc5Ih44aJ1LCQOnJo62gVnAi8cuxWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qrtmBW+tJBarv+SJgZ0oozLJrD0dawxwqluHY6T62Dpw484XEcEbdjwll6OmvD3LcpgM3U0vpZoI9zFs8tOl4sBn3W3gPcKipC+EMH9D8Hgxuqh1QJU8n7VUD7TQ2GYGvRKQLg8lxvnmgpc1epHqIs6bpo3ifCod332Eaa/k/Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lW2VJaEb; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743168800; x=1774704800;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=aFJGxokIFQiJirc5Ih44aJ1LCQOnJo62gVnAi8cuxWY=;
-  b=lW2VJaEbghi3rY3WXXNWRpizkRFGNcdEjDL31A6ADiI3r1wBYVr5Hw0n
-   ZZiEQukvs6u1fqA3LFOMtJ/WrBG6pjkYUCUckcetZeeSlx/ejwo1vn6t0
-   JD7y7IuTPahtEevJGSmjIr1BrWjY9T7DrKNCaNt/xwxQGVX9DsxBqn5MQ
-   pqowcYrFI93cTv+YQvcW/Hh0a2JmbohZbwPIouchtYdaAy/AM+aVL/Ph3
-   weA3anW6H8Ov0tmb87+u65XTIDvt1Rhc+R/857E9zZfg1BtFPrgBwFLG0
-   lQdGvoDxcbHwLMySMsWsH3aoHDJFX8uCVpCZR6oddkC+DsJ0fZj+XlqhE
-   A==;
-X-CSE-ConnectionGUID: A8zE25e3SLWCZhwc+VQljQ==
-X-CSE-MsgGUID: +OWhUEJ1TIuurE6/d+1vWA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="44711634"
-X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
-   d="scan'208";a="44711634"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 06:33:18 -0700
-X-CSE-ConnectionGUID: oyV6hxvlSA65Dz4ctN9lpA==
-X-CSE-MsgGUID: Zvs5QWTZRGmO512f13gvbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
-   d="scan'208";a="130658264"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 06:33:15 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1ty9pf-00000006kqW-23Ew;
-	Fri, 28 Mar 2025 15:33:11 +0200
-Date: Fri, 28 Mar 2025 15:33:11 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>,
-	"open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)" <linux-gpio@vger.kernel.org>,
-	krzk@kernel.org
-Subject: Re: [PATCH]  ASoC: codec: ak5386: Convert to GPIO descriptors
-Message-ID: <Z-alF-gK5TpGliCj@smile.fi.intel.com>
-References: <20250328113918.1981069-1-peng.fan@oss.nxp.com>
+	s=arc-20240116; t=1743173305; c=relaxed/simple;
+	bh=W7R2gZBzWBuPUH9E8mLgn5iH+bIAruEwVlJhbgs2hj4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PEXWsR7BsE5eXukrP97vKjW5qOSkyTCQ9GwxpjeBYxgnpmxVOt6/UTECxkOspsKvdEhZkVtkSlNLbr6uLPUYTQzHa5/NuSU+kkSvMI1UyIyhIJamOtt//WkaMEikbQq79wqtulWduS8+M4PEedgJ9T7Gl+AApItvBNYNBiZ6DHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fEaxdXBM; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523d8c024dfso923280e0c.3;
+        Fri, 28 Mar 2025 07:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743173302; x=1743778102; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W7R2gZBzWBuPUH9E8mLgn5iH+bIAruEwVlJhbgs2hj4=;
+        b=fEaxdXBMHI6Tya/9qDx2dRPCnIa6J43/9+EYLLDgHFQl4qMspEClgm4llYgrSYCLGJ
+         W5045Coc+Nxj4u9xoaibYQRHpCS5yOlCRT5D0a+zy0H93V98FxNYgRnjrCoqKfQIaW7F
+         UW8kQ8fWSilj9tlU4iOGEWwsnhch+Ed7PAqMv6CTAheKiwgLGG9cmK3fQJmnPNvCnT5I
+         zaaa+Nb9ow3J1qBeTvMX5FWsDYJHr+YgTv8MfGakmV9NFadm4gI7RFtnS1BC+GReRniV
+         fvKzq+OTRnSG7NDFN9YmAKnQMaDOBCaDfahw6FKeWFwozTwm+AqvK2ALzydRByLw6+oI
+         dfXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743173302; x=1743778102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W7R2gZBzWBuPUH9E8mLgn5iH+bIAruEwVlJhbgs2hj4=;
+        b=WCeAk4xT11R77IAEwAQSa6BXY//9OBH226NmljWzizNxOiU+ve3TrfaGDZt5uWngiD
+         bGCaNXQ9KEF1wSD2JU8OpTiFysB4eY1qBhc7KcgYUDuGVuqObTihuldaeRoM7mAP7nSa
+         zRe/CRUKVFhj0X3+g8P3n6+K/iSmTKVvX0tR1bTNjv7tl8jMecF6xYYheaHCt+GXDLE+
+         Y6Kuaj6jKVhyHaVtmQEroU7MJC5vVXQ1Hd8k4Yv/RCLKmizn00Dk7Vi35eYoGTSbYGTn
+         r5Q5ZhfqcYEW6DyF66Lof28d5TpmoKYd1lAdm5Que1qwQb3A0KUWClgV/g8tSLLm/iKm
+         Geqg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/MxYVvYwHHH7ylatz19DBBUk/LOI7UwgG/VnvXDsgCQH20lD09MAA1jTAGQEYtj09M6qVkkwEGNTrxv56FhdlME8=@vger.kernel.org, AJvYcCVCMSYro1jl0cubRDemWmCCmHqmOUb0Fiaarz4b7bFBFrgX/TC+dkuP2x7XD88mQEA8maoUyUxHT07JJUM0@vger.kernel.org, AJvYcCVqa8pHK5yAP/RQIEkWwx4W5IHN7h1ILf+ZY8ju41XJVBhu/mEyyUYrO+uZC7jq0oedttB63JLBxJCf@vger.kernel.org, AJvYcCWUcwOp3V2FoHnL3uCkJs84sLYS3AIh0oia/CBiCX24cXVW0uwcs/5sp0x9OSlN0Qoc5SgcqXTUQLm7@vger.kernel.org, AJvYcCWblTKUnNgDNy1B7wPhGYP1y7tU9vDv9KMK/ivAtR51cHZBcy+xrbrypmN5B8VbqKbttf44mIiElYr6pC40@vger.kernel.org, AJvYcCX1c5iRtkyqo5+J735TLwPWpnmMl9/iqSGyle9+yWkMjX7wuCUm24R/To6JAPMzi2uhgHFHOpKQ3obJdw==@vger.kernel.org, AJvYcCXK1vO69tmDot6oBABiI9wnTuRtpyo+h9aB0GAN2D7hve63lAN5i8WndUwqcWJosOdLpOJ7AMi/luAR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxexab2UG7SJk8fSFORMVFHcMuiSBZa3FHctQU8vGx8ollPlEHj
+	SkoQdnQu6Nj/Drkbaqe+viWB0BtKleHh9zfABZTDdsD7DGuOFJGZNgnoO2KP/hn5BNi1OkbOAXY
+	giEjPO+PTbMGzqWkyzprnIB6smus=
+X-Gm-Gg: ASbGncvRWMIWeYlOrH6aozR509CIv2fZtbrGmAQY/8kxQEy8n0c6HBiAYgHqTyWa7qE
+	oeE4PjyGGdaRsQfMIWf8kXH7LVqqAdrmskPSUefkqEjA4o1oPDYL5dh1bMYRBBsz5Q08rXhPJow
+	zx1zDHtje2on759CpWaBcDYWUyII+9560F1Nwz/mIXmZDV5MoF3+mZ37hp
+X-Google-Smtp-Source: AGHT+IHouldgTyP6Q/w4w6vBsXV6nSeyEMfHGqZjhRlDBBXFbUfgEyb6My2WMEzsfSI0GSy57EiD1BG9iD1i8bsYjz8=
+X-Received: by 2002:a05:6122:3d0a:b0:525:a70d:3110 with SMTP id
+ 71dfb90a1353d-52600a8712bmr6248996e0c.8.1743173302143; Fri, 28 Mar 2025
+ 07:48:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250328113918.1981069-1-peng.fan@oss.nxp.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250326143945.82142-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <f03c3a6a-aa6c-47be-8a03-7486131f6d32@kernel.org>
+In-Reply-To: <f03c3a6a-aa6c-47be-8a03-7486131f6d32@kernel.org>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 28 Mar 2025 14:47:56 +0000
+X-Gm-Features: AQ5f1Jr8bCu5jfB7gzVdmCLWSNd82UxgDWDDpWjIQfNCBC-6gPx3a_B0ei82wkA
+Message-ID: <CA+V-a8vx2VKoADpw5rG0jH6773=QiHB=reNYBr4ncYZGS-H+XQ@mail.gmail.com>
+Subject: Re: [PATCH 02/15] dt-bindings: soc: renesas: Document RZ/V2N EVK board
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 28, 2025 at 07:39:17PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
->  of_gpio.h is deprecated, update the driver to use GPIO descriptors.
->  - Use dev_gpiod_get_optional to get GPIO descriptor.
+Hi Krzysztof,
 
-devm
+Thank you for the review.
 
->  - Use gpiod_set_value to configure output value.
-> 
-> With legacy of_gpio API, the driver set gpio value 1 to power up
+On Thu, Mar 27, 2025 at 7:41=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 26/03/2025 15:39, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add "renesas,rzv2n-evk" which targets the Renesas RZ/V2N ("R9A09G056")
+> > EVK board.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> Squash, previous patch makes no sense on its own.
+>
+Agreed, I will squash this as patch patch 1/15.
 
-sets GPIO
+> You, Renesas, already received exactly that feedback!
+>
+I truly apologize for the oversight and appreciate your patience. I=E2=80=
+=99ll
+make sure this doesn=E2=80=99t happen again. Thank you for your understandi=
+ng.
 
-> AK5386, and set value 0 to power down.
-> Per datasheet for PDN(reset_gpio in the driver):
->  Power Down & Reset Mode Pin
->  “H”: Power up, “L”: Power down & Reset
->  The AK5386 must be reset once upon power-up.
-> 
-> There is no in-tree DTS using this codec, and the dt-bindings not
-
-bindings does not
-
-> specify polarity. Per driver and datasheet, the gpio polarity should be
-
-GPIO
-
-> active-high which is to power up the codec. So using GPIOD_OUT_LOW
-> when get the GPIO descriptor matches GPIOF_OUT_INIT_LOW when using
-> of_gpio API.
-
-...
-
->  The Documentation/devicetree/bindings/sound/ak5386.txt not specify
->  polarity(this seems bug), so per code and datasheet, I think it
->  should be active-high. I could add a quirk in gpiolib-of to force
->  active-high or acitive-low if you think needed.
-
-I don't think we need a quirk as long as the default is the same,
-I mean if the DTS is written without setting polarity, would it be
-active-high or active-low?
-
-...
-
-> +	if (priv->reset_gpio)
-
-Redundant as it duplicates the one in the below call.
-
-> +		gpiod_set_value(priv->reset_gpio, 1);
-
-...
-
-> +	if (priv->reset_gpio)
-
-Ditto.
-
-> +		gpiod_set_value(priv->reset_gpio, 0);
-
-...
-
-> +	priv->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(priv->reset_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(priv->reset_gpio),
-
-+ dev_printk.h // or even device.h, depending on the current code base
-+ err.h
-
-> +				     "Failed to get AK5386 reset GPIO\n");
-
-> +	gpiod_set_consumer_name(priv->reset_gpio, "AK5386 Reset");
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Cheers,
+Prabhakar
 
