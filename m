@@ -1,188 +1,586 @@
-Return-Path: <linux-gpio+bounces-18102-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18103-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 267E8A755C7
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Mar 2025 11:59:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5817BA75649
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Mar 2025 13:52:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B06663AF60E
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Mar 2025 10:59:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E08C1892312
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Mar 2025 12:53:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 672C31B85C5;
-	Sat, 29 Mar 2025 10:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2BFA1C5D72;
+	Sat, 29 Mar 2025 12:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="9AvfLB+E";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="mcxzM+8i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzQu3r6e"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279981AAA23;
-	Sat, 29 Mar 2025 10:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743245966; cv=fail; b=m3qTCPA+RQDFh6wJJzj8gnjaIRltSwgKyTU3rXYglE5keuW/30iZ1XCtW49w5Zfv1IFFLXisq+0ABVl/G8HakKtdDlbqEFJRa5H3jG7FPv7t1/YTRU+SVzDJmnf4HZH1Cdm/Afs7kU3fFVUkFN7y0BB0mljZuOBE+WMpVS107sE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743245966; c=relaxed/simple;
-	bh=g0GlwfKoo9aeW6pbqwuqAE4oHj1qeNRAIM9irlJcJqg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dYUhO7whfyuLnvyyv4YqXzUShA4/G8bOG6Qxc1XqCUivulwPlOdetEy6AAuTyZiSm9Etnxcr61VJcT37Q7UeL+qDEnp4r8rI8EYhEOpUNiKJbH0LOxq/NPcIgt4PnW2UvV00ipyJk67g0GzQvDHecFUq/bt72pk5Mj240QlWUQ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=9AvfLB+E; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=mcxzM+8i; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id 4381E480AF4;
-	Sat, 29 Mar 2025 06:59:17 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1743245957;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=RHO3yWxTen8cfAxy9aOWoO+AnpnPzPOoPnTKVT1ntBI=;
- b=9AvfLB+Et/5KT+V1EPnYq3i/sfxqn9q2R0SPH7C+gylHhfzjeUHw+UdrvYTRLshTUKiJH
- ZuMskWo1xZIagl7Aw==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1743245957;
-	cv=none; b=rliDB0OilO6hcbFYZ5wffqU3XC9D4HQ/30AuFkoNqnYBpscKA54wXGJJ8C+1TLIc0RuTj14agEZjpjH9dechhYjs7bJLqqFiJpXZhKEArF3B4+KvEWloyeCydk/V5BI5bLIcpbyC+1bn5FSB+VvjjqT2t8rbaSPxaGV1H/bpmrDeZe8fXxs1OwsaW9E249HgRj2wJwR/uf+QP7DTtzKaZGlycRk6HjemntO5+1sfX4S0VAr43HWYMpJfv4ILehe9ijxZej2GLK2Jm+C/2jfmX1BCAzlQLnuyUdA4B4iIVGbh/c4Q7hUh9SFVC8pB/8jAn692lkTk1b2pRwo65dOKOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1743245957; c=relaxed/simple;
-	bh=g0GlwfKoo9aeW6pbqwuqAE4oHj1qeNRAIM9irlJcJqg=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=R8jL5gL1+GOkJd3MZiucVyjOqiuHJSepx0dxy9cQ43L1Y68PPHpv2NZbIdnzNFCKvbkB3ZaAEn9Vc4W90H97ztVyp6Gk87cIOlVNkpx1hcRr2ONb2oEut7DJyrgv5aFGhR8uiJ9S6sq3U0W1HxzTp/Qx7Fxokxn8uJfaRT/7h/hjnsIk2rPU8F9713oBSaxSJcn95RO3knvbnZDS4rmCB2zPeugj7cb8yx4DY5195M9gVB7eGcgx57mGmzyEjiJ51Tuw8C1xIfjv2s0RK96jW3QNkusPRZZ7paJ4P1d0nzElQvAgsA2PGvyQnltAnUibr7A3AEs1I/zAxEprO9oG1w==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1743245957;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=RHO3yWxTen8cfAxy9aOWoO+AnpnPzPOoPnTKVT1ntBI=;
- b=mcxzM+8iKkqGtmGR85cxdbvTDoRxCcLSwuEfhXe+N8M9xRkKHDNmXJqiE9cSpKr2Gw/nY
- /ejk3xUwtQKmvtsnq5YR8EwZUSyBt/jD1CPlxlZASM5yGGDtlxXUEq3+MfMFyKfd176wD/3
- k77vvB0/fubyuY72tBgT+F7U8IJsD5VDplEmofqtMjcmPY561LaJTboDEqOef8QwNZrm7OM
- m1ThulyzheohevPuo0zhXGWDJWTUFKQX0iYUWDO8rfj1Q0AEXk7qrK/Ik1WaMlXwBPCkajS
- mpnMQ4CVVLoQPkc1ZSdWDt+z44aSvJC9q1CMGJKJjeWCOFKYSGgOWXMzR6mw==
-Received: by srv8.prv.sapience.com (Postfix) id 023B228011C;
-	Sat, 29 Mar 2025 06:59:16 -0400 (EDT)
-Message-ID: <d4204a3c44b31c6527b91558f9691b6a05faaadc.camel@sapience.com>
-Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
- get_direction failed -> pincntrl patch?
-From: Genes Lists <lists@sapience.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Sat, 29 Mar 2025 06:59:10 -0400
-In-Reply-To: <76e77de144a51d345c3542dd77dd0bdd86e4d5e5.camel@sapience.com>
-References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
-				 <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
-				 <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com>
-			 <76e77de144a51d345c3542dd77dd0bdd86e4d5e5.camel@sapience.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-uOpdoYz45Z3bDOU1DBh5"
-User-Agent: Evolution 3.56.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870EE1A3150;
+	Sat, 29 Mar 2025 12:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743252766; cv=none; b=nksR5aH3hh4lzarABIFLerQ5Lfh/UmqcFolIyuPNuTsBkCqqFG9YGe3tkJE7AbZS8eDEYTYCXbc7JdhRzLzrCTcPqNLshmaGn/16mY1aJimVlaw3SdTfMMpmeYpYXsaCLRQ85J/CxyAfuTRsPJoocHrgMfmquKEa2Rj++VbS96c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743252766; c=relaxed/simple;
+	bh=eZpiFhvDtIwHjX2CuR9smL6njxD51RMyHgmPsElPOQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aJ0PU0u61a1VB6ExtPLMOsAwTHfDOpktKr+o6fv4pCEnWVp1irlGaXYoIguANkQNMJAxvbjS+ZM1iJI3aAjjmPKUg3CMH2acJGWbclZduWWuzZZ2oDpEmAJwnhXqo5XWRAirdBPGrJRKSrANS+WgbbUcLfYnxYDSG1ApP94eXoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzQu3r6e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA34C4CEE2;
+	Sat, 29 Mar 2025 12:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743252766;
+	bh=eZpiFhvDtIwHjX2CuR9smL6njxD51RMyHgmPsElPOQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WzQu3r6ebDUh73MnwZ00Fiz+g1sNIgrk8UZikLEmwGEu1nGTlMxhDehG9hkjhRt6r
+	 DVgBs84IOKvkU6XwXBzdK28PFQhrQS23ezp5npi1KLYoU+d2oTp/s/mR/Bh65EOXtp
+	 mJiBCyCh3zu5ypb6m94nvenRAT4sOmyMyyGoNI1BMWZVXIDTLosZBYueVnWY2lYdqU
+	 oau4HRbL7E7C8jXBVwpYKGLlm12oXiuQCLSa7FhVLtDuVdJu6CfKQZb/SODYQfMP9w
+	 ZfoaNEhgxpPb5jwK9o/Vxz+WG5I8nRaXWffNi0ZH1S3BlawPgQneu7deMk0/+zKfQM
+	 5kFXsQkWSm3nw==
+Date: Sat, 29 Mar 2025 13:52:41 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: airoha: fix wrong PHY LED mapping and PHY2 LED
+ defines
+Message-ID: <Z-ftGYXl01tg9I0n@lore-rh-laptop>
+References: <20250326122359.27504-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bxBCDseondUIzNHf"
+Content-Disposition: inline
+In-Reply-To: <20250326122359.27504-1-ansuelsmth@gmail.com>
 
 
---=-uOpdoYz45Z3bDOU1DBh5
-Content-Type: text/plain; charset="UTF-8"
+--bxBCDseondUIzNHf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2025-03-16 at 08:48 -0400, Genes Lists wrote:
-> On Tue, 2025-03-11 at 10:40 -0700, Bartosz Golaszewski wrote:
-> > On Tue, 11 Mar 2025 15:03:59 +0100, Genes Lists
-> > <lists@sapience.com> said:
-> > > On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:
-> > > > ......
+> The current PHY2 LED define are wrong and actually set BITs outside the
+> related mask. Fix it and set the correct value. While at it, also use
+> FIELD_PREP_CONST macro to make it simple to understand what values are
+> actually applied for the mask.
 >=20
-> >=20
-> > There are two problems here. The issue you're seeing is fixed in
-> > next but
-> > not in mainline due to my omission. I will send a patch for that.
-> >=20
-> > On the other hand, the pinctrl driver in question should be fixed
-> > too.
-> > Can you try the following change:
-> >=20
-> > diff --git a/drivers/pinctrl/intel/pinctrl-intel.c
-> > b/drivers/pinctrl/intel/pinctrl-intel.c
-> > index d889c7c878e2..0c6925b53d9f 100644
-> > --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> > +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> > @@ -1068,7 +1068,11 @@ static int intel_gpio_get_direction(struct
-> > gpio_chip *chip, unsigned int offset)
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pin =3D intel_gpio_to_pin(pc=
-trl, offset, NULL, NULL);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pin < 0)
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EINVAL;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 /*
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 * For pins configured to functions other than
-> > GPIO, default
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 * to the safe INPUT value.
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return GPIO_LINE_DIRECTION_IN;
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D intel_get_padcfg(pct=
-rl, pin, PADCFG0);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!reg)
-> >=20
-> > ?
-> >=20
-> > FYI: This was uncovered by commit 9d846b1aebbe ("gpiolib: check the
-> > return value of gpio_chip::get_direction()").
-> >=20
-> > Bart
+> Also fix wrong PHY LED mapping. The SoC Switch supports up to 4 port but
+> the register define mapping for 5 PHY port, starting from 0. The mapping
+> was wrongly defined starting from PHY1. Reorder the function group to
+> start from PHY0. PHY4 is actually never supported as we don't have a
+> GPIO pin to assign.
+
+Hi Christian,
+
+This patch is fine, just a nit inline
+
+Regards,
+Lorenzo
+
 >=20
-> Hi Bart - I don't see this pincntrl patch in mainline yet - =C2=A0what's
-> your thinking on this?
+> Cc: stable@vger.kernel.org
+> Fixes: 1c8ace2d0725 ("pinctrl: airoha: Add support for EN7581 SoC")
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-airoha.c | 179 +++++++++++-----------
+>  1 file changed, 90 insertions(+), 89 deletions(-)
 >=20
-> thanks!
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/=
+mediatek/pinctrl-airoha.c
+> index 547a798b71c8..9099ad34aa29 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> @@ -6,6 +6,7 @@
+>   */
+> =20
+>  #include <dt-bindings/pinctrl/mt65xx.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/gpio/driver.h>
+> @@ -112,39 +113,39 @@
+>  #define REG_LAN_LED1_MAPPING			0x0280
+> =20
+>  #define LAN4_LED_MAPPING_MASK			GENMASK(18, 16)
+> -#define LAN4_PHY4_LED_MAP			BIT(18)
+> -#define LAN4_PHY2_LED_MAP			BIT(17)
+> -#define LAN4_PHY1_LED_MAP			BIT(16)
+> -#define LAN4_PHY0_LED_MAP			0
+> -#define LAN4_PHY3_LED_MAP			GENMASK(17, 16)
+> +#define LAN4_PHY4_LED_MAP			FIELD_PREP_CONST(LAN4_LED_MAPPING_MASK, 0x4)
+> +#define LAN4_PHY3_LED_MAP			FIELD_PREP_CONST(LAN4_LED_MAPPING_MASK, 0x3)
+> +#define LAN4_PHY2_LED_MAP			FIELD_PREP_CONST(LAN4_LED_MAPPING_MASK, 0x2)
+> +#define LAN4_PHY1_LED_MAP			FIELD_PREP_CONST(LAN4_LED_MAPPING_MASK, 0x1)
+> +#define LAN4_PHY0_LED_MAP			FIELD_PREP_CONST(LAN4_LED_MAPPING_MASK, 0x0)
+
+What about doing something like:
+
+#define LAN4_PHY_LED_MAP(_n)			FIELD_PREP_CONST(LAN4_LED_MAPPING_MASK, (_n))
+
+
+> =20
+>  #define LAN3_LED_MAPPING_MASK			GENMASK(14, 12)
+> -#define LAN3_PHY4_LED_MAP			BIT(14)
+> -#define LAN3_PHY2_LED_MAP			BIT(13)
+> -#define LAN3_PHY1_LED_MAP			BIT(12)
+> -#define LAN3_PHY0_LED_MAP			0
+> -#define LAN3_PHY3_LED_MAP			GENMASK(13, 12)
+> +#define LAN3_PHY4_LED_MAP			FIELD_PREP_CONST(LAN3_LED_MAPPING_MASK, 0x4)
+> +#define LAN3_PHY3_LED_MAP			FIELD_PREP_CONST(LAN3_LED_MAPPING_MASK, 0x3)
+> +#define LAN3_PHY2_LED_MAP			FIELD_PREP_CONST(LAN3_LED_MAPPING_MASK, 0x2)
+> +#define LAN3_PHY1_LED_MAP			FIELD_PREP_CONST(LAN3_LED_MAPPING_MASK, 0x1)
+> +#define LAN3_PHY0_LED_MAP			FIELD_PREP_CONST(LAN3_LED_MAPPING_MASK, 0x0)
+> =20
+>  #define LAN2_LED_MAPPING_MASK			GENMASK(10, 8)
+> -#define LAN2_PHY4_LED_MAP			BIT(12)
+> -#define LAN2_PHY2_LED_MAP			BIT(11)
+> -#define LAN2_PHY1_LED_MAP			BIT(10)
+> -#define LAN2_PHY0_LED_MAP			0
+> -#define LAN2_PHY3_LED_MAP			GENMASK(11, 10)
+> +#define LAN2_PHY4_LED_MAP			FIELD_PREP_CONST(LAN2_LED_MAPPING_MASK, 0x4)
+> +#define LAN2_PHY3_LED_MAP			FIELD_PREP_CONST(LAN2_LED_MAPPING_MASK, 0x3)
+> +#define LAN2_PHY2_LED_MAP			FIELD_PREP_CONST(LAN2_LED_MAPPING_MASK, 0x2)
+> +#define LAN2_PHY1_LED_MAP			FIELD_PREP_CONST(LAN2_LED_MAPPING_MASK, 0x1)
+> +#define LAN2_PHY0_LED_MAP			FIELD_PREP_CONST(LAN2_LED_MAPPING_MASK, 0x0)
+> =20
+>  #define LAN1_LED_MAPPING_MASK			GENMASK(6, 4)
+> -#define LAN1_PHY4_LED_MAP			BIT(6)
+> -#define LAN1_PHY2_LED_MAP			BIT(5)
+> -#define LAN1_PHY1_LED_MAP			BIT(4)
+> -#define LAN1_PHY0_LED_MAP			0
+> -#define LAN1_PHY3_LED_MAP			GENMASK(5, 4)
+> +#define LAN1_PHY4_LED_MAP			FIELD_PREP_CONST(LAN1_LED_MAPPING_MASK, 0x4)
+> +#define LAN1_PHY3_LED_MAP			FIELD_PREP_CONST(LAN1_LED_MAPPING_MASK, 0x3)
+> +#define LAN1_PHY2_LED_MAP			FIELD_PREP_CONST(LAN1_LED_MAPPING_MASK, 0x2)
+> +#define LAN1_PHY1_LED_MAP			FIELD_PREP_CONST(LAN1_LED_MAPPING_MASK, 0x1)
+> +#define LAN1_PHY0_LED_MAP			FIELD_PREP_CONST(LAN1_LED_MAPPING_MASK, 0x0)
+> =20
+>  #define LAN0_LED_MAPPING_MASK			GENMASK(2, 0)
+> -#define LAN0_PHY4_LED_MAP			BIT(3)
+> -#define LAN0_PHY2_LED_MAP			BIT(2)
+> -#define LAN0_PHY1_LED_MAP			BIT(1)
+> -#define LAN0_PHY0_LED_MAP			0
+> -#define LAN0_PHY3_LED_MAP			GENMASK(2, 1)
+> +#define LAN0_PHY4_LED_MAP			FIELD_PREP_CONST(LAN0_LED_MAPPING_MASK, 0x4)
+> +#define LAN0_PHY3_LED_MAP			FIELD_PREP_CONST(LAN0_LED_MAPPING_MASK, 0x3)
+> +#define LAN0_PHY2_LED_MAP			FIELD_PREP_CONST(LAN0_LED_MAPPING_MASK, 0x2)
+> +#define LAN0_PHY1_LED_MAP			FIELD_PREP_CONST(LAN0_LED_MAPPING_MASK, 0x1)
+> +#define LAN0_PHY0_LED_MAP			FIELD_PREP_CONST(LAN0_LED_MAPPING_MASK, 0x0)
+> =20
+>  /* CONF */
+>  #define REG_I2C_SDA_E2				0x001c
+> @@ -1476,8 +1477,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY1_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY0_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1491,8 +1492,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY1_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY0_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1506,8 +1507,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY1_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY0_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1521,8 +1522,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY1_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY0_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1540,8 +1541,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY2_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY1_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1555,8 +1556,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY2_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY1_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1570,8 +1571,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY2_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY1_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1585,8 +1586,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY2_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY1_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1604,8 +1605,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY3_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY2_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1619,8 +1620,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY3_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY2_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1634,8 +1635,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY3_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY2_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1649,8 +1650,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY3_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY2_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1668,8 +1669,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY4_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY3_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1683,8 +1684,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY4_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY3_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1698,8 +1699,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY4_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY3_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1713,8 +1714,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led0_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED0_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY4_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY3_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1732,8 +1733,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY1_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY0_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1747,8 +1748,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY1_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY0_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1762,8 +1763,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY1_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY0_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1777,8 +1778,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY1_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY0_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1796,8 +1797,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY2_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY1_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1811,8 +1812,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY2_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY1_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1826,8 +1827,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY2_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY1_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1841,8 +1842,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY2_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY1_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1860,8 +1861,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY3_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY2_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1875,8 +1876,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY3_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY2_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1890,8 +1891,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY3_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY2_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1905,8 +1906,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY3_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY2_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> @@ -1924,8 +1925,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN1_LED_MAPPING_MASK,
+> -			LAN1_PHY4_LED_MAP
+> +			LAN0_LED_MAPPING_MASK,
+> +			LAN0_PHY3_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1939,8 +1940,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN2_LED_MAPPING_MASK,
+> -			LAN2_PHY4_LED_MAP
+> +			LAN1_LED_MAPPING_MASK,
+> +			LAN1_PHY3_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1954,8 +1955,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN3_LED_MAPPING_MASK,
+> -			LAN3_PHY4_LED_MAP
+> +			LAN2_LED_MAPPING_MASK,
+> +			LAN2_PHY3_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	}, {
+> @@ -1969,8 +1970,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_LAN_LED1_MAPPING,
+> -			LAN4_LED_MAPPING_MASK,
+> -			LAN4_PHY4_LED_MAP
+> +			LAN3_LED_MAPPING_MASK,
+> +			LAN3_PHY3_LED_MAP
+>  		},
+>  		.regmap_size =3D 2,
+>  	},
+> --=20
+> 2.48.1
 >=20
-(resending in plain text - sorry about that)
 
-Hi Bart - I don't see this pincntrl patch in linus tree -  what's your
-thinking around this?
-
-thanks!
-
-
---=20
-Gene
-
---=-uOpdoYz45Z3bDOU1DBh5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+--bxBCDseondUIzNHf
+Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ+fSfgAKCRA5BdB0L6Ze
-27DLAP9ivUZRhlunSDMd4YRgEp+Q4UEeuCrxotIOZjz8/qV3/gD9HQhZvvAE8jlc
-0SeGbrTDQewCYFetqURFov5HhaK1nA8=
-=aYQz
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ+ftFgAKCRA6cBh0uS2t
+rA3jAQC3DuuDUXFJE6ZIunnmBsWsnWDVyyuB2dClQt002JIXcQEAiac4v+IAntq8
+nQ3BuM2ng3XlSqEIu12K9X4Xkuobzwo=
+=x72S
 -----END PGP SIGNATURE-----
 
---=-uOpdoYz45Z3bDOU1DBh5--
+--bxBCDseondUIzNHf--
 
