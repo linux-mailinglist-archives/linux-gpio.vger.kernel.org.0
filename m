@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-18159-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18160-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE373A78068
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 18:30:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2875EA78072
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 18:31:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B61B81702AF
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 16:24:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 194537A233D
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 16:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014AA20E70A;
-	Tue,  1 Apr 2025 16:20:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CF0720D4F2;
+	Tue,  1 Apr 2025 16:31:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Pi6sgHw5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="M4bvoux/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E089020E01A
-	for <linux-gpio@vger.kernel.org>; Tue,  1 Apr 2025 16:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A6D20D4F6
+	for <linux-gpio@vger.kernel.org>; Tue,  1 Apr 2025 16:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743524412; cv=none; b=XsrpiT+DVxoGXyghY8VRIjDtCgEuLDk8pxM/idiP50AuJMGxto2NKLf/YtIpmMj2UZvA+4FgMmy2nCQNu5NndbDOKOA3d533dDuR4D3BhrRAP5GgF4c/ynmju4evi7P+oPFctNlI6sf59Qf6nHf+fWS/zlvj2adZ0Sd9cX9Y/+I=
+	t=1743525069; cv=none; b=WOzdgyDTigEGi0vfj4UJYmft+TBq65VO3Tt65LyDD35ize3QhdHyN/PUe9cYz7Jn02v0SAs6lBTMLt0XnASQNm9BWCPULw+x+q8KKEKpewRphvsDiM6NXMysYEOicJ3JUkw9peK3qjUZup0hjSQI8+qm9lPCJRgGPzWNydo6TCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743524412; c=relaxed/simple;
-	bh=+gL7pqviWCTSkJIhD8SI688Pv1X16XRWBd25qPBRg20=;
+	s=arc-20240116; t=1743525069; c=relaxed/simple;
+	bh=A+8CGVk+rHAGbpJizcWomttlBO48kDl6sqlUmqTyKeU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=red3IbOTZ1aURhwsqwMfq9isoVggKnT3VNyVFTd2VTnEjIjDToXCHmUhfzRXTtGII7ww526TaF0R3s4xk/ZK+CtnSNlHln9H6TtNk2lUSXfq4KhzchOLiXjTN6YOh6lHyhOJcmIANkNJIgycJrlQsjhDLzey6TQoYjinjUK5yFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Pi6sgHw5; arc=none smtp.client-ip=209.85.160.43
+	 In-Reply-To:Content-Type; b=XVP/sDMTkHtKiZqFpoRaZyubu5x13Plvkwxp32bhmc2+wTtj0w8heU0T2fYvFzgywIOYXOAX7AMPVOkNAKtbdhxBnCw17VhCbTX+EuoqdOusb06PoR0ZLI+1Q6SpVZ9YfO/OFWiO5bq8CTrOqRI12KnMBbz6pi+czm7jKBKw9qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=M4bvoux/; arc=none smtp.client-ip=209.85.167.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2a01bcd0143so6146919fac.2
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Apr 2025 09:20:10 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f6dccdcadaso3893992b6e.2
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Apr 2025 09:31:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743524410; x=1744129210; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743525065; x=1744129865; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=yD6imsgkoRBmKikS0REDEdzThJO/QBBTFKUjw+FE6FA=;
-        b=Pi6sgHw52otpqLufj5O/uy0SJWB21oxopbZRTVpNL+5t1pao36G9Y6uSaGq86Lexk4
-         VqJbKydPcJL9HvPRQ/yYa/i+KccGqcXxLSLIWIz/5wpk3ccDuUhJuJDWfnRZl4A0YGJk
-         G0Cmb07GlmzMmAVyJ55EeNCVdTK4GC61+83u2cWWrVKVqyfP2AVyLJ1B0kH6VITurYOF
-         HfHnWzGBVZ7jPQzWH1QSJFGFkTeV2IbOEftx2yy8GT4IMUSncbc91Ba/CCTayLdwJxFA
-         TkcrUDL5DsxEbTGX8j+DxQNUad0S4s9VG62YBc5V3zRCCjg6/UbucsREaI8LEs9yU6VA
-         zClg==
+        bh=DIV9rDTCBYi/ZllmsgW2UcNi1UuQ/GGccoikNyYbqtg=;
+        b=M4bvoux/hLbXvcgkPNY5thr8Chc2me65K1M+dghTe3mdBlSeaWIkMeGhYHn0xNTCXt
+         KqD4Jkszy4gk26iEDuvoKl+5RgCxtFaG5h7o2qyt/H07ANJxQUMIB0dSfHveuZxMVYcK
+         K0Jm/H3cbwuOLVnd7eyJ2jTHehONzxlOouCzXxkpNLFuOmI4J6EasFmQk/SZbZWeQ+Ow
+         Bw5oQ/eM8LlRY9UnhQRaT4b+NCYdMRAf6qte579V6BbooM1AgESgnR+xqFYJwQPc9xAp
+         FzUv/Cq/cVYlj0Yo093DJIYtgQAAfcAreKO8gzdBxbhzYOLppjbWkZ+Kw/BYLRFbN93S
+         tsow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743524410; x=1744129210;
+        d=1e100.net; s=20230601; t=1743525065; x=1744129865;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yD6imsgkoRBmKikS0REDEdzThJO/QBBTFKUjw+FE6FA=;
-        b=mg3b1UAa/I2XrxbBHcN2HdlQ3QSO+v6T67F1tZc/0WanmVzIXWR3qmlRooGjVC2wd5
-         0hwxrNGfQ9VAmt1VjWoM9FsaYY1IHnQUPe4FGwg4hAD6fbU+PAje4Jjf29Y2dGHIB1oc
-         u36HVoRnRwKKh6j/GuTATUJgPpwgUlDXOvjF+s5XHv+J8jtEJEcxfEJgeMA8yTMoNlcI
-         oGCsLomizfQ3Kzg7gb+jcP2xoDZLUJKlWrgdT2Vgl9aVE+2nwN7JRMsME2uJy+sDF71D
-         Sl4SY74MMjGMFor6RaZEwGHSeqPdy00GjMcskxQy5X60WK3hVpzkvvSd6d+Op/oTQvfc
-         qDBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFbMHoqubkDBC2lDk2qcPg78GElr4U0JZ5rm/AceP5k8w+0iFTo7vCCGCwi+oBvFNdz+UrRa0F/j/V@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh/iIAhHsN94Uds+nPy1lz/z3DUZ880/OWJA/64YXOktn8Fl5r
-	0zOcDYxSR1yEgJtJZxVSUdW0mbnTYKmPpPjfgoMi/DcvnwXMkYb04z4Lm7u+Bc0=
-X-Gm-Gg: ASbGncvn9RE+8sEOeVw4VnGuhMcx/jJurLLUfwPRYLSbxAHUXMy8rFTzaiJkDr8W4Q+
-	erjDvQk8zIp68gCRVrf8RO/JrTdBdQu5ufTDJQ6xExUjBeadZEVYb6IthIEpq05bv1mtkov5n/Z
-	khzp1Mh0f79ZPchhoeILyEIDYSVya//BBqNFXTyc1P/fq69U+raah5pexFJISWtMMgOol1fGstN
-	aADeUUCAFS6zuqaBAKORs37F54GE4h9rieAh0v2ArNaosro8kDt9vbILf59zkN5t0Jnc5bbOt0z
-	SbygZnFw8jgu2C2Df3ZjXVipGMudJdDLzodAB/MXXsOyacgUE+iAL+dTfmX9PRA61l7vFB5mL+r
-	+UhuVtQ==
-X-Google-Smtp-Source: AGHT+IGRdAdsC+0OxQWe8MfCLWx67HbEd+4baPkKY8LWeRb8Ft8zVGD3dRLKm+iYNatE7FTS7a5YKQ==
-X-Received: by 2002:a05:6870:4d16:b0:2a7:d8cb:5284 with SMTP id 586e51a60fabf-2cbcf4216a3mr8115424fac.7.1743524409757;
-        Tue, 01 Apr 2025 09:20:09 -0700 (PDT)
+        bh=DIV9rDTCBYi/ZllmsgW2UcNi1UuQ/GGccoikNyYbqtg=;
+        b=vzR7pB2gSfhI1+rNNsHdPbzuSk9Z57KKCXr/DL8jw3OkMZlP7UmswBOQqOfDXvPWKu
+         4K/kVuB9A0Bf8TSlMDYK2IjX3cqwznjlI5TqYWbV4gR4zkqRZc9qGUx/F7aHC1UruUjz
+         4hHj3w9upWj7ZnvYUPdlXURStFuobWjVCDDEzXhyvZkkQZVFf3fBECO9lCsYlqSCEh1h
+         MfhDRH8p9+5AWp587O/O0YrWs0ArVQ6JViYJfZPav0ipbjcdtUY4GGYyRqBGSaVcDZhN
+         Xb4cr3ZqGzAE2MkQ2tIKIUImrcVSGfHZqJpB/+gn1j4CThUHkKB6hlGbT/pBL2Rl/2+C
+         nujw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlcWxn9Qw/WyFNiFS9MxfueFFna1zLlGUCTmN6p+XH/CSqAUdW8W58luYNNgXoKKoRQC1ZEPTSNaYk@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBFdHyeXuHNn1MacQC1ntk0hlQPNlxml670Wy5jucgyv1wCBEj
+	FbcoNDVif2XbCJTpN1TCT98B1tARMqqIC0BrQTXxwGbZ4tsIjhujxgbkS1CwdqI=
+X-Gm-Gg: ASbGncs2+Vw3XYfExCyfLDr0E19AmNkhuU0HMSgm7FYL7jz45KRmoVdU6m8bp0Yfe0n
+	IG8xOCgjSRIB6doyhSH30aqOCY8d8/G4NYVlSfQjFsT7PhLimUVPhFHsIT/ndOcG7MIziXcQSt7
+	JIoMAgG3wUI1QCwQhODHWDQPEaQ0eGZNxX1/80mqL3bIc4gHjtvrztUeQ4RTK2I0so+W5SJLRyD
+	JFNuItJtEcQ4w3oAAstSwLxkM8sPiaQMPCbH92Q7bRWhcPgf7efh1gOuFLLaOp8PhXfFIqVZocg
+	7p8mPJ16Z7rZ+olCewSo4Q0ehcoDriYzeTrpAAoVQDUip8+ttGZKHxlD4lFT1yKhbwFi2Da3FeG
+	rIxGCUQ==
+X-Google-Smtp-Source: AGHT+IFgxLHlEUHTiaVhBN/WS2y8zglVhq63twptXpO0781V1TyVKN+bnKqC1lUMJ1xUmse1ytdXjA==
+X-Received: by 2002:a05:6808:1b13:b0:3f7:e553:56c6 with SMTP id 5614622812f47-3ff0f5d0107mr7722566b6e.37.1743525065453;
+        Tue, 01 Apr 2025 09:31:05 -0700 (PDT)
 Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c86a497aedsm2345282fac.16.2025.04.01.09.20.08
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c86a5758e0sm2367583fac.29.2025.04.01.09.31.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 09:20:09 -0700 (PDT)
-Message-ID: <e542609d-afee-421a-87ca-18991a65a507@baylibre.com>
-Date: Tue, 1 Apr 2025 11:20:08 -0500
+        Tue, 01 Apr 2025 09:31:05 -0700 (PDT)
+Message-ID: <c72e422c-1ad0-4314-8171-1c3830f63fa5@baylibre.com>
+Date: Tue, 1 Apr 2025 11:31:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,8 +82,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/17] dt-bindings: iio: adc: ad7768-1: document
- regulator provider property
+Subject: Re: [PATCH v4 08/17] iio: adc: ad7768-1: convert driver to use regmap
 To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org
@@ -91,82 +90,40 @@ Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
  marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
  brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
- marcelo.schmitt1@gmail.com, jonath4nns@gmail.com,
- Conor Dooley <conor.dooley@microchip.com>
+ marcelo.schmitt1@gmail.com, jonath4nns@gmail.com
 References: <cover.1741268122.git.Jonathan.Santos@analog.com>
- <7125eea4c3386777d2211224c73e38d8f576e4f0.1741268122.git.Jonathan.Santos@analog.com>
+ <b0c7976d4bc817b7056ef40e3ce870b42e8a2d80.1741268122.git.Jonathan.Santos@analog.com>
 Content-Language: en-US
 From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <7125eea4c3386777d2211224c73e38d8f576e4f0.1741268122.git.Jonathan.Santos@analog.com>
+In-Reply-To: <b0c7976d4bc817b7056ef40e3ce870b42e8a2d80.1741268122.git.Jonathan.Santos@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/6/25 3:01 PM, Jonathan Santos wrote:
-> The AD7768-1 provides a buffered common-mode voltage output
-> on the VCM pin that can be used to bias analog input signals.
+On 3/6/25 3:02 PM, Jonathan Santos wrote:
+> Convert the AD7768-1 driver to use the regmap API for register
+> access. This change simplifies and standardizes register interactions,
+> reducing code duplication and improving maintainability.
 > 
-> Add regulators property to enable the use of the VCM output,
-> referenced here as vcm-output, by any other device.
+> Create two regmap configurations, one for 8-bit register values and
+> other for 24-bit register values.
 > 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Since we are using regmap now, define the remaining registers from 0x32
+> to 0x34.
+> 
 > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
 > ---
-> v4 Changes:
-> * replace "vcm_output" property name for "vcm-output". 
-> 
-> v3 Changes:
-> * VCM is now provided as a regulator within the device, instead of a 
->   custom property.
-> 
-> v2 Changes:
-> * New patch in v2.
-> ---
->  .../bindings/iio/adc/adi,ad7768-1.yaml        | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-> index e2f9782b5fc8..12358ea9138a 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-> @@ -59,6 +59,19 @@ properties:
->        in any way, for example if the filter decimation rate changes.
->        As the line is active low, it should be marked GPIO_ACTIVE_LOW.
+
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+
+> +static const struct regmap_range ad7768_regmap_rd_ranges[] = {
+> +	regmap_reg_range(AD7768_REG_CHIP_TYPE, AD7768_REG_DIG_DIAG_ENABLE),
+
+Technically, there are a few holes in here where registers are not defined
+so we could split this up in to a few ranges to only include registers that
+actually contain a useful value.
+
+> +	regmap_reg_range(AD7768_REG_MASTER_STATUS, AD7768_REG_COEFF_CONTROL),
+> +	regmap_reg_range(AD7768_REG_ACCESS_KEY, AD7768_REG_ACCESS_KEY),
+> +};
 >  
-> +  regulators:
-> +    type: object
-> +    description:
-> +      list of regulators provided by this controller.
-> +
-> +    properties:
-> +      vcm-output:
-> +        $ref: /schemas/regulator/regulator.yaml#
-> +        type: object
-> +        unevaluatedProperties: false
-> +
-> +    additionalProperties: false
-> +
->    reset-gpios:
->      maxItems: 1
->  
-> @@ -152,6 +165,14 @@ examples:
->                  reg = <0>;
->                  label = "channel_0";
->              };
-> +
-> +            regulators {
-> +              vcm_reg: vcm-output {
-> +                regulator-name = "ad7768-1-vcm";
-> +                regulator-min-microvolt = <900000>;
-> +                regulator-max-microvolt = <2500000>;
-
-Why do we have the min and max properties? Aren't these always
-going to be the same for all chips? It seems unnecessary to
-have to write that in the devicetree.
-
-> +              };
-> +            };
->          };
->      };
->  ...
-
 
