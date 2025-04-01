@@ -1,177 +1,220 @@
-Return-Path: <linux-gpio+bounces-18157-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18158-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D10DAA77FC5
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 18:03:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11F29A7804A
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 18:26:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D60B3AD3D1
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 16:00:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0E0816EC13
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 16:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A0B207E17;
-	Tue,  1 Apr 2025 16:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFC24219315;
+	Tue,  1 Apr 2025 16:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxRDrn/Q"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ox2cgNtr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD82F59B71;
-	Tue,  1 Apr 2025 16:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12401EF388
+	for <linux-gpio@vger.kernel.org>; Tue,  1 Apr 2025 16:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743523227; cv=none; b=GsUuwUMrcFNNHs+6xX9+TiFnY0kaveJzFXBWjPNmvXcu+6kWmSkVL0nqbwreoiMcp+a+jRN2uCsBcUFicAGSr47KAtrB+YV9ZgDYEOyZ4yZbhwkf8p2akr9AZg+0IK0ygjazwGAKj4StqE4Z7ybrNGhLo5rzY1U4pfiX1I1ehyA=
+	t=1743524127; cv=none; b=WmSzf4t3/dVNypAK0DJjEUs7Q02iXL88hXTp4UPrFVplQORl85MVkvhh8TYDdpr81dqJXpdggMHCoVUogmmv0Sr2ylHaJcR3K39SlOfmSIFo7PO2pvjOyANiba2AV7ElbFYhfjeyGguCmI4cNAFSGC3+6L5bfTJd7eTw/DHzTrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743523227; c=relaxed/simple;
-	bh=lzXvjhNF+5uNT5xjvOP/ET44+QdV0rVIa5hvDb0wIVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LlWNAco109P85cGWI11eH37nB2gDr42rGoFLTT2U3c8S6Zirf9zWBa9zNS2jD/aWv+jlLeOttdcF+6DFuE8TS60bg+fdMaVAP2Oj3lg504MhwNkwBm2N6XhhdNNC6MckrnlQNvyJ2dE0ZnoCLiEbPX6EMpf+d8KL9boEK5WOVFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxRDrn/Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE326C4CEE4;
-	Tue,  1 Apr 2025 16:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743523227;
-	bh=lzXvjhNF+5uNT5xjvOP/ET44+QdV0rVIa5hvDb0wIVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BxRDrn/Q8Kaph31oYCfXPN6BlF3YCUn+rWWyuIaTRlMwZdKF77jkEId/5eBqdzxAU
-	 11Qf+jtAyzT1ETEMcrDmeQPFzu+/FgZEFRJdKzjLza3d4TdLnhHvUCRczaZ94nxKaG
-	 gjM4nJkOz9Bd+BvQvWsTgHlY9+oLcwTbVk7SdcONzU6qlHVmoYfea4/snA+M9pRrBn
-	 XxcLPuvAo5EkVDnxEjzeSm927iPWO1rnyfwP6zkI+nC7C1ZOteMV64goLaKRcmdvth
-	 9Bnt/byJtc72AOdVvCTG3ukJyEiNOaDaWasRWNKZjXU0Vv8pWKJaaWtWUD5n8QUBjs
-	 3RXF9kqoVXXwQ==
-Date: Tue, 1 Apr 2025 17:00:23 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
- workarounds for regulators
-Message-ID: <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
- <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk>
- <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+	s=arc-20240116; t=1743524127; c=relaxed/simple;
+	bh=MCDRrc6gITw7ILHOzJNTmL2BGOeoJlccEAeGN1hnyDY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XYZkVZ16gNI1JCqRoqxD2dFp1cF4r55mqhVOwc1tzSy5G2PWBNFwJbYoQMGKOH9PPyKLAJAFg+7iuNihdV01e7PrUrUzIdjEK+Giv+esv93YRV0R18PRUfuTKWy7JJhzeSgwZw0DdfP1StXfEAkCfBr34xThoLjCwNI50lzIZYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ox2cgNtr; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7272f9b4132so4171664a34.0
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Apr 2025 09:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743524124; x=1744128924; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KV6A6SkFyjP45lT34VumuzTtupTmw14mZAo1pKWFBns=;
+        b=Ox2cgNtrnIxNz8aG0aUMSR2rosHJfCY+GQRSrNdUVCK6mGUQ3XxVu878TmVFCE5+jR
+         EUe9x2BdE+QnpP+rMy1/D0VSOy32zu7KOHDXRnw3hvogEiiaBLIxici2yC1eV12j+LtR
+         saUsDBFjalGxEbzSzgdvjv9JQKWMYSxe6/j83Jld7scNrZJpHjLMcG2MK1v//VQ33F4o
+         1mtSlwX6s/4fGOhhQ99QiR5HaVF+umven+BKDy0nIzOEr7oJhv5hW64vYYDHftUqFJ1b
+         WnZX7m1kxcuZl9o0WB6Ri0OyF78rC1VJsb/MnA3Y/gPtufXeykZSqLNtOTLGZa8D7MXB
+         Jfbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743524124; x=1744128924;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KV6A6SkFyjP45lT34VumuzTtupTmw14mZAo1pKWFBns=;
+        b=F5GtR0lL4Ww/88QYD/Y6Lt7J8CJeUDM7WwYYW35kDYP2+vtjTSkDk5LafzgOFqhzMC
+         2DqeDhO7jTG5McN/PgWvDhvUPCxaitvS3WChCK3wpINrzwPoX1sAMCGsNJCSnVHve27g
+         JmQMVd3x4XWAObiXORb/dLcuFuQ/yp3bmBy/XZfd8WdI0J2KNyI4bQgKOGrMw9TnnOAI
+         qfvT5AetO2QER+DnhEQ/82tEaamuyIiXM09ofBmXra4YkeUQEntnvBnHrg/TE5PylNn6
+         G7pob3V+pfgbE9shEHWO83nVGraM1p7QYhKKULsFfBgE9M9QdNADFrYFPzWvC3OSGZXb
+         wAWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJxHQGpmcsylWl2FpewDZKr4T+YpuuoHGBFHyygY3BY7QgSx2OP9Ou52hwnq9F9enTjJqaVOXqXbwc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzi6FSkQMnMpJfJJGc89Z9Bya+7vH0VPpMqASeaFjvW+ay1AHMd
+	8fGNxIXldJa6nShYELluGXndnN2Qswaz4ii6fw0OCtomIO0xcXN/o7ofV2AW+20=
+X-Gm-Gg: ASbGncuXE7EjM5P6BFZpENCGnT+V1G9I2vMvz80kVFTxMjrrMDbS9W8VITjEdfX8ueW
+	Em+YVAYgPoRVS96Avio4X7Ytm0lpN+mLSCZCiYOTHQdWnCNbc5mWIqXjxa1SgsXEEXcVcVN6BTP
+	3X+qGFRuKNZjcwWAbvweSEvqlq9J14sCPScm+VZnLPsW+cs63nGrsH364z1IG7hCqiTD7NWIAuG
+	RJ3EgkmuT5PUG7XT9vCL4lE8fT0SgK7WRTGZIzKv7IiERFJt05b8PZZu1BUB6iUGewwi9523g/Y
+	0QA0qFrpcr7J1WzMLrU3N6jfm67/tI5Jv+1iGrXeG/5TV9lhcJTiXWZm7Mhrg1PabQOyttviUf/
+	ZvYCEcw==
+X-Google-Smtp-Source: AGHT+IHkFB1qErKdOP/R3+n0pyHcdkpWGJYkUI8OIJLr5yCsfzswBCRj23kPPNNelf6fm+HG+W8KGA==
+X-Received: by 2002:a05:6830:3152:b0:729:ff76:5166 with SMTP id 46e09a7af769-72c637c450dmr8141400a34.14.1743524123806;
+        Tue, 01 Apr 2025 09:15:23 -0700 (PDT)
+Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72c58092589sm1914991a34.2.2025.04.01.09.15.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 09:15:22 -0700 (PDT)
+Message-ID: <e609fff8-9fc8-425a-8362-9205c17ffc4d@baylibre.com>
+Date: Tue, 1 Apr 2025 11:15:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="A+b6PC0Mfhf4pWwa"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
-X-Cookie: 15% gratuity added for parties over 8.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/17] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+ brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
+ marcelo.schmitt1@gmail.com, jonath4nns@gmail.com
+References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+ <4136b5259df75221fc314bcd4a57ecaeeab41a45.1741268122.git.Jonathan.Santos@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <4136b5259df75221fc314bcd4a57ecaeeab41a45.1741268122.git.Jonathan.Santos@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 3/6/25 3:00 PM, Jonathan Santos wrote:
+> In addition to GPIO synchronization, The AD7768-1 also supports
+> synchronization over SPI, which use is recommended when the GPIO
+> cannot provide a pulse synchronous with the base MCLK signal. It
+> consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+> a command via SPI to trigger the synchronization.
+> 
+> Add a new trigger-sources property to enable synchronization over SPI
+> and future multiple devices support. This property references the
+> main device (or trigger provider) responsible for generating the
+> SYNC_OUT pulse to drive the SYNC_IN of device.
+> 
+> While at it, add description to the interrupts property.
+> 
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
+> v4 Changes:
+> * none
+> 
+> v3 Changes:
+> * Fixed dt-bindings errors.
+> * Trigger-source is set as an alternative to sync-in-gpios, so we
+>   don't break the previous ABI.
+> * increased maxItems from trigger-sources to 2.
+> 
+> v2 Changes:
+> * Patch added as replacement for adi,sync-in-spi patch.
+> * addressed the request for a description to interrupts property.
+> ---
+>  .../bindings/iio/adc/adi,ad7768-1.yaml        | 28 +++++++++++++++++--
+>  1 file changed, 25 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> index 3ce59d4d065f..4bcc9e20fab9 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> @@ -26,7 +26,19 @@ properties:
+>    clock-names:
+>      const: mclk
+>  
+> +  trigger-sources:
+> +    description:
+> +      Specifies the device responsible for driving the synchronization pin,
+> +      as an alternative to adi,sync-in-gpios. If the own device node is
+> +      referenced, The synchronization over SPI is enabled and the SYNC_OUT
+> +      output will drive the SYNC_IN pin.
+> +    maxItems: 2
 
---A+b6PC0Mfhf4pWwa
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This says maxItems: 2 but the description only describes one, namely /SYNC_IN.
+IIRC, the 2nd one is for the optional /START input.
 
-On Tue, Apr 01, 2025 at 04:42:40PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Apr 1, 2025 at 3:27=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
-> > On Tue, Apr 01, 2025 at 02:46:41PM +0200, Bartosz Golaszewski wrote:
+> +
+>    interrupts:
+> +    description:
+> +      Specifies the interrupt line associated with the ADC. This refers
+> +      to the DRDY (Data Ready) pin, which signals when conversion results are
+> +      available.
+>      maxItems: 1
+>  
+>    '#address-cells':
+> @@ -57,6 +69,9 @@ properties:
+>    "#io-channel-cells":
+>      const: 1
+>  
+> +  "#trigger-source-cells":
+> +    const: 0
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -65,7 +80,6 @@ required:
+>    - vref-supply
+>    - spi-cpol
+>    - spi-cpha
+> -  - adi,sync-in-gpios
+>  
+>  patternProperties:
+>    "^channel@([0-9]|1[0-5])$":
+> @@ -89,6 +103,13 @@ patternProperties:
+>  allOf:
+>    - $ref: /schemas/spi/spi-peripheral-props.yaml#
+>  
+> +  - oneOf:
+> +      - required:
+> +          - trigger-sources
+> +          - "#trigger-source-cells"
+> +      - required:
+> +          - adi,sync-in-gpios
+> +
+>  unevaluatedProperties: false
+>  
+>  examples:
+> @@ -99,7 +120,7 @@ examples:
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+>  
+> -        adc@0 {
+> +        adc0: adc@0 {
+>              compatible = "adi,ad7768-1";
+>              reg = <0>;
+>              spi-max-frequency = <2000000>;
+> @@ -108,7 +129,8 @@ examples:
+>              vref-supply = <&adc_vref>;
+>              interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+>              interrupt-parent = <&gpio>;
+> -            adi,sync-in-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
+> +            trigger-sources = <&adc0 0>;
 
-> > > Let's deprecate both symbols officially, add them to the MAINTAINERS
-> > > keywords so that it pops up on our radars when used again, add a task=
- to
-> > > track it and I plan to use the power sequencing subsystem to handle t=
-he
-> > > cases where non-exclusive access to GPIOs is required.
+# cells is 0 but this has one cell specified. So one or the other is incorrect.
+Since there are other outputs that could be used as triggers, e.g. /DRDY could
+be used as a SPI offload trigger, having 1 cell seems prudent.
 
-> > What exactly is the plan here?  The regulator (and reset) usage seems
-> > like a reasonable one TBH - the real problem is having an API from the
-> > GPIO subsystem to discover sharing, at the minute you can't resolve a
-> > binding enough to find out if there's sharing without actually
-> > requesting the GPIO.
+> +            #trigger-source-cells = <0>;
+>              reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+>              clocks = <&ad7768_mclk>;
+>              clock-names = "mclk";
 
-> Hard disagree on the reasonable usage. Let's consider the following:
-
-> You have two users and one goes gpiod_set_value(desc, 0), the other:
-> gpiod_set_value(desc, 1). Who is right? Depending on the timing the
-> resulting value may be either.
-
-That's why we need to figure out if there's sharing - the usage here is
-that we have some number of regulators all of which share the same GPIO
-and we want to know that this is the case, provide our own reference
-counting and use that to decide when to both update the GPIO and do the
-additional stuff like delays that are required.  When the API was number
-based we could look up the GPIO numbers for each regulator, compare them
-with other GPIOs we've already got to identify sharing and then request
-only once.
-
-> For it to make sense, you'd have to add new interfaces:
-> gpiod_enable(desc) and gpiod_disable(), that would keep track of the
-> enable count. However you can't remove the hundreds of existing users
-> of gpiod_set_value() so the problem doesn't go away. But even if you
-> did introduce these new routines, what about
-> gpiod_direction_input/output()? My point is: the GPIO consumer API is
-> designed with exclusive usage in mind and it makes no sense to try to
-> ram shared GPIOs into the GPIO core.
-
-That's exactly what the regulator code was doing, as far as the GPIO API
-saw there was only ever one user at once.  Since we can't look up
-numbers any more what we now do is use non-exclusive requests and check
-to see if we already have the GPIO descriptor, if we do then we group
-together like we were doing based on the GPIO numbers.  The multiple
-gets are just there because that's how the gpiod API tells us if we've
-got two references to the same underlying GPIO, only one thing ever
-actually configures the GPIO.
-
-> 1. Audit all users of GPIOD_FLAGS_BIT_NONEXCLUSIVE
-
-> Outside of drivers/regulator/ it seems that there are several users
-> who don't really needs this (especially under sound/) and where using
-> this flag is just a result of a copy-paste.
-
-The sound use cases are roughly the same one - there's a bunch of audio
-designs where we've got shared reset lines, they're not actually doing
-the reference counting since the use cases mean that practically
-speaking all the users will make the same change at the same time (or at
-least never have actively conflicting needs) so practically it all ends
-up working fine.  IIRC the long term plan was to move over to the reset
-API to clean this up rather than redoing the reference counting, if
-we're doing this properly we do want to get the thing the regulator API
-has where we know and can control when an actual transition happens.
-
-> 3. Use pwrseq where drivers really need non-exclusive GPIOs.
-
-> The power sequencing subsystem seems like a good candidate to fix the
-> issue. I imagine a faux_bus pwrseq driver that would plug into the
-> right places and provide pwrseq handles which the affected drivers
-> could either call directly via the pwrseq_get(), pwrseq_power_on/off()
-> interfaces, or we could have this pwrseq provider register as a GPIO
-> chip through which the gpiod_ calls from these consumers would go and
-> the sharing mediated by pwrseq.
-
-This seems complicated, and I'm not sure that obscuring the concrete
-thing we're dealing with isn't going to store up surprises for
-ourselves.
-
-It's also not clear to me that pwrseq doesn't just have the same problem
-with trying to figure out if two GPIO properties are actually pointing
-to the same underlying GPIO that everything else does?  It seems like
-the base issue you've got here is that we can't figure out if we've got
-two things referencing the same GPIO without fully requesting it.
-
---A+b6PC0Mfhf4pWwa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfsDZYACgkQJNaLcl1U
-h9Bqjgf/RTmzdMDrGAN+FvUOHg34iBCjtDkd4r7H06CU6PebbIW6rBmNdnK9nAKV
-Msl7D6435UhRJlDdAWgGQ1ldGMeubfVwNqZ44EECz6013F2vHCkID+JWUFSYI0G1
-W/6S9zAuZZ80Eft8YyWayH3/dEItAKKu1dxbGoMGX8xX+0Xny2K8WnCKIkB4D7dB
-j4orisgnkMV2k2BnwQimO5j3xmFe54WtHy6H1EXuPpoxvY/SbC47m8UM8nbWnsUE
-0VCy9JJ+eNe/fJSETzpu73Y4KJHqEwZACDfRa+MMYdIEED5ruyzM731r7u/ex6I/
-iYmcrZ/BIFiMH+q1uOWs1tGHgs3hnw==
-=trmI
------END PGP SIGNATURE-----
-
---A+b6PC0Mfhf4pWwa--
 
