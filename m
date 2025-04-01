@@ -1,214 +1,212 @@
-Return-Path: <linux-gpio+bounces-18140-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18141-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D767FA7752B
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 09:26:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B784FA77708
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 10:58:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17EA13A568F
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 07:25:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CED493AAE26
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Apr 2025 08:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0BBB1E5B6F;
-	Tue,  1 Apr 2025 07:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 966EA1EE001;
+	Tue,  1 Apr 2025 08:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="R6ySs/FV"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zVos/QVm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011016.outbound.protection.outlook.com [52.101.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25DA1E2606;
-	Tue,  1 Apr 2025 07:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743492360; cv=fail; b=Tjkq/9LqHhmxZDcO3u+67JG4hpa29Jb89dDVhlC8dhU4IyFfMDWkPMUSLMGTpem8WaOy/6Wd1ekZDeEyj4Kr07pWkBRmUN99UkpASn57PRcCuM0GUXUDTx7vl6tm/jqHjmA9s0asr6ltRSqer9TaFYJ1g21m8XGugxfmlMQEj7s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743492360; c=relaxed/simple;
-	bh=OMHTISnLT5fkqT+c4fLHkpfjAad2bZsI87R5cbtW1FM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=GKG8qGcSfFpOah5Z4F+u+Xtqr9SmylmMt7qSLVYj9XQh0ttSQWJkCBjTyiDKJRbGInBA4jnzkz0EObfH2OfmLE2M6O3TshrrFhlQ/eOcXRusmIZLrpVwfuMdbW6DqSfMIf38bj3CjWfEIiUQxRS2cye5WAwPagu/jeZcHhqhhNI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=R6ySs/FV; arc=fail smtp.client-ip=52.101.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ju8CCZPlILWf1dCQjMroNGtMvoab++MfM0tMRTJM5U0Ab8RzTN2vFpdPrPE4HdgKkkDNmCm7LdaH23pqyfogt52QYEFkJPZad1Qb+qz72FW50g+2v8ER3nYzRR+0SVLn6Ng/aa6v9UIwMlEE5JP3oXeKe15LAFgepzUo7rCT/+VhdsMlQNYCdRTLIchBNM4u3lGH19KP3i2TD2N09eGxIiacqYjiNiyXiL4cQx8X7BDtakAzEtkAf2Nw5B+w5IZ7xVXr6iJiSKd/6hj4HWcUfwc09Rx8xkW+iwzcBcdwIRuURJsuZYCqNDRBeD5ZbwDFzpq3aC+St9ZUaeOjZSkZhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o/RWBxXdJN1vknmo3Kkyl/3QyB/UHIAIM1uC6oUszog=;
- b=TDh6oLc45lhykQeGSPCIKu01L1nkCC8cQOI06+ZxHCTux5YRK2xN7pbvCfYKUgP7E5KdM9GtOKz+hP0kqohy+E9mIzea197izxk751cBUO6FkDD0bamd6Hk6Rfq1K/Nm+0l8qHwH5gTVU1salYe3kqUImE4KFdCLbLkjkN2N9ktxjCob4lXaUEOEwknvvXUn5tpgonYChOku81GYW2ex9z/nYeIWCePC5/PtxjbaF8clH+PJcWo6FfmYeNAv+qdiB02yrTxnDSH2LVwvXaPp/K+61lipqT3AoN6wGUHB9pkX7XmrP5/Kwt71jLEXh90YXy/m/yVEF1rbpHg2ReoS3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o/RWBxXdJN1vknmo3Kkyl/3QyB/UHIAIM1uC6oUszog=;
- b=R6ySs/FVSwYnXzaMUQIVow3bByNxSMTIiFtq5bc8prVMTP3e9Xd0Zqe7snJGygWkYtrOqqoRI8VkshllI8ymvkFvFHIrnjHZUcci+8FWny708Pq2bCl9OS58KQvTXV4u/0ZQyLtWrN+qxmaYbymRPnhCehOUXUNc0LekZsI71X03F3etpE6jIIcvNCHTbpemOFsJEGTmyx/cVQC20wjAGjheN4KYkG4NPAKlE93YpiOs2HOvKCBl6syHw+z8G/g9DjiYFZKWnXspHLztvhoVtkjSxJdFyA3X61j+PMnjoLVHCDFM30TzO4yfw5MTL29gC7xWcumx9hUxjNoJZi8q+g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8642.eurprd04.prod.outlook.com (2603:10a6:20b:429::24)
- by GVXPR04MB9735.eurprd04.prod.outlook.com (2603:10a6:150:118::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Tue, 1 Apr
- 2025 07:25:55 +0000
-Received: from AS8PR04MB8642.eurprd04.prod.outlook.com
- ([fe80::50d3:c32a:2a83:34bb]) by AS8PR04MB8642.eurprd04.prod.outlook.com
- ([fe80::50d3:c32a:2a83:34bb%7]) with mapi id 15.20.8534.045; Tue, 1 Apr 2025
- 07:25:55 +0000
-From: Jacky Bai <ping.bai@nxp.com>
-To: sudeep.holla@arm.com,
-	linus.walleij@linaro.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	cristian.marussi@arm.com
-Cc: aisheng.dong@nxp.com,
-	festevam@gmail.com,
-	kernel@pengutronix.de,
-	linux-gpio@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org
-Subject: [PATCH RFC] pinctrl: freescale: Add support for imx943 pinctrl
-Date: Tue,  1 Apr 2025 15:27:25 +0800
-Message-Id: <20250401072725.1141083-1-ping.bai@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0004.apcprd04.prod.outlook.com
- (2603:1096:4:197::22) To AS8PR04MB8642.eurprd04.prod.outlook.com
- (2603:10a6:20b:429::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA091EBA0D
+	for <linux-gpio@vger.kernel.org>; Tue,  1 Apr 2025 08:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743497874; cv=none; b=ajy5rCkMzp5D0EG+vGGuLk8oyUMAkZvTCCF12O3n8FYs33YJetKuBuHtxjjhzQ3gAMjxd+CUYvSBqfSM+/1hWVwIL8fHH4ivutyUwA8ublWnuL07kzXVtwPdtodmJcU9dpmABeQ1PWRRxWeRv/VKkKBj+e7ZiLdvJK0J7L8Th2w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743497874; c=relaxed/simple;
+	bh=moSrvCxTIsu/1H4kAJprDurFwFaqiLT+mpfF+2Nc9m8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sbvIRCVYPeWTkYlkMBW0eEKoxbTyX03w1M6nc8It8FUpr7YrtxHMOUBDBN/e8ww1YxbvIo/9HQqdXEMCrKxADud4JQnsIgp1HEwSJGtfdSr4H/xqGzGpYP141AIqx1I84SNPbIqIFhZ+grDWk5tJzhvw6AK5S6x70M6z9APC0S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zVos/QVm; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5499c5d9691so5611872e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Apr 2025 01:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743497870; x=1744102670; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=moSrvCxTIsu/1H4kAJprDurFwFaqiLT+mpfF+2Nc9m8=;
+        b=zVos/QVmf7NUTuIZNhrnYHACVlfD3R5S5BnEOccjBhEZmJfpxVOegpsJ8ghVGQ91n3
+         qlGF7qCTyBNNmQKAPu+t9AhbFWxOPSAhXjIDplm0RhsCrSXhodXVNMhpX0xlzdiD6eQN
+         +g14tZ+K6ILOOu+JnCAZM8bog3iajgKUAUAenL9pQ4XSJtxOQkT2t3MHi5rquMLc5a5Q
+         jJWcNiMy8lkYr5gt2kUDKOj2GhjqUAh0IyeMxeAWNxIbcNgIGa7iLrdMAx9xiYLEHzIk
+         0b7cCerLUGdWHjuGYmnifDbtTMroGrMdGv5gg/dh8Uc+bMWbl3sKgT45MBc6FNfOPPxE
+         jycQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743497870; x=1744102670;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=moSrvCxTIsu/1H4kAJprDurFwFaqiLT+mpfF+2Nc9m8=;
+        b=qitNVBvXzj5i6dPcn8HtNqx3UaUgk+RUprWiNnsRPBtaxmgdyKIgmaSvS0QsCWvJ/Z
+         AvTzuRGl278vP2UBhU8onL5/CsVpakg+XYmLiRQLlihXZGhJrslQAbLnPQAfzX6c2Sal
+         C8L2JBmlh8qM2q9s/SKsRXZZMX9PbGAS7LFD2BnzY/yVRPCO1g+STxIuuWmkjHrx0kE9
+         1enAGpsI/4/bgUDNElqIWOlz2nvrceLK0G1UphZfRvMOsG5w1h9wvWwHZnr7ePvAqOe3
+         g7vWFKyDu4ko58q6y2wjoqmLLXn7GIo9o6lCtOOSEM7K+w83OeBbh36nBpjkawO6UPb1
+         3gwA==
+X-Gm-Message-State: AOJu0Yx1FhfqrzeRCN1uV59MczO4rvsScwk2YGfd3Q5nsh/7J0TP3uVu
+	uL2v0ySYPHDGCBFeZ8T8doDIchH8xq/qTzHyUO/FW+vtfJU2dxQO5ZCLj0W/OFdmuyzvu/01MVo
+	8uZ9DBz2yjsy3vMuhEiW2xcH6MqX+GXenUd/fBw==
+X-Gm-Gg: ASbGncvyqOPrDMuj/VyDDKtW2OJX3cfmHoHeplDHfdtSbDgC4XcPwZthE+Mf8TeBWSK
+	fKiTK0eC7CqnqaKUdFOZ3e/Wb/akr459so4l2d8AYbepX7PDlwfvuB0enFd9MiZJD9SQ9mW25Gy
+	mPM682DonAhly9eVBNIN9DnEALO2wmEHEpU0/90ilnh9dr8zh9nMJWdE2s
+X-Google-Smtp-Source: AGHT+IHVNE4vFyWCtv3mtcDXTW/DYArpMM5S90tEQJgnM/ljbfBvnuRVpFWic4vIzaVU1d1vfWv1Xl3Q3KQvEjtMUlM=
+X-Received: by 2002:a05:6512:2508:b0:54b:102b:af56 with SMTP id
+ 2adb3069b0e04-54b10d93684mr4424889e87.4.1743497870091; Tue, 01 Apr 2025
+ 01:57:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8642:EE_|GVXPR04MB9735:EE_
-X-MS-Office365-Filtering-Correlation-Id: e1792f10-d1f6-42a6-a7e0-08dd70ee70f0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|52116014|7416014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tOMC6fmSZ9w4p5DpjF3RtEqk6As01JUxcB6m+l/Y4O0Dr8o9maR+2FQW0kuZ?=
- =?us-ascii?Q?dkaZu2+yGxVLNRR6SqVH2iz9csc8hPiynGaTRmnCQogWDhqQRlgZddrnhmoA?=
- =?us-ascii?Q?W6bgd9S+7V9wQCCpH9IhWCwnDxRM+JOfKW9euYWpmW2yF8PX2tT0mgjKuz6O?=
- =?us-ascii?Q?eXXC9iV56ErdtI49nsdpXKx+9mv7zDOaXCZTeAzG+N1cKZHM/ipYC8/YsRq+?=
- =?us-ascii?Q?S0yIZbQc2rBrjQgunzwIft7n8Wn9BPaR2UZ28pz3TFs8Ru8zBtEa9HgQ4Zi3?=
- =?us-ascii?Q?YasrzHrSmUOET522OvlG+JM+25OTv9F2dEr/VOyBv5a/y2T7SRQAlE84u8yV?=
- =?us-ascii?Q?3OZm2N/dO+WJniP9weN+doeW5Ks7MDK3tos4D4Po+xdcS+4m/5m3WS2HfLvn?=
- =?us-ascii?Q?XVIA3AT9ymSSxOKMau770yLOmd9EfCKMNF1LxzI6dmE0NZ39F0oBiyVbSZdQ?=
- =?us-ascii?Q?h2tx3Cv9xMJwm1b556LtW3XiY+uBhNVzhiYhXlbQApvUK7EaeYM6mejWAjcV?=
- =?us-ascii?Q?RKqxPTJWt+G4lAJmCZMvxVBzXuXkQDZbSR5jqPaxqN9f2fzHTdevvc2qgl40?=
- =?us-ascii?Q?sQTIdjRSMKkk0cFAhELWDjCl/fHbPGos8h3+2QTpsWnqJxGmjDR5lUl4pXea?=
- =?us-ascii?Q?HLhLJi9j88JdcjxmylP/ZPAfDfxCayNGupZgtX2LVU3lpKZ2gIpuCBUMM0F+?=
- =?us-ascii?Q?HSRPilB6OI/En6b26vbTCgH2JlK/fWOakclsEXYXwCtyqq4/sZjCBHZ+R6bS?=
- =?us-ascii?Q?i+X1yprjZPeX1pkuFD75YSh5MsDGHItCsDmfSoyGQqnPZSlY6LJpqn4XLnha?=
- =?us-ascii?Q?gmAys6wC1XcKHslSaG3kunzRr9vlSwS0Y19uuUGJSY5bqsohwmHwefG4BhVW?=
- =?us-ascii?Q?JLxm2FhQRgB1uOp2g9taH2vWWBBY1w2NG8t8pfgKpfDHcZeY4PiWywFeX2Md?=
- =?us-ascii?Q?WCLbTIy58Yn7IWVyyev5kfsJI2CLwNN/kQ747oCqiNFMCxvrekQL/9b47H6S?=
- =?us-ascii?Q?YBHE5AlBmOlEbMO+DRoYTbpOVr3kjX6iPtey8a2QZutIS+u6FnbwZVYlhIqk?=
- =?us-ascii?Q?5qhgA7Z3grOA4/Fyr0GZ7x7rL8zAYAI0MzPGNtLELo+npcgSMgl8IkcgqA83?=
- =?us-ascii?Q?6wvdu14FdWuWOByDB83PVBdKR5MfPjZxS7liiilttlKYyRFAuoPW7jVe5sSw?=
- =?us-ascii?Q?oXu+X02/mkN4F6m1deTJOc5nJp6J1+6x6Urm8E53HFGxYaTsEuBPD4AkWFIU?=
- =?us-ascii?Q?6/XJFLuIAbhNNdaV6jJGeDwb0fzbNa2rzUldI8RSblHopzNnKi+P4kuSlY27?=
- =?us-ascii?Q?QmT4a1Yp2FpKGmIu/D2tGwsMGTtAXfyArNcW3FR5mvEDekKfqsJ4QAL9dbhc?=
- =?us-ascii?Q?YLGFF40+p2V3/WKhzFfUpiC7dSJyan5dE7X6fF4SHz1mX+q9pgjTq0/qs6Vb?=
- =?us-ascii?Q?s2vytiVgrkNyQkHcdJLwxwzq6VZQIMYg?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(52116014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8bR8kZi4es6ipySaaVQoub8lGCbXhqQuq+z9AigqLk54Gzm1or1D5lNJ6nCk?=
- =?us-ascii?Q?NSr5svvVcDvdOyan3kR684V8OUqwzqiVkb3ZNFfzNhtaaAJTnu8gyrlotwm6?=
- =?us-ascii?Q?9vYeUAH4pBOagd/DgyMGO4lsyCrGzPb1oaVxYnq/6zgkLjdA6fK5gQOvoF5r?=
- =?us-ascii?Q?q3azADSC860gy+tXHGZ9wQREYtgERvyDEaQeXs4W6XxJVQh5a16oytXd0nlr?=
- =?us-ascii?Q?40Ccl518Qlwi77lndRPMRwg0xlGgxZfcxd/VD+aykl5ieLO3OTMLECGYPoxv?=
- =?us-ascii?Q?TDUCHsvr4+ExUOCa5uBh0RX3n66PlkFbW4OFflRWVmCysGWL8EPRWVSDXoMI?=
- =?us-ascii?Q?bMGRUGDUMnLowRmOO7Wv3EUeVh+a9vgV2TYW5mW/awT9SSLW4FgAG6yIxSCg?=
- =?us-ascii?Q?39tGeeB1q27ofmu3CwlOOaoRZfbS01u0UyC/0idi3MhD652nMJ5DTxniMDTo?=
- =?us-ascii?Q?YpLxgHOtd1ALxRUmoCgFm5LX+qZjAqUumSU7+FVPQJXigDoCTHcmNmFKWVGW?=
- =?us-ascii?Q?Js3N3OyXawlsA4mCO31ax9pTDy9t0W4RH9HOm97bl9nRZDASWIxgdz18VbmD?=
- =?us-ascii?Q?x1+9hP7VaABxGENHbsxLOcpOKo5x5s0saHPaquYV34mdv4IfFNfy+vRG9LEV?=
- =?us-ascii?Q?Pqm3foiq+smoQz80/JNJdS9so4166anHz7arbARPTWcPPVN3e1Pkve2d6aOH?=
- =?us-ascii?Q?c461ahEPiVl+gt9SuggAlCP6v8+DG5SgU/7nCslVUAK91FbpU6KPBLIKaFt/?=
- =?us-ascii?Q?KIOhQzWUu/eez1wEs7CGi7Mr2bVBacgEY10zM+a/FPkAUvlpFHv6MywU8Llk?=
- =?us-ascii?Q?p7D7r/t9eiGlmJg2uTE3EkeezGxhYDF6hwoOo305uw/xx6R72nIWeVXEZdtM?=
- =?us-ascii?Q?9XwWAMvecI250A4TY8cAfCjnjfTHCu6ayN24nbtOmxTHg7/1UWzBo7tYo6h/?=
- =?us-ascii?Q?Af0OFXrDniLW476dhT2MLYZiS4cVQRVNFii6bY8O7g10yU1lIa3Utx6CYCWu?=
- =?us-ascii?Q?V5qUY8h/l//K6SraNyaG1P7m0B8f2VHwxZtdgevXt0CBHS098irC+62WoM2k?=
- =?us-ascii?Q?dNxf9QO8Tot0YqjRnWS8mjfqQ8Q/alfE8cTd1mIIjZ6J+79P+uVciHDbtZiF?=
- =?us-ascii?Q?cu223U6vyBSh55QnFJwfsznaw6ksdsF3BG/bW3JD5u4tWFHLbYY48Y1Ui891?=
- =?us-ascii?Q?yNGfe3c9pxSXO3oo1+m0N2GKnq/D6f3OSga2mnW+AvA2FUhknM3q1PSEQODh?=
- =?us-ascii?Q?Dfl+VrJZpwjDPoqQoybe32ozXD/AJz+BOBWvz33AP+Sav2arnV2L7E8YL2xc?=
- =?us-ascii?Q?efHT4EC6lWwEW5Jyh/E68XDVjGw/VPNuJDt8TcK9IhBKYjP/Ctigd+cVaVyC?=
- =?us-ascii?Q?sT4lY/FCVhpcl5Rn9e2XDhm2sf9X8B1Gxlkm0CtpUuL2F1Al0qbwz0P6igOV?=
- =?us-ascii?Q?7xaWqbnQz3RyWR43z4Be8kPwCCgdyE1mwGkPVTvP5L1dH9r/cMWVbIS/Nkyx?=
- =?us-ascii?Q?UPX4btx1dmkf4nidsYZ/zMUeAMIuh8PEyhrmDiQa8rXTttBXDR5QlYW0sKSY?=
- =?us-ascii?Q?G+CbVRnsepGfrZuF/PjMJ57VMRGyFh0TvsjQ+7sV?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1792f10-d1f6-42a6-a7e0-08dd70ee70f0
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 07:25:55.8128
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: feHp+n76KglqEaPbjGp4xLu6qI1rcxWqi5004Sq7olMPsJV7/bG1ihD+qr001GngK/5RaJF69ZzV6FK6KHGIbw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9735
+References: <20250331-gpio-todo-remove-nonexclusive-v1-0-25f72675f304@linaro.org>
+ <20250331-gpio-todo-remove-nonexclusive-v1-3-25f72675f304@linaro.org> <CACRpkdYMRnmYD1YRavZs7MHEVFM42bOL2=6s4rJzFDnfLJ4fAQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYMRnmYD1YRavZs7MHEVFM42bOL2=6s4rJzFDnfLJ4fAQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 1 Apr 2025 10:57:39 +0200
+X-Gm-Features: AQ5f1JoeyDHZT3nRgIi26c7fEQx15tO8O2w3Mtv49X-LBE_RrWPzOPezefjryZ8
+Message-ID: <CAMRc=McBWncrCcX87a3pYeZ3=uYGNhpSrK74hDP-XNYrT8WMMg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: TODO: track the removal of GPIOD_FLAGS_BIT_NONEXCLUSIVE
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for i.MX943 pinctrl.
+On Tue, Apr 1, 2025 at 12:49=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> On Mon, Mar 31, 2025 at 11:00=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
+>
+> > +Remove GPIOD_FLAGS_BIT_NONEXCLUSIVE
+> > +
+> > +This flag is an awful workaround that was created for some regulator
+> > +corner-cases but got out of hand and is now used in at least 33 places
+> > +treewide. Unlike what the intuition may tell users, it's not a referen=
+ce
+> > +counted mechanisms like what clocks or regulators use but just a raw a=
+ccess
+> > +to the same GPIO descriptor from multiple places with no synchronizati=
+on (other
+> > +than what the underying driver offers). It doesn't even correctly supp=
+ort
+> > +releasing the supposedly non-exclusive GPIOs. This whole thing should =
+go and be
+> > +replaced with a better solution - for exampe: using the relatively new=
+ power
+> > +sequencing subsystem.
+>
+> Try to focus on the solution instead of writing so much about the problem=
+.
+> We mostly get the information that the GPIO maintainer dislikes them,
+> not so much about why they exist and what can be done about them.
+>
 
-Signed-off-by: Jacky Bai <ping.bai@nxp.com>
----
- drivers/pinctrl/freescale/pinctrl-imx-scmi.c | 4 ++++
- drivers/pinctrl/pinctrl-scmi.c               | 1 +
- 2 files changed, 5 insertions(+)
+I'm sorry, after a second thought this does indeed sound too harsh but
+when I realized that people started slapping this non-exclusive flag
+on every problem - like when the GPIO ACPI code requests some GPIOs
+(possibly erroneously), so driver authors just request it as
+non-exclusive instead of investigating the actual problem, or some
+codec drivers in sound/ which seem to not even need it and it looks
+like a bad copy-paste, I got really frustrated that it's another thing
+on the pile of stuff to fix. I will reword this entry.
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx-scmi.c b/drivers/pinctrl/freescale/pinctrl-imx-scmi.c
-index 8f15c4c4dc44..4e8ab919b334 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx-scmi.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx-scmi.c
-@@ -51,6 +51,7 @@ struct scmi_pinctrl_imx {
- #define IMX_SCMI_PIN_SIZE	24
- 
- #define IMX95_DAISY_OFF		0x408
-+#define IMX94_DAISY_OFF		0x608
- 
- static int pinctrl_scmi_imx_dt_node_to_map(struct pinctrl_dev *pctldev,
- 					   struct device_node *np,
-@@ -70,6 +71,8 @@ static int pinctrl_scmi_imx_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	if (!daisy_off) {
- 		if (of_machine_is_compatible("fsl,imx95")) {
- 			daisy_off = IMX95_DAISY_OFF;
-+		} else if (of_machine_is_compatible("fsl,imx94")) {
-+			daisy_off = IMX94_DAISY_OFF;
- 		} else {
- 			dev_err(pctldev->dev, "platform not support scmi pinctrl\n");
- 			return -EINVAL;
-@@ -289,6 +292,7 @@ scmi_pinctrl_imx_get_pins(struct scmi_pinctrl_imx *pmx, struct pinctrl_desc *des
- 
- static const char * const scmi_pinctrl_imx_allowlist[] = {
- 	"fsl,imx95",
-+	"fsl,imx94",
- 	NULL
- };
- 
-diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
-index df4bbcd7d1d5..383681041e4c 100644
---- a/drivers/pinctrl/pinctrl-scmi.c
-+++ b/drivers/pinctrl/pinctrl-scmi.c
-@@ -507,6 +507,7 @@ static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
- 
- static const char * const scmi_pinctrl_blocklist[] = {
- 	"fsl,imx95",
-+	"fsl,imx94",
- 	NULL
- };
- 
--- 
-2.34.1
+> I would describe the actual problem and the actual solution,
+> something like:
+>
+> "A problematic usecase for GPIOs is when two consumers want to use
+> the same descriptor independently, as a consumer (in Linux a struct
+> device) is generally assumed to have exclusive access to all of its
+> resources, with a resource being defined as anything obtained behind
+> a devm_* managed resource API such as devm_gpiod_get().
+>
 
+This is not a devres issue though. I don't think we should mention it
+here. The real problem about this flag is that it effectively allows
+two users to "fight" over a line's state. It would be better if it
+would count the enable operations but this would go against the spirit
+of the "gpiod_set_value()" interface, where you expect the value to be
+actually set to what you request it to be. GPIOs should remain
+exclusive and any "packaging" should happen in a higher layer.
+
+This is one of those pesky resource ownership issues really.
+
+> Providers such as regulators pose a special problem here since
+> regulators instantiate several struct regulator_dev instances containing
+> a struct device but using the *same* enable GPIO line: i.e. from a Linux
+> point of view this enable line has a many-to-one ownership. You can
+> imagine a 12V and a 5V regulator being turned on by the same GPIO
+> line for example. The regulator resources need to have two different
+> devices in Linux because they have different voltages, but they are enabl=
+ed
+> by the same GPIO.
+>
+> This breaks the devres resource assumptions:
+>
+
+The same thing would happen without devres. I think the regulator
+framework should have some way of mediating GPIO use. There should
+only really be a single gpiod_get() call for all enable-gpios of a
+single regulator provider. I have it on my roadmap to look into it.
+Whether the right approach is a GPIO quirk or a power sequence
+provider binding to the top-level regulator provider, I don't know
+yet.
+
+> If several providers with their own struct device is using one
+> and the same GPIO line, the devres consumer is unclear: which
+> struct device should own the GPIO line?
+>
+
+Well, other subsystems just use reference-counted resources in this
+case but see above - this is not a good fit for GPIOs.
+
+> A hack allows GPIO lines to be shared between several consumers
+> with the flag GPIOD_FLAGS_BIT_NONEXCLUSIVE but this API is
+> confusing and prone to abuse, as is the related devm_gpiod_unhinge() API.
+
+This is another thing that should most likely be deprecated and
+removed. It's clearly a case of papering over unclear ownership of a
+resource. I believe that any "hand-over" of ownership is really asking
+for trouble. The entity that does the "get" should also do the "put"
+in almost all cases. Fortunately it's only limited to a few use-cases
+in drivers/regulator/ so it's not nearly as bad. However, I don't
+really see a close relationship between these two issues. How about
+adding a task for that as well?
+
+>
+> A better solution to some of the problems is to use approaches such as
+> the power sequencing subsystem, which avoids having several owners of
+> a resource by strictly sequencing the order in which they are obtained
+> and activated.
+>
+> For example a GPIO turning on the power for both wireless and bluetooth
+> chips can be obtained and turned on in a power sequence such that this
+> problem never occurs: it is always active when when it needs to be, it ha=
+s
+> just one owner (the power sequence itself, struct pwrseq_device, which
+> contains a struct device) and the GPIO regulator driver is not used in th=
+is
+> scenario."
+>
+
+So this bit is also unrelated - in the case of the wcn pwrseq driver,
+there are two separate GPIOs for wifi and bluetooth. They just need a
+delay between toggling one and the other. I would skip it.
+
+Bart
 
