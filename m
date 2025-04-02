@@ -1,201 +1,213 @@
-Return-Path: <linux-gpio+bounces-18177-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18178-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70E1BA790B7
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Apr 2025 16:08:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 815D7A791F4
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Apr 2025 17:17:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CD8697A34F4
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Apr 2025 14:07:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF3D91891E21
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Apr 2025 15:17:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E02D23BD10;
-	Wed,  2 Apr 2025 14:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 093E0236437;
+	Wed,  2 Apr 2025 15:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCgu/xpX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QwQSPFv3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093A923A58D;
-	Wed,  2 Apr 2025 14:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB902D7BF
+	for <linux-gpio@vger.kernel.org>; Wed,  2 Apr 2025 15:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743602905; cv=none; b=flMFCFJTd0zlmmHP0JzLWDDGxBt5U4K41ZHBxveCPzA/kdee4vC77XavHfuKRVJfPpyQjJlv7fN2Us4wgepNi1W3gnqnqUYiHtS5yFSRH8XVbevB9yeimNLrNWNOfPKdCOG8/kxcNu4vVyQNlJQBp1yl1i5dj+5YCJXq3Tmuew8=
+	t=1743607061; cv=none; b=B2nIUq2i1GAcjUXqcgx94BJgSE1p6Tf614DOjEEiMXu0WnLUBxyhP016TuDwSaE43niyd/UWSetVGBCvPtn4xgzPnthRAaOBy5wcoJTZrA4KkxAeo6We9g2T0MS9OoEkY0wlAeL4wIZySJ0jveIWiiqR83XEEGE/n8ILfb0OXsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743602905; c=relaxed/simple;
-	bh=Gvnk752YhvtU7ebhJTFn0xvmqjtEjNYKA3D8tTJhnfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e/U/Fa+Tx7aXVg77WkdnWkVtY5xXHmFGT8T4HN/1xtH5Y+3iQMYD3gDD3oH/P7mFRcNgFBLAvNqN0E6ohmxxKVMvr1KqGmzFG1TsenbaiLnNRC9RWgYXtAZ7+nCUIB19ICuNEhQJ7qZtW51iT73R6XtNQzf/bVYHEvaboyk2PC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCgu/xpX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48CAEC4CEDD;
-	Wed,  2 Apr 2025 14:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743602904;
-	bh=Gvnk752YhvtU7ebhJTFn0xvmqjtEjNYKA3D8tTJhnfg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WCgu/xpXMDkkrjiFk1GROdt5AbpPIUs+czN3BPDMYh9cBUILzBrGw89LhcTdQNQyi
-	 f5ewRSD3+ced21jheKjIKdH26KRRLR5DPDw/idzv6UE0tbk3MJgSiAGu42ro1DiQqf
-	 9r37/ezlk/pSRtlKxkJy6ObP7QG2+J4zjoyry0swKHWUPqpzLQOxdQVImkxCdihZv5
-	 ih+PQs+4O/VahlAGYLQ7sw6yj1+TQTzuPZMJ+UZLqeBejQsipw6IH5L1JBTxo2UVcG
-	 qlm058Np6gbg5mtQBoX/bAB6YbiOa0MBcpl4UUN6qv9bGRt6SyJCMp30/k5cFX9lWe
-	 EtYGFNromB2sw==
-Date: Wed, 2 Apr 2025 15:08:20 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
- workarounds for regulators
-Message-ID: <a484f0b2-c09a-4a6a-a30e-4c8660d755a6@sirena.org.uk>
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
- <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk>
- <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
- <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
- <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
- <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
- <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
+	s=arc-20240116; t=1743607061; c=relaxed/simple;
+	bh=NyHdU17b3BYKcxSflMYDwmeiHSv8J8KHGYTpcsjLvEc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FtgB2Kl0NiF8LttMOjqgGmcINrGYyrPRhpgHirf9hBNLzh1VhqV6tCeTcLE5P3sQEZuLSQksi1ZxcZRdkQdDQtiHSmCPWAdcEK0PxU4jyyYO9nLJX3/OazOzMWsMxcMkRbcEeBsN8Z12PEZU11Kxv5KXYGvnO2ArFQeG/koLgxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QwQSPFv3; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c1efc457bso1832832f8f.2
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Apr 2025 08:17:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743607058; x=1744211858; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yx2R8pO0Ra3Nc8Y0LIAf122qHZ5vDc7iiej3dPjF8G4=;
+        b=QwQSPFv3onTb5O+ZQBcO4g8cTiZjqdVQURhNFiUXFzOIQcCF8pNRoUAfqTmBYUMkUz
+         OEaUoMfnvSrLtEXhkiAtPUk4SyTUAV5qJacaS4oLC+cbougR51oRMRrKL+0DdimjP1z2
+         Vv2HjPiQRtKsN9FwynTy8HzIzH8igklSs0UCwPylssIJKlNAYFS2fTE/JFBz0ZSoJbp0
+         yx8lqy7DDCYEtyji7LhbW8ky0vPanMrDGAPpuXrihHOpYQsBqZnNw4mUOxbyXRRjpxx6
+         lDmTD5t+ZZEJPKiot/ki0u9zVNL1i5EjdY3qV4iLp21hfCXC6r0WoibHux6VnY6aTkIm
+         r88w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743607058; x=1744211858;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Yx2R8pO0Ra3Nc8Y0LIAf122qHZ5vDc7iiej3dPjF8G4=;
+        b=SAc2dD+gBzF0V4POuROKwlybglTxa9mbm/ZuU+2ieWUiA9gUDw2lpkHShdxRGbMJgQ
+         hDOH7FKPkHjyrGDQ0ZSfa0VJjvQLXu0ozam8WRKSSauXKRxfcnSP0JekqXt7sakzKHK0
+         7oQIgscK0tktds1Jxqey97zQsy2dGFpA/E4CRVIxrke9UcXDQg7GMoYXLPxK1QVmhiz7
+         wuKE8reEtdcos1SwJnkfpLQaRVp0q1MBshtaMuQ4k4q4ExNI9bMvQ5EjsyNYOiqTehQ8
+         PUYeW3BoW2cHVNLLwd89yP84OByFR9n6an/kVNPWOIv8VBpglV7VOaCy709VlcN/qivQ
+         T6Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ2siVu6ukW3pU2RStN9pOtQLrIwfCxzfSES4dMnxtyufdq4y3MJgnczl3bgWM/DxMTTg3RJW7SdP2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP+NZmxkBBinYrGE1MR0q619BD3P22a8ymUU25mCxGWjI27oOV
+	pVOwNZuS7SR5jzU/oeWa5GRdN82eCcor502pZXUXMsFsY5V7tZazaRK6BEGbUbQ=
+X-Gm-Gg: ASbGncsC6rt2ZwomYfUXGSEkrWPeEOv6Z+nkVAfHViVQXchT9QuG4Wv730Eyw/wNQlh
+	fe9MXK56HL8L2Xd4H2hpQj6/Cfu5IbfGHvu24WjCg4L77hugSt+Djhe3Fz9buvVxonTwYRAQqqA
+	0mm+2Znta+RkpotstQo5gAagnKwyHwbigKzzUt5uJ32dkLiCZiJpD2NLEBvXbWAPE8xLaPGcUDi
+	PiU3xyCNKXJYD4TZ/tGGOwrBHH7El0EyZMiuCPsji1tNL3syCi4ZrI28R9sL7va2JQvoeoToHON
+	h8I71q9OFr9RUwqLFgiXOLPqtSZHZuL1hK4rZunFu+vWvG8/9LpsuZm8eONVo/DqT9los/iEDQ=
+	=
+X-Google-Smtp-Source: AGHT+IGtw/YaMynhE0C3M4qaV2783kGrZos1104coVh6+inJZg+GE5x2GivvB2wyhudpC0AEWiHjvQ==
+X-Received: by 2002:a5d:6d8d:0:b0:39a:ca04:3dff with SMTP id ffacd0b85a97d-39c1211805dmr13821255f8f.40.1743607057958;
+        Wed, 02 Apr 2025 08:17:37 -0700 (PDT)
+Received: from gpeter-l.roam.corp.google.com ([145.224.66.90])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663860sm17469190f8f.39.2025.04.02.08.17.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 08:17:37 -0700 (PDT)
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v6 0/4] samsung: pinctrl: Add support for
+ eint_fltcon_offset and filter selection on gs101
+Date: Wed, 02 Apr 2025 16:17:29 +0100
+Message-Id: <20250402-pinctrl-fltcon-suspend-v6-0-78ce0d4eb30c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zu/nnPXYuJBRrHqZ"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
-X-Cookie: To stay youthful, stay useful.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAlV7WcC/4XNQW7DIBCF4atErEsFM2OIs+o9qi7AHhIkCyxwr
+ VaR716STVNFVpf/k+abq6hcIldxOlxF4TXWmFML83IQw8WlM8s4thagoFMalJxjGpYyyTAtQ06
+ yftaZ0ygBEZ1GO9BIoh3PhUP8usPvH60vsS65fN//rPq2/kuuWirJ1vZKeXDHjt6mmFzJr7mcx
+ c1c4ddBpXcdaI6zzKH3ngj9k4OPjtl1sDmhd55CMA6Inxx6dOyuQ82B0dqO6WgUmj/Otm0/Ix/
+ uwJUBAAA=
+X-Change-ID: 20250120-pinctrl-fltcon-suspend-2333a137c4d4
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com, 
+ semen.protsenko@linaro.org, kernel-team@android.com, 
+ jaewon02.kim@samsung.com, Peter Griffin <peter.griffin@linaro.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3882;
+ i=peter.griffin@linaro.org; h=from:subject:message-id;
+ bh=NyHdU17b3BYKcxSflMYDwmeiHSv8J8KHGYTpcsjLvEc=;
+ b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBn7VUOIpQvmKF+MMYf64vqTmU0WTMgiEeFEpShA
+ AynK1joXv+JAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCZ+1VDgAKCRDO6LjWAjRy
+ uoeJD/4+BiSfIgPVMI5fRAx6Coxh8/ggZfvF1RkO524nX45fsdiIaMPS1QR+Y7a9CdVb6L4Q3HX
+ V+NY7G4o32bDe69CQ20fjklp3fu/QwxXMMENII1Zebp3Mkwt0wAlkTGNwQ/cjsVvRZSlywJUehF
+ r5cdRDOGh94HHVuyQST+GQ9u4oMxyoiBardHYbuCLytcuXeieBnVg96fbn/ETxeMdWAkeiBQCd2
+ 1AX8VGBu00u9VUf3OB4e4X6fVkrp/7wC3MZ3Ty45olPqDf6NOCnLesQp9An9aqKnDkB1i72Gg/X
+ U/WsJcAmOLe+Rzw12qSgWtBRGLhCKv/pzfUKsVGzfPRnafo4WJc5fK74OKQg/gN2qzNAbdQ4hQI
+ bv5+mDP+IkAigc1yjYm31kZuUnt0kk8iLq6jzznvbaUWBhbI9ir/Tl++qA2iM5+hf1OBzyfEvGd
+ XVLwHGmbavNBjHtKWVUVOwVAyx6XPgr2koESdSNiArZ0hGZNiv9mu5HCZkJoxhbu2zlsTcPp2uJ
+ DfvD6979BXD2CWh5UBwUz2o/5jJuzeFUYUZLcVO8l3Zcd2wa54LrTiS15RZoR59InWWGEMnH0sl
+ +CMBzDDa2i7TdzdRkTWVqqmNTxoqJBRW+5MFzd3+NP0ZHremI3HWNzMsByood+77Rhz+Yz3R64V
+ syq/O8iBenmJoaA==
+X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
+ fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
 
+Hi folks,
 
---zu/nnPXYuJBRrHqZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series fixes support for correctly saving and restoring fltcon0
+and fltcon1 registers on gs101 for non-alive banks where the fltcon
+register offset is not at a fixed offset (unlike previous SoCs).
+This is done by adding a eint_fltcon_offset and providing GS101
+specific pin macros that take an additional parameter (similar to
+how exynosautov920 handles it's eint_con_offset).
 
-On Wed, Apr 02, 2025 at 12:05:24PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Apr 1, 2025 at 11:55=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
-rote:
+Additionally the SoC specific suspend and resume callbacks are
+re-factored so that each SoC variant has it's own callback containing
+the peculiarities for that SoC.
 
-> > If gpiolib were to change this API we'd need some other way of getting
-> > the same functionality, I'd be totally fine with that happening.  For
-> > regulators we don't really want the pwrseq behaviour, we want to know
-> > that there's a single underlying GPIO that we're updating.
+Finally support for filter selection on alive banks is added, this is
+currently only enabled for gs101. The code path can be excercised using
+`echo mem > /sys/power/state`
 
-> This is bothering me. This is the abstraction reversal I'm talking
-> about. Should the regulator drivers even be concerned about whether
-> they share resources or not? It's not like consumers of regulators are
+regards,
 
-For regulators there's similar issues with needing to know when things
-happen (eg, to know if the device actually got reset and needs to be
-reintialised) but it's much more likely that we'll both be sharing and
-not actually have any control at all even for unshared regulators so we
-provide notifiers for this case instead.
+Peter
 
-> concerned about sharing them with other devices. I'm not saying GPIOs
-> should become reference counted - as I said in a previous email, I
-> don't believe this makes sense - but GPIOLIB is a lower-level
-> abstraction to regulators thus the latter shouldn't really reach into
-> the GPIO core and inspect its structures in order to figure out
-> whether the lines are shared. This is where an intermediate
-> abstraction layer may be helpful. The regulator drivers then just go:
+To: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+To: Alim Akhtar <alim.akhtar@samsung.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: andre.draszik@linaro.org
+Cc: tudor.ambarus@linaro.org
+Cc: willmcvicker@google.com
+Cc: semen.protsenko@linaro.org
+Cc: kernel-team@android.com
+Cc: jaewon02.kim@samsung.com
 
-> handle =3D pwrseq_get(dev, "enable-gpios");
-> pwrseq_power_on(handle);
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+Changes in v6:
+- Make drvdata->suspend/resume symmetrically reversed (Krzysztof)
+- rebase on linux-next
+- Link to v5: https://lore.kernel.org/r/20250312-pinctrl-fltcon-suspend-v5-0-d98d5b271242@linaro.org/
 
-> Even if we do it in multiple places, as long as the enable count is
-> balanced, we're good. The consumers are not concerned by what's
-> happening behind the scenes just as if it was a reset handle.
+Changes in v5:
+- Split drvdata suspend & resume callbacks into a dedicated patch (Krzysztof)
+- Add comment about stable dependency (Krzysztof)
+- Add back in {} braces (Krzysztof)
+- Link to v4: https://lore.kernel.org/r/20250307-pinctrl-fltcon-suspend-v4-0-2d775e486036@linaro.org
 
-No, it's important when (or if) the enable was physically released so we
-need to know when the actual hardware operation happened - there's some
-delay before the hardware has finished implementing the enable.
+Changes in v4:
+- save->eint_fltcon1 is an argument to pr_debug(), not readl() change alignment accordingly (Andre)
+- Link to v3: https://lore.kernel.org/r/20250306-pinctrl-fltcon-suspend-v3-0-f9ab4ff6a24e@linaro.org
 
-> > Impossible seems pretty strong here?  Part of the thing here is that the
-> > higher level users want to understand that there is GPIO sharing going
-> > on and do something about it, the working out that the thing is shared
-> > isn't really the interesting bit it's rather the part where we do
-> > something about that.  It's not that you can't share some code but it
-> > feels more like a library than an opaque abstraction.
+Changes in v3:
+- Ensure EXYNOS_FLTCON_DIGITAL bit is cleared (Andre)
+- Make it obvious that exynos_eint_set_filter() is conditional on bank type (Andre)
+- Make it obvious exynos_set_wakeup() is conditional on bank type (Andre)
+- Align style where the '+' is placed first (Andre)
+- Remove unnecessary braces (Andre)
+- Link to v2: https://lore.kernel.org/r/20250301-pinctrl-fltcon-suspend-v2-0-a7eef9bb443b@linaro.org
 
-> The part where "the higher level users want to understand that there
-> is GPIO sharing going on" does not sound correct. Let's take the
-> example of drivers/net/phy/mscc/mscc_ptp.c which uses the
-> non-exclusive flag for gpiod_get() because on one of the MIPS
-> platforms, there are four instances of this PHY that share a GPIO. IMO
-> it's a hack, this driver shouldn't care about it. It reverses the idea
-> of the DT providing hardware information to drivers and instead the
-> driver knows that the DT may describe a shared GPIO.
+Changes in v2:
+- Remove eint_flt_selectable bool as it can be deduced from EINT_TYPE_WKUP (Peter)
+- Move filter config register comment to header file (Andre)
+- Rename EXYNOS_FLTCON_DELAY to EXYNOS_FLTCON_ANALOG (Andre)
+- Remove misleading old comment (Andre)
+- Refactor exynos_eint_update_flt_reg() into a loop (Andre)
+- Split refactor of suspend/resume callbacks & gs101 parts into separate patches (Andre)
+- Link to v1: https://lore.kernel.org/r/20250120-pinctrl-fltcon-suspend-v1-0-e77900b2a854@linaro.org
 
-Knowing if and when a reset line is actually asserted seems like an
-important an useful thing for a driver to know, for example if a chip is
-actually reset then we may need to do expensive reinitialisation which
-could be skipped if that didn't happen. =20
+---
+Peter Griffin (4):
+      pinctrl: samsung: refactor drvdata suspend & resume callbacks
+      pinctrl: samsung: add dedicated SoC eint suspend/resume callbacks
+      pinctrl: samsung: add gs101 specific eint suspend/resume callbacks
+      pinctrl: samsung: Add filter selection support for alive bank on gs101
 
-> > Though now I think again some of them might be closer to the regulator
-> > enables rather than resets so those ones would not fit there and would
-> > more want to librify what regulator is doing...  Something like that
-> > would definitely not feel right being described as a power sequence.
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |  52 ++---
+ drivers/pinctrl/samsung/pinctrl-exynos.c       | 294 +++++++++++++++----------
+ drivers/pinctrl/samsung/pinctrl-exynos.h       |  28 ++-
+ drivers/pinctrl/samsung/pinctrl-samsung.c      |  21 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.h      |   8 +-
+ 5 files changed, 252 insertions(+), 151 deletions(-)
+---
+base-commit: cd37a617b4bfb43f84dbbf8058317b487f5203ae
+change-id: 20250120-pinctrl-fltcon-suspend-2333a137c4d4
 
-> Well, pwrseq is just a naming convention for want of a better one. It
-> really is just a subsystem that mediates usage of shared resources and
-> doesn't bind to any specific kernel subsystem.
+Best regards,
+-- 
+Peter Griffin <peter.griffin@linaro.org>
 
-So what's the sequencing bit about then?  Having something that just
-shares resources might be useful here, but the sequencing bit seems like
-it's asking for landmines.
-
-> > I'm in no way attached to this specific solution, from my point of view
-> > the important thing is that given two devices using GPIOs we have some
-> > reasonably convenient way of telling if they're using the same underlyi=
-ng
-> > GPIO and can coordinate between the devices appropriately.
-
-> I think that logically, consumers of GPIOs shouldn't care about
-> whether they're shared. IOW: the non-exclusive flag passed to
-> gpiod_get() should go. If the opposition to using pwrseq here is
-> strong, then I'd suggest at least moving the handling of the
-> non-exclusive flag into gpiolib quirks (in gpiolib-of.c or elsewhere)
-> and not exposing it to consumers who have no business knowing it.
-
-I don't think the nonexclusive flag is essential so long as we can
-provide some way for users to discover what's going on and coordinate
-with each other.  I do think it's important for users to know about at
-least the impacts of sharing, and I suspect that for GPIOs usability
-means knowing about the sharing.
-
-> I believe pwrseq could actually be used to hide the enable counting
-> for GPIOs behind a faux GPIO chip and the consumer would never see a
-> pwrseq handle - they would instead use GPIO consumer interfaces and
-> we'd have to agree on what logic would we put behind gpiod_set_value()
-> (should it effectively work as gpiod_enable() meaning: value is 1 as
-> long as at least one user sets it to 1?) and
-> gpiod_direction_input()/output() (same thing: highest priority is
-> gpiod_direction_output(HIGH) and as long as at least one user sets it
-> as such, we keep it).
-
-Like I say that doesn't do the right thing since other users need to be
-able to see when something changes on the GPIO.  If that just happens on
-normal gpiolib then that complicates usage for the default case since
-they now have to worry about things not actually happening when
-requested which doesn't seem ideal.
-
---zu/nnPXYuJBRrHqZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmftRNMACgkQJNaLcl1U
-h9AybAf7ByZAYiVhzevBnsOl6hxJTH5i8v3qClBzngHAZ/rK8Wtqvwh0+p1D83vm
-N0TWkqnEUglWb9qoFg6PTReuM0xrwueCW/cNSszavMlAlyWdC62ZJUHVHu6j1TKg
-XtVuFD6Big0Tu41LabKr1WUn0aThgaCbhcIP07PJ7H5DTx6vobmG9qWQ/3XI9nPF
-xOL8EUvepBtXCSXUjIm19DjyaYQ/R0uoJhes/SVk1gkg7PFpxKecAiTriGd0jT1N
-zXj+oXkiHhp5yP3sITPG0CbHUmzMokokhqBN7ppTVHSlmRjfKBZeWDoTdGoUYz4M
-QOoAPNSy5/OG8JeGkR2MZQ/X8mfVxA==
-=BgMM
------END PGP SIGNATURE-----
-
---zu/nnPXYuJBRrHqZ--
 
