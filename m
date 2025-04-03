@@ -1,206 +1,219 @@
-Return-Path: <linux-gpio+bounces-18193-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18194-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43C1FA79E3C
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Apr 2025 10:33:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C61D2A7A121
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Apr 2025 12:37:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2F8D189533F
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Apr 2025 08:33:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F0F1E17672A
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Apr 2025 10:35:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB7E2242902;
-	Thu,  3 Apr 2025 08:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE30624A071;
+	Thu,  3 Apr 2025 10:35:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8Cb4AP4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LEGHM2gP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602D81A0731;
-	Thu,  3 Apr 2025 08:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85D52417D7;
+	Thu,  3 Apr 2025 10:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743669200; cv=none; b=ELXuIGQXyFIZFvEfZqQoaXAr3D3IDWuPzO4uezDzrDxlJus/ie8m82gfnBNL7qF+HKIMCRm62HDCu7muLwm8BDdiz/dBbgWq7fd2psguqAiC15rJDE3t9A5M+TMHaM5UV+FysnFmRg8JUiNZulC4BJGn6Aj+YpUHkKrKjoo3FKQ=
+	t=1743676512; cv=none; b=pMzpokjbbpw5tQh1HBGIgVtpcS53iZB40bDx1ix3p0frHQHpDvtE3ulqZZcl+NDfGhaSWfyAjPwh1U/c7qY7rjEQPgvt+0FHOCkyRdMNlv0Ir7DlzZMp1a1g9C4I4Ecl+4r0nsgQYTfPvAjA7Iw5LbDbTNt2PtjIRnNlG6QSzpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743669200; c=relaxed/simple;
-	bh=cYPE4hxj2E/+XBZrJpUbI6pIfd/alhO++G3MPN6trQY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Do+E41zFgW0lwsuEDGduWFVxEdEMlzYMzGsdK6Z04r2RCE4y7/dXUvfOMBkp9ca3veOjKo6XX+weiUyUwYUpF4dR/aV8zOxYMEBrSpVZA93/bDZ3S1gQ0kq4wEZOufLeb9PQSTYSkPbcZpW7C4SryB+Sg1UlhVtUsTL62Dx9Foc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8Cb4AP4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C862BC4CEE9;
-	Thu,  3 Apr 2025 08:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743669199;
-	bh=cYPE4hxj2E/+XBZrJpUbI6pIfd/alhO++G3MPN6trQY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=h8Cb4AP4OpYpLjYYj+z1vZ5xN6W9HulpbhR1bg2gJQjnjRCUWJqloCjGebGRqdPSY
-	 qHZkeVaccaQ4sKzOjZ5sy+Jtp046Dgcr2UL9cCee/U7MkUhxwxtxT8LKCcnX/U3Y/D
-	 CsxENjjO2Ly3SMMog+EtQgvaroGjKyOqKBkOkcz7OjQHzR8SYlFBZiLfTCtv/C9Eds
-	 eyTMbPNPm/fD3BFeFoPs2rV9Rgsfy9dZifU1ecORJKIKCKNOyFpeGC6+Cjqybsz9DO
-	 wYWp2rIjYm2l7ZS5PjjJz3JleLYG+cuvVy7dOcTkDNrPFExyncgtF+a4WCg4ImTt8k
-	 gjrnMFsCLo0Fw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF06C369A0;
-	Thu,  3 Apr 2025 08:33:19 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Thu, 03 Apr 2025 16:33:15 +0800
-Subject: [PATCH v3 2/2] dts: arm64: amlogic: add a5 pinctrl node
+	s=arc-20240116; t=1743676512; c=relaxed/simple;
+	bh=GD8GtdqYWV9GQMQcIMlkLPP31qBj8F+7qvyBxc/kjXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TuRY9kjxBQdNFiIIlx4dn1NORoaqhdBaGZqpSDO3UOAVN+kHkJlEC4mJi6AprxEqhWHO+fi5UM6nQ1xbNUsc/53dzPgt7ORkzin6pLA6eDiT8m0eWxa1MArIfVFYIyXGQlptDzw+fHwZsk0sp9ujLcSr7ZnAN3kx8Q/hKMhwrZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LEGHM2gP; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743676511; x=1775212511;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GD8GtdqYWV9GQMQcIMlkLPP31qBj8F+7qvyBxc/kjXY=;
+  b=LEGHM2gPOv2D4AxvwmODVuZCmSZQetQkTnaFJEb9vgAT2frCspXXj3Ik
+   ccFDJ+uBKxINfgA5E628RGyp1zGcO+AeU61x9eOjcrGVXUDHz2SVb5ZNI
+   lElmECOxTCPF4CJHOgk/MHSnfTADWrQPlghNUa0GA8YGZSwBRmfhJUTmH
+   1rmgtjS4c9tKOLzk5Z2E1SHFNtIbp2IburfxGsOK0Bj4ZBl1K8CE9VTjF
+   69qN0bVGd5gzEU9wGR3LRCj0txkTOV1im23cnb68f0Nw/pEaftqklO/Y6
+   aduH7tThVDkb7nFMbyLM0/tq4AolV2jdoRHfPqqEOzcHuYaN/aGg6GB2H
+   w==;
+X-CSE-ConnectionGUID: IzfXKdOeSGCmr8dfcNXgiw==
+X-CSE-MsgGUID: qlMWPMqDREyfUQ9Vu5VkBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44227536"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="44227536"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:35:09 -0700
+X-CSE-ConnectionGUID: Fs2oP0QHTh+jV+HiJSaPDg==
+X-CSE-MsgGUID: V5NhXtbBR7mKH2yr3Zp2wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="157960777"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 03 Apr 2025 03:35:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id A5ED8E2; Thu, 03 Apr 2025 13:35:06 +0300 (EEST)
+Date: Thu, 3 Apr 2025 13:35:06 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 4/5] gpiolib: acpi: Reuse struct acpi_gpio_params in
+ struct acpi_gpio_lookup
+Message-ID: <20250403103506.GJ3152277@black.fi.intel.com>
+References: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
+ <20250402122301.1517463-5-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-a5-pinctrl-v3-2-a8c067e22295@amlogic.com>
-References: <20250403-a5-pinctrl-v3-0-a8c067e22295@amlogic.com>
-In-Reply-To: <20250403-a5-pinctrl-v3-0-a8c067e22295@amlogic.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743669198; l=3211;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=zTXCd3mjrQB2UAQ+DUxS9Et3VYgrEbPO04Lv0RVd3Dc=;
- b=VfTnLhiqD/DvQpUxxaX0qvX6jYrBOat90xLSzkT4YNw6bb7j1G8Vy1HCZ3t+WhBoWOpkxIzSS
- tiQLCDxrljbD0aViwoDiGHA0apIDhoLk3Gmh7OL8e49ubWi8QzzYf/N
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250402122301.1517463-5-andriy.shevchenko@linux.intel.com>
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Wed, Apr 02, 2025 at 03:21:19PM +0300, Andy Shevchenko wrote:
+> Some of the contents of struct acpi_gpio_lookup repeats what we have
+> in the struct acpi_gpio_params. Reuse the latter in the former.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpiolib-acpi.c | 34 ++++++++++++++++++----------------
+>  1 file changed, 18 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index afeb8d1c7102..750724601106 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -744,9 +744,7 @@ static int acpi_gpio_update_gpiod_lookup_flags(unsigned long *lookupflags,
+>  
+>  struct acpi_gpio_lookup {
+>  	struct acpi_gpio_info info;
+> -	int index;
+> -	u16 pin_index;
+> -	bool active_low;
+> +	struct acpi_gpio_params par;
 
-Add pinctrl device to support Amlogic A5.
+params is better name
 
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi | 90 +++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+>  	struct gpio_desc *desc;
+>  	int n;
+>  };
+> @@ -754,6 +752,7 @@ struct acpi_gpio_lookup {
+>  static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+>  {
+>  	struct acpi_gpio_lookup *lookup = data;
+> +	struct acpi_gpio_params *par = &lookup->par;
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-index 32ed1776891b..844302db2133 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "amlogic-a4-common.dtsi"
-+#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
- #include <dt-bindings/power/amlogic,a5-pwrc.h>
- / {
- 	cpus {
-@@ -50,6 +51,95 @@ pwrc: power-controller {
- };
- 
- &apb {
-+	periphs_pinctrl: pinctrl@4000 {
-+		compatible = "amlogic,pinctrl-a5",
-+			     "amlogic,pinctrl-a4";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0x0 0x0 0x0 0x4000 0x0 0x300>;
-+
-+		gpioz: gpio@c0 {
-+			reg = <0x0 0xc0 0x0 0x40>,
-+			      <0x0 0x18 0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_Z<<8) 16>;
-+		};
-+
-+		gpiox: gpio@100 {
-+			reg = <0x0 0x100 0x0 0x40>,
-+			      <0x0 0xc   0x0 0xc>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 20>;
-+		};
-+
-+		gpiot: gpio@140 {
-+			reg = <0x0 0x140 0x0 0x40>,
-+			      <0x0 0x2c  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 14>;
-+		};
-+
-+		gpiod: gpio@180 {
-+			reg = <0x0 0x180 0x0 0x40>,
-+			      <0x0 0x40  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
-+		};
-+
-+		gpioe: gpio@1c0 {
-+			reg = <0x0 0x1c0 0x0 0x40>,
-+			      <0x0 0x48  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
-+		};
-+
-+		gpioc: gpio@200 {
-+			reg = <0x0 0x200 0x0 0x40>,
-+			      <0x0 0x24  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_C<<8) 11>;
-+		};
-+
-+		gpiob: gpio@240 {
-+			reg = <0x0 0x240 0x0 0x40>,
-+			      <0x0 0x0   0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
-+		};
-+
-+		gpioh: gpio@280 {
-+			reg = <0x0 0x280 0x0 0x40>,
-+			      <0x0 0x4c  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_H<<8) 5>;
-+		};
-+
-+		gpio_test_n: gpio@2c0 {
-+			reg = <0x0 0x2c0 0x0 0x40>,
-+			      <0x0 0x3c  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
-+		};
-+	};
-+
- 	gpio_intc: interrupt-controller@4080 {
- 		compatible = "amlogic,a5-gpio-intc",
- 			     "amlogic,meson-gpio-intc";
+These are not changed I guess so can this be const?
 
--- 
-2.37.1
+Ditto everywhere.
 
-
+>  
+>  	if (ares->type != ACPI_RESOURCE_TYPE_GPIO)
+>  		return 1;
+> @@ -765,12 +764,12 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+>  		u16 pin_index;
+>  
+>  		if (lookup->info.quirks & ACPI_GPIO_QUIRK_ONLY_GPIOIO && gpioint)
+> -			lookup->index++;
+> +			par->crs_entry_index++;
+>  
+> -		if (lookup->n++ != lookup->index)
+> +		if (lookup->n++ != par->crs_entry_index)
+>  			return 1;
+>  
+> -		pin_index = lookup->pin_index;
+> +		pin_index = par->line_index;
+>  		if (pin_index >= agpio->pin_table_length)
+>  			return 1;
+>  
+> @@ -796,7 +795,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+>  			lookup->info.polarity = agpio->polarity;
+>  			lookup->info.triggering = agpio->triggering;
+>  		} else {
+> -			lookup->info.polarity = lookup->active_low;
+> +			lookup->info.polarity = par->active_low;
+>  		}
+>  
+>  		lookup->info.flags = acpi_gpio_to_gpiod_flags(agpio, lookup->info.polarity);
+> @@ -834,7 +833,8 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
+>  				     struct acpi_gpio_lookup *lookup)
+>  {
+>  	struct fwnode_reference_args args;
+> -	unsigned int index = lookup->index;
+> +	struct acpi_gpio_params *par = &lookup->par;
+> +	unsigned int index = par->crs_entry_index;
+>  	unsigned int quirks = 0;
+>  	int ret;
+>  
+> @@ -857,9 +857,9 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
+>  	if (args.nargs != 3)
+>  		return -EPROTO;
+>  
+> -	lookup->index = args.args[0];
+> -	lookup->pin_index = args.args[1];
+> -	lookup->active_low = !!args.args[2];
+> +	par->crs_entry_index = args.args[0];
+> +	par->line_index = args.args[1];
+> +	par->active_low = !!args.args[2];
+>  
+>  	lookup->info.adev = to_acpi_device_node(args.fwnode);
+>  	lookup->info.quirks = quirks;
+> @@ -897,10 +897,11 @@ static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
+>  						 struct acpi_gpio_info *info)
+>  {
+>  	struct acpi_gpio_lookup lookup;
+> +	struct acpi_gpio_params *par = &lookup.par;
+>  	int ret;
+>  
+>  	memset(&lookup, 0, sizeof(lookup));
+> -	lookup.index = index;
+> +	par->crs_entry_index = index;
+>  
+>  	if (propname) {
+>  		dev_dbg(&adev->dev, "GPIO: looking up %s\n", propname);
+> @@ -909,9 +910,9 @@ static struct gpio_desc *acpi_get_gpiod_by_index(struct acpi_device *adev,
+>  		if (ret)
+>  			return ERR_PTR(ret);
+>  
+> -		dev_dbg(&adev->dev, "GPIO: _DSD returned %s %d %u %u\n",
+> -			dev_name(&lookup.info.adev->dev), lookup.index,
+> -			lookup.pin_index, lookup.active_low);
+> +		dev_dbg(&adev->dev, "GPIO: _DSD returned %s %u %u %u\n",
+> +			dev_name(&lookup.info.adev->dev),
+> +			par->crs_entry_index, par->line_index, par->active_low);
+>  	} else {
+>  		dev_dbg(&adev->dev, "GPIO: looking up %d in _CRS\n", index);
+>  		lookup.info.adev = adev;
+> @@ -943,6 +944,7 @@ static struct gpio_desc *acpi_get_gpiod_from_data(struct fwnode_handle *fwnode,
+>  						  struct acpi_gpio_info *info)
+>  {
+>  	struct acpi_gpio_lookup lookup;
+> +	struct acpi_gpio_params *par = &lookup.par;
+>  	int ret;
+>  
+>  	if (!is_acpi_data_node(fwnode))
+> @@ -952,7 +954,7 @@ static struct gpio_desc *acpi_get_gpiod_from_data(struct fwnode_handle *fwnode,
+>  		return ERR_PTR(-EINVAL);
+>  
+>  	memset(&lookup, 0, sizeof(lookup));
+> -	lookup.index = index;
+> +	par->crs_entry_index = index;
+>  
+>  	ret = acpi_gpio_property_lookup(fwnode, propname, &lookup);
+>  	if (ret)
+> -- 
+> 2.47.2
 
