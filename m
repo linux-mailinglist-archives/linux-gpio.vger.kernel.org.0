@@ -1,122 +1,150 @@
-Return-Path: <linux-gpio+bounces-18195-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18196-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E51AA7A18D
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Apr 2025 13:04:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 207C1A7A1BF
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Apr 2025 13:17:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACA9A3B5D0A
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Apr 2025 11:04:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A99997A6819
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Apr 2025 11:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E3DF24BC00;
-	Thu,  3 Apr 2025 11:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF6912459FB;
+	Thu,  3 Apr 2025 11:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZVJ0kbxE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VQ7MUWZO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968291DF975;
-	Thu,  3 Apr 2025 11:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C996481B6;
+	Thu,  3 Apr 2025 11:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678251; cv=none; b=KSPxhS5YbhYqXfREKPbJUeRjA9kP10zVFkdokLu3isF8d6WRlKXz2n0QmZdlkSZkh5RTgHhNGG0Zfc1E5ynuUwVNdPCm1GwSFfQop/36AylXUwDt0ESNVXAmUAx6bnom1HGgljd47X0rukm8hyJte8IMRq6QP6A+4Vmq35QFuC4=
+	t=1743679022; cv=none; b=GE++nZvXgq3Aj0pmuLY2UrfBvpDWia6mP3nMAJzSWKCUkEZ4oWfCnjWv+o9V7FEe5H236M2wNajhoAqDd8JllLQvFhrq9cHWYiNQaFW09u3cP8J5BXrQj1QYx5Jp+74C7yAgK9JrS/Z1JmHkrD5JDniy14b1KfU8cbZHZPQQqk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678251; c=relaxed/simple;
-	bh=2QeHOZ6m87E61wZmiIQ6dYN/+s8hph8dBv0jhrWmjoA=;
+	s=arc-20240116; t=1743679022; c=relaxed/simple;
+	bh=ur1JgpihFBqY1SpsszuYB5RYiGBwwmdeY8pW4WTMuuU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TyKSeyWGF3tVXSIPc52mNNjZdoymGOc7M9b88Zhr9RBpM0C5hvReoUxTYQomKYkrliOv6N3m78BjzLYagwtSQJPVxlzwr1qhKfDxzb/8Q1Dd05X30TT9fBM4SX3pmu9gqE45Mmy1wlpvvMJs8JxZYyJaNyk1Fn8i0hpVEc6JiOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZVJ0kbxE; arc=none smtp.client-ip=198.175.65.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=RiULUHAXfjR57JwIV6HUCoVKupW07l6U81oVYTUf6sd1Tm9Rq9c/Bycf+HhiHwVtKP1QPqRisbNuMj/DI0+jHtnVy3XaVAxjB35N6m2mOFKZVF8gkZaLKLQyLgSfspeMrqTjq4VRjOs67cS6HD78X2dLDVHhaxDX48TIrsssn5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VQ7MUWZO; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743678250; x=1775214250;
+  t=1743679021; x=1775215021;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2QeHOZ6m87E61wZmiIQ6dYN/+s8hph8dBv0jhrWmjoA=;
-  b=ZVJ0kbxEImOnfFIzc/Sd+c/XeD5jvzYrhMyC2KsMiltVVZwqRWBMYKd1
-   la/946NJXpcBhUnaoplO6y7ZGrrJBA6QL0Kghs+JItiYlICuj6+2SyHXv
-   bEfF5cYdmgcTT0Og7s2tEZrYogcW67wP4xQnKs6VEHcHFjE1PXXHf3+zL
-   raPQlphUrGrf8nY6rWEFuT5hTZRLq6jInMdx4YGpM+nw1e+xrPcJwzcYs
-   1na2AvfyL3SBXCG8M6xNW6fEEi9l0IUw4D+O3AqqtdNZGerHERX7whBOa
-   9WZvpdhjQyQDz66y/dEF7nEhaZxwDXjw+xzLc+e7h19ZuKctoh+qPcakO
-   Q==;
-X-CSE-ConnectionGUID: 0is1ai8CSPCvQpSK/Z8eZQ==
-X-CSE-MsgGUID: JuX1BePuTfKYiUxG5NMUZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48740823"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ur1JgpihFBqY1SpsszuYB5RYiGBwwmdeY8pW4WTMuuU=;
+  b=VQ7MUWZO+Q9U3NQxzc5yfShT/Uv8Vq6qA20q/Ma8P7G74fO0yFUlEXQE
+   MOC/7hnYjMhM3C2Z74Jrkvs+1Y4KdrvnD0cXebkOv0ESq0xcB8W25ueUB
+   ewVH8HwOi6FqtB77r/70KMQwt/akwobcv59M/wfCTsGheHXocpdvef3Px
+   pGn+I2syxVdy0IWBhvIZrOU9FaUfy0wN1Shd8+i6ylRlPZAagFERSVYve
+   OXttl3TnfUG8SHtcOjfCOCGDj3Br+hNCuMcHhiIihsMMYKSLDyAV5Vz+F
+   BTl5BUM52C/aNuoJ+XaC7WHKQcI/0yyy0xl0btoXnaatBJ6W2ZZPE13j+
+   g==;
+X-CSE-ConnectionGUID: r+p0dxpsS7O46aTusSuc7Q==
+X-CSE-MsgGUID: mB+HAcSdS5Gs4noCHzIF+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="56447289"
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="48740823"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:04:09 -0700
-X-CSE-ConnectionGUID: qSt/64BKQAmw5vyD1Khd4g==
-X-CSE-MsgGUID: Q0DRHy/oQj2zZvNDnTCN6g==
+   d="scan'208";a="56447289"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:17:00 -0700
+X-CSE-ConnectionGUID: ys+iyngxQxScXHcVzoAzDw==
+X-CSE-MsgGUID: UpXelSBlRMimi/ZDSfaJlw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="126779340"
+   d="scan'208";a="150179467"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:04:07 -0700
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:16:58 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0IMe-00000008mZK-11Kl;
-	Thu, 03 Apr 2025 14:04:04 +0300
-Date: Thu, 3 Apr 2025 14:04:04 +0300
+	id 1u0IZ5-00000008mk0-1lar;
+	Thu, 03 Apr 2025 14:16:55 +0300
+Date: Thu, 3 Apr 2025 14:16:55 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 4/5] gpiolib: acpi: Reuse struct acpi_gpio_params in
- struct acpi_gpio_lookup
-Message-ID: <Z-5rJDWaSJd58lTa@smile.fi.intel.com>
-References: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
- <20250402122301.1517463-5-andriy.shevchenko@linux.intel.com>
- <20250403103506.GJ3152277@black.fi.intel.com>
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
+Message-ID: <Z-5uJxij4jmhint3@smile.fi.intel.com>
+References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com>
+ <Z-5BHzTEed607Afz@smile.fi.intel.com>
+ <CAMRc=Mc12B-b-w6bJeOgwFvzbmaqzL+uT7vJssVYN4tMu3YpaQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250403103506.GJ3152277@black.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mc12B-b-w6bJeOgwFvzbmaqzL+uT7vJssVYN4tMu3YpaQ@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 03, 2025 at 01:35:06PM +0300, Mika Westerberg wrote:
-> On Wed, Apr 02, 2025 at 03:21:19PM +0300, Andy Shevchenko wrote:
-> > Some of the contents of struct acpi_gpio_lookup repeats what we have
-> > in the struct acpi_gpio_params. Reuse the latter in the former.
+On Thu, Apr 03, 2025 at 10:20:08AM +0200, Bartosz Golaszewski wrote:
+> On Thu, Apr 3, 2025 at 10:04 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Apr 03, 2025 at 08:58:09AM +0200, Bartosz Golaszewski wrote:
+> > > On Wed, Apr 2, 2025 at 5:20 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
 
-> > +	struct acpi_gpio_params par;
+> > > > When non-optional GPIO is requested and failed, the variable that holds
+> > > > the (invalid) descriptor can contain an error pointer. However, gpiod_put()
+> > > > ignores that fact and tries to cleanup never requested descriptor.
+> > > > Make sure gpiod_put() ignores that as well.
+> > > >
+> > > > While at it, do the same for the gpiod_put_array().
+> > > >
+> > > > Note, it arguable needs to be present in the stubs as those are usually
+> > > > called when CONFIG_GPIOLIB=n and GPIOs are requested using gpiod_get_optional()
+> > > > or similar APIs.
+> >
+> > > I'm not a fan of this. Silently ignoring NULL makes sense in the
+> > > context of _optional() calls where we want to do nothing on GPIOs that
+> > > aren't there.
+> >
+> > > But this encourages people to get sloppy and just ignore
+> > > error pointers returned from gpiod_get()?
+> >
+> > From where did you come to this conclusion, please? We have many subsystems
+> > that ignore invalid resource on the release stage, starting from platform
+> > device driver core.
 > 
-> params is better name
+> The fact that many people do something does not mean it's correct.
 
-It's been already used elsewhere in the code. Do you want renaming there as
-well for consistency's sake?
+And it doesn't tell it is incorrect either. We are going to conclude that there
+are pros and cons on each of the approaches, but I don't see much a point in
+yours, sorry.
 
-...
+> Many other subsystem scream loudly when that happens, so I would be ok
+> with adding a big WARN_ON(IS_ERR(desc)).
 
-> >  	struct acpi_gpio_lookup *lookup = data;
-> > +	struct acpi_gpio_params *par = &lookup->par;
+I disagree. This is not that case where passing an error pointer should be
+an issue.
+
+> > > Also: all other calls error out on IS_ERR(desc) so why would we make it an
+> > > exception?
+> >
+> > Because it's _release_ stage that participates in the cleaning up of
+> > the allocated resources in error paths. It's a common approach in
+> > the kernel. I would rather ask what makes GPIOLIB so special about it?
 > 
-> These are not changed I guess so can this be const?
+> Just because it's the release stage, does not mean you shouldn't care
+> about the correctness of the consumer code. Passing an IS_ERR(descr)
+> to any of the GPIO APIs can happen if the user ignores an error
+> returned by gpiod_get(). That's not alright.
 
-They are, see below. So the answer, it can't.
-
-But I will double check and add const where it makes sense.
-
-...
-
-> >  		if (lookup->info.quirks & ACPI_GPIO_QUIRK_ONLY_GPIOIO && gpioint)
-> > -			lookup->index++;
-> > +			par->crs_entry_index++;
-
-E.g., ^^^
+Have you ever seen such a code in the cases when it's okay (like in platform
+device driver users)? I do not. So, the above is based on the hypothetical
+assumption that somebody will make silly things. If you _really_ care about
+checking the error, add __must_check to the respective functions.
 
 -- 
 With Best Regards,
