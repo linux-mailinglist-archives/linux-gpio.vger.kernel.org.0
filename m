@@ -1,127 +1,136 @@
-Return-Path: <linux-gpio+bounces-18239-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18240-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A71A7BDB5
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 15:26:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A6E9A7BF00
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 16:21:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DBE017BE72
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 13:26:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F0F9189BC33
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 14:21:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53C181EBFE2;
-	Fri,  4 Apr 2025 13:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81EE1F3BA8;
+	Fri,  4 Apr 2025 14:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f32fnwEf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZI2ZReU1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9757D18D656;
-	Fri,  4 Apr 2025 13:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2231EF088;
+	Fri,  4 Apr 2025 14:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743773196; cv=none; b=Cj0LvcVU0YPDZ4yo4BvyXMNCMTtEEEJbRclMXzq/Nh6Y87//j7NepQkjcinuCp8Rnccujvjq49eH2AqlI/pL48aRk3h22oILWBw6bnIILCrdGKDvFsRtngI7Ss4pBZ06CT91eVQevdfxkYYBAv2LdzbkroApCcIT8DyLA2rM2Fo=
+	t=1743776483; cv=none; b=lpO5C2tIHro7jQ03W+WvUTkTcDiMSXxTrrCOW6/p8ZNNTXV0UB7vsPCvTlg80+e+B1asNalx2Pe86PFVpD6Fl543e0OMsRZY2o4ZxWor+qxKH8LM0Zjls6ICGq56qbg+9+S5SCt5qZeVRhGJAepoUK+2/3/zyLsNVHZo/XzzmYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743773196; c=relaxed/simple;
-	bh=GlYv4RJx/qddduKvUDY+jA46vAIVO1n4cjmqtnn2Vok=;
+	s=arc-20240116; t=1743776483; c=relaxed/simple;
+	bh=jWDI/Zr0/C5m752YjHWoRmTDwZdbUMKMz0DGgxY/xNE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uzH507yvqwcodvuw2/G76twz/4qfA328jbZliurU/m4eDGTtf5z8dgXwj6BOp/KYnblzmeP4MLJxkZ2G9fSSyTlJECVG4+hSX6txQy8e+jddPpie0GfiRVW/fNpOmp5rYUUCFMmKblbMtP7CAb9GvNnecH1PPLo3ITJetX9F0l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f32fnwEf; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743773194; x=1775309194;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GlYv4RJx/qddduKvUDY+jA46vAIVO1n4cjmqtnn2Vok=;
-  b=f32fnwEfXuYR1dIFAFzwLOTiZcY+jpO81h4l8dhK68JsRXUcjkf8CTRZ
-   mzL40gd1ez4rGJHvX3nTuCBWjfhaukfU2k5W9+EvY8HKsGalmNtUMAfAi
-   8FP2cigR+6Hl0aLvD3/U53r+zLvERMsEw2YQox5X55IFyjZ8xnLv0p+84
-   5t6fEYpOjQtcshglzewA7LMK/nNyesxLIUmFfBuQEK0eOe+TpaGUDaxOi
-   SiiQn2lhH67p5sNjX0XU659HDl2LyFgwv1gp/+2GSdykznq++SFmKDvNJ
-   NlNVzNXZwr30czffqSNVz0hCEUpDFqz38r+YaMj2dsggmNmWJ55bOIbZP
-   w==;
-X-CSE-ConnectionGUID: UQgfiA8xRzOuixszqRt9Sw==
-X-CSE-MsgGUID: TP0yiXFnQMuGAz7xERjgOw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49006313"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="49006313"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:26:34 -0700
-X-CSE-ConnectionGUID: LNYqZ3tQTYylWxtp7lrjlA==
-X-CSE-MsgGUID: iC9M8m7UTuyq7KAcEoOL+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="127124237"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:26:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0h40-0000000990o-0CJv;
-	Fri, 04 Apr 2025 16:26:28 +0300
-Date: Fri, 4 Apr 2025 16:26:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw
-Subject: Re: [PATCH 4/5] pinctrl: Add pin controller driver for AAEON UP
- boards
-Message-ID: <Z-_eA-gUPJt57DRK@smile.fi.intel.com>
-References: <Z4Tg-uTVcOiYK2Dr@smile.fi.intel.com>
- <b50444f7-4dd1-4440-af36-783b1b4f8625@bootlin.com>
- <Z4jNZPcDd89-HfAd@smile.fi.intel.com>
- <e273428e-3ebd-4116-b317-9aae0c8c603b@bootlin.com>
- <Z4j8NmKMEL7PALmw@smile.fi.intel.com>
- <8b9dd766-ae7e-4817-a093-536ae9646cd3@bootlin.com>
- <Z4kUWxR9VWkzQ9aW@smile.fi.intel.com>
- <5e5f7635-86ed-4814-b26f-b1c45fa4f29a@bootlin.com>
- <Z6NOfUG3QZyYW0rw@smile.fi.intel.com>
- <cb07335e-8dc0-4cf1-8524-40770d5419cc@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IrTQXu+dsNcUxHMuYna4jRB1v/hJMn2iOaGFtlNl4wMXCzzCZsigIrJkB9ViOzYp71Eh0bPP1n6LxZ83a/+HFd2C1W+JvMtzyixUQZhT0H8MH30PDqQqUBMSoqdqzWTMSw2N/VU+LbKqtBiFRG+vz9UuMlnXTdKspsxMMMCMnfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZI2ZReU1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE8BC4CEDD;
+	Fri,  4 Apr 2025 14:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743776482;
+	bh=jWDI/Zr0/C5m752YjHWoRmTDwZdbUMKMz0DGgxY/xNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZI2ZReU12jWJWtPcM6Zm1LelBbJ0IuB+ZYdQ7zGoAY01nrTX6icYXg4hfo2ZyPR/+
+	 TFb1QP2U3vi83K2SB7wMXVlsv1EbaDFkYO93Mc5MRJBLjVRpEt6wyuftu1pys508Q1
+	 Gx+P7JYHB1gAJu9Yv6ilupRA2fljBJJ49WLHLNCGYF7+54yAeGb/jDky7C4mmN/q69
+	 Mq2bCatP/Tk8s7PcP4ffGxHflKt1rfBNzO0xml2yN6JtsStcODOsuXkLf1VuzpZqYr
+	 q/yjX+XsM/G5Vkse2Syb9zEvHs9AkAKqmAi/+ehVlpC9sBls8pyb0+4Ujf7OXU3HaU
+	 7bTLp2ns2VbTg==
+Date: Fri, 4 Apr 2025 15:21:15 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	andi.shyti@kernel.org, mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+	jdelvare@suse.com, alexandre.belloni@bootlin.com,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v8 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250404142115.GC278642@google.com>
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-2-a0282524688@gmail.com>
+ <20250307011542.GE8350@google.com>
+ <CAOoeyxUgiTqtSksfHopEDhZHwNkUq9+d-ojo8ma3PX2dosuwyQ@mail.gmail.com>
+ <20250320145042.GS3890718@google.com>
+ <CAOoeyxXZmrzBSNRdRx9vK84m5Z5y8T_A+wY98vVrPUZ7f4w4iw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cb07335e-8dc0-4cf1-8524-40770d5419cc@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxXZmrzBSNRdRx9vK84m5Z5y8T_A+wY98vVrPUZ7f4w4iw@mail.gmail.com>
 
-On Fri, Apr 04, 2025 at 03:11:00PM +0200, Thomas Richard wrote:
-> On 2/5/25 12:41, Andy Shevchenko wrote:
-> > On Wed, Feb 05, 2025 at 12:17:29PM +0100, Thomas Richard wrote:
-> >> On 1/16/25 15:14, Andy Shevchenko wrote:
+On Wed, 26 Mar 2025, Ming Yu wrote:
 
-...
-
-> >> So I'm not really convinced by all this complexity for only one driver.
-> > 
-> > I am not sure if I asked you to show the excerpt from DSDT for this device.
-> > Is there any link I can browse the ASL code (for that particular device,
-> > most likely I wouldn't need the full DSDT)?
-> > 
+> Lee Jones <lee@kernel.org> 於 2025年3月20日 週四 下午10:50寫道：
+> >
+> ...
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x1),
+> > > >
+> > > > IDs are usually given in base-10.
+> > > >
+> > >
+> > > Fix it in v9.
+> > >
+> > > > Why are you manually adding the device IDs?
+> > > >
+> > > > PLATFORM_DEVID_AUTO doesn't work for you?
+> > > >
+> > >
+> > > I need to manage these IDs to ensure that child devices can be
+> > > properly utilized within their respective modules.
+> >
+> > How?  Please explain.
+> >
+> > This numbering looks sequential and arbitrary.
+> >
+> > What does PLATFORM_DEVID_AUTO do differently such that it is not useful?
+> >
 > 
-> I'm currently working on the V3, and I just remembered that you asked me
-> DSDT file. So for the UP Squared board, please find the full DSDT, and
-> also SSDT1 (which contains the FPGA declaration).
-> 
-> DSDT: https://gist.github.com/thom24/4d24c2a2f58d93f799e512c2485efd45
-> SSDT1: https://gist.github.com/thom24/2da44ef86eacfa5d2d492ce43fa41aa4
+> As far as I know, PLATFORM_DEVID_AUTO assigns dynamic IDs to devices,
+> but I need fixed IDs.
+> For example, the GPIO driver relies on these IDs to determine the
+> group, allowing the firmware to identify which GPIO group to operate
+> on through the API.
 
-Thank you!
+PLATFORM_DEVID_AUTO will allocate IDs 0 through 16, the same as you've
+done here.  These lines do not have any differentiating attributes, so
+either way we are not allocating specific IDs to specific pieces of the
+H/W.  I still do not understand why you need to allocate them manually.
+
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x2),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x3),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x4),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x5),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x6),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x7),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x8),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x9),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xA),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xB),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xC),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xD),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xE),
+> > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xF),
+> 
+> 
+> Thanks,
+> Ming
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
 
