@@ -1,59 +1,62 @@
-Return-Path: <linux-gpio+bounces-18224-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18225-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7413DA7B2E5
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 02:05:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C15AA7B316
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 02:10:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD2331703EC
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 00:04:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C71A8189B658
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 00:10:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDEBF433CB;
-	Fri,  4 Apr 2025 00:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 453131B042E;
+	Fri,  4 Apr 2025 00:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlKqHZR/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaJsMSNN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DB03D984;
-	Fri,  4 Apr 2025 00:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE21A1AE877;
+	Fri,  4 Apr 2025 00:05:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725052; cv=none; b=p9nmBup/6nIDSPGhnkD3GxkUi1/5T7y18oqf7oY8fxM3KkpwrIBrmLS038Ud6dl0lyymVBj5IwVcVcDD8SXwhPWzia41aqAPo9VQxGQMaA1i24kFvC2shi+Bvc1QQEV4tj1BobUdtBTU5dG3ip0ipAbpxrRmKzT+5eIRA4j3pi4=
+	t=1743725102; cv=none; b=pvU7ezWiq5EGjAYw6QfSscK/WBvODXG4rduXtk0xBumlGg1sGqQlx2I4v1oatcONgUV3FAx3KtmndC4qXCWgHA4CWu9btD5jou3hatdhOnOZIh+P5458hqHAWUsMP2lq0HVnWZ9XzEiD9c75kU//QE7kNuFbt0JrFjE4/WZ2e1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725052; c=relaxed/simple;
-	bh=N1YA7dqa2h4bNP+N0xfdfZRydTChokeDkIqw65VqEqw=;
+	s=arc-20240116; t=1743725102; c=relaxed/simple;
+	bh=fv93mNmTgll8s1lzzmMzuD6QI4oex6qpoMEo2aBam74=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qOnWD4JZ/zEe2Jz11HYRjMbTaMifZiHKSZ8AzF81tKJ1wqgXRrhVfPya5NKYld3bwWTYdbpI1f1PccWB7ff5v0Id+wLz6sSOhQLwmRLVYf6/xZuLUJXHP95mmG9ybH2mYhwMAkB6DBMdPNV05lacv1J75VLH3mCwvCcliMp/u1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlKqHZR/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56EE8C4AF0B;
-	Fri,  4 Apr 2025 00:04:11 +0000 (UTC)
+	 MIME-Version; b=U2MqEuk3xuYTVbZsGduqgK/7OZsU3B5W6jDnezjVEd4Oh4AX7sor2Il36cQsKbrTdfPncbSufH06u7PiiTEp3qH6nWwLbPbTlxmb0LxvQR2OzV1AErBzoVRFI5F+6FMM2phQ/+1HbyHerFAQuqTHPgT2HtfJD5jtPZBmXiHLz5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaJsMSNN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D410FC4CEE3;
+	Fri,  4 Apr 2025 00:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743725052;
-	bh=N1YA7dqa2h4bNP+N0xfdfZRydTChokeDkIqw65VqEqw=;
+	s=k20201202; t=1743725101;
+	bh=fv93mNmTgll8s1lzzmMzuD6QI4oex6qpoMEo2aBam74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WlKqHZR/ZbCGIWdgtVN8jHWXqRxwpWrMUPHGqzhnIQ40QSG2FlzK1F50FuZxszb0W
-	 jRHEIyaclulkOEFzpnYzc0TLOpxEATanKOOGs/zTlX585elSleNNQd7ipPhUhMsERx
-	 uap9yJZ9gQUKBoJgtkn3D4TDC40hqKitMIe1XsyTai3fCnvdn2AQGUQT2ovjfHPevi
-	 9vEmJ/hRGyj7WkOcdNnNE6fO0c1uxqKvRvPGeJqBPDxRLp8QaFtZGoynLsfP/c6umv
-	 gDFP+82rxkLjSU6O+ctJbenWnC0TwOH5ln0+kBvK7WFokl7/fjqtEcsGQeyqtbcU+q
-	 iTXYcIrbV+u+w==
+	b=PaJsMSNNwvgpvBGy9mpHIrdaOk4ru2+NA/qYqfiPkAPj46ciEkKthgjubCVgjprXP
+	 WL6TD7PCy78+7zmqzQgq/m2L59ik4w+o5Z2qjBDg6Hs/fuvVAmOGl7HA7nxR347iR7
+	 1T31y3uLmjSz1upjmQy2qnBvFsSOWTjwI0FjmEz84/7CFDdH88hNkYH+trfOSKnejC
+	 xMuKfJJO95hrAi5KM1yv9WctFQnPP1kI8n07oi3JPDmhy5gdtzDFXuZ9dYVMtJAvhb
+	 f8c9pWWOmZmXmYfWhj3XiakmFcDbbJYqTwNCjDbAkpWbPyLERhNbrlXPGwnVOcLUne
+	 cPxOE1yY4wanw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Mastykin <mastichi@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: Chenyuan Yang <chenyuan0y@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
+	linus.walleij@linaro.org,
+	linux-renesas-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 04/23] pinctrl: mcp23s08: Get rid of spurious level interrupts
-Date: Thu,  3 Apr 2025 20:03:41 -0400
-Message-Id: <20250404000402.2688049-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 03/22] pinctrl: renesas: rza2: Fix potential NULL pointer dereference
+Date: Thu,  3 Apr 2025 20:04:32 -0400
+Message-Id: <20250404000453.2688371-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250404000402.2688049-1-sashal@kernel.org>
-References: <20250404000402.2688049-1-sashal@kernel.org>
+In-Reply-To: <20250404000453.2688371-1-sashal@kernel.org>
+References: <20250404000453.2688371-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,89 +65,40 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14
+X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Mastykin <mastichi@gmail.com>
+From: Chenyuan Yang <chenyuan0y@gmail.com>
 
-[ Upstream commit 7b0671b97f0872d6950ccc925e210cb3f67721bf ]
+[ Upstream commit f752ee5b5b86b5f88a5687c9eb0ef9b39859b908 ]
 
-irq_mask()/irq_unmask() are not called for nested interrupts. So level
-interrupts are never masked, chip's interrupt output is not cleared on
-INTCAP or GPIO read, the irq handler is uselessly called again. Nested
-irq handler is not called again, because interrupt reason is cleared by
-its first call.
-/proc/interrupts shows that number of chip's irqs is greater than
-number of nested irqs.
+`chip.label` in rza2_gpio_register() could be NULL.
+Add the missing check.
 
-This patch adds masking and unmasking level interrupts inside irq handler.
-
-Signed-off-by: Dmitry Mastykin <mastichi@gmail.com>
-Link: https://lore.kernel.org/20250122120504.1279790-1-mastichi@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Link: https://lore.kernel.org/20250210232552.1545887-1-chenyuan0y@gmail.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-mcp23s08.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rza2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index b96e6368a9568..4d1f41488017e 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -382,6 +382,7 @@ static irqreturn_t mcp23s08_irq(int irq, void *data)
- {
- 	struct mcp23s08 *mcp = data;
- 	int intcap, intcon, intf, i, gpio, gpio_orig, intcap_mask, defval, gpinten;
-+	bool need_unmask = false;
- 	unsigned long int enabled_interrupts;
- 	unsigned int child_irq;
- 	bool intf_set, intcap_changed, gpio_bit_changed,
-@@ -396,9 +397,6 @@ static irqreturn_t mcp23s08_irq(int irq, void *data)
- 		goto unlock;
- 	}
+diff --git a/drivers/pinctrl/renesas/pinctrl-rza2.c b/drivers/pinctrl/renesas/pinctrl-rza2.c
+index dd1f8c29d3e75..a654ede01f705 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rza2.c
++++ b/drivers/pinctrl/renesas/pinctrl-rza2.c
+@@ -246,6 +246,9 @@ static int rza2_gpio_register(struct rza2_pinctrl_priv *priv)
+ 	int ret;
  
--	if (mcp_read(mcp, MCP_INTCAP, &intcap))
--		goto unlock;
--
- 	if (mcp_read(mcp, MCP_INTCON, &intcon))
- 		goto unlock;
- 
-@@ -408,6 +406,16 @@ static irqreturn_t mcp23s08_irq(int irq, void *data)
- 	if (mcp_read(mcp, MCP_DEFVAL, &defval))
- 		goto unlock;
- 
-+	/* Mask level interrupts to avoid their immediate reactivation after clearing */
-+	if (intcon) {
-+		need_unmask = true;
-+		if (mcp_write(mcp, MCP_GPINTEN, gpinten & ~intcon))
-+			goto unlock;
-+	}
+ 	chip.label = devm_kasprintf(priv->dev, GFP_KERNEL, "%pOFn", np);
++	if (!chip.label)
++		return -ENOMEM;
 +
-+	if (mcp_read(mcp, MCP_INTCAP, &intcap))
-+		goto unlock;
-+
- 	/* This clears the interrupt(configurable on S18) */
- 	if (mcp_read(mcp, MCP_GPIO, &gpio))
- 		goto unlock;
-@@ -470,9 +478,18 @@ static irqreturn_t mcp23s08_irq(int irq, void *data)
- 		}
- 	}
+ 	chip.parent = priv->dev;
+ 	chip.ngpio = priv->npins;
  
-+	if (need_unmask) {
-+		mutex_lock(&mcp->lock);
-+		goto unlock;
-+	}
-+
- 	return IRQ_HANDLED;
- 
- unlock:
-+	if (need_unmask)
-+		if (mcp_write(mcp, MCP_GPINTEN, gpinten))
-+			dev_err(mcp->chip.parent, "can't unmask GPINTEN\n");
-+
- 	mutex_unlock(&mcp->lock);
- 	return IRQ_HANDLED;
- }
 -- 
 2.39.5
 
