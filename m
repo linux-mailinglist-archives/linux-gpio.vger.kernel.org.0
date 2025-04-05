@@ -1,164 +1,196 @@
-Return-Path: <linux-gpio+bounces-18245-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18246-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B63D6A7C54F
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 23:11:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CF30A7C91E
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Apr 2025 14:49:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B3EF1898971
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Apr 2025 21:11:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B3FE7A7ECA
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Apr 2025 12:48:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9C75166F1A;
-	Fri,  4 Apr 2025 21:11:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE5871DF727;
+	Sat,  5 Apr 2025 12:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4jYuA3/"
+	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="fqlzOnRL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272B213CA9C;
-	Fri,  4 Apr 2025 21:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9501DDC21;
+	Sat,  5 Apr 2025 12:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743801085; cv=none; b=pmAA3N+1KlZON7926nvE5b/wisaW9PigiWdrK+9q89Q+TlzOHPcLJDLoOl16ZxttAq3ug8c/OWX64IEcaoY6z86ny3Z4dvz4ghtD88qusYrMxvg3aI6xaV6DGk5PE9ysfvMLjdpPdS1gzG5Z0GtjjTfQ6VOx3DscFNeLsadyvU0=
+	t=1743857361; cv=none; b=CWwAlLDUlXZZtnu8uEWfuf9pfUzRyZ7CGd2/pYAoP2Udv4f79K48tiYIhpRsae2nc820+SFm5XtRc9pzCHn4QPwKqVfJG/dGLj+P1jzNr9XTRdcJ2FkJipL2OqPqQplaXtuiUwKps560+HdjAPuRmAIMbDjtb5sVZef/dgvdOWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743801085; c=relaxed/simple;
-	bh=MjG7WDVtAWWUYawY2kCjjrRaSUwGOVTw+twD7YyzniI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ti1u1LlelY0l03pLSBS0hJGlpfNZUc3Ag+DWO7mFtYvMdmDkwLN2Zh6FaSG+BXTjLT57HR7FbGx4gTVdB4rGkck7unoQBqgsaWOib0TdObsar8EmDHeHiNwFSTnzSy69C6LXjpIeRKyOuwu/ZShFhxXXYubdN2n/E5DCofzldF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D4jYuA3/; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7399838db7fso2313046b3a.0;
-        Fri, 04 Apr 2025 14:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743801083; x=1744405883; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xJ5Ax+b/+r9SViBdjupPBgBblmSsLmDgYIPTd3L/ObA=;
-        b=D4jYuA3//wFS15gywYlnET75MvbPnO5EpPVbaqT46kgDKTXuN4iKIKHv1ROEawpWWQ
-         j3FcBVx2OVVORpB1oBzUSWtZYH4GqQCUDrzSq79SOgnbI7wIv5iRkcmhy3ZVciEHWYn2
-         7E2sXK15+wf3+RDkfDfWpAbkFJ550dtMYCAGNSsmswPJMJw4km2puWUtRK7PofUu4XOZ
-         tppZSqputv/NYFO+CDOaU4y2AXbwAboltjw17fSKnkG/MWY2HWrPVt177yFWzygSESUN
-         EOEe817hmpnLkz/GKSGmp3wPLiUn9t6xEHEO4YnWqYKNPeeZ+kSrkRUPPDdLcltskQ1s
-         jqCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743801083; x=1744405883;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xJ5Ax+b/+r9SViBdjupPBgBblmSsLmDgYIPTd3L/ObA=;
-        b=HUChG22IMSTCmq/2M593KEn9mmqf+quLFjMgwVMeMf6xMA5iz6uBEby80A3K8R6NxK
-         Tlpa9VrWHahAnbsRclk8WTMMaoY9y3Fe0IguRGep54uco+gHxKlFFvxnouUP6cX9Dr/F
-         WT/+BA2jva0+gpJUlSPO61xgDel7V0CQo2U5djhqZMYf9Z2fu0o5/u0Azqaadz58O2Ct
-         gm1KznT1n3p2C6w6kF8aOns8bkNWRN7Oge81dWTpGs4X6quts3FfJ32G8iYina/urCW9
-         FhbFXLyi7xCyZV3bsRA0MRxenRZszDeG8x1mTKNGTdrYI9RcLvlt0BYn6n1D/yuJksKY
-         CWHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUI8C0goORXpsHNZfxpRl1sDW4XKyINWfh4V3UMh8Frb5pD2EK7CCdryZ1x4ykvNP2fND7yVRETSZcQ7Q==@vger.kernel.org, AJvYcCVHMXUT+7lFdvGKLCYywtaAe1ME1E7C564IRYRNfbowgKtF0mN/GUVOETaAAM+3jkvoG/2C4M8k/cKk4/YL@vger.kernel.org, AJvYcCXklX+vRakGu78R2O43CBVX3cmdUjykv3m2Mo3uee94a0a1VTk/BRgFfASChv2KSTwdG5rK+8Svuher@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsZQHEhszeTqgf++1tJR0BCTYfHmSdAKyMptoZGtVXhywOp35O
-	YpgHdTcYDCpI7P327474ifhlJhG8L5heRXxEqdhRl6KB8idH9T8Q
-X-Gm-Gg: ASbGncuST1JH2Dxsd0ZFU+K3SSRNghZHYYw2b/59iaB7wzL0xbdh2+HudUsO16OaxM6
-	QHYSYitVPLpGgiyW6PZJ5UsMMI14EEnWZ6t6/wFvVq1iX/MqmyPYQ4Sf06tu67/2P/M99qGzIR2
-	4Mw4yJiaG9c5e7hOUXghRZwxIrFpv21jjrUCrNB2tWbLdIsY8f56rKqzprsY2cRgx3O349n2Ag6
-	6pSUwBWTNmP+ome9ySOX830WsCbgk0J3gKH17hs8UUkUSp7tdvJf3D3OHZlz8JL0yxW55+d7T/0
-	Erv9ReAt7g2GpQUZHUVO8KMHooq6+Sxcde+wQavvSzgQ5RUPMtiPxQ0=
-X-Google-Smtp-Source: AGHT+IH42CCq/W/EvmBslR7WSG2Y/2tJDvNHR8eQZSvFsgksiebLqGqMnBl3sbjeiQ3LoEp5Fd0/Cw==
-X-Received: by 2002:a05:6a00:3242:b0:732:56a7:a935 with SMTP id d2e1a72fcca58-739d65872a2mr12032822b3a.12.1743801083259;
-        Fri, 04 Apr 2025 14:11:23 -0700 (PDT)
-Received: from localhost ([2804:30c:1f4f:6800:9245:316f:6226:cc1e])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-739d9ea097asm4021937b3a.90.2025.04.04.14.11.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 14:11:22 -0700 (PDT)
-Date: Fri, 4 Apr 2025 18:12:26 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, lars@metafoo.de,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
-	lgirdwood@gmail.com, broonie@kernel.org, dlechner@baylibre.com,
-	jonath4nns@gmail.com
-Subject: Re: [PATCH v4 12/17] iio: adc: ad7768-1: Add GPIO controller support
-Message-ID: <Z_BLOjVxtPF_eyOj@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
- <efdbddad734021f38a43cc9d101a22424e71dcef.1741268122.git.Jonathan.Santos@analog.com>
+	s=arc-20240116; t=1743857361; c=relaxed/simple;
+	bh=POHAFotKd8e1O+6O+b9w5tEhRIF3sEA2eTNlYAQuvOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sczQzC69iU6+lD7DcVVTWeZwWnaIsxH3iK4Lh/9fb8qaPMCvi2EnQqm1NvoSkESY7+zXEWU2rPlMPQxk3oIEEN8Ub4bkw8wZFPHD9IL6Z6mq8dGigStYyMU/mNXyVZ6/K1jW3hxLUop+jNgrkq925p+olDq46n5kOqEzkhGoN5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=fqlzOnRL; arc=none smtp.client-ip=173.249.15.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
+dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
+	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type;
+	bh=+lj06kP7F8HTAAzSL4UU5vQVmYs6pDrrt0YSXXnbsUM=;
+	b=fqlzOnRLRyUuGGefktblktLzYyLfea5KMiTjVD1wykqt04dKGS3U8F/WoHWkTW8kgRjMaQRPeycvDE80NrfCHesWrcsCi7yLj5PsIkNIeedknZIodKPhAOdpWcBeJFFKKqLRspJzAXNHeiIj+VmMoItzRI58iV+HUuqJgcVaiXM=
+Received: from lukas-hpz440workstation.localnet (cm70-231.liwest.at [212.241.70.231])
+	by mail.netcube.li with ESMTPSA
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
+	; Sat, 5 Apr 2025 13:48:26 +0200
+From: Lukas Schmid <lukas.schmid@netcube.li>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ [BUG] pinctrl_mcp23s08_i2c: mutex used in irq_bus_lock causes 'scheduling
+ while atomic' with matrix_keypad
+Date: Sat, 05 Apr 2025 13:48:25 +0200
+Message-ID: <5879304.DvuYhMxLoT@lukas-hpz440workstation>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <efdbddad734021f38a43cc9d101a22424e71dcef.1741268122.git.Jonathan.Santos@analog.com>
+Content-Type: multipart/signed; boundary="nextPart6148072.lOV4Wx5bFT";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-Hey Jonathan, 
+--nextPart6148072.lOV4Wx5bFT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Lukas Schmid <lukas.schmid@netcube.li>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 05 Apr 2025 13:48:25 +0200
+Message-ID: <5879304.DvuYhMxLoT@lukas-hpz440workstation>
+MIME-Version: 1.0
 
-The AD7768-1 GPIO controller support looks good to me.
-Besides reviewing it, I've also inspired on your patch to implement GPIO
-controller support for AD4170. I have one inline suggestion, though.
+Hi all,
 
-With that sorted out
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+I'm encountering a "BUG: scheduling while atomic" when using the MCP23017 GPIO 
+expander with the `matrix_keypad` driver in IRQ mode on Linux v6.12.20
 
-Thanks,
-Marcelo
+Hardware setup:
+- MCP23017 connected via I2C
+- 4x4 matrix keypad hooked to MCP23017 GPIOs
+- SoC: Allwinner V3s SoC
+- Using devicetree-overlay configuration for `microchip,mcp23017` and `gpio-
+matrix-keypad`
 
-On 03/06, Jonathan Santos wrote:
-> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> 
-> The AD7768-1 has the ability to control other local hardware (such as gain
-> stages),to power down other blocks in the signal chain, or read local
-> status signals over the SPI interface.
-> 
-> Add direct mode conditional locks in the gpio callbacks to prevent register
-> access when the device is in buffered mode.
-> 
-> This change exports the AD7768-1's four gpios and makes them accessible
-> at an upper layer.
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> Co-developed-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> ---
-...
-> ---
->  drivers/iio/adc/ad7768-1.c | 143 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 141 insertions(+), 2 deletions(-)
-> 
-...
-> +static int ad7768_gpio_init(struct iio_dev *indio_dev)
-> +{
-> +	struct ad7768_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	ret = regmap_write(st->regmap, AD7768_REG_GPIO_CONTROL,
-> +			   AD7768_GPIO_UNIVERSAL_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->gpiochip = (struct gpio_chip) {
-> +		.label = "ad7768_1_gpios",
-> +		.base = -1,
-> +		.ngpio = 4,
-> +		.parent = &st->spi->dev,
-> +		.can_sleep = true,
-> +		.direction_input = ad7768_gpio_direction_input,
-> +		.direction_output = ad7768_gpio_direction_output,
-> +		.get = ad7768_gpio_get,
-> +		.set = ad7768_gpio_set,
-> +		.owner = THIS_MODULE,
-> +	};
-> +
-> +	return gpiochip_add_data(&st->gpiochip, indio_dev);
-Use devm_gpiochip_add_data(), otherwise the gpiochip is not removed on device
-detach.
+When I press buttons on the keypad, after some amount of presses I get the 
+following error from the Kernel:
 
-> +}
-> +
+[   92.820159] BUG: scheduling while atomic: kworker/0:2/46/0x00000002
+[   92.826577] Modules linked in: bluetooth ecdh_generic ecc cfg80211 rfkill 
+ipv6 af_packet evdev mcp251xfd can_dev matrix_keypad matrix_keymap 
+gpio_pcf857x pinctrl_mcp23s08_i2c pinctrl_mcp23s08 hd44780 hd44780_common 
+charlcd sun4i_ss libdes sun4i_codec sun8i_codec_analog sun8i_adda_pr_regmap 
+snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer snd soundcore uio_pdrv_genirq 
+uio [last unloaded: esp32_sdio(O)]
+[   92.862336] CPU: 0 UID: 0 PID: 46 Comm: kworker/0:2 Tainted: G           O       
+6.12.20 #1
+[   92.862362] Tainted: [O]=OOT_MODULE
+[   92.862368] Hardware name: Allwinner sun8i Family
+[   92.862378] Workqueue: events matrix_keypad_scan [matrix_keypad]
+[   92.862415] Call trace: 
+[   92.862429]  unwind_backtrace from show_stack+0x18/0x1c
+[   92.862469]  show_stack from dump_stack_lvl+0x68/0x74
+[   92.862490]  dump_stack_lvl from __schedule_bug+0x5c/0x70
+[   92.862518]  __schedule_bug from __schedule+0xab4/0xc94
+[   92.862541]  __schedule from schedule+0x34/0x14c
+[   92.862560]  schedule from schedule_preempt_disabled+0x24/0x34
+[   92.862580]  schedule_preempt_disabled from __mutex_lock.constprop.
+0+0x2e4/0x940
+[   92.862605]  __mutex_lock.constprop.0 from mcp23s08_irq_bus_lock+0x20/0x30 
+[pinctrl_mcp23s08]
+[   92.862650]  mcp23s08_irq_bus_lock [pinctrl_mcp23s08] from 
+__irq_get_desc_lock+0x84/0xa8
+[   92.862682]  __irq_get_desc_lock from enable_irq+0x38/0xa8
+[   92.862710]  enable_irq from matrix_keypad_scan+0x2e0/0x324 [matrix_keypad]
+[   92.862738]  matrix_keypad_scan [matrix_keypad] from 
+process_one_work+0x160/0x410
+[   92.862763]  process_one_work from worker_thread+0x258/0x3f8
+[   92.862782]  worker_thread from kthread+0x118/0x134
+[   92.862801]  kthread from ret_from_fork+0x14/0x38
+[   92.862817] Exception stack(0xc4989fb0 to 0xc4989ff8)
+[   92.862829] 9fa0:                                     00000000 00000000 
+00000000 00000000
+[   92.862840] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000
+[   92.862849] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   93.007968] BUG: workqueue leaked atomic, lock or RCU: kworker/0:2[46]
+[   93.007968]      preempt=0xffffffff lock=0->0 RCU=0->0 
+workfn=matrix_keypad_scan [matrix_keypad]
+[   93.008051] CPU: 0 UID: 0 PID: 46 Comm: kworker/0:2 Tainted: G        W  O       
+6.12.20 #1
+[   93.008071] Tainted: [W]=WARN, [O]=OOT_MODULE
+[   93.008076] Hardware name: Allwinner sun8i Family
+[   93.008085] Workqueue: events matrix_keypad_scan [matrix_keypad]
+[   93.008108] Call trace: 
+[   93.008121]  unwind_backtrace from show_stack+0x18/0x1c
+[   93.008158]  show_stack from dump_stack_lvl+0x68/0x74
+[   93.008179]  dump_stack_lvl from process_one_work+0x40c/0x410
+[   93.008202]  process_one_work from worker_thread+0x258/0x3f8
+[   93.008221]  worker_thread from kthread+0x118/0x134
+[   93.008240]  kthread from ret_from_fork+0x14/0x38
+[   93.008256] Exception stack(0xc4989fb0 to 0xc4989ff8)
+[   93.008267] 9fa0:                                     00000000 00000000 
+00000000 00000000
+[   93.008277] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000
+[   93.008286] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   93.008300] BUG: scheduling while atomic: kworker/0:2/46/0x00000000
+[   93.115583] Modules linked in: bluetooth ecdh_generic ecc cfg80211 rfkill 
+ipv6 af_packet evdev mcp251xfd can_dev matrix_keypad matrix_keymap 
+gpio_pcf857x pinctrl_mcp23s08_i2c pinctrl_mcp23s08 hd44780 hd44780_common 
+charlcd sun4i_ss libdes sun4i_codec sun8i_codec_analog sun8i_adda_pr_regmap 
+snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer snd soundcore uio_pdrv_genirq 
+uio [last unloaded: esp32_sdio(O)]
+[   93.151453] CPU: 0 UID: 0 PID: 46 Comm: kworker/0:2 Tainted: G        W  O       
+6.12.20 #1
+[   93.151483] Tainted: [W]=WARN, [O]=OOT_MODULE
+[   93.151488] Hardware name: Allwinner sun8i Family
+[   93.151496] Workqueue:  0x0 (events)
+[   93.151525] Call trace: 
+[   93.151537]  unwind_backtrace from show_stack+0x18/0x1c
+[   93.151570]  show_stack from dump_stack_lvl+0x68/0x74
+[   93.151589]  dump_stack_lvl from __schedule_bug+0x5c/0x70
+[   93.151615]  __schedule_bug from __schedule+0xab4/0xc94
+[   93.151640]  __schedule from schedule+0x34/0x14c
+[   93.151659]  schedule from worker_thread+0x1c8/0x3f8
+[   93.151681]  worker_thread from kthread+0x118/0x134
+[   93.151698]  kthread from ret_from_fork+0x14/0x38
+[   93.151713] Exception stack(0xc4989fb0 to 0xc4989ff8)
+[   93.151725] 9fa0:                                     00000000 00000000 
+00000000 00000000
+[   93.151736] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000
+[   93.151746] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+
+Happy to test patches or provide further debugging info.
+
+Best regards,  
+Lukas Schmid
+--nextPart6148072.lOV4Wx5bFT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEPv6dcBmn59ssZMkSJnN+drMVRtgFAmfxGIkACgkQJnN+drMV
+RtieUAf8CVbgPNCJYR+490fKHa8mOTrB03Mqkd1SXjfN0AMt+cbhmEQ/ELW7GYgG
+DTTrUqpeyDzxc85HVHWA8wk2hWN4CTnPl7C855fiCHq7yy1yiG/VMGR5hEW0izPC
+Fe4PZ6T1E6G7WigaamERePFcyqD79oAWyVYvBvGInY1MZHgIEJi82ZFw88dQpcaE
+UtEbVyDFnCvMupueBs/40bIxfqqA43XhIEzlqJ5e6XeZlfODnT+xCG58Pd2N5QCB
+jMsld05LWjEmRZSynXwHDXDUTrwRnYhxfCw0JSw4bOZeX+5FADJmF/0J+c5afXiS
+GMRp1ld2id2V1zpucE2hZDj/jsJW6A==
+=tCzG
+-----END PGP SIGNATURE-----
+
+--nextPart6148072.lOV4Wx5bFT--
+
+
+
+
 
