@@ -1,62 +1,63 @@
-Return-Path: <linux-gpio+bounces-18332-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18335-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2DF5A7DCA6
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 13:48:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA863A7DCB2
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 13:49:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2C6E173B15
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 11:48:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4414F1892F56
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 11:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BBB24501C;
-	Mon,  7 Apr 2025 11:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCB4924887D;
+	Mon,  7 Apr 2025 11:48:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Brx5uq38"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="azMp1/g6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC46322DF80;
-	Mon,  7 Apr 2025 11:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D192459F1;
+	Mon,  7 Apr 2025 11:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744026497; cv=none; b=l1AvtxBToEsovgJVREMLBvLvHKj7t3HCBB/kOTf3w+/V2ZkNEdZjfv8JHgvpER2g1nJrp9WtvD96s7DPzGgyemsk72Efzy+S8aCNa6WmW+xT4UJkyjs7rLZd67BVR7+4alHIUHKVFSMl42M4Xz5f8iP+JsZ6SSwf9JUB3XRCi0Q=
+	t=1744026505; cv=none; b=Rdb8V+E3S7IWgPgw8Z4larPwTTlKmn91juzvS5FlNHRCFN24SRUdH6BKq8NtTmpddxRlnIQuG3JTdObbUbqb5vKuoSpIQXE52BeF8Q6h+7Of1eh0QkdX9aOoD8B+BpHTeX68547B6yvS3twQ27cBQC4lTa4P3obgGqPL44UAydU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744026497; c=relaxed/simple;
-	bh=cV6uEwyukR8ex1GdskZ8gaKPeyj3PmbNq5yAuE2CMf4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YaAMKuMrOXzYfUszycvrr2dt7/G6DjcH8h23Em+FsJr+dC0yr9967gUipG+p30DXnmgBekR1va2ucsBw/n1oKV9Smsw1we56XK35mFu5lRlM+PGkl0lcA6mZYMeKFpkJrP8+N7W3pUzwbjcNRByNdMkTlj1OfKlc0JUPMM2sx/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Brx5uq38; arc=none smtp.client-ip=210.61.82.184
+	s=arc-20240116; t=1744026505; c=relaxed/simple;
+	bh=UD2mxR6/R3uUsSJHesVe76pW4JLHqV49tIevDIORvAg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M5V81MQ5BZS4GVDm7tmHGx/+hTcy07bTXAueyYvYIv8gwaSqukVDVLe/bDAckrxT22y8rOeZV3ltuu/pHjMHbC3/nc0ZrxawPHdCidhoyEA0Uzobk+Zigr+nhTpoR2LaykMOTO64JzTFRwYgtUmnXYws1kZqtaEI4slrjBohEVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=azMp1/g6; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 2c8ae2b013a611f08eb9c36241bbb6fb-20250407
+X-UUID: 2e308ed013a611f0aae1fd9735fae912-20250407
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=H0Ju1JYitew1f7vP2gI0VqL3Y8dqgqZen6iVSaDOPyM=;
-	b=Brx5uq38en+xtqbkpLuiY7HR8Ljmmxti4Gfi+eUY3UlxGiO+WLo3GpeVqj7Aqf7yFiJoy3zYhCC5Ipgg4l6KlrbTV1BojXXza+NZPWQG3Ss8HaIEmpmx8CEzViamD4QXDoAXq3ZWZSIXcLNAiG4ivIrRigCjJf9KLYjy2efZ87k=;
+	h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=BzRlhfZlWSb/lHccJiJkcS77zElOZqx95Po7yyZLtNc=;
+	b=azMp1/g6uz6pXctBezli2eL6jYEaTpqYrc/+Ij8CrIB5EQFRiU9SphgXSBr02XIWwvffnZTx1hWxMdlW1/B0mtDgl4gIMr8zUaDnCGtMOL9FwhZnAd2SAzcb+Xlr0amlqHSZx3X5nPuYcaTlaePkxxrQDSuD6rXI8CR80PlYmKM=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:010c1db5-6f95-4898-b0ff-cf68ffe0f565,IP:0,UR
+X-CID-O-INFO: VERSION:1.2.1,REQID:3aa9b862-5dbc-4273-bc47-02a8f761aebe,IP:0,UR
 	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
 	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:7dc80a4b-a527-43d8-8af6-bc8b32d9f5e9,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|102,TC:nil,Content:0|50,EDM:-3,IP
-	:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
-	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:bbedc6a5-c619-47e3-a41b-90eedbf5b947,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|102,TC:nil,Content:0|50,EDM
+	:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0
+	,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 2c8ae2b013a611f08eb9c36241bbb6fb-20250407
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+X-UUID: 2e308ed013a611f0aae1fd9735fae912-20250407
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
 	(envelope-from <darren.ye@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 95330008; Mon, 07 Apr 2025 19:48:08 +0800
+	with ESMTP id 479213022; Mon, 07 Apr 2025 19:48:10 +0800
 Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 7 Apr 2025 19:48:06 +0800
+ 15.2.1258.39; Mon, 7 Apr 2025 19:48:09 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 7 Apr 2025 19:48:06 +0800
+ 15.2.1258.39 via Frontend Transport; Mon, 7 Apr 2025 19:48:08 +0800
 From: Darren.Ye <darren.ye@mediatek.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
  Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
@@ -69,9 +70,11 @@ CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
 	<darren.ye@mediatek.com>
 Subject: [PATCH 00/11] ASoC: mediatek: Add support for MT8196 SoC
-Date: Mon, 7 Apr 2025 19:47:12 +0800
-Message-ID: <20250407114759.24835-1-darren.ye@mediatek.com>
+Date: Mon, 7 Apr 2025 19:47:13 +0800
+Message-ID: <20250407114759.24835-2-darren.ye@mediatek.com>
 X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250407114759.24835-1-darren.ye@mediatek.com>
+References: <20250407114759.24835-1-darren.ye@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -92,10 +95,12 @@ Changes since v1:
     are improved to support mt8196.
   - remove duplicate definitions in the mt8196 common header file.
   - cm logic is merge into the afe platform driver.
-  - modify afe clk to return judgment logic and remove useless clk sources.
+  - modify afe clk to return judgment logic and remove useless clk
+    sources.
   - refactor the mt8196 adda dai driver.
   - remove the gpio module and use SND_SOC_DAPM_PINCTRL to manage it.
-  - removes CONNSYS_I2S related functions that are not supported in i2s dai driver.
+  - removes CONNSYS_I2S related functions that are not supported in
+    i2s dai driver.
   - fixed mt8196-afe.yaml and mt8196-mt6681.yaml syntax issues.
   - modify log printing in all modules.
   - optimize the header file included for machine driver.
