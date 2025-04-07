@@ -1,79 +1,79 @@
-Return-Path: <linux-gpio+bounces-18397-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18398-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F8A1A7F00E
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 00:00:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A912A7F021
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 00:00:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AAEC216D1BB
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 22:00:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B7973AAC76
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 22:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B34A72080EB;
-	Mon,  7 Apr 2025 22:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B92702144A1;
+	Mon,  7 Apr 2025 22:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtrU1c/X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaHsvH9c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC55E222597;
-	Mon,  7 Apr 2025 22:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D77823DE;
+	Mon,  7 Apr 2025 22:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744063203; cv=none; b=skSlWQtLemFaGnsmyl/Bw6pHOTtWTHpahi+c/BRZlDMY1K6SyYm3uMRGAV4SjHtLQM/5j96rv9IX8QvlLikyyxDTgTlDj/6wZ9Yh0IcKlVLzGwweDQplBosuyWjpDsqwd4h6cD47JCa2kGTrr2SxAemw6fPZTFFpQt9kVd1ezp8=
+	t=1744063242; cv=none; b=PE4T0mDXO6ic7SM8ggPJP5g6fXk9pNnpEKgWM47Fsw7LvgFbko43xB3vDQIzZV2qd0VQz/JLRQanpzZv9eVOfaXNZVsh//Kc2Zg997u/6SEMoOitXvwCZco4u/Wg5sR2vtTu53W/fYq7pdQP94KLlWkDOXXP5pFsc6TCfJVbbLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744063203; c=relaxed/simple;
-	bh=T5/Exwnghj91zmb3+TLLB9qPHi3WhTFuRXW4Q0dQSXc=;
+	s=arc-20240116; t=1744063242; c=relaxed/simple;
+	bh=AdlKtehz82doSEn45Oyk5hf22xBH1s0QhMC3mjY+5lI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b9KxIOrbDRIoAQX/ESvlrd/ugQ/SgvDmKjtzyOaXv1dHJNh5s1G8GsuFo6rHkI7AfOiBJT3kYO5U2Nvna3Yc+5QAkmuP25zjZqeMCtTsBLgxImrSHS+8IIQrRNO03D6b4Jllgy/Jo3EwH8LwNGAqFCOhHkKg0QCTgKKVM8uORvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UtrU1c/X; arc=none smtp.client-ip=209.85.216.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=aahxK6bZj10m0CYuXPZgOAXAperL0i4tGrys9/FidzPTdDaIEAwz73JHA7R6Z+Ml5si6gG7ZX8/iMFFEv46Aj77SjrybZmL7hF3d7XphmYR8bJosUOl3hrT/8OeMKamBqrU1w23B6HUlJGDHHbSEB5eRawBhzPsBXwDbRafdMeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaHsvH9c; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3018e2d042bso3245946a91.2;
-        Mon, 07 Apr 2025 15:00:01 -0700 (PDT)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736a7e126c7so4383188b3a.3;
+        Mon, 07 Apr 2025 15:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744063201; x=1744668001; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744063240; x=1744668040; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Alsncr83KrcTiA2QIxfUURJ9XNKR9/L2MCro1oyjQD4=;
-        b=UtrU1c/XRLucFy5mOFkinzaGMHImcqZIpU/JlZX27xp6BuXYbtttKJF1/ybG3xZubn
-         Y7BQJ6y0wcQ+WgIGQUqfL7TM3ZPpQxlvl11pRN9vjALuUXfEtqt0xxcB15UsHxRNgt+Q
-         Zk7i79YgbG3hDLBGsu6ZJ/MhE4ea2oufo3teImGs0cXF93Qvr9wr3iKA6/rq5y43kSEW
-         7RUv5qX0JQYN/mSheqR5Xe9eO4aLz6Ti7rHZWyDSjwwus8NNlNYqOZIxeB8/NncSrbGZ
-         +qgC6oSbgbb5fz+e/mlf2VAwEeSP3QbheE7tI59pf2w+51pWqGS6iHFMPZyFgiIIj+n0
-         qPUw==
+        bh=n6D0NZ7H12HB12+U9+CnAwmOYRWcrrB6ReApYETicOk=;
+        b=FaHsvH9cRz3fZmAAvc6VM/+Vy8edaxBJWRKy1qKoE8DrNRBhodUNYsq4GdVUyhkO/U
+         SC4s7rRBmzrmU9f3FvJAp/UcZChTpECNv/rlV/bsGBcDSqpFRuq/4OiDY80dS62yQFQS
+         4587UpKX9D7i/MK3MsCcE+uI5h5Qw5vVRwH4X0Q/ceso0BW/IWttKXz0XYltPlTB1dJ3
+         lJKLiuQQ1JV4tgX3y63Rhbip5sLWYi2Q4Yktkb16vmioMTSnLx+QWFzLGjGmzyM/or9E
+         fUycA5t7Va5k2p/DNIWvSwx0B4lvp0Cj/9CQWSWPCBOOYwSLpMX9lJJ6I1I61FQK3dC+
+         9iWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744063201; x=1744668001;
+        d=1e100.net; s=20230601; t=1744063240; x=1744668040;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Alsncr83KrcTiA2QIxfUURJ9XNKR9/L2MCro1oyjQD4=;
-        b=WJ4rjlzzYhxPi9VbHUpabcpUMpLB4wFI/RHuFzCero0TBTrivvFiAKbdiZIszrhIhT
-         pWIQ9cLYOVeyEbav02M8EoYxl6vsGkGCNMwsdPe30FXW4dc7xZhlDzUskOB9fETyCRz0
-         KBPeWaQn+FwUB/3jqVNYFwcjfTj0qtLqJ7fjzYRUiHRWx0aAj0YKUEsjLPn+Go7ls0cc
-         7QeoKYMExYZREdc6leXOT3/jQmi8E8F1EofJ3w1b6zp6njlsGru+FQezsCEj/6eYbUa8
-         WJypFD8KyeguOlpOHyL1TGvBtcL0kt7y0sP0B4uqzsor3eEHdzcscPz3FDxF17rtm+X8
-         FGgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUk8tXeYhvdjI4TM1kq51XeXWpalBA/PVqrBazWmgpxm7dAqXrgFt5aRoi0NmEa7Luj1YCB76u2oF2a@vger.kernel.org, AJvYcCVSRAr8AkUXAtLqNsnGzQtO2xBEOcws1N8LxfTzIcWDS9gXYdlZ+sz5i1hF5JPZD/edvCe2cYQpnsQemLY=@vger.kernel.org, AJvYcCXEeLe7DYrcCNRicgZ6MJDd2bZ037CKRuXQ40fzmKi2Y+5wlhxqbx9pHytaBhFe9uKEag4H7O6YHF6K5g5c@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwuWCv7R3bEihPbw+Cpq46vF/XPuHi7HSqLVbS+jtU84kmypiW
-	ovSFjylAlV5O7qLFLE4tyZzCAajjKITfZqtAfKfDvZSpCN6NCC+3mTKIkQ==
-X-Gm-Gg: ASbGncvrYiWFkSLgb7H9XSzfEGvOiYp4HLmY9RDIvcDG6gY1PGS9Tc9EtkHW4CcAUVK
-	UnP9TVzMvH0DAidEZT+HFKimDAylF5nvMmz9X6JOkVQCIFYLJqjjXsOkOLZXmw+yR0bQD2kHQkv
-	IDoErtTfxOFXPTdxX4UNy071bwd2wvPyP+Tgaq9QTx0yoTh/W7AjWgopKpdnoZnrbCKIubwsIL4
-	eFG/+jSGQ6i37tURJoQP8SsCkUIxV3C1/hHjzF+bYJakeQn/BAn/I9T945YJfN5Mm3T8KNWe0Ot
-	P/5iAFDI7Wf5l2L+R2vBawUSjM0OXF6rwtR/oPG0gTpTDFKYW4PQcSqa5A==
-X-Google-Smtp-Source: AGHT+IH3Oetmj3VvNHFsyp058BeY9zk7Dd0sqo7AsFMHGM8yLzHsRxPycACVFpXnKNx5wTAVHZlPYw==
-X-Received: by 2002:a17:90b:2e42:b0:2fe:99cf:f579 with SMTP id 98e67ed59e1d1-306a4823704mr19362943a91.4.1744063200879;
-        Mon, 07 Apr 2025 15:00:00 -0700 (PDT)
+        bh=n6D0NZ7H12HB12+U9+CnAwmOYRWcrrB6ReApYETicOk=;
+        b=W6h+M23krxKwpt52bR42/iSDHuofiVYIHbcskTcwvXqsfjhu3l0ogT4j/tbw8tgq2l
+         gxgSY0EFNUBKeDqaBWhGpK4NTDvvG9rU9Aew1LS5aCcf3g71jEnFQl16iJVvrrcS816i
+         1XvgTYxOWzMYbJigEllGk3/W2Upml2voUSXQh6l41o/gbgRy4Vgaja4C+/g8xVnc/3Nz
+         /EllkLXvpfrLQYHEMxgSfAJKhCtLfS1A5DCXTpBfzFWaou1iZPety80fll+29F24bMNy
+         PSFeLtIpkRvuGtoZ3jYKfIbxwClP/v2lH3RBQsUzngX4Cb1wL7piuFIh7FJGXMrSbAXY
+         Xi5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWRjRKwfyYNsIDLYAUKltVYJXAE3vEZGeIu9eTM3K5KZEVLbGoKs0cOVHBzDyETSNC5W75o+ALlsauTwhk=@vger.kernel.org, AJvYcCXIKue24FPkuUNrWP1kZ9o140cdr2YyHpyIbPHDvulS2ggrXeRtD95wUqhByn7nhlS5HX0FkxPhjQlI@vger.kernel.org, AJvYcCXVZffiutZXAKlFPAFltRrUVsaR8UUWyQ6qtoDv9HrUChAqmr7fBVrUJ8htw+3ezGso9f5F53FKZzfxcnsn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxnix3RHyKzmAEQbVprlQbcf5jMZxghzzF3XdhaZOssOY/jGF8r
+	hUjSD2Q8bELBRH9VpekhF63nKFH8iLDWLKFYoGBa9iLXZjSh04b5
+X-Gm-Gg: ASbGncuKh51qjQUzSj8pS+0xQGIutuajVG7C29ymnls3qpcvu5E18XxXh2qeLUiNPtb
+	AbGiJYFz4sktwmOeJ37FxiC4xwNMtppEgWXvUlEGiXu7T14LFeB/K+q/Gl+b105HGYxzgEnH2Nv
+	fiFg4mtm1NeFYFq0sy5caIP25oihv4NSEttrmy6A+ZqUi2i2VV2i9xNoUVUZD5vXHRceF+l4UtK
+	ucIVBXH4SAMI1246DkVCuJl8LTGjJp2QNOcvDOcXgBQ7jZefB4u6CHuaNrK8br8kjqAlSPFsPp6
+	yIynZaPK+BV1/ZC9Tm3rAehDc35GpR4xAwbDUMmQSPW9Zfx08EEVT39LgA==
+X-Google-Smtp-Source: AGHT+IGXN3PtptyGLs+CQ9CJ+bDjhpeR7ILLRO9gIYVJ9LOIe8y7I4UKlZ9jze/A2pKV2h3rQA9TCQ==
+X-Received: by 2002:a05:6a20:d50b:b0:1f5:79c4:5da2 with SMTP id adf61e73a8af0-201047368bbmr25358744637.31.1744063240025;
+        Mon, 07 Apr 2025 15:00:40 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983b9cfbsm9419689a91.31.2025.04.07.15.00.00
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc31db70sm7853349a12.24.2025.04.07.15.00.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 15:00:00 -0700 (PDT)
+        Mon, 07 Apr 2025 15:00:39 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 7 Apr 2025 14:59:59 -0700
+Date: Mon, 7 Apr 2025 15:00:38 -0700
 From: Guenter Roeck <linux@roeck-us.net>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Jean Delvare <jdelvare@suse.com>,
@@ -81,11 +81,11 @@ Cc: Jean Delvare <jdelvare@suse.com>,
 	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 1/2] hwmon: (ltc2992) Use new GPIO line value setter
- callbacks
-Message-ID: <134ac671-13f1-4d29-a81b-a0b7285fd049@roeck-us.net>
+Subject: Re: [PATCH 2/2] hwmon: (pmbus/ucd9000) Use new GPIO line value
+ setter callbacks
+Message-ID: <b5e0fe4d-9acd-4bdf-832e-673237f16f4b@roeck-us.net>
 References: <20250407-gpiochip-set-rv-hwmon-v1-0-1fa38f34dc07@linaro.org>
- <20250407-gpiochip-set-rv-hwmon-v1-1-1fa38f34dc07@linaro.org>
+ <20250407-gpiochip-set-rv-hwmon-v1-2-1fa38f34dc07@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -94,9 +94,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407-gpiochip-set-rv-hwmon-v1-1-1fa38f34dc07@linaro.org>
+In-Reply-To: <20250407-gpiochip-set-rv-hwmon-v1-2-1fa38f34dc07@linaro.org>
 
-On Mon, Apr 07, 2025 at 09:16:16AM +0200, Bartosz Golaszewski wrote:
+On Mon, Apr 07, 2025 at 09:16:17AM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
 > struct gpio_chip now has callbacks for setting line values that return
@@ -105,7 +105,8 @@ On Mon, Apr 07, 2025 at 09:16:16AM +0200, Bartosz Golaszewski wrote:
 > 
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Applied, after fixing the multi-line alignment issue reported by checkpatch.
+Applied.
 
+Thanks,
 Guenter
 
