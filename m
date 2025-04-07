@@ -1,112 +1,103 @@
-Return-Path: <linux-gpio+bounces-18398-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18399-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A912A7F021
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 00:00:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FC6CA7F039
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 00:17:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B7973AAC76
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 22:00:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53AF23AF28D
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 22:14:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B92702144A1;
-	Mon,  7 Apr 2025 22:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D63C224887;
+	Mon,  7 Apr 2025 22:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaHsvH9c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJuWELVU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D77823DE;
-	Mon,  7 Apr 2025 22:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A86224236;
+	Mon,  7 Apr 2025 22:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744063242; cv=none; b=PE4T0mDXO6ic7SM8ggPJP5g6fXk9pNnpEKgWM47Fsw7LvgFbko43xB3vDQIzZV2qd0VQz/JLRQanpzZv9eVOfaXNZVsh//Kc2Zg997u/6SEMoOitXvwCZco4u/Wg5sR2vtTu53W/fYq7pdQP94KLlWkDOXXP5pFsc6TCfJVbbLs=
+	t=1744064103; cv=none; b=Agvf+iZgGcnrAr+qrIbpZGW/BvkoVP5Nw/2aS4or2cHOI/yOFY+izZ4+xCR/w3ZsuRB65lkx1I52SiY4zl2LmCSHoUGaIQKlqawHlLl6hWnRus2DsOUj8p5wnElRmPd2mSPxnOPE9MJn4FyO+aCaWbx0ZHWC6YceQYENhS6yPRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744063242; c=relaxed/simple;
-	bh=AdlKtehz82doSEn45Oyk5hf22xBH1s0QhMC3mjY+5lI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aahxK6bZj10m0CYuXPZgOAXAperL0i4tGrys9/FidzPTdDaIEAwz73JHA7R6Z+Ml5si6gG7ZX8/iMFFEv46Aj77SjrybZmL7hF3d7XphmYR8bJosUOl3hrT/8OeMKamBqrU1w23B6HUlJGDHHbSEB5eRawBhzPsBXwDbRafdMeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaHsvH9c; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736a7e126c7so4383188b3a.3;
-        Mon, 07 Apr 2025 15:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744063240; x=1744668040; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n6D0NZ7H12HB12+U9+CnAwmOYRWcrrB6ReApYETicOk=;
-        b=FaHsvH9cRz3fZmAAvc6VM/+Vy8edaxBJWRKy1qKoE8DrNRBhodUNYsq4GdVUyhkO/U
-         SC4s7rRBmzrmU9f3FvJAp/UcZChTpECNv/rlV/bsGBcDSqpFRuq/4OiDY80dS62yQFQS
-         4587UpKX9D7i/MK3MsCcE+uI5h5Qw5vVRwH4X0Q/ceso0BW/IWttKXz0XYltPlTB1dJ3
-         lJKLiuQQ1JV4tgX3y63Rhbip5sLWYi2Q4Yktkb16vmioMTSnLx+QWFzLGjGmzyM/or9E
-         fUycA5t7Va5k2p/DNIWvSwx0B4lvp0Cj/9CQWSWPCBOOYwSLpMX9lJJ6I1I61FQK3dC+
-         9iWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744063240; x=1744668040;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n6D0NZ7H12HB12+U9+CnAwmOYRWcrrB6ReApYETicOk=;
-        b=W6h+M23krxKwpt52bR42/iSDHuofiVYIHbcskTcwvXqsfjhu3l0ogT4j/tbw8tgq2l
-         gxgSY0EFNUBKeDqaBWhGpK4NTDvvG9rU9Aew1LS5aCcf3g71jEnFQl16iJVvrrcS816i
-         1XvgTYxOWzMYbJigEllGk3/W2Upml2voUSXQh6l41o/gbgRy4Vgaja4C+/g8xVnc/3Nz
-         /EllkLXvpfrLQYHEMxgSfAJKhCtLfS1A5DCXTpBfzFWaou1iZPety80fll+29F24bMNy
-         PSFeLtIpkRvuGtoZ3jYKfIbxwClP/v2lH3RBQsUzngX4Cb1wL7piuFIh7FJGXMrSbAXY
-         Xi5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWRjRKwfyYNsIDLYAUKltVYJXAE3vEZGeIu9eTM3K5KZEVLbGoKs0cOVHBzDyETSNC5W75o+ALlsauTwhk=@vger.kernel.org, AJvYcCXIKue24FPkuUNrWP1kZ9o140cdr2YyHpyIbPHDvulS2ggrXeRtD95wUqhByn7nhlS5HX0FkxPhjQlI@vger.kernel.org, AJvYcCXVZffiutZXAKlFPAFltRrUVsaR8UUWyQ6qtoDv9HrUChAqmr7fBVrUJ8htw+3ezGso9f5F53FKZzfxcnsn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnix3RHyKzmAEQbVprlQbcf5jMZxghzzF3XdhaZOssOY/jGF8r
-	hUjSD2Q8bELBRH9VpekhF63nKFH8iLDWLKFYoGBa9iLXZjSh04b5
-X-Gm-Gg: ASbGncuKh51qjQUzSj8pS+0xQGIutuajVG7C29ymnls3qpcvu5E18XxXh2qeLUiNPtb
-	AbGiJYFz4sktwmOeJ37FxiC4xwNMtppEgWXvUlEGiXu7T14LFeB/K+q/Gl+b105HGYxzgEnH2Nv
-	fiFg4mtm1NeFYFq0sy5caIP25oihv4NSEttrmy6A+ZqUi2i2VV2i9xNoUVUZD5vXHRceF+l4UtK
-	ucIVBXH4SAMI1246DkVCuJl8LTGjJp2QNOcvDOcXgBQ7jZefB4u6CHuaNrK8br8kjqAlSPFsPp6
-	yIynZaPK+BV1/ZC9Tm3rAehDc35GpR4xAwbDUMmQSPW9Zfx08EEVT39LgA==
-X-Google-Smtp-Source: AGHT+IGXN3PtptyGLs+CQ9CJ+bDjhpeR7ILLRO9gIYVJ9LOIe8y7I4UKlZ9jze/A2pKV2h3rQA9TCQ==
-X-Received: by 2002:a05:6a20:d50b:b0:1f5:79c4:5da2 with SMTP id adf61e73a8af0-201047368bbmr25358744637.31.1744063240025;
-        Mon, 07 Apr 2025 15:00:40 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc31db70sm7853349a12.24.2025.04.07.15.00.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 15:00:39 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 7 Apr 2025 15:00:38 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Jean Delvare <jdelvare@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] hwmon: (pmbus/ucd9000) Use new GPIO line value
- setter callbacks
-Message-ID: <b5e0fe4d-9acd-4bdf-832e-673237f16f4b@roeck-us.net>
-References: <20250407-gpiochip-set-rv-hwmon-v1-0-1fa38f34dc07@linaro.org>
- <20250407-gpiochip-set-rv-hwmon-v1-2-1fa38f34dc07@linaro.org>
+	s=arc-20240116; t=1744064103; c=relaxed/simple;
+	bh=VSVFpQj3hn1f1mOYrZD1BOgazgCdpZCs00LueNXdzzQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JOVeEZ+o9H03NF9PpaLXBFeg3eQ2D+HxvJgVL4ew0uqAEkqE2B+wZciZhwEmVrssjBNeS8tMF5sGhcyg6/u+SNyhNVoDBYSTFTTaJWNzhz1/wWBkbS34MrKN21YHiXVsKemrT+8SEZvrzbGHVPm8zoAMT2P9m4460BISLWsna4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJuWELVU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 690FBC4CEDD;
+	Mon,  7 Apr 2025 22:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744064102;
+	bh=VSVFpQj3hn1f1mOYrZD1BOgazgCdpZCs00LueNXdzzQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=XJuWELVUhqQI8860xY5NNgWNmLZ/iEIuwT3i4O4xBmSd+gEver/RHjgXSMdguCUwo
+	 /HOlrnvMI6jEUOAxTwJTMfNTOzN38f0kCUyEwyPLMBZMrdehC6SfR+qRPowJoaDre3
+	 bXTlmo3tACC/54sWNlCYN9n+5ktc3PLUTSzE0UY4dKnmL3Ait/lDs7Oh8MfANZu+mz
+	 87HptC9AAu6YTDk6jjYu2xxBbV6hyznNjX05DQYx54Tm8fkyXx+6Rw/FkWBXmGI51D
+	 17M37eFe5Lh23GhWllcKmr5NgezNU6aMI0grfKKSP/WdtbPne3MKh/DyUIDnAvASeb
+	 pKy3IlIe4BkNg==
+From: Mark Brown <broonie@kernel.org>
+To: linus.walleij@linaro.org, brgl@bgdev.pl, krzk@kernel.org, 
+ lgirdwood@gmail.com, andriy.shevchenko@intel.com, 
+ "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+In-Reply-To: <20250327004945.563765-1-peng.fan@oss.nxp.com>
+References: <20250327004945.563765-1-peng.fan@oss.nxp.com>
+Subject: Re: [PATCH V2 1/2] gpiolib: of: Add polarity quirk for s5m8767
+Message-Id: <174406410013.1124451.2033233013803863409.b4-ty@kernel.org>
+Date: Mon, 07 Apr 2025 23:15:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-gpiochip-set-rv-hwmon-v1-2-1fa38f34dc07@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, Apr 07, 2025 at 09:16:17AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, 27 Mar 2025 08:49:44 +0800, Peng Fan (OSS) wrote:
+> This is prepare patch for switching s5m8767 regulator driver to
+> use GPIO descriptor. DTS for exynos5250 spring incorrectly specifies
+> "active low" polarity for the DVS and DS line. But per datasheet,
+> they are actually active high. So add polarity quirk for it.
 > 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Applied.
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+
+Thanks!
+
+[1/2] gpiolib: of: Add polarity quirk for s5m8767
+      (no commit info)
+[2/2] regulator: s5m8767: Convert to GPIO descriptors
+      commit: 16b19bfd80402bb98135c4b65344e859883766ec
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Guenter
+Mark
+
 
