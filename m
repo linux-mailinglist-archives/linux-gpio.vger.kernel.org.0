@@ -1,83 +1,85 @@
-Return-Path: <linux-gpio+bounces-18252-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18253-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40048A7D2E6
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 06:31:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D41FA7D2E8
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 06:31:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15F487A3E0E
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 04:29:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F344D3AD295
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 04:30:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EB53221F1A;
-	Mon,  7 Apr 2025 04:30:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A32A221F38;
+	Mon,  7 Apr 2025 04:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="jJAZPLTQ"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="fMzQk41s"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F36E14831F
-	for <linux-gpio@vger.kernel.org>; Mon,  7 Apr 2025 04:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D19319341F
+	for <linux-gpio@vger.kernel.org>; Mon,  7 Apr 2025 04:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744000254; cv=none; b=KZWxlnuFUuzWf4qQ17JEyqFLk7YW/94hzIAnJ1OdnbSwPonJOmO/T+wSfOvweYyTpTA9a4sn2AQImXLPTWpBeZheH1n63LjxbMRD3QxKQDnuqLmLxhYYri2xMXQ7GCLmcwyMRZKqADrvqPST8/skUgd8pw+MwqjQqD0G1IkDrdg=
+	t=1744000254; cv=none; b=keVUDsbTh997Uimaujid+15PQhLdUNeiXb2eCBQ8WtNJccoTyWiPPuoiVxwQulpIMoujVVWEVc0G7IcvUX+vKQWyszrLYxHSLqWfXB8sBx+LNvnKvmhQACmXj3LB5BykPanraCVGh1afCTgPw8+VH5LmVANRypRCTqW88oj2bsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744000254; c=relaxed/simple;
-	bh=a2E+lRmEyGyPn4y/Lp5gh03cfv/gYiKAfaRg/gmeGSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dE6624udAkQuVjbLnoekwVZK1yYKCXMpw+JTm/G1Jvu0ZG2cFJWfHckU3Jj/bQE9I8gC3/8vGias1SpmVKcHlDd7xcFjo8uxDX0vuXo1SKtzapyki9Pkc6vTIzdycq5W7wumGj/CAaBHIPPfmKm5z+uZKFY6ODrD8iUoxmsXzsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=jJAZPLTQ; arc=none smtp.client-ip=185.125.188.122
+	bh=QKzGBY006K35i0VUre3m/YXkXfWXlIbWjW5345Q28Sw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GplSkOyvSOnuLOZuaEwt1jt2TanMWvyDrdRKnKhsV8WoyXiTFnjGZ1luv8DcODOIUC/Onrm5zLzJMif9VJ19F898l2+6smMhn9SY5nZFcr/qABgX7TdluQRmeaDXBQXL8JIsVShs6W6TNI2X+1YUxy+sw55wYVTH3VMJHh0pVME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=fMzQk41s; arc=none smtp.client-ip=185.125.188.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 28FB93F472
-	for <linux-gpio@vger.kernel.org>; Mon,  7 Apr 2025 04:30:48 +0000 (UTC)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 4E0A43F471
+	for <linux-gpio@vger.kernel.org>; Mon,  7 Apr 2025 04:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1744000248;
-	bh=ay0fSmPyuoS6lCZMzMt+gGBhLI4LljyUGT5pFmp0QYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=jJAZPLTQP0iXFUtP7Q8qBoPSsyt9dcF3r9MGJG6xY1ZnD0orQG1oP/1vyzAVXZAC+
-	 Js+Tan22N7xOMvfbg8MTB5iiwzinNd72+W8YvsKu92LZFR8wDQZHo4YTAzBUJqv3y3
-	 PXLII3tDHWu/CLRAH10h2S/GF5IKdiXV7AW5FiUC6Nqe104x81rZNoJnwLvX+5juCC
-	 zOGX4G1wZ93AiNjvmelFKGG0ij+Ln7zZeI1pkPzJXrcwu+XRE+K0YOxAa/BnQ5hTpK
-	 +8FmSZHb5scAB9powneJJp97gta7jUaKPl0om46XuA8nfCDXUi1nuZpuaeO+t+TNrN
-	 iArWprRpqX4QA==
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22651aca434so37645785ad.1
-        for <linux-gpio@vger.kernel.org>; Sun, 06 Apr 2025 21:30:48 -0700 (PDT)
+	s=20210705; t=1744000250;
+	bh=gYD77nW/waFXgRcL7RZiNMF3p8f4KzCk7t7Ss3jccwc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+	b=fMzQk41swGRDZD0MT87hwrqv1i54OXC/JJllHQjlkze4HE84L8ygzSgyQrI8S7eAE
+	 w8os78ofofQfec13yMiCqlLI239LFTb9OuJinjD+2ct7PkadCoUIl99nQy9wA81Zy5
+	 pO7u6NJ+WamF+BNgyDmK2GWQC3S1x/D/hIaqw4hFTzgmkeGrDiZEvYl027fWOE7sca
+	 VIbEccG9Kc1nuPP1l7lyFpGR3F0PiwpD2gPXGnz4wDLems4W79DpDl9ZoLgmMB+XAs
+	 3noBlKl2TCxLMfmGpiZKx8UINdAqbvFy0TNh/dXuCxfgAJ37TSA+bnUYyOcn+sh49B
+	 PFtlWKoNYt+wQ==
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-af51d92201fso4560404a12.0
+        for <linux-gpio@vger.kernel.org>; Sun, 06 Apr 2025 21:30:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744000246; x=1744605046;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ay0fSmPyuoS6lCZMzMt+gGBhLI4LljyUGT5pFmp0QYY=;
-        b=ha6DGeh2vIwxQZwzJzCUJxp7ixfo3TzfGgL4oK2L0z9c5nafsI+Yy2B2FwQPNx5sle
-         d7t4l5MXcFaxbSa7LZ3fwWjqPqI7UMk+EAhn9xFXAyBZ3pk9iTlq/MrOFS/zB/Xlu2Fv
-         4bloJxdMImBUx85hYcyhp4XwfSznW9pw/SvcXDob5zx1yUXoLYfj/ch9i4aSbjKj3De3
-         Xd9jkkCI66CQUGBtqVlZRmzFTcenXPIouGDRnc6YlKf4d0a2uP4cJlP2dxbjn4mtPsCH
-         uoie1X9OvEkSmLiVoVyWtYvtAWktrwnOcO9N2k4N1V+PemwnA11cv95NFT4d0hOrw7AY
-         iGYw==
-X-Gm-Message-State: AOJu0YxuUQLzfzLp4xrcfBiSVWLtYy0dZ200tU48eIZDVX5dOElCJ3e0
-	rKH3MfTDpC+wv1dOpGIe0S38lwruKbitYOvPKsyP9pUhfRGrWtQIaOOWExs03tLESyQGkc81NMF
-	oQft8ZNHEKQJ35XcqRhaG/S5BG4Bm1GVJN02ifs9H53nwbhU9kuwlQWE/Ag/TGCvwRj4DRy9FH3
-	HprvDN5gA=
-X-Gm-Gg: ASbGncvy8rhhs/eEzL0slM9FVcLEKDbNvZrmcrIRydu9WzL47bdzcSQwbVN8YW4xXuK
-	rmF02f7CJ4e67prEkGEw69yPpJVBBeqCWZOCcHRxr2zizTcpLeANlMkxegQUkhIPhRDu0OAt17/
-	0sCmS1wEJ5GEXzDb0p/ms3FjTRTmOr3ZQHCSs2LiIldcVQ3KZRVDXbBelRjnUopBBFTZEr9HLpw
-	0pUX22+xUelz2NyX8kxRJ7fvT7Bpi9C3wadg5qM6lBrim72nni6CO1TAEnf8LiJ17YcfGkJMtUo
-	o9umS1596xRps1bnNnJ5gt9arfq/FWzOMQ==
-X-Received: by 2002:a17:903:13ce:b0:215:b75f:a1cb with SMTP id d9443c01a7336-22a8a85a251mr151838715ad.9.1744000246396;
-        Sun, 06 Apr 2025 21:30:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHgBQ7gtDoXVn+RQVH+knkkbMRV7Nv7+Vu+MZdEbv2OXMQX1Tph5qzz736R80geSduyzcfUXA==
-X-Received: by 2002:a17:903:13ce:b0:215:b75f:a1cb with SMTP id d9443c01a7336-22a8a85a251mr151838565ad.9.1744000246043;
-        Sun, 06 Apr 2025 21:30:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744000249; x=1744605049;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gYD77nW/waFXgRcL7RZiNMF3p8f4KzCk7t7Ss3jccwc=;
+        b=wsUk5KiCW/Gzd+EWbdeRwf6UGNB+7nd33m7z++0lOBoYxF1e+zpe5QBlzRn3SuDuVR
+         xoif6RSqXzAwf473RNHaxqzBTkFSf/ogQoohXCx/helXZaCL0byRrPNbE6baAWc5yqK3
+         hi96dQh9Og9PegUsdulkz1TTJXIw6yqMBGMNISJ69CZjBjtL/tbqQKga0Gx3pMR4canQ
+         8j/3j3nLAtceo1Ggm8z7flcnFGCRP5oZYEmFoi+xr02gkOQAMBAKksnyqPismm+RfTjA
+         m+VnyxSPyS6oBjjPF/Uw4o98kwLlwUe07jlomhOr3KQiVT7e/VYEpM8v/QTDTvD0Es2X
+         zxXw==
+X-Gm-Message-State: AOJu0YwYg9/UgKkGIVA4W7xEis7+/Xy5iW3N0bOpZ6z5RVJkTILSLvm5
+	Tbw+Fb3G22x5I5tpfhFquVAPTJYYBlHwHSUy2S2nCCX0nu7NWJQeQ3buroI50cRAVHliUIVqbpO
+	l4IHmZ5bcl75RJ+2NCQnJw4KnG1+ofD37zcjW6c/4k9SIiOEy+NVjitDUC3OG79fQckL6s6/79i
+	jXfPHIcdE=
+X-Gm-Gg: ASbGncu78gnQWFaOoSIspX3G/3R1NgqmUtUvKey8owTAOdOyt7fxd22osOaPLdeNic6
+	h0O0+lUcE9RY75AsZhFwv5ZeCgwIqHJ1UhQ0kKF190UnBXuQbaBIdnKCDtotRFlS0+bQxwNJIxY
+	mqLXdostaUaWLdJ6A4dCKJ9YZSqc5jk3uGDSDRUEU4m1/8Y3XkY9XCIp1CmFSISuKcfdJ9rYVRe
+	MU7XB8cucN8HeqpdTXRzo87AsEHkfmtamEEHACDfIIP6RZlCqOjS2RsZelHxJONlH/iWrZ9xPE0
+	pm7dw4g1PwqCBegjoIGWeXLTw3j2luzCFw==
+X-Received: by 2002:a17:902:d491:b0:220:ff3f:6cba with SMTP id d9443c01a7336-22a95573902mr122824845ad.38.1744000248659;
+        Sun, 06 Apr 2025 21:30:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRt1TZZiQKo9HcnEyiDo2yBUyjoUApiYat4HpGVsubxyL9kQHP3eAQ5W3KlqnK1ubECzk5qg==
+X-Received: by 2002:a17:902:d491:b0:220:ff3f:6cba with SMTP id d9443c01a7336-22a95573902mr122824555ad.38.1744000248309;
+        Sun, 06 Apr 2025 21:30:48 -0700 (PDT)
 Received: from localhost.localdomain ([240f:74:7be:1:5985:1f8b:863f:3722])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978670dbbsm70839525ad.209.2025.04.06.21.30.43
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978670dbbsm70839525ad.209.2025.04.06.21.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 21:30:45 -0700 (PDT)
+        Sun, 06 Apr 2025 21:30:48 -0700 (PDT)
 From: Koichiro Den <koichiro.den@canonical.com>
 To: linux-gpio@vger.kernel.org
 Cc: brgl@bgdev.pl,
@@ -85,10 +87,12 @@ Cc: brgl@bgdev.pl,
 	linus.walleij@linaro.org,
 	maciej.borzecki@canonical.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 0/9] Introduce configfs-based interface for gpio-aggregator
-Date: Mon,  7 Apr 2025 13:30:10 +0900
-Message-ID: <20250407043019.4105613-1-koichiro.den@canonical.com>
+Subject: [PATCH v7 1/9] gpio: aggregator: reorder functions to prepare for configfs introduction
+Date: Mon,  7 Apr 2025 13:30:11 +0900
+Message-ID: <20250407043019.4105613-2-koichiro.den@canonical.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250407043019.4105613-1-koichiro.den@canonical.com>
+References: <20250407043019.4105613-1-koichiro.den@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -97,144 +101,438 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series introduces a configfs-based interface to gpio-aggregator
-to address limitations in the existing 'new_device' interface.
-
-The existing 'new_device' interface has several limitations:
-
-  Issue#1. No way to determine when GPIO aggregator creation is complete.
-  Issue#2. No way to retrieve errors when creating a GPIO aggregator.
-  Issue#3. No way to trace a GPIO line of an aggregator back to its
-           corresponding physical device.
-  Issue#4. The 'new_device' echo does not indicate which virtual
-           gpiochip<N> was created.
-  Issue#5. No way to assign names to GPIO lines exported through an
-           aggregator.
-
-Although Issue#1 to #3 could technically be resolved easily without
-configfs, using configfs offers a streamlined, modern, and extensible
-approach, especially since gpio-sim and gpio-virtuser already utilize
+Reorder functions in drivers/gpio/gpio-aggregator.c to prepare for the
+configfs-based interface additions in subsequent commits. Arrange the
+code so that the configfs implementations will appear above the existing
+sysfs-specific code, since the latter will partly depend on the configfs
+interface implementations when it starts to expose the settings to
 configfs.
 
-This v7 patch series includes 9 patches:
+The order in drivers/gpio/gpio-aggregator.c will be as follows:
 
-  Patch#1: Reorder functions to prepare for configfs introduction.
-  Patch#2: Unify function naming.
-  Patch#3: Add gpio_aggregator_alloc() to reduce code duplication.
-  Patch#4: Introduce basic configfs interface. Address Issue#1 to #5.
-  Patch#5: Prepare for Patch#6.
-  Patch#6: Expose devices created with sysfs to configfs.
-  Patch#7: Suppress deferred probe for purely configfs-based aggregators.
-  Patch#8: Documentation for the new configfs interface.
-  Patch#9: Selftest for gpio-aggregator.
+* Basic gpio_aggregator/gpio_aggregator_line representations
+* Common utility functions
+* GPIO Forwarder implementations
+* Configfs interface implementations
+* Sysfs interface implementations
+* Platform device implementations
+* Module init/exit implementations
 
-N.B. This submission is based on commit 0af2f6be1b42 ("Linux 6.15-rc1").
+This separate commit ensures a clean diff for the subsequent commits.
 
+No functional change.
 
-v6->v7 changes:
-  - Addressed feedback from Bartosz:
-    * Unified function naming using gpio_aggregator_ prefix (except for GPIO
-      forwarder implementations).
-    * Replaced remaining raw mutex_lock/mutex_unlock with scoped_guard.
-    * Ensured variables with __free() attribute are defined and assigned
-      in a single statement.
-  - Eliminated needless style inconsistencies across the new configfs attr
-    .show() implementations by replacing scoped_guard with guard where
-    possible, with no functional change.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+---
+ drivers/gpio/gpio-aggregator.c | 380 +++++++++++++++++----------------
+ 1 file changed, 192 insertions(+), 188 deletions(-)
 
-v5->v6 changes:
-  - Addressed feedback from Bartosz:
-    * Resolved issues spotted with lockdep and kasan.
-    * Added kselftest for gpio-aggregator.
-  - Fixed a memory leak in aggr_free_line() (missing kfree(line->name)).
-  - Fixed a bug I mistakenly added in aggr_parse() (misplaced scnprintf()).
-  - Eliminated a potential lock inversion deadlock by removing
-    gpio_aggregator_lock acquisition in gpio_aggregator_remove_all(), which
-    became unnecessary after the upstream commit 12f65d120350 ("gpio:
-    aggregator: protect driver attr handlers against module unload").
-
-v4->v5 changes:
-  - Rebased off of the latest gpio/for-next, that includes the patch series:
-    "Add synchronous fake device creation utility for GPIO drivers"
-    (https://lore.kernel.org/all/20250221133501.2203897-1-koichiro.den@canonical.com/)
-
-v3->v4 changes:
-  - Split off the introduction of gpio-pseudo.[ch] and conversions.
-  - Reordered commits to place a fix commit first.
-  - Squashed the trivial update for gpio-aggregator's conversion to gpio-pseudo
-    into the primary commit "gpio: aggregator: introduce basic configfs interface"
-    as it is only meaningful when combined.
-
-v2->v3 changes:
-  - Addressed feedback from Bartosz:
-    * Factored out the common mechanism for synchronizing platform device
-      probe by adding gpio-pseudo.[ch].
-    * Renamed "_auto." prefix to "_sysfs." for auto-generated
-      configfs entries corresponding to sysfs-created devices.
-    * Squashed v2 Patch#3 into its predecessor.
-  - Addressed feedback from Geert:
-    * Factored out duplicate code in struct gpio_aggregator initialization
-      by adding gpio_alloc()/gpio_free() functions. Note that v2 Patch#7
-      was dropped for other reasons as mentioned below, so aggr_free() in
-      v3 is unrelated to the same-named function in v2.
-    * Removed redundant parsing of gpio-line-names and unnecessary
-      chip->names assignments; squashed v2 Patch#4 + v2 Patch#5 into v3
-      Patch#9.
-    * Updated to use sysfs_emit().
-    * Updated Kconfig (select CONFIGFS_FS).
-    * Fixed typos, coding style issues, missing const qualifiers, and other
-      minor issues.
-  - Resolved an issue that was spotted during v3 preparation. See Patch#2.
-  - Reordered resource initialization order in gpio_aggregator_init() to
-    both eliminate a potential race condition (as noted in the source code
-    comment) and simplify the code. See Patch#8. This enabled:
-    * Removal of v2 Patch#7.
-    * Merging of aggr_unregister_lines() and aggr_free_lines() into a
-      unified function.
-  - Disabled 'delete_device' functionality for devices created via configfs
-    for simplicity. It was mistakenly allowed in v2 and proved buggy. See
-    Patch #8.
-
-RFC->v2 changes:
-  - Addressed feedback from Bartosz:
-    * Expose devices created with sysfs to configfs.
-    * Drop 'num_lines' attribute.
-    * Fix bugs and crashes.
-    * Organize internal symbol prefixes more cleanly.
-  - Split diffs for improved reviewability.
-  - Update kernel doc to reflect the changes.
-
-v6: https://lore.kernel.org/all/20250315164123.1855142-1-koichiro.den@canonical.com/
-v5: https://lore.kernel.org/all/20250224143134.3024598-1-koichiro.den@canonical.com/
-v4: https://lore.kernel.org/all/20250217143531.541185-1-koichiro.den@canonical.com/
-v3: https://lore.kernel.org/all/20250216125816.14430-1-koichiro.den@canonical.com/
-v2: https://lore.kernel.org/all/20250203031213.399914-1-koichiro.den@canonical.com/
-RFC (v1): https://lore.kernel.org/linux-gpio/20250129155525.663780-1-koichiro.den@canonical.com/T/#u
-
-
-Koichiro Den (9):
-  gpio: aggregator: reorder functions to prepare for configfs
-    introduction
-  gpio: aggregator: unify function naming
-  gpio: aggregator: add gpio_aggregator_{alloc,free}()
-  gpio: aggregator: introduce basic configfs interface
-  gpio: aggregator: rename 'name' to 'key' in gpio_aggregator_parse()
-  gpio: aggregator: expose aggregator created via legacy sysfs to
-    configfs
-  gpio: aggregator: cancel deferred probe for devices created via
-    configfs
-  Documentation: gpio: document configfs interface for gpio-aggregator
-  selftests: gpio: add test cases for gpio-aggregator
-
- .../admin-guide/gpio/gpio-aggregator.rst      |  107 ++
- drivers/gpio/Kconfig                          |    2 +
- drivers/gpio/gpio-aggregator.c                | 1181 ++++++++++++++---
- tools/testing/selftests/gpio/Makefile         |    2 +-
- tools/testing/selftests/gpio/config           |    1 +
- .../testing/selftests/gpio/gpio-aggregator.sh |  723 ++++++++++
- 6 files changed, 1811 insertions(+), 205 deletions(-)
- create mode 100755 tools/testing/selftests/gpio/gpio-aggregator.sh
-
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index d232ea865356..e026deb4ac64 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -61,194 +61,6 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *key,
+ 	return 0;
+ }
+ 
+-static int aggr_parse(struct gpio_aggregator *aggr)
+-{
+-	char *args = skip_spaces(aggr->args);
+-	char *name, *offsets, *p;
+-	unsigned int i, n = 0;
+-	int error = 0;
+-
+-	unsigned long *bitmap __free(bitmap) =
+-			bitmap_alloc(AGGREGATOR_MAX_GPIOS, GFP_KERNEL);
+-	if (!bitmap)
+-		return -ENOMEM;
+-
+-	args = next_arg(args, &name, &p);
+-	while (*args) {
+-		args = next_arg(args, &offsets, &p);
+-
+-		p = get_options(offsets, 0, &error);
+-		if (error == 0 || *p) {
+-			/* Named GPIO line */
+-			error = aggr_add_gpio(aggr, name, U16_MAX, &n);
+-			if (error)
+-				return error;
+-
+-			name = offsets;
+-			continue;
+-		}
+-
+-		/* GPIO chip + offset(s) */
+-		error = bitmap_parselist(offsets, bitmap, AGGREGATOR_MAX_GPIOS);
+-		if (error) {
+-			pr_err("Cannot parse %s: %d\n", offsets, error);
+-			return error;
+-		}
+-
+-		for_each_set_bit(i, bitmap, AGGREGATOR_MAX_GPIOS) {
+-			error = aggr_add_gpio(aggr, name, i, &n);
+-			if (error)
+-				return error;
+-		}
+-
+-		args = next_arg(args, &name, &p);
+-	}
+-
+-	if (!n) {
+-		pr_err("No GPIOs specified\n");
+-		return -EINVAL;
+-	}
+-
+-	return 0;
+-}
+-
+-static ssize_t new_device_store(struct device_driver *driver, const char *buf,
+-				size_t count)
+-{
+-	struct gpio_aggregator *aggr;
+-	struct platform_device *pdev;
+-	int res, id;
+-
+-	if (!try_module_get(THIS_MODULE))
+-		return -ENOENT;
+-
+-	/* kernfs guarantees string termination, so count + 1 is safe */
+-	aggr = kzalloc(sizeof(*aggr) + count + 1, GFP_KERNEL);
+-	if (!aggr) {
+-		res = -ENOMEM;
+-		goto put_module;
+-	}
+-
+-	memcpy(aggr->args, buf, count + 1);
+-
+-	aggr->lookups = kzalloc(struct_size(aggr->lookups, table, 1),
+-				GFP_KERNEL);
+-	if (!aggr->lookups) {
+-		res = -ENOMEM;
+-		goto free_ga;
+-	}
+-
+-	mutex_lock(&gpio_aggregator_lock);
+-	id = idr_alloc(&gpio_aggregator_idr, aggr, 0, 0, GFP_KERNEL);
+-	mutex_unlock(&gpio_aggregator_lock);
+-
+-	if (id < 0) {
+-		res = id;
+-		goto free_table;
+-	}
+-
+-	aggr->lookups->dev_id = kasprintf(GFP_KERNEL, "%s.%d", DRV_NAME, id);
+-	if (!aggr->lookups->dev_id) {
+-		res = -ENOMEM;
+-		goto remove_idr;
+-	}
+-
+-	res = aggr_parse(aggr);
+-	if (res)
+-		goto free_dev_id;
+-
+-	gpiod_add_lookup_table(aggr->lookups);
+-
+-	pdev = platform_device_register_simple(DRV_NAME, id, NULL, 0);
+-	if (IS_ERR(pdev)) {
+-		res = PTR_ERR(pdev);
+-		goto remove_table;
+-	}
+-
+-	aggr->pdev = pdev;
+-	module_put(THIS_MODULE);
+-	return count;
+-
+-remove_table:
+-	gpiod_remove_lookup_table(aggr->lookups);
+-free_dev_id:
+-	kfree(aggr->lookups->dev_id);
+-remove_idr:
+-	mutex_lock(&gpio_aggregator_lock);
+-	idr_remove(&gpio_aggregator_idr, id);
+-	mutex_unlock(&gpio_aggregator_lock);
+-free_table:
+-	kfree(aggr->lookups);
+-free_ga:
+-	kfree(aggr);
+-put_module:
+-	module_put(THIS_MODULE);
+-	return res;
+-}
+-
+-static DRIVER_ATTR_WO(new_device);
+-
+-static void gpio_aggregator_free(struct gpio_aggregator *aggr)
+-{
+-	platform_device_unregister(aggr->pdev);
+-	gpiod_remove_lookup_table(aggr->lookups);
+-	kfree(aggr->lookups->dev_id);
+-	kfree(aggr->lookups);
+-	kfree(aggr);
+-}
+-
+-static ssize_t delete_device_store(struct device_driver *driver,
+-				   const char *buf, size_t count)
+-{
+-	struct gpio_aggregator *aggr;
+-	unsigned int id;
+-	int error;
+-
+-	if (!str_has_prefix(buf, DRV_NAME "."))
+-		return -EINVAL;
+-
+-	error = kstrtouint(buf + strlen(DRV_NAME "."), 10, &id);
+-	if (error)
+-		return error;
+-
+-	if (!try_module_get(THIS_MODULE))
+-		return -ENOENT;
+-
+-	mutex_lock(&gpio_aggregator_lock);
+-	aggr = idr_remove(&gpio_aggregator_idr, id);
+-	mutex_unlock(&gpio_aggregator_lock);
+-	if (!aggr) {
+-		module_put(THIS_MODULE);
+-		return -ENOENT;
+-	}
+-
+-	gpio_aggregator_free(aggr);
+-	module_put(THIS_MODULE);
+-	return count;
+-}
+-static DRIVER_ATTR_WO(delete_device);
+-
+-static struct attribute *gpio_aggregator_attrs[] = {
+-	&driver_attr_new_device.attr,
+-	&driver_attr_delete_device.attr,
+-	NULL
+-};
+-ATTRIBUTE_GROUPS(gpio_aggregator);
+-
+-static int __exit gpio_aggregator_idr_remove(int id, void *p, void *data)
+-{
+-	gpio_aggregator_free(p);
+-	return 0;
+-}
+-
+-static void __exit gpio_aggregator_remove_all(void)
+-{
+-	mutex_lock(&gpio_aggregator_lock);
+-	idr_for_each(&gpio_aggregator_idr, gpio_aggregator_idr_remove, NULL);
+-	idr_destroy(&gpio_aggregator_idr);
+-	mutex_unlock(&gpio_aggregator_lock);
+-}
+-
+ 
+ /*
+  *  GPIO Forwarder
+@@ -583,6 +395,184 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ }
+ 
+ 
++/*
++ * Sysfs interface
++ */
++static int aggr_parse(struct gpio_aggregator *aggr)
++{
++	char *args = skip_spaces(aggr->args);
++	char *name, *offsets, *p;
++	unsigned int i, n = 0;
++	int error = 0;
++
++	unsigned long *bitmap __free(bitmap) =
++			bitmap_alloc(AGGREGATOR_MAX_GPIOS, GFP_KERNEL);
++	if (!bitmap)
++		return -ENOMEM;
++
++	args = next_arg(args, &name, &p);
++	while (*args) {
++		args = next_arg(args, &offsets, &p);
++
++		p = get_options(offsets, 0, &error);
++		if (error == 0 || *p) {
++			/* Named GPIO line */
++			error = aggr_add_gpio(aggr, name, U16_MAX, &n);
++			if (error)
++				return error;
++
++			name = offsets;
++			continue;
++		}
++
++		/* GPIO chip + offset(s) */
++		error = bitmap_parselist(offsets, bitmap, AGGREGATOR_MAX_GPIOS);
++		if (error) {
++			pr_err("Cannot parse %s: %d\n", offsets, error);
++			return error;
++		}
++
++		for_each_set_bit(i, bitmap, AGGREGATOR_MAX_GPIOS) {
++			error = aggr_add_gpio(aggr, name, i, &n);
++			if (error)
++				return error;
++		}
++
++		args = next_arg(args, &name, &p);
++	}
++
++	if (!n) {
++		pr_err("No GPIOs specified\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static ssize_t new_device_store(struct device_driver *driver, const char *buf,
++				size_t count)
++{
++	struct gpio_aggregator *aggr;
++	struct platform_device *pdev;
++	int res, id;
++
++	if (!try_module_get(THIS_MODULE))
++		return -ENOENT;
++
++	/* kernfs guarantees string termination, so count + 1 is safe */
++	aggr = kzalloc(sizeof(*aggr) + count + 1, GFP_KERNEL);
++	if (!aggr) {
++		res = -ENOMEM;
++		goto put_module;
++	}
++
++	memcpy(aggr->args, buf, count + 1);
++
++	aggr->lookups = kzalloc(struct_size(aggr->lookups, table, 1),
++				GFP_KERNEL);
++	if (!aggr->lookups) {
++		res = -ENOMEM;
++		goto free_ga;
++	}
++
++	mutex_lock(&gpio_aggregator_lock);
++	id = idr_alloc(&gpio_aggregator_idr, aggr, 0, 0, GFP_KERNEL);
++	mutex_unlock(&gpio_aggregator_lock);
++
++	if (id < 0) {
++		res = id;
++		goto free_table;
++	}
++
++	aggr->lookups->dev_id = kasprintf(GFP_KERNEL, "%s.%d", DRV_NAME, id);
++	if (!aggr->lookups->dev_id) {
++		res = -ENOMEM;
++		goto remove_idr;
++	}
++
++	res = aggr_parse(aggr);
++	if (res)
++		goto free_dev_id;
++
++	gpiod_add_lookup_table(aggr->lookups);
++
++	pdev = platform_device_register_simple(DRV_NAME, id, NULL, 0);
++	if (IS_ERR(pdev)) {
++		res = PTR_ERR(pdev);
++		goto remove_table;
++	}
++
++	aggr->pdev = pdev;
++	module_put(THIS_MODULE);
++	return count;
++
++remove_table:
++	gpiod_remove_lookup_table(aggr->lookups);
++free_dev_id:
++	kfree(aggr->lookups->dev_id);
++remove_idr:
++	mutex_lock(&gpio_aggregator_lock);
++	idr_remove(&gpio_aggregator_idr, id);
++	mutex_unlock(&gpio_aggregator_lock);
++free_table:
++	kfree(aggr->lookups);
++free_ga:
++	kfree(aggr);
++put_module:
++	module_put(THIS_MODULE);
++	return res;
++}
++
++static DRIVER_ATTR_WO(new_device);
++
++static void gpio_aggregator_free(struct gpio_aggregator *aggr)
++{
++	platform_device_unregister(aggr->pdev);
++	gpiod_remove_lookup_table(aggr->lookups);
++	kfree(aggr->lookups->dev_id);
++	kfree(aggr->lookups);
++	kfree(aggr);
++}
++
++static ssize_t delete_device_store(struct device_driver *driver,
++				   const char *buf, size_t count)
++{
++	struct gpio_aggregator *aggr;
++	unsigned int id;
++	int error;
++
++	if (!str_has_prefix(buf, DRV_NAME "."))
++		return -EINVAL;
++
++	error = kstrtouint(buf + strlen(DRV_NAME "."), 10, &id);
++	if (error)
++		return error;
++
++	if (!try_module_get(THIS_MODULE))
++		return -ENOENT;
++
++	mutex_lock(&gpio_aggregator_lock);
++	aggr = idr_remove(&gpio_aggregator_idr, id);
++	mutex_unlock(&gpio_aggregator_lock);
++	if (!aggr) {
++		module_put(THIS_MODULE);
++		return -ENOENT;
++	}
++
++	gpio_aggregator_free(aggr);
++	module_put(THIS_MODULE);
++	return count;
++}
++static DRIVER_ATTR_WO(delete_device);
++
++static struct attribute *gpio_aggregator_attrs[] = {
++	&driver_attr_new_device.attr,
++	&driver_attr_delete_device.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(gpio_aggregator);
++
++
+ /*
+  *  GPIO Aggregator platform device
+  */
+@@ -640,6 +630,20 @@ static struct platform_driver gpio_aggregator_driver = {
+ 	},
+ };
+ 
++static int __exit gpio_aggregator_idr_remove(int id, void *p, void *data)
++{
++	gpio_aggregator_free(p);
++	return 0;
++}
++
++static void __exit gpio_aggregator_remove_all(void)
++{
++	mutex_lock(&gpio_aggregator_lock);
++	idr_for_each(&gpio_aggregator_idr, gpio_aggregator_idr_remove, NULL);
++	idr_destroy(&gpio_aggregator_idr);
++	mutex_unlock(&gpio_aggregator_lock);
++}
++
+ static int __init gpio_aggregator_init(void)
+ {
+ 	return platform_driver_register(&gpio_aggregator_driver);
 -- 
 2.45.2
 
