@@ -1,122 +1,189 @@
-Return-Path: <linux-gpio+bounces-18369-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18370-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13764A7E003
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 15:52:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DBD6DA7E023
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 15:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1DE13AA509
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 13:45:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6E953B38E1
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 13:49:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 348E51ADC86;
-	Mon,  7 Apr 2025 13:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40BF01A3152;
+	Mon,  7 Apr 2025 13:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RbfZcg0t"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="CHn2fjav"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C1335962;
-	Mon,  7 Apr 2025 13:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1EC18D649
+	for <linux-gpio@vger.kernel.org>; Mon,  7 Apr 2025 13:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033557; cv=none; b=a41qzlijqt37Hpj9uRfuvU8+5bmYuptPvwQeXZA3jiRD96Fi6Ul7STS/Yw15SL+XJqwjqa7Wz0QQz24GYMhGvGJUFTvZNl/KbzYV8p1m+H95kYTPOs7OC+EiftfbY7tIwdCvIbXhQpNczzt0VU0JI4BXrkHfj1FVSlda715w+eA=
+	t=1744033779; cv=none; b=WJ3v0b2I5FetVU6ig+pfQ27+/w/R+yZ4lMZn3wymFsmjWvyw3VLodAPxPWsgsEn/xYDtdLWDOHvWt4r/t+9WI1cuhz/hd3zSbZS5PK8wrXkwNl4iGjnHOXS4b0oaKU5smUv3l/t5LJukImm/IobDvLhw216I/wrnHanT3eOU6DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033557; c=relaxed/simple;
-	bh=4e8rINJPc9nYc17RzIR3NQ5mwf2OOPgh0OmUqhEbytg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XgOSwCE0ID/8SGuAMFBdE5BncaWTxSPOAYsAbxQx/xpan6xiKtd0lm9tvJtMK+CdA7fyMm+9H/vu6BAK4Bna6nahj6BTjqkiOLJtD0jpZh+JzaJaklskgc7Ts4wei/A7J1psfItJ7DQMAbhmGxxH7RojR28Jn9BSfE2DkHwBBUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RbfZcg0t; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744033556; x=1775569556;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4e8rINJPc9nYc17RzIR3NQ5mwf2OOPgh0OmUqhEbytg=;
-  b=RbfZcg0t3cOdOcQ5wf7fuJRiXeGycaM80rkLUfhMS0/IGJOlTVGJoZs4
-   a9OGkwpUrn0ws3AGpqofNJUr9M4XY91FEOXO+7CXRMIvG4mCAxbXjH3/W
-   NMDIn2+2xxHz5dUUiwfOqGvW4v/AT6xdO2mXwtDb0MvQIcThfS8vlAVDc
-   RTeinrMs7ojVTk2KtmsZZGyXcv/fQ/F8qFj0cK8Jt+raskIs25eTXb1V9
-   9bWbgzZwBsIz2dqjpUxWqC6OgdmG18pfF3KruiID3S4aL+HzChekKNtD3
-   4hv18uXpURx4p3/LyQcnpIFite378VxZUJgG+ZQXfcU/49A1W2tfA8/OR
-   g==;
-X-CSE-ConnectionGUID: PP4Wa6SwQd2f46zQjU0EHQ==
-X-CSE-MsgGUID: nQ4WnHhHTwKvksvTIlWZxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49271122"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="49271122"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 06:45:55 -0700
-X-CSE-ConnectionGUID: E69X+6zOSeWWIlI7Pw1kig==
-X-CSE-MsgGUID: 2n2yj9wKQH2IJGDOX1Fsxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="128489483"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 06:45:53 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1mnO-0000000A5H2-1pv9;
-	Mon, 07 Apr 2025 16:45:50 +0300
-Date: Mon, 7 Apr 2025 16:45:50 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
-Message-ID: <Z_PXDjfVBBvZKf5i@smile.fi.intel.com>
-References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com>
- <Z-5BHzTEed607Afz@smile.fi.intel.com>
- <CAMRc=Mc12B-b-w6bJeOgwFvzbmaqzL+uT7vJssVYN4tMu3YpaQ@mail.gmail.com>
- <Z-5uJxij4jmhint3@smile.fi.intel.com>
- <CAMRc=MdPiz_YD451Arrm4mT-SwU_OdK1U-WozPxsvt11mHsLZQ@mail.gmail.com>
- <Z-6Lm_Aqe3-LS4lj@smile.fi.intel.com>
- <CAMRc=Md0gD=XPEkb=C6JJcRvDpBbcJb5Xv8fE-v94iT=COHw7A@mail.gmail.com>
+	s=arc-20240116; t=1744033779; c=relaxed/simple;
+	bh=WhV9u4IQQhmqgaWXSsNMfBXHEeR56D8mrLfD4YSL1jE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xgz2jcxtPSP/aqXBYfYjWZqUE/xYUG9ZdPfXn3bSndZTIWgzmdzoQW7TjtwPvikcbb07tv+ev59ozAky2+JZHDNQdNcsxtWbVkC1oPp5MjFNUA7+vSEgVzddoI2gvzftAW0+Z9oWW9jZ0CKEUHlMqRay1UXOf0P5zivvzWyfbeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=CHn2fjav; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-601ff283d70so1225246eaf.3
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Apr 2025 06:49:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744033776; x=1744638576; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dIXA1CtYmOM8PewjK/ZzArTuI36AiEw8n/KPp8qCjcQ=;
+        b=CHn2fjavnRMMXFPMdiM8wCQdSQq7m3B5MrbyCeMlb+nwZ7atw1lcO8mtNCgnwTD+lK
+         EJMF4/55xR5QufM9zMHLTwFrR1zJiM+F5khHEBC8wnqlC+nPw3ZBJ9gUWE3MArMF3AP3
+         8jVCvfIIpyMCrvawBaJmK9sph1y89rNNgUwhC3eLAeM38KTLYPfhJxumz938I7Qv9IGz
+         54XjksTUoNgbKTzxfHF5KmXwvEz29dQ3O3ytQW7zpVLM39m8KHGhALbfDcIasgDaJ5gJ
+         zMgVrQ0a2L+UrkuHf5RA44p4IJEPmaiCA7K+KP0SAtI8dKbebAYyBNtOPADaR87TnBz9
+         az8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744033776; x=1744638576;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dIXA1CtYmOM8PewjK/ZzArTuI36AiEw8n/KPp8qCjcQ=;
+        b=fT+C7s9AIxLcL1W7SdmtmsTiyYLRlNg/Yfo8/gMjB9TCLcQTe0War7vJnJ1OnFFbFF
+         1sroeQzEFHY0D5xWDTsDXw2WVgnxYGc9wTv2624Bj3hgDKC4HSwAjAKtfFDU9BRE+nyd
+         peKdHVjvTErk+x6Rnb5xLozj9y23TvJrWa01Y6Al0BaPp/xSukfiewC95S2c56Cuqqtu
+         +3e5YlUTQOM98fgp5cjphRvKBWqLPAtCM1RyzzrkaJ7gui/IcSvGHUR3VLQjQgyBVd6/
+         c8dDsAJP5xDrMNoyOxzrek6bSHqodk9/GfEG0dHKrVrtHHO1fSDWL7RMatJndnbyXjOM
+         y/iA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpIIA2BMv2aIKtR9+iMPkmX3VRRMQbCt9Fe8Bi8oVvoHhWxU3mnPudWBiDqv7O8ovQ7eLlDcCJD2h3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI4MZNqcDx/zW0W1J+fqQKD4ec8rA6YJOpOt3DzoPNICNrUEXn
+	HFN1v0V7w7qt3pynLM5jJIDwxWYEF0CI0JnFeKJg1mJ6bBKMaU1or8r4PXtNlaw=
+X-Gm-Gg: ASbGncucDFuZ/jkOIuzQOkX+7V3bV8yP+/Y9fmhmHqtzE1vzwRJKXI1kzmUyj+ZJ2L5
+	9dlzhfGOerkgDPqFs9/Kd2alOUTRUsPqF8+lobNHIh232qKbvplQx2GRGG7w5yPR7oXZayTbado
+	FAKvNSe6SvrpaADbXOt1D5rEuAGj3HEOOVdwKHwQJi4kxj5NPvnmWe/VcGUnSnm2ekGNfun39g/
+	EmE4ocallrlV2YIcDOPgVIufkrsAxVR9FOcjJe827a1gEVhdVo5hhGGxcMqp207E20sSnPvmZOc
+	ue5+9UcZN2rb3beZXbnyzj8FS0r/34bgJ2iK9q1mPdfNgXy5s13yuYv+bNwM+JMEcRRbZdCkB0+
+	l/bknXdCYOA==
+X-Google-Smtp-Source: AGHT+IG/WeJOsYTJug2WwIegYoFPtqQ1kYLmD+mN7tixYlfHeBiAMs6zs8YlU4OTlrzTKkroXpuE/Q==
+X-Received: by 2002:a05:6808:229e:b0:3fb:57ca:1ea7 with SMTP id 5614622812f47-4004668c4a6mr7559744b6e.36.1744033776048;
+        Mon, 07 Apr 2025 06:49:36 -0700 (PDT)
+Received: from [172.22.22.234] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40040099665sm1725950b6e.43.2025.04.07.06.49.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 06:49:35 -0700 (PDT)
+Message-ID: <184ecf87-823a-42ef-9903-a21c787e0c5d@riscstar.com>
+Date: Mon, 7 Apr 2025 08:49:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md0gD=XPEkb=C6JJcRvDpBbcJb5Xv8fE-v94iT=COHw7A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] staging: greybus: use new GPIO line value setter
+ callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rui Miguel Silva <rmfrfs@gmail.com>,
+ Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-gpiochip-set-rv-greybus-v1-1-9d4f721db7ca@linaro.org>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20250407-gpiochip-set-rv-greybus-v1-1-9d4f721db7ca@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 02:49:27PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Apr 3, 2025 at 3:22 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On 4/7/25 2:14 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-...
+Here is the commit that enabled these:
+   98ce1eb1fd87e gpiolib: introduce gpio_chip setters that return values
 
-> I explained why I believe this change is wrong and I will allow myself
-> to not accept it unless Linus is very positively in favor.
+This looks good.  Thank you.
 
-I am on the opposite site. With all burden on the users' shoulders...
+Reviewed-by: Alex Elder <elder@riscstar.com>
 
-And your _any deinit_ function example is wrong. This is not a deinit case,
-this is resource allocation / reservation / etc and freeing it. Freeing
-invalid resource is bad, freeing an optional resource, or resource which
-has never been allocated — is okay. It makes device driver developer's life
-easier. And many kernel APIs are written in that form. Since you again
-pointed out that gpiod_get() is annotated, there is very unlikely somebody
-deliberately will ignore those errors.
-
-P.S.
-I will continue insisting that this is an inconvenience (or bug) in gpiod_put().
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> ---
+>   drivers/staging/greybus/gpio.c | 16 +++++++++-------
+>   1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/gpio.c b/drivers/staging/greybus/gpio.c
+> index 16bcf7fc8158..f81c34160f72 100644
+> --- a/drivers/staging/greybus/gpio.c
+> +++ b/drivers/staging/greybus/gpio.c
+> @@ -185,8 +185,8 @@ static int gb_gpio_get_value_operation(struct gb_gpio_controller *ggc,
+>   	return 0;
+>   }
+>   
+> -static void gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+> -					u8 which, bool value_high)
+> +static int gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+> +				       u8 which, bool value_high)
+>   {
+>   	struct device *dev = &ggc->gbphy_dev->dev;
+>   	struct gb_gpio_set_value_request request;
+> @@ -195,7 +195,7 @@ static void gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+>   	if (ggc->lines[which].direction == 1) {
+>   		dev_warn(dev, "refusing to set value of input gpio %u\n",
+>   			 which);
+> -		return;
+> +		return -EPERM;
+>   	}
+>   
+>   	request.which = which;
+> @@ -204,10 +204,12 @@ static void gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+>   				&request, sizeof(request), NULL, 0);
+>   	if (ret) {
+>   		dev_err(dev, "failed to set value of gpio %u\n", which);
+> -		return;
+> +		return ret;
+>   	}
+>   
+>   	ggc->lines[which].value = request.value;
+> +
+> +	return 0;
+>   }
+>   
+>   static int gb_gpio_set_debounce_operation(struct gb_gpio_controller *ggc,
+> @@ -457,11 +459,11 @@ static int gb_gpio_get(struct gpio_chip *chip, unsigned int offset)
+>   	return ggc->lines[which].value;
+>   }
+>   
+> -static void gb_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> +static int gb_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+>   {
+>   	struct gb_gpio_controller *ggc = gpiochip_get_data(chip);
+>   
+> -	gb_gpio_set_value_operation(ggc, (u8)offset, !!value);
+> +	return gb_gpio_set_value_operation(ggc, (u8)offset, !!value);
+>   }
+>   
+>   static int gb_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+> @@ -555,7 +557,7 @@ static int gb_gpio_probe(struct gbphy_device *gbphy_dev,
+>   	gpio->direction_input = gb_gpio_direction_input;
+>   	gpio->direction_output = gb_gpio_direction_output;
+>   	gpio->get = gb_gpio_get;
+> -	gpio->set = gb_gpio_set;
+> +	gpio->set_rv = gb_gpio_set;
+>   	gpio->set_config = gb_gpio_set_config;
+>   	gpio->base = -1;		/* Allocate base dynamically */
+>   	gpio->ngpio = ggc->line_max + 1;
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250331-gpiochip-set-rv-greybus-cd2365755186
+> 
+> Best regards,
 
 
