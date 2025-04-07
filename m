@@ -1,122 +1,165 @@
-Return-Path: <linux-gpio+bounces-18250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89B19A7D036
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Apr 2025 22:23:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B465A7D222
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 04:26:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4E197A3054
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Apr 2025 20:21:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B186C3AD5A2
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 02:26:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F80F1AAE13;
-	Sun,  6 Apr 2025 20:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D22D213247;
+	Mon,  7 Apr 2025 02:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uc12eOas"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klJ2q2hU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF78717A30B
-	for <linux-gpio@vger.kernel.org>; Sun,  6 Apr 2025 20:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D2414AA9;
+	Mon,  7 Apr 2025 02:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743970975; cv=none; b=Fmv00UPRZK593habGkB0Y1afIPb14lWaTMjRZ8lEhAObDRPbdop4XQiu3j7mizdNvbnRHhssNTMmUd8ZOOK6MAcH0N6e+37YT/NvjxelUYNdGNVzAt/Ba/xNFrmd/EqncqdhjnzjrjfatXRLNHP1Jl0sV6xF0+lFP/p29yOrlTk=
+	t=1743992772; cv=none; b=Avw+X5duHJNop5wHi/fxNZYmSZsyT/pXBWwC9FTeqKwTGSHpZ9XIWXU/QcocY7pO1xddyirohfno/2kd02NqzEBqtyu1dfv2MwhWccgbSBf7rH6IONTcTw4RUjiTsjdNChTpprT26wXBtaougbX7gV7XJ6oPz7oQk+Qs8kkmFi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743970975; c=relaxed/simple;
-	bh=t/ClPnFK2Y4tw14RJzsVxyOOTn4d+SRgStXzq4Mnbr0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ctupJGsrUJ7fbmU8uRAnkiku54pt3kKxXBRYwTv5k9ckxw3iWSpTrRRIqjVR/JdOlxNy/ce8zl91GscUkC/vZHS3F/Q0qB75g0sY4KwMuu9XC6OW5a/okYe1U4qiT+Vc+LTrNl99mj7i02LhGgBkjx2joPrkCC0AsSCWvojTIMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uc12eOas; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf89f81c5so2116585e9.2
-        for <linux-gpio@vger.kernel.org>; Sun, 06 Apr 2025 13:22:53 -0700 (PDT)
+	s=arc-20240116; t=1743992772; c=relaxed/simple;
+	bh=qqs+LE0eRz1+HvRjfisMIFt6Lj6/g1vAXELmv46RSi4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nt/UT1plSi62tnPUhtD5mfYwdlQ9dViZRArM7AUwAcw1yvC6pOuXrUkjg5U+ZD3q5e63/wzaeSJeXJMNkyPBVgPmVLwPwbu7YhGYMFJTLn0Lt+5iWKlLr0hS93HXX80ME/bj6eJUbRKmyFL487qKz3l6HRamrxPyfigyAU1ZXkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=klJ2q2hU; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6febf391132so35008187b3.1;
+        Sun, 06 Apr 2025 19:26:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743970972; x=1744575772; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743992769; x=1744597569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E458gQJPEDLg7gt5tX3yC9GRB2p54/ySefPjbdFmnAo=;
-        b=uc12eOasR2Pg89XyJXTlUSScA3Ykxn5LvbicjmJaWTX0gavu3ji9FUKonPG6h1BItB
-         XNS4YT/Uo8vWFd1Ivm1lVB9XVqUDcGTJ53I4BN44ZIqkaBQ3RhXS+jqBTPHiVyawy3Su
-         9doJmaH2Ys7U3v6PZRJ7VZLy8NjcYf4nJfJ7Lv+Vqa8WVK5W9e3YN4zDH6ljgj/sLOQw
-         ddh5izkwHPn2shdZ/pkI+vLy+VSAvp817Sv+ZUxaBzqCIJjoHy76+Z3KNRUbJZsS6g7T
-         7qRx1k1Oa1drrXfrvsWk6ZI20uKZIrfa9lexgoT3y7IIZYJTofrMaau/pvqtif+cj/w5
-         n6rQ==
+        bh=debS+VRslkmHys5XV5kL/p+TQCO24vSGvmW5DmRp9r4=;
+        b=klJ2q2hU5QK0BhrCPmtHpVURfrT3364cLANBbD1NoggF58lwGZ7V/qLNCtxEOiTjA6
+         DSSic105zW7f34EANeRuZ452rbLPCI6zUYXIjuuJE+PoesQABHl2m/BO96sO+8oZR2qZ
+         ob8oKFhU/AxYTiQqSHa8zYflUVLK2esMw/xCV1+so+pygeR7mGVbQoNvvhAk+dLZh8Kq
+         6AQe/kxuzqwKf0suTzbOJ6ff9o/Yyb2ksPEAsWUA2Xvq74z61Olvtw2nES5TC52+TOUp
+         1eUw8lpCwoVsjenYS6XYBYkg4Es577WzCNsqsFGxES5/2Y9ifFLZDu/ss1sD+FehfejV
+         visA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743970972; x=1744575772;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743992769; x=1744597569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E458gQJPEDLg7gt5tX3yC9GRB2p54/ySefPjbdFmnAo=;
-        b=NAUiVvaxadAe8H31tp2HeM3FlTqcwRnGd8H9NOz/2dEmFyPQSEm1HQD/Lb8bHh2qn8
-         rTT5q00oHSi3C8W3ZgGupjAwrG3P0jommQo9HVFyc6R/zYE/F6N5ACPk6ptOEDNlsRYr
-         ALy/8DJeEYHTxgwq9YI4F1HQZPeWknnAK6ioIgaQZt+hZTDgXys349ibqHLtQHTrcuiN
-         5q74cxPjsQXJFd5JCY4BDIrRvN1G5oXm+xsopM+4Ulu3hjgKe6Rlav5kqgMyk66rlX3Z
-         nl0hNzPFDkshrRikLoM587IAFJEhmKr/1pjDjgI2vd9ZbXRY1JPQ79dEzfsYZNizAYUp
-         oG5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWhmx4kyxEf3n8iQ6Aw5yqkToas+8nlUpnSsw2QqYlh4ynkf1mXGldd5TbaCJHjz2BisuFxlfaw+eus@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRUF5Zpafbimo2tFGyCZ5Kn3kDnRlGZseBZG97NQotJqR6ZZsN
-	mlxTSuHKDLuO+sk3tJClGblHlz5t4rXxoJSALAUDcARUcqCda4yMAlSFnV3VIsc=
-X-Gm-Gg: ASbGnctofNa44OqxeMCDHB7eZSwwcoH/mCP73I0fPg/PKkdaxxvNPSkXu8exvfZdZGF
-	D5rwhkbO/GUqTbFsyNJficnZ+vW3YfdWCgG8p7FNN03IuXLXIObW4GtuACnpIkBRHxZVCTevhQ5
-	LLjoonJmNhIuk5NPL2gQ9tkN7t+SWxkfEwK28zq8dXzz9WmPMsnzc0pDqdxveHUtgVHjR0Now+H
-	+eSRBo5W/g/Cd4SlSS0M5Ap9pc7P7VMjfw4VqGa0ZkTkD9D4ydgHYQuVKWxxd4H1uHaAIlDKt7C
-	GDHpwQYB5acO7lLIqdOvU2CQH0VyAeVK1BGfCeMKFBh28rZHDDEjyg7jsh4anvq2
-X-Google-Smtp-Source: AGHT+IEF8tj7Pq+6DZXgyHyaSB4Mgz8msO3r9oCeK6E+RJBMjaZB+pmLJuJSpG/6Qd5AvxQHxn7QGw==
-X-Received: by 2002:a05:600c:3b12:b0:439:9c0e:36e6 with SMTP id 5b1f17b1804b1-43ecf86b411mr30682825e9.3.1743970972004;
-        Sun, 06 Apr 2025 13:22:52 -0700 (PDT)
-Received: from shite.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec147c9dbsm115304655e9.0.2025.04.06.13.22.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 13:22:51 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] gpio: zynq: Fix wakeup source leaks on device unbind
-Date: Sun,  6 Apr 2025 22:22:45 +0200
-Message-ID: <20250406202245.53854-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250406202245.53854-1-krzysztof.kozlowski@linaro.org>
-References: <20250406202245.53854-1-krzysztof.kozlowski@linaro.org>
+        bh=debS+VRslkmHys5XV5kL/p+TQCO24vSGvmW5DmRp9r4=;
+        b=WtwRZeFpNqTwQIJWf/qLEwLKcK2lOGv7qZVLoksE8mw3aLH7UyvPa51Co7er1gnv2F
+         JLvJAgU/jdG0C++3j/daALV/KOPRt22msNLTQ55zmJbrzWanrJgD/OKQCa9L95i3avHH
+         LLSpLfqDnomeBEDtooy/zXIHfFkYemTncq5LLwgLN2txBZJD8wS1dG5QJ//rhYm8/Qww
+         z7K+cYJZ3R1bC5J/YTliBiTnPJVM4GQRTZJAlVpttv12rXXnURNqQp+ePRx6I8Xe+N1q
+         xhdLHAvLVSLxotlki3MtlBSJnn73EthBPTuT2x0hUvTDjEaupwNFXJlf2/VnP30s7W7I
+         tqWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFaNkJXnxj7tkrHPvzm+iFffUJ7QMxkqXZWLuVSalt2OYx/EOm7RTJGKXWlHmC2q1cEvE8q5L3lsbM@vger.kernel.org, AJvYcCUPQiX/SyYLbOq3G2FoOzlJNY8YYkN+iAH7tuitd37I7bw0Upoitt/yUlnO0PisdvDb4g3kypj/8ttJtiwq@vger.kernel.org, AJvYcCUfh5WMlcb4kkJumy8aaXYQQEwejMYJmisobrld8Bpkl+LzIynG3rLtO5hue87/p52Y6DsCOBpKaCkWgZVLD/4=@vger.kernel.org, AJvYcCVE4f6AlsF932Ssa59QX+4x2kuvCfZq1DIkm4Mw065UcrLuHaBr2wDHYj6Va3X/yZk+DB0k8eRZAq3S@vger.kernel.org, AJvYcCVK+gadp8QAPJ+71sPw+uTzElx2dCJ5jnfF6/oeGZcxFRY8gHr3YtpFkyHM28ETCwu8jtnxFHU7I0NVkw==@vger.kernel.org, AJvYcCVKHqH3b01JAjrbEE02F663UFePU3XkAc7WZWeaZG0eBGVXktLgxYzAKtcbd9O13CS5lN9ktNM8tl8=@vger.kernel.org, AJvYcCWJgEqxzZfn3Zd4wUYc35YDricmRlQG3bsnWLMlQAgAN2Jb9csQH4VPY1sYvMrBtkQ5IIoJs8SM@vger.kernel.org, AJvYcCX/S4t4Ghktu+gZv3ALEc6NMC2TPeFGEdEGx9bVIWXG9CjCAIDeonNkzG/RXxDRj5crJrGddF7XhzBB@vger.kernel.org, AJvYcCXCzRN+p8rU/G7+yv84RwX8CQLpwbTLx1hGdwx5greFtJ/mOzm4rLM0J21qPi6XjF/4qCVegODP1Yt2VqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC51YS6iW3EVd87P9gX0kGMRMH8sNjNWpUGG2c7yXlqjqmoY2k
+	plyN/MXILVSvC/aB8ZC1iFywSF06vv4e0fzX/32s9TfMwJBSSRBjc5jFFuJgYM5drVg2K1rMLwX
+	5sdbq6R0Ays0BMVZlvbCbsB68yFI=
+X-Gm-Gg: ASbGncu9A5PtZTY7SOOQ0IasZmO80XfQAqRRP01tBlIfcp9ewMUt3oASUCxjrWYDdFV
+	x+gaF/+h6szxX/VuoZGYtXPcML473+PA9o3kv41XI+bsssKyn1CMWBoFsyiitDJllSHZ25kePM2
+	Y7E/dlMnJ6FQ2FjojfEg9jefTKzx05EgycxGAMdn72sFuvr3Hk6CCPFl+5gplkXU1XfDtJMHw=
+X-Google-Smtp-Source: AGHT+IGquV6j7kjxSU5DDbl56LJUWg84NJlvktHpwJEewJUQrkBdAn2Dp3qCJNnObG7k37I2GpH8CM6noQcYsBFXMjQ=
+X-Received: by 2002:a05:690c:670f:b0:6fd:a226:fb76 with SMTP id
+ 00721157ae682-703e31407ddmr182228257b3.14.1743992769361; Sun, 06 Apr 2025
+ 19:26:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-2-a0282524688@gmail.com> <20250307011542.GE8350@google.com>
+ <CAOoeyxUgiTqtSksfHopEDhZHwNkUq9+d-ojo8ma3PX2dosuwyQ@mail.gmail.com>
+ <20250320145042.GS3890718@google.com> <CAOoeyxXZmrzBSNRdRx9vK84m5Z5y8T_A+wY98vVrPUZ7f4w4iw@mail.gmail.com>
+ <20250404142115.GC278642@google.com>
+In-Reply-To: <20250404142115.GC278642@google.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Mon, 7 Apr 2025 10:25:58 +0800
+X-Gm-Features: ATxdqUEJhGHgxl-DlDPMkzogxSTRCsyaw-VHC_dALxuK6Y_oivsfK0lqdUug0TA
+Message-ID: <CAOoeyxVVgHGkH5ajQT0NGNPv7FmVPLzuZtGjCiF7mRRto70aAg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Lee Jones <lee@kernel.org>
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
+	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Device can be unbound, so driver must also release memory for the wakeup
-source.
+Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B44=E6=9C=884=E6=97=A5 =E9=
+=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8810:21=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> > ...
+> > > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x1),
+> > > > >
+> > > > > IDs are usually given in base-10.
+> > > > >
+> > > >
+> > > > Fix it in v9.
+> > > >
+> > > > > Why are you manually adding the device IDs?
+> > > > >
+> > > > > PLATFORM_DEVID_AUTO doesn't work for you?
+> > > > >
+> > > >
+> > > > I need to manage these IDs to ensure that child devices can be
+> > > > properly utilized within their respective modules.
+> > >
+> > > How?  Please explain.
+> > >
+> > > This numbering looks sequential and arbitrary.
+> > >
+> > > What does PLATFORM_DEVID_AUTO do differently such that it is not usef=
+ul?
+> > >
+> >
+> > As far as I know, PLATFORM_DEVID_AUTO assigns dynamic IDs to devices,
+> > but I need fixed IDs.
+> > For example, the GPIO driver relies on these IDs to determine the
+> > group, allowing the firmware to identify which GPIO group to operate
+> > on through the API.
+>
+> PLATFORM_DEVID_AUTO will allocate IDs 0 through 16, the same as you've
+> done here.  These lines do not have any differentiating attributes, so
+> either way we are not allocating specific IDs to specific pieces of the
+> H/W.  I still do not understand why you need to allocate them manually.
+>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/gpio/gpio-zynq.c | 1 +
- 1 file changed, 1 insertion(+)
+I'm using PLATFORM_DEVID_AUTO to allocate child device IDs with
+MFD_CELL_NAME(), like this:
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index be81fa2b17ab..3dae63f3ea21 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -1011,6 +1011,7 @@ static void zynq_gpio_remove(struct platform_device *pdev)
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0)
- 		dev_warn(&pdev->dev, "pm_runtime_get_sync() Failed\n");
-+	device_init_wakeup(&pdev->dev, 0);
- 	gpiochip_remove(&gpio->chip);
- 	device_set_wakeup_capable(&pdev->dev, 0);
- 	pm_runtime_disable(&pdev->dev);
--- 
-2.45.2
+static const struct mfd_cell nct6694_dev[] =3D {
+    MFD_CELL_NAME("nct6694-gpio"),
+    MFD_CELL_NAME("nct6694-gpio"),
+    ......
+    MFD_CELL_NAME("nct6694-gpio"),
+    MFD_CELL_NAME("nct6694-i2c"),
+    MFD_CELL_NAME("nct6694-i2c"),
+    ......
+    MFD_CELL_NAME("nct6694-i2c"),
+    ......
+};
 
+For example, the device IDs retrieved in gpio-nct6694.c is 1~16, and
+i2c-nct6694.c is 17~22. Does this mean each driver should
+independently handle its dynamically assigned IDs?
+Additionally, I originally referred to cgbc-core.c with i2c-cgbc.c,
+and ab8500-core.c with pwm-ab8500.c for associating child devices. Do
+you think this approach is appropriate in my case?
+
+
+Thanks,
+Ming
 
