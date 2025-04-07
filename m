@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-18327-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18328-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1771A7D8F3
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 11:04:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E181A7D8F4
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 11:04:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7DE2188712B
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 09:02:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E990D16F535
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 09:02:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D90322A4EE;
-	Mon,  7 Apr 2025 09:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A74D22E41C;
+	Mon,  7 Apr 2025 09:02:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C48414F123;
-	Mon,  7 Apr 2025 09:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867DE22E400;
+	Mon,  7 Apr 2025 09:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016536; cv=none; b=j9tGSCjAlEzO0vB8QOK67UKyfKxyWz17Ml9nbyF/YFioqB3tkrDLv30YJzFZ4xG3NdED0E+uX0e9wIMWydv5CNi/InqJBpBTzoDz9wdNvMbxsGPm4D/tp4RwkKEM8CZFGfl/GrhuyNeKyv/xXU48ka1QDM9hrVojgBKQmLqZgeg=
+	t=1744016566; cv=none; b=fhvMGSvGRbSNi6fn3t8BUg6lCjdubwjceJWtSbimARxREUPWB1wLpai/X/3H0zPNRXzoFs37lLKuM3s1LLOPBvSP2I4JVO4vyD8kwJ30DliU61/66K/5bw+OVz+mQkDcEE7Vw18X7u36wy49WATeXNZHZ6m2/ZgnNvFX4IgVWDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016536; c=relaxed/simple;
-	bh=eVOVBrlz3Cl7Qim70VH0GDhtOXI/yh4jfU2ytKhqAy4=;
+	s=arc-20240116; t=1744016566; c=relaxed/simple;
+	bh=pzaFCkkWTpWZKNbouG5TUzCCy42CbgKm50X6hDK2pMI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VzHE10g6oxFvTEoXUlbpPFX5e4ZM2RKfd3bvllQCpALpPmBQ6Iu6/Sqq9M26IxezwcVybu8FWpoaQelnp/HQ+vwhsNJ2euaPDPJzaL0h91yXm9jTLE1+PVH3FMTz7BzCHPQahr18So1esNOxLP649Cc0pD7oGkDe1pZN4JXPkSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=cP+l2YbpGgXTo7rdbAqWlj3IlzGsR4+KTiECg9jiA0duRNZp3LqTvDxJseDKePaTgl+3OqRswf0+UVM1W0btq16AmNu0X3srZcsV8LA0l4vbaC+bUQXT+cE0mLlokGP1pN/SfOeoCk4wlXVtRAJbHynYaTNWsWmQSP+ac1/uShk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: fHumtPQ7SVCUTeiFFeCwiA==
-X-CSE-MsgGUID: i/xtGRNgRM63hlYmzXjKOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="49043893"
+X-CSE-ConnectionGUID: NW/THfQTTmG4P+cP2bLwFw==
+X-CSE-MsgGUID: otl1PhbfT8+1xBhUzyUy/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="67865177"
 X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="49043893"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 02:02:14 -0700
-X-CSE-ConnectionGUID: jeoeFzTPQjqf00fyQ0Oe6A==
-X-CSE-MsgGUID: JWC/ymyCRbKiOyWyoZ2yeQ==
+   d="scan'208";a="67865177"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 02:02:45 -0700
+X-CSE-ConnectionGUID: zAdbsipFSZql+8zNwy6lYA==
+X-CSE-MsgGUID: 4xWTK/QvSEOChx3TJjpuvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="128220051"
+   d="scan'208";a="151081446"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 02:02:11 -0700
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 02:02:42 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andy@kernel.org>)
-	id 1u1iMq-0000000A0lL-3CZW;
-	Mon, 07 Apr 2025 12:02:08 +0300
-Date: Mon, 7 Apr 2025 12:02:08 +0300
+	id 1u1iNL-0000000A0mj-3WNA;
+	Mon, 07 Apr 2025 12:02:39 +0300
+Date: Mon, 7 Apr 2025 12:02:39 +0300
 From: Andy Shevchenko <andy@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
@@ -57,10 +57,11 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Peter Tyser <ptyser@xes-inc.com>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 06/12] gpio: f7188: use new line value setter callbacks
-Message-ID: <Z_OUkBr4ayDimp5Z@smile.fi.intel.com>
+Subject: Re: [PATCH 07/12] gpio: graniterapids: use new line value setter
+ callbacks
+Message-ID: <Z_OUr5xvoXh-sFne@smile.fi.intel.com>
 References: <20250407-gpiochip-set-rv-gpio-part1-v1-0-78399683ca38@linaro.org>
- <20250407-gpiochip-set-rv-gpio-part1-v1-6-78399683ca38@linaro.org>
+ <20250407-gpiochip-set-rv-gpio-part1-v1-7-78399683ca38@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,36 +70,17 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407-gpiochip-set-rv-gpio-part1-v1-6-78399683ca38@linaro.org>
+In-Reply-To: <20250407-gpiochip-set-rv-gpio-part1-v1-7-78399683ca38@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 07, 2025 at 09:13:15AM +0200, Bartosz Golaszewski wrote:
+On Mon, Apr 07, 2025 at 09:13:16AM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
 > struct gpio_chip now has callbacks for setting line values that return
 > an integer, allowing to indicate failures. Convert the driver to using
 > them.
 
-...
-
-> -static void f7188x_gpio_set(struct gpio_chip *chip, unsigned offset, int value);
-> +static int f7188x_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +			   int value);
-
-Same comment, I suggest you to correct editor configuration to make sure
-80 is 80 and not seventy something.
-
-...
-
-> -static void f7188x_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-> +static int f7188x_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +			   int value)
-
-Ditto.
-
-...
-
-But personally I would leave that archaism in the last decade or even century.
+I'll take this via my tree, thanks!
 
 -- 
 With Best Regards,
