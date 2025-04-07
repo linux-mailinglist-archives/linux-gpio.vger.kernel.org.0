@@ -1,124 +1,154 @@
-Return-Path: <linux-gpio+bounces-18331-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18332-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0D67A7DC3C
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 13:28:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2DF5A7DCA6
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 13:48:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3100188F80C
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 11:26:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2C6E173B15
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 11:48:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F96423AE64;
-	Mon,  7 Apr 2025 11:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BBB24501C;
+	Mon,  7 Apr 2025 11:48:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZVDY1fVP"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Brx5uq38"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD442239090
-	for <linux-gpio@vger.kernel.org>; Mon,  7 Apr 2025 11:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC46322DF80;
+	Mon,  7 Apr 2025 11:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744025188; cv=none; b=T34BLr4S9flROaNeCjs0VLu37J1qGbFmQuEHFUbmk3BmyyG9eIF/ALBDw6aUm//JRYoDvAh0RMhn3L08s7O2M3Wtg47gC+81srx+afile8B9SnuyVMlQUkqxDIjGcM5nRYGcnwP8tQzBB3uv8uwmp5hgRlVb9Npwr4IyPc+PNQ8=
+	t=1744026497; cv=none; b=l1AvtxBToEsovgJVREMLBvLvHKj7t3HCBB/kOTf3w+/V2ZkNEdZjfv8JHgvpER2g1nJrp9WtvD96s7DPzGgyemsk72Efzy+S8aCNa6WmW+xT4UJkyjs7rLZd67BVR7+4alHIUHKVFSMl42M4Xz5f8iP+JsZ6SSwf9JUB3XRCi0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744025188; c=relaxed/simple;
-	bh=RviIKAswlPvNGRsEWdEPn05fxHOsZa6tlhHIEII4Ung=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ku1l4YzNfJMWKKfvEQONPCIGw2xF8zYZwoyGyHprdsFVWZf5TRtVtZkL6AjLTsiJ55hwR7jBgydIbXPeEh45wkrvg3vU3dR7zc3Jnfweaule/FT3S3cXmGT6QAPK79QWfNBd9AWk4o1HZyDvYDuH2ok2PgBOmjz5ouLa0tTQ8D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZVDY1fVP; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-548430564d9so4830735e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Apr 2025 04:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744025184; x=1744629984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wMO1POcPMv7WcEI3IEK8Y5twX/lsGWmxAHtpCcotjPQ=;
-        b=ZVDY1fVPITL5y0lB7xs6qqdEmtD18vOXeZpZXhyeAyFOCSNBGjAm4XuAhqYobZnDco
-         RxkPpNI0MUCHaufv1teJaf7fQj/vCnq+c+HTUf0dpC6VkY/+E/eisw3yXTNPhbm9U4Vf
-         S+hzaBrn2iesr9OfiGbTS5stgARF6StqOofTz7csKLN+d8PAFD4CIUpZkVUoqm/gSeRA
-         HME9yR4Bft++hjU21ReXNXDNUA58q4+N86Hx8qjg/D8wns/4Z+5QjK85WRyVHGBomWmU
-         zGD9GpNIg4EtXkrSEnOms5jOp1yasb1qSQduVT7eydqXaYCPTMUKj+haUV8lbcIP0QYr
-         Hf0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744025184; x=1744629984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wMO1POcPMv7WcEI3IEK8Y5twX/lsGWmxAHtpCcotjPQ=;
-        b=kMynBqybo+VFr47OFwhidI2c+MehKlq+C9uEEK3MfhvN+2z9gc9+Mev3wm9/5yqvXY
-         LufHNq11hAK9aSAq9u781LZF6Iid6gHUa4okV8WCeQBkOHfNIueeYCn5LoCPA+hEHSjs
-         DvloA0DzUqiY3GJNo30/1ZouosdOvDojRu6j4cMInLzDt7mIfM6BWVNa+P+6kv+/f1C7
-         tt4V8+tfLaD/zuBkDVFxofDNiJMc3KiY/490Sgks/RQfzonR5F1pQGCkibgKhd952nPA
-         AmyKbudd0Fn09oHpfKrhNSAGb4aIc1VwJxFfgMx00zucBRsG/0w4yelOkrdgc3ZDYKnU
-         yUiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWq7KK2IBvt+W0SvW6+MSnwAQSfvoA6XTZC2eNIOM/9KkGI4R+76GtlWYgGwPlQYRqHjHCY6PbxQJgL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJTW6FS5gj3xOQa9enTM6T+YZ1NUsN3d92i/Kjh0H0pTqP6YKJ
-	QpTdsqHuNohx700nNldCPTpaCxB8pYhh5x9Mim/Hah4dcdqR2GjPrjE7E+pWXhFjPISVxhp4g0b
-	EwVmvCTpsVnodnhwxVoJtOsFmMT84hXoZl15ZhQ==
-X-Gm-Gg: ASbGncufogvStWE+R6eOIVjJKYY6vEg0IzbeZhsrV6WRxS8gQ0C9UfHVOwYpqLSYPRs
-	k5kWKeoTdXlnPLLvuBBcUtb2IJrgCb7kWrE90d6uk3KA4eKgsrpEkq5iD7VY8j1t7AzUGyDbmf4
-	NasiRHI0ZCVxJIyJ+Lg3jGs5mxzG3dPWCSfuLTU7VoiEjcVBX0URh3zTlRZZavNFJH8iFd
-X-Google-Smtp-Source: AGHT+IEF0Umob27acb0T2mBiL6aYslIf1iwF0v4IeDnV4GdBZ6Kni8wcccQPNxQv4mkDvYKKandIkloAlzt8S6od9ac=
-X-Received: by 2002:a05:6512:400c:b0:545:48c:6de2 with SMTP id
- 2adb3069b0e04-54c297d099bmr1645433e87.13.1744025183610; Mon, 07 Apr 2025
- 04:26:23 -0700 (PDT)
+	s=arc-20240116; t=1744026497; c=relaxed/simple;
+	bh=cV6uEwyukR8ex1GdskZ8gaKPeyj3PmbNq5yAuE2CMf4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YaAMKuMrOXzYfUszycvrr2dt7/G6DjcH8h23Em+FsJr+dC0yr9967gUipG+p30DXnmgBekR1va2ucsBw/n1oKV9Smsw1we56XK35mFu5lRlM+PGkl0lcA6mZYMeKFpkJrP8+N7W3pUzwbjcNRByNdMkTlj1OfKlc0JUPMM2sx/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Brx5uq38; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: 2c8ae2b013a611f08eb9c36241bbb6fb-20250407
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=H0Ju1JYitew1f7vP2gI0VqL3Y8dqgqZen6iVSaDOPyM=;
+	b=Brx5uq38en+xtqbkpLuiY7HR8Ljmmxti4Gfi+eUY3UlxGiO+WLo3GpeVqj7Aqf7yFiJoy3zYhCC5Ipgg4l6KlrbTV1BojXXza+NZPWQG3Ss8HaIEmpmx8CEzViamD4QXDoAXq3ZWZSIXcLNAiG4ivIrRigCjJf9KLYjy2efZ87k=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:010c1db5-6f95-4898-b0ff-cf68ffe0f565,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:7dc80a4b-a527-43d8-8af6-bc8b32d9f5e9,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|102,TC:nil,Content:0|50,EDM:-3,IP
+	:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
+	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 2c8ae2b013a611f08eb9c36241bbb6fb-20250407
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+	(envelope-from <darren.ye@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 95330008; Mon, 07 Apr 2025 19:48:08 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Mon, 7 Apr 2025 19:48:06 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Mon, 7 Apr 2025 19:48:06 +0800
+From: Darren.Ye <darren.ye@mediatek.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
+	<darren.ye@mediatek.com>
+Subject: [PATCH 00/11] ASoC: mediatek: Add support for MT8196 SoC
+Date: Mon, 7 Apr 2025 19:47:12 +0800
+Message-ID: <20250407114759.24835-1-darren.ye@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org>
- <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org> <20250407103320-GYA13974@gentoo>
-In-Reply-To: <20250407103320-GYA13974@gentoo>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 7 Apr 2025 13:26:12 +0200
-X-Gm-Features: ATxdqUFdC84fNZAgdG0QB3uYh3FcHqNCfMgI5v2DW_l-kU6Xw4akq4WaqW0KsIA
-Message-ID: <CAMRc=MeFK1gX69CWH2gkYUqkLU-KCOcwHcA+gjN1RXFA++B_eQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpiolib: support parsing gpio three-cell
- interrupts scheme
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-MTK: N
 
-On Mon, Apr 7, 2025 at 12:33=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
->
-> Hi Linus Walleij:
->
-> On 06:06 Wed 26 Mar     , Yixun Lan wrote:
-> > gpio irq which using three-cell scheme should always call
-> > instance_match() function to find the correct irqdomain.
-> >
-> > The select() function will be called with !DOMAIN_BUS_ANY,
-> > so for specific gpio irq driver, it need to set bus token
-> > explicitly, something like:
-> >   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
-> >
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > ---
-> >  drivers/gpio/gpiolib-of.c |  8 ++++++++
-> >  drivers/gpio/gpiolib-of.h |  6 ++++++
-> >  drivers/gpio/gpiolib.c    | 22 ++++++++++++++++++----
-> >  3 files changed, 32 insertions(+), 4 deletions(-)
-> >
->
->   I'd assume this patch [2/2] will go via pinctrl's tree?
-> as patch [1/2] has been accepted by Thomas into tip tree [1]..
->   Additonally need to pull that commit first? since it's a dependency
->
+From: Darren Ye <darren.ye@mediatek.com>
 
-No, this should go through the GPIO tree but for that I'd need an
-immutable tag with patch 1/2.
+This series of patches adds support for Mediatek AFE of MT8196 SoC.
+Patches are based on broonie tree "for-next" branch.
 
-Bart
+Changes since v1:
+  - modify mtk_memif_set_channel and mtk_afe_pcm_pointer interfaces
+    are improved to support mt8196.
+  - remove duplicate definitions in the mt8196 common header file.
+  - cm logic is merge into the afe platform driver.
+  - modify afe clk to return judgment logic and remove useless clk sources.
+  - refactor the mt8196 adda dai driver.
+  - remove the gpio module and use SND_SOC_DAPM_PINCTRL to manage it.
+  - removes CONNSYS_I2S related functions that are not supported in i2s dai driver.
+  - fixed mt8196-afe.yaml and mt8196-mt6681.yaml syntax issues.
+  - modify log printing in all modules.
+  - optimize the header file included for machine driver.
+
+Darren Ye (11):
+  ASoC: mediatek: common: modify mtk afe common driver for mt8196
+  ASoC: mediatek: common: modify mtk afe platform driver for mt8196
+  ASoC: mediatek: mt8196: add common header
+  ASoC: mediatek: mt8196: support audio clock control
+  ASoC: mediatek: mt8196: support ADDA in platform driver
+  ASoC: mediatek: mt8196: support I2S in platform driver
+  ASoC: mediatek: mt8196: support TDM in platform driver
+  ASoC: mediatek: mt8196: add platform driver
+  ASoC: dt-bindings: mediatek,mt8196-afe: add audio AFE document
+  ASoC: mediatek: mt8196: add machine driver with mt6681
+  ASoC: dt-bindings: mediatek,mt8196-mt6681: add mt8196-mt6681 document
+
+ .../bindings/sound/mediatek,mt8196-afe.yaml   |   233 +
+ .../sound/mediatek,mt8196-mt6681.yaml         |   114 +
+ sound/soc/mediatek/Kconfig                    |    30 +
+ sound/soc/mediatek/Makefile                   |     1 +
+ sound/soc/mediatek/common/mtk-afe-fe-dai.c    |    23 +-
+ sound/soc/mediatek/common/mtk-afe-fe-dai.h    |     1 +
+ .../mediatek/common/mtk-afe-platform-driver.c |    47 +-
+ .../mediatek/common/mtk-afe-platform-driver.h |     2 +
+ sound/soc/mediatek/common/mtk-base-afe.h      |    13 +
+ sound/soc/mediatek/mt8196/Makefile            |    16 +
+ sound/soc/mediatek/mt8196/mt8196-afe-clk.c    |   729 +
+ sound/soc/mediatek/mt8196/mt8196-afe-clk.h    |    78 +
+ sound/soc/mediatek/mt8196/mt8196-afe-common.h |   194 +
+ sound/soc/mediatek/mt8196/mt8196-afe-pcm.c    |  5070 +++++++
+ sound/soc/mediatek/mt8196/mt8196-dai-adda.c   |   918 ++
+ sound/soc/mediatek/mt8196/mt8196-dai-i2s.c    |  4080 ++++++
+ sound/soc/mediatek/mt8196/mt8196-dai-tdm.c    |   825 ++
+ .../mediatek/mt8196/mt8196-interconnection.h  |   121 +
+ sound/soc/mediatek/mt8196/mt8196-mt6681.c     |   876 ++
+ sound/soc/mediatek/mt8196/mt8196-reg.h        | 12068 ++++++++++++++++
+ 20 files changed, 25414 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-mt6681.yaml
+ create mode 100644 sound/soc/mediatek/mt8196/Makefile
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-clk.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-clk.h
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-common.h
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-pcm.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-adda.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-i2s.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-tdm.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-interconnection.h
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-mt6681.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-reg.h
+
+-- 
+2.45.2
+
 
