@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-18325-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18326-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4689A7D8BD
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 10:57:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E96CAA7D8E2
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 11:01:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB71418962AC
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 08:56:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60CD93B104F
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 09:00:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E86F22B8A5;
-	Mon,  7 Apr 2025 08:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEADD22B598;
+	Mon,  7 Apr 2025 09:00:21 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3810228CBE;
-	Mon,  7 Apr 2025 08:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00819224AEB;
+	Mon,  7 Apr 2025 09:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016105; cv=none; b=mIj1HuJqnRM6w6baWWv7YcjA0jmOtoVnpT0ELpCnNpTb0kRB+snC/dMhne3wXt25uZ1zKmNDKvdU56LsuI6YYy4gGyUtKz4WOqbm61ZrL2dYv3xH4N3hgb1z/5mi1fG2l0k0v9sJqAb6VVcvGSlEu69UyW1Dmx4/SMNVk/nzrWI=
+	t=1744016421; cv=none; b=lbwO+eG3vK+LzGkepws8AwfUBb0u/kEfBB5WxTePXTgnURvmT/JrpeRUyF28DfVuItjKDOt240r0zfCCR1cv+QqhWhHTZOGVsQduV4PailQOjIN9s5+Jjk8CB+NNsD3rlqlytBbbJDgK7ni12Plg2svqr02RCMsd3JjdkbbDaow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016105; c=relaxed/simple;
-	bh=f/LcNa6GPRTKbdOQ0J6Rx6Ux/UEHkLRKdixOCrp5Zw4=;
+	s=arc-20240116; t=1744016421; c=relaxed/simple;
+	bh=kbfKIWbU2qkEejFmSd7rCl9igaPP/nOQgBjxtPen4tE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SgzHU2VdnpKAveM9hdVq/Cd6ujiLq658RVrIGTFp/MCLqITitrYrrHlj0s+0qGb0nM6PG0RYQqgQpVHfhwat8kIHymGuf8WNf9CkHWsyndfE3q8qoLPygsJEJiuVSbLBNmtnj6U2NAXmZZ9FpygSu4ZcJEN0w7Wf0iQFJWHGZBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=a/BDOm17Y5OV6rtwvllqaShjlISnP7LfzZKOG6GbJ8ihurOnxEUy9ZHJP6JHnv3DFp/qojw1o12yyNhrFm6FzAVsXRG1OlfGFyB2J7JnYAyHENizcKoyqSvXnl5MsPf0YUqOI+uOuVx12elUFFhoL18vM01nFAUiOX1YnFYyeos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: o7xd73c8QbevuoL69pUt3g==
-X-CSE-MsgGUID: w0ZHCJaTQTyhq5xX/d2dsw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="67864445"
+X-CSE-ConnectionGUID: xTzDVyY0TympXeG3N812xQ==
+X-CSE-MsgGUID: BE1bn6KsRiqXyqPRQEikTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="45279812"
 X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="67864445"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:55:04 -0700
-X-CSE-ConnectionGUID: MqkqK+M3Rou5JYPj0Gvznw==
-X-CSE-MsgGUID: ITP6GFcDRhyw7vd/CvRTSg==
+   d="scan'208";a="45279812"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 02:00:19 -0700
+X-CSE-ConnectionGUID: FKdYtSnsSK6nNs3NaEf24A==
+X-CSE-MsgGUID: knvpajQqRjeDELdRVxFLzA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="151079832"
+   d="scan'208";a="132740528"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:55:01 -0700
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 02:00:17 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andy@kernel.org>)
-	id 1u1iFu-0000000A0dr-1kCv;
-	Mon, 07 Apr 2025 11:54:58 +0300
-Date: Mon, 7 Apr 2025 11:54:58 +0300
+	id 1u1iKz-0000000A0jy-3a6L;
+	Mon, 07 Apr 2025 12:00:13 +0300
+Date: Mon, 7 Apr 2025 12:00:13 +0300
 From: Andy Shevchenko <andy@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
@@ -57,10 +57,11 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Peter Tyser <ptyser@xes-inc.com>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 12/12] gpio: ich: use new line value setter callbacks
-Message-ID: <Z_OS4nx2E12yjL7_@smile.fi.intel.com>
+Subject: Re: [PATCH 05/12] gpio: allow building port-mapped GPIO drivers with
+ COMPILE_TEST=y
+Message-ID: <Z_OUHXS747yUSA9c@smile.fi.intel.com>
 References: <20250407-gpiochip-set-rv-gpio-part1-v1-0-78399683ca38@linaro.org>
- <20250407-gpiochip-set-rv-gpio-part1-v1-12-78399683ca38@linaro.org>
+ <20250407-gpiochip-set-rv-gpio-part1-v1-5-78399683ca38@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,17 +70,29 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407-gpiochip-set-rv-gpio-part1-v1-12-78399683ca38@linaro.org>
+In-Reply-To: <20250407-gpiochip-set-rv-gpio-part1-v1-5-78399683ca38@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 07, 2025 at 09:13:21AM +0200, Bartosz Golaszewski wrote:
+On Mon, Apr 07, 2025 at 09:13:14AM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
+> Extend the build coverage by allowing the port-mapped drivers to be
+> build with COMPILE_TEST enabled.
 
-I'll take it via my tree. Thanks!
+...
+
+>  menu "Port-mapped I/O GPIO drivers"
+> -	depends on X86 && HAS_IOPORT # I/O space access
+> +	depends on (X86 && HAS_IOPORT) || COMPILE_TEST # I/O space access
+
+Are you sure about this? Do we have IO accessor stubs? I don't remember that.
+
+What about
+
+	depends on HAS_IOPORT # I/O space access
+	depends on X86 || COMPILE_TEST
+
+instead?
 
 -- 
 With Best Regards,
