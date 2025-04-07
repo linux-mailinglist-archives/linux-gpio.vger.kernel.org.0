@@ -1,131 +1,149 @@
-Return-Path: <linux-gpio+bounces-18345-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18346-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63F21A7DCFF
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 14:02:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 636F6A7DD1E
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 14:05:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EFB767A2ADB
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 12:01:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50CB216C1E9
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Apr 2025 12:05:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC91A23C8A2;
-	Mon,  7 Apr 2025 12:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63572459CF;
+	Mon,  7 Apr 2025 12:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TOZJpPZ/"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ewF7B6dS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885A22B59F
-	for <linux-gpio@vger.kernel.org>; Mon,  7 Apr 2025 12:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A550622B8A8
+	for <linux-gpio@vger.kernel.org>; Mon,  7 Apr 2025 12:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744027331; cv=none; b=NDnZt6/j9YU4g8difks5orgsA2zCYeaKpbIL3/2YxW5GNdF4P1cz6cLqgp3Y3TcO9zthmExb+SebUFCrdTUcdayaenWyieDFmb0RmJOr66aqrJ0WiCTCMcdPVU34Dd+6Kf9XK7w/Ygww2RJ2taox8nPT6QcsnciOmFM7ixFRzlY=
+	t=1744027524; cv=none; b=E7JcSJkWeT3e784ZE/7569UN/0lprO9wbzviPJ74pZIo3JoBnxtv2OTAhS1HP3ngn+tLXgZR+rh+i8ZhXqbdyQ0+f/rjP66PB0Tj2TuEtIK7f9c32eyzFog7vLn3UpXi8gTIpH1c4oQu47UQfqRch07ATsrBZiEvQ2zzKF44SCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744027331; c=relaxed/simple;
-	bh=++rBUctgo7WqhcGy75JwrymHZEqQIqCCai4AuvewSxI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WQpMzm6UzzVMQ6mudWf602KpJn48x1GKQK2BN8pcUWxi4YoigeEQalz83j73iPiogekQFWo58VUNZ/eciZjzOQpbOumYhX8LMBsHv9MbIvvAILjOHKXH7V0GQTIn3XaWfvtNoJTUqjTApnW7kuCtkD3qW672yeGgKsqVFoxykgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TOZJpPZ/; arc=none smtp.client-ip=209.85.221.49
+	s=arc-20240116; t=1744027524; c=relaxed/simple;
+	bh=2zAQKYKEskwwU28OH2AkW9XmWSMWx0e+7cB//mUEAUc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UHgFojLHqckYG2rs8nRtCzSfmd473VrbkJpmEv2TkTBWmqO3nfTcrUkmM9K8hPALS0LNxpnQ8OjQHAyhmeeXOB07BWPQFMroDnmj3J1EW3Hx53Lg8xKgI8RkfqU7hVkEAHkiekJzarMeSMiMjMlzpZC8lllGcxhUo6KvZcKVlPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ewF7B6dS; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-391342fc0b5so3345794f8f.3
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Apr 2025 05:02:09 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54954fa61c9so1884284e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Apr 2025 05:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744027328; x=1744632128; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744027521; x=1744632321; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1pnqaorkLrZEV4we2FcGB2lZ+lYdMYMSEtj/n+/qjUU=;
-        b=TOZJpPZ/V+tKdKYgAUy8fLQNl9nNG5fzYXL2EK2oyNZHSufY2tlJBlEevjxKm10cfw
-         RucL3DxI21acif7DuKu08UusDS/HVgpMEeT4a1IyOq71m5nZAd/61/TVzUQGmSMy7N8u
-         FwU4N94D4wjQTu8cW3sxivJYEBRZH2EM3ZtFjdGFdkmlW0/I6EIxOKtBU72Nky1HCNlS
-         Bkcpp84uz5Y1m0qsYaZW7fm4LS65qOWz8ULx6qU618j61NIluGAmKIk5M0eRArXZRlkg
-         IKJcr3C1wiQ33PrgtdhTyFF8xtgBZrArOn2ZQB2nF033iulm5QYT50E2TVvheznkTM2z
-         IUxA==
+        bh=nyzXLIZQz5jByjQJS2N0CsVIfLCOdR71gsbEiiRIwmo=;
+        b=ewF7B6dSA1CQJsoKrxgoM5hdWnj5v0E7VZzoF4F3WPfNp7FcFEJlFC1JKDYEUnLAUn
+         P7tF/VofrWu4zQI/pUMbcGcdVm+sjc+MMarRCyhiX4dPiUbFuThLyVQBGktWlxmnXC79
+         +Tt2M9cYQiFbXnVJpbm3bZIaT9w3r+pv/aXaA92ZpyS+rCo5yl/UrgyVqM/PlIip/tEj
+         PLZoc7xsEKV7BCWcz9yQ1Qd85p6qIi5E6kRWTRHcWgyVKtPt3ksWcNjJE3QsbOQDF4TE
+         DXOYIOcL0LEyXJtJ60Cs+bgWK0HTCD6zZzPTlBikcNmHrzGcxUWmZk8zToSOtmYsGGPb
+         XdAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744027328; x=1744632128;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744027521; x=1744632321;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1pnqaorkLrZEV4we2FcGB2lZ+lYdMYMSEtj/n+/qjUU=;
-        b=BvQ3N/IYooQY93iV8L41653H3oy/np0iVlJ0ZNfpQDFAtLDhEhWbik3mKhRF541bt2
-         r3jF/Ey8LRkSODQxtUXwxpGTE6UxJiG/pxjj1ye5kcjVjyB55cgAxFKw3sYOwEUX1b9D
-         X51+m0iBu5haQ/wXbFze8HAkozvwJJtNdC89+DjMbCid4Dsvjfl/gi3MzOW74MJ+ZLHs
-         uNJRr8uUPauW4CjjKPb2rsK3Am2o5k9MUkGADGhMUU8ov+JJ0NMHVABAFaBQc8B6fBm9
-         6QlHbWeyl/61ksYDJRKLSuq8ZWXzMm9S6R1xbpEtnxsGh6NSOtCzdv0Ns/yMWqumlspM
-         wlRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXn+lJqnxVgrYno1QpMOGb5e0RI5kAr+R0PcUFsaoAUDZ2msbjCnT4Q0j2VvtMwobSfeUy51JfmE8Fg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5uQIBaYTOhFOQK0mwBaJgR04XZl+I3qOjdeDDLP/6Opou3wsu
-	lWzdUDMGX/4nvRAJhI5cAnlW3TGG5yS8L3kZgQ2EZLxJA8AL2AksgB+3VChcQM8=
-X-Gm-Gg: ASbGncur8oQL2u9xyaVZKlEG3mHZWQoor19jt1n2YhjAR8YBcAe5/R/rxQi2bc3X4q0
-	OMIRgpMAjBLYaP+R7+tT6aOAivunvKXZCvg8pa+ez7fQZQxMYq24xcHe2DT3o6mjxDkVtjDNFYu
-	FOBuIqIMji+y65V4K1vYJ8LDPL0l/0szyeLLtBbVCbiA/ageqRIoFAVN4rEe4OTUPfEhDSEvyjN
-	u7pIJiouIg91Xr/PGTQnunkXCxp1sqlFnL7W4FVXyUQtf1VkGBQSP/h8oo6CXHhVevVfrHoKvKA
-	4UuhQi4P7yhUg4zLqyIRoir3odCwa5Cl8w42JOeTKp5M
-X-Google-Smtp-Source: AGHT+IHQzfBlcrdH5SeBUOUhvSnbXFRgYmEUvgyqEtRbmlRwoKeao0pvP22bOvClSu4BfKDmGCcmaw==
-X-Received: by 2002:a05:6000:1788:b0:38d:d666:5457 with SMTP id ffacd0b85a97d-39cba982600mr9594792f8f.42.1744027328186;
-        Mon, 07 Apr 2025 05:02:08 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a6796sm12061650f8f.31.2025.04.07.05.02.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 05:02:07 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	James Cowgill <james.cowgill@blaize.com>,
-	Matt Redfearn <matthew.redfearn@blaize.com>,
-	Neil Jones <neil.jones@blaize.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: (subset) [PATCH v2 0/3] Add support for Blaize BLZP1600 GPIO driver
-Date: Mon,  7 Apr 2025 14:02:05 +0200
-Message-ID: <174402729978.46356.11201188338288043335.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250327-kernel-upstreaming-add_gpio_support-v2-0-bbe51f8d66da@blaize.com>
-References: <20250327-kernel-upstreaming-add_gpio_support-v2-0-bbe51f8d66da@blaize.com>
+        bh=nyzXLIZQz5jByjQJS2N0CsVIfLCOdR71gsbEiiRIwmo=;
+        b=UmacSg2SrSIb2k74oy0/c1KOKiusyJn7RuFhfTyQwZ0+hGFwkQBhINzqNA2NTspLfA
+         aNb87oX5mQC72PebRcA18njsXxGOpTOq3QTlHJAcGEXnjeVuCwY2uG6nK/YsnTVTGmuZ
+         1aFDKBscwDXHRIndqsGhGWFwIScU58LIuJA6dS2nzl564R8+btp9zFO2+WWn2RyBeTCf
+         CYB/xInsJ6nWiAwXi3VWgiXE+5JEGCLiLbsckR64c4k/dj3synsJ2kpm3crsMl58cXn6
+         P6oUdcMhXEi5JXSrUKu1nBBIoY9AOkA0DWPPK96eKA5kpYQjpY6xiI814Kl2vuEwVbWV
+         Viuw==
+X-Forwarded-Encrypted: i=1; AJvYcCU59/qajFY7/qefsTOTCw0QzQx+JxDs6x82cHjnzFdDF/Y0YZrfbgdZCZRCVAHfHblzdXzw1l8JovtL@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZbMELVL8UHkyZn7cvaBEjQYOAD0evU/A5eydJKURav7LxE9x1
+	4Ohm8/MXddW3xL3JqnxIqg1AZx6tRjeMhUT0AIkTX28Puh+mG82FjSBl/yflp5VkjgD6nOzoH/Z
+	Ry+jwVgG+4ztuh3E7mPXckr2kV+J1AAlApFxeaA==
+X-Gm-Gg: ASbGncvCaeaV3ugvEYzYDUhfXHgTREYKPk9CtSOwod5rkPveUImJcjZ7NUq9/6mb0v5
+	MFlkBL+NkV2q/Lb6SmgzNvCPRImC8NwY1Hsd0M8kFTGVf52TKSTlOH5Ovur3zhcuMZcVgL+NjYB
+	mcKw2yjd6ygpBKgXGUpbi12p4J+PFB0amVYz7gUNVcgm0mBls0SAWCAlT1SA==
+X-Google-Smtp-Source: AGHT+IEHw9355ezApneCF4SUVAzLY4ETP4OFd5PKxXyTOOvjdLrpav+qCe3u7bCH6diRQ2nujvbYSwfCNWcbhNX6Dk8=
+X-Received: by 2002:a05:6512:3984:b0:54a:f7fb:ff82 with SMTP id
+ 2adb3069b0e04-54c2278b893mr3000965e87.26.1744027520594; Mon, 07 Apr 2025
+ 05:05:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250327-kernel-upstreaming-add_gpio_support-v2-0-bbe51f8d66da@blaize.com>
+ <20250327-kernel-upstreaming-add_gpio_support-v2-1-bbe51f8d66da@blaize.com> <6b8583c9-3755-4b33-a454-261854e6cf2f@blaize.com>
+In-Reply-To: <6b8583c9-3755-4b33-a454-261854e6cf2f@blaize.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 7 Apr 2025 14:05:08 +0200
+X-Gm-Features: ATxdqUEsVQaphQBZzJswprLa4CXDw66XJ1bSTvKJk9OJJy8QVGv0t5yn3iIm7lM
+Message-ID: <CAMRc=MetyZqOgtdPgtSVQ2BHDCOAqoE3K70eCehkOscL8kmbMw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Document Blaize BLZP1600 GPIO driver
+To: Neil Jones <neil.jones@blaize.com>
+Cc: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	James Cowgill <james.cowgill@blaize.com>, Matt Redfearn <matthew.redfearn@blaize.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Mar 28, 2025 at 11:02=E2=80=AFAM Neil Jones <neil.jones@blaize.com>=
+ wrote:
+>
+> On 27/03/2025 11:27, Nikolaos Pasaloukos wrote:
+>
+> > This is a custom silicon GPIO driver provided by VeriSilicon
+> > Microelectronics. It has 32 input/output ports which can be
+> > configured as edge or level triggered interrupts. It also provides
+> > a de-bounce feature.
+> > This controller is used on the Blaize BLZP1600 SoC.
+> >
+> > Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+> > ---
+> >   .../bindings/gpio/blaize,blzp1600-gpio.yaml        | 77 +++++++++++++=
++++++++++
+> >   1 file changed, 77 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpi=
+o.yaml b/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..8b7842331a22b7b9fbfa42b=
+9c711da99227de2e4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
+> > @@ -0,0 +1,77 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpio/blaize,blzp1600-gpio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Blaize BLZP1600 GPIO controller
+> > +
+> > +description:
+> > +  Blaize BLZP1600 GPIO controller is a design of VeriSilicon APB GPIO =
+v0.2
+> > +  IP block. It has 32 ports each of which are intended to be represent=
+ed
+> > +  as child noeds with the generic GPIO-controller properties as descri=
+bed
+>
+> Typo here I assume, should be nodes ?
+>
+> Also maybe better worded as:
+>
+> Blaize BLZP1600 GPIO controller is an _implementation_ of the VeriSilicon=
+ APB GPIO v0.2 IP block
+>
 
+I fixed these in tree, thanks.
 
-On Thu, 27 Mar 2025 11:27:03 +0000, Nikolaos Pasaloukos wrote:
-> This patchset adds a GPIO driver for the VeriSilicon APB v0.2
-> hardware. This controller is used in the Blaize BLZP1600
-> SoC for its GPIO interface. It is essential for upstream
-> support since it is used to provide signals for the
-> Ethernet, USB, SD and many other interfaces.
-> 
-> Adds the GPIO interface to the Blaize BLZP1600 SoC devicetree.
-> 
-> [...]
-
-Applied, thanks!
-
-[1/3] dt-bindings: Document Blaize BLZP1600 GPIO driver
-      https://git.kernel.org/brgl/linux/c/5de6156a402b2d2432767478fe75c40f9755232f
-[2/3] gpio: Enable Blaize BLZP1600 GPIO support
-      https://git.kernel.org/brgl/linux/c/52eafd817651d44ab006c83ebd98f5dd687df2d3
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Bart
 
