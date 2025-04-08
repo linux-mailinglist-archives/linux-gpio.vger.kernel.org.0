@@ -1,99 +1,148 @@
-Return-Path: <linux-gpio+bounces-18469-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18470-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C0BDA7F88A
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 10:54:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA723A7F8A5
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 10:56:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5EF5D3BDA11
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 08:49:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04B3C1692A7
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 08:53:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F2CC266B40;
-	Tue,  8 Apr 2025 08:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFFC026738D;
+	Tue,  8 Apr 2025 08:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ljoLSqix";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zlmz6sQF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SS7FYlO8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E328726657C;
-	Tue,  8 Apr 2025 08:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1AD267394
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 08:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102060; cv=none; b=lF+5HT4BAzc2J/we7175iVOTcYAycYBwWDGEE7VdKPHxCfKvkCTUp3SLXc+lwjDfDxuJ0Kxw2QN/KNYWyfyYWc9r5Xsu9jm5YSkLiT7bQ/IRaTdafBNp3Zxx+UjbKggt1E/e4XQC6pwT8UR4Ug3/50FmXqtKyx3XhjMG03/w2pA=
+	t=1744102234; cv=none; b=Z/tdafsQMuR2bs6RHYfqPZfA9gOrN0418zx5JwwTx0fEK8beu+p2ytePrGF6sXMJFu3AjHgUFSkSOCeFjQcCDHX8g22hAoRGGV/2D0SBEp/nhA3h83bgL6qBzFjLrgVG8dHSO22Ufbcw4ZICc1nmBZBO4WCtihv+mflwwGd3chs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102060; c=relaxed/simple;
-	bh=zEMRJkHCiItH/9yEO44fnqGsMPNew6QZ4ceTZmRrlP8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oXcMrcd51pfMoX0BUDzdhaFzu0zvdKe79F8YpCaJFoASjfWZ/MIjXn441WewTX5fs46k1yGarqdVFJqesR7zPZAjBxvsgmcYjHeTXDK07VGPaSjHneN1JH2gZ3QBzptt8/jS7xHDeiW6ZL1bzqn1jMljzVIIP69zdTfTGSuIReg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ljoLSqix; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zlmz6sQF; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744102057;
+	s=arc-20240116; t=1744102234; c=relaxed/simple;
+	bh=kxoU5HcQ+O7M8SUK0YQ8e6eKmlicd6hex/t7nCbWbt4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jDsqXDSEvm9turk5KngSMtnqwlduWm+IgiXvS+ApuN33k3wv2LBCped/lDwk7xqCvfdZ1KoWMGNhcNWAo2sGJ2QEONdl4Vaf/u3gwig4BGHBMgYwmdRkbREOJZS2czLq9BjGgUIBpkfdUWBoIvI8ftwmQhNlbjF3cOS1CSg2lUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SS7FYlO8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744102231;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r4BlX0lCwbiIFb4qchxJxBRV88YRP4RCgKqrrz3VFes=;
-	b=ljoLSqixW5WrBxDLEm9j4dh8ysqPFujFvuy4u401FJUZcT6KpgcEhCrBPU73TtG0E4+GuV
-	AEhK/VLg6faTU++ebJsXR1H2QNIFuidGnver9GWVVyHsVv/a7juoCJA6i87LXVyaDAVpL2
-	Ffjue5OUd7T5UCjPmhF0zv9vDjQjZBGDBXACg8AdiMDC9kfMps4c2QAdUVmfQSBjb3C+CS
-	HKiX8Nnq7cKFcTwfzrassHZMVKwvNRpWxRR+QMBxZhDh4/iWkO/QYTS/ygL80aHZakUiwv
-	WcUz4s6I2QpYunlHR5HJP61Gt6JutFkm1J1QCm2Sts72M6gm5QQvtxRjCiy+oQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744102057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r4BlX0lCwbiIFb4qchxJxBRV88YRP4RCgKqrrz3VFes=;
-	b=Zlmz6sQFQbmRosJeoqbAq2dV0g8gygZFHZ2yi9oSV+ZOE19E1xJTh+9EABGXwJuNt5sGnj
-	aFSdX5uO+GIla1CA==
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alex Elder
- <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH v3 2/2] gpiolib: support parsing gpio three-cell
- interrupts scheme
-In-Reply-To: <CAMRc=MeFK1gX69CWH2gkYUqkLU-KCOcwHcA+gjN1RXFA++B_eQ@mail.gmail.com>
-References: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org>
- <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org>
- <20250407103320-GYA13974@gentoo>
- <CAMRc=MeFK1gX69CWH2gkYUqkLU-KCOcwHcA+gjN1RXFA++B_eQ@mail.gmail.com>
-Date: Tue, 08 Apr 2025 10:47:36 +0200
-Message-ID: <87r023ujiv.ffs@tglx>
+	bh=zQopZXdiy3xymCGR0rYIHwGprz+N88tu6wezwOaN3Nk=;
+	b=SS7FYlO8pg+22bdEuswI8XlaJG8myCxjuwirrnPYI0QYhf7mPUIb0GvOpj+Z+XYm/Zn2yT
+	ltELruU+Gm1nT4D5k1MJAWGOnWD9FHiOUyg8jCH66x5tLa0MWz/XdZgGuTl2UT5nK7j6AN
+	PYLNfa4ikQh4DPBezTZx85gCbhdvF1w=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-507-fdB8nwI5NXOICreZhRr8aw-1; Tue, 08 Apr 2025 04:50:30 -0400
+X-MC-Unique: fdB8nwI5NXOICreZhRr8aw-1
+X-Mimecast-MFC-AGG-ID: fdB8nwI5NXOICreZhRr8aw_1744102229
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac710ace217so410621066b.1
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 01:50:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744102229; x=1744707029;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zQopZXdiy3xymCGR0rYIHwGprz+N88tu6wezwOaN3Nk=;
+        b=YeXw6UegawCGiUGl0k6Yr/94cycqIuE7+YbrAdAZnB7KwgUkAVhWuUV4Q08amKLpaB
+         L1gsS/cWs8HAtv8iu1HjYF1UeeW+ocVYh3crvFvQDzhk6Hlk+wfWnud3OxDqRYIWDMHp
+         wrDzoY7yGfRjudivCIZ9P6Wi6vXL8GlVgGNRqWjmKKyBuKgxncUYJkWHsO42mI/vYIJa
+         Cr4wecF7IBlBW81zUVXeJRzld+pS3c+s7P3dfQBnunv/EkRwRveN4D62sNcyLKaatD0v
+         lu9SapzwKaicJMZZsM8X0hzmF0xN44JueMcGhuVBgOPEKZ6G90ABF9Blo9c4/kZ8nV8Y
+         cAjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHrWIVzlXfJQWmtzIIoOl84RjQe+X9RsAJ7e1SO217flwAMTKy6bcKaDjtnyRczaeocpUXKgWPokaM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuwbqMq+AukSGWiyDLsV9hL/YzjyI+AANz9laKJPFBDXdTk76M
+	q/YPX/6zclS2pM14fDjZtpz9upKsdShzVr1jMsmxm+UupCxL2Js/FP/yyX0rGYPRR6o3b7H4jSh
+	qX3lzA5k4t0HJfvmS0caDiNeM4uBmT8HddLqzLqD/MA2tjgi7nzRPBGNdAp8=
+X-Gm-Gg: ASbGncsgZyQK/2Ha98FIE0ca9s9/XTL+AzxkfnhGXEWQa4J1no/G6nadojuTVjZQski
+	SMogXKIHqGowOmRkut6nz4swzvkACHBQnGYkSTp2rplNbIZ8BbMEe+BI0nh0FnSX0mdUW8o+qnA
+	MdRfWTUM7bvDW9oIMzXO+q1+jmkaaO+ZVcWwJ7t1UUVMLUcfxI2uB0YGVDSLV6NjmnjtJjcvYwH
+	5ezL8pk6ZxJOaDQ/cioj736VakPMh2egujwZLG0Y4LmYzB73ZkTn3NtHgBZpUEUQpowj1bucbjb
+	vU/gqr+0e2nmJA77Be8mkLwI4uW6EWHO4gt57PwH3Vzkevpwl5ZIqWmeqsSEEIUaR1rUNiGK8J5
+	cmBMdEr8mntpF1XDcZQVU4yiAFvyRpOZsJ9t2hrv+eQKrZ/VkwcdoqnaOYzgReVciMQ==
+X-Received: by 2002:a17:907:1b11:b0:ac2:dfcf:3e09 with SMTP id a640c23a62f3a-ac7d6eb8de1mr1531979266b.43.1744102228796;
+        Tue, 08 Apr 2025 01:50:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFpsTVCILDyaXBZ5lkeFvik1nQEDh5z5n5qIxRWyhWTeQPllYWoHbltidBzTa2yJlwiabVPwA==
+X-Received: by 2002:a17:907:1b11:b0:ac2:dfcf:3e09 with SMTP id a640c23a62f3a-ac7d6eb8de1mr1531976466b.43.1744102228388;
+        Tue, 08 Apr 2025 01:50:28 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe99b30sm882797566b.58.2025.04.08.01.50.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 01:50:27 -0700 (PDT)
+Message-ID: <56826617-5e91-418f-869a-bdd24bca0f0c@redhat.com>
+Date: Tue, 8 Apr 2025 10:50:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] platform/x86: convert GPIO chips to using new value
+ setters
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Santosh Kumar Yadav <santoshkumar.yadav@barco.com>,
+ Peter Korsgaard <peter.korsgaard@barco.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250408-gpiochip-set-rv-platform-x86-v1-0-6f67e76a722c@linaro.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250408-gpiochip-set-rv-platform-x86-v1-0-6f67e76a722c@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07 2025 at 13:26, Bartosz Golaszewski wrote:
-> On Mon, Apr 7, 2025 at 12:33=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
->> On 06:06 Wed 26 Mar     , Yixun Lan wrote:
->>   I'd assume this patch [2/2] will go via pinctrl's tree?
->> as patch [1/2] has been accepted by Thomas into tip tree [1]..
->>   Additonally need to pull that commit first? since it's a dependency
->>
->
-> No, this should go through the GPIO tree but for that I'd need an
-> immutable tag with patch 1/2.
+Hi Bartosz,
 
-Here you go:
+On 8-Apr-25 9:19 AM, Bartosz Golaszewski wrote:
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. We're in the process of
+> converting all GPIO drivers to using the new API. This series converts
+> all the x86 platform GPIO controllers.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irqdomain-04-0=
-8-25
+Thanks, the entire series looks good to me:
 
-Thanks,
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-        tglx
+for the series.
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+> Bartosz Golaszewski (3):
+>       platform/x86: barco-p50: use new GPIO line value setter callbacks
+>       platform/x86: int0002: use new GPIO line value setter callbacks
+>       platform/x86: silicom: use new GPIO line value setter callbacks
+> 
+>  drivers/platform/x86/barco-p50-gpio.c      | 10 +++++++---
+>  drivers/platform/x86/intel/int0002_vgpio.c |  7 ++++---
+>  drivers/platform/x86/silicom-platform.c    | 11 ++++++-----
+>  3 files changed, 17 insertions(+), 11 deletions(-)
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250401-gpiochip-set-rv-platform-x86-86788597f4a4
+> 
+> Best regards,
+
 
