@@ -1,134 +1,110 @@
-Return-Path: <linux-gpio+bounces-18514-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18515-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDFEFA811C2
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 18:14:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC7ACA81275
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 18:34:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3CC6B7B7137
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 16:10:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D174718998B2
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 16:31:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12A5823E349;
-	Tue,  8 Apr 2025 16:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8E2E22DFB0;
+	Tue,  8 Apr 2025 16:31:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhMp3L95"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UK6iCA/P"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC89222F38B;
-	Tue,  8 Apr 2025 16:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DA5205ABF;
+	Tue,  8 Apr 2025 16:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128502; cv=none; b=hpm2m7zsO5+00sgglcYQhTECOHTr6agnPJudpZAMYKQbsxHN5vFaINdBu3HO3gAmYeMTik/Rt33JuAD9ij3LiO+NeZT+nVo1EsU0OddF6qZhuzOtyGmmoagG5/oiH9whwhJgljoKj02D9JhtwCmrBRry9aIsdfmy7chWdykSNpU=
+	t=1744129903; cv=none; b=iwwVn37T3ls/6DyGfX0FfycesdV8D2lqZRnuUW/S2DZai2CwtCMf0WPOgWk7aNHxDUUyo/aDwNLTIgd3pBW/vchCV0/RPbn+pbBJF7QQVGctuNlQ7WOdhKCpFhB+GoyLBbGnu480MtMkn5vdu8aZDat/+8ZmJVE3ZLjHd1Ulv+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128502; c=relaxed/simple;
-	bh=ckOi7tqsSO7KvykycTRL9CtPqRv/ASq7uban+AGPlrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpVZKw+HKoRLMpHu4scGMbeWcGihetUwSf2c5GGfnP4S8Xtkhl4gaJ75XUEY5M7vD2uJ4fNexBmzZOrA5rsbc7bbFgPPevYPX6IRXqDCjQwoX1h3z35famwuUkD8moKvg0GEenO2K43D7KjlWm56zWiwjlcIpcRBew9yt0893/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhMp3L95; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3A6C4CEEB;
-	Tue,  8 Apr 2025 16:08:18 +0000 (UTC)
+	s=arc-20240116; t=1744129903; c=relaxed/simple;
+	bh=egziIIrJF2lqSbR/TCnJppLKkivNvDY0/5IO3lTLgJ8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gDK8/RWnfzs0LDqFZkVYu/gIwJcXD3Rv0bitqwuPNIC1z+18FW2YTutVfea+FrjsIJrBWe0dpTxfjRGMxxg1d8OJOjNOuuEYaFenBAflRD8lFqCeGStpXhR/TkMizKCQndSPHqdXDXy0eiEp+ybm03s+ccupDWT2YgfV4bgWcHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UK6iCA/P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BF9C4CEE5;
+	Tue,  8 Apr 2025 16:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744128502;
-	bh=ckOi7tqsSO7KvykycTRL9CtPqRv/ASq7uban+AGPlrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XhMp3L959j1gmsrQtuaA2pU6O+vcxsQ/GjFmQORiv/4t1XmucuB7D9c0aUFv9TbSt
-	 VY3TCIbQE/LjfJf6JlhJyXxAZgdzluIjdA5uRcXEgsUX5xCirJbir8FOJKtcA0DfGz
-	 DY/YyD0h9wkh3f+VC8iLjwQGTwdx1+rZsVe5twn+03E+pSYbmopQVZ3Ys/mUL7PyCZ
-	 JiG6D+DytWxgwDz80/bHD6oPKL2JUycQFvU9/P2xnaKkpSKeq52cXxqil2x3FuiHQ0
-	 REmgxqP3yXoxXJk2IlcM2w9dMmMZqfZcGAo9v5GFLVGZsket2LnU2tXpy41zCX5nNE
-	 BDbvVNHd8Qhkg==
-Date: Tue, 8 Apr 2025 17:08:16 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	William Breathitt Gray <wbg@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Kever Yang <kever.yang@rock-chips.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
-	kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: rockchip: increase max amount
- of device functions
-Message-ID: <20250408-deviate-common-7846a921ddaa@spud>
-References: <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
- <20250408-rk3576-pwm-v1-1-a49286c2ca8e@collabora.com>
+	s=k20201202; t=1744129902;
+	bh=egziIIrJF2lqSbR/TCnJppLKkivNvDY0/5IO3lTLgJ8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=UK6iCA/PXeVfE+NUy9zsr035g3uKqIlH/wjKEXTUqc8Eep1ISLAccfNVBE5CiIhH8
+	 yIJlPojG6LNrQ+I582kYfNFY3lnbHKmrx4dz97/QvoXyx/khOTIHfO4B1gMQ/WDlhh
+	 8Knea54AxjcN/zNe7Q45JooCod3k/X4FnkgDi5Ld8NYFFJM1wx34zxBpmEPhzw9JLo
+	 5XVjhEthszBNxn1oo6EhlQKqVf+T1ONg5aKEu2D0Uu+lCIYblM0i4hpsNxmgFKhom+
+	 Wx6ylRd9aCiTbtZoXMIrXIDcIBqIP5Jk/owp3/P465S6unG+NaECaDDqHNyeLPbbt+
+	 5eugeNT1TePQQ==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In-Reply-To: <20250408-gpiochip-set-rv-regulator-v1-0-a18b6154b31a@linaro.org>
+References: <20250408-gpiochip-set-rv-regulator-v1-0-a18b6154b31a@linaro.org>
+Subject: Re: [PATCH 0/4] regulator: rpi-panel-attiny: use new GPIO line
+ value setter callbacks
+Message-Id: <174412990132.2213335.9669148842146678590.b4-ty@kernel.org>
+Date: Tue, 08 Apr 2025 17:31:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3HY2P3D0tNzBUcfu"
-Content-Disposition: inline
-In-Reply-To: <20250408-rk3576-pwm-v1-1-a49286c2ca8e@collabora.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
+On Tue, 08 Apr 2025 09:36:27 +0200, Bartosz Golaszewski wrote:
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. We're in the process of
+> converting all GPIO drivers to using the new API. This series converts
+> the only GPIO controller under drivers/regulator/ and - while at it -
+> refactors the code a bit.
+> 
+> 
+> [...]
 
---3HY2P3D0tNzBUcfu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-On Tue, Apr 08, 2025 at 02:32:13PM +0200, Nicolas Frattaroli wrote:
-> With the introduction of the RK3576, the maximum device function ID used
-> increased to 14, as anyone can easily verify for themselves with:
->=20
->   rg -g '*-pinctrl.dtsi' '<\d+\s+RK_P..\s+(?<func>\d+)\s.*>;$' --trim \
->   -NI -r '$func' arch/arm64/boot/dts/rockchip/ | sort -g | uniq
->=20
-> Unfortunately, this wasn't caught by dt-validate as those pins are
-> omit-if-no-ref and we had no reference to them in any tree so far.
->=20
-> Once again kick the can down the road by increasing the limit to 14.
->=20
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Thanks!
 
-> ---
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.y=
-aml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> index 960758dc417f7405010fab067bfbf6f5c4704179..125af766b99297dc229db1588=
-46daea974dda28e 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> @@ -135,7 +135,7 @@ additionalProperties:
->                description:
->                  Pin bank index.
->              - minimum: 0
-> -              maximum: 13
-> +              maximum: 14
->                description:
->                  Mux 0 means GPIO and mux 1 to N means
->                  the specific device function.
->=20
-> --=20
-> 2.49.0
->=20
+[1/4] regulator: rpi-panel-attiny: don't double-check GPIO range
+      commit: 06bab1f101337ae9469a7d2c6ac4de5db64e8160
+[2/4] regulator: rpi-panel-attiny: use devres for mutex management
+      commit: 1326e295d6b4ffc9647bd4f073b787b4f79d6b6e
+[3/4] regulator: rpi-panel-attiny: use lock guards for the state mutex
+      commit: 50faedda12e46918a11194a30c2bedf2b983fae2
+[4/4] regulator: rpi-panel-attiny: use new GPIO line value setter callbacks
+      commit: 936df52c29b0d422665c5e84b0cffae61611411b
 
---3HY2P3D0tNzBUcfu
-Content-Type: application/pgp-signature; name="signature.asc"
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
------BEGIN PGP SIGNATURE-----
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/VJ8AAKCRB4tDGHoIJi
-0o+cAQC++yhzDEA1pD75hj4YsKzIeFWFw+DrbpYLeNqyLfXtlgEA/5+i3Yju2VbF
-KzvzOSVA72JUCgJJIxDgw7JYzYv+HQc=
-=xuix
------END PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---3HY2P3D0tNzBUcfu--
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 
