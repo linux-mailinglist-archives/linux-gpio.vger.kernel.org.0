@@ -1,225 +1,192 @@
-Return-Path: <linux-gpio+bounces-18509-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18510-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BD00A80F8E
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 17:16:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3E2BA80FB1
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 17:20:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BCB61888C07
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 15:12:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68DDB189437F
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 15:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1964321CC55;
-	Tue,  8 Apr 2025 15:11:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B09591FCFF1;
+	Tue,  8 Apr 2025 15:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="aBfZt2ru"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013041.outbound.protection.outlook.com [40.107.159.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC821CCEE2;
-	Tue,  8 Apr 2025 15:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125103; cv=none; b=V8Sz6yw+23HkWXPB3P0KscHB02CZN7aDxO5dGHN3I6yLe4j/7mSlHcUOyJIgGNSCDdi3W6jwmQ8odqMY8/mfSUUm3evlWApNeUfE9uiaV7saSoVMT8y0EstSWPfVDNNXM595gQcgMQ+fz4iUCoSHpl3Rz2Dz83kVikp5G5Q0tOA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125103; c=relaxed/simple;
-	bh=kJqo/8IGdQrE3R8digcDbm08uHIaoAS8anwz06A50Qs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hLDTBPOLPrdZYXIvnd/WPybIt6lDs75m/uLBprL1UP7rsq/EWQFNvGedGGf4QuLa43TINlwy2YdUGIrystH1xHeD8EXwznIpUFZ+uo6wtRrh2N9myUZTsOKGfK4zvUR0Jr6w/OtFDS6tLwkO0c055Y5x2+j/zJ1S/mcjmf3NR3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [116.232.27.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 69853343026;
-	Tue, 08 Apr 2025 15:11:38 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Tue, 08 Apr 2025 23:11:20 +0800
-Subject: [PATCH v4] gpiolib: support parsing gpio three-cell interrupts
- scheme
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AB51D5CCD;
+	Tue,  8 Apr 2025 15:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744125349; cv=fail; b=t++er6eHsIqrQjDAnv40WLT5y87uai3cLx4Mj4JkK7qsktj6p6gYi69i9Eh9ZQBpqstefdt7fQk0a7+M1C543Tr9zsdu8pbYVYa7ivBEr5Adirjf1XVPySli/a3Gcs4DBoE/NiCCHifKqhoiPCxE0JLlFFIu6Z3EYGvMFJ4nt3E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744125349; c=relaxed/simple;
+	bh=ZcPUEVIQf2vW3mQLpzyOOIOIt8jUTvYorZHbENsi6kg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=hwHq8qSrNt/8QLwb3Vy9AoqnG0mdpYZD05gzAY5Wg8rMYHSh2++MimvgCuYGYeaW4UAFOmkUWfmtayXeaXG6yE0DbvM6I6VzfVBVibJAVHIZGUcb/pQa+JzQhaT9cIy79PrP2waD5amXK/tfp7nuYC6r7NqsENXVzLUyytSBsew=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=aBfZt2ru; arc=fail smtp.client-ip=40.107.159.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U95kmKFFMtO+7gWatLODRIfejfFgJoYmrJdIlf/yEY2B2LOnxLhndCLMUDCqdvAFGH1r+JbNGl4ShA/x/3G5+zHh6GNGao/UjtUFgltYEQgU2b3Ke1IQ/Cw6VNyuSXG5G4q0ulzrQKCcwgCspiZ+flXHLx+Q/u8XG9qZ3q3mbXFDmuXaI85UK/42CKu3PWUgA9KfYEebENcWuLeZ3Hz6t6xQcWjjUBtLwbkNBgMnROHjjRX9SfPxASDiIMba8V3kju9rWec4TDgxPjvvwFQKThLC9cCPseoM0xv733/m6jttmj6XRUoayAk0yMZyUqbkf+EutFmboW92FuamCwlfyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pinGkppOUEgshd376ZxQ1hvCv/p87Fm/FKzDdR7ukpU=;
+ b=VAyAKtIoyfpteG5kjEW48S2Y6Apl4s7KAI4+bE0A8G2LzOXoMgZbhqmIZfkR1sLcGxkcsb6cuRxrzGgEPnLJNq237FZZa52lyBeBjvngNcTD/DRVsNUmdySqC74jmVTgFiiEBDGGZvZKjSOrxnMjxylf5+OZ94eJ1XjkTRAtCitx70Y5B4FWEiBmzxiENRdBcX8BSeaqvtL2NXmXsMKdc0UjpXTEtipSdGUIUlotZ8arE9yYCXI5ckuuccznnWXp7URD5+8v4ipGHAFHONGtP1cqDsHgiP/FbA3UaWGIjoTO8WC/AbB6r1ske914eb5sDAUzmTI/xD70JMD5q+XfcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pinGkppOUEgshd376ZxQ1hvCv/p87Fm/FKzDdR7ukpU=;
+ b=aBfZt2rudRuCLEVDRDhhqwgDog3bczDhk5TPVyx21/SJ9cYbmAj+OAffS105TPpWztUzKx97zzWChlKNraFFqBrvi2bs2z8nvzU/w07qDtH+O5UAma0Nbus4K+ql4+YNas0a4OA9YikMnUvQkJ7rxq6VRBq+QOCsILKW5NcpdFKTWYTXXNx3i8G9oNHCfj9VgpyWhVYTI76fpTnw7tCZXs6JQ1//6WcR9lPujfJd9lt+HiWB64o1CxuVnHCn5tws6+3/lS3f/+O0b0Xr13fkI93y8Zaauk7OliKVdsPcIpPOw7zVE+K+MUTSWWBUk2sL/Kx9bcBwYxp0Z0vyWWxk1w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from GV1PR04MB9183.eurprd04.prod.outlook.com (2603:10a6:150:27::9)
+ by PR3PR04MB7322.eurprd04.prod.outlook.com (2603:10a6:102:8e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Tue, 8 Apr
+ 2025 15:15:42 +0000
+Received: from GV1PR04MB9183.eurprd04.prod.outlook.com
+ ([fe80::f8e8:b04f:49bf:f636]) by GV1PR04MB9183.eurprd04.prod.outlook.com
+ ([fe80::f8e8:b04f:49bf:f636%4]) with mapi id 15.20.8606.029; Tue, 8 Apr 2025
+ 15:15:42 +0000
+From: Jindong Yue <jindong.yue@nxp.com>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jindong.yue@nxp.com
+Subject: [RESEND PATCH] gpio: vf610: Allow building as a module
+Date: Wed,  9 Apr 2025 00:15:21 +0900
+Message-Id: <20250408151521.552749-1-jindong.yue@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0029.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::20) To GV1PR04MB9183.eurprd04.prod.outlook.com
+ (2603:10a6:150:27::9)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-04-gpio-irq-threecell-v4-1-fd170d5e2d2b@gentoo.org>
-X-B4-Tracking: v=1; b=H4sIAJc89WcC/4XOTWrDMBAF4KsYrasy+rHsZJV7lCxG0tgWJFYiq
- SYl+O5VnUVbSuhm4M0wH+/OMqVAme2bO0u0hBziXIN+aZibcB6JB18zkyBbkLLjoPl4CZGHdOV
- lSkSOTiduDAmCTrkeDKu/l0RDuG3u2/GRE13fK18eS2YxE3fxfA5l3+zId9oPCL2UFtue0CE5I
- wYrjPV6IKs0tmjYlzWFXGL62CovYsP+abcIDlwjab8TFtG7w0hzifE1pnEjF/nNKJDPmHrgSg9
- CoVcdof7DqB+MNM8YVRlEC2DqIIBfzLqun64ZJ0yVAQAA
-X-Change-ID: 20250227-04-gpio-irq-threecell-66e1e073c806
-To: Bartosz Golaszewski <brgl@bgdev.pl>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Alex Elder <elder@riscstar.com>, 
- Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
- spacemit@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5570; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=kJqo/8IGdQrE3R8digcDbm08uHIaoAS8anwz06A50Qs=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBn9TymmoKaxPjndUkTL/uONIdEU8latJ+8KRdoF
- eUmS9ZwlFmJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ/U8pl8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277U5RD/9IuD5VKbjaRZvD8L
- fMjaoKhPQ4VuBlrYfEi25ZTVhsYkwpbpNTyGHKCVcdjnOf5lk4/hQL2GwFX1QfgTbLiAbmxrPrA
- qcNFmtYbQefEYGg265P+dFhxTYVca1lJJsMrE5slJSvZMAnD4O7GnipUyVG68sppsrKbk7pqsoX
- P6aMk0TweiCBJWtQq3I37UKoDsciw6c+54xsceNiD1KkTi4JX8KtXGIi7Ws2I2WP/Kscbl/ta3P
- k49t544lwEOzhT/OCE9YOxmmA8JXThzj+1355bJSHTnZhLiFxH9nSA4P5yNzlpzwPaDKgvAv5NI
- vDQzSM2Ec2bcFFc8NRSQ6QpIwRddx02oCAeuklfPcDROutKBc3K5OopQV94gWpVxqCTxPacTaVh
- YAHd+/YkXGlOuuE8w9fyX3NxhalhLUj6VR6QY5n9twZOLDpxr6ufdp8jN0RNzzmhvNCjI23dsC1
- SCwtprvXEhfeSoddRCr0DrrgvZucV/Rk9IZ9hfzSbzOAPkfPFPt7feBB95KDwkj4exIQYhjvDQ0
- Y5r+flQO4bIhraJpxCVDwiFaxIZhB4eGvXYiZ86iKwEbBK6JTPTNdQ/J1zzz45AXV9/+se7Ij56
- jQz3GpXEnWSMF9cTx853fEFMqfeAFtpxumtPsqJ8DgNTHJzGrgwwpGl+JA9KUyuTcl2w==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV1PR04MB9183:EE_|PR3PR04MB7322:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9c65af9-e079-4e63-cdd8-08dd76b03a0f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PbZGen1qPJVL7rjJAoyV02JRjvFIw0Jj34tmytotjkzCL2xgWxfHf8OzpQju?=
+ =?us-ascii?Q?YsFrQagNIp6I99+oBVDQIfk/ienwMW6JXjxeiMGJqGoYMBVHSAaPJP7BSqfJ?=
+ =?us-ascii?Q?vuLw+/BE3DfbyLTooU9T8DPm6ROg7s1IYLrwqTiH/P4/FTIaYoZBs+af1QV6?=
+ =?us-ascii?Q?E2wnku3HowAKrZCimyVeDKE+R2UzQkXM0N3bM5ZxPIUjBoHU6MrtUZyn1ylz?=
+ =?us-ascii?Q?KlBUG3J0wAIAtJVgxhO3/y//UOlbaGi93hU+rrJIshZocRXWllnB8BUA/V3s?=
+ =?us-ascii?Q?+w0MUhId3WOEbrMLUlm1GQUFv9XJjin+e7JS216Ej7O4VrHD5+qFZj3QvhJI?=
+ =?us-ascii?Q?wMCry1Y0LsYr8+iqeBDEUUyFGk9IpR2x4yQrHMzyIBSvj/zrDYsdeU+3OmTp?=
+ =?us-ascii?Q?uPqaQWzYz4uQ2NSzZfZRwEDeP/n0PuvXORny3bfWMBEHoGHOgTWz20eUmSkI?=
+ =?us-ascii?Q?TEgkIsytYbWct574ZPghtv1Ve9fY3sG5hTa3GQVcBBtg5r6cj1PuVrEY41Ah?=
+ =?us-ascii?Q?X5SnaiEJYEMfym3U0lC3hfFGrnKDoE3/4IuJOjpClnAJ00x8i0GLLWFDFJtq?=
+ =?us-ascii?Q?r8r9PHFqIX1BzAs4TifiVOkSmfVknOooPXO3pzcYHXYMBAG2O+P+HM/io8zn?=
+ =?us-ascii?Q?P5gbYJP0cLwunof2XeF3oIzw254myI5ZaV1fYPhkMGXzPhsuo7+2zZ19wIPc?=
+ =?us-ascii?Q?dVsvr3s5F8X61Ng6k5wHF1vWrfhgQY6EQDc8vqtVahi7i76+TK1a0BMWqWLY?=
+ =?us-ascii?Q?NfOgyOkvPAIVXgHqacJ94vARJDeaFwLsPfWjSVo2knlQuqzuPJMB8+mL1SCV?=
+ =?us-ascii?Q?cqVaa0Ou0ldk7cf9A8iS5HFQWCR5ZsUIi5yb/15Xa6ROjtEK++L0QJBOVdWm?=
+ =?us-ascii?Q?+CVCuZ/K/M/A6JciZ+5DCGSVW7Iurswi2vYHdcjfL6gd3eXUAtlU8r9NrhCB?=
+ =?us-ascii?Q?A5i/F6EX4h4rfsFO3AmX/VvaGUmtkJXZ6MgeiwgsSbRMOKy/nLg6aZx5Ip4K?=
+ =?us-ascii?Q?OVPNMbXKEHZWRIZPCA6qfghw9Rfos0AwLwzN6uXFk3biBNXKAWtxqsAWyrA9?=
+ =?us-ascii?Q?RUtCXeRaymNOxmTbjF1xIwCzyKB8OhNjHuZwMX3PsKcna95fSZK4NSAQ3O0t?=
+ =?us-ascii?Q?U46SoaZJrnhapsht98JCG4KshnaC913XNEyGwF+56Y6PsGOoVddz/R/Z2BWI?=
+ =?us-ascii?Q?BuE7tmNXhMpYlFUEsy+UQLCi/wnupwautPlUQTlKKdsPhdML1uBMyLtgACRK?=
+ =?us-ascii?Q?KHDpJCh9KHTZytrUjePnhfsJNSqLEIamsvxP3se5XGuRVMvAJnA4HfbTThKj?=
+ =?us-ascii?Q?jJSU8fG9/TtMW40xzUSyt5YcYvBVquU7hFiEuWH6JnFuvF7HCRnJy+uCQUkj?=
+ =?us-ascii?Q?hJP2osWoAo2Imkw+xVaYFLBLsNKoAuFm7Vhy9iw+UbeIbYxGC1GO3kXyxdRY?=
+ =?us-ascii?Q?0NAh+ysuuR3AsxI4czVPay/9GRi3C4rd?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR04MB9183.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?En6z55dU7Som2nHEwDFU2yIp7Ai55k+j1vPe2UBX6seCozBl9sHL90BYGtvj?=
+ =?us-ascii?Q?/34Sd7fh/FabwKGqjfiK0+wP+JVGkJPptqGa1hR6XQMSPPpmUCQMU594diWr?=
+ =?us-ascii?Q?vyGxWRPuPVTLlPkk2dhcUKMfEURUy5MoI2/C1eIl+vN4u1Oil26Nz3/dsO1q?=
+ =?us-ascii?Q?KuXtkqXqpnA7xpmBw7ghRbK22x1R3ge+Tgvr0cDDFQ2KrDSsVDISXaCltltb?=
+ =?us-ascii?Q?HApovpQ+Mz2qdrvYFssZJN992VjkwAtOl3KUtoH54Oh/pieapzgKo7jo2hCC?=
+ =?us-ascii?Q?xACqQYRd9A4PA5s9lrmLJIjno8xsuEUEV2tPJ9x4T8dSWXqzoAAotYttWkNA?=
+ =?us-ascii?Q?d2nYpN84sNLhL4Y6lWoiwFche6Al9l47HWAaZNd4cJvmjcQzUPS7ATIH5qmz?=
+ =?us-ascii?Q?Npl7vmn8SEIue16jdyvirq0s64T5eUkZXkKNPgFmn3iiCyHeYf/0vkCX8BEV?=
+ =?us-ascii?Q?ekz2wTLjHzcwBKxDmoy8iRbif2z1J2/5/XGzLGGCpsDFZbxaTHlPhzoYU8CB?=
+ =?us-ascii?Q?Lynp1ctDXYv/cBWBbW12/A23l4fUez7EziSX8TfXSsSBVuEZbo6UGk04GFIN?=
+ =?us-ascii?Q?06S6hJyN1hkHM7oi32xNu2L44ET9oeeUbPIqicT8wBgvu1dO1xK2sD1taCKJ?=
+ =?us-ascii?Q?Ka6mfEVx4b+mTNfU78APoKOwJG+BUoHdlSL4T19APzKS2lUrfO35ekMRMMo2?=
+ =?us-ascii?Q?r60IVM8oiUjVfNmbMa47+yIWz6vNBR1gtcfYNufUBNg1mnw9MU+vdl6ewOOO?=
+ =?us-ascii?Q?/C6EfjQJE9uAtsr9rcOMJBQ1VxwLPJTz5lkF/CVyNgktFQ8zTSaGmgYWguzQ?=
+ =?us-ascii?Q?lCvc4adG3V4yhMFbLCwj0dP1BPXpc7J9EsOYuH7dW6NNG+0cscbeYnqddU/6?=
+ =?us-ascii?Q?6vz97SkWl+tqe3R14lDX5NaLRC3fdDocoA1Hml2IuyKtGOPXQ3sFFSznLLnB?=
+ =?us-ascii?Q?DtOfVo2FktFoeqcUST+Y1JLKdA6Q2iqPPYjTBy3+Ax43cBwnIs8Jn/utJK1j?=
+ =?us-ascii?Q?KWlM5TZqiLrbyN2fkI2mpuwtpmjcu3Aze0+BY1UB+nT/UAvBxvh9hP/XcYAJ?=
+ =?us-ascii?Q?xxDNIaC/uqgKRhUiyCLDBKLFIK+pVqxZdVkYY7wJBm57NsOdQ+18dFT/YzzU?=
+ =?us-ascii?Q?dWpz85iUo9/chcoO4HqVeUMqkG+0kheXJqr8Rjp5NubLIzRR0mc81YIWW6tH?=
+ =?us-ascii?Q?pzYEcOFwRvyET6Gf/ngnMfWlaXWwoldaQdlUfQlsREglYKocVfXtNkvFE8ZA?=
+ =?us-ascii?Q?c7RxM1hYYA5gwIMbCEd8ypuus/kVyHmVAMwspWg97WBvoVPG2iKyTlfUbjr9?=
+ =?us-ascii?Q?jsXxoYFsLaZGi66tB0/rR1zhuR7kP3RKR06zytNzVJhHj4dPBZvkIyjMmNym?=
+ =?us-ascii?Q?SEjDG059bXEBN4ghzcsQuyGVGSEqNlRtfT2hkAEjjUnzfhfHbkMpF/GZRGIp?=
+ =?us-ascii?Q?WCTtWIIh+CVwFHNfvy3HwIfBDRy3O/1/lBfxJ3aUV3GZ5VrRjSvv/MSqr+YB?=
+ =?us-ascii?Q?maka+uGQOUcG/kOkisqYhq54MbZ0attRL4hC4ItFpyxp5z/yIXsLVy4Ql3GB?=
+ =?us-ascii?Q?Ik9QMaipsdSmgsZC+uBGH4K0embs3KzqHqy80wkn?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9c65af9-e079-4e63-cdd8-08dd76b03a0f
+X-MS-Exchange-CrossTenant-AuthSource: GV1PR04MB9183.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 15:15:42.1473
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NkzJ0ycJu8RcaWZxdWjhqVQOKGfC87W+XORd52CDSR6xApUE4cUPyu2xpIfN0K405sBXZsmYTYcHn1BF+njL/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7322
 
-gpio irq which using three-cell scheme should always call
-instance_match() function to find the correct irqdomain.
+Support for building it as a module for use on the Android
+platform, because the Android kernel(GKI) doesn't contain
+board-specific drivers, it requires that these drivers
+be built as a module and loaded into the system.
 
-The select() function will be called with !DOMAIN_BUS_ANY,
-so for specific gpio irq driver, it need to set bus token
-explicitly, something like:
-  irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
-
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
+Signed-off-by: Jindong Yue <jindong.yue@nxp.com>
 ---
-In this patch [1], the GPIO controller add support for describing
-hardware with a three-cell scheme:
+ drivers/gpio/Kconfig      | 2 +-
+ drivers/gpio/gpio-vf610.c | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-    gpios = <&gpio instance offset flags>;
-
-It also result describing interrupts in three-cell as this in DT:
-
-    node {
-            interrupt-parent = <&gpio>;
-            interrupts = <instance hwirq irqflag>;
-    }
-
-This series try to extend describing interrupts with three-cell scheme.
-
-The first patch will add capability for parsing irq number and flag
-from last two cells which eventually will support the three-cells
-interrupt, the second patch support finding irqdomain according to
-interrupt instance index.
-
-Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [1]
----
-Changes in v4:
-- rebase patch [2/2] to gpio's for-next branch, no changes
-- drop [1/2] of patch v3 which merged into irq tree
-- Link to v3: https://lore.kernel.org/r/20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org
-
-Changes in v3:
-- explicitly introduce *_twothreecell() to support 3 cell interrupt
-- Link to v2: https://lore.kernel.org/r/20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org
-
-Changes in v2:
-- introduce generic irq_domain_translate_cells(), other inline cells function 
-- hide the OF-specific things into gpiolib-of.c|h
-- Link to v1: https://lore.kernel.org/r/20250227-04-gpio-irq-threecell-v1-0-4ae4d91baadc@gentoo.org
----
- drivers/gpio/gpiolib-of.c |  8 ++++++++
- drivers/gpio/gpiolib-of.h |  6 ++++++
- drivers/gpio/gpiolib.c    | 22 ++++++++++++++++++----
- 3 files changed, 32 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index f29143c71e9db61a6ad6d45d64e88a3f3f2d4fa7..3651c4178b81a1346809ec43b91a532e9f48af2b 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -1285,3 +1285,11 @@ void of_gpiochip_remove(struct gpio_chip *chip)
- {
- 	of_node_put(dev_of_node(&chip->gpiodev->dev));
- }
-+
-+bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index)
-+{
-+	if (gc->of_node_instance_match)
-+		return gc->of_node_instance_match(gc, index);
-+
-+	return false;
-+}
-diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
-index 16d6ac8cb156c02232ea868b755bbdc46c78e3c7..3eebfac290c571e3b90e4437295db8eaacb021a3 100644
---- a/drivers/gpio/gpiolib-of.h
-+++ b/drivers/gpio/gpiolib-of.h
-@@ -22,6 +22,7 @@ struct gpio_desc *of_find_gpio(struct device_node *np,
- 			       unsigned long *lookupflags);
- int of_gpiochip_add(struct gpio_chip *gc);
- void of_gpiochip_remove(struct gpio_chip *gc);
-+bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index);
- int of_gpio_count(const struct fwnode_handle *fwnode, const char *con_id);
- #else
- static inline struct gpio_desc *of_find_gpio(struct device_node *np,
-@@ -33,6 +34,11 @@ static inline struct gpio_desc *of_find_gpio(struct device_node *np,
- }
- static inline int of_gpiochip_add(struct gpio_chip *gc) { return 0; }
- static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
-+static inline bool of_gpiochip_instance_match(struct gpio_chip *gc,
-+					      unsigned int index)
-+{
-+	return false;
-+}
- static inline int of_gpio_count(const struct fwnode_handle *fwnode,
- 				const char *con_id)
- {
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 8252a671d7208105a315bdc914acb092d5f95e79..ed8397a88dea1d92c3d4cb3cc9a6b30be29d31f6 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1507,9 +1507,8 @@ static int gpiochip_hierarchy_irq_domain_translate(struct irq_domain *d,
- 						   unsigned int *type)
- {
- 	/* We support standard DT translation */
--	if (is_of_node(fwspec->fwnode) && fwspec->param_count == 2) {
--		return irq_domain_translate_twocell(d, fwspec, hwirq, type);
--	}
-+	if (is_of_node(fwspec->fwnode))
-+		return irq_domain_translate_twothreecell(d, fwspec, hwirq, type);
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index f2c39bbff83a..17127555f582 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -753,7 +753,7 @@ config GPIO_UNIPHIER
+ 	  Say yes here to support UniPhier GPIOs.
  
- 	/* This is for board files and others not using DT */
- 	if (is_fwnode_irqchip(fwspec->fwnode)) {
-@@ -1811,11 +1810,26 @@ static void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq)
- 	irq_set_chip_data(irq, NULL);
- }
- 
-+static int gpiochip_irq_select(struct irq_domain *d, struct irq_fwspec *fwspec,
-+			       enum irq_domain_bus_token bus_token)
-+{
-+	struct fwnode_handle *fwnode = fwspec->fwnode;
-+	struct gpio_chip *gc = d->host_data;
-+	unsigned int index = fwspec->param[0];
-+
-+	if (fwspec->param_count == 3 && is_of_node(fwnode))
-+		return of_gpiochip_instance_match(gc, index);
-+
-+	/* Fallback for twocells */
-+	return (fwnode && (d->fwnode == fwnode) && (d->bus_token == bus_token));
-+}
-+
- static const struct irq_domain_ops gpiochip_domain_ops = {
- 	.map	= gpiochip_irq_map,
- 	.unmap	= gpiochip_irq_unmap,
-+	.select	= gpiochip_irq_select,
- 	/* Virtually all GPIO irqchips are twocell:ed */
--	.xlate	= irq_domain_xlate_twocell,
-+	.xlate	= irq_domain_xlate_twothreecell,
+ config GPIO_VF610
+-	bool "VF610 GPIO support"
++	tristate "VF610 GPIO support"
+ 	default y if SOC_VF610
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 	select GPIOLIB_IRQCHIP
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index 4dad7ce0c4dc..ff2c95f03eea 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -346,3 +346,5 @@ static struct platform_driver vf610_gpio_driver = {
  };
  
- static struct irq_domain *gpiochip_simple_create_domain(struct gpio_chip *gc)
-
----
-base-commit: 9ed74dfa0822ba58eacaec61fb16bd4feb34a5a6
-change-id: 20250227-04-gpio-irq-threecell-66e1e073c806
-
-Best regards,
+ builtin_platform_driver(vf610_gpio_driver);
++MODULE_DESCRIPTION("VF610 GPIO driver");
++MODULE_LICENSE("GPL");
 -- 
-Yixun Lan
+2.34.1
 
 
