@@ -1,123 +1,105 @@
-Return-Path: <linux-gpio+bounces-18478-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18479-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ECADA7FB13
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 12:09:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 780FDA7FC22
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 12:34:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0F343BCE12
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 10:04:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED61E7A548C
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 10:32:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3611266EF6;
-	Tue,  8 Apr 2025 09:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A745C265CDA;
+	Tue,  8 Apr 2025 10:33:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hmc4Gurq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSL72a1q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86020266585
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 09:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615FF264A9E;
+	Tue,  8 Apr 2025 10:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106293; cv=none; b=ucN9Jk7EtsjlLAXAsZ3yr7aWzwEvPX5DrSR6hYqwq5eLLf5bFBDsTUZj51WjyUueivwoSs7+ybelsPGxq7VHXszn3wuHyZ9vR6ihE85sVA5uXAUkwO6HzDBAAaV1FOXk7WoiWMgY4nablx6rLyEr/WXH8zChtBXveW26zu7LpAk=
+	t=1744108428; cv=none; b=IMrI/oQBEZlHkmyGWxe5CD3UQMUqvC8DNKolo4BnLAFbzCKobTk9J92rYByHYiSa286higUaxRX4UslLihNu5IVjMaBKV0dpEDzsUdXaRd6y2NknEjaSaE+bkg0lDSXCUKJlUx6z/WAz7iTW7w/956eA/szEuiMKlEGYvo6M1Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744106293; c=relaxed/simple;
-	bh=E2QgDpoxCcKb2INHDykh1htW9Vy2w5OaINdf2ihN35M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QJoqOc20jGpw8JTkUuD6JO84wNf8v1fb0eF9SsIgbqkqSudCZQi4B+Oh4XiTbowUY8nZGVqWgDZK+igfIUM9JHTeidLJ8mNyi/gnGCJbUec9ArgO2TLpIr/x+2UtbYKw0wYl+ReYH09+wYSjMRz+jwgzxCtRTzXJ24xXzev33W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hmc4Gurq; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5499bd3084aso5068421e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 02:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744106289; x=1744711089; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E2QgDpoxCcKb2INHDykh1htW9Vy2w5OaINdf2ihN35M=;
-        b=hmc4Gurqp3AlHDlmaghMLd9g0yqXWJoCAsTiCjE+bbqPO9JI9UjVskvF/fU1f241yQ
-         wEI/EYNV+yKIV/wG8qQVh3ND4x1CBZPNEO3JDzaMz1gKPyHvjzGlnhRYNN5sVClYDnRx
-         oRmupejSjqgbJnqLHIVBOZTowlkFrhwyG9PfdCKBUGgMA0yC12l4SvJuzDXDxaVN8N+6
-         y1/Dbql9I73x0D47iy6YhSu3wYjqluLrZ5V/SfgpMub0bZpR3JmoI954DtX53Yw7HGRV
-         xawCUqp4dUYPR8pZ3s5EEwHdCQt5txKMbIBk7/O5g8E29zdJk8c61BvAsqfqbeHS0fY1
-         up6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744106289; x=1744711089;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E2QgDpoxCcKb2INHDykh1htW9Vy2w5OaINdf2ihN35M=;
-        b=vHgWyES+JNca5orU2gCW5rFhLZYAvPkuVdugbg0RtrRRGl3vWcQUYEUITw4doATr0U
-         uRxOI83NetgwjrpuwsC/1z8uCCGPVZ1Btns/0g7qWvXoZJWWICs7y9015pvb5U2RlOHp
-         NxOvFPBs0c+IJwe+dlM7Mwq5Vzloeb8ahfzfu9GVJx0oJV8vms9ZFDfRd5bGM1RHIoxi
-         SlSPkNoDI4C9q50eiusfrQApozyppEHzaffJooT59rnGD9ctn8tk+Rth+HI7u1ED8ey/
-         PR9jxzCktLA1qu6AWyvJS0pgLtXFmPHs7cPa/6IuvXIdMpvWLk9q5BnIR4NpemvXx/SV
-         tG1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWwUGrHA3YgMUX9alD+kPhsrDIeQy9jO10/tOPdoUHzY/PcuBPrPf7z53k/BrG/K6Zd1r0XANqhPx55@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0pDIvB2Q0bjPIc6NqiJH7tmxb72BbDcE6JTM4vU9zONXhXz3r
-	s1ohXZ2AygsA68wcEqzxtPvmyOls156Ldh4CR5yBHdyvGdREexJmw0joCZ4bmH6Y/SGwQFq6cwZ
-	zYbwucrtmhahD25k8n3RSYXFm8uryekw5Kuwyew==
-X-Gm-Gg: ASbGncuUu3pEcJvqGdFozkH+ywE0BrGFJcAJB8htgdO5PHNGChhR6l5HtK/lTgy5kpX
-	ELgfvsYyshjZWJpJWgMiKIG1nE1jxBgPNycnNDhHTu9JULlrc000a2jsV0s46DYSSSlYfwRmpaF
-	ZQ8etALVysCjr2o8/mEJN9uV48r9GENzbhQW6FeqIOEaLWD61RsFrBG6cIKw==
-X-Google-Smtp-Source: AGHT+IFx+bvhcS/ETnVr1Np3Ug4zUmPWJ6VvMwny/VNMHDECNGK0JObtu05hxR2rh6XM/f3a9h/6JQOpVobQ4HLmOU8=
-X-Received: by 2002:a05:6512:39d2:b0:549:b0f3:43a2 with SMTP id
- 2adb3069b0e04-54c227dc8cbmr3950486e87.40.1744106289554; Tue, 08 Apr 2025
- 02:58:09 -0700 (PDT)
+	s=arc-20240116; t=1744108428; c=relaxed/simple;
+	bh=dqZUQH9A3gBbckpMl01iPyZ2J6aWR3eyIu6QiPrKiqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwv4fS8xE/ntC7mfck6Y/8Ny9338g+PI4PBmjYIQEv4HpnX48nW5gNRe2BS85juWbweqjpFSGlN7w1tBkNffQOyi4VGsha6kQrhBYbhGOhZbwwoozxbkT+wwEyAZZGH4RtzWyqD/O7HRDrukWeYaXphYTBUmyVCwi4jDB5R9q6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSL72a1q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E79EC4CEE5;
+	Tue,  8 Apr 2025 10:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744108427;
+	bh=dqZUQH9A3gBbckpMl01iPyZ2J6aWR3eyIu6QiPrKiqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TSL72a1qC+paDiQfoaTlIPE9PEo4VTZNUdxmhuYw1G9WYOCE4T/JHSR5T63eR1MOZ
+	 eW665vj7Jf6coIpPFDV6Roz9cjeB1RprrKmNoZM/Wu5BghDl1nypzEqfJA11Z2zQhY
+	 PTRa7GejT5TZ/UBr8SXw0r1u7mD5Eps3pyKbFmQlmrJ9buAEKreQE0zJMx4H9yN09e
+	 zxrpTPqbuAMqLKmNjw9aSD0d+pExvrHbheVxf6J1oHAB5W2C4Sls9wlai9RVcw+wN/
+	 OhAMOLe/E121JGjzltRghh178ZsXrMHvwe0TniGoOi2blmqdxExcjcu+UvT02dSp94
+	 5xA9qSYfoG4Vg==
+Date: Tue, 8 Apr 2025 12:33:45 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] pwm: pca9685: use new GPIO line value setter callbacks
+Message-ID: <s6hks5xgximkrvciv2rmuzgtjjzj3oocjge4jjnp6h3svqq7g7@mggzysqt3pzi>
+References: <20250408-gpiochip-set-rv-pwm-v1-1-61e5c3358a74@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408082031.582461-1-jindong.yue@nxp.com> <CAMRc=MfuHs=7vda2CaMzHfVDXe41TV3u3ezPmt38xJ9=8JD1sA@mail.gmail.com>
- <GV1PR04MB91836DE75CB528C1B9CFB8ADFBB52@GV1PR04MB9183.eurprd04.prod.outlook.com>
-In-Reply-To: <GV1PR04MB91836DE75CB528C1B9CFB8ADFBB52@GV1PR04MB9183.eurprd04.prod.outlook.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 8 Apr 2025 11:57:58 +0200
-X-Gm-Features: ATxdqUEGEOr0dw204y3YmGV2yan7VL_T-GvaZ7q3qyHQO0_mJqqeqTSNoCQpObg
-Message-ID: <CAMRc=MfakE0aKwD_udfP23UQ2nVL29GLiquzyv1b9qYGp+fgSQ@mail.gmail.com>
-Subject: Re: Re: [PATCH] gpio: vf610: Allow building as a module
-To: Jindong Yue <jindong.yue@nxp.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uzob57sthtjneq6y"
+Content-Disposition: inline
+In-Reply-To: <20250408-gpiochip-set-rv-pwm-v1-1-61e5c3358a74@linaro.org>
+
+
+--uzob57sthtjneq6y
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: pca9685: use new GPIO line value setter callbacks
+MIME-Version: 1.0
 
-On Tue, Apr 8, 2025 at 11:46=E2=80=AFAM Jindong Yue <jindong.yue@nxp.com> w=
-rote:
->
-> > -----Original Message-----
-> > From: Bartosz Golaszewski <brgl@bgdev.pl>
-> > Sent: Tuesday, April 8, 2025 5:06 PM
-> > To: Jindong Yue <jindong.yue@nxp.com>
-> > Cc: linus.walleij@linaro.org; linux-gpio@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: [EXT] Re: [PATCH] gpio: vf610: Allow building as a module
-> >
-> >
-> > On Tue, Apr 8, 2025 at 10:20=E2=80=AFAM Jindong Yue <jindong.yue@nxp.co=
-m> wrote:
-> > >
-> > > Change the config to a tristate type and add a module license to
-> > > support building it as a module.
-> > >
-> >
-> > I can tell what the patch is doing from the diff. I'm much more interes=
-ted in why
-> > this change is needed.
-> I am building the vf610 driver as a module for use on the Android platfor=
-m because the Android kernel (GKI) doesn't
-> contain board-specific drivers, it requires that these drivers be built a=
-s a module and loaded into the system.
->
+Hello Bartosz,
 
-That's fine, just put it into the commit message.
+On Tue, Apr 08, 2025 at 09:31:46AM +0200, Bartosz Golaszewski wrote:
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Bartosz
+Applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+as v6.16-rc1 material.
+
+Thanks
+Uwe
+
+--uzob57sthtjneq6y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf0+4YACgkQj4D7WH0S
+/k5B+Af/fQ+GlBzudlOCt36Ouke8l2yhSQ5WzvXjcuXlUIct3FgPWAXScg1aVPyk
+r0u7ZhPAJDKikxGjTLjnYEGNmmXUEaoc7Wp6OhA+Uz13P8LcpkL17Y36gvIT+sY7
+gFXPagb7EltotndpDarQnQn19b+GbovcmRV5fkiJ2mS60+6xpfd8RxbWQTk29r6K
+/MuLk2BBPxxd6G4zd076cIZ2Tyx+ckaR/SJA9rEeWtJvoc6czrbwEeKG17/LwmBk
+bD0vqJvuWgF7JbPYW4YbxR8JpU+GWKKqvkVbEih4emZO7QhPdcu41WggS5Kmogyi
+PxBaZgDhHM9tiWxYVjqTL/69ik6RJw==
+=IiT0
+-----END PGP SIGNATURE-----
+
+--uzob57sthtjneq6y--
 
