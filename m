@@ -1,123 +1,110 @@
-Return-Path: <linux-gpio+bounces-18472-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18473-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C000FA7F8CF
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 11:01:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0774DA7F8E9
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 11:04:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 697B218985AC
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 09:00:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D48CB1886F87
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 09:04:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A30F1264627;
-	Tue,  8 Apr 2025 08:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADBE122332A;
+	Tue,  8 Apr 2025 09:04:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RVPmepSi"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QD72MVim"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B362B2620E8
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 08:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D939825334F
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 09:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102785; cv=none; b=rUXwcurucgD/xCyt5WMEWc8Cv87rr3gxWtmueuwjmAsIUbnIc6VECABgjB7qrqJNAzQPDKVL85SWO2AzmP0cmNJnW5yQEgzR4VHWw7Z7PaVuDZsJhbh1w3eK0jl5j4U6MtUzyPi+WlRguovee1an6PPhQ26BtZMTlZh6vEujdMc=
+	t=1744103054; cv=none; b=Cc3Z8sB+LaoKXnLgbIVk5LvNDHzHIzOj2GZDri3kHAm7+bGSX2WBsqX/jbwnZY2/eGoUauPm4W2TNm2/1UXYVimR0q4az9SQfrve/n4zpe+lzPM9EyoR00MTMeUdCX6ah3IKYFnEzHd52gLTb2tsinR2EXP2r55PjRVQmLXQNVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102785; c=relaxed/simple;
-	bh=lNiYZkdnErtTzxt0Uq6hCnSDgBoG7jrmCa6HXR2axIs=;
+	s=arc-20240116; t=1744103054; c=relaxed/simple;
+	bh=n3yPhKBmkrZrKNmGGkYKVNWI2VnNkodGMszFRz7nRK4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WOEqUJSFTVZI8JjYL/HRtSeoTrllMN/Wvv7LcKgeRT8YQ9PUomiIXdo56j16GsKlFOat/3RcmGJ4rwNa94vAkqThRuufFAkYH189d7kZUwYZdPA0xluK1VP8kaprq4VKlQc7ZPq7roSvR0Zrhi8J5407hwT7ColnDZ+rO1nQCzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RVPmepSi; arc=none smtp.client-ip=209.85.167.42
+	 To:Cc:Content-Type; b=ZtqN4DEZ6D8aBycOx3Mk2gNB6BS8k9mai6R9xNiTVSBUYCvgdGj9iJSXoHaTeXa6A+YGOQK3RKKn7go4OCsihjZw3OMkWAaZeDh6F04PXaCPSi9EcWKeI17ZhoJFWb51UhemIQsLOMrZRlL7jJsP8X8cAnLHkKePvhWcCaDbawU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QD72MVim; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54acc04516cso6102461e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 01:59:43 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-549946c5346so6253696e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 02:04:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744102782; x=1744707582; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744103051; x=1744707851; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n1ti+glIs7kbdo7Cmb4p1nzhkGIqNEX/Na3aCrAR2g8=;
-        b=RVPmepSiUFhgs+jpHCVKcKCszAKep92VNp9w3dNfyoKlYwT7vpFa6cevGCjzIQZ6Lx
-         7AUsxuIYBkDOQSoEc/1V2sk9Hajq+7sAgLhy/eTaVjH361D5rO8UzkwaGznblTbpstmz
-         QgAwkc2vlLIFi6IIeeCeA9NpoM1yM5Yze+aw48tMypRWdjnkaiCMfy0PEW5FSbjZ3c8z
-         sl896MBdwdAYR1fh9XCYVKmkzTXmGVJIXXZnOV6FB+3X3Vmtg8sfozfSY9c2p9pUyWhV
-         xDCevtApSyWiBcBetqbpsr4cJZ9EEp7pzy2l1XnWdIND3VgxAsYryv8ZRoHlue7X/b2O
-         V6oQ==
+        bh=LtKT5PB+I8jgGburlz5n6UrHfPzs2dxAk/yRT6NP0dQ=;
+        b=QD72MVimVL18kNyZqWYZ65q0JLA0IAAJx4h25n3YGjruMeQ579ZnBItiigguRReXR/
+         LbzwEJoFvqmVkV2BC2lbfHFimpKoUTPOQc0/9Ktu83X5OhRSR88JuFQtVBJyncFvel6M
+         8nsHoJiLX3J+/BKMHA4E6lfo3SnJ4bOB92s28tAUUZndQrVGv4ocewJ3Uh18b1VO1TQU
+         qug8G13AhM5vI+zFz5moQvPUKZZNVdI5p+sp9O0cuNTWYDMzf1ga2Vgg9ym0BqSrd+PJ
+         UNIe7/8D5kIq3zd0ZTWtcp9Jfz8WnSSS8SEiKwcY/su5VTUNhCmChsKnVdU9opF0cIfi
+         Qkzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744102782; x=1744707582;
+        d=1e100.net; s=20230601; t=1744103051; x=1744707851;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n1ti+glIs7kbdo7Cmb4p1nzhkGIqNEX/Na3aCrAR2g8=;
-        b=WDVbaA1CAnett+5VyACyd2k3yXPVb2aS+dERyIjQUXWu8HfiWYtBX5kF0mq45z1Wt4
-         6NORolJVPpGs8IhIxfNBHse8EL8U7YnrH6G/GuAlcRtxtpst2wlJu6xkeaEzdkvSrrIg
-         QgZxpeWDM1OmXZ7XO5fgM1Dh1f7TxuT6RyUwq5fxwGi1o9zmULayCuSpwrBdBMWMhmBR
-         +PovfAq9dmJlNH8Ap5Vas9q5zPz9L2cCKq1GTZKoquyU5TszLRecpUXrrmuFAwo0AOPP
-         lHs4f6mG+qZIcoeYRabcAg2k5bF1D7s7OektEwab/gGDlb3Lc4npsj1PndqrU/b0INQ9
-         Bs3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXL2Hh0aMJO2uZzhmwojv9AHSfssAx5J8745IEim2EV+h2nXwE0T5iadkjjMSZWmZsrHhxDODMCbedK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2l6S2MrdVX52q7wBgy6uA8sMMqD2xRrpoaSeFHfLjKhKm/J/f
-	7XIudWR1LvW8RjbexQ+Ut5EoxeQa21p9cFgQSCskP/XUa9xK4F10vVsWHatXFu9BDTCJXVE8+PF
-	/9QHcPJ0I4T4iDOn9sVLoecPAVN/R6P8bmFbK8A==
-X-Gm-Gg: ASbGnctw+DyhhvhSkKWEGK0yfmK1DiYcl2+wAaLiGq7X31zt9uZqmYKKf2pPiwaC4NP
-	bUue9/F3zadW2NZJq3WESbrloUYvnLl1hQHDedkNFZQlAX+CMTmuqSYOEO32zczj/6w/pezX8kY
-	r0TISEBN+Q+sx9ZnXG/iSFMxTeSfjrYENEZJ6sojBarTZwGBWmXPMkQvr8hg==
-X-Google-Smtp-Source: AGHT+IFhU+IhVBAJzBIMUxOBAo7QfFVW11UL24yOIyLgi1oINyxWjy4Dxkzmcdvr4r4k1H5XdlGKfbxf2ZKflqozVaw=
-X-Received: by 2002:a05:6512:1328:b0:545:2eca:863 with SMTP id
- 2adb3069b0e04-54c29836e84mr3493147e87.42.1744102781735; Tue, 08 Apr 2025
- 01:59:41 -0700 (PDT)
+        bh=LtKT5PB+I8jgGburlz5n6UrHfPzs2dxAk/yRT6NP0dQ=;
+        b=eBtEW/h2HNPd7lvAFhTNo3yKGlq0g2Gh1oxHeUgL4Vle+syb4MjISogQIkzjfdhXQl
+         hvXjxabpGEL8we5ckYvu6xmPwwADuHRPqgABM+7pcKEzUsOVBugcXyTE7LD3vAf8Y5+D
+         14tUMPliSNNZ/7rrtrGxS5L1CbYCptfwtyi2VAQd/7gDajqKnHm2BNFs0DPrNKF15FKO
+         KxFrb4+Gf33GJpLAakfQPPUkFLfkoOm5QjU6D2VN8PpTpibkWVnKoeSNUPow8caWcWsM
+         jBpM8d4jG23GOiAPbRWKgIl04KwKSzOCNVL108yiMA9mbHCi8xEpEENarO14pW7GMoBU
+         zddw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4hBU/W8bZA6Qd/ov4qJiZzQ9n8A0Exa/Jkc7cZpacxdrGu99eP00DzmmQLG3I5nR/UypDpL3oZSwT@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQdX/Nq+jcI4s34oh3UVS9CyL/SknkgCWbjJ3xlL88+aNRGGGv
+	D8EiyePkMIES7ykwDJVHXGsvnNF9cdJkriCiH2eEn8pPa+eA7fyRsy0raLt3RNxpkA3JOE/qljt
+	49cgzwcr6lx9wu0HL2VpULFrkchbC905fFA93Xg==
+X-Gm-Gg: ASbGncuYYGeCE4xNWiT8/6CJMDQSFA/nZmxAwqtiqHVgatDgc2rrULXwN3VaSxfCVD6
+	YGTHfCC/HMHwGXErgX4WOc1cx/qxVlHOAKpA7oGPkQECNFt9udpLp3/ICctH6QxfeWcOo5i0JKl
+	1oSUXzV/FaP2KS0LQ+zlKEloMs4d7wASsUM52Q3A6c7h/7DDMzuvWUfsmW4A==
+X-Google-Smtp-Source: AGHT+IF2WUkxm68ddIms01ocssUC4e0WNcZHFUed8nlsJd3SMfdqBt0sV6DP/H5TRFqdUI/lrkaIskfxxDirqwxdZyw=
+X-Received: by 2002:a05:6512:3f16:b0:549:8c86:9bf6 with SMTP id
+ 2adb3069b0e04-54c227dc869mr4261598e87.39.1744103050753; Tue, 08 Apr 2025
+ 02:04:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org>
- <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org>
- <20250407103320-GYA13974@gentoo> <CAMRc=MeFK1gX69CWH2gkYUqkLU-KCOcwHcA+gjN1RXFA++B_eQ@mail.gmail.com>
- <87r023ujiv.ffs@tglx>
-In-Reply-To: <87r023ujiv.ffs@tglx>
+References: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org> <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org>
+In-Reply-To: <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 8 Apr 2025 10:59:30 +0200
-X-Gm-Features: ATxdqUFtpGaiXd9grNQP3Ib6EubxTwZJQ656Dn7NldoLYjiAufIbT8WtF0ED4JY
-Message-ID: <CAMRc=MdP09b-cm2uZeqbbCP20kNjQJ8CbXTXSTxQEihdoXjGJw@mail.gmail.com>
+Date: Tue, 8 Apr 2025 11:03:59 +0200
+X-Gm-Features: ATxdqUGccJrFjcEWKyhVa646awyIsRz2HGjGAguvah1n6zT984GzRInZSF_52-w
+Message-ID: <CAMRc=McnW0YRMmikwu6qWSdWD5Zu227dBRwd4VeWZcfcEFUMDg@mail.gmail.com>
 Subject: Re: [PATCH v3 2/2] gpiolib: support parsing gpio three-cell
  interrupts scheme
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>, 
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
 	Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
 	spacemit@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 8, 2025 at 10:47=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
+On Tue, Mar 25, 2025 at 11:08=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
 >
-> On Mon, Apr 07 2025 at 13:26, Bartosz Golaszewski wrote:
-> > On Mon, Apr 7, 2025 at 12:33=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wro=
-te:
-> >> On 06:06 Wed 26 Mar     , Yixun Lan wrote:
-> >>   I'd assume this patch [2/2] will go via pinctrl's tree?
-> >> as patch [1/2] has been accepted by Thomas into tip tree [1]..
-> >>   Additonally need to pull that commit first? since it's a dependency
-> >>
-> >
-> > No, this should go through the GPIO tree but for that I'd need an
-> > immutable tag with patch 1/2.
+> gpio irq which using three-cell scheme should always call
+> instance_match() function to find the correct irqdomain.
 >
-> Here you go:
+> The select() function will be called with !DOMAIN_BUS_ANY,
+> so for specific gpio irq driver, it need to set bus token
+> explicitly, something like:
+>   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
 >
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irqdomain-04=
--08-25
->
-> Thanks,
->
->         tglx
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
 
-Thanks, pulled.
+This doesn't apply on top of my gpio/for-next branch. Please rebase
+your patch and resend. Patch 1/2 is already on that branch.
 
 Bartosz
 
