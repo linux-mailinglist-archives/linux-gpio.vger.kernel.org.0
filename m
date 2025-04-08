@@ -1,78 +1,90 @@
-Return-Path: <linux-gpio+bounces-18467-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18468-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9260FA7F82C
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 10:44:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6A8BA7F83E
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 10:47:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D82417E488
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 08:41:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06BA319E0143
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 08:43:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDA0026460B;
-	Tue,  8 Apr 2025 08:41:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5778263F37;
+	Tue,  8 Apr 2025 08:43:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ayG+zew+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zLjGAeR0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCAE263F2E
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 08:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C1A2185B8
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 08:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101667; cv=none; b=ufyNawvSSBmT1OfK+jLWKKemaku7L4Q5FAaHw8WSLNE0XxYHINl5KfKAcVcaLJp+4+5ByVV1jq9fNfDVtdtlfHk0LSFj9AZK7haxsmpTl3MVdsCi37uc/q3gYrD9SEHeh2ZHZ/mLfe9EQKp7dUXdRksNHBNIwD43i5yX1j4WMY4=
+	t=1744101807; cv=none; b=dssHe5n1Ge8BiORNWkdSQ/vLmGUX/Iuh6qxU9dWP0MC0ekftYFAyoWUyPoh/e3sEL24PKmp7E0PnT2KYD6SxW5jQzKjrjwGg2xchos0NQBecpUCXalGS5n4BsbkVHAz/GdaUPlR6nM64ZNXc1LSnxSozBCgwn/HLtMUaOLvHM24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101667; c=relaxed/simple;
-	bh=HHjVPooPghWZo3ILRG9A5aix/QJ9AoiqyE9/CoCMg24=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VYmQENDBiaac87nFvLy42nLLtcCJdeXKLfxY3WqCrXDhO7CLzghkzRSwC9MxtbVDj5vlowV31DzGgruGRb1uIcmKq8+k0/ssjMITbbReKF+GmY+6GcAzoikK+qd6c4LsfaXjByjAfxiuvAHKxLngBOA3gm8nlWWwweEAXE3d9gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ayG+zew+; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1744101807; c=relaxed/simple;
+	bh=GXK3ZGW9tf6Q9chAz2456V+BotYGmE/J2SwhelVDqRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tCgdtEPfIOpuYgPjUneIig1LbWATlgXmuQvmO4ZVXxm+9rqXsQIw4klHGiHlVZXBWdTJlx5Ejqqxa6viQQt9vRDN69udXrPx6ujrbZCurLDuNM4h4gYdftEbOoGzKTuuE+IzVJkSoeDQVnVWOgkC8Wu/009U6jDdEFc9U6wYsIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zLjGAeR0; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c266c1389so3725668f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 01:41:04 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3203463f8f.2
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 01:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744101663; x=1744706463; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5l/JX2uj1f+6tFDGUnl+gWENA+yeC4c9BhqC6pMEVSA=;
-        b=ayG+zew+8UeU4eVbpb0yJKBhI9uLmlYq/E5oPXWdkmgx2+2cuzEIOV3f3GkdeONSNh
-         O68OtGsh1unsP2uUOpmv+1XJoP96fsnxhhmWktI94HyNOOkItlwCpJArSycbEQ/NtwsQ
-         p//EJl+4zvHNW8QMEOZul2S2YGMQf6p4MwKSsjrobJGij7W54XREE08NvlOiWuUiHnQ7
-         /pmOe70swcQt7fHLWwA/slgShiZ/ZBthY3Ixw5k37/7B/M7MwtuRTpjxfn/WgqlsdPsY
-         SEcql/hA+VOBlJnb59dsq7rah+eUnVGUN1RxVc5l9tr+ubENTp2Ja3HDG2xeBZdQbY2U
-         NHCg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744101804; x=1744706604; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OePFKTyhdQdf/eaJWtXJyGR/G6HZO3R3hL0HNN3AkLo=;
+        b=zLjGAeR0zAq5ImoYHeZVbsy2fU6FueyrusA0simpCwgi7YYHc+LsdkjrvovnMz3j7W
+         QW1YRqYFmbM4gLqHAFSTBjlNv34Ei4SF36EOV+sJpnKuPoE0ChU3/S6Yy22KM+wxGK9l
+         cbZYvIcEVRDR/+tJdtGNnB7J/GQ2vieqD25U6/8VqG5/lrveTxj6t1oqxB056XinUjYZ
+         zHerYN5YroukP9ovMsp71PDixVz9vUksioactbdUubhUNmweNMgQFBeKKnEIcJvi9IZ5
+         meissqGqMvCAaPp6v12rqMIuQk2zcZHL5coATQsU9HkotA/nTfMhaqY6u+hLDHjUnS0Y
+         j5eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744101663; x=1744706463;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5l/JX2uj1f+6tFDGUnl+gWENA+yeC4c9BhqC6pMEVSA=;
-        b=DzLAAWLBB/zmfFP9b21VI0Ys7huXi28YqS0vnJd+1w5hZ6Dnylm8C/idaIdYo/J2kF
-         0ne5L+b50W1eqXEIS0ZuRJp9wCrq6XZRuD1HmgB1cdQbzBDUJzmjtHvtUH80IszaLhWm
-         O+kiwHeB/FEL+W9oNyoechWgbAvWb7eoKiFAf1NUeFi744y4GErIEH9v+LmDbc3wlmtn
-         clJiNduCkkmOXPRPm60bSKZW8JuBYAAAAzLUdIPNSGPIj4iWkxoxTMgMyudpB1wP6MEo
-         nz84ETMd/CJ/HECgytBhU6Nfi9wfScdS8pu7PXWnm6IgQOWJc6+hYQkBNBJin+VFl553
-         Rx6w==
-X-Gm-Message-State: AOJu0Yx05pKYXClxFrl9hlmjlbPpBalWdEwNAYGZBHL0/Ib1e1ogktVr
-	lHKT7KIgUJne/zImgV0vH2Cfq93mAKYcN4kHqC99sXmGviTYCeO022t69BDcRHY=
-X-Gm-Gg: ASbGnctxos4ccsdSVK0bwgHePz3IYbOI2tvWm2dhEqVfcsdtP2hkT5ZtXbKLBpV/pU/
-	oLZ0Mv7b5HaU47cuFHxziCGMJ0nrE/eSwjBtZr0NiA+xN70uoYuxY6XmL6pRHY8l4DZoEzTTE8k
-	sYGo5gM42++A7xh+4IPky3Nr8Pvg6qEfWblaPmPwr599kKojmaQKtgscQ5mPeRshFAbrghHu8bZ
-	7VlwqAFsJZAWQxi5Mx73luopPyytk8LeV7JDI/0LHPn/05MTjSslTCi+tZ+ZfECMeWvXF5qIvnd
-	Rb7BlzhgwmB8189wPBMBy3zIryDwab3+x/GMbQ==
-X-Google-Smtp-Source: AGHT+IFFTs8qEaLD6lNpPGuy+vrOtX/G5FHp1cGs4X1wq9yEqxfxIVjgXVOG+dEYLbN9f/ov+1CCiw==
-X-Received: by 2002:a5d:64e6:0:b0:39c:dcc:f589 with SMTP id ffacd0b85a97d-39d0de286fcmr13737229f8f.20.1744101663528;
-        Tue, 08 Apr 2025 01:41:03 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020dacfsm14318281f8f.72.2025.04.08.01.41.02
+        d=1e100.net; s=20230601; t=1744101804; x=1744706604;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OePFKTyhdQdf/eaJWtXJyGR/G6HZO3R3hL0HNN3AkLo=;
+        b=QOqdvoqaSDTTjy1l88fQpon6gsm7h6Bnu0+Ji3gJSHEWjLLy3igQa9vh82cpKen4Tx
+         H81hvP3MtdgBvXvCy4Dip0s//NXIMACjbsTlcOlgV8aOuk5hDWErdAL37v/aG9jXOz4n
+         6dATI3W47R2nAJk30YGiM0BOqIWoriqZz5x8px1WWW29vNFvkJBVbJuLpZ9pCMxTXA4T
+         YBGExT4yOPBYsvrVt50sIE2YDK6eBxpH9xdgyKNWf9K1nzjUOgHnGTu9gL7BNICP8fPi
+         l0gOuUum4YuCMwaipDPj9ZdE4qIc7KOtWebLSaPg5VV3vmcl4fH4sDsKGiZ8y0ws4t0B
+         Q1NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWVgGPC58wDmbR++/K4F2tJgY4FZy/e7vKCZ7uyFjta5ErqUAZNCVDGZxit6b1GdkfX2aV4wCmMb+4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc2vpdtfSial3pE9Tq244+N40vPfopxoHsxxbTX5+u58IPHdAT
+	RMy8ksRNlVD1ZoM/T19aLRL6YWgI6PIUteNSCLd8CdokJbayFOVJ/0mFUs4zHC8=
+X-Gm-Gg: ASbGncuIAg1OE4IKQr82OTTvFisExpddOX/fRrESrl3cWGIFAZzfqmHlbUSS6h/hi/v
+	FTH00IyFKkiDA0LFlm3l49n+CjPhqXLmRjd7o13ajiLOm5TTh02qu0OrlsTypZ5ehAqfEhyJg53
+	GVR+VgUUYNgWsqPHscnyrWCQtCGumcx4xoBLwRYNRAsGdI61jEFNvWrqZNJPwB0pAIn6vDXs/wY
+	uOZW7xwmPWt2bV1YdhdqTnTMCuPY3fIm8r4xfj2tL5jg1ron5B+G9NH+Xp+azxKxiAaC3MZp7cr
+	Favl86oSGJO8r6pIXA6uTozRGNz/y9euiOkTf8fHdGs5
+X-Google-Smtp-Source: AGHT+IEGC1m/9gJgDIPNZJo3xHP2dSgiPLSh/AneDnG9bwnv4PbEsI/+WnvpUUlb/P2XY7yG+BFXkQ==
+X-Received: by 2002:a05:6000:1aca:b0:390:fdba:ac7 with SMTP id ffacd0b85a97d-39cba97f346mr13060051f8f.51.1744101804000;
+        Tue, 08 Apr 2025 01:43:24 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096ecasm14689544f8f.18.2025.04.08.01.43.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 01:41:02 -0700 (PDT)
+        Tue, 08 Apr 2025 01:43:23 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 10:40:57 +0200
-Subject: [PATCH v2] gpio: ds4520: don't check the 'ngpios' property in the
- driver
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO workarounds for regulators
+Date: Tue,  8 Apr 2025 10:43:22 +0200
+Message-ID: <174410179723.40269.7114336096842145653.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
+References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -80,87 +92,36 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpio-regmap-ngpios-v2-1-26f254014f57@linaro.org>
-X-B4-Tracking: v=1; b=H4sIABjh9GcC/23NwQ6CMAzG8VchPVuzDUHh5HsYDhPKaKIb6QzRk
- L27A68ef1/Sf1eIJEwR2mIFoYUjB59hDgX0k/WOkIdsMMpUqjQ1upkDCrmnndFviEi6tpb0qPr
- mAvlwFhr5vUdvXfbE8RXks/9Y9Lb+cid1/pdbNGqsyNbl2N8HKpvrg72VcAzioEspfQEPvS8Xt
- QAAAA==
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1725;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=rOqVoIaD6phSjWEitOWWg2WCfMxGn77E/og0f+Z1p+k=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9OEaGrX5nZAh5c6b1XH5M40GBlSMvKLOvc5Zo
- zR66E8qBqWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/ThGgAKCRARpy6gFHHX
- csQnEACU/Cg40nGydr9zvG71is5qj5+a2EQnQBhHXXNfNq7rMtjlgxyBYh3q9aTDWlpbuxNiEzw
- b3npmNdpTO4/95LSmyO1y4g6zftWaGvR6JIiKzlKsiWGpC7QZRjFBRThE0VC7e/Dw6JsjVbE2y1
- dDuoGc0fK2oWlueqmzGneEDdZGr8jnIjcVoOh28lIScMkj5BfCKU6p/OfOTLIgLK2SGx5P6/m8K
- CA//3HzmHirRgokOnTCHxK9ct87bjD7EuW01iBYse3vdeTmSbR/whp0bvP+IsZKOoYOBngntn4T
- Nhta+eUyMMfmUuG1d97purd4kJtQhpMk8qEybGe+YUh/PvHsoCxO3nhe5I76Dxrp0jm3oD36eyy
- XkANxWfdnAlAsE6Wl0vxJCuJXfjwAgzpCcTZEdt3gZSoj7tDrkLKpWp2t1CjndjX2izzfpxhhXV
- upkcVB+iile4PTK4fNN4YBhAugjTReyMly3+F2Tq03vrwLa095B9wgKuEzM2fdBIIq1+WbZ12rw
- O7xwWAI6Q31t3y3nCEtpNLESyZL9sbY+n1E+N5XkvFOVfd7C7s98uZ9N5eygc4Uw5rZm08gAKb8
- kG5yPpZ+ynfZ69fBZcGirrcIfPkEec8qkF5y/7FEU7zUYlpoaPRoepGQvI3xf+bHPJTt/Z0V2cr
- RvGdJohV1498a8g==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This is already done by the gpio-regmap abstraction by calling
-gpiochip_get_ngpios(). We don't need to do this at the driver level.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Changes in v2:
-- remove the ngpios variable entirely
-- Link to v1: https://lore.kernel.org/r/20250407-gpio-regmap-ngpios-v1-1-5ea63fcbde39@linaro.org
----
- drivers/gpio/gpio-ds4520.c | 6 ------
- 1 file changed, 6 deletions(-)
+On Tue, 01 Apr 2025 14:46:41 +0200, Bartosz Golaszewski wrote:
+> The GPIOD_FLAGS_BIT_NONEXCLUSIVE flag and devm_gpiod_unhinge() helpers
+> were introduced as hacky workarounds for resource ownership issues in the
+> regulator subsystem. Unfortunately, people started using the former in
+> other places too and now it's in all kinds of drivers.
+> 
+> Let's deprecate both symbols officially, add them to the MAINTAINERS
+> keywords so that it pops up on our radars when used again, add a task to
+> track it and I plan to use the power sequencing subsystem to handle the
+> cases where non-exclusive access to GPIOs is required.
+> 
+> [...]
 
-diff --git a/drivers/gpio/gpio-ds4520.c b/drivers/gpio/gpio-ds4520.c
-index 1903deaef3e9..f52ecae382a4 100644
---- a/drivers/gpio/gpio-ds4520.c
-+++ b/drivers/gpio/gpio-ds4520.c
-@@ -25,7 +25,6 @@ static int ds4520_gpio_probe(struct i2c_client *client)
- 	struct gpio_regmap_config config = { };
- 	struct device *dev = &client->dev;
- 	struct regmap *regmap;
--	u32 ngpio;
- 	u32 base;
- 	int ret;
- 
-@@ -33,10 +32,6 @@ static int ds4520_gpio_probe(struct i2c_client *client)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Missing 'reg' property.\n");
- 
--	ret = device_property_read_u32(dev, "ngpios", &ngpio);
--	if (ret)
--		return dev_err_probe(dev, ret, "Missing 'ngpios' property.\n");
--
- 	regmap = devm_regmap_init_i2c(client, &ds4520_regmap_config);
- 	if (IS_ERR(regmap))
- 		return dev_err_probe(dev, PTR_ERR(regmap),
-@@ -44,7 +39,6 @@ static int ds4520_gpio_probe(struct i2c_client *client)
- 
- 	config.regmap = regmap;
- 	config.parent = dev;
--	config.ngpio = ngpio;
- 
- 	config.reg_dat_base = base + DS4520_IO_STATUS0;
- 	config.reg_set_base = base + DS4520_PULLUP0;
+Applied, thanks!
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250326-gpio-regmap-ngpios-e16aae1f0c98
+[1/4] gpio: deprecate the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag
+      https://git.kernel.org/brgl/linux/c/6deb8435f6bfcc9b6c7efe3b8a941ae2fb731495
+[2/4] gpio: deprecate devm_gpiod_unhinge()
+      https://git.kernel.org/brgl/linux/c/686e54ea31f3b7d9d20ac1fa2d0295d649c41f56
+[3/4] MAINTAINERS: add more keywords for the GPIO subsystem entry
+      https://git.kernel.org/brgl/linux/c/3af64f175b2405270bd0926153d9856a49b58352
+[4/4] gpio: TODO: track the removal of regulator-related workarounds
+      https://git.kernel.org/brgl/linux/c/2de1cf175c00927c286f8bd72e18602fe072af95
 
 Best regards,
 -- 
 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
 
