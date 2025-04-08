@@ -1,89 +1,128 @@
-Return-Path: <linux-gpio+bounces-18519-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18520-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4DE1A81398
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 19:27:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B7A0A815A3
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 21:15:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDE794A1FDA
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 17:27:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 889068853C5
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 19:10:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71EE923BFBC;
-	Tue,  8 Apr 2025 17:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826E624EA98;
+	Tue,  8 Apr 2025 19:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unmgh+wx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nCsWHMxB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EBC1D61A2;
-	Tue,  8 Apr 2025 17:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5587E23F43C
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 19:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744133229; cv=none; b=U9BTom7Ropp+Bjg22MrUR2NXQ3IzaqGuapdWe+n14hoONEt8LBOw2J8NypUW6RYI/EkwiqvKmKwb6aAZQSONN1K5+WBkdHW33MD7Lju+Os0oH36ES88gVQ+LmvpMg/j2eLgMhxKA/wkC8mLf7MbigJNhSF1dL8ZY3fnqsz2oNjM=
+	t=1744139213; cv=none; b=aVR0/p3cyOLD9LFoR2c5l0/7qdUSRarxa6C0443PnwJHoa88HqK92RLwFxwn0BKQjl6Hg4qoR12U5UqT/xlPmEhTsDIErb1RRkHRUoLmU/rEbbjXdSS/a6WZbR1h1j2yurGgD1SYDV1NoYgGhthSb3d6fmSfUhOlXeEeH139Hv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744133229; c=relaxed/simple;
-	bh=aLx0mUhM3Bq/zV6SJmFIXECD9k2eFzF4YueLPJkyMII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJgQzYvSmaQiRQQ3pl7t+m98js5rbJs8oB+/5eQfWWnpXmiZ0vgEF0uLtW7H18Z0lzj3SCcY+ITOBCtfm3KMVFTqK5D9dHqrELZqT5+YfZh4ay0d5saO5t59x1nBQEA4EN84pxQVHixxlhoL+Gb/6VMvPH1Zlw2QI2OeBn1BukM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unmgh+wx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C45CC4CEE5;
-	Tue,  8 Apr 2025 17:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744133228;
-	bh=aLx0mUhM3Bq/zV6SJmFIXECD9k2eFzF4YueLPJkyMII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=unmgh+wxykjk9tR3YGgjNWRwY6ElejEHHU19KaQ8LEQI9JCTmcilRpLInBUaSzsw1
-	 9kXAr58nGziKPUoa6ojX7Xo13s8sBUuOuo9CaESB03aKbim61OQX82m0m2xGWoG9VE
-	 V5dqs9W2QuNRo2VktvYdu82zP6nXH8a5OAyqQ+so/auKaUGNf6osms70qvPd0qbmuw
-	 7Nnk2xaG1yjD6uJK+t9h4xXDxgRKZFV2ckV3m3Pn3f117fHmmF//cLTR0GYrhueWJ4
-	 f6saZ3+ro9C2gdKLf4fcqZgOcpVLyCDa8pal9JobmMFFdvwpjd6Qdd65+F7Xkhub99
-	 CERiMnXgXtjGQ==
-Date: Tue, 8 Apr 2025 12:27:07 -0500
-From: Rob Herring <robh@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	William Breathitt Gray <wbg@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Kever Yang <kever.yang@rock-chips.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
-	kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: rockchip: increase max amount
- of device functions
-Message-ID: <20250408172707.GA2283098-robh@kernel.org>
-References: <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
- <20250408-rk3576-pwm-v1-1-a49286c2ca8e@collabora.com>
+	s=arc-20240116; t=1744139213; c=relaxed/simple;
+	bh=XDO7GZgIXZbIuvcgx0MtmUVNnpEHDttID7IaGMbJf/s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=RGtuIJen1YKd+svSg0xEz6IHV98f1QGdJ1uf1ueef5ihHWhZ2BF5deCjux197tlZHaxIWf+i2GoYnYAI9K6NFSHUvNDz76g7q32ASbNoFSbL0qC3xvXR1LNRt3y5gikwKgSHTyJqt+BMTa3pGhhdSKvhAhWHFWhPOGI3jVRrCHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nCsWHMxB; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912622c9c0so581508f8f.3
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 12:06:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744139209; x=1744744009; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=26BZYOZea4bfw7CNCFKawdkyJnG29aqqnfgcKzudge0=;
+        b=nCsWHMxB5lf12q3hAcn3iKQHC+p2PIBTwTv3HsESAajJeiKAPJOWxUFsd9DrebpWtw
+         3E1tVyXPnfZgpSPM//j6H9q8oe2HPARv6UW4HzIwfCxG5xhk7E9vnJdMQKR+Iobs94/U
+         XdhNLIJ5grTj4/KQXGGnMb+mS1B+O5SDMy0DjtR84rgIRTxyZP5knmMX9msQuGYWVi5C
+         btVU8DFwbqQ1RrhbupRBZQq1oI+8SwwaF/wKyAuiyfIiZyO6QkwcNhwZbzTnMcW4eyf7
+         D/Fj9HWbVsoDAidtF+Mcl7LEShs2vcxN782FDPaYG2KcUXCQrMJPgsG6+LrEmSA9RUEg
+         EKOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744139209; x=1744744009;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=26BZYOZea4bfw7CNCFKawdkyJnG29aqqnfgcKzudge0=;
+        b=PyP75SIXpkJxa6sba/BMrwCFL7ZNzDR0pqzpKTkJwmh0MoMqFfJX6Dn9ehS4oyMt8J
+         Ed+69chsNEtZN35li2zJT0ukLfWlfPwQhQm3U2ANDgWA+J12yOAc90XjffqGG4KYKJHq
+         gGvljJpPWe6xobBnVYRwuelnHCbeOsxzCwpSulj4S2fdzYUHj1Dj/SiPxEOUzsYF8ICn
+         SWUOffuR1/pkPfQUMGmspISecGHbBjI+CLY+zgwSrwnjj40X77YTBqJKJbXUzdEhBi7s
+         Ioh2BA8y+ZCnafx1L7UJQENvHi1KfItyAedewgWBOF1Yi9mbf8HWySI48YqFZd5bJjh4
+         8Czg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJo2t0/DpRnWapccNp77c9rYjpBqTRzXDA8MVsiWayHn8yRX63c2LiOJft1b0R9J6WjIOCbGbvGH4J@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT1liG2lCyA7TE4CVWfsLYTHcLj0DAB48gmJ668c/r1i7ACbww
+	7oUqV499yYZmWbnBrC+CMSjLht/yzyD/w9PYwrFeSwK061aKperWw1FATL1JVTc=
+X-Gm-Gg: ASbGnctyt8JUdhtRGVbZSEnQT69jYLptW90HXA7UfxHLiQFN76fUYBfTYn7vbgRBUxc
+	4fwT7/svt5s+QhSdKjOhBzWydY4g9i9Hjbt4kYVad2rPB2j51ji2ttsxa+gVa6PLn21dxv+IMfh
+	BNOIH0iyWZmYRND9nlnmMO40Xfol02U4iodc9yoMo1Shis6ebnjm/HJAXfYBOrDMLEsDy/0KQJq
+	MIjVD4aXojZtCWe27EeW8wy3sYWeDi1USPeiElompu84j3mV9K2y3LROS+hrVpooTums9kfL70R
+	QDzOXEuYxzswr1H0p8UCjYDxTLEVg7DOhMzP1oA04+GhR7av6fQNsuwBENmYofA=
+X-Google-Smtp-Source: AGHT+IFEmj19Sjp6m7XUEA3vyo+E8QmKaZA1qZbfv2jh+SPPFex3IJzzYfOY3+icqIou7/aTD5sG1A==
+X-Received: by 2002:a05:600c:a016:b0:439:a3df:66f3 with SMTP id 5b1f17b1804b1-43f1ed660damr1024815e9.6.1744139209570;
+        Tue, 08 Apr 2025 12:06:49 -0700 (PDT)
+Received: from [192.168.1.26] ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020da17sm15853743f8f.64.2025.04.08.12.06.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 12:06:49 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com, 
+ semen.protsenko@linaro.org, kernel-team@android.com, 
+ jaewon02.kim@samsung.com, stable@vger.kernel.org
+In-Reply-To: <20250402-pinctrl-fltcon-suspend-v6-0-78ce0d4eb30c@linaro.org>
+References: <20250402-pinctrl-fltcon-suspend-v6-0-78ce0d4eb30c@linaro.org>
+Subject: Re: [PATCH v6 0/4] samsung: pinctrl: Add support for
+ eint_fltcon_offset and filter selection on gs101
+Message-Id: <174413920812.155881.15584409813277033669.b4-ty@linaro.org>
+Date: Tue, 08 Apr 2025 21:06:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408-rk3576-pwm-v1-1-a49286c2ca8e@collabora.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Tue, Apr 08, 2025 at 02:32:13PM +0200, Nicolas Frattaroli wrote:
-> With the introduction of the RK3576, the maximum device function ID used
-> increased to 14, as anyone can easily verify for themselves with:
+
+On Wed, 02 Apr 2025 16:17:29 +0100, Peter Griffin wrote:
+> This series fixes support for correctly saving and restoring fltcon0
+> and fltcon1 registers on gs101 for non-alive banks where the fltcon
+> register offset is not at a fixed offset (unlike previous SoCs).
+> This is done by adding a eint_fltcon_offset and providing GS101
+> specific pin macros that take an additional parameter (similar to
+> how exynosautov920 handles it's eint_con_offset).
 > 
->   rg -g '*-pinctrl.dtsi' '<\d+\s+RK_P..\s+(?<func>\d+)\s.*>;$' --trim \
->   -NI -r '$func' arch/arm64/boot/dts/rockchip/ | sort -g | uniq
-> 
-> Unfortunately, this wasn't caught by dt-validate as those pins are
-> omit-if-no-ref and we had no reference to them in any tree so far.
+> [...]
 
-Sounds like we need a way to disable that for validation. We'd need a 
-dtc flag to ignore that and then set that flag for CHECK_DTBS.
+Applied, thanks!
 
-Rob
+[1/4] pinctrl: samsung: refactor drvdata suspend & resume callbacks
+      https://git.kernel.org/pinctrl/samsung/c/3ade961e97f3b05dcdd9a4fabfe179c9e75571e0
+[2/4] pinctrl: samsung: add dedicated SoC eint suspend/resume callbacks
+      https://git.kernel.org/pinctrl/samsung/c/77ac6b742eba063a5b6600cda67834a7a212281a
+[3/4] pinctrl: samsung: add gs101 specific eint suspend/resume callbacks
+      https://git.kernel.org/pinctrl/samsung/c/bdbe0a0f71003b997d6a2dbe4bc7b5b0438207c7
+[4/4] pinctrl: samsung: Add filter selection support for alive bank on gs101
+      https://git.kernel.org/pinctrl/samsung/c/a30692b4f81ba864cf880d57e9cc6cf6278a2943
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
