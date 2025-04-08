@@ -1,140 +1,225 @@
-Return-Path: <linux-gpio+bounces-18506-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18509-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DCA5A80E90
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 16:42:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BD00A80F8E
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 17:16:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30A571BA382F
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 14:38:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BCB61888C07
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 15:12:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F0A822B5A3;
-	Tue,  8 Apr 2025 14:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hd/+GhPh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1964321CC55;
+	Tue,  8 Apr 2025 15:11:44 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D1A229B0E
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 14:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC821CCEE2;
+	Tue,  8 Apr 2025 15:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123000; cv=none; b=DY5U8b2bJRBsNx1grRqh3A65dFZwnUEhv/NDAo51/LWauRn3ZbuAXAIUBXVxXVnzx4SOqWP7qxSYc3qbrj0h9ytS39P3FwcRf9rjROZpuQkSqhhWsvoaN4tG4m9cNyt5M0sUwzNExDrI61WIs+VaNzm0q9sx1njd0P1VcfMGJUI=
+	t=1744125103; cv=none; b=V8Sz6yw+23HkWXPB3P0KscHB02CZN7aDxO5dGHN3I6yLe4j/7mSlHcUOyJIgGNSCDdi3W6jwmQ8odqMY8/mfSUUm3evlWApNeUfE9uiaV7saSoVMT8y0EstSWPfVDNNXM595gQcgMQ+fz4iUCoSHpl3Rz2Dz83kVikp5G5Q0tOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123000; c=relaxed/simple;
-	bh=VMDuT2jhj89NF4sxHY78mrJyGiA92w/k0fyZukw4JbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pQIsn52tbQN6BaOZ//P/7/wBOiMIWJpcN1qvKYtPdbLkhin1wU52O2DzAy23OCLHmyHJHC+cPhMJquIB19qBLWvbGiQ1CblWZZfyYp+raotSSAEpBfRm8vd6XoQCBJ8I+IFq4evWfrxy2XytlAWNwu3S3NUdVmOjHRIMeko8Dss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hd/+GhPh; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso4337824f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 07:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744122996; x=1744727796; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wPPvBfN+HGZfLFV1ZtWLMiIkwQz23m7w6sKuYGQlZ7w=;
-        b=hd/+GhPhIt/aavoNYkuoppjGAAZabEhso/V46Aq1c+szqS9myvxDBVdcjeho24Pp41
-         sRnWIoOJ6LhAJRhcSIeWAiOvRd5uqpP4aD4czEYOIVaIa550WEuNqLBHXPBVOaZviCoB
-         RbJFOUjrUSnU0vZcz4wLxpnQS6qelD1ibjto0w1Gow8KtLQLFPjrniLS5C/VOIPFl+T6
-         MuW1QhvUCGF4s/fLB/rOt6HsvVNLMhf+mXOsiUYzYlAlOMGFZ32bbxngQc+UDAh+3Z3b
-         GrMj6NHXet7+u0E875xDB81GsBHvBHeEZbY1tdjSWxEdSip95NGxiKu+56KJ3OH6CUmr
-         3Hlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744122996; x=1744727796;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wPPvBfN+HGZfLFV1ZtWLMiIkwQz23m7w6sKuYGQlZ7w=;
-        b=NnLCqNX+8jFlpH4O95qkHMv3yugouOZyavXC70Af6NPUcgxEfjEpOZP6lUH9fhEHoa
-         0cFwLHj76sjEIVxVW49rgmvNx2dutMXL2et3SGBnFGPv6uE4D+REn+PQB39V2Ce45Gl7
-         9XNn76CBuurJDJja4AHjSDAIxunrWrK2y4W4kI0YwMkupsVYQ166YsEWAN+R8cYzTYoG
-         1OdEDZQHlMJfPygBVLu44W+buBR36lNzRnQBIDSOrZwT9wDy14PSFWBN48SJiw1ypkO/
-         7RP6HZUh2LMSRA4c69fnR/FWzMGE+h3FY6+RS/K0WVuhoKycntLOKSORpT8s1241ER6G
-         jgXA==
-X-Gm-Message-State: AOJu0YzoBOXlAhDZyC6eBjlimkMyqunLHQcK78mV43zVNMJT9WwFU0nd
-	lzpwIuL1Pp5BJbcjXtMkXDzngH5IM1rtQbP1ums5NBpeI+UMLdzqVOUULZ/mSpk=
-X-Gm-Gg: ASbGnctPfqt1lVK/4JndpzYvaZlPLNVDFWQIbm9kqb6DGrdU9YoGvaKH8h6tfpkmzhU
-	zMTJ/StHaJvY7ky67G0LsWpG1qkqFZm0MRdEQHQ3fKOGiRidt4E40ZIaPlwTZnuchM9uyVnjT2o
-	dZLQokfMlcFGDVodKFyxFqm/zIT/Dopt/U4tbEi2jAGcTLN49SirWbzbdr2UJXJF+A3B8X2bRtU
-	ucT8C6rt6895C6Yfu7GP8/nSozUbmEHykFnu0T8OUCnLRQQlE4aAdXB0ajeqc5EXoCn4Jt3HGQO
-	0hT/ZNnFeQcMwpbLXA0Ieyc6bGoez4lnJe8VfsX5jFqJ
-X-Google-Smtp-Source: AGHT+IGs3Xppykht8aj5t+Cb6rFG+nfWJmqODTuMzwxw5i3C8PzwPs3DpgDnmHqpNVBS5pEI3mexfQ==
-X-Received: by 2002:a05:6000:2289:b0:391:2a79:a110 with SMTP id ffacd0b85a97d-39d820ec28bmr3149920f8f.29.1744122995327;
-        Tue, 08 Apr 2025 07:36:35 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a727bsm15003151f8f.27.2025.04.08.07.36.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 07:36:35 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: James Cowgill <james.cowgill@blaize.com>,
-	Matt Redfearn <matt.redfearn@blaize.com>,
-	Neil Jones <neil.jones@blaize.com>,
-	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: blzp1600: drop dependency on OF headers
-Date: Tue,  8 Apr 2025 16:36:29 +0200
-Message-ID: <20250408143629.125576-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1744125103; c=relaxed/simple;
+	bh=kJqo/8IGdQrE3R8digcDbm08uHIaoAS8anwz06A50Qs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hLDTBPOLPrdZYXIvnd/WPybIt6lDs75m/uLBprL1UP7rsq/EWQFNvGedGGf4QuLa43TINlwy2YdUGIrystH1xHeD8EXwznIpUFZ+uo6wtRrh2N9myUZTsOKGfK4zvUR0Jr6w/OtFDS6tLwkO0c055Y5x2+j/zJ1S/mcjmf3NR3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 69853343026;
+	Tue, 08 Apr 2025 15:11:38 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Tue, 08 Apr 2025 23:11:20 +0800
+Subject: [PATCH v4] gpiolib: support parsing gpio three-cell interrupts
+ scheme
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-04-gpio-irq-threecell-v4-1-fd170d5e2d2b@gentoo.org>
+X-B4-Tracking: v=1; b=H4sIAJc89WcC/4XOTWrDMBAF4KsYrasy+rHsZJV7lCxG0tgWJFYiq
+ SYl+O5VnUVbSuhm4M0wH+/OMqVAme2bO0u0hBziXIN+aZibcB6JB18zkyBbkLLjoPl4CZGHdOV
+ lSkSOTiduDAmCTrkeDKu/l0RDuG3u2/GRE13fK18eS2YxE3fxfA5l3+zId9oPCL2UFtue0CE5I
+ wYrjPV6IKs0tmjYlzWFXGL62CovYsP+abcIDlwjab8TFtG7w0hzifE1pnEjF/nNKJDPmHrgSg9
+ CoVcdof7DqB+MNM8YVRlEC2DqIIBfzLqun64ZJ0yVAQAA
+X-Change-ID: 20250227-04-gpio-irq-threecell-66e1e073c806
+To: Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Alex Elder <elder@riscstar.com>, 
+ Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ spacemit@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5570; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=kJqo/8IGdQrE3R8digcDbm08uHIaoAS8anwz06A50Qs=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBn9TymmoKaxPjndUkTL/uONIdEU8latJ+8KRdoF
+ eUmS9ZwlFmJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ/U8pl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277U5RD/9IuD5VKbjaRZvD8L
+ fMjaoKhPQ4VuBlrYfEi25ZTVhsYkwpbpNTyGHKCVcdjnOf5lk4/hQL2GwFX1QfgTbLiAbmxrPrA
+ qcNFmtYbQefEYGg265P+dFhxTYVca1lJJsMrE5slJSvZMAnD4O7GnipUyVG68sppsrKbk7pqsoX
+ P6aMk0TweiCBJWtQq3I37UKoDsciw6c+54xsceNiD1KkTi4JX8KtXGIi7Ws2I2WP/Kscbl/ta3P
+ k49t544lwEOzhT/OCE9YOxmmA8JXThzj+1355bJSHTnZhLiFxH9nSA4P5yNzlpzwPaDKgvAv5NI
+ vDQzSM2Ec2bcFFc8NRSQ6QpIwRddx02oCAeuklfPcDROutKBc3K5OopQV94gWpVxqCTxPacTaVh
+ YAHd+/YkXGlOuuE8w9fyX3NxhalhLUj6VR6QY5n9twZOLDpxr6ufdp8jN0RNzzmhvNCjI23dsC1
+ SCwtprvXEhfeSoddRCr0DrrgvZucV/Rk9IZ9hfzSbzOAPkfPFPt7feBB95KDwkj4exIQYhjvDQ0
+ Y5r+flQO4bIhraJpxCVDwiFaxIZhB4eGvXYiZ86iKwEbBK6JTPTNdQ/J1zzz45AXV9/+se7Ij56
+ jQz3GpXEnWSMF9cTx853fEFMqfeAFtpxumtPsqJ8DgNTHJzGrgwwpGl+JA9KUyuTcl2w==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+gpio irq which using three-cell scheme should always call
+instance_match() function to find the correct irqdomain.
 
-Use the generic boolean device property getter instead of the
-OF-specific variant. This allows us to stop pulling in linux/of.h. While
-at it: drop the of_irq.h inclusion as none of its symbols are used in
-this driver.
+The select() function will be called with !DOMAIN_BUS_ANY,
+so for specific gpio irq driver, it need to set bus token
+explicitly, something like:
+  irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
- drivers/gpio/gpio-blzp1600.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+In this patch [1], the GPIO controller add support for describing
+hardware with a three-cell scheme:
 
-diff --git a/drivers/gpio/gpio-blzp1600.c b/drivers/gpio/gpio-blzp1600.c
-index 77ad0e596f3e..2760a13c0801 100644
---- a/drivers/gpio/gpio-blzp1600.c
-+++ b/drivers/gpio/gpio-blzp1600.c
-@@ -10,9 +10,8 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
--#include <linux/of.h>
--#include <linux/of_irq.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- 
-@@ -217,7 +216,6 @@ static int blzp1600_gpio_set_config(struct gpio_chip *gc, unsigned int offset, u
- 
- static int blzp1600_gpio_probe(struct platform_device *pdev)
+    gpios = <&gpio instance offset flags>;
+
+It also result describing interrupts in three-cell as this in DT:
+
+    node {
+            interrupt-parent = <&gpio>;
+            interrupts = <instance hwirq irqflag>;
+    }
+
+This series try to extend describing interrupts with three-cell scheme.
+
+The first patch will add capability for parsing irq number and flag
+from last two cells which eventually will support the three-cells
+interrupt, the second patch support finding irqdomain according to
+interrupt instance index.
+
+Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [1]
+---
+Changes in v4:
+- rebase patch [2/2] to gpio's for-next branch, no changes
+- drop [1/2] of patch v3 which merged into irq tree
+- Link to v3: https://lore.kernel.org/r/20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org
+
+Changes in v3:
+- explicitly introduce *_twothreecell() to support 3 cell interrupt
+- Link to v2: https://lore.kernel.org/r/20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org
+
+Changes in v2:
+- introduce generic irq_domain_translate_cells(), other inline cells function 
+- hide the OF-specific things into gpiolib-of.c|h
+- Link to v1: https://lore.kernel.org/r/20250227-04-gpio-irq-threecell-v1-0-4ae4d91baadc@gentoo.org
+---
+ drivers/gpio/gpiolib-of.c |  8 ++++++++
+ drivers/gpio/gpiolib-of.h |  6 ++++++
+ drivers/gpio/gpiolib.c    | 22 ++++++++++++++++++----
+ 3 files changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index f29143c71e9db61a6ad6d45d64e88a3f3f2d4fa7..3651c4178b81a1346809ec43b91a532e9f48af2b 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -1285,3 +1285,11 @@ void of_gpiochip_remove(struct gpio_chip *chip)
  {
--	struct device_node *node = pdev->dev.of_node;
- 	struct blzp1600_gpio *chip;
- 	struct gpio_chip *gc;
- 	int ret;
-@@ -240,7 +238,7 @@ static int blzp1600_gpio_probe(struct platform_device *pdev)
- 	gc = &chip->gc;
- 	gc->set_config = blzp1600_gpio_set_config;
+ 	of_node_put(dev_of_node(&chip->gpiodev->dev));
+ }
++
++bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index)
++{
++	if (gc->of_node_instance_match)
++		return gc->of_node_instance_match(gc, index);
++
++	return false;
++}
+diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
+index 16d6ac8cb156c02232ea868b755bbdc46c78e3c7..3eebfac290c571e3b90e4437295db8eaacb021a3 100644
+--- a/drivers/gpio/gpiolib-of.h
++++ b/drivers/gpio/gpiolib-of.h
+@@ -22,6 +22,7 @@ struct gpio_desc *of_find_gpio(struct device_node *np,
+ 			       unsigned long *lookupflags);
+ int of_gpiochip_add(struct gpio_chip *gc);
+ void of_gpiochip_remove(struct gpio_chip *gc);
++bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index);
+ int of_gpio_count(const struct fwnode_handle *fwnode, const char *con_id);
+ #else
+ static inline struct gpio_desc *of_find_gpio(struct device_node *np,
+@@ -33,6 +34,11 @@ static inline struct gpio_desc *of_find_gpio(struct device_node *np,
+ }
+ static inline int of_gpiochip_add(struct gpio_chip *gc) { return 0; }
+ static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
++static inline bool of_gpiochip_instance_match(struct gpio_chip *gc,
++					      unsigned int index)
++{
++	return false;
++}
+ static inline int of_gpio_count(const struct fwnode_handle *fwnode,
+ 				const char *con_id)
+ {
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 8252a671d7208105a315bdc914acb092d5f95e79..ed8397a88dea1d92c3d4cb3cc9a6b30be29d31f6 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1507,9 +1507,8 @@ static int gpiochip_hierarchy_irq_domain_translate(struct irq_domain *d,
+ 						   unsigned int *type)
+ {
+ 	/* We support standard DT translation */
+-	if (is_of_node(fwspec->fwnode) && fwspec->param_count == 2) {
+-		return irq_domain_translate_twocell(d, fwspec, hwirq, type);
+-	}
++	if (is_of_node(fwspec->fwnode))
++		return irq_domain_translate_twothreecell(d, fwspec, hwirq, type);
  
--	if (of_property_read_bool(node, "interrupt-controller")) {
-+	if (device_property_present(&pdev->dev, "interrupt-controller")) {
- 		struct gpio_irq_chip *girq;
+ 	/* This is for board files and others not using DT */
+ 	if (is_fwnode_irqchip(fwspec->fwnode)) {
+@@ -1811,11 +1810,26 @@ static void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq)
+ 	irq_set_chip_data(irq, NULL);
+ }
  
- 		chip->irq = platform_get_irq(pdev, 0);
++static int gpiochip_irq_select(struct irq_domain *d, struct irq_fwspec *fwspec,
++			       enum irq_domain_bus_token bus_token)
++{
++	struct fwnode_handle *fwnode = fwspec->fwnode;
++	struct gpio_chip *gc = d->host_data;
++	unsigned int index = fwspec->param[0];
++
++	if (fwspec->param_count == 3 && is_of_node(fwnode))
++		return of_gpiochip_instance_match(gc, index);
++
++	/* Fallback for twocells */
++	return (fwnode && (d->fwnode == fwnode) && (d->bus_token == bus_token));
++}
++
+ static const struct irq_domain_ops gpiochip_domain_ops = {
+ 	.map	= gpiochip_irq_map,
+ 	.unmap	= gpiochip_irq_unmap,
++	.select	= gpiochip_irq_select,
+ 	/* Virtually all GPIO irqchips are twocell:ed */
+-	.xlate	= irq_domain_xlate_twocell,
++	.xlate	= irq_domain_xlate_twothreecell,
+ };
+ 
+ static struct irq_domain *gpiochip_simple_create_domain(struct gpio_chip *gc)
+
+---
+base-commit: 9ed74dfa0822ba58eacaec61fb16bd4feb34a5a6
+change-id: 20250227-04-gpio-irq-threecell-66e1e073c806
+
+Best regards,
 -- 
-2.45.2
+Yixun Lan
 
 
