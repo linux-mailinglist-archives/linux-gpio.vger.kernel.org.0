@@ -1,128 +1,338 @@
-Return-Path: <linux-gpio+bounces-18520-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18521-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B7A0A815A3
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 21:15:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B742AA81641
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 22:03:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 889068853C5
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 19:10:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D10EB1B68008
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Apr 2025 20:03:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826E624EA98;
-	Tue,  8 Apr 2025 19:06:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 447FD245031;
+	Tue,  8 Apr 2025 20:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nCsWHMxB"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="QOnjGrf7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5587E23F43C
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Apr 2025 19:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A96244186;
+	Tue,  8 Apr 2025 20:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139213; cv=none; b=aVR0/p3cyOLD9LFoR2c5l0/7qdUSRarxa6C0443PnwJHoa88HqK92RLwFxwn0BKQjl6Hg4qoR12U5UqT/xlPmEhTsDIErb1RRkHRUoLmU/rEbbjXdSS/a6WZbR1h1j2yurGgD1SYDV1NoYgGhthSb3d6fmSfUhOlXeEeH139Hv4=
+	t=1744142596; cv=none; b=AquduS4QlkxJ0m1tc44vFE0t15Bz1FWuGm+Bc4hv4DidwSlu3GGBhpeI7liyXCzWqQwpuRBDhuyWMxiKRndmxVD3yQQ4LnWg2ygkMwN2YF/d73IrJNJys4eMs1m+5ACCYBI3fnDQFC5gfN8SP1TBPMwIJJ1I3zwwjKNpSyDm9D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744139213; c=relaxed/simple;
-	bh=XDO7GZgIXZbIuvcgx0MtmUVNnpEHDttID7IaGMbJf/s=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RGtuIJen1YKd+svSg0xEz6IHV98f1QGdJ1uf1ueef5ihHWhZ2BF5deCjux197tlZHaxIWf+i2GoYnYAI9K6NFSHUvNDz76g7q32ASbNoFSbL0qC3xvXR1LNRt3y5gikwKgSHTyJqt+BMTa3pGhhdSKvhAhWHFWhPOGI3jVRrCHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nCsWHMxB; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912622c9c0so581508f8f.3
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Apr 2025 12:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744139209; x=1744744009; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=26BZYOZea4bfw7CNCFKawdkyJnG29aqqnfgcKzudge0=;
-        b=nCsWHMxB5lf12q3hAcn3iKQHC+p2PIBTwTv3HsESAajJeiKAPJOWxUFsd9DrebpWtw
-         3E1tVyXPnfZgpSPM//j6H9q8oe2HPARv6UW4HzIwfCxG5xhk7E9vnJdMQKR+Iobs94/U
-         XdhNLIJ5grTj4/KQXGGnMb+mS1B+O5SDMy0DjtR84rgIRTxyZP5knmMX9msQuGYWVi5C
-         btVU8DFwbqQ1RrhbupRBZQq1oI+8SwwaF/wKyAuiyfIiZyO6QkwcNhwZbzTnMcW4eyf7
-         D/Fj9HWbVsoDAidtF+Mcl7LEShs2vcxN782FDPaYG2KcUXCQrMJPgsG6+LrEmSA9RUEg
-         EKOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744139209; x=1744744009;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=26BZYOZea4bfw7CNCFKawdkyJnG29aqqnfgcKzudge0=;
-        b=PyP75SIXpkJxa6sba/BMrwCFL7ZNzDR0pqzpKTkJwmh0MoMqFfJX6Dn9ehS4oyMt8J
-         Ed+69chsNEtZN35li2zJT0ukLfWlfPwQhQm3U2ANDgWA+J12yOAc90XjffqGG4KYKJHq
-         gGvljJpPWe6xobBnVYRwuelnHCbeOsxzCwpSulj4S2fdzYUHj1Dj/SiPxEOUzsYF8ICn
-         SWUOffuR1/pkPfQUMGmspISecGHbBjI+CLY+zgwSrwnjj40X77YTBqJKJbXUzdEhBi7s
-         Ioh2BA8y+ZCnafx1L7UJQENvHi1KfItyAedewgWBOF1Yi9mbf8HWySI48YqFZd5bJjh4
-         8Czg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJo2t0/DpRnWapccNp77c9rYjpBqTRzXDA8MVsiWayHn8yRX63c2LiOJft1b0R9J6WjIOCbGbvGH4J@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT1liG2lCyA7TE4CVWfsLYTHcLj0DAB48gmJ668c/r1i7ACbww
-	7oUqV499yYZmWbnBrC+CMSjLht/yzyD/w9PYwrFeSwK061aKperWw1FATL1JVTc=
-X-Gm-Gg: ASbGnctyt8JUdhtRGVbZSEnQT69jYLptW90HXA7UfxHLiQFN76fUYBfTYn7vbgRBUxc
-	4fwT7/svt5s+QhSdKjOhBzWydY4g9i9Hjbt4kYVad2rPB2j51ji2ttsxa+gVa6PLn21dxv+IMfh
-	BNOIH0iyWZmYRND9nlnmMO40Xfol02U4iodc9yoMo1Shis6ebnjm/HJAXfYBOrDMLEsDy/0KQJq
-	MIjVD4aXojZtCWe27EeW8wy3sYWeDi1USPeiElompu84j3mV9K2y3LROS+hrVpooTums9kfL70R
-	QDzOXEuYxzswr1H0p8UCjYDxTLEVg7DOhMzP1oA04+GhR7av6fQNsuwBENmYofA=
-X-Google-Smtp-Source: AGHT+IFEmj19Sjp6m7XUEA3vyo+E8QmKaZA1qZbfv2jh+SPPFex3IJzzYfOY3+icqIou7/aTD5sG1A==
-X-Received: by 2002:a05:600c:a016:b0:439:a3df:66f3 with SMTP id 5b1f17b1804b1-43f1ed660damr1024815e9.6.1744139209570;
-        Tue, 08 Apr 2025 12:06:49 -0700 (PDT)
-Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020da17sm15853743f8f.64.2025.04.08.12.06.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 12:06:49 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com, 
- semen.protsenko@linaro.org, kernel-team@android.com, 
- jaewon02.kim@samsung.com, stable@vger.kernel.org
-In-Reply-To: <20250402-pinctrl-fltcon-suspend-v6-0-78ce0d4eb30c@linaro.org>
-References: <20250402-pinctrl-fltcon-suspend-v6-0-78ce0d4eb30c@linaro.org>
-Subject: Re: [PATCH v6 0/4] samsung: pinctrl: Add support for
- eint_fltcon_offset and filter selection on gs101
-Message-Id: <174413920812.155881.15584409813277033669.b4-ty@linaro.org>
-Date: Tue, 08 Apr 2025 21:06:48 +0200
+	s=arc-20240116; t=1744142596; c=relaxed/simple;
+	bh=2Z4TqMhJgMVGMdEWKFKm8oqk6IobRWcr5GzyRiHD9X0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R75FpAQ/b7oz64Vk1RLGV3eGcmfjdBQbfWIQYbMnor0fuH5qA//QJATK7F9oopbByjXEouSNVldfNnLuBqKfjif03H44YqUQXsZosWXQ2n+/SHihmsPL10AGN+XfnwbB+dVSSsH4NzJeML/ej6w23yCZfT6E3ozaOT33Zw0YllQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=QOnjGrf7; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=FxiVMMavbeVJat0Fg13/bdPyEQi5kd3dq3ZqRtNTT1k=; b=QOnjGrf7X9PrCbh55TklsvWBSV
+	RpDtdVx3YJhCSYVlvWD8r5SitRALVtYyrVe4AjNSmP0rf0XqJROu31YDlFYA/9R9Oequlznuxc+Ka
+	hASbdH7877Vj9UPZ8la+BO50aButo8PYEaf6wpSUiFylT01JejCZbV+4F3tim+4ss9RnrlBURjL+5
+	hd2oQW0TN9pAP9/KHhvVTA87RPnAX37KJRkgV8bH3Y9BVRjAEU7GUkFHp/GgIJfrOB+II2JQ2GApD
+	u5V6Xu8Nj4TXSsvNybh4kDPTmhuxsgUd5uVb8JzO+AuZ5UE10Dcvbkl4NFm4jRRXfBZc1suO3l8J4
+	mWFi6LWg==;
+Received: from i53875b95.versanet.de ([83.135.91.149] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1u2F9z-00023n-2e; Tue, 08 Apr 2025 22:03:03 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ William Breathitt Gray <wbg@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-iio@vger.kernel.org, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: Re: [PATCH 4/7] soc: rockchip: add mfpwm driver
+Date: Tue, 08 Apr 2025 22:03:01 +0200
+Message-ID: <5559308.Sb9uPGUboI@diego>
+In-Reply-To: <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
+References:
+ <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
+ <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+
+Hi,
+
+not a full review, just me making a first pass.
+
+> +unsigned long mfpwm_clk_get_rate(struct rockchip_mfpwm *mfpwm)
+> +{
+> +	if (!mfpwm || !mfpwm->chosen_clk)
+> +		return 0;
+> +
+> +	return clk_get_rate(mfpwm->chosen_clk);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(mfpwm_clk_get_rate, "ROCKCHIP_MFPWM");
+
+aren't you just re-implemeting a clk-mux with the whole chosen-clk
+mechanism? See drivers/clk/clk-mux.c, so in theory you should be
+able to just do a clk_register_mux(...) similar to for example
+sound/soc/samsung/i2s.c .
 
 
-On Wed, 02 Apr 2025 16:17:29 +0100, Peter Griffin wrote:
-> This series fixes support for correctly saving and restoring fltcon0
-> and fltcon1 registers on gs101 for non-alive banks where the fltcon
-> register offset is not at a fixed offset (unlike previous SoCs).
-> This is done by adding a eint_fltcon_offset and providing GS101
-> specific pin macros that take an additional parameter (similar to
-> how exynosautov920 handles it's eint_con_offset).
-> 
-> [...]
+> +
+> +__attribute__((nonnull))
+> +static int mfpwm_do_acquire(struct rockchip_mfpwm_func *pwmf)
+> +{
+> +	struct rockchip_mfpwm *mfpwm = pwmf->parent;
+> +	unsigned int cnt;
+> +
+> +	if (mfpwm->active_func && pwmf->id != mfpwm->active_func->id)
+> +		return -EBUSY;
+> +
+> +	if (!mfpwm->active_func)
+> +		mfpwm->active_func = pwmf;
+> +
+> +	if (!check_add_overflow(mfpwm->acquire_cnt, 1, &cnt)) {
+> +		mfpwm->acquire_cnt = cnt;
+> +	} else {
+> +		WARN(1, "prevented acquire counter overflow in %s\n", __func__);
 
-Applied, thanks!
+dev_warn, as you have the mfpwm pointing to a pdev?
 
-[1/4] pinctrl: samsung: refactor drvdata suspend & resume callbacks
-      https://git.kernel.org/pinctrl/samsung/c/3ade961e97f3b05dcdd9a4fabfe179c9e75571e0
-[2/4] pinctrl: samsung: add dedicated SoC eint suspend/resume callbacks
-      https://git.kernel.org/pinctrl/samsung/c/77ac6b742eba063a5b6600cda67834a7a212281a
-[3/4] pinctrl: samsung: add gs101 specific eint suspend/resume callbacks
-      https://git.kernel.org/pinctrl/samsung/c/bdbe0a0f71003b997d6a2dbe4bc7b5b0438207c7
-[4/4] pinctrl: samsung: Add filter selection support for alive bank on gs101
-      https://git.kernel.org/pinctrl/samsung/c/a30692b4f81ba864cf880d57e9cc6cf6278a2943
+> +		return -EOVERFLOW;
+> +	}
+> +
+> +	dev_dbg(&mfpwm->pdev->dev, "%d acquired mfpwm, acquires now at %u\n",
+> +		pwmf->id, mfpwm->acquire_cnt);
+> +
+> +	return clk_enable(mfpwm->pclk);
+> +}
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> +/**
+> + * mfpwm_get_clk_src - read the currently selected clock source
+> + * @mfpwm: pointer to the driver's private &struct rockchip_mfpwm instance
+> + *
+> + * Read the device register to extract the currently selected clock source,
+> + * and return it.
+> + *
+> + * Returns:
+> + * * the numeric clock source ID on success, 0 <= id <= 2
+> + * * negative errno on error
+> + */
+> +static int mfpwm_get_clk_src(struct rockchip_mfpwm *mfpwm)
+> +{
+> +	u32 val;
+> +
+> +	clk_enable(mfpwm->pclk);
+> +	val = mfpwm_reg_read(mfpwm->base, PWMV4_REG_CLK_CTRL);
+> +	clk_disable(mfpwm->pclk);
+> +
+> +	return (val & PWMV4_CLK_SRC_MASK) >> PWMV4_CLK_SRC_SHIFT;
+> +}
+> +
+> +static int mfpwm_choose_clk(struct rockchip_mfpwm *mfpwm)
+> +{
+> +	int ret;
+> +
+> +	ret = mfpwm_get_clk_src(mfpwm);
+> +	if (ret < 0) {
+> +		dev_err(&mfpwm->pdev->dev, "couldn't get current clock source: %pe\n",
+> +			ERR_PTR(ret));
+> +		return ret;
+> +	}
+> +	if (ret == PWMV4_CLK_SRC_CRYSTAL) {
+> +		if (mfpwm->osc_clk) {
+> +			mfpwm->chosen_clk = mfpwm->osc_clk;
+> +		} else {
+> +			dev_warn(&mfpwm->pdev->dev, "initial state wanted 'osc' as clock source, but it's unavailable. Defaulting to 'pwm'.\n");
+> +			mfpwm->chosen_clk = mfpwm->pwm_clk;
+> +		}
+> +	} else {
+> +		mfpwm->chosen_clk = mfpwm->pwm_clk;
+> +	}
+> +
+> +	return clk_rate_exclusive_get(mfpwm->chosen_clk);
+> +}
+>
+> +/**
+> + * mfpwm_switch_clk_src - switch between PWM clock sources
+> + * @mfpwm: pointer to &struct rockchip_mfpwm driver data
+> + * @clk_src: one of either %PWMV4_CLK_SRC_CRYSTAL or %PWMV4_CLK_SRC_PLL
+> + *
+> + * Switch between clock sources, ``_exclusive_put``ing the old rate,
+> + * ``clk_rate_exclusive_get``ing the new one, writing the registers and
+> + * swapping out the &struct_rockchip_mfpwm->chosen_clk.
+> + *
+> + * Returns:
+> + * * %0        - Success
+> + * * %-EINVAL  - A wrong @clk_src was given or it is unavailable
+> + * * %-EBUSY   - Device is currently in use, try again later
+> + */
+> +__attribute__((nonnull))
+> +static int mfpwm_switch_clk_src(struct rockchip_mfpwm *mfpwm,
+> +					  unsigned int clk_src)
+> +{
+> +	struct clk *prev;
+> +	int ret = 0;
+> +
+> +	scoped_cond_guard(spinlock_try, return -EBUSY, &mfpwm->state_lock) {
+> +		/* Don't fiddle with any of this stuff if the PWM is on */
+> +		if (mfpwm->active_func)
+> +			return -EBUSY;
+> +
+> +		prev = mfpwm->chosen_clk;
+> +		ret = mfpwm_get_clk_src(mfpwm);
+> +		if (ret < 0)
+> +			return ret;
+> +		if (ret == clk_src)
+> +			return 0;
+> +
+> +		switch (clk_src) {
+> +		case PWMV4_CLK_SRC_PLL:
+> +			mfpwm->chosen_clk = mfpwm->pwm_clk;
+> +			break;
+> +		case PWMV4_CLK_SRC_CRYSTAL:
+> +			if (!mfpwm->osc_clk)
+> +				return -EINVAL;
+> +			mfpwm->chosen_clk = mfpwm->osc_clk;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +		clk_enable(mfpwm->pclk);
+> +
+> +		mfpwm_reg_write(mfpwm->base, PWMV4_REG_CLK_CTRL,
+> +				PWMV4_CLK_SRC(clk_src));
+> +		clk_rate_exclusive_get(mfpwm->chosen_clk);
+> +		if (prev)
+> +			clk_rate_exclusive_put(prev);
+> +
+> +		clk_disable(mfpwm->pclk);
+> +	}
+> +
+> +	return ret;
+> +}
+
+ok, the relevant part might be the 
+	/* Don't fiddle with any of this stuff if the PWM is on */
+thing, which will require special set_rate operation, but in general I
+think, if it ticks like a clock, it probably should be a real clock ;-) .
+
+
+> +static ssize_t chosen_clock_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct rockchip_mfpwm *mfpwm = dev_get_drvdata(dev);
+> +	unsigned long clk_src = 0;
+> +
+> +	/*
+> +	 * Why the weird indirection here? I have the suspicion that if we
+> +	 * emitted to sysfs with the lock still held, then a nefarious program
+> +	 * could hog the lock by somehow forcing a full buffer condition and
+> +	 * then refusing to read from it. Don't know whether that's feasible
+> +	 * to achieve in reality, but I don't want to find out the hard way
+> +	 * either.
+> +	 */
+> +	scoped_guard(spinlock, &mfpwm->state_lock) {
+> +		if (mfpwm->chosen_clk == mfpwm->pwm_clk)
+> +			clk_src = PWMV4_CLK_SRC_PLL;
+> +		else if (mfpwm->osc_clk && mfpwm->chosen_clk == mfpwm->osc_clk)
+> +			clk_src = PWMV4_CLK_SRC_CRYSTAL;
+> +		else
+> +			return -ENODEV;
+> +	}
+> +
+> +	if (clk_src == PWMV4_CLK_SRC_PLL)
+> +		return sysfs_emit(buf, "pll\n");
+> +	else if (clk_src == PWMV4_CLK_SRC_CRYSTAL)
+> +		return sysfs_emit(buf, "crystal\n");
+> +
+> +	return -ENODEV;
+> +}
+
+which brings me to my main point of contention. Why does userspace
+need to select a clock source for the driver via sysfs.
+
+Neither the commit message nor the code does seem to explain that,
+or I'm just blind - which is also a real possibility.
+
+In general I really think, userspace should not need to care about if
+a PLL or directly the oscillator is used a clock input.
+I assume which is needed results from some runtime factor, so the
+driver should be able to select the correct one?
+
+A mux-clock could ust use clk_mux_determine_rate_flags() to select
+the best parent depending on a requested rate instead.
+
+
+> +static ssize_t chosen_clock_store(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  const char *buf, size_t count)
+> +{
+> +	struct rockchip_mfpwm *mfpwm = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	if (sysfs_streq(buf, "pll")) {
+> +		ret = mfpwm_switch_clk_src(mfpwm, PWMV4_CLK_SRC_PLL);
+> +		if (ret)
+> +			return ret;
+> +		return count;
+> +	} else if (sysfs_streq(buf, "crystal")) {
+> +		ret = mfpwm_switch_clk_src(mfpwm, PWMV4_CLK_SRC_CRYSTAL);
+> +		if (ret)
+> +			return ret;
+> +		return count;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static DEVICE_ATTR_RW(chosen_clock);
+> +
+> +static ssize_t available_clocks_show(struct device *dev,
+> +				     struct device_attribute *attr, char *buf)
+> +{
+> +	struct rockchip_mfpwm *mfpwm = dev_get_drvdata(dev);
+> +	ssize_t size = 0;
+> +
+> +	size += sysfs_emit_at(buf, size, "pll\n");
+> +	if (mfpwm->osc_clk)
+> +		size += sysfs_emit_at(buf, size, "crystal\n");
+> +
+> +	return size;
+> +}
+> +
+> +static DEVICE_ATTR_RO(available_clocks);
+> +
+> +static struct attribute *mfpwm_attrs[] = {
+> +	&dev_attr_available_clocks.attr,
+> +	&dev_attr_chosen_clock.attr,
+> +	NULL,
+> +};
+
+Not understanding the need for the sysfs stuff was my main point this
+evening :-)
+
+Heiko
+
 
 
