@@ -1,156 +1,139 @@
-Return-Path: <linux-gpio+bounces-18567-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18568-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C28AA82739
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 16:10:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4160EA8275C
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 16:13:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EFD68A00DE
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 14:08:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31732176044
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 14:12:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19323265626;
-	Wed,  9 Apr 2025 14:08:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85AB42641CF;
+	Wed,  9 Apr 2025 14:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZUbyl1x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IV/c4HiR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3561915530C;
-	Wed,  9 Apr 2025 14:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCB729A0;
+	Wed,  9 Apr 2025 14:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207707; cv=none; b=q1NsE6j+zjsghs5+7Gmp45zO8A+7MqVAqCtv2f4+6EsUPgV6aK1d4TYAX9hjmHP/Mbqe2sJ/XEhYLshS8Sdo445Umst6PYD+ueE0ORn1sVIURSyAfMfuxfFr7AiX027Vw6l57VQ3/B7VyBIh4PXx/J5m01Nx6mTZADuuMrDSFyE=
+	t=1744207970; cv=none; b=pCoZbsDpPwJLj/GmwwSJS1Mcz0K0Wde8W6zSQg13QKL5A+Vth5J8BpLvs1b0NsktM9Yd0eSKAP4GR15u64rx7KiU5h8r6vAVxPvWlZ2NAF2tSBydtPzVhqxiUnX7QAqnIW39CH604R/auu6KLzvlj4fw49vyElACKzGeX4Z0JEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207707; c=relaxed/simple;
-	bh=rIHKh/mKxsxJnpgNyrdNVBlS2Bla89rn1+FP7nB0RD4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JFGnaudZ0wO2W+w88DRBixWlGslnosUdXlB4Q05rXCJQxJ2kkuswHBDqm4Tie5vR5XbomqOmkOeqUbki1sgau4Z7+n9L4GQZsmXJdlAc/l06CvJQp6tKj3sn2LK5KuSV1KHo9jQj3TMHC8npbzfXW5FfJDzeggHIGwHCF4tvEDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZUbyl1x; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso63522245e9.1;
-        Wed, 09 Apr 2025 07:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744207704; x=1744812504; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rIHKh/mKxsxJnpgNyrdNVBlS2Bla89rn1+FP7nB0RD4=;
-        b=AZUbyl1xxZKNLlUvnxkoFGN8BfW6LLAAVMdqjon6xJM1n+xp5MGX+2gmrvqwBdiagL
-         YqcDL1IpMrx6CxNJgxsG1gh4osyMA+LH9RWKMH1uBB5h5qyfaibcgmqBzhDedduOIoMI
-         RLxP2F1hlAzDQOHLpfj+P1BusPQArSmai1W4n1GMbWa1SdheokIvZmAjhlOhTomtc4sG
-         eIGVN+Ajl4RbNgqUK3bYh6obo0lq7mPPw9bqCSLrBhNUiiCNrdsgCutLThLT/vlxrGnF
-         ojh/GFdF7SGnqbHaScZM6f721XCRMRb0uxKoFaNeD6ogX7Ei2QzB5YmDBt/chgINhgcE
-         1h2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744207704; x=1744812504;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rIHKh/mKxsxJnpgNyrdNVBlS2Bla89rn1+FP7nB0RD4=;
-        b=teFx2gtX5pI41AIb8sMnob+KMQmsm8nX2Ca8wHPAmbgCBIY/PfmFCfOOROsIaKloy5
-         5ApfXedvBWEQPu53ktjAxDyptICvU28dAgMI2oxcXgdNxXOs/xMXPj83qA5ScUS0qwLm
-         kX9B8VG+0Vl5St4smfYN11EOuKNSoVs+Br/6Pn8JbdOTmUC6qU28hLYiL7E6RcxCPzf0
-         r+VpWbVqKEoM44pbGT5MPX86KcGRvEkSxXNQ5mQJsBJ0+9kPKz7KIR/n5urOKGqJ8jm1
-         MUzVhkPgepoxC51DG+jT2CO6jnr979/Q0pZE/J7NnQ91lJCpmbXo4+RyelEtXVXv8Na5
-         jXgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwriqWBQhxh5/eqJMaNPC/RWa6zsdroedc6hiyR1Zi4Z256PBjl/FScRnPP/eRAhJ+4WZkgi5mVU9P@vger.kernel.org, AJvYcCXXAJ/a+v01LCngk4Swf2llCdSmvE0zFyJkML6zJfLG3L8ltJjamwhvUEe1/u50rdD+7l8HKly3jZDCsMq/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6sVee9tF9YMP32liexncvAw/zoVbXOzzGg3ILDIC59E0JX012
-	mSGSGmMAboCTDCR1T1+wCnmtFJPorOAxuF5ZTeBFSK56g19Mo239
-X-Gm-Gg: ASbGncuE1lTuX7wu6G/mfsAjATT6PCbJDMOmxKCcCBWgSiXqt1rvh7mbicCZPwRuIO7
-	mymThUo9rmTzhtjHIbOjPiU07jLVx/2kClkHTr+L/UVKscYpdewjJCVDxx0GcjyjP1CKoPlDm+o
-	B2egfZ0yz0rYe/YRj8fZVW2e2+8PWW1jPem0/0D3cN4bZiknCylyvuMYLdEgqHeV532kY+MSu4j
-	Vkk2+kaWzBs40Wi/Djirn33MyJ/JeRiuPBvs3mU3C7iSSJCWv9uvqZfFmGkZMm6L5clUdUGUjeE
-	/juO15YS8fIz/0GyERUcxNbEtwDwMRaEgU33CoiTlWGw2wZwiLAjiPx6PjiR5tdDORHOn4HW1bQ
-	uYUYYP/uWq0pM
-X-Google-Smtp-Source: AGHT+IHZM3GjBdR+VWRxB6LzvXt749A9KyeZWvexdiGbDsu9DpF/8Q0G/EfwUOqiKkNDA2XYXLcHOw==
-X-Received: by 2002:a05:600c:580f:b0:43c:f575:e305 with SMTP id 5b1f17b1804b1-43f203273c9mr17560175e9.8.1744207704289;
-        Wed, 09 Apr 2025 07:08:24 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c817dsm17231585e9.23.2025.04.09.07.08.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 07:08:23 -0700 (PDT)
-Message-ID: <a160ad15944f28159a0d1145cdf4584fb2972d6d.camel@gmail.com>
-Subject: Re: [PATCH v2 0/7] iio: convert GPIO chips to using new value
- setters
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Lars-Peter Clausen
- <lars@metafoo.de>,  Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Linus Walleij	
- <linus.walleij@linaro.org>, Cosmin Tanislav <cosmin.tanislav@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>
-Date: Wed, 09 Apr 2025 15:08:24 +0100
-In-Reply-To: <20250409-gpiochip-set-rv-iio-v2-0-4b36428f39cb@linaro.org>
-References: <20250409-gpiochip-set-rv-iio-v2-0-4b36428f39cb@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	s=arc-20240116; t=1744207970; c=relaxed/simple;
+	bh=Vw/9BbWr42/S2TmbmC0tAGAkxyiMzz+D7XbIESFVGBo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tXn4HZ/fud3I84Bk66GXWjh+ebF8UfbmZvVRKouDj8rEXm9DFmg5N4Ax7wkqt0pjQILwz5FSfU2zYfeUgRfz7/DlVM2ajE6ASEtbfGx5T4299tOFybZ06vML3KzhN/R18judw0o07XwW6qDoj+gAbP84T9sBo5khHS70BGnD1v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IV/c4HiR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD98C4CEE8;
+	Wed,  9 Apr 2025 14:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744207969;
+	bh=Vw/9BbWr42/S2TmbmC0tAGAkxyiMzz+D7XbIESFVGBo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IV/c4HiRJ1k4xHbzWqZebkS9cmZrW2MxrIfo8hk4SRuOZ9OmYXKFumnZ/6bXf/NP8
+	 zZpq2D5hvU4Fqw2zDQI0ZMMgUaogUdCJM25sCz8I3xLkO/QucaL+hbuRMAV7JK2r3e
+	 1Bu+xdI7qOqIwM182WRgwb0CFEaJR5l55cDXUseoX3AMueFSYueaPLaLYr1NxA/jVz
+	 E1BsE9ZVmHzzzdSxD5QAbea53PWbHiW9nokMyh0A5A/YXTFHbDIyKS/+nXVibjewhE
+	 xh46uaYeSai9iL/PnDY/EOFC6cpFME14udNWDODGVc1Q7w2JcnQDSmGx7LAqjs3lFU
+	 IiUPRoo/xAc5Q==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c818343646so4022740fac.3;
+        Wed, 09 Apr 2025 07:12:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJMF2EgxNyB5xvDLyIwF/7/I8Ml0tvZrz0SU/vsAbfOZwguvs0u7314L+9My948X9DBd4ED0bRCVAv@vger.kernel.org, AJvYcCWW0DMPLDh/kbcSnZJR//Gitw/ymytvszYPd3bcZGXXNBGw0pWSAtEUqrZALJBlYxTZw3sE1WBqIhSyag==@vger.kernel.org, AJvYcCX1VbqQ1T/31jyaRnv1gYgUHHOI6GTsuUWnZAMfVYOt5KjaOlz90sa4yTytrRXQObkqsI3cYKgUfF4CFDCI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGkNaR23hNpqbuU92OFnm6rIKNcL2INri1ZcsCFH0UKETlJEHO
+	zUaykS1VSHsj3TWfWkedNHD5a1shOd024IP33N6FF5v5DwOeuejez+ouX7QITERVyVIUHtW29gf
+	5poZCIWmLbN5oaRRfedu8ZIVhugA=
+X-Google-Smtp-Source: AGHT+IEfbq1b6uZ6OUCvuexDfaJqZBDkEEa57XBGYlotEXlempsdj2+s4v7wD/x2wV4frJrZKXhB+Es/LZ+fKQADQ4Y=
+X-Received: by 2002:a05:6871:a112:b0:29d:c709:a76c with SMTP id
+ 586e51a60fabf-2d08dccf9e9mr1872958fac.4.1744207968972; Wed, 09 Apr 2025
+ 07:12:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250407183656.1503446-1-superm1@kernel.org>
+In-Reply-To: <20250407183656.1503446-1-superm1@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 9 Apr 2025 16:12:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g0w58KDpAJZq1RkM=hDg5W3QcoDPJsCfT3kEKntJ1d0A@mail.gmail.com>
+X-Gm-Features: ATxdqUFO6iRoisnzTjoDivu2_kLVOfSVcGADUXAQj7WpXtpnpd_FrOi6U7v-kFg
+Message-ID: <CAJZ5v0g0w58KDpAJZq1RkM=hDg5W3QcoDPJsCfT3kEKntJ1d0A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] ACPI: Add missing prototype for non
+ CONFIG_SUSPEND/CONFIG_X86 case
+To: Mario Limonciello <superm1@kernel.org>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-acpi@vger.kernel.org, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-04-09 at 10:40 +0200, Bartosz Golaszewski wrote:
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. We're in the process of
-> converting all GPIO drivers to using the new API. This series converts
-> all the IIO GPIO controllers and also contains some additional
-> refactoring patches for ad5592r in preparation for the conversion.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Apr 7, 2025 at 9:02=E2=80=AFPM Mario Limonciello <superm1@kernel.or=
+g> wrote:
+>
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> acpi_register_lps0_dev() and acpi_unregister_lps0_dev() may be used
+> in drivers that don't require CONFIG_SUSPEND or compile on !X86.
+>
+> Add prototypes for those cases.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202502191627.fRgoBwcZ-lkp@i=
+ntel.com/
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
-
-LGTM,
-
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-
-> Changes in v2:
-> - move devm_mutex_init() earlier in probe() to avoid using a goto
-> - rework returning on error in ad5592r_set_channel_modes(): return
-> =C2=A0 immediately instead of saving the return value and going to the bo=
-ttom
-> =C2=A0 of the function
-> - use scoped_guard() in one more place to fix a build warning reported
-> =C2=A0 by the build bot
-> - Link to v1:
-> https://lore.kernel.org/r/20250407-gpiochip-set-rv-iio-v1-0-8431b003a145@=
-linaro.org
->=20
+> v3:
+>  * Add struct acpi_s2idle_dev_ops outside defines too
 > ---
-> Bartosz Golaszewski (7):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: ad5592r: destroy mutexes in deta=
-ch paths
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: ad5592r: use lock guards
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: ad5592r: use new GPIO line value=
- setter callbacks
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ti-ads7950: use new GPIO line va=
-lue setter callbacks
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad4130: use new GPIO line value =
-setter callbacks
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: addac: ad74413r: use new GPIO line va=
-lue setter callbacks
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: addac: ad74115: use new GPIO line val=
-ue setter callbacks
->=20
-> =C2=A0drivers/iio/adc/ad4130.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 10 +--
-> =C2=A0drivers/iio/adc/ti-ads7950.c=C2=A0=C2=A0 |=C2=A0 17 +++--
-> =C2=A0drivers/iio/addac/ad74115.c=C2=A0=C2=A0=C2=A0 |=C2=A0 18 +++--
-> =C2=A0drivers/iio/addac/ad74413r.c=C2=A0=C2=A0 |=C2=A0 28 ++++----
-> =C2=A0drivers/iio/dac/ad5592r-base.c | 147 ++++++++++++++++++------------=
-----------
-> -
-> =C2=A05 files changed, 103 insertions(+), 117 deletions(-)
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250401-gpiochip-set-rv-iio-b064ce43791d
->=20
-> Best regards,
+>  include/linux/acpi.h | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 3f2e93ed97301..fc372bbaa5476 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1125,13 +1125,13 @@ void acpi_os_set_prepare_extended_sleep(int (*fun=
+c)(u8 sleep_state,
+>
+>  acpi_status acpi_os_prepare_extended_sleep(u8 sleep_state,
+>                                            u32 val_a, u32 val_b);
+> -#if defined(CONFIG_SUSPEND) && defined(CONFIG_X86)
+>  struct acpi_s2idle_dev_ops {
+>         struct list_head list_node;
+>         void (*prepare)(void);
+>         void (*check)(void);
+>         void (*restore)(void);
+>  };
+> +#if defined(CONFIG_SUSPEND) && defined(CONFIG_X86)
+>  int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg);
+>  void acpi_unregister_lps0_dev(struct acpi_s2idle_dev_ops *arg);
+>  int acpi_get_lps0_constraint(struct acpi_device *adev);
+> @@ -1140,6 +1140,13 @@ static inline int acpi_get_lps0_constraint(struct =
+device *dev)
+>  {
+>         return ACPI_STATE_UNKNOWN;
+>  }
+> +static inline int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg=
+)
+> +{
+> +       return -ENODEV;
+> +}
+> +static inline void acpi_unregister_lps0_dev(struct acpi_s2idle_dev_ops *=
+arg)
+> +{
+> +}
+>  #endif /* CONFIG_SUSPEND && CONFIG_X86 */
+>  void arch_reserve_mem_area(acpi_physical_address addr, size_t size);
+>  #else
+> --
+
+Applied along with the [2/2] as 6.16 material, thanks!
 
