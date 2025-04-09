@@ -1,170 +1,135 @@
-Return-Path: <linux-gpio+bounces-18598-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18599-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15EAEA82CA8
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 18:39:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7437AA82CBD
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 18:44:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AC9E189DA60
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 16:39:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3AAF175D5D
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 16:44:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B86AC26B975;
-	Wed,  9 Apr 2025 16:39:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363BB1C1F07;
+	Wed,  9 Apr 2025 16:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ladNj8dJ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gd7VRII0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5544155389;
-	Wed,  9 Apr 2025 16:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F225125E838
+	for <linux-gpio@vger.kernel.org>; Wed,  9 Apr 2025 16:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744216772; cv=none; b=K+nFdeY7Y8ttWkIu9FXY+FLhN5o9e0+1fsZ4vk1Ty3VUi66tOPJXfJ4SZLTL70tfP78YAWzE9bpMLVwvQK6KLwXApKaeVWCuRBfvSFwjtwfOCbQzl0h6Cd0q8V46mzJ8pkF7N/Tx5oZt2ejf9veRBzrXOXKAOn0iwwGS3bXXXM0=
+	t=1744217041; cv=none; b=cgnbcqWd9tF/JC+iZwMcEXoc6xahr3ZyyT8NOyVZPPm05UvnuW/JSw5l1ou15xCepZj6mwRLlUGiv7J5HJh+dV7YkH1kckCK4qqSyNOUCyzJM3qwhJdtd9UKWsiuXytKW7HlH1NgGEagdiOoF6Awy9s4H6NlaEMHBJCxnKFV/QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744216772; c=relaxed/simple;
-	bh=JQWGaUGSOXk7m4AGrKeFSoUILg6o1trhdcespk5qxuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q3BMIyf7j3UKLRJ5ZLSqFsmtUeaFI8LcQpIFsdMcFPK3VDgSgAMVmUrtnYyXEiISkB7XjeeG7A+FL4ITbf/0NpuxCbUsipHHyAV9awMezQidc//Er5ZURLYSBjwQlZ+lKe1EZv3+kUipcrdtDQjy985fzzF/S64jnL4Y7Ml+8vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ladNj8dJ; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744216771; x=1775752771;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JQWGaUGSOXk7m4AGrKeFSoUILg6o1trhdcespk5qxuI=;
-  b=ladNj8dJVzD6wUMeA76ujQiOReid/CNTwZMwlFm5FiFzmuVQQmWd366H
-   nh0yi4BmkiOLztGKtqFFyAD3HtOB6SAOQa9Dnq1R7rqJG2XiwQyJilcQ9
-   xJhHRRFTMLGBWN1joC5cC/oqVihWT7F/Nh9QF/m9Q1CQSqwz+yU0VIHS9
-   Y/Jx9b+LTk2nA0qGd3s88T191rV0ID4l+3l8BqfE+zkweEiWz98qlx6N7
-   ig53jzT5NG+x9nb56dJxZtFp8tE+b8I6dyJoYawImjA4dcnYbeS2VsmG/
-   58M2Yl+JbM5BvQdb5rndEMYdWgBvmArB6xp5JPTRh6/yx7ZdCzoPaEDFs
-   w==;
-X-CSE-ConnectionGUID: tXTvIyfARniZVi+iNfltww==
-X-CSE-MsgGUID: rhNls1J6TG6ZhBNi79n1pA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56338681"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="56338681"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:39:29 -0700
-X-CSE-ConnectionGUID: /7KtAMngRzalALCHu/4KQQ==
-X-CSE-MsgGUID: WVy7fnV1Q1mCWzQ6+xKoDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="128488422"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:39:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u2YSQ-0000000AnSb-0Oax;
-	Wed, 09 Apr 2025 19:39:22 +0300
-Date: Wed, 9 Apr 2025 19:39:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 07/12] gpio: regmap: Allow to allocate regmap-irq
- device
-Message-ID: <Z_aiubEgXLaDpsoq@smile.fi.intel.com>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-7-7a2535876e39@bootlin.com>
+	s=arc-20240116; t=1744217041; c=relaxed/simple;
+	bh=T1UOxjhpPsPhSQtw6G+iRKDta4RLFuAj7TRD1IXXveo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hQlTdy9AbzVR+E+8aU3WDYKfhQPhtVGTi4rqryIgfxX3+dkaoFujwkgEr+tD3zhnYIKrdQX8aXoP35MLk3fj8QgB1tBuZTPgo8v0NhLOhajexmqvFRV0g2o99t5W+EafFrb2znehguhe+afl0dVW/EOwm657FQIKc+swdpwIRMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gd7VRII0; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso7788027e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Apr 2025 09:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744217038; x=1744821838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T1UOxjhpPsPhSQtw6G+iRKDta4RLFuAj7TRD1IXXveo=;
+        b=gd7VRII0VB7hhUaD5AsdkLlob5qBs++5+9ziNzuGUGwjY1pRVRWACIYmEOhf5IYPVO
+         HpOZJD1xz7OKZ4bYktpPdUHmht+HQfjc21ulmYEQBB8MRdutCPpDdJb8cNNC/WglbELF
+         isCCisr8HMV94sHYsv/37Y0Xdq85SwJ5UJPgfCjI36m0LVUfsPQoj/qeG0bFpP7qp0yq
+         DtmdHYSJzcQkjmNnbwDP4HXHbzBmnut/7NSTR0FAcCvN0iu2uFrTiE7tO8075SqwydcP
+         jCezFrrGzF7B/xZ8x2Bjoe3VH6d2bF0RSAheUpeag/jopILjjpdxRWHIi2MfZE7NxxSj
+         O51w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744217038; x=1744821838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T1UOxjhpPsPhSQtw6G+iRKDta4RLFuAj7TRD1IXXveo=;
+        b=jbnTC0GAg57BDvbMkYWyHuClk0SUkDZSXnc5uEZ3w2wedk3TH70zsBFcszbKuBtyTU
+         igYyJYuHfb/Puhs14Ojkgl8MFYPu3NYa6xCX+9cT2dSSOhWfQNV2SISp5kd60KsD0DH2
+         OgC50cjNUyw53mVvvkXt10GSMNpLw5VGeULRNxLNc0mfjDMLWk/thEr0C2R3Yr+aGPa5
+         bm25pPs+OgeDPvVvrSJ9IweCSoJAWJQajwXb+DKdKMJv2qDDt4QgFCGZsmhcImBRanTr
+         GW3VDD1Edphgntb4qusa3CvP186A3A3S9aBW1fRs9tidxHRGtcDeylPXbO/Uni17zPc0
+         dbCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9LvDyydqA2URTxqXG1sAhWOVm/NCB2Oym2bBrHKrzP4aUbrAg6/ZmmPty4eBmHpoXMCxLH5Ap52Ia@vger.kernel.org
+X-Gm-Message-State: AOJu0YxppX7mNsvU0Ioqher4PwUVYF+Ktvao+MadrlviT8qMeQ8i2DlD
+	KajybxrZC4jsByo+tnPP5s4N2Nb+hSnbGy7NzMc7LeJp8KJFP/b6GATsfOoMC/wTnshBwxQNUBJ
+	JeJkjuxZ/Xs1fVQ0b3jXl6a+A+yL2ZAT6Lzftjw==
+X-Gm-Gg: ASbGncvc8dK2QEtvz8t/JN/UsC0s74kijUXVEjBUH1TNT8YxKzFpmbokn+ogKYWr7dn
+	WlyIkE837ZKpOkZRsNaA1tRVamPfEsL05Q/9Scu94FLjI2nGWZxy8ld8Q6DYiih/pza3PCWIEXd
+	AgqcR5LRcLlSPHq53wvo0TT+HQbpAxVTphgXtOgpHvvhOtZ/5tlvh0dw==
+X-Google-Smtp-Source: AGHT+IHhkAgu3QjROCGUJXTB4kW4wwAYSm8J2vtOKbqbIo+dJ2n+TEanaH7n1VTiK2H21P/9SxUOmXw5m8Let4mT4vQ=
+X-Received: by 2002:a05:6512:3d92:b0:545:2f0d:8836 with SMTP id
+ 2adb3069b0e04-54c437b480emr1159242e87.40.1744217037919; Wed, 09 Apr 2025
+ 09:43:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409-mdb-max7360-support-v6-7-7a2535876e39@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250311-gpio-set-check-output-v1-1-d971bca9e6fa@linaro.org>
+ <CACRpkdYujYhF8VP-_6O4Bt2tWL-NO-GgQPr=DeqE9QwCq12gqg@mail.gmail.com>
+ <CAMRc=MdwQZMDaHn15n4zgCujtDRg=UUwz3A9ZUYY9Uv7FFgz2Q@mail.gmail.com> <Z_aGZqsUXq2uyQfC@black.fi.intel.com>
+In-Reply-To: <Z_aGZqsUXq2uyQfC@black.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 9 Apr 2025 18:43:47 +0200
+X-Gm-Features: ATxdqUFMPhXHk7lQUf3DMlzg5Y5WXAkfdazwddpm-cxwT2Q6grS3dEAYZSF1S4A
+Message-ID: <CAMRc=MdsRWNVT0XC1DvwBdhZFsVZO6DeMrVePKgiF4Mj_Ryykg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't allow setting values on input lines
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2025 at 04:55:54PM +0200, Mathieu Dubois-Briand wrote:
-> GPIO controller often have support for IRQ: allow to easily allocate
-> both gpio-regmap and regmap-irq in one operation.
+On Wed, Apr 9, 2025 at 4:38=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Fri, Mar 14, 2025 at 11:35:21AM +0100, Bartosz Golaszewski wrote:
+> > On Fri, Mar 14, 2025 at 11:33=E2=80=AFAM Linus Walleij <linus.walleij@l=
+inaro.org> wrote:
+> > > On Tue, Mar 11, 2025 at 3:20=E2=80=AFPM Bartosz Golaszewski <brgl@bgd=
+ev.pl> wrote:
+> > >
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > Some drivers as well as the character device and sysfs code check
+> > > > whether the line actually is in output mode before allowing the use=
+r to
+> > > > set a value.
+> > > >
+> > > > However, GPIO value setters now return integer values and can indic=
+ate
+> > > > failures. This allows us to move these checks into the core code.
+> > > >
+> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Makes sense, if there are regressions let's smoke them out
+> > > in linux-next.
+> > >
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Thanks. I decided not to queue it for v6.15 for exactly that reason,
+> > I'll pick it up early into the v6.16 cycle and let it sit in next for
+> > several weeks.
+>
+> As far as I can tell from the reading of the code, this will break the op=
+en
+> drain emulation. Am I mistaken?
+>
 
->  
-> -		memcpy(d->prev_status_buf, d->status_buf, array_size(d->prev_status_buf));
-> +		memcpy(d->prev_status_buf, d->status_buf,
-> +		       array_size(d->chip->num_regs, sizeof(d->prev_status_buf[0])));
+Could you produce a call trace where this could result in a breakage?
+I tested open-drain and open-source emulation but maybe I'm missing
+something.
 
-...
-
-> +#ifdef CONFIG_REGMAP_IRQ
-> +	if (config->regmap_irq_chip) {
-> +		struct regmap_irq_chip_data *irq_chip_data;
-> +
-> +		ret = devm_regmap_add_irq_chip_fwnode(config->parent, dev_fwnode(config->parent),
-> +						      config->regmap, config->regmap_irq_irqno,
-> +						      config->regmap_irq_flags, 0,
-> +						      config->regmap_irq_chip, &irq_chip_data);
-> +		if (ret)
-> +			goto err_free_gpio;
-> +
-> +		irq_domain = regmap_irq_get_domain(irq_chip_data);
-> +	} else
-> +#endif
-> +	irq_domain = config->irq_domain;
-
-> +
-
-This is blank line is not needed, but I not mind either way.
-
-> +	if (irq_domain) {
-> +		ret = gpiochip_irqchip_add_domain(chip, irq_domain);
->  		if (ret)
->  			goto err_remove_gpiochip;
->  	}
-
-...
-
-> + * @regmap_irq_chip:	(Optional) Pointer on an regmap_irq_chip structure. If
-> + *			set, a regmap-irq device will be created and the IRQ
-> + *			domain will be set accordingly.
-
-> + * @regmap_irq_chip_data: (Optional) Pointer on an regmap_irq_chip_data
-> + *                      structure pointer. If set, it will be populated with a
-> + *                      pointer on allocated regmap_irq data.
-
-Leftover?
-
-> + * @regmap_irq_irqno	(Optional) The IRQ the device uses to signal interrupts.
-> + * @regmap_irq_flags	(Optional) The IRQF_ flags to use for the interrupt.
-
-...
-
-> +#ifdef CONFIG_REGMAP_IRQ
-> +	struct regmap_irq_chip *regmap_irq_chip;
-> +	int regmap_irq_irqno;
-
-Perhaps call it line?
-
-	int regmap_irq_line;
-
-> +	unsigned long regmap_irq_flags;
-> +#endif
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bartosz
 
