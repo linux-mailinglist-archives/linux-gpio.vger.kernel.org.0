@@ -1,142 +1,167 @@
-Return-Path: <linux-gpio+bounces-18611-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18612-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E64BA832E5
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 22:58:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBC6CA83310
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 23:15:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C45E3BE762
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 20:58:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 670197AAE58
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 21:12:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41D52147F9;
-	Wed,  9 Apr 2025 20:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F135E2144A8;
+	Wed,  9 Apr 2025 21:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwyy8DdU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgsIZF9k"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAA81E5018;
-	Wed,  9 Apr 2025 20:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0C01DA61B;
+	Wed,  9 Apr 2025 21:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744232302; cv=none; b=lOs3m1FFP9K1C7FUPfeCtRRHyTRwSD8X4Zc8XRwSJ8x3vrbCmRUqEYORzx+s05i16fNadTyctC93nXBpz6u3HC1GhcWIjuZsDrXI/MzhweQ80A7MlyfKxbbcg8A8o8KD1Y9IuH3zfd1bMeIHLhMUIBk0ceBgUr69kJlVe3FGB70=
+	t=1744233173; cv=none; b=E+vaE2LFRHq6Tos/r0S0z4kw5VDGz6Y3QD81308Xneu9H9D1fIbnVifTUgWSt+9thfiBPRX4pfaHWXhSjmX6Vhurm8X8PrT3MlVJvOZuaT/aFDcevivMWrLCvDrJjYUc1uQ5tm1peUpNj5zVYauTXutAUHQ1y/qrAihn1PLY9a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744232302; c=relaxed/simple;
-	bh=6ec0alS8XiULM/vgWxWgwfHpG7Je0oApq0VdXu9F0v4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iN0ZWi7qTMQSzlh0yu/4cX42feD/wZzLZnOwfAIg1/LeuvlrJM632V8rJ/LRTGI7krlHUwuhWbbVS4j+CpLqLZmlVyO40WDYgCD/VLTqONUSNaYvNuf2LSfMWTjk35qeOy8GrtMx2e7bOblNe6gkYBgKorVZm5Kog6jJSIn5k8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwyy8DdU; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b03bc416962so35332a12.0;
-        Wed, 09 Apr 2025 13:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744232300; x=1744837100; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0anQ+IpqWVzDF/uK9u1Pq2W1Y/RyglC7ZuUoWh/6VYc=;
-        b=mwyy8DdUym2PNXB10h67fTadWN5VgDr4mhCoJJNNZ4s5FflNklIzbw95RZVFVSMhLt
-         2MLBQMgaXWjVbCpzlxI7aCrbdJjL4bAghLqCN7q+w9F7iGNM4mz135O0mPwDUpoN1v4b
-         qrfGockCdOiGVXfQLxryNGGuCAmvYvKRHWIPIg1BNsxaxefNdS5tx/M5eAKfakiWWXp7
-         qrfOSU3+1d/nCKIkRyeilRS7irC8XN0p/dpfg3i6+YFQ1tdLOc8QIeaG9hIUq6WYlZ1j
-         rZOLZvmfYE9/ZZXiyqgvsHL9f09rHhM6MxIYquZYayZfUDFpVYzljjv2yxZ/CVCM1v9B
-         cIjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744232300; x=1744837100;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0anQ+IpqWVzDF/uK9u1Pq2W1Y/RyglC7ZuUoWh/6VYc=;
-        b=nGYhDfEnsky7RKNmTwyFkB/21rLXy1PTg5jUG8xDPr80bSjue+2keOFa1n70bNLQhZ
-         vOTBdAMtnQqncPH4L0++xt4E9z46+OL387OInED5Sf8JvHOOlOqicTORFgI7RONM2zuj
-         dB3xVINDqd1AffmkEzf31C7hAlmR+MIxZuZcb+evgfXMwHa2XF3Lsdp6Kf9S0hltRuEr
-         bUHtuj9WZDh7b84hORDvCOS0Pgan+NJy/Qk8S3yKu6SesrUS12wybDF/q8/KFv3IZETf
-         LWMx3cnWxs0IVZEDSSPFWerpyt5aZBEnOJbTyyuOKxsjzdyEt/W3DKtqYaQHLnL2RVZf
-         mAFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCYhxoe5EHqHp2WZoI9vkMk32pmFll3aBPMCMV2IPKfuUsc2MWIDcJinUQo8bvmbs21wfmeQUyGz92Jw==@vger.kernel.org, AJvYcCVWD36u5hxYWPSTC8aDqblTveZR/QmkjnCgko8XEsIP7ej1Np4kQm7R6lwLgtnWN8DN8XMWRY2MuEfEnn+G@vger.kernel.org, AJvYcCVzaUIRo6+8u3dHBuoCvfpmohqE+jP71bMHj2r7vWJL376iYIp2Tdmv5BYWxTmwOPEmQoquGMzh3irA@vger.kernel.org, AJvYcCWEBAYghVCr/gZCdahZlwcV1s4ghAHxmwjXYt7w6uyJgGH2xrfOKlnrcBQAqqTBI4URslzf1pWngoczXZA=@vger.kernel.org, AJvYcCX3PXCEjeIUDZ2Ag/GVKb4S7mjlHeXAjnLb6bdbRzUByHLk/q7GasPBIm1KPV/vGv5J93Fz1bSaq3d8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzqwrDNodHemZHSabqWdPiSq59WgiKTQ717fxMPe6I8m1vm3+f
-	0HXLlbDqoxSC7VsDotjXx3g3EvD9gR2MUDL92idJwb5tLJpFm/yE
-X-Gm-Gg: ASbGncvvdOqd3BHZcnXBoGPIpSW2T9V57FSAe/aoMXujNUp4K8nJIsVBWFizN4R8FFG
-	XXL5/5S1+7uYSXvAoro+YRdK8RncqkUWEPR+JVxOQsZ+zaaUm8uIMAZtftnBVLXXCFtD5z6mr/d
-	33zAMh3CoAdYmB8/TD81/57ojol37M57Tt9Bm7FAN43BqvVaxFg39fhCL6rS3eouAVxb2+OHMSG
-	S656+l8jqhEwCvzFxBVehmSPLG0bev1W1/q4+0UWlvNsp/xH9YFZD4FnrfmaQhDBrBucQ/Ii8fy
-	uYxKxHMk2Q1LgMYIe4tOH0ITfAIhrc1MQzykqv+W+g==
-X-Google-Smtp-Source: AGHT+IFpzhH7we9mCqBfCUsctssS5nONXoCjPZ/7FgmxJonyD7BwRkw3BofxA9xAGU2028ValekKbA==
-X-Received: by 2002:a17:90b:4a81:b0:2ff:6fc3:79c4 with SMTP id 98e67ed59e1d1-3072ba14733mr497341a91.27.1744232300372;
-        Wed, 09 Apr 2025 13:58:20 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:cff4:8871:54bb:4c97])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df08f63bsm1990940a91.24.2025.04.09.13.58.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 13:58:19 -0700 (PDT)
-Date: Wed, 9 Apr 2025 13:58:16 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 01/12] dt-bindings: mfd: gpio: Add MAX7360
-Message-ID: <triuq2rqofk4psfauemu6uikizvphnqg7om5x4b6sjc3tjg2a4@5fvv5l4kollo>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+	s=arc-20240116; t=1744233173; c=relaxed/simple;
+	bh=YAShHKLj8AoioI4Y2oEJ64CG3mJHNjT9J6J+lcCikLs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fc74SMtnm6P8RyDmoGbn7Yk1bSV9PKUjESnxYEHJcCjPCZRlKQGUF5yl8AhvymAVo/TRxC6n6BgHCqvRCGGIUErJzCX+dXUm5TLmjQgY8zA+R6TE13ewjXPOo7wTC1XAxRn/6OWMOKsNNoIMrQ0VrPpKa2BwsuAbL6ggnyU4uBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgsIZF9k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6284C4CEE2;
+	Wed,  9 Apr 2025 21:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744233173;
+	bh=YAShHKLj8AoioI4Y2oEJ64CG3mJHNjT9J6J+lcCikLs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sgsIZF9k9MpBH1Hv6vfy3AZVYRa62mPjCja+kWjnM66kF7irll7p3r1e/PKZeQMQg
+	 bhppqt+hinZOK/yKnktSu54neTTQxfjCLOZgrWp3hhYJpPv/wnlNllq7IxcyxD9bky
+	 W5iSsifb+pSaYU5KQGOu6BvU2UXvKO4haSJu8eG0Lnh/D3ZHxakLPAvhHsl9H9YL3k
+	 DcvHMrccQ3iEarZFvWY3UibadziAEI/4i7jHCct91rB0/jbGL0eou3zec65HQ76o2J
+	 dw5Lg+MDjoJEiAuoLNCVRP53zLKr20ir54v6Hjjw8ppekVKUFvER7K1lINC3LRW4I+
+	 zjOwXDB8fnOCw==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH v2] platform: cznic: use new GPIO line value setter callbacks
+Date: Wed,  9 Apr 2025 23:12:43 +0200
+Message-ID: <20250409211243.20105-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Mathieu,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Wed, Apr 09, 2025 at 04:55:48PM +0200, Mathieu Dubois-Briand wrote:
-> Add device tree bindings for Maxim Integrated MAX7360 device with
-> support for keypad, rotary, gpios and pwm functionalities.
-> 
-> +
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      io-expander@38 {
-> +        compatible = "maxim,max7360";
-> +        reg = <0x38>;
-> +
-> +        interrupt-parent = <&gpio1>;
-> +        interrupts = <23 IRQ_TYPE_LEVEL_LOW>,
-> +                     <24 IRQ_TYPE_LEVEL_LOW>;
-> +        interrupt-names = "inti", "intk";
-> +
-> +        keypad,num-rows = <8>;
-> +        keypad,num-columns = <4>;
-> +        linux,keymap = <
-> +          MATRIX_KEY(0x00, 0x00, KEY_F5)
-> +          MATRIX_KEY(0x01, 0x00, KEY_F4)
-> +          MATRIX_KEY(0x02, 0x01, KEY_F6)
-> +          >;
-> +        keypad-debounce-delay-ms = <10>;
-> +        autorepeat;
-> +
-> +        rotary-debounce-delay-ms = <2>;
-> +        linux,axis = <0>; /* REL_X */
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-Probably this has been already discussed, but shouldn't keyboard and
-rotary encoder be represented as sub-nodes here, similar to how GPIO
-block is represented?
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones.
+---
+Changes since v1:
+- renamed the variable `ret` to `err`
 
-Thanks.
+Arnd, I guess this can be merged by gpio subsystem maintainers.
+Marek
+---
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 35 ++++++++++++-------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/platform/cznic/turris-omnia-mcu-gpio.c b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
+index 5f35f7c5d5d7..dabdce113af2 100644
+--- a/drivers/platform/cznic/turris-omnia-mcu-gpio.c
++++ b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
+@@ -438,27 +438,28 @@ static int omnia_gpio_get_multiple(struct gpio_chip *gc, unsigned long *mask,
+ 	return 0;
+ }
+ 
+-static void omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
++static int omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+ {
+ 	const struct omnia_gpio *gpio = &omnia_gpios[offset];
+ 	struct omnia_mcu *mcu = gpiochip_get_data(gc);
+ 	u16 val, mask;
+ 
+ 	if (!gpio->ctl_cmd)
+-		return;
++		return -EINVAL;
+ 
+ 	mask = BIT(gpio->ctl_bit);
+ 	val = value ? mask : 0;
+ 
+-	omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
++	return omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
+ }
+ 
+-static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+-				    unsigned long *bits)
++static int omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
++				   unsigned long *bits)
+ {
+ 	unsigned long ctl = 0, ctl_mask = 0, ext_ctl = 0, ext_ctl_mask = 0;
+ 	struct omnia_mcu *mcu = gpiochip_get_data(gc);
+ 	unsigned int i;
++	int err;
+ 
+ 	for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
+ 		unsigned long *field, *field_mask;
+@@ -487,13 +488,21 @@ static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+ 
+ 	guard(mutex)(&mcu->lock);
+ 
+-	if (ctl_mask)
+-		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
+-				     ctl, ctl_mask);
++	if (ctl_mask) {
++		err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
++					   ctl, ctl_mask);
++		if (err)
++			return err;
++	}
++
++	if (ext_ctl_mask) {
++		err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
++					   ext_ctl, ext_ctl_mask);
++		if (err)
++			return err;
++	}
+ 
+-	if (ext_ctl_mask)
+-		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
+-				     ext_ctl, ext_ctl_mask);
++	return 0;
+ }
+ 
+ static bool omnia_gpio_available(struct omnia_mcu *mcu,
+@@ -1014,8 +1023,8 @@ int omnia_mcu_register_gpiochip(struct omnia_mcu *mcu)
+ 	mcu->gc.direction_output = omnia_gpio_direction_output;
+ 	mcu->gc.get = omnia_gpio_get;
+ 	mcu->gc.get_multiple = omnia_gpio_get_multiple;
+-	mcu->gc.set = omnia_gpio_set;
+-	mcu->gc.set_multiple = omnia_gpio_set_multiple;
++	mcu->gc.set_rv = omnia_gpio_set;
++	mcu->gc.set_multiple_rv = omnia_gpio_set_multiple;
+ 	mcu->gc.init_valid_mask = omnia_gpio_init_valid_mask;
+ 	mcu->gc.can_sleep = true;
+ 	mcu->gc.names = omnia_mcu_gpio_names;
 -- 
-Dmitry
+2.49.0
+
 
