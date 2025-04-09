@@ -1,128 +1,134 @@
-Return-Path: <linux-gpio+bounces-18600-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18601-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C532AA82CD2
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 18:50:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E356AA82CCC
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 18:48:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A2BA3B6822
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 16:45:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFCD9461522
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 16:48:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7E5326FD9C;
-	Wed,  9 Apr 2025 16:45:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F121126FD9F;
+	Wed,  9 Apr 2025 16:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XBQnK7mI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lEYxxgUq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76521B6CE4;
-	Wed,  9 Apr 2025 16:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBB926FD99;
+	Wed,  9 Apr 2025 16:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217153; cv=none; b=iYalrhBD4rBZQVeyCaDYMnRVkL6Wyqus62HXviEgjgLdvxkx+MIjC3oCPRrXvbiOWbvev1iQAl+Qd1Xr++EMEn4JVT1ghrP/PnNNAUsXXA0Y9VR30B4KN7w5GJB5NuSwzZbiZeyRKaafdlqZuvAIXQKfkqFCIRXjphYr1fZHJ+o=
+	t=1744217294; cv=none; b=gEFpGXYHsQpsJAfNlWx1MCH31pteDpEy89FJmp/j/tM2I2zgl4ho43bSR5CcrlAL/Z1QV4g6jR+gQooPvirqPyK8Bo/2bhNNzfC7yWemdzmdvRfqxbkTFKP/35tJXUlHgHtxdOD1MtHzFkB1FBJ8HdbHCo7fMJ8auS4QuTe7Tvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217153; c=relaxed/simple;
-	bh=K9WyzzagnEdcl+3DhOzX2KAFo60shCila3x7+THI/NE=;
+	s=arc-20240116; t=1744217294; c=relaxed/simple;
+	bh=vi1LQCaAJfP94bRltPYH+PzIpGzW6NDA4xBuvlrXDb0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o+209xxHfcP1LaBtWmYxaaMsOMQpPYDcaoEBP/CP051GsKl2l83NYbzbo1gOcZBQrVxxcVCA0MeDMBj3dhNeGl0YzmfkMwvIQR+r+FBFvh//FbxzQ1BXsJkY73X84Mb2ywGg7VUvTXwjs/LRWo3Uc2nBMC78BSNTrxCmyKmHJao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XBQnK7mI; arc=none smtp.client-ip=192.198.163.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=ONXRLBqGsni+ZvP4vbPjIAt6NGMHfY0wx6FjOnjSa1x7hj+42RXnsQH/XTw+IV0kVVOpHtm+lvEwqNhVizKTfgISbHG0v0pG1cmwH541TR8d+KLYSmf2X93fq0jpHlmO8W7PcNzd1l/z9UeUkFjBkFYDbBsJ0nZVnQwwJr9YWvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lEYxxgUq; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744217152; x=1775753152;
+  t=1744217292; x=1775753292;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=K9WyzzagnEdcl+3DhOzX2KAFo60shCila3x7+THI/NE=;
-  b=XBQnK7mILkikqZ36OPMg24i1yUmjPhBCPGdz4mGfRTdUjbmpVeKg9n5g
-   9r4pJBBwFl1/FL8hZpSJhjRSymDSkMNOwl5eURnQtN+bLJWJg7NLgLvvF
-   91AuNW2KoAmhRzrZ9ZqGP76iOnY8wHaI86puN4Tl8toKDXBlO9sZpN882
-   xR1gaoJieVsTcE4T7C5lO5iuwfB3uzJHSJCR8So+sgnOS36Xq7kkLDd2t
-   GVYJw0daFGBUy7l6arq202TvA5qOwfZQxtKmOBE2nXfyL/SkOMuazV5uz
-   nojkorID4OK22OkyzVkBqW9eHSTspycZ8zaln6S6Yd4mkI91hTmfEg0ku
-   Q==;
-X-CSE-ConnectionGUID: hUimHb0wRK+r+G/Ofo/B5Q==
-X-CSE-MsgGUID: 0nkleIDbT0Cr2XxVia2YYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56339704"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=vi1LQCaAJfP94bRltPYH+PzIpGzW6NDA4xBuvlrXDb0=;
+  b=lEYxxgUqAv1fel/oKGbfDNcHwFS4psQSJn8LQkoL12Evypz5Wl3f6wEx
+   csl8pOGj1tyYyNXG4iMw4/NJ/wdiifSyY7GV8VNt858GNqT5cniyBgNjm
+   kX3TrQN6YPBYm3xAvrrcMQcj5SXJaImqfM+w+mYjoNm6xPjqkR1v6nc/W
+   a6XhqHWu7LQUgPsv38ZG8ZPW6xpGsscfnbVx0s3u0Zrx1D38AWcdQKaUB
+   4niF9baWgkpBfyhDkSWS0r8mqJZhsF0NSH6juF9mSGEqPGG7p+OOYxtiA
+   Kfb6Tq597fS/Z0Ma/6IOovNdljtOBKianiBrs8Jd5qgBjElLFV8kD1noD
+   w==;
+X-CSE-ConnectionGUID: NNtBUsPlSNacpryvX/RrpQ==
+X-CSE-MsgGUID: APVOB/sWRoK+fdlm4dB6VA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="71082562"
 X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="56339704"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:45:50 -0700
-X-CSE-ConnectionGUID: HrnI8cC/QxClvv8SqBAUiw==
-X-CSE-MsgGUID: MMc2hgPWSBmMQ7y+zMvtgQ==
+   d="scan'208";a="71082562"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:47:47 -0700
+X-CSE-ConnectionGUID: ck4eHUrLTDehlzYvH06edw==
+X-CSE-MsgGUID: 3MYIgIc6S0+ZyxLkwOC/0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="128377391"
+   d="scan'208";a="159607974"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:45:45 -0700
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:47:46 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u2YYY-0000000AnZS-2PMy;
-	Wed, 09 Apr 2025 19:45:42 +0300
-Date: Wed, 9 Apr 2025 19:45:42 +0300
+	id 1u2YaV-0000000Anbu-247i;
+	Wed, 09 Apr 2025 19:47:43 +0300
+Date: Wed, 9 Apr 2025 19:47:43 +0300
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 05/12] regmap: irq: Remove unreachable goto
-Message-ID: <Z_akNogB_TkXcS37@smile.fi.intel.com>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-5-7a2535876e39@bootlin.com>
- <1b280408-888e-48e1-8e6b-de4e7a913e74@sirena.org.uk>
- <Z_aUeKm0k1zReS_D@smile.fi.intel.com>
- <7126e672-a829-489e-a0c0-8d6d64a8b2f4@sirena.org.uk>
- <Z_aZmJxPwIBgcwhG@smile.fi.intel.com>
- <28982424-d425-47c3-b910-58c787e13510@sirena.org.uk>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpiolib: don't allow setting values on input lines
+Message-ID: <Z_akr_b7wSQJSK3T@smile.fi.intel.com>
+References: <20250311-gpio-set-check-output-v1-1-d971bca9e6fa@linaro.org>
+ <CACRpkdYujYhF8VP-_6O4Bt2tWL-NO-GgQPr=DeqE9QwCq12gqg@mail.gmail.com>
+ <CAMRc=MdwQZMDaHn15n4zgCujtDRg=UUwz3A9ZUYY9Uv7FFgz2Q@mail.gmail.com>
+ <Z_aGZqsUXq2uyQfC@black.fi.intel.com>
+ <CAMRc=MdsRWNVT0XC1DvwBdhZFsVZO6DeMrVePKgiF4Mj_Ryykg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <28982424-d425-47c3-b910-58c787e13510@sirena.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdsRWNVT0XC1DvwBdhZFsVZO6DeMrVePKgiF4Mj_Ryykg@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 09, 2025 at 05:32:55PM +0100, Mark Brown wrote:
-> On Wed, Apr 09, 2025 at 07:00:24PM +0300, Andy Shevchenko wrote:
-> > On Wed, Apr 09, 2025 at 04:46:04PM +0100, Mark Brown wrote:
+On Wed, Apr 09, 2025 at 06:43:47PM +0200, Bartosz Golaszewski wrote:
+> On Wed, Apr 9, 2025 at 4:38 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Fri, Mar 14, 2025 at 11:35:21AM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Mar 14, 2025 at 11:33 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > > On Tue, Mar 11, 2025 at 3:20 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > >
+> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > >
+> > > > > Some drivers as well as the character device and sysfs code check
+> > > > > whether the line actually is in output mode before allowing the user to
+> > > > > set a value.
+> > > > >
+> > > > > However, GPIO value setters now return integer values and can indicate
+> > > > > failures. This allows us to move these checks into the core code.
+> > > > >
+> > > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > Makes sense, if there are regressions let's smoke them out
+> > > > in linux-next.
+> > > >
+> > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > >
+> > > Thanks. I decided not to queue it for v6.15 for exactly that reason,
+> > > I'll pick it up early into the v6.16 cycle and let it sit in next for
+> > > several weeks.
+> >
+> > As far as I can tell from the reading of the code, this will break the open
+> > drain emulation. Am I mistaken?
 > 
-> > > unreachable() just annotates things, AFAICT it doesn't actually
-> > > guarantee to do anything in particular if the annotation turns out to be
-> > > incorrect.
-> 
-> > I;m not sure I follow. unreachable is a wrapper on top of
-> > __builtin_unreachable() which is intrinsic of the compiler.
-> 
-> > https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html#index-_005f_005fbuiltin_005funreachable
-> 
-> That just says that the program is undefined if we get to the
-> __builtin_undefined() and documents some behaviour around warnings.  One
-> example of undefined behaviour would be doing nothing.
+> Could you produce a call trace where this could result in a breakage?
 
-Theoretically yes, practically return after a BUG() makes no sense. Note,
-that compiler effectively removes 'goto exit;' here (that's also mentioned
-in the documentation independently on the control flow behaviour), so
-I don't know what you expect from it.
+I can't right now, my comment was based on the my (mis)understanding of
+the code flow.
+
+> I tested open-drain and open-source emulation but maybe I'm missing
+> something.
+
+I;m glad to know that you tested this! So, it means that I misunderstood
+something.
 
 -- 
 With Best Regards,
