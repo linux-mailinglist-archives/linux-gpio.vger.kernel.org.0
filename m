@@ -1,134 +1,105 @@
-Return-Path: <linux-gpio+bounces-18608-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18609-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 668FCA83051
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 21:20:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 906F3A831D0
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 22:21:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23ED13BE58E
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 19:18:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16B593B11D2
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 20:18:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B3851E47C2;
-	Wed,  9 Apr 2025 19:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EF15213E6B;
+	Wed,  9 Apr 2025 20:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mr7qMi/M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYkYflST"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B857A1BC073;
-	Wed,  9 Apr 2025 19:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D21E2139D2;
+	Wed,  9 Apr 2025 20:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226283; cv=none; b=nnrsJ/lfEdGHSXUMZ8SchtPkhWAbMltZm/90+oavaxqKjAlixit599as2hLgg91dtlVmFwEq/BRzbjLKqwCzFHw7ITXpKbvvtXj6ZKKUt1AfjxZcn9G5yfrLf/bUwn+0W2jxncusxSSiNS6gp0kWTP9QwJ0aYge86wKDSuklRmA=
+	t=1744229929; cv=none; b=PxuGRnk2Ra8uW6FxirWoRL1RNQczgGU25YxnDxeqwz/bocrjLIWJQVZOHtPR8CzwOLb3AYpOozZRA+k43/yactobCiMHzDoWaXzfetvJ/6AtvdfOYqMITBWSJrtQlHuJi03rT1KfgX1WmqKobFnFMINk3j0TSiQ37gK6/qKUFdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226283; c=relaxed/simple;
-	bh=n0MHnrgNObzTRjdLX0L/5mn6PIokeufmSE0xOH7vcyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JWIlBQC/BexYQtwLrTuTCAXcC67jakVO2dyLUQy1Xp31tISFHlRutNNCxZX1xbaPTGs/+cZghJMVNVqGM1jaJp2GG9Q9VzhWrSNaPa5kP1Bl05XdgoqG8W4ddmub6E/kLg2/i5yo4UktDC9Kz3jLQ4PGUGxuDQbBybqzhLak9/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mr7qMi/M; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223fb0f619dso69165ad.1;
-        Wed, 09 Apr 2025 12:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744226281; x=1744831081; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HHQD0iOlFuQkVDhwcExHTtZwTrYRkg2cZu77K8SIYig=;
-        b=mr7qMi/MYdXEkSiz8cSRWJYTAVXZWdwK4FngFaRBizA/qJiuCTxruAElF1T/drqEC2
-         s3CeOB1XZ15DQO6ZT0trQUIX/+QjRtG3bFC9K80i7bpDQMistsNb7FwUl34iSMAhp6Ck
-         ASfjH/pzyjShG1HzbKX2qhpWEhgOy/+CbRGwAtLP+Pbx6gUfK9vD65BD/FQ0cAvrtvAI
-         kd7CvrOM7pTwULSYDssqnSKozm18K8JXXkS4rZe0sTDnP+A+B7LHbYGh2rdzQQSr6ssN
-         ZLPkFE9hLWa42ajIxJbJBOXlY7BSk+YdvUgT+OuGVbcPOX/Xca2UTt1JFEdVviLZgNnt
-         Yq0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744226281; x=1744831081;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HHQD0iOlFuQkVDhwcExHTtZwTrYRkg2cZu77K8SIYig=;
-        b=QLh/K7mO8nbj4cbJiSUVArr39h1tFFlyPX45rNFY3vkkXgimf7KB8z/BzWbwXouPIV
-         3ZAK0EbVIf2PnoxMlkgv0DIrQmtXf5QWueKF5eZHMjRsvia583iZmP7dhni57TpWNv+A
-         DCVKuSiE8Ok4j6Zoq52sjPPkIHKTdjsA1hk79sukc9GYdVlb2TJ9ORiamguSyJO//UEY
-         VofoFhjmaJ7DvPF4VZUYAEFrwywTnXJqrRXdjMUDgL+PyX8GaKGbVVlRCUZAIBzS2xRb
-         aooJbQ04O4plYtzQrNhkGd1czfoLFFfuLZoY+0YiA0DMVpQ6RT9zECw86ABELK0dvvZy
-         Ei4w==
-X-Forwarded-Encrypted: i=1; AJvYcCU6FoTyUn3nPmn1OreHcjSFXptpqWz6eivkZZhI/Xay9Oiwej/06HuNC1KG/V4qbcryT+xvyLpTQWNev4xc@vger.kernel.org, AJvYcCVA1KEKA80rG6Y1WCL5uMBCfLx7d9+9nLr07E2+5ms+1sOxUYTae0O1DrdskIK4lNSH9fTXhpw8zeSi@vger.kernel.org, AJvYcCVhxtPOxWxTEcbb/o4Nso+ApKPUo7Kp/mHlbTxA9GU68Bzio35yuLfGeq1jqOoMxMoo01Pojvgp/mR5@vger.kernel.org, AJvYcCWJ5ve0M1AO9UAcszVAv96BPYbRag6iDcvoyeiLUkhufYbzSL3SPxXDhTdXeSOsFXyocwsfIB8othbKRR0=@vger.kernel.org, AJvYcCXxc0l3t0Z87D2wkfteaMLjkS5blwjFLGQNPIa5+OpxIonfqM6SeKgDHGK2qxb0J0PjlJmFi/dv+fQzPQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRHjyopcEf0iSyMDXPKXdix0VpPHbcqZHs9Lg+BeQH1ko2FZLI
-	nOqnIlPi1f5QDs6Pdr/4B53r2BiOPaDAXMD4glNRvK+uhSJ94TjG
-X-Gm-Gg: ASbGncu3pxtQ5VY+8xXQjWPOk8ZLQ/HKHFcfJC5313XIb3PbzGvuklngwdCiSArWLGw
-	pkV5VzNIPFaj7p2XC/GYHozNEYXpv++1FfeJofZJBcyRNA1nDPAS+uIk45OH05QvfWiNQu39PM3
-	BcXUn3jGMAZbMyHvUREi5XQeWRrreglZlXryRA7Drwr8xIrTSc5TpxKeUUc6iRF3CWtoKMJn/Ln
-	2BRa2NWEtINsuN/JPi2DufCB0m9AGSTWvnrWBjVrRHvHavyQzyVq+nRhszkzPqQg3mVTMT8ysqA
-	5HowdXBTNUnk7tpDTKK3g15kfXmVwYpfIz/W0FkicQ==
-X-Google-Smtp-Source: AGHT+IFwBTfAW024TNIPQDCEFzUgxaaGpyzh2C3mW7SRmH4lEb0zb5qo7j6yydOgEn+rBQXJppUNnA==
-X-Received: by 2002:a17:903:440b:b0:224:1935:fb91 with SMTP id d9443c01a7336-22b2edf6293mr1071095ad.27.1744226280948;
-        Wed, 09 Apr 2025 12:18:00 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:cff4:8871:54bb:4c97])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e386d2sm1777469b3a.98.2025.04.09.12.17.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 12:18:00 -0700 (PDT)
-Date: Wed, 9 Apr 2025 12:17:57 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 11/12] input: misc: Add support for MAX7360 rotary
-Message-ID: <qszbvz7xr4jhpqnae7mqmnqfv6qzppxjpmbavdknhdnjausqtt@rbjjgc2ozbmq>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-11-7a2535876e39@bootlin.com>
+	s=arc-20240116; t=1744229929; c=relaxed/simple;
+	bh=AYozKfIJEGejODFACRHk9ANJ/wk559+JZBhYyYM7+aQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rs5nAsgxq5oMo1DsxnQ9SMBQA8C4YGeRrkNFbEhE6bVCqknVrXcYuDs9RUCRQ08YfQiiStNtMVCIAKgU+oNsaeyc8stsYW60jYXw0SIGmdr9Xh3bHc0bPZSlND6wll8xq91hMCU0Kp2JxZkjAarF1xoX8cpds/UBiCz4/yNASdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYkYflST; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF75FC4CEE9;
+	Wed,  9 Apr 2025 20:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744229929;
+	bh=AYozKfIJEGejODFACRHk9ANJ/wk559+JZBhYyYM7+aQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=qYkYflSTZIzuP9ZJBFKFxzj8+/4P13skp6yknFnyxufbE/tp0Jh4l5FARbXObVZiN
+	 LwEQaUCEkNMOfd9+gdRNGUuOI5LojuMkjQMyPgPPKSryMLqpCLUx1icWTpEuhvPrp5
+	 +SCbY1KlsXGmKll8FVoLQP10AEWAC7lLY+icRJvQNlWypkXaikHeTURzd/p41Zf/ID
+	 0mKr2czyCegYT3hyFg7UDFZwhalbB1vV1bbRA/58sGcOmur5Q/+MZ7C1lnzJqEM3d1
+	 ZDpPEGlLi0+PYwjjBEhWOf2azBcVvfrxGN/MbVOzTg4O4BMwDtDmE4MkEaZu4n/KSx
+	 jEpeGIYPMrb7g==
+From: Mark Brown <broonie@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In-Reply-To: <20250407-gpiod-is-equal-v1-0-7d85f568ae6e@linaro.org>
+References: <20250407-gpiod-is-equal-v1-0-7d85f568ae6e@linaro.org>
+Subject: Re: (subset) [PATCH 0/2] gpio: don't compare raw GPIO descriptor
+ pointers directly
+Message-Id: <174422992757.1502590.17781774762954372029.b4-ty@kernel.org>
+Date: Wed, 09 Apr 2025 21:18:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409-mdb-max7360-support-v6-11-7a2535876e39@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-Hi Mathieu,
+On Mon, 07 Apr 2025 09:08:13 +0200, Bartosz Golaszewski wrote:
+> Handling of shared GPIOs in the kernel needs some improvements. Let's
+> start with a simple change of not comparing GPIO descriptor pointers
+> directly as there's nothing that guarantees that the same physical pin
+> will always be represented by a single GPIO descriptor obtained by
+> calling gpiod_get().
+> 
+> For merging: I suggest to take patch 1/2 through the GPIO tree and
+> provide an immutable tag for the regulator tree.
+> 
+> [...]
 
-On Wed, Apr 09, 2025 at 04:55:58PM +0200, Mathieu Dubois-Briand wrote:
-> Add driver for Maxim Integrated MAX7360 rotary encoder controller,
-> supporting a single rotary switch.
+Applied to
 
-Largely same comments as for the keypad driver: use "int error" for erro
-variable, selection of the device for logging. Also:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-> +
-> +	input = devm_input_allocate_device(dev);
-> +	if (!input)
-> +		return -ENOMEM;
-> +
-> +	max7360_rotary->input = input;
-> +
-> +	input->id.bustype = BUS_I2C;
-> +	input->name = pdev->name;
-> +	input->dev.parent = dev;
+Thanks!
 
-No need to be setting/overriding this, devm_input_allocate_device()
-already sets this up.
+[2/2] regulator: don't compare raw GPIO descriptor pointers
+      commit: aaf6223ea2a1ff9316a81bf851fd5a0e82635b60
 
-> +
-> +	input_set_capability(input, EV_REL, max7360_rotary->axis);
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-The event type should come from the DT data I believe. Could we use at
-least parts of the regular rotary encoding bindings?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Thanks.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
--- 
-Dmitry
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 
