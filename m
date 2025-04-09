@@ -1,537 +1,703 @@
-Return-Path: <linux-gpio+bounces-18554-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18555-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9571AA82383
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 13:26:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3FA3A823B6
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 13:40:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73F9417F010
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 11:26:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BAB0F7B11AE
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 11:38:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51D5225DB17;
-	Wed,  9 Apr 2025 11:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84F4225E803;
+	Wed,  9 Apr 2025 11:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b="TEYbFU3n"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VjPFJfeT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021136.outbound.protection.outlook.com [52.101.129.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDB3450FE;
-	Wed,  9 Apr 2025 11:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.136
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198001; cv=fail; b=UKlGvREadZ13BbnSC8SCHOniA0lSWPEEOXmVhUn6wZ3K4dJhyZo1nRT6ndnYmPaeYsneNl9Xf3bYG7Xg2cauQazdisAcgpoF2k8aLoaotCegx283jtiu07pNkWKJQErpMhhVkHgq8EQEovpwi2BMWvAuW9uV2r5q0BIca58QveU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198001; c=relaxed/simple;
-	bh=X0d35a/dwBxswa2Py3B3mdntNB1qQQcc77oOozLOBBE=;
-	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=o78otd19uHuvCq8Jeo+w90dPuk2YUpY4vy6ORrVRLLN+e9Feu6oeqqrLbpYvSM7Cm5LTN1KG/8x2eYoUDm9rnaUHiAMh+Hlou2yIXmWUgLr98uZcAl+OMXFsuW4rZtXiqVTXgByBJJX2dWmA+NJJBnxV86EkxAWA955D+G3IIEg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw; spf=pass smtp.mailfrom=portwell.com.tw; dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b=TEYbFU3n; arc=fail smtp.client-ip=52.101.129.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=portwell.com.tw
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=afEyC8aOR4J4LWmJd40I8wKMrvB9MeeF9QNgFxlirtILrbm9+nR86YdE0j4/QRFFjp3iHt33Xw6ESpmSlRXaYkwSaQvlMt1C5wZfYJE+413U4rc1NFjepjnlMc0d1k3F9DUjcFtzF+cjh5MCgZ9zlaa98b/WQk0f6e2EaQJAYuzyFac7rC5z/2RhAH+sCpd3zKRAQ3eemPi2wLa97l3DAV7d74GTi2dLT7dIk6V+34AAtHY00+ZiIpEwOiI9xUu538qQ58mMhPoGP+QitE8W0FAumWZtB7VHS/m90G0txmN8RUddKvXL7ryPJxVPXrammxtEmuZ74DhJNltR6xl99Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JwEO3Z4Zo2E5VX6iR3hCfldYfFNMnwPJeZGiLi+CjiU=;
- b=YUj5Z2WvSlhwpvpbJ6NLFZ6D1q5+Y+42P56t64SpWUqEYCY8udlB2v6ErlF4CHNDNUi8NyT03Zkn/hfV7EL+tr/UvrAo1Ohli+fxYAZQ3JHkuIdJw/n5hia1BSk6wj/gP6vfk2kjCzfOKHsGNW4hYP6wAIckHSaQ42B7daaEHk9Nc5T5rDAAnstPa3du2H2SzhKZBIB55sIxEMqadc4Ha1DS6Bs4mY012JRIMm0RPHsVRRg3EhLep9V3gRW3I/EotBDAXutb6BT+wxOJFn5e+ADKmNFi1UhZl2e86RtMmJ7znXkfMgShZ803VUxu0ItBMOrxmGZtsxpA8vNO+lj5aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=portwell.com.tw; dmarc=pass action=none
- header.from=portwell.com.tw; dkim=pass header.d=portwell.com.tw; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC2925E456
+	for <linux-gpio@vger.kernel.org>; Wed,  9 Apr 2025 11:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744198785; cv=none; b=Gxkb862nzUV3FMGXUwIyxWFuqWnn4YoPg2EgEKqN+RPqnRVDYFNt79Kmv6qfmPT/VLXF3gpkQTziEZrYlRBn4rY3ci49L0w1eXAdn/CPP8fYOTaD5eGjweSP+f2S+pyICD9l+L9cRr/lj+NZ75e4hOL+IlQbZIrOkUfDBvMsmOM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744198785; c=relaxed/simple;
+	bh=9JPqM5tB/xt7Ke455v87Sqtbxm1iucVYBgzAxrP0jGY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VE/pebnlNjPHj3GbZIMnvhPOosCIrBJ04I5n0v/uW/oC8m2o05JNo6Czrw6neSNLAJgNSkoBpwzbyxBXA0Cbp7xRF0XQLj7jj3AkqGBM79zrd4LooGW4Ic4HaDvhFDW27TpEu7mFSalJAKxRg3WwVk5JamjZZv8iTCCVHZp9VPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VjPFJfeT; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so57815491fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Apr 2025 04:39:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fetCA905017.onmicrosoft.com; s=selector1-fetCA905017-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JwEO3Z4Zo2E5VX6iR3hCfldYfFNMnwPJeZGiLi+CjiU=;
- b=TEYbFU3ndttA9JSg7HL9OQyyeFuBEkCemgGoQdtsxFPgZkrTM2QxGNM2Mc5f0Xhopdjm3puFWVhAjvffqukuuixL3vKjvszk5lrEf4SKQ14SLRKjnnYpJEcRZIOiG66sjp8Rjigo5c9FL6UHzgJmp09h/hd/a7At1vPOInQYRuJY/8amg52ctZS4YXHMuIDioFtQqDiPV1TsFSRsvNC9K4S7NGpIF17DgJz+iTq0lk39jbCul48bpEO+/atFz2sreHYEhksgSBYxg0IPu+r9J+6srgnvt6VVznOgLdrwd+nebRFL95tw89HbkizICvSeUJZdLS10alu2hvTEG+cL0g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=portwell.com.tw;
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
- by SEZPR06MB6205.apcprd06.prod.outlook.com (2603:1096:101:f1::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.29; Wed, 9 Apr
- 2025 11:26:32 +0000
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224]) by KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224%5]) with mapi id 15.20.8606.029; Wed, 9 Apr 2025
- 11:26:32 +0000
-Message-ID: <e0e9e958-2a04-43e8-b2e4-fdc97906fd9d@portwell.com.tw>
-Date: Wed, 9 Apr 2025 19:26:29 +0800
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, wim@linux-watchdog.org,
- linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
- jay.chen@canonical.com, jesse.huang@portwell.com.tw
-From: Yen-Chi Huang <jesse.huang@portwell.com.tw>
-Subject: [PATCH v2] platform/x86: portwell-ec: Add GPIO and WDT driver for
- Portwell EC
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TP0P295CA0056.TWNP295.PROD.OUTLOOK.COM (2603:1096:910:3::7)
- To KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744198780; x=1744803580; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dqZ7G3XZuno9/BWbcpOUNm32JyzY1vuuWJOOv2PSiuI=;
+        b=VjPFJfeTDcr+YOimJmfUKCRre4cvyvMoztN40x+rVmN/gFCrsjWZooaMa4NWgFRIQY
+         v4P/wybg88s+yluq7ZaZ3Nc588R04lNCZ65f4OtGk7PjMsHry6jPbvODKScRp8J0wk79
+         kit3JuGHoD1ziXbjYwtl6PT74XaFzEUEzTTzDK8iH61hSAK9txF4Ix1J7Jt6/ol90xaS
+         NOoeFGTm8xM3NEzRtE95HKe/WfFi0rFE2nz5fFrG7NucT7I1hhbwHhBKzRtqg/oE9Rdf
+         L0kLJagr97uuj8NuZ5bNWLEqEx2/d69Q9eDldyNhHugWeWhycah/4AZMNq/y50vo8V6U
+         TMHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744198780; x=1744803580;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dqZ7G3XZuno9/BWbcpOUNm32JyzY1vuuWJOOv2PSiuI=;
+        b=KtmQ/UES7gfNbHf7JqXGhZ+6b4/gWT24zR9kW2OsbraT6wUNvIFbFTL/CPWMD6Z7wa
+         ru4qhhL45tCH4lGQDoGVHyIbbIK1/BKfPBEIKCMHLHzKFKSBp1TJIOdteiKvHn7cEX1v
+         +QqpVAFeHsjxI2LhHcMYv5PQhYDytLiuY9PwzN2twLXBeGzy2maE2dnBlXmbjeVZN9Lq
+         EakNzE/nzMMgAdCzQJACH0FOzlDerblaC1XZhFPKykV4/YsMG1ZapjPHEtuGFeuIajED
+         zE6HKDmZFuStJYE7EAsQSqHfLhP92G2F0tkbYzb4REiUTG9b3c0hIL6F6NBVlRxIz2u1
+         hA0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXaijeBDnGlcBYbuSZ20EEm1H8YVYSc/IuP2Z2W812mceweJ3xkLFP1GbjZwXcOJ1Q7ElF2TR6p06JT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+wYg8TvsxbtqqOmAsfGGyImHCasBvoO8Ddsmy7KWDUr6JZxQB
+	XwsZ+kUUcPKvIvxDZs5hGgrlC1Nz3hj10ZnDo1CljdOBQGIu3V+LBHj+R02JE9vOMw5B7Vm4cim
+	roShN0oX4Q7AjSNhsctKHnAAhPGghbx8imIftfw==
+X-Gm-Gg: ASbGncsuXGdyP6+/4kTnvgWoMUujpD69u0fC06LGN3wPwO9G2EcQtGj9mIMjHjDSsv8
+	IAovYHprun5JP+9xOevHf/49y5GlNix/RTgWr2Zrq771mQCaZzefqW4mnwZPBdpFmnnD7kT1xUN
+	lWIajj8NosDmrVzGl25tqGMXXVtw631qJlAZjzdjSgxPF878c/EFlcwQ==
+X-Google-Smtp-Source: AGHT+IH2rhh9UZr3gT+gk9vauBbff4rqoLJ0eK+N4IMBNrWJkLz7WugNYn/eMwW03Soju/MnS5YCOKqclgKaC+gr7b8=
+X-Received: by 2002:a2e:a916:0:b0:30b:aabf:fa8 with SMTP id
+ 38308e7fff4ca-30f438a304cmr9221251fa.28.1744198779776; Wed, 09 Apr 2025
+ 04:39:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR06MB6395:EE_|SEZPR06MB6205:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9b59d7b-05d4-4c32-b2e3-08dd77596132
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UkRhKytVY2ZGOXFQWks3RXpzcG9OaDlweElCdmxCd01wRXRRZldTMGhQL1RE?=
- =?utf-8?B?WER3VVE4emlFREZPTUtnTHJKR05hR3A1L3dubjVNQlcwZ1AxUHpYVjdCRW04?=
- =?utf-8?B?Sld6Ynkwa3p1eTRtZmIrQXlXUll6SXdneUc4UGFIVzNXVXpubXdKcVhtWVdS?=
- =?utf-8?B?TlhFUXVyZDFWRlI5d1g5b1p3Qk5NVWJaNFpreWw4M0oxN3lwWUNXOE50ak0z?=
- =?utf-8?B?YitGK1h5VE5aNE5LTDI5Qys4VHpNRGdEWkF2QysvYnlSd3lQT01EczczdkVT?=
- =?utf-8?B?UHRTTm9rZDZKVGNlaXZkWmZOUEhuU2xZNGw3VXdRMzNpaXRtd2hONFBXSnAw?=
- =?utf-8?B?NktkaHUvSm1DdFUraUhsbGlubFJWUmRLUkoyalc1elV0ZmdYY21abDdTUkFw?=
- =?utf-8?B?bVdaYlh4OGt1UE12MSs3Nm04aXBUTG53OW1IeVRHb3FNOFVmRkRoMnJUM1Ru?=
- =?utf-8?B?cTFiQVFPZU5xaHlONXBuN09PM3B5endmc3U1N2JaNTdhN0hpV2Z4ZlBCWmF2?=
- =?utf-8?B?cjBleXFlWnhjNmswcndVS3Z6RytxT1pXRW9DRTJUR2tURzJ4MnJnQW16Qktt?=
- =?utf-8?B?QTEyY2tzcWU2Q2huWS94K3ViV0NHR0NNNXYvMEl1TFhmTEpHckhobGpIUDZu?=
- =?utf-8?B?UFZ3UjFlZFNPUVcvYlFHaWpWS1hDTGZHdTM2ZmZHVGZwQlZ5QW0rRlJiaEZX?=
- =?utf-8?B?cllnVXh5YWJhM3ozQ0k1bFRBTUMwTXhuWTNVdmtBb0pUd1FWdi9FQlFlZ3pI?=
- =?utf-8?B?TUdPSFNDa0FjM3lGVE0raDIxOEdJT1FRUCt4MFc4TTNORkx1MXJwNUxiaTV3?=
- =?utf-8?B?eUpxMHVtUGlNS3cwK3FJRUpmWktmYlR1alFiV3haU0cxTVNQTm8rTCs2Qmkr?=
- =?utf-8?B?a2FVZ2JwWjZKVXdSbzZIZW1Ud3BtVEFLaGtzbzJYL3dCRGdMdjBWUUJQaStN?=
- =?utf-8?B?ZkI5Q3RLejRHWHhnS2trZ2JTaE9rZWVvL3crK05tN3I4TnlrWGlKejk1Rm13?=
- =?utf-8?B?d1VYcXVnVHdWUHBVU3F5aE10SzZUdm1LRmpjeGdxeEhmcG13VnIvL1p3WHRm?=
- =?utf-8?B?bHhkYlRMN0FLekxzMkpOQkJjZDhrN2V0MWNLT2Znd0hiekZCbG56TEo3TkpL?=
- =?utf-8?B?MjBXWlpQd3Z1VjhiaUxkNUxiZVNFSlNjSG9NbDRqRkdEREtQMFN1Z3Q2VFFq?=
- =?utf-8?B?ZkFiV1FxRWpCZlo5UzdzaHZzdXgzYXRyUjJidFlIb255b3JzaUMrN0pHaW1V?=
- =?utf-8?B?STFOd2xEa25WbGJEU3F5OXhKRUQ1RFBHL2ZleEQrMVpzVjcvV1JYSjVmcldh?=
- =?utf-8?B?TWo0UG4wRE1pOEVJdUUrOFZTZDFIMDNHajdDVjdrWmtqWmM0S0VOVThKbzEw?=
- =?utf-8?B?TXZQdGh2bis4N2Z6ajVwa1ZRYUxkUGJURmNqSjhhNmpDaVBQQnhsS0xMdFps?=
- =?utf-8?B?M1JZZm9EY3dWcmsyQjBHS2FsNnBKR01xV0V4RTFmL2kzRnhPNFNsTHN3NStq?=
- =?utf-8?B?R1BiWGZXblh5MUlMcUcwNWtENzR4VGdScG8wanlaQWNkMkFPekJ4WlhWeTF2?=
- =?utf-8?B?Yy9LbE1PR1daNWxCWGZQSDZVSXRSSWFyMmc3a3pYY3ZRV2VobVVwMzQvOERI?=
- =?utf-8?B?d2pMV0oyZXVONERSa0hwdWg3RWs1RVRMUEp5Z0JMeEJNaitSQVp6c2o0dmk1?=
- =?utf-8?B?cXFtU210ZGE0UENCeGJQMkxCU2tMbGY2R09sbzJBWmZHV0dYbFlsMWpzbGdh?=
- =?utf-8?B?L3BvNkVFdUJSaW1zOGgxOHVZVHN2azhvYk95UnpGV2dVT2Y1NGREbXV1RWlx?=
- =?utf-8?B?MUs4cGk5MlJ6SW1IdmhoQ0NheDE0dU5acWp1NUxIUGFTek92bGpXVXEvTHVi?=
- =?utf-8?Q?GZvLFzW/nDAWB?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6395.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y3VOY1o3KzI2WW1jeXRNcVJ5RjRVU0VxeWRvOEl2SVduS3BwbS8wR2Jhek5v?=
- =?utf-8?B?ME1OVWJQcmlTWGYwcFg1aWsvNWhHMit1bnlDNytVVzVnZVpkREMxSEQ4R1c4?=
- =?utf-8?B?L3NhUkpsbm13cDZZZVF1RXFHVEhOUHVGWEYvKzhQSml3eXhRZERYRjI4UUdZ?=
- =?utf-8?B?TEtSZ3dGcUFPUEMwOE16RzA1VlpjYkN4SE1RcThFbjBzaFoyT3hWNTN1TmVV?=
- =?utf-8?B?eVFnZU1RUE95S1Y2WkRvQ09RRDlRVHhhdCs5RTJVV01Fbk9wYjQ5MFpCVmt6?=
- =?utf-8?B?ejJscDJpMm4vb0QrVThBMmFKc0xaWGZMeGpnVUZHS0xwUnFoOWxKMXBKUXRh?=
- =?utf-8?B?RmIvYWxvejZqdTRTUG1VOGtMbkdCanMyR0dCNjdvbVc5V0N3dnMzKzBod2dv?=
- =?utf-8?B?aVVTZTYxQVIzUEZmMFZUTlNLWlZDUEErb2ViWmRRckFEMi93WGo0TjVsN2ha?=
- =?utf-8?B?WXFkaGV6YTR3K2ZZbUgwSTBSZERBVVZjYVppaVlBTUcyUDV2bUk4eGFVeG1v?=
- =?utf-8?B?TGFqMXJjdVdvdnYxQVpSbmV1NWJoK3EzZk5NT0hRbW04ekFaYzZVcEd5a2xy?=
- =?utf-8?B?K011VUNaUCtNRWw5Y0svbTVNY2ZHVTI4bVBDY0VRUE5kbU92NHVTMjZ6cTA1?=
- =?utf-8?B?QnRUeHlRUGtzUVdhVXZ0blhEd2hzdTVRRVYrZmozdkppVmVlRSt6cDBiSm9v?=
- =?utf-8?B?VCs5OGxNbmNuZDZqTjN6TVNMNlFZSGlMUWhqYkF6dWZNckRBbzhrOGJoUDlw?=
- =?utf-8?B?N1hLd3dFdkl1QTRkUXkyc0tsZi9kWFVib2hjUXh6K01jclhjdHZYK3g5bHQw?=
- =?utf-8?B?ZmIvd3V5NmtiLzV1bHB4MnZ2aTRZZXV0eE41eTRyNXdIaXNSYXNKU2Zva0p4?=
- =?utf-8?B?c1V1em40bElIV2lRZTJBRmxBQ2hrY05oUUtrdXEvQXBkYmZvdU1PSkswODlC?=
- =?utf-8?B?YVNMNlhjNCtUUVVnbzZEbGY4Y2dvaGNWWGN0VlNiQzRRSEZsaDZhdzVWYXNN?=
- =?utf-8?B?QVZhR2tJWGxqS25KRVI3d1ptV1Q4azJMTkpQWEVrV0d3VXBwa3NDSHZKcFlV?=
- =?utf-8?B?b1R3WFp5K01sQjRvUW5GZ2p3bWVqeitZdFVRZkp3aEF3K0Rmai82OHNodDI1?=
- =?utf-8?B?aFhPS0hWM0sxMUdHczl6dFN2Z0RvcnhxVG1HcFlhNmxoRDdOWDlka0V5ekZG?=
- =?utf-8?B?ZHgvbkErbWxCSEVENkQxZXRWZm4xSlRsTlY3YnBQRkJndnZQK3BUdGxyVlM5?=
- =?utf-8?B?OUdnYStaaEltSzFZK0dkYWZOTk51ZXRDdHhTTTRxb2dkSnhqWmFyVDA4Uzhl?=
- =?utf-8?B?TDQwRzZ5ZDdkUzNWUFJOUHN2aFJkcUQ2elM5aE0xaUdHTWZZZ0NvNy9rZXRo?=
- =?utf-8?B?UWpRbE83UlhRTkxaZFVFVSs3NVIvZW1oOGdiV1VCWG5mMUlHRSs5aU5hV2VP?=
- =?utf-8?B?M3JWMGhCbGRkNXdvQS81Y3dUSVlaa3ZpaWpXMXI2T1BDZ0I0cFpjdmNSMk56?=
- =?utf-8?B?dlFNMmlVK0VRQ2ZWQ2RiMzk2M1hibjZzQktkcytuTXpBdThZRU5abWs4QURI?=
- =?utf-8?B?VVVud0tEaWY1dEd3VUs5YWlwVTROSGxURGY3WnZYenRGd1JGczdWMGhrOW9k?=
- =?utf-8?B?OUVHaHd5cDhCdE5LeGpQNkprWjNabFBJcGd4aHZGYVE2N1Jrc0dlODF1c1hX?=
- =?utf-8?B?dmhhUE56c3RXTG9IY2lrVlZjWGs2bVF1cVV2OWJBVW9hVjEzTHU1VnhsU1o5?=
- =?utf-8?B?QUxOZWVQT0NIakduaThlZHZoU2hFNUhEb1BNZGQ2RExEbmZWK01UdkdPWC8w?=
- =?utf-8?B?K0RTczVTbWJleDFqalNMcXZBM0dRcXgrejNWYVNxMHk3alA5ZGp4YzlCK0tp?=
- =?utf-8?B?Z3lTZXpDd3U5K2kyeUFCdFkzbVFqbjYrTDlHSndYRXJTWnNXWUsxM0ZTYTlF?=
- =?utf-8?B?R2kyL1p0UHpXdWppTldBc1JvMzFzU3FNYUZFcHZGNUQwRmRqaFl1RnluYS8x?=
- =?utf-8?B?WS9Nak5IRnZDcHBKZ0l2TnlvUmUyWHpIa0tiYk5MOU5xK2pGeG4wL0wyWGVM?=
- =?utf-8?B?NFZsZThSN2t6eEc5Z2liSEFXUVMwTGFrVDU1d1ZVdDVZNkVYbS9qRTQ4SEJa?=
- =?utf-8?B?Q3AwVFpBTlhZYkxxbjAxOGFvV1ExYzlmdFVGaStiRmM2c3hCUzEwcE5yQmlJ?=
- =?utf-8?B?bWc9PQ==?=
-X-OriginatorOrg: portwell.com.tw
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9b59d7b-05d4-4c32-b2e3-08dd77596132
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6395.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 11:26:32.5460
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e309f7e-c3ee-443b-8668-97701d998b2c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IddHTuL9QB35RwUJGhqZ3GmsfkUDJW3r3zUVtpnrWJVH7e8nR5KrQwLoMxHd3ZyRXRPgk5uUrY3ml/cRyuvv7Z5Zz/IMv3KJ3ujVzNAd6rs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6205
+References: <20250409082752.3697532-1-tmyu0@nuvoton.com> <20250409082752.3697532-3-tmyu0@nuvoton.com>
+In-Reply-To: <20250409082752.3697532-3-tmyu0@nuvoton.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 9 Apr 2025 13:39:28 +0200
+X-Gm-Features: ATxdqUFijEYx6QdFRrhVQhViJ0ULDwLemnwxjabwnPjw2A_QybzwG7P-pxJwIsc
+Message-ID: <CAMRc=Meb9wbhd_wH0OBGAivgUA3-3_+-E5neE+b32T54zQkQjg@mail.gmail.com>
+Subject: Re: [PATCH v9 2/7] gpio: Add Nuvoton NCT6694 GPIO support
+To: a0282524688@gmail.com
+Cc: lee@kernel.org, linus.walleij@linaro.org, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Ming Yu <tmyu0@nuvoton.com>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Adds a driver for the ITE Embedded Controller (EC) on Portwell boards.
-It integrates with the Linux GPIO and watchdog subsystems to provide:
+On Wed, Apr 9, 2025 at 10:28=E2=80=AFAM <a0282524688@gmail.com> wrote:
+>
+> From: Ming Yu <tmyu0@nuvoton.com>
+>
+> This driver supports GPIO and IRQ functionality for NCT6694 MFD
+> device based on USB interface.
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+> ---
+>  MAINTAINERS                 |   1 +
+>  drivers/gpio/Kconfig        |  12 +
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-nct6694.c | 494 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 508 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-nct6694.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f67f78a1d7b0..c3e849701497 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17305,6 +17305,7 @@ F:      include/uapi/linux/nubus.h
+>  NUVOTON NCT6694 MFD DRIVER
+>  M:     Ming Yu <tmyu0@nuvoton.com>
+>  S:     Supported
+> +F:     drivers/gpio/gpio-nct6694.c
+>  F:     drivers/mfd/nct6694.c
+>  F:     include/linux/mfd/nct6694.h
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index f2c39bbff83a..ced4a93dccb6 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1463,6 +1463,18 @@ config GPIO_MAX77650
+>           GPIO driver for MAX77650/77651 PMIC from Maxim Semiconductor.
+>           These chips have a single pin that can be configured as GPIO.
+>
+> +config GPIO_NCT6694
+> +       tristate "Nuvoton NCT6694 GPIO controller support"
+> +       depends on MFD_NCT6694
+> +       select GENERIC_IRQ_CHIP
+> +       select GPIOLIB_IRQCHIP
+> +       help
+> +         This driver supports 8 GPIO pins per bank that can all be inter=
+rupt
+> +         sources.
+> +
+> +         This driver can also be built as a module. If so, the module wi=
+ll be
+> +         called gpio-nct6694.
+> +
+>  config GPIO_PALMAS
+>         bool "TI PALMAS series PMICs GPIO"
+>         depends on MFD_PALMAS
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index af130882ffee..6a56ec5430c6 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -124,6 +124,7 @@ obj-$(CONFIG_GPIO_MT7621)           +=3D gpio-mt7621.=
+o
+>  obj-$(CONFIG_GPIO_MVEBU)               +=3D gpio-mvebu.o
+>  obj-$(CONFIG_GPIO_MXC)                 +=3D gpio-mxc.o
+>  obj-$(CONFIG_GPIO_MXS)                 +=3D gpio-mxs.o
+> +obj-$(CONFIG_GPIO_NCT6694)             +=3D gpio-nct6694.o
+>  obj-$(CONFIG_GPIO_NOMADIK)             +=3D gpio-nomadik.o
+>  obj-$(CONFIG_GPIO_NPCM_SGPIO)          +=3D gpio-npcm-sgpio.o
+>  obj-$(CONFIG_GPIO_OCTEON)              +=3D gpio-octeon.o
+> diff --git a/drivers/gpio/gpio-nct6694.c b/drivers/gpio/gpio-nct6694.c
+> new file mode 100644
+> index 000000000000..5b6562814836
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-nct6694.c
+> @@ -0,0 +1,494 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Nuvoton NCT6694 GPIO controller driver based on USB interface.
+> + *
+> + * Copyright (C) 2024 Nuvoton Technology Corp.
+> + */
+> +
+> +#include <linux/bits.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/nct6694.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +/*
+> + * USB command module type for NCT6694 GPIO controller.
+> + * This defines the module type used for communication with the NCT6694
+> + * GPIO controller over the USB interface.
+> + */
+> +#define NCT6694_GPIO_MOD       0xFF
+> +
+> +#define NCT6694_GPIO_VER       0x90
+> +#define NCT6694_GPIO_VALID     0x110
+> +#define NCT6694_GPI_DATA       0x120
+> +#define NCT6694_GPO_DIR                0x170
+> +#define NCT6694_GPO_TYPE       0x180
+> +#define NCT6694_GPO_DATA       0x190
+> +
+> +#define NCT6694_GPI_STS                0x130
+> +#define NCT6694_GPI_CLR                0x140
+> +#define NCT6694_GPI_FALLING    0x150
+> +#define NCT6694_GPI_RISING     0x160
+> +
+> +#define NCT6694_NR_GPIO                8
+> +
+> +struct nct6694_gpio_data {
+> +       struct nct6694 *nct6694;
+> +       struct gpio_chip gpio;
+> +       struct mutex lock;
+> +       /* Protect irq operation */
+> +       struct mutex irq_lock;
+> +
+> +       unsigned char reg_val;
+> +       unsigned char irq_trig_falling;
+> +       unsigned char irq_trig_rising;
+> +
+> +       /* Current gpio group */
+> +       unsigned char group;
+> +       int irq;
+> +};
+> +
+> +static int nct6694_get_direction(struct gpio_chip *gpio, unsigned int of=
+fset)
+> +{
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       const struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPO_DIR + data->group),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +       int ret;
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return !(BIT(offset) & data->reg_val);
+> +}
+> +
+> +static int nct6694_direction_input(struct gpio_chip *gpio, unsigned int =
+offset)
+> +{
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       const struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPO_DIR + data->group),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +       int ret;
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       data->reg_val &=3D ~BIT(offset);
+> +
+> +       return nct6694_write_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +}
+> +
+> +static int nct6694_direction_output(struct gpio_chip *gpio,
+> +                                   unsigned int offset, int val)
+> +{
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPO_DIR + data->group),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +       int ret;
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       /* Set direction to output */
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       data->reg_val |=3D BIT(offset);
+> +       ret =3D nct6694_write_msg(data->nct6694, &cmd_hd, &data->reg_val)=
+;
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       /* Then set output level */
+> +       cmd_hd.offset =3D cpu_to_le16(NCT6694_GPO_DATA + data->group);
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (val)
+> +               data->reg_val |=3D BIT(offset);
+> +       else
+> +               data->reg_val &=3D ~BIT(offset);
+> +
+> +       return nct6694_write_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +}
+> +
+> +static int nct6694_get_value(struct gpio_chip *gpio, unsigned int offset=
+)
+> +{
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPO_DIR + data->group),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +       int ret;
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (BIT(offset) & data->reg_val) {
+> +               cmd_hd.offset =3D cpu_to_le16(NCT6694_GPO_DATA + data->gr=
+oup);
+> +               ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->r=
+eg_val);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               return !!(BIT(offset) & data->reg_val);
+> +       }
+> +
+> +       cmd_hd.offset =3D cpu_to_le16(NCT6694_GPI_DATA + data->group);
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return !!(BIT(offset) & data->reg_val);
+> +}
+> +
+> +static void nct6694_set_value(struct gpio_chip *gpio, unsigned int offse=
+t,
+> +                             int val)
+> +{
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       const struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPO_DATA + data->group),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +
+> +       if (val)
+> +               data->reg_val |=3D BIT(offset);
+> +       else
+> +               data->reg_val &=3D ~BIT(offset);
+> +
+> +       nct6694_write_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +}
+> +
+> +static int nct6694_set_config(struct gpio_chip *gpio, unsigned int offse=
+t,
+> +                             unsigned long config)
+> +{
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       const struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPO_TYPE + data->group),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +       int ret;
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       switch (pinconf_to_config_param(config)) {
+> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +               data->reg_val |=3D BIT(offset);
+> +               break;
+> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +               data->reg_val &=3D ~BIT(offset);
+> +               break;
+> +       default:
+> +               return -ENOTSUPP;
+> +       }
+> +
+> +       return nct6694_write_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +}
+> +
+> +static int nct6694_init_valid_mask(struct gpio_chip *gpio,
+> +                                  unsigned long *valid_mask,
+> +                                  unsigned int ngpios)
+> +{
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       const struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPIO_VALID + data->group)=
+,
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +       int ret;
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       *valid_mask =3D data->reg_val;
+> +
+> +       return ret;
+> +}
+> +
+> +static irqreturn_t nct6694_irq_handler(int irq, void *priv)
+> +{
+> +       struct nct6694_gpio_data *data =3D priv;
+> +       struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPI_STS + data->group),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +       unsigned char status;
+> +       int ret;
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->reg_val);
+> +       if (ret)
+> +               return IRQ_NONE;
+> +
+> +       status =3D data->reg_val;
+> +
+> +       while (status) {
+> +               int bit =3D __ffs(status);
+> +
+> +               data->reg_val =3D BIT(bit);
+> +               handle_nested_irq(irq_find_mapping(data->gpio.irq.domain,=
+ bit));
+> +               status &=3D ~BIT(bit);
+> +               cmd_hd.offset =3D cpu_to_le16(NCT6694_GPI_CLR + data->gro=
+up);
+> +               nct6694_write_msg(data->nct6694, &cmd_hd, &data->reg_val)=
+;
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int nct6694_get_irq_trig(struct nct6694_gpio_data *data)
+> +{
+> +       struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPI_FALLING + data->group=
+),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +       int ret;
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       ret =3D nct6694_read_msg(data->nct6694, &cmd_hd, &data->irq_trig_=
+falling);
+> +       if (ret)
+> +               return ret;
+> +
+> +       cmd_hd.offset =3D cpu_to_le16(NCT6694_GPI_RISING + data->group);
+> +       return nct6694_read_msg(data->nct6694, &cmd_hd, &data->irq_trig_r=
+ising);
+> +}
+> +
+> +static void nct6694_irq_mask(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gpio =3D irq_data_get_irq_chip_data(d);
+> +       irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+> +
+> +       gpiochip_disable_irq(gpio, hwirq);
+> +}
+> +
+> +static void nct6694_irq_unmask(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gpio =3D irq_data_get_irq_chip_data(d);
+> +       irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+> +
+> +       gpiochip_enable_irq(gpio, hwirq);
+> +}
+> +
+> +static int nct6694_irq_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +       struct gpio_chip *gpio =3D irq_data_get_irq_chip_data(d);
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+> +
+> +       guard(mutex)(&data->lock);
+> +
+> +       switch (type) {
+> +       case IRQ_TYPE_EDGE_RISING:
+> +               data->irq_trig_rising |=3D BIT(hwirq);
+> +               break;
+> +
+> +       case IRQ_TYPE_EDGE_FALLING:
+> +               data->irq_trig_falling |=3D BIT(hwirq);
+> +               break;
+> +
+> +       case IRQ_TYPE_EDGE_BOTH:
+> +               data->irq_trig_rising |=3D BIT(hwirq);
+> +               data->irq_trig_falling |=3D BIT(hwirq);
+> +               break;
+> +
+> +       default:
+> +               return -ENOTSUPP;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void nct6694_irq_bus_lock(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gpio =3D irq_data_get_irq_chip_data(d);
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +
+> +       mutex_lock(&data->irq_lock);
+> +}
+> +
+> +static void nct6694_irq_bus_sync_unlock(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gpio =3D irq_data_get_irq_chip_data(d);
+> +       struct nct6694_gpio_data *data =3D gpiochip_get_data(gpio);
+> +       struct nct6694_cmd_header cmd_hd =3D {
+> +               .mod =3D NCT6694_GPIO_MOD,
+> +               .offset =3D cpu_to_le16(NCT6694_GPI_FALLING + data->group=
+),
+> +               .len =3D cpu_to_le16(sizeof(data->reg_val))
+> +       };
+> +
+> +       scoped_guard(mutex, &data->lock) {
+> +               nct6694_write_msg(data->nct6694, &cmd_hd, &data->irq_trig=
+_falling);
+> +
+> +               cmd_hd.offset =3D cpu_to_le16(NCT6694_GPI_RISING + data->=
+group);
+> +               nct6694_write_msg(data->nct6694, &cmd_hd, &data->irq_trig=
+_rising);
+> +       }
+> +
+> +       mutex_unlock(&data->irq_lock);
+> +}
+> +
+> +static const struct irq_chip nct6694_irq_chip =3D {
+> +       .name                   =3D "gpio-nct6694",
+> +       .irq_mask               =3D nct6694_irq_mask,
+> +       .irq_unmask             =3D nct6694_irq_unmask,
+> +       .irq_set_type           =3D nct6694_irq_set_type,
+> +       .irq_bus_lock           =3D nct6694_irq_bus_lock,
+> +       .irq_bus_sync_unlock    =3D nct6694_irq_bus_sync_unlock,
+> +       .flags                  =3D IRQCHIP_IMMUTABLE,
+> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> +};
+> +
+> +static int nct6694_gpio_probe(struct platform_device *pdev)
+> +{
+> +       const struct mfd_cell *cell =3D mfd_get_cell(pdev);
+> +       struct device *dev =3D &pdev->dev;
+> +       struct nct6694 *nct6694 =3D dev_get_drvdata(pdev->dev.parent);
+> +       struct nct6694_gpio_data *data;
+> +       struct gpio_irq_chip *girq;
+> +       int ret, irq, i;
+> +       char **names;
+> +
+> +       irq =3D irq_create_mapping(nct6694->domain,
+> +                                NCT6694_IRQ_GPIO0 + cell->id);
+> +       if (!irq)
+> +               return -EINVAL;
+> +
+> +       data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +       if (!data) {
+> +               ret =3D -ENOMEM;
+> +               goto dispose_irq;
+> +       }
+> +
+> +       names =3D devm_kcalloc(dev, NCT6694_NR_GPIO, sizeof(char *),
+> +                            GFP_KERNEL);
+> +       if (!names) {
+> +               ret =3D -ENOMEM;
+> +               goto dispose_irq;
+> +       }
+> +
+> +       for (i =3D 0; i < NCT6694_NR_GPIO; i++) {
+> +               names[i] =3D devm_kasprintf(dev, GFP_KERNEL, "GPIO%X%d",
+> +                                         cell->id, i);
+> +               if (!names[i]) {
+> +                       ret =3D -ENOMEM;
+> +                       goto dispose_irq;
+> +               }
+> +       }
+> +
+> +       data->irq =3D irq;
+> +       data->nct6694 =3D nct6694;
+> +       data->group =3D cell->id;
+> +
+> +       data->gpio.names                =3D (const char * const*)names;
+> +       data->gpio.label                =3D pdev->name;
+> +       data->gpio.direction_input      =3D nct6694_direction_input;
+> +       data->gpio.get                  =3D nct6694_get_value;
+> +       data->gpio.direction_output     =3D nct6694_direction_output;
+> +       data->gpio.set                  =3D nct6694_set_value;
 
-- Control/monitoring of up to 8 EC GPIO pins.
-- Hardware watchdog timer with 1-255 second timeouts.
+Please use the set_rv variant, regular set is deprecated now.
 
-The driver communicates with the EC via I/O port 0xe300 and identifies
-the hardware by the "PWG" firmware signature. This enables enhanced
-system management for Portwell embedded/industrial platforms.
+> +       data->gpio.get_direction        =3D nct6694_get_direction;
+> +       data->gpio.set_config           =3D nct6694_set_config;
+> +       data->gpio.init_valid_mask      =3D nct6694_init_valid_mask;
+> +       data->gpio.base                 =3D -1;
+> +       data->gpio.can_sleep            =3D false;
+> +       data->gpio.owner                =3D THIS_MODULE;
+> +       data->gpio.ngpio                =3D NCT6694_NR_GPIO;
+> +
+> +       platform_set_drvdata(pdev, data);
+> +
+> +       ret =3D devm_mutex_init(dev, &data->lock);
+> +       if (ret)
+> +               goto dispose_irq;
+> +
+> +       ret =3D devm_mutex_init(dev, &data->irq_lock);
+> +       if (ret)
+> +               goto dispose_irq;
+> +
+> +       ret =3D nct6694_get_irq_trig(data);
+> +       if (ret) {
+> +               dev_err_probe(dev, ret, "Failed to get irq trigger type\n=
+");
+> +               goto dispose_irq;
+> +       }
+> +
+> +       girq =3D &data->gpio.irq;
+> +       gpio_irq_chip_set_chip(girq, &nct6694_irq_chip);
+> +       girq->parent_handler =3D NULL;
+> +       girq->num_parents =3D 0;
+> +       girq->parents =3D NULL;
+> +       girq->default_type =3D IRQ_TYPE_NONE;
+> +       girq->handler =3D handle_level_irq;
+> +       girq->threaded =3D true;
+> +
+> +       ret =3D devm_request_threaded_irq(dev, irq, NULL, nct6694_irq_han=
+dler,
+> +                                       IRQF_ONESHOT | IRQF_SHARED,
+> +                                       "gpio-nct6694", data);
+> +       if (ret) {
+> +               dev_err_probe(dev, ret, "Failed to request irq\n");
+> +               goto dispose_irq;
+> +       }
+> +
+> +       ret =3D devm_gpiochip_add_data(dev, &data->gpio, data);
+> +       if (ret)
+> +               goto dispose_irq;
+> +
+> +       return 0;
+> +
+> +dispose_irq:
+> +       irq_dispose_mapping(irq);
+> +       return ret;
+> +}
+> +
+> +static void nct6694_gpio_remove(struct platform_device *pdev)
+> +{
+> +       struct nct6694_gpio_data *data =3D platform_get_drvdata(pdev);
+> +
+> +       devm_free_irq(&pdev->dev, data->irq, data);
 
-Signed-off-by: Yen-Chi Huang <jesse.huang@portwell.com.tw>
----
-V2:
-  - Add DMI system check to avoid running on unsupported platforms
-  - Add 'force' module parameter to override DMI matching
-  - Use request_region() to claim I/O port access
-  - Extend WDT timeout handling to use both minute and second registers
-  - Increase WDT max timeout from 255s to 15300s
-  - Use named defines for WDT enable/disable
-  - Remove dummy pr_info() messages
-  - Fix several coding style issues (comments, alignment, spacing)
+That's definitely not right. If you need to use the devm_free variant
+in remove(), then you're doing something wrong. Most likely you can
+rely on the devres release path here...
 
----
- MAINTAINERS                        |   6 +
- drivers/platform/x86/Kconfig       |  14 ++
- drivers/platform/x86/Makefile      |   3 +
- drivers/platform/x86/portwell-ec.c | 268 +++++++++++++++++++++++++++++
- 4 files changed, 291 insertions(+)
- create mode 100644 drivers/platform/x86/portwell-ec.c
+> +       irq_dispose_mapping(data->irq);
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d5dfb9186962..c52f819786dc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19132,6 +19132,12 @@ F:	kernel/time/itimer.c
- F:	kernel/time/posix-*
- F:	kernel/time/namespace.c
- 
-+PORTWELL EC DRIVER
-+M:	Yen-Chi Huang <jesse.huang@portwell.com.tw>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/portwell-ec.c
-+
- POWER MANAGEMENT CORE
- M:	"Rafael J. Wysocki" <rafael@kernel.org>
- L:	linux-pm@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 43407e76476b..2f26d1bf0a75 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -779,6 +779,20 @@ config PCENGINES_APU2
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pcengines-apuv2.
- 
-+config PORTWELL_EC
-+	tristate "Portwell Embedded Controller driver"
-+	depends on X86 && HAS_IOPORT && WATCHDOG && GPIOLIB
-+	help
-+	  This driver provides support for the GPIO pins and watchdog timer
-+	  embedded in Portwell's EC.
-+
-+	  Theoretically, this driver should work on multiple Portwell platforms,
-+	  but it has only been tested on the Portwell NANO-6064 board.
-+	  If you encounter any issues on other boards, please report them.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called portwell-ec.
-+
- config BARCO_P50_GPIO
- 	tristate "Barco P50 GPIO driver for identify LED/button"
- 	depends on GPIOLIB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 650dfbebb6c8..83dd82e04457 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -92,6 +92,9 @@ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
- # PC Engines
- obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
- 
-+# Portwell
-+obj-$(CONFIG_PORTWELL_EC)	+= portwell-ec.o
-+
- # Barco
- obj-$(CONFIG_BARCO_P50_GPIO)	+= barco-p50-gpio.o
- 
-diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
-new file mode 100644
-index 000000000000..e94377906745
---- /dev/null
-+++ b/drivers/platform/x86/portwell-ec.c
-@@ -0,0 +1,268 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * portwell-ec.c: Portwell embedded controller driver.
-+ *
-+ * Tested on:
-+ *  - Portwell NANO-6064
-+ *
-+ * This driver provides support for GPIO and Watchdog Timer
-+ * functionalities of the Portwell boards with ITE embedded controller (EC).
-+ * The EC is accessed through I/O ports and provides:
-+ *  - 8 GPIO pins for control and monitoring
-+ *  - Hardware watchdog with 1-15300 second timeout range
-+ *
-+ * It integrates with the Linux GPIO and Watchdog subsystems, allowing
-+ * userspace interaction with EC GPIO pins and watchdog control,
-+ * ensuring system stability and configurability.
-+ *
-+ * (C) Copyright 2025 Portwell, Inc.
-+ * Author: Yen-Chi Huang (jesse.huang@portwell.com.tw)
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/dmi.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/string.h>
-+#include <linux/watchdog.h>
-+
-+#define PORTWELL_EC_IOSPACE 0xe300
-+#define PORTWELL_EC_IOSPACE_LEN 0x100
-+
-+#define PORTWELL_GPIO_PINS 8
-+#define PORTWELL_GPIO_DIR_REG 0x2b
-+#define PORTWELL_GPIO_VAL_REG 0x2c
-+
-+#define PORTWELL_WDT_EC_CONFIG_ADDR 0x06
-+#define PORTWELL_WDT_CONFIG_ENABLE 0x1
-+#define PORTWELL_WDT_CONFIG_DISABLE 0x0
-+#define PORTWELL_WDT_EC_COUNT_MIN_ADDR 0x07
-+#define PORTWELL_WDT_EC_COUNT_SEC_ADDR 0x08
-+#define PORTWELL_WDT_EC_MAX_COUNT_SECOND 15300 //255*60secs
-+
-+#define PORTWELL_EC_FW_VENDOR_ADDRESS 0x4d
-+#define PORTWELL_EC_FW_VENDOR_LENGTH 3
-+#define PORTWELL_EC_FW_VENDOR_NAME "PWG"
-+
-+static bool force;
-+module_param(force, bool, 0444);
-+MODULE_PARM_DESC(force, "Force loading ec driver without checking DMI boardname");
-+
-+static const struct dmi_system_id pwec_dmi_table[] = {
-+	{
-+		.ident = "NANO-6064 series",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "NANO-6064"),
-+		},
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(dmi, pwec_dmi_table);
-+
-+/* Functions for access EC via IOSPACE*/
-+
-+static void pwec_write(u8 index, u8 data)
-+{
-+	outb(data, PORTWELL_EC_IOSPACE + index);
-+}
-+
-+static u8 pwec_read(u8 address)
-+{
-+	return inb(PORTWELL_EC_IOSPACE + address);
-+}
-+
-+/* GPIO functions*/
-+
-+static int pwec_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	return (pwec_read(PORTWELL_GPIO_VAL_REG) & (1 << offset)) ? 1 : 0;
-+}
-+
-+static void pwec_gpio_set(struct gpio_chip *chip, unsigned int offset, int val)
-+{
-+	u8 tmp = pwec_read(PORTWELL_GPIO_VAL_REG);
-+
-+	if (val)
-+		tmp |= (1 << offset);
-+	else
-+		tmp &= ~(1 << offset);
-+	pwec_write(PORTWELL_GPIO_VAL_REG, tmp);
-+}
-+
-+static int pwec_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	u8 direction = pwec_read(PORTWELL_GPIO_DIR_REG) & (1 << offset);
-+
-+	if (direction)
-+		return GPIO_LINE_DIRECTION_IN;
-+	else
-+		return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+/*
-+ * Changing direction causes issues on some boards,
-+ * so direction_input and direction_output are disabled for now.
-+ */
-+
-+static int pwec_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int pwec_gpio_direction_output(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static struct gpio_chip pwec_gpio_chip = {
-+	.label = "portwell-ec-gpio",
-+	.get_direction = pwec_gpio_get_direction,
-+	.direction_input = pwec_gpio_direction_input,
-+	.direction_output = pwec_gpio_direction_output,
-+	.get = pwec_gpio_get,
-+	.set = pwec_gpio_set,
-+	.base = -1,
-+	.ngpio = PORTWELL_GPIO_PINS,
-+};
-+
-+/* Watchdog functions*/
-+
-+static int pwec_wdt_trigger(struct watchdog_device *wdd)
-+{
-+	int retry = 10;
-+	u8 min, sec;
-+	unsigned int timeout;
-+
-+	do {
-+		pwec_write(PORTWELL_WDT_EC_COUNT_MIN_ADDR, wdd->timeout / 60);
-+		pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout % 60);
-+		pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, PORTWELL_WDT_CONFIG_ENABLE);
-+		min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
-+		sec = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
-+		timeout = min * 60 + sec;
-+		retry--;
-+	} while (timeout != wdd->timeout && retry >= 0);
-+	if (retry < 0) {
-+		pr_err("watchdog started failed\n");
-+		return -EIO;
-+	} else
-+		return 0;
-+}
-+
-+static int pwec_wdt_start(struct watchdog_device *wdd)
-+{
-+	return pwec_wdt_trigger(wdd);
-+}
-+
-+static int pwec_wdt_stop(struct watchdog_device *wdd)
-+{
-+	pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, PORTWELL_WDT_CONFIG_DISABLE);
-+	return 0;
-+}
-+
-+static int pwec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
-+{
-+	if (timeout == 0 || timeout > PORTWELL_WDT_EC_MAX_COUNT_SECOND)
-+		return -EINVAL;
-+	wdd->timeout = timeout;
-+	pwec_write(PORTWELL_WDT_EC_COUNT_MIN_ADDR, wdd->timeout / 60);
-+	pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout % 60);
-+	return 0;
-+}
-+
-+static unsigned int pwec_wdt_get_timeleft(struct watchdog_device *wdd)
-+{
-+	u8 min, sec;
-+
-+	min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
-+	sec = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
-+	return min  * 60 + sec;
-+}
-+
-+static const struct watchdog_ops pwec_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = pwec_wdt_start,
-+	.stop = pwec_wdt_stop,
-+	.ping = pwec_wdt_trigger,
-+	.set_timeout = pwec_wdt_set_timeout,
-+	.get_timeleft = pwec_wdt_get_timeleft,
-+};
-+
-+static struct watchdog_device ec_wdt_dev = {
-+	.info = &(struct watchdog_info){
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.identity = "Portwell EC Watchdog",
-+	},
-+	.ops = &pwec_wdt_ops,
-+	.timeout = 60,
-+	.min_timeout = 1,
-+	.max_timeout = PORTWELL_WDT_EC_MAX_COUNT_SECOND,
-+};
-+
-+static int pwec_firmware_vendor_check(void)
-+{
-+	u8 buf[PORTWELL_EC_FW_VENDOR_LENGTH + 1];
-+	u8 i;
-+
-+	for (i = 0; i < PORTWELL_EC_FW_VENDOR_LENGTH; i++)
-+		buf[i] = pwec_read(PORTWELL_EC_FW_VENDOR_ADDRESS + i);
-+	buf[PORTWELL_EC_FW_VENDOR_LENGTH] = '\0';
-+
-+	return (strcmp(PORTWELL_EC_FW_VENDOR_NAME, buf) == 0) ? 0 : -ENODEV;
-+}
-+
-+static int __init pwec_init(void)
-+{
-+	int result;
-+
-+	if (!force) {
-+		if (!dmi_check_system(pwec_dmi_table)) {
-+			pr_info("unsupported platform\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	if (!request_region(PORTWELL_EC_IOSPACE, PORTWELL_EC_IOSPACE_LEN, "portwell-ec")) {
-+		pr_err("I/O region 0xE300-0xE3FF busy\n");
-+		return -EBUSY;
-+	}
-+
-+	result = pwec_firmware_vendor_check();
-+	if (result < 0)
-+		return result;
-+
-+	result = gpiochip_add_data(&pwec_gpio_chip, NULL);
-+	if (result < 0) {
-+		pr_err("failed to register Portwell EC GPIO\n");
-+		return result;
-+	}
-+
-+	result = watchdog_register_device(&ec_wdt_dev);
-+	if (result < 0) {
-+		gpiochip_remove(&pwec_gpio_chip);
-+		pr_err("failed to register Portwell EC Watchdog\n");
-+		return result;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit pwec_exit(void)
-+{
-+	watchdog_unregister_device(&ec_wdt_dev);
-+	gpiochip_remove(&pwec_gpio_chip);
-+	release_region(PORTWELL_EC_IOSPACE, PORTWELL_EC_IOSPACE_LEN);
-+}
-+
-+module_init(pwec_init);
-+module_exit(pwec_exit);
-+
-+MODULE_AUTHOR("Yen-Chi Huang <jesse.huang@portwell.com.tw");
-+MODULE_DESCRIPTION("Portwell EC Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+... and schedule this as a custom devm action.
 
+Bart
+
+> +}
+> +
+> +static struct platform_driver nct6694_gpio_driver =3D {
+> +       .driver =3D {
+> +               .name   =3D "nct6694-gpio",
+> +       },
+> +       .probe          =3D nct6694_gpio_probe,
+> +       .remove         =3D nct6694_gpio_remove,
+> +};
+> +
+> +module_platform_driver(nct6694_gpio_driver);
+> +
+> +MODULE_DESCRIPTION("USB-GPIO controller driver for NCT6694");
+> +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:nct6694-gpio");
+> --
+> 2.34.1
+>
 
