@@ -1,140 +1,175 @@
-Return-Path: <linux-gpio+bounces-18605-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18606-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 451E5A82D6F
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 19:16:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0693A82E5D
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 20:17:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 526B07B0FA8
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 17:15:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A72B03BF296
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Apr 2025 18:16:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93A7B270ECB;
-	Wed,  9 Apr 2025 17:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E3F27702D;
+	Wed,  9 Apr 2025 18:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4wKTQrn"
+	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="lkFwlPix"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91C81CB332;
-	Wed,  9 Apr 2025 17:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA9D26B2CA;
+	Wed,  9 Apr 2025 18:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744219006; cv=none; b=AiywyeYCEaGORGRuDV/aH65MxryVrR7UpKgqKFPNEHLM+ZzdJ7wP6BWwrfDN7w7Yr9YjyqNBeZMGfB7Aa34tbeirreLjQOrGYZCD7EXPncLVABvGz+9G1UVZvYwml2w0uZ8hgWhLob24ejdjaW+krOQwTtdsWXoSK8+tbG/UnhM=
+	t=1744222628; cv=none; b=nCed6JYjdCJ5GbQupAMk2K+Ej/s45FOp+znvg9B4vNTc9URCdTAazdlRFm2fcQc00w24xdQw17pVFhKdBOYenU13hkxvvop4q4X83K3YJmnVXCVZOTPATjD6+TqYRQ4LzkJ6gXgJu3EE4jtRvP8hBTgXyj9NofYCC8h4g/1DccE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744219006; c=relaxed/simple;
-	bh=hAy1MJepwnZxQmMK/uOX+EgaJ07ZfV47gUfy+9bYyfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lgWQXjdJ/k8rxWmX04Y1HC+uktEhEvg6fdD5B/HEgF1wV3XFJj78xlK7bkRCjaEMPM03gt7DMPxshguLlvedgcGj57Rp9xQyNmVcs6w1NCBaqy9T4ENsfsR+eYNEINQ0emPGD7v0Gf+Ur88lCblqv2bvag7wi71rOcrTgAKiKPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M4wKTQrn; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7369ce5d323so5759256b3a.1;
-        Wed, 09 Apr 2025 10:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744219004; x=1744823804; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5JqUMAh6AmNecX7O3aET6mXLWZl7+p4uOdSNHYwRAMQ=;
-        b=M4wKTQrnkYwE67DfmzedDAjYZxq4aSK4LT4pxBpFJ4ySyZCq/x+5BY46yMmoZD3kfR
-         yRSSiNGXMMtmOdGK+pAQ9fXsYPWyI5hTISETQszZ8w2onz+8pUSroh/UHfmTxmWBuIT9
-         5hmC11k6yohqhm/3vpq9HjccMpOf+seozx0PyZ8i0or+9Zw+wvoa8FhiLMg3qobRnIwR
-         besgMmMcL06hukjaL7Nt215N/4EfEfiVvTEwRrJfSZXvw5GLgF3037JMwj8ywLOlugCx
-         y24lE4y0sQeZjUVsrS7b0jY2kVlWF8Mcjkr3puGGPuSXZBjzzvtb8Cl3lwHNDrIBTRJN
-         GFog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744219004; x=1744823804;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5JqUMAh6AmNecX7O3aET6mXLWZl7+p4uOdSNHYwRAMQ=;
-        b=EAvOPKsgWDDEPaRiLcWVLsunw/RycKJGJnLa03D1UyETWhQiLMRa95E8YfC/KV1Hu3
-         LojSvAju+olBecOnEnS7a4zs1FsTd1Ay8IpR9kwMJDFVx5mWtvieBPfW5/DY8fDJ56B5
-         LssS1jYbGrDFUC/OGLSuBV4ZqYKc535uF4D47DDF0Eo/UmY7wICYlSq0AmKm55S/Zjfp
-         2bCbSY5Brwm0FhLMK7xMT3oTvDCUKTB/tD7JIc74+i3sQ6JaEmz35ac5RrmUrHrL0IaQ
-         xf62v4MXfeETAyQ2ACIrJ+16xu+la2SSU9a7MZowFWIjz8TizFaHUHWT3sjEpQZesJtA
-         SecQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbgRm7Fh+xW2pp0KCJrQ9C44WdJ0FF42EDCJs6JbfA5zWzOAEyA3Lb9ceEwEFCby4aoEftIcl1uRcy9VYA@vger.kernel.org, AJvYcCW0KagUnd+oJD7RmuwixjM46daQ0AISmH4FFW9J8F3t/MBh4CKno8/GgnbvmbZNfdgTtkSqmRWkrrku@vger.kernel.org, AJvYcCW1E8W82yAxIDb2V1Q3EduhA71k+H3enAOAUPoN4Aw8GvpyyARRVALLVJz+r9E4mg6IJxeBJrjS7D0V2io=@vger.kernel.org, AJvYcCWURy7kDgyL8NQ93Nj7d3gnMry4BwItY9xcphnMDnF92I5SVkz216yoHs0n8IGXY8hyVaTQP264XZf0@vger.kernel.org, AJvYcCXmvGtoBauBrYDdrkyf1Pm9ml2/tPdw9uIQrweZfS71U1njXgBuJ4c2MmoHlza7W8geRuc9xkZg06bw+A==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm3TpzWFYnvWTi7+Islp/9hdDdiA5sCOMlI3xcXiZTGZlEiSpY
-	G4j0t18WizV5KwRQ1Omt+qf6JKJ19NFurK45D1vfkolctym9YN0s
-X-Gm-Gg: ASbGncu3Zy4RHsz3Jo8oaQ8v809e9JNncYAVJivwxIHN6wQ8fptT0nQiQA5pNGzQVOI
-	M3QvO49YGxhIm/DGerAoMcgEeGlr0EbeIs8yE4uE63hjFMzoShcIPPNffNATRCu6e/2UhqcT5/Q
-	nES0odXR/wROLn1g2uW85RsVhhR/vH/MKlfJj//cPZ5Tzuj2CORW3ZBM9mPGPXS4kK8UM3+gIIo
-	KurbNRivWhqho5mKMdFwuNp8+hTvC5FpuBwVPawVeNRnzMCINQwH/ZiwO1/zhRDRk7TN/OQoVD8
-	QDg1Uuw1YeLFVIaZu5haMO8/iSXaBRL3LxxL1ohqGQ==
-X-Google-Smtp-Source: AGHT+IHwkaJMo3yG/X2kIQQLKeqOt+a7WIEY87CCGVmBrcmN2ocarEBiD+9SHNAOXX+Wk5f33TSTmA==
-X-Received: by 2002:a05:6a21:168d:b0:1f5:86ce:126a with SMTP id adf61e73a8af0-201592e127fmr6116939637.40.1744219003913;
-        Wed, 09 Apr 2025 10:16:43 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:cff4:8871:54bb:4c97])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0cf38dasm1312066a12.23.2025.04.09.10.16.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 10:16:43 -0700 (PDT)
-Date: Wed, 9 Apr 2025 10:16:40 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Mark Brown <broonie@kernel.org>, 
-	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 05/12] regmap: irq: Remove unreachable goto
-Message-ID: <asjb2gjqpohtq2cyn3pll6nabbymd2o3jg723eloog6znwruo3@47wewlrtom5h>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-5-7a2535876e39@bootlin.com>
- <1b280408-888e-48e1-8e6b-de4e7a913e74@sirena.org.uk>
- <Z_aUeKm0k1zReS_D@smile.fi.intel.com>
- <7126e672-a829-489e-a0c0-8d6d64a8b2f4@sirena.org.uk>
- <Z_aZmJxPwIBgcwhG@smile.fi.intel.com>
- <28982424-d425-47c3-b910-58c787e13510@sirena.org.uk>
- <Z_akNogB_TkXcS37@smile.fi.intel.com>
+	s=arc-20240116; t=1744222628; c=relaxed/simple;
+	bh=RlQyrCucUebSpzBZ0SiXZwAu7QBoTEAbCFjb1KaLXKU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XF6JrSoCC2J+mk3QT2FUd29m8/6tzWWx/41++2bBxQ10X1SAL9tWixHSOf5bgdg3hChC/SdFSgOXd+JKHTl3axdKFGh68JAqG5CJA5VZ7BquI7HgkdUdxuDwS19NxgtcCY8tlNLcwr+AjU1XBHiEk6RKnbMnI5oednVRC2NiGaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=lkFwlPix; arc=none smtp.client-ip=136.144.140.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1744222622; bh=RlQyrCucUebSpzBZ0SiXZwAu7QBoTEAbCFjb1KaLXKU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lkFwlPix333fAQ7xTLz9dmSmDPQqK5qY1WHjYQmn7uGLvUuV4nJh3iYr1q43ZjRRs
+	 BEnwFI7cHQoaYbgX8raJxBXg8dZ28RD7y/TpcfJ7zLrQ4oS7gg4BuoUSgmUuzOMn2p
+	 1fNZU87zaUJ7URve6IpkT+YPPPTc1jOvvAy5kT1qSxRZdmik/8U2SHP9cDpIt9GAI9
+	 zWzM1WAtzC5PqHLv/WOcUnxblS9G+GJILdirwMnPuyiGKFer1aiBQnkCl7YhpmR1Kl
+	 4RVcCRF0wkzvalxUrF1WTUDVFwijp0my0B4P+HD4PAuw3VYXr8Qp9KzoAOe0QmTNFQ
+	 MhknwFMzR8yB4vjenz82eVqYuRPwUSL4gmXMHG8AqDtfW0o72a4nKFOKO5dFK65xk/
+	 GKsGKs9PAntWU87uFj7EHPLODgyhz5Sw5f5OeE8OAk0Zgf043ef/OdeReXesFRLUu/
+	 PAaaPl6PTfUeFU/+1+FjWvEdWMNvaI7g54KpAQu+rgWhQXICFJIKNzu25tbnVr0c/e
+	 XRsc3IW14INY6ox524Qj7N2geiw5OL6vgCrp8LfX7qpa9vqhcAyQL+OuzHiPMTDWge
+	 XT0yOV0I0eVnRpdC1VyhxKoVofjZTMrul7F+KV7jLH4Edj7krVCaNUQITEDNQVew43
+	 2V/5WVGcb+HQWy7WzHg/68L0=
+Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
+	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id E038116358B;
+	Wed,  9 Apr 2025 20:17:01 +0200 (CEST)
+Message-ID: <98ded07e-33e4-417c-8146-fbf2783a7464@ijzerbout.nl>
+Date: Wed, 9 Apr 2025 20:16:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_akNogB_TkXcS37@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] gpiolib: acpi: Make sure we fill struct
+ acpi_gpio_info
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <westeri@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20250409132942.2550719-1-andriy.shevchenko@linux.intel.com>
+ <20250409132942.2550719-3-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Kees Bakker <kees@ijzerbout.nl>
+In-Reply-To: <20250409132942.2550719-3-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 07:45:42PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 09, 2025 at 05:32:55PM +0100, Mark Brown wrote:
-> > On Wed, Apr 09, 2025 at 07:00:24PM +0300, Andy Shevchenko wrote:
-> > > On Wed, Apr 09, 2025 at 04:46:04PM +0100, Mark Brown wrote:
-> > 
-> > > > unreachable() just annotates things, AFAICT it doesn't actually
-> > > > guarantee to do anything in particular if the annotation turns out to be
-> > > > incorrect.
-> > 
-> > > I;m not sure I follow. unreachable is a wrapper on top of
-> > > __builtin_unreachable() which is intrinsic of the compiler.
-> > 
-> > > https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html#index-_005f_005fbuiltin_005funreachable
-> > 
-> > That just says that the program is undefined if we get to the
-> > __builtin_undefined() and documents some behaviour around warnings.  One
-> > example of undefined behaviour would be doing nothing.
-> 
-> Theoretically yes, practically return after a BUG() makes no sense. Note,
-> that compiler effectively removes 'goto exit;' here (that's also mentioned
-> in the documentation independently on the control flow behaviour), so
-> I don't know what you expect from it.
-
-So unreachable() sometimes lears to weird behavior from compiler, for
-example as mentioned here where we ended up removing it to prevent
-miscompilations:
-
-https://lore.kernel.org/all/20241010222451.GA3571761@thelio-3990X/
-
-Thanks.
-
+Op 09-04-2025 om 15:27 schreef Andy Shevchenko:
+> The previous refactoring missed the filling of the struct acpi_gpio_info
+> and that's how the lot of the code got eliminated. Restore those pieces
+> by passing the pointer all down in the call stack.
+>
+> With this, the code grows by ~6%, but in conjunction with the previous
+> refactoring it still gives -387 bytes
+>
+> add/remove: 2/0 grow/shrink: 5/1 up/down: 852/-35 (817)
+> Function                                     old     new   delta
+> acpi_dev_gpio_irq_wake_get_by                129     695    +566
+> acpi_find_gpio                               216     354    +138
+> acpi_find_gpio.__UNIQUE_ID_ddebug504           -      56     +56
+> acpi_dev_gpio_irq_wake_get_by.__UNIQUE_ID_ddebug506       -      56     +56
+> acpi_populate_gpio_lookup                    536     548     +12
+> acpi_gpio_property_lookup                    414     426     +12
+> acpi_get_gpiod_by_index                      307     319     +12
+> __acpi_find_gpio                             638     603     -35
+> Total: Before=14154, After=14971, chg +5.77%
+>
+> As a positive side effect, it improves memory footprint for
+> struct acpi_gpio_lookup. `pahole` difference before and after:
+>
+> -       /* size: 64, cachelines: 1, members: 4 */
+> -       /* member types with holes: 1, total: 1 */
+>
+> +       /* size: 32, cachelines: 1, members: 4 */
+>
+> Reported-by: Kees Bakker <kees@ijzerbout.nl>
+> Closes: https://lore.kernel.org/r/9715c8dd-38df-48fd-a9d1-7a78163dc989@ijzerbout.nl
+> Fixes: 8b4f52ef7a41 ("gpiolib: acpi: Deduplicate some code in __acpi_find_gpio()")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   drivers/gpio/gpiolib-acpi.c | 11 ++++++-----
+>   1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 5b6344f0d065..2ac9c7b31908 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -742,8 +742,8 @@ static int acpi_gpio_update_gpiod_lookup_flags(unsigned long *lookupflags,
+>   }
+>   
+>   struct acpi_gpio_lookup {
+> -	struct acpi_gpio_info info;
+>   	struct acpi_gpio_params params;
+> +	struct acpi_gpio_info *info;
+>   	struct gpio_desc *desc;
+>   	int n;
+>   };
+> @@ -752,7 +752,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+>   {
+>   	struct acpi_gpio_lookup *lookup = data;
+>   	struct acpi_gpio_params *params = &lookup->params;
+> -	struct acpi_gpio_info *info = &lookup->info;
+> +	struct acpi_gpio_info *info = lookup->info;
+>   
+>   	if (ares->type != ACPI_RESOURCE_TYPE_GPIO)
+>   		return 1;
+> @@ -806,7 +806,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
+>   
+>   static int acpi_gpio_resource_lookup(struct acpi_gpio_lookup *lookup)
+>   {
+> -	struct acpi_gpio_info *info = &lookup->info;
+> +	struct acpi_gpio_info *info = lookup->info;
+>   	struct acpi_device *adev = info->adev;
+>   	struct list_head res_list;
+>   	int ret;
+> @@ -832,7 +832,7 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
+>   {
+>   	struct fwnode_reference_args args;
+>   	struct acpi_gpio_params *params = &lookup->params;
+> -	struct acpi_gpio_info *info = &lookup->info;
+> +	struct acpi_gpio_info *info = lookup->info;
+>   	unsigned int index = params->crs_entry_index;
+>   	unsigned int quirks = 0;
+>   	int ret;
+> @@ -893,8 +893,8 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
+>   static int acpi_get_gpiod_by_index(struct acpi_device *adev, const char *propname,
+>   				   struct acpi_gpio_lookup *lookup)
+>   {
+> -	struct acpi_gpio_info *info = &lookup->info;
+>   	struct acpi_gpio_params *params = &lookup->params;
+> +	struct acpi_gpio_info *info = lookup->info;
+>   	int ret;
+>   
+>   	if (propname) {
+> @@ -975,6 +975,7 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
+>   
+>   	memset(&lookup, 0, sizeof(lookup));
+>   	lookup.params.crs_entry_index = idx;
+> +	lookup.info = info;
+>   
+>   	/* Try first from _DSD */
+>   	for_each_gpio_property_name(propname, con_id) {
+Can you check and confirm that at least info.gpioint is filled in (or 
+initialized)?
+The callers of `__acpi_find_gpio` pass in an uninitialized `struct 
+acpi_gpio_info`
+and after the call they read `info.gpioint`.
 -- 
-Dmitry
+Kees
 
