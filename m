@@ -1,102 +1,84 @@
-Return-Path: <linux-gpio+bounces-18659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCD67A8400E
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 12:08:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5009FA8406D
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 12:19:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FE1C4A7F16
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 10:05:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D662C3A948B
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 10:13:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7A0B26B089;
-	Thu, 10 Apr 2025 10:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5631F26FA69;
+	Thu, 10 Apr 2025 10:13:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Wz5VcyTU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EcovJHeT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F46F204F81;
-	Thu, 10 Apr 2025 10:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1137020CCD9;
+	Thu, 10 Apr 2025 10:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744279390; cv=none; b=WSW/Qk6IWjyBSoCld/ob+FBy8yDonURFWZzqMy3dB+Cz4+1FPXfSQ2HucLVqa1ED+m0Bb2HaVJ/GZWbLt5kjPzZw6Xpqzmkt2ZEBMIgx0C8QSXDwdW3Gq6LTBu5bO5kSiYdcWttOrpOYUNgnlXLccyecvpKUP+6ufQ2jKGyLeBA=
+	t=1744280031; cv=none; b=VTcYk70vsnLjDYB43ks31a+AHcj43IgrwpFCTqdySn3JjF6T+Bs0X2atgBRgPL4w348PzhjSkAu1Xlhl4IP/6H+/ekv8xMcIqFxgT3wYILlsME66ljYrseoqMdUfrn4rrE75541mFD64ubk1zFPB+gZM51T5rY6QNUC0NTpH4MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744279390; c=relaxed/simple;
-	bh=zzkWYDpn+23fCcKLMPw7bx48mHu4Ffd5Q9D2vpVXdv0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=bpQCYqNwi7mdGPCfEcKRq5zLbZKpYN2kz4O8k4CHV7DujjlbmXxFdFG4khZLz96YcBSgMa9ZwJJQ2N5W1tZD6I29MAz49SbEfojAYNhjw3Qwnckh81QUXBaTaVkMdzr/JOBs+GeeNEKmC9nIjLbQB3Wbi2R8RFzllU3eHDTWNu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Wz5VcyTU; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9F0E843194;
-	Thu, 10 Apr 2025 10:03:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744279385;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zzkWYDpn+23fCcKLMPw7bx48mHu4Ffd5Q9D2vpVXdv0=;
-	b=Wz5VcyTUL2vv1SJiLcwxwpvVxBYB0gqKATzmZnp382KfPlU8FqoM13A7LMG/Sf9o2QH+zn
-	pehf3PQZjEMzZeEKPkzZvX9jF5nXlNn9kKEmwMy1f03WyqEKyrrDrzZgcsp7SgQpcIp/bX
-	V6+0r4TUSDp43pzu8rlJiJTMfNSiPL6IzVG9rQ/HoaT8o7Urdulwungk0fDtng8twacJAU
-	092UqdbIbAaEMnnAUl0r5qUFwaVweBeiykO262Oz5pY3/u4hpwFfqq9jqXEU4cN59gt9ND
-	ZCAm9KX1VnNsG2vAG7zVaigKavVPtEpywhvJz1cY/0uP/FEx9Itdb829iAQKJA==
+	s=arc-20240116; t=1744280031; c=relaxed/simple;
+	bh=BENSn15Qjk13RK2VIHCjWB0plCM7aZZ2brzj0YV+5QU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=RUH6FlGlyd2jdIRWntGMgFdnsumVAsIY8Hll9Zs8u3w3GfmkspQbymFkX3Ja5mgkDyXED4Ueri3DNHw6l8pIZTDDdCRGOcMEE6i1gO1kQbaGnwJvqdlfw+Kk51aNxgAClSK791j2lEI0XpWRSJLtpcWxWZhrHLxUxcEjA0ufyZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EcovJHeT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3902AC4CEDD;
+	Thu, 10 Apr 2025 10:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744280030;
+	bh=BENSn15Qjk13RK2VIHCjWB0plCM7aZZ2brzj0YV+5QU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=EcovJHeTXPaSf6/wgnbe8zGrmEERvqRxHkJLy9Hqat52TdTouVAUAx8/Za8FzJtSd
+	 uLJrjSnr0tlWLc9uOepwfncZLcsR2rwSrmsM5n0b11PA1kxsNArZWA8kvKNGImHNkK
+	 r1EOq3Vfa4hoD8fjWHt64UmWnOgFwjH+eb4uFtI2cQk8OUAyTQF5WerTaDAyV6mWYn
+	 ut2/wOanC0z8h+DsHDgsBrvd3pOPuV48eRoawEHm/zXWBN+3eghHC8U5S7wz7sdnEg
+	 RTPMkCNDkP57NYyQUFGK6krZgse4GOLJZqBWbM4QnC428A1AgcgPfnbhCO+OktZi38
+	 pr3uhR3zpCIsg==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In-Reply-To: <20250407-gpiochip-set-rv-mfd-v1-0-43f4d86d01d1@linaro.org>
+References: <20250407-gpiochip-set-rv-mfd-v1-0-43f4d86d01d1@linaro.org>
+Subject: Re: [PATCH 0/3] mfd: convert GPIO chips to using new value setters
+Message-Id: <174428002896.1707119.861401860713534508.b4-ty@kernel.org>
+Date: Thu, 10 Apr 2025 11:13:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 10 Apr 2025 12:03:04 +0200
-Message-Id: <D92VFQTK31ZN.36IFOLK0JGHWK@bootlin.com>
-Subject: Re: [PATCH v6 08/12] gpio: regmap: Allow to provide init_valid_mask
- callback
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
- <Z_aoI2n5v0TyJhb3@smile.fi.intel.com>
-In-Reply-To: <Z_aoI2n5v0TyJhb3@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekieduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgesk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-On Wed Apr 9, 2025 at 7:02 PM CEST, Andy Shevchenko wrote:
-> On Wed, Apr 09, 2025 at 04:55:55PM +0200, Mathieu Dubois-Briand wrote:
->> Allows to populate the gpio_regmap_config structure with
->> init_valid_mask() callback to set on the final gpio_chip structure.
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Mon, 07 Apr 2025 09:24:12 +0200, Bartosz Golaszewski wrote:
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. We're in the process of
+> converting all GPIO drivers to using the new API. This series converts
+> all MFD GPIO controllers.
+> 
+> 
 
-Thanks for the tag!
+Applied, thanks!
 
+[1/3] mfd: sm501: use new GPIO line value setter callbacks
+      commit: f66349748885325eaa4abb4f99e0fb8fa36105d4
+[2/3] mfd: tps65010: use new GPIO line value setter callbacks
+      commit: 070502a0056fcebc1d66c39b46ecf7bc530a203f
+[3/3] mfd: ucb1x00: use new GPIO line value setter callbacks
+      commit: 9dcbd9f7238510e272780ac9af82528b4f7b9a87
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--
+Lee Jones [李琼斯]
 
 
