@@ -1,131 +1,235 @@
-Return-Path: <linux-gpio+bounces-18617-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18619-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E033A838A6
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 07:50:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB1BDA838E1
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 08:05:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3204817B8CD
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 05:49:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4A97462629
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 06:05:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22C57201031;
-	Thu, 10 Apr 2025 05:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KYJ8gIXC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BA8E1F0E3A;
+	Thu, 10 Apr 2025 06:05:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F07B1F1311
-	for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 05:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25301D516C
+	for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 06:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744264145; cv=none; b=givhArS5lpnWt70ZlqThNZiZJPnw4x5RhCBRlmgcdW819QpgbYnjqdPucZgZhHfrVjJ4aST8QeW0koklrYblazPkvr7MLNxJQVIPKZjeogSMnCEV2AYlFsvSU4DwEKA7+UwTKnD1jNSalR7wmGj8RbkLT05NjkXAVskYmmiXEMs=
+	t=1744265108; cv=none; b=Dzj4NMArlQswrjfd1uZxtJT0Otub8gxKjTvFXgo89aFhVJKuDsMqC6G2NPZQwMrxaEd/j82MV820idLYDo1HV5kOwXohwBbxLgUYEnGm8JOhuc3vdyMrvyLSXeIx7HA20ufsIETcm7BOuUnkwl8tD9XbKDF3ZJM0V1/I2XXdhqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744264145; c=relaxed/simple;
-	bh=oln2jJOOqICfShN8BJEsdupRTcRq//7pVVPzBAIOxSc=;
+	s=arc-20240116; t=1744265108; c=relaxed/simple;
+	bh=q/kBApj8o1DODVLckuFXHWT1k9Qcxm273pF1C9ox4ro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=So/h5xHgPretBGQDLz01qHyangSUaH7XMZ7AQkYaIhtHYvBJqAgSQoHKDCADyybtGPePjF5IBUbwhjsIwiLGHWW3MP7C/fePcm43sVmx2BNtCSItZs4SExJmHzEXxhCsaFxn6ZBYvbUwNjyADFx7LFFdTYen807lSZcte7QiUN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KYJ8gIXC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A5UA6I001083
-	for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 05:49:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=6MfMIQcCfAX5ZEXpELMyE/uJ
-	lS97RQd/7sCSe2WVOqg=; b=KYJ8gIXCaxiIXAsB02wvIO0JlatZ4IQwf9CstzvY
-	oYUdp59mFB7RAAd8xdcw4x7YvkRff6O4Mxk+tZVr/d1iGED0M8X3H7eLLNkodq4u
-	25n6cq7Yrg8qLk0wmr8DeONgMQhAZipqjPx2GAkpgHLLY5PieH36DzzsbcCpCtXO
-	bxY46FklShistOwfEEHORNukgjUy6GgaqoDSLxPA4ipRlzMNbvUH9ukDl5SatvNO
-	+3ZZ7V7J3ZsYTXT+kb8LuIBMXAte+FvjevmVrDT2lHN7J1R0dtZqwDQKxBPUqbVB
-	tuGEWvEhBFm3C0VyaeH952c7TKSQC7jZCz/VhbJaasyopA==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgnuke-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 05:49:03 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8fae3e448so8078376d6.2
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Apr 2025 22:49:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744264142; x=1744868942;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6MfMIQcCfAX5ZEXpELMyE/uJlS97RQd/7sCSe2WVOqg=;
-        b=ebhvxmnZmHOUtbg81O6bPuKcDqQhElWCUfKiSLNHF+gy6rlcDYUhOPod2okjH86B17
-         wkGX7rfmNiBQZdlb8wMQMlUFAbypB4P8ucPiIkJfJZa1nLr7ylLXrFtWcbXD2wpnGVhU
-         HSJpogbemINGIYq9H/IQxYiXFg7LRbSWx2yaXmRK6Sz6VGAO03OQo8DE398TnZKH0rKX
-         VYmH0XmSLkcYmFL1K/HXgzNrG6mBMhzZyURJAWDwQsX/3XiHL7e7QbEiNAX8ya/jZ3nu
-         njGedsuWG9uznWE82780d1agSwZrX6nyjKJONpV1TD6jOC0zhuYXdgjQSLgALhrhQWUh
-         aeQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwNrGJdZq71x85zx+4rtJV3hclw2MBG9MYRxJKsgeDalLc8jT1zgDFIjAYkiN8EA/JF8W9TDAGyydW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv/eYvyxuH+a7JIQ+DBS4dw3Al8f0VczQALaBTnsWgZPPgGU+B
-	yC1DMSMQ/FfoK7t5ZL3k25O2iPwpoAufo5zIO0DrUZEh9PmPEhDs5dxlYvP8WoUp/+qRsd6eXc8
-	/a3kfhXXorxe5JDgKDay8Vq5a3D5kTBbHZ2Wd339vMn1356y4ggJ+xf1Gn9J1
-X-Gm-Gg: ASbGnctN7BKcfIX+huPKgzdlG2rnzflh6GteZcsNnarNzji1EoPvz7wsfyf05iAM8C3
-	q12rKuwwByfuF1KNonl26trzg+2kZWfF0fUIuHV/eXg221LJBJnGVoaBWXGE42VJupkQmjkwjh4
-	fZKmF8DrMgelIxwFjZzvVjw/EgSbWUdIoJtFEfv4jsv8jiwCw7wepd+kD7ahXKn2SqxlC7ff7rH
-	GKq1IX9UOgUeVR3+v98iXxxtgC5rvfm7s0rjOeZu72ndlYtHeELW47+LVNFMyGRis5H6N8HCLbI
-	NNqGlh6A9DaICQDMIUOHHMUzSnIlqqu8FTiyta42/exqTohCJMd5biqnlw2Y6KTnYKoP8GX3TRc
-	=
-X-Received: by 2002:a05:6214:224e:b0:6e8:ea17:8587 with SMTP id 6a1803df08f44-6f0e5c84b55mr20662046d6.42.1744264142392;
-        Wed, 09 Apr 2025 22:49:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3oSJ0cAMrOma0aNj8l0ookyEkkm93nqZHeWGbUi2zEFDAzsFv+nBjyFl++iehgnLplpiGbA==
-X-Received: by 2002:a05:6214:224e:b0:6e8:ea17:8587 with SMTP id 6a1803df08f44-6f0e5c84b55mr20661896d6.42.1744264142081;
-        Wed, 09 Apr 2025 22:49:02 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d510914sm45087e87.196.2025.04.09.22.48.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 22:49:01 -0700 (PDT)
-Date: Thu, 10 Apr 2025 08:48:58 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Wojciech Slenska <wojciech.slenska@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: pinctrl-qcm2290: Add egpio support
-Message-ID: <6q6iftxcym6ubvtljaquwz2xllsvxyfhfkb3t5fifugedlb2c7@efpxjlyqfuk6>
-References: <20250409080030.62254-1-wojciech.slenska@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HyP4Vj++gDWgUQR9WPYr2a3oRzO8Kowvq1dkKwjGi2OVNjVWUyLYKZ7FdaS/rQN0oHo9iyC42KeL01jxvZ0LcE3zlPCEvurSrhuKJgywzxBdNUgX1OE/uW1u76+YWmqzEXN3XGvnw5BcMSdgzBtFZcyhGIFpUPNWkJUwlt0WKp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1u2l1d-0004XD-C7; Thu, 10 Apr 2025 08:04:33 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1u2l1Z-004Dlj-2z;
+	Thu, 10 Apr 2025 08:04:29 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 75A153F4AE6;
+	Thu, 10 Apr 2025 06:04:29 +0000 (UTC)
+Date: Thu, 10 Apr 2025 08:04:26 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v9 4/7] can: Add Nuvoton NCT6694 CANFD support
+Message-ID: <20250410-artichoke-swan-of-abracadabra-33c1dc-mkl@pengutronix.de>
+References: <20250409082752.3697532-1-tmyu0@nuvoton.com>
+ <20250409082752.3697532-5-tmyu0@nuvoton.com>
+ <20250409-cooperative-elastic-pillbug-672a03-mkl@pengutronix.de>
+ <CAOoeyxULns52vAwzsLoXB+BwT+CN+VGBwqrg61pjKJH8bTD5bw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6ebpqmmsutfol6xr"
 Content-Disposition: inline
-In-Reply-To: <20250409080030.62254-1-wojciech.slenska@gmail.com>
-X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f75bcf cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=seQdOu09bPYBcSS_nr0A:9 a=CjuIK1q_8ugA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-ORIG-GUID: YLiwcqAigrSHSm8gvUn6X6Kk-uiVfe7S
-X-Proofpoint-GUID: YLiwcqAigrSHSm8gvUn6X6Kk-uiVfe7S
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
- impostorscore=0 suspectscore=0 mlxlogscore=769 bulkscore=0 mlxscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100042
+In-Reply-To: <CAOoeyxULns52vAwzsLoXB+BwT+CN+VGBwqrg61pjKJH8bTD5bw@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Wed, Apr 09, 2025 at 10:00:29AM +0200, Wojciech Slenska wrote:
-> qcm2290 supports the egpio feature on GPIOs ranging from 98 to 126.
-> This change is necessary to allow these GPIOs to be driven by TLMM.
-> 
-> Signed-off-by: Wojciech Slenska <wojciech.slenska@gmail.com>
-> ---
->  drivers/pinctrl/qcom/pinctrl-qcm2290.c | 70 +++++++++++++++-----------
->  1 file changed, 41 insertions(+), 29 deletions(-)
-> 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+--6ebpqmmsutfol6xr
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v9 4/7] can: Add Nuvoton NCT6694 CANFD support
+MIME-Version: 1.0
 
--- 
-With best wishes
-Dmitry
+On 10.04.2025 10:40:34, Ming Yu wrote:
+> Dear Marc,
+>=20
+> Thank you for reviewing.
+>=20
+> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B44=E6=9C=889=
+=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:21=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> ...
+> > > +static void nct6694_canfd_handle_state_change(struct net_device *nde=
+v, u8 status)
+> > > +{
+> > > +     struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
+> > > +     enum can_state new_state, rx_state, tx_state;
+> > > +     struct can_berr_counter bec;
+> > > +     struct can_frame *cf;
+> > > +     struct sk_buff *skb;
+> > > +
+> > > +     nct6694_canfd_get_berr_counter(ndev, &bec);
+> > > +     can_state_get_by_berr_counter(ndev, &bec, &tx_state, &rx_state);
+> > > +
+> > > +     new_state =3D max(tx_state, rx_state);
+> > > +
+> > > +     /* state hasn't changed */
+> > > +     if (new_state =3D=3D priv->can.state)
+> > > +             return;
+> > > +
+> > > +     skb =3D alloc_can_err_skb(ndev, &cf);
+> > > +
+> > > +     can_change_state(ndev, cf, tx_state, rx_state);
+> > > +
+> > > +     if (new_state =3D=3D CAN_STATE_BUS_OFF) {
+> > > +             can_bus_off(ndev);
+> >
+> > What does your device do when it goes into bus off? Does it recover its=
+elf?
+> >
+>=20
+> No, the device does not support automatic bus-off recovery. It
+> requires an explicit CAN Setting and Initialization(CMD0) command to
+> re-initialize the controller after entering bus-off state.
+
+Ok
+
+[...]
+
+> > > +static int nct6694_canfd_start(struct net_device *ndev)
+> > > +{
+> > > +     struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
+> > > +     const struct can_bittiming *d_bt =3D &priv->can.data_bittiming;
+> > > +     const struct can_bittiming *n_bt =3D &priv->can.bittiming;
+> > > +     struct nct6694_canfd_setting *setting __free(kfree) =3D NULL;
+> > > +     const struct nct6694_cmd_header cmd_hd =3D {
+> > > +             .mod =3D NCT6694_CANFD_MOD,
+> > > +             .cmd =3D NCT6694_CANFD_SETTING,
+> > > +             .sel =3D ndev->dev_port,
+> > > +             .len =3D cpu_to_le16(sizeof(*setting))
+> > > +     };
+> > > +     int ret;
+> > > +
+> > > +     setting =3D kzalloc(sizeof(*setting), GFP_KERNEL);
+> > > +     if (!setting)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     setting->nbr =3D cpu_to_le32(n_bt->bitrate);
+> > > +     setting->dbr =3D cpu_to_le32(d_bt->bitrate);
+> > > +
+> > > +     if (priv->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
+> > > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_C=
+TRL1_MON);
+> > > +
+> > > +     if (priv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
+> > > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_C=
+TRL1_NISO);
+> > > +
+> > > +     if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK)
+> > > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_C=
+TRL1_LBCK);
+> > > +
+> > > +     setting->nbtp =3D cpu_to_le32(FIELD_PREP(NCT6694_CANFD_SETTING_=
+NBTP_NSJW,
+> > > +                                            n_bt->sjw - 1) |
+> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NB=
+TP_NBRP,
+> > > +                                            n_bt->brp - 1) |
+> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NB=
+TP_NTSEG2,
+> > > +                                            n_bt->phase_seg2 - 1) |
+> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NB=
+TP_NTSEG1,
+> > > +                                            n_bt->prop_seg + n_bt->p=
+hase_seg1 - 1));
+> > > +
+> > > +     setting->dbtp =3D cpu_to_le32(FIELD_PREP(NCT6694_CANFD_SETTING_=
+DBTP_DSJW,
+> > > +                                            d_bt->sjw - 1) |
+> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DB=
+TP_DBRP,
+> > > +                                            d_bt->brp - 1) |
+> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DB=
+TP_DTSEG2,
+> > > +                                            d_bt->phase_seg2 - 1) |
+> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DB=
+TP_DTSEG1,
+> > > +                                            d_bt->prop_seg + d_bt->p=
+hase_seg1 - 1));
+> >
+> > What does your device do, if you set the bitrates _and_ the bit timing
+> > parameters? They are redundant.
+>=20
+> The firmware calculates the default bit timing parameters when it
+> receives the bitrates, and then overwrites them if it later receives
+> explicit bit timing parameters.
+>=20
+> To avoid confusion and ensure consistent behavior, I will remove the
+> bitrate setting logic in next patch. Instead, the bit timing will be
+> determined solely based on the provided bit timing parameters.
+
+Sounds good.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--6ebpqmmsutfol6xr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmf3X2cACgkQDHRl3/mQ
+kZy+Bwf/cD7PcXTrBFCGsudbvqhERiXg3j4fGxKlZVoNrTxY13w0WWxCpMBfL9lZ
+k+VJ+pxjPqL64WK5QAAem80jd8Pc+BqG+jdZIMEfTfYXvArLqzvnlfC16d6OoKmS
+cZCI+XAbNQMFCkOSLNa3tS6jA5/rwlsy+mV7CMLeOphSUl+sTbW2PlIiPJIQQXzG
+9Y1kcIlI1HLOTj2ilQ/8xgx+cNGh561Erou4H0fnNyoi4nuvlNcglfNm/m4B2DiQ
+oybJYK34/vHSiz361rkyU32z6TNcW5PaR7FwDGM/pMScYdQOnZSgOhuIBrl71etT
+/MLF7/H4MWskq7PZ97+8f+THFvhH2g==
+=67Py
+-----END PGP SIGNATURE-----
+
+--6ebpqmmsutfol6xr--
 
