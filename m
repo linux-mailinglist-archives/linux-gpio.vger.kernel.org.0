@@ -1,233 +1,201 @@
-Return-Path: <linux-gpio+bounces-18641-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18642-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7229A83E73
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 11:23:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35251A83E56
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 11:20:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA6B54C4558
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 09:18:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EAB607AADBF
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 09:18:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49576218AA3;
-	Thu, 10 Apr 2025 09:17:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C038A221F36;
+	Thu, 10 Apr 2025 09:19:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="01Z7jEVN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQQ3DxEG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9B52165E4
-	for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 09:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6979721D3F6;
+	Thu, 10 Apr 2025 09:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276678; cv=none; b=pd2k68QeoNKk1cb0C7pUBfT2ToqT69StGZncIIipV2xkjCj9MxznDmO9fqen0ET2WoGezhvsvfus3/4hUw50aPJtGciiQ49NzIgaxPJC2cLmJdax9q4FwYyc9jRphwjW31MTa1pQ9kT7nWH0aWjFp5BHMwzfGdUG6E9yw32H1qE=
+	t=1744276771; cv=none; b=XaMZl/keiZ1Fwh+q/A033DPjUBXv8+pJb5zj1zok/z4GPa66rmT0U+6LeAwX1oE9ST4c3nYGutq/5mb1uFj1f8bPveVt4jw/Ul20CMevs9nJ2k6WeB+5Iqdg+3QzCBrN3x3is2qn1H/N327+r1M2AbzTPK/vl83MbWrbecMBBjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276678; c=relaxed/simple;
-	bh=XnlpoEvjZACCU7kpAe6QEtknnxIso+q3oj4cR/PurvU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Qr1MTqpX8FxsvQfJKKFJa3Skx6aw1aYnSAKImLh7E3AUCi289raBNQ5t32dnhlnzbH+5vdvEOqI7g3pgydm9moVeeVB12o2mOzuun0T2YuMe0c4sKqJ+PyB7RwgDIRVR6xgIzXiPEwhWmbLDoz8R11wdZ2MH78wfo1zmm89zHs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=01Z7jEVN; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so6568115e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 02:17:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744276674; x=1744881474; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oN437SAl97gTTDmFe5aRM3ujBrLmqPWFhjIY3mJqkpQ=;
-        b=01Z7jEVNKqWel0u0EpcYSoFQ3Su8xnu/UrRXQiGDG8fkp3mSuGBceQs1qb2sLFQMGK
-         BewTeVvvZtBVx9SNLFlfcNR9/sVoc4HHQazwTjl0TAnWFAa82+d2X6CTb5yZgVJGqfaP
-         7dxMkL0XUEYJEPGgVI/+e3cPKWPdWeO/bXwyQN1407SO+vetZbiZolLhs5Dqay0cJonH
-         h+gqwo2lO2jVJ45QOUGgTosNFZbYtLLxChucebyNHNmn9FuTgEOCQWNapHtgMLDBlWVw
-         g81CEdtXaOUwdvdPOUCgpbbMHeXwlwyaz4jiClqUZGh8yJoEoa0QxlaYvlxNLeeXMijc
-         Tccg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744276674; x=1744881474;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oN437SAl97gTTDmFe5aRM3ujBrLmqPWFhjIY3mJqkpQ=;
-        b=Yr/Mt3iQ8HDvxwai0mRaiHyEjjuWBQ5cYuIqaYFrEKwGI9xpi7dBhFcz3evkaM6ZyH
-         TaxMCSTNBf8EfD4pnqScAUHC8YqKnTAT1hF8sT79pZDf/vbGVcqaW5zqzi27YaySdjFW
-         HtHpZJiYu44s2DwvfvwJmOx1DJ8ZqHQTsNSwNTmrwEXRr5RWOviGIYjWDaOkLIg3AIb/
-         ulYmWm7kYU3wVnFmArefss4vn1lhMSjViCdVSQcHYwHKF5daW4BQ/RL0Qd5GIlw2huKJ
-         yb8UE6qhmaIL/Mwp1CK9A4IfndBDwnYEb5bORJ89DtHt36+aOv1DOclwjXYmKyXyQeVr
-         v8fQ==
-X-Gm-Message-State: AOJu0YzMd1/pg4zYmaJx/mPdDHxPydYnHH2/5EG14iJSIbv+W6mxSuLJ
-	R4LXFwab0gTLxp+BW3amTlMDgPlLcyKntXK/MScpPT/BHwbgU3OrATeenyGCx9s=
-X-Gm-Gg: ASbGncsmhK5mfyklSM7vut6WVHLJ7bV/MBoSvQ1mSlf1TaAy4c28f8M9t1Gxd4MHhRj
-	88owEZ17f9jM53bdoIcKAWCQ5gFpohHOKXlSqDyOU/fP9Nae1aZe0Q0T5jSaAnhbMK2KRcshyG9
-	CwS9dqOQifJMHumN3vi+8RVsdMrsjHMt44LY7SZIqTCcwmLs089IJgYkMuj9ATG/HDyl6kc1OlS
-	7/P2noZHkMNl6e+gBgBUpDR5hCn8Ml7J4tBzmHeSnfP58tNh+WRnc4liJLgG2DXWTXFqyRON8YX
-	ChZ+Psso0AH6BJ0EJSuz2YSrvQB1opg/tA==
-X-Google-Smtp-Source: AGHT+IGVtg0EG0GnAaAtb1XCvPKN9twmYa1EbmJZcY+xhs+VPrxvE8Qs46ZvZ46XvPsPCfTLIYb03A==
-X-Received: by 2002:a05:600c:3b19:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-43f2fedc137mr13571585e9.9.1744276673863;
-        Thu, 10 Apr 2025 02:17:53 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:7c4f:f9d1:94e0:53f8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f206332d9sm47738515e9.13.2025.04.10.02.17.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 02:17:53 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 10 Apr 2025 11:17:47 +0200
-Subject: [PATCH libgpiod] tests: uapi: add test-cases for open-drain and
- open-source emulation
+	s=arc-20240116; t=1744276771; c=relaxed/simple;
+	bh=jyp8zbK16dxt+pX+B0WDW/DB8XOD++gFP8UT7RAEGFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bM4VgSxUoskY6P2Q4H2Mzxl87mHZdAWl6ODX5Lwd/3HU61rvHrWRrmMRvvX5h0blBqQi6DreOYxM3RBbPJDHYxrelItlYnLNslUr4jlAnpG7PiC3AP79FTbxA4/80n8qbhH8GukRHLMCcQRqp2YnnotUED82yhGzjkIzo52xzRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQQ3DxEG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81EFAC4CEDD;
+	Thu, 10 Apr 2025 09:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744276770;
+	bh=jyp8zbK16dxt+pX+B0WDW/DB8XOD++gFP8UT7RAEGFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QQQ3DxEGDF9pyyPblYM8Xn5VeUqluQYvDaI3IAIHr6q2ffOCVY3X/b5HOWc2o2i1t
+	 nWeirPwmNvuLwtoBo1PxW+6UXKm4wiiwi9pQXAvmTOrGanlYqcqnTfLi7TUcmPrelB
+	 4EdpxjCoARZesnvC4MCRxDJ3cNiTc8QRuoRpOWyQy9XqnWFMOFGXUA+xPfGo2ZnTPM
+	 RyUoDsMFHbAbHKmgYOCkISiKgIDouoqPljHq5vtmoBy21+UyWnDKt5POkKllL84wVS
+	 vpe/wZYS+VQksyrEeZrvHemdal8oyoB63RORYlPI+ifTdlCt78lKATAB/QUBW3U43B
+	 IVtqBFo6RAV3g==
+Date: Thu, 10 Apr 2025 10:19:24 +0100
+From: Lee Jones <lee@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v6 0/6] Maxim Integrated MAX77759 PMIC MFD-based drivers
+Message-ID: <20250410091924.GR372032@google.com>
+References: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-open-drain-source-tests-v1-1-a062d2280cc5@linaro.org>
-X-B4-Tracking: v=1; b=H4sIALqM92cC/x3MQQqDMBBG4avIrDsQxYD1KqWLmPy1A5KEGVsK4
- t0NXX6L9w4yqMBo7g5SfMWk5Ib+1lF8h7yCJTXT4Abvxt5xqcicNEhmKx+N4B22G9/dBO9DnBZ
- EanVVvOT3Pz9ok2WtUhI9z/MCTNKDanMAAAA=
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Andy Shevchenko <andy@kernel.org>, Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4570;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=seneONRSiVbEEKliCOc0m85tIR3gfsVHGtUYPrREKPM=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn94y9kqEemBQLWY7ZdGt0Ma2KClawxYRfHEGQD
- 7a+cdtg7v+JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/eMvQAKCRARpy6gFHHX
- co1lD/45Tbn6LyZ32wmSM6s6Al5/e29mUwJsCso3pYy1mXJiORAy/LYH7jrsPdW9kJjw2voLFZy
- mRlmgvB0l+obCDBSwql80r85OB2gD4HaCSHL3qAuZb46BNY0jiTSf9cC1pkzBaoijy+qErv3fqo
- nBMYKTzAU1N5Y1BdSXwR2jIybiaJ3T+19/9GyGgN+2/uDQJ5L8EKYxIGZ/RTSVi88WH0icNMqEz
- WLKZCY80eNsRLntusK04t/JmOOPvG4STEKshZIYx85SEaKIbcrBwlHvHBHy/nkhYT9YTXLkYnn2
- A/aHrYAe5whteEP63dFoaIH6In7je2NBwu6UAv2/Jhjv2yxMq/JeXSYp6NUGVDtPmiYE1pTK/9e
- ePdkj/UF2Q3wxqsKA3qyisizQBnACu0xYT7NtU9AQSlY6Iy8nxqkLxRPMT113wykdAlzTU33cEN
- gi7BF4MXOSQbjUSBXcX91XRhKY+It6pA6A/oQGXaCA6XTuZvr4bIAl4+dauVNLiArbXU3PbWgpl
- AUFk44ntB6TfoRo+7Q6cBg7bcOSWfP8A6KhHnCKQPs3iT3xnMFHdQb+yTwiHWw3DWbx9ea3BjJb
- 68n/tBEE1zGkqYQCNZyeTBgGw10P7tEK+jKXfVe/PpPhr0rBBDHes8PYq8X0C8QpCkVKZEnVjGK
- HT3iOed3JQhHoFw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, 25 Mar 2025, André Draszik wrote:
 
-The kernel GPIO subsystem can emulate open-drain and open-source by not
-actively driving the line for active and inactive output values
-respectively. The kernel does it by setting the line to input in these
-cases but this still must be reported as output to user-space. Add new
-test-cases that verify this behavior.
+> Hi,
+> 
+> This series improves support for the Maxim Integrated MAX77759
+> companion PMIC for USB Type-C applications using the MFD framework.
+> 
+> This series must be applied in-order, due to interdependencies of some
+> of the patches:
+> * to avoid use of undocumented compatibles by the newly added drivers,
+>   the bindings are added first in this series
+> * patch 1 ("dt-bindings: gpio: add max77759 binding") also creates a
+>   new MAINTAINERS entry, including a wildcard match for the other
+>   bindings in this series
+> * patch 3 ("dt-bindings: mfd: add max77759 binding") references the
+>   bindings added in patch 1 and 2 and can not work if those aren't
+>   available
+> * patch 4 ("mfd: max77759: add Maxim MAX77759 core mfd driver") adds
+>   the core MFD driver, which also exposes an API to its leaf drivers
+>   and is used by patches 5 and 6
+> * patches 5 and 6 won't compile without patch 4
+> 
+> The MAX77759 PMIC includes Battery Charger, Fuel Gauge, temperature
+> sensors, USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
+> 
+> This PMIC is used on the Google Pixel 6 and 6 Pro (oriole / raven).
+> 
+> This series adds support for the top-level MFD device, the gpio, and
+> nvmem cells. Other components are excluded for the following reasons:
+> 
+>     While in the same package, Fuel Gauge and TCPC have separate and
+>     independent I2C addresses, register maps, interrupt lines, and
+>     aren't part of the top-level package interrupt hierarchy.
+>     Furthermore, a driver for the TCPC part exists already (in
+>     drivers/usb/typec/tcpm/tcpci_maxim_core.c).
+> 
+>     I'm leaving out temperature sensors and charger in this submission,
+>     because the former are not in use on Pixel 6 and I therefore can
+>     not test them, and the latter can be added later, once we look at
+>     the whole charging topic in more detail.
+> 
+> To make maintainers' work easier, I am planning to send the relevant
+> DTS and defconfig changes via a different series, unless everything
+> is expected to go via Lee's MFD tree in one series?
+> 
+> Cheers,
+> Andre'
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+> Changes in v6:
+> - add one missing change in core driver
+> - Link to v5: https://lore.kernel.org/r/20250325-max77759-mfd-v5-0-69bd6f07a77b@linaro.org
+> 
+> Changes in v5:
+> - core: incorporate Lee's comments (hoping I didn't miss any :-)
+> - Link to v4: https://lore.kernel.org/r/20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org
+> 
+> Changes in v4:
+> - collect tags
+> - mfd: add missing build_bug.h include
+> - mfd: update an irq chip comment
+> - mfd: fix a whitespace in register definitions
+> - Link to v3: https://lore.kernel.org/r/20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org
+> 
+> Changes in v3:
+> - collect tags
+> - mfd: drop gpio-controller and gpio-cells, GPIO is provided by the
+>   child (Rob)
+> - gpio: drop duplicate init of 'handled' variable in irq handler
+> - gpio: use boolean with IRQ_RETVAL() (Linus)
+> - gpio: drop 'virq' variable inside irq handler to avoid confusion
+>   (Linus)
+> - gpio: drop assignment of struct gpio_chip::owner (Linus)
+> - Link to v2: https://lore.kernel.org/r/20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org
+> 
+> Changes in v2:
+> - reorder bindings patches to avoid validation failures
+> - add dependency information to cover letter (Krzysztof)
+> - fix max77759_gpio_direction_from_control() in gpio driver
+> - gpio: drop 'interrupts' property from binding and sort properties
+>   alphabetically (Rob)
+> - nvmem: drop example from nvmem binding as the MFD binding has a
+>   complete one (Rob)
+> - nvmem: rename expected nvmem subdev nodename to 'nvmem-0' (Rob)
+> - mfd: add kernel doc
+> - mfd: fix an msec / usec typo
+> - mfd: error handling of devm_mutex_init (Christophe)
+> - whitespace fixes & tidy-ups (Christophe)
+> - Link to v1: https://lore.kernel.org/r/20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org
+> 
+> ---
+> André Draszik (6):
+>       dt-bindings: gpio: add max77759 binding
+>       dt-bindings: nvmem: add max77759 binding
+>       dt-bindings: mfd: add max77759 binding
+>       mfd: max77759: add Maxim MAX77759 core mfd driver
+>       gpio: max77759: add Maxim MAX77759 gpio driver
+>       nvmem: max77759: add Maxim MAX77759 NVMEM driver
+> 
+>  .../bindings/gpio/maxim,max77759-gpio.yaml         |  44 ++
+>  .../devicetree/bindings/mfd/maxim,max77759.yaml    |  99 +++
+>  .../bindings/nvmem/maxim,max77759-nvmem.yaml       |  32 +
+>  MAINTAINERS                                        |  10 +
+>  drivers/gpio/Kconfig                               |  13 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-max77759.c                       | 524 ++++++++++++++++
+>  drivers/mfd/Kconfig                                |  20 +
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/max77759.c                             | 690 +++++++++++++++++++++
+>  drivers/nvmem/Kconfig                              |  12 +
+>  drivers/nvmem/Makefile                             |   2 +
+>  drivers/nvmem/max77759-nvmem.c                     | 156 +++++
+>  include/linux/mfd/max77759.h                       | 165 +++++
+>  14 files changed, 1769 insertions(+)
+> ---
+> base-commit: 9388ec571cb1adba59d1cded2300eeb11827679c
+> change-id: 20250224-max77759-mfd-aaa7a3121b62
+> 
+> Best regards,
+> -- 
+> André Draszik <andre.draszik@linaro.org>
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Andy's comment on a GPIOLIB patch made me realize it's a good idea to
-add tests for open-drain and open-source emulation in the kernel where
-we don't actively drive the line for active and inactive values
-respectively.
----
- tests/tests-kernel-uapi.c | 87 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+Didn't apply cleanly.  Please rebase onto v6.15-rc1.
 
-diff --git a/tests/tests-kernel-uapi.c b/tests/tests-kernel-uapi.c
-index ff220fc..5955fac 100644
---- a/tests/tests-kernel-uapi.c
-+++ b/tests/tests-kernel-uapi.c
-@@ -110,3 +110,90 @@ GPIOD_TEST_CASE(enable_debounce_then_edge_detection)
- 
- 	g_assert_cmpuint(ts_falling, >, ts_rising);
- }
-+
-+GPIOD_TEST_CASE(open_drain_emulation)
-+{
-+	static const guint offset = 2;
-+
-+	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
-+	g_autoptr(struct_gpiod_chip) chip = NULL;
-+	g_autoptr(struct_gpiod_line_settings) settings = NULL;
-+	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
-+	g_autoptr(struct_gpiod_line_request) request = NULL;
-+	g_autoptr(struct_gpiod_line_info) info = NULL;
-+	gint ret;
-+
-+	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
-+	settings = gpiod_test_create_line_settings_or_fail();
-+	line_cfg = gpiod_test_create_line_config_or_fail();
-+
-+	gpiod_line_settings_set_direction(settings,
-+					  GPIOD_LINE_DIRECTION_OUTPUT);
-+	gpiod_line_settings_set_drive(settings, GPIOD_LINE_DRIVE_OPEN_DRAIN);
-+	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
-+							 settings);
-+	request = gpiod_test_chip_request_lines_or_fail(chip, NULL, line_cfg);
-+
-+	ret = gpiod_line_request_set_value(request, offset,
-+					   GPIOD_LINE_VALUE_ACTIVE);
-+	g_assert_cmpint(ret, ==, 0);
-+	gpiod_test_return_if_failed();
-+
-+	/*
-+	 * The open-drain emulation in the kernel will set the line's direction
-+	 * to input but NOT set FLAG_IS_OUT. Let's verify the direction is
-+	 * still reported as output.
-+	 */
-+	info = gpiod_test_chip_get_line_info_or_fail(chip, offset);
-+	g_assert_cmpint(gpiod_line_info_get_direction(info), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_line_info_get_drive(info), ==,
-+			GPIOD_LINE_DRIVE_OPEN_DRAIN);
-+
-+	/*
-+	 * The actual line is not being actively driven, so check that too on
-+	 * the gpio-sim end.
-+	 */
-+	g_assert_cmpint(g_gpiosim_chip_get_value(sim, offset), ==,
-+			G_GPIOSIM_VALUE_INACTIVE);
-+}
-+
-+GPIOD_TEST_CASE(open_source_emulation)
-+{
-+	static const guint offset = 2;
-+
-+	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
-+	g_autoptr(struct_gpiod_chip) chip = NULL;
-+	g_autoptr(struct_gpiod_line_settings) settings = NULL;
-+	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
-+	g_autoptr(struct_gpiod_line_request) request = NULL;
-+	g_autoptr(struct_gpiod_line_info) info = NULL;
-+	gint ret;
-+
-+	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
-+	settings = gpiod_test_create_line_settings_or_fail();
-+	line_cfg = gpiod_test_create_line_config_or_fail();
-+
-+	gpiod_line_settings_set_direction(settings,
-+					  GPIOD_LINE_DIRECTION_OUTPUT);
-+	gpiod_line_settings_set_drive(settings, GPIOD_LINE_DRIVE_OPEN_SOURCE);
-+	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
-+							 settings);
-+	request = gpiod_test_chip_request_lines_or_fail(chip, NULL, line_cfg);
-+
-+	ret = gpiod_line_request_set_value(request, offset,
-+					   GPIOD_LINE_VALUE_INACTIVE);
-+	g_assert_cmpint(ret, ==, 0);
-+	gpiod_test_return_if_failed();
-+
-+	/*
-+	 * The open-source emulation in the kernel will set the line's direction
-+	 * to input but NOT set FLAG_IS_OUT. Let's verify the direction is
-+	 * still reported as output.
-+	 */
-+	info = gpiod_test_chip_get_line_info_or_fail(chip, offset);
-+	g_assert_cmpint(gpiod_line_info_get_direction(info), ==,
-+			GPIOD_LINE_DIRECTION_OUTPUT);
-+	g_assert_cmpint(gpiod_line_info_get_drive(info), ==,
-+			GPIOD_LINE_DRIVE_OPEN_SOURCE);
-+}
-
----
-base-commit: 9f0eca2d7260de1ae22fed3795280bdb14b62e57
-change-id: 20250410-open-drain-source-tests-908e55ac8bec
-
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
+Lee Jones [李琼斯]
 
