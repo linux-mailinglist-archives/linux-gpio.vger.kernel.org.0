@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-18623-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18624-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6BE2A83B95
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 09:47:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0780A83B9F
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 09:49:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEFA03B01CE
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 07:41:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE4EC19E5131
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 07:49:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA00205E0F;
-	Thu, 10 Apr 2025 07:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A77C81DF985;
+	Thu, 10 Apr 2025 07:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aot9COST"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jbx9V4Z6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7A81CEACB;
-	Thu, 10 Apr 2025 07:41:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D09D1B81DC;
+	Thu, 10 Apr 2025 07:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270881; cv=none; b=gJngUTo6S9sf/6uvI0MS3lSVLNhqX0H2Kbu9bzyCkx5z3LeazwlW69EdJIcML5+leTzDujmrcssDH2xFKEtLZG220Nd7mXWt/eS4rYonLQr+tGjbCS6c9y9HgGOyvTZzuRm5f6nnJb2zwbwKJe/5P5XdeLek08DVlnt82JsG2rE=
+	t=1744271353; cv=none; b=CGJJwfPXGhCPLbic4cp6oNCdHOvqTt8PThexgkK+jjSXDgwS7WchTkYXQpD9fZBFjCOEFIMBadUErDoIZuTj5srSJs+ilYPUBm4j/LYN8pb4k4Vv9LkZPqT87T3XeoEe53/R3ENTxnxCmZE7Rd/EpuUaGLqfOjTI8me8aHWUSho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270881; c=relaxed/simple;
-	bh=T0rl6mtqXz5LmV5LLiBAssGxQHXvEWWXL3EDzwmnWEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JzDsGH4fRkTucNY/ThFz7wHlI7n6/ruM4PvOdodt5FczjwVYAG+TyEZkU+ikbHDFk97hhwsED6/+J81Q123QEWIvAWwlPmfFVtGjXALl5rLdM2ythuuvla2ksHtR1zC93w+csGntkc0MMCOt0vuwzaskazzxTbGetLcwyUe2YDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aot9COST; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1744271353; c=relaxed/simple;
+	bh=ivk3g2xuuWzp02wJHrEL79rm/ijdgS0pYE3iPtcnQ94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RsPzVp9cMri+zCokzLIzxOaifvc11urhcOLkb/rd5hHz65eeVZdAbDLf3Sv2aZz0Oc15tDz0GiUquH2RIdt1oKbVG9oMQFFJ96kT+u311u4hlh5//X6x+qQY/14/CTTfOh/FXzzxeAiU6eAd9fcwphcPwRL1wnrUxvfy4Bub1os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jbx9V4Z6; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744270877;
-	bh=T0rl6mtqXz5LmV5LLiBAssGxQHXvEWWXL3EDzwmnWEk=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aot9COSTnnKvgbGAq80PH5OkL2BX7fTgqBgoPPT/KOmtsS0JQ3I5AnxJ2kkahytDZ
-	 RMauBQEs4WXQ/fG7+K7cGkem33n5Afdt7mMk2Z3tQBcxJdlFLLdbTUO5xgN1I85hyL
-	 AIUiTLipV5O01P4BySbn1VtLc+LOJFa+/qrPh/OkaN3DE5U5Y6ySrwh5nM3/4QHcR7
-	 al3BIoEy24HMwNHPcIYwwHGTTMZsVpVWxlPq8HYjOi+LycGoj+BuWGykl3AB3Haem0
-	 jt6Om8U14QSdNDNd9ADCaxME29oX/M67NRdEOcbR6F4FvC1LUKphUd1T86EmUifUX3
-	 /XxVPg5vq0Z6Q==
+	s=mail; t=1744271349;
+	bh=ivk3g2xuuWzp02wJHrEL79rm/ijdgS0pYE3iPtcnQ94=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jbx9V4Z6DWUoU2FXPTLYMh8Baz0STBgWnytWTfreUVWvbr0cTFRO4VZYiZ9al2LOI
+	 giTpUXroI3ZQtJur1zlcFZx5s8tBcHfswO1hrY5UjZadLnG9b8c//71sQ4OdNRYjfO
+	 YV5yPWulenhUJJ5FlzZF8J5nOl3xYmVaQPYL2UXW+FqmN3DYK2VOpu8tNg/ODZDfyg
+	 q1QU1nZ+FRiJCbn2gt5w3137KFG8+LgQ7VWHgJFfkOYZ+9M+y9TzR0/A+Cw40euUat
+	 7wDME0UQw4PTNRjrYRfltKx/ixnbDGw3TaCm7oxyQR8QoOP6dmnbBttUUH7onIQpcQ
+	 ncq3vrwIqSg/w==
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C03ED17E0904;
-	Thu, 10 Apr 2025 09:41:16 +0200 (CEST)
-Message-ID: <58b3bbe7-c036-45c6-b6e9-e2fc150a9256@collabora.com>
-Date: Thu, 10 Apr 2025 09:41:16 +0200
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 92A2417E0402;
+	Thu, 10 Apr 2025 09:49:08 +0200 (CEST)
+Message-ID: <7e77b50c-1808-49fa-a711-956a570ad208@collabora.com>
+Date: Thu, 10 Apr 2025 09:49:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,95 +57,103 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: mediatek: Correct indentation
- and style in DTS example
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Andy Teng <andy.teng@mediatek.com>,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250324125105.81774-1-krzysztof.kozlowski@linaro.org>
- <20250324125105.81774-2-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: pinctrl: mediatek: Add support for
+ mt8196
+To: Cathy Xu <ot_cathy.xu@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, yong.mao@mediatek.com,
+ Axe.Yang@mediatek.com, Jimin.Wang@mediatek.com, Wenbin.Mei@mediatek.com,
+ Andy-ld.Lu@mediatek.com, Guodong Liu <guodong.liu@mediatek.com>
+References: <20250401054837.1551-1-ot_cathy.xu@mediatek.com>
+ <20250401054837.1551-2-ot_cathy.xu@mediatek.com>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20250324125105.81774-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250401054837.1551-2-ot_cathy.xu@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Il 24/03/25 13:51, Krzysztof Kozlowski ha scritto:
-> DTS example in the bindings should be indented with 2- or 4-spaces and
-> aligned with opening '- |', so correct any differences like 3-spaces or
-> mixtures 2- and 4-spaces in one binding.
+Il 01/04/25 07:48, Cathy Xu ha scritto:
+> Add the new binding document for pinctrl on MediaTek mt8196.
 > 
-> No functional changes here, but saves some comments during reviews of
-> new patches built on existing code.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+> Signed-off-by: Cathy Xu <ot_cathy.xu@mediatek.com>
 > ---
->   .../pinctrl/mediatek,mt65xx-pinctrl.yaml      | 83 +++++++------------
->   .../pinctrl/mediatek,mt7622-pinctrl.yaml      | 48 +++++------
->   .../pinctrl/mediatek,mt8183-pinctrl.yaml      | 68 +++++++--------
->   .../pinctrl/mediatek,mt8192-pinctrl.yaml      | 76 ++++++++---------
->   4 files changed, 127 insertions(+), 148 deletions(-)
+>   .../pinctrl/mediatek,mt8196-pinctrl.yaml      | 220 ++++++++++++++++++
+>   1 file changed, 220 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
-> index 5f2808212f39..b9680b896f12 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
-> @@ -137,64 +137,43 @@ examples:
->           #size-cells = <2>;
->   
->           pinctrl@1c20800 {
-> -          compatible = "mediatek,mt8135-pinctrl";
-> -          reg = <0 0x1000B000 0 0x1000>;
-> -          mediatek,pctl-regmap = <&syscfg_pctl_a>, <&syscfg_pctl_b>;
-> -          gpio-controller;
-> -          #gpio-cells = <2>;
-> -          interrupt-controller;
-> -          #interrupt-cells = <2>;
-> -          interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> -              <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-> -              <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> +            compatible = "mediatek,mt8135-pinctrl";
-> +            reg = <0 0x1000B000 0 0x1000>;
-> +            mediatek,pctl-regmap = <&syscfg_pctl_a>, <&syscfg_pctl_b>;
-> +            gpio-controller;
-> +            #gpio-cells = <2>;
-> +            interrupt-controller;
-> +            #interrupt-cells = <2>;
-> +            interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
->   
-> -          i2c0_pins_a: i2c0-pins {
-> -            pins1 {
-> -              pinmux = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
-> -                <MT8135_PIN_101_SCL0__FUNC_SCL0>;
-> -              bias-disable;
-> -            };
-> -          };
-> -
-> -          i2c1_pins_a: i2c1-pins {
-> -            pins {
-> -              pinmux = <MT8135_PIN_195_SDA1__FUNC_SDA1>,
-> -                <MT8135_PIN_196_SCL1__FUNC_SCL1>;
-> -              bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-> -            };
-> -          };
-> -
-> -          i2c2_pins_a: i2c2-pins {
-> -            pins1 {
-> -              pinmux = <MT8135_PIN_193_SDA2__FUNC_SDA2>;
-> -              bias-pull-down;
-> +            i2c0_pins_a: i2c0-pins {
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..cef7e0321722
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+> @@ -0,0 +1,220 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/mediatek,mt8196-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek MT8196 Pin Controller
+> +
+> +maintainers:
+> +  - Lei Xue <lei.xue@mediatek.com>
+> +  - Cathy Xu <ot_cathy.xu@mediatek.com>
+> +
+> +description:
+> +  The MediaTek's MT8196 Pin controller is used to control SoC pins.
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8196-pinctrl
+> +
+> +  reg:
+> +    items:
+> +      - description: gpio base
+> +      - description: rt group IO
+> +      - description: rm1 group IO
+> +      - description: rm2 group IO
+> +      - description: rb group IO
+> +      - description: bm1 group IO
+> +      - description: bm2 group IO
+> +      - description: bm3 group IO
+> +      - description: lt group IO
+> +      - description: lm1 group IO
+> +      - description: lm2 group IO
+> +      - description: lb1 group IO
+> +      - description: lb2 group IO
+> +      - description: tm1 group IO
+> +      - description: tm2 group IO
+> +      - description: tm3 group IO
+> +
+> +  reg-names:
+> +    items:
+> +      - const: base
+> +      - const: rt
+> +      - const: rm1
+> +      - const: rm2
+> +      - const: rb
+> +      - const: bm1
+> +      - const: bm2
+> +      - const: bm3
+> +      - const: lt
+> +      - const: lm1
+> +      - const: lm2
+> +      - const: lb1
+> +      - const: lb2
+> +      - const: tm1
+> +      - const: tm2
+> +      - const: tm3
 
-Agreeing with Rob - if you can please also remove the labels while at it,
-that'd be great, but regardless of that...
+Why is there no EINT iospace?
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Regards,
+Angelo
 
 
 
