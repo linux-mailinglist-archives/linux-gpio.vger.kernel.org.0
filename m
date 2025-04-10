@@ -1,156 +1,151 @@
-Return-Path: <linux-gpio+bounces-18630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18631-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67A8BA83C9D
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 10:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0094AA83CB5
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 10:24:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCA2C19E01C4
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 08:22:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A91611B63AE1
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 08:24:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94E0020C49F;
-	Thu, 10 Apr 2025 08:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D92C720B812;
+	Thu, 10 Apr 2025 08:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NIXQOVlI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHqX2mW9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177891E5B84;
-	Thu, 10 Apr 2025 08:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2591F03F8;
+	Thu, 10 Apr 2025 08:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273186; cv=none; b=Hrw1vrp5HQKJHpcqUUWuEVPOJMdfCDKMOi13FOuRhgNEfg4fLBklbtAmcS1BMUCUuvxQhXIEh5BZkAFTw/qKNciQdXymj9Zv4a6q0z9+kJfHmsLNSzt6njg7qAwwVtbN+KJGppligi2p2FLE+MfIXFPixptGRSYU0+F8KHO2KMM=
+	t=1744273301; cv=none; b=Me5k3mf7j6UjOFKwb45FB0FSEaiYEo0gJwWAlbRLsQzqlxlFYu4sbZn9rJh1oWtrkskbcXGaJqEsB6rkVXS0zPoPDYkAfd23dOU5I7DFA/DpkCTDQ4gSyV0p+RL0FSgP5FGTsNmsh2d4pNgKBJiwLAdKy6OYThrTmobRExA9ywk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273186; c=relaxed/simple;
-	bh=JH0ysD7QlUmh3YZt2NcU9owTunnHQH6W/wNghS58NQI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
-	 References:In-Reply-To; b=TwvqH5k0WxOJyrTf334vRYkKKI04Sb2ZVYJLraTUeN8KXKm1P7lkuLZc9dt001t0bDyzb8vJGhsn2+EZZSYpNr4fJ04IGF1yICRA1o0Tpt/zDbkzJwhalmD6BhqouwsnOmCnvorCO3VwzkFKqGhwrLxRdCzf97dZoRIl4Q/2cf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NIXQOVlI; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D63034327A;
-	Thu, 10 Apr 2025 08:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744273181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Y5h+5OSRWIwQZiitm22COKTZGTsAm6UEQXwd9f9Grk=;
-	b=NIXQOVlIrym6KHvZ8zKy+qyJJYRaB6rzZvV1l2dctN9BM7O9xMfH4KCGwQoUewtNavGD9l
-	UBub7ZB9EJXHeHkffmFMFZpKwduUBxFGmEmMbN9qUQzSzkj4n7OzJerLwlfXCb1+tkw32Y
-	Aa6lBxB574wk2kfDRXLmAgKci/NcV4jEznQXBH7Dex4YJQUHCYxjHgCvOqSrnOM4Fy9mGX
-	9I1/jses8ZD8ieH1QsKASBBG8m9TpkWw1LG0Ew2teQhH+cufhYIvyoMCuB2uFVFVVO01m0
-	LI6UNdBkzBHpDr7SqGszCBdIQ/Q4nVcla9E9kqu/AoSxP0nqVg7P3Uk1l6ZnNw==
+	s=arc-20240116; t=1744273301; c=relaxed/simple;
+	bh=oE27GsIInnvywdfxX0MmCMRtS+md3d+J5Fr+8BysSMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E05KcU0ClR4Rp3XZkTldFE7FhkEP2zLeXhUusgQe4IO6UaN+ys90uyQGG/z+sk1xxa/7zC0ljRhYmsiz4IjHJZDGsfnkAeq3Tro0AhEPrKQh/IoTXXO267T79U00+doSZ2WsYOMR4tSbbDnS+Vdmy8EBNyC69/9/cInYg0fp2MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHqX2mW9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64388C4CEDD;
+	Thu, 10 Apr 2025 08:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744273299;
+	bh=oE27GsIInnvywdfxX0MmCMRtS+md3d+J5Fr+8BysSMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CHqX2mW9Zjwnt70+e0Tz0XPrkqHOtRGF/P69tBC+UmJYQMsTed3SOZ6EedJfZQjJf
+	 w5WM/9bt71oA38jm3o63EOmToJHx3UbTjhrYeefhAbILWJAiS4q2QYJCpHJKwlNh/k
+	 9vLO59VSIZvsqYux6o1BoYYbkm+yBbt0SRVK1BiBAJNOmgZqDhlqn5ZETEFunMsnt/
+	 hy8+o0EY1K8T63ZQA9+4sGRhftCcM4NfBud/wrw7vfKy1IL/gwad2OjFwt/ot38+uO
+	 bkvkWMHcrxxDykCGGY9OBhCTC4GGOUT1ZZpem2HTqfbnsdf3mdhSFb8qkstBZH9WhH
+	 JvucG4tU7jseg==
+Date: Thu, 10 Apr 2025 09:21:32 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	andi.shyti@kernel.org, mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+	jdelvare@suse.com, alexandre.belloni@bootlin.com,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v8 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250410082132.GP372032@google.com>
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-2-a0282524688@gmail.com>
+ <20250307011542.GE8350@google.com>
+ <CAOoeyxUgiTqtSksfHopEDhZHwNkUq9+d-ojo8ma3PX2dosuwyQ@mail.gmail.com>
+ <20250320145042.GS3890718@google.com>
+ <CAOoeyxXZmrzBSNRdRx9vK84m5Z5y8T_A+wY98vVrPUZ7f4w4iw@mail.gmail.com>
+ <20250404142115.GC278642@google.com>
+ <CAOoeyxVVgHGkH5ajQT0NGNPv7FmVPLzuZtGjCiF7mRRto70aAg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 10 Apr 2025 10:19:39 +0200
-Message-Id: <D92T8KH7F8Q1.3MYEC6SZEEGNB@bootlin.com>
-To: "ALOK TIWARI" <alok.a.tiwari@oracle.com>, "Lee Jones" <lee@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>
-Subject: Re: [External] : [PATCH v6 01/12] dt-bindings: mfd: gpio: Add
- MAX7360
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
- <a9d8ca30-3836-49b3-898c-c351b2c44a76@oracle.com>
-In-Reply-To: <a9d8ca30-3836-49b3-898c-c351b2c44a76@oracle.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekgedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvffuvefhofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvffdugeeiudevjedtteettefftefhvdeileekhffgleeiteeufeejvedvledtffenucffohhmrghinhepuhhrlhguvghfvghnshgvrdgtohhmpdguvghvihgtvghtrhgvvgdrohhrghdprghnrghlohhgrdgtohhmpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtoheprghlohhkr
- dgrrdhtihifrghrihesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxVVgHGkH5ajQT0NGNPv7FmVPLzuZtGjCiF7mRRto70aAg@mail.gmail.com>
 
-On Wed Apr 9, 2025 at 5:22 PM CEST, ALOK TIWARI wrote:
->
->
-> On 09-04-2025 20:25, Mathieu Dubois-Briand wrote:
->> Add device tree bindings for Maxim Integrated MAX7360 device with
->> support for keypad, rotary, gpios and pwm functionalities.
->>=20
->> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->> ---
->>   .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++++++
->>   .../devicetree/bindings/mfd/maxim,max7360.yaml     | 171 +++++++++++++=
-++++++++
->>   2 files changed, 254 insertions(+)
->>=20
->> diff --git a/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.y=
-aml b/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
->> new file mode 100644
->> index 000000000000..21d603d9504c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
->> @@ -0,0 +1,83 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: https://urldefense.com/v3/__http://devicetree.org/schemas/gpio/max=
-im,max7360-gpio.yaml*__;Iw!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp2=
-4O0wAwuujlnN1Zh9-xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvakCad_v0$
->> +$schema: https://urldefense.com/v3/__http://devicetree.org/meta-schemas=
-/core.yaml*__;Iw!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp24O0wAwuujl=
-nN1Zh9-xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvacsB3d9k$
->> +
->> +title: Maxim MAX7360 GPIO controller
->> +
->> +maintainers:
->> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
->> +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->> +
->> +description: |
->> +  Maxim MAX7360 GPIO controller, in MAX7360 chipset
->> +  https://urldefense.com/v3/__https://www.analog.com/en/products/max736=
-0.html__;!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp24O0wAwuujlnN1Zh9-=
-xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvavZnHZJk$
->> +
->> +  The device provide two series of GPIOs, referred here as GPIOs and GP=
-Os.
-> typo: The device provides two series of GPIOs,
->> +
->> +  PORT0 to PORT7 pins can be used as GPIOs, with support for interrupts=
- and
->> +  constant-current mode. These pins will also be used by the torary enc=
-oder and
-> typo: ie rotary encoder ?
->> +  PWM functionalities.
->> +
->> +  COL2 to COL7 pins can be used as GPOs, there is no input capability. =
-COL pins
->> +  will be partitionned, with the first pins being affected to the keypa=
-d
->> +  functionality and the last ones as GPOs.
->> +
-> typo: partitionned -> partitioned
+On Mon, 07 Apr 2025, Ming Yu wrote:
 
-Thanks for your review, I fixed all 3 typos.
+> Lee Jones <lee@kernel.org> 於 2025年4月4日 週五 下午10:21寫道：
+> >
+> > > ...
+> > > > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x1),
+> > > > > >
+> > > > > > IDs are usually given in base-10.
+> > > > > >
+> > > > >
+> > > > > Fix it in v9.
+> > > > >
+> > > > > > Why are you manually adding the device IDs?
+> > > > > >
+> > > > > > PLATFORM_DEVID_AUTO doesn't work for you?
+> > > > > >
+> > > > >
+> > > > > I need to manage these IDs to ensure that child devices can be
+> > > > > properly utilized within their respective modules.
+> > > >
+> > > > How?  Please explain.
+> > > >
+> > > > This numbering looks sequential and arbitrary.
+> > > >
+> > > > What does PLATFORM_DEVID_AUTO do differently such that it is not useful?
+> > > >
+> > >
+> > > As far as I know, PLATFORM_DEVID_AUTO assigns dynamic IDs to devices,
+> > > but I need fixed IDs.
+> > > For example, the GPIO driver relies on these IDs to determine the
+> > > group, allowing the firmware to identify which GPIO group to operate
+> > > on through the API.
+> >
+> > PLATFORM_DEVID_AUTO will allocate IDs 0 through 16, the same as you've
+> > done here.  These lines do not have any differentiating attributes, so
+> > either way we are not allocating specific IDs to specific pieces of the
+> > H/W.  I still do not understand why you need to allocate them manually.
+> >
+> 
+> I'm using PLATFORM_DEVID_AUTO to allocate child device IDs with
+> MFD_CELL_NAME(), like this:
+> 
+> static const struct mfd_cell nct6694_dev[] = {
+>     MFD_CELL_NAME("nct6694-gpio"),
+>     MFD_CELL_NAME("nct6694-gpio"),
+>     ......
+>     MFD_CELL_NAME("nct6694-gpio"),
+>     MFD_CELL_NAME("nct6694-i2c"),
+>     MFD_CELL_NAME("nct6694-i2c"),
+>     ......
+>     MFD_CELL_NAME("nct6694-i2c"),
+>     ......
+> };
+> 
+> For example, the device IDs retrieved in gpio-nct6694.c is 1~16, and
+> i2c-nct6694.c is 17~22. Does this mean each driver should
+> independently handle its dynamically assigned IDs?
+> Additionally, I originally referred to cgbc-core.c with i2c-cgbc.c,
+> and ab8500-core.c with pwm-ab8500.c for associating child devices. Do
+> you think this approach is appropriate in my case?
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Yes, if you _need_ the ranges to start from 0, then you will have to
+call mfd_add_devices() separately on those ranges.  Otherwise one range
+will follow directly on to another range.
 
+But wait, you're using mfd_add_hotplug_devices(), which means you are
+using PLATFORM_DEVID_AUTO.  So your .id values that you've added are
+being ignored anyway.  Thus, if you have tested that this works, you
+don't need them anyway, right?
+
+-- 
+Lee Jones [李琼斯]
 
