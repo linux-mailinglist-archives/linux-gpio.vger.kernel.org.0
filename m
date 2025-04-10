@@ -1,196 +1,156 @@
-Return-Path: <linux-gpio+bounces-18629-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18630-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC0E8A83BFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 10:03:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67A8BA83C9D
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 10:22:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 887B617979F
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 08:03:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCA2C19E01C4
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 08:22:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FC2B1E5204;
-	Thu, 10 Apr 2025 08:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94E0020C49F;
+	Thu, 10 Apr 2025 08:19:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="G988bKzK"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NIXQOVlI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2075.outbound.protection.outlook.com [40.107.243.75])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8A5381A3;
-	Thu, 10 Apr 2025 08:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272216; cv=fail; b=MZYBSx2Wp120echr3RkT/N6vYCRbcSZtfMDxRGp9kFPHTzJbuKWopI6vfbhGKRKvd4Qg0NP+VvL6ypuKe0Rkn5amXZSMAKhcFlkNaw0sWeUtB4+RAEwxCbjo7Yphokl3+VIJDp4B1b8mce0wnYmFwS1lRL/vvdnSztc4HdyM+DQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272216; c=relaxed/simple;
-	bh=CYlMrfU2OHWf3HuM7uuKMpr8oB98Tsyo5FgL3o3at0M=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BKF48bZReaE2J5WrFqilncpIuRhrph1F4TwFFRFeJ+5HBfipVizjvDOfrCkjAO724DraZHxju6wodo/JQQtKvNNVF2UC7SBSEUhQzOd087QOkixrlTegUax8nGDyCEFW8xgNjvlAZha3h2d3id7aY/4A2cWIxkA16P8MWyBHnPc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=G988bKzK; arc=fail smtp.client-ip=40.107.243.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JDN++Hm/7nZMpmlknAubU93jxZapFwvxj/SWFvgc9q5GrfWgGLAeK2hz4nR6S3LpTApN8VNNXJpYCdCepedQRNE/Kk25fxiHE2aEsV5V+0F8X2n9BZrb4U3soYksWPJcweCtsY3nTqu+mliZOKrMrzFzHNy5ENbnbWnOIfVP0SwL9etepj0yFw5CkeHPV7SV2Bx7ntoFma3vibbsgcw3gvFRnVs0IzUEQCgfuh/nil3V/JoFYlWWd8c/FMDX3nSo5xsrIEdiS5Kl8+36mL7xWyGGSC2CHn/TzmpTcThoZqeqx1WLPphn+21huUodFwHyII0SciAmMiDjes6uvtAbFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rpkxWLReosHUgqQ4gKzh4PLA2Ap6tAVbNvAZBN2SLSM=;
- b=EIHUNJKq4KgjFZri0uOs1MGTLN+AAXeQFAI0Nuagva/sQXLPtaUFpt1mYxYnHMBQ2Xdnz9ynv5RHnmieaCtvfhxsStd1gjc6b1Q/ffofS4pLBz5hWrwUuLtcoCfOhMOWUBV4Bc98VyZ5gmRQtkfq6p4KBpdvCeTNhKZBcF8rbYePyqw+te/fT8X9MnKpT7WgKRA81vh4U/Guyl8B5YBENFIowC4n1VXM7xiAkd2BFfFGaIsb5qVmfBuo0MssHNNbzaRJcHKORFs33dLetRQnEwHi+JsaDsRK8xBB4ytTJSnPXIFj51ULj7w2NhlmqkB2HDflSkvYn+g2yoTgysQQGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rpkxWLReosHUgqQ4gKzh4PLA2Ap6tAVbNvAZBN2SLSM=;
- b=G988bKzKFQYhhdogkKP6EOAKuAEEfZuurBZqaIMoAkZrCsUpsxZqoPo/SjmTpr3uGJlIF/x3ff91FeM6f5NMu8pamWoE4ALUq3XX8rT0SG7RiUviIsXq47oVmvyB8vC5VSWgD6n9blhMTUTRNcOqfMxIS7hF4JZR7bBDBBgSqtg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by DS0PR12MB8270.namprd12.prod.outlook.com (2603:10b6:8:fe::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Thu, 10 Apr
- 2025 08:03:31 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%3]) with mapi id 15.20.8632.024; Thu, 10 Apr 2025
- 08:03:31 +0000
-Message-ID: <344adc8a-6a35-4093-98c1-73f1e6de4eb5@amd.com>
-Date: Thu, 10 Apr 2025 13:33:26 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: amd: Fix use of undeclared identifier
- 'pinctrl_amd_s2idle_dev_ops'
-To: Mario Limonciello <superm1@kernel.org>,
- "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- kernel test robot <lkp@intel.com>
-References: <20250409213521.2218692-1-superm1@kernel.org>
-Content-Language: en-US
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20250409213521.2218692-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0082.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:23::27) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177891E5B84;
+	Thu, 10 Apr 2025 08:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744273186; cv=none; b=Hrw1vrp5HQKJHpcqUUWuEVPOJMdfCDKMOi13FOuRhgNEfg4fLBklbtAmcS1BMUCUuvxQhXIEh5BZkAFTw/qKNciQdXymj9Zv4a6q0z9+kJfHmsLNSzt6njg7qAwwVtbN+KJGppligi2p2FLE+MfIXFPixptGRSYU0+F8KHO2KMM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744273186; c=relaxed/simple;
+	bh=JH0ysD7QlUmh3YZt2NcU9owTunnHQH6W/wNghS58NQI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=TwvqH5k0WxOJyrTf334vRYkKKI04Sb2ZVYJLraTUeN8KXKm1P7lkuLZc9dt001t0bDyzb8vJGhsn2+EZZSYpNr4fJ04IGF1yICRA1o0Tpt/zDbkzJwhalmD6BhqouwsnOmCnvorCO3VwzkFKqGhwrLxRdCzf97dZoRIl4Q/2cf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NIXQOVlI; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D63034327A;
+	Thu, 10 Apr 2025 08:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744273181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/Y5h+5OSRWIwQZiitm22COKTZGTsAm6UEQXwd9f9Grk=;
+	b=NIXQOVlIrym6KHvZ8zKy+qyJJYRaB6rzZvV1l2dctN9BM7O9xMfH4KCGwQoUewtNavGD9l
+	UBub7ZB9EJXHeHkffmFMFZpKwduUBxFGmEmMbN9qUQzSzkj4n7OzJerLwlfXCb1+tkw32Y
+	Aa6lBxB574wk2kfDRXLmAgKci/NcV4jEznQXBH7Dex4YJQUHCYxjHgCvOqSrnOM4Fy9mGX
+	9I1/jses8ZD8ieH1QsKASBBG8m9TpkWw1LG0Ew2teQhH+cufhYIvyoMCuB2uFVFVVO01m0
+	LI6UNdBkzBHpDr7SqGszCBdIQ/Q4nVcla9E9kqu/AoSxP0nqVg7P3Uk1l6ZnNw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|DS0PR12MB8270:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b5c8c25-7794-4d26-ccc7-08dd78062f52
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QWhIMzRXdHJaT090UTZpemJIQnkzUnFEZVVTU2RDL2VadTZHcnpDZVVjdXEv?=
- =?utf-8?B?eTUzNExHYk5jdjVSOVRZRzhydFNFNHZEOWJES1ZKQ0dDZmIwZVkwNkxBNVYv?=
- =?utf-8?B?aWV5dnA0TUxYT0RSem9OSTlWNDhvZ1cwTW5xS3QyU2ZLdnlNREVIQlBaeEFR?=
- =?utf-8?B?SDdCZ2hPN2YzbUJVY1pDZElzdjcvVWlJalZMQTJSd0c3ODkxUXJZRlkzam9o?=
- =?utf-8?B?dGJtYTY2cDh3eXpoSk5yODRLNTVjVS9DbDZ3dWtMdEloYUZWOG85cll1Rm9n?=
- =?utf-8?B?V1MwMm40bG9JWUdIS3ZvRC9FWXV1WmJYL3hnSFpQcllHN3E2SWtzMW1nNWcw?=
- =?utf-8?B?SDVqVGQxRnpOK1lvMnVZdTFic2U0Mk8rMnU5YnZBbTNnTkxmZUlKOWpFblJ2?=
- =?utf-8?B?aWF3WGhRYXZSQTdCZlhWQWRXN0hBWHhzTmxaVURsTCt3Y1BwUlFmdEtQcGFv?=
- =?utf-8?B?MFZxYkJaQlBXNGF2VVBlOVZOeUhpQSt3c0lwbTU0QXErQVZsYU9hRy9TZGhD?=
- =?utf-8?B?ZEltRGhRYjAwdVd3VUtWK2k4VTh3cXl6L1hPaEdnRSt2SFBIMGgwcVNXZzhD?=
- =?utf-8?B?MS9tbjlUVVZYbVZxV1FGL01OYjNRTDRETzgvbUh6QVBPd0pNR3JVc2NZM1gy?=
- =?utf-8?B?UVlrdENpODBRdisyZjBKOWZsTkxKU2ROOXBOKzE1V1JqQi9UWlNyeGVnc1Rs?=
- =?utf-8?B?NzJtTEtRWXp6VkhvUFZRRC9BRjA4ZXpteVQzQVcvQ2J6Y0ovWmxHNytnYURR?=
- =?utf-8?B?K3h0d0dRNTRyc0tpdzBHdkcxYmFyTlpUWnJoQ1lQZndlcU43d1VXSDdnY1M4?=
- =?utf-8?B?V3NiY2Q2U0pEaGZyamlGdW55cEVCMG1KYkwzN0RXd3hMWHBsQmhPNCtRY3E2?=
- =?utf-8?B?RFZmV0dXb3NrSU91aXdVRi9xbVRyR2pzT2JIc3ZDVUpxMmFrT240L1hEN0dh?=
- =?utf-8?B?RzNUMVdsZFJVa1poaktjR0ZkS1R6ZW5MTWJPUDBFYldFcUF0c05IRzVKMGRQ?=
- =?utf-8?B?Z2NXVURsdG44ZnJCamlyNWRLYkxMMEpMU2Ixb09VVXNaUlExanphdUczSWhz?=
- =?utf-8?B?eTRlZHhlenpCMDdsSTJLYkJ1Y1VNMnJRNFllaVh2UHVzTDU1MGFwNzlmRDRW?=
- =?utf-8?B?MmZ3ZGVpVlMycUJ4ZTM2L2FQZ1RCTSs3dmhJUllIbG1LZDhVdU5wcjI4Tlp5?=
- =?utf-8?B?NUdJbm1CU0lkTENudWt0em9CMkVZSmI1ajJhaEJaYWw1RkRYZ0oydHgwL3BH?=
- =?utf-8?B?WEF4dmlldE5JT3ZWVVNxRFhxNmxoSThFcmllSDFnLzVXaExVenYySEdZcHNY?=
- =?utf-8?B?QW41OCt2YS9RemxBL3p3c2J0OGZDTFRsYXd0OVlPbDYvQytNam5EcXJDTVh6?=
- =?utf-8?B?aTlpY3IzVnZ1NnZkQjNYeWdzMCtXWXJnTzJFc2hVbWNQSHJXajFpVjl6ckFN?=
- =?utf-8?B?eWJkVkt0cG84bkRXSVRnSnZ5YytBL1NENnlOcHlGU0Z1SDJ5eWxmQngwSWFX?=
- =?utf-8?B?SlphVHhkZnJqaFU4ZG8wT1ZNNFBpQmpJSGJYSEdWMGdRZ3RiTG54Z0xFU3g2?=
- =?utf-8?B?OFB3eEo4TGJjT09kMkZrOEJ1S0pFU0d1MkwvenVCamFGd05GVTJVUEI2Qnlr?=
- =?utf-8?B?SS9FcURFc1U1N25UMzY0UzNXTWU4cEFIbXBnYnRiT3BqVEJxK0N4WUpEdk9q?=
- =?utf-8?B?YzdxVHM5VXJUZVk3OUxOZ3NrL3hIL1hYbEEySjFiaUZyeDlTdDBkVTl0M0gw?=
- =?utf-8?B?dGNzQ0lVeTludFd5dGk2K2luNTlsNGJBS2E2dWJNR0N6TS81K2dZQmR6ZWp0?=
- =?utf-8?B?aGgrL1JjRHE5VFZjNjg3eklTcGhTU25WV0srNGxKOG1aSk45NWl0YmVETjEy?=
- =?utf-8?B?TEdUbDFkWEtTaUZBUHJoZW9sa2V2dUxKd1hDaEY3eGhFNXFZNzBtZmJyL0k2?=
- =?utf-8?Q?AO0Zt+mxrxc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OHJieENTS3pnd1FST21NTXNPN2lGL1hWdmJaT2IremVEam5oT21Kc3krbGg5?=
- =?utf-8?B?WWVJd1p0dzF5RXc4OEdDd1NET3Y4amZRLzVQMHI5ckNjd3hBSEkrMkJBWDJY?=
- =?utf-8?B?UGFucmFnWE9LUksrY3NiYmlLSTh2WTlqVk4zczBxQTBiK2lJTGsrS2NVTXda?=
- =?utf-8?B?SG1pZkd5alppbC8zT3ZaMzF4NW45TW9LNGg1SzJmOXBjbWFzOVlNRk9JN0o1?=
- =?utf-8?B?bzR0ME8xWXhadG9nN1l1TGVGK0FDSmxRNDEzWjJMRktXZVB1OThFZzhMdlBM?=
- =?utf-8?B?NFhpRnFjb2ZlbnJSRGlnZEx2anZ1RjFSeXBpd2FaMG9TYzc1YllZSHQwMjgz?=
- =?utf-8?B?bk52UGZyRXVrUmdRN05tYVBnUm42cE9md2tPeExZTjJFWmN1Z0UzWnJsbFNH?=
- =?utf-8?B?YkNaZVZjUXk3WW4vN05sQnFCTEsxRGpYUmU0S0xCeHJxb1hWNjB5K3U0OGMr?=
- =?utf-8?B?MmQ2Mnp6VFg2bmFxcitqYU5ISzZwR0JyYzZnTlNMRVR2c3VuL0JnMVY0NVh2?=
- =?utf-8?B?a1NCYVFZWXdCbnFSaEZmY1dqMjUrcnVJY1RWbXYrK2JjbEdYa1NCQ2c5ZHdI?=
- =?utf-8?B?dUNPYmpHRzVKczFBV0RJWDR6a0Uvc3pwWkxWZ0tyZ3ZXaTgxOUZWRUhDZ1do?=
- =?utf-8?B?bWhYa1BwOTRRRGcvdnRxWUVHcmRsZFJOV05hNFRlUmVuTStNWThrZWZkazh3?=
- =?utf-8?B?dzFGOVp0M21FQnpPWUVHN3lpVkRGc0hqOUt1d3NORnVPdkEyYkpzSmdCNWpj?=
- =?utf-8?B?VkVxMzNWTjh1ZlRpNmQvaVp1Q1VleGRKdThBUE1BL09GVG43dUJhNW40V211?=
- =?utf-8?B?Q1I2bXE5U2VzbEdSVjdTemY0SEJwRnpIZWdseW9oc2J5YjFQZm0xV1hjekx0?=
- =?utf-8?B?VTdWdFhlOWViR205dU1jZlZXaDdCdG8yVnBOZVJpajJydXJDWjhnZVZuYnZu?=
- =?utf-8?B?TGt6ZWI2enJNRHBwa3dXZy80N05uT3JPMWprQnRlYjZwQUV2cGtSOGVvUDZX?=
- =?utf-8?B?TElsNEQrdU9pZHVNTHhOdlhTNkozQ0NrcWhhZmgvSFdIZmdWRXpLZUxuTjE5?=
- =?utf-8?B?V2pQZk9FT21wRXhjQ2tpakpVaGtxQzV3Q0NFUzR4NUwxQTJESlVKZStGOHpa?=
- =?utf-8?B?NmJRU0FwcjNKZUVGeVlDaDI5WjBmdERBSVBqWWxLTEVvdEhIbmZqNnFuZjlh?=
- =?utf-8?B?Y0NwejJONHBCa3RLYjVRS0V2QzNwQjQ0ZnEzZE9LTHFvb0VSTE50QWZpZHB2?=
- =?utf-8?B?Q0I2MFpmUlA1Z0EzZ04vQ1V5Q3JJZW05VWlpU2pJaXY4SzIvZGpITzAzQWlx?=
- =?utf-8?B?dGpXSkJsL21VMXFSdUs5R21WN2g3TTZTSDlraE9JTkVnVWNEcHVoWFY3bkIw?=
- =?utf-8?B?VitSb1d6RlZoTHVPcWdkSnlGUW1ycGI5bTlUUk40ekxuY255anh6eTdyamdl?=
- =?utf-8?B?UUMrNzRvQWZpcmFWalNGRVFmRzA3alUzc1RGV0c5SCtoR3lzNGV5UmtpTzMr?=
- =?utf-8?B?WUZsWG5GQWZUaUJheVlVQzJGYU9UaHpyRXNkQlROUXFrdXB3MXl5MlVseFFB?=
- =?utf-8?B?TEZ5MWVCUFdFeEZMTTRwYTV3MmFrdGRvNm5oLzlLT2RYSlovM1ZRMzIvMU9P?=
- =?utf-8?B?UUx0RE51SkVlQ1ZKekZiMElJRzBZNHVFdGNRZGN6VmlSQThuTFlxZmgwdERj?=
- =?utf-8?B?UG1qbzJSTFoyVTl2NTAwQTcraDh5YVNLVW9zdk8rUWRvOHFxcUFaaUY2R0cr?=
- =?utf-8?B?enZqYzlHOXJzYnNVNXdOeTlheDV2K2UyVVhVT1FCc1hmNXdaNjVJR2NQbXVl?=
- =?utf-8?B?SHJJbVJsUjBWWEsxenp4QUJZWTVSYytlQnBKRE50T2ZteW5qek5sZmdOZGxo?=
- =?utf-8?B?bDcwOHZSZHNqWS9CbnZzK09rVXpCdXMrWEpRL2RYeFZSYytIVWJJdVJJVlFJ?=
- =?utf-8?B?Wll3RGdvR2xra1dwRjIwNkRwQ2R2WWM2dXA2Q1lOanoxY0d1VTI2QUZZS3Q0?=
- =?utf-8?B?RjE1N04yV1pjMG53RXFVcnJEMXRSbWUxaEEvMEhWOVJOVlBFOWU4dEl1cnU4?=
- =?utf-8?B?V1c1eDQ2Sm1ORUlUM3RmeWM2ajA4UHZtUWZmbzFCaW9JM0VLQ2ZWYVhHYkVo?=
- =?utf-8?Q?25sCvFF9yZookNTV4L/jcnvjr?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b5c8c25-7794-4d26-ccc7-08dd78062f52
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 08:03:31.8550
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1MQAZ8ZjoDOVDPPay1Dyhpex8Pngtest+wcMsS0FFMaMNK+D0eR4uYkP92G8PZTlAdGoCul+pBoo99eWVHn1ig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8270
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 10 Apr 2025 10:19:39 +0200
+Message-Id: <D92T8KH7F8Q1.3MYEC6SZEEGNB@bootlin.com>
+To: "ALOK TIWARI" <alok.a.tiwari@oracle.com>, "Lee Jones" <lee@kernel.org>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>
+Subject: Re: [External] : [PATCH v6 01/12] dt-bindings: mfd: gpio: Add
+ MAX7360
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+ <a9d8ca30-3836-49b3-898c-c351b2c44a76@oracle.com>
+In-Reply-To: <a9d8ca30-3836-49b3-898c-c351b2c44a76@oracle.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekgedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvffuvefhofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvffdugeeiudevjedtteettefftefhvdeileekhffgleeiteeufeejvedvledtffenucffohhmrghinhepuhhrlhguvghfvghnshgvrdgtohhmpdguvghvihgtvghtrhgvvgdrohhrghdprghnrghlohhgrdgtohhmpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtoheprghlohhkr
+ dgrrdhtihifrghrihesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
+On Wed Apr 9, 2025 at 5:22 PM CEST, ALOK TIWARI wrote:
+>
+>
+> On 09-04-2025 20:25, Mathieu Dubois-Briand wrote:
+>> Add device tree bindings for Maxim Integrated MAX7360 device with
+>> support for keypad, rotary, gpios and pwm functionalities.
+>>=20
+>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> ---
+>>   .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++++++
+>>   .../devicetree/bindings/mfd/maxim,max7360.yaml     | 171 +++++++++++++=
+++++++++
+>>   2 files changed, 254 insertions(+)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.y=
+aml b/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
+>> new file mode 100644
+>> index 000000000000..21d603d9504c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
+>> @@ -0,0 +1,83 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: https://urldefense.com/v3/__http://devicetree.org/schemas/gpio/max=
+im,max7360-gpio.yaml*__;Iw!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp2=
+4O0wAwuujlnN1Zh9-xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvakCad_v0$
+>> +$schema: https://urldefense.com/v3/__http://devicetree.org/meta-schemas=
+/core.yaml*__;Iw!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp24O0wAwuujl=
+nN1Zh9-xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvacsB3d9k$
+>> +
+>> +title: Maxim MAX7360 GPIO controller
+>> +
+>> +maintainers:
+>> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> +
+>> +description: |
+>> +  Maxim MAX7360 GPIO controller, in MAX7360 chipset
+>> +  https://urldefense.com/v3/__https://www.analog.com/en/products/max736=
+0.html__;!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp24O0wAwuujlnN1Zh9-=
+xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvavZnHZJk$
+>> +
+>> +  The device provide two series of GPIOs, referred here as GPIOs and GP=
+Os.
+> typo: The device provides two series of GPIOs,
+>> +
+>> +  PORT0 to PORT7 pins can be used as GPIOs, with support for interrupts=
+ and
+>> +  constant-current mode. These pins will also be used by the torary enc=
+oder and
+> typo: ie rotary encoder ?
+>> +  PWM functionalities.
+>> +
+>> +  COL2 to COL7 pins can be used as GPOs, there is no input capability. =
+COL pins
+>> +  will be partitionned, with the first pins being affected to the keypa=
+d
+>> +  functionality and the last ones as GPOs.
+>> +
+> typo: partitionned -> partitioned
 
+Thanks for your review, I fixed all 3 typos.
 
-On 4/10/2025 03:05, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> `pinctrl_amd_s2idle_dev_ops` is hidden under both `CONFIG_ACPI` and
-> `CONFIG_PM_SLEEP` so the functions that use it need the same scope.
-> 
-> Adjust checks to look for both.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202504100420.88UPkUTU-lkp@intel.com/
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Looks good to me.
-
-Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
