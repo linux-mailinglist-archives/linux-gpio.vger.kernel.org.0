@@ -1,169 +1,215 @@
-Return-Path: <linux-gpio+bounces-18633-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18634-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBD95A83D24
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 10:37:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14A6BA83D3B
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 10:41:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C6833A6C98
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 08:37:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3EAA466A9F
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 08:40:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D70C620B207;
-	Thu, 10 Apr 2025 08:37:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E0BB20B804;
+	Thu, 10 Apr 2025 08:40:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VCK3utvl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zu13ZQiB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDB243AB7;
-	Thu, 10 Apr 2025 08:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E2320B7F7
+	for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 08:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744274253; cv=none; b=k30X7/q8RjU1r5KboCzDKNU1QMGZfKiv8C0DJ9sax/K5lJPfZSanEezDrGkSBlK1/4sZUcyBLBMrjuyiUhhGAdk9urMZCtzXTFZIIjgMv0OEeQAAeD87ky2N4CMowb1Z7MIAOtcuJedx/dzknNdfo45ipS5fiEJAxlaYJkFpy+s=
+	t=1744274428; cv=none; b=WoXCDF+Scc7gCKS3y8gL54VDr4GBFWPjm5zOj5bM8iEgi8BUF0FP7r9T6JCZor8qQArowwMsmqxSCS9VvLh7Vp6kdV9PCbptg2ZITYYlbQ3BdcOhG9eXqmYLk+BaYCkLJ2DvlBotutVbB8HUEsLQmmQ73tnhxNB7FDhx881s4Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744274253; c=relaxed/simple;
-	bh=Y7XTCca+Ph4nBDuMHEhEUQiVE0QAjFs5rJ9LGz+9ujc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=MMn+gDcl9H71p44FLai5hFsHFptgYqY5C3HwoUsmggspudPEbUpxmOxfvZOAU4lY0dBlvCVHVrdckEQIix4MZmU+uOR6VlWf9CD7w79ySirj3A2+FtOERGvnyEuvNV5YhiEcrksjVNj/poxgOsIFfNR6PUHFWcooYGvrbEG1Zro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VCK3utvl; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 03A5943291;
-	Thu, 10 Apr 2025 08:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744274248;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r9BN7vcK50A+/Pthg8cvvrb8KO1u3e1IMqjO+eqc8PU=;
-	b=VCK3utvlpNaG8Nj54Qfx1SeidjGbSasYRCW2akCLiGnOh8qAjgfYQ264I85//qvfGjLI/8
-	RfNGXTQURWYWA2fTVOuzoFjvY0brFLsa7WPPg4K5XcXkI965yZgol0iRb9d+zCdvWpRyaj
-	NkCJetYOOrAf4q9LIwKHmMjI6PO3KTqApsypbj+s/xn29GefSU2esaEpWJ7qUs5z26YXV0
-	TXxT/zyRLn2z3fwGDcj7f4CAiPR/fVIAYADNeM4B9etZDx5zcw4EKlck9LxyXvfChi+Ovt
-	Wz3Xx9CO5LCo9gHBRrXveivzkWs0U6SeczUWxvU1yCa/xNmTJbb+/vQxjSZmVw==
+	s=arc-20240116; t=1744274428; c=relaxed/simple;
+	bh=vOSWBLv7JfcTP0yOzSTGqNEJ2c9UpUhhMXGy4A9Hh0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=qLCvLJqra5CRNSRYg7i7NgkmjjZAtVImGTqUibLj3k+zSa4USfXfDK7CjZdWlzKwzZ6rSHzXnigqQ4Vvys+boqJ+UkLXDCwUNdV9p2T46n9LlOpaLF00/yokiiRMOVs52WmxfFso3Emi5QY2TfXeyNNC/OTjMDrXqGqGhORr++8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zu13ZQiB; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744274426; x=1775810426;
+  h=date:from:to:cc:subject:message-id;
+  bh=vOSWBLv7JfcTP0yOzSTGqNEJ2c9UpUhhMXGy4A9Hh0Q=;
+  b=Zu13ZQiBZhiTITk6vPtQrdW2mm1qLRs2lb8Kv24kuCwa7i9EMHXBvM9q
+   cAs8ofyqhaSTQK5dtlI6hNL4cCbD5yU8Bds8dOezIKl7a2oiuT0tb1x/C
+   tM4WhUJDAH9zDekckw2NYpZIdu0G2PhiPNxNvObTsUMrWaFvMfYSZAKGz
+   3DU6cUj7QdLgXCaqK4fVL8QA901K0J1qiTzZweUkvqylf39iRetxROWXh
+   xGZwXmqo6WpLGoGtM4ZinYZXRa4p09vLehb30kAy5wS3JJg2QR+0kUIls
+   PbDdxHHpzMCl1l/LgKRW77wI2miYpw5Zm95GR2XxiDV8rg3xKDZxOeRpi
+   Q==;
+X-CSE-ConnectionGUID: uawR4aqQQn+gm8qafpb0EA==
+X-CSE-MsgGUID: Xcmv7/s1SiCj7Ig2IHrsNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="63322807"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="63322807"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 01:40:25 -0700
+X-CSE-ConnectionGUID: YEVx236/TyCSpWNd4iIsaQ==
+X-CSE-MsgGUID: vp6qszRASge3Ce8Nl72J0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="132968220"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 10 Apr 2025 01:40:24 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u2nSQ-0009pj-0x;
+	Thu, 10 Apr 2025 08:40:22 +0000
+Date: Thu, 10 Apr 2025 16:39:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/gpiod-is-equal] BUILD SUCCESS
+ 265daffe788aa1cc5925d0afcde4fe6e99c66638
+Message-ID: <202504101617.eMBUVu6N-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 10 Apr 2025 10:37:27 +0200
-Message-Id: <D92TM7350HVV.19ONAJBTPEAU6@bootlin.com>
-Subject: Re: [PATCH v6 03/12] pinctrl: Add MAX7360 pinctrl driver
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-3-7a2535876e39@bootlin.com>
- <D9276VFZ6GYJ.EO9D1V7C4JSI@bootlin.com>
- <Z_ahLqrMASFXbG5Q@smile.fi.intel.com>
-In-Reply-To: <Z_ahLqrMASFXbG5Q@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekgeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhefhhfelhfekjeeugedtudelueetffejfffhkeeivedvveelgfetfeelveetvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhop
- ehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Wed Apr 9, 2025 at 6:32 PM CEST, Andy Shevchenko wrote:
-> On Wed, Apr 09, 2025 at 05:03:02PM +0200, Mathieu Dubois-Briand wrote:
->> On Wed Apr 9, 2025 at 4:55 PM CEST, Mathieu Dubois-Briand wrote:
->> > Add driver for Maxim Integrated MAX7360 pinctrl on the PORT pins. Pins
->> > can be used either for GPIO, PWM or rotary encoder functionalities.
->
-> ...
->
-> The all the rest of the driver LGTM, but the below.
->
->> > +	device_set_of_node_from_dev(dev, dev->parent);
->>=20
->> Ok, so this goes a bit against what I said I was going to do on my
->> previous series, let me explain why. Same reasoning applies for both
->> uses, in PWM and pinctrl drivers.
->>=20
->> With my previous experiments, I came to the conclusion that:
->> - Either we should use device_set_of_node_from_dev() as I do here.
->> - Or we should add more subnodes in the device tree binding.
->
->> - Also, copying the fwnode with device_set_node() was not possible, as
->>   the kernel would then try to apply pinctrl on both the parent and
->>   child device.
->
-> Hmm... I need to refresh my memory with the old discussions. Can you poin=
-t out
-> to the problem statement with that approach?
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/gpiod-is-equal
+branch HEAD: 265daffe788aa1cc5925d0afcde4fe6e99c66638  gpio: provide gpiod_is_equal()
 
-I mentioned here briefly in my previous series: https://lore.kernel.org/lkm=
-l/D8R4B2PKIWSU.2LWTN50YP7SMX@bootlin.com/
+elapsed time: 1462m
 
-So the issue is, if I copy the parent fwnode using device_set_node(),
-the kernel is trying to apply any pinctrl defined on the node with
-pinctrl- properties on both the parent and the child node. Of course,
-only the first one will succeed, as two devices cannot request the same
-pins at the same time.
+configs tested: 122
+configs skipped: 4
 
->> I previously said the second solution was probably the way to go, but I
->> changed my mind for two reasons.
->>=20
->> First having more subnodes in the device tree was already rejected in
->> the past in the reviews of the dt-bindings patch. This do makes sense as
->> it would be describing device internals (which should not be made in
->> DT), just to ease one specific software implementation (which should
->> also be avoided). So I believe this change would again be rejected.
->> https://lore.kernel.org/lkml/58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel=
-.org/
->>=20
->> But the the second reason is, doing
->> 'git grep "device_set_of_node_from_dev.*parent"', I found several
->> drivers using device_set_of_node_from_dev() for a similar need. Some of
->> these uses are also for MFD child devices:
->> - gpio-adp5585.c / pwm-adp5585.c,
->> - pwm-ntxec.c,
->> - max77620-regulator.c / max77620_thermal.c.
->>=20
->> So, based on this, I believe using device_set_of_node_from_dev() in
->> these two drivers is the way to go.
->
-> The problem with this solution is that, It's OF-centric. Which shouldn't =
-be
-> done in a new code (and I don't see impediments to avoid it). Yes, it doe=
-s
-> the right thing for the case, but only on OF systems. Note, fwnode is a l=
-ist
-> of maximum of two entries (yeah, designed like that right now), can you u=
-tilise
-> that somehow?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Looking at MFD code, I believe ACPI MFD child devices already get the
-parent fwnode, except if a fwnode exists for them.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250409    gcc-12.4.0
+arc                   randconfig-002-20250409    gcc-10.5.0
+arc                        vdk_hs38_defconfig    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                         mv78xx0_defconfig    clang-19
+arm                         orion5x_defconfig    clang-21
+arm                   randconfig-001-20250409    gcc-7.5.0
+arm                   randconfig-002-20250409    gcc-7.5.0
+arm                   randconfig-003-20250409    gcc-7.5.0
+arm                   randconfig-004-20250409    clang-14
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250409    clang-21
+arm64                 randconfig-004-20250409    gcc-6.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250409    gcc-14.2.0
+csky                  randconfig-002-20250409    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250409    clang-21
+hexagon               randconfig-002-20250409    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250409    gcc-12
+i386        buildonly-randconfig-002-20250409    clang-20
+i386        buildonly-randconfig-003-20250409    gcc-11
+i386        buildonly-randconfig-004-20250409    clang-20
+i386        buildonly-randconfig-005-20250409    gcc-12
+i386        buildonly-randconfig-006-20250409    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250409    gcc-14.2.0
+loongarch             randconfig-002-20250409    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                        m5307c3_defconfig    gcc-14.2.0
+m68k                        stmark2_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ci20_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250409    gcc-10.5.0
+nios2                 randconfig-002-20250409    gcc-8.5.0
+openrisc                         alldefconfig    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250409    gcc-13.3.0
+parisc                randconfig-002-20250409    gcc-13.3.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                   bluestone_defconfig    clang-21
+powerpc                      chrp32_defconfig    clang-19
+powerpc               randconfig-001-20250409    gcc-6.5.0
+powerpc               randconfig-002-20250409    clang-21
+powerpc               randconfig-003-20250409    clang-21
+powerpc                     stx_gp3_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250409    clang-21
+powerpc64             randconfig-002-20250409    gcc-8.5.0
+powerpc64             randconfig-003-20250409    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250409    clang-21
+riscv                 randconfig-002-20250409    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250409    gcc-9.3.0
+s390                  randconfig-002-20250409    gcc-9.3.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                         ecovec24_defconfig    gcc-14.2.0
+sh                            hp6xx_defconfig    gcc-14.2.0
+sh                 kfr2r09-romimage_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250409    gcc-12.4.0
+sh                    randconfig-002-20250409    gcc-12.4.0
+sh                          rsk7203_defconfig    gcc-14.2.0
+sh                           se7780_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250409    gcc-13.3.0
+sparc                 randconfig-002-20250409    gcc-7.5.0
+sparc64               randconfig-001-20250409    gcc-11.5.0
+sparc64               randconfig-002-20250409    gcc-13.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250409    gcc-12
+um                    randconfig-002-20250409    clang-14
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250409    clang-20
+x86_64      buildonly-randconfig-002-20250409    gcc-12
+x86_64      buildonly-randconfig-003-20250409    clang-20
+x86_64      buildonly-randconfig-004-20250409    clang-20
+x86_64      buildonly-randconfig-005-20250409    gcc-12
+x86_64      buildonly-randconfig-006-20250409    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                          iss_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250409    gcc-11.5.0
+xtensa                randconfig-002-20250409    gcc-11.5.0
 
-https://elixir.bootlin.com/linux/v6.13.7/source/drivers/mfd/mfd-core.c#L90
-
-Thanks for your review.
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
