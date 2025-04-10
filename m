@@ -1,201 +1,222 @@
-Return-Path: <linux-gpio+bounces-18642-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18643-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35251A83E56
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 11:20:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3012A83EA1
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 11:29:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EAB607AADBF
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 09:18:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9ABB77AE038
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 09:28:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C038A221F36;
-	Thu, 10 Apr 2025 09:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQQ3DxEG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16AC42571C3;
+	Thu, 10 Apr 2025 09:28:56 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6979721D3F6;
-	Thu, 10 Apr 2025 09:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173AA256C9C;
+	Thu, 10 Apr 2025 09:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276771; cv=none; b=XaMZl/keiZ1Fwh+q/A033DPjUBXv8+pJb5zj1zok/z4GPa66rmT0U+6LeAwX1oE9ST4c3nYGutq/5mb1uFj1f8bPveVt4jw/Ul20CMevs9nJ2k6WeB+5Iqdg+3QzCBrN3x3is2qn1H/N327+r1M2AbzTPK/vl83MbWrbecMBBjM=
+	t=1744277335; cv=none; b=mecyE37gG4QZubQrxUh+uE1Casn3GpUsyLp/fsf3A67n5fAa8B8hsk7cVgQGcLRWhp50bTZYRgfn1gF7xNl7K1s4Xoh9lTOzgXbA8qnOL2OB9kof5PPYJQ+aUeAZFokIlVV1oxg1CSlkCv0X30+Cstwc/ZlS6lQhTxRxlQ7lbRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276771; c=relaxed/simple;
-	bh=jyp8zbK16dxt+pX+B0WDW/DB8XOD++gFP8UT7RAEGFA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bM4VgSxUoskY6P2Q4H2Mzxl87mHZdAWl6ODX5Lwd/3HU61rvHrWRrmMRvvX5h0blBqQi6DreOYxM3RBbPJDHYxrelItlYnLNslUr4jlAnpG7PiC3AP79FTbxA4/80n8qbhH8GukRHLMCcQRqp2YnnotUED82yhGzjkIzo52xzRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQQ3DxEG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81EFAC4CEDD;
-	Thu, 10 Apr 2025 09:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744276770;
-	bh=jyp8zbK16dxt+pX+B0WDW/DB8XOD++gFP8UT7RAEGFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QQQ3DxEGDF9pyyPblYM8Xn5VeUqluQYvDaI3IAIHr6q2ffOCVY3X/b5HOWc2o2i1t
-	 nWeirPwmNvuLwtoBo1PxW+6UXKm4wiiwi9pQXAvmTOrGanlYqcqnTfLi7TUcmPrelB
-	 4EdpxjCoARZesnvC4MCRxDJ3cNiTc8QRuoRpOWyQy9XqnWFMOFGXUA+xPfGo2ZnTPM
-	 RyUoDsMFHbAbHKmgYOCkISiKgIDouoqPljHq5vtmoBy21+UyWnDKt5POkKllL84wVS
-	 vpe/wZYS+VQksyrEeZrvHemdal8oyoB63RORYlPI+ifTdlCt78lKATAB/QUBW3U43B
-	 IVtqBFo6RAV3g==
-Date: Thu, 10 Apr 2025 10:19:24 +0100
-From: Lee Jones <lee@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v6 0/6] Maxim Integrated MAX77759 PMIC MFD-based drivers
-Message-ID: <20250410091924.GR372032@google.com>
-References: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
+	s=arc-20240116; t=1744277335; c=relaxed/simple;
+	bh=j0cR0UkHwVBhvb6qrzH2gIti95jd2tW3Z9zzf4mBamI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rpQx5+e8zmvxC/83IeLMIJg66qoBwafMn4Vi7K6tKBcUYHZxVzlvB5pZOfPOXPjKO8cTjzxvfe3rF8OsepuIbX4yTF4hOSRmngcQ7tM2LQHR5xpD8e4dJQgN1DJ1rieB6S3gaSjlEZQmuD8RrlhHC/vFl/yaRnemz7c7xvnZ9aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523de538206so293872e0c.2;
+        Thu, 10 Apr 2025 02:28:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744277331; x=1744882131;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wBl1rpTFmuBR/zPu0dOpPN0jRShCrJGGB5hAKx+yje8=;
+        b=TXsTta4FZxYpcQh9OoKCny3ffXlyOEeBOge8ibTG0NuZGGALVaOj0Oo0DHLXP7D0Pq
+         zzpselrfbPwt+Tc/bSqeG10P1vK7atadhS5Oetpyhvf+OsJLmFMB2CmJ9CtXshVqxfKt
+         6+VogFWrfqwx89PQLHun2GBYMwwQ6383AORKGXRotHdMy1ZsWj9iOBsRtVzQrmQfM5WT
+         yP38+sH4ayBLfRqHpFhhtXjqsMbZaPh05wjad4oeCPLZDC77VHAAJmTCNPZFg3QBNFne
+         3asJbzCAlX3A1XlLnvm9Epp7VyO1t8F6L2xgi1k8evvbpT09hPRqkvbz/46S4WB77noj
+         4pgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7VIbO56DGIEZ4Jj+kgH/RuBK2iWhG9dQpvvK3irt3EzKpMTRXgxzF7q5OWkym1lb6aOzwBjqeoWdwmQ==@vger.kernel.org, AJvYcCUklrK+Sgj5lLHI1xWOKEnjfFXqou/qaLlHRlH7isVpV2ZfE55u8zQWv03JSr1hP3+PueMa+lTzYUMG@vger.kernel.org, AJvYcCUxfjj6U9s6s7dyFrDJIFTHMsYFHd0IjtwZSacUYU17hv/23f1DDOATN8o+w4/T+eAZYz9dC+knKXJJds5p@vger.kernel.org, AJvYcCVNYLRP2InocjQuwlv3/evmrebBY3Fs2tDWVbUPLY2rRuqrIXwMQmQBWPRAj7zPEPQbOXvHvvbN8NFGcvdW@vger.kernel.org, AJvYcCWeaVzfEkeX+BUuC5UpYleHO8thawqsNmrM+EsqG0OhNjVJRDzVLqOPNt0S1UkK/bA7WxoFVtpyLVl8@vger.kernel.org, AJvYcCXkQ2Spbe+Edo8iTwZtGwLwWaBEgSCOb8fcWnV375iJNu6vtxyTCE1bSdMjtMUOnbTBGqwXLzqNoy0bqPLp1T2RhLM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqW4GxdmCOz1MziVhnYNPMYKOMDKpUfCoBrv10v7zHymtu0OcV
+	7jgEvzCKK1B1PErxawnI3gRolGshHtvbKCGQRntqdREbd0TlCEcxRXZkIBkR
+X-Gm-Gg: ASbGncuU+5AxS7kIdkjAYBH7uAJ+KI98R8fA8hsmCauQG0qOEnG9eT+qwEgQ7v7NrUY
+	Cx0Ks9RkReb8dyoNdW2A38K+cA5HB8eagCQX5A98ameEbGstwMV/wWvOuGIcrzpM+r/Ugz0He32
+	YrqZ4MKfrzqx4rcV8chp7XIr9pEdqCicRcAJaM5mpjw8YomgL55HpPxeQ/TygMwDCWVysTDmNjX
+	kc7RyhkiL2n+6iYk8uxUTcHSxXCwHPfsUPIeYeYz4K+ZPSUhZXtu/Ir1xI9Y3UZ6wHIrt8L/gou
+	Fl8WDiPaFRbBxkmD4wopzAr5cqelE9HumiFVlqv9bRy6NlACRpUIQgBfHqdrNzkXISQReNXkCqZ
+	eaNo=
+X-Google-Smtp-Source: AGHT+IEp1dzmPfmYoXoV7GiRH5Sn7oB3ysaFgUw/bRRW5GdV+CThvRd2Re69rTPihq0vbvCLu6+OLw==
+X-Received: by 2002:a05:6102:1528:b0:4c5:1c0b:4ee9 with SMTP id ada2fe7eead31-4c9d36295aamr1187237137.22.1744277331428;
+        Thu, 10 Apr 2025 02:28:51 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c9738376sm522168137.6.2025.04.10.02.28.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 02:28:51 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86d3805a551so255790241.3;
+        Thu, 10 Apr 2025 02:28:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVGXGo3OY1lPDCzdamUc5NTwM/kVpZqfuIg3qSMgDYDTyiZNCzgHcFB7zID7s7UiYvRXFM7R1M7vxHpzDwu@vger.kernel.org, AJvYcCVVvgo+CRhBZopJA4ETv30j3aDevzUh+mJ2oye7lGaNyUIYsF1aPnbQyK5DBNBjLUgEwKgy43e5WtqN@vger.kernel.org, AJvYcCWQe07LIydN0jNmxhJzqmyeBOv6kFntCdCADxTS2CCeAnV7wEysAyQcTgMKz2Z8uxzJLed51Ad6aV2a@vger.kernel.org, AJvYcCWmNOdu3NWtg9oicAzMUS38WEkgyLqpun2Rhj9NHGZLF1WJJLW+YhkPh5bf9w3CD1tv6qVa0iCPLM9UT8Du+C8XW4Q=@vger.kernel.org, AJvYcCXbOWCDSEM+Znvt3rVAD57lyuYFPHNuzwuANXV/VGWkhh0w0M9KyKXgEgFIC9fK3GaajrE7EDLDfsaNZMjC@vger.kernel.org, AJvYcCXd/tW7x03Q/lgEHnOEeYuyJa+BaZLJzScknQxT9oeMoU4xLYcdjDkA8GagNHGrDNaBQmXkqlwNjKWtwQ==@vger.kernel.org
+X-Received: by 2002:a05:6102:1528:b0:4c5:1c0b:4ee9 with SMTP id
+ ada2fe7eead31-4c9d36295aamr1187228137.22.1744277330836; Thu, 10 Apr 2025
+ 02:28:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 10 Apr 2025 11:28:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
+X-Gm-Features: ATxdqUEYc_Qs25l4gr_1nikV9rdWYeVtBxciGQr8vWSlUzu_O6eXylqnRYziDHA
+Message-ID: <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
+Subject: Re: [PATCH v2 04/12] soc: renesas: sysc: Add SoC identification for
+ RZ/V2N SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 25 Mar 2025, André Draszik wrote:
+Hi Prabhakar,
 
-> Hi,
-> 
-> This series improves support for the Maxim Integrated MAX77759
-> companion PMIC for USB Type-C applications using the MFD framework.
-> 
-> This series must be applied in-order, due to interdependencies of some
-> of the patches:
-> * to avoid use of undocumented compatibles by the newly added drivers,
->   the bindings are added first in this series
-> * patch 1 ("dt-bindings: gpio: add max77759 binding") also creates a
->   new MAINTAINERS entry, including a wildcard match for the other
->   bindings in this series
-> * patch 3 ("dt-bindings: mfd: add max77759 binding") references the
->   bindings added in patch 1 and 2 and can not work if those aren't
->   available
-> * patch 4 ("mfd: max77759: add Maxim MAX77759 core mfd driver") adds
->   the core MFD driver, which also exposes an API to its leaf drivers
->   and is used by patches 5 and 6
-> * patches 5 and 6 won't compile without patch 4
-> 
-> The MAX77759 PMIC includes Battery Charger, Fuel Gauge, temperature
-> sensors, USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
-> 
-> This PMIC is used on the Google Pixel 6 and 6 Pro (oriole / raven).
-> 
-> This series adds support for the top-level MFD device, the gpio, and
-> nvmem cells. Other components are excluded for the following reasons:
-> 
->     While in the same package, Fuel Gauge and TCPC have separate and
->     independent I2C addresses, register maps, interrupt lines, and
->     aren't part of the top-level package interrupt hierarchy.
->     Furthermore, a driver for the TCPC part exists already (in
->     drivers/usb/typec/tcpm/tcpci_maxim_core.c).
-> 
->     I'm leaving out temperature sensors and charger in this submission,
->     because the former are not in use on Pixel 6 and I therefore can
->     not test them, and the latter can be added later, once we look at
->     the whole charging topic in more detail.
-> 
-> To make maintainers' work easier, I am planning to send the relevant
-> DTS and defconfig changes via a different series, unless everything
-> is expected to go via Lee's MFD tree in one series?
-> 
-> Cheers,
-> Andre'
-> 
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
-> ---
-> Changes in v6:
-> - add one missing change in core driver
-> - Link to v5: https://lore.kernel.org/r/20250325-max77759-mfd-v5-0-69bd6f07a77b@linaro.org
-> 
-> Changes in v5:
-> - core: incorporate Lee's comments (hoping I didn't miss any :-)
-> - Link to v4: https://lore.kernel.org/r/20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org
-> 
-> Changes in v4:
-> - collect tags
-> - mfd: add missing build_bug.h include
-> - mfd: update an irq chip comment
-> - mfd: fix a whitespace in register definitions
-> - Link to v3: https://lore.kernel.org/r/20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org
-> 
-> Changes in v3:
-> - collect tags
-> - mfd: drop gpio-controller and gpio-cells, GPIO is provided by the
->   child (Rob)
-> - gpio: drop duplicate init of 'handled' variable in irq handler
-> - gpio: use boolean with IRQ_RETVAL() (Linus)
-> - gpio: drop 'virq' variable inside irq handler to avoid confusion
->   (Linus)
-> - gpio: drop assignment of struct gpio_chip::owner (Linus)
-> - Link to v2: https://lore.kernel.org/r/20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org
-> 
-> Changes in v2:
-> - reorder bindings patches to avoid validation failures
-> - add dependency information to cover letter (Krzysztof)
-> - fix max77759_gpio_direction_from_control() in gpio driver
-> - gpio: drop 'interrupts' property from binding and sort properties
->   alphabetically (Rob)
-> - nvmem: drop example from nvmem binding as the MFD binding has a
->   complete one (Rob)
-> - nvmem: rename expected nvmem subdev nodename to 'nvmem-0' (Rob)
-> - mfd: add kernel doc
-> - mfd: fix an msec / usec typo
-> - mfd: error handling of devm_mutex_init (Christophe)
-> - whitespace fixes & tidy-ups (Christophe)
-> - Link to v1: https://lore.kernel.org/r/20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org
-> 
-> ---
-> André Draszik (6):
->       dt-bindings: gpio: add max77759 binding
->       dt-bindings: nvmem: add max77759 binding
->       dt-bindings: mfd: add max77759 binding
->       mfd: max77759: add Maxim MAX77759 core mfd driver
->       gpio: max77759: add Maxim MAX77759 gpio driver
->       nvmem: max77759: add Maxim MAX77759 NVMEM driver
-> 
->  .../bindings/gpio/maxim,max77759-gpio.yaml         |  44 ++
->  .../devicetree/bindings/mfd/maxim,max77759.yaml    |  99 +++
->  .../bindings/nvmem/maxim,max77759-nvmem.yaml       |  32 +
->  MAINTAINERS                                        |  10 +
->  drivers/gpio/Kconfig                               |  13 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-max77759.c                       | 524 ++++++++++++++++
->  drivers/mfd/Kconfig                                |  20 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/max77759.c                             | 690 +++++++++++++++++++++
->  drivers/nvmem/Kconfig                              |  12 +
->  drivers/nvmem/Makefile                             |   2 +
->  drivers/nvmem/max77759-nvmem.c                     | 156 +++++
->  include/linux/mfd/max77759.h                       | 165 +++++
->  14 files changed, 1769 insertions(+)
-> ---
-> base-commit: 9388ec571cb1adba59d1cded2300eeb11827679c
-> change-id: 20250224-max77759-mfd-aaa7a3121b62
-> 
-> Best regards,
-> -- 
-> André Draszik <andre.draszik@linaro.org>
+On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add SoC identification for the RZ/V2N SoC using the System Controller
+> (SYS) block.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Didn't apply cleanly.  Please rebase onto v6.15-rc1.
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/drivers/soc/renesas/r9a09g056-sys.c
+> @@ -0,0 +1,107 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * RZ/V2N System controller (SYS) driver
+> + *
+> + * Copyright (C) 2025 Renesas Electronics Corp.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/string.h>
+> +
+> +#include "rz-sysc.h"
+> +
+> +/* Register Offsets */
+> +#define SYS_LSI_MODE           0x300
+> +#define SYS_LSI_MODE_SEC_EN    BIT(16)
+> +/*
+> + * BOOTPLLCA[1:0]
+> + *         [0,0] => 1.1GHZ
+> + *         [0,1] => 1.5GHZ
+> + *         [1,0] => 1.6GHZ
+> + *         [1,1] => 1.7GHZ
+> + */
+> +#define SYS_LSI_MODE_STAT_BOOTPLLCA55  GENMASK(12, 11)
+> +#define SYS_LSI_MODE_CA55_1_7GHZ       0x3
+> +
+> +#define SYS_LSI_PRR                    0x308
+> +#define SYS_LSI_PRR_GPU_DIS            BIT(0)
+> +#define SYS_LSI_PRR_ISP_DIS            BIT(4)
+> +
+> +#define SYS_RZV2N_FEATURE_G31          BIT(0)
+> +#define SYS_RZV2N_FEATURE_C55          BIT(1)
+> +#define SYS_RZV2N_FEATURE_SEC          BIT(2)
+> +
+> +static void rzv2n_sys_print_id(struct device *dev,
+> +                              void __iomem *sysc_base,
+> +                              struct soc_device_attribute *soc_dev_attr)
+> +{
+> +       unsigned int part_number;
+> +       char features[75] = "";
+> +       u32 prr_val, mode_val;
+> +       u8 feature_flags;
+> +
+> +       prr_val = readl(sysc_base + SYS_LSI_PRR);
+> +       mode_val = readl(sysc_base + SYS_LSI_MODE);
+> +
+> +       /* Check GPU, ISP and Cryptographic configuration */
+> +       feature_flags = !(prr_val & SYS_LSI_PRR_GPU_DIS) ? SYS_RZV2N_FEATURE_G31 : 0;
+> +       feature_flags |= !(prr_val & SYS_LSI_PRR_ISP_DIS) ? SYS_RZV2N_FEATURE_C55 : 0;
+> +       feature_flags |= (mode_val & SYS_LSI_MODE_SEC_EN) ? SYS_RZV2N_FEATURE_SEC : 0;
+> +
+> +       part_number = 41;
+> +       if (feature_flags & SYS_RZV2N_FEATURE_G31)
+> +               part_number++;
+> +       if (feature_flags & SYS_RZV2N_FEATURE_C55)
+> +               part_number += 2;
+> +       if (feature_flags & SYS_RZV2N_FEATURE_SEC)
+> +               part_number += 4;
+
+The above construct can be simplified to
+
+    part_number = 41 + feature_flags;
+
+> +       if (feature_flags) {
+> +               unsigned int features_len = sizeof(features);
+> +
+> +               strscpy(features, "with ");
+> +               if (feature_flags & SYS_RZV2N_FEATURE_G31)
+> +                       strlcat(features, "GE3D (Mali-G31)", features_len);
+> +
+> +               if (feature_flags == (SYS_RZV2N_FEATURE_G31 |
+> +                                     SYS_RZV2N_FEATURE_C55 |
+> +                                     SYS_RZV2N_FEATURE_SEC))
+> +                       strlcat(features, ", ", features_len);
+> +               else if ((feature_flags & SYS_RZV2N_FEATURE_G31) &&
+> +                        (feature_flags & (SYS_RZV2N_FEATURE_C55 | SYS_RZV2N_FEATURE_SEC)))
+> +                       strlcat(features, " and ", features_len);
+> +
+> +               if (feature_flags & SYS_RZV2N_FEATURE_SEC)
+> +                       strlcat(features, "Cryptographic engine", features_len);
+> +
+> +               if ((feature_flags & SYS_RZV2N_FEATURE_SEC) &&
+> +                   (feature_flags & SYS_RZV2N_FEATURE_C55))
+> +                       strlcat(features, " and ", features_len);
+> +
+> +               if (feature_flags & SYS_RZV2N_FEATURE_C55)
+> +                       strlcat(features, "ISP (Mali-C55)", features_len);
+> +       }
+
+The above looks overly complicated to me.  What about handling it
+like on RZ/V2H?  I agree having 3x "with" doesn't look nice, but you
+could just drop all "with"s.
+
+> +       dev_info(dev, "Detected Renesas %s %sn%d Rev %s %s\n", soc_dev_attr->family,
+> +                soc_dev_attr->soc_id, part_number, soc_dev_attr->revision, features);
+
+This prints a trailing space if features is empty.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
