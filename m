@@ -1,121 +1,188 @@
-Return-Path: <linux-gpio+bounces-18692-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18693-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED92BA8610E
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 16:52:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7F2EA86280
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 17:58:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A9908A6930
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 14:52:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C675B1BA1D09
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 15:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 272761F7554;
-	Fri, 11 Apr 2025 14:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81248213E7B;
+	Fri, 11 Apr 2025 15:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Xq/UAxUK"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="0N8ZaVrY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7485537FF;
-	Fri, 11 Apr 2025 14:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFD0211711;
+	Fri, 11 Apr 2025 15:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744383155; cv=none; b=EU3ss2285BDYJTSsBSiTr0Ai8vP2ThZw1k8pfe6j4hHVvpA2Y3sIaqSw3U+4Eaw+afW5z0sU573Mf5DBuyAd7mJcfF5Smt5Vi3mRknwg//uwmPWZZJXgwUt8kGW4r45r7zlQRWzegA4dnr/qQffcFgA159+3fDlgvn4ip47NEA4=
+	t=1744386993; cv=none; b=pu5k0Z9iqBXdcLZMkuIywcIe96SGuFdURgmNdltIpaaGmZKPp64DCTyR/IiLohsSGI6rLqLQvTlHmmLbBoawcFQbf9Bgkn1WH3v7j4TF0n/NZkvklLF4PiaswcWPBAUnD3b7/kRay90pPpSeIiGflQxIdy4Tht4iKkWttHSqVjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744383155; c=relaxed/simple;
-	bh=B7cRh6flxc3wDyyTeZFBhXdqljBYzOjL9IBWbznSorQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NANerUmMbZPzGF0C8Le2aIK/gXbID0p6PbCbpsltexVonC9/OmRBUYSpa1DGmWIIwzh4HUYOJplZ5lrVxuSKDfuG0E6q8VAQByk29yQty5fz7hsZ0CjYzER4kJamJ0kpVGFF3tXJrqEu42DHuG1iuIbOtFVD3FbgN3hRFgJXHpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Xq/UAxUK; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7866C43846;
-	Fri, 11 Apr 2025 14:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744383150;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5WQj8JYIDKZIiU5BLzr8VSWJkkvHXrsWHxGSKXKhNz4=;
-	b=Xq/UAxUKEca5FS1wbJRQN/WGzbGua7wdXp/xnJGSERiHx/dw5Re9qjsuG5pQBpJ5VCdBzc
-	8xu0s5C5OSaUpKm2yxK4I5yny4rpww3JndLzOCaiN2lbH7Ciaw2H4m6LHl2ZXhIYx/pPyO
-	Vlx1zJ2xcFXw8vNnNynHgkOkMUrUl1p7BExm2j1+2fmOLT26lzuV6rJz4F+IriBMP3iKCC
-	yL7XcMlyuUhLeSNC/YW0UZLd+SpgZ6oClFQN//gr6OzXJuGaLgKMAkyNT53I8FW7+etiFR
-	spOcSKKF8FHN+HwiYRtQnQyR/UTUmQGcuBaj7wLZi0dTyG5W7sgLeaN/ILod5A==
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Fri, 11 Apr 2025 16:52:09 +0200
-Subject: [PATCH v2] gpiolib: Allow to use setters with return value for
- output-only gpios
+	s=arc-20240116; t=1744386993; c=relaxed/simple;
+	bh=Cch5sGaTT2+F0YWxSz4AB3xkKvujbKcwFLNV1deiUUc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qcSd5iFQERlzwjSVmrydlSEOLHKKSmXTlGxUGeiKUDUzhf882aXrvbpziQLxYQE0P2iVCKDMU1b4e68GKS/p8r70E6EebzvIzSzSN1FpU1IkYUOymaDMobbRZDdka3mN/vuVkvS4B4c5E+tmIfoS0z4ty7tXGwFfjVEhlGBh1eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=0N8ZaVrY; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BEoVFc001831;
+	Fri, 11 Apr 2025 11:56:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=j9xtUhdGhdkE8EyjBRJ/O22T4tN
+	Jah4ogLXZDU/tV8I=; b=0N8ZaVrYTbMppqCdcHAjAO9gFTUr2A1L47TKpQd3d4i
+	AePqVJkYStxGOpnI1cv1YFWGxsNv+Urkugs1IINWQebb0e31co/xiG1mk3UpnBC6
+	Bu9S6JJO1WjXK5XcZJW3bAbJoK+98iX7Kwr5CGy9ipdCZd/j5PNpm7NT8R50Unhb
+	2iuPRsK7W/vfJGVbDGQF+cQxG7rIGvS/S3WGB0MyfiBnAnNTJjyPomk3DtA2L6+F
+	/rZ8iyxti7UQIpv9ysyaOeswrv9wdfMCRVpDsq59TWluBBrHnJlGgPQywvsY8JiR
+	uZo2Ivcz0z5qKl1dDqaM/05a2+6zYeHbYyMktn4OVhQ==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 45x8yp16tq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 11:56:12 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 53BFuBFr022161
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 11:56:11 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 11 Apr 2025 11:56:11 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 11 Apr 2025 11:56:11 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 11 Apr 2025 11:56:11 -0400
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53BFtqcs015425;
+	Fri, 11 Apr 2025 11:55:54 -0400
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <nuno.sa@analog.com>,
+        <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
+Subject: [PATCH v5 00/14] iio: adc: ad7768-1: Add features, improvements, and fixes
+Date: Fri, 11 Apr 2025 12:55:51 -0300
+Message-ID: <cover.1744325346.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-mdb-gpiolib-setters-fix-v2-1-9611280d8822@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAJgs+WcC/4WNQQ6CMBBFr0Jm7Zi2orWsvIdhQekIkwAlbUM0p
- He3cgGX7yX//R0iBaYITbVDoI0j+6WAOlXQj90yELIrDEqoq6ilxNlZHFb2E1uMlBKFiC9+o71
- ro2/GKKEFlPUaqOij/GwLjxyTD5/jaJM/+7+5SZToqLsI1Vld1+JhvU8TL+fez9DmnL8jx3hBw
- AAAAA==
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744383150; l=1462;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=B7cRh6flxc3wDyyTeZFBhXdqljBYzOjL9IBWbznSorQ=;
- b=XlcqQPOGKCYQh051bTYIKWVhhv6s3D0dQvElenhZ88XXUe/UN7ogyvti36ApuR+ocXMafBHbW
- E6pdlZSI99WDvI10QdVOV56X4h4p5m5yGE7KmGxsNVZQass1/nwY8Sl
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddvuddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeitdevuefguedvjeduieeludekudeiveffueektdehfeevheeugffhhfdtgedvgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuhdrkhhlvghinhgvq
- dhkohgvnhhighessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggrrhhtohhsiidrghholhgrshiivgifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: 1V0-SBfQHb1mGgX1etPvE0AWIn-r8FTk
+X-Authority-Analysis: v=2.4 cv=BoqdwZX5 c=1 sm=1 tr=0 ts=67f93b9c cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=AKSQIOYSF6qBGy93K6UA:9
+X-Proofpoint-GUID: 1V0-SBfQHb1mGgX1etPvE0AWIn-r8FTk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_06,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 impostorscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110101
 
-The gpiod_direction_output_raw_commit() function checks if any setter
-callback is present before doing anything. As the new GPIO setters with
-return values were introduced, make this check also succeed if one is
-present.
+This patch series introduces some new features, improvements,
+and fixes for the AD7768-1 ADC driver. 
 
-Fixes: 98ce1eb1fd87 ("gpiolib: introduce gpio_chip setters that return values")
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+The goal is to support all key functionalities listed in the device
+datasheet, including filter mode selection, common mode voltage output
+configuration and GPIO support. Additionally, this includes fixes 
+for SPI communication and for IIO interface, and also code improvements
+to enhance maintainability and readability.
+
 ---
+Changes in v5:
+* Added gpio-trigger binding patch.
+* Include START pin and DRDY in the trigger-sources description.
+* increased trigger-source-cells to 1: this cell will define the trigger
+  source type.
+* Fixed the holes in the regmap ranges.
+* replace old iio_device_claim_direct_mode() for the new 
+  iio_device_claim/release_direct() functions.
+* Changed some commit messages.
+* Link to v4: https://lore.kernel.org/linux-iio/cover.1741268122.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v4:
+* Added missing `select REGMAP_SPI` and `select REGULATOR` to the device's Kconfig.
+* VCM output regulator property renamed.
+* Added direct mode conditional locks to regulator controller callbacks.
+* Renamed regulator controller.
+* Created helper function to precalculate the sampling frequency table and avoid
+  race conditions.
+* Link to v3: https://lore.kernel.org/linux-iio/cover.1739368121.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v3:
+* Fixed irregular or missing SoBs.
+* Moved MOSI idle state patch to the start of the patch, as the other fix.
+* fixed dt-binding errors.
+* Trigger-sources is handled in a different way, as an alternative to sync-in-gpio.
+  (this way we avoid breaking old applications).
+* VCM output is controlled by the regulator framework.
+* Added a second regmap for 24-bit register values.
+* Add new preparatory patch replacing the manual attribute declarations for
+  the read_avail from struct iio_info.
+* included sinc3+rej60 filter type.
+* Addressed review comments, see individual pacthes.
+* Link to v2: https://lore.kernel.org/linux-iio/cover.1737985435.git.Jonathan.Santos@analog.com/T/#u
+
 Changes in v2:
-- Add Fixes: tag and Cc: to stable
-- Link to v1: https://lore.kernel.org/r/20250411-mdb-gpiolib-setters-fix-v1-1-dea302ab7440@bootlin.com
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+* Removed synchronization over SPI property and replaced it for trigger-sources.
+* Added GPIO controller documentation.
+* VCM output control changed from an IIO attribute to a devicetree property (static value).
+* Converted driver to use regmap and dropped spi_read_reg and spi_write_reg pacthes.
+* replaced decimation_rate attribute for oversampling_ratio and dropped device specific documentation patch.
+* Added low pass -3dB cutoff attribute.
+* Addressed review comments, see individual pacthes.
+* Link to v1: https://lore.kernel.org/linux-iio/cover.1736201898.git.Jonathan.Santos@analog.com/T/#t
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index b8197502a5ac..cd4fecbb41f2 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2879,7 +2879,7 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
- 	 * output-only, but if there is then not even a .set() operation it
- 	 * is pretty tricky to drive the output line.
- 	 */
--	if (!guard.gc->set && !guard.gc->direction_output) {
-+	if (!guard.gc->set && !guard.gc->set_rv && !guard.gc->direction_output) {
- 		gpiod_warn(desc,
- 			   "%s: missing set() and direction_output() operations\n",
- 			   __func__);
+Jonathan Santos (11):
+  dt-bindings: trigger-source: add generic GPIO trigger source
+  dt-bindings: iio: adc: ad7768-1: add trigger-sources property
+  dt-bindings: iio: adc: ad7768-1: Document GPIO controller
+  dt-bindings: iio: adc: ad7768-1: document regulator provider property
+  iio: adc: ad7768-1: convert driver to use regmap
+  iio: adc: ad7768-1: add regulator to control VCM output
+  iio: adc: ad7768-1: add multiple scan types to support 16-bits mode
+  iio: adc: ad7768-1: add support for Synchronization over SPI
+  iio: adc: ad7768-1: replace manual attribute declaration
+  iio: adc: ad7768-1: add filter type and oversampling ratio attributes
+  iio: adc: ad7768-1: add low pass -3dB cutoff attribute
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250411-mdb-gpiolib-setters-fix-b87976992070
+Sergiu Cuciurean (3):
+  iio: adc: ad7768-1: Add reset gpio
+  iio: adc: ad7768-1: Move buffer allocation to a separate function
+  iio: adc: ad7768-1: Add GPIO controller support
 
-Best regards,
+ .../bindings/iio/adc/adi,ad7768-1.yaml        |   67 +-
+ .../bindings/trigger-source/gpio-trigger.yaml |   40 +
+ drivers/iio/adc/Kconfig                       |    2 +
+ drivers/iio/adc/ad7768-1.c                    | 1105 ++++++++++++++---
+ 4 files changed, 1040 insertions(+), 174 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+
+
+base-commit: 5d1a5c4f121f0ec50327e899c9450978505f1560
+prerequisite-patch-id: 933ca5331b0044084f60cba5f9019663e01fa9c2
 -- 
-Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+2.34.1
 
 
