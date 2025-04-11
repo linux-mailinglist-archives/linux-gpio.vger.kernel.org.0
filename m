@@ -1,113 +1,176 @@
-Return-Path: <linux-gpio+bounces-18712-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18713-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BAD6A86570
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 20:24:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26A4FA866A6
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 21:49:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5D0B9C1304
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 18:23:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE4D31B67C7F
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 19:49:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FEE425A2C6;
-	Fri, 11 Apr 2025 18:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DAEB28152F;
+	Fri, 11 Apr 2025 19:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="MOJtHNJ8"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="md1/lGE2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF7D8BEA;
-	Fri, 11 Apr 2025 18:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BC422DF9B
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Apr 2025 19:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744395781; cv=none; b=m6iyXq1QVULZztRTx+Mk3fG6kDRATbARyx79KD9ve+WU/efmwnGCASwwL7csjQl+ZExy0ejtFOetCrNnYBzZErQQqlzb4rFilpfD9RNewMPmFh3RZ3YOJnH6GzbTNDxOg5LzjQMMJhvshvwh7pW4Jkd/30K0uTcIVgucS8cfN98=
+	t=1744400940; cv=none; b=O/x49YtZtfAGYY99+G0zzQx/EnPjgU4ljJ0hy8ZutYffA6c/tS5RagSRg9DZKdbqnwEggOiSYRTn52h5QOJWaPZIfB2JfQMlWQqq15K0DT/wy5OcXxyQmdjiC4378VmB48bFXhRGxBjBHR6QKdHV7UoemYt1SH0v3rMgV5HP77E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744395781; c=relaxed/simple;
-	bh=hU1s2MUharV+JZ/o7ZGxIzde3SPrYoBUq97/n8uSb2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JKuOXjdL5aJNElTMLptliezSQqBDGoVIIBazTMf1/5a+NelPltu7+Dvh4NXthCWhqyCvBo7mJgO0PjGqepCao6txTqtt0rdjmr1NCSl4flsrm4j2kWOsVyu4QGVucnpUjUqbuKZOPJTq03YOUr4WJ3ZfankYGYbamwXn/qc9jYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=MOJtHNJ8; arc=none smtp.client-ip=136.144.140.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
-	t=1744395768; bh=hU1s2MUharV+JZ/o7ZGxIzde3SPrYoBUq97/n8uSb2Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MOJtHNJ84XRDBxnVQB8WQ1itTQrapZnb9yZMoagXLZ/o5UUfuQEhp2S6hRjJm4khh
-	 6TJ66jf2dHD34WIXLEh0GBZyc9tMNU95j3f3Mx2JEwdwaSHhSKeHLro3LPt0A15q54
-	 bP0qe2lclj6gpPSe2rHHxzQ6N6BzWs2L5qAIaFOUGTfWiffBleYN0vKkeQH7NSNqH2
-	 pab+dtYSF5kqYrC1ionbLYzkcx/RKzoWMuRM2zc6YHN7F7HYgi9w+6fcrjRthMWt/q
-	 GhEq5rysYviHJPcH/IcCGYUkofQM+JPRr0aghNPnpyBT9rj/CnEzsAdspA0hLj611E
-	 PFgD6FuP4JoolBBv7iRk9Huil3yIldFEpg6yn1/wgfe0MHWYXGWWcb8WdOGlpt1WSb
-	 u7zJwC/SZYKPEjZ2gPSsqjxP4k4kXCuOq/4n03c+JMXiJjlH0v2bVGrhTMwqexL/cC
-	 AOsa2vjigand3nGTKeoT4Tavlg5/l6BHmpzExQL47AcBMZEhnx7A89glS9n1ROm+yp
-	 qhgRD+gONPDfZzrSJ4mz/1wGRunuibTdn8lvvK+iYR03+brssPhPCvOxmnIyFDPHpN
-	 YFrh0+1L6ILiaz25AUKhKFpa5RgX4DEcmEiGuaz3zkFwhkbWiBQersl3+yNKLR9VYO
-	 EKm2oXg3oYvWFqTWBXlf7uDs=
-Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
-	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id 9227F163653;
-	Fri, 11 Apr 2025 20:22:48 +0200 (CEST)
-Message-ID: <4793eafb-bd9c-4857-a020-944fdb97fb9e@ijzerbout.nl>
-Date: Fri, 11 Apr 2025 20:22:41 +0200
+	s=arc-20240116; t=1744400940; c=relaxed/simple;
+	bh=dwX7lrYmi9zzC7dMvDxV9tnKHwWc/98WqddHYdda8zQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HSwP0Ph7TJYgo7rmNG67hJcGy+LlpJkajCNYk/QM+BfZwtAUrS14SjlCq/RJr7lOUz0DGPC99/KMBYWFjt2ORNWvLtXk5IUlzm2+MU92pMTfq+7gic+OUukXp05rDguGaP55Jb59ScdqumtFOjb5JExHTUvRG5GrnbStetOeVTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=md1/lGE2; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=qOkEUf9VE+o8qt
+	Kh7W5+vm+94aknEFFFwvSgu055GlE=; b=md1/lGE2BpJfcsswkeLB0hVBlBtTCM
+	9bgc6Pn+ahKxf9qfOttx/9iLNAmldN0RkIFV3gx+qisB9ZOKJ8Q0a+8+s7HblUN/
+	FpeT2rw1TVAdNSNNNDJQ2REkDKWwEbgDPxCW/r6jt+49w1xadaznC3XTaZ2Hv2Oa
+	/VZaJdB3znVO8hGmctWQ7Po0+vFXbqrzO6tiaoyPimWkCdc7NDrg8kdAzSw3Ol74
+	HGxqLckN4JFYsI1gINckzralP4Gsnbc/M0pmLsw0YRZgVRTYV1JTocmZ6KkdY9gO
+	8Gs5ZFCZQkYVG4A4zDIATXf495fNrQRt2ij7xg7CWF+UbN32z+Gzh5Gg==
+Received: (qmail 1407061 invoked from network); 11 Apr 2025 21:48:54 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Apr 2025 21:48:54 +0200
+X-UD-Smtp-Session: l3s3148p1@F8UN/oUyCKwujnsS
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfgang Grandegger <wg@grandegger.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	linux-can@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Subject: [PATCH] dt-bindings: remove RZ/N1S bindings
+Date: Fri, 11 Apr 2025 21:47:57 +0200
+Message-ID: <20250411194849.11067-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] gpiolib: acpi: Make sure we fill struct
- acpi_gpio_info
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20250409132942.2550719-1-andriy.shevchenko@linux.intel.com>
- <20250409132942.2550719-3-andriy.shevchenko@linux.intel.com>
- <98ded07e-33e4-417c-8146-fbf2783a7464@ijzerbout.nl>
- <Z_gQyg_JXTBRjisf@surfacebook.localdomain>
-Content-Language: en-US
-From: Kees Bakker <kees@ijzerbout.nl>
-In-Reply-To: <Z_gQyg_JXTBRjisf@surfacebook.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Op 10-04-2025 om 20:41 schreef Andy Shevchenko:
-> Wed, Apr 09, 2025 at 08:16:59PM +0200, Kees Bakker kirjoitti:
->> Op 09-04-2025 om 15:27 schreef Andy Shevchenko:
-> ...
->
->> Can you check and confirm that at least info.gpioint is filled in (or
->> initialized)?
-> Yes, I can confirm this. And that's how I have tested it, on Intel
-> Edison/Arduino the first GPIO expander (PCAL9555, serviced by
-> drivers/gpio/gpio-pca953x.c) is able to deliver an interrupt to the SoC.
->
-> Before this series that doesn't show up, now it works as expected.
->
->> The callers of `__acpi_find_gpio` pass in an uninitialized `struct
->> acpi_gpio_info`
-> True.
->
->> and after the call they read `info.gpioint`.
-> ...when GPIO descriptor is valid.
->
-> ...
->
-> Yes, I agree that NULLifying info maybe good to have, but I don't see currently
-> if we have bugs with it. Can you be more specific in case you have observed
-> anything wrong?
-Thanks for confirming.
-I have nothing specific, just manually reviewing the (new) patch.
-So, I guess this code in `acpi_populate_gpio_lookup` takes care of it.
-         lookup->desc = desc;
-         info->pin_config = agpio->pin_config;
-         info->debounce = agpio->debounce_timeout;
-         info->gpioint = gpioint;
-         info->wake_capable = acpi_gpio_irq_is_wake(&info->adev->dev, 
-agpio);
-That would sound plausible.
+Except for these four quite random bindings, no further upstream
+activity has been observed in the last 8 years. So, remove these
+fragments to reduce maintenance burden.
+
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+
+In the previous discussion [1], Rob offered to take this patch.
+
+[1] https://lore.kernel.org/r/CAL_Jsq+DOp8YOcshTVqYcbmgbuc4etTQeeswmMUYjw1sws4mAA@mail.gmail.com
+
+ .../devicetree/bindings/net/can/nxp,sja1000.yaml     |  4 +---
+ .../bindings/pinctrl/renesas,rzn1-pinctrl.yaml       |  4 +---
+ .../devicetree/bindings/serial/snps-dw-apb-uart.yaml | 12 +++---------
+ .../devicetree/bindings/spi/snps,dw-apb-ssi.yaml     |  4 +---
+ 4 files changed, 6 insertions(+), 18 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/can/nxp,sja1000.yaml b/Documentation/devicetree/bindings/net/can/nxp,sja1000.yaml
+index 144a3785132c..ec0c2168e4b9 100644
+--- a/Documentation/devicetree/bindings/net/can/nxp,sja1000.yaml
++++ b/Documentation/devicetree/bindings/net/can/nxp,sja1000.yaml
+@@ -16,9 +16,7 @@ properties:
+           - nxp,sja1000
+           - technologic,sja1000
+       - items:
+-          - enum:
+-              - renesas,r9a06g032-sja1000 # RZ/N1D
+-              - renesas,r9a06g033-sja1000 # RZ/N1S
++          - const: renesas,r9a06g032-sja1000 # RZ/N1D
+           - const: renesas,rzn1-sja1000 # RZ/N1
+ 
+   reg:
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml
+index 816688580e33..aa882b5bfe97 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml
+@@ -13,9 +13,7 @@ maintainers:
+ properties:
+   compatible:
+     items:
+-      - enum:
+-          - renesas,r9a06g032-pinctrl # RZ/N1D
+-          - renesas,r9a06g033-pinctrl # RZ/N1S
++      - const: renesas,r9a06g032-pinctrl # RZ/N1D
+       - const: renesas,rzn1-pinctrl   # Generic RZ/N1
+ 
+   reg:
+diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
+index 1aa3480d8d81..1ee0aed5057d 100644
+--- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
++++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
+@@ -17,9 +17,7 @@ allOf:
+       properties:
+         compatible:
+           items:
+-            - enum:
+-                - renesas,r9a06g032-uart
+-                - renesas,r9a06g033-uart
++            - const: renesas,r9a06g032-uart
+             - const: renesas,rzn1-uart
+             - const: snps,dw-apb-uart
+     then:
+@@ -45,15 +43,11 @@ properties:
+   compatible:
+     oneOf:
+       - items:
+-          - enum:
+-              - renesas,r9a06g032-uart
+-              - renesas,r9a06g033-uart
++          - const: renesas,r9a06g032-uart
+           - const: renesas,rzn1-uart
+           - const: snps,dw-apb-uart
+       - items:
+-          - enum:
+-              - renesas,r9a06g032-uart
+-              - renesas,r9a06g033-uart
++          - const: renesas,r9a06g032-uart
+           - const: renesas,rzn1-uart
+       - items:
+           - enum:
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+index bccd00a1ddd0..ff77ad6d4d8c 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+@@ -84,9 +84,7 @@ properties:
+         const: canaan,k210-spi
+       - description: Renesas RZ/N1 SPI Controller
+         items:
+-          - enum:
+-              - renesas,r9a06g032-spi # RZ/N1D
+-              - renesas,r9a06g033-spi # RZ/N1S
++          - const: renesas,r9a06g032-spi # RZ/N1D
+           - const: renesas,rzn1-spi   # RZ/N1
+       - description: T-HEAD TH1520 SoC SPI Controller
+         items:
 -- 
-Kees
+2.47.2
 
 
