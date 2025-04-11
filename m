@@ -1,107 +1,174 @@
-Return-Path: <linux-gpio+bounces-18683-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18684-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEA6EA84FB5
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 00:34:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3854A85144
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 03:34:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2C6B4C80E6
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Apr 2025 22:34:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AF234439E4
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 01:34:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC291EBA03;
-	Thu, 10 Apr 2025 22:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29D33217664;
+	Fri, 11 Apr 2025 01:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jYqxCwHd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+3Tj3rU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E4B1A5B9B
-	for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 22:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780452572
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Apr 2025 01:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744324481; cv=none; b=OzsBSE3FPtfX3LAc66PkombO4qAhTYfuTSBqMAmFtdZY4sLuhxbnw9cU6N8tmt72Lm9VMqi8F0LDEm7hDKywA9DkbXo+O0IaWpH7a/8BxcsZj1zsIyihieunHBPd0MVD7q9TXvDbr8OcCuByZ3HtS3KZ1Phhb69Tn4sgLRZpfaA=
+	t=1744335252; cv=none; b=sO0hekNRxj2H8JDPaqw0JQX2gdr/UkHbF/3usioljZkneKw8ygvyOkNOmFV/x1PRwOqzGAlh6sf3GqwqwLvhNYs8j1A4xIaAYEx4hU715wn8Uzx25CcyKQaBYN0XcHp5pH1N6+5eDZZJ55ufnm6QLinCwtjCVDn0XkeSRehwoTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744324481; c=relaxed/simple;
-	bh=Wxm965eZNAy9BW5/MykKmQUsmb3umX7nRNXwA9XN5e4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P3+tGtnPIgFNd3sEtmrok8i3SLuanq2JFvKFzQ2730gS0fzpHPwWBQYTvPtaOLERoj/FpBGOiIMBsmsMISFc3Jab/+prNhSVbUP38Cc1pA+FEn4UKMXCfoJuH1Tqw2qGus8sg0AMxgLXrCkjf4iEw4+LAJs+NznS81WD4YNYnkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jYqxCwHd; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso11135081fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 15:34:39 -0700 (PDT)
+	s=arc-20240116; t=1744335252; c=relaxed/simple;
+	bh=cQtip98fEhUo81ekSdxTpcxwdDp9Ljx+byTxpIzU8yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eHBC2e4m1k8B+4veBXZ4xJxJRht6vzIn9Tf2yBwm8QhONelRgEeGeMHCPjwdHQJwx/agAzXkvj2dqXGVT+dgb3/mRWU62HrBM4YGS85Zuon2Lde3Kbap3TXCsbbqArW4kbOZok8cZEhmfm0z1FYq6EMC0yrOuw9pY3W5+q5Gl4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+3Tj3rU; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223fd89d036so18906075ad.1
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Apr 2025 18:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744324477; x=1744929277; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wxm965eZNAy9BW5/MykKmQUsmb3umX7nRNXwA9XN5e4=;
-        b=jYqxCwHdHnnqKhroxew6oXqaqFEI2JsfqqI/rdYg3v6VU/L85Hg337AbxJy3m4qhRp
-         JP+wPeyXYM2I9lK2hFZvsKRpGH8GlBv2K6zubBKnAMzJTx+IWUm8zcFRUV4HsMAyeAj5
-         qd28iTFS/qCksMWxft3xpUEyKfTLdY8hfHDKo0rpG+okX9pK2N1cIienzfwKARr/cbAn
-         J1s/Mo7Eez1JAF8Dffr5p0ELBkyHDOjNk8USgmyW1DHCauh53C+zFNY+breMxKq2uzPQ
-         SgTiOP8+wxzzsCF7lvGqkfk5kBCOzYxNEE3A698K04LX/d0ZTq9HnLwcfR6YVpDjdjzZ
-         H7PA==
+        d=gmail.com; s=20230601; t=1744335250; x=1744940050; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fd8gBRS7KdSXCppq+uNgRvM7iia/98NvWArGNKufQiQ=;
+        b=i+3Tj3rUTCPsTTtoYVBK2o1InuYZnDkM5g98PCZgIUD8LSB4wKeKyZE3HEK578J5wF
+         5ufAEFDKvhXJRNEDseTiPHrkXJGimwR/4OlUkuzLDXoXGo6Od0NFtpMs0OdEOVlvFhxL
+         W2LcnVdRsZa9fqyFqSfoSosOkum/WfuM1JQBwN/h22Wnh1eRb12ppn8vtK/b3Ev1iZv1
+         +WT/8k6CrmoL279VfvTZWVS2hkJuxsI18B1p7E/q6ziZ2SsbEgfi/rN93T+/sxTD5MCO
+         Y8QWJFXAEonIUqqP/AdpQJRQsYxkSTfYxUPPCEEQv/RzxOTuwb4Qi6KKE1+tI206hK8F
+         /eEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744324477; x=1744929277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wxm965eZNAy9BW5/MykKmQUsmb3umX7nRNXwA9XN5e4=;
-        b=V8KErC34iBEbQ/FP0bRH+q5b3/bv/peuahXawmvy3ygpK4WFHf1u0mqNxX6rceHk64
-         +XPgnD3rvKRU02eH26aJruNR7yacjO5MPguwms+ZAB9PVOdJiFqhth9Mo+5+vwNMKksB
-         WPX84GysgsvjsVjxy942ycg9+Gi7+jZyXATJ4NVsoqcV19rqwjqRjr+yja75p9s5OO4O
-         d9l9kO+wG+F1z7jM6jFQfMeYoAfkhM39BQ3SUvrspi3v3GvSDDmgyZ8tWdK6lQpZ+X8x
-         +3BeS1T0rfHru0Uwv1HfcqEHrRlSOw3irZWCjDRMS5UIXy/so38szudLTWQ/tjz8qv7L
-         1bXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUgO1RgGs/Bb7figsOAzIH1X6tMxSDPQSr9zRRPoupTLcf+zOoDr68Ns2TFBBn89O/eXW915N+Q7D3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBtgeZAtc+aKPBGFs0PQGQupmdUs98R/uj2MPinRvUXoZAZsYS
-	2MzyTeSgmm8PFP+YPjTYW+AHKfPd6S4b1uWPSgyUSdFgEbZIpgAP4PZGNUTkp4yPZ8Dmte99cJA
-	cDHhbOxWOISuet9pjzfjR8CsZW4lcSRGWitriJA==
-X-Gm-Gg: ASbGncuKf4V2kopw2TSkbtGxMWwCAUcSoKVBuZurzD9QlrYyQUXm4Jdfuu5jHWuFXXZ
-	DDkHk7TZ2yX54I+16P86GKv46yL/Xi6gIr1zvIb4DsaBbMR4u4qBIuB8gS8F7TDDDf9udQWMIB+
-	6XekjQdKizMijiqaCGQV8=
-X-Google-Smtp-Source: AGHT+IFQ5X/At+JSFNbUE1xnp5LyBwwxt4xHNs/nHrO41KOgi6pNuGUXCpYt2H8bLi1d5Neb0s+pA/F8NRLAxfh8kDo=
-X-Received: by 2002:a2e:ad92:0:b0:30b:d63c:ad20 with SMTP id
- 38308e7fff4ca-31049a25e74mr1251291fa.24.1744324477293; Thu, 10 Apr 2025
- 15:34:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744335250; x=1744940050;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fd8gBRS7KdSXCppq+uNgRvM7iia/98NvWArGNKufQiQ=;
+        b=tn/xHsucYo0zHiV9ek7qoeMpt8axuDxDG6GTIO81S6lJuveYzej++OurrMsfg6Kzrp
+         AAXOCJWmbrWo2N0VEHwISG/cgFBC/xqs4CGaSOeOZU7hNT/fRW9zLLQRUoelQ3fraeXr
+         kAjqe7bHi0ds9Eyq/W7zBGXwbaPoNV/eE9A7uHwx/Pukn32B4gQ182MUQRAzDBQhWE9f
+         D74z1MQnReFjoYEM6EMuxTUAaZJHZG0BV/JHf9ni8CJdVfIEfBRgjoYk3gpIVVvQkJj0
+         9CTCYo4oVAX7VVzuhPStacCCs8hIOBVFGSPLsk7Pudw6kmEw7s12dGK/xxgURs7cdF3u
+         4Rxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWf8/cHY7g5UblUqREzUBptvUjATDR4/Jt5yuvcSi/psqRorrkShSz96Mw9MvRjS1aUx79ui/rPpwPY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzikXhGOOqtZbzccf63jYyh8h1G3URqb6BZH0D3l43Or4bdZr6H
+	6ngL+xRxFwoAhpPGw0X3Ck1r1tGXO3p/XKgQqh0rr2b5ukOOMOHHCnD5HyC2
+X-Gm-Gg: ASbGncs/JPBmqY3IXI3XygQ0+vZKYZqwUNEtzqp+rgIpQtYpLxN4t8g1oEqNExsM11k
+	6reK5GbmIBC8Fkc1ttJtysSh4uJSOn32Cc8ijdOCQeqENXw3CYuNwDW9OcwDDHiFxjyDN5/RBjL
+	KP0Q4vTxeFXlmAc1z+RXs1CiNVDlH8lp4ZEXla9GXM24TkRFQvd4Bn+IyfvfhDKdzgRtKNKtcbH
+	tsS47bTORyz5pOwXlGQxlvET0RS9DEmJiCXFvEq3qg8IB0UqOe/W5om/Qtfp6KBq81kfaz/2rAZ
+	jwo9FkvFrflm4CfZgwAOdclw2hjMMnlxAw==
+X-Google-Smtp-Source: AGHT+IG3W8X2HIftSLIMJCekEV53DK+OYiwW7fW9+ezG/ydjPXWfbp27yw8g/Josk4u7do1IvdSplA==
+X-Received: by 2002:a17:903:3a8d:b0:229:1619:ab58 with SMTP id d9443c01a7336-22bea5027dfmr14078385ad.43.1744335249965;
+        Thu, 10 Apr 2025 18:34:09 -0700 (PDT)
+Received: from rigel ([115.131.241.66])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8ae95sm37587195ad.61.2025.04.10.18.34.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 18:34:09 -0700 (PDT)
+Date: Fri, 11 Apr 2025 09:33:58 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH libgpiod] tests: uapi: add test-cases for open-drain and
+ open-source emulation
+Message-ID: <20250411013358.GA47403@rigel>
+References: <20250410-open-drain-source-tests-v1-1-a062d2280cc5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318030717.781-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250318030717.781-1-vulab@iscas.ac.cn>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 11 Apr 2025 00:34:26 +0200
-X-Gm-Features: ATxdqUFAOAmsanh_qMDDdICzYFdtcgmjMNVzfkr1X-a4RyLKP9cm2UhbygtlpGw
-Message-ID: <CACRpkdZ+VTCXudLC8L0zK6+Pwd+_NpFDfnR7nf16BXgEnXExeQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: at91: Add error handling for pinctrl_utils_add_map_mux()
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: ludovic.desroches@microchip.com, nicolas.ferre@microchip.com, 
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410-open-drain-source-tests-v1-1-a062d2280cc5@linaro.org>
 
-On Tue, Mar 18, 2025 at 4:07=E2=80=AFAM Wentao Liang <vulab@iscas.ac.cn> wr=
-ote:
-
-> In atmel_pctl_dt_subnode_to_map(), the return value of
-> pinctrl_utils_add_map_mux() needs to be checked, for the function
-> will fail to associate group when the group map is full. Add error
-> handling for pinctrl_utils_add_map_mux() to return immediately and
-> propagate the error code to caller function when the function fails.
+On Thu, Apr 10, 2025 at 11:17:47AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> The kernel GPIO subsystem can emulate open-drain and open-source by not
+> actively driving the line for active and inactive output values
+> respectively. The kernel does it by setting the line to input in these
+> cases but this still must be reported as output to user-space. Add new
+> test-cases that verify this behavior.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> Andy's comment on a GPIOLIB patch made me realize it's a good idea to
+> add tests for open-drain and open-source emulation in the kernel where
+> we don't actively drive the line for active and inactive values
+> respectively.
+> ---
+>  tests/tests-kernel-uapi.c | 87 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>
+> diff --git a/tests/tests-kernel-uapi.c b/tests/tests-kernel-uapi.c
+> index ff220fc..5955fac 100644
+> --- a/tests/tests-kernel-uapi.c
+> +++ b/tests/tests-kernel-uapi.c
+> @@ -110,3 +110,90 @@ GPIOD_TEST_CASE(enable_debounce_then_edge_detection)
+>
+>  	g_assert_cmpuint(ts_falling, >, ts_rising);
+>  }
+> +
+> +GPIOD_TEST_CASE(open_drain_emulation)
+> +{
+> +	static const guint offset = 2;
+> +
+> +	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
+> +	g_autoptr(struct_gpiod_chip) chip = NULL;
+> +	g_autoptr(struct_gpiod_line_settings) settings = NULL;
+> +	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
+> +	g_autoptr(struct_gpiod_line_request) request = NULL;
+> +	g_autoptr(struct_gpiod_line_info) info = NULL;
+> +	gint ret;
+> +
+> +	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
+> +	settings = gpiod_test_create_line_settings_or_fail();
+> +	line_cfg = gpiod_test_create_line_config_or_fail();
+> +
+> +	gpiod_line_settings_set_direction(settings,
+> +					  GPIOD_LINE_DIRECTION_OUTPUT);
+> +	gpiod_line_settings_set_drive(settings, GPIOD_LINE_DRIVE_OPEN_DRAIN);
+> +	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
+> +							 settings);
+> +	request = gpiod_test_chip_request_lines_or_fail(chip, NULL, line_cfg);
+> +
+> +	ret = gpiod_line_request_set_value(request, offset,
+> +					   GPIOD_LINE_VALUE_ACTIVE);
+> +	g_assert_cmpint(ret, ==, 0);
+> +	gpiod_test_return_if_failed();
+> +
+> +	/*
+> +	 * The open-drain emulation in the kernel will set the line's direction
+> +	 * to input but NOT set FLAG_IS_OUT. Let's verify the direction is
+> +	 * still reported as output.
+> +	 */
 
-Patch applied.
+My understanding is that FLAG_IS_OUT is always set for output lines,
+even if the direction is set to input for the emulation.
 
-Yours,
-Linus Walleij
+To quote gpiod_direction_output():
+
+set_output_flag:
+	/*
+	 * When emulating open-source or open-drain functionalities by not
+	 * actively driving the line (setting mode to input) we still need to
+	 * set the IS_OUT flag or otherwise we won't be able to set the line
+	 * value anymore.
+	 */
+	if (ret == 0)
+		set_bit(FLAG_IS_OUT, &desc->flags);
+	return ret;
+
+Cheers,
+Kent.
 
