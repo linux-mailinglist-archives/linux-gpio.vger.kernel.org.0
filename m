@@ -1,81 +1,80 @@
-Return-Path: <linux-gpio+bounces-18719-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18720-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14903A868F2
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 00:49:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5300A86922
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 01:26:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B07C44C2B44
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 22:49:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B2974A2CFB
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 23:26:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491FB29DB86;
-	Fri, 11 Apr 2025 22:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E6C2BD5AF;
+	Fri, 11 Apr 2025 23:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KC9Ajb5D"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PSKDqGOj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E00213B58C
-	for <linux-gpio@vger.kernel.org>; Fri, 11 Apr 2025 22:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D3529DB60
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Apr 2025 23:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744411744; cv=none; b=KLhF4Kxd11QtTAxd+dkTuqdR+Q8EAKr1MCN+O7Zwdagb3HFJRVGwtPHSVkrSMDfOk8xqzH9JhfeT/VTDW5dKowp5B1NNZPI6JiNhBh8qE8PnZCQHA+1rA2FCeZl4jTKBU+wVGI98G2Dgc5mD+tep2s1cACqQCUVqe2IpPnuKObI=
+	t=1744413975; cv=none; b=XdtOtAPw/74eaOu3x/h4uQddQcLtLr9sfmKNqHofgS5rDXD0j4wMnIEsYB/Y0hsIFgKusf7a6+LCgcAyuoL9Je9TFXlB2VEq1x1obVGIqhzalcNMYJ61E2fTQWhbbh1qJpGu69jF0CnH5/qLuBYA1LkcrMHxSUbPq1jEPX21Qe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744411744; c=relaxed/simple;
-	bh=+gKutII6aXJ0wrUffjvqF0sKi2f15qSdVcu/a6hEHUE=;
+	s=arc-20240116; t=1744413975; c=relaxed/simple;
+	bh=V/HmqSsw49B0iA0sXtWqxb6ZKdFvyeYgbWEg2Qp5R24=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QJ+Ajf+MNVxe47rKDPNWvL+JtJr3DPrV01iFC9EgocEwfCGnPvtWPUjau7e0YSwXCtlEU4SfRCv8ZwzYv4F1xD9rO4wUGnmeUbV4XSxmNLVZrvsoOa3l5Gsp3i8U0BQGsW4ULC7uL+axXl7ftctlfCLMJzdtcAyzLxjXsPF9hi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KC9Ajb5D; arc=none smtp.client-ip=209.85.167.172
+	 In-Reply-To:Content-Type; b=D53nN/acITaE+YehZ77XyW/VKISf/ZWdIumUvfvnsrH3BNFPhGek6370MDFnDYze+9vnF7cHZ1OQ3yphlWlQOFGziuvpTIBie1DS7s6u9hQnn2c+/eznD9rSqrRwj4kjy17zbWiC0otUMljZs1Df0pmGV6TW7pZjkTlMurzL+xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PSKDqGOj; arc=none smtp.client-ip=209.85.210.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3fbc00143d6so1401881b6e.3
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Apr 2025 15:49:00 -0700 (PDT)
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c0b4a038fso1508969a34.0
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Apr 2025 16:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744411740; x=1745016540; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744413971; x=1745018771; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wgl6Ni7QedexIS8h0jddujtCNFqc93iYEcO6ONe4NfU=;
-        b=KC9Ajb5Dpsoty/uaX+eOh5x0SBH/jk7JE+jiafrrCjg3Jj4vbnZxgotZU1MV4mcXbs
-         02kltKG/7MbbcoJAAUkPQEAgfJB76KYGrSxE6hMqu11xkIAA4lb+X+C3obiLZEyLKyP2
-         1cMIo8bie3ZeAdKW0CpszEa+ULHm9KTpVMS0fih5RseRwhpuxVWNuyyJc9wfZXIs2OYq
-         LL2h2WcUXROjH7hifojtZAZo9hPqVQhbuD4LndkPbZ8rX3i76o69IRZmAi/Erk3JlOEo
-         DtvMklvKomsdTHXulgTzPckoUzsqB2BpgLRdJDDvhGzoBWYjkTgz7D2XMqSETg4yAoOY
-         ceog==
+        bh=5GZyvI2XLRL6983WEyW7fk4u8vu6YYokKaErcKJZw8g=;
+        b=PSKDqGOjsUHl4gPKOplW4nZEA/ogdifhtHm4Np0zTCflCM4Y/WL8Mjy02UxaInz+Ri
+         pPuJMzbLkMT8oXTdpRUG+de+x2yWdFWdSpiJrPEyzwHqrWXcAXJUloUF8uIJJv6hIH0T
+         UwSSBAdC0AvsrfoFUppl5RZUO+Dyf9Z/jRKIKfayBkH6XvM1z7ZXAi4ETA932ixbiiqt
+         iJIZyK2BObr2iIj9rbw9dk7WZHLL4OdftNkXvWcuzGVNDnk5MhBfriEJFDULF7ghwFJD
+         Woj61Y/DaYXawV/z9tMPBIi33H+A/lhIVLJ11fW73ZnDdXfaKgItInPcjcnLi8XSkuUy
+         t+7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744411740; x=1745016540;
+        d=1e100.net; s=20230601; t=1744413971; x=1745018771;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wgl6Ni7QedexIS8h0jddujtCNFqc93iYEcO6ONe4NfU=;
-        b=BSAKnlt3lGtd6GcZW1P7d5XTMqoklBvMu91/tL/7Im2fjejSHpZ184iTaN+paSsbnf
-         1nyYlFH0QDzcn3C71+rMiD5MuaRjXMsNgzom7+ARSEpgEzDHbIC7TD4wvYCfP8vTJRxl
-         7jCr9wey/U+8cGaGI0/Y37EFPESyT6z7+jur+8Xr6BomhHyguS7biR9P2v0Xwiw9tfcb
-         Tj7e3oWoSit+aF8qbcYTP35gmVB4Y76bWWZ3Rf463PIc94T7O3eRkIyi3PYEv3S00aQw
-         p6IBqtZT56HB6ed/eNPWI15YrXu5Z6pbXYR1K7Kc5h1e0Yqsex0Tq4ixhuFTIyaT8j+R
-         upHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUL0EpR83wVTaE80PpVEFK44UwVVzrd+nJvc3lzWv3XC25n9X28RgPxHJHaxix8VOAsBbJSFQIgnJ/b@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYE5578eW4JhCuWqm/5qqXNCZTFM/3xji9HLIO+bNJLd4fAwF3
-	C+MhadHdUA75l3mvQOqiTiy0IHVhpf6+AeH7q444MVpsDuc4bJeXsr++F2H7hy1hqn4yrESyAGU
-	ALlM=
-X-Gm-Gg: ASbGncvdoCploOjgiYJ5etOWeOypu5GYYxHIJ1zZJcL5c8qbU7yq1gwzbLQjgoKnnVj
-	JS08FcggWiT2veGhvTtlthErcCbSoWaUaEFMOEa1VYaToDfovhed/ahP2aKXm94YbFy3rs+Y0PC
-	nrJ5Z4nk0sXDAXDFIMYmcEc76CIHzjSRt2CcflRY1df5a27I9y/5MAlZOWBEkImTX470oLpMFqo
-	urU8/BY/Cp3kBLOep50mQBuiA7q7ueRdFNCbvTEARGCpVwsbybRw1xfhUOhqXcDnCyAYipdh2Ke
-	196EavqdUNtG7SG8Ll4NVoW4BMplfZ+iPumoD7Sqmi51RzIGTt1Zk+FC6CmFRsUM78Boln4IA4v
-	9xA==
-X-Google-Smtp-Source: AGHT+IHCKIFhKd0vSaIWD5eYx6N/Y34MvmmZSKbjYALR5hdgbPkTqP9spLNbVdc9G93C7ww5Tzmhmg==
-X-Received: by 2002:a05:6808:1826:b0:3fb:a7d0:3b46 with SMTP id 5614622812f47-4008500563dmr2548539b6e.8.1744411740046;
-        Fri, 11 Apr 2025 15:49:00 -0700 (PDT)
+        bh=5GZyvI2XLRL6983WEyW7fk4u8vu6YYokKaErcKJZw8g=;
+        b=WXr/pMSV0MX4FMrw0ynLGj9i95XyX2rEsl2a2Qk6gG5L/eHJR+HjfPQq3op7l/7AIs
+         S9G8xmVdmglTrBHzohexXetx5JXSbdT9yTh6EmN7NIUSoXDk9FeRdCeKM/rTtKKwVF4U
+         WRaj74Xpo+3tz5STS1wOCjfgJDXYuxEplqbsWTMxWzRo2T8in4KPBA3aIoDj8rLBzBPe
+         Qxnv5JqpcguUccWORsi7YCUzTartHr3OJKvjL2PWmnGYrp69MtvRbbgjv7slqAavuLOM
+         mJCc3woseBA0FqrYgqLScdTRWaaFcSrzfCpv/esxyRLsNS19RyAqScRlL8ICN+qZvxaS
+         GUIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfV4P9dp8Y5FKzHeDFLC2TQ4D7OWz4HPpJUWbfWHzfi1Jd6Zr6ygwuguMUzS+51MhUzKIhdYugZvda@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd7er5eHfw12eDaAsY6ySq/aIPoQrBpkGgUTuBmsgee/G1ENb7
+	PT3mhR58CiyZNtiGslxTl62Qbd7YZSLKOSKOBn7y7NxDzUrtfG/GYDdySEzobqc=
+X-Gm-Gg: ASbGncsQONSDLJicJUIEx7NuAVmW5sHj6WdUH59tdR2An7KCQ3fuuGaqN5aRjOfcSF0
+	AtLSFY66QeOTjqWbVnF8tjEw4FEiK6DzLhZRibTKsPd8OaCwclGoETFKBZeJ3EbiIfZfGsGuyiR
+	XnDLcYVeuTlBYZKsvSfDertnCm+HKZh76m9MYLSL/mC2DuqK+4H6vYy8BOkuH+YvI328pi9ZvM/
+	uvai49HQBaWqRBV5EILJjFwiq0F26RftNh73aeZs0WVhYQNtKNFdxgCjMieSEI46WHojsFWygu8
+	xdqhOLUFvDfnq+sSe6pcj+6JwIe6GJV9IHMQObXaV29BU6OGqNbsA7+fQxoPe2dyIbT5MIXCPeD
+	gPQ==
+X-Google-Smtp-Source: AGHT+IGW7pFNc5nsIkwQxDBSYzjjR5YXgf6KeUTb67LI0heNBL6cMHzjIGL4Ij3lbZixsILkVxuEKg==
+X-Received: by 2002:a05:6830:258a:b0:72a:e8b:a849 with SMTP id 46e09a7af769-72e863c35c8mr3394273a34.27.1744413971065;
+        Fri, 11 Apr 2025 16:26:11 -0700 (PDT)
 Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4007639c9d5sm1120882b6e.39.2025.04.11.15.48.58
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d8d3bbsm1128472a34.33.2025.04.11.16.26.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 15:48:59 -0700 (PDT)
-Message-ID: <97a2aebb-f707-4f88-be5f-d86bd795c65a@baylibre.com>
-Date: Fri, 11 Apr 2025 17:48:57 -0500
+        Fri, 11 Apr 2025 16:26:10 -0700 (PDT)
+Message-ID: <3a87627f-3210-4350-bfdc-0007de5671b7@baylibre.com>
+Date: Fri, 11 Apr 2025 18:26:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,8 +82,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/14] iio: adc: ad7768-1: add support for
- Synchronization over SPI
+Subject: Re: [PATCH v5 13/14] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
 To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org
@@ -92,197 +91,99 @@ Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
  marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
  linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, jonath4nns@gmail.com
+ broonie@kernel.org, jonath4nns@gmail.com, Pop Paul <paul.pop@analog.com>
 References: <cover.1744325346.git.Jonathan.Santos@analog.com>
- <a4d0951fccade0f8e086416e94c4a38e1a21eb81.1744325346.git.Jonathan.Santos@analog.com>
+ <e5ea27f88607d1cc12daecf310c18f71383a3bbe.1744325346.git.Jonathan.Santos@analog.com>
 From: David Lechner <dlechner@baylibre.com>
 Content-Language: en-US
-In-Reply-To: <a4d0951fccade0f8e086416e94c4a38e1a21eb81.1744325346.git.Jonathan.Santos@analog.com>
+In-Reply-To: <e5ea27f88607d1cc12daecf310c18f71383a3bbe.1744325346.git.Jonathan.Santos@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 4/11/25 10:58 AM, Jonathan Santos wrote:
-> The synchronization method using GPIO requires the generated pulse to be
-> truly synchronous with the base MCLK signal. When it is not possible to
-> do that in hardware, the datasheet recommends using synchronization over
-> SPI, where the generated pulse is already synchronous with MCLK. This
-> requires the SYNC_OUT pin to be connected to SYNC_IN pin.
+> Separate filter type and decimation rate from the sampling frequency
+> attribute. The new filter type attribute enables sinc3, sinc3+rej60
+> and wideband filters, which were previously unavailable.
 > 
-> Use trigger-sources property to enable device synchronization over SPI
-> and to replace sync-in-gpios property for a gpio-trigger node.
+> Previously, combining decimation and MCLK divider in the sampling
+> frequency obscured performance trade-offs. Lower MCLK divider
+> settings increase power usage, while lower decimation rates reduce
+> precision by decreasing averaging. By creating an oversampling
+> attribute, which controls the decimation, users gain finer control
+> over performance.
 > 
+> The addition of those attributes allows a wider range of sampling
+> frequencies and more access to the device features. Sampling frequency
+> table is updated after every digital filter paramerter change.
+
+s/paramerter/parameter/
+
+> 
+> Co-developed-by: Pop Paul <paul.pop@analog.com>
+> Signed-off-by: Pop Paul <paul.pop@analog.com>
 > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
 > ---
-> v5 Changes:
-> * Allow omitting trigger-sources property.
 
-I didn't see this possibility mentioned in the dt-bindings patch. Maybe I missed
-something?
+The hardware designers sure didn't make this one easy for us. I'm very
+impressed that you were able to write code that actually makes sense to me
+without me having to read the data sheet 10 times. Nice work! :-)
 
-> * include gpio-trigger to trigger-sources to replace adi,sync-in-gpios
->   property.
-> * Read trigger-sources cell value to differentiate the trigger type.
-> 
+A few minor things to fix, but otherwise...
+
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+
+> -static const struct ad7768_clk_configuration ad7768_clk_config[] = {
+> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_8, 16,  AD7768_FAST_MODE },
+> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_16, 32,  AD7768_FAST_MODE },
+
+Extra spaces should be removed.
+
+> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_32, 64, AD7768_FAST_MODE },
+> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_64, 128, AD7768_FAST_MODE },
+> -	{ AD7768_MCLK_DIV_2, AD7768_DEC_RATE_128, 256, AD7768_FAST_MODE },
+> -	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_128, 512, AD7768_MED_MODE },
+> -	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_256, 1024, AD7768_MED_MODE },
+> -	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_512, 2048, AD7768_MED_MODE },
+> -	{ AD7768_MCLK_DIV_4, AD7768_DEC_RATE_1024, 4096, AD7768_MED_MODE },
+> -	{ AD7768_MCLK_DIV_8, AD7768_DEC_RATE_1024, 8192, AD7768_MED_MODE },
+> -	{ AD7768_MCLK_DIV_16, AD7768_DEC_RATE_1024, 16384, AD7768_ECO_MODE },
+> +static const int ad7768_dec_rate_values[8] = {
+> +	8, 16, 32, 64, 128, 256, 512, 1024,
+> +};
 
 ...
 
->  drivers/iio/adc/ad7768-1.c | 100 ++++++++++++++++++++++++++++++++++---
->  1 file changed, 92 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index 179806f821be..aa60c55afd24 100644
-> --- a/drivers/iio/adc/ad7768-1.c
-> +++ b/drivers/iio/adc/ad7768-1.c
-> @@ -100,6 +100,11 @@
->  
->  #define AD7768_VCM_OFF			0x07
->  
-> +enum ad7768_trigger_type {
-> +	AD7768_TRIGGER_TYPE_GPIO,
-> +	AD7768_TRIGGER_TYPE_DEV
+> +/*
+> + * The AD7768-1 supports three primary filter types:
+> + * Sinc5, Sinc3, and Wideband.
+> + * However, the filter register values can also encode additional parameters
+> + * such as decimation rates and 60Hz rejection. This utility function separates
+
+Technically, this is an array, not a function.
+
+> + * the filter type from these parameters.
+> + */
+
+...
+
+> +static const struct iio_enum ad7768_flt_type_iio_enum = {
+> +	.items = ad7768_filter_enum,
+> +	.num_items = ARRAY_SIZE(ad7768_filter_enum),
+> +	.set = ad7768_set_fil_type_attr,
+> +	.get = ad7768_get_fil_type_attr,
+
+Can we spell out filter here? It took me quite a while to figure out what "fil"
+is.
+
 > +};
-
-I assume this is supposed to correspond to the #trigger-source-cells argument?
-It would make sense to put this in a dt-bindings/iio/adc/adi,ad7768-1.h file
-in the dt-bindings patch so that it can also be used in .dts files.
-
-> +static int ad7768_set_sync_source(struct device *dev, struct ad7768_state *st)
-> +{
-> +	struct fwnode_reference_args args;
-> +	struct fwnode_handle *fwnode = NULL;
-> +	const char *value;
-> +	int trigger_type, ret;
 > +
-> +	/*
-> +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
-> +	 * to synchronize one or more devices:
-> +	 * 1. Using a GPIO to directly drive the SYNC_IN pin.
-> +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
-> +	 *    synchronization pulse that loops back to the SYNC_IN pin.
-> +	 */
-> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev),
-> +						 "trigger-sources",
-> +						 "#trigger-source-cells",
-> +						 0, 0, &args);
+> +static struct iio_chan_spec_ext_info ad7768_ext_info[] = {
+> +	IIO_ENUM("filter_type", IIO_SHARED_BY_ALL, &ad7768_flt_type_iio_enum),
+> +	IIO_ENUM_AVAILABLE("filter_type", IIO_SHARED_BY_ALL, &ad7768_flt_type_iio_enum),
 
-Since we have more than one possible trigger-source index, it could be helpful
-to create macros or an enum instead of hard-coding 0 here for the index arg.
+"flt" is a bit more obvious, but still would be nice to spell it out too.
 
-> +	if (ret) {
-
-This ignores errors other than the property just being missing. Probably better
-would be to use device_property_present() first for this check then call
-fwnode_property_get_reference_args() later and return any error.
-
-> +		/*
-> +		 * In the absence of trigger-sources property, enable self
-> +		 * synchronziation via SPI command.
-
-s/synchronziation/synchronization/
-
-> +		 */
-> +		st->en_spi_sync = true;
-> +		return 0;
-> +	}
+> +	{ }
+> +};
 > +
-> +	trigger_type = args.args[0];
-
-This is accessing args.args without checking args.nargs, so could be reading
-out of bounds.
-
-Also, we need to inspect args.fwnode first to see what type of trigger it is
-since the meaning of the args will depend on the compatible string of
-args.fwnode. The "gpio-trigger" has #trigger-source-cells = <0>; so this really
-would be reading uninitialized memory.
-
-> +	fwnode = args.fwnode;
-> +	if (!fwnode)
-> +		return dev_err_probe(dev, -ENOENT,
-> +				     "Invalid or missing fwnode in 'trigger-sources'\n");
-
-Is it really possible for this to happen without an error being returned by
-fwnode_property_get_reference_args()?
-
-> +
-> +	switch (trigger_type) {
-> +	case AD7768_TRIGGER_TYPE_GPIO:
-
-As mentioned in the dt-bindings review, this isn't a valid value. We should
-just check the compatible string directly.
-
-> +		ret = fwnode_property_read_string(fwnode, "compatible", &value);
-> +		if (ret)
-> +			goto out_put_node;
-> +
-> +		if (strcmp("gpio-trigger", value))
-> +			goto err_not_supp;
-
-Ideally we would have a trigger subsystem where we could just call a
-devm_trigger_source_get_gpio() function instead of this. But that is a bit
-beyond the scope of this patch series. :-)
-
-> +
-> +		st->gpio_sync_in = fwnode_gpiod_get_index(fwnode, NULL, 0,
-
-Should be devm_fwnode_gpiod_get_index() so that the gpiod is released on driver
-removal.
-
-> +							  GPIOD_OUT_LOW,
-> +							  "sync-in");
-> +		if (IS_ERR(st->gpio_sync_in))
-> +			ret = PTR_ERR(st->gpio_sync_in);
-> +
-> +		goto out_put_node;
-> +	case AD7768_TRIGGER_TYPE_DEV:
-
-As mentioned in the dt-bindings review, this isn't a valid value. We can just
-check fwnode->dev directly earlier in this function. Then it is only safe
-to do trigger_type = args.args[0]; after that. And we should be checking that
-trigger_type is SYNC_OUT since that is the only supported self trigger for now.
-
-> +		/* Only self synchronization is supported for now */
-> +		if (fwnode->dev == dev) {
-> +			st->en_spi_sync = true;
-> +			goto out_put_node;
-> +		}
-> +
-> +		goto err_not_supp;
-> +	default:
-> +		goto err_not_supp;
-> +	}
-> +
-> +err_not_supp:
-> +	ret = -EOPNOTSUPP;
-> +	dev_err(dev, "Trigger-sources type not supported\n");
-> +out_put_node:
-> +	fwnode_handle_put(args.fwnode);
-> +	return ret;
-> +}
-> +
->  static int ad7768_setup(struct iio_dev *indio_dev)
->  {
->  	struct ad7768_state *st = iio_priv(indio_dev);
-> @@ -699,10 +784,9 @@ static int ad7768_setup(struct iio_dev *indio_dev)
->  			return ret;
->  	}
->  
-> -	st->gpio_sync_in = devm_gpiod_get(&st->spi->dev, "adi,sync-in",
-
-I don't see where this function is moved to. If we remove it, wouldn't that
-break existing users depending on it? We can't expect everyone to update their
-devicetree to the new bindings.
-
-We could change it to devm_gpiod_get_optional() instead and only call
-ad7768_set_sync_source() if (!st->gpio_sync_in).
-
-> -					  GPIOD_OUT_LOW);
-> -	if (IS_ERR(st->gpio_sync_in))
-> -		return PTR_ERR(st->gpio_sync_in);
-> +	ret = ad7768_set_sync_source(&st->spi->dev, st);
-> +	if (ret)
-> +		return ret;
->  
->  	/* Only create a Chip GPIO if flagged for it */
->  	if (device_property_read_bool(&st->spi->dev, "gpio-controller")) {
-
 
