@@ -1,31 +1,31 @@
-Return-Path: <linux-gpio+bounces-18725-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18726-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DE8CA86940
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 01:35:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 283A3A8693A
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 01:34:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0A1F97AA90C
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 23:32:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17E1C1894A08
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Apr 2025 23:33:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F16F2BF3CB;
-	Fri, 11 Apr 2025 23:32:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803942BF3D6;
+	Fri, 11 Apr 2025 23:32:46 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51B32BF3C2;
-	Fri, 11 Apr 2025 23:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C29E219A86;
+	Fri, 11 Apr 2025 23:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744414360; cv=none; b=ZbhV0rEKBPnFjaF6wBhsU9MERWlBGmXtf3lYJSuNyUAyR8PUtFThRDy/3AkIbaguA3TenxjMew2KA+xkt00RxwDvl9qjxWD3P4SSu2ta3sY2sX5ACZ7NfYxXMmTvAP/G1L2E4jkitTi9mcxV9eVCRQvaq4v0Jns8ZU4PUC/hDVc=
+	t=1744414366; cv=none; b=XPBoixcG7+VOw6UxOBNXRTpsIcGOZIsueF28RI+2oElMEIyZ81XeublvQkdW4K5/16RaAO8FU8GkzTtLFIQCkTPgvN0tYWuf7ygdH7+zBCWMkTjydyvFxcyp+pRObT5FI7W2Sj6boWaBuoW7AEHQDmlucGZ5Yoe8RcbOcsmLmjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744414360; c=relaxed/simple;
-	bh=YrlYG0PuIhX+fM4QE2J+VecM1LCm6wkTyVul/SahGUw=;
+	s=arc-20240116; t=1744414366; c=relaxed/simple;
+	bh=ez3lQ50wt4PHNJjw/2DzRy5zUu0J1UdIhacJCZQJdao=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FkuIknSpXiJnYwgxPfV+r5L6UpZnHxJmSz1kywistC4gOe2pN7T3KvCNqKiAlp4HIv8eBwC/8SlgC2innzXsk54nvu8ZEwqn3lBc7EgaQG+Zt1P6r3YF5sleyL7dyE/oQasnGJe8m63MAsNrefuIQrFvOi50JkwEtzk0Ut0nOAM=
+	 In-Reply-To:To:Cc; b=QJz5c1kb0eGhuDIF4ulKQedLBeYYeR5175X5eMg6jsFWfldW8iH70vMIMpJuqYjjdm6hWg5ajEVXT0pRNJFzmcXY9FBrAr9xO+TcoWtNXUdBLHZflj1lQKD6p3lsf78tiyXf0U541IUvTW10DP6UVR16F9iYtw8dCe8/MCiriQ0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
@@ -34,11 +34,12 @@ Received: from [127.0.0.1] (unknown [116.232.27.72])
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 34AE73432D5;
-	Fri, 11 Apr 2025 23:32:31 +0000 (UTC)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id CED6834386C;
+	Fri, 11 Apr 2025 23:32:38 +0000 (UTC)
 From: Yixun Lan <dlan@gentoo.org>
-Date: Sat, 12 Apr 2025 07:31:31 +0800
-Subject: [PATCH v8 4/5] riscv: dts: spacemit: add gpio support for K1 SoC
+Date: Sat, 12 Apr 2025 07:31:32 +0800
+Subject: [PATCH v8 5/5] riscv: dts: spacemit: add gpio LED for system
+ heartbeat
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -47,7 +48,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250412-03-k1-gpio-v8-4-1c6862d272ec@gentoo.org>
+Message-Id: <20250412-03-k1-gpio-v8-5-1c6862d272ec@gentoo.org>
 References: <20250412-03-k1-gpio-v8-0-1c6862d272ec@gentoo.org>
 In-Reply-To: <20250412-03-k1-gpio-v8-0-1c6862d272ec@gentoo.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>, 
@@ -64,73 +65,53 @@ Cc: Alex Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>,
  linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
  Yixun Lan <dlan@gentoo.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1793; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=YrlYG0PuIhX+fM4QE2J+VecM1LCm6wkTyVul/SahGUw=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBn+aZuc6Btsz8hWNLUclrAWt/vtKUFU9gDludtq
- lprgt5hbNeJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ/mmbl8UgAAAAAAuAChp
+X-Developer-Signature: v=1; a=openpgp-sha256; l=866; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=ez3lQ50wt4PHNJjw/2DzRy5zUu0J1UdIhacJCZQJdao=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBn+aZxfiI6vSFppUJQZcclFJxoGxukFzknzKGWI
+ bSazNSymHmJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ/mmcV8UgAAAAAAuAChp
  c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277dTSD/4tMEKx7GOf1vg9zz
- 3MwpLQbUebhEVKxHuCpia83gNOTyNRUqHgnkSIfo6KrRMvIac1rcdd6e0kH36ivp33chnXeULhq
- g2yM2bybYNAlKBUegggSwITZSQ7O/I2mP1Bj8nlJzF66TvxEwrYN3pSeDNr9TX2HGPp9QV0CmbF
- /Mj4y302f7CGzDkup4CKL2CPZpigk9GZ/An4pcAUBT6u+XDSREQNHNKpnGyoVaK0MoCtPQgBC4k
- XfpLWKv4m7Ffl+fcB5derFJEEtCUhgtAYpJ+5qa9qUuwI9RFwwCiMP5xbW0wit7YMTpUIz6FX6C
- 6WKSUI2+yWtFhYWtwITSq+dlLYDB6OFvVTUF1/fwEPQM2cC62UcmUtTxLzrFpFuSYf4Vz6BWzzA
- 13Y4R+jJph+fZi3NRBvrFZ9AnQdkMTD9f9F7G0fj8y8djyhFy9xzI8K0kWX69PJ42u3DNYsKtlG
- 6iDaVBwAJvQfZxEpM/+deZ0YsOS1Wdo9iux3b8TlBKimtkZvhr477YESXo0MbIoJqq0ds8oYKye
- EYYMfZjyF/san6oPnnPRMYioYmva9dkR+SgabXG+kHqra1QXrgFGe9lyWX85epGZViqg88S3bMI
- 8ESy3j/hdsgO6V5TCB3RWt7KGMt3Qs57QlYlYqQYAIoI+1BcOai8G0kWK5rC7jrEYvwg==
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277aefD/9NlWbYn29Msk3Awk
+ JEFX4IoCMm//CCjVRGM9538q9qidfJrfb8Eoh93p+BTEL7GH9VJs6QUaXb5xF3jG7rO5vAtQD/8
+ D7UjxTtBlKeW2TVsBVVIkPr/mX6utN4uERzdFF9gr/+7tI3TcMWeHt+nPknCAYq74gfdY2t0pcc
+ xzW7l9Qpj026YMdE5OpU/obV7jTWPUaSdrISKV+Brj+Z5dQQ2JQt5Av8MMGeH0bgMjn1w79DZxB
+ HfFWvzahQOAT7h+HXndZ7QMC3gT7mSRhFk+fH5xWR+rbasYseok12T3CuPm1tslK044v/kkHxCC
+ YQeN/byAURzjLDPGFIy+LmNVs4d7IhDR2PVugjlpftNtiFfBlro1hgrXab13IfxbtpmjVs40PGy
+ gv15fhqGtrRXvXuaWhPQDXnlgvtLYNm336jGAnWvYN0AUNFMQYEhQv6NYoHOEHbDW7FUC7VSZ1J
+ w65vdLBlqOoKotUL/DUGo5TS8zA7rLDdKo0LFIQ5u0vZ50U2HT/FrNoOK+KopKzrEpL9CD60+Wj
+ zYRG797irsmcXl/n5IEVPpoxswpUztkAz+3SILGSqjGYh/W4CxUjGYYTlLrNuvCxIYrr4kbYGz2
+ YamsKUmzR2HZQHLUFr5KCuns0xWiv2sQE3baUi7A+4gZXTEU4xbMEdxKPQWxO7RKhZdw==
 X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
  fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-Populate the GPIO node in the device tree for SpacemiT K1 SoC.
-Each of 32 pins will act as one bank and map pins to pinctrl controller.
+Leverage GPIO to support system LED to indicate activity of CPUs.
 
 Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
- arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi |  3 +++
- arch/riscv/boot/dts/spacemit/k1.dtsi         | 15 +++++++++++++++
- 2 files changed, 18 insertions(+)
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index a8eac5517f8578d60cb45214589ccb45ac376b9a..283663647a86ff137917ced8bfe79a129c86342a 100644
---- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-@@ -7,6 +7,9 @@
- 
- #define K1_PADCONF(pin, func) (((pin) << 16) | (func))
- 
-+/* Map GPIO pin to each bank's <index, offset> */
-+#define K1_GPIO(x)	(x / 32) (x % 32)
+diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+index 1d617b40a2d51ee464b57234d248798aeb218643..816ef1bc358ec490aff184d5915d680dbd9f00cb 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+@@ -17,6 +17,17 @@ aliases {
+ 	chosen {
+ 		stdout-path = "serial0";
+ 	};
 +
- &pinctrl {
- 	uart0_2_cfg: uart0-2-cfg {
- 		uart0-2-pins {
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index c670ebf8fa12917aa6493fcd89fdd1409529538b..ff86a02c25f2e0818a48ed56c75e911d8612f6d1 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -404,6 +404,21 @@ uart9: serial@d4017800 {
- 			status = "disabled";
- 		};
- 
-+		gpio: gpio@d4019000 {
-+			compatible = "spacemit,k1-gpio";
-+			reg = <0x0 0xd4019000 0x0 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <3>;
-+			interrupts = <58>;
-+			interrupt-parent = <&plic>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			gpio-ranges = <&pinctrl 0 0 0 32>,
-+				      <&pinctrl 1 0 32 32>,
-+				      <&pinctrl 2 0 64 32>,
-+				      <&pinctrl 3 0 96 32>;
++	leds {
++		compatible = "gpio-leds";
++
++		led1 {
++			label = "sys-led";
++			gpios = <&gpio K1_GPIO(96) GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "on";
 +		};
-+
- 		pinctrl: pinctrl@d401e000 {
- 			compatible = "spacemit,k1-pinctrl";
- 			reg = <0x0 0xd401e000 0x0 0x400>;
++	};
+ };
+ 
+ &uart0 {
 
 -- 
 2.49.0
