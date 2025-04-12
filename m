@@ -1,125 +1,134 @@
-Return-Path: <linux-gpio+bounces-18749-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18750-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AAFAA86F25
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 21:32:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96B2AA87000
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Apr 2025 00:34:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F0717AE4DB
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 19:30:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60E017ABC6F
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 22:33:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABFC6219A7E;
-	Sat, 12 Apr 2025 19:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/7si5VN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13AE91F03FE;
+	Sat, 12 Apr 2025 22:34:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07102149E16;
-	Sat, 12 Apr 2025 19:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F02317C21C;
+	Sat, 12 Apr 2025 22:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744486318; cv=none; b=TjWBJpdP6OIcnv9VArSk0EvAEmaWmJuPvmXhIG69YUDlh5rGiQ5n6wQB+Myx166qPk9VEX8xDBdOXZifPKEE01n98D12Dz/7COjR2d0UwmJZhBTb1iDzLf2yY2RPawYmerB97Vw38U/74YRw6K8AjGZY1o/j9mjN5t+Oe/BpvYQ=
+	t=1744497284; cv=none; b=QAlmY3SxZl8cq0k1XWw2xAmfUzNGlcBi/Ne1CjDDytEXwkrA0+3sAV926Ou9xSxIsHinvvjvfsooi1Msav89zl3i5VyEfvpESZ62jWMO7nTDaeY9lJyUKdUDT0uGlYgPmxGZdsG4orGMiApyLr/YK/XFP94H+A3SzWtx4UX4Aa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744486318; c=relaxed/simple;
-	bh=NhS5vb/tQJFQ/jjj7UdNjo+5MgaJ9eG2Jnss57DCYUs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MaMtqqHS4T2rhNUB+YthH9ZZ0fPEYfOIhKRUgR2y9jEMao6Qkh+9ZCsNKGUfaeJFbJKTfId6VEOQnC5dVBjAjbdRlRoKjmz9UnYkunsqf7TPjY9vAGENbl8qHiuvReGCBdfcSXmL+rUe1lT2e+gUhLvlSHtxULb4Z3FpWEsi4Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/7si5VN; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c548db0aa0so51527185a.0;
-        Sat, 12 Apr 2025 12:31:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744486316; x=1745091116; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vGbdQ7HwZ6HfRq5afBeoyIwhWt20XJHmLncrgBwuDwU=;
-        b=f/7si5VN8s0ZpqI7wn34vIcB7gPmwYbMyMUeYkrC3Ny5/rEMlLmZHU0HhFxWvDbYRJ
-         sstB7EZY2clZAx050JCzJA8PxwBGiqhdmK8GzueFMQsn8w057YEaHiipojrqiYzSEGDw
-         pz9uTiYom6I1ZYV+Gfjm5ZknQeiDOysjHSUke/DqaRdJJqE+//rvRI68nvEythuri3wB
-         N64+GdOpNHnRn9xsn9+LqakYsOd81vhzQADQcmowInPNjwdFVzt7RDZRVYmURKwVHXmA
-         nQnQmHMDCrPezKpYQ9hAHy730iSIakk3LlhnzhsMjof4t1qcFsbGBNdEHqpmkwSypb5c
-         bkXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744486316; x=1745091116;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vGbdQ7HwZ6HfRq5afBeoyIwhWt20XJHmLncrgBwuDwU=;
-        b=THjm3MY3Y2aPI9Rm5RXajXoixstZ3DUl70YBt7UsLv3xT9Uld/E39y6pcY6/TsgK5C
-         xPBMWEer/ozp5HVJc3H+gKCb3zFtzw6ZWt8LuoFiOYl5JoatULg1heZ/feT2QN8OMz/5
-         hmM/ygUxwyUIM5+sBuhMJ5PH2LSiO2zqHBr2EsQ7PhgXEU+FM7G0DQjs5+CzzElwuo+N
-         na3AWVP6AnCUGAqUT/APT3zAIkP1d5ddV5F/iA8dlGw7zoF5lPktpCzfA0jGkst4iozn
-         Yx5KLhCeiI8j2P2sNoL+AKK2Ru82Kt1Tt+/cQGAZs8n/iFpEJAKVIZqqaTd1CZSbTzBN
-         KAjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWcaat5cjGTAPSLcnIh25bi8nQq4f86AcatzN0KPsfCj13OYmR0Z87GLWR7Hm7AaGRgDobTJGoQ7bZLRmD@vger.kernel.org, AJvYcCW0pkK866HReQD8Ol/ajJBCIxZNGcyx1X2fuY9Yfyp7xhmDmuoiqRTraq14uMMm5MZi7sqdkJoWupwH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj0vmI1/PJov2Vo9ufpW7d+Mn2ua2YCewHkt+B80hCCUGfKvbJ
-	UAq+o30CND6Vx/fWjfE5uGkOltyI4AOpS0joMkZqhZx1jvQvU0ZR6wpOAU4=
-X-Gm-Gg: ASbGncugb7tFTOoMfenEv1oF+X4cp45MaBFzicdT87lSfpFD0m/RXZ3ovncblQq2eHi
-	4qzz28kHIWKYqPYWQi8ldT13uQ+fhMadXdm0/9v2+CrILeVO6xlYch+u6pHKg5w/ezMIMkFsKmN
-	kCImxpo6ufPk+ywM31HbQ1QARHQbufkDo35qXkI4qm7W66+q4BiunnMdpiSvmHDP6sHly6trG+f
-	p4kGX8GY+rL9FZ0oVMq07z1lVoojuDg8pxk6xjSPxMtX9r3FafekPD16YxezXejwiHNco6TqcYO
-	oES9I1mauaToRUASusGTs2QFqOBpa7itZzimqw==
-X-Google-Smtp-Source: AGHT+IFwgsYs5JKfro8N+GKqLf/zqrbnDwJzJZWtKxHFomrdJnX8s4fGcuPU5JBg+lXyqUl2hEGWJw==
-X-Received: by 2002:a05:620a:29c3:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7c7af1cc7aemr400679385a.10.1744486315743;
-        Sat, 12 Apr 2025 12:31:55 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8a0dc9fsm443192485a.96.2025.04.12.12.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 12:31:55 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	theo.lebrun@bootlin.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] gpio: nomadik: Add check for clk_enable()
-Date: Sat, 12 Apr 2025 14:31:53 -0500
-Message-Id: <20250412193153.49138-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744497284; c=relaxed/simple;
+	bh=+vTIpcux5xo6tvbpM4VgRTZ9LEot9EsuWfaDrUeI7EI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CO5+nRAh114OqxhsMtmMOxJ93ybTcnUYxF1puua8ynb9AVoiFmx5CQFn9qrqUr83VQkWjTqarabKcvKJWQFNleLTJD860lTEN4swEQd7BZayfJ9g46CPeIoitnYctERJRYWAzNppQu5zWm9Y3kvAx8S5CHGpshtMNRIq6+cn8Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 44B4A343096;
+	Sat, 12 Apr 2025 22:34:41 +0000 (UTC)
+Date: Sat, 12 Apr 2025 22:34:31 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: spacemit: add clock support for K1 SoC
+Message-ID: <20250412223431-GYA25375@gentoo>
+References: <20250412-02-k1-pinctrl-clk-v1-0-e39734419a2d@gentoo.org>
+ <20250412-02-k1-pinctrl-clk-v1-2-e39734419a2d@gentoo.org>
+ <20250412182737.GA1425287-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412182737.GA1425287-robh@kernel.org>
 
-Add check for the return value of clk_enable() to catch
-the potential error.
+Hi Rob,
 
-This is similar to the commit 8332e6670997
-("spi: zynq-qspi: Add check for clk_enable()").
+On 13:27 Sat 12 Apr     , Rob Herring wrote:
+> On Sat, Apr 12, 2025 at 02:58:11PM +0800, Yixun Lan wrote:
+> > For SpacemiT K1 SoC's pinctrl, explicitly acquiring clocks in
+> > the driver instead of relying on bootloader or default hardware
+> > settings to enable it.
+> > 
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> >  drivers/pinctrl/spacemit/pinctrl-k1.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> > index 67e867b04a02ea1887d93aedfdea5bda037f88b1..3805fb09c1bc3b8cf2ccfc22dd25367292b397b9 100644
+> > --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
+> > +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> > @@ -2,6 +2,7 @@
+> >  /* Copyright (c) 2024 Yixun Lan <dlan@gentoo.org> */
+> >  
+> >  #include <linux/bits.h>
+> > +#include <linux/clk.h>
+> >  #include <linux/cleanup.h>
+> >  #include <linux/io.h>
+> >  #include <linux/of.h>
+> > @@ -721,6 +722,7 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> >  	struct spacemit_pinctrl *pctrl;
+> > +	struct clk *func_clk, *bus_clk;
+> >  	const struct spacemit_pinctrl_data *pctrl_data;
+> >  	int ret;
+> >  
+> > @@ -739,6 +741,14 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
+> >  	if (IS_ERR(pctrl->regs))
+> >  		return PTR_ERR(pctrl->regs);
+> >  
+> > +	func_clk = devm_clk_get_optional_enabled(dev, "func");
+> > +	if (IS_ERR(func_clk))
+> > +		return dev_err_probe(dev, PTR_ERR(func_clk), "failed to get func clock\n");
+> > +
+> > +	bus_clk = devm_clk_get_optional_enabled(dev, "bus");
+> > +	if (IS_ERR(bus_clk))
+> > +		return dev_err_probe(dev, PTR_ERR(bus_clk), "failed to get bus clock\n");
+> 
+> Do you really need these to be optional? Yes, it maintains 
+>
+Yes, the motivation here to make it optional is maintaining the 
+compatibility, to not break the case of using old dtb with new kernel,
+since the serial console device (uart0) is activated now [1]
 
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-Fixes: 966942ae4936 ("gpio: nomadik: extract GPIO platform driver from drivers/pinctrl/nomadik/")
----
- drivers/gpio/gpio-nomadik.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+IIUC, from the DT perspective, it's mandatory to keep this compatibility?
 
-diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-index fa19a44943fd..dbc4cdddf4df 100644
---- a/drivers/gpio/gpio-nomadik.c
-+++ b/drivers/gpio/gpio-nomadik.c
-@@ -262,8 +262,11 @@ static unsigned int nmk_gpio_irq_startup(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+	int ret;
- 
--	clk_enable(nmk_chip->clk);
-+	ret = clk_enable(nmk_chip->clk);
-+	if (ret)
-+		return ret;
- 	nmk_gpio_irq_unmask(d);
- 	return 0;
- }
+In dt-binding of patch [1/2], the clocks/clock-names has been described as 
+required property, so it's sort of mandatory from DT's view.
+
+One lesson I learned is that the pinctrl dt node shouldn't be activated
+untill all prerequisite dependencies meet.. it's ok to push the driver,
+but should postpone the DT part..
+
+> compatibility, but if this platform isn't stable, then do you really 
+> need that?
+> 
+I don't get what's your meaning of "isn't stable" here, the fact won't
+change for K1 SoC: the pinctrl controller requires two clocks
+
+[1] https://github.com/torvalds/linux/blob/master/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts#L22
+
 -- 
-2.34.1
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
