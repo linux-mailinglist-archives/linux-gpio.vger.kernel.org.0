@@ -1,126 +1,109 @@
-Return-Path: <linux-gpio+bounces-18729-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18730-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 567EFA86B6B
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 08:59:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 772F7A86C6D
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 12:15:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36A081B828E2
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 06:59:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E93B17BF89
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 10:15:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94F541993B1;
-	Sat, 12 Apr 2025 06:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A9881C863B;
+	Sat, 12 Apr 2025 10:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DcuUp8d5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1054318A6DF;
-	Sat, 12 Apr 2025 06:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD494C8F
+	for <linux-gpio@vger.kernel.org>; Sat, 12 Apr 2025 10:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744441124; cv=none; b=OnXG6V5d8yWOMba6Fam97hruVeOWUrH3zBMd+Crbk01HT31TbUlE+GRD3eGmDU9lS9A5WEs+uIh0i8wc8PJTAPr+7cIdYTl2vpnn4ViUAldPSgtL0xhSeO4XdD66llVUHidxfGVfGkV0b4CT3mm+vbJFCLO2iNqWzjQnyfr7qxA=
+	t=1744452902; cv=none; b=KwSgVe4n8SRXYkmRPEKrpKUf7WabbxwkECxdoQbFs8WZ6x5Y9Spjt/COtusHA+wV9eRnI1OKR50RdxafIoUxEuOdOxV6uyyQ023evTrR8CanjedGgfED30lCOaTxSTq4nssYvHnqwfu3Jj2fkfQGdJD5D4CDjF8S6PipWwfbO6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744441124; c=relaxed/simple;
-	bh=n7GbuJLw/44DNPKz3PzwbXAURd9IBpfJrhXcy+GGj2Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cV4hI/JFC8NR601eeox/mMZjGhl2n1R7DqhcAvh8DzetAf2Jly15PTmGrOqmrYQSBHWPcGw5VBe9k/A5VAVlLzaxLyDOh2ygaMd+DJbg3GormZNqjNcehVPSY35q98xZJkcVbAWebCOe+lMG8LBhzLw4/hVJDZGlzJPLs1Kao6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [116.232.27.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 45F0434375E;
-	Sat, 12 Apr 2025 06:58:37 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Sat, 12 Apr 2025 14:58:11 +0800
-Subject: [PATCH 2/2] pinctrl: spacemit: add clock support for K1 SoC
+	s=arc-20240116; t=1744452902; c=relaxed/simple;
+	bh=OUaqaenZQK40EKCZ5x5D+sjoF6j3O559xsJm3HomQC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PP+caeVlubbPoobYPvKI7fVOSgHRJ1Qu/8O3uBTDmXafsIX707RV1djVCyb2rCW9lRh+nVxoyxWNl89fVnq1D0h70up3t7tp/BvU9I/ddoTAHbqHk2huqWtaE8Zw3Owj9PbT8yXgJ9tUlqNfh44PRt9N9rS4q81w4wea4rqnpt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DcuUp8d5; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so28183645e9.3
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Apr 2025 03:14:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744452898; x=1745057698; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ADz2UHdhn6VlUtCxoXIDmk2qzKdPwe5zasSgeJVB5z4=;
+        b=DcuUp8d5N7CwSxEYROiNlwQ4bGCKhy18TJO5ecjLFPm8kfMb0HqKcZZpRrbEl1xeZT
+         KpYoRrIXuTaGuIfPXcJb5A0fx1LVGR1pqYS/ebIDDgiACeP/wiKj3LBeJS9gkO5Bo/jh
+         oOs9RVJC05ioaz2lhWGEIpATl0uLX592H/z1NBx+12YnWpmDjeBcOP6SEQgmkG/ditVS
+         lOxRMYJ6BO3R1iBtuoNs8q1NehD6C85f4Cf87yL0BQyg3XKw5DDDFXozcmFHW39VAXXw
+         RaYEzYEgYBVdec1Dqa5MOa9AA+MviyXLqTL3LjmsiX0TLbTIYKkr5axKO87Qw19Csps9
+         sJLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744452898; x=1745057698;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ADz2UHdhn6VlUtCxoXIDmk2qzKdPwe5zasSgeJVB5z4=;
+        b=Hv0iUXr6jYG5KkgRnkh/Ows14weil430eVs0HWgMa/qNa6es2yFHjg/EOlkeXekNvS
+         /LjeAJ9hWLEMv1u2aSCKMj3Wy2TiDeIxSnWDfma9V+Ioecxvhx4WC2mgiKOfdziRbbVV
+         rCGjrFv462mpQe/zyZ24NXh8GCxlY1hd2pcn2y56AS21Ds5f/ZcLONMI4Vu/fkmCPjKZ
+         VLNg2JvBKyH2nIx5HETGfiuiRM4lS+NirZpypZhSsRu1XZU5HOXwdoaMuh/fHjSkeHyB
+         YPSArmLMJUMNYaCPLC2e+peJ0REtiq1xvLJm2dHXf9EXwiakGgp7AsQj+yZZgfGPLMbN
+         8ISg==
+X-Forwarded-Encrypted: i=1; AJvYcCVd2imGHgT1R/S21Tl//It0E8cb0UUuDRht59MlaUYDtIfMevfFwW4yKzSKmGdpjKw0Hp7NF74U1Khv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMUQ8SY4iojm2rJRnCCnyelOBtZk7T2DTOQBuMIwrN3Omm9v7y
+	1Mu9IlteTS2dN/+1fW/UhMp7ge0pjtyIYFvpy4BlgHTqQoiR/Liyb3rCEb4mjRo=
+X-Gm-Gg: ASbGncufRHfGxjSOY8ARy+xWdh9xOKij18MS3kTNpGEqJ/7aajDxV4xh1nWpv5nfPEx
+	Lq+La/J65P7RSro1azibW11E1PYT8Z6yPGrYOb0Zsw6udn3H6RzaKpPgjeRWsYoYuPLsCYF+N/d
+	Hj6AL4vfLnMCZ3vu5Rjq5mGPer0nKT90kVWyypFJ3cb3Sp5KBbd2/bSunX2UXH04BtZhOc0KSZT
+	RYVH0Jevf6BaIGrriEmY4iA2fqYBSBjaowT13ES+5epsAl/8flyM/GMz6Km0iFYM70h+g7yUoLu
+	Fsz0l+ri9B1fpu5DfRY4uFU4169N00/C3Ll5JETul7pMxgN1Ywyepu3K
+X-Google-Smtp-Source: AGHT+IHxVaO0Q6A5zfZJplMfUr/1H1I3HvmVPXjbMZB/QaHYgFmax6t6yrpQoZxMY7sOOsN7U44WiQ==
+X-Received: by 2002:a05:600c:3b0d:b0:43c:ec28:d31b with SMTP id 5b1f17b1804b1-43f3a93d1d8mr64377345e9.10.1744452897722;
+        Sat, 12 Apr 2025 03:14:57 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae964048sm4713549f8f.2.2025.04.12.03.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Apr 2025 03:14:57 -0700 (PDT)
+Date: Sat, 12 Apr 2025 13:14:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] gpio: aggregator: Fix Smatch warnings
+Message-ID: <cover.1744452787.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250412-02-k1-pinctrl-clk-v1-2-e39734419a2d@gentoo.org>
-References: <20250412-02-k1-pinctrl-clk-v1-0-e39734419a2d@gentoo.org>
-In-Reply-To: <20250412-02-k1-pinctrl-clk-v1-0-e39734419a2d@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1653; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=n7GbuJLw/44DNPKz3PzwbXAURd9IBpfJrhXcy+GGj2Y=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBn+g8SiIjiGMLHykiyn4luij0gAqj6VC5tcOEr4
- HHe+VWgPUKJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ/oPEl8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277YSMD/4g8g5GHPkKUntp3e
- OUiaaGAEMBegOZVUQnYe7W9IivHp7oo0NXJYfVxHm0C0ozc0zivlgL4JDwWNfOUCiPPbO0+4k3d
- PELS5KD+K7QOO6PM1Q855Ifh+V/3afxJhgC0xGuIG7vwqvtW0obb2Ud6UB0gc9pZBgFs7VUaTli
- D0ixzy3PY+KB+vE6zReYoqBa+0Ebkq33N2+06+fYEB90Y1mmMJb6GGCcUyb7Kv6TKe6ufr+Td9e
- L412SlKPdD7HEKC71bc7tDrYgQ58j//vFhWnV7QblT0fzJ+7Ta/1GEoFdG/mIsfeCZhxkbfKOWD
- f7M5R3tYJpqZP5hxkq4M2N53YOEWLfjGTeICFk9vSpNzFBpmyYlDn4iYygP1PxX/ncCUrtqAxlh
- LOPwerOKBWu3s4kcuS8CIzzGarqJO2Jw6usEVGXEfuUJ2Rvlod8rK3rQT44917gJUkGLJHbuM5e
- gZcEaI6CQTY+EnYQS1xZOORTAfFc8FM5+XrJuM8riWO+GP5IexwmtGre1Ymn0kmXQfYEhSSNscy
- 5mklqCbq/YoE99pOf6NrUo/+iExnV/iPs3Qvq0KGb2+1XTNMjfbtyvvXxnxR0jrD7zDwY0tO33w
- K/S7bz1FW4bT49hINK8lhbHn557gewzTFpEIiHxMy7xw+mbUrJp1yuaK1nxj9zKUmBTA==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For SpacemiT K1 SoC's pinctrl, explicitly acquiring clocks in
-the driver instead of relying on bootloader or default hardware
-settings to enable it.
+Fix some static checker warnings from Smatch:
+https://github.com/error27/smatch
 
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- drivers/pinctrl/spacemit/pinctrl-k1.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Dan Carpenter (5):
+  gpio: aggregator: fix "_sysfs" prefix check in
+    gpio_aggregator_make_group()
+  gpio: aggregator: Fix gpio_aggregator_line_alloc() checking
+  gpio: aggregator: Return an error if there are no GPIOs in
+    gpio_aggregator_parse()
+  gpio: aggregator: Fix error code in gpio_aggregator_activate()
+  gpio: aggregator: Fix leak in gpio_aggregator_parse()
 
-diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-index 67e867b04a02ea1887d93aedfdea5bda037f88b1..3805fb09c1bc3b8cf2ccfc22dd25367292b397b9 100644
---- a/drivers/pinctrl/spacemit/pinctrl-k1.c
-+++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
-@@ -2,6 +2,7 @@
- /* Copyright (c) 2024 Yixun Lan <dlan@gentoo.org> */
- 
- #include <linux/bits.h>
-+#include <linux/clk.h>
- #include <linux/cleanup.h>
- #include <linux/io.h>
- #include <linux/of.h>
-@@ -721,6 +722,7 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct spacemit_pinctrl *pctrl;
-+	struct clk *func_clk, *bus_clk;
- 	const struct spacemit_pinctrl_data *pctrl_data;
- 	int ret;
- 
-@@ -739,6 +741,14 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
- 	if (IS_ERR(pctrl->regs))
- 		return PTR_ERR(pctrl->regs);
- 
-+	func_clk = devm_clk_get_optional_enabled(dev, "func");
-+	if (IS_ERR(func_clk))
-+		return dev_err_probe(dev, PTR_ERR(func_clk), "failed to get func clock\n");
-+
-+	bus_clk = devm_clk_get_optional_enabled(dev, "bus");
-+	if (IS_ERR(bus_clk))
-+		return dev_err_probe(dev, PTR_ERR(bus_clk), "failed to get bus clock\n");
-+
- 	pctrl->pdesc.name = dev_name(dev);
- 	pctrl->pdesc.pins = pctrl_data->pins;
- 	pctrl->pdesc.npins = pctrl_data->npins;
+ drivers/gpio/gpio-aggregator.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
 -- 
-2.49.0
+2.47.2
 
 
