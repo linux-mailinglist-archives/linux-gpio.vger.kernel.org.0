@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-18746-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18747-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D004A86E89
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 20:02:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C990EA86EA4
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 20:11:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E2FA44053A
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 18:02:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5ADC71890F55
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Apr 2025 18:11:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF35205AB9;
-	Sat, 12 Apr 2025 18:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F65D20A5EC;
+	Sat, 12 Apr 2025 18:11:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MC52n3cV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmsEAa59"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3899619CD1E;
-	Sat, 12 Apr 2025 18:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBDB1A23B1;
+	Sat, 12 Apr 2025 18:11:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744480936; cv=none; b=t9XNzBgUGB1dPjiOGaQjr/7fGagZ2XhhHh/o4UuKVr+RPZr8TkR2lf/RVGidQV4ITWM8kcJ7iSbBvdp9fNYcVEOjqh3gwWx744m/z4IoPiQEVZdRJbmv0fAbeCjyrRBF3sxv9Sn1g+Q1aeYZN8VaO+hB6lyote8WYoXXve2yS+o=
+	t=1744481498; cv=none; b=ni5+9jz6oFsxia0wbKtswvNmQtm6OpI41QFTiDZ9WUJMQqV4VXena+RpYe/qGbPrZy6rhlGGPjbwci8y8yX/G10+HW0uvZlNeFCS2DQL5KCo7MZXdNC2xfiqXSeX2DR4GiHnkoN9CrczWdrSeKrX3hmKxu2aJp+8sRkq8u78vL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744480936; c=relaxed/simple;
-	bh=hVTDMIQCxS+GFFPwVJ64C7rwJD3SSWBVHTshL/ti+yA=;
+	s=arc-20240116; t=1744481498; c=relaxed/simple;
+	bh=b3HaXXW+MR1VOkMnYXtzpEuVhn4y0K81DcGV47y/ueg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NjhSx0yl2Pqbtomq2bVqKDcugq0fLTo5+J1NBI4yXpWdgaHmy20LOpTS7L1qmV93jCE2Vpky7feG04vfeoVBKfizAGV9MQS62J67YOrK1dx/IK5+/ZWYvDPMI0M2hxFaSaqmjZhTMVUtYFgXyOQ5SIoutyet55V8g6T6xXdl16E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MC52n3cV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A36EEC4CEE3;
-	Sat, 12 Apr 2025 18:02:08 +0000 (UTC)
+	 MIME-Version:Content-Type; b=rbKUh2DYTaLsgKVAmTZb93J/ehrwl8jHix1NsatIxWofZW9MoNOzQOknsXclb+VFLz/4v6AJDgApMUARbrUmmCUd9QajKZYFSIOtNh8GgN5pjUT4s17QA0XQpLhbDbeITjitSSO30zJc+6wWMOA0YK9aAcrtA1pwdb+07M8KQtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmsEAa59; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A616C4CEE3;
+	Sat, 12 Apr 2025 18:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744480934;
-	bh=hVTDMIQCxS+GFFPwVJ64C7rwJD3SSWBVHTshL/ti+yA=;
+	s=k20201202; t=1744481497;
+	bh=b3HaXXW+MR1VOkMnYXtzpEuVhn4y0K81DcGV47y/ueg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MC52n3cVhNZSo5YbXsIDApqtwYc4to0SIljaG+21SS56q0dOvMQWqzC6boyzfu12E
-	 2n7N6j8xIxaywBWiz85bqC4Py/4QWJu6rJdrZQZgwZG/JKI1LmS4nuPIetv/DziCw0
-	 7ixhILBHo6rivvW31gEu6di3AEgzr6dRTidIpjL9p8Hyz3hGZ74L2ruym+UY/xBFNw
-	 q/7tjJqR7EX9+a5nQRWBCsDpeRKIL3f8B3fUgzq0htdxJ3XdM4j0GimDMNXz+kCB8R
-	 ndCUQgHsaGTuxOi+XHGGjHlAMo910vWjStMlVCl2RkEeODqlLAhSunJXHHYy0k83hI
-	 DYyRIxMyLwd0A==
-Date: Sat, 12 Apr 2025 19:02:03 +0100
+	b=mmsEAa59dTWc4y15WeR8qPZcy1o85rX7iSQrRXWxqfJsPyfKbhnmdzeb4buEDW/bD
+	 I2IGLnW+dIggXRY7Gpa4W6JAmJ8C0GOLuigBDxLn9bbJlq2rko5CSGuZ7nAfUOGLoo
+	 uM+2dA3vnEWaNt2X72wPt3LgTkEeVQGsbd3PRMUjuQp+eYXK4tfi7X9Fhf/KzEDEn6
+	 hzRsDF2Gb1jXabhNNR5obU24ed8MxfpnjY3jXr8KFnSePNU9JQkygO6PZTd3n685Po
+	 edqSAzcmQu0JKO9KxzeAEOL6zNVDV0VLC/I2+1izvSZ2CNoxKE5PkfWmGYXnAuCsuX
+	 lZpXd8M6l0c8A==
+Date: Sat, 12 Apr 2025 19:11:26 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Jonathan Santos <Jonathan.Santos@analog.com>
 Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -50,13 +50,14 @@ Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
  <marcelo.schmitt@analog.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
  <conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>,
  <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <lgirdwood@gmail.com>,
- <broonie@kernel.org>, <jonath4nns@gmail.com>, <dlechner@baylibre.com>
-Subject: Re: [PATCH v5 08/14] iio: adc: ad7768-1: add regulator to control
- VCM output
-Message-ID: <20250412190203.731aa10d@jic23-huawei>
-In-Reply-To: <7753dcd690f07f855100fc28e7b8ae746082de1c.1744325346.git.Jonathan.Santos@analog.com>
+ <broonie@kernel.org>, <jonath4nns@gmail.com>, <dlechner@baylibre.com>, Pop
+ Paul <paul.pop@analog.com>
+Subject: Re: [PATCH v5 13/14] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
+Message-ID: <20250412191126.06c19115@jic23-huawei>
+In-Reply-To: <e5ea27f88607d1cc12daecf310c18f71383a3bbe.1744325346.git.Jonathan.Santos@analog.com>
 References: <cover.1744325346.git.Jonathan.Santos@analog.com>
-	<7753dcd690f07f855100fc28e7b8ae746082de1c.1744325346.git.Jonathan.Santos@analog.com>
+	<e5ea27f88607d1cc12daecf310c18f71383a3bbe.1744325346.git.Jonathan.Santos@analog.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -67,42 +68,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Apr 2025 12:57:42 -0300
-Jonathan Santos <Jonathan.Santos@analog.com> wrote:
 
-> The VCM output voltage can be used as a common-mode voltage within the
-> amplifier preconditioning circuits external to the AD7768-1.
+
+>  
+> -static int ad7768_set_dig_fil(struct ad7768_state *st,
+> -			      enum ad7768_dec_rate dec_rate)
+> +static int ad7768_set_sinc3_dec_rate(struct ad7768_state *st,
+> +				     unsigned int dec_rate)
+>  {
+> -	unsigned int mode;
+> +	unsigned int max_dec_rate;
+> +	u8 dec_rate_reg[2];
+>  	int ret;
+>  
+> -	if (dec_rate == AD7768_DEC_RATE_8 || dec_rate == AD7768_DEC_RATE_16)
+> -		mode = AD7768_DIG_FIL_FIL(dec_rate);
+> -	else
+> -		mode = AD7768_DIG_FIL_DEC_RATE(dec_rate);
+> +	/*
+> +	 * Maximum dec_rate is limited by the MCLK_DIV value
+> +	 * and by the ODR. The edge case is for MCLK_DIV = 2
+> +	 * ODR = 50 SPS.
+> +	 * max_dec_rate <= MCLK / (2 * 50)
+> +	 */
+> +	max_dec_rate = st->mclk_freq / 100;
+> +	dec_rate = clamp_t(unsigned int, dec_rate, 32, max_dec_rate);
+> +	/*
+> +	 * Calculate the equivalent value to sinc3 decimation ratio
+> +	 * to be written on the SINC3_DECIMATION_RATE register:
+> +	 *  Value = (DEC_RATE / 32) -1
+> +	 */
+> +	dec_rate = DIV_ROUND_UP(dec_rate, 32) - 1;
+> +	dec_rate_reg[0] = FIELD_GET(AD7768_SINC3_DEC_RATE_MSB_MSK, dec_rate);
+> +	dec_rate_reg[1] = FIELD_GET(AD7768_SINC3_DEC_RATE_LSB_MSK, dec_rate);
+Looks like a larger big endian value. It's a little messy because of
+the 12 bit mask but I think still clearer as
+
+	u16 regval = FIELD_PREP(GENMASK(11, 0), dec_rate);
+	
+	unaligned_put_be16(dec_rate_reg, regval);
+
+Avoids the use of masks to get bytes from the dec_rate value which is
+is sort of backwards.
+
+
+> +	ret = regmap_bulk_write(st->regmap, AD7768_REG_SINC3_DEC_RATE_MSB,
+> +				dec_rate_reg, 2);
+> +	if (ret)
+> +		return ret;
 > 
-> This change allows the user to configure VCM output using the regulator
-> framework.
-> 
-> Acked-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-Just one question from me inline.
-
-> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index 66087fabe181..13d17a13b6ea 100644
-> --- a/drivers/iio/adc/ad7768-1.c
-> +++ b/drivers/iio/adc/ad7768-1.c
-
-> +static const struct regulator_desc vcm_desc = {
-> +	.name = "ad7768-1-vcm",
-> +	.of_match = of_match_ptr("vcm-output"),
-> +	.regulators_node = of_match_ptr("regulators"),
-I see this use of of_match_ptr() is common but not universal in regulator
-drivers.  Any idea if it really is just to save a string or if there
-some more fundamental reason to make these go away when device
-tree support is not built?
-
-We spent a while getting other uses of this out of IIO so  I'd like to know
-more about this one!
-
-Jonathan
-
-> +	.n_voltages = ARRAY_SIZE(vcm_voltage_table),
-> +	.volt_table = vcm_voltage_table,
-> +	.ops = &vcm_regulator_ops,
-> +	.type = REGULATOR_VOLTAGE,
-> +	.owner = THIS_MODULE,
-> +};
 
