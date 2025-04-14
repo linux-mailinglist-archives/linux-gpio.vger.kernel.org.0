@@ -1,56 +1,48 @@
-Return-Path: <linux-gpio+bounces-18782-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18783-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E2DFA87FD7
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 13:56:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB28BA87FF5
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 14:04:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BDA5166958
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 11:56:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A60D13B3C34
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 12:04:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3F429AB0A;
-	Mon, 14 Apr 2025 11:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AD282BE7A3;
+	Mon, 14 Apr 2025 12:03:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="hkXw8muY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L440nwe+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48D7539A;
-	Mon, 14 Apr 2025 11:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2912BD598;
+	Mon, 14 Apr 2025 12:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631769; cv=none; b=dZx/te/jr0ppfF5cd0UgHjzcYSLbhECA+zw7ZfhJ6VK8XYVgDGzcl2tTTCQGBB74qgLaFiba+7vemBVWjUMkEszTmjfofy4QmOnxLnbslaeJoMPj/99A59AyNW4PYGXOV0fNSxhC6CAWQikdHhCizinAPBScbA7XAonlOV10qF8=
+	t=1744632217; cv=none; b=t8Pr1jhay5YziFlHzVf5fQ839WDDfJ7vR7oULk47how7cqclQ8z+190BeY69kVFUa5D3kC8ymyp9gNNjYBkYMrzkHpF0+6dE23rrSZxTGZc3WMYefCMefnkh7pOhdcL13lDlybyPDfYDYwcXM9gd6gio+2Y/UKSGS7mCHPr1Xdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631769; c=relaxed/simple;
-	bh=HEMRU5ogTyYI/vOgZEsmrPMUZkbUYpcAVVYG0vTlpWI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=o127gXk4nMsQqxNiCgeDySHZp+g9qjmvMcPcrdG+5cYpGGoWO4CdTmmfT0gP/443jxS9poPQj6E+RvuFweyyPum3npwIZU09z4Gp68NkgbfWNe2J7qR9WVf/s2185DInd7x/DYf1PFvxh6n8haCbrUroVlF4u7yxfEBzCmti7Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=hkXw8muY; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744631761; x=1745236561; i=wahrenst@gmx.net;
-	bh=OreeNdyrrGiGJumVjXwzjTBKuHbR9pl0eB7Dt3B4zzc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=hkXw8muYvurpmWkA5D0R2aZZM3YLd+3hXbxIsxsEDGPzGa4moLFP7gBSVJBrqi+6
-	 Zp4Y2mpKIMypSStpHeqkWnUmkkroI5ydlmWUny94rpWm8YToANCnmU+6ixJwtrKrg
-	 IgvrWt1BJNSdZ9WvotQIyPU3Q8Dgc1Jl8WCBNPN6GEZa5yrO+egKUgJc9nJvnx5wk
-	 rKRSRVMCXLeW7GCqLUD+Nv1+IsW+DOsCsWrk4s61YlkLuo0vSrVhQXS7qLTuwVsPk
-	 y1sr7D3GalHtNvyGky+6uaDTv9IDoEnxQfI72MUhXOCs7uKStNxILoi2I6bd/4koB
-	 XYOpUs8aIr+PIDyd3w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDQeK-1tuuEY2qgw-008QzD; Mon, 14
- Apr 2025 13:56:00 +0200
-Message-ID: <45c1a50c-2ecd-4201-85e5-9a0e94f06fa3@gmx.net>
-Date: Mon, 14 Apr 2025 13:55:58 +0200
+	s=arc-20240116; t=1744632217; c=relaxed/simple;
+	bh=/bxomSJIGHyvt+5hFy0R5oVEwYMlY3ZvIOs419TYitg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L5zlhrFdSgMFjBV5+ggbtvViJikO9huUdSt70660vceR9MHLGaFY4sTRNcNPCQLk97iQygKhJ3jO4xbJT0nGKrcEFUGucVuKAEhXP+WD0C4ZPkzBOzVdMLFIp4djfutThN8V85GDA9641+mDC0KPAt73ZhvlTqFYLRsxt6ZFgqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L440nwe+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C732EC4CEEC;
+	Mon, 14 Apr 2025 12:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744632216;
+	bh=/bxomSJIGHyvt+5hFy0R5oVEwYMlY3ZvIOs419TYitg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L440nwe+sacWG4uCza+Iytyk2p5qHKHSdHROmIU1GcbXyBeQxTN2hAKUY3MzlTQPY
+	 W6uE5taQxcqTkIt9mTWCwfBSD13ZvyAzC7x7Li5GrGDDQisMA2nw07zSZpPgeGfAZj
+	 hR6XU1XCD1Y0C/jE/0NCX5tbCym7skZTxQyAXEqly+bxOLnvCi0vnqKh7+MSKBvdb4
+	 +lNrQd9vtxPQO9rXfTi0yhA7dOo7c3Smz3MLwuLjlJYg5PbqBMZaA+R6EZ9AGgCDeS
+	 RoccKY24x8jV03i3FGD22harPZ9J4LV9E6onlOdlqjCaMsONOX3e7M6b2GPYTTcwUO
+	 cOkZAZTdI60xA==
+Message-ID: <bb24afca-61c9-4c37-b98d-b2316ed79f98@kernel.org>
+Date: Mon, 14 Apr 2025 14:03:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -58,110 +50,115 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 11/13] arm64: dts: bcm2712: Add external clock for RP1
- chipset on Rpi5
-To: Andrea della Porta <andrea.porta@suse.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
- Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
-References: <cover.1742418429.git.andrea.porta@suse.com>
- <7c26a0b52e00a39930ba02f7552abdd1be4c828c.1742418429.git.andrea.porta@suse.com>
+Subject: Re: [PATCH v2 11/11] ASoC: dt-bindings: mediatek,mt8196-mt6681: add
+ mt8196-mt6681 document
+To: =?UTF-8?B?RGFycmVuIFllICjlj7bpo54p?= <Darren.Ye@mediatek.com>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ "broonie@kernel.org" <broonie@kernel.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>, "tiwai@suse.com"
+ <tiwai@suse.com>, "robh@kernel.org" <robh@kernel.org>,
+ "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "perex@perex.cz"
+ <perex@perex.cz>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20250407120708.26495-1-darren.ye@mediatek.com>
+ <20250407120708.26495-12-darren.ye@mediatek.com>
+ <6a9bd37e-ffec-4365-891a-64259c0cc115@kernel.org>
+ <b67a231529c2f8cf0053d8180df95da94ef6d6d2.camel@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <7c26a0b52e00a39930ba02f7552abdd1be4c828c.1742418429.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:czG4GMQht2nXD2Mp++EOANKZEP+5pkXc4oz+r+gufql0lTqXjuM
- Y8+JfqD3AYyuaFqqm863fyxublyZoJgRCh2hj4D1WaeSDHF++0qxu2XBaNtajrRIOgOhxjR
- HtcYdQV1zN2Jl1MVmGY01Y2SH+UYmwZTcSOb0EW5MgLaCWrvbOYYPBZMsh66zeac9xZyqSm
- OrcgCaFCW2lDKA9iuuqdg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vEW4EQv+njU=;qowLx6dw0PwcUYvBP81aJOvYU0C
- KYT5EDL/HOu92YhV9xMyNbTJ4wt1vQpl5IGofiaK//7K6ebfVMhT7KeEGmvjSmRJnvjxGAvDu
- 10ybIOFv4Zh0KTE3YVN8By8HkzUM22tVeRWq6khQUmDNd2TZdyx7aGRuzWrR0RDWEWyegcYqk
- zNxe7JLbi7QSjgWq3nfk+yMnaiZgWsQddlXd4P9YaWjue0TR2XTc/Fie88FZAlqmVkb4F4ORH
- p06z3ni4fRK+3RpbZfH3ZUiAwd7OuGYVAf+Xdovm0GcaeQYtuF5AtD6NVAlpylvy6OXMNwxm7
- 7FldIrVkcuG+rGnebie+TyRp+gtS4s3U104JPkeJDm8T4aXkGwtlqcEaQtRaij0No41Wl4fFx
- ZGx19bM4Zaf6o3r3WqQrP1tqNlEIPvm1D6w+iWk64yJCbB3dJ8GPJ+TuNzY0OagHIgeYT2zi9
- k1N9MuEBNjGbZQ+FQqmc3KbAYHmXlieH9HfzGPKyOZwAC5LO2t/rcBgkeTmcT2B3zYnb7w35e
- Sas5NuiOa6MAUosm6+QK1e2ttQJN0Ff0ZSksLF/O8gIr64rqySbkPe774hduPKdaP98tbo+F8
- OnQTQxprcYzzxouOBDh4QpVrewBlu6XiG3pmIxuaSq74Ju48JLQlcLJnuqyPotnZk8tTwVmN3
- ZUFiNIV8pMRs/zuEjLoZjZHkhheI9vdMY4YwQj7JLG5JXHcElVym7e0ghjTppF8WOmpfC+PRe
- qTVT8agweSHBJ7HVXDWT3YIDKRGFwdVl2m/g4qeyWI57U/iXjTgqVZBn6kF07seaV8j7cRM6t
- 9o+zU2tRrGhtrNtAfDeBszDaa03vcO2zz8K/75daxwRuK08BnESJjIoKfaOis4Pn6WXdWdP4a
- KSggrOZg+Ekc/NOQhwat8wm2y24m7Wwrx+SrsNg6ykZGH7GitSzd+mnkgq+c6+oMAS3a0IMn6
- sqPiM1x06NryP4mmt72SiMNvcN8CON2SATlxRbTKF94XmAOGXmCwvlp5liET4kC001AhXFZk5
- KC3HZru1+5nmPEGNG86V+1gIqydAYkuP9Kgo/wyuAIVTH3cvG83pgPPqJZRDZrP/zvDoUGZ0w
- awceQ+GrwNcKwb/6u/vrIuyBsm8CxndYDSUa8eGYomMMSdBHWfHLa+/CIWDhakSyMlLg4R9B8
- yRdx2X3rHI9HbPVjoAPKmWPKwu1v1FZ4J3m3NGVdPQteyIu+uaTlBGn+ET59+AxlvgqizbtUT
- 7U5dlX554FaPxTELGFG5dfK2GyF3Z27N2a7NneRQ3kQxE8e1st2PCp0OC2b3vDtfxFW0utvqF
- BrFJNqYKdkP+mPdiRI1+AMSHEug3yBopu1iPt8M1C4fxeJO9ZCNE5cG+U0ZLpzeJCDyY3XBDe
- zNDPtAPBJbWOpnAkYoY5n1TMa/jV1GLb/O4EVxYuSk5CrMfpH8CeeUs8lLVOyaZpbhvWMemnH
- g54GcnHPTN1vXEIhXZ03o/FxBZrfUYuZnhVpPRbExq9W11E+d
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <b67a231529c2f8cf0053d8180df95da94ef6d6d2.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Andrea,
+On 14/04/2025 09:08, Darren Ye (叶飞) wrote:
+> On Mon, 2025-04-07 at 15:12 +0200, Krzysztof Kozlowski wrote:
+>> External email : Please do not click links or open attachments until
+>> you have verified the sender or the content.
+>>
+>>
+>> On 07/04/2025 14:06, Darren.Ye wrote:
+>>> +
+>>> +allOf:
+>>> +  - $ref: sound-card-common.yaml#
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    oneOf:
+>>
+>> Drop
+> 
+> Drop oneOf ?
 
-Am 19.03.25 um 22:52 schrieb Andrea della Porta:
-> The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz=
-.
-> Add clk_rp1_xosc node to provide that.
->
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-i'm fine with the patch content, but I think this is necessary before
-Patch 9 is applied?
-> ---
->   arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 7 +++++++
->   1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm=
-64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> index fbc56309660f..1850a575e708 100644
-> --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> @@ -16,6 +16,13 @@ chosen: chosen {
->   		stdout-path =3D "serial10:115200n8";
->   	};
->
-> +	clk_rp1_xosc: clock-50000000 {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-output-names =3D "rp1-xosc";
-> +		clock-frequency =3D <50000000>;
-> +	};
-> +
->   	/* Will be filled by the bootloader */
->   	memory@0 {
->   		device_type =3D "memory";
+Yes
 
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    sound {
+>>> +        compatible = "mediatek,mt8196-mt6681-sound";
+>>> +        model = "mt8196-mt6681";
+>>> +        mediatek,platform = <&afe>;
+>>
+>> Make the example complete.
+> mt8196 pinctrl in mt8196-afe, does it have to be set in the machine
+> driver?
+
+I don't understand what do you ask me. Machine driver is not relevant to
+this and I did not mention it. You have in the binding few properties
+which are not present in DTS example. Why?
+
+Best regards,
+Krzysztof
 
