@@ -1,135 +1,256 @@
-Return-Path: <linux-gpio+bounces-18775-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18776-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8944BA87BCE
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 11:25:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 855A2A87D74
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 12:22:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC8DE1891D03
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 09:25:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DA7C188B10E
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 10:22:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBFAD25E822;
-	Mon, 14 Apr 2025 09:24:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D9C265CC5;
+	Mon, 14 Apr 2025 10:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XD9uxQEP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJIcbyEC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3580C13D;
-	Mon, 14 Apr 2025 09:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCF333997;
+	Mon, 14 Apr 2025 10:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744622696; cv=none; b=la7QEUN2FeQpDTzvLZ+8Zn0LDblHNUTSBbNsMEkbPxmitUkABNyMQKeAbICUmpVgjn1gEVa33HNbpMeiE6RE0GEwgRDVwn3ocX0mZjeRFaHngl4tKLRBIddN699OUXBKkI2y2SpaoGtVavSjql7mQ0dTamakj8qcNxTkAuJ35z8=
+	t=1744626128; cv=none; b=Icg92PfUkPGFPOjDckyvTg9E49ZCurhFPkeO1TFRMNpclVJ20StHcymwUeEdRnrvyioOdFtYPqLrAp6LXw//k0nECZbcYM2aQUQMCs0mGIJemBOZAfn2ffXDcMKgdX4FI4aGzFA2JTZ5+P3BviOVI4q0vDlZKafy1mQIOGpWd9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744622696; c=relaxed/simple;
-	bh=cuPUt25ydCoI90Mo7CFpmSw+zuTe2HfgUcXwmGgJgJQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=m9Dvc4ioAGD1be8VJGykmbnkJb0tfnFyLFj96dZk0ggdOS7LpVEE/SFaxi5UMhfNsGuKRDc4u8udRZ/3mkk9FR2ye4tn9mdfJ+Uv055JSYuvV3kFTDX79aRynVcFINLzcfT+5Td291i6mKHl+5UhoInDAoEbw/PHpT8hDN0hyq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XD9uxQEP; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BAC1043308;
-	Mon, 14 Apr 2025 09:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744622692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uHxCj/WeuO0V6P+rYLNraNK+W/B4StlcnsBL6N3GDhw=;
-	b=XD9uxQEPOqb9XH3Y8lP0LIktXX66Zjcgrrr02TlP/0pcgaoLtzpbsqyGFrJHxuFsaiaNLo
-	XCfsbd+c6COT9G7i9LIOBvAf2Yz0KF7yAfdpXU6EeeIm/Q9Cu6Hf9clpBPnMbyCDj7OQBf
-	z1S9Q7xvLcls6qTSrmbAKP2WFczvfCOtyPxnkPeuf7XT88+UpmHvLYDC6mOAOmeLv3FVVF
-	DiiF3R+Z0B6owa7XveaS/KmRN729YKFbEwnZBy55MiT2bKAiAwDJNaD40HC/0x0DOnCYYV
-	PLs2VuqnQv6ZOSNMUV5dBnZ91zfSjN3CR57bZ/5KvsvTZL2bMBHcuCbekrrbww==
+	s=arc-20240116; t=1744626128; c=relaxed/simple;
+	bh=KtqC2iditidJC2eSLn3KMSnoD5wXk8uVxjE6xg2dVhg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qMBhey+hKxDDJAGm5htJSdoYUrG+QKSMHrsKSvXF4oGLKr6HSVFNyq9qRgQBWuh9spcWVGcjlAfaqYuAOKAuBHZW7JLBt8w9RjDo6hvDdV6n+OCKPkqLhWRlETiYnWuEQ/y1j+7uYSM2R3aTu/UeyvJl0Cf13qRFrLlqHVLFOxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJIcbyEC; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-524125f6cadso3449459e0c.2;
+        Mon, 14 Apr 2025 03:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744626125; x=1745230925; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7k7jOxUiHWycKnZAs1fHyoctI9n8TH4eQ7bIdVfdT2Q=;
+        b=RJIcbyECyj2SxzILyTGR/ubLtHeBLY5kTyQC8cL3DkrouuBHhQdrDQ+FMObQPgpAhN
+         iiaTsF13HbF2PRL9fdICbaUtHDQpThYo54RUbEooGkDyL8dSccp/mE5d2TS+UKwsXc2q
+         iiy0VMtWrNY+zSg2lOtD7aQa8qplyJsLLutM7UJMcRNKjTaa8EivmqCpyFJfTPbAHoQJ
+         OgFnz52Yt1ZBBdD8YwV8LLH4TyyYxa4abvueXPCEnAN6yNwDIYv9ReK/25eOaFZTZlT7
+         NSZP9hrDMOn02RfaeI1xXUtLIWhdK93MTNt0D0QM1Nk0eyus7JqMqqpxLgVW6ScPUpne
+         K/Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744626125; x=1745230925;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7k7jOxUiHWycKnZAs1fHyoctI9n8TH4eQ7bIdVfdT2Q=;
+        b=P7CxnGT/XN/si1cRz622IaajCWSoC4i238wO4gTVdBiKCXae01yv+AlKgr6OOpigiq
+         ByRs7yuByS5/EvRjEr5JpC1C/MtyYssMP5Y3qdG/dfB52G834H0HyWdW4EqmdhTepDhG
+         eCB6gcQWeVvC0OySD3hO3lUSUaeD1PUUIkqDlrefmN/6Rco+mDa4Fsd5eZlcZ1Xd7388
+         Du6hmZaUk+Xtqy2iDhImxyodBf69+9uayw+rkkqxhlcyCPahutVMccdmsTDpnl7HXs91
+         iG5BIul//sDS2LKuSUmznmV6DBbwIn0aKrJaTd5NxhKTtbr1lQkz7jTpLxxmRGg64CG8
+         eMgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnAko+01/ipj10ovQYFkalt1zt08fk94DT1OOKTwpKvie501RlNHmEwWaDeo/n2YJo/uxsynemrfGaa+9k@vger.kernel.org, AJvYcCVnIRkP+K1yTwz+d0N0BoECiJY8wTU6xcWx3mzaw6nh2/B/qrtFICNpPubz/lXodWQcVHVMnPUE5A9Q@vger.kernel.org, AJvYcCWHt+xQKYFgFqVtmzQtJ3HU/rtvhDs5mdLPnG4/JxB2QUg4yriHHrU15Ecrdmqkkvj0RLK0+9mNdyRUkg==@vger.kernel.org, AJvYcCWRnIR+aqbPZPMmlZNoAUnQTb/HimYkEujKUVQI4i1pBVJ3nyIh0LWPUWpA+UGCNGH7IA36xxi99R8g2F5w@vger.kernel.org, AJvYcCWrW/IUI5dYNavJqcHM62cOsBStfSBunBJ9upsWH87mte+mnreSdZ1lEhMMspzqZ8oZCgoi0vxm80y52jF9FdX04oA=@vger.kernel.org, AJvYcCXUoDnoJ1HKkCLAdwkhk5/nms1emyhms4fuJ5ZBOcu0IJ9RxClewRPqtqGa8VFpRiBmEAGknDVXs2DB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrSJvsu9Ii+nT65lA/uZ1D2ufeILx0OEua4fauOkZI6UVv4CHB
+	/z9rJ5gomgaThxpnN5afjIkjIknMAOwR/DNjOmVILcRHpWd0ippdep2n9BAx0WKKowbmXr2W2ns
+	19gW1NXBZWQjHoFa7DqKqzqpcjLI=
+X-Gm-Gg: ASbGncsWRtyjuVRRK1LyIQzw03lH7NeJJZya9nNPFiYzhm0f1lPjI02nVF6BuhHBEjX
+	7rB8EZnnvOKU2U/kGJMaFio6rcx2n5msSz/h/PahKpAOEVBqmfjIfdbOQ/xwwAptGTsDhxntNtd
+	Z+D/2/8K7A5dYypR2LeQ5BgCoDdZwRN1fyoBAZQc0ScjeGmTBeiZSbyA==
+X-Google-Smtp-Source: AGHT+IFSeOGA2alvM6QeKWz4GkE6DGO1ZrCPg1gcKCQ11FxwYR0XiZJAS4I8ijlIiqbfKsOobnAycg3lAGA3S6FUZm0=
+X-Received: by 2002:a05:6122:889:b0:520:4996:7cf2 with SMTP id
+ 71dfb90a1353d-527c35f89c5mr7652543e0c.10.1744626125325; Mon, 14 Apr 2025
+ 03:22:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
+In-Reply-To: <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 11:21:39 +0100
+X-Gm-Features: ATxdqUFuOQmoL7ZTIiCRaOJodzbfgENtFmE4ZyvW6KnP_pB8NrLn_eb62g4E32I
+Message-ID: <CA+V-a8s0RbgEB2kHDtv35jOtSNw2ThMB_GEgX1SLdOdiRtiPfQ@mail.gmail.com>
+Subject: Re: [PATCH v2 04/12] soc: renesas: sysc: Add SoC identification for
+ RZ/V2N SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 14 Apr 2025 11:24:51 +0200
-Message-Id: <D9694O0MKV31.3SY6ZCTSKXWI9@bootlin.com>
-Subject: Re: [PATCH] gpio: nomadik: Add check for clk_enable()
-Cc: <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-To: "Chenyuan Yang" <chenyuan0y@gmail.com>, <linus.walleij@linaro.org>,
- <brgl@bgdev.pl>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250412193153.49138-1-chenyuan0y@gmail.com>
-In-Reply-To: <20250412193153.49138-1-chenyuan0y@gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddtudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevvffhofhfjgesthhqredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeduteeltdevjedvkeelueejhfdvleeiueetvdfgveffffekueeghffhieduleejveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtoheptghhvghnhihurghntdihsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtt
- hhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hello Chenyuan, Linus, Bartosz,
+Hi Geert,
 
-On Sat Apr 12, 2025 at 9:31 PM CEST, Chenyuan Yang wrote:
-> Add check for the return value of clk_enable() to catch
-> the potential error.
+Thank you for the review.
+
+On Thu, Apr 10, 2025 at 10:28=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
-> This is similar to the commit 8332e6670997
-> ("spi: zynq-qspi: Add check for clk_enable()").
+> Hi Prabhakar,
 >
-> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> Fixes: 966942ae4936 ("gpio: nomadik: extract GPIO platform driver from dr=
-ivers/pinctrl/nomadik/")
-> ---
->  drivers/gpio/gpio-nomadik.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add SoC identification for the RZ/V2N SoC using the System Controller
+> > (SYS) block.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-> index fa19a44943fd..dbc4cdddf4df 100644
-> --- a/drivers/gpio/gpio-nomadik.c
-> +++ b/drivers/gpio/gpio-nomadik.c
-> @@ -262,8 +262,11 @@ static unsigned int nmk_gpio_irq_startup(struct irq_=
-data *d)
->  {
->  	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
->  	struct nmk_gpio_chip *nmk_chip =3D gpiochip_get_data(gc);
-> +	int ret;
-> =20
-> -	clk_enable(nmk_chip->clk);
-> +	ret =3D clk_enable(nmk_chip->clk);
-> +	if (ret)
-> +		return ret;
->  	nmk_gpio_irq_unmask(d);
->  	return 0;
->  }
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/drivers/soc/renesas/r9a09g056-sys.c
+> > @@ -0,0 +1,107 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * RZ/V2N System controller (SYS) driver
+> > + *
+> > + * Copyright (C) 2025 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/bits.h>
+> > +#include <linux/device.h>
+> > +#include <linux/init.h>
+> > +#include <linux/io.h>
+> > +#include <linux/string.h>
+> > +
+> > +#include "rz-sysc.h"
+> > +
+> > +/* Register Offsets */
+> > +#define SYS_LSI_MODE           0x300
+> > +#define SYS_LSI_MODE_SEC_EN    BIT(16)
+> > +/*
+> > + * BOOTPLLCA[1:0]
+> > + *         [0,0] =3D> 1.1GHZ
+> > + *         [0,1] =3D> 1.5GHZ
+> > + *         [1,0] =3D> 1.6GHZ
+> > + *         [1,1] =3D> 1.7GHZ
+> > + */
+> > +#define SYS_LSI_MODE_STAT_BOOTPLLCA55  GENMASK(12, 11)
+> > +#define SYS_LSI_MODE_CA55_1_7GHZ       0x3
+> > +
+> > +#define SYS_LSI_PRR                    0x308
+> > +#define SYS_LSI_PRR_GPU_DIS            BIT(0)
+> > +#define SYS_LSI_PRR_ISP_DIS            BIT(4)
+> > +
+> > +#define SYS_RZV2N_FEATURE_G31          BIT(0)
+> > +#define SYS_RZV2N_FEATURE_C55          BIT(1)
+> > +#define SYS_RZV2N_FEATURE_SEC          BIT(2)
+> > +
+> > +static void rzv2n_sys_print_id(struct device *dev,
+> > +                              void __iomem *sysc_base,
+> > +                              struct soc_device_attribute *soc_dev_att=
+r)
+> > +{
+> > +       unsigned int part_number;
+> > +       char features[75] =3D "";
+> > +       u32 prr_val, mode_val;
+> > +       u8 feature_flags;
+> > +
+> > +       prr_val =3D readl(sysc_base + SYS_LSI_PRR);
+> > +       mode_val =3D readl(sysc_base + SYS_LSI_MODE);
+> > +
+> > +       /* Check GPU, ISP and Cryptographic configuration */
+> > +       feature_flags =3D !(prr_val & SYS_LSI_PRR_GPU_DIS) ? SYS_RZV2N_=
+FEATURE_G31 : 0;
+> > +       feature_flags |=3D !(prr_val & SYS_LSI_PRR_ISP_DIS) ? SYS_RZV2N=
+_FEATURE_C55 : 0;
+> > +       feature_flags |=3D (mode_val & SYS_LSI_MODE_SEC_EN) ? SYS_RZV2N=
+_FEATURE_SEC : 0;
+> > +
+> > +       part_number =3D 41;
+> > +       if (feature_flags & SYS_RZV2N_FEATURE_G31)
+> > +               part_number++;
+> > +       if (feature_flags & SYS_RZV2N_FEATURE_C55)
+> > +               part_number +=3D 2;
+> > +       if (feature_flags & SYS_RZV2N_FEATURE_SEC)
+> > +               part_number +=3D 4;
+>
+> The above construct can be simplified to
+>
+>     part_number =3D 41 + feature_flags;
+>
+Agreed.
 
-Returning a negative value whereas the ->irq_startup() [0] return value
-is an unsigned int? From some quick godbolt testing and briefly reading
-the spec it looks safe to do a round trip (signed->unsigned->signed),
-though not ideal to my eyes.
+> > +       if (feature_flags) {
+> > +               unsigned int features_len =3D sizeof(features);
+> > +
+> > +               strscpy(features, "with ");
+> > +               if (feature_flags & SYS_RZV2N_FEATURE_G31)
+> > +                       strlcat(features, "GE3D (Mali-G31)", features_l=
+en);
+> > +
+> > +               if (feature_flags =3D=3D (SYS_RZV2N_FEATURE_G31 |
+> > +                                     SYS_RZV2N_FEATURE_C55 |
+> > +                                     SYS_RZV2N_FEATURE_SEC))
+> > +                       strlcat(features, ", ", features_len);
+> > +               else if ((feature_flags & SYS_RZV2N_FEATURE_G31) &&
+> > +                        (feature_flags & (SYS_RZV2N_FEATURE_C55 | SYS_=
+RZV2N_FEATURE_SEC)))
+> > +                       strlcat(features, " and ", features_len);
+> > +
+> > +               if (feature_flags & SYS_RZV2N_FEATURE_SEC)
+> > +                       strlcat(features, "Cryptographic engine", featu=
+res_len);
+> > +
+> > +               if ((feature_flags & SYS_RZV2N_FEATURE_SEC) &&
+> > +                   (feature_flags & SYS_RZV2N_FEATURE_C55))
+> > +                       strlcat(features, " and ", features_len);
+> > +
+> > +               if (feature_flags & SYS_RZV2N_FEATURE_C55)
+> > +                       strlcat(features, "ISP (Mali-C55)", features_le=
+n);
+> > +       }
+>
+> The above looks overly complicated to me.  What about handling it
+> like on RZ/V2H?  I agree having 3x "with" doesn't look nice, but you
+> could just drop all "with"s.
+>
+Ok, I will switch like below:
 
-The caller is __irq_startup() [1].
+part_number =3D 41 + feature_flags;
 
-As for why irq_startup returns an unsigned int, I am unsure. The kernel
-Git history isn't enough to know more. The startup field in struct
-hw_interrupt_type appeared on v2.3.14 [2], so no commit message to
-explain decisions.
+dev_info(dev, "Detected Renesas %s %sn%d Rev %s%s%s%s%s\n",
+soc_dev_attr->family,
+               soc_dev_attr->soc_id, part_number,
+soc_dev_attr->revision, feature_flags ?
+               " with" : "", feature_flags & SYS_RZV2N_FEATURE_G31 ? "
+GE3D (Mali-G31)" : "",
+               feature_flags & SYS_RZV2N_FEATURE_SEC ? " Cryptographic
+engine" : "",
+               feature_flags & SYS_RZV2N_FEATURE_C55 ? " ISP (Mali-C55)" : =
+"");
 
-Seeing the __irq_startup() code, my proposal would be to turn the return
-value to a signed int, but I haven't exhaustively checked codepaths.
 
-Thanks,
+> > +       dev_info(dev, "Detected Renesas %s %sn%d Rev %s %s\n", soc_dev_=
+attr->family,
+> > +                soc_dev_attr->soc_id, part_number, soc_dev_attr->revis=
+ion, features);
+>
+> This prints a trailing space if features is empty.
+>
+Agreed.
 
-[0]: https://elixir.bootlin.com/linux/v6.13.7/source/include/linux/irq.h#L5=
-03
-[1]: https://elixir.bootlin.com/linux/v6.13.7/source/kernel/irq/chip.c#L244
-[2]: https://elixir.bootlin.com/linux/2.3.14/source/include/linux/irq.h#L21
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Cheers,
+Prabhakar
 
