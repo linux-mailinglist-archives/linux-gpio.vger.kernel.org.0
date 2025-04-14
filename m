@@ -1,165 +1,114 @@
-Return-Path: <linux-gpio+bounces-18785-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18786-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 713BBA88015
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 14:11:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21012A8823D
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 15:32:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32C7D1735D9
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 12:11:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53A5A7AB05F
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 13:30:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4E5F29B23F;
-	Mon, 14 Apr 2025 12:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 875D6275841;
+	Mon, 14 Apr 2025 13:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me95RUpC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="md47AUYE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077B880B;
-	Mon, 14 Apr 2025 12:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C69623D2B9;
+	Mon, 14 Apr 2025 13:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744632701; cv=none; b=Lgk9MUZGgS8EEzFJBznmB0FV6ygE7TtLJ/X/1RKmxV+ZWxqdPb16PB5MuESPbuKZqUI2ho/T1S/R+nGVV50QwaBul3ADkBstRVql6IjHV2ELLnYTbLQvTeME9JqEWsJVI0zJi8oNIuxXHkSq7o3bbMzm8DKrqzWyFf12MvLbckg=
+	t=1744637218; cv=none; b=KW8xq0KDwqUUCEC92q3oem7/UnthoOphaLFXXjsXvByoUpT7+I/zl8w66q+w9siDfeK5sQo6dTzp7hx9AuM1tk1JNR6zKG4syvn5IkJNTF0FaGD/Z+h0cyQDoJzQV9ltJif4tDZS7gNMvaynukT+FOA00seYL7UrcQw1Ksq3SyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744632701; c=relaxed/simple;
-	bh=bnGxRLs+K1CD65Hx8HF8eGtWOdGRG6IAiUaBqUPEOhU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mvGNQSC6kyhH/xMjRum/Bul7FrK3ZKV6Yxqi+N5wU1UZ0+tPcp7/1B0C6K3sBJ6bLHbu2Pw/bI9UGDvpq6pOcy1K+Eu+L8sDgZ6epYC6z+mMIsJZS6L0yUdfiKjEimZ0iUl7PacikEIKFSPOz8gUX73wQyuphV5NaiXYmPbKaCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Me95RUpC; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86cd8bcd8dfso160593241.0;
-        Mon, 14 Apr 2025 05:11:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744632699; x=1745237499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ac6H1/o/h+9u2eKjIhXkLMaofu5biYHSL+e4b7ZsNoc=;
-        b=Me95RUpCaGgc69j61FaFshjtTYENg13e+D47PgRr5hIFM5GBn7vBDRucNvVdWIOund
-         KR09nLZMlSn+QOPT1/faj8DyfPfgC2AcrZxsATjq3FZ3ayNtt8RBzR1xIb/mz5Sm2xJo
-         8Lflg3NpeokLWKItyqox7aS+1jqODFwuK5yhMMI+POg8fGxffbhhtG9r9ohvScuLGaSp
-         jBQEsJ+tTrOAd41GCvrsZ+YqEv5JMT7f5KwZ40ydskw+8NGCWV6OYf/Y9mJyXMBS9cSX
-         6mT+aqppiN8dhIIE+EY4Hu4hKenUEQGRG3ljMkeDlAGVFP/V0zvmOsAlqQLCgO1gMhm+
-         nJFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744632699; x=1745237499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ac6H1/o/h+9u2eKjIhXkLMaofu5biYHSL+e4b7ZsNoc=;
-        b=ad3VF6OTE1NFdsQDlSw0vI7evfYZnkVJYai552Sa1A0N8Zbzj2s/SwL9xRVrFMNxjs
-         5WlNVygh71PdIyvMyZ1bRZCnZZSSw/zt64Lpc4Icy/F1h0eZtcmSjum++ip6P13knw3G
-         95ashmcDv5jSIDfKJByLsjxzGthJm65pxq6QxW2ek5bs9RQEJXzu6CdysyM/w+Yid3YF
-         x97HfGAw3v198iv1cON5MSmioN/UAcjhIpMIMzjOvf6ZMGWCHpK++lSlQsvqGGkeYniP
-         KQzciWcE63jxQR9M0XllLoH875yGdW8Q8Mp/Pnk9jSrIdkDcOp7YQBs23kEN/GrUIY0m
-         JyeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1THRjcUOrhKm1LO3kiLVa7Yeqerg1O+DBYx6F2Rw7v+EnQoBcQ9wkfX3M81okfFXFmnWrGcvEoyoS@vger.kernel.org, AJvYcCXKq0yE8RDszOWS+wlspAgSYSTf5QnkCC7QfKKvrMtEtYFNMegoRLTedShgnkuz32PYvakVVMDw8jDuvH/P@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJwbe0ZBSXjDdm0tP2fV2/OS6u2WOb64eiSbrYPa9Lu94OQCWC
-	ASt5VMGuBwCZbeRnp7St+xzWvGYdBIN6/4i+qiH/t7p9F36i/Hqdvo+wIIxq9dQl9srIiCdwvJy
-	k7rshBsA4JxNwcboLsDlFvL5jqQ==
-X-Gm-Gg: ASbGncspxQQYy6y54vQMDhBK6Bqri82l+u9XdmV9gh/0nA3JkzkmUwbZUJglXVYQ8YW
-	x7c8vhyEV9IT/q6+dZ3C/IkK25qBTk1dCULZ3S/YR7NlA6skX0dfE+NeOTMcwceGZzil85l5br/
-	AdypIQWXJYJKewJIK3Yebv4rE=
-X-Google-Smtp-Source: AGHT+IF+TKucMPytpTJ5R+CA8NEB5VA18YC7dTPTBjoM8fCHrXGk3NfE5eJA70tng973CAZHmwTuo9mPRPDMashJT88=
-X-Received: by 2002:a05:6102:568c:b0:4c1:8047:e002 with SMTP id
- ada2fe7eead31-4c9e4ebb690mr2539916137.1.1744632698529; Mon, 14 Apr 2025
- 05:11:38 -0700 (PDT)
+	s=arc-20240116; t=1744637218; c=relaxed/simple;
+	bh=XnD07pk/6ayreH2RF2D+WL2oa/0JbLWCPdWUdxtZWjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=W4Id1vSCVdqBPKQjeK0OHzUxtIpx9BXPQDCtW4q88xVmrU9dnNcKUFlU/bttax22vXBA1y1YcbUPF7rUNU6ObwRvtITVPZEHkdVc04SJxGNyiMcTjkVLztd/RgoLyWmhRcWHlN8pIryzeYdPkI5sta/EMQx6iEzUekidIJmbq2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=md47AUYE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE2FDC4CEEE;
+	Mon, 14 Apr 2025 13:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744637218;
+	bh=XnD07pk/6ayreH2RF2D+WL2oa/0JbLWCPdWUdxtZWjA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=md47AUYEcsmjPAoTQ/yJ9bkiC612Rt81U3AHsnJjHCLy+1XXp/z9SWMG2RuCeHSp2
+	 UmtbaHCcUniIUIbmQceh9MgR4YTNJbpZpDtTIS8nLcfxZpUJOFDDYhYgI10w0nnzmc
+	 ZH36stsjnHN8vvC0wvfz8Vj2KXddV9+AyXr/F7jg+XAWxFVxirBMSAOgRTowzKEkxs
+	 uIjczC4fhI3cDf/7kbb4n2bHL6wPjlVY7asIFzx1K/e1vbvgwxv0jzRZ4gVEki/68n
+	 KJYbfN+Qd447sDmX6pohqSmEQ8SVRPUezSjtiaAnrbEKN4SaMITK2QZkwUsMgjCwK3
+	 2IDhglojKSk9w==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 20/34] gpiolib: of: Move Atmel HSMCI quirk up out of the regulator comment
+Date: Mon, 14 Apr 2025 09:25:56 -0400
+Message-Id: <20250414132610.677644-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250414132610.677644-1-sashal@kernel.org>
+References: <20250414132610.677644-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412193153.49138-1-chenyuan0y@gmail.com> <D9694O0MKV31.3SY6ZCTSKXWI9@bootlin.com>
-In-Reply-To: <D9694O0MKV31.3SY6ZCTSKXWI9@bootlin.com>
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-Date: Mon, 14 Apr 2025 07:11:27 -0500
-X-Gm-Features: ATxdqUEmzNKqNy2VeDRm0Ya7G52O07CobBBqgfreeKbyqmOiDNlMjis513mrcFY
-Message-ID: <CALGdzurLWayryjUEdSy4iuHAgFO=RA=HN=u+BZY96JqESKvi+A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: nomadik: Add check for clk_enable()
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.2
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 4:24=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
->
-> Hello Chenyuan, Linus, Bartosz,
->
-> On Sat Apr 12, 2025 at 9:31 PM CEST, Chenyuan Yang wrote:
-> > Add check for the return value of clk_enable() to catch
-> > the potential error.
-> >
-> > This is similar to the commit 8332e6670997
-> > ("spi: zynq-qspi: Add check for clk_enable()").
-> >
-> > Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> > Fixes: 966942ae4936 ("gpio: nomadik: extract GPIO platform driver from =
-drivers/pinctrl/nomadik/")
-> > ---
-> >  drivers/gpio/gpio-nomadik.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-> > index fa19a44943fd..dbc4cdddf4df 100644
-> > --- a/drivers/gpio/gpio-nomadik.c
-> > +++ b/drivers/gpio/gpio-nomadik.c
-> > @@ -262,8 +262,11 @@ static unsigned int nmk_gpio_irq_startup(struct ir=
-q_data *d)
-> >  {
-> >       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-> >       struct nmk_gpio_chip *nmk_chip =3D gpiochip_get_data(gc);
-> > +     int ret;
-> >
-> > -     clk_enable(nmk_chip->clk);
-> > +     ret =3D clk_enable(nmk_chip->clk);
-> > +     if (ret)
-> > +             return ret;
-> >       nmk_gpio_irq_unmask(d);
-> >       return 0;
-> >  }
->
-> Returning a negative value whereas the ->irq_startup() [0] return value
-> is an unsigned int? From some quick godbolt testing and briefly reading
-> the spec it looks safe to do a round trip (signed->unsigned->signed),
-> though not ideal to my eyes.
->
-> The caller is __irq_startup() [1].
->
-> As for why irq_startup returns an unsigned int, I am unsure. The kernel
-> Git history isn't enough to know more. The startup field in struct
-> hw_interrupt_type appeared on v2.3.14 [2], so no commit message to
-> explain decisions.
->
-> Seeing the __irq_startup() code, my proposal would be to turn the return
-> value to a signed int, but I haven't exhaustively checked codepaths.
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Good catch! I agree that using a signed int could be a better option.
+[ Upstream commit b8c7a1ac884cc267d1031f8de07f1a689a69fbab ]
 
-Dear Linus and Bartosz, could you please share your thoughts? If
-you=E2=80=99re on board with the change, I=E2=80=99ll go ahead and send a n=
-ew patch.
+The regulator comment in of_gpio_set_polarity_by_property()
+made on top of a couple of the cases, while Atmel HSMCI quirk
+is not related to that. Make it clear by moving Atmel HSMCI
+quirk up out of the scope of the regulator comment.
 
-> Thanks,
->
-> [0]: https://elixir.bootlin.com/linux/v6.13.7/source/include/linux/irq.h#=
-L503
-> [1]: https://elixir.bootlin.com/linux/v6.13.7/source/kernel/irq/chip.c#L2=
-44
-> [2]: https://elixir.bootlin.com/linux/2.3.14/source/include/linux/irq.h#L=
-21
->
-> --
-> Th=C3=A9o Lebrun, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20250402122058.1517393-3-andriy.shevchenko@linux.intel.com
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpio/gpiolib-of.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
--Chenyuan
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 2e537ee979f3e..f12ddb48909c0 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -257,6 +257,9 @@ static void of_gpio_set_polarity_by_property(const struct device_node *np,
+ 		{ "fsl,imx8qm-fec",  "phy-reset-gpios", "phy-reset-active-high" },
+ 		{ "fsl,s32v234-fec", "phy-reset-gpios", "phy-reset-active-high" },
+ #endif
++#if IS_ENABLED(CONFIG_MMC_ATMELMCI)
++		{ "atmel,hsmci",       "cd-gpios",     "cd-inverted" },
++#endif
+ #if IS_ENABLED(CONFIG_PCI_IMX6)
+ 		{ "fsl,imx6q-pcie",  "reset-gpio", "reset-gpio-active-high" },
+ 		{ "fsl,imx6sx-pcie", "reset-gpio", "reset-gpio-active-high" },
+@@ -282,9 +285,6 @@ static void of_gpio_set_polarity_by_property(const struct device_node *np,
+ #if IS_ENABLED(CONFIG_REGULATOR_GPIO)
+ 		{ "regulator-gpio",    "enable-gpio",  "enable-active-high" },
+ 		{ "regulator-gpio",    "enable-gpios", "enable-active-high" },
+-#endif
+-#if IS_ENABLED(CONFIG_MMC_ATMELMCI)
+-		{ "atmel,hsmci",       "cd-gpios",     "cd-inverted" },
+ #endif
+ 	};
+ 	unsigned int i;
+-- 
+2.39.5
+
 
