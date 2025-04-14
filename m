@@ -1,256 +1,144 @@
-Return-Path: <linux-gpio+bounces-18776-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18777-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 855A2A87D74
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 12:22:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AE4DA87DB0
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 12:29:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DA7C188B10E
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 10:22:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35D17165E08
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 10:29:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D9C265CC5;
-	Mon, 14 Apr 2025 10:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 732F9266B42;
+	Mon, 14 Apr 2025 10:29:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJIcbyEC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CyLabfru"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCF333997;
-	Mon, 14 Apr 2025 10:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94FF33997;
+	Mon, 14 Apr 2025 10:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744626128; cv=none; b=Icg92PfUkPGFPOjDckyvTg9E49ZCurhFPkeO1TFRMNpclVJ20StHcymwUeEdRnrvyioOdFtYPqLrAp6LXw//k0nECZbcYM2aQUQMCs0mGIJemBOZAfn2ffXDcMKgdX4FI4aGzFA2JTZ5+P3BviOVI4q0vDlZKafy1mQIOGpWd9Y=
+	t=1744626590; cv=none; b=lQLZb7aFB6bbpe2I/U+gQaBg1Ut+r0Hdrssjv0c727gJU1usaOdr4QMYgw4fPX9Qi5qqqXkRGB0AqSrEg/TWmPyl49lSny/IzmiTBiJmSaYjZI2lMk0dxGJTSV5OY6Upia50OdCuA/btcWzcLvt7boPXSktYvlfsXDjn9cDKrjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744626128; c=relaxed/simple;
-	bh=KtqC2iditidJC2eSLn3KMSnoD5wXk8uVxjE6xg2dVhg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qMBhey+hKxDDJAGm5htJSdoYUrG+QKSMHrsKSvXF4oGLKr6HSVFNyq9qRgQBWuh9spcWVGcjlAfaqYuAOKAuBHZW7JLBt8w9RjDo6hvDdV6n+OCKPkqLhWRlETiYnWuEQ/y1j+7uYSM2R3aTu/UeyvJl0Cf13qRFrLlqHVLFOxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJIcbyEC; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-524125f6cadso3449459e0c.2;
-        Mon, 14 Apr 2025 03:22:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744626125; x=1745230925; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7k7jOxUiHWycKnZAs1fHyoctI9n8TH4eQ7bIdVfdT2Q=;
-        b=RJIcbyECyj2SxzILyTGR/ubLtHeBLY5kTyQC8cL3DkrouuBHhQdrDQ+FMObQPgpAhN
-         iiaTsF13HbF2PRL9fdICbaUtHDQpThYo54RUbEooGkDyL8dSccp/mE5d2TS+UKwsXc2q
-         iiy0VMtWrNY+zSg2lOtD7aQa8qplyJsLLutM7UJMcRNKjTaa8EivmqCpyFJfTPbAHoQJ
-         OgFnz52Yt1ZBBdD8YwV8LLH4TyyYxa4abvueXPCEnAN6yNwDIYv9ReK/25eOaFZTZlT7
-         NSZP9hrDMOn02RfaeI1xXUtLIWhdK93MTNt0D0QM1Nk0eyus7JqMqqpxLgVW6ScPUpne
-         K/Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744626125; x=1745230925;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7k7jOxUiHWycKnZAs1fHyoctI9n8TH4eQ7bIdVfdT2Q=;
-        b=P7CxnGT/XN/si1cRz622IaajCWSoC4i238wO4gTVdBiKCXae01yv+AlKgr6OOpigiq
-         ByRs7yuByS5/EvRjEr5JpC1C/MtyYssMP5Y3qdG/dfB52G834H0HyWdW4EqmdhTepDhG
-         eCB6gcQWeVvC0OySD3hO3lUSUaeD1PUUIkqDlrefmN/6Rco+mDa4Fsd5eZlcZ1Xd7388
-         Du6hmZaUk+Xtqy2iDhImxyodBf69+9uayw+rkkqxhlcyCPahutVMccdmsTDpnl7HXs91
-         iG5BIul//sDS2LKuSUmznmV6DBbwIn0aKrJaTd5NxhKTtbr1lQkz7jTpLxxmRGg64CG8
-         eMgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnAko+01/ipj10ovQYFkalt1zt08fk94DT1OOKTwpKvie501RlNHmEwWaDeo/n2YJo/uxsynemrfGaa+9k@vger.kernel.org, AJvYcCVnIRkP+K1yTwz+d0N0BoECiJY8wTU6xcWx3mzaw6nh2/B/qrtFICNpPubz/lXodWQcVHVMnPUE5A9Q@vger.kernel.org, AJvYcCWHt+xQKYFgFqVtmzQtJ3HU/rtvhDs5mdLPnG4/JxB2QUg4yriHHrU15Ecrdmqkkvj0RLK0+9mNdyRUkg==@vger.kernel.org, AJvYcCWRnIR+aqbPZPMmlZNoAUnQTb/HimYkEujKUVQI4i1pBVJ3nyIh0LWPUWpA+UGCNGH7IA36xxi99R8g2F5w@vger.kernel.org, AJvYcCWrW/IUI5dYNavJqcHM62cOsBStfSBunBJ9upsWH87mte+mnreSdZ1lEhMMspzqZ8oZCgoi0vxm80y52jF9FdX04oA=@vger.kernel.org, AJvYcCXUoDnoJ1HKkCLAdwkhk5/nms1emyhms4fuJ5ZBOcu0IJ9RxClewRPqtqGa8VFpRiBmEAGknDVXs2DB@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrSJvsu9Ii+nT65lA/uZ1D2ufeILx0OEua4fauOkZI6UVv4CHB
-	/z9rJ5gomgaThxpnN5afjIkjIknMAOwR/DNjOmVILcRHpWd0ippdep2n9BAx0WKKowbmXr2W2ns
-	19gW1NXBZWQjHoFa7DqKqzqpcjLI=
-X-Gm-Gg: ASbGncsWRtyjuVRRK1LyIQzw03lH7NeJJZya9nNPFiYzhm0f1lPjI02nVF6BuhHBEjX
-	7rB8EZnnvOKU2U/kGJMaFio6rcx2n5msSz/h/PahKpAOEVBqmfjIfdbOQ/xwwAptGTsDhxntNtd
-	Z+D/2/8K7A5dYypR2LeQ5BgCoDdZwRN1fyoBAZQc0ScjeGmTBeiZSbyA==
-X-Google-Smtp-Source: AGHT+IFSeOGA2alvM6QeKWz4GkE6DGO1ZrCPg1gcKCQ11FxwYR0XiZJAS4I8ijlIiqbfKsOobnAycg3lAGA3S6FUZm0=
-X-Received: by 2002:a05:6122:889:b0:520:4996:7cf2 with SMTP id
- 71dfb90a1353d-527c35f89c5mr7652543e0c.10.1744626125325; Mon, 14 Apr 2025
- 03:22:05 -0700 (PDT)
+	s=arc-20240116; t=1744626590; c=relaxed/simple;
+	bh=WXgwEdzSaX+Y4rUWpW9RwNeaypZtrXrH4OUahsqCvQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pp5/NmfnhTg5fkMERIOORHtJFKXxkyAy3Eky6tEW71RlSMOM6NE09Q6Mt1dcaFSe4TPA5UG4k8UUVvg8DNraiRxLTRDIcau/8qGo8O9BPgU51RAiq0nJ4+X31z+1iX2KAhD7f7ieXM0f2M8G1eyEMSfB0SSnMxs8M65vjscj7D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CyLabfru; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744626588; x=1776162588;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WXgwEdzSaX+Y4rUWpW9RwNeaypZtrXrH4OUahsqCvQs=;
+  b=CyLabfrufKaHrDiROU2pLM72MTWusrwRhxbKf5vraf42z5gIpaCjtj3L
+   vmFhksXiTG8iRBAwH+GpSBXYBSAm/vtLajkbKsuXBmUe2XzE0EA3chF+9
+   hgYDRBFnMMQ8byIbBLFyo0Nm9uqBs4T2SNfu3agd9tC4/kO12m3tZPm04
+   MwMiOGepSs5ucLdq9pcIGeQOW9XiEJUN7gFemrqXCsrBVPF8JBJnKLa71
+   zY7dHouHvR3tXbKwxqINy9kJbErLsrXATIFDGTrurkF9eByI8LVPvalg5
+   /p6m8dbapP0j888odLyuo8szltuEBuwz7gk1DpNwmo/6Q+Fm75GanUGNE
+   Q==;
+X-CSE-ConnectionGUID: fIkSATCiRwWXgC+MOO9jgg==
+X-CSE-MsgGUID: /wjse7vhTXi2V6G7JK8XaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="33701338"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="33701338"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:29:47 -0700
+X-CSE-ConnectionGUID: Q1oHgF+hQ42aTWXeZ5VwYg==
+X-CSE-MsgGUID: CF7aM6O+QrSUlhJBHKpxtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="134755301"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 03:29:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u4H4N-0000000CCxF-0A55;
+	Mon, 14 Apr 2025 13:29:39 +0300
+Date: Mon, 14 Apr 2025 13:29:38 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 07/12] gpio: regmap: Allow to allocate regmap-irq
+ device
+Message-ID: <Z_zjki8ShybzpWDk@smile.fi.intel.com>
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-7-7a2535876e39@bootlin.com>
+ <Z_aiubEgXLaDpsoq@smile.fi.intel.com>
+ <D92U6CMH9WWM.3JLM1KLZF4WF8@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
-In-Reply-To: <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 14 Apr 2025 11:21:39 +0100
-X-Gm-Features: ATxdqUFuOQmoL7ZTIiCRaOJodzbfgENtFmE4ZyvW6KnP_pB8NrLn_eb62g4E32I
-Message-ID: <CA+V-a8s0RbgEB2kHDtv35jOtSNw2ThMB_GEgX1SLdOdiRtiPfQ@mail.gmail.com>
-Subject: Re: [PATCH v2 04/12] soc: renesas: sysc: Add SoC identification for
- RZ/V2N SoC
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D92U6CMH9WWM.3JLM1KLZF4WF8@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Geert,
+On Thu, Apr 10, 2025 at 11:03:46AM +0200, Mathieu Dubois-Briand wrote:
+> On Wed Apr 9, 2025 at 6:39 PM CEST, Andy Shevchenko wrote:
+> > On Wed, Apr 09, 2025 at 04:55:54PM +0200, Mathieu Dubois-Briand wrote:
 
-Thank you for the review.
+...
 
-On Thu, Apr 10, 2025 at 10:28=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
-:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >> +#ifdef CONFIG_REGMAP_IRQ
+> >> +	if (config->regmap_irq_chip) {
+> >> +		struct regmap_irq_chip_data *irq_chip_data;
+> >> +
+> >> +		ret = devm_regmap_add_irq_chip_fwnode(config->parent, dev_fwnode(config->parent),
+> >> +						      config->regmap, config->regmap_irq_irqno,
+> >> +						      config->regmap_irq_flags, 0,
+> >> +						      config->regmap_irq_chip, &irq_chip_data);
+> >> +		if (ret)
+> >> +			goto err_free_gpio;
+> >> +
+> >> +		irq_domain = regmap_irq_get_domain(irq_chip_data);
+> >> +	} else
+> >> +#endif
+> >> +	irq_domain = config->irq_domain;
 > >
-> > Add SoC identification for the RZ/V2N SoC using the System Controller
-> > (SYS) block.
+> >> +
 > >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- /dev/null
-> > +++ b/drivers/soc/renesas/r9a09g056-sys.c
-> > @@ -0,0 +1,107 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * RZ/V2N System controller (SYS) driver
-> > + *
-> > + * Copyright (C) 2025 Renesas Electronics Corp.
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/bits.h>
-> > +#include <linux/device.h>
-> > +#include <linux/init.h>
-> > +#include <linux/io.h>
-> > +#include <linux/string.h>
-> > +
-> > +#include "rz-sysc.h"
-> > +
-> > +/* Register Offsets */
-> > +#define SYS_LSI_MODE           0x300
-> > +#define SYS_LSI_MODE_SEC_EN    BIT(16)
-> > +/*
-> > + * BOOTPLLCA[1:0]
-> > + *         [0,0] =3D> 1.1GHZ
-> > + *         [0,1] =3D> 1.5GHZ
-> > + *         [1,0] =3D> 1.6GHZ
-> > + *         [1,1] =3D> 1.7GHZ
-> > + */
-> > +#define SYS_LSI_MODE_STAT_BOOTPLLCA55  GENMASK(12, 11)
-> > +#define SYS_LSI_MODE_CA55_1_7GHZ       0x3
-> > +
-> > +#define SYS_LSI_PRR                    0x308
-> > +#define SYS_LSI_PRR_GPU_DIS            BIT(0)
-> > +#define SYS_LSI_PRR_ISP_DIS            BIT(4)
-> > +
-> > +#define SYS_RZV2N_FEATURE_G31          BIT(0)
-> > +#define SYS_RZV2N_FEATURE_C55          BIT(1)
-> > +#define SYS_RZV2N_FEATURE_SEC          BIT(2)
-> > +
-> > +static void rzv2n_sys_print_id(struct device *dev,
-> > +                              void __iomem *sysc_base,
-> > +                              struct soc_device_attribute *soc_dev_att=
-r)
-> > +{
-> > +       unsigned int part_number;
-> > +       char features[75] =3D "";
-> > +       u32 prr_val, mode_val;
-> > +       u8 feature_flags;
-> > +
-> > +       prr_val =3D readl(sysc_base + SYS_LSI_PRR);
-> > +       mode_val =3D readl(sysc_base + SYS_LSI_MODE);
-> > +
-> > +       /* Check GPU, ISP and Cryptographic configuration */
-> > +       feature_flags =3D !(prr_val & SYS_LSI_PRR_GPU_DIS) ? SYS_RZV2N_=
-FEATURE_G31 : 0;
-> > +       feature_flags |=3D !(prr_val & SYS_LSI_PRR_ISP_DIS) ? SYS_RZV2N=
-_FEATURE_C55 : 0;
-> > +       feature_flags |=3D (mode_val & SYS_LSI_MODE_SEC_EN) ? SYS_RZV2N=
-_FEATURE_SEC : 0;
-> > +
-> > +       part_number =3D 41;
-> > +       if (feature_flags & SYS_RZV2N_FEATURE_G31)
-> > +               part_number++;
-> > +       if (feature_flags & SYS_RZV2N_FEATURE_C55)
-> > +               part_number +=3D 2;
-> > +       if (feature_flags & SYS_RZV2N_FEATURE_SEC)
-> > +               part_number +=3D 4;
->
-> The above construct can be simplified to
->
->     part_number =3D 41 + feature_flags;
->
-Agreed.
+> > This is blank line is not needed, but I not mind either way.
+> 
+> I can remove it, but as the line above is potentially part of the
+> "else", I have a small preference for keeping it.
 
-> > +       if (feature_flags) {
-> > +               unsigned int features_len =3D sizeof(features);
-> > +
-> > +               strscpy(features, "with ");
-> > +               if (feature_flags & SYS_RZV2N_FEATURE_G31)
-> > +                       strlcat(features, "GE3D (Mali-G31)", features_l=
-en);
-> > +
-> > +               if (feature_flags =3D=3D (SYS_RZV2N_FEATURE_G31 |
-> > +                                     SYS_RZV2N_FEATURE_C55 |
-> > +                                     SYS_RZV2N_FEATURE_SEC))
-> > +                       strlcat(features, ", ", features_len);
-> > +               else if ((feature_flags & SYS_RZV2N_FEATURE_G31) &&
-> > +                        (feature_flags & (SYS_RZV2N_FEATURE_C55 | SYS_=
-RZV2N_FEATURE_SEC)))
-> > +                       strlcat(features, " and ", features_len);
-> > +
-> > +               if (feature_flags & SYS_RZV2N_FEATURE_SEC)
-> > +                       strlcat(features, "Cryptographic engine", featu=
-res_len);
-> > +
-> > +               if ((feature_flags & SYS_RZV2N_FEATURE_SEC) &&
-> > +                   (feature_flags & SYS_RZV2N_FEATURE_C55))
-> > +                       strlcat(features, " and ", features_len);
-> > +
-> > +               if (feature_flags & SYS_RZV2N_FEATURE_C55)
-> > +                       strlcat(features, "ISP (Mali-C55)", features_le=
-n);
-> > +       }
->
-> The above looks overly complicated to me.  What about handling it
-> like on RZ/V2H?  I agree having 3x "with" doesn't look nice, but you
-> could just drop all "with"s.
->
-Ok, I will switch like below:
+Yes, but it's still coupled with the flow. But okay to leave as is.
 
-part_number =3D 41 + feature_flags;
+> >> +	if (irq_domain) {
+> >> +		ret = gpiochip_irqchip_add_domain(chip, irq_domain);
+> >>  		if (ret)
+> >>  			goto err_remove_gpiochip;
+> >>  	}
 
-dev_info(dev, "Detected Renesas %s %sn%d Rev %s%s%s%s%s\n",
-soc_dev_attr->family,
-               soc_dev_attr->soc_id, part_number,
-soc_dev_attr->revision, feature_flags ?
-               " with" : "", feature_flags & SYS_RZV2N_FEATURE_G31 ? "
-GE3D (Mali-G31)" : "",
-               feature_flags & SYS_RZV2N_FEATURE_SEC ? " Cryptographic
-engine" : "",
-               feature_flags & SYS_RZV2N_FEATURE_C55 ? " ISP (Mali-C55)" : =
-"");
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-> > +       dev_info(dev, "Detected Renesas %s %sn%d Rev %s %s\n", soc_dev_=
-attr->family,
-> > +                soc_dev_attr->soc_id, part_number, soc_dev_attr->revis=
-ion, features);
->
-> This prints a trailing space if features is empty.
->
-Agreed.
-
-Cheers,
-Prabhakar
 
