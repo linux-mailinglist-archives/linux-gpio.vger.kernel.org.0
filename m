@@ -1,297 +1,178 @@
-Return-Path: <linux-gpio+bounces-18767-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18763-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B6DDA87A84
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 10:36:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F12C5A87A7C
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 10:35:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 80E237A583F
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 08:35:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDDBD16F019
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 08:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 897FA25D90F;
-	Mon, 14 Apr 2025 08:35:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E83325A2DE;
+	Mon, 14 Apr 2025 08:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="IGxe8u/S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWRCYD4O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011028.outbound.protection.outlook.com [40.107.130.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDE225D53C;
-	Mon, 14 Apr 2025 08:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744619757; cv=fail; b=e9MgSZewIw/rOjIFOM5ywNMN4cUkt3CkxDojZuzXua1j/rUU4ws+TYtF5irZzcyHLIZJwwyhfgvjCEMxAl9TvOC5lUxyQGK867UqMcM23xIa+A7Pv3uajsqw6TzS9GjJ5iPKif+5T5TuIIMRuh/ut7Fxzge98XG59azT8Gn3ebA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744619757; c=relaxed/simple;
-	bh=ldaj3WJCLaaSOiCImB/9GpzjKzqFexnnLLxyh0LFknE=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=It12ppLM6J7LGKK1Qz7eeD5NEeQzjYhBAgs7fNEOizqNsUd/W8rWrbqvTDoJvdWjjXZMFje9y8wxOynjwhC/Kx199av5mQak3laodFt5MBrqA/6t3hT7vLUKDI541sJKrKnydr+Nk4/gF6NsjP3iueKXF7zGdPJzppxIoxqVKKA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=IGxe8u/S; arc=fail smtp.client-ip=40.107.130.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qwK90Nyt/h/frPDlRET4gYmw8diWyPcVEc87Vso5JLNsnLcVTnf4xLRxPJgv4NGf/x4F0zEEA6AK9Mpsa0WUcqGUdp4j9+K6dKKRK+dATWAQflJ+MjHWfPqj3wF2lhgyfYElGw5ucopwbHWBDqhDd2QjIMrOm/DCAE9Uu487/O822XiZlQhU6tWW9UggvuaEhqXGPHpV8hC3tVBrswJRVqukUG4/NGBOWeqxrovSDwpeq441XI+zfBUpM20J9TNaDgfk6xT3EGO+fC1lzJfj84UHdDBHOfrxRWIYcf3qoe3mm8CAdHmllzcQJ9Vk0Bjl2Psd82ib/0KHeUfSO9yHTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6riI87FgfWMTHZma3DRDOugjhUyjZHXq/7u/g1kHsLI=;
- b=O3xaEAdPfH4B85oY5chAfQ/qAccSuPSBIbD3PahAxVw+kBqQpg1Pt2PBJJAQc4sfSp62D/NKQiqpg9zQ2J810XC4PDN3DMmYBpsvmBfX4OWoHdUcmOZVaDbyz6ovnLT7T8DPFvxAqDRNWCF5MLyisqrJScuZJFBvq/UApxB84Ma7MMjJLIQAB6pN5MQM7yYUlFSEMIwJUq81Yr1hurgIV6kglbBHPOnz9Z3BhaBmKNtcxSCprtJqy8/Lkf6AQ6QrHVKjHjUWSjhrF3LFnET+wlEPAaTdtx0rsuE4guw4Rlp2cY8HnvXYNhMJ7ss/ct6RKYP7DAz3Q4X1OwGjVrQhsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6riI87FgfWMTHZma3DRDOugjhUyjZHXq/7u/g1kHsLI=;
- b=IGxe8u/SzZOHGThbfs/tiu980LWyKzrzhyQoiTwCjQXNS4yWyQ5oi/SAThxoUPQGPAyuAF9bcDpm4VfpZ5eaSqjbpAD8Hku06foI2lrUm+LS83nVtpz8nUb7DLRVMfqqw38Bse2cn8y/CVeQy0MO2lLbAOMxIJe+hsH4xLSwimWGPwnXRKOllrKmHY1QrKm4AVuu+2p/duFub41jVdd9NzvWwVqO5VzG6elGE8gfs4ehhuGxJY2kUGndQdATk4b8Ee0iMOankPgHbCiEPh2xMDrCXSr7+PmCEQVyF3UyPMM3SoiUr7VggjnnlFttQ5edwuuxfRk6TZpn2xW/Sr9SDQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by PAXPR04MB8408.eurprd04.prod.outlook.com (2603:10a6:102:1c9::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
- 2025 08:35:52 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 08:35:52 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Mon, 14 Apr 2025 16:34:25 +0800
-Subject: [PATCH 3/3] ASoC: codec: tpa6130a2: Convert to GPIO descriptors
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250414-asoc-tpa6130a2-v1-3-5f4052e656a0@nxp.com>
-References: <20250414-asoc-tpa6130a2-v1-0-5f4052e656a0@nxp.com>
-In-Reply-To: <20250414-asoc-tpa6130a2-v1-0-5f4052e656a0@nxp.com>
-To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
- Baojun Xu <baojun.xu@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744619674; l=3512;
- i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=3L8NFvdG6SDDUzUat/sgQEjAwl2zyDtxQYHTZRaH1Mw=;
- b=HueKIvVhujXmU7JE7FpCWIEoYDq1LmtzbxJHIeR835LSFrerkUYW9QvBc8fe8tV+dBUzGXCeo
- hX6eJYbaXa6CakLzJ+/zK5jsaeDGmdyeMtwMEVHpif1ap1okyqVu51g
-X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
- pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
-X-ClientProxiedBy: SG2PR01CA0145.apcprd01.prod.exchangelabs.com
- (2603:1096:4:8f::25) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EBC2367A0;
+	Mon, 14 Apr 2025 08:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744619726; cv=none; b=EjWj3J7KguI4jLMbHzc2n4ZVK7Dy1rj4V/iNBSD3L9gjK+I60PYisn7c4OQjO4KkUcrlyuzs0gunIDln1QVqD9WjkuGnYtmKSMwgL5G4q8PpEjs+eZyw1pcPzVk5xVtKLDbHosuZjGiJTvgZgxxCrhwvnaInROBdthVuNquvioY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744619726; c=relaxed/simple;
+	bh=jNMQtR9jmoHsBvBUeA+7pLFndTA9N0330V8tjJxI7og=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CvUrxYk4kibY3suqkGxNmyF8n0nybLWAcx6+UOAO1Rl7S7JYiRecXNt/jI6jh5TL577kCuh2nDb/JUwyLCLE5sd9iczfPvDjRgjZRPxCNs40DMvqJkf5cJzx6ZbQnZ71eovDtvjUHctM8EbnN5WmGBk5RfBnFDX9zYVGzAyPJic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cWRCYD4O; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-523f670ca99so1709323e0c.1;
+        Mon, 14 Apr 2025 01:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744619724; x=1745224524; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zK+fEyrb2ftsLjekq6LH08+qiCqnVgfTErFfTfbVUZo=;
+        b=cWRCYD4OwKmEEwheY/lZcgnTeRS3das9wuRRxrDAjIbnCudU8SSnyRxSyWBKynXTat
+         I2w5Mba7WJg18ExPNdxZTsb7HbrNFSq1xaULeYNKwcWmhp1abpjPNyHjpYSX5+n32jZ6
+         Lx4JrORn+Cyb3hBvmgj7brCnQ5T8tJ7qVsJXc7ywDtC9TsYNT/0O4+8K+P/99mmmkGUn
+         I9nLbSBPGWpuoLjnqT+4OF8ElF8UnEIeuwkCCxuHvpBrzfVkxoENBtPt2qh6J6MnugNl
+         ROyfIaCq1LyvGAs2Zd6cjT6/1uv4IioumT5IMDh3qucCIMArfHvGInhIlsqE/dT6UxbK
+         WXRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744619724; x=1745224524;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zK+fEyrb2ftsLjekq6LH08+qiCqnVgfTErFfTfbVUZo=;
+        b=IJpju/kRtuJNQHzJBUZYognM+7PUq5K1+966/eLZEb+pz7bNw+vR6JEFE3wNta2Jze
+         rc+207aza8tmRf827cQvAa33b2caV945WW8b13N/WbSTSPdFOjPdWEGX1j/xSKMIBPAt
+         0fZkHLEVRiaW0W+3gU+Rty3woqpj6Z++I/ie5C10oNwhNShdiYmEZRzHlUunuuk2m0tB
+         XO4shR6GLV5lVjzcSVVfBw+hIwCXlVrqfsZvxwCigzZtIRvEvbyFIk98HfJt4qvfyb0l
+         F7fy77GGYhaYPfX/ZQAFiGYrvyl9spgVazRIfg7VP7w1JHgfm0MUgUd2zTLE7d9n7LMq
+         Jvpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUndc51ACaaNyOY3a45y0R5/6yUHwpg2VjzXVynp/JeL0ybaDF9hnTC5GF95PeJiKd37v02sZRdx47R@vger.kernel.org, AJvYcCUwcjL04CIQQLcPYY5tVBqsKA405y6NKVivrGBYbHJ4jM/bMTv619f4we6LoX2EM+JOxHr27bQG/b08@vger.kernel.org, AJvYcCVAlM6xsKGtzp5CD4TLfLLEzS3GQpq8RnBRHZnhJwBpYm3mJ7OJEugJDHpctVwhD7I9Zl/SHWLBDVskWg==@vger.kernel.org, AJvYcCVMRLAvI69/Gd3G3AIciPRcTdq2GxJSloaadhaM4O5VH/lZB2CRiKkL5puwmWEWW8QFSzyevKPnyIB+8dTY@vger.kernel.org, AJvYcCXLa5sfLK5m7bG3Xuke2lUIFmQBTkLvJUCcAOTY3aamSEvH+neg988w6WDtOAUV1EvohMK0vaLG6v5STlhITYLFPiU=@vger.kernel.org, AJvYcCXUUYCG6jzIUsMynyG4Jvay7RHzZ3E9Xff8UF7Y7rIhGl0VYN4NJoIFQR9RAT+Kv3Snf1kNzlkBH1BL3ckg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfNITrT3FmyxP8zdZ1ayt71THU8YekquGZOMouYhvDFQH7HMCw
+	U/GGtkZHtuJeZrhgvTiGhUlPXh0yNvo6wHOQgETk/nbjOIvMtqb2RiOO8M/QaybYEsm2K0NUAlu
+	+F73NkGgROiXv1U7RKqZX9Rywmgo=
+X-Gm-Gg: ASbGncsXH1aQucxULp1A1Qy7yi5x67kGnIUST3yxSBeJbHeNDBZbP3htascd1QxcliT
+	Od9fgj0nYrKgLMa/4nktn3WrBuEE6idwGNVR/noSVsuvIqPCVRkvxCJTaUxD0fR6BqjlxVKjBAD
+	qSRR1ANvkuwoMh0BfB0bO1Dg==
+X-Google-Smtp-Source: AGHT+IGOGLfbW0SukWnxCHAABG5TfaOM526iSCc+9ulIg98XxOeWn3MdJv3wnW4Cc7Fzp1V5Oe6Fufo5S7bAzWHW7mA=
+X-Received: by 2002:a05:6122:21a0:b0:526:2210:5b64 with SMTP id
+ 71dfb90a1353d-527c35babbdmr6629870e0c.9.1744619723871; Mon, 14 Apr 2025
+ 01:35:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PAXPR04MB8408:EE_
-X-MS-Office365-Filtering-Correlation-Id: c8245d70-c5b3-46f6-9edf-08dd7b2f5dbf
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VjBjQnJ1UXA0RDQ2SnhNUXlScldtRG1wNytId2FmbVZVUWcvMmV0RGhudzJu?=
- =?utf-8?B?YVFwQUpYcXdKd0o2amNFZTZrTnJCb2Job0NQL3BIL0NDcmgwMnBSbjQza0Ni?=
- =?utf-8?B?OE1sUXRxaDJXaFNwblRoaUppbXp5QWpHM2I4NHBVUDQvOFJCeTl6OVBwb0ZF?=
- =?utf-8?B?MndMNmpvSGNtUmIxNTFiV1hmM2NsK205VndLNWtmMGJ6M1BYTlFsUHV0c1ln?=
- =?utf-8?B?anEvUFl5TWRCYUNwcG0xRGFPa29RREFzRXc5N2F1M09tbmFFQ2UxNDJwbjB3?=
- =?utf-8?B?UEdpTzZiZHNsWkc2emdwQjRmWjhHd3NvMTUzRGxCUWFnaUNmQWNUM3FyMHF2?=
- =?utf-8?B?K1hLS0ZxVFNOd1BqTDdqYlN2L0ZwWS8wZVdUL2JSUzNIeUIwdzJDbkdlQ3Zk?=
- =?utf-8?B?Rng3YmM2bjd5aW9haitpS2NtLzIxNHhBRVltdkc2QUI5U25lTjlBSkVvWWdz?=
- =?utf-8?B?SjhZREEzYzVWV3poS0h3d0hubHluYnJJaWwreGVCNk56cDNranVMZVgzQmly?=
- =?utf-8?B?VkZVOUh1R0NnMjBCQjZqRGJpb21vNGpjTjc1aGFhWkhJNUc4RFEvVEJZNkpP?=
- =?utf-8?B?Z3JWcWp0MFFGSUJoRmllT1poYXlYamlJZkdZMVhMRjdXNWVwN25RQWJ2bFd2?=
- =?utf-8?B?dkc3QldlYW94b2dNY3ZZU2d4L1Rjd1p4aHd4UjRSTHNPZDFPcU5Xc09sbmRD?=
- =?utf-8?B?Ky9vUEd3SmY1RkE2UXJwcENMY085cDBJTHFYNnhpU0ZMRDJyelRIVjFnMitV?=
- =?utf-8?B?ZDBpT09nMWtqUjdUMXJ1LytrVURJbTJKUTZna0RJb0tQaTBKWGRncDNHT1M2?=
- =?utf-8?B?emNIdXJZYmhLYklWeklYK1FKVERuWUtrVnBjVXZ4MVpRdnRzQ21oVmFsYkRa?=
- =?utf-8?B?bkVYMVV3NWhOeFUwZndNRWVXNG93dy9HTGR6Z3FETmloWDRTUkFmeXNGRHlt?=
- =?utf-8?B?ZDlBb1FOTnlXL0pGbEpmRGoxaFBTK1dGckZyeHQrWWFVVlVwR1FTM0NnR3JE?=
- =?utf-8?B?MU5yT2JwaFR3bVpmZFRXaS9IRno3K1Q5dzRjWmdQUWFIb2xGYlBJblVXTWFt?=
- =?utf-8?B?VTVqemhTdDltaVdzSGdmK2R0WmZYdmtFLzRMOU1xbFlxc0pFMDgwK1NOQlB0?=
- =?utf-8?B?d1N4cUdoMEpaUTI1OGE4eDJkR1NnY2hkeHQ5WXgvblB4R0tRdDFWZmJPS2d0?=
- =?utf-8?B?aGxoNDhWa21uTTYrcCsyMkRBQ0M0YjNOTDlMNExreTdYNTI4V2NOK05yTFJs?=
- =?utf-8?B?YWFtdUdRcFBuRzhKOXNZSVB6ZXZ1NW5VRkdOV3dJWFBHUVRQR3phRHlBQm4x?=
- =?utf-8?B?RnBSQTFlK2xnaE9UYWhEaldkd0RGQTlHRnZiM0RhQXp2ZEN6U3RiMlYzL0J1?=
- =?utf-8?B?K29Hb1FUYVlxeWFGUmFXUWc0ZjdoNGpxUUMyVVdUeDlWbkI2c3VrTU5rd1Nh?=
- =?utf-8?B?SUJSYXltQ3J2b2J3YTJsTzRrNURQZnJmUHA5Z0JUQ0FuWitwWFhMVFhjN3Vj?=
- =?utf-8?B?TEVKYlpuR1RnamtWNmlWeXBxdGJWc0ZhMUpWRnhNU1hHNTFMNkJ3WjhFYjVy?=
- =?utf-8?B?VDNMRHBkWFdoa2QzYTV1Tml4d0FaS0IzQ0RpV0VSQ2tzejNLMGRQb0pLdGVt?=
- =?utf-8?B?QktWczlTSVZVQXBPTVJRYlhzK3BCZnFjTlBUdnlweU9VK095cUxFS1FvN0Fa?=
- =?utf-8?B?ZkZObGZvRlRCeTM2ZkMrejc0czJ0aWxCR0loYjZZZ0tVa3h3ZU96Z2k2eHNI?=
- =?utf-8?B?T0F0RnBlV0NzV3RVdVJuQ21uVk9MYkN0RG9DYzVrQXVsYjdYOWNWSXIzb0l5?=
- =?utf-8?B?eXJndFVrY242QjdaQzI1SUpYamtiWlZNN1BoYmkvcFd0Slg2ekFXR2VTbkd2?=
- =?utf-8?B?VzNqYkNuUGx3MU5DcnVhMFRCcXNhdzdYbG9PTHkvVXdORXlKMi9yMXAzMjdm?=
- =?utf-8?B?Qk8xRE1zQXR6aldtTis5RUhpVHpiem54eUpwcThKOFBLeXNNb1lPQWl6T0oz?=
- =?utf-8?B?MllSQTVETGdBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UElqdXNVa0FXalYrQnpHNWFNWHlRcHVIanRINDlYZ0pvQ04rTXhkeXFtZWto?=
- =?utf-8?B?cUREbzE4VVdVd1J6VHZjUEkrcnhyNmtkaERndGtXOHNOK1hQYWhWcktPVHFZ?=
- =?utf-8?B?ZC94YkM3WmNuMmp6cElHZUdlUjZUcThRcVl6Z1h4NVV0d0pjcDlxQjJNQnJm?=
- =?utf-8?B?R29jQlJKVWNzbm42OEp5d3lUUkg0Z2pZalB6Mk1hWVozdFlsMWFWZVdrQmtq?=
- =?utf-8?B?UTJtb3FOeWRnenhtSGo2TzYvaFJLdWc3aEZuRWVKdW9FbjExQmNUNllXNmhM?=
- =?utf-8?B?dEFQT015RUpHYWRLWUJDT01yODFNaGhIMTBndkR1Nk9RamE1eWxHcHJTSGxQ?=
- =?utf-8?B?d2I2Q2VhbjRYTjVtWitIeEM1OEVoTWcrOCswRDZzcjEzU2YxRGhsSXJFOWIx?=
- =?utf-8?B?Uy90V0RXR1BsTFgvMk91SElJRk5tYXpvMHVWcTZMOHlibnMrUEpJV0xIYlVs?=
- =?utf-8?B?M3dZSVYxQVFFckdyaDVyOFFCSVBENVI0bXdyUnhFQlNyME54YkdzVWwrZ0xq?=
- =?utf-8?B?b2htVlYzeVEyRkorM1FPMjJMcDA5dmd5bzUzQU5lZ1ZPb3d5RW9haWpqVWdE?=
- =?utf-8?B?M2NMSENlQngyU0h5NjFLMk5zY1RNWDBuZmIwNnF2REQxeGtWQ3Y1b1VoTktq?=
- =?utf-8?B?VWFxWG5GKzJSd3dIRllLUDhiVUEwM293TVlCMzRZdWIzbjRQdU8vTm4vc1hS?=
- =?utf-8?B?OFpzMnpNekNGRkRuS0VxNGdSbEZUQ0Nic3dRbUN4V3RjaWE4UVhOdGZITExn?=
- =?utf-8?B?c0FkMk5iVzR6a1Rxbm9xTTFGOHFkNUZidEw1dVZuNmh2eG5McFprMXhCQTlw?=
- =?utf-8?B?dXYzS1RMa1VOTE8zbkx2bGFJYjIvZmpvcDZ1Y04vYVAzZndqcWVNd0hwZUxH?=
- =?utf-8?B?UlFJNFdwV2FNOXkzZ3hQczhZQkJTaW1CbDNGazJoeS9JUm1VVjJSQTFLUkxO?=
- =?utf-8?B?c0NtbGZZUXZWNE9uKzJHT2cycjBpR3Ivd3pQYlFDbzV6SFBLcDQxbnhYWGFR?=
- =?utf-8?B?a05OS29sV0Y3SCt1MGlDcnF3cmduQnVHMXpvdDRGNUtlaU1VZVF3V1FpcVp5?=
- =?utf-8?B?ZVcyR05SOFhadkwxQzBHcDdQMElEVTVKY1pQTElRZjFXdC9GVkt6S25icmZk?=
- =?utf-8?B?K0drSmNQeXd2YnFtNnVKVFFJRjdDL0h4ZkZRRGlXQ2ozcUh5VjNlOUVPRFJQ?=
- =?utf-8?B?V3BXTHppYXc0dEFMaGxDNXNhTEw4NHZQNVdxaEVFNkhPSWNUQ05IcXZxRzRR?=
- =?utf-8?B?NEtod2ZuRThsVXgzWjdkMnpjRmtML0pucHFYL1pjMVhoalJsL3JDZ0lzQy9L?=
- =?utf-8?B?b3ZuRllsMW9WdWtsN2szTFQraGl4alY2c04yYjlzWlFVWGpTN0k1UTg2eWRo?=
- =?utf-8?B?MkdDYjdSdXFXejFWRXgwaEY2UzZLRlBIN01GZ3N3VVFiWC9lTkJkMmFpdUVp?=
- =?utf-8?B?dkhlVnh6MmNXaTlDRkN1enNHTDBzQVFZSXg1RFd4VjZlaU5KK2dlQVQwa3BZ?=
- =?utf-8?B?RDNBNURuU3ltT1A1cVl1QXc0SGloVzdVcUdSUTMyOE1MbGZkVzl4bnB3TWZk?=
- =?utf-8?B?RVdCMjNiRnM2cHo4SzN3bTM1R3h4ZGx2K1FmcFU0RXRtZmlRc21QNktJQkNp?=
- =?utf-8?B?MlFMeUpLWm9tY0RueDkwWnZSUndqVWJzdzdoR3VENnduSEw0SUZWRmIzQ2ly?=
- =?utf-8?B?QzNMN1B2TVJmUHk0MzZzOEh5d2dPNk93R0hkZmZKN1lmV2xraFdQUUV4Qkpz?=
- =?utf-8?B?OUJ2QW9ETktJbnZ1SlYwT0FSeXRQUTJEM00rMlJqL2FiMGRPaVZYMjBTWFdI?=
- =?utf-8?B?Zm1WMU1kUXliQjYrSGNGRW41aEN2R0VxMUU3VjB0QytPUnJnVTRTSEZvWlFj?=
- =?utf-8?B?Sy9vMHYySUZ4VEUvUzh2NE5CQmhJMUdTb3UzU1dxbTVKeGEvTTJ3V3cxWWZa?=
- =?utf-8?B?K1lOSVp6V1NESUU4eDYwbjFhYXMwOTg3T1NpUjYrS0E1VVVrSzZORXl3bEpu?=
- =?utf-8?B?ejhtL0kyY1pkQ0VwVVUzeEZraFlVMWNuZ2pDSEdoWEpyY1pENGVjWE1XTUNN?=
- =?utf-8?B?anA0dEFzVFd1L2E0dm9GVTZCeW9pRnVSdEFHMjJHY1VWR092UzdoWC8rTnhw?=
- =?utf-8?Q?JI51kguiKDIpVV2kQZrfOf6jD?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8245d70-c5b3-46f6-9edf-08dd7b2f5dbf
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 08:35:52.4262
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8WIDCwaop74uFv1QlXHnfbHeRJ9q5mlBT6yZyEB4bvgdGHBd0My+GruKqsFzsgq40j4Wz+sY98ieNB2lLgylgQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8408
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407191628.323613-11-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWRokrL3EPKQbhHhCL84h1fZ7L3LjM0gFw96iqv36EiVA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWRokrL3EPKQbhHhCL84h1fZ7L3LjM0gFw96iqv36EiVA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 14 Apr 2025 09:34:57 +0100
+X-Gm-Features: ATxdqUFdznh3Sv9gHBH-n-mlporoTOmehWlxOa_he4pKtDtsqhX1d-1Ft9ky9fQ
+Message-ID: <CA+V-a8sv94q3Z0eHfgPPrg0GKAP+cJgFdD0uBzPfmfLxL3Su8Q@mail.gmail.com>
+Subject: Re: [PATCH v2 10/12] pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Peng Fan <peng.fan@nxp.com>
+Hi Geert,
 
-of_gpio.h is deprecated, update the driver to use GPIO descriptors.
-- Use devm_gpiod_get_optional to get GPIO descriptor with default
-  polarity GPIOD_OUT_LOW, set consumer name.
-- Use gpiod_set_value to configure output value.
+Thank you for the review.
 
-Checking the DTS polarity, all users are using GPIOD_ACTIVE_HIGH.
-so all should work as expected with this patch.
+On Thu, Apr 10, 2025 at 11:20=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add pinctrl support for the Renesas RZ/V2N SoC by reusing the existing
+> > RZ/V2H(P) pin configuration data. The PFC block is nearly identical, wi=
+th
+> > the only difference being the absence of `PCIE1_RSTOUTB` on RZ/V2N.
+> >
+> > To accommodate this, move the `PCIE1_RSTOUTB` entry to the end of the
+> > `rzv2h_dedicated_pins` array and set `.n_dedicated_pins` to
+> > `ARRAY_SIZE(rzv2h_dedicated_pins) - 1` in the RZ/V2N OF data.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Suggestion for improvement below.
+>
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > @@ -2304,7 +2304,6 @@ static struct rzg2l_dedicated_configs rzv2h_dedic=
+ated_pins[] =3D {
+> >         { "SD1DAT3", RZG2L_SINGLE_PIN_PACK(0xc, 3, (PIN_CFG_IOLH_RZV2H =
+| PIN_CFG_SR |
+> >                                                     PIN_CFG_IEN | PIN_C=
+FG_PUPD)) },
+> >         { "PCIE0_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 0, (PIN_CFG_IOLH_=
+RZV2H | PIN_CFG_SR)) },
+> > -       { "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_=
+RZV2H | PIN_CFG_SR)) },
+> >         { "ET0_MDIO", RZG2L_SINGLE_PIN_PACK(0xf, 0, (PIN_CFG_IOLH_RZV2H=
+ | PIN_CFG_SR |
+> >                                                      PIN_CFG_IEN | PIN_=
+CFG_PUPD)) },
+> >         { "ET0_MDC", RZG2L_SINGLE_PIN_PACK(0xf, 1, (PIN_CFG_IOLH_RZV2H =
+| PIN_CFG_SR |
+> > @@ -2359,6 +2358,14 @@ static struct rzg2l_dedicated_configs rzv2h_dedi=
+cated_pins[] =3D {
+> >         { "ET1_RXD1", RZG2L_SINGLE_PIN_PACK(0x14, 5, (PIN_CFG_PUPD)) },
+> >         { "ET1_RXD2", RZG2L_SINGLE_PIN_PACK(0x14, 6, (PIN_CFG_PUPD)) },
+> >         { "ET1_RXD3", RZG2L_SINGLE_PIN_PACK(0x14, 7, (PIN_CFG_PUPD)) },
+> > +
+> > +       /*
+> > +        * This pin is only available on the RZ/V2H(P) SoC and not on t=
+he RZ/V2N.
+> > +        * Since this array is shared with the RZ/V2N SoC, this entry s=
+hould be placed
+> > +        * at the end. This ensures that on the RZ/V2N, we can set
+> > +        * `.n_dedicated_pins =3D ARRAY_SIZE(rzv2h_dedicated_pins) - 1,=
+`.
+> > +        */
+> > +       { "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_=
+RZV2H | PIN_CFG_SR)) },
+> >  };
+>
+> Alternatively, you can replace the single array by a structure
+> containing two arrays, one for common pins, and a second
+> for V2H-only pins, like the common and automotive arrays in
+> e.g. drivers/pinctrl/renesas/pfc-r8a7791.c.  That would get rid of
+> the literal "- 1" (and the need for a comment ;-), and would protect
+> against future mistakes.
+>
+My initial intention was to do the above, but it was generating a lot
+of diff so choose this approach. I'll switch back to above in v3.
 
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- sound/soc/codecs/tpa6130a2.c | 32 +++++++++++---------------------
- 1 file changed, 11 insertions(+), 21 deletions(-)
-
-diff --git a/sound/soc/codecs/tpa6130a2.c b/sound/soc/codecs/tpa6130a2.c
-index 43cd957eaf321e8cff784e5d781e8e99d2c3ae89..38cc000891eacafb257a959b44f157413faee5fd 100644
---- a/sound/soc/codecs/tpa6130a2.c
-+++ b/sound/soc/codecs/tpa6130a2.c
-@@ -9,11 +9,10 @@
- 
- #include <linux/device.h>
- #include <linux/errno.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
-@@ -32,7 +31,7 @@ struct tpa6130a2_data {
- 	struct device *dev;
- 	struct regmap *regmap;
- 	struct regulator *supply;
--	int power_gpio;
-+	struct gpio_desc *power_gpio;
- 	enum tpa_model id;
- };
- 
-@@ -48,8 +47,7 @@ static int tpa6130a2_power(struct tpa6130a2_data *data, bool enable)
- 			return ret;
- 		}
- 		/* Power on */
--		if (data->power_gpio >= 0)
--			gpio_set_value(data->power_gpio, 1);
-+		gpiod_set_value(data->power_gpio, 1);
- 
- 		/* Sync registers */
- 		regcache_cache_only(data->regmap, false);
-@@ -58,8 +56,7 @@ static int tpa6130a2_power(struct tpa6130a2_data *data, bool enable)
- 			dev_err(data->dev,
- 				"Failed to sync registers: %d\n", ret);
- 			regcache_cache_only(data->regmap, true);
--			if (data->power_gpio >= 0)
--				gpio_set_value(data->power_gpio, 0);
-+			gpiod_set_value(data->power_gpio, 0);
- 			ret2 = regulator_disable(data->supply);
- 			if (ret2 != 0)
- 				dev_err(data->dev,
-@@ -75,8 +72,7 @@ static int tpa6130a2_power(struct tpa6130a2_data *data, bool enable)
- 		regcache_cache_only(data->regmap, true);
- 
- 		/* Power off */
--		if (data->power_gpio >= 0)
--			gpio_set_value(data->power_gpio, 0);
-+		gpiod_set_value(data->power_gpio, 0);
- 
- 		ret = regulator_disable(data->supply);
- 		if (ret != 0) {
-@@ -230,7 +226,12 @@ static int tpa6130a2_probe(struct i2c_client *client)
- 		return PTR_ERR(data->regmap);
- 
- 	if (np) {
--		data->power_gpio = of_get_named_gpio(np, "power-gpio", 0);
-+		data->power_gpio = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
-+		if (IS_ERR(data->power_gpio)) {
-+			return dev_err_probe(dev, PTR_ERR(data->power_gpio),
-+					     "Failed to request power GPIO\n");
-+		}
-+		gpiod_set_consumer_name(data->power_gpio, "tpa6130a2 enable");
- 	} else {
- 		dev_err(dev, "Platform data not set\n");
- 		dump_stack();
-@@ -241,17 +242,6 @@ static int tpa6130a2_probe(struct i2c_client *client)
- 
- 	data->id = (uintptr_t)i2c_get_match_data(client);
- 
--	if (data->power_gpio >= 0) {
--		ret = devm_gpio_request(dev, data->power_gpio,
--					"tpa6130a2 enable");
--		if (ret < 0) {
--			dev_err(dev, "Failed to request power GPIO (%d)\n",
--				data->power_gpio);
--			return ret;
--		}
--		gpio_direction_output(data->power_gpio, 0);
--	}
--
- 	switch (data->id) {
- 	default:
- 		dev_warn(dev, "Unknown TPA model (%d). Assuming 6130A2\n",
-
--- 
-2.37.1
-
+Cheers,
+Prabhakar
 
