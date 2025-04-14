@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-18786-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18787-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21012A8823D
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 15:32:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68001A882AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 15:41:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53A5A7AB05F
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 13:30:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A181188D848
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 13:39:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 875D6275841;
-	Mon, 14 Apr 2025 13:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41092291170;
+	Mon, 14 Apr 2025 13:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="md47AUYE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FV0TSrh7"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C69623D2B9;
-	Mon, 14 Apr 2025 13:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E36291161;
+	Mon, 14 Apr 2025 13:28:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637218; cv=none; b=KW8xq0KDwqUUCEC92q3oem7/UnthoOphaLFXXjsXvByoUpT7+I/zl8w66q+w9siDfeK5sQo6dTzp7hx9AuM1tk1JNR6zKG4syvn5IkJNTF0FaGD/Z+h0cyQDoJzQV9ltJif4tDZS7gNMvaynukT+FOA00seYL7UrcQw1Ksq3SyQ=
+	t=1744637299; cv=none; b=gUV8bACXcD5qKOhsMP8TiLhTx3tuOiAxa3uxriXOygycOGwIlXDxo3hAdAG1UEL46w1HRJjrTO+32k6mv/MbCIUQsW3S4nZvX36Ea+gsaU1MywtpudW9EEwIu/0TTNykP7jFo+Nlr0qBkJZNi0oj/dVLB7YVeVbJc2BG6Im9LLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637218; c=relaxed/simple;
+	s=arc-20240116; t=1744637299; c=relaxed/simple;
 	bh=XnD07pk/6ayreH2RF2D+WL2oa/0JbLWCPdWUdxtZWjA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W4Id1vSCVdqBPKQjeK0OHzUxtIpx9BXPQDCtW4q88xVmrU9dnNcKUFlU/bttax22vXBA1y1YcbUPF7rUNU6ObwRvtITVPZEHkdVc04SJxGNyiMcTjkVLztd/RgoLyWmhRcWHlN8pIryzeYdPkI5sta/EMQx6iEzUekidIJmbq2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=md47AUYE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE2FDC4CEEE;
-	Mon, 14 Apr 2025 13:26:56 +0000 (UTC)
+	 MIME-Version; b=RN3jwrkScAsEM2JAP7UlDuPPqDamL4WwtFTwfkhy6rKeq+ry4RLyyZK2JnrfQH/edDsPCDUv07BaRCJdeNMZR2FIcSgr1gfWISGiBPdvcgmJYJnS9g6Mc04KiBCafHY9BHKAV5VOIzO0IVhTA3dSppwTLspJ+Us1MK1hY/khTOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FV0TSrh7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3202BC4AF09;
+	Mon, 14 Apr 2025 13:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744637218;
+	s=k20201202; t=1744637296;
 	bh=XnD07pk/6ayreH2RF2D+WL2oa/0JbLWCPdWUdxtZWjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=md47AUYEcsmjPAoTQ/yJ9bkiC612Rt81U3AHsnJjHCLy+1XXp/z9SWMG2RuCeHSp2
-	 UmtbaHCcUniIUIbmQceh9MgR4YTNJbpZpDtTIS8nLcfxZpUJOFDDYhYgI10w0nnzmc
-	 ZH36stsjnHN8vvC0wvfz8Vj2KXddV9+AyXr/F7jg+XAWxFVxirBMSAOgRTowzKEkxs
-	 uIjczC4fhI3cDf/7kbb4n2bHL6wPjlVY7asIFzx1K/e1vbvgwxv0jzRZ4gVEki/68n
-	 KJYbfN+Qd447sDmX6pohqSmEQ8SVRPUezSjtiaAnrbEKN4SaMITK2QZkwUsMgjCwK3
-	 2IDhglojKSk9w==
+	b=FV0TSrh7Rlm8EgVMQ5Bi31qU7uLLgWCuYHwqoyjxZbiZ72+3jjpbo0qoLYEZWIM1K
+	 EazclQA9q1yn5M8gHoaApQyej6Kdw4McnJFX3YDcw+PQcPNA7JsOvpKQagQ0arZbtF
+	 FA0KCKBpKwsmKzpoLaTPNzzpDPVqRV7FqO4vgN0C+WcmHeKs4w0lkGgeB/jNt7eiHr
+	 WUR4tE+ugNCUK1hEJiyCbjC+9wXtRgjtfXOdmFveFk8dLxBcW9pE3zLfF2pcp3kedR
+	 FhwGUsOYpDXV9+tNr00VIuAFnxQWgA8VWoA1lnYJM48an1lBpA/SEzme0d/EXC5JM7
+	 b6xJ70SAOB+TQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -50,12 +50,12 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linus.walleij@linaro.org,
 	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 20/34] gpiolib: of: Move Atmel HSMCI quirk up out of the regulator comment
-Date: Mon, 14 Apr 2025 09:25:56 -0400
-Message-Id: <20250414132610.677644-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 20/34] gpiolib: of: Move Atmel HSMCI quirk up out of the regulator comment
+Date: Mon, 14 Apr 2025 09:27:14 -0400
+Message-Id: <20250414132729.679254-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250414132610.677644-1-sashal@kernel.org>
-References: <20250414132610.677644-1-sashal@kernel.org>
+In-Reply-To: <20250414132729.679254-1-sashal@kernel.org>
+References: <20250414132729.679254-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.2
+X-stable-base: Linux 6.13.11
 Content-Transfer-Encoding: 8bit
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
