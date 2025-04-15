@@ -1,112 +1,122 @@
-Return-Path: <linux-gpio+bounces-18883-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18884-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A361A8A1CF
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 16:50:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D961A8A1F5
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 16:55:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 762AB1900703
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 14:50:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B71BC190074A
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 14:55:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6584B2BCF52;
-	Tue, 15 Apr 2025 14:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2634729A3C9;
+	Tue, 15 Apr 2025 14:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSqfS8Nm"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NeGlLIav"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8CA29B790;
-	Tue, 15 Apr 2025 14:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0384C297A68;
+	Tue, 15 Apr 2025 14:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728561; cv=none; b=PT1qb7dvsabD3AUFur+8dBA0WJocfdtrBpbWz+NOAW3RvlT7OIY/XBD+KM84P2wNjoRrfXIOc86FAAdd3TbL0ymr2GR/qwu0Ig+NMokIBGAwgXclaUneRjILj2Vdrb/oy3z5UwsuwBjixnDbdOLgs98x+j5U1OYxOVCmn720L88=
+	t=1744728913; cv=none; b=e/pHuXCMn3Xub00d/F+BKj3rq/1ab+yH/aQ6dopHRI3SqwBnijm+wACRnT9W0m/mN9z3IuSR2fiw3CGR8ESM2DaVgr4zcAcP1/iHVz1l1zezRaFqKsUtmOdwDvx7OlLyjOC+yqRM28S2+QadDatAz2JAM6KyT94qCZxLPFV9CpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728561; c=relaxed/simple;
-	bh=jqGE0xVu8yWKFkliI8yVbSzznb3JK3p4yllxFur7jU8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qp+riBP0AUkfSgiSU7rUdJChDvB1O2fopNWthINrsuQaECTY3QEn6IKLeE6OWimv7POTLt3GGpSOE1s4ZBpL8qiPxmLZDeGKPyJwzckSdKBAGUI88EpnZvQPb9uJVZxZal9xRJeZ0wyaDv3ZCh7nAPb1XUaSeDHXV9fTlzSedfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSqfS8Nm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 48349C2BCC9;
-	Tue, 15 Apr 2025 14:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744728560;
-	bh=jqGE0xVu8yWKFkliI8yVbSzznb3JK3p4yllxFur7jU8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=GSqfS8NmE9pkSUb5BD9VdrvsDOA342KHzo0j8CPPjuA7boatuzTCQS9JelfXiaScb
-	 MRcMMpINsvSLHWfFZc5oii55Vgn1Tt6XvkGjr6NyulbL2cSeavq6ktOdbOeIIdnVdd
-	 n/QKhYJ4/iSEeZ3D1JBlZpIxCnxqj+FzUIA6b9tR1zyivKoikrMF5zyaXncVKTYApm
-	 ePDw6kfhkY3mTlraFtJu+9bslBF4RX/HBwzBRaCU8WbzhKQKEtFAkR0JDDQOiQMdCy
-	 SCGzXhGZzgXEfTkEfq+ayo16vxNWR6fCZs27zZXxv13Ak+qtffuzQc3o1fEMEnDhxL
-	 BSVrlXbjSDKuQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3165DC369B8;
-	Tue, 15 Apr 2025 14:49:20 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Tue, 15 Apr 2025 15:49:33 +0100
-Subject: [PATCH v2 17/17] pwm: adp5585: make sure to include
- mod_devicetable.h
+	s=arc-20240116; t=1744728913; c=relaxed/simple;
+	bh=+flNzZtjn1M/5D89HSQUpcWv0OrCTQQNyIqgrpPpkW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W62okntvqTwa5rrhm1kvZ6UU6b3N6GCsM0LYVQKfDF9hQdQmaYYn+p2BvG5LyqnS+Che4GySW78oxwghgt0buI09D0Lh2m05QlPhQjk1Kb+mrZM0wYH9mPhCcK7IzsYaldAgV3pw4H+oAV4lVXcA3uyEcGpdmmiI1VzMvsH9tQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NeGlLIav; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9C049439AC;
+	Tue, 15 Apr 2025 14:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744728909;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02LK9pHroELAh3qGOo82hLnNoi/5dDABLv647P77RhE=;
+	b=NeGlLIavf8r3+95C7G3xorvF32BXXKG3930EBRZhay4vBBBBnXJOU6PYCjReX1a+1648w8
+	wcxk6gJwXWocATV016xQa3TUEro4dECD/Jshf1oOhOi+hSfVlsMTBnjRi8Vn9LJoMeyCIw
+	weCSHqCMw+Ks+PEiOcnBsUZbSooI7JGRglPjy+QgCo9JobYsih5tijLHIjodfc/uvkBZhw
+	ZjyNEUq/D889sqajEC02nuUhI5QcBC/KrZwFMkZ8pOn9TrtKpvthgKofdbvs6HaxLK795N
+	pqVg7/VtLffvI+hLHk+H0vauo7A3s0yNXcethhI6BMc/V8yoP2uQXUjdxceU9w==
+Date: Tue, 15 Apr 2025 16:55:05 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, Manivannan
+ Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, Dragan
+ Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Saravana
+ Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, Stefan
+ Wahren <wahrenst@gmx.net>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>, Dave Stevenson
+ <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
+Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <20250415165505.0c05bc61@bootlin.com>
+In-Reply-To: <2025041557-masculine-abrasive-c372@gregkh>
+References: <cover.1742418429.git.andrea.porta@suse.com>
+	<3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
+	<2025041557-masculine-abrasive-c372@gregkh>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250415-dev-adp5589-fw-v2-17-3a799c3ed812@analog.com>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
-In-Reply-To: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
-To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Liu Ying <victor.liu@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744728560; l=672;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=v3TMENAZmJN0myQWjbTc/kqchul9OyTcCJ5PkGOgx9M=;
- b=OjgEv0txZLX702otZ+LNkY9LUqm7zC6znXqY0Nwn0XHuWxDxlpDFu1UAY2W9H33MD6MD7/173
- DISti+oXRK0DheBq5ztqTVeuwfVdpb35Rg93oiYNHGywrjgwLRhkWGg
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdfhleejtdeftdejveffgedtuddtgefhtedtudfhuefhtddtffeiueeigfdvhfdvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeehpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghnughrvggrrdhpohhrthgrsehsuhhsvgdrtghomhdprhgtphhtthhopehmthhurhhquhgvthhtvgessggrhihlihgsr
+ hgvrdgtohhmpdhrtghpthhtohepshgsohihugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-From: Nuno Sá <nuno.sa@analog.com>
+Hi Greg,
 
-Explicitly include mod_devicetable.h for struct platform_device_id.
+On Tue, 15 Apr 2025 16:06:43 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
----
- drivers/pwm/pwm-adp5585.c | 1 +
- 1 file changed, 1 insertion(+)
+> On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrote:
+> > The RaspberryPi RP1 is a PCI multi function device containing
+> > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > and others.  
+> 
+> So shouldn't this be using the auxbus code?  That's designed to "split
+> up" PCI devices such that you can share them this way.
+> 
+> Or did that get rejected somewhere previously?
+> 
 
-diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-index cc8ac8f9e5669b4ffca06d4117a29f030393f48f..85308257724a338da4d2416c8d01e48e08bd0856 100644
---- a/drivers/pwm/pwm-adp5585.c
-+++ b/drivers/pwm/pwm-adp5585.c
-@@ -20,6 +20,7 @@
- #include <linux/mfd/adp5585.h>
- #include <linux/minmax.h>
- #include <linux/module.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- #include <linux/regmap.h>
+It doesn't use auxbus probably for the exact same reason that the
+one given for the LAN966x PCI device driver [0] and [1].
 
--- 
-2.49.0
+Avoid all boiler plate needed with auxbus whereas drivers already exist
+as platform drivers. Internal devices are handled by those platform drivers.
+Those devi just need to be described as platform devices and device-tree is
+fully relevant for that description.
 
+[0] https://lore.kernel.org/all/CAL_Jsq+1r3SSaXupdNAcXO-4rcV-_3_hwh0XJaBsB9fuX5nBCQ@mail.gmail.com/
+[1] https://lore.kernel.org/all/Y9kuxrL3XaCG+blk@kroah.com/
 
+Best regards,
+Hervé
 
