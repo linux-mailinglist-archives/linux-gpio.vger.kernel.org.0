@@ -1,119 +1,103 @@
-Return-Path: <linux-gpio+bounces-18816-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18817-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1019A895E5
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 10:00:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D33EA895F3
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 10:03:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2E203A23B2
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 08:00:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4168E7A244E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 08:02:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F12F327B4EB;
-	Tue, 15 Apr 2025 08:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C28FB27A124;
+	Tue, 15 Apr 2025 08:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HO/S8o+h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WOuuhxXS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D432627A93D
-	for <linux-gpio@vger.kernel.org>; Tue, 15 Apr 2025 08:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DF5F4ED
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Apr 2025 08:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744704014; cv=none; b=FBotcIFsbFd3SqkquoehJo3q6vcq2vjhZzdIID1o6f8rvkTBAvhvndiZgL4TMvjlIVYYNKm7zTr+fWLjTmzZ33ftCxk2aWHKWxmGQx43g0oxls6+PapKOQPoRbI4kYL2zovTmcu18AYt0WDB08mizt2fg1lG6Bs0lIgEakm7Y3k=
+	t=1744704192; cv=none; b=rlhOBsVUisxgnMJfoOOlvnwCog5JCvgUnE1hZ5+4186mD6ysfnQQ9rfXP+FjjA0rKacyLa8hcC2a2FuTjkJ1J8H8i4HuVFNaj7hnhAJXprqNL+eKUdlyWA9BLn73BN3Z11c0kOS6LU427qIO6gqtM5/qMzQIyZUbNRLFJlf83Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744704014; c=relaxed/simple;
-	bh=QuiknlKiSA+WD7K8fGty1GjBqI96wU/H/9BL6EACW14=;
+	s=arc-20240116; t=1744704192; c=relaxed/simple;
+	bh=+V55qGdz3nFmdjae2o/u6EmBjC6s05SCXJObXnBOuI0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AebiivWb3C8K805dLSCrRjZdjlNZ2zbTLP9291PfsUrPXZDQLGbE83wRNsJvqEUPaAZvxCKhKy8BbzDsk/ZsGMwo6jpWVMCIIJjCW+mq/qNx9NQ+FW8iRDcsiivAE9HGpQyFeuqa/Y/e/u37+85360dbDW9PpXkORp8CCunJHx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HO/S8o+h; arc=none smtp.client-ip=209.85.208.178
+	 To:Cc:Content-Type; b=NelSX+Ji93z5NqSIWiqb3tijEundmEz0E9bhJfxZXKbC+lwLQJOVOtACbIy7JZCPrf56G3wcxK7Zr+Cv8bAnIQ5MbefUqhdBl/5Z1ynXLeZoTAlj1X66VMqOsDyEh2ASj8MYjEYoTE/Eo+Suy4PNICh/TuheEwfVjzWuh4of4KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WOuuhxXS; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so46808631fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Apr 2025 01:00:12 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-31062172698so22826391fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Apr 2025 01:03:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744704011; x=1745308811; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744704189; x=1745308989; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QuiknlKiSA+WD7K8fGty1GjBqI96wU/H/9BL6EACW14=;
-        b=HO/S8o+hH//VO4PFiDPmLKyG6tre9uFK5KG7a3Q8ouystAPkpSCL6JoA+2aE/u3H/O
-         k8G3KxIdrof/Ml/SXK5gGXtk0S6gTqHExciAgXGIzWQcdg3JrTn/ORzHBm3pl/Tx6iqI
-         bcTNuQka4j3ilQIy9lpGppcaY+kv9pTlhBlc/o7FFRWbSkKDew2eNzRPpuTHzQubyak9
-         YjFhnF4StgMZTjpAHQ/DK3O9NyqJd7UeLkdy0MoNNXIh0vil3TsTtuBp+gU1F5TtLVH2
-         3J2m9nnyckQXPGe2SafxAJsW1E4bKMhz3FvCF0ft59hpIs/rThokKGvTcOPnsjLBCPof
-         6olg==
+        bh=+V55qGdz3nFmdjae2o/u6EmBjC6s05SCXJObXnBOuI0=;
+        b=WOuuhxXSM+lfvvdenpheaDc29I8yIZJfYlbZyIp/fTjHaC9Jkxrz8JNGD1CfUvsSWk
+         i1MbPL8s6XszMsqVhiMtiDD/ULvbeVY2cqB4qbC69H9QrXLBhFx6/ysOMhn5dDUZBk4Y
+         p51kXoCZYEflXvWL+ZlFgsdBTH1/FhbX/fFG7Dcvx1C2O+eQr3YbJIv0heUUBU2q5bPD
+         bU7NFvYSy3yt12vG3bxPBSQOglByRYbSD3Q/YDE8vy6j7ot+tszb2PwD3jRKaQNX6Jvs
+         sSh7GFP2m0FNg0VqbJpgx8X2jgDR3QHUPgLhEwnpcwD17BqthCzkv6zP+29ShL4Hs70t
+         EZoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744704011; x=1745308811;
+        d=1e100.net; s=20230601; t=1744704189; x=1745308989;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QuiknlKiSA+WD7K8fGty1GjBqI96wU/H/9BL6EACW14=;
-        b=HNvV/1g8FXdyL9SXZv5UJZa0YU+Z+7DaO0g+StuS1Ink3BkXxp3QkTeVIg+PhYLdKO
-         1i/dBaeiY9IOdhi9kAmmkv+lLujpF5KaoCykwh/+50GSjLlWHLvdOJCubXE70x1TXHQu
-         8y+9MIYsq3j6VP7RIesXUZ3u4BFDRWa2Vt0wFhKn6wiwIgd+T87g5pnv34fzapvTkb5a
-         2tYHmPMxiwykGU6Um9VZsx5OvgwWKDEZ6+Z6of8MLojGhHmyHTKcHkBS3SEPw5JovnQ3
-         xE8UC5jXqw5RS0LhUGPTQ8I9uZHkqpiY130A0ZOQJqYW8DZ44vkVK0xR1Bdy2MNZ1I2t
-         YFRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWa2Dpspot2tMnozlrE+lxVUo4QuJCNKnMurtfq4CZ+IhbY7UIVT+dpdYIygDeAQCR6yPzz+emFhgoQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKaEiNv96/2uGIR9zhxZgizGfUVw1hboyX9yRiQprpQMnuRzb7
-	a6S1GFJ1K/6XJ6o5zQTWs5z6/ALHuw0m3h8Qk4uEYh782h3iPaxgGi5ZCzlOUcXfJP2YGRDzOMT
-	6axwJyPR5q9H4yNGXy2YjfrhUv/PMVpu+0tdIyQ==
-X-Gm-Gg: ASbGnctu5NdjYFxalyOBCzvEtyxLVQI5+Z0fej6c74+mXXj8kgo20ZbK74QQGPd2766
-	ublvg+37E1/+/MfkRinaodmbjitU/4N2HBlN6AF/+u7FNc2+7D8xYKfZsDzPhQvJAQ9Jy34wN9U
-	cIihiI9aj5b7/+4zWJuvMIng==
-X-Google-Smtp-Source: AGHT+IHnxXKT+pyd9gBpYCbMyVQZAO7XqVpYGkBSNYSVfaaSRz2f0QOsZvZ5bl34m2PPRdwZD5oWN80iP0qENOxIShY=
-X-Received: by 2002:a2e:b8d3:0:b0:308:eb34:103a with SMTP id
- 38308e7fff4ca-31049a7ff11mr54687661fa.28.1744704010562; Tue, 15 Apr 2025
- 01:00:10 -0700 (PDT)
+        bh=+V55qGdz3nFmdjae2o/u6EmBjC6s05SCXJObXnBOuI0=;
+        b=Gxx1Y0/IlwgCSAqvHEp39a25Tcp+Yygr4wyCbXypGuMSI8VTxza/ERGKRsdr9nOV8U
+         qypHljp2STpLFNokPTvjlGt34z932eCrF3vlT33xjpy0FSBrv8uMLjl+81ejOG+KxuV3
+         ysyrn3oOyAqJHSrQOMLsOUsOM9rqTGrglhCfwg6aGk/kRW4Vijf9mInh84cHpbkSvFFu
+         W4YUsi2cfuuvOrExjzR8S4UQBysBsx/ugek3Wc0peKAVwGP0Be+NuWOmur443caYKl6s
+         SlB4UlG+E/6mKvvYerM2v+3DcS8B6MN2Efv8LW6IIX/8feyGycIb16nKZD9kM5WNbxOS
+         Gx4g==
+X-Gm-Message-State: AOJu0YzobET0kVsNiPDDD3RDTU0wUxjeB7MsVuuPv3opKWj6ii/9yNXW
+	v3IUWS1Q4/qMxqWwmnh6JNEGHqPS0YWU095ewTuaZwdXSeo7v/iIdBY4wX/QcsJlNG8CnS1i/Bv
+	trbNTrjW0bLxdjJNYn+9kTi9Z+J0orKqy7DBS6g==
+X-Gm-Gg: ASbGncuQI5Ev8wsqcnrcMU4Iog+j19dpLxsRO2q7DmbmUFbPVONESjTcJYFMounl+bD
+	RcPrcj3c8Ri9hqAIaW2uYPXEPr7ZU9sb8Udy83+1bb7Z1kDCeLG8QFWlnPyV66pZvxENxlZho4T
+	QRn9ck7tSKyvxjqdPm0lGnZyqJLXWB4XhV
+X-Google-Smtp-Source: AGHT+IF8B7muO3z+eK2QnDzSM9ONUyOn1pOPX9ugb37B1zPs9RhHVBq4wiGGWi/LmGwDob0ku420OA7XLCJpPobaI30=
+X-Received: by 2002:a05:651c:210d:b0:309:20b4:b6d5 with SMTP id
+ 38308e7fff4ca-31049a7e5bfmr59334191fa.28.1744704188733; Tue, 15 Apr 2025
+ 01:03:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401135026.18018-1-ansuelsmth@gmail.com>
-In-Reply-To: <20250401135026.18018-1-ansuelsmth@gmail.com>
+References: <20250402122058.1517393-1-andriy.shevchenko@linux.intel.com> <20250402122058.1517393-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250402122058.1517393-2-andriy.shevchenko@linux.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 09:59:59 +0200
-X-Gm-Features: ATxdqUE1-4C5Fb1JmQvyH7hBozN_RXpvZiZvSLKiPhH1VCoFIEKXbvFQJXlM6ls
-Message-ID: <CACRpkdZdFhpixdhsmN=oCEmdAuabUpXtQ9RRh0cFRuxfYXJ0Ng@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: airoha: fix wrong PHY LED mapping and PHY2
- LED defines
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Benjamin Larsson <benjamin.larsson@genexis.eu>, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+Date: Tue, 15 Apr 2025 10:02:57 +0200
+X-Gm-Features: ATxdqUG8QfFP3eJEKd-SVmIh30MEixKKcvWkROjudjJnuccbbmELYQ8FlwuP_As
+Message-ID: <CACRpkdbrRWVOkwU932qehOK8QOZvWAuo1hsnAtV3u5uJeT-Gdg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpiolib: of: Fix the choice for Ingenic NAND quirk
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 1, 2025 at 3:50=E2=80=AFPM Christian Marangi <ansuelsmth@gmail.=
-com> wrote:
+On Wed, Apr 2, 2025 at 2:21=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> The current PHY2 LED define are wrong and actually set BITs outside the
-> related mask. Fix it and set the correct value. While at it, also use
-> FIELD_PREP_CONST macro to make it simple to understand what values are
-> actually applied for the mask.
+> The Ingenic NAND quirk has been added under CONFIG_LCD_HX8357 ifdeffery
+> which sounds quite wrong. Fix the choice for Ingenic NAND quirk
+> by wrapping it into own ifdeffery related to the respective driver.
 >
-> Also fix wrong PHY LED mapping. The SoC Switch supports up to 4 port but
-> the register define mapping for 5 PHY port, starting from 0. The mapping
-> was wrongly defined starting from PHY1. Reorder the function group to
-> start from PHY0. PHY4 is actually never supported as we don't have a
-> GPIO pin to assign.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 1c8ace2d0725 ("pinctrl: airoha: Add support for EN7581 SoC")
-> Reviewed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> Fixes: 3a7fd473bd5d ("mtd: rawnand: ingenic: move the GPIO quirk to gpiol=
+ib-of.c")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Patch applied for fixes.
-
-Sorry for the delay!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
