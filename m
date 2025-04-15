@@ -1,171 +1,133 @@
-Return-Path: <linux-gpio+bounces-18887-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18888-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08F27A8A379
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 17:56:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D258A8A3DB
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 18:15:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D01C3A8D8F
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 15:56:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9C30443F5A
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 16:15:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4737620F09A;
-	Tue, 15 Apr 2025 15:56:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DAA121507F;
+	Tue, 15 Apr 2025 16:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bwqJEDEd"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pztQCA3m"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED36C1F5434;
-	Tue, 15 Apr 2025 15:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38802DFA41;
+	Tue, 15 Apr 2025 16:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744732573; cv=none; b=kle3uXJ0Mn7j3SWBUt0VzmjIN0LwUXXv82Qm9tr2qhzsrJlAeLrq8QIT2x0+49IxcXgKm5lK6X66UZWv6GdwT2Pv0EYaELJL9TZYmNXEiRdzNuFnF7up4yct5adv6b4vlRuSaruYmmH0GEkzJ9rdI0ImVoUp7PzP7scgLYnRX5M=
+	t=1744733699; cv=none; b=W424lMifkqOYvkzCi0CTCpZ7IPwuwuyvrbRaWb4OuAJrFnrZHhK9ZjcFPmrmIf5OSmul+DfWBLZUXKrQYku/kWhLaxxAym6WyqqSf/Hohp7wwyaQ8BWWrOaQyQemofWZAcJimqm8H6u0y2hNZieeB02eRt+6JobzZXiBZUDwO+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744732573; c=relaxed/simple;
-	bh=vcJXMf6s/aWuafjr/5uHRa9qfBGrAhiwmMJfm0EH7x8=;
+	s=arc-20240116; t=1744733699; c=relaxed/simple;
+	bh=U/rKNYDUD8j6QMOYLJ34Ll3gyPFM6SLKNxk//x2JQP0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o3fJzvwATQgW+J0d1uCZ4Wje/2dxLDsnYv2DQhcRxqdT+/g+QODVZ7+lzINYeAl9kffWnHASKMQZQqGkOU4w+9AynzMptXUHrMGN/mz8yjH0eECaj49tBJaOvTqdd/0kKVVFrgFRB+I2X+dZ1XoDkb4Eec6hikUJ4Mt5jDTbc+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bwqJEDEd; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A281F11AA;
-	Tue, 15 Apr 2025 17:54:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744732446;
-	bh=vcJXMf6s/aWuafjr/5uHRa9qfBGrAhiwmMJfm0EH7x8=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=nm7ucF6UbYQxmjmbeXLawz2Aq4/7Rjl+b8UfzgZmkqQ7XtK1B22Vrg8DNOhnABlONGtvxqHz3GG8FsE60locFTTKJL4+7Mm2LBCdsuEODIpxuaGlC1OagcwzoMJUVmxNTqtMsiF+XFKzaj5FSj3uR3NtlmFILd19gW/YtIvj1R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pztQCA3m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 743E4C4CEEB;
+	Tue, 15 Apr 2025 16:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744733698;
+	bh=U/rKNYDUD8j6QMOYLJ34Ll3gyPFM6SLKNxk//x2JQP0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bwqJEDEdl7dnOKaQcyctBMXqZl6JKLldVLbHbj8uVocbee0h5hvXo8CFpX/S/rk/K
-	 1y04rKbPHMMqCjvLhS+N9Max54tja3efXAj/1kANtHkoOlAKiKwREa7rqoZbkrFP8U
-	 flmAwG1trN+7ZwlRF7v1hirWx350ZPrxXrJM6SNk=
-Date: Tue, 15 Apr 2025 18:56:07 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	b=pztQCA3m4GCim/1wSoY8Mu8F8hiIGUr0WM7lChdgo6fkoAulk7Da+VoWMtvINe60v
+	 o0eezdUCv+z2WE8DZF6zM1Ra2I8U+5eiZLlBGNASYIpAQD0Z16N9YYS0vmCWJ1gINx
+	 ehq9XyP/8CEQDI9/XyTxr1znYNaP1Pjy2m31UCRc=
+Date: Tue, 15 Apr 2025 18:14:55 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Herve Codina <herve.codina@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 00/17] mfd: adp5585: support keymap events and drop
- legacy Input driver
-Message-ID: <20250415155607.GI9439@pendragon.ideasonboard.com>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com
+Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <2025041530-random-cheek-125d@gregkh>
+References: <cover.1742418429.git.andrea.porta@suse.com>
+ <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
+ <2025041557-masculine-abrasive-c372@gregkh>
+ <20250415165505.0c05bc61@bootlin.com>
+ <2025041531-dubiously-duchess-276a@gregkh>
+ <Z_5-Jjbu6XoHGmxN@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
+In-Reply-To: <Z_5-Jjbu6XoHGmxN@apocalypse>
 
-Hi Nuno,
+On Tue, Apr 15, 2025 at 05:41:26PM +0200, Andrea della Porta wrote:
+> Hi Greg,
+> 
+> On 17:14 Tue 15 Apr     , Greg Kroah-Hartman wrote:
+> > On Tue, Apr 15, 2025 at 04:55:05PM +0200, Herve Codina wrote:
+> > > Hi Greg,
+> > > 
+> > > On Tue, 15 Apr 2025 16:06:43 +0200
+> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> > > 
+> > > > On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrote:
+> > > > > The RaspberryPi RP1 is a PCI multi function device containing
+> > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > > > > and others.  
+> > > > 
+> > > > So shouldn't this be using the auxbus code?  That's designed to "split
+> > > > up" PCI devices such that you can share them this way.
+> > > > 
+> > > > Or did that get rejected somewhere previously?
+> > > > 
+> > > 
+> > > It doesn't use auxbus probably for the exact same reason that the
+> > > one given for the LAN966x PCI device driver [0] and [1].
+> > > 
+> > > Avoid all boiler plate needed with auxbus whereas drivers already exist
+> > > as platform drivers. Internal devices are handled by those platform drivers.
+> > > Those devi just need to be described as platform devices and device-tree is
+> > > fully relevant for that description.
+> > > 
+> > > [0] https://lore.kernel.org/all/CAL_Jsq+1r3SSaXupdNAcXO-4rcV-_3_hwh0XJaBsB9fuX5nBCQ@mail.gmail.com/
+> > > [1] https://lore.kernel.org/all/Y9kuxrL3XaCG+blk@kroah.com/
+> > 
+> > I really hate creating platform devices below a PCI device, so I'll keep
+> > complaining about this every time people try to do it.
+> 
+> I agree with you, but as Herve has already pointed out this would mean incurring
+> in significant work to adapt drivers for all the peripherals (there are quite a
+> few), while with this approach they would be left untouched.
 
-On Tue, Apr 15, 2025 at 03:49:16PM +0100, Nuno Sá via B4 Relay wrote:
-> The adp5585 MFD driver was introduced in 6.11 adding support for gpio
-> and PWM. However, the gpio part of it was already supported as part of
-> the keyboard driver:
-> 
-> https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/input/keyboard/adp5589-keys.c#L532
-> 
-> On top of that it also overlapped with my refactoring of the above driver [1]
-> to drop usage of platform data and use FW properties instead.
-> 
-> Now, it actually makes sense for this device to be supported under MFD
-> and since the "legacy" input device depends on platform data that is not
-> defined anywhere the plan in this series is to add support for the
-> keyboard and adp5589 devices as part of the MFD driver. Once the MFD
-> driver supports all that's supported in the Input one, we drop it...
-> 
-> For DT Maintainers:
-> 
-> The compatible for adp5589 is part of trivial devices. To me, it makes
-> sense to remove it in the patch where we drop the driver but doing so
-> would result in a warning when adding the same compatible for the MFD
-> bindings. Hence, I remove it in that patch. Is that ok?
-> 
-> Uwe:
-> 
-> In my eval board, I could see that reading the GPIO value (when
-> configured as input) does not work when OSC_EN is not set. Therefore,
-> commit ("pwm: adp5585: don't control OSC_EN in the pwm driver") could
-> very well have a Fixes tag. However I'm not 100% sure it's a real issue
-> or something special to my eval board.
-> 
-> It would be nice if Laurent or Liu could test the PWM bits or even
-> check that the above is also an issue for their platform.
+We have no problem with reworking existing drivers, especially if they
+will be doing the correct thing.  Don't let that be an excuse, it
+doesn't work with me, sorry :)
 
-I'll give it a try, but it will need to wait until next week.
-
-> [1]: https://lore.kernel.org/linux-input/d1395bd61ce58b3734121bca4e09605a3e997af3.camel@gmail.com/
-> 
-> BTW the series is based on linux-next/master
-> 
-> ---
-> Changes in v2:
-> - Patch 5:
->    * Do not nest if:then:else::if:then.
-> - Patch 6:
->    * Make use of the adp5585 info variables and adp5589 volatile regs.
-> - Patch 9:
->    * Use standard "poll-interval" property (and move it before vendor
->      properties).
-> - Patch 10:
->    * Make sure to include bitfield.h.
-> 
-> - Link to v1: https://lore.kernel.org/r/20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com
-> 
-> ---
-> Nuno Sá (17):
->       dt-bindings: mfd: adp5585: ease on the required properties
->       mfd: adp5585: enable oscilator during probe
->       pwm: adp5585: don't control OSC_EN in the pwm driver
->       mfd: adp5585: make use of MFD_CELL_NAME()
->       dt-bindings: mfd: adp5585: document adp5589 I/O expander
->       mfd: adp5585: add support for adp5589
->       gpio: adp5585: add support for the ad5589 expander
->       pwm: adp5585: add support for adp5589
->       dt-bindings: mfd: adp5585: add properties for input events
->       mfd: adp5585: add support for key events
->       gpio: adp5585: support gpi events
->       Input: adp5585: Add Analog Devices ADP5585/89 support
->       Input: adp5589: remove the driver
->       mfd: adp5585: support getting vdd regulator
->       dt-bindings: mfd: adp5585: document reset gpio
->       mfd: adp5585: add support for a reset pin
->       pwm: adp5585: make sure to include mod_devicetable.h
-> 
->  .../devicetree/bindings/mfd/adi,adp5585.yaml       |  240 ++++-
->  .../devicetree/bindings/trivial-devices.yaml       |    2 -
->  MAINTAINERS                                        |    1 +
->  drivers/gpio/Kconfig                               |    1 +
->  drivers/gpio/gpio-adp5585.c                        |  299 +++++-
->  drivers/input/keyboard/Kconfig                     |   21 +-
->  drivers/input/keyboard/Makefile                    |    2 +-
->  drivers/input/keyboard/adp5585-keys.c              |  221 ++++
->  drivers/input/keyboard/adp5589-keys.c              | 1066 --------------------
->  drivers/mfd/adp5585.c                              |  808 ++++++++++++++-
->  drivers/pwm/pwm-adp5585.c                          |   57 +-
->  include/linux/mfd/adp5585.h                        |  153 ++-
->  12 files changed, 1709 insertions(+), 1162 deletions(-)
-> ---
-> base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
-> change-id: 20250311-dev-adp5589-fw-e04cfd945286
-> --
-
--- 
-Regards,
-
-Laurent Pinchart
+greg k-h
 
