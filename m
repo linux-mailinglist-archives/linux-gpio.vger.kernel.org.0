@@ -1,122 +1,130 @@
-Return-Path: <linux-gpio+bounces-18803-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18804-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D7C7A893D2
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 08:20:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DAEA8A893DF
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 08:24:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D24F17782F
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 06:20:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D7EF1724F0
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 06:24:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CAA12750EF;
-	Tue, 15 Apr 2025 06:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 193302750F1;
+	Tue, 15 Apr 2025 06:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ig8QJL1X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imjuNOSK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7477D21171C
-	for <linux-gpio@vger.kernel.org>; Tue, 15 Apr 2025 06:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C140B23D2A2;
+	Tue, 15 Apr 2025 06:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744698052; cv=none; b=pUzODnwEnR3xHphAFcxp0ZTRNOyZWD9uiJRnD22RK94x4cDQfOTh1SIOCL29UoiQ95IXnZNsQ4EjBq+hOnzkruasF7xcvLI3OoXLY/hLBRwfJrSKAzomy+8hlxveBpCFBFsIGN6/ZeC7rJ4h6evyy7XTw+g+3E7aMP1IvDMFnko=
+	t=1744698236; cv=none; b=hhosgIAOhVbtAQXPFLToAcwkx9OecaVK985Vk3d5UnudbXGd9PdzfzwuGFBPnSSSdO6V84K2LRksGhR7m64pk4eW/9CCH4K+1Mt1uaTwLuMepeyk2cttWw4ybvZLUUmFw2GvOPAAlCcscJk1ir1qIa5EkmI235DU7jUfaU9LWdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744698052; c=relaxed/simple;
-	bh=1wXOBOgYQVNqr+xMFUAAYMAmc5Wy2T1Eoh8nZ0KLltY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Qev+CAuYmR4LRuyKWmYapMbCg0tDnyItWGdxaiNDSmjGemMgLIOIwwFFhGMeAPlXH5/ldvmUvLeHkdDwy3yOPzPE+4Exbvkz8uDCLdTN1/tORhuJL9oDJKXwNZH4mfcBoavOxR8rulCpyWAK4NmdfYM9QpOV1YdU3cPBY6zy8O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ig8QJL1X; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e83e38d15dso668985a12.2
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Apr 2025 23:20:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744698049; x=1745302849; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/rfhPeoEjzIHtAc7j+jocnOEOsiVdj1SVq02z7sozKs=;
-        b=ig8QJL1Xhqwwy0hLREy+2K7hmZMcxyrN4K6Lxe+TrFw8rZqJZJOS+tHfsOPuh0S0vD
-         vtaeJxABSLClVsbFlQtenxdHomUawuGUZen6+zUb9lCwz2AWP/hPf7HzA3Ah25BXrSKu
-         NmYpqpM0hNmO9FxeJtXHpMYoxZWsc0NhruOQupkmq3b0juoNK+v+okKrk403nxArvRaX
-         5QmswtVN6Bm+4kzy1MGO2/HRY59Y2pQZVXRhA4Uwn9LKPa9Z1SCagCcCYvMK8GRmxP8+
-         ZNs0ELxqu6igbpX4O/pdn9caw/fJ7+Yxxh86iUuUNxJLxhT524Kdzad35GilE3cZFnmD
-         vkbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744698049; x=1745302849;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/rfhPeoEjzIHtAc7j+jocnOEOsiVdj1SVq02z7sozKs=;
-        b=a4Gm3cI5Gn6/u1EEcq2mk9aVF1DmDJbhEVtXCnVi7ckOkh1wmTwCHF7SclReW5lSP1
-         Pwh4T5nGjW3+sNbZxy0QF8RP2+cnubLKhxvPQk87j7eB9op34n2ILI+YNAXiF6KOFL2h
-         qGMl3nxjxzTsOcx6WiNWWAOxYZgt79McTF5ULuKwzuT8anv2ZSqPoMpmTjlqiDwi82g0
-         c3TZpXVQmpTzUJN0qcYbG7iA52kuqGH1zJuMHLUGRBEuDqCiCgx7p3d2xAYj23mx9SoJ
-         RryKsx1E5+//Y1KiBPzWWQB/pV211FkhC2uOGHmqe/e29UcQ6F1BdNWdkq0Ziy3bXElU
-         07DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzYhxfglvbFf1WEzIklI0CyyrnbLkbq49Lf8S1+ifAG30rMVExf+injM35oJyETbymT7z/1XaSlChB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlgN+x9a0n8i4txem3VXmMx7ztpMAdunITLKUWqHjSI13VyqNI
-	y3vkc2EAenZBIb+6L4hvoFfe62gtEywpWsi/8xZAz7KR5Syuc0ZbaInGQWv5DzE=
-X-Gm-Gg: ASbGnctrRCDP0kMxJtMR0P5mofrIHj/9+JO3tz4s63FC0AsiP/JfGzE9FqqAHLz7WQA
-	XEyp0xBbSZNioqX+xhKXWCJr4NlWZe79InHOXd+nTrtqAXzyfUB0Yt/8vshz2kFXSom/oMs1ik/
-	xgHStpAiJHI0pgPI8Nd5sbX6FwYDB+CPSgwPhe/pauJWGcubuSbnrs0kIrwOvN/rv52Rlve/zaq
-	PIMn84TglLhfViqszFbY84vz0oCNYjDagiM70DNxN2LyYBJI2WA9GdO+M/mg/QhMbZyY+kCKmnY
-	7Onw6oPgbQ4sq1So8HPFKFax5DoA85iqCIQYoENTcZ20DoJ9rV8dCDw6mPo2tqCAacFxccI9vJu
-	xch+uI8+ZBw3PBAM=
-X-Google-Smtp-Source: AGHT+IEhbVvbM/D9UHsiRmzPL9GGSfYHw1Hou6MhR4w4bWsSUPkFLFMOaIpV5Zft9r0xm9z2VHFeZg==
-X-Received: by 2002:a17:907:d850:b0:ac7:3911:250f with SMTP id a640c23a62f3a-acad36a20a5mr446907666b.14.1744698048611;
-        Mon, 14 Apr 2025 23:20:48 -0700 (PDT)
-Received: from [192.168.1.26] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb4129sm1053861866b.98.2025.04.14.23.20.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 23:20:48 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-In-Reply-To: <20250407-gpiochip-set-rv-memory-v1-0-5ab0282a9da7@linaro.org>
-References: <20250407-gpiochip-set-rv-memory-v1-0-5ab0282a9da7@linaro.org>
-Subject: Re: [PATCH 0/2] memory: omap-gpmc: improve the GPIO chip
- implementation
-Message-Id: <174469804731.15476.5829884320265602221.b4-ty@linaro.org>
-Date: Tue, 15 Apr 2025 08:20:47 +0200
+	s=arc-20240116; t=1744698236; c=relaxed/simple;
+	bh=E1sKRkbci1US+DMdi2tUPm4BVWPlTRs6RCIOV392Bh8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gGH2b1U/ejQlyWc8a/AhnGeOmeLvBzeUZF0OUD6J+xdrsB3WJxrjpg2Kdv0bFTV7XykigCG12OeUaV7Hp41hQfaWBlN6vVgh5+CiuaB7jHR5DBrlsOq4Yq5rE9LMc6ncnAaHgR5hpGtnIGP4HRcNqD5suVlecHtsXz6CsRiQlaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imjuNOSK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9587AC4CEDD;
+	Tue, 15 Apr 2025 06:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744698236;
+	bh=E1sKRkbci1US+DMdi2tUPm4BVWPlTRs6RCIOV392Bh8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=imjuNOSK+ePGCLJJwksDJKkhSBrGe8+YtLQJ3lZOCYhn4c6jKacm2L6+uj1I+9D4x
+	 Apru+E99dNZH2ywqi18Wc4UrVl3qYbzgDJZEY5NINiP2JGIuhmDv4mgDKvvd+op8lJ
+	 fllvSi3oiZ/afICuuAY9GSOCZntpa2f7SGi3I/6WW0xUTTRnxS0o++5THJ63Wcntxe
+	 Nfz5GHti/48aQ39HS6Y2VNiEkoy458H66uArbH9voB8PAuH0Z3zd7uhbu8Qji16rXM
+	 IZH2Tr5wT7oUR3i7HJxiZTzvNo8g/HrnCFlVeUUBEqECx80QszmV+PuJnCWLJg4l46
+	 VdP4Ftdf5rbLw==
+Message-ID: <075b347d-dac4-4b75-9c97-f2578bbfd279@kernel.org>
+Date: Tue, 15 Apr 2025 08:23:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] ARM: s3c/gpio: use new line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-gpiochip-set-rv-arm-v1-0-9e4a914c7fd4@linaro.org>
+ <20250407-gpiochip-set-rv-arm-v1-4-9e4a914c7fd4@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407-gpiochip-set-rv-arm-v1-4-9e4a914c7fd4@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
 
-
-On Mon, 07 Apr 2025 09:21:18 +0200, Bartosz Golaszewski wrote:
+On 07/04/2025 09:09, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
 > struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. We're in the process of
-> converting all GPIO drivers to using the new API. However, this
-> driver doesn't even need the set() callback so let's remove it
-> altogether.
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 > 
-> 
-> [...]
-
-Applied, thanks!
-
-[1/2] memory: omap-gpmc: use the dedicated define for GPIO direction
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/a63f9903a56fabe17a0c71dd0c291499d28214c5
-[2/2] memory: omap-gpmc: remove GPIO set() and direction_output() callbacks
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/1f34b5a9f09696eaf464c6ed06a055ed9cde3425
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  arch/arm/mach-s3c/gpio-samsung.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+This was applied a week ago, but it is not in the next (next-20250414).
+Are you sure you feed linux-next with all your patches?
 
 Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+Krzysztof
 
