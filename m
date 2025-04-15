@@ -1,55 +1,36 @@
-Return-Path: <linux-gpio+bounces-18850-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18851-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C37BA89CA2
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 13:39:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71D91A89CE8
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 13:54:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEE8916A5DA
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 11:37:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DABD2188CBBA
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 11:54:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8573D28E5EE;
-	Tue, 15 Apr 2025 11:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OIw6Wy9e"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A7129291E;
+	Tue, 15 Apr 2025 11:54:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FADF1CD213;
-	Tue, 15 Apr 2025 11:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA36C1DE2D6;
+	Tue, 15 Apr 2025 11:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744717046; cv=none; b=LuxZMBhY9aV3Ft8EsewtxzdE6WjTSnGHvtSUeuGyPjPGEfIwS4QeWQoP/1rTxw2+yGdT/iFgzyhCLqBrqXvl4hSc4hZ8eWbvCGrhaVZ1b627fJBOpmAjUBajzTHJt3TRTnS3oazewvUJhLxJvSR2DssJJvM2rxeKpgK8RlEW4+U=
+	t=1744718065; cv=none; b=u7MCFX05RljVapcTW943zpGzQTLrbYnIlAucaw3FMG8zrVZ2bysAsOlV9n16zmwTPODbEvklU8aNAB1Rlqq79v+RitHTUiju6BQi94a0lcObswomwVToD7XMTQo25Zq8Bkq4vJNZMMha5Xbg/GDTVDCHmJXWjkXynGRHjf//0o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744717046; c=relaxed/simple;
-	bh=LL2E+u91dO99wB41wuqyXT2j19QaB9gNRGI2R7/b5YQ=;
+	s=arc-20240116; t=1744718065; c=relaxed/simple;
+	bh=OTc+9NY3S3zs1DGknl92cbvEABzMnDVf8FyPoEQYkUw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iva4hA4xb3FwO/MbNAxksR2X5jvTg0Ou21xHSFVqc9qEkneHL0+Sn7vxTDLVySExXpckW0uICuevXkRa0JprvCqgxdO7eePDThAh+JMc3u1sh7AItOLu5p13Ktos/xbWTHdadh/C6JWtAiUG9xtDH117tx4fpb0COB9ZTZRubeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OIw6Wy9e; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744717042;
-	bh=LL2E+u91dO99wB41wuqyXT2j19QaB9gNRGI2R7/b5YQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OIw6Wy9e+R7VZf18fWQAN7uWonzzfJXvfUPULmxni+zAEvAbUSPu4wFgV1x8Jo/YN
-	 2KVmpk3L296/aMW+vmusHHvUCiqcInGNYexO+3bITYSFxCGwZR7Imge4ArE94dvKih
-	 25NKYIeh0R6M+wXAv/fdnZ3IcFn/W4FQBrtWVy2ri4bbm42RPIt8dN2c5ZzbmkGz5c
-	 U50PruUlqwudkueNNS1OZI+XqxqHoh5TMf0a1Sj/R7zopgf4NYYDKLD8zuk6DbJE9P
-	 O+Lku6ssL0tg6mpKFuBIENzpjYgrX9NIOS/zKOK3cLwMzfZu/Bpm1laYEZRQeLotaH
-	 tqtYa/LZCXtcg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9B9AD17E03B6;
-	Tue, 15 Apr 2025 13:37:21 +0200 (CEST)
-Message-ID: <c648c4f3-f20a-4255-93eb-69a80c695fa7@collabora.com>
-Date: Tue, 15 Apr 2025 13:37:21 +0200
+	 In-Reply-To:Content-Type; b=jPeMEbVrBUBIf8ohpZgOgH76m8THC05gT458gqP9WlPvkMyjsbCPWoIhyzIEQOPYEsXkxx/IZZSrtC3Mn9fjH1uMxAA3WJIXCcYfIjkmxTd6YW6fKC939UafhNTZRWUbksnU+anQsFNk+92br8cJqhIc+K7rLPF1DPcRQJ6hLSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10907C4CEDD;
+	Tue, 15 Apr 2025 11:54:23 +0000 (UTC)
+Message-ID: <86fe5e61-a8e6-43cd-87b6-f9c611358fcb@linux-m68k.org>
+Date: Tue, 15 Apr 2025 21:54:21 +1000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,38 +38,80 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: mediatek: common-v1: Fix EINT breakage on older
- controllers
-To: Chen-Yu Tsai <wenst@chromium.org>, Sean Wang <sean.wang@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Hao Chang <ot_chhao.chang@mediatek.com>,
- Qingliang Li <qingliang.li@mediatek.com>
-References: <20250415112339.2385454-1-wenst@chromium.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH] m68k: coldfire: gpio: use new line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-gpiochip-set-rv-m68k-v1-1-7fdc9132b6e8@linaro.org>
 Content-Language: en-US
-In-Reply-To: <20250415112339.2385454-1-wenst@chromium.org>
+From: Greg Ungerer <gerg@linux-m68k.org>
+In-Reply-To: <20250407-gpiochip-set-rv-m68k-v1-1-7fdc9132b6e8@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Il 15/04/25 13:23, Chen-Yu Tsai ha scritto:
-> When EINT support for multiple addresses was introduced, the driver
-> library for the older generations (pinctrl-mtk-common) was not fixed
-> together. This resulted in invalid pointer accesses.
-> 
-> Fix up the filled in |struct mtk_eint| in pinctrl-mtk-common to match
-> what is now expected by the mtk-eint library.
-> 
-> Reported-by: "Uwe Kleine-König" <u.kleine-koenig@baylibre.com>
-> Closes: https://lore.kernel.org/all/43nd5jxpk7b7fv46frqlfjnqfh5jlpqsemeoakqzd4wdi3df6y@w7ycd3k5ezvn/
-> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
-> Cc: Hao Chang <ot_chhao.chang@mediatek.com>
-> Cc: Qingliang Li <qingliang.li@mediatek.com>
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Hi Bartosz,
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+On 7/4/25 17:20, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Thanks. Applied to m68knommu git tree for-next branch, with
+Linus Walleij's reviewed by.
+
+Regards
+Greg
+
+
+> ---
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. We're in the process of
+> converting all GPIO drivers to using the new API. This series converts
+> all m68k board-file level controllers.
+> ---
+>   arch/m68k/coldfire/gpio.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/m68k/coldfire/gpio.c b/arch/m68k/coldfire/gpio.c
+> index ca26de257871..30e5a4ed799d 100644
+> --- a/arch/m68k/coldfire/gpio.c
+> +++ b/arch/m68k/coldfire/gpio.c
+> @@ -123,10 +123,12 @@ static int mcfgpio_direction_output(struct gpio_chip *chip, unsigned offset,
+>   	return __mcfgpio_direction_output(offset, value);
+>   }
+>   
+> -static void mcfgpio_set_value(struct gpio_chip *chip, unsigned offset,
+> -			      int value)
+> +static int mcfgpio_set_value(struct gpio_chip *chip, unsigned int offset,
+> +			     int value)
+>   {
+>   	__mcfgpio_set_value(offset, value);
+> +
+> +	return 0;
+>   }
+>   
+>   static int mcfgpio_request(struct gpio_chip *chip, unsigned offset)
+> @@ -158,7 +160,7 @@ static struct gpio_chip mcfgpio_chip = {
+>   	.direction_input	= mcfgpio_direction_input,
+>   	.direction_output	= mcfgpio_direction_output,
+>   	.get			= mcfgpio_get_value,
+> -	.set			= mcfgpio_set_value,
+> +	.set_rv			= mcfgpio_set_value,
+>   	.to_irq			= mcfgpio_to_irq,
+>   	.base			= 0,
+>   	.ngpio			= MCFGPIO_PIN_MAX,
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250326-gpiochip-set-rv-m68k-789f77283f78
+> 
+> Best regards,
 
 
