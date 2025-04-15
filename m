@@ -1,296 +1,197 @@
-Return-Path: <linux-gpio+bounces-18801-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18802-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7267A88D76
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 22:55:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44B09A891E2
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 04:32:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D5C3189ACF6
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Apr 2025 20:55:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6FBC07AA3AD
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 02:31:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE8F1EA7FC;
-	Mon, 14 Apr 2025 20:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W16IqfEg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 859B817A31F;
+	Tue, 15 Apr 2025 02:32:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9B41EA7FD
-	for <linux-gpio@vger.kernel.org>; Mon, 14 Apr 2025 20:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21B94A1A;
+	Tue, 15 Apr 2025 02:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744664134; cv=none; b=rIA0h6NG5hjCLXGunTlF6sZRZWQXznk8Pa6teetD0Xgp6mLabkbrMfHWsJ+lNn7Y0CpxZDYhn36910aYtM4v76IymLaYpKssBa+U3+rQ5bOlJC29ooiXGlSTaTqKIaDkmBUss7tDxZNpC5VhMwdDS0YSw1UmM1xpB3STxf1NP5Y=
+	t=1744684361; cv=none; b=mFg/HgoIU03EC3ypiDt5t87hGtk7SG1f6soige/14SkWWtStHT3c8qMTQT3z2S5Z6Gc51jcu9tT+uiWA1baaXHgYPNj7uPlbd0U+y5lLRFw9T9964qQ6JqJV+iW5OQEIR5jfEENtWsOMJrGzvpLt3wV+7G3QLWbPVvFrzXnrFDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744664134; c=relaxed/simple;
-	bh=zjE3vRT+ssrRw7bL71CD3Oe95BvjsQfUHA6+heIvoZ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ghIM/GVtKgXQ6JbruEsbL0zwbu8+ZozKD4yVsYkklNNnquo2ez7cIWoXSm3ileGlEU6qcmzvYH6hO2OGHw2P0QBjRW0H9HW2rhaiUnzsn0C60XkoLT4670X7e8o7un1duYXD0/ye4Xctq5Juh3x0wC5x8oYBGLpX6dYT/Ks85ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W16IqfEg; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EKe2jY026322
-	for <linux-gpio@vger.kernel.org>; Mon, 14 Apr 2025 20:55:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WxqIMMM+bD6pWCvSoOoUNZlHXMPZPcPy2ox/bPjumf4=; b=W16IqfEgr9ANz/Su
-	PT/7IXowclo9n8BNUIy5eNsu+iLRfEttOXQ0DOXxZk6EsByU9K4U/xc0AugxXZjZ
-	JhRWfIJXdvb8TGk2jtKw6xIkKujSxO1FMREqOei72PGhFq9pKIO2CcjF0lsk3DuD
-	CTw5qyK251zw7ETYI5SN4wWnjIs5q/5lozfs97LQHD7X5QglnaYg4j8tnA4GpZxQ
-	VACbYNT4b+zY018HIgXlnZvPvseQ2KI/FAhKl1v9tKQUfMXwIS3ZdV2pqFNhAwRd
-	qxLPwdCXrj2VB36MJjf2BVUSaKzIovig4Owq2NyhSuBxwNs1ozneWSqfl5wYnq7t
-	W9pWfw==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygxjwnsx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 14 Apr 2025 20:55:32 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c552802e9fso124643485a.0
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Apr 2025 13:55:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744664131; x=1745268931;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WxqIMMM+bD6pWCvSoOoUNZlHXMPZPcPy2ox/bPjumf4=;
-        b=Rb4trJv7gtKKtp6KWORh8233yq2OEpIhWasn4zTVp5aPkbtveFUJrbTGS0mWG/ZlFP
-         CZdloIIhyingeRwU6PNmhH2zRiy97E+5wIo01MRtq90fDYhTcv4Df4/e9KTzn6C00ssI
-         kFLGtFqpeAYLLHV+jXd8cywoOf9VU9AWxETeK4vcwh02d4FuBuOND/pFGsIKewwgDxOg
-         fALeQukqYgOnqYAk9SUW9YbK5Pv9yx8eZ6SLbZaSz8NgzTBWEVPRMNFZ1bKY5V6wh7sQ
-         VcbIv0YlGljt/KPM0f23BHsbI9SWMTbej9lm5H9EW9ptG93A8orCBnCYvJh1S7OmIOYH
-         x19w==
-X-Forwarded-Encrypted: i=1; AJvYcCWGPCOzb7VwUFMRxJhU8J/byuDXNpZoVJQde5YWoQbBA/AT+asU9RysyKruTMhv3QSRPxJoM9jLW+98@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPSx0LxI0slF9silxla72rFDsxp/NWZdFDTmHfMKcMkABxGZWj
-	foUh6NLTtNJVNczddKk8p0mZVHecHJBwNLfYTU2oW/NqVN5ARzrRMU6ARk1YinLk2Uysd471fxy
-	EkHpWRerCf64acyLQwLLvu+Vwv7Vl8RRgC2WtllMtwG3rg/zxUmye7D5gEJ81
-X-Gm-Gg: ASbGncsECMdte0naIX+K4WeJtaDBnfT+4d6y/Mwspy2jZwdIPB7bgkKlRg2Ook32wfV
-	x6FJWXSf1sHq6h9rCjL2DBfp6tQqLLK2sD/VOhSCMPWktqCXM4Iq9EZAP/18Q5MkiPx3Jqg4zFD
-	czyZRLMTLVZiRILU6mavQwrgtJwEr7udyuyePB7mFL7PEOk/FPKRq3F5wQqF/UM4xJ05WcbWcNd
-	pRiA0smaw1UULX8RwVtK5vubKXHVGcRVlaoFG2eweAV+aWI0H3felJO6RHuBlI6uyrOAFt5ow56
-	zBS6Fh21U5C71gcofnVcbitbKWVNVU5emsoGO/by+Psr4RZL1uqujwLOGm2Eobl0WA==
-X-Received: by 2002:a05:620a:4627:b0:7c0:bb63:536c with SMTP id af79cd13be357-7c7af10641cmr597550685a.4.1744664128862;
-        Mon, 14 Apr 2025 13:55:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGoWIvNWBnu8DBGFjtGdagGBK2fyiZED6ibSgijR4nYQRmR9ck5XDihEjcIo4pATTzpB4UWZQ==
-X-Received: by 2002:a05:620a:4627:b0:7c0:bb63:536c with SMTP id af79cd13be357-7c7af10641cmr597548885a.4.1744664128405;
-        Mon, 14 Apr 2025 13:55:28 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f5056easm5692216a12.63.2025.04.14.13.55.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 13:55:27 -0700 (PDT)
-Message-ID: <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
-Date: Mon, 14 Apr 2025 22:55:24 +0200
+	s=arc-20240116; t=1744684361; c=relaxed/simple;
+	bh=5aU/+jQzMsPhnk/kxaQnQS5SJH3IK8b/Do4X0eL5/oI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ROl2WyhTxHZFz+zzEUb4LzSgadSi8mEdt+noTqUjlBGm6Sr5VnXxIcAF5o/pSvDYoWWH3wi2XEQP9dGR8fVL7OhxM3UfdbR8cWPixJLctYoDzf4aqB7DOCpxVP5hnMRNq28uAUcnO0kCKqdAbkGd0mx0nGxNdeZmFUO5xz4fAVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 8CC5E34309F;
+	Tue, 15 Apr 2025 02:32:38 +0000 (UTC)
+Date: Tue, 15 Apr 2025 02:32:34 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Alex Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: Re: [PATCH v8 0/5] riscv: spacemit: add gpio support for K1 SoC
+Message-ID: <20250415023234-GYA29961@gentoo>
+References: <20250412-03-k1-gpio-v8-0-1c6862d272ec@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6] arm64: dts: qcom: Add initial support for MSM8937
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
-        Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, iommu@lists.linux.dev,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        linux@mainlining.org, Dang Huynh <danct12@riseup.net>
-References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
- <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=WecMa1hX c=1 sm=1 tr=0 ts=67fd7644 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=bBqXziUQAAAA:8 a=OuZLqq7tAAAA:8 a=zdbjSHh-4Hdwht_aKTEA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=BjKv_IHbNJvPKzgot4uq:22 a=AKGiAy9iJ-JzxKVHQNES:22
-X-Proofpoint-GUID: 1Q0Q3HN3CsDRwF-vbh5ABlHvdU46Gryr
-X-Proofpoint-ORIG-GUID: 1Q0Q3HN3CsDRwF-vbh5ABlHvdU46Gryr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_07,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504140152
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412-03-k1-gpio-v8-0-1c6862d272ec@gentoo.org>
 
-On 3/15/25 3:57 PM, Barnabás Czémán wrote:
-> From: Dang Huynh <danct12@riseup.net>
+Hi Bartosz,
+  I think this version is good to go, if you agree,
+can you take patch [1,2 / 5] through gpio tree?
+
+Hi Palmer,
+  I believe the change to riscv's defconfig file should
+ go via riscv tree?
+
+ thanks
+
+On 07:31 Sat 12 Apr     , Yixun Lan wrote:
+> The gpio controller of K1 support basic GPIO functions,
+> which capable of enabling as input, output. It can also be used
+> as GPIO interrupt which able to detect rising edge, falling edge,
+> or both. There are four GPIO ports, each consisting of 32 pins and
+> has indepedent register sets, while still sharing IRQ line and clocks.
+> The GPIO controller request the two clock sources from APBC block.
 > 
-> Add initial support for MSM8937 SoC.
+> Due to first three GPIO ports has interleave register settings, some
+> resources (IRQ, clock) are shared by all pins.
 > 
-> Signed-off-by: Dang Huynh <danct12@riseup.net>
-> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
+> 
+> This patch series has been tested on Bananapi-F3 board,
+> with following GPIO cases passed:
+>  1) gpio input
+>  2) gpio output - set to high, low
+>  3) gpio interrupt - rising trigger, falling trigger, both edge trigger
+> 
+> This version should resolve DT related concern in V4, and register each bank as
+> indepedent gpio chip in driver, no more sub children gpio DT node needed.
+> 
+> Please notice in this version, the reset property is added, but optional.
+> as I see no need to activate it in driver, instead I suspect it may
+> break cases if bootloader did some prerequisite settings, so I'm leaving
+> it for future implementation if really necessary.
+> 
+> The DT part (patches 4, 5) has no clock property populated which result
+> some DT warnings, I will fix it and re-spin the DT part once clock driver merged,
+> so it's included here for completeness only, please ignore these warnings.
+> 
+> Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
+> Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
+> Link: https://lore.kernel.org/all/20241016-02-k1-pinctrl-v5-0-03d395222e4f@gentoo.org/ [3]
+> Link: https://lore.kernel.org/all/20250218-gpio-ranges-fourcell-v1-0-b1f3db6c8036@linaro.org [4]
+> Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [5]
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
 > ---
+> Changes in v8:
+> - rebased to v6.15-rc1
+> - adjust dt-binding/code to request clocks
+> - add reset property
+> - call irq_domain_update_bus_token() to support threecells interrupt mode
+> - use devm_platform_ioremap_resource(), so drop "struct resource"
+> - fix Kconfig
+>   - select GPIO_GENERIC as calling bgpio_init()
+>   - change to tristate, make it possible to build as module
+> - adjust defconfig to enable gpio 
+> - Link to v7: https://lore.kernel.org/r/20250226-03-k1-gpio-v7-0-be489c4a609b@gentoo.org
+> 
+> Changes in v7:
+> - dt-binding: fix 80 column, drop unneeded dependencies
+> - tested with patch v3 of "gpiolib: of: Handle threecell gpios" [5]
+> - collect review tags
+> - Link to v6: https://lore.kernel.org/r/20250223-03-k1-gpio-v6-0-db2e4adeef1c@gentoo.org
+> 
+> Changes in v6:
+> - rebase to threecell gpio patch which proposed by LinusW at [4], 
+>   drop unneeded *xlate(), *add_pin_range() function
+> - add SPACEMIT prefix to macro
+> - adjust register comments
+> - drop 'index' member, instead calculate from offset
+> - add IRQCHIP_SKIP_SET_WAKE as gpio doesn't support irq wake up
+> - drop #ifdef CONFIG_OF_GPIO
+> - move interrupt mask disabling/enabling into irq_*mask()
+> - Link to v5: https://lore.kernel.org/r/20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org
+> 
+> Changes in v5:
+> - export add_pin_range() from gpio core, support to add custom version
+> - change to 3 gpio cells, model to <bank number>, <bank offset>, <gpio flag>
+> - fold children DT nodes into parent
+> - Link to v4: https://lore.kernel.org/r/20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org
+> 
+> Changes in v4:
+> - gpio: re-construct gpio as four independent ports, also leverage gpio mmio API
+> - gpio interrupt: convert to generic gpio irqchip
+> - Link to v3: https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
+> 
+> Changes in v3:
+> - dt: drop ranges, interrupt-names property
+> - Link to v2: https://lore.kernel.org/r/20241219-03-k1-gpio-v2-0-28444fd221cd@gentoo.org
+> 
+> Changes in v2:
+> - address dt-bindings comments, simplify example
+> - rebase to 6.13-rc3 
+> - Link to v1: https://lore.kernel.org/r/20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org
+> 
+> ---
+> Yixun Lan (5):
+>       dt-bindings: gpio: spacemit: add support for K1 SoC
+>       gpio: spacemit: add support for K1 SoC
+>       riscv: defconfig: spacemit: enable gpio support for K1 SoC
+>       riscv: dts: spacemit: add gpio support for K1 SoC
+>       riscv: dts: spacemit: add gpio LED for system heartbeat
+> 
+>  .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml |  96 +++++++
+>  arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |  11 +
+>  arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi       |   3 +
+>  arch/riscv/boot/dts/spacemit/k1.dtsi               |  15 ++
+>  arch/riscv/configs/defconfig                       |   1 +
+>  drivers/gpio/Kconfig                               |   9 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-spacemit-k1.c                    | 293 +++++++++++++++++++++
+>  8 files changed, 429 insertions(+)
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20240828-03-k1-gpio-61bf92f9032c
+> 
+> Best regards,
+> -- 
+> Yixun Lan
+> 
 
-[...]
-
-> +			power-domains = <&cpu_pd0>;
-> +			power-domain-names = "psci";
-
-So CPU4-7 get "nicer" idle, but 0-3 don't?
-
-[...]
-
-> +		cpu-map {
-> +			/* The MSM8937 has 2 cluster A53 setup. */
-
-This comment seems superfluous
-
-[...]
-
-> +	timer {
-
-'p' < 't', please sort top-level nodes alphabetically
-
-[...]
-
-> +				wcss-wlan2-pins {
-> +					pins = "gpio76";
-> +					function = "wcss_wlan2";
-> +					drive-strength = <6>;
-
-please unify this order (drive-strength before bias)
-
-> +					bias-pull-up;
-> +
-> +				};
-
-Extra newline
-
-[...]
-
-> +		gpu: gpu@1c00000 {
-> +			compatible = "qcom,adreno-505.0", "qcom,adreno";
-> +			reg = <0x1c00000 0x40000>;
-> +			reg-names = "kgsl_3d0_reg_memory";
-> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "kgsl_3d0_irq";
-> +			#cooling-cells = <2>;
-> +			clocks = <&gcc GCC_OXILI_GFX3D_CLK>,
-> +				<&gcc GCC_OXILI_AHB_CLK>,
-> +				<&gcc GCC_BIMC_GFX_CLK>,
-> +				<&gcc GCC_BIMC_GPU_CLK>,
-> +				<&gcc GCC_OXILI_TIMER_CLK>,
-> +				<&gcc GCC_OXILI_AON_CLK>;
-
-Please align the <s
-
-> +			clock-names = "core",
-> +				      "iface",
-> +				      "mem_iface",
-> +				      "alt_mem_iface",
-> +				      "rbbmtimer",
-> +				      "alwayson";
-> +			operating-points-v2 = <&gpu_opp_table>;
-> +			power-domains = <&gcc OXILI_GX_GDSC>;
-> +
-> +			iommus = <&adreno_smmu 0>;
-> +
-> +			status = "disabled";
-> +
-> +			gpu_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				opp-19200000 {
-> +					opp-hz = /bits/ 64 <19200000>;
-> +					opp-supported-hw = <0xFF>;
-
-0xff is overly broad, please document the existing known speed bins
-
-[...]
-
-> +		adreno_smmu: iommu@1c40000 {
-> +			compatible = "qcom,msm8996-smmu-v2",
-> +				     "qcom,adreno-smmu",
-> +				     "qcom,smmu-v2";
-> +			reg = <0x1c40000 0x10000>;
-
-Does it work as-is, without iommu changes?
-
-[...]
-
-> +	thermal_zones: thermal-zones {
-> +		aoss-thermal {
-> +			polling-delay-passive = <250>;
-
-There are no passive trip points> +
-> +			thermal-sensors = <&tsens 0>;
-> +
-> +			trips {
-> +				aoss_alert0: trip-point0 {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "hot";
-> +				};
-
-Please convert these to 'critical' instead
-
-[...]
-
-> +		cpuss1-thermal {
-> +			polling-delay-passive = <250>;
-
-You can drop polling-delay-passive under CPU tzones, as threshold
-crossing is interrupt-driven
-
-> +
-> +			thermal-sensors = <&tsens 4>;
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&cpuss1_alert0>;
-> +					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +
-> +			trips {
-> +				cpuss1_alert0: trip-point0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpuss1_alert1: trip-point1 {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "hot";
-> +				};
-
-On newer platforms we rely on LMH to shut down the device if it
-were to reach the junction temperature, but let's leave them here
-as probably no one remembers for sure how reliable that is on these
-older platforms and you're most likely not willing to test that
-
-Konrad
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
