@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-18847-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18846-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DFFCA89B9E
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 13:13:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED210A89B98
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 13:12:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 935FE19003C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 11:13:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F12754405FB
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Apr 2025 11:12:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741C82918EE;
-	Tue, 15 Apr 2025 11:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F42291165;
+	Tue, 15 Apr 2025 11:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YGI3ebsC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fja75t5J"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17BC28F53A;
-	Tue, 15 Apr 2025 11:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927AA28A1DE;
+	Tue, 15 Apr 2025 11:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715561; cv=none; b=REMkYe0Gdl39pxDov1wFN88mjXUb9ADHVxEdcs7mC6qlXF0CJz7l436RBaZo2lMHPEY6sfElz0ImM5zVZIc+ps2WJqnCZZbQpXgr+ndhe4/o3D8AMPA7QacOWjaTUQ/aAemueJ21Xx1O0XYLDEvRzudGI6VUHEwvgQ3kBEFj8UM=
+	t=1744715560; cv=none; b=opUG7/vKNBESlr7iHQwFWL/KZc/8LpdisxQcbywe8PF648iURLzZt4a99/ljDsCt4wLIVW++oKNgd3Swb6AYG22H94mgo2ofV13Xb9vswESXZ69HXLGav4ZgW45q/wr3qcu3nXdVkNq1NNewsGUaRqfWFy/ZCxBR/MQK6wpR7jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715561; c=relaxed/simple;
-	bh=yFDUH7vRo7zP7rsczdpfm1FLDJHRdQfsh5hGz0uSguA=;
+	s=arc-20240116; t=1744715560; c=relaxed/simple;
+	bh=tGluuzOIf4RSoAxttiEviz2AC2kBM+vtOzaXgge2A94=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KOEe4p7IyPPL665tTguPGw5PXpTbD+99sQsEv+5y4jaFvUEL9oJn/k1A7KbykfhCg33V5kNccbV5Oon0jKwv4ViMaZUaRvGeZhN04ebhIaV90Z2raMV01jvL/tNCyTWTZMfaQIuSk5xFGoarQVtDHhTog5+26oZPYDNTCwcxO0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YGI3ebsC; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=c8G6Cm0CdavAlD3v5lY2KuUEayPr8MU0b2tI8zElRJpXBzN3RjdNF2C5zFguUS7gxZ6EalSR678T7stl1/82uSGcIBYmmx6rh8kZCllem1yau08k9dGENYXb586yFeb8egVKuTpF6XqYyRksPR8vva7oDrHATlGCfb01MdO2h5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fja75t5J; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744715560; x=1776251560;
+  t=1744715559; x=1776251559;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yFDUH7vRo7zP7rsczdpfm1FLDJHRdQfsh5hGz0uSguA=;
-  b=YGI3ebsCnFEI5LFDUHN7cAm/EEpBjwYNa3C4MV43xbiZ+ephu3a13Arv
-   cqVBJm6sTx9G7LF9kxYz1hceT14yi6wCMFgnS2UVt5wuf94ybnFsoM+2o
-   sZYkotDIWYRB0iwxNBSFPtkJ4ZFJrazrr231bGGCaxgIwYFts6Uvjpcg3
-   YksTdbJCPWk94PVR9+80ixZ9wZAEnDWr00QiYEuLvPSdUnqKikPtQOZEd
-   WWeslHvrMFqzXv3rGnwN4SdnOXj6R7eLdl2DtpjSEkbJ24lPQQKRwhttl
-   eNa1zGuUyVCqasSl96JG+hSib6KfYai6W3m/w3I17581HrQDZKuZ6JDfG
-   w==;
-X-CSE-ConnectionGUID: VHZVVdp3Sju0x4tPTLUIkw==
-X-CSE-MsgGUID: ZHSs6QYSTEqczsr1kfnExg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="57601865"
+  bh=tGluuzOIf4RSoAxttiEviz2AC2kBM+vtOzaXgge2A94=;
+  b=Fja75t5JiRQ6xMBo2EhsjjNlzCmDegKItrEGCpIYINs1UehpMl95WPJh
+   ZxY1EiHiJGl8h4MmERpBZaMsSF8GgHEosWJVQSigr56TTQRlhWBRK/Cyl
+   KmZsMqIGEgKNSGdKJOAI9nbx/YptcZTjr2/lThdQBLvQmn3B2OCF4qojE
+   UYeR2JweV/tCab6ueFCGKEBcGruA2m3ZMF0Y0XDRK7XyH7vhRsD7e/X35
+   uP6p7n5A++gPGNw5UzTjFQkbNQe5ssq8p3Q76JAeWZK1EBTsnXBBSN6NK
+   QM0qgVdDU6oqT6v49nI5JXhfRQ7gqK+doOchavJyE4Uh+KNRAiEftYohK
+   Q==;
+X-CSE-ConnectionGUID: oJ2s/DuhQmOh6+89C03kQg==
+X-CSE-MsgGUID: jCMJor+JQ6q4ncc86GiLyw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="57601862"
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="57601865"
+   d="scan'208";a="57601862"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
   by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 04:11:31 -0700
-X-CSE-ConnectionGUID: D/zrq4n4RXWpHz5nbWrL0w==
-X-CSE-MsgGUID: lgerGfNVS5SXRdKCrn82oA==
+X-CSE-ConnectionGUID: 5W3I2lqvSguJd0gINyuGbw==
+X-CSE-MsgGUID: dIXdQMf1SDCBbSaRcXY5vw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="161071616"
+   d="scan'208";a="161071615"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa002.jf.intel.com with ESMTP; 15 Apr 2025 04:11:30 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E7BCFB48; Tue, 15 Apr 2025 14:11:25 +0300 (EEST)
+	id 01D50B53; Tue, 15 Apr 2025 14:11:25 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org,
@@ -67,9 +67,9 @@ To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 6/7] gpiolib: Convert to use guard()() for gpio_machine_hogs_mutex
-Date: Tue, 15 Apr 2025 14:10:05 +0300
-Message-ID: <20250415111124.1539366-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 7/7] gpiolib: Remove redundant assignment of return variable
+Date: Tue, 15 Apr 2025 14:10:06 +0300
+Message-ID: <20250415111124.1539366-8-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com>
 References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com>
@@ -81,64 +81,61 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The driver uses guard()()/scoped_guard() for the rest of the synchronisation
-calls. Convert to use the same for gpio_machine_hogs_mutex.
+In some functions the returned variable is assigned to 0 and then
+reassigned to the actual value. Remove redundant assignments.
+
+In one case make it more clear that the assignment is not needed.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpiolib.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/gpio/gpiolib.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index cc12f274ccda..8d525e9d4319 100644
+index 8d525e9d4319..cca987addc0e 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -916,14 +916,12 @@ static void machine_gpiochip_add(struct gpio_chip *gc)
+@@ -1015,7 +1015,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	struct gpio_device *gdev;
+ 	unsigned int desc_index;
+ 	int base = 0;
+-	int ret = 0;
++	int ret;
+ 
+ 	/* Only allow one set() and one set_multiple(). */
+ 	if ((gc->set && gc->set_rv) ||
+@@ -1040,11 +1040,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 
+ 	device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
+ 
+-	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
+-	if (gdev->id < 0) {
+-		ret = gdev->id;
++	ret = ida_alloc(&gpio_ida, GFP_KERNEL);
++	if (ret < 0)
+ 		goto err_free_gdev;
+-	}
++	gdev->id = ret;
+ 
+ 	ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
+ 	if (ret)
+@@ -3075,7 +3074,7 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
+  */
+ int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
  {
- 	struct gpiod_hog *hog;
+-	int ret = 0;
++	int ret;
  
--	mutex_lock(&gpio_machine_hogs_mutex);
-+	guard(mutex)(&gpio_machine_hogs_mutex);
+ 	VALIDATE_DESC(desc);
  
- 	list_for_each_entry(hog, &gpio_machine_hogs, list) {
- 		if (!strcmp(gc->label, hog->chip_label))
- 			gpiochip_machine_hog(gc, hog);
- 	}
--
--	mutex_unlock(&gpio_machine_hogs_mutex);
- }
- 
- static void gpiochip_setup_devs(void)
-@@ -4440,7 +4438,7 @@ void gpiod_add_hogs(struct gpiod_hog *hogs)
+@@ -3108,7 +3107,7 @@ EXPORT_SYMBOL_GPL(gpiod_enable_hw_timestamp_ns);
+  */
+ int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
  {
- 	struct gpiod_hog *hog;
+-	int ret = 0;
++	int ret;
  
--	mutex_lock(&gpio_machine_hogs_mutex);
-+	guard(mutex)(&gpio_machine_hogs_mutex);
- 
- 	for (hog = &hogs[0]; hog->chip_label; hog++) {
- 		list_add_tail(&hog->list, &gpio_machine_hogs);
-@@ -4454,8 +4452,6 @@ void gpiod_add_hogs(struct gpiod_hog *hogs)
- 		if (gdev)
- 			gpiochip_machine_hog(gpio_device_get_chip(gdev), hog);
- 	}
--
--	mutex_unlock(&gpio_machine_hogs_mutex);
- }
- EXPORT_SYMBOL_GPL(gpiod_add_hogs);
- 
-@@ -4463,10 +4459,10 @@ void gpiod_remove_hogs(struct gpiod_hog *hogs)
- {
- 	struct gpiod_hog *hog;
- 
--	mutex_lock(&gpio_machine_hogs_mutex);
-+	guard(mutex)(&gpio_machine_hogs_mutex);
-+
- 	for (hog = &hogs[0]; hog->chip_label; hog++)
- 		list_del(&hog->list);
--	mutex_unlock(&gpio_machine_hogs_mutex);
- }
- EXPORT_SYMBOL_GPL(gpiod_remove_hogs);
+ 	VALIDATE_DESC(desc);
  
 -- 
 2.47.2
