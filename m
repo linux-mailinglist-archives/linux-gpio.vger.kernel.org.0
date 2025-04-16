@@ -1,95 +1,101 @@
-Return-Path: <linux-gpio+bounces-18979-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18980-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23C20A90AC8
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 20:05:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08607A90B08
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 20:11:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A35CA188BA48
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 18:05:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1344188D09D
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 18:11:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ED38219A75;
-	Wed, 16 Apr 2025 18:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF0F422172C;
+	Wed, 16 Apr 2025 18:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzmYjCsN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7B6217712;
-	Wed, 16 Apr 2025 18:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BD621CA0E;
+	Wed, 16 Apr 2025 18:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826714; cv=none; b=h3Jwm8Y1myW+KB4eYn7dY3INS5YdZ0/SOEMAzchdZ2y6T8ObKuEVvc+LAx6jxX6cNtWhiCcSThu00LX2vhRXS5SC1aNLzC/N8CTwEyQVGqQeof31//cj6BlHHD3Ya9rH9bWDmLn9yrvRAVfwNL8QzqcIg6QGXUwfEp0VQcQ8I1I=
+	t=1744827056; cv=none; b=d3sbp1VuHCK/6ZylY7QBLbXTHL7M0bPyOcy1jkNTDc/UARfbGFUfqKjBSfeNsT3Q9S4xORymSglKIG/1xXi4w8zwEsboY0sdti2slfbyCjT9mL2DpAkVbbafZJXdXSS/lNgQmKSTfqem3lqail+byG6ec8Ez+USEsTjHrO/m9ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744826714; c=relaxed/simple;
-	bh=utxXC83Mt8uWnMQFYqlctgBj9oEN/njFfKMPjo/tbz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MMMTHyD3NmgrO35m4KutN3459At10zhplbfstwv7f6DbAaDH6rTg+8vRqvx62StpWuEvRnAV0+puwLPXavdRrEPiCD2NQ7EWXAXdwkuTUyZmDPtsNI9XaswbEPvqn1TS78zFwUerPvzdhRqZvhpZRf1II3JJY8fnHVLv8htsObU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: NNhEtVbVRU+qHlvk3rlwkg==
-X-CSE-MsgGUID: ssayU+bpTcaxQuBn39lIbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="71781787"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="71781787"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 11:05:11 -0700
-X-CSE-ConnectionGUID: R20vEJt3TlmyohtIwNJocg==
-X-CSE-MsgGUID: 33M2/ymAQIeRNRGAvZUUoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="130416755"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 11:05:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u578E-0000000CvvZ-1tEa;
-	Wed, 16 Apr 2025 21:05:06 +0300
-Date: Wed, 16 Apr 2025 21:05:06 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Peter Tyser <ptyser@xes-inc.com>, linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1744827056; c=relaxed/simple;
+	bh=BwHkWTpOhur440Z80ly8g3N+djQD6dBjxS1kT5nV74c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SRR8im2l8Hay3dFcZRQ1ca60YOqVtdkD4V+Rj9ihKhLrfCQ0UOm6mfmARzu+dfA4scq3IL5AnE8Ejv3gzBM2+vsvuOEKwDPBLP7pzR6/GWbIJnTrkfOvKw0E2xL6xiRGxn+4HHgChz5os5ZrJKRzpZwxnUf4+lG5uBZKmCktf5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzmYjCsN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28084C4CEE2;
+	Wed, 16 Apr 2025 18:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744827054;
+	bh=BwHkWTpOhur440Z80ly8g3N+djQD6dBjxS1kT5nV74c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lzmYjCsNepDSraryG5VzpwlDZMymqsbCUIVG1pE93F4nsvJ4sDUKkIFceIGn8SsqS
+	 zTTTblMvtpNo4tz5BuU38fRzxWuWXvj9KKn07rXgfg786pZE7moBJKDzN0cWo+pKba
+	 1WqTfdUgmXyJkofHy+pcBGnfJvqFg8ulA1BqG91BvG2a/vHN0gKGU9T5BiT2VjSAk1
+	 EQ1qH6zHSeXlNy7WWa1++M3lNS+qOj99aCAKZDSBaxoPvdDx5xjr9rKNS7EVlkpPEX
+	 8VzNpr0+ZnMqloSkevz2u734MLJELNtf1/Fc5fQNt/0SORCDqLTE8WFV4Am8FM524w
+	 VbZQCI0SUXE2w==
+From: Bjorn Andersson <andersson@kernel.org>
+To: konradybcio@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	ulf.hansson@linaro.org,
+	linus.walleij@linaro.org,
+	catalin.marinas@arm.com,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be,
+	neil.armstrong@linaro.org,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 00/12] gpio: convert more GPIO chips to using new value
- setters
-Message-ID: <Z__xUsSeYNQAvnNp@smile.fi.intel.com>
-References: <20250407-gpiochip-set-rv-gpio-part1-v1-0-78399683ca38@linaro.org>
- <174481898215.8191.2166208947252160548.b4-ty@bgdev.pl>
+	linux-clk@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Sricharan R <quic_srichara@quicinc.com>
+Cc: quic_varada@quicinc.com
+Subject: Re: (subset) [PATCH V5 0/6] Add minimal boot support for IPQ5424
+Date: Wed, 16 Apr 2025 13:10:44 -0500
+Message-ID: <174482704415.446874.4349704931217088020.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20241028060506.246606-1-quic_srichara@quicinc.com>
+References: <20241028060506.246606-1-quic_srichara@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174481898215.8191.2166208947252160548.b4-ty@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 05:56:24PM +0200, Bartosz Golaszewski wrote:
+
+On Mon, 28 Oct 2024 11:35:00 +0530, Sricharan R wrote:
+> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 > 
-> On Mon, 07 Apr 2025 09:13:09 +0200, Bartosz Golaszewski wrote:
-> > struct gpio_chip now has callbacks for setting line values that return
-> > an integer, allowing to indicate failures. We're in the process of
-> > converting all GPIO drivers to using the new API. This series converts
-> > another round of GPIO controllers.
+> The IPQ5424 is Qualcomm's 802.11be SoC for Routers, Gateways and
+> Access Points.
+> 
+> This series adds minimal board boot support for ipq5424-rdp466 board.
+> 
+> [...]
 
-> [07/12] gpio: graniterapids: use new line value setter callbacks
+Applied, thanks!
 
-> [12/12] gpio: ich: use new line value setter callbacks
+[6/6] arm64: defconfig: Enable IPQ5424 RDP466 base configs
+      commit: 4b77122818239bcc05995d0234491b91c8cd477f
 
-I believe I have taken these two via my tree. Can it be like this?
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bjorn Andersson <andersson@kernel.org>
 
