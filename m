@@ -1,86 +1,86 @@
-Return-Path: <linux-gpio+bounces-18929-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18930-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97C5FA8B43B
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 10:46:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 13CE5A8B43D
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 10:46:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF2BA1896121
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 08:46:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5F3B1895FF3
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 08:46:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F514230D0D;
-	Wed, 16 Apr 2025 08:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73AFF22FF30;
+	Wed, 16 Apr 2025 08:46:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W+xaIO1o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pQIxtCD7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E131B808
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 08:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE191B808
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 08:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793148; cv=none; b=hUhcEyYljTyPqen+f3aryAkH4ELYnyzlzIKTx3Y8Pqo1lxIyLYp7QZJ5YqWT37DZrWtHox7eMlYn5GAAmYTX4JvLs/U5bQB7FrqaL+X/ldqBmRA9jHlC0N/NR14Ux+2S9riR522Ovizd4KLh0Y/Ohm9EtdV5tHDtUZifwE+grmE=
+	t=1744793169; cv=none; b=QTuK9Xha9WznWxSMakv4iTEEZvTCzhYF0g9KJzrnAJ+bcE8+wCgDMgNF4yTrF00Zgclo26jeFKWCv6eFGrXeR+hhUsZwaO+OhOtMGkm+Qhq8ETPR9TkCgSkESsTWmkibY0KhsYDQlQ7mqs7tWAMp9DIsymZ9QTKT+3g/Ps0dDwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744793148; c=relaxed/simple;
-	bh=RE98C+gHqUp+2/XX8bTBngu2H+KXKruUzo51s1pekZg=;
+	s=arc-20240116; t=1744793169; c=relaxed/simple;
+	bh=dJWpmPmeZz2KNsdUSgiti8HMS2NRCkbFkDayLtPJquM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FHu++J340oNUXONA8iw4r5xG3fsJJ3R8o7ptsRHOw3KvjtDDLE86rnsYxMLIq4A+9Hb5+Q86Qe+iJQbVwwugpZl3MQNCTsM2WAXIQiDji+d/1lWd30bVoLgwvrWJR+f9J/UgsKliL8te5xpgz+1ghn8+JkDzOctHfYcRYjmAxks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W+xaIO1o; arc=none smtp.client-ip=209.85.208.180
+	 To:Cc:Content-Type; b=NorgdHNsAgAqeMJyRb1PUlQpJb5mLy00uMJqliheMeHruz/fG41ZmILgwirg3QUIs5htGpUsmM/ySgrO728dKibBKwZ6vyu8djWVNNkDjihUfqV92+aXUFCWn+txNDFWZhRbcG2zV2o4bfbEV/aEAgOrcr26oYmj6yO+S6nefqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pQIxtCD7; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3106217268dso33884961fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 01:45:46 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-548409cd2a8so8500291e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 01:46:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744793145; x=1745397945; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744793165; x=1745397965; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RE98C+gHqUp+2/XX8bTBngu2H+KXKruUzo51s1pekZg=;
-        b=W+xaIO1oiPuwbY7E1W3UhAIGLbErFO5qIdBXyplE1PfRlfYU1bCE3bgq8gB97Y0Oot
-         BugGl5e3e4AWU6gjT8AfxzPr9W20x0hc7AVWKFOxz4Y0AgPJge60wCFI1NQVIEdisePe
-         dql+BKdsLEl1sFiluwZb2GnO1FiE0+XM+0IudWIxCkakzl/Nk0EaF4mE5uat+MZ7xn1T
-         8vz9s+/sUcvDlRp39H5WoZeZH2bRaJEvYOZm4SrgHThNJsrt3C8fU3TjTLvNUlDKGmJb
-         GDN66QeliDt2mnz/whBg3ypzOCs+X0qhxJPGquonIHPOwk5AYV3rATXnx8fxOYC5Njfj
-         uy5g==
+        bh=dJWpmPmeZz2KNsdUSgiti8HMS2NRCkbFkDayLtPJquM=;
+        b=pQIxtCD7c28GJQND7ElsXZSYxd8K7U0k641enIdJwSHbYCVuyXcSKAoUVlQf1jhPjM
+         I9rgHSHgsE3O7aaHkPSMax6H3q87D2NV8BjclLu8b9s+g0bF0rMemv0tRbvtjWq+qbeY
+         vURAppp9nZFSIxbKzsxLAWM4T4iSFG2t4nRKNZru61OAHW3buEaJhg0DOx5B9LAyhC30
+         a3k+AEdKWy91facoYasDSw4hkaZ4iosGtatyf7aLWOVkGibNg8w4ZiTxW9GwesfjrRIB
+         0it5vs58XbA5+kB6XoJ9vMlgahC2k+hUppQ5OTRan8BiBCEEiIvJ2Dko9EVht81aNjo0
+         C2uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744793145; x=1745397945;
+        d=1e100.net; s=20230601; t=1744793165; x=1745397965;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RE98C+gHqUp+2/XX8bTBngu2H+KXKruUzo51s1pekZg=;
-        b=cwRGw4PqHtgT1xyGMtJkXPkP/MdS0KniEeGemNRzPU2nvvNznU+jFxoCOEVb/D3jA1
-         1KEsEswg1ws1tz4C6BlNiuerBOBrQW8dnzdBNty5RFuoH7sbcXHSispPkjcEY/qU/cdg
-         a+8k7mFYvs8pR7Gac44JtcWepM/x5V49opJB5tG2foETvFMc4TrRv8bq38MDCVwU3PWf
-         HzoQSBmv+GjRB1th4a78XWohsDuRGOcU+h/U3S3xFKAjZP1/D3z7ttozz3KfXgxkki6A
-         XhjyzDO7HjGWjDwoGiFeNdbT36mP1Ev4T3NbYjpRiM1EBSBAzX9bbe3G3GQ7ceiKgW4t
-         1Xlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzKHmw0GC0+SdonuarmmeiAWChVrwePTXJ9W7BAgJJfUMCDIW+aH8KS+sbZz8twmluVDmDs7Y2Pm/G@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/a2lWEi5maOXvLpLq7x+DymQx7EeUc+1VmbypeoSyQhFjMzTj
-	nr+KOSTxmBiaX1fvtwRDs+Vu3HnZzT3uh/yN3sjpGrD672wGzLI3UxqIL7lE0IVmv+e2C544etk
-	r2CAfOhPCfbwVW9Ij2wLCTnQpygcIzDSos8SjRQ==
-X-Gm-Gg: ASbGncsaBFIb/ZnPPQhuUjkxV8ibC9rWSLlaJElyBGzOKCZsQkVjW4NNfPL+4C0tLLD
-	f6E1zla7r8FeDFkdLAg1eiL3aOCv+md6uU4Epgl/fmt/XPv1khetpflUSiDIF9sZsQ0lLH0iGkF
-	bKXl7SS35zvwuorw1JiLyVpw==
-X-Google-Smtp-Source: AGHT+IFmYxdzrZGUbGtKMa+u9hnYq1xmfRbmwLNj5G838Fi5mSqfD8BB7+HJ6tHui63K85iCuSDBoWduZ9oyUn/Qp4s=
-X-Received: by 2002:a05:651c:50b:b0:30b:9813:b004 with SMTP id
- 38308e7fff4ca-3107f73175bmr3853981fa.34.1744793145362; Wed, 16 Apr 2025
- 01:45:45 -0700 (PDT)
+        bh=dJWpmPmeZz2KNsdUSgiti8HMS2NRCkbFkDayLtPJquM=;
+        b=BmlYUzZ28k7FXGCO56gUIxoeWOxkjxl8xW4Q8RNzBk2knYAvVjoCTOguVdJcnVaefn
+         +C/NWM7b+AsaRBqV7yts+b8bAkzCXKW+82In3CEowNwykmETYXEb8EFWUzFc+FLVsntJ
+         dZOcXs5Jj4bSpdCYHWUVqac17kcak2fPX8NZDsqHuUwF2W6J6bl6vP70S7Yu8dDkvTxV
+         FvCEzQQ4ALeh0mAHTPha69lLyay0p9mCShxlWeKgJfDS2Xs91YZ6E87nyNN4UijpQo2O
+         MDCnOsRe5lrUd0Y76kFsnm1h5oTXNfYMR/Ya2x/OHqLY/GG0L4i7KoopW+/hKNb1HqeA
+         lcKg==
+X-Forwarded-Encrypted: i=1; AJvYcCX30HEwTeym7uqCBazhfVpFv7pKimf8UC/btCPpHrZDDDzOC2igUivM5oFg872Ynb+hzQgAh7Yf39Jb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzQLPrVUeXu1Fim3V/XFo9jug13voXC9QDpP2wZ2iuBqyPGvCe
+	a+z1q6Rrhau6OViQYB8XD+G9kBhzVJuoG5586+aw4umV09BHFsllYtkIy8ezsInzYxJXpCV2pBK
+	Ok3MgnbtdbsD0zUgf4paTxbTxMnvrXTxapznf1A==
+X-Gm-Gg: ASbGncuPBa9S8QO3gNJhPpR+avRdt0SxB9hNQW24+eFKYtGW3VEPKNQ4nfTI/8B47Wj
+	xeETTguYnjkR1GdX7Q3pre85oOgzYxhdz9YjvdFwE9kRPmk+oDdD1qSn6m0L9AVpSGkQ+cAGdIM
+	aK9B8GRuiOB0RWX+F3exQeQlTT+t5pYwLX
+X-Google-Smtp-Source: AGHT+IHER4G1YW/HfugLB0RhEmlqCUXgsHRN71mbKyITUVzly9VKf5bLZAouG/qB8jIC3heoEwHvRcEVYlxmXDpX/Zk=
+X-Received: by 2002:a05:6512:ba6:b0:54b:102b:af56 with SMTP id
+ 2adb3069b0e04-54d64a7b607mr299899e87.4.1744793165426; Wed, 16 Apr 2025
+ 01:46:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com> <20250415111124.1539366-6-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250415111124.1539366-6-andriy.shevchenko@linux.intel.com>
+References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com> <20250415111124.1539366-7-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250415111124.1539366-7-andriy.shevchenko@linux.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 10:45:34 +0200
-X-Gm-Features: ATxdqUFF4O5obPmrMzaby6-Pz9kGjUdZrISDS5QYruNwCIm12lV8IvCKMpBO_AA
-Message-ID: <CACRpkdYvbbfKoCAJF8R=74tH3avEPa3K-xe0Y8aNJg_aZLDfvw@mail.gmail.com>
-Subject: Re: [PATCH v1 5/7] gpiolib: Make taking gpio_lookup_lock consistent
+Date: Wed, 16 Apr 2025 10:45:54 +0200
+X-Gm-Features: ATxdqUEeHb7bVJDEFYNrc_akyxNXE7o78pfUAhkyDtfdhV5o7_0R7syCdQ83ur0
+Message-ID: <CACRpkda=5pj63VQ3Ga+JR9Hp29Hkt7reBx=NzM6mXMNFUT_OrA@mail.gmail.com>
+Subject: Re: [PATCH v1 6/7] gpiolib: Convert to use guard()() for gpio_machine_hogs_mutex
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
@@ -90,9 +90,9 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Apr 15, 2025 at 1:11=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> There are two ways to take a lock: plain call to the mutex_lock()
-> or using guard()() / scoped_guard(). The driver inconsistently uses
-> both. Make taking gpio_lookup_lock consistent.
+> The driver uses guard()()/scoped_guard() for the rest of the synchronisat=
+ion
+> calls. Convert to use the same for gpio_machine_hogs_mutex.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
