@@ -1,54 +1,54 @@
-Return-Path: <linux-gpio+bounces-18960-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18961-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF966A905DA
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 16:15:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C45FAA905DD
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 16:15:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B48116E739
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 14:12:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23E3A174703
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 14:13:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 565BC200112;
-	Wed, 16 Apr 2025 14:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC7FC1FCFF0;
+	Wed, 16 Apr 2025 14:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S0ab/Feq"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XuVsmb6H"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE8A1F8755;
-	Wed, 16 Apr 2025 14:08:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2F31FBEA4;
+	Wed, 16 Apr 2025 14:08:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744812502; cv=none; b=em+b5RtkViDuRJsyq7Qmx+gY/q48m+KI4VlMZTSjed9Z4l/Lo73jhE1s/a39hFfMFB218w3xvCVPa3tqJo20+nYcHN4Vk7I+OB/bxXTCFo68jgPW3kSkI4gicZRGexA5pr752qmuZ5Yb09MJRjpQw0gdoDivrcwkaDEy759LrDU=
+	t=1744812503; cv=none; b=npP/8hr1wdhaDEVs5eajtkWpmLmGnhkp9pBBpTpTJPrwTw9PkJ9JQLPIIEYzpGcrg9K5dkPgqktrox+1ShT9x1Fo8YiB+wvi2ojf13sJVMMN1Hl3MqjJ86le2BcY8BsoNbH55zjK4ik1TRFHRpjym+ZlusPlkmm5G5iAW6lBMAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744812502; c=relaxed/simple;
-	bh=IUSSnH50SEv3wK+IpC9qmWyKF/i4h3ZwyjGbfYa21u8=;
+	s=arc-20240116; t=1744812503; c=relaxed/simple;
+	bh=wyjE0rrh/LjhSKmxz+tCb6np5ZXFrDh6a9pCjVCsjKc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NkrDmKTShiMDm0Ah9XxUiy6xdwbp+sC0/htmNsB+wwfNhhkv/l5HDDjD8FaO1FisocJutnrq6JHNFXYwiM6NvTUcSnFFnA7HJY8/48OTkMQlnny+zzzIpYmvqqwTCc6yR2uEmuphXeQn1UcYUewj9n622pqrg32ix4GVpTmOJks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S0ab/Feq; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=jLkZePbw9jTTUZUplrFyTJ517xPjx+h9HRaHPdoFxZh9eLfANL6QXOLnlywwB1aSTEfO8l8HEv88PwX4q4cREktWgVOkRkmmeSCR1fz6KqS3uFSNMGN496cohBdREy/tK4534zhTalizHeSgxi0JhPgNmFx4tSAE62+bApgI8Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XuVsmb6H; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 552F44314D;
-	Wed, 16 Apr 2025 14:08:17 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A0D9543873;
+	Wed, 16 Apr 2025 14:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744812498;
+	t=1744812499;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=53EIucSGozzlxQnWzP+KpPtvBMYT/F8TJYe8VlTnG/Y=;
-	b=S0ab/FeqPsNsvikHIQ5o7MFem0JlpYxEG1Rh3/2dp5LHR/QWRhYc26G2+6E0xCTyFcT3Sc
-	qLGj0CHPzL/oc68Gbui2cOf/PdilYL1n9I0nTAg/ehVnM7mhtULSOxMmupM4TmoaWS7S3k
-	VjFhesZnqtuu3yzjt3rfNx/P0xYRCLZZv5lQVBcEQsQIoEscYg1f8m9OQ1ASchMZAW2MVO
-	I5J9Uuyq2etE1erg36xU75wIwTEy10tW8OrGQB4vp754Eyi3Nrq4K4RR1cNMM54JR/qUSE
-	uWLKEmOlEwXUHBhsZRhBKWVZYvqdekuPzG9z5v9mBYaYt+ZDkcJ+jR7cOhNe4A==
+	bh=nVMzc3pAxWm+UN6nbaOf7sa0Nb2flxpigVgMOpMnxYw=;
+	b=XuVsmb6HkYXYD6TzUoC9/WFGHUFPjqAk5+ID2KEyjPbgPfpfGsOahfqbbXRSUf1YiQkvS0
+	M7YrRNp8d0vXoRMaTSVNGGQLsYHeCnNvVW9MPTZyhVa4pVa72vThwKxaSlaZZ8MpQcdu0X
+	cZTvlZXQaTcY1kWFNrXdwd0u7Ob9hjDT4zNcloBTwDtO9TMG+w0PVJoe67gA6rxyc71K9x
+	I5nhkhqInJrlqMxx87DqjjR8sfEiHLCti0hLQvoWnItJN4dS7uJhH8HCrHoEueJbCF2PyU
+	6L4EHA1r0Ypuyfxr98WuXPOjYcpWsHvsaE5FsQf8GgGbqNHxxXPdi+zlyJ8P6g==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Wed, 16 Apr 2025 16:08:13 +0200
-Subject: [PATCH v3 05/10] gpio: aggregator: refactor the forwarder
- registration part
+Date: Wed, 16 Apr 2025 16:08:14 +0200
+Subject: [PATCH v3 06/10] gpio: aggregator: update
+ gpiochip_fwd_setup_delay_line() parameters
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-aaeon-up-board-pinctrl-support-v3-5-f40776bd06ee@bootlin.com>
+Message-Id: <20250416-aaeon-up-board-pinctrl-support-v3-6-f40776bd06ee@bootlin.com>
 References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
 In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -74,60 +74,68 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeiheejucetufdoteggode
  ghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
 X-GND-Sasl: thomas.richard@bootlin.com
 
-Add a new function gpiochip_fwd_register(), which finalizes the
-initialization of the forwarder and registers the corresponding gpiochip.
+Remove useless parameters of gpiochip_fwd_setup_delay_line().
 
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/gpio/gpio-aggregator.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-aggregator.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 4d6e41e02659..66ea3daafc03 100644
+index 66ea3daafc03..96b82974969d 100644
 --- a/drivers/gpio/gpio-aggregator.c
 +++ b/drivers/gpio/gpio-aggregator.c
-@@ -566,6 +566,21 @@ static int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *fwd,
- 	return 0;
+@@ -476,10 +476,11 @@ static int gpiochip_fwd_delay_of_xlate(struct gpio_chip *chip,
+ 	return line;
  }
  
-+static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
-+{
+-static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *chip,
+-					 struct gpiochip_fwd *fwd)
++static int gpiochip_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
+ {
+-	fwd->delay_timings = devm_kcalloc(dev, chip->ngpio,
 +	struct gpio_chip *chip = &fwd->chip;
-+	int error;
 +
-+	if (chip->can_sleep)
-+		mutex_init(&fwd->mlock);
-+	else
-+		spin_lock_init(&fwd->slock);
-+
-+	error = devm_gpiochip_add_data(chip->parent, chip, fwd);
-+
-+	return error;
-+}
-+
- /**
-  * gpiochip_fwd_create() - Create a new GPIO forwarder
-  * @dev: Parent device pointer
-@@ -603,18 +618,13 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 			return ERR_PTR(error);
++	fwd->delay_timings = devm_kcalloc(chip->parent, chip->ngpio,
+ 					  sizeof(*fwd->delay_timings),
+ 					  GFP_KERNEL);
+ 	if (!fwd->delay_timings)
+@@ -491,8 +492,7 @@ static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *c
+ 	return 0;
+ }
+ #else
+-static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *chip,
+-					 struct gpiochip_fwd *fwd)
++static int gpiochip_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
+ {
+ 	return 0;
+ }
+@@ -602,7 +602,6 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 						unsigned long features)
+ {
+ 	struct gpiochip_fwd *fwd;
+-	struct gpio_chip *chip;
+ 	unsigned int i;
+ 	int error;
+ 
+@@ -610,8 +609,6 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 	if (!fwd)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	chip = &fwd->chip;
+-
+ 	for (i = 0; i < ngpios; i++) {
+ 		error = gpiochip_fwd_add_gpio_desc(fwd, descs[i], i);
+ 		if (error)
+@@ -619,7 +616,7 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
  	}
  
--	if (chip->can_sleep)
--		mutex_init(&fwd->mlock);
--	else
--		spin_lock_init(&fwd->slock);
--
  	if (features & FWD_FEATURE_DELAY) {
- 		error = gpiochip_fwd_setup_delay_line(dev, chip, fwd);
+-		error = gpiochip_fwd_setup_delay_line(dev, chip, fwd);
++		error = gpiochip_fwd_setup_delay_line(fwd);
  		if (error)
  			return ERR_PTR(error);
  	}
- 
--	error = devm_gpiochip_add_data(dev, chip, fwd);
-+	error = gpiochip_fwd_register(fwd);
- 	if (error)
- 		return ERR_PTR(error);
- 
 
 -- 
 2.39.5
