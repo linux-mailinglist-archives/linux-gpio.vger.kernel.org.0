@@ -1,111 +1,125 @@
-Return-Path: <linux-gpio+bounces-18912-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18913-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8A1CA8B1F7
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 09:23:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81F9AA8B212
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 09:27:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6CA131904A1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 07:23:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F31A13ABAFE
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 07:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B42322D797;
-	Wed, 16 Apr 2025 07:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8560B227B94;
+	Wed, 16 Apr 2025 07:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EdPOO+ei"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yTB6YFcA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDFE22D4F9
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 07:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696AF1A8F9E
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 07:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788170; cv=none; b=KWgchTpH5SpN2LnR1YDhsdBt6I1UXMavaA3TJJd/UznkCO2ZCxWVHhoYukb9dccGA0PUzE7/onpX+SiBje3xOEi05+haEnmYumFsjxy107xlAFIvargxu/I54N3wW4/WabdqdQkW9+kx5D3sEQScLEGn7/MjD27Ow7g7OUrv2Qo=
+	t=1744788417; cv=none; b=jEPhMU6oa+3BKbB7jLO9Xnr+OaU7H6B8fKsIRzxCOq5jpSLQtx5j9GVPkphSworF6U5gaCwX3jwYasOZzRWI7Xncxkc1/5ffSrJgO4w6oNv9WJ8t8x+KdMa2RjS3qp39sFp3D4aDYqXlVc3vGnyU+SBqxsyviFkAQIg5Hxwmq9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788170; c=relaxed/simple;
-	bh=6tPzTMhBIP4Ztm/pamoA9E7AfPXNf+05fR7f70iwjcg=;
+	s=arc-20240116; t=1744788417; c=relaxed/simple;
+	bh=1vaofwfGevdxm4fxBlcFaPcuDKOl1lL/bjN1PokEW5s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UXh5DTrrMDjQAEFXZ90zHxDC+6guGYDot9QITEXDYRsMPXTZUXSydado1+yX/+ufQaCO+kb6heahvDi29SNnhvslYAoh5nbKp0aS3klqJKwjSWaoqWmtWyglhI+HfAX40s8vUUiDVEYNfH6PKUoP2r4XrCahhSyruBauV+p8j+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EdPOO+ei; arc=none smtp.client-ip=209.85.208.174
+	 To:Cc:Content-Type; b=c5WBBUzdEOjKxIEONLKMn7KWKLCeFL/1NpWuMrwLWCN+n0yfLmZ2gcMXFpXHGY+nJNzoSdE7IlhyRILtHPZ3jT/XMc8rOOd+/PUZVcVoVL2WlymC5o3cK6yhM9rRaGzdu8HKcRtQy++cdwpV5LN2aQ5BIk3IJAtpKN75BWDrZS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yTB6YFcA; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bf1d48843so54921431fa.2
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 00:22:48 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bfed67e08so63906091fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 00:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744788166; x=1745392966; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744788413; x=1745393213; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xWD5DtO8Zmjj8hm/jgNeXXYBfzD9O0HKgWcyYm/pe+g=;
-        b=EdPOO+ei2bPpqPvFGSAN5GkWEPL5g+w7K0Xg3ZtOd0xDm7VqxWZgXKJC2or7VdY8tY
-         S3PSICLGT8C3k7syA6GtNAtVh+xacMzsXIN9Kjl6YKmKTqk020PDS/b+idXA61pmGDT/
-         gUfMPPIn/Ohg18u1+R3fJdy3KlKH/SNiXjmBlfT4K4/zpDnBhdsCR8xqsgpI8VcUbZvH
-         62Z+pgv4uFDP0ZYnR/FBvxbl1rgPAE6pCxfySCvSWCKpLWAoKDD6Xvo1DMfKzP4L9WN0
-         mRnkvpdTfNylZUQU32QFyP3PZl/CzKfcjhQ7yNpTSdv43CWgkkZUUWBccTza4/S7+R/V
-         5UKA==
+        bh=1vaofwfGevdxm4fxBlcFaPcuDKOl1lL/bjN1PokEW5s=;
+        b=yTB6YFcApHyvgS2IzwZM+D1G5zoy8hA+7xM7DZOEQHZPyqOJwH8Qzhz863tVBITzzE
+         xjrxfEh0CkNsfD/F3nhZb+Vs1Nw9Kr9NVksQQgkidYMzJGzzHkyH0HPvIcoXwNm3hqod
+         ZzekxACWvlnaoDN0hLVz6OWe4jsSof19WWsqKIKwkKP0laRP76yGcnah9F/cU4mlW5Hy
+         8i5W6/J0ZXMh1DcvkPtxZhmMiC70J0n3W99hdzjgpFZvYoJWFqqHyfA1Fp6wZF/JJUxw
+         mmfcsmRuBvsqQo7jV3TDDWdJhy/pHe7D1cqy7RNqmInCvm8oTf0+neUBT8S+clcP129u
+         mtjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744788166; x=1745392966;
+        d=1e100.net; s=20230601; t=1744788413; x=1745393213;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xWD5DtO8Zmjj8hm/jgNeXXYBfzD9O0HKgWcyYm/pe+g=;
-        b=jWVeC+c0GI2IxOiInzihnacbmRUFFZ6ULLTum2vJrpsshjqHz3yZXrelfqsMe8CrKW
-         NsZ/AdUD5CNGp47lnLDx/wZRprX7PJ2SJCCCdwceAj71Sql5n9trp9g3zy0wkKXOwcpY
-         MlN8emQeP7RtH3h2esHGQWSH7VNbK8MzvbkRnFZgGTi967Ti2oXxQMMJNL2jNJsu7hpd
-         K19ihJ77f+5gb/gRCuLHKtLR1cv7oof/YSPSOkURpScWeUJw0YmyTi2zaXM31wUewSFc
-         MW7H2Dr8g4tibzL1TvzFI65J5C3QPPJSY6nfxxxOOZvm5xJFEQidSWETfEwdZOP6ZQIi
-         X/sw==
-X-Forwarded-Encrypted: i=1; AJvYcCX64NZVyOWdUihrB+mdlsVUn0vt3o0EGNQ3q5tVUPFkFsi5KlCBUyHhTrO6R5XQYhKaiXsAEjevrxHi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8nDuzWhNFAVa6xVFGsdwJo6NeSFBhrFBKZgl6G3TPeQHD4ORT
-	Jw7Z30f2xOzji0vWZ+AUj9lnnMtNQDZoIA81QpDRxcdd5flIyYN2u5pey4HIzKhX0yHppUngnCZ
-	vPb+Kzd2mlHs7eYPF1kLu6HjpxAIv9hiOGC0y9A==
-X-Gm-Gg: ASbGncvQs7QIAXxNMrOAzyBF/O1dAiWAQokGHXr7gVC42iNZ/2p2Tojcwpu7wPBe65k
-	drGcq7jzKDkO2K3QdezcoskF2Ox6cJnoXTuT3FsOHsce18itHnv02gQa+Wz7bldFM4fIdbk1moE
-	jHEYZZtI8D/GlHDIESi8WckQ==
-X-Google-Smtp-Source: AGHT+IFJzy+zttruUfUSE7DAKwZxb0lvHyIXLpWKETv/eqQTmvTOtmlAPv2KPiXrE9yHLzHL0bc/wktEHBwODzsfibQ=
-X-Received: by 2002:a05:651c:243:b0:309:2ed:72df with SMTP id
- 38308e7fff4ca-3107f6ceca2mr1915221fa.24.1744788166445; Wed, 16 Apr 2025
- 00:22:46 -0700 (PDT)
+        bh=1vaofwfGevdxm4fxBlcFaPcuDKOl1lL/bjN1PokEW5s=;
+        b=MXtmcBa7d1QTPBSphcB8LfGJOATKDZP7IllxuCnYIQRD8lW2FPP2Bpl1PdypMnNtk6
+         udCdRFVIEW+D61hWMzh4hGzj9HcfHyNX6d3R5jaUK/kmeGAkXwOKt+2ng6DDIVeaRFqg
+         0yB/VFAxdawmQZQlQfyYaX6fHMK4KoROhYW7zSrYceJMWbYlvabOby7IJSC/3oYDsUDJ
+         sihsSsqAzWFd/sW5REleaU2eEkF0Hp9Tja16XonydlCWNrfptndRKWJCnSVFqGMxR1oP
+         Iljb+06PfW6JbBb5mjwu7jAP8gpz3mio61mTJ20RIJUquans7vL44Q0TXEcfu4YVzmBu
+         uDxg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5lHnPZF/i7i6SFKWdIz4AOnuTlGm9gQMOZha1CP2HZY6xw0L657iaDwSjy3h0MOAY68Ogc6/JVsnl@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzwLgvm4A2JnkLlrtSVQWzVFn6Qnv48eMsTdM4ymwsyjJSjjbA
+	3MaonVKABQcAWqtId8u4xSQctRbGsevLmLuSaDL94fCo20QD5rI2uMTKWKVn87zUGP5mYozossu
+	UMpCenKsYIwnDLZqnOjZ6cJC7pOp0PtJLabeuOg==
+X-Gm-Gg: ASbGncu+CCL9zzxSNTquve5ucPIlCg1q6DvZCVGn43rN42QlK1ee2BobEOF+K8Mdf8t
+	nis3wjJ+e0ET9Tzjxot7G0EYc+33nEpb/YFmTq17HTOjX+pxA3M0B5ZLXEwtHq3mZZSRIZsAyeB
+	fpTYe35xvG4Y9TyxyuJ4OGmA==
+X-Google-Smtp-Source: AGHT+IGFJYXFDDo/c9HFNj0hqEBV+yqtCpFXburGgG3GtJzyM/i0Julc0Ne5mNBFD3uMq2MVFDEsN5XeZET5w+5UV6E=
+X-Received: by 2002:a05:651c:220d:b0:30b:b184:a8ef with SMTP id
+ 38308e7fff4ca-3107f6bdddamr2202021fa.14.1744788413502; Wed, 16 Apr 2025
+ 00:26:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414090215.16091-1-ot_cathy.xu@mediatek.com>
-In-Reply-To: <20250414090215.16091-1-ot_cathy.xu@mediatek.com>
+References: <20250411084159.3307-1-ot_chhao.chang@mediatek.com>
+In-Reply-To: <20250411084159.3307-1-ot_chhao.chang@mediatek.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 09:22:35 +0200
-X-Gm-Features: ATxdqUGunV3YCOGXGIOJ9QSL-oTOhWVqzDgVFDf8RsYkNrat6ruPMmmT7W9km-0
-Message-ID: <CACRpkdYUqHzid4Rnuv4arC9wu9fmpcGR22Jc5JzJhyr7fABMCw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/3] pinctrl: mediatek: Add pinctrl driver on mt8196
-To: Cathy Xu <ot_cathy.xu@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
-	Lei Xue <lei.xue@mediatek.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	yong.mao@mediatek.com, Axe.Yang@mediatek.com, Andy-ld.Lu@mediatek.com, 
-	Wenbin.Mei@mediatek.com, Jimin.Wang@mediatek.com
+Date: Wed, 16 Apr 2025 09:26:42 +0200
+X-Gm-Features: ATxdqUEqi0bEqmx8YQckOZ12kcmNHaSqcTf6fCpAz3VpdY46Sk3RpC-b3QUf-pw
+Message-ID: <CACRpkdZ63dWzMg0t96zPFL4+4Ewg1nA=utPJ2QUg2DvmFe0_FQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mediatek: pinctrl: mediatek: add mt8196 eint pin
+To: Hao Chang <ot_chhao.chang@mediatek.com>, Cathy Xu <ot_cathy.xu@mediatek.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>, 
+	Qingliang Li <qingliang.li@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>, 
+	Chunhui Li <chunhui.li@mediatek.com>, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Thanks Cathy, this version looks finished!
+On Fri, Apr 11, 2025 at 10:42=E2=80=AFAM Hao Chang <ot_chhao.chang@mediatek=
+.com> wrote:
 
-On Mon, Apr 14, 2025 at 11:03=E2=80=AFAM Cathy Xu <ot_cathy.xu@mediatek.com=
-> wrote:
+> Add eint pin support for MediaTek mt8196 SoC.
+>
+> ---
+> This patch depends on
+> [v3,2/2] pinctrl: mediatek: add mt8196 driver
+> [v3,1/2] dt-bindings: pinctrl: mediatek: add support for mt8196
 
->   dt-bindings: pinctrl: mediatek: Add support for mt8196
->   pinctrl: mediatek: Add pinctrl driver on mt8196
+I just merged Cathys patches, can I have a review from Cathy on this
+patch so we are all aligned?
 
-I applied thes two patches to the pinctrl tree.
+> Please also accept this patch together with [1]
+> to avoid build and dt binding check error.
+> [1]https://patchwork.kernel.org/project/linux-mediatek/list/?series=3D&su=
+bmitter=3D215008&state=3D&q=3Dv3&archive=3D&delegate=3D
 
->   arm64: dts: mediatek: mt8196: Add pinmux macro header file
+I don't see how this patch (which is just code) could cause DT binding
+check errors?
 
-Please apply this patch to the SoC tree.
+> ---
+>
+> Signed-off-by: Hao Chang <ot_chhao.chang@mediatek.com>
+> Signed-off-by: Qingliang Li <qingliang.li@mediatek.com>
+
+This use of --- comments will make stuff disappear when applying the patch
+but I can fix it up I guess.
 
 Yours,
 Linus Walleij
