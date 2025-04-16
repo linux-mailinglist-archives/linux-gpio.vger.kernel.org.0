@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-18943-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18938-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C3D9A8B637
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 11:59:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A63EA8B62B
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 11:57:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35D53171ACD
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 09:58:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C36E444BDB
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 09:57:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1DA2459E6;
-	Wed, 16 Apr 2025 09:57:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3485A23D2BD;
+	Wed, 16 Apr 2025 09:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9o4X4tO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L/tMp6Lr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0BF24502C;
-	Wed, 16 Apr 2025 09:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68047238C2E;
+	Wed, 16 Apr 2025 09:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744797426; cv=none; b=TR3GrGtZLesFvNARk1ssh/bfwmhV5Ey9b27f14cO5sAwwAbZi9JKnBDy7VMUZzzEF5NgU+8rc5qIEsii1MyGTHEdiMjGnnrtD6Le5AyDlGaYBuV7QhrL00EEWC1LKmZeKzUB0NYJMJ5wBeuq8jpuC7MqztdlJNWeOPyjf0d+KAI=
+	t=1744797414; cv=none; b=HkKjWWDCDH8OcZqR/zx0uwBS0iO0peu/qIuUfZeuS8rlMReHDg2IqqZ/pvdnRcnK0dp2+Ac6Lk4GqctXwk3N/YZx4JnkoUNozL7yvIDP6hFfkTf9ZATebx0NSh99HdfSwVQkQ9ZiXgFEiVIIE3a12JJ+F8amq7WDll7G/i3egYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744797426; c=relaxed/simple;
-	bh=IhlW6Wu/axGKaX+oNbFSThpIYklJNdJRYZAvQ7gbYRM=;
+	s=arc-20240116; t=1744797414; c=relaxed/simple;
+	bh=5/Q7/EMTC9GVHsrsldbVrebqQeYH42cWDQYOYcPqTSA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S8onnFFZ3pAlumb7ox1zigg5W8irEC9vk0kMH/UNeoAO6DJSJs1whKBrpZ2nngfg/lrAYIodE9sh0jl/4TMWeTiBpy4Drc+3U/W/7YT6dF91a8dboRpt6OaZI3caF4d02mAHCv6NvD7Ea9s0j5zs9zsWc2ivX++3qry1+agF/6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9o4X4tO; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=gR9PTrjGyeaF2seFIpkZOAK3wDLJM3DVpbBLLntdFcwm4r4bb6qbw9RT5Nkk/PHCn3jLz4IKq/rdJuT/mYLu59nJ3drBdUpt6RA+vswo2A3fekHF1Rk75ToZyUpqOIIR6aArbZasaUlNFKUB+LJRU7CK03nuWlpeo7YNmcT3CFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L/tMp6Lr; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744797425; x=1776333425;
+  t=1744797413; x=1776333413;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IhlW6Wu/axGKaX+oNbFSThpIYklJNdJRYZAvQ7gbYRM=;
-  b=l9o4X4tOXTd9Gu7J3wK7fRw0IJ/c5buwOAiF/v3GfR8xP9n6z1oBef8j
-   2+CT+D9iUasKh9dG3iH0H0xxfnGOU1huTvqnSDPaMVTYyMecUl9JGiEMQ
-   hnOGynhsibwvRUOl9x2dcTS1O5nrDx0cYIkeDKvD4O7/BdgFZf+s/Mw5o
-   6KN+d8gzUKzBeBjPZwWBUQl0PNrUvlbMVuaL3cM7zCfJniIq6Tdj7MsR1
-   8/r2+ma7oVqCaCkib93phlmbLiUeQFslGQWLAHE741iDTOg9kuoXZKfjm
-   UgcXointAaCGxhmiLiSUMLhRwXJXYRkA3HplZH9fzlBfGiuAT2CLX9nFr
+  bh=5/Q7/EMTC9GVHsrsldbVrebqQeYH42cWDQYOYcPqTSA=;
+  b=L/tMp6LrGw16IZj530vRP+b7pnCYAor3dR3r0X+ZJthHyT/rOH9A2FNK
+   kP3WMqQxwz8BA4JpONR34dc2Ed33kpZMSdLTSTMq2GpVxZr6lMvWK4rOj
+   9qIuqkvNTYanJELEctQ3qc5j/p4z3OMqVTvT5moJ0VV6Mqp/wLyMToKwL
+   cNrswxhsDnljf4Xlf87KazfEU7kXW+wMhJmvtE0uY8tC4qexYWJmDBz8m
+   z4J6ZwjL3cTNWB18nE1N48hnaZwKUHLkpQzv3NN/bjcFBLLnht8fJyYtI
+   GZu4lAYqBqdFDqVUYrpfCFzuPbzYd+IKIBWyNldVR+JlmPCXw9qlG8RSY
    Q==;
-X-CSE-ConnectionGUID: xjl9qwioSM+4VJmTS1ubIQ==
-X-CSE-MsgGUID: Ro9Wx6SCQDW6Gge3lJUqIg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50144321"
+X-CSE-ConnectionGUID: 6VJx/agVS+uXItUqVXS+og==
+X-CSE-MsgGUID: rNkFwbznRzyp/Y5vyQ3H+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63743642"
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="50144321"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:56:53 -0700
-X-CSE-ConnectionGUID: YnZxj4g0TViZQhQ3EmCFQA==
-X-CSE-MsgGUID: Jm0I/7j+ST+0IbGooQjPCA==
+   d="scan'208";a="63743642"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:56:52 -0700
+X-CSE-ConnectionGUID: nC0BNLZjRcy5EEfj4KqCrg==
+X-CSE-MsgGUID: BphVdeQpS5aBfcTkuXPMvA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="135259321"
+   d="scan'208";a="131323323"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 16 Apr 2025 02:56:51 -0700
+  by fmviesa009.fm.intel.com with ESMTP; 16 Apr 2025 02:56:50 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 2A409741; Wed, 16 Apr 2025 12:56:47 +0300 (EEST)
+	id 32B4B76C; Wed, 16 Apr 2025 12:56:47 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org,
@@ -67,9 +67,9 @@ To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 6/8] gpiolib: Call validate_desc() when VALIDATE_DESC() can't be used
-Date: Wed, 16 Apr 2025 12:55:14 +0300
-Message-ID: <20250416095645.2027695-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 7/8] gpiolib: Reuse return variable in gpiod_to_irq()
+Date: Wed, 16 Apr 2025 12:55:15 +0300
+Message-ID: <20250416095645.2027695-8-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250416095645.2027695-1-andriy.shevchenko@linux.intel.com>
 References: <20250416095645.2027695-1-andriy.shevchenko@linux.intel.com>
@@ -81,50 +81,38 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Call validate_desc() directly when VALIDATE_DESC() can't be used.
-It will print additional information useful for debugging.
+There are two variables for the same used in the gpiod_to_irq().
+Replace the second by reusing the function top-level one.
+While at it, refactor the branch to have less lines of code.
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpiolib.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+ drivers/gpio/gpiolib.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ad2e68f66500..3f3371e427fd 100644
+index 3f3371e427fd..7a669218e42c 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -421,11 +421,8 @@ int gpiod_get_direction(struct gpio_desc *desc)
- 	unsigned int offset;
- 	int ret;
+@@ -3994,13 +3994,12 @@ int gpiod_to_irq(const struct gpio_desc *desc)
  
--	/*
--	 * We cannot use VALIDATE_DESC() as we must not return 0 for a NULL
--	 * descriptor like we usually do.
--	 */
--	if (IS_ERR_OR_NULL(desc))
-+	ret = validate_desc(desc, __func__);
-+	if (ret <= 0)
- 		return -EINVAL;
+ 	offset = gpio_chip_hwgpio(desc);
+ 	if (gc->to_irq) {
+-		int retirq = gc->to_irq(gc, offset);
++		ret = gc->to_irq(gc, offset);
++		if (ret)
++			return ret;
  
- 	CLASS(gpio_chip_guard, guard)(desc);
-@@ -3982,13 +3979,10 @@ int gpiod_to_irq(const struct gpio_desc *desc)
- 	struct gpio_device *gdev;
- 	struct gpio_chip *gc;
- 	int offset;
-+	int ret;
- 
--	/*
--	 * Cannot VALIDATE_DESC() here as gpiod_to_irq() consumer semantics
--	 * requires this function to not return zero on an invalid descriptor
--	 * but rather a negative error number.
--	 */
--	if (IS_ERR_OR_NULL(desc))
-+	ret = validate_desc(desc, __func__);
-+	if (ret <= 0)
- 		return -EINVAL;
- 
- 	gdev = desc->gdev;
+ 		/* Zero means NO_IRQ */
+-		if (!retirq)
+-			return -ENXIO;
+-
+-		return retirq;
++		return -ENXIO;
+ 	}
+ #ifdef CONFIG_GPIOLIB_IRQCHIP
+ 	if (gc->irq.chip) {
 -- 
 2.47.2
 
