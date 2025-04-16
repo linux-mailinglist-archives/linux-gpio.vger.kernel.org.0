@@ -1,112 +1,96 @@
-Return-Path: <linux-gpio+bounces-18922-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18923-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DFFCA8B3FD
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 10:37:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D904A8B402
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 10:37:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E4BE3AD463
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 08:36:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20CC4189CD8C
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 08:38:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0143822DFB6;
-	Wed, 16 Apr 2025 08:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4B2022FAF4;
+	Wed, 16 Apr 2025 08:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="baFOoMUz"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IeoBFVwX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD81A225A3C
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 08:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF22221572;
+	Wed, 16 Apr 2025 08:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792618; cv=none; b=DPKfKjRMb4xxeaFGmpVQrP+oZzoAdGZo0UYoumAWSuScE2isQgMS9nVWZX6hiF3vbs3NFNm4+wIzohQdVWhXugsVaLY6Kj+yddoJ2cY21MXit026Wc7HNJl2lkZvXAcSQOs9Pd8oFLCAsfigDLGszscIXZFk7cTRq2b/X1LORGY=
+	t=1744792662; cv=none; b=gs+SayJ9TZPrK6p7z26obmL/ZGrI/vB4AjZEbRsJL9OM5j5J+wlN4LFC/TvKQOnOlboHi12iwlg4pZIEJ1b0Y6sJnYwcJRIDbMyM2rLvEM+eYwjkaWASqjFG6YTT2i/eYLwIySjABfjvIYCa/UrSpUyAIuIl1mut/MNCO6aTguA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792618; c=relaxed/simple;
-	bh=DXCImHbhgaHYD5NXAki2E5LHyVFHbeqj7RL6q2PIT+U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z/DlIvzbbmrMXnbnRknxS3mwCIzIcdzw8990xhlE02nieOAlsaQvkFs35W56EvPYbdkFGrWLT0gPcqhAwK+YYZnCFEZYPqaEprTS2OYhQBEvOPBlQ8E5qjIKYH0TQoLjd+UqqAWcGb8oNZrx0wan1BJhK02rpVrg9Gy5LTSaDBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=baFOoMUz; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54acc04516fso6230187e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 01:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744792615; x=1745397415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DXCImHbhgaHYD5NXAki2E5LHyVFHbeqj7RL6q2PIT+U=;
-        b=baFOoMUz3UUr2fIPjRVkp0kpSh2jnrjfyFWgmhHWHF+V+sheqtna0Xa843SdB7hKt5
-         zH93FiQ69Awgke61GfQ80jR0QUkU3v9WexrHd3qjLYcELh8nlroIh5QQG8+H9QJH76tp
-         Z3Xf4NAUlxJcoHdH3S14GWVxFSQMhyq8UkBhMuvgue4pq/RcCi/L46KTaPyXVVgHHIZE
-         DXmf9fb3NgeDq16uOJ0bxEikAY92w38O7EQBEW5mr7WLw97VZnajZFq4D7x0FRSQAcjt
-         MEcKg3A4gJ+IRZeyIZPZ1OLzVxTW85eXoKn/sFeZly+nJNr9l3CT9Fo+eLay5xTEyaJ6
-         849A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744792615; x=1745397415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DXCImHbhgaHYD5NXAki2E5LHyVFHbeqj7RL6q2PIT+U=;
-        b=sgylzYGI8eLwYDC5A0uPtGb9W2mEW9CIcTyK9lItYQLB8nanW99oaKgqA9VhVj5pLp
-         w86zZkDFCBL5fzBF6xeB7uZhXT07XvTe5D4B3ZWWU3OcHUloLPBxcW3VLOLtA6uTj+33
-         Ir9meFNSOdFfIDHJs5YPTh1jxGYi8Xhzt7hi0z4noek3InSS2H+/miSr5KFUuUkXb9sR
-         HbZn3BblTKhKbB86ztqq8w3gFeeIh9n1v8OX5Bh6rrEoFcB/v0gNBXBouKVWwdZ73GqI
-         k5nTXEjY+VUFO1C29oB/1Z+xNJzqqMLtAiPoNYC3u5KkjcFq080QPWWW0eGt/Nf8sAim
-         4Oxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDJYb7SBhNXkz1xiyVcvPv2zSj84yEhWTYWmmHTQpiUpOY5ykSAFXDAWjF6ae7v65i/WlraJRvs2V2@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxB/tT38aitHNd9AFXii2/2VYTlVcxjyagHRRiTzLjk2IDGfcm
-	6Dycke086XMqKHtXzvVpUz3GFysA6XJW0ZwGtiZn9hyPHGxRxEcVkAJpzZNbASR3dXhMsIqvCUN
-	I8k9FuT5c4nQ2iNZd4pROp1mtF06HH2FwuuTONQ==
-X-Gm-Gg: ASbGnctRLFEDy381VmCFMs738UDZoirmiZ9mb6GpBd7B/ZKuIN2/1C3qx/4QpQgVwOr
-	yfGNHm8yuDzLuZq2Pv9tqhAdmQl956ZHHOOpW6Shst7Km7UbreAQLlc+84QiOohQG4+hsJy44rs
-	3bT00DQ3QbUc36QYLeIKNThF3uk4TK/4SJ
-X-Google-Smtp-Source: AGHT+IFnTyulj/0oGbeIikzilFJSE7sEuMb0JSQLD2qCkdI3QvGlZH639PCmqr2wKnbHsJXFbiOa8zKp3Mk8GGtQ/fo=
-X-Received: by 2002:a05:6512:3d02:b0:549:5802:b32d with SMTP id
- 2adb3069b0e04-54d64a7ae44mr362901e87.3.1744792614952; Wed, 16 Apr 2025
- 01:36:54 -0700 (PDT)
+	s=arc-20240116; t=1744792662; c=relaxed/simple;
+	bh=SFK4utDb6BiPvIgZqYxn3f+Q+Jaf4K4/kobGg3X7CUw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ibx331G8Mml7k9rtYsZ55s0Pjt5vljTspkxKaX0ZUF03ZjPTcsUXqMW/G2vJIcn9XsCYPhHJ0l+BdsclahmP5GJ1gtbme9ZWEG2QwPFMlSD88eL42Ugg8YIurpNJOvm2cs6+Vmau9hi+P1UAegUJ2bng52aiOcZZ3fo0mqhsDjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IeoBFVwX; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744792659;
+	bh=SFK4utDb6BiPvIgZqYxn3f+Q+Jaf4K4/kobGg3X7CUw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=IeoBFVwX2ltZCXPMVn+ySHACWJJN4sHulUsnvMqFYeug52ZWQgBfH2WbnZxmR9d04
+	 /1vKBKB0h0NCMJ564QZM5UyiWP1ffShol2DM2etow3w6kbHjEd4SSm/x3b5w7jj/J+
+	 QKal0lkL//mqk0ry87XcDDbQe274ek84fv0ZG7n7NFw6LlAGt3ECgBrVqH37LZYUv8
+	 i55EIOMaXkiecMwDgl0zp/PW+JIA1PlBdY9+LwZV45CtgJ06KgQqPeFDhuTh5egiEf
+	 /P5bkayrf74kuMHao7+9NbOrswg/gppmm52kVCPYjdV2pvrlQ70R6QLQAagZ1BIYZ1
+	 evRUB+1sVE8AQ==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5127C17E05F7;
+	Wed, 16 Apr 2025 10:37:38 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: linus.walleij@linaro.org, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ matthias.bgg@gmail.com, sean.wang@kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ kernel@collabora.com
+In-Reply-To: <20250410144044.476060-1-angelogioacchino.delregno@collabora.com>
+References: <20250410144044.476060-1-angelogioacchino.delregno@collabora.com>
+Subject: Re: (subset) [PATCH v1 0/3] MediaTek Dimensity 1200 - Add Pin
+ Controller support
+Message-Id: <174479265826.19309.1291310983060738038.b4-ty@collabora.com>
+Date: Wed, 16 Apr 2025 10:37:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250322035307.4811-1-ot_chhao.chang@mediatek.com>
- <20250322035307.4811-2-ot_chhao.chang@mediatek.com> <43nd5jxpk7b7fv46frqlfjnqfh5jlpqsemeoakqzd4wdi3df6y@w7ycd3k5ezvn>
-In-Reply-To: <43nd5jxpk7b7fv46frqlfjnqfh5jlpqsemeoakqzd4wdi3df6y@w7ycd3k5ezvn>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 10:36:42 +0200
-X-Gm-Features: ATxdqUG40hdym0n5Q2fxGBsUSS0OPVO8ybbpsBi47RVMjHapZZipAk2JRY_FG-A
-Message-ID: <CACRpkdbhGJhmNhoS-rqWEtqvH=D_2Q2+djaXWmyEu3o8UEcaZQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] pinctrl: mediatek: Add EINT support for multiple addresses
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Hao Chang <ot_chhao.chang@mediatek.com>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>, 
-	Qingliang Li <qingliang.li@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>, 
-	Chunhui Li <chunhui.li@mediatek.com>, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Mon, Apr 14, 2025 at 4:57=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@baylibre.com> wrote:
+On Thu, 10 Apr 2025 16:40:41 +0200, AngeloGioacchino Del Regno wrote:
+> In preparation for adding basic support for the OnePlus Nord 2 5G
+> DN2103 smartphone, this series adds support for the pin controller
+> of the MediaTek Dimensity 1200 (MT6893) SoC.
+> 
+> AngeloGioacchino Del Regno (3):
+>   dt-bindings: pinctrl: mediatek: Add support for MT6893
+>   pinctrl: mediatek: Add pinctrl driver for MT6893 Dimensity 1200
+>   arm64: dts: mediatek: Add MT6893 pinmux macro header file
+> 
+> [...]
 
-> this patch became commit 3ef9f710efcb in v6.15-rc1. It breaks booting a
-> mt8365-evk.
->
-> With earlycon it's possible to see a null pointer exception:
+Applied to v6.15-next/dts64, thanks!
 
-Argh, does this patch fix it:
-https://lore.kernel.org/all/20250415112339.2385454-1-wenst@chromium.org/
+[3/3] arm64: dts: mediatek: Add MT6893 pinmux macro header file
+      commit: c0f1fd9eeb317ee57b62127c8da48b309da0525d
 
-I have applied that one for fixes.
+Cheers,
+Angelo
 
-Yours,
-Linus Walleij
+
 
