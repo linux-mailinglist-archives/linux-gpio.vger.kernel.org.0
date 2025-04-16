@@ -1,149 +1,240 @@
-Return-Path: <linux-gpio+bounces-18975-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18976-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF39CA90862
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 18:10:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8E7BA908C5
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 18:26:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E20D19E0645
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 16:10:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3F31176780
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 16:26:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFF292144C7;
-	Wed, 16 Apr 2025 16:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AEE7211A37;
+	Wed, 16 Apr 2025 16:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xslu3yuj"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Zbk9V2mz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8BF211A07
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 16:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000B520D4E0
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 16:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744819775; cv=none; b=DO0T+4xOBhoJNATb31oNXR/H4TRUmUUDcYCGnETsaEd+AMr+kD3HRTi9fnNBYOw2Aypx+KhD4oEf0+pVKXlJ1fMgQVbeBNQ7qLcmLACU/xfmoI8XCInPmy/DG70dUVy/VNiVh9J57Wj4R649YwCz3/LrhfX85QoPjScPobWoCyo=
+	t=1744820806; cv=none; b=ucMh885JPFxfYDjzAeEbIKaqg1tqoq5tp1wFf88Jt2YFXURCfKkPXyyR/8dFXjLHx/UfwOIAopwgGjmnYykv9w5Sph8nCRyU4TMunMeIbPfbh/eKquZGLZ36eAgDNCRtm6W+yfgRwGRQPq98SyCiAJAuTw2acA9grY2cmebzq0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744819775; c=relaxed/simple;
-	bh=6gIfY2O9SRNMsf8TpU0oXNbXomtsGMw4EUG+PlvfsPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AWO6klSi1tQckk5mLx+7SAdGP37dNABqrk8aVRC2DF3v9XTWfRjnFglPA6F30PRlcRwD1ezC/lmdBC5ac/Bp7yNKKxS8fTSGX/8C4gZZICAPS0uyISx2J1beOwYk7401SRJutmEcCqzd91hSZgCgpiplApz5GI3pq4V6iey806o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xslu3yuj; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so60561755e9.1
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 09:09:32 -0700 (PDT)
+	s=arc-20240116; t=1744820806; c=relaxed/simple;
+	bh=IgVUPVmeENy0Uzuoi0wDjp+mUTJq74C5LbxA0jQcmRU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GSk5zbni2o5lkeHzlpuqAS/dApAAmEAvGZX1QiNRQuFGPuiUk7WyloOPYovrDANoJtDIbgwX2tyT+TCNESrTemClQFd9/7TNT16NWaBLI8UNCNFrdc+Q2dosHgbRvl06Kh8yJJfcT54rJb8Ys0vHh/GVnFypVsoocT5P47bPml4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Zbk9V2mz; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac41514a734so1144863366b.2
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 09:26:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744819771; x=1745424571; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1744820802; x=1745425602; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6gIfY2O9SRNMsf8TpU0oXNbXomtsGMw4EUG+PlvfsPM=;
-        b=xslu3yujU9rfen0sstCfEHbTKdZNTT4pG0iSV1QQHlEFENzfycxQ88MVbEITU3CD53
-         /Ug2h8sLkbKnV6RcxMvxyG5tZKu7WpOVytUfmM15n/8xL835qJ+RrWW9rNHs6VAdiNTt
-         6iCEE9mh96JGwexEmzcn3TDdhXF8kzYwzO+GpYlVdoGyltLaaJseNEACrP70PtG5JRSt
-         ydWsrDZACzCWXMbSNtF/masRf+OgbX9DTR/Kt5kFfensWtN9GjLq1YHiHQcNTx11dmBy
-         QLJYIZexzKUEAUT/G4AmsxGmyfjzAxqMJj5KzOldkkoBtnLkKfH0R3bDCc2N0BJ2geSe
-         +oXQ==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9FlZ3978PiTGhVSgh9hGMx7P3nOMDWWhOsbZtxjmYRo=;
+        b=Zbk9V2mzhvYatYTUOlXlO837M+Gz8+Hde2DMQCNpqHmfAXowQx43KtI8Fcn54XHz5A
+         4S04TNsffSUSK3qDocq8M8dd4EuM2JJlsWxvnG5UTulUD7qGwNHD4HGSMo5bgvZdQuiZ
+         o5EdZYA+J66smISdM4BYTjwZESdVpwxHfOiQfC4DnKidSfmf1jYZY6DIJ5b8fc37pDPe
+         nkq1GrBQ+HYunIBXFGhxiOJTyB0d9YNCoeeLvCpKBoVJ27fTdyCdi/yUZJP+MAqeG6Yx
+         BM5ntIRGHA0WQHTBkpoOxJZ2g8wOW29GQpHZGeM+E1z+N6D4MlFFlKdQBaI9XdxwDlmW
+         /iMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744819771; x=1745424571;
+        d=1e100.net; s=20230601; t=1744820802; x=1745425602;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6gIfY2O9SRNMsf8TpU0oXNbXomtsGMw4EUG+PlvfsPM=;
-        b=QejSpeCuBp9lNTv+xyFQbwcK82JgvpJR1B1RpuoAqt5T7my3uumWbg/AAAwPPSZkAw
-         mF88XAN5N3HFmd4PgI4QG0hjIvMRmL3uSx5CkAWrSI/h37BKgMGroGCQ2UV72LaJCtxW
-         j857Vw3tfmqUmAYa2PXoIyR6vHOcaICOinQ3B1xO22MrphGSxY0OxJScvbRTWLwX6vkV
-         MF0v7X/JZ163Sgi4m93vUz8MPzlLEBy51g/d5jXBZpZxkoLg9C8O7QgP1qUb55PP5Vp5
-         H3nN8pTzrRVhItYqCNUN3q+gsDvGBP+K+e88KeVj1HYlDvwlXZAWd37htAE/hSbf7Fd5
-         HMCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVV9eik5e+GceVXyBqZ15GmAhy0wZGDsugWbnRu+PYDHJY04rrGKmudRkzC/DMvazvLxBdY2br6hpM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMj3g6c8SgLKuxrAdzBmuwxB0qGnFdCnLboijelrwUJj25DWMY
-	1YD1yEfAa3KjFR/UF3EzFnLZSMRwmIxbPya0woxL+B0I74DSBnZzzxSm8Ayy3To=
-X-Gm-Gg: ASbGncs0J7wkSgm8w1Ihm2wlUWegPez7EAhQ2LwcRkUAZmyqPfq9fIUXof0SRlm9Jvb
-	+yu6WWlo7C/mpKeaKBMCtQo7rHYTtk4yzu45mluOPoZ6dJ5IyDs0y6tO37B9ZuYSpdc8bhLvBKk
-	mTxhR6q+S+QR2yt1d4FeafzQDWDZHnnHsKeaKIjRD4GGdd8eIPwoLo+RA9aVuotb1/84UlcZQgI
-	MTiAtlVn2MGG8HWQNftXQS0/Dpms13oxDtx6CUX6l2+pV138sV3BJIjrwDRdWEJEmjX9Ym6EMix
-	8b5E5nRcVBDccqi6L0iNTs7nWKn9sm3RC4JctptgR5xEQw3GjN7oht5EmVR0/4Xk8Ox1Ug9dlVz
-	huih2XMs=
-X-Google-Smtp-Source: AGHT+IF3ZHpE7zJB9IQ2y8x59SUdSUcwVopqWk1Zp0WNiDguj5I7CqqTziJa38Gb4iY+V+RufRzqeg==
-X-Received: by 2002:a05:600c:3ecb:b0:43c:fa24:873e with SMTP id 5b1f17b1804b1-4405d625054mr30574145e9.13.1744819771461;
-        Wed, 16 Apr 2025 09:09:31 -0700 (PDT)
-Received: from localhost (p200300f65f13aa0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:aa04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4405b4f3df8sm25248205e9.24.2025.04.16.09.09.30
+        bh=9FlZ3978PiTGhVSgh9hGMx7P3nOMDWWhOsbZtxjmYRo=;
+        b=aleHNVHcSNGMizuSqZRSZipxGiHQPjXyGymI9PwOPThhY259dBnrKknzkE6nW5unMi
+         O76XcPoP1XZSq1hrS0oR/MXtc8a5238r23XWuO+hjatKH1IWbCkyYx0tIzNKBH2/2B7b
+         lY6ELc2y10WRy5OepDZOdBRrMqoaAn68mVhcl6m8yKawWaDDeMAP8bonlsQNnQeFi862
+         KQcBloRyMBiZnFNVN6VkOE02EnDkZoiXzSKfRidaVDzH9/RHEnvIun/aR67azV3pRGIX
+         j9XycTUyrpAhS7GuCp07bGye2O6K9PTF5Js9pScAnAYR5xPUAoQD41aSU2raf4/U6g1x
+         LL8g==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Jg/NImDGoiooU4KIsnKHaYi8wYE8MVhYs20teT47GkSPYOPCUmBnAgCQcRGDurm4lj2UNfNNVx+Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YzngTab/pdnglga3+p2HErH/hRduzYnvssDsH4VS3ni32HzJoQ0
+	HLHqXgEx3U5vSxXhKe/7sNJti/PVFk86pLYTHMh3ZNLZTb6ZL+yg/DAszWeXzls=
+X-Gm-Gg: ASbGncvB3/rRkIXM9qXwS8pktzXWXU+ZxTJycDaPQqNJhwQxMq+qq1a967/kahL38yZ
+	f2iaMq8uF4iUwzUnTuMRMJUC35ZlhOBgdkikMKi8ILHexxpWVu9qqcQcWz66z6zqXznyKX0mnh5
+	y0ACIvmGS+BtGd5ojR5PGtNMjS6FwxhWM88WfS/mmNyTbcx3+k+Zs3OqU+x890t5ACHeYbzF7P9
+	6rY2WhB8Dq+THiULDgZr5zL3WU/KiM8g2h+Qy1SHGE93brU95NGK2MCszofVOu2qZAaDswqm5D7
+	MnKQ8Mqbrta+ztfcxp5pjgQuC1WXDw+SLFVXQaWwr4B5TYV7Br2Or/aj7qXWlWQlEPps60CNV7C
+	Q7xo6pA==
+X-Google-Smtp-Source: AGHT+IHS1EQoXBYosStv1ftcoY5+W8c3n7WjQIALsG6rcu4q9LYmbRt8Y9GVkdutMbrKBeFufo1cQw==
+X-Received: by 2002:a17:907:2d9e:b0:aca:c441:e861 with SMTP id a640c23a62f3a-acb42890585mr270946866b.7.1744820802220;
+        Wed, 16 Apr 2025 09:26:42 -0700 (PDT)
+Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1ccd75sm155050366b.142.2025.04.16.09.26.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 09:09:30 -0700 (PDT)
-Date: Wed, 16 Apr 2025 18:09:29 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Sean Wang <sean.wang@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Hao Chang <ot_chhao.chang@mediatek.com>, Qingliang Li <qingliang.li@mediatek.com>
-Subject: Re: [PATCH] pinctrl: mediatek: common-v1: Fix EINT breakage on older
- controllers
-Message-ID: <n3pyida4e4qhzzeyp4rpswiwiomgumgqeci7lwuimr6r4m5mxy@5s3w2ab3p75p>
-References: <20250415112339.2385454-1-wenst@chromium.org>
+        Wed, 16 Apr 2025 09:26:41 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Wed, 16 Apr 2025 18:28:05 +0200
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com
+Subject: Re: [PATCH v8 05/13] clk: rp1: Add support for clocks provided by RP1
+Message-ID: <Z__alTyVJOwu_1gR@apocalypse>
+References: <cover.1742418429.git.andrea.porta@suse.com>
+ <370137263691f4fc14928e4b378b27f75bfd0826.1742418429.git.andrea.porta@suse.com>
+ <23ac3d05-5fb7-4cd8-bb87-cf1f3eab521d@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ed2ffzrhvzkyt6i3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415112339.2385454-1-wenst@chromium.org>
+In-Reply-To: <23ac3d05-5fb7-4cd8-bb87-cf1f3eab521d@gmx.net>
 
+Hi Stefan,
 
---ed2ffzrhvzkyt6i3
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pinctrl: mediatek: common-v1: Fix EINT breakage on older
- controllers
-MIME-Version: 1.0
+On 14:09 Mon 14 Apr     , Stefan Wahren wrote:
+> Hi Andrea,
+> 
+> Am 19.03.25 um 22:52 schrieb Andrea della Porta:
+> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
+> > clock generators and PLLs that drives the sub-peripherals.
+> > Add the driver to support the clock providers.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >   MAINTAINERS           |    5 +
+> >   drivers/clk/Kconfig   |    9 +
+> >   drivers/clk/Makefile  |    1 +
+> >   drivers/clk/clk-rp1.c | 1512 +++++++++++++++++++++++++++++++++++++++++
+> >   4 files changed, 1527 insertions(+)
+> >   create mode 100644 drivers/clk/clk-rp1.c
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 896a307fa065..75263700370d 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -19748,6 +19748,11 @@ S:	Maintained
+> >   F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
+> >   F:	drivers/media/platform/raspberrypi/rp1-cfe/
+> > 
+> > +RASPBERRY PI RP1 PCI DRIVER
+> > +M:	Andrea della Porta <andrea.porta@suse.com>
+> > +S:	Maintained
+> > +F:	drivers/clk/clk-rp1.c
+> > +
+> >   RC-CORE / LIRC FRAMEWORK
+> >   M:	Sean Young <sean@mess.org>
+> >   L:	linux-media@vger.kernel.org
+> > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> > index 713573b6c86c..cff90de71409 100644
+> > --- a/drivers/clk/Kconfig
+> > +++ b/drivers/clk/Kconfig
+> > @@ -88,6 +88,15 @@ config COMMON_CLK_RK808
+> >   	  These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
+> >   	  Clkout1 is always on, Clkout2 can off by control register.
+> > 
+> > +config COMMON_CLK_RP1
+> > +	tristate "Raspberry Pi RP1-based clock support"
+> > +	depends on MISC_RP1 || COMPILE_TEST
+> > +	default MISC_RP1
+> > +	help
+> > +	  Enable common clock framework support for Raspberry Pi RP1.
+> > +	  This multi-function device has 3 main PLLs and several clock
+> > +	  generators to drive the internal sub-peripherals.
+> > +
+> >   config COMMON_CLK_HI655X
+> >   	tristate "Clock driver for Hi655x" if EXPERT
+> >   	depends on (MFD_HI655X_PMIC || COMPILE_TEST)
+> > diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> > index bf4bd45adc3a..ff3993ed7e09 100644
+> > --- a/drivers/clk/Makefile
+> > +++ b/drivers/clk/Makefile
+> > @@ -84,6 +84,7 @@ obj-$(CONFIG_CLK_LS1028A_PLLDIG)	+= clk-plldig.o
+> >   obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+> >   obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
+> >   obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
+> > +obj-$(CONFIG_COMMON_CLK_RP1)            += clk-rp1.o
+> >   obj-$(CONFIG_COMMON_CLK_HI655X)		+= clk-hi655x.o
+> >   obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
+> >   obj-$(CONFIG_COMMON_CLK_SCMI)           += clk-scmi.o
+> > diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
+> > new file mode 100644
+> > index 000000000000..72c74e344c1d
+> > --- /dev/null
+> > +++ b/drivers/clk/clk-rp1.c
+> > @@ -0,0 +1,1512 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> ...
+> > +
+> > +static int rp1_pll_divider_set_rate(struct clk_hw *hw,
+> > +				    unsigned long rate,
+> > +				    unsigned long parent_rate)
+> > +{
+> > +	struct rp1_clk_desc *divider = container_of(hw, struct rp1_clk_desc, div.hw);
+> > +	struct rp1_clockman *clockman = divider->clockman;
+> > +	const struct rp1_pll_data *data = divider->data;
+> > +	u32 div, sec;
+> > +
+> > +	div = DIV_ROUND_UP_ULL(parent_rate, rate);
+> > +	div = clamp(div, 8u, 19u);
+> > +
+> > +	spin_lock(&clockman->regs_lock);
+> > +	sec = clockman_read(clockman, data->ctrl_reg);
+> > +	sec &= ~PLL_SEC_DIV_MASK;
+> > +	sec |= FIELD_PREP(PLL_SEC_DIV_MASK, div);
+> > +
+> > +	/* Must keep the divider in reset to change the value. */
+> > +	sec |= PLL_SEC_RST;
+> > +	clockman_write(clockman, data->ctrl_reg, sec);
+> > +
+> > +	/* TODO: must sleep 10 pll vco cycles */
+> Is it possible to implement this with some kind of xsleep or xdelay?
 
-On Tue, Apr 15, 2025 at 07:23:37PM +0800, Chen-Yu Tsai wrote:
-> When EINT support for multiple addresses was introduced, the driver
-> library for the older generations (pinctrl-mtk-common) was not fixed
-> together. This resulted in invalid pointer accesses.
->=20
-> Fix up the filled in |struct mtk_eint| in pinctrl-mtk-common to match
-> what is now expected by the mtk-eint library.
->=20
-> Reported-by: "Uwe Kleine-K=F6nig" <u.kleine-koenig@baylibre.com>
-> Closes: https://lore.kernel.org/all/43nd5jxpk7b7fv46frqlfjnqfh5jlpqsemeoa=
-kqzd4wdi3df6y@w7ycd3k5ezvn/
-> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple ad=
-dresses")
-> Cc: Hao Chang <ot_chhao.chang@mediatek.com>
-> Cc: Qingliang Li <qingliang.li@mediatek.com>
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+I guess so... unless anyone knows a better method such as checking
+for some undocumented register flag which reveals when the clock is stable
+so it can be enabled (Phil, Dave, please feel free to step in with advice
+if you have any), I think this line could solve the issue:
 
-I confirm this fixes the booting issue on the mt8365-evk.
+ndelay (10 * div * NSEC_PER_SEC / parent_rate);
 
-If it's not too late for that:
+Many thanks,
+Andrea
 
-Tested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
-
-Thanks
-Uwe
-
---ed2ffzrhvzkyt6i3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf/1jcACgkQj4D7WH0S
-/k5aXAf/UP6i2a3y5UocoQPs0pyP+rVPxb+aRfLPNEEqjbC2EfKVw3TBePDcSXYw
-62fTt6kjxzOwm4tDzLbKcDzMIqHEIs2W2mE87RbAtUcp8Kobd1qUPJD++4lcIfjO
-isr+ZlQXT3mG0xCiZF5AHmhgzz4c3Ggc8RqeGDYCxzD3hj30XznRrOTTCv2wovzt
-Rlnu37XuzkHOGMJly86gPc5LSJHDUMyNs/66hNb5h+1v95Hpe8YZ+ZXreQsE9+8T
-9QnXW/NtxHg37nY1XIxdE6pBbUbz1jF8Woe83eBWDIwciCTpAeQ+WOFk1bLKf7Fg
-wRAaujOB3aa0qRpq3UL0vErWjNaMzg==
-=PJFt
------END PGP SIGNATURE-----
-
---ed2ffzrhvzkyt6i3--
+> > +	sec &= ~PLL_SEC_RST;
+> > +	clockman_write(clockman, data->ctrl_reg, sec);
+> > +	spin_unlock(&clockman->regs_lock);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > 
 
