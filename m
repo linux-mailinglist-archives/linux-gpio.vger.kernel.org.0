@@ -1,80 +1,79 @@
-Return-Path: <linux-gpio+bounces-18976-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18977-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8E7BA908C5
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 18:26:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8A06A90A50
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 19:42:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3F31176780
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 16:26:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81C847A2CD4
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 17:40:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AEE7211A37;
-	Wed, 16 Apr 2025 16:26:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 040E5217F40;
+	Wed, 16 Apr 2025 17:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Zbk9V2mz"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="INIiMUlm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000B520D4E0
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 16:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8725B217736
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 17:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820806; cv=none; b=ucMh885JPFxfYDjzAeEbIKaqg1tqoq5tp1wFf88Jt2YFXURCfKkPXyyR/8dFXjLHx/UfwOIAopwgGjmnYykv9w5Sph8nCRyU4TMunMeIbPfbh/eKquZGLZ36eAgDNCRtm6W+yfgRwGRQPq98SyCiAJAuTw2acA9grY2cmebzq0c=
+	t=1744825315; cv=none; b=UNnVB0y7PXQg+8OZ77/lmJcHVroqzyeZFmhPmAYFkg7NMOjBPNlAjE5hh3Z3SEJenhsGSDh+SLYz1n3VnhS02+LlYtyj+VIq1eUicdd5RjTkyD7MTYezNOziG1AanGChpGr5nIQhu2Yw0/iLa+RdHVLumN6SIwHSBgxuinlJZFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820806; c=relaxed/simple;
-	bh=IgVUPVmeENy0Uzuoi0wDjp+mUTJq74C5LbxA0jQcmRU=;
+	s=arc-20240116; t=1744825315; c=relaxed/simple;
+	bh=W7bBtLlluteHP/1dAH+Ya9l7v9aR1LVZvIfTf+Z30DM=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GSk5zbni2o5lkeHzlpuqAS/dApAAmEAvGZX1QiNRQuFGPuiUk7WyloOPYovrDANoJtDIbgwX2tyT+TCNESrTemClQFd9/7TNT16NWaBLI8UNCNFrdc+Q2dosHgbRvl06Kh8yJJfcT54rJb8Ys0vHh/GVnFypVsoocT5P47bPml4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Zbk9V2mz; arc=none smtp.client-ip=209.85.218.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTLU8d9vHISCo5+zf8misyDiynS6HBmjcG026TBwJVOvdIa9McwlDIwHkpSvGpdOeWNinq/MVL3hz/K+tFfI1qhYWR0+eZhgbcVh23vT8pSHnCYhCOwjDkBxWtaVUUvriq6RP1AL4/v51Lr1Hr5PY7RnN8Tj6TQDQOWLHjEJaWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=INIiMUlm; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac41514a734so1144863366b.2
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 09:26:43 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac297cbe017so192255666b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 10:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744820802; x=1745425602; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1744825312; x=1745430112; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9FlZ3978PiTGhVSgh9hGMx7P3nOMDWWhOsbZtxjmYRo=;
-        b=Zbk9V2mzhvYatYTUOlXlO837M+Gz8+Hde2DMQCNpqHmfAXowQx43KtI8Fcn54XHz5A
-         4S04TNsffSUSK3qDocq8M8dd4EuM2JJlsWxvnG5UTulUD7qGwNHD4HGSMo5bgvZdQuiZ
-         o5EdZYA+J66smISdM4BYTjwZESdVpwxHfOiQfC4DnKidSfmf1jYZY6DIJ5b8fc37pDPe
-         nkq1GrBQ+HYunIBXFGhxiOJTyB0d9YNCoeeLvCpKBoVJ27fTdyCdi/yUZJP+MAqeG6Yx
-         BM5ntIRGHA0WQHTBkpoOxJZ2g8wOW29GQpHZGeM+E1z+N6D4MlFFlKdQBaI9XdxwDlmW
-         /iMw==
+        bh=F/+k1VaPPfC6JjSP1qAD5erxrr3Ql1dchYoION8KrN4=;
+        b=INIiMUlmJ16tGuQVFvdcInPU6DmNXr6/gZ3TDNQYNZyfPLyYsAZ6uurwWn+a/23ZF+
+         mSctnYE022rQOVZmUfG09MDSJvraPebPxuar3yb72otY6H1gBxmogVJ1W/zwiKQo+j5+
+         m4v8CyDvTfY+oSmHpSb9CfoBrH629D6U/27hrPrtGWoyta9raQXVbEBIdVAiOABvdm87
+         0zTU0hpSm/CoCDis6b9J3OoDmj0BY7EsrYFwDREd/1oBT/dq7gZ+ZbX+BkPXezPR9PTa
+         igWPjF/Ky1UmyVu1wPICDR+6cxvPjLMmnQbQRU3cq5Cp/aYWcJezuVFZtwv1VlwQfVkm
+         CBVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744820802; x=1745425602;
+        d=1e100.net; s=20230601; t=1744825312; x=1745430112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9FlZ3978PiTGhVSgh9hGMx7P3nOMDWWhOsbZtxjmYRo=;
-        b=aleHNVHcSNGMizuSqZRSZipxGiHQPjXyGymI9PwOPThhY259dBnrKknzkE6nW5unMi
-         O76XcPoP1XZSq1hrS0oR/MXtc8a5238r23XWuO+hjatKH1IWbCkyYx0tIzNKBH2/2B7b
-         lY6ELc2y10WRy5OepDZOdBRrMqoaAn68mVhcl6m8yKawWaDDeMAP8bonlsQNnQeFi862
-         KQcBloRyMBiZnFNVN6VkOE02EnDkZoiXzSKfRidaVDzH9/RHEnvIun/aR67azV3pRGIX
-         j9XycTUyrpAhS7GuCp07bGye2O6K9PTF5Js9pScAnAYR5xPUAoQD41aSU2raf4/U6g1x
-         LL8g==
-X-Forwarded-Encrypted: i=1; AJvYcCU3Jg/NImDGoiooU4KIsnKHaYi8wYE8MVhYs20teT47GkSPYOPCUmBnAgCQcRGDurm4lj2UNfNNVx+Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzngTab/pdnglga3+p2HErH/hRduzYnvssDsH4VS3ni32HzJoQ0
-	HLHqXgEx3U5vSxXhKe/7sNJti/PVFk86pLYTHMh3ZNLZTb6ZL+yg/DAszWeXzls=
-X-Gm-Gg: ASbGncvB3/rRkIXM9qXwS8pktzXWXU+ZxTJycDaPQqNJhwQxMq+qq1a967/kahL38yZ
-	f2iaMq8uF4iUwzUnTuMRMJUC35ZlhOBgdkikMKi8ILHexxpWVu9qqcQcWz66z6zqXznyKX0mnh5
-	y0ACIvmGS+BtGd5ojR5PGtNMjS6FwxhWM88WfS/mmNyTbcx3+k+Zs3OqU+x890t5ACHeYbzF7P9
-	6rY2WhB8Dq+THiULDgZr5zL3WU/KiM8g2h+Qy1SHGE93brU95NGK2MCszofVOu2qZAaDswqm5D7
-	MnKQ8Mqbrta+ztfcxp5pjgQuC1WXDw+SLFVXQaWwr4B5TYV7Br2Or/aj7qXWlWQlEPps60CNV7C
-	Q7xo6pA==
-X-Google-Smtp-Source: AGHT+IHS1EQoXBYosStv1ftcoY5+W8c3n7WjQIALsG6rcu4q9LYmbRt8Y9GVkdutMbrKBeFufo1cQw==
-X-Received: by 2002:a17:907:2d9e:b0:aca:c441:e861 with SMTP id a640c23a62f3a-acb42890585mr270946866b.7.1744820802220;
-        Wed, 16 Apr 2025 09:26:42 -0700 (PDT)
+        bh=F/+k1VaPPfC6JjSP1qAD5erxrr3Ql1dchYoION8KrN4=;
+        b=KPBzPhX1a0/jrDnHvNdnGVrt3o4nnQ6D6GZ8+byKxqwsfcxC3CXXLKtqVAmWZL3sc+
+         uOnTAoM5pyi13/t7SR1ESufEP1zM2tehkx7+pNVcZWKavneVNs+KhsTXZKCpHeR9SHTO
+         dlUGcFn5YFxCwMZT9bb4kbm8WdjDkPSn/rHztwnim+KGRJ7ylpTXmR6qGXKUT/N6hNaU
+         xAt2MWyYknrc32PnipUMLb0EOD673fhxROfO49IrrvsUdhn0RW3i8lk2tVZ9L5TU2oD1
+         eUOdQz9yr+0CsrdH8yGim5YHSxnAMk9KuE9Z4l2keB0RVXSJdeEP0es1ruGQPxf14qGj
+         qWYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXc0nH5tQ1sU2g0Kt4wFejKm+0soBC9OuK/LrTLLDaHgloJHmj4obJCp9+byuP2jo9CdXiYEk66oxKG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwJC2MTMrFQ1B5xc7ptNOVw2r7lAa6Okxmiwr0MKqdUXzqcvZs
+	7Y9EIHfnTM+YMdnqjbRFRXD89emVUfDaL1xRIWSRJIjlyHN51WwcCdPYL5/msWg=
+X-Gm-Gg: ASbGncsBljQXBoetwS2Vd2vmtvKfZb7mWGdiAXzp+X175rFv8X4QD5UVniYSytaATSv
+	OyLDObUK8XK7f26XGKsI58XgCgN5r5qbLT6bMXNNFHo7lo1iPpi/UuOyKqWm/um1PHONjnGWpV7
+	lR1b7OMsxgJ/FEyVVq2A6PH3Lum37U2nhjtLfA81xRsYkM/3y8Cw2YyUZPvnn47xIG23y4sYJj5
+	oVnWHCskC4ax5BsRUxWnYFBB0eKJI69rMIvRai2iBCie/Px51PX531gGrvUB4b+0OeQrEqvNCvW
+	YsnEF++tWyqXAqMdV52U8au6M1j2lv1VlhCu8HKngdVui7CGu5ZmYIq750Hu+I19733WBL4=
+X-Google-Smtp-Source: AGHT+IG7VChiUUBXbPZt2UsOsnvfmMZv1kTPdmKDqxu0K/iyE0OKTXPbM6G10YQaE7vDg/k0DkFp+g==
+X-Received: by 2002:a17:907:1b2a:b0:ac7:b1eb:8283 with SMTP id a640c23a62f3a-acb5220ab4dmr51498666b.17.1744825311718;
+        Wed, 16 Apr 2025 10:41:51 -0700 (PDT)
 Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1ccd75sm155050366b.142.2025.04.16.09.26.41
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1ce081sm159581866b.154.2025.04.16.10.41.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 09:26:41 -0700 (PDT)
+        Wed, 16 Apr 2025 10:41:51 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Wed, 16 Apr 2025 18:28:05 +0200
+Date: Wed, 16 Apr 2025 19:43:14 +0200
 To: Stefan Wahren <wahrenst@gmx.net>
 Cc: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -104,11 +103,12 @@ Cc: Andrea della Porta <andrea.porta@suse.com>,
 	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>,
 	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 05/13] clk: rp1: Add support for clocks provided by RP1
-Message-ID: <Z__alTyVJOwu_1gR@apocalypse>
+Subject: Re: [PATCH v8 09/13] arm64: dts: Add board DTS for Rpi5 which
+ includes RP1 node
+Message-ID: <Z__sMg-RJ6B-3OL4@apocalypse>
 References: <cover.1742418429.git.andrea.porta@suse.com>
- <370137263691f4fc14928e4b378b27f75bfd0826.1742418429.git.andrea.porta@suse.com>
- <23ac3d05-5fb7-4cd8-bb87-cf1f3eab521d@gmx.net>
+ <c6498d8cf8dfade1980b566e99a9a91551fd8b53.1742418429.git.andrea.porta@suse.com>
+ <526751d2-c7e8-4097-9454-c9049b880225@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -117,124 +117,88 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <23ac3d05-5fb7-4cd8-bb87-cf1f3eab521d@gmx.net>
+In-Reply-To: <526751d2-c7e8-4097-9454-c9049b880225@gmx.net>
 
 Hi Stefan,
 
-On 14:09 Mon 14 Apr     , Stefan Wahren wrote:
+On 13:48 Mon 14 Apr     , Stefan Wahren wrote:
 > Hi Andrea,
 > 
 > Am 19.03.25 um 22:52 schrieb Andrea della Porta:
-> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> > clock generators and PLLs that drives the sub-peripherals.
-> > Add the driver to support the clock providers.
+> > Add the board 'monolithic' DTS for RaspberryPi 5 which includes
+> > the RP1 node definition.  The inclusion treeis as follow (the
+> > arrow points to the includer):
+> > 
+> > rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b-monolithic.dts
+> >                                                 ^
+> >                                                 |
+> >                                             bcm2712-rpi-5-b.dts
+> sorry for the delay. I'm not happy with the monolithic appendix.
+> 
+> How about bcm2712-rpi-5-b-rp1.dts or something more self-explaining?Regards
+
+Sure, good catch. I'd go even further saying that we can rename (or merge if
+the destination file already exists) as:
+
+bcm2712-rpi-5-b.dts             ->  bcm2712-rpi-5-b-norp1.dts (or some better suffix other than -norp1)
+bcm2712-rpi-5-b-monolithic.dts  ->  bcm2712-rpi-5-b.dts
+
+so the monolithic one, which seems to be the 'safest' option as of now,
+would be the default dtb. Do you think it could be ok?
+
+> > This is designed to maximize the compatibility with downstream DT
+> > while ensuring that a fully defined DT (one which includes the RP1
+> > node as opposed to load it from overlay at runtime) is present
+> > since early boot stage.
 > > 
 > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > > ---
-> >   MAINTAINERS           |    5 +
-> >   drivers/clk/Kconfig   |    9 +
-> >   drivers/clk/Makefile  |    1 +
-> >   drivers/clk/clk-rp1.c | 1512 +++++++++++++++++++++++++++++++++++++++++
-> >   4 files changed, 1527 insertions(+)
-> >   create mode 100644 drivers/clk/clk-rp1.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 896a307fa065..75263700370d 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -19748,6 +19748,11 @@ S:	Maintained
-> >   F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
-> >   F:	drivers/media/platform/raspberrypi/rp1-cfe/
-> > 
-> > +RASPBERRY PI RP1 PCI DRIVER
-> > +M:	Andrea della Porta <andrea.porta@suse.com>
-> > +S:	Maintained
-> > +F:	drivers/clk/clk-rp1.c
-> > +
-> >   RC-CORE / LIRC FRAMEWORK
-> >   M:	Sean Young <sean@mess.org>
-> >   L:	linux-media@vger.kernel.org
-> > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> > index 713573b6c86c..cff90de71409 100644
-> > --- a/drivers/clk/Kconfig
-> > +++ b/drivers/clk/Kconfig
-> > @@ -88,6 +88,15 @@ config COMMON_CLK_RK808
-> >   	  These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
-> >   	  Clkout1 is always on, Clkout2 can off by control register.
-> > 
-> > +config COMMON_CLK_RP1
-> > +	tristate "Raspberry Pi RP1-based clock support"
-> > +	depends on MISC_RP1 || COMPILE_TEST
-> > +	default MISC_RP1
-> > +	help
-> > +	  Enable common clock framework support for Raspberry Pi RP1.
-> > +	  This multi-function device has 3 main PLLs and several clock
-> > +	  generators to drive the internal sub-peripherals.
-> > +
-> >   config COMMON_CLK_HI655X
-> >   	tristate "Clock driver for Hi655x" if EXPERT
-> >   	depends on (MFD_HI655X_PMIC || COMPILE_TEST)
-> > diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> > index bf4bd45adc3a..ff3993ed7e09 100644
-> > --- a/drivers/clk/Makefile
-> > +++ b/drivers/clk/Makefile
-> > @@ -84,6 +84,7 @@ obj-$(CONFIG_CLK_LS1028A_PLLDIG)	+= clk-plldig.o
-> >   obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
-> >   obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
-> >   obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
-> > +obj-$(CONFIG_COMMON_CLK_RP1)            += clk-rp1.o
-> >   obj-$(CONFIG_COMMON_CLK_HI655X)		+= clk-hi655x.o
-> >   obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
-> >   obj-$(CONFIG_COMMON_CLK_SCMI)           += clk-scmi.o
-> > diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
-> > new file mode 100644
-> > index 000000000000..72c74e344c1d
-> > --- /dev/null
-> > +++ b/drivers/clk/clk-rp1.c
-> > @@ -0,0 +1,1512 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> ...
-> > +
-> > +static int rp1_pll_divider_set_rate(struct clk_hw *hw,
-> > +				    unsigned long rate,
-> > +				    unsigned long parent_rate)
-> > +{
-> > +	struct rp1_clk_desc *divider = container_of(hw, struct rp1_clk_desc, div.hw);
-> > +	struct rp1_clockman *clockman = divider->clockman;
-> > +	const struct rp1_pll_data *data = divider->data;
-> > +	u32 div, sec;
-> > +
-> > +	div = DIV_ROUND_UP_ULL(parent_rate, rate);
-> > +	div = clamp(div, 8u, 19u);
-> > +
-> > +	spin_lock(&clockman->regs_lock);
-> > +	sec = clockman_read(clockman, data->ctrl_reg);
-> > +	sec &= ~PLL_SEC_DIV_MASK;
-> > +	sec |= FIELD_PREP(PLL_SEC_DIV_MASK, div);
-> > +
-> > +	/* Must keep the divider in reset to change the value. */
-> > +	sec |= PLL_SEC_RST;
-> > +	clockman_write(clockman, data->ctrl_reg, sec);
-> > +
-> > +	/* TODO: must sleep 10 pll vco cycles */
-> Is it possible to implement this with some kind of xsleep or xdelay?
+> > Right now bcm2712-rpi-5-b.dts is the overlay-ready DT which will make
+> > the RP1 driver to load the RP1 dtb overlay at runtime, while
+> > bcm2712-rpi-5-b-monolithic.dts is the fully defined one (i.e. it
+> > already contains RP1 node, so no overlay is loaded nor needed).
+> > Depending on which one we want to be considered the default, we can
+> > swap the file names to align with downstream naming convention that
+> > has only the fully defined DT called bcm2712-rpi-5-b.dts.
+> Could you please move some of this good explanation into this dts file as
+> comment?
 
-I guess so... unless anyone knows a better method such as checking
-for some undocumented register flag which reveals when the clock is stable
-so it can be enabled (Phil, Dave, please feel free to step in with advice
-if you have any), I think this line could solve the issue:
+Sure.
 
-ndelay (10 * div * NSEC_PER_SEC / parent_rate);
-
-Many thanks,
+Thanks,
 Andrea
 
-> > +	sec &= ~PLL_SEC_RST;
-> > +	clockman_write(clockman, data->ctrl_reg, sec);
-> > +	spin_unlock(&clockman->regs_lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
+> > ---
+> >   arch/arm64/boot/dts/broadcom/Makefile                     | 1 +
+> >   .../boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts      | 8 ++++++++
+> >   2 files changed, 9 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts
 > > 
+> > diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
+> > index 3d0efb93b06d..4836c6da5bee 100644
+> > --- a/arch/arm64/boot/dts/broadcom/Makefile
+> > +++ b/arch/arm64/boot/dts/broadcom/Makefile
+> > @@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += bcm2711-rpi-400.dtb \
+> >   			      bcm2711-rpi-4-b.dtb \
+> >   			      bcm2711-rpi-cm4-io.dtb \
+> >   			      bcm2712-rpi-5-b.dtb \
+> > +			      bcm2712-rpi-5-b-monolithic.dtb \
+> >   			      bcm2712-d-rpi-5-b.dtb \
+> >   			      bcm2837-rpi-3-a-plus.dtb \
+> >   			      bcm2837-rpi-3-b.dtb \
+> > diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts
+> > new file mode 100644
+> > index 000000000000..3aeee678b0bc
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts
+> > @@ -0,0 +1,8 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > +/dts-v1/;
+> > +
+> > +#include "bcm2712-rpi-5-b.dts"
+> > +
+> > +&pcie2 {
+> > +	#include "rp1-nexus.dtsi"
+> > +};
+> 
 
