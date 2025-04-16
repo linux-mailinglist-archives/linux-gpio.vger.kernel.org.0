@@ -1,166 +1,248 @@
-Return-Path: <linux-gpio+bounces-18987-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18989-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E56EDA90C63
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 21:32:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B06EEA90D44
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 22:41:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09ECA17036C
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 19:32:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2FC3447BF8
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 20:41:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ED5522425B;
-	Wed, 16 Apr 2025 19:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B4732356AF;
+	Wed, 16 Apr 2025 20:41:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIPgOR5M"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="oXDcUd/S"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D045B1B6D06;
-	Wed, 16 Apr 2025 19:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B59D21324F;
+	Wed, 16 Apr 2025 20:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744831916; cv=none; b=OQsjKR52oi6pvpr8WLfdz7ycNd/V9o5dHJNXKZuAOBBn13OjAwbyQ7w2TloT1RqSwdtIAvw/t11MrNju6TWFxKeW0+tMyLIqZUAVX7VPNIbWBuK1osbX0iLTdPgNhQOL6dHiFnqbBQME6/ELJDTy6nCcCOzGr2ed+mHfgMVw3vk=
+	t=1744836068; cv=none; b=Mjvlh94KkGwik11Zwp/rWO+qugCN8su85PbuYctLGAOb2MkIfVXE+o1qDWvwNUoVUNsUwRiPpxkiFCk8x8/6l0dftiV+u7iGF9qPNjIWtBydeSVjSXyh3FkqcL3gnMxai2oUnS0ryT2BvsFHWp1Mj2TXaz2exYevdnR08Z9wF/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744831916; c=relaxed/simple;
-	bh=vxpDIaAEC9SyCL3ZAht0iZtYPbSSyHUAE7sjCOL8EDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=selu/w4Q4Ok/dVCqGfJUOGxN2rTAx5zNaSa3kByk2sg8N61iQBcaOX/QfWoHKAVaq0BzMSSfW2X6m2FSQdTC0cH3GI+3DarvXcemr/h8xjQ7BRHJScYa6wMFD0T/hGukxR2RwTji5jCMVNphf/Ey6cRrY0HzmV/wcZ9JOHaKb2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIPgOR5M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 057FFC4CEE2;
-	Wed, 16 Apr 2025 19:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744831914;
-	bh=vxpDIaAEC9SyCL3ZAht0iZtYPbSSyHUAE7sjCOL8EDI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VIPgOR5MNLdSjfdlkkjOwUf7qmUNhO0t4OBBHheK/N7avBHoXTTT2X7PgAWUWSr6U
-	 vf6BnQNC8DMs9hIRLLzpHjG624jNYTy10DS/RSWYn9KZbyn/ivV+rMU/Zd0/BTdyZy
-	 q8XxR9s32JWMSxvMgE+Zh69OKXLDQbl49qB8slxphi+AY5vbUF47wlXp+hZxGiOUKW
-	 WIEdjXDxPt1+xNoBRrafov/YQdPTvhKjikwKTMygIT/l2oH4Wl3YbdDaZ5ZZsceDQP
-	 xkyYbxXs27Dc6CLTp+1j/V3eDxj7j+HG1tH1mOmQRPVUZFeglvnsCDlp7S0xAmJnDT
-	 KtMHgXZ/kR/aA==
-Date: Wed, 16 Apr 2025 14:31:52 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <20250416193152.GA78446@bhelgaas>
+	s=arc-20240116; t=1744836068; c=relaxed/simple;
+	bh=v7UN+6CjXz2XLGpkAAt+coSnP+B3OwoBHVUpCmbXSZ4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=eTFeIBIZ+NyoAHp6z3Y4zPcSYBv+IhkTi0DiyDg3+eHkNgkvNvpSwpBX4Jx6De/p9i3g+B/WXAha0FLXx4EjhK39cNw4XJeT9AKueJgz4LPfOEGy6LlsjtBbNyVDFN7XZOLpgBRVWouYd2SMf8CVSOB9fJdm/3VycC7sOWXPzMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=oXDcUd/S; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from localhost (web.docker-mailserver_default [172.18.0.2])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 69865BBAD2;
+	Wed, 16 Apr 2025 20:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1744835607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KWNDczDpsZAXQp+kAkO6XxPalFUodMDdefQ7Hqvnp3I=;
+	b=oXDcUd/SrbjUZCVHpXK24ZQmD8eBsHZdttsQMwVDTwpErRn4lZfOJdH1A8oiVepKQPSDqZ
+	zlhtcHxJxDDvgtuNwu0JYAy5U1GvSo79Ey+649CcXxXpIIsyraAVU9Vr3PUPmWGlvRSKO1
+	xvLKpW0+s6nahxy3YDOwEU50jHtD38VCy88Y7xJgheSSEovev889x1DVU+LlGAJM5GUo38
+	P9tScdTlm2HuSd3uMqrUThPEGS4wG9Ma44SnYo2szJaYY3suuCYH78B0NE5BhULGNe21tZ
+	x6h9u4B4Ynv1/7XO73MGACy6WDFSjOXDm641nbh1O2DtAhNmPuNkGfh2aPRg7g==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
+Date: Wed, 16 Apr 2025 22:33:27 +0200
+From: barnabas.czeman@mainlining.org
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
+ =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
+ <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio
+ <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, Sean Paul
+ <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>, Marijn Suijten
+ <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Dmitry Baryshkov
+ <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, Dang Huynh
+ <danct12@riseup.net>
+Subject: Re: [PATCH v4 4/6] arm64: dts: qcom: Add initial support for MSM8937
+In-Reply-To: <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
+References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
+ <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
+ <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
+Message-ID: <ddf29d5743e25f311cd86711f39f7ad0@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrote:
-> The RaspberryPi RP1 is a PCI multi function device containing
-> peripherals ranging from Ethernet to USB controller, I2C, SPI
-> and others.
+On 2025-04-14 22:55, Konrad Dybcio wrote:
+> On 3/15/25 3:57 PM, Barnabás Czémán wrote:
+>> From: Dang Huynh <danct12@riseup.net>
+>> 
+>> Add initial support for MSM8937 SoC.
+>> 
+>> Signed-off-by: Dang Huynh <danct12@riseup.net>
+>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
 > 
-> Implement a bare minimum driver to operate the RP1, leveraging
-> actual OF based driver implementations for the on-board peripherals
-> by loading a devicetree overlay during driver probe if the RP1
-> node is not already present in the DT.
+> [...]
 > 
-> The peripherals are accessed by mapping MMIO registers starting
-> from PCI BAR1 region.
+>> +			power-domains = <&cpu_pd0>;
+>> +			power-domain-names = "psci";
 > 
-> With the overlay approach we can achieve more generic and agnostic
-> approach to managing this chipset, being that it is a PCI endpoint
-> and could possibly be reused in other hw implementations. The
-> presented approach is also used by Bootlin's Microchip LAN966x
-> patchset (see link) as well, for a similar chipset.
-> In this case, the inclusion tree for the DT overlay is as follow
-> (the arrow points to the includer):
+> So CPU4-7 get "nicer" idle, but 0-3 don't?
+I am not sure, i will check.
 > 
->  rp1-pci.dtso <---- rp1-common.dtsi
+> [...]
 > 
-> On the other hand, to ensure compatibility with downstream, this
-> driver can also work with a DT already comprising the RP1 node, so
-> the dynamically loaded overlay will not be used if the DT is already
-> fully defined.
+>> +		cpu-map {
+>> +			/* The MSM8937 has 2 cluster A53 setup. */
 > 
-> The reason why this driver is contained in drivers/misc has
-> been paved by Bootlin's LAN966X driver, which first used the
-> overlay approach to implement non discoverable peripherals behind a
-> PCI bus. For RP1, the same arguments apply: it's not used as an SoC
-> since the driver code is not running on-chip and is not like an MFD
-> since it does not really need all the MFD infrastructure (shared regs,
-> etc.). So, for this particular use, misc has been proposed and deemed
-> as a good choice. For further details about that please check the links.
+> This comment seems superfluous
 > 
-> This driver is heavily based on downstream code from RaspberryPi
-> Foundation, and the original author is Phil Elwell.
+> [...]
 > 
-> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
+>> +	timer {
 > 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# quirks.c, pci_ids.h
-
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b84ff7bade82..4dfda527c76b 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6283,6 +6283,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, 0x9660, of_pci_make_dev_node);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0, of_pci_make_dev_node);
->  
->  /*
->   * Devices known to require a longer delay before first config space access
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index de5deb1a0118..b7a2c0fd589e 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2620,6 +2620,9 @@
->  #define PCI_VENDOR_ID_TEKRAM		0x1de1
->  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
->  
-> +#define PCI_VENDOR_ID_RPI		0x1de4
-> +#define PCI_DEVICE_ID_RPI_RP1_C0	0x0001
-> +
->  #define PCI_VENDOR_ID_ALIBABA		0x1ded
->  
->  #define PCI_VENDOR_ID_CXL		0x1e98
-> -- 
-> 2.35.3
+> 'p' < 't', please sort top-level nodes alphabetically
 > 
+> [...]
+> 
+>> +				wcss-wlan2-pins {
+>> +					pins = "gpio76";
+>> +					function = "wcss_wlan2";
+>> +					drive-strength = <6>;
+> 
+> please unify this order (drive-strength before bias)
+> 
+>> +					bias-pull-up;
+>> +
+>> +				};
+> 
+> Extra newline
+> 
+> [...]
+> 
+>> +		gpu: gpu@1c00000 {
+>> +			compatible = "qcom,adreno-505.0", "qcom,adreno";
+>> +			reg = <0x1c00000 0x40000>;
+>> +			reg-names = "kgsl_3d0_reg_memory";
+>> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-names = "kgsl_3d0_irq";
+>> +			#cooling-cells = <2>;
+>> +			clocks = <&gcc GCC_OXILI_GFX3D_CLK>,
+>> +				<&gcc GCC_OXILI_AHB_CLK>,
+>> +				<&gcc GCC_BIMC_GFX_CLK>,
+>> +				<&gcc GCC_BIMC_GPU_CLK>,
+>> +				<&gcc GCC_OXILI_TIMER_CLK>,
+>> +				<&gcc GCC_OXILI_AON_CLK>;
+> 
+> Please align the <s
+> 
+>> +			clock-names = "core",
+>> +				      "iface",
+>> +				      "mem_iface",
+>> +				      "alt_mem_iface",
+>> +				      "rbbmtimer",
+>> +				      "alwayson";
+>> +			operating-points-v2 = <&gpu_opp_table>;
+>> +			power-domains = <&gcc OXILI_GX_GDSC>;
+>> +
+>> +			iommus = <&adreno_smmu 0>;
+>> +
+>> +			status = "disabled";
+>> +
+>> +			gpu_opp_table: opp-table {
+>> +				compatible = "operating-points-v2";
+>> +
+>> +				opp-19200000 {
+>> +					opp-hz = /bits/ 64 <19200000>;
+>> +					opp-supported-hw = <0xFF>;
+> 
+> 0xff is overly broad, please document the existing known speed bins
+> 
+> [...]
+> 
+>> +		adreno_smmu: iommu@1c40000 {
+>> +			compatible = "qcom,msm8996-smmu-v2",
+>> +				     "qcom,adreno-smmu",
+>> +				     "qcom,smmu-v2";
+>> +			reg = <0x1c40000 0x10000>;
+> 
+> Does it work as-is, without iommu changes?
+Yes
+> 
+> [...]
+> 
+>> +	thermal_zones: thermal-zones {
+>> +		aoss-thermal {
+>> +			polling-delay-passive = <250>;
+> 
+> There are no passive trip points> +
+Should i remove polling-delay-passive?
+>> +			thermal-sensors = <&tsens 0>;
+>> +
+>> +			trips {
+>> +				aoss_alert0: trip-point0 {
+>> +					temperature = <85000>;
+>> +					hysteresis = <2000>;
+>> +					type = "hot";
+>> +				};
+> 
+> Please convert these to 'critical' instead
+> 
+> [...]
+> 
+>> +		cpuss1-thermal {
+>> +			polling-delay-passive = <250>;
+> 
+> You can drop polling-delay-passive under CPU tzones, as threshold
+> crossing is interrupt-driven
+Should I remove polling-delay-passive then?
+> 
+>> +
+>> +			thermal-sensors = <&tsens 4>;
+>> +
+>> +			cooling-maps {
+>> +				map0 {
+>> +					trip = <&cpuss1_alert0>;
+>> +					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> +				};
+>> +			};
+>> +
+>> +			trips {
+>> +				cpuss1_alert0: trip-point0 {
+>> +					temperature = <75000>;
+>> +					hysteresis = <2000>;
+>> +					type = "passive";
+>> +				};
+>> +
+>> +				cpuss1_alert1: trip-point1 {
+>> +					temperature = <85000>;
+>> +					hysteresis = <2000>;
+>> +					type = "hot";
+>> +				};
+> 
+> On newer platforms we rely on LMH to shut down the device if it
+> were to reach the junction temperature, but let's leave them here
+> as probably no one remembers for sure how reliable that is on these
+> older platforms and you're most likely not willing to test that
+> 
+> Konrad
 
