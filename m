@@ -1,87 +1,86 @@
-Return-Path: <linux-gpio+bounces-18926-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18927-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9581DA8B419
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 10:41:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAA5CA8B421
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 10:42:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2688C3BABE8
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 08:41:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4AAC7AED00
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 08:41:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53C47230278;
-	Wed, 16 Apr 2025 08:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 731AF22FE05;
+	Wed, 16 Apr 2025 08:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z3b1vqnR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MKL4q0VZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D55822FF2E
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 08:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F4A22D7BC
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 08:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792877; cv=none; b=hL3MjYzxXmJmxHD4tS1yzQDDq4Trnbf6hePSiHObDCDBRYZbnBvKEm26RGWZK2qd9okWSMRZCx8QY5g+O+BEHxQsHJ9rLljR25z9a7I+y/pZfFlCYMb6257MgS91wI09kwPAcnutrP4pDWou9B7c9QX71dNS63hNc4jKTXl+sHo=
+	t=1744792959; cv=none; b=s/DcqPJbSZTpIX5HWjduuetHI/9nHWaW/JvQcjtnIkXt6MvkSulLzV4/M8kXA1SL6Q7zvFbLRXr6NdzcgysxBNNRHxZPVGtT/QTunUo34B3wx1ER4VBVULouE4ah/cEvMrV4prfBjYydqvg916yx7FdP+CX9g9qW+bGa2cs/0ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792877; c=relaxed/simple;
-	bh=kxf0AqUhSEyeWtBULLKmCMmtv5hyuRRkxXqiUsElL50=;
+	s=arc-20240116; t=1744792959; c=relaxed/simple;
+	bh=emU1ztpEHcPDJ3TesqEI0D74SFuoQkpyh55PmfPn1VE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CChh76B+dRLjCbyfp1NNoDjtFIXI1C+lHp2y/kgzKkUghRaEdXnbTEQBcYHYTzPUPFn1JnldzZW18p8rBcWnVgpTIuGC/qbaqq9IqDoKnvH375AgfXHtIzHQkZmpac/2QSxUug6VzzURuU0ix+MXbrIObxwq4nH3Btt+VJC0XQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z3b1vqnR; arc=none smtp.client-ip=209.85.208.177
+	 To:Cc:Content-Type; b=eXBo8ICeYFMt/RtCi4wFG1Hyq0+Kdy2tNkGo2ghABtt9OuhuC8UZgtekXwn7uh3tMimxxHf/Se4drg8NPRJxEji1rfvMSw9vPCvG1lDuzUfoRlHeoGYi6b0a283at0nhuQlxHTrMo9u6G8RxhhMZw86HjsjKMFguh0InuK6aap4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MKL4q0VZ; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3105ef2a070so37889751fa.2
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 01:41:15 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30effbfaf4aso63943231fa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Apr 2025 01:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744792873; x=1745397673; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744792955; x=1745397755; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kxf0AqUhSEyeWtBULLKmCMmtv5hyuRRkxXqiUsElL50=;
-        b=z3b1vqnRQW2hkxo+c1smDcVsC7DptsJJ+RMdg9H63IRMOw4sM72mdSk7ppb0vCXMdD
-         zZN34g6FRuG5L5zcrAghJBhMZWaXhM/l3MLyaC9A9P0mZsOCMrZkvEbjTCC3K2+H9JIr
-         RXTZg9p8p/OP7hZ2SptBLfJ6vpsXa0Yb1Iao4xljt7Xxh2TTm+pn7Hw1DlVA1hpfUTEQ
-         dYc8iuZWEV8j+EKO28QmXM+AvEVuwjQYdCMhum77UYLoPsXyL5MM3AeLXe3FSGp4Zz6M
-         P5RXL1w47U7wCd7K87QcqkB7wdds8yzvAis1Xh5XzprnZEG45gDaM1s6f8wgvjDNOQXP
-         Md7g==
+        bh=emU1ztpEHcPDJ3TesqEI0D74SFuoQkpyh55PmfPn1VE=;
+        b=MKL4q0VZ53nnCRoQy5sY1rQ/sGoX3wOMcC4SIYjQEwGCYhhRRDigzzB7GA0e3nMl7C
+         Ggx6TT/wK0M4N5c2NWsOMgiDMSz1hgMqqgFYm2GL0kdwvlCjF8VEwzM3x8sDIg4NFfrN
+         aUfKYEgrxrtJxKX7MiD+BN4c36ozksBJQ5Xi6FEDYcYdU04WfiTtCKGrvr2zQthTNLcE
+         0baL57HICUBnetiwla62FISfOISaj6A96fFvz49GzxGpbI+npweyTrvWqTzrYe9N/JxV
+         HGonTmKifn2YdqhdKYtXnqFtk439e6BmuKtz1FVmt2DjQ4ZT5AP9pnE0s8LWYPhZk27d
+         vi0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744792873; x=1745397673;
+        d=1e100.net; s=20230601; t=1744792955; x=1745397755;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kxf0AqUhSEyeWtBULLKmCMmtv5hyuRRkxXqiUsElL50=;
-        b=RGXjB1AWZVz8Y9tXc9Lrz94mdTWvysB9tnQruyF2LCaZ//oMbUA78DPU5g5IdW2rqZ
-         nN8JnZ3AMHG6Kl2U2d7zgNlyTYTDqeUAueZIPArcdnmvXs+3n96K0/4jOkBnjEIYwh4+
-         JPovKXWl/P0jBeiF7VsL+MuWkkI6v/TGxT42GNtpFMJ0Z7PYHvpUh+vXKPo/TOAAR4T4
-         b56oeYqq1prqfjReyUehYigLeSLBR+fuwjE4JWTSPaYDQ1qVo/YtMDcq+1l2IhRmJyx0
-         /Jw8lBCy/0g5tbMi+5UD4vtb/w8QhaekBmN6NujPMjfWsuzPlyUds5y20gvZ3IajmoB5
-         Ds6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWblXU56h7c9cI129poCCijRRHmH8MmyOxN3hf0+XDU6p6G1cSjUmLE/CYas6tK1UYAeyNGALER7ECA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRUylx+KOQUZsa1nCq1lbkyc94BmI+ecse6jEV+Z3ZGXpcRnHz
-	i3gXX+aXZZLNMXx+3TV7+y3HbnhyBfGXIET6wYT+ApmBBrSFwotjv94lepGTit5hjVLvcZ4k7of
-	tKxOrMXzKnNXbPwpZAbjAVP7YTGHsvh+TN/3kSgRpS6zogYtYMrQ=
-X-Gm-Gg: ASbGncsSgAVw9h9Xt7O1k4WvCBMyqaDv+nGMiF/0Ks9f5tWw9KZrU/7xVCzuBkGR3pO
-	b3WZTs/BRQBJ1VrVJyyzh0T5MbrTSmkBYNA8la4MdjhbVdh1kkiQyGpF+Vb3LnjzCOcpvKvomWi
-	JaLbeWR8qMrXEs8ZNBeXcHFQ==
-X-Google-Smtp-Source: AGHT+IH8mo6xpMWNcNdJIoeRY1eieSGQRWpdljySoJo2oFh+1rfwiEfyJ4W1HXlDeTDoHfIKfBC6KiTuMxrkOiZWAAk=
-X-Received: by 2002:a2e:9a10:0:b0:30d:e104:b795 with SMTP id
- 38308e7fff4ca-3107f738f76mr3366791fa.39.1744792873359; Wed, 16 Apr 2025
- 01:41:13 -0700 (PDT)
+        bh=emU1ztpEHcPDJ3TesqEI0D74SFuoQkpyh55PmfPn1VE=;
+        b=cHFQ7OJ2DX1Ua9YFqEvlA/z/KpHu8YxVpgsnNh+oOnYVQHRbqpdIjqnzNWdiFzUSU5
+         ZJjxe+8+hKz3ZSDW0iTyesomaNSdqJGkY25s3nFMi6FBq87nQJx/1sviUSdfvMkgfG2O
+         2eCBs+lCfbdV1UFGJp0KjyqaBvGNhQyWapKez3EzqsRRoeKs1Gtj3+Y16uPOkbY828B4
+         Rpg0FKm4GtczMiyVhXzEroY3EunkXQzfSSMHdLdV3Hx9sWkhRGtBFP2nIIIkCGCasVZg
+         dSBIc+VkKWI7RZ67KIStVfQThv1vq+kLYYncMmXFe3AGzzZovN9yUMir6rNkZpaGw4PT
+         Mpcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSP51OILovVxW6RR744eivFzLOOay02ww7hGx7WvsFgcKnER1aEO1Yr1lvuy4rvuCwSWvk4Lu+tHbQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmTGg3wx4wq1W5D9QPxCtIhBv/mA6Vnkql49mZS/vZ7Cq84IQ7
+	cNyzzzRAiDiKGBgaiY+HdK8oqFVujb7sziYVCR6eDql6j+Mh/58DfDCJXBUlMr9QwB01v+kigv+
+	KoaNyV84ZWFd4kyIAqJb0zTbLmlsMqetIsufLnA==
+X-Gm-Gg: ASbGncv2L0SggQULa3CVtnwcgqA2TQ2TbEGIPRMnhNSbO6rJ+28CuXw79AqLw0k5Hqf
+	ooIgqNYLwHzOyJQ3Z1PukLhaeelrZOx37NdvMf4BQnbMLkmVDGK6s1C72kO2SExHDnSXPn3nn4K
+	qwmoW+wmujlhZGHnADWdi0Ug==
+X-Google-Smtp-Source: AGHT+IG3vfJgDVatBWZn8CTY/EFP1pLWKS59uhKTgG+BQpORL3g5bmdKhrAO9ol2IZnTNVf832lwVZxuCek+mvzQcrs=
+X-Received: by 2002:a05:651c:b0b:b0:30d:e104:b592 with SMTP id
+ 38308e7fff4ca-3107f73a75cmr2464581fa.38.1744792955305; Wed, 16 Apr 2025
+ 01:42:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com> <20250415111124.1539366-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250415111124.1539366-3-andriy.shevchenko@linux.intel.com>
+References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com> <20250415111124.1539366-4-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250415111124.1539366-4-andriy.shevchenko@linux.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 10:41:01 +0200
-X-Gm-Features: ATxdqUHW4QWAWi7HIzYahxDVWb0xBJmLw-NFLTCrGCQlxhs2EcqoJMd9xzITsLQ
-Message-ID: <CACRpkdb9guK5hUuA+p4_EdwVVhbZPea8y83g1fY4Q+40JvZ7_Q@mail.gmail.com>
-Subject: Re: [PATCH v1 2/7] gpiolib: Revert "Don't WARN on gpiod_put() for
- optional GPIO"
+Date: Wed, 16 Apr 2025 10:42:24 +0200
+X-Gm-Features: ATxdqUFlkXxMm9jeA4EPLA5TxpwlyriYzwentOxHys1CKD_0gGXtuyJkG1m0nHg
+Message-ID: <CACRpkdYBn6v6ou9VpB9hDRcLQ=_-d4T-LU1v+_p96XT4SH2EVQ@mail.gmail.com>
+Subject: Re: [PATCH v1 3/7] gpiolib: Move validate_desc() and Co upper in the code
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
@@ -91,14 +90,11 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Apr 15, 2025 at 1:11=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> No need to double check the pointer for NULL since gpiod_free()
-> is using VALIDATE_DESC_VOID() which simply returns in that case.
->
-> This reverts commit 1d7765ba15aca68f3bc52f59434c1c34855bbb54.
+> Move validate_desc() and Co upper in the code to be able to use
+> in the further changes.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Well spotted!
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
