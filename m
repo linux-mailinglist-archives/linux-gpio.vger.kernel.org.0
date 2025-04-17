@@ -1,75 +1,81 @@
-Return-Path: <linux-gpio+bounces-19030-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19031-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A12D5A92304
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Apr 2025 18:50:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADB0AA9232D
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Apr 2025 18:55:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BF299464CED
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Apr 2025 16:50:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57A8B19E7D02
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Apr 2025 16:56:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87F4252292;
-	Thu, 17 Apr 2025 16:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AA0A255244;
+	Thu, 17 Apr 2025 16:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZFoHP6pJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BL0cGvRi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B52190462
-	for <linux-gpio@vger.kernel.org>; Thu, 17 Apr 2025 16:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6812E254B11;
+	Thu, 17 Apr 2025 16:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744908610; cv=none; b=nsU2FdulSxfKkBDkaz0jqn5mXCqYOTUR1tsb8+UzFG+xXngr9vBaC3GlyUMoWpBMXRuUFerMbtrFjLrNt+egHwtWix533ns1cIcDiqFQ0qXR6xkS1n2r0xl1O+L8NCUUgWS/78dq7z8VpQ5ZCxxv2y0ovLQVoWNWN3Yi/kokQRY=
+	t=1744908903; cv=none; b=lS02ic3pFXIvcKc2QWAhhKPgTgRYcmLDXIksjZqH+irGW1cwD5xGnnTE9rIPALzb0IQOW6JLF/jxjTcjd3b3vZunJzblc6/TkZSE7vFLyOYYcNpvZ/n4lx7Iwp/sNeXGd5NxsJrnBU+SWbvtufWhLUS4JCobjNx9WPyp6ANONNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744908610; c=relaxed/simple;
-	bh=lPfv0ocsz/XePRzqKl7ggZtRlHQV6xDoOKASVJytMbw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YEXm9O4oX8LeJh464spdcHY2AMKSw+YfL6jy3zhSpJttkneKpPmOKjzFiyEmV2ccKNzm8RW5yFMPmerDNRuEjVPR7pXjA+KjRIi5/EHCh0KXJ788g/1Y4eI0oyi82f+LvCbQjJG3dTtJ2CAJOyEDm+1nstFKdDM8hJ3SbNEMg0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZFoHP6pJ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744908903; c=relaxed/simple;
+	bh=UJtSO3yMvSEim1jitNFZfnL41L1kkq4cSwWmKFb9HCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fRRs320hzmzvQ7KVxM20Hu/xj0pRRoBJn5Tm7H98kuVzE7ktbVy6mFDYsdb18rZ0fVMg9N4Ya9dR1aaUgkAcjmqRazaE5H5CfhUb3tNB3gd1N1Cwum75VgOWeORbYzcfttWZZCgW0aKX8VbmleXc44Ur3icbjighnfF7JKv0nyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BL0cGvRi; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744908607; x=1776444607;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=lPfv0ocsz/XePRzqKl7ggZtRlHQV6xDoOKASVJytMbw=;
-  b=ZFoHP6pJ7NcJKSuTdcHf+ZkuLQkm4ccCzpXf+3Q5pmQStxLj+VVYD4DH
-   lrLJj06l9els80jD0chRndrG31tXzvYad3O6u1jZBMI4qgqRguXa8+7vn
-   qHYnbVovCOKYw2HBbxsetOhC8F3gj3P2IDEQqlqqfir/KpTKBdJuj9o4B
-   UuImFRt9vKwQsLW1P9bAs2i/0SNWZ+hkQGcNVKLJP2ZRs6kRGfudFY6fh
-   AaWUVB82r3wca3iIsOPlu73Y0h4dk/pku8tfCiki6pWdTGKiHNzIjSHDy
-   d8I6kmS+oX9xyfdaqiq/2twN0pYX9t65Yho7k4jAl0HUUqAmvjX5hgfN3
+  t=1744908902; x=1776444902;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UJtSO3yMvSEim1jitNFZfnL41L1kkq4cSwWmKFb9HCw=;
+  b=BL0cGvRimYKWfGrm2IFwxuS30+z70uJqyVjGkqTx7v6fgvrScPhrMB3I
+   /oXIaC7JgbimbjWLIs54M6aFlpSvvM0nXuoBmnC/yoRiwxA8VTrdMiSeO
+   oV6QAMKTPdpiRFudmiYSep6lhPGjw4xZ1C160nO1XSA8rcngz23WltrzZ
+   R4KNlCXYaBdhBBvdMfZGWn70Um+XP4czGgRmexXfLq7pNbYgWxvorxi6w
+   98cPG4UzTYm0y5KtlCZu8NE0xv8P1T4RUGWQ8ph0awHRWJcNVMRHhuUn9
+   ejYXZsbb310aYp/OfPjLN60DR/I31BEjJsLi6Z7DpKli3WrLrdeDmf8DD
    A==;
-X-CSE-ConnectionGUID: TOL+CzW1QYCnqCnzpm+iTA==
-X-CSE-MsgGUID: 8Zn9+OM3Rj20VEm6gVal0A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57504926"
+X-CSE-ConnectionGUID: ZBJqG2IjSRyEQyiTW6BKOg==
+X-CSE-MsgGUID: aZReXIzOT3y0ijoXPB+2mQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="46676674"
 X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57504926"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 09:50:06 -0700
-X-CSE-ConnectionGUID: upnzOCXqQ+WgMCl3v7KGiw==
-X-CSE-MsgGUID: liCKcVFjTVKWQY6nj13yKg==
+   d="scan'208";a="46676674"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 09:55:01 -0700
+X-CSE-ConnectionGUID: 1ph/G9w9Se+vHawsJT0RXQ==
+X-CSE-MsgGUID: KLRhZ+U1R/inljDuL7fNng==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="130794184"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 17 Apr 2025 09:50:04 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u5SR7-0000WX-1A;
-	Thu, 17 Apr 2025 16:50:01 +0000
-Date: Fri, 18 Apr 2025 00:49:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [linusw-pinctrl:b4/abx500-pinctrl 15/33] loongarch64-linux-ld:
- pinctrl-sx150x.c:undefined reference to `i2c_smbus_write_byte_data'
-Message-ID: <202504180045.r5xtbS4v-lkp@intel.com>
+   d="scan'208";a="168054428"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 09:54:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u5SVr-0000000DG6U-26De;
+	Thu, 17 Apr 2025 19:54:55 +0300
+Date: Thu, 17 Apr 2025 19:54:55 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
+	GaryWang@aaeon.com.tw
+Subject: Re: [PATCH v3 01/10] gpiolib: add support to register sparse pin
+ range
+Message-ID: <aAEyXxgcU4wN3QXK@smile.fi.intel.com>
+References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
+ <20250416-aaeon-up-board-pinctrl-support-v3-1-f40776bd06ee@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,33 +84,45 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-1-f40776bd06ee@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git b4/abx500-pinctrl
-head:   4fff328b120e7e541076abb58810bb845722e6d0
-commit: c4d1b2ee4407b0b12e0dade40361eb86c1c710ed [15/33] pinctrl: sx150x: enable building modules with COMPILE_TEST=y
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20250418/202504180045.r5xtbS4v-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250418/202504180045.r5xtbS4v-lkp@intel.com/reproduce)
+On Wed, Apr 16, 2025 at 04:08:09PM +0200, Thomas Richard wrote:
+> Add support to register for GPIO<->pin mapping using a list of non
+> consecutive pins. The core already support sparse pin range (pins member
+> of struct pinctrl_gpio_range), but it was not possible to register one. If
+> pins is not NULL the core uses it, otherwise it assumes that a consecutive
+> pin range was registered and it uses pin_base.
+> 
+> The function gpiochip_add_pin_range() which allocates and fill the struct
+> pinctrl_gpio_range was renamed to gpiochip_add_pin_range_with_pins() and
+> the pins parameter was added.
+> 
+> Two new functions were added, gpiochip_add_pin_range() and
+> gpiochip_add_sparse_pin_range() to register a consecutive or sparse pins
+> range. Both use gpiochip_add_pin_range_with_pins().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504180045.r5xtbS4v-lkp@intel.com/
+...
 
-All errors (new ones prefixed by >>):
+> +	if (!pin_range->range.pins)
 
-   loongarch64-linux-ld: drivers/pinctrl/pinctrl-sx150x.o: in function `sx150x_regmap_reg_read':
-   pinctrl-sx150x.c:(.text+0xb3c): undefined reference to `i2c_smbus_read_byte_data'
-   loongarch64-linux-ld: drivers/pinctrl/pinctrl-sx150x.o: in function `sx150x_probe':
-   pinctrl-sx150x.c:(.text+0xd98): undefined reference to `i2c_get_match_data'
->> loongarch64-linux-ld: pinctrl-sx150x.c:(.text+0xf44): undefined reference to `i2c_smbus_write_byte_data'
-   loongarch64-linux-ld: pinctrl-sx150x.c:(.text+0xf90): undefined reference to `i2c_smbus_write_byte_data'
-   loongarch64-linux-ld: drivers/pinctrl/pinctrl-sx150x.o: in function `sx150x_regmap_reg_write':
-   pinctrl-sx150x.c:(.text+0x19b4): undefined reference to `i2c_smbus_write_byte_data'
-   loongarch64-linux-ld: drivers/pinctrl/pinctrl-sx150x.o: in function `sx150x_init':
-   pinctrl-sx150x.c:(.init.text+0x28): undefined reference to `i2c_register_driver'
+This change looks pretty nice, but can we use positive conditonal?
+
+> +		chip_dbg(gc, "created GPIO range %d->%d ==> %s PIN %d->%d\n",
+> +			 gpio_offset, gpio_offset + npins - 1,
+> +			 pinctl_name,
+> +			 pin_offset, pin_offset + npins - 1);
+> +	else
+> +		chip_dbg(gc, "created GPIO range %d->%d ==> %s %d sparse PIN range { %d, ... }",
+> +			 gpio_offset, gpio_offset + npins - 1,
+> +			 pinctl_name, npins, pins[0]);
+
+With that done,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With Best Regards,
+Andy Shevchenko
+
+
 
