@@ -1,68 +1,95 @@
-Return-Path: <linux-gpio+bounces-18991-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-18992-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F9FFA90EB0
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Apr 2025 00:37:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E5EBA90FF9
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Apr 2025 02:08:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DBA7189F01D
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Apr 2025 22:37:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0D1A47A934B
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Apr 2025 00:07:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DDC92343B5;
-	Wed, 16 Apr 2025 22:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7719079CD;
+	Thu, 17 Apr 2025 00:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZClOAeIM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHmqfsng"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D085F204F90;
-	Wed, 16 Apr 2025 22:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E4B23C9;
+	Thu, 17 Apr 2025 00:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744843032; cv=none; b=buQqPGN3dfG+VjY3kTsI/luLztTqo2hdLgXhB3qcR5lSCLLhJ72+ctb1hIb4n4zwScOw/pCk1193GGoQyZ3sJdDDTfmvvkuDobctJ6P0cBFVJZd2HGjROUwSMajFrz2RfL5UqosOeENI5jMDGWjQko/b/MaTLPOE8G1u0Lw6C+w=
+	t=1744848519; cv=none; b=O+9M1aOe9KWqQGXozw6pyax8K55Qu2Xt7q4l0AIGaRUySFHPBUy2pC1jvCRpi0PBdJ6arDvDMz5EkMJ6nDURJlHwWGRlRl/4YksIVK73NsNTVSW87RkGIRUWoYQ32d78PtW4vdTGPaTlrx5g5bAUqWpnnR5oSTFULoy04Nrli44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744843032; c=relaxed/simple;
-	bh=GdvsN1LtIHMY8zJSroI+9TWLVN4zqOg8OLguK4T3YjA=;
+	s=arc-20240116; t=1744848519; c=relaxed/simple;
+	bh=hGr79s50hbOArFrIr7J2c9YKbRUTXQLJEWlC9VOUCM4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kD0AvLmV65d1bhQF7Lk5UCveslQaf10JeA1+8Fyt5N4tsfbMWIbNmW1FTnM5heixpKB7s6+5v5fjEau0u0XjOYu+4nrhVhAzv/1WlfyNKzam0vXdY/uzKEnGEXFTFpym44RUCLenDfBYUeg6rSpSFPuiaYF9C/xjpleBuiknHO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZClOAeIM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36CBCC4CEE2;
-	Wed, 16 Apr 2025 22:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744843032;
-	bh=GdvsN1LtIHMY8zJSroI+9TWLVN4zqOg8OLguK4T3YjA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZClOAeIM863a5cHtZdWqGyG/lFZkKazWfOYJgO2WTst8ltDgkE9vnjhpEYrBZLHIe
-	 C3pO+37q5MOe5PHcz02RW3JmIudnwBydcFQpofXfAhdeU/1yQ7sVWog0OpOIbCXavF
-	 2NmAncXKuOlvIqQ6EHSXOFpbZVeiAEGY92cv6RK6NKNo5VrOWUXtZ8LuZqUm2pe9pp
-	 hwytpPlUSzl/cgKgjiGN//rCk5vjCi6qd7puCiw47a+cR1NiuZ9MXB2F9shwJwsVZT
-	 G99jaqyYHUVZPwSz2sCWrhPMOtPhOMUR6PTdwn2boubTP7LQvijpzr9UBDOerornaZ
-	 VyNtIsoMCcktg==
-Date: Wed, 16 Apr 2025 15:37:06 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 07/10] pinctrl: sx150x: enable building modules with
- COMPILE_TEST=y
-Message-ID: <20250416223706.GA3230303@ax162>
-References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
- <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZKoEyxjNNDfddFSyabW16kmWjabyPhO0YhkQE+4aSUpVnB7oOl+myu+FsayWDPErfv4CcW1omYPWpzW47MIBs4RVQ2QSmpSlYF7HZ/BnIohRKTNU5mX+y/I/GDxHKTvscGqxXu+zaewja4oz6F0ZrfnFn2/Ujbzi94bc4G9k9Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QHmqfsng; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e8fa1f99a6so382826d6.3;
+        Wed, 16 Apr 2025 17:08:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744848516; x=1745453316; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tJqOv8o36TMLKjrK4zXvLAIpyGUhPRv2sP67Kw4EUAY=;
+        b=QHmqfsngc02NTZUUbY02r3j+8FYJDDgaxurqJkkaIcbR+QnzAjWhFfyb580uaOshqB
+         R/K9CpQ9P7yPp2e5gxL8jRQMdyzKCjADMjDFTQr9pmBD3vOcd1pIFmCP8vD+G9OB0E2J
+         bkYcVV+XqbVk0AP6rkdRd5LlFup1kECzfFkIarShXpSZHyluUZOjHV7ZFn9Jb0hdbN5Y
+         9uqXXatpWB9/iUn7qmYtK0tte39ngw1+EmlZQEUPbKEfvQr78bmHW+thAszQATaKT7yr
+         fRs6Yqo0Lt06wm/ZH7IpBpzra1SfWXGNQx9bv8NU1URMDEqy96wxS5WccXcOiiLraurb
+         jSVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744848516; x=1745453316;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tJqOv8o36TMLKjrK4zXvLAIpyGUhPRv2sP67Kw4EUAY=;
+        b=Yln/ozDHkUqA5aAD9mqexvTFctrh2bxRu1d+dpSzGKuuoTcPPCUxTX/+Scsu10k8Fn
+         qzkaB1uJTE713Oh1epKjZlWjst5prDbVPa5JKLEZQfFu+yIj2IqNv1SbCnyWDpSqcOq3
+         Y8rbPCsx0O3HdVedSxdYEgAe3uMPLkE1mBIEpiivv8k3luyQA6V2ccsQDTlG8xjU8Wuc
+         bkZuXqslADQ4Mbgq6DYucZcerYVDJqP909MZ7mslWXq7vJR6iKsm2vrt3NB7nU1MC/Af
+         sdVJOXVJfxdwWEvjpCJumwDUZiutEs+QbZV6EsuLqEn2bXNa7DrccGJLTcRa6g8J6RHW
+         rP8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUL+9IizsFA4UYAzxq3gu/C98ZjIJWeWhccc6qQq4AhFF1EvtI9AzD9TIPSLdyUhY3qS8Gk+Hmp8BTu@vger.kernel.org, AJvYcCUejfPDVytu8KqvI2m3AP73OLJItNz0tj6eUqIwItvR1me3KxozNGBSvai7F23n5Alszw8nCy9ka27/@vger.kernel.org, AJvYcCV2chR7y4T50eW03xNs+Df+9boyylu8LC2rIk8utHhCP58BqmL0vei2t0PFGq74WcCTJUpe6Lp4htJOMk/S@vger.kernel.org, AJvYcCXy3LBeuKtesXXeRvGjM8ZOhgdgZc9Jt1tycmdkJeunjGIMvYbBN0bnIF3YgFyv9MrWdGq/XrT6S6Gfeg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRTLiC0tghdd8VHTjP4G5aNHHwVb+LcqtBjRX6AcieBr7Xi1Dh
+	UTpcOGG3qFo3gOLDN8e+rqoCfItGDgtTv7ZBruo3JIANJcOTBoVf
+X-Gm-Gg: ASbGncuXG/ausKCs0jqQfVZLH9phK0+Du9t1IPWbBaMc32rdfOUmwG1yqyKZtMfYDBX
+	dBRB4zTjOdYAcnDmNofZ/J54DlTnZ5v/Xj9X4TX/ZauhFer6oYV7Gtw5MOKce/39bXnbUddRqPq
+	KFLA7KqY6qPceOvSlvLcg8r0Rj55U6Tps8any/+YZTtF/j3NAnFovuuVUn+ha9lZceYau/r2ZJj
+	5zjcQPKnqeasjNxyGUzbMB+QZE0IjQq+EMv97+Dm3dmc0YgPsjC+NfCikTbaEErlnTyQDGd1gIH
+	ZTNUooTpa3IxnWuoN3RjBsoI4/ZNmgKyj4YT4jEaBgIlPCr/kIz/doeIcSBc/A==
+X-Google-Smtp-Source: AGHT+IEgt/xzdl4pyyhYr8Rve1iU9l/NmW8OKduLXW80EHNhcCRd4MzklhGlnNblENETHjaRR9goIw==
+X-Received: by 2002:ad4:5fc8:0:b0:6e8:98ce:dd75 with SMTP id 6a1803df08f44-6f2b964e60cmr9426336d6.9.1744848516175;
+        Wed, 16 Apr 2025 17:08:36 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de9734a8sm122800756d6.48.2025.04.16.17.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 17:08:35 -0700 (PDT)
+Date: Wed, 16 Apr 2025 21:08:30 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org
+Subject: Re: [PATCH v5 02/14] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+Message-ID: <aABGfv+9KxEt5sAq@JSANTO12-L01.ad.analog.com>
+Reply-To: 938b950b-4215-4358-a888-6f6c9aab48e8@baylibre.com
+References: <cover.1744325346.git.Jonathan.Santos@analog.com>
+ <35481552e9ce39a24a0257ab001c0bcfea1a23be.1744325346.git.Jonathan.Santos@analog.com>
+ <938b950b-4215-4358-a888-6f6c9aab48e8@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,65 +98,98 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
+In-Reply-To: <938b950b-4215-4358-a888-6f6c9aab48e8@baylibre.com>
 
-Hi Bartosz,
-
-On Tue, Apr 08, 2025 at 09:17:44AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 04/11, David Lechner wrote:
+> On 4/11/25 10:56 AM, Jonathan Santos wrote:
+> > In addition to GPIO synchronization, The AD7768-1 also supports
+> > synchronization over SPI, which use is recommended when the GPIO
+> > cannot provide a pulse synchronous with the base MCLK signal. It
+> > consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+> > a command via SPI to trigger the synchronization.
+> > 
+> > Introduce the 'trigger-sources' property to support SPI-based
+> > synchronization, along with additional optional entries for the SPI
+> > offload trigger and the START signal via GPIO3.
+> > 
+> > While at it, add description to the interrupts property.
+> > 
+> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > ---
+> > v5 Changes:
+> > * Include START pin and DRDY in the trigger-sources description.
+> > * Fixed "#trigger-source-cells" value and description.
+> > * sync-in-gpios is represented in the trigger-sources property.
+> > 
+> > v4 Changes:
+> > * none
+> > 
+> > v3 Changes:
+> > * Fixed dt-bindings errors.
+> > * Trigger-source is set as an alternative to sync-in-gpios, so we
+> >   don't break the previous ABI.
+> > * increased maxItems from trigger-sources to 2.
+> > 
+> > v2 Changes:
+> > * Patch added as replacement for adi,sync-in-spi patch.
+> > * addressed the request for a description to interrupts property.
+> > ---
+> >  .../bindings/iio/adc/adi,ad7768-1.yaml        | 38 +++++++++++++++++--
+> >  1 file changed, 35 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > index 3ce59d4d065f..4c58dbe8f749 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > @@ -26,7 +26,30 @@ properties:
+> >    clock-names:
+> >      const: mclk
+> >  
+> > +  trigger-sources:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    minItems: 1
+> > +    maxItems: 3
+> > +    description: |
+> > +      A list of phandles referencing trigger source devices or GPIOs.
 > 
-> Increase the build coverage by enabling the sx150x modules with
-> COMPILE_TEST=y.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/pinctrl/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 464cc9aca157..94eb41bb9cf2 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -541,7 +541,7 @@ config PINCTRL_STMFX
->  
->  config PINCTRL_SX150X
->  	bool "Semtech SX150x I2C GPIO expander pinctrl driver"
-> -	depends on I2C=y
-> +	depends on I2C=y || COMPILE_TEST
->  	select PINMUX
->  	select PINCONF
->  	select GENERIC_PINCONF
-> 
-> -- 
-> 2.45.2
+> I don't think a gpio phandle should be directly allowed. Only a trigger
+> source provider (something with #trigger-source-cells).
 > 
 
-This appears to break allmodconfig with
+Sorry, I meant gpio-trigger, but I phrased it incorrectly.
 
-  ld.lld: error: undefined symbol: i2c_get_match_data
-  >>> referenced by pinctrl-sx150x.c
-  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_probe) in archive vmlinux.a
+> > +      Supports up to three entries, each representing a different type of
+> > +      trigger:
+> > +
+> > +        - First entry specifies the device responsible for driving the
+> > +          synchronization (SYNC_IN) pin, as an alternative to adi,sync-in-gpios.
+> > +          This can be a `gpio-trigger` or another `ad7768-1` device. If the
+> > +          device's own SYNC_OUT pin is internally connected to its SYNC_IN pin,
+> > +          reference the device itself or omit this property.
+> > +        - Second entry optionally defines a GPIO3 pin used as a START signal trigger.
+> > +        - Third entry specifies a GPIO line to act as a trigger for SPI offload.
+> 
+> SPI offload is part of the SPI controller, not the ADC chip, so doesn't
+> make sense to have that binding here. In that case, the ADC is the
+> trigger-source provider, not consumer.
 
-  ld.lld: error: undefined symbol: i2c_smbus_write_byte_data
-  >>> referenced by pinctrl-sx150x.c
-  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_probe) in archive vmlinux.a
-  >>> referenced by pinctrl-sx150x.c
-  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_probe) in archive vmlinux.a
-  >>> referenced by pinctrl-sx150x.c
-  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_regmap_reg_write) in archive vmlinux.a
+Right! Maybe a silly question, but this means we would have then two trigger-sources 
+defined, one in the spi controller node and other in the adc node, right? like
+this:
 
-  ld.lld: error: undefined symbol: i2c_smbus_read_byte_data
-  >>> referenced by pinctrl-sx150x.c
-  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_regmap_reg_read) in archive vmlinux.a
+spi_controller: spi@44a00000 {
+	...
+	trigger-sources = <&offload_trigger_source>;
+	...
+	adc0@ {
+	...
+		trigger-sources = <&sync_trigger_source>;
+		#trigger-source-cells = <1>;
+	...
+	}
+}
 
-  ld.lld: error: undefined symbol: i2c_register_driver
-  >>> referenced by pinctrl-sx150x.c
-  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_init) in archive vmlinux.a
-  make[4]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
-
-I don't think this change makes much sense in light of this error,
-unless the driver was converted to tristate.
-
-Cheers,
-Nathan
+> 
+> 
+> 
 
