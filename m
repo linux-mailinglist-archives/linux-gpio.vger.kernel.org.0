@@ -1,202 +1,166 @@
-Return-Path: <linux-gpio+bounces-19057-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19058-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 255DFA93847
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 16:09:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CA42A93999
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 17:27:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3619516497D
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 14:09:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 809DE3AC53B
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 15:26:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1686152E02;
-	Fri, 18 Apr 2025 14:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E48C21129A;
+	Fri, 18 Apr 2025 15:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dGACX5RY"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jRh0PjBQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F0514BF89
-	for <linux-gpio@vger.kernel.org>; Fri, 18 Apr 2025 14:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AC638FB9;
+	Fri, 18 Apr 2025 15:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744985375; cv=none; b=uUZo/NjrUhYiU9ELHqWHuBIOzxrdW0Yxy7qiJzg/yOxKtKDrKDxeOT0H9WSW7gIZIvwN1uwv6UGDKlSUSuMDBfkjK8g/wFoq7/0xgSOiwQn3spRHanzaiNDWwgxHk+DllUuT/xbgrS8fKvgyItM8NKI6p/JmQIrxYwgUgnTirA4=
+	t=1744990017; cv=none; b=QFHWcwGXbgCOo+H1UdXzlTNKtby+yn+fcVkdTLrL738VqYLZp4av+5n8sw1osw5ZvfdrYHFitYYuLKb60c8uct2wv/UquuEgm9y23gzjxEWTt6+lP9BpO6j+BDiEIl1qM1G7zMY2viODfw9kEwqLlh0hss6PwqKCXo8J2HXzs7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744985375; c=relaxed/simple;
-	bh=rfamlQxYm4cgTyH6VobpeL8n4zT1QaphLpYysJ2CmtU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ozR9/n5LP0KQVFVChT5MTanc2VqOA2yHgYgtWcbYd35qg6NDarY7mMc2sAKIbgpsfLn/HMgDFgmRQSQxVe5AfhNdJnHTe0RF72GB5AUKpE+f7l4/ls3+zl4UlfHzO8DjxO6rxHNuUsqair+BPAo5JVmgd3UYBV2aWuGGtKjqrd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dGACX5RY; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744985374; x=1776521374;
-  h=date:from:to:cc:subject:message-id;
-  bh=rfamlQxYm4cgTyH6VobpeL8n4zT1QaphLpYysJ2CmtU=;
-  b=dGACX5RYmquanRtqaZP7VdtWkmPF6mOM0+29jmX8oFiIH7WN9EiN3gRL
-   RjYHci2Wr/MrGLlAdWE7I4x08IjECG+YXp4aLJB0pM9C1M9QYycpuUd75
-   wyIoQiun2NWeYcGNXDY/mfJIaKhB8ErHHLO9LPX8PSyElOZcBsKtbiIap
-   DhACREIPynvRuFVsgmvB7Do9OHa9k155HOZDW9+tOuywQS3AhAMfr0gwo
-   oLiN6LTYYtUTnEs7Pi04x6NlCkmjurpCrmmKG1oUENVkSMLHNm1Hk07D3
-   18mEG4oDbrkV5seSviJAothntVgTsWXv1xtJ/AhMD2Ft1f5xHHwYM1Hfj
-   A==;
-X-CSE-ConnectionGUID: cSBoxLc8Rje/OAqGKiha+A==
-X-CSE-MsgGUID: nXI0dKd2S/KmL9f4cHe4/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="57274727"
-X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="scan'208";a="57274727"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 07:09:33 -0700
-X-CSE-ConnectionGUID: ZBQHmCLuTSStR334mUQxaw==
-X-CSE-MsgGUID: zF3TaCFgR0+DXxSI44bzeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,222,1739865600"; 
-   d="scan'208";a="131661272"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 18 Apr 2025 07:09:32 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u5mPK-0002vd-0K;
-	Fri, 18 Apr 2025 14:09:30 +0000
-Date: Fri, 18 Apr 2025 22:09:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 550300b9a295a591e0721a31f8c964a4bc08d51c
-Message-ID: <202504182213.OstkgWJi-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1744990017; c=relaxed/simple;
+	bh=XWSsNQuWP0x2aUg9USTmWsxm+dnGjwDvN4FzCiXZMoo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=gcftZ02DWbNtE82k+2z6kLYlHVHsf3ZiSjBR7RgIf99OAfDkcsCsLP9P8s8DCIFvB4H28/goBiE0EQDUBi8WmDrhxEeCVOBb6raONV6GdkzHa/HJ65TOvlg8T7XHpCr97A857XtdXTrYpE2rITlRns9yvI60hYeQ5hxt5HVuVOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jRh0PjBQ; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7BC97431BA;
+	Fri, 18 Apr 2025 15:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744990006;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YNDVjS9Ecf/JVJ+se63WO9MhluBgtWHZjFkXlGycTfI=;
+	b=jRh0PjBQf+DtVoqsLFAM80NGxwbyPkkPSCdcERiSIGYksp9EK1p5UkOY6OI/w7CtMcgo3w
+	qg/xNIZdROduFXw+V7QZGPzwOO+GGsTAqCn82QHizytQoNE+dYX9g8r588MtnBhsgBrCX/
+	py1ZUZDQkFbiXnAb35zazjfBrBxBAjAQXcN0fnoHEI2ekpCVLOdNd8hROR819Bl1WZvBz6
+	TaV/SHNLz2g7dLw1Vw/yRWi7HYu8kH3MQuIWlLo+MK0SYLQMQCUXP7PZBoc0yX1j+ZMfni
+	slkE8zpd262MJKsRnRdjUBLG83Cb3IbsUBOZnMmvsllaSHWwsZoYhIAT3pq/OA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 18 Apr 2025 17:26:44 +0200
+Message-Id: <D99VBXHNLWCW.2PQQZ21537GHQ@bootlin.com>
+Subject: Re: [PATCH v6 09/12] gpio: max7360: Add MAX7360 gpio support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
+ <aAFE18Yn5rtnuooc@smile.fi.intel.com>
+In-Reply-To: <aAFE18Yn5rtnuooc@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedvheduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 550300b9a295a591e0721a31f8c964a4bc08d51c  gpiolib: Remove redundant assignment of return variable
+On Thu Apr 17, 2025 at 8:13 PM CEST, Andy Shevchenko wrote:
+> On Wed, Apr 09, 2025 at 04:55:56PM +0200, Mathieu Dubois-Briand wrote:
+>
+>> +#include <linux/slab.h>
+>
+> I don't think you use this header directly.
+>
 
-elapsed time: 1450m
+Right.
 
-configs tested: 109
-configs skipped: 3
+> ...
+>
+>> +static int max7360_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +	struct regmap_irq_chip *irq_chip;
+>> +	struct gpio_regmap_config gpio_config =3D { };
+>> +	struct device *dev =3D &pdev->dev;
+>> +	unsigned long gpio_function;
+>> +	struct regmap *regmap;
+>> +	unsigned int outconf;
+>> +	int ret;
+>> +
+>> +	regmap =3D dev_get_regmap(dev->parent, NULL);
+>> +	if (!regmap)
+>> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
+>
+>> +	gpio_function =3D (uintptr_t)device_get_match_data(dev);
+>
+> Somebody pointed me out the Linus' rant on uintptr_t, so he prefers not t=
+o see
+> this in the entire kernel. He suggested to use (unsigned long), but ideal=
+ly one
+> should operate with the info structures instead.
+>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Ok, let's define my own platform data structure, this is not a lot of
+work to be honest.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250417    gcc-13.3.0
-arc                   randconfig-002-20250417    gcc-13.3.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250417    gcc-7.5.0
-arm                   randconfig-002-20250417    clang-16
-arm                   randconfig-003-20250417    gcc-10.5.0
-arm                   randconfig-004-20250417    gcc-6.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250417    gcc-7.5.0
-arm64                 randconfig-002-20250417    gcc-5.5.0
-arm64                 randconfig-003-20250417    clang-21
-arm64                 randconfig-004-20250417    gcc-9.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250417    gcc-13.3.0
-csky                  randconfig-002-20250417    gcc-11.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250417    clang-21
-hexagon               randconfig-002-20250417    clang-21
-i386                             alldefconfig    gcc-12
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250417    clang-20
-i386        buildonly-randconfig-002-20250417    gcc-12
-i386        buildonly-randconfig-003-20250417    gcc-12
-i386        buildonly-randconfig-004-20250417    gcc-12
-i386        buildonly-randconfig-005-20250417    clang-20
-i386        buildonly-randconfig-006-20250417    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250417    gcc-14.2.0
-loongarch             randconfig-002-20250417    gcc-13.3.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                        bcm47xx_defconfig    clang-18
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250417    gcc-11.5.0
-nios2                 randconfig-002-20250417    gcc-9.3.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250417    gcc-12.4.0
-parisc                randconfig-002-20250417    gcc-6.5.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                     asp8347_defconfig    clang-21
-powerpc               randconfig-001-20250417    clang-21
-powerpc               randconfig-002-20250417    gcc-9.3.0
-powerpc               randconfig-003-20250417    gcc-9.3.0
-powerpc64             randconfig-001-20250417    clang-21
-powerpc64             randconfig-002-20250417    clang-21
-powerpc64             randconfig-003-20250417    gcc-5.5.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250418    clang-21
-riscv                 randconfig-002-20250418    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250418    gcc-7.5.0
-s390                  randconfig-002-20250418    gcc-6.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250418    gcc-12.4.0
-sh                    randconfig-002-20250418    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250418    gcc-10.3.0
-sparc                 randconfig-002-20250418    gcc-7.5.0
-sparc64               randconfig-001-20250418    gcc-9.3.0
-sparc64               randconfig-002-20250418    gcc-11.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250418    clang-21
-um                    randconfig-002-20250418    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250417    clang-20
-x86_64      buildonly-randconfig-002-20250417    clang-20
-x86_64      buildonly-randconfig-003-20250417    gcc-12
-x86_64      buildonly-randconfig-004-20250417    clang-20
-x86_64      buildonly-randconfig-005-20250417    clang-20
-x86_64      buildonly-randconfig-006-20250417    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250418    gcc-7.5.0
-xtensa                randconfig-002-20250418    gcc-14.2.0
+> ...
+>
+>> +
+>> +		/*
+>> +		 * Port GPIOs: set output mode configuration (constant-current or not=
+).
+>> +		 * This property is optional.
+>> +		 */
+>> +		outconf =3D 0;
+>> +		ret =3D device_property_read_u32(dev, "maxim,constant-current-disable=
+", &outconf);
+>> +		if (!ret) {
+>> +			ret =3D regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+>> +			if (ret)
+>> +				return dev_err_probe(dev, ret,
+>> +						     "Failed to set constant-current configuration\n");
+>> +		}
+>
+> This will look better as if-else:
+>
+> 		ret =3D device_property_read_u32(dev, "maxim,constant-current-disable",=
+ &outconf);
+> 		if (ret) {
+> 			outconf =3D 0;
+> 		} else {
+> 			ret =3D regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+> 			if (ret)
+> 				return dev_err_probe(dev, ret,
+> 						     "Failed to set constant-current configuration\n");
+> 		}
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yes, actually there is no need to set outconf if the property was not
+specified.
+
+
+Thanks for your review.
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
