@@ -1,125 +1,113 @@
-Return-Path: <linux-gpio+bounces-19062-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19063-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E66BA93E69
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 21:49:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF373A93EBC
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 22:17:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7AE448E3D93
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 19:49:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 51CD57A43CB
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 20:16:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB9DE2248A8;
-	Fri, 18 Apr 2025 19:49:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 901D72222D5;
+	Fri, 18 Apr 2025 20:17:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pI/aWJxC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3jQvM6b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CEF29CE6
-	for <linux-gpio@vger.kernel.org>; Fri, 18 Apr 2025 19:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8ED2A1C9;
+	Fri, 18 Apr 2025 20:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745005790; cv=none; b=M9pQV00q7ZhuD449zmmeBPGFTjvBgPtVN7zm11ZlQ9lY/VHKc18LQ8LF30Ibf7fCvDrP2SFAgCTAVbpS9mxwFCFkQeCrlFMiFBauLkVSyef5k5rjQJMqlmTaXIwSrAvg0oyoyEqqB4JaACvUMdFzzqskPLhTsqjvcQuzjzfET9Q=
+	t=1745007450; cv=none; b=Jp2H85Ir9xgkE4uCbbnkGzDj8e+0blZA+Ml4wstMAiS2WaEi4uLLwEYTkikZEghrGtvhxOVUY7SK3oH9zsIcL7xCytVEB9/15BtBuRrBHf7begxZyawf9a0tTzFsE1vLYvpwmzs4hkIEp75XTiWLzte+dQ6WiXMDPmfwDrsB7TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745005790; c=relaxed/simple;
-	bh=Y3uL99Kqb5E5URdOgn/HDsBLA/QVSVh7R87wvzeJQZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ky43B3rltzQNZ9tNPmi7wZGLkhzoRYSwl2q7ZFjeZGRhzP09jPMsG7G8mV3nPkTgO7IEsLd+ZPP+2JSKLpQoIb/oQmkIAQfUABJwYA1+uE76jHxuTxsRb2Cp4ObJtPyN2F9rdOTR8AngMlQY0iM7bW7gtxNG155iw1C0d+fn74Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pI/aWJxC; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso2048978f8f.2
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Apr 2025 12:49:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745005787; x=1745610587; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SWcOQWb/FzwxcsBkXjqRrzLFD5Nt+phtJhswCCZfnng=;
-        b=pI/aWJxCYYWAjFV+Udr0Z3ZlS3VhFm050iJ9NeQ1l7PcQ487LgmJPi9mJyr7YIZyGB
-         sJwfwBFeNX9RNj2H3mVP7GQUL2n11yPCEsorDtpBpXirneApbkSq6AvlZNULxDjppyMY
-         3NpuQ1qD0naRlf1GvI0HAi46wOVJgblfZvFoAi1r8Qb2WcdFqvw4ZPgOWl4hk5VlqugM
-         5pBhbTRgkgBPWkOOVeB+xy7HjZt9TZusyiLpiK8K+7zNzWgxyRFbQ1wYPjRt7okjl4Ho
-         0gy+tyqcSqsHV2dqySgCyibRpZTdlbTYGKcNlAexBTRvcu+DpQdVGszNEDKmAAm72R2A
-         1XZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745005787; x=1745610587;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SWcOQWb/FzwxcsBkXjqRrzLFD5Nt+phtJhswCCZfnng=;
-        b=IwAK9pfrMh7rwKmJyarHbjtDmAHnxfDKqRMAzV8HaD+3+Tf0lJp8miwjLkqTeFuw40
-         AZiwV0He4fRLH3YFNKgv09F09irjGSMw/VG04MOGLuBC0W4TZ9/Tb14ZA7d94AYxNNoe
-         vL0h2cJk1AIjcmCoOfL2uhcaNTyacLPg2OyQY9KYlaSGzxqyvOKN1Ywc9ikryjBr9JyC
-         R6aA00pBUwu8dsGdzlBW7sKlg9P8Ad1LC+8i8N7LENASqblzspZsNA2+katLObVOzsh7
-         JkqTwWYzBIYCrMEQEysw9qfjn2fqu8NWgh0EeE/JdLj8JN49M62yGoNtHruCwJOWdwR3
-         VSKw==
-X-Forwarded-Encrypted: i=1; AJvYcCV61DPe8y4BJXZTY+vGOVNdfJjBzCvb0t2J8bxEx0AhFLQoyF9wiMwmc5T0b+QaZh7CrWl8i6RYt68Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPz+W9uFZn+yMfabz28UJCkY8niiIUsbl7reKsq8ze0xvjm4fJ
-	mzpK8ca9IOmefZ3lwRR/MrltLooRb5/ZW0q6IrWtEZiK7xCho18xbbIqZVQmWH0=
-X-Gm-Gg: ASbGnctSFpO8NY8HPlwzi1cIa2FaDUNmcHrPcsviZghQbz1uqhbFY8oIW6MS1eJeTM1
-	Pp9G0/2DNBpqPgSkTXg3LiuUVzw/LinZZ2jdLU42ZeObfO3l12YNl7h88zN51OXFYkeF9hZZKC+
-	gYRIALBel0Q/NpDoltVW8/i3P79KLy0qqFUkpDgbqu5gocKOoZGBLV//LDL3rxXAQfycVoM2Brx
-	vkLUOoRX47H4dAzeNoyG/todCnUHianzHoVg7OOgsqSWcoIc+DQoVHl55swTlFXP9jV8Ide5q1Y
-	E2i7/Y/5DzFDYdIQg81sCLZfADUV8Uqdi/BMVU9m
-X-Google-Smtp-Source: AGHT+IGfV2eBKHkjGdNUHgY7tqbduGqKcd0lyO45b1jqOpy/gF1E7xdvbOat2/h/MTv/N6tXoS1yrw==
-X-Received: by 2002:a05:6000:2907:b0:39e:f89b:85e2 with SMTP id ffacd0b85a97d-39efba5ae96mr3212423f8f.26.1745005786648;
-        Fri, 18 Apr 2025 12:49:46 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2c35:5ff2:b98f:4e61])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43be53sm3559480f8f.41.2025.04.18.12.49.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 12:49:46 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio fixes for v6.15-rc3
-Date: Fri, 18 Apr 2025 21:49:44 +0200
-Message-ID: <20250418194944.37742-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1745007450; c=relaxed/simple;
+	bh=BdURm55BBBuG9p5CztnmdkGeWDKrLKxOH4hwmr1P1oY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hgwROnX+JHZOkb4yKV5zG6D/OMWGH0H6vm9t4F+ekh77AtBd9gY2PcFA+IB5Bln0YoFa+G8QnKcAYhkl39r+nOXMC6zHeTrQgkkXt+yJx2xbXgQEZq0d3NliIILSyQrRsAf6t/UTDnHku7LJFHtEtqgcQBWyV++LTMsWikeVjmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3jQvM6b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54600C4CEE2;
+	Fri, 18 Apr 2025 20:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745007449;
+	bh=BdURm55BBBuG9p5CztnmdkGeWDKrLKxOH4hwmr1P1oY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=L3jQvM6bIy/+JGaYmIzhi3iO8TFIQVbvkTd88NOOScers45oRIdcihBPgRScNtZ2V
+	 EQYD2EBdIbpzNeMcz6E+QiWjI0fAQQdMyl6VfpTie9ocPvwGX4nz9Dla6ZxAt7Cth/
+	 7Zv7mBU4uxd5hQovDN0Ajr52PT7Kjv1s9MrGxCn2SvrJCByKGWqMOeFbWSTW8HeP3i
+	 T2c45siQmXEfcO87ufDps2Aznlj/LsHosD7PA4ZiGOQax7C06LsNbLqFf1yCJkUujP
+	 z+S1jQWMaYfGzS8/Q8nTeJiwh7oKxfCgm+mN8pHdlqwksBHF9S9U+6HwtPtqBFnrA0
+	 aTSXadOpUf7yw==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Fri, 18 Apr 2025 16:17:20 -0400
+Subject: [PATCH] gpio: Restrict GPIO_ICH to compile testing with HAS_IOPORT
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250418-gpio-ich-fix-build-without-ioport-v1-1-83fc753438ec@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAE+zAmgC/x2NwQqDMBAFf0X23AUjpkp/pfSQ6NY8KG5IYiuI/
+ 27ocWCYOShLgmR6NAcl+SJD1wrm1tAU3LoIY65MXdvZtjcjLxHKmAK/sbPf8Jn5hxJ0KwyNmgo
+ PdjR37wbfW0e1E5NU9/94vs7zAj1qjhBzAAAA
+X-Change-ID: 20250418-gpio-ich-fix-build-without-ioport-75816ba7b45a
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel test robot <lkp@intel.com>, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1513; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=BdURm55BBBuG9p5CztnmdkGeWDKrLKxOH4hwmr1P1oY=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBlMm8P19Tssz7xxmb+N5/Yl8YjjggIxlVu2O7sEbvX14
+ t50jeNwRykLgxgXg6yYIkv1Y9XjhoZzzjLeODUJZg4rE8gQBi5OAZiIxBZGhrWL92gkaSpZOtoX
+ LTWc3bXOTyW0vu/4yfjE+V/kfs6bZcXIcGZJ923P6r+bs+dcrL0WWPE78PgcbX5lvcuz97Mu1e7
+ 7zQcA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+When building gpio-ich.c for a platform that does not have IO port
+access like s390, there are several errors due to the use of inl() and
+outl() throughout the driver:
 
-Linus,
+  drivers/gpio/gpio-ich.c: In function 'ichx_read_bit':
+  include/asm-generic/io.h:578:14: error: call to '_inl' declared with attribute error: inl() requires CONFIG_HAS_IOPORT
 
-Please pull the following fix for GPIO core addressing an issue in
-the line value setter callback conversion.
+Only allow compile testing when the targeted platform selects HAS_IOPORT
+so that there are no compile time errors.
 
-Thanks,
-Bartosz
-
-The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
-
-  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.15-rc3
-
-for you to fetch changes up to b424bb88afb6719b30340f059bf50953424cdd9d:
-
-  gpiolib: Allow to use setters with return value for output-only gpios (2025-04-14 20:31:00 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v6.15-rc3
-
-- check for both the new AND old (deprecated) setter callback when
-  changing GPIO direction to output
-
-----------------------------------------------------------------
-Mathieu Dubois-Briand (1):
-      gpiolib: Allow to use setters with return value for output-only gpios
-
- drivers/gpio/gpiolib.c | 2 +-
+Fixes: f3592d252f77 ("gpio: ich: enable building with COMPILE_TEST=y")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504171941.g1yXja0j-lkp@intel.com/
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/gpio/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index bbbb550cac93..13b7319162c8 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -380,7 +380,7 @@ config GPIO_HLWD
+ 
+ config GPIO_ICH
+ 	tristate "Intel ICH GPIO"
+-	depends on (X86 && LPC_ICH) || COMPILE_TEST
++	depends on (X86 && LPC_ICH) || (COMPILE_TEST && HAS_IOPORT)
+ 	help
+ 	  Say yes here to support the GPIO functionality of a number of Intel
+ 	  ICH-based chipsets.  Currently supported devices: ICH6, ICH7, ICH8
+
+---
+base-commit: 550300b9a295a591e0721a31f8c964a4bc08d51c
+change-id: 20250418-gpio-ich-fix-build-without-ioport-75816ba7b45a
+
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
 
