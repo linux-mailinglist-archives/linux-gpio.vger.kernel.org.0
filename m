@@ -1,118 +1,125 @@
-Return-Path: <linux-gpio+bounces-19061-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19062-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA106A93AD5
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 18:27:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E66BA93E69
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 21:49:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BCF08A5AF0
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 16:24:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7AE448E3D93
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Apr 2025 19:49:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00816219E8C;
-	Fri, 18 Apr 2025 16:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB9DE2248A8;
+	Fri, 18 Apr 2025 19:49:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QN1FI8mQ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pI/aWJxC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6DD218EB3;
-	Fri, 18 Apr 2025 16:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CEF29CE6
+	for <linux-gpio@vger.kernel.org>; Fri, 18 Apr 2025 19:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744993225; cv=none; b=ELmzZkwGV+bNukRG/Dx5FAc0i5BQExzm334zy3H/7L2NBWnlfLsUU4cMJQa0ei45+SF3zdtUEiQlXGzFWxfbJzHItl7HOYgij0weUzAGXv99VMSniJ+v9PsN63ZVTIrtIWy0l7OASk/UDET0wNDLrb2x5KXvkuwp749g3DTYEyk=
+	t=1745005790; cv=none; b=M9pQV00q7ZhuD449zmmeBPGFTjvBgPtVN7zm11ZlQ9lY/VHKc18LQ8LF30Ibf7fCvDrP2SFAgCTAVbpS9mxwFCFkQeCrlFMiFBauLkVSyef5k5rjQJMqlmTaXIwSrAvg0oyoyEqqB4JaACvUMdFzzqskPLhTsqjvcQuzjzfET9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744993225; c=relaxed/simple;
-	bh=K48rndTQFDaaOgqbnB9bEd3QXRHyyPSM0ZTytB4DXGQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=eV3zo+wqdDnIiUNKIX5WHYxorYYbEY/LocJjJir/ysFIU6C5c8TGFGDgdam0Llxtbmjd/AnVLFEGIt2hA+3K/fVgnpdwDUNdrCVvJFB3EtuhK9BWV29pUlaxgIAkw4o0IByqArP41x6ple9DBOGm9khPlTHos99guj7CNJjVVeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QN1FI8mQ; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5E58543AF0;
-	Fri, 18 Apr 2025 16:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744993215;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z8Rt+EG00BQ+3x+tc7srxHh256czauX3We3PGhtVTSQ=;
-	b=QN1FI8mQISumOPJ0G2uRyToFIlX/neETYw7XQf4G/tOxcdrVHeIT4/Uyj+GvQsY0Aw719H
-	p4/KLAbqVc2JdsXobEnpDu8QsPyda5YBFq+2w7wHi3I24rO3SOM5/z8x0eIeVdCuWjdTW2
-	Sr4pUTkwdlb3vE1nkTAuX3LwPch7D4sTaXCjHg4YjioG6KUggmC8e702BByXLI+FtU06P8
-	U7zEgO8v4X3ml01aiKaa/OcIwfReW+/9/ncu5iVlk9kYJUhYKqsVAaqbYivlo1VFI8EN4p
-	ofEe8pZYe/N0T9kg1LvTk/7e48ja8w+CbnBRSXZfSucGE3xibeFQ28w13dothQ==
+	s=arc-20240116; t=1745005790; c=relaxed/simple;
+	bh=Y3uL99Kqb5E5URdOgn/HDsBLA/QVSVh7R87wvzeJQZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ky43B3rltzQNZ9tNPmi7wZGLkhzoRYSwl2q7ZFjeZGRhzP09jPMsG7G8mV3nPkTgO7IEsLd+ZPP+2JSKLpQoIb/oQmkIAQfUABJwYA1+uE76jHxuTxsRb2Cp4ObJtPyN2F9rdOTR8AngMlQY0iM7bW7gtxNG155iw1C0d+fn74Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pI/aWJxC; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso2048978f8f.2
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Apr 2025 12:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745005787; x=1745610587; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SWcOQWb/FzwxcsBkXjqRrzLFD5Nt+phtJhswCCZfnng=;
+        b=pI/aWJxCYYWAjFV+Udr0Z3ZlS3VhFm050iJ9NeQ1l7PcQ487LgmJPi9mJyr7YIZyGB
+         sJwfwBFeNX9RNj2H3mVP7GQUL2n11yPCEsorDtpBpXirneApbkSq6AvlZNULxDjppyMY
+         3NpuQ1qD0naRlf1GvI0HAi46wOVJgblfZvFoAi1r8Qb2WcdFqvw4ZPgOWl4hk5VlqugM
+         5pBhbTRgkgBPWkOOVeB+xy7HjZt9TZusyiLpiK8K+7zNzWgxyRFbQ1wYPjRt7okjl4Ho
+         0gy+tyqcSqsHV2dqySgCyibRpZTdlbTYGKcNlAexBTRvcu+DpQdVGszNEDKmAAm72R2A
+         1XZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745005787; x=1745610587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SWcOQWb/FzwxcsBkXjqRrzLFD5Nt+phtJhswCCZfnng=;
+        b=IwAK9pfrMh7rwKmJyarHbjtDmAHnxfDKqRMAzV8HaD+3+Tf0lJp8miwjLkqTeFuw40
+         AZiwV0He4fRLH3YFNKgv09F09irjGSMw/VG04MOGLuBC0W4TZ9/Tb14ZA7d94AYxNNoe
+         vL0h2cJk1AIjcmCoOfL2uhcaNTyacLPg2OyQY9KYlaSGzxqyvOKN1Ywc9ikryjBr9JyC
+         R6aA00pBUwu8dsGdzlBW7sKlg9P8Ad1LC+8i8N7LENASqblzspZsNA2+katLObVOzsh7
+         JkqTwWYzBIYCrMEQEysw9qfjn2fqu8NWgh0EeE/JdLj8JN49M62yGoNtHruCwJOWdwR3
+         VSKw==
+X-Forwarded-Encrypted: i=1; AJvYcCV61DPe8y4BJXZTY+vGOVNdfJjBzCvb0t2J8bxEx0AhFLQoyF9wiMwmc5T0b+QaZh7CrWl8i6RYt68Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPz+W9uFZn+yMfabz28UJCkY8niiIUsbl7reKsq8ze0xvjm4fJ
+	mzpK8ca9IOmefZ3lwRR/MrltLooRb5/ZW0q6IrWtEZiK7xCho18xbbIqZVQmWH0=
+X-Gm-Gg: ASbGnctSFpO8NY8HPlwzi1cIa2FaDUNmcHrPcsviZghQbz1uqhbFY8oIW6MS1eJeTM1
+	Pp9G0/2DNBpqPgSkTXg3LiuUVzw/LinZZ2jdLU42ZeObfO3l12YNl7h88zN51OXFYkeF9hZZKC+
+	gYRIALBel0Q/NpDoltVW8/i3P79KLy0qqFUkpDgbqu5gocKOoZGBLV//LDL3rxXAQfycVoM2Brx
+	vkLUOoRX47H4dAzeNoyG/todCnUHianzHoVg7OOgsqSWcoIc+DQoVHl55swTlFXP9jV8Ide5q1Y
+	E2i7/Y/5DzFDYdIQg81sCLZfADUV8Uqdi/BMVU9m
+X-Google-Smtp-Source: AGHT+IGfV2eBKHkjGdNUHgY7tqbduGqKcd0lyO45b1jqOpy/gF1E7xdvbOat2/h/MTv/N6tXoS1yrw==
+X-Received: by 2002:a05:6000:2907:b0:39e:f89b:85e2 with SMTP id ffacd0b85a97d-39efba5ae96mr3212423f8f.26.1745005786648;
+        Fri, 18 Apr 2025 12:49:46 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2c35:5ff2:b98f:4e61])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43be53sm3559480f8f.41.2025.04.18.12.49.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 12:49:46 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.15-rc3
+Date: Fri, 18 Apr 2025 21:49:44 +0200
+Message-ID: <20250418194944.37742-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 18 Apr 2025 18:20:14 +0200
-Message-Id: <D99WGVRMZKJ2.RZOWU8FHTTEJ@bootlin.com>
-Subject: Re: [PATCH v6 02/12] mfd: Add max7360 support
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>, "Lee Jones"
- <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-2-7a2535876e39@bootlin.com>
- <bb269f81-d33e-4292-89df-4c8cf40b3077@wanadoo.fr>
-In-Reply-To: <bb269f81-d33e-4292-89df-4c8cf40b3077@wanadoo.fr>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedviedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegthhhrihhsthhophhhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhtoheplhgvvgeskhgvrhhnv
- ghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri Apr 18, 2025 at 5:52 PM CEST, Christophe JAILLET wrote:
-> Le 09/04/2025 =C3=A0 16:55, mathieu.dubois-briand@bootlin.com a =C3=A9cri=
-t=C2=A0:
->> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
->>=20
->> Add core driver to support MAX7360 i2c chip, multi function device
->> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
->>=20
->> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
->> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.co=
-m>
->> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->> ---
->
-> ...
->
->> +	ret =3D max7360_mask_irqs(regmap);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "Could not mask interrupts\n");
->> +
->> +	ret =3D  devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
->
-> Nitpick: 2 spaces after =3D
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Fixed, thanks!
+Linus,
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Please pull the following fix for GPIO core addressing an issue in
+the line value setter callback conversion.
 
+Thanks,
+Bartosz
+
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.15-rc3
+
+for you to fetch changes up to b424bb88afb6719b30340f059bf50953424cdd9d:
+
+  gpiolib: Allow to use setters with return value for output-only gpios (2025-04-14 20:31:00 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.15-rc3
+
+- check for both the new AND old (deprecated) setter callback when
+  changing GPIO direction to output
+
+----------------------------------------------------------------
+Mathieu Dubois-Briand (1):
+      gpiolib: Allow to use setters with return value for output-only gpios
+
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
