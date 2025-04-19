@@ -1,127 +1,115 @@
-Return-Path: <linux-gpio+bounces-19069-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19070-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAD03A9411D
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Apr 2025 04:46:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F1D3A942DF
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Apr 2025 12:39:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A5168E0300
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Apr 2025 02:45:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20F89189CA5A
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Apr 2025 10:39:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E31881732;
-	Sat, 19 Apr 2025 02:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 375BE1D5146;
+	Sat, 19 Apr 2025 10:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQDIwF49"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kio4HHdO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE616136E;
-	Sat, 19 Apr 2025 02:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94C517C224;
+	Sat, 19 Apr 2025 10:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745030769; cv=none; b=Lcb1gjXrll8sRrb+m8Zxd5rpLtbC3bHch/cVKDlQOZJBFueynZnmpOrShGPfEHreKyCaDyAVVPSc+VD3gOn8yY8FcHvtRJQ92DhVWli92jnA2KUJUH6MvQvABtcLG/HiHEjmUXI4630AMJaVp9MgRrDY/q9hVofvA1GnQLn8tgI=
+	t=1745059138; cv=none; b=SqIXcReqtJ9I9W+rgS2fp/4jgqGAM2aiUtT8QmMw9jbCCVnvaw/esQhrNlcXqVDTaY2AYJxN+fFFgiCoMoSMLE+MG/gdOpbzwohZb5MuHRgKnMvX3VVcO4R+eaK8zXhA2GQhaEeZONPcBi7CooarBT7m6ZELou5yzqFIAxGkU20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745030769; c=relaxed/simple;
-	bh=gvuJrMLOdmnOm91Siq3JvFcU14VhzFH5Pwm0vWjpAZI=;
+	s=arc-20240116; t=1745059138; c=relaxed/simple;
+	bh=xY0aaUKiZ3nf6klLxrhBlG9cVhweGxQOTCb/Ekznwd4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XPOwVveHeZDAos98PFYiXcoRKkZptdegbrRd4gPYsQD9In9mpZ+kj8z7AJF9qiA0AfNSw0m0H/K3QqUAjI+tAD8G9eRoKdo+mPA6eOXwadd/vz/42cqYJTeU0vuWTJ9BYESGliyoOLm1/y8FI/0AOq8CRpH6Dq+CVhdBWKpJrTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQDIwF49; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22c33677183so28443175ad.2;
-        Fri, 18 Apr 2025 19:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745030763; x=1745635563; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/RzwzU/RPEWQh1ASxLVOsS98O+e47MbzqLttT3KONSA=;
-        b=iQDIwF49ejoP3fhhfPHweQMlhdD/+65SDsrJmOyyWUkDkp8qvscR49e5hCE6xgEH82
-         XJ8Crie90vpqrpTj4g9LPERMtKkXxdy2gOeUo9lJYPDPG0n+0a53v+Kfw3xUazLaeFL4
-         2d6Zse/6ATy5RHJeGemwUsM+jBI8hmq9Pmrl7nBkvI9uk01rVb8/DOhHgbvgftpbEkpm
-         RymQuCH+48Eu+29YztV1jWh2rw+lH61AagKoIVwB6hkQoaV38aqwKY0PJrqKzXrQo4xq
-         Nfx8KrLR5D1/RVRcO5O50jNFrpD71/Ym3dTCUoHu5rJ5cAFviwQv/19UqPwc9ldq2Scz
-         cd0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745030763; x=1745635563;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/RzwzU/RPEWQh1ASxLVOsS98O+e47MbzqLttT3KONSA=;
-        b=H82AIyre1hsy+lgaghQZC+t90DnYyebVgnHevXElM0efpa4yF0kBzWccX1O3DTBEEr
-         Xn0/jrsGteOMpM+B2tlKhvLAuLE80LwWhvYM93FXe9BN0p1/8h6AjYs2bdmdEHfIxtkj
-         fM8Sp4TkdVvAXxMOTQqDm8amyOPVptUCi9L5Vq6n6Tuy4x7Ecei0mtgCi5F6F1j39Y7R
-         LMdGxMgv3DFmt1oPaT3Um2QVHIoKOspwavKW8LXTVi/LRcbFe7V4EkNvFztyERA9toI1
-         1+qeXuxlpI3nYBfYN9g6VWe+XNF/afFYZxj+5KmVrgB7EWHrRLDgcU/cIfzt1Kp8pIYc
-         x9wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYSv0yiuWCF0IFhOC/y4GWYoPeWhWzm2yJ7mjHCqod+eXI/ueFQwoOtQxks0p6VOiHOyidt6LfCLEl@vger.kernel.org, AJvYcCWJv+CVAogMVxCK1iQzg7x1/iWGZ/XsqAXcCbJdQKl/Ztv5qiaVs8FcqUDjO3x67gRhSoqITi/pfNn7cF0=@vger.kernel.org, AJvYcCWLMhd2rCVYfcKX4eNtciUc0ikTLh1oNUiMbErvzzGdqtZifmjM+WpVmRarSP09x3urdeimdrulcshI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+WaCyCYwwa7LGBCUAddOdngQsvN4zIscsGiWBThg10uY05kWi
-	QZFAYOWOHd8CZ+Ykx895xJMOTlRnacOLVk1IAfS22xrJCZBSX8IO
-X-Gm-Gg: ASbGncv4k9OmY1Rxjg354wf2b53vCrcwGnIl/xrVOxHGcbeZ3qY+fWwXbS4GZEmjPhQ
-	uA6W/98DzU+8+1Bo1+TehUUYSVbmXQUJJmWAfq76zUdHlGG/VO+owKl61iGayPTON5icM1OVm0J
-	VE3G5OVUy/SJAmbbICegoQXCVuyEXS9dIeRYnElqg3eCrEkOGkYZnUygK+vyOrhijY8w71kNN4l
-	/CEV+wCgIrGJ0SlMrqTKL14quLBdZq6Q97eL3cdwHG9wy3UAspOTfzNCEg10sq1ZSfQXzweABFH
-	a7kuHRSrsnCQPqhTf1AHKEZ5XcBSpOzKzK2LnVftJg==
-X-Google-Smtp-Source: AGHT+IELLIfeh/WcHCnTSkEtDW6ClN6QTw3XxGVttzwpusfdY55BW4MXr2PLJVWbJ9rYaZ517CtvaQ==
-X-Received: by 2002:a17:902:cf0e:b0:223:5241:f5ca with SMTP id d9443c01a7336-22c5359b672mr57491585ad.20.1745030763015;
-        Fri, 18 Apr 2025 19:46:03 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:eaea:89f0:c84d:941a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087dee864dsm2012343a91.6.2025.04.18.19.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 19:46:02 -0700 (PDT)
-Date: Fri, 18 Apr 2025 19:45:59 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v2 13/17] Input: adp5589: remove the driver
-Message-ID: <uaasqxltp5o6owr2avd5x2okukvl3qgq7nuvajb56oiocwn5jm@eyoqvhlmday3>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
- <20250415-dev-adp5589-fw-v2-13-3a799c3ed812@analog.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wv5sQSVNMEz8AYJebST3BE5G+do1GG35G3Ir1WncWHYMUiqgSAROPBO6vJEZSoPhEx+KL+frRQgtMhAtA4FdTlH+TPSmP/F0FGFV496+QMQS5FQ4Nhg1uBe2mY6d/Lm4PtHYgiSlRlnM0SyU5jgcWeILk1VcOBTMHBdL1o1b2sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kio4HHdO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5053C4CEE7;
+	Sat, 19 Apr 2025 10:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745059137;
+	bh=xY0aaUKiZ3nf6klLxrhBlG9cVhweGxQOTCb/Ekznwd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kio4HHdOutRt0lX2iSm8cL9uJdAUhJ+605V0kO6NHfszftpZB1SzbYW1Zb7rFcau4
+	 r/9DIAxMBLwzRRUT9e5NVgI0dmKFFewiROwZI6Eq1alhEhv4fL4GQmgY0yQ+Otk7ly
+	 M62eiTqiLW3tdSXi8iC8Lhkbvr0f6CYqrYbOfKAsCqhvIbJui4wNP61RMfR1KiE1Zf
+	 9nIufnoRKDrJyIWV4yFuP3RARs+ugw4NFriv59FhMTJyM8p9KNSHiu0K4iyEHAC588
+	 tRHoW13+hfHVSQhTZRCwy4dJ+wlVMTJPaLVYcKoNnV3FoDsH6QFw9MHAHvdtASQLgh
+	 tQf3vWUTqHPjw==
+Date: Sat, 19 Apr 2025 12:38:54 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Michael Walle <mwalle@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 05/12] regmap: irq: Remove unreachable goto
+Message-ID: <innhzhoplngaorr3oqsxigccbzho7eptp42lmd4otux4xsuvhx@pdhzjy6jwrtf>
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-5-7a2535876e39@bootlin.com>
+ <1b280408-888e-48e1-8e6b-de4e7a913e74@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="i2qjelbfoeyv45bu"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415-dev-adp5589-fw-v2-13-3a799c3ed812@analog.com>
+In-Reply-To: <1b280408-888e-48e1-8e6b-de4e7a913e74@sirena.org.uk>
 
-On Tue, Apr 15, 2025 at 03:49:29PM +0100, Nuno Sá via B4 Relay wrote:
-> From: Nuno Sá <nuno.sa@analog.com>
-> 
-> The adp5589 support is based on legacy platform data and there's no
-> upstream pataform using this device.
-> Moreover, recently, with
-> 
-> commit
-> 480a8ad683d7 ("mfd: adp5585: Add Analog Devices ADP5585 core support")
-> 
-> we overlapped support for the adp5585 device (gpiochip part of it) but
-> since it actually makes sense for the device to be supported under MFD, we
-> can complement it and add the keymap support for it (properly based on FW
-> properties). And that is what
-> 
-> commit
-> 04840c5363a6 ("Input: adp5585: Add Analog Devices ADP5585/89 support")
-> 
-> is doing.
-> 
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+--i2qjelbfoeyv45bu
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 05/12] regmap: irq: Remove unreachable goto
+MIME-Version: 1.0
 
-Thanks.
+On Wed, Apr 09, 2025 at 04:19:27PM +0100, Mark Brown wrote:
+> On Wed, Apr 09, 2025 at 04:55:52PM +0200, Mathieu Dubois-Briand wrote:
+> > BUG() never returns, so code after it is unreachable: remove it.
+>=20
+> BUG() can be compiled out, CONFIG_BUG.
 
--- 
-Dmitry
+In that case BUG is defined as:
+
+	#define BUG() do {              \
+		do {} while (1);        \
+		unreachable();          \
+	} while (0)
+
+so the return can be dropped as suggested in the patch.
+
+Best regards
+Uwe
+
+--i2qjelbfoeyv45bu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgDfTEACgkQj4D7WH0S
+/k7/vwf8ClL68F1xm5thX7WLNjkcCjj0pl/3M+1HJ25yTuZ6yblDFzo6mRfBwfM5
+X0JG3yzxvMGlWGNLLql8B1J5DundDprN2qp6YOpMl1f5JneoI0KIXTY3lNT+0y4N
+P0V5eGYy96j3JGZ9p60X05EFHvfxMLZPBnTkj31X0fux7eodlRHQCmx4rjyOct4G
+TYUeb/HE+qZ/TnZKSU2biAzWsegr7RgnT8/oMVE+GFp6UZT5n6MAC6ZtjRt3p2jE
+KCG83+YMP9Vul2ZDXphhp3Vk6N8rIJgIaM0/PY0UotrGSyGyXccPAU7YC/srM4yA
+5RSfNSBdYe055b1jwS4NM5wo2lYXnw==
+=g+OB
+-----END PGP SIGNATURE-----
+
+--i2qjelbfoeyv45bu--
 
