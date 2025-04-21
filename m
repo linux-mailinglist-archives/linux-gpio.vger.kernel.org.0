@@ -1,180 +1,195 @@
-Return-Path: <linux-gpio+bounces-19087-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19088-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45CE3A94F26
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 12:08:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C05C9A94FBF
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 13:00:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07CFD7A3336
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 10:07:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F3563AC469
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 11:00:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E326125FA1B;
-	Mon, 21 Apr 2025 10:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A8582627FC;
+	Mon, 21 Apr 2025 11:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cYU84Q0e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPuNhvAd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9DA13B2A4;
-	Mon, 21 Apr 2025 10:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A3717CA17;
+	Mon, 21 Apr 2025 11:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745230125; cv=none; b=cksZAO7n2VnDCH7bViztWc1J/4FFc4OXqQ70vCs6WmKD36zkq/AR4SlkU/Wwrw/pX1GHL7TiGM2o6yC3xy2RUFckMDjhQxjKfa3lyUNkLiULt9cRl0b4r2UGd5lf+cJTZiDII3BKBCKT0dSyIZHoXyRAuDCgfwV8k6PVsceR0Ow=
+	t=1745233229; cv=none; b=DyYaaE6NCbTX9JBBa8dTlkFYZOv1zTAfZqV4ZjvEjpyoEwRKfvrfbiYgRAoZUm9iNBX8wzS9eqEYRS8rCtV5ymyNe2668CSlV3E2mDbGQXL2s9wHC3zNLdrXPpI41jGJGSr60fBiy/yRy8FYMYLGkZQUe3wmmCTUzJqvfcj/Vlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745230125; c=relaxed/simple;
-	bh=6pGa6Cbc38hPIdqm8esZILVQjx4bJAqWDNuqbaBlbgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Efv+GYX+PMENwY+mHiC/qIwpbVo7KYa62hHuaEWu51UIBJnOdpfyMWeF0S75bBG5mV/K44Vgvs9KKxqwAFXRJA5PIBD1YBXS7oOx4qzKBfDZEKmYzbZhKZDPmpq3/Or+Uk4p/9vLTz5HHaUKO+17IcJD0+pcVjn7+oJtAW1+joI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=cYU84Q0e; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5053056D;
-	Mon, 21 Apr 2025 12:06:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745229995;
-	bh=6pGa6Cbc38hPIdqm8esZILVQjx4bJAqWDNuqbaBlbgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cYU84Q0eBMEvMoSewxFDvBtXngQWR1BDp2CGHSpB5qW41R10xCX58tuts6oDvb7wt
-	 2or2Qc7ywNnmG+wr0f4XtT4D4aS/dwfBCewiAEKMYjmBBzM21p00QdC/mASyaIZSuf
-	 jATWy5lleQwdBVw7Qsj7Mvpjfj4gGjM0P481QjA8=
-Date: Mon, 21 Apr 2025 13:08:40 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 00/17] mfd: adp5585: support keymap events and drop
- legacy Input driver
-Message-ID: <20250421100840.GO29968@pendragon.ideasonboard.com>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
- <20250415155607.GI9439@pendragon.ideasonboard.com>
+	s=arc-20240116; t=1745233229; c=relaxed/simple;
+	bh=l5zPS8y6iowCGIfNInsmJ0YWWMW6rrpVtTzMCrgMbTo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e/VzIBHI2ImsEY3HzBdT89kGY0X6EPYnzK2/iRWDXRqxrG+xaPoQOVXT9TI2UkIz0CU3aFPBOytGU4NrNkszrDb3N7FOAGHarZQoxkxqUuAhEU6oHoanXxLAR9zEPnSXqpz93kh65sFp8vMd6AjzpGqTOcNwsAkWzf1g3Xsb68g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPuNhvAd; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-706cb438672so25527007b3.3;
+        Mon, 21 Apr 2025 04:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745233226; x=1745838026; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=viAID0OFSfWPdzwpqnKUlHRrEMqoxHvEgq73p5L8B4c=;
+        b=NPuNhvAdASLO5KA9eZqnSFG1fC7zuIRY+fRwraWyDboxLB1H5N5spYyk7KfOJtn0Aw
+         PsOApmgNU1agFoJPGk6QLiR5JHvYtNPAx64xtFDtnCTt5SJwx5lZXfFY2mrMM5vSZ3FD
+         tWkS83mF0ltclqlO3rbzeEuOIkbhMIItf1KIWwOGQEndmrJVgKNOsVOMIpwewFzux0Jg
+         HsNCHLO85gufY3t+cm016dhn37i9OUsajHTyk1f7iYjKiuoq428Fh2KlWf2KxQmBimHn
+         el2d0S0rMJSav0O3T+FJlil2trrQxKV68PVV+13gTe3J8MOwp+w6d/hcH/KLYrjeSoXE
+         5stA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745233226; x=1745838026;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=viAID0OFSfWPdzwpqnKUlHRrEMqoxHvEgq73p5L8B4c=;
+        b=CB5H+SnpnW5y6nJeMgFYjjXhmCzlwTy2XFy3seuWovjxZotiz/luCPB+Fr3gds6XAS
+         xEmrKVr+kUcNqaaYklCSL/ShyvCk4lqWtdBzFZ77zJGhFs1RA8PqzxtNflBLgN6tVR3q
+         L3Me6nylrYvGhtUuRWn+6GOlP3J40kko6H6410vsD8fD84omsnMyLtcJ7Rn5JP75NEIk
+         gfg3Rn7LcqbG6CBcsrjhbtNWTT5DDb+8Iol4WXL2K0itEojeoSe0GWQM0AuOaRCq1jhS
+         F1LZ9wBqjt1psEVYdECcTED17T9RW7VU1bWcl2OKFcCRWUryfugVI2iisJ8HtFhfSFKw
+         sslg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3QcfpJag8rq1lc1LrtZeeJEUGBrbswCh22ROLEfCQw2N5JLud/5S8w6Xb0aCqZtLm/kKN8vlH8NuOk8U=@vger.kernel.org, AJvYcCUE/dbXN6SuWxBh5z2jspE3L/ptFxC9fPznicNyQmQ1Q/p26Iqpw4tDQnbTSR+nX/HkzyPgUjwat7xU5KZN@vger.kernel.org, AJvYcCUd0FPLOqgDP5PZ2Pl+aokpOPlFEajitRZBQadWRfxrVRNFWymmd7zi3mIoj+pAIOX60juDClz07z0Y@vger.kernel.org, AJvYcCVAlnkonTaK2LUTsLkVleWIA3KLa8hIwL592384G/g7nl57UAkcNdJIgmsLTobyUm2RahWdxEUpibAu@vger.kernel.org, AJvYcCWfDkB0/VPWDveOdZBLEMnTbWaV3bl7pDlXEFJuLL51cTfqI7qPZ3ka8JmaK4HVaTkhNFsH77Ho@vger.kernel.org, AJvYcCWpb2nTtNJlxaZqXiP9+7wRoBCYD1rfBT911+kJuErP6D5HQZa1xLMRngZqj/P32a6b3WxbuOezqVuTZmOSAZs=@vger.kernel.org, AJvYcCX/fF4gF+YWwV7sXykA7797RbAMxPNVaFbLAnIVYB45LPAKWLmly9JqS89qBfAS43/1K+v5LYHosYQ=@vger.kernel.org, AJvYcCX5XvfOnxsvtfxLA5A2g1SD+x2FjMSmAn+/4VFfY59V+Q/eL0pnXlbsrsCmw3vqk8sFfijcNJcEfzG1YQ==@vger.kernel.org, AJvYcCXGkiEbh+myd8yS+gro1rnbT0ziL5b4RfAlosuxY/lNkEnql11HpH/XIeKl0LgbPK62+lps1Mb42xOe@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxuu6/hErfw3kg3JSHKH0FJEXOVJHrkcFlnqSPhi3iVtxt4iM8y
+	bhjuMHssgB6J5UbEWU3UQTahchw7Yl57COT3pJgZ5scRlniwJda5kDfpyJE0jAaKuI3cywEf/o+
+	Z65JwL2TtdrGD/VSmj62ynS33T+Q=
+X-Gm-Gg: ASbGnctWVn55G+UO++gg/trH/z4UyJ34A47DK5j77DL+uM62/utj67loFyh0Z7ISzMG
+	zADKE6xwNWKdnWrb5H/j7FZpb9a6c66kNrgApHia2cEEVcuVHkGMsJsGIbwwOUFj40KuwrPNNiq
+	jnTzuKX8SOB+5ZZtwt9OXWAwrrpYdknVtQnLXaIn/EmHkH1GApUfpChVff
+X-Google-Smtp-Source: AGHT+IG7euA4BFR+Mx5i/i0jG3mwDi1xEltiPr00AQmdaQcpf6Ouk/sCc3/HcH3nGYloVrsJS5NYz9rk2JRvmLgu4/g=
+X-Received: by 2002:a05:690c:4a09:b0:703:c3ed:1f61 with SMTP id
+ 00721157ae682-706ccd2a836mr163642197b3.20.1745233226387; Mon, 21 Apr 2025
+ 04:00:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415155607.GI9439@pendragon.ideasonboard.com>
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-2-a0282524688@gmail.com> <20250307011542.GE8350@google.com>
+ <CAOoeyxUgiTqtSksfHopEDhZHwNkUq9+d-ojo8ma3PX2dosuwyQ@mail.gmail.com>
+ <20250320145042.GS3890718@google.com> <CAOoeyxXZmrzBSNRdRx9vK84m5Z5y8T_A+wY98vVrPUZ7f4w4iw@mail.gmail.com>
+ <20250404142115.GC278642@google.com> <CAOoeyxVVgHGkH5ajQT0NGNPv7FmVPLzuZtGjCiF7mRRto70aAg@mail.gmail.com>
+ <20250410082132.GP372032@google.com>
+In-Reply-To: <20250410082132.GP372032@google.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Mon, 21 Apr 2025 19:00:15 +0800
+X-Gm-Features: ATxdqUESxNdKH3-Yj-9uSqFAuc712zSM3LkrmRSu8wa-twvX0fsx93cPWbbNJ5U
+Message-ID: <CAOoeyxV-dzrJNJ83Y55SKc0rBqcFk2jPM1Z2T+hPF+QFGz3GRA@mail.gmail.com>
+Subject: Re: [PATCH v8 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Lee Jones <lee@kernel.org>
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
+	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nuno,
+Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B44=E6=9C=8810=E6=97=A5 =E9=
+=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=884:21=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Mon, 07 Apr 2025, Ming Yu wrote:
+>
+> > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B44=E6=9C=884=E6=97=A5 =
+=E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8810:21=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > > ...
+> > > > > > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x1),
+> > > > > > >
+> > > > > > > IDs are usually given in base-10.
+> > > > > > >
+> > > > > >
+> > > > > > Fix it in v9.
+> > > > > >
+> > > > > > > Why are you manually adding the device IDs?
+> > > > > > >
+> > > > > > > PLATFORM_DEVID_AUTO doesn't work for you?
+> > > > > > >
+> > > > > >
+> > > > > > I need to manage these IDs to ensure that child devices can be
+> > > > > > properly utilized within their respective modules.
+> > > > >
+> > > > > How?  Please explain.
+> > > > >
+> > > > > This numbering looks sequential and arbitrary.
+> > > > >
+> > > > > What does PLATFORM_DEVID_AUTO do differently such that it is not =
+useful?
+> > > > >
+> > > >
+> > > > As far as I know, PLATFORM_DEVID_AUTO assigns dynamic IDs to device=
+s,
+> > > > but I need fixed IDs.
+> > > > For example, the GPIO driver relies on these IDs to determine the
+> > > > group, allowing the firmware to identify which GPIO group to operat=
+e
+> > > > on through the API.
+> > >
+> > > PLATFORM_DEVID_AUTO will allocate IDs 0 through 16, the same as you'v=
+e
+> > > done here.  These lines do not have any differentiating attributes, s=
+o
+> > > either way we are not allocating specific IDs to specific pieces of t=
+he
+> > > H/W.  I still do not understand why you need to allocate them manuall=
+y.
+> > >
+> >
+> > I'm using PLATFORM_DEVID_AUTO to allocate child device IDs with
+> > MFD_CELL_NAME(), like this:
+> >
+> > static const struct mfd_cell nct6694_dev[] =3D {
+> >     MFD_CELL_NAME("nct6694-gpio"),
+> >     MFD_CELL_NAME("nct6694-gpio"),
+> >     ......
+> >     MFD_CELL_NAME("nct6694-gpio"),
+> >     MFD_CELL_NAME("nct6694-i2c"),
+> >     MFD_CELL_NAME("nct6694-i2c"),
+> >     ......
+> >     MFD_CELL_NAME("nct6694-i2c"),
+> >     ......
+> > };
+> >
+> > For example, the device IDs retrieved in gpio-nct6694.c is 1~16, and
+> > i2c-nct6694.c is 17~22. Does this mean each driver should
+> > independently handle its dynamically assigned IDs?
+> > Additionally, I originally referred to cgbc-core.c with i2c-cgbc.c,
+> > and ab8500-core.c with pwm-ab8500.c for associating child devices. Do
+> > you think this approach is appropriate in my case?
+>
+> Yes, if you _need_ the ranges to start from 0, then you will have to
+> call mfd_add_devices() separately on those ranges.  Otherwise one range
+> will follow directly on to another range.
+>
+> But wait, you're using mfd_add_hotplug_devices(), which means you are
+> using PLATFORM_DEVID_AUTO.  So your .id values that you've added are
+> being ignored anyway.  Thus, if you have tested that this works, you
+> don't need them anyway, right?
+>
 
-On Tue, Apr 15, 2025 at 06:56:09PM +0300, Laurent Pinchart wrote:
-> On Tue, Apr 15, 2025 at 03:49:16PM +0100, Nuno Sá via B4 Relay wrote:
-> > The adp5585 MFD driver was introduced in 6.11 adding support for gpio
-> > and PWM. However, the gpio part of it was already supported as part of
-> > the keyboard driver:
-> > 
-> > https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/input/keyboard/adp5589-keys.c#L532
-> > 
-> > On top of that it also overlapped with my refactoring of the above driver [1]
-> > to drop usage of platform data and use FW properties instead.
-> > 
-> > Now, it actually makes sense for this device to be supported under MFD
-> > and since the "legacy" input device depends on platform data that is not
-> > defined anywhere the plan in this series is to add support for the
-> > keyboard and adp5589 devices as part of the MFD driver. Once the MFD
-> > driver supports all that's supported in the Input one, we drop it...
-> > 
-> > For DT Maintainers:
-> > 
-> > The compatible for adp5589 is part of trivial devices. To me, it makes
-> > sense to remove it in the patch where we drop the driver but doing so
-> > would result in a warning when adding the same compatible for the MFD
-> > bindings. Hence, I remove it in that patch. Is that ok?
-> > 
-> > Uwe:
-> > 
-> > In my eval board, I could see that reading the GPIO value (when
-> > configured as input) does not work when OSC_EN is not set. Therefore,
+Yes, it uses PLATFORM_DEVID_AUTO, but in my implementation, the
+sub-devices use cell->id instead of platform_device->id, so it doesn't
+affect the current behavior.
 
-How did you test that, through the GPI_STATUS_x register ?
+However, if you think there's a better approach or that this should be
+changed for consistency or correctness, I'm happy to update it, please
+let me know your recommendation.
 
-> > commit ("pwm: adp5585: don't control OSC_EN in the pwm driver") could
-> > very well have a Fixes tag. However I'm not 100% sure it's a real issue
-> > or something special to my eval board.
-> > 
-> > It would be nice if Laurent or Liu could test the PWM bits or even
-> > check that the above is also an issue for their platform.
-> 
-> I'll give it a try, but it will need to wait until next week.
 
-I can't easily test GPI or PWM with my hardware setup at the moment :-(.
-I can however confirm that this series doesn't break GPO support for my
-use case.
-
-> > [1]: https://lore.kernel.org/linux-input/d1395bd61ce58b3734121bca4e09605a3e997af3.camel@gmail.com/
-> > 
-> > BTW the series is based on linux-next/master
-> > 
-> > ---
-> > Changes in v2:
-> > - Patch 5:
-> >    * Do not nest if:then:else::if:then.
-> > - Patch 6:
-> >    * Make use of the adp5585 info variables and adp5589 volatile regs.
-> > - Patch 9:
-> >    * Use standard "poll-interval" property (and move it before vendor
-> >      properties).
-> > - Patch 10:
-> >    * Make sure to include bitfield.h.
-> > 
-> > - Link to v1: https://lore.kernel.org/r/20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com
-> > 
-> > ---
-> > Nuno Sá (17):
-> >       dt-bindings: mfd: adp5585: ease on the required properties
-> >       mfd: adp5585: enable oscilator during probe
-> >       pwm: adp5585: don't control OSC_EN in the pwm driver
-> >       mfd: adp5585: make use of MFD_CELL_NAME()
-> >       dt-bindings: mfd: adp5585: document adp5589 I/O expander
-> >       mfd: adp5585: add support for adp5589
-> >       gpio: adp5585: add support for the ad5589 expander
-> >       pwm: adp5585: add support for adp5589
-> >       dt-bindings: mfd: adp5585: add properties for input events
-> >       mfd: adp5585: add support for key events
-> >       gpio: adp5585: support gpi events
-> >       Input: adp5585: Add Analog Devices ADP5585/89 support
-> >       Input: adp5589: remove the driver
-> >       mfd: adp5585: support getting vdd regulator
-> >       dt-bindings: mfd: adp5585: document reset gpio
-> >       mfd: adp5585: add support for a reset pin
-> >       pwm: adp5585: make sure to include mod_devicetable.h
-> > 
-> >  .../devicetree/bindings/mfd/adi,adp5585.yaml       |  240 ++++-
-> >  .../devicetree/bindings/trivial-devices.yaml       |    2 -
-> >  MAINTAINERS                                        |    1 +
-> >  drivers/gpio/Kconfig                               |    1 +
-> >  drivers/gpio/gpio-adp5585.c                        |  299 +++++-
-> >  drivers/input/keyboard/Kconfig                     |   21 +-
-> >  drivers/input/keyboard/Makefile                    |    2 +-
-> >  drivers/input/keyboard/adp5585-keys.c              |  221 ++++
-> >  drivers/input/keyboard/adp5589-keys.c              | 1066 --------------------
-> >  drivers/mfd/adp5585.c                              |  808 ++++++++++++++-
-> >  drivers/pwm/pwm-adp5585.c                          |   57 +-
-> >  include/linux/mfd/adp5585.h                        |  153 ++-
-> >  12 files changed, 1709 insertions(+), 1162 deletions(-)
-> > ---
-> > base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
-> > change-id: 20250311-dev-adp5589-fw-e04cfd945286
-> > --
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Ming
 
