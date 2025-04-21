@@ -1,509 +1,147 @@
-Return-Path: <linux-gpio+bounces-19111-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19112-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1218A95745
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 22:20:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0332A958DA
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 00:04:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A63D5174AA5
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 20:19:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E12F1896BAD
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 22:04:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 657E71F3B96;
-	Mon, 21 Apr 2025 20:18:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3BA221DB2;
+	Mon, 21 Apr 2025 22:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="KfPy02tO"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="a8BO/IX5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D531F03FA;
-	Mon, 21 Apr 2025 20:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7633221F0A;
+	Mon, 21 Apr 2025 22:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745266726; cv=none; b=S61byHxqWWLz+mn65Bes33UI5ycYv87CtUd97PtaTYU2z8dzKdrfs+CBZXAtO5Lbq2cpwuYICinrSzzPn5ZRkaJPI7q96J4AY0YmDXFmIqgv5UMXge/JxwnceEMOsx2M1sdjuQzEy3s1GQPPMcR2t35VI9XkniYXTjxQO0t8RKU=
+	t=1745273018; cv=none; b=ESPd8xWdZQ5ODy1Ofgjt4E4N7TJIF13S6TmeNh3iVpAdkTy1EWQovBjt4oDtxRPMPkxRLIIg+0iJCBwsUFwcCHiMz7YLz0FCv6eFaI0pseZ2rr+h7FS8NWk7Qx0BuqeakV9hjfOwixyVhkp28R7MwQWJHef6e9MaYkP+dkobQC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745266726; c=relaxed/simple;
-	bh=JDB54FoTLeLwyo470fOwKknJanfkTVUJo3AeUpSczaU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YnZfnwF+1RX+xbSZfuTvIyEOpmOgwypr2PoxNyCE7M4V9lbKJoKZw1k8AxgbKO2tOJQozLO828UefDxlKU+bjPcmF2IOAE/WUjcNw+i1UijngDITGGySvCwYIDRulNZCF4KHd2I4OMVpdD75V9sgKz6Jbmqq/3yRFJjuYknPT8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=KfPy02tO; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-Received: from [192.168.183.162] (254C2769.nat.pool.telekom.hu [37.76.39.105])
-	by mail.mainlining.org (Postfix) with ESMTPSA id A60EBBBB09;
-	Mon, 21 Apr 2025 20:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1745266721;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dvAZ7WHxT1ib3U22U7YzaEM5wJPBeAMgcRsnmo/EFiw=;
-	b=KfPy02tOIt2WezpTLGBdI2HW25sRJ4gaf5/5JSG6nTYJ7N20uuLTfeYo0fFY+xqlrh4x6m
-	AkshjGrn23I+FkygkLohQ07V3kG4ALv3AdKp9aW1YIsCOev89fcgngWASRTzUJMii+ZTrM
-	H8BEYSJRlzAsWAJi5M0lCN2sqoqSAB53KPwsejIRsxMW0LvpWPNLBT3tyRM6Cx7Ab4K9kL
-	y0WMYr08k99dN+MjRjoU0fjXh6WRErLN3lc2Eq9PM60PYHQqGbaWPPWQt80p4AQkiOLdjR
-	EdBztwPQPPhB2qc+c4o1qDD7YBGuDw5AqLb9lre8Lh2C6Sx23JknlFmIUgOVgA==
-From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Date: Mon, 21 Apr 2025 22:18:27 +0200
-Subject: [PATCH v5 5/5] arm64: dts: qcom: Add Xiaomi Redmi 3S
+	s=arc-20240116; t=1745273018; c=relaxed/simple;
+	bh=L4Vm17wQXJt18C/sghPsQAjFU4r6TeOLbu1yYf7tbM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aibYZGcBo4VYtKo29jU91CwNonLiggMk1sFEWnmxWxrmyH1j08iiGOBMDQZX5oNIfZjfkDpwcg23P7FKFwz7SPbIbb81UhU6VtMktZXvTZVE5yLHaKbjtpkKqhttVFZSFlWBINPfMW7Q1L1Mw3nn8OrVWE9cIAbOqArqaNkvRBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=a8BO/IX5; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BBB10F01;
+	Tue, 22 Apr 2025 00:01:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745272887;
+	bh=L4Vm17wQXJt18C/sghPsQAjFU4r6TeOLbu1yYf7tbM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a8BO/IX52LNbxPTSI8RPpLv5mqe8JTQvgdkJE/68qzmONPMzE3XLo2f2aLcNddFhs
+	 TIkb7OvPuB/wBhVg65fCTnrbZfunWW3rzBsciPMHY1HV6VzyCJg7jfj23gr5Zvr3ic
+	 UhiAttG0hGeDYco1X6yNOI1cAIHyF2W/EsxSH2Kw=
+Date: Tue, 22 Apr 2025 01:03:32 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH v2 02/17] mfd: adp5585: enable oscilator during probe
+Message-ID: <20250421220332.GU17813@pendragon.ideasonboard.com>
+References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
+ <20250415-dev-adp5589-fw-v2-2-3a799c3ed812@analog.com>
+ <20250421085758.GB29968@pendragon.ideasonboard.com>
+ <aadec5eae6645e3e9c2f8f09dcf842510515122f.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250421-msm8937-v5-5-bf9879ef14d9@mainlining.org>
-References: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
-In-Reply-To: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, 
- =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
- Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Dmitry Baryshkov <lumag@kernel.org>, 
- Adam Skladowski <a_skl39@protonmail.com>, 
- Sireesh Kodali <sireeshkodali@protonmail.com>, 
- Srinivas Kandagatla <srini@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- linux@mainlining.org, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745266705; l=9557;
- i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=JDB54FoTLeLwyo470fOwKknJanfkTVUJo3AeUpSczaU=;
- b=zHB9MNa3HZvJuqqpLqFLsCa1PDmyqfxeI4jSjiWHNHbycN7oc6nSxjyZPtoR27dNWV/QbZRzx
- dB73PoUDMFSD6NvOgGBKyYpXdhbzPJXRz5tgfl1X2/1s7e4gyRd3Ikq
-X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
- pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
+In-Reply-To: <aadec5eae6645e3e9c2f8f09dcf842510515122f.camel@gmail.com>
 
-Add initial support for Xiaomi Redmi 3S (land).
+Hi Nuno,
 
-Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
----
- arch/arm64/boot/dts/qcom/Makefile                |   1 +
- arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts | 381 +++++++++++++++++++++++
- 2 files changed, 382 insertions(+)
+On Mon, Apr 21, 2025 at 01:14:28PM +0100, Nuno Sá wrote:
+> On Mon, 2025-04-21 at 11:57 +0300, Laurent Pinchart wrote:
+> > On Tue, Apr 15, 2025 at 03:49:18PM +0100, Nuno Sá via B4 Relay wrote:
+> > > From: Nuno Sá <nuno.sa@analog.com>
+> > > 
+> > > Make sure to enable the oscillator in the top device. This will allow to
+> > > not control this in the child PWM device as that would not work with
+> > > future support for keyboard matrix where the oscillator needs to be
+> > > always enabled (and so cannot be disabled by disabling PWM).
+> > 
+> > Setting this bit unconditionally increases power consumption. It should
+> > only be set when needed.
+> 
+> Well, not sure if the effort for that pays off... The only usecase were it would
+> make sense to do that would be for PWM. For the other devices (and assuming I'm
+> right with the GPI case) we need this always set.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index adb4d026bcc4b24d73de92e204db8d525b0770e6..8c101d07e78fb2d9837ecca84cc53005f9265506 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -64,6 +64,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-wingtech-wt88047.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-yiming-uz801v3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8917-xiaomi-riva.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8929-wingtech-wt82918hd.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8937-xiaomi-land.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-huawei-kiwi.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-longcheer-l9100.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-samsung-a7.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts b/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..91837ff940f1b6b13a9ef519519f471a7a4cdac0
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts
-@@ -0,0 +1,381 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024, Barnabas Czeman
-+ */
-+/dts-v1/;
-+
-+#include <dt-bindings/arm/qcom,ids.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+
-+#include "msm8937.dtsi"
-+#include "pm8937.dtsi"
-+#include "pmi8950.dtsi"
-+
-+/delete-node/ &qseecom_mem;
-+
-+/ {
-+	model = "Xiaomi Redmi 3S (land)";
-+	compatible = "xiaomi,land", "qcom,msm8937";
-+	chassis-type = "handset";
-+
-+	qcom,msm-id = <QCOM_ID_MSM8937 0x0>;
-+	qcom,board-id = <0x1000b 1>, <0x2000b 1>;
-+
-+	aliases {
-+		mmc0 = &sdhc_1;
-+		mmc1 = &sdhc_2;
-+	};
-+
-+	battery: battery {
-+		compatible = "simple-battery";
-+
-+		charge-full-design-microamp-hours = <4100000>;
-+		constant-charge-current-max-microamp = <1000000>;
-+		voltage-min-design-microvolt = <3400000>;
-+		voltage-max-design-microvolt = <4400000>;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		stdout-path = "framebuffer0";
-+
-+		framebuffer0: framebuffer@8dd01000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0x0 0x8dd01000 0x0 (720 * 1280 * 3)>;
-+			width = <720>;
-+			height = <1280>;
-+			stride = <(720 * 3)>;
-+			format = "r8g8b8";
-+
-+			clocks = <&gcc GCC_MDSS_AHB_CLK>,
-+				 <&gcc GCC_MDSS_AXI_CLK>,
-+				 <&gcc GCC_MDSS_VSYNC_CLK>,
-+				 <&gcc GCC_MDSS_MDP_CLK>,
-+				 <&gcc GCC_MDSS_BYTE0_CLK>,
-+				 <&gcc GCC_MDSS_PCLK0_CLK>,
-+				 <&gcc GCC_MDSS_ESC0_CLK>;
-+			power-domains = <&gcc MDSS_GDSC>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&gpio_keys_default>;
-+		pinctrl-names = "default";
-+
-+		key-volup {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&tlmm 91 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <15>;
-+		};
-+	};
-+
-+	irled {
-+		compatible = "gpio-ir-tx";
-+		gpios = <&tlmm 45 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reserved-memory {
-+		reserved@84a00000 {
-+			reg = <0x0 0x84a00000 0x0 0x1900000>;
-+			no-map;
-+		};
-+
-+		framebuffer: memory@8dd01000 {
-+			reg = <0x0 0x8dd01000 0x0 (720 * 1280 * 3)>;
-+			no-map;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&blsp1_i2c2 {
-+	status = "okay";
-+
-+	led-controller@45 {
-+		compatible = "awinic,aw2013";
-+		reg = <0x45>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vcc-supply = <&pm8937_l10>;
-+		vio-supply = <&pm8937_l5>;
-+
-+		led@0 {
-+			reg = <0>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@1 {
-+			reg = <1>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@2 {
-+			reg = <2>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+};
-+
-+&blsp1_i2c3 {
-+	status = "okay";
-+
-+	touchscreen@3e {
-+		compatible = "edt,edt-ft5306";
-+		reg = <0x3e>;
-+
-+		interrupts-extended = <&tlmm 65 IRQ_TYPE_LEVEL_LOW>;
-+		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-+		vcc-supply = <&pm8937_l10>;
-+		iovcc-supply = <&pm8937_l5>;
-+
-+		pinctrl-0 = <&tsp_int_rst_default>;
-+		pinctrl-names = "default";
-+
-+		touchscreen-size-x = <720>;
-+		touchscreen-size-y = <1280>;
-+	};
-+};
-+
-+&pm8937_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+
-+	status = "okay";
-+};
-+
-+&pm8937_spmi_regulators {
-+	/* APC */
-+	pm8937_s5: s5 {
-+		regulator-min-microvolt = <1050000>;
-+		regulator-max-microvolt = <1350000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&pmi8950_wled {
-+	qcom,num-strings = <2>;
-+	qcom,external-pfet;
-+	qcom,current-limit-microamp = <20000>;
-+	qcom,ovp-millivolt = <29600>;
-+
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators-0 {
-+		compatible = "qcom,rpm-pm8937-regulators";
-+
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+
-+		vdd_l1_l19-supply = <&pm8937_s3>;
-+		vdd_l2_l23-supply = <&pm8937_s3>;
-+		vdd_l3-supply = <&pm8937_s3>;
-+		vdd_l4_l5_l6_l7_l16-supply = <&pm8937_s4>;
-+		vdd_l8_l11_l12_l17_l22-supply = <&vph_pwr>;
-+		vdd_l9_l10_l13_l14_l15_l18-supply = <&vph_pwr>;
-+
-+		pm8937_s1: s1 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+
-+		pm8937_s3: s3 {
-+			regulator-min-microvolt = <1300000>;
-+			regulator-max-microvolt = <1300000>;
-+		};
-+
-+		pm8937_s4: s4 {
-+			regulator-min-microvolt = <2050000>;
-+			regulator-max-microvolt = <2050000>;
-+		};
-+
-+		pm8937_l2: l2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+
-+		pm8937_l5: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l6: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l7: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l8: l8 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8937_l9: l9 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l10: l10 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		pm8937_l11: l11 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-allow-set-load;
-+			regulator-system-load = <200000>;
-+		};
-+
-+		pm8937_l12: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8937_l13: l13 {
-+			regulator-min-microvolt = <3075000>;
-+			regulator-max-microvolt = <3075000>;
-+		};
-+
-+		pm8937_l14: l14 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l15: l15 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l16: l16 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l17: l17 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8937_l19: l19 {
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1350000>;
-+		};
-+
-+		pm8937_l22: l22 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+		};
-+
-+		pm8937_l23: l23 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+	};
-+};
-+
-+&sdc2_cmd_default {
-+	drive-strength = <12>;
-+};
-+
-+&sdc2_data_default {
-+	drive-strength = <12>;
-+};
-+
-+&sdhc_1 {
-+	vmmc-supply = <&pm8937_l8>;
-+	vqmmc-supply = <&pm8937_l5>;
-+
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	cd-gpios = <&tlmm 67 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&pm8937_l11>;
-+	vqmmc-supply = <&pm8937_l12>;
-+	pinctrl-0 = <&sdc2_default &sdc2_cd_default>;
-+	pinctrl-1 = <&sdc2_sleep &sdc2_cd_default>;
-+	pinctrl-names = "default", "sleep";
-+
-+	status = "okay";
-+};
-+
-+&sleep_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <20 4>;
-+
-+	gpio_keys_default: gpio-keys-default-state {
-+		pins = "gpio91";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
-+	sdc2_cd_default: sdc2-cd-default-state {
-+		pins = "gpio67";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	tsp_int_rst_default: tsp-int-rst-default-state {
-+		pins = "gpio64", "gpio65";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&wcnss {
-+	vddpx-supply = <&pm8937_l5>;
-+
-+	status = "okay";
-+};
-+
-+&wcnss_iris {
-+	compatible = "qcom,wcn3620";
-+	vddxo-supply = <&pm8937_l7>;
-+	vddrfa-supply = <&pm8937_l19>;
-+	vddpa-supply = <&pm8937_l9>;
-+	vdddig-supply = <&pm8937_l5>;
-+};
-+
-+&wcnss_mem {
-+	status = "okay";
-+};
-+
-+&xo_board {
-+	clock-frequency = <19200000>;
-+};
+For the keypad, can't the device be kept powered off if the input device
+exposed to userspace is not open ? And for GPIOs, OSC_EN isn't needed
+when all requested GPIOs are configured as outputs, as far as I can
+tell.
+
+I'm fine addressing this issue on top of this series.
+
+> > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> > > ---
+> > >  drivers/mfd/adp5585.c | 16 ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > > 
+> > > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> > > index
+> > > 160e0b38106a6d78f7d4b7c866cb603d96ea673e..f17b5f2474cac6a403556694066f438288
+> > > 264a49 100644
+> > > --- a/drivers/mfd/adp5585.c
+> > > +++ b/drivers/mfd/adp5585.c
+> > > @@ -110,6 +110,13 @@ static const struct regmap_config adp5585_regmap_configs[] = {
+> > >  	},
+> > >  };
+> > >  
+> > > +static void adp5585_osc_disable(void *data)
+> > > +{
+> > > +	const struct adp5585_dev *adp5585 = data;
+> > > +
+> > > +	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
+> > > +}
+> > > +
+> > >  static int adp5585_i2c_probe(struct i2c_client *i2c)
+> > >  {
+> > >  	const struct regmap_config *regmap_config;
+> > > @@ -138,6 +145,15 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
+> > >  		return dev_err_probe(&i2c->dev, -ENODEV,
+> > >  				     "Invalid device ID 0x%02x\n", id);
+> > >  
+> > > +	ret = regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
+> > > +			      ADP5585_OSC_EN);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable, adp5585);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > >  	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+> > >  				   adp5585_devs, ARRAY_SIZE(adp5585_devs),
+> > >  				   NULL, 0, NULL);
 
 -- 
-2.49.0
+Regards,
 
+Laurent Pinchart
 
