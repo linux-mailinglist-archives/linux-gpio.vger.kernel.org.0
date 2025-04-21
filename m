@@ -1,80 +1,186 @@
-Return-Path: <linux-gpio+bounces-19104-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19106-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6449A95686
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 21:11:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18D45A95722
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 22:18:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 123511880817
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 19:11:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFEF11895AE3
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Apr 2025 20:18:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CF9F1EDA2C;
-	Mon, 21 Apr 2025 19:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 133DE1F03CF;
+	Mon, 21 Apr 2025 20:18:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbC0NnAi"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="dnSS8qmZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25971EDA14;
-	Mon, 21 Apr 2025 19:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6238B10F1;
+	Mon, 21 Apr 2025 20:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745262682; cv=none; b=UH5zkDySKAtZuQP2k0LrDnNeTeqqYp2Ie2JPx/PSx07cjlLAx6uLcwVZGapOrph7HhYQItAaTtiSXwgOH/DocKtAMCGMP00kdDl/uNXUjO3gGQjxStxsCe8GKuvYju0iYiQXE4Ywq9KoX7OIVSojXgZ6mk7No8/wm2fgfskxoiA=
+	t=1745266712; cv=none; b=Gh201Si42WHU2mevx0yS1h4G4sxREL+Yv0pHRbsixvJTauALd/JA/1xbzReaYG7HCcx7JkoSVkDWsj1gIb2PYqPqZMUmjBFrr+tEE1iRj4xelTxTFSCuhq8tHatOdT+KyFa9FcvEh2ZSB+ID8N3ybYrdzVL86iG4Ex4FUMpV6fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745262682; c=relaxed/simple;
-	bh=h7Ge3JqI2gUvZQ3tKqKvk1UQ6gAx76a/Wgupd8InyfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SpZaAPAEDbRbVjAGuFUmLGN7sQs9BS3ouCxvPMO8Wg/6FNPiEC33YDAJPDfkNIj/vt57RGrO0qBF2cFeEOkPe8D9rdq9DFCUn/VRaisHnXHmLyZeQIyGaRRe0B7SZLDxbwRI/FbSOHqvV2Kh0bpqxOavIUx1LnZ3Z/1KTFLAbx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbC0NnAi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF655C4CEE4;
-	Mon, 21 Apr 2025 19:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745262681;
-	bh=h7Ge3JqI2gUvZQ3tKqKvk1UQ6gAx76a/Wgupd8InyfI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bbC0NnAizemZjXaq5L97y59y6hQNh6bjPjqf/2hSnifbBDjzWQaw1oFn8tBxaA+yU
-	 ad5lMhd4r2JU1ZbjD0Xps/X2EB0fAmbj+umO45aoiza5/R048EkZ4XSvktgbyqe/nT
-	 E1jieRne9VQDbWeWT2bWnTFRhW5/svlmVpordBRXe93kIWIHWRBENvN71qJ/Wj8YQ8
-	 Nt7m5jHUwB9aukmeG/tXfpOJGfpQb7QO2KPLoTFqyWtinOJCfSmfqMzaR9u/yWqYGQ
-	 Y43e2dcVQvNojJ06XC79rePdJn8EivPj/uv2ayDYD40b3OhA09+Nsd6Hdi++//CTzM
-	 agu1CAVkTFGdQ==
-Date: Mon, 21 Apr 2025 14:11:19 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, spacemit@lists.linux.dev,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: spacemit: add clock and
- reset property
-Message-ID: <174526267847.2645979.6771559999426063209.robh@kernel.org>
-References: <20250416-02-k1-pinctrl-clk-v2-0-2b5fcbd4183c@gentoo.org>
- <20250416-02-k1-pinctrl-clk-v2-1-2b5fcbd4183c@gentoo.org>
+	s=arc-20240116; t=1745266712; c=relaxed/simple;
+	bh=ZT6G0gLMpYOma7+nsyuQ5jRof3ch8u1E9cEnMHxyUSI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ATE6/8sCFU9GM+iayD0ecoLtRj1fj12zB7q9yyrujWrYs+PTiDVbfJcYsoim0OhjjWyHhNTCGerR5IXhhIKh9dRMKM/3DdLKRuFAi205tctMt7dgqsPfHiuhJa/u8JXdyR2SP8QzgWxHT9hQ6I9C3DaszHvMA7X2H7GWlOIhYeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=dnSS8qmZ; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from [192.168.183.162] (254C2769.nat.pool.telekom.hu [37.76.39.105])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 713D2BBAD2;
+	Mon, 21 Apr 2025 20:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1745266707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2s7t/jnFQ5IYzmw1pTsYPIv5DPpMMHbUNmN9wG24wrs=;
+	b=dnSS8qmZxj1Re0S4hWlbITnkCGLfs4DGs7AX2QhV+fL8r5N9RM8PzmDIi4ok2hTn6XNLt5
+	wgJ0c7kR4L/L7tab4CYhc8n05vIOZt7ls1RxYNasIkjweLStsOR7pvINtCwFUCpMn7K/0Z
+	iH7FdA3ncN70pkduATzp8oVx8XQ0ApaOI/wijoTZY7EgavyJzHYQM4dpt4bnBFAs7f6o24
+	rVtpW4+scaUBcUofgM5kdbAmQESVbfYzbB9MCcNHOQrAjTAbWw41kX66jPOVsxVz15EUYq
+	OeztBBVPNafZg/wprr4CwMNurYTkv8MzTK4497MkpuOJ57KNidQIRWvZ6wa1iA==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH v5 0/5] Initial support of MSM8937 and Xiaomi Redmi 3S
+Date: Mon, 21 Apr 2025 22:18:22 +0200
+Message-Id: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-02-k1-pinctrl-clk-v2-1-2b5fcbd4183c@gentoo.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAA6oBmgC/23MQQrCMBCF4atI1kaSmdYkrryHuKjJtA7YVBIpi
+ vTuRkEr6PIN8/13kSkxZbFZ3EWikTMPsYx6uRD+2MSOJIeyBSioFWgl+9xbh0YCWGpV8EjeifJ
+ 9TtTy9VXa7cs+cr4M6fYKj/p5fTf0pzFqqaQJYCisTWuU3fYNxxNHjt1qSJ14hkb4woAzhoIPz
+ plyXCMF/IvxG1czxoJDE4zXFrz3h7+4mjHqesZVwbrVCGSNair3g6dpegA++3eDWgEAAA==
+X-Change-ID: 20250210-msm8937-228ef0dc3ec9
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Dmitry Baryshkov <lumag@kernel.org>, 
+ Adam Skladowski <a_skl39@protonmail.com>, 
+ Sireesh Kodali <sireeshkodali@protonmail.com>, 
+ Srinivas Kandagatla <srini@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ linux@mainlining.org, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Daniil Titov <daniilt971@gmail.com>, Dang Huynh <danct12@riseup.net>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745266705; l=3161;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=ZT6G0gLMpYOma7+nsyuQ5jRof3ch8u1E9cEnMHxyUSI=;
+ b=Cnn8yNYhNWMRsGvjGORVd5qBpXDDR8h1RdPBXLl83ba2+UHgYGMpHT9LtJZC2dYHP+sta6Q+M
+ hM9x7vRwArSDi3o5k5tQoq/8zohzLhBMqOcU7X7NdNr51bngfF9OzeV
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
+This patch series add initial support for MSM8937 SoC
+and Xiaomi Redmi 3S (land).
 
-On Wed, 16 Apr 2025 08:15:27 +0800, Yixun Lan wrote:
-> SpacemiT K1 SoC's pinctrl controller requires two clocks in order
-> to work properly, also has one reset line from hardware perspective.
-> 
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
->  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml          | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
+The series is extending the MSM8917 gcc and pinctrl drivers
+because they are sibling SoCs.
+MSM8937 have 4 more A53 cores and have one more dsi port then
+MSM8917.
+It implements little-big architecture and uses Adreno 505.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Changes in v5:
+- msm8937:
+  - Remove wrongly defined idle-states.
+  - Fix thermal zones.
+  - Use the header with DSI phy clock IDs.
+  - Fix the nodes order.
+  - Fix the pinctrls style.
+  - Follow gcc header changes.
+- msm8937-xiaomi-land:
+  - Remove headphone switch and speaker amplifier bindings.
+  - Unify status property style.
+- gcc bindings:
+  - Expand MSM8953 gcc schema with MSM8937.
+  - Add MSM8937 prefix for MSM8937 specific clocks.
+- gcc:
+  - Follow the bindings changes.
+- Drop alwayson clock documentation it will be handled in another
+  patchset.
+- Link to v4: https://lore.kernel.org/r/20250315-msm8937-v4-0-1f132e870a49@mainlining.org
+
+Changes in v4:
+- Add missing rpmcc include for qcom,gcc-msm8937 dtbinding exmaple.
+- msm8937: add missing space after s9-p1@230
+- msm8937-xiaomi-land: replace LED_FUNCTION_INDICATOR to LED_FUNCTION_STATUS
+- Remove applied patches
+- Link to v3: https://lore.kernel.org/r/20250224-msm8937-v3-0-dad7c182cccb@mainlining.org
+
+Changes in v3:
+- Fix qcom,gcc-msm8937 dtbinding example 
+- Link to v2: https://lore.kernel.org/r/20250223-msm8937-v2-0-b99722363ed3@mainlining.org
+
+Changes in v2:
+- drop applied patches
+- drop gcc schema commits infavor of a new schema for gcc-msm8937
+- document always on clock for adreno 505/506/510
+- msm8937:
+  - set cache size
+  - rename cpu labels
+  - fix style issues addressed by review
+- msm8937-xiaom-land:
+  - remove unused serial0 alias
+  - remove regulator-always-on from pm8937_l6
+  - add blue indicator led for aw2013
+- Link to v1: https://lore.kernel.org/r/20250211-msm8937-v1-0-7d27ed67f708@mainlining.org
+
+---
+Barnabás Czémán (3):
+      dt-bindings: clock: qcom: Add MSM8937 Global Clock Controller
+      dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
+      arm64: dts: qcom: Add Xiaomi Redmi 3S
+
+Dang Huynh (1):
+      arm64: dts: qcom: Add initial support for MSM8937
+
+Daniil Titov (1):
+      clk: qcom: gcc: Add support for Global Clock controller found on MSM8937
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../bindings/clock/qcom,gcc-msm8953.yaml           |   11 +-
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts   |  381 ++++
+ arch/arm64/boot/dts/qcom/msm8937.dtsi              | 2069 ++++++++++++++++++++
+ drivers/clk/qcom/Kconfig                           |    6 +-
+ drivers/clk/qcom/gcc-msm8917.c                     |  617 +++++-
+ include/dt-bindings/clock/qcom,gcc-msm8917.h       |   19 +
+ 8 files changed, 3101 insertions(+), 10 deletions(-)
+---
+base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
+change-id: 20250210-msm8937-228ef0dc3ec9
+
+Best regards,
+-- 
+Barnabás Czémán <barnabas.czeman@mainlining.org>
 
 
