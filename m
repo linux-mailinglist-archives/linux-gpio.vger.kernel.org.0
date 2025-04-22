@@ -1,252 +1,198 @@
-Return-Path: <linux-gpio+bounces-19117-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19118-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E470A95A1D
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 02:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A10CA95FE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 09:50:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37A161896950
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 00:24:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5982F1897A1F
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 07:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8564313C67C;
-	Tue, 22 Apr 2025 00:24:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98B311EE7B6;
+	Tue, 22 Apr 2025 07:50:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gxem5lhJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2Cp3T4d"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBCD7603F
-	for <linux-gpio@vger.kernel.org>; Tue, 22 Apr 2025 00:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C67315B115;
+	Tue, 22 Apr 2025 07:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745281454; cv=none; b=u2xei1zKfqWx1Yz/+aX60qmU+gkKV3x71z0F/7L79husxSIbtfBv1mQtdcbvuJIMPN/JitO7/yA3ZUIQOrx5Ma1nagsO2zuNJXOz5/M4Umfo9rwfgnMufODGIATznw2N+nAEErWs7FlLa+RbeJKUmeRaKTfPHmrpaTUoSFDJ1+M=
+	t=1745308209; cv=none; b=QHl65D+xfH1gR3OvDiqgcoj+lNJVQnTp2FjbuINnJYV9je2Kux3YpmWNEBkaGyTCrVneE1r+iuPz+WrX/CvmDtFAT/A1cJLqeuMdfE2wQdh1ZwUqfkg3R4EaIf+KMprpd/mXCPXbVV0yLcocS6NcHFkyTmIzWokQi7iUN6dwRLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745281454; c=relaxed/simple;
-	bh=u52bVrB/pZ0lfovnX74KF6WwBxpQoIaVYqukYlfqcMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XqvspS3+CtsFY27WA1c0Avl6OuhzN8C1Gm6KzyiH5OFgCzP03kq2s/uRoXE6xrxchGVxR90RCU5VVJwhIUmFjHT+x1HOi/WiM3mkEAmsk38HV1H3lIF7HDar45y8eGLJIqt6RzacXfmHgQGUHsCADoR4skZfS4w8HiMmVKEphgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gxem5lhJ; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54b10956398so5317552e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Apr 2025 17:24:12 -0700 (PDT)
+	s=arc-20240116; t=1745308209; c=relaxed/simple;
+	bh=NJtgEOvcoWxtKXd1JFhHVKcXLnVSR8a6c//yHFlTBDs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OZaPGxDdSSMGfgAw4oGfV6cC9BtdndsND66YgXIJ8+P9SWtsrJvuLL8+8DmMf7p0usuz+n38YGx/F0j5V7CMhL0fEJW4OotSp7O/YcgMSFWQGnSUB4sD6ri8egLMopFwkGQnWHHIfrMwG9xt5cAs3IL7I9mN+A1vdv6muzgEdKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2Cp3T4d; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39ee651e419so2620251f8f.3;
+        Tue, 22 Apr 2025 00:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745281450; x=1745886250; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hfCnlXym9eZAbX+zdYaRO3WcEjSZxfzTyz2pRkP+wp4=;
-        b=gxem5lhJ+4DHlvLI3uNia58B73VfYi7pHotLLMwrnPEwyeKAnuPKgbgz4ZnhNLzGSe
-         6MNIomgzHCv/S/WDtolKl8Pim3obpqcm4/HlrlY08q3p7Av4G/tdyuxDQWWGkDS8whZY
-         Ary/n2nS5YKkjIn6JYHl0c36xfrMFreeuiizQ=
+        d=gmail.com; s=20230601; t=1745308206; x=1745913006; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AU68JbSJMerX79mNlx+AQyiWjCnknjAgapt7O28YwFs=;
+        b=g2Cp3T4dNRcw7wlGPLvyzWn0jficwPCK9jAc7L1zbkWxPYifNHMZcj0Ppu/8VIucyf
+         irtRq3ut/iGPusRrnWtutHS26TZLT+pthDVt942Q9x2R2P6Cmwtup0AQVMBzgEnGPQ97
+         s02SvVhecy1WwN2soDjWPEYCfonWt/ldBC1DIVCp53NX4ipzHeRviR68HNMGuwvoA3VD
+         VSywXmbekjqmCqyeKx12WJZAS27VNmDEB+ltov4MM7+gXAGFUd0SpItcVcLuoFl+HeJG
+         y7DSkT+k0cbOJl7Ojo5nDMf+OtR3/c4230TZePvzGwizBZc9Yb3epI2NmYhcQDLnNtB4
+         m4nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745281450; x=1745886250;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hfCnlXym9eZAbX+zdYaRO3WcEjSZxfzTyz2pRkP+wp4=;
-        b=bhL3+NJTE2St0vHQbPx+YC8J5zsyK4ohH1v8q61vNTE0R+VplvcLJyjDwPkZ0K+FDH
-         AhUQhg3Qw19ZdjBEeBji8L8tJCkOOUGUBZUS3lhaQ6SdDTpuSKXk1wB92QOVqT3QNFBb
-         iwvO6G0tdqehCawONhGpfV/OLHJ6+cQSu3tGVysXn0Gq9eZKFonwKPxyWSo9P8eDDB2n
-         XZtAivzj3tnmdpbjpBzSz0FHWpiaoEsOrihZo/2b8zmgOd3e5+QLpfvGm8W3Bf+F1fhU
-         qZB2XhXhsaIEk3uQtgESQtQCuSI0KiTGAsLqKfKKQZu6YLcbWSEGiEgn55pyavZZLWnX
-         HONw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVMeIAG2x7MJTlsklkALKAHuNcOiFetds2HDuEjARJAGL1RMmLiJlPA0xWZlv0wc5e65TGV+8Fo7Vy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp/FYIehyezTTk6zKFwosYW4GU9q/vQjGmnju+Z0XZto7Oj7M9
-	/aR03n3yi5FXNJQEkt6nT6YugAMk6Uke8qrKADi7BGM913HOuQaiRwRYKB2RSauL2ToewfkGEkQ
-	=
-X-Gm-Gg: ASbGncvAKuQOZjzkoWbsvCK2OPqVBWVRGP3kOo3h2LFYNN28KZ1Mr+I+62EGbsy7QnR
-	i2BCmKbEHs+nezAkaDlw8Wo1CljeTtJLt9lfW8KaOQ8HeY7jVQJTYI/uaPYtaEnSG86UmGGw5Iv
-	qIi6Es6SuIILBJ/k2XFuwLiXFFPUky8cmc9fYfgN56TU/QJHjxf0yirt5yVUBzkhaYSOX4ETmGw
-	gPYNR3lXVmhG4kg6LbGQZNAg8Whxqx+MNM4Hzp/fXz6mOfOX8aSp1UyBoPaNWPZL+8PR8jTdLF0
-	YBM2Ud6GMLRvfwgh2NcVljIPMAVJeIxWGUYz785agiVKFo5hkfoHTDy/u2MHQ9a/495fB4GjRZf
-	RZ5y+Qjk=
-X-Google-Smtp-Source: AGHT+IFbODrgwyL0swG78W/FiwBrYxbXaiMTmmys3s+rjcJmgEswVid6xDLerLDMdiU+MN8+KFzUZQ==
-X-Received: by 2002:ac2:4f16:0:b0:549:94c4:9f01 with SMTP id 2adb3069b0e04-54d6dbbdc77mr4675827e87.6.1745281450366;
-        Mon, 21 Apr 2025 17:24:10 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-31090850bb2sm13121211fa.107.2025.04.21.17.24.07
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 17:24:10 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bee278c2aso56927041fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Apr 2025 17:24:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX9y3EOk3XKVnRx7VbR4F7nBjuZ13DwQMIjLK9wU5YbBlxkWJcw6X3JlFHIlmljt3tnzPh97aHSykxT@vger.kernel.org
-X-Received: by 2002:a05:6512:3995:b0:54a:cc10:1050 with SMTP id
- 2adb3069b0e04-54d6e789b2bmr3360285e87.15.1745281447045; Mon, 21 Apr 2025
- 17:24:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745308206; x=1745913006;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AU68JbSJMerX79mNlx+AQyiWjCnknjAgapt7O28YwFs=;
+        b=grIecwPkKfEwQsrUFlmxJ2sFPXQXLbXI0S4PN52l71AHEvpCvoIPrCFz0PrtN+5pvy
+         +gldZS99VrETBrDpWQ5oEuShGsDK56EId0G9v4wKViI61h7KwZKBMC1flFaOfs40tU1G
+         arJhttwI5a7uWr12g3wcDN8Jq3sDlnFbLpexDihLX03UQRJwoTk2ZeKEn5rr5W7oXhr+
+         RuYSxKLGxG7htFlucsGMI39gZq8C4tz/q9qlS2zK9yBoZQCkaLuU+uh1BBoq7ywAIGM1
+         5YDBxlIt1dQqX5KLj7j0VB6zGwZZ6viTG5zcy2LGfF25uVe5ft0LlN2+C35ehkiD1kJG
+         gdZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzas7xyUKxlnKy68/tCPHDfVzpQyQ1JGa9Ehsp7shDeFMI3iFVPG2DSLB7tY1P0vcmtc/ilg7YZkCu@vger.kernel.org, AJvYcCWJYdXSw3w0WYzUvUSzs6vcRA7oSe+HLE3qcPM7T7Hw+L26AcyQeVOW9UGDlVt35p2jFl5mC0R9WkQPwQ==@vger.kernel.org, AJvYcCWbSgoukuIkAn3A5FTUb3WQJlhz+4ojxSXo5bFowlKQHTKeK53tYoo3ujCUKC4v7cwUkr0IR9JAenqH@vger.kernel.org, AJvYcCXBUl1c3+14X1QuQea4pXV0IWCQV8SXqvAwmjy7EH49iCJ281OkgW0Nz9gDPpwGAvsOtQ8fd57P4Jntla0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWU6AXYxrxehJQFUtE1RC5RIegmHNIQwPz4QyKosLHrAlKcBM5
+	pZpyx7JBkP7GNGLpfg1wiXWxrAkkVZDoMHea1LAUNRnDnSjisGky
+X-Gm-Gg: ASbGncse+9cL/ijbsu3+BgoeNgP752uveGHJqJUOyAnJGsXajQMkrbTxa1d+w8nyI86
+	kClEaEKIRH+TlMr9FM6YSfu2RxpzHi9h4cir+ZM0WWrigbIEKODw+gGHLs6Rhps6Ef/5dkWTToN
+	NxvEtpnWu0x2j9FkKprg8qjzP7HPSzdny8WgiH6QraDiBkQWfA3kC2lwIKJNqtTiceuiWxqd3qg
+	j8GKy85kMr8KJorfL3q15WIkrZAQAzKkO+SVUDvgCrp08E2ENp//WUnaBYACTXOTytBuGIhgOrQ
+	ehKzTBnsB3zh/ZxxxavObVEK02vSfTSpKhHg/sPc1LPsrIIkXStzzk+cJQNG9PP0OiozKhsg7ou
+	/F6T0wQqxmuzt
+X-Google-Smtp-Source: AGHT+IF6dL2bJ9C5RvXlIDkCiyGCQfJ5fcWo3OkK/2v/CO8fK8JiWhGS5yE7Z+4rE/t9RZwKxPV7AA==
+X-Received: by 2002:a05:6000:2281:b0:390:ea34:7d83 with SMTP id ffacd0b85a97d-39efba6dcb8mr13096953f8f.31.1745308205690;
+        Tue, 22 Apr 2025 00:50:05 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d56328asm163855655e9.0.2025.04.22.00.50.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 00:50:05 -0700 (PDT)
+Message-ID: <24be790f9c664dac31ac78ae6210b0bd55c04df0.camel@gmail.com>
+Subject: Re: [PATCH v2 02/17] mfd: adp5585: enable oscilator during probe
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
+ linux-pwm@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>,  Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,  Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=	
+ <ukleinek@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Liu Ying <victor.liu@nxp.com>
+Date: Tue, 22 Apr 2025 08:50:08 +0100
+In-Reply-To: <20250421220332.GU17813@pendragon.ideasonboard.com>
+References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
+	 <20250415-dev-adp5589-fw-v2-2-3a799c3ed812@analog.com>
+	 <20250421085758.GB29968@pendragon.ideasonboard.com>
+	 <aadec5eae6645e3e9c2f8f09dcf842510515122f.camel@gmail.com>
+	 <20250421220332.GU17813@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
- <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org> <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
-In-Reply-To: <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 22 Apr 2025 08:23:52 +0800
-X-Gmail-Original-Message-ID: <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
-X-Gm-Features: ATxdqUGV9UNm6rsWa1b6fT7zaIeRsrhtYZHR863_Li8k5tC_mUahvNyGq--RUEU
-Message-ID: <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
-Subject: Re: [PATCH 3/8] media: v4l: fwnode: Support acpi devices for v4l2_fwnode_device_parse
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Sakari
+On Tue, 2025-04-22 at 01:03 +0300, Laurent Pinchart wrote:
+> Hi Nuno,
+>=20
+> On Mon, Apr 21, 2025 at 01:14:28PM +0100, Nuno S=C3=A1 wrote:
+> > On Mon, 2025-04-21 at 11:57 +0300, Laurent Pinchart wrote:
+> > > On Tue, Apr 15, 2025 at 03:49:18PM +0100, Nuno S=C3=A1 via B4 Relay w=
+rote:
+> > > > From: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > > >=20
+> > > > Make sure to enable the oscillator in the top device. This will all=
+ow to
+> > > > not control this in the child PWM device as that would not work wit=
+h
+> > > > future support for keyboard matrix where the oscillator needs to be
+> > > > always enabled (and so cannot be disabled by disabling PWM).
+> > >=20
+> > > Setting this bit unconditionally increases power consumption. It shou=
+ld
+> > > only be set when needed.
+> >=20
+> > Well, not sure if the effort for that pays off... The only usecase were=
+ it
+> > would
+> > make sense to do that would be for PWM. For the other devices (and assu=
+ming
+> > I'm
+> > right with the GPI case) we need this always set.
+>=20
+> For the keypad, can't the device be kept powered off if the input device
+> exposed to userspace is not open ? And for GPIOs, OSC_EN isn't needed
+> when all requested GPIOs are configured as outputs, as far as I can
+> tell.
 
-On Sun, 13 Apr 2025 at 17:50, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> Hi Ricardo,
->
-> Thanks for the patch.
->
-> On Thu, Apr 03, 2025 at 07:16:14PM +0000, Ricardo Ribalda wrote:
-> > This patch modifies v4l2_fwnode_device_parse() to support ACPI devices.
-> >
-> > We initially add support only for orientation via the ACPI _PLD method.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-fwnode.c | 58 +++++++++++++++++++++++++++++++----
-> >  1 file changed, 52 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..81563c36b6436bb61e1c96f2a5ede3fa9d64dab3 100644
-> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > @@ -15,6 +15,7 @@
-> >   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> >   */
-> >  #include <linux/acpi.h>
-> > +#include <acpi/acpi_bus.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/mm.h>
-> >  #include <linux/module.h>
-> > @@ -807,16 +808,47 @@ int v4l2_fwnode_connector_add_link(struct fwnode_handle *fwnode,
-> >  }
-> >  EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
-> >
-> > -int v4l2_fwnode_device_parse(struct device *dev,
-> > -                          struct v4l2_fwnode_device_properties *props)
-> > +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
-> > +                                      struct v4l2_fwnode_device_properties *props)
-> > +{
-> > +     struct acpi_pld_info *pld;
-> > +     int ret = 0;
-> > +
-> > +     if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld)) {
-> > +             dev_dbg(dev, "acpi _PLD call failed\n");
-> > +             return 0;
-> > +     }
->
-> You could have software nodes in an ACPI system as well as DT-aligned
-> properties. They're not the primary means to convey this information still.
->
-> How about returning e.g. -ENODATA here if _PLD doesn't exist for the device
-> and then proceeding to parse properties as in DT?
+Yes, I do know it's doable (well, TBH for the input case I just learned we =
+can
+define .open()/.close() callbacks). My point was just this adds some comple=
+xity
+and I'm not sure of the added value (while saving power is always nice)
+>=20
+> I'm fine addressing this issue on top of this series.
 
-Do you mean that there can be devices with ACPI handles that can also
-have DT properties?
-
-Wow that is new to me :).
-
-What shall we do if _PLD contradicts the DT property? What takes precedence?
-
->
-> > +
-> > +     switch (pld->panel) {
-> > +     case ACPI_PLD_PANEL_FRONT:
-> > +             props->orientation = V4L2_FWNODE_ORIENTATION_FRONT;
-> > +             break;
-> > +     case ACPI_PLD_PANEL_BACK:
-> > +             props->orientation = V4L2_FWNODE_ORIENTATION_BACK;
-> > +             break;
-> > +     case ACPI_PLD_PANEL_TOP:
-> > +     case ACPI_PLD_PANEL_LEFT:
-> > +     case ACPI_PLD_PANEL_RIGHT:
-> > +     case ACPI_PLD_PANEL_UNKNOWN:
-> > +             props->orientation = V4L2_FWNODE_ORIENTATION_EXTERNAL;
-> > +             break;
->
-> How about the rotation in _PLD?
-
-If we agree on the orientation part I will extend it to support
-rotation. It should not be a complicated change.
-
->
-> > +     default:
-> > +             dev_dbg(dev, "Unknown _PLD panel val %d\n", pld->panel);
-> > +             ret = -EINVAL;
-> > +             break;
-> > +     }
-> > +
-> > +     ACPI_FREE(pld);
-> > +     return ret;
-> > +}
-> > +
-> > +static int v4l2_fwnode_device_parse_dt(struct device *dev,
-> > +                                    struct v4l2_fwnode_device_properties *props)
-> >  {
-> >       struct fwnode_handle *fwnode = dev_fwnode(dev);
-> >       u32 val;
-> >       int ret;
-> >
-> > -     memset(props, 0, sizeof(*props));
-> > -
-> > -     props->orientation = V4L2_FWNODE_PROPERTY_UNSET;
-> >       ret = fwnode_property_read_u32(fwnode, "orientation", &val);
-> >       if (!ret) {
-> >               switch (val) {
-> > @@ -833,7 +865,6 @@ int v4l2_fwnode_device_parse(struct device *dev,
-> >               dev_dbg(dev, "device orientation: %u\n", val);
-> >       }
-> >
-> > -     props->rotation = V4L2_FWNODE_PROPERTY_UNSET;
-> >       ret = fwnode_property_read_u32(fwnode, "rotation", &val);
-> >       if (!ret) {
-> >               if (val >= 360) {
-> > @@ -847,6 +878,21 @@ int v4l2_fwnode_device_parse(struct device *dev,
-> >
-> >       return 0;
-> >  }
-> > +
-> > +int v4l2_fwnode_device_parse(struct device *dev,
-> > +                          struct v4l2_fwnode_device_properties *props)
-> > +{
-> > +     struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > +
-> > +     memset(props, 0, sizeof(*props));
-> > +
-> > +     props->orientation = V4L2_FWNODE_PROPERTY_UNSET;
-> > +     props->rotation = V4L2_FWNODE_PROPERTY_UNSET;
-> > +
-> > +     if (is_acpi_device_node(fwnode))
-> > +             return v4l2_fwnode_device_parse_acpi(dev, props);
-> > +     return v4l2_fwnode_device_parse_dt(dev, props);
-> > +}
-> >  EXPORT_SYMBOL_GPL(v4l2_fwnode_device_parse);
-> >
-> >  /*
-> >
->
-> --
-> Kind regards,
->
-> Sakari Ailus
+Agreed. I would prefer that. This series is already big enough.
 
 
-
--- 
-Ricardo Ribalda
+>=20
+> > > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > > > ---
+> > > > =C2=A0drivers/mfd/adp5585.c | 16 ++++++++++++++++
+> > > > =C2=A01 file changed, 16 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> > > > index
+> > > > 160e0b38106a6d78f7d4b7c866cb603d96ea673e..f17b5f2474cac6a4035566940=
+66f43
+> > > > 8288
+> > > > 264a49 100644
+> > > > --- a/drivers/mfd/adp5585.c
+> > > > +++ b/drivers/mfd/adp5585.c
+> > > > @@ -110,6 +110,13 @@ static const struct regmap_config
+> > > > adp5585_regmap_configs[] =3D {
+> > > > =C2=A0	},
+> > > > =C2=A0};
+> > > > =C2=A0
+> > > > +static void adp5585_osc_disable(void *data)
+> > > > +{
+> > > > +	const struct adp5585_dev *adp5585 =3D data;
+> > > > +
+> > > > +	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
+> > > > +}
+> > > > +
+> > > > =C2=A0static int adp5585_i2c_probe(struct i2c_client *i2c)
+> > > > =C2=A0{
+> > > > =C2=A0	const struct regmap_config *regmap_config;
+> > > > @@ -138,6 +145,15 @@ static int adp5585_i2c_probe(struct i2c_client
+> > > > *i2c)
+> > > > =C2=A0		return dev_err_probe(&i2c->dev, -ENODEV,
+> > > > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid device ID 0x%02x\n", id=
+);
+> > > > =C2=A0
+> > > > +	ret =3D regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
+> > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ADP5585_OSC_EN);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	ret =3D devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable,
+> > > > adp5585);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > =C2=A0	ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+> > > > =C2=A0				=C2=A0=C2=A0 adp5585_devs,
+> > > > ARRAY_SIZE(adp5585_devs),
+> > > > =C2=A0				=C2=A0=C2=A0 NULL, 0, NULL);
 
