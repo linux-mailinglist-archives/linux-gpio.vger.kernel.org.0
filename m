@@ -1,59 +1,59 @@
-Return-Path: <linux-gpio+bounces-19136-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19137-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D3FFA97283
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 18:23:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF33DA97288
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 18:24:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDFD81601BC
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 16:23:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E6F4189B8AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 16:24:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC1D293461;
-	Tue, 22 Apr 2025 16:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3C68293B57;
+	Tue, 22 Apr 2025 16:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="qXIaKsOy"
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="YcygCLAb"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D618292900;
-	Tue, 22 Apr 2025 16:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A308B293B58;
+	Tue, 22 Apr 2025 16:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745339010; cv=pass; b=cXbvxDlbx1aDOEIR0Gl36Sn+TUmE6ZAWigT2x/uScrlKebryWUsz0AJTpG7wz0/eO42Dp0hFXuirLfTWEbcTmnfy6a4MqYrCzYyTh9TO7+GEe4ajui+I1HODQXYUr6o654GL5hhWPZxdxS9vh0sd5bJVNNwf8/g3W+q4iqQ4Q/8=
+	t=1745339015; cv=pass; b=ZQE0ns/2JPQiM9LgUBFgblxaHE+byl1sOUCKx1T9cu8IRW/w5kxKCm6iEzwfMvkO7Y8aObUwrh3BXd7alcZC8Bufh5O55ktsLvyn2wZsGsl2G++SWm4cbQWpMN2GYE/OsjfeSOjjjKDI+g5L1SvQ9tYSb5LBQy8qdn1WeVCcBPw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745339010; c=relaxed/simple;
-	bh=+gwzvMZHMkRJbKKRUCAnUBF29laHkO5T9NrzsqQu1yI=;
+	s=arc-20240116; t=1745339015; c=relaxed/simple;
+	bh=LKaMT9vBeRkAZJiI1w0aUuTya24bjt8MRRbOVFhzJA4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OyA3AXzKVdE4kTi6bKYhddnzoq9G/8MvnbTxqjQu60acSSKPXvKrKZvzhviFDtdoFwHYewEMms390azQTTpQFISSXdMiu1cbmo2YQdpWlx2JZJa/+C994K+S2MzOj/zSppyl2fkh9ernIspxXTZiB6LDjKcD0jnx+JDauRneYeE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=qXIaKsOy; arc=pass smtp.client-ip=136.143.188.15
+	 MIME-Version; b=MccBqRIJRFQD1rJnG7ZW5L0/O4g6yGbAXwBLMKVpuM/z+mW1K1T5F9HIyVr9ZGDyAqGzR+faWwUdsJtz99cJY7kAlDoS33FpsPgcHWopBX7LFNAUmrwe/VK75qy8D7GIdSQQmsxzeG4Kj4o6pepUeWxLTyRa7vYipFUn1f6862o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=YcygCLAb; arc=pass smtp.client-ip=136.143.188.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-ARC-Seal: i=1; a=rsa-sha256; t=1745338991; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1745338999; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=YmpFT+Np6DaKQbeE7Md2qEzIO0UPN3esqWkXLVnI3sRUlNxMOyVYOnAD69iSECFmR9ykf4Jif3ZeJlBs8FknjaT8yBZF9A72+P6EujpYCynxPiqfgnyMjqUC64YRBVsLk6H3OcqWY4N1sK+1wLYn9Zpc7Uuz+mCNCxG5wpUZRCg=
+	b=J2saA4O84j+l4Ecqc9rmzPDzZZcpuaCpfGlscOsbakms1sdzshEoppAmtXSEOuqR4QAGMTW/6xI5RYKHgSOzkX5p2JBAPbGizFjZnjxnzGt5tEZqkLlz20P8a1aeMCtPDZA+uWXAilnyNiF46MwgGa1Vu8RJIiwvMO1/nyv/Ftg=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745338991; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FWFt3dRo5BXi34AencVAC8YNFSNDAd4deu1+bkumoOo=; 
-	b=CnwRcEDA8XzrUNMWL7DrvQDZ2Ls0daxblvRkuDTNkDyYYTIXGC8Eh0ai+T3P1IlUIjxqHDgdHu2V8uOHjDJ5wCdk5zQQHNyDC162irCI2ESywAvMhxZ+6r9LatU13IrkTc+Jks3ipsfsoIEP+hGF0D4r13RYFq3uo1ZZcB0Ls7Q=
+	t=1745338999; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Z/q9P4yNkvEyR/a62wervKTvXtaUyeMzkuxzKhSQS9k=; 
+	b=ltqV//qb+UXQpwgFXTF1LFiEUMT3alV9EDN/86ftR/tH8A32igQEghdZ5bpJbC1cbJpM34bcRilXix2Yw7K0bpXxgdzr+zXjC75DXCQBlfgtdk7egpCE7KQ3Mhglh6IyKUz/WxujrikUi+FB+uon+DGOmXthbix3kY8FUKITVtU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=icenowy.me;
 	spf=pass  smtp.mailfrom=uwu@icenowy.me;
 	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745338991;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745338999;
 	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=FWFt3dRo5BXi34AencVAC8YNFSNDAd4deu1+bkumoOo=;
-	b=qXIaKsOypDu1rzVoxBRDe3LX4GSk/+dh8tzK6qwDEP6cazYGBhPhlthnfQ62e2Qz
-	pXUbsvqAvwEdnWf4RCn+6RvDBfUijhH1868/eYFHy64hF8Dq7yp8ffgLsZ7oWCHuTML
-	jCGS2ZMEFpoFEgMddXUfAymXv1DZ/tx4ycVHvq/PxZYZTbLYzm4wpEaYrtKSGERf1wU
-	yRcKG2srqQXvDTnwfRKF6XDnRh3Sf/1dWMQfpvFQ03qU9L78IAEUt8EnORnvf2uOzcw
-	x9HuyBHpP1KFsv4cmWxZUnQD2wZdACpQiPZwONSRt4w/zXnMCQfn4f419kXa2HnC93k
-	twGwpGj/Pw==
-Received: by mx.zohomail.com with SMTPS id 174533898976779.42946038180173;
-	Tue, 22 Apr 2025 09:23:09 -0700 (PDT)
+	bh=Z/q9P4yNkvEyR/a62wervKTvXtaUyeMzkuxzKhSQS9k=;
+	b=YcygCLAb5Zj9lEJaRc+SqZ0OMjomD8C5gD0HzUhxTaIY8tXoSnbU0BpmoQeBNfmn
+	9VHQC/I2um7lSFm4Zywln0RzhVsDOyBv0thUc5mZP2aZ5iQIsoG4XNTnEb3PmjTaJsb
+	o92xN8tRhd7XxbEvYcvbZtrXMsDl3ehMeotT5+9FpdsGTCU++KFkzCjT+QuyV5S5Dox
+	+emc2Ed9JWEUJPVLjZuJhjQalo3Ga1ATqaN3fj3FapBvSwtxl5UHKw04T+CqEluo8lt
+	WLe+02QuCHOhEqEi4P1yDofP2n8fsoOZt/WO3UH3D2dSyZWCREoRqJyi69WqvZawdO0
+	6rfOYnCX5A==
+Received: by mx.zohomail.com with SMTPS id 17453389979451012.0408814583301;
+	Tue, 22 Apr 2025 09:23:17 -0700 (PDT)
 From: Icenowy Zheng <uwu@icenowy.me>
 To: Emil Renner Berthing <kernel@esmil.dk>,
 	Jianlong Huang <jianlong.huang@starfivetech.com>,
@@ -67,9 +67,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	Icenowy Zheng <uwu@icenowy.me>
-Subject: [RFC PATCH 1/3] dt-bindings: pinctrl: jh7110-sys: add force inputs
-Date: Wed, 23 Apr 2025 00:22:48 +0800
-Message-ID: <20250422162250.436169-2-uwu@icenowy.me>
+Subject: [RFC PATCH 2/3] pinctrl: starfive: jh7110: support forcing inputs to low/high
+Date: Wed, 23 Apr 2025 00:22:49 +0800
+Message-ID: <20250422162250.436169-3-uwu@icenowy.me>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250422162250.436169-1-uwu@icenowy.me>
 References: <20250422162250.436169-1-uwu@icenowy.me>
@@ -82,39 +82,79 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-The internal inputs routed by the pin controller could be routed not to
-any GPIOs but forced low/high in the pin controller, which is a useful
-feature for some input signals (e.g. overcurrent_n pin of the USB
-controller, which needs to be tied to high if not externally routed).
+The internal input signals inside JH7110 SoC (output of the pin
+controller) could be routed to fixed low/high level instead of external
+GPIOs.
 
-Add two properties to support forcing inputs to low/high.
+Support this feature in the pinctrl driver, which is quite useful for
+some peripherals (e.g. USB) because of the low GPIO count of JH7110.
 
 Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
 ---
- .../bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml  | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../starfive/pinctrl-starfive-jh7110.c        | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml
-index 222b9e240f8af..d793290afdd74 100644
---- a/Documentation/devicetree/bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml
-@@ -46,6 +46,16 @@ properties:
-   '#gpio-cells':
-     const: 2
+diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+index 1d0d6c224c104..5652f9bb658a2 100644
+--- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
++++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+@@ -837,6 +837,41 @@ static void jh7110_disable_clock(void *data)
+ 	clk_disable_unprepare(data);
+ }
  
-+  starfive,force-low-inputs:
-+    description:
-+      The list of input signals forced to be low inside the SoC itself.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
++static int jh7110_force_input_pins(struct jh7110_pinctrl *sfp,
++				   const char *property, u32 forced_input)
++{
++	int i, nforce;
++	int ret;
++	u32 pin, val;
++	unsigned int offset, shift;
++	struct device *dev = sfp->dev;
++	const struct jh7110_pinctrl_soc_info *info = sfp->info;
 +
-+  starfive,force-high-inputs:
-+    description:
-+      The list of input signals forced to be high inside the SoC itself.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
++	nforce = of_property_count_u32_elems(dev->of_node, property);
 +
- patternProperties:
-   '-[0-9]+$':
-     type: object
++	if (nforce > 0) {
++		for (i = 0; i < nforce; i++) {
++			ret = of_property_read_u32_index(dev->of_node, property,
++							 i, &pin);
++			if (ret)
++				return ret;
++
++			offset = 4 * (pin / 4);
++			shift  = 8 * (pin % 4);
++
++			val = readl_relaxed(sfp->base +
++					    info->gpi_reg_base + offset);
++			val &= info->gpi_mask << shift;
++			val |= (forced_input & info->gpi_mask) << shift;
++
++			writel_relaxed(val, sfp->base +
++					    info->gpi_reg_base + offset);
++		}
++	}
++
++	return 0;
++}
++
+ int jh7110_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -964,6 +999,14 @@ int jh7110_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	dev_info(dev, "StarFive GPIO chip registered %d GPIOs\n", sfp->gc.ngpio);
+ 
++	ret = jh7110_force_input_pins(sfp, "starfive,force-low-inputs", 0);
++	if (ret)
++		return ret;
++
++	ret = jh7110_force_input_pins(sfp, "starfive,force-high-inputs", 1);
++	if (ret)
++		return ret;
++
+ 	return pinctrl_enable(sfp->pctl);
+ }
+ EXPORT_SYMBOL_GPL(jh7110_pinctrl_probe);
 -- 
 2.49.0
 
