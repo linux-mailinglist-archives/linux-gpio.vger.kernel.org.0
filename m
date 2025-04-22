@@ -1,146 +1,127 @@
-Return-Path: <linux-gpio+bounces-19133-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19134-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5394A97095
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 17:26:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76230A97183
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 17:48:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62A3E1B600C3
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 15:25:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A58D17889E
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Apr 2025 15:48:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77F5A2900AC;
-	Tue, 22 Apr 2025 15:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE18028DF13;
+	Tue, 22 Apr 2025 15:48:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NZiowtlV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBCmOnDR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53CF28F505;
-	Tue, 22 Apr 2025 15:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88C71A00F0;
+	Tue, 22 Apr 2025 15:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745335469; cv=none; b=sO0p5FERVEHFMMzFSytg/lt98P5V69fdyNhAgSkTe/Ppks+3RaiFmGdq+rSW+0dcHu6qJOTJOGZ90yJzsrfB0DFZoC2jLC0NwVTsGsLO59NgUVvSj50sF1+nhClcigeUAfL7SwW5ASVARQniyx9sYRPSSPbuluwx/rbnSwFcVl0=
+	t=1745336897; cv=none; b=OwPXG8+wbbctrL3qeZG64gCJvERraWaVi9HflFp+AdPu/Hngctx0tmNxAHJFv74v78PZ04bwbQ9Ehul/f4ClGNDFDpO+MFz/+nifn7GJnWE3NQX621Q9nca6vE3gMjaewVWzhc2vewXCpx0nR7t3wcp9dfLdowG9orLk4nIYp1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745335469; c=relaxed/simple;
-	bh=aje9S4zFxEfBi20gKMYLFKcs8Nb4SwJkX+rv9aswd6Y=;
+	s=arc-20240116; t=1745336897; c=relaxed/simple;
+	bh=nqFcG+6F2hXaL5zy+yH+SQePgNZ/EcZEbOmErrH/3vs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NOpMMXWNBxVLDitPIM6uHdjV/7WnwTZ0loNVw74/0Ww3NWuWdiQz++enf9WWLUFAOyd0bc+KqYCISNDFkH/uiGDnGF1YRNAm7KbwwDy5S237x0D2fBaqWW5bna0afou/OeAML3PGxj9XvIdh6b9/Q0UnrxZKnT/lgi8PmAp9Dh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NZiowtlV; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745335468; x=1776871468;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aje9S4zFxEfBi20gKMYLFKcs8Nb4SwJkX+rv9aswd6Y=;
-  b=NZiowtlV7Zuc/tzCYQv8dhwjDiq3U1oWMSimNPRSfutXJ7IIDsWEeylC
-   uSY3/JGWmu9cmIwthovLh/b94/vfDYeMFuDkiKCKO/urWJsxKvo4jroWd
-   9/1S8U7zTrerhwGg0sIP+o0RTRXXaDmwoWA6GU+Z6ZUXFHevCTVmsfFk5
-   bTZJSJeRDw5J6N23MVNETeKJdUiAzXde0w+fI4CW5KzLFLevzhY+e3v3P
-   hsgh8OKEFqhoD/kKYUaysjPlQvMCWoo+47CiqNTN0L7RkFUokrbgFlDoQ
-   zewVgeZD0tTovFEMYNbkUUQ6lHpFX7ZenI6eZ9yBQkbZMFV8/za8XhSk1
-   g==;
-X-CSE-ConnectionGUID: eypzoxidTzK5ojguU6dHgA==
-X-CSE-MsgGUID: 9bunrFBGR4mRe5DMzGEepQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="69390400"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="69390400"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:24:27 -0700
-X-CSE-ConnectionGUID: 8g2oOdBpQAuGY7zCQq0x8w==
-X-CSE-MsgGUID: 7xgAfr1yT7yG71jyTR9wiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="132365654"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:24:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u7FTx-0000000ElR4-2hLi;
-	Tue, 22 Apr 2025 18:24:21 +0300
-Date: Tue, 22 Apr 2025 18:24:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw
-Subject: Re: [PATCH v3 10/10] pinctrl: Add pin controller driver for AAEON UP
- boards
-Message-ID: <aAe0pWa1Fzxb86HM@smile.fi.intel.com>
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
- <20250416-aaeon-up-board-pinctrl-support-v3-10-f40776bd06ee@bootlin.com>
- <aAFBwANy47y0DAhY@smile.fi.intel.com>
- <e1bb879a-55b3-43fc-8d2d-67401c21ef76@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mjxJtalr/uxnurAS8iTPJKNYwyiy4QPHdOTWD7qHoQTiWMh6t9avamEbi0fpVVe7BGgNQ5RNrArNLZuhja0jdOCah5hP696tXq0F6Q66/C74JW3FRQ4tzYhsP4xFJRoVSAuMbSp9qShffmU0ClmGlPHWpWuaUwf7R8D7iqkLo8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBCmOnDR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ACCEC4CEE9;
+	Tue, 22 Apr 2025 15:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745336894;
+	bh=nqFcG+6F2hXaL5zy+yH+SQePgNZ/EcZEbOmErrH/3vs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IBCmOnDRYXMwdoo3rBgTGRHgMCDl35w7qmEdpl1zUZsxAeSve8j5KRVYfQyiwJIRA
+	 ca2B1b8/CqrQPNKef292AjDWZEAa94YysfNqLj6xDxZdXSHHSBnTP92BnVz8oIPHDE
+	 MugYkchaJaFaGq6rB+ShjZAVuitfqSMOW1syaBNE0lEOOTMG1JPyrxSzUBc17pqr5d
+	 +sL5h0gOTAv/ltxa/RsfkStymPiyAn8/eo4DMicwA5oQeHywIetxGo0q/28x9r7yiQ
+	 g8KfDA5B+/3+u62CLztkjoPY6Iqa4LIWXcsRez+8vjZaiJJMLCgskS2cSPqEQMOvSG
+	 z0p8RB9v5NGow==
+Date: Tue, 22 Apr 2025 17:48:11 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] arm64: dts: airoha: en7581: Add gpio-ranges property
+ for gpio controller
+Message-ID: <aAe6O8qB3d7MjT0-@lore-desk>
+References: <20250307-en7581-gpio-range-v1-0-de1262105428@kernel.org>
+ <20250307-en7581-gpio-range-v1-2-de1262105428@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="StZJEBqIgxJBqt0I"
+Content-Disposition: inline
+In-Reply-To: <20250307-en7581-gpio-range-v1-2-de1262105428@kernel.org>
+
+
+--StZJEBqIgxJBqt0I
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e1bb879a-55b3-43fc-8d2d-67401c21ef76@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 04:36:33PM +0200, Thomas Richard wrote:
+On Mar 07, Lorenzo Bianconi wrote:
+> Introduce missing gpio-ranges property for Airoha EN7581 gpio controller
+>=20
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> ---
+>  arch/arm64/boot/dts/airoha/en7581-evb.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/airoha/en7581-evb.dts b/arch/arm64/boot/=
+dts/airoha/en7581-evb.dts
+> index d53b72d18242e3cee8b37c7b1b719d662fd6db8d..a8f8a9f0b807a2ee4fd11f841=
+8b8e810a6945d73 100644
+> --- a/arch/arm64/boot/dts/airoha/en7581-evb.dts
+> +++ b/arch/arm64/boot/dts/airoha/en7581-evb.dts
+> @@ -65,6 +65,10 @@ reserved_bmt@7e00000 {
+>  	};
+>  };
+> =20
+> +&en7581_pinctrl {
+> +	gpio-ranges =3D <&en7581_pinctrl 0 13 47>;
+> +};
+> +
+>  &i2c0 {
+>  	status =3D "okay";
+>  };
 
-...
+Hi Angelo and Matthias,
 
-> >> +static int upboard_gpio_request(struct gpio_chip *gc, unsigned int offset)
-> >> +{
-> >> +	struct gpiochip_fwd *fwd = container_of(gc, struct gpiochip_fwd, chip);
-> >> +	struct upboard_pinctrl *pctrl = fwd->data;
-> > 
-> > Yeah, something like
-> > 
-> > 	struct upboard_pinctrl *pctrl = gpio_fwd_get_data(fwd);
-> > 
-> >> +	unsigned int pin = pctrl->pctrl_data->pin_header[offset];
-> >> +	struct gpio_desc *desc;
-> >> +	int ret;
-> >> +
-> >> +	ret = pinctrl_gpio_request(gc, offset);
-> >> +	if (ret)
-> >> +		return ret;
-> > 
-> >> +	/* GPIO desc is already registered */
-> >> +	if (fwd->descs[offset])
-> >> +		return 0;
-> > 
-> > As mentioned in another reply, why 0 and even though, why can't it be simply
-> > filtered by EEXIST from the below?
-> > 
-> > In worst scenario, you can add an API gpio_fwd_is_registered(fwd, offset).
-> 
-> I cannot filter using EEXIST, because I have to get the GPIO desc first.
-> And using the retcode of gpiod_get_index() I cannot detect that I
-> already requested the GPIO.
-> 
-> As now gpiochip_fwd is an opaque pointer, I will add the
-> gpio_fwd_is_registered() helper.
-> 
-> It is due to the fact that the forwarder never releases a GPIO desc. An
-> other solution could be to add the possibility to remove a GPIO desc.
-> In upboard_gpio_free() the GPIO desc is free, and we can remove the check.
-> 
-> upboard_gpio_free()
-> {
-> 	gpio_fwd_free_desc(fwd, offset);
-> 	pinctrl_gpio_free(gc, offset);
-> }
+Do you have any update about this patch? I have some queued patches depende=
+nt
+on this one. Thanks in advance.
 
-From given options I prefer to have the _gpio_free(), i.e. the latter one.
+Regards,
+Lorenzo
 
--- 
-With Best Regards,
-Andy Shevchenko
+>=20
+> --=20
+> 2.48.1
+>=20
 
+--StZJEBqIgxJBqt0I
+Content-Type: application/pgp-signature; name=signature.asc
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaAe6OwAKCRA6cBh0uS2t
+rK1DAP94bjHgjK6yU6Qawm+loboc0KNNR7UGKdg8qSO90HxTAwD+N8axwL0ELrpP
+0ix+uolfAGojTy4Ky9LnSmhkOymJiw4=
+=5EBn
+-----END PGP SIGNATURE-----
+
+--StZJEBqIgxJBqt0I--
 
