@@ -1,214 +1,196 @@
-Return-Path: <linux-gpio+bounces-19220-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19221-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFBFAA98C45
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 16:04:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F951A98CCE
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 16:23:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71B143BAA4D
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 14:04:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97C1A3A1D2B
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 14:22:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95801279912;
-	Wed, 23 Apr 2025 14:04:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BF2E27CB3F;
+	Wed, 23 Apr 2025 14:22:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gqLJFhRC"
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="BCp7xZzU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF0E27934B
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 14:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745417048; cv=none; b=dm+bdzbeSiB4KdqgX2n1F7pKpJXlw9DSmBPrxgBWKhoQPVnO/mp7sy5aPpsDOCpJ8ZOH5UD7JToX6y8kUU9ag7AIHkpGD20li5UXSb2hasozNsfUInUB8fyHyIPUx+tIfem6ugJX5mPnd4ugySh8TrxGYQCK5bEWFsP5gCTgOy4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745417048; c=relaxed/simple;
-	bh=Kpbhj1qhSKEadaVbA0z6YY9AlvNfJBM7kna2rhKpIUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UFHHH2t5/wNCA/NTXlqxeNcjHonCbMd5LsvDpFA4Oa+uujGm+gppYIG/6LwL9680UZ2ZB71VQ7na8JfE8qJ25/imypqzH+RYdhyO6Gi5EXmrCjunlkBkPaMRwS1QyDHWNaRnX/RTP6JI/WX9whNw7g3wM7UMVDdwlkgtuc1aiT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gqLJFhRC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAM7VV007642
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 14:04:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	HK4v2UxJbR5fXrAk1G29VWPj/UWIHaIHZOcZYqRxF9s=; b=gqLJFhRCUndtiYt7
-	7nVFud9l/0MH6QpvE/kIW4J63tMdeelEMdTC1IAEuFA5K8jVzh0/d2qRdrDKK0pn
-	GZ33/RXPMfhZ4ODI8LwwhwIjrHfe0CCVJ9oGBukOxpkpnVOdAvlmpDk6pQ9Yr6Sd
-	sGmrczDi829QgGOBpgyZcaaTXhafCwhyZ5ukT4NVV2sYiNrr/zgOGkk/+us2b4qe
-	PQ0B8HH0A/1PTId4jL0cQbCi2yPTJVav6wv3gPj9Mryc4kD+5qj9DW91th1v8CHe
-	sqcBZzwfinKADXufKObWXY4eajJl+7rEEMVrYwYjd4EyLomAZtuIXhSz+/e8iXwP
-	1ecJ8g==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5abjx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 14:04:04 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5ad42d6bcso132012485a.2
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 07:04:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745417043; x=1746021843;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HK4v2UxJbR5fXrAk1G29VWPj/UWIHaIHZOcZYqRxF9s=;
-        b=OIKdrQysFDMn48Eg6PXjz/sBX19pnrEYHU7PXuWdoVPX+XE1fvaCUCnv3yRKlStGg4
-         +Mrdl+PgO/mqe/2Em+SXJ6Rh0fyUwkl5ePNTvHv6DqUPqFzMiWgpe8xHaxBabR79iagy
-         b1vKrxi7rkg58cQJr7t92EpIrt+9VD0LEeX5BXkV+tMvx37h9yGzx/0ynTO8G9bTYHWe
-         O2TEDI7OQo0udkyCsNJymib/59L5QZb4lobNyl7D/933jH9ofqfghHtLHRvtoORZLdGz
-         i2aNlr+ABlKzQ2MW9jDaCYXoH6g0d+cnH1qfJcV2BKDDHGLfz/RZnVS3l1oZo22YQPv4
-         6TYw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8Cq6NxBdiEyWDcZ2HKGECHRSfsZTp7aDzTRxJVbu9Bxllu4MNWVyiC/LPAezUko5mhTkSJp2Njwui@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN1Bt5mlghz594TF8vgqudcVMKd/dRAjiZ4ZCsP/ivBL4gNJRZ
-	jvO6F+zYqLYjtfEtKkSIU2eeTvGjujYDFKrfYLphij/Z8q432dXg6dQX6WU7qKicnsAFRLWX+gb
-	/LEocaXSrKLh0FxF/xILBrPKY4yNZP7G5jmbfu1K3hRoP4AG/egtyS6Ruife7
-X-Gm-Gg: ASbGncsrIZDu8e9MxG7eJDKqrLxQM3K6Pws39RB1uLu/mcwEwaB0SqHk1bOENIP1gcm
-	oDfrmaiUdp27KUbgsTZs3JeK2th07f8Nt5i63b1UEHXxImkwFMJda6faU4VrhVi//+xLkcRjBCY
-	mPwpPYXiz/UuO94IWsSX12QolIVBYv8Pg+8JXJSKEB850Pfw8t0RLcXMM1eNiZxZzUUpdgxQLT9
-	sQmbEzDk6nnlk1M+o6rnabr54td+pdc7ZBCZZA/POPyYR4u2/+7QbuoEo6wSLmvZoct9xbCWjeH
-	KLQnc+BODeciREqNO3sjH2dWfPTmYhJtPFCk42ObAUYYGE82QA74X/a1bEQ/K80xUik=
-X-Received: by 2002:a05:620a:40c4:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7c928038e5emr1063390685a.11.1745417043381;
-        Wed, 23 Apr 2025 07:04:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5Nmp61dxe3+g8XquReGtc6SZo2EBLqOi9MgrQLq0RCvHH8eZt76lUCj3q3b5DnYlZ2FEF3g==
-X-Received: by 2002:a05:620a:40c4:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7c928038e5emr1063386885a.11.1745417042771;
-        Wed, 23 Apr 2025 07:04:02 -0700 (PDT)
-Received: from [192.168.65.183] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec4d397sm808450266b.59.2025.04.23.07.03.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 07:04:02 -0700 (PDT)
-Message-ID: <2e3d94a4-d9e1-429e-9f65-d004c80180e5@oss.qualcomm.com>
-Date: Wed, 23 Apr 2025 16:03:57 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F077D2797A1;
+	Wed, 23 Apr 2025 14:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745418141; cv=pass; b=ZMjnnU/rdzFfxYi1/oHP3biIj9z/Uo+PkXLu8SziOf3l2hVgT/g2zeZfgDSOliLsPMSem/L5EWwxERjSresjBOBMRP/HmMcq4Y7obOY8M0kYE70Is2yBImiNadR8njhJsGvr/qqedN5CF/IoSeni8/Be9hUYqZ1l1npz2fgBMyY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745418141; c=relaxed/simple;
+	bh=9yB/Qq+BRZ2Phu3AIq9BfdJXrDlB28zaBQ+JFyqEXRQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XZlyV5W7w5YWuANla/mC3kYaQHqMsZVG9DAv6ggzxzbUyeiZXi/KO+6EXg5+M67qJpN56XVWmoOU6zxhw/WmTTKo/nTEQGDJy/pcPGlMbloNyI+6qeBEw5f2BDOZCwWqKf7A5Tm8M1sHtGz3DlbyXVg6Opy1BcbTXy9xfkZvtso=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=BCp7xZzU; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+ARC-Seal: i=1; a=rsa-sha256; t=1745418119; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZDV+mpsgzh1T0Z7SwITf51hq64jkmPmYNt4ZPn0hf+9iQUFiOtzyQMPeXB87ELeh+mtm0UOI4jL2g1e/LMrwTzDC0BRsX75fwD0adNraebUpUKmFHW9gr7CgloAcfeoufKzEPsJjkocYEdjaYrgmGLmoOfPEbLhalr0b5sCzNPU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745418119; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=9yB/Qq+BRZ2Phu3AIq9BfdJXrDlB28zaBQ+JFyqEXRQ=; 
+	b=F5/MLn65UFcUWqfKpz3lDq0IhkS7oAIQyNKd2KZ5EU9HZHN+B9YFkSdfZyQmIXdM3Wz7VOf6+ZJCfWet4D+HuzGYUTSINMcFZ2hlkO9UxfYg1oiKMWGFCLuYV5pL+BIJEImgjBEJyHXXSNXmt48yYpxZd76A9sTv88MnprWaJ1s=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745418119;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=9yB/Qq+BRZ2Phu3AIq9BfdJXrDlB28zaBQ+JFyqEXRQ=;
+	b=BCp7xZzUEkm77k0kl7WIn+l0ZF78PFghvUmTccTyk2NkPGAR5Mow55ts+gKKKQzO
+	lRN2aPfzHc1aWe5MSAQDSLtrzwrnCdch6bRj126kI6Z+R9I2D3wtlAcVHvNROyzAyFi
+	ITU2NmEE4IervwC6IboL3/0/bp5d59sP/fTsMJRApy/BaqBcsGExlTQOGzBaUavdYU5
+	8zNNFQvUE5hPg+Qutt+DiVV3CiAV6x7MvaSromHkNvCcRZZp3Ih12fOAJf6m3gxkUeg
+	2nsU/Hr/gyo4GmKdRLdXdra415DjJutSVRAf20Pg0dDLBYR2Sm7KGECIO/nFRn+17Qd
+	RI3tRN6TsQ==
+Received: by mx.zohomail.com with SMTPS id 1745418117666283.0504327658683;
+	Wed, 23 Apr 2025 07:21:57 -0700 (PDT)
+Message-ID: <c5efd677fd2199cbf8f9d6006905acdf19da02bc.camel@icenowy.me>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: jh7110-sys: add force
+ inputs
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
+ <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+Date: Wed, 23 Apr 2025 22:21:51 +0800
+In-Reply-To: <CACRpkdYgkDpC1iJ-KaZj2GZ3A3_V=3-KQef_nCRhMDrUK=FHXg@mail.gmail.com>
+References: <20250422162250.436169-1-uwu@icenowy.me>
+	 <20250422162250.436169-2-uwu@icenowy.me>
+	 <CACRpkdbGwPyQgVL18iMvUTAvh4XTjo6g3mGT4e_b2aNAjr2obg@mail.gmail.com>
+	 <B4C8B369-E345-4133-A106-7C5E71513329@icenowy.me>
+	 <CACRpkdYgkDpC1iJ-KaZj2GZ3A3_V=3-KQef_nCRhMDrUK=FHXg@mail.gmail.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] arm64: dts: qcom: Add initial support for MSM8937
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
-        Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Adam Skladowski
- <a_skl39@protonmail.com>,
-        Sireesh Kodali <sireeshkodali@protonmail.com>,
-        Srinivas Kandagatla <srini@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, iommu@lists.linux.dev,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        linux@mainlining.org, Dang Huynh <danct12@riseup.net>
-References: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
- <20250421-msm8937-v5-3-bf9879ef14d9@mainlining.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250421-msm8937-v5-3-bf9879ef14d9@mainlining.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA5OCBTYWx0ZWRfXxdmb24rAFFbn qiBx6YSmDJuiRA5fEIRvNe3/6k7UDcttuNo37p/YnAMrKpPgcRvww6oEl/CrHF+e1Y4fZtiIekd 9xefattI8YarEscv+PKgi39pl9277/8hpFoGhbmNeM8/hvUN4Jy4eKjsG8Fm8uWkfUQ8iBIojU0
- lxr9Xy0hP9GvXAHrP4xdcnS6qsY/57rFaQtXsYA5O3+Wl6cYnI6Y72+VqEgY5L6pNFbKw5li4u1 xv/7erdT3SVxaFfqpdYIP9zTrUy35Le0rJ5ENNuUcRywVWwbV3MKFejwZrBP+NLZbdYrLLvy0GF z6qlknDXtvJEZhH15X7TjPjFr6qn0sa1uYullRcBfoeAw2OvNfDH7sHw6nzkXmQ+THEmTFur95P
- QZj9ek2tS/bKBERHegFfemjyFyR3YwaVFQtc1X1ChLSqnI1XUTNyd/dVzilpKmPGuJv+JcEO
-X-Proofpoint-GUID: KQO3WIe3J-fxZMnEyCUYNn8WZTWn6DUt
-X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=6808f354 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=bBqXziUQAAAA:8 a=OuZLqq7tAAAA:8 a=GsLbDo3STCR25-WXoqoA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=BjKv_IHbNJvPKzgot4uq:22 a=AKGiAy9iJ-JzxKVHQNES:22
-X-Proofpoint-ORIG-GUID: KQO3WIe3J-fxZMnEyCUYNn8WZTWn6DUt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230098
+X-ZohoMailClient: External
 
-On 4/21/25 10:18 PM, Barnabás Czémán wrote:
-> From: Dang Huynh <danct12@riseup.net>
-> 
-> Add initial support for MSM8937 SoC.
-> 
-> Signed-off-by: Dang Huynh <danct12@riseup.net>
-> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
-
-[...]
-
-> +			tsens_base1: base1@1d8 {
-> +				reg = <0x1d8 1>;
-
-The size part should be hex too
-
-[...]
-
-> +				wcss-wlan2-pins {
-> +					pins = "gpio76";
-> +					function = "wcss_wlan2";
-> +					drive-strength = <6>;
-> +					bias-pull-up;
+=E5=9C=A8 2025-04-23=E6=98=9F=E6=9C=9F=E4=B8=89=E7=9A=84 12:55 +0200=EF=BC=
+=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
+> On Wed, Apr 23, 2025 at 11:41=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me>
+> wrote:
+> > =E4=BA=8E 2025=E5=B9=B44=E6=9C=8823=E6=97=A5 GMT+08:00 17:09:42=EF=BC=
+=8CLinus Walleij
+> > <linus.walleij@linaro.org> =E5=86=99=E9=81=93=EF=BC=9A
+> > > Hi Icenowy,
+> > >=20
+> > > thanks for your patch!
+> > >=20
+> > > On Tue, Apr 22, 2025 at 6:23=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me=
+>
+> > > wrote:
+> > >=20
+> > > > +=C2=A0 starfive,force-low-inputs:
+> > > > +=C2=A0=C2=A0=C2=A0 description:
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 The list of input signals forced to=
+ be low inside the
+> > > > SoC itself.
+> > > > +=C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/definitions/uint32-a=
+rray
+> > >=20
+> > > I don't see why you need this hack.
+> >=20
+> > Unfortunately these properties are not for pins, but internal
+> > signals that isn't
+> > bound to external pins.
+>=20
+> We don't really care if pins are external or not, we are an operating
+> system
+> not a philosophy department ;)
+>=20
+> You calculate the offset and shift like this and write into a
+> base+offset:
+>=20
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D 4 *=
+ (pin / 4);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shift=C2=A0 =
+=3D 8 * (pin % 4);
 > +
-> +				};
-> +
-> +			};
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D readl_=
+relaxed(sfp->base +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 info->gpi_reg_base +
+> offset);
+>=20
+> Compare to jh7110_pin_dbg_show():
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 unsigned int offset =3D 4 * (pin / 4);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 unsigned int shift=C2=A0 =3D 8 * (pin % 4);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 u32 dout =3D readl_relaxed(sfp->base +
+> info->dout_reg_base + offset);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 u32 doen =3D readl_relaxed(sfp->base +
+> info->doen_reg_base + offset);
+>=20
+> So clearly the entities that you affect are in the same numberspace,
+> and that is all we care about. They are not enumerated in any way
+> orthogonal to any other pins AFAICT.
 
-random newline /\
+They just share the field width, they're not in the same numberspace.
 
-[...]
+The design of the JH7110 pin mux control is quite simple and stupid:
 
-> +		mdss: display-subsystem@1a00000 {
-> +			compatible = "qcom,mdss";
-> +			reg = <0x01a00000 0x1000>,
-> +			      <0x01ab0000 0x1040>;
+- First per-GPIO map configuration to map the GPIO's DOEn pin to
+internal tri-stating signals.
+- Then per-GPIO map configuration to map the GPIO's DOUT pin to
+internal output signals.
+- Then per-input-signal configuration (note that it's no longer per-
+GPIO) map configuration to map the signal to a GPIO's DIN (or fixed
+low/high).
 
-The latter region is 0x3000-long
+For examples, here's some field names of a few registers (according to
+the TRM):
+0x0 [5:0]: sys_iomux_gpo0_doen_cfg
+0x40 [6:0]: sys_iomux_gpo0_dout_cfg
+0x80 [6:0]: sys_iomux_gpi_u0_WAVE511_i_=C2=ADuart_rxsin_cfg
 
-> +			reg-names = "mdss_phys", "vbif_phys";
+P.S. I just now found that the vendor's 6.12 BSP (which uses the
+mainlined pinctrl driver) has pinmux configuration that maps the same
+GPIO pin (GPIO38) to two input signals (both BCLK signals of two I2S
+controllers, one RX and one TX) [1]. This makes me think use two
+virtual pad numbers (one for internal low level, another for internal
+high) for these internal connections viable again -- In this case I can
+write `GPIOMUX(PAD_INTERNAL_HIGH, GPOUT_LOW, GPOEN_DISABLE,
+GPI_SYS_USB_OVERCURRENT)` .
 
-Please make reg-names a vertical list too
+[1]
+https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_6.12.y_devel=
+/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi#L298
 
-[...]
+>=20
+> Both pin control and GPIO handle chip-internal lines that are not
+> routed outside sometimes, that's fine. Just deal with them as any
+> other
+> "pins".
+>=20
+> Yours,
+> Linus Walleij
 
-
-> +		gpu: gpu@1c00000 {
-> +			compatible = "qcom,adreno-505.0", "qcom,adreno";
-> +			reg = <0x1c00000 0x40000>;
-
-Please pad the address part to 8 hex digits
-
-[...]
-
-> +			gpu_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				opp-19200000 {
-> +					opp-hz = /bits/ 64 <19200000>;
-> +					opp-supported-hw = <0xff>;
-
-The comment from the previous revision still stands
-
-Konrad
 
