@@ -1,113 +1,124 @@
-Return-Path: <linux-gpio+bounces-19197-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19198-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E173AA98489
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 11:01:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1340A98508
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 11:12:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5FD147A88F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 09:00:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4B0E1B65562
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 09:12:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2793742A8B;
-	Wed, 23 Apr 2025 09:01:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28566262FFD;
+	Wed, 23 Apr 2025 09:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wmYogycs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pl9VrsOZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145A51DD539
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 09:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D65262FE7
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 09:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745398872; cv=none; b=DxAuMbZV1CPL2VB3xhhxltRdO1RcK5FZH0JnF9jPfKrfoHNbcrscVJgrdE9LsupGhQj7Ez0EQ84ZOGyA38Cff8qq06y5bDX+uW/A9oLTuikT/Qisl3MDkkchdhdsbMtemDLE+8zai34Xg9xrdrK/83FdBm+V/hWComHqudOPa8k=
+	t=1745399397; cv=none; b=VQlxkr+uIbnMPz6/TodI7Yx319M0qYbW/gFDR3KciJ1wJJWbBcuFGiIuSbLZvQe6HBQ0MPiNBwj8eZMMykdtgoY7GMVNwuBZsC5X6Df9aiJ9VuTeGXdWtYsFUEH8vrDFYjvhnxBZiMB7iHwl+0FABqIZKCIkfX68K49Qg19MFqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745398872; c=relaxed/simple;
-	bh=l4ONh9IizedqA6W3QPhG+iwsoh6uJslCMo9BpNc/j+E=;
+	s=arc-20240116; t=1745399397; c=relaxed/simple;
+	bh=D9zJsGGNBKvUtfUTrtoCvCv7NgLrgJG8N+UC8V4uJaY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UMIimePiE+r4zxRgDDsB3pY3IAsrY7WOt5If1m/N8uWaqMX0S+6X3DeiIMcWdr2Bk5C3TogFuFl/J/ljwdyNXFg5tu6AAU1owHVPLhfypbXjXsCk90vtjECx8+iv7KtI4YDgIW/W5i3hWdK29960Cg+zDevnUemMQbei72Vd9L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wmYogycs; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=Cin8XJtr30swtFtdAgkSoqfj4O5z6uvvVB3QUqSdSigLDhEe/ZS1zMAD+KxYhn0SB2XKM9amGLH7LeJCekfRqXPGtoCQQwOvdWsHAS7DHm3yuR4MbMVRFD8MfnMuWyvSMtslPh8F1P3gjzFI8sOxL83gNTywOyHo1+kEDmo586M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pl9VrsOZ; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54af20849adso717251e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 02:01:10 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54b1095625dso7146822e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 02:09:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745398869; x=1746003669; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745399394; x=1746004194; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l4ONh9IizedqA6W3QPhG+iwsoh6uJslCMo9BpNc/j+E=;
-        b=wmYogycsPxJrT5IkGprAIkXL+9jDAOIzLQieuEh85TszOBHxPFwG9p5PzljEidlh9+
-         jxUbO3Bs7L3VzNxJCG3vQOvxvwU2DWndvi3ZmNqMjkOsvNHzS1Kd9Gwpt0ieuSIzpkzp
-         E00k4LvPWP3IQWV+IIP0whnT3x7gij/Gn8YDAUqvs7vTHimgW3aRByw5dRewYdZYYv+Z
-         TGpDFP0SUJl7kwYo4+Hd3Xxg8+05yyZQdtvEgL67A++QxvrTw+goSumWNlJvG5Dn90Js
-         CuAsqfDh6ZQgnmmwg7gfNaf55Ns7AD3pvbd9IhMSzw/cieBV21UxQCLF9F9j0spVAjqD
-         Obzg==
+        bh=WARUA/SEaM7gTnI/pqNkLOZLeUBM+XHsQtQUHb5intU=;
+        b=Pl9VrsOZekY5NXHTUQ3uqtaasg2AmAMWacA56aj4pmYr1Prs/8o1NTQfEBKQSR3MTG
+         x33yusnv4hNxBJjwGUA/R8qN4X6htQTjOP6XB+ebq+rSVft1iH/An3bquuLaoLAPv2XI
+         SG7p4ZNnMGBVeTrFpsup2WZD/0nMmD+Su9D0petDlET0G7G4UvsXDyXxoasXiuYtQUDm
+         OOjs1fsCxFnkFHjbNDEs5GmMyB8QxCQKAoWlb95KDGXZ1y5xn2uqppepECzBvM4qdYgt
+         JX9JW6v6ZPbRlJNs2uj0BJN2KMyTAlvNBolSh4MbtPJx2w9WDaBPKlEAn8xjICZMLmsw
+         5HLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745398869; x=1746003669;
+        d=1e100.net; s=20230601; t=1745399394; x=1746004194;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l4ONh9IizedqA6W3QPhG+iwsoh6uJslCMo9BpNc/j+E=;
-        b=GRmF9k7mAcLbZdXUe4jtn5kLsSC3Tj6MxwVbtd3WBV9kxbLWJ/8XvLAap4dsTPGVh5
-         wryNL94c5bFFtQPAInYkFeCAs/jC0REO/86LJPpppVmprr1kSHjw1kYvw+rkyBSl3WMN
-         yaZb4LtEV4+j/ZgNQVcBU2QyyajlP4hMcm4hm+1Tof4XHnMJWWCarPuz0FJkp15XRzFA
-         9ncoRA2rsJyzJ6tyt/quK5/O0yxYlgHk5lDC8vXggovBFJFZJrrPzb25F9iXCFcqMOig
-         XN0AcK0Nc1lZlo8X4WiaB8OF6rQLyZtLh2fG3VqeXimF7mbkJBayMjrksiMDAb6HHk9g
-         //9A==
-X-Forwarded-Encrypted: i=1; AJvYcCX5rHZu9yVuVuA6ZZvie5HyXtSwI/lmji4pXZQzNKFT7cirelrlrEL/Z4WQChEBxc8vvkZ91IDuXP3w@vger.kernel.org
-X-Gm-Message-State: AOJu0YyitZuRgTyISFXvHaaYKaaADIdZaKjnlISKZ7vCTZL2flZpytO8
-	rJ4KbYDmubDuzi51CtmgSLyE/hG5zK42nWkAhxm2dNYd2DebtMIhktW/p0ExmG6So+QSA+IR6r/
-	Xy2ceCpKnXOdloq8XFDkifq4rjUk+2Q7iOJb4MQ==
-X-Gm-Gg: ASbGncv/eHO4EK0C3gEJMWe+aFVT7JAAvpb4ttxfo2wbS7lIjP8lgmSh5BxnZUO2qKn
-	UDZ0vryZgEn9diTZc/0qv/TG2sIMVQgDVb27a4WJ5UE2wlDxm7JSVMuMFRt6nnz9j3YiUDG9ADW
-	x/Y3VQsUgR9FTbF8XpuwHdCg==
-X-Google-Smtp-Source: AGHT+IEEUsAi88UCbofnaku2lk+aEb48FzRJxri8OckiCKB/AVx4JpJsbdKyriMomMEWTnYqEIv4ataPoB16Fz19o6E=
-X-Received: by 2002:a05:6512:a8e:b0:549:8d2f:86dd with SMTP id
- 2adb3069b0e04-54e76b22a2bmr572698e87.20.1745398869092; Wed, 23 Apr 2025
- 02:01:09 -0700 (PDT)
+        bh=WARUA/SEaM7gTnI/pqNkLOZLeUBM+XHsQtQUHb5intU=;
+        b=Nfo85/Z1WthgZVExrHEsbPhfljvGWmxOFR4CiMvxfW/JMVA7lsFkGycA7gk33IwBkb
+         ZfE5NSPAUONSYkHerqSIexe7rnw1SvQpuY4iLMzxaKt+iyrBW9TXue4Cj7TJw2xdk/nF
+         JIy+gJ37eWoGE2/Sy+YM1EmLTEzpk8v7RdnS3WNw7ia/juBdnLkMg6oO0RIe0uf/MRWh
+         t70Z1DemOZzvE8XH+p9Io4SviXGcE7qI9hVF2Ua7QouVdhRMM5Gj/xysAf1rZk0QTSLS
+         /lH1NNqbAn0CodZMoyjJWmurufzlnXJubtWkkyjkldUWwxV0qES7vFkkZZFRGlz2EElv
+         xSdA==
+X-Forwarded-Encrypted: i=1; AJvYcCV87VLFQDjMYs98n9ZIBPHYpyCAoAiht3dUSZodkCLHQAPrLYJZMUSV5LuxdjUE7RgNs+dyNSu8cVOe@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4RJEsT0alQuN/t4XVvlJ+6whVXvQX1uSwN9bT5dCP0QJMedzA
+	wSuQ0tflJAQU1xfa26hOLUZ65+QySi05immVjFNRbemhhvjQyQ1EtHcz5d1hJHTROFvnXPvyVxd
+	AUPWV1rUIrS7AZMNU33WpeKfewMLFY09KW5B7m9jWOWHqc3YRXJ8=
+X-Gm-Gg: ASbGnctjlpbRmw4Lm7xlJ1ztkFs5VhSZswQPevlblX0cHz6na+8b+0DkeATN7iQ52VP
+	kOlWvLm9XrwLibL/fU+btirhlLutNl4+g42lfyhg9QXa/hkh9AeNfGqGJfBPlsYtB+X3FeekMIO
+	xAq2YH0S+dtwKhUEXkPu0bf1/Vs1UC/MaI
+X-Google-Smtp-Source: AGHT+IGGSWx/qXe0KQyY/MREsZlIV6fNVYZhSzegs3sVGQ2Vz/xafsGBBtwjdgGYFha2pmBwx3eFZ0eFO4ELEa/acV4=
+X-Received: by 2002:a05:6512:68d:b0:549:7394:2ce5 with SMTP id
+ 2adb3069b0e04-54d6e663182mr5664661e87.41.1745399393941; Wed, 23 Apr 2025
+ 02:09:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417152158.3570936-1-Frank.Li@nxp.com>
-In-Reply-To: <20250417152158.3570936-1-Frank.Li@nxp.com>
+References: <20250422162250.436169-1-uwu@icenowy.me> <20250422162250.436169-2-uwu@icenowy.me>
+In-Reply-To: <20250422162250.436169-2-uwu@icenowy.me>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 23 Apr 2025 11:00:57 +0200
-X-Gm-Features: ATxdqUFs6bNpuAZ8C-mefVn5vnH3rPvKnGkG9Xz5ALDijczN73qOaRKozbezrQE
-Message-ID: <CACRpkdZkhQRdDCTBxOUifT3uX047us8cFExhZiuAUueegD-zeg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] dt-bindings: pinctrl: convert fsl,imx7ulp-pinctrl.txt
- to yaml format
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, 
-	"open list:PIN CONTROLLER - FREESCALE" <linux-gpio@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, 
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
+Date: Wed, 23 Apr 2025 11:09:42 +0200
+X-Gm-Features: ATxdqUGJI5EWHbFKNL1piYfBX7w6VEjwsS65rRDUL2ZIvKqVpjd39nGuBX00R-E
+Message-ID: <CACRpkdbGwPyQgVL18iMvUTAvh4XTjo6g3mGT4e_b2aNAjr2obg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: jh7110-sys: add force inputs
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 5:22=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
+Hi Icenowy,
 
-> Convert fsl,imx7ulp-pinctrl.txt to yaml format.
->
-> Additional changes:
-> - remove label in example
-> - fsl,pin direct use hex value instead of macro because macro define in
-> dts local directory.
->
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+thanks for your patch!
 
-Patch applied!
+On Tue, Apr 22, 2025 at 6:23=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me> wrot=
+e:
+
+> +  starfive,force-low-inputs:
+> +    description:
+> +      The list of input signals forced to be low inside the SoC itself.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+
+I don't see why you need this hack.
+
+Use the existing per-pin output-low property (see
+Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml).
+
+> +  starfive,force-high-inputs:
+> +    description:
+> +      The list of input signals forced to be high inside the SoC itself.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+
+Use the existing output-high property.
+
+Now I *know* these two properties are per-pin. That is more talkative
+but way easier for users to read.
+
+Then use pincontrol hogs to make sure these configs are set up
+at probe.
 
 Yours,
 Linus Walleij
