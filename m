@@ -1,129 +1,131 @@
-Return-Path: <linux-gpio+bounces-19185-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19186-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 160D1A98379
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 10:33:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB2FEA983EB
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 10:43:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DC9D18815AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 08:33:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D53B9189E35A
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 08:43:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EED0A283CB5;
-	Wed, 23 Apr 2025 08:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A75D278172;
+	Wed, 23 Apr 2025 08:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rBoC6mTW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GxM94OvQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6CE2836A4
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 08:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F072777E8
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 08:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396602; cv=none; b=dfxLAc2vTlWWwqeAhh6oePT2ewyEEdTNnFTKGNzvdxfMt15ILGyyC0N33ZIsFEezKdEizD8J0s/ay364vRYZXV/w+jTTimZdySGFfVwmg+m7WhITv8MtAdvmQxeBKpni/xQai40VIzvmvs8UMyQLVqpPSdSf8cOj8VJrlWnb438=
+	t=1745397510; cv=none; b=Mfh3cBRSigEKqxeHCtmr6gTpxr1jyYciS85Kg1CtT4F1C6hg5SZV1kHVsE5kHZOpunO2vvkGcko3kShh/Eoqnz2MZQ70UeGcFz/Ot0s+byIiqG6tHC8G775mQJaFjMRiGFy4bVWtr+6BEvP8kgbxcO0M3nHI5CF1k1teiPl3SZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396602; c=relaxed/simple;
-	bh=FDt808ioXfvg/ri68kgavNBFXzIhVQV7SGG7meNIS6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uEQvWQIhBiVPUlG3UQ9GeKzIxy7qgIKILRHiA68RkIOxT8ijPjVkom7SRmtSTsWCHAwtnGnTDMULvRQCLS1jUx8xwcIOF4ZaQUEaBOOhLyBQDktq1fj/MrvYoqqiAM7dJu2xmdiWHi6MKW0nXX3uqgNeGZ9sv7hf8Q/C9TPdyCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rBoC6mTW; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1745397510; c=relaxed/simple;
+	bh=qBj3z1T7rwn3ux+C+eO3W5yXwh6jAnKUWzTTH12y0wc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DN9Y2ztgQM6N4hJ5CM+If7oRsbdvR4b+PGn++EVepFBuoU3nmAeQfP6kVREqSMZU6trw5odytGiyt8saNBzhp72cto0bUPWGdCCEu0YUUbIgyX73iVfKrBJTvKbk3xRspPMyyMsnt6IFnk1CgQet1eL6bMzu+bKOSLfKqAvkr9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GxM94OvQ; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so4289376f8f.3
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 01:23:20 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-548409cd2a8so7956386e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 01:38:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745396599; x=1746001399; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZvxsiEPvdpb5l2WB/p6Z/my19eCAalsXZfsDJGPws1k=;
-        b=rBoC6mTWroNZ6Ccwtmre751AxOQv5TrbHJmHjxVz0xUYeTUmi3zBVdQYUTBPOHx6gj
-         GLmNaI0ufmTUXBdFE9Gq/wfyoZG+ElQ0fpM+W0OvJn+3tHWmu9NFWRyNfAKLHA8Sl8md
-         GsrMhugOmdvc9kPskSQlAjk1caOPkk7yvYl2sX9tKBv0g7zxDsMD5oIXT5qlcH8v1R6F
-         kg5sdvD5ZzjM8JZTCKtuM1EG9BHl6I5BaZXssu5fqBFEtre7fhsYPjCU9JB+yKysiRQj
-         ECzsZSqe61bAcsiwUJFUHMnAfeMcih+RC6+9VzS2p27ERSvtL7oMTkF7Xghlli+12UPk
-         aZKA==
+        d=linaro.org; s=google; t=1745397505; x=1746002305; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kSDycrf39wnAyWpIWRB4jBBrGHgujqLhxop3dNMcnqc=;
+        b=GxM94OvQC4I9HSK2KjtMN3KM5El3+HIV6zBJJ/20o4NWKjVnnU44pH5Yhx0VrLL3f8
+         NMV1HFXVXZjBD6ilOxRE+2UmeynopJK7V/cG+hBqdWErXemanc2pw5uqvI27lY9QQBF5
+         0HlZEZrUy9iWQ5nIVHyxvUrclhU5e/P0J47nId9AnEqZaiKYYJEBjMbQ2y9BeOqWUN8D
+         X+TtiM2u4nolK/b1WZ9NgkEhp3rsQPlazW8u4NknmQVGtHMEIu399h9h8CMbOscCq1TG
+         6Tyes5Z9d1PN3dlwuSiohvm/fjW7h0gVLyV2eY5sDzeREivCJKZz7bRb+uaWbHBduhMe
+         ORyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745396599; x=1746001399;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZvxsiEPvdpb5l2WB/p6Z/my19eCAalsXZfsDJGPws1k=;
-        b=Fn89SEYa/cTpbTFUyqFFXl+dqEe8x4Op7LtFJw9f8u2vWpQAEDEM9cxLTqv+yKpElF
-         6PLTfEMAvouM2dynbTGThsbkkm9XR4DkTy6ivAiTN6WovtCJYsVKMHYhNbmk1roVHECw
-         clEH9P+8dRXW3+27q3GfPJn3/25vFdysQFooPJBrsGON0vEVpqKCf964fxZ+8rf8/MlH
-         X8UwCj5dRakuilzTeLG8vWjn4kKkNgWJbLFtGKcDjf8D7IIgtlxwn0myTscUl98zXjhg
-         p+I9RID/1a+VcrwOTkXDn8dl7dsnzfekp9oIvAFbT+aI3aWwyWgaenpKU2UoHno2D7hx
-         BcuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWG+WXqFe4cywD89CjjPIla4RJTZc0H3h/RwYeX6er4TWu+S5bWnpP4rJFgs9dM3DIxbZWzCBAQLpMh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5F1KlfXIL7ldom6Ur/Eo552mX8HVT01qn57bhWCsMP6mHz2UP
-	sBV2/fgxcOKjVwTQYR+quCohMPLPa6mgE9PHRKCW/kXGo6lG7TBCr3EB7i6bwcA=
-X-Gm-Gg: ASbGncuWl+qMFrnEN1r6g0sjTA5SkMHrgy0/z5TyvHXRv8LVSNjLSspAokDOd3+G2pZ
-	mZgs0c3hmUo512j5vtMCNRshVXmFaGVlSfWiCk7MEaxyJY8Uj4y6gFvma7bSqCNrExU+vTd8+Vz
-	pqEGaZocd0yP9NGtUAaaqN2xmTMP5k7lWwJGTb057DSKoFzQFFAMGcNk/ASCZSgCDlMR3UFdjKg
-	CKA/r3lcByFgR/wuwzH6erIeYiMkQoa6haymX11Hb6QF38a4FwdtzWYPMbnw55yUECdRSpD/MVi
-	RBHT+aoWjGdB9FjRhFCAb5kQgmNdQVzWze+JiKvQnXVN3Q==
-X-Google-Smtp-Source: AGHT+IEelUJ/5v3FltvPfU2HhobryVrZIBwS3AI8/YV8yIZfhl1ShQPfo3U4FD8Ljf8SiRZZYW9GyA==
-X-Received: by 2002:a05:6000:2510:b0:39c:30f9:339c with SMTP id ffacd0b85a97d-39efba5a84dmr14374721f8f.28.1745396599114;
-        Wed, 23 Apr 2025 01:23:19 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-44092d4707csm16964585e9.40.2025.04.23.01.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 01:23:18 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:23:15 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] pinctrl: mediatek: common-v1: Fix error checking in
- mtk_eint_init()
-Message-ID: <aAijc10fHka1WAMX@stanley.mountain>
+        d=1e100.net; s=20230601; t=1745397505; x=1746002305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kSDycrf39wnAyWpIWRB4jBBrGHgujqLhxop3dNMcnqc=;
+        b=JIAXZZBDpch4qFhyagHX6RBfzK1kLhNX4jo+Jd5TFs+uFZWPmXmQQxODw4r1kRMjfr
+         nlIaiymugFIFKRtwgRknfFFgI7oR7MzkmPXEB/Tjw25qwJ9Jv2cGWtATN4d7Cb1Y8p5W
+         bIoWtCbpvAObQtAo3co0Y+FOtzhakbTFR9srAaCTzK+2ZU/HllV/ZISR3D3mRYV75HHv
+         ZfpTTkTT3eBafHWncdtK6WZYM2ge5ra59/pw9KRK8z0RqKPBdUm/r1ahA27BTsqiTf4t
+         R35IsINSNeaMCkH6lXr6jf0vWEnBzimP76UBflfmJxSvqHQaB9N9p4BKqnUXDvwBrYrU
+         AtMg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8zRkR7v55vv9XtjpLIeE65aL234nN+usN0Tbw+jYPSCTLFL/YQFiQ6pqFc2FZ2wHgdNxT+FQvJnSV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6NxYwV2Dq6/r83AeJiLlumIIM2/O9OKzF/RexZdbyHRhCzY00
+	ewArZZeorTwuhGs0DCAlhWuFBw9+SH4wQp1n96v5mbo8781s7ExbPZ5EnjgLJZfo0Oc9jgEO8Is
+	AJWCrRlOeCFtjcj+ubLSOcqsQnNVrtn8ESFQFRw==
+X-Gm-Gg: ASbGnctuFbUa4D81bu9+PV7ae2pKePhPHDHkWXnfa444XU8DhwuCwiyZYlhEB9UTYk+
+	C4UksujvcQ2bwECdz5kJMvMWrUPj1mijlpSgFSw5yLVWlu75Ah6D/K9AbRn3A+zieXHhbZdr2sm
+	bSkSz8/CZdYA01QfQGKp7s0g==
+X-Google-Smtp-Source: AGHT+IF2teZ+utBk3nbrptOE1OwOQHV13ZcYzWp4JC8Rks36uJd/7V0CNyiI6xhWlLjjle8y5+kVGlRVXioIPF4arc0=
+X-Received: by 2002:a05:6512:108b:b0:54d:653c:351a with SMTP id
+ 2adb3069b0e04-54d6e631790mr6082193e87.31.1745397505326; Wed, 23 Apr 2025
+ 01:38:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <3fc723de-c7e9-4a03-852b-93d5538847d7@portwell.com.tw>
+In-Reply-To: <3fc723de-c7e9-4a03-852b-93d5538847d7@portwell.com.tw>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 23 Apr 2025 10:38:13 +0200
+X-Gm-Features: ATxdqUGxmUFjZwr7eCepx2PgXtnPDoeuvGQPnxU2bfQ5F1M995XyX7ukEGxVZ7A
+Message-ID: <CACRpkdZKuiR7jaa-gsVTc=w64yhXv_Pny9u_zOkHDjcyXaXSeA@mail.gmail.com>
+Subject: Re: [PATCH v5] platform/x86: portwell-ec: Add GPIO and WDT driver for
+ Portwell EC
+To: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, brgl@bgdev.pl, 
+	wim@linux-watchdog.org, linux@roeck-us.net, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, jay.chen@canonical.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The devm_kzalloc() function doesn't return error pointers, it returns
-NULL on error.  Then on the next line it checks the same pointer again
-by mistake, "->base" instead of "->base[0]".
+Hi Yen-Chi,
 
-Fixes: fe412e3a6c97 ("pinctrl: mediatek: common-v1: Fix EINT breakage on older controllers")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+thanks for your patch!
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index 7585de11854b..8596f3541265 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -1018,12 +1018,12 @@ static int mtk_eint_init(struct mtk_pinctrl *pctl, struct platform_device *pdev)
- 	pctl->eint->nbase = 1;
- 	/* mtk-eint expects an array */
- 	pctl->eint->base = devm_kzalloc(pctl->dev, sizeof(pctl->eint->base), GFP_KERNEL);
--	if (IS_ERR(pctl->eint->base))
-+	if (!pctl->eint->base)
- 		return -ENOMEM;
- 
- 	pctl->eint->base[0] = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(pctl->eint->base))
--		return PTR_ERR(pctl->eint->base);
-+	if (IS_ERR(pctl->eint->base[0]))
-+		return PTR_ERR(pctl->eint->base[0]);
- 
- 	pctl->eint->irq = irq_of_parse_and_map(np, 0);
- 	if (!pctl->eint->irq)
--- 
-2.47.2
+On Fri, Apr 18, 2025 at 10:24=E2=80=AFAM Yen-Chi Huang
+<jesse.huang@portwell.com.tw> wrote:
 
+> Adds a driver for the ITE Embedded Controller (EC) on Portwell boards.
+> It integrates with the Linux GPIO and watchdog subsystems to provide:
+>
+> - Control/monitoring of up to 8 EC GPIO pins.
+> - Hardware watchdog timer with 1-255 second timeouts.
+>
+> The driver communicates with the EC via I/O port 0xe300 and identifies
+> the hardware by the "PWG" firmware signature. This enables enhanced
+> system management for Portwell embedded/industrial platforms.
+>
+> Signed-off-by: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+(...)
+
+> +static int pwec_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       return (pwec_read(PORTWELL_GPIO_VAL_REG) & (1 << offset)) ? 1 : 0=
+;
+
+I would use BIT(offset) instead of open-coding (1 << offset) in all of thes=
+e
+instances.
+
+The main reason we use it is that the BIT() macro hardwires U (unsigned)
+to the parameter so no mistakes can be made (even if you have
+no mistakes here obviously, it's a good habit).
+
+Either way this is not a big deal so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
 
