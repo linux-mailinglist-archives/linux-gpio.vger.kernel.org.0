@@ -1,122 +1,133 @@
-Return-Path: <linux-gpio+bounces-19215-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19216-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3FCDA98877
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 13:24:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD3A5A989A0
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 14:20:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E41DC17EEE4
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 11:24:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D5F87A12E0
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Apr 2025 12:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07E5226FA46;
-	Wed, 23 Apr 2025 11:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40FD71FF1A0;
+	Wed, 23 Apr 2025 12:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3VMzw4vT"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="loNoDGht"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E58C26E165
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 11:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4728632B
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 12:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745407494; cv=none; b=PEU/7xsa+jQyK9kJe8BTercTI8y+mMhifZxc9D4TJqb76FooE8aj93yP3zOFydtkfpsjAgG4NW5qunaLGZZ4NQKxH3VsT1nUoWAu8UIeRX+FceVI36ttug8SDCPTz2rLp8SPOlZN2i62ePQ/fe0XvL8793behDzf1004oo+yKCA=
+	t=1745410845; cv=none; b=D1Fah9vY/UvNZDrbBxJ4f2JRtx5DJ4vZZ5UScnxEU1YFLYkFhfgZXnjJAfCd0t9Yh3EqeApLqDOqix1dA0CYkDhPcOyIteglPadF/JtieBNI1prLBdG2bWf50n9/bp/dOsoNbVWwOJD4V6QpDKLVRwU5/Yr8vKuzKO33F8H3kMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745407494; c=relaxed/simple;
-	bh=ncxIYZozl3N3HdWJb2uKeAj2BG7Vhq1ZxeJg726Fiys=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fr/9kUFhChTi1hUQtCfq06Ga1YvsgsdR8iNo1oRvNTeyToCP26durb9F5h0fSnSPj3dkl8xaUprjYu4Ku9JakrO8A58Q7BWX3+8LUv6pKO0OnyGyV3OUAZ0zQ02nGHf6EBhpX0jZIGBu8OKivjUBJ2OEfNxhoEVjO2Im/FR/NSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3VMzw4vT; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1745410845; c=relaxed/simple;
+	bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KxuWn3eCwKaDoPrTyPcZwIa/MG9pYiUCrAK8IzdwtKzXBP1/Za5VviGe71BeEvbDjTOdRNNKSlv1I5v7WxTQKDSyjy5MaGdE6hg/GUSa8oM3n3+zTMTg78KzUYGtkKyMYF26mMYRyOOSSCOTV5FJyrQ88AS00GN5BC+dfFgKcZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=loNoDGht; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso585341f8f.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 04:24:52 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso56055581fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 05:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745407491; x=1746012291; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745410841; x=1746015641; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D9xEJcSBKi98pRIDlGVSCbCsSC4vSPyuZ//ZIroNx9Q=;
-        b=3VMzw4vTb1QfElPB8HBoN3Y/3jdiJjouJcHe8waRkQ2z4ErJLFBlppi3juYedILygk
-         7TMVcuAF5OFWSqZtCRrkt97Miux9qOzmBp+ksiYKOvgmjYMUE01zpoMDaC70qMO3qutn
-         4KTKyO47x6e0XnGkC/w4zug/Gl02QhX+TJeaeV2fWJ4p6LDQR7KyzFDBxsI2h6KnIFAp
-         WShU7akfhtEyXKB63mRYun1ytiBAyRUwx8uz7OgyYUdiP4ZbvW9Y4K0RHi+9Za71setX
-         evumo/AlEDPd2fob8bfRUu5q+y/6kYCRuSlY+t366ftoDq4Yg9a3CW2z3gZYBZIJRv7+
-         cXGg==
+        bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
+        b=loNoDGhtPFDwLtyn6lTEysmHBdvdLLrqHgGNyAVB6bHomhivdQMs4bkrqjHcKuvfpi
+         8FrqcxSArQ4hHI0A1wsttMEjR4nbfK8Y2Ayq503riRwPj6lnMaPKU9FTzot9l4LoKCHj
+         E0Ma5k+UHYAcj0IJHnnMAoZ9W6D/JTLJLWWlFkHqC48914M6ebbd/ZY1JTRTlyDinAlG
+         CiIPRbFQle5xk27Js3BWki9878KnDuOfru2Mew0lqdd6Fu+Y0cR1EF+V8OIZyYlLq7VP
+         NJ5MXPgxDJZrDSl/PAn03cjudkNYlhPI00vwFWMqY2fKKA2NAUW404A/hZRdkZ0RJ7Ta
+         LxHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745407491; x=1746012291;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745410841; x=1746015641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D9xEJcSBKi98pRIDlGVSCbCsSC4vSPyuZ//ZIroNx9Q=;
-        b=oqturnJGEBfDhwJ7XQo0opdJz3z4iWNaLGz0iLlDZBvmc49krOiZqajzAtKqSDKgMr
-         Tlg60eMQlla8O4AziVzzEyn+w6TRnYDIoHOVFYR0r+S304uu872aus/nn5LeQM4FcBNL
-         kn5kFi521emqk/EdRBHVx/Hzg2BEPK1QfFwg9ysqAQJce+prz6wfcpoUV48AmDHiD42i
-         a3b4LD/Esl80DWFkIph6fCMVUUEFFxJzOAurr/mvjjSEQfnqu7QqV5aZ8OJDLHVTn9sE
-         3MwuGKIAiOOOW2W4ofv8Q8v+b2LaUe0dMVY+8PxrRKIo3NC+V36jcoJNFR2koWloAgRp
-         GTfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBdO2AZHqgLAfAtiCTVJQtwl7YytwEXbBHpJV261UsV8z53z7UiB/no2Bfom0nD29sKOCLFqtYDIfA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLWb+4FuJRMh4NLCajXVZjZarWkKKCVY5p6Vah6s8h8tKkiyVG
-	SvuA+/3VXhEnV/MRQM7WwOhMi0r8EkVbpMbl+cPLiB9wk7Li9QhHF2m+GuKVAqs=
-X-Gm-Gg: ASbGnctJrCeI+xBGJQR52Ozgr5YGgxLwmuoQTJB9113zplyqOz1ucOB3oYuWvkZl/eq
-	75Wb6D1rtoDZvMw94Fmm87BnmAkZDDuwbyksbMHOxt3ltwkHETFzlF+FM68RfvGPV3uKWsLnW84
-	9BYbbulN22mfDa1IpMHWo0GhpnF3yU7+bQ+7L3RFKmebf50sksbzGWLErvSOUkt/v32/Bzq+5KA
-	4N7MP6VqNfbE/rlzp01ujNLd0y9Awjp48IqAnTWZrtSSKW6pqKTSeA5sU6HWBHGrCCb7etpOnY+
-	/FB8+2Z5bsQN739xScD+loXYCfDfjYpwAIhg5LWF
-X-Google-Smtp-Source: AGHT+IE/8aBMTgDMeNGhw38uYxbthi7915ysYEty/98iC2vU3Ts+4+07GiW/1NU/mZprn7jV6XzjaQ==
-X-Received: by 2002:a5d:59a8:0:b0:39c:1401:679e with SMTP id ffacd0b85a97d-3a067222757mr1949294f8f.5.1745407491320;
-        Wed, 23 Apr 2025 04:24:51 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:74b0:71bd:6dda:dcc1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433170sm18245595f8f.25.2025.04.23.04.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 04:24:50 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Patrick Williams <patrick@stwcx.xyz>,
-	Potin Lai <potin.lai.pt@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Cosmo Chou <cosmo.chou@quantatw.com>,
-	Potin Lai <potin.lai@quantatw.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Add support for level-triggered interrupts
-Date: Wed, 23 Apr 2025 13:24:47 +0200
-Message-ID: <174540748241.56202.13322099226080640371.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250409-gpio-pca953x-level-triggered-irq-v3-1-7f184d814934@gmail.com>
-References: <20250409-gpio-pca953x-level-triggered-irq-v3-1-7f184d814934@gmail.com>
+        bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
+        b=ebrwXvUlY/pJFfuBCXZEFQ/DzMvqfXxdnMiYuJBobPbRD9XCxNyfBWG1CxBvj1eXLM
+         QJ3fmx7Stfs3E+cENwdLOo+zkO+pxjTY8YobSkP1iEWotAvJXHO3R2HTjF+jtQ0T6xNi
+         D0nIiKSzCG9Z4CtvrCy9fjKN6EaZuxlzBEHpNVjxJfTRRVOQwvo9MrIUuHWyaEEYZz2U
+         c4X65uZH9NIo7xVusGyeg854wkX6n6N6tLtKc4ZqJ4Ga/YbBRRnigdZ7NDM0Fq2kzJ18
+         6MUncCBRNMss/98WINHBeQPi4PQ+q9LW8VZShknuwaEAIpvK0oBLjQVG4YY9JcoklpZ8
+         Zqhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWO3q/4yNYl2tAyvuOOQudYQ8r1Ok4mN5cUaIzOqSNi3nWUlfJernawDoXKoESeuNS+88xH1Mte4C1O@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpf2MhJhThbLTKK24qgkGbOjjs7fThxckKZYuUJ+W8VLqBE2cF
+	BgXNR0sLMsTY3zj8TnJjnRL9v9scmRJJOaWaH9a5ifXwYFGw4Xsa/WE/2jK9RQgkJiDvqhirIwe
+	nrJL+b1HE7m4C9dVog6FJklE7OwyR08fuIkSTlQ==
+X-Gm-Gg: ASbGncs9ypYt9K/BuB9haSoiuQIdtsbeH0nu3wkLt0WU5qpFhIm5J8GgsFuxLDo+jZM
+	qQvgvrb8k3VvMBp+ckJ5xiKrBZKhU6Cq7euYC/+gbuXkkLquo92nVeuYvGyqpgLQaiY5IDH4YoV
+	ir84l6/vMZordgGNU+YDhQ4eEa5G6BMn9EO/74sbe8/wBhLITIut4hwmvRc51OQsYH
+X-Google-Smtp-Source: AGHT+IHdOy6Vd80a71VsBDq9vq4NcDgqMFfcNVJIb9jbOrQ25R+2kyWaeho7dLvnMD7PoIkydcR5flY29jmHWUrtlnI=
+X-Received: by 2002:a2e:a814:0:b0:30b:971c:96e6 with SMTP id
+ 38308e7fff4ca-31090544994mr65437581fa.26.1745410841172; Wed, 23 Apr 2025
+ 05:20:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
+ <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk> <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+ <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk> <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
+ <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk> <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
+ <CACRpkdaBNVyXUwErHTtGBnUjh4+6Ojb6fu9M4E7LnRCu_Oovpg@mail.gmail.com>
+ <CAMRc=McFBAG9Gi3UBfsdoQ=78fL3sTK+ZMToXWGF=KOw6zwPiQ@mail.gmail.com> <CACRpkdaKBDyd44xPA_kBxR9HVFqfLgcSnd1UDHumyB=m5-B3xQ@mail.gmail.com>
+In-Reply-To: <CACRpkdaKBDyd44xPA_kBxR9HVFqfLgcSnd1UDHumyB=m5-B3xQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 23 Apr 2025 14:20:30 +0200
+X-Gm-Features: ATxdqUFPfchZIqBJZBy7vOjihOhPD3Ut0RnZdl-eHYA4dR5GVziVhoOlmDg3B_M
+Message-ID: <CAMRc=Mc9fMrx0bek1mE2kpoxXVgD7GATaeQWZnL1eDW5oZ-FTQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Apr 22, 2025 at 2:05=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> On Thu, Apr 17, 2025 at 8:57=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> > On Tue, Apr 15, 2025 at 11:33=E2=80=AFPM Linus Walleij <linus.walleij@l=
+inaro.org> wrote:
+>
+> > > There are precedents for this type of semantic IRQF_SHARED
+> > > is used whenever two devices share the same IRQ line,
+> > > and that is something the drivers have to specify, i.e. the
+> > > driver has to be aware that it may be sharing the IRQ
+> > > with other devices, and whenever it gets an IRQ it has
+> > > to check "was it for me?" and in case it was, return
+> > > IRQ_HANDLED else IRQ_NONE.
+> > >
+> >
+> > First: this flag has existed (as SA_SHIRQ) since before git days and
+> > could be considered legacy. But also: it's a bit of a different story
+> > as sometimes you get an interrupt and need to read a specific register
+> > to check from the status bits whether it concerns you. This never
+> > happens with a GPIO so I don't think it's a good argument for this
+> > specific case.
+>
+> But at the same time Mark describes that drivers using a shared
+> GPIO cannot really be opaque as to the status changes on the
+> GPIO line, as it may or may not need to update register contents
+> depending on whether the line has actually been low or not while
+> being disabled. Maybe this can be fixed by a per-consumer status
+> flag in the descriptor such as bool was_toggled;
+>
 
+The few use-cases we have for that use regulator notifiers at the
+moment and I think async is the way to go here.
 
-On Wed, 09 Apr 2025 23:37:30 +0800, Potin Lai wrote:
-> Adds support for level-triggered interrupts in the PCA953x GPIO
-> expander driver. Previously, the driver only supported edge-triggered
-> interrupts, which could lead to missed events in scenarios where an
-> interrupt condition persists until it is explicitly cleared.
-> 
-> By enabling level-triggered interrupts, the driver can now detect and
-> respond to sustained interrupt conditions more reliably.
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] gpio: pca953x: Add support for level-triggered interrupts
-      https://git.kernel.org/brgl/linux/c/417b0f8d08f878615de9481c6e8827fbc8b57ed2
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Bart
 
