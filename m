@@ -1,109 +1,155 @@
-Return-Path: <linux-gpio+bounces-19257-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19258-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17D0DA9A728
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 10:58:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 928C8A9A8B9
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 11:47:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2192018899C6
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 08:57:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7925A3B643E
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 09:45:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6F6B221FDD;
-	Thu, 24 Apr 2025 08:53:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D89C221FD2;
+	Thu, 24 Apr 2025 09:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvCaxswi"
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="qfXoCEr7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8F3221F15
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 08:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484828; cv=none; b=TQlw6yTD62vw2iiYKgkZwbpnTHh7Dfr3BiuWz0kkVUKsn0rbTnZPD7dNkeXSYJhWJb9GI/1yV4Nkhg78/t2NpVu7boZX7UY9Pvuyvpbzif3e9eMyldJvcOBR4h7KVO7dS+gftcCo6d0org9TpVUaIJuafVdPjmtejpt6a9gugXI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484828; c=relaxed/simple;
-	bh=h6xUHLkDXbn9hFTDw4xZ4U4OpXA7f7rhuSxwjLV2dJw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ShHAiU/kZUjrSzy91RE4PkPXLRsrKzfIweBxEt8zSRy0eKo5ztSKTLK4ZNpCG4RD16MWP8qZJmEf1QpYmuG3NlGsni69HgzbAcADxxkE+IXj1XN4BH6aum+tpjeuYllxNkVsmzKdeN8oRsu3G7iYV24cDpcEDAZpKtmRNCG1vAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CvCaxswi; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bf1d48843so7029481fa.2
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 01:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745484825; x=1746089625; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h6xUHLkDXbn9hFTDw4xZ4U4OpXA7f7rhuSxwjLV2dJw=;
-        b=CvCaxswiLWI9EWxjlYacWQSjYqixaun6Uebo8yEX+S9Fzg9jw2/i9eW2VZj8tRkq2Q
-         aKHFkTVugP5IqnNVbskjLhRk+R4PxlSMa8kRtE5Es3R/GdR0wTfywYpUvrcSyNVM73sL
-         Azl4qw+psqkmkBsXg2O60snci/PnFROUOuNAz2BLTdHj3DHappVZqh8uX7wU5+3T7okw
-         5NyFrncugigoDs7gcF7W1a3Fm5o/TeCYhxCi6VtvE4mAjwUd7Lb08Tmnoh65Pv65MVUx
-         yHs5/l/Jt4vIqS1x8JmaYeExe5mMdSspIuY9864Dd5ptxSAoZ3Nludy5D7XjL3NCOjPd
-         QNzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745484825; x=1746089625;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h6xUHLkDXbn9hFTDw4xZ4U4OpXA7f7rhuSxwjLV2dJw=;
-        b=aLUsgXc1tHhzYj7TTfFtXYTDLZafVnMQlw0EZ7Gm0nYYmcUYU762qme6meX/libBMc
-         AbghqyzBQSkHLv9GAWBkWjsHU7eBzxMqeWKHgiKnr1r0NdCfaEaKlRFwJF6zOXWpDXRx
-         4e9hfM5D+lBDSYCL7XQvASqCJ0BMa+Mq+WnXKZQoQTb8OvMiTkPeUhjVsAK08rNFwOqG
-         mp/DwbvTcgjLndUP1DRiBlcy6ACadj0TG/g88Q3LVsy4eKDpoIyA8kAgqegkalue4jiY
-         ldw08NUNT2CX3FT90GxRfvv6PWkJxFdNRPzjSq1A6nCq/GvOdTUAu7KLRQ52fdHaIoXT
-         hLKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNDX4oIvwnZbTPU31YtZacSTYSUBKaYZ1zvMqpWSHQcXa393C83WMgpV2HMTEiuR4FBv2vcKhqp927@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvWedurBlcXUgygB55T/pu/2bFjD2jt4lwz4n984ILTtyfwHg8
-	N1rVKqjXOHBsaM91ZZEXkRGzWYZ/ZrWFymA2XVZ7Rfiw5hyiSb+n+eCemDMHJpHSfd7U3lsfUMz
-	FZ6+56RH3d0hF9OMAOfcGSHl0W5xIah6cCkEsmw==
-X-Gm-Gg: ASbGncsO1T/6xfLMg1OvUdjSlzeEN42r5Zi49GwjAWaKI2RbpdTWvfU9d5O7SZBbWLz
-	qiuUeTNgz8aKlS6uTzrslPRkVBpzV5F+cIW84LUQ48MSkrWt/EliXbFkcEuI92OvwolS01LgEIY
-	wLmXeymuwct6eXHmeTvzy0XA==
-X-Google-Smtp-Source: AGHT+IFd6o2V1cDvfxchwTZEaDmypkAJ0u4hlPv2if9D2Y7a8wVhtGISsPpquAIRqMziQ60KxwoTpx35yBhShkFLhuw=
-X-Received: by 2002:a05:651c:993:b0:30b:a20d:1c06 with SMTP id
- 38308e7fff4ca-3179bf49914mr6039361fa.0.1745484823463; Thu, 24 Apr 2025
- 01:53:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DDC221FC2;
+	Thu, 24 Apr 2025 09:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745487533; cv=pass; b=NX/BoiD75iDcxvqUltN/rXLPqG3FsRHkwbs0t5Z9v/Am6/LTG/dwgmu7SeAjKCD71ukG7JKo+YY80DwvwSD9jFvPE5z/sp7fxtcuNM15kYc9L+khqyL4e0xRJDbnTOIea7kdbzYlmE6zsujw5oSd8CKQvrnB70khAFfBJ87QhvI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745487533; c=relaxed/simple;
+	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZGOH46mWuHZYpdivGEW2tTxg+WDr4tE9aNuO5PdoO2CQi7LHhYGkp6FOHgbnDRzGfadRS/u8PAxDwvqiVeGfgJpOGTdSyBqGd1kp2TXsx/jcBw29oFAU17XrVPFJbvpgdLxtr2oLxCl/gcnvO05pHjY/f6ZFIVkGZfYVMsxJQag=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=qfXoCEr7; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+ARC-Seal: i=1; a=rsa-sha256; t=1745487507; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=eWHXAzgrAP0yaKWz/ozs7h3vD4xkghAbBCljuFxWvbfTHCg8bB7O20Wj5Cey7zbwD83bKeATVCQmrgXoymM6Lya2UtsQN7MVx4CMPE2jlMOq7qxFfYhlsV1o2l6RCHhvsRBHLBCJ0YL+0XggR/jwNUTdVAwcSBp5SQRIQEIOGPE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745487507; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=; 
+	b=DHSi6PJJSSdsBNx8Q6gcPlWkCrtC3eJ270kQ1qKiOVODN/qZtPTjqsNtaLHCu1bespcQIaemquGNuv6PKmes98e9jPAOOG1Sgb/ASy2rlDQS0Ubm47nHswRiTtaTHOkv6sUDhR4nh7WSmK9T9NmvTnPXoGtJ8y2MVKmPH9s7E7o=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745487507;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=;
+	b=qfXoCEr7FQ9msjMMk+80tOQFcRYAJOkVcDSabeIUZoB/V4FpBb26CTdSda4LE0yK
+	fo9HylKuV1bD8f3fcPUrREMovKRdpXoD0SZQvglA489xMwzcX53UPrSxIX0CFg6WP0R
+	InG3nz1h5fZPfi7kHS7WEdueULDPnUm1RVrr3hVHIRicF9XBKTIBdgEAEexu1nBDC27
+	aJ0P7cJfdzmwXm1ETWv9rcb/Vsd9WbLzUiT55gu9M7m7ZUzDuF9bZCPvg5oITGjvRnx
+	k2U+NrEc1kWJKSqgl+ClkD2WXgVaPMyEPvMhSNqNQaQxHZs07iRaqH3R3Wo9/4iOHTA
+	G6TModPKfA==
+Received: by mx.zohomail.com with SMTPS id 1745487504141154.190763735755;
+	Thu, 24 Apr 2025 02:38:24 -0700 (PDT)
+Message-ID: <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
+ PAD_INTERNAL_* virtual pins
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
+ <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+Date: Thu, 24 Apr 2025 17:38:16 +0800
+In-Reply-To: <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
+References: <20250424062017.652969-1-uwu@icenowy.me>
+	 <20250424062017.652969-2-uwu@icenowy.me>
+	 <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org>
-In-Reply-To: <20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 24 Apr 2025 10:53:32 +0200
-X-Gm-Features: ATxdqUH1x92NvEG1VXzt3NjeT_OyAU-iOFZq_KwpZ_kjnPdsk-aLLUsyLsYPhSY
-Message-ID: <CACRpkdbMzKOkrxmWUuC-ORHg5gBdkmwrsbp4daA0aGnNs07bxA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] powerpc: convert board-file GPIO chips to using new
- value setters
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-On Tue, Apr 8, 2025 at 9:21=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+=E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:51 +0200=EF=BC=
+=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
+> On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> wr=
+ote:
+>=20
+> > The JH7110 SoC could support internal GPI signals to be routed to
+> > not
+> > external GPIO but internal low/high levels.
+> >=20
+> > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
+> > virtual
+> > "pads" to represent internal GPI sources with fixed low/high
+> > levels.
+> >=20
+> > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+>=20
+> As per my other reply in the previous post, I think this should be
+> handled internal in the kernel instead using a tighter integration
+> between
+> the GPIO and pin control parts of the driver and utilizing the
+> gpio-specific struct pinmux_ops callbacks.
 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. We're in the process of
-> converting all GPIO drivers to using the new API. This series converts
-> all powerpc board-file level controllers.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Well I cannot understand this -- these signals are not GPIOs, totally
+not related to the GPIO subsystem (because they're only pinmux, not
+related to GPIOs). This is described in my previous mail.
 
-The series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+The pin mux of JH7110 strictly route its inputs to its outputs. For
+signals from other SoC blocks (to external pins), the registers define
+how OUT/OEn of IO buffers *are driven by* the signals; however for
+signals to other SoC blocks (from external pins), the registers define
+how IN of IO buffers *drive* the signals. (This follows the generic
+signal-driving rule that one signal can drive multiple signals but
+cannot be multi-driven).
 
-Yours,
-Linus Walleij
+In addition the situation I am trying to handle here is an addition to
+the latter part of the previous paragraph -- in addition to 64 inputs
+corresponding to 64 GPIOs, two extra inputs, one always 0 and another
+always 1 are available to the pin controller for driving other SoC
+blocks' input (as output of pin controller).
+
+In fact this is why there is ` + 2` when calculating ival in
+jh7110_set_gpiomux() -- the first two possible values are for always 0
+and always 1, 3 represents the IN of GPIO0, etc.
+
+>=20
+> This solution looks like software configuration disguised as hardware
+> configuration.
+
+Well this solution handles these internal wires in the same way as
+signals from external GPIOs, excepting specifying special GPIO numbers.
+If you are against the principle, maybe the current already-included
+GPIOMUX system of the StarFive pinctrl is to be blamed instead of my
+small extension to it.
+
+I must admit that the current GPIOMUX system isn't a faithful
+representation of the hardware because it's a pad-centric setup instead
+of a register-field-centric one, which isn't very natural for input
+signals. However configurating the mux in such a way is against people
+reading, and we're not able to break the system because it's already
+there.
+
+Well in the situation that one GPIO used as input drives multiple
+internal signals the pinmux looks a little confusing too, e.g. the I2S
+clock situation I mentioned in my reply in the previous revision of the
+patchset.
+
+>=20
+> Yours,
+> Linus Walleij
+
 
