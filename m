@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-19273-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19274-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 823E4A9AE7B
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 15:09:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2CF4A9AE83
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 15:10:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 638347B2908
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 13:07:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C2CD5A250B
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 13:08:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE0AA27456;
-	Thu, 24 Apr 2025 13:06:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1F1D27FD50;
+	Thu, 24 Apr 2025 13:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="c1f9R+W6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tkwbALMT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C06717578
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 13:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C101327F747
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 13:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745500000; cv=none; b=DtE56tkGumUaYt3nXnAySLKNTux1UM4CVmHBdmanyzbppBhlSlC4sEnXpD37EvjrF/8iRh6IkpyQ8nL6eLEdrTz1/854Eh+YZKo3e9aLm1En26cl5aW3jCgLn9f8TcOPzw4SA2DxvZinmMZQTZDEvAf/Lli5YymdlUIlDEYXOV0=
+	t=1745500001; cv=none; b=t81fJy3fUQsQrXqVmzbesJWmPgomvB3dehxq5xn4Fto5MYzcLhxx4798veoJrfrdvLfp7I6NZ+3jBxCB40+8wRYGn+ttWC3EMOL+nAdaTqCDuRWb2yjG4/xUZCHX38LaRER4xm8TZJzLwwNKhLyzM/2P/NrWRa36m8ZtY3opN1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745500000; c=relaxed/simple;
-	bh=1lcu/hZI51lv5eCbcklnWaY+olahIvrkWxpxSfc/o5U=;
+	s=arc-20240116; t=1745500001; c=relaxed/simple;
+	bh=mWDw0hWwm0dea+mt+Eev9+17u4CLGz/EJKscfliQcpk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p6oGzxgAIkhMcOuMOmTODFWCX2kFzMCtP6k9wluv5e3KUdCOzbNE8RMFwuJxovsolroyUqecYwFEJBacUQrQ4LCQsr93xjWTmd9UcQkPtb0AwKFWxAmGO7TafnU/7i3LJ3JgqqDCN0BqD08+W+o0V3JMPR8XZcELUIkPPjcQpC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=c1f9R+W6; arc=none smtp.client-ip=209.85.128.46
+	 In-Reply-To:To:Cc; b=bJqNdox1p6n0E3M5sPHVt7leX62VeKPlfCpcjuZBMj184kJXfP7awnAgnYzmp4ekq1JZZcZADvxq4xm4T+11zQbXJAyQkHQooM488A/TUWwomNWs0UugZccFN+6ItE0X5NRYf+UDRHuRTGvU6UoeJlKYQx4kfrjTwHqup+s7+uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tkwbALMT; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso4538145e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 06:06:38 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe574976so6938315e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 06:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745499997; x=1746104797; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745499998; x=1746104798; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IviQGI5EQTn/siTes4L+J7t7qyt4gOGyvxGWOmyVk3M=;
-        b=c1f9R+W64NXeG9Zg2FFrA2dCX4OyEceEPtvm95Rw0ZbYiHtFR98GnaUtsvmOC6eRlf
-         bCtdSmLQ+5C/4BgPhqFDXrHxNigXPvbEUgFuKRswChI27+7V6IUYQrCYWC7hAQ+p51fg
-         kF8LyoKTYohrKV8+Q7p6mXSAHXs8VedwPoLJbGMKxc/dtAtKTMRhqY4X6c9XCx7wHd8Y
-         NxeFfCBW1EmYR2GZzLphVfaQ7QXZRysjC3Hz9qiED1H5Nk3vzDTttU9hE0bpJMQ3tqDb
-         BRrKphJEy278fTYOWFdAf/QzySBmLtRn7IEorAbNMniKe3hlKk0YJhTdUr0Wrtjr5BSs
-         PVrg==
+        bh=VRx+M24c9PeAFqXYodIH+XSda/6z+9fTtNDSYkvn8QY=;
+        b=tkwbALMTniQjDIjCysGe7SGJd4zEuWbpLuwSo/8vVkWbiCQtRMSgFR41oOpc7qWISJ
+         UW2X/hrPbn6W7RqVeOC5N4NkZyGagU2CNZfyu91YLmq70hOMFFdqHzBvJGLrlMtxdtvC
+         uhFwqQvlvm+40LskscDkhQA4x1hNVp3Jn6SWe/rES+j7q+EtbCb9rob0eHn5iYT1f5Aq
+         3qchOtq3cshhUXOB1bgcvC1KXxFUejG8x4XEO9Ny2Ht+hcUO5KlTT22mDtuitUlSEq83
+         uy/pBz+IhOsHhsmmuPCk3PmuBsfAReia+ErjbeUbkkUFOz3xEYrV1t3c0sQGdkcD1AnM
+         6o5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745499997; x=1746104797;
+        d=1e100.net; s=20230601; t=1745499998; x=1746104798;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IviQGI5EQTn/siTes4L+J7t7qyt4gOGyvxGWOmyVk3M=;
-        b=g/8yqAGCp2GXeFC765B4fADiE24z8gMIwWjqYAW9Sl2gGvSYL39zcWt1xi3i48pFN6
-         yj3O12vOPBw6BP/SHpu/XNXAa0knUx+PtQOUCjRJCZl6M4kNcWUGC4WBCMKgXilkDO42
-         8trYwSWOAS5+/xMjMZ+XXYAazbikm0F57Uw7z9Vb3QXpWNtT7WiY6KyuD/5St0JAmQGh
-         1rPmE5aBpnHhppyrCNxpbju2vetMegUap3/3Y03Krl+uCdOa5PiLW+jEghBlFuvADa6x
-         EwQ7U4wx8s4GCqmaNF6bkrwnIfU1695znDoaxUWVaB2tKW41ZPgBcxLUew2q9bKQj6KS
-         Hwsw==
-X-Gm-Message-State: AOJu0YxsXxFM0FyitZzLus1JJ/nNIFx4I+M0yYNP+bqqMasM8Jcd/jJr
-	dNsuy5673h/twV1oOCgzjrkB8xy6OIomwJR2Grkta4iLzvLjcbfyLzzYzS2qkmQ=
-X-Gm-Gg: ASbGncsVXPwNPALJErmac/IfOoY3PhhfZ56uSpEDt94btudUOJrMLSIyGzlUp1mdI42
-	wy8JcxQ37WgYJPqwcXz7/RZP70bCEWUm0QN0zxVfy/6hTTcGyeTspWol76PVnk7pS6RFAvhkTnK
-	9geqJILbgDHMTI8o2e8RgYaQR12wtEDPBT3WgSMLXdWJ1vTxnD3PaH0ttKfu5APAn1VCnvV8x7t
-	c99+EmyTY4SPbeHXmDm7wyb2hj9sonCez9OPZ0XUuIJqGXAKJDlzEmNda4tkG+8KKOaYJim3b5I
-	8CQA+xNAI+aCqwHdxzm7pGS3UDyJM9FT1RWMV3jgkokD
-X-Google-Smtp-Source: AGHT+IGZL0W3B3x6zTwb1Dsqb9IhqD/k3h8EgHcbWh10GnxLjJcbB4WW2qCyHYKlsVmlw944qxpLLA==
-X-Received: by 2002:a05:600c:a405:b0:43b:cc3c:60bc with SMTP id 5b1f17b1804b1-440a19b662emr918055e9.15.1745499996590;
-        Thu, 24 Apr 2025 06:06:36 -0700 (PDT)
+        bh=VRx+M24c9PeAFqXYodIH+XSda/6z+9fTtNDSYkvn8QY=;
+        b=R1MvLF5eZd942UQwqQYI4MkZfrBmzwFaBEDNXazVYiqYzRQLrPI7A3ArrRsEOlqzH8
+         C9pohAf3aaHm1lj7SyLNo15BP44I22MttCs2QtNmac+ybdU3azzI9C7yiH6umzB56iNX
+         zk6pQfbYXnRSaQtXmgCn5v3wUz8Lq69gFljoChDl51+Aq7iaZvrPSu6daWrQhmQhomrS
+         cqcdMMtUIGZegMxxOdlCEGGjPuIWfYjyDayrFqxX10CbHPGkB3QzOtlO/rE/bboYlB4X
+         E4gINcY3/K/kjpnyYA3v9HVGDXHFImkmXUKFo/OmEKL51cVNbfmVEF2+YHlszF0jUUmz
+         2VFA==
+X-Gm-Message-State: AOJu0YyDhost44kqAWHAnhOwwwx0wO8/IaJtmJ2TRhOVmF2pJEDeFr6h
+	w+chQFSKDEX7TCfhzUt2JI0g8SJF+vQUla2XyyabY6o/UUnvmfJKCL4i3OlCTmw=
+X-Gm-Gg: ASbGnctEt5oSeVAofSWaglmAhM1QnzKAHvi3G92xhpOup9mOjGotxNPBhHDIZFZxxxD
+	42KWMlOo0n1aTnw2pvGN1ffvl/r26igxungecuz/rHyktICp/6UPH1umFC3yKYqpTfiigoDDj6o
+	WZDtfwDmpPlhR3XABYpSI3LNJ4S9/h98uToWfqMT4Z3YmI7vx28+6ZVVSj5BeIwawaX2KZtTF2z
+	hGnagER1eX8i0/rI+/LmQ0fmxpQo75y1NjiY4FK7KvPcw2U5yAR+sR+QIFStlN4fiEIWlqaBwvL
+	/YY8z8v+dgt60LiQRAQn91h/YJh7aNEbxJsCFCkKGq7w
+X-Google-Smtp-Source: AGHT+IEbrPTLxm6ibinThR1er+K39UiqDTz92Njoxpi7oSzYmDWVRWYcMe4SIKNlr7DX/VF4eIhsoQ==
+X-Received: by 2002:a05:600c:3496:b0:43b:cc42:c54f with SMTP id 5b1f17b1804b1-4409bd18487mr25023475e9.14.1745499997741;
+        Thu, 24 Apr 2025 06:06:37 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:6266:7750:57ce:7cb4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2ad175sm20427485e9.24.2025.04.24.06.06.35
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2ad175sm20427485e9.24.2025.04.24.06.06.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 06:06:35 -0700 (PDT)
+        Thu, 24 Apr 2025 06:06:37 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 24 Apr 2025 15:06:27 +0200
-Subject: [PATCH libgpiod 1/2] bindings: python: add missing newline to
- pyproject.toml
+Date: Thu, 24 Apr 2025 15:06:28 +0200
+Subject: [PATCH libgpiod 2/2] bindings: python: make licensing information
+ conform with PEP 639
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +83,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-pyproject-toml-pep-639-v1-1-8150d3d807b1@linaro.org>
+Message-Id: <20250424-pyproject-toml-pep-639-v1-2-8150d3d807b1@linaro.org>
 References: <20250424-pyproject-toml-pep-639-v1-0-8150d3d807b1@linaro.org>
 In-Reply-To: <20250424-pyproject-toml-pep-639-v1-0-8150d3d807b1@linaro.org>
 To: Kent Gibson <warthog618@gmail.com>, 
@@ -92,44 +92,55 @@ To: Kent Gibson <warthog618@gmail.com>,
 Cc: linux-gpio@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=774;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1137;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=7N+05yOD667aLwIxBZsf+VeaZ0gSTB3y3HzBIyqo5tk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoCjdaR4Rv5/fm+M2BC0LttgAAYiYxTh9fiOGgg
- a2hfZQ1JgCJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAo3WgAKCRARpy6gFHHX
- cnHAEAC7gsOaAqms4uj9dmVaW4X5yN0GGsl06i8TYHg71lCE7h7J0CRWqLDfLDy/+C9A9HygHxi
- JYumRXD2HaunERvleGL5XOaAfbx0Z/P7yJ6xGEU9Y5+mYY2QXcBD5jc56WE9Avnzcnvpaw5wETC
- y5SDFO5XnTOiRzkGhpKhsfWDMz+IfgKOXBSTH6jfDMvDhSp55wKO+sFjCmfyA+h8e+RehW1E5/2
- 2UYE2e56SgmHD8kPHu4fjO6hBAT2OTW6CCT63wQ62sxePjyH4ST0Eh/SMCUL+4d1DwsgQxbdu4g
- H+T3VELyqEQj424X5INbfXfY5H5vQ/EcFxvPjIvehCN/TXbU+5LDDZOjpxv1kpafqsDl31mVjGS
- zMO1BhPqu1CbTM6TEDK32uDjvL32UlPoGrNMbazjnx0WjRc1yY59xu1TR2DdgGlA2XGw1VF34mJ
- 78h3CebIKNz/XRsC1hahPPCmXub36VO66sxhQsHU+zyIMibToCYSZB6vy13TDOMPCNAAxeK8OKN
- t6vE91FvkaNW0aUvXo9OPcxOQ7JNfJlH/OAXgrszTVQ2qlG7+SWXEa5WNP0lrK+rVintr5kX/2a
- wMIBPYZQ+CRmaZ97o7w6efmKTr2ti9x5XM07IPePDV6Uoj0XN4rLs/HTIB/IBzSOacHPWbRLAp0
- MApeaXg61Ot584g==
+ bh=AqbKXcZf/JAhk8SQkPA7DvRddQZZSHFB4MKxTB/AuG8=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoCjdav+dGPCenDmytq73XcL95VO+k0IuLt5dXp
+ D5w+s3R4m2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAo3WgAKCRARpy6gFHHX
+ cqRMD/4p3c9UgQLOdlqsncpD21vRt3p1+sAUsdaJsNu/leRu6GaT+VoiUokYQdYHYTsuFJV3Qoy
+ u4x5WxOS8JZpZakt9L/WSNbxOFprATrhOZT9le+U/VZW8MWY6M8ctPYeVUTF0UpILmzr/8NY7rq
+ vNFT9hy4Y7udziroidgz1PU+0osE7iku3wVxbWVcbCr9pktgt814yc56bsM3uzkjWm8/l1bVZWL
+ Fii5W9HqOQHyWQJd61wYXULUPBE+EnlcPmvGSgNDCfVFkd5NHFFA2Ie7olwmYg8PgXZgFbmRhIY
+ uKGpWz1QZcaBw/UBhwE+pruml+fnBo4/nMInLKram4vx+Q3i0gFSK6RvuiOd+kMmOeMs01IhNl4
+ q8H/z0ua2gm2ESA3yaDeAoViXxaOlhiBO0kt+7+GqFl17ukOQ4N54i0JH4cpCL8e0nbzKScFmL+
+ cTUp2SIq2qp8wMlNQ8DwrKxK1UpFB+JW0bu4PYdiiMu0Os/bVFvAtSj8QHuzvqIjT1LT5u9/NrL
+ TvW0LBqLkJWQ1C2TuqOBIBRpeKOqScnUOvxjn7kr4hy4xh8TPpmtxXG0kqhywnA2gMrOFQ8X9Py
+ 9hS+1QUwVYbUH7QyvPxnZtZAYRtTvv2yeZEl4Fw0aPdT8snj5BPm5j+rlmrzRdoP16y/p2bw0Q8
+ Sp9YcDspN5RXBqQ==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-There's a newline missing at the end of pyproject.toml. Add it.
+Follow the PEP 639 specification and remove the deprecated license
+classifier as well as make the license key in the [project] table a
+top-level string containing the SPDX license identifier.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- bindings/python/pyproject.toml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bindings/python/pyproject.toml | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/bindings/python/pyproject.toml b/bindings/python/pyproject.toml
-index dbc0c7d..8f025a7 100644
+index 8f025a7..f0f8c29 100644
 --- a/bindings/python/pyproject.toml
 +++ b/bindings/python/pyproject.toml
-@@ -79,4 +79,4 @@ ignore=[
- [tool.ruff.lint.per-file-ignores]
- "gpiod/__init__.py" = ["F403", "F405"]  # ignore warnings about star imports
- "tests/__main__.py" = ["F403"]
--"tests/**.py" = ["F841"]  # ignore warnings about unused variables
-\ No newline at end of file
-+"tests/**.py" = ["F841"]  # ignore warnings about unused variables
+@@ -10,14 +10,13 @@ name = "gpiod"
+ dynamic = ["version"]
+ description = "Python bindings for libgpiod"
+ readme = "README.md"
+-license = {text = "LGPL-2.1-or-later"}
++license = "LGPL-2.1-or-later"
+ requires-python = ">=3.9.0"
+ authors = [
+   {name = "Bartosz Golaszewski", email = "brgl@bgdev.pl"},
+ ]
+ classifiers = [
+   "Development Status :: 5 - Production/Stable",
+-  "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
+   "Operating System :: POSIX :: Linux",
+   "Typing :: Typed",
+   "Programming Language :: Python",
 
 -- 
 2.45.2
