@@ -1,155 +1,137 @@
-Return-Path: <linux-gpio+bounces-19258-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19259-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 928C8A9A8B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 11:47:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F056A9A8B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 11:47:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7925A3B643E
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 09:45:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD98C1B84562
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 09:47:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D89C221FD2;
-	Thu, 24 Apr 2025 09:38:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15A05221FD3;
+	Thu, 24 Apr 2025 09:39:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="qfXoCEr7"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L20d0vEn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DDC221FC2;
-	Thu, 24 Apr 2025 09:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487533; cv=pass; b=NX/BoiD75iDcxvqUltN/rXLPqG3FsRHkwbs0t5Z9v/Am6/LTG/dwgmu7SeAjKCD71ukG7JKo+YY80DwvwSD9jFvPE5z/sp7fxtcuNM15kYc9L+khqyL4e0xRJDbnTOIea7kdbzYlmE6zsujw5oSd8CKQvrnB70khAFfBJ87QhvI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487533; c=relaxed/simple;
-	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZGOH46mWuHZYpdivGEW2tTxg+WDr4tE9aNuO5PdoO2CQi7LHhYGkp6FOHgbnDRzGfadRS/u8PAxDwvqiVeGfgJpOGTdSyBqGd1kp2TXsx/jcBw29oFAU17XrVPFJbvpgdLxtr2oLxCl/gcnvO05pHjY/f6ZFIVkGZfYVMsxJQag=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=qfXoCEr7; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-ARC-Seal: i=1; a=rsa-sha256; t=1745487507; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=eWHXAzgrAP0yaKWz/ozs7h3vD4xkghAbBCljuFxWvbfTHCg8bB7O20Wj5Cey7zbwD83bKeATVCQmrgXoymM6Lya2UtsQN7MVx4CMPE2jlMOq7qxFfYhlsV1o2l6RCHhvsRBHLBCJ0YL+0XggR/jwNUTdVAwcSBp5SQRIQEIOGPE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745487507; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=; 
-	b=DHSi6PJJSSdsBNx8Q6gcPlWkCrtC3eJ270kQ1qKiOVODN/qZtPTjqsNtaLHCu1bespcQIaemquGNuv6PKmes98e9jPAOOG1Sgb/ASy2rlDQS0Ubm47nHswRiTtaTHOkv6sUDhR4nh7WSmK9T9NmvTnPXoGtJ8y2MVKmPH9s7E7o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745487507;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=;
-	b=qfXoCEr7FQ9msjMMk+80tOQFcRYAJOkVcDSabeIUZoB/V4FpBb26CTdSda4LE0yK
-	fo9HylKuV1bD8f3fcPUrREMovKRdpXoD0SZQvglA489xMwzcX53UPrSxIX0CFg6WP0R
-	InG3nz1h5fZPfi7kHS7WEdueULDPnUm1RVrr3hVHIRicF9XBKTIBdgEAEexu1nBDC27
-	aJ0P7cJfdzmwXm1ETWv9rcb/Vsd9WbLzUiT55gu9M7m7ZUzDuF9bZCPvg5oITGjvRnx
-	k2U+NrEc1kWJKSqgl+ClkD2WXgVaPMyEPvMhSNqNQaQxHZs07iRaqH3R3Wo9/4iOHTA
-	G6TModPKfA==
-Received: by mx.zohomail.com with SMTPS id 1745487504141154.190763735755;
-	Thu, 24 Apr 2025 02:38:24 -0700 (PDT)
-Message-ID: <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
- <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Date: Thu, 24 Apr 2025 17:38:16 +0800
-In-Reply-To: <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
-References: <20250424062017.652969-1-uwu@icenowy.me>
-	 <20250424062017.652969-2-uwu@icenowy.me>
-	 <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708FC8634F
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 09:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745487589; cv=none; b=FQhu87NusSlqZsjxngnscPqzJOGy41aku+i+y2LbXNl8GKvdsrHp3a83z7+zP1ow4R9rNfSad4u2dHIwx3TVzyklhGI8jBjk3cBlUeZOduuhmxXK+D9duLnbeHDLHevs1HO6zBEb/fmewKyu7Lt5a5O/U5A56scchakrZjUDLy0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745487589; c=relaxed/simple;
+	bh=uLu5qq+fu6nJOObQPQvzr891FiZ0IVNq6dpcmUuw9EE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q5tQRFig5wSkBxQ9SUNGasvCV3qtsbUlqREbWD3u/th2+BkL4qoBbXiqPztS+tHs/jsYAd2GR7XVLyEUwoEuUlDaNUzk1vRp8k/WGjkEhwpgfuyFH5Fc5SUvtl+Qvbs2AD8aT0iY1iDpwszcxyTiwUdQKIgLwG88uePETBi5GVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L20d0vEn; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F7sZ010242
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 09:39:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=4dGjO56yZ5rnlYsrCbSawbQj
+	IoRYwOqdiOvRK7aRuDw=; b=L20d0vEn2+o/Mnh5N8rHWG+UItlv3JpyyEfm3y5y
+	L5NTKIamb1n0+cI1PM6aPf1kpqx+p5BsI007OV/mAyj2ITqZ0BMP71qCMEQ3C6En
+	V99lBkho+oJ1v0pw2rbpXCjiPNL4WP/ChzZGyyWmc8jXyl7xX04yLUz8ugdnee28
+	W+8RYTUeMeqeKemcceYT9eAxUQQPN9kpNRLM3ZWgfysOWQjDoOfY1Nt7kb4iuzNS
+	ZuUDFQCWPHTcrtFq6/7eWYZv2Qu8yvDu26VmxYVI63Y2QhDwikInXLVrZNfe32t/
+	/F46b1emKn/0xgBJXOYiX27VfPn8cXXOuISwlts4wFdm4A==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3n0rr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 09:39:47 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c579d37eeeso125643185a.0
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 02:39:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745487587; x=1746092387;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4dGjO56yZ5rnlYsrCbSawbQjIoRYwOqdiOvRK7aRuDw=;
+        b=a+RSHDS6pKuJLWoec4HLKUqp57Fqbpb9GlG/C5WJluFZi9nz44f/4zrNrK1tylOMPR
+         bkf4jhLozr5kZl4ITz23N6kDmJ6tSDpzPi6dO4JNg0frZuyKwAOyElbToM64OUCXhWdm
+         nx0lGza7geTa9/FZmA41ni12LipTk4mR0XavA99Jg5m5yc9BID+NFA8/SZJT+zHv+PWh
+         AH2hriqpwQFCjfbx63NrcXqqwVaw6kMmOgXP0lkOaoeik8tvbV4cSXn0aQ/zf4VsI6QU
+         A0N8Jb5Tqud6LhPzv2fx6grNEfLKoin6rKyZWH5AE+X/7w5tAPTurz6Hfg0Qkatavsg/
+         yb0w==
+X-Forwarded-Encrypted: i=1; AJvYcCU+EcQmtqo2QuuD3fN/MApw+lW0YmrXQ/Jc1rrWYolR59s+4e3dSk05bY0tC6KxBCDI3LxvVcAlKlIK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcz+vy6Onc6EP7tnkfWYnH8A4N+/iT1oqbdl2+xtlRn7en0YqX
+	rurZBNVHDs3mdVBf+6h8v+ea80xHm/ABaTsraL8eDnwaJ6TWtx1mT0ZJz8Jr+uY2NBfQGRBEnoJ
+	udvDx5UCljNpOh8UcxV6HYuRtVWAD8Gzyosa/l4C8l2bzStkbJIH8no57PteI
+X-Gm-Gg: ASbGncvcdkCtRfAXrCtOBDibFKwJJkk6+OZrAVDSU+BeXNXf1mGFo2JMnBg3I1E+D2Z
+	WxWlxejobzdaPFs0OHhRUa8F3EMoo5YYG4b9h9rCiAYFiEGOlNnihDo1QcvLwX+D1bXnXpwN9Nu
+	rsHR0sx50eDYPm7mQk6Bgqd9CchUokwsk4tH1L7F2L5DHyALHRyUtqC33GBlfyqlu1+9KsGZz/v
+	T0/LGtjGtcDV0vQzGLbIAQzS0ioKjuHLea6Z/ACJKwW1ftK8KunqX3SARL0xAzhSfHsVEE2mMQ9
+	KgkQam25Zgy/cHwOfQGctnhRmdE1O/5efs55VzQNHiOxbURyZi+JLUP2u3R66GbAV75Lc3I0//s
+	=
+X-Received: by 2002:a05:620a:438e:b0:7c5:53ab:a74c with SMTP id af79cd13be357-7c956e7a968mr299385385a.10.1745487586706;
+        Thu, 24 Apr 2025 02:39:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8jnKxL7E7dGye9CmktSI0DSfoKsAN0FjpOYzJxhooQSxBRnV8KWWUfkIDlgbYRG+Pw0Rmdw==
+X-Received: by 2002:a05:620a:438e:b0:7c5:53ab:a74c with SMTP id af79cd13be357-7c956e7a968mr299383785a.10.1745487586416;
+        Thu, 24 Apr 2025 02:39:46 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb7f1asm169674e87.237.2025.04.24.02.39.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 02:39:45 -0700 (PDT)
+Date: Thu, 24 Apr 2025 12:39:44 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Melody Olvera <melody.olvera@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: Fix PINGROUP defination for sm8750
+Message-ID: <r542y5lcoymvykl5fdayjocvysrvzli6xlhcqjrwlpszucmaoa@ewwbbpynggnl>
+References: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: jWQXTyKahHGgMtyCbSIZ7_OcBj6DxV9c
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MyBTYWx0ZWRfX/uiku31uTrOe uX3ULNjFPkIB5gB7Bco2hiNEZIFvLMYaLSV6TE1mhEPrr4Eg08fuTE2a9TxJwiIRP7/udQyggfE PFjCoAQDEE3LGgpzBVlILPrejyldIH5mU0bZRr6BZffXYxVKO85at44smKBNMLlXsxabf2AlRYO
+ xbdDLrEVv2P4tU0ahskL9naWSwfgBmcBg25iXmxeUWDmoWLKHW61SRyQvWlQvlA77mWSEEtnIPV wShf98mCPtenMXTIpjuu87+vhYRgG0zBNlj8UOUnQBZEuxb+GE/SWxxiilWOQzmDGNnJBnpJKE3 wjHDR+73hqIOu5rv3iS7eaNYQS0bVsDn2BSvvFf0i4c2VPrwjocpuggZHa8LTmRC/gnvIGqFGE0
+ anvEohJa84P571bWJh+KjKP3b9aDV+ik2kC9ZV9Kvcbtl1NicDaEkhzkKWD/qB4q4uirsRYm
+X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=680a06e3 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=hy4lFNwNYWihUDc_pIEA:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: jWQXTyKahHGgMtyCbSIZ7_OcBj6DxV9c
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=630 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240063
 
-=E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:51 +0200=EF=BC=
-=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
-> On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> wr=
-ote:
->=20
-> > The JH7110 SoC could support internal GPI signals to be routed to
-> > not
-> > external GPIO but internal low/high levels.
-> >=20
-> > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
-> > virtual
-> > "pads" to represent internal GPI sources with fixed low/high
-> > levels.
-> >=20
-> > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
->=20
-> As per my other reply in the previous post, I think this should be
-> handled internal in the kernel instead using a tighter integration
-> between
-> the GPIO and pin control parts of the driver and utilizing the
-> gpio-specific struct pinmux_ops callbacks.
+On Thu, Apr 24, 2025 at 10:17:10AM +0530, Maulik Shah wrote:
+> On newer SoCs intr_target_bit position is at 8 instead of 5. Fix it.
+> 
+> Also add missing intr_wakeup_present_bit and intr_wakeup_enable_bit which
+> enables forwarding of GPIO interrupts to parent PDC interrupt controller.
+> 
+> Fixes: afe9803e3b82 ("pinctrl: qcom: Add sm8750 pinctrl driver")
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sm8750.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-Well I cannot understand this -- these signals are not GPIOs, totally
-not related to the GPIO subsystem (because they're only pinmux, not
-related to GPIOs). This is described in my previous mail.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-The pin mux of JH7110 strictly route its inputs to its outputs. For
-signals from other SoC blocks (to external pins), the registers define
-how OUT/OEn of IO buffers *are driven by* the signals; however for
-signals to other SoC blocks (from external pins), the registers define
-how IN of IO buffers *drive* the signals. (This follows the generic
-signal-driving rule that one signal can drive multiple signals but
-cannot be multi-driven).
-
-In addition the situation I am trying to handle here is an addition to
-the latter part of the previous paragraph -- in addition to 64 inputs
-corresponding to 64 GPIOs, two extra inputs, one always 0 and another
-always 1 are available to the pin controller for driving other SoC
-blocks' input (as output of pin controller).
-
-In fact this is why there is ` + 2` when calculating ival in
-jh7110_set_gpiomux() -- the first two possible values are for always 0
-and always 1, 3 represents the IN of GPIO0, etc.
-
->=20
-> This solution looks like software configuration disguised as hardware
-> configuration.
-
-Well this solution handles these internal wires in the same way as
-signals from external GPIOs, excepting specifying special GPIO numbers.
-If you are against the principle, maybe the current already-included
-GPIOMUX system of the StarFive pinctrl is to be blamed instead of my
-small extension to it.
-
-I must admit that the current GPIOMUX system isn't a faithful
-representation of the hardware because it's a pad-centric setup instead
-of a register-field-centric one, which isn't very natural for input
-signals. However configurating the mux in such a way is against people
-reading, and we're not able to break the system because it's already
-there.
-
-Well in the situation that one GPIO used as input drives multiple
-internal signals the pinmux looks a little confusing too, e.g. the I2S
-clock situation I mentioned in my reply in the previous revision of the
-patchset.
-
->=20
-> Yours,
-> Linus Walleij
-
+-- 
+With best wishes
+Dmitry
 
