@@ -1,155 +1,176 @@
-Return-Path: <linux-gpio+bounces-19261-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19262-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05C52A9A9B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 12:14:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEF08A9AA7F
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 12:37:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92F645A3EB0
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 10:14:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A78F919419C8
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 10:37:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E1F22129B;
-	Thu, 24 Apr 2025 10:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D91F6221263;
+	Thu, 24 Apr 2025 10:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="k34iNYmO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KIDrYHXo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from aposti.net (aposti.net [89.234.176.197])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0021220680;
-	Thu, 24 Apr 2025 10:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D293C1BC41
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 10:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745489648; cv=none; b=gWoOo+H+Nkv4ZAh+nZuXhJseLliwHUl4tVKRqc+a8MJxZ6U/lYiUbJudSiwYJvF3B6zimyRN3qRpELt+mm/4nnERAxDFryTVDEstuo7ikU19opPSp/KPa8htgcRrfiSCB4ouwplPqpVIJ9X9XkLoMJf6P6abPoda/JE5fTvcmEU=
+	t=1745490676; cv=none; b=WZ9fLMb6zAXM3y06wDwIFh392ujKZXiInaJaKuIf3Hpw5xNiCONhzTRqW8AJSiNpvFgs/dFrOec4mzOwU+9lB3MrOEMtMfAuUGTiItAwP01lu++IZzb0DlWcZYWYCujo+AGc/7su+5CyXqUF8Vu2rbESvtSNUJIS1J97yy84C+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745489648; c=relaxed/simple;
-	bh=zSmUq1tHp63+RAhXj9njMfxddHaNlQhPuYccDV+gtfo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TXP9Me2G9/ex/suxKjYaubKM6984w4qMHZ/NxTktos8dK79A0xTy8PztJFPypZOBDG8mSNxK4PoThjEPfZ+JaCNJv8glAdX7k7C3cA6CPucnfxFRbdUX6J4A/0yvhAcFkRK22pSxl5oWV/D9UYHBAnq8q5zZxYl72+OH8xHoDAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=k34iNYmO; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1745489643;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fYgEY5bFxGonZp37xNaaHsfSCY/iBrfzUTg+ah8x0OU=;
-	b=k34iNYmO2u/khsEJoWsLhO8cofWYl/u/QpqaDGdggEoJRr390q1f/uBot6xeqwcorlu9Rx
-	a8EQn7P2a8Exp3LftKt5tslqFgRYc+b14E6XaYC6btSEViYF3OqbJEwDMnuWSMvjuIBlZJ
-	G9UJn2cdbSDp7cHLYcYTJk/01lUCfOI=
-Message-ID: <fff5e22cd0cc75f1007bbe43889f97554efa6316.camel@crapouillou.net>
-Subject: Re: [PATCH 06/12] pinctrl: ingenic: use new GPIO line value setter
- callbacks
-From: Paul Cercueil <paul@crapouillou.net>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Basavaraj Natikar	
- <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>,
- Maxime Coquelin	 <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>,  Andreas =?ISO-8859-1?Q?F=E4rber?=	
- <afaerber@suse.de>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,  Steen Hegelund
- <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, 	UNGLinuxDriver@microchip.com, Ludovic
- Desroches <ludovic.desroches@microchip.com>,  Nicolas Ferre
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Andrew Lunn <andrew@lunn.ch>, Gregory Clement	
- <gregory.clement@bootlin.com>, Sebastian Hesselbarth	
- <sebastian.hesselbarth@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar
- <alim.akhtar@samsung.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, 	linux-actions@lists.infradead.org,
- linux-mips@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org, Bartosz
- Golaszewski	 <bartosz.golaszewski@linaro.org>
-Date: Thu, 24 Apr 2025 12:13:59 +0200
-In-Reply-To: <20250424-gpiochip-set-rv-pinctrl-part2-v1-6-504f91120b99@linaro.org>
-References: 
-	<20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
-	 <20250424-gpiochip-set-rv-pinctrl-part2-v1-6-504f91120b99@linaro.org>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
- LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
- FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
- z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
- +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
- 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
- 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
- 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
- dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
- 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
- rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
- lBwgAhlGy6nqP7O3u7q23hRU=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1745490676; c=relaxed/simple;
+	bh=veuDQajYZQmtwy5soBS8bgeTiDpHDVxRfRcmVV3dkkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pnlBvRnjIP4zz8A51pFjOS1+JEijuWgUlYcc6xV20xUIUQql55JWsycKcTfjsmRljuqfwcQG0x1jO7GQrto4jN9HSQ8ppMZpInPHSC6JTk03gRPDfmqoKQXj7pH5mvTNMWJcbfl2LuCaot4OzDQ4eLLDFq4vRiCfFGoqQE7XWQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KIDrYHXo; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6fead317874so8338937b3.0
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 03:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745490674; x=1746095474; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=veuDQajYZQmtwy5soBS8bgeTiDpHDVxRfRcmVV3dkkA=;
+        b=KIDrYHXoflincouO6Ie5zfhCB/C/R6tb8+kaypogXRHd4vGrIP+SK/5GSmA38CpYdB
+         iSe6VycjkUw/IAfM06GmCwxLKyIVJyDHVdCmKMb6MV5sJHPZ5GkSikQ9QTFIqsGA/bX7
+         7PqACZcSu59lWn+WSUlEImpUSMVjOrH3LOME7YbV5+x4i4J5l3cAYVZ1lSgl60xixg0w
+         YYKV/LD04e6y6ZRHwWj5Jgx7AQkevxDhqXyuCxkc0kUlQpqf985zKd46dI4DwlYWbhaX
+         3ZaFQKGyyft23LyNrq92GiDB8gQSsgG6A9bht+VAygM4H/a4VxPTsUvj3GMgmcUbrUjJ
+         U4cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745490674; x=1746095474;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=veuDQajYZQmtwy5soBS8bgeTiDpHDVxRfRcmVV3dkkA=;
+        b=HrgTtjS/xlolAjx+bmWKT0PuoeHKJrALKJipp3ofTVLWcqyK1LTOHai4LNJnM+UApX
+         wm/4U0KjxochkrxVi/tI2eQe7gaeYhewyJy56ZeJ1aVmdr1hzM3G4rRym03YIcuBRILU
+         XgrIjy6bqRilwQlGcfCIEtFXUw8kWEvO2grLJYRIRegck+6cWnDLiaH6c2ENjNk4SJcB
+         BfXchfAMOFFyJnCPKkpnopsQl7y0vSBFVPB61mXHcMKYwey3hKYCay0LW+bYh0aJ7QfY
+         zgxE28FzCOGThp4MDBVIBkkMJgo54/HaropgW7IJY/Qg4TmAQRoH9oulCXMQu0p+SZCw
+         15Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCW1hOIMqFSxeOTtNNZtZfedyPRffewDNDijslB/zGX3cXoDhEC2xpeEMfsoUib+0F75v5ez51KyWTO3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6ec2dmPJCSplIDsqgdvKd74npmqdzocDqwINeWUGs5hmAhBew
+	CZoQPC/NZlXo+GDpULXK8xaShny98+YNkrDq/DWSZXt6gGUJxBaV9ac1W/x+YpSVf0Gm1rKNG57
+	UchM3TH38FpIVcqYae/f5lWHWyHjVBIxHt6mW7g==
+X-Gm-Gg: ASbGncsFan3U+OmBsuRx+zrzfGsEwcBb/g0bXE6YjgPTuOEKUs3aK5+Tvxg0EDx3863
+	oCMF7x4VLuNkZda0MLNyHnMulaCLP7A5inyvRhMQsbj9hzCTqWEwoCxrrZLt6K1Sdao4bN0WxyF
+	mhUmpo13gZ+gC4Yn/oRRrTdQ==
+X-Google-Smtp-Source: AGHT+IFaCgdi/D8Mz2g+4kwknyPmgE+BAWyWeosYJdPhAXZY/ccwJe6YGp50DFdsLuHQOqspxP6UrWYnj+YkNWqFGqY=
+X-Received: by 2002:a05:690c:dd1:b0:6fb:46dc:d9c4 with SMTP id
+ 00721157ae682-7083ec4d087mr32192027b3.12.1745490673788; Thu, 24 Apr 2025
+ 03:31:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250424062017.652969-1-uwu@icenowy.me> <20250424062017.652969-2-uwu@icenowy.me>
+ <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com> <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
+In-Reply-To: <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 24 Apr 2025 12:30:58 +0200
+X-Gm-Features: ATxdqUHtrYzEaLg25kuj53TyY1Q41AznmucaPtZY25yhlzNHITgdvG43lqbYwqY
+Message-ID: <CACRpkdY0DXxDixZVhnRuKvSVbKQ6pSfLMiT2hf9818sbNG-4hg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
+ PAD_INTERNAL_* virtual pins
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz,
+On Thu, Apr 24, 2025 at 11:38=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> wro=
+te:
+> =E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:51 +0200=EF=
+=BC=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
+> > On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> =
+wrote:
+> >
+> > > The JH7110 SoC could support internal GPI signals to be routed to
+> > > not
+> > > external GPIO but internal low/high levels.
+> > >
+> > > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
+> > > virtual
+> > > "pads" to represent internal GPI sources with fixed low/high
+> > > levels.
+> > >
+> > > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+> >
+> > As per my other reply in the previous post, I think this should be
+> > handled internal in the kernel instead using a tighter integration
+> > between
+> > the GPIO and pin control parts of the driver and utilizing the
+> > gpio-specific struct pinmux_ops callbacks.
+>
+> Well I cannot understand this -- these signals are not GPIOs, totally
+> not related to the GPIO subsystem (because they're only pinmux, not
+> related to GPIOs). This is described in my previous mail.
 
-Le jeudi 24 avril 2025 =C3=A0 10:35 +0200, Bartosz Golaszewski a =C3=A9crit=
-=C2=A0:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> struct gpio_chip now has callbacks for setting line values that
-> return
-> an integer, allowing to indicate failures. Convert the driver to
-> using
-> them.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+OK sorry if I'm a bit dumb at times :(
 
-Acked-by: Paul Cercueil <paul@crapouillou.net>
+I guess I was falling into the common confusion of "something named
+general purpose" such as your GPI and GPO registers, is also
+related to GPIO which it is not, at least not always.
 
-Cheers,
--Paul
+> The pin mux of JH7110 strictly route its inputs to its outputs. For
+> signals from other SoC blocks (to external pins), the registers define
+> how OUT/OEn of IO buffers *are driven by* the signals; however for
+> signals to other SoC blocks (from external pins), the registers define
+> how IN of IO buffers *drive* the signals. (This follows the generic
+> signal-driving rule that one signal can drive multiple signals but
+> cannot be multi-driven).
+>
+> In addition the situation I am trying to handle here is an addition to
+> the latter part of the previous paragraph -- in addition to 64 inputs
+> corresponding to 64 GPIOs, two extra inputs, one always 0 and another
+> always 1 are available to the pin controller for driving other SoC
+> blocks' input (as output of pin controller).
 
-> ---
-> =C2=A0drivers/pinctrl/pinctrl-ingenic.c | 8 +++++---
-> =C2=A01 file changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index a9e48eac15f6..3c660471ec69 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -3800,12 +3800,14 @@ static void ingenic_gpio_irq_handler(struct
-> irq_desc *desc)
-> =C2=A0	chained_irq_exit(irq_chip, desc);
-> =C2=A0}
-> =C2=A0
-> -static void ingenic_gpio_set(struct gpio_chip *gc,
-> -		unsigned int offset, int value)
-> +static int ingenic_gpio_set(struct gpio_chip *gc, unsigned int
-> offset,
-> +			=C2=A0=C2=A0=C2=A0 int value)
-> =C2=A0{
-> =C2=A0	struct ingenic_gpio_chip *jzgc =3D gpiochip_get_data(gc);
-> =C2=A0
-> =C2=A0	ingenic_gpio_set_value(jzgc, offset, value);
-> +
-> +	return 0;
-> =C2=A0}
-> =C2=A0
-> =C2=A0static int ingenic_gpio_get(struct gpio_chip *gc, unsigned int
-> offset)
-> @@ -4449,7 +4451,7 @@ static int __init ingenic_gpio_probe(struct
-> ingenic_pinctrl *jzpc,
-> =C2=A0	jzgc->gc.fwnode =3D fwnode;
-> =C2=A0	jzgc->gc.owner =3D THIS_MODULE;
-> =C2=A0
-> -	jzgc->gc.set =3D ingenic_gpio_set;
-> +	jzgc->gc.set_rv =3D ingenic_gpio_set;
-> =C2=A0	jzgc->gc.get =3D ingenic_gpio_get;
-> =C2=A0	jzgc->gc.direction_input =3D pinctrl_gpio_direction_input;
-> =C2=A0	jzgc->gc.direction_output =3D ingenic_gpio_direction_output;
+OK ... maybe I get it now.
+
+> > This solution looks like software configuration disguised as hardware
+> > configuration.
+>
+> Well this solution handles these internal wires in the same way as
+> signals from external GPIOs, excepting specifying special GPIO numbers.
+> If you are against the principle, maybe the current already-included
+> GPIOMUX system of the StarFive pinctrl is to be blamed instead of my
+> small extension to it.
+>
+> I must admit that the current GPIOMUX system isn't a faithful
+> representation of the hardware because it's a pad-centric setup instead
+> of a register-field-centric one, which isn't very natural for input
+> signals. However configurating the mux in such a way is against people
+> reading, and we're not able to break the system because it's already
+> there.
+>
+> Well in the situation that one GPIO used as input drives multiple
+> internal signals the pinmux looks a little confusing too, e.g. the I2S
+> clock situation I mentioned in my reply in the previous revision of the
+> patchset.
+
+I guess what rubs me the wrong way is why the external users
+(devices, device drivers or even pin hogs) cannot trigger the chain of
+events leading to this configuration, instead of different "magic"
+configurations that are just set up in the pin controller itself.
+
+But if you are positively convinced that there is no other way,
+I guess I have to live with it.
+
+Yours,
+Linus Walleij
 
