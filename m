@@ -1,102 +1,110 @@
-Return-Path: <linux-gpio+bounces-19237-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19239-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A49BA9A58C
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 10:15:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89A7BA9A5D2
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 10:27:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7008C7A5493
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 08:14:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8ECD7A5E21
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 08:26:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CC641F4634;
-	Thu, 24 Apr 2025 08:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1B7520B803;
+	Thu, 24 Apr 2025 08:27:49 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from freeshell.de (freeshell.de [116.202.128.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BCD19994F;
-	Thu, 24 Apr 2025 08:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
+Received: from pokefinder.org (pokefinder.org [135.181.139.117])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFF611F2BB5;
+	Thu, 24 Apr 2025 08:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=135.181.139.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745482527; cv=none; b=s7YDqkjJ7u/HWfmIhLwSKt6d/VV5e6qsyn1KrbQWqUDw/cFGRXLws80hJit06egSotZLv61zqplG+GTrcKoBj5sj3p9L/IdciEcZPZrdjr1yq/usPrYNNENvZvsVlVtBWkCA075W0NIHF4VaP141FJSN8vQZgyAQ26dNcbdLptw=
+	t=1745483269; cv=none; b=KxXOoyJ6lXEwUyuVjveO1u7tQNbejNmcSedAoAvWysnyv4jZOIbJDYrc9Pp0PMntjgE7M7KN/FxRWE1P6DFS/HY9ZJn2J0Drex3oWy7wz7/gCW5wzyDPqpAIK0MoVHzMyfeEdLPEm3JtSF9vpPzvEqt+kQjJfOfZqdWctp5fRBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745482527; c=relaxed/simple;
-	bh=p1rDUK8rdI5Szwyaio0ijicup4XX8ctN1sOZD2658Mw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fsIp6QZTpFpIYF5TsbsLXYC0xuqdiaXGWXOkQogVPK4Y77ERcgBzt7mo8yzKMmm/hryKDrJydzgqpSdXMgiXjvLo8eFAVgUF6v29ZX4rA3XPS7bqy/xODQuxxBnXLJJ/S/embR6YdTo0kj0sLlUD75eI3pc6qZ7aBNdoUJfipSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; arc=none smtp.client-ip=116.202.128.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
-Received: from [192.168.2.35] (unknown [98.97.25.173])
-	(Authenticated sender: e)
-	by freeshell.de (Postfix) with ESMTPSA id 712A4B2C201A;
-	Thu, 24 Apr 2025 10:15:19 +0200 (CEST)
-Message-ID: <60891c52-eeca-4358-8f38-789533016495@freeshell.de>
-Date: Thu, 24 Apr 2025 01:15:16 -0700
+	s=arc-20240116; t=1745483269; c=relaxed/simple;
+	bh=Bjn3JWZQBUn+D4yw5VVxGddLhIebdHNjWM7dgu1Hj/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RqFfl0JgjsUpM8lcwwo6f2sZdrO0ucyto2RkQIREaZq1WozNXy1FqCQUrgvhm09weM6KDY6y7a53JuZCLQyb++DWUDryyg+W759wlUyHFGpLZumalro9nEXULrorMQIfxgphwH+k8KCi05qZMGMU1uORGggaepKMuxKy8PkULbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de; spf=pass smtp.mailfrom=the-dreams.de; arc=none smtp.client-ip=135.181.139.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=the-dreams.de
+Received: from localhost (p5486c924.dip0.t-ipconnect.de [84.134.201.36])
+	by pokefinder.org (Postfix) with UTF8SMTPSA id 81809A41FA1;
+	Thu, 24 Apr 2025 10:27:44 +0200 (CEST)
+Date: Thu, 24 Apr 2025 10:27:43 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Peter Rosin <peda@axentia.se>, Andi Shyti <andi.shyti@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] i2c: mux: ltc4306: use new GPIO line value setter
+ callbacks
+Message-ID: <aAn1_-Wuel-CaUIn@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-gpiochip-set-rv-i2c-mux-v1-1-7330a0f4df1a@linaro.org>
+ <16b14e5e-e5eb-5203-4cdf-44fbde9a5688@axentia.se>
+ <CAMRc=MeYs0W31Kj-o530_8+EvhoDNzyZunk4xu6PbwK8N1OE4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-To: Icenowy Zheng <uwu@icenowy.me>, Emil Renner Berthing <kernel@esmil.dk>,
- Jianlong Huang <jianlong.huang@starfivetech.com>,
- Hal Feng <hal.feng@starfivetech.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20250424062017.652969-1-uwu@icenowy.me>
- <20250424062017.652969-2-uwu@icenowy.me>
-Content-Language: en-US
-From: E Shattow <e@freeshell.de>
-In-Reply-To: <20250424062017.652969-2-uwu@icenowy.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="V/cTdx4ZqfhhtzD1"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeYs0W31Kj-o530_8+EvhoDNzyZunk4xu6PbwK8N1OE4Q@mail.gmail.com>
 
-On 4/23/25 23:20, Icenowy Zheng wrote:
-> The JH7110 SoC could support internal GPI signals to be routed to not
-> external GPIO but internal low/high levels.
-> 
-> Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two virtual
-> "pads" to represent internal GPI sources with fixed low/high levels.
-> 
-> Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
-> ---
->  include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> index 3865f01396395..3cca874b2bef7 100644
-> --- a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> +++ b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> @@ -126,6 +126,10 @@
->  #define	PAD_GMAC0_TXEN		18
->  #define	PAD_GMAC0_TXC		19
->  
-> +/* virtual pins for forcing GPI */
-> +#define PAD_INTERNAL_LOW	254
-> +#define PAD_INTERNAL_HIGH	255
-> +
->  #define GPOUT_LOW		0
->  #define GPOUT_HIGH		1
->  
 
-Asking about the choice of 255 and 254 values for virtual high/low pins,
-here. There's not much result when grep Linux source for 'virtual pin'
-to compare with. Are these the best values for this approach?
+--V/cTdx4ZqfhhtzD1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What happens when devicetree has in it to route PAD_INTERNAL_LOW to
-PAD_INTERNAL_HIGH and other unlikely combinations?  Or a devicetree blob
-with this computed value is paired to Linux kernel that does not have
-the code to handle these virtual pins, for compatibility concern?
+On Thu, Apr 24, 2025 at 09:16:48AM +0200, Bartosz Golaszewski wrote:
+> On Mon, Apr 7, 2025 at 10:08=E2=80=AFAM Peter Rosin <peda@axentia.se> wro=
+te:
+> >
+> > Hi!
+> >
+> > 2025-04-07 at 09:17, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > struct gpio_chip now has callbacks for setting line values that return
+> > > an integer, allowing to indicate failures. Convert the driver to using
+> > > them.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Do we know yet if JH8100 will share some of this design?
+Applied to for-next, thanks!
 
--E
+
+--V/cTdx4ZqfhhtzD1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgJ9f8ACgkQFA3kzBSg
+KbZs+w/7BpHPAQ+RaFXl40JiYlKbBHeigtBqppoPaS83FpQl8J3FG2wZCKkHwEqO
+t+MvnlH5Lbn1Y2mXmMJN/7tFbkGbEXExmYf9i7QDocHPg3irRo7TTJyvITFYcfhT
+btLfINAwWAd41nGPPLkqHGp3O8m9rehwTgegIExNZ8auXwbtbHsG4bgUDpY/JnSq
+ZUWQEfw7DGkwRpJif28COS3KIKcA3IXjIGoe/lvFP5HAAmsTsjyfyzGcB9vhAWTl
+6RJdmcX/7CTfvetWp98cpf1L3kW8SGHaEGqQR84cu+qrSsbc4CC1BgUNaFEWNiBh
+Z4oCcwM7hWfdhQR9vjiCUTQ0/PWZ0mvaiW38lTclqluOTckEFDYz/SEj3ml6CVwJ
+0AcnDppOdAqHfz0pW6mI61FbY6dT7oQR0/SZMDuXws4/Kj7Krv6zY0R87seVBNR7
+Mwb/76xUu9HRNYxsX9rPJJjMClKo+0I1eW4kwb4clqcxIQzTl91Xph6/6ivV12yY
+swsMZgCIZ33PPjVdP3075L800Ligqqyc8tEFiYciylpmJo0rXPCgqITlRz++9u2B
+OuV0NeE+HKK48IDwl31eJIVXgN+XCDZiO5MjmW0cWyj+HYjl9nMesokb+wTpnXaF
+VaE0LFKLoUPWA0oj2ZcVBYyDVBI/pbCcbKPKJ6xICO7/xEgONis=
+=iSX0
+-----END PGP SIGNATURE-----
+
+--V/cTdx4ZqfhhtzD1--
 
