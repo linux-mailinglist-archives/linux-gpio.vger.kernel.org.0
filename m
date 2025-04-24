@@ -1,122 +1,109 @@
-Return-Path: <linux-gpio+bounces-19232-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19233-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78FA1A9A1E1
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 08:26:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED321A9A2B2
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 08:56:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9EEB95A3DAB
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 06:25:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E7AD443F91
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 06:56:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C530120E6F7;
-	Thu, 24 Apr 2025 06:22:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19F1E1E7C12;
+	Thu, 24 Apr 2025 06:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="aTmw7cA0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpAcP0ul"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58409207DFE;
-	Thu, 24 Apr 2025 06:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745475756; cv=pass; b=AvaGCkM411bL6anUYAkA/QGSZ6gEmvDLw2kYzLc4Wfk+vxmTAUY6GfnGTWLcoaOljiFpsxkarzLCFJZ6xaNHZuWa2ssypdATPJ0L9T4BtJcIifQsvzd9KgSAGOe0RkcGpGFCRYbqUkFlO8k/XVB3YUEwBcnDsMXTDxlZlygipNI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745475756; c=relaxed/simple;
-	bh=Hsya3hwoUK8Ds+oFmJkETUofzArkqVuMq/FiU0wxbT0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MvhrRn4PSs/RA9KSZLGC1NU/9HID8GBtpUUxVRrr5ypQ2DZeQzPgtVTfkYvqwhSG2JP/GiW6epaWhS12N8CUul50i5A8iuPa3MP1TaTk4LHgXZh4qXumaCq9HugaKV/JmfyfBpa0vbSBqFpku2SmLl4cs1OqOBB/9oEa0gnspdA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=aTmw7cA0; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-ARC-Seal: i=1; a=rsa-sha256; t=1745475729; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=kDArssAjro99bi32ehmZfpQjev/z2RBPR3f4PwgXnYPpQjWPxuGrhX2gTQhwX6DeyIm9kTYxhi/klXB+pi+hwHPBx17ODPMIw2JS3r/E7K+0LtlLu9aknopkwB8NM2b3Fs1Sdr9sJFOlq9XbgsFP/+w9pC7SYN1eNwg6/zDSF2A=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745475729; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=xVNOvXEvdW6leQE28c3jHe0aUAqH+GUjgXBsNd/0dtY=; 
-	b=Xbqexsx+Y827fYArushI327qEhT+N+Q32WMJPDdq94wAAWWWujOiHtONtYGU1LAP49Lp00f08EpXOVPkZwAnRrBaY+M2iNNlg+wtf1KJEm90dI+wdMo0Em49jYrE7Fx2c7FPOhFxJsanfBRvai6C+f7N+NgD0hZtSSmD3EeN7HU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745475729;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=xVNOvXEvdW6leQE28c3jHe0aUAqH+GUjgXBsNd/0dtY=;
-	b=aTmw7cA0A0R7yGwvidNysZ7lVbcK8j3iS0tYCpm6FjiTxXMnaR9ptnsGRb1kzUMC
-	V3JtyIIZ1XuzwEuN7Gz0sHdJYzzGQb5T65nideQk+BM00P1mp292UrO9bVXvF9cwB5y
-	Ihuc7dxMXSGibLBQJZpmBEV/2bXLS487kXHyYbj9P03roC7UYmkuxzU8Ji3dJsz9MCl
-	uRogeAoqAEEvn6mBfxWIJTIgH3wm3VpcZakcs6QmT6gvhqVAlgalOYQy+EVWwCTELyI
-	HhCyx1COuaqz6odjBcY9ScWA0CZEMssyVF1ylHqaI/Jf5TYtrqwKSgezprny/F0I7Qh
-	bdIfjBFarA==
-Received: by mx.zohomail.com with SMTPS id 1745475727228758.2441586398901;
-	Wed, 23 Apr 2025 23:22:07 -0700 (PDT)
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Emil Renner Berthing <kernel@esmil.dk>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221C218E1F
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 06:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745477805; cv=none; b=Ed/b9WTAuRaJjDhbXX0mIlLAVbne3gFe8NculVNECjN5+VOBLnsoIhuGhbfKNGfHHXjDQ0oM6I9XLfXI9Xghcqaf9SHgns4WrlAKnas6QEBDQefNkhKYoDWBcHf+/8oUvjnqccvkpg4H4LXt1O4t46uxSfpk106NL65m2BDSEbY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745477805; c=relaxed/simple;
+	bh=KaDurauswI188KUjZ3KNQvsryIeiaUhlpIHOyWF2O0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MRdt6GkyN61a9yi1+abyuYom/eBtPRBHW/IntvG9GD0d/U3tNhOB54JZNvjjMklkR3PXrCX1D953/2xLzdlfvCZE3ZiYqIl4cScai3Qfa7n5WpqEjpQyk+n3wJSoO9T8WSdv3nCaL7yvwSNxJb4sScaDvIjaOd9iUhCQYNNM8p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpAcP0ul; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f62ef3c383so1242305a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 23:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745477802; x=1746082602; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7kzVv79whvRhzEeD6JG5Yuqa4/y4qdCf+2FXelQG1Yg=;
+        b=QpAcP0ull37osyzz0lwmfHbM6xwEU6yYa1hORanq77BXJc36z1RgOTaQPsXD2k8122
+         bO9/CqpUcrK07DTpAeexhlaDBbeOJyKUw+CkmrSztl0By8FCn28+32swlC6BAzjGd3uK
+         Ju36Alpzn+KeDeAWQQSpT1vF9VInhuMsLBu6BhSXifDq9h+wT9J5Ve+UDwg+9WWiP4mQ
+         3wucdPs4KneMVdSxlJ6/VilaaWKpUrutOSJdEjVu8dZA+zPVsSPTpCSx5/hN759fXjyx
+         Aq6TqNJWgzbWmJK7s6fRO1BFovKuMhhfCobqB6YeJ1JWgGul3Mk2vZ+i91oQU8wPqLyi
+         DJCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745477802; x=1746082602;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7kzVv79whvRhzEeD6JG5Yuqa4/y4qdCf+2FXelQG1Yg=;
+        b=YNl5WCHV8aNBOgTIdqkSNYb3Mbre3T1cMLoPjHvgeTQrnpCR31WQ0WJQJP3iQLY2S5
+         Nv4PhKCQ3ilCbSkSfay5j87uEuoEVtWRH7h/4ZdtT2wISuanBe8McCluqq3P/QVuvI4V
+         2/Zi8ck2rj2g85d+uYYb8RPWqMuXGb8JUckJRU6fjkHAOFwELwG1fcblT5tcl7vMgASK
+         sIgkDgHSEcsagwEG1pZr0kewe3BqJsilswjhAax9Jy8U5C1dX9iaGBeiRSC3ilhOgJsv
+         0VIDhlK6DjgyrAaWbY9QAAtHuUw4dFYzfRJ8aTxWUkgCiMj3alpTViGO/eGzkILIOESC
+         ajLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnc4MERWq4X6tvgNyniICccRUuV2GqvC5/tOlHOwhKUU84RGwq6mn7Q2qKfa49NwM00ID/bJh/ZJoU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh8JoVo7DI+KT13k++LRZ7uc2bvLsyypxwIjJ9K+1sOhnKqfxH
+	15uPWuCrr33aEpDEZ2vUIkgxnjAYlW0COQ3nZW2D6bUk1zmxSdhBM2QG5NCP1sQ=
+X-Gm-Gg: ASbGncs/o/2Mgg6WRMWYeDrYtgf947ChSHz5Se0apCPj8R6u5DA4I3WBnUHmN4IpE3Z
+	HGxuz3htnI/KZxDUj2lh/g4N8Bc1Gu4ONl6nP30AIg7muDUj4fF3T3/pxh7hqvVi7UQkF4L2WpK
+	d4hGdk2e69I5Y2o0fTKDzoH3AQ875ZRZ+OCC8zJJ/KULAUvmdNslL8ELu5IodxmH7lzVfFsv2Pj
+	atJODib4rujItNQVXu8LF/sQdDOG5INvOT3EuDMIvU8G2WjVYflv2KVixlEeQt8x4bJ51ilmlkt
+	MylR+m4NThImv27Go3I++UnX6uwsiUJBycI/vw==
+X-Google-Smtp-Source: AGHT+IHGr9cBdHuxjSZWLqVT9rmChGPepYhM4CQE7w0ih4cdp+SrjuSnVfBVqnG9DIEOEXWf/Vdtbw==
+X-Received: by 2002:a05:6402:254b:b0:5f4:c499:54e8 with SMTP id 4fb4d7f45d1cf-5f6de697effmr1551743a12.15.1745477802488;
+        Wed, 23 Apr 2025 23:56:42 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f6ed9e0936sm674611a12.71.2025.04.23.23.56.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 23:56:41 -0700 (PDT)
+Date: Thu, 24 Apr 2025 09:56:40 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Icenowy Zheng <uwu@icenowy.me>
-Subject: [PATCH v2 3/3] riscv: dts: starfive: jh7110-pine64-star64: force no USB overcurrent
-Date: Thu, 24 Apr 2025 14:21:54 +0800
-Message-ID: <20250424062154.655128-1-uwu@icenowy.me>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250424062017.652969-1-uwu@icenowy.me>
-References: <20250424062017.652969-1-uwu@icenowy.me>
+	Melody Olvera <melody.olvera@oss.qualcomm.com>,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: Fix PINGROUP defination for sm8750
+Message-ID: <aAngqFUPUxJfHhXJ@linaro.org>
+References: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
 
-The Star64 board has no GPIOs to indicate USB overcurrent, however the
-USB controller would stop to work if the overcurrent_n signal it gets is
-low (which means overcurrent situations happening because of the _n).
+On 25-04-24 10:17:10, Maulik Shah wrote:
+> On newer SoCs intr_target_bit position is at 8 instead of 5. Fix it.
+> 
+> Also add missing intr_wakeup_present_bit and intr_wakeup_enable_bit which
+> enables forwarding of GPIO interrupts to parent PDC interrupt controller.
+> 
+> Fixes: afe9803e3b82 ("pinctrl: qcom: Add sm8750 pinctrl driver")
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
 
-Use the pin controller to force the overcurrent_n signal to be high in
-order to ensure stable behavior of the USB controller.
+Nitpick: in commit subject, fix spelling of definition.
 
-Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
----
-This patch depends on [1] for including the necessary header file.
+With that fixed, LGTM:
 
-[1] https://lore.kernel.org/linux-riscv/20250424060605.638678-1-uwu@icenowy.me/T/#u
-
- arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-index 31e825be2065a..4fb522d127e21 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-+++ b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-@@ -91,6 +91,13 @@ GPOEN_ENABLE,
- 			input-schmitt-disable;
- 			slew-rate = <0>;
- 		};
-+
-+		overcurrent-pins {
-+			pinmux = <GPIOMUX(PAD_INTERNAL_HIGH,
-+					  GPOUT_LOW,
-+					  GPOEN_DISABLE,
-+					  GPI_SYS_USB_OVERCURRENT)>;
-+		};
- 	};
- };
- 
--- 
-2.49.0
-
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 
