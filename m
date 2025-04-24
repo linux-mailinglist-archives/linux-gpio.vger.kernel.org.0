@@ -1,197 +1,207 @@
-Return-Path: <linux-gpio+bounces-19270-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19271-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC75FA9ACD5
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 14:06:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59F30A9AD62
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 14:27:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3293E4437F2
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 12:06:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C26F53B7BB2
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 12:26:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0B4B22B590;
-	Thu, 24 Apr 2025 12:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EF7E25D91E;
+	Thu, 24 Apr 2025 12:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QTuLnxeL"
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="mXhODf+u"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0696221FCC
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 12:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745496392; cv=none; b=cbTzFBFrNTzSumwmwkFw21x5QLxSSmLljboygplBWf9+w37bMc397vN54sOmv5oQl4BOhzkU+4NLff1iq/OEPpUqZKOGrBDK3vh7lXrEwNbg4LI15i9kdbjgabm1LpiDDWz20srCySGEhs/KzsxqyDyl0vlE3T1Tqfh7BzRujp4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745496392; c=relaxed/simple;
-	bh=fZPyM+t+8g32uOJLovcOdzH0PaxIlPmC8Vhht+AXf+E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TnoN+dSA2onkytTapqRgIMBudgUXReJx5TnVMZUFdKxSVfI3cupjRbNk0QVm6YJH+VoRPs6Hc609i1Hdlwv6hEW8BU2rP20H3cJ+qLVt9V9Q2PyUgOTgwXJG/JtBRQe5GlrbXDXup9cXCVXM1Y+QN4pYlDx0LebY/LaOxGeddbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QTuLnxeL; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1428636f8f.1
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 05:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745496389; x=1746101189; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XmBfepC1ocfC4zLY8rWZfc6OY5eKgwPba73i3bJDtkU=;
-        b=QTuLnxeLORl0wmOTvLphxiZCls6/RxuVdeuzEq37k/ffWpF40BLH6DYe2t7PjeuhWJ
-         XM7rzG58yYy6aYI82UUSYZVNpAFEBtrhBjKTB9kEDtO0qPlXcB9YA1CH06EYrhhGF4I3
-         RHf0n80/vH59fJbTwxIt6yS7947trd8e8U3cYAKuAtUhEI8hawG0EyUiSdgV7k0XDrF3
-         NRKgLJHdpGDlR1NpvCUMcETItzIg4Zl0z+c4ggwJGBAn40BMB/dB+jj+yRT9K58o4jGZ
-         ztfm+oGNS8SpEMSiQ0nJxQfLJZ/dAJbFs3doUQ22F5Kd5/MNDgwrNpx15TLb9VIZARyE
-         MdHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745496389; x=1746101189;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XmBfepC1ocfC4zLY8rWZfc6OY5eKgwPba73i3bJDtkU=;
-        b=DgcTFb57TpPjqJ9zhDS/v/VdWIxtWhOkoCddRMANpCWbLmbo7Qbx9G6hVzSvvBaF/b
-         KqLFQ8uPcCsbg5uxMyhmb24zP6c8KjBJ7C/Pj+0fCj843Vb/twYaUT+xSUhmIW1FKkGj
-         dBh/b6nrZWi2cDnc8bPRKiMGsP0x2PeHliRRyIyjYYQeu8Vahr0L0CIe9OODEfb4IkgM
-         jzoCvYf4PmoCquPw/2Aw34prbk7XTc94iHlNuAZ1JjKK5HCp7KWIU1VPRWLfJZ73SYAj
-         KxW5LjECrCxuCSpLs6CJHxZr1MUCobqtb696dGWyYDWWFGOqZDNQWjEC32PQJ7gssqi5
-         20Qw==
-X-Gm-Message-State: AOJu0YxdW75Sp1wbkCXy53t6O+dQBlp29WJlXipcM9yvMVyNKMPZNMgR
-	MuTXVLPLt925k4kAKn3fTd6Pmr2w5pSCp97bfrAvoz/b/GrONDxZFBHmrBNjBEM=
-X-Gm-Gg: ASbGncvvc76D1esUqc3RW+kj23Z3wzR3HxUBsmlKlu1tRL2+Idu4P1HWrOu6XfNP1Rf
-	XM0LSm50pLMZ5u+FMhWk1xLMGYNOI3e0X07nXyXyfh/OekR1XZvo/6BE1JFGlzd1VjYpSZ99VhZ
-	jNKISjMT9yZYeYuNnWDSUlb1ZVKSZ+PSaJceU+nEcFOyGwXzuXC1YVfFUhwDRvZ6j9+LYM7kLGO
-	MHzip6cfAklFWdR8i3AeiW0remPwvuAmycSAiYgcLlXYCGlfO6i62LzUr0ul0GyLdFEWEsb9xO+
-	atzSsduCb4o9H1CUE1iDRoB06PcbtlQP4g==
-X-Google-Smtp-Source: AGHT+IFox1VUSgU/q9Vx6891P6KlOnQiiX9b7DUasucUXkg7XX/1HCJB9DC3kj5S7UsebUQ0eOubJg==
-X-Received: by 2002:a5d:648a:0:b0:39f:d0a:5b23 with SMTP id ffacd0b85a97d-3a06d674accmr2099066f8f.17.1745496388937;
-        Thu, 24 Apr 2025 05:06:28 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:6266:7750:57ce:7cb4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4c108esm1881793f8f.40.2025.04.24.05.06.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:06:28 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 24 Apr 2025 14:06:17 +0200
-Subject: [PATCH libgpiod 2/2] tests: add a test-case checking line-config
- memory usage
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408BD25A334;
+	Thu, 24 Apr 2025 12:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745497573; cv=pass; b=YXcrGy0QlgKY5t6lMk8GvV/G/OPpCrUGj6sD8PE+27atPdonVzDALUG8VU3zOwG8L+kNLftTF+/r9SEOsH3NWcQO+lPUW76ieFYMN3RikGcvZSlSfExL4ZxfT6mwuoJWELpJ0t81IteeIPVzwj8kkSWpB65FZNCUasXxXnkqw0A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745497573; c=relaxed/simple;
+	bh=Sbs1+npj6WAlGfBRhvWrInsT1B/Gk04REktMxgJiGtU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qurxc7IyaZqBjfV3R2jIa2fla2AyfIQKujlLPjvCWLoa3VSga1lBwJmzYyHkKO1j/H3KpV2KCjvAAZU+fzCRg47XjLe9T9v6V9hNybKM1nSLPCQr7meAXqI4WJNwmETQT5yPfqdvUsOXjS3By9qrsQoK1dXPSaRtMLE0XTjnUZI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=mXhODf+u; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+ARC-Seal: i=1; a=rsa-sha256; t=1745497551; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=H8BlMqnIHjw4CtLH/Yn0TapHjcjGiO1ZCjZbGA7DHDc5kXkiVgRN85TRuiASG8O26w67Wiffvf9Y0X6WFhJHEc0Mx929foyfqBMwa26g/mhXOy2fFcAxGI8mXzpa5Guf2iG+/Hjjk95YJlrXGZZtxIStEvWYRpGHA0zEuyQX+9U=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745497551; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Sbs1+npj6WAlGfBRhvWrInsT1B/Gk04REktMxgJiGtU=; 
+	b=PHTFa9PXZFTd4ld+pYXc02qHV3/BfobtI0PxJlLOFW7yvUBdOBZ4NKlvGBw+Rne8DzQG8rA6gAe8S9+Jl5jfVTJiS5n+xo86zyyyJVxcwrNRct064dRRP1EgD/v1IrVaaWV9e+AcQFnG89D1bsLL6Z6E0hTV8e9pBVTZkLeNc/8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745497551;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=Sbs1+npj6WAlGfBRhvWrInsT1B/Gk04REktMxgJiGtU=;
+	b=mXhODf+uc65g+sni/MC1Kpan87oFKEGupVO5z5YJnuEpzrnEjRied3ILx9FCBewQ
+	FIkNm/WKYbvLpLiwtKqNQer4y5EEIQ8sq+dSxAGOIQIKTcS9NIwr2H1YPp0yDLL58nx
+	y3VPQ/hCnmXXS0KUxWnmf5wTyD5Y02gBpF2PDxDRjLew8ro/LtFG0RFVWWFgUraJDNp
+	UlhAvoIiODexWA/3YF0UsdbD7duRpXsLxl4y+6oWbwbXYuxl4q06jZuxaVYagtne6gr
+	RW3d0NA64yDkbV511walU0Gu0sV4SMqjrI0OAt/cqkjiDH2GSlZf+iSoqx/D/ZEZNDH
+	pqgb9wS7OA==
+Received: by mx.zohomail.com with SMTPS id 174549754871497.68482437052171;
+	Thu, 24 Apr 2025 05:25:48 -0700 (PDT)
+Message-ID: <0606c146d97ff98ff1412b98f49e6da0071801d1.camel@icenowy.me>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
+ PAD_INTERNAL_* virtual pins
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
+ <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+Date: Thu, 24 Apr 2025 20:25:35 +0800
+In-Reply-To: <CACRpkdY0DXxDixZVhnRuKvSVbKQ6pSfLMiT2hf9818sbNG-4hg@mail.gmail.com>
+References: <20250424062017.652969-1-uwu@icenowy.me>
+	 <20250424062017.652969-2-uwu@icenowy.me>
+	 <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
+	 <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
+	 <CACRpkdY0DXxDixZVhnRuKvSVbKQ6pSfLMiT2hf9818sbNG-4hg@mail.gmail.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-line_config_mem_use-v1-2-fa0abdcf0cdf@linaro.org>
-References: <20250424-line_config_mem_use-v1-0-fa0abdcf0cdf@linaro.org>
-In-Reply-To: <20250424-line_config_mem_use-v1-0-fa0abdcf0cdf@linaro.org>
-To: Kent Gibson <warthog618@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2729;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=WHEXTrJML2n86+yPEpXIRKRki8p0tCWD5RkbP3HBkhk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoCilCsvj1Kg67WxXVUmnq03wYmDGvMvU+wbEgF
- okvsPzYGK6JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAopQgAKCRARpy6gFHHX
- cnX/D/sF9iloOJeoRLwlxWWI5oy2uVCnX2iwHLmIoHV2K/4Atx75J0rNz02RRQz1JSL96gMbDOR
- HAzsXgoIIyjeDHQP3k4VQHdK5HWatyFuwsrfmNXygnZxvuaUfCjCC/Hac0VZVy2Uzt3mpCTl/Wo
- nQ+K36ZiZmpt8/Ne/bi/mSplIUti68JqETV8AsaPlXBX03E1KZPQXhYyypdyHVQIOgm3k1NJ48F
- Gm8w5rpKSraDHnipk5OxziPd7KG1DsXjtKFNtpMGvxFSCpfrCUnBoApziEwjkyIZfINoXoCVo87
- quRstI79MLyIVE4hKMyQoGvttAZV+YzPjvwT6V6hA3gqsGx8nREs98i8yo4H3XPeFt5/dagSU0O
- 3aeSa+zSrVqn71gb+aduDRbi2PB/GIuplNSgVizDvlYryzae7GVoOANRcMSJggheIg304qebQvZ
- 93U0WiTnauPso37vqIg5k1E2YINVBim4czvAXhkcPOmgO4yqwvh3/5JXnzIH/BIxTkNgOiyQmYZ
- zO88ZhRiJnCqZlnWeFOLkjobFfxMLqpVEJtbg5/bTp0Sf4uviqmoQ8or1nGBEILp0zju+vaUMsp
- dRibJDo7p30wGwUM2lAquqC1HH4K8t9UbEonMmmo8ohKa4XwzFhUGKk7+rgsvnLWhZXhSdGTvra
- 247BN15BQ0WQavA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-ZohoMailClient: External
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+=E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 12:30 +0200=EF=BC=
+=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
+> On Thu, Apr 24, 2025 at 11:38=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me>
+> wrote:
+> > =E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:51 +0200=EF=
+=BC=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
+> > > On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me=
+>
+> > > wrote:
+> > >=20
+> > > > The JH7110 SoC could support internal GPI signals to be routed
+> > > > to
+> > > > not
+> > > > external GPIO but internal low/high levels.
+> > > >=20
+> > > > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
+> > > > virtual
+> > > > "pads" to represent internal GPI sources with fixed low/high
+> > > > levels.
+> > > >=20
+> > > > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+> > >=20
+> > > As per my other reply in the previous post, I think this should
+> > > be
+> > > handled internal in the kernel instead using a tighter
+> > > integration
+> > > between
+> > > the GPIO and pin control parts of the driver and utilizing the
+> > > gpio-specific struct pinmux_ops callbacks.
+> >=20
+> > Well I cannot understand this -- these signals are not GPIOs,
+> > totally
+> > not related to the GPIO subsystem (because they're only pinmux, not
+> > related to GPIOs). This is described in my previous mail.
+>=20
+> OK sorry if I'm a bit dumb at times :(
+>=20
+> I guess I was falling into the common confusion of "something named
+> general purpose" such as your GPI and GPO registers, is also
+> related to GPIO which it is not, at least not always.
 
-Add a test case making sure that repeatedly adding line settings to a
-line-config object doesn't continuously inflate its size until OOM.
+Ah, sorry, these GPI/GPO names are directly taken from the StarFive TRM
+from the register field names. They CAN be routed to the external
+GPIOs, but is not required so.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- configure.ac              |  1 +
- tests/tests-line-config.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+>=20
+> > The pin mux of JH7110 strictly route its inputs to its outputs. For
+> > signals from other SoC blocks (to external pins), the registers
+> > define
+> > how OUT/OEn of IO buffers *are driven by* the signals; however for
+> > signals to other SoC blocks (from external pins), the registers
+> > define
+> > how IN of IO buffers *drive* the signals. (This follows the generic
+> > signal-driving rule that one signal can drive multiple signals but
+> > cannot be multi-driven).
+> >=20
+> > In addition the situation I am trying to handle here is an addition
+> > to
+> > the latter part of the previous paragraph -- in addition to 64
+> > inputs
+> > corresponding to 64 GPIOs, two extra inputs, one always 0 and
+> > another
+> > always 1 are available to the pin controller for driving other SoC
+> > blocks' input (as output of pin controller).
+>=20
+> OK ... maybe I get it now.
+>=20
+> > > This solution looks like software configuration disguised as
+> > > hardware
+> > > configuration.
+> >=20
+> > Well this solution handles these internal wires in the same way as
+> > signals from external GPIOs, excepting specifying special GPIO
+> > numbers.
+> > If you are against the principle, maybe the current already-
+> > included
+> > GPIOMUX system of the StarFive pinctrl is to be blamed instead of
+> > my
+> > small extension to it.
+> >=20
+> > I must admit that the current GPIOMUX system isn't a faithful
+> > representation of the hardware because it's a pad-centric setup
+> > instead
+> > of a register-field-centric one, which isn't very natural for input
+> > signals. However configurating the mux in such a way is against
+> > people
+> > reading, and we're not able to break the system because it's
+> > already
+> > there.
+> >=20
+> > Well in the situation that one GPIO used as input drives multiple
+> > internal signals the pinmux looks a little confusing too, e.g. the
+> > I2S
+> > clock situation I mentioned in my reply in the previous revision of
+> > the
+> > patchset.
+>=20
+> I guess what rubs me the wrong way is why the external users
+> (devices, device drivers or even pin hogs) cannot trigger the chain
+> of
+> events leading to this configuration, instead of different "magic"
+> configurations that are just set up in the pin controller itself.
 
-diff --git a/configure.ac b/configure.ac
-index af5d53d..416ae28 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -172,6 +172,7 @@ then
- 	AC_CHECK_FUNC([tsearch], [], [FUNC_NOT_FOUND_LIB([tsearch])])
- 	AC_CHECK_FUNC([tdestroy], [], [FUNC_NOT_FOUND_LIB([tdestroy])])
- 	AC_CHECK_FUNC([tdelete], [], [FUNC_NOT_FOUND_LIB([tdelete])])
-+	AC_CHECK_FUNC([setrlimit], [], [FUNC_NOT_FOUND_LIB([setrlimit])])
- 	AC_CHECK_HEADERS([sys/utsname.h], [], [HEADER_NOT_FOUND_LIB([sys/utsname.h])])
- 	AC_CHECK_HEADERS([sys/mount.h], [], [HEADER_NOT_FOUND_LIB([sys/mount.h])])
- 	AC_CHECK_HEADERS([sys/prctl.h], [], [HEADER_NOT_FOUND_LIB([sys/prctl.h])])
-diff --git a/tests/tests-line-config.c b/tests/tests-line-config.c
-index b61a445..b510e0f 100644
---- a/tests/tests-line-config.c
-+++ b/tests/tests-line-config.c
-@@ -7,6 +7,8 @@
- #include <gpiod-test.h>
- #include <gpiod-test-common.h>
- #include <gpiosim-glib.h>
-+#include <sys/resource.h>
-+#include <unistd.h>
- 
- #include "helpers.h"
- 
-@@ -469,3 +471,44 @@ GPIOD_TEST_CASE(handle_duplicate_offsets)
- 	g_assert_cmpuint(retrieved[1], ==, 2);
- 	g_assert_cmpuint(retrieved[2], ==, 3);
- }
-+
-+GPIOD_TEST_CASE(dont_allow_line_config_to_balloon_out_of_control)
-+{
-+	static const guint offsets[] = { 0, 2 };
-+
-+	g_autoptr(struct_gpiod_line_config) config = NULL;
-+	g_autoptr(struct_gpiod_line_settings) settings = NULL;
-+	struct rlimit rlim;
-+	guint counter;
-+	gint ret;
-+
-+	/*
-+	 * Severly limit the available virtual memory and make sure that
-+	 * adding settings for the same offsets repeatedly does not trigger
-+	 * the OOM killer.
-+	 */
-+
-+	if (g_test_subprocess()) {
-+		config = gpiod_test_create_line_config_or_fail();
-+		settings = gpiod_test_create_line_settings_or_fail();
-+
-+		rlim.rlim_cur = rlim.rlim_max = sysconf(_SC_PAGESIZE) * 100;
-+		ret = setrlimit(RLIMIT_AS, &rlim);
-+		g_assert_cmpint(ret, ==, 0);
-+		gpiod_test_return_if_failed();
-+
-+		for (counter = 1000000; counter; counter--) {
-+			gpiod_line_settings_set_direction(settings,
-+					counter % 2 ?
-+						GPIOD_LINE_DIRECTION_OUTPUT :
-+						GPIOD_LINE_DIRECTION_INPUT);
-+			gpiod_test_line_config_add_line_settings_or_fail(
-+						config, offsets, 2, settings);
-+		}
-+
-+		return;
-+	}
-+
-+	g_test_trap_subprocess(NULL, 0, G_TEST_SUBPROCESS_DEFAULT);
-+	g_test_trap_assert_passed();
-+}
+Well I am just extending what's already in use...
 
--- 
-2.45.2
+Currently it's already supported to route GPIOs to GPI signals, I added
+the support to route fixed level sources to them, in a similar way.
+
+If any external users ever have the need of banging the internal
+signals instead of tying it fixedly, maybe switching between different
+pinctrl configuration sets is enough? (Because this kind of operation
+could never be as high speed enough as real hardware pins)
+
+>=20
+> But if you are positively convinced that there is no other way,
+> I guess I have to live with it.
+>=20
+> Yours,
+> Linus Walleij
 
 
