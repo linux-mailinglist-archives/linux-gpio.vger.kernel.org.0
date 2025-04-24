@@ -1,163 +1,111 @@
-Return-Path: <linux-gpio+bounces-19228-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19229-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3172A9A03C
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 06:47:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F025FA9A192
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 08:21:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 372F7445E5E
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 04:47:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7224188188E
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 06:21:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100291A4F12;
-	Thu, 24 Apr 2025 04:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 517D21E2847;
+	Thu, 24 Apr 2025 06:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ii0SDCVw"
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="jtlCVo/a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538C91624DE
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 04:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745470060; cv=none; b=DwcFk5xl+UQ2ZqyJsm3c12qAGu/4OVuECh5t3w9Hmn9N/IJVI8mPaw0yGOmMckwbzaBzF2i0bZXD7jCHaa6NmUVHrkMvj6WBGcZo0VbLb9eHX8K5pDD5237EjOeHMx8Wv5wAcR/UDkr6SRbPszR3+qLMH2rNUswpQ4+kxZoD+lw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745470060; c=relaxed/simple;
-	bh=ptuipwHUDCgZKqYL6e0NkqtYwtJGVubt2616v9gIpm0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qwVP4nCImOLYmnkzlzI4P6GzrjYHLarK0ckltDCSmNMWSD2PUjIA1XcGHuHuwLIA0KOhf+kcC4bEtQz3ymqGvktoAp6Q8VfYcwZkzRfym2xiPxIu8XmCJYzonIsYyjrti39PUMRY9nmqrl+Lo3l99VKtfEk/TJIwH/lmdlo12dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ii0SDCVw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0FDrL000771
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 04:47:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=EOpmjHuWdoyxtbl0lXVyHn
-	PEnYkVQY0jb3AUJtDtsSI=; b=ii0SDCVwQ09Myqek9hu7mOMmEeUahRsfY1YJCM
-	TMxDembBNPFtL6PIg/Y7J13KDvAbgirWPswJwt9NHS6sQPIQP1thbRkq6ZPbbMf2
-	b+E4RhbvsDSWmZj6m1w+/zeAmbEOPWateyDXbWKNVDej3jI1E3PGbGrPKzr0xlAu
-	MLt1xpS3tITrkLH0dA1cTXGSriNOYPW1whFXookNE6+lIekvyLYJt72aP4vsGy3u
-	CeS5tJf8JnGp7LzlapqXgm56+YqO9JE45nvc6av6eCaeFGAPPFP8s0BWDvV//4HT
-	LXEfZP9tJGd8dlGmqtcWzNNtHfLJq3JqyDxeWlDDTTyt798Q==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3c7q3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 04:47:38 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2264e5b2b7cso5410425ad.2
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Apr 2025 21:47:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745470057; x=1746074857;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EOpmjHuWdoyxtbl0lXVyHnPEnYkVQY0jb3AUJtDtsSI=;
-        b=lx+MLFXs15ijaeDLJMPb6LH7+Fa2XuEDCTqOwL5uSUPeNYvO8wsRDVHpcFTWcaue7G
-         +89QqMfQn0RrLF5sCbDPGSG5hT3HQKYaX8EjZREY0LRsStXleHwI30LELV9JFDx/+iah
-         0c7vt5TIgUzjGaPabqIVdIXPDG2QdSIvWw3M/NRS3TTVM2ipMKW+sbh/SfPk1rcUp9lN
-         RnI2S5/L3sWfGKHHtJ7FjWubVbwNvf1QX0XS0Qt53AOmSIFg8DYvsfRs5jePbylL8o9N
-         1wo4QhBsIQiCJ6mXJB3Dme1S0k2YIxrqDLecEh1uxi8dWz4YB9N2LlqoBvUCIRzV5Q5v
-         GmQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbU3Rr5IPwZMylpf9QIMN6Y40azlpDepSsqfvhrVRZ8dsz4Ty9E985cQRvwPrDBo++qY2bskfv0b6g@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLP29R37CIuyz5Re6ezg5gZFxJUUDbzYD0cDpe27GZ6Pak4fch
-	YYk4087BIWZV7mtGNbMvYjyo1aBHLp+losSouWM5x8If1WXtORSU30Vit3ClEr8sA/drwcmt4XT
-	u8fEnqIK8QHOynMKTPOAA7wTtfNVolfj3jPWMZ+7zdDFTo32FLRc47haF/gNN
-X-Gm-Gg: ASbGnctRmAhwe6AZnGYOanPpKz2O0oi9pTxpbofZbQ2YTSDRDQzxtzk6vJSnuN6HBcd
-	3uPi07VhIgo4jKgZB0kcQQ4u6M383DDrcOoFKBvdmkmrWz18qnrh5zDLKRjWBh/IMntHsI1aYn5
-	zBnKonGQ3cOuxnA9Dg95/a6cnlWBJUcyBiwy+JHesh4S/EdJterisuWjLRrHnmBbMDl23vWwk6T
-	SR1OHUAEorEgdbVjX3/EJY2jVSEnaq9rOvMfUUkyqMTXO5/v9WdBmXGzm/tFXxZ0DkG42NF4t6E
-	m3ylDHqVPSkIVGpgsTkuvsr8DA==
-X-Received: by 2002:a17:902:cccf:b0:22c:35c5:e30a with SMTP id d9443c01a7336-22db3bf1a0bmr15774445ad.16.1745470057583;
-        Wed, 23 Apr 2025 21:47:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGRXAusDnHxqVZy7R8LW483DslzGVuC/HbDJZqxIbATob8CnEvN8+j4rJ9x1uEc3kEzS5ppSA==
-X-Received: by 2002:a17:902:cccf:b0:22c:35c5:e30a with SMTP id d9443c01a7336-22db3bf1a0bmr15773985ad.16.1745470056924;
-        Wed, 23 Apr 2025 21:47:36 -0700 (PDT)
-Received: from [10.213.103.17] ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76ee8sm3589345ad.50.2025.04.23.21.47.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 21:47:36 -0700 (PDT)
-From: Maulik Shah <maulik.shah@oss.qualcomm.com>
-Date: Thu, 24 Apr 2025 10:17:10 +0530
-Subject: [PATCH] pinctrl: qcom: Fix PINGROUP defination for sm8750
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315091DE2A9;
+	Thu, 24 Apr 2025 06:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745475649; cv=pass; b=A56Ezqvo41kCbvR6CzlbeNgn32eOzZwLXmmUgaoyvTSCO2AaCN13Y6iYVwbXVCAqTo+peMzLW+WCAsh0b0i7aG21uFzfKO+WVgf//rJDHYJ1wsSQT5PjaXcYhUqdzE6erzxx3bfxaK1hMcb7NCcHjTnN1GN85vLf+Oo9y9SQTqE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745475649; c=relaxed/simple;
+	bh=DABFka4HbdPBcXLGqrG9SJ6E1qB3G++DfXkrYihMjQk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CcI/m50B9pVdb7GgnWOMl0IK3Hnaz8paaEjdWUaw39obA0XZhtn9VdbXfw4/9mV/ykkiHwO0oOx9wOB1JFXQ0tr8scqcq4aQpNgLs6+TbcCiN/JVfdnffvDXyLCnKuh6FsvosoQI5FZ/HBw6Nza7kQ3iMX5MoJ0HtOcuTTqpPQo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=jtlCVo/a; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+ARC-Seal: i=1; a=rsa-sha256; t=1745475632; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZgWdWs6T4jDSmg8fPAFKBv3su7BYKlvoYG1bfveGbzjx7mstJAZVg7h/94HHVEemi1FjPlR7MyjS1sxI6XCxO4JcamM3/mMPtx9eXSYrn/DdQeNOJDpEh3LkDyN727VDE+OhAECv0sW+JfyLzfKeAI1pk8PlN/gQHWSkUNb2euE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745475632; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=a7HW1AHqiaoZotNjYh30I6Q8Dv5nJzE7H5N8Hb9REWM=; 
+	b=IwnTKoSg3U5E1ojVPfpbqcd5JbFncewrn2LzJf5MLCCzBcvjtuEMuvsbZmZ7JF3Phcu6nEZwtpElz92m3wObDCdsC9KmIU8lByu7y35tBhS5Aom9lbFqoxypc78/aR229cNDKpPxykU3RobLQ71rjwTnC97R8pbyz1+hDJIAVWo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745475632;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=a7HW1AHqiaoZotNjYh30I6Q8Dv5nJzE7H5N8Hb9REWM=;
+	b=jtlCVo/au+kCuKDcnZvatUtMmtYJ+kaNW5G9/GsFpOADTN6NFoeWN4uSFrrUTbwT
+	/AYg68byV6+qz0B8+uTePracXzNCMCRIl43yW3lTj9MdgAYcRvWkHBcib7ugUoGzMIx
+	vuD2TJmdMBfoKNCPneXjQ2Kxg3RS9YvuC1OtoG5EZot5p5rviKuMWcAfKxLasYEkz/T
+	KQ5Wya3mD5VHJ4HmLi5D7VRGFwT7oppwUaR74GYtkbB4zAxdNpJ96iaoFNZwkLEEv/E
+	Q8N+lOWvgeJ8ynCmXRCco/GTHtno4laff/f7OHvDDpmyFQV0P6fPUQu1B22ueYt1tuY
+	z7dPgxf1ug==
+Received: by mx.zohomail.com with SMTPS id 1745475629816913.3831701579998;
+	Wed, 23 Apr 2025 23:20:29 -0700 (PDT)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Emil Renner Berthing <kernel@esmil.dk>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH v2 0/3] pinctrl: starfive: jh7110: support force inputs
+Date: Thu, 24 Apr 2025 14:20:14 +0800
+Message-ID: <20250424062017.652969-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAE3CCWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEyNj3YLMvOSSopz44lwLc1MDXfPEpBQDCxMDMzNzUyWgpoKi1LTMCrC
- B0bG1tQBIeyI8YAAAAA==
-X-Change-ID: 20250423-pinctrl_sm8750-7abd08406675
-To: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Melody Olvera <melody.olvera@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Maulik Shah <maulik.shah@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745470054; l=1529;
- i=maulik.shah@oss.qualcomm.com; s=20240109; h=from:subject:message-id;
- bh=ptuipwHUDCgZKqYL6e0NkqtYwtJGVubt2616v9gIpm0=;
- b=hbcY0ql0VRWNSWGKLs0BemjFuqtyHC3PLvTPFrDr5Kcg6ZUkOi9fHtbjOREi+3Iubk06FQDhM
- raADQQ9NeeoAYkwrk+6vhlRguAIqUXqJ14ovV9CA3rcbAzp0DQcvbeg
-X-Developer-Key: i=maulik.shah@oss.qualcomm.com; a=ed25519;
- pk=bd9h5FIIliUddIk8p3BlQWBlzKEQ/YW5V+fe759hTWQ=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAyOCBTYWx0ZWRfXwpuCT0saypqC TOkubjcwi80ctAQc9WyG+kSruDMjsPAGp1jxKBp9sLpnkYxN8P+glzlN8Zs1fX8wvvNEUneajBQ JVBhc1nzcH9DnZdkWAJ6ElJMMp89GJQfYQv/3rcKSQUGymigDgRMx7aJU8ec9DZtxl/UPNkZ8Di
- 4l30BjlBKPM4XoIXPPVFaGWuX53Yihb/aJKFk8sUTA/++8DtBHuyVJ4Nl5ZEjt5m4oi7obqvPUq KgvxXiwcOf9qbH7QfobnT8Y/QhKZIFFhVaT/f5qxukZr9eGgaVegM78y9wj+/W+WIj4x+9/z0TD 7NbuafRuQe0diUL8AjLdggyAS7jMSjU72xS06uhJZjMWhHVqm9DT8UqV2J1y8nlR8PZrnZGtbBn
- DQpwmMbiTZX6Au+e4tTvzGPSbgfC/qUC0OyCcT7kD08AkAUBC0tDtvdg28klbzPfDpEwSOjS
-X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=6809c26a cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=61JurpKn_mCFDXP9eHYA:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-ORIG-GUID: lIzzX7IKSaGo9xi-VdLY_U3oelLKRrd1
-X-Proofpoint-GUID: lIzzX7IKSaGo9xi-VdLY_U3oelLKRrd1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_01,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=614 mlxscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
- clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240028
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On newer SoCs intr_target_bit position is at 8 instead of 5. Fix it.
+The input signals inside the JH7110 SoC (to be routed by the pin
+controller) could be routed to GPIOs and internal fixed low/high levels.
+As the total GPIO count of JH7110 is not very high, it's sometime
+feasible to omit some hardwiring outside the SoC and do them in the pin
+controller. One such example is the USB overcurrent_n signal, which
+defaults to low at SoC reset, needs to be high for the USB controller to
+correctly work (the _n means low indicates overcurrent situation) and
+gets omitted on the Pine64 Star64 board.
 
-Also add missing intr_wakeup_present_bit and intr_wakeup_enable_bit which
-enables forwarding of GPIO interrupts to parent PDC interrupt controller.
+Add the support for hardwiring GPI signals inside the JH7110 pin
+controllers, via two virtual "pins" which mean fixed low/high.
 
-Fixes: afe9803e3b82 ("pinctrl: qcom: Add sm8750 pinctrl driver")
-Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
----
- drivers/pinctrl/qcom/pinctrl-sm8750.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Changes in v2:
+- Use virtual pins instead of special properties.
+- No longer RFC.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8750.c b/drivers/pinctrl/qcom/pinctrl-sm8750.c
-index 1af11cd95fb0e69fcc876fe069cc2cd6fd6679fd..b94fb4ee0ec38013d8cde7e45a7d6088a20e3b28 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8750.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8750.c
-@@ -46,7 +46,9 @@
- 		.out_bit = 1,                                         \
- 		.intr_enable_bit = 0,                                 \
- 		.intr_status_bit = 0,                                 \
--		.intr_target_bit = 5,                                 \
-+		.intr_wakeup_present_bit = 6,                         \
-+		.intr_wakeup_enable_bit = 7,                          \
-+		.intr_target_bit = 8,                                 \
- 		.intr_target_kpss_val = 3,                            \
- 		.intr_raw_status_bit = 4,                             \
- 		.intr_polarity_bit = 1,                               \
+Icenowy Zheng (3):
+  dt-bindings: pinctrl: starfive,jh7110: add PAD_INTERNAL_* virtual pins
+  pinctrl: starfive: jh7110: add support for PAD_INTERNAL_* for GPI
+  riscv: dts: starfive: jh7110-pine64-star64: force no USB overcurrent
 
----
-base-commit: 2c9c612abeb38aab0e87d48496de6fd6daafb00b
-change-id: 20250423-pinctrl_sm8750-7abd08406675
+ .../dts/starfive/jh7110-pine64-star64.dts     |  7 ++++
+ .../starfive/pinctrl-starfive-jh7110.c        | 41 +++++++++++++++----
+ .../pinctrl/starfive,jh7110-pinctrl.h         |  4 ++
+ 3 files changed, 45 insertions(+), 7 deletions(-)
 
-Best regards,
 -- 
-Maulik Shah <maulik.shah@oss.qualcomm.com>
+2.49.0
 
 
