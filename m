@@ -1,176 +1,185 @@
-Return-Path: <linux-gpio+bounces-19262-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19263-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEF08A9AA7F
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 12:37:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2297DA9AAC4
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 12:47:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A78F919419C8
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 10:37:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AB991888AB7
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 10:46:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D91F6221263;
-	Thu, 24 Apr 2025 10:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A69B1235364;
+	Thu, 24 Apr 2025 10:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KIDrYHXo"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="X/RPuHUs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D293C1BC41
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 10:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA7A215173;
+	Thu, 24 Apr 2025 10:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745490676; cv=none; b=WZ9fLMb6zAXM3y06wDwIFh392ujKZXiInaJaKuIf3Hpw5xNiCONhzTRqW8AJSiNpvFgs/dFrOec4mzOwU+9lB3MrOEMtMfAuUGTiItAwP01lu++IZzb0DlWcZYWYCujo+AGc/7su+5CyXqUF8Vu2rbESvtSNUJIS1J97yy84C+g=
+	t=1745491201; cv=none; b=ufQ8xKnRHizbMcMYlBqMPXdmivmVCyWdVi2VUULwfmSFpff09pW7AMMPAS+essQolkUkhBJ6TR1bU/tdo1f4EWOm3rUVW2V3VGsUoHNeRTf5BSB/a1awiTf9nSwQ0sivjVXyYuahnCLVDyxq09XyTfZo0OY1ZDtZwI8cvVe0xr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745490676; c=relaxed/simple;
-	bh=veuDQajYZQmtwy5soBS8bgeTiDpHDVxRfRcmVV3dkkA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pnlBvRnjIP4zz8A51pFjOS1+JEijuWgUlYcc6xV20xUIUQql55JWsycKcTfjsmRljuqfwcQG0x1jO7GQrto4jN9HSQ8ppMZpInPHSC6JTk03gRPDfmqoKQXj7pH5mvTNMWJcbfl2LuCaot4OzDQ4eLLDFq4vRiCfFGoqQE7XWQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KIDrYHXo; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6fead317874so8338937b3.0
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Apr 2025 03:31:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745490674; x=1746095474; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=veuDQajYZQmtwy5soBS8bgeTiDpHDVxRfRcmVV3dkkA=;
-        b=KIDrYHXoflincouO6Ie5zfhCB/C/R6tb8+kaypogXRHd4vGrIP+SK/5GSmA38CpYdB
-         iSe6VycjkUw/IAfM06GmCwxLKyIVJyDHVdCmKMb6MV5sJHPZ5GkSikQ9QTFIqsGA/bX7
-         7PqACZcSu59lWn+WSUlEImpUSMVjOrH3LOME7YbV5+x4i4J5l3cAYVZ1lSgl60xixg0w
-         YYKV/LD04e6y6ZRHwWj5Jgx7AQkevxDhqXyuCxkc0kUlQpqf985zKd46dI4DwlYWbhaX
-         3ZaFQKGyyft23LyNrq92GiDB8gQSsgG6A9bht+VAygM4H/a4VxPTsUvj3GMgmcUbrUjJ
-         U4cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745490674; x=1746095474;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=veuDQajYZQmtwy5soBS8bgeTiDpHDVxRfRcmVV3dkkA=;
-        b=HrgTtjS/xlolAjx+bmWKT0PuoeHKJrALKJipp3ofTVLWcqyK1LTOHai4LNJnM+UApX
-         wm/4U0KjxochkrxVi/tI2eQe7gaeYhewyJy56ZeJ1aVmdr1hzM3G4rRym03YIcuBRILU
-         XgrIjy6bqRilwQlGcfCIEtFXUw8kWEvO2grLJYRIRegck+6cWnDLiaH6c2ENjNk4SJcB
-         BfXchfAMOFFyJnCPKkpnopsQl7y0vSBFVPB61mXHcMKYwey3hKYCay0LW+bYh0aJ7QfY
-         zgxE28FzCOGThp4MDBVIBkkMJgo54/HaropgW7IJY/Qg4TmAQRoH9oulCXMQu0p+SZCw
-         15Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCW1hOIMqFSxeOTtNNZtZfedyPRffewDNDijslB/zGX3cXoDhEC2xpeEMfsoUib+0F75v5ez51KyWTO3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6ec2dmPJCSplIDsqgdvKd74npmqdzocDqwINeWUGs5hmAhBew
-	CZoQPC/NZlXo+GDpULXK8xaShny98+YNkrDq/DWSZXt6gGUJxBaV9ac1W/x+YpSVf0Gm1rKNG57
-	UchM3TH38FpIVcqYae/f5lWHWyHjVBIxHt6mW7g==
-X-Gm-Gg: ASbGncsFan3U+OmBsuRx+zrzfGsEwcBb/g0bXE6YjgPTuOEKUs3aK5+Tvxg0EDx3863
-	oCMF7x4VLuNkZda0MLNyHnMulaCLP7A5inyvRhMQsbj9hzCTqWEwoCxrrZLt6K1Sdao4bN0WxyF
-	mhUmpo13gZ+gC4Yn/oRRrTdQ==
-X-Google-Smtp-Source: AGHT+IFaCgdi/D8Mz2g+4kwknyPmgE+BAWyWeosYJdPhAXZY/ccwJe6YGp50DFdsLuHQOqspxP6UrWYnj+YkNWqFGqY=
-X-Received: by 2002:a05:690c:dd1:b0:6fb:46dc:d9c4 with SMTP id
- 00721157ae682-7083ec4d087mr32192027b3.12.1745490673788; Thu, 24 Apr 2025
- 03:31:13 -0700 (PDT)
+	s=arc-20240116; t=1745491201; c=relaxed/simple;
+	bh=xP4Tf79KqAuLlTb0FwQb/+buXy1DPxPoIe/ehI0F5Ig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZxD7tyix5ASWVGV5512BnXfOUA1TpiAmhf7TG7m2p/Iuxg2huyXy4wSTB3xO/Qcxs9fc6AqAHa/X1Ydg19BxdkB38QxNtX5Z3PiBhAYboYhRR5gjt2hMuQsXaRP2m+WXmwi6nzv4kdU8fn+9CBtq7RW21xx+NElPuebwpPU2ruk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=X/RPuHUs; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1745491195; x=1746095995; i=deller@gmx.de;
+	bh=xP4Tf79KqAuLlTb0FwQb/+buXy1DPxPoIe/ehI0F5Ig=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=X/RPuHUsRQBtEjnyySjzTdW7+n0EfeEXxu7mdLyVJbQRPswTFEqbDMTynhcZPCRU
+	 xH5B769uOvW+gg7VrZ5tWJnVijOUW4Wo/xUJtbQjTgbzr22hAOicclFt/fi9I7+RS
+	 Pk8bZqvUufr1QihlMVqt/TvuhndWe1LI9RCnZBlLxc3So7jHTAU2Amb2XfT3wJpRX
+	 4jJl7X8/0Ze3TvwvBtIvcsz0rxFfupC3PetWP+pY6u8nd6ultBpkd5TASmxZeYX8r
+	 AIN+Z0kIV6rFqLp6PS9Zb6GBuxxkqc+kem6SAqQavA2wEPbrMcC+Skk27FANHAC0R
+	 p3ABAyCAm33b5Oqucw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.8.0.6] ([78.94.87.245]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MeU0k-1uiKg32gey-00phI4; Thu, 24
+ Apr 2025 12:39:55 +0200
+Message-ID: <452a0622-5d2a-4a19-946c-536cf4130133@gmx.de>
+Date: Thu, 24 Apr 2025 12:39:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424062017.652969-1-uwu@icenowy.me> <20250424062017.652969-2-uwu@icenowy.me>
- <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com> <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
-In-Reply-To: <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 24 Apr 2025 12:30:58 +0200
-X-Gm-Features: ATxdqUHtrYzEaLg25kuj53TyY1Q41AznmucaPtZY25yhlzNHITgdvG43lqbYwqY
-Message-ID: <CACRpkdY0DXxDixZVhnRuKvSVbKQ6pSfLMiT2hf9818sbNG-4hg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
-	Hal Feng <hal.feng@starfivetech.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fbdev: via: use new GPIO line value setter callbacks
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250408-gpiochip-set-rv-video-v1-1-200ea4d24a29@linaro.org>
+ <CACRpkdY0d_a8qzN2bJD+yzZ0P_twwPM21yV771YoABuVQzXAUg@mail.gmail.com>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <CACRpkdY0d_a8qzN2bJD+yzZ0P_twwPM21yV771YoABuVQzXAUg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cX+jAVkwEd4MqhU2/AohxiHsnRCu7WChZ1Z5v2jXf+QyGJDa0+K
+ cN/bXekuU/KbcPiki7EUXIDaJqK3MhVF98J/SduyB54mU7FENdGpxjlQq41qKCYUq2jPJ/Z
+ 43mJPeT79JcoIK8J6WmeY6HfgP8BBMzW8m95SjFqhDet1PM7VWSoGGCRFgJN/DHQ09CzIOl
+ NHjhfWmJD5PJyyXcrW1zg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:eFF75nhUyP4=;ufqSyyMvZAB4Vyo32iUIC1by4eI
+ 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
+ IKiV6tUWJuWv4URAV6YNPeyJiP6O6Hg=
 
-On Thu, Apr 24, 2025 at 11:38=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> wro=
-te:
-> =E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:51 +0200=EF=
-=BC=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
-> > On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> =
-wrote:
-> >
-> > > The JH7110 SoC could support internal GPI signals to be routed to
-> > > not
-> > > external GPIO but internal low/high levels.
-> > >
-> > > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
-> > > virtual
-> > > "pads" to represent internal GPI sources with fixed low/high
-> > > levels.
-> > >
-> > > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
-> >
-> > As per my other reply in the previous post, I think this should be
-> > handled internal in the kernel instead using a tighter integration
-> > between
-> > the GPIO and pin control parts of the driver and utilizing the
-> > gpio-specific struct pinmux_ops callbacks.
->
-> Well I cannot understand this -- these signals are not GPIOs, totally
-> not related to the GPIO subsystem (because they're only pinmux, not
-> related to GPIOs). This is described in my previous mail.
+On 4/24/25 10:52, Linus Walleij wrote:
+> On Tue, Apr 8, 2025 at 9:43=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+>=20
+>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+>> struct gpio_chip now has callbacks for setting line values that return
+>> an integer, allowing to indicate failures. Convert the driver to using
+>> them.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-OK sorry if I'm a bit dumb at times :(
+added to fbdev for-next tree.
 
-I guess I was falling into the common confusion of "something named
-general purpose" such as your GPI and GPO registers, is also
-related to GPIO which it is not, at least not always.
-
-> The pin mux of JH7110 strictly route its inputs to its outputs. For
-> signals from other SoC blocks (to external pins), the registers define
-> how OUT/OEn of IO buffers *are driven by* the signals; however for
-> signals to other SoC blocks (from external pins), the registers define
-> how IN of IO buffers *drive* the signals. (This follows the generic
-> signal-driving rule that one signal can drive multiple signals but
-> cannot be multi-driven).
->
-> In addition the situation I am trying to handle here is an addition to
-> the latter part of the previous paragraph -- in addition to 64 inputs
-> corresponding to 64 GPIOs, two extra inputs, one always 0 and another
-> always 1 are available to the pin controller for driving other SoC
-> blocks' input (as output of pin controller).
-
-OK ... maybe I get it now.
-
-> > This solution looks like software configuration disguised as hardware
-> > configuration.
->
-> Well this solution handles these internal wires in the same way as
-> signals from external GPIOs, excepting specifying special GPIO numbers.
-> If you are against the principle, maybe the current already-included
-> GPIOMUX system of the StarFive pinctrl is to be blamed instead of my
-> small extension to it.
->
-> I must admit that the current GPIOMUX system isn't a faithful
-> representation of the hardware because it's a pad-centric setup instead
-> of a register-field-centric one, which isn't very natural for input
-> signals. However configurating the mux in such a way is against people
-> reading, and we're not able to break the system because it's already
-> there.
->
-> Well in the situation that one GPIO used as input drives multiple
-> internal signals the pinmux looks a little confusing too, e.g. the I2S
-> clock situation I mentioned in my reply in the previous revision of the
-> patchset.
-
-I guess what rubs me the wrong way is why the external users
-(devices, device drivers or even pin hogs) cannot trigger the chain of
-events leading to this configuration, instead of different "magic"
-configurations that are just set up in the pin controller itself.
-
-But if you are positively convinced that there is no other way,
-I guess I have to live with it.
-
-Yours,
-Linus Walleij
+Thanks!
+Helge
 
