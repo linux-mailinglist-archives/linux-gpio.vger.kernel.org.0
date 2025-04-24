@@ -1,161 +1,99 @@
-Return-Path: <linux-gpio+bounces-19281-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19280-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA786A9B37F
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 18:10:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40A68A9B369
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 18:07:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01D1616EA02
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 16:10:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C58D5A1B28
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Apr 2025 16:07:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E031127FD69;
-	Thu, 24 Apr 2025 16:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6FD3280A57;
+	Thu, 24 Apr 2025 16:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="lkcNnvNv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fH7gpb3+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B29119E7F9;
-	Thu, 24 Apr 2025 16:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E6227F741;
+	Thu, 24 Apr 2025 16:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511029; cv=none; b=ZAfkm2hX1BxCv7OB9X7z50F4JKOQr7eDiSZKOPbmKoDbc7WQfp3C5Sfg74BTknYYHDqlr+W8P8hfRUgegIVlP/9aBECmyiBDRAtMV9Pdurh3Ga2GY8UAzra4Q+a9IBwpcwr3pIofB+d3JPVfhJ4okjKRwVDxo4FSs0yaxXifduw=
+	t=1745510832; cv=none; b=EVAaLr0Zb51eslWQVHnOWPrTwHMfmpWecI6viDdv8LyHkOIueueVhDFftFaX1NDMItalH1AJhjD0guRhIvYeQ15FJlkEWVtC29NRea0yxcsiOfeGud4AmMi+g6zCWlfyuIdQJKp71YR8D0DkjceHsBCqYhIThogE+7v51V0aATQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511029; c=relaxed/simple;
-	bh=xS/c2OWjF/odcrpnrmcuWM+KrdapIB6JqW1w7ffcSTM=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DA5kX1cDd87AbsDvUwBgcADgRNmYZaVjIaOUF5SeB6u5knrI+bdVSMV4pU544os3LWCi8mBZbiJSg5k8Xe1xL4kAQQSdO1SrguxiGXqLtngq1/JJGHPk3Wkc3eaQRSob0frZi5c+C+Kj59gPyDafmpj3P7cL9IXNo8wG37PeJiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=lkcNnvNv; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OCIEXH002237;
-	Thu, 24 Apr 2025 18:09:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	xS/c2OWjF/odcrpnrmcuWM+KrdapIB6JqW1w7ffcSTM=; b=lkcNnvNvH3Y4ByzV
-	2xdkf8jvnuqm2xAX5NncjVhbS9sPbbWDkWN+8PNPuw1Jb2yDcLBl5/X1OBw+Gbi+
-	yL6UK0ojK5xWIg9O67qKpFOrIBH+lL7wj73r0lpR+2nzoedKVwqlTOV3+4AAqM1t
-	XH2yszQ9E985pznh7VRPbuKcl4HTWPceHELiyEs8oLieQdwI1TwLKR8/PlI4B24a
-	bKkm8tK7+aTLc7lVPrgkW6PdrBrW/C7kZwntzuRuy2CWDHXgDtXoa2D5b2ukbpG6
-	BheCKxuJtGgK+iY9E9wtURIBQXlCSfy5jlpxKF6/oxTsti3RrWTOMazcJUHQTCuf
-	k45zIQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jjygjeu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 18:09:41 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5168940082;
-	Thu, 24 Apr 2025 18:07:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 345169D0185;
-	Thu, 24 Apr 2025 18:04:50 +0200 (CEST)
-Received: from [192.168.8.15] (10.48.86.132) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
- 2025 18:04:48 +0200
-Message-ID: <b768bd1b6bfe3bef28278b85ace87230a67b904e.camel@foss.st.com>
-Subject: Re: [Linux-stm32] [PATCH 05/12] pinctrl: stm32: use new GPIO line
- value setter callbacks
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Basavaraj Natikar
-	<Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Andreas =?ISO-8859-1?Q?F=E4rber?=
-	<afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Steen Hegelund
-	<Steen.Hegelund@microchip.com>,
-        Daniel Machon <daniel.machon@microchip.com>,
-        <UNGLinuxDriver@microchip.com>,
-        "Ludovic Desroches"
-	<ludovic.desroches@microchip.com>,
-        Nicolas Ferre
-	<nicolas.ferre@microchip.com>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>
-CC: <linux-samsung-soc@vger.kernel.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>,
-        <linux-actions@lists.infradead.org>, <linux-mips@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date: Thu, 24 Apr 2025 18:04:47 +0200
-In-Reply-To: <20250424-gpiochip-set-rv-pinctrl-part2-v1-5-504f91120b99@linaro.org>
-References: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
-	 <20250424-gpiochip-set-rv-pinctrl-part2-v1-5-504f91120b99@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 
+	s=arc-20240116; t=1745510832; c=relaxed/simple;
+	bh=u+V3fTgG06hwrCHEbqKSXdFzqgVK2Sp69Gv2OEFHhfs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MRn40POFEZNR+5lCkpxUL99+G6UKVvPctJhXItzDTyI2umVIBPclEoVFPHK2hdrwilv7SAMtJHOtoaK0741v/kKPVi/aDvlCEeH/x2WnzHMzn8N4A3As1iu9UOJwuKalzlsHghHZXUrc0hjGyWRnT/QkIuczAX43xOUP8NNuPms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fH7gpb3+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2455C4CEE3;
+	Thu, 24 Apr 2025 16:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745510831;
+	bh=u+V3fTgG06hwrCHEbqKSXdFzqgVK2Sp69Gv2OEFHhfs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fH7gpb3+Z5SM88t6XGB1A1+9ZXTzbWvlnS9R1TtIspIsg0TCa7SFzRb7pWwFwWdN2
+	 tC5AAPACa6unuubzwIHDAoGpYvGwa65ezz0pfJVIx/h9OkkSuf2L8ZU1cbM3R6Hal7
+	 sym4tKrS/ndP9hdmlflvPyWc4siQZEm5EvNnPCdOl1RwPuo6/51e7+se4s7yBrM2GZ
+	 QCAE9ynczsKs9r43DFs7hDWhwDtHaDgLiJjW/13YWamtw5g4p/r6IxCCWwRkPbpOVA
+	 lwrVUQMkomQ6P1UeT1M7XUwB8NKDAqegrYTxV7GGsO+Z7vmTU6pK5JZsRIhz9lLPI/
+	 NgAhX+HP0RdFQ==
+Date: Thu, 24 Apr 2025 17:07:06 +0100
+From: Lee Jones <lee@kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-input@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH v2 10/17] mfd: adp5585: add support for key events
+Message-ID: <20250424160706.GL8734@google.com>
+References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
+ <20250415-dev-adp5589-fw-v2-10-3a799c3ed812@analog.com>
+ <20250421093310.GH29968@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_07,2025-04-24_01,2025-02-21_01
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250421093310.GH29968@pendragon.ideasonboard.com>
 
-T24gVGh1LCAyMDI1LTA0LTI0IGF0IDEwOjM1ICswMjAwLCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdy
-b3RlOgo+IEZyb206IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJhcnRvc3ouZ29sYXN6ZXdza2lAbGlu
-YXJvLm9yZz4KPiAKPiBzdHJ1Y3QgZ3Bpb19jaGlwIG5vdyBoYXMgY2FsbGJhY2tzIGZvciBzZXR0
-aW5nIGxpbmUgdmFsdWVzIHRoYXQgcmV0dXJuCj4gYW4gaW50ZWdlciwgYWxsb3dpbmcgdG8gaW5k
-aWNhdGUgZmFpbHVyZXMuIENvbnZlcnQgdGhlIGRyaXZlciB0byB1c2luZwo+IHRoZW0uCj4gCj4g
-U2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmFydG9zei5nb2xhc3pld3NraUBs
-aW5hcm8ub3JnPgoKUmV2aWV3ZWQtYnk6IEFudG9uaW8gQm9ybmVvIDxhbnRvbmlvLmJvcm5lb0Bm
-b3NzLnN0LmNvbT4KCj4gLS0tCj4gwqBkcml2ZXJzL3BpbmN0cmwvc3RtMzIvcGluY3RybC1zdG0z
-Mi5jIHwgNyArKysrKy0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAyIGRl
-bGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvc3RtMzIvcGluY3Ry
-bC1zdG0zMi5jIGIvZHJpdmVycy9waW5jdHJsL3N0bTMyL3BpbmN0cmwtc3RtMzIuYwo+IGluZGV4
-IGNjMGI0ZDFkN2NmZi4uYmE0OWQ0OGMzYTFkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGluY3Ry
-bC9zdG0zMi9waW5jdHJsLXN0bTMyLmMKPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvc3RtMzIvcGlu
-Y3RybC1zdG0zMi5jCj4gQEAgLTIyOCwxMSArMjI4LDE0IEBAIHN0YXRpYyBpbnQgc3RtMzJfZ3Bp
-b19nZXQoc3RydWN0IGdwaW9fY2hpcCAqY2hpcCwgdW5zaWduZWQgb2Zmc2V0KQo+IMKgwqDCoMKg
-wqDCoMKgwqByZXR1cm4gISEocmVhZGxfcmVsYXhlZChiYW5rLT5iYXNlICsgU1RNMzJfR1BJT19J
-RFIpICYgQklUKG9mZnNldCkpOwo+IMKgfQo+IMKgCj4gLXN0YXRpYyB2b2lkIHN0bTMyX2dwaW9f
-c2V0KHN0cnVjdCBncGlvX2NoaXAgKmNoaXAsIHVuc2lnbmVkIG9mZnNldCwgaW50IHZhbHVlKQo+
-ICtzdGF0aWMgaW50IHN0bTMyX2dwaW9fc2V0KHN0cnVjdCBncGlvX2NoaXAgKmNoaXAsIHVuc2ln
-bmVkIGludCBvZmZzZXQsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBpbnQgdmFsdWUpCj4gwqB7Cj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBzdG0z
-Ml9ncGlvX2JhbmsgKmJhbmsgPSBncGlvY2hpcF9nZXRfZGF0YShjaGlwKTsKPiDCoAo+IMKgwqDC
-oMKgwqDCoMKgwqBfX3N0bTMyX2dwaW9fc2V0KGJhbmssIG9mZnNldCwgdmFsdWUpOwo+ICsKPiAr
-wqDCoMKgwqDCoMKgwqByZXR1cm4gMDsKPiDCoH0KPiDCoAo+IMKgc3RhdGljIGludCBzdG0zMl9n
-cGlvX2RpcmVjdGlvbl9vdXRwdXQoc3RydWN0IGdwaW9fY2hpcCAqY2hpcCwKPiBAQCAtMzA4LDcg
-KzMxMSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZ3Bpb19jaGlwIHN0bTMyX2dwaW9fdGVtcGxh
-dGUgPSB7Cj4gwqDCoMKgwqDCoMKgwqDCoC5yZXF1ZXN0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqA9IHN0bTMyX2dwaW9fcmVxdWVzdCwKPiDCoMKgwqDCoMKgwqDCoMKgLmZyZWXCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoD0gcGluY3RybF9ncGlvX2ZyZWUsCj4g
-wqDCoMKgwqDCoMKgwqDCoC5nZXTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgPSBzdG0zMl9ncGlvX2dldCwKPiAtwqDCoMKgwqDCoMKgwqAuc2V0wqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoD0gc3RtMzJfZ3Bpb19zZXQsCj4gK8KgwqDCoMKgwqDC
-oMKgLnNldF9ydsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA9IHN0bTMyX2dwaW9f
-c2V0LAo+IMKgwqDCoMKgwqDCoMKgwqAuZGlyZWN0aW9uX2lucHV0wqDCoMKgwqDCoMKgwqDCoD0g
-cGluY3RybF9ncGlvX2RpcmVjdGlvbl9pbnB1dCwKPiDCoMKgwqDCoMKgwqDCoMKgLmRpcmVjdGlv
-bl9vdXRwdXTCoMKgwqDCoMKgwqDCoD0gc3RtMzJfZ3Bpb19kaXJlY3Rpb25fb3V0cHV0LAo+IMKg
-wqDCoMKgwqDCoMKgwqAudG9faXJxwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoD0g
-c3RtMzJfZ3Bpb190b19pcnEsCj4gCgo=
+On Mon, 21 Apr 2025, Laurent Pinchart wrote:
 
+> Hi Nuno,
+> 
+> Thank you for the patch.
+> 
+> On Tue, Apr 15, 2025 at 03:49:26PM +0100, Nuno Sá via B4 Relay wrote:
+> > From: Nuno Sá <nuno.sa@analog.com>
+> > 
+> > This adds support for key events. Basically, it adds support for all the
+> > FW parsing and configuration of the keys (also making sure there's no
+> > overlaps). They can either be part of a matrix keymap (in which case
+> > events will be handled by an input device) or they can be gpi's (in which
+> > case events will be handled by the gpiochip device via gpio_keys). There's
+> > also support for unlock keys as for reset keys.
+> 
+> There's lots of code below specific to matrix keypad handling. Please
+> move it to the keypad driver, and keep this driver as lean as possible.
+
+Exactly this.  MFD shouldn't need to contain anything that should be
+handed in the leaf drivers.  Keypad handling should be processed by
+keypad driver, etc.  If the GPIO driver needs to have visibility into
+keypad API, add some exported helpers in the Keyoad driver.
+
+-- 
+Lee Jones [李琼斯]
 
