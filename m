@@ -1,87 +1,127 @@
-Return-Path: <linux-gpio+bounces-19316-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19317-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED0B5A9CA1B
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 15:22:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B3E7A9CC8C
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 17:14:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B2359A2E4B
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 13:22:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AF481765E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 15:14:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F7024A074;
-	Fri, 25 Apr 2025 13:22:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAEC627510A;
+	Fri, 25 Apr 2025 15:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UnwmJqpZ"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="MiecbeKS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67403288A5;
-	Fri, 25 Apr 2025 13:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C4326FDBB;
+	Fri, 25 Apr 2025 15:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745587356; cv=none; b=YmeeDckkO4I9Ai+cmIlaGlAA/aE30IXRnrKUwlxQe6R7XrMOJQieXC5DU5CSZVRQomUdrtWwFcE8JAisYDzuCMMe+j7WVGRWE/2TcDAxJqqeJ8xaeRAtPZBDNyPIeVS1sAxIHTtzKlYnFZgg48E21YpqVBfQu9I2Z56ccXj5awY=
+	t=1745594035; cv=none; b=QC7bwwLl9wH4OJFjNXHuMhFr7XulQbuEP3f4GSXcR4I69pwKCEnu0qkTPKQT9vhiYNCFO5Qq0FmhnLzTulf6bdHmZXspwUoALKmOlgAf9silU+68cK+pIUKDhBX+FWyBh4pTa3kDNRCxBwwhG/srqLMJTVkeE7Ymhzam1r+uZVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745587356; c=relaxed/simple;
-	bh=Csu4kU53xYy8vIqw4BqzvpDFCe+FaWjgzttl9RTuU7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BPJTCU1+gg+T+OiwzUX/UkIIhjsc0PfzjCMD0Yc2M38mOf9xi4wn0hZlaML1tVzgOwklMD9cdd7XZc/qiHb5SrqE6K7TChd+AisuaZ/FrFswmy7zUqwwT8yGu4gg2z54AM8ScEncRAUydb4kot+AUCveDWAZvl/SHnIXWk+FBUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UnwmJqpZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F268C4CEE4;
-	Fri, 25 Apr 2025 13:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745587355;
-	bh=Csu4kU53xYy8vIqw4BqzvpDFCe+FaWjgzttl9RTuU7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UnwmJqpZ3Mpb0on/fQfoNEriirUddomsj8RAwg1ooWp3feHmVDBObHbt/AAdrG3KP
-	 Dns0dNyS9de5hOCSztOXdS7JGnFtf4QQRm5GEBeL5lEqJdEhnTtdoIOZffwZVZ3SR2
-	 jyNJTMVOb8EL9zolb6tFCrXp+xmRJ6JXTJBtVMZs=
-Date: Fri, 25 Apr 2025 15:22:33 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 0/3] gpiolib: finish conversion to devm_*_action*()
- APIs
-Message-ID: <2025042523-immovable-onyx-e648@gregkh>
-References: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
- <aAfmBlE3ZXU65PQR@smile.fi.intel.com>
+	s=arc-20240116; t=1745594035; c=relaxed/simple;
+	bh=2Fr79h5WpW0sk+9jfuwv/EfIloErPvJaRV1TKBMbIms=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=utsOTm86+lxhmQ0E5dryYvTPeBQ343VJdA2z2ZRGlIgqzxyMCXQ7SAvUkzWJm3PSE3tn0j5dfpfz47BFlsrW89AGYIH5W+YJAwdUGFlsoPyl5nzrbm/fjF5RZlA88FR6sETabFqxuUJLg/Dq5189p4xQYecFzt+6MHgnWkV/ffs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=MiecbeKS; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from localhost (web.docker-mailserver_default [172.18.0.2])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 4E4B2BBAC4;
+	Fri, 25 Apr 2025 15:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1745594025;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ECsaLysjp6B31lix5ePZqbR776k53fktpSr8Jb8kvHE=;
+	b=MiecbeKSC9qPTxgyzouBu54qd4VjFtmkfHV/2qTsOefPU2eAaK5cBCTcImhw+T75qlqO2+
+	xsNGxQQjX0OdP68jb2HZKFeV8do4HMOWxaZhIfySqXsdEKz5Op//pZWwxEqwnctK8A8rVg
+	P2WjEybiUv3PnKk+10v9R9AGnDIaowzlxTfxSncUT2oXgzv8YLcXGPbJ5rn9brvr+KfYzt
+	y9ZSgyOeTe1KRw4YfSE60ZQrWAbmyN8y261B96MCfrdyWbqrTrbHB4hEewS6ZzpxeAxnO5
+	sW1MJRWbpDrguja+qwxdVjlEkU+50iOBR8LfCx5VBQuphi1fOseWw4tM2FcHfg==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAfmBlE3ZXU65PQR@smile.fi.intel.com>
+Date: Fri, 25 Apr 2025 17:13:45 +0200
+From: barnabas.czeman@mainlining.org
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
+ =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
+ <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, Rob Clark
+ <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Dmitry
+ Baryshkov <lumag@kernel.org>, Adam Skladowski <a_skl39@protonmail.com>,
+ Sireesh Kodali <sireeshkodali@protonmail.com>, Srinivas Kandagatla
+ <srini@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, Dang Huynh
+ <danct12@riseup.net>
+Subject: Re: [PATCH v5 3/5] arm64: dts: qcom: Add initial support for MSM8937
+In-Reply-To: <70635d75-03f9-49ea-8098-57cb144fda94@oss.qualcomm.com>
+References: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
+ <20250421-msm8937-v5-3-bf9879ef14d9@mainlining.org>
+ <2e3d94a4-d9e1-429e-9f65-d004c80180e5@oss.qualcomm.com>
+ <790a0b7537e0b82b70bc4b32612ecee6@mainlining.org>
+ <70635d75-03f9-49ea-8098-57cb144fda94@oss.qualcomm.com>
+Message-ID: <5ccb39f9393b44761127717096a38a46@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 09:55:02PM +0300, Andy Shevchenko wrote:
-> On Thu, Feb 20, 2025 at 06:20:25PM +0200, Andy Shevchenko wrote:
-> > GPIOLIB has some open coded stuff that can be folded to the devm_*_action*()
-> > calls. This mini-series is for that. The necessary prerequisites are here
-> > as well, namely:
-> > 1) moving the respective APIs to the devres.h;
-> > 2) adding a simple helper that GPIOLIB will rely on;
-> > 3) finishing the GPIOLIB conversion to the device managed action APIs.
-> > 
-> > The series is based on another series that's available via immutable tag
-> > devres-iio-input-pinctrl-v6.15 [1]. The idea is to route this via GPIOLIB
-> > tree (or Intel GPIO for the starter) with an immutable tag for the device
-> > core and others if needed. Please, review and acknowledge.
+On 2025-04-25 11:57, Konrad Dybcio wrote:
+> On 4/23/25 4:46 PM, barnabas.czeman@mainlining.org wrote:
+>> On 2025-04-23 16:03, Konrad Dybcio wrote:
+>>> On 4/21/25 10:18 PM, Barnabás Czémán wrote:
+>>>> From: Dang Huynh <danct12@riseup.net>
+>>>> 
+>>>> Add initial support for MSM8937 SoC.
+>>>> 
+>>>> Signed-off-by: Dang Huynh <danct12@riseup.net>
+>>>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>>> ---
 > 
-> Greg, I know you are busy, but do you have a chance to look at this and give
-> your Ack if you are okay with the idea? The route is assumed to be via GPIOLIB
-> tree.
-
-Looks fine to me:
-
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> [...]
+> 
+>>>> +            gpu_opp_table: opp-table {
+>>>> +                compatible = "operating-points-v2";
+>>>> +
+>>>> +                opp-19200000 {
+>>>> +                    opp-hz = /bits/ 64 <19200000>;
+>>>> +                    opp-supported-hw = <0xff>;
+>>> 
+>>> The comment from the previous revision still stands
+>> If i remove opp-supported-hw i will got -22 EINVAL messages and the 
+>> opp will be not fine.
+> 
+> Right, I have a series pending to improve this situation a bit..
+> 
+> In the meantime, you should be able to define the nvmem cell and
+> fill in meaningful values for this platform
+As I wrote in the previous revision there is no nvmem for GPU on msm8937 
+only on msm8940.
+> 
+> Konrad
 
