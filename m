@@ -1,207 +1,161 @@
-Return-Path: <linux-gpio+bounces-19294-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19296-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 682BBA9C03F
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 09:59:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CDCBA9C1FE
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 10:50:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 54EAD7B0DB6
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 07:58:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68E6E3A6A5C
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 08:45:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81DFD23315E;
-	Fri, 25 Apr 2025 07:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72CA5238176;
+	Fri, 25 Apr 2025 08:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrrPLYLY"
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="MbSr3hYh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362BB231A23;
-	Fri, 25 Apr 2025 07:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745567945; cv=none; b=pWFDjyzZIHBycZdHEHTo0ALR7rNKAWkpbz1ylN2XRA3SlwWACtUXM+6k9aVz5IPWstrtBiKzlXto4G7SjDCBHCKztTlB5QgOeF/rwEnOrqOgTJ3prHDNA7CrSx9PGUwViTcz9A2pWNYktj0+ov0UTNee9LIip/oxxJrI1dUT3Uc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745567945; c=relaxed/simple;
-	bh=K3sEsMJ0EA7gcajxBx214Jzm7OZ+qxsCiyntNJbobEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rrcKa8nDFH3pQM4klsTS40i/9DE0h0NHYWzWOFLprcvUUzcqR8dHGX4dpzqyfMVXC2dZxQon96eHsU7Stnggb3CoJkw8ByGbv0wvMxIVZ0u2EuaNBo4ET7HqkQIRf2/vw41vOmu9O1FWRfntxPcNwLvpvsQ0F/T8NkP21RQHEg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrrPLYLY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F997C4CEE4;
-	Fri, 25 Apr 2025 07:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745567945;
-	bh=K3sEsMJ0EA7gcajxBx214Jzm7OZ+qxsCiyntNJbobEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CrrPLYLYKiKg2B8SlWl5gXeeY201MyBTl+9R/ba/Z3+8/00ivov+W6TqQ1tEuqfI9
-	 KaqQMGNgxXUENDSabh6TrWLfjwbVrhE2M/8MvEupSl5s7D99SrLyzauzMSyQU2ly45
-	 de7gCukg3deI7uzATR6pcL1NrMxA+U3Sqhzm324S6LaespwrUnk8XzSUGLJtp4iJpl
-	 os8q5QeOwzrkTU2i/plge5Vv3rggxiw8VQdQ9uU7NDlqOrcDZUNbKhmXAz06gc0Fre
-	 2B6xiAB3aVRlxwRuX6RcdohwJhB8u+eE44aMvSC+rcv4xCtvZNrMKVMQsx36Fhjvab
-	 gFPcNRqZR8n1w==
-Date: Fri, 25 Apr 2025 08:58:59 +0100
-From: Lee Jones <lee@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-input@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v2 06/17] mfd: adp5585: add support for adp5589
-Message-ID: <20250425075859.GQ8734@google.com>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
- <20250415-dev-adp5589-fw-v2-6-3a799c3ed812@analog.com>
- <20250424161838.GM8734@google.com>
- <20250424163024.GL18085@pendragon.ideasonboard.com>
- <20250424163830.GO8734@google.com>
- <20250424193931.GM18085@pendragon.ideasonboard.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25118238152;
+	Fri, 25 Apr 2025 08:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745570674; cv=pass; b=u8vqTLCoB7xiXkAxMua7Z/shka9tkZRmfGVtsEYaZmlVm+VlkijBCkV4uzocUa7bofR0Ttd/JEI14ZDJk8sNIFUmsM8ARsQ48TK6BaMxL6W3E92DCh3uNZP9J6poGErjHCAkNhUuKv462wmLyLMahgC2q1BK2c8dQJarlA+ZvGI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745570674; c=relaxed/simple;
+	bh=yjq2AGuA29xCOgUcG0CIGuz4LaDtS7a60cZx5XO2DGA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jxv4wddt0EOIyVDeHTA5sBcXc1nrdgCRofdyt3OBrxKDyzbphbKiXJJm6793FcPxlrdhxCwthx0GgVxowTe/V2C49Ex5JRJZzIpwxlnmzQILJGVHWRWb6TPYealNy7ZLZqdbxybLxMW4oFrzlfBGmQyQfeBKeWhCirLvtw5SV18=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=MbSr3hYh; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+ARC-Seal: i=1; a=rsa-sha256; t=1745570646; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iPxa1tME43btWBJM9+6+JF3341N/snsfZv7ikXOFqzt+ANi4A4Ysm8FOemEfDbUFzoeMjGLIlhMXvhq431XE1VV6YNa+7pB5M6NU7sqFUvSgmhgi2UF+CMZ3hjTIfeNhqWWMpdSilO2/ZTL8IGQzs7C3n3RKPc84NXnfsBCZNp4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745570646; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=yjq2AGuA29xCOgUcG0CIGuz4LaDtS7a60cZx5XO2DGA=; 
+	b=i2MLWQYurtV3APXeIRg1xh2Qw3urvftrm+CLRlgsB1ZqUseQD9sH5sfdPcr8+mPqYhWHjNq2IpinEvPel3RSl3sI5rt6/Nywibcnetu/saZXwsG62TBTWzkIOrksmWOyMUk1cSk71xDBYLAXccLsNWFyni33zmo3Iq+znekys6Y=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745570646;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=yjq2AGuA29xCOgUcG0CIGuz4LaDtS7a60cZx5XO2DGA=;
+	b=MbSr3hYhmraOXLP86p9Z8aaBI4qPNMRnIdZidUznApzOKEGDMzJjtIdnZ0yxBvc3
+	eQ844/s9iIpWOxG51BOVQHsnkKfWt6yNO6skTbO1V6EQWYPL8Umy+0EX48cFe5wrRnM
+	PLPsIZcEg7iXk5hAN0y3KJIF4LK6SMSgzKE4A1XGeCTJKqhlAsGrCqJv/CvPhz+EbCY
+	BZWanu9+eYglFfwWt1u53YhOoYPvt6Ol4M/rdHh0AZ7s9PvYeGmW7PdmZI9vQrR5NV9
+	hLcrKbqk3bwjuYWpO4TXC9j15hWYnCkSCzWc54wpAyJhi55ohZSXvbmeMNMpOXje2TZ
+	R18j/Qftog==
+Received: by mx.zohomail.com with SMTPS id 1745570643106791.8159653626777;
+	Fri, 25 Apr 2025 01:44:03 -0700 (PDT)
+Message-ID: <460048c49b82684af0759520ec8dcac057ad2857.camel@icenowy.me>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
+ PAD_INTERNAL_* virtual pins
+From: Icenowy Zheng <uwu@icenowy.me>
+To: E Shattow <e@freeshell.de>, Emil Renner Berthing <kernel@esmil.dk>, 
+ Jianlong Huang <jianlong.huang@starfivetech.com>, Hal Feng
+ <hal.feng@starfivetech.com>, Linus Walleij <linus.walleij@linaro.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Date: Fri, 25 Apr 2025 16:43:56 +0800
+In-Reply-To: <60891c52-eeca-4358-8f38-789533016495@freeshell.de>
+References: <20250424062017.652969-1-uwu@icenowy.me>
+	 <20250424062017.652969-2-uwu@icenowy.me>
+	 <60891c52-eeca-4358-8f38-789533016495@freeshell.de>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250424193931.GM18085@pendragon.ideasonboard.com>
+X-ZohoMailClient: External
 
-On Thu, 24 Apr 2025, Laurent Pinchart wrote:
+=E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 01:15 -0700=EF=BC=
+=8CE Shattow=E5=86=99=E9=81=93=EF=BC=9A
+> On 4/23/25 23:20, Icenowy Zheng wrote:
+> > The JH7110 SoC could support internal GPI signals to be routed to
+> > not
+> > external GPIO but internal low/high levels.
+> >=20
+> > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
+> > virtual
+> > "pads" to represent internal GPI sources with fixed low/high
+> > levels.
+> >=20
+> > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+> > ---
+> > =C2=A0include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h | 4 ++++
+> > =C2=A01 file changed, 4 insertions(+)
+> >=20
+> > diff --git a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> > b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> > index 3865f01396395..3cca874b2bef7 100644
+> > --- a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> > +++ b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> > @@ -126,6 +126,10 @@
+> > =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PAD_GMAC0_=
+TXEN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A018
+> > =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PAD_GMAC0_=
+TXC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A019
+> > =C2=A0
+> > +/* virtual pins for forcing GPI */
+> > +#define PAD_INTERNAL_LOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0254
+> > +#define PAD_INTERNAL_HIGH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0255
+> > +
+> > =C2=A0#define GPOUT_LOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00
+> > =C2=A0#define GPOUT_HIGH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A01
+> > =C2=A0
+>=20
+> Asking about the choice of 255 and 254 values for virtual high/low
+> pins,
+> here. There's not much result when grep Linux source for 'virtual
+> pin'
+> to compare with. Are these the best values for this approach?
 
-> On Thu, Apr 24, 2025 at 05:38:30PM +0100, Lee Jones wrote:
-> > On Thu, 24 Apr 2025, Laurent Pinchart wrote:
-> > > On Thu, Apr 24, 2025 at 05:18:38PM +0100, Lee Jones wrote:
-> > > > On Tue, 15 Apr 2025, Nuno Sá via B4 Relay wrote:
-> > > > 
-> > > > > From: Nuno Sá <nuno.sa@analog.com>
-> > > > > 
-> > > > > The ADP5589 is a 19 I/O port expander with built-in keypad matrix decoder,
-> > > > > programmable logic, reset generator, and PWM generator.
-> > > > > 
-> > > > > This patch adds the foundation to add support for the adp5589 gpio and pwm
-> > > > > drivers. Most importantly, we need to differentiate between some
-> > > > > registers addresses. It also hints to future keymap support.
-> > > > > 
-> > > > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > > > > ---
-> > > > >  drivers/mfd/adp5585.c       | 223 +++++++++++++++++++++++++++++++++++++++++---
-> > > > >  include/linux/mfd/adp5585.h |  57 ++++++++++-
-> > > > >  2 files changed, 268 insertions(+), 12 deletions(-)
-> > > > 
-> > > > [...]
-> > > > 
-> > > > > + * Bank 0 covers pins "GPIO 1/R0" to "GPIO 8/R7", numbered 0 to 7 by the
-> > > > > + * driver, bank 1 covers pins "GPIO 9/C0" to "GPIO 16/C7", numbered 8 to
-> > > > > + * 15 and bank 3 covers pins "GPIO 17/C8" to "GPIO 19/C10", numbered 16 to 18.
-> > > > > + */
-> > > > > +#define ADP5589_BANK(n)			((n) >> 3)
-> > > > > +#define ADP5589_BIT(n)			BIT((n) & 0x7)
-> > > > > +
-> > > > > +struct adp5585_regs {
-> > > > > +	unsigned int debounce_dis_a;
-> > > > > +	unsigned int rpull_cfg_a;
-> > > > > +	unsigned int gpo_data_a;
-> > > > > +	unsigned int gpo_out_a;
-> > > > > +	unsigned int gpio_dir_a;
-> > > > > +	unsigned int gpi_stat_a;
-> > > > > +	unsigned int pwm_cfg;
-> > > > > +	unsigned int pwm_offt_low;
-> > > > > +	unsigned int pwm_ont_low;
-> > > > > +	unsigned int gen_cfg;
-> > > > > +	unsigned int ext_cfg;
-> > > > > +};
-> > > > > +
-> > > > > +struct adp5585_info {
-> > > > > +	const struct mfd_cell *adp5585_devs;
-> > > > 
-> > > > Okay, we are never doing this.  Either use OF for platform registration
-> > > > or use MFD (or ACPI or PCI), but please do not pass MFD data through OF.
-> > > 
-> > > When I upstreamed the initial driver, I modelled the different functions
-> > > through child nodes in DT, with a compatible string for each child. I
-> > > was told very strongly to remove that. We have therefore no other choice
-> > > than constructing the name of the cells based on the model of the main
-> > > device.
-> > 
-> > It's okay to add this information statically in this driver.  It's not
-> > okay to then pass it through the OF API.  You can pass an identifier
-> > through the .data attribute to match on, but we are not passing MFD cell
-> > data through like this.
-> 
-> Sorry, I'm not following you. What's the issue with the .data field
-> pointing to an instance of a structure that lists properties related to
-> the device model ?
+These two values are picked because the following reasons:
 
-There isn't one.  By all means place any type of platform data you want
-in there.  Similar to the information you'd find in Device Tree or the
-old board-files type pdata.  You can even extract the platform data you
-pass through the OF API and place it into MFD platform data.  The line
-is being drawn on passing through one type of initialisation API with
-another, MFD through OF in this case.  MFD cells containing device
-registration data (including platform data!) is not itself platform
-data.
+- The pin field has 8 bits (see the comments of jh7110_pinmux_din() in
+pinctrl-starfive-jh7110.c)
+- We are already using values 0 and 1 for GPIO0/GPIO1
 
-> > > > > +	const struct regmap_config *regmap_config;
-> > > > > +	const struct adp5585_regs *regs;
-> > > > > +	unsigned int n_devs;
-> > > > > +	unsigned int id;
-> > > > 
-> > > > What ID is this?  We already have platform IDs and MFD cell IDs.
-> > > 
-> > > That's the value of the hardware model ID read-only register, it is used
-> > > as a safety check to verify that the connected device corresponds to the
-> > > compatible string.
-> > 
-> > I suggest changing the nomenclature to be more forthcoming.
-> > 
-> > 'model', 'version', 'hwid', 'chipid', etc.
-> > 
-> > Why is it being stored?  Is it used to match on at a later date?
-> 
-> The adp5585_info structure contains static information the describe each
-> device model. There's one global static const instance per device model,
-> and they are referenced from device id structures (e.g. of_device_id).
-> The driver gets an info pointer corresponding to the model reported by
-> the platform firmware (e.g. DT). It reads the device ID from the device
-> at probe time, and compares it with the value stored in the structure as
-> a safety check to ensure there's no mismatch.
+If we're designing from scratch, it's possible to have another practice
+by using 0 and 1 for internal low/high and 2 for gpio0 so on.
 
-I think the current implementation (as a whole, not just the IDs) needs
-a rethink.  Very few attributes are changing here, both between the 2
-platforms and the several variants you're trying to support, leading to
-masses of repetition.
+>=20
+> What happens when devicetree has in it to route PAD_INTERNAL_LOW to
+> PAD_INTERNAL_HIGH and other unlikely combinations?=C2=A0 Or a devicetree
+> blob
+> with this computed value is paired to Linux kernel that does not have
+> the code to handle these virtual pins, for compatibility concern?
 
-Looking at the static configuration here, this is starting to look like
-2 pieces of hardware with the only variation within each being the
-default register values.  Is that a correct assumption?  If so, does
-mean all of this added complexity is just to configure a few register
-values such that the two platforms can be used for different things?  Or
-are these really 6 true hardware variants of one another?
+I think it's not supported for newer DTs to be compatible with old
+kernels, but I analyzed the code, a read-out-of-bound could happen in
+jh7110_set_function() in pinctrl-starfive-jh7110-sys.c . Well this is
+unfortunate, but we can do few things to fix old kernels -- we can fix
+the problem in newer kernels.
 
-Either way, this approach doesn't scale.  Instead of multiplying the
-amount of platforms / variants together and creating that number of
-static structs, I'd suggest using templating and only adapting what
-actually changes.
+And even picking other values cannot make things better...
 
-For instance, the following attributes in 'struct regmap_config' never
-change; reg_bits, val_bits, and cache_type.  And max_register only
-changes between the 2 hardware platforms.  The reg_defaults_raw values
-can be changed in a switch statement.
+>=20
+> Do we know yet if JH8100 will share some of this design?
 
-Same goes for 'struct adp5585_info'.  Only regmap_config changes between
-variants.  Everything else is exactly the same.  So, with the use of a
-few of templates and a couple of succinct switch cases, you can control
-all of the differentiation you need.  And for every variant you wish to
-add, it's a couple of extra lines rather than many, leading to a
-much more scaleable implementation.
+We don't know yet whether JH8100 can exist.
 
--- 
-Lee Jones [李琼斯]
+>=20
+> -E
+
 
