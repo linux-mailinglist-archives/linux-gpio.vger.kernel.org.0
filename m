@@ -1,170 +1,256 @@
-Return-Path: <linux-gpio+bounces-19306-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 420CEA9C2F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 11:11:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB578A9C313
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 11:15:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9524B1B6444B
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 09:11:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DF6416D4DA
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 09:14:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AF63241CB0;
-	Fri, 25 Apr 2025 09:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AEF4222576;
+	Fri, 25 Apr 2025 09:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dX7yLZpx"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wevCCglA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7851E24166C
-	for <linux-gpio@vger.kernel.org>; Fri, 25 Apr 2025 09:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100AE2153C7;
+	Fri, 25 Apr 2025 09:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572126; cv=none; b=B0xQUWWSiPJSquIdiwDzck7xMhuKoWCTFdB+a6RvncbUaikdrsgqHjhMl8njIsmrEp/X7UyJtil4w3qMN51kf/Q3JM56VPUggecvq00ITtE4LOhFlHjdSq0bTeGj1sT5HajZlaWIBZwxRwQDzyzLt7c9w07eSWBpwj3DMgPCu+I=
+	t=1745572438; cv=none; b=WDxI2UAaMmydp6CTT0zsnx0LwL52c5BPWo3D8pO0hAtVzyD+gPrRfnH0+rjjbFz3TUCr+7waUYabLMgdUwaGrMopa0izt6/VdlsJvIZBp6DW0FUQpoKrpolzFaiT1IfnjIOqLCKfY611f8+9O8q6WEG6h+W09C3VEKdRUBP6fvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572126; c=relaxed/simple;
-	bh=pTrO24s8MBFrLrxR0rAOPN04paVQyMBRmX9Uiybwymg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iBoFxwLmDgNFNOH8Y54XQXxT99ZLoxP9yPc3Wz7H2f3LySQR+y0IAcz9dxi8emQYUPW+cbmqAYElDNRY3jc/0OlRRMtK08Cd5u3N8vwIwInNGYy+/M4zjlIC/aU6aHCQPiw3O+Zi2lqK5fNRn5N3B/cJDoRat0VLWDFIQIHqNME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dX7yLZpx; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso2081720f8f.1
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Apr 2025 02:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745572123; x=1746176923; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dlGoB/HUZg4yDoY5L3zieLRRojeVT0zMfmIc8y47oNU=;
-        b=dX7yLZpx/Ke+a1SCtrfOm/tvDE03LnSYSxKZG+qjihgkIVvBoDtzkwlYgsVDY5ysgv
-         mqVrKoTJCGfXBCPUI/kewTHpXWgyFnWPxPWXiOL0SQuGeXufJiAMXEhmVzMwTJ5othoj
-         YR7nd1LC8Cr97hSvLIfIy0JI6HZ4R4JBIa0/mxl8E0Uox/1a7vCvAVUQErSagrFxWbOG
-         e+oNV5KbdCw7FkMLcptjWNjumWbTMLUYKnaqqQvi6ylbEtW/QhZMQxmnQTqGvPgJoHZI
-         oZPjctg47ljpj6qkqlumHx52qcNstSy6L9SmU3HI756f/z62y+YTHjOqBNXACVUP4ZRM
-         hIuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745572123; x=1746176923;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dlGoB/HUZg4yDoY5L3zieLRRojeVT0zMfmIc8y47oNU=;
-        b=nbUWgpoi8S9sVBauobR213EvqME9J2HmMGUOyhm83PyNxZXdhpUR994fEMyneXN3jI
-         wZvJZ8elqtUkGHWHK+T+i+EimPx++w70j//nc43ETcQd2qP+FmNikgVV7If+E8IW+436
-         XhzcYismkeXEqLo/mHEoeEAcWszIH0tzGxRTUKGdsdbFxQ2J2kFpE934qM6gJtQ0la6M
-         A2SCFdegO3zF0hK67rtjmvf30ardc7DjN+ejjTkNRruw5LmX5Juw16p40Oz5mo2x7u6g
-         qbATHqQPDu14UxmaV1KQW/OMlEEd+cdIR6jjTxIxC31j2GQth0HhCtcKaYVjIUOMlNCX
-         xg0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWLZD6pS91Pn1fx4W56PaKmp+IFiDt2GxuXcyOE4ALqqe5YN4MdNoaLv/7Dp0yOvMDMM2iK3BV9dEt2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgSfQT9T7SvelZno9TnIRObH1mMm0WUoAVGf8TZx6PiBJfpt24
-	TOFkJe+4gf1k7Iaw5ldL+oQhnclsQiHfZIH3EaOyhmMRpOp+yp7uDByqsXYLN8E=
-X-Gm-Gg: ASbGncvNOmgPvTlKLC14PAILFM3Gj0c+QsClso50aMXuwTc0QytsRoAVWUXjEqICN2t
-	d7QrsSadLH09M1mPmRb6NUyvvwsoBl8Bv7BNQmNiTBgwTljZ1U9wr0La6y3bBsJ4ceRgopVLvhT
-	0AOaEe50DTNZZKYAhFSqnVEImcFQcJNHcBN5Sf2lxPvJzVqnoH0J1k9qHEjmoxgfJc7ZaQZi2NU
-	X1Z4qzbxNTfX3abqNoi9dHluFxy165oqLgKMoxc/ZGxDfB4To4jkVrfEbEzqiAMt59aynHM9H30
-	EDgcY/fDDZf7VRHN8FXhEzuWhp+PiZexZA==
-X-Google-Smtp-Source: AGHT+IG+vaC7MmgQ1lY8Xs/s97F/M6Om983foVEu9vVfhXq+DCq1sUbfXts/z/dMaAJgf6ogHaPHXQ==
-X-Received: by 2002:a05:6000:4285:b0:38d:e0a9:7e5e with SMTP id ffacd0b85a97d-3a06d641ee8mr5322988f8f.6.1745572122724;
-        Fri, 25 Apr 2025 02:08:42 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:3f35:2b31:c543:726d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5c9cdsm1688909f8f.87.2025.04.25.02.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 02:08:40 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 25 Apr 2025 11:08:31 +0200
-Subject: [PATCH 3/3] pinctrl: bcm2835: use new GPIO line value setter
- callbacks
+	s=arc-20240116; t=1745572438; c=relaxed/simple;
+	bh=IgeJAqgcuSThMaHuwjtA6Dk/yX8c+T7sRRiWPhVcyyY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eliDSkkF/bcTfARnx2S1pHH3VoQSbSjC9LyorrBQ4U7G89LWQql4n2/yhOJnrCmpNc1qf0qfBRVW92FZ+4ZP2/iGi1vk3nPX1HNU/piiPoYS3bsQ0QIK/ulQkUnJcNZi3g7u7cfI8Sj5EB2bppmffNani6G8NRlKr28nZ8QeYZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=wevCCglA; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 89B8A605;
+	Fri, 25 Apr 2025 11:13:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745572431;
+	bh=IgeJAqgcuSThMaHuwjtA6Dk/yX8c+T7sRRiWPhVcyyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wevCCglAXOWamnksvZss+XzkcbTkx5gmYogDNssAasbtJ06q1Y8FMT3wfyDmWX7Ru
+	 R9zJqW+o7ZMR+F0kAC5KKyllweI4B0Dbji4MdvS5Wr/DGhQ0MHj8OpCH1sVyg+UT+E
+	 0fUcFPcSeOP/rSOc0BmERy65ERM8Fc2P7ajI5BF8=
+Date: Fri, 25 Apr 2025 12:13:51 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Lee Jones <lee@kernel.org>
+Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-input@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH v2 06/17] mfd: adp5585: add support for adp5589
+Message-ID: <20250425091351.GO18085@pendragon.ideasonboard.com>
+References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
+ <20250415-dev-adp5589-fw-v2-6-3a799c3ed812@analog.com>
+ <20250424161838.GM8734@google.com>
+ <20250424163024.GL18085@pendragon.ideasonboard.com>
+ <20250424163830.GO8734@google.com>
+ <20250424193931.GM18085@pendragon.ideasonboard.com>
+ <20250425075859.GQ8734@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-gpiochip-set-rv-pinctrl-bcm-v1-3-6b8883d79b66@linaro.org>
-References: <20250425-gpiochip-set-rv-pinctrl-bcm-v1-0-6b8883d79b66@linaro.org>
-In-Reply-To: <20250425-gpiochip-set-rv-pinctrl-bcm-v1-0-6b8883d79b66@linaro.org>
-To: Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1810;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=aKxxveH0C+uR174fNORC/elug/yziUniASTqQNWz9nc=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoC1EPXzEnCILbRcigkhvMXKkn4wcX8TtqvQacB
- KB7TBd1QxiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAtRDwAKCRARpy6gFHHX
- cmUiD/9yZv6dvT2Wc+LvJ58hLcbjZISnPBDhqi6UcP6kX2qjRFckiM8hGhHOQymPP4CMm0Io3FB
- 3vhD5qFTWMyUqVB20hNF8fzxFSAF7z1w2CZ78upNY4Ty8iYKY6iXlZkTb4/I2vkUQElKJc/FKuz
- ll539+UounWRewqOlHwUdLlhdIg/p3K6dVzXwe7zVGhLh4xnvbHm8w0mOjziSgYepKhgDfG2h/e
- kECtA453bSJM8Krn7c8+9i/W7S50XLMt+8Q/uK5eerfg2Ix595UQNVT8wwygug0q0ex9i2nJPxS
- kLljtjYkeCbEzhpHvXPszQKP8S3ACP7Upcx60XQ32TFPKnlOnt34eNH5XnLRbhgMA44mfrVToIF
- b4bfmC1mhk9vjJmDe95jXH94+nOr5C/u8C17k5eoxpGwd/dzJISDfRBBfNPJou45LONB2eNPoBw
- 07rSsnepk1PHd2FzBRPi2yebyN6YD7VmyRqSU6uDB/GyaCM+V/6Fdkj+6YzN5qezh314hAUT3Hg
- Ua7v8riePOMzxWiQIJGaMQmNjAC6gHILJn+73Fe4sEXX756CFMp9EyAIYp5KffDuBwm2uP9ktkg
- xTJ9J0vBSw5fxWyfFhVBhP2ijqhpM/l94+zEJuw11XNTxhheJTSyayQWYB0i8TW7Dd34VOtqoFE
- HAHE0Qmyq/keRLw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250425075859.GQ8734@google.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Lee,
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+On Fri, Apr 25, 2025 at 08:58:59AM +0100, Lee Jones wrote:
+> On Thu, 24 Apr 2025, Laurent Pinchart wrote:
+> > On Thu, Apr 24, 2025 at 05:38:30PM +0100, Lee Jones wrote:
+> > > On Thu, 24 Apr 2025, Laurent Pinchart wrote:
+> > > > On Thu, Apr 24, 2025 at 05:18:38PM +0100, Lee Jones wrote:
+> > > > > On Tue, 15 Apr 2025, Nuno Sá via B4 Relay wrote:
+> > > > > 
+> > > > > > From: Nuno Sá <nuno.sa@analog.com>
+> > > > > > 
+> > > > > > The ADP5589 is a 19 I/O port expander with built-in keypad matrix decoder,
+> > > > > > programmable logic, reset generator, and PWM generator.
+> > > > > > 
+> > > > > > This patch adds the foundation to add support for the adp5589 gpio and pwm
+> > > > > > drivers. Most importantly, we need to differentiate between some
+> > > > > > registers addresses. It also hints to future keymap support.
+> > > > > > 
+> > > > > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> > > > > > ---
+> > > > > >  drivers/mfd/adp5585.c       | 223 +++++++++++++++++++++++++++++++++++++++++---
+> > > > > >  include/linux/mfd/adp5585.h |  57 ++++++++++-
+> > > > > >  2 files changed, 268 insertions(+), 12 deletions(-)
+> > > > > 
+> > > > > [...]
+> > > > > 
+> > > > > > + * Bank 0 covers pins "GPIO 1/R0" to "GPIO 8/R7", numbered 0 to 7 by the
+> > > > > > + * driver, bank 1 covers pins "GPIO 9/C0" to "GPIO 16/C7", numbered 8 to
+> > > > > > + * 15 and bank 3 covers pins "GPIO 17/C8" to "GPIO 19/C10", numbered 16 to 18.
+> > > > > > + */
+> > > > > > +#define ADP5589_BANK(n)			((n) >> 3)
+> > > > > > +#define ADP5589_BIT(n)			BIT((n) & 0x7)
+> > > > > > +
+> > > > > > +struct adp5585_regs {
+> > > > > > +	unsigned int debounce_dis_a;
+> > > > > > +	unsigned int rpull_cfg_a;
+> > > > > > +	unsigned int gpo_data_a;
+> > > > > > +	unsigned int gpo_out_a;
+> > > > > > +	unsigned int gpio_dir_a;
+> > > > > > +	unsigned int gpi_stat_a;
+> > > > > > +	unsigned int pwm_cfg;
+> > > > > > +	unsigned int pwm_offt_low;
+> > > > > > +	unsigned int pwm_ont_low;
+> > > > > > +	unsigned int gen_cfg;
+> > > > > > +	unsigned int ext_cfg;
+> > > > > > +};
+> > > > > > +
+> > > > > > +struct adp5585_info {
+> > > > > > +	const struct mfd_cell *adp5585_devs;
+> > > > > 
+> > > > > Okay, we are never doing this.  Either use OF for platform registration
+> > > > > or use MFD (or ACPI or PCI), but please do not pass MFD data through OF.
+> > > > 
+> > > > When I upstreamed the initial driver, I modelled the different functions
+> > > > through child nodes in DT, with a compatible string for each child. I
+> > > > was told very strongly to remove that. We have therefore no other choice
+> > > > than constructing the name of the cells based on the model of the main
+> > > > device.
+> > > 
+> > > It's okay to add this information statically in this driver.  It's not
+> > > okay to then pass it through the OF API.  You can pass an identifier
+> > > through the .data attribute to match on, but we are not passing MFD cell
+> > > data through like this.
+> > 
+> > Sorry, I'm not following you. What's the issue with the .data field
+> > pointing to an instance of a structure that lists properties related to
+> > the device model ?
+> 
+> There isn't one.  By all means place any type of platform data you want
+> in there.  Similar to the information you'd find in Device Tree or the
+> old board-files type pdata.  You can even extract the platform data you
+> pass through the OF API and place it into MFD platform data.  The line
+> is being drawn on passing through one type of initialisation API with
+> another, MFD through OF in this case.  MFD cells containing device
+> registration data (including platform data!) is not itself platform
+> data.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+I'm still not following you. The issue will likely go away in the next
+version anyway, as the MFD cells registration code needs to be rewritten
+to be more dynamic.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index eaeec096bc9a..826827800474 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -356,11 +356,14 @@ static int bcm2835_gpio_get_direction(struct gpio_chip *chip, unsigned int offse
- 	return GPIO_LINE_DIRECTION_IN;
- }
- 
--static void bcm2835_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+static int bcm2835_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			    int value)
- {
- 	struct bcm2835_pinctrl *pc = gpiochip_get_data(chip);
- 
- 	bcm2835_gpio_set_bit(pc, value ? GPSET0 : GPCLR0, offset);
-+
-+	return 0;
- }
- 
- static int bcm2835_gpio_direction_output(struct gpio_chip *chip,
-@@ -394,7 +397,7 @@ static const struct gpio_chip bcm2835_gpio_chip = {
- 	.direction_output = bcm2835_gpio_direction_output,
- 	.get_direction = bcm2835_gpio_get_direction,
- 	.get = bcm2835_gpio_get,
--	.set = bcm2835_gpio_set,
-+	.set_rv = bcm2835_gpio_set,
- 	.set_config = gpiochip_generic_config,
- 	.base = -1,
- 	.ngpio = BCM2835_NUM_GPIOS,
-@@ -411,7 +414,7 @@ static const struct gpio_chip bcm2711_gpio_chip = {
- 	.direction_output = bcm2835_gpio_direction_output,
- 	.get_direction = bcm2835_gpio_get_direction,
- 	.get = bcm2835_gpio_get,
--	.set = bcm2835_gpio_set,
-+	.set_rv = bcm2835_gpio_set,
- 	.set_config = gpiochip_generic_config,
- 	.base = -1,
- 	.ngpio = BCM2711_NUM_GPIOS,
+> > > > > > +	const struct regmap_config *regmap_config;
+> > > > > > +	const struct adp5585_regs *regs;
+> > > > > > +	unsigned int n_devs;
+> > > > > > +	unsigned int id;
+> > > > > 
+> > > > > What ID is this?  We already have platform IDs and MFD cell IDs.
+> > > > 
+> > > > That's the value of the hardware model ID read-only register, it is used
+> > > > as a safety check to verify that the connected device corresponds to the
+> > > > compatible string.
+> > > 
+> > > I suggest changing the nomenclature to be more forthcoming.
+> > > 
+> > > 'model', 'version', 'hwid', 'chipid', etc.
+> > > 
+> > > Why is it being stored?  Is it used to match on at a later date?
+> > 
+> > The adp5585_info structure contains static information the describe each
+> > device model. There's one global static const instance per device model,
+> > and they are referenced from device id structures (e.g. of_device_id).
+> > The driver gets an info pointer corresponding to the model reported by
+> > the platform firmware (e.g. DT). It reads the device ID from the device
+> > at probe time, and compares it with the value stored in the structure as
+> > a safety check to ensure there's no mismatch.
+> 
+> I think the current implementation (as a whole, not just the IDs) needs
+> a rethink.  Very few attributes are changing here, both between the 2
+> platforms and the several variants you're trying to support, leading to
+> masses of repetition.
+> 
+> Looking at the static configuration here, this is starting to look like
+> 2 pieces of hardware with the only variation within each being the
+> default register values.  Is that a correct assumption?
+
+The variants of the ADP5585 differ mainly by how they handle the default
+configuration of pull-up and pull-down resistors. The consequence on the
+driver side is limited to default register values, yes.
+
+ADP5589 differs more significantly from the ADP5585. Differences between
+the ADP5589 variants are small as far as I understand (datasheets are
+public, should you want to have a look).
+
+> If so, does
+> mean all of this added complexity is just to configure a few register
+> values such that the two platforms can be used for different things?  Or
+> are these really 6 true hardware variants of one another?
+
+They are different physical chips with different product numbers.
+
+> Either way, this approach doesn't scale.  Instead of multiplying the
+> amount of platforms / variants together and creating that number of
+> static structs, I'd suggest using templating and only adapting what
+> actually changes.
+> 
+> For instance, the following attributes in 'struct regmap_config' never
+> change; reg_bits, val_bits, and cache_type.  And max_register only
+> changes between the 2 hardware platforms.  The reg_defaults_raw values
+> can be changed in a switch statement.
+
+All the fields of the adp5585_info structure that you would like to
+dynamically set would then need to be stored in the adp5585 structure.
+The would essentially trade static const data for dynamic data and more
+code. Is that a personal coding style preference, or are there clear
+advantages ?
+
+> Same goes for 'struct adp5585_info'.  Only regmap_config changes between
+> variants.  Everything else is exactly the same.
+
+I assume this comment relates only to the different variants of the info
+structure for the same model (e.g. ADP5585 or ADP5589). There are more
+differences between the ADP5585 and ADP5589 entries.
+
+> So, with the use of a
+> few of templates and a couple of succinct switch cases, you can control
+> all of the differentiation you need.  And for every variant you wish to
+> add, it's a couple of extra lines rather than many, leading to a
+> much more scaleable implementation.
+
+That also seems like a personal coding style preference :-) Adding a new
+compatible variant with the existing approach only requires adding an
+instance of the info structure, while your proposal would require
+changes in multiple places. It seems more work to me (from a personal
+preference point of view).
+
+Of course, if the new variant requires developing abstractions that
+don't exist (such as supporting large differences in the registers
+layout as needed for the ADP5589), refactoring of the code will always
+be required. This seems a bit of a theoretical concern though, as I'm
+not aware of any other chip that would require such development.
+
+In any case, let's see how the next version will look like, after
+reworking the MFD cells registration code. Maybe it will make everybody
+happy :-)
 
 -- 
-2.45.2
+Regards,
 
+Laurent Pinchart
 
