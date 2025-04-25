@@ -1,161 +1,143 @@
-Return-Path: <linux-gpio+bounces-19296-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19297-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CDCBA9C1FE
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 10:50:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1072A9C2BC
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 11:06:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68E6E3A6A5C
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 08:45:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF9ED1BC03B0
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Apr 2025 09:06:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72CA5238176;
-	Fri, 25 Apr 2025 08:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AF0423F28D;
+	Fri, 25 Apr 2025 09:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="MbSr3hYh"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2CeX7/fb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25118238152;
-	Fri, 25 Apr 2025 08:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570674; cv=pass; b=u8vqTLCoB7xiXkAxMua7Z/shka9tkZRmfGVtsEYaZmlVm+VlkijBCkV4uzocUa7bofR0Ttd/JEI14ZDJk8sNIFUmsM8ARsQ48TK6BaMxL6W3E92DCh3uNZP9J6poGErjHCAkNhUuKv462wmLyLMahgC2q1BK2c8dQJarlA+ZvGI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570674; c=relaxed/simple;
-	bh=yjq2AGuA29xCOgUcG0CIGuz4LaDtS7a60cZx5XO2DGA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jxv4wddt0EOIyVDeHTA5sBcXc1nrdgCRofdyt3OBrxKDyzbphbKiXJJm6793FcPxlrdhxCwthx0GgVxowTe/V2C49Ex5JRJZzIpwxlnmzQILJGVHWRWb6TPYealNy7ZLZqdbxybLxMW4oFrzlfBGmQyQfeBKeWhCirLvtw5SV18=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=MbSr3hYh; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-ARC-Seal: i=1; a=rsa-sha256; t=1745570646; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=iPxa1tME43btWBJM9+6+JF3341N/snsfZv7ikXOFqzt+ANi4A4Ysm8FOemEfDbUFzoeMjGLIlhMXvhq431XE1VV6YNa+7pB5M6NU7sqFUvSgmhgi2UF+CMZ3hjTIfeNhqWWMpdSilO2/ZTL8IGQzs7C3n3RKPc84NXnfsBCZNp4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745570646; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=yjq2AGuA29xCOgUcG0CIGuz4LaDtS7a60cZx5XO2DGA=; 
-	b=i2MLWQYurtV3APXeIRg1xh2Qw3urvftrm+CLRlgsB1ZqUseQD9sH5sfdPcr8+mPqYhWHjNq2IpinEvPel3RSl3sI5rt6/Nywibcnetu/saZXwsG62TBTWzkIOrksmWOyMUk1cSk71xDBYLAXccLsNWFyni33zmo3Iq+znekys6Y=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745570646;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=yjq2AGuA29xCOgUcG0CIGuz4LaDtS7a60cZx5XO2DGA=;
-	b=MbSr3hYhmraOXLP86p9Z8aaBI4qPNMRnIdZidUznApzOKEGDMzJjtIdnZ0yxBvc3
-	eQ844/s9iIpWOxG51BOVQHsnkKfWt6yNO6skTbO1V6EQWYPL8Umy+0EX48cFe5wrRnM
-	PLPsIZcEg7iXk5hAN0y3KJIF4LK6SMSgzKE4A1XGeCTJKqhlAsGrCqJv/CvPhz+EbCY
-	BZWanu9+eYglFfwWt1u53YhOoYPvt6Ol4M/rdHh0AZ7s9PvYeGmW7PdmZI9vQrR5NV9
-	hLcrKbqk3bwjuYWpO4TXC9j15hWYnCkSCzWc54wpAyJhi55ohZSXvbmeMNMpOXje2TZ
-	R18j/Qftog==
-Received: by mx.zohomail.com with SMTPS id 1745570643106791.8159653626777;
-	Fri, 25 Apr 2025 01:44:03 -0700 (PDT)
-Message-ID: <460048c49b82684af0759520ec8dcac057ad2857.camel@icenowy.me>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-From: Icenowy Zheng <uwu@icenowy.me>
-To: E Shattow <e@freeshell.de>, Emil Renner Berthing <kernel@esmil.dk>, 
- Jianlong Huang <jianlong.huang@starfivetech.com>, Hal Feng
- <hal.feng@starfivetech.com>, Linus Walleij <linus.walleij@linaro.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Date: Fri, 25 Apr 2025 16:43:56 +0800
-In-Reply-To: <60891c52-eeca-4358-8f38-789533016495@freeshell.de>
-References: <20250424062017.652969-1-uwu@icenowy.me>
-	 <20250424062017.652969-2-uwu@icenowy.me>
-	 <60891c52-eeca-4358-8f38-789533016495@freeshell.de>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E480208997
+	for <linux-gpio@vger.kernel.org>; Fri, 25 Apr 2025 09:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745571670; cv=none; b=oo4IqaRZEOE4/qjdpvES1OlwLJfNl6qqBHOMS9OBxpUFGL5aNYaXovOdOrkyoCMJYMGgXZHFtftn1VRkcboooCO3XyfkxBWN92rF59qo2gKnfkBrIow6ZMKadJkzQkkmoJw7eZljYHMUamL/zxGT4L8fUgFjoY3mnBQOxMe1OHU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745571670; c=relaxed/simple;
+	bh=gcgSAGCf9S1xTbI3gVnPSPqXssP4QvQGlqxWgMXBtSY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ia/nPJtT+TrjK2JP3YghNtPe+zpOG6yXDKX5zaAYyWizGmsM8L44T5MYOBVTMjd+HN/KDFES7xoTtEaVzSvgPHpDE1KoPl1bKbnoFMHr7sBEAd2x1dRKrk8I0P4+Q+83EvfwpCAFFG9gsX9kdnn6YDJyrUWPeKpm98srtaUoU0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2CeX7/fb; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-391342fc0b5so1509046f8f.3
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Apr 2025 02:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745571666; x=1746176466; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=86MPQpP9DYDVUcUDU5TkbLJWYglOE/j2zaAMUX/6YP0=;
+        b=2CeX7/fb7C3C4qkMVyeR2si1V/CYu0EsmU4VB5L3s9Epvf8bzClMAXrtbCkj7ZoPXg
+         6dlSO5iKC+fSoMm6r79l+/vIHrnm9bcjHrAJ0aHMTTX1VHEyaTAsho2/5O/39gNSD6l8
+         rS/X+6Cm87E4tDkwl4b+UL4xI6x/tG5oEFkbSu4l5YozOyUz3A6xOf9elcqAw8QvkGNb
+         kDTuRvQpn8cyOolfKn+ak1EcUDe83HjbRbmlo2VY/3FPPg02f8VtZ4gL2fgSK0IAvnGJ
+         CdqsnoErdnYh8g07Iae/F/HCIrIaXqqcmAGexMGPE85CegAgpCn/HviRJREcK6J74nNe
+         mzdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745571666; x=1746176466;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=86MPQpP9DYDVUcUDU5TkbLJWYglOE/j2zaAMUX/6YP0=;
+        b=Oaug5r53gL7ZfYJl5wKttP+YPuXi2UK1ATTOZscTAqmuCP3Ot6J9r4WyelBkhB4FQt
+         0bX+KZWZp/G60ZAk+ZIXwFF9aF+axkgFSFSABdv9YNd1yCvV74CcXFkLaUAuLNvGZ6Lu
+         ajwS12oK7SxUkKExESMr/HTDcd4tq7vWw57bd4NU0YP6VxpdpwY/iK0yo1hii2EtMqjt
+         DR4hYs/NNWeJZq7tKnT7urZWspoogqK4hpgHKXVhdvMNmwBo7UlHepi8BdC5JPKA0U9u
+         skZfCmsiVCdthZL/RxCUEbXvhpnHqrDHMRRvnWum4nuCs8QDW1Ury/yY/bZ9qUve9d2z
+         8Z6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVXOhJ+dUaiIfNijVNShdNh2Vh48As/XvJO3rGVHwviPVuH+rbbPBb/x0+jUWyBqq2GYbhYu9ihG2re@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnyoMJBIx9LtRviuURcVS1Y9Zfwt1o3tkQJ4MYHp5WEKwOhfZb
+	pPPWSTKy5ksBA3f6NZI+Zpz0v0nT5I8a+kyHIhKNZh7WyMtROi2nayNCDp1PRiM=
+X-Gm-Gg: ASbGncs+X0+GTfXrX5a4pVLrfUf92bADgEFdHQftsBjSkScNZFNsQfsIlY7xrav5xBs
+	z1jzwbWnMaK7wTMiOXBTW/d2iZMOxILi3k7xgrgKuyUidyCK2UoaTcD2VeK62Litep7vvSJoPOn
+	9itQX1KkYP6LWRcnFnEbiGMFZZJwcf4/qEcWgZ2p7g0KxMQnnqXdNpOuMctD+2VOdG1YGXLE5Me
+	xpNoTdCA4biFhtlWgQjktZ24geflD3RToiLJMPPm8ofhNsugotudmuLwv7cEJnp8luWJUg00wFZ
+	YudA58fxdVsGI+gcP8QKxPiNnzJ96ypRQSUq2bARkQIB
+X-Google-Smtp-Source: AGHT+IH3OnIubuFCBwHvzDU6+k3f9N9mzQaSt1HB4QUYIlDhLHCrYidDLJkaQB3hjNSR8q+IxbksRA==
+X-Received: by 2002:a05:6000:402c:b0:39e:f51d:9cf9 with SMTP id ffacd0b85a97d-3a074f42e7amr1207472f8f.48.1745571665602;
+        Fri, 25 Apr 2025 02:01:05 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:3f35:2b31:c543:726d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073c8c95dsm1696571f8f.3.2025.04.25.02.01.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 02:01:05 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/5] pinctrl: mediatek: convert GPIO chips to using new
+ value setters
+Date: Fri, 25 Apr 2025 11:00:56 +0200
+Message-Id: <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-0-93e6a01855e7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEhPC2gC/x3NwQqDMAyA4VeRnA2YTnH4KuKhNFHDtlrSIgPx3
+ Vd2/C7/f0EWU8kwNReYnJr1iBXUNhB2HzdB5WpwnRu63g24JT3CrgmzFLQTk8ZQ7I0fYfVFXkj
+ Mzwf5nmkkqJlksur3v5iX+/4BviB2NHIAAAA=
+To: Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1272;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=gcgSAGCf9S1xTbI3gVnPSPqXssP4QvQGlqxWgMXBtSY=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoC09LShA4FFFs7FxYzWMo/1MzGZYVAv/t/XsCr
+ XI6PnVu6PeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAtPSwAKCRARpy6gFHHX
+ ci3cD/9iJ/xVDYLFM7DCh189mq6iSH435TREA5mvwF1xWjo5k+b1ttZTjFnkyQHXyQCVmygSLBq
+ Z9xZ3BHypbpwD8ykxvnDZ2IOP5QkvXArTwYU7SsqEAOzsLQ1woH8qCK06dOj0fXfjuBxyjY0PGw
+ w2iSbbza3dIiabeuu7ed8uAJmgBuf+qrUQon1gGImTXwyYRKJSIfMZ8GwIhD5sdVbj7IF+NqVv8
+ DzQMC2pOQ8/uyaoz7DDypiT8QZ4VqNyIS0YCU0qAFOsud0U3LesVVNIr7x6SViXRDaeAvF5C0vN
+ xK3cd28bek61r1sYczNp5XAWFZZbZE1JanSfO/Ra1m3UFNWhxrbsPuccrAvlUHcBd+fhP6AwVwz
+ 7ODzLYWquoOtJDLDMeGfZTaNmenKqsQZKEfw+5aryPpWSCrESUbP9AnejrJ2gpDGpdXaya6s84i
+ YLIEB+KusN8gNbzPOy5+x2MF40OlbYfdA2479FscfDcvG3OIpn0AQox+enlI+1jVX1kX996qELm
+ 3kpMjMSqIMO5RaCKGxkyiWzmkBocfOG6W6iGco1FeARqFlZB7dOn8TNzQT/X2tlgOz91ag6PvPD
+ 3qfrDaI1aDWXGHlQWAT66D2q+8ZxvUHrB/4Qk0w/B/D7JwV+XE6BYhnDA9bR34WHbb9R7fzDspS
+ GBnZdlnyiNYYxjg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-=E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 01:15 -0700=EF=BC=
-=8CE Shattow=E5=86=99=E9=81=93=EF=BC=9A
-> On 4/23/25 23:20, Icenowy Zheng wrote:
-> > The JH7110 SoC could support internal GPI signals to be routed to
-> > not
-> > external GPIO but internal low/high levels.
-> >=20
-> > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
-> > virtual
-> > "pads" to represent internal GPI sources with fixed low/high
-> > levels.
-> >=20
-> > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
-> > ---
-> > =C2=A0include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h | 4 ++++
-> > =C2=A01 file changed, 4 insertions(+)
-> >=20
-> > diff --git a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> > b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> > index 3865f01396395..3cca874b2bef7 100644
-> > --- a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> > +++ b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> > @@ -126,6 +126,10 @@
-> > =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PAD_GMAC0_=
-TXEN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A018
-> > =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PAD_GMAC0_=
-TXC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A019
-> > =C2=A0
-> > +/* virtual pins for forcing GPI */
-> > +#define PAD_INTERNAL_LOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0254
-> > +#define PAD_INTERNAL_HIGH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0255
-> > +
-> > =C2=A0#define GPOUT_LOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00
-> > =C2=A0#define GPOUT_HIGH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A01
-> > =C2=A0
->=20
-> Asking about the choice of 255 and 254 values for virtual high/low
-> pins,
-> here. There's not much result when grep Linux source for 'virtual
-> pin'
-> to compare with. Are these the best values for this approach?
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. We're in the process of
+converting all GPIO drivers to using the new API. This series converts
+all the mediatek pinctrl GPIO controllers.
 
-These two values are picked because the following reasons:
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (5):
+      pinctrl: mediatek: airoha: use new GPIO line value setter callbacks
+      pinctrl: mediatek: paris: don't double-check the GPIO number
+      pinctrl: mediatek: paris: use new GPIO line value setter callbacks
+      pinctrl: mediatek: moore: use new GPIO line value setter callbacks
+      pinctrl: mediatek: common: use new GPIO line value setter callbacks
 
-- The pin field has 8 bits (see the comments of jh7110_pinmux_din() in
-pinctrl-starfive-jh7110.c)
-- We are already using values 0 and 1 for GPIO0/GPIO1
+ drivers/pinctrl/mediatek/pinctrl-airoha.c     | 19 ++++++++----------
+ drivers/pinctrl/mediatek/pinctrl-moore.c      | 18 +++++++++--------
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 13 ++++++++----
+ drivers/pinctrl/mediatek/pinctrl-paris.c      | 29 +++++++--------------------
+ 4 files changed, 34 insertions(+), 45 deletions(-)
+---
+base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+change-id: 20250425-gpiochip-set-rv-pinctrl-mediatek-1dd831a4d171
 
-If we're designing from scratch, it's possible to have another practice
-by using 0 and 1 for internal low/high and 2 for gpio0 so on.
-
->=20
-> What happens when devicetree has in it to route PAD_INTERNAL_LOW to
-> PAD_INTERNAL_HIGH and other unlikely combinations?=C2=A0 Or a devicetree
-> blob
-> with this computed value is paired to Linux kernel that does not have
-> the code to handle these virtual pins, for compatibility concern?
-
-I think it's not supported for newer DTs to be compatible with old
-kernels, but I analyzed the code, a read-out-of-bound could happen in
-jh7110_set_function() in pinctrl-starfive-jh7110-sys.c . Well this is
-unfortunate, but we can do few things to fix old kernels -- we can fix
-the problem in newer kernels.
-
-And even picking other values cannot make things better...
-
->=20
-> Do we know yet if JH8100 will share some of this design?
-
-We don't know yet whether JH8100 can exist.
-
->=20
-> -E
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
