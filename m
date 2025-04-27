@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-19346-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19347-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF9F0A9E3A8
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Apr 2025 16:54:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3CB5A9E3F5
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Apr 2025 18:29:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F5F13A952E
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Apr 2025 14:54:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0788418944F7
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Apr 2025 16:29:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9030B139D1B;
-	Sun, 27 Apr 2025 14:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25E1D1B0F33;
+	Sun, 27 Apr 2025 16:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrHzG1TL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAd05eQR"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E73A256D
-	for <linux-gpio@vger.kernel.org>; Sun, 27 Apr 2025 14:54:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9E315747C
+	for <linux-gpio@vger.kernel.org>; Sun, 27 Apr 2025 16:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745765668; cv=none; b=AUfHx6CJkuoSRRF2ulTlhJzyfObUOAYyUU/6Y+VHNixABqEC8aqeS5KNrX4l9yo0peP9Fj9RX9RrIv/BWFdlqUildt4zVBV1ZtQvWBBHA/iQHVCLWl8d06i2BUR31u5NXfPJMIyKual+RFMB76GeUwNFJ6B4IbM2/sqlAqZ4w+g=
+	t=1745771367; cv=none; b=IRRbErQNbLzhKqUy6FH+H23Fst8QtykeRs9Fn/hJjn6PBSxuwT3oxI/avn1douN+iWo8TWEWn9Mc5C89NjIoZDOOxBqMr8oVELWnM/pH4R9+9ZiQVB+ufPTx2/FPpNbx7IRhiQD+pLeGPSf4VKKSqJrXBAD9c+Y03K5w/o4F/EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745765668; c=relaxed/simple;
-	bh=laYrnf3yR3FeS2jeck5mT4kP1j7pxLXEV21y0uA3Ecw=;
+	s=arc-20240116; t=1745771367; c=relaxed/simple;
+	bh=6T13l4wkeQxaqPT1Z+pBsVa4rOHVdct3E0KebRIEL8E=;
 	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=ut72Ezl6/sHY4rCyEjX7ufU4i0n0hIoKW4gkKeYToOwW0LCbcNhQylb9TeJwwFx3LI0zcIVP9buz8hMfr0MNX6vK6988rhOturWdI2PkVeLti2CZjT097Rfvfnt8xHux47NvD25O5oeo28pLaAEFXgB9C/C7XeqQlftV7wWWceY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrHzG1TL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF0D1C4CEE9
-	for <linux-gpio@vger.kernel.org>; Sun, 27 Apr 2025 14:54:27 +0000 (UTC)
+	 References:Subject; b=Iiyw1Ev0NqsvaghkeH16/4hSkjOCTOyKLhUmouDxeky4IohffWrTE84EDHbW9X0rABJz/AMcRvCqGyxVFZ+fM7bHKdQ2AuY81Y1zRGrB+7NiLONEIp2C9x3jUDQp/iZ2/YIvHrx0GHwKKSSaOAesK79BGa+017Rpq7GG02k3oQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAd05eQR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53CECC4CEE3
+	for <linux-gpio@vger.kernel.org>; Sun, 27 Apr 2025 16:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745765667;
-	bh=laYrnf3yR3FeS2jeck5mT4kP1j7pxLXEV21y0uA3Ecw=;
+	s=k20201202; t=1745771367;
+	bh=6T13l4wkeQxaqPT1Z+pBsVa4rOHVdct3E0KebRIEL8E=;
 	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=CrHzG1TLC/RPxR4Jdi2LzstNi2AO6ozS+HvUMtLkEGeQqZPoVfxe4VpMGjf5pNW02
-	 sCzrrt74hJlyDp4qWZWWnLsJh05Qf9oYn40DLPvO29GFhZcV1sXG0J0xdxNnaV5ruH
-	 ZIKjnNw7Tlta5HKbepeDotWztf0wpeKGP9xorl8EUeaAVdGrwsLfIxg7dRqry4ofCv
-	 LCY66EoftASo/PqNnezR4lbwAGqNC/OEeXgvjpqSQXkGbozb89VCrDJjzgb3w3B/2S
-	 gTJDFIuhd4Fl6gUg3xZiJixaAo74gvAHTYJN3MXH0jqe3JoN+GBqGaSDtP05EhoNeu
-	 2PX5p22ifN2aw==
+	b=LAd05eQROjMJ5wI2lN1DE3mIkt97hOu5qzglJ19M+BnQ5ELeBKqgRHsP3uWMLa/Eb
+	 ubRcabO/7scPkRAPXpqze41VRXXtoHTRRMWkHqJ2O+8RhbvhqsQTZq722E7GLDsh64
+	 YQpV58Nv3hftJM813hVw7TcAW8LCPVnl9knLP4LYz8NbznCS7B4ur/7xie+Qz+9lWP
+	 7jwF8qxjsWFnh7fFxfzbLi+rlw4VKdK7Y1akoyNAPKECV4AD3tOHUiwcgtLs86He4r
+	 mWLRNoEwfd8su5gbMYzTyI5h0rYTXkmVo6H0rm/Z/z7yXyyxIqQ3aefMDG97irtjVn
+	 kLIWK1A/Yn/yw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B1A41380664A
-	for <linux-gpio@vger.kernel.org>; Sun, 27 Apr 2025 14:55:07 +0000 (UTC)
-From: Guido Trentalancia via Bugspray Bot <bugbot@kernel.org>
-Date: Sun, 27 Apr 2025 14:55:17 +0000
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 38201380664A
+	for <linux-gpio@vger.kernel.org>; Sun, 27 Apr 2025 16:30:07 +0000 (UTC)
+From: Ariel Simulevski via Bugspray Bot <bugbot@kernel.org>
+Date: Sun, 27 Apr 2025 16:30:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,9 +53,9 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 To: linux-gpio@vger.kernel.org
-Message-ID: <20250427-b220056c13-98984dcbfebc@bugzilla.kernel.org>
+Message-ID: <20250427-b220056c14-65b296b1b462@bugzilla.kernel.org>
 In-Reply-To: <20250425-b220056c0-ca0f4862134d@bugzilla.kernel.org>
 References: <20250425-b220056c0-ca0f4862134d@bugzilla.kernel.org>
 Subject: Re: PixArt touchpad not detected due to wrong pinctrl
@@ -63,11 +63,15 @@ X-Bugzilla-Product: Drivers
 X-Bugzilla-Component: GPIO/Pin Control
 X-Mailer: bugspray 0.1-dev
 
-Guido Trentalancia writes via Kernel.org Bugzilla:
+Ariel Simulevski writes via Kernel.org Bugzilla:
 
-Marking it as REOPENED because the issue has not been resolved nor the specifications to resolve it have been provided.
+Yeah as it stands, this grouping is based on observation, not official documentation (I think I even wrote that in a comment in my first patch). As I don’t have access to the Intel PCH documentation (and am still getting into Kernel Hacking), these were more or less educated guesses.
 
-View: https://bugzilla.kernel.org/show_bug.cgi?id=220056#c13
+Andy if you prefer, I am happy to withdraw the patch and instead suggest documenting the need to use CONFIG_PINCTRL_TIGERLAKE for affected systems.
+
+I do agree with Guido tho that the status quo is sort of confusing.
+
+View: https://bugzilla.kernel.org/show_bug.cgi?id=220056#c14
 You can reply to this message to join the discussion.
 -- 
 Deet-doot-dot, I am a bot.
