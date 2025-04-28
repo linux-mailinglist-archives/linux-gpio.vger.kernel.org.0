@@ -1,128 +1,118 @@
-Return-Path: <linux-gpio+bounces-19383-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19384-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B52FDA9E9E9
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 09:48:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37D83A9E9FF
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 09:50:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 26A9A7AEF6C
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 07:46:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C11B3B79D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 07:48:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 485B41E282D;
-	Mon, 28 Apr 2025 07:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FC7A1DDC2B;
+	Mon, 28 Apr 2025 07:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RBbJO0bL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPktEH1D"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5884C1FFC4F
-	for <linux-gpio@vger.kernel.org>; Mon, 28 Apr 2025 07:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D100B23C9;
+	Mon, 28 Apr 2025 07:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745826357; cv=none; b=bAdr/4rXcrYTQ4iHc+urCjYLNt22OmPJiJATGxjBJx1ILz/EYcEMOUE/uNHbRXxn9GEFANQacnkyF27enZeMnHxShTG86DvItnWS7I3JyN7EdlCsOfiuvj0ByKUB7jRatZ1fIY4IUU93OPj9lS6ymksgHRe2CMA14sx6HaCx7lw=
+	t=1745826467; cv=none; b=o/h7NxLsXUjdhlvkrHUOniQqsBpY+sctjeUfMGDrA1Kyr5gz5dbfaOaC8cLcVHpCgXI3pQyqOEmh26EWb6LomgMnePbF3rmLbGjiN4QnkjlM+Y7mU8mUxFmRsCV8y/53yEeQg89oRIG/uX2qDbZS9rPuA3o3hMarxXqYdhtEo14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745826357; c=relaxed/simple;
-	bh=A9JZF2x0XBPNe0xhvFBjMVJ04N3DDFd23ten+mIE6ZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c+dKQ0fYkvBl81Sc6pw4HGitpMLUAsIOo4l/excr8W60f9CiQesRD+DOO+Ct2A0pRtjF0OgPPrIG7OAvnIW3jWtc61H4Nh+S6WlAUIVxS2pX9eHFfmkqgXH8NIh01/RefONDRqZsDc25G+TNZUwBnf8DJAd9vbNJY/F/9giV1Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RBbJO0bL; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so29197655e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Apr 2025 00:45:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745826353; x=1746431153; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cn3fzPLnrYDZ8b8q63yC0G6po3q9MyCtc16aUo0tzk0=;
-        b=RBbJO0bLPqiovucsfsoHIgzN6gC9ETDcQaWadaot+VSdpBc+8HV/C2iF2veZ6jBFJc
-         zVqnmoqOktwmiAVC0xMOf4cELe42E8+mbkW5oEma4l9K5lh8ARpg3Kc3LA5Gee1X81vp
-         OpW/15eb/MnCS9wvFUe5XSkS2/XZ4TuC8fq7JhIVCl/jDdugipQBH93Iveb5Tl9+QH2w
-         HvsNo/g+4MeBmvgQbxMywLD/S4eHqkvDPnluoREpumK8En4Ar71h9dKp1qyaUHosdcDK
-         m3iHIVlzrZZzalrhYlWHnwSsTuViIazrmKou4QsCD5hZKFAAgcXORlZtXuA8qfM+TNA+
-         E/CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745826353; x=1746431153;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Cn3fzPLnrYDZ8b8q63yC0G6po3q9MyCtc16aUo0tzk0=;
-        b=f4Urm6OlHJdrdCrj+zh1Buw0TwZ/0LxDIQg2dROHTuxAF83rTWeXWLn3QsbcdPZ8/F
-         63w+SigJdlyWCA2yxvxbILgDjB2T818SaJMyhG7Nn9dmtgI7XunKBCP0c4tkT2LWfNxF
-         aoQDdy3KxTACmABYYvW048lGbR6kIYtC4kaP8lIC9wckCMdWWC80dqw8Kz+HlXeOsHmt
-         LAi3byUhD/VgFCCbcSVyWWvp3m4zzqhPhSViEo+eo2f2KI38FQmygd17Fgmhn4dLmbVT
-         bsPVTJJUKVVE1bRsl/iA6vupqkCrGvAyBnr8pWze3q6nAeiDGABcRa1Y2Hd2pqoIBQ/d
-         T8MQ==
-X-Gm-Message-State: AOJu0YzKe9At3vm9wiY1KKeMlRS3rUV77ppNmzMWML/uNGx6B8wkUKna
-	M0MT5CJ3iXKHGw/GVMI5407y8bo9fM4chD92gFhvBiACRQjz47SJHH2xqBIP1lk=
-X-Gm-Gg: ASbGnct4eS2yQ/sCrihZkJwmAFa+AQnQ1UjQ8oUgeEiTz/8gbmhk/fto+GxMkbREXsP
-	sgnjxdztazrthNSnpqeV4H+cSdLUElBmSuQlVqqdwvfRqwabSDviiOZX7Cpw7ffSWNd6Q4SJEY7
-	zfrq84QLGFJNr+MdcX/tKkj5DKRQWAv/rvITlGaENPJ9AKbxTpk6xkQKd1A6LYOjitw6xC+GIBQ
-	PbMrC1IcG31GRQaT+/w9/pz7i07eYt2Jw1Ny1VBnxWj2WOVV6ty0fvW0ayblAes8jVDQWjxWJiq
-	nBS8xTtkHTUc5HWiv9rxAlb3IsVDX5g70rk2RTY4CdFLWoQ3890=
-X-Google-Smtp-Source: AGHT+IFXl+ZQU0ypFUQJa+vOS+GCJuZ5zXtYcKI1hR5mhmtP9vTQGxLja6fjO+0lItJcB6b/6fvuwg==
-X-Received: by 2002:a7b:c305:0:b0:440:67d4:ec70 with SMTP id 5b1f17b1804b1-4409c48b0e9mr101655345e9.8.1745826353516;
-        Mon, 28 Apr 2025 00:45:53 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:96f1:a768:3c75:f123])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8909sm120179695e9.2.2025.04.28.00.45.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 00:45:53 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Raag Jadav <raag.jadav@intel.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: immutable tag for the driver core for v6.16-rc1
-Date: Mon, 28 Apr 2025 09:45:50 +0200
-Message-ID: <20250428074550.16190-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1745826467; c=relaxed/simple;
+	bh=V9VO8d7GqRn1Ql1CwDZyQu1tYggE7XNW+vS8mR6BDDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uXTa+8bB12MI8+NgaTDfjPSUgdT/VzeAYaGGNqonvBFwZKyvSKxepsrv8SFfEsMjEj0uUm00Ip5asr/e3+Cz9iJTr2+S1epZRWSYQC2gtf09YKbUbzBXSlkivvhLK158H9bJhIO62ESABj23b6GmGGdOdUPVVjVDEH1EkVXLBGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPktEH1D; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745826466; x=1777362466;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V9VO8d7GqRn1Ql1CwDZyQu1tYggE7XNW+vS8mR6BDDc=;
+  b=EPktEH1D6VAx/+uXcUPUusV7Z7SVdMVa4NxcfMzyMS+iBlPoaKyLPVc0
+   86wXNmRjnb1zJbW40SmorTP4woAeuADB2fMfNyQhsWe6HSG8VA0a3HrJo
+   ugJdLNFG8lMpA322UT/THA4qnlyxePsw3PlqPhoTKM0Yl9TdrHnEVnByM
+   s4ZtyVQ+dpCifUggT3u0VtXsCBt9EB9aUkoQro3o8NXllkhvoSzZ9SBCh
+   tP5NxxrP7mPm+UoZRolvcbaorcEv/YsB20ykAcBNpUG9MDGV95POSlVtN
+   wbobr6t9a/W11mRH4xWaXqnrA0/V54VjGJo/2l3IFDaFCTf4qxQorraX+
+   A==;
+X-CSE-ConnectionGUID: 6g0JmwdYQyavyS68Zdm4RQ==
+X-CSE-MsgGUID: pml7PYGeTVq66dwedX6L8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="50060258"
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="50060258"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:47:45 -0700
+X-CSE-ConnectionGUID: sbVqtqoyQiO34GlzQs/iVw==
+X-CSE-MsgGUID: hw9NucE/RAmkdkz81dmYqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="137494097"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:47:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u9JDH-000000011Mm-3j3O;
+	Mon, 28 Apr 2025 10:47:39 +0300
+Date: Mon, 28 Apr 2025 10:47:39 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: (subset) [PATCH v2 0/3] gpiolib: finish conversion to
+ devm_*_action*() APIs
+Message-ID: <aA8ym3GYoAK4lI2y@smile.fi.intel.com>
+References: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
+ <174582608319.15717.12211907178640999391.b4-ty@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174582608319.15717.12211907178640999391.b4-ty@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Apr 28, 2025 at 09:41:52AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> On Thu, 20 Feb 2025 18:20:25 +0200, Andy Shevchenko wrote:
+> > GPIOLIB has some open coded stuff that can be folded to the devm_*_action*()
+> > calls. This mini-series is for that. The necessary prerequisites are here
+> > as well, namely:
+> > 1) moving the respective APIs to the devres.h;
+> > 2) adding a simple helper that GPIOLIB will rely on;
+> > 3) finishing the GPIOLIB conversion to the device managed action APIs.
 
-Here is the tag containing the driver core dependencies pulled into the
-GPIO tree to enable picking up the final commit from Andy's series[0].
+[...]
 
-Bart
+> Applied, thanks!
 
-[0] https://lore.kernel.org/all/20250220162238.2738038-4-andriy.shevchenko@linux.intel.com/
+Thanks!
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+> [3/3] gpiolib: devres: Finish the conversion to use devm_add_action()
+>       https://git.kernel.org/brgl/linux/c/d1d52c6622a61a0ae8dd2bd2097b25c0f553d2f3
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Only one? What about the first two?
 
-are available in the Git repository at:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpiod-devm-is-action-added-for-v6.16-rc1
 
-for you to fetch changes up to e383bb8f958444620d96386811aacf6a49757996:
-
-  devres: Add devm_is_action_added() helper (2025-04-28 09:30:41 +0200)
-
-----------------------------------------------------------------
-Immutable tag for the driver core tree to pull from
-
-devres: Move devm_*_action*() APIs to devres.h
-devres: Add devm_is_action_added() helper
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      devres: Move devm_*_action*() APIs to devres.h
-      devres: Add devm_is_action_added() helper
-
- drivers/base/devres.c         | 11 +++++++++++
- include/linux/device.h        | 38 --------------------------------------
- include/linux/device/devres.h | 41 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 52 insertions(+), 38 deletions(-)
 
