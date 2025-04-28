@@ -1,172 +1,119 @@
-Return-Path: <linux-gpio+bounces-19425-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19426-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A53FA9F529
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 18:07:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22C0FA9F549
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 18:13:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECB9F3ADC1E
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 16:07:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B6451A8211B
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 16:13:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 020AD27A130;
-	Mon, 28 Apr 2025 16:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5316427A13F;
+	Mon, 28 Apr 2025 16:12:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YiGGeNAc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaIJgJt+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2241FDE3D
-	for <linux-gpio@vger.kernel.org>; Mon, 28 Apr 2025 16:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDE627B4F9;
+	Mon, 28 Apr 2025 16:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745856470; cv=none; b=e510cQG6V6mQXCVN06E4dVS1znMyNT2531/VBg2wH/EszyKcxqYpbp7V4oG+VTFMqma6T4b2jUDGws/BtwKHPxtKA1WFzXoj1Gpc4Dzh1/S2VwQzsyVzuyHawLqa64LcHcnfFC6pvdHJJA3pLYOMI4xL9Rco7h9WtLgJHGkJlkI=
+	t=1745856761; cv=none; b=SS+Nk5dMAY7CtdZIRoa/uo4U3rj1oCCpR/ifPBfFNdev9CGFNVk+mZ8Gg7JISSqi3al/YF5wqCjDrw8PRn0EApiQ/nHciFRIu3svKO3rtNu77yIot8lKnkz8bn1Erq6xn4unNCUnjihToOWnUcpLLiTGAJ+qGI2URu4X+47kTIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745856470; c=relaxed/simple;
-	bh=EicrIC19WAEeWMuLep/tExhmxJZcV0V/chCfiyO/yOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUpY0OtTxVhfVDveCtUu6eXwuf3DcnxuigIIE9J5IiDU5gy75anf27UtrJxBMdxk/4KuQw1GjKg+0VDwz1WDt8G7tSSHk6YoUxqMSqWHAHVqkEqKNMDXcU0H5e1K09YLUd2+uTjKX0VTbGob/H4bwRi/2rrOaRrf5vbpLVw38oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YiGGeNAc; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso4598140b3a.2
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Apr 2025 09:07:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745856468; x=1746461268; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5sZqFf0pd/XIN1B2NzEquxW9LkBSgzNN2nMSHABe7I8=;
-        b=YiGGeNAc7GhHF8tsJDBwRNElmM1rEby89gs3Tgkw9iCN9nztCsyUG3SlaoKSsGjh6o
-         LON8tqkURoxDDXccUNHCiimnNsh8VFJp2zC0uotq6VfvtroJjnc/rfFYXY5USZFjIlNp
-         Zd39WJ+91MNHBQwbaRqXvn7asSY2RjrHkyFPaw3iy9PrdCpd6l9X741Qf+NceAsZEks7
-         C8eJGQypysijJ79nc089QJp0p4Ceteoqp7P4cQTXKipBWlEVhVH+hJytEJDnyIoBmzwy
-         mXDzQ+zf3X62/fjDpfJ5MzEN4K2dxS1YJ1LvSEF4YtvR6DH2yE1oV/O77QI5kRk6kcdG
-         dWbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745856468; x=1746461268;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5sZqFf0pd/XIN1B2NzEquxW9LkBSgzNN2nMSHABe7I8=;
-        b=jgWx1PSx2WmJNhJ24BlYGdNgBp01I01K6RJCWEh2oYgkPIcdAj8vnhb3RXD/1lZ5Sa
-         Vs/4HStATxFjoFuq58XZmGIq0gbRJJuRsPc+T9SSoYRH7CCRboxNkZn7hJSxyrkMVBz9
-         QKBcjtxYkyiE6qZuLYlj1vIqT5aqWEJ4hI6R7OKtSftT+TT0upAu2S/umE2qBMhsr6wR
-         Ay9YpM8pAXr6LCxWzMEY+t5aE9cd1d4YSDxw9XG3PaMNTLp9Ibbu5Ei6TPDcCMT4JtxK
-         So+PGcPUlc7F8ZvZze3fniA4uEuIdrAJuDyEqOxrC5LQv+Ljw/Nbhws8WGSMSjDVBf3O
-         XWPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQPwwRC/PRBYmyliYuJnxbXu1hu/p4EIFOpsMn+nQXUJOECrXi4ny5Q5Bj25KZWKZ4DWmdTrgcnefW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpOvBNuRHIeePC8JYi9QfuS7Ov7z94nZ01AyhdfMUFOQEummqv
-	F6Acfijy15BycQxHvy5y328JC21y3VUSYO6sjZnyzSKArwaeHWGv9GgAOVDjOA==
-X-Gm-Gg: ASbGncvaEyFzpu1d3q+lS+kUBXTd0dvcoYgYYpZKcBBp79tVWK8olN5HqD+MtGR6VYR
-	TLiebQWTkwqc9/TMH0V1QjMvy+mzZeZNB2XZzMAETwHVCeORXIvLQej9ILnY/gBNc4TqZ1M6Er+
-	gPDllqkZ6bjn+E/2WLGzU9YwaP5nAEkmmzpdp4Tq2r2/DCa4gf2oIbxE0J+waBoh6+QuaKq8462
-	N/xHHwo9CdmoK4kFqP/Tg9MJyoO9KgB07a9fAU2OnDT3xgaRQ8s04OPeicrn5HjTAhZ+KUOwnIK
-	sTtb5yqXl/MvCpgzVOAu36tH+9KIrr4EjhwkvkxXJexkZYzmyQ==
-X-Google-Smtp-Source: AGHT+IF0ND+g+mFXQq9lcsG6u5nnlgozZt0EphIl6/bHv3S/p1GH2+Y4vlSstnIZ/hRGR6y3aIC3NA==
-X-Received: by 2002:a05:6a00:138e:b0:736:3c2f:acdd with SMTP id d2e1a72fcca58-73ff72d3d28mr12125481b3a.14.1745856468420;
-        Mon, 28 Apr 2025 09:07:48 -0700 (PDT)
-Received: from thinkpad ([120.60.72.74])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25acc4casm8463484b3a.172.2025.04.28.09.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 09:07:47 -0700 (PDT)
-Date: Mon, 28 Apr 2025 21:37:38 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, 
-	Paul Cercueil <paul@crapouillou.net>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
-	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
-	Ludovic Desroches <ludovic.desroches@microchip.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
-	linux-actions@lists.infradead.org, linux-mips@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 04/12] pinctrl: owl: use new GPIO line value setter
- callbacks
-Message-ID: <ild3eqfgiez4zgtxcha6ki3udfxzdiqeywvwzh7rfympgfps7o@m6h4v5kxhq63>
-References: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
- <20250424-gpiochip-set-rv-pinctrl-part2-v1-4-504f91120b99@linaro.org>
+	s=arc-20240116; t=1745856761; c=relaxed/simple;
+	bh=Ucpgunkpy6U/IjEb5XHK0SIzreigneomegn1oB6Tnow=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=XSulZiC3Nxr6uLZL+nGToTDTsN5EdRnfdk6VOaVFwWEEw2KlXX3TtXSv9TSxTqIFnKOxfGrkZp8hRha4mch9A9nRtclT49uD3ANpig1J819Obudc4vQskaZDpIXpSoSdIWU3IvXMvQ3TdQRTUjJ0C26QStM4vCQXWaTIp5YCpGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaIJgJt+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BC3EC4CEED;
+	Mon, 28 Apr 2025 16:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745856760;
+	bh=Ucpgunkpy6U/IjEb5XHK0SIzreigneomegn1oB6Tnow=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=uaIJgJt+DJaMG67WjKi3sdigCzl/72lz3imb2odO9xWNkJzqi4qzGKb+O/bB4Qa6f
+	 PU2S2K7obAU4IxU8ve2cW5qfyAn0drFc+2pQXdak6nzpN+jm5IlHzN5N3ggyHKOjIF
+	 GdKPcU3AI6AMXnLHwvEkbijjecDmcaVICihnkVMXPdmV68TBA5XiYZkLX9DizAX4Tb
+	 fS80ZZbUBkyAJmw07JN5rtrMxrF9kaifLyw57CqrC4zLRHFsck6VB7u2MXwWVn2gTD
+	 1sb1wA5XutyZDS7KIyUVH9k4NwnvD0mwr98QzHA6zTvfJnC0kiDxV6C+kGTURWjQ0n
+	 /WhagvG3Zg2SQ==
+Date: Mon, 28 Apr 2025 11:12:38 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250424-gpiochip-set-rv-pinctrl-part2-v1-4-504f91120b99@linaro.org>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-hardening@vger.kernel.org, 
+ Srinivas Kandagatla <srini@kernel.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ linux-gpio@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>, 
+ Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Lee Jones <lee@kernel.org>
+To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+In-Reply-To: <20250428-max77759-mfd-v7-1-edfe40c16fe8@linaro.org>
+References: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
+ <20250428-max77759-mfd-v7-1-edfe40c16fe8@linaro.org>
+Message-Id: <174585675718.1413056.7895723185749789189.robh@kernel.org>
+Subject: Re: [PATCH v7 1/6] dt-bindings: gpio: add max77759 binding
 
-On Thu, Apr 24, 2025 at 10:35:27AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+On Mon, 28 Apr 2025 12:36:04 +0100, André Draszik wrote:
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
 > 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
+> This describes its GPIO module.
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
 > ---
->  drivers/pinctrl/actions/pinctrl-owl.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
-> index d49b77dcfcff..86f3d5c69e36 100644
-> --- a/drivers/pinctrl/actions/pinctrl-owl.c
-> +++ b/drivers/pinctrl/actions/pinctrl-owl.c
-> @@ -598,7 +598,7 @@ static int owl_gpio_get(struct gpio_chip *chip, unsigned int offset)
->  	return !!(val & BIT(offset));
->  }
->  
-> -static void owl_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-> +static int owl_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
->  {
->  	struct owl_pinctrl *pctrl = gpiochip_get_data(chip);
->  	const struct owl_gpio_port *port;
-> @@ -607,13 +607,15 @@ static void owl_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
->  
->  	port = owl_gpio_get_port(pctrl, &offset);
->  	if (WARN_ON(port == NULL))
-> -		return;
-> +		return -ENODEV;
->  
->  	gpio_base = pctrl->base + port->offset;
->  
->  	raw_spin_lock_irqsave(&pctrl->lock, flags);
->  	owl_gpio_update_reg(gpio_base + port->dat, offset, value);
->  	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +	return 0;
->  }
->  
->  static int owl_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-> @@ -960,7 +962,7 @@ int owl_pinctrl_probe(struct platform_device *pdev,
->  	pctrl->chip.direction_input  = owl_gpio_direction_input;
->  	pctrl->chip.direction_output = owl_gpio_direction_output;
->  	pctrl->chip.get = owl_gpio_get;
-> -	pctrl->chip.set = owl_gpio_set;
-> +	pctrl->chip.set_rv = owl_gpio_set;
->  	pctrl->chip.request = owl_gpio_request;
->  	pctrl->chip.free = owl_gpio_free;
->  
-> 
-> -- 
-> 2.45.2
+> v2:
+> * drop 'interrupts' property and sort properties alphabetically
+> ---
+>  .../bindings/gpio/maxim,max77759-gpio.yaml         | 44 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 +++
+>  2 files changed, 50 insertions(+)
 > 
 
--- 
-மணிவண்ணன் சதாசிவம்
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+
+
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250428-max77759-mfd-v7-1-edfe40c16fe8@linaro.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
