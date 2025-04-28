@@ -1,87 +1,86 @@
-Return-Path: <linux-gpio+bounces-19379-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19380-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ADBAA9E8CA
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 09:05:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 670DCA9E8E4
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 09:10:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 213063AE8A1
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 07:04:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0A0918994F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 07:11:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E55301D61BC;
-	Mon, 28 Apr 2025 07:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F29D1D63FC;
+	Mon, 28 Apr 2025 07:10:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdWQaAo/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOv4NGuy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CCE191F94;
-	Mon, 28 Apr 2025 07:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82044610C;
+	Mon, 28 Apr 2025 07:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745823902; cv=none; b=NQiVkc0hj7E3hOiGVcmA3lXXUIIyxUn8/kLVVxLeB0P2qWyB/TGgBEO8Pz78/AzBKgUlcY05pp2hEGNLUZZkY23j0XDL2EebS7uznZGlw/ZgKngCriLJ8akTncdnuxIlR7J2nfOMu/hu6QGF5ORVJVeD1SweJ7bQUCTct0Gafm0=
+	t=1745824245; cv=none; b=c/JPhJiUfpZg2EOfXpR0yPT80cPYcJ6+jPVLnDZUyeU0cXBvpnEHzdNXYhc75U/BLs8QvTGA6ag8Toe+lzs0nO9yd3m0qJDuLB4N8u+47vnfuFPer5g0JMB5oHTCNFzWIgLgVLDWrLmbHJyyGc4v1t2b41jUBtH5a9DvkpcGjnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745823902; c=relaxed/simple;
-	bh=7NHDbXVYZkKVsgdRvpnNE6uy6uOLayDsajznmv2GS/U=;
+	s=arc-20240116; t=1745824245; c=relaxed/simple;
+	bh=aySXpSXRWRRtP4dlGp4idY6DfXJvB6nPlOBjz2x0fls=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p0qhhx/fZqt6aIqDqmCbXUFJt/9jp0Wl9Ue4nw/oQW9RbXycrUfjIHDCnC9XIO1WkazUXjkW/m9+UVIPSoaU4MIevpYUQu2ZNkCOJzWcheN6dpAxP6+/fR2zx0mYUEHAts+xrkjKp9kbn2fRskKXqpoSZBxcvA/oURCpBB6JMSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdWQaAo/; arc=none smtp.client-ip=209.85.218.48
+	 To:Cc:Content-Type; b=cSbvUCaNLiMc8+YB/+S/6pz03j9E8pOZhg8MpADqOsh6Cffgov6vRpAfv0DRo2Tuiu27T7/jIPEysQ5eVYjyhClhM7A0UOp/x83/+qF7I7Oc/bZGaeqHmhUaqe44220OyNQgg0T7V29r3Z7mAOIjatISQ7OZxEz15EOtDMeDT70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HOv4NGuy; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac289147833so778885066b.2;
-        Mon, 28 Apr 2025 00:05:00 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so785526566b.1;
+        Mon, 28 Apr 2025 00:10:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745823899; x=1746428699; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745824242; x=1746429042; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dFug2l7i4RVR+IYDsgOgLdi8rZQpSCoOK9KVvixJP/I=;
-        b=BdWQaAo/+I/oPSa++wRYi40UpsY1172f1vgZF7U7bhWzgfNfB1QDhGxWnnTEMds9OK
-         xZ+495wgC2EC9L+cn97AduVmEtNKt4lLGVpnFJoAGx8/dR26UBFuWjQ88owqTZ7Bra1W
-         zqM+La3yL0rNBDWXd9R843UDJoZzkUwFDASH4Yw8do69eo3eDuoBzcaEsmxv+WMUBc6r
-         DCyUvUb3WzWRiInMJfSacZwiplo7rVk+tZ2NbO5wG69qiTSG55ptMtmzi1YxjC4QlDep
-         n39YHno0jzJn7vVXUYScVq3vX9xieDn/iw1f8MWO5sLkB+FiHxc2DjpHqfFJbJm9Tuhu
-         tqfA==
+        bh=cqzLjPjkbpIKPWTWNjXwUoG3WgWvGtDW3UH4waTe6EU=;
+        b=HOv4NGuyYOtd0S3qpT+8LHU8+jYNv0kTcbWYnaUeMgQZk/cS13KtdNYpYmDUW6VBZ2
+         YHQ4+uV3Qg5bDjVk8OUI9Rq9IULG6Rk+EJNAr3db0K4jOe7TmTuDsZRd3khzpyRNs5j+
+         QA5D5cZ0U/PusvZxaJ1pVp+7V3TOJ5J+4WBgyV+yTMbVwdKNpsF1mz+k1WW3LJqX/DjS
+         G2d2YVZgOLmN5rsx0qc7bXYb7UqgukPcc2AnUnBb+TFaSNoGK1XqKlagO+Jl+Q8DmyGX
+         JSUDI7UmjOQIObPbkQq7MqwrXdNHYlVsbSxou1w6gyiDKmYicFZB8bh9WS+C0G7S2twq
+         D5TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745823899; x=1746428699;
+        d=1e100.net; s=20230601; t=1745824242; x=1746429042;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dFug2l7i4RVR+IYDsgOgLdi8rZQpSCoOK9KVvixJP/I=;
-        b=BIY7QDMM49jvtdNApKIm6VIgBc6aKAsm3OMJ2lKTHYUgF9Jbjxzuk8b0776N/s6eEj
-         e/BlblLrUa0xi0QyxhM7xAQvguWwrPr5jO+JZBTDvfqGLCV3rBmu/e9CBd/hdUKYJyN5
-         5VV3AjDZ/Vanh7rsil4fkUcd1SLmWPIYygVse2zfwoJzIbelnQhjC2d0g9mOW//oBIFn
-         m0nDQEksBH2nc3lHitWfQUA8V/6z0t3bGnjzxHVUlYCsZiRqRkpatWtHxtATxYnUzvyc
-         /enlY20zrQ7PrrWFytej4F4H9gm9gTQr7FT//hBAojd1iLEITUfNXDIZZ0rZprJGape5
-         3uVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJsx3lgv9ursSFWluqrAL2QvFQjhxRsrHPOQ90f9w5jQpRXWc43Dc5Wu/9Xhse1h5pmGDNpQtSnf8QeGM5@vger.kernel.org, AJvYcCWNQYCKisxjFFboo79FlPRQcsFdkMFroDinVaog5mJUE5okR3GIORP6Vggf7rX4FaOLxqKyYiyZ/r8q8g==@vger.kernel.org, AJvYcCXnGps7M2ygI5jgzxkJ7a9wQMZUm7j9dQzVdMc+xyK/FockgiP5kyE3mR/rQO/te+zQQeYD98wDy3W7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIgoByvLxOKMMitOkDg3cQh0VuYDYFRZZBYklVxh0T2yEmYi/C
-	cQi7P1kiAbq7HsTAe3Vnk68kU9rTLCl70pAzCIXJLKgdylCnuiezhpOntphs2jrpbz8RRJGI/br
-	JC5CCW9Ff2EgSwci0OrmO1LblWSc=
-X-Gm-Gg: ASbGncsITRH0sNKZBYiCSoQOHbPysZgJw/N0AggQ/v4l4hcRz+Ey+HUmMgiSCjlUBGu
-	TXAtWCpTjoTihAGqMYR06CB8bu5ZGEBtfSmi+6KJf9f+nItHVdmO5U3alARmgW+Na7dNGgzYFrf
-	5gh5BKVqQhW06wbOUzBd323/vq
-X-Google-Smtp-Source: AGHT+IG+BXrTALiy8ip+X07daV4bi+92ZdgkSR3MY/GK9RV0CTMTYQ+H6sJMufc7bShBSiA215YRly8Ku/rIZJVXZU8=
-X-Received: by 2002:a17:907:3f0e:b0:ac8:1798:a796 with SMTP id
- a640c23a62f3a-ace84b27e18mr773066566b.54.1745823898815; Mon, 28 Apr 2025
- 00:04:58 -0700 (PDT)
+        bh=cqzLjPjkbpIKPWTWNjXwUoG3WgWvGtDW3UH4waTe6EU=;
+        b=hOrcqxDluLrQx1cmvDi6Fp73Lxuz6pkEI+TuJXm9Ai4CpDiK81KMyn4oVafkMGTjOt
+         sYWudAvTC6n85sOWVwUzGmyITcFFpEm+qdS+tRo0gcSCNmUFxROpRAXFSkTv0kha9sE4
+         ox8/GI461LkH9JV/US9LD/G2Ct0KzrWF1V45ehRcoT2ECsLqHLq5JPNCbBLj0b5pxHtb
+         doAAo8eK9LDxLcy4xAdyN/+pJSxg7Bfen2jPKxzX9oTLH+22c124EXGDCHZUgkHt3P0+
+         sZLEJA4uy5w9XL4oU8QjMwCdFR3V36OzpFqCpuczMgGGhiIfeW4r0G8gI3QyZW2d7h3g
+         eYFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeD2+yBrOZ8VDLFkWTbV6XhWTaZwPVOJvwlm71xjVQUrd7t9ed9RxUxnqhCwOrF0FR8qGYnJboq6Du@vger.kernel.org, AJvYcCXaI9x5R+Sebocu/+5/mlsi8XU2Gomb8txkHyuPGksYhW3KlDq3TgiPwgAg1PHcMMhyLXU8ZBrjt3tVnw==@vger.kernel.org, AJvYcCXw5FTucRmxvnZAFWzdEb9uWW94bbmkJ3daIo27zldXnqDYuyQqVH12TqMc2uibrKLNdjx3yh1mGIs+uX+D@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeeQOYZ3hjEZ69adUVW+OUixZDhz267ongr3uBeEEYVagi0cK0
+	1MvDtngDD/1CQ1/+muw7EbyAktS2se6ffjQ3Hz9B7o6KM2APbfo3HRQAoUhLyRuQZMwVY5GODGv
+	1QMwY22EQGCZcH1PxWQrnBEqRmjU=
+X-Gm-Gg: ASbGncvPx2U8rr9LDsiHaXIVSTmFWyYg2hfnskvREPwR2f7ZNkUgmiqL1FYW41spZKQ
+	n3bn9uOZVdTAuELa0/w3VYaTUNy4G2ORJ/dYQltnezDPA/LV1QYhm3UlY7G4ZoAVXMJk4uOpmFz
+	OH3JWB52EU0K58fD7Yv3KDHOma
+X-Google-Smtp-Source: AGHT+IFRMuFZcNRNjfeF9AvnM7Bj9iBUzUeVmXdmu7ZHhNJMmpa4po14psUPiugLj18fOlz9Qi+euRe8nRR7W/lKtE8=
+X-Received: by 2002:a17:907:9816:b0:aca:cac6:3ca9 with SMTP id
+ a640c23a62f3a-ace71107381mr984506166b.27.1745824241407; Mon, 28 Apr 2025
+ 00:10:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745605382.git.Jonathan.Santos@analog.com> <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
-In-Reply-To: <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
+References: <cover.1745605382.git.Jonathan.Santos@analog.com> <7c308dac8869a0152c09f6218df32bbc516594d4.1745605382.git.Jonathan.Santos@analog.com>
+In-Reply-To: <7c308dac8869a0152c09f6218df32bbc516594d4.1745605382.git.Jonathan.Santos@analog.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 28 Apr 2025 10:04:22 +0300
-X-Gm-Features: ATxdqUHFAFmL9ZTtZPxBtKZFjukTHC9F3xQuY99Q83kaUvbAzsd5GjhbSlsQk3A
-Message-ID: <CAHp75VdNymzseF7Dt9kL8GBPLM0MGBQg-YQabKUKxEryM8nxOQ@mail.gmail.com>
-Subject: Re: [PATCH v6 08/11] iio: adc: ad7768-1: add support for
- Synchronization over SPI
+Date: Mon, 28 Apr 2025 10:10:05 +0300
+X-Gm-Features: ATxdqUHWYVdMPoHiP_7ikj6eXNEtH7KvpMnnFIsMTk8-_2GRl2efruCjIZIF3uY
+Message-ID: <CAHp75Vc2AN0_KBDj--eaFYsQBzFJYiReXfweasuyntxdkP1Xhg@mail.gmail.com>
+Subject: Re: [PATCH v6 09/11] iio: adc: ad7768-1: replace manual attribute declaration
 To: Jonathan Santos <Jonathan.Santos@analog.com>
 Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, andy@kernel.org, 
@@ -96,159 +95,28 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Apr 28, 2025 at 3:14=E2=80=AFAM Jonathan Santos
 <Jonathan.Santos@analog.com> wrote:
 >
-> The synchronization method using GPIO requires the generated pulse to be
-> truly synchronous with the base MCLK signal. When it is not possible to
-> do that in hardware, the datasheet recommends using synchronization over
-> SPI, where the generated pulse is already synchronous with MCLK. This
-> requires the SYNC_OUT pin to be connected to SYNC_IN pin.
-
-to the SYNC_IN
-
-> Use trigger-sources property to enable device synchronization over SPI
-> and multi-device synchronization, as an alternative to adi,sync-in-gpios
-> property.
+> Use read_avail callback from struct iio_info to replace the manual
+> declaration of sampling_frequency_available attribute.
 
 ...
 
-> +static int ad7768_send_sync_pulse(struct ad7768_state *st)
+> +static void ad7768_fill_samp_freq_tbl(struct ad7768_state *st)
 > +{
-> +       if (st->en_spi_sync)
-> +               return regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x=
-00);
+> +       int i;
 
-> +       if (st->gpio_sync_in) {
+Why signed?
 
-Dup check, the following have already it.
+> +       for (i =3D 0; i < ARRAY_SIZE(ad7768_clk_config); i++)
 
-> +               gpiod_set_value_cansleep(st->gpio_sync_in, 1);
+Check that the driver includes array_size.h...
 
-Yes, I see the original code, but still the Q is why no delay. Perhaps
-a comment explaining that the GPIO op is slow enough (?) to add.
+> +               st->samp_freq_avail[i] =3D DIV_ROUND_CLOSEST(st->mclk_fre=
+q,
+> +                                                          ad7768_clk_con=
+fig[i].clk_div);
 
-> +               gpiod_set_value_cansleep(st->gpio_sync_in, 0);
-> +       }
-> +
-> +       return 0;
-> +}
+...and math.h.
 
-...
-
-> +static struct gpio_desc *ad7768_trigger_source_get_gpio(struct device *d=
-ev,
-> +                                                       struct fwnode_han=
-dle *fwnode)
-> +{
-> +       const char *value;
-> +       int ret;
-> +
-> +       ret =3D fwnode_property_read_string(fwnode, "compatible", &value)=
-;
-> +       if (ret)
-> +               return ERR_PTR(ret);
-> +
-> +       if (strcmp("gpio-trigger", value))
-> +               return ERR_PTR(-EINVAL);
-
-Reinvention of fwnode_device_is_compatible().
-
-> +       return devm_fwnode_gpiod_get_index(dev, fwnode, NULL, 0,
-> +                                          GPIOD_OUT_LOW, "sync-in");
-> +}
-
-...
-
-> +static int ad7768_trigger_sources_get_sync(struct device *dev,
-> +                                          struct ad7768_state *st)
-> +{
-> +       struct fwnode_reference_args args;
-> +       struct fwnode_handle *fwnode =3D NULL;
-
-Redundant assignment AFAICS.
-
-> +       int ret;
-> +
-> +       /*
-> +        * The AD7768-1 allows two primary methods for driving the SYNC_I=
-N pin
-> +        * to synchronize one or more devices:
-> +        * 1. Using an external GPIO.
-> +        * 2. Using a SPI command, where the SYNC_OUT pin generates a
-> +        *    synchronization pulse that drives the SYNC_IN pin.
-> +        */
-> +       if (!device_property_present(dev, "trigger-sources")) {
-> +               /*
-> +                * In the absence of trigger-sources property, enable sel=
-f
-> +                * synchronization over SPI (SYNC_OUT).
-> +                */
-> +               st->en_spi_sync =3D true;
-> +               return 0;
-> +       }
-> +
-> +       ret =3D fwnode_property_get_reference_args(dev_fwnode(dev),
-
-In this case the above is better to be also fwnode_property_present().
-You save a double call to dev_fwnode().
-
-> +                                                "trigger-sources",
-> +                                                "#trigger-source-cells",
-> +                                                0,
-> +                                                AD7768_TRIGGER_SOURCE_SY=
-NC_IDX,
-> +                                                &args);
-> +       if (ret)
-> +               return ret;
-> +
-> +       fwnode =3D args.fwnode;
-> +       /*
-> +        * First, try getting the GPIO trigger source and fallback to
-> +        * synchronization over SPI in case of failure.
-> +        */
-> +       st->gpio_sync_in =3D ad7768_trigger_source_get_gpio(dev, fwnode);
-> +       if (IS_ERR(st->gpio_sync_in)) {
-> +               /*
-> +                * For this case, it requires one argument, which indicat=
-es the
-> +                * output pin referenced.
-> +                */
-> +               if (args.nargs < 1)
-> +                       goto err_not_supp;
-> +
-> +               if (args.args[0] !=3D AD7768_TRIGGER_SOURCE_SYNC_OUT)
-> +                       goto err_not_supp;
-> +
-> +               /*
-> +                * Only self trigger is supported for now, i.e.,
-> +                * external SYNC_OUT is not allowed.
-> +                */
-> +               if (fwnode->dev =3D=3D dev) {
-
-?!?! What is this?!
-
-For the reference:
-https://elixir.bootlin.com/linux/v6.15-rc3/source/include/linux/fwnode.h#L5=
-1
-
-> +                       st->en_spi_sync =3D true;
-> +                       goto out_put_node;
-> +               }
-> +
-> +               goto err_not_supp;
-> +       }
-> +
-> +       goto out_put_node;
-> +
-> +err_not_supp:
-> +       ret =3D dev_err_probe(dev, -EOPNOTSUPP,
-> +                           "Invalid synchronization trigger source");
-
-Missing \n, and can be one line anyway (we don't complain about long
-strings ending with string literals for ages, way before the 100
-character limit).
-
-> +out_put_node:
-> +       fwnode_handle_put(args.fwnode);
-> +       return ret;
 > +}
 
 --=20
