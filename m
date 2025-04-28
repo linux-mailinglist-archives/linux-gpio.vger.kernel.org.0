@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-19420-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19421-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAAAAA9F06A
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 14:14:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 731E6A9F06D
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 14:14:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C05A5188708A
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 12:14:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 088BC3AFBF4
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Apr 2025 12:14:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 930B4269899;
-	Mon, 28 Apr 2025 12:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CDA426A090;
+	Mon, 28 Apr 2025 12:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="GtAyoPTP"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Z4XbgkSO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2060.outbound.protection.outlook.com [40.107.249.60])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2051.outbound.protection.outlook.com [40.107.241.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BF226980E;
-	Mon, 28 Apr 2025 12:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D9D269D1B;
+	Mon, 28 Apr 2025 12:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745842458; cv=fail; b=uM++RPnJeLdswXUczhpZdSuKg1VJXHNzPA2VIMfyEpy3oXuNtMeXbsV+L2dJh0sTCuIkp2szqrg+PfClFP6ckDR4w/UPIdSMl6W37OLEBiEC4KDjZGhNfdhUonQxZGDF619Pw97NZwGI11/gdkvAHnzERsLk+JTkty8ZU3NSE18=
+	t=1745842464; cv=fail; b=ptwH3Dacm/YRVah9Uu4lPRjJsHBYb0sT30vGUW4ZR/1FwNSJK3wQzP4sYbBoOwg7hi5BVptv/uBbZHjPXRlJCc9SNfrUxT8bl8V/u51s4CV1IccbwQvIQVrQjmed5CoKdgoA2UvxDzXgpXO6E1hjqp2EW/sZyk+qqWzUhPLXbp8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745842458; c=relaxed/simple;
-	bh=rS0tNPiVRVLUM/POpgIa2wwRZZN3tXXNmD8iPlaWmyQ=;
+	s=arc-20240116; t=1745842464; c=relaxed/simple;
+	bh=vWIyUU7p4ttEkVsaBk+yOfTwpj4hus5fzbGbrZaI0co=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=Iw/HQ6A4Pv1gTSYg5iSz4juEwSXJIu1xFcjtbpmR23E4Lk7/6jQNbXTiuxsPReI49/+CE13rTLWGuWlc9J57JNHd0HzSgE2mMXlm3EdBl6kUFpQbNTmROm6A1ablZENxoqSG+xF3j224oHgfQFDV3/N3oCZH+5DLQApZr7lT+xk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=GtAyoPTP; arc=fail smtp.client-ip=40.107.249.60
+	 To:Cc:MIME-Version; b=OjzUoUc8xjbOeTLtA4pOIq+7YeGX9lY77byWUGAmVaqYjFGrSVH/zKTzYNcJ3dfwsTt82mxVnpa++BgJgpo55WcM28B37selOUquiMXDpmiM1pUqPMq16BlZumThNqiQJuRJd24Hrn2MHG7yG76llEXvhmgIDaIJA1dN1LXrQfg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Z4XbgkSO; arc=fail smtp.client-ip=40.107.241.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cJJAevognjKpBPHt2qEwaw6nYHfy7hYcAikYv5xfJSziTpHKZLx4tmOl3YF/9hLwxs6EjLHtrpF/AXG7GZ+01KfIAbD05xRE/ZkcZiIYjyex1LqbTiCOCGptZti2q6IvivcOAg8l26FqJHALLKXgaTCXvG7EgJ0XWtnbpwFsnnlt68a8D8CsECoHiMZ7EyNlZ5wVxyY/J2SOUYHxppgOVhCd4hPVF2iB9Po5//2q5GiuheixiDdEv2oFDbvk27MWLpnl7j4/f1NHO3oAHCldnEi1L6QgKCviVvHQypAxinTEDsszPfTH2YA5F6v39YWEgdrHMTIHYdmZ6pJtoTqzYg==
+ b=wawcHT0b+qndVn1+FZRHXDyfzvmKKAu3sEnhvLdTxKCXdOaPumixj/any/Sc11FfaG9OK1cpfHph+mpDfl7Q+PIxoNBycG6Px1GiX9J+HEdgcbkvAN/58E9u6rgP9qQz949x57GLYHhQVtrW0zeYWecwnaKgC9UVp5QabDIPpbsvIPGNSTiioV06sI7C2yoEdFeehHdedrSf1rgR++KpGrf8VUBmZ8n5F39UddkaUOYTOfa55bGNwHnCekt1nxSatg+NYQXOpW9wBJJoJpIaoPSku2HffmbW+wodhhxDwfmQJKGg0dLuUiZd7Xxp4AXg0UoWAIj9rtnHqV8QDF9tUg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fYfYVG9g5T61c1aCwh6qjoK2UgeU8vrokoXmP2UHipI=;
- b=smr9aHdzF2J7nf204K2yV2iDkYdEklpBPjUXq19sd0xVkuyFuomBOAejUbEL5xGAtqp3FoA5TAHpdFeuFABDaq4fbG2W4dnixifyntqUof6SYFGqy6PUL4rlrlYahPNSgVgivEkgWHz1XojOaqa7y51e6FO9GzCi8R6OZXkmR1bJJirnDUpXXWyCUB3WMDUsntBbbrJ6iukwtdZzg3EqE4Kh9LV60mUD3TIbOl2kJI25YV9OtdcJF99Nw3+fqisdiK8H0BCyR19CM3hFcEK70yNgnF1ulAXXsGx3x8oOWm4YSzCetnjrjnjOe+GuaC+/a33BDzqSIAWsWkaP+6v/TQ==
+ bh=UbVYJckMehHqW7pMrSFoU9XLJnov49IfXL+OR0P0xXc=;
+ b=XyDagOay5ZoaZ3xPGumnNiWbbIuYsYrm4Cs6n9JD6tNZTKyGaT0AL0A5scg3lDjDvvJWNCOydgoDxxMjWCtuZCADzmK/wz44MBfQEsQDUiqjT0E76wd/I8tP52TkyaUjHGEbU2AMyUs3EYgal/toKxxIANk3SGqoNfNKxlZQvKcRYSGIyZmuzDDPG+pKyz99SDzZ/qOW0tJ4W7PjRNVtqozIjLicazIfPPv/v/hQz69fzEUkaCCYvYJqJJMbk/mMWNbEwMKYm/qqyQu+jLVeSr0LtkMmOgX/z/ZGQL0RA7Dc+i47NrHSZlqnYpDhZ/wishW8WSxKbyaFNxer+HS5NQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fYfYVG9g5T61c1aCwh6qjoK2UgeU8vrokoXmP2UHipI=;
- b=GtAyoPTP9tU3LPHLbgnEWciZe3GyB8tDo6cEajcNdpta4oTbKNYvv1M4VOKOiuz15SQdKbH2B5pFeSOT6Qziv7Sr7/F2V6XOAPT7Rtj4syX7pI3SmTZX3y9pHZnwA8Arf4ctXE64JH6LZnplvtEYSCUN9O3OJZIQ/Flpe0kNbIeibwx2AMQup8dlLiNlFL/oN/x7+Emd00LXwmR2KduM+PteBhbQA5HpHbwecMiMyqGNDpiPROwYyBceiZvHZzqHJQ/z/yhvzkUTxCKWdMAq3qFq+iC8aN0Uq45lT/aRS8VESTeNKFjfWligI5YF7uDS0IfAZ9inYEcn/5pmhmzF5Q==
+ bh=UbVYJckMehHqW7pMrSFoU9XLJnov49IfXL+OR0P0xXc=;
+ b=Z4XbgkSOcBJMXCjZpTqf0lFsWEJTm9vtq1ScZbyUQXX2C4TkYZ0tiPnDm7zis19nJTHuAmASXjXPJBD58m9/vM0+t/Hkp+xho4hSrkFxyaNssLYZs4U4Gdnggq/TmS+tty1tewGUMPgAbraz2hK61jM1lApF3/rV1DkN3BajumBPWh697RsTQ9OAFkHiSWm6mEqoq/kln+z10BqY1uKF9hKTIp29LgY+UjH4TVvmV+C2NHY6MwbTls/f/vAFMfaAgVuOBQaWpdeYz/0cIEAvR/VtQah1CRh6Spo4sAAy/YOiJXzNvb38jRH/mSeyHxpKFuGg/G9j3YWLU561NkeCxw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
  by DB9PR04MB8236.eurprd04.prod.outlook.com (2603:10a6:10:245::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
- 2025 12:14:14 +0000
+ 2025 12:14:18 +0000
 Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
  ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
  ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 12:14:14 +0000
+ 12:14:18 +0000
 From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Mon, 28 Apr 2025 20:12:46 +0800
-Subject: [PATCH v2 1/2] ASoC: codec: twl4030: Sort headers alphabetically
+Date: Mon, 28 Apr 2025 20:12:47 +0800
+Subject: [PATCH v2 2/2] ASoC: codec: twl4030: Convert to GPIO descriptors
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250428-twl4030-v2-1-868d0d572f12@nxp.com>
+Message-Id: <20250428-twl4030-v2-2-868d0d572f12@nxp.com>
 References: <20250428-twl4030-v2-0-868d0d572f12@nxp.com>
 In-Reply-To: <20250428-twl4030-v2-0-868d0d572f12@nxp.com>
 To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
@@ -71,13 +71,14 @@ To: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
  Linus Walleij <linus.walleij@linaro.org>, 
  Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+ linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
+ Tony Lindgren <tony@atomide.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745842378; l=1530;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745842378; l=6355;
  i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=M52TZ6Q50TAmOw1qhoy5vILliUUzilo/QQGDest7nqE=;
- b=TK/Jd2KpAEpq0q3f6B15SJZDObE0y0ngP2V4pHIQMH901PtJ3Gx6o2VfzD12/Pvum6ToRd61U
- FhA1zBEJyGPCfFAUwcPYtgOHmrmWXKams6q4ppTuwe+wGNNUMMWAM7V
+ bh=zRutLP2gVhiHvVKI0d7pUXtSI4FotQXNYo50xKP5Ktg=;
+ b=d+JgcUgc1CYEOcvAOsWeFOHaQf0GAqj8R4zzoE0EO3VAg5/swejySJF6QlcldqaHfeXWDyCZT
+ QSOOTaqRhxHCaNr8CFCGyh3aayuhFdUYZ2wYBqZiPv7IsVkrRde+/9O
 X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
  pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
 X-ClientProxiedBy: SG2PR01CA0121.apcprd01.prod.exchangelabs.com
@@ -92,151 +93,273 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DB9PR04MB8236:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0ffe1d9-2461-4a5c-6b53-08dd864e30c0
+X-MS-Office365-Filtering-Correlation-Id: 9ca02309-7d50-4c9c-65fe-08dd864e3351
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|7416014|366016|52116014|376014|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UUpQdHVSYjVLZ28vN2dIR0lybHpMVmlEcm9meklsMEc3RVRBcXpDcjA5U2lr?=
- =?utf-8?B?SXlwSDRrYld4cjUvWXJWc1JTbm0vUUU3S0QzcFlYUTl0WDVTZ2pLaG81VHl5?=
- =?utf-8?B?YXE1RjQwM3EwaHVReW03OTM1V3R1VHZGZ2FXamVzVHIwN1c3aERySmdpeStM?=
- =?utf-8?B?YWN0Q01sME44TmJXWGoyTGwvakhRREU4YWV1VEEzSmYvcEdUaHhaMC9LdVZW?=
- =?utf-8?B?SmVtS1RMaXlaWG03c1JnekpjUWYvdFRnQjgyT3VVdC9lR3FGazFwcTlUeDhr?=
- =?utf-8?B?YzZscS8rTnFtVVJseVVLOURCSFRhcEtLVVlnclE5WExtN25Md0NWbERDTUlL?=
- =?utf-8?B?NWt2OEFlUjF1UUlLR0dreHhIK0c3Y0VXQndxd3g5VDRvVHRhKzhHcmNvdzha?=
- =?utf-8?B?NUd5RStYVWt0MlVXbFZGYnJya0JPN0cyODJvWURvL0FrSmZMYnQ3eXUwVXUx?=
- =?utf-8?B?bmZOUzQyRFdBeldKa2tOaG9TSVdmVjZtTmRTOXR5eWpmbnpSS1NKQ0c4aHF3?=
- =?utf-8?B?OWgxT3pndWhpZmNKYnFtb1BKSXEyNk1pd1ZaNHo5WjMyMitPd3R3RkFqYUNM?=
- =?utf-8?B?NGpxMnA5NjVWbVlCa0VFTStzeEIrRnEyM2NZc1liOEtaaUdaYjcvbERYSnRa?=
- =?utf-8?B?MzZKdkFWcjRTSkdqajJrYmRNSHZiU0R0bnYrdFltWXpPT1JCMHdISnpjamZD?=
- =?utf-8?B?SHFOZXEzc1crRGg2VFQ0WG5MUUNnMUdkdHI0Mkl2Nk0rTlpWYnlXT0ZwNHZN?=
- =?utf-8?B?V1BvUDhOWG9aMjNQOFJjNEZqMFhqamVXai9IUFJuUnRiUjFZa0Z0U2hNWjZN?=
- =?utf-8?B?ckVKZ0U0THRiMnBjZTIwOFVNOEZidUZ6d24rNUpqMjgyZHhrTE9ZdTJPTzhE?=
- =?utf-8?B?N0w0YjdKQnBqd0JMaGtWVTZKVnYva3VKRjdEU1Jsa2JmRFBveXBNOC9NTjBm?=
- =?utf-8?B?UFFzWkYxNTA0NVViZUJYclZTY3lmK3ZLREtvRTZ4ektyZ2t4aERjRkRLTXVU?=
- =?utf-8?B?SlBNbTZEOGlCZXdxdEZwaUZDZ2g5a09VR0w1bmRLMU9rNit1UzVZdEp1ejdw?=
- =?utf-8?B?VGNGSHBSOEkwMmpaNml2eEhINGtQTDBUUnhOZG1vMnVnUmN2RmN4WEJYWlo1?=
- =?utf-8?B?NWprdy96NjhtNGJNTVVpQ2s0YzdWbHVoYStOeDBUSzFRVDFReWdvTEc2Yk5J?=
- =?utf-8?B?SFk5N0w0K2x4Rm52VTVpSE0rYXowZUJqUHNvVVRhWFEyTGRsV3dHaGdJaFZJ?=
- =?utf-8?B?RFpDejVJdFFCbXNHaHdkNHptL0E2bXFwTzZXYkF2RUw2UEh2K29IREtxd0t4?=
- =?utf-8?B?bWl3bHkra2JLWnB4T2MvT3BxQ3dqS0hyeHp4bFl1L2dDRm1pL0ozM2pENzAy?=
- =?utf-8?B?NGVtSG1kRFVSYkVCeWF6TzZ0VVlyeXo1VEc5Q3F0WGphcFgzYlZPSkZLN2pW?=
- =?utf-8?B?bGYxMEJwdHRHMWJmT3BrYzNndyt1U3BnMElVVFFOYjFOQzVYTUNlSngzNkMy?=
- =?utf-8?B?ZnREU1V6YXpzWnFTbWh5dXc5S3R5YXAxdXNXYWpBR2gyQ0w5VzA4Z09MN1Ay?=
- =?utf-8?B?VmxRLzlEaFJZUTVoWXNpejlxMlJrM3JlRWhDTXBFSXFSZHBFK2htZVZuT0Nt?=
- =?utf-8?B?VWg4a2JTQ0J5TDRVWjBISWkrZjZSRzZtOEJSQmFaeFUzbDYxMTJGUmlGMEt0?=
- =?utf-8?B?QmtGRTJVQkk3V1hkNXNhMnBQL0RyU0d1LzlGY3FoMzUzQjg0eU9kT3h4aExU?=
- =?utf-8?B?QzluRTVPWURER2pwSFg4aXRHKytSY21FQUM0empFSDZjcFZiUFNuT0E5dHpE?=
- =?utf-8?B?aHQxcGRhckRnaHUyT2ErOCtSMUFUUWQvb2w0YVJNM2xzKzVQVVpXOEJWbllR?=
- =?utf-8?B?M1Z1aGVIbDJYaEQ4clJoWkxMUUdDWktNUXdNbTdFczNtTWZtWXZYOFpiK2xj?=
- =?utf-8?B?cXJXOUtEOHFBRHBFQ3NEZi92RHpQbUxpZ1FJYTVIdkFuNU9UNGZlZklyU2dj?=
- =?utf-8?B?MTFScXdxM1V3PT0=?=
+	=?utf-8?B?aDd2MjNJcmVLREdkTnQxdnRkQVhEREVkQW9uc2VYUFZpY2ZXNWxIZWFOKzFF?=
+ =?utf-8?B?ZEQzM2x1UFpRRW9GLzRSandENmw5SzhwOFp2VDAxT1gwU3JBM2FXQmg0cmFV?=
+ =?utf-8?B?eWdZcm84RGE3eVpUbjIzQThobTZOUEdRemdEVWxDOXI5bzJiR0Foc0RrY1JB?=
+ =?utf-8?B?OGJ1Q2FhbXd6aFBhemhLclFMeE5PN0h1WjhkNzZJaVdldHF5UTBKRmZVRVVn?=
+ =?utf-8?B?a3V0RjNWUC9IbXlEVjJVVnE3NUovT0FhSDN5ZWNjVDdBSEZFVGZ6K3o0SE9s?=
+ =?utf-8?B?Y0Z6OUJrMndwMVZ4V1BocEtlMUU0cVRrVExvU3NlZ3JWS093Y0I4Q0xYYmlu?=
+ =?utf-8?B?ZGlia3BTbkpHVzR3ZmRvNURiNG9NYlZjQlU2N0t0cWZzMFJsSmdLRmwzOEhh?=
+ =?utf-8?B?anlzUExlOGRicHo4R2FHemZ3dXV3bzBEaUEraXI2U2dLL24yZmE2RUVIaTVu?=
+ =?utf-8?B?U3FqVzhFL3VqL0lKOFNIREJ6Sk1SRFFDSUVTRnJxUTMyNHI1MTk3VDlFdEJS?=
+ =?utf-8?B?Uk44MDdQS3g5UStoQmVVN3N1SFZ2MDZwQUl0eW9XSlFLNlJlK1V5VG9IRzZX?=
+ =?utf-8?B?SG1YKzQvMWZtNHhqdXJKbC9tc2tEd0VXR3VacUV3Z1BHT1hVVEpud21YM1Qv?=
+ =?utf-8?B?aXVDaEtxcnd0SEQvWmxUbXFKbUticlpzeC8zMXVkOUtmNU5zelNRZHZXOFRX?=
+ =?utf-8?B?MCt4cVNpQUJ6RVBkRTRISTFSU3YxZUxCYU9iUk5DNG1HTnVIYU5idGFucXBE?=
+ =?utf-8?B?MjhSWDcyWDVub3FOSGFnc1VNUHpiMUdEZDd6UC9rODdzc3B0SzZxQkV2Ulh0?=
+ =?utf-8?B?ZWxlVDA1YkdNZmJvL1R4a3pjamZZR0RnQ2dWK0FsK2dIaUt2eDdQU1pzWlh0?=
+ =?utf-8?B?M3dFODNuZkloYzNyYWdTVnZQeDJtMm1mOFN5K1ROSjBDY1Vjb0VPNUowNmwy?=
+ =?utf-8?B?ckxKRmZURnlLQUxOTU1BNWFBS200YWlYYnJ5cjJHMlFrY0VOMDc1QktSamdZ?=
+ =?utf-8?B?TStZMm8waytraHFOYjBkazVDRHVjUGkvV1lIUnlyakhvQXZpQnZiVTlnK3VE?=
+ =?utf-8?B?NU1SZjM3RVNCdVNYOHRSTDZwUUtySkFmTG12U1NXQmMwaGlZbWdtbmEzUFBI?=
+ =?utf-8?B?a1ZMQkdjY3VzclI4dEMwdGNLZFVuaUw5blpSRE1EeHJVcFRsNGl0ZEVRN2x1?=
+ =?utf-8?B?Qktpb2VuVDJGQURkTEh2N0RNQkNMdk9vVlY0d2p1Vm1NN2Fpc2lZY3ZJbFZa?=
+ =?utf-8?B?aVlsYWRVdzg5VTVRSjE3V0pTNDJERWR6dXZqMFJ1SnRkYXEzQzBRMmJJdTkz?=
+ =?utf-8?B?UHpXcThjZ3dqU0NEaVo5UzB0dks5M3QrSkxhSFduTzExOWNhenNYMURUeWh3?=
+ =?utf-8?B?ak15TXYyZW84NGl2LzRsL0ZHelUzMW9Pa2FmNTNVYzkxMlB6TzdVY3J1UElN?=
+ =?utf-8?B?OUFEWDZaRVlINStDKzhLYlp4ZEh0TkJtR1BlWElkTytPZFVUL2xZcUhWdjVM?=
+ =?utf-8?B?NXdVb3k1dURaTEtmQlBrSmtyTk5Lcis0VXoxTkNiMHVxVEJtTTljRTFTR0dr?=
+ =?utf-8?B?QzluNWYwR2F1anFpQTFOT0YzRHBuempvV3RCejFiWjBxejNSRmxvWUJZY29Z?=
+ =?utf-8?B?aVJNYzl3TDl2NW9YdzdqdlQzamNlVnluRGlmVk8zU2V2ZzZHQlNhMmxUSUxC?=
+ =?utf-8?B?bEJLaFRnZDRHVFRzSkVxQ1RVek9SbU5qamZ1VmVlV0RCUVd4M2NGRmhXTml3?=
+ =?utf-8?B?YVpDbEVFMGs5WnV6T3hNUzV6ZjFFUTQrbWRRNXFXaVZqL3NTWmJGc0REY1RR?=
+ =?utf-8?B?eFYyd3VzZ0RxNDk4a1JnaERUSVZvYWlOVVNXS2h4T1BmcDVqNXoramk3SWtO?=
+ =?utf-8?B?MjZDTms3WEJya2xFMDRmYmZGUm5SOGNMQTJsMk14Z1JSWUJ3N1NmQkFwU0d6?=
+ =?utf-8?B?bWZrRVZUSGNRSDJPVE1mTjYwOVUzdXFQaWk5cnNPQ1p5MnFNUTNJRXFSRWRl?=
+ =?utf-8?B?bFRJbUtSZFVBPT0=?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NkNaUXlVTmhuV0d0dThrUlVHQXE1SXljV09qbkkyaFM3TzN1UGZvUStTcXEy?=
- =?utf-8?B?bXVURXo3M1FuTndvNmdheThGNFFZa3NSVkNsdG02bmZkZHNJODIrcDd3NERV?=
- =?utf-8?B?NUxFd0sxRjFRWWhXWmRkV1NLMWZqYkJxd0F0Q1FQR2J4eHhCRW9lY1RGOWZT?=
- =?utf-8?B?Z3pmeFBBZE50aW4wYmhXMHYzU1RxcHo0OEJrOG82ZkRnKzlqc1paTHBQbW9y?=
- =?utf-8?B?ZDQrOTU0dUgrOW5HNjM0QUh3KzNCVVMzRW4yL3NDV1FEcE5CdjQ0TllrNlZq?=
- =?utf-8?B?a0VhM3pkQWJvMTVKbFBQakZQWXlUdUtJd3lUWktlQnNsaDVPYUYycEZTTE5J?=
- =?utf-8?B?d3l4Ukc5ZmtRbnpZSEtQWE42UzhiVjZmU1NkT0J1QzBKYWdkVEJjVURzQWlH?=
- =?utf-8?B?UkxXZDJSUXlVRndGUHptZ0N6SUVJbEs0ZUd1K1FIaElaZS84VkYvWXllLzZw?=
- =?utf-8?B?NmVWeTlwR2ptSWJURjV5eFlGdUc1ZU1qM2xjdEtCVlRUYVZkZkJYQkhCSm1F?=
- =?utf-8?B?NXE0emtTYmZvSkVtQnpUU2tBMXZFczdRVTE0cXlLSkk4SkEyTjExRktnd2k4?=
- =?utf-8?B?REYzMzlQYmdId3E2M0t3WWxyNVYzMkR3VDlrS0FPR1o5M0NGS1dnRzlCck4x?=
- =?utf-8?B?RzRqaU5wQjUyNWwrTjZDeTVrOHh4Smc5SGtUTjRPam1BdDdVV0RidmpkVkxa?=
- =?utf-8?B?cXpEZDN6d0s2a3BLa1lIOHhMU0h4UGc0MGdBcE1WRldIM2lSdUgzbStSZ1dj?=
- =?utf-8?B?cDFWOTNFR2N0d21zQncyUTd6THg5VDlPZG5PN1VEK1pWM3A5Uk5oOE5uQi81?=
- =?utf-8?B?UVlOQ2daUXpBUWdVK0QzRW4rU0xabFZrdFdZS3pSSFhzcmVtUWV0U2J6ZFV5?=
- =?utf-8?B?TFhYV0twMCtVR3BnbWFNRzBHOHRTTFdjWHg0ZDhOZ0ZOTWdvTG53NlJxbGVP?=
- =?utf-8?B?WXVOaVR5czBPQVVWUmozM2Z4NEJjWVBQckR1WjBNZzF2T2lnNjFINXdvWGZX?=
- =?utf-8?B?VElaQitGZlFXSWdhUGNqSy9LZGx4UDd0cjNwSkppSGhKMDY3MVI3ajRJczZv?=
- =?utf-8?B?bGRzZFNHT1kyMGFoUUUrSFV4YzAwN2NTY295THlBTFJIMU5FV1NWZVRSRnJO?=
- =?utf-8?B?dVFoVGxPb2lVZGZsYUhTVm1RdXllSHhBYmhaeWhId2tuTGQ0OVZRd0NMUlI0?=
- =?utf-8?B?c3NGNXd5MEp0RFlwaUY4emQvWG9UUFIzdEdSVW1rVXdQK3VoRG5VUTlIN255?=
- =?utf-8?B?cDUzMDUwd210M1VuMDBFYkpRSjRGQWN1Rk5Nank4NzdtbnVablF0cUk1TUV2?=
- =?utf-8?B?NEJ4dC9kUzZ5emFKUkw2QlFCcTF3cVZCUWdqQ1BzY2d0SlhTVDhlVTkzWisw?=
- =?utf-8?B?Y3ZTZ3ZrUGF0M1IzS2V1aUZxcjRBbVFNTGZ1N1hGYmtUbDRaMllacy93Z0ZC?=
- =?utf-8?B?VnZUSFF6MXJtaVMxODMybEQ4THhMd2toQnVuTzQ2VDhIVm1YK1ZkYzdPVVd6?=
- =?utf-8?B?OVJHcnIwT2xPVFBoYUJ5QXc2MEhoc01Gci9tMXBXNWE3OFlGc1djaUthQ1Va?=
- =?utf-8?B?anFSYWpHSzQ3eVdhUlYrSXRabXpUSTFzOVB5WUNDQXBtb2dUcmx4RmFELy9O?=
- =?utf-8?B?c3VUaG5VT1N5OVhTbzh4TkIrYmh3OS9Tai94MEtyKzJKN0NjOE8vYlJXMnIx?=
- =?utf-8?B?ZG05Q1pjcnl5eGJFNm83c0IvZ0h6dmQyVXk3NDBEVGFhc1J4b3o5WGVPMWRq?=
- =?utf-8?B?UWhTTmZxRlIvRmVQcm1iVGxXSHdXeDNPb3A4NnFabTIyYUZZUWdFT1daR1Zx?=
- =?utf-8?B?YVJVRVF3QWw3dFkyT1dja1hDZzV3M2Rub1V4dnFLNHRWSmRzTVlNdXZ4bHNV?=
- =?utf-8?B?eGdHQUxvSk54QWtrOE5GOXRoZnI0d011em01bzRieG9VL1BLbHZsYUYzTkNw?=
- =?utf-8?B?d1Ryc1lhV0UyRFIzQzNQY3RQZkJXY1J4MDNLeGVZVVdLU0s2SnhjVVg0OTR3?=
- =?utf-8?B?dlM3b05BT2pVVkZ0SjlMT29WN1ExS1NVS3NlR2VXYzR2MXo5UkZndkEvQXhY?=
- =?utf-8?B?MzJBZFk4aFdQM0wrR2ZhWGNKVWhJbnRTcWhQVStmb2cxS0xuYmdNdUg3Misy?=
- =?utf-8?Q?JQpkk2eE5koQ8GiJTn4VTL6X+?=
+	=?utf-8?B?eHNVb1FxMlp5Z1B4UnppSmp0RDY3Qmw0cmVBeklmeXh6Uk1PMmpFS0tMb2sr?=
+ =?utf-8?B?T2RoVUsxNEJxbGszbldIYUF5bDJmdkIrQVFGc3hQSjVJTEpVRDd0VWdDOFl5?=
+ =?utf-8?B?S1pFcjQxdHJLSG9JT1Q5WHJxeDBuWG1zYkROUVFZN0kyb0RvcitRU1BDKy9r?=
+ =?utf-8?B?Q09qMWVhdHJNem9qTVBGeXdmcEZpTStGN1ZQYzhwYnAzdWMrUXd6RVdWZ0N1?=
+ =?utf-8?B?RmVXN0FLdUFLRWdQL3Z4ZExBaTFRRUZudHhTUnpnWVZnd2dlYjl0RWZTMEtZ?=
+ =?utf-8?B?YStndmprYmZ5SDRtbVo3T1diWUYyK3BKbjMyWlhwdEUvcUpRV2RrMDFVbmlQ?=
+ =?utf-8?B?akVwWVNHMDVERkdFLzNsSTd0Q3hGWEpzWFJ1MUt1S1p3cm8rczU3VndqM1Fz?=
+ =?utf-8?B?Vk44RUFGYWJHT3hjTzh3ZkxUR014aWtiL2VVQ3FuUGprd2p3cGZlWk13dmRQ?=
+ =?utf-8?B?c0w1ZDk4dExVaHhYa1dpekxwcnFLYjdKTERQaG8yRjBHVlJCSmQwUkFnNzEz?=
+ =?utf-8?B?K1N6eE1MQlVZVXZlNzMrK3ppOHQ2T1AzaFpQSDZwNi9kWmVPYjJhajNtYjNI?=
+ =?utf-8?B?UWlpZnAwNjdIUWMwdDRJUmRDNEkzWlNnUG1kQ09kU0pWYkJxTE1rVGZFU3hO?=
+ =?utf-8?B?b1RpOENMUTB6THFKb3RHa0diSEtwZm9xQTNaR1JWOTdpS3JkbHBwTjQ0VG5P?=
+ =?utf-8?B?NDNOa0gzL1V3UWpEOXNkNkppL0FjU0lXRkRpN3pDbU5xanRqcU9OZjFEbDlB?=
+ =?utf-8?B?b1l0UGV4bVRyTTI2TjJoZVBoMTltb1I2SE0vVzhzWDhETFFKZEFVdDF0QVpm?=
+ =?utf-8?B?WjkyYmgyakVDOW1YMzhkMnVWeDg1UFVqQ2FERk04dHFvMTBPMFNZVE5mRHIr?=
+ =?utf-8?B?QWYzaDlOR0lDRmtxTzNySVpsNnF0S2UvTHpraXN6TWRjWXVqT05wT1JteFUx?=
+ =?utf-8?B?U25UNC93d0taSEF3UVduR1FyMWgzVlBieHVIRmdRTkE0SDJnOTFSbWpscEFp?=
+ =?utf-8?B?ck1ocVI2R0Uyd2FpcjJvTGJKcTFhSzhlOHVEdVlEZ2dqb29TcHMvMlJVSGZs?=
+ =?utf-8?B?OE4xa09IRGVwQVF6enZ6RElMTFhVbjJMZ2dsSksvOGJvQTBZR0Q3QW5EekF3?=
+ =?utf-8?B?SjZXZ2dhNUZXZ3F2NGpwZUQ3NHRHL0R0VGVFazBEKzJ4cGlSZFlsbUc0Um1X?=
+ =?utf-8?B?TW5zRE9HRHJZclZLL1IyeFVmOEFnNVEyUGJhMVZIaldiY0IrYkg1NSs0YTJq?=
+ =?utf-8?B?VTRVQ3dnZzlFT0gyOThFdmZBWlhMVzRyOVNhTFZkaHFEanptSjZ2WjNDenpa?=
+ =?utf-8?B?Y29xakRxR3VuU25hU2dtRlhNMUxHTkV5emZBV28yS254Q2xGb0QwWndnQWZY?=
+ =?utf-8?B?TFJIa2QwZWh6QWFueUl6YnFXVzhsUGtPTHpkV2ZETlZxN3VpVXhQWnlaZW1D?=
+ =?utf-8?B?eUVrZVdxcEZyaWpSMXBsMjNGRVZxZTI2VTQ2N3VhQ3poazA0Q2szcjRKZ3BD?=
+ =?utf-8?B?TlVGTSszai9xNklGcUN5Q3VTNTZOS2RNQ0tKYnhUNUd4VlJMaUQ3OTFicVFX?=
+ =?utf-8?B?dmcxa25heVFMOWxneXpIS1BRQ1VyZkd0bFYvTlZtUUNLdG4zNnRjaEZlQ1R3?=
+ =?utf-8?B?WTZ6dWtMVG5HSVp2WDhLSm13NXFTZFBtZFNhU0dkWDFCS3lhN3FiZXlHSG9R?=
+ =?utf-8?B?RDJNOUZ1UFQzL2d6NGovVmVVOGV5cTFjSzVTUW4rSmtRb1UyWjl1dmxIR3o2?=
+ =?utf-8?B?M0xtMnpMQ3NlKzBYdjJ1TkFzUHRITE85UG94TEhoWk5xcFhUY0ZGdkVWTlN4?=
+ =?utf-8?B?bnJNWEpEUjFOY2trRm9XWXJ2ei9VNUwxVklnTkY4eko5Zm52MVozM3dGSG1l?=
+ =?utf-8?B?UWd5a2JQbGlLVlJaUFdoSHo1S3VDYTJFdGhUZWZ6VEFvZHArTXJYRXZhMlpv?=
+ =?utf-8?B?ZG41aHhweVRIek1pc1VHOFJUWmtjMnVEVHJhckJKV1MySk1UQmE2V2xpdXZm?=
+ =?utf-8?B?UndDaHpVaWVtWGtoL0Ezbmx0ZmZCMDJsOXM4d1dsOUN0dE1wTElUdVNJTFBm?=
+ =?utf-8?B?Y2ZISFBZTHNZSlBPMmJHSnpXcC82SEdWR1ZNMWVaek1UYkNjaFdjby9laGpO?=
+ =?utf-8?Q?Ktpn3IMnEVPTBRRIMrP1utuQs?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0ffe1d9-2461-4a5c-6b53-08dd864e30c0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ca02309-7d50-4c9c-65fe-08dd864e3351
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 12:14:14.2040
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 12:14:18.4619
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ii6OZED/eJa0p9E6S+Q+Y3hEy1L15rp2lgZPtVd/JwVdBswlIYUsUNLPzBUDmhwluRARxG0rczcTyXJHW/QSMg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: wqzF1H7XZSorfb8AJZaggA9gpjQpxgDuoo/qg682Q5Yu54Ev4sPPKuEdYpqPCc5JUFUhptiCtmx1jYDeiq7t5Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8236
 
 From: Peng Fan <peng.fan@nxp.com>
 
-Sort headers alphabetically to easily insert new ones
-and drop unused ones.
+of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+ - Use of_property_present to check "ti,hs_extmute_gpio" to set hs_extmute
+ - if returned value is true.
+ - Use devm_gpiod_get_optional to get GPIO descriptor, set consumer name.
+ - Use gpiod_set_value to configure output value.
 
+While at here
+ - drop remove hook after switching to use devm_gpiod_get_optional
+ - Add return value for twl4030_init_chip to propagate value to parent
+   in case defer probe happens
+
+Checking the only user logicpd-som-lv.dtsi that uses polarity
+GPIO_ACTIVE_HIGH, so all should work as expected.
+
+Cc: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- sound/soc/codecs/twl4030.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ sound/soc/codecs/twl4030.c | 63 +++++++++++++++++-----------------------------
+ 1 file changed, 23 insertions(+), 40 deletions(-)
 
 diff --git a/sound/soc/codecs/twl4030.c b/sound/soc/codecs/twl4030.c
-index 609886461805f85f826a002942bd07c9105f2038..dbd2a0ce7dede26c302b7e30bb68c40ff6e3790a 100644
+index dbd2a0ce7dede26c302b7e30bb68c40ff6e3790a..92194579e15beb452b63c8f00800b50724f63ba5 100644
 --- a/sound/soc/codecs/twl4030.c
 +++ b/sound/soc/codecs/twl4030.c
-@@ -5,28 +5,26 @@
-  * Author:      Steve Sakoman, <steve@sakoman.com>
+@@ -6,7 +6,7 @@
   */
  
--#include <linux/module.h>
--#include <linux/moduleparam.h>
--#include <linux/init.h>
  #include <linux/delay.h>
--#include <linux/pm.h>
-+#include <linux/gpio.h>
- #include <linux/i2c.h>
--#include <linux/platform_device.h>
-+#include <linux/init.h>
-+#include <linux/mfd/twl.h>
-+#include <linux/mfd/twl4030-audio.h>
-+#include <linux/module.h>
-+#include <linux/moduleparam.h>
- #include <linux/of.h>
- #include <linux/of_gpio.h>
--#include <linux/mfd/twl.h>
-+#include <linux/pm.h>
-+#include <linux/platform_device.h>
- #include <linux/slab.h>
 -#include <linux/gpio.h>
- #include <sound/core.h>
-+#include <sound/initval.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
--#include <sound/initval.h>
- #include <sound/tlv.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+ #include <linux/mfd/twl.h>
+@@ -14,7 +14,6 @@
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/of.h>
+-#include <linux/of_gpio.h>
+ #include <linux/pm.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -37,7 +36,7 @@ struct twl4030_board_params {
+ 	unsigned int ramp_delay_value;
+ 	unsigned int offset_cncl_path;
+ 	unsigned int hs_extmute:1;
+-	int hs_extmute_gpio;
++	struct gpio_desc *hs_extmute_gpio;
+ };
  
--/* Register descriptions are here */
--#include <linux/mfd/twl4030-audio.h>
+ /* codec private data */
+@@ -211,8 +210,7 @@ twl4030_get_board_param_values(struct twl4030_board_params *board_params,
+ 	if (!of_property_read_u32(node, "ti,hs_extmute", &value))
+ 		board_params->hs_extmute = value;
+ 
+-	board_params->hs_extmute_gpio = of_get_named_gpio(node, "ti,hs_extmute_gpio", 0);
+-	if (gpio_is_valid(board_params->hs_extmute_gpio))
++	if (of_property_present(node, "ti,hs_extmute_gpio"))
+ 		board_params->hs_extmute = 1;
+ }
+ 
+@@ -240,7 +238,7 @@ twl4030_get_board_params(struct snd_soc_component *component)
+ 	return board_params;
+ }
+ 
+-static void twl4030_init_chip(struct snd_soc_component *component)
++static int twl4030_init_chip(struct snd_soc_component *component)
+ {
+ 	struct twl4030_board_params *board_params;
+ 	struct twl4030_priv *twl4030 = snd_soc_component_get_drvdata(component);
+@@ -250,24 +248,20 @@ static void twl4030_init_chip(struct snd_soc_component *component)
+ 	board_params = twl4030_get_board_params(component);
+ 
+ 	if (board_params && board_params->hs_extmute) {
+-		if (gpio_is_valid(board_params->hs_extmute_gpio)) {
+-			int ret;
 -
- /* TWL4030 PMBR1 Register */
- #define TWL4030_PMBR1_REG		0x0D
- /* TWL4030 PMBR1 Register GPIO6 mux bits */
+-			if (!board_params->hs_extmute_gpio)
+-				dev_warn(component->dev,
+-					"Extmute GPIO is 0 is this correct?\n");
+-
+-			ret = gpio_request_one(board_params->hs_extmute_gpio,
+-					       GPIOF_OUT_INIT_LOW,
+-					       "hs_extmute");
+-			if (ret) {
+-				dev_err(component->dev,
+-					"Failed to get hs_extmute GPIO\n");
+-				board_params->hs_extmute_gpio = -1;
+-			}
++		board_params->hs_extmute_gpio = devm_gpiod_get_optional(component->dev,
++									"ti,hs_extmute",
++									GPIOD_OUT_LOW);
++		if (IS_ERR(board_params->hs_extmute_gpio))
++			return dev_err_probe(component->dev, PTR_ERR(board_params->hs_extmute_gpio),
++					     "Failed to get hs_extmute GPIO\n");
++
++		if (board_params->hs_extmute_gpio) {
++			gpiod_set_consumer_name(board_params->hs_extmute_gpio, "hs_extmute");
+ 		} else {
+ 			u8 pin_mux;
+ 
++			dev_info(component->dev, "use TWL4030 GPIO6\n");
++
+ 			/* Set TWL4030 GPIO6 as EXTMUTE signal */
+ 			twl_i2c_read_u8(TWL4030_MODULE_INTBR, &pin_mux,
+ 					TWL4030_PMBR1_REG);
+@@ -295,7 +289,7 @@ static void twl4030_init_chip(struct snd_soc_component *component)
+ 
+ 	/* Machine dependent setup */
+ 	if (!board_params)
+-		return;
++		return 0;
+ 
+ 	twl4030->board_params = board_params;
+ 
+@@ -330,6 +324,8 @@ static void twl4030_init_chip(struct snd_soc_component *component)
+ 		  TWL4030_CNCL_OFFSET_START));
+ 
+ 	twl4030_codec_enable(component, 0);
++
++	return 0;
+ }
+ 
+ static void twl4030_apll_enable(struct snd_soc_component *component, int enable)
+@@ -712,8 +708,8 @@ static void headset_ramp(struct snd_soc_component *component, int ramp)
+ 	/* Enable external mute control, this dramatically reduces
+ 	 * the pop-noise */
+ 	if (board_params && board_params->hs_extmute) {
+-		if (gpio_is_valid(board_params->hs_extmute_gpio)) {
+-			gpio_set_value(board_params->hs_extmute_gpio, 1);
++		if (board_params->hs_extmute_gpio) {
++			gpiod_set_value(board_params->hs_extmute_gpio, 1);
+ 		} else {
+ 			hs_pop |= TWL4030_EXTMUTE;
+ 			twl4030_write(component, TWL4030_REG_HS_POPN_SET, hs_pop);
+@@ -748,8 +744,8 @@ static void headset_ramp(struct snd_soc_component *component, int ramp)
+ 
+ 	/* Disable external mute */
+ 	if (board_params && board_params->hs_extmute) {
+-		if (gpio_is_valid(board_params->hs_extmute_gpio)) {
+-			gpio_set_value(board_params->hs_extmute_gpio, 0);
++		if (board_params->hs_extmute_gpio) {
++			gpiod_set_value(board_params->hs_extmute_gpio, 0);
+ 		} else {
+ 			hs_pop &= ~TWL4030_EXTMUTE;
+ 			twl4030_write(component, TWL4030_REG_HS_POPN_SET, hs_pop);
+@@ -2166,24 +2162,11 @@ static int twl4030_soc_probe(struct snd_soc_component *component)
+ 	/* Set the defaults, and power up the codec */
+ 	twl4030->sysclk = twl4030_audio_get_mclk() / 1000;
+ 
+-	twl4030_init_chip(component);
+-
+-	return 0;
+-}
+-
+-static void twl4030_soc_remove(struct snd_soc_component *component)
+-{
+-	struct twl4030_priv *twl4030 = snd_soc_component_get_drvdata(component);
+-	struct twl4030_board_params *board_params = twl4030->board_params;
+-
+-	if (board_params && board_params->hs_extmute &&
+-	    gpio_is_valid(board_params->hs_extmute_gpio))
+-		gpio_free(board_params->hs_extmute_gpio);
++	return twl4030_init_chip(component);
+ }
+ 
+ static const struct snd_soc_component_driver soc_component_dev_twl4030 = {
+ 	.probe			= twl4030_soc_probe,
+-	.remove			= twl4030_soc_remove,
+ 	.read			= twl4030_read,
+ 	.write			= twl4030_write,
+ 	.set_bias_level		= twl4030_set_bias_level,
 
 -- 
 2.37.1
