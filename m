@@ -1,208 +1,111 @@
-Return-Path: <linux-gpio+bounces-19479-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19481-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F650AA1C55
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 22:42:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C70F6AA397A
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 23:34:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 471DE98802B
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 20:41:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CA0E9A7B7F
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 21:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9C47267714;
-	Tue, 29 Apr 2025 20:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 353D7270EA1;
+	Tue, 29 Apr 2025 21:33:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NICgK7IJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJWjBJhL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54892522A0;
-	Tue, 29 Apr 2025 20:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A7425E450;
+	Tue, 29 Apr 2025 21:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745959328; cv=none; b=kCBG9vQY/Yot0o1uJaX76uqWA0odWI5ce+OX3OWwY+Rf69opgH1UReyG4a5adQPE1lYt5kEHtCgs+P+SuyO0PZyZ35j3DLsbOrx1Yf/b9fWRzAHRqkNnkOW8d+V8fFxuAeN0VdaM5aYVUxbXN6AwL2BkVjPlv29MCPvkiiI+S84=
+	t=1745962427; cv=none; b=dyCMYdQAxkeW6XTutY3RKX1hiUY8c9gJoOx+Lr7YJQG+9D6p3B3K7yi9R2LhgmT1EuayE9zDSnddnC/PuSDdCZ3fSRcAilJgPd3fRWRBFeTUaZczbsRnhY1aMemg1Nv2k3qCEw+Xzv/b5AXEXItie7sEPwM3TQW9Gb5DvdV4tL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745959328; c=relaxed/simple;
-	bh=sqw8u468bvWPhnZZvrvFjZOeJJxU6TLriFYsQyHe/Wo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TcxCkGn5kkg214biIxNNnACgGOvyyjSGLRia98QiO2iCETLd2UE1qchpQkf1STykAlmBjxg6gu31mdAvrSK+GQ3olWSrJ43SXUyWTocU1/6YcffCXOeP4C4KYlhopNwbq82I4VvevG2F1mc1fZv2QzRLm5/lXLaau98M9xKXZtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NICgK7IJ; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ace94273f0dso655741766b.3;
-        Tue, 29 Apr 2025 13:42:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745959325; x=1746564125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D1z/mqKv1IeI8pEEU6fVR2jhLi7rY9Y0QGzSV/lMhx0=;
-        b=NICgK7IJSUPINy8cCaeGm81RW5I3/b5wgMm40+0sFEu2gLjK4/7sgfpH1l6QxKKXsH
-         om+l1eqNQi4iJj/ia8Z7HY+bkYZj7u9cWro0fn8Mp7QxVdt4VC/tP4Tnd5gf008avK7W
-         eHVRD22XxTWp5ExNePLs9lp0BGWANvXi3crNe3zoV/7DdhO3BUGsFfRO4MsLM+5iWj8O
-         42cnZGwObX578ogKpGgWVC0eWFBC3g2oirY4WkBX2rZ1r8rdOMGopqv7WzcYvAU0qGsa
-         mbWzlz55dkp4KhYRL1i/NtHmxIbrp04uLsYIGij1ZWIo6yrZeeA0ADNuI9y4TnTbaoXM
-         Kaew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745959325; x=1746564125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D1z/mqKv1IeI8pEEU6fVR2jhLi7rY9Y0QGzSV/lMhx0=;
-        b=jvB3i1qvktSA5/lvKrHUwc4bdmydS0pk18OLEj7qIFVOu6bJv7eNphfHGybHsw41e3
-         3+Ke9l8iPv9kv+cPTJ90ISX2xE+hI9jKRTSxYBy/MpZj9XHYWPUMkNu4pVitA5RI3VFV
-         3p2KjH/I9tenNcSlfTxN0Bv2gpE8GpUWeW83yhhlNV6Y1rC6TvG3F4CXH7AZvVTaHhN9
-         BqoNoAxMJe2hYwaRllzFTPxRUIRZ4TGkdFpUChQSZIenoKXhGdMvbAXAQXfLrkJwS2XR
-         pmlsVnDCin8E5pF4jAFHevRVbp56TwkoX6w+KFKgrlJ0Ey6f/CeHn7enFp6zoi6+b1y9
-         72hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUChlpUHggl7sKKaG6qv5vjg+G4InorRt9gwry2Wi6a9BI3JXTXu5PupkDiqSGtlqlcoz1PXWMo9ph/ChtXvCxV@vger.kernel.org, AJvYcCVPvNKhZAxyGoJJyqstMwEfw+KxWJjwx/P+gChbim4/TlHi5SuzntqsQfFYZRzLloRB/fhmaR/7DC+G@vger.kernel.org, AJvYcCVqWtwnrNufMTbtJtGNnI4SUmix6erWNIC16zc2xuwQxoS04p4HsizsPF0wEzhXKJidSQ0Mjx0wsLY0sAMA@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEFPd9Y8gJlnkhqyqyAfUVY7BHOhb9FXQEv1XBOYBtPMs++3UV
-	R31QfEWokZZbIw+QsN6atN4XQ/r9e57PmbAE5H6XMbGi9Ypnj47yk4k+WW/mYSLKULuvipBIW/S
-	WeUyZZCU1vSs3l1vKBMOZSwD/cY0=
-X-Gm-Gg: ASbGncv18n3IKbh72QuUxolLbZv5n2aglGL7S7/Uu9lwNg6V/mvyUb7v3fr65YmQxkS
-	sLmV51c0VjkVXhUPIhpYW5KSCJr/H2JxuGuqytXYbMBWTLgQU2yI3VGt9TRV/lpiLTphEJ3ecUm
-	L9C+s6EGC8tWGrbEK2wzy/3A==
-X-Google-Smtp-Source: AGHT+IE14msetcDvHYj/CK4TchmcNPfTjYNeX1wqV1ziOxtznfOccILX1u8l/ZGo797xJvN0+L0UY0jzsPR+fFwsf1U=
-X-Received: by 2002:a17:907:3f18:b0:ac1:db49:99a3 with SMTP id
- a640c23a62f3a-acedc73396bmr77444066b.40.1745959324967; Tue, 29 Apr 2025
- 13:42:04 -0700 (PDT)
+	s=arc-20240116; t=1745962427; c=relaxed/simple;
+	bh=sqgl5y8PVkwCo9nS/VR1ZpFSL6mY1lIOi7iBfe47K3E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BvJ2NwFkQhqgwolpa/9FSK8zOu0jG4At3/qWUA+ZwvMb0HGkjSO8gjM9XVm1r96D045F0gID9JQjDGwVuvrnN5oIKnIr27dUxwPhPa4jOrlWQg8p8KlSdxLh5YVcIdxChcELbJi6vl1OwV3sR8TLnhKoCkfq2OKx+eyEy9g15gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJWjBJhL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 51B9AC4CEE3;
+	Tue, 29 Apr 2025 21:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745962427;
+	bh=sqgl5y8PVkwCo9nS/VR1ZpFSL6mY1lIOi7iBfe47K3E=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=uJWjBJhLgqgAq3KyfWA4iQ/y64zfVdFTV/DQxIcFmNyFI2OM7/YO54iiOB9Qs4mYz
+	 TtDUXIyu0moBh/E0YwfKKmUw1NehYSER8kFxXz6jB7XPWAug+bUsOomYqfL1gJcxQo
+	 N+1ghTXEFhzew73hoqSFcF125Du+8Ky2ecs2cEX2ncYKafJHTu9sZ/Y5s6I0PhbLgD
+	 ntzUE8pJN8HuLly5aSCkYVdsXNb0uuq0TIFNbFFYV81H85hDPjpjL8jcTSN3BoWOvX
+	 AI6hararlfwzPnfcKQYoVdIzaX+nBceCoMXaDboibrjrKZ29boG1dfTlsdv2BTMiAS
+	 7Ams1W7gJMGNw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D344C3ABA5;
+	Tue, 29 Apr 2025 21:33:47 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Subject: [PATCH 0/4] pinctrl: tegra: Add Tegra186 pinmux driver
+Date: Tue, 29 Apr 2025 16:33:29 -0500
+Message-Id: <20250429-tegra186-pinctrl-v1-0-722c7c42394e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
- <20250429-aaeon-up-board-pinctrl-support-v4-12-b3fffc11417d@bootlin.com>
-In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-12-b3fffc11417d@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 29 Apr 2025 23:41:28 +0300
-X-Gm-Features: ATxdqUH6LFL-Q-RdSyhm0fHJzj7z0eKXlWR7xvTBkFx2dpxSM6ZEfA2sxQxPlko
-Message-ID: <CAHp75VfkJ8J=4zmRwjFjq49GRN-=6FCv=uU6+2NUxSW6ZZ+mnQ@mail.gmail.com>
-Subject: Re: [PATCH v4 12/12] pinctrl: Add pin controller driver for AAEON UP boards
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKlFEWgC/x3MQQqAIBBA0avIrBO0UKSrRIu0sQbCYowIxLsnL
+ d/i/wIZmTDDKAowPpTpTA26ExD2JW0oaW2GXvVGDcrJGzdetLPyohRuPqQ1OkbvPTptoWUXY6T
+ 3X05zrR/vH5J7YgAAAA==
+X-Change-ID: 20250308-tegra186-pinctrl-651ffbbbe816
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745962426; l=1088;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=sqgl5y8PVkwCo9nS/VR1ZpFSL6mY1lIOi7iBfe47K3E=;
+ b=82IwiueRLIua0SuZBRzUSmXl81Zbv2b6djBSxHxKnI8T6smApO86ykTTBxfRIbDo3CWdWaQnn
+ Rgx+JNwb27wBcGEP1lIIXapKtz6Fm9bK5pOrMWtsDNSV0qZaNfcKb6f
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> This enables the pin control support of the onboard FPGA on AAEON UP
-> boards.
->
-> This FPGA acts as a level shifter between the Intel SoC pins and the pin
-> header, and also as a mux or switch.
->
-> +---------+          +--------------+             +---+
->           |          |              |             |   |
->           | PWM0     |       \      |             | H |
->           |----------|------  \-----|-------------| E |
->           | I2C0_SDA |              |             | A |
-> Intel SoC |----------|------\       |             | D |
->           | GPIO0    |       \------|-------------| E |
->           |----------|------        |             | R |
->           |          |     FPGA     |             |   |
-> ----------+          +--------------+             +---+
->
-> For most of the pins, the FPGA opens/closes a switch to enable/disable
-> the access to the SoC pin from a pin header.
-> Each switch, has a direction flag that is set depending the status of the
-> SoC pin.
->
-> For some other pins, the FPGA acts as a mux, and routes one pin (or the
-> other one) to the header.
->
-> The driver provides also a gpiochip. It requests SoC pins in GPIO mode,
+This series adds support for Tegra186 pin control, based on a downstream
+driver, updated to match the existing Tegra194 driver.
 
-also provides a GPIO chip
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+Aaron Kling (4):
+      dt-bindings: pinctrl: Document Tegra186 pin controllers
+      dt-bindings: gpio: tegra186: Add gpio-ranges
+      pinctrl: tegra: Add Tegra186 pinmux driver
+      arm64: tegra: Add Tegra186 pin controllers
 
-> and drives them in tandem with FPGA pins (switch/mux direction).
->
-> This commit adds support only for UP Squared board
+ .../bindings/gpio/nvidia,tegra186-gpio.yaml        |    3 +
+ .../bindings/pinctrl/nvidia,tegra186-pinmux.yaml   |  285 ++++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           |   12 +
+ drivers/pinctrl/tegra/Kconfig                      |    4 +
+ drivers/pinctrl/tegra/Makefile                     |    1 +
+ drivers/pinctrl/tegra/pinctrl-tegra186.c           | 1784 ++++++++++++++++++++
+ drivers/soc/tegra/Kconfig                          |    1 +
+ 7 files changed, 2090 insertions(+)
+---
+base-commit: 1110ce6a1e34fe1fdc1bfe4ad52405f327d5083b
+change-id: 20250308-tegra186-pinctrl-651ffbbbe816
 
-Missing period at the end.
-
-...
-
-> +config PINCTRL_UPBOARD
-> +       tristate "AAeon UP board FPGA pin controller"
-> +       depends on MFD_UPBOARD_FPGA
-> +       select PINMUX
-> +       select GENERIC_PINCTRL_GROUPS
-> +       select GENERIC_PINMUX_FUNCTIONS
-> +       select GPIOLIB
-> +       select GPIO_AGGREGATOR
-> +       help
-> +         Pin controller for the FPGA GPIO lines on UP boards. Due to the
-> +         hardware layout, the driver control the FPGA pins in tandem wit=
-h
-
-control --> controls
-
-> +         their corresponding Intel SoC GPIOs.
-> +
-> +         Currently supported:
-> +         - UP Squared
-> +
-> +         To compile this driver as a module, choose M here: the module
-> +         will be called pinctrl-upboard.
-
-...
-
-> +#include <linux/device.h>
-
-> +#include <linux/platform_device.h>
-
-> +#include <linux/stddef.h>
-
-types.h guarantees stddef.h, but having it explicit is not a bad idea,
-so up to you. All the same for device.h included by platform_device.h.
-
-> +#include <linux/types.h>
-
-...
-
-> +static const enum upboard_pin_mode upboard_up2_i2s0_modes[] =3D {
-> +       UPBOARD_PIN_MODE_GPIO_OUT,
-> +       UPBOARD_PIN_MODE_GPIO_OUT,
-> +       UPBOARD_PIN_MODE_GPIO_IN,
-> +       UPBOARD_PIN_MODE_GPIO_OUT
-
-Keep trailing comma.
-
-> +};
-
-...
-
-> +static void upboard_pinctrl_dbg_show(struct pinctrl_dev *pctldev, struct=
- seq_file *s,
-> +                                    unsigned int offset)
-> +{
-> +       int ret;
-> +
-> +       ret =3D upboard_pinctrl_pin_get_mode(pctldev, offset);
-> +       if (ret =3D=3D UPBOARD_PIN_MODE_FUNCTION)
-> +               seq_puts(s, "mode function ");
-> +       else if (ret =3D=3D UPBOARD_PIN_MODE_DISABLED)
-> +               seq_puts(s, "HIGH-Z");
-
-No space in this line?
+Best regards,
+-- 
+Aaron Kling <webgeek1234@gmail.com>
 
 
-> +       else
-> +               seq_printf(s, "GPIO (%s) ", str_input_output(ret =3D=3D U=
-PBOARD_PIN_MODE_GPIO_IN));
-> +}
-
---
-With Best Regards,
-Andy Shevchenko
 
