@@ -1,149 +1,168 @@
-Return-Path: <linux-gpio+bounces-19433-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19434-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80CB3AA028F
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 08:10:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21745AA041D
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 09:10:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D43B7169795
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 06:10:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E53A1B6443B
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 07:10:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F4C127466B;
-	Tue, 29 Apr 2025 06:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B03327466D;
+	Tue, 29 Apr 2025 07:09:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjiMcRfG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLzBkn7v"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4514227057C;
-	Tue, 29 Apr 2025 06:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC8A1F76A5;
+	Tue, 29 Apr 2025 07:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745906949; cv=none; b=DMsfg2caeARb2CTjfkSnaB3G3LEOE4Tj2NkjUg9gzPkW5hW0i//zqlVPRdx94SFbOHND8JL10/5mm8CB3ScqA7FnZ/1ZDtORtIG5BhWF7vKYnppWw+pHx1PEMOwUj1YONDdMfLFi3XJBLxSW7a4Az6CeaARMdKvU8y/bSGoqYYo=
+	t=1745910597; cv=none; b=Pk8mXNEgx0mx48iVWdJpLpqzZx5H7WfI7agHkwrkE754sJZqeSg2lMn/qbBSQkgScahAU+fIBwzpy28uR2VPa+jZejIqxVlHEW92v39Qj2wtyBW1ts5kf7IutmA1su/49ExPzBjdKnSWQG4kLf14Zc4y+i/xNlvPPtGZT9w62/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745906949; c=relaxed/simple;
-	bh=Marj5r3kVxF6pHVxPMZl6SBr+BOUstXhJdPVFluqlvQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D6BcsahOM4BJe55p1EqKf6QfBH07vfTDjLTNGFufpTDr5lQp458px9LuQ3QSBJKFf/C4b1UnUzA+lCVD5G3KXzQJB/ZHt5ldKZHEqM+ovZoqXwzwOysuKQG2chUuaz4lUYKIyqaaxcsvM3UbjjjT99U4sTGE6at6mCuuAzGKFdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjiMcRfG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54996C4CEE3;
-	Tue, 29 Apr 2025 06:09:04 +0000 (UTC)
+	s=arc-20240116; t=1745910597; c=relaxed/simple;
+	bh=XYz3g2B0rvs9Ov2YUd2o2zmJrspxC64MWa2M4SH/gUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ru4z9q68NvzyfXFDwp8a2iBFf4+k9Ja1rO9BvZ4ss60f420FcxX7fryVsvP2JxYRx3g6TNqOfachoM+oedefx30JPP8J+GlucXE7zvsAGaQIkrUXXAvSlMRuzL5rzZRru1o6kOtClO2I8eIpAGkcyRzPl4EE2K1JJYkAmKIYYq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLzBkn7v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 782F9C4CEE3;
+	Tue, 29 Apr 2025 07:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745906948;
-	bh=Marj5r3kVxF6pHVxPMZl6SBr+BOUstXhJdPVFluqlvQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RjiMcRfGSTfBwP5V5QrWTwXA5LPhlb1MLs/ow5uf2/nKYhX0gHR1S1G1avyWldTu5
-	 FUw10U/MGYxMfaYon/pbzeMTaLWBtmImQs3ZS1wC/I1lscqrXbhYOhEiaTOMfUMMLM
-	 1ZBFgWaNyhr+m84SpCBiTjA3FIj8DtM4w7q18d9HWLkGvVL+hmC853dB0cdXCgaMd4
-	 YJMl+CWOUuvteojV6ACPLb6XNcf+16mudGUS2kBe8/rwEcr8btAGeL7sGRdPM6pMBv
-	 y1Cl3tfp4MZrC7GRR1v6QM9AASV9w6K4KoxnvvI4n7CrQvPvR0YkdkqByldN53f8E3
-	 nQ3ZfMN7X1JEg==
-Message-ID: <8fdb13dd-6540-471e-9be0-b7248533e522@kernel.org>
-Date: Tue, 29 Apr 2025 08:09:01 +0200
+	s=k20201202; t=1745910596;
+	bh=XYz3g2B0rvs9Ov2YUd2o2zmJrspxC64MWa2M4SH/gUM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TLzBkn7vxR3ao/EIan1Ff3uh7sQpmsEwhTyvp5IWbiNtqN50Zz/Xyge++kELaJN0q
+	 kMFpD/jygnIMW5irfCRHI1/OVghY9TyguwAoG6JGFRuLB12fPTTndhMsERnLtxJVI+
+	 wrdDiskFcX7rprpqyAD5jb78XXPmEjOP4woZg3f8UV4ahjmC8sga4B3fg+JZGGbSsz
+	 8VmTcfeSdQfDPyV/QYga3rL+W+deyMnR0DXK8PsAVfjFfbba+7pehYP3BREI1aPGXl
+	 eLCkMiD9L+6FQVeWWGCGc7G102jR3mGdcoBf1JnDrEjP48Wz5un/kPBYmstcawhD9D
+	 ln9Dj+vJkBQ6A==
+Date: Tue, 29 Apr 2025 09:09:54 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 1/5] pinctrl: mediatek: airoha: use new GPIO line value
+ setter callbacks
+Message-ID: <aBB7QkazpVxlUCJc@lore-desk>
+References: <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-0-93e6a01855e7@linaro.org>
+ <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-1-93e6a01855e7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Srinivas Kandagatla <srini@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
- <20250428-max77759-mfd-v7-5-edfe40c16fe8@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250428-max77759-mfd-v7-5-edfe40c16fe8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-On 28/04/2025 13:36, André Draszik wrote:
-> +static const struct of_device_id max77759_gpio_of_id[] = {
-> +	{ .compatible = "maxim,max77759-gpio", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max77759_gpio_of_id);
-> +
-> +static struct platform_driver max77759_gpio_driver = {
-> +	.driver = {
-> +		.name = "max77759-gpio",
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +		.of_match_table = max77759_gpio_of_id,
-> +	},
-> +	.probe = max77759_gpio_probe,
-> +};
-> +
-> +module_platform_driver(max77759_gpio_driver);
-> +
-> +MODULE_AUTHOR("André Draszik <andre.draszik@linaro.org>");
-> +MODULE_DESCRIPTION("GPIO driver for Maxim MAX77759");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:max77759-gpio");
-
-Drop alias, if you need it means you have incomplete platform ID table
-(because it means you will need to add more aliases on every new OF entry).
-
-> 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SzPC/w3b/xBP/t6u"
+Content-Disposition: inline
+In-Reply-To: <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-1-93e6a01855e7@linaro.org>
 
 
-Best regards,
-Krzysztof
+--SzPC/w3b/xBP/t6u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-airoha.c | 19 ++++++++-----------
+>  1 file changed, 8 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/=
+mediatek/pinctrl-airoha.c
+> index 5d84a778683d..b97b28ebb37a 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> @@ -2247,15 +2247,16 @@ static int airoha_convert_pin_to_reg_offset(struc=
+t pinctrl_dev *pctrl_dev,
+>  }
+> =20
+>  /* gpio callbacks */
+> -static void airoha_gpio_set(struct gpio_chip *chip, unsigned int gpio,
+> -			    int value)
+> +static int airoha_gpio_set(struct gpio_chip *chip, unsigned int gpio,
+> +			   int value)
+>  {
+>  	struct airoha_pinctrl *pinctrl =3D gpiochip_get_data(chip);
+>  	u32 offset =3D gpio % AIROHA_PIN_BANK_SIZE;
+>  	u8 index =3D gpio / AIROHA_PIN_BANK_SIZE;
+> =20
+> -	regmap_update_bits(pinctrl->regmap, pinctrl->gpiochip.data[index],
+> -			   BIT(offset), value ? BIT(offset) : 0);
+> +	return regmap_update_bits(pinctrl->regmap,
+> +				  pinctrl->gpiochip.data[index],
+> +				  BIT(offset), value ? BIT(offset) : 0);
+>  }
+> =20
+>  static int airoha_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+> @@ -2280,9 +2281,7 @@ static int airoha_gpio_direction_output(struct gpio=
+_chip *chip,
+>  	if (err)
+>  		return err;
+> =20
+> -	airoha_gpio_set(chip, gpio, value);
+> -
+> -	return 0;
+> +	return airoha_gpio_set(chip, gpio, value);
+>  }
+> =20
+>  /* irq callbacks */
+> @@ -2419,7 +2418,7 @@ static int airoha_pinctrl_add_gpiochip(struct airoh=
+a_pinctrl *pinctrl,
+>  	gc->free =3D gpiochip_generic_free;
+>  	gc->direction_input =3D pinctrl_gpio_direction_input;
+>  	gc->direction_output =3D airoha_gpio_direction_output;
+> -	gc->set =3D airoha_gpio_set;
+> +	gc->set_rv =3D airoha_gpio_set;
+>  	gc->get =3D airoha_gpio_get;
+>  	gc->base =3D -1;
+>  	gc->ngpio =3D AIROHA_NUM_PINS;
+> @@ -2715,9 +2714,7 @@ static int airoha_pinconf_set_pin_value(struct pinc=
+trl_dev *pctrl_dev,
+>  	if (pin < 0)
+>  		return pin;
+> =20
+> -	airoha_gpio_set(&pinctrl->gpiochip.chip, pin, value);
+> -
+> -	return 0;
+> +	return airoha_gpio_set(&pinctrl->gpiochip.chip, pin, value);
+>  }
+> =20
+>  static int airoha_pinconf_set(struct pinctrl_dev *pctrl_dev,
+>=20
+> --=20
+> 2.45.2
+>=20
+
+--SzPC/w3b/xBP/t6u
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaBB7QgAKCRA6cBh0uS2t
+rH+7AP9aAxct76GnQDHEVxQpxzo251BHKc2c0P+HYX1/qSMfZQD/bQxwhnZGiu8p
+hKaJ4RR5BS1SvzR7LL64CT3ArjhR5A4=
+=KZkz
+-----END PGP SIGNATURE-----
+
+--SzPC/w3b/xBP/t6u--
 
