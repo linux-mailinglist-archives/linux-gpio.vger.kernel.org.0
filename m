@@ -1,210 +1,140 @@
-Return-Path: <linux-gpio+bounces-19471-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19472-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2094AAA1B93
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 21:52:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1801FAA1B96
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 21:53:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E809D1BA6BEA
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 19:52:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9817C188C5EE
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 19:53:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B929F261362;
-	Tue, 29 Apr 2025 19:51:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E5EE25F7B3;
+	Tue, 29 Apr 2025 19:53:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1Wver2v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwUD7d8M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F90253B71;
-	Tue, 29 Apr 2025 19:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B32118F2FC;
+	Tue, 29 Apr 2025 19:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745956309; cv=none; b=IxEe6Io97aEAqOdZ1GrDJ6NMsIJ4geZqOV9Jz8JjwLgdmXGx+26jaOalFIvfSgpiiHwfSfGzF5gfCN3mSbByqoL3LrMt9f5SuT2fit0I8VhS0JJ5M6cqaHW4cDfEtlu1wN9y2crhaCuy2gnp0J//juqEX3qwBfj4Z985sdhzj78=
+	t=1745956420; cv=none; b=meVc7m7NeCZXV/xPSpNmn1AUqBlsZyAabW6MO+yDkaCYCMUMOtcIzZb17061TicnO2beE5WxgaOezLmzW0DBkjYdYKHgHh1Fxw8raBdCttkIcmh5yK5IxBAD7/3lXvqQ4D4Iobmk5KyCmXMrDghQgpFLPgxJ2kZGH+uFyJjFd6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745956309; c=relaxed/simple;
-	bh=z1fvvieY1psn6GVNY6iDPpzBM5AWRCz/GzQ7g8pEEVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uVvhJRh4noxiSgt0W6sSMZLWtc+LwGlEAzkGZzjNqK7rEpfBV0i2YjsY53HVySAudVPaYuGYB4kosBNn2YqoYJd5p9cgallG4xvLztfujPQLTS5fSDv1ZpCP0YvB6KtTrltuk5etmY4tskjKedP+nMAvgif35eh0xJxMY+wl84s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1Wver2v; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3EC3C4CEE3;
-	Tue, 29 Apr 2025 19:51:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745956308;
-	bh=z1fvvieY1psn6GVNY6iDPpzBM5AWRCz/GzQ7g8pEEVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b1Wver2vES19Qwkp6AQZn80UfAWt/dCb+ZdPRTAu9+7Wr9f/3iShWlqG58YB+VX50
-	 dc1NbF3NmgotoSlA+EZnjAwc/hoXuGN97GWgYEr7fq5RofHVRZ0bNd/PPOuZ/BRRfs
-	 tBt8BDpU3F7i/2Jh+QjudJkaHx2uSs34ekHrTgYOq1m8CjFJR178bDapZGhUMRqC20
-	 TtSs3RxPwOOL+xndT8Gs+PFfQx+9Vj26jmrIuqdfM8olXCBmHkHMBF68lDay9OmIRI
-	 zSZnQFtP46/bDUxxmpDl4qRVBLZTuMzN9qA9dYHjZPPwfbveE1OZk+3NmQi4avqU5b
-	 KW5mBSc8SzP0g==
-Date: Tue, 29 Apr 2025 20:51:42 +0100
-From: Srinivas Kandagatla <srini@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 6/6] nvmem: max77759: add Maxim MAX77759 NVMEM driver
-Message-ID: <aBEtzh8w5PZKSntr@srini-hackbase>
-References: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org>
- <20250429-max77759-mfd-v8-6-72d72dc79a1f@linaro.org>
+	s=arc-20240116; t=1745956420; c=relaxed/simple;
+	bh=/m2f5glFJoqPUvsL1MCDWCg8ycsdqZ8UzASsUMK5Y2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L5iFgpWoMz4YpacbLJ5Xo0DRYLWOPlzHziZsboiVaIkvNsLdi+Py3+R9MbutrWh61rEhEdwn4/etgHcfzHMCD1eSVFJ4Qt7ryKWK5nV5vcARbKcK8JTzpEW56zupCP4YabOJ8ruBMGK++WtrWJQS0Spaw9GD1ZLQ9Itsbqc+axI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BwUD7d8M; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f7ec0e4978so5916488a12.1;
+        Tue, 29 Apr 2025 12:53:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745956417; x=1746561217; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=amJhdD4Bfh27xkAj5s99YtoTbehGVcO5N5MkHcm2+9g=;
+        b=BwUD7d8MUnGUOQxJ0cGcJWZjnWtwjNxhzDsE4Eg5nClNkFQp79PGbicC9f45E30ke8
+         +raFb+Hl9F/5tit0bgXz/myLYR4LnWtdrp1tlDudy0wjyCGek+J9YLpDX6M7W1gGfOT0
+         ZDZnSxp7eww1PlR/or+CrSo8AoSGoB/k/TiAE2U2R4o41IaI4n6DsxQu+g9qC+l4v15J
+         sSstmC4647xN2z0aIosiWqD6ZV4FGFIeophuYk3qZH59rDYE4AwbET8M8TSdZMCIYuo1
+         b+WVUM1/DlcxXVsPpEtMrQ5ZXmzggcWmj7Iy+omhrTCgpPmb/9WQ3i6UIXTDStfEAGgE
+         5ocA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745956417; x=1746561217;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=amJhdD4Bfh27xkAj5s99YtoTbehGVcO5N5MkHcm2+9g=;
+        b=Ejxq5+OLcbr4VJqo2VlekwsELzcvHZsNFqjDhMaTKY98Ewm+9Nr3rfJHcfvoKBQXjZ
+         d5KTp4hWDl4QU/qMWHopR4FXrJoN06qBatG+D0GWDqGYNFvyasdTsFhNkazShU1/qQsQ
+         gId8PRCIvun7KEzCiDQKTBCd6qnDIHgYdJkHmHX3U2D8MSeH2z1YZ/GYG7Uk2amLb3P0
+         2oljAUTss0kejcMOAK67nofvQX2Ygn5REhtlbBIE7Hy+8WEZ2f+nqt8TVT9RwMcy8+8l
+         JChqgZ0Q88jZorB3t6wH+SrPenOmPXbzvnRQnDkvu/w5WEAjnYyrXi6cRN0D/8pNtRU+
+         bEWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnNlaGSbQp4HYldFcc3SZ0yJBQbACLDBs9u8uyXco6q3R9sttOg2Zx0yAsIxs6+z0eg72GR0dfWQZZ+9RlffYb@vger.kernel.org, AJvYcCXYkcTqgeR8Nrw6PI56Q/J8faBJdYstNQCs0znTbZleZPuuxfkxmjJTojYl8/cRaMb6EVlPrbC9rkAxkAPY@vger.kernel.org, AJvYcCXzZe54mymnDE6RciwXJ2sbcxCAgeSydvPBavGthDX8mBvSIUGThaWJZCRkCc0HNEGLb3W6A9xaD2mg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyrmme8RCU1M3CnaAwzj+OpLBI4ngkoyy5uvOJjScUhOSweaE53
+	O/aUDNerYPnFkI3a8OUg8CjcpegsWxnZ0/gCOO96XjM89ejtbIN1e6p1JfVLg+PnEEuWfu2BUi1
+	PXPeyDX6rkeMG+9RDzBUnI/yAnO3z6dSO
+X-Gm-Gg: ASbGncvPeWXtNkCDsYlVhMI2JxWQT02Jx92T+mZEILLCUUwcC1vZpCh6aiQwvbmDQi0
+	pQXdgvdsokhcK3e3RWA82arTQ/KBddNQkDHs57D2eiqwzf1HsPaAxMqi87VqFbetmeOEyqkGJYi
+	WH4xGBbEftOhxbKHYtmw5vxA==
+X-Google-Smtp-Source: AGHT+IFn+Ny7vYGospb10UuJ4S9bFcXHWzs+HDCP+yYxtmh3gLnLEIb7H9zLRBUWbVIgjB5NrwRSq66TQfIqBMNO99g=
+X-Received: by 2002:a17:906:1119:b0:acb:bbc4:3344 with SMTP id
+ a640c23a62f3a-acedc5e042cmr50004466b.22.1745956416638; Tue, 29 Apr 2025
+ 12:53:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429-max77759-mfd-v8-6-72d72dc79a1f@linaro.org>
+References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
+ <20250429-aaeon-up-board-pinctrl-support-v4-3-b3fffc11417d@bootlin.com>
+In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-3-b3fffc11417d@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 29 Apr 2025 22:53:00 +0300
+X-Gm-Features: ATxdqUFIOUQJascpH7Q4rydZ5qHH4jZYeeXXhuypZCuHlgQ4MyZpT2gNs5uAOio
+Message-ID: <CAHp75VfM7hw7LLkZ8_oXj2WsWJKyr+yYq38csYYczqNo2qV63A@mail.gmail.com>
+Subject: Re: [PATCH v4 03/12] pinctrl: core: add devm_pinctrl_register_mappings()
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 09:21:42AM +0100, André Draszik wrote:
-> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> Port Controller (TCPC), NVMEM, and a GPIO expander.
-> 
-> This driver exposes the non volatile memory using the platform device
-> registered by the core MFD driver.
-> 
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
-> ---
-> v8:
-> * replace MODULE_ALIAS() with .id_table (Krzysztof)
-> * drop previous tags
-> 
-> v5:
-> * follow API updates of max77759 core driver
-> 
-> v2:
-> * align sentinel in max77759_nvmem_of_id[] with other max77759 drivers
->  (Christophe)
-> ---
->  MAINTAINERS                    |   1 +
->  drivers/nvmem/Kconfig          |  12 +++
->  drivers/nvmem/Makefile         |   2 +
->  drivers/nvmem/max77759-nvmem.c | 162 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 177 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0db5e1fe64930e85265913e6a7dd2669c645cf42..b821502afc48f95d48fb8c6ac6941d1dd8e63582 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14670,6 +14670,7 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
->  F:	drivers/gpio/gpio-max77759.c
->  F:	drivers/mfd/max77759.c
-> +F:	drivers/nvmem/max77759-nvmem.c
->  F:	include/linux/mfd/max77759.h
->  
->  MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index 8671b7c974b933e147154bb40b5d41b5730518d2..3de07ef524906ad24a89e58abdfe93529a83c80f 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -154,6 +154,18 @@ config NVMEM_LPC18XX_OTP
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called nvmem_lpc18xx_otp.
->  
-> +config NVMEM_MAX77759
-> +	tristate "Maxim Integrated MAX77759 NVMEM Support"
-> +	depends on MFD_MAX77759
-> +	default MFD_MAX77759
-> +	help
-> +	  Say Y here to include support for the user-accessible storage found
-> +	  in Maxim Integrated MAX77759 PMICs. This IC provides space for 30
-> +	  bytes of storage.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem-max77759.
-> +
->  config NVMEM_MESON_EFUSE
->  	tristate "Amlogic Meson GX eFuse Support"
->  	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 5b77bbb6488bf89bfb305750a1cbf4a6731a0a58..a9d03cfbbd27e68d40f8c330e72e20378b12a481 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -34,6 +34,8 @@ obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
->  nvmem_lpc18xx_eeprom-y			:= lpc18xx_eeprom.o
->  obj-$(CONFIG_NVMEM_LPC18XX_OTP)		+= nvmem_lpc18xx_otp.o
->  nvmem_lpc18xx_otp-y			:= lpc18xx_otp.o
-> +obj-$(CONFIG_NVMEM_MAX77759)		+= nvmem-max77759.o
-> +nvmem-max77759-y			:= max77759-nvmem.o
->  obj-$(CONFIG_NVMEM_MESON_EFUSE)		+= nvmem_meson_efuse.o
->  nvmem_meson_efuse-y			:= meson-efuse.o
->  obj-$(CONFIG_NVMEM_MESON_MX_EFUSE)	+= nvmem_meson_mx_efuse.o
-> diff --git a/drivers/nvmem/max77759-nvmem.c b/drivers/nvmem/max77759-nvmem.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..df7d1998fa2f116450d2fd50eba70d9b61a24574
-> --- /dev/null
-> +++ b/drivers/nvmem/max77759-nvmem.c
-> @@ -0,0 +1,162 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +// Copyright 2020 Google Inc
-> +// Copyright 2025 Linaro Ltd.
-> +//
-> +// NVMEM driver for Maxim MAX77759
-> +
-> +#include <linux/dev_printk.h>
-> +#include <linux/device.h>
-> +#include <linux/device/driver.h>
-> +#include <linux/err.h>
-> +#include <linux/mfd/max77759.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/overflow.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/string.h>
-> +
-> +#define MAX77759_NVMEM_OPCODE_HEADER_LEN 3
-> +/*
-> + * NVMEM commands have a three byte header (which becomes part of the command),
-> + * so we need to subtract that.
-> + */
-> +#define MAX77759_NVMEM_SIZE (MAX77759_MAXQ_OPCODE_MAXLENGTH \
-> +			     - MAX77759_NVMEM_OPCODE_HEADER_LEN)
-> +
-> +struct max77759_nvmem {
-> +	struct device *dev;
-> +	struct max77759 *max77759;
-> +};
-> +
-> +static bool max77759_nvmem_is_valid(unsigned int offset, size_t bytes)
+On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+>
+> Using devm_pinctrl_register_mappings(), the core can automatically
+> unregister pinctrl mappings.
+
+...
+
+> +static void devm_pinctrl_unregister_mappings(void *data)
+
+data --> maps
+
 > +{
-> +	return (offset + bytes - 1 <= MAX77759_NVMEM_SIZE);
+> +       pinctrl_unregister_mappings(*(const struct pinctrl_map **)data);
+
+Why can't you use the 'maps' pointer directly here?
+
 > +}
-Do you really need this check?
-nvmem core should take care of this boundary checks.
+> +
+> +/**
+> + * devm_pinctrl_register_mappings() - Resource managed pinctrl_register_=
+mappings()
+> + * @dev: device for which mappings are registered
+> + * @maps: the pincontrol mappings table to register. Note the pinctrl-co=
+re
+> + *     keeps a reference to the passed in maps, so they should _not_ be
+> + *     marked with __initdata.
+> + * @num_maps: the number of maps in the mapping table
 
+Missing Return: section. Please, validate the kernel doc.
+
+> + */
+
+...
+
+>  void pinctrl_provide_dummies(void);
 > +
-> +static int max77759_nvmem_reg_read(void *priv, unsigned int offset,
-> +				   void *val, size_t bytes)
-> +{
-> +	struct max77759_nvmem *nvmem = priv;
-> +	DEFINE_FLEX(struct max77759_maxq_command, cmd, cmd, length,
-> +		    MAX77759_NVMEM_OPCODE_HEADER_LEN);
-> +	DEFINE_FLEX(struct max77759_maxq_response, rsp, rsp, length,
-> +		    MAX77759_MAXQ_OPCODE_MAXLENGTH);
-> +	int ret;
-> +
-> +	if (!max77759_nvmem_is_valid(offset, bytes)) {
-> +		dev_err(nvmem->dev, "outside NVMEM area: %u / %zu\n",
-> +			offset, bytes);
-> +		return -EINVAL;
-> +	}
-> +
+>  #else
+
+Stray change.
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
