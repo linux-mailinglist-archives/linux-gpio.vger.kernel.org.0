@@ -1,135 +1,118 @@
-Return-Path: <linux-gpio+bounces-19469-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19470-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C30AFAA1B4F
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 21:25:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4451DAA1B88
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 21:50:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40FDD1BC2DCE
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 19:25:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 399CB5A57B7
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 19:49:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2C3E25E811;
-	Tue, 29 Apr 2025 19:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F5425F7B3;
+	Tue, 29 Apr 2025 19:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="HwxktT6L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbASlLEr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D9122A7ED
-	for <linux-gpio@vger.kernel.org>; Tue, 29 Apr 2025 19:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745BD25E804;
+	Tue, 29 Apr 2025 19:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745954723; cv=none; b=hxcEBFLF5vWWH/lnGRsNgPY6E2teGMOPXQ6jX+eFO3A+U76dd/QvNQiBywMwr+s63ucANcPGC5G60q/GwrV5sw6eWmtVr7vJm+Es24fIvUyZDo8g7RWJGTdc33VMPqq+u8BDn835DBVuF8L3J4zlqdD5ekpV4uK33ldAGejegvQ=
+	t=1745956205; cv=none; b=MsexXXlJw6fWpec9Cp23VVKvCGOIiE0KP4+SI/Yy/5heQcuaiGUtKVUYGBoJRsVv9LZDiNfjsJ+oin/4FCQ7vAoLTuffo+fDuKpnW8yZ25ACAECc8tc9FuO1IvI7DLc8FKlZaIOeD3VV/OQPjWsSohELjzjlFgtBt3Mvhi6teyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745954723; c=relaxed/simple;
-	bh=wQYgyO8cTCRZnnsbCH9cX9z79zt/5slmTEUOaPrK4W0=;
+	s=arc-20240116; t=1745956205; c=relaxed/simple;
+	bh=rxQV+B09cZpKnArsylLSchYzK1z1cTKsP3tBIcuV+hI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dRo4y9YNWELVCs/0VGh9ZYmrsjNn1wrONbd2lBvr9vfr+4aljI3oXi5GeXMWuAaM8Uhx0y+JPpkTgpCHrXZ+ItlRQnbaAGAvObkAdHpImNWv05WhvyR9K7yyITey11ybYXSjDnkJpgUOCGErnX/+8FuytB619S1sBKGO9yKkHPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=HwxktT6L; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e573136107bso5681479276.3
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Apr 2025 12:25:20 -0700 (PDT)
+	 To:Cc:Content-Type; b=S1ypZskdEVxLvcE3fI2P09na36IjOFxyQxtchejSLOU121l0thrgfzlR3N8qVi+2OJV5ZW0BbJalmWmZr1CZqh6mxkfgjoy6Wjv3/V+0cVMkaYCl2ciI6uMBvzP4uFlJlwXoe74xXxXLz+VheaFVpX1C8bQ6hFJIyfRgPhwvKfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AbASlLEr; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso10017231a12.0;
+        Tue, 29 Apr 2025 12:50:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=criticallink.com; s=google; t=1745954719; x=1746559519; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745956202; x=1746561002; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r/ifkoP2VzjSNVs4Xu0uRQ1iLvHQ3o12JsQMc2lGYGM=;
-        b=HwxktT6Ll2Y2nntGRoqh71qvITTVcUnQ3FOKA9UsN7vKADajUmLO+49zUMvPjstHFw
-         kl7tbuqrhtSTwvODBUMOCRCjlYzWCmXqhWwwjp92UF/DK5yjPv/qX/k1bEFWG8IjKRqz
-         Hk63CKe/gulqhRywbXQY37anWtr99uhNUof5BNzREIfmI4yihYPlHDFWMeI/vnPzSDG0
-         kyrsgD6GLeSrrZ9RLewKLm1sB5dtNyvZIfRNmZMC0eQJFDWNT0266m9xfQQpAh94p2JL
-         NI41TZ0Lvy1wOqp/HGwGYVLqTD7eaNDlyjBK4905N+qwk5YOLXX1mWa5omki+jG+K0fI
-         /OzQ==
+        bh=vD1YAn8CAvm0h+/6JzAGzl8A57FhZyZFee4OCIIGKBA=;
+        b=AbASlLErF+Ug7Pp8Nlz5uZmFhvJwI8m5v0tuTJE502Do92ie4GoMv/FQIhal+D4YjE
+         01x/gjjrNpERM0/fCduGdrte4KHamhaY0KsJnQk5Fxl6rOInsArd2i4KPcwz0M9Ye1Sj
+         /aFyah4unnQZTAKBY0b9S1cFrz6iizYFzo9jHC0x+xTJgNEYooTu+vqM5Rh3ep2DO1ue
+         M9OnNy4Z6Sx7wPOV4wt42n0NAotHWRrl5T/BVZ805rkhpNbVO1Cf86x5HFDxh/6ximAj
+         88M7dvT4XFJcSGG/LqFXN38s4Q4jEA0UHoGR7d1psRbMwx3Fo/E5Ntb4Oi5kCCUoslsd
+         2+AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745954719; x=1746559519;
+        d=1e100.net; s=20230601; t=1745956202; x=1746561002;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r/ifkoP2VzjSNVs4Xu0uRQ1iLvHQ3o12JsQMc2lGYGM=;
-        b=CySGPmUQuf8Hh8lpdBcUrxdsML/R/rB7hj4WHD9q/Rqq5Z2RQ/k6tLyhwyDc7bC9t4
-         EubLvwhXomIIwZP6TTcwbR2Y6wZM8bnATW23svW8UUbFmSWYEM3WTpFLj3TuMnzeiMm8
-         uGzUqVTnz0ef3UbQn3t1sJ0u0HEQ2/IOVZs2tiGB/BNeXLqJlYtvt18Jv9Zm0rmDTeHz
-         s3td4nYUFGfJzINb69FoNbXR+LQJaOpe/+hWucjnyMUUmVElR9A3Dpki64Sc/Zy0ePLi
-         g/tecNYdcvJaJiVsblNA2Sqx6ra7bdLZD+xiIuj89iEw5kPaNy7/jXxwoWZu6NIp8dem
-         tS0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUfCFzrBxbWhZ0kt0FHQGTzA8xVJrWnnc2MK+zJllPSM9NtxnikOLPGmwmgjq6YI+ys1n1zjDttjVcv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMsomOTT88vi16wjrZ9CCapykNEC99jHmTjqSRJgEaULCkpxHR
-	zJphzsf9lIbEG9+FA7Z7qqRWUjtuRpwWm9O2lJ2rMMdxtJsPgtgZy3Sot2n35DgYW++mhte7Lz7
-	unWwfJZTr2DKEggmzo+PJSMBRpkHhP3m08rWL
-X-Gm-Gg: ASbGncu5mD8axYnoGGSk5YzcN7bVTmQZirYi4zSv8sjZTAh6OxeQM8Bb2TZqYzwsQYu
-	cOgY1VWnmLtqzBre3bHeNGYyNzkyQEgFxkohUCjbmvkwpj/ayM9ACRTChvWZL3BJa0A1dNmpfld
-	gHF4m5AYYH9podwH639MkR
-X-Google-Smtp-Source: AGHT+IGqPxuLRzyJFjxrB+wKq9wOk//LyPTOPx3ptoig5goYUbeX82deJ4X6MbMth7FkOt7ItZfdyhmRh3usApwY78Q=
-X-Received: by 2002:a05:6902:2808:b0:e73:117c:42cb with SMTP id
- 3f1490d57ef6-e73ea2123bemr645377276.2.1745954719592; Tue, 29 Apr 2025
- 12:25:19 -0700 (PDT)
+        bh=vD1YAn8CAvm0h+/6JzAGzl8A57FhZyZFee4OCIIGKBA=;
+        b=Ri44AvMGC09KtYfvcgV+MOyiP+eGXSqR0L9efgDSOMn+cf+93v39uT65j8SUjx74oM
+         917du0NYVBHJyfMfIG8ctWsyZpI/5LrzOpvxjqcjAtYCguzAQKrzXeQQNQ/105349AQg
+         MXyLJlFaz+mVCG38GWa/sCyrhGfOWdVNzy0qnWBTNQxjn0ynluRYzfpzoRn2ow20lY/X
+         QbEe+zYV4ViWX8iQ2TF1Jxod6VHk69/W3OinnZB0x4vBK8vM/ITiLiEEXhvipwgd/mfq
+         hV9okxo/GQXOmuK/8cOiPyitbBSIlH8o87903Dz5X13pQGF5DSUXBo9h5LQ+irrCoqw6
+         CecQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+ZoKfgV2+OW5IEWTV9KcoGAg2cUIVyPF9l9Gqen66U9X1tJRiC/RbL0t+cTfkD2DTzc8bdmBEe3OQ@vger.kernel.org, AJvYcCVPIeIaSVfOQiapdzopQhHHGQJ94lQ1p5M8LoKeN5LyXbhfYajkSgYZGXkPsN0ZVgCiK6NGkUgSoIWnWGgNuI/D@vger.kernel.org, AJvYcCXjlmXNPOg8eBdyfLqsvKnxTWprjNT3CP7bxCWW9R2Ip8PjELbXBIeml7gqfKhY3ec+fSUGpH0VL5Vha99X@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx3bVizX1g9p5fG3ayb9XiiZAID6J3FqTDPWeD+epH2xUJ3yDt
+	r6ZYsUQrHzOlpafJgeqD/Fghm99advReQCh/JUImlxQl6dAEHv+9qFoGOYZ8eCLba8oXmMpFDR+
+	7QgxGX8HlRWeowrJQCqhq6ZUdaC8=
+X-Gm-Gg: ASbGnctYqjPIdBfy6NhJswP/SM0ZmyDDP7TMt1OkprLjcrt6TQlb+u50xI5XcXyXqnW
+	BSCfgcqaetHXxk4YmSF0iqyYO9Tivjk3IQOZHVPD8YOtCWkqAXlUNtwNKBaXUOdi8eYcqQKS587
+	0X2/fgnKkZ/Qt3gBixy7rSyw==
+X-Google-Smtp-Source: AGHT+IEUzFIo3b0L4aXqgoV444s05OuZpnNTBUTUqCoyUFdKydQUdpip0ILc9B6HJvuemsUHctOi8vEgkoRpMDf4RAQ=
+X-Received: by 2002:a17:906:4fca:b0:aca:d54d:a1f8 with SMTP id
+ a640c23a62f3a-acedc6229cemr61982366b.31.1745956201478; Tue, 29 Apr 2025
+ 12:50:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425203315.71497-1-s-ramamoorthy@ti.com> <20250425203315.71497-4-s-ramamoorthy@ti.com>
- <f92085bd-e35e-422a-8aa3-66e624c44586@criticallink.com> <683a1c36-0b5a-461f-bc89-3a418f542b57@ti.com>
-In-Reply-To: <683a1c36-0b5a-461f-bc89-3a418f542b57@ti.com>
-From: Jon Cormier <jcormier@criticallink.com>
-Date: Tue, 29 Apr 2025 15:25:08 -0400
-X-Gm-Features: ATxdqUFbxaBs_n6S4jW-r8vtMbiLr_Zi-oXCzuJN-ujmvmE10E7tbKFaoDyKPd4
-Message-ID: <CADL8D3YwBOf6wPTgxjadsPPn3rLR16V7nAO39+7J=tNxk_hQDQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] gpio: tps65219: Add support for varying
- gpio/offset values
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Jerome Neanne <jneanne@baylibre.com>, m-leonard@ti.com, 
-	praneeth@ti.com, jsava@criticallink.com
+References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
+ <20250429-aaeon-up-board-pinctrl-support-v4-2-b3fffc11417d@bootlin.com>
+In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-2-b3fffc11417d@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 29 Apr 2025 22:49:25 +0300
+X-Gm-Features: ATxdqUHSfG0vNdIwi2jFrwaCEV7cRWEDDe8ST1XH67uD4-tJhqxBIKpIR6Y0sMI
+Message-ID: <CAHp75VcRYE6meHB9+MhcH242eXbA0jzYXhL-+WidvvLXiLX=MQ@mail.gmail.com>
+Subject: Re: [PATCH v4 02/12] pinctrl: remove extern specifier for functions
+ in machine.h
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 12:42=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@t=
-i.com> wrote:
+On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 >
-> Hi,
->
-> On 4/28/2025 11:41 AM, Jonathan Cormier wrote:
-> > On 4/25/25 4:33 PM, Shree Ramamoorthy wrote:
+> Extern is the default specifier for a function, no need to define it.
 
-> >
-> > However Jerome wanted GPIO to map to linux "GPIO 0".  Is this still
-> > the case for TPS65215?
->
-> In my attempt to combine TPS65214 (which originally had 1 GPO and 1 GPIO
-> when I wrote the patch, but systems informed me they just switched it to
-> 2 GPOs and 1 GPIO) & TPS65215 (2 GPOs and 1 GPIO), I made a mistake in
-> combining the 2 series during rebase & with how similar the PMICs are.
-> Thanks for reviewing this as I wrote it a cycle ago. I'll made the
-> necessary changes & re-test. I will double check that GPIO matches to
-> linux "GPIO 0" now that I have more context about the offset math (super
-> helpful explanation!).
+Suggested-by ?
 
+...
 
-Thanks. Considering this confusion, could you add a comment for the
-pin mappings? Something like:
-// TPS65219 GPIO mapping
-// Linux gpio 0 -> GPIO (pin16) -> offset 2
-// Linux gpio 1 -> GPO1 (pin8 ) -> offset 0
-// Linux gpio 2 -> GPO2 (pin17) -> offset 1
+> +int pinctrl_register_mappings(const struct pinctrl_map *map,
+> +                             unsigned int num_maps);
 
+Now it can be on one line.
 
+...
 
+With the above being addressed,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
 --=20
-Jonathan Cormier
-Senior Software Engineer
-
-Voice:  315.425.4045 x222
-
-http://www.CriticalLink.com
-6712 Brooklawn Parkway, Syracuse, NY 13211
+With Best Regards,
+Andy Shevchenko
 
