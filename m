@@ -1,116 +1,185 @@
-Return-Path: <linux-gpio+bounces-19452-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19453-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAD32AA0D54
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 15:18:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB8A0AA0E33
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 16:08:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E893A188FB6C
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 13:18:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 920A71B63293
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 14:08:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06DDB2D0260;
-	Tue, 29 Apr 2025 13:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E07032D29A8;
+	Tue, 29 Apr 2025 14:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="USF1+qqD"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c5d2yTg+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BA62C179C
-	for <linux-gpio@vger.kernel.org>; Tue, 29 Apr 2025 13:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76C52C17AE;
+	Tue, 29 Apr 2025 14:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745932670; cv=none; b=QwLk64ebyBaJ+W93OhtRwkHOkZt4rLff1qbfqziR/H6I7CQ9b+8cinYEDuQkx3uMl5ikHD7vZZ2t67HwiDo34RrNnmBkrtNetgLuD3HaiF+Pm3mUHi7vRSWRzHzEAEeKZ5UExCHk19m/NATUvg4oJqOn0IF2cG4N5AkaB17caJA=
+	t=1745935713; cv=none; b=b6cgBhLdoMN+YvTsYekpj7I7dDSnXs+Jkkm3IbBlbizpU2pqFpQl+AC7ZtsUeASOJ8+WXLYoJfSp0h40n8He2NCt5p94wWgymz4hTz1PaEi95ayweW3gvvsmgKW2evhRMMMwseNqEtuJLOyN/kIYc0Qe6sX9ctlX6s/fl8rhfYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745932670; c=relaxed/simple;
-	bh=R3HOfhuh4Z/yau6P4o09NM2xwO65jdSQzwa46LoRqpU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dpoozIbTVoZAnFf9SuJBtMiN3ARcro1TEe66FBGW4lJG47IYqYjVhiFdjZwDHNX7BPnmzFONfQWXPjkyKxgNWgyarsZchhtA0MowHgGSoz4UP43ChQ7l8649HL7/ZaqGStiCODs00e25Oo1gqu6ZxERRPTXc1K/HLhH+hPbB1tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=USF1+qqD; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70842dc27easo53861447b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Apr 2025 06:17:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=criticallink.com; s=google; t=1745932668; x=1746537468; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JiU0ctgy7Lku6IPSealurIvtPQsS8cdAkog6qNamfp4=;
-        b=USF1+qqDnxgaV+JunfwDta5K4//84DptMR0utZMV8Zi/e7BrwN/vtP9F236HzeIGmN
-         TQbzjQz+VT2nyZ2Da5bo/RJjDC40M4Wnv/6MsXXNjZzCCsF1LiHbImFSJ0FHeZMg91Z+
-         mp7pJdsf2mEM4gsMYYBHqa9Oo1rl/NFDOs7Vqttex/5ragcvX0WmgwUC9mYFScQKRWBZ
-         8E3k3y53jhcq9MPM/tmz3u5t4n+0e1JvZqJlUTeei9CFRpaZUOTGt/5jEd3YxYT4Cay9
-         EbmfWlGwc5xtbR10KoWUrCSizCq+em4tKKblOctsgoyKFTSvvWjl4tkGfjxpg3knmD3l
-         ka4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745932668; x=1746537468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JiU0ctgy7Lku6IPSealurIvtPQsS8cdAkog6qNamfp4=;
-        b=eZjavfz5w0uwRONi3Dcn9CSYFXy7ADIKFQ7Z6pRau+ppiNdQdBgvy7KYYuYnAg23xE
-         jRuz5Q5l0btdGYN4jKn6aPQxq2WCSjdjYTUiffGSyp/ShppaCPq852Y1BG0w/Tw6DwFe
-         PxoErxg8HaBonNYmGu/kmNbdrq7diU65rU4QTdCK3jRi66U3fnOx7D2oTI02CqVWcnBe
-         lxUp/HhcRcsNUPzyJGRjLy1DD4P1jc+KOSW5mbJT2vG7MzthO31gxvWFFXnyV1LcSn6I
-         NjXCaYWP0Qrh144Ma/nVh27F5yr5iNSr+b2FCaQEhhoRaca/mbAhVefLo2YtJC3hqGdC
-         CxEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMa9gmJ9pcw09Iod0C4OaOPcioz2iP+Or9GiNt4kNOcb+S6Somyi0NK2bq+S4QI8FTrsNksZyAvSaP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXd75yIxc2ucNlN8ah8p1VURcWenH34kjKJf/LAbeYYbpkBLfs
-	LEf8Sdivo/eHBBq1BjZ4JiYYyQhmR74H8F7TB4pZgLewhYVUP1juFsumL5cebUIP2AOxkyPjomc
-	l2HHPgpkfsn/hsz5LtLUmossB2o+bis59VQrF
-X-Gm-Gg: ASbGncsfCxXR+w1SFz3mk7WNzn3nlzSznzL1yCT8cYo7FJwD3+LIOoC9bJv7uZBD5HJ
-	RrLW8nwCSfEAajsgySFYB4TTW6GK2eSpbI4KubB3hj48y6L7pdFAizN8c1KSZtp4OkEfV9nW8Pm
-	HUET4lCAMxkBqz9ZuHr6x7
-X-Google-Smtp-Source: AGHT+IFAkL63cTl/cATNWOg2+YEvpMmi4OYjf4KFpNJEBRA716QUIF33QsNLmMAkg+zJVxgzGQkTVCNVAoMlrQh1Ycg=
-X-Received: by 2002:a05:690c:6888:b0:6fd:a226:fb24 with SMTP id
- 00721157ae682-7085f1773b5mr194962727b3.10.1745932667944; Tue, 29 Apr 2025
- 06:17:47 -0700 (PDT)
+	s=arc-20240116; t=1745935713; c=relaxed/simple;
+	bh=a/KaADWjzPD1n6XSIisEkuXyI9Rpb5lCP8//NIJqlZw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OuKiWI3Ll3OLX4liyc4h5E1lpnQqBxu1dp+eirFWaGNkuY4N2w1AeITrBiH590LiRC++ylJq1eM5hHlARHvUmS/fO1o8K7StZA23V8Zd3BKZGbmvXWpaTlHoS0yjt86H1h2CayAZ7aK+K056KfzOiky1s1JKCx0lUGOAs5JGI/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c5d2yTg+; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3D3F5438C6;
+	Tue, 29 Apr 2025 14:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745935708;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ATsPUSdXr60F20JAZF5BOD3B44pL6Xwbcrn3rluDAJA=;
+	b=c5d2yTg+LJwLH26q4ShU3GUXiRLNl6PLZemPbA5pqVpL0f5XSmdHf7Lb80A5VjVHLykEio
+	qbIOwwtDaSODRVlaTCaYUXQHdEMwO857sshqdG9GSwx/KtaXVtSUFEi4AKrBnOOw7jAvV6
+	1g/RBnFn2jQ6As5ZWZoXEH7s+YvZIKjqbdvSfgxCpsEuXOd0guAtERieP6vdB6vOgD+nga
+	GiHaYQhcfqLjVuWLZdgH62qqZ4uZfphVBFKfJHyx5Ii6vi5eWQm/SO22FTvW/8GAGDuvPl
+	YKSmQbZ62lO8PzuU6JA0j9XFpsTX+rrQAGm94vXaQ46NQQ9gIqHKWjC8ysa/5A==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v4 00/12] Add pinctrl support for the AAEON UP board FPGA
+Date: Tue, 29 Apr 2025 16:08:14 +0200
+Message-Id: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425203315.71497-1-s-ramamoorthy@ti.com> <20250425203315.71497-4-s-ramamoorthy@ti.com>
- <f92085bd-e35e-422a-8aa3-66e624c44586@criticallink.com>
-In-Reply-To: <f92085bd-e35e-422a-8aa3-66e624c44586@criticallink.com>
-From: Jon Cormier <jcormier@criticallink.com>
-Date: Tue, 29 Apr 2025 09:17:36 -0400
-X-Gm-Features: ATxdqUG2F7x0DRZn5itS7I9rvm7sd9uKgUWiZxhm2pdUZyNe5KbRtX9ZG_d-XUs
-Message-ID: <CADL8D3YY+EYPBX+Unt=zbCCLT1-qaCmOmF5VwG1qOK7v_yFzoA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] gpio: tps65219: Add support for varying
- gpio/offset values
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>, aaro.koskinen@iki.fi, andreas@kemnade.info, 
-	khilman@baylibre.com, rogerq@kernel.org, tony@atomide.com, 
-	linus.walleij@linaro.org, brgl@bgdev.pl, linux-omap@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc: m-leonard@ti.com, jsava@criticallink.com, 
-	Praneeth Bajjuri <praneeth@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE7dEGgC/4XOQU7DMBAF0KtEXjPVjO3apCvugVg4yYRaamNjO
+ xGoyt1xUyGEWGT5R6P3/01kTp6zODU3kXjx2YepBv3UiP7spncGP9QsJEqNrUJwjsMEc4QuuDR
+ A9FNf0gXyHGNIBdrn0WmHCnWLoiIx8eg/t4LXt0dO/DHXnvI4is5lhj5cr76cmsUc6Aipl+L+f
+ Pa5hPS1jVto+77vIEm0t2MhQJDaUtuxtEbRSxdCufjpUKs2fJE/4BEV2V1QVlAZkoYVOmfkf1D
+ 9gprMLqgqOGq01nQDGua/4Lqu3wDao+OdAQAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+ linux-hardening@vger.kernel.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieegtddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteeijeduffelvdevuedvieeuvdeugfekgeehjedufefgkedtueduvdffhffggfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhto
+ heprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghupdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Mon, Apr 28, 2025 at 12:41=E2=80=AFPM Jonathan Cormier
-<jcormier@criticallink.com> wrote:
->
+This is the fourth version of this series.
 
->
-> Note: Its unclear to me, why Jerome Neanne and I weren't included in
-> this patch set, considering we were the ones who authored and submitted
-> this driver.
+The main change is the way the forwarder type is exported, now gpiochip_fwd
+is an opaque structure.
+In the forwarder, a valid_mask was added to track registered GPIO
+descriptors, and it is now possible to remove a GPIO at runtime using the new
+gpio_fwd_gpio_free() helper.
 
-I see Jerome's email is dead. So that's one mystery solved.
+Two new patches were added, the first one to remove extern specifier in
+machine.h, the second one to define new helpers str_input_output() and
+str_output_input().
 
+Other minor changes address Andy's comments, see below for more details in the
+changelog.
 
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v4:
+- gpiolib: use positive conditonal in gpiochip_add_pin_range_with_pins().
+- pinctrl: fix warning reported by kernel robot in
+  include/linux/pinctrl/machine.h.
+- pinctrl: add a patch to remove the extern specifier in machine.h.
+- pinctrl: use devm_add_action_or_reset() in
+  devm_pinctrl_register_mappings().
+- string_choices: add a patch to define str_input_output() and
+  str_output_input() helpers.
+- gpio: aggregator: set gpiochip_fwd as opaque and define getters
+  gpio_fwd_get_gpiochip() and gpio_fwd_get_data().
+- gpio: aggregator: add valid_mask in gpiochip_fwd struct to track already
+  registered gpio descs.
+- gpio: aggregator: add gpio_fwd_gpio_free() helper.
+- gpio: aggregator: add kdoc sections for exported functions.
+- gpio: aggregator: fix some nitpicks.
+- pinctrl-upboard: use str_input_output() helper.
+- pinctrl-upboard: fix some nitpicks.
+- pinctrl-upboard: add missing headers stddef.h and types.h.
+- pinctrl-upboard: add intermediate cast (unsigned long) for dmi_id->driver_data.
+- pinctrl-upboard: use getter gpio_fwd_get_gpiochip() and
+  gpio_fwd_get_data().
+- pinctrl-upboard: fix kernel robot warning 'unmet direct dependencies detected
+  for GPIO_AGGREGATOR when selected by PINCTRL_UPBOARD'.
+- pinctrl-upboard: use gpio_fwd_gpio_free() helper.
+- Link to v3: https://lore.kernel.org/r/20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com
 
---=20
-Jonathan Cormier
-Senior Software Engineer
+Changes in v3:
+- pinctrl: add devm_pinctrl_register_mappings()
+- gpiolib: rename gpiochip_add_pin_range() to
+  gpiochip_add_pin_range_with_pins() and add pins parameter
+- gpiolib: add stubs gpiochip_add_pin_range() and 
+  gpiochip_add_sparse_pin_range()
+- aggregator: split to more simpler patches
+- aggregator: add a namespace for the forwarder library
+- aggregator: rename header file to forwarder.h
+- aggregator: add some missing headers and declaration in forwarder.h
+- aggregator: forwarder.h provides consumer.h and driver.h
+- aggregator: fix error code returned by gpio_fwd_request()
+- pinctrl-upboard: fix order of header files
+- pinctrl-upboard: fix some nitpicks
+- pinctrl-upboard: rework macros to define pin groups
+- pinctrl-upboard: add missing container_of.h and err.h header files
+- pinctrl-upboard: handle correctly pointer returned by dmi_first_match()
+- pinctrl-upboard: use devm_pinctrl_register_mappings()
+- pinctrl-upboard: import GPIO_FORWARDER namespace
+- Link to v2: https://lore.kernel.org/r/20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com
 
-Voice:  315.425.4045 x222
+Changes in v2:
+- mfd: removed driver (already merged)
+- led: removed driver (already merged)
+- gpio-aggregator: refactor code to create a gpio-fwd library
+- pinctrl: refactor gpio part to use the gpio-fwd library
+- pinctrl: add pinctrl mappings for each board
 
-http://www.CriticalLink.com
-6712 Brooklawn Parkway, Syracuse, NY 13211
+---
+Thomas Richard (12):
+      gpiolib: add support to register sparse pin range
+      pinctrl: remove extern specifier for functions in machine.h
+      pinctrl: core: add devm_pinctrl_register_mappings()
+      gpio: aggregator: move GPIO forwarder allocation in a dedicated function
+      gpio: aggregator: refactor the code to add GPIO desc in the forwarder
+      gpio: aggregator: refactor the forwarder registration part
+      gpio: aggregator: update gpiochip_fwd_setup_delay_line() parameters
+      gpio: aggregator: export symbols of the GPIO forwarder library
+      gpio: aggregator: handle runtime registration of gpio_desc in gpiochip_fwd
+      gpio: aggregator: add possibility to attach data to the forwarder
+      lib/string_choices: Add str_input_output() helper
+      pinctrl: Add pin controller driver for AAEON UP boards
+
+ drivers/gpio/gpio-aggregator.c    |  344 +++++++++---
+ drivers/gpio/gpiolib.c            |   29 +-
+ drivers/pinctrl/Kconfig           |   19 +
+ drivers/pinctrl/Makefile          |    1 +
+ drivers/pinctrl/core.c            |   27 +
+ drivers/pinctrl/pinctrl-upboard.c | 1068 +++++++++++++++++++++++++++++++++++++
+ include/linux/gpio/driver.h       |   51 +-
+ include/linux/gpio/forwarder.h    |   51 ++
+ include/linux/pinctrl/machine.h   |   20 +-
+ include/linux/string_choices.h    |    6 +
+ 10 files changed, 1538 insertions(+), 78 deletions(-)
+---
+base-commit: 8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd
+change-id: 20240930-aaeon-up-board-pinctrl-support-98fa4a030490
+
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
+
 
