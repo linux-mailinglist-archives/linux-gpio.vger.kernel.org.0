@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-19472-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19473-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1801FAA1B96
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 21:53:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 078F6AA1BCB
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 22:06:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9817C188C5EE
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 19:53:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E2941B67D2F
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 20:06:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E5EE25F7B3;
-	Tue, 29 Apr 2025 19:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA9F825FA29;
+	Tue, 29 Apr 2025 20:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwUD7d8M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0wtL3hD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B32118F2FC;
-	Tue, 29 Apr 2025 19:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06CE25A2DE;
+	Tue, 29 Apr 2025 20:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745956420; cv=none; b=meVc7m7NeCZXV/xPSpNmn1AUqBlsZyAabW6MO+yDkaCYCMUMOtcIzZb17061TicnO2beE5WxgaOezLmzW0DBkjYdYKHgHh1Fxw8raBdCttkIcmh5yK5IxBAD7/3lXvqQ4D4Iobmk5KyCmXMrDghQgpFLPgxJ2kZGH+uFyJjFd6I=
+	t=1745957173; cv=none; b=eicDFrjdokioDyBm8zZ+C0wnU59aiBEsLGHTaYxQ3yKeyUnCDSR5lRBkNAk9l9BzKgMddEPCcbZRist5m4zWH/vUyKtf7eXOC3tlxW/OJUbtnQaOE/TiwT0ev3LWT0joRb0MernFoDMgqj2VI4WuiDv2sQUTwWm5Y2COncU1hWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745956420; c=relaxed/simple;
-	bh=/m2f5glFJoqPUvsL1MCDWCg8ycsdqZ8UzASsUMK5Y2c=;
+	s=arc-20240116; t=1745957173; c=relaxed/simple;
+	bh=ROrues9ocYSCTDxwHhiyyawG8Ax3bIuGP081rEw54HM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L5iFgpWoMz4YpacbLJ5Xo0DRYLWOPlzHziZsboiVaIkvNsLdi+Py3+R9MbutrWh61rEhEdwn4/etgHcfzHMCD1eSVFJ4Qt7ryKWK5nV5vcARbKcK8JTzpEW56zupCP4YabOJ8ruBMGK++WtrWJQS0Spaw9GD1ZLQ9Itsbqc+axI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BwUD7d8M; arc=none smtp.client-ip=209.85.208.51
+	 To:Cc:Content-Type; b=TvKep+lW1Le0WLEjZSvERQH0dtoswmjS3U6ZV+YaC0EDbQ8C53iqpQYHUcFrPVWTlccIekX8hiN+3b3YLGFKfq35lp1LsjHtSP/WOpTSwpx87F7WNOyDi7BoaeQSp32KR2b2h6MzevB/yXnes8hvcuJfZbTIwc7sTNN5UkcUIxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M0wtL3hD; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f7ec0e4978so5916488a12.1;
-        Tue, 29 Apr 2025 12:53:38 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so809632166b.1;
+        Tue, 29 Apr 2025 13:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745956417; x=1746561217; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745957168; x=1746561968; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=amJhdD4Bfh27xkAj5s99YtoTbehGVcO5N5MkHcm2+9g=;
-        b=BwUD7d8MUnGUOQxJ0cGcJWZjnWtwjNxhzDsE4Eg5nClNkFQp79PGbicC9f45E30ke8
-         +raFb+Hl9F/5tit0bgXz/myLYR4LnWtdrp1tlDudy0wjyCGek+J9YLpDX6M7W1gGfOT0
-         ZDZnSxp7eww1PlR/or+CrSo8AoSGoB/k/TiAE2U2R4o41IaI4n6DsxQu+g9qC+l4v15J
-         sSstmC4647xN2z0aIosiWqD6ZV4FGFIeophuYk3qZH59rDYE4AwbET8M8TSdZMCIYuo1
-         b+WVUM1/DlcxXVsPpEtMrQ5ZXmzggcWmj7Iy+omhrTCgpPmb/9WQ3i6UIXTDStfEAGgE
-         5ocA==
+        bh=VnhlweQrbulpbYz5+ddzD9VuCBmMsdNLumZo0g6Oc68=;
+        b=M0wtL3hDfy74tnGFqJtumgEzOHtgnURSZkVIXvRW7DmTLCuL1ANlVku/XLXZ5g7o4k
+         rjQpL4x08/Uu1UfqiTfcPZsC1qUhJ2/SJcdCHrgLr32Ubk8IiyZhKXSpKvxt++rcPRJq
+         z/K283/3R+E6FPXBersEyce+W+H/oc3MUsjSxPQLrPEij6S7MeaUKw3sSpDSrWm2i28s
+         0uvOnDRU/2J1zPa0BWUx+UaKZwlZC6cDvi8+DIuMlKd8vaF1v1B3U67142XQ7UYS8myM
+         8CJuYHwyooEJuVyVNUGq4so3FoGG1ZaMSJP3DWzwL7LUGQiHU/rtkyTbQrV93QJMEIMy
+         eXWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745956417; x=1746561217;
+        d=1e100.net; s=20230601; t=1745957168; x=1746561968;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=amJhdD4Bfh27xkAj5s99YtoTbehGVcO5N5MkHcm2+9g=;
-        b=Ejxq5+OLcbr4VJqo2VlekwsELzcvHZsNFqjDhMaTKY98Ewm+9Nr3rfJHcfvoKBQXjZ
-         d5KTp4hWDl4QU/qMWHopR4FXrJoN06qBatG+D0GWDqGYNFvyasdTsFhNkazShU1/qQsQ
-         gId8PRCIvun7KEzCiDQKTBCd6qnDIHgYdJkHmHX3U2D8MSeH2z1YZ/GYG7Uk2amLb3P0
-         2oljAUTss0kejcMOAK67nofvQX2Ygn5REhtlbBIE7Hy+8WEZ2f+nqt8TVT9RwMcy8+8l
-         JChqgZ0Q88jZorB3t6wH+SrPenOmPXbzvnRQnDkvu/w5WEAjnYyrXi6cRN0D/8pNtRU+
-         bEWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWnNlaGSbQp4HYldFcc3SZ0yJBQbACLDBs9u8uyXco6q3R9sttOg2Zx0yAsIxs6+z0eg72GR0dfWQZZ+9RlffYb@vger.kernel.org, AJvYcCXYkcTqgeR8Nrw6PI56Q/J8faBJdYstNQCs0znTbZleZPuuxfkxmjJTojYl8/cRaMb6EVlPrbC9rkAxkAPY@vger.kernel.org, AJvYcCXzZe54mymnDE6RciwXJ2sbcxCAgeSydvPBavGthDX8mBvSIUGThaWJZCRkCc0HNEGLb3W6A9xaD2mg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyrmme8RCU1M3CnaAwzj+OpLBI4ngkoyy5uvOJjScUhOSweaE53
-	O/aUDNerYPnFkI3a8OUg8CjcpegsWxnZ0/gCOO96XjM89ejtbIN1e6p1JfVLg+PnEEuWfu2BUi1
-	PXPeyDX6rkeMG+9RDzBUnI/yAnO3z6dSO
-X-Gm-Gg: ASbGncvPeWXtNkCDsYlVhMI2JxWQT02Jx92T+mZEILLCUUwcC1vZpCh6aiQwvbmDQi0
-	pQXdgvdsokhcK3e3RWA82arTQ/KBddNQkDHs57D2eiqwzf1HsPaAxMqi87VqFbetmeOEyqkGJYi
-	WH4xGBbEftOhxbKHYtmw5vxA==
-X-Google-Smtp-Source: AGHT+IFn+Ny7vYGospb10UuJ4S9bFcXHWzs+HDCP+yYxtmh3gLnLEIb7H9zLRBUWbVIgjB5NrwRSq66TQfIqBMNO99g=
-X-Received: by 2002:a17:906:1119:b0:acb:bbc4:3344 with SMTP id
- a640c23a62f3a-acedc5e042cmr50004466b.22.1745956416638; Tue, 29 Apr 2025
- 12:53:36 -0700 (PDT)
+        bh=VnhlweQrbulpbYz5+ddzD9VuCBmMsdNLumZo0g6Oc68=;
+        b=dtGgkGKrgMT6agmVCVJGMynUARRd8FbnWYw/LN+iNNyflXOohAiDNdKNyb9JDqSie6
+         jA/3Viv/8Uldvut1eLcPYmChgN7L3O1WP9yGjQi/geq+rx6gy5Cg0MG/aWg4nI5RW+ri
+         aIDLvpdLoVtmxPM1yCZejtQT+pwE5do+Eq1X4t62mCUQDRlJio05Onb8uemoL7xygpkT
+         entB3t01TOGRP12+IX5k8bGJ74JfJ2FCV4HCOkZ57fjg1WsqUqwn7JzVskvcN4x3kn7e
+         PymJcTm323UB6s82iaxBQ1RtX2m6h31W33abOBFTDmhg7dcn79j9Jq1dOu7Kg67Hucvx
+         WY8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWEeXnmYIOarM07EjwQKaBnnS5ucpt0Yd9znFu5mFUInSrsswMo5JKOx2DDwl58zURD9Zkj4frQufuy@vger.kernel.org, AJvYcCWkED/XKHVb9hyvVxclqQjAu2w2dKco7/1f/5oh16a/F67OzZolmuBG9Xxkb5DYBqpF2D7kJqrdgcKWL9PTteWT@vger.kernel.org, AJvYcCXyn8J0trxmlzldVRNA7IOyDWdt06xpftDDpJPfZyNpsQK1m1jOlNxGkftNyhmteS3PnKK0zNLp09ZG9+3/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY7hvKAqKQ4mA4sj4w9IMdLQwIUc6Ogfq//wRgvoIbWUaut5z2
+	XUDokxqBNBbb+toJDvCq/DZyD2tsXi9+Sbo8XXKca+WZBowP6ENMt5JP10jW0jpmkN6KWUhhyoK
+	EQohLpEaDUgyy5EPnLnAWCsXgvYc=
+X-Gm-Gg: ASbGncs4V5wQLolJ6kxR7IyZCCBZhUaY4ZHVVVhxpqqiyeQu2w76mWniFJwEM8TP+ce
+	B3qXb8xJL15FZnVy+oJkqJOUN4XSIFQDPLpC9w5ElzQAobF3xnRoCN28G6Ffwi6C5MUUrczBMbl
+	0SNlMap2HEENMY9npZjKeB2g==
+X-Google-Smtp-Source: AGHT+IHzBwENZySO+iABPSOfF0pbPLTD2vHtSSYYLyk7Rh9/rw8P+me+a0xt/eolP/8YcUIxAVbgjbLl+erCtG37oR0=
+X-Received: by 2002:a17:907:72c1:b0:ac2:9683:ad25 with SMTP id
+ a640c23a62f3a-acedc62278fmr64758766b.34.1745957167963; Tue, 29 Apr 2025
+ 13:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,13 +75,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
- <20250429-aaeon-up-board-pinctrl-support-v4-3-b3fffc11417d@bootlin.com>
-In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-3-b3fffc11417d@bootlin.com>
+ <20250429-aaeon-up-board-pinctrl-support-v4-5-b3fffc11417d@bootlin.com>
+In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-5-b3fffc11417d@bootlin.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 29 Apr 2025 22:53:00 +0300
-X-Gm-Features: ATxdqUFIOUQJascpH7Q4rydZ5qHH4jZYeeXXhuypZCuHlgQ4MyZpT2gNs5uAOio
-Message-ID: <CAHp75VfM7hw7LLkZ8_oXj2WsWJKyr+yYq38csYYczqNo2qV63A@mail.gmail.com>
-Subject: Re: [PATCH v4 03/12] pinctrl: core: add devm_pinctrl_register_mappings()
+Date: Tue, 29 Apr 2025 23:05:31 +0300
+X-Gm-Features: ATxdqUH3j5SoOveEZ_BcoQGg8gt0PoLFQ9rwxHPs1rQsev2JxgqaatDygJT-ZVg
+Message-ID: <CAHp75Vehui8wJPvX=wn78eQYVSYk3h0WqiEtczAS81qtuWsYzA@mail.gmail.com>
+Subject: Re: [PATCH v4 05/12] gpio: aggregator: refactor the code to add GPIO
+ desc in the forwarder
 To: Thomas Richard <thomas.richard@bootlin.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, 
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
@@ -95,44 +96,54 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
 <thomas.richard@bootlin.com> wrote:
 >
-> Using devm_pinctrl_register_mappings(), the core can automatically
-> unregister pinctrl mappings.
+> Create a dedicated function to add a GPIO desc in the forwarder. Instead =
+of
+> passing an array of GPIO desc, now the GPIO desc are passed on by one to
+
+GPIO desc:s
+GPIO desc:s
+
+> the forwarder.
 
 ...
 
-> +static void devm_pinctrl_unregister_mappings(void *data)
-
-data --> maps
-
+> +static int gpiochip_fwd_gpio_add(struct gpiochip_fwd *fwd,
+> +                                struct gpio_desc *desc,
+> +                                unsigned int offset)
 > +{
-> +       pinctrl_unregister_mappings(*(const struct pinctrl_map **)data);
+> +       struct gpio_chip *parent =3D gpiod_to_chip(desc);
+> +       struct gpio_chip *chip =3D &fwd->chip;
+> +
+> +       if (offset > chip->ngpio)
+> +               return -EINVAL;
 
-Why can't you use the 'maps' pointer directly here?
+> +       if (fwd->descs[offset])
+> +               return -EEXIST;
 
+If we still need this, it shouldn't be in this patch. This change
+doesn't require the check.
+
+> +       /*
+> +        * If any of the GPIO lines are sleeping, then the entire forward=
+er
+> +        * will be sleeping.
+> +        * If any of the chips support .set_config(), then the forwarder =
+will
+> +        * support setting configs.
+> +        */
+> +       if (gpiod_cansleep(desc))
+> +               chip->can_sleep =3D true;
+> +
+> +       if (parent && parent->set_config)
+> +               chip->set_config =3D gpio_fwd_set_config;
+> +
+> +       fwd->descs[offset] =3D desc;
+> +
+> +       dev_dbg(chip->parent, "%u =3D> gpio %d irq %d\n", offset,
+> +               desc_to_gpio(desc), gpiod_to_irq(desc));
+> +
+> +       return 0;
 > +}
-> +
-> +/**
-> + * devm_pinctrl_register_mappings() - Resource managed pinctrl_register_=
-mappings()
-> + * @dev: device for which mappings are registered
-> + * @maps: the pincontrol mappings table to register. Note the pinctrl-co=
-re
-> + *     keeps a reference to the passed in maps, so they should _not_ be
-> + *     marked with __initdata.
-> + * @num_maps: the number of maps in the mapping table
-
-Missing Return: section. Please, validate the kernel doc.
-
-> + */
-
-...
-
->  void pinctrl_provide_dummies(void);
-> +
->  #else
-
-Stray change.
-
 
 --=20
 With Best Regards,
