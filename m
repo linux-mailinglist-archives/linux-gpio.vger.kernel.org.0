@@ -1,119 +1,147 @@
-Return-Path: <linux-gpio+bounces-19450-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19451-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8D19AA079C
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 11:44:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2679AA090E
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 13:00:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08E6E3A87BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 09:44:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B42533AB77B
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Apr 2025 10:59:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FC542BE0FC;
-	Tue, 29 Apr 2025 09:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D9312BF3EA;
+	Tue, 29 Apr 2025 11:00:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqq0LuxO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XH+gpxAg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2477D2BE0E1;
-	Tue, 29 Apr 2025 09:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E755176ADB;
+	Tue, 29 Apr 2025 10:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919876; cv=none; b=nC33pclWjGj7OAvuMgvi5X1YA9b01RaTlhsl1jfF0/e1iIlUEs7kggP6vgSS9NeXjnHjpqREzSc0kuvpAzKwcPgNk2hs6MCUhmdI6HZTdSKfsv+6MK7Tveiz6qa1hR2afKooHNJ+AfB/N6C3YPNxM1jYqaI++w0veWNliZI7jzo=
+	t=1745924401; cv=none; b=oPw4UUquHGMiiktN7z93OqnGJg2+vz+uIZrpIP/RVhm5OQ6/xbohr0sy8GZhtjXQ0aTNhAwJXZVOxxHs/D8SWG/0O0vSwkZL40B757ulWNWr/DzEm1SSAAEtm6F1CWQbzTZrg/p/GgYunDop3q5G530+Ni67QWLuS/imSoIWnkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919876; c=relaxed/simple;
-	bh=tjyIOBp2pVvC/RTZRsqbz2Va8h4MtD0qw3IcJi/tjuw=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=jKDEuCFWu+Y2OhIYX8N9wNmasG29odIOrNZDT2u6tmc4QlUccQX46FSQA+qLgqIQf26fLT6CEzvVAt6TwfhupH7SmLBREbTFNDlzzc5/c/MAYU3GwZkd8yRcEka153Ieuxhpm2w2pTtk+AxkqiWuRxizxeuNg/rpr671xwqETFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqq0LuxO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BDD6C4CEE3;
-	Tue, 29 Apr 2025 09:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745919875;
-	bh=tjyIOBp2pVvC/RTZRsqbz2Va8h4MtD0qw3IcJi/tjuw=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qqq0LuxOtnslY2NsfByYMNGgwEYpTe4O1FH0Z7jRLLw/83sBZQXvK2AtBce4Rp4Vh
-	 RRrtZvgAm0KTtAM0dRR8FFZgHbOD74cY1fwp0+m1BStKwH9OMAJ1tbqqIR7WGEvUdy
-	 Huyn7q3PO4Mv0wgzElunEnlSH92XNipiFYAiNmwm+IgYpOMXVtNpPKws8k1uLWotFd
-	 bLzen+59z9PDBxxLRsVdAJi0M12GVCctM+AfbOEhsog6AmtYp83tU9BbOND/6NJ39Z
-	 SmgGYl/arNHXgMI/+FwQQhyjYWUUy6Pc/LQYLIt0QdAnK+H5mCgCkdkTfMANoEpT74
-	 1X0lz/It9jpaA==
-Date: Tue, 29 Apr 2025 04:44:34 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1745924401; c=relaxed/simple;
+	bh=xYx7vVMODEw3waQ3jXqBqGbAJdRANkPSZXchstFSTSI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T+tM5e7FD9taq29lT+coWLNJrN0owM+0XWbjEzN3JvVyPRa7RNVdXLN5+bWCcozdI7JzgGCbeJCQ9BsbDdIlXVL+gTf4S4KPgU0Ria8iNSJvf58qqn/pM/oiyz6l5OC1MXfPtzd95Z2z6p8MKSycxfVGUaOCHfc+V59c3coKQr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XH+gpxAg; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-acbb48bad09so1091038966b.0;
+        Tue, 29 Apr 2025 03:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745924397; x=1746529197; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gAhibOWntv/JIa0M4k74yL4qCdZZ5IyEkuemH9Z9jOg=;
+        b=XH+gpxAgKx9yVc+i6bzhNJ82faq9BJW0cjBbf/q+CzqiWCOYNyGCct3QRSDepPa66A
+         zNvyCp5dfBn9LXhltXBHrS1nNKso/pegFm18E9+62M75iYLZfJVgSUIWj0/FqGZ0EMzB
+         asroHfWGw7JnQB6aId6vze+6zRjv78U0nJuvbPJnMMdDJliOTUnhBJ7ZFHSNjDmA6rBs
+         J3ePYryhUSd1I767Jqrre8eSxSkxGjDaXr1RmWySowKBxzG3AwZGohG4zoiOojRpvKKK
+         ZRtOHj9vMQvRnrKO9e1YlmjlfOgPLcW6o0W+lOZQZmiu7Ykq+F7IlwzBdY3O47zUiPwq
+         ndXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745924397; x=1746529197;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gAhibOWntv/JIa0M4k74yL4qCdZZ5IyEkuemH9Z9jOg=;
+        b=vLQ/B2RLJXIdNA8Xs3lQmIEeSAjRA0yBGdqjsVVVhluGZ66fOpZecScD+/Ss71i4RL
+         RGpBP8I8mPSl1UaeDPbneEaW7hzOQe0U2yj7U1RRo7yulqKQkDzN0yBM3G5q8gSQx321
+         UJsmS7iSwhsLJ++ncPnjIDF0L2whrvyObC+oJD9vs3b0mwfnNEV41J/A8zr7aZLbcRwV
+         inf7Lm0GDaTgOcWABVK59kENtXNGJwCtcZknrbflQ+NJNy9ckg1oFyeo4ZI+gF2bBp5Q
+         CAOskM9r3DtBJ1iWlFIw1wyGHtwuE0fyw9C77Y4+8GvGe5KNpiWEjLREalQn8EHpcb8X
+         df5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVAKgm4McVnFo7Zv7dZYoB8fz5mgETNWhVpnsjX/jK1PKQPqM+KngQsfUeuFXIHPnIKb2v1FHVc3/oA@vger.kernel.org, AJvYcCVsY3wkmevBYmecQAM2WIJh5hGRJfV9Rf4asEe/TCJHCmko6JXKflDhkSt0jWJLEeLvGPTc8k+e6STkStbV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn5eoAwFy7TWcGhEw8PjaBLYcXBNyrrKXnmjaw6QqExV+yXq5c
+	CizXWkzGEoXpphqha23MYCe79Ie50JyGtufTOXFbSrpq/qOo610XFdQ683hEy3jcIApG/7d7h/V
+	cWmTvm1jyN9IGcZV2i/1VVYGUkoU=
+X-Gm-Gg: ASbGnctoee/VXaxVPXPgJcKY1VtDG/YJjvozWwbuPmlhJoEnRpwk29pIV6kIP4SdQSk
+	VAnAQIpvqF8qFD1Mh0rlrKiGUvOVxl93mjwg8u4kcDATxuZjR3WwBkAs4MPBQif5acw7+vyvJzl
+	afbvBrp9ipOMAEVknja8ksWw==
+X-Google-Smtp-Source: AGHT+IH/NXv8Ns/r4ELzIeUjCBq1C8X3IuRvUDL2M1p517q3J6szG3n+1EsZKhZkYWyLva+16eIhp/8IYP2isELwNdA=
+X-Received: by 2002:a17:907:7daa:b0:ace:6a25:f56a with SMTP id
+ a640c23a62f3a-ace8493cc59mr1172294666b.29.1745924397295; Tue, 29 Apr 2025
+ 03:59:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Srinivas Kandagatla <srini@kernel.org>, 
- Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Will McVicker <willmcvicker@google.com>, linux-hardening@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>
-To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-In-Reply-To: <20250429-max77759-mfd-v8-2-72d72dc79a1f@linaro.org>
-References: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org>
- <20250429-max77759-mfd-v8-2-72d72dc79a1f@linaro.org>
-Message-Id: <174591987220.3132987.2369994359468543666.robh@kernel.org>
-Subject: Re: [PATCH v8 2/6] dt-bindings: nvmem: add max77759 binding
+References: <20250428235610.11324-1-ariel@simulevski.at>
+In-Reply-To: <20250428235610.11324-1-ariel@simulevski.at>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 29 Apr 2025 13:59:20 +0300
+X-Gm-Features: ATxdqUFO3a5WRMEYxmo6NOZKv9hXMs8WfdDFruZ68XC6mnwev1lM-GgXl7oxlLw
+Message-ID: <CAHp75VccaDdzW7SUyLE6Y+HLFDHdcc78JZTFD5wbAeOOdPEqOA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: intel: Document Tiger Lake reuse on some Alder
+ Lake platforms
+To: Ariel Simulevski <ariel@simulevski.at>
+Cc: andy@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 29, 2025 at 2:56=E2=80=AFAM Ariel Simulevski <ariel@simulevski.=
+at> wrote:
 
-On Tue, 29 Apr 2025 09:21:38 +0100, André Draszik wrote:
-> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> Port Controller (TCPC), NVMEM, and a GPIO expander.
-> 
-> This describes its storage module (NVMEM).
-> 
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
-> ---
-> v2:
-> * drop example as the MFD binding has a complete one (Rob)
-> 
-> Note: MAINTAINERS doesn't need updating, the binding update for the
-> first leaf device (gpio) adds a wildcard matching all max77759 bindings
-> ---
->  .../bindings/nvmem/maxim,max77759-nvmem.yaml       | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
+Thank you for the patch. My comments below.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+First of all, the Subject should start with: "pinctrl: tigerlake: ..."
 
-yamllint warnings/errors:
+> Some Alder Lake systems, such as those using the PixArt I2C touchpad (PIX=
+A3848),
+> reuse GPIO IP blocks similar to Tiger Lake. As a result, enabling
+> CONFIG_PINCTRL_TIGERLAKE may be required for proper I2C device detection.
+>
+> Document this in the Kconfig help text to assist users encountering this =
+issue.
 
-dtschema/dtc warnings/errors:
+It's all nice, but can be written in much simpler way:
 
+"Some users may be confused on what to choose to support their chipsets,
+Document supported SoCs and PCHs by the driver in the Kconfig help text."
 
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+Or something like that.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250429-max77759-mfd-v8-2-72d72dc79a1f@linaro.org
+(In other words the "touchpad", "some systems", etc are unneeded
+details. It may be other users who have different issues, you need to
+cover all of them.)
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D220056
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+> Signed-off-by: Ariel Simulevski <ariel@simulevski.at>
 
-pip3 install dtschema --upgrade
+Reported-by: ... ?
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+...
 
+> @@ -54,6 +54,11 @@ config PINCTRL_ALDERLAKE
+>           This pinctrl driver provides an interface that allows configuri=
+ng
+>           of Intel Alder Lake PCH pins and using them as GPIOs.
+>
+> +         Note: On some Alder Lake platforms, including systems with
+> +         the PixArt I2C touchpad (PIXA3848), the hardware reuses
+> +         Tiger Lake style GPIO blocks. For proper device detection,
+> +         enabling CONFIG_PINCTRL_TIGERLAKE may be necessary.
+> +
+
+This is too narrow and too detailed, nobody needs to know this. Just
+list the platforms the driver supports (take the example from the
+existing list, i.e. INTEL_PLATFORM):
+"Currently the following Intel SoCs / platforms require this to be function=
+al:
+  =E2=80=94 Tiger Lake (all variants) // needs to be double checked
+  =E2=80=94 Alder Lake-P
+"
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
