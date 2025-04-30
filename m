@@ -1,80 +1,81 @@
-Return-Path: <linux-gpio+bounces-19516-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19517-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB2B4AA540F
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 20:47:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7160AA5483
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 21:07:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50B443B48A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 18:46:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27D391C0709A
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 19:07:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 531F126460D;
-	Wed, 30 Apr 2025 18:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D148F2690CF;
+	Wed, 30 Apr 2025 19:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DXDdvIMN"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="a+DTulzi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AFE1C5D62
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 18:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE7A2B9A9
+	for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 19:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038809; cv=none; b=VTyxRU9wtsZBG80EbXaOK1ULMIT0uktWgQWtsuupoymnq0fHL/MI3PbuumfTBDDCmk8PcrNTZAPtdx1KNTyn9OYWNM7d3owcEzUS5A/39bquY0eVX2l59vpB38/iYtC7TGZwpmajLvaakKd+79vcQQdEob/TdVPCDc6kNeMRPCw=
+	t=1746040047; cv=none; b=BEUHPJZfQo/7E+Cf4iqjk9j0s/oSwPgvZbiiEz8fYMTvke/1/oZW+hhbji9bzySyHeoy8TrY0U/PgzJSaozFaV6u4tJ1HUvZXCNKy6PjkJpxqwRZlvie6S52mitum1wRU6L63bBJO+Ej/Fv8MUEyAOL5I2DjWJtG6d6/Nynreoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746038809; c=relaxed/simple;
-	bh=Tjt7SVaTlOlpBRH6eoevRK63rsFx7sHHtqzp+HITOvU=;
+	s=arc-20240116; t=1746040047; c=relaxed/simple;
+	bh=Mtlu1YXyNBwG2h3ygr9dqrRxqm2wdhJyl6YDuhQ3wR4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HOqs6/REBQZeCC9uE6iL5MyMpVeNhzyiu28vu9tlT+PZEjUrdSbgiQZHHahvo9474Lmn8FcVFVNMfm3TjZCL7imxsOwIrdIcX5MjHCH5icQoLXNmob28OiApzDo4LfKX2mQ9ACY/gvV4JIJTyAOU3/qrcBRc3CsR91lPffsKDFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DXDdvIMN; arc=none smtp.client-ip=209.85.160.53
+	 In-Reply-To:Content-Type; b=RmX8UWPz3XZVkgZN0/A0boMtXSwGDTGyIC/DvmwCng+uF0Mf97Okopv1gs7D5z0j06Vwnu/njLdU0j9dF5zO3S7mhJJfpZ9c+d5mgNyXuUDP7DiOSAibwfIMrqDHgsqXqnRAbHit4Inrser2WeqW1OA3DzLhtGDp7TxIFYO+rzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=a+DTulzi; arc=none smtp.client-ip=209.85.167.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c77a5747e0so126584fac.2
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 11:46:45 -0700 (PDT)
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3feb3f54339so221148b6e.1
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 12:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746038805; x=1746643605; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746040044; x=1746644844; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=RXxYKFdvPhnv+i2OQnjVQIRhugvl2GuR0kkHgiv5OW4=;
-        b=DXDdvIMNL7KSK9YwgOALkU4pQzb+iWP+LL7DW5mTrJiAVJw0EM6HDgSpmxrl0hxXiU
-         NMCy65C6W2EdqMHXGB1PIX+INDdzfTUSKxKWrUz9oaq19SN3caF94BIg3a9r3FepBeVd
-         tv+VEuTdsqERsnnPrX4RSKmykOSEx8BcI8wnL1gPEImTvmzK/sF/fFR8RBD1HiUupgDF
-         vl/8XDBVESobOrNd9sm8X1zeAJU6ijgUVHud0qgd4uGdxoULauxE2t5d98p6erIq0rhu
-         DceZg3xT23Sv39lidSNM4UrkJzheUpqX9yk6udhN1HDKqDA8lDw5RK17b5WyQuAMsjg+
-         SDQg==
+        bh=80mRLjys5Hd2u6ysZghS8YZztGds6iRGiX59kcQq5fM=;
+        b=a+DTulziBBgjK15PobKXItb6pezBzOAeZTXoWYyszi9ELWCUEPVBzye077Cv3E1YLh
+         YsnR9S55uiAIzu5/zmVwF4uwx0Nst3NJlCTrHsqg5+h5hk9hXctkjq48epypFAHgFQb8
+         7+Mwz0ifa7H4gVWDEk/k4THbeDD6fP7Z0HbFvPwbVOTJDsW8yVz8Do5uerANtzl03nVE
+         7XxcH4luzONwDP9ET3GrMP3Nqj2NYH6PLuomYW0B1ves6gJpJ5N2qns7iz6dW3+RXDF6
+         Yjf6bBVXMW5r8Gg2cPia1ABw2OMVQtDx5FNhHenz1+NlqmlgtuFzEFoqNCNHNOzgZu04
+         9X6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746038805; x=1746643605;
+        d=1e100.net; s=20230601; t=1746040044; x=1746644844;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RXxYKFdvPhnv+i2OQnjVQIRhugvl2GuR0kkHgiv5OW4=;
-        b=pzSn7JEYc899JavCFITvpQk++2Pnc1FCtIl7mY6pp95fMBrm98+OMFUNF0TC5+o2kw
-         1sKtnpYXswRQw4/fp7vylrBqJKnACP7B5hRE/8qgarHQmTGHwv1+3KA2zOqkO1b5rFJF
-         pfo7r/FyCHHDIEsZ0cF8ujNWNJFUtKcY0TXf/KQBJlDN2zdyOiTTvGWp7FeGYU339FlQ
-         qiPzuiho186ImSRv30i25rBd8EIFc6ruz+P8llL0qBzB/DcswuqpNLuIwPOZA9OaN+VZ
-         jOrLOe7BX1zIKrKpQ5VHu4IkHBkSbHK60MLRoj9cMz3Ydcj8sQZ+i0mDLD9Gzk5lZCYA
-         HPpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVZHKw1k17nj4MggGSyQaje2JXm48UKn9zI2NDS2QFtjppa5NGJR3LPtfkwSN6DJ5CcF4RK/1f5kQ8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWzP9CaLD19gQw/lRYc3MiVgQsRbkTNbUD2AOglKGMbEJ/RRew
-	f82kBsV6k2pFKJ47nAUnY+cp5q8g6bo/UMpYm9qlP9tp3wX03tUPZaf0TC2fD6Y=
-X-Gm-Gg: ASbGncvYTpsZalwwRDH+xULZVF97/xUuTvagm4ZzFi1hvYj5n9AVk7j4lQiu/zhvxth
-	LKio8IJ1wJStk1sXq9jKNHD+JAPTCd2gLSkqIfjQU/HXj+H5S6tALATO63PuIU4MWYYARF7i6Cy
-	9bkhTTCf/1qONz5zBKrWyo4dqbZ68ZueD+Skex4blCSJnF3mzriTU0o/1Elr1v9WWlw4+5OJfND
-	98KO8Etilcfaq9wu82pt6M4o9rPq1GjKVYkBytypYeRb6OIci66IGuqtRndz/HUocdmrVuhedHo
-	sFLfvSwQamtmCkoNCmBXvn3Aju/5tZ0SmlMpH3omgtS+Rim+6J+CR/j9HJReFr58WoefoufVHjq
-	47V6tw9OrNISfxh4PxUwDHibF1A==
-X-Google-Smtp-Source: AGHT+IFPQcd2cZ+lppyTbrPKR3yE2CUjnINt9qXLSF2VkkLMNJ220iqVNXLIMGAHI/5Kafk9Ar//nQ==
-X-Received: by 2002:a05:6870:8315:b0:2c1:9897:dd24 with SMTP id 586e51a60fabf-2da8c82f967mr227133fac.35.1746038805290;
-        Wed, 30 Apr 2025 11:46:45 -0700 (PDT)
+        bh=80mRLjys5Hd2u6ysZghS8YZztGds6iRGiX59kcQq5fM=;
+        b=sxkIjSX9Ibhlujp4UYLO//Sl5nipTV6iBKGxmjp+HEPYTb8Q9os+32Z5dCgKm9Zi7M
+         XTPuAM3oyxWB9RPSBgkmXFwHNaJWuu6uVoq11aF98jJjLtpDfd4i9DAJLMpU2Vbx1/xZ
+         RSIFKCzsJKnIcTRmll/hS0QDs3DBqSVzDE2TH7toRtahNiJh/wTKPOEb5rTPwKcSNIIX
+         MbKdN5U0Lb6A2ldHXtH6NlcEN7KOQ3GG7oN5VsprMngLqIK7pBKqilZdnLWxvj+zVVdN
+         xzm5LzGreJP4BgraWoE57rsU6NbZzd4smdCrvkWQdoV4mJ5ePXGqMHParreVmh0a3EWZ
+         Dj0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUm7iosPiUG/BPQo73y1qpss8PAy30x7H4U45X8kikifReLGGNW+1MsG2y5eBtJlVVzx1D0+COtW6ww@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjcmsPEhy4vluus3BOsDR3jsWQZbM3hjjqLclZ1QjKgh8iVN/x
+	5zRW47Z7fJKAUMqTEcKI5AIZdGxI4maaDUF/YaEaL0/BnH3QReRq3wI+gPwnECm0uuLPM0BcD+L
+	V
+X-Gm-Gg: ASbGncvI+gv8CAgvkEXcePCZJgoceRQW9FYzmMear5JKWFWjvtcl/ACruWhRaLV9N/d
+	V/kCU++iLcX61//ZVqq/Bz5HiAGddk+/rXJZsbEvj5bnhzaVFMk7yb0v5q1BptuH6SAr5k1D2ih
+	io41Zle10FFxUtQDpZzVeWpP3tv9mb+BPOFM4nwrOUmOEnYN1oaVvxqqTCVc6FtKXZsFSf7mZ3r
+	+PnWnfpAfow5IJ6ZRwlyWXkiYiFFlteeLoxmyeyQMOzOt5vsjI8jwsrte9pMRPy0tdGSrLtuG0W
+	iHR1zyWmzYmw0kxOsFZx48bcwZLMBylhD1E4jAn9zl2J5gHplP3Zvotj79XOTN/3lpCGqCb9xu/
+	RfXQCNnHM940UMlc=
+X-Google-Smtp-Source: AGHT+IGxFe30jnIEtcfXxdqEbeOH01eszlna0BNlLl4bX8yJXYfGDxf9e+JqaxB0WSf1rlJMFOvtVQ==
+X-Received: by 2002:a05:6808:80cb:b0:401:ea99:532 with SMTP id 5614622812f47-40239e77c8bmr3044029b6e.21.1746040044090;
+        Wed, 30 Apr 2025 12:07:24 -0700 (PDT)
 Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2da6e4f7cccsm577231fac.33.2025.04.30.11.46.44
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40212c4dc27sm920732b6e.48.2025.04.30.12.07.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 11:46:44 -0700 (PDT)
-Message-ID: <7d93075f-8426-45f1-8c7d-3c3c904a859a@baylibre.com>
-Date: Wed, 30 Apr 2025 13:46:43 -0500
+        Wed, 30 Apr 2025 12:07:23 -0700 (PDT)
+Message-ID: <4fd62562-cd94-4019-952d-38624656ea81@baylibre.com>
+Date: Wed, 30 Apr 2025 14:07:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,8 +83,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 02/11] dt-bindings: iio: adc: ad7768-1: add
- trigger-sources property
+Subject: Re: [PATCH v6 08/11] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
 To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org
@@ -93,45 +94,120 @@ Cc: andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
  linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
  broonie@kernel.org, jonath4nns@gmail.com
 References: <cover.1745605382.git.Jonathan.Santos@analog.com>
- <128de2793d6d5424ad152c394faf1d51f0d56e0b.1745605382.git.Jonathan.Santos@analog.com>
+ <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
 From: David Lechner <dlechner@baylibre.com>
 Content-Language: en-US
-In-Reply-To: <128de2793d6d5424ad152c394faf1d51f0d56e0b.1745605382.git.Jonathan.Santos@analog.com>
+In-Reply-To: <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/27/25 7:12 PM, Jonathan Santos wrote:
-> In addition to GPIO synchronization, The AD7768-1 also supports
-> synchronization over SPI, which use is recommended when the GPIO
-> cannot provide a pulse synchronous with the base MCLK signal. It
-> consists of looping back the SYNC_OUT to the SYNC_IN pin and send
-> a command via SPI to trigger the synchronization.
+On 4/27/25 7:13 PM, Jonathan Santos wrote:
+> The synchronization method using GPIO requires the generated pulse to be
+> truly synchronous with the base MCLK signal. When it is not possible to
+> do that in hardware, the datasheet recommends using synchronization over
+> SPI, where the generated pulse is already synchronous with MCLK. This
+> requires the SYNC_OUT pin to be connected to SYNC_IN pin.
 > 
-> Introduce the 'trigger-sources' property to enable SPI-based
-> synchronization via SYNC_OUT pin, along with additional optional
-> entries for GPIO3 and DRDY pins.
-> 
-> Also create #trigger-source-cells property to differentiate the trigger
-> sources provided by the ADC. To improve readability, create a
-> adi,ad7768-1.h header with the macros for the cell values.
-> 
-> While at it, add description to the interrupts property.
+> Use trigger-sources property to enable device synchronization over SPI
+> and multi-device synchronization, as an alternative to adi,sync-in-gpios
+> property.
 > 
 > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
 > ---
 
-
 ...
 
-> ---
->  .../bindings/iio/adc/adi,ad7768-1.yaml        | 31 ++++++++++++++++++-
->  include/dt-bindings/iio/adc/adi,ad7768-1.h    | 10 ++++++
->  2 files changed, 40 insertions(+), 1 deletion(-)
->  create mode 100644 include/dt-bindings/iio/adc/adi,ad7768-1.h
+> +static int ad7768_trigger_sources_get_sync(struct device *dev,
+> +					   struct ad7768_state *st)
+> +{
+> +	struct fwnode_reference_args args;
+> +	struct fwnode_handle *fwnode = NULL;
+> +	int ret;
+> +
+> +	/*
+> +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
+> +	 * to synchronize one or more devices:
+> +	 * 1. Using an external GPIO.
+> +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
+> +	 *    synchronization pulse that drives the SYNC_IN pin.
+> +	 */
+> +	if (!device_property_present(dev, "trigger-sources")) {
+> +		/*
+> +		 * In the absence of trigger-sources property, enable self
+> +		 * synchronization over SPI (SYNC_OUT).
+> +		 */
+> +		st->en_spi_sync = true;
+> +		return 0;
+> +	}
+> +
+> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev),
+> +						 "trigger-sources",
+> +						 "#trigger-source-cells",
+> +						 0,
+> +						 AD7768_TRIGGER_SOURCE_SYNC_IDX,
+> +						 &args);
+> +	if (ret)
+> +		return ret;
+> +
+> +	fwnode = args.fwnode;
+> +	/*
+> +	 * First, try getting the GPIO trigger source and fallback to
+> +	 * synchronization over SPI in case of failure.
+> +	 */
+> +	st->gpio_sync_in = ad7768_trigger_source_get_gpio(dev, fwnode);
+> +	if (IS_ERR(st->gpio_sync_in)) {
 
-We should add this new file to the MAINTAINERS entry.
+Normally, having error be the indented path like this is preferred, but I think
+this case is an exception since the following is "normal" code path, not error
+return path.
 
-Otherwise:
+I would understand this better as:
 
-Reviewed-by: David Lechner <dlechner@baylirbe.com>
+	st->gpio_sync_in = ad7768_trigger_source_get_gpio(dev, fwnode);
+	if (!IS_ERR(st->gpio_sync_in))
+		/* The trigger is a GPIO, our job is done here. */
+		goto out_put_node;
+
+	/* Second, ... */
+
+> +		/*
+> +		 * For this case, it requires one argument, which indicates the
+> +		 * output pin referenced.
+> +		 */
+> +		if (args.nargs < 1)
+> +			goto err_not_supp;
+> +
+> +		if (args.args[0] != AD7768_TRIGGER_SOURCE_SYNC_OUT)
+> +			goto err_not_supp;
+> +
+> +		/*
+> +		 * Only self trigger is supported for now, i.e.,
+> +		 * external SYNC_OUT is not allowed.
+> +		 */
+> +		if (fwnode->dev == dev) {
+
+As Andy pointed out, this is a bit odd. Technically, we should be allowing any
+trigger provider with the right capabilities. But we don't have a trigger
+subsystem yet to make that easy. Since we can already handle the SYNC_IN is
+wired to SYNC_OUT of the same chip above by omitting the trigger-sources
+property, I would just make a TODO here and always return the not supported
+error for now.
+
+> +			st->en_spi_sync = true;
+> +			goto out_put_node;
+> +		}
+> +
+> +		goto err_not_supp;
+> +	}
+> +
+> +	goto out_put_node;
+> +
+> +err_not_supp:
+> +	ret = dev_err_probe(dev, -EOPNOTSUPP,
+> +			    "Invalid synchronization trigger source");
+> +out_put_node:
+> +	fwnode_handle_put(args.fwnode);
+> +	return ret;
+> +}
+> +
 
