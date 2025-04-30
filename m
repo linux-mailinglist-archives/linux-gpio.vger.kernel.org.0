@@ -1,116 +1,201 @@
-Return-Path: <linux-gpio+bounces-19512-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19514-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7076AAA5395
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 20:19:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB217AA53A5
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 20:27:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A58A97ABBF1
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 18:17:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67A16188B5F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 18:28:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD74267AFD;
-	Wed, 30 Apr 2025 18:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39528265627;
+	Wed, 30 Apr 2025 18:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lghmvSC0"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Ckf6iXag"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320D32638A1;
-	Wed, 30 Apr 2025 18:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD8D264637;
+	Wed, 30 Apr 2025 18:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037056; cv=none; b=XCMe0u7pgp/GIvjUzJxx5dTc5AobO8ccG0+FNPOYxWMCm2+O7TpuOwL44a/nxkWa6AVQAp7mmJsEtfggoEU1su3Cx08e0CwOFUlibq05b2nbMaU+WVTxEYzHAirxiN9qfNSongk0SDkvkwRbEUhyd6uQmfQLvwVUztFo/QsrKbw=
+	t=1746037671; cv=none; b=lHuY8wN1aHwFil6gIfeyZhuZZyQDI8PNlxg5nUAFKAPSaqkC6MD1FK9+GAizK/ZkG9vgEkAIRXT5oVuJixHx9HKXpS4ThDd/nq3SIvqWBGXno4akZ00h2Vib66rzKp7Cp3+Grim/8ntgdVRGf4nzb7Pf0uIowxOuz5zP3kniV7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037056; c=relaxed/simple;
-	bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jg0c1nHjtfejQheR9wNFMl8UiVQFiLId3hQ9l4r6cppDJccnxrBAvSWQL0jAtRfrMmYyaf8SjI/m2C9+VCtCzkO++yKU+CiP1Cvq74Dn6vseiF9SqLMo54mttSxJLT02x193r/zt+NWKunwYHchn2dWTY52xU9I2+9MvFha0bBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lghmvSC0; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ace333d5f7bso17662366b.3;
-        Wed, 30 Apr 2025 11:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746037053; x=1746641853; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
-        b=lghmvSC0wUSxPy12iHEMnkEiJ7LG8p38e2Idel0omhQNPmyFcIGPx21FlDjspImmth
-         N6+VqlCCFe5UF3hBABaWjmTzLjytuTm5GxFPBM0jBNAG9+PsuXDlnEJxiibC9DnhufiY
-         oAweiygZKlMGIo0TFVhwhan3sbh3NfAmvgcbhRuE2+Tq97ywQy7ysnRHLOtaXOKgJ8ZU
-         c2tX9BDewZlEKw5ifD5f0Mhi6N7xswONmLYiAgawHvxDXyAonL9pDcDSgzuYXBaIj+VL
-         Y+IJxeUUzfpepHxcsYBo/N3zkPwwpEjEdTw0wMs19xeTXxsGxengUhKE6bQFX8ux4Lot
-         HvhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746037053; x=1746641853;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
-        b=gGguWk2VaICOpinilewaGl6kYPN8U0zmB5II6TiINf3+Wwy+tTl9Mog9DsgKYx+CWA
-         FNz/YWgQnRbMG2ojd0FAdrEedwiGKIMHlk4U0T5oUNyGKKdqcSz2ZiCNU+1m2aAyCkzZ
-         SVzQxxaiM//Xy+/WMdLKNCJIT3QoOaIQO6EeLAhmsxZTJfOdMG2lD2Ai2mnU45HenYST
-         RL9KOwIvRB30Ct0GY9d5Z/l+E05vQ8wLpqJU8cnacl7VpYW5Ysw5ce+tf+S5nNem/ND9
-         GJdS6LeCn2OfKWm8Hlo0OZq8IUZISuKGUx7sp8wmn1rxgPoyUWEjdHUENrJsjijKtpFv
-         NVew==
-X-Forwarded-Encrypted: i=1; AJvYcCV1axPaOg21YwxFo3nyfXeQgnEtavGjlOlHznOoOJcIBAGRyGERaTaRoZiWM7yjIbWaO5gtUK0nd6vYgygC@vger.kernel.org, AJvYcCVkQ2BVGjMNDK7LtZCkpoU67VDTL+fjwtQepjNz5zVVNg8CXmoCLzfrr3JDZ/E3q3B3JmKFO2mNnZIh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx4SBlBuSweFDm4cqWuR0e0fi8yvaGXJKgD2XY2WIJITxeLAcq
-	iRgJ/KPCeridmWtQjk4xbfhTKz9M8LZnwpNI78X2VORvCUZZe/HzPZJgzth0/e9UXhs0GX/WeUx
-	wGZblJsXrsTQOy4vukYI9JN5NcPZoOVKRyCA=
-X-Gm-Gg: ASbGnctUooKdOSu4sAU5qSfVjEjfzRzeXfUO6NoMC06SrJmpVSedn1Z5KUFAtBzFrIr
-	sJuRbveKNmioYkNdgGwcRLnq77jLCYXK+oD4jzTfv48CwPrYWo6Ns/3lY+WJiDWyI5Rp8iFVK6R
-	6DA09puKdNw1F1SqBoMelEUw==
-X-Google-Smtp-Source: AGHT+IHo7vrjzoHJavBMnKjeuMAIEZNioUuX2F9fOYFlukm++RPIL7DlnzSNXWqD9CisW72t0j+V7ncSPEXQrlmkbuQ=
-X-Received: by 2002:a17:907:96a2:b0:ac7:e366:1eab with SMTP id
- a640c23a62f3a-acef45a8f8fmr34709266b.48.1746037053266; Wed, 30 Apr 2025
- 11:17:33 -0700 (PDT)
+	s=arc-20240116; t=1746037671; c=relaxed/simple;
+	bh=BAnu53X6LUhNIJoXvEr0FZYi1TI93lQ+xX62tTdscNE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HO+KlPRYjATbORfkxx/8/fOgiYsWVeaVhDZY6eq/PDaLNEZTcw9J+sfqcMiYwcKoRgOsDvQt13C18lfHgYNCYXCdeiSs+Umfjrr/2BHD+T4Bn7fxiMyX8hGySvt4KzEpsxT2+6/pxj/8INLVX5TWSpKP2ZERUE4J42OTOaYYPgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Ckf6iXag; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Received: from kreacher.localnet (unknown [217.114.34.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5A6FE666854;
+	Wed, 30 Apr 2025 20:27:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1746037661;
+	bh=BAnu53X6LUhNIJoXvEr0FZYi1TI93lQ+xX62tTdscNE=;
+	h=From:Subject:Date;
+	b=Ckf6iXagpU23zp9V/WVAVTY/2vc3c9NUaz4YTy+UK6EfUYSysN/pgMpEbPMkXfAIn
+	 BinPDShn4fU7MmcdwlnXXH3ZcVEhPAAqkepYfoYMd1R8y4vurcKhmvl1bR10wwpRei
+	 Mln2Uzvl+6EkDu2iGHJBEjN3OIZT8bck/1nWpSnUDfG4kYaGaXrj5bLM23eU5lTAxV
+	 LohGuSqf+CdU/QHD1mKFV3vUYqb/SOlC1p4ZEEHyi19qctA5N27rvW2/2wtQBk4rxD
+	 6gjVeHyUZIxzPxfTtEXjAwwxCRl6JBuVwdb0BNU6BAw5PmHBgxUpyIFWw4UkXr1n8y
+	 rHsXP5Z8LWJhQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject:
+ [PATCH v1] pinctrl: amd: Fix hibernation support with CONFIG_SUSPEND unset
+Date: Wed, 30 Apr 2025 20:27:41 +0200
+Message-ID: <5889368.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430153239.7137-1-ariel@simulevski.at> <CAHp75VdzqoxKwVhSqHVcnjCyBT1+y+020iTADc0isX-kqDJY8w@mail.gmail.com>
-In-Reply-To: <CAHp75VdzqoxKwVhSqHVcnjCyBT1+y+020iTADc0isX-kqDJY8w@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 30 Apr 2025 21:16:57 +0300
-X-Gm-Features: ATxdqUFMwmB3y28A-hm95F8boEEb_jY5iJhskLEEBjLgwXpZVanJzJZ34Jvxles
-Message-ID: <CAHp75Vcc0jX_AXh25sicRJCF1o7au8oOeCkN4GoTUTHyXYQv5g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: tigerlake: Document supported platforms in
- Kconfig help
-To: Ariel Simulevski <ariel@simulevski.at>
-Cc: andy@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guido Trentalancia <guido2022@trentalancia.com>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CLIENT-IP: 217.114.34.19
+X-CLIENT-HOSTNAME: 217.114.34.19
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepshhuphgvrhhmudeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushd
+X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
 
-On Wed, Apr 30, 2025 at 9:14=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Apr 30, 2025 at 6:32=E2=80=AFPM Ariel Simulevski <ariel@simulevsk=
-i.at> wrote:
->
-> Technically this is a v2 of the previous patch, but it has been
-> changed a lot, so for _this_ time it's okay to have it still v1. Also
-> note when v2 or any new version of patch is required the changelog
-> must be provided (after the cutter '---' line below).
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On top of that, you forgot to include (all) maintainers of the
-respective code. I recommend using my "smart" script [1] for sending
-patches to the Linux kernel subsystems.
+After recent changes, pinctrl-amd will not support hibernation when
+CONFIG_HIBERNATION is set and CONFIG_SUSPEND isn't because it will not
+register amd_gpio_pm_ops then.
 
-...
+Address this by restoring dependencies on CONFIG_PM_SLEEP where
+necessary for hibernation support.
 
-> With that, waiting for v2.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+Mario, this is on top of:
+
+https://patchwork.kernel.org/project/linux-acpi/patch/20250414203551.779320-1-superm1@kernel.org/
+
+which is currently in my bleeding-edge branch only.
+
+---
+ drivers/pinctrl/pinctrl-amd.c |   63 ++++++++++++++++++++++++------------------
+ 1 file changed, 36 insertions(+), 27 deletions(-)
+
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -894,26 +894,7 @@
+ 	}
+ }
+ 
+-#ifdef CONFIG_SUSPEND
+-static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
+-{
+-	const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
+-
+-	if (!pd)
+-		return false;
+-
+-	/*
+-	 * Only restore the pin if it is actually in use by the kernel (or
+-	 * by userspace).
+-	 */
+-	if (pd->mux_owner || pd->gpio_owner ||
+-	    gpiochip_line_is_irq(&gpio_dev->gc, pin))
+-		return true;
+-
+-	return false;
+-}
+-
+-#ifdef CONFIG_ACPI
++#if defined(CONFIG_SUSPEND) && defined(CONFIG_ACPI)
+ static void amd_gpio_check_pending(void)
+ {
+ 	struct amd_gpio *gpio_dev = pinctrl_dev;
+@@ -936,8 +917,40 @@
+ static struct acpi_s2idle_dev_ops pinctrl_amd_s2idle_dev_ops = {
+ 	.check = amd_gpio_check_pending,
+ };
++
++static void amd_gpio_register_s2idle_ops(void)
++{
++	acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
++}
++
++static void amd_gpio_unregister_s2idle_ops(void)
++{
++	acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
++}
++#else
++static inline void amd_gpio_register_s2idle_ops(void) {}
++static inline void amd_gpio_unregister_s2idle_ops(void) {}
+ #endif
+ 
++#ifdef CONFIG_PM_SLEEP
++static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
++{
++	const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
++
++	if (!pd)
++		return false;
++
++	/*
++	 * Only restore the pin if it is actually in use by the kernel (or
++	 * by userspace).
++	 */
++	if (pd->mux_owner || pd->gpio_owner ||
++	    gpiochip_line_is_irq(&gpio_dev->gc, pin))
++		return true;
++
++	return false;
++}
++
+ static int amd_gpio_suspend_hibernate_common(struct device *dev, bool is_suspend)
+ {
+ 	struct amd_gpio *gpio_dev = dev_get_drvdata(dev);
+@@ -1211,9 +1224,7 @@
+ 
+ 	platform_set_drvdata(pdev, gpio_dev);
+ 	acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
+-#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
+-	acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+-#endif
++	amd_gpio_register_s2idle_ops();
+ 
+ 	dev_dbg(&pdev->dev, "amd gpio driver loaded\n");
+ 	return ret;
+@@ -1232,9 +1243,7 @@
+ 
+ 	gpiochip_remove(&gpio_dev->gc);
+ 	acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
+-#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
+-	acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+-#endif
++	amd_gpio_unregister_s2idle_ops();
+ }
+ 
+ #ifdef CONFIG_ACPI
+@@ -1251,7 +1260,7 @@
+ 	.driver		= {
+ 		.name	= "amd_gpio",
+ 		.acpi_match_table = ACPI_PTR(amd_gpio_acpi_match),
+-#ifdef CONFIG_SUSPEND
++#ifdef CONFIG_PM_SLEEP
+ 		.pm	= &amd_gpio_pm_ops,
+ #endif
+ 	},
 
 
-[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.=
-sh
 
---=20
-With Best Regards,
-Andy Shevchenko
 
