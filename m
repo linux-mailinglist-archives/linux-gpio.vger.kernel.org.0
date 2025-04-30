@@ -1,201 +1,117 @@
-Return-Path: <linux-gpio+bounces-19514-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19515-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB217AA53A5
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 20:27:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CD4CAA53FE
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 20:45:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67A16188B5F7
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 18:28:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAD169E7F45
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 18:43:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39528265627;
-	Wed, 30 Apr 2025 18:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35019274676;
+	Wed, 30 Apr 2025 18:43:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Ckf6iXag"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZtV8bycx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD8D264637;
-	Wed, 30 Apr 2025 18:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4714514AD2D
+	for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 18:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037671; cv=none; b=lHuY8wN1aHwFil6gIfeyZhuZZyQDI8PNlxg5nUAFKAPSaqkC6MD1FK9+GAizK/ZkG9vgEkAIRXT5oVuJixHx9HKXpS4ThDd/nq3SIvqWBGXno4akZ00h2Vib66rzKp7Cp3+Grim/8ntgdVRGf4nzb7Pf0uIowxOuz5zP3kniV7Y=
+	t=1746038611; cv=none; b=EZDnRZQ/yHATTU2kfUxWtqdVZLfSMSLZ1pUVf/aSX/5RJVwdT3nnIwRBn0KGgfkvefnyAxd8fLwsLMnjKuqK4GwRqkOeSNlDCLbtmZUK/MMNmHI9weS9cr0c+TUStyJL3Hr34RWNuciIswwu+SJfdVzy98XaxnhWfhZuwxhS5L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037671; c=relaxed/simple;
-	bh=BAnu53X6LUhNIJoXvEr0FZYi1TI93lQ+xX62tTdscNE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HO+KlPRYjATbORfkxx/8/fOgiYsWVeaVhDZY6eq/PDaLNEZTcw9J+sfqcMiYwcKoRgOsDvQt13C18lfHgYNCYXCdeiSs+Umfjrr/2BHD+T4Bn7fxiMyX8hGySvt4KzEpsxT2+6/pxj/8INLVX5TWSpKP2ZERUE4J42OTOaYYPgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Ckf6iXag; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from kreacher.localnet (unknown [217.114.34.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5A6FE666854;
-	Wed, 30 Apr 2025 20:27:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1746037661;
-	bh=BAnu53X6LUhNIJoXvEr0FZYi1TI93lQ+xX62tTdscNE=;
-	h=From:Subject:Date;
-	b=Ckf6iXagpU23zp9V/WVAVTY/2vc3c9NUaz4YTy+UK6EfUYSysN/pgMpEbPMkXfAIn
-	 BinPDShn4fU7MmcdwlnXXH3ZcVEhPAAqkepYfoYMd1R8y4vurcKhmvl1bR10wwpRei
-	 Mln2Uzvl+6EkDu2iGHJBEjN3OIZT8bck/1nWpSnUDfG4kYaGaXrj5bLM23eU5lTAxV
-	 LohGuSqf+CdU/QHD1mKFV3vUYqb/SOlC1p4ZEEHyi19qctA5N27rvW2/2wtQBk4rxD
-	 6gjVeHyUZIxzPxfTtEXjAwwxCRl6JBuVwdb0BNU6BAw5PmHBgxUpyIFWw4UkXr1n8y
-	 rHsXP5Z8LWJhQ==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject:
- [PATCH v1] pinctrl: amd: Fix hibernation support with CONFIG_SUSPEND unset
-Date: Wed, 30 Apr 2025 20:27:41 +0200
-Message-ID: <5889368.DvuYhMxLoT@rjwysocki.net>
+	s=arc-20240116; t=1746038611; c=relaxed/simple;
+	bh=Pb/efMrKg4+HQ6/2NfMbs7Yh7bxImHsK9yrL75Whraw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X0I9ZtYdpBxt4aaF0Q+6ySvRUgP2eLQzozTQMS5gc03x22LKRJNART8sCpb8mWhJn8oLgYW8lrIVihFrVjkzpUOj07fAjGRWM46VQ0pRpPxYeryox9Y6VVGijUP0ay53yD4aRO1TzodCMh5DapVqeoqvALTbDwE8zDnbw5QcQGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZtV8bycx; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-601ad30bc0cso877835eaf.0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 11:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746038607; x=1746643407; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dRXIk2lKOYAihoanpH8QfdOUyxAwjsmIpzrb0u3+vUw=;
+        b=ZtV8bycxyMd8Oo2aCtRDHSBqDpXEvKtPS13YV11fWJNa3apDicwVUT33iToiV32Jsk
+         L6lPAP8s2Wox4fHf5VRJdPRnjBKE5zZJIQWEpaH/K9OqAM+27TuIbcjfGDRE9GfwfXRy
+         FFcDh9TjW6VINlRGFLjV3IZnk9q1NuiZ2UtYtLywb4BxvdtQluuy/XudfUZBbksaHufi
+         CEdfGBMLgCQrEgP+/+DTTAQfmm5dlEhQjNi21Tk6jTMCb/tLsBGd8fwi+AVs1VIVSBvk
+         anhdXrudaY3V2uzuLn4fDzVwgD/DvVHYpuYm2fsafeNymG2ADng+oIUX7Hta/viBOWPY
+         +coA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746038607; x=1746643407;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dRXIk2lKOYAihoanpH8QfdOUyxAwjsmIpzrb0u3+vUw=;
+        b=ZUgtCFVarK+DKMXpNd1Sdxs35xjO/0qOw3GN2nSUeheJU6ycKQLQ9wBg+x1MvMRDEx
+         p1iC6aWrq57mrHWF+rafaO+Dt9B5fe4LtyuMvGeW3pe7Admw/8nRXkAHKxucLtLK5IXC
+         TPs47oMtWJuj5FR80XggU2h/gytmx0EwabZIHsk/SehtW1xovAyhAQH+RdG5Zc2lq8+L
+         POBP9Bv9voWkjsvp7K9wL1ooYbJcMgscvUlLH8Cto6GIjpg1+4xmhLJPPl8JR1EsU+S+
+         Q147ZyhVjDYukQhWDJpvRlUlmwvKchWCmf/YqDWLmxzBCjjBfIAmKZwdTzLpHlnDeBvV
+         8/3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVBZBDz76e1yXgoEWScyj8V/xyUmOsSu9PTWPZnsPbFyh4YabDVVjRDk474HzGW9ZCa6HMxhDn06570@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpDlRlakgHBC2Rn0AMNgD0LL4vUO/F9DSnp/IKzZUIwpgzxSc4
+	oPVlH7H0Qu2LxiEGN3c6LHlt6g1OTPmqFFSxJfnqasuuqmVUZ+O+xJZ8bbvVipQ=
+X-Gm-Gg: ASbGncvawcjk71uDCTofGGHAgzp/e4xDD103Ir6ogI1LRedQKg76138j3vhKDTmPXbr
+	R34n7sJT9FMfNr8PEO3+KnyB3dXNFWz3dqC/eNVqvM1cmvmdHBeSPvV50+pEJybK/CuRR8XwL67
+	8GmDpEB5EFizq3eKJfyzI1M4/6HDiAUl972Ts7DDQFEiYh6BHONk7BGG4QZkAzjSQdQ0UjOBhw9
+	KZ/Kekve8pinKs6rQ7TUrXxYTFCugRV+nuflcpg7ilx2DqS+NnYXJKsfcKz+doVYUM9IG7ZfZO9
+	sKTA3gjS1gtBuruaT8OI+V2zplaE06GBVn1a5qbEHSGQaukpfTMjzcaLclWIueYI2PQvs7HqR8E
+	gdYW2nKNyNhMC2l8=
+X-Google-Smtp-Source: AGHT+IFJ7NsTI0Qgevug+avxKfif9V5H032u+ML/0KNagUrHEeVV4ThgLTtzw4bhB4wmXUjY6rLWXA==
+X-Received: by 2002:a4a:e843:0:b0:604:99a6:4e90 with SMTP id 006d021491bc7-607df5e5f9amr353602eaf.0.1746038607385;
+        Wed, 30 Apr 2025 11:43:27 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60686e96dddsm884171eaf.2.2025.04.30.11.43.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 11:43:26 -0700 (PDT)
+Message-ID: <996aedcb-f4f6-47f1-a818-ac89de0fa459@baylibre.com>
+Date: Wed, 30 Apr 2025 13:43:24 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 217.114.34.19
-X-CLIENT-HOSTNAME: 217.114.34.19
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepshhuphgvrhhmudeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushd
-X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 05/11] iio: adc: ad7768-1: add regulator to control VCM
+ output
+To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Cc: andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+ marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, jonath4nns@gmail.com
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+ <8a04f8f1e9c14d57b1db2f38a8433a0367c0c9dd.1745605382.git.Jonathan.Santos@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <8a04f8f1e9c14d57b1db2f38a8433a0367c0c9dd.1745605382.git.Jonathan.Santos@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 4/27/25 7:13 PM, Jonathan Santos wrote:
+> The VCM output voltage can be used as a common-mode voltage within the
+> amplifier preconditioning circuits external to the AD7768-1.
+> 
+> This change allows the user to configure VCM output using the regulator
+> framework.
+> 
+> Acked-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
+With the issues that Andy pointed out addressed:
 
-After recent changes, pinctrl-amd will not support hibernation when
-CONFIG_HIBERNATION is set and CONFIG_SUSPEND isn't because it will not
-register amd_gpio_pm_ops then.
-
-Address this by restoring dependencies on CONFIG_PM_SLEEP where
-necessary for hibernation support.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-Mario, this is on top of:
-
-https://patchwork.kernel.org/project/linux-acpi/patch/20250414203551.779320-1-superm1@kernel.org/
-
-which is currently in my bleeding-edge branch only.
-
----
- drivers/pinctrl/pinctrl-amd.c |   63 ++++++++++++++++++++++++------------------
- 1 file changed, 36 insertions(+), 27 deletions(-)
-
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -894,26 +894,7 @@
- 	}
- }
- 
--#ifdef CONFIG_SUSPEND
--static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
--{
--	const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
--
--	if (!pd)
--		return false;
--
--	/*
--	 * Only restore the pin if it is actually in use by the kernel (or
--	 * by userspace).
--	 */
--	if (pd->mux_owner || pd->gpio_owner ||
--	    gpiochip_line_is_irq(&gpio_dev->gc, pin))
--		return true;
--
--	return false;
--}
--
--#ifdef CONFIG_ACPI
-+#if defined(CONFIG_SUSPEND) && defined(CONFIG_ACPI)
- static void amd_gpio_check_pending(void)
- {
- 	struct amd_gpio *gpio_dev = pinctrl_dev;
-@@ -936,8 +917,40 @@
- static struct acpi_s2idle_dev_ops pinctrl_amd_s2idle_dev_ops = {
- 	.check = amd_gpio_check_pending,
- };
-+
-+static void amd_gpio_register_s2idle_ops(void)
-+{
-+	acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
-+}
-+
-+static void amd_gpio_unregister_s2idle_ops(void)
-+{
-+	acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
-+}
-+#else
-+static inline void amd_gpio_register_s2idle_ops(void) {}
-+static inline void amd_gpio_unregister_s2idle_ops(void) {}
- #endif
- 
-+#ifdef CONFIG_PM_SLEEP
-+static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
-+{
-+	const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
-+
-+	if (!pd)
-+		return false;
-+
-+	/*
-+	 * Only restore the pin if it is actually in use by the kernel (or
-+	 * by userspace).
-+	 */
-+	if (pd->mux_owner || pd->gpio_owner ||
-+	    gpiochip_line_is_irq(&gpio_dev->gc, pin))
-+		return true;
-+
-+	return false;
-+}
-+
- static int amd_gpio_suspend_hibernate_common(struct device *dev, bool is_suspend)
- {
- 	struct amd_gpio *gpio_dev = dev_get_drvdata(dev);
-@@ -1211,9 +1224,7 @@
- 
- 	platform_set_drvdata(pdev, gpio_dev);
- 	acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
--#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
--	acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
--#endif
-+	amd_gpio_register_s2idle_ops();
- 
- 	dev_dbg(&pdev->dev, "amd gpio driver loaded\n");
- 	return ret;
-@@ -1232,9 +1243,7 @@
- 
- 	gpiochip_remove(&gpio_dev->gc);
- 	acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
--#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
--	acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
--#endif
-+	amd_gpio_unregister_s2idle_ops();
- }
- 
- #ifdef CONFIG_ACPI
-@@ -1251,7 +1260,7 @@
- 	.driver		= {
- 		.name	= "amd_gpio",
- 		.acpi_match_table = ACPI_PTR(amd_gpio_acpi_match),
--#ifdef CONFIG_SUSPEND
-+#ifdef CONFIG_PM_SLEEP
- 		.pm	= &amd_gpio_pm_ops,
- #endif
- 	},
-
-
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
 
