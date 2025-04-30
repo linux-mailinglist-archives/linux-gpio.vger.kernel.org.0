@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-19504-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19505-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C182AA52B4
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 19:37:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5426DAA52E3
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 19:48:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE6BA1C06332
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 17:37:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 347AF7A5815
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Apr 2025 17:47:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94935264F9D;
-	Wed, 30 Apr 2025 17:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0D9B262807;
+	Wed, 30 Apr 2025 17:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wEgiSrDm"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bh1QSUkf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0831A3177
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 17:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC78C8635B
+	for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 17:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746034651; cv=none; b=oT1OaXhj1mWx5rUSxzdLz6aSqdo6k2vHLpBMhTsX1qz8ebQMhZ16duubg+6gG0QEUH7maevU6CD6XcAFiP0Y7CQ/s5PHO+8PgQVorXRi981yLsCfgVi7BnCHS0tJSOMdQlowEZv8sDSOvwHPxedOL/z85JC7nnFpPLXaz5bBXUg=
+	t=1746035313; cv=none; b=f4qucM/9h76B3C4XsJwWvRoMFl0JkcAbC+iQgHy2nC7NblNr/Ac0z/QiKcDPOfIzYh02cNsaxHtgM9ue+4ozUU2Wb8mwFnEssLUH4loRzKRaaTYaBB0ecgHHfrlhjvxbvf9eOX6Q9eARIGlcLqBmaOelzMgkobIPb1kvXiF73hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746034651; c=relaxed/simple;
-	bh=OaA5OCQkvQnVP7nf8AXqDZtBH7PFGtrlg3Uojswc5M0=;
+	s=arc-20240116; t=1746035313; c=relaxed/simple;
+	bh=Xd//+EUjjM9fMWyNAsySAoIwP/Y9zNlTjX3ZSwAAHBg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kdKxQNojhV2/K7w32AOesWjOYUs4dCrsAm8OK0w7z9f+yVDFeGWh+1Ov87S6iLDVuZUforFy4fk9RROQNbWJ+gn9L3TBbKoJPnVX8cW9MSrps2Re/uJlZKh+Y0wSw2MDktxcj+PhEqGDAzAt8crpRFFfO/keb3wwi0TNbAIEhJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wEgiSrDm; arc=none smtp.client-ip=209.85.208.181
+	 To:Cc:Content-Type; b=EyuadAdHPnZeOLQ5N4PNrMRBnKTU+yoU37EQXrYcO6avB7aw1k0vZ022iN+dAF4zTOg0x7KP8Ygz7/DcR0HwsX+JrerMp5FCFB/USt0As16ERJiNXdQJy/wK/7T1hRcRZoSpo77Vq5v0A8JSA0CSl4kCP8r4BF2peQBvF/vlB0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bh1QSUkf; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30f30200b51so426311fa.3
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 10:37:28 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5499614d3d2so158264e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Apr 2025 10:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746034647; x=1746639447; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746035310; x=1746640110; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B80QHmr+sB5OMT7DkCFdd8/2a+nIvyDwd83EjF1b7wg=;
-        b=wEgiSrDm4PpSIjcw4EnkIIIArFYyjm6Q9haUgNQ/RKw3qhK51kDS61qWy497RzVCua
-         80fVOm38TTTHGnJF8FCvpw3Pjc7Br3IQz30Rr0iivVfXN3ShsRdQxUM0A1e9jzp872yM
-         WciFlw222dUjrrGLh/nLG3GXF5jNzh7DTD30hKTGeMABlJ6SZEwY0rB0CouP5MNEJ0vo
-         a7kSoZ26W54U/U6Jt701vdd7yNzl0a0bapMZxb/chsDgKtWGi5B2NleAwwlv423wjY0N
-         LhCppanyRKWo9jNiK7AWFJA2svGZ6obonekccVTObeR8Jf5Gg37Lbaek1uhu83CHepJd
-         uTuA==
+        bh=qpJGX9+h+gTHIetaz3YRmMwjLsCGItIjG65DtWufLYY=;
+        b=bh1QSUkfdnmGbKRyb73JojgTSfHRTbcAWT9Z0fd7O6M9vM9u90butYb5sTy78YT5+H
+         3NHCrF8vuIKccFD03GGvOLPTdJtEyCIx06wRVjuzq4nf8/sH9TI7+YRO1tM3vbZAnFCC
+         vr2TVWZEiGmTPgbfB5WXmMAmI1EEqvYpoltF1we5/4pcGedcFo/9lsYEqCP37FTJLXSS
+         /Y0uTuqkGLWd4GpfwyIAklVahlYuFAdsDgBCUSYGaqsYire5dUt3wqPf7EDeD7WUOiO8
+         YeSHn949lOTiDF7KOFKqpyPdbu2BSmAUW1zn5CZS9oHZVexZMfJLakd4pu01Ry1I245U
+         QxbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746034647; x=1746639447;
+        d=1e100.net; s=20230601; t=1746035310; x=1746640110;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B80QHmr+sB5OMT7DkCFdd8/2a+nIvyDwd83EjF1b7wg=;
-        b=wky8TuymQFHGmkdOicRL3EwY0OY9jOqqDN1fzdM7P1HkjqJgGpNZK6FQOpaIVOjgVa
-         z4Ikz64pYDmNTQlLZfvTc0Tywm7Fdxh5d9U36cTREKAtg3gjZdiVAh0Y11eKl+UNj6q9
-         rDHrbVXVehLK0rOzowpUykJIJLyaNj6KRFiaDeYhqUDE0IChnimpfgj2yscneRO3Wg8+
-         oOyrpWRqDAx0mhTzep4+tefBUIPf7mNPxOyzA8lpFllR7i9Hcasv7SWYNFbDFT8N5U54
-         7Un6aGOoO1OYDcp2WRi5lmIdbi1/FRnVFVDRqllx8t7z4gj9Od3fzlpVvc9vv1ddOeLV
-         QrPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnZ9HirhgaZGIdqyo2vQ61wyklwNbb7A7+ZFPFagNpJa1jtaVDd7SLKcduTc+XNg5lMsWlPiTNFMk8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbYOM3UVIxu+HNLlStSIIdBqTP8yMnzvB7yGho0UCCvLHsXUFF
-	OWixh8bQDsvvso2ixsKVsm0Kr52uJsoJcIMPPDFu70KKdBmkgrrcHrAya0412GeUVFIe8kcLANM
-	8voxc+4uGuCK21TSYbd9AKCydQB6zo/6IT+ElNw==
-X-Gm-Gg: ASbGncv2qGCPUSpNSrigYV75JVlT11RyHSWVm0oQMxg3iUFvKEMRwCNhE0PlVHNp6ew
-	7OdGZyRhnrQ2fMbdVAb8m5w9dT/OS8ETmuXpaFmpwviqe08fjxbuHT5zd4lcWk2w4HMdpy79+Gv
-	BWMao4N0LE7UyzbSBB22DrqN13p7cStpSysr39JLUjICrpLdHCgGDIFg==
-X-Google-Smtp-Source: AGHT+IHEUyDS2y73x5UTLVTCAeSkmZ9cGIaS0WUiShuP4klNjjtKcVRhzpqZk/qxLOTTSObt/mVmSixEfyP9TzJHf3w=
-X-Received: by 2002:a05:651c:2112:b0:30b:a185:47d8 with SMTP id
- 38308e7fff4ca-31e69d17438mr13186651fa.4.1746034647109; Wed, 30 Apr 2025
- 10:37:27 -0700 (PDT)
+        bh=qpJGX9+h+gTHIetaz3YRmMwjLsCGItIjG65DtWufLYY=;
+        b=tQuyULibR9Pr4FPGkY3SGuqIxHHYVa0Y8nz7vMm/xuMVOmXfVohU8ZXi7uf1AMPWp/
+         DWES+Yb7+otrnsUXHFVxr3Rlc6v+2j4A+pE4vPZx/ABpo1f2vq0oGul1IgWC6ba3Oj2c
+         Bw/hVyCqnlILULx0Lhmp3oHv/90k9wvfmyrzhYb3ZbWRE3H7Ygm9T3M/0yayQxbcXe0o
+         MQ1cWid3Pl/oz5ItRVedjwXa5RbHePthXV72lIKXeZ6TcQntcqDnegaxB11dK3M5CPgh
+         nVV6NoFV0VQKaFEhfHKJY+zFMtGVZzYRDUQKkohf7M/1A1XZJEIy7lH1lYox+Akfimv8
+         Kggw==
+X-Forwarded-Encrypted: i=1; AJvYcCXU7mHjDJbhv8aWddSu5lRjh3pfawMBGCLMgUW5Ja+wXfJJ/Cr9twUw8qrCMZ31O9eBjdU+pn8Kr2T+@vger.kernel.org
+X-Gm-Message-State: AOJu0YztJA9CwY0vS7LR2fY6S4vz9fflLzX0lXCIr8tvSdoZZYSuEDKx
+	pYt7lOgDRo6gw4CT2tN4R32TVsqCjYDy0CF18WauOJlhmYyw9IP3zR8g9gVSKKOvx2I/q+gHARJ
+	x9GaN77hiMUquZEk0s491RShMTm2nevHjMNQGEw==
+X-Gm-Gg: ASbGncudA5yOou+YCBTAWOvNdwWEEVjbx9k74oVLZDSWeFjnnTc4WqwXvr/Vch+lw7N
+	niLr9S/0CPTeHNoyuR4ZwKn5J6/ADEWwnoZe9svnC09qFhsQcdmATrCuGzTdhPG00JUVg1THzII
+	9xh1l59JVLi3MqfmygJH95zkJgj4GS17DxCzLI1HAw2s5/dFmUCF5DHw==
+X-Google-Smtp-Source: AGHT+IFQ67uvPfDk2IC9gMdbwUwG5ozHU8ifWNIm2kpJQe5MUQrHtoSLGWBpWg5s+akHjnbM1ZGlWV32hbFW1I86oMY=
+X-Received: by 2002:ac2:4e07:0:b0:54d:68bd:2856 with SMTP id
+ 2adb3069b0e04-54ea3363a60mr1289824e87.24.1746035309924; Wed, 30 Apr 2025
+ 10:48:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,12 +75,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org>
- <20250408-gpiochip-set-rv-powerpc-v1-2-73dc1ebc6ef1@linaro.org> <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu>
-In-Reply-To: <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu>
+ <20250408-gpiochip-set-rv-powerpc-v1-2-73dc1ebc6ef1@linaro.org>
+ <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu> <CAMRc=MesdgXAivzDnm1RW-jcxs_5goZiyKvK0-JLwqDv=9F6LQ@mail.gmail.com>
+ <11e1a1e7-7bd3-4d48-804c-45b53b5e15d5@csgroup.eu>
+In-Reply-To: <11e1a1e7-7bd3-4d48-804c-45b53b5e15d5@csgroup.eu>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 30 Apr 2025 19:37:14 +0200
-X-Gm-Features: ATxdqUEh34Gz1POqWO9v2IKaGBTgS6zz7pi2s7vMr2oV8EN8tMuslc97xocJ6hQ
-Message-ID: <CAMRc=MesdgXAivzDnm1RW-jcxs_5goZiyKvK0-JLwqDv=9F6LQ@mail.gmail.com>
+Date: Wed, 30 Apr 2025 19:48:19 +0200
+X-Gm-Features: ATxdqUGjB0gCz481F3EdLKjtPBE29miYqhVUozl3mGg7-bSczgf2pXdTmq-UqSY
+Message-ID: <CAMRc=McOxP5j=HTm6xybdr_09X-khHcanz4chfEwa-m6y1+gZQ@mail.gmail.com>
 Subject: Re: [PATCH 2/5] powerpc: 83xx/gpio: use new line value setter callbacks
 To: Christophe Leroy <christophe.leroy@csgroup.eu>
 Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
@@ -91,72 +93,81 @@ Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 7:33=E2=80=AFPM Christophe Leroy
+On Wed, Apr 30, 2025 at 7:47=E2=80=AFPM Christophe Leroy
 <christophe.leroy@csgroup.eu> wrote:
 >
 >
 >
-> Le 08/04/2025 =C3=A0 09:21, Bartosz Golaszewski a =C3=A9crit :
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Le 30/04/2025 =C3=A0 19:37, Bartosz Golaszewski a =C3=A9crit :
+> > On Wed, Apr 30, 2025 at 7:33=E2=80=AFPM Christophe Leroy
+> > <christophe.leroy@csgroup.eu> wrote:
+> >>
+> >>
+> >>
+> >> Le 08/04/2025 =C3=A0 09:21, Bartosz Golaszewski a =C3=A9crit :
+> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>
+> >>> struct gpio_chip now has callbacks for setting line values that retur=
+n
+> >>> an integer, allowing to indicate failures. Convert the driver to usin=
+g
+> >>> them.
+> >>>
+> >>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>> ---
+> >>>    arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 6 ++++--
+> >>>    1 file changed, 4 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/po=
+werpc/platforms/83xx/mcu_mpc8349emitx.c
+> >>> index 4d8fa9ed1a67..d4ba6dbb86b2 100644
+> >>> --- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+> >>> +++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+> >>> @@ -92,7 +92,7 @@ static void mcu_power_off(void)
+> >>>        mutex_unlock(&mcu->lock);
+> >>>    }
+> >>>
+> >>> -static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, in=
+t val)
+> >>> +static int mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int=
+ val)
+> >>>    {
+> >>>        struct mcu *mcu =3D gpiochip_get_data(gc);
+> >>>        u8 bit =3D 1 << (4 + gpio);
+> >>> @@ -105,6 +105,8 @@ static void mcu_gpio_set(struct gpio_chip *gc, un=
+signed int gpio, int val)
+> >>>
+> >>>        i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL, mcu->reg_=
+ctrl);
+> >>>        mutex_unlock(&mcu->lock);
+> >>> +
+> >>> +     return 0;
+> >>
+> >> i2c_smbus_write_byte_data() can fail, why not return the value returne=
+d
+> >> by i2c_smbus_write_byte_data() ?
+> >>
 > >
-> > struct gpio_chip now has callbacks for setting line values that return
-> > an integer, allowing to indicate failures. Convert the driver to using
-> > them.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >   arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 6 ++++--
-> >   1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powe=
-rpc/platforms/83xx/mcu_mpc8349emitx.c
-> > index 4d8fa9ed1a67..d4ba6dbb86b2 100644
-> > --- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-> > +++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-> > @@ -92,7 +92,7 @@ static void mcu_power_off(void)
-> >       mutex_unlock(&mcu->lock);
-> >   }
-> >
-> > -static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int =
-val)
-> > +static int mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int v=
-al)
-> >   {
-> >       struct mcu *mcu =3D gpiochip_get_data(gc);
-> >       u8 bit =3D 1 << (4 + gpio);
-> > @@ -105,6 +105,8 @@ static void mcu_gpio_set(struct gpio_chip *gc, unsi=
-gned int gpio, int val)
-> >
-> >       i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL, mcu->reg_ctr=
-l);
-> >       mutex_unlock(&mcu->lock);
-> > +
-> > +     return 0;
+> > The calls to i2c_smbus_write_byte_data() in this driver are
+> > universally not checked. I cannot test it and wasn't sure if that's on
+> > purpose so I decided to stay safe. Someone who has access to this
+> > platform could potentially fix it across the file.
 >
-> i2c_smbus_write_byte_data() can fail, why not return the value returned
-> by i2c_smbus_write_byte_data() ?
+> As far as I can see this function is called three times in this file.
+>
+> First time is in mcu_power_off(), which must return void.
+> Second time is inside a forever loop in shutdown_thread_fn(), and I
+> can't see what could be done with the returned value.
+>
+> Last time is in the function you are changing. Wouldn't it make sense to
+> take the value into account here ? IIUC it is the purpose of the change,
+> isn't it ?
+>
+> Christophe
 >
 
-The calls to i2c_smbus_write_byte_data() in this driver are
-universally not checked. I cannot test it and wasn't sure if that's on
-purpose so I decided to stay safe. Someone who has access to this
-platform could potentially fix it across the file.
+Sure, I can do it. The purpose is first and foremost to convert all
+drivers so that we can drop the old callbacks but I see what you mean.
 
-Bartosz
-
-> >   }
-> >
-> >   static int mcu_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, =
-int val)
-> > @@ -123,7 +125,7 @@ static int mcu_gpiochip_add(struct mcu *mcu)
-> >       gc->can_sleep =3D 1;
-> >       gc->ngpio =3D MCU_NUM_GPIO;
-> >       gc->base =3D -1;
-> > -     gc->set =3D mcu_gpio_set;
-> > +     gc->set_rv =3D mcu_gpio_set;
-> >       gc->direction_output =3D mcu_gpio_dir_out;
-> >       gc->parent =3D dev;
-> >
-> >
->
+Bart
 
