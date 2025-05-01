@@ -1,269 +1,109 @@
-Return-Path: <linux-gpio+bounces-19520-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19521-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 427BAAA58E7
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 May 2025 02:04:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0256DAA5B2B
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 May 2025 08:45:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8FB41C0852A
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 May 2025 00:04:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD0E89C5ADC
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 May 2025 06:44:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3772120EB;
-	Thu,  1 May 2025 00:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEF9626B084;
+	Thu,  1 May 2025 06:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXuq7cKE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icr1+AxF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5416D134BD;
-	Thu,  1 May 2025 00:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86586267AF1;
+	Thu,  1 May 2025 06:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746057840; cv=none; b=VV+O+c5HxdREbOLpeBAukVw06lsrr4lqvmsgwZkUtjOT/kDU9dzKsbk9XJq1GNUFqhmtvKGimrizBvEBA0Ml4j3+2sFuP30MYG1Ix0fxwUmTb0aCDx/Xa0kh+P63wdbo5GcAOmIB3O8Peyzix0PFM0kxFLjqam68DY6pHEYvR1U=
+	t=1746081896; cv=none; b=SD8CRUsinMuDM1k0D0IEFnOWDSt7ghg3V07bTztKXxMNBb2/ejfGYqPOE80Tzyuu3ztlpg1kIJXtRh03OUNrz1D11gVc6WFgqSRBqpXFQF0fzxU2KRWzOnGYUywvSIUsByVNkAaLStZ3bt2xjIs8L9OGYBrOHNusVzeLxJh/wF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746057840; c=relaxed/simple;
-	bh=M10xuiOCECXNReIlFGalx02n10//HYeZ4fFlOkCVJko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qixks6BhOCLFERA9uM10we9lYd9JqooiihGzv5NLLWFtNi0nHBXbaRm/NjFUvaP2CQSFDTvw1UCDWNx+Z2iTDVi+g3yh9tVI3mdGhEUi2pieO+yQMdutm7kqwbLwTUipsAqEd4qtReIOwbyRJvsQZ39uLZqPKHLb46F+ptfRijY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXuq7cKE; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-476a2b5dffcso792361cf.3;
-        Wed, 30 Apr 2025 17:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746057836; x=1746662636; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UeGfTw1gt4xDthSATw6PmxbO4fBAFGEO3J6t3pVQfv4=;
-        b=KXuq7cKE075KktVwQvsDXuRR5uVrZXP8vMxaza+OtvOYNemBedkNAZ+rP6xQ9wo9Mu
-         YU3X/9IuSYPGR08Inc8tGQeunqjboMK2lfzFx2Mp6ObR7+FTq3P5z0iEFWcFFh2nAyQC
-         XRB2u4VPfaLTS7ZbvLCNCqK8gPoeRNj2NpJatVfAWzg3ZYxvcDzQN8e1NU6FweomPzHN
-         TX7SkdmNGLjUJRqLWfk7euEFkPLuZzZXhE5RtpoANnA+uzK/V21QXAN74/DdlM6VJ9PV
-         pV2QBfdpQg1XRCX6aAaHU0Q+FzpvLoFrmkcbEvLdp+3+4vyvizHeC6eOTribn//NllU7
-         U/3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746057836; x=1746662636;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UeGfTw1gt4xDthSATw6PmxbO4fBAFGEO3J6t3pVQfv4=;
-        b=V9jIxEoysWFGNs8cMR/Tz24GLCPkq18Svp88DHDKEs6hD+7oxgd4T4pEpnDPk0Rs9z
-         AdU+51zlj5+ZtLi5JXg4fG+4qL2HHWUQ6ge67pEZjBaXGA3KkTQYigW93JRTvC1YnIVJ
-         DIauKfcOkHQco4UyzWbWEM8tb5zfs1f1yACwo2kH4ke/ZY1ip47l7TaIpzcgNOMfTa+0
-         MsGglAU674EmEAZP4kPlxIC1MkYzHsUolLv1tzmr9wxkgBhJ2gv6hb7iuMaGDqqiWGIs
-         pVi0iTGt+574+nQeLU4qQNUjswSgvxyPLH4cEuUY5AO2BOZu0g8ELyQSQPa5jlbRfcv0
-         zdMw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8uwm/eVFbwTPKwzuIm/Cq+MHr8bkE0atFLqxT1QYrYeq+BaUNhvPxJk5rlFkAY+DTJigA3eOxU3cYag==@vger.kernel.org, AJvYcCVb/1pW1ex04VVSdAasVjU3QuN3/MJFK7W9JPeGq3aioK2W159XD/Bd19WoY+C2pbvVPvuSCfdc2Tao@vger.kernel.org, AJvYcCXYtWvwx8uX7xwypurXryUMUcVPnXuDXhQ1Jlj5jegIujDYitxigfOTWnthndBN2SOXdxwgRVEDVS910jAV@vger.kernel.org, AJvYcCXeTuQKLefNj4A5ZGsCRuWaICJTk0hYPMYW8G2UuNrynYCdR3QnlNsB2fPHCx9DPatOL6yp4OS37E0U@vger.kernel.org
-X-Gm-Message-State: AOJu0YznBDnU+A/xgWo3zngSUF5WFFYy3Dtu+Q4Uox9dHDj8aaE80LPW
-	vuyfocyG115N/tzi5CLzTOHmvgChrE/zbIQbah5gA+vKAaBblhnE
-X-Gm-Gg: ASbGnctpYMkZS6FqVLpNBR88w6j+4Od0hefh4glIl7ap129N0GFa8A7lbEqC2fI4rYJ
-	Y5dMbHcn5h1x4d9uzk5JF6kElAgTDpoLgHmp2ucXZvacbmIrqPgqrWgeMzoeCgsjwBVrGUmr8AD
-	/YlA0aKHSP16hRWyjPybtdxsuA0O36LNoTx+3vPwxTxdZEbHm2lKLIe1GjA8MWBfFcCpfelSbLr
-	VTldR4LnD4fsMSHhRzPtfEEoc6aAAw2ygcRSydqO/6Rylgo+KGZJK4juDQJchBtKhqluslLPx/x
-	+hqeO65ZDk0Cn1siiJbFlxtT+qxeIBwFdhGDXT2vVTiNggl2tpSaPiOWQLnVeA==
-X-Google-Smtp-Source: AGHT+IFe0FzdLQIprF16C52vp9PvPRKmvD0jPHOEB8bQQ72ps0/+8ln3yZP5Af1ifzhS+7suBE0emQ==
-X-Received: by 2002:a05:6214:5183:b0:6e8:9351:77f8 with SMTP id 6a1803df08f44-6f4ff5eac65mr23049506d6.7.1746057835921;
-        Wed, 30 Apr 2025 17:03:55 -0700 (PDT)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe6ad5efsm14469276d6.11.2025.04.30.17.03.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 17:03:55 -0700 (PDT)
-Date: Wed, 30 Apr 2025 21:03:50 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, dlechner@baylibre.com
-Subject: Re: [PATCH v6 08/11] iio: adc: ad7768-1: add support for
- Synchronization over SPI
-Message-ID: <aBK6Zlx71Aeihue/@JSANTO12-L01.ad.analog.com>
-Reply-To: CAHp75VdNymzseF7Dt9kL8GBPLM0MGBQg-YQabKUKxEryM8nxOQ@mail.gmail.com
-References: <cover.1745605382.git.Jonathan.Santos@analog.com>
- <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
- <CAHp75VdNymzseF7Dt9kL8GBPLM0MGBQg-YQabKUKxEryM8nxOQ@mail.gmail.com>
+	s=arc-20240116; t=1746081896; c=relaxed/simple;
+	bh=hedUuVJ2ba0To/dZiYYHWY2dIC5+4M9qP+za4OwnZ1g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=QIkt5sntAM0OGIGBpXMvXDdeKmQHT6YeI6yvImQw0MtC76GvJgggGvZEH5Ut8SDD04ESuYmAus/bYiFf5zNKt+CLO9vIap/gHPBYypzmUwjGznExBcgbcC+Y54imYKoKY9nWGRru2zb3hlpmXA962yIZ2ikfI6AKGYyjR4DMG0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icr1+AxF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8CAC4CEE3;
+	Thu,  1 May 2025 06:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746081895;
+	bh=hedUuVJ2ba0To/dZiYYHWY2dIC5+4M9qP+za4OwnZ1g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=icr1+AxFz+6Eh8RkzaaS3QtswMIX5dGtrA3UEDJyKkDK0Qa/3471NxLr1RV5xJlDs
+	 VtjQVfZkqZv1CBO+CGnsZeiFCmltdyhzNgupbRBrPZ64qzCA+/qJjM7wnodqQ9J44W
+	 lGi+WePtehz1ztuMpE3umisYaUDQu/6H3J5RORcb1pkscSUALKrcpWj1ue9QCZK5DY
+	 XRQb/W9gu5hVC00EJUL121/M8+ktsPhGfWLGhM7UxiSbMEi9jZvXsuatl1TKuhKKeH
+	 81k7JjtDFqIPr2Q/FfLh3cpEYC2V2NtEdkhLT/8f8IbaLEdH00cJvQMgfh6XzWTmLL
+	 9vtByWf00Vh2A==
+From: Mark Brown <broonie@kernel.org>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
+ Tony Lindgren <tony@atomide.com>
+In-Reply-To: <20250428-twl4030-v2-0-868d0d572f12@nxp.com>
+References: <20250428-twl4030-v2-0-868d0d572f12@nxp.com>
+Subject: Re: [PATCH v2 0/2] ASoC: codec: twl4030: Convert to GPIO
+ descriptors
+Message-Id: <174608189176.4035867.4222681481103578694.b4-ty@kernel.org>
+Date: Thu, 01 May 2025 15:44:51 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VdNymzseF7Dt9kL8GBPLM0MGBQg-YQabKUKxEryM8nxOQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On 04/28, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 3:14 AM Jonathan Santos
-> <Jonathan.Santos@analog.com> wrote:
-> >
-> > The synchronization method using GPIO requires the generated pulse to be
-> > truly synchronous with the base MCLK signal. When it is not possible to
-> > do that in hardware, the datasheet recommends using synchronization over
-> > SPI, where the generated pulse is already synchronous with MCLK. This
-> > requires the SYNC_OUT pin to be connected to SYNC_IN pin.
+On Mon, 28 Apr 2025 20:12:45 +0800, Peng Fan (OSS) wrote:
+> This is separated from [1]. With an update that sorting the headers in a
+> separate patch. No other changes, so I still keep Linus' R-b for
+> Patch 2.
 > 
-> to the SYNC_IN
+> [1] https://lore.kernel.org/all/20250408-asoc-gpio-v1-3-c0db9d3fd6e9@nxp.com/
 > 
-> > Use trigger-sources property to enable device synchronization over SPI
-> > and multi-device synchronization, as an alternative to adi,sync-in-gpios
-> > property.
 > 
-> ...
-> 
-> > +static int ad7768_send_sync_pulse(struct ad7768_state *st)
-> > +{
-> > +       if (st->en_spi_sync)
-> > +               return regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x00);
-> 
-> > +       if (st->gpio_sync_in) {
-> 
-> Dup check, the following have already it.
-> 
-> > +               gpiod_set_value_cansleep(st->gpio_sync_in, 1);
-> 
-> Yes, I see the original code, but still the Q is why no delay. Perhaps
-> a comment explaining that the GPIO op is slow enough (?) to add.
-> 
+> [...]
 
-Datasheet specifies a minimum of 1.5*Tmclk pulse width. For the
-recommended mclk of 16.384 MHz, it usually takes 4 times the minimum
-pulse width. If it can be less than that for other plataforms I can add
-this delay.
+Applied to
 
-> > +               gpiod_set_value_cansleep(st->gpio_sync_in, 0);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> 
-> ...
-> 
-> > +static struct gpio_desc *ad7768_trigger_source_get_gpio(struct device *dev,
-> > +                                                       struct fwnode_handle *fwnode)
-> > +{
-> > +       const char *value;
-> > +       int ret;
-> > +
-> > +       ret = fwnode_property_read_string(fwnode, "compatible", &value);
-> > +       if (ret)
-> > +               return ERR_PTR(ret);
-> > +
-> > +       if (strcmp("gpio-trigger", value))
-> > +               return ERR_PTR(-EINVAL);
-> 
-> Reinvention of fwnode_device_is_compatible().
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-> > +       return devm_fwnode_gpiod_get_index(dev, fwnode, NULL, 0,
-> > +                                          GPIOD_OUT_LOW, "sync-in");
-> > +}
-> 
-> ...
-> 
-> > +static int ad7768_trigger_sources_get_sync(struct device *dev,
-> > +                                          struct ad7768_state *st)
-> > +{
-> > +       struct fwnode_reference_args args;
-> > +       struct fwnode_handle *fwnode = NULL;
-> 
-> Redundant assignment AFAICS.
-> 
-> > +       int ret;
-> > +
-> > +       /*
-> > +        * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
-> > +        * to synchronize one or more devices:
-> > +        * 1. Using an external GPIO.
-> > +        * 2. Using a SPI command, where the SYNC_OUT pin generates a
-> > +        *    synchronization pulse that drives the SYNC_IN pin.
-> > +        */
-> > +       if (!device_property_present(dev, "trigger-sources")) {
-> > +               /*
-> > +                * In the absence of trigger-sources property, enable self
-> > +                * synchronization over SPI (SYNC_OUT).
-> > +                */
-> > +               st->en_spi_sync = true;
-> > +               return 0;
-> > +       }
-> > +
-> > +       ret = fwnode_property_get_reference_args(dev_fwnode(dev),
-> 
-> In this case the above is better to be also fwnode_property_present().
-> You save a double call to dev_fwnode().
-> 
-> > +                                                "trigger-sources",
-> > +                                                "#trigger-source-cells",
-> > +                                                0,
-> > +                                                AD7768_TRIGGER_SOURCE_SYNC_IDX,
-> > +                                                &args);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       fwnode = args.fwnode;
-> > +       /*
-> > +        * First, try getting the GPIO trigger source and fallback to
-> > +        * synchronization over SPI in case of failure.
-> > +        */
-> > +       st->gpio_sync_in = ad7768_trigger_source_get_gpio(dev, fwnode);
-> > +       if (IS_ERR(st->gpio_sync_in)) {
-> > +               /*
-> > +                * For this case, it requires one argument, which indicates the
-> > +                * output pin referenced.
-> > +                */
-> > +               if (args.nargs < 1)
-> > +                       goto err_not_supp;
-> > +
-> > +               if (args.args[0] != AD7768_TRIGGER_SOURCE_SYNC_OUT)
-> > +                       goto err_not_supp;
-> > +
-> > +               /*
-> > +                * Only self trigger is supported for now, i.e.,
-> > +                * external SYNC_OUT is not allowed.
-> > +                */
-> > +               if (fwnode->dev == dev) {
-> 
-> ?!?! What is this?!
-> 
-> For the reference:
-> https://elixir.bootlin.com/linux/v6.15-rc3/source/include/linux/fwnode.h#L51
-> 
+[1/2] ASoC: codec: twl4030: Sort headers alphabetically
+      commit: 5ae1bd2f6312948231e72cee1022dd6a0c29c7d0
+[2/2] ASoC: codec: twl4030: Convert to GPIO descriptors
+      commit: ff9ae9b9d938060300789c763fea3ce2ab56b452
 
-I see, my bad. I will follow David's suggestion, so we will avoid this.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> > +                       st->en_spi_sync = true;
-> > +                       goto out_put_node;
-> > +               }
-> > +
-> > +               goto err_not_supp;
-> > +       }
-> > +
-> > +       goto out_put_node;
-> > +
-> > +err_not_supp:
-> > +       ret = dev_err_probe(dev, -EOPNOTSUPP,
-> > +                           "Invalid synchronization trigger source");
-> 
-> Missing \n, and can be one line anyway (we don't complain about long
-> strings ending with string literals for ages, way before the 100
-> character limit).
-> 
-> > +out_put_node:
-> > +       fwnode_handle_put(args.fwnode);
-> > +       return ret;
-> > +}
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 
