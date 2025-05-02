@@ -1,305 +1,128 @@
-Return-Path: <linux-gpio+bounces-19550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3CD4AA701B
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 12:53:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF42EAA70C9
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 13:43:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CDF14657FB
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 10:53:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F1771BC3F5B
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 11:43:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C775623ED5E;
-	Fri,  2 May 2025 10:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AMVcObY1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02E822417E6;
+	Fri,  2 May 2025 11:43:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54C622FACE;
-	Fri,  2 May 2025 10:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B8822F152;
+	Fri,  2 May 2025 11:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746183189; cv=none; b=a80naCnuuT+uTLPtYU3JHLyu5hxp8l0Tg4ss2fAIDpIMAn3Hb75OpRUa0u+9tIOhVpjaSqegYqaBDCMOgm7GWV4OcWMbaw4mLJiX/JQw5SOH2wbS2kXbpG7frQVW9J7MY3xCcpn+bgInlfRwNeGHntEzhBPdsrI84UYO9C9LLJE=
+	t=1746186183; cv=none; b=pwVEmNHOvOhFMvqXSjJmNqasS27wTqY5/PwnHUKckTv/BiiIELF/mYjyx7bEklcgS8CU7VZd66Hp7qDY6s/S74I1ioOwCQeLSXBZKAbQmnucB16/RjE51pPHPAoWO29dZQiR1DkMGFy25/bMWCofsLArSBHOG/wU03oquR6TjMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746183189; c=relaxed/simple;
-	bh=Z2s8QaH0F2vgbOHJjHMKjTTqJC0m5rpm77idrTTwn+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3um+veR1MMknN1vBk2x75tLquFrVvrqytDA2mUyGK2xVlQU9jmWICtYnPTUTr+mUCG96PNGoDTlCe8Zlhj3Mo2WBCuRr1j+BbNM0OI3l/9WAoir38QNI9KZkoMjIo9iSLfpN4oX/pYq0SU7Z/E4oim7cVYk6QklfYuOKLOUZ9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AMVcObY1; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746183188; x=1777719188;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z2s8QaH0F2vgbOHJjHMKjTTqJC0m5rpm77idrTTwn+g=;
-  b=AMVcObY1HY1Za7YWQIZ0aGrFX/yz40YheCRuXqhkqcAT0/NLW59o5sq5
-   rN/bj38weCHCx/X+ST9uDrRTQ7b5MbWnz3zNxOvImCKu3SuKOlct+Scm9
-   XJHkhkizkEZTNmXDycAxeTfpAVQDfHvMf3fIa6sDLHNuWD0wQ+OvsJGx/
-   h3+mmaQ6uAMV+NOmWEmTIf9HkmvvlZ/R3NI/nCJ/O9rPcVMaw+1I32iZ2
-   mge51vzStwaKa3qEhQFoMWGzBeB0fqeYEJ+3ZSYayCIieO74cuv7W/nBS
-   OH4XfP/BovCDpmvqb0iv2n7kPWOIJTDhRg36D51QfhsNx13g6NgIwV5Xk
-   Q==;
-X-CSE-ConnectionGUID: qDiCO7M+R6SQpU9TMU65Vg==
-X-CSE-MsgGUID: HYXT+nqSSbqJulH/pLaSfw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="65394013"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="65394013"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:53:07 -0700
-X-CSE-ConnectionGUID: ODbTATNuQgac6ODPon0HoA==
-X-CSE-MsgGUID: N87L86c3RACx04gImxSM/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="157850440"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:53:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uAo0o-00000002AYP-35Q0;
-	Fri, 02 May 2025 13:52:58 +0300
-Date: Fri, 2 May 2025 13:52:58 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 10/11] input: misc: Add support for MAX7360 rotary
-Message-ID: <aBSkCsw3GJ6RHeJV@smile.fi.intel.com>
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-10-4e0608d0a7ff@bootlin.com>
+	s=arc-20240116; t=1746186183; c=relaxed/simple;
+	bh=+bKH78JkWpMbuLiMH2klT+W2jWWSwU2GBJo+cDrKX5Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ra+b+wI8aVSQoMimKddbjCl2k0KA3JNfZV/rg7cJTM3so1zCt68bWoXOxWtp3Asa86tKrO6N/49v5ioUwH07M/7FVlnwuM/iX7DtkNVjKJtGGfW7nlJyBIbdXLioio+bSzUmWwrGnDtwR4twJgJloAjZkUA09YlS7Fp5C0+0kbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5241abb9761so575887e0c.1;
+        Fri, 02 May 2025 04:43:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746186179; x=1746790979;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xx93yRVM4w/R+TEdbPsidsu/QFUjb5pgYuRlHQSKOPE=;
+        b=fYWUdTUF4wyJxQjlMlGrf+dOJ5Ck7ms+5nbYnnWo1o1sGdb51heePfGr0Ugaebdn2n
+         /zVJl1kY5yPviwuxsuY6kEWS7GHW8Hmq9tCA0uGLeWtoucFe1xLy9OU21VThgcXlgljm
+         Wn6QIlXye2f4nFv1v6TQ9wRYWa/8NeSj3pEU/9uc5VsE0mq75nNVtvdm7kx7UrRwNCYR
+         vjpn74VXBGPkwSNEeGARmiWivDhTOvbIS3GYbSD2STZCew3njn4ZTJUv66a2gXWNh74+
+         j6np5EIFHuspGnZXcSazqq5DvYHBmktbvkF39wSp1ugWNRa+q5N4iyfPHaScKsoMupXk
+         y3xA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFF5H+X+XYBWi4GCekztdYqiu+SKNV3RVcZko5QbFMh97Bywgkh3kktqySlEcXGliQeuHhvVQJUe8L@vger.kernel.org, AJvYcCWHwx0jijpUJ02x2Q6w22UkX8Pno/S4kCvc5ZU7pBKUSNPNVD1SmHgWnySrK+Zq+re4/h2pDVQSG8DTBYmo@vger.kernel.org, AJvYcCX59PVpjaLwu9JmaqIRgCkFtNPosV3w0UPo4W02B8WMztPZ4GbYdvUAca3YVffjrhyInIXAKSWEKN6aIhWbXtzVwyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrQuCvEuhFo05iFLPAlPwaFoP0r5pNeSaDTNg0ZvMeU/dIuZ4o
+	s5X2wJml+IdXsp8btYeUKmfbxQyhtaZSUvZwRfrWtTV0oG25NQh5t7k9kXXw
+X-Gm-Gg: ASbGncvAbS8QxwhkbhBYNttLc2u54V/pMaarM2FGqzdlHs6Aw20wnmvterpsY+IIHLX
+	y9Ip/3IuAco/xO4/pIE94WJyzu4ddvojVpxhIx0MIEd9cbPPxISxBor+5hIr5C5tXdZRuI4DgJV
+	IOj1f/VRu8kq+h1tMFXgKeSWVUizavhtt8ZnQrRMd9WNNXyIjRxEXUxGqdPCBI2S4eTtJBlb/p7
+	i1kFYzJXKo8r32BksZRrPkFkTxsvAZ9AQS1MsdIy+YeKjjcXOALJwF47GewgMt3Sk6OSGoiDThZ
+	PEsnGrzYYJy5aq9h9WAA+FipglzEJgGXJbNZgElYdkf9vMMTU3JkXsaq0UaY0V8u56cE1Sd/QDs
+	AE4U=
+X-Google-Smtp-Source: AGHT+IEO1w1g1QUECyrQMLxwQQdjFP6jVO0zHzv4tVTRXMkP5O6ihqRIOgGnCmbEeGUAKaUNGLgafg==
+X-Received: by 2002:a05:6102:3c86:b0:4bb:cdc0:5dd7 with SMTP id ada2fe7eead31-4dafb68b6damr1234793137.16.1746186179513;
+        Fri, 02 May 2025 04:42:59 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8780afe9cdesm255690241.5.2025.05.02.04.42.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 04:42:58 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-873a2ba6f7cso508139241.3;
+        Fri, 02 May 2025 04:42:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUVoVaDlLmzw/1JSYfjyQNoisshX3AGZuEEtLI3vs8Nj1ueqzKCL32bSqo2QH3V53qFo5i1mnufWXK9QifS@vger.kernel.org, AJvYcCW04m3c4gkD08BwItAhZhklwY7H9MWNQPnQJ1m3Vbmg0QWp4C1n52xbWrkLYojYFnaqNls87AcPBa9G8q5jtP/1B8o=@vger.kernel.org, AJvYcCXrXfc2eafx3e7PrH2UOm3dsPplk+cDkFBxQ/d9XiSqVtlb56FPnK1Gx/KJVacxmvnGDdQ5Y5V0fx0q@vger.kernel.org
+X-Received: by 2002:a05:6102:4b1b:b0:4c1:9738:820d with SMTP id
+ ada2fe7eead31-4dafb4f7276mr1451231137.6.1746186178555; Fri, 02 May 2025
+ 04:42:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428-mdb-max7360-support-v7-10-4e0608d0a7ff@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250415130854.242227-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250415130854.242227-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 2 May 2025 13:42:46 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVh+Xr2o7YMPpk3gwYDAD8z-W0OOWO=2Gq0VunyaoH-tA@mail.gmail.com>
+X-Gm-Features: ATxdqUHz4lf0vegjX0kY0z5gx-e18rdT0Qc71om7yw5cMjLBX0VHQIlaIHl9fxc
+Message-ID: <CAMuHMdVh+Xr2o7YMPpk3gwYDAD8z-W0OOWO=2Gq0VunyaoH-tA@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 28, 2025 at 01:57:28PM +0200, Mathieu Dubois-Briand wrote:
-> Add driver for Maxim Integrated MAX7360 rotary encoder controller,
-> supporting a single rotary switch.
+On Tue, 15 Apr 2025 at 15:09, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add pinctrl support for the Renesas RZ/V2N SoC by reusing the existing
+> RZ/V2H(P) pin configuration data. The PFC block is nearly identical, with
+> the only difference being the absence of `PCIE1_RSTOUTB` on RZ/V2N.
+>
+> To handle this, the rzv2h_dedicated_pins array is refactored into a common
+> and pcie1 subset. This enables reuse of the common portion across both
+> SoCs, while excluding PCIE1_RSTOUTB for RZ/V2N.
+>
+> This change allows the pinctrl-rzg2l driver to support RZ/V2N without
+> duplicating large parts of the RZ/V2H configuration.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> Hi All,
+> This patch is from series [0]. Since most of the patches have already
+> been queued, I'm sending this one separately.
+> [0] https://lore.kernel.org/all/20250407191628.323613-11-prabhakar.mahadev-lad.rj@bp.renesas.com/
+> Cheers, Prabhakar
+> v2->v3:
+> - Split up rzv2h_dedicated_pins into common and pcie1 subsets to
+>   facilitate reuse for RZ/V2N.
 
-...
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.16.
 
-> +struct max7360_rotary {
-> +	struct input_dev *input;
-> +	unsigned int debounce_ms;
-> +	struct regmap *regmap;
-> +
-> +	u32 steps;
-> +	u32 axis;
-> +	bool relative_axis;
-> +	bool rollover;
-> +
-> +	unsigned int pos;
-> +};
+Gr{oetje,eeting}s,
 
-I believe `pahole` can recommend better layout (look for the better position
-of debounce_ms).
-
-...
-
-> +static void max7360_rotaty_report_event(struct max7360_rotary *max7360_rotary, int steps)
-> +{
-> +	if (max7360_rotary->relative_axis) {
-> +		input_report_rel(max7360_rotary->input, max7360_rotary->axis, steps);
-> +	} else {
-> +		unsigned int pos = max7360_rotary->pos;
-> +
-> +		if (steps < 0) {
-> +			/* turning counter-clockwise */
-> +			if (max7360_rotary->rollover)
-> +				pos += max7360_rotary->steps + steps;
-> +			else
-
-> +				pos = max(0, (int)pos + steps);
-
-Please, no castings for min()/max()/clamp(). It diminishes the use of those
-macros.
-
-> +		} else {
-> +			/* turning clockwise */
-> +			if (max7360_rotary->rollover)
-> +				pos += steps;
-> +			else
-> +				pos = min(max7360_rotary->steps, pos + steps);
-> +		}
-> +
-> +		if (max7360_rotary->rollover)
-> +			pos %= max7360_rotary->steps;
-> +
-> +		max7360_rotary->pos = pos;
-> +		input_report_abs(max7360_rotary->input, max7360_rotary->axis, max7360_rotary->pos);
-> +	}
-> +
-> +	input_sync(max7360_rotary->input);
-> +}
-
-...
-
-> +static irqreturn_t max7360_rotary_irq(int irq, void *data)
-> +{
-> +	struct max7360_rotary *max7360_rotary = data;
-> +	struct device *dev = max7360_rotary->input->dev.parent;
-> +	unsigned int val;
-> +	int error;
-> +
-> +	error = regmap_read(max7360_rotary->regmap, MAX7360_REG_RTR_CNT, &val);
-> +	if (error < 0) {
-> +		dev_err(dev, "Failed to read rotary counter\n");
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	if (val == 0) {
-
-> +		dev_dbg(dev, "Got a spurious interrupt\n");
-
-This contradicts with the IRQF_SHARED. Drop one of them.
-
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	max7360_rotaty_report_event(max7360_rotary, sign_extend32(val, 7));
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-...
-
-> +static int max7360_rotary_hw_init(struct max7360_rotary *max7360_rotary)
-> +{
-> +	struct device *dev = max7360_rotary->input->dev.parent;
-> +	int val;
-> +	int error;
-> +
-> +	val = FIELD_PREP(MAX7360_ROT_DEBOUNCE, max7360_rotary->debounce_ms) |
-> +		FIELD_PREP(MAX7360_ROT_INTCNT, 1) | MAX7360_ROT_INTCNT_DLY;
-
-Indentation is incorrect.
-
-> +	error = regmap_write(max7360_rotary->regmap, MAX7360_REG_RTRCFG, val);
-> +	if (error)
-> +		dev_err(dev, "Failed to set max7360 rotary encoder configuration\n");
-> +
-> +	return error;
-> +}
-
-...
-
-> +static int max7360_rotary_probe(struct platform_device *pdev)
-> +{
-> +	struct max7360_rotary *max7360_rotary;
-> +	struct device *dev = &pdev->dev;
-> +	struct input_dev *input;
-> +	struct regmap *regmap;
-> +	int irq;
-> +	int error;
-> +
-> +	regmap = dev_get_regmap(dev->parent, NULL);
-> +	if (!regmap)
-> +		dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
-
-Missing return. Copy'n'paste error over all drivers?
-
-> +	irq = fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
-> +	if (irq < 0)
-> +		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
-> +
-> +	max7360_rotary = devm_kzalloc(dev, sizeof(*max7360_rotary), GFP_KERNEL);
-> +	if (!max7360_rotary)
-> +		return -ENOMEM;
-> +
-> +	max7360_rotary->regmap = regmap;
-> +
-> +	device_property_read_u32(dev->parent, "linux,axis", &max7360_rotary->axis);
-> +	max7360_rotary->rollover = device_property_read_bool(dev->parent,
-> +							     "rotary-encoder,rollover");
-> +	max7360_rotary->relative_axis =
-> +		device_property_read_bool(dev->parent, "rotary-encoder,relative-axis");
-> +
-> +	error = device_property_read_u32(dev->parent, "rotary-encoder,steps",
-> +					 &max7360_rotary->steps);
-> +	if (error)
-> +		max7360_rotary->steps = MAX7360_ROTARY_DEFAULT_STEPS;
-> +
-> +	device_property_read_u32(dev->parent, "rotary-debounce-delay-ms",
-> +				 &max7360_rotary->debounce_ms);
-> +	if (max7360_rotary->debounce_ms > MAX7360_ROT_DEBOUNCE_MAX)
-> +		return dev_err_probe(dev, -EINVAL, "Invalid debounce timing: %u\n",
-> +				     max7360_rotary->debounce_ms);
-> +
-> +	input = devm_input_allocate_device(dev);
-> +	if (!input)
-> +		return -ENOMEM;
-> +
-> +	max7360_rotary->input = input;
-> +
-> +	input->id.bustype = BUS_I2C;
-> +	input->name = pdev->name;
-> +
-> +	if (max7360_rotary->relative_axis)
-> +		input_set_capability(input, EV_REL, max7360_rotary->axis);
-> +	else
-> +		input_set_abs_params(input, max7360_rotary->axis, 0, max7360_rotary->steps, 0, 1);
-> +
-> +	error = devm_request_threaded_irq(dev, irq, NULL, max7360_rotary_irq,
-> +					  IRQF_ONESHOT | IRQF_SHARED,
-> +					  "max7360-rotary", max7360_rotary);
-> +	if (error)
-> +		return dev_err_probe(dev, error, "Failed to register interrupt\n");
-> +
-> +	error = input_register_device(input);
-> +	if (error)
-> +		return dev_err_probe(dev, error, "Could not register input device\n");
-> +
-> +	error = max7360_rotary_hw_init(max7360_rotary);
-> +	if (error)
-> +		return dev_err_probe(dev, error, "Failed to initialize max7360 rotary\n");
-> +
-> +	device_init_wakeup(dev, true);
-> +	error = dev_pm_set_wake_irq(dev, irq);
-> +	if (error)
-> +		dev_warn(dev, "Failed to set up wakeup irq: %d\n", error);
-> +
-> +	return 0;
-> +}
-> +
-> +static void max7360_rotary_remove(struct platform_device *pdev)
-> +{
-> +	dev_pm_clear_wake_irq(&pdev->dev);
-
-Shouldn't be here
-
-	device_init_wakeup(dev, false);
-
-?
-
-> +}
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
