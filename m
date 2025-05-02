@@ -1,153 +1,143 @@
-Return-Path: <linux-gpio+bounces-19541-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19542-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7A00AA6DCC
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 11:13:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D08BAA6E73
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 11:50:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B76A3A72EA
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 09:13:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97BD34A4847
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 09:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D7E722B8AB;
-	Fri,  2 May 2025 09:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JGQfuY18"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60DB22FF59;
+	Fri,  2 May 2025 09:50:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A8E1E0DDC;
-	Fri,  2 May 2025 09:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B43C919E82A;
+	Fri,  2 May 2025 09:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746177192; cv=none; b=QxwcU8TU4Tp9DDmZmx+/1LAcC1X9OvHFh0da7ELleL4E1OxRi/eASr8pcZSL+Xd9+SmRo9lnW/DV57YVjY0GpeMu7/Nnqadwa2fFMpGpf6ERfbIBGdWpybCy1eFdT9YspQX//SCtfMU3O1Y0hiWERojHkBkzzimhUsSJGyrgNcY=
+	t=1746179437; cv=none; b=IeKTZqTVcuOQR37xObNTRxDCL93WF4tyq2xrlPVAndBSQsSx9TWSYt5LcXbeSJMoLnGcMklXEGpROXqTcuTKW/Kx+4PJOKoyyZUk/ayo9vtJ2oMvZYAF7g176sKoC12f0ZpZXij+cX7W0RtCsBoTX9Jw45e+VGX3zAZbT2f54lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746177192; c=relaxed/simple;
-	bh=k4K0SLDj35wju6CxDxtCOmwkGr1oR0IoArKcJ2bBLY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QoZ0ntqgoIfSmEVCBsKX+z1pjv3Lbfl3YLuD0ZnizVFcFVYs7XxVUgEvjP5ipGJV+aHLaoP81Kxk9EtMikOWLKWG23c9LEfAyRvReaF9x5kJhLXDa9mpvaNJmJB3Fii4L+YaRvG/dUqSkaksJWawWwepW3zwAly5DFM2vuEfHWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JGQfuY18; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746177190; x=1777713190;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=k4K0SLDj35wju6CxDxtCOmwkGr1oR0IoArKcJ2bBLY8=;
-  b=JGQfuY181SRFMSwz0QgeGvq+MApjpZt/FRlkZSNa6m/4dU6oj0JQp+ny
-   8JI3Foy2hMN2ppcscIMi5p2TP9ZBTycO4uJklonXyAa1ESsr/aFDZw3kD
-   t4zrfI12WYaY0cBjlr2PhKP1TXQBDgA7KMNnYHGCnO24APd0I6UikAMex
-   r4MVc876DWWRg+dHhQG7QRUH6fQqoztTu/kx8uudu96JG8sCM8J9Z7u+y
-   czWaQ/LfAcmB+PTNretnnfn3SJAMWRv4N9mRVqz+IL5hB309mX5cZOcqY
-   RyGJdZ0q5Wj4VesSNF+6Q4ocwj+kKskRMhjmOsDbPoSBXkGDK3d+K/88s
-   A==;
-X-CSE-ConnectionGUID: on03tkPZQ3C58zDNCTV/EA==
-X-CSE-MsgGUID: nY4Z/9AhRt2pGvpA5OBkRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47868105"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="47868105"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:13:09 -0700
-X-CSE-ConnectionGUID: yNL+bGqwT66ian8WSyMpIQ==
-X-CSE-MsgGUID: axpGhANiQoW7paWcjs0CXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="134898278"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:13:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uAmS4-000000028s7-3v1u;
-	Fri, 02 May 2025 12:13:00 +0300
-Date: Fri, 2 May 2025 12:13:00 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Lee Jones <lee@kernel.org>
-Cc: mathieu.dubois-briand@bootlin.com, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 02/11] mfd: Add max7360 support
-Message-ID: <aBSMnNQiCbTTH_4a@smile.fi.intel.com>
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-2-4e0608d0a7ff@bootlin.com>
- <20250501125943.GN1567507@google.com>
+	s=arc-20240116; t=1746179437; c=relaxed/simple;
+	bh=9hLa0GeXbjLeuJi3uPOxojCfoyiJQ/EkwrIRDRKr1ZU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hiPbDuZfR68VRutoSgi/8NYRZPOTklfdqjwvH/sK5c/az/M6ZAKNfDY2CLFzKxEx81l5TT4FrDrXcbXcy1qAPaMqy4dxasRmbD+SduCJwQKqgoCC1rJ9ijUTODs4ByvzOUvsdm3tUXYpAKE/5jtDt//w8BxjOVLHVeUcyP6xs3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Zpm0p2R7Zz9sVS;
+	Fri,  2 May 2025 11:32:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id zcdAzJ89m-7Z; Fri,  2 May 2025 11:32:26 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Zpm0T386Wz9sYQ;
+	Fri,  2 May 2025 11:32:09 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 670DC8B765;
+	Fri,  2 May 2025 11:32:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id wmcughdSQ2WZ; Fri,  2 May 2025 11:32:09 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id DA1DF8B763;
+	Fri,  2 May 2025 11:32:08 +0200 (CEST)
+Message-ID: <4d6de524-82b7-41b3-af67-29dcf6f8c0cf@csgroup.eu>
+Date: Fri, 2 May 2025 11:32:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501125943.GN1567507@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] powerpc: 83xx/gpio: use new line value setter
+ callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Anatolij Gustschin <agust@denx.de>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250502-gpiochip-set-rv-powerpc-v2-0-488e43e325bf@linaro.org>
+ <20250502-gpiochip-set-rv-powerpc-v2-2-488e43e325bf@linaro.org>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250502-gpiochip-set-rv-powerpc-v2-2-488e43e325bf@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 01, 2025 at 01:59:43PM +0100, Lee Jones wrote:
-> On Mon, 28 Apr 2025, mathieu.dubois-briand@bootlin.com wrote:
-> > 
-> > Add core driver to support MAX7360 i2c chip, multi function device
-> > with keypad, GPIO, PWM, GPO and rotary encoder submodules.
 
-...
 
-> > +static int max7360_probe(struct i2c_client *client)
-> > +{
-> > +	struct device *dev = &client->dev;
-> > +	struct regmap *regmap;
-> > +	int ret;
-> > +
-> > +	regmap = devm_regmap_init_i2c(client, &max7360_regmap_config);
-> > +	if (IS_ERR(regmap))
-> > +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialise regmap\n");
+Le 02/05/2025 à 10:59, Bartosz Golaszewski a écrit :
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> dev_err_ptr_probe()
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Hmm... This one to return an error pointer casted to the needed type. I think
-the given code is correct as is.
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-> > +	ret = max7360_reset(regmap);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "Failed to reset device\n");
-> > +
-> > +	/* Get the device out of shutdown mode. */
-> > +	ret = regmap_write_bits(regmap, MAX7360_REG_GPIOCFG,
-> > +				MAX7360_GPIO_CFG_GPIO_EN,
-> > +				MAX7360_GPIO_CFG_GPIO_EN);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "Failed to enable GPIO and PWM module\n");
-> > +
-> > +	ret = max7360_mask_irqs(regmap);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "Could not mask interrupts\n");
-> > +
-> > +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-> > +				   max7360_cells, ARRAY_SIZE(max7360_cells),
-> > +				   NULL, 0, NULL);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "Failed to register child devices\n");
-> > +
-> > +	return 0;
-> > +}
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> ---
+>   arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 13 ++++++++-----
+>   1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+> index 4d8fa9ed1a678..6e37dfc6c5c9e 100644
+> --- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+> +++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+> @@ -92,10 +92,11 @@ static void mcu_power_off(void)
+>   	mutex_unlock(&mcu->lock);
+>   }
+>   
+> -static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+> +static int mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>   {
+>   	struct mcu *mcu = gpiochip_get_data(gc);
+>   	u8 bit = 1 << (4 + gpio);
+> +	int ret;
+>   
+>   	mutex_lock(&mcu->lock);
+>   	if (val)
+> @@ -103,14 +104,16 @@ static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>   	else
+>   		mcu->reg_ctrl |= bit;
+>   
+> -	i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL, mcu->reg_ctrl);
+> +	ret = i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL,
+> +					mcu->reg_ctrl);
+>   	mutex_unlock(&mcu->lock);
+> +
+> +	return ret;
+>   }
+>   
+>   static int mcu_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
+>   {
+> -	mcu_gpio_set(gc, gpio, val);
+> -	return 0;
+> +	return mcu_gpio_set(gc, gpio, val);
+>   }
+>   
+>   static int mcu_gpiochip_add(struct mcu *mcu)
+> @@ -123,7 +126,7 @@ static int mcu_gpiochip_add(struct mcu *mcu)
+>   	gc->can_sleep = 1;
+>   	gc->ngpio = MCU_NUM_GPIO;
+>   	gc->base = -1;
+> -	gc->set = mcu_gpio_set;
+> +	gc->set_rv = mcu_gpio_set;
+>   	gc->direction_output = mcu_gpio_dir_out;
+>   	gc->parent = dev;
+>   
+> 
 
 
