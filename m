@@ -1,153 +1,152 @@
-Return-Path: <linux-gpio+bounces-19533-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19534-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9B42AA6C8B
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 10:31:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C789AA6D6A
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 11:02:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31930467026
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 08:31:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 771B33BFD0D
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 09:02:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07E0422A7E5;
-	Fri,  2 May 2025 08:31:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE0B5244687;
+	Fri,  2 May 2025 08:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fu9i7b//"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FSFQali2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE77A1FDA6D;
-	Fri,  2 May 2025 08:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDD2243964
+	for <linux-gpio@vger.kernel.org>; Fri,  2 May 2025 08:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746174661; cv=none; b=ng47eWSAuRL5aFySWDtUDFhENnzcy/csa4MXDxXLK2+KRBvoWFl0Qm7CMTWDYaiPpX1lD6vl9fkSVb51TwDOxO81hqzTkSKBCKWDFiBZOZxpbRwAfuwZK65S2kq79cR/V7PBLikkmmM67uN+5HE6zy2XZ5q+fVv0PViP9Vc0x10=
+	t=1746176395; cv=none; b=uGwVAJSTKyDFQ9Ndj8gF/8x8XgulbEASIn0UzD3v+crLled06Bvjo80OHYV7zMIrXTOL8+KCS5yGsi8gm7aCX6lJklEFRwA36/P0a/S/iW7XxF2esmbT0TNsdhzmAhL4pR2wNjtgSHUnv15oPgFHh7J4+60u1cx/dMM58eBo2WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746174661; c=relaxed/simple;
-	bh=y99cWh1qDmMqrQMp2BU2xOYKTolCUcplKtnNhwXq0+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcvQWCwNPlYfIu1PdvZLzrMqUxD9VsfG5QkwJi6C3ykLRB2PRkcy0zTddR++6iroieP/p+wCaZRY6U19IvRM36rBNT5tuqHrNxyiz03/S3xVbhVGfR9nhqsw3wkfqtAjg07ra/MfIi4jlAis1DnDrIf8VGaY0A5khVjDIQGSyro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fu9i7b//; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB5CC4CEE4;
-	Fri,  2 May 2025 08:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746174661;
-	bh=y99cWh1qDmMqrQMp2BU2xOYKTolCUcplKtnNhwXq0+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fu9i7b//WchSHCjmeccyZz64THiNUNRQLSuP+sbxeoXXEd6a779TqU5lFvJtPsU7o
-	 Hf0uJ9VCGELJ0kkKF2VPP/+9wW9SXc2eC06oWnbZEWNG1twLeVC6f0NZdnfn8sVIB/
-	 EWfqHSJ2YGbGMnuIvw/0WEeJdznOc8QpLh4SgqrjYMepRMR/3vAfAyZdegtDAsP+J3
-	 1cvd6UsO7On+EgFoUGw8M5i8iG5DQdTbnCn8oCYOUdB1ATeXBgaHBixnEktMy85Apc
-	 uiS6/XqXSVrY6d+ipX3wRuXydD2pBJdX2cjOo8YchuK77/9luHWiZRjmmSNhV0iJbt
-	 k1A8EeHJTJsKw==
-Date: Fri, 2 May 2025 09:30:55 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 00/17] mfd: adp5585: support keymap events and drop
- legacy Input driver
-Message-ID: <20250502083055.GG3865826@google.com>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
- <174610080338.3792828.16902042195346769114.b4-ty@kernel.org>
- <20250501140958.GB6838@pendragon.ideasonboard.com>
- <20250502071336.GA3865826@google.com>
- <d78a923a7da54292f98746c71ff84160a5c42963.camel@gmail.com>
+	s=arc-20240116; t=1746176395; c=relaxed/simple;
+	bh=5mkPquEYhHhuaHDlP2FWJwcbCha2j8346u44CjTk/b8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CfkLGQudtAWr7c2CSSAhHoimg9AE+CaC6F2PSRhdWCBOX5BPs1Nl4AHpI7l4yrLM/+4xe/IW32NJqEzl0c6TjTf3JgFZRzJMeLh7441eakV2VAoJ7mJ9fw7qbjt9rnKhDacqMAKbb60HboYcr9keQjJRsdhDj3vyyhCV28LjivA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FSFQali2; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1efc457bso1236425f8f.2
+        for <linux-gpio@vger.kernel.org>; Fri, 02 May 2025 01:59:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746176391; x=1746781191; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1rOqsO31HLSQBn8sCWbcbFta882rLl4DDI6mWD+gWFc=;
+        b=FSFQali2X9HuW2FDwiWRnoBRNGLYWf7QhdA5eBmedJJGniwpOYrpSMwuHuNJ8Mi+W/
+         hMKb314gC8NDzwp1Pql2yfxMnT/EZXGkJbqmamsAV09hJNQe3cp/z1mrBxlz7kptO8Uu
+         +7lvYb1n7Yu27XRV6I6KavAHQltgAnNF3jj9TH9MrHtLcu0gReLtjWzqZPPOJuNYRPt1
+         j5Ind3h8XKMDChEh0OTWfceu9DNDnVqKdukbr7xrEKC4DoyuBzAgLBcqhvwb+LhIRDdZ
+         EDgPmx1EYQ2K9czk+rwS2YZbQkZjghwAcFqDJR2mglyOeB4OphZ+rGgM+WANmIOu78uK
+         XdhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746176391; x=1746781191;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1rOqsO31HLSQBn8sCWbcbFta882rLl4DDI6mWD+gWFc=;
+        b=Vtwl/9v+IKRvgkMwv1H3osFAGW65u/DAdxETwv884UaUDfjmCeEalyUNesZVQfqPsG
+         vK2lhdcaQG63T4Igys4SxNRHV5dGMHw05ETHov4Cc+iyjXZszjIufIz0koafvw39kFpU
+         NEBLOaD8zZeCPKhwJzB5pe18ICI/Q6zeFM6Owpc0L/JzWmliOdftBKh1H0PZgWmGR0kO
+         pv4K201izvIoSrSncO11bRBXjiCCdKIgk6kKGlo1UcG1LygAjPCjnK36n5L5WS4u1px2
+         U8q9hu/uzv0enbUbg9/4tXza5a3W9WA16DereTjBhhcVPw1iYw/WVGVksifEOhYSkT86
+         /lHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuuens2IM/g2LnxcgIL6/KUrvi8ec3YpZJ6Qhz3mFQ+HXST9SCFh5IJ7YQaSF42rQ4v5rkcKG9at9A@vger.kernel.org
+X-Gm-Message-State: AOJu0YzASEfSenRlsCgsM7vUX9LOyAGvf6fQBg1t1PZ5iny9UrJoZcln
+	Kr2bvjYqd8TGZq2tU82Szt94G5KfbTCc2IwgyQiWeGWgRPpn2zn2SwLIMfVVLmZWz48SZas9+Th
+	24mc=
+X-Gm-Gg: ASbGncsQ4nkaPXj2igaE2r8AASYMKZnX1+HliOl6M4IYMRkWCqYAms+ouufnGwWktTz
+	83IaVBLFimHKGvtTt/l0Z0yqy4ltnk85zy2j4TuuRZTfcAKdmhVQksg/bGjdxKMQ1mQbB3nSDsG
+	XRuXOUzAALbBLuKtJoZ7FUMagM3rB6II7XkyA1QcLbqYI1ZYQRH9eDtEu7SKlxvj+tnw66chhYu
+	K+XQj7+MPzNTcx5osacZMJz3WU3BtQL+Ew1i/ecF0Kz7JtG0RvQKimPRUjnQR3TuITJ7D+M/H2N
+	kz9qrmoeOHV28v+W5zymR+1i3eqpTwvQzUo=
+X-Google-Smtp-Source: AGHT+IGkAmj0QTn7U0/RzbLyZFE3GXCS35eKh83HE+zzPG33Ol9TAe6eJSEee/o7TqoMVcjZZmYXFw==
+X-Received: by 2002:a05:6000:2501:b0:391:3b11:d604 with SMTP id ffacd0b85a97d-3a099af0f94mr1403321f8f.54.1746176390895;
+        Fri, 02 May 2025 01:59:50 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:f280:a08c:3f15:ae3e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b17017sm1552055f8f.92.2025.05.02.01.59.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 01:59:50 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 0/5] powerpc: convert board-file GPIO chips to using new
+ value setters
+Date: Fri, 02 May 2025 10:59:46 +0200
+Message-Id: <20250502-gpiochip-set-rv-powerpc-v2-0-488e43e325bf@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d78a923a7da54292f98746c71ff84160a5c42963.camel@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIKJFGgC/3WNQQ6CMBBFr0K6dkw7KKIr72FY1DLAJIY2U1I1p
+ He34trle8l/f1WRhCmqS7UqocSR/VwAd5Vyk51HAu4LK9R41DU2MAb2buIAkRaQBME/SYIDQ+e
+ 2xxYRrVVlHYQGfm3lW1d44rh4eW9HyXztr3nQ7d9mMqDhVPfO0N01NJjrg2crfu9lVF3O+QNbQ
+ tBBvwAAAA==
+To: Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Anatolij Gustschin <agust@denx.de>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1469;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=5mkPquEYhHhuaHDlP2FWJwcbCha2j8346u44CjTk/b8=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoFImEk8IL2kl18zA8xLaZV5UpuGvSQ0944hzDl
+ +MCaHC/g5qJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaBSJhAAKCRARpy6gFHHX
+ ctyvD/0QuzQl8wwUQP5TkXhU0j7o76hnUPg9igcQd/mlb+GN+T5YJ7enSR4IgmeJkZVbUmRH+BV
+ Hve2ufGgwDdIv07zwz2sc4sI2TWM3P3McMJIqlcBt2hfBtRvoJkic85ly65NV0rqScnJkrTQCOa
+ Kt9pci1vAm3TX2K9j6b9Y6YUsMXkPpnBxJ7Bgfub+lBlDr128sdvgGUhkdFsd4+AP0EshgJ/R/J
+ k/8Ga/IVA6Ze2en6raVViv1FiW+hN/4Ddg5hGdq4yzD3rqBJ93+1Wtg0VKthkwew43D1ucROH6a
+ 7wKorwf4SPc7ByLaJ3lrYuH1036ZpeJqPm97EEMD0DRHYa6sJxey4YyVx6o5rrgoTtGO8dn/nU8
+ VE8hCMvzhdVGXaOpoFQ1312JoE+Z/Cn8/xxa9Vd0bSLIPDh/rlzmRO7PBKAKvoGH2rnC6eJl8rT
+ 653e8AqEn3aqaDBJJWhR+GHXSw942if2lOPnPyBzfU8MbB3VxBWlrmuzZAvsdtqQ6sKk4I82LS2
+ WzBX3jKtN0qxJmwErJz/ZRA692Sf5gSIJh7sqCt0+A0m0XyuwpTEeDRhThbk6462Ct7+ht4syCU
+ JN1r4TU0Yqi/FyFaI5d/eg01SodTxDrEsSOZVWKdEIOWomBY5DSmt5wqXgGIki8mmiyRnbGahnt
+ Lyx4jfzgnRhTnIg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Fri, 02 May 2025, Nuno Sá wrote:
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. We're in the process of 
+converting all GPIO drivers to using the new API. This series converts 
+all powerpc board-file level controllers.
 
-> On Fri, 2025-05-02 at 08:13 +0100, Lee Jones wrote:
-> > On Thu, 01 May 2025, Laurent Pinchart wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > On Thu, May 01, 2025 at 01:00:03PM +0100, Lee Jones wrote:
-> > > > On Tue, 15 Apr 2025 15:49:16 +0100, Nuno Sá wrote:
-> > > > > The adp5585 MFD driver was introduced in 6.11 adding support for gpio
-> > > > > and PWM. However, the gpio part of it was already supported as part of
-> > > > > the keyboard driver:
-> > > > > 
-> > > > > https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/input/keyboard/adp5589-keys.c#L532
-> > > > > 
-> > > > > On top of that it also overlapped with my refactoring of the above
-> > > > > driver [1]
-> > > > > to drop usage of platform data and use FW properties instead.
-> > > > > 
-> > > > > [...]
-> > > > 
-> > > > Applied, thanks!
-> > > > 
-> > > > [01/17] dt-bindings: mfd: adp5585: ease on the required properties
-> > > >         commit: 3a2ea3e9f369bdae939bcccff67a77a6281dca74
-> > > > [02/17] mfd: adp5585: enable oscilator during probe
-> > > >         commit: 7353f196fd73b79e30ff750d93caf096ed660e1b
-> > > > [03/17] pwm: adp5585: don't control OSC_EN in the pwm driver
-> > > >         commit: 7c7e9f08a1a9bf16b6c1942c2e0cb919da855970
-> > > > [04/17] mfd: adp5585: make use of MFD_CELL_NAME()
-> > > >         commit: e72e9148d017535b39500d0aad624d0a0fcd2ce7
-> > > > [05/17] dt-bindings: mfd: adp5585: document adp5589 I/O expander
-> > > >         commit: 6da01b9d833c5efbce7c2e30dde276e0d29105f8
-> > > > [06/17] mfd: adp5585: add support for adp5589
-> > > >         commit: 382dc0327b8a9ee03c901df9b85134c68917becc
-> > > > [07/17] gpio: adp5585: add support for the ad5589 expander
-> > > >         commit: cff3cef09595001140bd29aedf33fc84998bf77c
-> > > > [08/17] pwm: adp5585: add support for adp5589
-> > > >         commit: 333b66fd3edfe18db4dc16041328a89144b73067
-> > > > [09/17] dt-bindings: mfd: adp5585: add properties for input events
-> > > >         commit: 7bdb41d7a85e1c6244da57d4dcc491df962ff3fb
-> > > > [10/17] mfd: adp5585: add support for key events
-> > > >         commit: 8814ac45c75fcce55896bc376a97b56f392925c3
-> > > > [11/17] gpio: adp5585: support gpi events
-> > > >         commit: 8f3d9b44c5c5ada312d0ef71ec0181011854a95b
-> > > > [12/17] Input: adp5585: Add Analog Devices ADP5585/89 support
-> > > >         commit: a53fc67a1e21a8507821263946b1d65687b0284f
-> > > > [13/17] Input: adp5589: remove the driver
-> > > >         commit: 216c99cf1002a42f896b54fab09823e8ba46b218
-> > > > [14/17] mfd: adp5585: support getting vdd regulator
-> > > >         commit: 63a8717f744d51ea0c8228e09db4233d48f2f9ba
-> > > > [15/17] dt-bindings: mfd: adp5585: document reset gpio
-> > > >         commit: 49c887f0547bc14eb50ba20e1c8acb7255af3b86
-> > > > [16/17] mfd: adp5585: add support for a reset pin
-> > > >         commit: 01c328823459456fb99469cc37f270f70d41fd2a
-> > > > [17/17] pwm: adp5585: make sure to include mod_devicetable.h
-> > > >         (no commit info)
-> > > 
-> > > I'm a bit surprised, didn't you ask for changes, calling for a v3 ?
-> > 
-> > Yes, sorry.  My fault.  Tooling error.  Please disregard.
-> 
-> I was wondering the same...
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v2:
+- propagate the return value of i2c_smbus_write_byte_data() in
+  mcu_gpio_set() (Christophe Leroy)
+- Link to v1: https://lore.kernel.org/r/20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org
 
-Found out what happened.
+---
+Bartosz Golaszewski (5):
+      powerpc: sysdev/gpio: use new line value setter callbacks
+      powerpc: 83xx/gpio: use new line value setter callbacks
+      powerpc: 44x/gpio: use new line value setter callbacks
+      powerpc: 52xx/gpio: use new line value setter callbacks
+      powerpc: 8xx/gpio: use new line value setter callbacks
 
-I applied them all to grep for the spelling issue reported by Colin.
-However, I hit return (sending the thank-yous) instead of Ctrl+c (to
-cancel them).
+ arch/powerpc/platforms/44x/gpio.c              |  7 ++++---
+ arch/powerpc/platforms/52xx/mpc52xx_gpt.c      |  6 ++++--
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 13 ++++++++-----
+ arch/powerpc/platforms/8xx/cpm1.c              | 12 ++++++++----
+ arch/powerpc/sysdev/cpm_common.c               |  6 ++++--
+ 5 files changed, 28 insertions(+), 16 deletions(-)
+---
+base-commit: 8a2d53ce3c5f82683ad3df9a9a55822816fe64e7
+change-id: 20250326-gpiochip-set-rv-powerpc-1e98d28222aa
 
-Apologies for the confusion.
-
+Best regards,
 -- 
-Lee Jones [李琼斯]
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
 
