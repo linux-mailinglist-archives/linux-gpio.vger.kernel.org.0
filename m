@@ -1,162 +1,153 @@
-Return-Path: <linux-gpio+bounces-19540-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19541-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CC13AA6DA9
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 11:08:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7A00AA6DCC
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 11:13:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56A584A17B0
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 09:08:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B76A3A72EA
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 May 2025 09:13:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D1B26A08F;
-	Fri,  2 May 2025 09:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D7E722B8AB;
+	Fri,  2 May 2025 09:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHP2L7o9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JGQfuY18"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75927267B77;
-	Fri,  2 May 2025 09:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A8E1E0DDC;
+	Fri,  2 May 2025 09:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176674; cv=none; b=Ddc/Mcm/Lfh1Q+MlpODEFDtiTUDgv6W5oRWrPn5VCpazY8yUqdQPg6OFJbVbjQCkDzrBy9VBNpybglMJwnvbYjwNt+7E6wKlcg05dC5Jt5oSoPxKn6lS/Ji/Ybh0m/pxytHEQKFSBIEnSG5kEnsOVuP7a+aan5vcNHteALuaWk4=
+	t=1746177192; cv=none; b=QxwcU8TU4Tp9DDmZmx+/1LAcC1X9OvHFh0da7ELleL4E1OxRi/eASr8pcZSL+Xd9+SmRo9lnW/DV57YVjY0GpeMu7/Nnqadwa2fFMpGpf6ERfbIBGdWpybCy1eFdT9YspQX//SCtfMU3O1Y0hiWERojHkBkzzimhUsSJGyrgNcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176674; c=relaxed/simple;
-	bh=I7kWDbCb9YT/O0Cj2R2bStAeSRvHrutnIYH0yo5EYFA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t76UFxCbQCkp90228Q+7CN0MXWONgRek/Ozbh/GiS3ODFNXN0CRDzJukUpPWUkDcDhJNmWFIxNseXL/Nb8HkpBaqo80pCPs5fGzGdQ3AvJIP3XvOx/N0fE7E6exkQPFrgcYauz3/LfHKEiCd/lgDa4ohyF1tpHsgaKMY0Tye5M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHP2L7o9; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6fead317874so15771147b3.0;
-        Fri, 02 May 2025 02:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746176671; x=1746781471; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ax6rAQxnmMYtNEHshOX9p41p7YxJfMs7tSxdQeWwIh8=;
-        b=EHP2L7o9uzzb5K7rVvAG0U3ueCu+nA8hXzCKmoFEP8bUPmOrIiKhzoLQpcToBjeccW
-         /WdJhbC/iX3kT/Oj8s+P0KXkJNZHc3A9e4x4SdaTi65sK+M3nU5qrL/RctvnN9bFbrqB
-         JqTIdBdsNUGVsjfVRMlImVFWTexnyaofAjPoYVXzi6386tRevDilERE09LNYbOhtRV/7
-         J/7wBR8IDOJjyP09ERpq4IF2hVFK+faLABwK4tTiiwTCUyXAGq3pysvAg/5PGbHtcYh3
-         ccTqkmSkso923v5xrBjF3z53bLrLJrU+S5RymYyz4VZh/HVvU85fr1uFlkPF1yh8m8q7
-         Dfkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746176671; x=1746781471;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ax6rAQxnmMYtNEHshOX9p41p7YxJfMs7tSxdQeWwIh8=;
-        b=rcgd2HdToi3VGbJ72uzz4XjBtK2rpUItG9aPt6jmxyclGriSuaGlSRJbzv96UJA3V2
-         FrzhDiipfiShb+T/BfkV+mcmgu/pIJ1O3DwYWgA/br0hdpfhw96MmbHDqP++mrvIU4Pe
-         jEA6oaalPxg6ztE6Own1IbjUeZtkNo1ROqjwIMmtUhQBIx1+lqZmTCVBGo0o1OcCYB10
-         MOa+vM0VWaCdI9hcNO09flDOCugmi1lnRoe/v2RokBt5QnVvWttxjSmFIDqz0yGq9bpc
-         iSSbtP9sKUtSV6/n7bfac43UYAIBmXFeZGkCDLKRUdvgtOzoN4BYghB58YeVEIq6P8np
-         FFAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcT8i1YTvWGEfiRdrcmGKs92qHcl5uPwlXtCDgqJBFYXeuuusXF13pk8F9N4oqpkopiyjpeno6yfzh5IX2ir4=@vger.kernel.org, AJvYcCUuhidYu0piXblS3dtZpppuxfC90DKv4GpVpa8ZytfC+44qmzg0dZ7Y5c/wFCWV4BxCurwZ010q1PxJjg==@vger.kernel.org, AJvYcCV5VjhM2yySPliwv4JiWLBrfChCl4Vfn5mxGpZifDC3teyjlevx+vM9fla/lY0akzYiO9JfnRCaaoGA@vger.kernel.org, AJvYcCVSrI377ArsAHzNhz03ZUkP2PSdH3Bw+2oDU8LkvdHXF0xPbS443OaMG7ZqiGdRRKjcNTRLEweXCaz3@vger.kernel.org, AJvYcCWAtmF56APy6D45Le4Cusho02EcH/3p78tGY0qQQLBcHyRQW1lQCpmXCSbU1TmEnYjNRFnyK5XvalMnmepO@vger.kernel.org, AJvYcCWabstch6zBM8uGmmGHd6qp6dR66IUr0A4SqEz7CeYkw410wB9LQFkxPGFrvrlbrDaGcYWUqSWa6WbT@vger.kernel.org, AJvYcCWsp0xdoL1q4Z/ywX6zqKVLJRtI/ziyetGe9sR9ppIapMBov+C3ln5nmfe+gm3MBJ5PtGvOwowMKhJCwHk=@vger.kernel.org, AJvYcCXBxT4p3DYAz3uASiHh7mPhOG7WDtccg5E1bKMuD20973jlQr8ip4QgNrWboEvJncqtyjuaeSUioN4=@vger.kernel.org, AJvYcCXv0N2Eb4L6F/H7zFaA3Srkk8CX0rTzVrxYK+yU9LJz7AcYD3+9QsvNRIBPBR9QPRCu4uoc6RKM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWPElaiTtdND9WHemUoS/sPU6GlZ3c+YzwOfrvNj8g6bJKi/Vt
-	7xX1+08jg6oTeYZL9JbUJG9WjLUV57fpfKr4RRnaCPuBtAmHHoaIRcu6XA2/9e+Jch3wV5QjqJf
-	vqRLhIDDXqpZ3t98+zOyjahEC60Y=
-X-Gm-Gg: ASbGncuqgu2NCJdWa2ZzKmyI3FtN1MDFFhUr4HMlrldJJaBbQSKapl+ZN6ik+S4iBh4
-	9KdLhNulu42Gnygr9F7EaV9z/MMfxZq7PH4KKo8aDlvuFwckPTh0pGEC82588DIUG4AduaYYkWL
-	WaO0HfFQgZmq8JAUEXy9j9mDWxJK6zqFoX6aYGsIG5quYVsPgapnXdYQ==
-X-Google-Smtp-Source: AGHT+IFeIif58xXASLlUQ5gUuhwQWQfmgZ6uEgeqnbXUDfU31RgSE83NowbSJaAJgLlbclQ9hMc30P2+IT7ECEc6eyc=
-X-Received: by 2002:a05:690c:7307:b0:703:ac44:d367 with SMTP id
- 00721157ae682-708ced214admr35881097b3.6.1746176671162; Fri, 02 May 2025
- 02:04:31 -0700 (PDT)
+	s=arc-20240116; t=1746177192; c=relaxed/simple;
+	bh=k4K0SLDj35wju6CxDxtCOmwkGr1oR0IoArKcJ2bBLY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QoZ0ntqgoIfSmEVCBsKX+z1pjv3Lbfl3YLuD0ZnizVFcFVYs7XxVUgEvjP5ipGJV+aHLaoP81Kxk9EtMikOWLKWG23c9LEfAyRvReaF9x5kJhLXDa9mpvaNJmJB3Fii4L+YaRvG/dUqSkaksJWawWwepW3zwAly5DFM2vuEfHWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JGQfuY18; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746177190; x=1777713190;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=k4K0SLDj35wju6CxDxtCOmwkGr1oR0IoArKcJ2bBLY8=;
+  b=JGQfuY181SRFMSwz0QgeGvq+MApjpZt/FRlkZSNa6m/4dU6oj0JQp+ny
+   8JI3Foy2hMN2ppcscIMi5p2TP9ZBTycO4uJklonXyAa1ESsr/aFDZw3kD
+   t4zrfI12WYaY0cBjlr2PhKP1TXQBDgA7KMNnYHGCnO24APd0I6UikAMex
+   r4MVc876DWWRg+dHhQG7QRUH6fQqoztTu/kx8uudu96JG8sCM8J9Z7u+y
+   czWaQ/LfAcmB+PTNretnnfn3SJAMWRv4N9mRVqz+IL5hB309mX5cZOcqY
+   RyGJdZ0q5Wj4VesSNF+6Q4ocwj+kKskRMhjmOsDbPoSBXkGDK3d+K/88s
+   A==;
+X-CSE-ConnectionGUID: on03tkPZQ3C58zDNCTV/EA==
+X-CSE-MsgGUID: nY4Z/9AhRt2pGvpA5OBkRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47868105"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="47868105"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:13:09 -0700
+X-CSE-ConnectionGUID: yNL+bGqwT66ian8WSyMpIQ==
+X-CSE-MsgGUID: axpGhANiQoW7paWcjs0CXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134898278"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:13:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uAmS4-000000028s7-3v1u;
+	Fri, 02 May 2025 12:13:00 +0300
+Date: Fri, 2 May 2025 12:13:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lee Jones <lee@kernel.org>
+Cc: mathieu.dubois-briand@bootlin.com, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 02/11] mfd: Add max7360 support
+Message-ID: <aBSMnNQiCbTTH_4a@smile.fi.intel.com>
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-2-4e0608d0a7ff@bootlin.com>
+ <20250501125943.GN1567507@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423094058.1656204-1-tmyu0@nuvoton.com> <20250423094058.1656204-2-tmyu0@nuvoton.com>
- <20250501122214.GK1567507@google.com> <CAOoeyxVL2MV83CJaYCXMiw0b5YUzk728H4B9GY1q9h_P8D43fg@mail.gmail.com>
- <20250502080754.GD3865826@google.com>
-In-Reply-To: <20250502080754.GD3865826@google.com>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Fri, 2 May 2025 17:04:19 +0800
-X-Gm-Features: ATxdqUELjUMd__-XSmruQ7aiBehkcn0fiRFxm_J9Q8eFjgTFGBlNo-dtZFMfegY
-Message-ID: <CAOoeyxWpYmcg1_FBXYqDfMi28R5ZXp2Sk2PhUo=cL10Nn3iVEw@mail.gmail.com>
-Subject: Re: [PATCH v10 1/7] mfd: Add core driver for Nuvoton NCT6694
-To: Lee Jones <lee@kernel.org>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Ming Yu <tmyu0@nuvoton.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501125943.GN1567507@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B45=E6=9C=882=E6=97=A5 =E9=
-=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=9A
->
+On Thu, May 01, 2025 at 01:59:43PM +0100, Lee Jones wrote:
+> On Mon, 28 Apr 2025, mathieu.dubois-briand@bootlin.com wrote:
+> > 
+> > Add core driver to support MAX7360 i2c chip, multi function device
+> > with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+
 ...
-> > > > +static const struct mfd_cell nct6694_devs[] =3D {
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
-> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
-> > >
-> > > These are all identical.
-> > >
-> > > I thought you were going to use PLATFORM_DEVID_AUTO?  In fact, you ar=
-e
-> > > already using PLATFORM_DEVID_AUTO since you are calling
-> > > mfd_add_hotplug_devices().  So you don't need this IDs.
-> > >
-> > > MFD_CELL_NAME() should do.
-> > >
-> >
-> > Yes, it uses PLATFORM_DEVID_AUTO, but in my implementation, the
-> > sub-devices use cell->id instead of platform_device->id, so it doesn't
-> > affect the current behavior.
-> > However, if you think there's a better approach or that this should be
-> > changed for consistency or correctness, I'm happy to update it, please
-> > let me know your recommendation.
-> >
-> > When using MFD_CELL_NAME(), the platform_device->id for the GPIO
-> > devices is assigned values from 1 to 16, and for the I2C devices from
-> > 1 to 6, but I need the ID offset to start from 0 instead.
->
-> Oh no, don't do that.  mfd_cell isn't supposed to be used outside of MFD.
->
-> Just use the platform_device id-- if you really need to start from 0.
->
-> As an aside, I'm surprised numbering starts from 1.
->
 
-OK, I will use platform_device->id instead. However, I'm still unsure
-why the ID starts from1.
+> > +static int max7360_probe(struct i2c_client *client)
+> > +{
+> > +	struct device *dev = &client->dev;
+> > +	struct regmap *regmap;
+> > +	int ret;
+> > +
+> > +	regmap = devm_regmap_init_i2c(client, &max7360_regmap_config);
+> > +	if (IS_ERR(regmap))
+> > +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialise regmap\n");
+> 
+> dev_err_ptr_probe()
 
-Additionally, I noticed that when calling mfd_add_devices()
-separately, the IDs are also assigned consecutively (e.g., GPIO: 1~16,
-I2C: 17~22, ...).
+Hmm... This one to return an error pointer casted to the needed type. I think
+the given code is correct as is.
 
-Do you have any recommendations on how I should implement this?
+> > +	ret = max7360_reset(regmap);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Failed to reset device\n");
+> > +
+> > +	/* Get the device out of shutdown mode. */
+> > +	ret = regmap_write_bits(regmap, MAX7360_REG_GPIOCFG,
+> > +				MAX7360_GPIO_CFG_GPIO_EN,
+> > +				MAX7360_GPIO_CFG_GPIO_EN);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Failed to enable GPIO and PWM module\n");
+> > +
+> > +	ret = max7360_mask_irqs(regmap);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Could not mask interrupts\n");
+> > +
+> > +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
+> > +				   max7360_cells, ARRAY_SIZE(max7360_cells),
+> > +				   NULL, 0, NULL);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Failed to register child devices\n");
+> > +
+> > +	return 0;
+> > +}
 
 
-Thanks,
-Ming
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
