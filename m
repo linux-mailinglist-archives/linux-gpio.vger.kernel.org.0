@@ -1,245 +1,184 @@
-Return-Path: <linux-gpio+bounces-19573-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19578-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D70CAA7FD0
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 May 2025 11:55:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53B0FAA7FE5
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 May 2025 12:07:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E3C33AF01D
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 May 2025 09:55:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CEE227B0FDB
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 May 2025 10:06:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB2121DB346;
-	Sat,  3 May 2025 09:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC9B1E5219;
+	Sat,  3 May 2025 10:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhloYE4A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3M6XbVd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52D54315F;
-	Sat,  3 May 2025 09:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469201CEAC2;
+	Sat,  3 May 2025 10:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746266142; cv=none; b=OOCpc1vDvhzFDq1oMnKKrnj31jr0iea7NPThDGyiMXccbkXUkRqvRLMoBQJDbpv+SFCjEKLeI+/0Bt1y/UD8K00okpFz4eBcCRhGIhUyFMCTJZqzo2KAc8iPGtMyYESTn2HpgtbQSR/H6DLxRLr0Ryqnn98wdkQSYSX8aJ5VkAI=
+	t=1746266836; cv=none; b=qYpfhZVOZIZrU5Q2oz8SNubTikielyy1CdllXZcMGED5h7qKk+k/HhbdVIDCKRkdBZJAwZEXtNLFvKAyr/hwM7HuE9MLPIgZo2kd3h7RrWqiTKgegRg60qhJhS+tj6yjZNKm7/gmb5U34ruwkS07txDBDCelBLbOYp1oiB8oVvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746266142; c=relaxed/simple;
-	bh=QsjQOqs9rNCb6wlXwkkUKTzyWATUgzGPtz62hjqj04U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GqQyPg0MtJXRDu9DD+xW/Czcwt0YcNm4Bi8JN07abGki1ASgDHxygcawSuOpzve0JPkha9hMf1BJx2s8n5ggXDxfxJkugl+LLc5OZoYSGc7mN7+AVObYIoQbDkMZ2DPWgtpqr3JdZ2UNtK2iXAG/BT14fTBzUvRcpxy5g5I3IUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VhloYE4A; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223fb0f619dso35483265ad.1;
-        Sat, 03 May 2025 02:55:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746266140; x=1746870940; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r2FFqPQS0cGePNUSaEag1bMy/aHVdoE23x6HNRbtcvE=;
-        b=VhloYE4AigwI2KLyD9tQKWesvuj6kG+sZJUrABWgVFBfBt7mZOW1yfyIM/9IxrgEjS
-         Q9bo1Ji+tqjGo0q46MvBX/bOpo+xyURWjwdj/dw+tAKZV2V+Qz58nRDM7TEn0RcKAOmL
-         olotzhQeNRdC3NWRDlmQGYgQWsLYJpqnnLZ11t5kd1DMkOjmpmfhPTLSiy0MlKsgrZN9
-         PhNm/ckG13aX4IW+LxUUPFwvXKHFOhFRpHn7Pyf5iZ2H7WwlQLMGvIDDShYCBF993ic0
-         GTG7RxLN3078F+JYAQKMaIzCqzkdHoYTjPtFzAJWVLrCQ6Yh0V8FrCgGQtaTSiHSo8HL
-         3Atg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746266140; x=1746870940;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r2FFqPQS0cGePNUSaEag1bMy/aHVdoE23x6HNRbtcvE=;
-        b=KgUa1o5DCX4xvJaXuyQ5v9TcEvwFB8D+HFWaS58m/VJZOly3PUDuFwQQdLIERjJsdQ
-         1mxsAToTKUWfpPUZJrpE+IVI5G4U04tl8mv+vP/Eh3GtNTLjGqaoUS3lwPC+wJ8DRZOK
-         BvR3my7TeNn+Ww12AGldsTak8bNXDEM0Q/NLQJlE8WOPyO8ILrl3NyuIIiTVi9LWiY/z
-         cCt00BdLKxZF5Xe1hcjbWkoAGWzkVjLG7rqwTjzc27g8kKeqB8Jm4prcPOkNAm9/UHT8
-         KgMIik/X2wlvWtWU0IXGXaGxR0MOmADwwiUSkhq5eFAIoKHMRwpEra0Rubx/B0cVZTTf
-         FB1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUP5W5JnEkgF2TUltocG8e5dTb3LqvSitrKsKbanvABsqghQ4Ys5UdGUSnE9S4O5DRqDec57QmR1BcqjoZ8@vger.kernel.org, AJvYcCUZTgcLDi5x96fTTg3Du1pRyolp0PG6LAbtU6KBH5hgckxs6R0K4SEkn9Z0UIW01g/MyLFwETUDTCvw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0pvdBIgBVgpgW4J0ndFCBkzSYVm1va3caEAwRmKPdhmJKFRC2
-	2IeWJAHsliXWK9eGyXNRT61yd5ixTmJlhJMzgVa2ZpcGzC6F8xA+
-X-Gm-Gg: ASbGncvgCBRq2fo66ToCrcb7q8VlchWo9L8Nbhpe5DcBhACb55ObPFIBD7W4XWlS7VN
-	ryajGjVaMN/A1PF49687usbLRYXAxGTQRFxErsNJnpWzM5XfC6ZZ0XjM1TgS2uH5kquRUI8dVvA
-	TwLg0EC18e5auwsi1vsG+zbMjkkQBceYtec9j3sDSxLI1K0uct/Cq95x7QyI6lDTNQZ5gV65Exc
-	anqIdq9MJWQLwrzY26AaMktwf/tBJz9zRTh1KPbM2R81WVwFApdjGX/51NJzs/u4lUG1jQZg6PW
-	9hYdLhf7d8YmJWwq/BQKhUvPDKS+1B8TKj4CmrSCsSxT5oKl0rV5goqNuw/2
-X-Google-Smtp-Source: AGHT+IHdkFFj/To09DWxc81m7ALbu06mLkZUP8cKiy8xtrdnioKoWhr5mFDpUzvkl43XFEATvCd9tg==
-X-Received: by 2002:a17:902:e750:b0:223:fb3a:8631 with SMTP id d9443c01a7336-22e1030a3afmr120736405ad.24.1746266140170;
-        Sat, 03 May 2025 02:55:40 -0700 (PDT)
-Received: from localhost.localdomain ([36.50.162.227])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522948csm20883585ad.159.2025.05.03.02.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 02:55:39 -0700 (PDT)
-From: akshay bansod <akshaybansod997@gmail.com>
-To: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH] iio: dac: ad559*: fixed coding style issue (shorthand unsigned)
-Date: Sat,  3 May 2025 15:25:29 +0530
-Message-ID: <20250503095532.132041-1-akshaybansod997@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746266836; c=relaxed/simple;
+	bh=A6sW0fHhezyvxJw0ueUn7VDzoKCJ4EosNM854fVXIRc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=U0tceK80ZPtvucbji3l0LB2DzD60Arrgi4fy1+Tg1uSgaMqlicAhq+1FAP/V08GTJsdT6thVOEgiUBTklkclEWBjXUfmMcYd+9S0jxj9W5iVEAI3JbbuDo93M9SL88ulrKzy6WSTYlqnzpZzvNjURwbGHAztH0kragd8j8EMzi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3M6XbVd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ABDFAC4CEE3;
+	Sat,  3 May 2025 10:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746266835;
+	bh=A6sW0fHhezyvxJw0ueUn7VDzoKCJ4EosNM854fVXIRc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=q3M6XbVdckVpk5+qHUzI31GMalJN/2cH4nN547PXyZB5CWWbcEmfukrzzDd5zfoQd
+	 rciN7vaEfgXM1KAf7icrGA+/mH9K3j/q6O3ihl4q5B7bAQs0GdM39ZnhPko1GuMwfR
+	 q29Ad/fSPKfpSjGbYOkhD/utaMob1mxdxZCRhhUZgAZcuU1JGumBOKNhdNc7uL8YqX
+	 AWuHM19PbgwH29+Rq5FnSo+45Cn7Ld/xoT2tSKYPHERRcY/LGeTceIcXMvBZ/ytWHJ
+	 xWS6IuHvc+rGCcyNJ7ZY4ErKt+AcWojIi48AMEhSFbv3MEoyRStq186ZpR0JAleQDP
+	 XgJmL+tDez3Xg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988CCC369D9;
+	Sat,  3 May 2025 10:07:15 +0000 (UTC)
+From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
+Subject: [PATCH v4 0/9] Apple Mac System Management Controller
+Date: Sat, 03 May 2025 10:06:47 +0000
+Message-Id: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALfqFWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyTHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDYwMT3eLcZF0zXUNT3TSD1BQzQ8tUY8MUEyWg8oKi1LTMCrBR0bG1tQA
+ Ek3W/WgAAAA==
+X-Change-ID: 20250304-smc-6-15-f0ed619e31d4
+To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Hector Martin <marcan@marcan.st>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4267; i=sven@svenpeter.dev;
+ h=from:subject:message-id;
+ bh=A6sW0fHhezyvxJw0ueUn7VDzoKCJ4EosNM854fVXIRc=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ4boq0N7VfUk+HOu9n5tUfVrDzzUWbhHOXfvjIrjV9t+r
+ bmcH87TUcrCIMbBICumyLJ9v73pk4dvBJduuvQeZg4rE8gQBi5OAZhI61JGhvbsBZzL3Nfuexwz
+ f+s5qXfXdjc/2ioW+epGWmng1aCPwWqMDKeYWrwfNV2a32pislHjxtaobe75f0/bPzc8HRhV+Uj
+ lISMA
+X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
+ fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
+X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
+ auth_id=167
+X-Original-From: Sven Peter <sven@svenpeter.dev>
+Reply-To: sven@svenpeter.dev
 
-checkpatch.pl flagged use of shorthand 'unsigned' as warning
-trivial fix: replaced use of shorthand 'unsigned' with 'unsigned int'
+Hi,
 
-Signed-off-by: akshay bansod <akshaybansod997@gmail.com>
+It's been quite a while (end of 2022) since the last version of this
+series was sent by Russel. I'd like to pick this up again and get SMC
+upstream.
+
+I've taken the last version from the ML and worked in the review
+comments and some other changed:
+
+  - Added documentation for all functions and structs
+  - Fixed dt-bindings and re-ordered commits so that the mfd one comes
+    last and can include the gpio subdevice
+  - Added the reset driver and corresponding bindings
+  - Reworked the atomic mode inside SMC since the previous implementation
+    called mutex_lock from atomic context
+  - Removed the backend split for now which lead to a quite intense discussion
+    for the previous versions which hadn't been solved as far as I could tell
+    from the old threads.
+    It's also been 2+ years and I haven't heard of any backend implementation
+    for T2 or even older macs. It's also unclear to me which sub-devices
+    are actually useful there because at least GPIO and shutdown/reboot
+    from this series will not work as-is there.
+    I'd rather have this initial version which only supports M1+ macs upstream
+    and then iterate there if any other backend is developed.
+    I'll gladly help to re-introduce backend support if it's ever required.
+
+Dependencies:
+The code and dt-bindings themselves apply cleanly to 6.15-rc1 but
+the device tree changes require the already merged SPMI controller
+and SPMI NVMEM series which will be part of 6.16.
+The series is also using the printf format specifiers which will
+land in 6.16 via the drm-misc tree.
+A tree with all dependencies for testing is available at
+https://github.com/AsahiLinux/linux/commits/sven/smc-v4/.
+
+Merging:
+The dt-binding patches all depend on each other such that they all
+should probably go together with the mfd device itself.
+The following commits also depend on mfd due to the new header file and
+will either have to go through the mfd tree as well or we'll need an
+immutable branch there.
+I'll take the device tree updates through our tree which also has the
+previous device tree updates these depend on.
+
+v3: https://lore.kernel.org/asahi/Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk/
+v2: https://lore.kernel.org/asahi/YxdInl2qzQWM+3bs@shell.armlinux.org.uk/
+v1: https://lore.kernel.org/asahi/YxC5eZjGgd8xguDr@shell.armlinux.org.uk/
+
+Best,
+
+Sven
+
 ---
- drivers/iio/dac/ad5592r-base.c | 14 +++++++-------
- drivers/iio/dac/ad5592r-base.h |  4 ++--
- drivers/iio/dac/ad5592r.c      |  4 ++--
- drivers/iio/dac/ad5593r.c      |  5 +++--
- 4 files changed, 14 insertions(+), 13 deletions(-)
+Hector Martin (5):
+      gpio: Add new gpio-macsmc driver for Apple Macs
+      power: reset: macsmc-reboot: Add driver for rebooting via Apple SMC
+      arm64: dts: apple: t8103: Add SMC node
+      arm64: dts: apple: t8112: Add SMC node
+      arm64: dts: apple: t600x: Add SMC node
 
-diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
-index 5f2cd5172..9aa051a74 100644
---- a/drivers/iio/dac/ad5592r-base.c
-+++ b/drivers/iio/dac/ad5592r-base.c
-@@ -21,7 +21,7 @@
- 
- #include "ad5592r-base.h"
- 
--static int ad5592r_gpio_get(struct gpio_chip *chip, unsigned offset)
-+static int ad5592r_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
- 	int ret = 0;
-@@ -55,7 +55,7 @@ static int ad5592r_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	return st->ops->reg_write(st, AD5592R_REG_GPIO_SET, st->gpio_val);
- }
- 
--static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-+static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
- 	int ret;
-@@ -73,7 +73,7 @@ static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
- }
- 
- static int ad5592r_gpio_direction_output(struct gpio_chip *chip,
--					 unsigned offset, int value)
-+					 unsigned int offset, int value)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
- 	int ret;
-@@ -99,7 +99,7 @@ static int ad5592r_gpio_direction_output(struct gpio_chip *chip,
- 	return st->ops->reg_write(st, AD5592R_REG_GPIO_IN_EN, st->gpio_in);
- }
- 
--static int ad5592r_gpio_request(struct gpio_chip *chip, unsigned offset)
-+static int ad5592r_gpio_request(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
- 
-@@ -188,7 +188,7 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
- {
- 	const struct ad5592r_rw_ops *ops = st->ops;
- 	int ret;
--	unsigned i;
-+	unsigned int i;
- 	u8 pulldown = 0, tristate = 0, dac = 0, adc = 0;
- 	u16 read_back;
- 
-@@ -472,7 +472,7 @@ static const struct iio_chan_spec_ext_info ad5592r_ext_info[] = {
- };
- 
- static void ad5592r_setup_channel(struct iio_dev *iio_dev,
--		struct iio_chan_spec *chan, bool output, unsigned id)
-+		struct iio_chan_spec *chan, bool output, unsigned int id)
- {
- 	chan->type = IIO_VOLTAGE;
- 	chan->indexed = 1;
-@@ -489,7 +489,7 @@ static void ad5592r_setup_channel(struct iio_dev *iio_dev,
- static int ad5592r_alloc_channels(struct iio_dev *iio_dev)
- {
- 	struct ad5592r_state *st = iio_priv(iio_dev);
--	unsigned i, curr_channel = 0,
-+	unsigned int i, curr_channel = 0,
- 		 num_channels = st->num_channels;
- 	struct iio_chan_spec *channels;
- 	struct fwnode_handle *child;
-diff --git a/drivers/iio/dac/ad5592r-base.h b/drivers/iio/dac/ad5592r-base.h
-index cc7be426c..d78f5bb72 100644
---- a/drivers/iio/dac/ad5592r-base.h
-+++ b/drivers/iio/dac/ad5592r-base.h
-@@ -42,8 +42,8 @@ enum ad5592r_registers {
- #define AD5592R_REG_CTRL_DAC_RANGE	BIT(4)
- 
- struct ad5592r_rw_ops {
--	int (*write_dac)(struct ad5592r_state *st, unsigned chan, u16 value);
--	int (*read_adc)(struct ad5592r_state *st, unsigned chan, u16 *value);
-+	int (*write_dac)(struct ad5592r_state *st, unsigned int chan, u16 value);
-+	int (*read_adc)(struct ad5592r_state *st, unsigned int chan, u16 *value);
- 	int (*reg_write)(struct ad5592r_state *st, u8 reg, u16 value);
- 	int (*reg_read)(struct ad5592r_state *st, u8 reg, u16 *value);
- 	int (*gpio_read)(struct ad5592r_state *st, u8 *value);
-diff --git a/drivers/iio/dac/ad5592r.c b/drivers/iio/dac/ad5592r.c
-index 92d1b629b..a40f590e6 100644
---- a/drivers/iio/dac/ad5592r.c
-+++ b/drivers/iio/dac/ad5592r.c
-@@ -30,7 +30,7 @@ static int ad5592r_spi_wnop_r16(struct ad5592r_state *st, __be16 *buf)
- 	return spi_sync_transfer(spi, &t, 1);
- }
- 
--static int ad5592r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
-+static int ad5592r_write_dac(struct ad5592r_state *st, unsigned int chan, u16 value)
- {
- 	struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
- 
-@@ -39,7 +39,7 @@ static int ad5592r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
- 	return spi_write(spi, &st->spi_msg, sizeof(st->spi_msg));
- }
- 
--static int ad5592r_read_adc(struct ad5592r_state *st, unsigned chan, u16 *value)
-+static int ad5592r_read_adc(struct ad5592r_state *st, unsigned int chan, u16 *value)
- {
- 	struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
- 	int ret;
-diff --git a/drivers/iio/dac/ad5593r.c b/drivers/iio/dac/ad5593r.c
-index 9a8525c61..3bdb54820 100644
---- a/drivers/iio/dac/ad5593r.c
-+++ b/drivers/iio/dac/ad5593r.c
-@@ -40,7 +40,7 @@ static int ad5593r_read_word(struct i2c_client *i2c, u8 reg, u16 *value)
- 	return 0;
- }
- 
--static int ad5593r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
-+static int ad5593r_write_dac(struct ad5592r_state *st, unsigned int chan, u16 value)
- {
- 	struct i2c_client *i2c = to_i2c_client(st->dev);
- 
-@@ -48,7 +48,7 @@ static int ad5593r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
- 			AD5593R_MODE_DAC_WRITE | chan, value);
- }
- 
--static int ad5593r_read_adc(struct ad5592r_state *st, unsigned chan, u16 *value)
-+static int ad5593r_read_adc(struct ad5592r_state *st, unsigned int chan, u16 *value)
- {
- 	struct i2c_client *i2c = to_i2c_client(st->dev);
- 	s32 val;
-@@ -102,6 +102,7 @@ static const struct ad5592r_rw_ops ad5593r_rw_ops = {
- static int ad5593r_i2c_probe(struct i2c_client *i2c)
- {
- 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
-+
- 	if (!i2c_check_functionality(i2c->adapter,
- 				     I2C_FUNC_SMBUS_BYTE | I2C_FUNC_I2C))
- 		return -EOPNOTSUPP;
+Russell King (Oracle) (2):
+      dt-bindings: gpio: Add Apple Mac SMC GPIO block
+      dt-bindings: mfd: Add Apple Mac System Management Controller
+
+Sven Peter (2):
+      dt-bindings: power: reboot: Add Apple Mac SMC Reboot Controller
+      mfd: Add Apple Silicon System Management Controller
+
+ .../devicetree/bindings/gpio/apple,smc-gpio.yaml   |  37 ++
+ .../devicetree/bindings/mfd/apple,smc.yaml         |  71 +++
+ .../bindings/power/reset/apple,smc-reboot.yaml     |  52 ++
+ MAINTAINERS                                        |   7 +
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi          |  35 ++
+ arch/arm64/boot/dts/apple/t8103.dtsi               |  35 ++
+ arch/arm64/boot/dts/apple/t8112.dtsi               |  35 ++
+ drivers/gpio/Kconfig                               |  10 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-macsmc.c                         | 246 ++++++++
+ drivers/mfd/Kconfig                                |  15 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/macsmc.c                               | 657 +++++++++++++++++++++
+ drivers/power/reset/Kconfig                        |  11 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/macsmc-reboot.c                | 362 ++++++++++++
+ include/linux/mfd/macsmc.h                         | 337 +++++++++++
+ 17 files changed, 1913 insertions(+)
+---
+base-commit: 8b7e6734e2231a549a23943678ee3452bd19a1fe
+change-id: 20250304-smc-6-15-f0ed619e31d4
+
+Best regards,
 -- 
-2.49.0
+Sven Peter <sven@svenpeter.dev>
+
 
 
