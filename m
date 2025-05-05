@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-19589-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19590-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E1D2AA8BD8
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 07:49:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8E16AA8BDD
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 07:54:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD9A93A489F
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 05:49:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4493317164A
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 05:54:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C021581E1;
-	Mon,  5 May 2025 05:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54DE51A8F9A;
+	Mon,  5 May 2025 05:54:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGpHkZLK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJWIxpRQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D348C191;
-	Mon,  5 May 2025 05:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6204AEBE;
+	Mon,  5 May 2025 05:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746424164; cv=none; b=WK4wLR4rfCjMmMpZ2kyFYaFLsV3AHFFMO4fDxv+XDEZfemuF1JhriCWwfleO3mu8nj1q7/vQPSJvXVAotRZb2WNxg8BeZERxKYAqoa+3uaJviN3WKlVx/kkyxLcXU5T34kytn/Rs/w+IFFy/v3HWamYuqJFS/TePt6X0SHpFobg=
+	t=1746424479; cv=none; b=ZeOl1xCWtaO50RpZLil+TInW2bf+wvzVNj7M0ACcarvFA9c2jKQNes5XDqQz4H8hINUNNsdCCfVDZmHiseevQeGP7Wx32i3uv+wDdm5+cC24ZZ562xrCjvCGmXma8SFzlez/BhK7BeAWJIEk2HaY4Lc2maKhJEGrH/YXdy0J7X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746424164; c=relaxed/simple;
-	bh=+FgMjKYqhxS1cHdqrPa33yg8+8R5RcElOW2tGyI1Kx8=;
+	s=arc-20240116; t=1746424479; c=relaxed/simple;
+	bh=JNhDULvhn4HOLlSr9x6YtX6MGI6nzOi9XQ4X+JR8FDI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BrQpFb0rjot/RxahoYrYwhKuY806wszVkb0t1kC08AGtIXNEtzZT2FD/JiByo9JGRSRUQDLVyTr3KKUtFvCyNmwuqTv12FS6FlJ6BsIjGMyYDFapLomt1HdDlUn4aX3SgwsKSQhW0Ba0wC5BlcQNrftJQbpmuyf0u2CJx7Z1kk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FGpHkZLK; arc=none smtp.client-ip=209.85.167.50
+	 In-Reply-To:Content-Type; b=AcVr1qGnPZxKy7kA9FibQEoXw/axpRSX8yrrihPDROGnb9Ui8xQi2DM72quI36ZDlxlgiKQOvr1ZqTczRg8i4jOwhTUewEYgdx2/vDQOxARy4tdT5VfuvYr8d60Wo6rnvuClPXu4ZrvyPegL4ywSxt5Jb7EqHer7sZP7dLOv/gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJWIxpRQ; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so4961453e87.2;
-        Sun, 04 May 2025 22:49:22 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso5175707e87.1;
+        Sun, 04 May 2025 22:54:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746424161; x=1747028961; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746424475; x=1747029275; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=F7qwbDp0f7k4ja2LqUiSR09Ld8+F7/LbnaIjm4GJKRE=;
-        b=FGpHkZLKhAqeJiHr/IKiA6Zvwkj+NMAinXSm9OOXC9HgQksteUjJ6KEjZcYOWa5TsG
-         QVNKVAWYuOPdNYHsv6GpQ5ylKXh7NTRablGzlrypU+/ey+Jy4QEAMLlVYFVteRNEAn9Q
-         HEiyOgl/IPxRMsiOFnJJUvYK/8m70aGha7Go6TXEwDU6/zpEJbxIhbR2HdrDYfqHYHlF
-         B3sxWaAMDTATXV9n/17XIOMOF0wfEp95LNG+BoBe3DQkohYJzY+FJ8CMKyaweFhHKLZ0
-         +Xx/yfjAGOY8GW6aa2Z3giRH8pqEh/5Y5LwGV2oF/wHLt9hxh9AP02Cmtj25em1Xpur/
-         sVLw==
+        bh=v41UzD7X2NmBLMS2a6rtXUz59TrgAWuFJrBADKI9liE=;
+        b=RJWIxpRQuFjEoL1Rh0d0q1W+qJ+XZGbVzHOGFywMFHmUClI9vwoimVyd0gFTon7Rnx
+         KC/3S/rj9TOg2pY40smyqQw/78HXPxVhaZdlr4UtWocHy2BWI0KWqY47DLNQE3Tqw8ZB
+         As17A5ug31Apuqu3eA7jJlkMBB2N/Mua2UjGi7eHGeLBEJFRhlMyMKWWso09nx84L3cG
+         EnL5AklfZzBOsWrGJJPr4iBHJVwWFOCCubTfeOuYPVxig1bkdHWli5OM3uoP1PoXpnLL
+         cGvfzXyX5m7gaOrVhReVwBPPqUyMPsGCcNZQ/VeD5c/YMQe196Nhp+alJkIqQoqGBt6p
+         UsVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746424161; x=1747028961;
+        d=1e100.net; s=20230601; t=1746424475; x=1747029275;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F7qwbDp0f7k4ja2LqUiSR09Ld8+F7/LbnaIjm4GJKRE=;
-        b=SrL3HfSv01y6OmO+1N75bVpAgdA4g+Bl7UmAyXvrcC/JLUi5hIlNXrwl4ZxLx2OSql
-         eYCSSM5F4zA6KzOIXURoM3zEkYoU4Vt5COcTPrl4NqVI+tlahbUU0L3GoB2U2AC23Q7m
-         /juam7ev9ZYjCURSnFZgxPAbdgEY3PGb0PNlBnkyBtN27tmDP0/bHn7czyCjKzPiAGC6
-         Uv+yOca6F+j1CCySG/9vSh7Fgg3eK2MVupW9pUEfgEig/iOQQFRNcPZYktIe6GzzSbby
-         hXuotF/WGrgF7axKLUpZpPxrkxur3f92VesvnaSor4WoMffhboqTXPeM5TsGMmzk5p0z
-         dIdg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNADkf4D9BrowlUbn2mq16Cf65hnTxGXdFRlBcA4XipDxiMSKGWtQWdzMqSGpI6wEMQ/XDmcYXyb0q@vger.kernel.org, AJvYcCWUDfBM4KrgSCGRZ2uQks52ziun3NeWnVFoz0pbPlXNyHbJ6iXf4VIF2wLied/TkVSMHXGTGkW+AYUJwK+Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrQvQXKT8CXI1CKI3zfBvOO1FONCIYel4+6r5oui8UlA16E9bh
-	aoms3V9B0vrp+zJ9ZfEkeVC3LDt3DFMvBL0XF+sQHSZ6qART9+Wr
-X-Gm-Gg: ASbGncuzdcxlC10X4t1p6jih0F8JngRyM76mcTrfGmlOPCt+p3oMqPSCndGzUPtUUnU
-	ovxC2vtTwYK3ZLH5MMntM8x21YWbB3Bl4MnttbOhSBll41vLa2UuS31FFIFd27m/ioyOgNT8FnR
-	BcYUk7nMV7t+6T+oRnrdBtmaYjYLuZedWaaKAgAu1bH7lPiNDDLAh/a1tIJPdMmUUas5w/OVIge
-	bt9XI5OuQ6zH5PsQjY3HyZIhb4g+/E2HbWiPRSfkYOX6Z5xZlGCOfbmEl5TFwfMcC/zSw5SewOu
-	+xEpxuIkRwSfvEXuWaVM9PIt9s/0H5Jvj2HAgEpI7apOXOJRGMs71n///cIZhROG4hnQhRT4rTO
-	VTs0St2mOjTfREl1oibUPnw==
-X-Google-Smtp-Source: AGHT+IG7I2Hi0oKgaw7vLe5XbYTAnttjMnNVypSo9F6RxZlOGnQml/7g5P0McvNg69vLjDZWi8r9Ug==
-X-Received: by 2002:a05:6512:33c3:b0:549:8fc0:bc2b with SMTP id 2adb3069b0e04-54fa4f8af6amr1321909e87.39.1746424160427;
-        Sun, 04 May 2025 22:49:20 -0700 (PDT)
+        bh=v41UzD7X2NmBLMS2a6rtXUz59TrgAWuFJrBADKI9liE=;
+        b=YdFnm4OCKymptKUyyGZo2wsq2B1uGceX1FwLjRrA9UOtDJrZJQys7puU39gT45tfTd
+         ZA3wXpX1dIRX+l4yRVSdKA682rou8gOk+WdYnk2vT1Fb1hL5Ro4Gzf6HD11S+bWCe5hw
+         RdxgcIgekEj+p0+cM+P0+rcD2Qij8MKOcnNTHxgGrH5BfqTr2CIPnZrNXXJ4XFY9fGR0
+         WHCt2RuTGPXO7hQJiQhErrqT0V0TnKDCmUC9tP7KiZye3rIXNPetFx6WixSHy2S7NP7A
+         wuYex1QrjnNb3TjOarZH417VRvI2/wQAB6ApVy+RbC47sYsnQewMVCMi3PfHc2bxlGfG
+         MxgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvK8LBM0cKvVr34o+bkm+OVIzjMLX1TcbWd35iloTKpZ9NAh8XuZRJUG9A/nfpPya2PvP/sSOVL5BU@vger.kernel.org, AJvYcCX1x2rSMhsx/bBUJCio4eLajMiJH/6JJgDIO1XIdB6i2WvUacE6rkCm9ZsRGLa8pv/kOhYuPVHI2ILrGBkQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9ZS+iYlNttCJoP/IKaD7BoIa0gMHNQJ7xPbTFg31a7w/K3LDs
+	1GorEUZLcyOEwNNIpmuSiWv6KuSOOCK0hp4j2jEY2uZqTaiYDnqz9mCGcA==
+X-Gm-Gg: ASbGncuqkJTXcyvSeUkCrDL0UpVfJcejTolhxK5LDLmYVmZ/b0R4b7vzQjPcKWB0cBm
+	+HHSDMFGTrSZFlGFz9r5VzQ4vnEfJPIVxvT2NJKiR9wYr2YL5ZPkV0MKEOAMyq+qaDvOKXo5CWm
+	mSNFT9I1xsMmefAfkgfyAyc6hnGObCpuEc32/FX4eYdo37VkiFqcQAn7EwfgdTxZBVoKChomW5s
+	wo1vEhNEcZR6Vbir9nwoYNQ46fFLnk1Z/CU1uMlHFQco3Qwsp5wLRA7GkTLlmmWC4xTbsp/IQys
+	FTAQdVb8DT6IIuRjWjol9Gv7kDIqknLYe2FDWy7ZGbd2xrNbyZvH5W4XMilez+Se47KlU58CMTm
+	c8lxtGj7k3kTLpfXCc+b5Cw==
+X-Google-Smtp-Source: AGHT+IFlzjo2ymbBjO9DidiEJ2qkM8M7MJZlHw2O/AGlyoxxDugUkv/aBtOTyBWKTezqkj2cm5NfpA==
+X-Received: by 2002:a05:6512:3088:b0:54e:86f3:5e54 with SMTP id 2adb3069b0e04-54eb2418fa2mr1896454e87.5.1746424475060;
+        Sun, 04 May 2025 22:54:35 -0700 (PDT)
 Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6a6esm1562650e87.240.2025.05.04.22.49.19
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94ee054sm1587952e87.149.2025.05.04.22.54.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 May 2025 22:49:19 -0700 (PDT)
-Message-ID: <5f66f797-a16c-4ab4-9bcf-589e4418e161@gmail.com>
-Date: Mon, 5 May 2025 08:49:18 +0300
+        Sun, 04 May 2025 22:54:34 -0700 (PDT)
+Message-ID: <baea6673-b48d-4544-9c6b-5f64d8e76603@gmail.com>
+Date: Mon, 5 May 2025 08:54:32 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,7 +82,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] pinctrl: qcom: don't crash on enabling GPIO HOG pins
+Subject: Re: [PATCH 3/4] pinctrl: qcom: switch to devm_gpiochip_add_data()
 To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
  Bjorn Andersson <andersson@kernel.org>,
  Linus Walleij <linus.walleij@linaro.org>, Guenter Roeck
@@ -92,112 +92,60 @@ To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
 Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
- <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com>
+ <20250503-pinctrl-msm-fix-v1-3-da9b7f6408f4@oss.qualcomm.com>
 Content-Language: en-US, en-AU, en-GB, en-BW
 From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com>
+In-Reply-To: <20250503-pinctrl-msm-fix-v1-3-da9b7f6408f4@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 03/05/2025 08:32, Dmitry Baryshkov wrote:
-> On Qualcomm platforms if the board uses GPIO hogs msm_pinmux_request()
-> calls gpiochip_line_is_valid(). After commit 8015443e24e7 ("gpio: Hide
-> valid_mask from direct assignments") gpiochip_line_is_valid() uses
-> gc->gpiodev, which is NULL when GPIO hog pins are being processed.
-> Thus after this commit using GPIO hogs causes the following crash. In
-> order to fix this, verify that gpiochip->gpiodev is not NULL.
+> In order to simplify cleanup actions, use devres-enabled version of
+> gpiochip_add_data().
 > 
-> Note: it is not possible to reorder calls (e.g. by calling
-> msm_gpio_init() before pinctrl registration or by splitting
-> pinctrl_register() into _and_init() and pinctrl_enable() and calling the
-> latter function after msm_gpio_init()) because GPIO chip registration
-> would fail with EPROBE_DEFER if pinctrl is not enabled at the time of
-> registration.
-> 
-> pc : gpiochip_line_is_valid+0x4/0x28
-> lr : msm_pinmux_request+0x24/0x40
-> sp : ffff8000808eb870
-> x29: ffff8000808eb870 x28: 0000000000000000 x27: 0000000000000000
-> x26: 0000000000000000 x25: ffff726240f9d040 x24: 0000000000000000
-> x23: ffff7262438c0510 x22: 0000000000000080 x21: ffff726243ea7000
-> x20: ffffab13f2c4e698 x19: 0000000000000080 x18: 00000000ffffffff
-> x17: ffff726242ba6000 x16: 0000000000000100 x15: 0000000000000028
-> x14: 0000000000000000 x13: 0000000000002948 x12: 0000000000000003
-> x11: 0000000000000078 x10: 0000000000002948 x9 : ffffab13f50eb5e8
-> x8 : 0000000003ecb21b x7 : 000000000000002d x6 : 0000000000000b68
-> x5 : 0000007fffffffff x4 : ffffab13f52f84a8 x3 : ffff8000808eb804
-> x2 : ffffab13f1de8190 x1 : 0000000000000080 x0 : 0000000000000000
-> Call trace:
->   gpiochip_line_is_valid+0x4/0x28 (P)
->   pin_request+0x208/0x2c0
->   pinmux_enable_setting+0xa0/0x2e0
->   pinctrl_commit_state+0x150/0x26c
->   pinctrl_enable+0x6c/0x2a4
->   pinctrl_register+0x3c/0xb0
->   devm_pinctrl_register+0x58/0xa0
->   msm_pinctrl_probe+0x2a8/0x584
->   sdm845_pinctrl_probe+0x20/0x88
->   platform_probe+0x68/0xc0
->   really_probe+0xbc/0x298
->   __driver_probe_device+0x78/0x12c
->   driver_probe_device+0x3c/0x160
->   __device_attach_driver+0xb8/0x138
->   bus_for_each_drv+0x84/0xe0
->   __device_attach+0x9c/0x188
->   device_initial_probe+0x14/0x20
->   bus_probe_device+0xac/0xb0
->   deferred_probe_work_func+0x8c/0xc8
->   process_one_work+0x208/0x5e8
->   worker_thread+0x1b4/0x35c
->   kthread+0x144/0x220
->   ret_from_fork+0x10/0x20
-> Code: b5fffba0 17fffff2 9432ec27 f9400400 (f9428800)
-> 
-> Fixes: 8015443e24e7 ("gpio: Hide valid_mask from direct assignments")
-> Reported-by: Doug Anderson <dianders@chromium.org>
-> Closes: https://lore.kernel.org/r/CAD=FV=Vg8_ZOLgLoC4WhFPzhVsxXFC19NrF38W6cW_W_3nFjbw@mail.gmail.com
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 > ---
->   drivers/pinctrl/qcom/pinctrl-msm.c | 7 +++++++
->   1 file changed, 7 insertions(+)
+>   drivers/pinctrl/qcom/pinctrl-msm.c | 6 +-----
+>   1 file changed, 1 insertion(+), 5 deletions(-)
 > 
 > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 9ec15ae4a104cbeb9a7d819b964d341f3bba58ea..a99275f3c4a66a39f4d9318fe918101127ef4487 100644
+> index 88dd462516c76d58b43d49accbddeea38af8f1ec..b2e8f7b3f3e3d5d232b2bd60e5cace62b21ffb03 100644
 > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
 > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -149,6 +149,13 @@ static int msm_pinmux_request(struct pinctrl_dev *pctldev, unsigned offset)
->   	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
->   	struct gpio_chip *chip = &pctrl->chip;
+> @@ -1449,7 +1449,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>   	girq->handler = handle_bad_irq;
+>   	girq->parents[0] = pctrl->irq;
 >   
-> +	/*
-> +	 * hog pins are requested before registering GPIO chip, don't crash in
-> +	 * gpiochip_line_is_valid().
-> +	 */
-> +	if (!chip->gpiodev)
-> +		return 0;
-> +
-
-This should fix the reported crash at hog registration. Still, I feel 
-this is only papering over a real problem, which is the dependency from 
-pinmux request to the gpiodev. As far as I can say, there is no 
-mechanism ensuring the gpiochip is there, right? Even though this fixes 
-the reported crash, it also causes all early pinmux requests to assume 
-all the GPIOs are valid, right?
-
-Also, I suppose there will be a time window at remove path when the 
-pinctrl is still there - but gpio has already gone. (I didn't really 
-dive into the dirty details of the pinctrl... Perhaps if this is somehow 
-prevented?) Anyways, I'm not sure how valid it is to assume the 
-gpiochip_line_is_valid() will work in such case?
-
-Unfortunately, I don't have any better suggestion how to fix this. So, 
-what little it is worth, I am Ok with applying this, at least as a fix 
-for the crash!
-
->   	return gpiochip_line_is_valid(chip, offset) ? 0 : -EINVAL;
+> -	ret = gpiochip_add_data(&pctrl->chip, pctrl);
+> +	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
+>   	if (ret) {
+>   		dev_err(pctrl->dev, "Failed register gpiochip\n");
+>   		return ret;
+> @@ -1470,7 +1470,6 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>   			dev_name(pctrl->dev), 0, 0, chip->ngpio);
+>   		if (ret) {
+>   			dev_err(pctrl->dev, "Failed to add pin range\n");
+> -			gpiochip_remove(&pctrl->chip);
+>   			return ret;
+>   		}
+>   	}
+> @@ -1608,9 +1607,6 @@ EXPORT_SYMBOL(msm_pinctrl_probe);
+>   
+>   void msm_pinctrl_remove(struct platform_device *pdev)
+>   {
+> -	struct msm_pinctrl *pctrl = platform_get_drvdata(pdev);
+> -
+> -	gpiochip_remove(&pctrl->chip);
 >   }
+>   EXPORT_SYMBOL(msm_pinctrl_remove);
+
+I suppose this should also make the time window when the GPIO chip has 
+gone, but pinmux is still there (to call the 'gpiochip_line_is_valid()') 
+smaller.
+
+FWIW:
+Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
 Yours,
 	-- Matti
-
 
