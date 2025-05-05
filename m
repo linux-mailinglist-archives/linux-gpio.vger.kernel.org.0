@@ -1,272 +1,204 @@
-Return-Path: <linux-gpio+bounces-19612-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20AD9AA9D65
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 22:41:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F44EAAA19D
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 00:49:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F12527A20B3
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 20:39:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 253861883E82
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 22:49:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B03C825C6F4;
-	Mon,  5 May 2025 20:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90A8B27F4F7;
+	Mon,  5 May 2025 22:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cNMFeFzJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXuDSdWh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5F21C861D
-	for <linux-gpio@vger.kernel.org>; Mon,  5 May 2025 20:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4346B2BFC72;
+	Mon,  5 May 2025 22:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746477657; cv=none; b=Ql+p2GoBU1+InxAS8ogRINm2Etx5xkA46CmvndKCmYWazTK0RFn9tPAn+5xVbMA7dgDsBFPYCnpToXU+kkQrwNpprJUizvdL91C/NTYJIwypop1VzcDnSL+6+UYoeK3pPBDU+JxrbmrFheQHYjQQbHUnc5TZ44arE5kQLKVJwPE=
+	t=1746483602; cv=none; b=ppTirX6tu7qUe0W6D7fEUgwRR+Fy1i/iFitP/eBrI2CiHG/NQ/Gwt0WnplqBeRS310g7N1cYsYCYH4jwf7x5fQxWKdk1L9UBh2KEF29hjYPMJ+SheU1q043FnffO8Rx6C8U+qzC5sWb83SHqW9qip6lfazqcnDFCKkogxsFi/ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746477657; c=relaxed/simple;
-	bh=eXsbeYaStEdVkB/9iiuPPvCcb0GJ33j+Y7Lm4GpCn+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FVOvVKT2oDEJxM4ttNTjDjsy1NNyqumkyESFU03eY8bsknbYOnkQ8kbP5BEcbLNFV982okPCDjbHK8GtXcQOVaqnKPZnfdChktfU6FFWAKUW6AIzLA9xFhZTyUacKYPd/19FMxQ2ySmM9rbKO4Kr2xKQnBeJ1RbA9TKTcWkMujI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cNMFeFzJ; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ace98258d4dso700272066b.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 May 2025 13:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746477654; x=1747082454; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aad+O7LlnePo9Jud5k6L+0x2zxiP/d5GA/t21nuBedc=;
-        b=cNMFeFzJtxQgzXi3qDHel0FtK8JZ9Dt7+Wk6xvxBOS3Wa/SQEGZA+veun1YIHYBnLs
-         EzieRZtz+3B0KPEFLjaLIsJxUUuvTA/UjGpP4wkEJx6w8CKxEBp4v2iHuIb6LoTRrlXJ
-         /e+Hk3XVvXnpNEXTe5obHiIogQVu94/ytDL84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746477654; x=1747082454;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aad+O7LlnePo9Jud5k6L+0x2zxiP/d5GA/t21nuBedc=;
-        b=f2kqVx68iE0bj7FTnKYhweT+ks+UZKl3MISVZRsJaOQvF2TvddeV7vNY80qO3XJK7W
-         hL9BB2bH4/xphQWRI43gWpOVaNYKPtJlpanUUKpnMhHejQxmgSl4jqLAn3OfBKwG7lut
-         cTOrhv9pmoKf5xhFWntScxIitWCYuPVG3JnF78hnZ0RJiUIAaLWYS9jP2LQ+1VUAJwin
-         kgW5f9pqEarOOaljDyMOMNsbKD+VR0oIT+X/qpDQzoIBwrIaABdd8PrAZKiQ9pa3l8PR
-         pra+em3byA6FSlRJ8jUk5ja8ZnvNBlS0MDt9APR0FnRNKk5z6o2+yZ5BZjuQpGawANtJ
-         aDnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUX9AdvUk5CR1zNH+lKruVnS3xOLOzHvlCDxde1fqxMFSpwQolq4rvHuVrK1q48rBiKHBK2QNQHFhj@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc1ZijmeDL+RcH7myd8kB3sHZ78RHpi1GR42jPXQC1XNKDDjor
-	PzFukifBNSfozXBsM7rrJiA6LpfYtyE3dyr2AFHaYeLRkYRyWTGCbX5SlaaXhrH+1Nut0Db0/xW
-	3/Q==
-X-Gm-Gg: ASbGnctilmC+z+eoWakt3D/9LIw+MV3w8TA+s7H5kX3xhGVvOIrl2KmoqLAKqxbkANG
-	9xUtF1z07pMYEBQiJ6FCXtFchF+Wtm5C1SJ6yKPLj/efvUo4cL3CpwIkjLnQyjUhXc9OHUo2QGR
-	246kcoA0/euM+g3HEPrIVJ9O60pO07fnqBxUnE3WGY9GHKojc9r3XLxhl6f0Am7B1Tsq4uK0jsr
-	M88ok25b+b0tdt1oGRTMywePKeIiFSSL/L+MVcGOWazlmCb31MGpB3gnx5toG5n2+1xUc6dGPq2
-	fvmvFJs+FGrMyfSR17x+lR65kULaxx1EtvJgXZ53/2r+uvdabV4BHMEMsQKbX06wxJjJQy3Tv4K
-	J4h4=
-X-Google-Smtp-Source: AGHT+IGGRC1++6+NeWMy1URALtnURbl57OomNg0mK9aQkCa6TwkOv3R90ssagk0F1EwPjwG4NOrIvA==
-X-Received: by 2002:a17:906:99d5:b0:ac6:e327:8de7 with SMTP id a640c23a62f3a-ad1d467afedmr35010466b.42.1746477653683;
-        Mon, 05 May 2025 13:40:53 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18914d067sm550083266b.3.2025.05.05.13.40.53
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 13:40:53 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso8871630a12.3
-        for <linux-gpio@vger.kernel.org>; Mon, 05 May 2025 13:40:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNBtTOq0Bjs72sa1lXt2kR8/iA9XXqk3PY/gAqZwRcbSWG4tG2LXShG2Wtzk3funAnKTr0Cs+QpfnO@vger.kernel.org
-X-Received: by 2002:a05:651c:b2a:b0:319:d856:c2f3 with SMTP id
- 38308e7fff4ca-3266b59789emr751721fa.10.1746477268328; Mon, 05 May 2025
- 13:34:28 -0700 (PDT)
+	s=arc-20240116; t=1746483602; c=relaxed/simple;
+	bh=ND8ed1luOqfEIsbMxce0N4FcAEg4PUo+x3DsLi+mG94=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CumjybNTvmUa9TFe/A2ZoeqfSoNaLj55cKv1w6ahfh4hvPlNjvxhn9sfwzj9ByLJ5+ulwmoZ21nafQLcSdB+mmI4SoAkZTfM/q+ntMF6my7zSo6kKsdy1TpEfEvrI2pcKj/ZyMarWuLsf8X3L70r34iXWRVj5jUgVN4sUGpvaWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXuDSdWh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12FB3C4CEE4;
+	Mon,  5 May 2025 22:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746483601;
+	bh=ND8ed1luOqfEIsbMxce0N4FcAEg4PUo+x3DsLi+mG94=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cXuDSdWh876X/U1DrvQ43537Mp95Vo6iBxf9pwutIknTk9fWqYaw9cpiOlhXgwJ8P
+	 RW9WFb61GwU8ckN2lJ0jw9XFaXCXI4tKKQ1pQLk8t3Zr1DVTeyVRYKEbdPaBHJOrw6
+	 iuVHkFVpyKsEUCZoKZfK5mSbZ5u03S86M+ck2Ln+P8tRFSXWfv2XqD9BAMUvFDP4rK
+	 Pkve1B4wdFzA1muWPM0X0BAMIK4xRXYPG/hAcf3hiTdohEi5DvME7AfxzohP2Kfd4t
+	 x0K9ekWl5v2oCCTFS0Yt+G8kYWcaSdl+6ho79pc5CLorTOfwZCFmF6hWj2v2KqXsg/
+	 //HMKSVR0nyrQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	brgl@bgdev.pl,
+	afd@ti.com,
+	gehao@kylinos.cn,
+	shenghao-ding@ti.com,
+	viro@zeniv.linux.org.uk,
+	robh@kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 137/642] ASoC: pcm6240: Drop bogus code handling IRQ as GPIO
+Date: Mon,  5 May 2025 18:05:53 -0400
+Message-Id: <20250505221419.2672473-137-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
- <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org> <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
- <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
- <dd471b51-333b-4537-ac58-29ad2a10f1e2@redhat.com> <aAdkU65ruBfyRjss@valkosipuli.retiisi.eu>
-In-Reply-To: <aAdkU65ruBfyRjss@valkosipuli.retiisi.eu>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 5 May 2025 22:34:16 +0200
-X-Gmail-Original-Message-ID: <CANiDSCt5_HwfwXDWNGWvzkSAW2ZB4PJwS00=i0EizY_3A-OSgw@mail.gmail.com>
-X-Gm-Features: ATxdqUEg2rUAsN7TYo98ElSvRXDzyBQACXaWg80nr6xGofF6c5WfqBKJm9vPYRM
-Message-ID: <CANiDSCt5_HwfwXDWNGWvzkSAW2ZB4PJwS00=i0EizY_3A-OSgw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] media: v4l: fwnode: Support acpi devices for v4l2_fwnode_device_parse
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
+Content-Transfer-Encoding: 8bit
 
-Hi Sakari
+From: Linus Walleij <linus.walleij@linaro.org>
 
-On Tue, 22 Apr 2025 at 11:41, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> Hi Hans, Ricardo,
->
-> On Tue, Apr 22, 2025 at 10:44:41AM +0200, Hans de Goede wrote:
-> > Hi Ricardo,
-> >
-> > On 22-Apr-25 2:23 AM, Ricardo Ribalda wrote:
-> > > Hi Sakari
-> > >
-> > > On Sun, 13 Apr 2025 at 17:50, Sakari Ailus <sakari.ailus@iki.fi> wrot=
-e:
-> > >>
-> > >> Hi Ricardo,
-> > >>
-> > >> Thanks for the patch.
-> > >>
-> > >> On Thu, Apr 03, 2025 at 07:16:14PM +0000, Ricardo Ribalda wrote:
-> > >>> This patch modifies v4l2_fwnode_device_parse() to support ACPI devi=
-ces.
-> > >>>
-> > >>> We initially add support only for orientation via the ACPI _PLD met=
-hod.
-> > >>>
-> > >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > >>> ---
-> > >>>  drivers/media/v4l2-core/v4l2-fwnode.c | 58 +++++++++++++++++++++++=
-++++++++----
-> > >>>  1 file changed, 52 insertions(+), 6 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/=
-v4l2-core/v4l2-fwnode.c
-> > >>> index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..81563c36b6436bb61e1=
-c96f2a5ede3fa9d64dab3 100644
-> > >>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > >>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > >>> @@ -15,6 +15,7 @@
-> > >>>   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > >>>   */
-> > >>>  #include <linux/acpi.h>
-> > >>> +#include <acpi/acpi_bus.h>
-> > >>>  #include <linux/kernel.h>
-> > >>>  #include <linux/mm.h>
-> > >>>  #include <linux/module.h>
-> > >>> @@ -807,16 +808,47 @@ int v4l2_fwnode_connector_add_link(struct fwn=
-ode_handle *fwnode,
-> > >>>  }
-> > >>>  EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
-> > >>>
-> > >>> -int v4l2_fwnode_device_parse(struct device *dev,
-> > >>> -                          struct v4l2_fwnode_device_properties *pr=
-ops)
-> > >>> +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
-> > >>> +                                      struct v4l2_fwnode_device_pr=
-operties *props)
-> > >>> +{
-> > >>> +     struct acpi_pld_info *pld;
-> > >>> +     int ret =3D 0;
-> > >>> +
-> > >>> +     if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld=
-)) {
-> > >>> +             dev_dbg(dev, "acpi _PLD call failed\n");
-> > >>> +             return 0;
-> > >>> +     }
-> > >>
-> > >> You could have software nodes in an ACPI system as well as DT-aligne=
-d
-> > >> properties. They're not the primary means to convey this information=
- still.
-> > >>
-> > >> How about returning e.g. -ENODATA here if _PLD doesn't exist for the=
- device
-> > >> and then proceeding to parse properties as in DT?
-> > >
-> > > Do you mean that there can be devices with ACPI handles that can also
-> > > have DT properties?
-> >
-> > Yes it is possible to embed DT properties in ACPI, but I don't
-> > think that is really applicable here.
->
-> This is determined by
-> Documentation/firmware-guide/acpi/DSD-properties-rules.rst . So rotation
-> and orientation shouldn't come from _DSD properties on ACPI systems.
+[ Upstream commit 17fdf318f5fbe5c27353ae917c0c5a2899d9c259 ]
 
-Doesn't this contradict what DisCo does?
+The current code for the IRQ in pcm6240 makes no sense:
+it looks up an IRQ with of_irq_get(), treat it as a GPIO
+by issuing gpio_request(), gpio_direction_input()
+and gpio_to_irq() on it.
 
+This is just wrong, if the device tree assigns the IRQ
+from a GPIO number this is just incorrect: it is clearly
+stated that GPIO providers and IRQ providers are
+orthogonal.
 
-if (!fwnode_property_present(adev_fwnode, "rotation")) {
-struct acpi_pld_info *pld;
+It is possible to look up an IRQ to a corresponding GPIO
+line but this is taking an IRQ and pretending it's a
+GPIO, which is just semantically wrong.
 
-if (acpi_get_physical_device_location(handle, &pld)) {
-swnodes->dev_props[NEXT_PROPERTY(prop_index, DEV_ROTATION)] =3D
-PROPERTY_ENTRY_U32("rotation",
-   pld->rotation * 45U);
-kfree(pld);
-}
-}
+Drop the offending code and treat the IRQ that we get
+from the device tree as any other IRQ, see for example
+other codec drivers.
 
-It seems to first check for the rotation property, and then check _DSD.
+The DT bindings for this codec does not have any in-tree
+DTS files, which may explain why things are weird.
 
-If I send a v2, shall I also replace DisCo even if that means
-reverting its logic?
+As a bonus, this moves the driver away from the legacy
+<linux/gpio.h> include.
 
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://patch.msgid.link/20250312-pcm-codecs-v1-3-41ffc4f8fc5c@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/codecs/pcm6240.c | 28 +++++++---------------------
+ sound/soc/codecs/pcm6240.h |  7 +------
+ 2 files changed, 8 insertions(+), 27 deletions(-)
 
->
-> >
-> > But we also have secondary software-fwnodes which are used
-> > extensively on x86 to set device-properties on devices by
-> > platform code to deal with ACPI tables sometimes having
-> > incomplete information.
-> >
-> > For example atm _PLD is already being parsed in:
-> >
-> > drivers/media/pci/intel/ipu-bridge.c and that is then used to add
-> > a standard "orientation" device-property on the sensor device.
-> >
-> > This is actually something which I guess we can drop once your
-> > patches are in, since those should then do the same in a more
-> > generic manner.
->
-> DisCo for Imaging support currently also digs this information from _PDL
-> (see init_crs_csi2_swnodes() in drivers/acpi/mipi-disco-img.c), but this
-> is only done if a _CRS CSI-2 descriptor is present. It could also be done
-> for devices with the IPU Windows specific ACPI objects and it would be a
-> natural location for handing quirks -- there are some
-> unrelated Dell DSDT quirks already.
->
-> >
-> > > What shall we do if _PLD contradicts the DT property? What takes prec=
-edence?
-> >
-> > As for priorities, at east for rotation it seems that we are going
-> > to need some quirks, I already have a few Dell laptops where it seems
-> > that the sensor is upside down and parsing the rotation field in
-> > the IPU6 specific SSDB ACPI package does not yield a 180=C2=B0 rotation=
-,
-> > so we are going to need some quirks.
-> >
-> > I expect these quirks to live in the bridge code, while your helper
-> > will be called from sensor drivers, so in order to allow quirks to
-> > override things, I think that first the "orientation" device-property
-> > should be checked (which the ACPI glue code we have can set before
-> > the sensor driver binds) and only then should _PLD be checked.
-> >
-> > IOW _PLD should be seen as the fallback, because ACPI tables are
-> > often a copy and paste job so it can very well contain wrong info
-> > copy-pasted from some example ACPI code or from another hw model.
->
-> Unfortunately that does happen. :-(
->
-> --
-> Regards,
->
-> Sakari Ailus
+diff --git a/sound/soc/codecs/pcm6240.c b/sound/soc/codecs/pcm6240.c
+index 4ff39e0b95b27..b2bd2f172ae76 100644
+--- a/sound/soc/codecs/pcm6240.c
++++ b/sound/soc/codecs/pcm6240.c
+@@ -14,7 +14,7 @@
+ 
+ #include <linux/unaligned.h>
+ #include <linux/firmware.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/of_irq.h>
+@@ -2035,10 +2035,8 @@ static const struct regmap_config pcmdevice_i2c_regmap = {
+ 
+ static void pcmdevice_remove(struct pcmdevice_priv *pcm_dev)
+ {
+-	if (gpio_is_valid(pcm_dev->irq_info.gpio)) {
+-		gpio_free(pcm_dev->irq_info.gpio);
+-		free_irq(pcm_dev->irq_info.nmb, pcm_dev);
+-	}
++	if (pcm_dev->irq)
++		free_irq(pcm_dev->irq, pcm_dev);
+ 	mutex_destroy(&pcm_dev->codec_lock);
+ }
+ 
+@@ -2109,7 +2107,7 @@ static int pcmdevice_i2c_probe(struct i2c_client *i2c)
+ 		ndev = 1;
+ 		dev_addrs[0] = i2c->addr;
+ 	}
+-	pcm_dev->irq_info.gpio = of_irq_get(np, 0);
++	pcm_dev->irq = of_irq_get(np, 0);
+ 
+ 	for (i = 0; i < ndev; i++)
+ 		pcm_dev->addr[i] = dev_addrs[i];
+@@ -2132,22 +2130,10 @@ static int pcmdevice_i2c_probe(struct i2c_client *i2c)
+ 
+ 	if (pcm_dev->chip_id == PCM1690)
+ 		goto skip_interrupt;
+-	if (gpio_is_valid(pcm_dev->irq_info.gpio)) {
+-		dev_dbg(pcm_dev->dev, "irq-gpio = %d", pcm_dev->irq_info.gpio);
+-
+-		ret = gpio_request(pcm_dev->irq_info.gpio, "PCMDEV-IRQ");
+-		if (!ret) {
+-			int gpio = pcm_dev->irq_info.gpio;
+-
+-			gpio_direction_input(gpio);
+-			pcm_dev->irq_info.nmb = gpio_to_irq(gpio);
+-
+-		} else
+-			dev_err(pcm_dev->dev, "%s: GPIO %d request error\n",
+-				__func__, pcm_dev->irq_info.gpio);
++	if (pcm_dev->irq) {
++		dev_dbg(pcm_dev->dev, "irq = %d", pcm_dev->irq);
+ 	} else
+-		dev_err(pcm_dev->dev, "Looking up irq-gpio failed %d\n",
+-			pcm_dev->irq_info.gpio);
++		dev_err(pcm_dev->dev, "No irq provided\n");
+ 
+ skip_interrupt:
+ 	ret = devm_snd_soc_register_component(&i2c->dev,
+diff --git a/sound/soc/codecs/pcm6240.h b/sound/soc/codecs/pcm6240.h
+index 1e125bb972860..2d8f9e798139a 100644
+--- a/sound/soc/codecs/pcm6240.h
++++ b/sound/soc/codecs/pcm6240.h
+@@ -208,11 +208,6 @@ struct pcmdevice_regbin {
+ 	struct pcmdevice_config_info **cfg_info;
+ };
+ 
+-struct pcmdevice_irqinfo {
+-	int gpio;
+-	int nmb;
+-};
+-
+ struct pcmdevice_priv {
+ 	struct snd_soc_component *component;
+ 	struct i2c_client *client;
+@@ -221,7 +216,7 @@ struct pcmdevice_priv {
+ 	struct gpio_desc *hw_rst;
+ 	struct regmap *regmap;
+ 	struct pcmdevice_regbin regbin;
+-	struct pcmdevice_irqinfo irq_info;
++	int irq;
+ 	unsigned int addr[PCMDEVICE_MAX_I2C_DEVICES];
+ 	unsigned int chip_id;
+ 	int cur_conf;
+-- 
+2.39.5
 
-
-
---=20
-Ricardo Ribalda
 
