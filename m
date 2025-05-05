@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-19629-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19630-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DE2CAAACD6
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 04:24:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BF2CAAAD8B
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 04:37:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 020C11B68153
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 02:21:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 586403B91A6
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 02:31:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 271973CDBA3;
-	Mon,  5 May 2025 23:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7AB330794D;
+	Mon,  5 May 2025 23:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cV0DC2NI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbJ8AtXl"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BF028A73C;
-	Mon,  5 May 2025 23:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649EF3982AD;
+	Mon,  5 May 2025 23:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487026; cv=none; b=JOToXobNitvsIN1g+gBbOgbVu480E6wuW7nNeCsyrUgEV81VuQ5fti4tFXSqdtC6+aK9eep34h2Lz7y8hobhUqW15dEvB7zafKiwZCt/sBOo6CAqepAtM4X7CIGbWQ1eA2A/suozO99dyheNE32COnXyfhhalNwXshmyjsHg0Ok=
+	t=1746487263; cv=none; b=QxnP6IvpwZHHNteVTgYlLFGfGRA5gDLd3f0gC3W7xzIkJyxA+M0jUOzsmxpar4R7Xc38v53IPuYgJ4FydI0FZNoJEar2Of6QCsQk0zyro19PGH9485KLDot2+Bv80p1yWlzG+i6t8rW6uT+kTsIRdXyZudv1kKfuoNff0LghLF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487026; c=relaxed/simple;
+	s=arc-20240116; t=1746487263; c=relaxed/simple;
 	bh=Lz96IMezMgkbCz8GTPWpiYh8XEo+mx5noJ7sVQUzPiM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WQRTwPI8XWEM7mvBpW+Pl0HRNaGLEx1vwzMExajMO8eVXeOibv3quSsedKTiYeetxB8mq0WEnUJsLyJRlsNlwXdRtJTI0sHA+ogLdfadxlbgVrsdA+RinkF+0vS5+n6GbhYDdO8X5rDKFLuLcs28Y5UMCl8Lr2l+eq3YnE5M01c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cV0DC2NI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D95FC4CEED;
-	Mon,  5 May 2025 23:17:04 +0000 (UTC)
+	 MIME-Version; b=a024KSPMi9FlIeA8AQPDQf7To0/13HTqLDxKFmOU7pwlLG4dFpdIwYPXdt3P8RZqFHm7Ato2VkoapoiCVOtItjAmBuPMp/fb+NNQysR2XaeYRqeZt/tH+ObLi+ySx21t36IoAHG0yq8h/NS2+rOgdCI/QpJ4SANHMBg3aTwqBDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbJ8AtXl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D64C4CEF1;
+	Mon,  5 May 2025 23:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487025;
+	s=k20201202; t=1746487261;
 	bh=Lz96IMezMgkbCz8GTPWpiYh8XEo+mx5noJ7sVQUzPiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cV0DC2NI/Ri+aBKwSPcF19rPl2aHU9n9pfYQYvcazNCJSklOsFbdEHt+rIR99eo4q
-	 ht+gUfbtvt14/oOionGSXcGDWszS6uNVlkZiBuhff2GV4jSx5JZ4JJ7TNiP6dB6C3+
-	 Sq3jwOjmKk8Es/SQVHbLQJ3h/qAnlqEtAWvNNVEU8bcbg0LkUECoEKOZz+jxcGqPLs
-	 8Oc5ej6WsUTA8MmXm+gsaLwNMsxcUV5LFklN/A9mOd61J7+WdN9/Lz1+cSkre+kN+k
-	 YHVu2H4UQCpt02kUn3MIKfrxCmchj43ZDAYO4KGevVCgXduD8Y1VC8frZhClYd+zgR
-	 kRu2YWmiuf9Ug==
+	b=GbJ8AtXl3bPg2K014rUCxEaCUqoQOH8QYYknd0KUBPScarirfXIyQtlcK3GVtJXxf
+	 bRC9yYf1Gpc8M/LnMRT6H537JsGpEK/jJx/1P8y76/nQbu9FaMHJ617GWw7Jz3c8hk
+	 zNeOkFX96NpRg6gEyvWpCu8LApgXu1y6lZSrisIrP/MjLaiO12H+UHXA5F4v6Mu5sH
+	 eJ07XYQbdq1H0vzXQJE9K+yGn9qoOmkRRjLvNgbLSIYHYlDOgGF0Z7fmxNoCP9+bMk
+	 mze+vKDqW4K1pKKqKQReA3MrF7LW94MKVl3ik9wPl51rv2EsJUD7lVRM3A3BWeILFl
+	 9G3WIwSBEZcMw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -48,12 +48,12 @@ Cc: Valentin Caron <valentin.caron@foss.st.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 115/153] pinctrl: devicetree: do not goto err when probing hogs in pinctrl_dt_to_map
-Date: Mon,  5 May 2025 19:12:42 -0400
-Message-Id: <20250505231320.2695319-115-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 087/114] pinctrl: devicetree: do not goto err when probing hogs in pinctrl_dt_to_map
+Date: Mon,  5 May 2025 19:17:50 -0400
+Message-Id: <20250505231817.2697367-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
+In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
+References: <20250505231817.2697367-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
+X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
 From: Valentin Caron <valentin.caron@foss.st.com>
