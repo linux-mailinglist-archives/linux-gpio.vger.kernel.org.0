@@ -1,116 +1,127 @@
-Return-Path: <linux-gpio+bounces-19598-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19600-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A03F7AA9235
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 13:39:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DB15AA9256
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 13:52:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E38AE3B2426
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 11:39:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C3A93AB1ED
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 11:52:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F5B920371F;
-	Mon,  5 May 2025 11:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 633D52063E7;
+	Mon,  5 May 2025 11:52:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TN6+LJud"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Jr7cWSqc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52321211C
-	for <linux-gpio@vger.kernel.org>; Mon,  5 May 2025 11:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25C02040A8;
+	Mon,  5 May 2025 11:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746445187; cv=none; b=M5EFTKQnw5iwKJX1WpibVwdv5JifjXQ7ueztw1wwc1II8BzqLpkk2zKNTRMwPHh+bZYL+GieISXv0btjEbDxbAYuA+70ylM28TK8usjX13CwqMGxS8WDxyoMNXRBk+cOQCjfxMXSCR/he8hs1xh2Il8rtdiakdBDGoA3oRDxtyk=
+	t=1746445963; cv=none; b=eB0/0ESVCTLDa0g03abKNeDJB/O13QPngGHaUpjXy61WhmeH76trDuQ0e6IXRaMg7CjRuv4Z4dBtjq4JZT9eqaSA78jwJN5O0sK9rHQLoIv+0q+1qyohcxXchHx66TIMxlwv7b4hnz4gjQoJZzHKQpNB1HYl14ja3TavO44qGQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746445187; c=relaxed/simple;
-	bh=4bKLvDsMPtH7EF9AXDSmtoiw8jurLha7GghprHG3BvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4G2N7+k/sK3I8E80Fw/rE/Qdx0uL2k6gtAQRHYYHfIOt+1Gv+EHz1M5ya6j9iWQBvWc3I2enkANS6E5RP41koniroAjEl53MELcaW236mHOJ2Jrzo8saF5BiSNX1sUVa3G7lpaju+B/wUow40+5IdnCiQecsTmDZkr1rjwaovo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TN6+LJud; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so27622775e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 05 May 2025 04:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746445184; x=1747049984; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mJ5GcmEYYVhQR96gxyM5WKIfvUizOn+pM0wiDy3cDmQ=;
-        b=TN6+LJud85Ylkf8tXRdSjuWZCMG+R80wAhlGd9Q9RRCjzeuZ1s/C3xpVXpkxYUvuFK
-         iJL9DH7KK987kWAtrQ+TtJj9lyQCOmih7JRBjdHUFIVJUQ42MZw6/LD2cWqInT1jdXEB
-         D3BB1OH3mOUmnD6+aj2OXUJEYhwpm2kogzQZofcHWAlpkmo6czoYn0R0I+K6AoXmUlTC
-         +IJX5eQIg5a6iNe0faQkR2/xHOkPadnevNuQ+I3E7Nj/OnSltEapQ0+mscncGe1kHUtc
-         xF3dnT+u7bg/K1eMpMTbm0sEQ7caHL6OxU6t/sqV7QmwwMXZcifcXQudScPqmTKqCIjZ
-         M1yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746445184; x=1747049984;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mJ5GcmEYYVhQR96gxyM5WKIfvUizOn+pM0wiDy3cDmQ=;
-        b=YiHlqAE06StVbdOrnlbRmX42zELEQex6/XGSre7Gp+jKZLdaiCjxzoBhR8VEPWLev7
-         EieJs9lp+r8VsKFRDYtrwC6vtdhjtwkO1tz73wrQJagY6sq17GdnEsNwZnb5fk6GnupC
-         CL7ShEPKFY9pePbqs2OSxWcCx4Fk6IFCHJBTOQiKTOybLRLu1aPW4ZAR03sDv15HF7mp
-         3vLKpXGfAElku6Zkv5WQ4yrJUDaAsfqq4noaxhsYhH5OeoOfyKg91LA44fBXLFcdRD5m
-         Id2Qxr53qWpu0AtPEVJ9WuFfW+GgQJlrG8RLT8n2iZ1+h9BYaxkOpDvan+KUcPrw+HNr
-         Zvng==
-X-Forwarded-Encrypted: i=1; AJvYcCWkb1yT4p+HSK27m/PKxF8PSaMFjNkT1Kt5qhs1YU+cjA/AbuIA3xFIBesFqV54GeM4ezFlNhVoNSyc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYyXs6Cx8FhshTTUET9su2aXnyw7/ankbwkd0JcdgiRz+60iSC
-	l0LWE2iAje486jmAEdJmKOrISxgAhpJ0A7jmscO27YZdveJxaqi50T+6IBS747U=
-X-Gm-Gg: ASbGncskD1HQ6uxlvVF+L+gt2R3tMrk+5ezJbOIh6R/bXULaPs7HJQHySxp/Dfj/7v+
-	yFzFTYdVOO42H2HmJ+89+9p0krl/L6h4ogTEDXansXk3KJnSV+S13G/Oog0GlcCKxZtKMD0OROL
-	1p6HU7bEVPQ9uZsUDkO6vU/cwgq8D5PA6beKrjZ2VWvCyTjq1oEwvtFFOcJ/3zFnnivyUl3/jWC
-	hv+AI+aSrVdRZPzVLmnlmx3btLsX3LsrrL83F55E49bm/7iKyNkBlZGNOhbxn7nuSiH2klMyfO5
-	6JaALONVjyCFW2U41+49FzYj+xEYP6JAuoGlalGg8vm1TQ==
-X-Google-Smtp-Source: AGHT+IF691cbKdNi4eo7oEzfSp9l49WgI8HMTDJbfgYt7c7D7g1nuGGELzTh8vYSZBETmpZ7y7TCVA==
-X-Received: by 2002:a05:600c:500b:b0:43c:f050:fed3 with SMTP id 5b1f17b1804b1-441c48bdfb7mr51792235e9.11.1746445183903;
-        Mon, 05 May 2025 04:39:43 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b89ee37dsm129618395e9.22.2025.05.05.04.39.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 04:39:43 -0700 (PDT)
-Date: Mon, 5 May 2025 14:39:35 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC 7/7] pinctrl-scmi: remove unused struct member
-Message-ID: <e7a338b653d378b37f8e0a73ebe6750adc1cf280.1746443762.git.dan.carpenter@linaro.org>
-References: <cover.1746443762.git.dan.carpenter@linaro.org>
+	s=arc-20240116; t=1746445963; c=relaxed/simple;
+	bh=4kaZEUxGVTYwxOZIR6two8Odt1oN1JQHgkymxLgLVS8=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:Mime-Version:
+	 References:In-Reply-To; b=uiJjuz/RRu/4bIptTn5ySSCCtfqPh/2NNNH8b/nRpfkQQ2FYjnMCyxpfoRY1IetAvZsXNhMpnZx/pY71dWu9/duCGJtuLbRKx3au5Q2CNdSMjQmUiKNSeowrUP4VZ/vAsKJUmgHhR14XUMAzhKE2ujyd4l6C6GRiGBGVvnTd0SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Jr7cWSqc; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0F111432A2;
+	Mon,  5 May 2025 11:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746445952;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vm8qmex3bAGRILrPZHXrirOvCQozzFYhA+oyW1nX2/A=;
+	b=Jr7cWSqcIA1lpycR6i5nolFqFjVEdLgYXoW24zAYltxtUHfKBqnhE0pHou0wG9DxIvkI8z
+	zFDQb6X1TEw32V5IEJX8uJCQG6mFBBZgkqkNbR9hmPQbK34Mw0vDp7L8Xa2Ppo03LRTv7/
+	musII7g5mPco3A3vzxZBs0XnvdogiQed15QcxXnB3DsA1YmjKarmdiZgavq1ietgMfKMvD
+	3Jd0n9feQ6jfJ/jPsCZwxt4ameL6rD6bVz9g0Rd6GWLnZKfbEXPHcnSVVP8BH4beHbIxPH
+	2H+smQfh5OoSA2XEwdE3j6Z2KTM5sgnHcmZZHzOxrRmaXZV7Zzefu0nwAg/TFw==
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 05 May 2025 13:52:30 +0200
+Message-Id: <D9O7F5Q6F1PS.2Q7R864GRUHZQ@bootlin.com>
+Subject: Re: [PATCH v7 10/11] input: misc: Add support for MAX7360 rotary
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1746443762.git.dan.carpenter@linaro.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-10-4e0608d0a7ff@bootlin.com>
+ <aBSkCsw3GJ6RHeJV@smile.fi.intel.com>
+ <D9LQ7NV1LJM9.F2GF0YEEDFEY@bootlin.com>
+ <aBTSNsCupbpAscwA@smile.fi.intel.com>
+In-Reply-To: <aBTSNsCupbpAscwA@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedutddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtfffkufevhffvggfgofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhtdeuhfehtdekueeltdejffdtuefgueffhfeiueegleffueevvefgtedtkeegjeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-The ->nr_pins is not used so delete that.
+On Fri May 2, 2025 at 4:09 PM CEST, Andy Shevchenko wrote:
+> On Fri, May 02, 2025 at 03:58:04PM +0200, Mathieu Dubois-Briand wrote:
+>> On Fri May 2, 2025 at 12:52 PM CEST, Andy Shevchenko wrote:
+>> > On Mon, Apr 28, 2025 at 01:57:28PM +0200, Mathieu Dubois-Briand wrote:
+>
+> ...
+>
+>> >> +				pos =3D max(0, (int)pos + steps);
+>> >
+>> > Please, no castings for min()/max()/clamp(). It diminishes the use of =
+those
+>> > macros.
+>>=20
+>> Sorry, I'm not sure to get the point. Should I use MIN_T() instead?
+>
+> Are the second argument is compile-time constant? I don't think so. Hence=
+ no
+> use for MIN*()/MAX*(). First of all, try to answer to the Q: Why is the e=
+xplicit
+> casting being used? The second Q: How can it be easily fixed without usin=
+g _t()
+> variants of the macros?
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/pinctrl/pinctrl-scmi.c | 1 -
- 1 file changed, 1 deletion(-)
+Err right, no MIN/MAX of course.
 
-diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
-index 40b432aa4756..d1f3c126c3cb 100644
---- a/drivers/pinctrl/pinctrl-scmi.c
-+++ b/drivers/pinctrl/pinctrl-scmi.c
-@@ -45,7 +45,6 @@ struct scmi_pinctrl {
- 	struct pinfunction *functions;
- 	unsigned int nr_functions;
- 	struct pinctrl_pin_desc *pins;
--	unsigned int nr_pins;
- 	struct gpio_chip *gc;
- };
- 
--- 
-2.47.2
+Explicit cast is here because the unsigned int + int sum would result in
+an unsigned int.
+
+I will use an intermediate signed value. Also the whole logic here can
+be simplified a bit, so I will rework the whole block.
+
+Best regards,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
