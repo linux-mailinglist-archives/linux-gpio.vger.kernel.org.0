@@ -1,87 +1,85 @@
-Return-Path: <linux-gpio+bounces-19596-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19597-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 886EEAA922C
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 13:38:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F01E4AA9233
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 13:39:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 727FD188515F
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 11:38:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEE001898B3D
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 11:39:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41C6C206F2A;
-	Mon,  5 May 2025 11:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 299FE2040B6;
+	Mon,  5 May 2025 11:39:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B2KEd8tn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yo9G/U4g"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0F6205AA8
-	for <linux-gpio@vger.kernel.org>; Mon,  5 May 2025 11:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C8F1F7580
+	for <linux-gpio@vger.kernel.org>; Mon,  5 May 2025 11:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746445091; cv=none; b=Tb9M5iUSig8UoQ265VCm9E+68E+ggcbV1PrYLSsLRccagx/lrEbOlMXJq3oOB8nBQU6pBDH/Lrc1NSL7c2Wu1/xsdPckm2dV6AptQ8tDFWWmuj+691CX5mzqu7xed6NA8DSou8kL0TsHUnGGb2qBszndd0ysmN6pGL1IbvEq7Pk=
+	t=1746445174; cv=none; b=HNRRpU6AB2dLXjdO7c7FPqvAPyxwsjabbEBMfuDvU9BM73GpN4IGETmxydzhnCnvxfZAumbvSPtzNQwCq+BbS4kMng5EI4MorLBSfs0Xj2SnD13XUtu17EFaIVKp1byQwD74U3eS3Hy9vvKZSTb+VicXRO1JdPVQ/H8w7pygnJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746445091; c=relaxed/simple;
-	bh=R/WHlFZFKv+KxPs+9oB1B0r5TXqskrjUVFLrHry2GT4=;
+	s=arc-20240116; t=1746445174; c=relaxed/simple;
+	bh=ivuMF4AiyTS/4JYqXd/Q51GmUAE+wVce2hJ7HRmspx0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rD48JD7SCQaaWWOBHzi9aoVeS4sL+ObJg+9YMGvOFK9uUX6j9kA9rO4ZNWQKaxQcjr896+PDxcgn5alzT8hdUJBsM9OqJM8/RVrTYuG+x9ZpBzAgCK3KC3ZDjHWfztTvcUpCyG5C9S2GlQQVQ00dS35sL79SdHHC/hJbyPR3wTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B2KEd8tn; arc=none smtp.client-ip=209.85.221.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaSZ7o9KOpJ9mfLPPN1gFY1uicmpRHUhW/JatdVp5C967hKMMlBZS1GyAE4ST/kx8vRlXW0AamxIZJSmio+ZAAH/NDKpjoTxpamtWn/PbQiAE+bg0C9O/FWocYBhV3hHg3URgfzblfEUrvCEZbeVgFdZr9HOfxk8TNZ0JasEySA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yo9G/U4g; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so3125369f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 05 May 2025 04:38:07 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so25262875e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 05 May 2025 04:39:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746445086; x=1747049886; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746445171; x=1747049971; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EnfanRT/xnMsGy8H0p32Y/2L5KjP3rCv4iXcBwib1Gc=;
-        b=B2KEd8tnRltXOjFpEuJ6OfklU49ySnIoVTv53sDC0kj8FwlTUA7171/BXaQH3k+1Ws
-         IRnEL3nQ7sKN/iPLKerTQxN8DOEKgxNeH0CuNMc8epiGXEriQMbrRv/w2OlFcMNMlokE
-         NOtHQq2iiVxLn/TC8caxIgYF6e8fExY5e04bn7JBPJOIRXrdo75PBkWrKw0jdAr+o+kS
-         Ds2FBhIi+qXphfRRz4Dypw0pW0345b3Ky20Fqpgqpsusggjl5lVH8QN8sZ8KRESopLNM
-         t6nb3ZwPUnwAXLCvW9bUR4bWJZ7H5Ykl2ifSULVhx75wpA41zSrIKIak2TGV9CrhXDzy
-         sDsA==
+        bh=XnllKV8s3Tx8+pvOlOa62d3loJC0CAU43X1zb3557EY=;
+        b=Yo9G/U4gm5ENY1N56ruYbEY9yTflS7Mb3qHRiK7rIphbVVKBzqyhQWFyJe6sbfLsiv
+         S+9GXlD3x5qI2ENniiOHEpxnC7ge6fDOazIkA4SxLzveGKIQ9Lu22rupbaL+Q/s7uYqH
+         94t+MNJBPErNEkCuRZbHNqA8OG3xHlEBF4FM1ZystO6tJ8nwCt7ShqVnCGLU+OSSI6Ch
+         MshNUT8awgHOqewzJxVOA/547zFl7IluW38JSi4+eMnY8D2ULEoAMxHyvkZFwo4C8/9j
+         dE9YHB1ZvxETW7rlvV3Qa/mY6P1ewJrAzA7C5bJuMNHvjM5uaJl74OPr/XzXZ9P+XMl4
+         k0aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746445086; x=1747049886;
+        d=1e100.net; s=20230601; t=1746445171; x=1747049971;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EnfanRT/xnMsGy8H0p32Y/2L5KjP3rCv4iXcBwib1Gc=;
-        b=UsgQ1gBcmBbqf5cH6KcSkPJNwaEPKybZSOSD/bVjXBxKlEDHG0q/OHRQfgN1Z9nDoI
-         yCgOCrba/2f8bg7j0mf0fASeN537oYgI0/mIHHcIJclGl+BspZPwS6csycuvDA6EfHrx
-         Xn+USSW2tIIQuRbQeANyD9T/B5JnQiKLuuMDAKJOZbWPBUo9Bstg0VPPZjT2cVmfOKZo
-         e7vi85QQlj9/MK478QariGvHhtSo9kQrZ8tSCEpd+OQD+KYOcWIpYYkYQhnXtcrSEUyu
-         eG2kaqHP8vcVd1pooJJBfY7DisI12Xj7au+2uhGy+g/bbYN14myoF3higUrmTUXdvP57
-         HAhg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpnaneYpNx/sQMX7OR/Ga8Tvvx+f8brwW1h+GipkQ0Gr6zNcgIGri3Aa0+cISqx7tKyCXjQOUyPhYq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxEVwftoaUp8KUFcFb9KFJMPpnQZhO+vTwc4WH/CQlI3Aaigdw
-	77Brk+16v/+o21UA2qRR+WccK4m3F+mUJCHrpqPrH0S59uHGYkfKK4r0U00Mln8=
-X-Gm-Gg: ASbGncvE6h6hTmpv5EFWRcYYVhLvyogZ06jloi4xRnOnfOMONRKYvVBPhVRvmLabQO8
-	CoFCDTKwWUJC9m4k4e+ImL6xEHvZNdSjsDq4gFFHlO9eBWW08GQoMrmCM1/mDEzUbNwmyIeBfC3
-	Lb5rMJ8VqpYaywtW0hAGOHmPHm4NR7scz4gH+033atVrpQWlblHJIwgZwyr76osYAayTxnDgbzt
-	sVCgeCTle8d6um5tnWfoUql29CL+gDZg0aym6pPWXVrwYV/59j2XgjydwnFCi6SUxJzUXhLn6fV
-	FK1Goix0dVZPsvu9T5HYuKmhR6gAkOLoCvtvMXk8vdBM7w==
-X-Google-Smtp-Source: AGHT+IF/dmblFRkX7iqKnSY3Ui47NKfre3JcFqznctB9OO4eNwvIWHtPXnnSjPUS4bdilcUbRpgeUw==
-X-Received: by 2002:a5d:588a:0:b0:39c:30f9:339c with SMTP id ffacd0b85a97d-3a09ceba16amr6598523f8f.28.1746445086315;
-        Mon, 05 May 2025 04:38:06 -0700 (PDT)
+        bh=XnllKV8s3Tx8+pvOlOa62d3loJC0CAU43X1zb3557EY=;
+        b=K4pYII/NgpsNKzLYrLFxSlMUyA+N3g5UIiDmjMX7FLIvclIfUTHvIdNeearPOQbvJz
+         1kqFl3Gin4xzegEVSCWgSRKp/IGYS/uIDD4ais9JfXpCP3++nWM/1vnXjcBzZlgGJePH
+         RJohXYtjwILDKYv8zuqdde7uc/gBuksV0f5YTsUVl3JUXdFNS85ivXPzrtASysuxYF8R
+         rViotXfZLfbDKMlJD05fc10eNkdgopT9KTKADIALEl4RPJylcpnlr/5pWdPWBERf70qE
+         imOSXiaGvmxCPsUNTDQWmeVyGFnFH1J7bvrqEIs8fBoUj8f9braZg5EqmiAwDWWpqpg0
+         LFoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVRHk+Z/43AGjT8vwbNaJw1Yr9KEyR7rgyL8jKOJy8CPuM56bxh7tClhPO232l3bzj+K/taCPxOf9CG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHqCvB92towrcA/w2nz5iDvbjrtZKofSzQI9KWR3QxaBTnOwwY
+	QgoXp4teJZC7zba0mtqWovDByoyYYUR45uhoJvBC2PTss5SAFXbw8teGdoaRSOM=
+X-Gm-Gg: ASbGncthELeYrEPSm6dmkeb9Hc6GlG8FAUvGXWexiF8wUi9c9uvcBwDaspYnR8D/gLl
+	xiCxl1MlNPErYpOvjeYIWEBylU9ooLuboE7+C7CoJNnHx7HZ9oIfZw51TdtcAXz5seuUQUIdorr
+	SyuRe2lyyQf1UQWAkWFJhxn/ruK1AyHmssaUeC4sNxx/iCb/DszNCXSvk/qLAdXZ6luj2XJo2ry
+	rZ3e3E57bGZi0P0rxVeMIp3UVOKO2sg7wyTggXEvCzS77Pdp34qgkTBZisQlqseK3oKCV7/rBk1
+	lOBYqGPvgbFbykOLF/18XC4TrsiIja8ovq3p2Sw6sltLyg==
+X-Google-Smtp-Source: AGHT+IEa20MlrBHGITVX3bXAuaInVkSaScwYRHy4y22UhCPjKxK+cq5tGX/c8wkWOhLGOqkhp1PM5g==
+X-Received: by 2002:a05:600c:4e47:b0:43b:bb72:1dce with SMTP id 5b1f17b1804b1-441b7481655mr136942135e9.5.1746445171320;
+        Mon, 05 May 2025 04:39:31 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae8117sm10276584f8f.56.2025.05.05.04.38.05
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2b20aa6sm178602255e9.27.2025.05.05.04.39.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 04:38:06 -0700 (PDT)
-Date: Mon, 5 May 2025 14:38:03 +0300
+        Mon, 05 May 2025 04:39:30 -0700 (PDT)
+Date: Mon, 5 May 2025 14:39:17 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Sudeep Holla <sudeep.holla@arm.com>
 Cc: Cristian Marussi <cristian.marussi@arm.com>,
 	Linus Walleij <linus.walleij@linaro.org>, arm-scmi@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Takahiro AKASHI <akashi.tkhro@gmail.com>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [RFC 4/7] pinctrl-scmi: add PIN_CONFIG_INPUT_VALUE
-Message-ID: <855acdd6fcef4856c4fcc59affd3a191f74dbe82.1746443762.git.dan.carpenter@linaro.org>
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [RFC 5/7] pinctrl: Delete PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS support
+Message-ID: <81fb0a1b0cf15d73e7635081594d8650bf1a258d.1746443762.git.dan.carpenter@linaro.org>
 References: <cover.1746443762.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -93,60 +91,33 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1746443762.git.dan.carpenter@linaro.org>
 
-In SCMI the value of the pin is just another configuration option.  Add
-this as an option in the pin_config_param enum and creating a mapping to
-SCMI_PIN_INPUT_VALUE in pinctrl_scmi_map_pinconf_type()
+The argument for PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS is supposed to
+be expressed in terms of ohms.  But the pinctrl-scmi driver was
+implementing it the same as PIN_CONFIG_OUTPUT and writing either a
+zero or one to the pin.
 
-Since this is an RFC patch, I'm going to comment that I think the SCMI
-pinctrl driver misuses the PIN_CONFIG_OUTPUT enum.  It should be for
-enabling and disabling output on pins which can serve as both input and
-output.  Enabling it is supposed to write a 1 and disabling it is
-supposed to write a 0 but we use that side effect to write 1s and 0s.  I
-did't change this because it would break userspace but I'd like to add a
-PIN_CONFIG_OUTPUT_VALUE enum as well and use that in the GPIO driver.
-But in this patchset I just use PIN_CONFIG_OUTPUT.
+The SCMI protocol doesn't have an support configuration type so just
+delete this code instead of fixing it.
 
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/pinctrl/pinctrl-scmi.c          | 3 +++
- include/linux/pinctrl/pinconf-generic.h | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/pinctrl/pinctrl-scmi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
-index df4bbcd7d1d5..362a6d2c3c68 100644
+index 362a6d2c3c68..f369f0354e43 100644
 --- a/drivers/pinctrl/pinctrl-scmi.c
 +++ b/drivers/pinctrl/pinctrl-scmi.c
-@@ -250,6 +250,9 @@ static int pinctrl_scmi_map_pinconf_type(enum pin_config_param param,
- 	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
- 		*type = SCMI_PIN_INPUT_MODE;
+@@ -262,9 +262,6 @@ static int pinctrl_scmi_map_pinconf_type(enum pin_config_param param,
+ 	case PIN_CONFIG_OUTPUT_ENABLE:
+ 		*type = SCMI_PIN_OUTPUT_MODE;
  		break;
-+	case PIN_CONFIG_INPUT_VALUE:
-+		*type = SCMI_PIN_INPUT_VALUE;
-+		break;
- 	case PIN_CONFIG_MODE_LOW_POWER:
- 		*type = SCMI_PIN_LOW_POWER_MODE;
+-	case PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS:
+-		*type = SCMI_PIN_OUTPUT_VALUE;
+-		break;
+ 	case PIN_CONFIG_POWER_SOURCE:
+ 		*type = SCMI_PIN_POWER_SOURCE;
  		break;
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 1bcf071b860e..b37838171581 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -83,6 +83,8 @@ struct pinctrl_map;
-  *      schmitt-trigger mode is disabled.
-  * @PIN_CONFIG_INPUT_SCHMITT_UV: this will configure an input pin to run in
-  *	schmitt-trigger mode. The argument is in uV.
-+ * @PIN_CONFIG_INPUT_VALUE: This is used in SCMI to read the value from the
-+ *	pin.
-  * @PIN_CONFIG_MODE_LOW_POWER: this will configure the pin for low power
-  *	operation, if several modes of operation are supported these can be
-  *	passed in the argument on a custom form, else just use argument 1
-@@ -135,6 +137,7 @@ enum pin_config_param {
- 	PIN_CONFIG_INPUT_SCHMITT,
- 	PIN_CONFIG_INPUT_SCHMITT_ENABLE,
- 	PIN_CONFIG_INPUT_SCHMITT_UV,
-+	PIN_CONFIG_INPUT_VALUE,
- 	PIN_CONFIG_MODE_LOW_POWER,
- 	PIN_CONFIG_MODE_PWM,
- 	PIN_CONFIG_OUTPUT,
 -- 
 2.47.2
 
