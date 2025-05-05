@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-19624-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19626-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E876AAA9F9
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 03:26:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10E4CAAAAB6
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 03:43:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B7EB1886E3C
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 01:23:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 548564A54CC
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 01:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE842D86B9;
-	Mon,  5 May 2025 22:56:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62DB02EE190;
+	Mon,  5 May 2025 23:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6kLc9UB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qivaZwFv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991C536BFE6;
-	Mon,  5 May 2025 22:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C6A385350;
+	Mon,  5 May 2025 23:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485195; cv=none; b=dgI6DhO4pPJ/DzZE8767XA+S8CAKkXQoo4YzpSg9w6DTa7HequYC1gSuE/1b/BVtWErsGdzj48GkblJeazrC2gfzbwK5Wz6mheNyQWoaQd7IKdfr9JPlD4zsz7FXm1xGjnSYIlik0NPKmt3uT68SDURMywajcRHv0JY7INlIWmw=
+	t=1746486037; cv=none; b=QL3GcVvCV+MPkhREQGWe86cQMudSURB+5147eq3zXeIO1OL4823624jPUrwf9CHbOsrIKlyPLzOAB3LhEEGfeSMmiwc0cfEzZrazU87jQ38RGNCbExc0Cv75KzEt3BevZRDkC+pcaeg5tq/Q3W5Ns/S/QwJOnjWyt23i5ezB9so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485195; c=relaxed/simple;
+	s=arc-20240116; t=1746486037; c=relaxed/simple;
 	bh=dax5wqEKuM333ZcfbQ21Tr60WY5WK+s4KXT4IfgTIks=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s7AJgXPhjMh7mq9ho7RpBx5xGthF4mFPLl8aohrI3EA8mBla16D+jw2VuYn94Mv3/9Xuhtr0myxcOp/UD1jkFTWSnLGww4ujPMRZh5WI6cwy+319zpSa1Yb3AGJXs3Nd5WnDZlCMz8VmsKab8QQpZn9TDYRWwnP84SFa1SBB08M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6kLc9UB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB2BC4CEE4;
-	Mon,  5 May 2025 22:46:33 +0000 (UTC)
+	 MIME-Version; b=sLBNRJSDTmv8APw2vr//KMoKgXoL18Ve/FkoqEogt2vm/2JpM5dvG16zPoQ7CxwlHG7NE+ejT/l8Qam4SaM4WbD/9WSNTTm3JkBuxBdaewc6ZktyT5+dHmbLAqXp6CM262ae218Bys/Z8uyDrIWAedgVZwMqQQPUb9EagP4feoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qivaZwFv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977E7C4CEF1;
+	Mon,  5 May 2025 23:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485194;
+	s=k20201202; t=1746486035;
 	bh=dax5wqEKuM333ZcfbQ21Tr60WY5WK+s4KXT4IfgTIks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j6kLc9UB6Rw+HTpKzJxzs5GULAbvEaeI6X4oJLQmFuvHuBWWvr9LuQjpJ9KrV3aXY
-	 fg+O4GiXnVCpL/1T7kM4fFM4thnI7vGCwwv6b4HGnJ16R+uvHAkgElXm6/o6vsO1It
-	 aXo8DeTfQ3lUvMbY9au7/QsfMvSv5wwAjjltoCH5VXDwZ4qfFBTJ+eFx4osu9tEB+K
-	 DSugQPkTJRjpX6iQqosqoj1qm8Y7Z4CNeMTGNouwWBIp7JFRC6zfkMwy1uTFOjgGsC
-	 ugiVnx4GFLkr3P8CqE6gcTBTgAOK3Zl0FQdVycKDTGoRORxbWyyuszmXL0wd8CWN/q
-	 ZEdbZZQPctoUA==
+	b=qivaZwFvvQDlRLfHAvQZdD5vJSWe5FLRM4nqVCOAv2gBkMFU3up0MTH6uY2DWfhOz
+	 ipV/zqGE6oJgQ3wi+FC6CbV0ZMjyvA17WO8BMHFd/a0wjCC2Th9SGMvZ2HGwCFd3L+
+	 I9hzQ3mhOKm94SPidDErWKkTWD0wFnSFekkK3cyjWEjScfpIOSF+dU76IIGUBZzEGh
+	 IeAbKweFHPQzsX3lEkbKhwzkONdvwpGlyivdwBvHHLCI7ZgU1ldyc9Z9uTdWtw++ua
+	 TYCkEnYJE0E4ycVNix57V+oVeUJPLMzSgMCKaSdaKCfllTcWmGvdrzCiaRK4WlA5/4
+	 9Nu6TOzOz/7vw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -54,12 +54,12 @@ Cc: Artur Weber <aweber.kernel@gmail.com>,
 	linux-gpio@vger.kernel.org,
 	linux-rpi-kernel@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 204/486] pinctrl: bcm281xx: Use "unsigned int" instead of bare "unsigned"
-Date: Mon,  5 May 2025 18:34:40 -0400
-Message-Id: <20250505223922.2682012-204-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 121/294] pinctrl: bcm281xx: Use "unsigned int" instead of bare "unsigned"
+Date: Mon,  5 May 2025 18:53:41 -0400
+Message-Id: <20250505225634.2688578-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
+References: <20250505225634.2688578-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
 From: Artur Weber <aweber.kernel@gmail.com>
