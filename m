@@ -1,57 +1,56 @@
-Return-Path: <linux-gpio+bounces-19618-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19619-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A05FAAA4F8
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 01:39:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DBD7AAA5CB
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 01:57:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E75D0188D72C
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 23:37:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E97B18812AF
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 23:55:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BD830723C;
-	Mon,  5 May 2025 22:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B313174EC;
+	Mon,  5 May 2025 22:31:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPk8q8Fi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUfnpTNj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0B3307232;
-	Mon,  5 May 2025 22:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30283174E1;
+	Mon,  5 May 2025 22:31:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484086; cv=none; b=Kk6IPSijFaW4uJ69m6hwEObKjQ+2Fzg3PPGU4JzZNPT1JfAd/9Epp8RXRThG9J4wO9Q+wfpTs5VkHT+4djeEUq20PCCDkrMdqdpyh/sQuGyRbPP5oDySlP/7MvHeOiWFeRj3j9WaeM2N1tu3e4EqZdw3XpgqkXOl6MGLH8+N0I8=
+	t=1746484262; cv=none; b=MRhyyeCO7KI/qCxqMihk2RLgggt67+/0u7ByQ75Q/TCpf3ebA5UnXz1iiqCcMn+J/8ipobPuyiLylM8POLt7K0a9CbFrLxA8JqrimVigLv9Hp7IZevM1f14FoozZiOjm50yLL4IXBYI2LBlHA4vYO8iuu/kwwiaOGeC7Crew31I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484086; c=relaxed/simple;
-	bh=WB2dY6oh6xjhaw0B01zKCSI5qkhaRNJBNP0Lgmr7EbI=;
+	s=arc-20240116; t=1746484262; c=relaxed/simple;
+	bh=AWuDwQHhVZqwsKiuJexopmeKVA3Ii4AwL48PA1xN6vs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WkBMUkIxToyb0MhXMkDvE9//Ld1jOp/NwKNoOELm2tPgB4icO2698LHFRtsmHp5Ni59KAk00g0mGoMWOHHkkHWTLX5LjbyQMIEt0ZErYeYI0znsTEm+p+wrNrbjaw7VKnZARXWEgXza13+BtAeNedwVaWG7IA1BwjKoyMOVLXq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPk8q8Fi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80773C4CEED;
-	Mon,  5 May 2025 22:28:05 +0000 (UTC)
+	 MIME-Version; b=YQKbm22COynxjxZWM61w8QA2XgefBCngcHaMm1Sj8jKXAQylJvdmy8NpTfEhfhqUmhHB7tuEPW4o3hh3xi9NLh1PzFfSMNnyLzmY6xrPI5pgP/u81/zi5j+rvjPp0jSJi2a54ntY5sB7q7IC1AcdWCH15cMc+QHqjiMR+R3vS2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUfnpTNj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC68AC4CEEE;
+	Mon,  5 May 2025 22:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484086;
-	bh=WB2dY6oh6xjhaw0B01zKCSI5qkhaRNJBNP0Lgmr7EbI=;
+	s=k20201202; t=1746484261;
+	bh=AWuDwQHhVZqwsKiuJexopmeKVA3Ii4AwL48PA1xN6vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vPk8q8FiMlfqcXMbMTV00CqqSV+G9vHJJ9j8OBh5lon5DMhtAJl+JaXzTlmvk1Z6F
-	 JsYLMOoMlVz8pZrIFhcmGfz+H5ce4aqMNDp8Ym29464YZeGuM3e9C7IiU0kijyoZbQ
-	 eweTP9rrQgveWcolZtXSSzMsv6F3wSWRJZq+IazfMQT+CB/nba1xT/T6+PKPw0N+CC
-	 oTrwf9IN9ZJdthLQQqAAjQBAE0C3quh5nxz7RvgDsk0X4BlkA0Hu1564CL6hpuLVk6
-	 DUzdhBUsQiZAo6XcWQ7jCS1jBIHmO2YE0Fw2Gp0nc2bsTplbuW+fTJIVXy6Bz9D9Qf
-	 358cOTqTwVw3A==
+	b=bUfnpTNjoVH4OtSUob8dMXj9P09ixjqNfWF4LfhpHVIgKsE7BAEMXGGlKfciFx2Wx
+	 ajgOfWyXgYc1zyO19Mn9xdEqDsaMoxwdrWtu0QMpuzuojjolxIi8hjGZx3zYnCfbk1
+	 C8ZHpxSQCziFV2qIsFO8Y+Iv+uJ9mmLjzUV8PMYmYIPpw/+VYjHvL5OjxKbftl5lho
+	 XlNUiph5IQdRlizDPUoSEQD6tUFCBDLYzD7YtmlSF5Amm6MNXdOw/50pn2/4X8CEJL
+	 cXKSPUK+RhdlbqO/AuBqDQbSZBBAe7Z+iC85dY49/HT80/Tq9OyI8JP25EBKtNyhbo
+	 FnRmYgueg06nA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+Cc: Valentin Caron <valentin.caron@foss.st.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 343/642] gpiolib: sanitize the return value of gpio_chip::set_config()
-Date: Mon,  5 May 2025 18:09:19 -0400
-Message-Id: <20250505221419.2672473-343-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 419/642] pinctrl: devicetree: do not goto err when probing hogs in pinctrl_dt_to_map
+Date: Mon,  5 May 2025 18:10:35 -0400
+Message-Id: <20250505221419.2672473-419-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -66,52 +65,107 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: Valentin Caron <valentin.caron@foss.st.com>
 
-[ Upstream commit dcf8f3bffa2de2c7f3b5771b63605194ccd2286f ]
+[ Upstream commit c98868e816209e568c9d72023ba0bc1e4d96e611 ]
 
-The return value of the set_config() callback may be propagated to
-user-space. If a bad driver returns a positive number, it may confuse
-user programs. Tighten the API contract and check for positive numbers
-returned by GPIO controllers.
+Cross case in pinctrl framework make impossible to an hogged pin and
+another, not hogged, used within the same device-tree node. For example
+with this simplified device-tree :
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20250210-gpio-sanitize-retvals-v1-3-12ea88506cb2@linaro.org
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+  &pinctrl {
+    pinctrl_pin_1: pinctrl-pin-1 {
+      pins = "dummy-pinctrl-pin";
+    };
+  };
+
+  &rtc {
+    pinctrl-names = "default"
+    pinctrl-0 = <&pinctrl_pin_1 &rtc_pin_1>
+
+    rtc_pin_1: rtc-pin-1 {
+      pins = "dummy-rtc-pin";
+    };
+  };
+
+"pinctrl_pin_1" configuration is never set. This produces this path in
+the code:
+
+  really_probe()
+    pinctrl_bind_pins()
+    | devm_pinctrl_get()
+    |   pinctrl_get()
+    |     create_pinctrl()
+    |       pinctrl_dt_to_map()
+    |         // Hog pin create an abort for all pins of the node
+    |         ret = dt_to_map_one_config()
+    |         | /* Do not defer probing of hogs (circular loop) */
+    |         | if (np_pctldev == p->dev->of_node)
+    |         |   return -ENODEV;
+    |         if (ret)
+    |           goto err
+    |
+    call_driver_probe()
+      stm32_rtc_probe()
+        pinctrl_enable()
+          pinctrl_claim_hogs()
+            create_pinctrl()
+              for_each_maps(maps_node, i, map)
+                // Not hog pin is skipped
+                if (pctldev && strcmp(dev_name(pctldev->dev),
+                                      map->ctrl_dev_name))
+                  continue;
+
+At the first call of create_pinctrl() the hogged pin produces an abort to
+avoid a defer of hogged pins. All other pin configurations are trashed.
+
+At the second call, create_pinctrl is now called with pctldev parameter to
+get hogs, but in this context only hogs are set. And other pins are
+skipped.
+
+To handle this, do not produce an abort in the first call of
+create_pinctrl(). Classic pin configuration will be set in
+pinctrl_bind_pins() context. And the hogged pin configuration will be set
+in pinctrl_claim_hogs() context.
+
+Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
+Link: https://lore.kernel.org/20250116170009.2075544-1-valentin.caron@foss.st.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c      | 3 +++
- include/linux/gpio/driver.h | 3 ++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/devicetree.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 0c00ed2ab4315..960ca0ad45fc8 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2577,6 +2577,9 @@ int gpio_do_set_config(struct gpio_desc *desc, unsigned long config)
- 		return -ENOTSUPP;
- 
- 	ret = guard.gc->set_config(guard.gc, gpio_chip_hwgpio(desc), config);
-+	if (ret > 0)
-+		ret = -EBADE;
-+
- #ifdef CONFIG_GPIO_CDEV
- 	/*
- 	 * Special case - if we're setting debounce period, we need to store
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 2dd7cb9cc270a..5ce6b2167f808 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -347,7 +347,8 @@ struct gpio_irq_chip {
-  * @set: assigns output value for signal "offset"
-  * @set_multiple: assigns output values for multiple signals defined by "mask"
-  * @set_config: optional hook for all kinds of settings. Uses the same
-- *	packed config format as generic pinconf.
-+ *	packed config format as generic pinconf. Must return 0 on success and
-+ *	a negative error number on failure.
-  * @to_irq: optional hook supporting non-static gpiod_to_irq() mappings;
-  *	implementation may not sleep
-  * @dbg_show: optional routine to show contents in debugfs; default code
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 6a94ecd6a8dea..0b7f74beb6a6a 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -143,10 +143,14 @@ static int dt_to_map_one_config(struct pinctrl *p,
+ 		pctldev = get_pinctrl_dev_from_of_node(np_pctldev);
+ 		if (pctldev)
+ 			break;
+-		/* Do not defer probing of hogs (circular loop) */
++		/*
++		 * Do not defer probing of hogs (circular loop)
++		 *
++		 * Return 1 to let the caller catch the case.
++		 */
+ 		if (np_pctldev == p->dev->of_node) {
+ 			of_node_put(np_pctldev);
+-			return -ENODEV;
++			return 1;
+ 		}
+ 	}
+ 	of_node_put(np_pctldev);
+@@ -265,6 +269,8 @@ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
+ 			ret = dt_to_map_one_config(p, pctldev, statename,
+ 						   np_config);
+ 			of_node_put(np_config);
++			if (ret == 1)
++				continue;
+ 			if (ret < 0)
+ 				goto err;
+ 		}
 -- 
 2.39.5
 
