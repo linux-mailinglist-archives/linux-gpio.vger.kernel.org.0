@@ -1,59 +1,57 @@
-Return-Path: <linux-gpio+bounces-19617-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19618-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C447AAA4A8
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 01:32:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A05FAAA4F8
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 01:39:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B7CB3B8F10
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 23:30:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E75D0188D72C
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 May 2025 23:37:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0263B301A57;
-	Mon,  5 May 2025 22:26:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BD830723C;
+	Mon,  5 May 2025 22:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iAqEbBoc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPk8q8Fi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E86301A49;
-	Mon,  5 May 2025 22:26:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0B3307232;
+	Mon,  5 May 2025 22:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484005; cv=none; b=HtFrx3L+0LnYKmOAOpQcdeUzaRHIjWLvJRstNjjP9EivJ+cp3/weIgwkSn5JHvjpkf44+nrbXFp2qb9angItJjt5cgwdrX+7wPq/YfaLKhhmZHR91KI12JsfkXmfhAFdx7PvQRlCCx3s7MMbgNhUCIBt0QplvVEdk2zAlly7ZWY=
+	t=1746484086; cv=none; b=Kk6IPSijFaW4uJ69m6hwEObKjQ+2Fzg3PPGU4JzZNPT1JfAd/9Epp8RXRThG9J4wO9Q+wfpTs5VkHT+4djeEUq20PCCDkrMdqdpyh/sQuGyRbPP5oDySlP/7MvHeOiWFeRj3j9WaeM2N1tu3e4EqZdw3XpgqkXOl6MGLH8+N0I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484005; c=relaxed/simple;
-	bh=7B9odQZRj2gC76z7NxjH0h9xUUpgvrl593tF6Jxvcd0=;
+	s=arc-20240116; t=1746484086; c=relaxed/simple;
+	bh=WB2dY6oh6xjhaw0B01zKCSI5qkhaRNJBNP0Lgmr7EbI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nhUpqNA3Jf7ye072hOvWhDJvpx+WA7XW1t7qgtMXxdCp1RgW2V2fCgYaLCTEpOFm6q7bA3M5omaWCL+sKHdwYgWbH/hTAlHbaGromErGO91P3bCIltJ8FSv1AyJo6kbmitG69JAi7J0ks5+OVn5NnJ3djAJvE1QuZ7KCP5Uefx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iAqEbBoc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81438C4CEE4;
-	Mon,  5 May 2025 22:26:44 +0000 (UTC)
+	 MIME-Version; b=WkBMUkIxToyb0MhXMkDvE9//Ld1jOp/NwKNoOELm2tPgB4icO2698LHFRtsmHp5Ni59KAk00g0mGoMWOHHkkHWTLX5LjbyQMIEt0ZErYeYI0znsTEm+p+wrNrbjaw7VKnZARXWEgXza13+BtAeNedwVaWG7IA1BwjKoyMOVLXq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPk8q8Fi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80773C4CEED;
+	Mon,  5 May 2025 22:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484005;
-	bh=7B9odQZRj2gC76z7NxjH0h9xUUpgvrl593tF6Jxvcd0=;
+	s=k20201202; t=1746484086;
+	bh=WB2dY6oh6xjhaw0B01zKCSI5qkhaRNJBNP0Lgmr7EbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iAqEbBocZC57c9KDxDww09oZj+5qGuCvW8Lcg/N5Ece8tM6/8hfd0/fWk53dpu8bs
-	 sozNUYfFPGuJ4FqU4Zq4V8/czNC3/zB88FrnWoLXM4bDrcSwLCkn7LVEG6oNgo/6JC
-	 LSi3MXkk4ctd1fxQiDyLy/cduUPO1lo1VKJ7bVPX5k5dtTiKhUojqeDW9/WKf7x/85
-	 QGrJaIJU1wi2xzEELcwvGYUg5jSzkY1KImxg1SHYtAQvejUiQJp+T3jjohgnRAv1VS
-	 A9byi1KjJ7JW6sJ2Ri11xEZW403k6sWoz5MzBkbEHcVYMrBzjAxwxf26rn3gTXfTKr
-	 HHkVoAzlP+Wfg==
+	b=vPk8q8FiMlfqcXMbMTV00CqqSV+G9vHJJ9j8OBh5lon5DMhtAJl+JaXzTlmvk1Z6F
+	 JsYLMOoMlVz8pZrIFhcmGfz+H5ce4aqMNDp8Ym29464YZeGuM3e9C7IiU0kijyoZbQ
+	 eweTP9rrQgveWcolZtXSSzMsv6F3wSWRJZq+IazfMQT+CB/nba1xT/T6+PKPw0N+CC
+	 oTrwf9IN9ZJdthLQQqAAjQBAE0C3quh5nxz7RvgDsk0X4BlkA0Hu1564CL6hpuLVk6
+	 DUzdhBUsQiZAo6XcWQ7jCS1jBIHmO2YE0Fw2Gp0nc2bsTplbuW+fTJIVXy6Bz9D9Qf
+	 358cOTqTwVw3A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dang Huynh <danct12@riseup.net>,
-	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>,
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	andersson@kernel.org,
-	linux-arm-msm@vger.kernel.org,
+	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 314/642] pinctrl: qcom: msm8917: Add MSM8937 wsa_reset pin
-Date: Mon,  5 May 2025 18:08:50 -0400
-Message-Id: <20250505221419.2672473-314-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 343/642] gpiolib: sanitize the return value of gpio_chip::set_config()
+Date: Mon,  5 May 2025 18:09:19 -0400
+Message-Id: <20250505221419.2672473-343-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -63,84 +61,57 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: Dang Huynh <danct12@riseup.net>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-[ Upstream commit 3dd3ab690172b11758e17775cfbf98986ec0cb71 ]
+[ Upstream commit dcf8f3bffa2de2c7f3b5771b63605194ccd2286f ]
 
-It looks like both 8917 and 8937 are the same except for one pin
-"wsa_reset".
+The return value of the set_config() callback may be propagated to
+user-space. If a bad driver returns a positive number, it may confuse
+user programs. Tighten the API contract and check for positive numbers
+returned by GPIO controllers.
 
-Signed-off-by: Dang Huynh <danct12@riseup.net>
-Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-Link: https://lore.kernel.org/20250211-msm8937-v1-4-7d27ed67f708@mainlining.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20250210-gpio-sanitize-retvals-v1-3-12ea88506cb2@linaro.org
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/Kconfig.msm       | 4 ++--
- drivers/pinctrl/qcom/pinctrl-msm8917.c | 8 +++++++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpio/gpiolib.c      | 3 +++
+ include/linux/gpio/driver.h | 3 ++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/Kconfig.msm b/drivers/pinctrl/qcom/Kconfig.msm
-index 35f47660a56b1..a0d63a6725393 100644
---- a/drivers/pinctrl/qcom/Kconfig.msm
-+++ b/drivers/pinctrl/qcom/Kconfig.msm
-@@ -138,10 +138,10 @@ config PINCTRL_MSM8916
- 	  Qualcomm TLMM block found on the Qualcomm 8916 platform.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 0c00ed2ab4315..960ca0ad45fc8 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2577,6 +2577,9 @@ int gpio_do_set_config(struct gpio_desc *desc, unsigned long config)
+ 		return -ENOTSUPP;
  
- config PINCTRL_MSM8917
--	tristate "Qualcomm 8917 pin controller driver"
-+	tristate "Qualcomm 8917/8937 pin controller driver"
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
--	  Qualcomm TLMM block found on the Qualcomm MSM8917 platform.
-+	  Qualcomm TLMM block found on the Qualcomm MSM8917, MSM8937 platform.
- 
- config PINCTRL_MSM8953
- 	tristate "Qualcomm 8953 pin controller driver"
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8917.c b/drivers/pinctrl/qcom/pinctrl-msm8917.c
-index cff137bb3b23f..350636807b07d 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8917.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8917.c
-@@ -539,6 +539,7 @@ enum msm8917_functions {
- 	msm_mux_webcam_standby,
- 	msm_mux_wsa_io,
- 	msm_mux_wsa_irq,
-+	msm_mux_wsa_reset,
- 	msm_mux__,
- };
- 
-@@ -1123,6 +1124,10 @@ static const char * const wsa_io_groups[] = {
- 	"gpio94", "gpio95",
- };
- 
-+static const char * const wsa_reset_groups[] = {
-+	"gpio96",
-+};
+ 	ret = guard.gc->set_config(guard.gc, gpio_chip_hwgpio(desc), config);
++	if (ret > 0)
++		ret = -EBADE;
 +
- static const char * const blsp_spi8_groups[] = {
- 	"gpio96", "gpio97", "gpio98", "gpio99",
- };
-@@ -1378,6 +1383,7 @@ static const struct pinfunction msm8917_functions[] = {
- 	MSM_PIN_FUNCTION(webcam_standby),
- 	MSM_PIN_FUNCTION(wsa_io),
- 	MSM_PIN_FUNCTION(wsa_irq),
-+	MSM_PIN_FUNCTION(wsa_reset),
- };
- 
- static const struct msm_pingroup msm8917_groups[] = {
-@@ -1616,5 +1622,5 @@ static void __exit msm8917_pinctrl_exit(void)
- }
- module_exit(msm8917_pinctrl_exit);
- 
--MODULE_DESCRIPTION("Qualcomm msm8917 pinctrl driver");
-+MODULE_DESCRIPTION("Qualcomm msm8917/msm8937 pinctrl driver");
- MODULE_LICENSE("GPL");
+ #ifdef CONFIG_GPIO_CDEV
+ 	/*
+ 	 * Special case - if we're setting debounce period, we need to store
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 2dd7cb9cc270a..5ce6b2167f808 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -347,7 +347,8 @@ struct gpio_irq_chip {
+  * @set: assigns output value for signal "offset"
+  * @set_multiple: assigns output values for multiple signals defined by "mask"
+  * @set_config: optional hook for all kinds of settings. Uses the same
+- *	packed config format as generic pinconf.
++ *	packed config format as generic pinconf. Must return 0 on success and
++ *	a negative error number on failure.
+  * @to_irq: optional hook supporting non-static gpiod_to_irq() mappings;
+  *	implementation may not sleep
+  * @dbg_show: optional routine to show contents in debugfs; default code
 -- 
 2.39.5
 
