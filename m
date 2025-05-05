@@ -1,59 +1,66 @@
-Return-Path: <linux-gpio+bounces-19632-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19636-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A1CDAAAD9B
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 04:38:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9937AAB6D6
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 07:58:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 522B17AAC28
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 02:37:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB6313A6FE1
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 05:52:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48DD03F8A17;
-	Mon,  5 May 2025 23:45:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E09544737D;
+	Tue,  6 May 2025 00:31:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LD5O5kAD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdWdDeV2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B3E3BE7D6;
-	Mon,  5 May 2025 23:23:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED073745A5;
+	Mon,  5 May 2025 22:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487415; cv=none; b=HEikecn7PcDvB/iGJXN+tmh0iMcS4oXypx8Hba3nf32RNkKgZB4FB3oDYm7FAYYnDWUmRs23xwtK0w3tKTjimf4y5vCAXyisJsU+XikOcaJbPX+ceQbf1EAKziC5kj94CTKdD4BQvm5yI+OVCi/z0MD7r2M29lD20kB5rI2fNwY=
+	t=1746485936; cv=none; b=o56+D2lHnTdiNyi8Y6lLVGVhGWAEzGDxDi9bT/zhvMKGwplPI/77BCqByq7cne0VvTS5rKMIIRI/m+eGaSQ4UG0dKCU4anzSB90FiP7gjW2cuBAjUpc92pstUFRNvDZTqvMQ404fGKqOJNEYiH710wJWoG8LfmaxXtHVyhufM30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487415; c=relaxed/simple;
-	bh=0zpXg/dv88PnIScM0f8hthu1crIBBf4iKZ46cfJ133E=;
+	s=arc-20240116; t=1746485936; c=relaxed/simple;
+	bh=rOo8j2xsQXpsL82NQglsa2dm1Nhqx7YdR2/zchL6+xw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OKrHF5YaxqTiOInSKXtPQql7OhW08jFUWQLlLAymxhWDR0V2wg+MCm6W6AU2gzFif1fjB9X5C5isWjHYY2qTbvoDyzQNsxPGRWF8EQ4htttHml0TeRgDij86v6/Fd6PoxnfjI9WRmMMocuvF09RViZNQR8ktLwpzJBEZTYry24c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LD5O5kAD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D91E3C4CEED;
-	Mon,  5 May 2025 23:23:33 +0000 (UTC)
+	 MIME-Version; b=ijIr8AqH5v7i0EZ3YvaTN20mKEAbnflfNV2973vIOSMwRfo2Js8tDpx6qMIZNPPkOSKadLuD23IkHK2i/Fmn1eqKFwdhBXdSgkYHjiyAHX1zJpF4+UzeXq1MeJEykTj3RwZk0TIQVigZxlanhDKAmTEka8dmWL+o4UHP7HqKKLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdWdDeV2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32C4C4CEE4;
+	Mon,  5 May 2025 22:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487414;
-	bh=0zpXg/dv88PnIScM0f8hthu1crIBBf4iKZ46cfJ133E=;
+	s=k20201202; t=1746485936;
+	bh=rOo8j2xsQXpsL82NQglsa2dm1Nhqx7YdR2/zchL6+xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LD5O5kADuzTQuL7vlfywtz4Wpb2LZ+qVbjhFq770Nd9tXnimqsNlaxWZmy7VMExNH
-	 zvduD9yR/GxURnc7vE+BzaX4/kMNegu0N9pe4Q6+dAYm77JmSSJ1CT1ocgAr2zFbFE
-	 sPd09/IIQ1KriASqHWClIGC2gTAejn/pYCoHTNl8PolBCIFUfH/f+dBmvamV11CCXH
-	 utRIuOYdudoRHbkwJBL78AP5JudDraoDL427lV62wxI6JDYr3t8Gsh+Gca185jzMKU
-	 Bde881g9+qHaFCGzTkWXLMDEw7L0Z9gdkbWJ8mZBUO3DBxi73PQyzh56EidE86M1I5
-	 p8DV7Wrphj5BA==
+	b=hdWdDeV22HCRz9/iITCEYS9i19b0Mktg24weWKu2z2Yp1Ft/C4uWY50q8WtNX4SjN
+	 IPJzweayWLXzzEzFi2WXkmyzqOxhMD8XMis/J+KxYxn9IvD6ueiv6pRSZFz91MQOCI
+	 nwrAFMfntwdIkS1uthW+DOdbDbPuNicGwkjQ67b9E8J/mniLDjGs5gHaSR2MnAkBN8
+	 Ovx/xt6jYO6UtoK2AXCNlSpwC8OkdssSy8I+1m3rbt2LUcGox0SqlixgCBKQO8c7Xk
+	 iXqNy0HJj6xFn/7rPmw9FGB9A5h67bRsXsh0fjBRxdGEPWco0OwjPnHD6u9hK9wfut
+	 7I2z36JD4nAQg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Valentin Caron <valentin.caron@foss.st.com>,
+Cc: Prathamesh Shete <pshete@nvidia.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 58/79] pinctrl: devicetree: do not goto err when probing hogs in pinctrl_dt_to_map
-Date: Mon,  5 May 2025 19:21:30 -0400
-Message-Id: <20250505232151.2698893-58-sashal@kernel.org>
+	thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
+	brgl@bgdev.pl,
+	peng.fan@nxp.com,
+	kunwu.chan@linux.dev,
+	dan.carpenter@linaro.org,
+	linux-gpio@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 074/294] pinctrl-tegra: Restore SFSEL bit when freeing pins
+Date: Mon,  5 May 2025 18:52:54 -0400
+Message-Id: <20250505225634.2688578-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
-References: <20250505232151.2698893-1-sashal@kernel.org>
+In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
+References: <20250505225634.2688578-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,110 +69,184 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.293
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Valentin Caron <valentin.caron@foss.st.com>
+From: Prathamesh Shete <pshete@nvidia.com>
 
-[ Upstream commit c98868e816209e568c9d72023ba0bc1e4d96e611 ]
+[ Upstream commit c12bfa0fee65940b10ff5187349f76c6f6b1df9c ]
 
-Cross case in pinctrl framework make impossible to an hogged pin and
-another, not hogged, used within the same device-tree node. For example
-with this simplified device-tree :
+Each pin can be configured as a Special Function IO (SFIO) or GPIO,
+where the SFIO enables the pin to operate in alternative modes such as
+I2C, SPI, etc.
 
-  &pinctrl {
-    pinctrl_pin_1: pinctrl-pin-1 {
-      pins = "dummy-pinctrl-pin";
-    };
-  };
+The current implementation sets all the pins back to SFIO mode
+even if they were initially in GPIO mode. This can cause glitches
+on the pins when pinctrl_gpio_free() is called.
 
-  &rtc {
-    pinctrl-names = "default"
-    pinctrl-0 = <&pinctrl_pin_1 &rtc_pin_1>
+Avoid these undesired glitches by storing the pin's SFIO/GPIO
+state on GPIO request and restoring it on GPIO free.
 
-    rtc_pin_1: rtc-pin-1 {
-      pins = "dummy-rtc-pin";
-    };
-  };
-
-"pinctrl_pin_1" configuration is never set. This produces this path in
-the code:
-
-  really_probe()
-    pinctrl_bind_pins()
-    | devm_pinctrl_get()
-    |   pinctrl_get()
-    |     create_pinctrl()
-    |       pinctrl_dt_to_map()
-    |         // Hog pin create an abort for all pins of the node
-    |         ret = dt_to_map_one_config()
-    |         | /* Do not defer probing of hogs (circular loop) */
-    |         | if (np_pctldev == p->dev->of_node)
-    |         |   return -ENODEV;
-    |         if (ret)
-    |           goto err
-    |
-    call_driver_probe()
-      stm32_rtc_probe()
-        pinctrl_enable()
-          pinctrl_claim_hogs()
-            create_pinctrl()
-              for_each_maps(maps_node, i, map)
-                // Not hog pin is skipped
-                if (pctldev && strcmp(dev_name(pctldev->dev),
-                                      map->ctrl_dev_name))
-                  continue;
-
-At the first call of create_pinctrl() the hogged pin produces an abort to
-avoid a defer of hogged pins. All other pin configurations are trashed.
-
-At the second call, create_pinctrl is now called with pctldev parameter to
-get hogs, but in this context only hogs are set. And other pins are
-skipped.
-
-To handle this, do not produce an abort in the first call of
-create_pinctrl(). Classic pin configuration will be set in
-pinctrl_bind_pins() context. And the hogged pin configuration will be set
-in pinctrl_claim_hogs() context.
-
-Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
-Link: https://lore.kernel.org/20250116170009.2075544-1-valentin.caron@foss.st.com
+Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+Link: https://lore.kernel.org/20250305104939.15168-2-pshete@nvidia.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/devicetree.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 59 +++++++++++++++++++++++----
+ drivers/pinctrl/tegra/pinctrl-tegra.h |  6 +++
+ 2 files changed, 57 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 200357094e3be..e9bfb96a2e0e8 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -141,10 +141,14 @@ static int dt_to_map_one_config(struct pinctrl *p,
- 		pctldev = get_pinctrl_dev_from_of_node(np_pctldev);
- 		if (pctldev)
- 			break;
--		/* Do not defer probing of hogs (circular loop) */
-+		/*
-+		 * Do not defer probing of hogs (circular loop)
-+		 *
-+		 * Return 1 to let the caller catch the case.
-+		 */
- 		if (np_pctldev == p->dev->of_node) {
- 			of_node_put(np_pctldev);
--			return -ENODEV;
-+			return 1;
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index 7c12a3470642c..1350ab56fbc03 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -280,8 +280,8 @@ static int tegra_pinctrl_set_mux(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
+-static const struct tegra_pingroup *tegra_pinctrl_get_group(struct pinctrl_dev *pctldev,
+-					unsigned int offset)
++static int tegra_pinctrl_get_group_index(struct pinctrl_dev *pctldev,
++					 unsigned int offset)
+ {
+ 	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+ 	unsigned int group, num_pins, j;
+@@ -294,12 +294,35 @@ static const struct tegra_pingroup *tegra_pinctrl_get_group(struct pinctrl_dev *
+ 			continue;
+ 		for (j = 0; j < num_pins; j++) {
+ 			if (offset == pins[j])
+-				return &pmx->soc->groups[group];
++				return group;
  		}
  	}
- 	of_node_put(np_pctldev);
-@@ -268,6 +272,8 @@ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
- 			ret = dt_to_map_one_config(p, pctldev, statename,
- 						   np_config);
- 			of_node_put(np_config);
-+			if (ret == 1)
-+				continue;
- 			if (ret < 0)
- 				goto err;
- 		}
+ 
+-	dev_err(pctldev->dev, "Pingroup not found for pin %u\n", offset);
+-	return NULL;
++	return -EINVAL;
++}
++
++static const struct tegra_pingroup *tegra_pinctrl_get_group(struct pinctrl_dev *pctldev,
++							    unsigned int offset,
++							    int group_index)
++{
++	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
++
++	if (group_index < 0 || group_index > pmx->soc->ngroups)
++		return NULL;
++
++	return &pmx->soc->groups[group_index];
++}
++
++static struct tegra_pingroup_config *tegra_pinctrl_get_group_config(struct pinctrl_dev *pctldev,
++								    unsigned int offset,
++								    int group_index)
++{
++	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
++
++	if (group_index < 0)
++		return NULL;
++
++	return &pmx->pingroup_configs[group_index];
+ }
+ 
+ static int tegra_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
+@@ -308,12 +331,15 @@ static int tegra_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
+ {
+ 	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+ 	const struct tegra_pingroup *group;
++	struct tegra_pingroup_config *config;
++	int group_index;
+ 	u32 value;
+ 
+ 	if (!pmx->soc->sfsel_in_mux)
+ 		return 0;
+ 
+-	group = tegra_pinctrl_get_group(pctldev, offset);
++	group_index = tegra_pinctrl_get_group_index(pctldev, offset);
++	group = tegra_pinctrl_get_group(pctldev, offset, group_index);
+ 
+ 	if (!group)
+ 		return -EINVAL;
+@@ -321,7 +347,11 @@ static int tegra_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
+ 	if (group->mux_reg < 0 || group->sfsel_bit < 0)
+ 		return -EINVAL;
+ 
++	config = tegra_pinctrl_get_group_config(pctldev, offset, group_index);
++	if (!config)
++		return -EINVAL;
+ 	value = pmx_readl(pmx, group->mux_bank, group->mux_reg);
++	config->is_sfsel = (value & BIT(group->sfsel_bit)) != 0;
+ 	value &= ~BIT(group->sfsel_bit);
+ 	pmx_writel(pmx, value, group->mux_bank, group->mux_reg);
+ 
+@@ -334,12 +364,15 @@ static void tegra_pinctrl_gpio_disable_free(struct pinctrl_dev *pctldev,
+ {
+ 	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+ 	const struct tegra_pingroup *group;
++	struct tegra_pingroup_config *config;
++	int group_index;
+ 	u32 value;
+ 
+ 	if (!pmx->soc->sfsel_in_mux)
+ 		return;
+ 
+-	group = tegra_pinctrl_get_group(pctldev, offset);
++	group_index = tegra_pinctrl_get_group_index(pctldev, offset);
++	group = tegra_pinctrl_get_group(pctldev, offset, group_index);
+ 
+ 	if (!group)
+ 		return;
+@@ -347,8 +380,12 @@ static void tegra_pinctrl_gpio_disable_free(struct pinctrl_dev *pctldev,
+ 	if (group->mux_reg < 0 || group->sfsel_bit < 0)
+ 		return;
+ 
++	config = tegra_pinctrl_get_group_config(pctldev, offset, group_index);
++	if (!config)
++		return;
+ 	value = pmx_readl(pmx, group->mux_bank, group->mux_reg);
+-	value |= BIT(group->sfsel_bit);
++	if (config->is_sfsel)
++		value |= BIT(group->sfsel_bit);
+ 	pmx_writel(pmx, value, group->mux_bank, group->mux_reg);
+ }
+ 
+@@ -785,6 +822,12 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 	pmx->dev = &pdev->dev;
+ 	pmx->soc = soc_data;
+ 
++	pmx->pingroup_configs = devm_kcalloc(&pdev->dev,
++					     pmx->soc->ngroups, sizeof(*pmx->pingroup_configs),
++					     GFP_KERNEL);
++	if (!pmx->pingroup_configs)
++		return -ENOMEM;
++
+ 	/*
+ 	 * Each mux group will appear in 4 functions' list of groups.
+ 	 * This over-allocates slightly, since not all groups are mux groups.
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
+index b3289bdf727d8..b97136685f7a8 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.h
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
+@@ -8,6 +8,10 @@
+ #ifndef __PINMUX_TEGRA_H__
+ #define __PINMUX_TEGRA_H__
+ 
++struct tegra_pingroup_config {
++	bool is_sfsel;
++};
++
+ struct tegra_pmx {
+ 	struct device *dev;
+ 	struct pinctrl_dev *pctl;
+@@ -21,6 +25,8 @@ struct tegra_pmx {
+ 	int nbanks;
+ 	void __iomem **regs;
+ 	u32 *backup_regs;
++	/* Array of size soc->ngroups */
++	struct tegra_pingroup_config *pingroup_configs;
+ };
+ 
+ enum tegra_pinconf_param {
 -- 
 2.39.5
 
