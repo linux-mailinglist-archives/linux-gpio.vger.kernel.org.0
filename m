@@ -1,171 +1,160 @@
-Return-Path: <linux-gpio+bounces-19660-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19661-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78DEBAABCC7
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 10:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C9051AABE15
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 11:02:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40845188D978
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 08:10:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 254081C243ED
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 09:02:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74EA522A807;
-	Tue,  6 May 2025 08:10:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6465264A76;
+	Tue,  6 May 2025 09:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="BKclO5bl"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RGd0UEv/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3037522EF5;
-	Tue,  6 May 2025 08:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746519039; cv=pass; b=sDVAflGvmuMd153F90Xswy9o/Z8jDK9zPETD4a6w74gDBFJ4ioYVslQ0U2CbwdVj21drdyZjP+Kqep3o/ZijVBryys9nCCXNcHjGSQz9UG7gZvbaelPPbs0girlXzHDHdjCMG685MqgcUOwnYlUL+j1MSowB/Zv3Je3m1dCS2lM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746519039; c=relaxed/simple;
-	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oi5i+MvRirZLul3WE5Yj70PmYr+ioRGe7Svj/Bjc7LfEXt42/ngA1p5wDWQ4URMybGDvNFYSuBAHfBzMXg1/utCEFR/zgraXqfneShMVegRl37EyDgOCKoOPglTu0jBSkfneGTNRGU9NI6jm3F7lEFRcYKo50U4ED2xJCBwAszw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=BKclO5bl; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-ARC-Seal: i=1; a=rsa-sha256; t=1746519017; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VWMqlzwxd65hBeq2sNRERKJp2v5qyjn7WtVbYRO9rzpP41X8kddgX0l9dEhyESc+sHIgE3gwVW+GxPxOvPnL1gvrStnmdWZVGLG6WMx5rq1PFlNa9YUqJgNGL6rSLaY1jtkCybvHd0aBHtU+PRtYlt4bAWGpXQaMXfUJLG0EDzU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746519017; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=; 
-	b=n5W3a7jNxhp/g44TpsXKkmJwKFzjHWuYQcO1A+iLQk+hCBmP9oCnwZIHVv6XXBy29v+/dyXa6l23AOrWcyjtmyLeDa3yWo95OfnQeuWEElu/gpy/IyyUJbGAeY5dj8zsasx3ZNfj6YaHQ1UkPnASSQK4vAJ5DoNVPOlEX7MuD1I=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746519017;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=;
-	b=BKclO5blmRx2GCmPaGOanhYa16dcXIPaVtZjbvWdf16EuZT6cPLobR1ljZEW0siS
-	1+4v15/Li4P4d4OL2KcFcnNRrNgnMCC+iqQeHDUX1IKLnngo9p1y83BfMazD3Y7f/YM
-	Xg+q2haemciOkRt399bn8R0Iplc2lPpwZ7ZRHiNVr067MXyjgbSFtVGyca4IzgJ2wlg
-	NIx24n3lr7RF5UvUqvs5mM8U0n7j4w1eR6Mt9GMHR/gJBVPpIj5i0zUltywu6nyjnRh
-	ZB9WHOGEh6UWvgy+CQD3NxeHphmSwPseIHP8l1syvsVTMe2LMSvlXI2fmbI2ZypVRZx
-	wY2rvnCvXA==
-Received: by mx.zohomail.com with SMTPS id 1746519014161403.32583521591005;
-	Tue, 6 May 2025 01:10:14 -0700 (PDT)
-Message-ID: <d2f68cebc321ef659d507ef75d3a7fd625063591.camel@icenowy.me>
-Subject: Re: [PATCH v2 2/3] pinctrl: starfive: jh7110: add support for
- PAD_INTERNAL_* for GPI
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
- <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Date: Tue, 06 May 2025 16:10:08 +0800
-In-Reply-To: <20250424062017.652969-3-uwu@icenowy.me>
-References: <20250424062017.652969-1-uwu@icenowy.me>
-	 <20250424062017.652969-3-uwu@icenowy.me>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7EB19F115
+	for <linux-gpio@vger.kernel.org>; Tue,  6 May 2025 09:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746522116; cv=none; b=YbGZd19gUF0Yq+9F8tQ1hxfYGh+r4v3AqI3fLG8g7t79nfcr9Ub4OYMvYw93VlsMmqUiEWbVwmy1gHCJLgz7m5/I+3RNrqxUw5hQZlWvY/5vnHtB19pK00rzPfna70cuzHjNcq1ltC4ek1oiY0V4ReD2gtTI8rBdDgACoScZBAY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746522116; c=relaxed/simple;
+	bh=zzyfhEwAK0od7u7qQvaEU1irR1bKl9oLt0gopkvJps8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bv37ASoJHNfxPRQrI3keP0JOa12SomLQDwCiUqJLvmBGjuie5KYGMfZEOHlCv2EYNE1zV2ESbWp+YkJGTC3KUM0+4ucGCzbr9YG+FFYw95+uqb6UXdusloEuGIASf0Jig5rttxoymOQiX/0UbF0ekuRRch4LchUPUZGGKVmLgQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RGd0UEv/; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so44931175e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 06 May 2025 02:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746522113; x=1747126913; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bkSckdGbet2iMO3lK9JiFkiMA12riXIjt+egFZP9xhw=;
+        b=RGd0UEv/a/LG4BHUNtxIVCW5vNPWSKUb4rpdeHjRUJEWAmcRkF0DKmBK/3xQI87k99
+         HvQgd/l/KSp6nL6y8sq9b4ELzSFbqjoOk+DJJx6MXKXYFvdBwtOzyEBr6Gt+SABDM7hl
+         NeoG6guYMXm1hOXujFXkTN35LsxzTs8uoFYQj5f2IY0cK6j0PL3VeXqVIJH06agyOtqx
+         AlGvkjHAE0xkY6AGgqf7Vgbgol5yW0XUhvRfCYwHGTsjOmaK5jeHAVJy2+YBrix0lFgQ
+         /zdhPCFpYZ8jvrDASYnORawJ1j6EzipETxYC4H7R5vW/qeaVMzHBRRwtkMzFPH9HRGmr
+         CScg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746522113; x=1747126913;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bkSckdGbet2iMO3lK9JiFkiMA12riXIjt+egFZP9xhw=;
+        b=gYrC9RGwtabav61J84+Fr7vH3XqoCJFMsDGIvczJ1u3uLBxiSIe493coLvCYGlbgRv
+         ePJQZalVvkFQWPbnuFE3KYMZvV+bgkF/bJaeyOUjEZG1+ovwabnIb9nX1oqflUqtMadq
+         TVwGzmDhko+Cwnv7+xceg12nvN4y6llIOrdR7sTwSkcMGAETl43pqAWR/W/h9LFZMF0y
+         2qw4hpOTBqYZoVZssExu4uVpYUUm/ddk/V51fDVTFCArU6LywRNxK3a2PlMBl+pJRyuC
+         ouiUieDLInup0oB9qewHfqzgowdWorqFkEEtr8Y5gHmmgec6QY2dgN3OLTl15S+PWUjx
+         6GuA==
+X-Gm-Message-State: AOJu0Yw8N+T1KPeS6jz6hEY2hDOo79NthgcUwBShc7eGlZh/rfMptGLW
+	/luon9tNWyx1ST8VF5syW42faXbe2qP7L/jb6CmN0i1Hmxe6mnQ8p/KiQuLJW1M=
+X-Gm-Gg: ASbGnctBu4dfi1yGVV70pfebTSRMc2ueVPbyIgmTpho36NtexEywcN6spC+b90cPzx8
+	IoXOECVDbGYbwklun6ND3FYE/wjvTiOs30+ixWUv3a008j0JkcUV/udYAOQIg/TCz0MGoEQM+Cu
+	MyyEF0XacxJnii2slAsbolPXTOe4faWvcw6gR1WyHrBevftdGzT5Ad2cW6wtOBGp1NfkN3PqJTe
+	0gl1tBCJlrGlwJl7OYmUEkM0gPGHMDJzxBrsrdRo+OJFeLnYwFqVLQL22vG7evIFLpH2TpiUB5P
+	1eBHBI48xi/OziV8DOj/C/XHF2L5+tR4yGF5zCjGDfwvdw==
+X-Google-Smtp-Source: AGHT+IFj7sycuby5+Xisi67I6ctjifRj/oOl9WSXmMnv0sxBewhRFv1zbclSFWHzUaj8JwTL8LEU3A==
+X-Received: by 2002:a05:600c:4f54:b0:441:b076:fcdf with SMTP id 5b1f17b1804b1-441c48b3c97mr66535245e9.8.1746522113070;
+        Tue, 06 May 2025 02:01:53 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:bfd0:3ad7:fd8a:fe95])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441bc83d471sm138125725e9.26.2025.05.06.02.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 02:01:52 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/12] gpio: convert more GPIO chips to using new value
+ setters - part 3 for v6.16
+Date: Tue, 06 May 2025 11:01:43 +0200
+Message-Id: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPfPGWgC/x3MQQqAIBAAwK/Inlswrai+Eh3C1tqLyioRRH9PO
+ s5lHsgkTBlm9YDQxZljqGgbBe7cwkHIezUYbXrd6wGPxNGdnDBTQbl+Y9qkWJz8aIbOWWeshxo
+ kIc/3ny/r+364QdFSbAAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Vladimir Zapolskiy <vz@mleia.com>, 
+ Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+ patches@opensource.cirrus.com, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2032;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=zzyfhEwAK0od7u7qQvaEU1irR1bKl9oLt0gopkvJps8=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoGc/5slEzhsD4QV82YbNGPsWnFf/VHMCf8ipQG
+ d21roh9ByyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaBnP+QAKCRARpy6gFHHX
+ csZxD/4p08GnOddD9OWGTSyOB4+3HZn3pFgEl5zIiWCeDBSBuwfSNxTEfLgdhQhMV4SWPcuMgz7
+ zztx5NWLVVaBwFAhh45V+ILUKvXpMTIsNgCEXmDYu7/opEgQuH6qEKzTIRBbTiFQmov7SdGC8bD
+ 4l2vyF69wBGWNC5gL+5ZsIm36sgpJsAFAJN4GOV/Y+QLZ6tC5z2RTD5bEX9gz5q+peiAEEKgm/9
+ 3xsK7obO2K9DiFYUjMDcsKCEVPyNV53I67w9YcZYBjCDBgvbPPt0keoMJpHfeXPxDKeD4auTRJl
+ sLHwIRGdoX8cOmOQTm1sYsD5ISGRd6IYV0RdZ82D4gKBKft+gSgA9+rzZ2+Vz5Df73nTGCnrlA3
+ zaYVp8j3EcNKsUfT9fjdAe/zE2zn5OEcroiZo1iBJDTOzR9gleq6RBTf8Vnht+IoUhWwt5Dy5ee
+ W0QZQ5x6shgBpFdgGbdNXHfSfNcmON/yayuAzZoKud3EQ/Pdo0qaJW0hbE+ljm5KPBA0NemlL7/
+ m5mcq9EaHsXMtcLGVmaHTwCQA9LMiw4YIKOS2CRlI5wOljOBcoDPGnyRWWx8hBLBzaK+Wt/w2Hf
+ 63/qwQuNNoogtfd6p4JxCxYiqaroOH3mBmEhlIqJsPBK5NW5SEPu4bc0c9WiACtIiJhLM7RCJok
+ 1eVp+i8HvwPoY0w==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-5ZyoIDIwMjUtMDQtMjTmmJ/mnJ/lm5vnmoQgMTQ6MjAgKzA4MDDvvIxJY2Vub3d5IFpoZW5n5YaZ
-6YGT77yaCj4gVGhlIEpINzExMCBTb0MncyBib3RoIHBpbiBjb250cm9sbGVyIHN1cHBvcnQgcm91
-dGluZyBHUEkgc2lnbmFscyB0bwo+IGludGVybmFsIGZpeGVkIGxvdy9oaWdoIGxldmVsLgo+IAo+
-IEFzIHdlIGFsbG9jYXRlZCB0d28gc3BlY2lhbCAicGluIiBudW1iZXJzIGZvciB0aGVzZSBzaXR1
-YXRpb25zCj4gKFBBRF9JTlRFUk5BTF97TE9XLEhJR0h9KSwgYWRkIHNwZWNpYWwgaGFuZGxpbmcg
-Y29kZSBmb3IgdGhlc2UKPiAicGlucyIuCj4gVGhlIERPRW4vRE9VVC9GVU5DVElPTiBmaWVsZHMg
-YXJlIGlnbm9yZWQgYW5kIHRoZSBpbnRlcm5hbCBpbnB1dAo+IHNpZ25hbAo+IHNwZWNpZmllZCBi
-eSB0aGUgRElOIGZpZWxkIGlzIHJvdXRlZCB0byBmaXhlZCBsb3cvaGlnaCBsZXZlbC4KCk9vcHMg
-dG9kYXkgSSBmb3VuZCB0aGF0IHRoaXMgcGF0Y2hzZXQgaGFzIHNvbWUgcHJvYmxlbSAtLSB0aGUg
-R1BJT01VWAptYWNybyBtYXNrcyBiaXRzIDcgYW5kIDggaW4gR1BJTyBudW1iZXIsIGFuZCBpdCBt
-YXBzCkdQSV9TWVNfVVNCX09WRVJDVVJSRU5UIHRvIEdQSU82MyBpbnN0ZWFkIG9mIFBBRF9JTlRF
-Uk5BTF9ISUdIIGluc3RlYWQuCgpXaGVuIEkgZml4ZWQgdGhpcywgSSBnb3QKCmBgYApbICAgIDku
-ODY1ODQxXSBzdGFyZml2ZS1qaDcxMTAtc3lzLXBpbmN0cmwgMTMwNDAwMDAucGluY3RybDogcGlu
-IDI1NSBpcwpub3QgcmVnaXN0ZXJlZCBzbyBpdCBjYW5ub3QgYmUgcmVxdWVzdGVkClsgICAgOS44
-NzU4MTRdIHN0YXJmaXZlLWpoNzExMC1zeXMtcGluY3RybCAxMzA0MDAwMC5waW5jdHJsOiBlcnJv
-ciAtCkVJTlZBTDogcGluLTI1NSAoc29jOnVzYkAxMDEwMDAwMCkKWyAgICA5Ljg4NDg4Ml0gc3Rh
-cmZpdmUtamg3MTEwLXN5cy1waW5jdHJsIDEzMDQwMDAwLnBpbmN0cmw6IGVycm9yIC0KRUlOVkFM
-OiBjb3VsZCBub3QgcmVxdWVzdCBwaW4gMjU1IChub24tZXhpc3RpbmcpIGZyb20gZ3JvdXAgdXNi
-MC0KMC5vdmVyY3VycmVudC1waW5zIG9uIGRldmljZSAxMzA0MDAwMC5waW5jdHJsCmBgYAoKV2Vp
-cmQgcHJvYmxlbSwgaG93IGNvdWxkIEkgc29sdmUgdGhpcz8KCj4gCj4gU2lnbmVkLW9mZi1ieTog
-SWNlbm93eSBaaGVuZyA8dXd1QGljZW5vd3kubWU+Cj4gLS0tCj4gwqAuLi4vc3RhcmZpdmUvcGlu
-Y3RybC1zdGFyZml2ZS1qaDcxMTAuY8KgwqDCoMKgwqDCoMKgIHwgNDEgKysrKysrKysrKysrKysr
-LS0KPiAtLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25z
-KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9zdGFyZml2ZS9waW5jdHJsLXN0
-YXJmaXZlLWpoNzExMC5jCj4gYi9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1zdGFy
-Zml2ZS1qaDcxMTAuYwo+IGluZGV4IDFkMGQ2YzIyNGMxMDQuLmZiMThjNzk3NGVjODYgMTAwNjQ0
-Cj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3N0YXJmaXZlL3BpbmN0cmwtc3RhcmZpdmUtamg3MTEw
-LmMKPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1zdGFyZml2ZS1qaDcx
-MTAuYwo+IEBAIC0yOTEsNiArMjkxLDI0IEBAIHZvaWQgamg3MTEwX3NldF9ncGlvbXV4KHN0cnVj
-dCBqaDcxMTBfcGluY3RybAo+ICpzZnAsIHVuc2lnbmVkIGludCBwaW4sCj4gwqB9Cj4gwqBFWFBP
-UlRfU1lNQk9MX0dQTChqaDcxMTBfc2V0X2dwaW9tdXgpOwo+IMKgCj4gK3N0YXRpYyB2b2lkIGpo
-NzExMF9zZXRfZ3BpKHN0cnVjdCBqaDcxMTBfcGluY3RybCAqc2ZwLCB1MzIgZ3BpLCB1MzIKPiB2
-YWwpCj4gK3sKPiArwqDCoMKgwqDCoMKgwqB1MzIgb2Zmc2V0LCBzaGlmdDsKPiArwqDCoMKgwqDC
-oMKgwqB1MzIgcmVnX3ZhbDsKPiArwqDCoMKgwqDCoMKgwqBjb25zdCBzdHJ1Y3Qgamg3MTEwX3Bp
-bmN0cmxfc29jX2luZm8gKmluZm8gPSBzZnAtPmluZm87Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoG9m
-ZnNldCA9IDQgKiAoZ3BpIC8gNCk7Cj4gK8KgwqDCoMKgwqDCoMKgc2hpZnTCoCA9IDggKiAoZ3Bp
-ICUgNCk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHJlZ192YWwgPSByZWFkbF9yZWxheGVkKHNmcC0+
-YmFzZSArCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgaW5mby0+Z3BpX3JlZ19iYXNlICsgb2Zmc2V0KTsKPiArwqDCoMKgwqDC
-oMKgwqByZWdfdmFsICY9IGluZm8tPmdwaV9tYXNrIDw8IHNoaWZ0Owo+ICvCoMKgwqDCoMKgwqDC
-oHJlZ192YWwgfD0gKHZhbCAmIGluZm8tPmdwaV9tYXNrKSA8PCBzaGlmdDsKPiArCj4gK8KgwqDC
-oMKgwqDCoMKgd3JpdGVsX3JlbGF4ZWQocmVnX3ZhbCwgc2ZwLT5iYXNlICsKPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbmZv
-LT5ncGlfcmVnX2Jhc2UgKyBvZmZzZXQpOwo+ICt9Cj4gKwo+IMKgc3RhdGljIGludCBqaDcxMTBf
-c2V0X211eChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsCj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW5zaWduZWQgaW50IGZzZWwsIHVuc2ln
-bmVkIGludCBnc2VsKQo+IMKgewo+IEBAIC0zMDcsMTQgKzMyNSwyMyBAQCBzdGF0aWMgaW50IGpo
-NzExMF9zZXRfbXV4KHN0cnVjdCBwaW5jdHJsX2Rldgo+ICpwY3RsZGV2LAo+IMKgwqDCoMKgwqDC
-oMKgwqBwaW5tdXggPSBncm91cC0+ZGF0YTsKPiDCoMKgwqDCoMKgwqDCoMKgZm9yIChpID0gMDsg
-aSA8IGdyb3VwLT5ncnAubnBpbnM7IGkrKykgewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgdTMyIHYgPSBwaW5tdXhbaV07Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oHUzMiBwaW4gPSBqaDcxMTBfcGlubXV4X3Bpbih2KTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqBpZiAoaW5mby0+amg3MTEwX3NldF9vbmVfcGluX211eCkKPiAtwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGluZm8tPmpoNzExMF9zZXRf
-b25lX3Bpbl9tdXgoc2ZwLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBqaDcxMTBfcGlubXV4X3Bp
-bih2KSwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kaW4odiksCj4gLcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoGpoNzExMF9waW5tdXhfZG91dCh2KSwKPiAtwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb2VuKHYpLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBq
-aDcxMTBfcGlubXV4X2Z1bmN0aW9uKHYpKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgc3dpdGNoIChwaW4pIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2FzZSBQ
-QURfSU5URVJOQUxfTE9XOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjYXNlIFBB
-RF9JTlRFUk5BTF9ISUdIOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgamg3MTEwX3NldF9ncGkoc2ZwLCBqaDcxMTBfcGlubXV4X2Rpbih2KSwKPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgcGluID09IFBBRF9JTlRFUk5BTF9ISUdIKTsKPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJyZWFrOwo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqBkZWZhdWx0Ogo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgaWYgKGluZm8tPmpoNzExMF9zZXRfb25lX3Bpbl9tdXgpCj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgaW5mby0+amg3MTEwX3NldF9vbmVfcGluX211eChzZnAsCj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBqaDcxMTBfcGlubXV4X3Bpbih2KSwKPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGpoNzExMF9waW5tdXhfZGluKHYpLAo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb3V0KHYpCj4gLAo+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb2Vu
-KHYpCj4gLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bp
-bm11eF9mdW5jdGlvCj4gbih2KSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0K
-PiDCoMKgwqDCoMKgwqDCoMKgfQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiAwOwoK
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts another round of GPIO controllers.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (12):
+      gpio: lp873x: use new GPIO line value setter callbacks
+      gpio: lp87565: use new GPIO line value setter callbacks
+      gpio: lpc18xx: use new GPIO line value setter callbacks
+      gpio: lpc32xx: use new GPIO line value setter callbacks
+      gpio: madera: use new GPIO line value setter callbacks
+      gpio: max3191x: remove unused callbacks
+      gpio: max730x: use new GPIO line value setter callbacks
+      gpio: max732x: use new GPIO line value setter callbacks
+      gpio: max77620: use new GPIO line value setter callbacks
+      gpio: mb86s7x: use new GPIO line value setter callbacks
+      gpio: mc33880: use new GPIO line value setter callbacks
+      gpio: ml-ioh: use new GPIO line value setter callbacks
+
+ drivers/gpio/gpio-lp873x.c   | 12 ++++++------
+ drivers/gpio/gpio-lp87565.c  | 15 +++++++++------
+ drivers/gpio/gpio-lpc18xx.c  |  8 ++++++--
+ drivers/gpio/gpio-lpc32xx.c  | 28 +++++++++++++++++-----------
+ drivers/gpio/gpio-madera.c   | 18 ++++++------------
+ drivers/gpio/gpio-max3191x.c | 16 ----------------
+ drivers/gpio/gpio-max730x.c  |  9 ++++++---
+ drivers/gpio/gpio-max732x.c  | 15 ++++++++++-----
+ drivers/gpio/gpio-max77620.c | 13 +++++--------
+ drivers/gpio/gpio-mb86s7x.c  |  6 ++++--
+ drivers/gpio/gpio-mc33880.c  |  9 ++++++---
+ drivers/gpio/gpio-ml-ioh.c   |  6 ++++--
+ 12 files changed, 79 insertions(+), 76 deletions(-)
+---
+base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+change-id: 20250506-gpiochip-set-rv-gpio-part3-9f8264c3c23f
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
