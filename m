@@ -1,52 +1,53 @@
-Return-Path: <linux-gpio+bounces-19686-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19685-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC30AAAC952
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 17:22:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 395C5AAC94B
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 17:21:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F3293BCE09
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 15:21:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FAF94E4846
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 15:21:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 674DF283FDB;
-	Tue,  6 May 2025 15:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2F05283FCB;
+	Tue,  6 May 2025 15:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zsc5RUK/"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Gqjew4MF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0D3283691;
-	Tue,  6 May 2025 15:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5929F283C91;
+	Tue,  6 May 2025 15:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746544896; cv=none; b=VdO4aAngM2QTKUVzcOwuSazgwThBlRXiBgmA9Y2P0l/2BUeuLAN2gjOxcv4GoHEU9gHgTvZp4ClJFCh0Fi1Hn5rZ5XCgXj7uou4GAHZRU+f+QAFYt+WENme/nKLfMTBGUy4HSCkV1AD68KIpiy8C1zO3BbAAJq3FVgQsVHENEVE=
+	t=1746544895; cv=none; b=n7a2rteL3q6V93NGviAEuFyvcNUMB8rQFwmMV5ApChDJXMBUalCbcynFkKJjZ8BgCsJwBFmFguTzVPaQMLMf4NfWwTg2rGaLGrBWYa4vktOTTWJf75YH4lspoyieFb1b2NEHtImyr/dCHxKjRCZXPHDY0OpxUvG8tG9frXhbSlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746544896; c=relaxed/simple;
-	bh=zMCM2LXONnAXgynSB3na2oliewdtsC40ahhF6rCZb7E=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aoz8+LiIjtLO5Pq9IZl8rv3ZhnbAbJdIwJuyCkLY7hoe7PWbFLwBqcWdRnyoLH4pUgUgpLMAxzwzjEPklDc0nv7QM9B3Kk8Bk8ndVJ21O6Eto96W4RkIa9KIxL2rW5QVc9mnfaqmU2xOGVkFRe8BuJpvaHBGhr6aAuHx/2E/bAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zsc5RUK/; arc=none smtp.client-ip=217.70.183.201
+	s=arc-20240116; t=1746544895; c=relaxed/simple;
+	bh=ArpSGaELRtIcEnBIvydZufpYt2tcyW531ny0FgKVEU0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XO+8GUsvuaKu1FEWzKc390f4HbA2OQDwxPhF6HMrXS7tXdCqvNIOXaynrsliF5Mv5dEt3gH/f1H0+Pjfr3VnOMpUYkgiyDE1+478iLxjSpxSyT+Gs9iYgxOGo59aDC53Bfnq+qjhN5OxPWkNzMTwqOeAdorNeg7ylz4N0QKMIqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Gqjew4MF; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 149FE43B38;
-	Tue,  6 May 2025 15:21:24 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 926E743B39;
+	Tue,  6 May 2025 15:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746544885;
+	t=1746544886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5VPfO0mn7Fq1tR36iPFGt0D7txALo69kG+JP+mgsXAM=;
-	b=Zsc5RUK/jY6zqCKVUF7yWw8MHSJTM7rCwpt/ykApeG2/2gtXen9g+ZS5y98zsoQcPQi5L7
-	8jutME8+nmMHnY+o5b3OhxS1cmObwO9qzQAJz3GYMT8WBT2amrQV+pFhG7DWeKVcc36BnA
-	GlkDjKuu1/3NhJ23Fj7ZtQBSRFXd++1fxD82BOvVBGjSPvvhHHD26XPQoRB3wKF91h1Prx
-	6OEALhlfjYJaUzp4YNLqd5ydGY2YMQbVJsFprAGgdRku+tdTtG9Zws4Aq1ha+T0mNOKmHA
-	h795RNCYUWYS0OlcE+JGAGeL+BX2e7062eR404hXRT87TvL/1FLqPJsDxRH2/w==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vwFqRYJCao11TjqazPLblrbyeF94Ji0bncnET8QI318=;
+	b=Gqjew4MFzYRG59G3QLvlV954CBniwkS/NmSLbgQCuroaqMGRCr+WM1SNVnd5ekoDadOHMe
+	/4E9RuEl2KTdqpUp6NutGChL8n1/8s/OZDanH44MdxTljdfnFmh1PTxT7CFZtWyh/h8JD/
+	qFxU1SezjKxQg9frrORZHzIO+n2HqAcGgIRMtykrdWC61YJYTfSStzDbcp4hCVOwx9GRxi
+	3ulD8BOvLArl+6reaz+L6ClVjI80ydJbr6hIyqx31YtOe78BmDyDMTeiTPeFkrVWUr+7Zr
+	AfzEaOMltX7krOctQWGRUYW2Zyd251MZ/gtwDUY4N0aVAHHk4+aAx62864CRtg==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Subject: [PATCH v5 00/12] Add pinctrl support for the AAEON UP board FPGA
-Date: Tue, 06 May 2025 17:21:18 +0200
-Message-Id: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+Date: Tue, 06 May 2025 17:21:19 +0200
+Subject: [PATCH v5 01/12] gpiolib: add support to register sparse pin range
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,11 +56,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAO4oGmgC/4XOQW7DIBAF0KtYrEvEDBjqrHqPqguwhwYpMS5gq
- 1Xku5c4qtoqCy//aPT+v7JMKVBmx+bKEi0hhzjW0D41rD/Z8Z14GGpmKFCJTgpuLcWRzxN30aa
- BT2HsSzrzPE9TTIV3z94qK6RQnWAVmRL58LkVvL7dc6KPufaU+5E5m4n38XIJ5dgs+gAtTz2y2
- /Mp5BLT1zZuge37tgMQYG/HAlxwVAY6R2i0hBcXYzmH8VCrNnzBH7AVEswuiBWUGlCTFNZqfAT
- lL6hA74Kygl4JY7QbhCZ6BNUfELtdUFXQSe99D6DADP/BdV2/ASC0NWruAQAA
+Message-Id: <20250506-aaeon-up-board-pinctrl-support-v5-1-3906529757d2@bootlin.com>
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
  Bartosz Golaszewski <brgl@bgdev.pl>, 
@@ -72,118 +71,180 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.14.1
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegfeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteeijeduffelvdevuedvieeuvdeugfekgeehjedufefgkedtueduvdffhffggfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrt
- ghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegfeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvt
+ ghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
 X-GND-Sasl: thomas.richard@bootlin.com
 
-This is the fifth version of this series, addressing the few remaining
-issues identified by Andy.
+Add support to register for GPIO<->pin mapping using a list of non
+consecutive pins. The core already supports sparse pin range (pins member
+of struct pinctrl_gpio_range), but it was not possible to register one. If
+pins is not NULL the core uses it, otherwise it assumes that a consecutive
+pin range was registered and it uses pin_base.
 
+The function gpiochip_add_pin_range() which allocates and fills the struct
+pinctrl_gpio_range was renamed to gpiochip_add_pin_range_with_pins() and
+the pins parameter was added.
+
+Two new functions were added, gpiochip_add_pin_range() and
+gpiochip_add_sparse_pin_range() to register a consecutive or sparse pins
+range. Both use gpiochip_add_pin_range_with_pins().
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
-Changes in v5:
-- all: improve commit messages, fix some typos and nitpicks.
-- pinctrl: machine.h: add "Suggested-by: Andy Shevchenko <andy@kernel.org>"
-  and "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tags.
-- pinctrl: core: fix kernel doc for devm_pinctrl_register_mappings().
-- pinctrl: core: do not cast pointer in devm_pinctrl_unregister_mappings().
-- gpio: aggregator: remove a useless check in patch 5/12.
-- gpio: aggregator: fix condition to identify if the gpiochip forwarder can
-  sleep or not.
-- gpio: aggregator: add "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tag
-  in patch 10/12
-- string_choices: add "Suggested-by: Andy Shevchenko <andy@kernel.org>" and
-  "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tags.
-- string_choices: add missing parameter for str_output_input() macro.
-- Link to v4: https://lore.kernel.org/r/20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com
+ drivers/gpio/gpiolib.c      | 29 ++++++++++++++++++--------
+ include/linux/gpio/driver.h | 51 ++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 68 insertions(+), 12 deletions(-)
 
-Changes in v4:
-- gpiolib: use positive conditonal in gpiochip_add_pin_range_with_pins().
-- pinctrl: fix warning reported by kernel robot in
-  include/linux/pinctrl/machine.h.
-- pinctrl: add a patch to remove the extern specifier in machine.h.
-- pinctrl: use devm_add_action_or_reset() in
-  devm_pinctrl_register_mappings().
-- string_choices: add a patch to define str_input_output() and
-  str_output_input() helpers.
-- gpio: aggregator: set gpiochip_fwd as opaque and define getters
-  gpio_fwd_get_gpiochip() and gpio_fwd_get_data().
-- gpio: aggregator: add valid_mask in gpiochip_fwd struct to track already
-  registered gpio descs.
-- gpio: aggregator: add gpio_fwd_gpio_free() helper.
-- gpio: aggregator: add kdoc sections for exported functions.
-- gpio: aggregator: fix some nitpicks.
-- pinctrl-upboard: use str_input_output() helper.
-- pinctrl-upboard: fix some nitpicks.
-- pinctrl-upboard: add missing headers stddef.h and types.h.
-- pinctrl-upboard: add intermediate cast (unsigned long) for dmi_id->driver_data.
-- pinctrl-upboard: use getter gpio_fwd_get_gpiochip() and
-  gpio_fwd_get_data().
-- pinctrl-upboard: fix kernel robot warning 'unmet direct dependencies detected
-  for GPIO_AGGREGATOR when selected by PINCTRL_UPBOARD'.
-- pinctrl-upboard: use gpio_fwd_gpio_free() helper.
-- Link to v3: https://lore.kernel.org/r/20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index cd4fecbb41f2..b59fc4d751da 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2283,11 +2283,13 @@ int gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
+ 
+ /**
+- * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
++ * gpiochip_add_pin_range_with_pins() - add a range for GPIO <-> pin mapping
+  * @gc: the gpiochip to add the range for
+  * @pinctl_name: the dev_name() of the pin controller to map to
+  * @gpio_offset: the start offset in the current gpio_chip number space
+  * @pin_offset: the start offset in the pin controller number space
++ * @pins: the list of non consecutive pins to accumulate in this range (if not
++ *	NULL, pin_offset is ignored by pinctrl core)
+  * @npins: the number of pins from the offset of each pin space (GPIO and
+  *	pin controller) to accumulate in this range
+  *
+@@ -2299,9 +2301,12 @@ EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
+  * Returns:
+  * 0 on success, or a negative errno on failure.
+  */
+-int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+-			   unsigned int gpio_offset, unsigned int pin_offset,
+-			   unsigned int npins)
++int gpiochip_add_pin_range_with_pins(struct gpio_chip *gc,
++				     const char *pinctl_name,
++				     unsigned int gpio_offset,
++				     unsigned int pin_offset,
++				     unsigned int const *pins,
++				     unsigned int npins)
+ {
+ 	struct gpio_pin_range *pin_range;
+ 	struct gpio_device *gdev = gc->gpiodev;
+@@ -2319,6 +2324,7 @@ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+ 	pin_range->range.name = gc->label;
+ 	pin_range->range.base = gdev->base + gpio_offset;
+ 	pin_range->range.pin_base = pin_offset;
++	pin_range->range.pins = pins;
+ 	pin_range->range.npins = npins;
+ 	pin_range->pctldev = pinctrl_find_and_add_gpio_range(pinctl_name,
+ 			&pin_range->range);
+@@ -2328,16 +2334,21 @@ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+ 		kfree(pin_range);
+ 		return ret;
+ 	}
+-	chip_dbg(gc, "created GPIO range %d->%d ==> %s PIN %d->%d\n",
+-		 gpio_offset, gpio_offset + npins - 1,
+-		 pinctl_name,
+-		 pin_offset, pin_offset + npins - 1);
++	if (pin_range->range.pins)
++		chip_dbg(gc, "created GPIO range %d->%d ==> %s %d sparse PIN range { %d, ... }",
++			 gpio_offset, gpio_offset + npins - 1,
++			 pinctl_name, npins, pins[0]);
++	else
++		chip_dbg(gc, "created GPIO range %d->%d ==> %s PIN %d->%d\n",
++			 gpio_offset, gpio_offset + npins - 1,
++			 pinctl_name,
++			 pin_offset, pin_offset + npins - 1);
+ 
+ 	list_add_tail(&pin_range->node, &gdev->pin_ranges);
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(gpiochip_add_pin_range);
++EXPORT_SYMBOL_GPL(gpiochip_add_pin_range_with_pins);
+ 
+ /**
+  * gpiochip_remove_pin_ranges() - remove all the GPIO <-> pin mappings
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 4c0294a9104d..6142837ea403 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -784,23 +784,68 @@ struct gpio_pin_range {
+ 
+ #ifdef CONFIG_PINCTRL
+ 
+-int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+-			   unsigned int gpio_offset, unsigned int pin_offset,
+-			   unsigned int npins);
++int gpiochip_add_pin_range_with_pins(struct gpio_chip *gc,
++				     const char *pinctl_name,
++				     unsigned int gpio_offset,
++				     unsigned int pin_offset,
++				     unsigned int const *pins,
++				     unsigned int npins);
+ int gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ 			struct pinctrl_dev *pctldev,
+ 			unsigned int gpio_offset, const char *pin_group);
+ void gpiochip_remove_pin_ranges(struct gpio_chip *gc);
+ 
++static inline int
++gpiochip_add_pin_range(struct gpio_chip *gc,
++		       const char *pinctl_name,
++		       unsigned int gpio_offset,
++		       unsigned int pin_offset,
++		       unsigned int npins)
++{
++	return gpiochip_add_pin_range_with_pins(gc, pinctl_name, gpio_offset,
++						pin_offset, NULL, npins);
++}
++
++static inline int
++gpiochip_add_sparse_pin_range(struct gpio_chip *gc,
++			      const char *pinctl_name,
++			      unsigned int gpio_offset,
++			      unsigned int const *pins,
++			      unsigned int npins)
++{
++	return gpiochip_add_pin_range_with_pins(gc, pinctl_name, gpio_offset, 0,
++						pins, npins);
++}
+ #else /* ! CONFIG_PINCTRL */
+ 
++static inline int
++gpiochip_add_pin_range_with_pins(struct gpio_chip *gc,
++				 const char *pinctl_name,
++				 unsigned int gpio_offset,
++				 unsigned int pin_offset,
++				 unsigned int npins)
++{
++	return 0;
++}
++
+ static inline int
+ gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+ 		       unsigned int gpio_offset, unsigned int pin_offset,
+ 		       unsigned int npins)
++{
++	return 0
++}
++
++static inline int
++gpiochip_add_sparse_pin_range(struct gpio_chip *gc,
++			      const char *pinctl_name,
++			      unsigned int gpio_offset,
++			      unsigned int const *pins,
++			      unsigned int npins)
+ {
+ 	return 0;
+ }
++
+ static inline int
+ gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ 			struct pinctrl_dev *pctldev,
 
-Changes in v3:
-- pinctrl: add devm_pinctrl_register_mappings()
-- gpiolib: rename gpiochip_add_pin_range() to
-  gpiochip_add_pin_range_with_pins() and add pins parameter
-- gpiolib: add stubs gpiochip_add_pin_range() and 
-  gpiochip_add_sparse_pin_range()
-- aggregator: split to more simpler patches
-- aggregator: add a namespace for the forwarder library
-- aggregator: rename header file to forwarder.h
-- aggregator: add some missing headers and declaration in forwarder.h
-- aggregator: forwarder.h provides consumer.h and driver.h
-- aggregator: fix error code returned by gpio_fwd_request()
-- pinctrl-upboard: fix order of header files
-- pinctrl-upboard: fix some nitpicks
-- pinctrl-upboard: rework macros to define pin groups
-- pinctrl-upboard: add missing container_of.h and err.h header files
-- pinctrl-upboard: handle correctly pointer returned by dmi_first_match()
-- pinctrl-upboard: use devm_pinctrl_register_mappings()
-- pinctrl-upboard: import GPIO_FORWARDER namespace
-- Link to v2: https://lore.kernel.org/r/20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com
-
-Changes in v2:
-- mfd: removed driver (already merged)
-- led: removed driver (already merged)
-- gpio-aggregator: refactor code to create a gpio-fwd library
-- pinctrl: refactor gpio part to use the gpio-fwd library
-- pinctrl: add pinctrl mappings for each board
-
----
-Thomas Richard (12):
-      gpiolib: add support to register sparse pin range
-      pinctrl: remove extern specifier for functions in machine.h
-      pinctrl: core: add devm_pinctrl_register_mappings()
-      gpio: aggregator: move GPIO forwarder allocation in a dedicated function
-      gpio: aggregator: refactor the code to add GPIO desc in the forwarder
-      gpio: aggregator: refactor the forwarder registration part
-      gpio: aggregator: update gpiochip_fwd_setup_delay_line() parameters
-      gpio: aggregator: export symbols of the GPIO forwarder library
-      gpio: aggregator: handle runtime registration of gpio_desc in gpiochip_fwd
-      gpio: aggregator: add possibility to attach data to the forwarder
-      lib/string_choices: Add str_input_output() helper
-      pinctrl: Add pin controller driver for AAEON UP boards
-
- drivers/gpio/gpio-aggregator.c    |  343 +++++++++---
- drivers/gpio/gpiolib.c            |   29 +-
- drivers/pinctrl/Kconfig           |   19 +
- drivers/pinctrl/Makefile          |    1 +
- drivers/pinctrl/core.c            |   29 +
- drivers/pinctrl/pinctrl-upboard.c | 1068 +++++++++++++++++++++++++++++++++++++
- include/linux/gpio/driver.h       |   51 +-
- include/linux/gpio/forwarder.h    |   48 ++
- include/linux/pinctrl/machine.h   |   18 +-
- include/linux/string_choices.h    |    6 +
- 10 files changed, 1534 insertions(+), 78 deletions(-)
----
-base-commit: 8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd
-change-id: 20240930-aaeon-up-board-pinctrl-support-98fa4a030490
-
-Best regards,
 -- 
-Thomas Richard <thomas.richard@bootlin.com>
+2.39.5
 
 
