@@ -1,156 +1,119 @@
-Return-Path: <linux-gpio+bounces-19681-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19682-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7A26AAC21D
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 13:08:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78462AAC46B
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 14:41:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A2FD7B7AD0
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 11:07:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D9F87AD8E6
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 12:40:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8AEB2798EA;
-	Tue,  6 May 2025 11:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C96B27F4CA;
+	Tue,  6 May 2025 12:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhkoApNP"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QKSOfD4B"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5804E224250;
-	Tue,  6 May 2025 11:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8669D27A478;
+	Tue,  6 May 2025 12:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529719; cv=none; b=iG8BJlg3viMbQWLu9gOTYjCyYP+bqcGS0kULLoWZtM27zVqfSw4/KwAgXlS3G6zdj1btIVIMHaUPQXfmT+RJtPGurlINMQRFQO2clYB3/ylcs+DP6M7aqqvgMjn+efAPbloEhxCBXg42axAhaPK1zKP9GTlhqmA4A3yTJvtY5Uw=
+	t=1746535270; cv=none; b=qVDacWzz2gCOFNLSoyM4ruEDw24kAySX4pJCm7SmkrNVdeQqvxNh66KGVA5IibmOxBbnBMzR7sttGQpJNAuD/vz7lp0BCmG3SnG19HshXkzBgllMLiPBBuaZFMkMq7167L3SY6e2fxlGe04oyLc79oWlFd9N2j1SfxSFvLgBwA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529719; c=relaxed/simple;
-	bh=oG6/2IHwC9TU785hP8ZTx7QljRu77QhLKNtBxqyfX/E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ApWAj7+s2Y6H1IoYRpP/AFGRsPSWR7iCN7a3277MM+YHTCR3sXqbijkyxczu6d4KQx461h3yXFvx+c0WOjPScGUHwm8C/ylvaTZvNjzbmweZiXdPsSNlWUUzzjESR2PcV2wW1lhJ0Q/UIYEeYQVKDrWd2XItpZcTSNupjFCJcow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhkoApNP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98027C4CEED;
-	Tue,  6 May 2025 11:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746529718;
-	bh=oG6/2IHwC9TU785hP8ZTx7QljRu77QhLKNtBxqyfX/E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OhkoApNPEE6U5Ityg35H850t4Yvidcvgk5WzimaWQytpPKezOJmb03xt+UPK3UvRA
-	 bvtko+i9/dWxnu70CS8TY3LIycyYDf2JSn8bw6Rpgnf0Xrzf+V/bWYx3hLjqRE5JMw
-	 +XSKGGw2vdNm1H25YadNXJfgL90MVOw2X7TQ5NPC4W1lmcLE+Yup6kCjDo73xCVgpJ
-	 gTHHEiss48u6pB0uH3hafY64KEA+8WRX8BhpnVce3OJqbV/Hy3qVFvT9Rkm27v2EOG
-	 07WlX4Pgaj2VMtJX8OKEQhyoQGk+ibRf9sUMqo6FR3010ANv2SL9vaSVPF8TmthPTY
-	 7ELClK4wd+UUw==
-Message-ID: <1f7a47f6-33d0-4e35-bd4f-9d130e37c931@kernel.org>
-Date: Tue, 6 May 2025 13:08:32 +0200
+	s=arc-20240116; t=1746535270; c=relaxed/simple;
+	bh=fKAjeUu7aJ2cAoUuZNbRM4pTCnVbVDOkQZPM/+G+pdE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=XluRxXYjiGJmxKmFQCpM4vgtWyqK/Qo8N+KqH972pH85zthIco1zv+BUjAssbgw8O95JJKpA6UNFtatUc5vq0ETZqOBIsokq09VZBRhKhsATiR8QjaXWpvhos+tzy5HRgxAbgS188VorUmHU7JKoApUMHMr4gPiaBae7LBZdA2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QKSOfD4B; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AD73B43B04;
+	Tue,  6 May 2025 12:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746535264;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0sqKVcBEt6pQmMwRIYYIzEuUV/01lrMK0Zw8BI9CN/k=;
+	b=QKSOfD4BfheMezgztCkjPf4/2L/rXlXNBI6VznfgOptD6RjikLqYOqRBLdlu4UdwlUw+uA
+	YQWgQh5Mb8hGO8Qlod4DrEOyTSzUmPPk7YATMA7PvL/Yg9n/RCE01u/1vCdFqx4Yhx3VHl
+	8PLnIt645r6+EF3G2mGcERTp89/Mq0vKccIh09vNzcC12JQTNKh1fN4ZgXTUvMdqYfqS8n
+	+ILvwpmYyLZxipsa8SADLUYEPNZBqBZa6gaIRLBCik/BSZjvfxvvaeGA91PFBUIDsKoyRi
+	d/7uHyDA76WT2xZ524HjSpFIDI1uTldbpg2zGODJ03l3qv3Pu1lWtA3D61Q0Rw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pinctrl: eswin: Add eic7700 pinctrl driver
-To: luyulin <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kees@kernel.org, gustavoars@kernel.org,
- brgl@bgdev.pl, linux-hardening@vger.kernel.org
-Cc: zhengyu@eswincomputing.com, ningyu@eswincomputing.com,
- huangyifeng@eswincomputing.com, linmin@eswincomputing.com,
- fenglin@eswincomputing.com, lianghujun@eswincomputing.com,
- Samuel Holland <samuel.holland@sifive.com>
-References: <20250506090844.1516-1-luyulin@eswincomputing.com>
- <20250506091241.941-1-luyulin@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250506091241.941-1-luyulin@eswincomputing.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Tue, 06 May 2025 14:41:03 +0200
+Message-Id: <D9P32VIGJX5V.1VV0F5MZ17QDW@bootlin.com>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Andy Shevchenko"
+ <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v7 09/11] input: keyboard: Add support for MAX7360
+ keypad
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
+ <aBSii0rHox72GM5Y@smile.fi.intel.com>
+ <aggrss4doko5scdlmyzdsujkifryzuzqdnpkh6sd33rg5ibqmm@aiikzv732rkq>
+In-Reply-To: <aggrss4doko5scdlmyzdsujkifryzuzqdnpkh6sd33rg5ibqmm@aiikzv732rkq>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegtdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvffuvefhofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeethfeiheehheegheekueeigfekffdvheegfeeivefgkeeftdehhfdthfehueejfeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgth
+ hgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On 06/05/2025 11:12, luyulin wrote:
-> +static int eic7700_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pinctrl_dev *pctldev;
-> +	struct eic7700_pinctrl *pc;
-> +	struct regulator *regulator;
-> +	u32 voltage, rgmii0_mode, rgmii1_mode;
-> +	int ret;
-> +
-> +	pc = devm_kzalloc(dev, struct_size(pc, functions, EIC7700_FUNCTIONS_COUNT), GFP_KERNEL);
-> +	if (!pc)
-> +		return -ENOMEM;
-> +
-> +	pc->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(pc->base))
-> +		return PTR_ERR(pc->base);
-> +
-> +	regulator = devm_regulator_get(dev, "vrgmii");
-> +	if (IS_ERR_OR_NULL(regulator)) {
-> +		dev_err(dev, "failed to get vrgmii regulator!\n");
-
-Hm? So here you do not use dev_err_probe, even though it is actually
-important, but...
+On Tue May 6, 2025 at 7:14 AM CEST, Dmitry Torokhov wrote:
+> On Fri, May 02, 2025 at 01:46:35PM +0300, Andy Shevchenko wrote:
+>> On Mon, Apr 28, 2025 at 01:57:27PM +0200, Mathieu Dubois-Briand wrote:
+>> > +	error =3D matrix_keypad_build_keymap(&keymap_data, NULL,
+>> > +					   max7360_keypad->rows, max7360_keypad->cols,
+>> > +					   max7360_keypad->keycodes, max7360_keypad->input);
+>> > +
+>> > +	return error;
+>>=20
+>> 	return matrix_...(...);
+>
+> Because that function has multiple failure points please
+>
+> 	if (error)
+> 		return error; // or return dev_err_probe()
+>
+> 	return 0;
+>
+> Thanks.
 
 
+Noted, I will change this.
 
-...
+Thanks for your review.
+Mathieu
 
-> +
-> +	ret = devm_pinctrl_register_and_init(dev, &pc->desc, pc, &pctldev);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "could not register pinctrl driver\n");
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Here you use, even though here it actually does not matter? It makes no
-sense, it is not logical. If using dev_err_probe selectively, then use
-it when it matters - so for probe deferal. Or preferred is to use it always.
-
-
-
-Best regards,
-Krzysztof
 
