@@ -1,123 +1,168 @@
-Return-Path: <linux-gpio+bounces-19643-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19644-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C9B2AABACF
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 09:28:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A13EAABB9D
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 09:44:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C74D11C24A41
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 07:23:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F06A01C43A21
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 07:40:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FBA828A400;
-	Tue,  6 May 2025 05:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C529672637;
+	Tue,  6 May 2025 06:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1z5dUuD"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kupw8XaS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF95289354;
-	Tue,  6 May 2025 05:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C996E7260E;
+	Tue,  6 May 2025 06:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746508448; cv=none; b=jLNJ1kdSRImIYdp7nRZ2EFp8WB36bJIX+ipq6lt/APUGkoC0f+Sh1L49yHZ4U7mK93VEz+wzjN6YIrraVQwN1Alz1S/ccC2UzBTWJwwss9jze3mxFvFSWU4SEi/2cdedu7VRunQalYUYTtR+PNaYkrFHL6h92j8EtTIuxGucdhk=
+	t=1746512624; cv=none; b=sUTYXV5XSXsd2oXy4qH+3YiVsx6+fHfDM/gKZUivfrIxhgtYndx1okTZ7Ktl9urgW9ZGI0ZuCA4betfrQZzQ73/5385teQ5EtIszZN8E5fsQwvIaef1Ir8TEjERLoyHmAtmy0xprNix1AahpIDBuuyeRdigtkL+fA1FVc9GFmlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746508448; c=relaxed/simple;
-	bh=g/w1LWrilKqP38kQb6pooTCkIt2thHowZ54k63vIR2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHyvPDxTSvD5XEFX0gAjUjsBuo6CUk0Cdq+RWRTErWKu5ucyEIlRsekQwWke+jssPTiejqVGmnY4dQb5B7ZFhZIG6Tb6I3IcN8Lp5PmVzdNuXS9ESzjJPA9jIb9eYWYBIAQvShf4RKbBkRJXuGOMm9F8lUNOi6gUIW1iHuNSZzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1z5dUuD; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73c17c770a7so7474459b3a.2;
-        Mon, 05 May 2025 22:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746508446; x=1747113246; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pS0iuNnDrfN5JuPKmxY9SUCg0BKAF7oXTwP02sXXN2Q=;
-        b=G1z5dUuDPp1vFrrK4Y+z/CMdeiedNCN01GDN4PBqouTsvYpOiFHxSct5XFqWwqp1UJ
-         C3Tlj43BINfeUkOczVO4GrwKHfENGmIFSK+N1w0VVD/9KHa4Qgd709nbEC2T58q2Xrjs
-         Vas8tLDpXigaz0QqRptTmdYqtj6zipn1YyruM51vzhEy9PBWUYQSzk4tevThQIGnw7kj
-         Se9jN1lOUuATkXC7Hur0MXzCB+I8WnMDxjp6cEkK+l0mmovLvtVl/TkcdrxPIcPmlMMM
-         Vl4QnLr1p2K0A4N/ZgcyEWT4YARSJ7bDgbS3OIF8x2g78NLevqmyVurdFX+nYmKS4UfG
-         qw0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746508446; x=1747113246;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pS0iuNnDrfN5JuPKmxY9SUCg0BKAF7oXTwP02sXXN2Q=;
-        b=BwNAApf5hbnzM4f1SmN1V7/mKI98Mr77TLiBC9tzj8GpcvbK79g1/ByDEvDBP/YAl9
-         zN2dC8PuxXEM673ot+p0y9fXn7rkX8RDgVdlMgC/MzkFSwbKFoKtT435j7cWBjbFbcYA
-         muMPt5rK/LkWaIQu59+8XRBXHG0FsgRdyAp6k4rBTzOcQjuO2MoyGVoKxJzrUQlbaV4k
-         4wgtOevGr3nZozz6/Z2g4OdHyRYdjZr4TA0M1o49t7P+CTkmNvEjdfJHLr070z6qhT1Q
-         mBJmorEpd6lU0VyI26sb3R92s/5XzcjVMHqBpm1xGpoAxrNAocactN7PdBHmoGap7i4k
-         OezA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTwHZ8c84YrhPbVt5lI4bFkv99AAdlavrBWzUE4ItD0iy9K5Ky2fB7nCtG+YCB4GFwvRx10sCMJRzk@vger.kernel.org, AJvYcCUhtCZ7eb4V/vJx/VU4U5WEEWyGIqOfgU6GfnI2EMI0MxQHWMG/mocQ9uRfHwjo+z+vMJPYoDzZh5STSwQ=@vger.kernel.org, AJvYcCUxuLG7Ty6qOJy6WrdvllsRDeAEVS7whLhGTjtIYRJmAHqGh4DQyNe3oiehalrLm+nc02Ygdn9Fh4eA@vger.kernel.org, AJvYcCWjpO8N5f+jGwy2s/QTbmf1bSVzbWNCqfO+P1+nWYdJgkH3ty0UNHLiFcy9gB74W6eMsNAg1to7ze/rBA==@vger.kernel.org, AJvYcCXNbiiEdJAzN4ySCqiS41YWjVt7aZMKaO8KXjk2T6lk06qHjPYTaO3ozsO+L+tlkJQg03rGCxmVuEcwrKZn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzMHUU7J6R8tHGcKcS+cJ0R7MTJ1YMfCGfIBBlIHOvkXRaQbKr
-	BNIc/hjSvYuz0PBbYtCyxuzB2WG49ht+IYoKIV6stkOqiOF7g3wj
-X-Gm-Gg: ASbGncuVqs5N8lNbjH1TPPoHFTEfSL7mlyPnuzfsk+9kLnIjnwtDa3Og3gRLUHGVR4D
-	w/hPhmYejGscFzAYN7dJwdJudsnngZmxMkd3VZRrSzGvhTn0rnQhYUwT7Qgh5t3hsJnXFUPNN3n
-	JZKFbFEgkB24TJLfKixDNJ9de2sc946SthYJdFbFf57izlzETFhlCA9ylS5RzkecEzbNZ5qjMsq
-	0QjJVybEeXXyenih3LAbeMmzzd0zEXd8KKuPRStbTYgkTsK3IbBHcpAm2GGYu1W1JKsCqYC6B5q
-	k4Jwa9kd5JPRVI9tPZLB/tbLbx6SZx7ukh5iSPP4G+9IemXUqhF2
-X-Google-Smtp-Source: AGHT+IEjUJofINkDZHEFOImlgP4FAtwJXz6KioPdAiI2880/99Nh8quz4k0gej+fzJl4Qyzl3HFAxw==
-X-Received: by 2002:a05:6a00:f0a:b0:737:6fdf:bb69 with SMTP id d2e1a72fcca58-7406f0ebf2amr14738585b3a.13.1746508446572;
-        Mon, 05 May 2025 22:14:06 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:17ab:9e47:29ba:57e6])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059021483sm8156840b3a.93.2025.05.05.22.14.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 22:14:06 -0700 (PDT)
-Date: Mon, 5 May 2025 22:14:03 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 09/11] input: keyboard: Add support for MAX7360 keypad
-Message-ID: <aggrss4doko5scdlmyzdsujkifryzuzqdnpkh6sd33rg5ibqmm@aiikzv732rkq>
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
- <aBSii0rHox72GM5Y@smile.fi.intel.com>
+	s=arc-20240116; t=1746512624; c=relaxed/simple;
+	bh=uLOj3gzjzJHXb5dMIMlDQDK7dGmsb0GWN4kozaXfopI=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=KieTdO9iJ9s+rfeq4dPFghsWFDcKMlB7ny8nqRA0wLi1Tj3JTSI2vHicm4yMRwOEu09+O29mrvQ+ALZUQk67e5zJ6SAxlGPeiOwwITyxXdRgiWfFMuImsYVoVUQPFkzXDiIrfE7SEerHTGoE0+Hq3q+Jabk+ARt6g2J7zCKpPIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kupw8XaS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545M4e85010779;
+	Tue, 6 May 2025 06:23:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=EcGgFtMnMHu7y/f6bO7AuW
+	GTFEhhyK8BvFHxsHOBdjM=; b=Kupw8XaS4yFkt1czS+Q8DRQ9NGrNfvU7sIuwmc
+	07aF8tpxQ+MZgF1C+i4+2yKHtWkdYooKie7/UNv9jo/rwgkY4dPLZuKJeDGwjGHr
+	V5lMlQKf1OcmKNL+RCvXwaDNE1136KFbiEqSrv4CP2GmKK+myUFrHa7jUWGc9JGi
+	8MXpuC24ssEtwgGyHILRdqrrQar2V8cy90rC7epL9KkB25yZ+AXttXYFvTZOZyHb
+	wb3t0Yo7Ce74Ab5O2hYMkoVAQE0vNTe2UXzEpkQ3SZCfGl0qnQ1ITdKHJ9otjolg
+	zvuhY/frNMr4lk4E+4RRFhXc6GjapBpUXy8BLj6y8Xh+vUjw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5tb95ph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 06:23:38 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5466NbJw023138
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 6 May 2025 06:23:37 GMT
+Received: from lijuang2-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 5 May 2025 23:23:30 -0700
+From: Lijuan Gao <quic_lijuang@quicinc.com>
+Subject: [PATCH v3 0/4] Correct the number of GPIOs in gpio-ranges for
+ QCS615 and QCS8300
+Date: Tue, 6 May 2025 14:22:57 +0800
+Message-ID: <20250506-correct_gpio_ranges-v3-0-49a7d292befa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBSii0rHox72GM5Y@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMGqGWgC/22NzQ6CMBCEX4X0bE1/pAIn38MQgtsF9iDFLRIN4
+ d0tnD1+k5lvVhGRCaOoslUwLhQpjAnsKRMwtGOPknxiYZTJVa6chMCMMDf9RKHhvRElts5eHTi
+ lvRVpOTF29Dms9zrxQHEO/D1OFrunu++ijS7/+hYjldRl2xV5UfiHV7fXm4BGOEN4inrbth81k
+ qC3uAAAAA==
+To: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Jingyi
+ Wang" <quic_jingyw@quicinc.com>
+CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Lijuan Gao <quic_lijuang@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.15-dev-99b12
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746512610; l=1774;
+ i=quic_lijuang@quicinc.com; s=20240827; h=from:subject:message-id;
+ bh=uLOj3gzjzJHXb5dMIMlDQDK7dGmsb0GWN4kozaXfopI=;
+ b=aMPICzuACzuB605bXfuI+uVxjqiMN5d3jmjW5WCcbM1kis9lFZR81Wx69I/OyUUDuP0jt3k6+
+ DlB4NR18+daDWOal2/88mMobKVWa+NEUiVKQIBAx6yfl99qqCZYf/S0
+X-Developer-Key: i=quic_lijuang@quicinc.com; a=ed25519;
+ pk=1zeM8FpQK/J1jSFHn8iXHeb3xt7F/3GvHv7ET2RNJxE=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: FjHJ9exTdrmn4dTfVv84QUesSzZQBKCd
+X-Proofpoint-GUID: FjHJ9exTdrmn4dTfVv84QUesSzZQBKCd
+X-Authority-Analysis: v=2.4 cv=doXbC0g4 c=1 sm=1 tr=0 ts=6819aaea cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=Uo5fGkIgM_B_5ApAZXMA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA1OSBTYWx0ZWRfX9KnuV38w98Nn
+ OPVaOBH+OJcPpFPsZa8BS5j/x3+QBcWVk2r7ShgAUhGK5LaQ8F/Pqh0EqhjwbOPLiMNwzN/BOiT
+ AbOpKpCxvHb23qbwAPJ0bR3yddz3giZJs/+8nnNBJd6xEs1L1GAn/ddtZaq//K8B9k3ggqL2UHL
+ m/h6GOl8QKCP9WosE0YNvEzDmIB1PTtHYXl12z8G5yiPH+t3YQpVkHYqY6BKhsUL7mrypPx4Q14
+ eeQjzY/eGvdb0hsitWGSKMgarD5uHtmAWTAziJ63dyQFyU3/UCBNco9zzMgCjM0EpPHxX+TWlzn
+ ahiKcZlPaX2Bu29sAfnynqS1RP+NnzIRKwbr//avcMm1G1VTYTknXqwKxvEnLH+TR3YgzMgqCxm
+ WNXUs6uE0aOQxnw+5Weqt9hcv3uw6sv6yAA8Wq0UwqwolQTAJomRmZbyhFjp7buTSbT496lJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_03,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=720 impostorscore=0 clxscore=1011 mlxscore=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505060059
 
-On Fri, May 02, 2025 at 01:46:35PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 01:57:27PM +0200, Mathieu Dubois-Briand wrote:
-> > +	error = matrix_keypad_build_keymap(&keymap_data, NULL,
-> > +					   max7360_keypad->rows, max7360_keypad->cols,
-> > +					   max7360_keypad->keycodes, max7360_keypad->input);
-> > +
-> > +	return error;
-> 
-> 	return matrix_...(...);
+The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and exposed
+through the GPIO framework. It is expected to be wired to the reset pin
+of the primary UFS memory so that the UFS driver can toggle it.
 
-Because that function has multiple failure points please
+The UFS_RESET pin is exported as GPIOs in addtion to the real GPIOs. The
+QCS615 TLMM pin controller has GPIOs 0-122, so correct the gpio-rangs to
+124. The QCS8300 TLMM pin controller has GPIOs 0-132, so correct the
+gpio-rangs to 134.
 
-	if (error)
-		return error; // or return dev_err_probe()
+Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+---
+Changes in v3:
+- Add tags from Rob Herring and Konrad Dybcio.
+- Remove applied patches.
+- Link to v2: https://lore.kernel.org/r/20241219-correct_gpio_ranges-v2-0-19af8588dbd0@quicinc.com
 
-	return 0;
+Changes in v2:
+- Update the introductory information in the cover letter
+- Update the commit message
+- Update the title of the TLMM driver patch
+- Link to v1: https://lore.kernel.org/r/20241212-correct_gpio_ranges-v1-0-c5f20d61882f@quicinc.com
 
-Thanks.
+---
+Lijuan Gao (4):
+      dt-bindings: pinctrl: qcom: correct gpio-ranges in examples for qcs615
+      dt-bindings: pinctrl: qcom: correct gpio-ranges in examples for qcs8300
+      pinctrl: qcom: correct the ngpios entry for QCS615
+      pinctrl: qcom: correct the ngpios entry for QCS8300
 
+ Documentation/devicetree/bindings/pinctrl/qcom,qcs615-tlmm.yaml  | 2 +-
+ Documentation/devicetree/bindings/pinctrl/qcom,qcs8300-tlmm.yaml | 2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs615.c                            | 2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c                           | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+---
+base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+change-id: 20250506-correct_gpio_ranges-ea6376c601d3
+
+Best regards,
 -- 
-Dmitry
+Lijuan Gao <quic_lijuang@quicinc.com>
+
 
