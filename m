@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-19657-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19658-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C59BDAABBD9
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 09:49:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2F64AABCAD
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 10:10:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DB8E84E775A
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 07:49:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B1713B1E21
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 07:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AFA23ED74;
-	Tue,  6 May 2025 07:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F33EC23F40E;
+	Tue,  6 May 2025 07:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="MKiOV6Fs"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="cmUpukZz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2056.outbound.protection.outlook.com [40.107.241.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DA523D288;
-	Tue,  6 May 2025 07:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EB823ED75;
+	Tue,  6 May 2025 07:31:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746516700; cv=fail; b=gCXXQwl9OW6DJGoT/N6YASUNEBmi22FNjl8DPQngILeDCunf1NUl9bTTYD6snnwLK6VzJKzyxJx+KLRLVCGTZXYn4g080ZMqvXhpUZWmKIqftxCSdDyd2a2y7h00isl/CpC55efUa2MwSThI7jePdAf531tYa4E1A/DNjupfhm8=
+	t=1746516702; cv=fail; b=RSA04A1Xma8ZtoJLVHx/D0gCBX+3HuFZU7874WmzfGWh6fgQgINmy9cmkSlSDvcJzmlpBlR21GIZ1EK6rizuHbDNc2B+Xoi7W5NyYsMmEdmvcZNuLlMun0ZAu/l8jgnWdP0jIbtBYy3GUEN15HGjVTM7l4fw5UoyE/D7GGGRCM0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746516700; c=relaxed/simple;
-	bh=hRlT3/ewzgRHoWAAW4auCAg3K5hopTijr31RLhkkEZQ=;
+	s=arc-20240116; t=1746516702; c=relaxed/simple;
+	bh=5nyC0HpBCpJxerFRaGt2W8pQIN+4nUL6P3ojYdbc/2o=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=IzYmNi3nDj9SeeecrFnXuTVOQo3l1RFyh/XRUcHZE0E2NPX+ooE863RTZ4WJFVKrBueno5KdpKc1NCauuclIdUrkZ/xm3lkVeo2h96rDUuRWIUJb8GlzE1RnsUTg0e+s8wD87VDuXje1G0GbGhOnWHerhfEed1W4uqu+VeaRL/4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=MKiOV6Fs; arc=fail smtp.client-ip=40.107.241.56
+	 To:Cc:MIME-Version; b=YXJu0rnpRFQe0Eu0jRpYZJCcPE6QocpZr2ovmigB3CGc/yVAJR5OhiECA3ucqJsDqCl/CnpK7jiBf9TjzYP6UCdqrUIgCeDtsu6gUNb2jLLp8whDw9WU5JsoGK3WQxn8IEegiZCfMlz5yMZuWhBXfiD2rBjVJ4lzPT6X3vjJFUE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=cmUpukZz; arc=fail smtp.client-ip=40.107.241.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YtIAMSghBUi+yYC5c1BPltiBShOQcag9F40Pis9xgut9Sow7eGOWBKLFRYKohnzdNHNTC/8jMpH/tk6yvKlPpYSeA+Tno8WI7SwhMyXuS3IILk+FaN9HobMAA4FeLPDNFKXQAs2hNCHMQuk3BdPrAJsOVJlgAn9oGI7GAdg64RkIyUfJcCE6OZ3LFsaVpN8kK7J832ZxWNeY+SbfoxrIHv55iOL6DuNttvwswR4klo1P/WfJM/666USxDqz+scWh4oO6ozNZj4EkD2ps3KJXZvQQp8H4uMRAciEloZzR+SSyzu4EyqaLWZr0MRSWfpAOajKFFK3USJHny7yjf+C0Ig==
+ b=iBTQWGNUJ6U1nlFa9UuMQ3qrg27qEmDnf6sKuPLbMs1lJnz1Pxh3iuRtNK70ptVUHv94gp2lL05pVpxh2NvkVuy7nTAAdrKX/PQih9SirBHFKfOn1jYyBz9+P5mFttp0+/LxNwiYCKIDF5LK7e+vB5PzCr2aM1KIW2kXG6Dnvduu4Le5i5nyIuAQ3ZwyaLeWPehqdOqZ7obDXQmt8bCgvoekpCWtw+VbB1QCOGZ64anZT0toYLXMX9PqjCLI9yXRmRWDYrgXAi/x6EWQRj6E/IIFf4j82dutqabGwtTEnCVDheVIdYswrj12kXKQADMuGyaT5UHFQcGIi8c58lX96w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NzIn22C/bCqKKCp92PT/0N8Qjb6tiddD259dSvsaWRI=;
- b=QKjB6UO7C6/LHQ6P84T+xcojwmVH1z/GOf3LHJT3EpH3foNZyihk1cW8mfzYhyxnqwAxEXNLhFkRHqXL7ttaNmx/QPgry+beIxCN0bkfvr/VWR1L0O7T5WPXAhaUdOkgJZyrvg+VQg6dciowQygXU3Zsmhbx47RhyqpCUIbHib8mlJL7dBSQURilAYPNJLzXTi2RVXqJ4/J/k2ncHUoD3i9LnWEzTVEHdAa7cBqjf5nfy97MXwYI4o7XTLlBEZBeKKRd/iwF0Y8SeXoNpc7X+ocyWl4n7OROhAKFcWlWeLp50S2KskFw9Xzv8jCWyUw8J/OiX+uMnR/DapcQ5YsnHA==
+ bh=CYdjuhwvsfxVUEvKeKODcrk1U2kmXEfmBE/qUmzTBBA=;
+ b=la4S2BOegYwlroV37+pL0M76Xb/WsOWhLHsG5KGCE8Avd/tVll2WK9vg2sh2xYXRaV4UF8d/E8as/K8OdEFePLGwKQfkZhP/XV4vek5WQAREfhB21F+ORN6lPaYeWVVcbu19KW2kyjoQDU+3zu3bjKyNk+jZmXaA9mDg6gRq/eWckB3pHfAYWCI0t+he9kAwRW+SVF/+UMctpMTZ4vk0wP4KFVXbuBwPge1pKUlwSVx/0dfhs0pT81uGEfuuyYSTxnDojd26X5lz/qAyH1ABbBZRjOoWtdA5QCAUETiB1zYdYsE3cKfQ3U7hOruqbDWJMzpHZFJTP/zog18L7sPxRQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NzIn22C/bCqKKCp92PT/0N8Qjb6tiddD259dSvsaWRI=;
- b=MKiOV6Fsp22wra8VXiDxbyo+hMTNTym4q5vU1xdu8LEJLX5PKRE32OK/RtJo2sElTSj0Y9Jp10ETbStzEn06O8R1EqFz2GOF4zZjrwcBb90UDs85mYGkggiEiGwg3g8YTBeUDidTwCJTnovRm6pj9xKijfJhmTpsxmi2sQwnvkFVC+asSRC6sHgm6i9B5jh3gFLskPiZAclsBL4BxcSAa68vkuv+pNlKfeAmBH1QzieVuwdvlS4TYt58MqybWYVEMvssHlSk4j/NGCc5wQY6cxsGG9Ql9nCCRWwZKJjBq5PQaaRegii/aSJSTfRvZ2Orc0P9upqcDFb9ILLAoHTMoA==
+ bh=CYdjuhwvsfxVUEvKeKODcrk1U2kmXEfmBE/qUmzTBBA=;
+ b=cmUpukZzD3O3+0c6Qtu0/SwqNA4Mhs7uawd/LxJpR6cfAzPm5tqERSki0Q9eg3+e508RdREFgKUjZhhJcyOC1rSEmz1SsmiPN3HaWOe/xJKHJVox9Qv0IVhZiM9dC10CU01K2afRpaQzM6/Sln91K+j2segVY22gEIRbbl4DgjhVqAfRnOa8UE2KHjQ0ZxjuwvSElfqcfEVy7iQW4t7QeU4pffPeJlIuqkSu89nZboiU370VPEDt7r6mbpai28/14P2dfUKEDflTjHekAim03tzEM1qrAeFxygM46A1Cg/nP7jO6DC5YoI9XH71ttsSLEUNzpwvHTI0Nya6eo9b5Zw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
  by AM0PR04MB6881.eurprd04.prod.outlook.com (2603:10a6:208:18b::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 07:31:34 +0000
+ 2025 07:31:38 +0000
 Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
  ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
  ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8699.026; Tue, 6 May 2025
- 07:31:34 +0000
+ 07:31:38 +0000
 From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Tue, 06 May 2025 15:29:38 +0800
-Subject: [PATCH v3 8/9] ASoC: codec: cs42l52: Drop cs42l52.h
+Date: Tue, 06 May 2025 15:29:39 +0800
+Subject: [PATCH v3 9/9] ASoC: codec: cs42l52: Convert to GPIO descriptors
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-csl42x-v3-8-e9496db544c4@nxp.com>
+Message-Id: <20250506-csl42x-v3-9-e9496db544c4@nxp.com>
 References: <20250506-csl42x-v3-0-e9496db544c4@nxp.com>
 In-Reply-To: <20250506-csl42x-v3-0-e9496db544c4@nxp.com>
 To: David Rhodes <david.rhodes@cirrus.com>, 
@@ -76,11 +76,11 @@ Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
  Peng Fan <peng.fan@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746516585; l=4795;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746516585; l=3098;
  i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=+Vvp6+/DXS9mmi5+1a0ljPE8nIjFVG5lF9th4X+L+ew=;
- b=bpVRN+6qqhc+y4Ln3HuGADcsqcMd30Dmq1KF62uOiUGFgAnXQTIXb5j7Pigf/F0uQLV3PXp9f
- 0ymeQiOymS6AIyRDI4YPR8EN5nGCuDxS+dRwGetw1hzWkl4DhlMOZRU
+ bh=Meie2Ur8+olGUDMVKFIdjW59K4DPyviqRjxk8qxOcTQ=;
+ b=611DabAmrYbdYNQOf1UblJW/76YPXQkbN8IWnt3uuWXTC3pRcpnh2Jem1ZdV36k4Pb4LCg8V2
+ 0CK5kmDLWAeAInh4qi5DFa5t5hZ+zEy4qbe6g4NHBmeUbYnIWwxW6zh
 X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
  pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
 X-ClientProxiedBy: SG2PR01CA0176.apcprd01.prod.exchangelabs.com
@@ -95,259 +95,191 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AM0PR04MB6881:EE_
-X-MS-Office365-Filtering-Correlation-Id: e358fecd-7c34-4754-47e1-08dd8c700731
+X-MS-Office365-Filtering-Correlation-Id: 24bb3cf8-bd49-4fec-4422-08dd8c700992
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SEV3MFZnaENVQnJ1b25RVXhoR2ZpdXg5RlJQam1ORjZFeU1iVlE3RnZ6Kzlz?=
- =?utf-8?B?L1l4aHNQNTMyNm9LQnlORVMrSUtDRkM1NzhJU0J5aTNLTGNrMGUrUTlGTUp4?=
- =?utf-8?B?aVZTeDV1WWRaSXgrWWNtQTlXVllDSXhnbzVBTHBEdnFUdkhVb0RmUlNCSjgr?=
- =?utf-8?B?ck1jLzAvTmZ0ak1UeXg2WjR1Q0VVY3hsamlRQnk2clVWeG1FMW9zMmxuT0ll?=
- =?utf-8?B?bFFKdVJZT3lnSURmM1RabW9XV0p3cUNiaEgvL0gxQ1JIS3FRcjhzc0JCOXky?=
- =?utf-8?B?MHkrUUhGamRITklFcFh0dDM5K3N1TVFqRnh3bGtIMnBBYS9aUmNnOGhtUDlW?=
- =?utf-8?B?VHVVREx2bjlXK0dNTGkwOFc1ZjYrOTA1NElZZ0RodUt3Q2pHdmZqVVZjaVp5?=
- =?utf-8?B?MnlCWkZodzg4eXNIa21HeFdMMHhRekdGQUJUelJrUDZLY3I4R2lyQlY0ZDdj?=
- =?utf-8?B?c3NXUTRMUkoyeitiTEIxcU1wVHRLWDVJSDQrTDJkNWRiblRUZmJ5Y3luakhm?=
- =?utf-8?B?RW16MGhBRElSMkkzQklzZW1qeTJDM2hIQktFUGRGUEY3V1RlVVRBY25paTBR?=
- =?utf-8?B?N3RDUlViZlpPSDBaR1RONXNSSkhscXpyYllPRXcxTHNybVNodDZJbTJHRWtX?=
- =?utf-8?B?bzNHM2o4WjlnMEhuTys2R0FuZ2dacHRocFZ6SUlSbTNVRzI4My9sWjdLbUov?=
- =?utf-8?B?WThObUtUeTNlUHRKMkhhRnFvdVk4d3pZMC9SY2pmWU5SSFdNS1dJbjNueFhH?=
- =?utf-8?B?M21QL1BESnFYMHlSbmlmcHFWRy9Jb0dhMEliNnNUdzZNRFdoUUgvR3ZJVXp6?=
- =?utf-8?B?S1FRMEJPYXI4MXRaS1BKM1dDSGhuWG1mMERUd0RCWmVOREhDLy9PT3IwL1A0?=
- =?utf-8?B?US9xL3pNdlQ4SGh6a0xIQWxraWZUeGx3K3N1Yy83SlpMTFNSUE85WExqZ3Nv?=
- =?utf-8?B?SGVlcFNSMENDVnBqdUxuNVlqdEhZeElnbUhXTFBic3NHTk9Wb3pCN3FiQkNz?=
- =?utf-8?B?UGppZGEzVDhCNzA0MEp2V0N4ZkRFSGpyMWJuTDROZUhzMG5hVVpNdnM0Rm9v?=
- =?utf-8?B?N3UyT1dPMWhWTXcvS3EvZDgwZW5yNkh2RDlyVFd1Rmp0Z0FQdTA4RVM1QXFH?=
- =?utf-8?B?cDR2VGZ5aTZxR3liTUFCb3MybUJ4Z2plOTFTWjhCMDNxOUxRY0RCUVgrWXpT?=
- =?utf-8?B?NHpiVVRSZmlYZkU0bG9hV1lNSXRPeUNRNTZMUVVQWUpTMjRUS0crVmZnNURI?=
- =?utf-8?B?VThQVWtWbzlUOVAxSEt3R2lacHZjQ2VianY2OUY3VVR1OUw0YUVGdWV4bStY?=
- =?utf-8?B?QjVDbk5zMEdXMEs3aVdadU1TaDFLKzZQTGdMMVFEUmk1WnBDQUZmckZpWCth?=
- =?utf-8?B?UWRmYjR1dU5tSURWVm1ieVNCZVp5bVJ0aWlJck0rYjF4OWxuMXdpVkcrS1BP?=
- =?utf-8?B?OWFQWFJwT09yUUR3WHg3RWxCWVlyYXB1dExSVVZNVHU0TWNHMDZPK0tDUEkv?=
- =?utf-8?B?eVZZZEhMZUFmV2tRQkw5NHBiUGF4M05Ucm9qcXU3aUpmODMrSUVaU1Q1UHk3?=
- =?utf-8?B?M0JLUitua1A4ZU0yaC9ZOUp3U3hxWEpUQnM1UkRPQzJnTG55bm1IWWhlSGwr?=
- =?utf-8?B?VXVEV292Mzk2Z2UvbTYwQVpVL1pXVDEwSjJ6OWhmRldFN1VrU0EzdU91VHpZ?=
- =?utf-8?B?WHdTSWJxd1lDeEI3SEZ2R0lLbk5mc2hSYnB4M3RNVXZxeHpzR2JGMndSSU9i?=
- =?utf-8?B?VFJxMnpTRno5UDVtRHJhR0xqWmduRkVoMkkwVzVsQktmM1N6aVo3OThvbDdL?=
- =?utf-8?B?MHVseUpwZnREbnJlTkcweWg1TWxIK01TVDd0dk9uQTc5RW50WGZ2TEwxdzV0?=
- =?utf-8?B?NkVaM0JOWGVsMWJWOFZ4Ymc1Y08wT3NXdUltcVBPWVdYZm9aUGw4OWFnb2Ix?=
- =?utf-8?B?UUZUNjRHQkV4d2s1K3Y2M1BhelN4RFE2d2xmRExLOWRDNUZBRENDS25WSUdz?=
- =?utf-8?B?Q0FzTHl1NFRRPT0=?=
+	=?utf-8?B?dW9iSERlVVRWUm45WENyc2FhY2FLT3N1SlEwYUNDd01WTFpURTBOdzBvRmda?=
+ =?utf-8?B?YjFJdzQ0TW5tc1ZhMzVIUjF4SlptNTRsT3hROWdzZHY3UDFDSUoyMk5TcjZv?=
+ =?utf-8?B?b09xSnNidU5UTnpBVnYvL0xlQXJPUHVoS3g3TkRQbnUyby8wV1FZZ0d5aVV5?=
+ =?utf-8?B?Y3JWYzRPZEI4S1NYODdPWUtkL0FVaXplTFRQSFM4NklHcFA0MVZSalF5L2U0?=
+ =?utf-8?B?b21rY0xHV2NXRm02T2NWbHE4Q2ltbTd1eU5LY0V4VUN6dWdhZUJ2ZW9RSjVX?=
+ =?utf-8?B?U0k2dWkraXBqVHhoOTU0RzJER3F0MldqNDg3WkNKWmIzYjI1a1daTEF3MFBD?=
+ =?utf-8?B?ZnZJTTM2eW9PNzhjUVdQMG9Vd2dLZVB5RDRmRm1vdWs3THI1M0M0L2I5U0tT?=
+ =?utf-8?B?dnVRMVZGaU91dEpFY0hpS3FlMm1JcTdxMXVRcGVFQWc0My9iUEREK2dHanFm?=
+ =?utf-8?B?ZmNpVWpVaDdtSi9ENlJqWE4rNDVHbzBveUVKdDNHSElWeHpBYUYwVHEwYnlW?=
+ =?utf-8?B?NU1raHF0czZoZW9GcWlvRVczSjBld3BOYVNuaGpMMWtJaHo1RUJsS2d3alJj?=
+ =?utf-8?B?N2ZhOVJJaDZNOEgzaXg0UGNzZ3l3eWZJQTVCek9PSU1aUHhVdWtpbXBMUUdI?=
+ =?utf-8?B?WVg0MjF5ZkV0WFZTVTcxbDBCWmt0aHpTK2R2eU42RzJiNVV0dG1HcUV0MFNS?=
+ =?utf-8?B?c3BKQnM3aS9Xd2IrUTFOM0tVYXBON2RkYllWYXBEMy9KSm5RN0hPZy9xNTdx?=
+ =?utf-8?B?L1U5a2pocll2TWRrZ0hSTW5JTHVkdVRQd3RldmRBQW12cGkwN3czaEtCRmpp?=
+ =?utf-8?B?R2NwbmRnQWE1S3E2QkdHWC9ROTBFTDdoSlVzejNWWVRGM0lIUXZvS1ZSU0l4?=
+ =?utf-8?B?Qzd5c2hPbVJseS9RQTJUMTZMeUt5QmtTdk03N3Y3bmlLSXhLbGJmenVtM0RN?=
+ =?utf-8?B?eG83Uyt6bHhoSXdLdnBRWnB5TGtjRjBvK1VNdmtTUEpNTklSdDFMaGtMc0cz?=
+ =?utf-8?B?SzJ3elJqTVdvSjhZaVNtLzJ6ZGd0R0h2ZHVKb0dLTzRpc0RMQXpUU2NDbFhO?=
+ =?utf-8?B?WE50WDJpOUZ6QzlORGRrcGhQSkphdGE0dnMzNXgxR2NWTDN0VzBGM0VaNU9K?=
+ =?utf-8?B?cHRic005di9IeTJBOFpYeDhIWkY2b0dnMnpaYlhsT0ltc3VlMDA3NXZkVzVi?=
+ =?utf-8?B?MVljN3pxT016SktEK2lEWGVhUFExWXcvaVBjSFZ6bFp1eU1Yc1dXdmNEY2J5?=
+ =?utf-8?B?S2NLcnhZRkFMaXkyUW1xdURCUGpWV2tCOElaS2tzcXFTMDkvdjZIWnRSa1dS?=
+ =?utf-8?B?LzRxUDFFYTZUdjBkTkpzM1dsZmZDOG92WlhYcWJadzdvTjI5c1VydVlqbWlR?=
+ =?utf-8?B?eGFBNldLRWx2VDExRWhTajNvWGRJSDVrVDQzblk4NDJJalRGVmxzeVN1N3Bq?=
+ =?utf-8?B?QTRZWVlOQVM3MndONHAwVW9qWDdpZXF4UzM1SHZtdTd2L1RCQ1BzdU0rb1lV?=
+ =?utf-8?B?RXlrNzlrRHk5Y2ZPejhFcjNXL3k1djBTVlBsYTR4b1lWMU0ycVdIamg1bUJo?=
+ =?utf-8?B?dlNoZHhPZ080cXk2VXFnQm1zUGdvM0J0d2hPNXpaM1VsZ2JCYzFCdHYwbitK?=
+ =?utf-8?B?SXRodlBnY0NhZzA4MmZSSkVNMlpsMVYwNDl1b2VMdkFzZHdzTnZLVk00dHZ3?=
+ =?utf-8?B?cGdTZUtscmZZcHpUYTZqQm0yR2J3cUxCZkM3MGhLdlJDYzB6eXhWWWt1NmdW?=
+ =?utf-8?B?bFNmS3VjU1Y0TnRpUTBCRVA4clU2YWhDZWc3V3A2V3VtakxJVE92VUl1aFRy?=
+ =?utf-8?B?VmdsTWRxUmlFOEZmY2dHNjV4YThoOG96b1REbFA1MXR6aURvTmNYcEpnT0th?=
+ =?utf-8?B?a2NsMjYvcjh4aVJ0TmlOdlRHR1hFa29nVTYvcmhTYVFXc0FkUVJVYWVGQVIv?=
+ =?utf-8?B?MjAxY0hNUmZGVXhNR2pDVnBDaWVmME1jTjM1TS8yK2pHVEZndjg2QWd4NkNN?=
+ =?utf-8?B?TXdNU2t4WnB3PT0=?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TGNSSXhHNmM0TEJSbzZ1MWFHTkY2VGJsa3ZmZG84VlZ6R0wwdEY3TEhIblE2?=
- =?utf-8?B?Y3BPNmJ6Mnl6SUlTbzI0cmFjUVU3ako3SzdlQnl1NHlRalRNTzkzZlAzVW0y?=
- =?utf-8?B?VTRua1V3bTU5RWdQOHJocFFmVmw5cHBFeTlBOXFBeWE5R2J3NzAxV05rK2RP?=
- =?utf-8?B?Mzc4c1J4MHdJOStJYlNtNDFqWHVBTnc3RFJxcVdOMzJ3eCs0anhvNDJZTEhw?=
- =?utf-8?B?SlZhS2RSd0VZV3lRMUVUdjVwT1hibWZvN2NxWHN2a2ptV2ZmOVdnRnJPNjFa?=
- =?utf-8?B?S05ycTNRVUtsV0lFZFlBMzIyS2NBaGg2dFdhQ0w4QmQ2cnlTU1JUd2hiUXVQ?=
- =?utf-8?B?d002THdGZnpkNEp6ZWFWSmlJaHRjcGpXb0hNUjNHU3JhQkRuTzliRS9tS1RC?=
- =?utf-8?B?S1lZamtwbUJVNjBoNGdzUlpoVXdFcVF5SXFobXhWd2YxWTZ2QUVlUG1jN3p5?=
- =?utf-8?B?RTJqdWxPVElMcWF2SDFXQlI2ZFFFa0xOZEhmeXhwTVFiUWZyZzgzVmhEd0Vm?=
- =?utf-8?B?WHd3VmNnWTdGMTRVVzl4QUpONUlkdjF4S2R2R3hKSDBzalRpYUhOZ2NWUEVV?=
- =?utf-8?B?RWFNSTJhaW85N2JxeTJueFlQTzljM0pTVXV6Q2VRQXAwcXpaaUpieVg0aVRT?=
- =?utf-8?B?Ti9IVS9aRTJQeDdUbm4xY3RIWEQ4c3FzbU5odFRGdkQzV0NyeFU1d2s4Slg1?=
- =?utf-8?B?enkwYnhCWk9vTDJZY3BNUklOdEZSOXlHS1RnWVRDOGVQZ2h1VTBSWlJyeDlZ?=
- =?utf-8?B?VEpPT0RYWHhJcmR0dVRIaEtQUlNvbVpvc1lPZzJ4Ly9wTmJmM2NqMU8vcEgx?=
- =?utf-8?B?V3VlZ3FqYUJOM1RLYUM2TWRUeUtab2lLNCszWXZEckZKSzVqODk3UytGVEg3?=
- =?utf-8?B?RVZzYWhQaHMyQ2szOW40RlFlMVIwY0M5akRJaUlVVkFHZU1GVnZGSmFZdkFa?=
- =?utf-8?B?bmo3MEF4ZTVLb2ovVlFmemZWUGhZTlV2Nk5FbXc4U0RYeEcxb2RtUmtxZDFV?=
- =?utf-8?B?OWF5bHpBNDltaWFteWlmV2oyVG9wMjJic0NQZ2lWWXI5OU9LcnpHR1dMZm1H?=
- =?utf-8?B?Mk40Z2l4QjhSR08vUUtua3ZsVkUvek1MeWRrWnI1eXhTclh6bmFhNzRWSk9W?=
- =?utf-8?B?c2ZiMk9LN2J6YXl5bmZFRnl1VklKQ2lPaENieUZNR1E4ZHpIRzJockhteHY3?=
- =?utf-8?B?ZFpKYWRjWTV4M2dLblgzb1VYcjZ5MFg0aW82b1FLYWd5K0VmZkw3NmNLUzNI?=
- =?utf-8?B?S0RoSXJkUVovL0EySjR3MG5wbFZkUndtWkFXTFZvUmFNa0ZqelZtNVNpMDNN?=
- =?utf-8?B?N0IzMW1vTnk2OVpYdVJWYkFWZnNzOE9zeXRSd1NCclB5TVU4eXlMbFBUbEo3?=
- =?utf-8?B?RHpNMU1qdUNTb0FoSDJZNDdaYzVzaHBBVG5FUUM2YXpUckhCZFdVdVVINlJz?=
- =?utf-8?B?T1RTc1RVNy84a095bENKUXJaQlB1K2gySGJYdlVSeWtNejNyQW4zM1NERDV0?=
- =?utf-8?B?RmoxK2pOWXRuNGwxMXkyQ3ZqSzZPei9NVnVmYlo0WktMVGE4OE9ENTJOVnY5?=
- =?utf-8?B?L0JjV3VIQm9UTWhmYUUzUzJoUkZCZzZIOFFpdHVpNE5na2ZUc29jVEZkdGFs?=
- =?utf-8?B?ZHRaOHU2VnhINEkraWhWOTZDeDNkMnhkVzdmOXgzRGhudFhYZUdENkhkUlVy?=
- =?utf-8?B?QUtnWGE2elVOVDArbmNxNHZSdzdXUVVIc2d2STZqQ1ZmNm5XTlFzWlhEUkFI?=
- =?utf-8?B?c3B3cmdybkFTV2dySXhzK2c5YXhNREtBSGdJOWNGT3J6MVk2RnlVY3NtMm9w?=
- =?utf-8?B?dDRvL3FONDhQQ2pUVHRuS3BPNlRORCt1eGN5b0ZqbXlHeHk5MFd2RVRvdUlW?=
- =?utf-8?B?SEFsSzNQWEQvdzRVYW1ScEphZm9KTitISnpUWW9wQUVxaU0yZHh3QmVwcHBI?=
- =?utf-8?B?MFhnMUp3WWJ6Rk0vNy81ZlZPUzFYNTRhbHNtK1o1dEYveTlYNjQyOGJSem51?=
- =?utf-8?B?dTJVRDhTRnNpRExIaUNxOFRIRE5LZFFjc21XUXVkZ2RTUHFUd0cvQjJ5M3dH?=
- =?utf-8?B?ZnVRa1V5Yk1yenJFWEg5anZxZjNYNDdzdjc2WlR0RG9xU3g2bzBsUVIyb2RT?=
- =?utf-8?Q?VA2p3Ldv0Qy3l7hwwMYrG/XbM?=
+	=?utf-8?B?SGlLS0YvLys0RGhKaVVCa0FSMVJ5alBBR1JZQ0o3QW8yZGRONm5zbEpIR0Z2?=
+ =?utf-8?B?TzFhekJXdzFIRURKalpBRjVzVnhMbmFKcWpvTW9YWS9td05TN1dVLzlTRFIy?=
+ =?utf-8?B?anBKMHpWcnlubnd6Uk1mNXkxUWZvZzRKQ25OelRkYzNoYk9zOExGb0E2RVJz?=
+ =?utf-8?B?VmhDSUU4NWtHUzJkOE50a0NTVmJIVHFPWDBRSXVBb09ZUS9ja2h6eEk2WlNo?=
+ =?utf-8?B?Q1Vva0lMNDF6OFhXWm1qMlpuL285UVpoQzNjTk83K1IxWmROSC84bFRuKzk2?=
+ =?utf-8?B?TzZSK0d5eG9PUXYwVXpzdUx4ekFneUFlZEdIcXRUK2cwV1ZmSDVFWXRqbWhB?=
+ =?utf-8?B?N244YW1CdU1xaEJrRlo1RmVlTE14QVRReFV2amV5R0JlamwveGJyOEhMTjJi?=
+ =?utf-8?B?NGNXUUdGVnZDWVlERGFuQ0U3ckY0Q0F4V3JsMnFEZmRUMDZUWWFTRGtaalVF?=
+ =?utf-8?B?ZXloZDNDT3FmZXVzNEZibTFEbGw5a3JGZUpocUhUK2drY09JSDAwaVBkajhM?=
+ =?utf-8?B?dWZvUHA5ZFhyNEY2R2VYTkdJT1ZWUVE5VXRYelpsTEFGdGlaUFJCeW5YRklt?=
+ =?utf-8?B?d1FOYjZiVzN6VVpxbHR1S09XS0VVaksrQVBrQmZsT0VCaklhNStiODlOWThz?=
+ =?utf-8?B?TU5qUDNkZDliTjFDM09yeU5BNHREN3g1VUVwT1ZrQWVEMUdxSU1hamNjNmUx?=
+ =?utf-8?B?d0sxYVMvVFZqUlpvSEVjdHdHOEVuVHQ2cmY4Q2JDcGFIWWZGaG5oNHQveHQw?=
+ =?utf-8?B?SlNxbXdSWEozWDlSd3hvUUx6V2krY2tLNlZ3a0ZHK3ducmZ0dE9jc25Kbmha?=
+ =?utf-8?B?RlpodGw3VkJsb3hNbXFBNUozS21YOVU1ZTdHZU5PZWN1eXZsSUloTGJMZGRp?=
+ =?utf-8?B?RXNVc0lrUHNocFlqZ0UrOFdNS1JobUs0T3FXSERNUzAreDZlZVNGSzhBOFZF?=
+ =?utf-8?B?WmtWQ1RWV01kbG1udGFibWdSVXZRRTZEZ1JYdDVtNURIRnZDSWVsNHpSaG04?=
+ =?utf-8?B?dWp4ZnFiWTl4V2xadjZHV09Wajl0bXR1NktCR3EzdUJnb3RUZGhheUgxZGFn?=
+ =?utf-8?B?THhYL216amlvdG1KV2YwazZDUngwVXEzN0tOcko5ZXFjL21KQkNhdU04Skpo?=
+ =?utf-8?B?UGxWMjhtQ1YrR25KNFAxeUpKTGtxdVJCcE9ZSzF6MkV5WmpKTEFiVExsWGJy?=
+ =?utf-8?B?YTdpa2E2SWFtckVFVFN6NE11YWVxMHhpcjcyZmxOTUQwRTlsb3YrcTl4YWRp?=
+ =?utf-8?B?bzZteUwvcU1vN1pXcVZPVGZZMytabkd1TjdTUzRhZkZZMTh3ZnpNU1c1WGh4?=
+ =?utf-8?B?SW5BVm1LU1dmSFYyK2lrc0ZqeXZsZUZLRk1RZE16RVBDcXR5WEdmLzFWdCth?=
+ =?utf-8?B?M0wzS3dLRXlwYW85UXJPcHRjSU5HVUJsL3gwZ1RsYWtBMElRMldGZEh2N0Iv?=
+ =?utf-8?B?dGVEOVRkekwrVUtmM082bGE3ZmhabE4wTGFPb0FqYkZtY3FxSjZEU04zM3Js?=
+ =?utf-8?B?WmE3aVpBZ01BYkpiZUVIWTlGMlZtVnBOOXEyTWdlRVF2NEZUdEJ1OUZvSVhH?=
+ =?utf-8?B?T3R4U2NCVHVOL1o0NUdZS1h0L1ZmbzJzRWJ1WCtGRE42M1hRS01IMExza3JI?=
+ =?utf-8?B?aXgzSGpZWkppcnhNZUNyR2V5RFl1RlcxRENtZFRKWEZldnBqOFQ4b0tTSTVr?=
+ =?utf-8?B?Y0hhYksvd3k0VVhoRmxXK2dycEVGK3hGVGNrcHZ5TStlSlVISlZNU3ZBTnRT?=
+ =?utf-8?B?TVVMVGx4ajdKRWlxRkdEYy83M2lobjNmNVVhSVZSeGUwL3FodUtnNFF1L280?=
+ =?utf-8?B?cVo2dGZJTmZEeEhOZUpqLy9rUldGL1RPRG00dEpHOWNtWDVjMkwwS2FqTTc1?=
+ =?utf-8?B?ZlVJN2taNjJnOUl4elRPMGhiQks5bWQxYzVsdDBaa3JCUHBvd1Z5c2Y2c1R5?=
+ =?utf-8?B?ZFQ1a1Bielp3VlVVTzhWR2kwUys5NlNWK2tldEVsSWJoaFlkU0tVOHlERlhI?=
+ =?utf-8?B?NFdlTnplRmJvWDYySkxQTUFON1RxRXBveW9ManlRQWNUMjZmRVRYN2xIa1Uw?=
+ =?utf-8?B?czVoVnlOSW0wS05WNWZQSFdOSkczQi83b055ZklzVm9GeURKQWdTZUdRdm84?=
+ =?utf-8?Q?QOfRC6TjmsJssOG9Q6fu/c103?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e358fecd-7c34-4754-47e1-08dd8c700731
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24bb3cf8-bd49-4fec-4422-08dd8c700992
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 07:31:34.2660
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 07:31:38.3316
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b8+NZpcxQUBQedjzM7g179W9uZQ4awbVXzVvvHuos96xrCmgixHXPH8ENPjpCQAFzhHm5yrYtPHRI0NSNMukTg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: /78shIC/Xgy1c1rIasRALR1KzP8v27zJfn6/ecpAh4BPZAepEAytBSc60ks4KzRD1CJKGeJ6KrWyvZ7O6n25ZA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6881
 
 From: Peng Fan <peng.fan@nxp.com>
 
-There is no in-tree user of "include/sound/cs42l52.h", so move
-'struct cs42l52_platform_data ' to cs42l52.c and remove the header file.
-And platform data is mostly for legacy platforms that create devices
-non using device tree. So drop cs42l52.h to prepare using GPIOD API.
+of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+ - Use devm_gpiod_get_optional to get GPIO descriptor with default
+   polarity GPIOD_OUT_LOW, set consumer name.
+ - Use gpiod_set_value_cansleep to configure output value.
+
+Checking the current driver using legacy GPIO API, the
+reset value is first output HIGH, then LOW, then HIGH.
+
+Checking the datasheet, the device remains in Power-down state until
+RESET pin is brought high.
+
+Since the driver has been here for quite long time and no complain on
+the reset flow, still follow original flow when using GPIOD
+descriptors.
+
+Per datasheet, the DTS polarity should be GPIOD_ACTIVE_LOW. The binding
+example use value 0(GPIOD_ACTIVE_HIGH) which seems wrong.
+And the binding use reset-gpio as example, not same as driver using
+"cirrus,reset-gpio", and there is no in-tree DTS has the device,
+so all should be fine with this patch.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- include/sound/cs42l52.h    | 29 -----------------
- sound/soc/codecs/cs42l52.c | 78 +++++++++++++++++++++++++++-------------------
- 2 files changed, 46 insertions(+), 61 deletions(-)
+ sound/soc/codecs/cs42l52.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/include/sound/cs42l52.h b/include/sound/cs42l52.h
-deleted file mode 100644
-index c20649666abe5dcbbf628f6c2d1692d3e7190eeb..0000000000000000000000000000000000000000
---- a/include/sound/cs42l52.h
-+++ /dev/null
-@@ -1,29 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * linux/sound/cs42l52.h -- Platform data for CS42L52
-- *
-- * Copyright (c) 2012 Cirrus Logic Inc.
-- */
--
--#ifndef __CS42L52_H
--#define __CS42L52_H
--
--struct cs42l52_platform_data {
--
--	/* MICBIAS Level. Check datasheet Pg48 */
--	unsigned int micbias_lvl;
--
--	/* MICA mode selection Differential or Single-ended */
--	bool mica_diff_cfg;
--
--	/* MICB mode selection Differential or Single-ended */
--	bool micb_diff_cfg;
--
--	/* Charge Pump Freq. Check datasheet Pg73 */
--	unsigned int chgfreq;
--
--	/* Reset GPIO */
--	unsigned int reset_gpio;
--};
--
--#endif /* __CS42L52_H */
 diff --git a/sound/soc/codecs/cs42l52.c b/sound/soc/codecs/cs42l52.c
-index ba2ccc818ba6cc1b5fbcfb38e07e9bc8f68c4a6e..aa8c001cce099e3c1dfc979678fe8000caed097f 100644
+index aa8c001cce099e3c1dfc979678fe8000caed097f..a9ffba62aaf88c55a715d83609382d6fc5cfaa8d 100644
 --- a/sound/soc/codecs/cs42l52.c
 +++ b/sound/soc/codecs/cs42l52.c
-@@ -22,7 +22,6 @@
- #include <linux/slab.h>
- #include <linux/workqueue.h>
- #include <sound/core.h>
--#include <sound/cs42l52.h>
- #include <sound/initval.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -36,6 +35,24 @@ struct sp_config {
- 	u32 srate;
+@@ -9,13 +9,13 @@
+  */
+ 
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+ #include <linux/input.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+-#include <linux/of_gpio.h>
+ #include <linux/pm.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+@@ -50,7 +50,7 @@ struct cs42l52_platform_data {
+ 	unsigned int chgfreq;
+ 
+ 	/* Reset GPIO */
+-	unsigned int reset_gpio;
++	struct gpio_desc *reset_gpio;
  };
  
-+struct cs42l52_platform_data {
-+
-+	/* MICBIAS Level. Check datasheet Pg48 */
-+	unsigned int micbias_lvl;
-+
-+	/* MICA mode selection Differential or Single-ended */
-+	bool mica_diff_cfg;
-+
-+	/* MICB mode selection Differential or Single-ended */
-+	bool micb_diff_cfg;
-+
-+	/* Charge Pump Freq. Check datasheet Pg73 */
-+	unsigned int chgfreq;
-+
-+	/* Reset GPIO */
-+	unsigned int reset_gpio;
-+};
-+
  struct  cs42l52_private {
- 	struct regmap *regmap;
- 	struct snd_soc_component *component;
-@@ -1090,7 +1107,7 @@ static const struct regmap_config cs42l52_regmap = {
- static int cs42l52_i2c_probe(struct i2c_client *i2c_client)
- {
- 	struct cs42l52_private *cs42l52;
--	struct cs42l52_platform_data *pdata = dev_get_platdata(&i2c_client->dev);
-+	struct cs42l52_platform_data *pdata;
- 	int ret;
- 	unsigned int devid;
- 	unsigned int reg;
-@@ -1107,38 +1124,35 @@ static int cs42l52_i2c_probe(struct i2c_client *i2c_client)
- 		dev_err(&i2c_client->dev, "regmap_init() failed: %d\n", ret);
- 		return ret;
- 	}
--	if (pdata) {
--		cs42l52->pdata = *pdata;
--	} else {
--		pdata = devm_kzalloc(&i2c_client->dev, sizeof(*pdata),
--				     GFP_KERNEL);
--		if (!pdata)
--			return -ENOMEM;
--
--		if (i2c_client->dev.of_node) {
--			if (of_property_read_bool(i2c_client->dev.of_node,
--				"cirrus,mica-differential-cfg"))
--				pdata->mica_diff_cfg = true;
--
--			if (of_property_read_bool(i2c_client->dev.of_node,
--				"cirrus,micb-differential-cfg"))
--				pdata->micb_diff_cfg = true;
--
--			if (of_property_read_u32(i2c_client->dev.of_node,
--				"cirrus,micbias-lvl", &val32) >= 0)
--				pdata->micbias_lvl = val32;
--
--			if (of_property_read_u32(i2c_client->dev.of_node,
--				"cirrus,chgfreq-divisor", &val32) >= 0)
--				pdata->chgfreq = val32;
--
--			pdata->reset_gpio =
--				of_get_named_gpio(i2c_client->dev.of_node,
--						"cirrus,reset-gpio", 0);
--		}
--		cs42l52->pdata = *pdata;
+@@ -1146,25 +1146,21 @@ static int cs42l52_i2c_probe(struct i2c_client *i2c_client)
+ 			"cirrus,chgfreq-divisor", &val32) >= 0)
+ 			pdata->chgfreq = val32;
+ 
+-		pdata->reset_gpio =
+-			of_get_named_gpio(i2c_client->dev.of_node,
+-					"cirrus,reset-gpio", 0);
++		pdata->reset_gpio = devm_gpiod_get_optional(&i2c_client->dev,
++							    "cirrus,reset",
++							    GPIOD_OUT_LOW);
 +
-+	pdata = devm_kzalloc(&i2c_client->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
++		if (IS_ERR(pdata->reset_gpio))
++			return PTR_ERR(pdata->reset_gpio);
 +
-+	if (i2c_client->dev.of_node) {
-+		if (of_property_read_bool(i2c_client->dev.of_node,
-+			"cirrus,mica-differential-cfg"))
-+			pdata->mica_diff_cfg = true;
-+
-+		if (of_property_read_bool(i2c_client->dev.of_node,
-+			"cirrus,micb-differential-cfg"))
-+			pdata->micb_diff_cfg = true;
-+
-+		if (of_property_read_u32(i2c_client->dev.of_node,
-+			"cirrus,micbias-lvl", &val32) >= 0)
-+			pdata->micbias_lvl = val32;
-+
-+		if (of_property_read_u32(i2c_client->dev.of_node,
-+			"cirrus,chgfreq-divisor", &val32) >= 0)
-+			pdata->chgfreq = val32;
-+
-+		pdata->reset_gpio =
-+			of_get_named_gpio(i2c_client->dev.of_node,
-+					"cirrus,reset-gpio", 0);
++		gpiod_set_consumer_name(pdata->reset_gpio, "CS42L52 /RST");
  	}
  
-+	cs42l52->pdata = *pdata;
-+
+ 	cs42l52->pdata = *pdata;
+ 
  	if (cs42l52->pdata.reset_gpio) {
- 		ret = devm_gpio_request_one(&i2c_client->dev,
- 					    cs42l52->pdata.reset_gpio,
+-		ret = devm_gpio_request_one(&i2c_client->dev,
+-					    cs42l52->pdata.reset_gpio,
+-					    GPIOF_OUT_INIT_HIGH,
+-					    "CS42L52 /RST");
+-		if (ret < 0) {
+-			dev_err(&i2c_client->dev, "Failed to request /RST %d: %d\n",
+-				cs42l52->pdata.reset_gpio, ret);
+-			return ret;
+-		}
+-		gpio_set_value_cansleep(cs42l52->pdata.reset_gpio, 0);
+-		gpio_set_value_cansleep(cs42l52->pdata.reset_gpio, 1);
++		gpiod_set_value_cansleep(cs42l52->pdata.reset_gpio, 1);
++		gpiod_set_value_cansleep(cs42l52->pdata.reset_gpio, 0);
+ 	}
+ 
+ 	i2c_set_clientdata(i2c_client, cs42l52);
 
 -- 
 2.37.1
