@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-19711-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19712-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53DB0AACFF1
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 23:44:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED817AAD014
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 23:47:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 582D21C25192
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 21:43:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 276DF986C94
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 21:45:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CF5C218AD7;
-	Tue,  6 May 2025 21:36:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5EA023315A;
+	Tue,  6 May 2025 21:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGnlRfK5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2AbNYMS"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B7E22D9FB;
-	Tue,  6 May 2025 21:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BFB233127;
+	Tue,  6 May 2025 21:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746567417; cv=none; b=BQyR/CVJ4FoAQpwXbr2KJ1KhLjA8FkWmVxokVhQkiCHsIlXmAt0DGxAUmfZ2ZrsQD178Zhfb/z2yTC2P3GDS1CjPtCj5SyWRwQuMUD9YkWSQNahKLhIy8PUA3opgD8NCmlOj70FDZZ//lxne3kk/TQcmvL4RAs+g//B9wQEYbKw=
+	t=1746567441; cv=none; b=epEG9yftpKFgePFsK4of1o5wNcWQRx3Us/QvU2OJyDepBw11+M+egmnzFSUMjGjEQdA2e/BAZXqeDTzXJcbZtDv0uGrpvFaPJx03/+DWI8wqb/5es3H4U9SaVWBm9lUUnVqgr7eE4/N2sFu2p6bnPh77Wa/dio7AtOcO0WXt4Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746567417; c=relaxed/simple;
-	bh=1k5f6S15WEvZFIIAndx3JpAhTytTqx5CYGLFKaXK0Q4=;
+	s=arc-20240116; t=1746567441; c=relaxed/simple;
+	bh=/6dotfspmfvLZQl7LisUvq7pisMsJv9hVeR4uJ/vVSA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WZjlbnjjM8FcfvrpuW9qncW2rF0xVXAdElPynRR8RUnHcadQAEdf2hDmH9cxpOOAahTYVkgbaQPAwYzXfTrEtlj0TlVKQfYJvZYqZUFhYjbxN8K4ZXOvQwipwQ/0Sz0i+Fc11FR26XlaB4zNhl+MDyMWd+0X9Rp49REf6Rnpm54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGnlRfK5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 205D9C4CEEE;
-	Tue,  6 May 2025 21:36:56 +0000 (UTC)
+	 MIME-Version; b=lEk5GvSKSaSamgeWpHWGIBuKi+TPSGO0KzgFwchG2DpVq77qZ6PP3YZiLGkRTvdBLquBB9XuZkQyRW8Ooe4V75PsbO74OM9jmSOfwXTxuPyklyUS+t1T/xlJFKhxoqQxJVh7//VpshCFO5bCsKwQ2wYZJxAmspxN6QPXjCSG0tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2AbNYMS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E63CC4CEE4;
+	Tue,  6 May 2025 21:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746567417;
-	bh=1k5f6S15WEvZFIIAndx3JpAhTytTqx5CYGLFKaXK0Q4=;
+	s=k20201202; t=1746567441;
+	bh=/6dotfspmfvLZQl7LisUvq7pisMsJv9hVeR4uJ/vVSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WGnlRfK5OjePuxU/kX0ROoYfCILPxOzE9wmm3CQ07DAH/YCszm4UlHZxHve605Sn0
-	 R06FhSrrurhiEIH5gaK0hR/E5R74YCg682J7RGjAVcvYhM6ZNi1Dw9lb/MqiAxcEJJ
-	 Gt1LYzTR03waqXEcCrf1pqu1Tt5UIbEvyu4BHiNrHI/x5RGX3WqZ0nlxnZUxQZw2ph
-	 J8U3p04HDd6k80s5QYnVFtdOYV9fN7k1yb/fTYUe4gw5aPvRiiaps5sAQIulstuTh2
-	 9S7YLmWzlgCQXQ7afDzTooU1P5w/6gXgAouCjjNGsY345J0h2hzG/EisSZ+DWoN7JU
-	 whhTS9cvpOSTQ==
+	b=u2AbNYMSYOYrfWqQ6O1px2QdfPrjmcK/cyLL4wiBweTgVid3OHvfgg6nsgLSBkthx
+	 k6LIy1nguMn4/aKj8homDQD7hGviz7DuVonqYdLB28ANcKFHqFPjlOMy7FrF3hcZP9
+	 A7Jn/8XVi2uGp3J4fMq3tt/f0uh3vyZqikght8/DCEgqjizjcWxsN04N2bQbv6Upn/
+	 ccxNeJI2QteEi+K0FkFJOrxRh4FePLr6FeVAu6OUNfdH8GKhnMpjjlJzBja413F7Pu
+	 dRGLUQPVUgB6stC7vNk+NTbq32v4n2c5OtI9yBfehmJMNpTtg2a5mpfPh0mqV8tOyx
+	 w5EK0HHIpsdog==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-amlogic@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 03/12] pinctrl: meson: define the pull up/down resistor value as 60 kOhm
-Date: Tue,  6 May 2025 17:36:38 -0400
-Message-Id: <20250506213647.2983356-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 2/6] pinctrl: meson: define the pull up/down resistor value as 60 kOhm
+Date: Tue,  6 May 2025 17:37:10 -0400
+Message-Id: <20250506213714.2983569-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250506213647.2983356-1-sashal@kernel.org>
-References: <20250506213647.2983356-1-sashal@kernel.org>
+In-Reply-To: <20250506213714.2983569-1-sashal@kernel.org>
+References: <20250506213714.2983569-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.89
+X-stable-base: Linux 6.1.137
 Content-Transfer-Encoding: 8bit
 
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
@@ -103,10 +103,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index 524424ee6c4e7..5cc00fdc48d84 100644
+index 530f3f934e196..1f05f7f1a9aee 100644
 --- a/drivers/pinctrl/meson/pinctrl-meson.c
 +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -486,7 +486,7 @@ static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
+@@ -487,7 +487,7 @@ static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
  	case PIN_CONFIG_BIAS_PULL_DOWN:
  	case PIN_CONFIG_BIAS_PULL_UP:
  		if (meson_pinconf_get_pull(pc, pin) == param)
