@@ -1,143 +1,171 @@
-Return-Path: <linux-gpio+bounces-19659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E4B4AABC9D
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 10:08:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78DEBAABCC7
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 10:13:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F1987AEF3D
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 08:06:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40845188D978
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 08:10:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33DE320C028;
-	Tue,  6 May 2025 08:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74EA522A807;
+	Tue,  6 May 2025 08:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="H4qZA6D/"
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="BKclO5bl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD33020B813
-	for <linux-gpio@vger.kernel.org>; Tue,  6 May 2025 08:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746518836; cv=none; b=ZqRhvf8umicdetBozwe9X5HUS3NGula2KdooQyvudMVZYMXvC/E9AnjouddK3p0h8o+h1IQHFLLcTm/SxOcfkeG/RBSxVu6E/kPmNiFB7SJEwpoUW/aJvNPWbjDwJ2c4k1tEtnSwF9It8HSxv3aeGmaKZWjfzivlVVjKd9M8e0M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746518836; c=relaxed/simple;
-	bh=/i/S7NDpaV/eqwKPT4Y4crlS4XLw5APJiQbbcfUmI+A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NFYTpjdvKJEVi1Z6CbvOM2M75Fs7tcpSydIBlk2AVjc8uT64Hxj6SkNicQs/OVcMRUIAxN/w65Rc3dZ8ZF/u51iDn5PPSOLqWm+LY6vjKiFDoWLcHgTvt9nqXyEgGdPbs0v3cRJiezkDEKz8gO8nN/De8b6KxJH6+IoOx4bCi00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=H4qZA6D/; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54ea69e9352so6346402e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 06 May 2025 01:07:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746518832; x=1747123632; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IWjI1WdrW4fw1LjYjyn2MNuK0dU9SDM3EHaXeQ0QWpk=;
-        b=H4qZA6D/mTJunFcq2f15O0aC5SYL/RVC7lMYPpknaxX4IiUbxtiVRbwWed0TUPnag6
-         hDnXvBa9LsAT/K1enliHJolXi75dGDBPD86VP2BduRYMXrvHOf0y3qibuVK/1qHOUXAw
-         sJQQe/kt0gURiAuWB2LZUCNJWP/4wtkEDbF6h2WhIaX/NDcw3K6a5HSql0EquHK/CyX7
-         fbpqwu907nYqTr1TkwrVUx8TzrKs148S89nsQo70GrHpmCocUK13sNIEAhK9ypAlNEyA
-         8ufOUhXn/utzWcd7FXb6sFDcf7Ky+XXURhJ07E5kP0uBNNZiXpO4Iix8bK90AskmjtFO
-         Vvgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746518832; x=1747123632;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IWjI1WdrW4fw1LjYjyn2MNuK0dU9SDM3EHaXeQ0QWpk=;
-        b=YnohEuBSSwxKAvJ80FySwTFikxSjxsVFICcznmq6PCjHLjryC+ONSsEoWvOjKWj5Xo
-         D4sw+qpoDb+Jc1ohAws67J1btN+qTvBtHG2aTq2VV3GIyGkV/28i+h07VkDI4fHnNmDT
-         K3upLqB4mVAUNBqskM9ErQDBynsibzQdaduP93+ImvdaBqhcdpZU1jARV09ahvhAsZeN
-         5gcYs1qlrnj+FN8ge7/TqIxjWDmv2hIcxlJybEvpseke8/S56hu83EULjDPzVWo7YEVW
-         4C4mFJadb9CrOlRkRwKEvBhp4DuGNOcaENxrgJDhPXeN/GMx730hFVEprTCVCTxDytI0
-         K97w==
-X-Forwarded-Encrypted: i=1; AJvYcCVFtukHapaqHuiLjjoBfC0s59PM2vSOZCf1nnyJmba4x6HIBtXyIiQMiiyNyrxNoc0/I09OakPKERs/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/Y7T+GdHv9eKnkneYvtBe4HGrTnz0fYAE6vjAAZNSpo9neIxB
-	KeLgpH1x8WZAgctlO5C47ueRyunj+dqxTiP9m6z9CHpseGn9lgr8Yg6bK53nGvFeKJIR77LnFCz
-	wk/gScUz5NMvth4G4FHio1m4DAjambFHPSWp2tw==
-X-Gm-Gg: ASbGnctTWtBd62aanAC9M20NIGgixfrNfyRGUHgG7sEQvIF6jihJ254pMY4VAzl4YmC
-	SJSqnTcusreIrCyRwLw8WukiUcIS7ugaXUlnAc29E5ccj6oNRq/7sTQFwop5N56OOVNz6R7yjIa
-	E1FifhE2RmFm7na3rKLhmUnuLZpYhRhKKBZl9AXQ3pF4E46YovTrn6Tw==
-X-Google-Smtp-Source: AGHT+IHqoCICO9862R9K2Lm84ouPAwINr3VP7krJifWUL5WSBoQ4Kvr33P34RfQvhWkjHIDMgMqYGqtI1g5tPyBwgtk=
-X-Received: by 2002:a05:6512:1048:b0:545:aa5:d44f with SMTP id
- 2adb3069b0e04-54fb4a14406mr712084e87.30.1746518831752; Tue, 06 May 2025
- 01:07:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3037522EF5;
+	Tue,  6 May 2025 08:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746519039; cv=pass; b=sDVAflGvmuMd153F90Xswy9o/Z8jDK9zPETD4a6w74gDBFJ4ioYVslQ0U2CbwdVj21drdyZjP+Kqep3o/ZijVBryys9nCCXNcHjGSQz9UG7gZvbaelPPbs0girlXzHDHdjCMG685MqgcUOwnYlUL+j1MSowB/Zv3Je3m1dCS2lM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746519039; c=relaxed/simple;
+	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oi5i+MvRirZLul3WE5Yj70PmYr+ioRGe7Svj/Bjc7LfEXt42/ngA1p5wDWQ4URMybGDvNFYSuBAHfBzMXg1/utCEFR/zgraXqfneShMVegRl37EyDgOCKoOPglTu0jBSkfneGTNRGU9NI6jm3F7lEFRcYKo50U4ED2xJCBwAszw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=BKclO5bl; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+ARC-Seal: i=1; a=rsa-sha256; t=1746519017; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VWMqlzwxd65hBeq2sNRERKJp2v5qyjn7WtVbYRO9rzpP41X8kddgX0l9dEhyESc+sHIgE3gwVW+GxPxOvPnL1gvrStnmdWZVGLG6WMx5rq1PFlNa9YUqJgNGL6rSLaY1jtkCybvHd0aBHtU+PRtYlt4bAWGpXQaMXfUJLG0EDzU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746519017; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=; 
+	b=n5W3a7jNxhp/g44TpsXKkmJwKFzjHWuYQcO1A+iLQk+hCBmP9oCnwZIHVv6XXBy29v+/dyXa6l23AOrWcyjtmyLeDa3yWo95OfnQeuWEElu/gpy/IyyUJbGAeY5dj8zsasx3ZNfj6YaHQ1UkPnASSQK4vAJ5DoNVPOlEX7MuD1I=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746519017;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=;
+	b=BKclO5blmRx2GCmPaGOanhYa16dcXIPaVtZjbvWdf16EuZT6cPLobR1ljZEW0siS
+	1+4v15/Li4P4d4OL2KcFcnNRrNgnMCC+iqQeHDUX1IKLnngo9p1y83BfMazD3Y7f/YM
+	Xg+q2haemciOkRt399bn8R0Iplc2lPpwZ7ZRHiNVr067MXyjgbSFtVGyca4IzgJ2wlg
+	NIx24n3lr7RF5UvUqvs5mM8U0n7j4w1eR6Mt9GMHR/gJBVPpIj5i0zUltywu6nyjnRh
+	ZB9WHOGEh6UWvgy+CQD3NxeHphmSwPseIHP8l1syvsVTMe2LMSvlXI2fmbI2ZypVRZx
+	wY2rvnCvXA==
+Received: by mx.zohomail.com with SMTPS id 1746519014161403.32583521591005;
+	Tue, 6 May 2025 01:10:14 -0700 (PDT)
+Message-ID: <d2f68cebc321ef659d507ef75d3a7fd625063591.camel@icenowy.me>
+Subject: Re: [PATCH v2 2/3] pinctrl: starfive: jh7110: add support for
+ PAD_INTERNAL_* for GPI
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
+ <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Date: Tue, 06 May 2025 16:10:08 +0800
+In-Reply-To: <20250424062017.652969-3-uwu@icenowy.me>
+References: <20250424062017.652969-1-uwu@icenowy.me>
+	 <20250424062017.652969-3-uwu@icenowy.me>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev> <20250503-smc-6-15-v4-5-500b9b6546fc@svenpeter.dev>
-In-Reply-To: <20250503-smc-6-15-v4-5-500b9b6546fc@svenpeter.dev>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 6 May 2025 10:07:00 +0200
-X-Gm-Features: ATxdqUE_9uM4g2e9vDQcwVZ74pJhDseN0shdJbJ2G8cWvYqvkY72EGPX5Nyfbec
-Message-ID: <CAMRc=MebFf-DBh_=H0J4ORStaxBYhOnfY+jSk2d4UpdyS=m1LA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/9] gpio: Add new gpio-macsmc driver for Apple Macs
-To: sven@svenpeter.dev
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
-	Hector Martin <marcan@marcan.st>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-On Sat, May 3, 2025 at 12:07=E2=80=AFPM Sven Peter via B4 Relay
-<devnull+sven.svenpeter.dev@kernel.org> wrote:
->
-> From: Hector Martin <marcan@marcan.st>
->
-> This driver implements the GPIO service on top of the SMC framework
-> on Apple Mac machines. In particular, these are the GPIOs present in the
-> PMU IC which are used to control power to certain on-board devices.
->
-> Although the underlying hardware supports various pin config settings
-> (input/output, open drain, etc.), this driver does not implement that
-> functionality and leaves it up to the firmware to configure things
-> properly. We also don't yet support interrupts/events. This is
-> sufficient for device power control, which is the only thing we need to
-> support at this point. More features will be implemented when needed.
->
-> To our knowledge, only Apple Silicon Macs implement this SMC feature.
->
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Reviewed-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Sven Peter <sven@svenpeter.dev>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Sven Peter <sven@svenpeter.dev>
-> ---
+5ZyoIDIwMjUtMDQtMjTmmJ/mnJ/lm5vnmoQgMTQ6MjAgKzA4MDDvvIxJY2Vub3d5IFpoZW5n5YaZ
+6YGT77yaCj4gVGhlIEpINzExMCBTb0MncyBib3RoIHBpbiBjb250cm9sbGVyIHN1cHBvcnQgcm91
+dGluZyBHUEkgc2lnbmFscyB0bwo+IGludGVybmFsIGZpeGVkIGxvdy9oaWdoIGxldmVsLgo+IAo+
+IEFzIHdlIGFsbG9jYXRlZCB0d28gc3BlY2lhbCAicGluIiBudW1iZXJzIGZvciB0aGVzZSBzaXR1
+YXRpb25zCj4gKFBBRF9JTlRFUk5BTF97TE9XLEhJR0h9KSwgYWRkIHNwZWNpYWwgaGFuZGxpbmcg
+Y29kZSBmb3IgdGhlc2UKPiAicGlucyIuCj4gVGhlIERPRW4vRE9VVC9GVU5DVElPTiBmaWVsZHMg
+YXJlIGlnbm9yZWQgYW5kIHRoZSBpbnRlcm5hbCBpbnB1dAo+IHNpZ25hbAo+IHNwZWNpZmllZCBi
+eSB0aGUgRElOIGZpZWxkIGlzIHJvdXRlZCB0byBmaXhlZCBsb3cvaGlnaCBsZXZlbC4KCk9vcHMg
+dG9kYXkgSSBmb3VuZCB0aGF0IHRoaXMgcGF0Y2hzZXQgaGFzIHNvbWUgcHJvYmxlbSAtLSB0aGUg
+R1BJT01VWAptYWNybyBtYXNrcyBiaXRzIDcgYW5kIDggaW4gR1BJTyBudW1iZXIsIGFuZCBpdCBt
+YXBzCkdQSV9TWVNfVVNCX09WRVJDVVJSRU5UIHRvIEdQSU82MyBpbnN0ZWFkIG9mIFBBRF9JTlRF
+Uk5BTF9ISUdIIGluc3RlYWQuCgpXaGVuIEkgZml4ZWQgdGhpcywgSSBnb3QKCmBgYApbICAgIDku
+ODY1ODQxXSBzdGFyZml2ZS1qaDcxMTAtc3lzLXBpbmN0cmwgMTMwNDAwMDAucGluY3RybDogcGlu
+IDI1NSBpcwpub3QgcmVnaXN0ZXJlZCBzbyBpdCBjYW5ub3QgYmUgcmVxdWVzdGVkClsgICAgOS44
+NzU4MTRdIHN0YXJmaXZlLWpoNzExMC1zeXMtcGluY3RybCAxMzA0MDAwMC5waW5jdHJsOiBlcnJv
+ciAtCkVJTlZBTDogcGluLTI1NSAoc29jOnVzYkAxMDEwMDAwMCkKWyAgICA5Ljg4NDg4Ml0gc3Rh
+cmZpdmUtamg3MTEwLXN5cy1waW5jdHJsIDEzMDQwMDAwLnBpbmN0cmw6IGVycm9yIC0KRUlOVkFM
+OiBjb3VsZCBub3QgcmVxdWVzdCBwaW4gMjU1IChub24tZXhpc3RpbmcpIGZyb20gZ3JvdXAgdXNi
+MC0KMC5vdmVyY3VycmVudC1waW5zIG9uIGRldmljZSAxMzA0MDAwMC5waW5jdHJsCmBgYAoKV2Vp
+cmQgcHJvYmxlbSwgaG93IGNvdWxkIEkgc29sdmUgdGhpcz8KCj4gCj4gU2lnbmVkLW9mZi1ieTog
+SWNlbm93eSBaaGVuZyA8dXd1QGljZW5vd3kubWU+Cj4gLS0tCj4gwqAuLi4vc3RhcmZpdmUvcGlu
+Y3RybC1zdGFyZml2ZS1qaDcxMTAuY8KgwqDCoMKgwqDCoMKgIHwgNDEgKysrKysrKysrKysrKysr
+LS0KPiAtLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25z
+KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9zdGFyZml2ZS9waW5jdHJsLXN0
+YXJmaXZlLWpoNzExMC5jCj4gYi9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1zdGFy
+Zml2ZS1qaDcxMTAuYwo+IGluZGV4IDFkMGQ2YzIyNGMxMDQuLmZiMThjNzk3NGVjODYgMTAwNjQ0
+Cj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3N0YXJmaXZlL3BpbmN0cmwtc3RhcmZpdmUtamg3MTEw
+LmMKPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1zdGFyZml2ZS1qaDcx
+MTAuYwo+IEBAIC0yOTEsNiArMjkxLDI0IEBAIHZvaWQgamg3MTEwX3NldF9ncGlvbXV4KHN0cnVj
+dCBqaDcxMTBfcGluY3RybAo+ICpzZnAsIHVuc2lnbmVkIGludCBwaW4sCj4gwqB9Cj4gwqBFWFBP
+UlRfU1lNQk9MX0dQTChqaDcxMTBfc2V0X2dwaW9tdXgpOwo+IMKgCj4gK3N0YXRpYyB2b2lkIGpo
+NzExMF9zZXRfZ3BpKHN0cnVjdCBqaDcxMTBfcGluY3RybCAqc2ZwLCB1MzIgZ3BpLCB1MzIKPiB2
+YWwpCj4gK3sKPiArwqDCoMKgwqDCoMKgwqB1MzIgb2Zmc2V0LCBzaGlmdDsKPiArwqDCoMKgwqDC
+oMKgwqB1MzIgcmVnX3ZhbDsKPiArwqDCoMKgwqDCoMKgwqBjb25zdCBzdHJ1Y3Qgamg3MTEwX3Bp
+bmN0cmxfc29jX2luZm8gKmluZm8gPSBzZnAtPmluZm87Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoG9m
+ZnNldCA9IDQgKiAoZ3BpIC8gNCk7Cj4gK8KgwqDCoMKgwqDCoMKgc2hpZnTCoCA9IDggKiAoZ3Bp
+ICUgNCk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHJlZ192YWwgPSByZWFkbF9yZWxheGVkKHNmcC0+
+YmFzZSArCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgaW5mby0+Z3BpX3JlZ19iYXNlICsgb2Zmc2V0KTsKPiArwqDCoMKgwqDC
+oMKgwqByZWdfdmFsICY9IGluZm8tPmdwaV9tYXNrIDw8IHNoaWZ0Owo+ICvCoMKgwqDCoMKgwqDC
+oHJlZ192YWwgfD0gKHZhbCAmIGluZm8tPmdwaV9tYXNrKSA8PCBzaGlmdDsKPiArCj4gK8KgwqDC
+oMKgwqDCoMKgd3JpdGVsX3JlbGF4ZWQocmVnX3ZhbCwgc2ZwLT5iYXNlICsKPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbmZv
+LT5ncGlfcmVnX2Jhc2UgKyBvZmZzZXQpOwo+ICt9Cj4gKwo+IMKgc3RhdGljIGludCBqaDcxMTBf
+c2V0X211eChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW5zaWduZWQgaW50IGZzZWwsIHVuc2ln
+bmVkIGludCBnc2VsKQo+IMKgewo+IEBAIC0zMDcsMTQgKzMyNSwyMyBAQCBzdGF0aWMgaW50IGpo
+NzExMF9zZXRfbXV4KHN0cnVjdCBwaW5jdHJsX2Rldgo+ICpwY3RsZGV2LAo+IMKgwqDCoMKgwqDC
+oMKgwqBwaW5tdXggPSBncm91cC0+ZGF0YTsKPiDCoMKgwqDCoMKgwqDCoMKgZm9yIChpID0gMDsg
+aSA8IGdyb3VwLT5ncnAubnBpbnM7IGkrKykgewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgdTMyIHYgPSBwaW5tdXhbaV07Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oHUzMiBwaW4gPSBqaDcxMTBfcGlubXV4X3Bpbih2KTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBpZiAoaW5mby0+amg3MTEwX3NldF9vbmVfcGluX211eCkKPiAtwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGluZm8tPmpoNzExMF9zZXRf
+b25lX3Bpbl9tdXgoc2ZwLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBqaDcxMTBfcGlubXV4X3Bp
+bih2KSwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kaW4odiksCj4gLcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGpoNzExMF9waW5tdXhfZG91dCh2KSwKPiAtwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb2VuKHYpLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBq
+aDcxMTBfcGlubXV4X2Z1bmN0aW9uKHYpKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgc3dpdGNoIChwaW4pIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2FzZSBQ
+QURfSU5URVJOQUxfTE9XOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjYXNlIFBB
+RF9JTlRFUk5BTF9ISUdIOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgamg3MTEwX3NldF9ncGkoc2ZwLCBqaDcxMTBfcGlubXV4X2Rpbih2KSwKPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgcGluID09IFBBRF9JTlRFUk5BTF9ISUdIKTsKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJyZWFrOwo+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqBkZWZhdWx0Ogo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgaWYgKGluZm8tPmpoNzExMF9zZXRfb25lX3Bpbl9tdXgpCj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgaW5mby0+amg3MTEwX3NldF9vbmVfcGluX211eChzZnAsCj4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBqaDcxMTBfcGlubXV4X3Bpbih2KSwKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGpoNzExMF9waW5tdXhfZGluKHYpLAo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb3V0KHYpCj4gLAo+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb2Vu
+KHYpCj4gLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bp
+bm11eF9mdW5jdGlvCj4gbih2KSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0K
+PiDCoMKgwqDCoMKgwqDCoMKgfQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiAwOwoK
 
-[snip]
-
-> +
-> +       smcgp->gc.label =3D "macsmc-pmu-gpio";
-> +       smcgp->gc.owner =3D THIS_MODULE;
-> +       smcgp->gc.get =3D macsmc_gpio_get;
-> +       smcgp->gc.set =3D macsmc_gpio_set;
-
-I must have given my Reviewed-by under this driver before we started
-the conversion to the new GPIO driver setters. Could you please
-replace this with set_rv() as the old set() is now deprecated?
-
-> +       smcgp->gc.get_direction =3D macsmc_gpio_get_direction;
-> +       smcgp->gc.init_valid_mask =3D macsmc_gpio_init_valid_mask;
-> +       smcgp->gc.can_sleep =3D true;
-> +       smcgp->gc.ngpio =3D MAX_GPIO;
-> +       smcgp->gc.base =3D -1;
-> +       smcgp->gc.parent =3D &pdev->dev;
-> +
-
-Bart
 
