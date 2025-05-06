@@ -1,164 +1,122 @@
-Return-Path: <linux-gpio+bounces-19673-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19674-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B53F9AABE2F
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 11:04:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68812AABED0
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 11:15:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E8693B4DF2
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 09:03:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B9F11C28484
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 May 2025 09:15:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46FD6278755;
-	Tue,  6 May 2025 09:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="E0lqo8iQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7025A2798F0;
+	Tue,  6 May 2025 09:09:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F58277036
-	for <linux-gpio@vger.kernel.org>; Tue,  6 May 2025 09:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11925264A9E;
+	Tue,  6 May 2025 09:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522130; cv=none; b=MGaXAT9rn357GqvBWZ3giogeAUoeFoMK7iRhlJlmUlrjc+7cZS6y0/rI+OECrawA2ipPc8EkMlR0y+FvGywYiGzv+xb7ddqVoEQWNlgjcS81LWTVlXOpByL52HfdOKvQkLvba+7yJWGypJze2uzBwvDXJqzrJQqclj9ki94F5Z4=
+	t=1746522559; cv=none; b=MEX/J6ruz2kfqXJi3CY81PuLzgR6tXMRJ/KyXaRJnYurf16Pvr+0TUDaGKnQBrXpzwnlB0snSrneRGcJDHt2plpv7J7g/4XHK3ilRi1BSIOzRenWH36rH0O3sfkiEz5Z0f2pEY0vsFhKhMS5VP9tC2l6W3LWEy5FNiz179eR0Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522130; c=relaxed/simple;
-	bh=L7ylAv3DjJzqa9bWTH30KaUS/rijboOvo44ZRxv2joU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n0sNLHS53QiT2yMgJnXfla1xALE1WUWX0JXTpC7zGPaJyDhZ96zgZ3ZbLaR53uxBMuoSxseEOzTTU5eNaEmR3TQH+DeGJcLUYOkpeTC0GqRIIPaGYOuuBiD6/0RHZiXIj/W4jULWg7pkrnI8ZKnBpGtsYRc3f3vobNHRtzVlNIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=E0lqo8iQ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ede096d73so31960465e9.2
-        for <linux-gpio@vger.kernel.org>; Tue, 06 May 2025 02:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746522126; x=1747126926; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M5t7463cNsExwzuHfixoOLULX/8A+JIXQFhWYI91z8U=;
-        b=E0lqo8iQ2gFu/uIG4u0cJqfZVehC7sha5rtDgIEK3nv6Ywm7uQVY7WRS7tVOnhsswR
-         s9ajmW8vFinVgCrb3I+RXU+Tp3TH9dMlxJxJRT5Uit3MjUSRFcdeyf21D9P3sOGYuhDE
-         TyTAX2nXCEYtuy4sB1THjgHR/U18dRd38Ry7+K335CDahUooCfGsBR3yQMsetU3lE7Oj
-         iQcnsqqFg28ejTYC6Wyo+0uI6HflbBqzfYDq61JLoIBak3v7KF40HvOHk3sNKbXNFEYd
-         oCpc9qigeqrGpa0fxH+rwjrrRcv1gHGLm/tDUyMgECCjosu9+JqNYblPiWCOIEd5H5SH
-         IXtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746522126; x=1747126926;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M5t7463cNsExwzuHfixoOLULX/8A+JIXQFhWYI91z8U=;
-        b=OruIMnZg8rBDV2f0iS3XnJtqpYVhTkVFZ52h2OTIW1MhC0LzL2A3ReWLMleHoNCe41
-         QNkqfgnjboDCp/wVZQVkcA55xA2rJDN5A0Pe6hYafYZ4YLjGq3fopDDjjChGdMwXeC/Q
-         xS6C+T0QuKbFx7qenU+lBD/fIO0rWJIjZB6WqH+LBgwcSZ62zpxf1HpDwXkTKP4o9Yt4
-         SKAIyPKpSoGMIdW20A13J8fuoHphS+JPFrNrVN+dnq4htw/PPuuVUmloOorKscxAw3pR
-         qrLh/czX+VuXSNNSoXyVDRVK2THZdNE5kZBR2eooj+f3lfqB9rJqV6LVeq0PViuZ3gvH
-         3l/w==
-X-Gm-Message-State: AOJu0Yzci1f3SJJe7VJlWe1CtF1CQ+reIANiipZbR+uUvI0Gz6ZU/2MT
-	FLMwfiG8IU70/FtvyuJvFDlN2kSgFSKS7N7AgvXT7ZcGWRCoH3nDyrLUSdGKFds=
-X-Gm-Gg: ASbGnctmVnOElB88W90b1KdolN9c5XuB0gMu/bNeisvUhSxDX8lCcB8P3uXmythW5Zt
-	aPiDZp6DJvdrnDijWWSBCcOPvnu1XTR8L/YKH9SAxqIvxNZXJb/no41f0Wiea03meMeqJjVHviw
-	jkvYOAx6yNjXOsRh6xH12PS0SRkFLK/SfuqfBWchXY9hB89ZIu/jQJjtwu52Fm5c3LQ6BE/x5uZ
-	/Q1Bbx+YwYHDEZYVZlI9FMe0+ht/4UvJ6fH1mGHC2hOCjm74+HE0pdMrbJn9Fu42qX1NumE3/yD
-	3kpxyJW6nNEwHhNw8iIh+KQLVSZgthtyktY=
-X-Google-Smtp-Source: AGHT+IG2JavFAOfkm5yvEVzhBOWiCM+n63NE0WGorpmBiJ6Up7VY84BWzS6I5+ST2HXolMCVpnzNgw==
-X-Received: by 2002:a05:600c:a413:b0:43a:ed4d:716c with SMTP id 5b1f17b1804b1-441cbc3e6c1mr42623835e9.22.1746522126365;
-        Tue, 06 May 2025 02:02:06 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:bfd0:3ad7:fd8a:fe95])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441bc83d471sm138125725e9.26.2025.05.06.02.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 02:02:05 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 06 May 2025 11:01:55 +0200
-Subject: [PATCH 12/12] gpio: ml-ioh: use new GPIO line value setter
- callbacks
+	s=arc-20240116; t=1746522559; c=relaxed/simple;
+	bh=vSUbMIpTRLHktM0iNQa7tKGDC2wPWrqGiVyANR5NiNI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i4yfLeEQ/nDQ7uuHpVy806NTDTkFml+sEP4jIhvxug9OZeXiQOd67rgGHx94+h/ajxsQSMtht5sjuv1UeffCpGMjGPxjLZ66oVKlJ/o+9zM+RsQBAq9rSoSHGEonKT3GzIYon0Z8K3+rp+P+ev1r9Egq1q+oIsKPxF2AGghgt/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app1 (Coremail) with SMTP id TAJkCgBHXg+f0RloSiViAA--.38522S2;
+	Tue, 06 May 2025 17:08:49 +0800 (CST)
+From: luyulin <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: zhengyu@eswincomputing.com,
+	ningyu@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	linmin@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	luyulin <luyulin@eswincomputing.com>
+Subject: [PATCH 0/2]
+Date: Tue,  6 May 2025 17:08:44 +0800
+Message-Id: <20250506090844.1516-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-gpiochip-set-rv-gpio-part3-v1-12-0fbdea5a9667@linaro.org>
-References: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
-In-Reply-To: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Vladimir Zapolskiy <vz@mleia.com>, 
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
- Charles Keepax <ckeepax@opensource.cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
- patches@opensource.cirrus.com, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1487;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=nNCKmy4dSJPb2zDH2e9wzncuQT/cTu26TwYiGfHINVU=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoGc//yRkQw+Mjxb/VAzEYh4NS0eiU4M8rdeHKD
- lwNJrrj8Q2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaBnP/wAKCRARpy6gFHHX
- cgkxEAC8fJnRNCwURyy7LqresTVWXPVo+9MHCVv7Xny2M4dcRTEzIR0UWviKCey2j9UtttbRC1S
- RJLdo1AbErdGoC9X4GXxqTF0HVzys7e2R5IuMDKile7aI5gtS25t3B/MxMAimQGNZYszacXclvV
- tAEhuuUXZoOi0tn+vUL8M0kI5Q0rPoBxjafYzpV7vThKuVDJVlFHnbpX+v73bcpvPrKnNQxkGSk
- Y0ddRdsoVggcxRyRQoP3reI1vnrUAQX6EVbl0eOABGFQGn5v4UtlTf6fcyoK/M8iEkK/fJIwDwe
- 1sKo8qCEErY5+/tc0jkNVU7rz2aVDNl+tdxRS/L0uPkdjAFf2hGusuctrIArQjq/fLM4qXcTYis
- oQpVROTxZ8BCKks2ipR9OUnareuOcKkzEwnyNz9Euvbbf9/QTzg8QXilXqdUZs1p2MatmAAVgzy
- 78QVnDB1XkwMaayWKL8MjmyZp0VEhrL6MAEYWhEF1e7F9UATHREd/Nb5VfyvjUa4Z4POrtU59r5
- b1cUgOhohRjs6+sUxZ//I7AUuhwYARthUobnm8V6tbEGwKnCsPz/T+1BJ/Zh197UpgE6ML4YMNH
- tu/dPXHdy/6tt4ZGX9/ew/2vhmW0kspKtafG/On2TTVH+5+s9QEUPxqnWJ5TPoPXzMjbkC6HR3t
- 6/VRTvBri4V3vRw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgBHXg+f0RloSiViAA--.38522S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr17AF4UWF45tr18Gw45KFg_yoW8XrWDpF
+	43GF1rtrn8XFZrXa47Jw4FkrW3Ga1xAr1a9ayft347XFs8A348AF15K3W5XrWDWF48JrnI
+	yryYgryUuF1DArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+  This patch introduces a driver for the Eswin eic7700 SoC pinctrl
+  controller, adding support for the pinctrl functionality in the Linux
+  kernel. The driver provides basic functionality to manage and control
+  the pinctrl signals for the eic7700 SoC.
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+  The driver integrates with the Linux pinctrl subsystem, enabling kernel
+  code to trigger pinctrl operations on hardware and ensuring support for
+  pin multiplexing and pin configuration.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-ml-ioh.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+  Features:
 
-diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
-index 48e3768a830e7..12cf36f9ca63b 100644
---- a/drivers/gpio/gpio-ml-ioh.c
-+++ b/drivers/gpio/gpio-ml-ioh.c
-@@ -89,7 +89,7 @@ struct ioh_gpio {
- 
- static const int num_ports[] = {6, 12, 16, 16, 15, 16, 16, 12};
- 
--static void ioh_gpio_set(struct gpio_chip *gpio, unsigned nr, int val)
-+static int ioh_gpio_set(struct gpio_chip *gpio, unsigned int nr, int val)
- {
- 	u32 reg_val;
- 	struct ioh_gpio *chip =	gpiochip_get_data(gpio);
-@@ -104,6 +104,8 @@ static void ioh_gpio_set(struct gpio_chip *gpio, unsigned nr, int val)
- 
- 	iowrite32(reg_val, &chip->reg->regs[chip->ch].po);
- 	spin_unlock_irqrestore(&chip->spinlock, flags);
-+
-+	return 0;
- }
- 
- static int ioh_gpio_get(struct gpio_chip *gpio, unsigned nr)
-@@ -222,7 +224,7 @@ static void ioh_gpio_setup(struct ioh_gpio *chip, int num_port)
- 	gpio->direction_input = ioh_gpio_direction_input;
- 	gpio->get = ioh_gpio_get;
- 	gpio->direction_output = ioh_gpio_direction_output;
--	gpio->set = ioh_gpio_set;
-+	gpio->set_rv = ioh_gpio_set;
- 	gpio->dbg_show = NULL;
- 	gpio->base = -1;
- 	gpio->ngpio = num_port;
+    Implements support for the Eswin eic7700 SoC pinctrl controller.
+    Provides API to manage pinctrl for the eic7700 SoC.
+    Integration with the Linux pinctrl subsystem for consistency and
+    scalability.
+
+  Supported chips:
+    Eswin eic7700 SoC.
+
+  Test:
+    I tested this patch on the Sifive HiFive Premier P550 (which uses
+    the EIC7700 SoC), including system boot, networking, EMMC, display,
+    and other peripherals. The drivers for these modules all use the
+    pinctrl module, so this verifies that this pinctrl driver
+    patch is working properly.
+
+luyulin (2):
+  dt-bindings: pinctrl: eswin: Document for eic7700 SoC
+  pinctrl: eswin: Add eic7700 pinctrl driver
+
+ .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-eic7700.c             | 701 ++++++++++++++++++
+ 4 files changed, 869 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
 
 -- 
-2.45.2
+2.25.1
 
 
