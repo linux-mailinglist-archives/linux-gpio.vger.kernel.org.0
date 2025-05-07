@@ -1,144 +1,266 @@
-Return-Path: <linux-gpio+bounces-19725-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19726-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6816AADA74
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 10:47:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 350BEAADA7B
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 10:49:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7FFDA7B20DB
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 08:46:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D81E17FD40
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 08:49:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ED6D1FE471;
-	Wed,  7 May 2025 08:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C68B1E3DFD;
+	Wed,  7 May 2025 08:49:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTm00zAy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQKT6CeJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B47A1F4CA6;
-	Wed,  7 May 2025 08:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3855C7260A;
+	Wed,  7 May 2025 08:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746607645; cv=none; b=qahciR2OCYA35UZFWs1Qj5iNKp0a1LBzvm9MkCGjHpH56whasOQ4hPMJSREKbpc8BBoMFSqYrfaUoUQmIfTnT+IOl2XsWEdJKo+zbW++Yv3xnkrGRFWjrr6kV/h4LC63l6vM2pn/Jmkb8JrjMqdujavYtCeWTHToZN8QBPaNsCs=
+	t=1746607755; cv=none; b=sKnC+4LBBJX3NkqIB1E2E2tVLtLVjbQVMd/Q2ehYtn1Mp6F7Mv4wslYTyVLoe2cJCBRNItUNeDjGY1oOIXhG+vv0g/47KO4MyhsYx5JTZhNNHkC6tWrraOVD9RzFWx6rT2BPQH1qxAorENhZ08pzbgWTDhko3DfY7VnnhtdmWXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746607645; c=relaxed/simple;
-	bh=MdB771dZ+rBXjQh6pZ43Jwf+R6ErJMfzPFbhNeRcU8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ngt9S7hGMec/pUFcl222LqpijgnM1CzHmwp4iM+7bZjTcm1OS8Zz24QYYGa6IxRU+ATA8gFbrUDl5b7AkEy82nFfD4P/WxBj48EfLnozkepytI6LcM7U2VyUeHjeNmQFyq5i+IQ+0qk2BtUb93WnZ5ECEbEoaAE/gfMF2pYS5GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTm00zAy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CFEC4CEF0;
-	Wed,  7 May 2025 08:47:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746607644;
-	bh=MdB771dZ+rBXjQh6pZ43Jwf+R6ErJMfzPFbhNeRcU8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nTm00zAyhcWrsX4BME9KZK2kC3hR5vJT7cn7ILyHRXaomvTptRS9GUP/HG6k9hu8k
-	 Hq4AMtQa4GpS/h8r3edxpRGPz9taUPlNsiOPZmdcY7+8EwWgsUO2TzgzsabLN8wWST
-	 KT58nnqyz4/X2JlQAX5aTAxteeE9JP5TkGgneolB79YuxkY9yQP0vs95FRZ4i0ROjA
-	 FmKtm6llZIYTG8TpynIuQk9YytQJX+Z85NHrhPj9eLOYPUecb0B5H72gKUZIl/GGjo
-	 6OGzqdJhBiGOa/xyjTWDQT1rJuEVB5m7/Fncg94VEjofdsuwSEOUMGCn2/LEZz6z1E
-	 fl0a4dJeANYdQ==
-Date: Wed, 7 May 2025 17:47:18 +0900
-From: William Breathitt Gray <wbg@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Kever Yang <kever.yang@rock-chips.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
-	kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH 6/7] counter: Add rockchip-pwm-capture driver
-Message-ID: <aBseFo-EC-PzxiqM@ishi>
-References: <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
- <9YSDgp1lgx6iAp5HG0vS5k0VtP_qnX2YlyDlQOHRYJPU1rRcefCFy8b_ypj4EiQ4i-68q1yIjttcwaTg92zWoA==@protonmail.internalid>
- <20250408-rk3576-pwm-v1-6-a49286c2ca8e@collabora.com>
+	s=arc-20240116; t=1746607755; c=relaxed/simple;
+	bh=g/bgMzABqmeK5ZOGSDI7WEA1Yu3yTLaOQjHdBstHEi4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YYkey9H3fA/bvb1v2VuOVmkMkdSYevabLBtnQFPzAgXCZCYkLCl0Sgz1E9XmglYAIftDClo/rcluyvqrCkJpknLVfwWuxwgxARPYLVbhXmKrcC8UB9CdJ1DJu2pA/Kmt42Ho0u75Ug/AYwTeDfupNycYAzpyQsSqkBYUPjtmuN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQKT6CeJ; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbfa0a7d2cso205217a12.1;
+        Wed, 07 May 2025 01:49:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746607751; x=1747212551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+10a6Fl3SYk8s9AOlehRcxdun4zG4/gdUlq2lQ15FrQ=;
+        b=YQKT6CeJrYfVP1FwmgXjqKiUQzL/8V+r0aP5bFBVPrVnMYyswB8ADbaq164AyXXee1
+         lz/ndlf+lgZDNlvOnpX9/rKc8zBVagMm6S5iXAYgJC6306MFInByvNWcbdh8QDdMPMvt
+         Fm7aoSotDYM8Q51+hU4HY3pBMjZWS7cZxxH1wom38sInyBCTHKs7GXQAOAmzqwLx7ffx
+         WsL/R+8oAfOy3V0ogo8DMXPqXAk4NkWWkuoYuKV1braTiX4RZnqf+AJrqGAFNOpR8BHP
+         yxBO/RCa/TTl8y5vZeDRbe0mdkYxFwghTRMUfVoURKvuTuN19sVd/S/0wtbCh/nQ2apq
+         5BpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746607751; x=1747212551;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+10a6Fl3SYk8s9AOlehRcxdun4zG4/gdUlq2lQ15FrQ=;
+        b=SLcqmSrZk6mKeW97zaeaf9Hv6XVerw3HdJ6ANJYn2RjDBfed0z9OafnxdUVevk/2bs
+         +GV4foBA/mfnT1M3LeLZpOuUFInPaw5oPP57AoLKcONgeQityLeyf4HBYbyRvroMzpFB
+         U+iYdLtvxcwvON6oluH9XmKXCdbpdt0mHXg/jSLggxy3OaST9/wZuz65GAEQhI46nt5+
+         L5BcSvl/6gGUJp9mvsS3Z2qdXHZNXsZt6epomtyHmAr/bdHMAPNmqKBV55eL0/OyK0KN
+         xV5jxbbLAsLS0C5gHrmfZR/hroj/wOSHNKRyG0uHD9pMhF7H2Ox4AzAGLXMy6UdkoZ+1
+         6qcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzJ0hqfZvlR9T1+yM3miV7EYWeUc4itiSIS/jnp2vlN92tJUJ3z1SCvr8rHWzMMrhBOKhzSgTN/ZqvDPc=@vger.kernel.org, AJvYcCVk/L4Jd6ASmiEXr8ShXZ4Sb4v8RRVetl4EtpXvSGjiZfzU0ObX0T3KAmi0hiVQqOJ+1NEd0NFXmtOEeA==@vger.kernel.org, AJvYcCX9tQWQx+13JSqNUAGGRPWnSdD0TeJwVtIoGj7eKtIeh+4ULU3mVpmJMeaM2C7ISl3QBCM37wD51m0g@vger.kernel.org, AJvYcCXwNkRV+4LaJ2xR5MjxlzK1zpcnNFWH2hbAkD84h/FJ/l5iQSKF4aWrSpbOfvK7+Ok9tQ4ayLrJKvWaPdJ9@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd6ENjOflCojAaSeaPC0xxOo7e+A0Pe5vHB0MQDH69Q0RQfExs
+	GBHslsRgpiBq1CwkEdGSkU34u+wA+/CVl4+RVMPBH2tjHnSOGUs/
+X-Gm-Gg: ASbGncsyZwDg8Z8ph6ceLi+LH0L7Qi8EWwSpeCJ4BQ7oRH+IUisvdefwRT4HngFJMfL
+	2uHdN6KpN+kUSCEdloF7iR82taumLbaZSsrD1QbSqk5QBIKvBFnylvc6oZp4DflMleLxig3Gi2C
+	M31TxwLeivsGFgE7LRaSu6WHhNK/3t8YkJPD7dgc/5VQLnZSIovJCl2LNGxi4uKTwJAQH8iSy/T
+	hQBFkCZaIAfEPHTAgXCeg1oJDwTkBNOCBSnK8DSCf+md74IEJ7jqlNxaz80rX77KWKdLsxtL06f
+	qcp5vjyZaF8WsFFzedLmW7LeXBCpVphAqtHo1r3nfAZ2rQ==
+X-Google-Smtp-Source: AGHT+IH7l4ECxJMJdvAnFGxq4javtpxMVIOqZQGVLLZY3qh4kIT2AXvmCFtcH3BzW9LSfh6TllvpTg==
+X-Received: by 2002:a17:907:86a4:b0:abf:733f:5c42 with SMTP id a640c23a62f3a-ad1e8cacfb8mr222839866b.8.1746607751184;
+        Wed, 07 May 2025 01:49:11 -0700 (PDT)
+Received: from [192.168.0.100] ([188.27.128.5])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189147431sm869699666b.8.2025.05.07.01.49.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 01:49:10 -0700 (PDT)
+Message-ID: <c56d03cb-14a4-4a7f-82e7-80368c3ca4ec@gmail.com>
+Date: Wed, 7 May 2025 11:49:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xXULWcVOlYB0+4sM"
-Content-Disposition: inline
-In-Reply-To: <20250408-rk3576-pwm-v1-6-a49286c2ca8e@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 12/16] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+To: Jakub Kostiw <jakub.kostiw@videtronic.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?=
+ <niklas.soderlund@ragnatech.se>, Julien Massot
+ <julien.massot@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Arnd Bergmann
+ <arnd@arndb.de>, Taniya Das <quic_tdas@quicinc.com>,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ Eric Biggers <ebiggers@google.com>,
+ Javier Carrasco <javier.carrasco@wolfvision.net>,
+ Ross Burton <ross.burton@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Zhi Mao <zhi.mao@mediatek.com>,
+ Kieran Bingham <kieran.bingham@ideasonboard.com>,
+ Dongcheng Yan <dongcheng.yan@intel.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+ Tommaso Merciai <tomm.merciai@gmail.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Ihor Matushchak <ihor.matushchak@foobox.net>,
+ Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
+ linux-gpio@vger.kernel.org
+References: <20250309084814.3114794-1-demonsingur@gmail.com>
+ <20250309084814.3114794-13-demonsingur@gmail.com>
+ <b214bf8d-33d0-4da8-bf16-cc62bd1fbd55@videtronic.com>
+ <f22f1343-9b7b-4ae6-9461-bc1b8108619f@gmail.com>
+ <d4165e96-7587-471c-a7c5-ffa26531a796@videtronic.com>
+ <eb2f0337-9261-4867-b6e2-dd6ca2fd25fa@gmail.com>
+ <29eea52b-a512-4948-b4e0-e6d19d09ded4@videtronic.com>
+From: Cosmin Tanislav <demonsingur@gmail.com>
+Content-Language: en-US
+In-Reply-To: <29eea52b-a512-4948-b4e0-e6d19d09ded4@videtronic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---xXULWcVOlYB0+4sM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 02:32:18PM +0200, Nicolas Frattaroli wrote:
-> Among many other things, Rockchip's new PWMv4 IP in the RK3576 supports
-> PWM capture functionality.
->=20
-> Add a basic driver for this that works to capture period and duty cycle
-> values and return them as nanoseconds to the user. It's quite basic, but
-> works well enough to demonstrate the device function exclusion stuff
-> that mfpwm does, in order to eventually support all the functions of
-> this device in drivers within their appropriate subsystems, without them
-> interfering with each other.
->=20
-> Once enabled, the counter driver waits for enough high-to-low and
-> low-to-high interrupt signals to arrive, and then writes the cycle count
-> register values into some atomic members of the driver instance's state
-> struct. The read callback can then do the conversion from cycle count to
-> the more useful period and duty cycle nanosecond values, which require
-> knowledge of the clock rate, which requires a call that the interrupt
-> handler cannot make itself because said call may sleep.
->=20
-> To detect the condition of a PWM signal disappearing, i.e. turning off,
-> we modify the delay value of a delayed worker whose job it is to simply
-> set those atomic members to zero. Should the "timeout" so to speak be
-> reached, we assume the PWM signal is off. This isn't perfect; it
-> obviously introduces a latency between it being off and the counter
-> reporting it as such. Additionally, periods longer than the timeout
-> value will cause the count to "flicker" between the correct period and
-> duty cycle values, and zero. This is because there doesn't appear to be
-> a way to reset the hardware's internal counters, even when writing to
-> the registers.
->=20
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+On 5/7/25 10:28 AM, Jakub Kostiw wrote:
+>> Can you revert the change you made to polarity_on_physical_lanes, and
+>> try the following?
+>>
+>> diff --git a/drivers/media/i2c/maxim-serdes/max9296a.c b/drivers/ 
+>> media/i2c/maxim-serdes/max9296a.c
+>> index f48f5b68a750..dea0518fd790 100644
+>> --- a/drivers/media/i2c/maxim-serdes/max9296a.c
+>> +++ b/drivers/media/i2c/maxim-serdes/max9296a.c
+>> @@ -474,7 +474,7 @@ static int max9296a_init_phy(struct max_des *des, 
+>> struct max_des_phy *phy)
+>>                  */
+>>
+>>                 if (priv->info->polarity_on_physical_lanes)
+>> -                       map = phy->mipi.data_lanes[i];
+>> +                       map = phy->mipi.data_lanes[i] - 1;
+>>                 else
+>>                         map = i;
+>>
+>> data_lanes is 1-based (since 0 is the clock lane), but the bits
+>> in register 0x335 start from 0. That means we should adjust the
+>> values in data_lanes to be 0-based. 
+> 
+> I have applied your patch and polarity settings seems to be correct now 
+> (based on register contents).
+> However, I have came across another issue.
+> When I was debugging the driver for MAX96714, before I found out that 
+> the issue was with polarity settings, I have commented out calls to 
+> MAX9296A_DPLL_0. Probably because I thought it was there by mistake. I 
+> totally forgot about that change.
+> Before applying your patch I reverted any changes to the driver, so 
+> MAX9296A_DPLL_0 writes were back again. Sadly, video stream did not 
+> work. So I began to wonder, and just for sake of testing, commented 
+> these calls again (added some logs for quick tracing purposes):
+> 
+> diff --git a/drivers/media/i2c/maxim-serdes/max9296a.c b/drivers/media/ 
+> i2c/maxim-serdes/max9296a.c
+> index f48f5b68a..b24a8e2d6 100644
+> --- a/drivers/media/i2c/maxim-serdes/max9296a.c
+> +++ b/drivers/media/i2c/maxim-serdes/max9296a.c
+> @@ -391,6 +391,8 @@ static int max9296a_init_phy(struct max_des *des, 
+> struct max_des_phy *phy)
+>           * PHY1 Lane 1 = D3
+>           */
+> 
+> +       dev_info(priv->dev, "Using  %d lanes", num_data_lanes);
+> +
+>          /* Configure a lane count. */
+>          ret = regmap_update_bits(priv->regmap, 
+> MAX9296A_MIPI_TX10(hw_index),
+>                                   MAX9296A_MIPI_TX10_CSI2_LANE_CNT,
+> @@ -474,7 +476,7 @@ static int max9296a_init_phy(struct max_des *des, 
+> struct max_des_phy *phy)
+>                   */
+> 
+>                  if (priv->info->polarity_on_physical_lanes)
+> -                       map = phy->mipi.data_lanes[i];
+> +                       map = phy->mipi.data_lanes[i] - 1;
+>                  else
+>                          map = i;
+> 
+> @@ -484,6 +486,9 @@ static int max9296a_init_phy(struct max_des *des, 
+> struct max_des_phy *phy)
+>          if (phy->index == 0 && priv->info->phy0_lanes_0_1_on_second_phy)
+>                  val = ((val & 0x3) << 2) | ((val >> 2) & 0x3);
+> 
+> +       dev_info(priv->dev, "Val for MIPI_PHY5 (0_1): %lx", 
+> FIELD_PREP(MAX9296A_MIPI_PHY5_PHY_POL_MAP_0_1, val));
+> +       dev_info(priv->dev, "Val for MIPI_PHY5 (2_3): %lx", 
+> FIELD_PREP(MAX9296A_MIPI_PHY5_PHY_POL_MAP_2_3, val >> 2));
+> +
+>          ret = regmap_update_bits(priv->regmap, MAX9296A_MIPI_PHY5(index),
+> MAX9296A_MIPI_PHY5_PHY_POL_MAP_0_1 |
+> MAX9296A_MIPI_PHY5_PHY_POL_MAP_2_3,
+> @@ -499,10 +504,10 @@ static int max9296a_init_phy(struct max_des *des, 
+> struct max_des_phy *phy)
+>                  return ret;
+> 
+>          /* Put DPLL block into reset. */
+> -       ret = regmap_clear_bits(priv->regmap, MAX9296A_DPLL_0(hw_index),
+> - MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
+> -       if (ret)
+> -               return ret;
+> +       //ret = regmap_clear_bits(priv->regmap, MAX9296A_DPLL_0(hw_index),
+> +       // MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
+> +       //if (ret)
+> +       //      return ret;
+> 
+>          /* Set DPLL frequency. */
+>          ret = regmap_update_bits(priv->regmap, MAX9296A_BACKTOP22(index),
+> @@ -519,10 +524,10 @@ static int max9296a_init_phy(struct max_des *des, 
+> struct max_des_phy *phy)
+>                  return ret;
+> 
+>          /* Pull DPLL block out of reset. */
+> -       ret = regmap_set_bits(priv->regmap, MAX9296A_DPLL_0(index),
+> -                             MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
+> -       if (ret)
+> -               return ret;
+> +       //ret = regmap_set_bits(priv->regmap, MAX9296A_DPLL_0(index),
+> +       //                    MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
+> +       //if (ret)
+> +       //      return ret;
+> 
+>          if (dpll_freq > 1500000000ull) {
+>                  /* Enable initial deskew with 2 x 32k UI. */
+> 
+> To my surprise it works this way. I tested this 2 times back and forth. 
+> Can these calls really cause some issues?
 
-Hi Nicolas,
 
-I just want to give you a heads-up that I'm looking over this but it's
-going to take me a couple more weeks or so; this hardware is a little
-weird so I want to properly grok it before I Ack such a driver. In
-particular, I'm not sure yet that the counter subsystem is necessarily
-the right place for this functionality if you're ultimately after values
-in units of time (sounds more like a clk framework feature) -- but we'll
-determine so together.
+Can you revert your changes and try this?
 
-That being said, please continue on to a version 2 of this patchset if
-you have other changes ready -- I don't want the counter driver
-bottlenecking the development of the rest of this series when progress
-can be made independent of it.
+diff --git a/drivers/media/i2c/maxim-serdes/max9296a.c 
+b/drivers/media/i2c/maxim-serdes/max9296a.c
+index dea0518fd790..3bb80fe42a22 100644
+--- a/drivers/media/i2c/maxim-serdes/max9296a.c
++++ b/drivers/media/i2c/maxim-serdes/max9296a.c
+@@ -519,7 +519,7 @@ static int max9296a_init_phy(struct max_des *des, 
+struct max_des_phy *phy)
+  		return ret;
 
-Thanks,
+  	/* Pull DPLL block out of reset. */
+-	ret = regmap_set_bits(priv->regmap, MAX9296A_DPLL_0(index),
++	ret = regmap_set_bits(priv->regmap, MAX9296A_DPLL_0(hw_index),
+  			      MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
+  	if (ret)
+  		return ret;
 
-William Breathitt Gray
 
---xXULWcVOlYB0+4sM
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCaBseFgAKCRC1SFbKvhIj
-K3NnAP9fPfygexiooPBDY7YMa3FOYHLiEwL3Ff8romDthgeuZAD/U02/o2pFHFC2
-oc7TaVdshAg8bTYLocZqBxZrWjFAHgM=
-=fgvr
------END PGP SIGNATURE-----
-
---xXULWcVOlYB0+4sM--
 
