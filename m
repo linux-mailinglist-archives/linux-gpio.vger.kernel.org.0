@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-19730-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19731-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF7BCAADD0A
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 13:13:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C44CAADD0D
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 13:13:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 52B424A821A
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 11:13:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 704773B983F
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 11:13:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F6C221772D;
-	Wed,  7 May 2025 11:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9B2233134;
+	Wed,  7 May 2025 11:13:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Io4axBlX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHLLOjeb"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92231F5834;
-	Wed,  7 May 2025 11:12:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C689F1F5834;
+	Wed,  7 May 2025 11:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616375; cv=none; b=Ew/r4X1dy3nLF6DYHS/0AgGMbOv77uk2ILGNNWa+ozLizzv0S6mHegd3zHJwNESrfp5XhOZ1qQlMoBOw3Z6cr2DCk9ykm+zpZNqsoqV+dHq+SANuqSSHP+qjdqx8TW36Q0j/WTncVHR0eYvpJLLhQUDAT0Z28WndhmYHkBXJiMw=
+	t=1746616383; cv=none; b=icOWqgNwkCZHfJffe3o+bk4G5I2sjVGRBu8XCWYVz1KKs4AyjQKI+wNZR1PycHBNr9VRziVCr0xscH55kSYjmk6iWSgKlmcyNo/wlwdXAjdTux9+JmMWAYukocLuJA0zVzcfem3tVkIuv1TC/9RXQEcl1Kz9A46ktd+1sCYJivo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616375; c=relaxed/simple;
-	bh=i8Nmf/M83ngPceislApsO+P6BTyU/rioXKpD6P/mSKU=;
+	s=arc-20240116; t=1746616383; c=relaxed/simple;
+	bh=Lo9iaKfVSwtjx3+rJqlE7MKN4vhPhaKVtFHVlkTLxHc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UD+wRLWdP2kCGzM/LtY52E3YYU0vEQGw4A7Opx+tT/RMl4hPkt+rNsdYZzeQTZTiUj48vbFK3dD0bfcSIznG/HjmZnNKvOhnZDm301aAlOhd5Wgnp8xPRnJ/U99f6FS+q9Y9RcLEmzsSC00nwPbValol7ywoXR/jul5Q8ype0ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Io4axBlX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89EB7C4CEE7;
-	Wed,  7 May 2025 11:12:52 +0000 (UTC)
+	 MIME-Version:Content-Type; b=GxnQI+7mDvMfb0cpYARoESu+HtbZKtjgDeR64S9J30qZgAZzRkYqwHZhp3iQs8BwOP3Ru0CG01pbR6F47AI8xtJtLdBeOjTjM0dCtGwW0APnthOkeoUrOxReWP2JEeVhY3XdOjhw+mg0k5LehZvOOrHQkABEiO/YNuOqC26l9eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHLLOjeb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71ED0C4CEEB;
+	Wed,  7 May 2025 11:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746616375;
-	bh=i8Nmf/M83ngPceislApsO+P6BTyU/rioXKpD6P/mSKU=;
+	s=k20201202; t=1746616383;
+	bh=Lo9iaKfVSwtjx3+rJqlE7MKN4vhPhaKVtFHVlkTLxHc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Io4axBlXnAqiwN50vnbJxawwhAUR2HJTYEh2QC80zGTlMkecKmvP+aeN0z702Eaga
-	 zABZn+8VwK4uiI8pNOmzokFSPS4JI90Q85J8UUeCk52Dshyy31eGxcY2I/QTktk84/
-	 /8KY4lvdvLCn4viw3qtJiSVhAVAyS5LsNKpyV4v+5IqJl0833a37No06FBB4VYPqWh
-	 xRh/HB+0kGKkbBLcIa6XBRsipvWVKuDHS/kx8m8UGtB/d8t2puZ1hmw5lJGkx9A3vl
-	 uu3JrxZVGWdMsstJhxsYfJGPQpN9TDJSI35S0JhVc547QdZR3G9kpIjxwYOnPe8FOj
-	 kr5nC6EnLwP7w==
+	b=OHLLOjebOvxIFF5GjrEGrmBfUu9iTg8pyNZ279YhMgTb8xCfh6QRkk4gaWICtmHwr
+	 hmgIJxN2i0G4NaGm+0tcukYNKSz4RXq5O4dBEaLQWSv0/N6kgkMLI05vjnpt/2GQSe
+	 3lVhcaMBfQPNbRc6seuizjF8m2PMtkcScpf1zwHmkW7KUD0NuzIbfkiPckYv4EZH/E
+	 uBOblIprSKgEkrH0Fv+HbKfyeLRQrANgU/85LSMzKgB/4+LOMjjhFexaDfNOsjQZG6
+	 23XIymXMVCaZr5E3gDUKmT2U54q0FToztoPS5C7Y+N3ahA8TUiNL2bjIHzmwRNp1Ku
+	 j/duEKicWLBSg==
 From: Mark Brown <broonie@kernel.org>
 To: David Rhodes <david.rhodes@cirrus.com>, 
  Richard Fitzgerald <rf@opensource.cirrus.com>, 
@@ -52,12 +52,12 @@ To: David Rhodes <david.rhodes@cirrus.com>,
 Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
  Peng Fan <peng.fan@nxp.com>
-In-Reply-To: <20250428-csl42x-v2-0-e8056313968f@nxp.com>
-References: <20250428-csl42x-v2-0-e8056313968f@nxp.com>
-Subject: Re: [PATCH v2 0/9] ASoC: codec: cs42l[56,73,52]: Convert to GPIO
+In-Reply-To: <20250506-csl42x-v3-0-e9496db544c4@nxp.com>
+References: <20250506-csl42x-v3-0-e9496db544c4@nxp.com>
+Subject: Re: [PATCH v3 0/9] ASoC: codec: cs42l[56,73,52]: Convert to GPIO
  descriptors
-Message-Id: <174661637241.4174662.1114099505492854363.b4-ty@kernel.org>
-Date: Wed, 07 May 2025 20:12:52 +0900
+Message-Id: <174661638031.4174662.2028103771120539508.b4-ty@kernel.org>
+Date: Wed, 07 May 2025 20:13:00 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,7 +68,7 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, 28 Apr 2025 10:09:01 +0800, Peng Fan (OSS) wrote:
+On Tue, 06 May 2025 15:29:30 +0800, Peng Fan (OSS) wrote:
 > This patchset is separate from [1], and not merging changes in one
 > patch. So separate changes into three patches for each chip.
 > - sort headers
