@@ -1,313 +1,191 @@
-Return-Path: <linux-gpio+bounces-19723-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19724-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 583FBAAD82F
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 09:33:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D34D4AAD845
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 09:36:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E7ED9A044B
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 07:28:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1190E3B9FF7
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 07:32:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D92621A952;
-	Wed,  7 May 2025 07:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0ED921CC4E;
+	Wed,  7 May 2025 07:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eh+Qi/9d"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from WA1P291CU004.outbound.protection.outlook.com (mail-polandcentralazon11020084.outbound.protection.outlook.com [52.101.182.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEF8214A6C;
-	Wed,  7 May 2025 07:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.182.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602905; cv=fail; b=hzO2mchYY7LHAyRDxRmspVKrKP0sSI0Nk3690ubRh1Jv69xa3XgAuVOLg31lHbe+aAtc53OdbcpUqlyBxYiyg2FEW08twmAwqUGKjWyDmkoMUI+Tmo/4vLFsb5v7b7FMNf40gLdD/BHUmzVWy95vOn+WUpz0zJBs4cg8NtKn9LE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602905; c=relaxed/simple;
-	bh=XW7hZifP8q4m3+s/9/oR/u2u5SYIc3tq5g/wuRA7lD0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cViRfC9xiIfyRomRPmDEvHkhC2Mc8g3vI8/zOtbVpMuUq1ph5rgyHTQKfrYd631oppUMGZw4TkDIgyuu/0CJgcL8huRfAr4pohIEhseGmpvpdO9sQZDXAo8wDm3Dse3OgYfU318xgBEkiEvAQvN5CcvLF0j/13EVtA90V7CjrGU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=videtronic.com; spf=pass smtp.mailfrom=videtronic.com; arc=fail smtp.client-ip=52.101.182.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=videtronic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=videtronic.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PoAQuCg9ExKhNmpDfA1elICB8mHpB1KZMq28m5Zp+D9e6rb5pZwU95wpKuFLVU4vgP0kRto5zC8opxHbzZgaudlhNwMumayPh07kcqM3hqJqDfnEgb58KxhrSukyvWgwvr1f28xA4Dec97nB0NXEzj1yJ2Cc7iUeqfIQVG7iwdFUvEdrbjxuvcnvoVGUGr7PnfJQ6PavGHiFr9/qWbUE9zFfXTNxcHnqUv9YO3wu+rbq4x5wX+cJx9R0dQogaPvHJcEpzc40S5S64GdL18YmbcJOnKyR3oxOa7/588M5mxAm3q7SGPJUdpdjs5S2m5Re9FoxiaKajd3JXjpSLEky9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DRDpIsjFLfPPQjTvjbwoiSNAp8AqPUagfYIAbDDI56g=;
- b=BHVqmz8bsHiZ3KxpFGFnxWNvyClIAst1EdQVSjVnYUby+6oYbRy6UGC9KDiM+jLWD8aAtKSz3xVNdMgojKwlkqG+WPSMHLsOGq7Qx3ROhOS7VzNZtlPtmT8bGBLeo2UgMIPEUdxBUFs2/4HHAqy/OmSXqLjuH9wS8b6k17cx+nwn4sez8BkJzzo+/oADzG5mpORrASJvlQiJVdS8opSx5fC2Uzjs/x+efJUvM37xh/zU2BC7MqgPV8ye6mGAjNY4n+/bfmZJj95iOX5ddVcNLaS+KZg6XK1qJySBvYR2NiFx1StBpfTnfDkR25lnn7JmjbZ74eb/iSwJE+5GkQbveg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=videtronic.com; dmarc=pass action=none
- header.from=videtronic.com; dkim=pass header.d=videtronic.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=videtronic.com;
-Received: from WA2P291MB0309.POLP291.PROD.OUTLOOK.COM (2603:10a6:1d0:24::14)
- by WA2P291MB0282.POLP291.PROD.OUTLOOK.COM (2603:10a6:1d0:27::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.20; Wed, 7 May
- 2025 07:28:15 +0000
-Received: from WA2P291MB0309.POLP291.PROD.OUTLOOK.COM
- ([fe80::5b7e:db51:5934:a36f]) by WA2P291MB0309.POLP291.PROD.OUTLOOK.COM
- ([fe80::5b7e:db51:5934:a36f%3]) with mapi id 15.20.8678.028; Wed, 7 May 2025
- 07:28:15 +0000
-Message-ID: <29eea52b-a512-4948-b4e0-e6d19d09ded4@videtronic.com>
-Date: Wed, 7 May 2025 09:28:13 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 12/16] media: i2c: add Maxim GMSL2/3 serializer and
- deserializer drivers
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Cosmin Tanislav <cosmin.tanislav@analog.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?=
- <niklas.soderlund@ragnatech.se>, Julien Massot
- <julien.massot@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Bjorn Andersson <quic_bjorande@quicinc.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Arnd Bergmann
- <arnd@arndb.de>, Taniya Das <quic_tdas@quicinc.com>,
- Biju Das <biju.das.jz@bp.renesas.com>,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- Eric Biggers <ebiggers@google.com>,
- Javier Carrasco <javier.carrasco@wolfvision.net>,
- Ross Burton <ross.burton@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Zhi Mao <zhi.mao@mediatek.com>,
- Kieran Bingham <kieran.bingham@ideasonboard.com>,
- Dongcheng Yan <dongcheng.yan@intel.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
- Tommaso Merciai <tomm.merciai@gmail.com>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Ihor Matushchak <ihor.matushchak@foobox.net>,
- Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
- linux-gpio@vger.kernel.org
-References: <20250309084814.3114794-1-demonsingur@gmail.com>
- <20250309084814.3114794-13-demonsingur@gmail.com>
- <b214bf8d-33d0-4da8-bf16-cc62bd1fbd55@videtronic.com>
- <f22f1343-9b7b-4ae6-9461-bc1b8108619f@gmail.com>
- <d4165e96-7587-471c-a7c5-ffa26531a796@videtronic.com>
- <eb2f0337-9261-4867-b6e2-dd6ca2fd25fa@gmail.com>
-Content-Language: en-US
-From: Jakub Kostiw <jakub.kostiw@videtronic.com>
-In-Reply-To: <eb2f0337-9261-4867-b6e2-dd6ca2fd25fa@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: WA0P291CA0012.POLP291.PROD.OUTLOOK.COM (2603:10a6:1d0:1::7)
- To WA2P291MB0309.POLP291.PROD.OUTLOOK.COM (2603:10a6:1d0:24::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73C6215078
+	for <linux-gpio@vger.kernel.org>; Wed,  7 May 2025 07:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746603143; cv=none; b=eneILbAMAGgA7FhhWSyCUHqKoqF7kFaf8FMsXgQKpI7ZFy3pl7dKgay1c+QSfzULNuC8KdIcP1eUfr8BBEK2TcgMF0JEtIHSU28I3Gf4WYKFCggxu6oRY2Ah2SouEb0sS41nA5BqsB8wo4kW0dvSCH0HjNoqnjWT0u/jPuv9GPQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746603143; c=relaxed/simple;
+	bh=4GJWSGDKlJnMIWGtNQ7AH+MLDqEOVwEj8uKjnSOFYk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uvq7ClDDIsrbm8ZLL7sUmOWj2wwIUs+Y2nlVkOueddP25zcqgB3gUh3MrvHIHRyMBTeNPrtQtcM2OICSM4OruFGvOuXIqMqYHsuBBe05iwsY+30Xp6zOVpxJV1KS93cv4ARoNA/45p52HxQcFfjEJS1PtKI2wbQTopZrH5tm9lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=eh+Qi/9d; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so56078795e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 07 May 2025 00:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1746603139; x=1747207939; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=/oowGCRlPnH53+dvEhVfbik3/aGzqGnubNjPU1FCxSc=;
+        b=eh+Qi/9d13bHoy9Z+QrOnegQRg7q/L2wXZUEj53aO3EIhbkow8+KLBRc4TSY/HLxAm
+         6QQF3jxyyZ3zRCsUqqY/SawkLhPlCPfRsUjIg+bXXrLNHtbNP82Zmm2rkRqSSYAJzAQJ
+         PiRW39Oyw9TCcbvLrOTl1nnFrl5NMOUtFXs84=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746603139; x=1747207939;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/oowGCRlPnH53+dvEhVfbik3/aGzqGnubNjPU1FCxSc=;
+        b=saQXaS0TaRyKTV6ruYDAWjpy2yFhLOTJcArii9QYqhFM9F1c5Hiw9mh5z7Y3M/Z8mx
+         CC7sOwEPQDsgBmIHttLFd/yt1ZBp7GWt4aaoAnHDxp2CW9RXqzWDZegh+EF5jgGz6Fqt
+         SWhfD4lHNjTj3RV+AVQLQ5LP9ASOTXleMbhizn5fBljyElw/h17fjnzOleLrg1yB2lM7
+         Tx/mMED/xtxgzAmmpxfztzlHljL6vj8KU2asE1hBtSdIO6HTygPRI/JEpqtjI2iorVP6
+         7rI9GmIIPi9ktyiZLkWf0Hc0G4QQyiqEXX5ZFq3FZgw7rd0Ads0wJ+4qEzSvNHbJztXR
+         AJ8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUZkjm6Yd9n7oqM6hSylH9ClE1Js/5LgLlqEQAQEtJMXqX9oBGbUXk33cPcGLisu+HqlLfol2tdi3EK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm0eOCQlCsgGgtzOZlJWTGq9pNn5iTn3dCV3/ff6BIx0Oor2Vx
+	Q4MtYXb42TW5nZFpaexz04MRVXPkeNXeXGwmiEZRYu9iXzY6DA0NPt89gwS/ag==
+X-Gm-Gg: ASbGncvs/gMN64us8qfxKwOA2kVSnUjvNnhOnPW8vqhiFc8PHPqkWmWcDg1Ma5dnrWq
+	fxfPBhArLioHXk4NDqaFsV5gjQL54Yg1bx38HvAi1xqO79hQNYTlsFJrO69jbpaBax+mBGP4ttB
+	F4t9tdABIpPKCuwwjlX7Ub2N9whSuhHnSq7vgYBK5z0eMfbn/OW4soOUAeuDsBWrC0xGRVneW0T
+	t6Bmhbf0fRfyVDp0PVcOaHYfvioHXARC7yCnWSiS1q3LWNmSURtYaTt3JZAD7rV/iJr6x6fu5Ym
+	cYdN/px+eIrCKDOJ7u5A8+q3jTbUnPwX3TP0P4fwVorwE//4Nu/xdsTmE2mD8CofOCB8kcjFRDh
+	vnoS6l4L0bNLnZDn6hSEg2P6/YqLt/jpnkGvGgeY=
+X-Google-Smtp-Source: AGHT+IHhnQ0XoKBKM5DMQ7zEqqg7TzLxsMCpqS1ZcloLnADNH5WKFeYw2vsLW0QXNRCZ5zE1p7gAJg==
+X-Received: by 2002:a05:600c:8289:b0:441:b00d:e9d1 with SMTP id 5b1f17b1804b1-441d44bbf50mr17486185e9.2.1746603139011;
+        Wed, 07 May 2025 00:32:19 -0700 (PDT)
+Received: from [192.168.1.24] (90-47-60-187.ftth.fr.orangecustomers.net. [90.47.60.187])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442c98fd955sm5285245e9.7.2025.05.07.00.32.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 00:32:16 -0700 (PDT)
+Message-ID: <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+Date: Wed, 7 May 2025 09:32:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: WA2P291MB0309:EE_|WA2P291MB0282:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76f29506-acab-479d-16a8-08dd8d38bae0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?blVuNm84QXB2cnRvbjNHdit2L0FVcXZ6ekxRQ2h3bmRBcFRLb2ZYVmZ6bFZ0?=
- =?utf-8?B?ekZ2MS9FRGIyOHYwYllTcytJTW1oMXM4cXNsZmRORlVwZmp5aW42QXVjbldR?=
- =?utf-8?B?a1pUcXNZWUNJNnJwY3dTTmRvTWtXd25EaVhTT0UrZkl2QktkaDBQSTFjY3dn?=
- =?utf-8?B?Zy9Wc2RvVkhYYit2cVRaSHNpZW5WV1pRUGM1T2oxQ3JQeWJhUkZOQXdPRmFk?=
- =?utf-8?B?WkxMeDhXck11TEE3TXIxTXlialQzWTZkTkhiL2lTQnRaVmE4dUUyUm51aUJP?=
- =?utf-8?B?OElRWFQ3T2dtRzlKclVqbW9BWTFrL3d1M3IyY1dmejRmLzZ4ZG5SaUNicVFU?=
- =?utf-8?B?M0s5U2JMa044RktEMktCTUVqNzdkRElCS3ZLRDlBVHhCYjlLM2ZTQ3NKOXc2?=
- =?utf-8?B?NGYrSHRpVkIzbUxHK1hvYzFqYk5TWlAxL00reUdBTTQ5aUhBU216YUhqWjFE?=
- =?utf-8?B?TXBDek8rck9YRlY3QVZ0dkk5bWpDRXlVTW5EeUw5QXBub1M5eFdQeEFjMEZj?=
- =?utf-8?B?cy9pbXU2ZTNyT2twVWEwVWYyeTE4YmJKR3pOVExQZE5uVkRXMVBlWEN5bGx6?=
- =?utf-8?B?SS9wdVFZMFUvekRxODdUbktpaGUrTFRMTlhaWVBvelhMK2RJWjQ5TDRCODZC?=
- =?utf-8?B?V0Jjb0o5QjlLYmFsYnNCdGJUdzhwaXJ0VzBsdGJETUsyWkVWVUE0Z2JTTURI?=
- =?utf-8?B?Um4vSEFGVG5JZHUvNEo3NzVaZDEzVHJlQklWSDN6b3VHaFp0THlYRVpxZTJm?=
- =?utf-8?B?MXk2YWNyM1VISG5iY2doOE4vdHpsb0diWHRZWG5neUlQRWh5SytMSnN6SG1F?=
- =?utf-8?B?SFM1d3YvcVphMEVSemFOVlhjWktCSnNBeWcyb1krdWRSSlRmSGkrQVpuRlQr?=
- =?utf-8?B?Y0htSkx2cnBTWEpGVUpQL2x5SWVtdkE1bmVtRXo4dlA0ODFnSDhGYjI5TE1w?=
- =?utf-8?B?c3BhWUROTXNnSysvMTI1K0V4aWV2Z1J3M1RiUFd5Q0N5RFUvTVZtVWpsaktG?=
- =?utf-8?B?SGVPbWFXUFp5SkpoS2hod01QZ2dOUUNKRjd4MnNtY0NaZ0VjWUJXdVF4MzV4?=
- =?utf-8?B?VkdFWU1JNGE3aCtsTHJtR0g5VGJQMStTa0FBaWxmaXpubFdKKzNXQXBmQlNT?=
- =?utf-8?B?Uk03enY4NndWYWZnVFFVUHBPNEc1bkFoL2pzR2g1UktERThiWXNOaVhzcEtI?=
- =?utf-8?B?MnhJVmV2WWc4dEs2M1NBUFJDYWtLSnp1ckNGNDd0Yk90V3dYVnFKOVRMcmFK?=
- =?utf-8?B?UUYxc2hvN3d6cGN4S2pTb2JIK0dUL0VKWkRoeWxoL2xTQmZXTWJ6ajdiTWVW?=
- =?utf-8?B?T093VnBqZnkzUUNKMHBwUlFQUGNndWozV0ZvVndZaUVqaE5WQlNicTR4U2l0?=
- =?utf-8?B?YUlNeHNaYjVtYVFFRG1xcWJKWDBBSHZTK2dVU0ZnWUpBV1pKVkVaaFVta1Bv?=
- =?utf-8?B?K3dXd3F0bCt0a2V6My9oSGlNOWI0RG5XWUwvcTBKMEFvR2JNTVYwaUdKc1Iw?=
- =?utf-8?B?Skg5YlJMWDluVDJQYkFOOTYzeHgvL2EyU2IrQU5DVllqbzNxOGdqZnVCcVAy?=
- =?utf-8?B?bzJUL0VKMFNsWUU3a1lBYzdkLzBhclhLaDJySDg2ZTlkZVF1UHo5WFJVbWln?=
- =?utf-8?B?SkZnZ0xBcFBQclVTSWkwaURZb2tWcTRzSHVSNjArUkFEM0hiUXhLdEt1MlBS?=
- =?utf-8?B?WjBMMUcrb21tNHRCVDA3eitRdXlmcEF0K3IyY1pvQWk5TWtRZHBxZXJQaFdq?=
- =?utf-8?B?WUE3Q045YTR3TVlaZlhSOEkyR1FyTVZVNmRla3FaaGRkUUhWWWFrMUZDRUFD?=
- =?utf-8?B?bS9LRS9sbG1remhWbFNIMHNrM2FCNHNKTWlhMUNxZEpmbUF2ZUl4ZHdLWXFk?=
- =?utf-8?B?TjFjRWNYd0JmdVJ5a1hrQk9XSXEzVUtTdFphSWRoVlJ3NzZxNWRSS3dLaHlM?=
- =?utf-8?Q?gPhLmKrbKNc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:WA2P291MB0309.POLP291.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WU1BN1FpWXJqT3ZUandCN1dWbVVreDhzcHg0LytXNkZjL2poVXBJTzJhMXha?=
- =?utf-8?B?UFh0SkpyUDZXWG9acTRqUVpkbEpMR3hkSDNMcStsVnIzMVhXSmZaSFA4OTRm?=
- =?utf-8?B?RGRsMWhYM1FvMTFLQW1JZUVFeXBZZ2svL3lLSC9Cc0NaQjczLzdOSE5JYXQ4?=
- =?utf-8?B?VlQxb0xYeVk0Z3RwTnc5dUJZQ2VsSElwa2w2WmNPbGQrOHhGSFZBSVp4YWVI?=
- =?utf-8?B?SklRZWpEV2d5TExRbTNTUUhMdWZzTFVpRzVqamo2MW81a0hRbWRXSXBrVEd2?=
- =?utf-8?B?MDVkK2FnTHVFcTlyRW9hSnVFbkcrMzRkOEs3UlB4R0NzVU5KejhwUWhmdnJj?=
- =?utf-8?B?dWFCMUplRnM1WHk0TURISy90bXhqOGg1alQ3TGVmc3djYlowczNxOHBYYTlK?=
- =?utf-8?B?Y1BTOWZEbk5zS05ldU45VitKbUlEa0JENmhHZ2thVzk5SDlUWndVUVAvQnp4?=
- =?utf-8?B?Uis4SVZYSkRMajl2NktkaWhLZklZclFrMFhPM1VrYnhSdFBkVVZReERudGRk?=
- =?utf-8?B?MGpJc1hWeEQ2R1ovN21WcEdqRS96OVVsSVN5dWZvc2I2WHhkU05MVE83aEVX?=
- =?utf-8?B?ZEk0TTd2bWtRN1ZsVS8rZTNITW9yRkhMN0U1d0lnMFlueVlYWlI1eEordmJ0?=
- =?utf-8?B?R1lySVlYWi9GMWZnTXNyRHFjV2k5VDVxZmFtWGtJUzE4UnRpM29KVzhHM0lw?=
- =?utf-8?B?QTRnTVV1RzY5c3pJNDRkeUhEUW1vZ25WZHR3REgvcVZFODBnSW1LYlN1N2hj?=
- =?utf-8?B?TjdGQTVlOWl0Nk9FMHpoS2JML3VBbmh2SmlEd3JqdUtnVVBvQ2hZQWorNyti?=
- =?utf-8?B?K0VYRFMxOW1qVTJ3SWRsZ0R5RXBUbjkrc2htcDd6d0RxcU9QZHg5VkJvdHhs?=
- =?utf-8?B?dTVhK2o5VHhSVVgyR0JUem1xcFdyRUFvUi9uTnpKQ2ZCZEZ4bDR5YjkreGhF?=
- =?utf-8?B?N2xvOUw4aTdUTFdIaERRMkdWQjZKWjRBM2hZanRYTlpYRSs3a1FoOGFFd0Rx?=
- =?utf-8?B?NlRHRk82STFyZFo4RmJ6OG1ERVZJUFZEM1F3LzRpbWl4OHZRWjdtT2FKRXhG?=
- =?utf-8?B?bXp2ejQ5TmZsZWZTci8zSHVHYytwOFZhNExHZnFHaENCNnhLMytxc25pdC9v?=
- =?utf-8?B?bUNqdS90aVhhb081WU5IY1FCZEhIUDJrc0Y4SEcyb0QzcGM1eHFZaDNMRVpl?=
- =?utf-8?B?RG1Rd3hOYitoTm02NnFlNE42clNEaUJpcHRGc2laZllETW8xUzdhazRJQTR6?=
- =?utf-8?B?SzhrS2hCN0tSZWpTYkxXWVZOR0pnVWpGaUpiTnRqV0l4TVlrT0hJMzJ3M3Jr?=
- =?utf-8?B?YTFHZFJEaDVRUHU1QzVNcUgyZDNvT0FvR2x6Sk5LR2d6VEVPbnhhNmhzeEw5?=
- =?utf-8?B?elAvWStWUHlkOTFOUWg1ZXJsZlpON3lYYkV2QkNGdXljeU5sQTdwbXBjWjFk?=
- =?utf-8?B?aWliQUhoWXBQQXh3aG5lcFpIcUQzU2Z4SS95clg2QTZJdmh6ZjZRZGE0WXdZ?=
- =?utf-8?B?ZlZ5RURkYllLamwwTllCQ0RrWCt6bGZwNFZKaE1IM1F5ME9PTGdFRlE5SGZX?=
- =?utf-8?B?aitDZ0pDaGluVjcxQkVtQkFQN1N2QTJvK09yREhleXJwVW4vOXNjVCtHUHBC?=
- =?utf-8?B?bUxGajRNNzJFUzJVZFN0eWdyNmg1a1FBRXA5SmMzSkdCaERDU052Y2hVV09k?=
- =?utf-8?B?YWtqekFBWUZlRWJIa2VyNlhFNlJvdEpVUFdXYTRwYWpMZ2xkS0JEV293TFhr?=
- =?utf-8?B?NVZheWttcWV0WWtlQ2MyYkdNU2hwR1NIdE5GTURDd1FBMERkaUsvMllzTDNw?=
- =?utf-8?B?ck1SRW0zK09KZ1BCTGk0OXpoRGJJVmYrYytDblllYVdrQ3V1K1U5ZDl6Qkdx?=
- =?utf-8?B?bFllZEFHRGlTTmI1UndCSVFQd3BoMllyOFZZZER0VzNobXl0dVQyMHBNaWNR?=
- =?utf-8?B?aWJ5OUI2Ty9oNEk5SkdMbnpKSDRPcXQrSEJWT0JYb04yRVZOTG94WnRlM0lh?=
- =?utf-8?B?cEErYTFEK1UreHFGVDlkdzZCUE1UNHpTcWNXcTlSWHZjREtaWjRMTlNUSGQ0?=
- =?utf-8?B?TnI1VlU2ZFNjOG1UT2cxUzhZdjM0UTN1eFJFWTJITzQ1SGRBQTVEYXhSRlFL?=
- =?utf-8?B?MVhCSUZlak5jVXJVeWRJaTVWQWdOZDFZem1yRmFjdWhJV3BySWRZZEExN295?=
- =?utf-8?B?SkE9PQ==?=
-X-OriginatorOrg: videtronic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76f29506-acab-479d-16a8-08dd8d38bae0
-X-MS-Exchange-CrossTenant-AuthSource: WA2P291MB0309.POLP291.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 07:28:15.0884
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 42908bfd-23a4-4a6c-951d-1ef4d8e0c612
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0XbJxPMrDt8509oKIs4LnwgFaCPm3zh9Kgmdo+ZJhjpwK8wGH0rIEU/MbVGlhUk5vW1bDKyxBjC7Ga7XikqRg3Sey/BfnBgGc8GH036gkgo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: WA2P291MB0282
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
+ for RP1 chipset on Rpi5
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+ <aBp1wye0L7swfe1H@apocalypse>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <aBp1wye0L7swfe1H@apocalypse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> Can you revert the change you made to polarity_on_physical_lanes, and
-> try the following?
->
-> diff --git a/drivers/media/i2c/maxim-serdes/max9296a.c 
-> b/drivers/media/i2c/maxim-serdes/max9296a.c
-> index f48f5b68a750..dea0518fd790 100644
-> --- a/drivers/media/i2c/maxim-serdes/max9296a.c
-> +++ b/drivers/media/i2c/maxim-serdes/max9296a.c
-> @@ -474,7 +474,7 @@ static int max9296a_init_phy(struct max_des *des, 
-> struct max_des_phy *phy)
->                  */
->
->                 if (priv->info->polarity_on_physical_lanes)
-> -                       map = phy->mipi.data_lanes[i];
-> +                       map = phy->mipi.data_lanes[i] - 1;
->                 else
->                         map = i;
->
-> data_lanes is 1-based (since 0 is the clock lane), but the bits
-> in register 0x335 start from 0. That means we should adjust the
-> values in data_lanes to be 0-based. 
 
-I have applied your patch and polarity settings seems to be correct now 
-(based on register contents).
-However, I have came across another issue.
-When I was debugging the driver for MAX96714, before I found out that 
-the issue was with polarity settings, I have commented out calls to 
-MAX9296A_DPLL_0. Probably because I thought it was there by mistake. I 
-totally forgot about that change.
-Before applying your patch I reverted any changes to the driver, so 
-MAX9296A_DPLL_0 writes were back again. Sadly, video stream did not 
-work. So I began to wonder, and just for sake of testing, commented 
-these calls again (added some logs for quick tracing purposes):
 
-diff --git a/drivers/media/i2c/maxim-serdes/max9296a.c 
-b/drivers/media/i2c/maxim-serdes/max9296a.c
-index f48f5b68a..b24a8e2d6 100644
---- a/drivers/media/i2c/maxim-serdes/max9296a.c
-+++ b/drivers/media/i2c/maxim-serdes/max9296a.c
-@@ -391,6 +391,8 @@ static int max9296a_init_phy(struct max_des *des, 
-struct max_des_phy *phy)
-          * PHY1 Lane 1 = D3
-          */
+On 5/6/2025 10:49 PM, Andrea della Porta wrote:
+> Hi Florian,
+> 
+> On 20:53 Tue 22 Apr     , Andrea della Porta wrote:
+>> The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
+>> Add clk_rp1_xosc node to provide that.
+>>
+>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+>> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> 
+> A gentle reminder for patches 8 through 12 of this series, which I guess
+> would ideally be taken by you. Since the merge window is approaching, do
+> you think it's feasible to iterate a second pull request to Arnd with my
+> patches too?
+> 
+> With respect to your devicetree/next branch, my patches have the following
+> conflicts:
+> 
+> PATCH 9:
+> - arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts: &pcie1 and &pcie2
+>    reference at the end, my patch was rebased on linux-next which has them
+>    while your devicetree branch has not. This is trivial to fix too.
+> 
+> PATCH 9 and 10:
+> - arch/arm64/boot/dts/broadcom/Makefile on your branch has a line recently
+>    added by Stefan's latest patch for RPi2. The fix is trivial.
+> 
+> PATCH 11 and 12:
+> - arch/arm64/configs/defconfig: just a couple of fuzz lines.
+> 
+> Please let me know if I should resend those patches adjusted for your tree.
 
-+       dev_info(priv->dev, "Using  %d lanes", num_data_lanes);
-+
-         /* Configure a lane count. */
-         ret = regmap_update_bits(priv->regmap, 
-MAX9296A_MIPI_TX10(hw_index),
-                                  MAX9296A_MIPI_TX10_CSI2_LANE_CNT,
-@@ -474,7 +476,7 @@ static int max9296a_init_phy(struct max_des *des, 
-struct max_des_phy *phy)
-                  */
+Yes please resend them today or tomorrow so I can send them the 
+following day. Thanks
+-- 
+Florian
 
-                 if (priv->info->polarity_on_physical_lanes)
--                       map = phy->mipi.data_lanes[i];
-+                       map = phy->mipi.data_lanes[i] - 1;
-                 else
-                         map = i;
-
-@@ -484,6 +486,9 @@ static int max9296a_init_phy(struct max_des *des, 
-struct max_des_phy *phy)
-         if (phy->index == 0 && priv->info->phy0_lanes_0_1_on_second_phy)
-                 val = ((val & 0x3) << 2) | ((val >> 2) & 0x3);
-
-+       dev_info(priv->dev, "Val for MIPI_PHY5 (0_1): %lx", 
-FIELD_PREP(MAX9296A_MIPI_PHY5_PHY_POL_MAP_0_1, val));
-+       dev_info(priv->dev, "Val for MIPI_PHY5 (2_3): %lx", 
-FIELD_PREP(MAX9296A_MIPI_PHY5_PHY_POL_MAP_2_3, val >> 2));
-+
-         ret = regmap_update_bits(priv->regmap, MAX9296A_MIPI_PHY5(index),
-MAX9296A_MIPI_PHY5_PHY_POL_MAP_0_1 |
-MAX9296A_MIPI_PHY5_PHY_POL_MAP_2_3,
-@@ -499,10 +504,10 @@ static int max9296a_init_phy(struct max_des *des, 
-struct max_des_phy *phy)
-                 return ret;
-
-         /* Put DPLL block into reset. */
--       ret = regmap_clear_bits(priv->regmap, MAX9296A_DPLL_0(hw_index),
-- MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
--       if (ret)
--               return ret;
-+       //ret = regmap_clear_bits(priv->regmap, MAX9296A_DPLL_0(hw_index),
-+       // MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
-+       //if (ret)
-+       //      return ret;
-
-         /* Set DPLL frequency. */
-         ret = regmap_update_bits(priv->regmap, MAX9296A_BACKTOP22(index),
-@@ -519,10 +524,10 @@ static int max9296a_init_phy(struct max_des *des, 
-struct max_des_phy *phy)
-                 return ret;
-
-         /* Pull DPLL block out of reset. */
--       ret = regmap_set_bits(priv->regmap, MAX9296A_DPLL_0(index),
--                             MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
--       if (ret)
--               return ret;
-+       //ret = regmap_set_bits(priv->regmap, MAX9296A_DPLL_0(index),
-+       //                    MAX9296A_DPLL_0_CONFIG_SOFT_RST_N);
-+       //if (ret)
-+       //      return ret;
-
-         if (dpll_freq > 1500000000ull) {
-                 /* Enable initial deskew with 2 x 32k UI. */
-
-To my surprise it works this way. I tested this 2 times back and forth. 
-Can these calls really cause some issues?
 
