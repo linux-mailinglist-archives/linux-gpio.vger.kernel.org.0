@@ -1,196 +1,127 @@
-Return-Path: <linux-gpio+bounces-19732-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19733-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6974BAADD36
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 13:23:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEC3BAADD67
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 13:32:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23A891BC5E6D
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 11:23:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DC0A9A3441
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 11:32:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6F223371E;
-	Wed,  7 May 2025 11:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A712A221730;
+	Wed,  7 May 2025 11:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="mybp3sV6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vw5ND7Rx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3997523315A
-	for <linux-gpio@vger.kernel.org>; Wed,  7 May 2025 11:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F62221019C
+	for <linux-gpio@vger.kernel.org>; Wed,  7 May 2025 11:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616994; cv=none; b=UzDidbh/fzSZXakCxoZVzL91g1M6Bf6JywmlE2iPli/cSk6METoyas0BFObEM/saln7tr6TpK0HhVkt03yilmp9GKVxzUfaQxLuKfGHdrsEAhEFd0T6SJXExi6KWa6dvLILKA6ET5gDuyvD7srl96VEAazz0e43TshnchRro+LI=
+	t=1746617553; cv=none; b=uCxBTHBIh2gK9b1un37QBJD2vwhNEBn7FJQD7ldInSp9vlIa15ucOfR3IFVTOK40SsEvkJCkV+/njc9h/UplEl+zslMI/jnUBsAmztM57vokcji4UYd4QtUlO5xaz9saJ8XYS05nO8iZ7c3ZpDlE2teOffXBEtZ7dR6H5s55Vus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616994; c=relaxed/simple;
-	bh=0YN7Qt+8hBYIMYQkj/bbF+8pso2oPM0KoT57Hc+rRzk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X+waumBoeqggDkw4e2SFx9NzapJzs9IvJ6uCtUMma90LliMVdlTyPDt52mQTIIeoN8nXsxpoXSQ8V3u1n+vd6vp20f3u9/zX8goMhGy8UHnD3Z41snw716jgGqbNGEBoT2lV8O0Vd0s4tzSu74w7xhaAb7qrV5D44xZ3x4Q5Tvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=mybp3sV6; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e78e53cc349so395967276.0
-        for <linux-gpio@vger.kernel.org>; Wed, 07 May 2025 04:23:11 -0700 (PDT)
+	s=arc-20240116; t=1746617553; c=relaxed/simple;
+	bh=3XbAz2PGXTRyrdvEhkXrGX16BDmtijuZ4bay8iyN02Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uRY3JZ1Eht/7URqx5r7kQvzoH3k0gQ2tvektCxxdvf09vCIiqdDUFHdPWEPWuOxC6Amf7ziyPhEzN850KUp0P2JteN8ddu2Vc3gJBQH5jSdEAg2Ye9iSZNvtI+HZzdgf2TIEAVvQ5e7WHfUUxCZxJUv2bEcgo/XUjcKJ5zW/C6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vw5ND7Rx; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0adcc3e54so1044697f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 07 May 2025 04:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1746616991; x=1747221791; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BrlKQngaih/GyBdcD0JlQz7H1v2pzxnPiDTUdfvP4es=;
-        b=mybp3sV6AGCN4BO5zB4gqBXdriJSZwq2KPTT4t1sB9sklCUTuGVZYldgh+kx2rTcYl
-         08zoX1KX5bW/qeDqD3fWSMSMXo4VlXlMhymWUyLWNFF8tCcJ9MwiIf6pd3ap/S6r3Nu9
-         RzS8HsHMmQnznzifQ9Xod4Tg9HuGeLEpdGivLJGk57LRpNV9iC5mLEcxG7pAPa+suJbC
-         T6cSiSrhsoJc5PE3rnq90R9/ZGyxB6HaWA3PXa6Eo/1GZF9j3rh4hvU28iuzY4C1kcGD
-         7gLVavPFZSwcGv6S+ra6DL0VAx1EzyrVgn/O3thmrlGtratkZnpVruJA6TM0WBaWCBIz
-         uxXw==
+        d=linaro.org; s=google; t=1746617550; x=1747222350; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nb+zlo587RuPjZXBWr3+oLX8zkFQSZwHVEcLM+1lwB8=;
+        b=vw5ND7Rx5+lkbzZeLWZ6WPBEWTxNcVx3hSjMP6HMR3ahY7OyvaI8rC4FfJlJSZYpQp
+         eFOkcqNQhOswgb0yznonZ+TskDQt40sao3XnOlMob8Z7DFg80YhPmQ2pHJnt5iriTBYr
+         yd8Y5KH5ktQ8mppxSiaxqyvSTsMxZG/zSTxZGQCog+TAd6YCwgfTD7myefBaWW+G8b1Z
+         nof97H2C59nvdDi0VknOy8JlDYskeazSHv3glHd73lMViyQWGVnOFNWkXbrmrXEYmuU8
+         7HMg7gYzDvnwSJwjlnGcHVasJcABjBi+2XYpAvCNSfIOeSzSjTZomZmiKGTzVshTnkU/
+         kkfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746616991; x=1747221791;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BrlKQngaih/GyBdcD0JlQz7H1v2pzxnPiDTUdfvP4es=;
-        b=ImmNI2vQM0kzoVICA1R9sMFM3tJKHPW3WtONjv139y0KBqCeqKczquDvHuSczkfeNT
-         bYMSAO2JO6NuTaYbruXmrq9vFROqZ8t5GMXOoHRUjMRaljYYyZIHdg8MGHI0yPp5GPPg
-         IMakehG95GuCN33gEHgqBXvr3TzA9uey7v5SeGwInDQe3Di5bUPWgGPPFWqcHYADuKQk
-         29npXqRL7h2S4KF97VwHbOUR+fDB/WPkiT2Yabz1bGUocW6lBARHOP6FZtcCl9YQKdk+
-         8ceTIcxhhG3cWb4iWmVK7mDALz7sBVZ+WNX2MJb8NbGhn8TNSC8OolVUQ7GGi3qXTOew
-         4ksw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdHiag1yRBNAntaZdIcFlAU9CWddO8pOy7sXY7UmlsOHYDOTGMdHhP6nAq18MbvwfnGBhcyhqAHpqU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAh72oQ9nqCOYlqQSdkWkBeQ9DeS9mxReEJNqpG/qmaYl3LWRN
-	cCDyaskFE7R7UEZzoz8Y5WDXulWuY7T3CpNpYeNUZEG0N/ornOeXm1qFzZoxMKFwiGi6/Z7rhn1
-	OyQYrR0L0pNMUwQeg4XPQzCpxWtSom3eCArO2Sw==
-X-Gm-Gg: ASbGncsyD7HV65fRHEaWSReqp3OgxTqXrbst6S7m2i5Ge4hGzflUZc+DpsOagbgAjpu
-	Epmwx/mz0EiX9kQ5/hspEwYIY09AuTRRVMQnp1J9HE5SyVcS0vztk7d2e23HVWCre5E8OZgLr4N
-	mPN8JJ5AUZGG1UBx2MNq6oc80BdYYR/q4yMEH0JUTjV1JeJ0cLay2q
-X-Google-Smtp-Source: AGHT+IFxdYKCzY2TKwPokyurfueqmOKja0Rc4hCwr5SUWy06EioalRQvocuOR1AAy0bCdqDcNh77dszj2t/Oy74t3i4=
-X-Received: by 2002:a05:6902:18cd:b0:e74:e02:626a with SMTP id
- 3f1490d57ef6-e7880fc6382mr3556036276.19.1746616991034; Wed, 07 May 2025
- 04:23:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746617550; x=1747222350;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nb+zlo587RuPjZXBWr3+oLX8zkFQSZwHVEcLM+1lwB8=;
+        b=f1Yg1wZelzOD+N7ztu7+q8htTb8yXkNiLaon40BBQs+ReYnVH+QPPwfFrfONeSUyeN
+         UuTSqH+DNuM1PrN9silFxyY0P6fEQ1ur2bG0KY1cvSjAX2GuR7LCrLkb41sgpgdZoBqp
+         T8d8QjYZown2lCP2PKGizjeTBz9m/HKSm1ot+iZD5k+AoONKo2sTkkOsF2h1eDeFNUqu
+         XwAxxAwf/xICGdSwW0+pBpBDIIVh9Gw3Gcb0uIx2uOvvLugu+cEY3K0dkqb9htUUvF69
+         lQNG/WzKI5Hz5hsfvhjD8QXqZm4inS/8DbtAgo6ZJSIY+bnR9kRtvmTqDbVjp0mCgdFL
+         rfUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWMTMfRY7w0J8SUULb27bxPkRNQnz7xV7rDdYreShjiIyVgEyQK4PpUmCIcWRlMwh2SNqnB8KozbA1D@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNc6SSyMon1vTy0KXYBYk1qemoFGhaTDEQg2CArKVH4CBoR7Tl
+	XncdHi3FjdcHcI8Ge+T8/ZYQvyOlrB4DoajZ6vSf9SRIB06dG7l98MWPCNLHoB4=
+X-Gm-Gg: ASbGncvexeQYlWr/Zas12UcMk/y5vJLIygQ4SVbVTb4pxXCPRkMWf11q67r2vDttwjO
+	PvLEE08mYulevBef6Wee01285l9u1lUACG81XdhSwnHgn+SLSRhmXtmdoXC5RK8H3MI/235EHJw
+	RKP4RTCUAHmMIhq4k1+FwUXMxL8gfzJW8KnnU+mt9xK3b4anU92/4XVIWO98/DoGhNUGINFjTcx
+	hm7O94iF/hmL/6L3PRJge8DzuXXFDehglDgDJ0wGM+3UObRXFiVnLutMQyhLRxI6gUaHgsOIUbS
+	5mJFWE4dajmidaq9DIPQkfS/dpGF1CJ6OrinYOkN5xqrkg==
+X-Google-Smtp-Source: AGHT+IEItGOXOrk5wMY3AvgagcMlmqm3t9UoMOHncdRejXrITI+PTxVIePkvuItRyBuA1HIIIAv1lQ==
+X-Received: by 2002:a05:6000:250d:b0:391:4559:8761 with SMTP id ffacd0b85a97d-3a0b4a4b31emr2533881f8f.36.1746617549892;
+        Wed, 07 May 2025 04:32:29 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a0b22bd6a3sm4059664f8f.27.2025.05.07.04.32.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 04:32:29 -0700 (PDT)
+Date: Wed, 7 May 2025 14:32:25 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Takahiro AKASHI <akashi.tkhro@gmail.com>
+Subject: Re: [RFC 3/7] pinctrl: introduce pinctrl_gpio_get_config()
+Message-ID: <aBtEyciwVip9FaKP@stanley.mountain>
+References: <cover.1746443762.git.dan.carpenter@linaro.org>
+ <0e982ace876920162d27a521f5f460b1dd6fc929.1746443762.git.dan.carpenter@linaro.org>
+ <f59c3493-4630-4cf1-8d25-d4e9fbf23498@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250309084814.3114794-1-demonsingur@gmail.com>
- <20250309084814.3114794-13-demonsingur@gmail.com> <b214bf8d-33d0-4da8-bf16-cc62bd1fbd55@videtronic.com>
-In-Reply-To: <b214bf8d-33d0-4da8-bf16-cc62bd1fbd55@videtronic.com>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Wed, 7 May 2025 12:22:50 +0100
-X-Gm-Features: ATxdqUG3nHKGjKOQoFEY4aL1pXCEA2rU5jPHWszWU5gDb-fbZzf1eN3M8MI_ltM
-Message-ID: <CAPY8ntCtycm+fha9yuJyr2_9obq8cq6xjYJT7acnFPgh_sCi8Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 12/16] media: i2c: add Maxim GMSL2/3 serializer and
- deserializer drivers
-To: Jakub Kostiw <jakub.kostiw@videtronic.com>
-Cc: Cosmin Tanislav <demonsingur@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Cosmin Tanislav <cosmin.tanislav@analog.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
-	Julien Massot <julien.massot@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Andersson <quic_bjorande@quicinc.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Taniya Das <quic_tdas@quicinc.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
-	Eric Biggers <ebiggers@google.com>, Javier Carrasco <javier.carrasco@wolfvision.net>, 
-	Ross Burton <ross.burton@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Zhi Mao <zhi.mao@mediatek.com>, 
-	Kieran Bingham <kieran.bingham@ideasonboard.com>, Dongcheng Yan <dongcheng.yan@intel.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>, Tommaso Merciai <tomm.merciai@gmail.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Ihor Matushchak <ihor.matushchak@foobox.net>, 
-	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, linux-media@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f59c3493-4630-4cf1-8d25-d4e9fbf23498@oracle.com>
 
-Hi Jakub and Cosmin
+On Mon, May 05, 2025 at 10:00:35PM +0530, ALOK TIWARI wrote:
+> > +int pinctrl_gpio_get_config(struct gpio_chip *gc, unsigned int offset, unsigned long *config)
+> > +{
+> > +	struct pinctrl_gpio_range *range;
+> > +	const struct pinconf_ops *ops;
+> > +	struct pinctrl_dev *pctldev;
+> > +	int ret, pin;
+> > +
+> > +	ret = pinctrl_get_device_gpio_range(gc, offset, &pctldev, &range);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ops = pctldev->desc->confops;
+> > +	if (!ops || !ops->pin_config_get)
+> > +		return -EINVAL;
+> > +
+> > +	mutex_lock(&pctldev->mutex);
+> > +	pin = gpio_to_pin(range, gc, offset);
+> > +	ret = ops->pin_config_get(pctldev, pin, config);
+> 
+> can we add reason here, as now we are not calling pin_config_get_for_pin()
+> 
+> https://lore.kernel.org/all/20231002021602.260100-3-takahiro.akashi@linaro.org/
+> 
 
-On Tue, 6 May 2025 at 19:34, Jakub Kostiw <jakub.kostiw@videtronic.com> wrote:
->
-> Hi Cosmin
->
-> Awesome work. The initiative to establish a common framework for GMSL
-> devices is a great idea.
->
-> I believe that we have found few bugs:
->
-> > +#define MAX9296A_BACKTOP22(x)                        (0x31d * (x) * 0x3)
->
-> The first multiplication is wrong and should be replaced with addition:
->
-> +#define MAX9296A_BACKTOP22(x)                  (0x31d + (x) * 0x3)
->
-> The same goes for MAX96724 equivalent macro:
->
-> > +#define MAX96724_BACKTOP22(x)                        (0x415 * (x) * 0x3)
->
-> In MAX96714 driver there is an issue with setting up lane-polarities.
->
-> > +static const struct max9296a_chip_info max96714_info = {
-> > +     .max_register = 0x5011,
-> > +     .set_pipe_stream_id = max96714_set_pipe_stream_id,
-> > +     .set_pipe_enable = max96714_set_pipe_enable,
-> > +     .set_pipe_tunnel_enable = max96714_set_pipe_tunnel_enable,
-> > +     .phys_configs = {
-> > +             .num_configs = ARRAY_SIZE(max96714_phys_configs),
-> > +             .configs = max96714_phys_configs,
-> > +     },
-> > +     .polarity_on_physical_lanes = true,
-> > +     .supports_phy_log = true,
-> > +     .adjust_rlms = true,
-> > +     .num_pipes = 1,
-> > +     .pipe_hw_ids = { 1 },
-> > +     .num_phys = 1,
-> > +     .phy_hw_ids = { 1 },
-> > +     .num_links = 1,
-> > +};
->
-> In order to make thing work we had to set
->
-> > +     .polarity_on_physical_lanes = true,
->
-> To false. So this field is either improperly set for MAX96714, or handling of this case is wrong:
->
-> > +             if (priv->info->polarity_on_physical_lanes)
-> > +                     map = phy->mipi.data_lanes[i];
-> > +             else
-> > +                     map = i;
->
-> Upon mentioned changes we have successfully tested two GMSL2
-> combinations on Raspberry 5 platform:
->
-> 1. MAX96724 + MAX96717 (only 2 MIPI-CSI2 lanes with single camera due to
-> hardware limitations)
->
-> 2. MAX96714 + MAX96717
+I don't even know why I changed that.  Using pin_config_get_for_pin()
+works and it's cleaner.
 
-Feel free to shout if you want help on the Pi side.
+regards,
+dan carpenter
 
-Pi5 should be able to extract multiple virtual channels to support
-several sensors simultaneously (up to 4 VC/DT combinations). It does
-need a rework so the CFE runs from memory rather than being fed data
-directly from the CSI-2 receiver, but I believe that is pencilled in
-as future work with libcamera already.
-
-Unless things have regressed, libcamera should report all connected
-sensors to SerDes setups, and set up Media Controller appropriately to
-use them one at a time. I know I've had that working with simple CSI-2
-multiplexers and thought I'd had it working with TI FPD-Link III
-SerDes (Arducam's IMX219 V3Link kit, modded to remove their MCU). I
-don't have any GMSL hardware to test with.
-
-We're also fairly open to merging drivers and overlays for 3rd party
-hardware into the downstream Pi kernel. If they've been reviewed and
-merged upstream then that is the ideal, but if you're prepared to
-support them, then it saves the user the headache of having to build
-out-of-tree modules.
-
-Cheers
-  Dave
 
