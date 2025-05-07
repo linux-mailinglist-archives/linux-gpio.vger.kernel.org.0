@@ -1,125 +1,92 @@
-Return-Path: <linux-gpio+bounces-19744-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19745-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B63C9AAE392
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 16:53:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC943AAE39A
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 16:56:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7DD61BA7A52
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 14:53:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1940D4E585C
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 14:56:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE402289E0E;
-	Wed,  7 May 2025 14:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UHwThykS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61090289E0B;
+	Wed,  7 May 2025 14:55:56 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A19280325;
-	Wed,  7 May 2025 14:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FFC72637;
+	Wed,  7 May 2025 14:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746629586; cv=none; b=fAsVUEjW3fLgz3yT2p1I760DxkSi9frWMNwxCuEut+iVcplCa700RLU6sHQtwT4Oas5atvAdeX49F8TJs4iKdfOl5+j98qDQCljraACurGszFVSf8GpBjEj190o2xO5PsN5cGh1888m7q2jD5QrRQu5t5VQOFk5vwoNOCg3sRzU=
+	t=1746629756; cv=none; b=WxNkor6sqVJS2dbWobKRjeesZqvQU6RdGq+OqFSMu7ofnTfuTSDmsCI5rq1NsP4x18c48EAeFV1zeotnQGh5d92Cptovdk7yuknNn+uKkHAKUVUTw/5v3dW14FsbzQCRNyRRQ5mx6rMNHUif+hmUbcAGZ2EVT6KOFSelJDg2ghw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746629586; c=relaxed/simple;
-	bh=860Cy43wuTr4BOgz0A4KfUV5gGHRPzJ3YR2WV8WhSsI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mniFi0XeKNKzl7j8Imzn/6UEr9FUPOE56Q5tRf+db9vRVr0qIh2UgojWlHJ6HGB6etw2NIIfRryISJ6+7QnwxkQjSepqaBMJz9oqDxZDRfTGk8phEqNNOhQdNVOahoqAKdXeU5x5eNHNGV/Yhj/jW4G0rc+AZfq87ey6c78cmWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UHwThykS; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 995D743B65;
-	Wed,  7 May 2025 14:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746629582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v4rUVGQTujMSoZ9NRNRI+654RlT+kaV4WAhwcUmLWZg=;
-	b=UHwThykSJ0NH1IOwHYI5CzrYbN0nKFD4xzMPYJwiSPLJ3e40RyCrPf9UNHoCsKsoyuqocI
-	ucQJ1UQapCw1SG9aGJaUlztolZ6fweCYP3u7cB4bfTnryItp+5PLT3eG7iHJE+bNHAnT/n
-	mj7RxO/XkDvlFEe42D/3L3hVvNqsViUeHN/0Xf72rSpdKjzkp/HFfCVfF9WqOze1HwkUs5
-	O1S7twaHz9//1TbEE5s2L8Uja2wvaKS8g+uuf52ML5z4mAWEk/quEI4HZyt49Eauzk0yIM
-	2WhmQC6mvg2Y/Tjvrk8j8vK7GmIrTN0/uggVmTWDkQ7yiOXyDCj/pTH+nyuFrA==
-Message-ID: <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
-Date: Wed, 7 May 2025 16:53:00 +0200
+	s=arc-20240116; t=1746629756; c=relaxed/simple;
+	bh=o5GOjlPSuFb3knLMrtqOwgVnz2Ys5BjuXTmzVET+4YE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z5t2HbKHBNg/GTWyGy1dEzB/CBU4cmEgUWvggVoVOU0DzZJ93tm6QXqpkVtdYrJuC0GyLL9iCE5n6xOlgGyJZ92rnu+QGxgjpJpiEzVXtpi7+hF0rUfCaTfPfq+RDnLFbRB9T9lado+V3WPLomIBNj6iu/MEWGSBfAnj2rXpEdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: k6bXGk9cTfufKKGVR22Q9Q==
+X-CSE-MsgGUID: x7odT/WSQnWhbmDX0y34yQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48381502"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="48381502"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 07:55:46 -0700
+X-CSE-ConnectionGUID: 4ZO337GzRVuRNVkfTZ2zdA==
+X-CSE-MsgGUID: d0ykZMZiTeiZdxGpT2udZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="136908212"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 07:55:43 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uCgBQ-00000003lHU-2h4G;
+	Wed, 07 May 2025 17:55:40 +0300
+Date: Wed, 7 May 2025 17:55:40 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 12/12] gpio: ml-ioh: use new GPIO line value setter
+ callbacks
+Message-ID: <aBt0bFTPUK3qh9H0@smile.fi.intel.com>
+References: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
+ <20250506-gpiochip-set-rv-gpio-part3-v1-12-0fbdea5a9667@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejudehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghro
- hdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506-gpiochip-set-rv-gpio-part3-v1-12-0fbdea5a9667@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 5/7/25 08:29, Andy Shevchenko wrote:
->> +/**
->> + * gpio_fwd_gpio_add - Add a GPIO in the forwarder
+On Tue, May 06, 2025 at 11:01:55AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> forwarder
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 
-Sorry I do not see the typo :)
+Pushed to my review and testing queue, thanks!
 
-> 
->> + * @fwd: GPIO forwarder
->> + * @desc: GPIO decriptor to register
-> 
-> descriptor
-> 
->> + * @offset: offset for the GPIO in the forwarder
->> + *
->> + * Returns: 0 on success, or negative errno on failure.
->> + */
-> 
-> Please, spellcheck all of the comments.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Ditto
 
-> 
-> ...
-> 
->> +#ifndef __LINUX_GPIO_FORWARDER_H
->> +#define __LINUX_GPIO_FORWARDER_H
-> 
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/gpio/driver.h>
-> 
-> These are not used (at least as of this patch).
-
-Indeed they are only needed in the pinctrl driver.
-
-> 
-> + struct gpio_chip;
-
-And also struct gpio_desc;
-
-Regards,
-
-Thomas
 
