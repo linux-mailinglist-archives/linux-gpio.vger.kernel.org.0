@@ -1,127 +1,129 @@
-Return-Path: <linux-gpio+bounces-19729-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19730-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC500AADC40
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 12:10:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF7BCAADD0A
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 13:13:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE0B17A7817
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 10:09:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 52B424A821A
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 11:13:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D95F209F2E;
-	Wed,  7 May 2025 10:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F6C221772D;
+	Wed,  7 May 2025 11:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CEapo+ua"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Io4axBlX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB2638F9C;
-	Wed,  7 May 2025 10:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92231F5834;
+	Wed,  7 May 2025 11:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612650; cv=none; b=RVc0JKbCjV5s1FwgSuo9mr+dyBWIbRiG7X0T2oEowu5ei0MbKBJK9xY+IJ7IIIPfgSEX2vIHC+S83Y7r4ZLAJiMIhsghGy0wEHwoz3SB96/osacvPo1/km7AnTp5WLjagx8Dv8/zSPMScffqliK7lUeFCyWqHV0FkFhh7W04ofw=
+	t=1746616375; cv=none; b=Ew/r4X1dy3nLF6DYHS/0AgGMbOv77uk2ILGNNWa+ozLizzv0S6mHegd3zHJwNESrfp5XhOZ1qQlMoBOw3Z6cr2DCk9ykm+zpZNqsoqV+dHq+SANuqSSHP+qjdqx8TW36Q0j/WTncVHR0eYvpJLLhQUDAT0Z28WndhmYHkBXJiMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612650; c=relaxed/simple;
-	bh=gza/MOq50ChUay0E0DpEA6I4RfwVm/dyTI5sPhwVRY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p+mpMkbdfTa2QnK49+dez6oK7WZ39MRccOYY7GwncNkeH6vxlgq7Lm5zT8BMYlJbQ7ME/38m/LG7j1oVwBJgUgOk3fGidOKy/ofIJglhjLuki/p5N+XxGKaALmtRr4bC7k0YUZzYFV+XTXH1iAc8QY6AnNCWw03rtHNQ3SockAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CEapo+ua; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BE0FF43196;
-	Wed,  7 May 2025 10:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746612646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vBBo8w/w0Mv2gCQOaR7DDY38mmWSZESYCGslHTTWp6Y=;
-	b=CEapo+uaeI/8s9l4kL5cMd+py3hRodTLtFh3o+l0+a66QwzIvdRTQeyuKd4B8N1betfShT
-	bgY5r1gfYyhoaDVutAlf96JOA4t2ImnXtMTKoEmObt7AMG2LRX9BYs6Xp1cChQqyupaLGi
-	rZpks8oUcZEKrDsqoK94mIvwdCfLCpux3Ruo5KSNQMiwYMFjmSgKTbZ7w1uaB4XRf3boDd
-	G0JQy0V46OdI5PgyCOe+KU+6UjagXDX120xg44kxBVHyk2qzbUv+rj0DUzwM3jcth956jH
-	fHsB4Vv85IkdLFRAujNOOf5aWvwjEXGhkDwxekkc1J4V4r5ydqFAzIT8azJkfA==
-Message-ID: <c3b9c494-599e-4d99-8645-589c1c0c106c@bootlin.com>
-Date: Wed, 7 May 2025 12:10:44 +0200
+	s=arc-20240116; t=1746616375; c=relaxed/simple;
+	bh=i8Nmf/M83ngPceislApsO+P6BTyU/rioXKpD6P/mSKU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UD+wRLWdP2kCGzM/LtY52E3YYU0vEQGw4A7Opx+tT/RMl4hPkt+rNsdYZzeQTZTiUj48vbFK3dD0bfcSIznG/HjmZnNKvOhnZDm301aAlOhd5Wgnp8xPRnJ/U99f6FS+q9Y9RcLEmzsSC00nwPbValol7ywoXR/jul5Q8ype0ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Io4axBlX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89EB7C4CEE7;
+	Wed,  7 May 2025 11:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746616375;
+	bh=i8Nmf/M83ngPceislApsO+P6BTyU/rioXKpD6P/mSKU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Io4axBlXnAqiwN50vnbJxawwhAUR2HJTYEh2QC80zGTlMkecKmvP+aeN0z702Eaga
+	 zABZn+8VwK4uiI8pNOmzokFSPS4JI90Q85J8UUeCk52Dshyy31eGxcY2I/QTktk84/
+	 /8KY4lvdvLCn4viw3qtJiSVhAVAyS5LsNKpyV4v+5IqJl0833a37No06FBB4VYPqWh
+	 xRh/HB+0kGKkbBLcIa6XBRsipvWVKuDHS/kx8m8UGtB/d8t2puZ1hmw5lJGkx9A3vl
+	 uu3JrxZVGWdMsstJhxsYfJGPQpN9TDJSI35S0JhVc547QdZR3G9kpIjxwYOnPe8FOj
+	 kr5nC6EnLwP7w==
+From: Mark Brown <broonie@kernel.org>
+To: David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Peng Fan <peng.fan@nxp.com>
+In-Reply-To: <20250428-csl42x-v2-0-e8056313968f@nxp.com>
+References: <20250428-csl42x-v2-0-e8056313968f@nxp.com>
+Subject: Re: [PATCH v2 0/9] ASoC: codec: cs42l[56,73,52]: Convert to GPIO
+ descriptors
+Message-Id: <174661637241.4174662.1114099505492854363.b4-ty@kernel.org>
+Date: Wed, 07 May 2025 20:12:52 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/12] gpio: aggregator: handle runtime registration of
- gpio_desc in gpiochip_fwd
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-9-3906529757d2@bootlin.com>
- <CAHp75Vdg2LE885+qjpYLkQrdNqaahJc3=Ki7op=6jJUJfJM+sw@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75Vdg2LE885+qjpYLkQrdNqaahJc3=Ki7op=6jJUJfJM+sw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeiheekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetueefgeetveffheevkedvffeugfevhefgueegieelveejjeefgfeigefggfdvkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhop
- ehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-Hi Andy,
-
-Thanks again for the review.
-
-On 5/7/25 08:34, Andy Shevchenko wrote:
-> On Tue, May 6, 2025 at 6:21 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->>
->> Add request() callback to check if the GPIO descriptor was well registered
->> in the gpiochip_fwd before using it. This is done to handle the case where
->> GPIO descriptor is added at runtime in the forwarder.
->>
->> If at least one GPIO descriptor was not added before the forwarder
->> registration, we assume the forwarder can sleep as if a GPIO is added at
->> runtime it may sleep.
+On Mon, 28 Apr 2025 10:09:01 +0800, Peng Fan (OSS) wrote:
+> This patchset is separate from [1], and not merging changes in one
+> patch. So separate changes into three patches for each chip.
+> - sort headers
+> - Drop legacy platform support
+> - Convert to GPIO descriptors
 > 
-> ...
+> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+>  - Use devm_gpiod_get_optional to get GPIO descriptor with default
+>    polarity GPIOD_OUT_LOW, set consumer name.
+>  - Use gpiod_set_value_cansleep to configure output value.
 > 
->>  {
->>         struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
->>
->> +       /*
->> +        * get_direction() is called during gpiochip registration, return input
->> +        * direction if there is no descriptor for the line.
->> +        */
->> +       if (!test_bit(offset, fwd->valid_mask))
->> +               return GPIO_LINE_DIRECTION_IN;
-> 
-> Can you remind me why we choose a valid return for invalid line? From
-> a pure code perspective this should return an error.
+> [...]
 
-I reproduced gpiolib behavior. During gpiochip registration, we get the
-direction of all lines. In the case the line is not valid, it is marked
-as input if direction_input operation exists, otherwise it is marked as
-output. [1]
+Applied to
 
-But in fact we could return an error and the core will mark the line as
-input. Maybe ENODEV ?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-[1]
-https://elixir.bootlin.com/linux/v6.15-rc5/source/drivers/gpio/gpiolib.c#L1105-L1123
+Thanks!
 
-Regards,
+[1/9] ASoC: codec: cs42l56: Sort headers alphabetically
+      commit: 4060ebdd5063eed98a8f81f78f1e67ffc4ff0942
+[2/9] ASoC: codec: cs42l56: Drop cs42l56.h
+      commit: 86f6e4791c40c33891299d95c055e5d06d396284
+[3/9] ASoC: codec: cs42l56: Convert to GPIO descriptors
+      commit: 0bb92e4736a9dd43e3215b378db5ac63075a3cc1
+[4/9] ASoC: codec: cs42l73: Sort headers alphabetically
+      commit: f3e7298848f0e6c09e4da5fd80bca7cd0c58ccc1
+[5/9] ASoC: codec: cs42l73: Drop cs42l73.h
+      commit: 43ef0dccbc2528924c4b03a902fa39502faabb16
+[6/9] ASoC: codec: cs42l73: Convert to GPIO descriptors
+      commit: b6118100382c9e4c8ca623b3a8e8bf1a09c42aa5
+[7/9] ASoC: codec: cs42l52: Sort headers alphabetically
+      commit: 2d703321b856acdb6589d74906e19aa5cb328d4e
+[8/9] ASoC: codec: cs42l52: Drop cs42l52.h
+      commit: 772c036befb875c904731fb309fb9d2e065ba3f8
+[9/9] ASoC: codec: cs42l52: Convert to GPIO descriptors
+      commit: 5bf5bdfd007e07f2ec5b3e07aa02616f4eebef67
 
-Thomas
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
 
