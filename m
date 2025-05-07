@@ -1,108 +1,133 @@
-Return-Path: <linux-gpio+bounces-19721-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19722-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D27E6AAD6A5
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 09:00:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F60CAAD6D0
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 09:07:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0C683B1AF2
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 06:59:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DD253B2A55
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 07:07:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5E15212B38;
-	Wed,  7 May 2025 06:59:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 899762144B9;
+	Wed,  7 May 2025 07:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhof3Fs5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nmlOy1s8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF552135B8;
-	Wed,  7 May 2025 06:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86CF2101B3;
+	Wed,  7 May 2025 07:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601181; cv=none; b=gT9yacGVKYgbi+XuEX52nnGE7gpduyG3R6JIIHcDW+APVYrtV/oxglxGzkRFMed3Pl6Zmzeik0R3YwIcetibvZ41F3egKoJLjD+vsDb+DAQ8ra1mzr0ri1JgaBxTWJQYSdlfY3dN7k1VwzEedKv23m6haeqzi4B0nO0bwaAA4v0=
+	t=1746601659; cv=none; b=rSRjsC0ZDwGQyUp7OwDOGAfGOSQHFQujoHoaZdyFefo37FlVvibf+0RvV3lYjqldmWNoNs+k144LASz2eZ21EAOEsmgY6D7H7yCtKtWTcOfkpwpvJ2S5oAl84JgLPT2H2XXFjrNi5N66Bfayhjqx8FnD+kf8fnLY+leKwQ2C7s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601181; c=relaxed/simple;
-	bh=SwahXcMqx4G/lamObKis0IYDh70MhysmwuIhsqcDBuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sKToSDsvRCei5McPE9TVNuTpuZB9o+jomw6MTankFgI+eTm0PbrnCwwEJTMap9jMZZFDCgrNjuZJRqZE4smVRwRBcl8RSs1cBXqtyMvMAGslOH8k5097bOy5K7RKuPYiY5QGpo1K+XjYNqY27zjQRE34SCnEWnpGEQG9ldf132E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nhof3Fs5; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb39c45b4eso1028291966b.1;
-        Tue, 06 May 2025 23:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746601178; x=1747205978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SwahXcMqx4G/lamObKis0IYDh70MhysmwuIhsqcDBuY=;
-        b=nhof3Fs5678GQQd3tLsBvoeHLWP+VEAFXKxVcsRGBtgTYWR7Lx6o4knXdcU6DHp6rA
-         eC9Gv8nU8QI4nlUta2iFuuGBuPaO8BbhA2XP7Jij0H4QcdpOvRtXEFSmWKwhOw3k4Pct
-         VBpr34jXPJ3u+m8FvXgmu2Fi0yUwiNu9Lup8qSoGDmU1ZxZdQwCN+wHyxFSEGk9ynDOH
-         Q/TwhlV+SiiyPEbMI2flWbtazbLVSvjvSTnyok42MDD9b52VVGTj2uy9B2TCicANFS6e
-         J1yNISF7qYRyupofhMh0t/F8c9YWylBraEATT2M1pwb9nkahiIIt3HYnjAz+rpBk144y
-         Hw/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746601178; x=1747205978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SwahXcMqx4G/lamObKis0IYDh70MhysmwuIhsqcDBuY=;
-        b=L2zzbY8dVr/9HqDtWJ2f2JMjUO96S7Pd18eN6FzJovW9QFh9cVtUerIIE1ovkbjHEh
-         XDV92zJQdghSOhqLeY+VIAWm/PLYnObBoxo+MmwlkjkX6KGrfLntfRQ/0ZIUUD7zdIdz
-         qw1iM/Le0q+Qr6xS++Wx/6Mz8A8EGFeUMPIFad6vckqNNEPgBBgd5etLXKyhpjPrUSuL
-         pG/nEiWh7TdW/U4RTOtxqqTUfA5tj6WPjnjpmVHsDS7WUj5halifSHu06Pz9tAzuwHnW
-         wT7I4XDFU2rrjpMN1aatqQShGzFXEPwQTFT6frvipyyoC3IRprTm7HGRTA9iOZGm2j8A
-         oFSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXjb2q7avL1UhpdiRr8Ka5sVSMBO3TyHSYQlqSDDJWE2KyExiXX9CTLdhqPL54YX/8rmXpfWu1tq+D@vger.kernel.org, AJvYcCWta4TP+5Fa7088DymvbwPHJ+ojb9QCoeULqBGXp4/aYaSM0ikb56plgZtqfw68k1he3E305M3NUimD/VPD@vger.kernel.org, AJvYcCXM9Ei78toX6oaXMEqeR9eh+goWJ1UgVxd4oDVojQvZTEFI61gOlqrKwiTK6R5i32HWZJ2GwTtUtQ6Bwpv0qQ8e@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz4tyr3b5iQ2ZZme9WaNt3oYX7oU9EsWHg3kbrv6LmjgMdL94D
-	yaGsnZm8NfxU+CbQPNDMQyUiqRxVnZP0gI/oX+BPixoMGLs0RjU5iFHrJGLY2omwCARCtis3mYB
-	NyL1QvjHCu3F9tn6y+oNc9fm61yY=
-X-Gm-Gg: ASbGnctBrF3BBsPq2BNTnmfU6q8daVNKw0VAoEXR8znaOg3/dGaPw4LLlU6T1oLOl4q
-	+FhsSC7iOGSYzN6bZ7/zu2sbPYa4IBpyJWiEwXy6YpJQxo+ivqPYI0QjRnzONqAVdms23kRBS3K
-	80IN/kVWqm1VlrPtkInbi0yw==
-X-Google-Smtp-Source: AGHT+IE8DKbrimrtdsItEPL5aMaWNUWXC3ZTJTFEXrviI9KZnSYxAw8eGv/Y0aTNLCM02R66GVEGf35ty+ZSx5XGZqc=
-X-Received: by 2002:a17:907:c016:b0:ace:ca87:2306 with SMTP id
- a640c23a62f3a-ad1e8bf6a2fmr191446066b.34.1746601178038; Tue, 06 May 2025
- 23:59:38 -0700 (PDT)
+	s=arc-20240116; t=1746601659; c=relaxed/simple;
+	bh=4g1meUY7nXGsLmA3ICMv283OhsmrHmNHTC3hWxkVC9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bwKgML+nzqYAorZAinQe6dfKOM5F05nanDkNvCxVXquRbgs+tGhMv89ewG8Rxuo1PQ9R2hXeHkdbTn2HEaAIB2p8xAJNJ3x1Nsg+3zpU1tkPJKgtCEoSUg9RyASQGRcD6srTN6e5WNGVQ1qj/DQz5q2RPg3+Teq99ylPBIWfvCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nmlOy1s8; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746601658; x=1778137658;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4g1meUY7nXGsLmA3ICMv283OhsmrHmNHTC3hWxkVC9U=;
+  b=nmlOy1s87hyw4VmAmRUSCh+IdTw3/DuYbTBDmBxAULC+aVgA7rg4sMYD
+   +mN/r50Hpw+43b063UQATs6tc7gN7ltlPuE27SPVlVUIqCluCSX0Enpzf
+   G6HOax9Bbgxsicdyj+pjY5gDL2tggE9+GkTVbz5xDzqkgBZRz1q5lguzd
+   qlOepO19K1Ke9GHluMiYfrM9+2XUcUoSRfW71wyZIYUkarpcB4xGT98k9
+   xoe2r+2qTdOrDN5vZSdmem8mk+jtnKh3VcCQvkJyKm+dC9rDu5dR9VMVT
+   GJF1u/WNS4Mwez4bjZ3t3Ab2PdQpbxZ7WtpHSKuawFprlLsLFvitGkZ56
+   w==;
+X-CSE-ConnectionGUID: AIBkOdDnSJu6dicLZsgM9Q==
+X-CSE-MsgGUID: wQv1mhoiQICh4e5FGkj6yA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="73702382"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="73702382"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:07:37 -0700
+X-CSE-ConnectionGUID: zCSCCDRrTdSJsRd7DdL1/Q==
+X-CSE-MsgGUID: fYVDb9S2SfyCD34yU9tWOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="135767280"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 00:07:31 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCYsK-0007GF-2A;
+	Wed, 07 May 2025 07:07:28 +0000
+Date: Wed, 7 May 2025 15:07:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	andriy.shevchenko@intel.com,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: Re: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <202505071411.RPLesOGz-lkp@intel.com>
+References: <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 7 May 2025 09:59:01 +0300
-X-Gm-Features: ATxdqUEsmCS8k6lrTHepQQNIqW01WadwCjMiJKv-YOeOc-NwT5ZimtrL5nqQhrE
-Message-ID: <CAHp75VcOxtr1o+YEkQURYGk+Aisk2nZhx7698hbaOen_5EXpyA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/12] Add pinctrl support for the AAEON UP board FPGA
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
 
-On Tue, May 6, 2025 at 6:21=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> This is the fifth version of this series, addressing the few remaining
-> issues identified by Andy.
+Hi Mathieu,
 
-Thanks for the updated version! We are all good now, but I have a few
-nit-picks and one small thing to fix, i.e. the constifying of the
-driver_data in GPIO forwarder.
-(Yes, yes, spelling is another thing, but not so critical).
+kernel test robot noticed the following build warnings:
 
---=20
-With Best Regards,
-Andy Shevchenko
+[auto build test WARNING on b4432656b36e5cc1d50a1f2dc15357543add530e]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-mfd-gpio-Add-MAX7360/20250428-221705
+base:   b4432656b36e5cc1d50a1f2dc15357543add530e
+patch link:    https://lore.kernel.org/r/20250428-mdb-max7360-support-v7-8-4e0608d0a7ff%40bootlin.com
+patch subject: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
+config: alpha-randconfig-r111-20250429 (https://download.01.org/0day-ci/archive/20250507/202505071411.RPLesOGz-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.4.0
+reproduce: (https://download.01.org/0day-ci/archive/20250507/202505071411.RPLesOGz-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071411.RPLesOGz-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/gpio/gpio-max7360.c:30:31: sparse: sparse: symbol 'max7360_gpio_port_plat' was not declared. Should it be static?
+>> drivers/gpio/gpio-max7360.c:31:31: sparse: sparse: symbol 'max7360_gpio_col_plat' was not declared. Should it be static?
+
+vim +/max7360_gpio_port_plat +30 drivers/gpio/gpio-max7360.c
+
+    29	
+  > 30	struct max7360_gpio_plat_data max7360_gpio_port_plat = { .function = MAX7360_GPIO_PORT };
+  > 31	struct max7360_gpio_plat_data max7360_gpio_col_plat = { .function = MAX7360_GPIO_COL };
+    32	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
