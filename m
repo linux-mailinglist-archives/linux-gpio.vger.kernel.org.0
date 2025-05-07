@@ -1,252 +1,88 @@
-Return-Path: <linux-gpio+bounces-19756-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19757-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EE89AAE831
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 19:50:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86A99AAEC63
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 21:45:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 928E47AA22B
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 17:49:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4F281C02430
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 19:45:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DB1328DB5E;
-	Wed,  7 May 2025 17:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DA1C28E5E7;
+	Wed,  7 May 2025 19:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f1+FsNHT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPlzZc0V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C8C28C2B9;
-	Wed,  7 May 2025 17:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AC719CC0A;
+	Wed,  7 May 2025 19:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746640235; cv=none; b=oemnmG32NtajQF6+MEnuCN+Pp+39tEv/NnntWfZIdOxjTgU6SAaiJDjhncrrohzq02Jv7ZjyFHqykJfPzIvhKNzTh5ciNUeRYw5Cs2QthCdm4PGV85mM/Qx4jZspw/WFNSj9GOYQ39QDXn/9Nc6dWH0dkDgHsl6MGZTSnS1J/ww=
+	t=1746647094; cv=none; b=DfPk902Xcbbmkobr/2d9ObOeLQgshaqd6mYlL/7as1iuogfG5qpTRpzH1z6utp6M+oRD4YGXY+wH1VtUBqBAJSsgc86i7PmezAXNW6s+YJ8FXGfem+kWe8hU8yxYnE6n03veRZ4fF0bnNE9mC1QVSnzLv4odl7emBJ/QjaYd50o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746640235; c=relaxed/simple;
-	bh=HFwdVXzZ1CNYZyQqaj1DLzkkPltpMegQ5LnWNpViWgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P/OZFbQTz8A6Ug9aS4kvUqCOjd130LwxsjqjBVJRvX8l9YO1YrDyY1XckEH41C95QnNIRe7QQmPDaIYmlmhOKP4L6bcLl0JIxemjIVx85yGityA6mVF+CnuIxXie/b+xgPJ3vsyy5kSl0We1ZZjqrUxruBlcPMFF0zopdY7h8Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f1+FsNHT; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746640232; x=1778176232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HFwdVXzZ1CNYZyQqaj1DLzkkPltpMegQ5LnWNpViWgA=;
-  b=f1+FsNHTrBbeVbDgnsQf/L+mJoENB8E/XlVHCbYhY2OcWenk/x+2ZZQ3
-   ANA8qkpEWeZ+XJXZ53tocCLv1oggJLSljk26cTyczJ8oYfvOPHTPa+pUV
-   qN8IYQxV7HjwkTwYpPnNmpX1SpoPeNftzl7kd1O1Q4dA/j5aArX7WtPQw
-   e7Ykk1VAUe1y3mB5ealYm7iY0aLhT0lhyujMbDJnsntb6hQhSgHJC7y6X
-   Xgi+z02uiw+dy7B9ye2YLAeeSntwxQ8YCwGe3vdUn8/VKT+wXugHTr0nn
-   kR9X42DhgRYXSjwNiH+53buJE0Zv+ttVoeTf8T1YzD/v70AUHyAXsM7wT
-   A==;
-X-CSE-ConnectionGUID: jgYpmaxgRkuVeadXt1eOdQ==
-X-CSE-MsgGUID: PDVCZpogSx6bw7qnn6buRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52203190"
-X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
-   d="scan'208";a="52203190"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 10:50:31 -0700
-X-CSE-ConnectionGUID: SILCjCe0Ss2Uji0a6Ysddg==
-X-CSE-MsgGUID: +nYK3GBoTGmI8yeTxN/+Hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
-   d="scan'208";a="135731386"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 07 May 2025 10:50:28 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCiuX-0008FN-28;
-	Wed, 07 May 2025 17:50:25 +0000
-Date: Thu, 8 May 2025 01:49:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Kees Cook <kees@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org,
-	Thomas Richard <thomas.richard@bootlin.com>
-Subject: Re: [PATCH v5 01/12] gpiolib: add support to register sparse pin
- range
-Message-ID: <202505080122.v2Lm1rIa-lkp@intel.com>
-References: <20250506-aaeon-up-board-pinctrl-support-v5-1-3906529757d2@bootlin.com>
+	s=arc-20240116; t=1746647094; c=relaxed/simple;
+	bh=q4hIvtoNu1oOGcAKyK/6LoLwv0LjCdfMt4xNiihRoZs=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=erNPT2NAmtzPrNhQpD2OvoY1hShV81fUCRUaVXn2XuY+5RuxIG2C7VdEwso4SnMGArH57eoM/uKYMn7i8BIS/keuY3jKzCb/Oj5HPLFl5jlpPV5nghTFbDCle35G4UjjuS3HHWR9wT5HaXvXa69fWa8e0RGQa5uO+d5j9A+l9u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPlzZc0V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B39BC4CEE2;
+	Wed,  7 May 2025 19:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746647092;
+	bh=q4hIvtoNu1oOGcAKyK/6LoLwv0LjCdfMt4xNiihRoZs=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=qPlzZc0VbmcBh/IBRlviaOz38xt5NO496/SGC3ggUSWMOx+oBrVl2jObCeavNvfQ+
+	 R2Yi7Nlm9rfbJgoaXwyCKj2+ORCv6v0HaZJ0vqGuwN7Es/6uNpXxzd6A98Oqag6/4Q
+	 KLKfNStxTE+v7NgktYd/xEvLRGaIYYxg8sv8f65ld+ldjyPrDGSxRLJDlxz/jXV73e
+	 fgZWLjaXcVfUI2r95d5TaZJEvSNNaR5PzP6cwA0c9orH+RhqEOdelSyuxSVp3PCvp2
+	 O4B+hWoqwNALx3co7BWGW3jVCf/SnTxgH2PwTHEn19aVaECO8D2/8vMdJ6+gFGt4gf
+	 D5t4O/WiNTw+g==
+Message-ID: <8513c30f597f757a199e4f9a565b0bf5@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-1-3906529757d2@bootlin.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aBprHfQ7Afx1cxPe@apocalypse>
+References: <cover.1745347417.git.andrea.porta@suse.com> <e8a9c2cd6b4b2af8038048cda179ebbf70891ba7.1745347417.git.andrea.porta@suse.com> <aBprHfQ7Afx1cxPe@apocalypse>
+Subject: Re: [PATCH v9 -next 04/12] clk: rp1: Add support for clocks provided by RP1
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, Masahiro
+  Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>
+Date: Wed, 07 May 2025 12:44:50 -0700
+User-Agent: alot/0.12.dev8+g17a99a841c4b
 
-Hi Thomas,
+Quoting Andrea della Porta (2025-05-06 13:03:41)
+> Hi Stephen,
+>=20
+> On 20:53 Tue 22 Apr     , Andrea della Porta wrote:
+> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
+> > clock generators and PLLs that drives the sub-peripherals.
+> > Add the driver to support the clock providers.
+>=20
+> Since subsequent patches in the set depends on this one and as the next
+> merge window is approaching, assuming there are no blockers can I kindly =
+ask
+> if you can merge it on your tree for the upcoming pull request?
+>=20
+> This patch should apply cleanly to your clk-next branch except for some f=
+uzz
+> lines on MAINTAINERS. Please let me know if you want me to adjust it.
+>=20
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Richard/gpiolib-add-support-to-register-sparse-pin-range/20250506-232604
-base:   8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd
-patch link:    https://lore.kernel.org/r/20250506-aaeon-up-board-pinctrl-support-v5-1-3906529757d2%40bootlin.com
-patch subject: [PATCH v5 01/12] gpiolib: add support to register sparse pin range
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20250508/202505080122.v2Lm1rIa-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505080122.v2Lm1rIa-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505080122.v2Lm1rIa-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/gpio/gpiolib.c:32:
->> include/linux/gpio/driver.h:836:10: error: expected ';' after return statement
-     836 |         return 0
-         |                 ^
-         |                 ;
-   1 error generated.
---
-   In file included from drivers/gpio/gpiolib-cdev.c:15:
->> include/linux/gpio/driver.h:836:10: error: expected ';' after return statement
-     836 |         return 0
-         |                 ^
-         |                 ;
-   drivers/gpio/gpiolib-cdev.c:1665:2: warning: implicit conversion from 'unsigned long' to 'unsigned int' changes value from 18446744073709551615 to 4294967295 [-Wconstant-conversion]
-    1665 |         INIT_KFIFO(lr->events);
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/kfifo.h:135:69: note: expanded from macro 'INIT_KFIFO'
-     135 |         __kfifo->mask = __is_kfifo_ptr(__tmp) ? 0 : ARRAY_SIZE(__tmp->buf) - 1;\
-         |                       ~                             ~~~~~~~~~~~~~~~~~~~~~~~^~~
-   1 warning and 1 error generated.
---
-   In file included from drivers/gpio/gpiolib-swnode.c:20:
->> include/linux/gpio/driver.h:836:10: error: expected ';' after return statement
-     836 |         return 0
-         |                 ^
-         |                 ;
-   In file included from drivers/gpio/gpiolib-swnode.c:22:
-   In file included from drivers/gpio/gpiolib.h:12:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/x86/include/asm/elf.h:10:
-   In file included from arch/x86/include/asm/ia32.h:7:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:34:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:98:11: warning: array index 3 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      98 |                 return (set->sig[3] | set->sig[2] |
-         |                         ^        ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-      24 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/gpio/gpiolib-swnode.c:22:
-   In file included from drivers/gpio/gpiolib.h:12:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/x86/include/asm/elf.h:10:
-   In file included from arch/x86/include/asm/ia32.h:7:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:34:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:98:25: warning: array index 2 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      98 |                 return (set->sig[3] | set->sig[2] |
-         |                                       ^        ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-      24 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/gpio/gpiolib-swnode.c:22:
-   In file included from drivers/gpio/gpiolib.h:12:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/x86/include/asm/elf.h:10:
-   In file included from arch/x86/include/asm/ia32.h:7:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:34:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:99:4: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      99 |                         set->sig[1] | set->sig[0]) == 0;
-         |                         ^        ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-      24 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/gpio/gpiolib-swnode.c:22:
-   In file included from drivers/gpio/gpiolib.h:12:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/x86/include/asm/elf.h:10:
-   In file included from arch/x86/include/asm/ia32.h:7:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:34:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:101:11: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     101 |                 return (set->sig[1] | set->sig[0]) == 0;
-         |                         ^        ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-      24 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/gpio/gpiolib-swnode.c:22:
-   In file included from drivers/gpio/gpiolib.h:12:
-   In file included from include/linux/cdev.h:8:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/x86/include/asm/elf.h:10:
-   In file included from arch/x86/include/asm/ia32.h:7:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:34:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:114:11: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     114 |                 return  (set1->sig[3] == set2->sig[3]) &&
-         |                          ^         ~
-
-
-vim +836 include/linux/gpio/driver.h
-
-   830	
-   831	static inline int
-   832	gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
-   833			       unsigned int gpio_offset, unsigned int pin_offset,
-   834			       unsigned int npins)
-   835	{
- > 836		return 0
-   837	}
-   838	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I need to take the dt-binding header as well so it compiles. What's the
+plan there? Do you want me to provide a branch with the clk driver and
+binding header? Or do you want to send a PR to clk tree with the clk
+driver and the binding header and then base your DTS patches on the
+binding header and send that to the soc maintainers? I'm also happy to
+give a Reviewed-by tag if that works for you and then you can just take
+it through the soc tree.
 
