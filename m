@@ -1,88 +1,122 @@
-Return-Path: <linux-gpio+bounces-19757-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19758-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86A99AAEC63
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 21:45:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E6110AAEC74
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 21:50:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4F281C02430
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 19:45:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 216A61C02F0F
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 May 2025 19:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DA1C28E5E7;
-	Wed,  7 May 2025 19:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C38228E5E3;
+	Wed,  7 May 2025 19:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPlzZc0V"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJPP6b6J"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AC719CC0A;
-	Wed,  7 May 2025 19:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2D828B7CD;
+	Wed,  7 May 2025 19:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746647094; cv=none; b=DfPk902Xcbbmkobr/2d9ObOeLQgshaqd6mYlL/7as1iuogfG5qpTRpzH1z6utp6M+oRD4YGXY+wH1VtUBqBAJSsgc86i7PmezAXNW6s+YJ8FXGfem+kWe8hU8yxYnE6n03veRZ4fF0bnNE9mC1QVSnzLv4odl7emBJ/QjaYd50o=
+	t=1746647451; cv=none; b=gD2wdcUO2Ju7bghOnAquFuWhpQ5SPBTc+S9gNNT8nZ7MMBgj1QBVfdHi6nlIdqT3LnADMaNhjN4YDI+T1YZi+LhPCTm2FqSiYw94Q1EnakqzDd9mi+kJwP7dAaOdj4O3JWyEXJHaNQWPtMim7wRUrrGPV5o4DJN5GZ5b8NHeqeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746647094; c=relaxed/simple;
-	bh=q4hIvtoNu1oOGcAKyK/6LoLwv0LjCdfMt4xNiihRoZs=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=erNPT2NAmtzPrNhQpD2OvoY1hShV81fUCRUaVXn2XuY+5RuxIG2C7VdEwso4SnMGArH57eoM/uKYMn7i8BIS/keuY3jKzCb/Oj5HPLFl5jlpPV5nghTFbDCle35G4UjjuS3HHWR9wT5HaXvXa69fWa8e0RGQa5uO+d5j9A+l9u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPlzZc0V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B39BC4CEE2;
-	Wed,  7 May 2025 19:44:52 +0000 (UTC)
+	s=arc-20240116; t=1746647451; c=relaxed/simple;
+	bh=3K/lkvfFCs/82QJBISbca7YT7L6y0PkB4hRjS4NLTPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D8NuvKJORrd5F/gwRlP2u43M3lSPms6O7bpiFT24/IImvd+5icDIkFTqGzrvqFh5qnA9y5e6AA1rcvqbY0yGMRCWrb+WkBEIdN1NEW6s/bak4bFE+WVkm7wWWPLYl/iyeRxAcOVTCmZJYRk15fGX2esGTh1j25VV44fmYKwGv5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJPP6b6J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 971BBC4CEE2;
+	Wed,  7 May 2025 19:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746647092;
-	bh=q4hIvtoNu1oOGcAKyK/6LoLwv0LjCdfMt4xNiihRoZs=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=qPlzZc0VbmcBh/IBRlviaOz38xt5NO496/SGC3ggUSWMOx+oBrVl2jObCeavNvfQ+
-	 R2Yi7Nlm9rfbJgoaXwyCKj2+ORCv6v0HaZJ0vqGuwN7Es/6uNpXxzd6A98Oqag6/4Q
-	 KLKfNStxTE+v7NgktYd/xEvLRGaIYYxg8sv8f65ld+ldjyPrDGSxRLJDlxz/jXV73e
-	 fgZWLjaXcVfUI2r95d5TaZJEvSNNaR5PzP6cwA0c9orH+RhqEOdelSyuxSVp3PCvp2
-	 O4B+hWoqwNALx3co7BWGW3jVCf/SnTxgH2PwTHEn19aVaECO8D2/8vMdJ6+gFGt4gf
-	 D5t4O/WiNTw+g==
-Message-ID: <8513c30f597f757a199e4f9a565b0bf5@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1746647450;
+	bh=3K/lkvfFCs/82QJBISbca7YT7L6y0PkB4hRjS4NLTPI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZJPP6b6JhvABdbIrF7lmXfQt6Tu3HuuqG9VFadfM25ZFeJ6NDzqcRd2p9FUpXPUb9
+	 7GRSVsG1qmDbuARLCppknxhRlqXccrhQ56Wx1h1DJvlUM5HqX+WEzAax2SrBpv5GpN
+	 YpCJEqrjlER1QWjNpm+o7pgtg8uFOFCTMbIznLITd112w5ANrF0o79VxW3Jx0WbYJl
+	 h9qY3JvfwUvCF9OnBk6WfabJ7uW/9/hY3silNDszSP0NBnzfds4ShjltISileRlCcQ
+	 BNJAV6RsEKICoX2UABWmze2KA3wVHC/jEEIMc0n1Q5JD0vCOBQVupSnVYr3vU1N4iw
+	 lEERR8qoRN9Pg==
+Date: Wed, 7 May 2025 20:50:40 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jonathan Santos <jonath4nns@gmail.com>
+Cc: 20250505163919.6d805db2@jic23-huawei.smtp.subspace.kernel.org,
+	Jonathan Santos <Jonathan.Santos@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, dlechner@baylibre.com
+Subject: Re: [PATCH v6 02/11] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+Message-ID: <20250507205040.3a1eec14@jic23-huawei>
+In-Reply-To: <aBpgFQ+/KBXdvyWx@JSANTO12-L01.ad.analog.com>
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+	<128de2793d6d5424ad152c394faf1d51f0d56e0b.1745605382.git.Jonathan.Santos@analog.com>
+	<20250505163919.6d805db2@jic23-huawei>
+	<aBpgFQ+/KBXdvyWx@JSANTO12-L01.ad.analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aBprHfQ7Afx1cxPe@apocalypse>
-References: <cover.1745347417.git.andrea.porta@suse.com> <e8a9c2cd6b4b2af8038048cda179ebbf70891ba7.1745347417.git.andrea.porta@suse.com> <aBprHfQ7Afx1cxPe@apocalypse>
-Subject: Re: [PATCH v9 -next 04/12] clk: rp1: Add support for clocks provided by RP1
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, Masahiro
-  Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-To: Andrea della Porta <andrea.porta@suse.com>
-Date: Wed, 07 May 2025 12:44:50 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Quoting Andrea della Porta (2025-05-06 13:03:41)
-> Hi Stephen,
->=20
-> On 20:53 Tue 22 Apr     , Andrea della Porta wrote:
-> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> > clock generators and PLLs that drives the sub-peripherals.
-> > Add the driver to support the clock providers.
->=20
-> Since subsequent patches in the set depends on this one and as the next
-> merge window is approaching, assuming there are no blockers can I kindly =
-ask
-> if you can merge it on your tree for the upcoming pull request?
->=20
-> This patch should apply cleanly to your clk-next branch except for some f=
-uzz
-> lines on MAINTAINERS. Please let me know if you want me to adjust it.
->=20
+On Tue, 6 May 2025 16:16:37 -0300
+Jonathan Santos <jonath4nns@gmail.com> wrote:
 
-I need to take the dt-binding header as well so it compiles. What's the
-plan there? Do you want me to provide a branch with the clk driver and
-binding header? Or do you want to send a PR to clk tree with the clk
-driver and the binding header and then base your DTS patches on the
-binding header and send that to the soc maintainers? I'm also happy to
-give a Reviewed-by tag if that works for you and then you can just take
-it through the soc tree.
+> On 05/05, Jonathan Cameron wrote:
+> > On Sun, 27 Apr 2025 21:12:16 -0300
+> > Jonathan Santos <Jonathan.Santos@analog.com> wrote:
+> >   
+> ...
+> > >  required:
+> > >    - compatible
+> > >    - reg
+> > > @@ -65,7 +95,6 @@ required:
+> > >    - vref-supply
+> > >    - spi-cpol
+> > >    - spi-cpha
+> > > -  - adi,sync-in-gpios  
+> > 
+> > Maybe worth requiring oneOf adi,sync-in-gpios or trigger-sources? 
+> >   
+> 
+> We cannot do that because we defined that self triggering is enabled
+> when trigger-sources is omitted (is this case adi,sync-in-gpios is not
+> present as well).
+Ah. Fair enough.  More complex but we can constrain to never having
+both adi,sync-in-gpios and trigger-sources at the same time.
+
+> 
+> > >  
+> > >  patternProperties:
+> > >    "^channel@([0-9]|1[0-5])$":
+> > > diff --git a/include/dt-bindings/iio/adc/adi,ad7768-1.h b/include/dt-bindings/iio/adc/adi,ad7768-1.h
+> > > new file mode 100644
+> > > index 000000000000..34d92856a50b
+> > > --- /dev/null
+> > > +++ b/include/dt-bindings/iio/adc/adi,ad7768-1.h
+> > > @@ -0,0 +1,10 @@
+> > > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> > > +
+> > > +#ifndef _DT_BINDINGS_ADI_AD7768_1_H
+> > > +#define _DT_BINDINGS_ADI_AD7768_1_H
+> > > +
+> > > +#define AD7768_TRIGGER_SOURCE_SYNC_OUT  0
+> > > +#define AD7768_TRIGGER_SOURCE_GPIO3     1
+> > > +#define AD7768_TRIGGER_SOURCE_DRDY      2
+> > > +
+> > > +#endif /* _DT_BINDINGS_ADI_AD7768_1_H */  
+> >   
+
 
