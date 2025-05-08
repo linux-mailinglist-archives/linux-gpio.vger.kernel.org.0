@@ -1,111 +1,148 @@
-Return-Path: <linux-gpio+bounces-19781-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19782-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C81EBAAFDC4
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 16:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 914B0AAFEC7
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 17:15:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09D774C76CE
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 14:50:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F4008164FA7
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 15:14:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2354227816E;
-	Thu,  8 May 2025 14:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FtBK+lkM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7540D278E71;
+	Thu,  8 May 2025 15:08:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29509278150;
-	Thu,  8 May 2025 14:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C1E13635C
+	for <linux-gpio@vger.kernel.org>; Thu,  8 May 2025 15:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715850; cv=none; b=h1ZrNfgj+vOdFmf64ADpO+OReZ7ltN+tU4CWsAegSXU5SaBOF/k56X4n07bpx/9NDHbN0by9UNEeHyr5qw4kQNxcb0jtB8nCfDJjF8aLH/efb+jYU4IsfjLxZ2LeAjh0xoBk8Qdiy/b/ETU0p9tZxup18IxDQ2nkXLpFSwVC53k=
+	t=1746716937; cv=none; b=GHRna0CifBn9F6/+fklT9zcx7OShLcvAAbruwAwjf1rSQ9upTN25j2UHgQhdQIVGxLG6rcT9k7siSnvem791ASuUCJ7hqyy68kJpDhDR0PYzHaVlmEPyfTkILsFQGzqlqSgewoJWQyF28teBHyyOlFhwnCxCVxNn1YUVhu8ttXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715850; c=relaxed/simple;
-	bh=jH5SGcX3ZdcFxEoulSCBV2Phdw9LLtV84mxbdRu7o88=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=n6Cw3slLF1NG0TQvx/QZvO5GOP+xh7IZX/A2LLhNrnhgTbrkihZ8P5g59jdAUSyiH7t+M9Q27sxa6apLb9m6YKXSvncBxiq3PHllX6GI6W0OdsmTohV/xwVysuTgx0B0a0vxCXSyYBtpCLNMDZe9U15njVAkTekZN1YXiMx1HpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FtBK+lkM; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746715849; x=1778251849;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=jH5SGcX3ZdcFxEoulSCBV2Phdw9LLtV84mxbdRu7o88=;
-  b=FtBK+lkMplz6Ioy4bKWL1I2nFofraf4HJ655+YOqyxe02auO9yliD/OX
-   exJo2WeLkTMjHOxA8OGn6HiffTXvTRSo6Ne8Dni/HaoKjvP71zf5Kg0jn
-   MSqecy3SnZAgfe/6ZFjqNTF5t5rYvolzD2BlSjQNnw0iRhSBvi0Sflnem
-   wW3+PXQsBffez0v72+RriaifS+U+SdvaIOU3PijxjsuR26f0lJGWXVO2z
-   Xhbm2iquE9pMhee1kS+5l5/FkMe2zJ/dAP6r1HFXrhllANAwWR1K+E4wX
-   Pc69N8JB1golCYTzz+NkMb2G/tGcW/ihDjWepUPn2tsQBewZA7/jYAwJe
-   Q==;
-X-CSE-ConnectionGUID: wSrA1B0hTBaRONDTTdTUiQ==
-X-CSE-MsgGUID: 31rN+qmoQbakQJuCz2B3fQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48372324"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="48372324"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:50:47 -0700
-X-CSE-ConnectionGUID: axgp00/iTnewpBziKXtiTg==
-X-CSE-MsgGUID: pZ4zCB+EQimd1ypaXJ/xog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="167265552"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.196])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:50:43 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
- wim@linux-watchdog.org, linux@roeck-us.net, 
- Yen-Chi Huang <jesse.huang@portwell.com.tw>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- jay.chen@canonical.com
-In-Reply-To: <a04be962-b207-4085-af5b-523f59bffcbc@portwell.com.tw>
-References: <a04be962-b207-4085-af5b-523f59bffcbc@portwell.com.tw>
-Subject: Re: [PATCH v6] platform/x86: portwell-ec: Add GPIO and WDT driver
- for Portwell EC
-Message-Id: <174671583458.18151.3490608010947983443.b4-ty@linux.intel.com>
-Date: Thu, 08 May 2025 17:50:34 +0300
+	s=arc-20240116; t=1746716937; c=relaxed/simple;
+	bh=EUta3aTRjT21bXtQrcK4rhz7dH2rAHVXhefracRyNDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sMv1FFWamVfRMN8rwO5BOMaWBzKAkSWnqhtJUY0I/Fu6mZYV1hhc5Gx01mfoXZiKajFXG7jXtVTXtKS/iUzBbUWqGFDS0sH8GymCEnS6zvDcV6ljCz3pTCVWOZGca9XUHbHk8LDg+pPrESkEoV4COMe/arMKsiAmmk0FGY9TO3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uD2rJ-0006ko-49; Thu, 08 May 2025 17:08:25 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uD2rG-001kE3-0o;
+	Thu, 08 May 2025 17:08:22 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id CA5A940BC73;
+	Thu, 08 May 2025 15:08:21 +0000 (UTC)
+Date: Thu, 8 May 2025 17:08:15 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
+Message-ID: <20250508-prudent-festive-puffin-83f666-mkl@pengutronix.de>
+References: <20250423094058.1656204-1-tmyu0@nuvoton.com>
+ <20250423094058.1656204-5-tmyu0@nuvoton.com>
+ <20250503-fulmar-of-sexy-upgrade-1184a7-mkl@pengutronix.de>
+ <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-
-On Tue, 06 May 2025 18:23:14 +0800, Yen-Chi Huang wrote:
-
-> Adds a driver for the ITE Embedded Controller (EC) on Portwell boards.
-> It integrates with the Linux GPIO and watchdog subsystems to provide:
-> 
-> - Control/monitoring of up to 8 EC GPIO pins.
-> - Hardware watchdog timer with 1-255 second timeouts.
-> 
-> The driver communicates with the EC via I/O port 0xe300 and identifies
-> the hardware by the "PWG" firmware signature. This enables enhanced
-> system management for Portwell embedded/industrial platforms.
-> 
-> [...]
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fkxqes6nz57lm4hv"
+Content-Disposition: inline
+In-Reply-To: <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+--fkxqes6nz57lm4hv
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
+MIME-Version: 1.0
 
-The list of commits applied:
-[1/1] platform/x86: portwell-ec: Add GPIO and WDT driver for Portwell EC
-      commit: 83579675331059689e2869bf752ca9e17fadbd82
+On 08.05.2025 11:26:09, Ming Yu wrote:
+> > > This driver supports Socket CANFD functionality for NCT6694 MFD
+> > > device based on USB interface.
+> > >
+> > > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+> >
+> > The destroy functions nct6694_canfd_close() and nct6694_canfd_remove()
+> > are not the exact inverse of their init functions. Se comments inline.
+> >
+> > Please fix and add:
+> >
+> > Reviewed-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> >
+> > Feel free to mainline this patch as part of the series outside of the
+> > linux-can-next tree. Better ask the netdev maintainers for their OK, to=
+o.
+> >
+> > What about transceiver delay compensation for higher CAN-FD bitrates?
+> > How does you device handle these?
+> >
+>=20
+> In the CAN CMD0's DBTP field, bit 23 is the TDC flag, I will add
+> support for enabling tdc, and firmware will automatically configure
+> tdco. Do you think this approach is appropriate?
 
---
- i.
+Can you configure the TDC manually via USB?
 
+If the firmware does automatic TDCO configuration, does it take care of
+not enabling TCDO if the Data-BRP is > 2?
+
+BTW: What's the CAN clock of the device? I want to add it to the
+can-utils' bitrate calculation tool.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--fkxqes6nz57lm4hv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgcyNwACgkQDHRl3/mQ
+kZzE7Af9FGhvmDVRrnQ/F4bSbWoG2NTq/f6c3fZSGEWA89N5tefMfjZvh7dlyYji
+VaHiukxhQV4tR1h1zXxI/eZ9VQA3NyE5dv4XDcTtPDQILQ03+/sEQOOCSoI8Nb+d
+1WJ6Wvj7apYZa6Qvl+s9K5JVrgaRiQOBFXeKIQYAqTaR0DpQ8nB0gYdClnRowTeB
+gTYVRD/j3fNoE6Cm2DTMs/rzDxp57S/RTZTWuqpbo6i39xQZnv4c6IX6kRHS51Lg
+pQQNi1JctlAO52n2YZnYbBVa3P6XM3f/qLDmL7PYzYFo4v5O19avY0wiuanBk+hK
+wllO7zAOx6+Zxj0ABxJ9edXuP0H61g==
+=EkV4
+-----END PGP SIGNATURE-----
+
+--fkxqes6nz57lm4hv--
 
