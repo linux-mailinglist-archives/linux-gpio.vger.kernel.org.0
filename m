@@ -1,203 +1,192 @@
-Return-Path: <linux-gpio+bounces-19795-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19796-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C555AB010D
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 19:06:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BF5F5AB01E7
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 19:57:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9310A18856A5
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 17:06:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3C961BA6615
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 17:57:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF98128642F;
-	Thu,  8 May 2025 17:06:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E49DF286D44;
+	Thu,  8 May 2025 17:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="mHpPycDp"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CmGfi86i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C200284B26;
-	Thu,  8 May 2025 17:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75812139D8
+	for <linux-gpio@vger.kernel.org>; Thu,  8 May 2025 17:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746723974; cv=none; b=jO0G8yboPypzYTRsCzZr4pwU0pJ97OljcR+k1Zc2iOmZjTO8FmMjfumGyHyD9z0f60QgDuBE3jnfhlQlsbdxrYg6XIwnBvBWUn0mOFK55wvUsnFneM7aRe5q4Oi7hdnxrV+FwLRlcCJ7FA/xhZhquPSqIbCxHRUzO3rZjTZ8Ixk=
+	t=1746727023; cv=none; b=TKZ+lbDDFiRsOLDvX8bjoSvasqeGR3xYEajqem/ha/G708YfNfMC1cTVT0Jxm1iUP3LRaRPVqZO6hkfj0XCYx7yAsScqn3HFoATxcs5ERI/g0M0alCf25JnzvkaN7bmU2M+5D/dV2TXuxXwBPVCmVPjuZeIXSHia222VMCclQbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746723974; c=relaxed/simple;
-	bh=5oB5XuQUAHY+iWIu7xO2YXp0L1tqVZjkQtTZeLmmlko=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SmPIkFLvBQBJVmjtdt2JwtlrQxNCTIoeszWn6rSrp8r2lb4049zRj+4jLEnE1gYPFDHWGqSGI6wnfDSBGfTO3lk1EcjRNrwPKCNAosh6IDrVWzQdN57beK1t3ojQFTjblrDYnCfgqbMs3NUbv4ckQw2kUmvzFfY14PrQpCmcTIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=mHpPycDp; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DMfTV013536;
-	Thu, 8 May 2025 13:05:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=Vr42C
-	2tcFtKYH/kR/TkyurniNImfA3S11wrHsfaGJBo=; b=mHpPycDp3WCq0j73JnV5V
-	bDf1ZvaBYfSJDo29Q/EDaB2dx5e9uONiYE7CfnXsMpGHq/KFoLypErBo4lFRd1V0
-	nIHsBTz6RFTbajndr5oUrDzxnObBeBcHLbx6C7TkNFUh6L37QgnZKj135fee1niQ
-	07rIlvA0uEOUYo7f+2PR4loUxHoc+TVjQzkr80iyQS/n3cmr9Vm6YIROS8Kg2W4L
-	7EeMk94sZ6q+dEosC4UzWDFukOm3uLus3wsUbFg5m+qmZIFJDKGKkjR6TCj36xpW
-	jK9aUBGgQFp21vrR8Jc2SrB3Z0ACvh+Ke0rv7YDoo65ysggtewc0oyRCrc11gJ/+
-	w==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46gpct32qc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 13:05:57 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 548H5ujR052999
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 May 2025 13:05:56 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 8 May 2025
- 13:05:55 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 8 May 2025 13:05:55 -0400
-Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 548H5drA015955;
-	Thu, 8 May 2025 13:05:42 -0400
-From: Jonathan Santos <Jonathan.Santos@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
-        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
-        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
-Subject: [PATCH v7 12/12] iio: adc: ad7768-1: add low pass -3dB cutoff attribute
-Date: Thu, 8 May 2025 14:05:39 -0300
-Message-ID: <4a8b85097213311851a710df7c036c124c7862ed.1746662899.git.Jonathan.Santos@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1746662899.git.Jonathan.Santos@analog.com>
-References: <cover.1746662899.git.Jonathan.Santos@analog.com>
+	s=arc-20240116; t=1746727023; c=relaxed/simple;
+	bh=vGgzOqvmtXTNDUkxEJrbRUfaL/N3ftCRZlY+IGCRt90=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PeZnMyf9w4EeG0kIpPZ8/tmub0Cv3ZZQzqHx+xvpjZKtykUJInEU4A89yhK7s0U/qSrkpZDiz549mDlGAxCLqlegGwiU2y1NF+0vUT8hUrd4Z4HZbsBfqYtJPj1ufh6ONbMg22d/A1n4NTC4z+p+6f256gdWDNTEbtsKXyXre/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CmGfi86i; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-606440d92eeso649324eaf.2
+        for <linux-gpio@vger.kernel.org>; Thu, 08 May 2025 10:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746727021; x=1747331821; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E/em9Rm7s3BQodglQQHbeSlKuDWm4dZvuXf5QXXEEcY=;
+        b=CmGfi86iLWxrgyVqghNJevQnbmgJwkiw+NEBzf9iwQ+rm6D8lDItcpj5gyNbGwQ/sQ
+         MJWMlNzj4l/LY3Jw9PAzXKQVeQT2iyCIH60DDYj3Urn5mt+zzixgOu/2poJCSseFjP0Z
+         VYHen/BReCvIP7xDCiQqaJzMLvCWUrBI1HDVUj6iPqRXa8n3QIC+GeuqrApBVKxxotHh
+         g+9hZJRfcQOpaFhCBCHruOt8cqmMesVrGsTwawA5Zhyh77JCVYveVlEmqUIPR1ayFRM2
+         2WiignIGsUJXqs+Fy/9clmsSwmFf2cjxgENxhxIT1pi/DpSVwFQMvnyXy8IPCwdTuHrJ
+         3CKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746727021; x=1747331821;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E/em9Rm7s3BQodglQQHbeSlKuDWm4dZvuXf5QXXEEcY=;
+        b=J6t9dv4XfLRVTLbJ54dC+JjoSELWxicmTX4eA0W6cX1KEgjikKrCcsn6J9GxRopUSB
+         BfbCOuEBuLHAqhb0r8MJkmIGZ4Lw32zcJnhylc+4fTgr/UxmJfWl4ykAd6VQ567ZLcT7
+         R68neL3PIaQ64NXVwHlu2gx76wHqVV0EjidK+sPKKnE4Ax6gTg0BjdG4c2ea0gOpM4Y4
+         egENAAcucYeNIADvtXhj2/qjMvkK90agd3HY/h/QPZrINQYM040bTVB3oMMo0QZA1p2d
+         y6ZyQ82pm5K1z35toAG3RwDdqu2sgkLtn1QbiD04Mi7ADyXMNcBGZVvrMZ+tkG6m7/8U
+         tI5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVAfhcEbL0PkDEfbhmWkXWLEZSitjj5VahgZMs6dOi+x7bKWcuBu45UQTfpmUmgCtFAorHMHkJptA7C@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8JwPNXEwk01fFKg5JUulRRawp1VSX4HaUGidbYZB9M5WZVcO+
+	pBcIeKJMucA0jT+e1rJOpKEcC4WR7RpqFSwX9rmoE2mk5e9CCnnGKuOEu2YuKIE=
+X-Gm-Gg: ASbGncsR+8CxKOvQ+/KFkWatA8fq+KDNBdyM0Vz3m/Mu5f2PxVoZFEJhjrT43ndILpm
+	6ufH7Aqr5af7YhXbUaSfoekHRdSvbKcqEwAMVYMZfYx5qQHoBlN6fpRXViLq8k8TmKEpTR4W9cz
+	nkUZqc394J2PEAXyC53RB6f/cN9SO/SHqqUrnMjzn5nY6xTKxnmo4g5kwoMQi3aGU+N7JeytsVW
+	anELhlgV6SX0KXFxlDoTt20GsazcIKeMeihyVoVf4QjHjodW+na0LJLnH/JXtkCPpBr/fFusHbo
+	3pJDzJgRDZFrYmuJ0n4/9vrEqkmAQ5C/aXYlTr5oLFE8z8ck1AhHA41CPwERwE06Gaipc/6aD7Z
+	lpmxmKlZmJ0pi9wte/w==
+X-Google-Smtp-Source: AGHT+IHJwGAFlFty5s3LWKljU2VuT/aTgMb0iNLaZ1mqX6ViwEULZHmp7hgs+wI4bnWsmWOPe9FWlA==
+X-Received: by 2002:a05:6820:4b0d:b0:606:8986:55a9 with SMTP id 006d021491bc7-6084b65daa5mr237000eaf.5.1746727020707;
+        Thu, 08 May 2025 10:57:00 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6083fe3c829sm81452eaf.15.2025.05.08.10.56.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 10:57:00 -0700 (PDT)
+Message-ID: <4b6a45d5-a6d8-4334-a405-df1cf4c2fcac@baylibre.com>
+Date: Thu, 8 May 2025 12:56:58 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=J/eq7BnS c=1 sm=1 tr=0 ts=681ce475 cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=ZkoTrUv0hqWFqrPu6skA:9
- a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-GUID: lCYsiY6ywWlXGcoOtBfEO-AjC8Mk7FP8
-X-Proofpoint-ORIG-GUID: lCYsiY6ywWlXGcoOtBfEO-AjC8Mk7FP8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0OSBTYWx0ZWRfX0QsmtxVLUXOQ
- wV1O9049CiB+oZqL86wZUfnYjSeyHmSKEWsq0cUqtIdX6guPNwKXbRmXDBOPLOelLSrF5wdty0S
- 97wVtvrhC0tU2fmCs+KqY9+67oQTCiLVwP2UdThK8hQ+TWPdaMPtlAiHDSVqOKMh2J87nPNyVtG
- ehbIfFHNRbVBSpGPGKuifaZr1ikV66F+oeXYdDurOROpeERv0qzOH/x2G2GbIHSBIio/C0Q2zWV
- ukWurbS9DL+YKKV9t4gY3NhdCst/NkblMgKhVsoT2b9WsuG7hVntkIodwMfGGerP53n7cPJ96B1
- PI7sN4oBgW+V3M2XD18GtEOaKgI1y1A1p1llDegaKWJ0zLvQNriFrgZFyKryqkuDBHrIJrXqSzy
- pp/iR0FFeXCzYM6mxO0xbVRa82jR4P6Aul4w1g1+xBgLqvGR+sF7BaXbJ0E5MCRDeEiaq9+A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 malwarescore=0
- spamscore=0 mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080149
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 02/12] dt-bindings: trigger-source: add generic GPIO
+ trigger source
+To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Cc: andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+ marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, jonath4nns@gmail.com
+References: <cover.1746662899.git.Jonathan.Santos@analog.com>
+ <f62bcaabde172e0b2880f7d05dce97d684cc04ca.1746662899.git.Jonathan.Santos@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <f62bcaabde172e0b2880f7d05dce97d684cc04ca.1746662899.git.Jonathan.Santos@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Ad7768-1 has a different -3db frequency multiplier depending on
-the filter type configured. The cutoff frequency also varies according
-to the current ODR.
+On 5/8/25 12:03 PM, Jonathan Santos wrote:
+> Inspired by pwm-trigger, create a new binding for using a GPIO
+> line as a trigger source.
+> 
+> Link: https://lore.kernel.org/linux-iio/20250207-dlech-mainline-spi-engine-offload-2-v8-3-e48a489be48c@baylibre.com/
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
+> v7 Changes:
+> * File added to MAINTAINERS and Made trigger source generic to include both pwm and gpio.
+> 
+> v6 Changes:
+> * Changed description.
+> * Fixed typos and replaced GPIO pin with GPIO line.
+> * Added link reference for pwm-trigger.
+> 
+> v5 Changes:
+> * New patch in v5.
+> ---
+>  .../bindings/trigger-source/gpio-trigger.yaml | 40 +++++++++++++++++++
+>  MAINTAINERS                                   |  3 +-
+>  2 files changed, 42 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml b/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+> new file mode 100644
+> index 000000000000..1331d153ee82
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/trigger-source/gpio-trigger.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic trigger source using GPIO
+> +
+> +description: A GPIO used as a trigger source.
+> +
+> +maintainers:
+> +  - Jonathan Santos <Jonathan.Santos@analog.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: gpio-trigger
+> +
+> +  '#trigger-source-cells':
+> +    const: 0
+> +
+> +  gpios:
+> +    maxItems: 1
+> +    description: GPIO to be used as a trigger source.
+> +
+> +required:
+> +  - compatible
+> +  - '#trigger-source-cells'
+> +  - gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    trigger {
+> +        compatible = "gpio-trigger";
+> +        #trigger-source-cells = <0>;
+> +        gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 01079a189c93..9b2e9a9dd8bc 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -24569,9 +24569,10 @@ W:	https://github.com/srcres258/linux-doc
+>  T:	git git://github.com/srcres258/linux-doc.git doc-zh-tw
+>  F:	Documentation/translations/zh_TW/
+>  
+> -TRIGGER SOURCE - PWM
+> +TRIGGER SOURCE
+>  M:	David Lechner <dlechner@baylibre.com>
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+>  F:	Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
+>  
+>  TRUSTED SECURITY MODULE (TSM) ATTESTATION REPORTS
 
-Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-the user which bandwidth is being allowed depending on the filter
-configurations.
-
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Reviewed-by: David Lechner <dlechner@baylibre.com>
-Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
----
-v7 Changes:
-* None
-
-v6 Changes:
-* None
-
-v5 Changes:
-* None
-
-v4 Changes:
-* None
-
-v3 Changes:
-* None
-
-v2 Changes:
-* New patch in v2.
----
- drivers/iio/adc/ad7768-1.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-index 28998cb02761..335612bce3bd 100644
---- a/drivers/iio/adc/ad7768-1.c
-+++ b/drivers/iio/adc/ad7768-1.c
-@@ -152,6 +152,17 @@ enum ad7768_scan_type {
- 	AD7768_SCAN_TYPE_HIGH_SPEED,
- };
- 
-+/*
-+ * -3dB cutoff frequency multipliers (relative to ODR) for
-+ * each filter type. Values are multiplied by 1000.
-+ */
-+static const int ad7768_filter_3db_odr_multiplier[] = {
-+	[AD7768_FILTER_SINC5] = 204,
-+	[AD7768_FILTER_SINC3] = 262,
-+	[AD7768_FILTER_SINC3_REJ60] = 262,
-+	[AD7768_FILTER_WIDEBAND] = 433,
-+};
-+
- static const int ad7768_mclk_div_rates[] = {
- 	16, 8, 4, 2,
- };
-@@ -757,7 +768,8 @@ static const struct iio_chan_spec ad7768_channels[] = {
- 		.type = IIO_VOLTAGE,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
--					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
-+					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
- 		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
- 		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-@@ -777,7 +789,7 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- {
- 	struct ad7768_state *st = iio_priv(indio_dev);
- 	const struct iio_scan_type *scan_type;
--	int scale_uv, ret;
-+	int scale_uv, ret, temp;
- 
- 	scan_type = iio_get_current_scan_type(indio_dev, chan);
- 	if (IS_ERR(scan_type))
-@@ -815,6 +827,12 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
- 		*val = st->oversampling_ratio;
- 
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-+		*val = DIV_ROUND_CLOSEST(temp, 1000);
-+
- 		return IIO_VAL_INT;
- 	}
- 
--- 
-2.34.1
+Acked-by: David Lechner <dlechner@baylibre.com>
 
 
