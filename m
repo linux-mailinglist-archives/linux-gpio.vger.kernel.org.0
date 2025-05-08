@@ -1,148 +1,227 @@
-Return-Path: <linux-gpio+bounces-19782-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19783-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 914B0AAFEC7
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 17:15:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BEA1AB00D9
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 19:03:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F4008164FA7
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 15:14:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8798C3BEE24
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 17:03:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7540D278E71;
-	Thu,  8 May 2025 15:08:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C286B27EC97;
+	Thu,  8 May 2025 17:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="EbNx2WUd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C1E13635C
-	for <linux-gpio@vger.kernel.org>; Thu,  8 May 2025 15:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0897221294;
+	Thu,  8 May 2025 17:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716937; cv=none; b=GHRna0CifBn9F6/+fklT9zcx7OShLcvAAbruwAwjf1rSQ9upTN25j2UHgQhdQIVGxLG6rcT9k7siSnvem791ASuUCJ7hqyy68kJpDhDR0PYzHaVlmEPyfTkILsFQGzqlqSgewoJWQyF28teBHyyOlFhwnCxCVxNn1YUVhu8ttXQ=
+	t=1746723805; cv=none; b=NSC4GcKmdcxUr7QonWq9Ge6BQbm/w6tkh7fLwkultZEmE5piNaGXhDqqMdEd9wkQe+j2FeBo40bN9N0UwsGfMiNCx27suwOzqAPYTW9RWPMXAxtTwkNVTenXcNb2fok/KskdsDCoIe8dhtHlDkoB/+kGLWLJP8sFU7Eydqe6BOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716937; c=relaxed/simple;
-	bh=EUta3aTRjT21bXtQrcK4rhz7dH2rAHVXhefracRyNDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sMv1FFWamVfRMN8rwO5BOMaWBzKAkSWnqhtJUY0I/Fu6mZYV1hhc5Gx01mfoXZiKajFXG7jXtVTXtKS/iUzBbUWqGFDS0sH8GymCEnS6zvDcV6ljCz3pTCVWOZGca9XUHbHk8LDg+pPrESkEoV4COMe/arMKsiAmmk0FGY9TO3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uD2rJ-0006ko-49; Thu, 08 May 2025 17:08:25 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uD2rG-001kE3-0o;
-	Thu, 08 May 2025 17:08:22 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id CA5A940BC73;
-	Thu, 08 May 2025 15:08:21 +0000 (UTC)
-Date: Thu, 8 May 2025 17:08:15 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
-Message-ID: <20250508-prudent-festive-puffin-83f666-mkl@pengutronix.de>
-References: <20250423094058.1656204-1-tmyu0@nuvoton.com>
- <20250423094058.1656204-5-tmyu0@nuvoton.com>
- <20250503-fulmar-of-sexy-upgrade-1184a7-mkl@pengutronix.de>
- <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com>
+	s=arc-20240116; t=1746723805; c=relaxed/simple;
+	bh=gZCDkiJ4Rg95tBrcRO8NL7Eap/QE9Mn0zTYRwRZ5lAc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=USiXZRHykBMIVfayg9eA7IEIIfbNe4s4XEeak9CFu6g/uu5wLTcoZjVrfO0R8r0W4tfPY6VR3OOQv7752YUaxTqQi2R5JAhEo4J8cyo/CgrofjWLoHBcvtFGhEjjGJPI/8NHIWbqCr01j5Pshm3UqcgfKASZzSjfSB6tkQeO7m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=EbNx2WUd; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548FSX9V000696;
+	Thu, 8 May 2025 13:03:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=YeJkxcgCvWKrgpLFRX7pF+F2eqK
+	1Bsb7YEXmv/cAX0E=; b=EbNx2WUdleF+aoqLuR2i3YtjceMs/4q7k7O09PHRUfn
+	hJ8+6wdYhsykYKeHT+NEAPgQWEkFFarPx2cX2CCxZsPF16jsvOkOhg3RhQsB0vYb
+	845L/557vc7eQKIJTibeZSn2QRKutzZF4EBhoWJgeWp4TON9Aa1RyOP6EE5YMJNk
+	ixjZgZiHB1kUKucTA6opBfH4J7pQsI5dC2O93x3SLZ1Xf/GOzZS4vo5oMipkuPAm
+	17EiWc1WX2qfxQVZYRBrZQpX0N9aj673O57Vo1utljJYyv9EDf1Zvo9q7incd2oc
+	8PFfYKOCSR3p045YxyHRX02KK67uQ0m5TyURj0gRjfA==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 46gy9q8cye-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 13:03:10 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 548H39t9052577
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 May 2025 13:03:09 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 8 May 2025 13:03:09 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 8 May 2025 13:03:09 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 8 May 2025 13:03:09 -0400
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 548H2qSF015857;
+	Thu, 8 May 2025 13:02:55 -0400
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
+        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
+        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
+Subject: [PATCH v7 00/12] iio: adc: ad7768-1: Add features, improvements, and fixes
+Date: Thu, 8 May 2025 14:02:50 -0300
+Message-ID: <cover.1746662899.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fkxqes6nz57lm4hv"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: ulU4eOWoH9C5wOf0IJWx49L8JfibmLvd
+X-Authority-Analysis: v=2.4 cv=f/ZIBPyM c=1 sm=1 tr=0 ts=681ce3ce cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=wUxFP8jSl_fENa0tmKEA:9
+X-Proofpoint-ORIG-GUID: ulU4eOWoH9C5wOf0IJWx49L8JfibmLvd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0OSBTYWx0ZWRfXyag8l0tyIo+p
+ yEOjBkQII7fqsZC0FcPMDqd7qUZjYSfDpiMDXvqYe5TWTM7eiVlfEaFLmBRuBtPLWvw4yVi/zkr
+ QIAfWMZXUD2D3RZxkoKmDnUx1+wxfgi+MlJ1dtuHJGD1hyuCh1YmSLI4KqvgsAT5mJuG4Yk8+V7
+ okeVZofxSdBo4Kk6X7SDS44Hmpo62mDmmitq4WYPdkeAAbTFmcNMcjUcT93al2DGypBmJP2Qeg1
+ 8bOlwrQjwxOOZ+ufWjV0M1RxIcd3ouRUCTmed0rvfjX+RzdOMwi3O9Cxg4MRKT2N81UzgnFSowx
+ u+jp4dkqfsNY4dkKpzp69uk59Ko0/1GByQgTM8XJ/WzGUd8m0/pEWv63KY+z4avdwi96rlKbkKu
+ B0JIEQamovwEXCEwbcBue4De/MKl1/+uvmWKjktExy/m1zfjqCjXGnux/b1it2O+Z2xLBuz5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 malwarescore=0 adultscore=0 mlxscore=0 impostorscore=0
+ suspectscore=0 priorityscore=1501 phishscore=0 bulkscore=0 lowpriorityscore=0
+ spamscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080149
+
+This patch series introduces some new features, improvements,
+and fixes for the AD7768-1 ADC driver. 
+
+The goal is to support all key functionalities listed in the device
+datasheet, including filter mode selection, common mode voltage output
+configuration and GPIO support. Additionally, this includes fixes 
+for SPI communication and for IIO interface, and also code improvements
+to enhance maintainability and readability.
+
+---
+Changes in v7:
+* Added a new patch to reorganize driver headers.
+* Added the new files to MAINTAINERS.
+* Added dependencies to constrain the use of trigger-sources and
+  adi,sync-in-gpios properties at the same time.
+* Self triggering is enabled only when the trigger-sources property is
+  not defined. Added TODO to support other trigger sources when the subsystem
+  is available.
+* Refactor code to avoid forward declarations.
+* Mentioned that sampling frequency changes is not allowed in
+  buffered mode.
+* Addressed review comments, see individual pacthes.
+* Link to v6: https://lore.kernel.org/linux-iio/cover.1745605382.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v6:
+* Changed description and addressed other nits in the gpio-trigger patch.
+* Rewrote the #trigger-sources-cells description and removed mentions 
+  to offload engine.
+* Added adi,ad7768-1.h header with macros for the trigger source cells.
+* removed of_match_ptr() from regulator_desc.
+* Replaced deprecated .set callback with .set_rv in the gpio controller
+  patch.
+* Use `trigger-sources` as an alternative to `adi,sync-in-gpios`
+  (now optional), instead of replacing it.
+* Check trigger source by the compatible string (and the dev node for the
+  self triggering).
+* Addressed review comments, see individual pacthes.
+* Link to v5: https://lore.kernel.org/linux-iio/cover.1744325346.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v5:
+* Added gpio-trigger binding patch.
+* Include START pin and DRDY in the trigger-sources description.
+* increased trigger-source-cells to 1: this cell will define the trigger
+  source type.
+* Fixed the holes in the regmap ranges.
+* replace old iio_device_claim_direct_mode() for the new 
+  iio_device_claim/release_direct() functions.
+* Changed some commit messages.
+* Link to v4: https://lore.kernel.org/linux-iio/cover.1741268122.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v4:
+* Added missing `select REGMAP_SPI` and `select REGULATOR` to the device's Kconfig.
+* VCM output regulator property renamed.
+* Added direct mode conditional locks to regulator controller callbacks.
+* Renamed regulator controller.
+* Created helper function to precalculate the sampling frequency table and avoid
+  race conditions.
+* Link to v3: https://lore.kernel.org/linux-iio/cover.1739368121.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v3:
+* Fixed irregular or missing SoBs.
+* Moved MOSI idle state patch to the start of the patch, as the other fix.
+* fixed dt-binding errors.
+* Trigger-sources is handled in a different way, as an alternative to sync-in-gpio.
+  (this way we avoid breaking old applications).
+* VCM output is controlled by the regulator framework.
+* Added a second regmap for 24-bit register values.
+* Add new preparatory patch replacing the manual attribute declarations for
+  the read_avail from struct iio_info.
+* included sinc3+rej60 filter type.
+* Addressed review comments, see individual pacthes.
+* Link to v2: https://lore.kernel.org/linux-iio/cover.1737985435.git.Jonathan.Santos@analog.com/T/#u
+
+Changes in v2:
+* Removed synchronization over SPI property and replaced it for trigger-sources.
+* Added GPIO controller documentation.
+* VCM output control changed from an IIO attribute to a devicetree property (static value).
+* Converted driver to use regmap and dropped spi_read_reg and spi_write_reg pacthes.
+* replaced decimation_rate attribute for oversampling_ratio and dropped device specific documentation patch.
+* Added low pass -3dB cutoff attribute.
+* Addressed review comments, see individual pacthes.
+* Link to v1: https://lore.kernel.org/linux-iio/cover.1736201898.git.Jonathan.Santos@analog.com/T/#t
+
+Jonathan Santos (11):
+  iio: adc: ad7768-1: reorganize driver headers
+  dt-bindings: trigger-source: add generic GPIO trigger source
+  dt-bindings: iio: adc: ad7768-1: add trigger-sources property
+  dt-bindings: iio: adc: ad7768-1: Document GPIO controller
+  dt-bindings: iio: adc: ad7768-1: document regulator provider property
+  iio: adc: ad7768-1: add regulator to control VCM output
+  iio: adc: ad7768-1: add multiple scan types to support 16-bits mode
+  iio: adc: ad7768-1: add support for Synchronization over SPI
+  iio: adc: ad7768-1: replace manual attribute declaration
+  iio: adc: ad7768-1: add filter type and oversampling ratio attributes
+  iio: adc: ad7768-1: add low pass -3dB cutoff attribute
+
+Sergiu Cuciurean (1):
+  iio: adc: ad7768-1: Add GPIO controller support
+
+ .../bindings/iio/adc/adi,ad7768-1.yaml        |  68 +-
+ .../bindings/trigger-source/gpio-trigger.yaml |  40 +
+ MAINTAINERS                                   |   4 +-
+ drivers/iio/adc/Kconfig                       |   1 +
+ drivers/iio/adc/ad7768-1.c                    | 905 +++++++++++++++---
+ include/dt-bindings/iio/adc/adi,ad7768-1.h    |  10 +
+ 6 files changed, 918 insertions(+), 110 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+ create mode 100644 include/dt-bindings/iio/adc/adi,ad7768-1.h
 
 
---fkxqes6nz57lm4hv
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
-MIME-Version: 1.0
+base-commit: 9415c8b5b9b7ba927d98f80022a2890e8639e9e4
+prerequisite-patch-id: fbb33747cd0293bacd5b6d801d6cfc087449a28e
+-- 
+2.34.1
 
-On 08.05.2025 11:26:09, Ming Yu wrote:
-> > > This driver supports Socket CANFD functionality for NCT6694 MFD
-> > > device based on USB interface.
-> > >
-> > > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
-> >
-> > The destroy functions nct6694_canfd_close() and nct6694_canfd_remove()
-> > are not the exact inverse of their init functions. Se comments inline.
-> >
-> > Please fix and add:
-> >
-> > Reviewed-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> >
-> > Feel free to mainline this patch as part of the series outside of the
-> > linux-can-next tree. Better ask the netdev maintainers for their OK, to=
-o.
-> >
-> > What about transceiver delay compensation for higher CAN-FD bitrates?
-> > How does you device handle these?
-> >
->=20
-> In the CAN CMD0's DBTP field, bit 23 is the TDC flag, I will add
-> support for enabling tdc, and firmware will automatically configure
-> tdco. Do you think this approach is appropriate?
-
-Can you configure the TDC manually via USB?
-
-If the firmware does automatic TDCO configuration, does it take care of
-not enabling TCDO if the Data-BRP is > 2?
-
-BTW: What's the CAN clock of the device? I want to add it to the
-can-utils' bitrate calculation tool.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---fkxqes6nz57lm4hv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgcyNwACgkQDHRl3/mQ
-kZzE7Af9FGhvmDVRrnQ/F4bSbWoG2NTq/f6c3fZSGEWA89N5tefMfjZvh7dlyYji
-VaHiukxhQV4tR1h1zXxI/eZ9VQA3NyE5dv4XDcTtPDQILQ03+/sEQOOCSoI8Nb+d
-1WJ6Wvj7apYZa6Qvl+s9K5JVrgaRiQOBFXeKIQYAqTaR0DpQ8nB0gYdClnRowTeB
-gTYVRD/j3fNoE6Cm2DTMs/rzDxp57S/RTZTWuqpbo6i39xQZnv4c6IX6kRHS51Lg
-pQQNi1JctlAO52n2YZnYbBVa3P6XM3f/qLDmL7PYzYFo4v5O19avY0wiuanBk+hK
-wllO7zAOx6+Zxj0ABxJ9edXuP0H61g==
-=EkV4
------END PGP SIGNATURE-----
-
---fkxqes6nz57lm4hv--
 
