@@ -1,740 +1,401 @@
-Return-Path: <linux-gpio+bounces-19767-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19768-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A82F6AAF2DB
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 07:27:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BF7BAAF30D
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 07:43:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7FFA4E2D7C
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 05:27:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65C611C02689
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 05:43:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BF8F214222;
-	Thu,  8 May 2025 05:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 412A42153C5;
+	Thu,  8 May 2025 05:43:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOTnBg/U"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BZpYc3R1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB42F212B31
-	for <linux-gpio@vger.kernel.org>; Thu,  8 May 2025 05:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5D68472;
+	Thu,  8 May 2025 05:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746682026; cv=none; b=VYz/pKbqavM4wdnwxg/ajTnYoucW0sq4p76n6L8hUBnNTcYBnRDoJHerygtKjmcCuRgx34AejbsJEDk+h2i1QZ5xYVcgnyX9TKymn0bBdjlEQpPeng0WRjTYprLXHDyiph5hFxhUhzEcQH5dKJAfVaxlkW8xN43uOBpE39gXsRM=
+	t=1746682995; cv=none; b=cKl6dINV8LQw59EAXsZaYEGuAmikdaJq4ZhU7Ebpr4Y2eJagIFmFi41dl8FPMrzYFGDcyVR+bKSImMEAzck5u1/aqUT4nuqi2psZbOygJHK7bRXkFnCjii3qWtohEKJGLJ0xirDVgebQT+taoO3cKlAEZCN5Dn5TX7dy4XPVlqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746682026; c=relaxed/simple;
-	bh=fkBr5nLGC59gBBw4hK+m1YgEa81j0HqIz4Ot1J9Ef1w=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XATN5phR9kYdZaCnadDvudvHST31K3bZx9FqNtCTS9juk9QjLlziL/jSbqCuRD9rZUbP31eGS6DGTkopNNGlCWaL1HFyFCPxzr3E0y6O/Ps+a1cykFvWu5sjJ58My+96B3mDuFQuM+MMH9vLEsfL6GVpGoUb5h2KXgWvWyOSfhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOTnBg/U; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1746682995; c=relaxed/simple;
+	bh=bJnTVWWAoPsi/gOCsSmayqk7WS4HGxFcME0P4yAMNnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fcc8jVegTiqwSwHkYmyKUcGxoc8XYtsltS3K0tIBlcM24BEZrWU+MldrkjCMst4qJg7C4wG1ahGef0rFIuJROQH9UgNwD5g0eqMsNpKsFD7qhRoxEvKPCDlEjxICFDStJ7XQwuAM2rdxeCnzozsiKQUq5RUbHBcjNIqH0tgwQ+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BZpYc3R1; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746682025; x=1778218025;
-  h=date:from:to:cc:subject:message-id;
-  bh=fkBr5nLGC59gBBw4hK+m1YgEa81j0HqIz4Ot1J9Ef1w=;
-  b=aOTnBg/Ufxy7WNhPUJCtd87d85JnyBFkP15qNb+hfrUwHHLJbbE3Ai6R
-   g2Y1xdxfEFkwDe1VnRnnMOWsuAxUw3TqRx+Scu5CQNPfG/Yvgew1PR9wf
-   5FetrGtMDvs6kltCEgfKMQPhD1U3FEI4H25muHDXfumpGdXcOF5qc//yn
-   cazdw3chVbNtcTbR8OtCtIbVf7HKqjiojU2Irsuz4l84zCX8wIwvoUglB
-   xMF0qLRvJftpQ7ax85vrp3UCOH4LIZVKul8fCiUmiDYCdgQ8JuHIxd98F
-   TzUXpUjj74ZClhQdJf55hkYen/OlTCWjKP/FIpJbqSzhzi7V3f/KjRXXI
-   A==;
-X-CSE-ConnectionGUID: OQJtuFATRhij9/kvErKBcA==
-X-CSE-MsgGUID: cdSlog9BS/WhUEL5ideBOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48352965"
+  t=1746682993; x=1778218993;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bJnTVWWAoPsi/gOCsSmayqk7WS4HGxFcME0P4yAMNnk=;
+  b=BZpYc3R1sqll+ImXZ6yHGHvbDArb/w/Qurug2T7Pt+qEeZdEM2vKPaYS
+   m0TpjB40exo+LytWwVYQV34HbtBjnPihUcW4vYyPbdhhhfOrEN8IBIPY0
+   zm66OcB997NfUjAN0AIThmeMPE4BGwIfm8+dDtSVAQfr3FzW3Y8OVc8sM
+   ZTyry7s3T+isFfVqWe57tWNeNI8CLNCQyeTlWg/pPSHFjNPimF2rRxqlN
+   5P5uLvzA5nNoi5o3pdZsGKxn7kJn5cYstbbHcTMBp2ti8Oys/fQd1xiv4
+   C9z+eOFyX6yFHuGGH5j3bX44Bt+Vb8h4EysdpvvYMwhxyBGlKDCXhqCVq
+   Q==;
+X-CSE-ConnectionGUID: LpZ76HDBQ1e1PIbiwHShQg==
+X-CSE-MsgGUID: J9j+G0dZSpS3rTUSyrplsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="73829759"
 X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="48352965"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 22:27:04 -0700
-X-CSE-ConnectionGUID: zfAuHAKQRsq6SQuei8Tmtw==
-X-CSE-MsgGUID: HP5wHyhIT1yoe6oevGyvtg==
+   d="scan'208";a="73829759"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 22:43:12 -0700
+X-CSE-ConnectionGUID: Wy1ixSdURoa0eiLmwwRbfA==
+X-CSE-MsgGUID: XdNwMjLTQf++QnlSFVtUhQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="135884455"
+   d="scan'208";a="137177988"
 Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 07 May 2025 22:27:03 -0700
+  by fmviesa009.fm.intel.com with ESMTP; 07 May 2025 22:43:06 -0700
 Received: from kbuild by 1992f890471c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uCtme-000AMF-0j;
-	Thu, 08 May 2025 05:27:00 +0000
-Date: Thu, 08 May 2025 13:26:00 +0800
+	id 1uCu2D-000AR5-0z;
+	Thu, 08 May 2025 05:43:05 +0000
+Date: Thu, 8 May 2025 13:42:08 +0800
 From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/devm-is-action-added] BUILD SUCCESS
- e383bb8f958444620d96386811aacf6a49757996
-Message-ID: <202505081354.LE1RZ8PS-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+To: luyulin <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kees@kernel.org,
+	gustavoars@kernel.org, brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, zhengyu@eswincomputing.com,
+	ningyu@eswincomputing.com, huangyifeng@eswincomputing.com,
+	linmin@eswincomputing.com, fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com, luyulin <luyulin@eswincomputing.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: [PATCH 2/2] pinctrl: eswin: Add eic7700 pinctrl driver
+Message-ID: <202505081214.tUfDpIv3-lkp@intel.com>
+References: <20250506091241.941-1-luyulin@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506091241.941-1-luyulin@eswincomputing.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/devm-is-action-added
-branch HEAD: e383bb8f958444620d96386811aacf6a49757996  devres: Add devm_is_action_added() helper
+Hi luyulin,
 
-elapsed time: 13759m
+kernel test robot noticed the following build errors:
 
-configs tested: 647
-configs skipped: 28
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next robh/for-next linus/master v6.15-rc5 next-20250507]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/intel-lab-lkp/linux/commits/luyulin/pinctrl-eswin-Add-eic7700-pinctrl-driver/20250506-181212
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20250506091241.941-1-luyulin%40eswincomputing.com
+patch subject: [PATCH 2/2] pinctrl: eswin: Add eic7700 pinctrl driver
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250508/202505081214.tUfDpIv3-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505081214.tUfDpIv3-lkp@intel.com/reproduce)
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-19
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-19
-arc                              allyesconfig    gcc-14.2.0
-arc                      axs103_smp_defconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                     haps_hs_smp_defconfig    gcc-14.2.0
-arc                 nsimosci_hs_smp_defconfig    clang-21
-arc                   randconfig-001-20250429    gcc-13.3.0
-arc                   randconfig-001-20250429    gcc-14.2.0
-arc                   randconfig-001-20250501    clang-21
-arc                   randconfig-001-20250502    gcc-8.5.0
-arc                   randconfig-002-20250429    gcc-14.2.0
-arc                   randconfig-002-20250501    clang-21
-arc                   randconfig-002-20250502    gcc-8.5.0
-arm                              allmodconfig    clang-19
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-19
-arm                              allyesconfig    gcc-14.2.0
-arm                         assabet_defconfig    gcc-14.2.0
-arm                        clps711x_defconfig    gcc-14.2.0
-arm                          collie_defconfig    gcc-14.2.0
-arm                     davinci_all_defconfig    clang-21
-arm                                 defconfig    gcc-14.2.0
-arm                            dove_defconfig    gcc-14.2.0
-arm                          exynos_defconfig    gcc-14.2.0
-arm                            hisi_defconfig    gcc-14.2.0
-arm                       imx_v4_v5_defconfig    gcc-14.2.0
-arm                       imx_v6_v7_defconfig    gcc-14.2.0
-arm                      integrator_defconfig    clang-21
-arm                      integrator_defconfig    gcc-14.2.0
-arm                          ixp4xx_defconfig    gcc-14.2.0
-arm                        keystone_defconfig    gcc-14.2.0
-arm                   milbeaut_m10v_defconfig    clang-16
-arm                          moxart_defconfig    clang-21
-arm                        multi_v5_defconfig    gcc-14.2.0
-arm                       netwinder_defconfig    gcc-14.2.0
-arm                           omap1_defconfig    gcc-14.2.0
-arm                          pxa168_defconfig    gcc-14.2.0
-arm                          pxa910_defconfig    clang-21
-arm                            qcom_defconfig    clang-21
-arm                   randconfig-001-20250429    gcc-14.2.0
-arm                   randconfig-001-20250429    gcc-7.5.0
-arm                   randconfig-001-20250501    clang-21
-arm                   randconfig-001-20250502    gcc-8.5.0
-arm                   randconfig-002-20250429    clang-20
-arm                   randconfig-002-20250429    gcc-14.2.0
-arm                   randconfig-002-20250501    clang-21
-arm                   randconfig-002-20250502    gcc-8.5.0
-arm                   randconfig-003-20250429    gcc-10.5.0
-arm                   randconfig-003-20250429    gcc-14.2.0
-arm                   randconfig-003-20250501    clang-21
-arm                   randconfig-003-20250502    gcc-8.5.0
-arm                   randconfig-004-20250429    clang-21
-arm                   randconfig-004-20250429    gcc-14.2.0
-arm                   randconfig-004-20250501    clang-21
-arm                   randconfig-004-20250502    gcc-8.5.0
-arm                         s5pv210_defconfig    clang-21
-arm                           sama5_defconfig    gcc-14.2.0
-arm                          sp7021_defconfig    gcc-14.2.0
-arm                        spear6xx_defconfig    gcc-14.2.0
-arm                           spitz_defconfig    gcc-14.2.0
-arm                           tegra_defconfig    gcc-14.2.0
-arm                         wpcm450_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                            allyesconfig    clang-21
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250429    gcc-14.2.0
-arm64                 randconfig-001-20250429    gcc-7.5.0
-arm64                 randconfig-001-20250501    clang-21
-arm64                 randconfig-001-20250502    gcc-8.5.0
-arm64                 randconfig-002-20250429    clang-21
-arm64                 randconfig-002-20250429    gcc-14.2.0
-arm64                 randconfig-002-20250501    clang-21
-arm64                 randconfig-002-20250502    gcc-8.5.0
-arm64                 randconfig-003-20250429    gcc-14.2.0
-arm64                 randconfig-003-20250429    gcc-9.5.0
-arm64                 randconfig-003-20250501    clang-21
-arm64                 randconfig-003-20250502    gcc-8.5.0
-arm64                 randconfig-004-20250429    gcc-14.2.0
-arm64                 randconfig-004-20250429    gcc-9.5.0
-arm64                 randconfig-004-20250501    clang-21
-arm64                 randconfig-004-20250502    gcc-8.5.0
-csky                             alldefconfig    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250429    clang-21
-csky                  randconfig-001-20250429    gcc-14.2.0
-csky                  randconfig-001-20250501    gcc-7.5.0
-csky                  randconfig-001-20250501    gcc-8.5.0
-csky                  randconfig-001-20250502    gcc-8.5.0
-csky                  randconfig-001-20250503    gcc-8.5.0
-csky                  randconfig-002-20250429    clang-21
-csky                  randconfig-002-20250429    gcc-14.2.0
-csky                  randconfig-002-20250501    gcc-7.5.0
-csky                  randconfig-002-20250501    gcc-8.5.0
-csky                  randconfig-002-20250502    gcc-8.5.0
-csky                  randconfig-002-20250503    gcc-8.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-21
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    gcc-14.2.0
-hexagon               randconfig-001-20250429    clang-21
-hexagon               randconfig-001-20250501    gcc-7.5.0
-hexagon               randconfig-001-20250501    gcc-8.5.0
-hexagon               randconfig-001-20250502    gcc-8.5.0
-hexagon               randconfig-001-20250503    gcc-8.5.0
-hexagon               randconfig-002-20250429    clang-21
-hexagon               randconfig-002-20250501    gcc-7.5.0
-hexagon               randconfig-002-20250501    gcc-8.5.0
-hexagon               randconfig-002-20250502    gcc-8.5.0
-hexagon               randconfig-002-20250503    gcc-8.5.0
-i386                             alldefconfig    gcc-14.2.0
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250429    clang-20
-i386        buildonly-randconfig-001-20250429    gcc-12
-i386        buildonly-randconfig-001-20250501    clang-20
-i386        buildonly-randconfig-001-20250502    clang-20
-i386        buildonly-randconfig-001-20250503    clang-20
-i386        buildonly-randconfig-001-20250506    gcc-12
-i386        buildonly-randconfig-002-20250429    clang-20
-i386        buildonly-randconfig-002-20250429    gcc-11
-i386        buildonly-randconfig-002-20250501    clang-20
-i386        buildonly-randconfig-002-20250502    clang-20
-i386        buildonly-randconfig-002-20250503    clang-20
-i386        buildonly-randconfig-002-20250506    gcc-12
-i386        buildonly-randconfig-003-20250429    clang-20
-i386        buildonly-randconfig-003-20250429    gcc-12
-i386        buildonly-randconfig-003-20250501    clang-20
-i386        buildonly-randconfig-003-20250502    clang-20
-i386        buildonly-randconfig-003-20250503    clang-20
-i386        buildonly-randconfig-003-20250506    gcc-12
-i386        buildonly-randconfig-004-20250429    clang-20
-i386        buildonly-randconfig-004-20250429    gcc-12
-i386        buildonly-randconfig-004-20250501    clang-20
-i386        buildonly-randconfig-004-20250502    clang-20
-i386        buildonly-randconfig-004-20250503    clang-20
-i386        buildonly-randconfig-004-20250506    gcc-12
-i386        buildonly-randconfig-005-20250429    clang-20
-i386        buildonly-randconfig-005-20250501    clang-20
-i386        buildonly-randconfig-005-20250502    clang-20
-i386        buildonly-randconfig-005-20250503    clang-20
-i386        buildonly-randconfig-005-20250506    gcc-12
-i386        buildonly-randconfig-006-20250429    clang-20
-i386        buildonly-randconfig-006-20250429    gcc-12
-i386        buildonly-randconfig-006-20250501    clang-20
-i386        buildonly-randconfig-006-20250502    clang-20
-i386        buildonly-randconfig-006-20250503    clang-20
-i386        buildonly-randconfig-006-20250506    gcc-12
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250429    gcc-12
-i386                  randconfig-001-20250501    gcc-12
-i386                  randconfig-001-20250502    clang-20
-i386                  randconfig-001-20250503    clang-20
-i386                  randconfig-001-20250506    gcc-12
-i386                  randconfig-002-20250429    gcc-12
-i386                  randconfig-002-20250501    gcc-12
-i386                  randconfig-002-20250502    clang-20
-i386                  randconfig-002-20250503    clang-20
-i386                  randconfig-002-20250506    gcc-12
-i386                  randconfig-003-20250429    gcc-12
-i386                  randconfig-003-20250501    gcc-12
-i386                  randconfig-003-20250502    clang-20
-i386                  randconfig-003-20250503    clang-20
-i386                  randconfig-003-20250506    gcc-12
-i386                  randconfig-004-20250429    gcc-12
-i386                  randconfig-004-20250501    gcc-12
-i386                  randconfig-004-20250502    clang-20
-i386                  randconfig-004-20250503    clang-20
-i386                  randconfig-004-20250506    gcc-12
-i386                  randconfig-005-20250429    gcc-12
-i386                  randconfig-005-20250501    gcc-12
-i386                  randconfig-005-20250502    clang-20
-i386                  randconfig-005-20250503    clang-20
-i386                  randconfig-005-20250506    gcc-12
-i386                  randconfig-006-20250429    gcc-12
-i386                  randconfig-006-20250501    gcc-12
-i386                  randconfig-006-20250502    clang-20
-i386                  randconfig-006-20250503    clang-20
-i386                  randconfig-006-20250506    gcc-12
-i386                  randconfig-007-20250429    gcc-12
-i386                  randconfig-007-20250501    gcc-12
-i386                  randconfig-007-20250502    clang-20
-i386                  randconfig-007-20250503    clang-20
-i386                  randconfig-007-20250506    gcc-12
-i386                  randconfig-011-20250429    clang-20
-i386                  randconfig-011-20250501    clang-20
-i386                  randconfig-011-20250502    gcc-12
-i386                  randconfig-011-20250503    clang-20
-i386                  randconfig-011-20250505    clang-20
-i386                  randconfig-011-20250506    gcc-12
-i386                  randconfig-012-20250429    clang-20
-i386                  randconfig-012-20250501    clang-20
-i386                  randconfig-012-20250502    gcc-12
-i386                  randconfig-012-20250503    clang-20
-i386                  randconfig-012-20250505    clang-20
-i386                  randconfig-012-20250506    gcc-12
-i386                  randconfig-013-20250429    clang-20
-i386                  randconfig-013-20250501    clang-20
-i386                  randconfig-013-20250502    gcc-12
-i386                  randconfig-013-20250503    clang-20
-i386                  randconfig-013-20250505    clang-20
-i386                  randconfig-013-20250506    gcc-12
-i386                  randconfig-014-20250429    clang-20
-i386                  randconfig-014-20250501    clang-20
-i386                  randconfig-014-20250502    gcc-12
-i386                  randconfig-014-20250503    clang-20
-i386                  randconfig-014-20250505    clang-20
-i386                  randconfig-014-20250506    gcc-12
-i386                  randconfig-015-20250429    clang-20
-i386                  randconfig-015-20250501    clang-20
-i386                  randconfig-015-20250502    gcc-12
-i386                  randconfig-015-20250503    clang-20
-i386                  randconfig-015-20250505    clang-20
-i386                  randconfig-015-20250506    gcc-12
-i386                  randconfig-016-20250429    clang-20
-i386                  randconfig-016-20250501    clang-20
-i386                  randconfig-016-20250502    gcc-12
-i386                  randconfig-016-20250503    clang-20
-i386                  randconfig-016-20250505    clang-20
-i386                  randconfig-016-20250506    gcc-12
-i386                  randconfig-017-20250429    clang-20
-i386                  randconfig-017-20250501    clang-20
-i386                  randconfig-017-20250502    gcc-12
-i386                  randconfig-017-20250503    clang-20
-i386                  randconfig-017-20250505    clang-20
-i386                  randconfig-017-20250506    gcc-12
-loongarch                        alldefconfig    clang-16
-loongarch                        alldefconfig    gcc-14.2.0
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                        allyesconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250429    clang-21
-loongarch             randconfig-001-20250429    gcc-14.2.0
-loongarch             randconfig-001-20250501    gcc-7.5.0
-loongarch             randconfig-001-20250501    gcc-8.5.0
-loongarch             randconfig-001-20250502    gcc-8.5.0
-loongarch             randconfig-001-20250503    gcc-8.5.0
-loongarch             randconfig-002-20250429    clang-21
-loongarch             randconfig-002-20250429    gcc-13.3.0
-loongarch             randconfig-002-20250501    gcc-7.5.0
-loongarch             randconfig-002-20250501    gcc-8.5.0
-loongarch             randconfig-002-20250502    gcc-8.5.0
-loongarch             randconfig-002-20250503    gcc-8.5.0
-m68k                             alldefconfig    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                          amiga_defconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                          hp300_defconfig    gcc-14.2.0
-m68k                       m5208evb_defconfig    gcc-14.2.0
-m68k                        m5272c3_defconfig    gcc-14.2.0
-m68k                        m5407c3_defconfig    gcc-14.2.0
-m68k                            mac_defconfig    gcc-14.2.0
-m68k                          multi_defconfig    gcc-14.2.0
-m68k                           virt_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-microblaze                      mmu_defconfig    gcc-14.2.0
-mips                             allmodconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                             allyesconfig    gcc-14.2.0
-mips                        bcm63xx_defconfig    gcc-14.2.0
-mips                       bmips_be_defconfig    gcc-14.2.0
-mips                      bmips_stb_defconfig    clang-21
-mips                  cavium_octeon_defconfig    clang-21
-mips                          eyeq6_defconfig    clang-21
-mips                           ip28_defconfig    gcc-14.2.0
-mips                      maltaaprp_defconfig    clang-21
-mips                        maltaup_defconfig    clang-16
-mips                         rt305x_defconfig    clang-21
-mips                         rt305x_defconfig    gcc-14.2.0
-mips                        vocore2_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250429    clang-21
-nios2                 randconfig-001-20250429    gcc-11.5.0
-nios2                 randconfig-001-20250501    gcc-7.5.0
-nios2                 randconfig-001-20250501    gcc-8.5.0
-nios2                 randconfig-001-20250502    gcc-8.5.0
-nios2                 randconfig-001-20250503    gcc-8.5.0
-nios2                 randconfig-002-20250429    clang-21
-nios2                 randconfig-002-20250429    gcc-7.5.0
-nios2                 randconfig-002-20250501    gcc-7.5.0
-nios2                 randconfig-002-20250501    gcc-8.5.0
-nios2                 randconfig-002-20250502    gcc-8.5.0
-nios2                 randconfig-002-20250503    gcc-8.5.0
-openrisc                          allnoconfig    clang-21
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-openrisc                            defconfig    gcc-14.2.0
-parisc                           alldefconfig    clang-21
-parisc                           alldefconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-21
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250429    clang-21
-parisc                randconfig-001-20250429    gcc-14.2.0
-parisc                randconfig-001-20250501    gcc-7.5.0
-parisc                randconfig-001-20250501    gcc-8.5.0
-parisc                randconfig-001-20250502    gcc-8.5.0
-parisc                randconfig-001-20250503    gcc-8.5.0
-parisc                randconfig-002-20250429    clang-21
-parisc                randconfig-002-20250429    gcc-10.5.0
-parisc                randconfig-002-20250501    gcc-7.5.0
-parisc                randconfig-002-20250501    gcc-8.5.0
-parisc                randconfig-002-20250502    gcc-8.5.0
-parisc                randconfig-002-20250503    gcc-8.5.0
-parisc64                         alldefconfig    gcc-14.2.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                     akebono_defconfig    clang-21
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-21
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                    amigaone_defconfig    gcc-14.2.0
-powerpc                      bamboo_defconfig    clang-21
-powerpc                        cell_defconfig    gcc-14.2.0
-powerpc                       ebony_defconfig    gcc-14.2.0
-powerpc                        fsp2_defconfig    gcc-14.2.0
-powerpc                          g5_defconfig    gcc-14.2.0
-powerpc                       holly_defconfig    gcc-14.2.0
-powerpc                        icon_defconfig    gcc-14.2.0
-powerpc                   lite5200b_defconfig    clang-16
-powerpc                      mgcoge_defconfig    gcc-14.2.0
-powerpc                   motionpro_defconfig    clang-21
-powerpc                 mpc8313_rdb_defconfig    gcc-14.2.0
-powerpc                 mpc832x_rdb_defconfig    clang-16
-powerpc                 mpc834x_itx_defconfig    clang-16
-powerpc                 mpc836x_rdk_defconfig    gcc-14.2.0
-powerpc                 mpc837x_rdb_defconfig    clang-21
-powerpc                 mpc837x_rdb_defconfig    gcc-14.2.0
-powerpc                     mpc83xx_defconfig    clang-21
-powerpc                  mpc885_ads_defconfig    clang-21
-powerpc                      pasemi_defconfig    clang-21
-powerpc                      pcm030_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250429    clang-21
-powerpc               randconfig-001-20250501    gcc-7.5.0
-powerpc               randconfig-001-20250501    gcc-8.5.0
-powerpc               randconfig-001-20250502    gcc-8.5.0
-powerpc               randconfig-001-20250503    gcc-8.5.0
-powerpc               randconfig-002-20250429    clang-21
-powerpc               randconfig-002-20250501    gcc-7.5.0
-powerpc               randconfig-002-20250501    gcc-8.5.0
-powerpc               randconfig-002-20250502    gcc-8.5.0
-powerpc               randconfig-002-20250503    gcc-8.5.0
-powerpc               randconfig-003-20250429    clang-21
-powerpc               randconfig-003-20250501    gcc-7.5.0
-powerpc               randconfig-003-20250501    gcc-8.5.0
-powerpc               randconfig-003-20250502    gcc-8.5.0
-powerpc               randconfig-003-20250503    gcc-8.5.0
-powerpc                     sequoia_defconfig    gcc-14.2.0
-powerpc                    socrates_defconfig    clang-21
-powerpc                  storcenter_defconfig    gcc-14.2.0
-powerpc                     taishan_defconfig    clang-21
-powerpc                     tqm8560_defconfig    clang-16
-powerpc                 xes_mpc85xx_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250429    clang-21
-powerpc64             randconfig-001-20250501    gcc-7.5.0
-powerpc64             randconfig-001-20250501    gcc-8.5.0
-powerpc64             randconfig-001-20250502    gcc-8.5.0
-powerpc64             randconfig-001-20250503    gcc-8.5.0
-powerpc64             randconfig-002-20250429    clang-21
-powerpc64             randconfig-002-20250501    gcc-7.5.0
-powerpc64             randconfig-002-20250501    gcc-8.5.0
-powerpc64             randconfig-002-20250502    gcc-8.5.0
-powerpc64             randconfig-002-20250503    gcc-8.5.0
-powerpc64             randconfig-003-20250429    clang-21
-powerpc64             randconfig-003-20250429    gcc-7.5.0
-powerpc64             randconfig-003-20250501    gcc-7.5.0
-powerpc64             randconfig-003-20250501    gcc-8.5.0
-powerpc64             randconfig-003-20250502    gcc-8.5.0
-powerpc64             randconfig-003-20250503    gcc-8.5.0
-riscv                            allmodconfig    clang-21
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    clang-21
-riscv                               defconfig    gcc-12
-riscv                    nommu_virt_defconfig    clang-21
-riscv                 randconfig-001-20250429    gcc-12
-riscv                 randconfig-001-20250429    gcc-14.2.0
-riscv                 randconfig-001-20250501    gcc-14.2.0
-riscv                 randconfig-001-20250502    gcc-13.3.0
-riscv                 randconfig-001-20250503    gcc-10.5.0
-riscv                 randconfig-002-20250429    clang-18
-riscv                 randconfig-002-20250429    gcc-12
-riscv                 randconfig-002-20250501    gcc-14.2.0
-riscv                 randconfig-002-20250502    gcc-13.3.0
-riscv                 randconfig-002-20250503    gcc-10.5.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250429    clang-21
-s390                  randconfig-001-20250429    gcc-12
-s390                  randconfig-001-20250501    gcc-14.2.0
-s390                  randconfig-001-20250502    gcc-13.3.0
-s390                  randconfig-001-20250503    gcc-10.5.0
-s390                  randconfig-002-20250429    clang-17
-s390                  randconfig-002-20250429    gcc-12
-s390                  randconfig-002-20250501    gcc-14.2.0
-s390                  randconfig-002-20250502    gcc-13.3.0
-s390                  randconfig-002-20250503    gcc-10.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                                  defconfig    gcc-14.2.0
-sh                ecovec24-romimage_defconfig    gcc-14.2.0
-sh                        edosk7760_defconfig    gcc-14.2.0
-sh                             espt_defconfig    clang-21
-sh                 kfr2r09-romimage_defconfig    clang-21
-sh                 kfr2r09-romimage_defconfig    gcc-14.2.0
-sh                          lboxre2_defconfig    gcc-14.2.0
-sh                          polaris_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250429    gcc-12
-sh                    randconfig-001-20250429    gcc-5.5.0
-sh                    randconfig-001-20250501    gcc-14.2.0
-sh                    randconfig-001-20250502    gcc-13.3.0
-sh                    randconfig-001-20250503    gcc-10.5.0
-sh                    randconfig-002-20250429    gcc-12
-sh                    randconfig-002-20250429    gcc-13.3.0
-sh                    randconfig-002-20250501    gcc-14.2.0
-sh                    randconfig-002-20250502    gcc-13.3.0
-sh                    randconfig-002-20250503    gcc-10.5.0
-sh                          rsk7201_defconfig    gcc-14.2.0
-sh                          rsk7203_defconfig    gcc-14.2.0
-sh                          rsk7264_defconfig    gcc-14.2.0
-sh                          rsk7269_defconfig    clang-21
-sh                   rts7751r2dplus_defconfig    clang-16
-sh                          sdk7780_defconfig    gcc-14.2.0
-sh                          sdk7786_defconfig    gcc-14.2.0
-sh                           se7705_defconfig    gcc-14.2.0
-sh                           se7721_defconfig    clang-21
-sh                           se7751_defconfig    gcc-14.2.0
-sh                           se7780_defconfig    clang-21
-sh                        sh7763rdp_defconfig    gcc-14.2.0
-sh                              ul2_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                            allyesconfig    gcc-14.2.0
-sparc                 randconfig-001-20250429    gcc-12
-sparc                 randconfig-001-20250429    gcc-12.4.0
-sparc                 randconfig-001-20250501    gcc-14.2.0
-sparc                 randconfig-001-20250502    gcc-13.3.0
-sparc                 randconfig-001-20250503    gcc-10.5.0
-sparc                 randconfig-002-20250429    gcc-10.3.0
-sparc                 randconfig-002-20250429    gcc-12
-sparc                 randconfig-002-20250501    gcc-14.2.0
-sparc                 randconfig-002-20250502    gcc-13.3.0
-sparc                 randconfig-002-20250503    gcc-10.5.0
-sparc64                          allmodconfig    gcc-14.2.0
-sparc64                          allyesconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-12
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250429    gcc-12
-sparc64               randconfig-001-20250429    gcc-12.4.0
-sparc64               randconfig-001-20250501    gcc-14.2.0
-sparc64               randconfig-001-20250502    gcc-13.3.0
-sparc64               randconfig-001-20250503    gcc-10.5.0
-sparc64               randconfig-002-20250429    gcc-12
-sparc64               randconfig-002-20250429    gcc-8.5.0
-sparc64               randconfig-002-20250501    gcc-14.2.0
-sparc64               randconfig-002-20250502    gcc-13.3.0
-sparc64               randconfig-002-20250503    gcc-10.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250429    clang-18
-um                    randconfig-001-20250429    gcc-12
-um                    randconfig-001-20250501    gcc-14.2.0
-um                    randconfig-001-20250502    gcc-13.3.0
-um                    randconfig-001-20250503    gcc-10.5.0
-um                    randconfig-002-20250429    gcc-12
-um                    randconfig-002-20250501    gcc-14.2.0
-um                    randconfig-002-20250502    gcc-13.3.0
-um                    randconfig-002-20250503    gcc-10.5.0
-um                           x86_64_defconfig    clang-21
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250429    clang-20
-x86_64      buildonly-randconfig-001-20250429    gcc-12
-x86_64      buildonly-randconfig-001-20250501    gcc-12
-x86_64      buildonly-randconfig-001-20250502    clang-20
-x86_64      buildonly-randconfig-001-20250503    gcc-12
-x86_64      buildonly-randconfig-002-20250429    clang-20
-x86_64      buildonly-randconfig-002-20250429    gcc-12
-x86_64      buildonly-randconfig-002-20250501    gcc-12
-x86_64      buildonly-randconfig-002-20250502    clang-20
-x86_64      buildonly-randconfig-002-20250503    gcc-12
-x86_64      buildonly-randconfig-003-20250429    clang-20
-x86_64      buildonly-randconfig-003-20250501    gcc-12
-x86_64      buildonly-randconfig-003-20250502    clang-20
-x86_64      buildonly-randconfig-003-20250503    gcc-12
-x86_64      buildonly-randconfig-004-20250429    clang-20
-x86_64      buildonly-randconfig-004-20250429    gcc-12
-x86_64      buildonly-randconfig-004-20250501    gcc-12
-x86_64      buildonly-randconfig-004-20250502    clang-20
-x86_64      buildonly-randconfig-004-20250503    gcc-12
-x86_64      buildonly-randconfig-005-20250429    clang-20
-x86_64      buildonly-randconfig-005-20250501    gcc-12
-x86_64      buildonly-randconfig-005-20250502    clang-20
-x86_64      buildonly-randconfig-005-20250503    gcc-12
-x86_64      buildonly-randconfig-006-20250429    clang-20
-x86_64      buildonly-randconfig-006-20250429    gcc-12
-x86_64      buildonly-randconfig-006-20250501    gcc-12
-x86_64      buildonly-randconfig-006-20250502    clang-20
-x86_64      buildonly-randconfig-006-20250503    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250429    clang-20
-x86_64                randconfig-001-20250501    clang-20
-x86_64                randconfig-001-20250502    clang-20
-x86_64                randconfig-001-20250503    clang-20
-x86_64                randconfig-001-20250506    clang-20
-x86_64                randconfig-002-20250429    clang-20
-x86_64                randconfig-002-20250501    clang-20
-x86_64                randconfig-002-20250502    clang-20
-x86_64                randconfig-002-20250503    clang-20
-x86_64                randconfig-002-20250506    clang-20
-x86_64                randconfig-003-20250429    clang-20
-x86_64                randconfig-003-20250501    clang-20
-x86_64                randconfig-003-20250502    clang-20
-x86_64                randconfig-003-20250503    clang-20
-x86_64                randconfig-003-20250506    clang-20
-x86_64                randconfig-004-20250429    clang-20
-x86_64                randconfig-004-20250501    clang-20
-x86_64                randconfig-004-20250502    clang-20
-x86_64                randconfig-004-20250503    clang-20
-x86_64                randconfig-004-20250506    clang-20
-x86_64                randconfig-005-20250429    clang-20
-x86_64                randconfig-005-20250501    clang-20
-x86_64                randconfig-005-20250502    clang-20
-x86_64                randconfig-005-20250503    clang-20
-x86_64                randconfig-005-20250506    clang-20
-x86_64                randconfig-006-20250429    clang-20
-x86_64                randconfig-006-20250501    clang-20
-x86_64                randconfig-006-20250502    clang-20
-x86_64                randconfig-006-20250503    clang-20
-x86_64                randconfig-006-20250506    clang-20
-x86_64                randconfig-007-20250429    clang-20
-x86_64                randconfig-007-20250501    clang-20
-x86_64                randconfig-007-20250502    clang-20
-x86_64                randconfig-007-20250503    clang-20
-x86_64                randconfig-007-20250506    clang-20
-x86_64                randconfig-008-20250429    clang-20
-x86_64                randconfig-008-20250501    clang-20
-x86_64                randconfig-008-20250502    clang-20
-x86_64                randconfig-008-20250503    clang-20
-x86_64                randconfig-008-20250506    clang-20
-x86_64                randconfig-071-20250429    gcc-12
-x86_64                randconfig-071-20250501    gcc-12
-x86_64                randconfig-071-20250502    clang-20
-x86_64                randconfig-071-20250503    clang-20
-x86_64                randconfig-071-20250506    clang-20
-x86_64                randconfig-072-20250429    gcc-12
-x86_64                randconfig-072-20250501    gcc-12
-x86_64                randconfig-072-20250502    clang-20
-x86_64                randconfig-072-20250503    clang-20
-x86_64                randconfig-072-20250506    clang-20
-x86_64                randconfig-073-20250429    gcc-12
-x86_64                randconfig-073-20250501    gcc-12
-x86_64                randconfig-073-20250502    clang-20
-x86_64                randconfig-073-20250503    clang-20
-x86_64                randconfig-073-20250506    clang-20
-x86_64                randconfig-074-20250429    gcc-12
-x86_64                randconfig-074-20250501    gcc-12
-x86_64                randconfig-074-20250502    clang-20
-x86_64                randconfig-074-20250503    clang-20
-x86_64                randconfig-074-20250506    clang-20
-x86_64                randconfig-075-20250429    gcc-12
-x86_64                randconfig-075-20250501    gcc-12
-x86_64                randconfig-075-20250502    clang-20
-x86_64                randconfig-075-20250503    clang-20
-x86_64                randconfig-075-20250506    clang-20
-x86_64                randconfig-076-20250429    gcc-12
-x86_64                randconfig-076-20250501    gcc-12
-x86_64                randconfig-076-20250502    clang-20
-x86_64                randconfig-076-20250503    clang-20
-x86_64                randconfig-076-20250506    clang-20
-x86_64                randconfig-077-20250429    gcc-12
-x86_64                randconfig-077-20250501    gcc-12
-x86_64                randconfig-077-20250502    clang-20
-x86_64                randconfig-077-20250503    clang-20
-x86_64                randconfig-077-20250506    clang-20
-x86_64                randconfig-078-20250429    gcc-12
-x86_64                randconfig-078-20250501    gcc-12
-x86_64                randconfig-078-20250502    clang-20
-x86_64                randconfig-078-20250503    clang-20
-x86_64                randconfig-078-20250506    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    clang-18
-x86_64                          rhel-9.4-func    clang-20
-x86_64                         rhel-9.4-kunit    clang-18
-x86_64                           rhel-9.4-ltp    clang-18
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                           allyesconfig    gcc-14.2.0
-xtensa                generic_kc705_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250429    gcc-12
-xtensa                randconfig-001-20250429    gcc-14.2.0
-xtensa                randconfig-001-20250501    gcc-14.2.0
-xtensa                randconfig-001-20250502    gcc-13.3.0
-xtensa                randconfig-001-20250503    gcc-10.5.0
-xtensa                randconfig-002-20250429    gcc-12
-xtensa                randconfig-002-20250429    gcc-8.5.0
-xtensa                randconfig-002-20250501    gcc-14.2.0
-xtensa                randconfig-002-20250502    gcc-13.3.0
-xtensa                randconfig-002-20250503    gcc-10.5.0
-xtensa                         virt_defconfig    clang-21
-xtensa                    xip_kc705_defconfig    gcc-14.2.0
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505081214.tUfDpIv3-lkp@intel.com/
 
---
+All errors (new ones prefixed by >>):
+
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:123:9: note: in expansion of macro 'EIC7700_PIN'
+     123 |         EIC7700_PIN(0,   "chip_mode",           [0] = F_CHIP_MODE),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:123:9: note: in expansion of macro 'EIC7700_PIN'
+     123 |         EIC7700_PIN(0,   "chip_mode",           [0] = F_CHIP_MODE),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:123:9: note: in expansion of macro 'EIC7700_PIN'
+     123 |         EIC7700_PIN(0,   "chip_mode",           [0] = F_CHIP_MODE),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:124:9: note: in expansion of macro 'EIC7700_PIN'
+     124 |         EIC7700_PIN(1,   "mode_set0",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:124:9: note: in expansion of macro 'EIC7700_PIN'
+     124 |         EIC7700_PIN(1,   "mode_set0",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:124:9: note: in expansion of macro 'EIC7700_PIN'
+     124 |         EIC7700_PIN(1,   "mode_set0",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:125:9: note: in expansion of macro 'EIC7700_PIN'
+     125 |         EIC7700_PIN(2,   "mode_set1",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:125:9: note: in expansion of macro 'EIC7700_PIN'
+     125 |         EIC7700_PIN(2,   "mode_set1",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:125:9: note: in expansion of macro 'EIC7700_PIN'
+     125 |         EIC7700_PIN(2,   "mode_set1",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:126:9: note: in expansion of macro 'EIC7700_PIN'
+     126 |         EIC7700_PIN(3,   "mode_set2",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:126:9: note: in expansion of macro 'EIC7700_PIN'
+     126 |         EIC7700_PIN(3,   "mode_set2",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:126:9: note: in expansion of macro 'EIC7700_PIN'
+     126 |         EIC7700_PIN(3,   "mode_set2",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:127:9: note: in expansion of macro 'EIC7700_PIN'
+     127 |         EIC7700_PIN(4,   "mode_set3",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:127:9: note: in expansion of macro 'EIC7700_PIN'
+     127 |         EIC7700_PIN(4,   "mode_set3",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:127:9: note: in expansion of macro 'EIC7700_PIN'
+     127 |         EIC7700_PIN(4,   "mode_set3",           [0] = F_SDIO, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:128:9: note: in expansion of macro 'EIC7700_PIN'
+     128 |         EIC7700_PIN(5,   "xin",                 [0] = F_OSC),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:128:9: note: in expansion of macro 'EIC7700_PIN'
+     128 |         EIC7700_PIN(5,   "xin",                 [0] = F_OSC),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:128:9: note: in expansion of macro 'EIC7700_PIN'
+     128 |         EIC7700_PIN(5,   "xin",                 [0] = F_OSC),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:129:9: note: in expansion of macro 'EIC7700_PIN'
+     129 |         EIC7700_PIN(6,   "rtc_xin",             [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:129:9: note: in expansion of macro 'EIC7700_PIN'
+     129 |         EIC7700_PIN(6,   "rtc_xin",             [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:129:9: note: in expansion of macro 'EIC7700_PIN'
+     129 |         EIC7700_PIN(6,   "rtc_xin",             [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:130:9: note: in expansion of macro 'EIC7700_PIN'
+     130 |         EIC7700_PIN(7,   "rst_out_n",           [0] = F_RESET),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:130:9: note: in expansion of macro 'EIC7700_PIN'
+     130 |         EIC7700_PIN(7,   "rst_out_n",           [0] = F_RESET),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:130:9: note: in expansion of macro 'EIC7700_PIN'
+     130 |         EIC7700_PIN(7,   "rst_out_n",           [0] = F_RESET),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:131:9: note: in expansion of macro 'EIC7700_PIN'
+     131 |         EIC7700_PIN(8,   "key_reset_n",         [0] = F_RESET),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:131:9: note: in expansion of macro 'EIC7700_PIN'
+     131 |         EIC7700_PIN(8,   "key_reset_n",         [0] = F_RESET),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:131:9: note: in expansion of macro 'EIC7700_PIN'
+     131 |         EIC7700_PIN(8,   "key_reset_n",         [0] = F_RESET),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:132:9: note: in expansion of macro 'EIC7700_PIN'
+     132 |         EIC7700_PIN(9,   "rst_in_n",            [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+>> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:132:9: note: in expansion of macro 'EIC7700_PIN'
+     132 |         EIC7700_PIN(9,   "rst_in_n",            [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:132:9: note: in expansion of macro 'EIC7700_PIN'
+     132 |         EIC7700_PIN(9,   "rst_in_n",            [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:133:9: note: in expansion of macro 'EIC7700_PIN'
+     133 |         EIC7700_PIN(10,  "por_in_n",            [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:133:9: note: in expansion of macro 'EIC7700_PIN'
+     133 |         EIC7700_PIN(10,  "por_in_n",            [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:133:9: note: in expansion of macro 'EIC7700_PIN'
+     133 |         EIC7700_PIN(10,  "por_in_n",            [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:134:9: note: in expansion of macro 'EIC7700_PIN'
+     134 |         EIC7700_PIN(11,  "por_out_n",           [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:134:9: note: in expansion of macro 'EIC7700_PIN'
+     134 |         EIC7700_PIN(11,  "por_out_n",           [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:134:9: note: in expansion of macro 'EIC7700_PIN'
+     134 |         EIC7700_PIN(11,  "por_out_n",           [0] = F_DISABLED),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:135:9: note: in expansion of macro 'EIC7700_PIN'
+     135 |         EIC7700_PIN(12,  "gpio0",               [0] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:135:9: note: in expansion of macro 'EIC7700_PIN'
+     135 |         EIC7700_PIN(12,  "gpio0",               [0] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:135:9: note: in expansion of macro 'EIC7700_PIN'
+     135 |         EIC7700_PIN(12,  "gpio0",               [0] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:136:9: note: in expansion of macro 'EIC7700_PIN'
+     136 |         EIC7700_PIN(13,  "por_sel",             [0] = F_RESET),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:136:9: note: in expansion of macro 'EIC7700_PIN'
+     136 |         EIC7700_PIN(13,  "por_sel",             [0] = F_RESET),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:136:9: note: in expansion of macro 'EIC7700_PIN'
+     136 |         EIC7700_PIN(13,  "por_sel",             [0] = F_RESET),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                       ^~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:137:9: note: in expansion of macro 'EIC7700_PIN'
+     137 |         EIC7700_PIN(14,  "jtag0_tck",           [0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
+     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+         |                                                                        ^
+   drivers/pinctrl/pinctrl-eic7700.c:137:9: note: in expansion of macro 'EIC7700_PIN'
+     137 |         EIC7700_PIN(14,  "jtag0_tck",           [0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
+         |         ^~~~~~~~~~~
+   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
+     116 |         { \
+         |         ^
+   drivers/pinctrl/pinctrl-eic7700.c:137:9: note: in expansion of macro 'EIC7700_PIN'
+     137 |         EIC7700_PIN(14,  "jtag0_tck",           [0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
+
+
+vim +/static +119 drivers/pinctrl/pinctrl-eic7700.c
+
+   114	
+   115	#define EIC7700_PIN(_number, _name, ...) \
+   116		{ \
+   117			.number	= _number, \
+   118			.name = _name, \
+ > 119			.drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
+   120		}
+   121	
+
+-- 
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
 
