@@ -1,153 +1,121 @@
-Return-Path: <linux-gpio+bounces-19802-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19803-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32917AB03C2
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 21:39:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8716AB0458
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 22:08:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A737A4C7225
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 19:39:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E8874E4D69
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 May 2025 20:08:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F338728A72A;
-	Thu,  8 May 2025 19:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E2D6288C02;
+	Thu,  8 May 2025 20:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ku5GUimN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C1722256E;
-	Thu,  8 May 2025 19:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3D71946A0;
+	Thu,  8 May 2025 20:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746733182; cv=none; b=T1HLW4sKgOJJYNPy0BRSvZwoYDnpprEKgIYW5sVOkpi8dlJ0Mq6FBH9DXvlF+dJ0o4KhEIdWKJbTthPnMVDw7UqHIZgmtnRKBdD4jYg3poOGMGP8IQfqKoG7dyKQ3I/F/O2Ory7cYFP5ov1xzGiwOHIfkGdEWyI/QIdouo2AnpA=
+	t=1746734903; cv=none; b=s1pKgsjj23eF4/3y5zdYV5xhCS1WAWdqzRPGGHVJxdd8tppG65nsD/s6gc8/mKrtkq5jVhC2Z8oDEYFIfY6nhzHhWEf83sBa/xA4IgdAZU5L1kueQHEioMPB4aVaHWCB5zHNaH8SbY701xyYtLnHL8HG5BVnuQMTqvHvqff1gjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746733182; c=relaxed/simple;
-	bh=hAilNBFFJjfHY8ctZm9ZWAdpUqW4veJAA4tcgJfcKv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X4f/QOvWbMXEseimM+coCZNwMmWRVxAHLEsx0d2mi1fL56BLYnprT9IZSir9AClkrTQmjRDSo5x7oBkCNN/vVBiADKxp8dBmhmaKwoCnJ7jkNlyJoEwlaoEBKM1vfOmNVK2RtvNf4n2dox8UDeTjymlOKRIo4s4nFmYJ3rPyGq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: j6okXO7BRz+Cfm7u87GUiA==
-X-CSE-MsgGUID: XpOIHBKOSQuSNC1DV0v1sg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52346031"
+	s=arc-20240116; t=1746734903; c=relaxed/simple;
+	bh=ojYjwhOLOLZviFfBkcdSnQqT1nII+khrxJF96hfNsns=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vd2WQEjqNG+OEothaoDH6tGUO94f1ECl6FMAeStt2Y4lg+fuO4bnDRa2nwg6DQX9sOpHtHEF6OHetElHAEo/UhjqfDuD5Myz2Fi4gsvNBycpR28OEp6LnyV01F6aGfOeFDQZ3nRNadvqFB25F0DPfoHGkdJD5xgutC6ZQYi1Ujo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ku5GUimN; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746734902; x=1778270902;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ojYjwhOLOLZviFfBkcdSnQqT1nII+khrxJF96hfNsns=;
+  b=ku5GUimNQni+EnZWCt0i7fRORtLe5mXcu5a2e0IwBAINeDZ7e8UwM7Rn
+   CTqAJdcWlaz7aIYsdW00bY2j9wFlU6sSKjtC9IvIrk8aqHzfiwuW9KMN3
+   t4frlOtTkqfHQpmTDemMZeGr7jB9/+TtWEJdz+NK+d08UTEOZYImEtTx/
+   qMYIfX8IiY9cafX7l1ddDpLjOlbcaOOewJ2/8iUmP3ZUXU5c46qeLIVp/
+   rJL/SjTPZDvmiddbhOjMoNBLF9rc+bX4BYV8O++3rblvygXFvbX0IYuSL
+   Trz2PNn0EEofkV/ZaQDNnloN8fEODi0q55xiqh5FKsP3u/gDdUB8moOud
+   Q==;
+X-CSE-ConnectionGUID: kr2IJzKRQnWK+nIt12f5qg==
+X-CSE-MsgGUID: CI2SzHrHSdm5sVxUQ91yEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59885494"
 X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="52346031"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:39:39 -0700
-X-CSE-ConnectionGUID: KWulWhzJQRmiBZud12T51w==
-X-CSE-MsgGUID: vbSx4htURVmghGEyUAS0wg==
+   d="scan'208";a="59885494"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 13:08:20 -0700
+X-CSE-ConnectionGUID: rb6gG6rWSKuJIC2WZRv6gw==
+X-CSE-MsgGUID: qX3cjfo4RcWnQJoo2a0Feg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="167470398"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:39:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uD75g-00000004DLl-1R5F;
-	Thu, 08 May 2025 22:39:32 +0300
-Date: Thu, 8 May 2025 22:39:32 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
-	Pop Paul <paul.pop@analog.com>
-Subject: Re: [PATCH v7 11/12] iio: adc: ad7768-1: add filter type and
- oversampling ratio attributes
-Message-ID: <aB0IdPcjtcGFp6o-@smile.fi.intel.com>
-References: <cover.1746662899.git.Jonathan.Santos@analog.com>
- <2180d8774a2fdef3900f86fbc8f25886503df479.1746662899.git.Jonathan.Santos@analog.com>
+   d="scan'208";a="136283622"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 08 May 2025 13:08:11 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 887A813B; Thu, 08 May 2025 23:08:09 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: at91: Fix possible out-of-boundary access
+Date: Thu,  8 May 2025 23:08:07 +0300
+Message-ID: <20250508200807.1384558-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2180d8774a2fdef3900f86fbc8f25886503df479.1746662899.git.Jonathan.Santos@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 08, 2025 at 02:05:26PM -0300, Jonathan Santos wrote:
-> Separate filter type and decimation rate from the sampling frequency
-> attribute. The new filter type attribute enables sinc3, sinc3+rej60
-> and wideband filters, which were previously unavailable.
-> 
-> Previously, combining decimation and MCLK divider in the sampling
-> frequency obscured performance trade-offs. Lower MCLK divider
-> settings increase power usage, while lower decimation rates reduce
-> precision by decreasing averaging. By creating an oversampling
-> attribute, which controls the decimation, users gain finer control
-> over performance.
-> 
-> The addition of those attributes allows a wider range of sampling
-> frequencies and more access to the device features. Sampling frequency
-> table is updated after every digital filter parameter change.
-> 
-> Changes in the sampling frequency are not allowed anymore while in
-> buffered mode.
+at91_gpio_probe() doesn't check that given OF alias is not available or
+something went wrong when trying to get it. This might have consequences
+when accessing gpio_chips array with that value as an index. Note, that
+BUG() can be compiled out and hence won't actually perform the required
+checks.
 
-...
+Fixes: 6732ae5cb47c ("ARM: at91: add pinctrl support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinctrl-at91.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
->  static void ad7768_fill_samp_freq_tbl(struct ad7768_state *st)
->  {
-> -	unsigned int i;
-> +	unsigned int i, freq_filtered, len = 0;
-> +
-> +	freq_filtered = DIV_ROUND_CLOSEST(st->mclk_freq, st->oversampling_ratio);
-> +	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-
-> +		st->samp_freq_avail[len] = DIV_ROUND_CLOSEST(freq_filtered,
-> +							     ad7768_mclk_div_rates[i]);
-
-Same comment as per previous patch.
-
-> +		/* Sampling frequency cannot be lower than the minimum of 50 SPS */
-> +		if (st->samp_freq_avail[len] >= 50)
-> +			len++;
-
-Actually I would rather see the assignment once.
-
-	... samp_freq_avail;
-
-	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-		/* Sampling frequency cannot be lower than the minimum of 50 SPS */
-		samp_freq_avail = DIV_ROUND_CLOSEST(freq_filtered, ad7768_mclk_div_rates[i]);
-		if (samp_freq_avail < 50)
-			continue;
-
-		st->samp_freq_avail[len++] = samp_freq_avail;
-	}
-
-> +	}
-> +
-> +	st->samp_freq_avail_len = len;
-> +}
-
-...
-
-> +	res = DIV_ROUND_CLOSEST(st->mclk_freq, freq * st->oversampling_ratio);
->  
->  	/* Find the closest match for the desired sampling frequency */
-> +	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-> +		diff_new = abs(res - ad7768_mclk_div_rates[i]);
->  		if (diff_new < diff_old) {
->  			diff_old = diff_new;
->  			idx = i;
->  		}
->  	}
-
-Hmm... Wasn't the point to include util_macros.h to replace the above?
-
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 442dd8c80b65..6c2727bd55bc 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1822,12 +1822,16 @@ static int at91_gpio_probe(struct platform_device *pdev)
+ 	struct at91_gpio_chip *at91_chip = NULL;
+ 	struct gpio_chip *chip;
+ 	struct pinctrl_gpio_range *range;
++	int alias_idx;
+ 	int ret = 0;
+ 	int irq, i;
+-	int alias_idx = of_alias_get_id(np, "gpio");
+ 	uint32_t ngpio;
+ 	char **names;
+ 
++	alias_idx = of_alias_get_id(np, "gpio");
++	if (alias_idx < 0)
++		return alias_idx;
++
+ 	BUG_ON(alias_idx >= ARRAY_SIZE(gpio_chips));
+ 	if (gpio_chips[alias_idx])
+ 		return dev_err_probe(dev, -EBUSY, "%d slot is occupied.\n", alias_idx);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.2
 
 
