@@ -1,109 +1,99 @@
-Return-Path: <linux-gpio+bounces-19879-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19880-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10543AB1A5F
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 18:24:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F5AEAB1A62
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 18:24:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63A841B63453
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 16:19:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4685EB226F7
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 16:20:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892B62367D0;
-	Fri,  9 May 2025 16:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9131B236A70;
+	Fri,  9 May 2025 16:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXEfiWzH"
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="yJbb5Pv2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D106212B05;
-	Fri,  9 May 2025 16:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDE22367D0
+	for <linux-gpio@vger.kernel.org>; Fri,  9 May 2025 16:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807542; cv=none; b=LRIMbTGcGwvcRQZO2Kc6vB2Ar0hU3Cf4FnnCwa9gY6XLsikjtvlmwg8VOW54sj68mCkxHX2Wqm0YM9aFwL59WgRh1xE8XlN/kTvW4AdosGpuu47eep1AkrV9ADJ9M/HdmA5lobvyGef69o+cl7NfafOjvGyxhYOASAFWqE/AB2o=
+	t=1746807721; cv=none; b=YQwyHxQc62MY+FiYxT9JtV1sgwcQg/ewm5JE3cs3dvbddmokunGDVJJBxRXzAia17gLxQav6Uy73fpE466d1XsFSGzyeHVAwnqD0059gbI+XG01eZiGHzpCRK/IRvUENGSjRLm67k+gml9hehxNFnuD3BQ0Jq++6ajuXWCW998w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807542; c=relaxed/simple;
-	bh=yxU9epCjfjrkhmIjvYnzwdMNf3n/vyyPrAQQiuM40Qg=;
+	s=arc-20240116; t=1746807721; c=relaxed/simple;
+	bh=rEj6hWkcGPaha1zLvnzaxpRj8FK8vW30ghmy4w7SLfQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VA5DAAz+aH4K5kg3y6ZVt1lKlWnInVJ/YJHQ1ccNhPiuAED2PMjcaW/z7lJi6ycoYQRpqmrZtTORcYc1SUIzjjbXygmAdAzF/z4VLsYLRoPCKtMRDtxEZZ07DUhbkV15KHVBeuIeUj7xJN/w1+7aLhI4FjQ3CvL7ousn4/tboiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXEfiWzH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8C63C4CEED;
-	Fri,  9 May 2025 16:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746807541;
-	bh=yxU9epCjfjrkhmIjvYnzwdMNf3n/vyyPrAQQiuM40Qg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YXEfiWzHYGkIc4V+1gCXViTz3bPgcHWSLcceefx4jNBukedCr7lPTzS/9dspnhlih
-	 BrYtXXZ+QqXKI+S9vjT7KWL/ZfteVLPG0fWGdTvS7F4HgQE1nA2e9Jk9hX7ngcD8pA
-	 D2NuzIn5vSpry2tMrbtT9MQ48t89bewTuyvJPeG108xOJK8/8In0QQlx6QThwdT9ZT
-	 I5vNPtyyuiU48t0j/qSaou6v92r/5eIY9L9PIDuVxV5bLehF64deG/Cm+29hXbzzbY
-	 bM+F/AFlUfHWfiGsqZUGipObfb/Chg/wPR8Xmc1vPhH023rStfyzg6fzya+4HqO0KX
-	 a+n12/fe+fk+A==
-Date: Fri, 9 May 2025 17:18:55 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
-	David Lechner <dlechner@baylirbe.com>
-Subject: Re: [PATCH v7 03/12] dt-bindings: iio: adc: ad7768-1: add
- trigger-sources property
-Message-ID: <20250509-gala-unfiled-fd273655b89d@spud>
-References: <cover.1746662899.git.Jonathan.Santos@analog.com>
- <731196750f27eee0bad5493647edb2f67a05a6e2.1746662899.git.Jonathan.Santos@analog.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=k95EoIvvM6qRVwZkq21pqXANNkHWCIbuj2ZR0nJ35Tfeaq2F+RGgBiCjXHuQhfLCLeuF/HClkGHigN8kiRxINphX4zSWklFtdgrYG2BKj0d286B7K0qiDfuGuwxB4u40SET/PJT2yvZmT5Xx6xF9/owkfDHnYInjzPSSLbFWHP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=yJbb5Pv2; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+Date: Fri, 9 May 2025 12:21:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1746807707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oCay4j7C41YPfPP4dRmjz27ecUbg9JIQQ0y/wWYi3Yk=;
+	b=yJbb5Pv23OL+WAcAvl05L189sakxNU2wSigqZjyKPBKo6TN/zVF3XYwjSGhv/nOUsiEjL/
+	Tp8tSHES30I1yjcQmteNELFrqGV/wMzPapMmE2mcb5VxV89kHpNkfAWq0W5a43dR7bQeR3
+	tj08z9iGNCbD3M+FVqOr5t9j3yQAw8MY5HnYsz+l2fxXFwkjNx4XLdsQjaR13NvfRce8d1
+	NmvMvyE+Cg/sJgIBOCWV6X1i6kZ5PwdUwMWq5Wr7lzoRGnFI38esKrtfgKKKRoJSgurIpD
+	ac11fOF5/1DfHQHvguwizyJTVaY0X11phlrinCUlPVjjthsGKDpUWi0jK4cwVw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: Sven Peter <sven@svenpeter.dev>
+Cc: Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>,
+	Hector Martin <marcan@marcan.st>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Russell King <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 6/9] power: reset: macsmc-reboot: Add driver for
+ rebooting via Apple SMC
+Message-ID: <aB4rliBFrUWWuNQ2@blossom>
+References: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
+ <20250503-smc-6-15-v4-6-500b9b6546fc@svenpeter.dev>
+ <aB39iJm9759RYAKW@blossom>
+ <196f84ea-6567-4fe3-9bee-743bb289223e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Y3HCj6m+kwEOd5rj"
-Content-Disposition: inline
-In-Reply-To: <731196750f27eee0bad5493647edb2f67a05a6e2.1746662899.git.Jonathan.Santos@analog.com>
-
-
---Y3HCj6m+kwEOd5rj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <196f84ea-6567-4fe3-9bee-743bb289223e@app.fastmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 08, 2025 at 02:03:30PM -0300, Jonathan Santos wrote:
-> +dependencies:
-> +  adi,sync-in-gpios:
-> +    not:
-> +      required:
-> +        - trigger-sources
-> +  trigger-sources:
-> +    not:
-> +      required:
-> +        - adi,sync-in-gpios
+> >
+> >> +		mdelay(100);
+> >> +		WARN_ON(1);
+> >
+> > ...What?
+> 
+> This is done in a few drivers in drivers/power/reboot. If we haven't
+> rebooted after 100ms something's wrong with SMC. I'll add a comment.
+> 
+> drivers/power/reset/tps65086-restart.c:	WARN_ON(1);
+> drivers/power/reset/atc260x-poweroff.c:	WARN_ONCE(1, "Unable to power off system\n");
+> drivers/power/reset/mt6323-poweroff.c:	WARN_ONCE(1, "Unable to power off system\n");
+> drivers/power/reset/gpio-restart.c:	WARN_ON(1);
+> drivers/power/reset/regulator-poweroff.c:	WARN_ON(1);
 
-Actually, this is normally not written like this. Usually it is done as
-an allOf entry:
-  - if:
-      required:
-        - maxim,gpio-poc
-    then:
-      properties:
-        poc-supply: false
-        gpio-controller: false
+Ohh, duh, ok. Cute.
 
---Y3HCj6m+kwEOd5rj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaB4q7wAKCRB4tDGHoIJi
-0oZzAPwPUKSBLiMIGUSmw/L5ltSvNBqEyK6Kdh0T6Z4SFo4SSgD/drQHaWB2p1zs
-WNQunAze+EjQ+qmUatfORHhmzm4yNwM=
-=m/bM
------END PGP SIGNATURE-----
-
---Y3HCj6m+kwEOd5rj--
+Can we do the WARN_ONCE(1, "Unable ...") pattern? Then we don't need a
+comment since the warn message makes it obvious.
 
