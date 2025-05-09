@@ -1,141 +1,181 @@
-Return-Path: <linux-gpio+bounces-19842-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19843-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6874AB0F0B
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 11:32:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EC6AAB0F1F
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 11:38:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AB841BA122C
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 09:33:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67B0C9C2179
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 09:37:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1248927A477;
-	Fri,  9 May 2025 09:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44FD227AC24;
+	Fri,  9 May 2025 09:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ik3mPqeL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D8A2882AA;
-	Fri,  9 May 2025 09:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FB735976;
+	Fri,  9 May 2025 09:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746783169; cv=none; b=bH3tO4g5F3glrW+M/wnYXrjCeEukPu0g1TLieUxzRPDTguFmGW/33fmfoJQ26PXmoHfEHRErFAePsz1WQw9alZh/tdsGAwM1i5mbCPO8Zwz5uGF4KAw1KeOvDR8nSvmEloh2aSYcbEQ9NN+GwZjCeyXdSSY3QqbgOxU8oo4XHO0=
+	t=1746783489; cv=none; b=ZDhJ8o0Z4ewu3FCXx8FUD7WqplNRZ7FUduGrQKZNhQyHPzSXL7FeJTDiZNhBd22Q06Db285aehF/VbbS3WBVsFz5SJtDsFCq2/p5OegWlpqEjU3Vmeo2UqO9kmvIXWj75UTbO67BPn/XD7V/71B3WU2R1LwPjn2mo/1uMK8IpI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746783169; c=relaxed/simple;
-	bh=u8CP2jstY1vLjj9w7I+M1YYtHhLAwJx51Kwb35+xddA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MBs4+ICkcAUD1i7VayWIjhHs5dv1RIvGYOzN7uMZVzraP5XxNUOAOb7UoOF42b3Rj4/G4jUeIqUHLKmZvo5C79H2zuoiAQ7V5zJN4BzqaG8ICJkjIxm/eke81GRHkG6JxZ06mi9EdjM4bcKEO5QH3OifA94eMZ52TotowrYdcbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-523f670ca99so632248e0c.1;
-        Fri, 09 May 2025 02:32:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746783165; x=1747387965;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OiqZY4cxBVqG62IrO4QCpU4892TzI+loxr1Y0y5+4vk=;
-        b=iRTSMgKFT0/G1B1i+7ZMX/tzaRLrs1pqVoSTTcjdoJeImJn8U7ZBtf4sUWTZk+5Ffq
-         iUOTPxlech/ln1I2e5yM8G5rtKcviT6zv+FEwRyFbzQRcuzorah7o55NPc1zZxnoKRkW
-         Z6A3D16SWgT6VMihrVRffJzg+bwVLQGGclbZ1n1FNPYi0pWLufPaNB+NrE0ImyvQiEdN
-         Bvd/MVuxr9bMWSQNDATrEP6YVERVhKxBwW0twGPIIYNhzpAmMhUswfi17tvvdsyUFlPm
-         3nJAJvSh9Sn75EGZaj/KZrCuir361bnD5af7n9yjDupNR0qSfvdu2Hl1U/tUg8+OHn/Z
-         1yDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+x3lonbdQPPREMSBr/0qQkOSLzgkUQb3ymdb483OABIBl1BRWDu55ovhCo4bnSzUIacZozbW9eWzChMIm@vger.kernel.org, AJvYcCWTH7RTqHiVCoRxgz7k4Koxz7IYrVJggUJaiBHUu7yoiiBo2yDBzgIthRO921MQDiC75FfipMu1QVhd@vger.kernel.org, AJvYcCXyiLrhV97UTiHQzPOQKyXLfX2EU9Q8BFYT7IGD9SFBp4vIzZjvG+ESW+Jx7Jg6I+Nxa8npCdazP0SIqVMS8G/2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmfO4FYJ/JuglUHD5bSeROdJ0GQdDyA5Ivvx+F57AHFkzA+VzP
-	fK5gBzW9kC04PNfzFMUqcZ1DNVSDZMAn1AFpYSOH3GKofpUpqsbOy2+8b+QT
-X-Gm-Gg: ASbGncuC/Sv7Pqnhg3SgCjia+uQwTQKbW0c1am83WMtGEfFeOEOfQ/svMk0VVfB7m1L
-	6f27sjCtccYImInIONb5ioNIyOi5OXyaT1QLyVDc591+9FYGkZJpJvTngmQZCThScy3PDRP83rv
-	aiAzfKZA+6TNQIISsr1bvGtkQ2c55UYM2KEORK4v5aRBxcpZADrhSDxBDPvCJPC4Qs/ZnTW4GrY
-	QQyeiMviVzKJm7jRAbyQHTyvS+ZeSTbjeG/mijw7TTFHa3ypEAo56ytBndqObQ7ojqAW8HtJYkj
-	e8qpSfyVUjzPcpzZhDu5TRq5mbrmHgC7ymtNdtyWPOxJDJiH3e8/KHdNUz6P3llHrkhZ7yEsahM
-	2V7E=
-X-Google-Smtp-Source: AGHT+IGHWjt6yFi6L2E6+EpUMyuMlq2TK3LxwEqDf9eGdcU7TeeyxQxK4oqjRRg/3fAPBabdLZX2iw==
-X-Received: by 2002:a05:6122:90e:b0:520:42d3:91c1 with SMTP id 71dfb90a1353d-52c53cb66f4mr1762737e0c.10.1746783165508;
-        Fri, 09 May 2025 02:32:45 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c565cc6d9sm637227e0c.5.2025.05.09.02.32.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 02:32:45 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-878af63c5eeso498657241.3;
-        Fri, 09 May 2025 02:32:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUYyy6iCZUaz5zdm9wyAFZomtjs6IaBRVsfUXEbwfXnoA8NDMUFDSMtiivIE4IVmYG8KcAkp/ScJ7WxzszEzg8r@vger.kernel.org, AJvYcCVqtUAusZSsZTVzAiw2Ahi3xdypAacQRGoSzjZKNhvLVZlaZha+pRWKxaxmYlHKpnW0bNmvF48BpWKxFgMa@vger.kernel.org, AJvYcCWjQULQ+KZxHB7cQZAggO9HsTaUw6tvwCcQcdx1FL0GF2IFojUdYeTa+B9lvverajP8AMCAghzR4S6D@vger.kernel.org
-X-Received: by 2002:a05:6102:148f:b0:4b1:1eb5:8ee3 with SMTP id
- ada2fe7eead31-4deed3ff7d2mr1976230137.22.1746783164290; Fri, 09 May 2025
- 02:32:44 -0700 (PDT)
+	s=arc-20240116; t=1746783489; c=relaxed/simple;
+	bh=GKyHnY3Ghu2yiVf36Y/TrJp84COCpEcwGhvyMsI/YG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TICtB1Oe+fopwb7yo8Bz7JnbuWRPgMIVjzIIP3+cUkYp4Osj64XggrPhiJUlU7WALgV5ZpBFwN5LJGnb25GB55Hq2VUUR+uONYwtANUNTC52mrLJ2JV7hHXCljYBia86bH390xSdmPYlAQhKQh0KL+eMM/GVS9x1qyk/ScevoHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ik3mPqeL; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746783487; x=1778319487;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GKyHnY3Ghu2yiVf36Y/TrJp84COCpEcwGhvyMsI/YG8=;
+  b=ik3mPqeLNpQHns/JSK/lLniI2htObWmhm/T8j+897Tu46JV4mDSgDECI
+   2c/3FBnE4RC/ZJ9P8qk72+dVUQCLdsfM2szj0A6VqH9FzAkKSDRk8wsUJ
+   aFfg3BXJKCPFxim+0+Mxq68rxlMgtQjEM4Xua6inDkiS4ksVIXbXQH1lx
+   0jN8DVTD5GxKI9RUIJVQft5TRxKpKsBz+gEn5CNZ/fSz3b+hk/nK3u9VP
+   GLLteY4q7mzy2hee3+4FPs5X+29STxsfqRF6BPw60+mMcOaSkaKVwU/p3
+   R4jsDJyfhuAb86vnGf7EMnzVQNytMhFUzDimgiNnaHy7cGSeyfnhykLsb
+   g==;
+X-CSE-ConnectionGUID: CFWpUTrKQOCFmGkGcC4/Mg==
+X-CSE-MsgGUID: rS/akeDIQ2SWxW7Gs44DCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59268838"
+X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
+   d="scan'208";a="59268838"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 02:38:06 -0700
+X-CSE-ConnectionGUID: 0/Te/Uk2TmuNkEJfgpnkUA==
+X-CSE-MsgGUID: qb8DGivuQBW3TKbXJfOpfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
+   d="scan'208";a="136959750"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 09 May 2025 02:37:51 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDKAv-000BsO-1B;
+	Fri, 09 May 2025 09:37:49 +0000
+Date: Fri, 9 May 2025 17:37:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Markus Burri <markus.burri@mt.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Nuno Sa <nuno.sa@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, linuxppc-dev@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] gpio: fix potential out-of-bound write
+Message-ID: <202505091754.285hHbr2-lkp@intel.com>
+References: <20250508130612.82270-5-markus.burri@mt.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-10-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-10-3906529757d2@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 9 May 2025 11:32:32 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX8kxyZV9TeC9H5=RBHW3ZL84jRvEOX7HBTVfkAyrxSqQ@mail.gmail.com>
-X-Gm-Features: AX0GCFv6hjVazIWnpPSbgpjruxFWmQk-XkjpotFopyD6W8-ZKiIyd5_Qr17iPWo
-Message-ID: <CAMuHMdX8kxyZV9TeC9H5=RBHW3ZL84jRvEOX7HBTVfkAyrxSqQ@mail.gmail.com>
-Subject: Re: [PATCH v5 10/12] gpio: aggregator: add possibility to attach data
- to the forwarder
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508130612.82270-5-markus.burri@mt.com>
 
-Hi Thomas,
+Hi Markus,
 
-On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
-> Add a data pointer to store private data in the forwarder.
->
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+kernel test robot noticed the following build errors:
 
-Thanks for your patch!
+[auto build test ERROR on b4432656b36e5cc1d50a1f2dc15357543add530e]
 
-> --- a/drivers/gpio/gpio-aggregator.c
-> +++ b/drivers/gpio/gpio-aggregator.c
+url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Burri/iio-backend-fix-out-of-bound-write/20250508-211644
+base:   b4432656b36e5cc1d50a1f2dc15357543add530e
+patch link:    https://lore.kernel.org/r/20250508130612.82270-5-markus.burri%40mt.com
+patch subject: [PATCH v4 4/6] gpio: fix potential out-of-bound write
+config: x86_64-buildonly-randconfig-003-20250509 (https://download.01.org/0day-ci/archive/20250509/202505091754.285hHbr2-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091754.285hHbr2-lkp@intel.com/reproduce)
 
-> @@ -289,6 +290,18 @@ struct gpio_chip *gpio_fwd_get_gpiochip(struct gpiochip_fwd *fwd)
->  }
->  EXPORT_SYMBOL_NS_GPL(gpio_fwd_get_gpiochip, "GPIO_FORWARDER");
->
-> +/**
-> + * gpio_fwd_get_data - Get data for the GPIO forwarder
-> + * @fwd: GPIO forwarder
-> + *
-> + * Returns: The data for the GPIO forwarder
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505091754.285hHbr2-lkp@intel.com/
 
-driver-private data
+All errors (new ones prefixed by >>):
 
-> + */
-> +void *gpio_fwd_get_data(struct gpiochip_fwd *fwd)
-> +{
-> +       return fwd->data;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(gpio_fwd_get_data, "GPIO_FORWARDER");
-> +
->  /**
->   * gpio_fwd_request - Request a line of the GPIO forwarder
->   * @chip: GPIO chip in the forwarder
+>> drivers/gpio/gpio-virtuser.c:404:6: error: use of undeclared identifier 'size'; did you mean 'ksize'?
+     404 |         if (size >= sizeof(buf))
+         |             ^~~~
+         |             ksize
+   include/linux/slab.h:491:8: note: 'ksize' declared here
+     491 | size_t ksize(const void *objp);
+         |        ^
+   1 error generated.
 
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
+vim +404 drivers/gpio/gpio-virtuser.c
 
-                        Geert
+   393	
+   394	static ssize_t gpio_virtuser_direction_do_write(struct file *file,
+   395							const char __user *user_buf,
+   396							size_t count, loff_t *ppos,
+   397							bool atomic)
+   398	{
+   399		struct gpio_virtuser_line_data *data = file->private_data;
+   400		struct gpio_desc *desc = data->ad.desc;
+   401		char buf[32], *trimmed;
+   402		int ret, dir, val = 0;
+   403	
+ > 404		if (size >= sizeof(buf))
+   405			return -EINVAL;
+   406	
+   407		ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, user_buf, count);
+   408		if (ret < 0)
+   409			return ret;
+   410	
+   411		buf[ret] = '\0';
+   412	
+   413		trimmed = strim(buf);
+   414	
+   415		if (strcmp(trimmed, "input") == 0) {
+   416			dir = 1;
+   417		} else if (strcmp(trimmed, "output-high") == 0) {
+   418			dir = 0;
+   419			val = 1;
+   420		} else if (strcmp(trimmed, "output-low") == 0) {
+   421			dir = val = 0;
+   422		} else {
+   423			return -EINVAL;
+   424		}
+   425	
+   426		if (!atomic)
+   427			ret = gpio_virtuser_set_direction(desc, dir, val);
+   428		else
+   429			ret = gpio_virtuser_set_direction_atomic(desc, dir, val);
+   430		if (ret)
+   431			return ret;
+   432	
+   433		return count;
+   434	}
+   435	
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
