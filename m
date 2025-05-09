@@ -1,107 +1,127 @@
-Return-Path: <linux-gpio+bounces-19883-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19884-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0EADAB1C4D
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 20:28:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1811BAB1D3F
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 21:22:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22C171C20DD0
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 18:28:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9CB0F189711C
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 19:22:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA70E23E235;
-	Fri,  9 May 2025 18:28:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2409525D1F9;
+	Fri,  9 May 2025 19:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AYbnBLQB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4ju9s+Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1AF238172;
-	Fri,  9 May 2025 18:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBB933F3;
+	Fri,  9 May 2025 19:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746815317; cv=none; b=tCNpXEKHnxi0vq7QDTD0xcV/Oloj+fy/KTBupSsximi5Vv+VL86ttrYRXyY1eT8ZwgQZdAlRGdlKDhfI0Vvo2YJ1gsegytpg2HdypLSaid104re2gYGAo2wf9tJUl+pdTYemQXoJioyuNhwqLHCPPA6AmbuKWU+fngHppf280ns=
+	t=1746818534; cv=none; b=cC8zX6T2rOrJ4WT5uC1RvqqwaMPUh9K5Wy/Qn8Y9fU3naoX13NoFZrTqGcnkwv637e49V2m+785XOD8TPetsPIw2jEbH9r6Zsg5Nq8MHg+7Kjmd+9h2uLCeO33+5uoNkViFem2fH0j4AmkiJg+PejsBsboHqk/m4Tmzgke+7EzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746815317; c=relaxed/simple;
-	bh=10fWKQkNnHsqIbf/pw3ZTsZtcdW11Mi85qpJNxHdr28=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DfBGKGNd8s302tXyk3PHyaXhAO2qtJbQxa/vQOJyNSG/s89sTbICUVYWRBBLJkBXkDNPG3VdS3Qh0IlnHO0jzzt85G5Vquq3WsdTDSmmzJDyBYRLUxXvIaDGsF3U/V93nEx5B8LqThoCtCEdBxooI67VDvXYLuIM2ZhXboISfV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=AYbnBLQB; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74248a3359fso564457b3a.2;
-        Fri, 09 May 2025 11:28:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1746815315; x=1747420115; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AVjmITvg5xwQUhBH3cPWu+1Rci6sKZeIVD+X8Tz7B6Y=;
-        b=AYbnBLQBGpTjp4qqM5x5rME4jKnQ2sztadWaKg67B7gLiTJGsHIyOaq2cZaKBsInK4
-         +i6/D4AXyNsfN/+ACIkd/xx+2Zmave6jUzAOBv460Q7uJhiQVESshau07d4BWOfON8Bs
-         0PC957BYTrdAUWnrN6CJqR+20M4Mpo6WS1AOyiSIz4WCDgeJW+vYoo1I/eSI71Q96kP+
-         vp4HeqHtau0MACVztknNCnLCLkdCiJ/KRxCuT+gdOC4QSg8fe3b70jTKOnE7wLv0nFIb
-         IVqBAkr2B1lfGoqzu7sshrCH7PKhROj9iwORAoisfVInGYmIQvi1z/dFfGLU5NKUePxw
-         gepg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746815315; x=1747420115;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AVjmITvg5xwQUhBH3cPWu+1Rci6sKZeIVD+X8Tz7B6Y=;
-        b=MTF16kTkDPbRdtqnLS3X9Yybbhy25HxViRimEul2UCqOrP7ZXB3Ry2mgr5JC2x9G0I
-         sMn73hApfdpWkBbjPSJy5XUoV65r6aRpZ8PdvcPsUcd9tyNyqxgzSgYpB7uRHYv81+oC
-         eC727DpdeZWGUef/xNhoimPgDyHpy9TlcWBIXp3RvhyelfpPFcLnXYSD3xwtT7Ya5Vng
-         dZbTjfPkboymGKOGK/lx2NMRjsBcu9hnBHWvulUHxmFrDdg8U2wfhpyFGAJWwRI6ffPT
-         S3uv9YEYefBiX6Lpya+V+MSYXpR2cBsR1o8ijBz9OJNZ6iHMZ4KtlDTJVndPmZqQlnKi
-         mNSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVakknxfzUs/T3StL4pSLbKvc7Xyrb3PSBzH+u7plPaSRTDmyYoYNbwGqHfX0YEn7Z2KJlGqZxMhjPF@vger.kernel.org, AJvYcCVjmLE+cDVjhhKfkrnnTeCgLIezo8sTAYi7hft6WPkvYe4JAMw/GXCU0B5k8i7vj1VudIgI8iWfoVmfHaH+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLPrEnl/UzsN2EKZ28TMQ2PHkWOLwhFbbaF+qA/gyr9B43Yc6P
-	0DzYgSIzVxzcxCy69+x37IwbyefVLwgvAzHJ3fICVWYre0PIl+XltbwNG7GK442OpGtBWZ9bMI3
-	hrAJm6ZGazUlh5PpXyEQyzcLLB3s=
-X-Gm-Gg: ASbGnctuSmJEbQI+mWZwm2Y+ggV/2n3jQN27TP38JfUucwC5NhJ5g0wyC/8GwkN1AM5
-	IzdOCzPLeATtxaUASbAuASezBSNsp45pPc1pAehtezFsOY2gkdWVJz9bpANqItlbH4ndTa6Uluj
-	KlyuOt3j2RJ3tf5CWK7mYLdOM9fSvXGIldSs+UFJbflpjbjf1YZ1HpIzKLn9Gp1fa5Uw==
-X-Google-Smtp-Source: AGHT+IEwd7AiDoJxpDhyTHw6FTDd796IjH1JzgkpmVh4628MtJYKSWng6hqIPivs5wHI5s0eCiBfNcWPOBCx0dc2UHI=
-X-Received: by 2002:a17:902:f70a:b0:225:abd2:5e39 with SMTP id
- d9443c01a7336-22fc8c8eac0mr65654585ad.30.1746815315465; Fri, 09 May 2025
- 11:28:35 -0700 (PDT)
+	s=arc-20240116; t=1746818534; c=relaxed/simple;
+	bh=dA5hNV7xLnpRN9zoNb0MzWxcvFdMBNDlsrZb88qVmI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k9mgardWLSTvwovUojSK3ldAXGV+Tu22i+NPzb33p5u0xWppAvM4CZp12PyjIBUAHenjhOk5fzF7H0NJJRUddu3Vz8fvTR55th9iVZBm0NE+B0pGrfsHr6p9GbFkUmcVzHKrCi5GexsoyTp4TL8YqA7H9pyx6QVnUH+uiYVNfDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D4ju9s+Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE3BC4CEE4;
+	Fri,  9 May 2025 19:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746818534;
+	bh=dA5hNV7xLnpRN9zoNb0MzWxcvFdMBNDlsrZb88qVmI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D4ju9s+QFdb/2LZabo1Bq79ixSLpDlmAINoajemtD3nw1UpKRae4DJqcciiMm4sqr
+	 7Cnq4oW6n7MYrRwxBdroDCdVN71b/3mpWzf38F6TonthwysTGpjcVi1Z3yxqEIdLvl
+	 rQ6mTVHVljPdGec46M0pQkWWjOXpt/zVlF6DayDeaCE2yaJboElvrki4NSBJYwIcPS
+	 i+3El4sSURVvfny80qrKE1kjMEQGIR9cm2udi5YTAnt8bD/XijCBT0McFB0UMQHQjI
+	 Ime1AwEZ9lUmaJCq/6hVKr8u1y9KiSf+UQJi7Jq6d6knzhM9PRzYKke/gWR9PUJSsu
+	 YeQBofi6EC5zw==
+Date: Fri, 9 May 2025 14:22:12 -0500
+From: Rob Herring <robh@kernel.org>
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: pinctrl: Document Tegra186 pin
+ controllers
+Message-ID: <20250509192212.GA3945761-robh@kernel.org>
+References: <20250429-tegra186-pinctrl-v1-0-722c7c42394e@gmail.com>
+ <20250429-tegra186-pinctrl-v1-1-722c7c42394e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Fri, 9 May 2025 20:28:24 +0200
-X-Gm-Features: AX0GCFt7pQHVyrf4n1xvCNGZ9D5D94k38mJZKPZaIgxrW2CstAdBDU6m2wUQANg
-Message-ID: <CAFBinCDt1jDv=jhDoW3UtBUL8BuLL8PpJPKjpC1Sf5fifnw+6g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: meson: Drop unused aml_pctl_find_group_by_name()
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-amlogic@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429-tegra186-pinctrl-v1-1-722c7c42394e@gmail.com>
 
-On Fri, May 9, 2025 at 5:01=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> aml_pctl_find_group_by_name() is not used anywhere, as reported by W=3D1
-> clang build:
->
->   pinctrl-amlogic-a4.c:600:2: error: unused function 'aml_pctl_find_group=
-_by_name' [-Werror,-Wunused-function]
->
-> Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, Apr 29, 2025 at 04:33:30PM -0500, Aaron Kling wrote:
+> Tegra186 contains two pin controllers. Document their compatible strings
+> and describe the list of pins and functions that they provide.
+> 
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  .../bindings/pinctrl/nvidia,tegra186-pinmux.yaml   | 285 +++++++++++++++++++++
+>  1 file changed, 285 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra186-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra186-pinmux.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..2fcf42869d7b68671ae3ce78bd33787901ae9203
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra186-pinmux.yaml
+> @@ -0,0 +1,285 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/nvidia,tegra186-pinmux.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NVIDIA Tegra186 Pinmux Controller
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Jon Hunter <jonathanh@nvidia.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nvidia,tegra186-pinmux
+> +      - nvidia,tegra186-pinmux-aon
+> +
+> +  reg:
+> +    items:
+> +      - description: pinmux registers
+> +
+> +patternProperties:
+> +  "^pinmux(-[a-z0-9-_]+)?$":
+
+Is there really a case for having just 'pinmux'? Seems like there would 
+always be multiple nodes.
+
+Don't use '_' in node names.
+
+> +    type: object
+> +
+> +    # pin groups
+> +    additionalProperties:
+
+Define a node name pattern here instead. Allowing any name was for 
+existing bindings.
+
+> +      $ref: nvidia,tegra-pinmux-common.yaml
+> +      unevaluatedProperties: false
+> +      properties:
+> +        nvidia,function:
 
