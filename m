@@ -1,181 +1,158 @@
-Return-Path: <linux-gpio+bounces-19843-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19844-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EC6AAB0F1F
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 11:38:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BF5BAB0FA4
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 11:54:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67B0C9C2179
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 09:37:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84D5516238E
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 09:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44FD227AC24;
-	Fri,  9 May 2025 09:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BA6F28DF33;
+	Fri,  9 May 2025 09:54:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ik3mPqeL"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DR9hnALO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FB735976;
-	Fri,  9 May 2025 09:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D834269AEE;
+	Fri,  9 May 2025 09:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746783489; cv=none; b=ZDhJ8o0Z4ewu3FCXx8FUD7WqplNRZ7FUduGrQKZNhQyHPzSXL7FeJTDiZNhBd22Q06Db285aehF/VbbS3WBVsFz5SJtDsFCq2/p5OegWlpqEjU3Vmeo2UqO9kmvIXWj75UTbO67BPn/XD7V/71B3WU2R1LwPjn2mo/1uMK8IpI0=
+	t=1746784439; cv=none; b=tfq/XAE2jNPGGhtgSOzg7WYJ+o4GVlj05gggl57X46l3lYIzysSCQoMXUIHdfr5HOdiOEtHYRHtI0RGUnQgMsIZS4j8ER0xib6SV5wtP3uHMgj3iQMUu1Jn3PWrVptikosVWY/xilwLOn5nB8JSsyHtsoAE3hnnTlsNi77tCQ1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746783489; c=relaxed/simple;
-	bh=GKyHnY3Ghu2yiVf36Y/TrJp84COCpEcwGhvyMsI/YG8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TICtB1Oe+fopwb7yo8Bz7JnbuWRPgMIVjzIIP3+cUkYp4Osj64XggrPhiJUlU7WALgV5ZpBFwN5LJGnb25GB55Hq2VUUR+uONYwtANUNTC52mrLJ2JV7hHXCljYBia86bH390xSdmPYlAQhKQh0KL+eMM/GVS9x1qyk/ScevoHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ik3mPqeL; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746783487; x=1778319487;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GKyHnY3Ghu2yiVf36Y/TrJp84COCpEcwGhvyMsI/YG8=;
-  b=ik3mPqeLNpQHns/JSK/lLniI2htObWmhm/T8j+897Tu46JV4mDSgDECI
-   2c/3FBnE4RC/ZJ9P8qk72+dVUQCLdsfM2szj0A6VqH9FzAkKSDRk8wsUJ
-   aFfg3BXJKCPFxim+0+Mxq68rxlMgtQjEM4Xua6inDkiS4ksVIXbXQH1lx
-   0jN8DVTD5GxKI9RUIJVQft5TRxKpKsBz+gEn5CNZ/fSz3b+hk/nK3u9VP
-   GLLteY4q7mzy2hee3+4FPs5X+29STxsfqRF6BPw60+mMcOaSkaKVwU/p3
-   R4jsDJyfhuAb86vnGf7EMnzVQNytMhFUzDimgiNnaHy7cGSeyfnhykLsb
-   g==;
-X-CSE-ConnectionGUID: CFWpUTrKQOCFmGkGcC4/Mg==
-X-CSE-MsgGUID: rS/akeDIQ2SWxW7Gs44DCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59268838"
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="59268838"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 02:38:06 -0700
-X-CSE-ConnectionGUID: 0/Te/Uk2TmuNkEJfgpnkUA==
-X-CSE-MsgGUID: qb8DGivuQBW3TKbXJfOpfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="136959750"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 09 May 2025 02:37:51 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uDKAv-000BsO-1B;
-	Fri, 09 May 2025 09:37:49 +0000
-Date: Fri, 9 May 2025 17:37:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Markus Burri <markus.burri@mt.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
-	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Nuno Sa <nuno.sa@analog.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, linuxppc-dev@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] gpio: fix potential out-of-bound write
-Message-ID: <202505091754.285hHbr2-lkp@intel.com>
-References: <20250508130612.82270-5-markus.burri@mt.com>
+	s=arc-20240116; t=1746784439; c=relaxed/simple;
+	bh=s7L62xg5AhYSBPqLtZLS+/N9HboWD+nvR4XXTw7AV18=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
+	 References:In-Reply-To; b=Rbh4BF0x2qroDJfF22hMfT8ZAX/nARV0C98ycSzxSYLNnef/VQt+9vDitE5UVdG22A4JZkSj7ofp05ov/KHn6sIksxeMUJT8ayyF+v3p7PlsYYSLISyqoajgWl8UlbIlJisS1XwfCC3tF0EWKspZPmG05LYfymbKg2Cgpp+kWQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DR9hnALO; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F3A254326B;
+	Fri,  9 May 2025 09:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746784429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j50PEjeqXZDrUMeEGIxCAVR6d8U98GtS3zwEHA1HFcA=;
+	b=DR9hnALO9LwAG80j5ak+KWuJL/BSYM/nVDB7jUqtHVPXRlg6wf3SP1iiMpagJlg7ZwMiwm
+	4s3x8MdeuW4bGnbEZAiLxBn4EvsYd3ITVtxj9OtCsOs60J2YVadl7PAn+kQ4cPHcEI3XAF
+	Ax/8N6v4zRq3Ub+GnhLkab5eiDtlw6N+4jiO5bBmhlXYDhTO+xS4DHlkkmEk+2aecekCa6
+	YsOG/YhhJp5kzHX8F0H5bpK1B21//3xGJy/Hklngy50/m1uFaGYfNNRKpTYAZPm6K2LyjB
+	+ynrBQNg0fgPwUe6qaNjkQGeVGQMbbjXAdIkX8dsd5AUjQo8QuGTCOBSA7B1OQ==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508130612.82270-5-markus.burri@mt.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 09 May 2025 11:53:47 +0200
+Message-Id: <D9RJEFYN039A.UGCG0K6AAPLH@bootlin.com>
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>, "Lee Jones"
+ <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>
+Subject: Re: [PATCH v8 02/11] mfd: Add max7360 support
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
+ <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
+ <69f72478-7102-4cfd-98d7-a93dcfe5a1a0@wanadoo.fr>
+In-Reply-To: <69f72478-7102-4cfd-98d7-a93dcfe5a1a0@wanadoo.fr>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvfeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefhvffuofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftedvgfegteehjeejtdefgffhteevvddtvdejleeghfefuefgledtteduvdetkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegthhhrihhsthhophhhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhtoheplhgvvgeskhgvrhhnv
+ ghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Hi Markus,
+On Fri May 9, 2025 at 11:29 AM CEST, Christophe JAILLET wrote:
+> Le 09/05/2025 =C3=A0 11:14, mathieu.dubois-briand@bootlin.com a =C3=A9cri=
+t=C2=A0:
+>> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>>=20
+>> Add core driver to support MAX7360 i2c chip, multi function device
+>> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+>>=20
+>> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.co=
+m>
+>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> ---
+>
+> Hi,
+>
+> ...
+>
+>> +static int max7360_mask_irqs(struct regmap *regmap)
+>> +{
+>> +	struct device *dev =3D regmap_get_device(regmap);
+>> +	unsigned int val;
+>> +	int ret;
+>> +
+>> +	/*
+>> +	 * GPIO/PWM interrupts are not masked on reset: as the MAX7360 "INTI"
+>> +	 * interrupt line is shared between GPIOs and rotary encoder, this cou=
+ld
+>> +	 * result in repeated spurious interrupts on the rotary encoder driver
+>> +	 * if the GPIO driver is not loaded. Mask them now to avoid this
+>> +	 * situation.
+>> +	 */
+>> +	for (unsigned int i =3D 0; i < MAX7360_PORT_PWM_COUNT; i++) {
+>> +		ret =3D regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+>> +					MAX7360_PORT_CFG_INTERRUPT_MASK,
+>> +					MAX7360_PORT_CFG_INTERRUPT_MASK);
+>> +		if (ret)
+>> +			return dev_err_probe(dev, ret,
+>> +					     "Failed to write MAX7360 port configuration");
+>
+> Nitpick: Missing \n
+>
+>> +	}
+>> +
+>> +	/* Read GPIO in register, to ACK any pending IRQ. */
+>> +	ret =3D regmap_read(regmap, MAX7360_REG_GPIOIN, &val);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "Failed to read GPIO values: %d\n", re=
+t);
+>
+> Nitpick: ret is not needed in the error message.
+>
+>> +
+>> +	return 0;
+>> +}
+>
+> ...
+>
+> CJ
 
-kernel test robot noticed the following build errors:
+Hi Christophe,
 
-[auto build test ERROR on b4432656b36e5cc1d50a1f2dc15357543add530e]
+Thanks, I'm fixing the two messages.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Burri/iio-backend-fix-out-of-bound-write/20250508-211644
-base:   b4432656b36e5cc1d50a1f2dc15357543add530e
-patch link:    https://lore.kernel.org/r/20250508130612.82270-5-markus.burri%40mt.com
-patch subject: [PATCH v4 4/6] gpio: fix potential out-of-bound write
-config: x86_64-buildonly-randconfig-003-20250509 (https://download.01.org/0day-ci/archive/20250509/202505091754.285hHbr2-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091754.285hHbr2-lkp@intel.com/reproduce)
+Thanks for your review.
+Mathieu
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505091754.285hHbr2-lkp@intel.com/
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-All errors (new ones prefixed by >>):
-
->> drivers/gpio/gpio-virtuser.c:404:6: error: use of undeclared identifier 'size'; did you mean 'ksize'?
-     404 |         if (size >= sizeof(buf))
-         |             ^~~~
-         |             ksize
-   include/linux/slab.h:491:8: note: 'ksize' declared here
-     491 | size_t ksize(const void *objp);
-         |        ^
-   1 error generated.
-
-
-vim +404 drivers/gpio/gpio-virtuser.c
-
-   393	
-   394	static ssize_t gpio_virtuser_direction_do_write(struct file *file,
-   395							const char __user *user_buf,
-   396							size_t count, loff_t *ppos,
-   397							bool atomic)
-   398	{
-   399		struct gpio_virtuser_line_data *data = file->private_data;
-   400		struct gpio_desc *desc = data->ad.desc;
-   401		char buf[32], *trimmed;
-   402		int ret, dir, val = 0;
-   403	
- > 404		if (size >= sizeof(buf))
-   405			return -EINVAL;
-   406	
-   407		ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, user_buf, count);
-   408		if (ret < 0)
-   409			return ret;
-   410	
-   411		buf[ret] = '\0';
-   412	
-   413		trimmed = strim(buf);
-   414	
-   415		if (strcmp(trimmed, "input") == 0) {
-   416			dir = 1;
-   417		} else if (strcmp(trimmed, "output-high") == 0) {
-   418			dir = 0;
-   419			val = 1;
-   420		} else if (strcmp(trimmed, "output-low") == 0) {
-   421			dir = val = 0;
-   422		} else {
-   423			return -EINVAL;
-   424		}
-   425	
-   426		if (!atomic)
-   427			ret = gpio_virtuser_set_direction(desc, dir, val);
-   428		else
-   429			ret = gpio_virtuser_set_direction_atomic(desc, dir, val);
-   430		if (ret)
-   431			return ret;
-   432	
-   433		return count;
-   434	}
-   435	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
