@@ -1,152 +1,255 @@
-Return-Path: <linux-gpio+bounces-19818-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19819-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFBE3AB09C7
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 07:39:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FDDCAB0AD2
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 08:45:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5063A4A273F
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 05:39:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A62551C04AC6
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 06:45:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90713269899;
-	Fri,  9 May 2025 05:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2F5826E17D;
+	Fri,  9 May 2025 06:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj/KbpJq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gBKQArXb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B668D2686B1;
-	Fri,  9 May 2025 05:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFF326E16F
+	for <linux-gpio@vger.kernel.org>; Fri,  9 May 2025 06:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746769164; cv=none; b=ASR0L6Nk6HTbE9RvRVbq7CftF1NnQTNBov4EEvr3gQ9lhBsmtnNfmRYsIczt4ltQ8jk6v/3zN7tCesfdAOUukdB/MplPhhHh2gRStRwe5n40w0l/j7pg9qLQ6UJqNwIVHc/2u08i8CZ6CFkxmXK6wSglhps0pnUV0qjQgFxApNE=
+	t=1746773117; cv=none; b=i4pckhFCl+9b5RZqBn2V5LSwVFEunebG0cK08r7o4rAgyh1WaURg/DM3imc1xhY9iIS3f0vI9UUtgH72N5uXqY5mxD/d3qs17F6JdTMkmE3fg/niyGuAFjHIbTuDWDYt0opgjRTbR+gATq7wOOeEtdQH/OXIm6IWA2mXVcO3ZVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746769164; c=relaxed/simple;
-	bh=Wt6qmQ7sZcDANvo0BmQAwd3idypT0K8m5njPmRPNL7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pCLtOW02hISDHknPWLWNqF7xzTTtnfi+MMi5rALRgCfExOvW5aaiuti2zPpZdNRZn8TDtrB16jirZdaLcdXlfFEsbJx2vh9w0cpXjMwnHRo4t85yM0iMTcKwBhQBT7RSpn6W9UC3D5NSNPEoFJCR11BqhKI4/Ft1sg4WekP6WIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dj/KbpJq; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6ff4faf858cso12491067b3.2;
-        Thu, 08 May 2025 22:39:22 -0700 (PDT)
+	s=arc-20240116; t=1746773117; c=relaxed/simple;
+	bh=27kGMBB3C0h9ODtKKrLc1VupFSWATrFKfY3kj/JBugQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BtU+LFNYDaMsneIZRjeCOeqM/HecwiSKmZj7NsWInfT/jpq81jRVGwoMkNOwZLc1YKts2+1PKF50miephVDvWiPaVvhYc+ujzJYvD8Zjsms8CgrTp6Cj1psT/r8Do/rgpyyWV8DGajdWWJ5Fn7I8ek0fAQIZ9fo0wFi4qxigIHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gBKQArXb; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0ac853894so1459836f8f.3
+        for <linux-gpio@vger.kernel.org>; Thu, 08 May 2025 23:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746769161; x=1747373961; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wt6qmQ7sZcDANvo0BmQAwd3idypT0K8m5njPmRPNL7A=;
-        b=Dj/KbpJq4XJSW8XL5syhdB8Tx0o6SSEWchYnDow660MmAku+CJoDsB3EfXUgmiIKrw
-         GAgqywluCwCRoat1sQwsUfJ0JxIj0R5V8IVPK+nUDDoTsq2o1h5f4i5v6kqMWO2F/kPH
-         r9gET+kRZ+mza7bE/1tHhoVQiJDr0LCZ9uiV+oA/Fig4M2qfwPpdtwnI+5n3JdyrMgC/
-         o7Fy14HrPXcx9PHAr5b2YKy7lcuhY5SdYr0MQ8SEMvuDz4imcJgmt9sCZkdwQlVpFIdU
-         on9BnIKNs7y6ppmQFq9W1lShkekMzyt7L+UnCd+YzdDQJAPZBNrnxK+ZMuBUm/M0oyyj
-         llPg==
+        d=linaro.org; s=google; t=1746773114; x=1747377914; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UVJ2TuNUBUpO94IHTiYXs30ZxdePvcvCPymvMj2I2OQ=;
+        b=gBKQArXbZYzhy6ncASQWGKwcq4h7+Eags9bxpk5gVSOz2TXAV+OT1chirGqpK9XcNU
+         jhBQ0zsiMDqEQc6yD8NBC0d5J+EHhWiJ+NtywTApGVCrzKmsptuBhuV4QfP5ueTTJv1s
+         eCW8hYB/p3ADp5TeXFdXDVHf2ZjN4ktecvEF3bFXy2GztWSgVeARyMmeEkt6NhhTGKiJ
+         uh80Ns+ZR7mWdwHWzGCQzrDi/UoA2xb8fhMDZrUbZjkxXiWqgdUsMJaoVa+YsWmcBQpr
+         WBMfMG8z9Dj/cfU6Tc3468u9rRMx0FyWSdRniU8hgODh/k7IFaqtSLPtmssWWxylnpTX
+         0ytg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746769161; x=1747373961;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wt6qmQ7sZcDANvo0BmQAwd3idypT0K8m5njPmRPNL7A=;
-        b=GZ4O1VK42wybB0a9+1sCrZb4fWB4pSQ0gkpbQBJVl4OVqU8zgtupAACXQKa2FWGVHo
-         EurS3owNtXEjvLrPFiB/WnuaM+R7JoJNgjKxrtlOG4pxoojvddAm6QmdvdaSkY6a5vmL
-         glYahook0AgbrMIWlZMeObVVopYViXbu8Eq8dyiqcbcmmAU2ny7OdBmkVmn/Cz/vGJfB
-         gQElygMFYFXqcCMBIq/wD+n95WqzbM155Tgcs4UNeSe87is22C2wor5nRXgeb+y3EHOR
-         VUBQoZSSGYYkSyFCBVmRgBf6zVvmMyggGhRRMuvE298tZvnMGZokYfUbkeFF2Yylv28v
-         iGfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYyYc94fDGmZGwjKG/Q6GwMF+yZnCwPPQFWdJPCCK/oyFI+5UkIZT5ZiGtdvIfB4U8YsTopbRA@vger.kernel.org, AJvYcCVD1erA0h8+/NRj3AGq2WxlQ+AwKhrBl0Beq3BwA/VoWvssIu06lB05Q7SJqb3SYwhMX54Z5oYHE+qZg0A5UfE=@vger.kernel.org, AJvYcCWGZMRGecWsz3Hgi6sKo9VdFlCEuwnBfBP2mGCMIIHkKl1lOGZG9flo0sbh3iDucOo/OLVzbn7IoY+e0A==@vger.kernel.org, AJvYcCWTzRYXjFZNQSHn5J8r/3hV3qXxT1PivWBYWLPPt/n71O9YFrq1csEI0IAiNctSNQ+T1bCn8WbhKujhEJ0B@vger.kernel.org, AJvYcCWYl3l6ZOJXpUH9H8KnLa0b6OHJwKN/6sHzUGL53c5k2l50vMQz8WiQc7e6Vw0DJ/ku8bY/kuXW05AK@vger.kernel.org, AJvYcCWhQMp+jsrdRQL8xW8D6UKGOBYKQjtrHj9kx2EjyajnUTSRnl8vsqXANPhjO8qpjb9QMVpKCLyg5Zw=@vger.kernel.org, AJvYcCWqS74aICIgZYC5Un43hf0RqlBW7hbYHRKOsUnfIiW6t9FiOes/uDYzrg8IwyVe9UUCZOrE4RfaADJKEdg=@vger.kernel.org, AJvYcCXD28b2VU5/dXuaajsz6A9f4fBd3zTnb85EPGVwqnxG11b0BKxfW46WDO2erbJAhQKJDOmknxePY3Yl@vger.kernel.org, AJvYcCXmxNoAWYQnuzMbwMndeLLPEqWaDoyZd9/HNfD7GZxNCZzp1RuB0hE7/qx5pAyWObFlIshPnmBtyUyc@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB34ibkp1AnH6q9+CrlF2BpYYUI5wzE6A79O9OaEB1+c4GtQa3
-	mdhw/C2Uqp9ycL6fTYa6dS/haiWN6bW4Rfi9wR2QEhvrCI9kjIipZNgi7kUob6UgD+u7/R21rlz
-	BiR/jL1adrYaShe/57U1b3paKXgw=
-X-Gm-Gg: ASbGncvmF63es7mY//qPXv8Qdzsa2nIbV9sayYMrB6bafWBrNNdtvDQIkEvMuoHbSn3
-	k8Cj/Tys45/JXCB/n0kuaFChjCTylhMp/rUXev6NhDNXTs1WAQZHtf85cTISfrPwCGpy6o4aQeq
-	9MVnB8XM+3b6be10TfFHE/7/zIYDjvHnDeLwKDN7HCIjmSXWCqwaEWK8A=
-X-Google-Smtp-Source: AGHT+IFk5bB/kSQCQvPokaz/k9WbjeiZWx0KoBAXjKrwliCu6xp8xGoktdaerVMzGTy2Apz2buaGKEb4MTQ0qSgkw5M=
-X-Received: by 2002:a05:690c:368e:b0:702:627d:c86 with SMTP id
- 00721157ae682-70a3f9ec80amr26501877b3.5.1746769161576; Thu, 08 May 2025
- 22:39:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746773114; x=1747377914;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UVJ2TuNUBUpO94IHTiYXs30ZxdePvcvCPymvMj2I2OQ=;
+        b=N5xUtpMwpRxeKwHjLk+9NKDO8AZ+VupirLDQCaNRc/OodPMoiD1KDU0vsLVPACiHuq
+         1ByfQ321bOInrKtf39mWuJiVJsqIRUmGYndMmn/VKPPBMmrr8k+XBVVs4ChLDr62FcUY
+         BzSgCOvxUhHLp13OF98z4dJ1Pdt4TpwS2xzffPIG/V/9tbHfItZv6bXKI7r5sO12s/vN
+         mgYCpBuDUlIwalux1rg2alB1uhI6HckSI6G+1GYqRWMpnZSyKceFonMOuPglb7TJ1/HQ
+         CBldKUr8r7TGezsReQEyo8uC8aeY9U50ilbnMWM6LftESJVomqcmQE1P82IiRjINyGQn
+         lbWA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6yXTW2IaDbfISp2W5Y4IqmutJLAoJjR6YuzAN3nu/CAY6F97O7lQmQHPve1rEyK638FK2r2/Ol8pj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrXOupnqUzThEj/y3+3W5zTmrQolP1qaLM0FgBxj62sMVDCS+w
+	cr2EDbuDKRsA0QW3KiiRFlUBReUGfddvt5/tneOxjGNrFrrgeETz7PlhE0opF5c=
+X-Gm-Gg: ASbGncs+5n7pLJK8aqHNixtr6jrz9fDotwxzxZPKkhuQBCFNJRGWilQYdW0lMgq1HsR
+	9IiffB6f3B43uBmxn6KAv42aRHfaDKH3Nz5JT1WPeq7q1Nv/MDIwwU9vwceF5Gs8ByOzpxGm/8N
+	/AAdRCswbzd4dh3vMbSbX4B70HMug0dZ5/A1DP+O5uFg0KFq/QTer22HzyAMAVeIuEvmEu/K85n
+	b2Ts505SxR2i+DmhoMknxpXP2WAHSkIkDPbtlYVe+KVCNYgo/mY7GuiNTIrKJQMI2ObaNTIQBBy
+	7g1X7MPvhZC7UTfwOwkTS8bJBrHgH8EIvCnErl4AEXKn
+X-Google-Smtp-Source: AGHT+IH18FSd6kFBMFpH6Tgr5SOpt1kgXIcmqF5vBZmAhp4BLHkkT7JEQaYeI4Zj3eGt5omTIFhStw==
+X-Received: by 2002:a5d:59a7:0:b0:3a0:8325:8090 with SMTP id ffacd0b85a97d-3a1f64374d6mr1856560f8f.18.1746773114003;
+        Thu, 08 May 2025 23:45:14 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddde0sm2302928f8f.14.2025.05.08.23.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 23:45:12 -0700 (PDT)
+Message-ID: <eb8c820c864717d6348cd11f16e6899c744a92ed.camel@linaro.org>
+Subject: Re: [PATCH v9 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
+ Kandagatla <srini@kernel.org>, Kees Cook	 <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, Peter Griffin	 <peter.griffin@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker
+ <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
+Date: Fri, 09 May 2025 07:45:11 +0100
+In-Reply-To: <20250508140259.GN3865826@google.com>
+References: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org>
+	 <20250430-max77759-mfd-v9-4-639763e23598@linaro.org>
+	 <20250508140259.GN3865826@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.55.2-1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423094058.1656204-1-tmyu0@nuvoton.com> <20250423094058.1656204-5-tmyu0@nuvoton.com>
- <20250503-fulmar-of-sexy-upgrade-1184a7-mkl@pengutronix.de>
- <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com> <20250508-prudent-festive-puffin-83f666-mkl@pengutronix.de>
-In-Reply-To: <20250508-prudent-festive-puffin-83f666-mkl@pengutronix.de>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Fri, 9 May 2025 13:39:10 +0800
-X-Gm-Features: AX0GCFt636wiv16YtC2YyaNfP9KFULTYiEBXmwaP8u-ShxBEnE2ClP4UKWJVyys
-Message-ID: <CAOoeyxWTsrR+boq_afxVTnouq=A7LMTp=9ihDOHUUONaPnVUcA@mail.gmail.com>
-Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Ming Yu <tmyu0@nuvoton.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B45=E6=9C=888=
-=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:08=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> > > > This driver supports Socket CANFD functionality for NCT6694 MFD
-> > > > device based on USB interface.
-> > > >
-> > > > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
-> > >
-> > > The destroy functions nct6694_canfd_close() and nct6694_canfd_remove(=
-)
-> > > are not the exact inverse of their init functions. Se comments inline=
-.
-> > >
-> > > Please fix and add:
-> > >
-> > > Reviewed-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> > >
-> > > Feel free to mainline this patch as part of the series outside of the
-> > > linux-can-next tree. Better ask the netdev maintainers for their OK, =
-too.
-> > >
-> > > What about transceiver delay compensation for higher CAN-FD bitrates?
-> > > How does you device handle these?
-> > >
-> >
-> > In the CAN CMD0's DBTP field, bit 23 is the TDC flag, I will add
-> > support for enabling tdc, and firmware will automatically configure
-> > tdco. Do you think this approach is appropriate?
->
-> Can you configure the TDC manually via USB?
->
+Hi Lee,
 
-Currently, it only supports enabling or disabling TDC.
+On Thu, 2025-05-08 at 15:02 +0100, Lee Jones wrote:
+> On Wed, 30 Apr 2025, Andr=C3=A9 Draszik wrote:
+>=20
+> > The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> > Port Controller (TCPC), NVMEM, and a GPIO expander.
+> >=20
+> > Fuel Gauge and TCPC have separate and independent I2C addresses,
+> > register maps, and interrupt lines and are therefore excluded from the
+> > MFD core device driver here.
+> >=20
+> > The GPIO and NVMEM interfaces are accessed via specific commands to the
+> > built-in microprocessor. This driver implements an API that client
+> > drivers can use for accessing those.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> >=20
+> > ---
+> > v6: really use postinc
+> >=20
+> > v5:
+> > * update all (I hope) of Lee's comments:
+> > * file header C comment (not C++)
+> > * drop references to 'MFD'
+> > * extra indent register bit definitions
+> > * make 'struct max77759' public
+> > * drop comments that were used for visual separation only
+> > * drop MAX77759_*_REG_LAST_REGISTER defines
+> > * add comments to regmap ranges
+> > * use longer lines
+> > * sort local variable in reverse christmas tree order
+> > * update comments in max77759_maxq_command()
+> > * drop BUILD_BUG_ON()
+> > * use dev_err() in max77759_maxq_command()
+> > * reflow max77759_create_i2c_subdev() slightly and update error message=
+s
+> > * drop useless comment in max77759_add_chained_maxq()
+> > * reflow max77759_probe()
+> > * consistent upper-/lower-case in messages
+> >=20
+> > v4:
+> > * add missing build_bug.h include
+> > * update an irq chip comment
+> > * fix a whitespace in register definitions
+> >=20
+> > v2:
+> > * add kernel doc for max77759_maxq_command() and related structs
+> > * fix an msec / usec typo
+> > * add missing error handling of devm_mutex_init() (Christophe)
+> > * align sentinel in max77759_of_id[] with max77759_i2c_id[]
+> > =C2=A0 (Christophe)
+> > * some tidy-ups in max77759_maxq_command() (Christophe)
+> >=20
+> > max77759 Lee's updates
+> > ---
+> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> > =C2=A0drivers/mfd/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 20 ++
+> > =C2=A0drivers/mfd/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0drivers/mfd/max77759.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 690 =
++++++++++++++++++++++++++++++++++++++++++++
+> > =C2=A0include/linux/mfd/max77759.h | 165 +++++++++++
+> > =C2=A05 files changed, 878 insertions(+)
+>=20
+> This looks okay to me now.
 
-> If the firmware does automatic TDCO configuration, does it take care of
-> not enabling TCDO if the Data-BRP is > 2?
->
+Thanks :-)
 
-No, the firmware does not handle it. Do you think it would be
-appropriate for the driver to handle the case where DBRP is > 2, for
-example by disabling TDC?
-(The firmware sets TDCO to (Total bit TQs / 2) when configuring DBTP.)
+> I assume the other patches depend on this one?
 
-> BTW: What's the CAN clock of the device? I want to add it to the
-> can-utils' bitrate calculation tool.
->
+Yes, that is correct.
+>=20
+> [...]
+>=20
+> > diff --git a/drivers/mfd/max77759.c b/drivers/mfd/max77759.c
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..15723ac3ef49771eafd5c2e=
+9984abc550eec7aa1
+> > --- /dev/null
+> > +++ b/drivers/mfd/max77759.c
+> > @@ -0,0 +1,690 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2020 Google Inc
+> > + * Copyright 2025 Linaro Ltd.
+> > + *
+> > + * Core driver for Maxim MAX77759 companion PMIC for USB Type-C
+> > + */
+>=20
+> [...]
+>=20
+> > +int max77759_maxq_command(struct max77759 *max77759,
+> > +			=C2=A0 const struct max77759_maxq_command *cmd,
+> > +			=C2=A0 struct max77759_maxq_response *rsp)
+> > +{
+> > +	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
+> > +	struct device *dev =3D regmap_get_device(max77759->regmap_maxq);
+> > +	static const unsigned int timeout_ms =3D 200;
+> > +	int ret;
+> > +
+> > +	if (cmd->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * As a convenience for API users when issuing simple commands, rsp i=
+s
+> > +	 * allowed to be NULL. In that case we need a temporary here to write
+> > +	 * the response to, as we need to verify that the command was indeed
+> > +	 * completed correctly.
+> > +	 */
+> > +	if (!rsp)
+> > +		rsp =3D _rsp;
+> > +
+> > +	if (!rsp->length || rsp->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		return -EINVAL;
+> > +
+> > +	guard(mutex)(&max77759->maxq_lock);
+> > +
+> > +	reinit_completion(&max77759->cmd_done);
+> > +
+> > +	/*
+> > +	 * MaxQ latches the message when the DATAOUT32 register is written. I=
+f
+> > +	 * cmd->length is shorter we still need to write 0 to it.
+> > +	 */
+> > +	ret =3D regmap_bulk_write(max77759->regmap_maxq,
+> > +				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
+> > +				cmd->length);
+> > +	if (!ret && cmd->length < MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> > +		ret =3D regmap_write(max77759->regmap_maxq,
+> > +				=C2=A0=C2=A0 MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
+> > +	if (ret) {
+> > +		dev_err(dev, "writing command failed: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* wait for response from MaxQ */
+>=20
+> If you have to respin this patch, please s/wait/Wait/.
+>=20
+> If not, please send a subsequent patch.
 
-The CAN clock is running at 96Mhz.
+I guess I might as well send another version, given this series is still
+waiting for Srini's ACK.
 
+Cheers,
+Andre'
 
-Thanks,
-Ming
 
