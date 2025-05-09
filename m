@@ -1,145 +1,155 @@
-Return-Path: <linux-gpio+bounces-19871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19872-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FC02AB1766
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 16:29:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22BDAAB17DB
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 17:01:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 864BF526DF8
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 14:28:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F7963B15EF
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 May 2025 15:01:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF3D821930B;
-	Fri,  9 May 2025 14:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62963233736;
+	Fri,  9 May 2025 15:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDeY3Ffu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GEBrV2oQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8621E5B82;
-	Fri,  9 May 2025 14:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704DF224AF0
+	for <linux-gpio@vger.kernel.org>; Fri,  9 May 2025 15:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800907; cv=none; b=BAOb7n2X+B+v/1ZwSVORKAi5KFFCD21PUPm4nLEDXMaemSEkp0dYJ5F7j695LlraGbPM5P1Ww2ZHDuu0H8xixMGcI1v+4CeiJDgw/p5cLaxe2AGO/9Ytt1Za/JCK4/U0gYrVOFofv48Ixga+gHn3/9a2yYIPZJJD2JWi2v89idk=
+	t=1746802884; cv=none; b=WJA/HwsOpK9JJroQgfhyutPOUJlvQ8YvTekj4/Svjah2ZDWVcbnUeRFVtVADulQDF0k6KeQtInDTw5hoY1sinQ0um0ijutrM8oQ5gZG2n4dDoGgv2XH/z9rf1mHVJEHikxo7ZyYliAIq/G+DtoppzrAljvlU5ZmmfeoVhfKPGeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800907; c=relaxed/simple;
-	bh=fNRLig7bAYi1L1Kq7n0i/6zijpbMaAknetCXULDY9CM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ksJny0jhVHTzkHXk7Rw1W4Cvhii6VzjvjKABXNmp+eZkiWo5G5uSsYQLlieIRSQgUif+1QlOL9TUfHYwglTzS3e9UCFFOuYdHOj1o1/22P+Jjbs7JH8iBLe/eTRSWXZXE5R37t/eIPkS3MSmtpO/6kHKCYa4J5VXexFVDtzpCRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDeY3Ffu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51886C4CEE4;
-	Fri,  9 May 2025 14:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746800906;
-	bh=fNRLig7bAYi1L1Kq7n0i/6zijpbMaAknetCXULDY9CM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CDeY3FfuWHHr5ejCUZjrZfxLJ19JvZe/RsVbusBSk3mJbCZBndZddB5O2dP/eV8HK
-	 ik/fCKZlR7BGiQ8VI7eGCgcWeQOEahApJyI22knewmpxyfvWp3wlc9gq8Ak86xvDzp
-	 pBbq/9/fR4Kky+db9ieJJltllj/DLGK2f2fHtldJI4g721+ez5je893Bp8YPKGaAfL
-	 FOPT+WtvsI5JyP6T1rRcCX09RcQlvcfP80a5gCTNvqotCeJzW7gkrH+4tQR/I/m241
-	 w3WWYeZcEBdUTPqwtf9w+4hHfkhMWt0JJiQiGKgkNxCuNbrtZaQgSajZFKkSkQxAfD
-	 MJHjru/wqRDkw==
-Date: Fri, 9 May 2025 15:28:19 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
-	linux@roeck-us.net, jdelvare@suse.com,
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org, netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
-	Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v10 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20250509142819.GG2492385@google.com>
-References: <20250423094058.1656204-1-tmyu0@nuvoton.com>
- <20250423094058.1656204-2-tmyu0@nuvoton.com>
- <20250501122214.GK1567507@google.com>
- <CAOoeyxVL2MV83CJaYCXMiw0b5YUzk728H4B9GY1q9h_P8D43fg@mail.gmail.com>
- <20250502080754.GD3865826@google.com>
- <CAOoeyxWpYmcg1_FBXYqDfMi28R5ZXp2Sk2PhUo=cL10Nn3iVEw@mail.gmail.com>
+	s=arc-20240116; t=1746802884; c=relaxed/simple;
+	bh=OrJwae8l2jh9g4trffYYEvr/eZCG11Gv7r3R6UTzxSY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CbY2VSV84T7TK7FE5TGawcEHiaNfpgAF2wqlM2pb5rnpAFyBreT3y0rYXQewjzwLtB4y6N8xrhCyL2CcnxMuXPMShv5nF7KnPILbU6Yw1MdAHIbW2NVEB3b46JC6cQQTo/H0bUC0iIVaYHrUO+jU0dQFuW3KBh2vp3MoZt+UcLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GEBrV2oQ; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-441c0d42233so1148245e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 09 May 2025 08:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746802880; x=1747407680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KTkbpvRCkCNDRgtaNpdtouZmnsaUStr5DjZh4PVUoxA=;
+        b=GEBrV2oQywcbh5Kr7O5SzAEYxMKoB6NP5O+BY0GUowv6zxPIKcy35H2JHAJw34OsXp
+         0Z3PtJo2tebiqkr3sQnVYvYHbggstlcKhpeNldFFvI02hN1ZWlxo0QO7crZoxBN6Iklv
+         zvof2vR//CAVxbtRkQaz51cljiel7VQKRQQ2Ov65ZCQ9zm0JLVKGGXdpInhASJW1eA6k
+         iN1YfSFuK7Cn7grX25/t1lGkGd1ML9WzzjRBr1zQQEFG2rNo7dCCAOSy2jvQuC2lbpMe
+         LmvbzwIHYwyctg/QZpONCB1czS6+vsm240mRjBCLgRJ5djTlJwRToaHqTU/k4Bwsh9Mj
+         eN4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746802880; x=1747407680;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KTkbpvRCkCNDRgtaNpdtouZmnsaUStr5DjZh4PVUoxA=;
+        b=r4tCOhjuB831DzBTFpVybBojd2A8hYssGdSwN0QqCF4C6QNxI54f9KhVtU5sq+IEgf
+         iE/YRdd1BjT1P7+sPgV2ig/X/z5dzSMF6iBMjjENdwxS8ad3TcPPeh/FbmWO4nQT9cyj
+         BU0pMzev/kqWH2BTGjyMKxR/djRkq071jvLLh7eGQtAq4kGVnNnXzoJRiQ71TYKfztUB
+         bcCu2YIA+i6yVtOnG64VogOTytF+dtw2lGsnzCEwv0OoKBqljsGEoOUMTTG8+6kK4Xk0
+         Fq0CWF3lLxkLsZ7cfdyfF//ER64W+Ps4nTZbWald5qs8IoLeCJnh3Bw3aozftkq1iVwL
+         Cl/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUqK61G4Z1Kfv3mH5v9myU3Fa4VfUlD4/DawtXM9W1T4Nhdgnl58/dB3S3ru+282KzG9cc67zaBuf62@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8gHm+0MZv5WaUlwwXETwVjFr9LpcMDKEGtJeM7SXi85Z8dBqR
+	1qSZyKzTBgmPf3C6RBY34EKjdcjH1MOQZXSdvULWKCyid2XY/GACn7aPkU8SvDU=
+X-Gm-Gg: ASbGncsh2pzQdgPhi0tThgCKMQzlr+/GdJ01U1a5d34IxA/tazXspIiVg+1iVZL76pZ
+	Hbt8AhbmEKETAytHet4BBK2j2+vxiDPcZ7B5Kf7C9z9QkrVXRiIWRWf1qLnDUkQb4r84OYYpYE7
+	NezSxxEf6so2a7hlBhug793ZOyh1DeRGUTdAXN7n4qYfPHLx5soyECiUnfcJZYGabfbrHKPumhJ
+	UW7W+W0mpZqHNqWjXgEHzFZdGOZBHvqMqiYZDX5caFUBOggO7l1jUlYhuwLU5f9Doh3S3Q2Ae0y
+	ddvukjFqzhhNRQkMm1w2xj0rLFYyf+DzE6JeG5fuDtKgXEPTNQ==
+X-Google-Smtp-Source: AGHT+IHkBCNBnWPS/LtBg9S6XT9b0O28ZZRzf7nzBT0Cq35AQorOtZe7qvsosSmWPjFrnfFCw+NYnA==
+X-Received: by 2002:a05:600c:8207:b0:43b:bbb9:e25f with SMTP id 5b1f17b1804b1-442d6ddcedcmr10827805e9.6.1746802879590;
+        Fri, 09 May 2025 08:01:19 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67e138asm32063275e9.10.2025.05.09.08.01.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 08:01:17 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-amlogic@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] pinctrl: meson: Drop unused aml_pctl_find_group_by_name()
+Date: Fri,  9 May 2025 17:01:15 +0200
+Message-ID: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1218; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=OrJwae8l2jh9g4trffYYEvr/eZCG11Gv7r3R6UTzxSY=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoHhi6pu+duuCQJsD1u7676gujslrvVm4Iw27Cv
+ 36hI4QfwzOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaB4YugAKCRDBN2bmhouD
+ 186yEACA393kMv+ucbdEL6lZb/ug65wE7C5fY0na+UddUEAqfbdRTMW/MQNb98gck2H4JelcSfd
+ OqvvlLQeKFMdWfdUO18CHwvvC6jx66XVCegvI4JxuvyksOrbdym5bdkndEtsvJU65+czjW31aQC
+ bHRORJ2LIBPhhHFt3ciNC419Qf2mqrIbuTdCqXzPCYIAG8lyODGPRBf0LOzsou2eHbNKoe/9Y+R
+ 23eU21dwJrXTGQTdhZ4qfRdprxXwba89LAlR8QDQCVmK16b1qGaazYtoO91pGXtUR8rzkk2i48H
+ Wq9kS0QV3rawviyRjAMKi85wG92NalX7ZfaI2Q5QuOdw7JC0O+0Q0AgxcwAxwRboQ39ip4LqGDk
+ tvjnS4C68OSHUa3PX6JTLE+UXdCZe30u4UYdsIcmTTT3FgpzrXkJbKTXqGkK6uF0+3HYoijtD9g
+ s+SAVZIrOX7WT9EelETCp43Y3cuWalfUBl6VVgIGPY1QmUU0ATKC65qnVOvh4fXdUuH16PWtHXV
+ 7Al9PQ3UL07lYL8o45wc9N4eZf11k0Jrxz/Y47WdnpUfH7JQ7PjUOs2+s+zD0+/QCmae9q45mJP
+ YO9URaV6sm2hA0MKrtqU5s740gHW4t8rdh2BT/QLHRUNFxURM2zBsHQbIpt/eXKgkE5r6+FATnw Lzhd+0AQCGwUKJg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOoeyxWpYmcg1_FBXYqDfMi28R5ZXp2Sk2PhUo=cL10Nn3iVEw@mail.gmail.com>
 
-On Fri, 02 May 2025, Ming Yu wrote:
+aml_pctl_find_group_by_name() is not used anywhere, as reported by W=1
+clang build:
 
-> Lee Jones <lee@kernel.org> 於 2025年5月2日 週五 下午4:08寫道：
-> >
-> ...
-> > > > > +static const struct mfd_cell nct6694_devs[] = {
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
-> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
-> > > >
-> > > > These are all identical.
-> > > >
-> > > > I thought you were going to use PLATFORM_DEVID_AUTO?  In fact, you are
-> > > > already using PLATFORM_DEVID_AUTO since you are calling
-> > > > mfd_add_hotplug_devices().  So you don't need this IDs.
-> > > >
-> > > > MFD_CELL_NAME() should do.
-> > > >
-> > >
-> > > Yes, it uses PLATFORM_DEVID_AUTO, but in my implementation, the
-> > > sub-devices use cell->id instead of platform_device->id, so it doesn't
-> > > affect the current behavior.
-> > > However, if you think there's a better approach or that this should be
-> > > changed for consistency or correctness, I'm happy to update it, please
-> > > let me know your recommendation.
-> > >
-> > > When using MFD_CELL_NAME(), the platform_device->id for the GPIO
-> > > devices is assigned values from 1 to 16, and for the I2C devices from
-> > > 1 to 6, but I need the ID offset to start from 0 instead.
-> >
-> > Oh no, don't do that.  mfd_cell isn't supposed to be used outside of MFD.
-> >
-> > Just use the platform_device id-- if you really need to start from 0.
-> >
-> > As an aside, I'm surprised numbering starts from 1.
-> >
-> 
-> OK, I will use platform_device->id instead. However, I'm still unsure
-> why the ID starts from1.
-> 
-> Additionally, I noticed that when calling mfd_add_devices()
-> separately, the IDs are also assigned consecutively (e.g., GPIO: 1~16,
-> I2C: 17~22, ...).
-> 
-> Do you have any recommendations on how I should implement this?
+  pinctrl-amlogic-a4.c:600:2: error: unused function 'aml_pctl_find_group_by_name' [-Werror,-Wunused-function]
 
-If you are to use this mechanism, you'd have to submit separate
-mfd_add_devices() calls I guess.
+Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-However, this all seems a bit silly for simple, contextless (where
-device 3 is identical to device 10, etc) enumeration.  Can you use IDA
-instead?
-
+diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+index a76f266b4b94..385cc619df13 100644
+--- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
++++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+@@ -596,20 +596,6 @@ static int aml_get_group_pins(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
+-static inline const struct aml_pctl_group *
+-	aml_pctl_find_group_by_name(const struct aml_pinctrl *info,
+-				    const char *name)
+-{
+-	int i;
+-
+-	for (i = 0; i < info->ngroups; i++) {
+-		if (!strcmp(info->groups[i].name, name))
+-			return &info->groups[i];
+-	}
+-
+-	return NULL;
+-}
+-
+ static void aml_pin_dbg_show(struct pinctrl_dev *pcdev, struct seq_file *s,
+ 			     unsigned int offset)
+ {
 -- 
-Lee Jones [李琼斯]
+2.45.2
+
 
