@@ -1,148 +1,114 @@
-Return-Path: <linux-gpio+bounces-19902-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19903-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFAD1AB27A3
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 May 2025 12:15:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94DDBAB2917
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 May 2025 16:29:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A11927A560F
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 May 2025 10:14:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 13A667A6E29
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 May 2025 14:27:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D051D61BB;
-	Sun, 11 May 2025 10:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA38A25D1FF;
+	Sun, 11 May 2025 14:27:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="dBVe67lX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eARh53/i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUTFGZsf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BC41C862B;
-	Sun, 11 May 2025 10:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919BB25D1ED;
+	Sun, 11 May 2025 14:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746958513; cv=none; b=pZVNy2p/S4W+GUg4rZtN5l2iu7S2txmsg73HlOXYh79o0Mp84e4EVs6mK37IbeVzQ67y3vYnhrFlVhRRNrYNl3bwFijEuQVLLqU2KmdH96eeOdVPSyCV1VWyUUNta7n7YJV8sc0GsjhgJHiod9db/V/YRQ3L2aohWmCjjYy5qys=
+	t=1746973640; cv=none; b=Gx1mhi7zQhQopM41Shs9o6PZabvcwybcOsgfCYu5oIPvGimx5b1f1jOBUChOZVMnGYmp/hG0oqwYtow/vT1jrt8laOVy7TOK9tFm3cRAIE0LgBMXwiEFMy0kxFE669cXi/Ggn7dd7hFrOfCDh1cXsNpB5xqWHpyZyp6n5EWUwpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746958513; c=relaxed/simple;
-	bh=tCmDfNwDsZk/3rZfK3h1oUOzUlRnrxuzRcHS6LPaiQ0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=fpOgo0uX6fC5i2K5mygKVwH6b4yRKjs1FRsTFa0DyHhA2C+Hj/jaSjmgVgkotUWtBhuKvB/g2BXhjSQgZvO9hSAbQsJd7r1LMX+Kx3Uzvkl2X8hUSRoxQStiyFS7bXrwVgBs5hYMzCAYHQ4Fn1UHluaA3bAtqtYdhyXtfV6Cbnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=dBVe67lX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eARh53/i; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id 0E41911400F6;
-	Sun, 11 May 2025 06:15:10 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-04.internal (MEProxy); Sun, 11 May 2025 06:15:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1746958509; x=1747044909; bh=cV+CqJ2sR58/2GW2HDcotcUwO0tRQwcr
-	M95nei+5RVc=; b=dBVe67lXrNSWSmfmKAbaBz4/sqEcMnCBISmSB32wPnaJBdj4
-	+G1pyzvsyCnhq10UP92fVtGmjM5ueVoNOmp+uu9utLnTTiYWlvFkZVdnwnTBIfkz
-	Ji+pUNNmgQK3OWgVD6DD3iuqWh7ftAi22kGaX4Yq4faOlglSSwvfHy3sI/DWP75j
-	0kgxc6feGAVxTVBPDNcCDjhB9ukrkzd6bYtRcfsj5jmx6IvNbvTgfJAu6pnkN+Rv
-	/mFB/UpIwJzK975Jhb71VMshgWMuJbw+q1vELE9Iv0UB9jCSk6Q3veU229zUwVte
-	XmkmTnbPJknwv85vaikliZ6tfWXYZEwumAVdtA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746958509; x=
-	1747044909; bh=cV+CqJ2sR58/2GW2HDcotcUwO0tRQwcrM95nei+5RVc=; b=e
-	ARh53/ipxqudoE7Kx5TComMShvZsuDuvuIpZkzKavyOXP4VFgRtuu8gQLZaiCRMc
-	8VxIQID21/kk/nJlTYkSmIDgAIYRnXNKe3VrMHftnhFEXSsOA2dF8w8Wnz48MHOw
-	JGe76DkS21VozvW1xTmDLUzXdjI5Q9iXdkkO9EtbInxemgifibhY3gCjItBSeYNx
-	rBVr12iTq2l6lcNmfZxzVM5H0RZpxsOSi5swvV+om/IpeuORqVpccY6xDTdUX3EH
-	MHFTJVJevXsO2mccsa6Nmif0u4WaFda3IKPA7CvRAjbTQC+uGZPlf0ZJ2urGA/PY
-	NgL2PGYT6THdVlJDzzMew==
-X-ME-Sender: <xms:q3ggaO0qrEf7AfPcxgAhV_4QTRZrwThYeSBOtnpoBPpOvAZ-djIx6w>
-    <xme:q3ggaBFRUZMDlh9ceevrv2RCzzXyDaO7FceMfX6QVhfKB5NF-WjiICVU1HuE7nmWe
-    VQByCJnWafxEhZdVt0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleekudduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvth
-    gvrhdruggvvheqnecuggftrfgrthhtvghrnhepleefteeugeduudeuudeuhfefheegveek
-    ueefffdvffektdffffelveffvddvueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhnsggp
-    rhgtphhtthhopedvtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhmkhdokh
-    gvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepsghrghhlsegs
-    ghguvghvrdhplhdprhgtphhtthhopeifrghhrhgvnhhsthesghhmgidrnhgvthdprhgtph
-    htthhopehnvggrlhesghhomhhprgdruggvvhdprhgtphhtthhopehjsehjrghnnhgruhdr
-    nhgvthdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtohepmhgriieskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:q3ggaG4igTnPWHT2ytCAlkCxt2qsSTjbTCgVlWXLGA2Aap9ZBRFtQA>
-    <xmx:q3ggaP3oNedhlr9WMSbKBbbZoOQ-Zp7jU6WhxYL_XZLzcw3tRkv6gQ>
-    <xmx:q3ggaBFGx0ys088vMTLjsa5tvs94U616_aItSTuxW3lYg5tokEOYfw>
-    <xmx:q3ggaI-3XpB95lGxgwa76HNTTGouranUQEu9Qq6z9lPDtp7Ipmtq_Q>
-    <xmx:rXggaLfR6dFUBzPlbcQeP94Q1N4fjgXUnLJzjJef-Tf-n02itAHvXc7c>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B3EA41C20067; Sun, 11 May 2025 06:15:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1746973640; c=relaxed/simple;
+	bh=qYsPB5KTJZb+XUGm4MW6ZwKZMh54o71O1hC+tg3tZWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NjQjqKsv4EBSByA7CcRRhU+5nR06pW0ErUtSlyrT45YVD1po8RStMjbT3tRoJDDBw+hgjumhRbkzWDHfHEmWggq26Ui2M/baVlgCX8kykE4mKL4ZAwlKJjQYr5U/oV2ZE5G3DUNGQ7b/zZ7n8hE5QD9njVoarhrkQAckV1lBQd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUTFGZsf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0707C4CEE4;
+	Sun, 11 May 2025 14:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746973639;
+	bh=qYsPB5KTJZb+XUGm4MW6ZwKZMh54o71O1hC+tg3tZWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VUTFGZsfLBrHnjVnBTeej4wSPZzyPI6+32RY1g9O8Wgdp865wvZgZqUP6ZUvCJDST
+	 OW9a5RdYmOw53EABLcl+/LFqcmiT5iL1+avGUChdgS2gHQHfczML3CrO2wTkJ8rz6F
+	 CMazwxn5m+RtnpAo+K7dg0TAGowB8SZaK9LQU5Q11spR3ShzejqeaPM7SnJ1szITOY
+	 sCNQW1pmzbbK6k2NgqwrqJMvUQ4TPg3TVB67TVoslAlYYSSfXXssVHNG27CZLSPrLb
+	 3MWWCAShtdXDHPI9siix40h2m2Xw1ef67f7pd8l4hEffQk+2J/CmA2n9AKwsqWUYnu
+	 zICK5ZaW1dXtg==
+Date: Sun, 11 May 2025 15:27:07 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Markus Burri <markus.burri@mt.com>
+Cc: linux-kernel@vger.kernel.org, Mahesh J Salgaonkar
+ <mahesh@linux.ibm.com>, "Oliver O'Halloran" <oohall@gmail.com>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Jacek
+ Lawrynowicz <jacek.lawrynowicz@linux.intel.com>, Maciej Falkowski
+ <maciej.falkowski@linux.intel.com>, Oded Gabbay <ogabbay@kernel.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Nuno Sa <nuno.sa@analog.com>, Olivier Moysan <olivier.moysan@foss.st.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, linuxppc-dev@lists.ozlabs.org,
+ dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+ linux-iio@vger.kernel.org, Markus Burri <markus.burri@bbv.ch>
+Subject: Re: [PATCH v4 1/6] iio: backend: fix out-of-bound write
+Message-ID: <20250511152707.294bc7b9@jic23-huawei>
+In-Reply-To: <20250508130612.82270-2-markus.burri@mt.com>
+References: <20250508130612.82270-1-markus.burri@mt.com>
+	<20250508130612.82270-2-markus.burri@mt.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tee5e6786d5fc82a3
-Date: Sun, 11 May 2025 12:14:46 +0200
-From: "Sven Peter" <sven@svenpeter.dev>
-To: "Stefan Wahren" <wahrenst@gmx.net>
-Cc: "Janne Grunau" <j@jannau.net>, "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
- "Neal Gompa" <neal@gompa.dev>, "Hector Martin" <marcan@marcan.st>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Sebastian Reichel" <sre@kernel.org>,
- "Lee Jones" <lee@kernel.org>, "Marc Zyngier" <maz@kernel.org>,
- "Russell King" <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Message-Id: <5a0263f4-1073-45a8-a8aa-76028a2d0b6e@app.fastmail.com>
-In-Reply-To: <678528db-67bc-4bb7-a866-7b8aeb4f4510@gmx.net>
-References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
- <20250511-smc-6-15-v5-7-f5980bdb18bd@svenpeter.dev>
- <678528db-67bc-4bb7-a866-7b8aeb4f4510@gmx.net>
-Subject: Re: [PATCH v5 07/10] power: reset: macsmc-reboot: Add driver for rebooting via
- Apple SMC
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Stefan,
+On Thu,  8 May 2025 15:06:07 +0200
+Markus Burri <markus.burri@mt.com> wrote:
 
-On Sun, May 11, 2025, at 12:07, Stefan Wahren wrote:
-> Hi Sven,
->
-> Am 11.05.25 um 10:18 schrieb Sven Peter via B4 Relay:
+> The buffer is set to 80 character. If a caller write more characters,
+> count is truncated to the max available space in "simple_write_to_buffer".
+> But afterwards a string terminator is written to the buffer at offset count
+> without boundary check. The zero termination is written OUT-OF-BOUND.
+> 
+> Add a check that the given buffer is smaller then the buffer to prevent.
+> 
+> Fixes: 035b4989211d ("iio: backend: make sure to NULL terminate stack buffer")
+> Signed-off-by: Markus Burri <markus.burri@mt.com>
+I'm looking for a tag from Nuno on this one before applying.
 
-[...]
+J
+> ---
+>  drivers/iio/industrialio-backend.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+> index a43c8d1bb3d0..31fe793e345e 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -155,11 +155,14 @@ static ssize_t iio_backend_debugfs_write_reg(struct file *file,
+>  	ssize_t rc;
+>  	int ret;
+>  
+> +	if (count >= sizeof(buf))
+> +		return -ENOSPC;
+> +
+>  	rc = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf, count);
+>  	if (rc < 0)
+>  		return rc;
+>  
+> -	buf[count] = '\0';
+> +	buf[rc] = '\0';
+>  
+>  	ret = sscanf(buf, "%i %i", &back->cached_reg_addr, &val);
+>  
 
->> +/* Helpers to read/write a u8 given a struct nvmem_cell */
->> +static int nvmem_cell_get_u8(struct nvmem_cell *cell)
->> +{
->> +	size_t len;
->> +	u8 val;
->> +	void *ret = nvmem_cell_read(cell, &len);
-> in case this series needs a respin, please rename the pointer (e.g. 
-> buf). This is very unusual, because ret is usually of type int.
-
-That's indeed odd, I'll rename it.
-
-
-Thanks,
-
-
-Sven
 
