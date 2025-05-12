@@ -1,124 +1,222 @@
-Return-Path: <linux-gpio+bounces-19954-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19955-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32F68AB383C
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 15:16:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55ABCAB3984
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 15:42:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA65D17BEB6
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 13:16:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA5881791B7
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 13:42:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB8D292912;
-	Mon, 12 May 2025 13:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46975255F51;
+	Mon, 12 May 2025 13:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a1mrVFg/"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zP5U3VrW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gvKon7yM";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mrNRbP0b";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a5UtLZDe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F912D7BF;
-	Mon, 12 May 2025 13:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348BF25A651
+	for <linux-gpio@vger.kernel.org>; Mon, 12 May 2025 13:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747055760; cv=none; b=om+rEeQiVtrKYMQrFeWojgpXuuzsM2uW6/RJ+vGwywK7c8SL4d8ODmhOhxQ2kRissp3gKu44swhjI2Vfa/VvMbK1VfK0Hrh1w1QpUcSODoR2d3Yo5Y1cP+far4JzojYTgLY9uAJC5hVA49jI1xwGPcNV9bzD62A3R8SQ4cAe/3I=
+	t=1747057367; cv=none; b=Ea2VW+LXELqU2GrXNCzyE37JVsnhjgZYqRLtU9O5mi0aeLITD9XaEs32SIX5KH8AvSo6laSqpw6BTGdVZGwPBUW3mM3/Yv+eOpjvgKa6eyNdh9o97XTfDuUe9EYwsTyU7Q6nZNsxY6sBFhol0dLSP3BE4elN4jfShKTwk8NNgdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747055760; c=relaxed/simple;
-	bh=N+0LFGTtI6zB+BSNgrVSHcilV81hSz+0mu8K+VGrGKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EYUbykmvOU7Rf26M0YbDp+5X/ka8INczsGnO1/nirQoTGjHXLlEWLnanAPJHCnBhUO5H4qL3ZJVwJf3zxjKrYfGlRwKpX8vl1Klz0oSr2jTQE0JSC32NXHojvTWRB+NXd99ZZnxSqtYljYHRuWFwwornkI+vRYzc2dnvXKtAspc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a1mrVFg/; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747055758; x=1778591758;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=N+0LFGTtI6zB+BSNgrVSHcilV81hSz+0mu8K+VGrGKw=;
-  b=a1mrVFg/9jyxt7ZswjRlBcFkjn+Fo86bTDkGxLCPcmk6E+8Iqv2N+W+x
-   0uBxa8YRGJpiQQey4VS8T1poFw5memjjC1RI5lMKBbR679hK1SFIu7Yzy
-   rcIEil5FK0JFn6rIE5NHPx46ULkINvUs6s3eyOme6SKyUykUwQPNzM0lM
-   WeK5mVzhkcIxXs0A9KYKkQlzBbpEUGCZ8dKYpEl5Bh1qeRLfiINUfaNyK
-   e/outxpQZoWdzssUpWX53uqCwQp2t5gr5hGvPfPYilHAb58R7v4Hymu79
-   eJrv862jWj92IxclJoFXwNIOkkEJr5+kbyqJy1KkPtMvd7ylrg5AYg5HO
-   Q==;
-X-CSE-ConnectionGUID: 82/VeHVETf2UzY6bNe3bjw==
-X-CSE-MsgGUID: xNexGs2hRJKMK3vo4dU39w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="74243965"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="74243965"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 06:15:57 -0700
-X-CSE-ConnectionGUID: mF0Tr4TVTgSXs/DMLsD7rQ==
-X-CSE-MsgGUID: /tqYRHGYSri+FGM+Rb+4MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="138329163"
-Received: from tronach-mobl.ger.corp.intel.com (HELO [10.245.84.129]) ([10.245.84.129])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 06:15:51 -0700
-Message-ID: <c26c38da-401e-4044-8b9e-cd5547e61677@linux.intel.com>
-Date: Mon, 12 May 2025 15:15:49 +0200
+	s=arc-20240116; t=1747057367; c=relaxed/simple;
+	bh=VeCDMgkzyL+iMixGYU/gMkR9Q15A/DHrJuIO2Xaxb8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eTAsAQwqa5loT2FiJcIlAxFMIKwhIwZYtEB9b2HVto/KjWzVFT8koHXmGQZrc2/knibtkBd1m5TXz7MLfItEoTfc4vfusuAjERDAjYDo9ROMH0/I8hVF901Kf+l2inLTC6E43R32/mlRlJcNilKRtYbKqMncEcW8NRugMbTGO7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zP5U3VrW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gvKon7yM; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mrNRbP0b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a5UtLZDe; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 77C721F38C;
+	Mon, 12 May 2025 13:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747057362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CrpU8YxLS+4Al6Udh0YnCVnyLmsN5nb6vSk+X5R1cE0=;
+	b=zP5U3VrW3t8DldETQ2m3ra/g9SR/7BfZECcIwt1ffozAv53i4FQNTbZqDlArwMGydwaBj6
+	rtCzxLUs79hYV9o0Zzc4IUjfIraGG048FWChP1WvdFVRQhYgY2kGiXmYA2HbBvn4MP7iQJ
+	GSdeERGDIVxWiZR/A6vqbWOAeUUfRIU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747057362;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CrpU8YxLS+4Al6Udh0YnCVnyLmsN5nb6vSk+X5R1cE0=;
+	b=gvKon7yMqsoG257e/+tjFmrYEyugtB0QHKk7RcncstuvNHkWJgUu0gzu6xzHS1AJNvI2QX
+	OVlRskUcVxR7BmBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747057361; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CrpU8YxLS+4Al6Udh0YnCVnyLmsN5nb6vSk+X5R1cE0=;
+	b=mrNRbP0beD+FA3kIigtZ4Axve0L82Sl8oc2EvXufjmPE8pwINqFDZxkHovVpcbgQ/vNB0m
+	vqZplir1glSp40FziCgR2C0aHfwbrJD8wBoBU9Cl2dt07JUr0xad4PyPKPg0CEt0K23we7
+	KQHa5h307RnZsk+FTfdGFKXqvDVJ65I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747057361;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CrpU8YxLS+4Al6Udh0YnCVnyLmsN5nb6vSk+X5R1cE0=;
+	b=a5UtLZDe1eN/4R0G6f8q7lUB9f46NVeH/gmYLEhqmnN5Pvsl5Tq/jEozyj/EDghnESjMQr
+	YROgoHf7h4tvWhAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 539C613A30;
+	Mon, 12 May 2025 13:42:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2MYKEtH6IWi/LQAAD6G6ig
+	(envelope-from <iivanov@suse.de>); Mon, 12 May 2025 13:42:41 +0000
+Date: Mon, 12 May 2025 16:42:40 +0300
+From: "Ivan T. Ivanov" <iivanov@suse.de>
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, florian.fainelli@broadcom.com,
+	andrea.porta@suse.com, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Arend van Spriel <aspriel@gmail.com>, kernel-list@raspberrypi.com
+Subject: Re: [PATCH 6/7] arm64: dts: broadcom: bcm2712: Add second SDHCI
+ controller node
+Message-ID: <20250512134240.hg4we6sxemxeufka@localhost.localdomain>
+References: <20240731062814.215833-1-iivanov@suse.de>
+ <20240731062814.215833-7-iivanov@suse.de>
+ <a563971a-45f4-4404-a622-21c940d96250@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/6] accel/ivpu: Use effective buffer size for zero
- terminator
-To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>,
- Maciej Falkowski <maciej.falkowski@linux.intel.com>,
- Oded Gabbay <ogabbay@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Nuno Sa <nuno.sa@analog.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- linuxppc-dev@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
- linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
- Markus Burri <markus.burri@bbv.ch>
-References: <20250508130612.82270-1-markus.burri@mt.com>
- <20250508130612.82270-3-markus.burri@mt.com>
-Content-Language: en-US
-From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
- Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <20250508130612.82270-3-markus.burri@mt.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a563971a-45f4-4404-a622-21c940d96250@gmx.net>
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[dt];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FREEMAIL_TO(0.00)[gmx.net];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.net];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linaro.org,kernel.org,broadcom.com,suse.com,vger.kernel.org,lists.infradead.org,gmail.com,raspberrypi.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
 
-Thanks for the fix, applied to drm-misc-fixes
+Hi,
 
-On 5/8/2025 3:06 PM, Markus Burri wrote:
-> Use the effective written size instead of original size as index for zero
-> termination. If the input from user-space is to larger and the input is
-> truncated, the original size is out-of-bound.
-> Since there is an upfront size check here, the change is for consistency.
+I am sorry so long delayed answer. Shifting priorities.
+
+On 08-02 21:01, Stefan Wahren wrote:
 > 
-> Signed-off-by: Markus Burri <markus.burri@mt.com>
-> ---
->  drivers/accel/ivpu/ivpu_debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi,
 > 
-> diff --git a/drivers/accel/ivpu/ivpu_debugfs.c b/drivers/accel/ivpu/ivpu_debugfs.c
-> index f0dad0c9ce33..cd24ccd20ba6 100644
-> --- a/drivers/accel/ivpu/ivpu_debugfs.c
-> +++ b/drivers/accel/ivpu/ivpu_debugfs.c
-> @@ -455,7 +455,7 @@ priority_bands_fops_write(struct file *file, const char __user *user_buf, size_t
->  	if (ret < 0)
->  		return ret;
->  
-> -	buf[size] = '\0';
-> +	buf[ret] = '\0';
->  	ret = sscanf(buf, "%u %u %u %u", &band, &grace_period, &process_grace_period,
->  		     &process_quantum);
->  	if (ret != 4)
+> [add Arend and Raspberry Pi devs]
+> 
+> Am 31.07.24 um 08:28 schrieb Ivan T. Ivanov:
+> > Add SDIO2 node. On RPi5 it is connected to WiFi chip.
+> > Add related pin, gpio and regulator definitions and
+> > add WiFi node. With this and firmware already provided by
+> > distributions, at least on openSUSE Tumbleweed, this is
+> > sufficient to make WiFi operational on RPi5 \o/.
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
+> > ---
+> >   .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     | 55 +++++++++++++++++++
+> >   arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 13 +++++
+> >   2 files changed, 68 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> > index 06e926af16b7..b6bfe0abb774 100644
+> > --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> > +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> > @@ -46,6 +46,20 @@ sd_vcc_reg: sd-vcc-reg {
+> >   		gpios = <&gio_aon 4 GPIO_ACTIVE_HIGH>;
+> >   	};
+> > 
+> > +	wl_on_reg: wl-on-reg {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "wl-on-regulator";
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		pinctrl-0 = <&wl_on_pins>;
+> > +		pinctrl-names = "default";
+> > +
+> > +		gpio = <&gio 28 GPIO_ACTIVE_HIGH>;
+> > +
+> > +		startup-delay-us = <150000>;
+> > +		enable-active-high;
+> > +	};
+> I don't think this GPIO is a regulator from hardware perspective. I
+> guess it's the same reset pin we have on the older Raspberry Pis. Please
+> look at bcm283x-rpi-wifi-bt.dtsi for the wifi power sequence.
+
+FWICS, "mmc-pwrseq-simple" is more about proper reset sequence while
+here we need power to be applied to the connected device.
+
+And this is not a precedent. Just grep for "vmmc-supply = <&wlan"
+
+> > +
+> >   	pwr-button {
+> >   		compatible = "gpio-keys";
+> > 
+> > @@ -80,6 +94,25 @@ &sdio1 {
+> >   	cd-gpios = <&gio_aon 5 GPIO_ACTIVE_LOW>;
+> >   };
+> > 
+> > +/* SDIO2 drives the WLAN interface */
+> > +&sdio2 {
+> > +	pinctrl-0 = <&sdio2_30_pins>;
+> > +	pinctrl-names = "default";
+> > +	bus-width = <4>;
+> > +	vmmc-supply = <&wl_on_reg>;
+> > +	sd-uhs-ddr50;
+> > +	non-removable;
+> > +	status = "okay";
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +
+> > +	wifi: wifi@1 {
+> > +		reg = <1>;
+> > +		compatible = "brcm,bcm4329-fmac";
+> > +		local-mac-address = [00 00 00 00 00 00];
+> I think we can drop this?
+
+Sure.
+
+Regards,
+Ivan
 
 
