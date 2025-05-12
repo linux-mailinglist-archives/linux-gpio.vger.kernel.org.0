@@ -1,172 +1,241 @@
-Return-Path: <linux-gpio+bounces-19971-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19972-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3877AB3C2C
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 17:34:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B37F1AB3C78
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 17:43:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DC581680EC
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 15:34:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44A1919E23F8
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 15:42:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B88F923BCE7;
-	Mon, 12 May 2025 15:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3406423C51D;
+	Mon, 12 May 2025 15:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jWDU0Cf2"
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="jL8JZhYU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pxC6oBya"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D7F230BF5;
-	Mon, 12 May 2025 15:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A627239567;
+	Mon, 12 May 2025 15:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064039; cv=none; b=BA7WGfZCcGSjRwynb9GB7oWfyqRoTP8W892JP0JYZl/BrPAlFTHaUDb8cAWPBlm/g9MtTNSTN3pPUL4CuZHXiL6t2IKMA4+VQalL00RLWmqfGEy1QpGU77AVFjJ1gX/ovGqAsLKICjN6SOpI/z3fIpysJqCuO5y9ggzlFByQPUs=
+	t=1747064519; cv=none; b=QXpvn5FvUhMTCFldLCxe6fRf9gd4oEwgz+jAP4uycjqlBhqjulkJiUCn+WoNd6Za8eUFcXtrkSiksHIz+q/IZofPnZ7buFxlIj8hx/xHFLDp/P5uU0sWOjzUtd0UmiW+Vn7fpehElMQ1iILtZpDKmNjOcVh2KrP7mCnUdcHLFeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064039; c=relaxed/simple;
-	bh=8kFDe70qaBxmc6z/Z1gNuXvdsiYl3WM8puv+RKmDiaU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UkjC9Yck9YaH/YV8swH0pvnYsnuXvaKMGvHbpGDgWl2Y0RbQhh/gGENIxO+gv2ZSD1yig+D3blkgNfYPY/VOWl92D2J5ohjS4R5eNQRfYQ/30MuTyKnCzuUjN8SeNuKFn+WTnckIDSJJYU1J4sJQLa7ltIwAw06VT+lGOdKLDD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jWDU0Cf2; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A3ABC43B3A;
-	Mon, 12 May 2025 15:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747064035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tqr4mwpC62OuBMSttBJ++MLfd/oZaeC/h6MdIt4o6Dg=;
-	b=jWDU0Cf2tHPFa1T6VvkLpuRitJNsHihmOOifZKfM3nHDGeYcC8zu5J6wdAL9JpNhXfkwLd
-	9lG1Ee+LZwBf77xLTsNxW+4SCAp8xs7IGbhx4w+CjRxKvHnpAOmOECqN4vC9XXhMs28M6K
-	gv2iuARfeRGeHHRylgy+7mR6Pupk/P9T6U39LsPp1EldOZf5Nf6yeoyvISZZ34xJovJK4N
-	zdAimCXdjmjR+zVzZkDo54YbqQPXbHDjC97KRTs1QN+8GmN/ShCMMehV2cEZ9uuOsPIN9m
-	5ZdrdVLoiVVVF5n4y3QOIj+VwrBGyjjwWSBQ1wmRLPPGI0oXGd7Nn838n17vSw==
-Message-ID: <5030b353-85ba-40d7-9b87-619787d99061@bootlin.com>
-Date: Mon, 12 May 2025 17:33:53 +0200
+	s=arc-20240116; t=1747064519; c=relaxed/simple;
+	bh=+4oLiO4GFHU12kRH/cBJ0soX/a+bXHdHYP8wcVfW7ZU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=l+PEBVXQmkLJfLGUf24CsopV1+vaUVJ+I57XlgqASaeeXToURAYDwvYfYmbhE/qZuW+YYkYmOQ3FYscryCI0hMgP33re58d5v+yjZnpAJx/feY2NyWEoWuoR3hE2YRmVvJOjPuVNrTHffwWgzdONGopLyqS7jSp3nj3U7tT8ngU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=jL8JZhYU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pxC6oBya; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 21A5925400D8;
+	Mon, 12 May 2025 11:41:54 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-04.internal (MEProxy); Mon, 12 May 2025 11:41:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1747064513; x=1747150913; bh=A/ri/6ZjxW7RCFovjRl8X2bDl9rq/UBN
+	CApnh0pl15I=; b=jL8JZhYU/eNhS1Dbxm8P0HfZ5uJ0f9c89R1Xokb5AT19RPm5
+	+UMawNHN9e+gdyVjzbmeX0UKUI35c234NQmPyK/mQN1vlgMpkP+3fQ+z7WYvLzUG
+	sceVXAUgUxkf5tiVfvmbw4vMxinru9KcJcufIOr8wRBYK0VIpTg7cCnCpCXG63Oh
+	vRv1TLt6VN54bh03c1nN2wI8LocK8MRenPos2cZSlGgVs0sErjULY+GDJ7MKSHHr
+	MDBkG0xm/dhyS/UpDBDXBJbUcXF6tYYybOXiIpQERyDgr5NDKJVU6fdAOl8WkyH8
+	3uRz2iYtOXuvSg6H7fpRdeXvD8iDbLPr8R4dyQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747064513; x=
+	1747150913; bh=A/ri/6ZjxW7RCFovjRl8X2bDl9rq/UBNCApnh0pl15I=; b=p
+	xC6oByaTqzWJwlrUULPV7S5tdE3lUUlVajj+ozI2sdYQCKWMgpFqxhnNp6sQ/y3Y
+	p8bnDHQOwqQ/WqZdvo8+vkHIsA/pUzAxfOWQGRR/Q9tRWYXCfq/j+OiIDeBLGjhh
+	FMWtTGLYAZ7nbIeleqlohvHNw1IbFxAGLbJ3fIDKY8rUEoV1BOx2+vDkyBtq5QAM
+	O2wvUDSEmgPxFwTiea0QShiLok1j9VwG5slUFcddocxg18gYxzdxeDIiDJtd/lNa
+	KyTyG0FwUBWoJY3cwKOADqIRnwYgcZvdbmg3E3j2hGR7cK1GVhqQec4Ws4V2Zwk9
+	RT1cigP76djJ9Yz+g6hHg==
+X-ME-Sender: <xms:wBYiaFNvahD2L0uAISA-4GNPY-XHMqVkfJCBRUPL7Uvkv83DCo0tOA>
+    <xme:wBYiaH8U0H8aSWHE257TqtISn56uYU87w7rZURaBjDJPUK09AVw70q4qCmQh_L5Oj
+    b1V3uXVnZJoZL6QUHI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduieegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvth
+    gvrhdruggvvheqnecuggftrfgrthhtvghrnhepleefteeugeduudeuudeuhfefheegveek
+    ueefffdvffektdffffelveffvddvueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhnsggp
+    rhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhmkhdokh
+    gvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepsghrghhlsegs
+    ghguvghvrdhplhdprhgtphhtthhopehsvggsrghsthhirghnrdhrvghitghhvghlsegtoh
+    hllhgrsghorhgrrdgtohhmpdhrtghpthhtohepnhgvrghlsehgohhmphgrrdguvghvpdhr
+    tghpthhtohepjhesjhgrnhhnrghurdhnvghtpdhrtghpthhtoheptghonhhorhdoughtse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrgiise
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:wBYiaEQsd1xvdtdJJ1WfCDmYgfhkFuWZm0lxil1__WEgKGWQUR0-5A>
+    <xmx:wBYiaBtdFny8lKddpw7XUOJHW7bSUw9R_n012ooBLLVM6JlUq0Nj3A>
+    <xmx:wBYiaNeqU2j49KazqgorE4hyn67K84YsrCQN126k-JyVdi2Ck_kauQ>
+    <xmx:wBYiaN2DNwhMgAxOfYxgOmMN8aQfZCmK0CIhYyyTJgzfnV1YBPVl9A>
+    <xmx:wRYiaDO07QpmSUH25G9IVJMjlkEKU2glNIRaTFN6QHOUrCApyau3cbWu>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B65281C20067; Mon, 12 May 2025 11:41:52 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
- <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
- <CAMuHMdUtEtZH0MuS7TA6RTa1-LB=K47sEGzo9BJM_RvfCRmRAw@mail.gmail.com>
- <93425f2f-9496-4d18-ad7d-7e631a80e6cf@bootlin.com>
- <CAMuHMdUMVFk+-3akj6nj+XCya9zj_FqkbnpOT1Wc4wSsgttiww@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAMuHMdUMVFk+-3akj6nj+XCya9zj_FqkbnpOT1Wc4wSsgttiww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+X-ThreadId: Tee5e6786d5fc82a3
+Date: Mon, 12 May 2025 17:41:32 +0200
+From: "Sven Peter" <sven@svenpeter.dev>
+To: "Sebastian Reichel" <sebastian.reichel@collabora.com>
+Cc: "Janne Grunau" <j@jannau.net>, "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+ "Neal Gompa" <neal@gompa.dev>, "Hector Martin" <marcan@marcan.st>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Lee Jones" <lee@kernel.org>,
+ "Marc Zyngier" <maz@kernel.org>, "Russell King" <rmk+kernel@armlinux.org.uk>,
+ asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Message-Id: <438dc401-a531-4b07-b77c-92748acadf85@app.fastmail.com>
+In-Reply-To: 
+ <2mhqiy6twurcidtwe7rhtobq5mivb2meoq6ik3dt45zwerkwrd@ebudw64trryq>
+References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
+ <20250511-smc-6-15-v5-7-f5980bdb18bd@svenpeter.dev>
+ <2mhqiy6twurcidtwe7rhtobq5mivb2meoq6ik3dt45zwerkwrd@ebudw64trryq>
+Subject: Re: [PATCH v5 07/10] power: reset: macsmc-reboot: Add driver for rebooting via
+ Apple SMC
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduieefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgp
- dhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.richard@bootlin.com
 
-On 5/12/25 17:14, Geert Uytterhoeven wrote:
-> Hi Thomas,
-> 
-> On Mon, 12 May 2025 at 17:01, Thomas Richard <thomas.richard@bootlin.com> wrote:
->> On 5/12/25 16:39, Geert Uytterhoeven wrote:
->>> On Mon, 12 May 2025 at 16:08, Thomas Richard <thomas.richard@bootlin.com> wrote:
->>>> On 5/9/25 11:07, Geert Uytterhoeven wrote:
->>>>> On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
->>>>>> Export all symbols and create header file for the GPIO forwarder library.
->>>>>> It will be used in the next changes.
->>>>>>
->>>>>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
->>>>
->>>> ...
->>>>
->>>>>> +
->>>>>> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
->>>>>> +                       unsigned long config);
->>>>>> +
->>>>>> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
->>>>>
->>>>> I would expect all of these to take gpiochip_fwd pointers instead of
->>>>> gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
->>>>> that does not correspond to a gpiochip_fwd object, causing a crash?
->>>>
->>>> Indeed nothing prevents from passing gpio_chip pointer which does not
->>>> correspond to a gpiochip_fwd object.
->>>> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
->>>> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
->>>>
->>>> I can keep GPIO operations as is, and create exported wrappers which
->>>> take a gpiochip_fwd pointer as parameter, for example:
->>>>
->>>> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
->>>>                               unsigned long *mask,
->>>>                               unsigned long *bits)
->>>> {
->>>>         struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
->>>>
->>>>         return gpio_fwd_get_multiple_locked(chip, mask, bits);
->>>> }
->>>> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
->>>>
->>>> So exported functions are gpiochip_fwd_*().
->>>
->>> That sounds fine to me.
->>>
->>> BTW, do you need to use these functions as gpio_chip callbacks?
->>> If that is the case, they do no need to take struct gpio_chip pointers.
->>>
->> I'm not sure to understand the question, or the idea behind the question.
-> 
-> Do users of the forwarder library want to use these functions directly
-> as callbacks in their own gpiochip?
-> E.g. do they want to use:
-> 
->     chip->get_multiple_rv = gpiochip_fwd_get_multiple;
-> 
-> I hope my question is more clear now.
+Hi Sebastian,
 
-Oh ok I understand now.
-The answer is no (gpiochip_fwd_get_multiple() is already by default the
-get_multiple_rv operation of the forwarder).
+thanks for the review!
 
-My use case (patch 12/12) is:
-I have a pinctrl driver (for a FPGA) which registers a gpiochip_fwd. The
-driver has to drive in tandem its configuration and SoC GPIOs (which are
-added in the gpiochip_fwd).
-During the probe, the driver will change gpiochip operation to use its
-own operation.
+On Mon, May 12, 2025, at 00:16, Sebastian Reichel wrote:
+> Hi,
+>
+> On Sun, May 11, 2025 at 08:18:42AM +0000, Sven Peter via B4 Relay wrote:
+>> From: Hector Martin <marcan@marcan.st>
+>> 
+>> This driver implements the reboot/shutdown support exposed by the SMC
+>> on Apple Silicon machines, such as Apple M1 Macs.
+>> 
+>> Signed-off-by: Hector Martin <marcan@marcan.st>
+>> Signed-off-by: Sven Peter <sven@svenpeter.dev>
+>> ---
+>>  MAINTAINERS                         |   1 +
+>>  drivers/power/reset/Kconfig         |  11 ++
+>>  drivers/power/reset/Makefile        |   1 +
+>>  drivers/power/reset/macsmc-reboot.c | 363 ++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 376 insertions(+)
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index fa3a5f9ee40446bcc725c9eac2a36651e6bc7553..84f7a730eb2260b7c1e0487d18c8eb3de82f5206 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -2303,6 +2303,7 @@ F:	drivers/mfd/macsmc.c
+>>  F:	drivers/nvme/host/apple.c
+>>  F:	drivers/nvmem/apple-efuses.c
+>>  F:	drivers/pinctrl/pinctrl-apple-gpio.c
+>> +F:	drivers/power/reset/macsmc-reboot.c
+>>  F:	drivers/pwm/pwm-apple.c
+>>  F:	drivers/soc/apple/*
+>>  F:	drivers/spi/spi-apple.c
+>> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+>> index 60bf0ca64cf395cd18238fc626611c74d29844ee..6e8dfff64fdc001d09b6c00630cd8b7e2fafdd8e 100644
+>> --- a/drivers/power/reset/Kconfig
+>> +++ b/drivers/power/reset/Kconfig
+>> @@ -128,6 +128,17 @@ config POWER_RESET_LINKSTATION
+>>  
+>>  	  Say Y here if you have a Buffalo LinkStation LS421D/E.
+>>  
+>> +config POWER_RESET_MACSMC
+>> +	tristate "Apple SMC reset/power-off driver"
+>> +	depends on ARCH_APPLE || COMPILE_TEST
+>> +	depends on MFD_MACSMC
+>> +	depends on OF
+>
+> This can also be 'OF || COMPILE_TEST'. But I would expect this
+> driver to just have 'depends on MFD_MACSMC' and then manage the
+> checks for ARCH_APPLE and OF in the MFD Kconfig.
 
-gc = gpiochip_fwd_get_gpiochip(fwd)
-gc->direction_input = my_direction_input;
+Makes sense, it'll just depend on MFD_MACSMC then and I'll move the ARCH_APPLE,
+OF, etc. depends to the MFD Kconfig.
 
-This function does some custom things and them call
-gpiochip_fwd_gpio_direction_input().
+>
+[...]
+>> +#include <linux/delay.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/mfd/macsmc.h>
+>> +#include <linux/module.h>
+>> +#include <linux/nvmem-consumer.h>
+>> +#include <linux/of.h>
+>
+> Once of_get_child_by_name() is no lnger used the correct include for
+> the remaining 'struct of_device_id' is <linux/mod_devicetable.h>
+> instead of <linux/of.h>.
 
-my_direction_input()
-{
-	do_something()
-	gpiochip_fwd_gpio_direction_input()
-}
+Fixed.
 
-It allows you to add custom action before/after default operation.
+>
+[...]
+>> +
+>> +	pdev->dev.of_node = of_get_child_by_name(pdev->dev.parent->of_node, "reboot");
+>
+> Why is this needed? The of_node should already be set correctly when
+> probed via the of_match_table.
 
-Regards,
+Leftovers from a previous version that didn't use of_match_table.
+I'll remove it.
 
-Thomas
+>
+[...]
+>> +
+>> +	if (device_create_file(&pdev->dev, &dev_attr_ac_power_mode))
+>> +		dev_warn(&pdev->dev, "could not create sysfs file\n");
+>
+> custom sysfs files must be documented in Documentation/ABI.
+
+This sysfs file allows to configure if the system reboots automatically after
+power loss. But now that I'm looking at this again I'm not sure this driver
+is even the proper place for this (the nvmem cell is kinda unrelated to SMC)
+or if we need this at all in the kernel since the nvmem cell is already
+exposed to sysfs just with a less convenient interface at 
+/sys/bus/nvmem/devices/spmi_nvmem0/cells/pm-setting@d001,0.
+
+I'm going to drop it for now and revisit this later.
+
+
+>
+>> +
+[...]
+>> +MODULE_LICENSE("Dual MIT/GPL");
+>> +MODULE_DESCRIPTION("Apple SMC reboot/poweroff driver");
+>> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
+>> +MODULE_ALIAS("platform:macsmc-reboot");
+>
+> Why is the MODULE_ALIAS needed?
+
+No idea, my best guess is it was copy/pasted without a good reason.
+I'll drop it.
+
+
+Thanks,
+
+
+Sven
 
