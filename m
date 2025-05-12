@@ -1,149 +1,150 @@
-Return-Path: <linux-gpio+bounces-19966-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19967-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54D96AB3AA1
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 16:30:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1953AB3AD3
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 16:40:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED49E19E187D
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 14:30:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 430CB860089
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 14:39:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E7A21D3EF;
-	Mon, 12 May 2025 14:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="igdHCSr5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9790622A7E7;
+	Mon, 12 May 2025 14:39:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1F021B9F8;
-	Mon, 12 May 2025 14:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF01E22A7E0;
+	Mon, 12 May 2025 14:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747060223; cv=none; b=pGhZfcffCn4NoIAdA8KwiO/gWOdog8sGhtqAjmHQgrFE/9C0cPUlQf4Cy6C55FJEt6pLzwtwEEiuxO4xPO2Pfou94phvdUG46lZ3PkdevcSMjtcK9WP0CTx7AWu/ST0d75QtFPHAHfawFLPEsdOFW46GgsraHKBhQVmrgUqNlFY=
+	t=1747060797; cv=none; b=bEH6uFtBAE0mtpFuD76bTGYmpsAHdsxgI+s3qbYErq2PSvmTXDF3WWeFyPZMEx7y0i624GMbqtDCYFEDpXr6MPV2pixKnL/+36yNZYpcUUWLSMIvzK9VcazH9Dzl2slqOm5T0f2EPgBzZWrqEaB7QPa+KCjkvwVqCXF7k5rXHYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747060223; c=relaxed/simple;
-	bh=dJLSXh6NRrH5GVSoNm8+zlgpZoDi2lHurrmrZhGWPo0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ug2f3B4XJhONaorznfr+JO3Hnl0OgqfcAPYVR+FoishP9PFtvAKsVHascat7mj1VkgS6orkR2L/9ExhJN1G/BWhTfH7LtbcDvqJ1dEeA9BkYxRU4qZ07KoWioy36PwbYGjYkhXy7x8UvBbBXqRCQtph3dqexq0yzLzM/BXbQB2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=igdHCSr5; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 999A441C93;
-	Mon, 12 May 2025 14:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747060218;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7/Ui6oc5Nm+KkKzPZxG2CxXKG9UmNd43w4GiVI/YA3I=;
-	b=igdHCSr5lt6uEPkbP9bms8179TGIn+n4NhO03e7kSzvUIcXmIdYS4VTrDzsW3Guoa6D0S/
-	2B5q4fKplnv/PXqB6D90WwPdiD2EopmH373ZIip+wyuKthhCdficB8+QALLRyqvzIzVtnd
-	E139KHdhArmwwO/Hm9Km/P2Lclo4ca2FNlyydyDtrMJhItKitJPvDCOjjE5wTwPfWLb96l
-	Y4tayxl/RAPnND9+axz+gzLvqNnmYLjyF61bKxf4nd5zBSAn9KX9u79v6+lXGvGaR6QMgi
-	UL3KwZtEMrBayhJdb6OrQjzEI5xfK8aomNdIBQUHpPi72nNtkBKD2leJ5X9N8A==
-Message-ID: <b5b24b98-ae89-4d50-90cb-c2bbc38aafba@bootlin.com>
-Date: Mon, 12 May 2025 16:30:16 +0200
+	s=arc-20240116; t=1747060797; c=relaxed/simple;
+	bh=Y17awEESg2LErrL8JCmdKRYQ5sEkFBnsWygtJqC80NE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pEotVJCuRRx29J2yRHETYoUgtkmCkOZPQimX2ykc+Aj/KQyZiyLDIlS0WuVIcK541E4elLnxduzmCtCVvm9dGZF4el13Zsnrv1EEKogjf9APMrCMOmPpHjHXRqHlwUGajh0cbgQ5ATK6aFA4fYtuOSeQb/zN7PNDK460EZI3dhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4def6955e85so1107788137.3;
+        Mon, 12 May 2025 07:39:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747060794; x=1747665594;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=05JsmMNwJva64+BtkCkZpam/OAJPWNRgxTT4dtTVxqo=;
+        b=P0UcKAMUWZOtsuKaqUfZHCnngc53rwvCzTR0jAYNfyrukVvmpb0+DhebfwXXdLKcC0
+         OgEf1LbLb0I1Jc1mMqfKBvjxD0FDQ2OGOMOVeSXbaJNsLDMB8lrih8uCl2bgL16scM2W
+         qclVBw4yZfcvNYExE48RFaHGkgoUKe3lOiNCrf9yJMZoDxD/8EYIKfgGY19o7aa3Y388
+         dzDjDFVIfA29R94zFj0WXu7V1WrqjieMYh7duTRoI8rvFq/K5HGhYnA9xob/4SsHYKKN
+         35IWtCLY41PVE880hfw5ICAD5meFGQxd3htFxFGyD10eASr4cWhzhURDX/rJfX/XZXEa
+         XSEg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDTaHCkMAUlvIzu0VHZ9itjYmaN3jxKYUcU4E87YQFXWNcuqQFL9Z+FbqiudUX/oalSykrTxQ4ojMGzw/MuUK+@vger.kernel.org, AJvYcCWdBdUnGYRbkM58HG2ienOpF20WzTxBbY7Nrm5IIhmLQ76jDWn6DHPx8yYsTuIUMiLIf2iu/o/ca2jZ@vger.kernel.org, AJvYcCX4UTmmnMQX3hhIPK8yOamAvgf0xDBYUMSNM/jcqFyHrmEF0kfp7yXvOhKY9g+Ew5TfqUyi9wBQxk4WMb9Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVGqjoWGFyQXOsF3AtD5dYrZ3S1/fH2MumC2zv3ldejfdHzOtU
+	vjcG6zRG30moqJBQTHNRqrCKyA4G1reM+wQ5XU2otXDwwZ3nbm84ABS53FqP
+X-Gm-Gg: ASbGnctrQdNT0yVu/tvV3wZ69Nb+TrUkMYY9xbRNZFBX5Krz14lxrHFR1COLYFvhkLO
+	gPPKaIoPCpAITAuqrwcFO+gGLS3tYPEdV30OX7u9GaKKombLRT1rKOHWfSaoKbv4XI69rW4i4g5
+	RYQsKzAZ3UW9Xy9srvbW5sKVBlbjnVjMCwTYf/KwcBh+08dnGW5AOYKrp6oSIhABS2ZbiYIALQn
+	x9y6QcMPJmcUJDowtZLoUn2P6vpTSVS+rT+7BTQpgoV6rCHPvFNPI/Wvtwi0OB1FZluUHisRnK6
+	rBTMQRWgDYO+4uQV/bacp+lrszvKjNa7Rv0GAhs8uz61t3HrQD+vHmal/8+WmlpAtRdeUhEaIQE
+	5maI+ylfIkwXTfA==
+X-Google-Smtp-Source: AGHT+IF4bn8Q0Bij731smAvLbxSOpYh4jfFMTGmogTexjXrEcLLtAbNovk3mnCEAym7NX0KulPVWFA==
+X-Received: by 2002:a05:6102:148f:b0:4b1:1eb5:8ee3 with SMTP id ada2fe7eead31-4deed3ff7d2mr10726549137.22.1747060793998;
+        Mon, 12 May 2025 07:39:53 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f6171564sm5104061241.13.2025.05.12.07.39.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 07:39:53 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4de317a6fbcso1554176137.1;
+        Mon, 12 May 2025 07:39:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUUpx95Y7pybsXvCNuE+zEVnQTl6g2ktzyV1zHXbnIgKW0wjWvrDdrG+y4kwBSyMBTvwKmBfxV4fSND@vger.kernel.org, AJvYcCWRKnXHZrjNE2+MgiIo88LWGKtQ6ap36NB5BifImLNAcV7PP9v84ZSxB1Fjix8i764+iUtgzZqeherAUvif@vger.kernel.org, AJvYcCXe34r8ktpZs7jN1iftzc0dI9jjoTvdI6kfAYMtC5Z/wS4o2Bw+6N7ZHhNphII4CnFWL2gfbD6oj8k4a8NA9Dt7@vger.kernel.org
+X-Received: by 2002:a05:6102:4a95:b0:4d7:11d1:c24e with SMTP id
+ ada2fe7eead31-4deed3fdbccmr10508480137.21.1747060792620; Mon, 12 May 2025
+ 07:39:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
 References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
  <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
- <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
- <aCIBoSi84NnwEA2s@smile.fi.intel.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <aCIBoSi84NnwEA2s@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigq
- dhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
-X-GND-Sasl: thomas.richard@bootlin.com
+ <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com> <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
+In-Reply-To: <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 May 2025 16:39:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUtEtZH0MuS7TA6RTa1-LB=K47sEGzo9BJM_RvfCRmRAw@mail.gmail.com>
+X-Gm-Features: AX0GCFtBB0NPqcRF4Vf9YhvCgyehMS_G0PxE4z0auJK_waQKI-5qQqM6guRCFiI
+Message-ID: <CAMuHMdUtEtZH0MuS7TA6RTa1-LB=K47sEGzo9BJM_RvfCRmRAw@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/12/25 16:11, Andy Shevchenko wrote:
-> On Mon, May 12, 2025 at 04:08:35PM +0200, Thomas Richard wrote:
->> On 5/9/25 11:07, Geert Uytterhoeven wrote:
->>> On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
-> 
+Hi Thomas,
+
+On Mon, 12 May 2025 at 16:08, Thomas Richard <thomas.richard@bootlin.com> wrote:
+> On 5/9/25 11:07, Geert Uytterhoeven wrote:
+> > On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
+> >> Export all symbols and create header file for the GPIO forwarder library.
+> >> It will be used in the next changes.
+> >>
+> >> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+>
 > ...
-> 
->>>> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
->>>> +                       unsigned long config);
->>>> +
->>>> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
->>>
->>> I would expect all of these to take gpiochip_fwd pointers instead of
->>> gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
->>> that does not correspond to a gpiochip_fwd object, causing a crash?
->>
->> Indeed nothing prevents from passing gpio_chip pointer which does not
->> correspond to a gpiochip_fwd object.
->> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
->> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
->>
->> I can keep GPIO operations as is, and create exported wrappers which
->> take a gpiochip_fwd pointer as parameter, for example:
->>
->> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
->> 			      unsigned long *mask,
->> 			      unsigned long *bits)
->> {
->> 	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
->>
->> 	return gpio_fwd_get_multiple_locked(chip, mask, bits);
->> }
->> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
->>
->> So exported functions are gpiochip_fwd_*().
-> 
-> Sounds good for me. Let's wait for Geert's opinoin on this.
+>
+> >> +
+> >> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
+> >> +                       unsigned long config);
+> >> +
+> >> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
+> >
+> > I would expect all of these to take gpiochip_fwd pointers instead of
+> > gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
+> > that does not correspond to a gpiochip_fwd object, causing a crash?
+>
+> Indeed nothing prevents from passing gpio_chip pointer which does not
+> correspond to a gpiochip_fwd object.
+> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
+> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
+>
+> I can keep GPIO operations as is, and create exported wrappers which
+> take a gpiochip_fwd pointer as parameter, for example:
+>
+> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
+>                               unsigned long *mask,
+>                               unsigned long *bits)
+> {
+>         struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
+>
+>         return gpio_fwd_get_multiple_locked(chip, mask, bits);
+> }
+> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
+>
+> So exported functions are gpiochip_fwd_*().
 
-Regarding Geert's comment for patch 9/12, an other proposal for naming:
-As mentioned above, exported functions gpiochip_fwd_*() take a
-gpiochip_fwd as parameter.
+That sounds fine to me.
 
-But for all functions corresponding to a GPIO operation add the gpio
-word, and for functions to add/remove GPIO descriptor add the desc word:
+BTW, do you need to use these functions as gpio_chip callbacks?
+If that is the case, they do no need to take struct gpio_chip pointers.
 
-devm_gpiochip_fwd_alloc()
-gpiochip_fwd_register()
+Gr{oetje,eeting}s,
 
-gpiochip_fwd_desc_add()
-gpiochip_fwd_desc_free()
+                        Geert
 
-gpiochip_fwd_get_gpiochip()
-gpiochip_fwd_get_data()
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-gpiochip_fwd_gpio_request()
-gpiochip_fwd_gpio_get_direction()
-gpiochip_fwd_gpio_direction_input()
-gpiochip_fwd_gpio_direction_output()
-gpiochip_fwd_gpio_get()
-gpiochip_fwd_gpio_set()
-gpiochip_fwd_gpio_set_multiple()
-gpiochip_fwd_gpio_get_multiple()
-gpiochip_fwd_gpio_set_config()
-gpiochip_fwd_gpio_to_irq()
-
-Regards,
-
-Thomas
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
