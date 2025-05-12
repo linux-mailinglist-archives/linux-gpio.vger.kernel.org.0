@@ -1,537 +1,236 @@
-Return-Path: <linux-gpio+bounces-19910-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19911-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73B09AB2BD7
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 00:17:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0E6EAB2D61
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 04:15:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BF80E1771D1
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 May 2025 22:17:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67B113B2665
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 02:15:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A76232609D7;
-	Sun, 11 May 2025 22:17:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CF3E202F7C;
+	Mon, 12 May 2025 02:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="RbkIrhN8"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="chNNTHAa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011039.outbound.protection.outlook.com [40.107.130.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D74510F1;
-	Sun, 11 May 2025 22:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2A18834;
+	Mon, 12 May 2025 02:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.39
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747001841; cv=pass; b=MUkr1CRXBOHdR3dnG/kBZnUePImqKQu5gqhusDYkVIsJNVRL7/FBHzb+T3V6ZmBN+l3nzQaRYYS4taD52415Jjw+P1khyXOBSXBG2QCS5+1SWrc8yDRcYsTzePEak180eyxJ3Mhyow4BVGRPyil0my51EImZkc7Wo0QPmWtMG6s=
+	t=1747016150; cv=fail; b=FKneP9/8m7Df71JSZyuQaaMuaVLUmgYxLj4KVuIr3GUUASoVmt6F0fNqhufz3aZt1yfO/2sbobGbMOlrBD36yBmXERaPJKsllSOY/FznFJp6cWb9TbwQvZf2FSeFNU8AMa+hTfBgQABCOB8m194wYIe1vJKbnY4yLQHnMz+edoU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747001841; c=relaxed/simple;
-	bh=yrmNJCmYv7Na8HB4lJur31d404jWIvE81CQ8WubS4uQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MnzHDaphyRDR7vvHEUqGC3ICxoFBeNBhAfdsGH+JxIGxVuQ7WiZMEDkpsu0NbCwUCfdpsobPG28DKi7X4LQ7/FErqzAUIx3CvC90dwogLaUjq0Vhm1uaLwFIADFSxhK8mvNK6b6Iay7R1N2/oCE+fHVhpS1o/roUW1sbicNUrM4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=RbkIrhN8; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1747001802; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=h3yuEgqKVo3jqfJm0l+hcuZr4k9eU8hPlnQmuB7LOw46CFv6j8Gp6TKBf0JxL3RwAYem8L7Fl+Egrv4dkQYGqZ+xsjq7ojEBAkEOd84MIkswJSbyEsMWGGUX8tZrB+nJOrVaM8eKT0BSvFzALAcFG1eCYzS8ITiUUQpTmlRec1o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747001802; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=T1jtHdhTBzj+SkjCG6A+ZJds3l7CYHoTuTPZrwy941E=; 
-	b=FBlXr083sob0vaK0Rv7qGgrQaZAVfx0QAetxELIv09JNGI9gxA7WIbAqhxG5KF0maDgRhfMfwwHC9MDmL6ZCH13HeC/0iMcU8VrgZ3tQF11juUiCkScDLJyV364hTP2m9Zkc5ByYsI6X01ZKuoZSWv6ImLbl++UJwkYK2wnC2sQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747001802;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=T1jtHdhTBzj+SkjCG6A+ZJds3l7CYHoTuTPZrwy941E=;
-	b=RbkIrhN8Z1lwZCxFuzAr2s2/L/8ojXVgA6JScNOlCT1TU288FsSEuDIRMiRzV1hD
-	Xg8dSDWlSQl2dS2HPXc3ca/6aYItRLweRbf5Vzb+BUm9iDlcF4WR9jNyqPqS8m07Nc9
-	92F/7O4qXKKvBf3ahCvEbld9ENm32ZbxdxJ2XXo4=
-Received: by mx.zohomail.com with SMTPS id 1747001800549578.1946754598622;
-	Sun, 11 May 2025 15:16:40 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 11034180949; Mon, 12 May 2025 00:16:34 +0200 (CEST)
-Date: Mon, 12 May 2025 00:16:33 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: sven@svenpeter.dev
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
-	Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 07/10] power: reset: macsmc-reboot: Add driver for
- rebooting via Apple SMC
-Message-ID: <2mhqiy6twurcidtwe7rhtobq5mivb2meoq6ik3dt45zwerkwrd@ebudw64trryq>
-References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
- <20250511-smc-6-15-v5-7-f5980bdb18bd@svenpeter.dev>
+	s=arc-20240116; t=1747016150; c=relaxed/simple;
+	bh=vund7pqJIQHNF6l6F4D3JPzf5I+3XhkkUAAQfB14+Ac=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=VITNeFW30C27PpFdZk0qRCU+9+T/uu7KLbDdQM7lPmzh6jMmRcCl4O6R9YL88Kitfpjr9jsTBhDWlRNIdaDf0/4218XbvO3UVJKbGnsFTM0YNW1+66YUx0kr6KK+GpLuBZdWfVgnDfPd6imOAjUclzUxaKDgu6utQ0OnmgwBYtk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=chNNTHAa; arc=fail smtp.client-ip=40.107.130.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V4SA/Hi2dJ7RlQ3zBT19wMRlsqhMWniY3kA9XACS3qcsGMqfVKUqEnWEKtQ3Uu2IzNyc0fzGR3ypGJXu2G9xDawa4M/whiqQIdeS3qxj0GQS3WWRLitoPtApnVYn/z0FAFOwsNb/JBXNOdSHYA95pL3/9kf971QCiyVU14Mmwxx247Ur4jPt4U/ALCqyJA8bENM8lyCn2Us1kTFCM5yt8QrUjyAjmv22FZGfy9dPa2lASJ2H0L91Mcbt3QrQA7ZRazaTkb57BpOF0AA8dNNnU4c5BD8ehHtvAmdF+ev7ltN5VdOHdPwp1mQXseduAv37oF5L6FspOkaJXIb663ejEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Qece37I9j8439XqV2rwVsuDx9WDlAxMv9H6LIgAHkLk=;
+ b=uN0cCfYW63hkTL6Zza1gJ3dC02frON7jLVMnuUycInS2P9PFEtHMTeH9MiEmnLR7RoXo/AHM+5FgvkrccjF86ryWyAybztZ+/PiiN7KPkSFcHkwoZ2++i43bQ1CY5b9oMHyyU4AtgFdRtBHL3W1Ox8Hfx+Un4VTJ2C1fvM3Y474v2qt8Mjly7oCWh2ihL1idKxC/NQS8Tz+MpCRB8xjryOElSyEA5hIZqoPumcEQshW7cVip0IrtAigVp4CiW7iP0r/S69EwGF7GLBzK3tHRtscPSPmeuS4ZuHG1yJaa5/LKFl52kyT/rh4WqQqfH1kCXaDNERtbG9EvZa/XmR5OEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qece37I9j8439XqV2rwVsuDx9WDlAxMv9H6LIgAHkLk=;
+ b=chNNTHAajMP4nhm96sS0yWzqq6Ot2SVN04P/QqGZboN+Mq8NjxQDd1DVwgEQ6bIzfNDggV048t9o+Z8iQnmUxmY3VIPfXLUAwqTGmSKkrL9xtHMe6kYnkATTaj5IwRuo//awq++Fllena/uf7Vywl+xtvzkL9d/TSC0t6GFbDjc7HVqPYXpwWYfRrb6Y9EI+Fcp7FEypuzKdflmFKRLVRR22O7sVgEYaSTxgGB/Pj+6TvoHfmN03RPj8uFItdbPgV8xT7Yl2lKwUxYbb6iv9uvJ/jqwjfB5wYZcUf2XT/4qFH61cWfbmF7VUKF+TOxCu+XgQYcwiIPW2L7RSvyq7Cg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by AS1PR04MB9240.eurprd04.prod.outlook.com (2603:10a6:20b:4c4::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.26; Mon, 12 May
+ 2025 02:15:44 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 02:15:42 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH 0/3] pinctrl: imx-scmi: Introdue nxp,iomuxc-daisy-off
+Date: Mon, 12 May 2025 10:14:13 +0800
+Message-Id: <20250512-pin-v1-0-d9f1555a55ad@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHVZIWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUwNL3YLMPN1U0yRTM+OkpBRT0xQloMqCotS0zAqwKdGxtbUA+rTmYlU
+ AAAA=
+X-Change-ID: 20250509-pin-e5b563bbd55d
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
+ Jacky Bai <ping.bai@nxp.com>, NXP S32 Linux Team <s32@nxp.com>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747016063; l=1481;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=vund7pqJIQHNF6l6F4D3JPzf5I+3XhkkUAAQfB14+Ac=;
+ b=bI1hcecZfZ8773UaoAny4XVXBSRF6OQaf5cwXcTMUqMkQFuG84C7qx+hYbPzleNrwIouYv+rF
+ daTvYt16A98A0T2LKxK7DDbo+annujv0j0lkGgRc4nX2O6/cc6k5gcZ
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SG2PR02CA0042.apcprd02.prod.outlook.com
+ (2603:1096:3:18::30) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250511-smc-6-15-v5-7-f5980bdb18bd@svenpeter.dev>
-X-ZohoMailClient: External
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AS1PR04MB9240:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79c78bb6-8de0-49e9-e2ef-08dd90fae589
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|52116014|376014|1800799024|366016|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dGRCSGoydWpDd2NWNElySnpjN3g2VElNcEZjQThGVUlGZkpoVGhteXJ0L2h2?=
+ =?utf-8?B?WjVmMjF3YkxCV3JpWkFRY1Jvd25BUExXbEJwajR4dHVaSHNNWURETjRwTWtN?=
+ =?utf-8?B?NzRYWHRKWWl1T0NrTjhSaVdZbHYrTU9yeEZHSnJkWDRPVUVMZURYanJYVGFa?=
+ =?utf-8?B?OG5oUFRITzhZTFQ4UGJ0MFBMTHdFTUhLejBYSU01cVBRU3gvZHp5STg4NTFt?=
+ =?utf-8?B?aXNEVDQwajFVSWNwOXhEMFI0djI4S2lJTjdrRkh5SmJCdTJCbThxaDA5RHJ2?=
+ =?utf-8?B?T3M2MGtQOGRSemh0OWNQNk16RUhiRXFIeTdJMDNKbm1RNGtPS1M2MytBZ1ZH?=
+ =?utf-8?B?czZ5STh1MTA3NGRGTG5CSStiMVg3dlZKNmEzWXBUUit4Mk9OaWF0ZkR4K2RU?=
+ =?utf-8?B?M2F3UnZuYnhIL3EwUktsamZORDhWQ3hmb3hZU3plYTUwZXE2TU9lNnBHcmJM?=
+ =?utf-8?B?b0VqODhTQ2o3bURuY2xid1dtUkhoblYyQkoyaFRvUDU3aVZMb1IxM0dnNk5y?=
+ =?utf-8?B?QW5MeW5zZHluSmZtODQ1cldHRFVwYmlreGx2bXBoYjRKWFFzc2xoaUxMSncw?=
+ =?utf-8?B?UjFBVEV5bUlzbG9MZ3RJWTI3VjhDWDlGWE9kdzJSZlFlQWl3YUszS0xCQVAx?=
+ =?utf-8?B?aFBEYzgxaFZsbGVhTGJRN2pDTldDcWk2a0t6ekd6bHRKbERSYUpjMFF0MWkz?=
+ =?utf-8?B?K2RVcFFGbXQzeEZaVms0SEN4bnZ0SFd0UzJWNkJ6QUlSTU5LY1l4UHRHVVhX?=
+ =?utf-8?B?a05KWFRuMjdIY2d0WWMyTWExQWRCZ1dzeVVaYVZOeU9yK29FZFFKQUMyYU9v?=
+ =?utf-8?B?dDRORXczWCtvSUkyRXRvcFZqYkdrYU9qSldTMklSNXN5SGppamJvaWJGemY2?=
+ =?utf-8?B?MlhvanZXRFZlM2ZUV2YvTnZySGxmdVU5a2k5ZzladFhlV0NCN3o5Z0h2Z1pU?=
+ =?utf-8?B?eWVkaGl6V1BGK3lvV2N2Z015eStmZElXOHFXYVJ6cG1DWVJOSUhzQUFpY2Rx?=
+ =?utf-8?B?aVlGVUxSZ1BjK1VDVTVyQUpCQXBTbWxoYlZrM05TZDdLVkk4dTBzeGFhVmJk?=
+ =?utf-8?B?Y2NlYjNqM200UlJXaVFTTHhtdXYvV091d1ZXYnZNV2FPYTZjbFpORU5jaWF3?=
+ =?utf-8?B?RUhSeGpOZkN6czhXSGEyODlnN3I0RWtOUWZwSjZrRGxaMHN4TTA1aWFhRktN?=
+ =?utf-8?B?N0NjL09EVGVtdWxGTit5MndqV3JWMmdzME9IaTRuRVRlZFJ6SWZBakNJcVhw?=
+ =?utf-8?B?TVdpNDV6b2dRTEFHRjdDM1NrQStYWnN6K0NkV3F3L0RqUzZkWUVsbjNnSDh2?=
+ =?utf-8?B?enF5QWkwVVJsT2tMQmNqV0JDeWtLcDRtcXZrQXloanNDTnVwdUVuQkJERDJQ?=
+ =?utf-8?B?bjZtekpucnI0MTBOa2I5K2VWNGZxVkVZQ3kyUnJYSkRIZ2hQd3kyZ2JnUEkr?=
+ =?utf-8?B?K1NsK1VDR000V0MyZDBuc0F6U2VvWnlCdkgwRWMzdzkrdmtyejZmQnRrWEQw?=
+ =?utf-8?B?NmN2QmRZRDE5TXY4eEZGNjJBaXhjRm1TMFk1aVAvNzVScE4rUjhFRUJLSjl5?=
+ =?utf-8?B?TncwS01KVWh0N0R1VGVJRkMveXpqSHE2SldlRG05cWZnZVptVmVZUWVKZjd1?=
+ =?utf-8?B?UXFuWk5jUjhaTSt5allmTTVjZmtNdE4veFBkQzhpK2toZlRTQzFEWTUzYzdM?=
+ =?utf-8?B?OGtLQlFuTWtPKzRBak1wdUdoREJLUE5BS3R6elpvVmh5OGNUNjB4cmxLOExN?=
+ =?utf-8?B?cWNFZk1ZY0xhRG1SZW1Zb3MzWFFGRytmRGVSU2hqOHVvV3pUaFZDRHRDTnJB?=
+ =?utf-8?B?anhoNTB4WmxKZlNMMkxSVUo5QmNBSGlQcG5JTU9Rejh0MjNRYWhQT2kxWU9a?=
+ =?utf-8?B?TnRPQTZ1cmZZUk44ckJHdnMwcSt6SjV4NHNscnppaFlzVEtEWEl6QXcyWUdv?=
+ =?utf-8?B?eUVVcWtGS1JiU25HaE92bndtdWUzZ3M4TjZxOFpSN1dXYmc4SThIVEhuV1RV?=
+ =?utf-8?Q?Y3RRNL/85fx+E+ZXMr1OTAqKxg3r0w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(1800799024)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MUtjeTV1OVpLRGtzLzRlcUhjY3dPcUNSWnJGWDFmQ05ZNVlJTUdYZU5TKzJZ?=
+ =?utf-8?B?a05WSVByMjdpQU5yaWlzcHN2M01pckJYcndNRVNPdWpGVTJIU3BvRDBONEFq?=
+ =?utf-8?B?bTZXMGRxWmRtL0M5N3FWS1FaWENvQ0s5Rm9NbVk3NDR6bUJvbnhQVFZYU09Q?=
+ =?utf-8?B?Uk5GMUFrWHNmS2h4Z1RqVEtSNkNtL05CMk5EQlBKMWZUcWhQYTR2KzAwTEpv?=
+ =?utf-8?B?ZG1LeVFiS1Vhdmh3OXRKK2xaS2gzWDJIc2FtQ3FMWUpVYW0zYmViWkMyeWV6?=
+ =?utf-8?B?d1R2aUlZdmhubGxSV1NYcFVEa0l0aFZoV21wSytLUzg5WjB0bFduYVJERnlH?=
+ =?utf-8?B?TklqOEZmT24zbE5vcVRKYVFwcWhSMlpJejZkMXp4QWhCWDVlcEJSVkJ1Y3RH?=
+ =?utf-8?B?Vzk1VzFMVGNDbTFxYWVZV3dwNllwNXlzTm0rb3hPOUMyWUJuOEJsSEFNbmwy?=
+ =?utf-8?B?VkpkVnQvV3RhNnVJTVYrbWtaZ3gxWDNtTTZBZm1scHZKL1dSQ3p1UmM2S2FL?=
+ =?utf-8?B?bWVRYWRKOERRR204WUF3YXBwa3NSL255bTRFOWJSdG5TU01Sd0ZhREpGb1ZI?=
+ =?utf-8?B?NVdtZk9XTEt2bnRUcUVza285NTloRHBtS3F1MDNWbGtaNjRMWk42aTZLeWZW?=
+ =?utf-8?B?UlM3M0ZQWnBSbDhDVDVzdDVmcml5d2VmMldNOUpvbUZoVG1IWmVpL2hzVk03?=
+ =?utf-8?B?K0ZiU3RsTjJPTTlqMEltdmxScWR0ODhvZ0lGbU5sRHp6d2t1QTdmRHM3eEcw?=
+ =?utf-8?B?VitZcy9pUXhEeVVuc1J5MjFYL1RQVUFxc3hoanMxZVlEQU1VT0NvVG5vN3lD?=
+ =?utf-8?B?c1VZNWd6NStMYXdIOUV6cW5NbE1Hc3picVlONnN3aGNHWVdBTGVienZnSktq?=
+ =?utf-8?B?azYvUmh2VVphdlZxOG9tR0d4NDBja1BxWThsYnhvUmxuZ1lzTi8zWWpTczJS?=
+ =?utf-8?B?MDN2L0s5SEQzbmwyRS9pTjZvQ1AraFFyQkZldzJoUEs1TFRmOW1ycC9DdDB5?=
+ =?utf-8?B?eC94aXd3dC9tSnFkQ05LTWJVVmxXS1k1Y0JSYnluUDFiZjY0TTU5LzV5WTVR?=
+ =?utf-8?B?bzRoR1FoOGg3Ykp3WnVzSy82MXRON2xvRHJBeTFzN2IyZ29Fa0pLbXhpQlJa?=
+ =?utf-8?B?MWV5NmlSREdzbEJWUUFJaUpMek5UVXJjMjNlaytBaDNLbzgxMmxjWHAwc0o2?=
+ =?utf-8?B?TjVXc0RyYzMwK2Y5Y2tyaS9JUEdDTm1lc3kwRUg5VzJLL0VsamZGd1dtRjVP?=
+ =?utf-8?B?YVZXTEpwY2g3TVVrd28rM2Q2WU5VU2JOVUJrN3Y3aS9hRWpoTW0xUENVRUV3?=
+ =?utf-8?B?MStVY1dwa2ZSRWNnRFF6S2puQUNWRm9XU040ejAzazgwTTBVa1h5VzZ0Z0sv?=
+ =?utf-8?B?cDVCNDh4d0Rnd0RrWTBST2RFK2E4aXhHVU9RSnk4OUpTbWF5VURZQ3ltNi9V?=
+ =?utf-8?B?aTcyNW14dHJrcW1HVWJhbjNidlJzU0FEMk93b3JoV3lia3RxaUIvUDUrL29U?=
+ =?utf-8?B?aURINkFBWDZNY0UwWHZhTEIzNGt0dnhkc3RLcEhxWmpBQlFkbTNJL1F4U0pI?=
+ =?utf-8?B?L3JYWmZieVhVTGg2ZGZCMURTSEF6L3hpWHlOaXNDb1lieHR0a0xNbjhzNHVp?=
+ =?utf-8?B?OWZpWXoyOEt5WW1vdlhtN1JIRUdGSWp5eURFYk4rWVQvQzQ4OXhzbC90eXQ5?=
+ =?utf-8?B?SFZqZWUwb1VYR2p4dUdBYVNGcFZSdjUwY2xUdlFmajJiTHA0TUVJUVBTSmxn?=
+ =?utf-8?B?ZCtXeW5veXBpa2taQ2dCamRXS3RGL1FpUXpuMkNGSFhOZFNZYlBBN0Y5MTFk?=
+ =?utf-8?B?K0xqQWhBWE02Nk82SUd6VXBCVEpnaU5xS05WTWxzOVFrYU8wd3JoUDRaSHo5?=
+ =?utf-8?B?bUtqMkp3ZDYxcGdZUU9RSG9BMzFycm9xdWNyYnFiOW4wNVJWZzhOQXJuTVlq?=
+ =?utf-8?B?YldFTTdWeUgxRkZkZmwwbUU0dnErbHVKSlo4TEh5MEUrUDBzeXlEeVJkU0x3?=
+ =?utf-8?B?UGUrL3p6WlRkY25hQTBEVzkzWXJ1cTJ3dnVBRE9zTG0rOFhiK3M1emZuSUhq?=
+ =?utf-8?B?bzZDVjYybXZ3cWlMYlRkVVFPaTNrcVBUMFdsRDVXRDl2SmFzWkkxZGsxWVFn?=
+ =?utf-8?Q?/dzI0GBeHIbFUvDKstILrhOeU?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79c78bb6-8de0-49e9-e2ef-08dd90fae589
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 02:15:42.5568
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hzjF3OH+ajCFIs38h47LfwGM+EnBVr04pej9iXPAcsjwV2z6bxwDiPuqafnRjwYJx3fRoYVljqY0IzlSO+tb9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9240
 
-Hi,
+It might be a bit late, since it is 6.15-RC6 now. No rush, the target is 6.17.
 
-On Sun, May 11, 2025 at 08:18:42AM +0000, Sven Peter via B4 Relay wrote:
-> From: Hector Martin <marcan@marcan.st>
-> 
-> This driver implements the reboot/shutdown support exposed by the SMC
-> on Apple Silicon machines, such as Apple M1 Macs.
-> 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Sven Peter <sven@svenpeter.dev>
-> ---
->  MAINTAINERS                         |   1 +
->  drivers/power/reset/Kconfig         |  11 ++
->  drivers/power/reset/Makefile        |   1 +
->  drivers/power/reset/macsmc-reboot.c | 363 ++++++++++++++++++++++++++++++++++++
->  4 files changed, 376 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fa3a5f9ee40446bcc725c9eac2a36651e6bc7553..84f7a730eb2260b7c1e0487d18c8eb3de82f5206 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2303,6 +2303,7 @@ F:	drivers/mfd/macsmc.c
->  F:	drivers/nvme/host/apple.c
->  F:	drivers/nvmem/apple-efuses.c
->  F:	drivers/pinctrl/pinctrl-apple-gpio.c
-> +F:	drivers/power/reset/macsmc-reboot.c
->  F:	drivers/pwm/pwm-apple.c
->  F:	drivers/soc/apple/*
->  F:	drivers/spi/spi-apple.c
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index 60bf0ca64cf395cd18238fc626611c74d29844ee..6e8dfff64fdc001d09b6c00630cd8b7e2fafdd8e 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -128,6 +128,17 @@ config POWER_RESET_LINKSTATION
->  
->  	  Say Y here if you have a Buffalo LinkStation LS421D/E.
->  
-> +config POWER_RESET_MACSMC
-> +	tristate "Apple SMC reset/power-off driver"
-> +	depends on ARCH_APPLE || COMPILE_TEST
-> +	depends on MFD_MACSMC
-> +	depends on OF
+i.MX9 SoC family IOMUXC features Daisy chain(multi pads driving same module
+input pin), each SoC has its own daisy register offset. When add a new SoC
+support, need to hardcode the register offset in pinctrl-imx-scmi.c just as
+"
+if (of_machine_is_compatible("fsl,imx95"))
+   daisy_off = IMX95_DAISY_OFF;
+else if
+   ...
+else
+   ...
+"
 
-This can also be 'OF || COMPILE_TEST'. But I would expect this
-driver to just have 'depends on MFD_MACSMC' and then manage the
-checks for ARCH_APPLE and OF in the MFD Kconfig.
+This is no good to long term maintainence.
 
-> +	help
-> +	  This driver supports reset and power-off on Apple Mac machines
-> +	  that implement this functionality via the SMC.
-> +
-> +	  Say Y here if you have an Apple Silicon Mac.
-> +
->  config POWER_RESET_MSM
->  	bool "Qualcomm MSM power-off driver"
->  	depends on ARCH_QCOM
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index 10782d32e1da39f4b8b4566e8a885f2e13f65130..887dd9e49b7293b69b9429ddc0c1571194a153cf 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
->  obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
->  obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
->  obj-$(CONFIG_POWER_RESET_LINKSTATION) += linkstation-poweroff.o
-> +obj-$(CONFIG_POWER_RESET_MACSMC) += macsmc-reboot.o
->  obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
->  obj-$(CONFIG_POWER_RESET_MT6323) += mt6323-poweroff.o
->  obj-$(CONFIG_POWER_RESET_QCOM_PON) += qcom-pon.o
-> diff --git a/drivers/power/reset/macsmc-reboot.c b/drivers/power/reset/macsmc-reboot.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d82339e427886667be4ad2de0d1d5c04d2383059
-> --- /dev/null
-> +++ b/drivers/power/reset/macsmc-reboot.c
-> @@ -0,0 +1,363 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +/*
-> + * Apple SMC Reboot/Poweroff Handler
-> + * Copyright The Asahi Linux Contributors
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/macsmc.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/of.h>
+With nxp,iomuxc-daisy-off introduced, things will be simplified to set
+daisy register offset:
+"device_property_read_u32(dev, "nxp,iomuxc-daisy-off", &pmx->daisy_off);"
 
-Once of_get_child_by_name() is no lnger used the correct include for
-the remaining 'struct of_device_id' is <linux/mod_devicetable.h>
-instead of <linux/of.h>.
+The new property is set as required, so there might be dtbs_check error
+without patch 3 applied. This is expected.
 
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/slab.h>
-> +
-> +struct macsmc_reboot_nvmem {
-> +	struct nvmem_cell *shutdown_flag;
-> +	struct nvmem_cell *pm_setting;
-> +	struct nvmem_cell *boot_stage;
-> +	struct nvmem_cell *boot_error_count;
-> +	struct nvmem_cell *panic_count;
-> +};
-> +
-> +static const char * const nvmem_names[] = {
-> +	"shutdown_flag",
-> +	"pm_setting",
-> +	"boot_stage",
-> +	"boot_error_count",
-> +	"panic_count",
-> +};
-> +
-> +enum boot_stage {
-> +	BOOT_STAGE_SHUTDOWN		= 0x00, /* Clean shutdown */
-> +	BOOT_STAGE_IBOOT_DONE		= 0x2f, /* Last stage of bootloader */
-> +	BOOT_STAGE_KERNEL_STARTED	= 0x30, /* Normal OS booting */
-> +};
-> +
-> +enum pm_setting {
-> +	PM_SETTING_AC_POWER_RESTORE	= 0x02,
-> +	PM_SETTING_AC_POWER_OFF		= 0x03,
-> +};
-> +
-> +static const char * const ac_power_modes[] = { "off", "restore" };
-> +
-> +static int ac_power_mode_map[] = {
-> +	PM_SETTING_AC_POWER_OFF,
-> +	PM_SETTING_AC_POWER_RESTORE,
-> +};
-> +
-> +struct macsmc_reboot {
-> +	struct device *dev;
-> +	struct apple_smc *smc;
-> +	struct notifier_block reboot_notify;
-> +
-> +	union {
-> +		struct macsmc_reboot_nvmem nvm;
-> +		struct nvmem_cell *nvm_cells[ARRAY_SIZE(nvmem_names)];
-> +	};
-> +};
-> +
-> +/* Helpers to read/write a u8 given a struct nvmem_cell */
-> +static int nvmem_cell_get_u8(struct nvmem_cell *cell)
-> +{
-> +	size_t len;
-> +	u8 val;
-> +	void *ret = nvmem_cell_read(cell, &len);
-> +
-> +	if (IS_ERR(ret))
-> +		return PTR_ERR(ret);
-> +
-> +	if (len < 1) {
-> +		kfree(ret);
-> +		return -EINVAL;
-> +	}
-> +
-> +	val = *(u8 *)ret;
-> +	kfree(ret);
-> +	return val;
-> +}
-> +
-> +static int nvmem_cell_set_u8(struct nvmem_cell *cell, u8 val)
-> +{
-> +	return nvmem_cell_write(cell, &val, sizeof(val));
-> +}
-> +
-> +static ssize_t macsmc_ac_power_mode_store(struct device *dev, struct device_attribute *attr,
-> +					  const char *buf, size_t n)
-> +{
-> +	struct macsmc_reboot *reboot = dev_get_drvdata(dev);
-> +	int mode;
-> +	int ret;
-> +
-> +	mode = sysfs_match_string(ac_power_modes, buf);
-> +	if (mode < 0)
-> +		return mode;
-> +
-> +	ret = nvmem_cell_set_u8(reboot->nvm.pm_setting, ac_power_mode_map[mode]);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return n;
-> +}
-> +
-> +static ssize_t macsmc_ac_power_mode_show(struct device *dev,
-> +					 struct device_attribute *attr, char *buf)
-> +{
-> +	struct macsmc_reboot *reboot = dev_get_drvdata(dev);
-> +	int len = 0;
-> +	int i;
-> +	int mode = nvmem_cell_get_u8(reboot->nvm.pm_setting);
-> +
-> +	if (mode < 0)
-> +		return mode;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ac_power_mode_map); i++) {
-> +		if (mode == ac_power_mode_map[i])
-> +			len += scnprintf(buf+len, PAGE_SIZE-len,
-> +					 "[%s] ", ac_power_modes[i]);
-> +		else
-> +			len += scnprintf(buf+len, PAGE_SIZE-len,
-> +					 "%s ", ac_power_modes[i]);
-> +	}
-> +
-> +	buf[len-1] = '\n';
-> +	return len;
-> +}
-> +static DEVICE_ATTR(ac_power_mode, 0644, macsmc_ac_power_mode_show,
-> +		   macsmc_ac_power_mode_store);
-> +
-> +/*
-> + * SMC 'MBSE' key actions:
-> + *
-> + * 'offw' - shutdown warning
-> + * 'slpw' - sleep warning
-> + * 'rest' - restart warning
-> + * 'off1' - shutdown (needs PMU bit set to stay on)
-> + * 'susp' - suspend
-> + * 'phra' - restart ("PE Halt Restart Action"?)
-> + * 'panb' - panic beginning
-> + * 'pane' - panic end
-> + */
-> +
-> +static int macsmc_prepare_atomic(struct sys_off_data *data)
-> +{
-> +	struct macsmc_reboot *reboot = data->cb_data;
-> +
-> +	dev_info(reboot->dev, "Preparing SMC for atomic mode\n");
-> +
-> +	apple_smc_enter_atomic(reboot->smc);
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static int macsmc_power_off(struct sys_off_data *data)
-> +{
-> +	struct macsmc_reboot *reboot = data->cb_data;
-> +
-> +	dev_info(reboot->dev, "Issuing power off (off1)\n");
-> +
-> +	if (apple_smc_write_u32_atomic(reboot->smc, SMC_KEY(MBSE), SMC_KEY(off1)) < 0) {
-> +		dev_err(reboot->dev, "Failed to issue MBSE = off1 (power_off)\n");
-> +	} else {
-> +		mdelay(100);
-> +		WARN_ONCE(1, "Unable to power off system\n");
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static int macsmc_restart(struct sys_off_data *data)
-> +{
-> +	struct macsmc_reboot *reboot = data->cb_data;
-> +
-> +	dev_info(reboot->dev, "Issuing restart (phra)\n");
-> +
-> +	if (apple_smc_write_u32_atomic(reboot->smc, SMC_KEY(MBSE), SMC_KEY(phra)) < 0) {
-> +		dev_err(reboot->dev, "Failed to issue MBSE = phra (restart)\n");
-> +	} else {
-> +		mdelay(100);
-> +		WARN_ONCE(1, "Unable to restart system\n");
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static int macsmc_reboot_notify(struct notifier_block *this, unsigned long action, void *data)
-> +{
-> +	struct macsmc_reboot *reboot = container_of(this, struct macsmc_reboot, reboot_notify);
-> +	u32 val;
-> +	u8 shutdown_flag;
-> +
-> +	switch (action) {
-> +	case SYS_RESTART:
-> +		val = SMC_KEY(rest);
-> +		shutdown_flag = 0;
-> +		break;
-> +	case SYS_POWER_OFF:
-> +		val = SMC_KEY(offw);
-> +		shutdown_flag = 1;
-> +		break;
-> +	default:
-> +		return NOTIFY_DONE;
-> +	}
-> +
-> +	dev_info(reboot->dev, "Preparing for reboot (%p4ch)\n", &val);
-> +
-> +	/* On the Mac Mini, this will turn off the LED for power off */
-> +	if (apple_smc_write_u32(reboot->smc, SMC_KEY(MBSE), val) < 0)
-> +		dev_err(reboot->dev, "Failed to issue MBSE = %p4ch (reboot_prepare)\n", &val);
-> +
-> +	/* Set the boot_stage to 0, which means we're doing a clean shutdown/reboot. */
-> +	if (reboot->nvm.boot_stage &&
-> +	    nvmem_cell_set_u8(reboot->nvm.boot_stage, BOOT_STAGE_SHUTDOWN) < 0)
-> +		dev_err(reboot->dev, "Failed to write boot_stage\n");
-> +
-> +	/*
-> +	 * Set the PMU flag to actually reboot into the off state.
-> +	 * Without this, the device will just reboot. We make it optional in case it is no longer
-> +	 * necessary on newer hardware.
-> +	 */
-> +	if (reboot->nvm.shutdown_flag &&
-> +	    nvmem_cell_set_u8(reboot->nvm.shutdown_flag, shutdown_flag) < 0)
-> +		dev_err(reboot->dev, "Failed to write shutdown_flag\n");
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static void macsmc_power_init_error_counts(struct macsmc_reboot *reboot)
-> +{
-> +	int boot_error_count, panic_count;
-> +
-> +	if (!reboot->nvm.boot_error_count || !reboot->nvm.panic_count)
-> +		return;
-> +
-> +	boot_error_count = nvmem_cell_get_u8(reboot->nvm.boot_error_count);
-> +	if (boot_error_count < 0) {
-> +		dev_err(reboot->dev, "Failed to read boot_error_count (%d)\n", boot_error_count);
-> +		return;
-> +	}
-> +
-> +	panic_count = nvmem_cell_get_u8(reboot->nvm.panic_count);
-> +	if (panic_count < 0) {
-> +		dev_err(reboot->dev, "Failed to read panic_count (%d)\n", panic_count);
-> +		return;
-> +	}
-> +
-> +	if (!boot_error_count && !panic_count)
-> +		return;
-> +
-> +	dev_warn(reboot->dev, "PMU logged %d boot error(s) and %d panic(s)\n",
-> +		 boot_error_count, panic_count);
-> +
-> +	if (nvmem_cell_set_u8(reboot->nvm.panic_count, 0) < 0)
-> +		dev_err(reboot->dev, "Failed to reset panic_count\n");
-> +	if (nvmem_cell_set_u8(reboot->nvm.boot_error_count, 0) < 0)
-> +		dev_err(reboot->dev, "Failed to reset boot_error_count\n");
-> +}
-> +
-> +static int macsmc_reboot_probe(struct platform_device *pdev)
-> +{
-> +	struct apple_smc *smc = dev_get_drvdata(pdev->dev.parent);
-> +	struct macsmc_reboot *reboot;
-> +	int ret, i;
-> +
-> +	/* Ignore devices without this functionality */
-> +	if (!apple_smc_key_exists(smc, SMC_KEY(MBSE)))
-> +		return -ENODEV;
-> +
-> +	reboot = devm_kzalloc(&pdev->dev, sizeof(*reboot), GFP_KERNEL);
-> +	if (!reboot)
-> +		return -ENOMEM;
-> +
-> +	reboot->dev = &pdev->dev;
-> +	reboot->smc = smc;
-> +
-> +	platform_set_drvdata(pdev, reboot);
-> +
-> +	pdev->dev.of_node = of_get_child_by_name(pdev->dev.parent->of_node, "reboot");
+Patchset based on next-20250508
 
-Why is this needed? The of_node should already be set correctly when
-probed via the of_match_table.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+Peng Fan (3):
+      dt-bindings: firmware: nxp,imx95-scmi-pinctrl: Introduce nxp,iomuxc-daisy-off
+      pinctrl: imx-scmi: Get daisy register offset from DT
+      arm64: dts: imx95: Add property nxp,iomuxc-daisy-off
 
-> +	for (i = 0; i < ARRAY_SIZE(nvmem_names); i++) {
-> +		struct nvmem_cell *cell;
-> +
-> +		cell = devm_nvmem_cell_get(&pdev->dev,
-> +					   nvmem_names[i]);
-> +		if (IS_ERR(cell)) {
-> +			if (PTR_ERR(cell) == -EPROBE_DEFER)
-> +				return -EPROBE_DEFER;
-> +			dev_warn(&pdev->dev, "Missing NVMEM cell %s (%ld)\n",
-> +				 nvmem_names[i], PTR_ERR(cell));
-> +			/* Non fatal, we'll deal with it */
-> +			cell = NULL;
-> +		}
-> +		reboot->nvm_cells[i] = cell;
-> +	}
-> +
-> +	/* Set the boot_stage to indicate we're running the OS kernel */
-> +	if (reboot->nvm.boot_stage &&
-> +	    nvmem_cell_set_u8(reboot->nvm.boot_stage, BOOT_STAGE_KERNEL_STARTED) < 0)
-> +		dev_err(reboot->dev, "Failed to write boot_stage\n");
-> +
-> +	/* Display and clear the error counts */
-> +	macsmc_power_init_error_counts(reboot);
-> +
-> +	reboot->reboot_notify.notifier_call = macsmc_reboot_notify;
-> +
-> +	ret = devm_register_sys_off_handler(&pdev->dev, SYS_OFF_MODE_POWER_OFF_PREPARE,
-> +					    SYS_OFF_PRIO_HIGH, macsmc_prepare_atomic, reboot);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "Failed to register power-off prepare handler\n");
-> +	ret = devm_register_sys_off_handler(&pdev->dev, SYS_OFF_MODE_POWER_OFF, SYS_OFF_PRIO_HIGH,
-> +					    macsmc_power_off, reboot);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "Failed to register power-off handler\n");
-> +
-> +	ret = devm_register_sys_off_handler(&pdev->dev, SYS_OFF_MODE_RESTART_PREPARE,
-> +					    SYS_OFF_PRIO_HIGH, macsmc_prepare_atomic, reboot);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "Failed to register restart prepare handler\n");
-> +	ret = devm_register_sys_off_handler(&pdev->dev, SYS_OFF_MODE_RESTART, SYS_OFF_PRIO_HIGH,
-> +					    macsmc_restart, reboot);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to register restart handler\n");
-> +
-> +	ret = devm_register_reboot_notifier(&pdev->dev, &reboot->reboot_notify);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to register reboot notifier\n");
-> +
-> +	dev_info(&pdev->dev, "Handling reboot and poweroff requests via SMC\n");
-> +
-> +	if (device_create_file(&pdev->dev, &dev_attr_ac_power_mode))
-> +		dev_warn(&pdev->dev, "could not create sysfs file\n");
+ .../bindings/firmware/nxp,imx95-scmi-pinctrl.yaml  |  8 +++++++
+ arch/arm64/boot/dts/freescale/imx95.dtsi           |  1 +
+ drivers/pinctrl/freescale/pinctrl-imx-scmi.c       | 26 +++++++++++++---------
+ 3 files changed, 24 insertions(+), 11 deletions(-)
+---
+base-commit: f48887a98b78880b7711aca311fbbbcaad6c4e3b
+change-id: 20250509-pin-e5b563bbd55d
 
-custom sysfs files must be documented in Documentation/ABI.
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
 
-> +
-> +	return 0;
-> +}
-> +
-> +static void macsmc_reboot_remove(struct platform_device *pdev)
-> +{
-> +	device_remove_file(&pdev->dev, &dev_attr_ac_power_mode);
-> +}
-> +
-> +static const struct of_device_id macsmc_reboot_of_table[] = {
-> +	{ .compatible = "apple,smc-reboot", },Documentation/ABI
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, macsmc_reboot_of_table);
-> +
-> +static struct platform_driver macsmc_reboot_driver = {
-> +	.driver = {
-> +		.name = "macsmc-reboot",
-> +		.of_match_table = macsmc_reboot_of_table,
-> +	},
-> +	.probe = macsmc_reboot_probe,
-> +	.remove = macsmc_reboot_remove,
-> +};
-> +module_platform_driver(macsmc_reboot_driver);
-> +
-> +MODULE_LICENSE("Dual MIT/GPL");
-> +MODULE_DESCRIPTION("Apple SMC reboot/poweroff driver");
-> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-> +MODULE_ALIAS("platform:macsmc-reboot");
-
-Why is the MODULE_ALIAS needed?
-
-Greetings,
-
--- Sebastian
 
