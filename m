@@ -1,164 +1,154 @@
-Return-Path: <linux-gpio+bounces-19919-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19920-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2228BAB32E9
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 11:18:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53DBBAB3312
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 11:22:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4484A189C507
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 09:18:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE2E8189D47B
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 09:22:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 396FA25B1F5;
-	Mon, 12 May 2025 09:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6168B25DD02;
+	Mon, 12 May 2025 09:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DQiymcGQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE57134AC;
-	Mon, 12 May 2025 09:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0537A25C80B;
+	Mon, 12 May 2025 09:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041485; cv=none; b=OkSPsksQd0jtm93Qo2PzUeSP4807gSBoTMn9/63xELkb1z0ExuB+rmXwRUKTP2VsBHLKSypMrzHxTAzUy/3GHyY9S2dHByEjGaKBRQ7CJdToybS5HSL14bKC62tNrr/3Tqo2Y6I5X7rGHeHhVd3x4BqvAJcnAP0Mwjcd9wyaPkc=
+	t=1747041698; cv=none; b=mQxgbBUk6vdilLWiT9K5RdiyelNtzy6AMj0fXywXZqK7IYwhTBRXg5gREFQaVgDJrfkvNRQM0QmiuVYUtyOk/K8BOgkxj4aCnbB6eM5XJigLl8J8UDP8/VxBclMgDslpBCWKhK94MCMSJDGQCpTUHwJkRh3vd0HfS9lXP+P2nsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041485; c=relaxed/simple;
-	bh=20wCNPBChVfLOxnez/k+p6fyn8K7JV/aN+exYqU8/sg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jTRKAbyTVMX7yDThHhUe/t2jzV87ndZ1yUYen4xf4K/s/x99S4v5CQzFtweEIvuoyie9X1TB7g9TqBMlTCWGIoR3rxLcQaFT2hePCFJ5gY9pH2Bfx7niR/Qog6HnnnJL8PmUUFUQVJMUlDsnp3gzLoSFkC3SboKsidubkjLCoCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5290be1aedcso4124704e0c.1;
-        Mon, 12 May 2025 02:18:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747041481; x=1747646281;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1GCzaDLKiY3kq0HsFC8+1h8MN6YYKUQQuwUOm7Hvb2g=;
-        b=REt9+IZIgWbESEvk3wjGK9bOTRgUKNbToQPQ9LmcXHSID5M6tiXpvmC1wCACwcrzJm
-         EGaoESpcgu0kNFwCta+iNDxebCtp+Hw1lOYl+ugV6Kq6iw/18VYjK/WeoKQ6NFesBqdG
-         HnM3KYg6WxynOLcpPe5lvuNJsV4AbHuNQ56G0gFvBv5UCfeIwI4Fuws+VKIRF2a7nRQ+
-         A1vGsIYvPP1f8QbcnBf2u/gaxGG4KWC2mS17iVOKuZ1fAW9zmQp+avWMdJUZ7lmbqwjn
-         uod0hQ76wAlQF3nhVW7MvIAlwljQykF8tSpVIa84UpOxeshUkVGIJ67DlFh5Z6YRncfc
-         22Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSH6xRCL2doUc7HpceHdWGXncmkQG0pf8Ue03ISWZS/Zjf1Iq5y//mw3xD6QTFaWxe/plJKOd0@vger.kernel.org, AJvYcCWFloWLFD4eyX6D+lOz9hIiBn/PH6xP+hJDcxKJcO7+xAVu7Mnc8vYfOIcBkkAGfnBskjqMWJ1N3FN0GWym@vger.kernel.org, AJvYcCWcAps/wns2BSU8jviZNIyZVef/CfI/XY320sSHZROLgN5GUH2n+841w0E6KUT3RkKU2+ADSHd8O7i4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfAe0wxuKWA3310zjzOzsq0w1AwrwKdHr7R95Kfua9bPAbgYcm
-	76oP/9Jw2YR4UKOzxVraQJcszwFTH1Y1W+pi/5eY7ZULdj2RT09WfemNwtFj
-X-Gm-Gg: ASbGncu5EUwK4fAxU22M9cgbxf8vNNzVWN6HHZEcq20LR0xwZvWbmzajQl/wsMTIqD3
-	2XMUZmdLGv+2lwk9NiyknVdyUKnEOyd0hlfRGhgoQLsgTxwEnQY4fNHpGnCcMy2+OTxUvH+RUsf
-	7s61+hy/8U5a2V0xjDVJvwPHNPlF8D+5afyFgZIcJ2pslZCtkPXITl2mlav861IyJ5NbKmGZ9kz
-	RDCz8FlFD3LVI/JZJJu8EHyYmGf6Bi7ZTavvxaHjAnu4v9c8K1d1L9YRkN27REkgMEnHExtqM+b
-	+Yz9noYbEOyXmimPxsK4pxtH7phrgZctvY8v2YzTxSVpbgTjKbXMx28vzaq4NOcJ2pd2aV6CfFf
-	CiZVQmE4xNxW45A==
-X-Google-Smtp-Source: AGHT+IHJs0ZzCPyfm0JL94byRrkupHP8LDAu211cUAaO+EsOa1rRPYUfi9plZlazokd78/w9INEM8g==
-X-Received: by 2002:ac5:cde1:0:b0:523:dbd5:4e7f with SMTP id 71dfb90a1353d-52c44223bfbmr10687585e0c.3.1747041481098;
-        Mon, 12 May 2025 02:18:01 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c53574e28sm5407716e0c.0.2025.05.12.02.18.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 02:18:00 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so3101652241.1;
-        Mon, 12 May 2025 02:18:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUCsAQ/qq307ymILubpUwpi9ixVKGQLuMtFqJpcyaOj6Yi6XS/n63LdEQ36TH3Q3lB2J+nLtqHhK5CY@vger.kernel.org, AJvYcCVM4tQiUg1lu9LUEDFegBdBOyOrG8BgF3EEe8+YfA6PJK4dqcPOdqevGyXi2gjZROnViVPBRSZ8@vger.kernel.org, AJvYcCXIcCSNavZ/i9Sc7Ctrn+hVHKrQx1FyBKbl2SIzhZEP/GYXk9ZNsAOx5pGr+LJQp6wJx8Bpt+4OYpw1IksN@vger.kernel.org
-X-Received: by 2002:a05:6102:1529:b0:4c3:243:331a with SMTP id
- ada2fe7eead31-4ddac869475mr14899178137.6.1747041480540; Mon, 12 May 2025
- 02:18:00 -0700 (PDT)
+	s=arc-20240116; t=1747041698; c=relaxed/simple;
+	bh=YmCAbwyOKKCOtWmhkRLBy829s5QkGxOr0MC+PNYO3U0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tpp5hBHsT7OGtxjiOC8EBQ3545hOX1RclxL3JIuL+EtgdJBcD8UUOLBcJ8Aff1enzq9JuBD3IRQyARvSD51r+BxjJbhgPNOdKUtf+LOR4WM2eyt+v6Db1M9siSBtxc7HajpwwBAQjeJR6j6617wnKNPeJbWnM9bt9xGZfXG7jIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DQiymcGQ; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747041696; x=1778577696;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YmCAbwyOKKCOtWmhkRLBy829s5QkGxOr0MC+PNYO3U0=;
+  b=DQiymcGQWCa0IxCvHPvu1YVBjlbUVS6Bc/iNPq2bk+XjZvv+1bHdNTta
+   ACdTR+po0A4BwTUyHeriWWnjDCedPRdEjExvttpWWd024nQ17BcV6AQRn
+   zdcVRMJQmcBCZPjRm9/oFI4FRcGTqBMnpe2hdJMQbP/agsetyIPjm//sZ
+   V0UvUchwCNhm6eQ29t+yIGPmD1hvyBF8cfIPbvOMrZG++DiFAZ0gIVkGC
+   NHy2RbhwWt1hGudbMz35glFZxgQZKugSp1tPp67qp1lKwU6Jg3uk5DEj8
+   53K8YbSgc356v2uMuJdKA8OP8gdySMCYjrnDUzprPosXjvJiIkuTxZZjK
+   Q==;
+X-CSE-ConnectionGUID: mNm96ilSQQqwEyzPGSjWeA==
+X-CSE-MsgGUID: 8LvY2hPyTAeF9dPHAqONwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48947672"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="48947672"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:21:35 -0700
+X-CSE-ConnectionGUID: /YbdnLXlRBeGXuDj1xlBgQ==
+X-CSE-MsgGUID: DwVgNY1YSkOB3zIE/HlX0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="142076489"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:21:30 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uEPLj-00000000sE1-1BwI;
+	Mon, 12 May 2025 12:21:27 +0300
+Date: Mon, 12 May 2025 12:21:27 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 02/11] mfd: Add max7360 support
+Message-ID: <aCG9lyaCGchBsqLE@smile.fi.intel.com>
+References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
+ <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509141828.57851-1-francesco@dolcini.it>
-In-Reply-To: <20250509141828.57851-1-francesco@dolcini.it>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 May 2025 11:17:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXqRpuy8gsz+0a0xTp6VWfMD0=WWdS84jWvF31O9i4MZw@mail.gmail.com>
-X-Gm-Features: AX0GCFu9GLpjYZglknqssUJDtYOeHiT_fWmLArgWGMr7BFw0q2XZWcOcZfqXvp0
-Message-ID: <CAMuHMdXqRpuy8gsz+0a0xTp6VWfMD0=WWdS84jWvF31O9i4MZw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: pca953x: fix IRQ storm on system wake up
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Marek Vasut <marek.vasut@gmail.com>, stable@vger.kernel.org, 
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Francesco,
+On Fri, May 09, 2025 at 11:14:36AM +0200, mathieu.dubois-briand@bootlin.com wrote:
+> 
+> Add core driver to support MAX7360 i2c chip, multi function device
+> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
 
-On Fri, 9 May 2025 at 16:18, Francesco Dolcini <francesco@dolcini.it> wrote:
-> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
->
-> If an input changes state during wake-up and is used as an interrupt
-> source, the IRQ handler reads the volatile input register to clear the
-> interrupt mask and deassert the IRQ line. However, the IRQ handler is
-> triggered before access to the register is granted, causing the read
-> operation to fail.
->
-> As a result, the IRQ handler enters a loop, repeatedly printing the
-> "failed reading register" message, until `pca953x_resume` is eventually
-> called, which restores the driver context and enables access to
-> registers.
->
-> Fix by disabling the IRQ line before entering suspend mode, and
-> re-enabling it after the driver context is restored in `pca953x_resume`.
->
-> An irq can be disabled with disable_irq() and still wake the system as
-> long as the irq has wake enabled, so the wake-up functionality is
-> preserved.
->
-> Fixes: b76574300504 ("gpio: pca953x: Restore registers after suspend/resume cycle")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> ---
-> v1 -> v2
->  - Instead of calling PM ops with disabled interrupts, just disable the
->    irq while going in suspend and re-enable it after restoring the
->    context in resume function.
+...
 
-Thanks for the update!
+> + * Author: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -1226,6 +1226,8 @@ static int pca953x_restore_context(struct pca953x_chip *chip)
->
->         guard(mutex)(&chip->i2c_lock);
->
-> +       if (chip->client->irq > 0)
-> +               enable_irq(chip->client->irq);
->         regcache_cache_only(chip->regmap, false);
->         regcache_mark_dirty(chip->regmap);
->         ret = pca953x_regcache_sync(chip);
-> @@ -1238,6 +1240,10 @@ static int pca953x_restore_context(struct pca953x_chip *chip)
->  static void pca953x_save_context(struct pca953x_chip *chip)
->  {
->         guard(mutex)(&chip->i2c_lock);
-> +
-> +       /* Disable IRQ to prevent early triggering while regmap "cache only" is on */
-> +       if (chip->client->irq > 0)
-> +               disable_irq(chip->client->irq);
->         regcache_cache_only(chip->regmap, true);
->  }
+ * Authors:
+	 Person A <...>
+	 Person B <...>
 
-While this does not cause the regression seen on Salvator-XS with
-the earlier approach[1], I expect this will break using a GPIO as a
-wake-up source?
+?
 
-[1] https://lore.kernel.org/linux-gpio/CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com
+...
 
-Gr{oetje,eeting}s,
+> +	for (unsigned int i = 0; i < MAX7360_PORT_PWM_COUNT; i++) {
+> +		ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+> +					MAX7360_PORT_CFG_INTERRUPT_MASK,
+> +					MAX7360_PORT_CFG_INTERRUPT_MASK);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to write MAX7360 port configuration");
 
-                        Geert
+I think I already pointed out the missing '\n'.
+
+> +	}
+
+...
+
+> +	/* Read GPIO in register, to ACK any pending IRQ. */
+> +	ret = regmap_read(regmap, MAX7360_REG_GPIOIN, &val);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to read GPIO values: %d\n", ret);
+
+Double ret in the message. Check all of the usages of dev_err_probe() in your code.
+
+> +	return 0;
+
+...
+
+> +#define MAX7360_REG_GPIO_LAST		0x5F
+
+> +#define MAX7360_FIFO_EMPTY		0x3f
+> +#define MAX7360_FIFO_OVERFLOW		0x7f
+
+Please, be consistent in style of the values.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
