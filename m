@@ -1,124 +1,147 @@
-Return-Path: <linux-gpio+bounces-19926-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19927-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8187AAB34EF
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 12:32:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05DB8AB35CF
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 13:19:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DEC63AE487
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 10:31:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A50EC3B55AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 11:18:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E673265CB1;
-	Mon, 12 May 2025 10:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED95D29187B;
+	Mon, 12 May 2025 11:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PeJ0af0/"
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="ZEZoO2tC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o71VIvkb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC922500CF;
-	Mon, 12 May 2025 10:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0B92900BE;
+	Mon, 12 May 2025 11:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747045932; cv=none; b=YZilpYC0mu9Loj2+S/wdNM5sV2UTFkutCsrpMmgQFOjeM04LPoUu7sCZYCMw6S5j6AMMTHFcjUtBvf6iqWtOCXzdDbBwpjZoEa7pdvddFNeOq4ESElbR8i/cphWczDmfreG93tDX+h5A3sOFoWg3y5yMfrNnp6d9krQhaLxKsb8=
+	t=1747048735; cv=none; b=WkWmsUM4CihpXsxBEM1QXnKYqXXJwWWI19EQ+P3sg9H22Z8s6P5Di2reOWi+akuRVMx87pBj+Ohvdbwi8gS4ppi1OEJia1iG+sQp3zYLyqP5x/qkCsgjW06zPPATmU5jHfcz+hP0klDiIpDRFJ+SfjmiPRwM7DZpUKdg4MIN91o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747045932; c=relaxed/simple;
-	bh=LNx6d+LGN0UuAE1Kev9HiY5qljRgbBixlBjM7cy0ht4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T+0vkwfoa9BfBOz76JhyD1SCU+q72Ss5C2HyK20BqfeJk7+iUv7a/LQ1wvcY2WnHgKdzXhCUJzlYaRfFMZKZ6v56G/4k9swjBc5gEZF1s6/muhiTDWI4kPrK2bLw9IHwNo3ANgTFZWrcvHLmWvFrJKjxhTm9w5idn7TmZ06a7j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PeJ0af0/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747045931; x=1778581931;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LNx6d+LGN0UuAE1Kev9HiY5qljRgbBixlBjM7cy0ht4=;
-  b=PeJ0af0/Pxq1vXe/yO/buDoD60wqeDV6ygTuqnofUSnA69enGLFM885J
-   qZVDFvCxW0SurCPUC8qEQZ0iJDPM5HB1eC/aXuKBwdQitukTdzxzxnK9i
-   St8S2H8I7qsdHYOzmOlCbalUVMl2nvZTJz3iY6bMfc/eh7drVbsKOV05O
-   LWZm+1nxLu3KKgEamLI2xnZ6bDpFLYjc3+ymhX/dEYIzVpbbnzGm7k3+P
-   lzCDKpTT4CLyCEaZQ6TipfesuDf4XjJiGqV+uNq6D9GmhBhyb2JwTRmsG
-   51Dz4CUzhrb3h66kIjKNull7clkzbIZdumiPX+/9vGvvmEl5pAmX5dBUq
-   w==;
-X-CSE-ConnectionGUID: 7pQ8W5rsS+uyPz4g/qdM/A==
-X-CSE-MsgGUID: r+oddfWmSSCrJG5nP7+TKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48832450"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="48832450"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 03:32:10 -0700
-X-CSE-ConnectionGUID: /G0itieJSEKZW5XGggzgTA==
-X-CSE-MsgGUID: y/nPGEjAS+ypF8F9DpOSLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="174474865"
-Received: from snowacki-mobl1.ger.corp.intel.com (HELO [10.245.253.141]) ([10.245.253.141])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 03:32:04 -0700
-Message-ID: <60cf19a2-4f55-4330-991d-5ec76ab5a5f3@linux.intel.com>
-Date: Mon, 12 May 2025 12:32:01 +0200
+	s=arc-20240116; t=1747048735; c=relaxed/simple;
+	bh=jBZdiSf1gf5BKRqqB+Fpy8grw8nZle3zN8U9da1iFnI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=W/jr+hocfti/oAuHA1vLyvIPr8YQHxfRHSai+mfEe4z3HKKc+goY8o+SBTjt5VWJKHNjjkmOQyE6AOVdZkULENophmsn+xH2HBQzdKmTEcBNhRHxioxMgaUALiyx0FhTkiUjHC8W7zEE5/z4vFQzpUCZy9QXoeT/9KSzGiw0qvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=ZEZoO2tC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=o71VIvkb; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id EE918114012E;
+	Mon, 12 May 2025 07:18:51 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-04.internal (MEProxy); Mon, 12 May 2025 07:18:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1747048731; x=1747135131; bh=8R1AryTPhNH6vqIqKW5/6ef09cTbxqCZ
+	txeiuNj7wb0=; b=ZEZoO2tCNmwSdnwnJxE/d1l9NlLFeCFYdL0qlb6qL6xIlCPf
+	hF2iarJizQyLFm8x2KzLfRavW+65RwLZHkD2macXXgtP6ZkCR07kM0AsMWAp4mP5
+	b1eHvSoBA+6Y1KRtwiiXn1clD7x2diHeX+E3o0yc5ySfTSSL5vLIoE/gmVtSk1ja
+	O+2RKLohnsiXP8AftrNWX5Df2sNZ78C9D8Mx8vx1N27ZNQ9mclwYCS5j1KNa5y0C
+	WqCsmTLdTq/BdKv00MQha/vAZFHY62liGcGHS4aPPjj7oKo0bApwiTeKYHgDElX/
+	PKUzBACRUNmz8yku5JBHwNrVOlPEndAcwsBcZQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747048731; x=
+	1747135131; bh=8R1AryTPhNH6vqIqKW5/6ef09cTbxqCZtxeiuNj7wb0=; b=o
+	71VIvkbuLT3kGsowGOJJcwdT42sXnEfrYjJ481iyRenFZs/DjdVBy1erScpkFt89
+	V1mJO2Qawd1M/+e5lOfWEMYqfjig2Ouw6Wa8HDebNGC43Bgrq3nNLDGrY6DZMCaB
+	MgbEcqwwLuVMnKkI6hmhYUxjAhvJeAQbxxwe4tYjfYYVEl4m4aqY7SOzrEmiqcJA
+	YCG99UzfVsP3WUWe3s4550bBnG3SRs23K1+XUeFuSDlm7UZvXsuPVvfCLfispM03
+	QbC+S0LuaBVPM+MmzRmbSHUseByDwzim/FBz3QN6b93bmoLvzY/SEZzShopzdecr
+	TSXuPMMCQI3EZ8C36Grbw==
+X-ME-Sender: <xms:GtkhaMuxhIixs7p21gBf1a0Z3lGaLN01jbE7aoEXMUjV0ATKxr3m1g>
+    <xme:GtkhaJcxVpGSL22cNbzohzJd4xiwMe3KVqA6nHUL9mZ1CDii7lQHmbNRdtxEZHq54
+    BeKmKBo9M8LPqBzbKE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduuddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvth
+    gvrhdruggvvheqnecuggftrfgrthhtvghrnhepleefteeugeduudeuudeuhfefheegveek
+    ueefffdvffektdffffelveffvddvueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhnsggp
+    rhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhmkhdokh
+    gvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepsghrghhlsegs
+    ghguvghvrdhplhdprhgtphhtthhopehnvggrlhesghhomhhprgdruggvvhdprhgtphhtth
+    hopehjsehjrghnnhgruhdrnhgvthdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgriieskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:GtkhaHwf1fLs4ujDzYRV9p3oA3Lt4JG2bsbNc20DSXmw_eocXzmFsg>
+    <xmx:GtkhaPM7O7JUWdN5Wd4NEAF-FcE-62VNd7UGjUafuz50M1xr5tBgQg>
+    <xmx:GtkhaM-cXFV8dPcEYGmRkbX2dgNTmYprkObOHjphG973E1qh_XFlPA>
+    <xmx:GtkhaHVaCx-SAYUC_qxcEr6LGzVJp6dM-85d--eaFsj7mQ3c6yV6JQ>
+    <xmx:G9khaM_l9MfNgcxlpMCOrs9zCtzwYcG-SDIeitwMfLz4Wlb9mB0NWHtw>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0A6521C20067; Mon, 12 May 2025 07:18:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/6] accel/ivpu: Use effective buffer size for zero
- terminator
-To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>,
- Maciej Falkowski <maciej.falkowski@linux.intel.com>,
- Oded Gabbay <ogabbay@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Nuno Sa <nuno.sa@analog.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- linuxppc-dev@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
- linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
- Markus Burri <markus.burri@bbv.ch>
-References: <20250508130612.82270-1-markus.burri@mt.com>
- <20250508130612.82270-3-markus.burri@mt.com>
-Content-Language: en-US
-From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
- Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <20250508130612.82270-3-markus.burri@mt.com>
-Content-Type: text/plain; charset=UTF-8
+X-ThreadId: T54af4484963dacde
+Date: Mon, 12 May 2025 13:18:29 +0200
+From: "Sven Peter" <sven@svenpeter.dev>
+To: "Alyssa Rosenzweig" <alyssa@rosenzweig.io>
+Cc: "Janne Grunau" <j@jannau.net>, "Neal Gompa" <neal@gompa.dev>,
+ "Hector Martin" <marcan@marcan.st>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Sebastian Reichel" <sre@kernel.org>,
+ "Lee Jones" <lee@kernel.org>, "Marc Zyngier" <maz@kernel.org>,
+ "Russell King" <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Message-Id: <50f35475-958e-481a-83f8-f19fc2259191@app.fastmail.com>
+In-Reply-To: <aCDVgI4_LtE6OfO-@blossom>
+References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
+ <20250511-smc-6-15-v5-5-f5980bdb18bd@svenpeter.dev>
+ <aCDVgI4_LtE6OfO-@blossom>
+Subject: Re: [PATCH v5 05/10] mfd: Add Apple Silicon System Management Controller
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Hi,
 
-On 5/8/2025 3:06 PM, Markus Burri wrote:
-> Use the effective written size instead of original size as index for zero
-> termination. If the input from user-space is to larger and the input is
-> truncated, the original size is out-of-bound.
-> Since there is an upfront size check here, the change is for consistency.
-> 
-> Signed-off-by: Markus Burri <markus.burri@mt.com>
-> ---
->  drivers/accel/ivpu/ivpu_debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/accel/ivpu/ivpu_debugfs.c b/drivers/accel/ivpu/ivpu_debugfs.c
-> index f0dad0c9ce33..cd24ccd20ba6 100644
-> --- a/drivers/accel/ivpu/ivpu_debugfs.c
-> +++ b/drivers/accel/ivpu/ivpu_debugfs.c
-> @@ -455,7 +455,7 @@ priority_bands_fops_write(struct file *file, const char __user *user_buf, size_t
->  	if (ret < 0)
->  		return ret;
->  
-> -	buf[size] = '\0';
-> +	buf[ret] = '\0';
->  	ret = sscanf(buf, "%u %u %u %u", &band, &grace_period, &process_grace_period,
->  		     &process_quantum);
->  	if (ret != 4)
 
+On Sun, May 11, 2025, at 18:51, Alyssa Rosenzweig wrote:
+>> +struct apple_smc_key_info {
+>> +	u8 size;
+>> +	u32 type_code;
+>> +	u8 flags;
+>> +};
+>
+> This still has the padding problem from v4. With that fixed,
+
+I somehow managed to drop two !fixup commits before sending this out :-(
+One of them was moving type_code to the beginning and the other some cosmetic
+changes (mainly starting descriptions with uppercase letters) to macsmc.h.
+Will be fixed for the next version for real this time.
+
+
+>
+> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+
+Thanks,
+
+
+Sven
 
