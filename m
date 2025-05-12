@@ -1,113 +1,96 @@
-Return-Path: <linux-gpio+bounces-19948-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19952-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50CBFAB3781
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 14:40:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76B8EAB37F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 14:59:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB5261890FBA
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 12:40:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC5623B450B
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 12:59:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E932957D7;
-	Mon, 12 May 2025 12:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61103293B69;
+	Mon, 12 May 2025 12:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXs0jhC5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsdY9hbU"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC1A295511;
-	Mon, 12 May 2025 12:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A63478F43;
+	Mon, 12 May 2025 12:59:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747053540; cv=none; b=uCxX6PXR01xDRofZD4vwqgq0WXNTQok00qNwD3GeVp1WeeKZJgJlUJ1LG5dRsa5o1XRICskOmIneWaJAtcG77scOHpS0oX9VKQMYgp88c6n/wWj/BxwRRwZOhgHKu85TX3RgmlNP2TM3pposUD6qYuK8BYd5QF/0a11PZfKkYEs=
+	t=1747054784; cv=none; b=hsfTXy1HMSN8bDLHUDG7YbCRFSLcwVAtgzVfAzK/rE798CzacIcrd25q06+HL7eZBSd/uolWlw6lIvMxqgO9g3M1t/qgwPe/Eic6rOuM/AB4g88sy5oZBtZSG/zrJ+abJnm2jaToYLvJZOvD4IDezjl25bZZB+10E+v108SVFec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747053540; c=relaxed/simple;
-	bh=b3QpbHDoX+KSKhGr1oHIV9UzBf4xMsgrZHQ0d7I2XII=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Qb6HDZBLeHAJi9OQlqaVNb8fabyajvMc0ZitXxqYOwQ9LHo6i89bvGRdPV3wtvCFSvRRzzjWgZFACxSnwRr8jDuQoTz9N9uA3A+vhaBDFPbydB+93aTuuFyW4b6UPhBK1HfyEXSkrSfKbe5OHx4z4QiryGrxU6mSohRBJje1+Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXs0jhC5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AB68EC4CEF7;
-	Mon, 12 May 2025 12:38:59 +0000 (UTC)
+	s=arc-20240116; t=1747054784; c=relaxed/simple;
+	bh=Sl9HhishayHhuvvB5bQuDThhoqmbFaMgmkYIGRlpRog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bz13aRkb17Oned2NuzkVEf7pWwqEH7l+6M/LybfjeejdWOGGAGG4BX/iGNleurF31IDIa8UNxlQjJmgPWe5103/YqaW6Y8kj8rObHuOin3yyQ4ilA4T6Lw9jGSlsps/oZS13c/wT46rGKdlg95ZgM6nJhkIq6l5Cd/Ae+ZhXg40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsdY9hbU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7B9C4CEE7;
+	Mon, 12 May 2025 12:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747053539;
-	bh=b3QpbHDoX+KSKhGr1oHIV9UzBf4xMsgrZHQ0d7I2XII=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=QXs0jhC5JG6e7b0BCRdmyq8AwnATbJ6GUaTbma1u4dWZ4/lp7G1dMhN87LyS+dM5D
-	 3y1yMpZbrkVpH6dyeEPuMY4ntEF9Tu0FQ36QrXBo7FxZlUIrvSCvxfhNOz5u3YnUYh
-	 Op5oz0aSit7e0hxFEBLG0akraPs1860cUQ0Wjm0Zp/zJPhTWzzI2lHA89Xvh51BfCn
-	 EyvHedtTF6kaWkEZMso74rV6wgMAS2p+GVp/EC8xDr7wwVqf/f2l0rnnQ3vFZlQsZ6
-	 qNwxxiUNzo3Q5b7pd0Z0GNcqGLAFlTk/P6OGRxQ62893iaGLckCxs3ONunrOjnAN7M
-	 ItFdPHQufZZxw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C6EC3ABD4;
-	Mon, 12 May 2025 12:38:59 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Mon, 12 May 2025 13:39:14 +0100
-Subject: [PATCH v3 22/22] pwm: adp5585: make sure to include
- mod_devicetable.h
+	s=k20201202; t=1747054783;
+	bh=Sl9HhishayHhuvvB5bQuDThhoqmbFaMgmkYIGRlpRog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VsdY9hbUj7lzvgCG+qD3jMnd/6+YmALHBCgEFxiAI5SeZV0QsLiluVIisah5mqeQJ
+	 caJXV365FgBEgoe/qhzjhhu7c3uteuwTTdTE3bRKWDQ5K3dNAqMTjp94iGN/dcDq5M
+	 dPlrnJtUEJTnW0mCls7X2FaBzWgrV2yiQNPfv0cdFuXUnMbhqlTChttFa4QXMIDG+/
+	 BB8J4IKc2qJUPnTY6PslvQOhR2xmcm2HEPMRJ3G04adrg2HGyCg3xA/wYv5+4TMwpm
+	 889vc2UYfKPbKuRjWHqDQwoOLvnXaMtx57t8OGRjD4w5t36XsqpPMiGGg+BbLyKttv
+	 LZAAXBB1X+qRg==
+Date: Mon, 12 May 2025 07:59:41 -0500
+From: Rob Herring <robh@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	marcelo.schmitt1@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	lgirdwood@gmail.com, broonie@kernel.org, jonath4nns@gmail.com,
+	dlechner@baylibre.com, David Lechner <dlechner@baylirbe.com>
+Subject: Re: [PATCH v7 03/12] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+Message-ID: <20250512125941.GA2952373-robh@kernel.org>
+References: <cover.1746662899.git.Jonathan.Santos@analog.com>
+ <731196750f27eee0bad5493647edb2f67a05a6e2.1746662899.git.Jonathan.Santos@analog.com>
+ <20250509-gala-unfiled-fd273655b89d@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250512-dev-adp5589-fw-v3-22-092b14b79a88@analog.com>
-References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
-In-Reply-To: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
-To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Liu Ying <victor.liu@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747053537; l=739;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=7qqRv2NdSBhPS6hh0D7Nz9u+Cn76QfW1seayq7g6/eY=;
- b=m76GUvHoTQlZX5KCbaOfpmAJncrdRkO1u7jE9HGDp0wCD87D3ER3qdJhrhF6kVIjLuXh1rkjV
- vO9qmQCKn9WDjYtyKrb+OvWiEiBCjg7H2rR6OeYuWhEcDN55erJyePv
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509-gala-unfiled-fd273655b89d@spud>
 
-From: Nuno Sá <nuno.sa@analog.com>
+On Fri, May 09, 2025 at 05:18:55PM +0100, Conor Dooley wrote:
+> On Thu, May 08, 2025 at 02:03:30PM -0300, Jonathan Santos wrote:
+> > +dependencies:
+> > +  adi,sync-in-gpios:
+> > +    not:
+> > +      required:
+> > +        - trigger-sources
+> > +  trigger-sources:
+> > +    not:
+> > +      required:
+> > +        - adi,sync-in-gpios
+> 
+> Actually, this is normally not written like this. Usually it is done as
+> an allOf entry:
+>   - if:
+>       required:
+>         - maxim,gpio-poc
+>     then:
+>       properties:
+>         poc-supply: false
+>         gpio-controller: false
 
-Explicitly include mod_devicetable.h for struct platform_device_id.
+Using 'dependencies' is fine here. It's actually shorter.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
----
- drivers/pwm/pwm-adp5585.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-index f26054c19c2e154d05780af09aee1b2431eba2eb..93d0294d048abfe1a009161025e658b58b669cd9 100644
---- a/drivers/pwm/pwm-adp5585.c
-+++ b/drivers/pwm/pwm-adp5585.c
-@@ -20,6 +20,7 @@
- #include <linux/mfd/adp5585.h>
- #include <linux/minmax.h>
- #include <linux/module.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- #include <linux/regmap.h>
-
--- 
-2.49.0
-
-
+Rob
 
