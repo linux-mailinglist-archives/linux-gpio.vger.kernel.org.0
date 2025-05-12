@@ -1,134 +1,124 @@
-Return-Path: <linux-gpio+bounces-19957-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19958-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A731AB3A1F
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 16:11:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C77AAB3A58
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 16:23:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1E013AD631
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 14:11:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19F2617E4BE
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 14:23:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D31ED1E3769;
-	Mon, 12 May 2025 14:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1143215789;
+	Mon, 12 May 2025 14:23:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PU7/IvFB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T1ePDZHc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD529475;
-	Mon, 12 May 2025 14:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257861D9A5F;
+	Mon, 12 May 2025 14:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747059113; cv=none; b=nmQpRnDSmocvq9aUgVzIts6SvROpYGRpnhnLWX0yoU5S7opOlzb5ZS0VGCimt1djIgieCcomBt+QF7NhY/Aq7d1PBHlLPHLbTbbr0HieMkEgcIJzTg3cwxi34AvSSsw6ArmaZCBLBtpTmvW46MExyIgNDbb/1/a2vgSfk/BXFVk=
+	t=1747059786; cv=none; b=iknpt50YE91WOFK/4dQp8+AJdyAtXglaDc5DeBBD2Yfu9o1/C4eplWZ414faSVkNSeJmk4ryTz1aWfeddEXTDKHj7I7Jau9orvhZ1K+NDYmh6f93SIH2/WGJ3gjJZAGsKO/edSeHo/II5DldrKPNGxGy/YjM5k+JfzQ7TEWLegg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747059113; c=relaxed/simple;
-	bh=UEjYN2lHg9SIUb5F193bgueHoD7APqo/HwVQqWus7+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G1QB5g/Ze1lfHjS6K/4W+xTcWOenJlUV8p2DGCvfkmpwtxWsI076kuuNIysxBGCDjIRYSnl7Se4fzd0J2cqC9EiyE6ooAWHVAtUiAHJ7TzK/ZHIqrFy/9IOIPWgn9NPIbgYE/LDMMR1kqBVOzY6vbi/9Vu0M9FAlN6lEUcsxQ78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PU7/IvFB; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747059112; x=1778595112;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UEjYN2lHg9SIUb5F193bgueHoD7APqo/HwVQqWus7+A=;
-  b=PU7/IvFBHqpXUPFexQTniHr0dTI4K9dwY9wJm08K8r64xML0jINNAcHj
-   0rJ/cvfRv/LDGBpmKA0rxYShhzuksXm2g3juEQMZMgIMTsltxXhB5ckGq
-   1/G25rzTYazKQ3w/HEbNyjh7a2dR0K4rHU8/8WAL8yxUY7qALXME71lBt
-   3Bs7Obewn8r7PY0Vj0UTKeNQ776lkGWSnedJw+V6TjkdIPmjmkMDpoN5u
-   eIJoKlmejwEw9vbdGaK3v3HAQdqeZJ9tpqTiWqscYTsg4d5x3utHPdU+O
-   IShL6Hob7yA//URHHCiomOLehrLrgAQf++pM1SvVg9FMe6WBpaVZHH79M
-   g==;
-X-CSE-ConnectionGUID: zoItyobdQEmzonUlC0pvHw==
-X-CSE-MsgGUID: pGRAefCQR4W3gWkDajsueQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59490774"
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="59490774"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 07:11:51 -0700
-X-CSE-ConnectionGUID: 9IxtU5XxS0uqVpgod+GerA==
-X-CSE-MsgGUID: 8TjpSW12T5uAGi1wHLcpXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,282,1739865600"; 
-   d="scan'208";a="160646554"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 07:11:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uETsf-00000000vvN-3Fh5;
-	Mon, 12 May 2025 17:11:45 +0300
-Date: Mon, 12 May 2025 17:11:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu,
-	GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-Message-ID: <aCIBoSi84NnwEA2s@smile.fi.intel.com>
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAMuHMdXzU1k_JZ0UhUh33XCq_zpq6MBJgAjo9F9Cw4gckA12EQ@mail.gmail.com>
- <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
+	s=arc-20240116; t=1747059786; c=relaxed/simple;
+	bh=GsvNWfa11SxTItd4H+U313AmqXHn2xS/CXKvwm3uC9E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=vC9bionQuLdakE0/9jvXrzEFw2SqezZ6LmW8jI1NAyqYHhZpgd5WAwr4ZtZcyEdONResVA22+jBCZJ6PLs7g/e72jDZxPHXi0oTxjJUbeNj/ujyUy5dwaLErED6si1Zn/PGNBjXZUeLPQX9ab7JEQLp1m6b39ObYZwcyX/zY+5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T1ePDZHc; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fbf0324faaso9408056a12.1;
+        Mon, 12 May 2025 07:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747059783; x=1747664583; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I7U/7TFFzbKxLXCoN9cY2hp8Xdg5JA+fD81iTA/+0bg=;
+        b=T1ePDZHcBYny87pGh4YzAhApCsFKw6kUJEIBOsPRdwX73BDkLH+1vTrv3b2cgY3Qth
+         MJrashGPtk2AOq+boBkpV3bUeEoKRqL3KAjPPzIaRtBF0/aJkgiu661JGjvga/6SiuBS
+         z3mmpnlOD8Bj1s6coPVgmIkBKV/kGtknIQ9ZPg/1bDA5fuU1Fz3tsWMCmckUwI5tRhfS
+         5s+gPW1QW6ryzx+8pKWBP61rowI+6tyNJqbNw+zV1i35kw1f0tezDaakbdq7TqALWeDR
+         tfB1pKmVRrGsrlq9zHPeJTe0oULzAS8dN1IVn5+MjKrJ/j8zimGas8ey7q8MquO6fWc8
+         HQQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747059783; x=1747664583;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I7U/7TFFzbKxLXCoN9cY2hp8Xdg5JA+fD81iTA/+0bg=;
+        b=r9SFrNMhNbjqC4ZdYEa68PhzVpj0OWsvX+4iOA+mRc+elbqwj3IN4V670v+XA4kwgb
+         TiNcF11aZVFTQTfA0B4Joipf5eMyHdldD6R0dCq9Z2TtpXmVxhdzofdxLwkwkdoC9+DD
+         RYZbyDTRqFjgfD1XfEAZZfCwfULXOVmeRBYz2eF5KGVLEVm4EHW5ekjjXfrIIzIw2Poq
+         ePpOp/BcBi8ssOxk2WYuDPyo6p8dVBEL6omxWcgieWXa6LPQaqPgxhYe4NC0paXuFdW1
+         DfGFqZcquoCXMQ+Qz3Hc5LVPpce/d0UDFrmkWoLITLT69UH/nF+IGwHvpxnn5ieNoSFT
+         l2kg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8U3d6xLmpU4sp+bYRpEupVfZsec8tgPEabyjy+/FQ3ie4oJe6P3oI0HlF+XLP0+SZh+1rnrFpmheZ87Fu@vger.kernel.org, AJvYcCVBuBlr6fLyJob37lggIX/AMLJ41hf5RMKLiR7U51bQCpSfWqYYE5rmF7J8P7S3ZbhQiGOJpK/IoIYj@vger.kernel.org, AJvYcCWBSHXu4e/phOBidISvAd04rpuyQBzvFvnq+UgDPFxf7DPRPdYzgg6zSYn8puGI7qV63OBng5eU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6NgC2CwaxCtYD79uzaaZrGvn9Z2dZPdXq1lurwymMdCQ69LHc
+	m0mLlxwAmt/Rb8qhTviBezQFqy/awjoLT1zSUBx6ztTaijsAxzds
+X-Gm-Gg: ASbGncvxHThfT5VUdWLeRZgl841YjXZH52YMRtT+h/O0UuQWtOc71d9s6fY8O3KtVTa
+	FBExSnl5wagoDhW3/l9RYLj07fNWgonOWF1s7IBCIb7RXa5DB73/j9QTjwXQBXa/+JoNxENLZTC
+	yA3A4iURIt6un2IpLc6nHW3gqghSbO996O4Jifj32NqQmXhMLEqUax9bnvLyseq4rJFcp8bBcdk
+	npJ6jT3jSn3UIuZgJZY00FGKHhAzVHpkLlkcG9yNQtPgKRXir4MXs+LYp6eOOdJmlQWKIt/4nSJ
+	dRglMqi2mY5xonDtYx3r0SZg6/Zi/jllEy1jqCq5egZC2RBoinigmfIrFuUQbYaJ8h9dvOybOgg
+	vsPBG
+X-Google-Smtp-Source: AGHT+IH5BZ0mIdqP6PVPdn96FQfatjAkMNwjVngyRgQXInUcRxpFy4UFr4q/qRntr7dbIFUCIXMbWw==
+X-Received: by 2002:a17:907:c243:b0:ad2:5198:d710 with SMTP id a640c23a62f3a-ad25198d7aemr440934166b.20.1747059783141;
+        Mon, 12 May 2025 07:23:03 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad2197be0c5sm619626866b.153.2025.05.12.07.23.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 07:23:02 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH 0/7] pinctrl: armada-37xx: a couple of small fixes
+Date: Mon, 12 May 2025 16:22:36 +0200
+Message-Id: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c10b7752-cec5-483c-90a9-ada16aa0904a@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACwEImgC/x3LTQqAIBBA4avIrBtIS/q5SrRQm2ogLDRCkO6et
+ Px4vAyRAlOEUWQI9HDk0xfISoDbjd8IeSkGVStda6nwYu/ucKBpupRw5UQRh3411rXaWSmhnFe
+ gP5Rxmt/3A8vr7AxlAAAA
+X-Change-ID: 20250512-pinctrl-a37xx-fixes-98fabc45cb11
+To: Andrew Lunn <andrew@lunn.ch>, 
+ Gregory Clement <gregory.clement@bootlin.com>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>, 
+ stable@vger.kernel.org, Imre Kaloz <kaloz@openwrt.org>
+X-Mailer: b4 0.14.2
 
-On Mon, May 12, 2025 at 04:08:35PM +0200, Thomas Richard wrote:
-> On 5/9/25 11:07, Geert Uytterhoeven wrote:
-> > On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
+The series contains several small patches to fix various
+issues in the pinctrl driver for Armada 3700.
 
-...
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Gabor Juhos (7):
+      pinctrl: armada-37xx: use correct OUTPUT_VAL register for GPIOs > 31
+      pinctrl: armada-37xx: propagate error from armada_37xx_gpio_direction_output()
+      pinctrl: armada-37xx: set GPIO output value before setting direction
+      pinctrl: armada-37xx: propagate error from armada_37xx_gpio_get()
+      pinctrl: armada-37xx: propagate error from armada_37xx_pmx_gpio_set_direction()
+      pinctrl: armada-37xx: propagate error from armada_37xx_gpio_get_direction()
+      pinctrl: armada-37xx: propagate error from armada_37xx_pmx_set_by_name()
 
-> >> +int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
-> >> +                       unsigned long config);
-> >> +
-> >> +int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
-> > 
-> > I would expect all of these to take gpiochip_fwd pointers instead of
-> > gpio_chip pointers.  What prevents you from passing a gpio_chip pointer
-> > that does not correspond to a gpiochip_fwd object, causing a crash?
-> 
-> Indeed nothing prevents from passing gpio_chip pointer which does not
-> correspond to a gpiochip_fwd object.
-> And it is also a bit weird to pass a gpiochip_fwd pointer in some cases
-> (for example gpio_fwd_gpio_add()) and a gpio_chip in other cases.
-> 
-> I can keep GPIO operations as is, and create exported wrappers which
-> take a gpiochip_fwd pointer as parameter, for example:
-> 
-> int gpiochip_fwd_get_multiple(struct gpiochip_fwd *fwd,
-> 			      unsigned long *mask,
-> 			      unsigned long *bits)
-> {
-> 	struct gpio_chip *gc = gpiochip_fwd_get_gpiochip(fwd);
-> 
-> 	return gpio_fwd_get_multiple_locked(chip, mask, bits);
-> }
-> EXPORT_SYMBOL_NS_GPL(gpiochip_fwd_get_multiple, "GPIO_FORWARDER");
-> 
-> So exported functions are gpiochip_fwd_*().
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 35 ++++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
+---
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+change-id: 20250512-pinctrl-a37xx-fixes-98fabc45cb11
 
-Sounds good for me. Let's wait for Geert's opinoin on this.
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Gabor Juhos <j4g8y7@gmail.com>
 
 
