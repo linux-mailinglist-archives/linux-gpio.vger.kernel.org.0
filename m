@@ -1,241 +1,112 @@
-Return-Path: <linux-gpio+bounces-19972-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-19973-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B37F1AB3C78
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 17:43:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E5D0AB3CB2
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 17:50:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44A1919E23F8
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 15:42:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F46119E2D9B
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 May 2025 15:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3406423C51D;
-	Mon, 12 May 2025 15:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E385623BCF7;
+	Mon, 12 May 2025 15:50:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="jL8JZhYU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pxC6oBya"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OV8qbHvj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A627239567;
-	Mon, 12 May 2025 15:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD93EB66E
+	for <linux-gpio@vger.kernel.org>; Mon, 12 May 2025 15:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747064519; cv=none; b=QXpvn5FvUhMTCFldLCxe6fRf9gd4oEwgz+jAP4uycjqlBhqjulkJiUCn+WoNd6Za8eUFcXtrkSiksHIz+q/IZofPnZ7buFxlIj8hx/xHFLDp/P5uU0sWOjzUtd0UmiW+Vn7fpehElMQ1iILtZpDKmNjOcVh2KrP7mCnUdcHLFeA=
+	t=1747065053; cv=none; b=rWK8fA+0j8++cGyNATHZex+O7jJA3slDQ4g1wDkQiy7CCknFilMK5vHeLVGzB9c1dN30CwWHSVzqjyIB2EPra4Lhg66gSRaMeLxrXoUw04kNuG/R7h4ivcSXKjx4Z/oXuuCVXpdXHYQ5xKCzu7JgK7iEMXDjCOTnOehyLPds2cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747064519; c=relaxed/simple;
-	bh=+4oLiO4GFHU12kRH/cBJ0soX/a+bXHdHYP8wcVfW7ZU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=l+PEBVXQmkLJfLGUf24CsopV1+vaUVJ+I57XlgqASaeeXToURAYDwvYfYmbhE/qZuW+YYkYmOQ3FYscryCI0hMgP33re58d5v+yjZnpAJx/feY2NyWEoWuoR3hE2YRmVvJOjPuVNrTHffwWgzdONGopLyqS7jSp3nj3U7tT8ngU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=jL8JZhYU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pxC6oBya; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 21A5925400D8;
-	Mon, 12 May 2025 11:41:54 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-04.internal (MEProxy); Mon, 12 May 2025 11:41:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1747064513; x=1747150913; bh=A/ri/6ZjxW7RCFovjRl8X2bDl9rq/UBN
-	CApnh0pl15I=; b=jL8JZhYU/eNhS1Dbxm8P0HfZ5uJ0f9c89R1Xokb5AT19RPm5
-	+UMawNHN9e+gdyVjzbmeX0UKUI35c234NQmPyK/mQN1vlgMpkP+3fQ+z7WYvLzUG
-	sceVXAUgUxkf5tiVfvmbw4vMxinru9KcJcufIOr8wRBYK0VIpTg7cCnCpCXG63Oh
-	vRv1TLt6VN54bh03c1nN2wI8LocK8MRenPos2cZSlGgVs0sErjULY+GDJ7MKSHHr
-	MDBkG0xm/dhyS/UpDBDXBJbUcXF6tYYybOXiIpQERyDgr5NDKJVU6fdAOl8WkyH8
-	3uRz2iYtOXuvSg6H7fpRdeXvD8iDbLPr8R4dyQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747064513; x=
-	1747150913; bh=A/ri/6ZjxW7RCFovjRl8X2bDl9rq/UBNCApnh0pl15I=; b=p
-	xC6oByaTqzWJwlrUULPV7S5tdE3lUUlVajj+ozI2sdYQCKWMgpFqxhnNp6sQ/y3Y
-	p8bnDHQOwqQ/WqZdvo8+vkHIsA/pUzAxfOWQGRR/Q9tRWYXCfq/j+OiIDeBLGjhh
-	FMWtTGLYAZ7nbIeleqlohvHNw1IbFxAGLbJ3fIDKY8rUEoV1BOx2+vDkyBtq5QAM
-	O2wvUDSEmgPxFwTiea0QShiLok1j9VwG5slUFcddocxg18gYxzdxeDIiDJtd/lNa
-	KyTyG0FwUBWoJY3cwKOADqIRnwYgcZvdbmg3E3j2hGR7cK1GVhqQec4Ws4V2Zwk9
-	RT1cigP76djJ9Yz+g6hHg==
-X-ME-Sender: <xms:wBYiaFNvahD2L0uAISA-4GNPY-XHMqVkfJCBRUPL7Uvkv83DCo0tOA>
-    <xme:wBYiaH8U0H8aSWHE257TqtISn56uYU87w7rZURaBjDJPUK09AVw70q4qCmQh_L5Oj
-    b1V3uXVnZJoZL6QUHI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdduieegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvth
-    gvrhdruggvvheqnecuggftrfgrthhtvghrnhepleefteeugeduudeuudeuhfefheegveek
-    ueefffdvffektdffffelveffvddvueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhnsggp
-    rhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhmkhdokh
-    gvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepsghrghhlsegs
-    ghguvghvrdhplhdprhgtphhtthhopehsvggsrghsthhirghnrdhrvghitghhvghlsegtoh
-    hllhgrsghorhgrrdgtohhmpdhrtghpthhtohepnhgvrghlsehgohhmphgrrdguvghvpdhr
-    tghpthhtohepjhesjhgrnhhnrghurdhnvghtpdhrtghpthhtoheptghonhhorhdoughtse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrgiise
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:wBYiaEQsd1xvdtdJJ1WfCDmYgfhkFuWZm0lxil1__WEgKGWQUR0-5A>
-    <xmx:wBYiaBtdFny8lKddpw7XUOJHW7bSUw9R_n012ooBLLVM6JlUq0Nj3A>
-    <xmx:wBYiaNeqU2j49KazqgorE4hyn67K84YsrCQN126k-JyVdi2Ck_kauQ>
-    <xmx:wBYiaN2DNwhMgAxOfYxgOmMN8aQfZCmK0CIhYyyTJgzfnV1YBPVl9A>
-    <xmx:wRYiaDO07QpmSUH25G9IVJMjlkEKU2glNIRaTFN6QHOUrCApyau3cbWu>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B65281C20067; Mon, 12 May 2025 11:41:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1747065053; c=relaxed/simple;
+	bh=g04ojqJSgO5fmCKDjJblgC5ZqP751lCrvJ/UA1FmmJw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kc78ycajXUVM6mHkefd7B5+CBzkLzMtOl9UkE0Yp91yQ7/MLU3NTiEVGUQsuquaNFCkEpZfnTSThe9Lgv4aLmXRp8EgQll6w7wwRKamnCL/HlfDAihm7ogAiOi/Lapwqc3hXzluBfF+jQYxhUUShOrHm5CFKnk+Ba76MSGWus9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OV8qbHvj; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43edb40f357so31726085e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 12 May 2025 08:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747065050; x=1747669850; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cgal0nArzlA/5FhTbdC2bKf0czreUrrpYhFqhZV62dY=;
+        b=OV8qbHvje2Tr90X4hTfyTegTYBi5HLrdtixLJz88Vx8VbIzTsR0tURhE9TACfmYtqS
+         8RF+sKhxvkhqF9mjkCam6GBbwyS5yUvAYWg4vAPxD9B3q0xWFyRu+pHpuQDcj9P/MNNo
+         4pebljuWxH+Pg1NYJnACRfMm3UUvjkmC0YpJHOGlHWUFHDGsYHooDeq1ZM5QRFqUZMO5
+         feSCqK7pyq+cDrGPM6SN9E9ksvqTKCGH2P76n007bNpNYCvawQ0O+/7wgfYVte8kgvWL
+         U4b4OCS2+AoUADp9KpaHbJwXviJ7uyXNi2iEVWdcWnGvJ7suK52BAaNxKjr2eRQ1CIcc
+         tlvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747065050; x=1747669850;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cgal0nArzlA/5FhTbdC2bKf0czreUrrpYhFqhZV62dY=;
+        b=aJJCLYIQLRKOjlSMXwVRq3fbCzejDR2sK4RA89WKUesPmccL5Nz4KGMUUngpbC/6dn
+         bCWB5dNs+CJ6GDWySRkJ+sgJBe3JzybroseSEAwdFkitaKD8L8G5udGEMtlgZWIXt6gO
+         iTfogSqz07zSEzd9w4UQC+cX+bkjJoV0bMwXwdxjOIt+r0DuNApDY731gxjy3d9ed2EU
+         kuL6d4Ixf7s1LR+1t6juHLw5Riwzu/KXqqFHgdZpgNqDOpkwe4PFqqpJyL3TBwhhVxLB
+         w6Rof2BH74JMo24ahgG5qa6qQ7MDOpUkXCA5q8QGBULhUQQb412n3Hwc7xXOsqkIq9mt
+         T7ew==
+X-Forwarded-Encrypted: i=1; AJvYcCXpSokJO6L25Augfv+JDVKbMKXIxCqxdb4V+1TFDZqczljli8zGVVDFJkHoVpaatXTsxpwvHBf97Wn0@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaWLcxIhatga9UPnbeHz5Na5A+fnukTylOIXgMwZaEFQg0kZ1U
+	QSZngedL0gDyB/dxSA1E3q35Zzl4V7nU3zSeExTX1k2uh2K2bmUQ7f2muLQ+OHc=
+X-Gm-Gg: ASbGnct1KdjiAlxmkJJu7USJDLwOIAJ8lr0Y0FgHcX7N2B605GMalNIKZW824NQUX+u
+	WKW0dg+nWz9bDg+5aUFEaWvkmnuWldgoVyalQAkY05leINFjoqpofx6/QF4n4yityZJ21T7cuU3
+	GjRr9luWnZy+VMhvwq9XRvvFPpM89/nlUuSatMsfjVgmXZwUBlvECi10mVqDG8cWLgFYRCgEAjv
+	QdX/8R//aLuzLgN6K464VVfglAJT5UGujKhf+gWBB1YGKil9+rnVgkoMyrOdaoOsPV6yswAbEe2
+	vWR8fZnvD0O6V26rwazXQcjt2xTn/KPXpCc2OURMwwnwWTFoUGNNstgji87Ok7ST+K3ZJC7JO+d
+	RJTqHXt51hOf59P0cxLsnbD7N
+X-Google-Smtp-Source: AGHT+IFNsW5+O59HSqMycKUWIsHWCl2KtZenWg03LyVBqJ/RJXz1dJUqh7GeQ5WUQwN2fy2P3TFvMg==
+X-Received: by 2002:a05:600c:8207:b0:43c:ee62:33f5 with SMTP id 5b1f17b1804b1-442d6ddcf2dmr111987515e9.27.1747065049729;
+        Mon, 12 May 2025 08:50:49 -0700 (PDT)
+Received: from brgl-uxlite.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442dc6f1a51sm97931075e9.22.2025.05.12.08.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 08:50:49 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-renesas-soc@vger.kernel.org,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: add me as maintainer for the gpio sloppy logic analyzer
+Date: Mon, 12 May 2025 17:50:47 +0200
+Message-ID: <174706502332.6905.5544454633711754338.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250424212234.5313-2-wsa+renesas@sang-engineering.com>
+References: <20250424212234.5313-2-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tee5e6786d5fc82a3
-Date: Mon, 12 May 2025 17:41:32 +0200
-From: "Sven Peter" <sven@svenpeter.dev>
-To: "Sebastian Reichel" <sebastian.reichel@collabora.com>
-Cc: "Janne Grunau" <j@jannau.net>, "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
- "Neal Gompa" <neal@gompa.dev>, "Hector Martin" <marcan@marcan.st>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Marc Zyngier" <maz@kernel.org>, "Russell King" <rmk+kernel@armlinux.org.uk>,
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Message-Id: <438dc401-a531-4b07-b77c-92748acadf85@app.fastmail.com>
-In-Reply-To: 
- <2mhqiy6twurcidtwe7rhtobq5mivb2meoq6ik3dt45zwerkwrd@ebudw64trryq>
-References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
- <20250511-smc-6-15-v5-7-f5980bdb18bd@svenpeter.dev>
- <2mhqiy6twurcidtwe7rhtobq5mivb2meoq6ik3dt45zwerkwrd@ebudw64trryq>
-Subject: Re: [PATCH v5 07/10] power: reset: macsmc-reboot: Add driver for rebooting via
- Apple SMC
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Sebastian,
-
-thanks for the review!
-
-On Mon, May 12, 2025, at 00:16, Sebastian Reichel wrote:
-> Hi,
->
-> On Sun, May 11, 2025 at 08:18:42AM +0000, Sven Peter via B4 Relay wrote:
->> From: Hector Martin <marcan@marcan.st>
->> 
->> This driver implements the reboot/shutdown support exposed by the SMC
->> on Apple Silicon machines, such as Apple M1 Macs.
->> 
->> Signed-off-by: Hector Martin <marcan@marcan.st>
->> Signed-off-by: Sven Peter <sven@svenpeter.dev>
->> ---
->>  MAINTAINERS                         |   1 +
->>  drivers/power/reset/Kconfig         |  11 ++
->>  drivers/power/reset/Makefile        |   1 +
->>  drivers/power/reset/macsmc-reboot.c | 363 ++++++++++++++++++++++++++++++++++++
->>  4 files changed, 376 insertions(+)
->> 
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index fa3a5f9ee40446bcc725c9eac2a36651e6bc7553..84f7a730eb2260b7c1e0487d18c8eb3de82f5206 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -2303,6 +2303,7 @@ F:	drivers/mfd/macsmc.c
->>  F:	drivers/nvme/host/apple.c
->>  F:	drivers/nvmem/apple-efuses.c
->>  F:	drivers/pinctrl/pinctrl-apple-gpio.c
->> +F:	drivers/power/reset/macsmc-reboot.c
->>  F:	drivers/pwm/pwm-apple.c
->>  F:	drivers/soc/apple/*
->>  F:	drivers/spi/spi-apple.c
->> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
->> index 60bf0ca64cf395cd18238fc626611c74d29844ee..6e8dfff64fdc001d09b6c00630cd8b7e2fafdd8e 100644
->> --- a/drivers/power/reset/Kconfig
->> +++ b/drivers/power/reset/Kconfig
->> @@ -128,6 +128,17 @@ config POWER_RESET_LINKSTATION
->>  
->>  	  Say Y here if you have a Buffalo LinkStation LS421D/E.
->>  
->> +config POWER_RESET_MACSMC
->> +	tristate "Apple SMC reset/power-off driver"
->> +	depends on ARCH_APPLE || COMPILE_TEST
->> +	depends on MFD_MACSMC
->> +	depends on OF
->
-> This can also be 'OF || COMPILE_TEST'. But I would expect this
-> driver to just have 'depends on MFD_MACSMC' and then manage the
-> checks for ARCH_APPLE and OF in the MFD Kconfig.
-
-Makes sense, it'll just depend on MFD_MACSMC then and I'll move the ARCH_APPLE,
-OF, etc. depends to the MFD Kconfig.
-
->
-[...]
->> +#include <linux/delay.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/mfd/macsmc.h>
->> +#include <linux/module.h>
->> +#include <linux/nvmem-consumer.h>
->> +#include <linux/of.h>
->
-> Once of_get_child_by_name() is no lnger used the correct include for
-> the remaining 'struct of_device_id' is <linux/mod_devicetable.h>
-> instead of <linux/of.h>.
-
-Fixed.
-
->
-[...]
->> +
->> +	pdev->dev.of_node = of_get_child_by_name(pdev->dev.parent->of_node, "reboot");
->
-> Why is this needed? The of_node should already be set correctly when
-> probed via the of_match_table.
-
-Leftovers from a previous version that didn't use of_match_table.
-I'll remove it.
-
->
-[...]
->> +
->> +	if (device_create_file(&pdev->dev, &dev_attr_ac_power_mode))
->> +		dev_warn(&pdev->dev, "could not create sysfs file\n");
->
-> custom sysfs files must be documented in Documentation/ABI.
-
-This sysfs file allows to configure if the system reboots automatically after
-power loss. But now that I'm looking at this again I'm not sure this driver
-is even the proper place for this (the nvmem cell is kinda unrelated to SMC)
-or if we need this at all in the kernel since the nvmem cell is already
-exposed to sysfs just with a less convenient interface at 
-/sys/bus/nvmem/devices/spmi_nvmem0/cells/pm-setting@d001,0.
-
-I'm going to drop it for now and revisit this later.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
->
->> +
-[...]
->> +MODULE_LICENSE("Dual MIT/GPL");
->> +MODULE_DESCRIPTION("Apple SMC reboot/poweroff driver");
->> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
->> +MODULE_ALIAS("platform:macsmc-reboot");
->
-> Why is the MODULE_ALIAS needed?
+On Thu, 24 Apr 2025 23:22:23 +0200, Wolfram Sang wrote:
+> This was forgotten when the analyzer went upstream.
+> 
+> 
 
-No idea, my best guess is it was copy/pasted without a good reason.
-I'll drop it.
+Nobody is taking it so let me queue it with other GPIO fixes.
 
+[1/1] MAINTAINERS: add me as maintainer for the gpio sloppy logic analyzer
+      https://git.kernel.org/brgl/linux/c/579cb52ecd46ce0351fc3d40882ebdb60332a0bc
 
-Thanks,
-
-
-Sven
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
