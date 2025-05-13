@@ -1,91 +1,134 @@
-Return-Path: <linux-gpio+bounces-20064-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20065-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57C7AAB563E
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 15:37:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAD6CAB5715
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 16:26:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BE0919E2DCC
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 13:38:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2AA3D7B149B
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 14:25:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EF4828F93E;
-	Tue, 13 May 2025 13:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDA1A2BE0E3;
+	Tue, 13 May 2025 14:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkL0LTcf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3061728C87D;
-	Tue, 13 May 2025 13:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA0F212FBD;
+	Tue, 13 May 2025 14:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143465; cv=none; b=Br3fyGBgpmTTL2eVLwPWFSv2jECV5p8ebpGJMWt0tldQF720Y7AxNA7ZaMh6qs7X8xXSsPyv/jU30xtnlIlXNpm+mUFGban75OJ1hGJkvKUaRqiXowaIuiki32maz9CYWNXO3jlBornTDZREjrC8Uhi+641WdURG+5kGCTTDAzs=
+	t=1747146384; cv=none; b=K0N9nFFujddd9hRZieOm5ukF3H+Ps9BOap3wvQeaJHCuxNU7BLSatp8gVuelJrDYqL6n3RmVoNiYmnmVHRRGuCuyYNdX963NflM277OC7qzM0UYxg9APc7sLJacMxsX9be355Rq6c3qKBbwSL/Ch4HVoa/TpOuR4c52kYgWVf90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143465; c=relaxed/simple;
-	bh=xaSrdxOWc5LB0dHY9T6rZvtzrfo23rdHF6/lCp5oYDU=;
+	s=arc-20240116; t=1747146384; c=relaxed/simple;
+	bh=qAEY+cryUh2C7geBy3Ndeqhgf/WqCkZEWt0NqYuKdxE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kpwpUMPh6Sg/Z72LfhD6NrXBjXW3JEc0OjH/dbwhkFtIlRtYRy5qA8gCfG5tPinjkwPumk8clizakSsxsphgkZIrPvsGU1ikUdrz30sq9tHDdSV4fZC4qosGmOgK5FZCFdzjcfWIet2zgllhiAwJWiFqBUOCS02ftMDMVbur0xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: ExiDh1YrQl+gI1QmBCheLw==
-X-CSE-MsgGUID: 4UmXDupDQwSVBj0KwkMjAg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="51645166"
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="51645166"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 06:37:42 -0700
-X-CSE-ConnectionGUID: rBkZQB+qQwORMn0Jifto4g==
-X-CSE-MsgGUID: 43AkM+AzRQeU/pFbJg+qqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="174837265"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 06:37:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uEppA-00000001GvW-0TdT;
-	Tue, 13 May 2025 16:37:36 +0300
-Date: Tue, 13 May 2025 16:37:35 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com
-Subject: Re: [PATCH 00/12] gpio: convert more GPIO chips to using new value
- setters - part 3 for v6.16
-Message-ID: <aCNLHxb-o3Kadpui@smile.fi.intel.com>
-References: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
- <174714214927.9467.6551553602169960677.b4-ty@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rhojDXBx2mDflcsivUO0qEB1QOH/q3hq10uHiaWXMJeHhSN9iIEJ2uxrhJypD8ntWNbpX/PgAswTTGUZ8O6ch6BhJuGX4r7KpOkQXeeAXCsGXL8x1nY3NIBvr/nzIxfqF1qDI/JPNga64H+hgxRbymP3w7wn951JwQRa/p4dchk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkL0LTcf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F3B0C4CEE4;
+	Tue, 13 May 2025 14:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747146384;
+	bh=qAEY+cryUh2C7geBy3Ndeqhgf/WqCkZEWt0NqYuKdxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VkL0LTcfXIDCsM9vZCfeyPKMxbTtOmaFexCyQjUdbrr5pHLPXNDUHsvLT1dCl9Z7x
+	 l8YxW8Riy/27mNZH1DFQR267a8gM3t91oWC3pwi8KWhnbgKDXDp/DHUx/1IgJqK675
+	 AqUX8Pwf6f7TFrrvLLvbJP5dRLZuMoiq+ym3a7qgQ/wXuBY0oHuCjqUuU+aVf3K5dQ
+	 lh6apLy6PEcrZElQScB8MRek587P702Coo2t/prxO6AewG9hn3zSH9t5Se1fJBFudU
+	 DKVqXG1LD5TbtIbMWmPlawbpBnb00It9CSMjwlolKZ3pfp/VQ4rr6oMYTkAgib3KDm
+	 MCba6lVlOxcEw==
+Date: Tue, 13 May 2025 15:26:18 +0100
+From: Lee Jones <lee@kernel.org>
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH v3 03/22] mfd: adp5585: enable oscilator during probe
+Message-ID: <20250513142618.GL2936510@google.com>
+References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
+ <20250512-dev-adp5589-fw-v3-3-092b14b79a88@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <174714214927.9467.6551553602169960677.b4-ty@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512-dev-adp5589-fw-v3-3-092b14b79a88@analog.com>
 
-On Tue, May 13, 2025 at 03:15:51PM +0200, Bartosz Golaszewski wrote:
-> On Tue, 06 May 2025 11:01:43 +0200, Bartosz Golaszewski wrote:
+On Mon, 12 May 2025, Nuno Sá via B4 Relay wrote:
 
-> [12/12] gpio: ml-ioh: use new GPIO line value setter callbacks
->         https://git.kernel.org/brgl/linux/c/d3f960365b8c35449d22b780383dc9b40d96203e
+> From: Nuno Sá <nuno.sa@analog.com>
+> 
+> Make sure to enable the oscillator in the top device. This will allow to
+> not control this in the child PWM device as that would not work with
+> future support for keyboard matrix where the oscillator needs to be
+> always enabled (and so cannot be disabled by disabling PWM).
+> 
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> ---
+>  drivers/mfd/adp5585.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> index 02f9e8c1c6a1d8b9516c060e0024d69886e9fb7a..d693b1ead05128e02f671ca465f9c72cab3b3395 100644
+> --- a/drivers/mfd/adp5585.c
+> +++ b/drivers/mfd/adp5585.c
+> @@ -143,6 +143,13 @@ static int adp5585_parse_fw(struct device *dev, struct adp5585_dev *adp5585,
+>  	return rc;
+>  }
+>  
+> +static void adp5585_osc_disable(void *data)
+> +{
+> +	const struct adp5585_dev *adp5585 = data;
+> +
+> +	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
+> +}
+> +
+>  static int adp5585_i2c_probe(struct i2c_client *i2c)
+>  {
+>  	const struct regmap_config *regmap_config;
+> @@ -176,6 +183,15 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
+>  	if (n_devs < 0)
+>  		return n_devs;
+>  
+> +	ret = regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
+> +			      ADP5585_OSC_EN);
 
-I have already picked this up.
+Nit: Consider unwrapping to 100-chars to avoid these simple line breaks.
+
+Other than that, looks okay.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable, adp5585);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+>  				   devs, n_devs, NULL, 0, NULL);
+>  	if (ret)
+> 
+> -- 
+> 2.49.0
+> 
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
 
