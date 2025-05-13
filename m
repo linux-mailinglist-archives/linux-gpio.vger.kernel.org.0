@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-20052-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20053-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3937AAB556D
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 14:59:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD480AB557E
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 15:03:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0DF83A4B31
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 12:59:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE5C41B4654C
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 13:03:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AB7228E5FA;
-	Tue, 13 May 2025 12:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DC1628DF3B;
+	Tue, 13 May 2025 13:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NaxZ9zaG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LmdMWaiY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F21928E570
-	for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 12:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA71D14A8B
+	for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 13:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141157; cv=none; b=J43tUhM8ZIQ5WNiktt1+vQHbM6X7lW9bSUuqxzl+iDW2gWoMSCy9/6YGLQ2WnAhTd6NqIir60yq9UoRnriw7zhbKDpLz7dz5wqxQMffyBcnWhZ/owTMMPkv9kxMEfqzZZ3piu5UeoQlOu+Q7EeaNl3eITl/6LJ0yW0ykoYLmFgk=
+	t=1747141395; cv=none; b=f2T8Dfb70B0jJ4hKAg/XqBU7bpNtaI2Be8WNVWzvUwb3+ymPl4229jr9VfgFArzdi6vkkzHhLaLjQ/Udy6swTUm9ORbP7OC4bXp2thy8qwM/lXdRwBcgkAWfXGue05JZO/KsE0UJaNNMOgXhGb4I5qnTLRICYF19MDOAf/HlQcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141157; c=relaxed/simple;
-	bh=8S3Yph41W8zJG6kDyye8/3nlQvoaGabwx2YL+oI7wA0=;
+	s=arc-20240116; t=1747141395; c=relaxed/simple;
+	bh=x8ieU4EKi2B4fi65n0AYV5vqCBD7U2SnDPQDI/RK5MA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mPpLRKFnbMiX70pLLiMp2631jNNRWHisaPUbwni3SpU4Ovoyn5P3tDHhJut0uu9PRTywIYaGgz0JD6RPEX/wuafN4NwOuPT0PJT/DlZSxD/s+sHq44IPRJ2v3/r/oMwrMOYsGRs3Nm5VzMUsVk5u2PCWY+W4JiOMe8ZSv5nPF84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NaxZ9zaG; arc=none smtp.client-ip=209.85.167.47
+	 To:Cc:Content-Type; b=Gxj0H4VPr82Pd+rFgWzWZBc9yZdnwN9dmcy5OxKajdvjDsHqWKL6v+nmfeOcj09z6EbH94ENmjWntZi7B3TR27ZldS8reZYs8ZUZx3X4bwEnAPkixrUR6SxDcNXbEj9R+so/Trqy3e/vyawz9Rr+pMDvaP9i5w2zRDsMNL6sntU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LmdMWaiY; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54b1095625dso6665542e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 05:59:13 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-310447fe59aso51587831fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 06:03:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747141152; x=1747745952; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747141391; x=1747746191; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8S3Yph41W8zJG6kDyye8/3nlQvoaGabwx2YL+oI7wA0=;
-        b=NaxZ9zaG63W4bd4VUkxGiFjRk5qHllCf2EsWG3Q8Wlxxh0ovnGDMS17DSPvSegcGHk
-         CKTrpclXS/25nQlxrZUmog+3U5GRuZ079Laxxr5mnCOoJza0uc1C4GtJUWUoy8pp6fmH
-         +tY9diaQMwSTIrRNgOJbOuOMHhYroALAXFCEKmVFPm4IldVff4gfq9aKS5zmxHRymClk
-         8sMpZCtAthCl+MD6g1YulmLYy4acwLOvqqTlgNLVCRUwTkxNSoAd0oDgKvR5SNGWIWbt
-         gilcE/aP7IPVRU+nqXfnziFEx1N08mwebXX3pnhfyhhb+JtlyVOwaSzoZyuf9+NQDPXy
-         XFXw==
+        bh=bckFuN4azCmbNe0b2Ogt/F42jsbbCCh007jmdEYNzmc=;
+        b=LmdMWaiY3rwMXY65xWrlSDrBZm5+MGKWVYjRItOT0iySYAjIoFEfFtvNH4HibHVQ//
+         Bf6oHPC0ut9DSRzLtOwFIbO+OzGEgRfk5lJ0siI4SBah5tzM8VkXj3qjrbplEN2nF/Ig
+         JadL7xMuwjzGvvxvxQEIgku4Na98fQgev1cYh0XvgeKXGwQdDDSA+zfiPXq/s66G1QhR
+         npOA1HcJcpPOXu4PnyqSD3fhfn9EYg6mLY2p0VqvBBVZAwdFpfBhLLCxqtMKv736vK+h
+         CpN336LJDgfy28yB9itUMJmzcODbp1TzZDst3saL9ulFEz2ZB196gikdTxVQ9wwtY+8A
+         7ZsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747141152; x=1747745952;
+        d=1e100.net; s=20230601; t=1747141391; x=1747746191;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8S3Yph41W8zJG6kDyye8/3nlQvoaGabwx2YL+oI7wA0=;
-        b=Y1p7rYMbwQPvLxwphvfjs2xZ8mMOf5R7jtmPqVzCFL8B95lwO92cFjCtBWJha0qVEw
-         x52SqPlwI9dtZe6whib9YvWe+tAJeFF1GJxo/xNEgrMm0MI5drqiGZ8QadNLCsYluqdq
-         1ixBRESXLPv66+l9ao+N42pSQnFma26/afcsGwvIQOoOzqUU0ivYVk300XxlG2otH2NS
-         wKMSS3WWxUMliEzifeEziRSB+4TXL28W8ILYnXEfZIY/jCRTAjEOdTWddYoqpbN8RG4r
-         3XJpwPnO2+yRd0UQB6WMrC+liWI2CX69RF4af7CZsCn+x2SQULOY+7cMU/gNbChrMYpW
-         yQWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2BFbet2mgqpqy7Mdl158y+13hkQn9i6yl0PAvNIvGiWdFkLRCfAeagR0R0xbAhZelSxUEhu6Heze1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+1cHuB0s9u6Tt+5GyL8Yi8iMKCd3uBKmo22BCYxxr5tyFBPXv
-	APqEn4QmBM5zm3xIoPX3pJHjJMyYDAzHvX88aW0jEzKTzw7d3JjyChdDNDY+ANBKynhhX12kS+P
-	idVcyn8WS95VQw3rv5uW1kD4iQCKQ8DvXuPK6LQ==
-X-Gm-Gg: ASbGnctjdCKEYwSpOS59IdjqN9Dyok3kQqwJlgFYrzvjlgpsySy3fpnisST8YbS8AEg
-	4BfZGjjhxT2rLxQnHFowG2IDR6NoG1k0ih7ZWgmND9a3kJfYhlvg7Qb9Wf/OibR79JAt+W7ALI1
-	3HjjEjActaXRqxC4aoaLCkEFQSbPF0B5BN
-X-Google-Smtp-Source: AGHT+IH8XHefqNP0R9UQJCUOm8QNLo2Ezd+mWaxac97cDIiKEKJXNuZgmWyG8hS99tlcf+2TC0nBCMeUjZpkYFyc7oA=
-X-Received: by 2002:a05:6512:608b:b0:545:2cb6:af31 with SMTP id
- 2adb3069b0e04-54fc67b8e2emr6534510e87.15.1747141152348; Tue, 13 May 2025
- 05:59:12 -0700 (PDT)
+        bh=bckFuN4azCmbNe0b2Ogt/F42jsbbCCh007jmdEYNzmc=;
+        b=Tz/pHwFZ/2WE4Fgev4cwtkSAX87CwrOPhRs5dAV81KbnLPBA0I43uJ5Px2FBqtTZSY
+         actJ3yh3SJbR03tzujeOaSDjzS8RbwyLnVKZsw0I2i0qH6bLLTlMZjnT+xDR3qLK8rM5
+         SXP3osJMyS2mCSjwKDBUjQRp4irf1y/3ZSfUogTvdGwlRmuiShQk8bGNDBL2ZiSlvSvf
+         Dopy7LiIrqhETcyHhAcBR2M0cLcxxQjLIs6jf64gHBXD0XP/ObHhcIpJYHbeT+zLBV/C
+         lzIE85wuKuhEp8MfiXIsWYNEe0K0vxPOcSkiZ0683gief/I78WGxL6yOflloA4CSUeFb
+         UpQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUr+EbQYFh6cy+NCA3HVwGHPRIOxJdGqw6ThNt23cLxWft/F5rCDe1roqwdCc6M6v/8lLzR0nh2vBtV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzgy2VecOkmnGWNPIj5++vchBCFV5fvSCg4YxFYSsu5frRYi6kf
+	L+aC7Dx5RQWBLiJRIRrbPOprxMfufBpdNqaHe8iIwRqZP7oKpZ0UPFST7Xt7mXFCpm4AFPkN/Ba
+	lzHHNb4yBBYZhcOSs/F1J26ByTOTJalR8RVzUyQ==
+X-Gm-Gg: ASbGnctKGfBjKfPCSqH4aZ9YxMtcO20CT1b7mINBewJYXYNKCVN0w4xYybcWh8XqrZC
+	c12LC9QGxK5GTwhapJMzuIiTqFhmlqiBY0l7MVXUUB2vYQS28qiAqelocC5CvrurIhWPIj0Iegm
+	cQhgDDrR6hsyRf3jDKf1ZY7ENCW0Xz5xbD
+X-Google-Smtp-Source: AGHT+IG41x6HOlIO0IJUYhQJ2UY3oU18tjuuOsvxrjmQ22T794qYcI75spC45YpUWkdDO5fUQhcFroeonzakK7RK33I=
+X-Received: by 2002:a2e:a549:0:b0:30b:fe62:2329 with SMTP id
+ 38308e7fff4ca-326c455e0bamr65757501fa.11.1747141390612; Tue, 13 May 2025
+ 06:03:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,14 +75,12 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-2-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-2-3906529757d2@bootlin.com>
+In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 14:59:00 +0200
-X-Gm-Features: AX0GCFtmi1qs_gSfGas8GoZGoCMX4N_wHeVY3_msDsE4LWjvnIpjpsZUBZz2o4E
-Message-ID: <CACRpkdZs+Hb=XGMvKxTTgNVBKDO1cjOCjfY2yQj_bxWtjwbSag@mail.gmail.com>
-Subject: Re: [PATCH v5 02/12] pinctrl: remove extern specifier for functions
- in machine.h
+Date: Tue, 13 May 2025 15:02:58 +0200
+X-Gm-Features: AX0GCFuUcIfML44aAdhDDQyW4WElAah3qOFUrVK8KAK7hsanUNq0ZohV10DNP3g
+Message-ID: <CACRpkda8XSuO8-pY8K4gRsK7Ny6=PqcgKdrK+8A-3ghCfRTBLQ@mail.gmail.com>
+Subject: Re: [PATCH v5 00/12] Add pinctrl support for the AAEON UP board FPGA
 To: Thomas Richard <thomas.richard@bootlin.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
 	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
@@ -92,16 +90,48 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <br
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+Hi Thomas,
+
+thanks for working on this!
+
+Also thanks to Andy for excellent guidance on the series.
+
 On Tue, May 6, 2025 at 5:21=E2=80=AFPM Thomas Richard
 <thomas.richard@bootlin.com> wrote:
 
-> Extern is the default specifier for a function, no need to define it.
+> This is the fifth version of this series, addressing the few remaining
+> issues identified by Andy.
 >
-> Suggested-by: Andy Shevchenko <andy@kernel.org>
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
 > Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Looks good to me!
+
+> Thomas Richard (12):
+>       gpiolib: add support to register sparse pin range
+>       pinctrl: remove extern specifier for functions in machine.h
+>       pinctrl: core: add devm_pinctrl_register_mappings()
+>       gpio: aggregator: move GPIO forwarder allocation in a dedicated fun=
+ction
+>       gpio: aggregator: refactor the code to add GPIO desc in the forward=
+er
+>       gpio: aggregator: refactor the forwarder registration part
+>       gpio: aggregator: update gpiochip_fwd_setup_delay_line() parameters
+>       gpio: aggregator: export symbols of the GPIO forwarder library
+>       gpio: aggregator: handle runtime registration of gpio_desc in gpioc=
+hip_fwd
+>       gpio: aggregator: add possibility to attach data to the forwarder
+>       lib/string_choices: Add str_input_output() helper
+>       pinctrl: Add pin controller driver for AAEON UP boards
+>
+
+Most heavy commits are in the GPIO subsystem, once the nitpicks
+are addressed in v6, Bartosz do you want
+to create an immutable branch for this and merge into your for-next
+and see how it works, if all is good I can perhaps pull the same
+branch into pinctrl as well.
+
+If this is stressful I can do the same operation in pinctrl instead so
+you can just pull it to GPIO from my tree.
 
 Yours,
 Linus Walleij
