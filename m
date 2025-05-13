@@ -1,105 +1,112 @@
-Return-Path: <linux-gpio+bounces-20055-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20056-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDEA7AB558F
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 15:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A859FAB55B4
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 15:14:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29DBB7AD99B
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 13:05:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 934407B2874
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 13:12:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 901FC28E591;
-	Tue, 13 May 2025 13:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5605928EA43;
+	Tue, 13 May 2025 13:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yUsq8PJQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QLDzxz92"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5EF28E570
-	for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 13:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4036428DB72
+	for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 13:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141584; cv=none; b=YyscRV43z0CKaBHGRZWT+qC3aAXccfwvzPmHSa7EjQfn/M08KNMu1Gi+g9FAHNzM0b5kwLTStTzwWO5qsVmTAM4rxO64ME0vGrCx1r2cXjjvbHVzNX1c607gzbc+gFExvKX808mQHjbFVJSxL7ExrrcZzyBrdtQNmQp2Ulvl0SU=
+	t=1747142032; cv=none; b=OQYJ10HsU7UiUxFWLh5x8P0721iz8JdK72NPbTH895AsEN5jQn5S2pwlUCA5zfobxmBwB7vFRN4qFfUq2wEsUfp1AKXuKosf9MdPBwz+XOcRkgX70KqaWxhyjIJ3Cg3hRe6SUxp/0rlOIGdrPtTCVuW7OMCYppTzYDesgp6E2Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141584; c=relaxed/simple;
-	bh=L3zCNxGeHbmJ4ou2tiPDwvsIuH9feK9R89XonhcL5mY=;
+	s=arc-20240116; t=1747142032; c=relaxed/simple;
+	bh=FH3BY6eCD7Lez7c7QuOQpeui3zGud0bNV62j7nTi9Ak=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CyeNmVtIEF7duPrpF4zjq9lf7EgDvP/+FYtbwoL2pN76I89pVGbijPvAqIB7DU4kQMOjY3sI966VUf0kjb45vV29QFzMgzivSXAERy35ZJSpHaOYAWtMzNiHZ4nsvtaBNyTlIp67VQicvjSLc7quJzKISeC8MeI7j3rWN7IgpBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yUsq8PJQ; arc=none smtp.client-ip=209.85.208.169
+	 To:Cc:Content-Type; b=IT+9aorDVXEzrbZ3jCdCLZ0JelZhV3uX+HZO/wYpP9FxUFfKnY0MoFGvH4cevNZ4RLL0Mc0646gWw6d1fbqEU5Wbd3lEvFRoyelHf/2WyGxWXRF1wqErvORY9b73KObt4FOlg79Cg59aO2mlIY0xhUux/wondTN1y7fB4Y+Db70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QLDzxz92; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso53660781fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 06:06:22 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54fc9e3564cso5458425e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 06:13:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747141580; x=1747746380; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747142027; x=1747746827; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L3zCNxGeHbmJ4ou2tiPDwvsIuH9feK9R89XonhcL5mY=;
-        b=yUsq8PJQJj/sgXO3P9eqyIza3hD4o4tyy/vonPiCuHAVop7T8sLy3GN+U2TS4QE9qg
-         kX51GpOHDGRaoJ3Hi8o5I0zWkgDAiE6PhUc3cZh2nE66lvi7axv7cjRLDnSzuTf4QKmE
-         IW/PQ6MUNVsacGqvgB0yESwGJ1PFF41NXUU+yYWR3h9Xbdo6B+4WlHXjgZGRfSo2Wae9
-         uAvQIUgYHfm/RVrPXu7Vjd6iF1lm2A2FWVw6ytFZFLzbIdrfpHNs9AhUMQyEuzJKBOOI
-         IcRPCvk5vZHajMWAO5bCTT9aoG1HmHYK4RoX6KyPAqaZN5F3rzERJ8YcIzMH9OVReI0G
-         0q8w==
+        bh=FH3BY6eCD7Lez7c7QuOQpeui3zGud0bNV62j7nTi9Ak=;
+        b=QLDzxz924SVUm0i5grfkNxKCa4GOuzB++lKlQnn2y0A7NDARziTCf3cjsl0QvBPp1z
+         POl0WMA2Pt8z7TkRroAaFfRmCSHgzm++WY/mWDC1K/M0YlM6+MQMGf/H5Kob6VLcoVAz
+         3SdQlKw7Ww6V94ZjnudJ/VQd/zXU8r/e3p8x+SAVK/uRiQpSeTkuXBMOxLFOX4l9mgU+
+         MexX4fzgmWOq1b2GCeOWH8Gop71uXTpKcOSVSNkQvB97zE2+Tci8CB/2JBX5do8afgPU
+         YIxYihcBMApkiTydTF8/FQ0uPkaFXdmLHOTAcIoApNJfyVIvRYKvCmtAW1v9MepDAsQp
+         /9Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747141580; x=1747746380;
+        d=1e100.net; s=20230601; t=1747142027; x=1747746827;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L3zCNxGeHbmJ4ou2tiPDwvsIuH9feK9R89XonhcL5mY=;
-        b=NN4GFh9TFHKYrxhxd8tCAr2VzpTq+D7AeAOE7Wtv7YHsHfZzIMUjaiMdP/IsoTTsx9
-         ZOxytIpl6s49ikLVusUCsT4fYId/n0DF6SsTFpzCvfY9CaY0cK6N3ba3LUhHnvig6iQS
-         0o5v/tdaU4tyOR7n9gbaJleVtid2I/lhJYA34sHdwWVs05AsUvw57fz5HJxLDO/9hZpu
-         b4MT7wrjZFiZE6EX3/QEEABo83D5sT3icaZv0+IspogVA4djykO4dpSjRedSlmmlPafc
-         Jk3rQcADUAZ1Nr3lKdar1O8m2CFAbDZIU8S0zxYVT7C2hokLDKj8KnIJxxmXP3U3IULf
-         pAeA==
-X-Gm-Message-State: AOJu0YzqYD9zUJ5kfZ+vDIuElygss+UlyWUcERyrhN98x8wsJ3KlYgiJ
-	+bIo8mYKRIKkU4D40Kba77fEdsHkb4ohehfi5IOfLbdHO+mx0BpU4urBaHhhfrz+Vu6df2ic6GW
-	4lAOpl/IAtU1YVo1Oy5vHI/TIm9cq7KD3tnnWZQ==
-X-Gm-Gg: ASbGncv4sZSbIDAbINXVtKwvbBn/iIeeiBrAKNnzNL0BdV2u6IhOyZcxWM9SfJkeBGE
-	WrpPqsOEghT8o6EWeHMNLoNwt85oeE0ppzuYd6UIEkmHZ/Kx7g/bve7WEH0gH3zCGvhtL5Rd4Xt
-	v7cNi+cS4TJ3aeMNlEHUYJ2MPosz7bsM15
-X-Google-Smtp-Source: AGHT+IFgVxCDXAWbybreCxKR0Wftlb7giGFDaBFjG3lwzRxw7lyKYP8gOF0rnBb55gNe0R92SSktLH2rUh+tT2b0C6w=
-X-Received: by 2002:a2e:b8c1:0:b0:31a:4906:fcf6 with SMTP id
- 38308e7fff4ca-326c454575fmr70975041fa.6.1747141580265; Tue, 13 May 2025
- 06:06:20 -0700 (PDT)
+        bh=FH3BY6eCD7Lez7c7QuOQpeui3zGud0bNV62j7nTi9Ak=;
+        b=GGjBpih3s65vnQb5f3lZfdmeXqX9GGJJSP8fwfxlyu9dyRNY8dtwt00KLnsxykyv2Y
+         YO2QccM0qVFW4R8VxLIqH+vmf3wYp7OUE2ltstDOKaNQjWtD8vtAyh4cvFsbWz4hP/aJ
+         j3gVitvRFmV/ZbOeT+BKp5wGHuvmGfUWOcFaYsUatedoZA1t0qBsMaMxKr2DS5XPBzzV
+         33uHN19iLqP9gPUAgGWCkCFDrN2wmRBCfony98dHaZd69fX9OvsW9tH7ZPQ9soL51L/9
+         Ow7UXVUPmlF1Qn8Ode3J+rzmExn/jII2bpmVGRX+MbdHdvvPDDRRSkkIX02+Hul04SLv
+         9gFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDQnynACoSW4bQ2mjuw6JboCxiXbUCS+N1c6khAY+cNGw3oXVnm2N+yZQb1zGdZ/QYybvxEtMv2b93@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQAaGojXQ+7thqqZcY9P+s+g6lPOfBYMJJMBwMvITf8wa+i8fx
+	PozRmiQJYrfd4CMbP1UNrlJIj+ui5zwwgCXqnDif4wELk0mKf3SfAI9XkrQLCLU9xBh1xlb7SBK
+	VHBJWnqQPEOEiSwHSr+qQjlmMWf3I2nLQ3Y8TDA==
+X-Gm-Gg: ASbGncvwWwp17qkZVYfaJuWhTIB4oxWtoM1tMI/vAmm6I0afjOdwVQmgJPmvBgg8nnk
+	z0P+H7pGeeHQPAKmzIC5vJSI5X0f9qb5n+GT2RlDt6XXAWkE4II1RRMb42/MQrRoswPx5icahNN
+	7aSFbKZtXnMrKuR8eWPbTYnoCq8g3UNSe5
+X-Google-Smtp-Source: AGHT+IErd1zECtSWmiueqkwD4t5q1dDN1qHnbcMn1cncmM9gOi/5w9TSouYOqYoqxFwgSSQ9wh2aWvhxApgZaMeuOic=
+X-Received: by 2002:a05:6512:640b:b0:549:8b24:989d with SMTP id
+ 2adb3069b0e04-54fc6764426mr5389978e87.0.1747142027286; Tue, 13 May 2025
+ 06:13:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507143551.47056-1-brgl@bgdev.pl>
-In-Reply-To: <20250507143551.47056-1-brgl@bgdev.pl>
+References: <20250509-gpio-v1-0-639377c98288@nxp.com>
+In-Reply-To: <20250509-gpio-v1-0-639377c98288@nxp.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 15:06:08 +0200
-X-Gm-Features: AX0GCFtfYDDV6M_mfaAuX98JCWZFJqSNYXOqleX0yy9Z5K5Dw1ID6H40dWPGXXo
-Message-ID: <CACRpkdY+mnFxfW7zaEx8CAhuS8eaH8SS3N9bm90BUTqAbE5tXA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: add stubs for OF-specific pinconf functions
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>
+Date: Tue, 13 May 2025 15:13:36 +0200
+X-Gm-Features: AX0GCFtipyG-m8FrUnzYpmqYR7dxFkSgGJS5zK3dL1i48JJGkPJ7bD5UcE0Rkes
+Message-ID: <CACRpkdaDiJDoyW18cAsb1JcJvFvrweWKtUbO0=pUtGKbz1GtCw@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/9] gpio: make irq_chip immutable
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Ray Jui <rjui@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Keerthy <j-keerthy@ti.com>, Robert Jarzmik <robert.jarzmik@free.fr>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 7, 2025 at 4:35=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On Fri, May 9, 2025 at 6:47=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
+> wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Allow building drivers using these interfaces with COMPILE_TEST enabled
-> and OF disabled by providing stub definitions.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505072245.OgSXI1hh-lkp@i=
-ntel.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> This might be a bit late to post this patchset, since it is almost rc6,
+> but no rush here. Not expect this patchset be in 6.16.
 
-Patch applied!
+The series:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+I agree with Andy, why not just apply this, these drivers have
+had long time to adopt to immutable GPIO chip and your
+patches are generously helping them to migrate. If things
+break for these users they can fix it in the rc:s, and if there
+are no users testing these, well that's a community problem.
+
+But there can be some fallout, so it's your pick!
 
 Yours,
 Linus Walleij
