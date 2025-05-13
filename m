@@ -1,176 +1,199 @@
-Return-Path: <linux-gpio+bounces-20070-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20072-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2840AAB57A2
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 16:52:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBE46AB57D2
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 17:00:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5AD4A7ACDB2
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 14:51:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19208860F7B
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 15:00:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC9F1AF0C9;
-	Tue, 13 May 2025 14:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B2319995D;
+	Tue, 13 May 2025 15:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbCfaRFE"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DOrhuriI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="REGEktdO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EDA74C14;
-	Tue, 13 May 2025 14:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87E31D555;
+	Tue, 13 May 2025 15:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747147944; cv=none; b=cp029k2MIuL/RvChtwoaBzsUfLjskweHR3ITtVBmIBesfUHTuTg0kvojy1Tua8hyv/dhIbhhPQ3HNR/KpmpDPncrX7Hmn1hX28Nx3cCX1J8Ek8Dz+YKH1kw91q0Isj7KkGdyKCnXQtc6me200i07pgKAZFEZyacnhEqvq6toD30=
+	t=1747148443; cv=none; b=rheEF3IJwAvQgVEDoCpILvhos/MdSPuVD8BS8A5apYh59nNmg4ENWI6gnRj0fq6zFoP559nayupeYJPZZPq382vPq59HazooMAX+xgk7Svr+/13lA1w4rEV2yQxlEFfVB/LgLxnZ4EXgiB5xOfCKO+58icv5RlyytJbCSKgE3aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747147944; c=relaxed/simple;
-	bh=5aDU6OkJffzsgTsPnqz6E1KgUCy/DEuGEYl7z4KWf8w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MjFe7txhXNxZmNftRVySGIADbpyJ5k42mCA3Y5yZnJXv/6sfZdr8jrbOY+23NDhNN+GD4+dfR5tEt5fN81mSJA6wIIXXgqLyByrvjWAmZwJOu1roU/ShnvtkUK08AssTIP/qpWfnfMHWP35Hp3xcfTCwc2/jJHbS99c8qbco6Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QbCfaRFE; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so33225685e9.2;
-        Tue, 13 May 2025 07:52:22 -0700 (PDT)
+	s=arc-20240116; t=1747148443; c=relaxed/simple;
+	bh=Lucx0KH9MaH/7UpmN5KbkNHQmkYf5YHbGDtSWRCjDiQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sm5f0FYzVuqmVZVeG2pq6XJysNbGj7h+r51DbzLhwtddtT7Mlib6QAObwfWxLSzqTvuyaC+UnRrbFVoy+liSViukGP0rVMRZUXjGX7F7MAZLOEATNTfKvxCu/JO2EZg9kHZlP5rW18qB+EPZaHFBEWfASujyWPJbNkha/JXkYFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DOrhuriI; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=REGEktdO reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747147941; x=1747752741; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BtUBi7drBB+cXFEzK9hPG3JrXPoNrKKCJnRpWc9LEtM=;
-        b=QbCfaRFEOO66sh0wbP+gQZvhluZuQeUIKE6K6LEiUkK4cMKkFsJgYVa1oECUhoyI3V
-         uvAKzCOI5ZmXKwGPamgAJv+ZoIBKCHG3FqMwXnTSFPM/ZGo7vsF0udG4LZeTh5vO+966
-         o6hniW56P5c9zTqeEEAVC5zeZzNxl3Dvjoptp2RGPmoShlBB1GouW1iFLCnbwiv2//aO
-         2Ys5j3qCFsd4WY2sbh05z1IyAgQRhEKCKGTyZ4GLCpkgW78/vplX7ct1XTmfcU7mPZ36
-         c6hU+xImWwLRrG8qYsq5Ac+4oxNcefUpb16Nn9UTbikyiI7SZCfwnS/14Yg+CaySqcXB
-         NppQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747147941; x=1747752741;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BtUBi7drBB+cXFEzK9hPG3JrXPoNrKKCJnRpWc9LEtM=;
-        b=FXUHArwuu3ZJw92YGuj+lgtGLQ+Gd3t65G54lTORNYHvuTcWgyRqqTskYzACy5SGCf
-         LLHfotmCG7bPS9URW91Y59G022Z6y6+8g8xCVFVeYq6sU3/Rk0qV7P5pz0FoPS8qJ/KH
-         RZun6Kh857SxSQAeNp2JzJdWP0OX3xwjY6Fkiimh0IViQKB2nRDFJ/Nl1rayT1Gixasm
-         Pw7Lj3dJ5ETO5N8il89CuDpHarKmyrUxoJsP+v4NXv/sZV3QYJOhoqr2Y6xlQV/CoXaz
-         LhutWuXpKtOGcMahr5JXyfVRZvK6s06EudNxnmlvijPA7xBC6jVtXg9afHGgo039FMqw
-         7RgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVW9soI2bD7GamhxNKUSZDpTmFFqVouc4lKE/rTDu1TPCHrbNfjsOLnnTlK1sVoG2a6qwOpcIoPSwQp@vger.kernel.org, AJvYcCVyAmSGAHS1/esfM2knfKy6RAabqOZcniqAGjdKdg1tTIBfwnTZI/gZ+p7d5MgHmE5X7bqc3Tb13dca@vger.kernel.org, AJvYcCXe0wVpOmqQpCEzw1tAPrlDIz3n83x0E3ZKk10xlZzmZTy4DTp+LCy7SGwAnOMP0FlwcvxT+8v6ZQhL+vI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0tyZegsfxZjKSBEGp/nH+6p9BDFFi9+kowZeY2QRuMrjC09yN
-	OtZ6BCKzBT/d7OEEHDvGfFlcXKV8v6OuBjcIBi0pBmZ39/z/GN671ErnE9oc
-X-Gm-Gg: ASbGncuTot7MDztxUVvrvwNKmG1CF2wRKW9DTHfF8eAPnuoMSIDhdzMW5P9FiHuc1OQ
-	BBBgu3wdIbXyIhOyUMqTCXJTTP3eAI33+Q5DmKPsWogKKDzw0BsvsAYISlM2OC/nV20SfrisfLt
-	oscNrVpC7fddfgo4m1tPh6HdpWo395+3PPpo07PKYPoTTDXAgw6a5mp1s/0LWyTizruze9Y1V6+
-	8gYVUKBjRbPrbdaJ4+0QT0pjS1XRxKKXGWApefDYEnTJgab75UFFkk4Gyzz1CYPrvfCTgPdggSh
-	PhLnVkRzwFHn02tCv3vA5DRMdK1apEAqETpwUL6365Etx6V/LTOa
-X-Google-Smtp-Source: AGHT+IFhFqhFnyQlgNgjWev5W6MiX5oqGtj/0NAeUmmplDp1v7d0JOxrTw/cyIJG0wjlSaIhyYs2rg==
-X-Received: by 2002:a05:600c:4451:b0:43d:526:e0ce with SMTP id 5b1f17b1804b1-442d6dc51e8mr129641265e9.21.1747147940888;
-        Tue, 13 May 2025 07:52:20 -0700 (PDT)
-Received: from [10.5.0.2] ([195.158.248.94])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f3c2sm213513235e9.15.2025.05.13.07.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 07:52:20 -0700 (PDT)
-Message-ID: <12d73022533c250ecd5af696fbcb90dbad8fc88d.camel@gmail.com>
-Subject: Re: [PATCH v3 03/22] mfd: adp5585: enable oscilator during probe
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Lee Jones <lee@kernel.org>, nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <ukleinek@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov	 <dmitry.torokhov@gmail.com>,
- Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Liu Ying
- <victor.liu@nxp.com>
-Date: Tue, 13 May 2025 15:52:20 +0100
-In-Reply-To: <20250513142618.GL2936510@google.com>
-References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
-	 <20250512-dev-adp5589-fw-v3-3-092b14b79a88@analog.com>
-	 <20250513142618.GL2936510@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1747148439; x=1778684439;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gh2NMO7qJrdv3iG60qbGVCR0O4srfdQABWtiiWuAUlw=;
+  b=DOrhuriI8a4Nw3OlNGY+cL+LEFaxdENf6Y6X/C1aA2F+AgGjDUYqkrDR
+   3O1OxznGt/Fb1DjI1J5mYbQ53xMY8PSi7lRnxSxW4NP565lgjqaDXvxPl
+   XEPDnSHmeJfgMwkIBvzN07gIV+1HozxvR7HHh/4kIl60goxSPmdQabn+o
+   NEf94gEpO7F9Selb0yB6vDbHtrKyPveDI5Fp4uPyDFo9CAqF7jfwXtb1X
+   2wIKO26vQheVJpo1QOviSS0OR1uNlg77pg+Wowv+QrNEFnaZQhhjcV7lR
+   QqL8D0JW2pQIFeSb4AVc97WHY+1pa6dMT0SjU4awDH8F5VDQoll2Kvehx
+   A==;
+X-CSE-ConnectionGUID: BWWvUYNuSImKxyj+5+dKgg==
+X-CSE-MsgGUID: 2iIUzI4OSQKYJDou9ZNbKg==
+X-IronPort-AV: E=Sophos;i="6.15,285,1739833200"; 
+   d="scan'208";a="44051266"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 13 May 2025 17:00:31 +0200
+X-CheckPoint: {68235E8E-25-3689CF63-CB8C500E}
+X-MAIL-CPID: 8AF5C25384C644D3101B75723DB32111_3
+X-Control-Analysis: str=0001.0A006375.68235E91.0079,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4E6FB166837;
+	Tue, 13 May 2025 17:00:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1747148426;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gh2NMO7qJrdv3iG60qbGVCR0O4srfdQABWtiiWuAUlw=;
+	b=REGEktdOJSZB22vxLke68pavWt63t07eXLNHdPVOsHqS+kedsJ7991/Gup3ZFTdO6yuVrZ
+	WxnhB7OgzS8x/KPu70JHOi7gfOuJxq+nBJhXWiIm7mCS71GPqU4rqiVSW4kXl4iKdM6TLY
+	kbzHPyiMUYPa1wYzqbIEwbFkFTLE9ycxO1qZInz5U5WnDe0oPa5ZaWmT0cWikYL0fmn93k
+	vqkxai4ooXNPGs2VrhnkNLwOTVWIMVJQQ8UbYheLbpwV4hzBPESIGq/YVCwjhL5D4zKoHu
+	+iStl/v1wasjLk9KQs3/X9lshXEUQ6uTSS5bE9eQlTCewudBw8itNWY7Ah2Xyg==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Esben Haabendal <esben@geanix.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] pinctrl: freescale: Enable driver if platform is enabled.
+Date: Tue, 13 May 2025 17:00:09 +0200
+Message-ID: <20250513150010.600656-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, 2025-05-13 at 15:26 +0100, Lee Jones wrote:
-> On Mon, 12 May 2025, Nuno S=C3=A1 via B4 Relay wrote:
->=20
-> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
-> >=20
-> > Make sure to enable the oscillator in the top device. This will allow t=
-o
-> > not control this in the child PWM device as that would not work with
-> > future support for keyboard matrix where the oscillator needs to be
-> > always enabled (and so cannot be disabled by disabling PWM).
-> >=20
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> > ---
-> > =C2=A0drivers/mfd/adp5585.c | 16 ++++++++++++++++
-> > =C2=A01 file changed, 16 insertions(+)
-> >=20
-> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> > index
-> > 02f9e8c1c6a1d8b9516c060e0024d69886e9fb7a..d693b1ead05128e02f671ca465f9c=
-72cab
-> > 3b3395 100644
-> > --- a/drivers/mfd/adp5585.c
-> > +++ b/drivers/mfd/adp5585.c
-> > @@ -143,6 +143,13 @@ static int adp5585_parse_fw(struct device *dev, st=
-ruct
-> > adp5585_dev *adp5585,
-> > =C2=A0	return rc;
-> > =C2=A0}
-> > =C2=A0
-> > +static void adp5585_osc_disable(void *data)
-> > +{
-> > +	const struct adp5585_dev *adp5585 =3D data;
-> > +
-> > +	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
-> > +}
-> > +
-> > =C2=A0static int adp5585_i2c_probe(struct i2c_client *i2c)
-> > =C2=A0{
-> > =C2=A0	const struct regmap_config *regmap_config;
-> > @@ -176,6 +183,15 @@ static int adp5585_i2c_probe(struct i2c_client *i2=
-c)
-> > =C2=A0	if (n_devs < 0)
-> > =C2=A0		return n_devs;
-> > =C2=A0
-> > +	ret =3D regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ADP5585_OSC_EN);
->=20
-> Nit: Consider unwrapping to 100-chars to avoid these simple line breaks.
->=20
-> Other than that, looks okay.
+The pinctrl drivers are not enabled in defconfig. Instead of listing
+each driver in the defconfig, enable then by default if the platform/soc
+support is enabled as well.
 
-This topic is always hard as some other maintainers perfect the rule "keep =
-the
-80 char and only go 100 if readability is hurt). Personally, I do prefer 10=
-0 so
-happy to do it here.
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+---
+Changes in v2:
+* default pinctrl driver depending on SoC support
 
->=20
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable,
-> > adp5585);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > =C2=A0	ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
-> > =C2=A0				=C2=A0=C2=A0 devs, n_devs, NULL, 0, NULL);
-> > =C2=A0	if (ret)
-> >=20
-> > --=20
-> > 2.49.0
-> >=20
-> >=20
+The discussion at [1] resulted it is better to default SoC-specific pinctrl
+drivers to thei SoC support instead of adding to defconfig or selecting
+pinctrl.
+
+[1] https://lore.kernel.org/all/20250507124414.3088510-1-alexander.stein@ew.tq-group.com/
+
+ drivers/pinctrl/freescale/Kconfig | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+index 4c420b21b804d..18962bc93b87d 100644
+--- a/drivers/pinctrl/freescale/Kconfig
++++ b/drivers/pinctrl/freescale/Kconfig
+@@ -21,6 +21,7 @@ config PINCTRL_IMX_SCMI
+ config PINCTRL_IMX_SCU
+ 	tristate
+ 	depends on IMX_SCU || COMPILE_TEST
++	default IMX_SCU
+ 	select PINCTRL_IMX
+ 
+ config PINCTRL_IMX1_CORE
+@@ -159,6 +160,7 @@ config PINCTRL_IMX8MM
+ 	tristate "IMX8MM pinctrl driver"
+ 	depends on OF
+ 	depends on SOC_IMX8M || COMPILE_TEST
++	default SOC_IMX8M
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8mm pinctrl driver
+@@ -167,6 +169,7 @@ config PINCTRL_IMX8MN
+ 	tristate "IMX8MN pinctrl driver"
+ 	depends on OF
+ 	depends on SOC_IMX8M || COMPILE_TEST
++	default SOC_IMX8M
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8mn pinctrl driver
+@@ -175,6 +178,7 @@ config PINCTRL_IMX8MP
+ 	tristate "IMX8MP pinctrl driver"
+ 	depends on OF
+ 	depends on SOC_IMX8M || COMPILE_TEST
++	default SOC_IMX8M
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8mp pinctrl driver
+@@ -183,6 +187,7 @@ config PINCTRL_IMX8MQ
+ 	tristate "IMX8MQ pinctrl driver"
+ 	depends on OF
+ 	depends on SOC_IMX8M || COMPILE_TEST
++	default SOC_IMX8M
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8mq pinctrl driver
+@@ -191,6 +196,7 @@ config PINCTRL_IMX8QM
+ 	tristate "IMX8QM pinctrl driver"
+ 	depends on OF
+ 	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
++	default ARCH_MXC
+ 	select PINCTRL_IMX_SCU
+ 	help
+ 	  Say Y here to enable the imx8qm pinctrl driver
+@@ -199,6 +205,7 @@ config PINCTRL_IMX8QXP
+ 	tristate "IMX8QXP pinctrl driver"
+ 	depends on OF
+ 	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
++	default ARCH_MXC
+ 	select PINCTRL_IMX_SCU
+ 	help
+ 	  Say Y here to enable the imx8qxp pinctrl driver
+@@ -207,6 +214,7 @@ config PINCTRL_IMX8DXL
+ 	tristate "IMX8DXL pinctrl driver"
+ 	depends on OF
+ 	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
++	default ARCH_MXC
+ 	select PINCTRL_IMX_SCU
+ 	help
+ 	  Say Y here to enable the imx8dxl pinctrl driver
+@@ -215,6 +223,7 @@ config PINCTRL_IMX8ULP
+ 	tristate "IMX8ULP pinctrl driver"
+ 	depends on OF
+ 	depends on ARCH_MXC || COMPILE_TEST
++	default ARCH_MXC
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8ulp pinctrl driver
+@@ -239,6 +248,7 @@ config PINCTRL_IMX93
+ 	tristate "IMX93 pinctrl driver"
+ 	depends on OF
+ 	depends on ARCH_MXC || COMPILE_TEST
++	default SOC_IMX9
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx93 pinctrl driver
+-- 
+2.43.0
+
 
