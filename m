@@ -1,278 +1,142 @@
-Return-Path: <linux-gpio+bounces-20031-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20032-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03AD4AB5271
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 12:29:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0660FAB5355
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 12:59:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 76C124C2A43
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 10:27:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 436693BF684
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 10:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CD00239E6A;
-	Tue, 13 May 2025 10:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3D4428643D;
+	Tue, 13 May 2025 10:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBc6dcyH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQUXizoj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BA718DB20;
-	Tue, 13 May 2025 10:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8E023FC6B
+	for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 10:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130933; cv=none; b=PnDopRtqGzoevLdpKBKvJJxFFsqdCBDZjD801RcxM4ro2aipuypt8SwtuZIxokxKoNMmHaG7MWR8O0T3lv8z0YjBRs1x/cEUlYUj7/ijtkmyZwhRl1Z18TrtSh8um/oBifvC0VfwVIFq9PdFrmHhLn7kHoKC2qOZls0G/GgbYj8=
+	t=1747133989; cv=none; b=onnyj1oTWAbABhIRjVa9W1eE4hcQdMC5wv9SwLxcBk1w/F8UOWBpOKx4g+27k8gFUemr98ZtWLPW2J9qW34haVWISgqf8QqQ+RzH1V66xZncu6ixRIRwmDH9FgYb70NpcrGsmUXX3xO4JWVpRsIpQ5MBbU87qvuzZoumRz+iNNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130933; c=relaxed/simple;
-	bh=zaeAUYaQaFHz8DDo3EJfThuIgsaCi3wiYrz7Dcx2zMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dVq3ZDUJh8F3GjwniaCu/F3kK3nbW776p3UFM5ksNiVgC8LbazHmmC309YknJE5lgAAMkKGbYn/QOBUj9oXpKLqJPZ5oQNGHGPdu57o3/GgcZwK48qh95fa/V5NxrJdnM4ebOMDS3rEHQ2H4LsoQcYazzEqFx8M2A5Rp3qtAUT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBc6dcyH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08DCC4CEEF;
-	Tue, 13 May 2025 10:08:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747130932;
-	bh=zaeAUYaQaFHz8DDo3EJfThuIgsaCi3wiYrz7Dcx2zMg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mBc6dcyHfRmLVPnEJ7WqN6jAAGEAy1SxD+69ZeQkyenu2zi1lBZ1UAoWBRdVUsG3e
-	 5REm+NHtSlykhwg38l+cCizPJlE7VbxCPTAzDti3CU+vt25zRRMMjvTEbB7grlw9/S
-	 Melmd91vg176MxOgnp2edXmzJuRrRt8rvB1lXNU5165SZF1Tny3uf34Ag83GKKQ4z3
-	 Q2De000VrTC/39GfW5XHj7N9zaqt4xtZQb+3r5bD0EO2oAOKjOPNwvv3gj0jKeQgTI
-	 rLpxk3KKYh8Bh1hHT1NsCl/UBXX3uBBDCVx2JUHnW8gzQbkWHgqfmLI130FigyC0Y+
-	 ncbjFVXqPyAig==
-Date: Tue, 13 May 2025 12:08:49 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: mathieu.dubois-briand@bootlin.com
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 04/11] pwm: max7360: Add MAX7360 PWM support
-Message-ID: <5eb7xqo7bfzath3xy7i6v5fep7qwfeg4z3rtzifmgnyvlc3o5b@yi6hzur52hl3>
-References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
- <20250509-mdb-max7360-support-v8-4-bbe486f6bcb7@bootlin.com>
+	s=arc-20240116; t=1747133989; c=relaxed/simple;
+	bh=GAD0kFJ5YJ2FK8mLZ5w9P8zRKTWeWXXWX86RwPrS390=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hxnZRZUy1zjn595dmtyNP+C5+dVnh1EJuO+TFpqEINUOZAFwEghGPwfBg809ney2u4IbRO37+ZlA/YCtIpXl0N5x5WSWxwy/S7mOz+t06/2Nnghu+MidHFmK/F2D2DV7Ryt9BjnoBrQcCLsTUjba3PdUJRmn5k83/i5ZHyHWFVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jQUXizoj; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a0b5b90b7aso636688f8f.1
+        for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 03:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747133986; x=1747738786; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IvRmj826ad4QUb971cjwKbsd9avSTJmnW3hYgxwozQA=;
+        b=jQUXizoj0s8tXQLdH4D/428a8dG6y31jd0Ts82QycPUYpPMD8QOTcNSaNsD9QXGqaQ
+         N7EJtnF/1sXZ+zyAGfVvTU8Z6AvWpTWtUAx+JQi1hBU8L1FgaW945syqGhi5yYbOVACd
+         AmTHpIHncEHrWfjd+0C69PC2qRfCv+6OYYECgUPn4uBhDiN8OcctKblOtSrnew00cew/
+         MnB6jv+0/OiDLxKijrCOXcxtXmKGAkB7vEpo/LQu+dFQrMqyJsIO0AtO+yjWK1Czfptg
+         StKYg/o4Tx3IBVCG1uF2QLgQp10cJX9kBUPW7eF2lGkZG3Al3BNUybnyRqWC9j7rZ21t
+         CzGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747133986; x=1747738786;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IvRmj826ad4QUb971cjwKbsd9avSTJmnW3hYgxwozQA=;
+        b=QweJfVMR3wBQkiJMzv0BdRBoDGmzlKsSeVANi7fWpwXGJrmRRrU5qprlBQthxfufkH
+         NB8vCKr/ReUWQeegvgt2cGzpNKCwo38ilr/VoLeNOUuropXnyLt/Ek0mwgi9pe2ezH1B
+         e/PLHpFxJmiJHFClt2mCJmOrByBpazbFwElQdDX2daPoXKVKh5KgQXfoodiPmUKE4cPx
+         YwDeQC8c2kL7WRCUKFULZtAJnmu3qTP7fElPBvcPwawYWLSDC+bVhir5GBZPW2OiCh+a
+         9KLVCy5AFuSraMyx8iX2A7is8CobRKfHBF/an+fW3DereemhDILkQMEbEyXh55R0iRWc
+         XdgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4A5A6siswhiEelOPdOhaUDJYfpLKSpqSczkdFMCEZm5MFDUQNr1tObBiStLMtbPS7FUP2SDP1U5ig@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5svS1gehV7eKYB9WhadYgL1J4+tYCRjrxNKjFt+4K4HbKKgDC
+	VDz3IgLjZmJpaCzW9KxX3n0IL+Tt2kQ7lL0d3OPkoqDlRJEK+ysCE1ArtogK5/A=
+X-Gm-Gg: ASbGncstd9eGp6Lo6+caW4/o4iYqBgRlsm58zReA20eVENYqS3RkwnqCBs5H0R0+xGL
+	Z2XrAWvy/EfybctSLZmFFk0lpE5HbpYv+EPb/lQkXpX5ep9k7af+mV3SD1lJ0EH0kZqqv7PjOHI
+	u3C8y31CEOrcibFiyoKUQQZK96zRsGWcmmwIph2sMOhElQK1dp9a1jlayeKOoZQBMu/88stKouG
+	+CQsGQVNyoCT7xwIITUerRWhJXDax1pbhxW/3NsFs7mWu0rFFM8Oprxx6AT02T/KULJtuxBgqPZ
+	fX/MerusyjofRfB3wFoq1z+eV6iWFDMswNh9pMwYv+Fj6lYeyTBj+4NSghli1nZei2Nv6fHKFwC
+	YRpU5keg7WnknZclaxz7h617Cz5neixGirp0SqeY=
+X-Google-Smtp-Source: AGHT+IG5fKMxvjjltTJpP1VGWjmB/2GOQg7Z1BsjigMi3Gmj35E8GZ5+qOXlM4koXQ1T7HjcmVC4nw==
+X-Received: by 2002:a05:6000:40df:b0:3a0:782e:9185 with SMTP id ffacd0b85a97d-3a1f6423590mr4776881f8f.2.1747133986123;
+        Tue, 13 May 2025 03:59:46 -0700 (PDT)
+Received: from kuoka.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f3afdsm16078670f8f.60.2025.05.13.03.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 03:59:45 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Sylwester Nawrocki <snawrocki@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] pinctrl: samsung: drivers for v6.16
+Date: Tue, 13 May 2025 12:59:41 +0200
+Message-ID: <20250513105941.28448-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2yxh7t5v6ayknmhz"
-Content-Disposition: inline
-In-Reply-To: <20250509-mdb-max7360-support-v8-4-bbe486f6bcb7@bootlin.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1442; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=GAD0kFJ5YJ2FK8mLZ5w9P8zRKTWeWXXWX86RwPrS390=;
+ b=owEBbAKT/ZANAwAKAcE3ZuaGi4PXAcsmYgBoIyYeXGYfRXBpOgZAbyMyM0G0gXfP7x4rVhaNG
+ ZNlW5kBi1aJAjIEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCMmHgAKCRDBN2bmhouD
+ 1/mMD/QJrD+uVxskUSpR2WCT2iO2+zMLNh2Y105Wpicr6Ppz9U1EayRxH/yzRm4FqlVITLwSXPi
+ J7Wutiaf6sSE2g+LRG5mvicN5kctLn6jeKpgtCr7chJmHsffzJ24bC4MPO77a84H/0pItzLZYss
+ W5bzXLsjUr8VMg/22ALBMREsx+wfGlD5wzSXf/eTXoPaIWktsTOaSMC6UQ1+kC5zLgUZHXVJdW3
+ wf4gOksiN+SxVyQw1831nBdb4d3o68a5HtWw/q620FAkMOmKrur4T2Jow9E2eAaC3xjcE46cynw
+ m/FXrz42LMv6FeI+6oPdkx1gn00Eeg4pM2LRIyTK9htDCTkC5DvNZvOwTbvobADJgAxopW8riR1
+ 9yEWXP0hQOTaoLnmWmatCcKRPhvFh3mScZ7aWEML5Vh/AVRVe/2vA2tyPqBi9kxePyQbTJjAKiE
+ PkRTZ7gAgGxy2W6y4oXv85TbJgt7FYIQknSg4xPjnmkhrAcOXi77Q7hGQxDwh0bJzxL4bwgBikx
+ ZO2Zh5Yi2T2TzlEffmT/iaq5GtwUtRkOdwuK6byXJJpRAL6GFlyAVKdXqxtRJzLR1EncdtF9c2i
+ x3BO0yWGmDqHJXPZ6Ge0SoVyGhmn4vq+eo5UsX+5n6NqJwlqI5f+3YqjebieP9OZmVRz21iaKm1 VIdZZ7f5Bry/C
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
---2yxh7t5v6ayknmhz
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 04/11] pwm: max7360: Add MAX7360 PWM support
-MIME-Version: 1.0
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-Hello,
+are available in the Git repository at:
 
-On Fri, May 09, 2025 at 11:14:38AM +0200, mathieu.dubois-briand@bootlin.com=
- wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
->=20
-> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
-> 8 independent PWM outputs.
->=20
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> ---
->  drivers/pwm/Kconfig       |  10 +++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-max7360.c | 186 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 197 insertions(+)
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 4731d5b90d7e..0b22141cbf85 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -755,4 +755,14 @@ config PWM_XILINX
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-xilinx.
-> =20
-> +config PWM_MAX7360
-> +	tristate "MAX7360 PWMs"
-> +	depends on MFD_MAX7360
-> +	help
-> +	  PWM driver for Maxim Integrated MAX7360 multifunction device, with
-> +	  support for up to 8 PWM outputs.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-max7360.
-> +
->  endif
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 539e0def3f82..9c7701d8070b 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+=3D pwm-lpc32xx.o
->  obj-$(CONFIG_PWM_LPSS)		+=3D pwm-lpss.o
->  obj-$(CONFIG_PWM_LPSS_PCI)	+=3D pwm-lpss-pci.o
->  obj-$(CONFIG_PWM_LPSS_PLATFORM)	+=3D pwm-lpss-platform.o
-> +obj-$(CONFIG_PWM_MAX7360)	+=3D pwm-max7360.o
->  obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
->  obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
->  obj-$(CONFIG_PWM_MICROCHIP_CORE)	+=3D pwm-microchip-core.o
-> diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
-> new file mode 100644
-> index 000000000000..af2006ec7a96
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-max7360.c
-> @@ -0,0 +1,186 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2025 Bootlin
-> + *
-> + * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
-> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> + *
-> + * Limitations:
-> + * - Only supports normal polarity.
-> + * - The period is fixed to 2 ms.
-> + * - Only the duty cycle can be changed, new values are applied at the b=
-eginning
-> + *   of the next cycle.
-> + * - When disabled, the output is put in Hi-Z.
-> + */
-> +#include <linux/bits.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/math64.h>
-> +#include <linux/mfd/max7360.h>
-> +#include <linux/minmax.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/time.h>
-> +#include <linux/types.h>
-> +
-> +#define MAX7360_NUM_PWMS			8
-> +#define MAX7360_PWM_MAX_RES			255
-> +#define MAX7360_PWM_PERIOD_NS			(2 * NSEC_PER_MSEC)
-> +
-> +struct max7360_pwm_waveform {
-> +	u8 duty_steps;
-> +	bool enabled;
-> +};
-> +
-> +static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device =
-*pwm)
-> +{
-> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
-> +	int ret;
-> +
-> +	ret =3D regmap_write_bits(regmap, MAX7360_REG_PWMCFG(pwm->hwpwm),
-> +				MAX7360_PORT_CFG_COMMON_PWM, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write_bits(regmap, MAX7360_REG_PORTS, BIT(pwm->hwpwm), BI=
-T(pwm->hwpwm));
+  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-6.16
 
-What is the effect of these writes? It doesn't need to be undone in a
-matching .free()?
+for you to fetch changes up to a30692b4f81ba864cf880d57e9cc6cf6278a2943:
 
-> +}
-> +
-> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
-> +					   struct pwm_device *pwm,
-> +					   const struct pwm_waveform *wf,
-> +					   void *_wfhw)
-> +{
-> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
-> +	u64 duty_steps;
-> +
-> +	/*
-> +	 * Ignore user provided values for period_length_ns and duty_offset_ns:
-> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of =
-0.
-> +	 */
-> +	duty_steps =3D mul_u64_u64_div_u64(wf->duty_length_ns, MAX7360_PWM_MAX_=
-RES,
-> +					 MAX7360_PWM_PERIOD_NS);
-> +
-> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX_RES, duty_steps);
-> +	wfhw->enabled =3D !!wf->duty_length_ns;
-> +
-> +	return 0;
-> +}
-> +
-> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
-> +					     const void *_wfhw, struct pwm_waveform *wf)
-> +{
-> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
-> +
-> +	wf->period_length_ns =3D wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
-> +	wf->duty_offset_ns =3D 0;
-> +	wf->duty_length_ns =3D DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERI=
-OD_NS,
-> +					  MAX7360_PWM_MAX_RES);
-> +
-> +	return 0;
-> +}
-> +
-> +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
-> +				      struct pwm_device *pwm,
-> +				      const void *_wfhw)
-> +{
-> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
-> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	val =3D wfhw->enabled ? BIT(pwm->hwpwm) : 0;
-> +	ret =3D regmap_write_bits(regmap, MAX7360_REG_GPIOCTRL, BIT(pwm->hwpwm)=
-, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (wfhw->duty_steps)
-> +		return regmap_write(regmap, MAX7360_REG_PWM(pwm->hwpwm), wfhw->duty_st=
-eps);
+  pinctrl: samsung: Add filter selection support for alive bank on gs101 (2025-04-08 20:57:51 +0200)
 
-Would it make sense to first write duty_steps and only then enable?
-Otherwise it might happen that you enable and still have a wrong duty
-configuration in the MAX7360_REG_PWM register and emit a wrong period?
+----------------------------------------------------------------
+Samsung pinctrl drivers changes for v6.16
 
-Do you need to write duty_steps =3D 0 if enabled is false?
+Refactor the driver suspend and resume to handle Google GS101 EINT GPIO
+pin banks and add the alive pin bank for that SoC.
 
-> +	return 0;
-> +}
+----------------------------------------------------------------
+Peter Griffin (4):
+      pinctrl: samsung: refactor drvdata suspend & resume callbacks
+      pinctrl: samsung: add dedicated SoC eint suspend/resume callbacks
+      pinctrl: samsung: add gs101 specific eint suspend/resume callbacks
+      pinctrl: samsung: Add filter selection support for alive bank on gs101
 
-Best regards
-Uwe
-
---2yxh7t5v6ayknmhz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgjGi4ACgkQj4D7WH0S
-/k7HQgf+Odk90m1utgkmYbrz0FZcNC2Skz6UXgO3C4M5SobWtBPbpcaW/JcIB4Gk
-fVwmhMBKl2od85hqkXxZLOuVzA3oBPOCDzQAZTg9gb4bisIWrT3hHpDvL5UZEoKI
-ma06cuOTdO38aJByqPveRD54zUJugND1BcQcNT9+ZOxNmj1pg1QUe+4yxrFN8Zbp
-ZrIUqujG7ME+OV1MxFw5g3WVvGonjnVJFfi9BVdzNAUpjlqaOEQIj5en96e3titd
-JlpLFklRScDWH8stcquc87bhxm4NDdK0BP01NK5r/9NbJmVLDfCBgeM0ATUGGkLS
-G20Lg42CoxYWzsO+yiLcAyR7uCky3g==
-=gP0G
------END PGP SIGNATURE-----
-
---2yxh7t5v6ayknmhz--
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |  52 ++---
+ drivers/pinctrl/samsung/pinctrl-exynos.c       | 300 +++++++++++++++----------
+ drivers/pinctrl/samsung/pinctrl-exynos.h       |  28 ++-
+ drivers/pinctrl/samsung/pinctrl-samsung.c      |  21 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.h      |   8 +-
+ 5 files changed, 255 insertions(+), 154 deletions(-)
 
