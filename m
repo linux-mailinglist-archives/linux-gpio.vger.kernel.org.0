@@ -1,555 +1,495 @@
-Return-Path: <linux-gpio+bounces-20086-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20087-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4311CAB5909
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 17:48:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19B6BAB5934
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 17:59:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC30319E0E20
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 15:48:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8EA007A59C1
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 15:58:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED972BE7BA;
-	Tue, 13 May 2025 15:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363B42BE7AE;
+	Tue, 13 May 2025 15:59:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dsyo08kx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kxI3NfAe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC3928DF1C
-	for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 15:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4A42EB1D;
+	Tue, 13 May 2025 15:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747151256; cv=none; b=UaOh7KhnHTsb4U+C13Fuek/Pv/sJoarBZ49HNy0XG2eZTyrRe+Khzz0EtiP/yJ44lUIDx8mwFjYYvSLDpFU1gH7TKRi2O8WPsBQrpVLmRegGlJqQfrKrCkdcWLaC2F0a4/icqLCrLOuGcYO8b+kSO8e7hIJXi3Mv71KjSoSTEvU=
+	t=1747151967; cv=none; b=QJHuMd8alcAqoUCshyy/phrVOUIfL4Lph903BRlfz4ai4RbfrYMOFR4NldUvWufLAhAW/T6t3PXYb6TxFGdA4aPCJI6sFV9KAx/WrznmULA21mzywBzYvQBW5MSRTgaLUMecTWMx5lLGEDAn6ENO6ubqM7BOBQCNB3HhTs1/vDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747151256; c=relaxed/simple;
-	bh=LgWjVXLxMRmZWHXKYHj/TIb6AGXxEOc2zoBozKupXMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X6aS+Af6heZPi5xxHRT/g0ZNcEwEKLI0jlk/5RCJA0GFkk/UKtvyZ5uDcTOKN50m8+UFKsofETCRmGf9hJS4nRPONezp3aGZz/RoBiYopSmde96sbb8/02ZO2ZhoT/MunEXxJFfFVgSiut4ShVMqdaybCnB9Nxiau89IWt2x/do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dsyo08kx; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72c14235af3so3685073a34.3
-        for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 08:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747151252; x=1747756052; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jvqK9h8ZXoVcJjo3l2Osc+9QJUEe79cCes8JJ/MXKKI=;
-        b=dsyo08kxEXIy8UdqaDekBb2beEns+rvSvXKMgDuwGc49P0bpi6IwJM/LFdMu+j3V5X
-         0mih6ZDgHEbmMzmK/Wahlgpda/DKAKfTU0xWtH67nIKUw2WlLtKLGsDuNjw5ZLYF7bz3
-         YN09TGMEAGMH5HuAlf0UsFNXJHIYMQ9fSKT+ykrGIgjJIUnngrBrUEpmEanldqUDd4uh
-         h/7wmN1ljI89MYM1ZNFkXu1Yw70GIuPnJk+oCSmFjU5RYQW4688x0LhwHOvmGN06t4RD
-         BgBYfeM3SKFp/GRskDju2+K6olLvEDE2MOI9ndGXohpxypifDuyUMMAsi5StDdDXz0TI
-         sVKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747151252; x=1747756052;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvqK9h8ZXoVcJjo3l2Osc+9QJUEe79cCes8JJ/MXKKI=;
-        b=kQhNIhALJ1mN0kP+gyX1dXRwv+0LQxjj1hSxJTGc3zym5ztWAUQTAiVO5UG8rEJ4xs
-         jWegsu9faMq7/0sDFmk9hrravNnDmtPVpgauoAApJYN0wRTGHaCIs0N9fmStQaFXnevq
-         d8ffd/O8T/qNpa34WjWpWyMlnUMmNC5vbCMjHxx48aW/mEGwFh2EbJwaX+uR/ApS80+Q
-         kjBwzMEEWIrrrfBuTmgIgLT6Vr/2Hqg1nNjXnOtAnHUdvM0UrqJcCaBJv2CS2srNlQMI
-         nO2uTwgDF1YvU0vIMqlERQ26HxgTr02m1yOBZwtG0b8dCNnEMD/tAkQU4vceeP/Bp+3V
-         WJjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuVfegJ+CF28yvSjuEVh5Arie/r5F9BCZiSHsRT5IPC7myKH/V9i2K/wzU/Toa4sV1NBBN1L+ZWjJZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg+t833emM8sHxELt3Qunn/xnReAZP2dy21Tohb6ah8Bk7C18N
-	wX1vg+wkDBkQDM/OSJkljmc/luMPy1QirC1OSaoZ70wQDMQyEiE5epXpnOPzr9U=
-X-Gm-Gg: ASbGncvbY5UFayo9IPZCsjTct9zDsW6H5skJccYInLNe2X3SOmI5B8ZEZS9G1YdWVOG
-	nnK55zQs6VvwLN0ziEYjtzrWY2LdcO9e8CfSYKSbvsuYfdydKBac9df4Hf/04eZjr0U4S6I3qfr
-	merNptnvDy/m4OY3PU01trimBzlRVW2vbG5NwiLIIZdOAveN6GMREfgdgEJ8my8EnocLCIWvYrn
-	lHBZZGXo1VyBKBKaCZDdbr4Tx1Y8eAbej3y8VSiXWzAx23JHc6ygXZgHCg0Fdf/cn+mK1Ck2AZL
-	W/9uS9YO+BEQ4At6IfKCpkWLXOnN3m8xwEcFLIBCKc3JvO4HNVHjhfTCh2FrrEubdvVw8wLC2fM
-	NL7/tZiaQap2fyOunMVEJ0pw=
-X-Google-Smtp-Source: AGHT+IEDZtsdMIkMEjqjGIW2pZvIngRPUib7P8CaLk/cn2NBC/c3zT+CnAGOqZVaFiqMiE4gHHF9ow==
-X-Received: by 2002:a05:6830:3498:b0:72b:9506:8db6 with SMTP id 46e09a7af769-732269bd8f8mr9591947a34.6.1747151252251;
-        Tue, 13 May 2025 08:47:32 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d74:845a:15c:3fdc? ([2600:8803:e7e4:1d00:d74:845a:15c:3fdc])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732265f95c6sm1956222a34.63.2025.05.13.08.47.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 08:47:31 -0700 (PDT)
-Message-ID: <2ab9a6e2-a331-4995-8d42-00290bc825e7@baylibre.com>
-Date: Tue, 13 May 2025 10:47:30 -0500
+	s=arc-20240116; t=1747151967; c=relaxed/simple;
+	bh=+aDJ36VsyLlU+J6XmuNFxIBmKrWqVCS4wZMDzLEjHfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gCKU4Rq6qHaUgmtcVx1OrUqLOa/UicHjoNRopsA/hs6FjadTtml7XfUXDhu/+b2DyDrrzzfMFvrdGhk5CDycZ4WWTTYJkWHxr4wooT5by+pZhd0h3QwvMbdTs5CoXkpB1hm2DpbwIteoBDc9mO/U5EZoYMYhvDE6OQ8+hf8AWFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kxI3NfAe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0EDFC4CEE4;
+	Tue, 13 May 2025 15:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747151966;
+	bh=+aDJ36VsyLlU+J6XmuNFxIBmKrWqVCS4wZMDzLEjHfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kxI3NfAemezlRaLG0a4JNZr4G9sVb2EgjFiwA7zYwJGuYLn2bnVdTzgk/sXDTiaKn
+	 pftFeUepoyeNscMVQ2dNNMJ4jdZHrgfFsocn8bIeaQZ1CG7TQDmiqcbsGbqsnxS05/
+	 WolKfki2lY114smi0OObUZkgyZvec/op01+pCvvfHff/GUbVM7/v5tMm7YgONC/iUH
+	 D4aOIiGTy/MP1a4FsLQ0r39CH6HDmcykPp+98CSqQilmUgNvPAeK0kkT4ytF9OSxJ1
+	 VnqO5YGRwNL5ycFStJtd+kLuvTat9IdX0T0hWUHthyEScjnXvlZH+jjevIFcnRT/hl
+	 YIzculzxquayQ==
+Date: Tue, 13 May 2025 16:59:20 +0100
+From: Lee Jones <lee@kernel.org>
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH v3 13/22] mfd: adp5585: add support for event handling
+Message-ID: <20250513155920.GQ2936510@google.com>
+References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
+ <20250512-dev-adp5589-fw-v3-13-092b14b79a88@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/10] dt-bindings: iio: adc: Add AD4170
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
- nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
- marcelo.schmitt1@gmail.com
-References: <cover.1747083143.git.marcelo.schmitt@analog.com>
- <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512-dev-adp5589-fw-v3-13-092b14b79a88@analog.com>
 
-On 5/13/25 7:33 AM, Marcelo Schmitt wrote:
-> Add device tree documentation for AD4170 and similar sigma-delta ADCs.
-> The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
+On Mon, 12 May 2025, Nuno Sá via B4 Relay wrote:
+
+> From: Nuno Sá <nuno.sa@analog.com>
 > 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> These devices are capable of generate FIFO based events based on KEY or
+> GPI presses. Add support for handling these events. This is in
+> preparation of adding full support for keymap and gpis based events.
+> 
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 > ---
-> Change log v2 -> v3
+>  drivers/mfd/adp5585.c       | 180 ++++++++++++++++++++++++++++++++++++++++++--
+>  include/linux/mfd/adp5585.h |  48 ++++++++++++
+>  2 files changed, 223 insertions(+), 5 deletions(-)
 > 
-> [device tree changes]
-> - Removed unneeded allOf.
-> - Removed occurences of adi,sensor-type type re-declaration.
-> - Created type for the AD4170 channels, allowing to avoid dt doc repetition.
+> diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> index 8be7a76842f639cbe90ad0eb956a7a3eef43fa3d..5851ad30e7323bbb891878167d0786bc60ef5d90 100644
+> --- a/drivers/mfd/adp5585.c
+> +++ b/drivers/mfd/adp5585.c
+> @@ -154,10 +154,16 @@ static const struct regmap_config adp5585_regmap_config_template = {
+>  
+>  static const struct adp5585_regs adp5585_regs = {
+>  	.ext_cfg = ADP5585_PIN_CONFIG_C,
+> +	.int_en = ADP5585_INT_EN,
+> +	.gen_cfg = ADP5585_GENERAL_CFG,
+> +	.poll_ptime_cfg = ADP5585_POLL_PTIME_CFG,
+>  };
+>  
+>  static const struct adp5585_regs adp5589_regs = {
+>  	.ext_cfg = ADP5589_PIN_CONFIG_D,
+> +	.int_en = ADP5589_INT_EN,
+> +	.gen_cfg = ADP5589_GENERAL_CFG,
+> +	.poll_ptime_cfg = ADP5589_POLL_PTIME_CFG,
+>  };
+>  
+>  static int adp5585_fill_chip_configs(struct adp5585_dev *adp5585,
+> @@ -214,6 +220,8 @@ static int adp5585_parse_fw(struct device *dev, struct adp5585_dev *adp5585,
+>  {
+>  	unsigned int has_pwm = 0, has_gpio = 0, rc = 0;
+>  	const struct mfd_cell *cells;
+> +	unsigned int prop_val;
+> +	int ret;
+>  
+>  	if (device_property_present(dev, "#pwm-cells"))
+>  		has_pwm = 1;
+> @@ -224,6 +232,25 @@ static int adp5585_parse_fw(struct device *dev, struct adp5585_dev *adp5585,
+>  	if (!has_pwm && !has_gpio)
+>  		return -ENODEV;
+>  
+> +	ret = device_property_read_u32(dev, "poll-interval", &prop_val);
+> +	if (!ret) {
+> +		switch (prop_val) {
+> +		case 10:
+> +			fallthrough;
+> +		case 20:
+> +			fallthrough;
+> +		case 30:
+> +			fallthrough;
+> +		case 40:
+> +			adp5585->ev_poll_time = prop_val / 10 - 1;
+> +			break;
+> +		default:
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "Invalid value(%u) for poll-interval\n",
+> +					     prop_val);
+> +		}
+> +	}
+
+This all seems like a lot of code for:
+
+	ev_poll_time = prop_val / 10 - 1;
+	if (ev_poll_time > 3 || ev_poll_time < 0)
+		return dev_err_probe();
+
+> +
+>  	*devs = devm_kcalloc(dev, has_pwm + has_gpio, sizeof(struct mfd_cell),
+>  			     GFP_KERNEL);
+>  	if (!*devs)
+> @@ -249,6 +276,135 @@ static void adp5585_osc_disable(void *data)
+>  	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
+>  }
+>  
+> +static void adp5585_report_events(struct adp5585_dev *adp5585, int ev_cnt)
+> +{
+> +	struct adp5585_ev_handler *h;
+> +	unsigned int i;
+> +
+> +	guard(mutex)(&adp5585->ev_lock);
+> +
+> +	if (list_empty(&adp5585->ev_handlers)) {
+> +		dev_warn_ratelimited(adp5585->dev, "No event handlers registered\n");
+> +		return;
+> +	}
+> +
+> +	for (i = 0; i < ev_cnt; i++) {
+> +		unsigned int key, key_val, key_press;
+> +		int ret;
+> +
+> +		ret = regmap_read(adp5585->regmap, ADP5585_FIFO_1 + i, &key);
+> +		if (ret)
+> +			return;
+> +
+> +		key_val = FIELD_GET(ADP5585_KEY_EVENT_MASK, key);
+> +		key_press = FIELD_GET(ADP5585_KEV_EV_PRESS_MASK, key);
+> +
+> +		list_for_each_entry(h, &adp5585->ev_handlers, entry) {
+> +			ret = h->handler(h->dev, key_val, key_press);
+
+Rather than rolling your own call-back handler mechanism.  Are you sure
+the kernel doesn't provide a generic solution for this?  For instance,
+would a shared workqueue be better?  This way you could also exit IRQ
+context sooner as well.
+
+> +			if (!ret)
+> +				/* handled! */
+
+All comments should start with an upper case char.
+
+> +				break;
+> +		}
+> +	}
+> +}
+> +
+> +static irqreturn_t adp5585_irq(int irq, void *data)
+> +{
+> +	struct adp5585_dev *adp5585 = data;
+> +	unsigned int status, ev_cnt;
+> +	int ret;
+> +
+> +	ret = regmap_read(adp5585->regmap, ADP5585_INT_STATUS, &status);
+> +	if (ret)
+> +		return IRQ_HANDLED;
+> +
+> +	if (status & ADP5585_OVRFLOW_INT)
+> +		dev_err_ratelimited(adp5585->dev, "Event Overflow Error\n");
+
+Strange capitalisation.
+
+> +
+> +	if (!(status & ADP5585_EVENT_INT))
+> +		goto out_irq;
+> +
+> +	ret = regmap_read(adp5585->regmap, ADP5585_STATUS, &ev_cnt);
+> +	if (ret)
+> +		goto out_irq;
+> +
+> +	ev_cnt = FIELD_GET(ADP5585_EC_MASK, ev_cnt);
+> +	if (!ev_cnt)
+> +		goto out_irq;
+> +
+> +	adp5585_report_events(adp5585, ev_cnt);
+
+You don't want to propagate any errors?
+
+> +out_irq:
+> +	regmap_write(adp5585->regmap, ADP5585_INT_STATUS, status);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int adp5585_setup(struct adp5585_dev *adp5585)
+> +{
+> +	const struct adp5585_regs *regs = adp5585->info->regs;
+> +	unsigned int reg_val, i;
+> +	int ret;
+
+The final version of this function needs some nice commentary to explain
+what each step is doing.  May as well start now.
+
+> +	for (i = 0; i < ADP5585_EV_MAX; i++) {
+> +		ret = regmap_read(adp5585->regmap, ADP5585_FIFO_1 + i, &reg_val);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret = regmap_write(adp5585->regmap, regs->poll_ptime_cfg,
+> +			   adp5585->ev_poll_time);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(adp5585->regmap, regs->gen_cfg,
+> +			   ADP5585_OSC_FREQ_500KHZ | ADP5585_INT_CFG |
+> +			   ADP5585_OSC_EN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_add_action_or_reset(adp5585->dev, adp5585_osc_disable,
+> +					adp5585);
+> +}
+> +
+> +static void adp5585_irq_disable(void *data)
+> +{
+> +	struct adp5585_dev *adp5585 = data;
+> +
+> +	regmap_write(adp5585->regmap, adp5585->info->regs->int_en, 0);
+> +}
+> +
+> +static int adp5585_irq_enable(struct i2c_client *i2c,
+> +			      struct adp5585_dev *adp5585)
+> +{
+> +	const struct adp5585_regs *regs = adp5585->info->regs;
+> +	unsigned int stat;
+> +	int ret;
+> +
+> +	if (i2c->irq <= 0)
+> +		return 0;
+> +
+> +	ret = devm_request_threaded_irq(&i2c->dev, i2c->irq, NULL, adp5585_irq,
+> +					IRQF_ONESHOT, i2c->name, adp5585);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* clear any possible outstanding interrupt before enabling them... */
+
+Uppercase char (I won't report on this again) and now silly punctuation
+please...
+
+> +	ret = regmap_read(adp5585->regmap, ADP5585_INT_STATUS, &stat);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(adp5585->regmap, ADP5585_INT_STATUS, stat);
+> +	if (ret)
+> +		return ret;
+
+What does reading status values then writing them right back do?
+
+Commentary throughout please.
+
+> +	ret = regmap_write(adp5585->regmap, regs->int_en,
+> +			   ADP5585_OVRFLOW_IEN | ADP5585_EVENT_IEN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_add_action_or_reset(&i2c->dev, adp5585_irq_disable,
+> +					adp5585);
+
+Feel free to use 100-chars to help with these early line breaks.
+
+> +}
+> +
+>  static int adp5585_i2c_probe(struct i2c_client *i2c)
+>  {
+>  	struct regmap_config regmap_config;
+> @@ -282,16 +438,19 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
+>  		return dev_err_probe(&i2c->dev, -ENODEV,
+>  				     "Invalid device ID 0x%02x\n", id);
+>  
+> +	adp5585->dev = &i2c->dev;
+> +	adp5585->irq = i2c->irq;
+> +	INIT_LIST_HEAD(&adp5585->ev_handlers);
+> +
+>  	n_devs = adp5585_parse_fw(&i2c->dev, adp5585, &devs);
+>  	if (n_devs < 0)
+>  		return n_devs;
+>  
+> -	ret = regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
+> -			      ADP5585_OSC_EN);
+> +	ret = adp5585_setup(adp5585);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable, adp5585);
+> +	ret = devm_mutex_init(&i2c->dev, &adp5585->ev_lock);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -301,13 +460,16 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
+>  		return dev_err_probe(&i2c->dev, ret,
+>  				     "Failed to add child devices\n");
+>  
+> -	return 0;
+> +	return adp5585_irq_enable(i2c, adp5585);
+>  }
+>  
+>  static int adp5585_suspend(struct device *dev)
+>  {
+>  	struct adp5585_dev *adp5585 = dev_get_drvdata(dev);
+>  
+> +	if (adp5585->irq)
+> +		disable_irq(adp5585->irq);
+> +
+>  	regcache_cache_only(adp5585->regmap, true);
+>  
+>  	return 0;
+> @@ -316,11 +478,19 @@ static int adp5585_suspend(struct device *dev)
+>  static int adp5585_resume(struct device *dev)
+>  {
+>  	struct adp5585_dev *adp5585 = dev_get_drvdata(dev);
+> +	int ret;
+>  
+>  	regcache_cache_only(adp5585->regmap, false);
+>  	regcache_mark_dirty(adp5585->regmap);
+>  
+> -	return regcache_sync(adp5585->regmap);
+> +	ret = regcache_sync(adp5585->regmap);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (adp5585->irq)
+> +		enable_irq(adp5585->irq);
+> +
+> +	return 0;
+>  }
+>  
+>  static DEFINE_SIMPLE_DEV_PM_OPS(adp5585_pm, adp5585_suspend, adp5585_resume);
+> diff --git a/include/linux/mfd/adp5585.h b/include/linux/mfd/adp5585.h
+> index 9a925a91c772722db559c9ec8ae334b2159ede79..218c56bed2e0304de8b81c7090386fb4e1b6c281 100644
+> --- a/include/linux/mfd/adp5585.h
+> +++ b/include/linux/mfd/adp5585.h
+> @@ -10,13 +10,23 @@
+>  #define __MFD_ADP5585_H_
+>  
+>  #include <linux/bits.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/device.h>
+> +#include <linux/list.h>
+> +#include <linux/mutex.h>
+>  
+>  #define ADP5585_ID			0x00
+>  #define		ADP5585_MAN_ID_VALUE		0x20
+>  #define		ADP5585_MAN_ID_MASK		GENMASK(7, 4)
+> +#define		ADP5585_REV_ID_MASK		GENMASK(3, 0)
+>  #define ADP5585_INT_STATUS		0x01
+> +#define		ADP5585_OVRFLOW_INT		BIT(2)
+> +#define		ADP5585_EVENT_INT		BIT(0)
+>  #define ADP5585_STATUS			0x02
+> +#define		ADP5585_EC_MASK			GENMASK(4, 0)
+>  #define ADP5585_FIFO_1			0x03
+> +#define		ADP5585_KEV_EV_PRESS_MASK	BIT(7)
+> +#define		ADP5585_KEY_EVENT_MASK		GENMASK(6, 0)
+>  #define ADP5585_FIFO_2			0x04
+>  #define ADP5585_FIFO_3			0x05
+>  #define ADP5585_FIFO_4			0x06
+> @@ -32,6 +42,7 @@
+>  #define ADP5585_FIFO_14			0x10
+>  #define ADP5585_FIFO_15			0x11
+>  #define ADP5585_FIFO_16			0x12
+> +#define		ADP5585_EV_MAX			(ADP5585_FIFO_16 - ADP5585_FIFO_1 + 1)
+>  #define ADP5585_GPI_INT_STAT_A		0x13
+>  #define ADP5585_GPI_INT_STAT_B		0x14
+>  #define ADP5585_GPI_STATUS_A		0x15
+> @@ -104,6 +115,8 @@
+>  #define		ADP5585_INT_CFG			BIT(1)
+>  #define		ADP5585_RST_CFG			BIT(0)
+>  #define ADP5585_INT_EN			0x3c
+> +#define		ADP5585_OVRFLOW_IEN		BIT(2)
+> +#define		ADP5585_EVENT_IEN		BIT(0)
+>  
+>  #define ADP5585_MAX_REG			ADP5585_INT_EN
+>  
+> @@ -121,7 +134,9 @@
+>  #define ADP5589_PWM_OFFT_LOW		0x3e
+>  #define ADP5589_PWM_ONT_LOW		0x40
+>  #define ADP5589_PWM_CFG			0x42
+> +#define ADP5589_POLL_PTIME_CFG		0x48
+>  #define ADP5589_PIN_CONFIG_D		0x4C
+> +#define ADP5589_GENERAL_CFG		0x4d
+>  #define ADP5589_INT_EN			0x4e
+>  #define ADP5589_MAX_REG			ADP5589_INT_EN
+>  
+> @@ -138,8 +153,18 @@ enum adp5585_regmap_type {
+>  	ADP5589_REGMAP_02,
+>  };
+>  
+> +struct adp5585_ev_handler {
+> +	struct list_head entry;
+> +	struct device *dev;
+> +	int (*handler)(struct device *dev, unsigned int key_val,
+> +		       unsigned int key_press);
+
+Pointer to functions outside of subsystem-level ops are generally
+frowned upon.  Are you sure there isn't a standard way to achieve your
+goal without them?
+
+> +};
+> +
+>  struct adp5585_regs {
+> +	unsigned int gen_cfg;
+>  	unsigned int ext_cfg;
+> +	unsigned int int_en;
+> +	unsigned int poll_ptime_cfg;
+>  };
+>  
+>  struct adp5585_info {
+> @@ -150,7 +175,30 @@ struct adp5585_info {
+>  
+>  struct adp5585_dev {
+>  	struct regmap *regmap;
+> +	struct device *dev;
+>  	const struct adp5585_info *info;
+> +	/* Used to synchronize the availability of the event handlers */
+> +	struct mutex ev_lock;
+> +	struct list_head ev_handlers;
+> +	int irq;
+> +	unsigned int ev_poll_time;
+>  };
+>  
+> +static inline void adp5585_ev_handler_remove(void *data)
+> +{
+> +	struct adp5585_ev_handler *handler = data;
+> +	struct adp5585_dev *adp5585 = dev_get_drvdata(handler->dev->parent);
+> +
+> +	guard(mutex)(&adp5585->ev_lock);
+> +	list_del(&handler->entry);
+> +}
+> +
+> +static inline int devm_adp5585_ev_handler_add(struct adp5585_dev *adp5585,
+> +					      struct adp5585_ev_handler *handler)
+> +{
+> +	guard(mutex)(&adp5585->ev_lock);
+> +	list_add_tail(&handler->entry, &adp5585->ev_handlers);
+> +	return devm_add_action_or_reset(handler->dev, adp5585_ev_handler_remove,
+> +					handler);
+> +}
+>  #endif
 > 
->  .../bindings/iio/adc/adi,ad4170.yaml          | 544 ++++++++++++++++++
->  MAINTAINERS                                   |   7 +
->  2 files changed, 551 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> -- 
+> 2.49.0
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-> new file mode 100644
-> index 000000000000..0a06258b6631
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-> @@ -0,0 +1,544 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD4170 and similar Analog to Digital Converters
-> +
-> +maintainers:
-> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converters.
-> +  Specifications can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4170-4.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4190-4.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4195-4.pdf
-> +
-> +$ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +$defs:
-> +  ad4170-channel:
-> +    type: object
-> +    $ref: /schemas/iio/adc/adc.yaml#
-> +    description:
-> +      Common properties for configuring AD4170 channels.
-> +
-> +    properties:
-> +      adi,reference-select:
-> +        description: |
-> +          Selects the reference source to use when converting on the specific
-> +          channel. Valid values are:
-> +          0: Differential reference voltage REFIN+ - REFIN−.
-> +          1: Differential reference voltage REFIN2+ - REFIN2−.
-> +          2: Internal 2.5V referece (REFOUT) relative to AVSS.
-> +          3: Analog supply voltage (AVDD) relative AVSS.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2, 3]
-Using strings instead of int for this and most of the other custom enums here
-would make them self-documenting and easier to use.
+> 
 
-> +
-> +
-> +  sensor-node:
-> +    type: object
-> +    $ref: '#/$defs/ad4170-channel'
-> +    description:
-> +      The AD4170 and similar designs have features to aid interfacing with weigh
-> +      scale, RTD, and thermocouple sensors. Each of those sensor types requires
-> +      either distinct wiring configuration or external circuitry for proper
-> +      sensor operation and can use different AD4170 functionality on their
-> +      setups. A key characteristic of those external sensors is that they must
-> +      be excited either by voltage supply or by AD4170 excitation signals. The
-> +      sensor can then be read through a pair of analog inputs. These properties
-> +      describe external sensor circuitry connected to the ADC.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          Channel number. Connects the sensor to the channel with this number
-> +          of the device.
-> +        minimum: 1
-> +        maximum: 16
-> +
-> +      diff-channels:
-> +        description:
-> +          Defines the ADC input pins used to read sensor data. Only regular
-> +          analog input pins can be used.
-> +        items:
-> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-> +
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: |
-> +          Type of sensor connected to the device. Depending on the sensor type
-> +          (weigh scale, RTD, or thermocouple) the values of sensor-node
-> +          properties have slightly different constraints. This property
-> +          specifies which particular external sensor is connected to the ADC so
-> +          the sensor-node properties can be properly parsed and verified. The
-> +          possible sensor types are:
-> +          0: weigh scale;
-> +          1: RTD;
-> +          2: thermocouple.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-This property seems reduandant since it has to match the node name.
-
-i.e. weighscale@... is is always adi,sensor-type = <0>; and so on.
-
-> +
-> +      adi,excitation-ac:
-> +        type: boolean
-> +        description:
-> +          Whether the external sensor has to be AC or DC excited.
-Description could be more clear than when omitted, it is DC excited.
-
-> +
-> +      adi,excitation-pins:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          Pins used to excite the sensor or external circuit that contains the
-> +          sensor. Thermocouples and RTD sensors are excited either with one
-> +          current source or with a pair of current sources to minimize the
-> +          excitation current mismatch and the excitation current drift matching
-> +          on the ADC. E.g. <0>; <1>; <0 1>. Load cell weigh scales may be
-> +          excited with one current source, a pair of excitation currents, or two
-> +          pairs of excitation currents. When four pins are defined, the first
-> +          two values specify the first pair and the last ones specify the second
-> +          pair of excitation currents. E.g. <0>; <0 1>; <0 1 2 3>.
-> +        items:
-> +          minimum: 0
-> +          maximum: 20
-> +
-> +      adi,excitation-current-microamp:
-> +        description:
-> +          Excitation current in microamperes to be output to each excitation pin
-> +          specified by adi,excitation-pins property. If not provided and
-> +          adi,excitation-ac is true, use predefined ACX1, ACX1 negated, ACX2,
-> +          and ACX2 negated signals to AC excite the bridge circuit. Those
-> +          singals are output on GPIO2, GPIO0, GPIO3, and GPIO1, respectively.
-> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
-> +        default: 0
-> +
-> +      adi,power-down-switch-pin:
-> +        description:
-> +          Number of the GPIO used as power-down switch for the bridge circuit.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1]
-This isn't required, so what is the default if omitted?
-
-> +
-> +      adi,vbias:
-> +        type: boolean
-> +        description:
-> +          For unbiased thermocouple applications, the voltage generated by the
-> +          thermocouple must be biased around some DC voltage. When present, this
-> +          property specifies a bias voltage of (AVDD + AVSS)/2 to be applied as
-> +          common-mode voltage for the sensor.
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +      - bipolar
-> +      - adi,sensor-type
-> +      - adi,reference-select
-> +
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4170
-> +      - adi,ad4190
-> +      - adi,ad4195
-> +
-> +  avss-supply:
-> +    description:
-> +      Referece voltage supply for AVSS. If provided, describes the magnitude
-s/Referece/Reference/
-
-> +      (absolute value) of the negative voltage supplied to the AVSS pin. Since
-> +      AVSS must be −2.625V minimum and 0V maximum, the declared supply voltage
-> +      must be between 0 and 2.65V. If not provided, AVSS is assumed to be at
-> +      system ground (0V).
-> +
-> +  avdd-supply:
-> +    description:
-> +      A supply of 4.75V to 5.25V relative to AVSS that powers the chip (AVDD).
-> +
-> +  iovdd-supply:
-> +    description: 1.7V to 5.25V reference supply to the serial interface (IOVDD).
-> +
-> +  refin1p-supply:
-> +    description: REFIN+ supply that can be used as reference for conversion.
-> +
-> +  refin1n-supply:
-> +    description: REFIN- supply that can be used as reference for conversion. If
-> +      provided, describes the magnitude (absolute value) of the negative voltage
-> +      supplied to the REFIN- pin.
-> +
-> +  refin2p-supply:
-> +    description: REFIN2+ supply that can be used as reference for conversion.
-> +
-> +  refin2n-supply:
-> +    description: REFIN2- supply that can be used as reference for conversion. If
-> +      provided, describes the magnitude (absolute value) of the negative voltage
-> +      supplied to the REFIN2- pin.
-> +
-> +  spi-cpol: true
-> +
-> +  spi-cpha: true
-> +
-> +  interrupts:
-> +    maxItems: 1> +
-> +  interrupt-names:
-> +    description:
-> +      Specify which pin should be configured as Data Ready interrupt.
-> +    enum:
-> +      - sdo
-> +      - dig_aux1
-> +    default: sdo> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      Optional external clock source. Can specify either an external clock or
-> +      external crystal.
-> +
-> +  clock-names:
-> +    enum:
-> +      - ext-clk
-> +      - xtal
-> +    default: ext-clk
-Shouldn't there be a depedency that if clocks is given, then clock-names is requried.
-
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  clock-output-names:
-> +    maxItems: 1
-And if #clock-cells is given then clocks is forbidden.
-
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description: |
-> +      The first cell is for the GPIO number: 0 to 3.
-> +      The second cell takes standard GPIO flags.
-> +
-> +  ldac-gpios:
-> +    description:
-> +      GPIO connected to DIG_AUX2 pin to be used as LDAC toggle to control the
-> +      transfer of data from the DAC_INPUT_A register to the DAC.
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^channel@[0-9a-f]$":
-> +    $ref: '#/$defs/ad4170-channel'
-> +    unevaluatedProperties: false
-> +    description:
-> +      Represents the external channels which are connected to the ADC.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          The channel number.
-> +        minimum: 0
-> +        maximum: 15
-> +
-> +      diff-channels:
-> +        description: |
-> +          This property is used for defining the inputs of a differential
-> +          voltage channel. The first value is the positive input and the second
-> +          value is the negative input of the channel.
-> +
-> +          Besides the analog input pins AIN0 to AIN8, there are special inputs
-> +          that can be selected with the following values:
-> +          17: Internal temperature sensor
-> +          18: (AVDD-AVSS)/5
-> +          19: (IOVDD-DGND)/5
-> +          20: DAC output
-> +          21: ALDO
-> +          22: DLDO
-> +          23: AVSS
-> +          24: DGND
-> +          25: REFIN+
-> +          26: REFIN-
-> +          27: REFIN2+
-> +          28: REFIN2-
-> +          29: REFOUT
-> +          For the internal temperature sensor, use the input number for both
-> +          inputs (i.e. diff-channels = <17 17>).
-> +        items:
-> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-> +                 26, 27, 28, 29]
-
-A Header file with macros for these would be nice since it seems like we
-have to use the higher-numbered ones a lot with the common-mode-channel
-properties in the examples.
-
-> +
-> +      single-channel: true
-> +
-> +      common-mode-channel: true
-> +
-> +      bipolar: true
-> +
-> +      adi,buffered-positive:
-> +        description: |
-> +          Enable precharge buffer, full buffer, or skip reference buffering of
-> +          the positive voltage reference. Because the output impedance of the
-> +          source driving the voltage reference inputs may be dynamic, RC
-> +          combinations of those inputs can cause DC gain errors if the reference
-> +          inputs go unbuffered into the ADC. Enable reference buffering if the
-> +          provided reference source has dynamic high impedance output. Note the
-> +          absolute voltage allowed on positive reference inputs (REFIN+,
-> +          REFIN2+) is from AVSS − 50 mV to AVDD + 50 mV when the reference
-> +          buffers are disabled but narrows to AVSS to AVDD when reference
-> +          buffering is enabled or in precharge mode.
-> +          0: Reference precharge buffer.
-> +          1: Full Buffer.
-> +          2: Bypass reference buffers (buffering disabled).
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2]
-> +        default: 1
-> +
-> +      adi,buffered-negative:
-> +        description: |
-> +          Enable precharge buffer, full buffer, or skip reference buffering of
-> +          the negative voltage reference. Because the output impedance of the
-> +          source driving the voltage reference inputs may be dynamic, RC
-> +          combinations of those inputs can cause DC gain errors if the reference
-> +          inputs go unbuffered into the ADC. Enable reference buffering if the
-> +          provided reference source has dynamic high impedance output. Note the
-> +          absolute voltage allowed on negative reference inputs (REFIN-,
-> +          REFIN2-) is from AVSS − 50 mV to AVDD + 50 mV when the reference
-> +          buffers are disabled but narrows to AVSS to AVDD when reference
-> +          buffering is enabled or in precharge mode.
-> +          0: Reference precharge buffer.
-> +          1: Full Buffer.
-> +          2: Bypass reference buffers (buffering disabled).
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2]
-> +        default: 1
-Could make a $def for these too to reduce duplication.
-
-Also another case where string type would make more sense.
-
-> +
-> +    required:
-> +      - reg
-
-reg is already required by adc.yaml
-
-> +
-> +    oneOf:
-> +      - required: [single-channel]
-
-Is there a default for common-mode-channel if it isn't required in this case?
-
-> +        properties:
-> +          diff-channels: false
-> +      - required: [diff-channels]
-> +        properties:
-> +          single-channel: false
-> +          common-mode-channel: false
-> +
-> +  "^weighscale@":
-> +    $ref: '#/$defs/sensor-node'
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      diff-channels: true
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: Weigh scale sensor.
-> +        const: 0
-> +
-> +      adi,excitation-pins: true
-> +
-> +  "^rtd@":
-> +    $ref: '#/$defs/sensor-node'
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      diff-channels: true
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: RTD sensor.
-> +        const: 1
-> +
-> +      adi,excitation-pins: true
-> +
-> +      adi,excitation-current-microamp: true
-> +
-> +    required:
-> +      - adi,excitation-pins
-> +      - adi,excitation-current-microamp
-> +
-> +  "^thermocouple@":
-> +    $ref: '#/$defs/sensor-node'
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      diff-channels: true
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: Thermocouple sensor.
-> +        const: 2
-> +
-> +    required:
-> +      - adi,excitation-pins
-> +      - adi,excitation-current-microamp
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - avdd-supply
-> +  - iovdd-supply
-> +  - spi-cpol
-> +  - spi-cpha
-> +
-> +allOf:
-> +  # Some devices don't have integrated DAC
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - adi,ad4190
-> +              - adi,ad4195
-> +    then:
-> +      properties:
-> +        ldac-gpios: false
-> +
-> +unevaluatedProperties: false
-> +
-
-The patternProperties: section is so big, it would be nice to move these
-before it so the are closer to the properties they actually affect.
+-- 
+Lee Jones [李琼斯]
 
