@@ -1,114 +1,102 @@
-Return-Path: <linux-gpio+bounces-20021-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20022-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E4C8AB4FBC
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 11:28:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A347AB4FD5
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 11:31:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F1B91670E6
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 09:28:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E64D37AAB3A
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 May 2025 09:30:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54313225A5B;
-	Tue, 13 May 2025 09:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662A3238C07;
+	Tue, 13 May 2025 09:31:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xtXHVIrE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mHI0+0jx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D9C202C49
-	for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 09:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D69A634EC;
+	Tue, 13 May 2025 09:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747128523; cv=none; b=clOiKWncNnXH6t9w89pJE7HAGjmUmTJSd0kNt8colG8duOkXVGjNtf1VOFaxRmgpzyR0kqyuJdXuH4WHgoyju6cbbRBk9h5QPVbiqf25V0WNeNoHHk33t4nltXQnEoqUlqQTIdSwSBbpJGmMXKm5/wnTITlxWVHKROxeK0UuhAE=
+	t=1747128675; cv=none; b=q5jZSqo56AnWecP4Di2JDhtOXEBuxdJN2c6kq+KcttRNMtGaZAzc2C4ECAn3dO3MXiTprzU8937LNmzK8qk9zILgEBGBeTiX8uSF7alG9CJg+OCxiaOrInr2Thc1FBsyA5ibbKs5sSeCJlVfl6mXJo2EQ8sIgnZQlBnme/69BXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747128523; c=relaxed/simple;
-	bh=sdWO6ko67mqTWcGMEtMgDVXtVTLim084V1a605JGgT8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X5bYptAFGCEN/E0dxDbZFLuNxVRHFOdPRaFZqSi/gJjLpz9ZI/dWFxTW6aq7QNLFssHGVooFFjMlt6VRaGBzgw/8X6OPGjTXc0n5kF4c4pP1UdZwMJmfRTMz9rnSb7Y5ZWDb2OZkk5ER/uy03CjjT2PCpwP8KSZBVoq6IpzMVTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xtXHVIrE; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54fc36323c5so4892261e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 May 2025 02:28:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747128519; x=1747733319; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JBWoBdG3lbXFBJdWTyceAqfFC9xtnHUxGj7C5Wu4R/Y=;
-        b=xtXHVIrEJxQpK/jITVVUxFeYQH6C6fVt+60KftrSUEpcV+ZgECys7tjl33Recxr7ZX
-         L7cAZzCkuXLXDSq+UBPQxzDwe3EAx6RXkgsGPDSMgJFAPpWug//zhfP9EQ1mMmr089lk
-         ON7zUSjCE1WIPfjfoRXGxeJ3Tw4BeKLG9ig0T4ZLxNikNCJ4OQYaGQUXooFKybdpY/T7
-         AMm8SHkM9O2FjGJUt8Ci3XHtWKPFztGf1DCdGpPN0gnxkn7sbr5Fz7WtbZo851wbXmpS
-         MPDbRY7FwNXBVIJp6/xsgRe24iiSqb0qly7RXgUHdobJjCtrq3hpnrZV91xj2d8Cghkv
-         FdsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747128519; x=1747733319;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JBWoBdG3lbXFBJdWTyceAqfFC9xtnHUxGj7C5Wu4R/Y=;
-        b=LgRq/J1t5E2QS26eQIRQTfeDcAJw5rj1w2H/K5JSX2vq/Ak8VJqgdGXddJzRgSMYpI
-         vWroTOsp6V4tjWf5BtNVN+/jMb8LXJ23oHB6EU7xXOVu3Vv43NhTDNQ/jgSrXNichBrX
-         M90xataKoHhuPdjWVPjhRJTVYEkNORZXiLzJgfUxH/HrvmmgAq0+dCQH0mLvH2yV4Vrd
-         E0nwXb7GJ2oWfWsHXLzm0dIcGD2c904FVhPv6kMkAgvWFGWIKQoPr8MOesIwLALIdG21
-         4r0a5ZlBbD1LkIdkziHyxOoJ7P+E79wM9fIJJD++aKpFF/OVTFOiIJzNKMpD59KddL/K
-         i+zA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGnym2xidCWB6mJzikMRrUFx4JqmfFCW6Ly74Pbf1eYxA+DWbysP0vH8CIamgi+cNF/WZXSG4gTDgc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUxr8yEQOD/CbI5OWwdYrd/aLrfDLAcJbYcESPYY6V8oIU9TOg
-	ah8XLlKv4A/01KOoWQuznJkasiT1qV8Pl3eMx6ou39DZWwKll0iPyaY13sI7lRpWD9lWioh5H1D
-	I9YSkuhaLxhdCHRWSku4izfopTWsrE2/YKd4vwQ==
-X-Gm-Gg: ASbGncs2ljB5MiSGfG8erzKzyH6KmQ8FkeUeYA2KQjhxyEQlPm4ZEx5PSRuRjbFB4r7
-	7ja+jUIdIeKGDcZ9Sncq7D+pDhOeLZLbSEYVOz7u9t4QYn3AJ9iMT/HobYZYHaYOZ9btR1NPEvi
-	jmKdS9XO8yJHMGTTB2P3YXA480JODXm81Z
-X-Google-Smtp-Source: AGHT+IGPsCaQsVwlbGypFhudSFOc2s4QHLHTEndYHt5ArHEoc7abTls+1/mAIN2RUHgXYU7cdExwVaSdPdvNIIu+maw=
-X-Received: by 2002:a05:6512:1385:b0:549:6030:a720 with SMTP id
- 2adb3069b0e04-550d0c09efbmr969887e87.23.1747128519475; Tue, 13 May 2025
- 02:28:39 -0700 (PDT)
+	s=arc-20240116; t=1747128675; c=relaxed/simple;
+	bh=jsqqrcfYq+bnJqM7TR/bt4mLPJ69Cu+o4leVutMS2Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ah762fjjGMSS43/Y2Mp2yWwGLrQWdhJk/zKOTmqXBLxxtUYl0XwnyqVOrPDT2xXu16GtouQ3Kl3A0HIUpME6JRQO9jxOj5Iuzx8HNb2xgv1cAsuyOdH3SiNHLRHDV27aJ5rd6/hfGqbsobqlP2uq9J3wPYKs8YQu6VkCgGklJ30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mHI0+0jx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8118BC4CEE4;
+	Tue, 13 May 2025 09:31:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747128674;
+	bh=jsqqrcfYq+bnJqM7TR/bt4mLPJ69Cu+o4leVutMS2Rc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mHI0+0jxgvDq2H+naSqE+eBaNqvmqwpNyecqNTZZ4VHserpQaOPhA9RvDuTyTjF5s
+	 /zsm9sMwCSOd8gTOQzxtYKbmsqsnUt09M0K6fEEHlph919MDI2nyVU9+Cs3ULBXsVO
+	 FK6w1HJEsWuBhuiUhPTV831bzeFCQERsTj353uaDRyhQs9sz6sL5k/BaIl8Hu7D36v
+	 unFPlEg+BZ2Y2uKdvwGcpeqaKJhe/NV6l95bwuZ9Bb8dhUaUOS1Ob2ABNPBKQAR8wQ
+	 4wXNSLla4/E1/Dwq0zWf4UNeb7+616VqCYaKTbj9IZypnncAlk2RzLISBn80P7IRiI
+	 74JIJz09QyCXQ==
+Date: Tue, 13 May 2025 10:31:07 +0100
+From: Lee Jones <lee@kernel.org>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 02/11] mfd: Add max7360 support
+Message-ID: <20250513093107.GC2936510@google.com>
+References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
+ <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
+ <aCG9lyaCGchBsqLE@smile.fi.intel.com>
+ <D9UW14SJQ9HV.3BA1FYKMG9DE0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
-In-Reply-To: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 11:28:28 +0200
-X-Gm-Features: AX0GCFu5WhS-D41dmYNwbrb5PKy-0pktNjYekORF361g_nOjHNY4p6UTBXBPCbc
-Message-ID: <CACRpkdbcm3AkcT9SxWfEYz1tsZQSLMUgY5nmTD9_iEq3Xs+shw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pinctrl: qcom: several fixes for the pinctrl-msm code
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Josh Cartwright <joshc@codeaurora.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Matti Vaittinen <mazziesaccount@gmail.com>, Doug Anderson <dianders@chromium.org>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9UW14SJQ9HV.3BA1FYKMG9DE0@bootlin.com>
 
-Hi Dmitry,
+On Tue, 13 May 2025, Mathieu Dubois-Briand wrote:
 
-On Sat, May 3, 2025 at 7:32=E2=80=AFAM Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
+> On Mon May 12, 2025 at 11:21 AM CEST, Andy Shevchenko wrote:
+> > On Fri, May 09, 2025 at 11:14:36AM +0200, mathieu.dubois-briand@bootlin.com wrote:
+> >
+> >> +#define MAX7360_REG_GPIO_LAST		0x5F
+> >
+> >> +#define MAX7360_FIFO_EMPTY		0x3f
+> >> +#define MAX7360_FIFO_OVERFLOW		0x7f
+> >
+> > Please, be consistent in style of the values.
+> 
+> Is your point about the alignment of the values? Most of these are
+> aligned on column 41, including the ones above. I just have an exception
+> with MAX7360_PORT_CFG_*, as they are a bit too long. But as we are using
+> tabs here, indentation appears a bit broken in the patch.
 
-> Fix/rework several issues in the pinctrl-msm common code. The most
-> important fix is the one for the gpio-hog handling.
->
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
-> Dmitry Baryshkov (4):
->       pinctrl: qcom: don't crash on enabling GPIO HOG pins
->       pinctrl: qcom: switch to devm_register_sys_off_handler()
->       pinctrl: qcom: switch to devm_gpiochip_add_data()
->       pinctrl: qcom: drop msm_pinctrl_remove()
+I believe the point was in reference to capitalisation.
 
-Nice work, since it is core stuff it'd be great if Bjorn could take a look
-at the next iteration too. (I'd suggest to ping him on IRC.)
-
-Yours,
-Linus Walleij
+-- 
+Lee Jones [李琼斯]
 
