@@ -1,66 +1,88 @@
-Return-Path: <linux-gpio+bounces-20171-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20172-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28253AB776C
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 22:56:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51B82AB7845
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 23:57:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 384BC7ACA49
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 20:55:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD89F4A78C1
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 21:57:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5821F296711;
-	Wed, 14 May 2025 20:56:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B30C4224240;
+	Wed, 14 May 2025 21:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKjA/3US"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTCdstgH"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0674AE55B;
-	Wed, 14 May 2025 20:56:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB70223DF2;
+	Wed, 14 May 2025 21:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747256182; cv=none; b=lI+LP7OxvXbB43uQRERH+009bpk9KQR4x1hH5AUu6PrEkVncRVrtCT+yFHDPpbrACFD/ZBVSCLF/Y5kro/qyh/yyZry3nXz8M6bdV5ZZiuojleTqfAeWvsq5F7pqrIvuiRdCd3IKeW/7rkj1S33FXMkcGwabxxcammXDy9Hu9cY=
+	t=1747259807; cv=none; b=Jqw7tpato/HCQh9X6sSeI8R7KpmsiwmYmdISJWwd9/99uMuWqY1OGtsZyh4iffb2HJdb0F35VCygKLMJYyv3RmaMOvcP+WiA0QQb6FneG2aED8fAsB/0UIdiEi/NIQxEbcKOQjWUuVm5LmjK4nnMB5DmFCVXdtmrvbCXtWje5F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747256182; c=relaxed/simple;
-	bh=LzcztWerU4pmt8hh0TJh4jLsvk6/oUYWuswSfEQJhA0=;
+	s=arc-20240116; t=1747259807; c=relaxed/simple;
+	bh=RGYu87/MAqgKB3NyYtwwQKOk3FvzBnCoc9OCA815Hsg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HAgjP9MKjYjEZcSxokYeUhEMwcilyzDnTRnB8JN1bHn1R355xk1mrVsVmgZXOArXqrc5owDAfUaJeojzXJSfdQGSIoB+O8604tPtZsbgoqyOFrFrvQpyxGTIQvvlusEg7a8I9Z5mKQb33kqI94LDKrhDr7zfiz784kl264wk/Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKjA/3US; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A225C4CEE3;
-	Wed, 14 May 2025 20:56:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwux0wAQzivly1eebwdkplMfP7fZd0wgqqdQcP9ICTGni8Yfa3U5mcV76tu+Xhz18XxkkzTTODgjUvukpljZQmNlEtraGK9sVDQxcGKAvR46efy9EAzBhHENOSgLc2m9wE82dgLtK6VGHeyBalz81FKXkrWG6brdcu0atsyUCAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTCdstgH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFE4C4CEED;
+	Wed, 14 May 2025 21:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747256179;
-	bh=LzcztWerU4pmt8hh0TJh4jLsvk6/oUYWuswSfEQJhA0=;
+	s=k20201202; t=1747259806;
+	bh=RGYu87/MAqgKB3NyYtwwQKOk3FvzBnCoc9OCA815Hsg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VKjA/3US6VvMiYWEFfxUTPcVRsgkq/fkEDd1FECDu3ML/8zXXjCtRGVqsgM8wCUH5
-	 +ly2bPAmH0DwK6dNZL892QlHnLHhFjDitrtw52TwhPFYhT+LUEv5yuC7EW/yskCSy2
-	 eNJNgCzxtKIuXEoYdQyC00fVdaiCxVlLuYEM1mvp5kXyJEcPNzlZJs92pnXqpwijHT
-	 MqAKCgjWf+09vWbdG9ViS23iPDY5zWJnOCJwri1XSKRIhmd23wvZWVmMQ/vyJPgI9L
-	 Sz6X2Oiqd7Iy9MO31pjPyE+UlaqzGmrWv5IASpHjm7eqrfGR6ceJ9sxNHOUTvroicT
-	 TSbs3g75uA6lg==
-Date: Wed, 14 May 2025 15:56:17 -0500
-From: Rob Herring <robh@kernel.org>
-To: Sven Peter <sven@svenpeter.dev>
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
+	b=KTCdstgHWRrldh1wABpKj5eRgkuQhNB8/qHdUFoPG1CrYo9NuhWXZzjVQkImNGzNW
+	 5V1YXwpoqKfb1yoSTA1qt/WlcAV8ROqTVWhLYewcBW1/npMuTgTScjUBPx0e+5HLvC
+	 x7EceodlirCQuQktCWkdKiOkNGMXbXYAGg7Fvsi6S92q6TPzHxUq6fDRM8ArrW3v0t
+	 uluNe7pVtRuBgTTpZE7pZvPo20pgcB/uNFM6+J2naS0V5HJHKc4cNlEGI2dSpcdkpX
+	 sBBwoRnlz/seX7ra4MgDLIU8runuxeffmDssmHoLvXlZfkUiMXpYOhi7bYwFVCo9P1
+	 D20Lm3eykWjRQ==
+Date: Wed, 14 May 2025 16:56:45 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Liu Ying <victor.liu@nxp.com>, Zhi Mao <zhi.mao@mediatek.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Dongcheng Yan <dongcheng.yan@intel.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+	Bjorn Andersson <andersson@kernel.org>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+	devicetree@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Julien Massot <julien.massot@collabora.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Will Deacon <will@kernel.org>, Ross Burton <ross.burton@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Eric Biggers <ebiggers@google.com>, linux-gpio@vger.kernel.org,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 02/10] dt-bindings: power: reboot: Add Apple Mac SMC
- Reboot Controller
-Message-ID: <20250514205617.GA3020430-robh@kernel.org>
-References: <20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev>
- <20250511-smc-6-15-v5-2-f5980bdb18bd@svenpeter.dev>
+	Taniya Das <quic_tdas@quicinc.com>, Mark Brown <broonie@kernel.org>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	linux-arm-kernel@lists.infradead.org,
+	Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v3 01/19] dt-bindings: media: i2c: max96717: add myself
+ as maintainer
+Message-ID: <174725980451.3108487.13826253376011337133.robh@kernel.org>
+References: <20250512212832.3674722-1-demonsingur@gmail.com>
+ <20250512212832.3674722-2-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,41 +91,21 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250511-smc-6-15-v5-2-f5980bdb18bd@svenpeter.dev>
+In-Reply-To: <20250512212832.3674722-2-demonsingur@gmail.com>
 
-On Sun, May 11, 2025 at 08:18:37AM +0000, Sven Peter wrote:
-> On Apple Silicon machines a clean shutdown or reboot requires
-> talking to SMC and writing to NVMEM cells. Add a binding for
-> this MFD sub-device.
+
+On Tue, 13 May 2025 00:28:10 +0300, Cosmin Tanislav wrote:
+> Analog Devices is taking responsability for the maintenance of the Maxim
+> GMSL2/3 devices.
+> Add myself to the maintainers list and to the device tree bindings.
 > 
-> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Signed-off-by: Sven Peter <sven@svenpeter.dev>
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 > ---
->  .../bindings/power/reset/apple,smc-reboot.yaml     | 52 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 53 insertions(+)
+>  Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml | 1 +
+>  MAINTAINERS                                                     | 1 +
+>  2 files changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/reset/apple,smc-reboot.yaml b/Documentation/devicetree/bindings/power/reset/apple,smc-reboot.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e55e524914c2f57f7acf239fdefcbdc7a993b69f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/apple,smc-reboot.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/reset/apple,smc-reboot.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Apple SMC Reboot Controller
-> +
-> +description: |
 
-Don't need '|' here.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-> +  The Apple System Management Controller (SMC) provides reboot functionality
-> +  on Apple Silicon SoCs. It uses NVMEM cells to store and track various
-> +  system state information related to boot, shutdown, and panic events.
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
