@@ -1,80 +1,61 @@
-Return-Path: <linux-gpio+bounces-20136-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20125-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57085AB6594
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:15:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1458DAB6568
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:12:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D11B93C0001
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 08:15:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FE814A6215
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 08:12:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65FDE223DC1;
-	Wed, 14 May 2025 08:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KNPNlxGQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EDBA221272;
+	Wed, 14 May 2025 08:11:56 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFE32222BE;
-	Wed, 14 May 2025 08:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE66222068E;
+	Wed, 14 May 2025 08:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210418; cv=none; b=jSVMLhwZnA9+/1hS7Ne5ADipWQ2mbi9cp+tLtd38OW5cCMCLjXKyV/18d3dpBCONFBd+QKQ/pBQE5SszbL1ytu4c4X5tLIyp2Cnf49RkukvwVo382WBDVLmkq/jcS8U1p/2v5DbbfKo6cIsR7RyOLdlqNnY/AUozo8LQmkW29hE=
+	t=1747210315; cv=none; b=AhqFhzio6mbu/hsAPfWkRcRB3TGoiuSbEdjdf0/GfvdBf2IToIbWcffTJm5CHWc86An6YmeyEtzRg6CVt+emYmc1LBhu2WFs0QMZa2q1kyc1GfWLhKOI6+U4HWPVPXw4/fFeTG2O31mhl6gq6kmhPUa1sIeaYZBy4eZdaKB6oWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210418; c=relaxed/simple;
-	bh=b82mO8JtpdVroqvtnWLBLq7FbSr8dAH0GJmL41NDAQ4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lR+J3sam6zeA1PAtEfODR6XcHwuBVGicYM+IcO342qbk2+lh5t3BYhkvqXLEr5lLAQ6v93XyOD57iWVNMcLD5V+11l6Vm+btmMCZb4zjV5Rn1mUuw5m0w5wCYu9tVKwH14D1nSfjn2DL4FqWQL3hDkpkJtx9QBLY0H637uAl9Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=KNPNlxGQ; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 5252ba1a309b11f082f7f7ac98dee637-20250514
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=fIAM4FwaO7DBTCffflSADli2WjouhqFkIGcgVZscon4=;
-	b=KNPNlxGQRa2KkbwNBgx1eXiXy/TrVCpZb8QeJFiDt6jqaj7TUEJtr1m0e9MAcvhNUVt+O3+HQeqP/cbMc9E4c2g4skADVnxFCTb7GF2PjXEHlLLm3w69ZjDwf916QHfP6UvBhTZBr97+8prX669Pi/OJI7CL2grWcsutX1pBpCI=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:ed468653-0165-41d7-91e8-6ec85c9e36fb,IP:0,UR
-	L:25,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:25
-X-CID-META: VersionHash:0ef645f,CLOUDID:b5bffd3d-da74-431d-a7be-5e6761de3b64,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:97|99|83|11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 5252ba1a309b11f082f7f7ac98dee637-20250514
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
-	(envelope-from <darren.ye@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1437501209; Wed, 14 May 2025 16:13:30 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 14 May 2025 16:13:22 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 14 May 2025 16:13:27 +0800
-From: Darren.Ye <darren.ye@mediatek.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
-	<darren.ye@mediatek.com>
-Subject: [PATCH v3 10/10] ASoC: dt-bindings: mediatek,mt8196-nau8825: add mt8196-nau8825 document
-Date: Wed, 14 May 2025 16:11:12 +0800
-Message-ID: <20250514081125.24475-11-darren.ye@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250514081125.24475-1-darren.ye@mediatek.com>
-References: <20250514081125.24475-1-darren.ye@mediatek.com>
+	s=arc-20240116; t=1747210315; c=relaxed/simple;
+	bh=NcvD0uAmpsHhAnoMgJvb28PbFb92iIhISgI68ms+8Eg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ddNYF55h/fyOytpRmsAvDmyyZIbUsaZTmBo1LCoKzWx/ee1UXhJhh3IAb1aEs8qEP50Qn70pHJ3Um+rDhuRiF0oWli7U6iIU88voUFP5oRrrlUja3asICOZOIcVIZMkTf0tZWiaTMtleC1fQ/10/oT69MnBJOKDxGnxW/dPtzkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app2 (Coremail) with SMTP id TQJkCgAHp5U5UCRoqb15AA--.19521S2;
+	Wed, 14 May 2025 16:11:39 +0800 (CST)
+From: Yulin Lu <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	brgl@bgdev.pl,
+	linux-hardening@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	zhengyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	Yulin Lu <luyulin@eswincomputing.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v3 1/2] dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
+Date: Wed, 14 May 2025 16:11:35 +0800
+Message-Id: <20250514081135.636-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250514080928.385-1-luyulin@eswincomputing.com>
+References: <20250514080928.385-1-luyulin@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,141 +63,203 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+X-CM-TRANSID:TQJkCgAHp5U5UCRoqb15AA--.19521S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3XFWrJF1DZw4DtFy7ZFWDArb_yoW7tF17pF
+	43W34fJFnFqr1xGa9Ivw109F1fJan7AF9xAF1qyry3Xw1Yq3WSyr4ayr45WFWUWr4kJry3
+	Zayjqay0qF4UCrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRRKZX5UUUUU==
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-From: Darren Ye <darren.ye@mediatek.com>
+Add EIC7700 pinctrl device for all configurable pins.
+For the EIC7700 pinctrl registers, each register (32 bits)
+controls the characteristics of a single pin.
+It supports setting function multiplexing, Schmitt trigger,
+drive strength, pull-up/pull-down, and input enable.
 
-Add document for mt8196 board with nau8825.
-
-Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
 ---
- .../sound/mediatek,mt8196-nau8825.yaml        | 115 ++++++++++++++++++
- 1 file changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml
+ .../pinctrl/eswin,eic7700-pinctrl.yaml        | 157 ++++++++++++++++++
+ 1 file changed, 157 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml
+diff --git a/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
 new file mode 100644
-index 000000000000..8f9aa8b816e0
+index 000000000000..dbdfcc9a1b36
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+@@ -0,0 +1,157 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/sound/mediatek,mt8196-nau8825.yaml#
++$id: http://devicetree.org/schemas/pinctrl/eswin,eic7700-pinctrl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: MediaTek MT8196 ASoC sound card
++title: Eswin Eic7700 Pinctrl
 +
 +maintainers:
-+  - Darren Ye <darren.ye@mediatek.com>
++  - Yulin Lu <luyulin@eswincomputing.com>
 +
 +allOf:
-+  - $ref: sound-card-common.yaml#
++  - $ref: pinctrl.yaml#
++
++description: |
++  eic7700 pin configuration nodes act as a container for an arbitrary number of
++  subnodes. Each of these subnodes represents some desired configuration for one or
++  more pins. This configuration can include the mux function to select on those pin(s),
++  and various pin configuration parameters, such as input-enable, pull-up, etc.
 +
 +properties:
 +  compatible:
-+    enum:
-+      - mediatek,mt8196-nau8825-sound
-+      - mediatek,mt8196-rt5682s-sound
-+      - mediatek,mt8196-rt5650-sound
++    const: eswin,eic7700-pinctrl
 +
-+  audio-routing:
++  reg:
++    maxItems: 1
++
++  vrgmii-supply:
 +    description:
-+      Valid names could be the input or output widgets of audio components,
-+      power supplies, MicBias of codec and the software switch.
-+
-+  mediatek,platform:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle of MT8188 ASoC platform.
-+
-+  mediatek,adsp:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the MT8188 ADSP platform, which is the optional Audio DSP
-+      hardware that provides additional audio functionalities if present.
-+      The AFE will link to ADSP when the phandle is provided.
++      Regulator supply for the RGMII interface IO power domain.
++      This property should reference a regulator that provides either 1.8V or 3.3V,
++      depending on the board-level voltage configuration required by the RGMII interface.
 +
 +patternProperties:
-+  "^dai-link-[0-9]+$":
++  '-grp$':
 +    type: object
-+    description:
-+      Container for dai-link level properties and CODEC sub-nodes.
-+
-+    properties:
-+      link-name:
-+        description:
-+          This property corresponds to the name of the BE dai-link to which
-+          we are going to update parameters in this node.
-+        items:
-+          enum:
-+            - TDM_DPTX_BE
-+            - I2SOUT6_BE
-+            - I2SIN6_BE
-+            - I2SOUT4_BE
-+            - I2SOUT3_BE
-+
-+      codec:
-+        description: Holds subnode which indicates codec dai.
-+        type: object
-+        additionalProperties: false
-+        properties:
-+          sound-dai:
-+            minItems: 1
-+            maxItems: 2
-+        required:
-+          - sound-dai
-+
-+      dai-format:
-+        description: audio format.
-+        items:
-+          enum:
-+            - i2s
-+            - right_j
-+            - left_j
-+            - dsp_a
-+            - dsp_b
-+
-+      mediatek,clk-provider:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description: Indicates dai-link clock master.
-+        items:
-+          enum:
-+            - cpu
-+            - codec
-+
 +    additionalProperties: false
 +
-+    required:
-+      - link-name
++    patternProperties:
++      '-pins$':
++        type: object
 +
-+unevaluatedProperties: false
++        properties:
++          pins:
++            description:
++              For eic7700, specifies the name(s) of one or more pins to be configured by
++              this node.
++            items:
++              enum: [ chip_mode, mode_set0, mode_set1, mode_set2, mode_set3, xin,
++                      rst_out_n, key_reset_n, gpio0, por_sel, jtag0_tck, jtag0_tms,
++                      jtag0_tdi, jtag0_tdo, gpio5, spi2_cs0_n, jtag1_tck, jtag1_tms,
++                      jtag1_tdi, jtag1_tdo, gpio11, spi2_cs1_n, pcie_clkreq_n,
++                      pcie_wake_n, pcie_perst_n, hdmi_scl, hdmi_sda, hdmi_cec,
++                      jtag2_trst, rgmii0_clk_125, rgmii0_txen, rgmii0_txclk,
++                      rgmii0_txd0, rgmii0_txd1, rgmii0_txd2, rgmii0_txd3, i2s0_bclk,
++                      i2s0_wclk, i2s0_sdi, i2s0_sdo, i2s_mclk, rgmii0_rxclk,
++                      rgmii0_rxdv, rgmii0_rxd0, rgmii0_rxd1, rgmii0_rxd2, rgmii0_rxd3,
++                      i2s2_bclk, i2s2_wclk, i2s2_sdi, i2s2_sdo, gpio27, gpio28, gpio29,
++                      rgmii0_mdc, rgmii0_mdio, rgmii0_intb, rgmii1_clk_125, rgmii1_txen,
++                      rgmii1_txclk, rgmii1_txd0, rgmii1_txd1, rgmii1_txd2, rgmii1_txd3,
++                      i2s1_bclk, i2s1_wclk, i2s1_sdi, i2s1_sdo, gpio34, rgmii1_rxclk,
++                      rgmii1_rxdv, rgmii1_rxd0, rgmii1_rxd1, rgmii1_rxd2, rgmii1_rxd3,
++                      spi1_cs0_n, spi1_clk, spi1_d0, spi1_d1, spi1_d2, spi1_d3, spi1_cs1_n,
++                      rgmii1_mdc, rgmii1_mdio, rgmii1_intb, usb0_pwren, usb1_pwren,
++                      i2c0_scl, i2c0_sda, i2c1_scl, i2c1_sda, i2c2_scl, i2c2_sda,
++                      i2c3_scl, i2c3_sda, i2c4_scl, i2c4_sda, i2c5_scl, i2c5_sda,
++                      uart0_tx, uart0_rx, uart1_tx, uart1_rx, uart1_cts, uart1_rts,
++                      uart2_tx, uart2_rx, jtag2_tck, jtag2_tms, jtag2_tdi, jtag2_tdo,
++                      fan_pwm, fan_tach, mipi_csi0_xvs, mipi_csi0_xhs, mipi_csi0_mclk,
++                      mipi_csi1_xvs, mipi_csi1_xhs, mipi_csi1_mclk, mipi_csi2_xvs,
++                      mipi_csi2_xhs, mipi_csi2_mclk, mipi_csi3_xvs, mipi_csi3_xhs,
++                      mipi_csi3_mclk, mipi_csi4_xvs, mipi_csi4_xhs, mipi_csi4_mclk,
++                      mipi_csi5_xvs, mipi_csi5_xhs, mipi_csi5_mclk, spi3_cs_n, spi3_clk,
++                      spi3_di, spi3_do, gpio92, gpio93, s_mode, gpio95, spi0_cs_n,
++                      spi0_clk, spi0_d0, spi0_d1, spi0_d2, spi0_d3, i2c10_scl,
++                      i2c10_sda, i2c11_scl, i2c11_sda, gpio106, boot_sel0, boot_sel1,
++                      boot_sel2, boot_sel3, gpio111, lpddr_ref_clk ]
++
++          function:
++            description:
++              Specify the alternative function to be configured for the
++              given pins.
++            enum: [ disabled, boot_sel, chip_mode, emmc, fan_tach,
++                    gpio, hdmi, i2c, i2s, jtag, ddr_ref_clk_sel,
++                    lpddr_ref_clk, mipi_csi, osc, pcie, pwm,
++                    rgmii, reset, sata, sdio, spi, s_mode, uart, usb ]
++
++          input-schmitt-enable: true
++
++          input-schmitt-disable: true
++
++          bias-disable: true
++
++          bias-pull-down: true
++
++          bias-pull-up: true
++
++          input-enable: true
++
++          input-disable: true
++
++          drive-strength-microamp: true
++
++        required:
++          - pins
++
++        additionalProperties: false
++
++        allOf:
++          - $ref: pincfg-node.yaml#
++          - $ref: pinmux-node.yaml#
++
++          - if:
++              properties:
++                pins:
++                  anyOf:
++                    - pattern: '^rgmii'
++                    - const: lpddr_ref_clk
++            then:
++              properties:
++                drive-strength-microamp:
++                  enum: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000]
++            else:
++              properties:
++                drive-strength-microamp:
++                  enum: [6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000]
++
 +
 +required:
 +  - compatible
-+  - mediatek,platform
++  - reg
++
++unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    sound {
-+        compatible = "mediatek,mt8196-nau8825-sound";
-+        model = "mt8196-nau8825";
-+        mediatek,platform = <&afe>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&aud_pins_default>;
-+        dai-link-0 {
-+            link-name = "I2SOUT6_BE";
-+            dai-format = "i2s";
-+            mediatek,clk-provider = "cpu";
-+            codec {
-+                sound-dai = <&nau8825>;
-+            };
-+        };
-+    };
++    pinctrl@51600080 {
++      compatible = "eswin,eic7700-pinctrl";
++      reg = <0x51600080 0x1fff80>;
++      vrgmii-supply = <&vcc_1v8>;
 +
-+...
++      dev-active-grp{
++        /* group node defining 1 standard pin */
++        gpio10-pins {
++          pins = "jtag1_tdo";
++          function = "gpio";
++          input-enable;
++          bias-pull-up;
++        };
++
++        /* group node defining 2 I2C pins */
++        i2c6-pins {
++          pins = "uart1_cts", "uart1_rts";
++          function = "i2c";
++        };
++      };
++    };
 -- 
-2.45.2
+2.25.1
 
 
