@@ -1,108 +1,108 @@
-Return-Path: <linux-gpio+bounces-20137-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20139-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58D95AB65B0
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:19:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D206FAB65E6
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:27:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EDE2C3B4B5F
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 08:18:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D9CF4A4CDF
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 08:27:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E9F22156D;
-	Wed, 14 May 2025 08:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8646D22171B;
+	Wed, 14 May 2025 08:26:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O31B7HzE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnS+CFTX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FAD202F9A;
-	Wed, 14 May 2025 08:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356F521E0BD;
+	Wed, 14 May 2025 08:26:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210656; cv=none; b=Tuo5mvseCT5zXTVhYcu+1HxFoSlXg7adBX4v6rdYzr/4AJ219NHZH5r6y0UjmRltLyOYMAtg1/kMSHdgHde/P2kIT1Ibm/XPclWKbrqYg9V0f31EuFsmXEKq78iu7oMfRc7kXdbgNBqYwqR1l6a51WmGsV1MZNqS1agdVAU9p3I=
+	t=1747211161; cv=none; b=XWBHTXunR1UKcr/5qjSvaC/0YcW6slb2g7UHsijB8ftnroPSyYhEVqyUR6ASBAO54zcI+sYgX/gYtYvWqlyYj91eqHdorouK7pKX26+qk2WrSx3j2sgMnBa7AMPtcnd+1PIjx8x6eQWG60pITSnet9S29ydCi3M3Iqy4rgZsvDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210656; c=relaxed/simple;
-	bh=HrEby8X97oMS/rj+guNPUJDiVtS8KqyTeO4FfPyEZHU=;
+	s=arc-20240116; t=1747211161; c=relaxed/simple;
+	bh=EQlzhgK8hYT+vlKLW5TJxTbodWSCb22tA9s2LNb3ffQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZN1L0DOV3cQPfUekMm9ybf7pKoGd1GvRVcwCkAB3wX/ctGrfrsDoTRjOFzvVSDEFAFzFVfewseChf9KFBlyOkdC2zr9rfyB8/NfccvyhgJKCldfuJtHAJCj4JU4iRZHnPFqjCh1Qtfw9+v+zVJcS1mD0DzKHBdf5oZWQ5KVb4b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O31B7HzE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E50C4CEE9;
-	Wed, 14 May 2025 08:17:34 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=QErHPNooPCO5ckC0c6AgJxbChyKz4ngrwb3zMnGStTNNjPm6LAQpG6VkSjRzs088pCntjSxFBJoAC+/XbnVn1NPykxjTeRYuWMGZO1bQFb0MvSuq2aybsdKgJHZki9JQKJgbe4UM8Xyih9VlZ21Mh7gY75kxCzhKshDu50yo1a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnS+CFTX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84094C4CEE9;
+	Wed, 14 May 2025 08:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747210655;
-	bh=HrEby8X97oMS/rj+guNPUJDiVtS8KqyTeO4FfPyEZHU=;
+	s=k20201202; t=1747211160;
+	bh=EQlzhgK8hYT+vlKLW5TJxTbodWSCb22tA9s2LNb3ffQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O31B7HzEyj3Nh4DAAJoFtHFRHPDbN7/g83eRGt9BVOdIa407ZQsTtrzwDXm08UiHf
-	 au9g7acBtuIWljLhpr1LVdKmuA8eumou+3pxY2wx3+y4tNi2Da0cT7MJesdUQoTz9M
-	 x3xxKgtVuJl2rvXx+koXEHh2vjGBnY7kezCh1XkcOUJx3DdswXJ0KhNUIt7N7AvEDZ
-	 rI9bK1c389FzNXR/9nABj8vY3s7LJ2xWKNrLciHhrbc0NFCR3BrPv935Avf+Fzw7u4
-	 T0XJMfje25BR4bZ5c1G189g5NyRAtkKpL1STKWQFKkrsIWLPUncgYk1ehmnKyxJOhp
-	 VoQMI5UaLWtjg==
-Date: Wed, 14 May 2025 10:17:30 +0200
-From: Mark Brown <broonie@kernel.org>
-To: "Darren.Ye" <darren.ye@mediatek.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	b=BnS+CFTXcJXpm4tPPGgnhaaB6YgFzpNZ/mS6Bp9Lr9Qk9lVQuxAakxWZCMYQApL2J
+	 pnBUHS69xG3KTj+caAZXFGU7PkFSwCRx+jX/oAhrEdlAK0Cs2uJMTWxEZeBGlR35o+
+	 ty36NBSL68aFHLnhP1Yjdcx4wmBzEr39mR4icO1+f/rtzXsIdUp90ztyFiz0EE/bZL
+	 Bn3R5ZEzmv6thYasOGsYdSK2mLkZpyqBVtg0EY706q9gK4ZUzuZUhGJ2p51Zs1+kGW
+	 Y6cIPuZVmtklvUbVi8OyGGeGrE73TNjMenbmDlU8RPh37IJcsUTctiN9UpkSoFp8wB
+	 6+F8GG1aQk6lQ==
+Date: Wed, 14 May 2025 09:25:54 +0100
+From: Lee Jones <lee@kernel.org>
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 04/10] ASoC: mediatek: mt8196: support ADDA in
- platform driver
-Message-ID: <aCRRmk2Vqplbbusn@finisterre.sirena.org.uk>
-References: <20250514081125.24475-1-darren.ye@mediatek.com>
- <20250514081125.24475-5-darren.ye@mediatek.com>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Liu Ying <victor.liu@nxp.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v3 00/22] mfd: adp5585: support keymap events and drop
+ legacy Input driver
+Message-ID: <20250514082554.GY2936510@google.com>
+References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1Ucd00qPZdK+Pv3F"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250514081125.24475-5-darren.ye@mediatek.com>
-X-Cookie: Well begun is half done.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 
+On Mon, 12 May 2025, Nuno Sá via B4 Relay wrote:
 
---1Ucd00qPZdK+Pv3F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Hi all,
+> 
+> Here it goes v3. There was some major refactoring in this version due to
+> Lee's and Laurent's feedback. There are some splits (and some explicit
+> requests) resulting in new patches being added. The biggest change is the
+> effort in trying to minimize the usage of specific child device bits in
+> the top level device (mainly stuff related to the keymap). I think now
+> it's fairly self contained and the only thing that we really need to
+> handle in the top device are the unlock and reset events as those can be
+> supported through both the input and gpio devices (via gpio_keys). This
+> results in a bit of more runtime complexity but well, that's life...
+> 
+> Another change is Lee's suggestion of making use of templates (for
+> regmap and chip specific data) and fill things up at probe.
+> 
+> I also refactored a bit the event handling so it's more generic now.
+> There were lot's of changes so odds are that I might have forgotten some
+> feedback and so, my apologies in advance :).
+> 
+> I also dropped the tags in:
+> 
+> patch 16/22 ("gpio: adp5585: support gpi events") as it has some
+> significant changes (replacing .init_valid_masks() with .request() and
+> .free())
 
-On Wed, May 14, 2025 at 04:11:06PM +0800, Darren.Ye wrote:
+Please run this set through checkpatch.pl before submitting again.
 
-> +#include <linux/regmap.h>
-> +#include <linux/delay.h>
-> +#include "mt8196-afe-clk.h"
-> +#include "mt8196-afe-common.h"
-> +#include "mt8196-interconnection.h"
-> +
-> +#define MTKAIF4
+Not sure if we've discussed this, but W=1 wouldn't hurt either.
 
-This define is there unconditionally, what's it for?
-
---1Ucd00qPZdK+Pv3F
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkUZoACgkQJNaLcl1U
-h9DiUwf8CeXyIw1furK0nf9QfBubUYFQ3DjxWzlkFbKAyVnUb3qF3V4vkrVIRC2P
-HYiWu0j8HLfZE/o+6cFkU0RIhzDgC/TGdMp/8ZlCLG3PpX8n124t3GsigTEOv+ZP
-13p4rzmwS4GdMZD5uY7yI5mg1ScK69kNmb6ah4DeOTo92/GJQTITnJXq8B3UegXr
-P5rk8qlBWvgKL4ebpRSGbCztpZZ+rDkUzaNutwIk0I4mzdmGwfJ/u/kBk1oUNhoD
-+dvn4qemKwDA8J9QV/sDzEu964KbUx+iWz1AryHn3TwKzF6kO1I2nirfld6rrqqK
-0vtfqUZc+p2IdLOgN8NnSiL0/t3h4Q==
-=xV1N
------END PGP SIGNATURE-----
-
---1Ucd00qPZdK+Pv3F--
+-- 
+Lee Jones [李琼斯]
 
