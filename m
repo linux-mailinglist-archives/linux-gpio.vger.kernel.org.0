@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20147-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20148-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B6D9AB693A
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 12:53:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 839F7AB693C
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 12:54:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDD01861BD6
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:51:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9C943A5D6A
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:54:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23DB272E56;
-	Wed, 14 May 2025 10:51:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7EBF272E4F;
+	Wed, 14 May 2025 10:54:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjJ4jl/X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ldsy8J/p"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31B346426;
-	Wed, 14 May 2025 10:51:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6920125DD07;
+	Wed, 14 May 2025 10:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747219905; cv=none; b=XXGiGAldaRUj0DwkCzyx6BC6sY8epqBID+G5gn2M1OT6UWdCDh1yq7nApWbirH0ycNweKFAPe3P5f8OkZS22PmhnEShvKcUBaTZ9gJzL3UPIXlCYRD4ULYSltLwdjECzJCH/qUTTZRNeCZ2l6/G6jt472w9bIHiYlYaus+g0v+0=
+	t=1747220059; cv=none; b=F37vufmpOzB7CD8ih6pmSizUVPhFU/pEkexRWuoZ+WvWrg+ICbYuuorgf7s4c6yWmGJ19FgQqTBy6B/HZDAMQ3q6NVBryarg5LbgI3q6d5YIjpZeVZq7pAw1T5KhsTkt1SbHYyX/iaPE13VQ0lS2R9Ua3aSlIKBbfTDNJ6lNxUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747219905; c=relaxed/simple;
-	bh=PrGh9SpMA5/9+J5Zgu002byi2m9ghtEE/SkkLqqxAos=;
+	s=arc-20240116; t=1747220059; c=relaxed/simple;
+	bh=5C0Di50yZg3ty4QVTSTQB3iKbWQP64UKAoZRv5/Vnm8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=guwmgXmBQkIeNZSmMcXgANBIV5+uiJDa6XrgjgSjCd244ErNGzUJVDZ3ja9uXPcLc3d4J6gNOIgsH4MElWZzi9TeCZuYVWzm0bPxAjuwLMHP6OxmEE4+S7q38r3BP3vhbmCbMLgLZJGHLNNtRFt1+q2KYNUTMLwNrJIFKOdOZNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mjJ4jl/X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A083C4CEEB;
-	Wed, 14 May 2025 10:51:41 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=lao2fmeaxuZ3yD1Ygz1lWcqmyU/NggLCyEgTs6Mt7G3hPBmtzm8iThNOYH/ROyP1QD8JTbnOSL4pK1n8IzeuiJqpSlLQ+3WcUSorZNplHqa75nXBZl08jagaYBuJonRNF6i+3xPnFrLDk1nBXZtSd3MNyd7MdnH2nxXuJFMW5Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ldsy8J/p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C348C4CEE9;
+	Wed, 14 May 2025 10:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747219905;
-	bh=PrGh9SpMA5/9+J5Zgu002byi2m9ghtEE/SkkLqqxAos=;
+	s=k20201202; t=1747220057;
+	bh=5C0Di50yZg3ty4QVTSTQB3iKbWQP64UKAoZRv5/Vnm8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mjJ4jl/XAE9SvGEQOmGm3+Zk9ABaavs2siKdRbt7xZ/ijhAtIrLYkAnc1GddJGLze
-	 5FztE931bpZ7x+Zw8orsfC3x+lwm4kdUGQZl5hfIjHAPFTQDb26T4GDn3ECIUEwD/I
-	 5P74AcAxx7/ZE/GeFNLWIabsddi5McWO5DASPuwNqt+/SZ98S/v+U+9l+bq9q4YgK4
-	 sQkSIH6D9mwe/xyw0eKOHKZ0ey+dqMphrvTdapMAk1DYTgz2A+tn6yzq1u+Md4oJ94
-	 ieAv4d7d2VvBIioUM8RpeD30sYY3dTER3NEfeaL6uYS4WUu9iRGJVj/aSMEaBGJgnl
-	 48/rGyNEidBWw==
-Message-ID: <67a7343b-fd1e-4276-83b0-baa28d19f207@kernel.org>
-Date: Wed, 14 May 2025 12:51:38 +0200
+	b=Ldsy8J/pJGV5VEi08QDYMpAMPTnsoY09dAYYi7nPToxlDhNYYhovz1Aymg5iHKLxn
+	 2qpcL02TN07fuVobHfT3EkzvwkM/3sDjVixJh9ZoA3QZyqUANutNZsn+2DQwa2K5TZ
+	 mt6km69+IS5Ns/TR0UKcgsh+0syJ/AfMe7qGiaqCXYdl1IbIlkr+vT2XQYzu8WynkT
+	 E5d8nFienaJ4TTylUPRu6NEn+6O5yfNc4n0h81jS1XEISzP34nOvoLasQomy/EC7/l
+	 azgXWH4tVZ76xtyGGLX9W8rwovxMMUD4VQwpSyvO/fpfXcwgmibj4DCoX6sv1P9itJ
+	 jtXFRPHY7ZtpA==
+Message-ID: <e74d82b3-ed4a-433b-9305-a80b68130a6f@kernel.org>
+Date: Wed, 14 May 2025 12:54:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/10] ASoC: dt-bindings: mediatek,mt8196-nau8825: add
- mt8196-nau8825 document
+Subject: Re: [PATCH v3 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
+ audio AFE document
 To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
  <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -64,7 +64,7 @@ Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 References: <20250514081125.24475-1-darren.ye@mediatek.com>
- <20250514081125.24475-11-darren.ye@mediatek.com>
+ <20250514081125.24475-9-darren.ye@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,92 +110,59 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250514081125.24475-11-darren.ye@mediatek.com>
+In-Reply-To: <20250514081125.24475-9-darren.ye@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 14/05/2025 10:11, Darren.Ye wrote:
+> From: Darren Ye <darren.ye@mediatek.com>
+> 
+> Add mt8196 audio AFE document.
 
-
-A nit, subject: drop second/last, redundant "document". The
-"dt-bindings" prefix is already stating that this is a document.
+A nit, subject: drop second/last, redundant "document".
 See also:
 https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt8196-nau8825-sound
-> +      - mediatek,mt8196-rt5682s-sound
-> +      - mediatek,mt8196-rt5650-sound
-> +
-> +  audio-routing:
-> +    description:
-> +      Valid names could be the input or output widgets of audio components,
-> +      power supplies, MicBias of codec and the software switch.
+> 
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
 
-Nothing improved. I asked to drop the property. Why do you need it?
-> +
-> +  mediatek,platform:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: The phandle of MT8188 ASoC platform.
-> +
-> +  mediatek,adsp:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      The phandle of the MT8188 ADSP platform, which is the optional Audio DSP
-> +      hardware that provides additional audio functionalities if present.
-> +      The AFE will link to ADSP when the phandle is provided.
-> +
 
 ...
-
-> +      codec:
-> +        description: Holds subnode which indicates codec dai.
-> +        type: object
-> +        additionalProperties: false
-> +        properties:
-> +          sound-dai:
-> +            minItems: 1
-> +            maxItems: 2
-> +        required:
-> +          - sound-dai
-> +
-> +      dai-format:
-> +        description: audio format.
-> +        items:
-> +          enum:
-> +            - i2s
-> +            - right_j
-> +            - left_j
-> +            - dsp_a
-> +            - dsp_b
-> +
-> +      mediatek,clk-provider:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description: Indicates dai-link clock master.
-> +        items:
-
-Drop items
-
-> +          enum:
-> +            - cpu
-> +            - codec
-> +
-> +    additionalProperties: false
-> +
-> +    required:
-> +      - link-name
-> +
-> +unevaluatedProperties: false
-
-This goes after required: block.
 
 > +
 > +required:
 > +  - compatible
-> +  - mediatek,platform
+> +  - reg
+> +  - interrupts
+> +  - mediatek,vlpcksys
+> +  - power-domains
+> +  - memory-region
+> +  - clocks
+> +  - clock-names
+
+
+Keep the same order as in properties:.
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+<form letter>
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, you can skip it (please do
+not feel offended by me posting it here - no bad intentions intended).
+If you do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here. However, there's no need to repost
+patches *only* to add the tags. The upstream maintainer will do that for
+tags received on the version they apply.
+
+Full context and explanation:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+</form letter>
 
 
 Best regards,
