@@ -1,135 +1,183 @@
-Return-Path: <linux-gpio+bounces-20167-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20168-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33744AB75AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 21:19:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4F92AB76BF
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 22:21:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2B881BA5916
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 19:20:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E0353A4A4F
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 20:21:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A8072951BA;
-	Wed, 14 May 2025 19:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD3BB297B86;
+	Wed, 14 May 2025 20:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcNVZ12y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W5A4U/Mu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A65293758;
-	Wed, 14 May 2025 19:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D445297B66;
+	Wed, 14 May 2025 20:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747250338; cv=none; b=QGZ7oeuLtRg5s7iGBDsRB5ecA36+0pUNLO1SSwav05bF3Boq3fsD8tLdMlKG0VifY+MVfPtggPxhyAMazk3PQkZFoJ25g4eEElSZqe5CByb0I7Qlhwha4FwsITqwdklsjLyS0sdiZCHe5KL3rITwurS6az5XtjVrTzjKvudPtwg=
+	t=1747253956; cv=none; b=cTYfEVXDX/EX8Nwdoaqg/OXAjrAKY2vB8o19tde+FpPY7jOR2qEzY1Ic91qlvT6//CGLP1YD2+GSfPx9rxnmTFgSSncFy+d376uvFbaGGL65os+wHk5Mwt7yqmKCpa/hjgzh79FACO7P6w4tw3uoV/EePVL0qj7hnIuQRowVasQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747250338; c=relaxed/simple;
-	bh=+7qqRID3OgpSWICC3duVHK6vZd1Tbn89NENi8PpPnjg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Xojcv6VrQU/9p1JHdOgx3Xi6h4Qq4kahchI1HM7uFjaKEEvjFIJlfmsIo/Ujln7uniqJ4luafth5sZYjDe6DnvDjHkZGBFJ9pVoHnSm/ckLnHj5rHVk8dhR5wcP3E38FM4UKUu5cyMOBdXWUbaZz3rjrzB+dpbHK/71xzghCdnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jcNVZ12y; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-442f5b3c710so1347315e9.1;
-        Wed, 14 May 2025 12:18:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747250335; x=1747855135; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vaL6y6eAH+cyG0BHc8g4kaknwTTJ0ODkBusGr+TVtqA=;
-        b=jcNVZ12ybH7Yph7nLNKSVApKMxSH5TIOa6fljweuvMM2UZJFWcYYL5eM40NYT3Vw21
-         2IjH6rpYdINe5p+AC+vtDvHy1nfFrT2XxWjg1OimgxRaTugXTKKwHmVjcrzHOHSU09xA
-         rps6QVHNd7O7kZrauVhGY7FBijHgZC969Ku/DZBeaxoQuuRWlRK4TZTS+2RieoYHNN8y
-         aflyKry/gemxbo3vzUEYuVtxOHiXd30qo1jh/2wE8CKogDqAqptGq8JDtBVnlNwaaSfc
-         4fd+acG9xqi5Nuycf3DpqB8hQp0THGKj7e1L9+VOirs9XUp8VbP54l4tKUKMRDeGU0YV
-         v+Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747250335; x=1747855135;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vaL6y6eAH+cyG0BHc8g4kaknwTTJ0ODkBusGr+TVtqA=;
-        b=jZTiyRYHAJPN1zCxKD0JD3TYaUudgStUL1/hXqZOohxEWLvwtAUZ4yeeaAAOH6JacH
-         hzR0JFnV5mMXAoMxbTwmi1mtONMeXdfO5cDJ7D9jahouQyWpB7K4NWSTZDkvjrM4mVVC
-         73QAwK3AkAXKbIbDA1OB1pZpS9ZOOCcZq2FovDlhd3wmsTwfMUfGOsWW9kmbEP4GeSbr
-         R3j4crI1E1aXvymtEgFFY2pXL0eya2iZPZ6bjtaurwQt64TKze4XvGfUrpxxuIdwjVWW
-         8Psu2Nbz+pj4UFwLe/kWklHLkjEZvei//xwZAJ24Ulp9EkSg6t3pLmX3y3znX3iC9MgT
-         /I6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVuCK8XgJ9dqjkidazRM5olsU8HBASStanOAxY7/2YKCDYGGhtzknVHseEDVc86iR/kOrQnGQYfmnp7@vger.kernel.org, AJvYcCW6QtDDOWwCd0EeAHnTO4c0uzXrVxrvh2jlzLXDnCAW5zXYW6bZhduqFk0zum/PkPwtxE1MEefyk9U857RL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk1N00PVC8bGWtrHg5TXCdwWMj5Jwq7wK5nj4YCPJE4sCjQUfY
-	d9LioRLvRQRXvtn6fxPLY/DYE3syQvVjx8BPT3h9aKA/JsbYxCAa
-X-Gm-Gg: ASbGncuhd/dfeGxlhf0/+B9IIofV+cfF93VXfCR7dnKWOCl+bMTH41KYMKcJnje71ek
-	/CSdlffZdOD+DaGHy3EJHbUwZ+3DuNebwKyssyacbDmH4n5IY4w9/iCpJNb2MxaNKRYS1vPZvn8
-	0bH/sn1h0tHY4p8jiHZNuZCsqmtH87C1aJmgWL3NhxjTOg8PIhNDYgVoNzQFTJOQlrknMBx0hPG
-	Qb181e2ryK3O5n953Y38aVFPVVGI4sh/dGaDhBOWzGtzrHlnDpXpEMwfwg1tDByyPEEewaSWFFh
-	qoaxfQcWbQKpr8vLy1FbDiximhOp/sWsMfqy0o7qerI7TPpbsCZh0qQxLLVj0NSKsCPMiyo6JY2
-	2Kl/P/ADBRT5cdro=
-X-Google-Smtp-Source: AGHT+IEO8Ku9a6HIDYbQtu7HYkIlwiUHOkaMZWGq1KsWHgfBv9ZWFnMh6u04RTRwJ+/8YE1l6aQXSA==
-X-Received: by 2002:a05:600c:1e2a:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-442f2168cefmr45995485e9.24.1747250334905;
-        Wed, 14 May 2025 12:18:54 -0700 (PDT)
-Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f39ef811sm38707525e9.35.2025.05.14.12.18.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 12:18:54 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Wed, 14 May 2025 21:18:38 +0200
-Subject: [PATCH v2 7/7] pinctrl: armada-37xx: propagate error from
- armada_37xx_pmx_set_by_name()
+	s=arc-20240116; t=1747253956; c=relaxed/simple;
+	bh=hYrU9RvV+4y2DHFLaQiCECHzjwEV+OkrnWnu8hwtrgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWrInO6x2H9b0gn3AGxsnG8oFx210UazMW94Sl3TcJcCBsW2EeOq1Jq76R1hsIh4wwA7C7MdvhGt3VJW9xxfvosv9aP48AXOAryEa12v8k+b/SuVTlHS2ACNJC97kybmaeBTb0Hr67UdkSNLlHCG3a8Dq46dZW4FAzAGr4fv2/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W5A4U/Mu; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747253954; x=1778789954;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hYrU9RvV+4y2DHFLaQiCECHzjwEV+OkrnWnu8hwtrgU=;
+  b=W5A4U/MuznMYUwssUybHr6Rm/LiqYcRbcNvoGaVrM0pMreeuwRcSJ8Ka
+   84wBWgCnBpmzoL4ysw+gfyJlXo1Hqi1/wC7cgo/3j9fnTCCn1vG7uzFWD
+   D/iq/HDdKCuxjsMvnHPZjla4jtDtYm9cDkvkW2IKpvDl4Jj86amqx6BcK
+   8U7whg80bbHgzJrj6dHAvem/AMlFbgAtMYXesN8Q7ExgLZ8logmU9r2tb
+   pQGMO7Spj/C0Rcwg4YwWjlhMEXntykI3xoonrVhoMMM7mJXTCpFyJdRNK
+   mPtmNXNDE5VBkY52/svEXTCCvTzFEf7N1M/boNYR/0+CRRM+cEDXwQhaz
+   g==;
+X-CSE-ConnectionGUID: 5QWR/utISUGSfEbj7XcfMQ==
+X-CSE-MsgGUID: ROBM/K5iR62ukral0Mu3MQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="71677944"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="71677944"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 13:19:14 -0700
+X-CSE-ConnectionGUID: aoXVi9WcQ9WWpZlstv9FhA==
+X-CSE-MsgGUID: c9k03sXERRO7riqhJkfvNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="169084389"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 14 May 2025 13:19:10 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFIZH-000HWZ-2b;
+	Wed, 14 May 2025 20:19:07 +0000
+Date: Thu, 15 May 2025 04:18:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Xianwei Zhao <xianwei.zhao@amlogic.com>
+Subject: Re: [PATCH 5/8] pinctrl: meson: support amlogic S6/S7/S7D SoC
+Message-ID: <202505150408.vMuuQH5G-lkp@intel.com>
+References: <20250514-s6-s7-pinctrl-v1-5-39d368cad250@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-pinctrl-a37xx-fixes-v2-7-07e9ac1ab737@gmail.com>
-References: <20250514-pinctrl-a37xx-fixes-v2-0-07e9ac1ab737@gmail.com>
-In-Reply-To: <20250514-pinctrl-a37xx-fixes-v2-0-07e9ac1ab737@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>, 
- Gregory Clement <gregory.clement@bootlin.com>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514-s6-s7-pinctrl-v1-5-39d368cad250@amlogic.com>
 
-The regmap_update_bits() function can fail, so propagate its error
-up to the stack instead of silently ignoring that.
+Hi Xianwei,
 
-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
----
-Changes in v2:
-  - remove 'stable' and 'Fixes' tags
-  - add 'Reviewed-by' tag from Andrew
-  - reorder 'Signed-off-by' tags (result of 'b4 trailers -u')
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 18c6c5026b26c294ee65e3deea02d2e852e10622..f35bf0cd98c97419ba0ab0291a23d4774a595d39 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -358,9 +358,7 @@ static int armada_37xx_pmx_set_by_name(struct pinctrl_dev *pctldev,
- 
- 	val = grp->val[func];
- 
--	regmap_update_bits(info->regmap, reg, mask, val);
--
--	return 0;
-+	return regmap_update_bits(info->regmap, reg, mask, val);
- }
- 
- static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
+[auto build test ERROR on aa94665adc28f3fdc3de2979ac1e98bae961d6ca]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Xianwei-Zhao-via-B4-Relay/dt-bindings-pinctl-amlogic-pinctrl-a4-Add-compatible-string-for-S7/20250514-150438
+base:   aa94665adc28f3fdc3de2979ac1e98bae961d6ca
+patch link:    https://lore.kernel.org/r/20250514-s6-s7-pinctrl-v1-5-39d368cad250%40amlogic.com
+patch subject: [PATCH 5/8] pinctrl: meson: support amlogic S6/S7/S7D SoC
+config: arm64-randconfig-004-20250514 (https://download.01.org/0day-ci/archive/20250515/202505150408.vMuuQH5G-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250515/202505150408.vMuuQH5G-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505150408.vMuuQH5G-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pinctrl/meson/pinctrl-amlogic-a4.c:128:13: error: designator into flexible array member subobject
+     128 |         .multi_data[0] = {
+         |                    ^~~~~~~
+     129 |                 .m_bank_id = AMLOGIC_GPIO_CC,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     130 |                 .m_bit_offs = 24,
+         |                 ~~~~~~~~~~~~~~~~~
+     131 |                 .sid = (AMLOGIC_GPIO_X << 8) + 16,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     132 |                 .eid = (AMLOGIC_GPIO_X << 8) + 19,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     133 |         },
+         |         ~
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:69:19: note: initialized flexible array member 'multi_data' is here
+      69 |         struct multi_mux multi_data[];
+         |                          ^
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:138:13: error: designator into flexible array member subobject
+     138 |         .multi_data[0] = {
+         |                    ^~~~~~~
+     139 |                 .m_bank_id = AMLOGIC_GPIO_CC,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     140 |                 .m_bit_offs = 24,
+         |                 ~~~~~~~~~~~~~~~~~
+     141 |                 .sid = (AMLOGIC_GPIO_X << 8) + 16,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     142 |                 .eid = (AMLOGIC_GPIO_X << 8) + 19,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     143 |         },
+         |         ~
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:69:19: note: initialized flexible array member 'multi_data' is here
+      69 |         struct multi_mux multi_data[];
+         |                          ^
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:144:13: error: designator into flexible array member subobject
+     144 |         .multi_data[1] = {
+         |                    ^~~~~~~
+     145 |                 .m_bank_id = AMLOGIC_GPIO_F,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     146 |                 .m_bit_offs = 4,
+         |                 ~~~~~~~~~~~~~~~~
+     147 |                 .sid = (AMLOGIC_GPIO_D << 8) + 6,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     148 |                 .eid = (AMLOGIC_GPIO_D << 8) + 6,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     149 |         },
+         |         ~
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:69:19: note: initialized flexible array member 'multi_data' is here
+      69 |         struct multi_mux multi_data[];
+         |                          ^
+   3 errors generated.
+
+
+vim +128 drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+
+   125	
+   126	const struct aml_pctl_data s7_priv_data = {
+   127		.number = 1,
+ > 128		.multi_data[0] = {
+   129			.m_bank_id = AMLOGIC_GPIO_CC,
+   130			.m_bit_offs = 24,
+   131			.sid = (AMLOGIC_GPIO_X << 8) + 16,
+   132			.eid = (AMLOGIC_GPIO_X << 8) + 19,
+   133		},
+   134	};
+   135	
 
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
