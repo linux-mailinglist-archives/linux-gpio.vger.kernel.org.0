@@ -1,149 +1,142 @@
-Return-Path: <linux-gpio+bounces-20144-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20145-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4209AB6845
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 11:59:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40C01AB687C
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 12:15:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DEF21887644
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 09:59:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBE731BA06BB
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:15:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E8E325DD13;
-	Wed, 14 May 2025 09:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CE17BA42;
+	Wed, 14 May 2025 10:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1ZgMsxn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iVsAw0OE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD77C13E41A;
-	Wed, 14 May 2025 09:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704C414A09C
+	for <linux-gpio@vger.kernel.org>; Wed, 14 May 2025 10:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216780; cv=none; b=uiSaW/jsdMB+x4EugaQ3K2sI7JRqlItfGihAqH9CKpog0THDV7IrONlnlylaQX4jyhuj/dq/I9qFwnYvwH3ov6ZTtfykWffpkvWBYWtM+Y35tKuONDAzNLgjG6G7/hMsP47feFxa4DZRY3ZDmOFhEMThDx32hlWWBDy2ZEU/ZH4=
+	t=1747217706; cv=none; b=s+0MxkDTUPN4jYCDUdVCEf4USZ5WFua3FgE0yo5FO/NaPcqsWIXWVIb7l9ySWFJQDLOj9yZ+f35FYsmnh2LRtzcvxXhm4gVJM3lj7rw66iBFMg5/G0Tp4LqsT2SGAln6Vi4kcsuV17awZpOuLwi5QU64e0kxR1JEVrsyAsxmLRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216780; c=relaxed/simple;
-	bh=BIvliVdYqXYrImtlDwKxLO6W8rVjN3lVoNpwHJ7DmqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jfWj/fCEkIASJKGAugykXMsvkx9y56beOmBuMobx7KbRrk3+yKWo49/dUq4J72InmZNVmxwAYcbmWXXFOAaE/AUcap+UN4+AUGRPFhl4dnB4iG9fbej3EyY7c5qHyIEVEsvxVrja0D/mYiNBWi3QTAWBsb0hOA/2AjfRWEw1iaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1ZgMsxn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0E4C4CEE9;
-	Wed, 14 May 2025 09:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747216779;
-	bh=BIvliVdYqXYrImtlDwKxLO6W8rVjN3lVoNpwHJ7DmqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O1ZgMsxntfuQjd/h0unBrYQzcBKcUtoZTyNYAlmMYABq7mggbRuFNxpn9cAuJ6eDk
-	 0Z8XvWh06F7bYvpiZwiclrBuU8j/kYGkd6FpebniW4vlRWP7vflhc0jS+0li+X1D55
-	 N1L/QACKMuDc2pwJXUq8VNiM3M2ugqKzbWPVq1IIwCvakFQTbLHcJctn/pfLuR3ZW+
-	 JOkyjtI/bRtsKS0x0AdnKXUQrtSUeFaeKQ5Qn+eJez4y8yC4grPLdUyTwK8KAtoSsF
-	 A+r2Dl0BkVNvO/eI5Tc0yoN9/SB0KVF+6VRjlHN+akhG8PVIsjIekmlRQWWQNHh+Uj
-	 U/O/LV2oEVORw==
-Date: Wed, 14 May 2025 11:59:35 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v8 05/11] regmap: irq: Add support for chips without
- separate IRQ status
-Message-ID: <aCRph9Qo7BbtTjIR@finisterre.sirena.org.uk>
-References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
- <20250509-mdb-max7360-support-v8-5-bbe486f6bcb7@bootlin.com>
+	s=arc-20240116; t=1747217706; c=relaxed/simple;
+	bh=wDmraekW7m0pgFwPRFE4S7PnYUyPMFc7PeEJ7Alaud0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LeGhrooD+SmQVpTTA4kMSUZemr3dhc8ZihC/jRA7gHbRnrHSQy8UvYicjqQW0eZrSSYHPp2yYB2IJ/jKxyZT0boVgiMg+bSYqhak+yvbnTjuoUkEQHdBxjoRFGBFGDHBPX8ya2LzzyVQpnv2zFC+lJsyUXHnJfO2Qi7dPx/A3kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iVsAw0OE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747217703;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K8LKDxEPlK0zUrqmN4DZvo7SZOHbpNlPdUFt+T51TxI=;
+	b=iVsAw0OE2vGJCyUNvW6ugcxjU7vSSbGD92RyjT5sMmupNXNUIMZ88541/tp/VEhQ7n1qUT
+	oyWnl0avt8d9/CuW1efMdgdTscgETcK1B+EEX2UgC5ldbk+X3PFwvq/x10HC/J02w9tfJK
+	dbjyRG8CUIEO5V+pbDti8SHEJ2epFCE=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-UQy9zZ41M8uNfWYn8J23yQ-1; Wed, 14 May 2025 06:15:02 -0400
+X-MC-Unique: UQy9zZ41M8uNfWYn8J23yQ-1
+X-Mimecast-MFC-AGG-ID: UQy9zZ41M8uNfWYn8J23yQ_1747217701
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb61452b27so731105766b.2
+        for <linux-gpio@vger.kernel.org>; Wed, 14 May 2025 03:15:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747217701; x=1747822501;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K8LKDxEPlK0zUrqmN4DZvo7SZOHbpNlPdUFt+T51TxI=;
+        b=fytx+ybRwcntXtgMB1LCm2WWnivGtkhT/VdJmNy0R2mlgSpNKUqQFzOTGy4YFO1FM6
+         mGQ7bLakQ2ECOrAX92P8kMNagItqvw+XDjPueqZOOFi8kP4UPdGNBGMInhkNRzjII6OQ
+         K22wzJhPRh01F8Rm7/qMgASTRZl3gamZs8ezSZbVLei6MbV6UNQeDND4XmrPlMOSrs5Q
+         wY1NjNFrt6hu85NztsUcwVh7LTTD9vIt5hwKotd9pe2WK9lGqZ58bDnVH28myXoNYCWa
+         HdV3Y43k98aULvU7h44nsjqEBoHXei2MsAnXAccvjgiCkpVzkyhaEg0K6hrUai5X/CPn
+         5FdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXfy3f66yyySifv2lev72prj8kJzEr2lAVFWoMFgJ+sGHMSH0WPbsMY231yNupUW0j8GvJmtEgfd/S@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrQhkmGgNQMNIGq9wssO7P8Ls2uiHBz5ynarh/m0y/i6Hc6WtQ
+	Se0w2zFGSrLQDOfb64V5p4qtcQcviy+WSiwK+sfSRE7KvB5zSbctU6MEQDGNA2AwDQycOS9lSOX
+	+pSkmcQxhO73GvlzxszDhoGz8ifXlAvEm+drW8Ig/JR9iczxqfxIhON9KxhA=
+X-Gm-Gg: ASbGncsjAJB4GYRm4ngC5HscyytEF+mP21IIc9P/IPB6wX5SLt/+IPo/1E+shcuGAff
+	FR4ZRl7aJ7mfFkgAMOidXQKqJ/1w5Yhnkpn1QrALMuYe/M3AP5EXy01c9Xg9XYjuqTFaQOQhTCa
+	Eco0z8zN+vtfbz4DkHGZVFVpLZ6zCsI3pBpw8PfERA5PVlmhmRoTYV4fmD2LjH/+bK7u18uwJz7
+	v7iyrckH7RpFPDo+PzGMTaLMCt94K5M2IGcVNAPmR2kyx4blqUNgSrMcGDy17FAcUwom8V5ZUTS
+	nGz1O9SY4gUY/oJwaQ==
+X-Received: by 2002:a17:907:96ab:b0:ad2:293d:166e with SMTP id a640c23a62f3a-ad4f717a571mr262750066b.31.1747217700922;
+        Wed, 14 May 2025 03:15:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHL7kdzll3t4oQ25ZYCbLYS9k6oyFJfi2q4wOT/F3rxR/d4Hx5O00NDK2zGNm+A5NAW2+hs3g==
+X-Received: by 2002:a17:907:96ab:b0:ad2:293d:166e with SMTP id a640c23a62f3a-ad4f717a571mr262748266b.31.1747217700550;
+        Wed, 14 May 2025 03:15:00 -0700 (PDT)
+Received: from [192.168.37.224] ([109.36.142.219])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad21947acf8sm912226966b.85.2025.05.14.03.14.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 03:14:59 -0700 (PDT)
+Message-ID: <adda844f-1dc7-4c4d-90f1-ddba1c99be65@redhat.com>
+Date: Wed, 14 May 2025 12:14:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Z3tfCnzQ5p+24U/H"
-Content-Disposition: inline
-In-Reply-To: <20250509-mdb-max7360-support-v8-5-bbe486f6bcb7@bootlin.com>
-X-Cookie: Well begun is half done.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Mika Westerberg <westeri@kernel.org>
+References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+On 13-May-25 12:00, Andy Shevchenko wrote:
+> The GPIO ACPI helpers use a few quirks which consumes approximately 20%
+> of the file. Besides that the necessary bits are sparse and being directly
+> referred. Split them to a separate file. There is no functional change.
+> 
+> For the new file I used the Hans' authorship of Hans as he the author of
+> all those bits (expect very tiny changes made by this series).
+> 
+> Hans, please check if it's okay and confirm, or suggest better alternative.
+
+Thanks, the entire series looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
 
 
---Z3tfCnzQ5p+24U/H
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 09, 2025 at 11:14:39AM +0200, Mathieu Dubois-Briand wrote:
-> Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
-> provide an IRQ status for each separate line: only the current gpio
-> level can be retrieved.
-
-This doesn't build in a wide range of configurations (none at all
-AFAICT):
-
-/build/stage/linux/drivers/base/regmap/regmap-irq.c: In function =E2=80=98r=
-egmap_add_irq
-_chip_fwnode=E2=80=99:
-/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:88: error: macro "a=
-rray_
-size" requires 2 arguments, but only 1 given
-  914 |                 memcpy(d->prev_status_buf, d->status_buf, array_siz=
-e(d->
-prev_status_buf));
-      |                                                                    =
-    =20
-               ^
-In file included from /build/stage/linux/include/linux/string.h:13,
-                 from /build/stage/linux/include/linux/bitmap.h:13,
-                 from /build/stage/linux/include/linux/cpumask.h:12,
-                 from /build/stage/linux/include/linux/smp.h:13,
-                 from /build/stage/linux/include/linux/lockdep.h:14,
-                 from /build/stage/linux/include/linux/spinlock.h:63,
-                 from /build/stage/linux/include/linux/sched.h:2213,
-                 from /build/stage/linux/include/linux/ratelimit.h:6,
-                 from /build/stage/linux/include/linux/dev_printk.h:16,
-                 from /build/stage/linux/include/linux/device.h:15,
-                 from /build/stage/linux/drivers/base/regmap/regmap-irq.c:1=
-0:
-/build/stage/linux/include/linux/overflow.h:327:9: note: macro "array_size"=
- defined here
-  327 | #define array_size(a, b)        size_mul(a, b)
-      |         ^~~~~~~~~~
-/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:59: error: =E2=80=
-=98array_size=E2=80=99 undeclared (first use in this function)
-  914 |                 memcpy(d->prev_status_buf, d->status_buf, array_siz=
-e(d->prev_status_buf));
-      |                                                           ^~~~~~~~~~
-/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:59: note: each unde=
-clared identifier is reported only once for each function it appears in
 
 
---Z3tfCnzQ5p+24U/H
-Content-Type: application/pgp-signature; name="signature.asc"
+> Andy Shevchenko (4):
+>   gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
+>   gpiolib: acpi: Handle deferred list via new API
+>   gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
+>   gpiolib: acpi: Move quirks to a separate file
+> 
+>  drivers/gpio/Makefile                         |   1 +
+>  .../{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 344 +----------------
+>  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
+>  drivers/gpio/gpiolib-acpi.h                   |  15 +
+>  4 files changed, 392 insertions(+), 331 deletions(-)
+>  rename drivers/gpio/{gpiolib-acpi.c => gpiolib-acpi-core.c} (79%)
+>  create mode 100644 drivers/gpio/gpiolib-acpi-quirks.c
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkaYYACgkQJNaLcl1U
-h9D5cAf+JhYoPK5A9iw0gYMdc9xLOUPvzCDacN5d5KvUrO4WUo6ZpEumlPwyI5kX
-700vdHFINWEJgKwy1UTRj70pXgkPkVUDDDZ4Y2hZZloQEgl10N+mm/hUZLxNlNRS
-N6idzTanOzTogg/bVYiNuMylxLNewGi93QqK7oplFA5eaRVbgFd5y1VJsECAEyfo
-TNqEmn+isUKmP0uC3NWbADZek2IOZ5wqt7WBVPPvF3zdNaLelFCiMw+N7Zm8xI1r
-S9UOfg4eKan6E2SVhwyr5Aemj+gpEhFgpJEVRUpOXZOGIymWcf2oFqbvDFs1YuLg
-n02uX8JFzuLgwFezUggjRZsJVJxw1A==
-=Mu44
------END PGP SIGNATURE-----
-
---Z3tfCnzQ5p+24U/H--
 
