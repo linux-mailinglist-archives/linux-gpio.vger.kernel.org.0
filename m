@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-20133-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20134-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1362BAB658C
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:15:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FCFFAB658D
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 10:15:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D85716AAD9
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 08:15:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D8C93B1DCC
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 08:14:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67B432222D8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2A6222586;
 	Wed, 14 May 2025 08:13:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="n6fO3eWh"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JBytGkVs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D87B21D5BC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DD0221F31;
 	Wed, 14 May 2025 08:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210415; cv=none; b=akIjtzv6TdSRaSY9jB3vUVlACaR7XxvvjtHKbNTV6/0uFwmYCevPw9bCkTL+3ywJsI3virzJDkgClIvnV84xSeErg+Wp/irY/rVpD6aXtaHvWox4b7PvwAGwy4H3hRoO3ZG9UMNIomrCAyXxlpNgn/gkUBGKOgquC6SZC/iysQQ=
+	t=1747210415; cv=none; b=b/XAJL/PdleOwhkq4xEQ54PilcTFeklkfxKFJAMwixGku6whJQNMC4cd38dw1oXu7l5vGMc9nIEhcmWJbfGe2SBEE/84GpmIMW6h1wv/lP8YNnu6xzlcw32TgHh9BZrstoHYnTPtTkoPn3+GJOG3VdbQCD93D7vnzrQB0XlYIlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747210415; c=relaxed/simple;
-	bh=hAtxVgsu9e7nAOGkR3BzVgrLTkP22lj54gIMgpXGwuQ=;
+	bh=AGTCzqmZXVj+4ts7fS3QleRFQAOGyo6HtsJYB8J8FIs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kN1KJlGy7TUfq073Tozef019dX6r28EaMbdhYsTUkJUYY6BsV3G3epq+iZ+B0cqdZe8c4w2aKPfbGARWgLx3ysTbTGelZUoMrcaQAl4wuhGuOpmoA69zQbLU5pu7y2vDdgiG2uov8JVKh0/gHFb4sO4KocW/qPA0AdQruxywh1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=n6fO3eWh; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=q9jMBE9q55A6IZh9T3W91jAlHV2m1EH8HYgU6SKkk94pDQ9D5gDmZM/SLlbJ/3bOjTw1uGeGQ9sfIglnV78XtMTAgbL7QbkO4N7dTExtkeGYaQ0jDTs2VSENBN/aqMvvXdxV/ktiVSnis5C9fLAr8ZCMc8SfIx/nCEfADoACK7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=JBytGkVs; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 4f41c3e8309b11f0813e4fe1310efc19-20250514
+X-UUID: 50b48f08309b11f082f7f7ac98dee637-20250514
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=1wYKSB0FjMx8jlJ18TzsF4CiOFsK9W13XLG7zuQRGJM=;
-	b=n6fO3eWh9ydVcT8mW2taXV4YSYZ2sMS22ErkARqir2q7KxN3yGvoH7+BpfPtiMJtgqxPHBoSHcL36trWNOshA8V6zaAXjB/EUJAR9qS4LQ4kQ5BYGU0LN2IuEyMh96ooqvyxIE9oGlnmJMOE5rDWe0iG1rWhKiYF6IJ645FahLA=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qQ/NJ1Nq3m3eqkVwKQNXAbkoO/MPiQiiYozuGVrUpmY=;
+	b=JBytGkVsGjHCJeOOSKRqv7BS3ZC2rLpRtONTu/Oj6Go2hLtWAZ9E39WSTFxgC5llnQ3JM/iVq+fcVCz2FNLy+jdR+6vzfv87wGX17HqI4n2KwLPr3ScbnvrkbpgUZMUmZPT+doMBLdyP63vIHgxGtcxFZvIOrrtUcunuS0sUzWg=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:9d3ee266-ea54-4e9e-b1e6-88573ce77554,IP:0,UR
-	L:25,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:20
-X-CID-META: VersionHash:0ef645f,CLOUDID:6973bf73-805e-40ad-809d-9cec088f3bd8,B
+X-CID-O-INFO: VERSION:1.2.1,REQID:81bb1a31-5961-4b3f-867f-69e947edeeea,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:0ef645f,CLOUDID:9078b697-7410-4084-8094-24619d975b02,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:97|99|83|11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 4f41c3e8309b11f0813e4fe1310efc19-20250514
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 50b48f08309b11f082f7f7ac98dee637-20250514
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
 	(envelope-from <darren.ye@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 231114876; Wed, 14 May 2025 16:13:25 +0800
+	with ESMTP id 1726141518; Wed, 14 May 2025 16:13:28 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 14 May 2025 16:13:18 +0800
+ 15.2.1258.39; Wed, 14 May 2025 16:13:25 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 14 May 2025 16:13:22 +0800
+ 15.2.1258.39 via Frontend Transport; Wed, 14 May 2025 16:13:24 +0800
 From: Darren.Ye <darren.ye@mediatek.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
 CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
 	<darren.ye@mediatek.com>
-Subject: [PATCH v3 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add audio AFE document
-Date: Wed, 14 May 2025 16:11:10 +0800
-Message-ID: <20250514081125.24475-9-darren.ye@mediatek.com>
+Subject: [PATCH v3 09/10] ASoC: mediatek: mt8196: add machine driver with nau8825
+Date: Wed, 14 May 2025 16:11:11 +0800
+Message-ID: <20250514081125.24475-10-darren.ye@mediatek.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250514081125.24475-1-darren.ye@mediatek.com>
 References: <20250514081125.24475-1-darren.ye@mediatek.com>
@@ -87,175 +87,933 @@ X-MTK: N
 
 From: Darren Ye <darren.ye@mediatek.com>
 
-Add mt8196 audio AFE document.
+Add support for mt8196 board with nau8825.
 
 Signed-off-by: Darren Ye <darren.ye@mediatek.com>
 ---
- .../bindings/sound/mediatek,mt8196-afe.yaml   | 155 ++++++++++++++++++
- 1 file changed, 155 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+ sound/soc/mediatek/Kconfig                 |  22 +-
+ sound/soc/mediatek/mt8196/Makefile         |   3 +
+ sound/soc/mediatek/mt8196/mt8196-nau8825.c | 869 +++++++++++++++++++++
+ 3 files changed, 893 insertions(+), 1 deletion(-)
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-nau8825.c
 
-diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+diff --git a/sound/soc/mediatek/Kconfig b/sound/soc/mediatek/Kconfig
+index 63d4abebb539..90515f7df2cb 100644
+--- a/sound/soc/mediatek/Kconfig
++++ b/sound/soc/mediatek/Kconfig
+@@ -328,4 +328,24 @@ config SND_SOC_MT8196
+ 	  This adds ASoC driver for Mediatek MT8196 boards
+ 	  that can be used with other codecs.
+ 	  Select Y if you have such device.
+-	  If unsure select "N".
+\ No newline at end of file
++	  If unsure select "N".
++
++config SND_SOC_MT8196_NAU8825
++	tristate "ASoc Audio driver for MT8196 with NAU8825 and I2S codec"
++	depends on SND_SOC_MT8196
++	depends on I2C
++	select SND_SOC_HDMI_CODEC
++	select SND_SOC_DMIC
++	select SND_SOC_NAU8315
++	select SND_SOC_NAU8825
++	select SND_SOC_RT5645
++	select SND_SOC_RT5682_I2C
++	select SND_SOC_RT5682S
++	select SND_SOC_TAS2781_COMLIB
++	select SND_SOC_TAS2781_FMWLIB
++	select SND_SOC_TAS2781_I2C
++	help
++	  This adds support for ASoC machine driver for MediaTek MT8196
++	  boards with the NAU8825 and other I2S audio codecs.
++	  Select Y if you have such device.
++	  If unsure select "N".
+diff --git a/sound/soc/mediatek/mt8196/Makefile b/sound/soc/mediatek/mt8196/Makefile
+index b8a51a53d52a..453279a11313 100644
+--- a/sound/soc/mediatek/mt8196/Makefile
++++ b/sound/soc/mediatek/mt8196/Makefile
+@@ -13,3 +13,6 @@ snd-soc-mt8196-afe-objs += \
+ 	mt8196-dai-tdm.o
+ 
+ obj-$(CONFIG_SND_SOC_MT8196) += snd-soc-mt8196-afe.o
++
++# machine driver
++obj-$(CONFIG_SND_SOC_MT8196_NAU8825) += mt8196-nau8825.o
+diff --git a/sound/soc/mediatek/mt8196/mt8196-nau8825.c b/sound/soc/mediatek/mt8196/mt8196-nau8825.c
 new file mode 100644
-index 000000000000..384a97ab5f4e
+index 000000000000..6452484a2777
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
-@@ -0,0 +1,155 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/mediatek,mt8196-afe.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/sound/soc/mediatek/mt8196/mt8196-nau8825.c
+@@ -0,0 +1,869 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  mt8196-nau8825.c  --  mt8196 nau8825 ALSA SoC machine driver
++ *
++ *  Copyright (c) 2024 MediaTek Inc.
++ *  Author: Darren Ye <darren.ye@mediatek.com>
++ */
 +
-+title: MediaTek Audio Front End PCM controller for MT8196
++#include <linux/module.h>
++#include <linux/pm_runtime.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/jack.h>
++#include <linux/input.h>
++#include <linux/of_device.h>
 +
-+maintainers:
-+  - Darren Ye <darren.ye@mediatek.com>
++#include "mtk-afe-platform-driver.h"
++#include "mt8196-afe-common.h"
++#include "mtk-afe-platform-driver.h"
++#include "mtk-soundcard-driver.h"
++#include "mtk-dsp-sof-common.h"
++#include "mtk-soc-card.h"
 +
-+properties:
-+  compatible:
-+    const: mediatek,mt8196-afe
++#include "../../codecs/nau8825.h"
++#include "../../codecs/rt5682s.h"
 +
-+  reg:
-+    maxItems: 1
++#define NAU8825_HS_PRESENT	BIT(0)
++#define RT5682S_HS_PRESENT	BIT(1)
++#define RT5650_HS_PRESENT	BIT(2)
 +
-+  interrupts:
-+    maxItems: 1
++/*
++ * Nau88l25
++ */
++#define NAU8825_CODEC_DAI  "nau8825-hifi"
 +
-+  memory-region:
-+    maxItems: 1
++/*
++ * Rt5682s
++ */
++#define RT5682S_CODEC_DAI     "rt5682s-aif1"
 +
-+  mediatek,vlpcksys:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: To set up the apll12 tuner
++/*
++ * Rt5650
++ */
++#define RT5650_CODEC_DAI     "rt5645-aif1"
 +
-+  power-domains:
-+    maxItems: 1
++#define SOF_DMA_DL1 "SOF_DMA_DL1"
++#define SOF_DMA_DL_24CH "SOF_DMA_DL_24CH"
++#define SOF_DMA_UL0 "SOF_DMA_UL0"
++#define SOF_DMA_UL1 "SOF_DMA_UL1"
++#define SOF_DMA_UL2 "SOF_DMA_UL2"
 +
-+  clocks:
-+    items:
-+      - description: mux for audio intbus
-+      - description: mux for audio engen1
-+      - description: mux for audio engen2
-+      - description: mux for audio h
-+      - description: vlp 26m clock
-+      - description: audio apll1 clock
-+      - description: audio apll2 clock
-+      - description: audio apll1 divide4
-+      - description: audio apll2 divide4
-+      - description: audio apll12 divide for i2sin0
-+      - description: audio apll12 divide for i2sin1
-+      - description: audio apll12 divide for fmi2s
-+      - description: audio apll12 divide for tdmout mck
-+      - description: audio apll12 divide for tdmout bck
-+      - description: mux for audio apll1
-+      - description: mux for audio apll2
-+      - description: mux for i2sin0 mck
-+      - description: mux for i2sin1 mck
-+      - description: mux for fmi2s mck
-+      - description: mux for tdmout mck
-+      - description: mux for adsp clock
-+      - description: 26m clock
++enum mt8196_jacks {
++	MT8196_JACK_HEADSET,
++	MT8196_JACK_DP,
++	MT8196_JACK_HDMI,
++	MT8196_JACK_MAX,
++};
 +
-+  clock-names:
-+    items:
-+      - const: top_aud_intbus
-+      - const: top_aud_eng1
-+      - const: top_aud_eng2
-+      - const: top_aud_h
-+      - const: vlp_clk26m
-+      - const: apll1
-+      - const: apll2
-+      - const: apll1_d4
-+      - const: apll2_d4
-+      - const: apll12_div_i2sin0
-+      - const: apll12_div_i2sin1
-+      - const: apll12_div_fmi2s
-+      - const: apll12_div_tdmout_m
-+      - const: apll12_div_tdmout_b
-+      - const: top_apll1
-+      - const: top_apll2
-+      - const: top_i2sin0
-+      - const: top_i2sin1
-+      - const: top_fmi2s
-+      - const: top_tdmout
-+      - const: top_adsp
-+      - const: clk26m
++static struct snd_soc_jack_pin mt8196_dp_jack_pins[] = {
++	{
++		.pin = "DP",
++		.mask = SND_JACK_LINEOUT,
++	},
++};
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - mediatek,vlpcksys
-+  - power-domains
-+  - memory-region
-+  - clocks
-+  - clock-names
++static struct snd_soc_jack_pin mt8196_hdmi_jack_pins[] = {
++	{
++		.pin = "HDMI",
++		.mask = SND_JACK_LINEOUT,
++	},
++};
 +
-+additionalProperties: false
++static struct snd_soc_jack_pin nau8825_jack_pins[] = {
++	{
++		.pin    = "Headphone Jack",
++		.mask   = SND_JACK_HEADPHONE,
++	},
++	{
++		.pin    = "Headset Mic",
++		.mask   = SND_JACK_MICROPHONE,
++	},
++};
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
++static const struct snd_kcontrol_new mt8196_dumb_spk_controls[] = {
++	SOC_DAPM_PIN_SWITCH("Ext Spk"),
++};
 +
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++static const struct snd_soc_dapm_widget mt8196_dumb_spk_widgets[] = {
++	SND_SOC_DAPM_SPK("Ext Spk", NULL),
++};
 +
-+        afe@1a110000 {
-+            compatible = "mediatek,mt8196-afe";
-+            reg = <0 0x1a110000 0 0x9000>;
-+            interrupts = <GIC_SPI 351 IRQ_TYPE_LEVEL_HIGH 0>;
-+            memory-region = <&afe_dma_mem_reserved>;
-+            mediatek,vlpcksys = <&vlp_cksys_clk>;
-+            power-domains = <&scpsys 14>; //MT8196_POWER_DOMAIN_AUDIO
-+            clocks = <&vlp_cksys_clk 40>, //CLK_VLP_CK_AUD_INTBUS_SEL
-+                     <&vlp_cksys_clk 38>, //CLK_VLP_CK_AUD_ENGEN1_SEL
-+                     <&vlp_cksys_clk 39>, //CLK_VLP_CK_AUD_ENGEN2_SEL
-+                     <&vlp_cksys_clk 37>, //CLK_VLP_CK_AUDIO_H_SEL
-+                     <&vlp_cksys_clk 45>, //CLK_VLP_CK_CLKSQ
-+                     <&cksys_clk 129>, //CLK_CK_APLL1
-+                     <&cksys_clk 132>, //CLK_CK_APLL2
-+                     <&cksys_clk 130>, //CLK_CK_APLL1_D4
-+                     <&cksys_clk 133>, //CLK_CK_APLL2_D4
-+                     <&cksys_clk 80>, //CLK_CK_APLL12_CK_DIV_I2SIN0
-+                     <&cksys_clk 81>, //CLK_CK_APLL12_CK_DIV_I2SIN1
-+                     <&cksys_clk 92>, //CLK_CK_APLL12_CK_DIV_FMI2S
-+                     <&cksys_clk 93>, //CLK_CK_APLL12_CK_DIV_TDMOUT_M
-+                     <&cksys_clk 94>, //CLK_CK_APLL12_CK_DIV_TDMOUT_B
-+                     <&cksys_clk 43>, //CLK_CK_AUD_1_SEL
-+                     <&cksys_clk 44>, //CLK_CK_AUD_2_SEL
-+                     <&cksys_clk 66>, //CLK_CK_APLL_I2SIN0_MCK_SEL
-+                     <&cksys_clk 67>, //CLK_CK_APLL_I2SIN1_MCK_SEL
-+                     <&cksys_clk 78>, //CLK_CK_APLL_FMI2S_MCK_SEL
-+                     <&cksys_clk 79>, //CLK_CK_APLL_TDMOUT_MCK_SEL
-+                     <&cksys_clk 45>, //CLK_CK_ADSP_SEL
-+                     <&cksys_clk 140>; //CLK_CK_TCK_26M_MX9
-+            clock-names = "top_aud_intbus",
-+                          "top_aud_eng1",
-+                          "top_aud_eng2",
-+                          "top_aud_h",
-+                          "vlp_clk26m",
-+                          "apll1",
-+                          "apll2",
-+                          "apll1_d4",
-+                          "apll2_d4",
-+                          "apll12_div_i2sin0",
-+                          "apll12_div_i2sin1",
-+                          "apll12_div_fmi2s",
-+                          "apll12_div_tdmout_m",
-+                          "apll12_div_tdmout_b",
-+                          "top_apll1",
-+                          "top_apll2",
-+                          "top_i2sin0",
-+                          "top_i2sin1",
-+                          "top_fmi2s",
-+                          "top_tdmout",
-+                          "top_adsp",
-+                          "clk26m";
-+        };
-+    };
++static const struct snd_soc_dapm_widget mt8196_nau8825_widgets[] = {
++	SND_SOC_DAPM_HP("Headphone Jack", NULL),
++	SND_SOC_DAPM_MIC("Headset Mic", NULL),
++	SND_SOC_DAPM_SINK("DP"),
++};
++
++static const struct snd_kcontrol_new mt8196_nau8825_controls[] = {
++	SOC_DAPM_PIN_SWITCH("Headphone Jack"),
++	SOC_DAPM_PIN_SWITCH("Headset Mic"),
++};
++
++#define EXT_SPK_AMP_W_NAME "Ext_Speaker_Amp"
++
++static struct snd_soc_card mt8196_nau8825_soc_card;
++
++static const struct snd_soc_dapm_widget mt8196_nau8825_card_widgets[] = {
++	/* dynamic pinctrl */
++	SND_SOC_DAPM_PINCTRL("ETDMIN_SPK_PIN", "aud-gpio-i2sin4-on", "aud-gpio-i2sin4-off"),
++	SND_SOC_DAPM_PINCTRL("ETDMOUT_SPK_PIN", "aud-gpio-i2sout4-on", "aud-gpio-i2sout4-off"),
++	SND_SOC_DAPM_PINCTRL("ETDMIN_HP_PIN", "aud-gpio-i2sin6-on", "aud-gpio-i2sin6-off"),
++	SND_SOC_DAPM_PINCTRL("ETDMOUT_HP_PIN", "aud-gpio-i2sout6-on", "aud-gpio-i2sout6-off"),
++	SND_SOC_DAPM_PINCTRL("ETDMIN_HDMI_PIN", "aud-gpio-i2sin3-on", "aud-gpio-i2sin3-off"),
++	SND_SOC_DAPM_PINCTRL("ETDMOUT_HDMI_PIN", "aud-gpio-i2sout3-on", "aud-gpio-i2sout3-off"),
++	SND_SOC_DAPM_PINCTRL("AP_DMIC0_PIN", "aud-gpio-ap-dmic-on", "aud-gpio-ap-dmic-off"),
++	SND_SOC_DAPM_PINCTRL("AP_DMIC1_PIN", "aud-gpio-ap-dmic1-on", "aud-gpio-ap-dmic1-off"),
++};
++
++static const struct snd_soc_dapm_route mt8196_nau8825_card_routes[] = {
++};
++
++static const struct snd_kcontrol_new mt8196_nau8825_card_controls[] = {
++	SOC_DAPM_PIN_SWITCH(EXT_SPK_AMP_W_NAME),
++};
++
++/*
++ * define mtk_spk_i2s_mck node in dts when need mclk,
++ * BE i2s need assign snd_soc_ops = mt8196_nau8825_i2s_ops
++ */
++static int mt8196_nau8825_i2s_hw_params(struct snd_pcm_substream *substream,
++					struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	unsigned int rate = params_rate(params);
++	unsigned int mclk_fs_ratio = 128;
++	unsigned int mclk_fs = rate * mclk_fs_ratio;
++	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
++
++	return snd_soc_dai_set_sysclk(cpu_dai,
++				      0, mclk_fs, SND_SOC_CLOCK_OUT);
++}
++
++static const struct snd_soc_ops mt8196_nau8825_i2s_ops = {
++	.hw_params = mt8196_nau8825_i2s_hw_params,
++};
++
++static int mt8196_dptx_hw_params(struct snd_pcm_substream *substream,
++				 struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	unsigned int rate = params_rate(params);
++	unsigned int mclk_fs_ratio = 256;
++	unsigned int mclk_fs = rate * mclk_fs_ratio;
++	struct snd_soc_dai *dai = snd_soc_rtd_to_cpu(rtd, 0);
++
++	return snd_soc_dai_set_sysclk(dai, 0, mclk_fs, SND_SOC_CLOCK_OUT);
++}
++
++static const struct snd_soc_ops mt8196_dptx_ops = {
++	.hw_params = mt8196_dptx_hw_params,
++};
++
++static int mt8196_dptx_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
++				       struct snd_pcm_hw_params *params)
++{
++	dev_info(rtd->dev, "fix format to 32bit\n");
++
++	/* fix BE i2s format to 32bit, clean param mask first */
++	snd_mask_reset_range(hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT),
++			     0, (__force unsigned int)SNDRV_PCM_FORMAT_LAST);
++
++	params_set_format(params, SNDRV_PCM_FORMAT_S32_LE);
++
++	return 0;
++}
++
++static int mt8196_i2s_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
++				      struct snd_pcm_hw_params *params)
++{
++	dev_info(rtd->dev, "fix format to 32bit\n");
++
++	/* fix BE i2s format to 32bit, clean param mask first */
++	snd_mask_reset_range(hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT),
++			     0, SNDRV_PCM_FORMAT_LAST);
++
++	params_set_format(params, SNDRV_PCM_FORMAT_S32_LE);
++	return 0;
++}
++
++static int mt8196_sof_be_hw_params(struct snd_pcm_substream *substream,
++				   struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
++	struct snd_soc_component *cmpnt_afe = NULL;
++	struct snd_soc_pcm_runtime *runtime;
++
++	/* find afe component */
++	for_each_card_rtds(rtd->card, runtime) {
++		cmpnt_afe = snd_soc_rtdcom_lookup(runtime, AFE_PCM_NAME);
++		if (cmpnt_afe) {
++			dev_info(rtd->dev, "component->name: %s\n", cmpnt_afe->name);
++			break;
++		}
++	}
++
++	if (cmpnt_afe && !pm_runtime_active(cmpnt_afe->dev)) {
++		dev_err(rtd->dev, "afe pm runtime is not active!!\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct snd_soc_ops mt8196_sof_be_ops = {
++	.hw_params = mt8196_sof_be_hw_params,
++};
++
++static const struct sof_conn_stream g_sof_conn_streams[] = {
++	{
++		.sof_link = "AFE_SOF_DL1",
++		.sof_dma = SOF_DMA_DL1,
++		.stream_dir = SNDRV_PCM_STREAM_PLAYBACK
++	},
++	{
++		.sof_link = "AFE_SOF_DL_24CH",
++		.sof_dma = SOF_DMA_DL_24CH,
++		.stream_dir = SNDRV_PCM_STREAM_PLAYBACK
++	},
++	{
++		.sof_link = "AFE_SOF_UL0",
++		.sof_dma = SOF_DMA_UL0,
++		.stream_dir = SNDRV_PCM_STREAM_CAPTURE
++	},
++	{
++		.sof_link = "AFE_SOF_UL1",
++		.sof_dma = SOF_DMA_UL1,
++		.stream_dir = SNDRV_PCM_STREAM_CAPTURE
++	},
++	{
++		.sof_link = "AFE_SOF_UL2",
++		.sof_dma = SOF_DMA_UL2,
++		.stream_dir = SNDRV_PCM_STREAM_CAPTURE
++	},
++};
++
++/* FE */
++SND_SOC_DAILINK_DEFS(playback1,
++		     DAILINK_COMP_ARRAY(COMP_CPU("DL1")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(playback_24ch,
++		     DAILINK_COMP_ARRAY(COMP_CPU("DL_24CH")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(capture0,
++		     DAILINK_COMP_ARRAY(COMP_CPU("UL0")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(capture1,
++		     DAILINK_COMP_ARRAY(COMP_CPU("UL1")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(capture2,
++		     DAILINK_COMP_ARRAY(COMP_CPU("UL2")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(playback_hdmi,
++		     DAILINK_COMP_ARRAY(COMP_CPU("HDMI")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(playback2,
++		     DAILINK_COMP_ARRAY(COMP_CPU("DL2")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(capture_cm0,
++		     DAILINK_COMP_ARRAY(COMP_CPU("UL_CM0")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++/* BE */
++SND_SOC_DAILINK_DEFS(ap_dmic,
++		     DAILINK_COMP_ARRAY(COMP_CPU("AP_DMIC")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(ap_dmic_ch34,
++		     DAILINK_COMP_ARRAY(COMP_CPU("AP_DMIC_CH34")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(ap_dmic_multich,
++		     DAILINK_COMP_ARRAY(COMP_CPU("AP_DMIC_MULTICH")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(i2sin6,
++		     DAILINK_COMP_ARRAY(COMP_CPU("I2SIN6")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(i2sout3,
++		     DAILINK_COMP_ARRAY(COMP_CPU("I2SOUT3")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(i2sout4,
++		     DAILINK_COMP_ARRAY(COMP_CPU("I2SOUT4")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(i2sout6,
++		     DAILINK_COMP_ARRAY(COMP_CPU("I2SOUT6")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(tdm_dptx,
++		     DAILINK_COMP_ARRAY(COMP_CPU("TDM_DPTX")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(AFE_SOF_DL_24CH,
++		     DAILINK_COMP_ARRAY(COMP_CPU("SOF_DL_24CH")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(AFE_SOF_DL1,
++		     DAILINK_COMP_ARRAY(COMP_CPU("SOF_DL1")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(AFE_SOF_UL0,
++		     DAILINK_COMP_ARRAY(COMP_CPU("SOF_UL0")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(AFE_SOF_UL1,
++		     DAILINK_COMP_ARRAY(COMP_CPU("SOF_UL1")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(AFE_SOF_UL2,
++		     DAILINK_COMP_ARRAY(COMP_CPU("SOF_UL2")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++
++static struct snd_soc_dai_link mt8196_nau8825_dai_links[] = {
++	/*
++	 * The SOF topology expects PCM streams 0~4 to be available
++	 * for the SOF PCM streams. Put the SOF BE definitions here
++	 * so that the PCM device numbers are skipped over.
++	 * (BE dailinks do not have PCM devices created.)
++	 */
++	{
++		.name = "AFE_SOF_DL_24CH",
++		.no_pcm = 1,
++		.playback_only = 1,
++		.ops = &mt8196_sof_be_ops,
++		SND_SOC_DAILINK_REG(AFE_SOF_DL_24CH),
++	},
++	{
++		.name = "AFE_SOF_DL1",
++		.no_pcm = 1,
++		.playback_only = 1,
++		.ops = &mt8196_sof_be_ops,
++		SND_SOC_DAILINK_REG(AFE_SOF_DL1),
++	},
++	{
++		.name = "AFE_SOF_UL0",
++		.no_pcm = 1,
++		.capture_only = 1,
++		.ops = &mt8196_sof_be_ops,
++		SND_SOC_DAILINK_REG(AFE_SOF_UL0),
++	},
++	{
++		.name = "AFE_SOF_UL1",
++		.no_pcm = 1,
++		.capture_only = 1,
++		.ops = &mt8196_sof_be_ops,
++		SND_SOC_DAILINK_REG(AFE_SOF_UL1),
++	},
++	{
++		.name = "AFE_SOF_UL2",
++		.no_pcm = 1,
++		.capture_only = 1,
++		.ops = &mt8196_sof_be_ops,
++		SND_SOC_DAILINK_REG(AFE_SOF_UL2),
++	},
++	/* Front End DAI links */
++	{
++		.name = "HDMI_FE",
++		.stream_name = "HDMI Playback",
++		.trigger = {SND_SOC_DPCM_TRIGGER_PRE,
++			    SND_SOC_DPCM_TRIGGER_PRE},
++		.dynamic = 1,
++		.playback_only = 1,
++		SND_SOC_DAILINK_REG(playback_hdmi),
++	},
++	{
++		.name = "DL2_FE",
++		.stream_name = "DL2 Playback",
++		.trigger = {SND_SOC_DPCM_TRIGGER_PRE,
++			    SND_SOC_DPCM_TRIGGER_PRE},
++		.dynamic = 1,
++		.playback_only = 1,
++		SND_SOC_DAILINK_REG(playback2),
++	},
++	{
++		.name = "UL_CM0_FE",
++		.stream_name = "UL_CM0 Capture",
++		.trigger = {SND_SOC_DPCM_TRIGGER_PRE,
++			    SND_SOC_DPCM_TRIGGER_PRE},
++		.dynamic = 1,
++		.capture_only = 1,
++		SND_SOC_DAILINK_REG(capture_cm0),
++	},
++	{
++		.name = "DL_24CH_FE",
++		.stream_name = "DL_24CH Playback",
++		.trigger = {SND_SOC_DPCM_TRIGGER_PRE,
++				SND_SOC_DPCM_TRIGGER_PRE},
++		.dynamic = 1,
++		.playback_only = 1,
++		SND_SOC_DAILINK_REG(playback_24ch),
++	},
++	{
++		.name = "DL1_FE",
++		.stream_name = "DL1 Playback",
++		.trigger = {SND_SOC_DPCM_TRIGGER_PRE,
++				SND_SOC_DPCM_TRIGGER_PRE},
++		.dynamic = 1,
++		.playback_only = 1,
++		SND_SOC_DAILINK_REG(playback1),
++	},
++	{
++		.name = "UL0_FE",
++		.stream_name = "UL0 Capture",
++		.trigger = {SND_SOC_DPCM_TRIGGER_PRE,
++				SND_SOC_DPCM_TRIGGER_PRE},
++		.dynamic = 1,
++		.capture_only = 1,
++		SND_SOC_DAILINK_REG(capture0),
++	},
++	{
++		.name = "UL1_FE",
++		.stream_name = "UL1 Capture",
++		.trigger = {SND_SOC_DPCM_TRIGGER_PRE,
++				SND_SOC_DPCM_TRIGGER_PRE},
++		.dynamic = 1,
++		.capture_only = 1,
++		SND_SOC_DAILINK_REG(capture1),
++	},
++	{
++		.name = "UL2_FE",
++		.stream_name = "UL2 Capture",
++		.trigger = {SND_SOC_DPCM_TRIGGER_PRE,
++				SND_SOC_DPCM_TRIGGER_PRE},
++		.dynamic = 1,
++		.capture_only = 1,
++		SND_SOC_DAILINK_REG(capture2),
++	},
++	/* Back End DAI links */
++	{
++		.name = "I2SIN6_BE",
++		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_CBS_CFS
++			| SND_SOC_DAIFMT_GATED,
++		.ops = &mt8196_nau8825_i2s_ops,
++		.no_pcm = 1,
++		.capture_only = 1,
++		.ignore_suspend = 1,
++		.be_hw_params_fixup = mt8196_i2s_hw_params_fixup,
++		SND_SOC_DAILINK_REG(i2sin6),
++	},
++	{
++		.name = "I2SOUT4_BE",
++		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_CBS_CFS
++			| SND_SOC_DAIFMT_GATED,
++		.ops = &mt8196_nau8825_i2s_ops,
++		.no_pcm = 1,
++		.playback_only = 1,
++		.ignore_suspend = 1,
++		.ignore_pmdown_time = 1,
++		.be_hw_params_fixup = mt8196_i2s_hw_params_fixup,
++		SND_SOC_DAILINK_REG(i2sout4),
++	},
++	{
++		.name = "I2SOUT6_BE",
++		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_CBS_CFS
++			| SND_SOC_DAIFMT_GATED,
++		.ops = &mt8196_nau8825_i2s_ops,
++		.no_pcm = 1,
++		.playback_only = 1,
++		.ignore_suspend = 1,
++		.be_hw_params_fixup = mt8196_i2s_hw_params_fixup,
++		SND_SOC_DAILINK_REG(i2sout6),
++	},
++	{
++		.name = "AP_DMIC_BE",
++		.no_pcm = 1,
++		.capture_only = 1,
++		.ignore_suspend = 1,
++		SND_SOC_DAILINK_REG(ap_dmic),
++	},
++	{
++		.name = "AP_DMIC_CH34_BE",
++		.no_pcm = 1,
++		.capture_only = 1,
++		.ignore_suspend = 1,
++		SND_SOC_DAILINK_REG(ap_dmic_ch34),
++	},
++	{
++		.name = "AP_DMIC_MULTICH_BE",
++		.no_pcm = 1,
++		.capture_only = 1,
++		.ignore_suspend = 1,
++		SND_SOC_DAILINK_REG(ap_dmic_multich),
++	},
++	{
++		.name = "TDM_DPTX_BE",
++		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_CBS_CFS
++			| SND_SOC_DAIFMT_GATED,
++		.ops = &mt8196_dptx_ops,
++		.be_hw_params_fixup = mt8196_dptx_hw_params_fixup,
++		.no_pcm = 1,
++		.playback_only = 1,
++		.ignore_suspend = 1,
++		SND_SOC_DAILINK_REG(tdm_dptx),
++	},
++	{
++		.name = "I2SOUT3_BE",
++		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_CBS_CFS
++			| SND_SOC_DAIFMT_GATED,
++		.ops = &mt8196_nau8825_i2s_ops,
++		.no_pcm = 1,
++		.playback_only = 1,
++		.ignore_suspend = 1,
++		SND_SOC_DAILINK_REG(i2sout3),
++	},
++};
++
++static int mt8196_dumb_amp_init(struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_soc_card *card = rtd->card;
++	int ret = 0;
++
++	ret = snd_soc_dapm_new_controls(&card->dapm, mt8196_dumb_spk_widgets,
++					ARRAY_SIZE(mt8196_dumb_spk_widgets));
++	if (ret) {
++		dev_err(rtd->dev, "unable to add Dumb Speaker dapm, ret %d\n", ret);
++		return ret;
++	}
++
++	ret = snd_soc_add_card_controls(card, mt8196_dumb_spk_controls,
++					ARRAY_SIZE(mt8196_dumb_spk_controls));
++	if (ret) {
++		dev_err(rtd->dev, "unable to add Dumb card controls, ret %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int mt8196_dptx_codec_init(struct snd_soc_pcm_runtime *rtd)
++{
++	struct mtk_soc_card_data *soc_card_data = snd_soc_card_get_drvdata(rtd->card);
++	struct snd_soc_jack *jack = &soc_card_data->card_data->jacks[MT8196_JACK_DP];
++	struct snd_soc_component *component = snd_soc_rtd_to_codec(rtd, 0)->component;
++	int ret = 0;
++
++	ret = snd_soc_card_jack_new_pins(rtd->card, "DP Jack", SND_JACK_LINEOUT,
++					 jack, mt8196_dp_jack_pins,
++					 ARRAY_SIZE(mt8196_dp_jack_pins));
++	if (ret) {
++		dev_err(rtd->dev, "new jack failed: %d\n", ret);
++		return ret;
++	}
++
++	ret = snd_soc_component_set_jack(component, jack, NULL);
++	if (ret) {
++		dev_err(rtd->dev, "set jack failed on %s (ret=%d)\n",
++			component->name, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int mt8196_hdmi_codec_init(struct snd_soc_pcm_runtime *rtd)
++{
++	struct mtk_soc_card_data *soc_card_data = snd_soc_card_get_drvdata(rtd->card);
++	struct snd_soc_jack *jack = &soc_card_data->card_data->jacks[MT8196_JACK_HDMI];
++	struct snd_soc_component *component = snd_soc_rtd_to_codec(rtd, 0)->component;
++	int ret = 0;
++
++	ret = snd_soc_card_jack_new_pins(rtd->card, "HDMI Jack", SND_JACK_LINEOUT,
++					 jack, mt8196_hdmi_jack_pins,
++					 ARRAY_SIZE(mt8196_hdmi_jack_pins));
++	if (ret) {
++		dev_err(rtd->dev, "new jack failed: %d\n", ret);
++		return ret;
++	}
++
++	ret = snd_soc_component_set_jack(component, jack, NULL);
++	if (ret) {
++		dev_err(rtd->dev, "set jack failed on %s (ret=%d)\n",
++			component->name, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int mt8196_headset_codec_init(struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_soc_card *card = rtd->card;
++	struct mtk_soc_card_data *soc_card_data = snd_soc_card_get_drvdata(card);
++	struct snd_soc_jack *jack = &soc_card_data->card_data->jacks[MT8196_JACK_HEADSET];
++	struct snd_soc_component *component = snd_soc_rtd_to_codec(rtd, 0)->component;
++	int ret;
++	int type;
++
++	ret = snd_soc_dapm_new_controls(&card->dapm, mt8196_nau8825_widgets,
++					ARRAY_SIZE(mt8196_nau8825_widgets));
++	if (ret) {
++		dev_err(rtd->dev, "unable to add nau8825 card widget, ret %d\n", ret);
++		return ret;
++	}
++
++	ret = snd_soc_add_card_controls(card, mt8196_nau8825_controls,
++					ARRAY_SIZE(mt8196_nau8825_controls));
++	if (ret) {
++		dev_err(rtd->dev, "unable to add nau8825 card controls, ret %d\n", ret);
++		return ret;
++	}
++
++	ret = snd_soc_card_jack_new_pins(rtd->card, "Headset Jack",
++					 SND_JACK_HEADSET | SND_JACK_BTN_0 |
++					 SND_JACK_BTN_1 | SND_JACK_BTN_2 |
++					 SND_JACK_BTN_3,
++					 jack,
++					 nau8825_jack_pins,
++					 ARRAY_SIZE(nau8825_jack_pins));
++	if (ret) {
++		dev_err(rtd->dev, "Headset Jack creation failed: %d\n", ret);
++		return ret;
++	}
++
++	snd_jack_set_key(jack->jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
++	snd_jack_set_key(jack->jack, SND_JACK_BTN_1, KEY_VOICECOMMAND);
++	snd_jack_set_key(jack->jack, SND_JACK_BTN_2, KEY_VOLUMEUP);
++	snd_jack_set_key(jack->jack, SND_JACK_BTN_3, KEY_VOLUMEDOWN);
++
++	type = SND_JACK_HEADSET | SND_JACK_BTN_0 | SND_JACK_BTN_1 | SND_JACK_BTN_2 | SND_JACK_BTN_3;
++	ret = snd_soc_component_set_jack(component, jack, (void *)&type);
++
++	if (ret) {
++		dev_err(rtd->dev, "Headset Jack call-back failed: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++};
++
++static void mt8196_headset_codec_exit(struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_soc_component *component = snd_soc_rtd_to_codec(rtd, 0)->component;
++
++	snd_soc_component_set_jack(component, NULL, NULL);
++}
++
++static int mt8196_nau8825_hw_params(struct snd_pcm_substream *substream,
++				    struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
++	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
++	unsigned int rate = params_rate(params);
++	unsigned int bit_width = params_width(params);
++	int clk_freq, ret;
++
++	clk_freq = rate * 2 * bit_width;
++
++	/* Configure clock for codec */
++	ret = snd_soc_dai_set_sysclk(codec_dai, NAU8825_CLK_FLL_BLK, 0,
++				     SND_SOC_CLOCK_IN);
++	if (ret < 0) {
++		dev_err(codec_dai->dev, "can't set BCLK clock %d\n", ret);
++		return ret;
++	}
++
++	/* Configure pll for codec */
++	ret = snd_soc_dai_set_pll(codec_dai, 0, 0, clk_freq,
++				  params_rate(params) * 256);
++	if (ret < 0) {
++		dev_err(codec_dai->dev, "can't set BCLK: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct snd_soc_ops mt8196_nau8825_ops = {
++	.hw_params = mt8196_nau8825_hw_params,
++};
++
++static int mt8196_rt5682s_i2s_hw_params(struct snd_pcm_substream *substream,
++					struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_card *card = rtd->card;
++	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
++	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
++	unsigned int rate = params_rate(params);
++	int bitwidth;
++	int ret;
++
++	bitwidth = snd_pcm_format_width(params_format(params));
++	if (bitwidth < 0) {
++		dev_err(card->dev, "invalid bit width: %d\n", bitwidth);
++		return bitwidth;
++	}
++
++	ret = snd_soc_dai_set_tdm_slot(codec_dai, 0x00, 0x0, 0x2, bitwidth);
++	if (ret) {
++		dev_err(card->dev, "failed to set tdm slot\n");
++		return ret;
++	}
++
++	ret = snd_soc_dai_set_pll(codec_dai, RT5682S_PLL1, RT5682S_PLL_S_BCLK1,
++				  rate * 32, rate * 512);
++	if (ret) {
++		dev_err(card->dev, "failed to set pll\n");
++		return ret;
++	}
++
++	dev_info(card->dev, "%s set mclk rate: %d\n", __func__, rate * 512);
++
++	ret = snd_soc_dai_set_sysclk(codec_dai, RT5682S_SCLK_S_MCLK,
++				     rate * 512, SND_SOC_CLOCK_IN);
++	if (ret) {
++		dev_err(card->dev, "failed to set sysclk\n");
++		return ret;
++	}
++
++	return snd_soc_dai_set_sysclk(cpu_dai, 0, rate * 512,
++				      SND_SOC_CLOCK_OUT);
++}
++
++static const struct snd_soc_ops mt8196_rt5682s_i2s_ops = {
++	.hw_params = mt8196_rt5682s_i2s_hw_params,
++};
++
++static int mt8196_nau8825_soc_card_probe(struct mtk_soc_card_data *soc_card_data, bool legacy)
++{
++	struct snd_soc_card *card = soc_card_data->card_data->card;
++	struct snd_soc_dai_link *dai_link;
++	bool init_nau8825 = false;
++	bool init_rt5682s = false;
++	bool init_rt5650 = false;
++	bool init_dumb = false;
++	int i;
++
++	dev_info(card->dev, "legacy: %d\n", legacy);
++
++	for_each_card_prelinks(card, i, dai_link) {
++		if (strcmp(dai_link->name, "TDM_DPTX_BE") == 0) {
++			if (dai_link->num_codecs &&
++			    strcmp(dai_link->codecs->dai_name, "snd-soc-dummy-dai"))
++				dai_link->init = mt8196_dptx_codec_init;
++		} else if (strcmp(dai_link->name, "I2SOUT3_BE") == 0) {
++			if (dai_link->num_codecs &&
++			    strcmp(dai_link->codecs->dai_name, "snd-soc-dummy-dai"))
++				dai_link->init = mt8196_hdmi_codec_init;
++		} else if (strcmp(dai_link->name, "I2SOUT6_BE") == 0 ||
++			   strcmp(dai_link->name, "I2SIN6_BE") == 0) {
++			if (!strcmp(dai_link->codecs->dai_name, NAU8825_CODEC_DAI)) {
++				dai_link->ops = &mt8196_nau8825_ops;
++				if (!init_nau8825) {
++					dai_link->init = mt8196_headset_codec_init;
++					dai_link->exit = mt8196_headset_codec_exit;
++					init_nau8825 = true;
++				}
++			} else if (!strcmp(dai_link->codecs->dai_name, RT5682S_CODEC_DAI)) {
++				dai_link->ops = &mt8196_rt5682s_i2s_ops;
++				if (!init_rt5682s) {
++					dai_link->init = mt8196_headset_codec_init;
++					dai_link->exit = mt8196_headset_codec_exit;
++					init_rt5682s = true;
++				}
++			} else if (!strcmp(dai_link->codecs->dai_name, RT5650_CODEC_DAI)) {
++				dai_link->ops = &mt8196_rt5682s_i2s_ops;
++				if (!init_rt5650) {
++					dai_link->init = mt8196_headset_codec_init;
++					dai_link->exit = mt8196_headset_codec_exit;
++					init_rt5650 = true;
++				}
++			} else {
++				if (strcmp(dai_link->codecs->dai_name, "snd-soc-dummy-dai")) {
++					if (!init_dumb) {
++						dai_link->init = mt8196_dumb_amp_init;
++						init_dumb = true;
++					}
++				}
++			}
++		}
++	}
++
++	return 0;
++}
++
++static const struct mtk_sof_priv mt8196_sof_priv = {
++	.conn_streams = g_sof_conn_streams,
++	.num_streams = ARRAY_SIZE(g_sof_conn_streams),
++};
++
++static struct snd_soc_card mt8196_nau8825_soc_card = {
++	.owner = THIS_MODULE,
++	.dai_link = mt8196_nau8825_dai_links,
++	.num_links = ARRAY_SIZE(mt8196_nau8825_dai_links),
++	.dapm_widgets = mt8196_nau8825_card_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(mt8196_nau8825_card_widgets),
++	.dapm_routes = mt8196_nau8825_card_routes,
++	.num_dapm_routes = ARRAY_SIZE(mt8196_nau8825_card_routes),
++	.controls = mt8196_nau8825_card_controls,
++	.num_controls = ARRAY_SIZE(mt8196_nau8825_card_controls),
++};
++
++static const struct mtk_soundcard_pdata mt8196_nau8825_card = {
++	.card_name = "mt8196_nau8825",
++	.card_data = &(struct mtk_platform_card_data) {
++		.card = &mt8196_nau8825_soc_card,
++		.num_jacks = MT8196_JACK_MAX,
++		.flags = NAU8825_HS_PRESENT
++	},
++	.sof_priv = &mt8196_sof_priv,
++	.soc_probe = mt8196_nau8825_soc_card_probe,
++};
++
++static const struct mtk_soundcard_pdata mt8196_rt5682s_card = {
++	.card_name = "mt8196_rt5682s",
++	.card_data = &(struct mtk_platform_card_data) {
++		.card = &mt8196_nau8825_soc_card,
++		.num_jacks = MT8196_JACK_MAX,
++		.flags = RT5682S_HS_PRESENT
++	},
++	.sof_priv = &mt8196_sof_priv,
++	.soc_probe = mt8196_nau8825_soc_card_probe,
++};
++
++static const struct mtk_soundcard_pdata mt8196_rt5650_card = {
++	.card_name = "mt8196_rt5650",
++	.card_data = &(struct mtk_platform_card_data) {
++		.card = &mt8196_nau8825_soc_card,
++		.num_jacks = MT8196_JACK_MAX,
++		.flags = RT5650_HS_PRESENT
++	},
++	.sof_priv = &mt8196_sof_priv,
++	.soc_probe = mt8196_nau8825_soc_card_probe,
++};
++
++static const struct of_device_id mt8196_nau8825_dt_match[] = {
++	{.compatible = "mediatek,mt8196-nau8825-sound", .data = &mt8196_nau8825_card,},
++	{.compatible = "mediatek,mt8196-rt5682s-sound", .data = &mt8196_rt5682s_card,},
++	{.compatible = "mediatek,mt8196-rt5650-sound", .data = &mt8196_rt5650_card,},
++	{}
++};
++MODULE_DEVICE_TABLE(of, mt8196_nau8825_dt_match);
++
++static struct platform_driver mt8196_nau8825_driver = {
++	.driver = {
++		.name = "mt8196-nau8825",
++		.of_match_table = mt8196_nau8825_dt_match,
++		.pm = &snd_soc_pm_ops,
++	},
++	.probe = mtk_soundcard_common_probe,
++};
++module_platform_driver(mt8196_nau8825_driver);
++
++/* Module information */
++MODULE_DESCRIPTION("MT8196 nau8825 ALSA SoC machine driver");
++MODULE_AUTHOR("Darren Ye <darren.ye@mediatek.com>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("mt8196 nau8825 soc card");
++
 -- 
 2.45.2
 
