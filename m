@@ -1,110 +1,109 @@
-Return-Path: <linux-gpio+bounces-20184-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20185-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81755AB78D4
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 00:11:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4BA4AB790F
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 00:28:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17EA64A77CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 22:11:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 912DA1BA34C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 22:29:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26DCB224224;
-	Wed, 14 May 2025 22:11:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2B13221FBD;
+	Wed, 14 May 2025 22:28:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8oD9goZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lVSWe5Ok"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0311BC3F;
-	Wed, 14 May 2025 22:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EA61EA7D6
+	for <linux-gpio@vger.kernel.org>; Wed, 14 May 2025 22:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747260680; cv=none; b=tITn/iENrayVoXfmJcvdOZbN9pBPHvZHpzx35pATFfrZ4GGFDDyAQ2b6aDnydAXU9Nz6K8Dk2TIhNrCfcarKeCOGeG4QvqlVAVnPkav8NtbWfPv9MWYMzBmiJvRpd3r9BUlJHR48Wek34+FcgdEztO6Eeyt41agJCUFU7CLbjrQ=
+	t=1747261724; cv=none; b=FeDOAfJnKkMxzKnkMXFF5J6W1hbCgmARTCRDFIi2UjgSbr2K7MJCBOgJdi9x1xi+9AGtDXYoxzLGH0WHp2nED5pxCPbinlAswq6upHnmsew1Xw/8n05K2C1trOr08DB70kyi3zKs2qconDrALojBtyZmAOhtlLpPOCg707av0Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747260680; c=relaxed/simple;
-	bh=4UaJQCgd2hT5pkJkwrytXoNgO3X8wC20SnyuDVFYARo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oH/CD1xQjKqlv4smQWN+DwI1Bkg4C7NOgAy4CY9Yr1PR0BWSfyUPF5QZ68Vl8FJLcrcY/3SsTX/F+h4iPVt8f75zRcGhJdf1YqmegVowC9nVW3hsUhXc+jfTIHKcuhAR74+KZ7rm8gYIwpzz0lqpQjss9y1P+0A2/58v6GeAsFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8oD9goZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1F6EC4CEE3;
-	Wed, 14 May 2025 22:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747260680;
-	bh=4UaJQCgd2hT5pkJkwrytXoNgO3X8wC20SnyuDVFYARo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t8oD9goZh6UuqsEju1LgX/cz+3etVU8bQZmK9BDGxyt3kRth1HC0B+pIwW0WKX/+q
-	 bavDuMc7udEHHdAp0xK4POoX7khNWR2RmN1jWJHoH+XJzEv5J2cmgFIbzjACMCmV6i
-	 ubs8GS1TwunKmx3Q0tz8Lu1BFyRBE2mqptFwaMu/Locchb2fwmOBO7QyaVGsEt5F1g
-	 pcNbcOxIblc7uacp+8QSW2nT7WhwEIAcBIcBYkGtgf2IEb0h6uRM48x8PqNNdeNV7o
-	 JhyVpUag0Fhzhhuzi04oGOedgTxstO8OxYKIRS66zMxSh9FQPeAB4q8i256PlNFhWX
-	 GBCFdHkX+XGqA==
-Date: Wed, 14 May 2025 17:11:18 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Dongcheng Yan <dongcheng.yan@intel.com>,
-	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
-	Taniya Das <quic_tdas@quicinc.com>, linux-staging@lists.linux.dev,
-	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	Zhi Mao <zhi.mao@mediatek.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Eric Biggers <ebiggers@google.com>, Liu Ying <victor.liu@nxp.com>,
-	devicetree@vger.kernel.org,
-	Julien Massot <julien.massot@collabora.com>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ross Burton <ross.burton@arm.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	Will Deacon <will@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 13/19] dt-bindings: media: i2c: max96714: add support
- for MAX96714R
-Message-ID: <174726067779.3133689.811162498884437185.robh@kernel.org>
-References: <20250512212832.3674722-1-demonsingur@gmail.com>
- <20250512212832.3674722-14-demonsingur@gmail.com>
+	s=arc-20240116; t=1747261724; c=relaxed/simple;
+	bh=ikg7uKNlFxdtInhouVVjlX/eWNb/Iocaf0FOoIsWq04=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pLdtBm0v6S1NfZoo47OWcoFJAqBlpaRDHO6UagnKPuH1JP4TqyfumttaInK8m/eIivQIX4IdVmRGApkAqjRov/xZL6r7f2zsUp0HKm9HyqhPaUc3TUoXYCDKzsoC1aH80gOqxMmhHqp2SiUcEVmgmB8iXdCFIbr67iX3pcsMR1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lVSWe5Ok; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54fbd1ba65dso263940e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 14 May 2025 15:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747261721; x=1747866521; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ikg7uKNlFxdtInhouVVjlX/eWNb/Iocaf0FOoIsWq04=;
+        b=lVSWe5OkMpmjEy0mhYsTTltJfu0oaUtd//WBacEWg7ZSevmG1HqR+FdcNn9YT9vPPP
+         5BOQetKQV+LeMQyoORqCJLjIDoBhtLFxdkpRtvP6xuq/keEFldb/aNQSDSQarbtL20oA
+         9dxkgEIkGIs7oz4WTcdcE+EIWN6n5FVzOztRQDX1NtiShFJqDH/QHP/K9v+3sYM3HLvA
+         O/qrQoBcK3YMD+2Rom5Bn32xjkSG8UNQ4CVXaPPzh6EzrdL6WoTY2p1jtmoRe/gu4B92
+         y1+EI5RcIydRYBiulEyJJL9tkHHrNjv+sYHTwG4Th9rf/GG7zGWo0Y9boJoH1zQr8mUV
+         yZMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747261721; x=1747866521;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ikg7uKNlFxdtInhouVVjlX/eWNb/Iocaf0FOoIsWq04=;
+        b=Uc6N8bBPFYFIuooN0irndMqP67gR/kuxVeftkQvWwj2hWISYbGcUFeeJKQGd/BESy8
+         sbYOv3oZ3VNR+7qZYrUIpQnsrTN/13hqIN8+xoVzRalgH7Y8cU8C3koZwLGJ6ErLmzHB
+         XBCjcJ6Hyr+rzeOcc9/qI4rOPFu3qNGYbr5k9PDVtbiDWelzt6xX4MNBIxMHfw1A2Lpm
+         3yg7wSlnvdIGH0NEiZJ9YUo1bZF9N4EkF2DqN0i2/krnqEe0JxBzQfKxvAzZE1gHX01i
+         wzFNQ6HoeLHMW0gIA25X5iiLIUrML1OmCD4PN7nw2s+ocSDvsM4QgG/mHlIn0y8SJpHA
+         sT8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUmrQ09N8r4MjcVe5i6WS4J4l8n+IF3ZXXeT/ZyErzxOWRJ6JeCo11VdtLjw2J4DE3zmdgbAMvZmEQF@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ0C/8d/gX4p0yqQ6Z80Sz4ijqq5dFNr0aGndeXlLjxwmuUl0B
+	4fPsAlADtxsV3a49eZCJhVnZqNptx+3NROVw5ZLsn1+jIp+0CX34uXla3oe+ndtwsYQIhIc48hE
+	R3ro4uLOmsgEuGJGGradiXf5ZqmNXLXsGd7lCqw==
+X-Gm-Gg: ASbGncu4O76WtK6On3uNJx7Tc411ZRbrsHV1kffJMrk5uaIWPGLkbK3EQ12TwiBrzls
+	KIowhmxcQk51XRNPV/NJzKpsnA4eJZx2K0rUtv5O6vEHOswUZUAmPoVWnDv31koMNxQyuuqKV8d
+	HbPvcAizXVJs6m1RyU8Cqg6WMf934wxrstt9/10a56LF8=
+X-Google-Smtp-Source: AGHT+IE1Vp4rlvI75qMKlDEVkN1t9zzD3BxyByO5SW27Vl1zUjiPYHzMEgLHLW0x21yYIa1dbtvC8PDJZuRwP2Kenrw=
+X-Received: by 2002:a05:6512:450c:b0:550:d534:2b10 with SMTP id
+ 2adb3069b0e04-550dd12aeeemr60274e87.35.1747261720610; Wed, 14 May 2025
+ 15:28:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512212832.3674722-14-demonsingur@gmail.com>
+References: <20250514-pinctrl-a37xx-fixes-v2-0-07e9ac1ab737@gmail.com>
+In-Reply-To: <20250514-pinctrl-a37xx-fixes-v2-0-07e9ac1ab737@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 15 May 2025 00:28:29 +0200
+X-Gm-Features: AX0GCFsW1KstBI2jcV_icDkbitXFWIRxmcRnuAcWr-VFZ0eu8OVxn2v41gFG6Ok
+Message-ID: <CACRpkdb2Njam8GGuN5yeR+DYvi0xe11xbARaoDepoGk=gAK6GA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] pinctrl: armada-37xx: a couple of small fixes
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 14, 2025 at 9:18=E2=80=AFPM Gabor Juhos <j4g8y7@gmail.com> wrot=
+e:
 
-On Tue, 13 May 2025 00:28:22 +0300, Cosmin Tanislav wrote:
-> MAX96714R is a lower capability variant of the MAX96714 which only
-> supports a fixed rate of 3Gbps in the forward direction.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  .../devicetree/bindings/media/i2c/maxim,max96714.yaml        | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+> The series contains several small patches to fix various
+> issues in the pinctrl driver for Armada 3700.
+>
+> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Patches applied by applying to a separate immutable branch
+and merging into my "devel" branch: we were clashing a bit
+with Bartosz rewrites so I had to help git a bit.
 
+Pushed to the autobuilders, check the result!
+
+Yours,
+Linus Walleij
 
