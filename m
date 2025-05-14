@@ -1,146 +1,110 @@
-Return-Path: <linux-gpio+bounces-20151-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20152-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA8C6AB6AC7
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 13:59:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FEF3AB6C3E
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 15:10:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E90D19E05AF
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 11:59:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3C5F1B63401
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 13:10:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D796F2750F4;
-	Wed, 14 May 2025 11:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6393627A918;
+	Wed, 14 May 2025 13:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pS5ClvLR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQY79gmH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DDD2750E3;
-	Wed, 14 May 2025 11:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1986A27A907;
+	Wed, 14 May 2025 13:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747223961; cv=none; b=YLqrcZi0pXi/avniqVzOzSibS8hIQe/9eTCqDjeLUVHPolOxMR+iwHr9+0TGrQOukJpNwiPwErXMxGtyCcC0FJfKYPCh6/ZTB+KTfOUS/HYxLF8/wEe8AJXDdCsYiUaZkg3H0Y6PuoCir9RsBMbZSYPaPYGvPP50o1CIHKW80d8=
+	t=1747228225; cv=none; b=Q1dq4s2PpdEV2XJk6piN3jU7beGQOmSD4Ic1p+VsnX9UTBqV4d8ElcvTn6Baab3KbxL8d7O96n/MoDUxuuSKlgie3JovruAyWpnHdDD3P3uW3xtLnlltLzqB4ACOyTHfcPyJBMLKBWFMlL3OF3mAuYsBD17BfHKK+A+3KA21sOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747223961; c=relaxed/simple;
-	bh=KhTRneUkTX9EBKW+iyOoaMIrQvNJC+gMVHEHh8UDj+I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:Cc:
-	 References:In-Reply-To; b=CukK4xw6VHrRrTjSb8Rsg1DNxaYaM9RXPOpJS3KQMwqpXx7pEhMa0vA6HnNTffrVqLZU+06AF4akUFLUxR6Simh2s++xOeAyy06I4LyqAvVzTvXMTiaHMNNpDXPuWJ29QwzaEOw85mDDi5xh6Z/YUbCpQ1e7nUaWDT9ZfFbvL7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pS5ClvLR; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E2F5243AE1;
-	Wed, 14 May 2025 11:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747223955;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hx8hZadhPLNPdx/ZVIFSoWCGdjdrp3mSlEudiBBNUXQ=;
-	b=pS5ClvLRuSk+5kUEP9oDRWUgPmmp8md/PBTinyu9u263y7Y1aVN/ZEV7mJtFy5tfDw0NG5
-	MHF7WB/EloSufQwNR/UK5323cmQt6RnHWFqrD0tuVV0DPKX+Ex6yVGQ5SYyHyOsepJUECV
-	xhh7xiBblKace48GK8/7uILLtbF85iqMUdVvr/LUUcaw+/qkcqXlOWGfLpYT/a5I83nVx6
-	i//NYXHuS1DZ/yFar21QR381M6oJhsjaqEgfjLadkUMBiGIENvJJXFG0AQWfwKLkEutaUF
-	d/61eZwhBkc9tOEDkZKLYKoQVeG4E8Hp+nZM+X8h0PRI/GWS/9FepiH+IlW/gg==
+	s=arc-20240116; t=1747228225; c=relaxed/simple;
+	bh=YSHixMfBQIo2tsjE+RpfvwcFjHExWTXe3JSwBkN0y4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jzM3A6YU1uVECgdC1YgHMSKHGiB0sXgdapTYUqm2u59DBeR20CAYpRhLkGKP9zxY9RV8KawBLUVRKp4ZjDKwr0PTTllzAhUTXx/IF37AV93sUX/VzXbG71CVuZKoTJFiRJWeCz+RdAC6vX5Jmh49rmuvwBaaSqtKCmpm/cVCfeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQY79gmH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4698CC4CEED;
+	Wed, 14 May 2025 13:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747228224;
+	bh=YSHixMfBQIo2tsjE+RpfvwcFjHExWTXe3JSwBkN0y4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UQY79gmHrxHRzHRhbVSBxQuv2MeZQvOdiwhA8wR0F3LXhBMnynNTPK2FM+JI4V3hr
+	 hHpdlDw8v/KzzwpiRPwKoLyRSPLNi1pBkS1S3ZSxgkbuJOHym2N4xp/LWsCwRKgbO1
+	 kRVlDYQXUj3wXNUsIvEceZfuTb78sbFxuypS8LB3h1o6DgB9VvxOBcREbSQZtO/5E3
+	 zKfQSybkNvfLgjedVEOI3qdP8XEZfNgFEvZYiMaWufJgQ6ORK4WuXbyoV0yf0ehQlR
+	 7EjHltYo4aem46Q+6rz3FUXpE4fEWbZrNu6S1TGtJZfHWdMrNSHDNbS7TI4MeXL++L
+	 rlBxpyhdR7aig==
+Date: Wed, 14 May 2025 08:10:22 -0500
+From: Rob Herring <robh@kernel.org>
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 6/8] dts: arm64: amlogic: add S7 pinctrl node
+Message-ID: <20250514131022.GA1833633-robh@kernel.org>
+References: <20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com>
+ <20250514-s6-s7-pinctrl-v1-6-39d368cad250@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 May 2025 13:59:11 +0200
-Message-Id: <D9VV76MU61HW.XEELOHWXFW3Q@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Mark Brown" <broonie@kernel.org>
-Subject: Re: [PATCH v8 05/11] regmap: irq: Add support for chips without
- separate IRQ status
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
- <20250509-mdb-max7360-support-v8-5-bbe486f6bcb7@bootlin.com>
- <aCRph9Qo7BbtTjIR@finisterre.sirena.org.uk>
-In-Reply-To: <aCRph9Qo7BbtTjIR@finisterre.sirena.org.uk>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdeileefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkhffvufevofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehvedtkeffueelheektddvjefhiefhgedtudevgeehvdevlefgveetkeevleelteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtdegmegtvggttdemfhdtheefmegvfhegmeefjeefjeemfeeijeejmegvvgdtieemugelvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtdegmegtvggttdemfhdtheefmegvfhegmeefjeefjeemfeeijeejmegvvgdtieemugelvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtt
- hhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514-s6-s7-pinctrl-v1-6-39d368cad250@amlogic.com>
 
-On Wed May 14, 2025 at 11:59 AM CEST, Mark Brown wrote:
-> On Fri, May 09, 2025 at 11:14:39AM +0200, Mathieu Dubois-Briand wrote:
->> Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
->> provide an IRQ status for each separate line: only the current gpio
->> level can be retrieved.
->
-> This doesn't build in a wide range of configurations (none at all
-> AFAICT):
->
-> /build/stage/linux/drivers/base/regmap/regmap-irq.c: In function =E2=80=
-=98regmap_add_irq
-> _chip_fwnode=E2=80=99:
-> /build/stage/linux/drivers/base/regmap/regmap-irq.c:914:88: error: macro =
-"array_
-> size" requires 2 arguments, but only 1 given
->   914 |                 memcpy(d->prev_status_buf, d->status_buf, array_s=
-ize(d->
-> prev_status_buf));
->       |                                                                  =
-      =20
->                ^
-> In file included from /build/stage/linux/include/linux/string.h:13,
->                  from /build/stage/linux/include/linux/bitmap.h:13,
->                  from /build/stage/linux/include/linux/cpumask.h:12,
->                  from /build/stage/linux/include/linux/smp.h:13,
->                  from /build/stage/linux/include/linux/lockdep.h:14,
->                  from /build/stage/linux/include/linux/spinlock.h:63,
->                  from /build/stage/linux/include/linux/sched.h:2213,
->                  from /build/stage/linux/include/linux/ratelimit.h:6,
->                  from /build/stage/linux/include/linux/dev_printk.h:16,
->                  from /build/stage/linux/include/linux/device.h:15,
->                  from /build/stage/linux/drivers/base/regmap/regmap-irq.c=
-:10:
-> /build/stage/linux/include/linux/overflow.h:327:9: note: macro "array_siz=
-e" defined here
->   327 | #define array_size(a, b)        size_mul(a, b)
->       |         ^~~~~~~~~~
-> /build/stage/linux/drivers/base/regmap/regmap-irq.c:914:59: error: =E2=80=
-=98array_size=E2=80=99 undeclared (first use in this function)
->   914 |                 memcpy(d->prev_status_buf, d->status_buf, array_s=
-ize(d->prev_status_buf));
->       |                                                           ^~~~~~~=
-~~~
-> /build/stage/linux/drivers/base/regmap/regmap-irq.c:914:59: note: each un=
-declared identifier is reported only once for each function it appears in
+On Wed, May 14, 2025 at 03:01:33PM +0800, Xianwei Zhao wrote:
+> Add pinctrl device to support Amlogic S7.
+> 
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi | 81 +++++++++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi
+> index f0c172681bd1..924f10aff269 100644
+> --- a/arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi
+> @@ -6,6 +6,7 @@
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
+>  
+>  / {
+>  	cpus {
+> @@ -94,6 +95,86 @@ uart_b: serial@7a000 {
+>  				clock-names = "xtal", "pclk", "baud";
+>  				status = "disabled";
+>  			};
+> +
+> +			periphs_pinctrl: pinctrl {
 
-My bad, I somehow ended with this commit introducing bad code but having
-the next patch of the series fixing it. I will take care of that. Thanks
-for pointing this.
+If you have non-boolean ranges, then this should have a unit address 
+(@4000).
 
-Thanks for your review.
-Mathieu
+> +				compatible = "amlogic,pinctrl-s7";
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Doesn't look like you need 64-bits of address and size. 1 cell is 
+enough.
+
+> +				ranges = <0x0 0x0 0x0 0x4000 0x0 0x340>;
 
 
