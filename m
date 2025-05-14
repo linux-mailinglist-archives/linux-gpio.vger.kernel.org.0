@@ -1,88 +1,89 @@
-Return-Path: <linux-gpio+bounces-20175-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20176-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83DC3AB787F
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 00:02:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE80AB7884
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 00:03:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D64B1889383
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 22:02:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40ADE1BA4A87
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 May 2025 22:03:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7BC2153D8;
-	Wed, 14 May 2025 22:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7EC321CFEA;
+	Wed, 14 May 2025 22:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wlt6WydL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qcz1V5NN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A45F191F98;
-	Wed, 14 May 2025 22:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829561F0990;
+	Wed, 14 May 2025 22:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747260125; cv=none; b=Pf4Tvwib3w7ifxyQurnotmyA0Q7B9m8NCAWwOKXhRnHfQ4NOg6ZRkWbGu/8F4V+S35FLjHKjCk5sOAsU596QjfH0U70pJ8F2T5jcQ5jWjY6bdAgx1Q9RsSQc4ix5li26R4bJJPu6U2FeEuO1V24t3Vv0TjIBVCmMJlmaaIfUKYo=
+	t=1747260186; cv=none; b=cr+KdlBQ0i6rv/Bfo20GIavXjXRU+I4vOEWMzt7nZaIG/JFEwZ1r6826VI6in41xELGDW+lrU6pFH5otaKKXi3fNDRpUIW1E9GdiDL8nz+ltyfJW5sGuQLX/zI588WLdttHe7kjHj/4dCcYrnykESepG1VhqdfwgqfDNN988JP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747260125; c=relaxed/simple;
-	bh=bBCMDxAQqB223GvdKm9yHRzBPrInid0txIiE0L/rdLk=;
+	s=arc-20240116; t=1747260186; c=relaxed/simple;
+	bh=DOxuecpOoYFFBrNEOqQW+VQSF4O2eelHquHDUs7IvFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QxKhQU7HUx0iYRaQYV6buj3sqSXnPdsk+4s74u/0x2pMitsL2lrdy5fs3SGMAyUqDCL8RUcNIAyUTeqzokzbprTHTRhHPqKCMiC4O58GIr9nUdVtDGFye6iMXV0Cw8E1t4Z8QOthFuMu/J0w+FnXmtPGyw3ir4PXyBVenbJ8xXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wlt6WydL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0848C4CEE3;
-	Wed, 14 May 2025 22:02:04 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=e/W9CJxja/Sb2iMpC/gNEw7Oxmh7bK5AHfaEUK8VFtXm05aiXihEwTkmYuYXbUbIwHQ84h8365jcpltZoVnnp8vqpF/Kk/fc+gtS2lDMX8aUPveUcEoj4RZgz/fG7mUPLomoxuILzg7HOp6NzQmIFhpC84St3zM/JUHWHhsj+74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qcz1V5NN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0404C4CEED;
+	Wed, 14 May 2025 22:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747260125;
-	bh=bBCMDxAQqB223GvdKm9yHRzBPrInid0txIiE0L/rdLk=;
+	s=k20201202; t=1747260186;
+	bh=DOxuecpOoYFFBrNEOqQW+VQSF4O2eelHquHDUs7IvFU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wlt6WydL4OlmyBn1uPevsmGDaJwHta+vKvolkNv5JmwU7YG1xolTibG0Sa62P+wMc
-	 CAB9rSiSGyooqzKWWut3SciuoToVo8kC4olRP6xQ27WCWtBCyeH5fHXVtFC967YrlE
-	 71fLEC/Hb7Ygn5kxZH4YK5so4WOs98TzJhJD7K1d0pMCLKbD+4UTHkVVCBKStLPxCs
-	 F8HwjxUiZU+g/aNh09z28uunT1Va7moIR4TvvYeU/UNAQg0E9dHqt2U+Wa0qd9cc80
-	 3jBVst83TxjAR26sTbP/BL6tE6K+B/hxe6ZLKufhi/7Lh1zPfudUNP8GZGbiMjLiAE
-	 V3XbroG1u97Yw==
-Date: Wed, 14 May 2025 17:02:03 -0500
+	b=Qcz1V5NNoxnsrIJM+0EFJ4R8aM5wx5kTpQAYgGvPSKivx39MglvXa2XTROUxkMlCo
+	 XwWUYXHyX5ERRIRlSkrktWf43CVjIKkcCUcgpIcijQxSUk+9f5Ubk+e/2mGrVsUxG5
+	 WgYsIwGfFNiCcVQiXcxVIzaJTeF7FE6uyulCG3q78F4/msR/DSk92C9gET8xV5T0rF
+	 8cAiAIiTtKca1LGhXrVQUtxmFRlAJeMiAQLaLQDOluAULotoQwKmmhluwaBSXMzxnu
+	 UVYrhwC5EE6KOsE0o8j0EsDlF3gBf2z9mM1Qz5F02BpRud1OiTpoc/WAVxwVhoPrsb
+	 w0vwPjc/MiriA==
+Date: Wed, 14 May 2025 17:03:04 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, devicetree@vger.kernel.org,
-	Liu Ying <victor.liu@nxp.com>,
-	Dongcheng Yan <dongcheng.yan@intel.com>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Taniya Das <quic_tdas@quicinc.com>, Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ross Burton <ross.burton@arm.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>, Zhi Mao <zhi.mao@mediatek.com>,
-	linux-staging@lists.linux.dev,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
+Cc: linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Mark Brown <broonie@kernel.org>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
 	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
 	Bjorn Andersson <andersson@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-media@vger.kernel.org, Will Deacon <will@kernel.org>,
 	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-arm-kernel@lists.infradead.org,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
+	Ross Burton <ross.burton@arm.com>,
+	linux-arm-kernel@lists.infradead.org, Liu Ying <victor.liu@nxp.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Ricardo Ribalda <ribalda@chromium.org>,
-	Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH v3 04/19] dt-bindings: media: i2c: max96717: add support
- for MAX9295A
-Message-ID: <174726012257.3116712.4544442889949224547.robh@kernel.org>
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	devicetree@vger.kernel.org, Zhi Mao <zhi.mao@mediatek.com>,
+	linux-staging@lists.linux.dev,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Dongcheng Yan <dongcheng.yan@intel.com>, linux-gpio@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v3 05/19] dt-bindings: media: i2c: max96717: add support
+ for MAX96793
+Message-ID: <174726018371.3121119.12710872984241960937.robh@kernel.org>
 References: <20250512212832.3674722-1-demonsingur@gmail.com>
- <20250512212832.3674722-5-demonsingur@gmail.com>
+ <20250512212832.3674722-6-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -91,19 +92,19 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250512212832.3674722-5-demonsingur@gmail.com>
+In-Reply-To: <20250512212832.3674722-6-demonsingur@gmail.com>
 
 
-On Tue, 13 May 2025 00:28:13 +0300, Cosmin Tanislav wrote:
-> MAX9295A is an older variant of the MAX96717 which does not support
-> tunnel mode.
+On Tue, 13 May 2025 00:28:14 +0300, Cosmin Tanislav wrote:
+> MAX96793 is a newer variant of the MAX96717 which also supports GMSL3
+> links.
 > 
-> Document the compatibility.
+> Document this compatibility.
 > 
 > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 > ---
->  .../devicetree/bindings/media/i2c/maxim,max96717.yaml      | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/media/i2c/maxim,max96717.yaml          | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
 Acked-by: Rob Herring (Arm) <robh@kernel.org>
