@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20225-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20226-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA466AB848B
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 13:11:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56F23AB848F
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 13:12:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 895AA1B61F56
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 11:11:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B73C8C770D
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 11:11:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83044298240;
-	Thu, 15 May 2025 11:11:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1252F29824A;
+	Thu, 15 May 2025 11:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9YlcaIT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrE7mMQi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FF11DE4EC;
-	Thu, 15 May 2025 11:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DCE297B8F;
+	Thu, 15 May 2025 11:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747307494; cv=none; b=afoXe/Z5LMndIenjFnCu/7kPaK3kt9StcZn7M/nVOFELNI0jggexUO5AClu0SdX8EjTOw3N5dR9IhsxUT2mQGQNBBjYKJYjGxQYpTNeu8Dab/cMxOI1E12iomLxgt5zOVDcn5sSNM9jwTs8BmeNeq5AI09TyvIprRvq7bi//UkQ=
+	t=1747307520; cv=none; b=CcQay3Of1uw5BayOQWBmZswRL6znbrmUXWm8C6l7PamYGkvhLBcWTgUMOUNsfAdbNhFfKODi0kM+kMQMABMF/koPn7UAyBNAC+HceTYQJBRWqIaiMFPyBwCCqOJDmadotolkSJzaRB9i2B+aaTBgNhF26qltCv7RU6yeQAmSgwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747307494; c=relaxed/simple;
-	bh=HSPXx6WvJE06D5FeKQWwYHUJz42/PY91n94yRkGdGfY=;
+	s=arc-20240116; t=1747307520; c=relaxed/simple;
+	bh=XPgp+L0xynTMhQdAzvCt1qZX2mlUrGAkjD9kQfYs8lQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BBhFm1TRJc1YsAhvKnoNVR9xMKfjAqg0VLSi0xLz4H+jTI2B9chAXubjLTZn43pXu2TLkdvWWWOWCntwaWiPHIXaMB+z1g869PM5cIlO2N+I5aIIuJjPccIWpaVyg50m+MYBA0Qfhiuxh31a0P0aWFNlVtER/Rf0zAA3vUcTrM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9YlcaIT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0DDC4CEE7;
-	Thu, 15 May 2025 11:11:29 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Fq22bH9vzJCz8lUfc7BugI7aUKwMU4aUY8NZCMyZ5vDXOOJ6703CUtJ6Jfgdx5EHHrUd2hcOOPW3sAtw9tHQbKghHuGyTjEBPIRzgCxfsC5bxNiipIspyBNF3rG4Qgvn+FuRBuifOoCMAt3DEUyxRxaEkA5IsPRYo81NqspJGRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrE7mMQi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40CEC4CEE7;
+	Thu, 15 May 2025 11:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747307493;
-	bh=HSPXx6WvJE06D5FeKQWwYHUJz42/PY91n94yRkGdGfY=;
+	s=k20201202; t=1747307520;
+	bh=XPgp+L0xynTMhQdAzvCt1qZX2mlUrGAkjD9kQfYs8lQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a9YlcaIT4XqC23WXhaZ7zWtrW+oV0uPtpkf/kqkZ+e3KyL7ExH85cpwze1TbodDdK
-	 QpuaF8LEM7YwC5mwQXll6PMNt28P6BBzFQI/by1YpnoO2hLaPZ4m1w0PAsKELu8CLs
-	 7yMIPQSUFkTRpxKVOVZAIsN6j9IAaR94tX1Ll8YXZpHJrY4O2ZQF+vX8CqX8IKOE0+
-	 IAq+u1oJyoPs0o7nYnsZWYH6O1kFVW6VXVqvNWTimdM8Tr4/n8r4oPXwjbUOaNVLhk
-	 nalyFVpmIcsj7KP+UvxQeyIwVE9gSt7yC2Dz1PPxXmbJ8ZC9uGnsqpjBuJXtLDFis+
-	 vJ+ESwdXNpKvg==
-Message-ID: <22649c0f-d596-4e4a-b296-469e7664c162@kernel.org>
-Date: Thu, 15 May 2025 13:11:27 +0200
+	b=jrE7mMQifMc13Y+3ygYR6Ksx18KYg211bivTIiBnDb4Dq745anxWHzyhyG5eK8lYV
+	 4ZbaoTVzZQ8CYY9jqpashkR9z2Jmm67I0wF+PN/3ntuUbbD2OgUra3UD+vxQCCHdJ/
+	 Fr4BxbpIGmwUCf9Hxy+gc6ScMs+3zO0wNAnisOPsWnsPxJgZ/SPV//+j/lMTl8u7EX
+	 7/4g1PVfrifnQqPZ1XhDLpmL2VKoogXaEtZ7iOpFa91UrvjqxQFaztivEW9LY3o01b
+	 O9Dp0Kd8jACC3UOLApN8mIZ/RsJhAFTjuQ4DLZYL+p+l5pGTIKc+YPdc36bFEb+vLH
+	 c4eKN6dj0XcUg==
+Message-ID: <daf58379-ea55-468d-9174-8a04677550e2@kernel.org>
+Date: Thu, 15 May 2025 13:11:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] pinctrl: eswin: Add EIC7700 pinctrl driver
+Subject: Re: [PATCH v4 0/2] ESWIN EIC7700 pinctrl driver
 To: Yulin Lu <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
@@ -58,11 +58,8 @@ To: Yulin Lu <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
  brgl@bgdev.pl, linux-hardening@vger.kernel.org
 Cc: ningyu@eswincomputing.com, zhengyu@eswincomputing.com,
  linmin@eswincomputing.com, huangyifeng@eswincomputing.com,
- fenglin@eswincomputing.com, lianghujun@eswincomputing.com,
- Samuel Holland <samuel.holland@sifive.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ fenglin@eswincomputing.com, lianghujun@eswincomputing.com
 References: <20250515054524.390-1-luyulin@eswincomputing.com>
- <20250515054736.922-1-luyulin@eswincomputing.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,24 +105,33 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250515054736.922-1-luyulin@eswincomputing.com>
+In-Reply-To: <20250515054524.390-1-luyulin@eswincomputing.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 15/05/2025 07:47, Yulin Lu wrote:
-> Add support for the pin controller in ESWIN's EIC7700 SoC,
-> which supports pin multiplexing, pin configuration,
-> and rgmii voltage control.
+On 15/05/2025 07:45, Yulin Lu wrote:
+>   Implements support for the Eswin eic7700 SoC pinctrl controller.
+>   Provides API to manage pinctrl for the eic7700 SoC.
+>   Integration with the Linux pinctrl subsystem for consistency and
+>   scalability.
 > 
-> Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>   Supported chips:
+>     Eswin eic7700 SoC.
+> 
+>   Test:
+>     Tested this patch on the Sifive HiFive Premier P550 (which uses
+>     the EIC7700 SoC), including system boot, networking, EMMC, display,
+>     and other peripherals. The drivers for these modules all use the
+>     pinctrl module, so this verifies that this pinctrl driver
+>     patch is working properly.
+> 
+> ---
+> Changes since V3:
+> - Added "Reviewed-by" tag of "Krzysztof Kozlowski"
+> - Corrected some incorrect spaces and blank lines in the YAML file.
+> - Link: https://lore.kernel.org/all/20250514080928.385-1-luyulin@eswincomputing.com/
 
-Hm? This did not happen!
-
-You cannot add fake tags! Read again the explanation I provided last
-time. Read the documentation.
+Start using b4 so you will not introduce such errors like here.
 
 Best regards,
 Krzysztof
