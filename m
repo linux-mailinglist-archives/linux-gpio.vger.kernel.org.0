@@ -1,118 +1,127 @@
-Return-Path: <linux-gpio+bounces-20212-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20213-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51B9AAB7F1E
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 09:45:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C164AB7FAF
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 10:05:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E67551BA5E57
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 07:46:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 509D74E13C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 08:04:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB3851F0E50;
-	Thu, 15 May 2025 07:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34DDD2063F3;
+	Thu, 15 May 2025 08:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBpWSsL8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ga1Q2mYI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99A417BD9;
-	Thu, 15 May 2025 07:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4880B2820CD;
+	Thu, 15 May 2025 08:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747295145; cv=none; b=baoxgDmICqPWRWfNhf4KT2IW7lPhtmv9UlF+gpJkPaw4a2caZB0+uNXi/ewIW2BOJk1vYqzw4DJhm0LarRuVmjPz0UqDxhG2nFdm9DDrGj5KrZnxSSzQycuUUsZ6r5ISiTmClC1UaY8B7LcwGZUfQZd9nLh9jROJikLm7RtEDuQ=
+	t=1747296270; cv=none; b=TTaZAKvFFSPoVPNgYAmSp5y+gqnEI1Bw4DPJ+1CsdKyOhZsOypuHUuU9reo8EA01NIzrSXBq7Ny5zpnAL3ZrMwSMEgPPr/NXixE9+ymEFeAl7zyv5fy/sXozOY4yPoM47lDAqFF2FFzUqQbJZy/uq0L0Iaaizfe5SlbXdSQv518=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747295145; c=relaxed/simple;
-	bh=FUTGQUAOkm5bi73IlMsoeSedRcN4KCV84hEa6dEH/8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=soaTtzs3dWlcm1uu2x96j2lHKmuwoMaGQgV3QTvJN++TZhgottajAsJO0OX55hoDj6A7Yd7hH0IdByq+ITkooWWoZLMv1nk5z9QNBcN91E/CT0psC4e9IDPEvcuM3hgBhLZ0YA25RfDMd8vZRbJKvZWsQmuNmkHUQ7o8BorhAIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBpWSsL8; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso6446165e9.0;
-        Thu, 15 May 2025 00:45:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747295142; x=1747899942; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ji/KKSHoP7yY7aJyBCvNgq977Um77Yq/cN+M0anXeoY=;
-        b=QBpWSsL8ZxthIO6ryC4ulXaTHIYL5cCR0/mwSNZTLrVcz3APUQhYebWpq9j4dBW2/R
-         hReVbx0zNqesO+63Azk7maVM3oqiOKMqKGMuis0x+CAV/g0ckWQWWSOeJKMmg7pPGkgD
-         pDopgSSZ4wjGLcFjeA6YdG3WRg/1SbWD2Sy9fLFQB8Y3w/hbMXLhnNdbMNl+OSNnuzlv
-         vzG76vHA0vtr2X9NlmtTovNXv4JGYrxOMAq7k0XSwLhfVE+BKOWanx77UWrOLr4Rc3A6
-         h6stuQ9C7kqpSGWAQtboXs0BjA/t6YNLL/ew6surf+rbaignP22MzdM0VGZ87zWtBbiM
-         B4tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747295142; x=1747899942;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ji/KKSHoP7yY7aJyBCvNgq977Um77Yq/cN+M0anXeoY=;
-        b=DDKkY0+yDwV7h0zY/6T/l2ipLCK06CO9xiU3HR6X+La1KERJiagwbwLhYGjOPz+5+N
-         0UyWf6W9TWhSoAB7cjIRmzjv6vxRTHuBZ1qZwJpOmFV0TiDUnynwwdutK9FlYYjeSY8u
-         Fc6MslXn291UepfYX//eEKcadHQcA+XfoG8i/qtrqpcMuqekiaIPLr6T9oFptZaDpLcN
-         JSOdGiZjgOsC1vyd6SfXVC24wdxizUMngJBCkeQSVbny8UbCYdMURgL5eSuNu5bQLEd4
-         daDB6B5GLwb7n+FP2uDiYsVxcjBRmEuhgYR7qklePYwvEo3/NoUK9KLSjtuOD/ak9rYz
-         1Vhw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1AVQuJcsbp8ZHUgUEO7NfMai5vPECQ3zwr4EF3cD6ZjJ8p5pVklqDQAI2nf+uzXhYuPjhXvd4tMce@vger.kernel.org, AJvYcCV1XKVY/2HNCKVvTzmGvLFYB5WXJIsS8GrMWF4fCDQApMPgeqUlRkzZf7PECyaJWvjHfTU6M0VBrZ8tNl8/@vger.kernel.org, AJvYcCVqVkXNVH/asAZfS/I8o8aHEdhlVfA3thnns+1KE2I+yt4cpjrIQIAsRZFO7+TwDoqzZBLqls3J@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7SaU9p506vHMdqvKuiwZ3v5C2WAOlCXRvp4uo2rFAJEyL0VlW
-	0YaixyyfObiEiEFjfoyFA3MGXcqVN8YbgtPRafPSTtic4KgLxpQF
-X-Gm-Gg: ASbGncvvks6ZN3vnqckAnJj4D6rS6ivgpLlkTstgw0A/rJghmdIuozNIcPs/+LAj+Gk
-	c9wee562PgTd/Mx2dxNtIeEnyUXiRWoyZt1RjD/LxCrOZjBg4QDfTkwoqc5fVqR+xYE0ghEZD7+
-	+Mkio7oGIfqIELfuapYc0EHROpiKCu+us52tEdxbkfGjYd2jC31jv3mcC/Vs514j6qAGpUZM5fF
-	cxw42QDvJqwK7Dm0ACkOVQBHiB7PkZg6fGY0vqbJixCLpflQCyaSBS8boHMGhmiiBeKNxjRoJVH
-	5Zd0z5kGn2SHP/UNb4ng+YyLFcJC48YFzHCTWO+3jjCZWkCgp7uI8wT9HEhB5VeDjDE3uSN1ifX
-	gZZzObarLChaPZaWw
-X-Google-Smtp-Source: AGHT+IEnXEKhyoqKyql7HmWJcCHO+Gr5r3eS6SUzYuWVl+B+RTKRMOQwn/WGYHQLnofQqru7Sv/AKw==
-X-Received: by 2002:a05:600c:3c85:b0:442:cab1:e092 with SMTP id 5b1f17b1804b1-442f20e5547mr55352885e9.11.1747295141986;
-        Thu, 15 May 2025 00:45:41 -0700 (PDT)
-Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f395060esm60261815e9.17.2025.05.15.00.45.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 00:45:41 -0700 (PDT)
-Message-ID: <d5083f6a-e39b-46cb-8551-ca7a5f6f6bed@gmail.com>
-Date: Thu, 15 May 2025 09:45:40 +0200
+	s=arc-20240116; t=1747296270; c=relaxed/simple;
+	bh=1M9gFt8zcx9pxQgfErGrv96mAUW3gZ4D8dDvbtfNJCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bizvqgcy/ZjTugV3DYlqQmofgROpUSaGL53iNxD9psW2U8iFVg+rcKIuOYUDeSSG5ANt9E3+Na1+DUpQHYC+Mx/uIGZYXaUUSZXNPqLgNKl3ZVi5V7MppYLEvVi2Hy7PDi7nH0aYo/O4dhlippzCtcmxAKKJKJdeMi4uk1Hhwdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ga1Q2mYI; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747296269; x=1778832269;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1M9gFt8zcx9pxQgfErGrv96mAUW3gZ4D8dDvbtfNJCk=;
+  b=ga1Q2mYIgvtV4Dw4YYM65s/Eh7uSlnrSLHPR2pNp8qZcZDG+2pbwWyDi
+   SDzQYE9+FSA9rQUokTWEZa/DqkmUesLYo19NR83Ljje4P4pET1zHJx6eQ
+   bjoHS/CV5Z4DaxfgTM3BaHFnfpuGezfjvjDjSeyW08Mwfwgpk5EtgCG5b
+   lEXsu5bavPxn8cJmVlZxKH5J5N9DbVspnwahr/iRH8c0Bx/JM7tFQ4vem
+   KqnRHYqCYroOS7drirYIkKiUD/69BnAtmb2untskHq3A0lTuHWCvtIX5a
+   accbOTaAQ11oO9HiQ8QfPzoCul8joP7ijCI/1/StxYlivzm2CX4O3WOh+
+   w==;
+X-CSE-ConnectionGUID: KRdKZPKnQPWDRwqLDXBOuA==
+X-CSE-MsgGUID: i/ETMfAZQLucowgCcqWNpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49380465"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="49380465"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:04:28 -0700
+X-CSE-ConnectionGUID: 8rn1t7pnS1+Vp/MKnVHVkg==
+X-CSE-MsgGUID: bIueTCnlQoWnbt5TSlsEaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="138340907"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:04:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uFTZm-00000001mmx-3BXQ;
+	Thu, 15 May 2025 11:04:22 +0300
+Date: Thu, 15 May 2025 11:04:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mika Westerberg <westeri@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
+Message-ID: <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
+References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
+ <20250514155955.GS88033@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] pinctrl: armada-37xx: a couple of small fixes
-Content-Language: hu
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Lunn <andrew@lunn.ch>,
- Gregory Clement <gregory.clement@bootlin.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Imre Kaloz <kaloz@openwrt.org>,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250514-pinctrl-a37xx-fixes-v2-0-07e9ac1ab737@gmail.com>
- <CACRpkdb2Njam8GGuN5yeR+DYvi0xe11xbARaoDepoGk=gAK6GA@mail.gmail.com>
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <CACRpkdb2Njam8GGuN5yeR+DYvi0xe11xbARaoDepoGk=gAK6GA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514155955.GS88033@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-2025. 05. 15. 0:28 keltezéssel, Linus Walleij írta:
-> On Wed, May 14, 2025 at 9:18 PM Gabor Juhos <j4g8y7@gmail.com> wrote:
+On Wed, May 14, 2025 at 06:59:55PM +0300, Mika Westerberg wrote:
+> On Tue, May 13, 2025 at 01:00:30PM +0300, Andy Shevchenko wrote:
+> > The GPIO ACPI helpers use a few quirks which consumes approximately 20%
+> > of the file. Besides that the necessary bits are sparse and being directly
+> > referred. Split them to a separate file. There is no functional change.
+> > 
+> > For the new file I used the Hans' authorship of Hans as he the author of
+> > all those bits (expect very tiny changes made by this series).
+> > 
+> > Hans, please check if it's okay and confirm, or suggest better alternative.
+> > 
+> > Andy Shevchenko (4):
+> >   gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
+> >   gpiolib: acpi: Handle deferred list via new API
+> >   gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
+> >   gpiolib: acpi: Move quirks to a separate file
+> > 
+> >  drivers/gpio/Makefile                         |   1 +
+> >  .../{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 344 +----------------
+> >  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
+> >  drivers/gpio/gpiolib-acpi.h                   |  15 +
 > 
->> The series contains several small patches to fix various
->> issues in the pinctrl driver for Armada 3700.
->>
->> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-> 
-> Patches applied by applying to a separate immutable branch
-> and merging into my "devel" branch: we were clashing a bit
-> with Bartosz rewrites so I had to help git a bit.
-> 
-> Pushed to the autobuilders, check the result!
+> All this -foo-core things look redundant to me. Why not just split it out
+> and call it gpiolib-quirks.c and put there all the quirks not just ACPI? I
+> Don't think we want to have gpiolib-of-quirks.c and gpiolog-swnode-quirks.c
+> and so on.
 
-Checked, it is fine. Thanks!
+That's might be the next step to have for all of them, but these are ACPI
+specific. In any case they can't be put to gpiolib-quirks.c due to module
+parameters. If we do that we will need a dirty hack to support old module
+parameters (see 8250 how it's done there, and even author of that didn't like
+the approach).
 
--Gabor
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
