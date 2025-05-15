@@ -1,148 +1,132 @@
-Return-Path: <linux-gpio+bounces-20224-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20225-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 835FBAB837B
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 12:02:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA466AB848B
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 13:11:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DACAC9E244D
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 10:02:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 895AA1B61F56
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 11:11:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F20328C873;
-	Thu, 15 May 2025 10:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83044298240;
+	Thu, 15 May 2025 11:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GlVE8kYI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9YlcaIT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD6A222586;
-	Thu, 15 May 2025 10:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FF11DE4EC;
+	Thu, 15 May 2025 11:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747303362; cv=none; b=RWaQjSX2cqNlmmF5jvf89r1bmWFbyH8PaL40kIdq2he9fvk6+U+a4onXZbPplSSV0Nt+8KwAk1fumbA4K28ZMfktB/4ukCc3fe44de7Z5xm7DOc+hORqq4cApzLe1MmLkJlHweCauDrg5exBNZ5wL0WPeObZFBqDEln95CZ50uY=
+	t=1747307494; cv=none; b=afoXe/Z5LMndIenjFnCu/7kPaK3kt9StcZn7M/nVOFELNI0jggexUO5AClu0SdX8EjTOw3N5dR9IhsxUT2mQGQNBBjYKJYjGxQYpTNeu8Dab/cMxOI1E12iomLxgt5zOVDcn5sSNM9jwTs8BmeNeq5AI09TyvIprRvq7bi//UkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747303362; c=relaxed/simple;
-	bh=7V+0sXGhrjXDWjjEqhgFc7TixWZcO1mFzorR7Ny6tVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TmJxXfDHxG2UVr2h4Equ8tHwKgLJAkoxX3pCKXGuPVPVK3REQmYw1YANoI6dTcNT3pkLVyaGsIa6TiU9A0dpcJ4Hq6CyT0B7R8BoEyTXNDWkjHqWz7ZfmNvsA5Ej9+dTKDeKuHIiPxR73JMYvVoJ97kyR7LLxZnT4dyeNehG8ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GlVE8kYI; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747303360; x=1778839360;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7V+0sXGhrjXDWjjEqhgFc7TixWZcO1mFzorR7Ny6tVE=;
-  b=GlVE8kYI+kfX1kQIQGrPGu+YguDNq6gNs623FczsGWD3xaNgLSEVWXrh
-   MsmDxaKPkoH6lwB5hWkEliPTQHMbAuUB5JAsTAwuFnsZWRHBcsq3x1NSw
-   bIiysTq/85m0U22u8k+cge/fHxH7cgmbm/dS0QHqoP0gxxPqRCwvZcNtx
-   7cBNJ4B4i0JrPnTRzZnXOU6mRAEaU9qQq/Kq1pquzPbidPtpq/Uzogk+U
-   VC8z7yCaF8XSAno9FI/XVcThrYJO7ICvhjXa/FHWKRzv2MjUlvUNAXuO2
-   qnSj181lXUv8PFMm8NuUz0Rat3d45QfyoENscrYSubLd/TbeDRmLE5Glx
-   g==;
-X-CSE-ConnectionGUID: 4P9xtCK3S3y3jErxczeANg==
-X-CSE-MsgGUID: NJppuzI7Rg+A5uABdQBKOw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="51868459"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="51868459"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 03:02:39 -0700
-X-CSE-ConnectionGUID: 7q/X3VPPQzCJMbjpDDGX7Q==
-X-CSE-MsgGUID: BFAj0XCCTa+EZV33FnPIQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="138205390"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 03:02:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uFVQA-00000001oKi-1zxc;
-	Thu, 15 May 2025 13:02:34 +0300
-Date: Thu, 15 May 2025 13:02:34 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <westeri@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
-Message-ID: <aCW7unjYEgPWYV_i@smile.fi.intel.com>
-References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
- <20250514155955.GS88033@black.fi.intel.com>
- <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
- <20250515083451.GT88033@black.fi.intel.com>
- <aCWo19FjcvZzP1H7@smile.fi.intel.com>
- <20250515084727.GU88033@black.fi.intel.com>
- <aCWsuRc5ggJJFc5u@smile.fi.intel.com>
- <20250515093124.GV88033@black.fi.intel.com>
+	s=arc-20240116; t=1747307494; c=relaxed/simple;
+	bh=HSPXx6WvJE06D5FeKQWwYHUJz42/PY91n94yRkGdGfY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BBhFm1TRJc1YsAhvKnoNVR9xMKfjAqg0VLSi0xLz4H+jTI2B9chAXubjLTZn43pXu2TLkdvWWWOWCntwaWiPHIXaMB+z1g869PM5cIlO2N+I5aIIuJjPccIWpaVyg50m+MYBA0Qfhiuxh31a0P0aWFNlVtER/Rf0zAA3vUcTrM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9YlcaIT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0DDC4CEE7;
+	Thu, 15 May 2025 11:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747307493;
+	bh=HSPXx6WvJE06D5FeKQWwYHUJz42/PY91n94yRkGdGfY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a9YlcaIT4XqC23WXhaZ7zWtrW+oV0uPtpkf/kqkZ+e3KyL7ExH85cpwze1TbodDdK
+	 QpuaF8LEM7YwC5mwQXll6PMNt28P6BBzFQI/by1YpnoO2hLaPZ4m1w0PAsKELu8CLs
+	 7yMIPQSUFkTRpxKVOVZAIsN6j9IAaR94tX1Ll8YXZpHJrY4O2ZQF+vX8CqX8IKOE0+
+	 IAq+u1oJyoPs0o7nYnsZWYH6O1kFVW6VXVqvNWTimdM8Tr4/n8r4oPXwjbUOaNVLhk
+	 nalyFVpmIcsj7KP+UvxQeyIwVE9gSt7yC2Dz1PPxXmbJ8ZC9uGnsqpjBuJXtLDFis+
+	 vJ+ESwdXNpKvg==
+Message-ID: <22649c0f-d596-4e4a-b296-469e7664c162@kernel.org>
+Date: Thu, 15 May 2025 13:11:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515093124.GV88033@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] pinctrl: eswin: Add EIC7700 pinctrl driver
+To: Yulin Lu <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kees@kernel.org, gustavoars@kernel.org,
+ brgl@bgdev.pl, linux-hardening@vger.kernel.org
+Cc: ningyu@eswincomputing.com, zhengyu@eswincomputing.com,
+ linmin@eswincomputing.com, huangyifeng@eswincomputing.com,
+ fenglin@eswincomputing.com, lianghujun@eswincomputing.com,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250515054524.390-1-luyulin@eswincomputing.com>
+ <20250515054736.922-1-luyulin@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250515054736.922-1-luyulin@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 12:31:24PM +0300, Mika Westerberg wrote:
-> On Thu, May 15, 2025 at 11:58:33AM +0300, Andy Shevchenko wrote:
-> > On Thu, May 15, 2025 at 11:47:27AM +0300, Mika Westerberg wrote:
-> > > On Thu, May 15, 2025 at 11:41:59AM +0300, Andy Shevchenko wrote:
-> > > > On Thu, May 15, 2025 at 11:34:51AM +0300, Mika Westerberg wrote:
-> > > > > On Thu, May 15, 2025 at 11:04:22AM +0300, Andy Shevchenko wrote:
-> > > > > > On Wed, May 14, 2025 at 06:59:55PM +0300, Mika Westerberg wrote:
-> > 
-> > ...
-> > 
-> > > > > > That's might be the next step to have for all of them, but these are ACPI
-> > > > > > specific. In any case they can't be put to gpiolib-quirks.c due to module
-> > > > > > parameters. If we do that we will need a dirty hack to support old module
-> > > > > > parameters (see 8250 how it's done there, and even author of that didn't like
-> > > > > > the approach).
-> > > > > 
-> > > > > Hmm, how does it affect module paremeters? I thought they are
-> > > > > gpiolib.something as all these object files are linked to it?
-> > > > 
-> > > > gpiolib_acpi.FOO because the object file is gpiolib-acpi.o.
-> > > 
-> > > Ah okay.
-> > > 
-> > > > > At least can we drop the gpiolib-acpi-core.c rename?
-> > > > 
-> > > > Unfortunately no due to the above.
-> > > 
-> > > This does not work?
-> > > 
-> > > gpiolib-acpi-y                 := gpiolib-acpi.o gpiolib-acpi-quirks.o
-> > 
-> > No. You can't use the same name on left and right parts.
+On 15/05/2025 07:47, Yulin Lu wrote:
+> Add support for the pin controller in ESWIN's EIC7700 SoC,
+> which supports pin multiplexing, pin configuration,
+> and rgmii voltage control.
 > 
-> I see :( Okay then I guess there are no other options than name it like
-> this.
-> 
-> [ Ideally we would drop the while gpiolib- prefix from all these so you have
-> acpi.c, sysfs.c and so on without the redundancy but that's outside of
-> scope of this work anyways ;-) ]
+> Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I also would like to have prefix to be dropped for the files, but the modules
-(and it's can be achieved, but it's indeed out of scope here).
+Hm? This did not happen!
 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+You cannot add fake tags! Read again the explanation I provided last
+time. Read the documentation.
 
-Thank you!
-I am going to push to my review and testing queue soon.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best regards,
+Krzysztof
 
