@@ -1,138 +1,123 @@
-Return-Path: <linux-gpio+bounces-20226-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20227-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56F23AB848F
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 13:12:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0AEFAB8A22
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 17:01:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B73C8C770D
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 11:11:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 81D241BC47DE
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 15:01:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1252F29824A;
-	Thu, 15 May 2025 11:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6CF920B80D;
+	Thu, 15 May 2025 15:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrE7mMQi"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RbKW1qQ+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DCE297B8F;
-	Thu, 15 May 2025 11:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD01B1EFF93
+	for <linux-gpio@vger.kernel.org>; Thu, 15 May 2025 15:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747307520; cv=none; b=CcQay3Of1uw5BayOQWBmZswRL6znbrmUXWm8C6l7PamYGkvhLBcWTgUMOUNsfAdbNhFfKODi0kM+kMQMABMF/koPn7UAyBNAC+HceTYQJBRWqIaiMFPyBwCCqOJDmadotolkSJzaRB9i2B+aaTBgNhF26qltCv7RU6yeQAmSgwU=
+	t=1747321299; cv=none; b=OUZsHGJ64GjPfEHb0qagefkA+OPqisRk5J5za7v2pbDcW99m3v2S5ivMSPORb56DjGfsLElDZi+hZxvVO1aJ2beM5QBce035/7aHYEQW8QHSc5zKoloWjaHnhkJqr1dOvvhnC9fQDp5eZWxZ9AL0Dh0k9GvtI5KLfHvYEoM5Hdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747307520; c=relaxed/simple;
-	bh=XPgp+L0xynTMhQdAzvCt1qZX2mlUrGAkjD9kQfYs8lQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fq22bH9vzJCz8lUfc7BugI7aUKwMU4aUY8NZCMyZ5vDXOOJ6703CUtJ6Jfgdx5EHHrUd2hcOOPW3sAtw9tHQbKghHuGyTjEBPIRzgCxfsC5bxNiipIspyBNF3rG4Qgvn+FuRBuifOoCMAt3DEUyxRxaEkA5IsPRYo81NqspJGRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrE7mMQi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40CEC4CEE7;
-	Thu, 15 May 2025 11:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747307520;
-	bh=XPgp+L0xynTMhQdAzvCt1qZX2mlUrGAkjD9kQfYs8lQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jrE7mMQifMc13Y+3ygYR6Ksx18KYg211bivTIiBnDb4Dq745anxWHzyhyG5eK8lYV
-	 4ZbaoTVzZQ8CYY9jqpashkR9z2Jmm67I0wF+PN/3ntuUbbD2OgUra3UD+vxQCCHdJ/
-	 Fr4BxbpIGmwUCf9Hxy+gc6ScMs+3zO0wNAnisOPsWnsPxJgZ/SPV//+j/lMTl8u7EX
-	 7/4g1PVfrifnQqPZ1XhDLpmL2VKoogXaEtZ7iOpFa91UrvjqxQFaztivEW9LY3o01b
-	 O9Dp0Kd8jACC3UOLApN8mIZ/RsJhAFTjuQ4DLZYL+p+l5pGTIKc+YPdc36bFEb+vLH
-	 c4eKN6dj0XcUg==
-Message-ID: <daf58379-ea55-468d-9174-8a04677550e2@kernel.org>
-Date: Thu, 15 May 2025 13:11:54 +0200
+	s=arc-20240116; t=1747321299; c=relaxed/simple;
+	bh=0bpgmELm9pb0sTqZLHy84T/BAyd8bl3vq21w2L/4rbY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b2HWQr7zxdJ1deePm2QbNZFARcdZ3C1EsWsRK9vjX+hZQoa8yCSONvZYsziHHjvXQRy0fcHdGJeeIeGghtC2BQCN0qJSAFKjoOGxvCDJx3cRvU8+gldoZjxC7TKC2hRWPJ7pUgIiJ4mZP2h4HIfVztj+cmcwTStATmFkNzNie9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RbKW1qQ+; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43edb40f357so8275085e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 15 May 2025 08:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747321296; x=1747926096; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R+ExZLPgDVqN/4FPN7RMRww8CSWWl502tOiZJcg9SzU=;
+        b=RbKW1qQ+wXt5d6fGV19WSyFsSdtGy1xU2SR7jN8WdHqmQvuI+5HKHJM5pE4gDH5MCQ
+         qZl69AWj+lzhciGLw8V+Lah84JQUvPmGYbQCehrC4SHxnvP5VG2cq7d3lrIxYqEcQH3R
+         bwNXHxYfuHD6Sh7kPaWF8UzkFm+bUs0ThAZhrE3Ttgk/En7jpiO1jYCQveAhMjUZhRgl
+         s1iQjl1qfPgDxFqaavEy7TZieg8GSixaqlaIoOB9838IcdBcVCzriYuf0We/0wvKA1v8
+         L9W77xtW2zZwT7FlB6p8XV+lVZPgruXLlPiSAsBURbs8hY32tSI8Xv6ooWYs+jcQuAta
+         f/UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747321296; x=1747926096;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R+ExZLPgDVqN/4FPN7RMRww8CSWWl502tOiZJcg9SzU=;
+        b=C4pLqwAUT2e8IT2A0uggsMduZGITarqsCHxBkn4dMmBisJIC4FUdpG+jpq+hZkq+LO
+         1LCIYt90tpuU+3J8MN+D4Vncp07ZioiumCxmF29i4esjDRiCE58y7+l3Z4GriTQSpLSD
+         YN9l9zsDmm8GIn4sbepb80f+SsghcGPgs0Ah/BE6eET/0b60Ybe6VXtTwcUk00jKQHZT
+         cwNwyPNZvZLkttCECZFjxZdZTRo4XcgircMkMwE88Skni5YC/a9FyiL9Af6yo3VMsGrD
+         GTZkeZiq+liOM2FicpvErhJrilmymfz0drE/YF6AuiU29SGiXoFTAYX/5coNkhL/UZUZ
+         uChw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDhjS4NcHYR1c+Ij3iDatv/FYVWKWcpzdJmr61thhT8F4hdob7cc8M4D4ifcO4/G2iGYil6PAudo/8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvX81ym/vPlhOHD9QFL2b0jIi3+f6toL+SJJD1W5quf3HP634m
+	r5PvrzAZzdyhR26i2uX8Y2tjham2plP3YwCp6Oi1WWKrUsbNzAaWH4gJ8ksWuw8MdLo=
+X-Gm-Gg: ASbGncvhLuY8LVjLwPc4mQ4sgg1TaoSTft5lTnigqIhRIeZnxwYacNhId4SrDjdQrj1
+	xxYayIs448V/fOAJPA08HpYVuXdaq4BhHXCWXCI2mhd/tJPFKBmpJTLddxY0ieE314+3AgkkLFU
+	LnDcyaaOs/ytCmPCkcP2odVfyp22dw7IvyquM2fVe3DV4h4iVVdSmPx+NcaFOV1U48FePnfEHRz
+	ReSkNEWJC+aZDFM+NJFevU7faNclwsUbZyLDDKvGcZbsyPV5WdjSPcPiEpj/nSamnU5we49M76w
+	Jy0iu63vLml1XPkNME/wfuCjaoXSrY62a+yGhtuJkc5Tf0ur1Xo/ickoRx16mSspC6UnvCdI0Kw
+	/nsWmyBKGOogwTyil7zrKSb5L
+X-Google-Smtp-Source: AGHT+IEaP32P+mtGWKd+DTEdhUkGNIOD6/Ha+Kt5yoVGB1vbS+3gB2gBhfdgIpL/XkzyzcsRFJdbcA==
+X-Received: by 2002:a05:6000:188d:b0:3a3:5c7c:1889 with SMTP id ffacd0b85a97d-3a35c84fc73mr60948f8f.52.1747321294274;
+        Thu, 15 May 2025 08:01:34 -0700 (PDT)
+Received: from brgl-uxlite.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde01sm23388046f8f.15.2025.05.15.08.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 08:01:33 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	linux-gpio@vger.kernel.org,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: (subset) [PATCH 0/2] gpio: TODO: add item about GPIO drivers reading struct gpio_chip::base
+Date: Thu, 15 May 2025 17:01:28 +0200
+Message-ID: <174732127891.17102.13995153594267301956.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250507-gpio-chip-base-readback-v1-0-ade56e38480b@pengutronix.de>
+References: <20250507-gpio-chip-base-readback-v1-0-ade56e38480b@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] ESWIN EIC7700 pinctrl driver
-To: Yulin Lu <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kees@kernel.org, gustavoars@kernel.org,
- brgl@bgdev.pl, linux-hardening@vger.kernel.org
-Cc: ningyu@eswincomputing.com, zhengyu@eswincomputing.com,
- linmin@eswincomputing.com, huangyifeng@eswincomputing.com,
- fenglin@eswincomputing.com, lianghujun@eswincomputing.com
-References: <20250515054524.390-1-luyulin@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250515054524.390-1-luyulin@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 15/05/2025 07:45, Yulin Lu wrote:
->   Implements support for the Eswin eic7700 SoC pinctrl controller.
->   Provides API to manage pinctrl for the eic7700 SoC.
->   Integration with the Linux pinctrl subsystem for consistency and
->   scalability.
-> 
->   Supported chips:
->     Eswin eic7700 SoC.
-> 
->   Test:
->     Tested this patch on the Sifive HiFive Premier P550 (which uses
->     the EIC7700 SoC), including system boot, networking, EMMC, display,
->     and other peripherals. The drivers for these modules all use the
->     pinctrl module, so this verifies that this pinctrl driver
->     patch is working properly.
-> 
-> ---
-> Changes since V3:
-> - Added "Reviewed-by" tag of "Krzysztof Kozlowski"
-> - Corrected some incorrect spaces and blank lines in the YAML file.
-> - Link: https://lore.kernel.org/all/20250514080928.385-1-luyulin@eswincomputing.com/
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Start using b4 so you will not introduce such errors like here.
+
+On Wed, 07 May 2025 19:28:00 +0200, Ahmad Fatoum wrote:
+> Bartosz requested that I add this to the TODO, so here goes.
+> While at it, I also added a FIXME into the driver.
+> 
+> I'll be away most of the month, so feel free to squash changes as
+> appropriate.
+> 
+
+Applied, thanks!
+
+[1/2] gpio: TODO: add item about GPIO drivers reading struct gpio_chip::base
+      https://git.kernel.org/brgl/linux/c/833c086f22ecebe576af42051733796d1690dd71
 
 Best regards,
-Krzysztof
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
