@@ -1,563 +1,243 @@
-Return-Path: <linux-gpio+bounces-20208-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20195-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E2F2AB7E94
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 09:14:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8743AB7DCA
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 08:22:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9417A4A408E
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 07:14:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 902E51B60126
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 May 2025 06:22:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CBDB280A5A;
-	Thu, 15 May 2025 07:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AE00297102;
+	Thu, 15 May 2025 06:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1oxaD2D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csVn2Z6A"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2909A2797BB;
-	Thu, 15 May 2025 07:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBF328153C;
+	Thu, 15 May 2025 06:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747293265; cv=none; b=T533wjQiqk/U+u+4kAwRvMcpKZwS+8qujQX1m3LVraROLg8j0BMO6qRBeS75pxjxJUj1zbH+Emlc6PkVJj4zk84DHVao27pRhBNftce0r3yiGTQ7+5MSmga+lnuuBqDTwTMlRqVKXT0eCocP3ccWFjoB78Hcd7rwZHRBkZvt5XE=
+	t=1747290134; cv=none; b=DEYcANiIV5dZcDbew8pKTOzE+V6XeqGNRx6SnVt+RnbE5QA0y7FTvkJjgss2owOQk5FJkeisKkrdeVAri90ErPmKE5dP4r7UVqdTb05q/Vu9WSrMWSyZgqlbF0j/QWVM5+d+dimIJuxC2VA/2FddrFPk3RMQpVbpaZC8EPV/bkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747293265; c=relaxed/simple;
-	bh=o/ecv9yXIKZlFDqFrsLArJP2qQJ3aZihxXztamxxomI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cuIPin/4iXZ++MHtHVeVPavBKFsXZTlMpI4rSM0B0O61lGJya6FPo3y+5lF0aUypHQn3BNUprnQ5xiG/U9ZSeQr4jPWhGDPyLlwM2VUevCp5NtO7yIAkjoJDSvb7gQJjkeYizwB9vnI3wmRyIFu8rK7B8gkY+JwRIpcmmQ+c+hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h1oxaD2D; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so6263435e9.3;
-        Thu, 15 May 2025 00:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747293260; x=1747898060; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KD8cS6cgzj5Uiq1H5FJM1CE0gy4jEfoCs/JvaXo6r+k=;
-        b=h1oxaD2DPjuDohXkt08c0hWeU0BC3msgv9P+nO9H5XxKzkqghn3ccPCgMyQea2aoBg
-         RIX9VklMXw0LpNvldlEiEnCSAHfmqqkhbxJswWkXS8ZiZZe5SVAoGd+7bvC2lKvGBZJD
-         sjztYx9f4iFU++BJL2EbljwBAyOaQZ+drGVnniDJooW/gZUbdjtmUT+aXPZ/MnXhmTDR
-         oM3nRrC8vPv4Uuh2PMI9lHIKYbpca1L2j5AeqpYjjlcIfju80x2AcTkkLtrOjCfGMSn9
-         RSHsYHUQm8ocdV9rZGzCUBx0FOlHMQ1KJ21EuPU8c9+ufkMxtE6rQLNIoWH4WWZ8q+02
-         Ux7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747293260; x=1747898060;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KD8cS6cgzj5Uiq1H5FJM1CE0gy4jEfoCs/JvaXo6r+k=;
-        b=KrCypPer9U/jAVLTUykJNdhLaNZ33YPPl2UNFHsVv9qxI31c5eU3u/g5rotV7HroaL
-         EshfPGweXyRbwWffCMJlJ1/M1cb10enYQ3XVVJ7bDlqgXdR9qPvgA3OgRy7t59u28nwM
-         y+kAqE7+ih2E4L82W0eA8kWP7ZKGcoKpLdEv1fl/ET7SL2Uo2AculxqMu91zPiN3V7HC
-         cqlOo7hvDHi5zJLWDuZZGwQrKtWycQb5qV4RYnn9j60PnmE+b/hf8pKx2S5t6JVUBTHD
-         T3kc/vAh+cPdqsT2MCmdFVeYGgLhrxLKKEh9O7qrcfLfDU1J/UEdcyU7rHoNBQlJYcyT
-         lbvA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmWj4Q2QgGxxv2bHCoJUJ7m9WVvbpXxSSefMsoSRW3vpLSeirtiXGlpAmdJD8SJcDu+3qtSDhPPqz2@vger.kernel.org, AJvYcCX2C6cfWirgdR9xSucqkhq4tZFQ5bt0IceurVw7FS2QNXRbwZscP2buLDh3Mp6m4jI/zNrE9abAQ/p4@vger.kernel.org, AJvYcCXyB8C3eXeFhhEilenjf6s4YbyLBcSIdParga1bLO1ayhDphTa/foTuT5zOZ4EYa6ARnXZT8vw1iseDWBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJh3B4DZOAMxEv791eUoYGFh3q14fn8kBQ+HdhhtJXFg1n/EY1
-	S+P3Jp2Q8UHUJlukutS4VCJUbnCgkAPDJ4xvkh58rAZzgI7fDtaP
-X-Gm-Gg: ASbGncsE2TMUY0XqJo4x5o6GJTb7IsaVVj46hkiuaLzsmrGf/h6S8vEmIxYN6oooFY8
-	emlCwzC3qWUgNlAyzc2ms0tv3zCclpIzFIvuxnRl4U4K6lEOWQKo23cYpbmnCnWEDsTl2Myu1ww
-	qOuJw382xykTvjeYjmAtIVgwvuRLfqqIxAL8oiRLgU3qu+a9I36RlCN5HSb7a1EOx+h+aK1okJc
-	OyjI5EAVy99296PHtAHkzzfrFMzxo2BwDZVSwExkQ6qzBP5A4NgyY8SKUJ/j+st4pc1KG/bHL/c
-	qAXPG9wNULLPBHURsCMThzSmQx5LFu7RWidNjBjE6iLuvJTjpEg2n8LAfeZNnZZabJuCeczUYpE
-	Z6H2nZTfD5oqEkV4KDk05x0dk9Q==
-X-Google-Smtp-Source: AGHT+IGn1IPdtVB1lBv/1nov3WjqcuSR8LVs0rfZoL9s5KeW8wcX4ImAqjh4I5NXGTnCcyqGwbQndw==
-X-Received: by 2002:a05:600c:1e02:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-442f970a8dcmr8938885e9.22.1747293260107;
-        Thu, 15 May 2025 00:14:20 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2fc4sm22119816f8f.56.2025.05.15.00.14.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 00:14:19 -0700 (PDT)
-Message-ID: <332b3f951b91f56acbeae9b01bb89f108f8838e6.camel@gmail.com>
-Subject: Re: [PATCH v3 13/22] mfd: adp5585: add support for event handling
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Lee Jones <lee@kernel.org>, nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <ukleinek@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying
- <victor.liu@nxp.com>
-Date: Thu, 15 May 2025 07:14:45 +0100
-In-Reply-To: <20250513155920.GQ2936510@google.com>
-References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
-	 <20250512-dev-adp5589-fw-v3-13-092b14b79a88@analog.com>
-	 <20250513155920.GQ2936510@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1747290134; c=relaxed/simple;
+	bh=4zeGaBUvC1Q9ojCS6BwilpI7jNLQBxZR8OQzD04olA4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aZlcfSXT5CbRIMu7VzrNjfVnNpoYKAF8GFVGRQPClmxVNhYzNp9GV5h7mUUIWkabRUK8jOmu50bMLTGwCQfKnvfqfkfF2ql9TVyPeEmwz4hqrZeRbpaJgW4A88XU4hMx6wQx0KC0J63X0maijNprTSJudN2XXvgkDfLeYTYyWjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csVn2Z6A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2371DC4CEE7;
+	Thu, 15 May 2025 06:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747290134;
+	bh=4zeGaBUvC1Q9ojCS6BwilpI7jNLQBxZR8OQzD04olA4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=csVn2Z6A8Sl3SqKO3MI5MubdJCB8umTAnTFO5SMw/elfFoZzdsYdpt/RDZBpzTS+D
+	 b750TEKmduBW/BRISjdWknmxjvrJAYeRR44lbMSBNOUpiYAsSnBENfmfAX3ObU7JVQ
+	 eNW5xm5MtIbtcwh1+Z7tidGqaTMKf9Iqz2SRS7bDVweaSYrkAilHX91qq8m+CeeUiQ
+	 RNHfqKizr6VUkCFuk6znR7+3fICDvCWnHSYmIugJsJl+3L+WwdHZX9flrmZvjfN9Sg
+	 n6So2U4wZNplCdbAxlEe+FGj0Tz64KBRC80c7riOnfTgdIGurersTsNtpn4AP0Od6A
+	 QJMsL2mWgXgPA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C3EC2D0CD;
+	Thu, 15 May 2025 06:22:14 +0000 (UTC)
+From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
+Subject: [PATCH v6 00/10] Apple Mac System Management Controller
+Date: Thu, 15 May 2025 06:21:12 +0000
+Message-Id: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANmHJWgC/13MQQ6CMBCF4auQWVszhU4DrriHcWHpVLoQSEsaD
+ eHuFlxIXL7J/N8CkYPnCJdigcDJRz8OeehTAV1/Hx4svM0bSiwJK1QiPjuhhSThkK2WDVfSKsj
+ vU2DnXzt1veXd+ziP4b3LSW3XL5KZH5KUQEGIpjGalHZdGxMPE88czpYTbFCiQyzlIaYcO2pqN
+ NbI2tj/eF3XD+K8fWjhAAAA
+X-Change-ID: 20250304-smc-6-15-f0ed619e31d4
+To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Hector Martin <marcan@marcan.st>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7511; i=sven@svenpeter.dev;
+ h=from:subject:message-id;
+ bh=4zeGaBUvC1Q9ojCS6BwilpI7jNLQBxZR8OQzD04olA4=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ4ZqB1vgt88/QjfM+n7KTPLoEil3G/Gj/DdOiTiFbHRXb
+ +BXtbzZUcrCIMbBICumyLJ9v73pk4dvBJduuvQeZg4rE8gQBi5OAZhI+RKG/2GGJdFRj9jNJ55j
+ 9PSXe3i7dBmTxo+YV0G7/W+y2gQe3c/w3z28aVtD+4H+FX17jrrN3eP3p0Neq+tAh/LX2mX6/eu
+ aOQA=
+X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
+ fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
+X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
+ auth_id=167
+X-Original-From: Sven Peter <sven@svenpeter.dev>
+Reply-To: sven@svenpeter.dev
 
-On Tue, 2025-05-13 at 16:59 +0100, Lee Jones wrote:
-> On Mon, 12 May 2025, Nuno S=C3=A1 via B4 Relay wrote:
->=20
-> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
-> >=20
-> > These devices are capable of generate FIFO based events based on KEY or
-> > GPI presses. Add support for handling these events. This is in
-> > preparation of adding full support for keymap and gpis based events.
-> >=20
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> > ---
-> > =C2=A0drivers/mfd/adp5585.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 180 +=
-+++++++++++++++++++++++++++++++++++++++++--
-> > =C2=A0include/linux/mfd/adp5585.h |=C2=A0 48 ++++++++++++
-> > =C2=A02 files changed, 223 insertions(+), 5 deletions(-)
-> >=20
-> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> > index
-> > 8be7a76842f639cbe90ad0eb956a7a3eef43fa3d..5851ad30e7323bbb891878167d078=
-6bc60ef5d9
-> > 0 100644
-> > --- a/drivers/mfd/adp5585.c
-> > +++ b/drivers/mfd/adp5585.c
-> > @@ -154,10 +154,16 @@ static const struct regmap_config
-> > adp5585_regmap_config_template =3D {
-> > =C2=A0
-> > =C2=A0static const struct adp5585_regs adp5585_regs =3D {
-> > =C2=A0	.ext_cfg =3D ADP5585_PIN_CONFIG_C,
-> > +	.int_en =3D ADP5585_INT_EN,
-> > +	.gen_cfg =3D ADP5585_GENERAL_CFG,
-> > +	.poll_ptime_cfg =3D ADP5585_POLL_PTIME_CFG,
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0static const struct adp5585_regs adp5589_regs =3D {
-> > =C2=A0	.ext_cfg =3D ADP5589_PIN_CONFIG_D,
-> > +	.int_en =3D ADP5589_INT_EN,
-> > +	.gen_cfg =3D ADP5589_GENERAL_CFG,
-> > +	.poll_ptime_cfg =3D ADP5589_POLL_PTIME_CFG,
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0static int adp5585_fill_chip_configs(struct adp5585_dev *adp5585,
-> > @@ -214,6 +220,8 @@ static int adp5585_parse_fw(struct device *dev, str=
-uct
-> > adp5585_dev *adp5585,
-> > =C2=A0{
-> > =C2=A0	unsigned int has_pwm =3D 0, has_gpio =3D 0, rc =3D 0;
-> > =C2=A0	const struct mfd_cell *cells;
-> > +	unsigned int prop_val;
-> > +	int ret;
-> > =C2=A0
-> > =C2=A0	if (device_property_present(dev, "#pwm-cells"))
-> > =C2=A0		has_pwm =3D 1;
-> > @@ -224,6 +232,25 @@ static int adp5585_parse_fw(struct device *dev, st=
-ruct
-> > adp5585_dev *adp5585,
-> > =C2=A0	if (!has_pwm && !has_gpio)
-> > =C2=A0		return -ENODEV;
-> > =C2=A0
-> > +	ret =3D device_property_read_u32(dev, "poll-interval", &prop_val);
-> > +	if (!ret) {
-> > +		switch (prop_val) {
-> > +		case 10:
-> > +			fallthrough;
-> > +		case 20:
-> > +			fallthrough;
-> > +		case 30:
-> > +			fallthrough;
-> > +		case 40:
-> > +			adp5585->ev_poll_time =3D prop_val / 10 - 1;
-> > +			break;
-> > +		default:
-> > +			return dev_err_probe(dev, -EINVAL,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid value(%u) for poll-
-> > interval\n",
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 prop_val);
-> > +		}
-> > +	}
->=20
-> This all seems like a lot of code for:
->=20
-> 	ev_poll_time =3D prop_val / 10 - 1;
-> 	if (ev_poll_time > 3 || ev_poll_time < 0)
-> 		return dev_err_probe();
->=20
-> > +
-> > =C2=A0	*devs =3D devm_kcalloc(dev, has_pwm + has_gpio, sizeof(struct mf=
-d_cell),
-> > =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
-> > =C2=A0	if (!*devs)
-> > @@ -249,6 +276,135 @@ static void adp5585_osc_disable(void *data)
-> > =C2=A0	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
-> > =C2=A0}
-> > =C2=A0
-> > +static void adp5585_report_events(struct adp5585_dev *adp5585, int ev_=
-cnt)
-> > +{
-> > +	struct adp5585_ev_handler *h;
-> > +	unsigned int i;
-> > +
-> > +	guard(mutex)(&adp5585->ev_lock);
-> > +
-> > +	if (list_empty(&adp5585->ev_handlers)) {
-> > +		dev_warn_ratelimited(adp5585->dev, "No event handlers
-> > registered\n");
-> > +		return;
-> > +	}
-> > +
-> > +	for (i =3D 0; i < ev_cnt; i++) {
-> > +		unsigned int key, key_val, key_press;
-> > +		int ret;
-> > +
-> > +		ret =3D regmap_read(adp5585->regmap, ADP5585_FIFO_1 + i, &key);
-> > +		if (ret)
-> > +			return;
-> > +
-> > +		key_val =3D FIELD_GET(ADP5585_KEY_EVENT_MASK, key);
-> > +		key_press =3D FIELD_GET(ADP5585_KEV_EV_PRESS_MASK, key);
-> > +
-> > +		list_for_each_entry(h, &adp5585->ev_handlers, entry) {
-> > +			ret =3D h->handler(h->dev, key_val, key_press);
->=20
-> Rather than rolling your own call-back handler mechanism.=C2=A0 Are you s=
-ure
-> the kernel doesn't provide a generic solution for this?=C2=A0 For instanc=
-e,
-> would a shared workqueue be better?=C2=A0 This way you could also exit IR=
-Q
-> context sooner as well.
->=20
-> > +			if (!ret)
-> > +				/* handled! */
->=20
-> All comments should start with an upper case char.
->=20
-> > +				break;
-> > +		}
-> > +	}
-> > +}
-> > +
-> > +static irqreturn_t adp5585_irq(int irq, void *data)
-> > +{
-> > +	struct adp5585_dev *adp5585 =3D data;
-> > +	unsigned int status, ev_cnt;
-> > +	int ret;
-> > +
-> > +	ret =3D regmap_read(adp5585->regmap, ADP5585_INT_STATUS, &status);
-> > +	if (ret)
-> > +		return IRQ_HANDLED;
-> > +
-> > +	if (status & ADP5585_OVRFLOW_INT)
-> > +		dev_err_ratelimited(adp5585->dev, "Event Overflow Error\n");
->=20
-> Strange capitalisation.
->=20
-> > +
-> > +	if (!(status & ADP5585_EVENT_INT))
-> > +		goto out_irq;
-> > +
-> > +	ret =3D regmap_read(adp5585->regmap, ADP5585_STATUS, &ev_cnt);
-> > +	if (ret)
-> > +		goto out_irq;
-> > +
-> > +	ev_cnt =3D FIELD_GET(ADP5585_EC_MASK, ev_cnt);
-> > +	if (!ev_cnt)
-> > +		goto out_irq;
-> > +
-> > +	adp5585_report_events(adp5585, ev_cnt);
->=20
-> You don't want to propagate any errors?
->=20
-> > +out_irq:
-> > +	regmap_write(adp5585->regmap, ADP5585_INT_STATUS, status);
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int adp5585_setup(struct adp5585_dev *adp5585)
-> > +{
-> > +	const struct adp5585_regs *regs =3D adp5585->info->regs;
-> > +	unsigned int reg_val, i;
-> > +	int ret;
->=20
-> The final version of this function needs some nice commentary to explain
-> what each step is doing.=C2=A0 May as well start now.
->=20
-> > +	for (i =3D 0; i < ADP5585_EV_MAX; i++) {
-> > +		ret =3D regmap_read(adp5585->regmap, ADP5585_FIFO_1 + i,
-> > &reg_val);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	ret =3D regmap_write(adp5585->regmap, regs->poll_ptime_cfg,
-> > +			=C2=A0=C2=A0 adp5585->ev_poll_time);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D regmap_write(adp5585->regmap, regs->gen_cfg,
-> > +			=C2=A0=C2=A0 ADP5585_OSC_FREQ_500KHZ | ADP5585_INT_CFG |
-> > +			=C2=A0=C2=A0 ADP5585_OSC_EN);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return devm_add_action_or_reset(adp5585->dev, adp5585_osc_disable,
-> > +					adp5585);
-> > +}
-> > +
-> > +static void adp5585_irq_disable(void *data)
-> > +{
-> > +	struct adp5585_dev *adp5585 =3D data;
-> > +
-> > +	regmap_write(adp5585->regmap, adp5585->info->regs->int_en, 0);
-> > +}
-> > +
-> > +static int adp5585_irq_enable(struct i2c_client *i2c,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct adp5585_dev *adp5585)
-> > +{
-> > +	const struct adp5585_regs *regs =3D adp5585->info->regs;
-> > +	unsigned int stat;
-> > +	int ret;
-> > +
-> > +	if (i2c->irq <=3D 0)
-> > +		return 0;
-> > +
-> > +	ret =3D devm_request_threaded_irq(&i2c->dev, i2c->irq, NULL, adp5585_=
-irq,
-> > +					IRQF_ONESHOT, i2c->name, adp5585);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* clear any possible outstanding interrupt before enabling them... *=
-/
->=20
-> Uppercase char (I won't report on this again) and now silly punctuation
-> please...
->=20
-> > +	ret =3D regmap_read(adp5585->regmap, ADP5585_INT_STATUS, &stat);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D regmap_write(adp5585->regmap, ADP5585_INT_STATUS, stat);
-> > +	if (ret)
-> > +		return ret;
->=20
-> What does reading status values then writing them right back do?
->=20
-> Commentary throughout please.
->=20
-> > +	ret =3D regmap_write(adp5585->regmap, regs->int_en,
-> > +			=C2=A0=C2=A0 ADP5585_OVRFLOW_IEN | ADP5585_EVENT_IEN);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return devm_add_action_or_reset(&i2c->dev, adp5585_irq_disable,
-> > +					adp5585);
->=20
-> Feel free to use 100-chars to help with these early line breaks.
->=20
-> > +}
-> > +
-> > =C2=A0static int adp5585_i2c_probe(struct i2c_client *i2c)
-> > =C2=A0{
-> > =C2=A0	struct regmap_config regmap_config;
-> > @@ -282,16 +438,19 @@ static int adp5585_i2c_probe(struct i2c_client *i=
-2c)
-> > =C2=A0		return dev_err_probe(&i2c->dev, -ENODEV,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid device ID 0x%02x\n", id);
-> > =C2=A0
-> > +	adp5585->dev =3D &i2c->dev;
-> > +	adp5585->irq =3D i2c->irq;
-> > +	INIT_LIST_HEAD(&adp5585->ev_handlers);
-> > +
-> > =C2=A0	n_devs =3D adp5585_parse_fw(&i2c->dev, adp5585, &devs);
-> > =C2=A0	if (n_devs < 0)
-> > =C2=A0		return n_devs;
-> > =C2=A0
-> > -	ret =3D regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
-> > -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ADP5585_OSC_EN);
-> > +	ret =3D adp5585_setup(adp5585);
-> > =C2=A0	if (ret)
-> > =C2=A0		return ret;
-> > =C2=A0
-> > -	ret =3D devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable, adp5=
-585);
-> > +	ret =3D devm_mutex_init(&i2c->dev, &adp5585->ev_lock);
-> > =C2=A0	if (ret)
-> > =C2=A0		return ret;
-> > =C2=A0
-> > @@ -301,13 +460,16 @@ static int adp5585_i2c_probe(struct i2c_client *i=
-2c)
-> > =C2=A0		return dev_err_probe(&i2c->dev, ret,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to add child devices\n");
-> > =C2=A0
-> > -	return 0;
-> > +	return adp5585_irq_enable(i2c, adp5585);
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0static int adp5585_suspend(struct device *dev)
-> > =C2=A0{
-> > =C2=A0	struct adp5585_dev *adp5585 =3D dev_get_drvdata(dev);
-> > =C2=A0
-> > +	if (adp5585->irq)
-> > +		disable_irq(adp5585->irq);
-> > +
-> > =C2=A0	regcache_cache_only(adp5585->regmap, true);
-> > =C2=A0
-> > =C2=A0	return 0;
-> > @@ -316,11 +478,19 @@ static int adp5585_suspend(struct device *dev)
-> > =C2=A0static int adp5585_resume(struct device *dev)
-> > =C2=A0{
-> > =C2=A0	struct adp5585_dev *adp5585 =3D dev_get_drvdata(dev);
-> > +	int ret;
-> > =C2=A0
-> > =C2=A0	regcache_cache_only(adp5585->regmap, false);
-> > =C2=A0	regcache_mark_dirty(adp5585->regmap);
-> > =C2=A0
-> > -	return regcache_sync(adp5585->regmap);
-> > +	ret =3D regcache_sync(adp5585->regmap);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (adp5585->irq)
-> > +		enable_irq(adp5585->irq);
-> > +
-> > +	return 0;
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0static DEFINE_SIMPLE_DEV_PM_OPS(adp5585_pm, adp5585_suspend, adp5=
-585_resume);
-> > diff --git a/include/linux/mfd/adp5585.h b/include/linux/mfd/adp5585.h
-> > index
-> > 9a925a91c772722db559c9ec8ae334b2159ede79..218c56bed2e0304de8b81c7090386=
-fb4e1b6c28
-> > 1 100644
-> > --- a/include/linux/mfd/adp5585.h
-> > +++ b/include/linux/mfd/adp5585.h
-> > @@ -10,13 +10,23 @@
-> > =C2=A0#define __MFD_ADP5585_H_
-> > =C2=A0
-> > =C2=A0#include <linux/bits.h>
-> > +#include <linux/cleanup.h>
-> > +#include <linux/device.h>
-> > +#include <linux/list.h>
-> > +#include <linux/mutex.h>
-> > =C2=A0
-> > =C2=A0#define ADP5585_ID			0x00
-> > =C2=A0#define		ADP5585_MAN_ID_VALUE		0x20
-> > =C2=A0#define		ADP5585_MAN_ID_MASK		GENMASK(7, 4)
-> > +#define		ADP5585_REV_ID_MASK		GENMASK(3, 0)
-> > =C2=A0#define ADP5585_INT_STATUS		0x01
-> > +#define		ADP5585_OVRFLOW_INT		BIT(2)
-> > +#define		ADP5585_EVENT_INT		BIT(0)
-> > =C2=A0#define ADP5585_STATUS			0x02
-> > +#define		ADP5585_EC_MASK			GENMASK(4, 0)
-> > =C2=A0#define ADP5585_FIFO_1			0x03
-> > +#define		ADP5585_KEV_EV_PRESS_MASK	BIT(7)
-> > +#define		ADP5585_KEY_EVENT_MASK		GENMASK(6, 0)
-> > =C2=A0#define ADP5585_FIFO_2			0x04
-> > =C2=A0#define ADP5585_FIFO_3			0x05
-> > =C2=A0#define ADP5585_FIFO_4			0x06
-> > @@ -32,6 +42,7 @@
-> > =C2=A0#define ADP5585_FIFO_14			0x10
-> > =C2=A0#define ADP5585_FIFO_15			0x11
-> > =C2=A0#define ADP5585_FIFO_16			0x12
-> > +#define		ADP5585_EV_MAX			(ADP5585_FIFO_16 -
-> > ADP5585_FIFO_1 + 1)
-> > =C2=A0#define ADP5585_GPI_INT_STAT_A		0x13
-> > =C2=A0#define ADP5585_GPI_INT_STAT_B		0x14
-> > =C2=A0#define ADP5585_GPI_STATUS_A		0x15
-> > @@ -104,6 +115,8 @@
-> > =C2=A0#define		ADP5585_INT_CFG			BIT(1)
-> > =C2=A0#define		ADP5585_RST_CFG			BIT(0)
-> > =C2=A0#define ADP5585_INT_EN			0x3c
-> > +#define		ADP5585_OVRFLOW_IEN		BIT(2)
-> > +#define		ADP5585_EVENT_IEN		BIT(0)
-> > =C2=A0
-> > =C2=A0#define ADP5585_MAX_REG			ADP5585_INT_EN
-> > =C2=A0
-> > @@ -121,7 +134,9 @@
-> > =C2=A0#define ADP5589_PWM_OFFT_LOW		0x3e
-> > =C2=A0#define ADP5589_PWM_ONT_LOW		0x40
-> > =C2=A0#define ADP5589_PWM_CFG			0x42
-> > +#define ADP5589_POLL_PTIME_CFG		0x48
-> > =C2=A0#define ADP5589_PIN_CONFIG_D		0x4C
-> > +#define ADP5589_GENERAL_CFG		0x4d
-> > =C2=A0#define ADP5589_INT_EN			0x4e
-> > =C2=A0#define ADP5589_MAX_REG			ADP5589_INT_EN
-> > =C2=A0
-> > @@ -138,8 +153,18 @@ enum adp5585_regmap_type {
-> > =C2=A0	ADP5589_REGMAP_02,
-> > =C2=A0};
-> > =C2=A0
-> > +struct adp5585_ev_handler {
-> > +	struct list_head entry;
-> > +	struct device *dev;
-> > +	int (*handler)(struct device *dev, unsigned int key_val,
-> > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int key_press);
->=20
-> Pointer to functions outside of subsystem-level ops are generally
-> frowned upon.=C2=A0 Are you sure there isn't a standard way to achieve yo=
-ur
-> goal without them?
+Hi,
 
-Actually, it was fast. I think the notifier API will do fine here. I guess =
-that would
-make you happier?
+This series adds support for the System Management Controller found in
+Apple Silicon devices which we model as a mfd. It also includes support
+for the GPIO block and the power/reset block as sub-devices.
 
-- Nuno S=C3=A1=20
->=20
-> > +};
-> > +
-> > =C2=A0struct adp5585_regs {
-> > +	unsigned int gen_cfg;
-> > =C2=A0	unsigned int ext_cfg;
-> > +	unsigned int int_en;
-> > +	unsigned int poll_ptime_cfg;
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0struct adp5585_info {
-> > @@ -150,7 +175,30 @@ struct adp5585_info {
-> > =C2=A0
-> > =C2=A0struct adp5585_dev {
-> > =C2=A0	struct regmap *regmap;
-> > +	struct device *dev;
-> > =C2=A0	const struct adp5585_info *info;
-> > +	/* Used to synchronize the availability of the event handlers */
-> > +	struct mutex ev_lock;
-> > +	struct list_head ev_handlers;
-> > +	int irq;
-> > +	unsigned int ev_poll_time;
-> > =C2=A0};
-> > =C2=A0
-> > +static inline void adp5585_ev_handler_remove(void *data)
-> > +{
-> > +	struct adp5585_ev_handler *handler =3D data;
-> > +	struct adp5585_dev *adp5585 =3D dev_get_drvdata(handler->dev->parent)=
-;
-> > +
-> > +	guard(mutex)(&adp5585->ev_lock);
-> > +	list_del(&handler->entry);
-> > +}
-> > +
-> > +static inline int devm_adp5585_ev_handler_add(struct adp5585_dev *adp5=
-585,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct adp5585_ev_handler
-> > *handler)
-> > +{
-> > +	guard(mutex)(&adp5585->ev_lock);
-> > +	list_add_tail(&handler->entry, &adp5585->ev_handlers);
-> > +	return devm_add_action_or_reset(handler->dev, adp5585_ev_handler_remo=
-ve,
-> > +					handler);
-> > +}
-> > =C2=A0#endif
-> >=20
-> > --=20
-> > 2.49.0
-> >=20
-> >=20
->=20
+Changes between v5 and v6:
+  - Actually reorder struct members this time, start comments with an
+    uppercase letter, and use devm_ for mfd_register_devices instead of
+    dropping those fixup commits by accident
+  - Stefan's comment: Renamed ret to bfr in the reboot driver
+  - Sebastian's comments on the reboot driver:
+    - Moved Kconfig dependencies to MFD device and made reboot only
+      depend on that one
+    - Removed sysfs file to configure "reboot after power loss" for now
+      since this probably belongs in a userspace tool that directly
+      writes to nvmem instead
+    - Dropped setting pdev->dev.of_node since that's already done
+      automatically and adjusted #include to linux/mod_devicetable.h
+    - Dropped MODULE_ALIAS which was probably a leftover from a previous
+      version that did not use of_match_table
+  - Rob's comments to the dt-bindings
+    - Removed examples from sub-devices and added them to the main smc
+      binding
+    - Removed a spurious |
+
+Changes between v4 and v5:
+  - Alyssa's comments:
+    - Made the WARN_ON in the reboot driver more obvious
+    - Added missing brackets around a for loop in the reboot driver
+    - Used min instead of open-coded variant inside the gpio driver
+    - Reoder struct memebers to prevent padding inside the mfd driver
+  - Lee's comments:
+    - All comments now start with an uppercase letter
+    - Removed apple_smc_read_ioft_scaled and apple_smc_read_f32_scaled
+      since these are not yet used and likely don't belong into
+      drivers/mfd
+    - Relaced if (ret != 0) with if (ret) when possible
+    - Used devm_platform_get_and_ioremap_resource to get and map the
+      SRAM resource
+    - Used reverse Christmas-tree formating when declaring variables
+    - Dropped _platform left-overs from probe and remove functions
+    - Removed dev_dbg prints which are no long required after
+      development
+    - Reworked is_alive/is_initialized so that it's obvious how errors
+      during boot are propagated from the callback to the probe function
+    - Used dev_warn instead of dev_err in a few places
+    - Removed no-op apple_smc_rtkit_shmem_destroy; this required an
+      additional change in rtkit.c because we had a check there that's a
+      bit too strict
+    - Removed struct resource in apple_smc_rtkit_shmem_setup and
+      open-coded resource_contains instead
+    - Unwrapped lines with less than 100 chars
+    - Made sure to compile with W=1 and ran scripts/kernel-doc -v
+      on macsmc.h once and fixed any fallout
+  - Removed first_key/last_key from struct smc and moved
+    apple_smc_find_first_key_index to the gpio driver since it's only
+    used there anyway to find the index of the first GPIO key (gP00)
+  - Return -EIO when a command fails instead of whatever SMC returns
+    which does not map to Linux errnos on errors
+
+Changes between v3 and v4:
+  - Added documentation for all functions and structs
+  - Fixed dt-bindings and re-ordered commits so that the mfd one comes
+    last and can include the gpio subdevice
+  - Added the reset driver and corresponding bindings
+  - Reworked the atomic mode inside SMC since the previous implementation
+    called mutex_lock from atomic context
+  - Removed the backend split for now which lead to a quite intense discussion
+    for the previous versions which hadn't been solved as far as I could tell
+    from the old threads.
+    It's also been 2+ years and I haven't heard of any backend implementation
+    for T2 or even older macs. It's also unclear to me which sub-devices
+    are actually useful there because at least GPIO and shutdown/reboot
+    from this series will not work as-is there.
+    I'd rather have this initial version which only supports M1+ macs upstream
+    and then iterate there if any other backend is developed.
+    I'll gladly help to re-introduce backend support if it's ever required.
+
+Dependencies:
+The code and dt-bindings themselves apply cleanly to 6.15-rc1 but
+the device tree changes require the already merged SPMI controller
+and SPMI NVMEM series which will be part of 6.16.
+The series is also using the printf format specifiers which will
+land in 6.16 via the drm-misc tree.
+A tree with all dependencies for testing is available at
+https://github.com/AsahiLinux/linux/commits/smc-v6/.
+
+Merging:
+The dt-binding patches all depend on each other such that they all
+should probably go together with the mfd device itself.
+The following commits also depend on mfd due to the new header file and
+will either have to go through the mfd tree as well or we'll need an
+immutable branch there or we just wait one kernel release and I'll
+re-submit the rest then.
+I'll take the device tree updates through our tree which also has the
+previous device tree updates these depend on.
+
+v5: https://lore.kernel.org/asahi/20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev/
+v4: https://lore.kernel.org/asahi/20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev/
+v3: https://lore.kernel.org/asahi/Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk/
+v2: https://lore.kernel.org/asahi/YxdInl2qzQWM+3bs@shell.armlinux.org.uk/
+v1: https://lore.kernel.org/asahi/YxC5eZjGgd8xguDr@shell.armlinux.org.uk/
+
+Best,
+
+Sven
+
+---
+Hector Martin (5):
+      gpio: Add new gpio-macsmc driver for Apple Macs
+      power: reset: macsmc-reboot: Add driver for rebooting via Apple SMC
+      arm64: dts: apple: t8103: Add SMC node
+      arm64: dts: apple: t8112: Add SMC node
+      arm64: dts: apple: t600x: Add SMC node
+
+Russell King (Oracle) (2):
+      dt-bindings: gpio: Add Apple Mac SMC GPIO block
+      dt-bindings: mfd: Add Apple Mac System Management Controller
+
+Sven Peter (3):
+      dt-bindings: power: reboot: Add Apple Mac SMC Reboot Controller
+      soc: apple: rtkit: Make shmem_destroy optional
+      mfd: Add Apple Silicon System Management Controller
+
+ .../devicetree/bindings/gpio/apple,smc-gpio.yaml   |  29 ++
+ .../devicetree/bindings/mfd/apple,smc.yaml         |  79 ++++
+ .../bindings/power/reset/apple,smc-reboot.yaml     |  40 ++
+ MAINTAINERS                                        |   7 +
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi          |  35 ++
+ arch/arm64/boot/dts/apple/t8103.dtsi               |  35 ++
+ arch/arm64/boot/dts/apple/t8112.dtsi               |  35 ++
+ drivers/gpio/Kconfig                               |  10 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-macsmc.c                         | 292 ++++++++++++
+ drivers/mfd/Kconfig                                |  18 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/macsmc.c                               | 498 +++++++++++++++++++++
+ drivers/power/reset/Kconfig                        |   9 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/macsmc-reboot.c                | 294 ++++++++++++
+ drivers/soc/apple/rtkit.c                          |   3 +-
+ include/linux/mfd/macsmc.h                         | 279 ++++++++++++
+ 18 files changed, 1664 insertions(+), 2 deletions(-)
+---
+base-commit: 5abab6ab4ebacfff5857b63bd349902a6568d2e8
+change-id: 20250304-smc-6-15-f0ed619e31d4
+
+Best regards,
+-- 
+Sven Peter <sven@svenpeter.dev>
+
 
 
