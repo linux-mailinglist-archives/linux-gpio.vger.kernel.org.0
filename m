@@ -1,255 +1,79 @@
-Return-Path: <linux-gpio+bounces-20262-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20263-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E258BABA09E
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 May 2025 18:07:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB668ABA0F1
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 May 2025 18:44:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4369F1884F54
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 May 2025 16:06:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6A157A510A
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 May 2025 16:42:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E411D5161;
-	Fri, 16 May 2025 16:06:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4D1D1D63FC;
+	Fri, 16 May 2025 16:43:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EF4cJVo0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPxsy+B1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B47613A3ED
-	for <linux-gpio@vger.kernel.org>; Fri, 16 May 2025 16:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914037261B;
+	Fri, 16 May 2025 16:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747411596; cv=none; b=GNmyg5y+JpAleUE3yZ4EpZKE8pFdGglGd3SIbxxV8dK00wKnaoEyQOFeeMJF4VUdI81EVgkDgYjY/PWBr4iysE6qpPlWujjlwWAo4x8GDxRHpsPe6Mjc3SvoanX9LogxjMNm1Yy8+0KQLSsRf1gs/AAKhAJaVx3MfrDgT4ksSQM=
+	t=1747413826; cv=none; b=kfHBf4iqTtWCN5XHNeWXANh39A7chYZtQdrXJH+zfxdUU7Y9eEw6Ctcn7CdJxKd3V7NLl0hdlzpzDjxQevaPh7ZJFv7rkme8x9fZwioelslDpQQCLkK46RJsME79zMEj16cH992HF2RmO6mFoG6+DKlZMFOnweanbqTs1dVWtss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747411596; c=relaxed/simple;
-	bh=NJsJt22Ou4Vloxah4jNEyYB3MHXbHXXcLQ1AgkDAB98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p4PRQ10Zv/6turXX02WkBPDCjLd4B+0xc1528P3qOz4/yHtKsDsNUR5av6YpHP4XANaes9Rp//KYWrXOxRytfsyeFATyJn2FXVk7pQ5n7gt2FQ1JeZ1h9Rz1ZzSisVaH1LSqv/7gyy9l5OPMctzZzkIQPSVLVek8tZ3+f1oL4sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EF4cJVo0; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2d4f8c42f49so441028fac.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 May 2025 09:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747411592; x=1748016392; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HWlBYMs+G2O1hnBcI+2U3m/ebczROAhhuj3hfKR/QyA=;
-        b=EF4cJVo0H/JFr9b+SQdVGcjYYfTOPFkrNXKK5MOGL0LttdT2oiLYf1m2J5tdPhLkYb
-         8H/uadfrU6FA8xVsBytw93k2SX8n+fKJL0OK/Snp6Zh52t0Ek+XJj9YsgK9rCbVH/6ja
-         lYCa8MCl6nTNId2ZzsubC8P+S/YXdogQBlpbNKk8ryJXbJRxEehf2+iefvvnyQsTOLCs
-         SrqrPFZrzitdJtf04K+q+GgvmrnlB0mDZgMPd3swb84DPI4qI6sLTc7bEyWVM/k7ct1q
-         G/3My10FY/eMdofO2VxDol0Sa04vrXzL9GB8POYOW/xbJCPEa+mhUbktg8Tjdr3m4Lvf
-         N4Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747411592; x=1748016392;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HWlBYMs+G2O1hnBcI+2U3m/ebczROAhhuj3hfKR/QyA=;
-        b=IazIy3poXCCvDBiunMgIZ2J8vxY0MWCzMV7uF1y4HmDOwbcp4+6hc+Vo4r0aur0WKy
-         3Gww5ghsXk8XEiXysJolFqnO7c/epF7XOLmbOWbvJf0SP1VyZ6/+NCtYkODeRqs0gP17
-         aN4cMiUy2QsPkHdd7NiuY5hjoy83g8NLvF+ftiMIxgfGGe4b+adL9ilJ/aW2tyKxbSR0
-         zGA1SmjsR22sSGrXpfFBqvNaFobNkVcxZRaD1tUNtQpl1RH91xGtvRCINIZp4fPGBVqj
-         IoJO/Q2ym029Lj02oAJqmc4wnhgEViffB92xL4eOyTEG6/v4REJCBE4ZwdF48fc18mE3
-         KccQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSI6TdnXzY10aAK2J2IS/8YzPpD8mtZUriQ/0bOuc+gc+SbYIUBf/XVV0XbqOo58gkBwm2z6g4dW8y@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw7rAM4lJUdCLtBVjBXfJpV2nMYqV0LfYN4blhMU0gj/+K/Kis
-	18gTp/DQLdLWU+qXaKFtQIyK6+dFKBaqZbxaV8QcRPiRwJTWIxxmyrNtO3GR+QOVAoI=
-X-Gm-Gg: ASbGncsZEBiLUHLRTOg3Qv9OtbucIm6u0Tlno618b2A1pB+78fscfP//mpIrMSicY9E
-	ndsLmryOax0N2E7kwddmMAtumfbVqbWGjP9WD2IUtFedBzzhuMDmw6YfWG4jviA5DmaQCn8Wdi/
-	GZaT29M+ZsUuPKyK5bmNKYP0RkxjuXJ+lP3QzG6+WOnx/3BPEWgsMDqSFGD8IP3Z0HwBNqKinxC
-	YJpvLUF9BOgvqQneTC4lbxESKuUtSbHlhHVnyRibDGJFhPMOKeWwA8EKzLSOp+mlTzl9qEV1Q3I
-	C77sdfcRy7HRg610EHAHcNaFYbtcgBoz6P7afqSYbCXOAEI/WWRuh3yiYytMbiIiRfFOYtI8zqE
-	FORC/JJm77fhuzg89NF7PGovn5Q==
-X-Google-Smtp-Source: AGHT+IFoJs3fuisk7mzI66aYlQ9JiNRvN0cxCbKHzCUMWSGPfMIPRK8lo74bJ6bAidLAwv2PG4JcGg==
-X-Received: by 2002:a05:6871:400b:b0:29d:c6dd:cc6c with SMTP id 586e51a60fabf-2e3c2a9edf4mr2338495fac.15.1747411592412;
-        Fri, 16 May 2025 09:06:32 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d2f:9b08:7c22:3090? ([2600:8803:e7e4:1d00:d2f:9b08:7c22:3090])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6b5e60esm390866a34.59.2025.05.16.09.06.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 09:06:31 -0700 (PDT)
-Message-ID: <bfd606f0-e253-4685-9025-5bdc7aafacbe@baylibre.com>
-Date: Fri, 16 May 2025 11:06:30 -0500
+	s=arc-20240116; t=1747413826; c=relaxed/simple;
+	bh=DhY1S5xS1URe45hkYU8L8vE1etkyv/eNQjS0NzVRiuk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=laawYIaGDYP/2VfF1UTdLIVg9TIcvQ2JnU0qCD0LPJNv37nbNoSvpNKvJw7Zejz5uTMWUDce33pP56K6iXCIewQLUxW/W3Q/yuGW6koV03SLTGSfE4uoDr7PmRxJoL2m6v0Sbi3hiKMqUXua38Y/4TBFlTlddk9RV7knxT3kng8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPxsy+B1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A93C4CEE4;
+	Fri, 16 May 2025 16:43:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747413826;
+	bh=DhY1S5xS1URe45hkYU8L8vE1etkyv/eNQjS0NzVRiuk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=BPxsy+B18J8ns0KltGWAcNvX39+t0/jusH29hAXctvEqGbDME9YLifCPI1xsxXN9d
+	 KacQeV1OUNSemtYWuy6OOjromk1u/0K3+SdkOCu/0OXeX4SLbbLSczjbSqUrZNM4EZ
+	 X3J2tbebVtUfavjFnwP1NkbJYKZGk4LTGexcrTLbxRxthRobXR5okAGNow9t0AD4Wj
+	 fpkhO/nxE9wEOz94e2W3DwIYr9x5RBdpTuW3zCqPVKzE0vQwZYrjM5S+T5SED6nqsq
+	 NTJCoev2lHbGUcMCwfmZ/K1oleR45XRElxNbsNfeFE2WfprAOyVfNkO2YRuU4X6fJE
+	 318RcWIyMh1FQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 891033806659;
+	Fri, 16 May 2025 16:44:24 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.15-rc7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250516101215.5822-1-brgl@bgdev.pl>
+References: <20250516101215.5822-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250516101215.5822-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.15-rc7
+X-PR-Tracked-Commit-Id: 7118be7c6072f40391923543fdd1563b8d56377c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7dc774fde73afd3a127b58ec99bd58b975abc8ab
+Message-Id: <174741386331.3992786.7707607690612994801.pr-tracker-bot@kernel.org>
+Date: Fri, 16 May 2025 16:44:23 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/10] dt-bindings: iio: adc: Add AD4170
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
- Michael.Hennerich@analog.com, nuno.sa@analog.com, andy@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linus.walleij@linaro.org, brgl@bgdev.pl
-References: <cover.1747083143.git.marcelo.schmitt@analog.com>
- <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
- <2ab9a6e2-a331-4995-8d42-00290bc825e7@baylibre.com>
- <aCddgYRWrLPlGeuR@debian-BULLSEYE-live-builder-AMD64>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aCddgYRWrLPlGeuR@debian-BULLSEYE-live-builder-AMD64>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 5/16/25 10:45 AM, Marcelo Schmitt wrote:
-> ...
->>> +
->>> +    properties:
->>> +      adi,reference-select:
->>> +        description: |
->>> +          Selects the reference source to use when converting on the specific
->>> +          channel. Valid values are:
->>> +          0: Differential reference voltage REFIN+ - REFIN−.
->>> +          1: Differential reference voltage REFIN2+ - REFIN2−.
->>> +          2: Internal 2.5V referece (REFOUT) relative to AVSS.
->>> +          3: Analog supply voltage (AVDD) relative AVSS.
->>> +        $ref: /schemas/types.yaml#/definitions/uint8
->>> +        enum: [0, 1, 2, 3]
->> Using strings instead of int for this and most of the other custom enums here
->> would make them self-documenting and easier to use.
-> 
-> The numbers match the values that are documented in the datasheet for each
-> option of voltage reference available to use with a channel. So we would be
-> using numbers mostly to define values of some unit and pin numbers (e.g. 100 for
-> the microamp property)? Not really excited about doing this change because I
-> think it will make the dtb a bit larger and the driver code a bit more lengthy,
-> but can do that for v4.
+The pull request you sent on Fri, 16 May 2025 12:12:15 +0200:
 
-I don't think it is too bad since we have match_string() to convert the strings
-to an enum value. So it would just be a matter of adding the string tables.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.15-rc7
 
-But I don't feel terribly strongly about it anyway.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7dc774fde73afd3a127b58ec99bd58b975abc8ab
 
-> ...
->>> +
->>> +      adi,power-down-switch-pin:
->>> +        description:
->>> +          Number of the GPIO used as power-down switch for the bridge circuit.
->>> +        $ref: /schemas/types.yaml#/definitions/uint8
->>> +        enum: [0, 1]
->> This isn't required, so what is the default if omitted?
-> 
-> We don't care about it when the property is omitted.
-> Do we need a default even when the property is not required and we don't care
-> when it's not set?
+Thank you!
 
-Ah, in that case, maybe add a bit to the description to say that this
-is omitted when there isn't a bridge circuit wired up.
-
-> 
-> ...
->>> +      diff-channels:
->>> +        description: |
->>> +          This property is used for defining the inputs of a differential
->>> +          voltage channel. The first value is the positive input and the second
->>> +          value is the negative input of the channel.
->>> +
->>> +          Besides the analog input pins AIN0 to AIN8, there are special inputs
->>> +          that can be selected with the following values:
->>> +          17: Internal temperature sensor
->>> +          18: (AVDD-AVSS)/5
->>> +          19: (IOVDD-DGND)/5
->>> +          20: DAC output
->>> +          21: ALDO
->>> +          22: DLDO
->>> +          23: AVSS
->>> +          24: DGND
->>> +          25: REFIN+
->>> +          26: REFIN-
->>> +          27: REFIN2+
->>> +          28: REFIN2-
->>> +          29: REFOUT
->>> +          For the internal temperature sensor, use the input number for both
->>> +          inputs (i.e. diff-channels = <17 17>).
->>> +        items:
->>> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 25,
->>> +                 26, 27, 28, 29]
->>
->> A Header file with macros for these would be nice since it seems like we
->> have to use the higher-numbered ones a lot with the common-mode-channel
->> properties in the examples.
-> 
-> The RFC set had a header with macros for those numbers, but making dt properties
-> "look nice" was said to no be a reason to have binding headers. 
-> 
-> https://lore.kernel.org/linux-iio/ikq55kcfu2lmxzeeobu4zwf67xypyikadnpycw2m4d7o6gvmi2@tkepvcvzqzoh/
-> 
-
-Hmm, OK I never got that complaint before. Although the headers I have made before
-were defining arbitrary numbers for phandle cells, and not something from the
-datasheet like this.
-
-> Also, no other binding would use those values. So, we would have a header
-> specific for adi,ad4170?
-
-Yes.
-
-> 
->>
->>> +
->>> +      single-channel: true
->>> +
->>> +      common-mode-channel: true
->>> +
->>> +      bipolar: true
->>> +
->>> +      adi,buffered-positive:
->>> +        description: |
->>> +          Enable precharge buffer, full buffer, or skip reference buffering of
->>> +          the positive voltage reference. Because the output impedance of the
->>> +          source driving the voltage reference inputs may be dynamic, RC
->>> +          combinations of those inputs can cause DC gain errors if the reference
->>> +          inputs go unbuffered into the ADC. Enable reference buffering if the
->>> +          provided reference source has dynamic high impedance output. Note the
->>> +          absolute voltage allowed on positive reference inputs (REFIN+,
->>> +          REFIN2+) is from AVSS − 50 mV to AVDD + 50 mV when the reference
->>> +          buffers are disabled but narrows to AVSS to AVDD when reference
->>> +          buffering is enabled or in precharge mode.
->>> +          0: Reference precharge buffer.
->>> +          1: Full Buffer.
->>> +          2: Bypass reference buffers (buffering disabled).
->>> +        $ref: /schemas/types.yaml#/definitions/uint8
->>> +        enum: [0, 1, 2]
->>> +        default: 1
->>> +
->>> +      adi,buffered-negative:
->>> +        description: |
->>> +          Enable precharge buffer, full buffer, or skip reference buffering of
->>> +          the negative voltage reference. Because the output impedance of the
->>> +          source driving the voltage reference inputs may be dynamic, RC
->>> +          combinations of those inputs can cause DC gain errors if the reference
->>> +          inputs go unbuffered into the ADC. Enable reference buffering if the
->>> +          provided reference source has dynamic high impedance output. Note the
->>> +          absolute voltage allowed on negative reference inputs (REFIN-,
->>> +          REFIN2-) is from AVSS − 50 mV to AVDD + 50 mV when the reference
->>> +          buffers are disabled but narrows to AVSS to AVDD when reference
->>> +          buffering is enabled or in precharge mode.
->>> +          0: Reference precharge buffer.
->>> +          1: Full Buffer.
->>> +          2: Bypass reference buffers (buffering disabled).
->>> +        $ref: /schemas/types.yaml#/definitions/uint8
->>> +        enum: [0, 1, 2]
->>> +        default: 1
->> Could make a $def for these too to reduce duplication.
-> 
-> I think so, but how? They are only documented here. I can merge them into a
-> single adi,buffered property. That will also reduce duplication.
-
-You already have $defs:, so just add precharge-buffer: there with
-the description:, etc., then here, just:
-
-	adi,buffered-positive:
-	  $ref: '#/$defs/precharge-buffer'
-	adi,buffered-negative:
-	  $ref: '#/$defs/precharge-buffer'
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
