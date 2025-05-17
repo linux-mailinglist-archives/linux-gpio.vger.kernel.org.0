@@ -1,101 +1,111 @@
-Return-Path: <linux-gpio+bounces-20264-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20265-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19DA5ABA16F
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 May 2025 19:01:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FA60ABAB1D
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 May 2025 18:28:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 929C7522454
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 May 2025 16:58:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F71F18984BC
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 May 2025 16:28:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 099AB25290E;
-	Fri, 16 May 2025 16:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C133020AF62;
+	Sat, 17 May 2025 16:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFh8V4J5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PbTUAr7p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B3A250C1F;
-	Fri, 16 May 2025 16:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC6915748F;
+	Sat, 17 May 2025 16:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414711; cv=none; b=intNJBdUe0oMZ2isWQUvdhtczZb6OjhcB01mW5tOmIi/d6haWKd6ftHNtJDMnjTzWi4LHfD+/iMjYO8G6NlfRQ67R/+YOt1wwIcAQsUwjcWM1uyuNgGCm5u40rFVBgL9nA9KEJg73XpeLAra9i3kDj05sEI1nvv37OMPr4vFNh4=
+	t=1747499320; cv=none; b=byc+l0AHHvk4ivFPlfXcNzSWMqxV28uBBxCl0R4+4AiMOSFQkTEhE+QPTVMalRIjwkpSvbEBhU3s72Oco5I3+5dqS0M6IXdsjWpMSqvB0ZhTENSZhd4W+PcPAw/Vvh2r6+8jQnuaifBjufsoEU7yntdJMFX9XQzXYsU10FEpYOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414711; c=relaxed/simple;
-	bh=Pa+c9PjmCSQn92YhqXv2lH7ZolnhV1WRtgLkV1dHxEo=;
+	s=arc-20240116; t=1747499320; c=relaxed/simple;
+	bh=WJbQgRZO8pBaUF67/UjtlS0RvUVsOBvvMvIIb35Oaso=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ImFRsv4fYXcp3KG4pPF8ElzIANWCx3g9j1CIt9IFBb3Ke2U9lqnI6c4Tz9NvktMz+lSoj4AD6DWYg0M1sGmkLtRUWANWkyTErjCwQBN/vrshqJxZaQs3RWmgHL0ecr4xkRisKBLa8vetEBHFM2yz1x5M0siT4bU+iJE6GtfM92Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFh8V4J5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E7DC4CEE4;
-	Fri, 16 May 2025 16:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747414711;
-	bh=Pa+c9PjmCSQn92YhqXv2lH7ZolnhV1WRtgLkV1dHxEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QFh8V4J5d+PVqj45++VMM1hFYVo3lpvpUTjhcmGwPal8vrbshQD/l+ZaQiuPLT9M7
-	 Cx0PuqGolLklI3eVRPk6j++cCUbtTpJpZpP2T6id61ONXuepxjgOwkv+P+AxM0NmpC
-	 upONAZNF1Pb4gNWNZHjfnjR4Rpi6DyG1RKYU4A5u+7wEHgr3YI/8VblHQ4L3wAqh3r
-	 2vXMMYt1ijY7+cEryP5su3lxAEAwA8felN/aJbe/LUKZ12cDyynjZS/IuojLnKFZWG
-	 5CZBi17EvRk9d1q7o9RPGsy+5PzC2563taZ74ZsfUiuIyW+u7FBJH54lr1kABuSuGs
-	 RFoDZZK0MjQLg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uFyOC-0000000062z-1mxn;
-	Fri, 16 May 2025 18:58:28 +0200
-Date: Fri, 16 May 2025 18:58:28 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] gpio: sysfs: add missing mutex_destroy()
-Message-ID: <aCdutI4J6r5kjCNs@hovoldconsulting.com>
-References: <20250516104023.20561-1-brgl@bgdev.pl>
- <aCckl9cC8fCBhHQT@hovoldconsulting.com>
- <CAMRc=Mf=xW6HFVYOOVS2W6GOGHS2tCRtDYAco0rz4wmEpMZhmA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BpkBPMfkTzZHzRlScAmHGzuxHNtjUpDdRme95st0G2vOVAnahB6JosG6Lmsa6GtIRozoxU4e+tvR+jKQcsjfw1OsCcuMn2MvxffDcEkmSDuLBCxVsm87egpj5z17sldqu6lTc0TAQpM4ijYWCrELoMhJjkmLc2ZjLkmc/y6cua0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PbTUAr7p; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747499319; x=1779035319;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=WJbQgRZO8pBaUF67/UjtlS0RvUVsOBvvMvIIb35Oaso=;
+  b=PbTUAr7pXHXoFXFVdoffUkDyD6t0qGoAWV8CC53tjTMW/jPA+s56+Tls
+   Dqd2ahSGLU5BiNv4wD7QAgRzQizJYuhBXdSqUSYfxrTFLwdVfA63yzKK7
+   p7oN5d7s5lOPhSNPxjOEvMrP37ysVz/5qLltunFLWTEuAAwMuORooKP1N
+   qHGha4KWzR48PefCb1bKEpx5GpnjNitpCaIMG5Obd1mTekcJVWKgkME/R
+   fbFYfD10ZUenU7I+1uQ108ddagsSq8a6avGnQ36l873NdDKmvE82pyEyT
+   9/cwETtaRjQyzVFw5bjV9NbiMuXt0YYYEELwC91auRjlz4EESTEgKWIyY
+   g==;
+X-CSE-ConnectionGUID: nqCwJXSQS4ClQU+GCLhxUA==
+X-CSE-MsgGUID: hF9AxtVuQtOMLpgvrwsYwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="49381462"
+X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
+   d="scan'208";a="49381462"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 09:28:38 -0700
+X-CSE-ConnectionGUID: Sq/Jz2YURICyO09R2idEew==
+X-CSE-MsgGUID: N510eJ5qQimeFD2btNcvxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
+   d="scan'208";a="138711331"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 09:28:34 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uGKOl-00000002Teu-1Rtb;
+	Sat, 17 May 2025 19:28:31 +0300
+Date: Sat, 17 May 2025 19:28:30 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v1 1/1] gpiolib-acpi: Update file references in the
+ Documentation and MAINTAINERS
+Message-ID: <aCi5LitM88RnoN73@smile.fi.intel.com>
+References: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
+ <02bdf242-cbfd-18e2-fabc-82f20823dcbb@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mf=xW6HFVYOOVS2W6GOGHS2tCRtDYAco0rz4wmEpMZhmA@mail.gmail.com>
+In-Reply-To: <02bdf242-cbfd-18e2-fabc-82f20823dcbb@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, May 16, 2025 at 02:32:54PM +0200, Bartosz Golaszewski wrote:
-> On Fri, May 16, 2025 at 1:42â€¯PM Johan Hovold <johan@kernel.org> wrote:
-> >
-> > On Fri, May 16, 2025 at 12:40:23PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > We initialize the data->mutex in gpiod_export() but lack the
-> > > corresponding mutex_destroy() in gpiod_unexport() causing a resource
-> > > leak with mutex debugging enabled. Add the call right before kfreeing
-> > > the GPIO data.
-> >
-> > No, there's no resource leak and it's perfectly fine not to call
-> > mutex_destroy().
-> 
-> No, there's no leak but with lock debugging it still warns if the
-> mutex is locked when it's being destroyed so the change still makes
-> sense with a modified commit message.
-> 
-> > You can't just make shit up and then pretend to fix it...
-> 
-> There's no need for this kind of comment. You made your point clear in
-> the first sentence.
+On Fri, May 16, 2025 at 03:19:11PM +0300, Ilpo Järvinen wrote:
+> On Fri, 16 May 2025, Andy Shevchenko wrote:
 
-Your claim that there's "a resource leak with mutex debugging enabled"
-is is quite specific. Now I had to go check that no one had changed
-something in ways they shouldn't have recently. But mutex_destroy()
-still works as it always has, which you should have verified yourself
-before sending a "fix" tagged for stable backport based on a hunch.
+...
 
-Johan
+> Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+Thanks!
+
+> I assume this goes through some other tree than pxd86 ?
+
+Yes, via Intel GPIO.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
