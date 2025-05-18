@@ -1,99 +1,112 @@
-Return-Path: <linux-gpio+bounces-20267-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20268-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94D73ABB102
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 May 2025 19:04:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCB2FABB206
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 00:08:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9165C164703
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 May 2025 17:04:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66B0D1895E77
+	for <lists+linux-gpio@lfdr.de>; Sun, 18 May 2025 22:08:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E29421D3E3;
-	Sun, 18 May 2025 17:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16A61208961;
+	Sun, 18 May 2025 22:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oN4rRZzv"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="S7F9qNzU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0B917BCE;
-	Sun, 18 May 2025 17:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4AC207DFE
+	for <linux-gpio@vger.kernel.org>; Sun, 18 May 2025 22:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747587841; cv=none; b=HD6Gmev8WSOs4y+4oVJzusbTg694n237MeAttks+9FFD8+d5y0OsvjURbJvK1XMLrcsciVrhIgd+6WSRhOhhV04VEZgYdZs4rQx92An/+1ZlYWU5L655T+LXXYqhwqWOiBFOFeEO5MnhU3Ch3b2gNIkD+Umt5Y7E4STsaVSfeBM=
+	t=1747606067; cv=none; b=CJd7qpqxFbxetbZEIbTd8x5LRDA83T9WpKdmVU7VJkChlhzRRKcwbqeCv5xR6Fva1HUbTPEK88xMqzDP/NxwF2GkicNmh9q/SJbTMp45GKZJiEcbNZz1PfGELsHFuSiJYbxq9r3SsH6+SPWF/HyVYqCZm3dJNuIFBySiRVmzyLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747587841; c=relaxed/simple;
-	bh=VZyATrG8dI2kKuzr8sjYNP2XjYxIguTB75/oIwMWeME=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oOKkcf3sSqc55RceRKoPJ51e8x3gXszSSIqZkjoBYGrF3oPai2dZ+pBNA5YawERGn7uOYdm5SN8o6QDlJJkO6vCAn9bL1aE3VK57O4bRfYPrlgLppuMoKx4SZCM82ZC1rUHeq55jbTAKZDI//sIsa+YFpSZ1fUKQjRvrfAmmp5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oN4rRZzv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2035C4CEE7;
-	Sun, 18 May 2025 17:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747587840;
-	bh=VZyATrG8dI2kKuzr8sjYNP2XjYxIguTB75/oIwMWeME=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oN4rRZzvoIWK11dRtMO4f89WBEo2r6ETdeyX6jrv9qoAYhseXkyweyQD1YTBuGAJi
-	 gN0ZvcCyPtGtbTPEu0DWoY6WHzJc09VeFXtgaAdOjDZeIZ4BEftwEDp2Ht1XAGQfLe
-	 RNaL9PhDGCWkEHRu2dmXZ5Zqz97qCJkRJ26X5E9ehlSFiPfJUzJk4UaBunnYQWTwU4
-	 +HPtmYd5LD3U9h/yNfYOgnbbsHHVk23HOKBRK0cjfgaKB52FPkClPfg4k1+K8NCkWl
-	 iLwj+gHJFJQYJA0zYFjJmQSZ6ZbkpPyfNyGnayugKjA5vR7cN54D1Seq8DVIW/jvy1
-	 79SQrcrq28tbQ==
-Date: Sun, 18 May 2025 18:03:49 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <andy@kernel.org>, <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
- <marcelo.schmitt@analog.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
- <conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>,
- <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <lgirdwood@gmail.com>,
- <broonie@kernel.org>, <jonath4nns@gmail.com>, <dlechner@baylibre.com>, "Pop
- Paul" <paul.pop@analog.com>
-Subject: Re: [PATCH v8 10/11] iio: adc: ad7768-1: add filter type and
- oversampling ratio attributes
-Message-ID: <20250518180349.6fb308be@jic23-huawei>
-In-Reply-To: <1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
-References: <cover.1747175187.git.Jonathan.Santos@analog.com>
-	<1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747606067; c=relaxed/simple;
+	bh=IaouxIHOdXcJtAHSznf8PEqezOyP8PmUvFtKqQi5Vbg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o2HmE7V03GTTuzZE2V9AlukOp0YiFUl+l46obU2SoXqSMYeybFhsPRzueIgMe9DjvsxIGnAw/g90En4UMEl6cxlGYblUAm5Uu2yrEHOfI2N5FP2eau21jUNBvZzPt0H0JuDXauX9ifCxbiUz3ufypeflLwMlrbo8p4nTfuXaX1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=S7F9qNzU; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
+ Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
+ t=1747606065; bh=JlFCAc4M4tsY005AhENFwugyMYaX2j/qB+dCiJDYFXQ=;
+ b=S7F9qNzU4YdYULblVzzvOlx+rNEAkwx9oQWJXuhCUkq/YGCoqxxMjh5fawGjapp3ZLshluBaB
+ 2tqNJtt1Js2Li/PjeOhrQAamv/A4koDXoxVtTDq2EEAzWwtdC+8F5HuVw4IJK9AnGVOVg5gVjOk
+ mPFCrxeMJ8W/zXzsjnldVBHa80FhanVuM8P7m4MyEj1qb+p1AwX8N1J7GABX/icGYlhJlWY/Aoh
+ JOKIjyGJANilSIXiClGE5i8bKbOeWiB7iqt6PWFKuNmqgLWEZ+JU/I72ZWMK82/UAfkliMVDqOW
+ VlIXvKle6IGYdx0TSK/jrbRkgjsbsHnPZy14WzHl2Edw==
+X-Forward-Email-ID: 682a5a2a78cae75fbd8d46ef
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.0.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Heiko Stuebner <heiko@sntech.de>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Yao Zi <ziyao@disroot.org>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	linux-rockchip@lists.infradead.org,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Jonas Karlman <jonas@kwiboo.se>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 6/9] dt-bindings: gpio: rockchip: Allow use of a power-domain
+Date: Sun, 18 May 2025 22:06:53 +0000
+Message-ID: <20250518220707.669515-7-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250518220707.669515-1-jonas@kwiboo.se>
+References: <20250518220707.669515-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The GPIO controllers in most Rockchip SoCs are part or power domains
+that are always powered on, i.e. PD_BUS or PD_PMU.
 
->  	 * DMA (thus cache coherency maintenance) may require the
-> @@ -326,11 +337,37 @@ static int ad7768_send_sync_pulse(struct ad7768_state *st)
->  
->  static void ad7768_fill_samp_freq_tbl(struct ad7768_state *st)
->  {
-> -	unsigned int i;
-> +	unsigned int i, samp_freq_avail, freq_filtered, len = 0;
+On RK3528 the GPIO controllers are spread out among the PD_RKVENC, PD_VO
+and PD_VPU power domains.
 
-If you are spinning again, please split the len = 0 onto it's own
-unsigned int len = 0;
-to avoid mixing assigning and non assigning declarations
-as they are a little hard to spot when mixed up!
+Add support to describe power-domains for the GPIO controllers.
 
-> +
-> +	freq_filtered = DIV_ROUND_CLOSEST(st->mclk_freq, st->oversampling_ratio);
-> +	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-> +		samp_freq_avail = DIV_ROUND_CLOSEST(freq_filtered, ad7768_mclk_div_rates[i]);
-> +		/* Sampling frequency cannot be lower than the minimum of 50 SPS */
-> +		if (samp_freq_avail < 50)
-> +			continue;
-> +
-> +		st->samp_freq_avail[len++] = samp_freq_avail;
-> +	}
-> +
-> +	st->samp_freq_avail_len = len;
-> +}
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+index d76987ce8e50..bdd83f42615c 100644
+--- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
++++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+@@ -41,6 +41,9 @@ properties:
+   "#interrupt-cells":
+     const: 2
+ 
++  power-domains:
++    maxItems: 1
++
+ patternProperties:
+   "^.+-hog(-[0-9]+)?$":
+     type: object
+-- 
+2.49.0
 
 
