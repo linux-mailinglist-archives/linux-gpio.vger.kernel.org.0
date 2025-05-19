@@ -1,126 +1,134 @@
-Return-Path: <linux-gpio+bounces-20296-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20297-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4C9EABC38B
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 18:04:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9C95ABC41A
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 18:15:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2C74162CAB
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 16:04:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E059E4A324A
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 16:15:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 441A6286D50;
-	Mon, 19 May 2025 16:04:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2F3F289348;
+	Mon, 19 May 2025 16:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnpeEQF9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKRf2Wwl"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC443286896;
-	Mon, 19 May 2025 16:04:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F7528850B;
+	Mon, 19 May 2025 16:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670646; cv=none; b=n1+DSWXg7OhgF1mQnFsEaJNfRTpq27gkZ34V7MR4VYFwQm5JijurZnbaWIC4PIwkDVA+ls1xAeQ8HhGmu+2RvqTS3acLhWorseljH2qG+EARoaCMsqtho1KED2ate17nPztqQ10TPru8Gsd+auMagTqfzEfah8afYcFAckhEyRM=
+	t=1747671079; cv=none; b=qcvpZUoclrDtwuxrxnP4Q/YNPEszs5c5m3dpBQgNnFnXCDJcWmi2PUhv3lNbNimjN+VaZTYHGVPkPmfITvD06r0mLA4U1Q29TfLIBK1tc5woyEksnhv+3GJz/PAnldnuXG2JcivgmwJiZupY2E36W2oyfiF/h3swh9S5AI8kFyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670646; c=relaxed/simple;
-	bh=YiciytpzBKZU6jliaO65tJGGDGQootlSrvvGG35Ktdk=;
+	s=arc-20240116; t=1747671079; c=relaxed/simple;
+	bh=/6hDOx38+FGxkUeFC3f5N5ACgq2V3ezpi96vcKcJdX4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jatNJ5DW432GUOsKJdQh/zedBxSoE2dd6s23+yzskJ7+Vw1uNyPUAaXTQXZIsdq6hjr4B1Camc64mOuOEDnYNiNB+oIKRUZdKEiNW499w/kCuTYIio/ZkTnmHkA/GwuYEme5HbZvMXAvb/OepYY3m/uhgGSXls6VdlX0yV9Uoec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnpeEQF9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1739C4CEE4;
-	Mon, 19 May 2025 16:04:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=PAaoRo4OzZWEjmKmu1rWZa+vi3iyVT7fpopox6LxYzvvwh8gdFl+30iSAueo+Ca1k/6IuNg0N4vG4oCYZaotXaNTLYtWnb0o9EFHh/hCf/rKFQV6eYzWcFPQ63W9LOHmLYVaOCERUroj9C9863yng1sU+odTbLmhubyu+kmJTsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKRf2Wwl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68156C4CEE4;
+	Mon, 19 May 2025 16:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747670645;
-	bh=YiciytpzBKZU6jliaO65tJGGDGQootlSrvvGG35Ktdk=;
+	s=k20201202; t=1747671079;
+	bh=/6hDOx38+FGxkUeFC3f5N5ACgq2V3ezpi96vcKcJdX4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KnpeEQF9AXAlhGeeYGGwNM4vuPj26g+dg4Nt2tEQBNl1/zoUhsV8N1BECbhcTHrLb
-	 d1dePDbkxEQTbZ7zgcDvRdOFdzyCu8xJogzBh7JYRBEy2W/+vY1D0/rIHP28LcXuZ/
-	 r6H87jLQl8kAo/VND+R6hsCxqLQAW9OdFt6eqtmDd+AYGwWhhzPYpBL0OFmP8jtxQp
-	 fP8NgT9rQGdTOPxyo2qfRfqDJzbzHhbe/fihZESj2dT2RLZh4Eybspg/KsLUHLQ2UP
-	 Pi0xJ+rE1RDQc4aqzslBxTEH6wppS3apYCaNuS5LSVrp7yf4KuwE+QUo1KyIIgmn6/
-	 CZQGHysnqEe7A==
-Date: Mon, 19 May 2025 17:04:00 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Haibo Chen <haibo.chen@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: vf610: add ngpios and
- gpio-reserved-ranges
-Message-ID: <20250519-bucked-revolt-2b93a9a31422@spud>
-References: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
- <20250519-gpio-dts-v2-2-b9e77173e9c5@nxp.com>
+	b=dKRf2Wwl7bpcp9pVcyY5ZheNAeNSzdDIRtptozowjy+s8+zFLqb5u2tFlKZTEQHeR
+	 WOF73Bb8GqMhrYCSdXNNzVeSHfRyAriWlUyrypJpvk+u7UhuUlfJIUHvCINmBW0ODC
+	 ZbhpnOTEdCbiLT6srgMlyCOhzVkjpiP7WWAH/8OlyKlA4Df59LOvKtofSBvpf5Fq70
+	 4MxvSsUb6zaxyCzFa+xEL9BlJrcM9ZDaENTIaQPhxnqVyBSeMVYS46DZfUsnwR2A4Z
+	 oECy0nh9e19/kcb8eaMrGnU63Ns2kEghWv52qGAJggpoxdxpf99kj72BzR6p5tDZ0D
+	 KTKSN+b9qHUeQ==
+Date: Mon, 19 May 2025 18:11:16 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH v3 22/22] pwm: adp5585: make sure to include
+ mod_devicetable.h
+Message-ID: <gfrckmiyfo3rnvhnryptcwtwlu37aaga22onpra2yteelwl3zq@b6zaszmd4axp>
+References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
+ <20250512-dev-adp5589-fw-v3-22-092b14b79a88@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2cAhBHrdr3ZQFzJw"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m6hy34zawwyv3ya4"
 Content-Disposition: inline
-In-Reply-To: <20250519-gpio-dts-v2-2-b9e77173e9c5@nxp.com>
+In-Reply-To: <20250512-dev-adp5589-fw-v3-22-092b14b79a88@analog.com>
 
 
---2cAhBHrdr3ZQFzJw
-Content-Type: text/plain; charset=us-ascii
+--m6hy34zawwyv3ya4
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 22/22] pwm: adp5585: make sure to include
+ mod_devicetable.h
+MIME-Version: 1.0
 
-On Mon, May 19, 2025 at 02:03:43PM +0800, Haibo Chen wrote:
-> Add optional ngpios and gpio-reserved-ranges property
+Hello Nuno,
+
+On Mon, May 12, 2025 at 01:39:14PM +0100, Nuno S=E1 via B4 Relay wrote:
+> From: Nuno S=E1 <nuno.sa@analog.com>
 >=20
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> Explicitly include mod_devicetable.h for struct platform_device_id.
+>=20
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Nuno S=E1 <nuno.sa@analog.com>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/pwm/pwm-adp5585.c | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Doc=
-umentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> index 4fb32e9aec0a341a50088f3e4352ed4d36f649d3..5b98228466c6414be681c4941=
-7bbdd82f2c45756 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> @@ -70,6 +70,12 @@ properties:
->      minItems: 1
->      maxItems: 4
-> =20
-> +  gpio-reserved-ranges: true
-> +
-> +  ngpios:
-> +    minimum: 1
-> +    maximum: 32
+> diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
+> index f26054c19c2e154d05780af09aee1b2431eba2eb..93d0294d048abfe1a00916102=
+5e658b58b669cd9 100644
+> --- a/drivers/pwm/pwm-adp5585.c
+> +++ b/drivers/pwm/pwm-adp5585.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/mfd/adp5585.h>
+>  #include <linux/minmax.h>
+>  #include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  #include <linux/regmap.h>
 
-Do these platforms have a default? I'd expect one to be added that
-contains the default value from what the driver does now.
+This looks relevant for the current state of the driver in mainline and
+doesn't depend on other patches in the series.
 
-> +
->  patternProperties:
->    "^.+-hog(-[0-9]+)?$":
->      type: object
->=20
-> --=20
-> 2.34.1
->=20
+I applied it to
 
---2cAhBHrdr3ZQFzJw
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
+-next
+
+and so it should be included in the next next.
+
+Thanks
+Uwe
+
+--m6hy34zawwyv3ya4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCtWcAAKCRB4tDGHoIJi
-0t2uAQC9WN2OYYXOrp610MPdWdT0m5i4i1tZeyTZdr3aD+wm0wD/fSCYfaimi/PV
-1bDpFQcFtXElQhb4Wvjp3cwIUlEZNQs=
-=IjWH
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgrWB4ACgkQj4D7WH0S
+/k5yNwf8C6QiKMsJxp9zTuniJkcjoLSZ5Jytz5aCeTjzcZH29Rh1ua/z561fshlh
+b6whXP/++JBcqFvNSlUF0zW0DqOWMV1wDeHg3O97Queo/Wa4wIx9bT4/Uf1p6mxV
+1Zp58mtsY92M+HDlpbLNYum8FPo5KPQpqOqod9xpWXjnElKWNr4oHNQPNKFkQ04p
+5hL+KhsiQ+nPvdu6FMSoyNkNzAnaINVzgMbNmLGuI/cG0WEYakqDTt7TUEH6ROgG
+BIyvs2vP1NbVEE55zhHO09SxJOYBwL/wwUnMsQCpKwsM2BNooCoei5DEz+9ihhuY
+TNOdbbO0I7TWYM9WIoplCswocI5ltA==
+=Qp+H
 -----END PGP SIGNATURE-----
 
---2cAhBHrdr3ZQFzJw--
+--m6hy34zawwyv3ya4--
 
