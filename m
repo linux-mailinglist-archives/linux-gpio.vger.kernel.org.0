@@ -1,80 +1,52 @@
-Return-Path: <linux-gpio+bounces-20304-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20305-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01E22ABC83C
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 22:15:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 381D6ABC87E
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 22:36:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85F097A19DE
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 20:15:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32FB61B65A95
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 20:36:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9031D20DD4E;
-	Mon, 19 May 2025 20:15:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBCD6219300;
+	Mon, 19 May 2025 20:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="McoLpWvC"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NBgUCaLu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0AA155326
-	for <linux-gpio@vger.kernel.org>; Mon, 19 May 2025 20:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C47217F33;
+	Mon, 19 May 2025 20:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747685748; cv=none; b=QLzrx5BQeAC81HMrGocojrFnNmsN6yDj5/ev+TRzJNPIQttN2Bvx+NanbKB8k4/g3QYrp0+UU7Zzl7j8BgxRh2b02HX4FclfKVa9DqwLbWRML7cq/bkfBr0O+o5/FpptHva0/55Sg6/EIpL8eg8ONvz5arw+Yb2UgdZM+1UU6mQ=
+	t=1747686952; cv=none; b=Cq3x7g1aKeJjBMWoXJM2h1eVPSO0cCJGoHsohERd4RIU441smykQi0DyIgUwRQiXI7NvGYw9y9GAtU0F8HUuIvluw8H59NeadVTy/IhsEbxghHp7eTCmYQPc3OVEfgENqApz7EIRrOjWE4Y4lvUVmkwv2u+62f2ZXx4B82sPBMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747685748; c=relaxed/simple;
-	bh=8dX8Wr9L4YGOHz+wjN+mZYVu8hwJ3J7H6NpKgGMox/M=;
+	s=arc-20240116; t=1747686952; c=relaxed/simple;
+	bh=RRfj6sklt52XV9KPvHuEGNGS2C+bYmaNrEa80a65PI8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OjQcSiKZyWDNyYduVs3qxfLSLGCUS0OS4c3V5oPfFj1g+8klA4H5Y7esggxZKVJ8NvPJW+uNbbRLrvNxF821eYVe1dgtWUlDuhysFITeHWdKuRiJhvNURlc0L3A8eZRrvIr08b3o26QWkeA3axFVVlZNbDUtzCThSy7dYLpOtQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=McoLpWvC; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-73384b2c7ffso1383984a34.0
-        for <linux-gpio@vger.kernel.org>; Mon, 19 May 2025 13:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747685745; x=1748290545; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IxPqQrqptdt6ZRunnP9xjg4VsQBTXE7UdgcvpQp1vnQ=;
-        b=McoLpWvC/nmgl4hDj9EwLeckCAoo+leQLspXx4bh9ImZrQf47pwCUDWTdKRnnHNogn
-         ZUtD3L5SEDztK5Jh0rTftRqhzdKLWrKPI981NZWUwZ7IYrWawo2a5NDcbPOyLKibIh/D
-         e+N1agNQgVEev7hx8R3jzncgmXsRiCckNodgNn6h5d3+ia+gM+j5F4Q3aOLYKcGyDf2h
-         cFnUYjzoWGTG2js1WeQmkm4oJsL+ZnDtAgVathjQb+/7ioGepDPnL/msmyxHZwiAZPPs
-         H2S4zU8HBbLKpq3cPmdOvzOHybV1P2RGFzs84TAK0242Ew/v2JEq2w5FJA/h7TJ6WUO2
-         KJiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747685745; x=1748290545;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IxPqQrqptdt6ZRunnP9xjg4VsQBTXE7UdgcvpQp1vnQ=;
-        b=RSaECIQExUcGJ0SKvSpekk+2juJFhA0GrW19T1GyLJbzNBS8SleSAiwMB/E4iqJFhg
-         m1QWZqzUUSIwNziTizsQCLLW/uDLp62tv1rsxXyyWjKAZrdvtauwRr7SoKMmJ7Gkn4hM
-         HKKAqJx3NhzX9gvQIgn1ZAHAzS9zqtuZ3ldpTsDUs7/JkW9YoVj2jNhxeGQwyvgb9sU2
-         ydKqx/4Na1dvJVJLh8/a8fR+VUJijrG+87zTCKY1g5S8D00Gk+BUilbXxXRmswyYm43V
-         vqExqKWp432F8v5auwYLTsqjTbj7kJOGCRDihvaRNeV4GbYnW0NNE9vkcmyu+kPouvE2
-         7W8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ0N16D2JomrQfbZTtEutsKGFreEisA6c58bDQ6LP2XnCMBFFeY9T9wU8j3trpU50pFcPysDV1Yy8Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhDbkNplc/Hm2datq5xrylbjDtKMOs/mJzbFJh9DTsH2x4z+ue
-	aOdUGrv/W3QG0ZkMxx6hOfyi224q71yNoos6MyuT4/vFrEr4SCDII6TVxDA6131kpco=
-X-Gm-Gg: ASbGncu2RCO+QCCVSIn5mvWgmsELGIkoGXK7xvT6eEpVIXQw0JIxCSvn7CGzE30pflJ
-	7VwFSFOb5YXwWsSRmWiiH+4OCw9ns1cue/dosQ6B7KIkseKlTZMXg6KprAM9TCmasRS0fbdp1Xx
-	ZxVASQLuzK7+l14DwAJB+UOA9t5fPrh8vVnU9f3+1LqM/exHWtNXnihk0NVCv6g6EVh0cNA74hx
-	/Z4U2MGG4vHS1oW/S4zur4h6bNxiGdVNNFmEko2za9rH7Nr9p9iuLM11Q/7Z+dGwxiuSxh10Z/X
-	byPk5Qdz5kNXEOQbuHw/V5SyPoj8/h5oOtTWgM/JL3OCqaQThlufdG5esiDNi00o39+WpnjI3IN
-	UbwcFQllam11+Mffe6kVNHsJhtmPj
-X-Google-Smtp-Source: AGHT+IHnM+ogubTeRYfZUDZjML14fl+Syr5GdQv0cHx7rQtXJUm1hDhfIBt4qdixN9KogS4f8h/scQ==
-X-Received: by 2002:a05:6830:611c:b0:72b:8297:e988 with SMTP id 46e09a7af769-734f998dc0fmr8973347a34.25.1747685745325;
-        Mon, 19 May 2025 13:15:45 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4118:1770:ecaf:ee73? ([2600:8803:e7e4:1d00:4118:1770:ecaf:ee73])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6b5f697sm1541527a34.57.2025.05.19.13.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 13:15:44 -0700 (PDT)
-Message-ID: <4843ec52-57e2-418a-b640-8e05ba60959e@baylibre.com>
-Date: Mon, 19 May 2025 15:15:43 -0500
+	 In-Reply-To:Content-Type; b=J+XJPROUVftIBWmlq6sw/RKAqaQKRAhDY1Yg95+8P7GjmRqb1gJBkE7RX8UxqvBoY5Y0UB2FeNNHo8JAqVxTITYFEjnWsMh42LKw8AlBWAdQ2/aDj/uuZsXf8zaiDLR4KwnM+DOhm3LhHys23+gqrGHJb/UGJCWrLuWBoMWP6Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NBgUCaLu; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=XaOMJJ7u0iVjtCw5+/d6aptsqLr44Y26RgnYyUy9xVc=; b=NBgUCaLuUPXMiMVXiPqUaXkdef
+	mlcIza4vAcC7k6AJTdxqfWCBK1Lu/hQz+GkIqtoKoI+dZu1nzxi8Z+gsRxGk4j4QIfduTINgTNxjk
+	3GPe+cvaWIZCOU96gYWLGvSSDxq8mQGJReeBzAPbc+TMVYmWPVj5I1rJGRvK/fZUOQ/ug9r5lpqeW
+	kLulKgVgI6/RFVnyuNRxZbParm/AeeKE82BOBAD9h7SehsOr56hEGvhkN//iiafM9bd6Bcl6I7GJH
+	y+YHlENrb7Qh42nM2FlMghYJuFK/wcWd4JlwAawkiSmMFcXogA5ljX94fUaI6WTwRjSLT1xxpribk
+	sINQz2DA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uH7D8-00000002M1C-1ryQ;
+	Mon, 19 May 2025 20:35:46 +0000
+Message-ID: <e50896d2-f44a-42da-8bfc-446e80980e80@infradead.org>
+Date: Mon, 19 May 2025 13:35:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,50 +54,101 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 10/11] iio: adc: ad7768-1: add filter type and
- oversampling ratio attributes
-To: 1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com,
- Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, andy@kernel.org,
- nuno.sa@analog.com, Michael.Hennerich@analog.com,
- marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, Pop Paul <paul.pop@analog.com>
-References: <cover.1747175187.git.Jonathan.Santos@analog.com>
- <1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
- <aCtmt+ozqSRDGQxi@JSANTO12-L01.ad.analog.com>
+Subject: Re: [PATCH v1 1/1] gpiolib-acpi: Update file references in the
+ Documentation and MAINTAINERS
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
+ Dongliang Mu <dzm91@hust.edu.cn>, Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aCtmt+ozqSRDGQxi@JSANTO12-L01.ad.analog.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 5/19/25 12:13 PM, Jonathan Santos wrote:
-> On 05/15, Jonathan Santos wrote:
 
-...
->> +
->> +/* Decimation Rate range for each filter type */
->> +static const int ad7768_dec_rate_range[][3] = {
->> +	[AD7768_FILTER_SINC5] = { 8, 8, 1024 },
->> +	[AD7768_FILTER_SINC3] = { 32, 32, 163840 },
->> +	[AD7768_FILTER_WIDEBAND] = { 32, 32, 1024 },
->> +	[AD7768_FILTER_SINC3_REJ60] = { 32, 32, 163840 },
->> +};
->> +
+
+On 5/16/25 2:52 AM, Andy Shevchenko wrote:
+> The recent changes in the gpiolib-acpi.c need also updates in the Documentation
+> and MAINTAINERS. Do the necessary changes here.
 > 
-> Since we're still discussing some points — is the `step` in 
-> `[min step max]` for the IIO range additive or multiplicative? It is not 
-> clear on documentation, maybe on purpose or I have missed something.
+> Fixes: babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/r/20250516193436.09bdf8cc@canb.auug.org.au
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  Documentation/driver-api/gpio/index.rst                    | 2 +-
+>  Documentation/translations/zh_CN/driver-api/gpio/index.rst | 2 +-
+>  MAINTAINERS                                                | 2 +-
+>  drivers/platform/x86/intel/int0002_vgpio.c                 | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> Here, decimation/OSR doubles from 8 or 32 for SINC5/WIDEBAND, and is a 
-> multiple of 32 for SINC3. So I'm still unsure how to represent this to be
-> clear to the user.
+> diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/driver-api/gpio/index.rst
+> index 34b57cee3391..43f6a3afe10b 100644
+> --- a/Documentation/driver-api/gpio/index.rst
+> +++ b/Documentation/driver-api/gpio/index.rst
+> @@ -27,7 +27,7 @@ Core
+>  ACPI support
+>  ============
+>  
+> -.. kernel-doc:: drivers/gpio/gpiolib-acpi.c
+> +.. kernel-doc:: drivers/gpio/gpiolib-acpi-core.c
+>     :export:
+>  
+>  Device tree support
+> diff --git a/Documentation/translations/zh_CN/driver-api/gpio/index.rst b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> index e4d54724a1b5..f64a69f771ca 100644
+> --- a/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> +++ b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> @@ -42,7 +42,7 @@ ACPI支持
+>  
+>  该API在以下内核代码中:
+>  
+> -drivers/gpio/gpiolib-acpi.c
+> +drivers/gpio/gpiolib-acpi-core.c
+>  
+>  设备树支持
+>  ==========
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 96b827049501..d1290bbb6ac6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10105,7 +10105,7 @@ L:	linux-acpi@vger.kernel.org
+>  S:	Supported
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
+>  F:	Documentation/firmware-guide/acpi/gpio-properties.rst
+> -F:	drivers/gpio/gpiolib-acpi.c
+> +F:	drivers/gpio/gpiolib-acpi-*.c
+>  F:	drivers/gpio/gpiolib-acpi.h
+>  
+>  GPIO AGGREGATOR
+> diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
+> index 3b48cd7a4075..b7b98343fdc6 100644
+> --- a/drivers/platform/x86/intel/int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel/int0002_vgpio.c
+> @@ -23,7 +23,7 @@
+>   * ACPI mechanisms, this is not a real GPIO at all.
+>   *
+>   * This driver will bind to the INT0002 device, and register as a GPIO
+> - * controller, letting gpiolib-acpi.c call the _L02 handler as it would
+> + * controller, letting gpiolib-acpi call the _L02 handler as it would
+>   * for a real GPIO controller.
+>   */
+>  
 
-Sounds to me like sinc5/wideband should be lists instead of ranges.
-It is only 6 values.
-
-
+-- 
+~Randy
 
