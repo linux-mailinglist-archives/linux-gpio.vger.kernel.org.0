@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-20306-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64562ABC928
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 23:23:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AFEA9ABC962
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 23:28:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F29D57A029A
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 21:23:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF7E17A5FD7
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 21:27:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 482B5221261;
-	Mon, 19 May 2025 21:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77082227EA4;
+	Mon, 19 May 2025 21:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMuQ64Mw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5jaCsAM"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF347220F55;
-	Mon, 19 May 2025 21:21:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B24F227E88;
+	Mon, 19 May 2025 21:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747689706; cv=none; b=gZAb8CIfswJIbe207WHo9tGx/a/fBXGdYMYpLl7EIdMs21d3pEe1Itx5tLXsixwoGPoXBu5n/Ri47CMcaKmrISJ429DMvCC4tDpfnCYBPObCytWKlXCqTmv6bSFplGFlt3HwZJJazHGXjAea36PjrgdnN9pkSXH27vB8bud6i0c=
+	t=1747689738; cv=none; b=kZb/AKo4AAMzoJsaK5PtI3EJ36uP1Xt0DltWegK+H03wyzSGF1JdKFEj9xwna8fm7OLMRPGHlxg7TsxuPtlZwfWE2T2gubahEYhiFlnS0+joR6QFq3IjXkVWEQp0I89nPlt1wZ1FS4O8vRNm8cIJ/MgmfJc8WlrpX7oF0Vb352s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747689706; c=relaxed/simple;
+	s=arc-20240116; t=1747689738; c=relaxed/simple;
 	bh=Z+yB0flMSft2uwS0zLLzDtNhD6mSwuSDI2LoEPob+kM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xplg0/hmCp0anNCeX47YHy370/aBtObYsoMYNtBAHY7+1qwaJsO4TS4OOwV/QMlEjnM8evs2ZMgt8RUB8jipvQ++kR5LSmhfMOUs/leop7CLCkss80j5nDlaRR7dTnnJ1BWDNLCJaWH6cpvjYTjKRnSuuhy82f2wlTUn6Qpp7jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMuQ64Mw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 577ACC4CEF4;
-	Mon, 19 May 2025 21:21:44 +0000 (UTC)
+	 MIME-Version; b=fWKxbgShZ1FKp+WLs5kAmndwn4hJSkG/1vQX4N6puGF7EzWJRBDZujDe+Vxg1vgKwaGF2BQDbzlKcBS1dl5r7r/eZPr6mCpEWIO+k8aYyNs8YhADHWGm0CMNq7yXWeZkBqlFUH4nBJfFpcqud90MAYd+wgOqliNLWaYsNw0bIV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5jaCsAM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E92B9C4CEF1;
+	Mon, 19 May 2025 21:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747689705;
+	s=k20201202; t=1747689738;
 	bh=Z+yB0flMSft2uwS0zLLzDtNhD6mSwuSDI2LoEPob+kM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kMuQ64MwuKAaw4wyu8lgpFgyubKJQW1Ul54ZsOsYbZphUNgwoVWZ2TijvOeB2wj9Q
-	 R9SzFOe1FVZxejJEqlB1K3Wnjxc8jqljI4viy+QCp+BjqSOodMVF7K9CDDcAjXWxeC
-	 Wl4wFtEIQEBiGct0gtL6veipoEE0iDKVmvEhhkcsmDUCivq7uBdoB26LAjndiGQWFB
-	 UY1ChzBlLOvBIeaNNt57YYquPkZBf7XGu9X2emGeURSmau0IQ4fy5chGiVHmaN26Wl
-	 TveeIt40GZzA6lqbC6wSUzuUn+2Eb5lwI58F4rV3JwV1ndOZQ+CKcEwRA90NjNfvm3
-	 ZXKK4AI4Om2eg==
+	b=C5jaCsAMSnr5lf/Kw+KivshRo/9arYLUGL+SL7QZh7SEdxlsZFGAkzApW7bLoYWD3
+	 s3btvPVoddAoMrYUOf+6JyLUksaiPRqgvCkVWZqmzzeIuDUU5JxapvrVd5qCpyO+Pt
+	 /2ib4eCk5AdlpiqvBOHNdByacoHo3xtUsHbmNz8Z+D3dvCN8NqfniC+eJY41WZDfqK
+	 4FIaTKmC9VGPKoWsR+16T2vaNMYli2YTeXth2ZuYuQElm9Tcc5xqHC+vn5LNv6NhRf
+	 ygmPZ3J+YedqGd5czh6X0k9jroqw7AHf+NVFuLBHiNfbhkdlx3IkhWdLXxMTqQqNwe
+	 KNg1Ze8Kg6/hQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -52,12 +52,12 @@ Cc: Markus Burri <markus.burri@mt.com>,
 	bgolaszewski@baylibre.com,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 09/23] gpio: virtuser: fix potential out-of-bound write
-Date: Mon, 19 May 2025 17:21:16 -0400
-Message-Id: <20250519212131.1985647-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 06/18] gpio: virtuser: fix potential out-of-bound write
+Date: Mon, 19 May 2025 17:21:55 -0400
+Message-Id: <20250519212208.1986028-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250519212131.1985647-1-sashal@kernel.org>
-References: <20250519212131.1985647-1-sashal@kernel.org>
+In-Reply-To: <20250519212208.1986028-1-sashal@kernel.org>
+References: <20250519212208.1986028-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,7 +66,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.7
+X-stable-base: Linux 6.12.29
 Content-Transfer-Encoding: 8bit
 
 From: Markus Burri <markus.burri@mt.com>
