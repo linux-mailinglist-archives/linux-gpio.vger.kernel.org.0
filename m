@@ -1,173 +1,137 @@
-Return-Path: <linux-gpio+bounces-20310-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20311-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A098ABCADF
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 00:29:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CE08ABCAE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 00:31:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAFB53A5CA9
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 22:29:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D7B03ADB07
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 May 2025 22:31:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 718C821CC48;
-	Mon, 19 May 2025 22:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4FF01F582E;
+	Mon, 19 May 2025 22:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJVqLA8B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Im6H618V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE78E1DE887;
-	Mon, 19 May 2025 22:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A0F524F;
+	Mon, 19 May 2025 22:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747693758; cv=none; b=DJIY21JqV6WUfOuTGIFfNnmoCqVW4QjL4hX7JbLw6TUKrWWadd1rIbTgxNm2VHFFvgf7ZWPGVVuFjXZlI05p5YViVIuxkLEMrdaKqm8yAcWuMK2Skuw3UizX2+P76ff8rf9PRODMp8+tIMVzGl1tXe5KZ7Ydt7Ysz5XV69w/pyk=
+	t=1747693899; cv=none; b=V+1SFJRUx8mQqmhvsXnK4nsL/c40qPfXz4d/QhUI16xBikwZFmvs73WZHeJF6WtdZsRLY8uDoq1N+BQTbP3eV2cw7ORFYSLO0qv52aMBu3F7lEWPCdifP3PT8cnPa50bTyUcpOzDgp7ru9KL3q2BxgCQqlJFbFhpcx+r083vUDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747693758; c=relaxed/simple;
-	bh=vdhot2bogrAAVmaP4EuykHJI5W0v/2hfiO1ojSRA+vU=;
+	s=arc-20240116; t=1747693899; c=relaxed/simple;
+	bh=twd94YFShG5PaKr1yOCPEGR19p35/1Yadc8USsIYst0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ggz3zpMLU7DzV8D4NFuDIfExzp8KKCY1vi0gWXpdxfp3syCX2PRrwXzgJmVi8GAtMttUmXN/F6HNXzmf2ojBu9lAUpkEvfc/AYFh8i9YsgQhasO4DX8hk1ra/kyK9pEY/aEkTbLvn5qiWhv6pqeaUZy9gPdFKrM6oiLtN68xhoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJVqLA8B; arc=none smtp.client-ip=209.85.214.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=JFdaQOea+vQWwHKi355SroatxNwXufijWngtx6E9zQx3hQRm+rz3jvHBwip3GRQvs7GrsLRaUJHkj/oCTtdUhF971auXNNcFSeSsH1Ic/PTtpt8H5g10mwI3kMxsVLj8gfYoe9NCEyBmkpyipHJUpKRGfjd6SGOGBszX0fgcg1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Im6H618V; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2327aa24b25so2114225ad.3;
-        Mon, 19 May 2025 15:29:16 -0700 (PDT)
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5f619cc01so73194085a.3;
+        Mon, 19 May 2025 15:31:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747693756; x=1748298556; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747693897; x=1748298697; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gVfdNVHigfGlLdYVfYQUg3Ao+EVb/XXfYA5VQaT7/Mc=;
-        b=RJVqLA8BFgczdE60GJj+Bp/qJ+MwAfGC/uojPWdJ3PN5Ak/DfXHillcbySxXGQhsY3
-         qrPHSEunhSQrUUdEt6ClC0Phef2rXNZkBRNYPGaOSNrvemo0rqWs3I5HTg9CQvKboTbr
-         2PE/33A/ZaA3BX6CSOBIF7T9iKwblzk83Nl8McHe/xtPYHKCOHseZVxjCxlWqSfvS1Fy
-         ucO7dGSEHMiBTsryP86QU9Izq50ScvYnumkYnecX7By5IaGh1Y8i2X2/+03BcH+T/e82
-         1lRxkJU3jiurOshRQX3rnKPTZUQCphFSQN2/vLx7PVBOm0CaYTlRTTLSl7vvo6Faszes
-         /oBg==
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rNRhady4NedJvDV1wRtYfXkN0eIeHdeRYwkGiPr6wzc=;
+        b=Im6H618VdaAdx/F1R8I+0fc7Lv7RENbWhYn15EiGBM2MidjfMFUGsu/gHTwvmZAN+y
+         Wpl8707oLRuA88w7P0hzu9MlAG8b7+2AfgxVZ85SKk/MBuSyxeiMrWO+T28eGxGxtZfG
+         25o3oUz9kMRGaEc4QQu+1ncbVk3yroM8nWdRQ2CgCaZPCagv1syF3OIQnYKFzFFWkHix
+         pLheUWuyxqenkZJvFs4p0qMcTVMc8gnzxcELJiB9Vnyt3pfPRfqg48LYJ/eMKx6WE9LQ
+         PXelrq9DVqK4wiUPiPN/TEELw7DYCe1f0ZUAlluBlDDG28k0kqgKoSemNR1f/nLrjsYn
+         INyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747693756; x=1748298556;
+        d=1e100.net; s=20230601; t=1747693897; x=1748298697;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gVfdNVHigfGlLdYVfYQUg3Ao+EVb/XXfYA5VQaT7/Mc=;
-        b=uQBW2r1ft/2cPvx1h9FgkuKrwa/MIxWyX2YM6IidLY10u5ZDd73NKfJPBx+0Qm6VuX
-         945ovc6hlQTWO4djpjN8yLR5Me50Je3r3sHQvEIU31axpE7twUhqd35vzAz9zPM/eqwW
-         GIyHAaH44nfHR4m0xIo4HswWu7JEWzLMJH3Gtw1vrnmL25eaat1N0ozBlnVJmHF/BZgU
-         DhT/aUVF8f12b4A5qqT5FHyK4wp8lJZtwkY4JcaaxTRQ0bKI15idrlAOT3veUAUFOSOS
-         JJXl0YyX6X6WNbzFQiDfK2nDTUmrdyjcqtq2KPy5M3f/18WugpoE70AYgR2bFPW8EkzI
-         9jow==
-X-Forwarded-Encrypted: i=1; AJvYcCU30JnysQdmSTENIJ1byochIzkOM3ZMey59rmILuJiX4n3qG7GYOLV3Y2O2WyImm0dxEd/ENH30yiCV0FQ=@vger.kernel.org, AJvYcCWdsg+XlfrlRteFWXQG+fPSACpT05OSczbREMPiRpvsAwixlJ46fO909jBvBkzTB0FjHyDaNZTjzNkq@vger.kernel.org, AJvYcCXuBWVnEIRl3mQiBWGxi0jUaPFSg73CrFaEBe90JUTmcoApinaps1WpjXqQjjNLPT1K1KZGdLG/Y1e1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6Jlp+WyK5VwkZxf2Vywd9AJGq9h2e6fS87+0AXWB9gKd5/DQi
-	syKoWYi+ki1ZfNCk2XOEE3HdYljJkrJt3qpgFarzWURjk52uRVX6ZL7g
-X-Gm-Gg: ASbGncuRiCaiM02dUwEjFCxxnvlFj+hOaP/FqtrrdtEyVMKQizjJ58uSJ2up/upndIp
-	JIyklR/mDP9UNO9JBL31rXi3TQkyD8R2kgFNEBxfAgbU3gmdd4zZnvkhRZUpQA5HvmoXvRymy/m
-	2U7/7lCwn42uRHSmrsXBa67KeRDZaovjBkw/jt/5tegn5i5UfKtk0eqvlajROgqTuXdOH9xr1Q8
-	EAChIEOegobmMMd79WwFw3Ik1OSs8kuuK8FAkbVSKXgWpTIa+psAXSqRNfMwUg8zn23IkIeEL7s
-	sy+ivZ9X4ts4vH2YIqM1BEtsarU5hT9yNAC8O2m5zbJmZ1D0Yg==
-X-Google-Smtp-Source: AGHT+IExzxC1Rn8Seuzhbs42BUoT/DfFEqGl+OeWDv86sR+KOtPhL6fBwEtIP4ZkCi/7WCr7mYVlTA==
-X-Received: by 2002:a17:903:19c4:b0:220:e655:d77 with SMTP id d9443c01a7336-231d452d0e3mr210299435ad.36.1747693755940;
-        Mon, 19 May 2025 15:29:15 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:e134:a6aa:27:6156])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97db8sm65049265ad.110.2025.05.19.15.29.14
+        bh=rNRhady4NedJvDV1wRtYfXkN0eIeHdeRYwkGiPr6wzc=;
+        b=HAMA6b97SXhv8KJrzz98H1CkCabUzHizwQV7NeHN4Df1hDLD9GwWDJAWabmWmpZUSB
+         CK9izalv2B9E785DRIzRw2mL1GcQm0EnQrvjENKob02F4Aa9RozPpWqb/8xN02ji4ERf
+         KG7txev48+iAiQhSU01/iFrPtykcM7MI6XU2kdQNvHjuH886COLOeasH5gYD16H50uaa
+         gGmr8xR012FCTm5ymTWg0JfE1zP0AJu3ClY2nB9vKROLgk6UVvwh7ngJJYoC+9MngHLj
+         uNAbt3krmcYzLewNkUZhvZGJPgfCvNxv87p5xX9o/8wMYGqHgnjtF6Bwm9Ix4ZqB70PM
+         DtaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCpZSXpdC0WsqXOgL7nuG//3MXTFBiDAK8Bwtb5DGgDnFOH7KeQIgZhYtkftW2q5YngWW1TrmXFfADHzMs@vger.kernel.org, AJvYcCWLfc3UNBIMjjI1Snm6hAp1vStKQ3punzrQeSS1GvGxBPrpBzOH3P7LkICIY7nifCKbhUDfByIgjtReGg==@vger.kernel.org, AJvYcCWrmx2E7YN1o2QXYDoazJLVgDB7ZCMGvUi2Z3w6+t9YbcJZB8624wBU1r0Qb+9gNIKwr5ekePJHk0xp@vger.kernel.org, AJvYcCXegAP0MbbXWO5BZNIouy+lIf/gLMNdMx44MHHjUi8ad/UeJxCM7Qe89N32yaJfdmNbNb3xsEa90HDp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV/HVXZnzWLb87DL0FumWLebuUQnDXdzXfXwkiypaZ38h+uhDZ
+	bmDY3lljr/9LLn3/OMWoCRhYRFtQGhwasTSJJZ2l2QQWRcTGrtH5AcYO
+X-Gm-Gg: ASbGncuEAH1t9OpqaOlHyZNcusjfRSm+7LCNFpyPEukFQiyzzeQ7RaSp1Fol/ssakaO
+	vA62CafcClUZJl3cDCZhM0nyLDN7x2B4oXqX3cQOVShEiToZhmiIjxWwN9fhwEL4TyXQuPrzHDS
+	KxRrMjzyrzKblFfOBPgg6AUewJof9d8Zmn4hKa/2htvRI8+lJIzGV80NSJYrb7hTIUmqhFXD4ne
+	CBn5RJcri6mdlCkjKLsYnF9wbIrQ1x//m7JOxfqlXdZKn0XzHUg0y9seRY5MhgIo5Bh4hgD9rTb
+	6aGNTfNPPhq64YJrLzB+IZ2ktafvP5wevol5vBqQ//u5Ur514dIq1+lySyUcOzESn1P3Al/M
+X-Google-Smtp-Source: AGHT+IGh3p0p6XHD6kUXTDkG5ZGADgJ0hhzJakFzthoIXrWXnT4v5hCkzwTklcCcCCf5dr6edgdKFA==
+X-Received: by 2002:a05:620a:6506:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7cd46779c90mr967974885a.10.1747693896617;
+        Mon, 19 May 2025 15:31:36 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467ee1fcsm637581485a.52.2025.05.19.15.31.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 15:29:15 -0700 (PDT)
-Date: Mon, 19 May 2025 15:29:12 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v3 17/22] Input: adp5585: Add Analog Devices ADP5585/89
- support
-Message-ID: <gdhn57zkmt5fyq33qsvdbpq3k7ofzycm24ligd3hw2cwdqkn5y@z4sk2arp6ssn>
-References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
- <20250512-dev-adp5589-fw-v3-17-092b14b79a88@analog.com>
+        Mon, 19 May 2025 15:31:35 -0700 (PDT)
+Date: Mon, 19 May 2025 19:31:30 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: 1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com,
+	Jonathan Santos <Jonathan.Santos@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, Pop Paul <paul.pop@analog.com>
+Subject: Re: [PATCH v8 10/11] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
+Message-ID: <aCuxQgCPgeFAqwWh@JSANTO12-L01.ad.analog.com>
+Reply-To: 4843ec52-57e2-418a-b640-8e05ba60959e@baylibre.com
+References: <cover.1747175187.git.Jonathan.Santos@analog.com>
+ <1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
+ <aCtmt+ozqSRDGQxi@JSANTO12-L01.ad.analog.com>
+ <4843ec52-57e2-418a-b640-8e05ba60959e@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250512-dev-adp5589-fw-v3-17-092b14b79a88@analog.com>
+In-Reply-To: <4843ec52-57e2-418a-b640-8e05ba60959e@baylibre.com>
 
-Hi Nuno,
+On 05/19, David Lechner wrote:
+> On 5/19/25 12:13 PM, Jonathan Santos wrote:
+> > On 05/15, Jonathan Santos wrote:
+> 
+> ...
+> >> +
+> >> +/* Decimation Rate range for each filter type */
+> >> +static const int ad7768_dec_rate_range[][3] = {
+> >> +	[AD7768_FILTER_SINC5] = { 8, 8, 1024 },
+> >> +	[AD7768_FILTER_SINC3] = { 32, 32, 163840 },
+> >> +	[AD7768_FILTER_WIDEBAND] = { 32, 32, 1024 },
+> >> +	[AD7768_FILTER_SINC3_REJ60] = { 32, 32, 163840 },
+> >> +};
+> >> +
+> > 
+> > Since we're still discussing some points â€” is the `step` in 
+> > `[min step max]` for the IIO range additive or multiplicative? It is not 
+> > clear on documentation, maybe on purpose or I have missed something.
+> > 
+> > Here, decimation/OSR doubles from 8 or 32 for SINC5/WIDEBAND, and is a 
+> > multiple of 32 for SINC3. So I'm still unsure how to represent this to be
+> > clear to the user.
+> 
+> Sounds to me like sinc5/wideband should be lists instead of ranges.
+> It is only 6 values.
 
-On Mon, May 12, 2025 at 01:39:09PM +0100, Nuno Sá via B4 Relay wrote:
-> +
-> +	for (pin = 0; pin < n_pins; pin++) {
-> +		if (keypad_pins[pin] >= adp5585->info->n_pins) {
-> +			error = dev_err_probe(dev, -EINVAL,
-> +					      "Invalid keypad pin(%u) defined\n",
-> +					      keypad_pins[pin]);
-> +			goto out_free_map;
-> +		}
-> +
-> +		if (test_and_set_bit(keypad_pins[pin], adp5585->pin_usage)) {
-> +			error = dev_err_probe(dev, -EBUSY,
-> +					      "Keypad pin(%u) already used\n",
-> +					      keypad_pins[pin]);
-> +			goto out_free_map;
+So can we mix lists and ranges for the same attribute? I see that this
+is not usual.
 
-This jump looked confusing, together with devm, etc. I wonder, can you
-move call to devm_add_action_or_reset() before the loop? It looks like
-it should handle completely unpopulated pin map just fine... 
-
-> +		}
-> +
-> +		__set_bit(keypad_pins[pin], &kpad->keypad);
-> +	}
-> +
-> +	error = devm_add_action_or_reset(dev, adp5585_keys_pins_free, kpad);
-> +	if (error)
-> +		return error;
-> +
-> +	/*
-> +	 * Note that given that we get a mask (and the HW allows it), we
-> +	 * can have holes in our keypad (eg: row0, row1 and row7 enabled).
-> +	 * However, for the matrix parsing functions we need to pass the
-> +	 * number of rows/cols as the maximum row/col used plus 1. This
-> +	 * pretty much means we will also have holes in our SW keypad.
-> +	 */
-> +
-> +	rows = find_last_bit(&kpad->keypad, kpad->info->max_rows) + 1;
-> +	if (rows == kpad->info->max_rows + 1)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "Now rows defined in the keypad!\n");
-> +
-> +	cols = find_last_bit(&kpad->keypad, kpad->info->max_cols + kpad->info->max_rows);
-> +	if (cols < kpad->info->max_rows)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "No columns defined in the keypad!\n");
-> +
-> +	cols = cols + 1 - kpad->info->max_rows;
-> +
-> +	error = matrix_keypad_build_keymap(NULL, NULL, rows, cols,
-> +					   kpad->keycode, kpad->input);
-> +	if (error)
-> +		return error;
-> +
-> +	kpad->row_shift = get_count_order(cols);
-> +
-> +	if (device_property_read_bool(kpad->dev, "autorepeat"))
-> +		__set_bit(EV_REP, kpad->input->evbit);
-> +
-> +	return adp5585_keys_check_special_events(adp5585, kpad);
-
-	error = adp5585_keys_check_special_events(...);
-	if (error)
-		return error;
-
-	return 0;
-
-Thanks.
-
--- 
-Dmitry
+> 
+> 
 
