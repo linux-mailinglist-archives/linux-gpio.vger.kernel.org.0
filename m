@@ -1,54 +1,54 @@
-Return-Path: <linux-gpio+bounces-20338-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20340-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44BF3ABD95A
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 15:29:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FA04ABD96A
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 15:30:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1F6E3BF867
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 13:28:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 832E0175FDC
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 13:29:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B286243379;
-	Tue, 20 May 2025 13:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 622F9245032;
+	Tue, 20 May 2025 13:28:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DgrGoV9x"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kBMdva8l"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C0824110F;
-	Tue, 20 May 2025 13:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CA2242D7D;
+	Tue, 20 May 2025 13:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747747734; cv=none; b=PhnF37F0+mmZarHUR3Y2UsOY6CndWN2DWZn4YerNxR32K2KM629eysxTqRYOVUMXAQyshureB/ZaRG7tIOn/2eYsx6yU9MzZ60Fhs37dVRGOGF/FVzKf9gtFzJWR2O73b6cmsgi1Gw0RD3PpBUqp/W1Kzk0Qj7tiO+6AT8JCmVU=
+	t=1747747736; cv=none; b=S3W0ZRQCjo69VY2aqkYpt7591rnY+PnUEIb7sJprTFsi0ZA5vTjuaNB/Gt4c6SnzUWLbruOM3m0M3y4dm8uuIKA7X+WwQ7TkNqDaBPYRfVMm3DdZeUxg6Ar8yxDixjk48qlc9yYP+PcmE3HiqKGLJDJkjTZtfAEBdt+Bp5+NOx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747747734; c=relaxed/simple;
-	bh=Zi4kUK8V8exQ/jYlGTZpiqNPDV/K0PVGeQF8lZgoC1c=;
+	s=arc-20240116; t=1747747736; c=relaxed/simple;
+	bh=ueBDR8GgdfVn0bozqSfFaWsKfsPU3jywT/DmcxE60LE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K7lU5F/v60av/t7cp+YECdm2LCtBJ5Rr9YHNWOoyKSBFjvEulmZkfE9ZKpOM4W8rRHsn6bv9WcBef5dqSu6uqotT1r8BzKi9hxAhPrUWRSmInsAwiAUDEy+mIkVkPNi18T7/CrRw7v4s2W8VnX5o29sbBCs6qDg49PIeZb+hnLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DgrGoV9x; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=IoCIY8Nm9DHVXN50RcsWf0KcgwrUxcGAyjuCHlj8y4HOuVl/zVbwhkRV/pzOWvs/+MQxu56PMTY0U5FZowjv6XVl03dipB8aytl651SkAHSqx7JQt2LLiTc4H160UIuNK/9eO7XQzw4NkZDgPsxSCQ5thrMn2Go1lw2kg0zJnLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kBMdva8l; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A3EBB43B3D;
-	Tue, 20 May 2025 13:28:44 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 63C7443B58;
+	Tue, 20 May 2025 13:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747747725;
+	t=1747747726;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QXkFTZPAhN5Z4nXJ2+2nFSRY5GnUn0Nq/yGjDLyOt5Q=;
-	b=DgrGoV9xVt8JfeurDowIKf6nsF32spDyApQmerRy0Dmwji/+aCrKLwVbX1ONGLeaHoRUUh
-	DzDJpy9QncKeE2iHOJ79fJlxzy7Md3L0Ii3eYkY/Y5IQRm0Q8SCGa5AJcKiadQ4TcRqQTK
-	D106cJHWZUcnB1I9oE/yZ1CQJIpGQalmPG6CYEgR8FJ5ouH6eANLGL9D89vjR6OFXVoN4i
-	gQGc/1JDXRtP737sLGAv+V8k9HbTBZu+XWOSiv9lOkzHH41tsp9wbJOE7STWTlTWxA0oT0
-	TVT7NQWNsYeeFU69pV5OcYx1nr74y+N4Pch8IotDZrXNy5mmiuxdVK+fg3Z6jw==
+	bh=krAelrpNDrBYMCWLpXCND+FOfaRARJpzubfAqth4n7A=;
+	b=kBMdva8lAL6DbphdFPKYHRhRMQ+JWMSWxrSevuYU6hsMCHrM3WVp5/nDovy3sSllGNJLYx
+	kckkL7RavKPz4of8V5R8U9XX4EuKwtSiaRy3nWkFdNzM0Ad8IJeyjOUNSpYTyCpnTdepoC
+	Xg5qQ+pnJXNnxkfKZHJj4REQNZOJ3Su1yDnUURnUitWA2aVcyOZGCBahN/DBxyXOtMCVZz
+	pVKX+IONMzlQOF/lF+offz1u/GdTcD90N8rkhsoDO0wBN7/lUZFfXCnybAN6EoOcq0afzD
+	x/9gvWVlSS0mQrn4FQ41WD5I4l2EKhR5gs7krUCYxbiazm3spIlCdqXIiqNDLA==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 20 May 2025 15:28:27 +0200
-Subject: [PATCH v6 03/12] pinctrl: core: add
- devm_pinctrl_register_mappings()
+Date: Tue, 20 May 2025 15:28:28 +0200
+Subject: [PATCH v6 04/12] gpio: aggregator: move GPIO forwarder allocation
+ in a dedicated function
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-3-dcb3756be3c6@bootlin.com>
+Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-4-dcb3756be3c6@bootlin.com>
 References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -76,91 +76,95 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffecutefuodetggdotefrodf
  ghpthhtohepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopefirghrhighrghnghesrggrvghonhdrtghomhdrthifpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
 X-GND-Sasl: thomas.richard@bootlin.com
 
-Using devm_pinctrl_register_mappings(), the core can automatically
-unregister pinctrl mappings.
+Move the GPIO forwarder allocation and static initialization in a dedicated
+function.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/pinctrl/core.c          | 29 +++++++++++++++++++++++++++++
- include/linux/pinctrl/machine.h | 11 +++++++++++
- 2 files changed, 40 insertions(+)
+ drivers/gpio/gpio-aggregator.c | 50 +++++++++++++++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 4bdbf6bb26e2..9046292d1360 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1530,6 +1530,35 @@ void pinctrl_unregister_mappings(const struct pinctrl_map *map)
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index d232ea865356..754680fd810f 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -498,6 +498,35 @@ static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *c
  }
- EXPORT_SYMBOL_GPL(pinctrl_unregister_mappings);
+ #endif	/* !CONFIG_OF_GPIO */
  
-+static void devm_pinctrl_unregister_mappings(void *maps)
++static struct gpiochip_fwd *
++devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
 +{
-+	pinctrl_unregister_mappings(maps);
++	struct gpiochip_fwd *fwd;
++	struct gpio_chip *chip;
++
++	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)), GFP_KERNEL);
++	if (!fwd)
++		return ERR_PTR(-ENOMEM);
++
++	chip = &fwd->chip;
++
++	chip->label = dev_name(dev);
++	chip->parent = dev;
++	chip->owner = THIS_MODULE;
++	chip->get_direction = gpio_fwd_get_direction;
++	chip->direction_input = gpio_fwd_direction_input;
++	chip->direction_output = gpio_fwd_direction_output;
++	chip->get = gpio_fwd_get;
++	chip->get_multiple = gpio_fwd_get_multiple_locked;
++	chip->set_rv = gpio_fwd_set;
++	chip->set_multiple_rv = gpio_fwd_set_multiple_locked;
++	chip->to_irq = gpio_fwd_to_irq;
++	chip->base = -1;
++	chip->ngpio = ngpios;
++
++	return fwd;
 +}
-+
-+/**
-+ * devm_pinctrl_register_mappings() - Resource managed pinctrl_register_mappings()
-+ * @dev: device for which mappings are registered
-+ * @maps: the pincontrol mappings table to register. Note the pinctrl-core
-+ *	keeps a reference to the passed in maps, so they should _not_ be
-+ *	marked with __initdata.
-+ * @num_maps: the number of maps in the mapping table
-+ *
-+ * Returns: 0 on success, or negative errno on failure.
-+ */
-+int devm_pinctrl_register_mappings(struct device *dev,
-+				   const struct pinctrl_map *maps,
-+				   unsigned int num_maps)
-+{
-+	int ret;
-+
-+	ret = pinctrl_register_mappings(maps, num_maps);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, devm_pinctrl_unregister_mappings, (void *)maps);
-+}
-+EXPORT_SYMBOL_GPL(devm_pinctrl_register_mappings);
 +
  /**
-  * pinctrl_force_sleep() - turn a given controller device into sleep state
-  * @pctldev: pin controller device
-diff --git a/include/linux/pinctrl/machine.h b/include/linux/pinctrl/machine.h
-index 0940fabb154d..25620229b1d6 100644
---- a/include/linux/pinctrl/machine.h
-+++ b/include/linux/pinctrl/machine.h
-@@ -149,12 +149,16 @@ struct pinctrl_map {
- #define PIN_MAP_CONFIGS_GROUP_HOG_DEFAULT(dev, grp, cfgs)		\
- 	PIN_MAP_CONFIGS_GROUP(dev, PINCTRL_STATE_DEFAULT, dev, grp, cfgs)
- 
-+struct device;
- struct pinctrl_map;
- 
- #ifdef CONFIG_PINCTRL
- 
- int pinctrl_register_mappings(const struct pinctrl_map *map,
- 			      unsigned int num_maps);
-+int devm_pinctrl_register_mappings(struct device *dev,
-+				   const struct pinctrl_map *map,
-+				   unsigned int num_maps);
- void pinctrl_unregister_mappings(const struct pinctrl_map *map);
- void pinctrl_provide_dummies(void);
- #else
-@@ -165,6 +169,13 @@ static inline int pinctrl_register_mappings(const struct pinctrl_map *map,
- 	return 0;
- }
- 
-+static inline int devm_pinctrl_register_mappings(struct device *dev,
-+						 const struct pinctrl_map *map,
-+						 unsigned int num_maps)
-+{
-+	return 0;
-+}
-+
- static inline void pinctrl_unregister_mappings(const struct pinctrl_map *map)
+  * gpiochip_fwd_create() - Create a new GPIO forwarder
+  * @dev: Parent device pointer
+@@ -518,16 +547,14 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 						struct gpio_desc *descs[],
+ 						unsigned long features)
  {
- }
+-	const char *label = dev_name(dev);
+ 	struct gpiochip_fwd *fwd;
+ 	struct gpio_chip *chip;
+ 	unsigned int i;
+ 	int error;
+ 
+-	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
+-			   GFP_KERNEL);
+-	if (!fwd)
+-		return ERR_PTR(-ENOMEM);
++	fwd = devm_gpiochip_fwd_alloc(dev, ngpios);
++	if (IS_ERR(fwd))
++		return fwd;
+ 
+ 	chip = &fwd->chip;
+ 
+@@ -549,19 +576,6 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 			chip->set_config = gpio_fwd_set_config;
+ 	}
+ 
+-	chip->label = label;
+-	chip->parent = dev;
+-	chip->owner = THIS_MODULE;
+-	chip->get_direction = gpio_fwd_get_direction;
+-	chip->direction_input = gpio_fwd_direction_input;
+-	chip->direction_output = gpio_fwd_direction_output;
+-	chip->get = gpio_fwd_get;
+-	chip->get_multiple = gpio_fwd_get_multiple_locked;
+-	chip->set_rv = gpio_fwd_set;
+-	chip->set_multiple_rv = gpio_fwd_set_multiple_locked;
+-	chip->to_irq = gpio_fwd_to_irq;
+-	chip->base = -1;
+-	chip->ngpio = ngpios;
+ 	fwd->descs = descs;
+ 
+ 	if (chip->can_sleep)
 
 -- 
 2.39.5
