@@ -1,166 +1,133 @@
-Return-Path: <linux-gpio+bounces-20376-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20377-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BF15ABE73E
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 00:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AD04ABE765
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 00:42:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A3711BC2E3A
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 22:35:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A6A11BC1BE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 22:42:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6727125FA01;
-	Tue, 20 May 2025 22:35:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A800D25F7A5;
+	Tue, 20 May 2025 22:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e0Dn5uB9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U0COWbjy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561C825F7A5
-	for <linux-gpio@vger.kernel.org>; Tue, 20 May 2025 22:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A25213E76
+	for <linux-gpio@vger.kernel.org>; Tue, 20 May 2025 22:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747780504; cv=none; b=fVBPGGollbJCx9MYaGopFVCLgvbO0/8WB0No8185nYpEVBVFIq1vmQuJQ9zp+1BHQ7ebDc9fD9KoyNTZuYZUHZJsS1IHX14qJx4x/ejshAGtCD1/xq6rzjpQiKqrRbXfz+V3OYwLTrkdu6lCfNaroQDItBNqSvM1zC5grLNdQzs=
+	t=1747780937; cv=none; b=U/PycbxAF76yflKL0IZ9F2505/3czfMQdHN8GtDqcRVxqBWvnUoMxMgaVlj3OjiCIWQ7b4WhXIYl0Oym5FY9p37t0+mcib7LLF+tE1985QAS+0YdXQAPr2J50CeF1UT7uTvi+9AcWBNe7jceeqTm4iT/dMSURnoj7TDt2ajBvhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747780504; c=relaxed/simple;
-	bh=G/qZCh5e8IqALffgL4PSg+SILS7Tze0xhMEWFjvrHHc=;
+	s=arc-20240116; t=1747780937; c=relaxed/simple;
+	bh=F+0KGjJEeMGYRbcevFKEOSgGE0ujrUpdmrmtWjYGodk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HBIK2+X9vB9N7fORMLe25Lna4QL7d8LUB6MZepdrIc7ZHaqkFJCtEsWeF0GDAg/J8cVr8MzFjmIt96+mIVUn+5+4zKk6R2Sk4B251QR8ujME56M/K69JpmndIxb7+lycssrDYVjl6/R5qZS66+L/CoS8EdbeS7WKuj6NlfESDBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e0Dn5uB9; arc=none smtp.client-ip=209.85.208.175
+	 To:Cc:Content-Type; b=HaPlQXzGTL6C0fXn6slZd45mu7HaPWQa/ho2mF+bcSrFdJIXeeDVSfzAERfoVtQzjDKE6osZKO7t3Fk6W1pGrYKdLmM0EWUrTQuXCA4aClC+rd90gJZIyuqtDxoqY681eYUs3HCEY4jS6Yesk1oglJfOTbke7dcfb+QgoQWSK/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U0COWbjy; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-328114b262aso41925471fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 20 May 2025 15:35:01 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-329119a3a8eso32015251fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 20 May 2025 15:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747780500; x=1748385300; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747780933; x=1748385733; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G2rh9i3/PUqd91HnT/agwHUBEJLIceaCRVKrhRf0A54=;
-        b=e0Dn5uB9ac6prNeknALYJ7BuoRdeXIG822lQ7EoN8W8L5SozhHYtBGB2I6LKni0mGe
-         E7MD/mPwCytlOqlj8wMDB843N9KmeUmrB3ecItahrETSO8xL4cFwcVeEctsc6IiQ5bH0
-         AWU2SWuwWWBwrOqHU7WBxmpgG63EgMyHpeHSwLgqnV7uks9w/roBzJZgfK8EdxL1hLj/
-         ioXDj8hzoAqCZ1Pez9SQbGpavb/gjupacpdHzDbJ6pq/zj/GveQ8k9XP/fg0/TLnJno9
-         1Su0Fm99xwI7072qpMDVrh9tscWjLloaCtPOyzYpNLX2dRjOYiYkkXpxPZcwhDH7KFrR
-         +kOg==
+        bh=F+0KGjJEeMGYRbcevFKEOSgGE0ujrUpdmrmtWjYGodk=;
+        b=U0COWbjyNECRHl1cur8aqhDSQ7FmsyklzbRM8AC8XYrjIjuUysuXjW1OaV4qRCYs1u
+         tu9eCeBKf0FqnopXuNaGjEysh8jYZyv5KmKMkp9e0SYbWLz6Bj+n6nfSnw/msNesI4F+
+         DCAc2NGfhNt1OTGfYqMZ58L9YazZ0uUJWMDjy8LV0eM9RSHeQyfvVH6iT7DmcZqLj/ha
+         +N4pHwiIZYwkabUjsRslz0jr7H62D2gteo0RhNylDVwCxGIzghnv6E2d5PhKrQBTaAVa
+         FvY4vjyH0gEMoDxnzMw7Tv2jsRimFjI01A7xxuFp+NlBAofmtlvOz1nC6dC79rZvskiU
+         AvuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747780500; x=1748385300;
+        d=1e100.net; s=20230601; t=1747780933; x=1748385733;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=G2rh9i3/PUqd91HnT/agwHUBEJLIceaCRVKrhRf0A54=;
-        b=MtJER+h/6ZOuKa6makVQS39bebXqqMg2TlDO8/c+L6FdXTy3KTxlgLliVW1gqEXVFX
-         uxHlPx5CBMQW3z1LIFMtRWhSIz7MnwFf2aElrE7GoeBysXO3BB+kb6wghi70M+SQZeC0
-         VT4fLA9mR2tL0epwBlpCzJnsX8mWvJMzfuIuf7ngWe2mRYXQkAcMoYCjIruu5ljMBmLG
-         huharotY/mC2KUxSM6Np8tRhOmb68PkIP0xU25kqi7ycfkD+SxYatP0pLNcxDNshuhL3
-         gElKSjKD9dAe0u+ZhcGMetdEnKwK/dYRvvBNhtgcKclMho7cFqCTxnVVxEx2NB7IrlHX
-         XeKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHePG8Ut/GB4rAItedsangPEi6oesxTwDQlRoSGUxHbWm8VcotriP8VPyqY1/NbTaZkWp+VYOkS9Q1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrbTYX64etr+gXzHpDBNKcGKWaXNDwyYZXcN5dsKt/X3qm8Xbj
-	FoZ47eMqvY2ljBgCpjHbARg9DqnWjyvsdixZh5yS2yNZzDnv++UHq99QQ2fwvkVi44pWuIglOZK
-	pklQUUHXtHQS+LKIoi2AlfeL3X9Qp6mSuC5ISxew7sA==
-X-Gm-Gg: ASbGncv0w/x37ZrPFxp/LLEFm9MqR80F/87DlDMawdzlXJEwYPghp8iv6U7LhWThM3S
-	KnaqXrzxwgz95HPhMMQP9b7BneMLr5abq9xn83uBnHfrgWZOyQi7W514NeuB+HpZdGQt3jrb3Ue
-	81fclPZKb1VRT9XF6XbDYjWaxwkQiSFVPd2jP+2b5NS6A=
-X-Google-Smtp-Source: AGHT+IG3zE80N3OdjZZgIj1CBi8G4bnNpTjDsApWfo+qPPNIniOdUu0Ts+pT4sWio2WYX62CWpyx5h4GPmpl48aN4uk=
-X-Received: by 2002:a05:651c:f0a:b0:30b:ed8c:b1e7 with SMTP id
- 38308e7fff4ca-32807728eb8mr48465441fa.18.1747780499896; Tue, 20 May 2025
- 15:34:59 -0700 (PDT)
+        bh=F+0KGjJEeMGYRbcevFKEOSgGE0ujrUpdmrmtWjYGodk=;
+        b=EHATqwAA2xd8mR4m5gEmuJ0lsTAqlF/d7sBhYuvCdBfTsz7cJap8C2vBPKftekGp0c
+         6ooyb7gyy2f+UOubEeoFjFfvlNLo757imC/fu4B5g93odx3U2/FkWyhxHFjEaAvPS2iD
+         O16fOC3pHNrH2XcxU+OqtCYpSlFhn4QyDpQSwpExY8Kg6dPBupwd4020tEBW5E2y8Lko
+         Caca1y/y1NRxcsQPoKmKKm3d0VvJ3SeAGAKKJqJqMZQYS9N4yn3JJhWQezy5lEZ2F9u4
+         2lxGdESS6ATRYAvmjlC7l0DaCLaPoOTLQxyETWwoqh2oNb0IdcFG3sisd/n7rfSQg70L
+         +f4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUjG/DG6m6k44f0vQygA4w84Q1gdUqhFktviZEtfYjRcT3MtOBOn42r+WkUiub5PHeaR55nowagKp1x@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaX1R91KMo5e7aAtNGEkcxwshB+OMVAIZQoP9jHIu9cz8qzMNc
+	n+meGtmBf33y61n/1gBzuvI0O6/zADjLckqL5CsfVJyDglfnc6WHpGuFN6ezpNNBgMx/XQO6o13
+	Q/iGSnMJLrwxWjdVopErU9+3s22b4lj9P8/6lIGaOxA==
+X-Gm-Gg: ASbGncuCgsf4UeXSTehCXbveGM6snLBbbnnI/GhjNyL1t3DVpHvRXp5W1POUboQKVAM
+	jQ58ypxBUN5+GHIactQHCFbrFkeFweo3wN8rouJmnAV/iQuYOQkJ/9Rm6fAQmtkODEVNZMp7MoH
+	AjZ65xm+oNWc8Es1RKlpUMYZozquheXKXN
+X-Google-Smtp-Source: AGHT+IHsUCF87aJBJgdi8mRkNqubc6I4D9fZMCMetg4kSiJqDTe01fpVuT5acGVm0IsXULfYXw603PwqUKvGmPST+r8=
+X-Received: by 2002:a05:651c:20d5:b0:328:d50:d7cc with SMTP id
+ 38308e7fff4ca-3280d50d846mr35144561fa.20.1747780933368; Tue, 20 May 2025
+ 15:42:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com> <20250520-hdp-upstream-v2-2-53f6b8b5ffc8@foss.st.com>
-In-Reply-To: <20250520-hdp-upstream-v2-2-53f6b8b5ffc8@foss.st.com>
+References: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+In-Reply-To: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 May 2025 00:34:48 +0200
-X-Gm-Features: AX0GCFuW4vdoq3ZxavI5D-k3WcmH7E3A9H2e_P8Zln_7BppO66UxFChz04uYBvs
-Message-ID: <CACRpkdZp6D-duzyVRLv5+PURb3Nu69njJx_33D-2aYS4DjmsoQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] pinctrl: stm32: Introduce HDP driver
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
+Date: Wed, 21 May 2025 00:42:01 +0200
+X-Gm-Features: AX0GCFsxq2qbIdoCh-TtdqObwj9pvVqees80rU3HdDEUCMiHs8dNAK0ZulTRIX8
+Message-ID: <CACRpkdYor2+rCZGsZLw=_Wna=0KnyXBaVtx-VahmN6Ky-zZ-Dg@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mediatek: eint: Fix invalid pointer
+ dereference for v1 platforms
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Hao Chang <ot_chhao.chang@mediatek.com>, Qingliang Li <qingliang.li@mediatek.com>, 
+	kernel@collabora.com, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Chen-Yu Tsai <wenst@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Cl=C3=A9ment,
+On Tue, May 20, 2025 at 11:16=E2=80=AFPM N=C3=ADcolas F. R. A. Prado
+<nfraprado@collabora.com> wrote:
 
-thanks for your patch!
-
-On Tue, May 20, 2025 at 5:04=E2=80=AFPM Cl=C3=A9ment Le Goffic
-<clement.legoffic@foss.st.com> wrote:
-
-> This patch introduce the driver for the Hardware Debug Port available on
-> STM32MP platforms. The HDP allows the observation of internal SoC
-> signals by using multiplexers. Each HDP port can provide up to 16
-> internal signals (one of them can be software controlled as a GPO).
+> Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
+> addresses") introduced an access to the 'soc' field of struct
+> mtk_pinctrl in mtk_eint_do_init() and for that an include of
+> pinctrl-mtk-common-v2.h.
 >
-> Signed-off-by: Cl=C3=A9ment Le Goffic <clement.legoffic@foss.st.com>
+> However, pinctrl drivers relying on the v1 common driver include
+> pinctrl-mtk-common.h instead, which provides another definition of
+> struct mtk_pinctrl that does not contain an 'soc' field.
+>
+> Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
+> will now try to dereference an invalid pointer when called on v1
+> platforms. This has been observed on Genio 350 EVK (MT8365), which
+> crashes very early in boot (the kernel trace can only be seen with
+> earlycon).
+>
+> In order to fix this, since 'struct mtk_pinctrl' was only needed to get
+> a 'struct mtk_eint_pin', make 'struct mtk_eint_pin' a parameter
+> of mtk_eint_do_init() so that callers need to supply it, removing
+> mtk_eint_do_init()'s dependency on any particular 'struct mtk_pinctrl'.
+>
+> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple ad=
+dresses")
+> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@colla=
+bora.com>
+> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
 
-(...)
-> +static int stm32_hdp_gpio_get_direction(struct gpio_chip *gc, unsigned i=
-nt offset)
-> +{
-> +       return GPIO_LINE_DIRECTION_OUT;
-> +}
+Patch applied for v6.16.
 
-That's reasonable.
-
-> +static int stm32_hdp_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +       struct stm32_hdp *hdp =3D gpiochip_get_data(gc);
-> +
-> +       if (((hdp->mux_conf & HDP_MUX_MASK(offset))) =3D=3D HDP_MUX_GPOVA=
-L(offset))
-> +               return !!(readl_relaxed(hdp->base + HDP_GPOVAL) & BIT(off=
-set));
-> +       else
-> +               return !!(readl_relaxed(hdp->base + HDP_VAL) & BIT(offset=
-));
-> +}
-
-...but you still make it possible to read the value of the line
-if it's not muxed as GPO?
-
-Should it not stm32_hdp_gpio_get_direction() return
-GPIO_LINE_DIRECTION_IN if HDP_MUX_MASK(offset))) !=3D HDP_MUX_GPOVAL(offset=
-)?
-
-> +static void stm32_hdp_gpio_set(struct gpio_chip *gc, unsigned int offset=
-, int value)
-> +{
-> +       struct stm32_hdp *hdp =3D gpiochip_get_data(gc);
-> +
-> +       if (value)
-> +               writel_relaxed(BIT(offset), hdp->base + HDP_GPOSET);
-> +       else
-> +               writel_relaxed(BIT(offset), hdp->base + HDP_GPOCLR);
-> +}
-
-Can't you just use GPIO_GENERIC for this?
-
-bgpio_init(gc, dev, ARRAY_SIZE(stm32_hdp_pins), // =3D=3D 8
-    hdp->base + HDP_VAL,
-    hdp->base + HDP_GPOSET,
-    hdp->base + HDP_GPOCLR,
-    NULL,
-    NULL,
-    0);
-
-The default behaviour of GPIO MMIO is to read the output register
-for the value if the line is in output mode.
-
-You may wanna override the .get_direction() callback after bgpio_init()
-and before registering the chip, either with what you have or what
-I described above.
+If it is needed for v6.15- then I think at this point it will need to
+be backported to stable. It also does not apply cleanly on Torvald's
+tree, just on my devel branch.
 
 Yours,
 Linus Walleij
