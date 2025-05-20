@@ -1,55 +1,56 @@
-Return-Path: <linux-gpio+bounces-20332-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20333-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3779FABD308
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 11:15:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BE57ABD59E
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 12:55:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 154151BA349C
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 09:15:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE578177402
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 10:55:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97937267B90;
-	Tue, 20 May 2025 09:15:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13331272E64;
+	Tue, 20 May 2025 10:55:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SVPwpdjE"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="f5OtOc+h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB551D63FC;
-	Tue, 20 May 2025 09:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4DD270EC3;
+	Tue, 20 May 2025 10:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732520; cv=none; b=KTL45qUossgdZkkN/jZSxf68jRpsBMzpWEtq+ZWQeIboHryohveGsafiBQauzB698RdyELqUznI88AsszV6X/yiTPqVetiE46EwYEAt+I5WuJhAeQexsHG1bXpRAdiEYILwfkghnOX7aLnl3GTWcqCI0moyum/cDfULUPeF1ZSg=
+	t=1747738518; cv=none; b=YlPyy3IBJ+IbxeU8pajVq71j+Hi8NFqKoo0Emli3uEiFuENiAEYenX6dGq8ZC9Ym0S5+xnAoIb2+BsdW5snsLNoazHaO6iB6r8+6Cq+lu6kdx5hoXhinxyPYFQ/Gko13PgsuGRXvGqsgCMgrmbK/rQFTHdvRihT5HEzw8OHHMcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732520; c=relaxed/simple;
-	bh=YOACIVFpfOzkfuJOEv7U1awZi32i31XSCqitokq/3Js=;
+	s=arc-20240116; t=1747738518; c=relaxed/simple;
+	bh=Gc0wZ+bMJbD1feOCIgrzdzp2vokFyfBnADbbUlrcFdQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ORpB9LeC6a6UexaUslZZWLbearh1qru5gJgYQUOF63a2Vk024jscImru8tLR+JTdJfuF99Ik9RUr2xXGDRUr1r+AvGHV4GKPII4uokdpzZFgvcOI6dLAVyZaZN8SLzFYUi+rmdpQz9t/wYegKGl6eeOvFeUbEVlbwULofJjqZHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SVPwpdjE; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747732514;
-	bh=YOACIVFpfOzkfuJOEv7U1awZi32i31XSCqitokq/3Js=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SVPwpdjEA4jgrbChMjQZi+PNrzVL35YcfMnLrMjiiLRzz7thakSS8XAQUS8hVRZrG
-	 +qmGZzYz3i8n2LnIjyh2jIkgiahW2HHL8nMzU6/4EIMqOqvs48qLsy15Z+Iz4wn+zB
-	 gV1OoGVNojLGrKA1ycn6U/p1ep07r813PaZLwtLzDNOKScPC7umFGbcfnG/6tyg33k
-	 JKFkQ7XeUpo6bINTAfJLOid22gMX/KiOFDOndwL+8NxxG2fDO1FExzNo1MYmp4XNo7
-	 hwh/9koFpwGA3drEI/cFy8bjX7+hpf+gCWVF0nznxJbi+zxSiA99OYJ7G43ls3lEei
-	 8aLwtdkvWxyHw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C4E5617E0E89;
-	Tue, 20 May 2025 11:15:13 +0200 (CEST)
-Message-ID: <2f7dffb0-cddd-44c5-a205-30dbc13f9891@collabora.com>
-Date: Tue, 20 May 2025 11:15:13 +0200
+	 In-Reply-To:Content-Type; b=jjWqiOx6VfBLAczXj0hsSAHGXEkl1Z8BOimMPFsBg20a5vz66fzhpEf8GFJ5sb1nyqvAsojWyODB2SxoAxvImaEG5+FH2CNLXWqBzAjsqpzjYj2S1c8f+R2P93zJ0DUk9KDU8oIIuZWlxSidFscfHFssAGS8LHmrEWk1DcG8rho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=f5OtOc+h; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1747738492; x=1748343292; i=wahrenst@gmx.net;
+	bh=TT2xkWfmRv0GSyyjB8NHPoKAs97BDlbBMy3S8w3PonU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=f5OtOc+hn1NjVYTN+ZPwGD2Qy/qnFTYq14Ld6LmqvIIQK5nDltkEg7zrL8AAhlQt
+	 JKnRLbANzffZRjaSCQaSa0tyjdkba703usKpOuUecBHXBurPuPymcay1bpV0RtQzE
+	 UVR53BcwfU/kx2sbKCPmOXy3k1dbBeENVJHvbd74vO6/mSj21Y56FWMg05Mm+6fe+
+	 P2XYFV9wRAiVn6zX07tpXc6ehjqv5so99Y6MioH7YaGEAuIkjz7xg3zMiRYz1OQM/
+	 tQGIV5fo9VhqyyodCcEDFiqQQej2vcTcx0MU13EjLLi21YJ5sd9XttFhhIil0vlYk
+	 WuDD9Mv3mvn+oZNhkA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.105] ([91.41.216.208]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRTRH-1ucPhm3Cwn-00O2G5; Tue, 20
+ May 2025 12:54:51 +0200
+Message-ID: <f0017caf-8fd7-4046-ab7c-71c6560b7a95@gmx.net>
+Date: Tue, 20 May 2025 12:54:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,101 +58,196 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: mediatek: eint: Fix invalid pointer dereference
- for v1 platforms
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Hao Chang <ot_chhao.chang@mediatek.com>,
- Qingliang Li <qingliang.li@mediatek.com>
-Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Chen-Yu Tsai <wenst@chromium.org>
-References: <20250519-genio-350-eint-null-ptr-deref-fix-v1-1-07445d6d22c3@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v3 2/3] ARM: dts: add ngpios for vf610 compatible gpio
+ controllers
+To: Haibo Chen <haibo.chen@nxp.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, peng.fan@nxp.com, conor@kernel.org,
+ Frank Li <Frank.Li@nxp.com>
+References: <20250520-gpio-dts-v3-0-04771c6cf325@nxp.com>
+ <20250520-gpio-dts-v3-2-04771c6cf325@nxp.com>
 Content-Language: en-US
-In-Reply-To: <20250519-genio-350-eint-null-ptr-deref-fix-v1-1-07445d6d22c3@collabora.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20250520-gpio-dts-v3-2-04771c6cf325@nxp.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xrkl7NJAqZnlTaTEnX/cpkGwTW+zKvSKuh/hDiAPK7+MOCaf2yi
+ 1LSOS8uyvmobKOQO4SbcnnT2r6QgfpWyxp+PllMX8Oh98+98AMlHVGYF8t37PPv/twH0Yhb
+ aYpgIdqZw0RWW50rnjO87u6w/9vC4NDNMH1cxFFq/HynPB+bN1dKvao5Q28BVKNO4KgKzvo
+ ZFSgwTWU9lIullCEOTZNw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ssFXhHaeEuM=;Gx4eRypxVFkb9GRqF9fl4ZVUEQu
+ 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
+ 1XEpMxhRDAL0s2dT
 
-Il 19/05/25 21:38, Nícolas F. R. A. Prado ha scritto:
-> Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
-> addresses") introduced an access to the 'soc' field of struct
-> mtk_pinctrl in mtk_eint_do_init() and for that an include of
-> pinctrl-mtk-common-v2.h.
-> 
-> However, pinctrl drivers relying on the v1 common driver include
-> pinctrl-mtk-common.h instead, which provides another definition of
-> struct mtk_pinctrl that does not contain an 'soc' field.
-> 
-> Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
-> will now try to dereference an invalid pointer when called on v1
-> platforms. This has been observed on Genio 350 EVK (MT8365), which
-> crashes very early in boot (the kernel trace can only be seen with
-> earlycon).
-> 
-> In order to fix this, given that this if code block is only relevant for
-> platforms with multiple EINT bases, and the previous if block already
-> handles the single base case, add an else statement so this if condition
-> will never even be evaluated on platforms with a single EINT base, which
-> covers all v1 platforms following commit fe412e3a6c97 ("pinctrl:
-> mediatek: common-v1: Fix EINT breakage on older controllers").
-> 
-> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Hi,
 
-I say that this is going to backfire next time.
+Am 20.05.25 um 05:46 schrieb Haibo Chen:
+> After commit da5dd31efd24 ("gpio: vf610: Switch to gpio-mmio"),
+> the vf610 GPIO driver no longer uses the static number 32 for
+> gc->ngpio. This allows users to configure the number of GPIOs
+> per port.
+>
+> And some gpio controllers did have less pads. So add 'ngpios' here,
+> this can save some memory when request bitmap, and also show user
+> more accurate information when use gpio tools.
+sorry for asking this dumb question: why do we need the redundant ngpio=20
+property in case there is already gpio-ranges defined? AFAIU the last=20
+cell already contains the necessary information. Or do I missed something?
 
-I would rather propose, instead....
-
-int mtk_eint_do_init(struct mtk_eint *eint, const struct mtk_eint_pin *eint_pin)
-{
-	...
-
-	[if (or) else if] (eint_pin) {
-		eint->pins = eint_pin;
-		... etc
-	}
-}
-
-...so that we avoid having this issue about referencing two different structures
-called with the same name (which is bad from the principle anyway), and no more
-mistakes around that in the future.
-
-This also means that we can remove the inclusion of pinctrl-mtk-common-v2.h from
-the mtk-eint.c file, as that's the right thing to do: eint should be standalone
-and should not depend on ambiguous definitions from pinctrl-mtk-common(-v2).h.
-
-Cheers,
-Angelo
-
+Best regards
+>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 > ---
->   drivers/pinctrl/mediatek/mtk-eint.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> index 16af6a47028e67bb53db4041a37ebbbb8b9a1e43..9114e0cd9def1bc65558c67317abe67ba63ef1f6 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -531,9 +531,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->   			eint->pins[i].index = i;
->   			eint->pins[i].debounce = (i < eint->hw->db_cnt) ? 1 : 0;
->   		}
-> -	}
-> -
-> -	if (hw && hw->soc && hw->soc->eint_pin) {
-> +	} else if (hw && hw->soc && hw->soc->eint_pin) {
->   		eint->pins = hw->soc->eint_pin;
->   		for (i = 0; i < eint->hw->ap_num; i++) {
->   			inst = eint->pins[i].instance;
-> 
-> ---
-> base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
-> change-id: 20250519-genio-350-eint-null-ptr-deref-fix-1a163aa9ad84
-> 
-> Best regards,
-
+>   arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi | 4 ++++
+>   arch/arm/boot/dts/nxp/vf/vfxxx.dtsi    | 5 +++++
+>   2 files changed, 9 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi b/arch/arm/boot/dts/=
+nxp/imx/imx7ulp.dtsi
+> index 3c6ef7bfba60986b797bb01b843830d364c96d45..880b9a4f32b0846a773dbf9a=
+d30715c84ac2fda6 100644
+> --- a/arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi
+> +++ b/arch/arm/boot/dts/nxp/imx/imx7ulp.dtsi
+> @@ -399,6 +399,7 @@ gpio_ptc: gpio@40ae0000 {
+>   				 <&pcc3 IMX7ULP_CLK_PCTLC>;
+>   			clock-names =3D "gpio", "port";
+>   			gpio-ranges =3D <&iomuxc1 0 0 20>;
+> +			ngpios =3D <20>;
+>   		};
+>  =20
+>   		gpio_ptd: gpio@40af0000 {
+> @@ -413,6 +414,7 @@ gpio_ptd: gpio@40af0000 {
+>   				 <&pcc3 IMX7ULP_CLK_PCTLD>;
+>   			clock-names =3D "gpio", "port";
+>   			gpio-ranges =3D <&iomuxc1 0 32 12>;
+> +			ngpios =3D <12>;
+>   		};
+>  =20
+>   		gpio_pte: gpio@40b00000 {
+> @@ -427,6 +429,7 @@ gpio_pte: gpio@40b00000 {
+>   				 <&pcc3 IMX7ULP_CLK_PCTLE>;
+>   			clock-names =3D "gpio", "port";
+>   			gpio-ranges =3D <&iomuxc1 0 64 16>;
+> +			ngpios =3D <16>;
+>   		};
+>  =20
+>   		gpio_ptf: gpio@40b10000 {
+> @@ -441,6 +444,7 @@ gpio_ptf: gpio@40b10000 {
+>   				 <&pcc3 IMX7ULP_CLK_PCTLF>;
+>   			clock-names =3D "gpio", "port";
+>   			gpio-ranges =3D <&iomuxc1 0 96 20>;
+> +			ngpios =3D <20>;
+>   		};
+>   	};
+>  =20
+> diff --git a/arch/arm/boot/dts/nxp/vf/vfxxx.dtsi b/arch/arm/boot/dts/nxp=
+/vf/vfxxx.dtsi
+> index 597f20be82f1ee044e14bfaf3bd05cff37a8ad39..a275821c35d41e97eb2139a0=
+81ef5765d07672aa 100644
+> --- a/arch/arm/boot/dts/nxp/vf/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/nxp/vf/vfxxx.dtsi
+> @@ -318,6 +318,7 @@ gpio0: gpio@40049000 {
+>   				interrupt-controller;
+>   				#interrupt-cells =3D <2>;
+>   				gpio-ranges =3D <&iomuxc 0 0 32>;
+> +				ngpios =3D <32>;
+>   			};
+>  =20
+>   			gpio1: gpio@4004a000 {
+> @@ -329,6 +330,7 @@ gpio1: gpio@4004a000 {
+>   				interrupt-controller;
+>   				#interrupt-cells =3D <2>;
+>   				gpio-ranges =3D <&iomuxc 0 32 32>;
+> +				ngpios =3D <32>;
+>   			};
+>  =20
+>   			gpio2: gpio@4004b000 {
+> @@ -340,6 +342,7 @@ gpio2: gpio@4004b000 {
+>   				interrupt-controller;
+>   				#interrupt-cells =3D <2>;
+>   				gpio-ranges =3D <&iomuxc 0 64 32>;
+> +				ngpios =3D <32>;
+>   			};
+>  =20
+>   			gpio3: gpio@4004c000 {
+> @@ -351,6 +354,7 @@ gpio3: gpio@4004c000 {
+>   				interrupt-controller;
+>   				#interrupt-cells =3D <2>;
+>   				gpio-ranges =3D <&iomuxc 0 96 32>;
+> +				ngpios =3D <32>;
+>   			};
+>  =20
+>   			gpio4: gpio@4004d000 {
+> @@ -362,6 +366,7 @@ gpio4: gpio@4004d000 {
+>   				interrupt-controller;
+>   				#interrupt-cells =3D <2>;
+>   				gpio-ranges =3D <&iomuxc 0 128 7>;
+> +				ngpios =3D <7>;
+>   			};
+>  =20
+>   			anatop: anatop@40050000 {
+>
 
 
