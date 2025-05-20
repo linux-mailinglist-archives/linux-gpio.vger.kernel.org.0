@@ -1,54 +1,54 @@
-Return-Path: <linux-gpio+bounces-20340-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20343-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FA04ABD96A
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 15:30:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD26FABD967
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 15:30:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 832E0175FDC
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 13:29:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF94E8C1A7A
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 May 2025 13:29:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 622F9245032;
-	Tue, 20 May 2025 13:28:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2427E246773;
+	Tue, 20 May 2025 13:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kBMdva8l"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Hm9LDvUN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CA2242D7D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F44242D8C;
 	Tue, 20 May 2025 13:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747747736; cv=none; b=S3W0ZRQCjo69VY2aqkYpt7591rnY+PnUEIb7sJprTFsi0ZA5vTjuaNB/Gt4c6SnzUWLbruOM3m0M3y4dm8uuIKA7X+WwQ7TkNqDaBPYRfVMm3DdZeUxg6Ar8yxDixjk48qlc9yYP+PcmE3HiqKGLJDJkjTZtfAEBdt+Bp5+NOx8=
+	t=1747747736; cv=none; b=aIngGCkaVodqV2HyKN6phCG4+yP1OLPYaOI1cx0gfsK/IVht36qICYbL0d+crz1k06LQ5WK3Y3p2qdA/3+aw9JLLTTlsu+xROnFhxqP8VQXlHx3ELyRONw6onSPuJ9E3wI2uLO7w5qiJWlbnVVvhgVVDnpEk05sbvqlZCUb7IyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747747736; c=relaxed/simple;
-	bh=ueBDR8GgdfVn0bozqSfFaWsKfsPU3jywT/DmcxE60LE=;
+	bh=nCAKnSASnpn+6Ho/EYarjD1cfMrmPMLqLqaztpN0k+Q=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IoCIY8Nm9DHVXN50RcsWf0KcgwrUxcGAyjuCHlj8y4HOuVl/zVbwhkRV/pzOWvs/+MQxu56PMTY0U5FZowjv6XVl03dipB8aytl651SkAHSqx7JQt2LLiTc4H160UIuNK/9eO7XQzw4NkZDgPsxSCQ5thrMn2Go1lw2kg0zJnLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kBMdva8l; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=Hwc0tEenAqpeMT6z7DBOLQCz8V11cXl+H0aPTqZj3nKNRVjuTXmwRzMuFdpRbdPwiMwLMiOCCr3KLYMf0jqpgvbTrQq8h5uzI1QUQ62qNwL5ZEonKFoMyPoRwJ3scdz2Ii9YRYjmFE+lLzd1rDsKhW8ae71pWJjaF7G5kvzEhPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Hm9LDvUN; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 63C7443B58;
-	Tue, 20 May 2025 13:28:45 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2289143B57;
+	Tue, 20 May 2025 13:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	t=1747747726;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=krAelrpNDrBYMCWLpXCND+FOfaRARJpzubfAqth4n7A=;
-	b=kBMdva8lAL6DbphdFPKYHRhRMQ+JWMSWxrSevuYU6hsMCHrM3WVp5/nDovy3sSllGNJLYx
-	kckkL7RavKPz4of8V5R8U9XX4EuKwtSiaRy3nWkFdNzM0Ad8IJeyjOUNSpYTyCpnTdepoC
-	Xg5qQ+pnJXNnxkfKZHJj4REQNZOJ3Su1yDnUURnUitWA2aVcyOZGCBahN/DBxyXOtMCVZz
-	pVKX+IONMzlQOF/lF+offz1u/GdTcD90N8rkhsoDO0wBN7/lUZFfXCnybAN6EoOcq0afzD
-	x/9gvWVlSS0mQrn4FQ41WD5I4l2EKhR5gs7krUCYxbiazm3spIlCdqXIiqNDLA==
+	bh=xyMefgQ0mbE+hBBY4Y1ke8A5E10K93xV2YGEkCqM1go=;
+	b=Hm9LDvUNbQ3SLxcAz8AWba7z8n0fXpA1iASM3y/i1oMQvMCAsXZ0M3hlglXGPhJtsqLHuN
+	+22g0zC5X88XlpDSOChzXEL+ZrHPmXElnUnyyBuqfSeE7eJj3KfIlnUgMx57HisDC9/SQQ
+	Xnai2DfueGFeSd1azwNNJMlyrYr6y5XcsQTrMtmQy1Fu9Iz219gzRvvDpi8G+BliyH+c6S
+	eFE6Xr6GLLNilpl5YzfFz+cl6vwIFOQTjW0Tl5CK8sKx9aWnUm542NNmQ5YaYZH4xw9uuC
+	SAA7ECioP+EFsAzOng8GKO280mtWAtBNSDiQ4noz9baPWLfzEv3aaJpEMKn4Mw==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 20 May 2025 15:28:28 +0200
-Subject: [PATCH v6 04/12] gpio: aggregator: move GPIO forwarder allocation
- in a dedicated function
+Date: Tue, 20 May 2025 15:28:29 +0200
+Subject: [PATCH v6 05/12] gpio: aggregator: refactor the code to add GPIO
+ desc in the forwarder
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-4-dcb3756be3c6@bootlin.com>
+Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-5-dcb3756be3c6@bootlin.com>
 References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -76,95 +76,116 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffecutefuodetggdotefrodf
  ghpthhtohepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopefirghrhighrghnghesrggrvghonhdrtghomhdrthifpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
 X-GND-Sasl: thomas.richard@bootlin.com
 
-Move the GPIO forwarder allocation and static initialization in a dedicated
-function.
+Create a dedicated function to add a GPIO desc in the forwarder. Instead of
+saving a GPIO descs array pointer, now the GPIO descs are passed one by one
+to the forwarder which registers them in its own array. So after the call
+of gpiochip_fwd_create(), the passed array can be free.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/gpio/gpio-aggregator.c | 50 +++++++++++++++++++++++++++---------------
- 1 file changed, 32 insertions(+), 18 deletions(-)
+ drivers/gpio/gpio-aggregator.c | 59 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 40 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index d232ea865356..754680fd810f 100644
+index 754680fd810f..ed3fb6abec09 100644
 --- a/drivers/gpio/gpio-aggregator.c
 +++ b/drivers/gpio/gpio-aggregator.c
-@@ -498,6 +498,35 @@ static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *c
- }
- #endif	/* !CONFIG_OF_GPIO */
+@@ -508,6 +508,10 @@ devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
+ 	if (!fwd)
+ 		return ERR_PTR(-ENOMEM);
  
-+static struct gpiochip_fwd *
-+devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
-+{
-+	struct gpiochip_fwd *fwd;
-+	struct gpio_chip *chip;
-+
-+	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)), GFP_KERNEL);
-+	if (!fwd)
++	fwd->descs = devm_kcalloc(dev, ngpios, sizeof(*fwd->descs), GFP_KERNEL);
++	if (!fwd->descs)
 +		return ERR_PTR(-ENOMEM);
 +
-+	chip = &fwd->chip;
+ 	chip = &fwd->chip;
+ 
+ 	chip->label = dev_name(dev);
+@@ -527,13 +531,43 @@ devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
+ 	return fwd;
+ }
+ 
++static int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd,
++				 struct gpio_desc *desc,
++				 unsigned int offset)
++{
++	struct gpio_chip *parent = gpiod_to_chip(desc);
++	struct gpio_chip *chip = &fwd->chip;
 +
-+	chip->label = dev_name(dev);
-+	chip->parent = dev;
-+	chip->owner = THIS_MODULE;
-+	chip->get_direction = gpio_fwd_get_direction;
-+	chip->direction_input = gpio_fwd_direction_input;
-+	chip->direction_output = gpio_fwd_direction_output;
-+	chip->get = gpio_fwd_get;
-+	chip->get_multiple = gpio_fwd_get_multiple_locked;
-+	chip->set_rv = gpio_fwd_set;
-+	chip->set_multiple_rv = gpio_fwd_set_multiple_locked;
-+	chip->to_irq = gpio_fwd_to_irq;
-+	chip->base = -1;
-+	chip->ngpio = ngpios;
++	if (offset > chip->ngpio)
++		return -EINVAL;
 +
-+	return fwd;
++	/*
++	 * If any of the GPIO lines are sleeping, then the entire forwarder
++	 * will be sleeping.
++	 * If any of the chips support .set_config(), then the forwarder will
++	 * support setting configs.
++	 */
++	if (gpiod_cansleep(desc))
++		chip->can_sleep = true;
++
++	if (parent && parent->set_config)
++		chip->set_config = gpio_fwd_set_config;
++
++	fwd->descs[offset] = desc;
++
++	dev_dbg(chip->parent, "%u => gpio %d irq %d\n", offset,
++		desc_to_gpio(desc), gpiod_to_irq(desc));
++
++	return 0;
 +}
 +
  /**
   * gpiochip_fwd_create() - Create a new GPIO forwarder
   * @dev: Parent device pointer
-@@ -518,16 +547,14 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 						struct gpio_desc *descs[],
- 						unsigned long features)
- {
--	const char *label = dev_name(dev);
- 	struct gpiochip_fwd *fwd;
- 	struct gpio_chip *chip;
- 	unsigned int i;
- 	int error;
- 
--	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
--			   GFP_KERNEL);
--	if (!fwd)
--		return ERR_PTR(-ENOMEM);
-+	fwd = devm_gpiochip_fwd_alloc(dev, ngpios);
-+	if (IS_ERR(fwd))
-+		return fwd;
+  * @ngpios: Number of GPIOs in the forwarder.
+  * @descs: Array containing the GPIO descriptors to forward to.
+- *         This array must contain @ngpios entries, and must not be deallocated
+- *         before the forwarder has been destroyed again.
++ *         This array must contain @ngpios entries, and can be deallocated
++ *         as the forwarder has its own array.
+  * @features: Bitwise ORed features as defined with FWD_FEATURE_*.
+  *
+  * This function creates a new gpiochip, which forwards all GPIO operations to
+@@ -558,26 +592,12 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
  
  	chip = &fwd->chip;
  
-@@ -549,19 +576,6 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 			chip->set_config = gpio_fwd_set_config;
+-	/*
+-	 * If any of the GPIO lines are sleeping, then the entire forwarder
+-	 * will be sleeping.
+-	 * If any of the chips support .set_config(), then the forwarder will
+-	 * support setting configs.
+-	 */
+ 	for (i = 0; i < ngpios; i++) {
+-		struct gpio_chip *parent = gpiod_to_chip(descs[i]);
+-
+-		dev_dbg(dev, "%u => gpio %d irq %d\n", i,
+-			desc_to_gpio(descs[i]), gpiod_to_irq(descs[i]));
+-
+-		if (gpiod_cansleep(descs[i]))
+-			chip->can_sleep = true;
+-		if (parent && parent->set_config)
+-			chip->set_config = gpio_fwd_set_config;
++		error = gpiochip_fwd_desc_add(fwd, descs[i], i);
++		if (error)
++			return ERR_PTR(error);
  	}
  
--	chip->label = label;
--	chip->parent = dev;
--	chip->owner = THIS_MODULE;
--	chip->get_direction = gpio_fwd_get_direction;
--	chip->direction_input = gpio_fwd_direction_input;
--	chip->direction_output = gpio_fwd_direction_output;
--	chip->get = gpio_fwd_get;
--	chip->get_multiple = gpio_fwd_get_multiple_locked;
--	chip->set_rv = gpio_fwd_set;
--	chip->set_multiple_rv = gpio_fwd_set_multiple_locked;
--	chip->to_irq = gpio_fwd_to_irq;
--	chip->base = -1;
--	chip->ngpio = ngpios;
- 	fwd->descs = descs;
- 
+-	fwd->descs = descs;
+-
  	if (chip->can_sleep)
+ 		mutex_init(&fwd->mlock);
+ 	else
+@@ -629,6 +649,7 @@ static int gpio_aggregator_probe(struct platform_device *pdev)
+ 		return PTR_ERR(fwd);
+ 
+ 	platform_set_drvdata(pdev, fwd);
++	devm_kfree(dev, descs);
+ 	return 0;
+ }
+ 
 
 -- 
 2.39.5
