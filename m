@@ -1,53 +1,52 @@
-Return-Path: <linux-gpio+bounces-20382-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20380-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F58DABEA4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 05:20:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29AA3ABEA4C
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 05:20:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BC028A1574
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 03:19:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6774C1B61940
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 03:20:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D00322DF95;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 970BF22DA0E;
 	Wed, 21 May 2025 03:19:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/mxn9y3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8U69ETY"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC661B0F20;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC06BA36;
 	Wed, 21 May 2025 03:19:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747797598; cv=none; b=p41N0pu7Wbt/OgIZSaaNCuWO5OyvLwgYwZT+DvwClzFYHvUNeTpjllz1ojxygbifxIeOTA6/Dufmjq52IuaIsOiVIRIADdiU7IRoWWh7dG2NxSBqNwPLaUx9G8tM/FcZ31ifKt36mr/KoCiwsUu0W1GLp6C5wiGRldQLKaDsGcc=
+	t=1747797598; cv=none; b=WQHUjBJ0vIGCjhM0wyCm9Ocboj0sAxb6rsRmsI+814uh4NUhKBhLAcB6Dk+3kX/LZ76mOKuM0XcS/AILmzY5m56yaNwqsi3nDeVAZVAz/aN35oOSVWEEUz4jHNoe1BcQu57n+f92KNvA6l41ggaxsYPH7Io2CCP0zqcqB33t0i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747797598; c=relaxed/simple;
-	bh=RhXaG6D10XuprrM2uwXZ+yryGaiW6qQjUHpNKKnNco4=;
+	bh=urScH87aRUYYRU4uMH/UcgcwqDXNvfnULC466CYiu1A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e3Cp6hzOVeu0n4ilfIxQH+gxV1hQxfuYyIkjut8X8uLQrKlczBmOYgXq1Kr5pkIDtoWpsXxzhV49LEbbSCdAlymyzvf/goelpPGrXBv2QCMTdtAta23BM92geU3IuWUh5Nw3ocM81YxsPvhLjxMf9uF8pLB9iD+mW9apSjiqQoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/mxn9y3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DBE2FC4CEF1;
+	 In-Reply-To:To:Cc; b=St7LnqoV9LaztUAmRzoZW30KNr6pJk4fwt1Hxkh9pFQobIDeNTdujnz6qZigYquWfUU6ZKkM9DSOpvsNWWEkPl4QivAHlfIsg81icnxWM0fL1DDlGX1uIEOO8cpXlsYHJ0NOyAOfaoJLaT+FZqeLFyksqwvTzHNiG9cvTCZjasA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8U69ETY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E8A88C4CEF3;
 	Wed, 21 May 2025 03:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747797597;
-	bh=RhXaG6D10XuprrM2uwXZ+yryGaiW6qQjUHpNKKnNco4=;
+	s=k20201202; t=1747797598;
+	bh=urScH87aRUYYRU4uMH/UcgcwqDXNvfnULC466CYiu1A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=P/mxn9y3r77ow1mNlUSj58ovqamNsESg8/Kevrn2cE2msAxBmALMWBXuaymV9ZwA/
-	 QK9lRD7CVZPyQuyF/huvjxhJeXEmh7kuiFH3Te3AUNtPXKy6fPdYjKd/J+AWzs/0KM
-	 MGD+NJacFRwt8MLAbf4/RVJQnZBBDNGG6vQIJpsysctVyT1QEF8ZyZZyrkQet5ZyPb
-	 Ci9sYgFKXC4uCnl2H8avb/FLzcHgOcnxftg+uiCLxI/gZ42qW+7gKlMg/GblE8BNhL
-	 eKx1ApWyO/Lx6WgI6j/XrWYJivQpDCvcQETF951Oku+tr+x6ue5s2upvV0P6si31W5
-	 hD/s9qm3UtDoQ==
+	b=U8U69ETYhCgpd/7xhhjYmm8NwvdXgy+CAK9MhNtZD6qGE97BjA8XblYcuWq1XhReZ
+	 KaBPn47XEl368VuF4STArQwOSMgk4effgpJ3Qva433ElHV3esM6cyL85csvXQl3xcY
+	 5gHioKfhrl/r1cn8H4uoaP3E3g1N9VEGl9XL/WlYcf/gexDDbJgQ86DcBOBGMK9yIs
+	 q81a9arOPqFxsnM7ykfccjngF761oSsD6ldvn/tuAdZTMrc0VrIDTwfX8f7uFJJu4a
+	 FIscGGuE+jv+AIlBZh6AjKEX36oCGklU2nX0nO3ZSs2Vo3kYXoABu/qwxPOqA6PSlE
+	 l7YL1PuWECqow==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DFEC54E90;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE33DC2D0CD;
 	Wed, 21 May 2025 03:19:57 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Wed, 21 May 2025 11:19:57 +0800
-Subject: [PATCH v2 3/8] dt-bindings: pinctl: amlogic,pinctrl-a4: Add
- compatible string for S6
+Date: Wed, 21 May 2025 11:19:58 +0800
+Subject: [PATCH v2 4/8] pinctrl: meson: a4: remove special data processing
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250521-s6-s7-pinctrl-v2-3-0ce5e3728404@amlogic.com>
+Message-Id: <20250521-s6-s7-pinctrl-v2-4-0ce5e3728404@amlogic.com>
 References: <20250521-s6-s7-pinctrl-v2-0-0ce5e3728404@amlogic.com>
 In-Reply-To: <20250521-s6-s7-pinctrl-v2-0-0ce5e3728404@amlogic.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -70,11 +69,11 @@ Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, 
  Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747797595; l=777;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747797595; l=1982;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=SGs48wURMjraERop2ENTKoLj76g7oJ3ublU0QekYvzE=;
- b=Qt5nX5BPUxyZHj1gFAIs7uDZ/upCK3i0jkdHqry6mRyIScoOtknKTKFy2qmuUdObrWo4G+b+E
- 4/UadHNq18uCcwbXtuXngUoIpK2bJz7DhYfBM/RAYjertkKpB3WUVBV
+ bh=FRMEmxN5zjpQVQOxtUKSm3GQm/lC+q2P8YsijCrDdRM=;
+ b=BnUKwq9rFXD1xM0UERW/kxg0uFOop/YPcCnUe/9W5BaSlFuIliZYLkIBEsUp33Ekw0SpcHRNL
+ 6PVxLZTla9/B/3TM2VXV73w0ISjrM18REAbx66iqdQx8TP3YxfETe1G
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -84,25 +83,72 @@ Reply-To: xianwei.zhao@amlogic.com
 
 From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Update dt-binding document for pinctrl of Amlogic S6 SoC.
+According to the data specifications of Amlogic's existing SoCs,
+the function register offset and the bit offset are the same
+value among various chips. Therefore, general processing can
+be carried out without the need for private data modification.
+Drop special data processing.
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 33 +++---------------------------
+ 1 file changed, 3 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-index 96a7c5646c13..61a4685f9748 100644
---- a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-@@ -17,6 +17,7 @@ properties:
-     oneOf:
-       - enum:
-           - amlogic,pinctrl-a4
-+          - amlogic,pinctrl-s6
-           - amlogic,pinctrl-s7
-       - items:
-           - enum:
+diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+index a76f266b4b94..90d4d10ca10b 100644
+--- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
++++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+@@ -50,15 +50,8 @@ struct aml_pio_control {
+ 	u32 bit_offset[AML_NUM_REG];
+ };
+ 
+-struct aml_reg_bit {
+-	u32 bank_id;
+-	u32 reg_offs[AML_NUM_REG];
+-	u32 bit_offs[AML_NUM_REG];
+-};
+-
+ struct aml_pctl_data {
+ 	unsigned int number;
+-	struct aml_reg_bit rb_offs[];
+ };
+ 
+ struct aml_pmx_func {
+@@ -843,31 +836,11 @@ static const struct gpio_chip aml_gpio_template = {
+ static void init_bank_register_bit(struct aml_pinctrl *info,
+ 				   struct aml_gpio_bank *bank)
+ {
+-	const struct aml_pctl_data *data = info->data;
+-	const struct aml_reg_bit *aml_rb;
+-	bool def_offs = true;
+ 	int i;
+ 
+-	if (data) {
+-		for (i = 0; i < data->number; i++) {
+-			aml_rb = &data->rb_offs[i];
+-			if (bank->bank_id == aml_rb->bank_id) {
+-				def_offs = false;
+-				break;
+-			}
+-		}
+-	}
+-
+-	if (def_offs) {
+-		for (i = 0; i < AML_NUM_REG; i++) {
+-			bank->pc.reg_offset[i] = aml_def_regoffs[i];
+-			bank->pc.bit_offset[i] = 0;
+-		}
+-	} else {
+-		for (i = 0; i < AML_NUM_REG; i++) {
+-			bank->pc.reg_offset[i] = aml_rb->reg_offs[i];
+-			bank->pc.bit_offset[i] = aml_rb->bit_offs[i];
+-		}
++	for (i = 0; i < AML_NUM_REG; i++) {
++		bank->pc.reg_offset[i] = aml_def_regoffs[i];
++		bank->pc.bit_offset[i] = 0;
+ 	}
+ }
+ 
 
 -- 
 2.37.1
