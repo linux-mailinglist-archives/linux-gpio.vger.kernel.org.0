@@ -1,168 +1,173 @@
-Return-Path: <linux-gpio+bounces-20414-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B2BAABF03D
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 11:42:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46CBFABF082
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 11:53:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2008C171AE9
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 09:42:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A498B3A965D
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 09:52:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D193125393D;
-	Wed, 21 May 2025 09:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08EA5259CAE;
+	Wed, 21 May 2025 09:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fpmYmNzk"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="BkFXkMX3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B09623506E
-	for <linux-gpio@vger.kernel.org>; Wed, 21 May 2025 09:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6492367D4;
+	Wed, 21 May 2025 09:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820549; cv=none; b=kGlWfgdYVS1k+PlP5cCM5t6fnxhnFTircodtF7OBNtAU94JbQh6R5nRm6TkdlJL9lTTYdxV+vdUKH8gBgrtCE96kmZIDjbGsiMkKJnVmjgaiKMDee3Bqz3yOqUDTJXxGti4ePJkfM3v2Ab0cDUTOOH5pvB0EKM5qNEdYpt3g7VQ=
+	t=1747821176; cv=none; b=JD5uw5ZWdAQhZde/6Kok4RJE7cANECpBanaGA5xesAuuKEWBG7FahSNw9edzerGdF/r2pYP1FXTkZGm+DNQVmSFe2aMDu0oe2KvgiuKlJRCDhmA6jS78MkKDtx4Tln/rgLYO5eb+bLeoUGO/V6Bm79Ts4oAIXyUJi3wlOKHcLcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820549; c=relaxed/simple;
-	bh=liQNIRFnZ03NjSzs9BkHVZcd5if+lO0YZ2c1Vi0Sapw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mUyxNzAwnpbomIIz6mqpzgGZvm3cc7IrRCr0mZWImW0k/zwNOmTocJXstk0+y0zF0JqPVK8ywSi6MNNizOAOUxuUDmxcI3yqqXIqYy95qe+Gl7DFu6uQI4f2cc45DFzpwWfpMRVlE8W3AxRVXs7rmVhTWPNsTZCTIndJjhe/syA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fpmYmNzk; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747820548; x=1779356548;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=liQNIRFnZ03NjSzs9BkHVZcd5if+lO0YZ2c1Vi0Sapw=;
-  b=fpmYmNzknnsYJlWvZIF1A/Nobd+okmPedWMzMIF/PM2JZzdvd1WrHkpB
-   xQ00aihOs71PFWPfAmKFfQYXxtKH/nziO594xphBOC78txCLLlRlalEpT
-   u6ll4cSZHLO2DmoNT+lugOXdYSn850ypoprurztI14+zVU/ffvcGn36Ot
-   tKAmfD6hMRE0DVDUO7ADUr2kxczFG/1tOaefTsjDaQDzdHub67V1k0aaA
-   1Et/NqVTig+T1H57HG7kStxUZrhto4FFbfay8lFfEQLAL+68Lzw5PB1VV
-   aSi/k3fM9xhfA3jkk5llFRLKZDoxPHSPwklFUKdM5j/J7Xj4hOjyPcEFw
-   g==;
-X-CSE-ConnectionGUID: 7nydsJyLSRe9OaynGTL+yQ==
-X-CSE-MsgGUID: s90SJ4TfRCCTTyR1+UpFGQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="37411002"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="37411002"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 02:42:27 -0700
-X-CSE-ConnectionGUID: NoeErKcNQYWdGpdtW1jOBQ==
-X-CSE-MsgGUID: 5kGXsfBhTVyUbHjl77KOUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="139894445"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP; 21 May 2025 02:42:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D8E0E368; Wed, 21 May 2025 12:42:24 +0300 (EEST)
-Date: Wed, 21 May 2025 12:42:24 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linux GPIO <linux-gpio@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 6.16-1 (take 2)
-Message-ID: <aC2gABILEj1yRCxF@black.fi.intel.com>
+	s=arc-20240116; t=1747821176; c=relaxed/simple;
+	bh=s+OJJh6wEUSG2CbJb4VTBrTFAe2fTwvbV/JtwgKXfzo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rXXtsGlmUEcLqldxK6xI0nO+dGV6C+y/xHCv3pWwGPdnCNpUcd/gBjvu8inEFmB4t9CdzEZefPey15fD/tgHuUMNxoqsb9PwHuUoCRFiq3KYAxTUxlZHjb9u44UPiLvzqS0m4dsqBe78QsMRq/8+L2mMtSSzse3SpvBYvPpZCZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=BkFXkMX3; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L8WjP4012800;
+	Wed, 21 May 2025 11:52:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	OHCrVLLAGlouvcMb1tlHih+m6bTWke9YqMBcp1oO9Vk=; b=BkFXkMX3H7zyFr2c
+	MHSey3reiprVN7T5LDv3bR145OYKa3jLTzqo6ZvVVG0MOCQfX9xz9Truk0PRXnIZ
+	PVpBQFkKBA5SdRd1GRC0esDMHsHJaY+5divF1lcfn5u31ygADHmFlwQf9a7QljDt
+	8PAWIi5OHHuMTewIp/LFRr8vsGKSu+f5gxeyY3WypE6sjvKRgC3d8t2fV24hz1Om
+	h2rKVlpD81IjyL5pgJoTiQsK44nA2S9BBIN0Pxv1X7yljLUSerjndCAxcMPcD9F+
+	e7+RDbpF++ZyEl8es1kMy9w6TFj7GsI7UKhT/Jv7pValL+DykGrCRuO++OGn27SE
+	Dz5Igw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46rwfabc0j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 11:52:40 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EA0E74004B;
+	Wed, 21 May 2025 11:51:36 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 486ECAA8652;
+	Wed, 21 May 2025 11:49:49 +0200 (CEST)
+Received: from [10.48.81.67] (10.48.81.67) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 May
+ 2025 11:49:48 +0200
+Message-ID: <94795d0c-0c73-41eb-ada6-9a01b2ac5892@foss.st.com>
+Date: Wed, 21 May 2025 11:49:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/8] pinctrl: stm32: Introduce HDP driver
+To: Linus Walleij <linus.walleij@linaro.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
+ <20250520-hdp-upstream-v2-2-53f6b8b5ffc8@foss.st.com>
+ <CACRpkdZp6D-duzyVRLv5+PURb3Nu69njJx_33D-2aYS4DjmsoQ@mail.gmail.com>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <CACRpkdZp6D-duzyVRLv5+PURb3Nu69njJx_33D-2aYS4DjmsoQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_03,2025-05-20_03,2025-03-28_01
 
-Hi Linux GPIO  maintainers,
+On 5/21/25 00:34, Linus Walleij wrote:
+> Hi Clément,
+> 
+> thanks for your patch!
+> 
+> On Tue, May 20, 2025 at 5:04 PM Clément Le Goffic
+> <clement.legoffic@foss.st.com> wrote:
+> 
+>> This patch introduce the driver for the Hardware Debug Port available on
+>> STM32MP platforms. The HDP allows the observation of internal SoC
+>> signals by using multiplexers. Each HDP port can provide up to 16
+>> internal signals (one of them can be software controlled as a GPO).
+>>
+>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> 
+> (...)
+>> +static int stm32_hdp_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+>> +{
+>> +       return GPIO_LINE_DIRECTION_OUT;
+>> +}
+> 
+> That's reasonable.
+> 
+>> +static int stm32_hdp_gpio_get(struct gpio_chip *gc, unsigned int offset)
+>> +{
+>> +       struct stm32_hdp *hdp = gpiochip_get_data(gc);
+>> +
+>> +       if (((hdp->mux_conf & HDP_MUX_MASK(offset))) == HDP_MUX_GPOVAL(offset))
+>> +               return !!(readl_relaxed(hdp->base + HDP_GPOVAL) & BIT(offset));
+>> +       else
+>> +               return !!(readl_relaxed(hdp->base + HDP_VAL) & BIT(offset));
+>> +}
+> 
+> ...but you still make it possible to read the value of the line
+> if it's not muxed as GPO?
+> 
+> Should it not stm32_hdp_gpio_get_direction() return
+> GPIO_LINE_DIRECTION_IN if HDP_MUX_MASK(offset))) != HDP_MUX_GPOVAL(offset)?
 
-The GPIO ACPI code rework is in this PR. The patches are in Linux Next
-for at least a few days. However, one regression was reported and fixed
-immediately, which becomes the last patch in the PR. It wasn't in Linux Next
-since there was no Linux Next on this week. Nonetheless, Randy Dunlap tested
-it independently, that's why I include it into PR (without this the checkpatch
-and make htmldocs warn).
+Hi, oops, you're right !
 
-Please, pull for v6.16-rc1.
+> 
+>> +static void stm32_hdp_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+>> +{
+>> +       struct stm32_hdp *hdp = gpiochip_get_data(gc);
+>> +
+>> +       if (value)
+>> +               writel_relaxed(BIT(offset), hdp->base + HDP_GPOSET);
+>> +       else
+>> +               writel_relaxed(BIT(offset), hdp->base + HDP_GPOCLR);
+>> +}
+> 
+> Can't you just use GPIO_GENERIC for this?
+> 
+> bgpio_init(gc, dev, ARRAY_SIZE(stm32_hdp_pins), // == 8
+>      hdp->base + HDP_VAL,
+>      hdp->base + HDP_GPOSET,
+>      hdp->base + HDP_GPOCLR,
+>      NULL,
+>      NULL,
+>      0);
+> 
+> The default behaviour of GPIO MMIO is to read the output register
+> for the value if the line is in output mode.
+> 
+> You may wanna override the .get_direction() callback after bgpio_init()
+> and before registering the chip, either with what you have or what
+> I described above.
 
-Thanks,
+I didn't know about it, I'll take a look and provide a V3.
 
-With Best Regards,
-Andy Shevchenko
+Thank you,
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+Clément
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.16-1
-
-for you to fetch changes up to ec0c0aab15243bbc6140a7cedd01e2dd9ad19878:
-
-  gpiolib-acpi: Update file references in the Documentation and MAINTAINERS (2025-05-21 12:25:24 +0300)
-
-----------------------------------------------------------------
-intel-gpio for v6.16-1
-
-* Split GPIO ACPI quirks to its own file
-* Refactored GPIO ACPI library to shrink the code
-
-The following is an automated git shortlog grouped by driver:
-
-gpiolib:
- -  acpi: Update file references in the Documentation and MAINTAINERS
- -  acpi: Move quirks to a separate file
- -  acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
- -  acpi: Handle deferred list via new API
- -  acpi: Make sure we fill struct acpi_gpio_info
- -  acpi: Switch to use enum in acpi_gpio_in_ignore_list()
- -  acpi: Use temporary variable for struct acpi_gpio_info
- -  acpi: Deduplicate some code in __acpi_find_gpio()
- -  acpi: Reuse struct acpi_gpio_params in struct acpi_gpio_lookup
- -  acpi: Rename par to params for better readability
- -  acpi: Reduce memory footprint for struct acpi_gpio_params
- -  acpi: Remove index parameter from acpi_gpio_property_lookup()
- -  acpi: Improve struct acpi_gpio_info memory footprint
-
-----------------------------------------------------------------
-Andy Shevchenko (16):
-      gpiolib: acpi: Improve struct acpi_gpio_info memory footprint
-      gpiolib: acpi: Remove index parameter from acpi_gpio_property_lookup()
-      gpiolib: acpi: Reduce memory footprint for struct acpi_gpio_params
-      gpiolib: acpi: Rename par to params for better readability
-      gpiolib: acpi: Reuse struct acpi_gpio_params in struct acpi_gpio_lookup
-      gpiolib: acpi: Deduplicate some code in __acpi_find_gpio()
-      Merge patch series "gpiolib: acpi: Refactor to shrink the code by ~8%"
-      gpiolib: acpi: Use temporary variable for struct acpi_gpio_info
-      gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
-      gpiolib: acpi: Make sure we fill struct acpi_gpio_info
-      gpiolib: acpi: Handle deferred list via new API
-      Merge patch series "gpiolib: acpi: Fix missing info filling"
-      gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
-      gpiolib: acpi: Move quirks to a separate file
-      Merge patch series "gpiolib: acpi: Split quirks to its own file"
-      gpiolib-acpi: Update file references in the Documentation and MAINTAINERS
-
- Documentation/driver-api/gpio/index.rst            |   2 +-
- .../translations/zh_CN/driver-api/gpio/index.rst   |   2 +-
- MAINTAINERS                                        |   2 +-
- drivers/gpio/Makefile                              |   1 +
- .../gpio/{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 522 ++++-----------------
- drivers/gpio/gpiolib-acpi-quirks.c                 | 363 ++++++++++++++
- drivers/gpio/gpiolib-acpi.h                        |  15 +
- drivers/platform/x86/intel/int0002_vgpio.c         |   2 +-
- include/linux/gpio/consumer.h                      |   2 +-
- 9 files changed, 486 insertions(+), 425 deletions(-)
- rename drivers/gpio/{gpiolib-acpi.c => gpiolib-acpi-core.c} (72%)
- create mode 100644 drivers/gpio/gpiolib-acpi-quirks.c
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> Yours,
+> Linus Walleij
 
 
