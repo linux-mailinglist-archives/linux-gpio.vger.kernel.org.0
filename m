@@ -1,141 +1,170 @@
-Return-Path: <linux-gpio+bounces-20445-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20446-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D9CBABF55B
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 15:04:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C76EABF6A0
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 15:53:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FE2E7A9A2A
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 13:02:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D66017064D
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 13:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FDE27CCDC;
-	Wed, 21 May 2025 13:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80FD714F117;
+	Wed, 21 May 2025 13:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fHj4L4Xr"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="R62vDqmr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735A0274FC4;
-	Wed, 21 May 2025 13:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B9014658D;
+	Wed, 21 May 2025 13:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832589; cv=none; b=FGa3zn7SfuxgRbEuy2jREUQZJtHYXQTliRCgCTJAcIZVj1QblMRtXt/UA0Ra3Q0cvZOH76CWz3fOMLpmgBweTkn3dyNQpfIY7yvoRmWGOA+cL5G/eO+pN2PKswDA+UfxfbyiO+K+C6leQE5RHnlVGJ1Ickj8EzzG6FC2SMxT5TU=
+	t=1747835603; cv=none; b=g65PDSo118E2Kya5zQ1h05dHPiqiGu1anm/P28d45qLktQgsv2KVedQ4YZkekducmqjPJd/nFa3h7XqhL+jl4FN2sfQiXErohMnA879Pin2w2yoY6no6qaseyy65wVkLwfMiCG8LSCNudJ5546Z+VMGt7nHkAmAxvuxK9tMBHYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832589; c=relaxed/simple;
-	bh=WyPLnEXhfwySw2iAcKwtYQ66R/7RyIN9OzOf04gSfBI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eUAHX6wk+RCUGfK6RcvBny6joH65vrkZrL3+5ITyq5KU4clGdQO2tUqoTufwWCR9dqe4vh5wSoJ11m364yyeHCdbKI2fwfghT/pKmSK/kPgah/saJ7d0dWNLg/6We1fncR++FDxriOUFgsd+7m3J5T3U5otapt3WBigdHgY+A7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fHj4L4Xr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 53FACC4AF09;
-	Wed, 21 May 2025 13:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747832589;
-	bh=WyPLnEXhfwySw2iAcKwtYQ66R/7RyIN9OzOf04gSfBI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fHj4L4XruTxkntKZF88lbdx4NNePuNPcFEyezGzJTqUZxB04TV3xHVWt7qnVLytaw
-	 t8bepzDo68ZWcBlbiqJVfxOKUV8vftJ9rEGSpd9FoATp6ccIFAr0jGnnK6lh1GNh+a
-	 RDXliaHijHZtrL2mDX0x+YQaQk86tTq1Z59ms3GAjNNmuQ1sadBuu8Td0xQ1BYSdmI
-	 LAx0Qpcc9L/e3/kiWVxAFURIe0sEUj1KUCgj2/ni7xFMf+tFoC+tAmyTJr9M9K4KsQ
-	 yfkPvXZfy9tPBQi9OuyvtXHMbSKhcrHa8BBBodT/gdB9uUfn6zIBeNLNlZXja3tHkE
-	 k219ng8mPa9jA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5B2C54ED1;
-	Wed, 21 May 2025 13:03:09 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Wed, 21 May 2025 14:03:10 +0100
-Subject: [PATCH v4 20/20] mfd: adp5585: add support for a reset pin
+	s=arc-20240116; t=1747835603; c=relaxed/simple;
+	bh=hutYu+1ngX5Dt7IvfZMnK5eZXB31NtkXbIx/qn2SlPc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ECMomfSiu7T7yZgUK1Iq/HRNaGj1ZK0+zHFkEZYkYAN+TYLK1UkvcmTphMu9fJAImtIp5m3bst0AGkgv8VP4IUla+ifcmIELkcF95gzcAUZ9qh9IYcjO/jf+gFvuXAA2aB9hpX1Lq2C6RxgocuEYd8RaXhqYb+OwVYcPCRRTH3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=R62vDqmr; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747835592;
+	bh=hutYu+1ngX5Dt7IvfZMnK5eZXB31NtkXbIx/qn2SlPc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R62vDqmrOkMKkmZxrNQeM1WnDBjhH9iGq2aBoELIjuvSW21xQwdOdspMpv9vY2XBn
+	 xMlTG2M8DraIIaaBwmThC672MJYyytmXLcyGxoikKpfi0QhJ/6rui18W1vJblW50FZ
+	 Qvugdm/jtNygoUE6njUoSB8FUMkXPHGwlo2TY0LUCgIxbFvz9g5QuTVcnZyxqjizJK
+	 jSYBMy1xNX5g3uVv+p32u8fn2hGZ+fEy2YM9se/iUTd310tASWUhD8cbWjw9qYoTI9
+	 r55n5ABClwoAHRSHB6p/swieW20LjJDQrxiXAsTc9Hnq5o7h2YeNtuoKIq0aVigBQc
+	 207PIFL9zBhrg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2AD2E17E02BE;
+	Wed, 21 May 2025 15:53:12 +0200 (CEST)
+Message-ID: <557a5182-4843-4925-953e-09e3b1e41f0c@collabora.com>
+Date: Wed, 21 May 2025 15:53:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pinctrl: mediatek: eint: Fix invalid pointer
+ dereference for v1 platforms
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Hao Chang <ot_chhao.chang@mediatek.com>,
+ Qingliang Li <qingliang.li@mediatek.com>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Chen-Yu Tsai <wenst@chromium.org>
+References: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250521-dev-adp5589-fw-v4-20-f2c988d7a7a0@analog.com>
-References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
-In-Reply-To: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
-To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Liu Ying <victor.liu@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747832589; l=1494;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=I4VY/9poNwSdsVpeDT0XePKG84hzWFHXfJYt/VQ2EfE=;
- b=iDmMo7mYgRVbEt/4lrsZft+aWe1qmLukm9dxMxpSmBAJKDxwURfT6WY2KJGBCpqgAwuDXSIUB
- B9j1Nl1EBbZDbNVjYg5XQ9lRQYuxF3kSUriUFm/hlJ1Ua2WugZM1VFq
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
 
-From: Nuno Sá <nuno.sa@analog.com>
+Il 20/05/25 23:15, Nícolas F. R. A. Prado ha scritto:
+> Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
+> addresses") introduced an access to the 'soc' field of struct
+> mtk_pinctrl in mtk_eint_do_init() and for that an include of
+> pinctrl-mtk-common-v2.h.
+> 
+> However, pinctrl drivers relying on the v1 common driver include
+> pinctrl-mtk-common.h instead, which provides another definition of
+> struct mtk_pinctrl that does not contain an 'soc' field.
+> 
+> Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
+> will now try to dereference an invalid pointer when called on v1
+> platforms. This has been observed on Genio 350 EVK (MT8365), which
+> crashes very early in boot (the kernel trace can only be seen with
+> earlycon).
+> 
+> In order to fix this, since 'struct mtk_pinctrl' was only needed to get
+> a 'struct mtk_eint_pin', make 'struct mtk_eint_pin' a parameter
+> of mtk_eint_do_init() so that callers need to supply it, removing
+> mtk_eint_do_init()'s dependency on any particular 'struct mtk_pinctrl'.
+> 
+> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
+> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+> Changes in v2:
+> - Completely changed approach to make mtk_eint_pin a parameter of
+>    mtk_eint_do_init() as suggested by Angelo
+> - Link to v1: https://lore.kernel.org/r/20250519-genio-350-eint-null-ptr-deref-fix-v1-1-07445d6d22c3@collabora.com
+> ---
+>   drivers/pinctrl/mediatek/mtk-eint.c              | 26 ++++++++++--------------
+>   drivers/pinctrl/mediatek/mtk-eint.h              |  5 +++--
+>   drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |  2 +-
+>   drivers/pinctrl/mediatek/pinctrl-mtk-common.c    |  2 +-
+>   4 files changed, 16 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+> index 16af6a47028e67bb53db4041a37ebbbb8b9a1e43..d906a5e4101fb10968035fc48e9cf4a444d063a9 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> @@ -22,7 +22,6 @@
+>   #include <linux/platform_device.h>
+>   
+>   #include "mtk-eint.h"
+> -#include "pinctrl-mtk-common-v2.h"
+>   
+>   #define MTK_EINT_EDGE_SENSITIVE           0
+>   #define MTK_EINT_LEVEL_SENSITIVE          1
+> @@ -505,10 +504,9 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
+>   }
+>   EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
+>   
+> -int mtk_eint_do_init(struct mtk_eint *eint)
+> +int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
+>   {
+>   	unsigned int size, i, port, virq, inst = 0;
+> -	struct mtk_pinctrl *hw = (struct mtk_pinctrl *)eint->pctl;
+>   
+>   	/* If clients don't assign a specific regs, let's use generic one */
+>   	if (!eint->regs)
+> @@ -519,7 +517,15 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+>   	if (!eint->base_pin_num)
+>   		return -ENOMEM;
+>   
+> -	if (eint->nbase == 1) {
 
-Make sure to perform an Hardware reset during probe  if the pin is given
-in FW.
+Okay, dropping the nbase == 1 is sane, but that statement was actually documenting
+the fact that *eint_pin is used only for multi-base EINT case, so please add those
+comments:
 
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
----
- drivers/mfd/adp5585.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> +	if (eint_pin) {
 
-diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-index e8b9a0ef4ee654ac1abc4042152fe0933f1d9f0d..164da0b804c4fce4e3af1ac0c2813020a77f4938 100644
---- a/drivers/mfd/adp5585.c
-+++ b/drivers/mfd/adp5585.c
-@@ -12,6 +12,7 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/mfd/adp5585.h>
- #include <linux/mfd/core.h>
- #include <linux/mod_devicetable.h>
-@@ -697,6 +698,7 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
- {
- 	struct regmap_config regmap_config;
- 	struct adp5585_dev *adp5585;
-+	struct gpio_desc *gpio;
- 	unsigned int id;
- 	int ret;
- 
-@@ -718,6 +720,20 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
- 	if (ret)
- 		return ret;
- 
-+	gpio = devm_gpiod_get_optional(&i2c->dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpio))
-+		return PTR_ERR(gpio);
-+
-+	/*
-+	 * Note the timings are not documented anywhere in the DS. They are just
-+	 * reasonable values that work.
-+	 */
-+	if (gpio) {
-+		fsleep(30);
-+		gpiod_set_value_cansleep(gpio, 0);
-+		fsleep(60);
-+	}
-+
- 	adp5585->regmap = devm_regmap_init_i2c(i2c, &regmap_config);
- 	if (IS_ERR(adp5585->regmap))
- 		return dev_err_probe(&i2c->dev, PTR_ERR(adp5585->regmap),
+		/* EINT with multiple bases */
 
--- 
-2.49.0
+> +		eint->pins = eint_pin;
+> +		for (i = 0; i < eint->hw->ap_num; i++) {
+> +			inst = eint->pins[i].instance;
+> +			if (inst >= eint->nbase)
+> +				continue;
+> +			eint->base_pin_num[inst]++;
+> +		}
+> +	} else {
 
+		/* Single base EINT */
+
+...after which:
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+Thanks for fixing this!
 
 
