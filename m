@@ -1,191 +1,133 @@
-Return-Path: <linux-gpio+bounces-20449-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20450-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3FFFABF981
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 17:35:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BE08ABFAB3
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 18:05:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 531F7168047
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 15:34:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8535A1891286
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 May 2025 16:00:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06F47221291;
-	Wed, 21 May 2025 15:33:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662FA21D3CA;
+	Wed, 21 May 2025 15:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MEQ5S6Ze"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Vz/X0YFA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C641EA7C6;
-	Wed, 21 May 2025 15:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3525421422B
+	for <linux-gpio@vger.kernel.org>; Wed, 21 May 2025 15:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841587; cv=none; b=mny5YhJw4JZoMiNkpyIqSe+Kyg/4mPOqN7gjfE30sTGAyud5M+qHVgo347hf5lR7V+d1Srfh8fGb9U/bkzseMo1b+BCOj/UoLPOAv9xQAbZWQsSohYSw89ZLivYxxAgzx1tp4enL/YgcuePCLxZNWAstCDb7hjMraQ4j1rhfoos=
+	t=1747842692; cv=none; b=rGxX7Sf1m4YQCp3JRgXqhEBFkoJyNgLGvIWZ2CGtNTefS977MNZhJOST2rNCCaFpS/rK89H3sTJ99+g8GcKuHkfAaMrtq7yQCfMIJmWm8ee0bpTQaNnz/C0cUZzrkUI6m42cD0rcFxvxSLMX0qC5Sp5kAhBMm9VnRHdqMSoGRgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841587; c=relaxed/simple;
-	bh=GW8fSJtIIcQfrlBHzwFuPMtHkQZy1wmn2vANi12FPSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nZmAsV+X8XTCDgjF5NbDWF4nHe0ifxI2RonJdIJy0p9jVom8RAljKGfbhfz9btKQi9Iisyq4wRgJN+zL12cjH/Daxx8QpGRBaSmvLyxr0lTloPU0kXbka3fQxo0UpfCHCKgnOgO9s+iV5B2GXOl9kUpVPGJk3LgylW034dgykiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MEQ5S6Ze; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747841586; x=1779377586;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GW8fSJtIIcQfrlBHzwFuPMtHkQZy1wmn2vANi12FPSw=;
-  b=MEQ5S6ZeVrA9ikBXytNAwjRI/oEFpM61UO9N79vPumUHKs8Fcabc1Tf9
-   8Strvm2ulOuyU8B0+ompKRPTARZkdihw2kWsIahLB80uhG87qB8BPoSGx
-   82REDkb7jqijcieHjl+1fyv+3XeYa9zzUqEI1kf6Rr4UDUPq+C61cOuvy
-   HYT33HSi/D/io1jX/8oTd/3Nto+qP+S8OP/OS6Yd2Zcp7u8rlUX9whMlg
-   0K2vDiIEgAGAZvwKj6gtV4umyVnjWqYLmNT8DRrM/Uoqr4cMKMYE4f1G6
-   qZrkibiaQpc9uzH4G68/4rJmsSVbuGJWK3zcaTy84ae8uCFrPG25qNUYS
-   A==;
-X-CSE-ConnectionGUID: /NlwuTENTMyvUoQTCQk15g==
-X-CSE-MsgGUID: jYIgMtlCTIyhaiPH9tW3Ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72345621"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="72345621"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:33:04 -0700
-X-CSE-ConnectionGUID: /0j+tz1wRYKNB1/qh7Axyg==
-X-CSE-MsgGUID: osH+72QJRYGme7yAqVUxjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="141046554"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:33:00 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uHlRB-00000003fEh-41bz;
-	Wed, 21 May 2025 18:32:57 +0300
-Date: Wed, 21 May 2025 18:32:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
+	s=arc-20240116; t=1747842692; c=relaxed/simple;
+	bh=eiAaBv74i/CT4/xN4zsTzuWn2wgfVrrhiK3KxXjzMyI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ing5Y8F3jsrHBpT6D/58z1EzIuPRWhSJ4w0g2MRks/BsnA+ZfuFlYSZ1/CNIiVuybqc10Cc7FGnz7YYxwrSS7+IZyWYwVCAkuakEBeKcYe/J2DnpxSmuIaOj+58r8NAG13UiMcV2W+gQ1hw8iVo0WdaO/sVsP80DISp9GHozKOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Vz/X0YFA; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so78950135e9.2
+        for <linux-gpio@vger.kernel.org>; Wed, 21 May 2025 08:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747842687; x=1748447487; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ALPXDBC4VOnQSYjOJhu8mMUA1ahkHYVduSlJiXRjoA0=;
+        b=Vz/X0YFA38kM3Te963deqxknMXrC/VK3KEcq+vZAVDG9boXKvUqlLLMT/HzpAZ2NfT
+         hjDUY6153XRPOeRiQfBV4o6xPxkN/M/bUft4X/j1pgSLhgiKkm2guZGiwwKR2hayq3vH
+         7v3qujJorr+cmxoq6/s01+BBvJlxWre5buBsGJyuvXOTuUYPgotdX7kH5xqoSEJ+HXSI
+         6/rCnqS05PpHCYHw2YZY1XVOF5thUd49clsgIMiIpVqno/wcHaVOzilFtVXwaeVH4uTC
+         ekrM3Lxb+qHLTA3OWBEP3wYgmyLXeGkpuHMp8d/hL597kLX75zSRiDs7yZ9CrK0OZ5RA
+         RzIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747842687; x=1748447487;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ALPXDBC4VOnQSYjOJhu8mMUA1ahkHYVduSlJiXRjoA0=;
+        b=UWVv3CUygqC2Kc+z9OCVInyayTnQuyvV4VpEmdkRAhhyK5HXzoOyw6mEPX8a5YCFrE
+         dOrCiJJ8JeGA1sX5HycRhF8gXkNT7Ml5qwJLnr39wWoOV6wxfxQPkbwpN/iQSSjBE5UW
+         lLOWqenNaY+LzAMtplgYI6i2Wtfl3HnxjLWUOiJXg7VKCLT7wB7e6tVKc425o6WdiKFV
+         aanILJb4TwGktcOvvGGAmRr/yUS0D2Y7F1e1Xzq653kyhsnMgUP5Pn97I6mVLGEBvXxz
+         F8pFp+be6WYgD0tekdEeysDwcNmCS9DlifqulDz/pBkvAVTPdljzIkge/XjGZLOcjhHq
+         TeFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUulXNSgL+yWd8psaVzy0+szDRzydyhCd1WwENeQygJT/8tOX9eRvtZ7kAlDWiRtkitFg/vBcE30gIH@vger.kernel.org
+X-Gm-Message-State: AOJu0YweAejXaPhCl+NEZO2InRZShSauZa/tj87gd7aHcX8qhU0NGjwN
+	ifazqxEY2c0eW3s2hWx0eWgcqmHA5XcQTB/Mtuggarws2KriH4hMNTp2J3QcKE8vYDo=
+X-Gm-Gg: ASbGncu8j0g+MNCyMPwP9g0rtVfzya94sZkBNoGzhaSj6AC6cTjDzB5C45ayFQxUKeV
+	hX+1MicnH2XKjBzb6p0N5aK1k1fQY+tcTciMdulbOHNjeKLsUHdl6z4mhFru5DmYQHksqzdqg3x
+	sKRWMNq2Wj1KhiJcixBFxCdZckFFvbgQY+1SvYMO5ztrkrX0Y8ivYUjamBFoACpt566sgiMa266
+	bZ6YPiS0syOR7WiMX+5Szm6xhd3RvPHcZvkdjKoAoI8XRrQipr1fPMLexGRzDHgba5WbAkmeOnm
+	HJj3FttFgujLq1GvcABjS23vFTyV0Xu6chPIBNuxT+8bH6rnLzXv
+X-Google-Smtp-Source: AGHT+IEqZ+pvs2qnbXKikjx3bqPhev0Cos2vwclP7j26sP/JdZ5sUoTbb2O4Vt1gGh0WRqouqxSmSw==
+X-Received: by 2002:a05:600c:3b94:b0:43c:f63c:babb with SMTP id 5b1f17b1804b1-442fd60a517mr194344195e9.1.1747842687246;
+        Wed, 21 May 2025 08:51:27 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b545:3055:5b24:d6c3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f38145eesm72488205e9.26.2025.05.21.08.51.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 08:51:26 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Stefan Agner <stefan@agner.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6 12/12] pinctrl: Add pin controller driver for AAEON UP
- boards
-Message-ID: <aC3yKaCNZA8H2KPt@smile.fi.intel.com>
-References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
- <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
+	Haibo Chen <haibo.chen@nxp.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	peng.fan@nxp.com,
+	wahrenst@gmx.net,
+	conor@kernel.org,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: (subset) [PATCH v3 0/3] Add 'ngpios' and 'gpio-reserved-ranges' for vf610-gpio driver
+Date: Wed, 21 May 2025 17:51:25 +0200
+Message-ID: <174784268330.124259.6614015290533617892.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250520-gpio-dts-v3-0-04771c6cf325@nxp.com>
+References: <20250520-gpio-dts-v3-0-04771c6cf325@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 03:28:36PM +0200, Thomas Richard wrote:
-> This enables the pin control support of the onboard FPGA on AAEON UP
-> boards.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Tue, 20 May 2025 11:46:11 +0800, Haibo Chen wrote:
+> Not all GPIO ports have 32 pads, so add 'ngpios' property to specify
+> the number. This can save some memory when alloc bitmap for GPIO,
+> besides GPIO tools like gpioinfo will show the correct information.
 > 
-> This FPGA acts as a level shifter between the Intel SoC pins and the pin
-> header, and also as a mux or switch.
+> Some GPIO ports even more special, e.g. GPIO7 on imx94, it only support
+> IO0~IO9 and IO16~IO27, so add 'gpio-reserved-ranges' property.
 > 
-> +---------+          +--------------+             +---+
->           |          |              |             |   |
->           | PWM0     |       \      |             | H |
->           |----------|------  \-----|-------------| E |
->           | I2C0_SDA |              |             | A |
-> Intel SoC |----------|------\       |             | D |
->           | GPIO0    |       \------|-------------| E |
->           |----------|------        |             | R |
->           |          |     FPGA     |             |   |
-> ----------+          +--------------+             +---+
-> 
-> For most of the pins, the FPGA opens/closes a switch to enable/disable
-> the access to the SoC pin from a pin header.
-> Each switch, has a direction flag that is set depending the status of the
-> SoC pin.
-> 
-> For some other pins, the FPGA acts as a mux, and routes one pin (or the
-> other one) to the header.
-> 
-> The driver also provides a GPIO chip. It requests SoC pins in GPIO mode,
-> and drives them in tandem with FPGA pins (switch/mux direction).
-> 
-> This commit adds support only for UP Squared board.
+> [...]
 
-...
+Applied, thanks!
 
-> +static int upboard_pinctrl_pin_get_mode(struct pinctrl_dev *pctldev, unsigned int pin)
-> +{
-> +	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +	struct upboard_pin *p = &pctrl->pins[pin];
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	if (p->funcbit) {
-> +		ret = regmap_field_read(p->funcbit, &val);
-> +		if (ret)
-> +			return ret;
-> +		if (val)
-> +			return UPBOARD_PIN_MODE_FUNCTION;
-> +	}
-> +
-> +	ret = regmap_field_read(p->enbit, &val);
-> +	if (ret)
-> +		return ret;
-> +	if (!val)
-> +		return UPBOARD_PIN_MODE_DISABLED;
-> +
-> +	ret = regmap_field_read(p->dirbit, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return val ? UPBOARD_PIN_MODE_GPIO_IN : UPBOARD_PIN_MODE_GPIO_OUT;
-> +}
-> +
-> +static void upboard_pinctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-> +				     unsigned int offset)
-> +{
-> +	int ret;
-> +
-> +	ret = upboard_pinctrl_pin_get_mode(pctldev, offset);
-> +	if (ret == UPBOARD_PIN_MODE_FUNCTION)
-> +		seq_puts(s, "mode function ");
-> +	else if (ret == UPBOARD_PIN_MODE_DISABLED)
-> +		seq_puts(s, "HIGH-Z ");
+[1/3] dt-bindings: gpio: vf610: add ngpios and gpio-reserved-ranges
+      https://git.kernel.org/brgl/linux/c/4e9d73034196ac8ab496bb47583197b36ba13327
 
-> +	else
-> +		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
-
-Actually this should be
-
-	else if (ret < 0)
-		seq_printf(s, "N/A "); // or similar text
-	else
-		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
-
-as the above may return a negative error code which is not listed here.
-
-> +}
-
-With the above being addressed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-...
-
-Thanks for doing this driver, eventually we will have it working
-out-of-the-box. Do you have any plans for enabling HSI and SIM card
-slot on UP Squared 7000?
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
