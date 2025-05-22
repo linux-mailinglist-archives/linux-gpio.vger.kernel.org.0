@@ -1,130 +1,133 @@
-Return-Path: <linux-gpio+bounces-20461-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20462-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08B3DAC074A
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 May 2025 10:39:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DE84AC0813
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 May 2025 11:00:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3597D3A512D
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 May 2025 08:39:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9983D1BC5064
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 May 2025 09:00:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 657B626A0BD;
-	Thu, 22 May 2025 08:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF5F7286899;
+	Thu, 22 May 2025 08:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rR5McHqp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7/ESCQo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D14F26B94F
-	for <linux-gpio@vger.kernel.org>; Thu, 22 May 2025 08:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584A2281531;
+	Thu, 22 May 2025 08:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903158; cv=none; b=cuhttIsc3QceMtvTpI16PaH8RrMetQi3Syqvcx+zkFGIsGQmW1qJ9c/PscdO6Ls6MuoQaGeA1VNMQyz7cdlGJ/X3SVEyKzm1bpWkHlSVZE9t7cMWz7VG4y/3xXkKQy46pUT3FTG5LkmpjHFMqNGroPnijVShV2l8zYoPBWIen+k=
+	t=1747904353; cv=none; b=eE1JDRLzi7cZYjJj8sbOXxOwBnjU1gGiL4fu/nEPF7O+UQA5kB6TyWIgWk5KGav99sKc4Jo4VMM+VBhU2VSgYUNHQlxr7BM7gzWKNNyhRCMTF4Ae6lemEqtWW8ve5dJmUqWiEdTXIcgYI1YwfcJ0/o4Eq990IsrYo8n0CLWaVtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903158; c=relaxed/simple;
-	bh=tznesHqeZytUQBxsCKufL4tsD5eNcOjqiXA4b3qJMvg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=C58ZpX8eL6k5I/QBEqujfkPWAulhO3t+7Ja5Ba/CVe4d/BRO6mwRrWnEx3xhkQxS+I90RMtE+6Didz/y6QTB/P2Bh5e14c9u790NWkca4lArD4VG1xxGTy/bmxC+Dq/xL1hsA9NjxIGKeRr3zsGplVy0t7nWMXkiKojsC0wKulo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rR5McHqp; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso70469901fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 22 May 2025 01:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747903154; x=1748507954; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qMhmNskADhrsN3v1DxlLOqwp8G2YfbYOwBOnwBv83D8=;
-        b=rR5McHqpJlrqkKpCbfJ2WNyKVzJbKo2Z1YP+ZMfzasgn5bdjOEnbZu5KIuSWbB8fc4
-         ye4QCP0TX/hHHJSKl4gbHz0+pOr4SIAhiUWELNsAyheofhhfcK0QLFMwmJSDlIoihXuK
-         eCnNDqYh/jiTc9nVoLXqNHeONZ+UJt7jFJMDn6QHYdDzQSRP4zivT1gv3V/5K1MsIjz3
-         0X30bi8BPhEUQyaZQO6/O3EJagp3u1LntYqZypbtwy9zJWJ4apVL4trNb366VjZB+8YT
-         upKQa9PKWf9b1K77p3hHW8Xld3zm102iIQ1Nyzx1W+kZT6/SAqrs8cIbtSEGvm8bOcoT
-         sy3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747903154; x=1748507954;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qMhmNskADhrsN3v1DxlLOqwp8G2YfbYOwBOnwBv83D8=;
-        b=alqK4K/XpE78sUBo+9T0TzHkFHn10FfBm3O/ugKwpdQIi12iqDArbl7iTaqLV/P/fd
-         bU9qWan9QQgki1KbqShHQ8W8ZamYZIP5brqcy+xNh+4uw3yO5JfIck47XesBw+KwE7dM
-         cmcmqFvQYqozAIVN1VECpEKkhqq3BVZ3vRZDgNLFegUzlujIV5yptrdATkebzy4aenpd
-         bw73hhcLvPmoMimi+ChbZcnFoQwuaA3+/8C2oFqqo5jQXFEmajkgsYogyiECOAv/GGg8
-         rz5J6Rqy1SSbM1R2cU/FQHQAKSLJe+FUMEwmM1TH5Ff/5xlJ/UhU+4emEgdyCgCj2VAF
-         a8IA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmq7Ix54WN1rfAVleLZ9JYflVIKsTuwEZ4nVMdwa3pr7fEtLtldUDG/+9+/kArxuWeYPFOQ3qZaouc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuKlJcbcqUInYoDquC79odXbSdVqwAvkY0aWcsfXpim0+BFAYk
-	Sd9MkKAS/CRVZqbDsmJQDIVMRufecUQ2ts3+TCmdaEqoqEsLamPuZxmQAuCIGreHW4vEHOFA0FE
-	+rA+BTqA63VuPQN5ekakmzZDnqiDpf+bbJNiwEFYEC8DWEySe+XAEpn0=
-X-Gm-Gg: ASbGncvJdDw4M8sj9PxN97jb+RwDjpOS5Ka3ykvY42nqJ7f0WR/YWgCBFPufsYcFHIH
-	hrFn+F1OiKJm9wB88uaHZax9RHbThr9MEf1tdHbq4L8t14+oQn1kWuDCHr4PilcDomJ4Zwckpnu
-	Y3iRzoYBQ8Ax7DKbiim3iPpcAwMeGnjdZp4CaE/iAG2yI=
-X-Google-Smtp-Source: AGHT+IF5P3YyhMqZP4RT6l7E1iz5hMh6P8bMERqdor0RMnNXGUnxHB4+ImovRLcw/3knetHVFpP+GFf1niTI9bRIZUk=
-X-Received: by 2002:a05:651c:2229:b0:30b:ee44:b692 with SMTP id
- 38308e7fff4ca-328077b2d17mr98326021fa.33.1747903154140; Thu, 22 May 2025
- 01:39:14 -0700 (PDT)
+	s=arc-20240116; t=1747904353; c=relaxed/simple;
+	bh=F+UaMKsaTaM23XM2k8ATYaf6ORfK+hGHKXw+SidOvP0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaxJaPo0MSjVIdZluGzEs4uV4Unw7iBgGngsb9rfCdL00MVx3sF7uDRowbAoK33vgs7pu8yArElpaHKj6ZG09e2KyhqE2vNydgYGmLF/n0FAM4qOJbeLz5fSD14vt5aTdpIYfLE3iwmRelEsA1RVNRU9/VkV7qGRnBpVp9gyyS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7/ESCQo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43286C4CEE4;
+	Thu, 22 May 2025 08:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747904352;
+	bh=F+UaMKsaTaM23XM2k8ATYaf6ORfK+hGHKXw+SidOvP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T7/ESCQoDO8xpAYpb+TppNiGZuXD5kGBMkqEXzyjHKG58NZQ51X20EicgGsjmDVWf
+	 k4w9RLdbhirJCnP+M0h925cuPMimyMsxAWwOoiOJgNoctuAh0Dhxbt9qERxyNJionC
+	 PRiYKhMolbpRhCrnlNpWWy8fRRc8nRJT5ABEjOmKP+buMPt4qLkzijSFAiBXOCqiDP
+	 E9QzVu+v82JG7fylZCh6T5qq6Rqf8BPjIBhXB+2qGmJHyUiE6QHSjQDMkCAyyivlbq
+	 c9PraU0EWUzPy9MM4Dsr1b4BaQVdzc+qv8QHGxeFFfHW+pXEzxI803IAPDeGvO4LhV
+	 wFgOe8d2pMqGg==
+Date: Thu, 22 May 2025 09:59:06 +0100
+From: Lee Jones <lee@kernel.org>
+To: sven@svenpeter.dev
+Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v6 05/10] mfd: Add Apple Silicon System Management
+ Controller
+Message-ID: <20250522085906.GA1199143@google.com>
+References: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
+ <20250515-smc-6-15-v6-5-c47b1ef4b0ae@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 22 May 2025 10:39:03 +0200
-X-Gm-Features: AX0GCFu1eG7CL_G1brUAj9AgP9YxI-nCFQ5opBOZ9pyczqf7w8M-DcNU6bcW4UI
-Message-ID: <CACRpkdaEmKn_0QObo9kFrgm2TajepUFjcgK8CVn-u_zMmoEO8g@mail.gmail.com>
-Subject: [GIT PULL] pin control late fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250515-smc-6-15-v6-5-c47b1ef4b0ae@svenpeter.dev>
 
-Hi Linus,
+On Thu, 15 May 2025, Sven Peter via B4 Relay wrote:
 
-these are two patches to the Qualcomm pin control driver that
-fixes a late discovered problem.
+> From: Sven Peter <sven@svenpeter.dev>
+> 
+> The System Management Controller (SMC) on Apple Silicon machines is a
+> piece of hardware that exposes various functionalities such as
+> temperature sensors, voltage/power meters, shutdown/reboot handling,
+> GPIOs and more.
+> 
+> Communication happens via a shared mailbox using the RTKit protocol
+> which is also used for other co-processors. The SMC protocol then allows
+> reading and writing many different keys which implement the various
+> features. The MFD core device handles this protocol and exposes it
+> to the sub-devices.
+> 
+> Some of the sub-devices are potentially also useful on pre-M1 Apple
+> machines and support for SMCs on these machines can be added at a later
+> time.
+> 
+> Co-developed-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Reviewed-by: Neal Gompa <neal@gompa.dev>
+> Signed-off-by: Sven Peter <sven@svenpeter.dev>
+> ---
+>  MAINTAINERS                |   2 +
+>  drivers/mfd/Kconfig        |  18 ++
+>  drivers/mfd/Makefile       |   1 +
+>  drivers/mfd/macsmc.c       | 498 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
+>  5 files changed, 798 insertions(+)
 
-I first tagged a version with an additional cleanup patch on top
-but realized I can't send that this late so this is the diet version
-of the fix.
+Arghhh, so close!
 
-Please pull them in!
+[...]
 
-Yours,
-Linus Walleij
+> +static struct platform_driver apple_smc_driver = {
+> +	.driver = {
+> +		.name = "mfd-macsmc",
 
-The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
+Drop the 'mfd-' part please.
 
-  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
+> +		.of_match_table = apple_smc_of_match,
+> +	},
+> +	.probe = apple_smc_probe,
+> +};
+> +module_platform_driver(apple_smc_driver);
+> +
+> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
+> +MODULE_AUTHOR("Sven Peter <sven@svenpeter.dev>");
+> +MODULE_LICENSE("Dual MIT/GPL");
+> +MODULE_DESCRIPTION("Apple SMC driver");
 
-are available in the Git repository at:
+I plan to apply this set after the merge-window.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.15-4
+What else are you waiting on?
 
-for you to fetch changes up to 41e452e6933d14146381ea25cff5e4d1ac2abea1:
-
-  pinctrl: qcom: switch to devm_register_sys_off_handler() (2025-05-20
-23:41:29 +0200)
-
-----------------------------------------------------------------
-This concerns a crash in the Qualcomm pin controller GPIO
-portions when using hogs.
-
-First patch hits into the gpiolib making gpiochip_line_is_valid()
-NULL-tolerant.
-
-Second patch fixes the actual problem.
-
-----------------------------------------------------------------
-Dmitry Baryshkov (2):
-      gpiolib: don't crash on enabling GPIO HOG pins
-      pinctrl: qcom: switch to devm_register_sys_off_handler()
-
- drivers/gpio/gpiolib.c             |  6 ++++++
- drivers/pinctrl/qcom/pinctrl-msm.c | 23 ++++++++++++-----------
- 2 files changed, 18 insertions(+), 11 deletions(-)
+-- 
+Lee Jones [李琼斯]
 
