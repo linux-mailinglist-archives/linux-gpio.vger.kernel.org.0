@@ -1,194 +1,228 @@
-Return-Path: <linux-gpio+bounces-20463-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20464-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29B71AC09EB
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 May 2025 12:36:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F37DAC0B1C
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 May 2025 14:06:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AC363BE883
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 May 2025 10:35:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 28254188F3AE
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 May 2025 12:07:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 198F2288CB8;
-	Thu, 22 May 2025 10:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1926D28A702;
+	Thu, 22 May 2025 12:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="d14xGV3S";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A+NNQzCX"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RulxBa0V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54589C2EF;
-	Thu, 22 May 2025 10:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F00433DB;
+	Thu, 22 May 2025 12:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747910155; cv=none; b=hN5oNR0/aHbscqPHz4Pn8oz33gx9Cfh6a1CAvIKxTkPKUrnafyJQC3BJ1l7Ayry1UHkbiOSG7poIa1GvNXY2AIHSmLeHJBYbOt86hARpLNp08bx70b5p8nwrW0Hn9wMLGSfDf+Z71zbgoIHfWp2uAX0I0UbGVVZ6SrIOV1ev3lQ=
+	t=1747915608; cv=none; b=DPIkNYJGsyN43Eh/XLp0zYjj76nhFgWgFdztTX/DpVbrer9pVEzNSEzNr2VHDjsO2cfGypHHSCuFbdFnGUmSgJ6WUW6dZ3UWjy5qXq0K6qtGMj6jZKKGqlNxOf5tsX54mU+IzsJqnGH0EcvQAwWjzg+mgZLwOs+o115m0Mnxqkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747910155; c=relaxed/simple;
-	bh=HfSoJkOb2VFyqKcxw7pJZAp9sgXXlthrjBP9L0gsEQg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=RKiKd/cGXfmhHllxOmWGAJafXwYT9GHfa3SXHkvBDGQI17dx5m90BxSnLOysHmZgf5oBAiH2m3oMsRZ8t3fefQUtM031V+cyliLGyu8MQojTL6Z0I2AJnVwhK/j9Bb7v2wi+hK/JbdNqVDoje2v4RTbHLMrR7uUT0maK4Qhm1SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=d14xGV3S; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A+NNQzCX; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id EF3EF114027B;
-	Thu, 22 May 2025 06:35:50 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-04.internal (MEProxy); Thu, 22 May 2025 06:35:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1747910150; x=1747996550; bh=xVWtyDUgJnh0geO6pSrHxWvzURu7bA5K
-	2oBZ3UTDjCI=; b=d14xGV3SXRmTMfztLAPZ6NvlVMWpTzQg84FTQQkGXBsqstyA
-	mzo7DDnNErbeE0VRKhPZzRjBObcAqqJQHCcwGqCPATVeV0WAjIAeQeu5uxnm063Q
-	FBGio/gg4hKcf3TFVBsEu9UXXG3Lg+3aAkQxmx6DfAVs0d+aXkQ/HCOlB8LLkWb3
-	hVoyj6hFs5sc+4yEr/v/sQjmqxAZPUg3O1hhkDG06LDzKt1JX8e7/WzFsYyeZzkS
-	4xen2/CkWfc5YZW2/yLmHYxIpyFudWEoA7+sg3+C+MmDEqk9OZWKPuuBr0OXS6zP
-	I/tdK5Iw6ZYshdlnMqNoWESXSgyYWtovJBFFfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747910150; x=
-	1747996550; bh=xVWtyDUgJnh0geO6pSrHxWvzURu7bA5K2oBZ3UTDjCI=; b=A
-	+NNQzCXr/vB9MXDJ4H/QCT+zaG8lFXTw7UrGv0BBjXzmg7tSMxqdgawo9CfOUot8
-	hPZgoKyYbQQ4ZI6zlVcdZ0Bs4Hw21CsTShvA7PjBdS6LhODzPLdsMPfssE0NLB1d
-	EIY4GnLwb1DRuioNF8ci7+OFj0ANHi4wngIkIkbTvOu1O521fSNVG7cUpCWHPtJd
-	rwMDhAO6qfqzefEDsDOJsaiI8aqTWozVtf6IuLnf946n9hSzyq9cCA5mY9o28zEL
-	a0Lo36PKKdJJR3rezt4NLcNds+SQbBpcqZVWKaU1RU8/3hd9Rc4UMQfPu6ldaRtN
-	7v8KqiuE1oiSdhpNNlAuw==
-X-ME-Sender: <xms:Bf4uaBi41Gee8Y9TlEBhsmvEafo5eksg2aItR-vQ1a_8bgfaCGgDtg>
-    <xme:Bf4uaGAODiEgqY9HurCCQgzc4z0_TOG40yIXuYAeILWg4Mt9nQZbC6c4xEmlimPAz
-    IgX0eIAzpkjBUeE4qw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdehjeegucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
-    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvh
-    gvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrfgrthhtvghrnhepleefteeugedu
-    udeuudeuhfefheegveekueefffdvffektdffffelveffvddvueffnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvght
-    vghrrdguvghvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtoheprhhmkhdokhgvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghp
-    thhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehnvggrlhesghhomhhprg
-    druggvvhdprhgtphhtthhopehjsehjrghnnhgruhdrnhgvthdprhgtphhtthhopegtohhn
-    ohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepmhgriieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlh
-    drohhrgh
-X-ME-Proxy: <xmx:Bf4uaBG3xisiHfp8Ns3UFfK35HUVkqQ4fftw2wGZ_djGpmn8EmNOLA>
-    <xmx:Bf4uaGSkpPIN-s6ylvzAY_1LoKUzJpOFKPC4W0kv2SJM6RPwCQdycw>
-    <xmx:Bf4uaOyaP7zzsEsoQB5O6NYGBzt3mtywoRRTr-qgqkofrFwdsjOWDg>
-    <xmx:Bf4uaM6au0aOxZia-xzKu2U-ig7fjblF7bJc2UYVlmgz2ov4NYTP8Q>
-    <xmx:Bv4uaGTUG2WZ2-PYLm2-qorCxLXAhBfBIXRVe25pI1T9ATDnT4NodPSA>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 961FF1060060; Thu, 22 May 2025 06:35:49 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1747915608; c=relaxed/simple;
+	bh=sarlfpjmwco1wBVRTTBDateodZuUqAOn115Z368wacc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Vk+N3klDSzCUR4eA8brmEmE72mm6WEBTOnRho8dJzUmsFHyf5D1c/UIuA7J4k9U2m4S6VfyksfC8shQnn66mJDyoslVNdQ/kDVnP8vW3ySNOYX1/aMfHX6uH8FTEIS8UX9OZeuW0I+q007hhL0nVS56/YZ1vWOwKGCYxy3jtIxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RulxBa0V; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F37851FD48;
+	Thu, 22 May 2025 12:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747915603;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xa4FngajQSj/KFbgvgvpRtuRSkbY6yfLKj4dHrHeIRM=;
+	b=RulxBa0Vyjqc+owdBmdIBHviKcMau7F2yIpvEe6hhlPszwIbm9rs2atFMOyI/Z1w6knrTT
+	QnLHZ8NvzZhkPqmFHAJof6vnsbyrTnMTsqdSW0mDhf8X9Ol9oG2Mh97j2i+/nOrwexPyfa
+	9fiLgK4mbkutselTmId4z6TE9F9X2CHh5a0Qo7GRS/ddTgc2AULQyCKY+CzNHk46MueVPy
+	VkVcAPLTdyTS+EyMoABElqhUgVq5x/iT8uhXKWsvpF4SaUeLLMm1d/iEpIX02D9EWfbefi
+	qrd6TfagA74EXjlUsFTNSHgshVBPncGkUkzlstP42PqxkDLF95k1PvKiZoEGCA==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: [PATCH v9 00/11] Add support for MAX7360
+Date: Thu, 22 May 2025 14:06:15 +0200
+Message-Id: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T3582cb9b01beb853
-Date: Thu, 22 May 2025 12:35:29 +0200
-From: "Sven Peter" <sven@svenpeter.dev>
-To: "Lee Jones" <lee@kernel.org>
-Cc: "Janne Grunau" <j@jannau.net>, "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
- "Neal Gompa" <neal@gompa.dev>, "Hector Martin" <marcan@marcan.st>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Sebastian Reichel" <sre@kernel.org>,
- "Marc Zyngier" <maz@kernel.org>, "Russell King" <rmk+kernel@armlinux.org.uk>,
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Message-Id: <c9c2779e-dfa4-4e64-9b16-7558bb2563fd@app.fastmail.com>
-In-Reply-To: <20250522085906.GA1199143@google.com>
-References: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
- <20250515-smc-6-15-v6-5-c47b1ef4b0ae@svenpeter.dev>
- <20250522085906.GA1199143@google.com>
-Subject: Re: [PATCH v6 05/10] mfd: Add Apple Silicon System Management Controller
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADcTL2gC/33QTW7DIBAF4KtErEsFM/x21XtUXTCAG6Q6juzUS
+ hX57sWRKqey3eVD8M0bbmzIfckDezncWJ/HMpTuVIN/OrB4DKePzEuqmYEAJUF63ibibbhaNII
+ PX+dz1184AAYXs9IUkNWX5z435XpX395rPpbh0vXf9yGjnE//90bJBXfZobTazddeqesun+X0H
+ LuWzeIIDwrgtgJVQRtcAohoclor+KtoIeWOglXxWnpSIZKgjS5qUUCqbUXNGwXU0SQib8xa0Yu
+ C0m0ruioNgaDQeJuCWCtmUZTY+V1TFRtAo3bWZPRrxT4osNPFVkVlYYRLItimWStuUfReF1cVo
+ qycaQxFsn+VaZp+AGU3+qeiAgAA
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747915601; l=6039;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=sarlfpjmwco1wBVRTTBDateodZuUqAOn115Z368wacc=;
+ b=qHEGL0EaoRkPoiIasJEM9p1K3SVTVHGOE6/CuwcQq2BqVIDWYmzjyY/UlcZXEy9RiY/uc6jb3
+ a4i5t1gZsHLDZQcq9bV0Hb5Yb6ViNKvkepfeAdKcqsRNxPJeJzVPrIV
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdehleduucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhkeffueegvdekiefhfeejueeukeekgeegjeeghefgvdekveevvdekieetkeelveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpddugedqrhgtvddrqdhlihhnkhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhin
+ hhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhm
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Hi,
+This series implements a set of drivers allowing to support the Maxim
+Integrated MAX7360 device.
 
+The MAX7360 is an I2C key-switch and led controller, with following
+functionalities:
+- Keypad controller for a key matrix of up to 8 rows and 8 columns.
+- Rotary encoder support, for a single rotary encoder.
+- Up to 8 PWM outputs.
+- Up to 8 GPIOs with support for interrupts and 6 GPOs.
 
-On Thu, May 22, 2025, at 10:59, Lee Jones wrote:
-> On Thu, 15 May 2025, Sven Peter via B4 Relay wrote:
->
->> From: Sven Peter <sven@svenpeter.dev>
->> 
->> The System Management Controller (SMC) on Apple Silicon machines is a
->> piece of hardware that exposes various functionalities such as
->> temperature sensors, voltage/power meters, shutdown/reboot handling,
->> GPIOs and more.
->> 
->> Communication happens via a shared mailbox using the RTKit protocol
->> which is also used for other co-processors. The SMC protocol then allows
->> reading and writing many different keys which implement the various
->> features. The MFD core device handles this protocol and exposes it
->> to the sub-devices.
->> 
->> Some of the sub-devices are potentially also useful on pre-M1 Apple
->> machines and support for SMCs on these machines can be added at a later
->> time.
->> 
->> Co-developed-by: Hector Martin <marcan@marcan.st>
->> Signed-off-by: Hector Martin <marcan@marcan.st>
->> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
->> Reviewed-by: Neal Gompa <neal@gompa.dev>
->> Signed-off-by: Sven Peter <sven@svenpeter.dev>
->> ---
->>  MAINTAINERS                |   2 +
->>  drivers/mfd/Kconfig        |  18 ++
->>  drivers/mfd/Makefile       |   1 +
->>  drivers/mfd/macsmc.c       | 498 +++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
->>  5 files changed, 798 insertions(+)
->
-> Arghhh, so close!
->
-> [...]
->
->> +static struct platform_driver apple_smc_driver = {
->> +	.driver = {
->> +		.name = "mfd-macsmc",
->
-> Drop the 'mfd-' part please.
+Chipset pins are shared between all functionalities, so all cannot be
+used at the same time.
 
-Ack.
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+---
+Changes in v9:
+- Fix build issue with bad usage of array_size() on intermediate commit.
+- MFD: Fix error strings. Also fix #define style in the header file.
+- Pinctrl: Fix missing include.
+- PWM: Fix register writes in max7360_pwm_waveform() and
+  max7360_pwm_round_waveform_tohw().
+- GPIO: Fix GPIO valid mask initialization.
+- Link to v8: https://lore.kernel.org/r/20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com
 
->
->> +		.of_match_table = apple_smc_of_match,
->> +	},
->> +	.probe = apple_smc_probe,
->> +};
->> +module_platform_driver(apple_smc_driver);
->> +
->> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
->> +MODULE_AUTHOR("Sven Peter <sven@svenpeter.dev>");
->> +MODULE_LICENSE("Dual MIT/GPL");
->> +MODULE_DESCRIPTION("Apple SMC driver");
->
-> I plan to apply this set after the merge-window.
->
-> What else are you waiting on?
+Changes in v8:
+- Small changes in drivers.
+- Rebased on v6.15-rc5
+- Link to v7: https://lore.kernel.org/r/20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com
 
-The only thing missing is a review/ack from the power/reset maintainers.
-I will send v7 after the merge window rebased on -rc1 then.
+Changes in v7:
+- Add rotary encoder absolute axis support in device tree bindings and
+  driver.
+- Lot of small changes in keypad, rotary encoder and GPIO drivers.
+- Rebased on v6.15-rc4
+- Link to v6: https://lore.kernel.org/r/20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com
 
+Changes in v6:
+- Rebased on v6.15-rc1.
+- Use device_set_of_node_from_dev() instead of creating PWM and Pinctrl
+  on parent device.
+- Various small fixes in all drivers.
+- Fix pins property pattern in pinctrl dt bindings.
+- Link to v5: https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com
 
-Thanks,
+Changes in v5:
+- Add pinctrl driver to replace the previous use of request()/free()
+  callbacks for PORT pins.
+- Remove ngpios property from GPIO device tree bindings.
+- Use GPIO valid_mask to mark unusable keypad columns GPOs, instead of
+  changing ngpios.
+- Drop patches adding support for request()/free() callbacks in GPIO
+  regmap and gpio_regmap_get_ngpio().
+- Allow gpio_regmap_register() to create the associated regmap IRQ.
+- Various fixes in MFD, PWM, GPIO and KEYPAD drivers.
+- Link to v4: https://lore.kernel.org/r/20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com
 
+Changes in v4:
+- Modified the GPIO driver to use gpio-regmap and regmap-irq.
+- Add support for request()/free() callbacks in gpio-regmap.
+- Add support for status_is_level in regmap-irq.
+- Switched the PWM driver to waveform callbacks.
+- Various small fixes in MFD, PWM, GPIO drivers and dt bindings.
+- Rebased on v6.14-rc2.
+- Link to v3: https://lore.kernel.org/r/20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com
 
-Sven
+Changes in v3:
+- Fix MFD device tree binding to add gpio child nodes.
+- Fix various small issues in device tree bindings.
+- Add missing line returns in error messages.
+- Use dev_err_probe() when possible.
+- Link to v2: https://lore.kernel.org/r/20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com
+
+Changes in v2:
+- Removing device tree subnodes for keypad, rotary encoder and pwm
+  functionalities.
+- Fixed dt-bindings syntax and naming.
+- Fixed missing handling of requested period in PWM driver.
+- Cleanup of the code
+- Link to v1: https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com
+
+---
+Kamel Bouhara (2):
+      mfd: Add max7360 support
+      pwm: max7360: Add MAX7360 PWM support
+
+Mathieu Dubois-Briand (9):
+      dt-bindings: mfd: gpio: Add MAX7360
+      pinctrl: Add MAX7360 pinctrl driver
+      regmap: irq: Add support for chips without separate IRQ status
+      gpio: regmap: Allow to allocate regmap-irq device
+      gpio: regmap: Allow to provide init_valid_mask callback
+      gpio: max7360: Add MAX7360 gpio support
+      input: keyboard: Add support for MAX7360 keypad
+      input: misc: Add support for MAX7360 rotary
+      MAINTAINERS: Add entry on MAX7360 driver
+
+ .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++
+ .../devicetree/bindings/mfd/maxim,max7360.yaml     | 191 +++++++++++++
+ MAINTAINERS                                        |  13 +
+ drivers/base/regmap/regmap-irq.c                   |  99 ++++---
+ drivers/gpio/Kconfig                               |  12 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max7360.c                        | 257 +++++++++++++++++
+ drivers/gpio/gpio-regmap.c                         |  22 +-
+ drivers/input/keyboard/Kconfig                     |  12 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/max7360-keypad.c            | 308 +++++++++++++++++++++
+ drivers/input/misc/Kconfig                         |  10 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/max7360-rotary.c                | 192 +++++++++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max7360.c                              | 171 ++++++++++++
+ drivers/pinctrl/Kconfig                            |  11 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-max7360.c                  | 215 ++++++++++++++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-max7360.c                          | 180 ++++++++++++
+ include/linux/gpio/regmap.h                        |  18 ++
+ include/linux/mfd/max7360.h                        | 109 ++++++++
+ include/linux/regmap.h                             |   3 +
+ 26 files changed, 1903 insertions(+), 33 deletions(-)
+---
+base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+change-id: 20241219-mdb-max7360-support-223a8ce45ba3
+
+Best regards,
+-- 
+Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+
 
