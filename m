@@ -1,136 +1,141 @@
-Return-Path: <linux-gpio+bounces-20524-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20525-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC933AC20BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 May 2025 12:15:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4F6CAC2150
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 May 2025 12:43:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBDE83B4C30
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 May 2025 10:15:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12E601BA8388
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 May 2025 10:43:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B7E229B12;
-	Fri, 23 May 2025 10:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FB43229B18;
+	Fri, 23 May 2025 10:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMPe1HBt"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="blRBdVfd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1DC22A4E5;
-	Fri, 23 May 2025 10:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7F1227EAF
+	for <linux-gpio@vger.kernel.org>; Fri, 23 May 2025 10:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747995309; cv=none; b=C2PPespXikCY944Th9HTNwxOgSqF/68HYXww7rBSDCVzRqQT3AnTPcg+9EA8sfSm9NdAzRlqTMSisonVrAEH4CJZm5D6K6fz2OoiCJIdqQ3blS9oayAngtG3X1BpcQUzgs6RX9CiDUAb1ppc5bi0jEHmRliZVPYziZP7d2rwOoY=
+	t=1747997014; cv=none; b=cRwHOjc/Yl0uYRsZkdReN2nNWhu4nZ1D3xEe86R8ftTeNLxdYOXAcloCcUKXYuhQcXB9IF4fRPTnQOiORG3TEDp6LRyeE7Dm5BHYPw8cOuyl7rIjRk7ipkdyPg+H9xXcnaeWWXxgYCciqOJrVRqbWHUw4Lmrs9CdykHj/pTh2WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747995309; c=relaxed/simple;
-	bh=9B8Qbuz0+HjwNMerJ1VV6FpRT6m7U/s0nPQnJsXESXk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dvVAlljNI8Eo9/wsKngzM01SeR6kDt2VdWS5iyfgueMXWSrw9LWlG5fEmTXXNW8QnqYXL4rvUMDs2bK0YMZB8S4YQuP9vxpkU9koAk05GN/dfUK1yeI/lTTkpl30zQX1k3Mg1xbRvHDRPzV+nhu6RDMKTBwXM1SCWT3QnUF3Av0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XMPe1HBt; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad563b69908so955424466b.3;
-        Fri, 23 May 2025 03:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747995306; x=1748600106; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=12Do9t9YpCf+Nz+IVlJd3oQSzsy39pOVxJJm3ENuKwc=;
-        b=XMPe1HBt5RET4bQMYSlP/oPTJKE24V6d5nMO20ZHhP6HKIXYwiAA63jnz0u1IVvivz
-         5is7g64k4N3qjdhIK/0PPeAt//xxk8XaevKPEyuQgJ/jhvWjXIyNbsebtqntaaCTAnWe
-         T56MgED/UsYQy30JqFqwYH+tugV/boU5PS3DFFEypBV9kNxCwQ0EvlGdpiuiCL5S0LYc
-         Q29QU81DuM4LT0TwwCtncnkGFEc6yOBonbtF+5y4JeVoLl9rFTr1/8EaMSX2gBFAm6PF
-         EHjOd6byVA15/Gi8SQ9AqhQJTbtKXfgN8mwuX3ARKgd9E8Ji5iVs/Vyhuarszwse6d2G
-         AQvg==
+	s=arc-20240116; t=1747997014; c=relaxed/simple;
+	bh=ZiDp3mO3sMfo9g1+QqK7V6IccxK5oqxhhCjDFpYu+yo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=joAOaCQARI47gtgs6PwXCzyjxBn+ppXdKU6NPDgIVZtYGf65TX3FB2mbuTB7QPV44Vao2cSzWIdTGTKrrOKiN+KwndhDfZj1jkHYITgU24/xxb+ziBCo1K8KsMOLPhPmRC5q642NoeomKZsPsqeBWLZR/b4qASV28QYQyJlomuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=blRBdVfd; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54N4egcj000731
+	for <linux-gpio@vger.kernel.org>; Fri, 23 May 2025 10:43:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=iEMzP+5FE+zKvD/hVaBar5L9
+	380xOk0G1VKx9PKO9B8=; b=blRBdVfdPhndERA5iEFRLF2aB2HeRYBY1FGHpQfb
+	ADrRlAB2Cuh7xp+n1SUczNsMGbLv6t/tw/w0+Tk62cJxKt9ijqbn8mXjuL/tCG3n
+	3t384YoMBXTticbN4rB06KsqLmx4DY40AwFocC5PuGpP3EwvMiZV4g0BnLh8OZsq
+	ti462CQ04oBvuJoWsgF0qwwaAAJ3rGlQA5WOWB46kEmV88ypZ8tlwtYZip9PukIQ
+	rGw6EordPJdHU3y1kwzYoEeLaONJaH5RtEBBwrKOP5LC/p+k37Wdhl3U12J+9aYv
+	UncboCN281sd4qH/YhfqlmqpH2RSfOP+XClEkOCDYstEaQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s95tr273-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 23 May 2025 10:43:31 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c544d2c34fso1344608585a.1
+        for <linux-gpio@vger.kernel.org>; Fri, 23 May 2025 03:43:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747995306; x=1748600106;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=12Do9t9YpCf+Nz+IVlJd3oQSzsy39pOVxJJm3ENuKwc=;
-        b=udQgWqZLKu8nsnAXGs/lpa/nAvKoVrVoOwRzBPuQ3l9J27leEyFT1tLo0bQtrDgD3b
-         ElzsOAm+dVbHxI5D/tp6IeHA+2nf5cccd6gAAn8L91nW44kxvCWK2Kf4UzO6LBfQj5WJ
-         kHAXMXIge2UEMBoG9EEnhFrYm1qVhM8OWrWK++o9WKD5wzC/Lb5P5Fo9PAHbu8k4PpsK
-         e8EmYkG5RiPLn3pObGg6lR2nJLrT5/FYxU/4nOtpbR33FhyOeD9Opa20Ih7LMnWdplBa
-         9U987IM4mvyrbmSHwNpox1v3JQGzVhjbBUyzT4gB4o6LdUAY11fenc2WsBvW1i9v5eOb
-         1nDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOBFJLQsjlhnVy1oXOLE+PxnP8YSDYqDYsV4ziXT8l3iYDZ2mYI7oECwBygBHDTPMf41bVtsLb8EOuJPC4@vger.kernel.org, AJvYcCUuRNz5D6X7tGT677esOThRXwnJjKnLiCWkHrTXPV2fQF0xu49KxV+H6SDkeYbEhiR42erRnsuVLoqcew==@vger.kernel.org, AJvYcCW7UglxJXQ9S7/cIhQQ8nuborU55juT5SqjvZx/5E7+Jagoc9C70t5BCTeZYEHwZ5DqoDHRhpfZIQ3IRkvs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLxky2RqroJuBGcsE5bQ3J0WBvdMU7R26yrlVW5M4Y5k2OYKxo
-	JOAk+QU2wv8wMK8Mgo9jI3kO626RBgdQEn8kYH8e3585fM49KhyAum/f
-X-Gm-Gg: ASbGnctdCrOwHhOyF3wpzSX8sdKr1gKUewrqR1Yi3rmd8QfD1hQ7hVarZHJJl2vaf1Z
-	0TQ7qGJ1nGLisebt+3MbSyvRNuwGDcBYgepacybkttWmvc+/W+RjCIoMXWqYeXLVwGChJRNlzx+
-	/Vd+1PVRZ63MO+p73C/rpbzqSYyZWTiRbLAr7ynRJJuFeDVYoaX/etOXDbrWry9XRHNlvM5xRaw
-	eLjNZ9Hu9D+VKipGxOh0dv0T3Giwq+btsxLpNaJTa7SpobewHpW9EiMhQuZ4sXD5YqA7nB8kVS3
-	XKtTTl9P8P7Xq0RgnRQJwCi9SzUeCktm5qHUNNJ5tsNa6yhXz5+XmEBjAfO+3QU2aQ9imR9FjCU
-	oYdk84ml1
-X-Google-Smtp-Source: AGHT+IF9z/ZwcIGZ/MFGn3LzYKCuz4hF1lfNqCLb8lo4Mdq9Jp1Bno4R2tXKBU4ikKUFTPlMGPVwAQ==
-X-Received: by 2002:a17:906:230a:b0:ad4:f6d2:431b with SMTP id a640c23a62f3a-ad536dce6cfmr1912503166b.44.1747995305575;
-        Fri, 23 May 2025 03:15:05 -0700 (PDT)
-Received: from T15.. (wireless-nat-94.ip4.greenlan.pl. [185.56.211.94])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad52d06dfa4sm1212928966b.57.2025.05.23.03.15.04
+        d=1e100.net; s=20230601; t=1747997011; x=1748601811;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iEMzP+5FE+zKvD/hVaBar5L9380xOk0G1VKx9PKO9B8=;
+        b=g16AmBcXYo9BTI+7+z1kQB5bS11XowxuApogt9DWzEFRsEp4TTZfSgVbW1sENKeFTg
+         sQ71L1F1VkTOiGSegwUCjgThzwJm4uckqX3hw2WYbiT6BgjvXXcLPJsDPt8hCutOp731
+         gQp9t0rC6bjn8Zv3WaSNUFDDsfI+gHhnGoa4GcKioroPpogxzwptxXhtk6722pityAS5
+         ZqL9ulIoFh8gTRvAuxXUBOgpobg3U/ZcORAa9OUHv39qs014cC15cT+PCQvXwRBU4SIr
+         yuTEPLgqNQNl9De882Ys0hHxr6meidTn+Ut/c+w3YGAZz3/u0/xUQISycVjikI3PnM8h
+         Y2TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWDiuRnSYqPdLHxjWEx/3mWT1GweXeZsz3NO3xDfAZWteYDbpfwNMy63eX0nG/4dNQ0oJkca/BRluf@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywca4N8Klyoo+SAdc+fx4b6AJ4wezd++LhW74r4wDUpmtlTgE3Z
+	ErOnPAOSmhVEGcSgiLCh9u+yWFHCZPuw0vjhIDqqLDJsVvlPMMjpgJZsEkNJagmaQxwvE5ynlya
+	yRsYm7c5aa4kp9CNvgh5yihuLpoL9GW7qW10Af0X3BS39o410NpOu21neCega35ix
+X-Gm-Gg: ASbGnctmXN31XBEjeepLlIgQaEXIENRy3FkcqEH4PxuG9kMcMDZcsFB9d/u9E0KLafQ
+	oxKAFV1VRG4x97lIe3Gs1IVRKh4tQ7yiV23WlUovOZN2Fbv9t/MVVidm3BP3E0jJLatfBxE6Q9f
+	tRibhTuam49LiOu0usdhb6Q0CgLz7CVwsYPGHZiWE5cF6H8AIUYcK3kxpPXukLbRlDzDRBJByc1
+	Qr1WoYKRwEDaj++0uOesg/QL1YPwLtbs3mGGhUqBJBNuo58dw/PLj0n+y1/+F9UeGx3vka3tzqm
+	F5ySD1gAEHcjwihnJFoGkfIgaFfzy628pqH0O1O78v+e2ZIeJ0oCiiuUPsDpQECAcOP7Xep1TzI
+	=
+X-Received: by 2002:a05:6214:ca2:b0:6e8:f464:c9a9 with SMTP id 6a1803df08f44-6f8b2cc7d70mr442359106d6.2.1747997010829;
+        Fri, 23 May 2025 03:43:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHwxUzBuSM7MlJkdoDJAusHv/lJtCwWU0NIU+aqlho6PFa3OqprXhTnIwm14NKC4PymbSBonw==
+X-Received: by 2002:a05:6214:ca2:b0:6e8:f464:c9a9 with SMTP id 6a1803df08f44-6f8b2cc7d70mr442358656d6.2.1747997010497;
+        Fri, 23 May 2025 03:43:30 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f1624esm3802842e87.17.2025.05.23.03.43.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 03:15:05 -0700 (PDT)
-From: Wojciech Slenska <wojciech.slenska@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Wojciech Slenska <wojciech.slenska@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: qcom: pinctrl-qcm2290: Add missing pins
-Date: Fri, 23 May 2025 12:14:37 +0200
-Message-Id: <20250523101437.59092-1-wojciech.slenska@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 23 May 2025 03:43:29 -0700 (PDT)
+Date: Fri, 23 May 2025 13:43:28 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Wojciech Slenska <wojciech.slenska@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: pinctrl-qcm2290: Add missing pins
+Message-ID: <et7we4wunzwj2c5zg6mynpgetd5vr57elujsczbsjwkviaqrlo@op7z42vpsaq6>
+References: <20250523101437.59092-1-wojciech.slenska@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523101437.59092-1-wojciech.slenska@gmail.com>
+X-Authority-Analysis: v=2.4 cv=QKBoRhLL c=1 sm=1 tr=0 ts=68305153 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=3Wf6-wXKAYLzd_tvBgsA:9
+ a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: Nia2KLWEc3SAk6DUBlcQSn3VgfG49yfD
+X-Proofpoint-GUID: Nia2KLWEc3SAk6DUBlcQSn3VgfG49yfD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIzMDA5NSBTYWx0ZWRfX6UUz+/66CnT2
+ OiKPwp4/oFzY10TWYHLDMFSFb5bW618MVkbY0YNmtYhNSEPQbwdtnTROtwp1Wx4mM+sf3EArbXv
+ ngA1cJsfojdwOziAhlPkS4eEw280LzTdJBReD0c7Gy6iRRWE+OZXG/W/emwPus+C5blSpKQBztW
+ VgbHhNiHg+E9aUynkxB7UXqdaaKwPZjxeebgyyrDIbA4Igp2EG05IW7fPZmhh7URh/38iEW9VWf
+ nq82LaslTJg1S56kOfQurF6SSTXZxlXi9Vy8cWQODUajBBR9FAhVUdMVd28yIUl+IoT6Y2cZ/ZA
+ BANM7d4wSVvQx2PxxJ7jMF6Q0p5m7aaKtvo9/lTlwZ6BrjT94yGs2MHsWNoFOetezMJhrkoPe6c
+ 8N9+vahd63qEvDXatbJblz5+WEZSyZdi+lcXVw6pK5tTwLpq04vLTylh6zHrunVOz2K94ci8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-23_03,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 spamscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=869 suspectscore=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505230095
 
-Added the missing pins to the qcm2290_pins table.
+On Fri, May 23, 2025 at 12:14:37PM +0200, Wojciech Slenska wrote:
+> Added the missing pins to the qcm2290_pins table.
+> 
+> Signed-off-by: Wojciech Slenska <wojciech.slenska@gmail.com>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-qcm2290.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
 
-Signed-off-by: Wojciech Slenska <wojciech.slenska@gmail.com>
----
- drivers/pinctrl/qcom/pinctrl-qcm2290.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Fixes: 48e049ef1238 ("pinctrl: qcom: Add QCM2290 pinctrl driver")
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcm2290.c b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-index 85c951305abd..eeeec6434f6a 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-@@ -167,6 +167,10 @@ static const struct pinctrl_pin_desc qcm2290_pins[] = {
- 	PINCTRL_PIN(62, "GPIO_62"),
- 	PINCTRL_PIN(63, "GPIO_63"),
- 	PINCTRL_PIN(64, "GPIO_64"),
-+	PINCTRL_PIN(65, "GPIO_65"),
-+	PINCTRL_PIN(66, "GPIO_66"),
-+	PINCTRL_PIN(67, "GPIO_67"),
-+	PINCTRL_PIN(68, "GPIO_68"),
- 	PINCTRL_PIN(69, "GPIO_69"),
- 	PINCTRL_PIN(70, "GPIO_70"),
- 	PINCTRL_PIN(71, "GPIO_71"),
-@@ -181,12 +185,17 @@ static const struct pinctrl_pin_desc qcm2290_pins[] = {
- 	PINCTRL_PIN(80, "GPIO_80"),
- 	PINCTRL_PIN(81, "GPIO_81"),
- 	PINCTRL_PIN(82, "GPIO_82"),
-+	PINCTRL_PIN(83, "GPIO_83"),
-+	PINCTRL_PIN(84, "GPIO_84"),
-+	PINCTRL_PIN(85, "GPIO_85"),
- 	PINCTRL_PIN(86, "GPIO_86"),
- 	PINCTRL_PIN(87, "GPIO_87"),
- 	PINCTRL_PIN(88, "GPIO_88"),
- 	PINCTRL_PIN(89, "GPIO_89"),
- 	PINCTRL_PIN(90, "GPIO_90"),
- 	PINCTRL_PIN(91, "GPIO_91"),
-+	PINCTRL_PIN(92, "GPIO_92"),
-+	PINCTRL_PIN(93, "GPIO_93"),
- 	PINCTRL_PIN(94, "GPIO_94"),
- 	PINCTRL_PIN(95, "GPIO_95"),
- 	PINCTRL_PIN(96, "GPIO_96"),
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
 -- 
-2.34.1
-
+With best wishes
+Dmitry
 
