@@ -1,131 +1,148 @@
-Return-Path: <linux-gpio+bounces-20568-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20569-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 978ADAC42F9
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 18:23:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 265DBAC4338
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 19:03:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4327117A6B1
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 16:23:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C782D1897E52
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 17:03:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B6DF23D2BF;
-	Mon, 26 May 2025 16:23:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 192001F37D4;
+	Mon, 26 May 2025 17:03:31 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9506820299E;
-	Mon, 26 May 2025 16:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551963595E;
+	Mon, 26 May 2025 17:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748276631; cv=none; b=EYexVKprqDh1iI+8YBWbceGvoFRIfSLuJztQzUdrd8oIGDhV9DHVI0AaQwfnk32xAKraWH3d+J2X7nMiS9slGUYIuM8TNFdWfKaRLcI4V62tFNpQUDpcf6DbWsmlxLTYH+Ly8xOI8ZMsZIKMd6jNw2NoW+WwrPV4i2EbkG1UjvE=
+	t=1748279010; cv=none; b=f+uUqrCqk3/Po/vsdVuWdMezcAdH2MRqHx3NnLs/NMltLosflXPLiCGi1FWpYupkOa7dHRurmTA3WsDVCqiSgt8BNUQRr1GgMQTnYYb61gFoBCEci1foBNLCZ5IgTWOcIxEfC1wIoWdDzQvQ3Nyi5UIkdGOCgOcpzzIcxlgG4rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748276631; c=relaxed/simple;
-	bh=3rKM3t8ghJaT33UAt7ML5cI5/HQFX7a1T3aoNNJ6cRI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dSUjb/PBPmvcFEls14IXxigglx9qJHuZ7dQqsAO427paZFqfdbIHqvszSKq/5SEe1v5RHeM2Xf/pvpcAK8nvLiH5ntQDcDQkuhDYsObJOKIG+Ftki5/nDXZcSEDVKRjTDz0rbSDJzcrDKbNXgyvvsJwUyu9/63ZsKIJ2OB/CUFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [27.18.99.37])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 16718efe6;
-	Tue, 27 May 2025 00:23:41 +0800 (GMT+08:00)
-From: Ze Huang <huangze@whut.edu.cn>
-Date: Tue, 27 May 2025 00:23:35 +0800
-Subject: [PATCH] dt-bindings: pinctrl: k230: fix child node name patterns
+	s=arc-20240116; t=1748279010; c=relaxed/simple;
+	bh=S6MYSVF8EsvwxyfLZcoepSZZXUPzFm1P/4bcMAYCajI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NsdD+RvhzkPkS5YXuhcVeXi5Rdp9ImMeau+YDDMYKx3/ZnEwuQei7mDpBqsIfu5vCGLA2OVplak+017vzvssw8FkOOjXr1KNoyvTYu2ZCwQ13SiHIxyLbsNXizgfvyKYSoMf2InL50TBytw27QLiR6y3CYHV2a/xYroMrz5hNCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-48d71b77cc0so26994301cf.1;
+        Mon, 26 May 2025 10:03:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748279007; x=1748883807;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7ezYcjK/kuLdHuSHwh/ef2ocXIk2CuNxW7qZXpfVeTs=;
+        b=CyaMGcXn4zUkdpHR+1iDB0wLyv/o4cqXj8n69lhlkbYxx1wD9cogCbRNym1vk+78Jy
+         OYpO9LFN8awVspMz3nA6LWdKfO66+EjRxgF0z9j7qb5+0J4KMoaocHl0f4L2OzdM4sTW
+         6nIUUV/D18/VUCBdWipaggv2x/9+xp3nY+yCcScUOvxowBLmWoXvajYxLsweKtSMDuoW
+         w5kcp6LGju1R+HvdeIdRzc6yEX2trMyrIIffxVDGTe95CPawjTDaVjB8VSDrEkwFB/In
+         xyO8zG9yH+7432qe5vNvfz8kCywCuwXtGnnrysHXazRLWfivB/vq2EBgg9ADJRjIW/x3
+         5esw==
+X-Forwarded-Encrypted: i=1; AJvYcCUB2T7lYGfAmZPShnLgUdarLniiZeiZNQ4nRwJAaSHgave7Eg00HhwHSYbDS5WJmnkVcb2N/nyRkJpXvTUzxwzQOAM=@vger.kernel.org, AJvYcCUY256NP3U7AWAdwytB+8e1gI1ZrILUtwohVARzTGtkzcM90iOj2QMaQVycDd3TXIaY5M0eCzfd2vK5JSWD@vger.kernel.org, AJvYcCWKarhzjYs5Gc4KWpgyA1u5HzoBFOoMutqR4s9BWqO1e0/bFRJrcqTYrgT93AYAHA3W47jD/US97bWX@vger.kernel.org, AJvYcCXHWkBP9NTjoxGihFyM0+2HYXbYFtMJk4PgUU0UySIzgXiqZIsoMCGrougesY+v9UKRJAfu7MNfm8dzXg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC0SZikWr5ju1n4r3k1T69SteXKpqVdI98YqPvJpLZ21IPOwYd
+	GyRC/XRXZE5rGTKDBHtDG419/ir7rfnpO4Fa4olEz3QzBmm1O9UyZZNYYUtHAl2a
+X-Gm-Gg: ASbGncuZRx6vOUMQlTw40Zs2+7JzCtBFTfR2oiLYzhQE8qr+7BcboTvIQzQm0ah01Eu
+	c2zlnqWCcaUmkeImNNYlkpFRWXtRxLYymaET5E+N52VcGokvfCg0x8cjpDnFY+mx4+Gvrb9Gt56
+	YhqSLvv33D0YvitahXC7CumUbDrZB9W23Vb3/DDsaC1+4fTmHk97uAgSgFH3NSzjeEBIkVLd+uh
+	8P6O4/r24fyQplFIFhZ7QRLr+aAHulO2vx5dx3duMM5tWcZ1vMFcwZiDHiUDov1btToCxbUUkz2
+	jOLTqZAGyIgpi7U2wNvfW3OQ4OEc5LVH9KDwstMF5lxTTdJbu23p+xwiMCBa8ndCkzDEadLYrVf
+	AfovDotECAPEKVw==
+X-Google-Smtp-Source: AGHT+IGfAC16fwvcKeA3Xzx89f+r53ggyhRfmOySsq+ksQvW3N2iwqJnB4tP28TQgj+bqaheqQbTSg==
+X-Received: by 2002:a05:6830:6307:b0:72c:10db:f210 with SMTP id 46e09a7af769-7355cff50demr6874377a34.13.1748278995283;
+        Mon, 26 May 2025 10:03:15 -0700 (PDT)
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com. [209.85.161.49])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6a4afb9sm4039258a34.13.2025.05.26.10.03.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 10:03:15 -0700 (PDT)
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6060167af73so1513002eaf.2;
+        Mon, 26 May 2025 10:03:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUR8VfWb1DboBWTvkxEbfuYyWYcI1BsHI3nJ9Jpj2HkDzTB+lw6NYpGSPkwd+n4DyzZaVF/3TY7uM49@vger.kernel.org, AJvYcCUSgoFgIvqVOPIcNwWGuwY+2sLCSj9fIx5v9KEb4avGiD6jGIcSlRbppZHG/pMJXhttiahhlWCL/5TixA==@vger.kernel.org, AJvYcCUsaMT91BUEo1j2p5JdxBJnqwgxk7fpd0zHZfea8Y37MuyliCpxLnq79EcqjJekkicQpQy3HwimFu5BSsAJ@vger.kernel.org, AJvYcCVzzosWBy2LdQFDMdgWhUdXwSGvdvLT8GluRa+DGULgdNvemMDl3Nb89MZ0wwv1nX+ILBT/k09uznZGYhvU+ICdi1g=@vger.kernel.org
+X-Received: by 2002:a05:6214:62b:b0:6f5:106a:271e with SMTP id
+ 6a1803df08f44-6fa9d2be7e9mr168460116d6.38.1748278983943; Mon, 26 May 2025
+ 10:03:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-k230-binding-fix-v1-1-3c18ae5221ab@whut.edu.cn>
-X-B4-Tracking: v=1; b=H4sIAIaVNGgC/yWMywqDMBAAfyXsuVuSTSPUXykefGzsUoxtolIQ/
- 71LPc7AzA6Fs3CB2uyQeZMic1JwFwP9s00jowzKQJaCDVThi7zFTtIgacQoX/SOQow3H+/egmb
- vzKr/y0dzcubPqufllNC1hbGfp0mW2mzV1QVojuMHOm41f4sAAAA=
-X-Change-ID: 20250526-k230-binding-fix-3125ff43f930
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
- Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, 
- Ze Huang <huangze@whut.edu.cn>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748276621; l=1885;
- i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
- bh=3rKM3t8ghJaT33UAt7ML5cI5/HQFX7a1T3aoNNJ6cRI=;
- b=s92TgKISQNeKR5510+Ky6wgaq4zbHjoGIaAAXPtBHjdq+sk3UaYAjX/xh7VS/BQA3ayAcvpcs
- Yjw8lrnp/GZDN7mFZcx6qqPGEY7iYYibLZggADmf+H0MSZIA1Z0Gwq5
-X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
- pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHkxCVhoaGB9PGUhNQk4aQlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktISk5MTlVKS0tVSkJLS1
-	kG
-X-HM-Tid: 0a970d6831a803a1kunm4c5611af1d643
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mxw6Kyo6EjEzCAxITSsxSyMD
-	TTdPCjFVSlVKTE9DSUxNTUlNT0hCVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
-	TFVKQ1VCQlVITFlXWQgBWUFISUJMNwY+
+References: <20250519215734.577053-1-thierry.bultel.yh@bp.renesas.com> <20250519215734.577053-2-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250519215734.577053-2-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 May 2025 19:02:52 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWHUuLiwG+-znzGxqWzYHo3Um7e+yrTJeb-Ei=SQ8TjGg@mail.gmail.com>
+X-Gm-Features: AX0GCFvT7iN4yfX8D71Vm8JTSTnk1aSrctC0JzIhU0KPMEe0rEDICsFhXWYVd_E
+Message-ID: <CAMuHMdWHUuLiwG+-znzGxqWzYHo3Um7e+yrTJeb-Ei=SQ8TjGg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: add compatible for Renesas RZ/T2H
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Rename child node name patterns to align with conventions.
+Hi Thierry,
 
-    uart0-pins      =>   uart0-cfg
-        uart0-cfg            uart0-pins
+On Mon, 19 May 2025 at 23:57, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Document RZ/T2H (a.k.a r9a09g077) pinctrl
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-This avoids potential confusion and improves consistency with existing
-bindings like sophgo,sg2042-pinctrl and starfive,jh7110-aon-pinctrl.
+Thanks for your patch!
 
-Fixes: 561f3e9d21a1 ("dt-bindings: pinctrl: Add support for canaan,k230 SoC")
-Signed-off-by: Ze Huang <huangze@whut.edu.cn>
----
- .../devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml          | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> @@ -29,6 +29,7 @@ properties:
+>        - renesas,pfc-r8a774b1    # RZ/G2N
+>        - renesas,pfc-r8a774c0    # RZ/G2E
+>        - renesas,pfc-r8a774e1    # RZ/G2H
+> +      - renesas,pfc-r9a09g077   # RZ/T2H
+>        - renesas,pfc-r8a7778     # R-Car M1
+>        - renesas,pfc-r8a7779     # R-Car H1
+>        - renesas,pfc-r8a7790     # R-Car H2
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
-index 0b462eb6dfe169a292bf716503c03d029f1ac7ee..f4e0da0bf7fa30af5132644109dbd371ddfc0228 100644
---- a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
-@@ -22,7 +22,7 @@ properties:
-     maxItems: 1
- 
- patternProperties:
--  '-pins$':
-+  '-cfg$':
-     type: object
-     additionalProperties: false
-     description:
-@@ -30,7 +30,7 @@ patternProperties:
-       pinctrl groups available on the machine.
- 
-     patternProperties:
--      '-cfg$':
-+      '-pins$':
-         type: object
-         allOf:
-           - $ref: /schemas/pinctrl/pincfg-node.yaml
-@@ -112,8 +112,8 @@ examples:
-         compatible = "canaan,k230-pinctrl";
-         reg = <0x91105000 0x100>;
- 
--        uart2-pins {
--            uart2-pins-cfg {
-+        uart2-cfg {
-+            uart2-pins {
-                 pinmux = <0x503>, /* uart2 txd */
-                          <0x603>; /* uart2 rxd */
-                 slew-rate = <0>;
+From a quick glance at the docs and driver, adding support for RZ/T2H
+to this DT binding is a not good match, as the RZ/T2H PFC hardware
+does not have the concept of pin groups and functions.
 
----
-base-commit: 0a4b866d08c6adaea2f4592d31edac6deeb4dcbd
-change-id: 20250526-k230-binding-fix-3125ff43f930
+Using separate DT bindings, as for most other SoCs in the RZ family,
+also allows you to use the preferred order "renesas,r9a09g077-<foo>".
 
-Best regards,
--- 
-Ze Huang <huangze@whut.edu.cn>
+> @@ -194,3 +209,13 @@ examples:
+>                      power-source = <3300>;
+>              };
+>      };
+> +
+> +  - |
+> +    pinctrl: pinctrl@812c0000 {
 
+The unit address does not match the first reg property.
+
+> +            compatible = "renesas,pfc-r9a09g077";
+> +            reg = <0x802c0000 0x2000>,
+> +                  <0x812c0000 0x2000>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            gpio-ranges = <&pinctrl 0 0 287>;
+
+GPIOs without interrupts?
+
+> +    };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
