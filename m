@@ -1,460 +1,290 @@
-Return-Path: <linux-gpio+bounces-20562-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20563-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8EF0AC3D6C
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 11:56:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC854AC3DBE
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 12:21:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83C7B17177A
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 09:56:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60AFC1895A7A
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 10:21:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC2171EFFB2;
-	Mon, 26 May 2025 09:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71AB21F4615;
+	Mon, 26 May 2025 10:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wOr6LT9u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYDJuGRY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7822566
-	for <linux-gpio@vger.kernel.org>; Mon, 26 May 2025 09:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D02A1E5B7D;
+	Mon, 26 May 2025 10:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748253359; cv=none; b=TOfYe4I4numluYCM2vgJxxZXDJMEa7SaWnpoWMy1WnJ/xVKmgYdDQSn1sPZMy+D7mdlq2M9MAOoWrqW5S2TekDLrq9zuikgptT+F3OEpCMSR1uoAqSWI1kQ07ssuFtHWBVZ3Rn5H2XaneeCdQccX9DrcrvkUblstXP2GERn+qog=
+	t=1748254878; cv=none; b=flfHq5SafFbGZd3rSOaJnDw0GDENmkgv3cwXEMu5HEx+Ka/sAGRWSYph3RorBB4Wc7HePpaVIycfM4kaIDGOItt8BD8zeTYyCqLfxPQtX/Y6DmgAWMah2JmMLmJdNlhGBM0EA0S8sGXkNnEovXCAhiLjJvewnWwsLUvagCSwddM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748253359; c=relaxed/simple;
-	bh=g1Smzj2cI6eJSFcxJzUxWqhAX4meF8dpQ8e0hxrOq2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bmi1toBkNky6bBoiTH5q/TVLf7hADiB4j0shejL0Qz6JpX1Tf5S/9mJYH8jfD6wXqaeKgAJuh1rBTjRZF1IAO0gs0SUD4k68coKJVWVdMy0Z6ePDCcneI7fdogKBpitrJOSLVXsyUBPZevUXH4YZAy0NrBV8x4YLvnOWI3rUBVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wOr6LT9u; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so30344525e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 26 May 2025 02:55:56 -0700 (PDT)
+	s=arc-20240116; t=1748254878; c=relaxed/simple;
+	bh=p2gK8iwaWKY6guqBl2DKOLD8mONcUKHwX183TyfcQG8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gxwonZnzHWCFqqQxsT0kR0c2KREt9k5rnBobX86cuqOXo0QNktPaHc/dFpIw10o7ADGZUICkML5MMuOT0B8hGF/WwjJlv678aevxxTNMoYZo+o8fuK5oFhS6njLIYgTWKuNNOE1Th1RZZ9aYFpQQwlDZIUGexHZKjhgAMeZOAzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PYDJuGRY; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a36e090102so1138549f8f.2;
+        Mon, 26 May 2025 03:21:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1748253355; x=1748858155; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7BBnM4SFPT90uhkjia+TXc5+tlZApsW6YCMJ56WF/2M=;
-        b=wOr6LT9uYw0gKN3rMI99xP9Rd4vmRXbiTjdXge1U5olxIeD7pInNNPl9TTAD2kXHE4
-         k/HIpWME4s8ibLC6pX7vwL5x9TVD7g5xhgCMRrkJq7vhBSjMgqI2fG4dBaJvgU6bpnio
-         DUofOYUtCR6hCfAMUmIZi44X7wpe/+fDyDRk4zMkz+tRgP7em584NsDRpJhyg9NF78zp
-         wTOcYvw5A1BwDvXZf83HLem/EZLAAC+nSPigo+FJ3yuc8l+vsIAfQY462ZRNO19i1hQe
-         +1YnDqLh0Y2oHe5iToQ7/ddDhqYWhv2n4r0EhD+S98slEzRzFU5Xuemt03UKeRA0Cqin
-         egJg==
+        d=gmail.com; s=20230601; t=1748254875; x=1748859675; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yDvvEg63RaMwETBjnBaEEie893D+QP16pmtX1cgvqSo=;
+        b=PYDJuGRYBdIId1ghEWL9YYBuvRJtCuhWBG7Whkusx8MMe4BYHYCmcNseUTaUjjGqfd
+         iTQJ3LVpHusHBeru3ONIOs/kPJuVLRKUZzluHVzw9HV2uswALAJWTpSahv1J3+B99NdI
+         by/1AHWDUuyq2pk6xt4Vb7BFhkIB1Z+xARvo7t/Gcg5FnZZR4RHi3BFREABUDxcACCGC
+         G35A15F4rYg7flLj5ZcMNw3Id682u3C/8N9ikzyj8hNT+ntmOsi2M0xrX8UApUi5O8bO
+         rTBvUClWapHI5uA98O3FTHspoq7TYFH8Nxwp6U9zZxcBOHOyLlAmmVmI9zDcNNkIs4b9
+         RCoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748253355; x=1748858155;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7BBnM4SFPT90uhkjia+TXc5+tlZApsW6YCMJ56WF/2M=;
-        b=aWR3sSSkCJeCOvZ2gNxdZ90o5Y180q9PbfQO6iwiXXnh0tH0YGaKOeFptkJ4EtNjdN
-         bUti1ojtuVokkpG0ACUbrtIGZvch/7fws2vm/8uqjYgqsOftsdkRVze6C4Pt7aGd4age
-         rebjQHOswiJGlA9pPGW+E/96ZFUStljjltBFsVR0F6WVSUWsik+M20AGvcs8oKnLtCwz
-         6ZIcLurrjti2sfhIMJoIvdOMZ4/Y68kwhbEk5qR4bYmMusU0kcOyOlMJo85+aqCELwae
-         m8/V2bMOOnrmRuHu07EwJ+w3qmfyfEDg4FNSPE7ShdN8gNmvwM8t/Em4WPFicetfiqBx
-         CQ9w==
-X-Forwarded-Encrypted: i=1; AJvYcCXKRwFZUqlXBNKvQFjJfVWbeUjidEuGFNuJUYb1+Lt8Onzg93PskGFOfAveCDx9HQmE0DzYUYiMuuoE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5UEaYdq+CwaCOEghC3P7yQ7hSCtQQ9XDnvAtcZxSuGubPzamN
-	Q9mJsPbfKKx4uHmvijgjnbHWGfMihrtZbr9FrjHqBV7ziROTCIZ2mCrvvyT8HDIsTUk=
-X-Gm-Gg: ASbGncutpXXBGcmqTWFp0K3ltHM+6RUqbW9wXEKSLI8HUjt8uMNLgQbrqJCC31bsYFn
-	ni+92dEq8bzyjuoqDiScKihNTM6P69guR3tCn6XDvfJz79tzLrSWH6jeoj2BBKWOJD8my4mj0RQ
-	pdCDamjiBs4K5vt4MDCWiXKwzvMrKyRJC1H2vsGEx1lkDdsxB81tI2wX4uGUDtWISNN71sjGZaY
-	owuY1tmnKGhAlmJQANhCRfBEWqFd3xImF4Hi+HMu8fqNdOGFgk/LUMzzccis6lU3tnbRGAos+iv
-	hk+LHpuzPYlDWFXKeS8oah8rDwJjjvt172L4zG7QmiFLS1LfPXk=
-X-Google-Smtp-Source: AGHT+IFRGB6lmrRnAadBT36Pu03+oYL+UAfPMujMfvE5kRE9c9ykSogcueoKMstSz2lFvetdUCD9OQ==
-X-Received: by 2002:a05:600c:a07:b0:43c:fdbe:4398 with SMTP id 5b1f17b1804b1-44c916071admr70495535e9.6.1748253354860;
-        Mon, 26 May 2025 02:55:54 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b4a1:24ab:1579:3692])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7ca2dd9sm227326375e9.37.2025.05.26.02.55.53
+        d=1e100.net; s=20230601; t=1748254875; x=1748859675;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yDvvEg63RaMwETBjnBaEEie893D+QP16pmtX1cgvqSo=;
+        b=OIxg6P9NvwcGvGoYbOJnHbobgIVKjy0blo6fICcwNDuoVrFa5sCVhcaiAqASVi0dBG
+         ocyOX0dETa/SVtmole+3Sr88SI0df/2Gf1be0NFotsCCdaFgNvci92FESRB02Tj2pg2Y
+         77OXzMWcSNCnsExP3AeQNXLPXzFd1f/2vUoS/3X88J8GWE2wNQ0c32IUoKcIHwUalH5f
+         li7+gHBCHkXGYfXhbvdISZdwf6JwaU7QUqcb+F1PgJNrRtHcUxVQPF+dUXLxF7JbDUuC
+         PeBqGY2otehOL6Fi2nQ57ki27sAFWOiwHw/mfjl5Z+TaZivEaJGfu9CQ3TzWBF14NAut
+         3HLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYg2ve/sE+VXQr4OO10INhhcbgxIrziTLVqFwt0W4ymjBQ2Ih5Qtjvm0iPUvyAj1gMuH+aMKKPE6Hw@vger.kernel.org, AJvYcCUfT/1qqkOWgIcjK6C50qoJ0LVxePTPVKCfbw4PN/6+q8QUi9MNonuStoqZOoz02HeXx3qzGGwykzF4RrVB@vger.kernel.org, AJvYcCVMhFwlZ4+P8905FoUaaqUn968QsyUttWmn/50LKaazHouPSz5ADXLGQMYdypWtPGqghb/rGwH4KFaH3w==@vger.kernel.org, AJvYcCVqpW569c5WXYo9Q6igfQiQreOtTSs/7yoMhsIPhKvJL5m/7VDRkKT13Ndzl4RVj1QRkpwviQhKAeM1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yydg7pKlR+qY1KZER+p8iqefYb79tjyl6ZcJhpDwHmnCjj16/aN
+	2T3EZHan5UgGeGCjpamxsB9mTN+loOII/JJrgPeyMG42Vl7AcwcNmdXjdwkGxa1tSc0=
+X-Gm-Gg: ASbGncuYDG2KsEDk9kYhCPGca2VDTRfLwGAjaj4ou+jNukCMuiWIwlTJADDhwFqicf0
+	vUsilRZ+WQqGE4U3OtGdEoA5SyoE9PqZy2w6eBMW/O6lhzHEBe80N//FHwM8bTRvIBPs5i1Ih4S
+	Z2tWl3dD9GLqKtvJkyByRK+vSm5NJfNZvFw5kpCxkpSIHjqE6uXUcEH4PtY0+3FEpJvy0aIN5vq
+	yeRiEUh+yU50eBLmK1wDlhQbzrRqC0p8C8LkMOxnMU4fj2DV2+VGnyNAfKyZGwG41NTtoJREx10
+	ej+IwYh2P0yo5A5/1DuaF9//81J6g47PjNjMP2/WGBHEXr/xeWXntjhc
+X-Google-Smtp-Source: AGHT+IHHLdzyh4ldfuqGdkWQ/KWMg/H/cJzxp87GB8pPL8XIM8U+WILu9uXeT2fI6lvKnnSp6kwH1g==
+X-Received: by 2002:a05:6000:238a:b0:3a4:d367:c5aa with SMTP id ffacd0b85a97d-3a4d367c798mr4265259f8f.20.1748254874308;
+        Mon, 26 May 2025 03:21:14 -0700 (PDT)
+Received: from [100.73.1.233] ([185.128.9.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f23c080asm239676925e9.22.2025.05.26.03.21.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 02:55:54 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio updates for v6.16-rc1
-Date: Mon, 26 May 2025 11:55:38 +0200
-Message-ID: <20250526095541.34708-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+        Mon, 26 May 2025 03:21:13 -0700 (PDT)
+Message-ID: <a1fc70b489cc6396200cb777795183f42ed31719.camel@gmail.com>
+Subject: Re: [PATCH v3 02/10] iio: adc: Add basic support for AD4170
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ 	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org, 
+	lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com, 
+	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	marcelo.schmitt1@gmail.com
+Date: Mon, 26 May 2025 11:21:17 +0100
+In-Reply-To: <2c308bf8464660079ec6da82a62316e9f2ebd5f7.1747083143.git.marcelo.schmitt@analog.com>
+References: <cover.1747083143.git.marcelo.schmitt@analog.com>
+	 <2c308bf8464660079ec6da82a62316e9f2ebd5f7.1747083143.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, 2025-05-13 at 09:34 -0300, Marcelo Schmitt wrote:
+> From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+>=20
+> The AD4170 is a multichannel, low noise, 24-bit precision sigma-delta
+> analog to digital converter. The AD4170 design offers a flexible data
+> aquisition solution with crosspoint multiplexed analog inputs, configurab=
+le
+> ADC voltage reference inputs, ultra-low noise integrated PGA, digital
+> filtering, wide range of configurable output data rates, internal
+> oscillator and temperature sensor, four GPIOs, and integrated features fo=
+r
+> interfacing with load cell weigh scales, RTD, and thermocouple sensors.
+>=20
+> Add basic support for the AD4170 ADC with the following features:
+> - Single-shot read.
+> - Analog front end PGA configuration.
+> - Differential and pseudo-differential input configuration.
+>=20
+> Signed-off-by: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+> Co-developed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
 
-Linus,
+Looks very good. Just some small notes...
 
-Here's the PR containing updates for the GPIO subsystem for this cycle.
-We have three new drivers, some refactoring in the GPIO core, lots of
-various changes across many drivers, new configfs interface for the
-virtual gpio-aggregator module and DT-bindings updates.
+> Change log v2 -> v3
+> - Updated Copyright year.
+> - Separated handling of channel setup cases for better understanding of c=
+ode
+> flow.
+> - Now comparing setups field by field instead of using memcmp().
+> - Disable channel on ad4170_read_sample() error path.
+> - Reinit completion before entering single conversion mode.
+> - Organized ad4170_sinc3_filt_fs_tbl.
+> - Used clamp to simplify configuration value checking.
+> - Returned earlier whenever possible.
+> - Used HZ_PER_KHZ/MHZ.
+> - Declared internal voltage reference constant AD4170_INT_REF_2_5V
+> - Many other minor code style and readability improvements.
+>=20
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/adc/Kconfig=C2=A0 |=C2=A0=C2=A0 12 +
+> =C2=A0drivers/iio/adc/Makefile |=C2=A0=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/adc/ad4170.c | 1553 +++++++++++++++++++++++++++++++++++=
++++
+> =C2=A04 files changed, 1567 insertions(+)
+> =C2=A0create mode 100644 drivers/iio/adc/ad4170.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0a8f2c7a139c..541e37ed304e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1352,6 +1352,7 @@ L:	linux-iio@vger.kernel.org
+> =C2=A0S:	Supported
+> =C2=A0W:	https://ez.analog.com/linux-software-drivers
+> =C2=A0F:	Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> +F:	drivers/iio/adc/ad4170.c
+> =C2=A0
+> =C2=A0ANALOG DEVICES INC AD4695 DRIVER
+> =C2=A0M:	Michael Hennerich <michael.hennerich@analog.com>
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 0fe6601e59ed..594b9f55ec0a 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -70,6 +70,18 @@ config AD4130
+> =C2=A0	=C2=A0 To compile this driver as a module, choose M here: the modu=
+le will
+> be
+> =C2=A0	=C2=A0 called ad4130.
+> =C2=A0
+> +
+> +config AD4170
+> +	tristate "Analog Device AD4170 ADC Driver"
+> +	depends on SPI
+> +	select REGMAP_SPI
+> +	help
+> +	=C2=A0 Say yes here to build support for Analog Devices AD4170 SPI anal=
+og
+> +	=C2=A0 to digital converters (ADC).
+> +
+> +	=C2=A0 To compile this driver as a module, choose M here: the module wi=
+ll
+> be
+> +	=C2=A0 called ad4170.
+> +
+> =C2=A0config AD4695
+> =C2=A0	tristate "Analog Device AD4695 ADC Driver"
+> =C2=A0	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 07d4b832c42e..d3a1376d1f96 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_AD_SIGMA_DELTA) +=3D ad_sigma_delta.o
+> =C2=A0obj-$(CONFIG_AD4000) +=3D ad4000.o
+> =C2=A0obj-$(CONFIG_AD4030) +=3D ad4030.o
+> =C2=A0obj-$(CONFIG_AD4130) +=3D ad4130.o
+> +obj-$(CONFIG_AD4170) +=3D ad4170.o
+> =C2=A0obj-$(CONFIG_AD4695) +=3D ad4695.o
+> =C2=A0obj-$(CONFIG_AD4851) +=3D ad4851.o
+> =C2=A0obj-$(CONFIG_AD7091R) +=3D ad7091r-base.o
+> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+> new file mode 100644
+> index 000000000000..bf19b31095ee
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad4170.c
+> @@ -0,0 +1,1553 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2025 Analog Devices, Inc.
+> + * Author: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+> + * Author: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bitmap.h>
+> +#include <linux/bitops.h>
+> +#include <linux/bits.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/math64.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/unaligned.h>
+> +#include <linux/units.h>
+> +#include <linux/util_macros.h>
+>=20
 
-The treewide conversion of GPIO drivers to using the new value setter
-callbacks is ongoing with another round of GPIO drivers updated. You will
-also see these commits coming in from other subsystems as with the
-relevant changes merged into mainline last cycle, I've started converting
-GPIO providers located elsewhere than drivers/gpio/.
+...
 
-Details are in the signed tag. Please consider pulling
+> +
+> +static int ad4170_debugfs_reg_access(struct iio_dev *indio_dev,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int reg, unsigned int writeval,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *readval)
+> +{
+> +	struct ad4170_state *st =3D iio_priv(indio_dev);
+> +
+> +	if (readval)
+> +		return regmap_read(st->regmap, reg, readval);
+> +	else
+> +		return regmap_write(st->regmap, reg, writeval);
 
-Thanks,
-Bartosz Golaszewski
+redundant else
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+...
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+>=20
+> +
+> +/*
+> + * Sets the ADC operating mode. Supported modes are
+> + * - Single conversion mode
+> + * - Idle mode
+> + */
+> +static int ad4170_set_mode(struct ad4170_state *st, unsigned int mode)
+> +{
+> +	return regmap_update_bits(st->regmap, AD4170_ADC_CTRL_REG,
+> +				=C2=A0 AD4170_ADC_CTRL_MODE_MSK,
+> +				=C2=A0 FIELD_PREP(AD4170_ADC_CTRL_MODE_MSK,
+> mode));
+> +}
 
-are available in the Git repository at:
+I'm usually not a fan of these wrappers.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.16-rc1
+...
 
-for you to fetch changes up to 8b8ef309093ff196967a21ee51a9cdb404a13bf6:
+>=20
+> +
+> +static int ad4170_parse_firmware(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4170_state *st =3D iio_priv(indio_dev);
+> +	struct device *dev =3D &st->spi->dev;
+> +	int reg_data, ret;
+> +	unsigned int i;
+> +
+> +	st->mclk_hz =3D AD4170_INT_CLOCK_16MHZ;
+> +
+> +	for (i =3D 0; i < AD4170_NUM_ANALOG_PINS; i++)
+> +		st->pins_fn[i] =3D AD4170_PIN_UNASIGNED;
 
-  gpio: timberdale: select GPIOLIB_IRQCHIP (2025-05-22 10:00:08 +0200)
+Isn't the above the default already?
 
-----------------------------------------------------------------
-gpio updates for v6.16-rc1
 
-GPIO core:
-- use more lock guards where applicable
-- refactor GPIO ACPI code and shrink it in the process by 8%
-- move GPIO ACPI quirks into a separate file
-- remove unneeded #ifdef
-- convert GPIO devres helpers to using devm_add_action() where applicable
-  which shrinks and simplifies the code
-- refactor GPIO descriptor validation in GPIO consumer interfaces
-- don't allow setting values on input lines in the GPIO core which will
-  take off the burden from GPIO drivers of checking this down the line
-- provide gpiod_is_equal() as a way of safely comparing two GPIO
-  descriptors (the only current user is in regulator core)
-
-New drivers:
-- add the GPIO module for the max77759 multifunction device
-- add the GPIO driver for the VeriSilicon BLZP1600 GPIO controller
-- add the GPIO driver for the Spacemit K1 SoC
-
-Driver improvements:
-- convert more drivers to using the new GPIO line value setter callbacks
-- convert more drivers to making the irq_chip immutable as is recommended
-  by the interrupt subsystem
-- extend build testing coverage by enabling more modules to be built with
-  COMPILE_TEST=y
-- extend the gpio-aggregator module with a configfs interface that makes
-  the setup easier for user-space than the existing driver-level sysfs
-  attributes and also adds more advanced configuration features (such as
-  referring to aggregated lines by their original names or modifying
-  their names as exposed by the aggregated chip)
-- add a missing mutex_destroy() in gpio-imx-scu
-- add an OF polarity quirk for s5m8767
-- allow building gpio-vf610 as a loadable module
-- make gpio-mxc not hardcode its GPIO base number with GPIO SYSFS
-  interface disabled (another small step towards getting rid of the global
-  GPIO numberspace)
-- add support for level-triggered interrupts to gpio-pca953x
-- don't double-check the ngpios property in gpio-ds4520 as GPIO core
-  already does it
-- don't double-check the number of GPIOs in gpio-imx-scu as GPIO core
-  already does it
-- remove unused callbacks from gpio-max3191x
-
-DT bindings:
-- add device-tree bindings for max77759, spacemit,k1 and blzp1600 (new
-  drivers added this cycle)
-- document more properties for gpio-vf610 and gpio-tegra186
-- document a new pca95xx variant
-- fix style of examples in several GPIO DT-binding documents
-
-Misc:
-- TODO list updates
-
-----------------------------------------------------------------
-Aaron Kling (1):
-      dt-bindings: gpio: tegra186: Add gpio-ranges
-
-Ahmad Fatoum (2):
-      gpio: mxc: configure dynamic GPIO base for CONFIG_GPIO_SYSFS=n
-      gpio: TODO: add item about GPIO drivers reading struct gpio_chip::base
-
-André Draszik (6):
-      dt-bindings: gpio: Add max77759 binding
-      dt-bindings: nvmem: Add max77759 binding
-      dt-bindings: mfd: Add max77759 binding
-      mfd: max77759: Add Maxim MAX77759 core driver
-      gpio: max77759: Add Maxim MAX77759 gpio driver
-      nvmem: max77759: Add Maxim MAX77759 NVMEM driver
-
-Andy Shevchenko (27):
-      gpiolib: acpi: Improve struct acpi_gpio_info memory footprint
-      gpiolib: acpi: Remove index parameter from acpi_gpio_property_lookup()
-      gpiolib: acpi: Reduce memory footprint for struct acpi_gpio_params
-      gpiolib: acpi: Rename par to params for better readability
-      gpiolib: acpi: Reuse struct acpi_gpio_params in struct acpi_gpio_lookup
-      gpiolib: acpi: Deduplicate some code in __acpi_find_gpio()
-      Merge patch series "gpiolib: acpi: Refactor to shrink the code by ~8%"
-      gpiolib: Make taking gpio_lookup_lock consistent
-      gpiolib: Convert to use guard()() for gpio_machine_hogs_mutex
-      gpiolib: Print actual error when descriptor contains an error pointer
-      gpiolib: Revert "Don't WARN on gpiod_put() for optional GPIO"
-      gpiolib: Move validate_desc() and Co upper in the code
-      gpiolib: Call validate_desc() when VALIDATE_DESC() can't be used
-      gpiolib: Reuse return variable in gpiod_to_irq()
-      gpiolib: Remove redundant assignment of return variable
-      devres: Move devm_*_action*() APIs to devres.h
-      devres: Add devm_is_action_added() helper
-      gpiolib: devres: Finish the conversion to use devm_add_action()
-      gpiolib: acpi: Use temporary variable for struct acpi_gpio_info
-      gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
-      gpiolib: acpi: Make sure we fill struct acpi_gpio_info
-      gpiolib: acpi: Handle deferred list via new API
-      Merge patch series "gpiolib: acpi: Fix missing info filling"
-      gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
-      gpiolib: acpi: Move quirks to a separate file
-      Merge patch series "gpiolib: acpi: Split quirks to its own file"
-      gpiolib-acpi: Update file references in the Documentation and MAINTAINERS
-
-Arnd Bergmann (1):
-      gpio: blzp1600: remove incorrect pf_match_ptr()
-
-Bartosz Golaszewski (53):
-      gpiolib: don't allow setting values on input lines
-      Merge tag 'gpio-s5m8767-polarity-quirk-for-v6.16-rc1' into gpio/for-next
-      Merge tag 'irqdomain-04-08-25' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip into gpio/for-next
-      gpio: provide gpiod_is_equal()
-      Merge tag 'gpiod-is-equal-for-v6.16-rc1' of gitolite.kernel.org:pub/scm/linux/kernel/git/brgl/linux into gpio/for-next
-      gpio: dln2: use new line value setter callbacks
-      gpio: eic-sprd: use new line value setter callbacks
-      gpio: em: use new line value setter callbacks
-      gpio: exar: use new line value setter callbacks
-      gpio: f7188: use new line value setter callbacks
-      gpio: graniterapids: use new line value setter callbacks
-      gpio: gw-pld: use new line value setter callbacks
-      gpio: htc-egpio: enable building with COMPILE_TEST=y
-      gpio: htc-egpio: use new line value setter callbacks
-      gpio: ich: enable building with COMPILE_TEST=y
-      gpio: ich: use new line value setter callbacks
-      gpio: ds4520: don't check the 'ngpios' property in the driver
-      gpio: blzp1600: drop dependency on OF headers
-      gpio: zynq: enable building the modules with COMPILE_TEST=y
-      gpio: msc313: enable building the module with COMPILE_TEST=y
-      gpio: pl061: enable building the module with COMPILE_TEST=y
-      gpio: rtd: enable building the module with COMPILE_TEST=y
-      gpio: tn48m: enable building the module with COMPILE_TEST=y
-      Merge tag 'gpiod-devm-is-action-added-for-v6.16-rc1' into gpio/for-next
-      gpio: imx-scu: don't check the GPIO range
-      gpio: imx-scu: use lock guards
-      gpio: imx-scu: destroy the mutex in detach path
-      gpio: imx-scu: use new line value setter callbacks
-      gpio: it87: use new line value setter callbacks
-      gpio: janz-ttl: use new line value setter callbacks
-      gpio: kempld: use new line value setter callbacks
-      gpio: ljca: use new line value setter callbacks
-      gpio: logicvc: use new line value setter callbacks
-      gpio: loongson-64bit: use new line value setter callbacks
-      gpio: loongson: use new line value setter callbacks
-      gpio: lp3943: use new line value setter callbacks
-      Merge tag 'ib-mfd-gpio-nvmem-v6.16' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd into gpio/for-next
-      gpio: lp873x: use new GPIO line value setter callbacks
-      gpio: lp87565: use new GPIO line value setter callbacks
-      gpio: lpc18xx: use new GPIO line value setter callbacks
-      gpio: lpc32xx: use new GPIO line value setter callbacks
-      gpio: madera: use new GPIO line value setter callbacks
-      gpio: max3191x: remove unused callbacks
-      gpio: max730x: use new GPIO line value setter callbacks
-      gpio: max732x: use new GPIO line value setter callbacks
-      gpio: max77620: use new GPIO line value setter callbacks
-      gpio: mb86s7x: use new GPIO line value setter callbacks
-      gpio: mc33880: use new GPIO line value setter callbacks
-      gpio: ml-ioh: use new GPIO line value setter callbacks
-      gpio: pxa: select GPIOLIB_IRQCHIP
-      gpio: mpc8xxx: select GPIOLIB_IRQCHIP
-      gpiolib: remove unneeded #ifdef
-      Merge tag 'intel-gpio-v6.16-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
-
-Dan Carpenter (5):
-      gpio: aggregator: fix "_sysfs" prefix check in gpio_aggregator_make_group()
-      gpio: aggregator: Fix gpio_aggregator_line_alloc() checking
-      gpio: aggregator: Return an error if there are no GPIOs in gpio_aggregator_parse()
-      gpio: aggregator: Fix error code in gpio_aggregator_activate()
-      gpio: aggregator: Fix leak in gpio_aggregator_parse()
-
-Emanuele Ghidoli (1):
-      dt-bindings: gpio: pca95xx: add Toradex ecgpiol16
-
-Geert Uytterhoeven (1):
-      gpio: GPIO_BLZP1600 should depend on ARCH_BLAIZE
-
-Haibo Chen (1):
-      dt-bindings: gpio: vf610: add ngpios and gpio-reserved-ranges
-
-Jindong Yue (1):
-      gpio: vf610: Allow building as a module
-
-Koichiro Den (10):
-      gpio: aggregator: reorder functions to prepare for configfs introduction
-      gpio: aggregator: unify function naming
-      gpio: aggregator: add gpio_aggregator_{alloc,free}()
-      gpio: aggregator: introduce basic configfs interface
-      gpio: aggregator: rename 'name' to 'key' in gpio_aggregator_parse()
-      gpio: aggregator: expose aggregator created via legacy sysfs to configfs
-      gpio: aggregator: cancel deferred probe for devices created via configfs
-      Documentation: gpio: document configfs interface for gpio-aggregator
-      selftests: gpio: add test cases for gpio-aggregator
-      selftests: gpio: gpio-aggregator: add a test case for _sysfs prefix reservation
-
-Krzysztof Kozlowski (1):
-      dt-bindings: gpio: Correct indentation and style in DTS example
-
-Nathan Chancellor (1):
-      gpio: Restrict GPIO_ICH to compile testing with HAS_IOPORT
-
-Nikolaos Pasaloukos (2):
-      dt-bindings: Document Blaize BLZP1600 GPIO driver
-      gpio: Enable Blaize BLZP1600 GPIO support
-
-Peng Fan (15):
-      gpiolib: of: Add polarity quirk for s5m8767
-      gpio: bcm-kona: make irq_chip immutable
-      gpio: grgpio: Make irq_chip immutable
-      gpio: lpc18xx: Make irq_chip immutable
-      gpio: mpc8xxx: Make irq_chip immutable
-      gpio: davinci: Update irq chip data
-      gpio: davinci: Make irq_chip immutable
-      gpio: xgene-sb: Make irq_chip immutable
-      gpio: timberdale: Make irq_chip immutable
-      gpio: pxa: Make irq_chip immutable
-      gpio: davinci: select GPIOLIB_IRQCHIP
-      gpio: bcm-kona: select GPIOLIB_IRQCHIP
-      gpio: grgpio: select GPIOLIB_IRQCHIP
-      gpio: lpc18xx: select GPIOLIB_IRQCHIP
-      gpio: timberdale: select GPIOLIB_IRQCHIP
-
-Potin Lai (1):
-      gpio: pca953x: Add support for level-triggered interrupts
-
-Yixun Lan (4):
-      irqdomain: Support three-cell scheme interrupts
-      gpiolib: support parsing gpio three-cell interrupts scheme
-      dt-bindings: gpio: spacemit: add support for K1 SoC
-      gpio: spacemit: add support for K1 SoC
-
- Documentation/admin-guide/gpio/gpio-aggregator.rst |  107 ++
- .../bindings/gpio/atmel,at91rm9200-gpio.yaml       |   16 +-
- .../bindings/gpio/blaize,blzp1600-gpio.yaml        |   77 ++
- .../bindings/gpio/fairchild,74hc595.yaml           |   20 +-
- .../devicetree/bindings/gpio/gpio-mxs.yaml         |   70 +-
- .../devicetree/bindings/gpio/gpio-pca95xx.yaml     |    4 +
- .../devicetree/bindings/gpio/gpio-vf610.yaml       |    7 +
- .../bindings/gpio/maxim,max77759-gpio.yaml         |   44 +
- .../bindings/gpio/nvidia,tegra186-gpio.yaml        |    3 +
- .../devicetree/bindings/gpio/nxp,pcf8575.yaml      |   24 +-
- .../bindings/gpio/realtek,otto-gpio.yaml           |    8 +-
- .../devicetree/bindings/gpio/renesas,em-gio.yaml   |   20 +-
- .../bindings/gpio/renesas,rcar-gpio.yaml           |   24 +-
- .../devicetree/bindings/gpio/sifive,gpio.yaml      |    6 +-
- .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml |   96 ++
- .../bindings/gpio/toshiba,gpio-visconti.yaml       |   24 +-
- .../devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml |   48 +-
- .../devicetree/bindings/mfd/maxim,max77759.yaml    |   99 ++
- .../bindings/nvmem/maxim,max77759-nvmem.yaml       |   32 +
- Documentation/driver-api/gpio/index.rst            |    2 +-
- .../translations/zh_CN/driver-api/gpio/index.rst   |    2 +-
- MAINTAINERS                                        |   22 +-
- drivers/base/devres.c                              |   11 +
- drivers/gpio/Kconfig                               |   64 +-
- drivers/gpio/Makefile                              |    4 +
- drivers/gpio/TODO                                  |    7 +
- drivers/gpio/gpio-aggregator.c                     | 1120 +++++++++++++++++---
- drivers/gpio/gpio-bcm-kona.c                       |    1 +
- drivers/gpio/gpio-blzp1600.c                       |  281 +++++
- drivers/gpio/gpio-davinci.c                        |   29 +-
- drivers/gpio/gpio-dln2.c                           |    7 +-
- drivers/gpio/gpio-ds4520.c                         |    6 -
- drivers/gpio/gpio-eic-sprd.c                       |    5 +-
- drivers/gpio/gpio-em.c                             |    6 +-
- drivers/gpio/gpio-exar.c                           |   16 +-
- drivers/gpio/gpio-f7188x.c                         |   13 +-
- drivers/gpio/gpio-graniterapids.c                  |    6 +-
- drivers/gpio/gpio-grgpio.c                         |    7 +-
- drivers/gpio/gpio-gw-pld.c                         |    6 +-
- drivers/gpio/gpio-htc-egpio.c                      |   16 +-
- drivers/gpio/gpio-ich.c                            |   12 +-
- drivers/gpio/gpio-imx-scu.c                        |   47 +-
- drivers/gpio/gpio-it87.c                           |   11 +-
- drivers/gpio/gpio-janz-ttl.c                       |    6 +-
- drivers/gpio/gpio-kempld.c                         |    7 +-
- drivers/gpio/gpio-ljca.c                           |   13 +-
- drivers/gpio/gpio-logicvc.c                        |   11 +-
- drivers/gpio/gpio-loongson-64bit.c                 |    6 +-
- drivers/gpio/gpio-loongson.c                       |    8 +-
- drivers/gpio/gpio-lp3943.c                         |   13 +-
- drivers/gpio/gpio-lp873x.c                         |   12 +-
- drivers/gpio/gpio-lp87565.c                        |   15 +-
- drivers/gpio/gpio-lpc18xx.c                        |   21 +-
- drivers/gpio/gpio-lpc32xx.c                        |   28 +-
- drivers/gpio/gpio-madera.c                         |   18 +-
- drivers/gpio/gpio-max3191x.c                       |   16 -
- drivers/gpio/gpio-max730x.c                        |    9 +-
- drivers/gpio/gpio-max732x.c                        |   15 +-
- drivers/gpio/gpio-max77620.c                       |   13 +-
- drivers/gpio/gpio-max77759.c                       |  530 +++++++++
- drivers/gpio/gpio-mb86s7x.c                        |    6 +-
- drivers/gpio/gpio-mc33880.c                        |    9 +-
- drivers/gpio/gpio-ml-ioh.c                         |    6 +-
- drivers/gpio/gpio-mpc8xxx.c                        |    8 +
- drivers/gpio/gpio-mxc.c                            |    9 +-
- drivers/gpio/gpio-pca953x.c                        |   32 +-
- drivers/gpio/gpio-pxa.c                            |    8 +-
- drivers/gpio/gpio-spacemit-k1.c                    |  293 +++++
- drivers/gpio/gpio-timberdale.c                     |   10 +-
- drivers/gpio/gpio-vf610.c                          |    4 +-
- drivers/gpio/gpio-xgene-sb.c                       |   26 +-
- .../gpio/{gpiolib-acpi.c => gpiolib-acpi-core.c}   |  522 ++-------
- drivers/gpio/gpiolib-acpi-quirks.c                 |  363 +++++++
- drivers/gpio/gpiolib-acpi.h                        |   15 +
- drivers/gpio/gpiolib-cdev.c                        |    3 -
- drivers/gpio/gpiolib-devres.c                      |   90 +-
- drivers/gpio/gpiolib-of.c                          |   17 +
- drivers/gpio/gpiolib-of.h                          |    6 +
- drivers/gpio/gpiolib-sysfs.c                       |   12 +-
- drivers/gpio/gpiolib.c                             |  173 +--
- drivers/mfd/Kconfig                                |   20 +
- drivers/mfd/Makefile                               |    1 +
- drivers/mfd/max77759.c                             |  690 ++++++++++++
- drivers/nvmem/Kconfig                              |   12 +
- drivers/nvmem/Makefile                             |    2 +
- drivers/nvmem/max77759-nvmem.c                     |  145 +++
- drivers/platform/x86/intel/int0002_vgpio.c         |    2 +-
- include/linux/device.h                             |   38 -
- include/linux/device/devres.h                      |   41 +
- include/linux/gpio/consumer.h                      |   11 +-
- include/linux/irqdomain.h                          |   18 +-
- include/linux/mfd/max77759.h                       |  165 +++
- kernel/irq/irqdomain.c                             |   56 +
- tools/testing/selftests/gpio/Makefile              |    2 +-
- tools/testing/selftests/gpio/config                |    1 +
- tools/testing/selftests/gpio/gpio-aggregator.sh    |  727 +++++++++++++
- 96 files changed, 5574 insertions(+), 1140 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
- create mode 100644 Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
- create mode 100644 drivers/gpio/gpio-blzp1600.c
- create mode 100644 drivers/gpio/gpio-max77759.c
- create mode 100644 drivers/gpio/gpio-spacemit-k1.c
- rename drivers/gpio/{gpiolib-acpi.c => gpiolib-acpi-core.c} (72%)
- create mode 100644 drivers/gpio/gpiolib-acpi-quirks.c
- create mode 100644 drivers/mfd/max77759.c
- create mode 100644 drivers/nvmem/max77759-nvmem.c
- create mode 100644 include/linux/mfd/max77759.h
- create mode 100755 tools/testing/selftests/gpio/gpio-aggregator.sh
+- Nuno S=C3=A1
 
