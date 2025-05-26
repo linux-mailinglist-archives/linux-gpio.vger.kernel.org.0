@@ -1,157 +1,229 @@
-Return-Path: <linux-gpio+bounces-20566-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20567-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1476AC3F06
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 14:03:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66454AC40FB
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 16:07:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67E1C18970D5
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 12:03:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B297162576
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 May 2025 14:07:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F9C41FCFEF;
-	Mon, 26 May 2025 12:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B04220E70A;
+	Mon, 26 May 2025 14:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bM8bhV4z"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NViilAsC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5ED1BC5C;
-	Mon, 26 May 2025 12:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B139020E00A
+	for <linux-gpio@vger.kernel.org>; Mon, 26 May 2025 14:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260998; cv=none; b=ntZ5A7+Z5DuZ+x2xmyofKhmogVoPfKN1FC0pt3yzQDHYXvtTe08cjWYBvQNNlKGgeYZ+XdwHeEdKcXlijcKp6n0ytBWBV14FOLqaJ95M1hSe1Q6r2JZLPoQSVb3KE5B+yqmef9HYPdU0RAR0eiAvbXt9AmHzTQikawxGgh/YeQY=
+	t=1748268419; cv=none; b=cErK8680lqGbV2ZU/YdjvJpi3CkKiRGNbmcbgg2A3+msOBR9s5o4/2umE7vwk+H+jBtLB6zytYRe/At3OipAXv/tTeZxtt+VvbXPjgvOWSrJ7w4WwSEnkedQne++dr5fzWfootVnszU7Sclcmys9iMa+jygMZV2huN3XrjQDiKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748260998; c=relaxed/simple;
-	bh=7RcKKcyw/mz1JEdzFQBQPEG8HmMMGUkhsGa4P9iWHbk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=EHFAw3GkzTX83M3qO368Qp2iNHVHRB9NbDmVGzcKjcRLfra3F7gAc1SzolBBPmmeC7//sfhCsjXdBNcRa+V8HwWdUEN35NiS3F3HQIPmPKue/c7BvQHkuYWYwmNhqeufO4ulnFoSMhy08e4EQrCsF/uMwReirT8wmIaIEjPYDlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bM8bhV4z; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1942F43B29;
-	Mon, 26 May 2025 12:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748260994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zxMH5k+dYKIilp2PKuzRPktv59J5PhIs3BBDtjszt0o=;
-	b=bM8bhV4zj/W2OP6qfF9wkW4EcChAuml0Pbcmn56RpgKhJrhogQK20f443bC4+ZMVr8yigP
-	WoilBnTSYNUQIk5pWtir7Jpd5TIOqEfk2j5dutyxhoppi4XzXiCnsKGaNwzaYxzFKsY+jP
-	qseUip5kW54H/5G10A3mVWaNgr7tsRgDcvumQjKbQfN2+BQ9aHnKdVXydK+coAvYLNyYf4
-	Q9pjo/qe5pIzBsniojLrnxkGpoR3MC8y89GI/K4elRnN5kLWlsW1m8Vanvdh4YyoBmNvfw
-	oOA72ORaBD89bYWOZryRc54hcWTsAhNiijZlrn1Drx2ZjuaKgwZVvgGfqLiTtA==
+	s=arc-20240116; t=1748268419; c=relaxed/simple;
+	bh=QTeXWNX2iUXDBSxx5jGj9CcIe9hdPTaRCVCOms2e+b0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rjJvFhCmJWZduyzTYMEIt2zMGIoLUp7piUvpruxbsAeKn4nJ6LhG4s1otPOZaHJFHqDjT//+rdh3PEy5G0I5lqneSpzeQtn1OGd8AegkF6hTt7UeyRf0If7Gi1nN7LWlDJPAjoydGAzSkAPc41rAT5L8ekR4g9juvUIt0FMi5KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NViilAsC; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a37d24e607so210198f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 May 2025 07:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748268416; x=1748873216; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zUalJN5MUy3YAR3UhbDJtGyL6WBv2slh5mtlXFKO8b0=;
+        b=NViilAsCn2xGDAq4FOPQ0O+rbmAKtR1y9M/EpUXRPhsLYuzOnc4Riy0hIuhq6t6l4A
+         MVJiy9yv/Tbb/P6gBUY0AgLntktU9C83mf1QrpKce21ajCVDOwq56j4COXFgaN09dCo5
+         +9QojH5rRaZ/3TA4K5UBIysnuAe+f4jkOUAPV6/WAdxHtv6EjPYZJPUfYw2e84qcu6yk
+         VE3iErTgyIBThBWPVCQeb1PDqNKc1BfV/OGKXZeaA56HLtnjipmEh7LqoIu9Yh8Vpz7C
+         n/FTweIowzD4V3cVmaFqDG627iheHLJkajisy2fjAA5QpnJ48+sMO2uCvCIip37F3jiJ
+         nuCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748268416; x=1748873216;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zUalJN5MUy3YAR3UhbDJtGyL6WBv2slh5mtlXFKO8b0=;
+        b=mqpLTwcQJ61v2UZketWw5TzEHWom1mU0Sl1ryTGg1JKH8QeESb+UMxy7KTZ3adM66u
+         jPLNQcY3BLMsnqtdnAXBBKtml92XTUBJyhO33ZdiKeCbt+sItjYg2g8aJS/cvQriU5Va
+         F0+E10F+RiNwa/u/RIBe7ydXR+bPG70MjsPYujQ6moTRLgbS+q4LkfyqnQDbdzloQB9K
+         BtcsCDWqYUORMuDdJ6+lauWy/jjoXD7cNQpXqIZ2RY6nrhpztk78OrBRAY2HVTY5IjDh
+         gguwEXtsfC1J1wqhihpfmFYIKdOldXKrDauJj3ScUDUtrUI3KPsES38PxxZAXUH/E1u4
+         VUQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVogDqTJM1rCKsTHxVcTxVMzqe2uQXkZ80FwYuHxlEG+ZJgB2x/lJ8bDP9ZcvxOvlEK7BxkM8UvikSB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG7XzgbnMnjKIcgqu58AC6R5PH3xnergs5/EqbYBcGT9je9Mw+
+	PClfOzKYz0uoAj3ws6DqcZcE1REByQUUVauMJ6aX5tg5LUynrt4YtXSMF5g/t3ITZB4=
+X-Gm-Gg: ASbGncvQrDY8DUck8PQvsZwMh2LyRcOqWZXTr4b3NUHr69HMV3LrWwVVI98/9bHkL/j
+	cyhCSKjb9slLw3C7WKI/rIpXLsKkib6WDfMfD3YFEf6/vvw1doxNqWIb7Tth84tYBtnfoT4xgHd
+	YCwLgR8Z64Byv1zwNMntXP9QOStkdnYY9gv1pORoY6eB0Tg0VXFQk106g6NSZCB4eiZGOo2QEfW
+	YEbgbuvxksUN4fjF2pmWo5cWFU6JMqnAve9o/by+c3UEQaNwe9Ri9ln1Sb+H0A42TBAKJ6Qv6Eh
+	kDGr79NKadZ2ejhbIb/oVsCCuLyaaYHAy2PoeWqa7cgMA3FRaH+K
+X-Google-Smtp-Source: AGHT+IFn52fIeGag1IWUAYwZ0XrL+fmHEWUQ8gimnAH86GvLzi97W0zr1r99vIRe5MeCAnEzOnrUPA==
+X-Received: by 2002:a05:6000:1886:b0:3a4:c909:ce2a with SMTP id ffacd0b85a97d-3a4cb489a8cmr7582347f8f.45.1748268415632;
+        Mon, 26 May 2025 07:06:55 -0700 (PDT)
+Received: from [192.168.2.177] ([91.116.220.47])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4db284261sm2418574f8f.67.2025.05.26.07.06.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 07:06:55 -0700 (PDT)
+Message-ID: <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
+Date: Mon, 26 May 2025 16:06:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 26 May 2025 14:03:12 +0200
-Message-Id: <DA62SSMI7C52.V2QD509S95QW@bootlin.com>
-Subject: Re: [PATCH v9 06/11] gpio: regmap: Allow to allocate regmap-irq
- device
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
- <20250522-mdb-max7360-support-v9-6-74fc03517e41@bootlin.com>
- <CAMRc=MeT+b5dBOWyf6-BpTjk70nwVhLOpCY-JHNizBo5H1-AnQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MeT+b5dBOWyf6-BpTjk70nwVhLOpCY-JHNizBo5H1-AnQ@mail.gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddujeegjeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkefhkeeifeethfejteevfeduheduvddvuedvvddugfffhfevkefftefhuefftddunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemvgdtrgemrgeiieemfedukedtmegttdgsvgemsgelrgekmegvheelvdemiegrfehfnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmegrieeimeefudektdemtgdtsggvmegslegrkeemvgehledvmeeirgeffhdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdpr
- hgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
+ for RP1 chipset on Rpi5
+To: Andrea della Porta <andrea.porta@suse.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+ <aBp1wye0L7swfe1H@apocalypse>
+ <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+ <CAO50JKVF6x_=MUuzjhdK0QotcdUgHysMb9v1g0UvWjaJF2fjDA@mail.gmail.com>
+ <48AFA657-5683-42A4-888E-3E98A515F3B1@broadcom.com>
+ <aCIk40642nXZ3arz@apocalypse>
+Content-Language: en-US, ca-ES, es-ES
+From: Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; keydata=
+ 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
+ PVrr2NoUqi/bxI8fFQJD1jVj8K0=
+In-Reply-To: <aCIk40642nXZ3arz@apocalypse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu May 22, 2025 at 3:01 PM CEST, Bartosz Golaszewski wrote:
-> On Thu, May 22, 2025 at 2:06=E2=80=AFPM Mathieu Dubois-Briand
-> <mathieu.dubois-briand@bootlin.com> wrote:
+
+
+On 12/05/2025 18:42, Andrea della Porta wrote:
+> Hi Florian,
+> 
+> On 15:02 Mon 12 May     , Florian Fainelli wrote:
+>> On May 7, 2025 5:01:05 PM GMT+02:00, Andrea della Porta <andrea.porta@suse.com> wrote:
+>>> Hi Florian, to accept the patches, what would work best for you?
+>>>
+>>> 1) Send only the relevant updated patches (maybe as an entirely new
+>>> patchset with
+>>>    only those specific patches)
 >>
->> GPIO controller often have support for IRQ: allow to easily allocate
->> both gpio-regmap and regmap-irq in one operation.
+>> Only the updated patches work for me. I don't think there is that much coupling between the DT changes and the non-DT changes (other than without DT entries nothing is activated)
+> 
+> It's a little bit more involved than that:
+> 
+> - Patch 7 (misc driver) depends on 6 (RP1 common dts) which in turn
+>    depends on 1 (clock binding header). Should be taken by Greg.
+
+Greg gave an Acked-by so I think Florian is good to take that patch. Which 
+leaves us to the clock patches (driver + dt-bindings).
+
+> 
+> - Patch 9 and 10 (board dts) depends on 6 (RP1 common dts) which again
+>    depends on 1 (clock binding header). Should be taken by Florian.
+> 
+> - Patch 4 (clock driver) depends on 1 (clock binding header) and
+>    should be taken by Stephen.
+> 
+
+Steven reviewed the patches (driver + dt-binding) so he is waiting for a new 
+version which addresses the review. He offered to either take them and provide a 
+branch that Florian can merge into his branch or provide a Acked-by tag.
+
+@Florian what would you prefer?
+
+Regards,
+Matthias
+
+> So patches 6 and 1 are in common between Florian and Greg, while patch 1
+> is in common between everyone in the pool.
+> 
+> If I uniquely assign the patches in common to one of you, the others
+> won't be able to compile their own branch because they will be missing
+> the dependent patch.
+> 
+> If, on the other hand, I duplicate common patches to each of you to
+> make the kernel compile for veryone, you should remember that there
+> will be conflicts due to duplicated patches among different trees
+> down the merge path.
+> 
+> Any advice about how to proceed is appreciated.
+> 
+> Many thanks,
+> Andrea
+> 
 >>
->> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->> ---
->>  drivers/gpio/gpio-regmap.c  | 21 +++++++++++++++++++--
->>  include/linux/gpio/regmap.h | 11 +++++++++++
->>  2 files changed, 30 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
->> index 87c4225784cf..9cbbbaf82609 100644
->> --- a/drivers/gpio/gpio-regmap.c
->> +++ b/drivers/gpio/gpio-regmap.c
->> @@ -215,6 +215,7 @@ EXPORT_SYMBOL_GPL(gpio_regmap_get_drvdata);
->>   */
->>  struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_confi=
-g *config)
->>  {
->> +       struct irq_domain *irq_domain;
->>         struct gpio_regmap *gpio;
->>         struct gpio_chip *chip;
->>         int ret;
->> @@ -295,8 +296,24 @@ struct gpio_regmap *gpio_regmap_register(const stru=
-ct gpio_regmap_config *config
->>         if (ret < 0)
->>                 goto err_free_gpio;
->>
->> -       if (config->irq_domain) {
->> -               ret =3D gpiochip_irqchip_add_domain(chip, config->irq_do=
-main);
->> +#ifdef CONFIG_REGMAP_IRQ
->> +       if (config->regmap_irq_chip) {
->> +               struct regmap_irq_chip_data *irq_chip_data;
->> +
->> +               ret =3D devm_regmap_add_irq_chip_fwnode(config->parent, =
-dev_fwnode(config->parent),
->> +                                                     config->regmap, co=
-nfig->regmap_irq_line,
->> +                                                     config->regmap_irq=
-_flags, 0,
->> +                                                     config->regmap_irq=
-_chip, &irq_chip_data);
->
-> I don't think using devres here is a good idea. There's no guarantee
-> that gpio_regmap_register() will be called on device attach so you
-> must not make the release of the resource depend on an associated
-> detach which may never happen. Please use the non-managed variant
-> here.
-
-Right, I will make sure to use
-regmap_add_irq_chip_fwnode()/regmap_del_irq_chip() here.
-
-I should be able to send a new version in the coming days.
-
->
-> Bart
->
-
-Thanks for your review.
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>> Florian
 
 
