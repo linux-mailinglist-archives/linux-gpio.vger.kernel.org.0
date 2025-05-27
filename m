@@ -1,126 +1,318 @@
-Return-Path: <linux-gpio+bounces-20578-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20579-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C4E1AC4A1F
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 10:23:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E547FAC4C07
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 12:09:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C96FC3B7582
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 08:22:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21F5F3A6271
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 10:08:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71ED7248F5E;
-	Tue, 27 May 2025 08:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7483254841;
+	Tue, 27 May 2025 10:09:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WYZLKDV7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fv30QztK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F6322578C;
-	Tue, 27 May 2025 08:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B286B2110E;
+	Tue, 27 May 2025 10:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748334193; cv=none; b=WDajmu+PMn4izZeA6c3SCn2BD50KklQ6/r6lzCcQ9orGfF7OAj5GgrEUsvZ+8Pxctta8QL8ptyHnS+FgtssEndH+rZy04+WzUM3iy1O2jWEoE5KtxZJsxTWVfIHm9psbU3YNoA+Ibw0a67VlXACrrtNyAYKjARQqdEXz8X/RH/I=
+	t=1748340540; cv=none; b=OL3NRerj+C3lXDIyGpecg8MaWFXkd2L856jA0VUiu6K+yLOTWWjxz/4PfowmJCKJxzLzVF4IstTWiUTsovO4c73wwHdAHl0RhhqUx33WzvKjy2WiNchMfS1ffgM6CXXcW7eQP0BXRX3qzKStDiRK/yYpF845peMsNx2JiSZcS74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748334193; c=relaxed/simple;
-	bh=sJCAD/G3WgHCOo4ZVOYfJyxfGJfkPPlZ7UPU9cG3z4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ejA3X2AZ9uksIOMicjTp1p2B/Dpbw/GUw2/EkuziRFRhqkvn12UgCozCNVxIiS8yHiYunVPhkPFjI0gW8nR8c7uCAjIdf/5O153wz+lf05W5vuTvcolmVWyTusmAKWedOc+LXcO4sz7XvZ4kcBLLg2zd+/DedU0wYfGGL+quKAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WYZLKDV7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F7A1C4CEE9;
-	Tue, 27 May 2025 08:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748334192;
-	bh=sJCAD/G3WgHCOo4ZVOYfJyxfGJfkPPlZ7UPU9cG3z4k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WYZLKDV7aNJZvutW+MBDWLwEL7Ethc6LB6zZ+nDaK50BuKD91lFPM6FdBHVrxM0+c
-	 OoR3Q+wtPIOwNx7bSniXkbUi9bsHT1dy23/OhUpB755hTCA5nTcfeslxW7VJSkarxo
-	 rBV1gHKxCWrEee46k62V92UWuGBri9ZKIs8r6NjAcCRfsCFOefIfNEuD2WVjq/lvq0
-	 iaCyphOVdiqTeqpUZ5l+1cpEbKeqgKYHTc9gQVW9l3Jf2xw7DhIzy5jef+FgbUZSkK
-	 7W9KwcEY612rZ0CNbsDGVKl5V1fNN60Pc1cS79RBkqNzsGigkEn35CeEBvaWLfw8Iq
-	 69mtBz3l2jGfg==
-Message-ID: <63857ae0-924e-42f1-adb7-19b477fe06f6@kernel.org>
-Date: Tue, 27 May 2025 10:23:07 +0200
+	s=arc-20240116; t=1748340540; c=relaxed/simple;
+	bh=RUaIfTju6q4KJc5UsfnxPADcffSmo0OlVbZ8SY8Mnro=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bakpuQvhMkitRkXNyKge+ILggc6R6hhtxTt71LhVCO75NKGYm4ud+N+N18LAjpak2e1WazxgigGu3EnwhG4/2omg/GBn/osD5egwKIclkbhn1mllcvc0SROmmyJhp9DqlaonYWu8+5HrG7ImIs+N5yQsDPf6FEjcS/LOfc26mg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fv30QztK; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-441c99459e9so19681265e9.3;
+        Tue, 27 May 2025 03:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748340537; x=1748945337; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ILodCWyZ8sVROYb0hQ6K3xo+lZX+dJNU60OVJehOf64=;
+        b=Fv30QztKa2+u26CycMawqP0p1LIUHN/dFl1tdwBATIHpxZsBcAVUaSea+sPzX+98Br
+         tXJcuSNNOcCn7f1Xm8KuK59Iy1hE6GETOQ8KbpZ8wlOl3tt5s9NING7z8ZwJj0FFAQT/
+         SLVIdc0cqLP37nDhXoPRDmEexwQDCezV84X2+BskP5Ix/Htd8cbvstAKGR1JnFR0OT1U
+         JntkU//jn28X3dF5za1cnhP2X2LRac/qzt1sAoxmmQ8oguI9EOASEnwfQ/oS7kkgw6mW
+         lWs1slcVcnF7JbiiFZSBhzJhKlMJ/Baom+Fj9PSySc6kNBUX9hK2/Fri53xEufHACZyK
+         pfTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748340537; x=1748945337;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ILodCWyZ8sVROYb0hQ6K3xo+lZX+dJNU60OVJehOf64=;
+        b=EObxkdAN73RTVpq2+bARTezyMswAeNcrHcKYmdIgDgwdj10jgXSrPz66MRyOFYcwEm
+         7vudD8N7jBtNpV/LOJM5uwqu5/guGFfRkSdXaih6z2SZDEmoFaCqcjFElFuv/nXmcDO7
+         XcBkxiBsCHeNbRSLnM9xx7AU2UFbFwWqFsAId1nOhvpwgnhkUsfUwsp/b3JKlD597Soc
+         dy9RtZcLNhx5HAJdUJ1fS35Lj43+Q+qc4kYH56n3SaYK5dK2CFEINj2U2WiKGfh9FLY3
+         3dZtHi5WgbJaTwAOUmiDZdfUk/CBF6hYqT95gqWQn4QKvit+4KGAxJUPfpEE4LlkM0va
+         OyHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVc1w99RvLeL8+Fb+0RIKDHvSlzXxK/fTM0z6S8e9h8EB1ZlmJUIgA9YenC47JElux2fD9RglX6QVMP@vger.kernel.org, AJvYcCW018Sai0X3ItXzuHSjEBexD5TAsKH7UcvqGR1iplNTU4lECZ76JAmBYWn3FwCxlKIYjBJOfyy36Zjtw2I=@vger.kernel.org, AJvYcCWzT+faYN+QC2iEpKW2lFTZAhUM+XbSw04+AO0O9qeFY7D0v48vVbumukJp2EsDgeLJalszvERiZ4TQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj0g8oZATjGnjLDwHwwIqTVrzjfo/fGJguIu0OH/iZhlWl45Ap
+	eAK98r9kuzqcgHyqdvoH6B8ngz9aUVX8rY9vFeNNtp7cJjdiZpU1ZBl6
+X-Gm-Gg: ASbGnctNvPejRHGaAjk9dz+KuoNkSdRUUJBdB/BKUTYWYcxgHaafUeGYFQassddaeAA
+	+ri35sS5gTuAgFrwYyUq4hUDzqU3vhI2d6OiWi2Oyyob1sL5YcTI5YK3oSSsqXDulHsfQ9HTQ7t
+	yj+6UDo+PJl1cPmcTjvFuz/rKndaoBmXfNCUkrtoCo9qmtDaG511lyyaDT1Ep/CN4hImmqkbdv4
+	Z8jYQh0XURoJxaPMZYuEygTIAv3NJqPKa2aGI5XFc/wqakHXiHgQbISy0/luF5j1UPW9kyUEp8n
+	/XhG5Hn8dggBj/6Mqj6UIEOPBJ/gf5oMHLX8FjRs71X2ctESa2maRjavX+yvUupjYJtAcA==
+X-Google-Smtp-Source: AGHT+IFQNfqcH49B7+ZJZpALbPhHFs2CU7qSI/6ot0EmNd2l5ulmPpgQmrxVmMioW1PHPMelJNZbuA==
+X-Received: by 2002:a05:600c:4fc9:b0:43c:ec4c:25b4 with SMTP id 5b1f17b1804b1-44c91ad70d0mr142754285e9.10.1748340536572;
+        Tue, 27 May 2025 03:08:56 -0700 (PDT)
+Received: from [100.73.1.233] ([195.158.248.117])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44fcced3cb5sm19168305e9.1.2025.05.27.03.08.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 03:08:55 -0700 (PDT)
+Message-ID: <a94be0ebad027a58a9665253e0d94ff014691cd2.camel@gmail.com>
+Subject: Re: [PATCH v4 06/20] mfd: adp5585: refactor how regmap defaults are
+ handled
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Lee Jones <lee@kernel.org>, nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring	
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
+ <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <ukleinek@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov	 <dmitry.torokhov@gmail.com>,
+ Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Liu Ying
+ <victor.liu@nxp.com>
+Date: Tue, 27 May 2025 11:08:59 +0100
+In-Reply-To: <20250523150338.GH1378991@google.com>
+References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
+	 <20250521-dev-adp5589-fw-v4-6-f2c988d7a7a0@analog.com>
+	 <20250523150338.GH1378991@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] dt-bindings: pinctl: amlogic,pinctrl-a4: Add
- compatible string for S7/S7D/S6
-To: xianwei.zhao@amlogic.com, Linus Walleij <linus.walleij@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
- <20250527-s6-s7-pinctrl-v3-1-44f6a0451519@amlogic.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250527-s6-s7-pinctrl-v3-1-44f6a0451519@amlogic.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 27/05/2025 07:23, Xianwei Zhao via B4 Relay wrote:
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> 
-> Update dt-binding document for pinctrl of Amlogic S7/S7D/S6.
-> 
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Fri, 2025-05-23 at 16:03 +0100, Lee Jones wrote:
+> On Wed, 21 May 2025, Nuno S=C3=A1 via B4 Relay wrote:
+>=20
+> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
+> >=20
+> > The only thing changing between variants is the regmap default
+> > registers. Hence, instead of having a regmap condig for every variant
+>=20
+> Spellcheck.
+>=20
+> > (duplicating lots of fields), add a chip info type of structure with a
+> > regmap id to identify which defaults to use and populate regmap_config
+>=20
+> "ID"
+>=20
+> > at runtime given a template plus the id. Also note that between
+> > variants, the defaults can be the same which means the chip info
+> > structure can be used in more than one compatible.
+> >=20
+> > This will also make it simpler adding new chips with more variants.
+> >=20
+> > Also note that the chip info structures are deliberately not const as
+> > they will also contain lots of members that are the same between the
+> > different devices variants and so we will fill those at runtime.
+> >=20
+> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > ---
+> > =C2=A0drivers/mfd/adp5585.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 74 ++=
++++++++++++++++++++---------------------
+> > ---
+> > =C2=A0include/linux/mfd/adp5585.h | 10 ++++++
+> > =C2=A02 files changed, 44 insertions(+), 40 deletions(-)
+> >=20
+> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> > index
+> > 179dc284833ae8f39eefc6787dd2c7158dfd3ad7..672f3468bda5be6af85a5982c3626=
+053b4
+> > cb59bf 100644
+> > --- a/drivers/mfd/adp5585.c
+> > +++ b/drivers/mfd/adp5585.c
+> > @@ -81,42 +81,31 @@ static const u8
+> > adp5585_regmap_defaults_04[ADP5585_MAX_REG + 1] =3D {
+> > =C2=A0	/* 0x38 */ 0x00, 0x00, 0x00, 0x00, 0x00,
+> > =C2=A0};
+> > =C2=A0
+> > -enum adp5585_regmap_type {
+> > -	ADP5585_REGMAP_00,
+> > -	ADP5585_REGMAP_02,
+> > -	ADP5585_REGMAP_04,
+> > +/* -1 since the enum starts at 1 for error checking in
+> > i2c_get_match_data()*/
+>=20
+> Space before the '*'.
+>=20
+> > +static const u8 *adp5585_regmap_defaults[ADP5585_MAX - 1] =3D {
+> > +	[ADP5585_00 - 1] =3D adp5585_regmap_defaults_00,
+> > +	[ADP5585_01 - 1] =3D adp5585_regmap_defaults_00,
+> > +	[ADP5585_02 - 1] =3D adp5585_regmap_defaults_02,
+> > +	[ADP5585_03 - 1] =3D adp5585_regmap_defaults_00,
+> > +	[ADP5585_04 - 1] =3D adp5585_regmap_defaults_04,
+>=20
+> Just leave the first entry blank.=C2=A0 No need for all he gymnastics.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+alright
 
-Best regards,
-Krzysztof
+>=20
+> > =C2=A0};
+> > =C2=A0
+> > -static const struct regmap_config adp5585_regmap_configs[] =3D {
+> > -	[ADP5585_REGMAP_00] =3D {
+> > -		.reg_bits =3D 8,
+> > -		.val_bits =3D 8,
+> > -		.max_register =3D ADP5585_MAX_REG,
+> > -		.volatile_table =3D &adp5585_volatile_regs,
+> > -		.cache_type =3D REGCACHE_MAPLE,
+> > -		.reg_defaults_raw =3D adp5585_regmap_defaults_00,
+> > -		.num_reg_defaults_raw =3D sizeof(adp5585_regmap_defaults_00),
+> > -	},
+> > -	[ADP5585_REGMAP_02] =3D {
+> > -		.reg_bits =3D 8,
+> > -		.val_bits =3D 8,
+> > -		.max_register =3D ADP5585_MAX_REG,
+> > -		.volatile_table =3D &adp5585_volatile_regs,
+> > -		.cache_type =3D REGCACHE_MAPLE,
+> > -		.reg_defaults_raw =3D adp5585_regmap_defaults_02,
+> > -		.num_reg_defaults_raw =3D sizeof(adp5585_regmap_defaults_02),
+> > -	},
+> > -	[ADP5585_REGMAP_04] =3D {
+> > -		.reg_bits =3D 8,
+> > -		.val_bits =3D 8,
+> > -		.max_register =3D ADP5585_MAX_REG,
+> > -		.volatile_table =3D &adp5585_volatile_regs,
+> > -		.cache_type =3D REGCACHE_MAPLE,
+> > -		.reg_defaults_raw =3D adp5585_regmap_defaults_04,
+> > -		.num_reg_defaults_raw =3D sizeof(adp5585_regmap_defaults_04),
+> > -	},
+> > +static const struct regmap_config adp5585_regmap_config_template =3D {
+> > +	.reg_bits =3D 8,
+> > +	.val_bits =3D 8,
+> > +	.max_register =3D ADP5585_MAX_REG,
+> > +	.volatile_table =3D &adp5585_volatile_regs,
+> > +	.cache_type =3D REGCACHE_MAPLE,
+> > +	.num_reg_defaults_raw =3D ADP5585_MAX_REG + 1,
+> > =C2=A0};
+> > =C2=A0
+> > +static void adp5585_fill_regmap_config(const struct adp5585_dev *adp55=
+85,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct regmap_config *regmap_=
+config)
+> > +{
+> > +	*regmap_config =3D adp5585_regmap_config_template;
+>=20
+> Return struct regmap_config * instead.
+>=20
+> > +	regmap_config->reg_defaults_raw =3D adp5585_regmap_defaults[adp5585-
+> > >variant - 1];
+>=20
+> Does this really warrant a separate function?
+
+In this particular patch, not really. But since I know how things will evol=
+ve :)
+
+- Nuno S=C3=A1
+
+>=20
+> > +}
+> > +
+> > =C2=A0static void adp5585_remove_devices(void *dev)
+> > =C2=A0{
+> > =C2=A0	mfd_remove_devices(dev);
+> > @@ -157,7 +146,7 @@ static void adp5585_osc_disable(void *data)
+> > =C2=A0
+> > =C2=A0static int adp5585_i2c_probe(struct i2c_client *i2c)
+> > =C2=A0{
+> > -	const struct regmap_config *regmap_config;
+> > +	struct regmap_config regmap_config;
+> > =C2=A0	struct adp5585_dev *adp5585;
+> > =C2=A0	unsigned int id;
+> > =C2=A0	int ret;
+> > @@ -168,8 +157,13 @@ static int adp5585_i2c_probe(struct i2c_client *i2=
+c)
+> > =C2=A0
+> > =C2=A0	i2c_set_clientdata(i2c, adp5585);
+> > =C2=A0
+> > -	regmap_config =3D i2c_get_match_data(i2c);
+> > -	adp5585->regmap =3D devm_regmap_init_i2c(i2c, regmap_config);
+> > +	adp5585->variant =3D (enum
+> > adp5585_variant)(uintptr_t)i2c_get_match_data(i2c);
+> > +	if (!adp5585->variant)
+> > +		return -ENODEV;
+> > +
+> > +	adp5585_fill_regmap_config(adp5585, &regmap_config);
+> > +
+> > +	adp5585->regmap =3D devm_regmap_init_i2c(i2c, &regmap_config);
+> > =C2=A0	if (IS_ERR(adp5585->regmap))
+> > =C2=A0		return dev_err_probe(&i2c->dev, PTR_ERR(adp5585->regmap),
+> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to initialize register
+> > map\n");
+> > @@ -226,19 +220,19 @@ static DEFINE_SIMPLE_DEV_PM_OPS(adp5585_pm,
+> > adp5585_suspend, adp5585_resume);
+> > =C2=A0static const struct of_device_id adp5585_of_match[] =3D {
+> > =C2=A0	{
+> > =C2=A0		.compatible =3D "adi,adp5585-00",
+> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_00],
+> > +		.data =3D (void *)ADP5585_00,
+> > =C2=A0	}, {
+> > =C2=A0		.compatible =3D "adi,adp5585-01",
+> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_00],
+> > +		.data =3D (void *)ADP5585_01,
+> > =C2=A0	}, {
+> > =C2=A0		.compatible =3D "adi,adp5585-02",
+> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_02],
+> > +		.data =3D (void *)ADP5585_02,
+> > =C2=A0	}, {
+> > =C2=A0		.compatible =3D "adi,adp5585-03",
+> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_00],
+> > +		.data =3D (void *)ADP5585_03,
+> > =C2=A0	}, {
+> > =C2=A0		.compatible =3D "adi,adp5585-04",
+> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_04],
+> > +		.data =3D (void *)ADP5585_04,
+> > =C2=A0	},
+> > =C2=A0	{ /* sentinel */ }
+> > =C2=A0};
+> > diff --git a/include/linux/mfd/adp5585.h b/include/linux/mfd/adp5585.h
+> > index
+> > 016033cd68e46757aca86d21dd37025fd354b801..2813b20e638b6e73ef198e43af07e=
+f29ff
+> > 25f273 100644
+> > --- a/include/linux/mfd/adp5585.h
+> > +++ b/include/linux/mfd/adp5585.h
+> > @@ -119,8 +119,18 @@
+> > =C2=A0
+> > =C2=A0struct regmap;
+> > =C2=A0
+> > +enum adp5585_variant {
+> > +	ADP5585_00 =3D 1,
+> > +	ADP5585_01,
+> > +	ADP5585_02,
+> > +	ADP5585_03,
+> > +	ADP5585_04,
+> > +	ADP5585_MAX
+> > +};
+> > +
+> > =C2=A0struct adp5585_dev {
+> > =C2=A0	struct regmap *regmap;
+> > +	enum adp5585_variant variant;
+> > =C2=A0};
+> > =C2=A0
+> > =C2=A0#endif
+> >=20
+> > --=20
+> > 2.49.0
+> >=20
+> >=20
 
