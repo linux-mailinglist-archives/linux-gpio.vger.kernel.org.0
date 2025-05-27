@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-20573-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20572-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63226AC478B
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AC74AC478A
 	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 07:23:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 452AE3A93C7
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D6663A79D6
 	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 05:23:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C2AF1DF749;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47B5B1DF725;
 	Tue, 27 May 2025 05:23:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbkJdXsD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVw7eiD6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FF01D5170;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F8F1D416E;
 	Tue, 27 May 2025 05:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748323411; cv=none; b=GexRrats3FL2n40ed7dAIQzE5tZar78PR4Aa6orAgJD5lRBlOlsUVg4ukkvGbNzWcxHJfXQrilC8zOk2iKh9wJ+TdUrxxZKi0T63EYE5eLLB4x7XY4oKocYZleantl5nMO0ufDG+woUpIBJvSZrx6irh3ixD7MwjJLZJJRNscHo=
+	t=1748323411; cv=none; b=bN60u96soJwB4FQRLlKV5wlz0d3n3T4hVXHVt8Jgwl4lLwVCFsY8ForXfdsJetJCRADhdtT8ZhM5SmRBcErHEU0wMYQMLfs2eP9L3dbXpninwNDloS/Cc7/C+pZAOZfyzLMmvfNH5nIAfGsC9PPcKGCmn6CtwYv7YDYA5VqCxBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748323411; c=relaxed/simple;
-	bh=1L6yZi98OMXSwGuVg1fqDNJOAY9tKiGWyTN1OH6EbiI=;
+	bh=quOporxfDNGe0WOCFU1wm8cDs1FXS8mPxsye1M2mYFw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j9ojHpk0PmJ6cgqWDHCLvJDsadv9nSkUkIqG8yIgLQP+zN5zPAD4Jym5SASLxIKRCyUF4MbCqTY+Z3ixclzwQMeKW3Zm8QVF8LP7AEu3DjbYwRFzKAM9vTxUZQZ2mVPDQgQl+6Ojq3YERU9PLKwLrgeMu/pLyP/P+A+KXwowjKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbkJdXsD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 76803C4CEEF;
+	 In-Reply-To:To:Cc; b=Y1ZXvNSce36ebqC6D68BrWEnpp6MVYv6BioQdxi4O7jRad5vJ3VgNEeKmQ+rB0V/357mXpfwitV/8lnp4DNxnu2ss09jJEQslB3Q1o9NQQba9TlmqzySIzw5ptw7Jh0zFmf/yCD8cd4CZ1N7t/byvUhvbQ/3OYjmyrnOiVbdkGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVw7eiD6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8061AC4CEF1;
 	Tue, 27 May 2025 05:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1748323410;
-	bh=1L6yZi98OMXSwGuVg1fqDNJOAY9tKiGWyTN1OH6EbiI=;
+	bh=quOporxfDNGe0WOCFU1wm8cDs1FXS8mPxsye1M2mYFw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mbkJdXsDLBUaGBxZHauuX2jN7tcoNNQqY4H6OsyI6zTjnIR6p8Ing/dHjdqWikFF8
-	 XmUK2A7hGXtzklVEW4S8W4SHRFNoOSfElO7FaM6Oq9/t8oZxEZfxa8ZThCkf4tidUR
-	 nG2NtZhorbAriHWLzIFGfRg/8ZvX4OZf2iAMaZZeeIFw/EcuxSKFda0i7pR5sbEZTM
-	 h+MCEd+9HSODB2JSrdXmdD1fsTxn3ZhR80V/F7Ud99xj6F5cye6F4TC+/FjNjH1fno
-	 TnoGRcfQyTcVvTowlGjG1rHu00abSfvAuZFdKR/qz4J50BliQsqUEZwHKhI9VuRg5k
-	 iOa6X1828qAVg==
+	b=YVw7eiD6TqtTeRTJiO0dec0wkPnIo3p7s3qkedCOyUh3rm0lVs63uo3LnNahvHQNi
+	 vY/DChRLi311KgQM3teuG/KoDkUTRjKmRvV7+JnaEZ1wmeCpyIrY0c3LoHDBLHYIlo
+	 AIcEkFbFp0A5lYcbyE8I5RI8TSC1DKIRjnarmgjavfvAkkE+IRVAxggKvmdlx3ICWE
+	 jO1zobcYQJOqK19Zl1sAHZlnQxOvIMprcnMAeilVqXTtte92TaXo8P+zU5VtZlfb7O
+	 ap967/OB1YlfOlrQenBjjQXT9djohKQJsNuRhBTrGG2EYkph2fLwePqsTz+F2t8OHF
+	 wkB4IBGvnxsTg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655A4C54F30;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C2FC5B549;
 	Tue, 27 May 2025 05:23:30 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Tue, 27 May 2025 13:23:29 +0800
-Subject: [PATCH v3 2/6] pinctrl: meson: a4: remove special data processing
+Date: Tue, 27 May 2025 13:23:30 +0800
+Subject: [PATCH v3 3/6] pinctrl: meson: support amlogic S6/S7/S7D SoC
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-s6-s7-pinctrl-v3-2-44f6a0451519@amlogic.com>
+Message-Id: <20250527-s6-s7-pinctrl-v3-3-44f6a0451519@amlogic.com>
 References: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
 In-Reply-To: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -69,11 +69,11 @@ Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, 
  Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748323408; l=1982;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748323408; l=5341;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=g72piH28WZYJsuGTLrHAVcqtzDHjy35+PP/ZYnzW+rI=;
- b=rrK5/km3xKR3SJKuUH/4jDuMIKsv8qSz/aPkYq10bR2tZPJayF7mVdVQyuwBjHtR+yWBtREce
- LR2LUpEfu5tDH/vEu3hsoIA7N96Ws/T7KUNGgupXnZcd5CKOdSjxjNN
+ bh=qwVCVEAnoBSq9I7w3IY19mvHAyrHN1ELUryPfTi/kbc=;
+ b=wbXtugHHTmGqqZwpfNa/C/9aeKyj4bIAOBY4DnAoW0oG+TN4aXTn7R3nqUieW0QUjmfJIT7wb
+ vYnp2NKxsUUDxljc3ltoSPRo+FEyBJPIGunqQaOlgk/7K6TDw0HA5ss
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -83,72 +83,191 @@ Reply-To: xianwei.zhao@amlogic.com
 
 From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-According to the data specifications of Amlogic's existing SoCs,
-the function register offset and the bit offset are the same
-value among various chips. Therefore, general processing can
-be carried out without the need for private data modification.
-Drop special data processing.
+In some Amlogic SoCs, to save register space or due to some
+abnormal arrangements, two sets of pins share one mux register.
+
+A group starting from pin0 is the main pin group, which acquires
+the register address through DTS and has management permissions,
+but the register bit offset is undetermined.
+
+Another GPIO group as a subordinate group. Some pins mux use share
+register and bit offset from bit0 . But this group do not have
+register management permissions.
+
+This submission implements this situation.
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 33 +++---------------------------
- 1 file changed, 3 insertions(+), 30 deletions(-)
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 101 ++++++++++++++++++++++++++++-
+ 1 file changed, 99 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-index 385cc619df13..11f68224342e 100644
+index 11f68224342e..2541c864086d 100644
 --- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
 +++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-@@ -50,15 +50,8 @@ struct aml_pio_control {
+@@ -50,8 +50,23 @@ struct aml_pio_control {
  	u32 bit_offset[AML_NUM_REG];
  };
  
--struct aml_reg_bit {
--	u32 bank_id;
--	u32 reg_offs[AML_NUM_REG];
--	u32 bit_offs[AML_NUM_REG];
--};
--
++/*
++ * partial bank(subordinate) pins mux config use other bank(main) mux registgers
++ * m_bank_id:	the main bank which pin_id from 0, but register bit not from bit 0
++ * m_bit_offs:	bit offset the main bank mux register
++ * sid:         start pin_id of subordinate bank
++ * eid:         end pin_id of subordinate bank
++ */
++struct multi_mux {
++	unsigned int m_bank_id;
++	unsigned int m_bit_offs;
++	unsigned int sid;
++	unsigned int eid;
++};
++
  struct aml_pctl_data {
  	unsigned int number;
--	struct aml_reg_bit rb_offs[];
++	const struct multi_mux *p_mux;
  };
  
  struct aml_pmx_func {
-@@ -829,31 +822,11 @@ static const struct gpio_chip aml_gpio_template = {
+@@ -71,10 +86,12 @@ struct aml_gpio_bank {
+ 	struct gpio_chip		gpio_chip;
+ 	struct aml_pio_control		pc;
+ 	u32				bank_id;
++	u32				mux_bit_offs;
+ 	unsigned int			pin_base;
+ 	struct regmap			*reg_mux;
+ 	struct regmap			*reg_gpio;
+ 	struct regmap			*reg_ds;
++	const struct multi_mux		*p_mux;
+ };
+ 
+ struct aml_pinctrl {
+@@ -106,13 +123,46 @@ static const char *aml_bank_name[31] = {
+ "GPIOCC", "TEST_N", "ANALOG"
+ };
+ 
++const struct multi_mux multi_mux_s7[] = {
++	{
++		.m_bank_id = AMLOGIC_GPIO_CC,
++		.m_bit_offs = 24,
++		.sid = (AMLOGIC_GPIO_X << 8) + 16,
++		.eid = (AMLOGIC_GPIO_X << 8) + 19,
++	},
++};
++
++const struct aml_pctl_data s7_priv_data = {
++	.number = ARRAY_SIZE(multi_mux_s7),
++	.p_mux = multi_mux_s7,
++};
++
++const struct multi_mux multi_mux_s6[] = {
++	{
++		.m_bank_id = AMLOGIC_GPIO_CC,
++		.m_bit_offs = 24,
++		.sid = (AMLOGIC_GPIO_X << 8) + 16,
++		.eid = (AMLOGIC_GPIO_X << 8) + 19,
++	}, {
++		.m_bank_id = AMLOGIC_GPIO_F,
++		.m_bit_offs = 4,
++		.sid = (AMLOGIC_GPIO_D << 8) + 6,
++		.eid = (AMLOGIC_GPIO_D << 8) + 6,
++	},
++};
++
++const struct aml_pctl_data s6_priv_data = {
++	.number = ARRAY_SIZE(multi_mux_s6),
++	.p_mux = multi_mux_s6,
++};
++
+ static int aml_pmx_calc_reg_and_offset(struct pinctrl_gpio_range *range,
+ 				       unsigned int pin, unsigned int *reg,
+ 				       unsigned int *offset)
+ {
+ 	unsigned int shift;
+ 
+-	shift = (pin - range->pin_base) << 2;
++	shift = ((pin - range->pin_base) << 2) + *offset;
+ 	*reg = (shift / 32) * 4;
+ 	*offset = shift % 32;
+ 
+@@ -124,9 +174,36 @@ static int aml_pctl_set_function(struct aml_pinctrl *info,
+ 				 int pin_id, int func)
+ {
+ 	struct aml_gpio_bank *bank = gpio_chip_to_bank(range->gc);
++	unsigned int shift;
+ 	int reg;
+-	int offset;
++	int i;
++	unsigned int offset = bank->mux_bit_offs;
++	const struct multi_mux *p_mux;
++
++	/* peculiar mux reg set */
++	if (bank->p_mux) {
++		p_mux = bank->p_mux;
++		if (pin_id >= p_mux->sid && pin_id <= p_mux->eid) {
++			bank = NULL;
++			for (i = 0; i < info->nbanks; i++) {
++				if (info->banks[i].bank_id == p_mux->m_bank_id) {
++					bank = &info->banks[i];
++						break;
++				}
++			}
++
++			if (!bank || !bank->reg_mux)
++				return -EINVAL;
++
++			shift = (pin_id - p_mux->sid) << 2;
++			reg = (shift / 32) * 4;
++			offset = shift % 32;
++			return regmap_update_bits(bank->reg_mux, reg,
++					0xf << offset, (func & 0xf) << offset);
++		}
++	}
+ 
++	/* normal mux reg set */
+ 	if (!bank->reg_mux)
+ 		return 0;
+ 
+@@ -822,12 +899,30 @@ static const struct gpio_chip aml_gpio_template = {
  static void init_bank_register_bit(struct aml_pinctrl *info,
  				   struct aml_gpio_bank *bank)
  {
--	const struct aml_pctl_data *data = info->data;
--	const struct aml_reg_bit *aml_rb;
--	bool def_offs = true;
++	const struct aml_pctl_data *data = info->data;
++	const struct multi_mux *p_mux;
  	int i;
  
--	if (data) {
--		for (i = 0; i < data->number; i++) {
--			aml_rb = &data->rb_offs[i];
--			if (bank->bank_id == aml_rb->bank_id) {
--				def_offs = false;
--				break;
--			}
--		}
--	}
--
--	if (def_offs) {
--		for (i = 0; i < AML_NUM_REG; i++) {
--			bank->pc.reg_offset[i] = aml_def_regoffs[i];
--			bank->pc.bit_offset[i] = 0;
--		}
--	} else {
--		for (i = 0; i < AML_NUM_REG; i++) {
--			bank->pc.reg_offset[i] = aml_rb->reg_offs[i];
--			bank->pc.bit_offset[i] = aml_rb->bit_offs[i];
--		}
-+	for (i = 0; i < AML_NUM_REG; i++) {
-+		bank->pc.reg_offset[i] = aml_def_regoffs[i];
-+		bank->pc.bit_offset[i] = 0;
+ 	for (i = 0; i < AML_NUM_REG; i++) {
+ 		bank->pc.reg_offset[i] = aml_def_regoffs[i];
+ 		bank->pc.bit_offset[i] = 0;
  	}
++
++	bank->mux_bit_offs = 0;
++
++	if (data) {
++		for (i = 0; i < data->number; i++) {
++			p_mux = &data->p_mux[i];
++			if (bank->bank_id == p_mux->m_bank_id) {
++				bank->mux_bit_offs = p_mux->m_bit_offs;
++				break;
++			}
++			if (p_mux->sid >> 8 == bank->bank_id) {
++				bank->p_mux = p_mux;
++				break;
++			}
++		}
++	}
  }
  
+ static int aml_gpiolib_register_bank(struct aml_pinctrl *info,
+@@ -994,6 +1089,8 @@ static int aml_pctl_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id aml_pctl_of_match[] = {
+ 	{ .compatible = "amlogic,pinctrl-a4", },
++	{ .compatible = "amlogic,pinctrl-s7", .data = &s7_priv_data, },
++	{ .compatible = "amlogic,pinctrl-s6", .data = &s6_priv_data, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, aml_pctl_dt_match);
 
 -- 
 2.37.1
