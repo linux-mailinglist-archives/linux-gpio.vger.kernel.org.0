@@ -1,208 +1,202 @@
-Return-Path: <linux-gpio+bounces-20599-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20600-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7FA8AC52E4
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 18:18:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6918AC5312
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 18:32:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DB4B3AA9ED
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 16:18:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E85DD3B1ACA
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 16:32:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C8127E7CF;
-	Tue, 27 May 2025 16:18:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11C4827FB2A;
+	Tue, 27 May 2025 16:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AS8wEHlA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sslJajJC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5675B27A44A
-	for <linux-gpio@vger.kernel.org>; Tue, 27 May 2025 16:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D538127B516
+	for <linux-gpio@vger.kernel.org>; Tue, 27 May 2025 16:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362721; cv=none; b=HNyH70lpoRDnDmWOPLDVp1ElFAp6ZkRlYYBdH1vfLGaUCL1Lt7gITvvWBuFD1rVl3rA1FMOVK0AzgaMB7voP28+obCYow8MddlI3ZAKwHIYzWW5XCqf5DzRQbPCB4GP+32lHZKTWZ2s7BqmQEeaIOew2IggACufTv+R5s1DgzGs=
+	t=1748363543; cv=none; b=g6JIWoGQV0zGRZPMcdbvG4FUqfFmvOyVUw7HGTj3Nx1reRbUKoenmQhluWjlUvXSAyWRtdhY7r/F2bSgghjgX1GNP3obHmToR75hqeh76H//Zs3kTLm1wOzADp+MOKmeGH0miQ/J6ejhhJXTyHdIARmUG1liAThkK0hmhfwdTgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362721; c=relaxed/simple;
-	bh=XhTt676vUTRZQa7c0XDUeYryAQMXPv7GVIuaao63lI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ftCZSdmpda8RKlWh7KGgiGJIMBDH8odrX+liDiUKj88tnFlWjShMIdS5FKQO87piC1F4ZiKBaDDr69Atmt/XpAt7R+ZzrRwhXvd0HfiZpogIG/WRPfzHIvp9TaB692EXbUWTqVXNnUbK0qEzET6LnRlQjYy8q2Z0p7Gey6t4tn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=AS8wEHlA; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742c9907967so3547767b3a.1
-        for <linux-gpio@vger.kernel.org>; Tue, 27 May 2025 09:18:40 -0700 (PDT)
+	s=arc-20240116; t=1748363543; c=relaxed/simple;
+	bh=2sIt4equTxMf7zNksQU/+IeDziUhiC69Jled1PWpUQE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=AGz1piKnE7Z70D1up5Qa7F8gd4AX4i4dNgxY9Ee6WgF/SCl2uI+Ye1loEVZYttBQRMiKUJIeKgwT7/BKYPEq7owxIxLrjTPHVvfEEBuf0/UK4ZL6hxsMOFpjK/ldZ1nrDBTDT4l7D20IMezd1EqgUuODY5xW5DvO0A4IQcTclO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sslJajJC; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-441ab63a415so42822365e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 27 May 2025 09:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748362719; x=1748967519; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=L5cxpY74SeyEYMsHNu2Rje055exgHwznrIMIxOx3xXw=;
-        b=AS8wEHlAMn1L+2yEQy4nlZcRUKvtBmJK7t0FVW46GYJPo6QnSK/yqs+iOM2BLNpRhN
-         xavN6HHpgCeliuV6+kwRAtPBVqea6UC6WBenGEkZbTyyQGfAAq+E0gutaISxwYktd9HZ
-         qValqmX5DsPwTv3fx0oztSwrsuBbpsnnZ3S6s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748362719; x=1748967519;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1748363540; x=1748968340; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L5cxpY74SeyEYMsHNu2Rje055exgHwznrIMIxOx3xXw=;
-        b=KGoHNZv5N+vclas+7EM9vHcplYv4OohMszT455Oe2FrOw7O+ue2v15Q9+GeTvezIcq
-         dfuI5/Yv+4bF/3wrjbmVPvGxi047CFnC5EpypIEmJ1BQXqTreoy+o1Xxr2PR7aoVv/ht
-         fLYP7npgNNEdZP+G1agISGoIqJOCP2mO6QTZvugx7IHPcNug/tysGI89JVJ4uCb3hzks
-         C1dtITCSnmMCxC0LzeflBkF0k0w2uNdyNHSQAZhFbeGtgsuhcTCN8hjord2LHqack4RP
-         0kZipu7f9lJqypfNAF3QdvnIjXag44IRseH+JDwdipoNRTFYyCGeXXhSAoizuI4JRSU7
-         ueQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVim8kksnWHnMwgbOYPn+84xbbFGSF9nwZ2BpgOSJTpSMaejSnJzcjtxm1QzmqbtbiCIU01sVnjC52b@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM+eeglpIokVFyvENsoENCwupbPRYo/VYOLq3gvtElJ+1xX9KD
-	F2e5aTRecTXDijaosQDDOaCaayYHmLINnviLdNjv9kE90y+th1KQtdV6rmwEs9jPEA==
-X-Gm-Gg: ASbGncuGDei123Y/zQPPlvfQm0CylpHO2UcwK4s36Yvo64VBAmCApsKsyObrWF1an/i
-	a2njsxR+bCGIv4FWQb5WnMSXq5CVyWPerYMyxcKr7Fm7/50J9zId/iLtGiD5fjb2vc0pqkM24ZP
-	V/GkRweWD6YrixLHO1LEs9kBSZo5DX7j2P0SNvbt6/kKyTSMhSx8J7yadUsgqdgwMkqOzp0eahH
-	eS6NObzvkH036FDF+l8f5THpLH5t0EQx8VxHNHclc6XcqOEyalvpxbSDGPFTz7mSmQQprgPe3IH
-	ODEIhIKEACguvMMW1TijuqsjDTf25v3ng/GkgGOQa+IaziNfY7UMBJmOLrjKw4PbHWbSboEUXs0
-	YOXfDNlmOgl2hsCvP8e+H90kOoQ==
-X-Google-Smtp-Source: AGHT+IEom8QL6Y/Pg1q5xaK7iGO193QLG6Lm8YsAgtzmZjeb230ToJsSh7hjy+S2iDqt2W7r0HW6dA==
-X-Received: by 2002:a05:6a21:1084:b0:1f5:7d57:830f with SMTP id adf61e73a8af0-2188c37d5a0mr20596185637.33.1748362719553;
-        Tue, 27 May 2025 09:18:39 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6fd3bsm18838307a12.23.2025.05.27.09.18.35
+        bh=j4ceyXfpbHOb26b8XCYLDg0Adii9j8clPXP8isRHjuk=;
+        b=sslJajJCJsXGH1OU5imgef6CxF90BaOM9UBxOexziU1MFTfXryj133Ryw0898TK/oq
+         K6wy9zhUouFdvmTDuvYVs3NJx/QJS7ZfQI0IdEaaDZeScpKGI1bM84j5ooCO2Vgpy4jr
+         gqJQxDmUG/Ew2SszVOzFv+Y5pChEJxCbqj3YazYSgwpuJLjJlcjiaw++ZChkCRgFKXUR
+         HPpa4mxRLNRqm7jZNSaAZnXfAhDMmbPy5wkLniRNPyoYRDx7XBq+tX3e1HpOpn2vfUCh
+         RqjrTWNAJN6m70K8L5dKlHE3WbPgJknZJXL5/5RjI3Tmq4jXm+b4e5vqVVogvGQeGVcW
+         ppvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748363540; x=1748968340;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j4ceyXfpbHOb26b8XCYLDg0Adii9j8clPXP8isRHjuk=;
+        b=pZCFatFfVZNSFpDGMKXgpjXTJ1r5yy4XytGBQoSQE7F+qaQxerzRz4ZQ6orNdNQTLL
+         wAdA1uv67kpfi+/0PDqQM4bF4Jr9YxSEUTkwq5HfiHzRlblNLK8WZNOs4wcBJzqqTN4T
+         CiQbE02VtAYbPJnmZpAdsFodq/eCMBsNzVe6/1e/XgITjpkqFByfZY9mOtDkwWj4F2Oc
+         jgmzsqNo1ynxdlXr7GQkxzJv8DsOCvx4kLJMvRxR8RPmoBm5SI/wsV8JIx8o3hFpCY6W
+         arpGJz5a1DpRNXwvpljjPNnQuivxblCOE/0LuFwyo3k1kE4aD4eHe+gdF9SQvx0SbkIX
+         +doA==
+X-Forwarded-Encrypted: i=1; AJvYcCXaHeXGnh4EBlF4mpkGvvW/sh72cu4+X23yFzPCosAXKRGqMf71M1PN95BxaAjXO8HiB0hQd4NNee74@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEaHuW3tdc95QN4x77qHM+CI89vxA7yy37LIpErI7qlvH6AMsf
+	5sQP1YChTDkPuMKUtdYA+sROhxFpI3vBdqJC1IbltsNMSYxOpDpS1o2G2g3UPpxUG5M=
+X-Gm-Gg: ASbGncvENLPK2Sw28Yi8vSCCFz9bj7Ui5HYCRymVPotGRDMlv3Ha9HfGEGJKc9Gg8zH
+	1F2qK83is47WX3dDSQY1FB4F7bkuF77aOQLhYKHo9GYEpdKGLeA5ggQ5s3dGc8mQ+m8DHRfkhZc
+	ExJswklvrMrmLGj/aW14GnM3O2zbKClozKUNhx2DphwwGdgVJ13HZ9Kes6wSSJPBs8RSoqV0p/c
+	ZCL9Jd/xXeMHB3KgpQ87Sl1LNXFnfiZD6XcdOmY9czPD+xgLLY88bB+1hzvhNIANdcZ13iSQQIC
+	aHKxGTi9sBsStfdfI7u3wxb0R3PXt7dmnDU/qF1FOKtdIR0O/1FMWHWbbQ==
+X-Google-Smtp-Source: AGHT+IEmErbjqw+229GOiiiNp1gk2yeXCVD0vFAogvu/2yFKvfiLTxs0BLJ5USyClF4cC7YxbXHYeQ==
+X-Received: by 2002:a05:600c:6286:b0:442:d9f2:c74e with SMTP id 5b1f17b1804b1-44c932f9428mr116536725e9.23.1748363540016;
+        Tue, 27 May 2025 09:32:20 -0700 (PDT)
+Received: from localhost ([2a02:c7c:7213:c700:f024:90b8:5947:4156])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3dd94d1sm270586605e9.34.2025.05.27.09.32.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 09:18:38 -0700 (PDT)
-Message-ID: <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
-Date: Tue, 27 May 2025 09:18:34 -0700
+        Tue, 27 May 2025 09:32:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
- for RP1 chipset on Rpi5
-To: Matthias Brugger <mbrugger@suse.com>,
- Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
- Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
- <aBp1wye0L7swfe1H@apocalypse>
- <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
- <CAO50JKVF6x_=MUuzjhdK0QotcdUgHysMb9v1g0UvWjaJF2fjDA@mail.gmail.com>
- <48AFA657-5683-42A4-888E-3E98A515F3B1@broadcom.com>
- <aCIk40642nXZ3arz@apocalypse> <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 May 2025 17:32:18 +0100
+Message-Id: <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
+To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>
+Cc: "Srinivas Kandagatla" <srini@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, <linux-sound@vger.kernel.org>, "Liam Girdwood"
+ <lgirdwood@gmail.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Bjorn Andersson" <andersson@kernel.org>, "Dmitry Baryshkov"
+ <lumag@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>, "Konrad
+ Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Jaroslav Kysela"
+ <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+X-Mailer: aerc 0.20.0
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
+ <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
+In-Reply-To: <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
 
-On 5/26/25 07:06, Matthias Brugger wrote:
-> 
-> 
-> On 12/05/2025 18:42, Andrea della Porta wrote:
->> Hi Florian,
->>
->> On 15:02 Mon 12 May     , Florian Fainelli wrote:
->>> On May 7, 2025 5:01:05 PM GMT+02:00, Andrea della Porta 
->>> <andrea.porta@suse.com> wrote:
->>>> Hi Florian, to accept the patches, what would work best for you?
->>>>
->>>> 1) Send only the relevant updated patches (maybe as an entirely new
->>>> patchset with
->>>>    only those specific patches)
->>>
->>> Only the updated patches work for me. I don't think there is that 
->>> much coupling between the DT changes and the non-DT changes (other 
->>> than without DT entries nothing is activated)
->>
->> It's a little bit more involved than that:
->>
->> - Patch 7 (misc driver) depends on 6 (RP1 common dts) which in turn
->>    depends on 1 (clock binding header). Should be taken by Greg.
-> 
-> Greg gave an Acked-by so I think Florian is good to take that patch. 
-> Which leaves us to the clock patches (driver + dt-bindings).
-> 
->>
->> - Patch 9 and 10 (board dts) depends on 6 (RP1 common dts) which again
->>    depends on 1 (clock binding header). Should be taken by Florian.
->>
->> - Patch 4 (clock driver) depends on 1 (clock binding header) and
->>    should be taken by Stephen.
->>
-> 
-> Steven reviewed the patches (driver + dt-binding) so he is waiting for a 
-> new version which addresses the review. He offered to either take them 
-> and provide a branch that Florian can merge into his branch or provide a 
-> Acked-by tag.
-> 
-> @Florian what would you prefer?
+On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
+> On 22/05/2025 19:40, Alexey Klimov wrote:
+>> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
+>> are required to support audio playback and audio capture on sm6115 and
+>> its derivatives.
+>>=20
+>> Cc: Konrad Dybcio <konradybcio@kernel.org>
+>> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>
+> Just keep one CC.
 
-I am fine either way, it's definitively simpler if I can take all of the 
-patches in the respective Broadcom ARM SoC branches, but pulling a 
-branch from another maintainer's tree works just as well.
+Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
+email here?
 
-Andrea, sorry to ask you this, can you post a v10 and we aim to get that 
-version applied?
+>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>
+> Missing SoB.
 
-Thanks!
--- 
-Florian
+IIRC I took Konrad's changes but at this point I don't remember how much wa=
+s changed.
+So I need to switch to Konrad's owned completely or somehow indicate using =
+tags
+that it is initial Konrad's work.
+
+Konrad, what's your preference here?
+
+>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm6115.dtsi | 132 ++++++++++++++++++++++++++++=
++++++++
+>>  1 file changed, 132 insertions(+)
+>>=20
+>> diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/=
+qcom/sm6115.dtsi
+>> index c8865779173eca65f9e94535b5339f590d4b1410..045887ae215b0965ffc098fd=
+31fd18ac1ad90b7b 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
+>> @@ -2689,6 +2689,138 @@ funnel_apss1_in: endpoint {
+>>  			};
+>>  		};
+>
+>
+>
+> ...
+>
+>> +		swr0: soundwire@a740000 {
+>> +			compatible =3D "qcom,soundwire-v1.6.0";
+>> +			reg =3D <0x0 0x0a740000 0x0 0x2000>;
+>> +			interrupts =3D <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&txmacro>;
+>> +			clock-names =3D "iface";
+>> +
+>> +			resets =3D <&lpasscc 0>;
+>> +			reset-names =3D "swr_audio_cgcr";
+>> +
+>> +			label =3D "VA_TX";
+>> +			qcom,din-ports =3D <3>;
+>> +			qcom,dout-ports =3D <0>;
+>> +
+>> +			qcom,ports-sinterval-low =3D	/bits/ 8 <0x03 0x03 0x03>;
+>> +			qcom,ports-offset1 =3D		/bits/ 8 <0x01 0x02 0x01>;
+>> +			qcom,ports-offset2 =3D		/bits/ 8 <0x00 0x00 0x00>;
+>> +			qcom,ports-hstart =3D		/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-hstop =3D		/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-word-length =3D	/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-block-pack-mode =3D	/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-block-group-count =3D	/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-lane-control =3D	/bits/ 8 <0x00 0x00 0x00>;
+>> +
+>> +			#sound-dai-cells =3D <1>;
+>> +			#address-cells =3D <2>;
+>> +			#size-cells =3D <0>;
+>
+> Why this not is not disabled? That's a bus. Each bus node makes no sense
+> on its own without the actual devices, thus it is always disabled in the
+> SoC file. Just take a look at other DTSI.
+
+Because I didn't know that. Ok, I'll add disable status to these.
+
+>> +		};
+>> +
+>> +		lpasscc: clock-controller@a7ec000 {
+>> +			compatible =3D "qcom,sm6115-lpasscc";
+>> +			reg =3D <0x0 0x0a7ec000 0x0 0x1000>;
+>> +			#reset-cells =3D <1>;
+>> +		};
+>> +
+>>  		remoteproc_adsp: remoteproc@a400000 {
+>
+> Looks like not ordered by unit address.
+
+Ok, I need to sort it then and check other parts to see if they are sorted =
+or not.
+
 
