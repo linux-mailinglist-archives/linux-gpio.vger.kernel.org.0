@@ -1,138 +1,168 @@
-Return-Path: <linux-gpio+bounces-20596-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20597-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 155E1AC519F
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 17:08:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B506AAC5268
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 17:56:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BF56D16C3B4
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 15:08:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52FDE9E04AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 15:55:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED6342798EA;
-	Tue, 27 May 2025 15:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C64BB27CCC7;
+	Tue, 27 May 2025 15:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D9+bMXgB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBEF2750E7;
-	Tue, 27 May 2025 15:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A92427BF6E
+	for <linux-gpio@vger.kernel.org>; Tue, 27 May 2025 15:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748358477; cv=none; b=tL/7+qpr2rYsaFtW+Zwmx2wkowDGN0vYQr/MqzprVqxYEG/URTgkfAZEWh2yyn8N36OmOxUANeJaNrwhbhKTXwU6xSceqyjpLiwkXi5Top6jM6tSmRMJtOvh+SBkNCi+pKmODc2z56YSs6fwkZRm02S0vgZ57g2WYi58oN85+z0=
+	t=1748361366; cv=none; b=MSJCtTLeSnaME08IXn7Ty1ZKFW2d/hY6pcPiCJ2Wa2fkmJzyMnts8zk57vofReU6yp76gd5eFxC/jCgvvZ3EjzJPwsiMhlznt63ZfQtfhv+IORwx6+3iZSp6i+JRRC3ufiK2+ROZzCYLLPWSjPSTFa7+ruBPxPd+zLfdYNJKbnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748358477; c=relaxed/simple;
-	bh=vqd5489V0avFdRMIy9tvgVQe9WcgN2RWYY5hv0QOid0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QKHt1UCw8hDkHRhYRitG5Hvgqwig/jsKeKGPxI6/g9U0mDzJ7yQhFl7sJQ0cF9NzEVH3WhNM4wksH3TKs66h36uVKtYHPactnZngiUgJ0U3z1EhK4pclBXbsKMwpxgJwrp/bc5cMpEtVRAEd5F/got1vNGtk6zi0TkWRwbaGFMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from [198.18.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [113.57.237.88])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1696b4356;
-	Tue, 27 May 2025 23:07:40 +0800 (GMT+08:00)
-Message-ID: <0b16c5df-94e2-43b0-876f-a5070ac71ba0@whut.edu.cn>
-Date: Tue, 27 May 2025 23:07:40 +0800
+	s=arc-20240116; t=1748361366; c=relaxed/simple;
+	bh=1EN/qo7phDn1lEOJKo1bEU9nZpbFRZxjY4LQ8qzGqFI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=oBXuAO8IS7rAES2Dz2vpsOaSRK2BdRaMd6AOlbK9Azqla7nAcbKP5yJej9oWzfS4JCeB3rKUiYQ6SNJBA1GueFRgbPl/J9uAnrWuWdbPyKB9IFvxhFBYQXWlR8ECU+OwenrT0gNIon+d08Uf7yF3huPGME08BveFd95GD9rurnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D9+bMXgB; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so29668225e9.0
+        for <linux-gpio@vger.kernel.org>; Tue, 27 May 2025 08:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748361361; x=1748966161; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WUOHpXno4FKjbaz+Vq7mO6g3BDL4JOg348p7rmPIkO0=;
+        b=D9+bMXgBs7Whru0LXz2r8gO7XmJknG9G4OyDwi7ccJ1O7tl45N6R2SM7BXlixt0hbN
+         p+wdfVF4mcWYrxKOqKhvj5QneCwW0HGgbkSstk3ZSOqrISIK3XRYzvLmmnzRQcbjjRHH
+         roaC8DMpMmT2XxdheJluYHIFNAblObzopbfDiKrdzVWHIiWy5kg4klQ/FvzPd7IprvWV
+         s2anymuNGOFM8TWZP+3Tj9DyWDwW26vmtZaLmJotryTT3NJunu2hHKQ+jEqerXwKSf8o
+         Tkr6cB1LTmEUnzw3ZhBFOi+plBdu6UPT4yuFFT53IWUA0E191w2W7eIfDOyxRRBEzWMR
+         B2Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748361361; x=1748966161;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WUOHpXno4FKjbaz+Vq7mO6g3BDL4JOg348p7rmPIkO0=;
+        b=N3ZApe4rCpHMdTxvcU1aD51gEROAMTjA0ixGXP9Po7xN/2/IIwjiUjfsfWf+9dzQU9
+         bjj1TnMhIHWsWkOnvNIYDhZ4QTafb3PJ25/qmWzuYzP0jsHVWzhkCnhSnWi79C+TKlYA
+         m2hsCG/742h73gy45lKwj618Ubwi9uyKM1APlddPe1MSffzMKvR402cqIPTWG7EZh8tE
+         s+5B/bW3xGzL0BV80YLl6pkeCVgBxvt3oYE6YObB+KxpxoulKzpRd8vDnmNV3fzKbWdW
+         shxxniq1WtpF4jKwEoGysxsMPQv0Yk4/a5KE/2XMoKpDrmweDqdO12mbfsEl11qYOjIU
+         HJ9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXekYnFykvgT4+XtTWHxKgMtgNHQu6h5ny8Kim/seCq4pOxVq/aV1cifn4PKuLgxKzhtwjrRooDvsj9@vger.kernel.org
+X-Gm-Message-State: AOJu0YzolQlR8AyAqpI4xWsG8VHaVwrngm9DUevDA/E7JAVq1zhPXbKu
+	7M+JMjpsJlbk9lfScC5DUQHRiWwBmuDYh2znXRLwEQ6E3LfL53ESP9Jva84zEwUXiqM=
+X-Gm-Gg: ASbGncs7ZshhNbt9rp4KzNeqJZwE0WpSmGTPkclIjrlF4J0cRACM4FWctxg/lmXDl3R
+	p/hlgCW0EirQVKpGFYFopkBlBl4p/kaFYYj5q7yk4ZBHp6y52021Ojamd+/65enc0OP9ER7Wm48
+	CJ590s9PCVuIhkeaUfCjKFOHlp8quj6YsdjkjFzPxAudTG3tsV1C5dEOjzJ7E4J9m06z0Toud8i
+	XWwer064HTqLSDkga4xPcNXIYXFucIH901kAz8/zOAymEZyZ7y8uQSSyGojrIfHTNVogTQta7hD
+	I0XpN5Z3o0HfoanhH7/arqsTa1mYESy/yckzyjZCA+K+swzcWz8Dqg/mDvco2KucK1ik
+X-Google-Smtp-Source: AGHT+IGWpBubqNiiMJO9C0pBAekzBnLwiPK9uY689/6fUTlai3/xs++Qb/ljE1+USh/yGxcE4+gWhA==
+X-Received: by 2002:a05:600c:6296:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-44c91ad6b46mr120335515e9.8.1748361360729;
+        Tue, 27 May 2025 08:56:00 -0700 (PDT)
+Received: from localhost ([2a02:c7c:7213:c700:f024:90b8:5947:4156])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef0ab8sm270595235e9.13.2025.05.27.08.55.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 08:55:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH] dt-bindings: pinctrl: k230: fix child node name patterns
-To: Conor Dooley <conor@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
- Inochi Amaoto <inochiama@gmail.com>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- sophgo@lists.linux.dev
-References: <20250527-k230-binding-fix-v1-1-3c18ae5221ab@whut.edu.cn>
- <20250527-activism-container-4a9da77a8da1@spud>
-Content-Language: en-US
-From: Ze Huang <huangze@whut.edu.cn>
-In-Reply-To: <20250527-activism-container-4a9da77a8da1@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUhXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSkgfVh5CQhodTx1CTB9IT1YeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSkhVTkxVSUhMVUNDWVdZFhoPEhUdFFlBWU9CTFVISUxNQlVPVUhLS0pZBg
-	++
-X-HM-Tid: 0a971248f54b03a1kunm41ef4b31c6cea
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N0k6Kio*KjEyUVZRFBYMTS0d
-	NioaCwxVSlVKTE9DSE5DT01OSElMVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlK
-	SkhVTkxVSUhMVUNDWVdZCAFZQUhOTUo3Bg++
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 May 2025 16:55:59 +0100
+Message-Id: <DA72DKCKVX7T.269HYJZNIABOB@linaro.org>
+Cc: "Liam Girdwood" <lgirdwood@gmail.com>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Bjorn Andersson" <andersson@kernel.org>, "Dmitry Baryshkov"
+ <lumag@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>, "Jaroslav
+ Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 10/12] arm64: dts: qcom: qrb4210-rb2: enable wsa881x
+ amplifier
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Srinivas Kandagatla"
+ <srini@kernel.org>, "Mark Brown" <broonie@kernel.org>,
+ <linux-sound@vger.kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-10-9eeb08cab9dc@linaro.org>
+ <c7d5dbab-0a51-4239-811e-dc68cac18887@oss.qualcomm.com>
+In-Reply-To: <c7d5dbab-0a51-4239-811e-dc68cac18887@oss.qualcomm.com>
 
-On 5/27/25 10:36 PM, Conor Dooley wrote:
-> On Tue, May 27, 2025 at 12:23:35AM +0800, Ze Huang wrote:
->> Rename child node name patterns to align with conventions.
->>
->>      uart0-pins      =>   uart0-cfg
->>          uart0-cfg            uart0-pins
->>
->> This avoids potential confusion and improves consistency with existing
->> bindings like sophgo,sg2042-pinctrl and starfive,jh7110-aon-pinctrl.
->>
->> Fixes: 561f3e9d21a1 ("dt-bindings: pinctrl: Add support for canaan,k230 SoC")
-> You're changing something merged in October of last year, which is an
-> ABI break, for what seems like a cosmetic change to me. What makes this
-> worth it? Consistency with some devices by other vendors isn't a strong
-> argument I don't think.
-
-Thanks for the feedback.
-
-You're right - this change would introduce an ABI break just for naming
-consistency, there’s no strong functional benefit.
-
->> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+On Thu May 22, 2025 at 7:13 PM BST, Konrad Dybcio wrote:
+> On 5/22/25 7:41 PM, Alexey Klimov wrote:
+>> One WSA881X amplifier is connected on QRB4210 RB2 board
+>> hence only mono speaker is supported. This amplifier is set
+>> to work in analog mode only. Also add required powerdown
+>> pin/gpio.
+>>=20
+>> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
 >> ---
->>   .../devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml          | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
->> index 0b462eb6dfe169a292bf716503c03d029f1ac7ee..f4e0da0bf7fa30af5132644109dbd371ddfc0228 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
->> +++ b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
->> @@ -22,7 +22,7 @@ properties:
->>       maxItems: 1
->>   
->>   patternProperties:
->> -  '-pins$':
->> +  '-cfg$':
->>       type: object
->>       additionalProperties: false
->>       description:
->> @@ -30,7 +30,7 @@ patternProperties:
->>         pinctrl groups available on the machine.
->>   
->>       patternProperties:
->> -      '-cfg$':
->> +      '-pins$':
->>           type: object
->>           allOf:
->>             - $ref: /schemas/pinctrl/pincfg-node.yaml
->> @@ -112,8 +112,8 @@ examples:
->>           compatible = "canaan,k230-pinctrl";
->>           reg = <0x91105000 0x100>;
->>   
->> -        uart2-pins {
->> -            uart2-pins-cfg {
->> +        uart2-cfg {
->> +            uart2-pins {
->>                   pinmux = <0x503>, /* uart2 txd */
->>                            <0x603>; /* uart2 rxd */
->>                   slew-rate = <0>;
->>
->> ---
->> base-commit: 0a4b866d08c6adaea2f4592d31edac6deeb4dcbd
->> change-id: 20250526-k230-binding-fix-3125ff43f930
->>
->> Best regards,
->> -- 
->> Ze Huang <huangze@whut.edu.cn>
->>
+>>  arch/arm64/boot/dts/qcom/qrb4210-rb2.dts | 26 +++++++++++++++++++++++++=
++
+>>  1 file changed, 26 insertions(+)
+>>=20
+>> diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/=
+dts/qcom/qrb4210-rb2.dts
+>> index 6bce63720cfffd8e0e619937fb1f365cbbbcb283..4b878e585227ee6b3b362108=
+be96aad99acba21d 100644
+>> --- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+>> @@ -270,6 +270,24 @@ zap-shader {
+>>  	};
+>>  };
+>> =20
+>> +&i2c1 {
+>> +	clock-frequency =3D <400000>;
+>> +	status =3D "okay";
+>> +
+>> +	wsa881x: amplifier@f {
+>> +		compatible =3D "qcom,wsa8815";
+>> +		reg =3D <0x0f>;
+>> +		pinctrl-0 =3D <&wsa_en_active>;
+>> +		pinctrl-names =3D "default";
+>> +		clocks =3D <&q6afecc LPASS_CLK_ID_MCLK_2 LPASS_CLK_ATTRIBUTE_COUPLE_N=
+O>;
+>> +		powerdown-gpios =3D <&lpass_tlmm 16 GPIO_ACTIVE_LOW>;
+>> +		mclk-gpios =3D <&lpass_tlmm 18 GPIO_ACTIVE_HIGH>;
+>> +		sound-name-prefix =3D "SpkrMono";
+>> +		#sound-dai-cells =3D <0>;
+>> +		#thermal-sensor-cells =3D <0>;
+>> +	};
+>> +};
+>> +
+>>  &i2c2_gpio {
+>>  	clock-frequency =3D <400000>;
+>>  	status =3D "okay";
+>> @@ -736,6 +754,14 @@ wcd_reset_n: wcd-reset-n-state {
+>>  		drive-strength =3D <16>;
+>>  		output-high;
+>>  	};
+>> +
+>> +	wsa_en_active: wsa-en-active-state {
+>> +		pins =3D "gpio106";
+>
+> Are there two separate enable pins? Or is the powerdown-gpio something
+> else?
+
+No, should be only one. I think 106 on tlmm is wired into 16 on lpass tlmm.
+We need to assign gpio function to such pins, aren't we?
+
+Best regards,
+Alexey
 
 
