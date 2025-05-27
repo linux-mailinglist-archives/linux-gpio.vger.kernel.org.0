@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20592-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20593-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DE74AC4E08
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 14:00:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EBA3AC4E12
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 14:00:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D12CA1BA083C
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 12:00:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 709611BA08F7
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 May 2025 12:00:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49004263C68;
-	Tue, 27 May 2025 11:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D699A242D80;
+	Tue, 27 May 2025 12:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwXgG18c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PH6Fdlz6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7241262FF8;
-	Tue, 27 May 2025 11:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B597260E;
+	Tue, 27 May 2025 12:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748347194; cv=none; b=iWulWpq0MpOELQTbOYLbXxTbAYXYIac2xItZIQ5cupq4K/umIauMLDTo+XPaNv07yYw+VZYSdcEytG0CR8081SyxN3KGUruDAprlhNwk2+lTp2etpzt1c6P1eWoPATiqLrQZRX4T67ooizppoIB2EPjo61rGfZ/emDhjzPHCgZw=
+	t=1748347236; cv=none; b=T1SJaAwYEhH4dccWi3FLYJ1zwVfN3g331svOoCt+RU5Pzy8LplBh1GMf9IuOOpZcBsOF+JlZBPFuiCEgZ7WC5SEDC4EVTUYGvbiXiJMUTnDduyCtao2rRiVsoDEGpTIwOiDIcvKUwKk4DK2bt8uJcd0xj6hevEaeTDV03oGxzEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748347194; c=relaxed/simple;
-	bh=+kemLuzFkgZ1UIxtkoIOAR3ZA5j5sMKalEQKqeMVpMY=;
+	s=arc-20240116; t=1748347236; c=relaxed/simple;
+	bh=lMMy4g/MYXQ+b9gPcrJlEgyzSKdjqC5ncOGH/dfQoVo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T5q7HUXKQS9jNNE0MKt5qhjgwfXzeNvD/2qywT7dHvOyfdlZVYQUVc48h6uUCm+qF8xYylGwR62XnUzpsA+Krp36R1ZiagpG3fbFBQj/Ypr1V2PVuTr/gi60+L+w9K17QY2W3xQhVRkBfF0//Z0Mz4zyRIfgQpLztcCY7o7PoO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwXgG18c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F1AC4CEEB;
-	Tue, 27 May 2025 11:59:49 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=QjJHsQXBsk05fVBXqb1V4Zjge5uy0hMX14B2L8xVZIcnIpzKV65IidHwpVOJ2kNHDgnawwfp3/UgsJiLb//SVTjCoAjxjhhOrXw7Ia7X29cSzLu60dk1dK1oZWsgnYQaoqLWQi+POVzcwAQo6DakOVqlumXSLW/P/0NxuiWLqL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PH6Fdlz6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791EAC4CEE9;
+	Tue, 27 May 2025 12:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748347193;
-	bh=+kemLuzFkgZ1UIxtkoIOAR3ZA5j5sMKalEQKqeMVpMY=;
+	s=k20201202; t=1748347236;
+	bh=lMMy4g/MYXQ+b9gPcrJlEgyzSKdjqC5ncOGH/dfQoVo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SwXgG18cqInM0BaDP4E32EcSqJUdilZ+hokS5PYb26Fo+oblt3iS+eMJ2eoi8B5MO
-	 +GVs6d2JAcAore0qsNzdimV98+cmO7/9rPhHtIWDEyA0tqCniTU25A3xUgI428fulL
-	 Lsa9wL4DYIxD/7sq1crVug6L/yl2s1S2QVWMpuWnJbrsavUP9634ZIxPVtZqTuu7K2
-	 Le8lN2HQOMkSZmpi+j79v+eSihYcl77YPr+YBFrIs49cFUkivwCJO5eH5xcRf8PnaJ
-	 Kv3zWgwDxyeei9l8EiV5FalmnA1hYtWJsWoIjIAndP2hT5mmIe/MhVOhCXXt+i5oNu
-	 zlDK6nUcnNxyQ==
-Message-ID: <c54b2243-fa0b-4de9-a780-e0fab795da25@kernel.org>
-Date: Tue, 27 May 2025 13:59:47 +0200
+	b=PH6Fdlz681kpS84Jq83UnDedxxrKP0uYjlKEG6OTOmdUnaMGcABZ3Bu63oF0uVuol
+	 DbCoZcg5805u3rPwka/ONPeiULqgKvgzgAhZljBpLxxZ45ADkZMkXkaeYdbx/ZUdzA
+	 Mn9yG0pYcKqpgPaqBMId2F/PElTUt0kU08EplZJG+OCbx8aAlDIp9Wj44Ediey0KRZ
+	 7PtKD2nbz0MGWEyqlGuqYtDITOMrZjNI53VMp+ZM/uT9JwSDxWHQa4dr3bh4aX2vqt
+	 Co4f/e0aj4k02w1+AClJGZiEa9pja2I+GEJZuSMbgPszzjLdGF6viQInCmw4E8jeRX
+	 jzD+mpEYAdzaA==
+Message-ID: <0f70110d-4861-487b-834d-f217c9a77384@kernel.org>
+Date: Tue, 27 May 2025 14:00:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/8] arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830
- speakers amplifier
+Subject: Re: [PATCH v4 6/8] arm64: dts: qcom: qcs6490-rb3gen2: Add sound card
 To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
  Bjorn Andersson <andersson@kernel.org>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
@@ -62,9 +61,11 @@ To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
 Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
- kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+ kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-6-quic_pkumpatl@quicinc.com>
+ <20250527111227.2318021-7-quic_pkumpatl@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,29 +111,27 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250527111227.2318021-6-quic_pkumpatl@quicinc.com>
+In-Reply-To: <20250527111227.2318021-7-quic_pkumpatl@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 27/05/2025 13:12, Prasad Kumpatla wrote:
-> +	left_spkr: speaker@0,1 {
-> +		compatible = "sdw10217020200";
-> +		reg = <0 1>;
-> +		powerdown-gpios = <&tlmm 158 GPIO_ACTIVE_LOW>;
-> +		#sound-dai-cells = <0>;
-> +		sound-name-prefix = "SpkrLeft";
-> +		#thermal-sensor-cells = <0>;
-> +		vdd-supply = <&vreg_l18b_1p8>;
-> +		qcom,port-mapping = <1 2 3 7>;
-> +	};
-> +
-> +	right_spkr: speaker@0,2 {
-> +		compatible = "sdw10217020200";
-> +		reg = <0 2>;
-> +		powerdown-gpios = <&tlmm 158 GPIO_ACTIVE_LOW>;
+> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> 
+> Add the sound card node with tested playback over WSA8835 speakers
+> and digital on-board mics.
+> 
+> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 45 ++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 
 
-This will fail during runtime. You never booted your DTS.
+Don't add one-node per patch. Add entire sound for this board.
 
 Best regards,
 Krzysztof
