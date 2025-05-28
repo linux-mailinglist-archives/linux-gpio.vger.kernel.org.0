@@ -1,153 +1,167 @@
-Return-Path: <linux-gpio+bounces-20623-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20624-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1884AC6180
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 07:59:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8AFBAC62BC
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 09:16:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D9A777A62E9
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 05:58:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 717713AA1C8
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 07:15:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D490220E034;
-	Wed, 28 May 2025 05:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73BEC22AE45;
+	Wed, 28 May 2025 07:16:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1tV9d5S"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrJmZD+e"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B9284A35;
-	Wed, 28 May 2025 05:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213DB10E0;
+	Wed, 28 May 2025 07:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748411953; cv=none; b=EhGVhPSDxdQJYMqtxyHsR5FG4h1nD21ic74ApXGyrogl1WdvQljy7lR7J7LxpVX3S2l2di+hnd4zJa2QhmfNoTs2S8nSESI2pXBZQ7GaS676e8lVKh5tLq5vmTl04MElnjPxEFBuFOD5tcZK2ZUlU6f71vSiZYs0xmYLHrjJnYQ=
+	t=1748416568; cv=none; b=JHnnEV9IlhbbUBeJBuHSochPhvs1MDXn/EfncxLxevbE9a1h07q9ITqHSpMWRemX70v32Qp4eYrO8jvbt5gjjKB6VjpZ6PShGdrdALdANioE37BBzoPEjKxRyCI79go+41xU12jLKIiCwVtG1opqQdfujpiCq+0ol2n4sKjhkgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748411953; c=relaxed/simple;
-	bh=UTvNIVWWhnhGQ65MdDP5oOsZnXPxBKSF/A15KmFo3Uk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZA02qKU2oGK0ZAFK7PKDfcnhXCHE0Q8fXgMtR7/WZQDrQ/yz1uaPDvzKSMhpqT6N8SuIvqTLGKD28esEOGeO1eGicADIZDsmbQ963bk8bYAasLhmx057RCUr1V7iUQvc0HyOCa07Bg/mcFNXRuU6qYTA80OrdXPOxwsuhi1TMXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1tV9d5S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44EC1C4CEE7;
-	Wed, 28 May 2025 05:59:09 +0000 (UTC)
+	s=arc-20240116; t=1748416568; c=relaxed/simple;
+	bh=K9xLFL3YjxEg/yT53Mbd2sI0G3a9mzJ1vSU6/nzZZGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tb9+35uZAQP50pHpT4lGxNq/tDC1yZkl2vtZNHOVvXE2o8bPUyAwxarWR3Hs5vtzexv+skxUutKibaehJ3cP6K09h5GXBpOeVNn9Ss/ebqIhEBj6Pu6RPi+IV89l3QfGKawzgkGGnxR0mgf+lQ60Nj/wLdGwjnHZmaAwdlPW6ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrJmZD+e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC15C4CEE7;
+	Wed, 28 May 2025 07:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748411953;
-	bh=UTvNIVWWhnhGQ65MdDP5oOsZnXPxBKSF/A15KmFo3Uk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S1tV9d5SKxXHN6owAkHT5cjDhewtybgTGpD/nB+1zsItUgDmYnfOK5RmFoS1+xIz+
-	 /GCcgJEOly29rFWfNX9koEVZlh4mKhaPk5FBap5aBSj5P7rpQS+iGMwXWaNcVyJI5b
-	 Rj9bIqoV6n1AcJ4q+OeGb3IZUV0eXX2bO0fy/0Ivp2SAViX68H2rjp7PsbO7JEtduR
-	 0R75NKg+qQ41w8CMm6jv9Pz6rQ7AvIlEgZ5TSlSEuQ/OhSTEsiidswMepYgXh78jCm
-	 WzqhBw7KZUhZ5vYxB4foht1DpHTenpLP+UZbs1HBZPtsNIXjpOGgmkIgaw8Vqx9dh9
-	 xcOe6zEJKX9Pg==
-Message-ID: <f41763a9-0371-4a1d-aa3b-0aadf54c0655@kernel.org>
-Date: Wed, 28 May 2025 07:59:07 +0200
+	s=k20201202; t=1748416567;
+	bh=K9xLFL3YjxEg/yT53Mbd2sI0G3a9mzJ1vSU6/nzZZGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LrJmZD+eu3rGOkhdZyxN4JM0eL8FuhebF+ryNOrcZ3k1MneHJ1X5+eEXS7NrupIye
+	 wA5u5eQFtYyQuPWcieS+EjiAS5elaLKloPDwlUe9b6vJBmF1sWotJ45tquAxoX47KP
+	 ao5OXqAWHI+6evaZxj0jDiKgTEEPTST6erF+kpU7erw3SKEuo7IU48OTDJW2u/3lng
+	 u2P/FTign5MUZqI4L/xBu9AqdJBd86+DU0xYw0yu6xeGuoC6ONgeweeRJk6PcHWB+p
+	 ROe0CE/Xk8BE0qKGzovhVkhfKPVBhYf2Oq5fXfqZDBdNXudraKMyoJEco5YK1XljO8
+	 xw2DClFYdtBRg==
+Date: Wed, 28 May 2025 09:16:04 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/6] pinctrl: airoha: fix wrong PHY LED mux value for
+ LED1 GPIO46
+Message-ID: <aDa4NCTzyzw0mnfE@lore-desk>
+References: <20250527222040.32000-1-ansuelsmth@gmail.com>
+ <20250527222040.32000-2-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
-To: Alexey Klimov <alexey.klimov@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
- linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Dmitry Baryshkov <lumag@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
- <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
- <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
- <b163bb31-2d02-47bb-a7a1-91c1fb007523@linaro.org>
- <DA78C0GLXJDX.2Z7K375XWOZH3@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <DA78C0GLXJDX.2Z7K375XWOZH3@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="CoT/qmCue5gfNYHx"
+Content-Disposition: inline
+In-Reply-To: <20250527222040.32000-2-ansuelsmth@gmail.com>
 
-On 27/05/2025 22:36, Alexey Klimov wrote:
-> On Tue May 27, 2025 at 7:33 PM BST, Krzysztof Kozlowski wrote:
->> On 27/05/2025 18:32, Alexey Klimov wrote:
->>> On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
->>>> On 22/05/2025 19:40, Alexey Klimov wrote:
->>>>> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
->>>>> are required to support audio playback and audio capture on sm6115 and
->>>>> its derivatives.
->>>>>
->>>>> Cc: Konrad Dybcio <konradybcio@kernel.org>
->>>>> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>>
->>>> Just keep one CC.
->>>
->>> Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
->>> email here?
->>>
->>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
->>>>> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>>>
->>>> Missing SoB.
->>>
->>> IIRC I took Konrad's changes but at this point I don't remember how much was changed.
->>
->> And stripped his SoB?
-> 
-> If the memory serves me well there was none.
-Sure, then the last part of my response is applicable (which was below
-above sentence).
 
-Best regards,
-Krzysztof
+--CoT/qmCue5gfNYHx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> In all the MUX value for LED1 GPIO46 there is a Copy-Paste error where
+> the MUX value is set to LED0_MODE_MASK instead of LED1_MODE_MASK.
+>=20
+> This wasn't notice as there were no board that made use of the
+> secondary PHY LED but looking at the internal Documentation the actual
+> value should be LED1_MODE_MASK similar to the other GPIO entry.
+>=20
+> Fix the wrong value to apply the correct MUX configuration.
+
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 1c8ace2d0725 ("pinctrl: airoha: Add support for EN7581 SoC")
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-airoha.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/=
+mediatek/pinctrl-airoha.c
+> index b97b28ebb37a..8ef7f88477aa 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> @@ -1752,8 +1752,8 @@ static const struct airoha_pinctrl_func_group phy1_=
+led1_func_group[] =3D {
+>  		.regmap[0] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_GPIO_2ND_I2C_MODE,
+> -			GPIO_LAN3_LED0_MODE_MASK,
+> -			GPIO_LAN3_LED0_MODE_MASK
+> +			GPIO_LAN3_LED1_MODE_MASK,
+> +			GPIO_LAN3_LED1_MODE_MASK
+>  		},
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+> @@ -1816,8 +1816,8 @@ static const struct airoha_pinctrl_func_group phy2_=
+led1_func_group[] =3D {
+>  		.regmap[0] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_GPIO_2ND_I2C_MODE,
+> -			GPIO_LAN3_LED0_MODE_MASK,
+> -			GPIO_LAN3_LED0_MODE_MASK
+> +			GPIO_LAN3_LED1_MODE_MASK,
+> +			GPIO_LAN3_LED1_MODE_MASK
+>  		},
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+> @@ -1880,8 +1880,8 @@ static const struct airoha_pinctrl_func_group phy3_=
+led1_func_group[] =3D {
+>  		.regmap[0] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_GPIO_2ND_I2C_MODE,
+> -			GPIO_LAN3_LED0_MODE_MASK,
+> -			GPIO_LAN3_LED0_MODE_MASK
+> +			GPIO_LAN3_LED1_MODE_MASK,
+> +			GPIO_LAN3_LED1_MODE_MASK
+>  		},
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+> @@ -1944,8 +1944,8 @@ static const struct airoha_pinctrl_func_group phy4_=
+led1_func_group[] =3D {
+>  		.regmap[0] =3D {
+>  			AIROHA_FUNC_MUX,
+>  			REG_GPIO_2ND_I2C_MODE,
+> -			GPIO_LAN3_LED0_MODE_MASK,
+> -			GPIO_LAN3_LED0_MODE_MASK
+> +			GPIO_LAN3_LED1_MODE_MASK,
+> +			GPIO_LAN3_LED1_MODE_MASK
+>  		},
+>  		.regmap[1] =3D {
+>  			AIROHA_FUNC_MUX,
+> --=20
+> 2.48.1
+>=20
+
+--CoT/qmCue5gfNYHx
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaDa4NAAKCRA6cBh0uS2t
+rOCOAQDIlVEn3j31KLCPSoLJ6jFOUiwWCNqW5qOv7UtW1mOCagEAh6LZiTafRxQs
+HXf7z9JkF4bcnAu1w5WH7iDwvjnpNw0=
+=lKi2
+-----END PGP SIGNATURE-----
+
+--CoT/qmCue5gfNYHx--
 
