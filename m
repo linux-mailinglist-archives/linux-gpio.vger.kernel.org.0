@@ -1,165 +1,315 @@
-Return-Path: <linux-gpio+bounces-20674-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20675-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98894AC6BF6
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 16:40:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8067EAC6CCD
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 17:28:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2F68A25394
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 14:37:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36275174BBA
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 15:28:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A0D3289349;
-	Wed, 28 May 2025 14:37:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351EA28C038;
+	Wed, 28 May 2025 15:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="erkqbxt8"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="nBfiaGUv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010003.outbound.protection.outlook.com [52.101.69.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D956F288C88
-	for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 14:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748443071; cv=none; b=O8DS7C/eFBgd/4ZNVjOEmxj3l1jJa0ys5wHbxOEvKpZVfCrl/I6q/v8QHbrrss8I95WUocktXmUKuuKp7xsF4VCW+Cg8aixJ39PiAAC091+vkLFIlAr2knhFk22rR/QToMWr3WGqmI92WQMzrftLA1UkqWe7RCb72Pe6r9TopzA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748443071; c=relaxed/simple;
-	bh=E/d0r6OOpns+M1s/P1Grzi0S5pY57VyTC8g4426MF4A=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=E67lV362sX+e+hPNiMog51jNcqiJHOo/4DeoQNdLQvy6Xn7M2MapBv3jtpDUzvjfRxOsQwQGW1Dn++SlV+o1fGyDe8ILRQGmmZJCLtXr/cYEP9Sg/KK+fXFblNmffJ1YOCfVfERso4+Xl/ymM7eSmWG5ev6bBGyV0z1HjEbK+4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=erkqbxt8; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so3588355e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 07:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748443068; x=1749047868; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8e/FVNVV68OMZMjntDEe+D+IU61dqOd3DPdYBN+2WAg=;
-        b=erkqbxt8Z1K4KelvFp4KBetLfSTi7qibcWWSbW+liggles7H3+h63gj9e1GpVyRDeM
-         1vIf/sIiVKj5E7gQo4Lvtc6F4a84YfMcW7ln2HwqFrP+cetnIoeEZDbFlVFA7xytmAFk
-         rwSpK/RWeIkyfj0HDn1NTLSJlEvwN4eyJmKO6jei2b1Cn2dxlpeKXOa0PWtAEgSqp+a8
-         ba8ngUVlKeG4wvmkozZigPdqn+YP1lLYXMYWAxjTOIvCyEAdxlVRyJf184woEILNa2gV
-         3bMnxsSkmq/wNunhPVxfyXhEk91yVFGogEiJD4a3u0vwqZQcIVlFF3TbxvAK0YRbifE1
-         efuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748443068; x=1749047868;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8e/FVNVV68OMZMjntDEe+D+IU61dqOd3DPdYBN+2WAg=;
-        b=PfBIrNzVCPk6tOzjommkSudmBiGb1ZaDboKMbSL5TGHBTUouwKn8S/v/OGPkR3SCTG
-         cm1Z2Bo3QfhZRdy4ljU/GLIpSkYbv1ADFnTdLK9bsCEpW1Nnn+5DTWkOd2tUCSLFpjoG
-         1dL2/g6hpsFeo+tirhaBRTwOoEjwwe9kFOLRb+Wk2S/rbbiVf5JDMKY8dMtGtQBDA7im
-         x/Sob2x1iJSlotglem9sP5hFpuDyqsO0XdKp8oRXSTXjeYQVNjl/BtTXi4+akvoqb12t
-         FUrm7AbPOGpHPq7UVo2BMceKZoZbehQQOqbl4Fy2bKBwWHGkovoMc9aUpUsZnQCPhpJO
-         QbEw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6paQdy5sD346rI+FazBkjFRxpyePDfIzoBZDoE2zrQbfqj6SXeYZI68qZ4g3uKBMAvRa2mt4oCfgO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZIYQVNuX8qme34h+9nnfFjPYIiO9BVejdfLl/TsKx3Cr3PA1V
-	gufBDKm3CyoenOyKjnO9JS5cHGijoWdckwrWL8KP5zZX4aea4idfjaJgcRG7Qzv2tnQ=
-X-Gm-Gg: ASbGnctKr36NoULP8WLKvBczjbbKFPgtVYEPirsumGYiE9vkAz00cyTS+GU1TsMJZ+r
-	B5HlRzX7UEFjqTHszmnfdzagdAmq6xS8jNIdBmu5Uc/l3E1FbJyAGMig4zUkYUDCCMkVgzsRZPL
-	40rrpV1Mgl1TsXW7DUxBPOiwOpMJbrvQ0PhOho5Tblb+QfkKf0bpAvTklN+Xf5DlPLEXqRs93/s
-	L1F9UF2pO4Qj6l6RLoqYldC6kBsokQJwttXuJqtuqeodrQb4Tld+m9hyNovWuXrmBG+nqJZgg81
-	hfUpKcdLW8sD8xygOQD3fvFIlurXUpliHJFbcdqEZ966P+OiisuIl9LE
-X-Google-Smtp-Source: AGHT+IHIM9BVzOCXjIDgxXeOl1dIOtdnPxWp/iK5O/TdB3YnpE+mVV2tCG/RghqPvH2Xw5hFmwSDyA==
-X-Received: by 2002:a05:600c:1d0d:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-44c9141d90emr133062395e9.7.1748443068029;
-        Wed, 28 May 2025 07:37:48 -0700 (PDT)
-Received: from localhost ([2a00:2381:fd67:101:6c39:59e6:b76d:825])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064a133csm24375355e9.11.2025.05.28.07.37.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 07:37:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFCB244670;
+	Wed, 28 May 2025 15:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748446083; cv=fail; b=Wx8Ev4ayE5NUrEpPwnxBovqmY43o748bWekzHt2GJzhiMcd5Em1JVB1hUs8N6Y7dBoGyBOhY5Lv+Of2+08tdudiz1sAFYAfvra83m6YygQY1n3/8jsPIe9uqWMDPOQ7RHssY70eiLaa4KeSjbiJ1wbXecn+8xD+Lx5/8e0YBvRE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748446083; c=relaxed/simple;
+	bh=IZfbzp8o0VNvRPnvgazQBCF0BmyViD7esAa3exNJp2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pLsR3wIQOy5R/WlDtE2Xr2A5hoX4WMVCpw1sOMNoHqYgjK6BZSY7iRaebA+MMYekS7YREJXKGsMI7svlnJ58+XGuNmrlcQHAJLITjiObpgRBjZvshAuIbtepPckXf4VZmsollE4iMO5mzZlpHXLypBb9p5Jjx2/NUtmKnZapF6c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=nBfiaGUv; arc=fail smtp.client-ip=52.101.69.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=piKNaAVWA1SYblKQBLxIz97FF7O+lLXaSQXXMmcJglz/VnuQjitxHqNCRiXvZt7VMHamTp51rx7C/TxB/7y0G+mAWGrGGVVnD/OP/Hby+QvGP6DdRaG5pABj0DNGAjDX9Hq0f3HvRV9uenADNX+07MLbTiPqf4qEOlSS51Efl2beGN3n5C1nxqnG9My0t4fISwHI/9rufsEQiKv2ULhjL7Es4DpFLuUccL28qQ8sioCxqY7zbgZKi3J+CGozS17jxuupIT3bYkcrmAHIYXZubP5oiVDoKsa+BAbxrCf03EqS2ap/hS3KudptF9G7oEDMWa/OcU6xnd7amTWM8JTMMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Uoj0Eoc/onIkSqwcJQjQf28hxx/VRihgktbhWLq/RgI=;
+ b=xUFnVgDf9PYTv6vQuJCW+DlH9cPzecUGkdJhfITwm03Q1Ef/V1bhmTRDRcW1uWudvl9Z6RjUrCGZlqzy35bsKQ3Vpc8Wfz+NPupE96WAD+LzLojKvYO34UOCP1Eyg5kWdgYSSWia0ZuAGLow/97b2GJbobX4HEV+AL+rcZ5QaN/63YYPRYYR6JgZ9fHJaiYUXKLxO9qvomIts+gmDW12vO/pG1cY5k3SRhcur9dYNxerrRambQhphxwvV1kyDqqjJDO9bW7BVs9wdct+M0x4jvV3DjC1UDvVKwHeo05W8qk+V05aBTn+iYY4F5f9737VEQULpXIiEUvMebZPlW8uBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Uoj0Eoc/onIkSqwcJQjQf28hxx/VRihgktbhWLq/RgI=;
+ b=nBfiaGUvWxAlcc1k5pfHJzaZ1xyyGvFwjzsFaDWG/DxcAYnFImvuLvNlpUd0CxyjrXkrcZQsa1/ZKJcjLSUAzsBk8i3lCfF1p20SwEasApOA4HTmzDKfs4f7G5udQd6VM1wVkGGigOXYwPB/F4PVuttzPcpTHtd7jzxbLX0yRug55KhLFjJL6Fps5QA10/sIT5Y60VjbqznDYzs8bx4yN2ruDYM/xwC9rUXOV+ldB12wRHeqKZMZD3EIYZvrZWMHTvaVUGkq+1XOo9JbNa+6gMhqRbk8hMykXKL/xFX3miJEKwgiYDLxdH69WrElfPocowKm91NAJ2X2sGfNZdk5pg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DU4PR04MB10959.eurprd04.prod.outlook.com (2603:10a6:10:586::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Wed, 28 May
+ 2025 15:27:54 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Wed, 28 May 2025
+ 15:27:53 +0000
+Date: Wed, 28 May 2025 11:27:44 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: gpio: Move fsl,mxs-pinctrl.txt into
+ gpio-mxs.yaml
+Message-ID: <aDcrcIB1zBVtxnne@lizhi-Precision-Tower-5810>
+References: <20250523203159.570982-1-Frank.Li@nxp.com>
+ <20250527181803.GA877374-robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527181803.GA877374-robh@kernel.org>
+X-ClientProxiedBy: SJ0PR13CA0160.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 15:37:46 +0100
-Message-Id: <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
-Cc: "Srinivas Kandagatla" <srini@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, <linux-sound@vger.kernel.org>, "Liam Girdwood"
- <lgirdwood@gmail.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Bjorn Andersson" <andersson@kernel.org>, "Dmitry Baryshkov"
- <lumag@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>, "Konrad
- Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Jaroslav Kysela"
- <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
- being selected as SoC component
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-X-Mailer: aerc 0.20.0
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
- <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
-In-Reply-To: <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU4PR04MB10959:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9f6c5a78-50c9-417b-b75c-08dd9dfc3691
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?15k0xqApvRyTdkhA3CLUZPKqjfeqcD/F1F4nhPmd5pH9xsMPrYox0ljj1qFL?=
+ =?us-ascii?Q?CJ67IstMtUVIH1kNlo/TFZX6Tmfkto8OqpDBYtIvzD3Z7m1wfsr0I0ZhNSPS?=
+ =?us-ascii?Q?AOPlAMXceNwwBBreh3Y2eNRHNulSuLeSE7baZXqRxGJL0JTeQgXQHgcyutYc?=
+ =?us-ascii?Q?8LK1UF58ZLcaypSpdi9PIDXjZoI8u9v22oUYhjMm9XkcPd420lkDtanJZuMd?=
+ =?us-ascii?Q?v73c35kcoM1Lg9iRXssV2FVf9lfcNdQSw44JlV/LJF2WF/BbUvMvlNKBnpDM?=
+ =?us-ascii?Q?bo0gvbFAT1n725uOuFxew2ZuMWMFP0Y8ZWq1+SUKczkO1Ovv3sDTtRtQDbiK?=
+ =?us-ascii?Q?2Tc99GpZNtCKK0qhzfZLl8YLTe8wfMWAJGoABgSzmUayzCk1wuHmFjHCVqxX?=
+ =?us-ascii?Q?wWrDeekmRZhNmqsfQAzcCr2QqDVKUn6nMkQhVgB4Fj4aoGDY77ftiXGD1Zgf?=
+ =?us-ascii?Q?KnnUwphqbcqwsJMOmyMzK0fDy6xSv1iCiq3EYViayd8tFrW8qN4MoTcLGeuB?=
+ =?us-ascii?Q?eevnHzveC/IJbCvW8eAL1vi7Hofkw5iczfYzzAib+g/CqfObRyX4lSHueRZ+?=
+ =?us-ascii?Q?BwjobkhK6tFQWBrTtb4MIjH3qgGDrqf7A9MeMsYkbUhAlcaMMjaOmogFknm2?=
+ =?us-ascii?Q?abDn+Vz4CQANWi5jSA+yM5bTn80MxMmpChmzFxKh69bwUbY1tRGsDsNTWtLz?=
+ =?us-ascii?Q?CgoDuTFVKNAhM4aeEEMZ4mMn67oEU8NV9ArVt8ZNOujeAfDQv+wAmrnrl9dJ?=
+ =?us-ascii?Q?SJYIwBUCAMJz4GrdLZ2x1VHrTzhFQugkP+GtXDvh8Ur0MPpWr7DF/zd/00Xc?=
+ =?us-ascii?Q?2XzIGWBUDC68YaZyo6ncd5cKf7LnSZUJUMCiQQWONHYGtFRpir+lhWyRsj/e?=
+ =?us-ascii?Q?90bP9a7hnirhktH7PtMR57Cf4TBQgXIc6IHHKN1q2UlnUDjast5eDbrFVMGk?=
+ =?us-ascii?Q?KhhDydcNkwJU6fZnomMX5zuaHD2SH4lBMIcSrWtmsGhF/R/51r9+FBPA7rqw?=
+ =?us-ascii?Q?PZDGLIQaIBjH95AA9gmE+TkxFKgWRUrWPB1ykhpTXdwQAmRzEq8icDFuZd4c?=
+ =?us-ascii?Q?ScM9TRNXCRzTCGHpT7LCUqpYMgVDN/O3FRabgm+16R8CysWudfHtRUYtrfK2?=
+ =?us-ascii?Q?PGOk+Z4GS6wuk7WYGei1vYpBcUkedlX7jRgHZxfG0vFlndd3HOiTQ16K/1gr?=
+ =?us-ascii?Q?9YwvaI8lA28SleMN9rG99X+xKfmGTIQfA34gd16tIAetmaQRG7xuiZwvbTTF?=
+ =?us-ascii?Q?HNWl6aOKtm4c1QVpMd83WtYp/5Ca+vwUWnil4KVhialdN7NLnb49Z/Ee/Z03?=
+ =?us-ascii?Q?4A0DkroA4y7NHQNzuWZNfztXivRyK8UHm0JMufqdPzXWShC6OmFwe1WcUoSP?=
+ =?us-ascii?Q?X2e5Gi+KzPPARmG8hxFHbRpMoABYZdON3cKX8zjvuYo9EqIK6BA8S8xWDohD?=
+ =?us-ascii?Q?OHDLI6VTb5svdHDWvYiGdK+k2pY2xLVriMqqeNTm2t4i/2EduBkzDA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7dbsY+SZ0jAxBEZKrA6Wqe/r9bGV0OhBpK1zPISt0H2Bbdx/jOKXCGTf5KUg?=
+ =?us-ascii?Q?ZvPhWclTOd7bNexsPzc3mrVG8BidSJ0LRwJqgitNZ3JgY/RQtqACQs4Gk5Gt?=
+ =?us-ascii?Q?bPBXUPLd/+9wNixbLOFfX2qHjXa4ubuq/RSeZh3rTfxugBLpDqveeaCXW7o2?=
+ =?us-ascii?Q?9SjJND2gN/YEmzh7D+ZSPZ8/xKpvgiheHqAIQjp2uHsdGAffk+wlZZatRVz8?=
+ =?us-ascii?Q?+/34ZxdoPmwpbJC9i81Iv2c5qd79rrzmpzAGjMkkvVT3uPh0EwfESTxMYYnd?=
+ =?us-ascii?Q?PbK+T5VTog34J9Os9tdMcfWAxxfi8WXN6VIL6isXQZTIHyplIAiNu5BEivWa?=
+ =?us-ascii?Q?HJY4Lg7Z+D8Rlhf97sggCrSwUlGvDRVz1IAskdQ91gWdNiHTXFkoIrMBKqqf?=
+ =?us-ascii?Q?t7T9Ae189F0avmXQYQ7JE55lbhdKklGAkMc0UtjnMsAVo1V7qljr1mUbWgZB?=
+ =?us-ascii?Q?xsIk2HvizYTELVFs32qgMznctues3bRxRFMeYbw66+IyYRizV34rE+X9qYlN?=
+ =?us-ascii?Q?g2Oj8zjcQBCrb1LPNB/9fr7prod7ZhwdQVQsM86bVRMfPRcg6iB0hXmLcWVT?=
+ =?us-ascii?Q?lSyJQYG+eVHg/9oK70+YN/L/HvYrrTHq5yDFadp6VqWNBHg+zeDdeu+lJz82?=
+ =?us-ascii?Q?csFwYqVX6oqhHij1ni9cA371R/qgT+2DSk6krZzhk0PGyFeZkaOk2/dv4q6p?=
+ =?us-ascii?Q?l4f6cqxmE+Fv+FD5M7cfVdJnnHq+lPTzadX4qW2bDdcJIUdt+lNte51yWqOO?=
+ =?us-ascii?Q?hFVICTbdMF7YWu0z8/0B6/A2dcLMuWCb5b9hkYdEZrRcJJ4eyUtvvaBxBBk7?=
+ =?us-ascii?Q?zHYkzS46nyIgPQcPnmi/OFIqpY9z4E9Fq+f4OCl4heOQMCkQsaA7yh7gPxtc?=
+ =?us-ascii?Q?C8eYt4d3ydRt4HlohxtD2q0OHM3nGZOM9ht36030GY/OharbNSn3TeV1btyF?=
+ =?us-ascii?Q?USb1C/2jIMsYtjVGVKH9rFYEOdEzBeLBbFlb8/hmed75tm4esMQCm93dCZNf?=
+ =?us-ascii?Q?G0e//e4CAN7/2VYMALqZsTONfSiFe+H+Ucd2MF73OixkuNoTIU5GXrIKmeqY?=
+ =?us-ascii?Q?mluGvSCUXC9Qp7MYYJmx29IZZqmGAE79UAIjNiepDl12ta1BOjahq5VZHjUa?=
+ =?us-ascii?Q?Ti+0w6niJNu+1tucDIsORiI6wvGG6TTO5MfJIpM2ViqY3AmnG6+yMBoV0n9M?=
+ =?us-ascii?Q?mJESdwYaDzNSGZbcDN8Z+LvBKv29ul2vOiTrFzLrVEuT/zP74Xg/7oWfHIIi?=
+ =?us-ascii?Q?uVEcQSEayrDG4bM6Gm13zpylPPYmKndUCC6f/UU8ZP6F2POesFrmoe2zGPGr?=
+ =?us-ascii?Q?WD4rDz6xBUZ2Shq7SNl0eV6m9VcKRygIVWX1OBODVEn2GQIJE9fnuJ+dL671?=
+ =?us-ascii?Q?UTr3nGfSl0MzoMAxAoEeh7eI+/2O8lM7HXVimOxTQQ2Zse4CZGWKfoG8SOEp?=
+ =?us-ascii?Q?PQ1sYqW2LDH/hkKth2x1FSjKi6QyH1Br6M7ug0uPTnDc17dQw1g+olIcggE1?=
+ =?us-ascii?Q?gtoQsmiSM+bp2eVBJMfWyj8lbaWUvH2m4VGxqYJXwTqrE9rSIOa4PtkWS6RE?=
+ =?us-ascii?Q?aUPEnIf1jwlAsI1Jo8w=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f6c5a78-50c9-417b-b75c-08dd9dfc3691
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 15:27:53.0904
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VfL6hp5tUTrQpbfyfQwFKY+w6KIWpGGPdcBLLgFjOurcB2ac1OMwT82ypF/1P6WdWzCyxC+oLXK3SHBCcM1IZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10959
 
-On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
-> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
->> The pattern matching incorrectly selects "wsa" because of "sa" substring
->> and evaluates it as a SoC component or block.
->>=20
->> Wsa88xx are family of amplifiers and should not be evaluated here.
->>=20
->> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Docum=
-entation/devicetree/bindings/arm/qcom-soc.yaml
->> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a=
-811c4a13143efce3 100644
->> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->> @@ -23,7 +23,7 @@ description: |
->>  select:
->>    properties:
->>      compatible:
->> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[am=
-x]|sm|x1[ep])[0-9]+.*$"
->> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|s=
-c|sd[amx]|smx1[ep])[0-9]+.*$"
+On Tue, May 27, 2025 at 01:18:03PM -0500, Rob Herring wrote:
+> On Fri, May 23, 2025 at 04:31:57PM -0400, Frank Li wrote:
+> > Move mxs-pinctrl part into gpio-mxs.yaml and add pinctrl examples to fix
+> > below CHECK_DTB warning:
+> >
+> > arch/arm/boot/dts/nxp/mxs/imx28-xea.dtb: pinctrl@80018000 (fsl,imx28-pinctrl):
+> >    'auart0-2pins@0', 'auart0@0',  ... 'usb1@1' do not match any of the regexes: 'gpio@[0-9]+$', 'pinctrl-[0-9]+'
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-mxs.yaml    |  73 +++++++++-
+> >  .../bindings/pinctrl/fsl,mxs-pinctrl.txt      | 127 ------------------
+> >  2 files changed, 69 insertions(+), 131 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> > index b58e08c8ecd8a..b3cf4682be3fd 100644
+> > --- a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> > @@ -18,9 +18,11 @@ description: |
+> >
+> >  properties:
+> >    compatible:
+> > -    enum:
+> > -      - fsl,imx23-pinctrl
+> > -      - fsl,imx28-pinctrl
+> > +    items:
+> > +      - enum:
+> > +          - fsl,imx23-pinctrl
+> > +          - fsl,imx28-pinctrl
+> > +      - const: simple-bus
 >
-> Why dropping front .*? Are you sure this matches what we want - so
-> incorrect compatibles? To me it breaks the entire point of this select,
-> so I am sure you did not test whether it still works. To remind: this is
-> to select incorrect compatibles.
+> I don't think the use of simple-bus is correct here. The addresses are
+> not MMIO (there's no size), and I would guess the child nodes are
+> dependent on the parent.
 
-Thanks, great point. I tested it with regular dtbs checks with different
-dtb files but I didn't check if it selects incorrect compatibles.
+This is legency device, which more than 10 years. It use simple-bus
+to probe children gpio devices. pinctrl have not use it.
 
-
-> (?!wsa)
-> Because qcom,x-wsa8845 should be matched and cause warnings.
-
-This is now confusing. I thought that the main job for the pattern above
-is to avoid selecting wsa88xx amplifiers in the first place. Or, if I can
-quote yourself: "What is WSA8815 that it should be here?"
-
-If said wsa8845 with incorrect or correct should be selected by that patter=
-n
-then why not just leave that pattern as it is then? I am lost.
-
-> And probably we are getting past the point of readability, so could you
-> try:
 >
-> compatible:
->   anyOf:
->     - pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sar|sc|sd[amx]|sm=
-|x1[ep])[0-9]+.*$"
->     - pattern: "^qcom,.*(?!wsa)sa[0-9]+.*$"
+> >
+> >    '#address-cells':
+> >      const: 1
+> > @@ -31,6 +33,61 @@ properties:
+> >      maxItems: 1
+> >
+> >  patternProperties:
+> > +  "^(?!gpio).*@[0-9]+$":
+>
+> Unit-address should be hex? If not, then another reason this is not a
+> simple-bus.
 
-Thanks, that one is much better for readability. I'll test that one then.
+Yes, it is wrong to use simple-bus in old driver and dts
+drivers/gpio/gpio-mxs.c
 
-Best regards,
-Alexey
+It is not worth to fix driver and dts for such old lagency devices. Although
+chip is still shipping, we have not board to test it.
+
+>
+> > +    type: object
+> > +    properties:
+> > +      fsl,pinmux-ids:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +        description: |
+> > +          An integer array.  Each integer in the array specify a pin
+> > +          with given mux function, with bank, pin and mux packed as below.
+> > +
+> > +          [15..12] : bank number
+> > +          [11..4]  : pin number
+> > +          [3..0]   : mux selection
+> > +
+> > +          This integer with mux selection packed is used as an entity by both group
+> > +          and config nodes to identify a pin.  The mux selection in the integer takes
+> > +          effects only on group node, and will get ignored by driver with config node,
+> > +          since config node is only meant to set up pin configurations.
+> > +
+> > +          Valid values for these integers are listed below.
+> > +
+> > +      reg:
+> > +        maxItems: 1
+>
+> Would be good to say what 'reg' represents here.
+
+It is just a index, which are not use by drivers. But need it to dts build
+issue.
+
+Frank
+>
+> > +
+> > +      fsl,drive-strength:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        enum: [0, 1, 2, 3]
+> > +        description: |
+> > +          0: MXS_DRIVE_4mA
+> > +          1: MXS_DRIVE_8mA
+> > +          2: MXS_DRIVE_12mA
+> > +          3: MXS_DRIVE_16mA
+> > +
+> > +      fsl,voltage:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        enum: [0, 1]
+> > +        description: |
+> > +          0: MXS_VOLTAGE_LOW  - 1.8 V
+> > +          1: MXS_VOLTAGE_HIGH - 3.3 V
+> > +
+> > +      fsl,pull-up:
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        enum: [0, 1]
+> > +        description: |
+> > +          0: MXS_PULL_DISABLE - Disable the internal pull-up
+> > +          1: MXS_PULL_ENABLE  - Enable the internal pull-up
+> > +
+> > +          Note that when enabling the pull-up, the internal pad keeper gets disabled.
+> > +          Also, some pins doesn't have a pull up, in that case, setting the fsl,pull-up
+> > +          will only disable the internal pad keeper.
+> > +
+> > +    required:
+> > +      - fsl,pinmux-ids
+> > +
+> > +    additionalProperties: false
+> > +
+> >    "gpio@[0-9]+$":
+> >      type: object
+> >      properties:
+> > @@ -80,7 +137,7 @@ examples:
+> >      pinctrl@80018000 {
+> >          #address-cells = <1>;
+> >          #size-cells = <0>;
+> > -        compatible = "fsl,imx28-pinctrl";
+> > +        compatible = "fsl,imx28-pinctrl", "simple-bus";
+> >          reg = <0x80018000 0x2000>;
+> >
+> >          gpio@0 {
+> > @@ -132,4 +189,12 @@ examples:
+> >              interrupt-controller;
+> >              #interrupt-cells = <2>;
+> >          };
+> > +
+> > +        lcdif-apx4@5 {
+> > +            reg = <5>;
+> > +            fsl,pinmux-ids = <0x1181 0x1191>;
+> > +            fsl,drive-strength = <0>;
+> > +            fsl,voltage = <0>;
+> > +            fsl,pull-up = <0>;
+> > +        };
+> >      };
 
