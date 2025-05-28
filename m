@@ -1,161 +1,156 @@
-Return-Path: <linux-gpio+bounces-20657-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20658-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92CC0AC6922
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 14:20:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CC21AC696E
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 14:37:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D872A7B1E21
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 12:19:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 445B34E47F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 12:37:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2D69284B20;
-	Wed, 28 May 2025 12:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Up9MwRuH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7CF2286402;
+	Wed, 28 May 2025 12:36:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C171B28468C
-	for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 12:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C900285411;
+	Wed, 28 May 2025 12:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434822; cv=none; b=ojTSpi8xAafZHLl6U9v7dLCF3A6i2p9BW53xqhrSJzF3cMWtOVWeGRXMZuH6phxdXVqQ7iRHO2lW2/Z+IEZ3QBEOeg085980xyIVQBkzpPM6f6OGK0QWHpTtl5AhWyk3CenHLBTtDk6ckuHmepA6Qo2eC1PXlZ80GfwgGApY6oA=
+	t=1748435798; cv=none; b=Pj7DAMbiJUyQA3VmpN1pt9p8y2BDlRiGAVnpqDsO1tnVO8Hv6vM8r6I7zpQkB9SGL/X+1AMQPFJMVwlbDy9Fn1UsVMqMoWhohU28UdlrddSiEGW+Nzw/U3Su2+Q1JAJru2j39dBeZRO6IJKB5om624U+shKp5X27zfWZIg2bRN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434822; c=relaxed/simple;
-	bh=LgluqXTAQPOxJPKju8Bo8ViAFRC7s0F2a9tFXlqvtIo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=LAWy3gC4ZUWygBRQArOzXnLLllWGudjUJvp+amTkRXa+iOyLSF/q/I58FTe7RdTiz9ir/6DxECgxNWkbfdykwiu/XFXNH4ymMw8wT3OA7tnjsYCr5royoGBfRmFb4EdyIeabfBUSdA14oWitTMMo6Bcf2dy/K88Socf8JdMJF0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Up9MwRuH; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-442d146a1aaso50958545e9.1
-        for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 05:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748434818; x=1749039618; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nUiSIyBK9bnL6y5jkIEyCSHfBFQ4eE1Z0A1Z3a6M0aM=;
-        b=Up9MwRuHNjPw1rlRQzUew66x7qEPzJiY9UVqJhwvtqIf0Eyo8lBQCHqtWdrA5m9oYE
-         cQuPLlhoGUjI1pgVqE+wE/s544dc0VOLMRzLVEmaDPWy9BpuDGjDTlWu7NHnXkeqYYDi
-         LS/N2aq0Q5HHtM26h+IwOruFH3o0lEwdzLbpOu8LTAoMEIQUmLpzyomxAMNSLuLFe+l+
-         hN1kFmpyq4xM5UYNtEbrl0NZjqmb8dCbT0mXGc0ahpMwuiHfCCMu3MdqvNnqbNRXfM5M
-         tx3XGeVV7oXENS2jWvJto04TScoaNtoDRPUeSBNGT2V7MU+bmGc+wOKiTULLKBme1g96
-         wzOw==
+	s=arc-20240116; t=1748435798; c=relaxed/simple;
+	bh=Tb8JwKiZIuYCl3tOsCNwIpx036fyGp61/t1y80b2mTM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NWtc3N3dk/bKFKug90xxuDsMY8AMs8THXFrhR1zkDqpZp2kCn9gtiwNQXg03TfF0k9IZkjNjibX/fTezDgU9sstoxpouPpWgEKAGY/vR06/9vEhimhusMGxFtg6JuaobFzyczoEKT/fsYeCcnOdycLv0tZhqG+F906olnrIwKHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so1273840241.2;
+        Wed, 28 May 2025 05:36:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748434818; x=1749039618;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nUiSIyBK9bnL6y5jkIEyCSHfBFQ4eE1Z0A1Z3a6M0aM=;
-        b=SEZC/EcP5vknWPGyRYxf7g9F7wISi7l78Hi8Kn5ZWl+V4drwCXKEAQSAmeG9p+PPx4
-         WWiHSd+H0wcM1q+gcbCXlT1OaZecvO1jGzxk1Z4w8g5qqAP8SmXqSyb+bjM/sSpH9lvZ
-         wU0ijB8+ANIUHw+IJXXC6w5SysX8cSXfz/iSE72BjZe8oEvhaXqSW8PRoLkQ0jp8uY91
-         6uf/KfcI9L3DbqIhX+hjyhW284n6CAb0PR8yqV6tcUJJ/iBpbkez30yujZq8zEUQ2+wb
-         X/j9TEUfTGkoTTe3G+C3srwMPz2Hp1DUokp7gX9nZLFE1g4zKVPKVoLXVBjtli37Aeuc
-         0Vmw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3B9H5Ks299f+Y6KvDgvjtVzKFwkCqAJLXBAT5vrrDjV4rhhqHF+vehHM5JFYzmvkL9SeJeRGekjiH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQYOzdk3MvjIOKTlhFOU6Q+j9BkGSy/MSMmFES/oNbUDUvfSKu
-	6LOQrjtzOwRA6hWkCvGz0xfkgfLHodQToALxNfTFXqkZy2Xc274xaof7PFsCM1oDTuA=
-X-Gm-Gg: ASbGncsDOR2LJdtv95at/VpCrOI5zb22deJws4ZxehWulsw28y+JeIioz9Eo0SaAUP3
-	wqJOJ0WoN/upDbgbgtZV7tWsB8TOCIlCsZCpOq4Hfh0xL9jI9dDMWNJeA3FnmqRFEnnR2rv7+C7
-	YaibFI0dQgxPm9GT+y+i7V2LxVidE+jedLlBOYdQoPkTmR+I0znV0TYck+C673ZNFK5FjEKSN6j
-	ccU6YpKPAHo7sC3jri9ndMBRegLx3SAYtdbTwUfqI1h38Rbx+AQqpP4Qx3tpJKdzAEwcW3t3/vL
-	Qz7jCk/o/L/6Icf5Y7UEVA4ViUd0ED/HFIFVEw2M9NgVe16zXDzSwyjnEN0R27CCEok=
-X-Google-Smtp-Source: AGHT+IGZexNRqILydRhcO4IU4n98EZEdu0fFVjtfd4sxx1IIeEAtAXBTC1Us7iU6PxbqQgpjB0cAjw==
-X-Received: by 2002:a05:600c:3109:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-44c941884eamr149032045e9.9.1748434817966;
-        Wed, 28 May 2025 05:20:17 -0700 (PDT)
-Received: from localhost ([2a00:2381:fd67:101:6c39:59e6:b76d:825])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4507255b619sm15992525e9.22.2025.05.28.05.20.16
+        d=1e100.net; s=20230601; t=1748435794; x=1749040594;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EttMl+UEO23MQ5/zgKZh51X1fkqP6brx9qDrKYFmyoA=;
+        b=Zz8NzvcetK05jErEbx/ZP8QJVx1G1THE7k6BzGtuwnEbL2Qlt7JPbihNQNyZy+irtN
+         rGQ7yMEwBzW0E7ZED5ZGqtWh7NW37aMscQmtkpmsHXqc9XMsrrsoDFuXuNTdzqdE7y78
+         FjurhvWJA3n7ltUBXfXRQ4VFzUmv++koJilWjNF12as13Vk/8ZCzu6MSqt94ard3Qimx
+         jGUEDKZ5CMFWkwCSuyoYDgLnReAseueGT4/haA6zy+bnAkE0NYt1h+jD1CGnfUPFZSTR
+         lqzEDhVXDhcGLkQKATNACqsfNhRRU1Bmfu2CJj1yIey71WaMBiRPWy/46NFRJwkRgaW2
+         bH2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVa0JJeYhTLJ34WgLsKtf4mDSUfm5oirLJbNQ/y5wBvWOsu3olB3WLKOsMk+tPA+2+B1xWh/QuB+uRu2Ro=@vger.kernel.org, AJvYcCWRlyQmU8QDqHotGTZlOMYs8Asmdyini862gJvv11kqpghYsMN07kdDBR4P0FRWnLtLAl9L/PCTXZgU@vger.kernel.org, AJvYcCWUJT+wEWHZaGm0jBVz0QWYpTbEcBqHuiy7SOnk9H7HH4aDK8hEbcxPud7pga510WV4wOpOqt8rssHE@vger.kernel.org, AJvYcCX9UlbJpcH8IqGWQADHeY0dJCieWJSUkNSMjH0vw2lz+c4vyOvv3D6aiJdQyr2v9nYScwmq8H4U63ggqJfS@vger.kernel.org, AJvYcCXZasUqzV8vVyIZwXY2bJcoKtjTxpEPfMPoNP9KKJTdFBcnpIed0byge8siNpUPxAL3D3qAhLcmXHYVyvKfa4Fn8LA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywLC8EMdRBpVJuq2XMLXCLZCWjlI7JPL8afTt3Q+CEo8eH8mRd
+	UQlLg+O8cnCeBnhjb1GvWmGEVqmq4NBCjrwneizw+LwBS+aXxFYaeEjjW0036KVB
+X-Gm-Gg: ASbGncuEZYv5tV0/4YUZigYV5sBzjO1Rqe6YtjxRg0I8fwgHoxv874GIGzz9jmc+vkm
+	f8+FF+/ncD3WSM/Cs/ZzOnR09DLfvfZsdGjlaBNiL0VEbh1ogivtDBm64PpDWSXsPyce3CsJahp
+	BhsIdB+REanGq9TsKGrF9N+CRGvQNoirMmiIkAHflwl0kqPGYk6bfxyQWUEDMtqRfCKEOXj2HVI
+	uVnnBglR9aNrfkyj6Gz+l3xMT7IbhfSwZInfmOHI1QM8VPdpPidiC7fDUleHahoea/iP6a5z7z8
+	A4uqJARiEMdB/TFXFL07CuEJS1PpP3Ln7gYz1geQL9DFJVykJCpdETWQO51pvQxVXMIaCsR4JO6
+	tYfP1r0PDi5x09A==
+X-Google-Smtp-Source: AGHT+IFqX++8xVp+nCvnBBtE1xW7PBsDc7dPeyBs/u6wrEFcPIIOb+1g2Ka1Xfb5vCu7pD3ebvj7wg==
+X-Received: by 2002:a05:6122:d81:b0:526:720:704 with SMTP id 71dfb90a1353d-52f2c56e83emr12183548e0c.7.1748435793843;
+        Wed, 28 May 2025 05:36:33 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53066973c62sm872607e0c.44.2025.05.28.05.36.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 05:20:17 -0700 (PDT)
+        Wed, 28 May 2025 05:36:33 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-87dfe8388f8so834813241.0;
+        Wed, 28 May 2025 05:36:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdZMdzQj2tjIztXLodfaEF0vTWGP+GzqSKV9mrRsm7pzPKRREnrw0WMod4EsutEqZrnYWnw4WVTDyZ@vger.kernel.org, AJvYcCV1RP1XBseuqv33llEzkRQYA/Sy4ZB7qtd5jKFVvorlYyQDCz5K1F5TsQvcI+f0d/SnvprpTIbabd0gLJr2tSY/bpY=@vger.kernel.org, AJvYcCVcq3wrLQ6S8UN+kGk9Xm8SfIvKmB3+/nsM20AoorYIR1rPd9bRxne9pg5teFw8KbqJOwBJIbJpEzUG@vger.kernel.org, AJvYcCW3Nug3JCEca+iJygNTK7HuzaGKOk2lY1tYBPVYpBFRJIxDcGylvOwwAsasTW0uvZr8zi9yh2VACqIy0sU=@vger.kernel.org, AJvYcCWoURuO9za1nINwJwZ3CyCghrYlBYTKN3WZv01ZrZZtE7tGUPyrmpVhFR0Vt8UhrfLa7pDYwvRGx3ZIKk+S@vger.kernel.org
+X-Received: by 2002:a05:6102:3e95:b0:4c5:1c2e:79f5 with SMTP id
+ ada2fe7eead31-4e42415db7dmr12024574137.16.1748435792883; Wed, 28 May 2025
+ 05:36:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 13:20:16 +0100
-Message-Id: <DA7SEY5S1F1Z.1LZE7191BKBFM@linaro.org>
-Cc: "Bjorn Andersson" <andersson@kernel.org>, "Linus Walleij"
- <linus.walleij@linaro.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Srinivas Kandagatla" <srini@kernel.org>, "Liam Girdwood"
- <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, <cros-qcom-dts-watchers@chromium.org>,
- <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-sound@vger.kernel.org>, <kernel@oss.qualcomm.com>
-Subject: Re: [PATCH v4 7/8] arm64: dts: qcom: qcm6490-idp: Add WSA8830
- speakers and WCD9370 headset codec
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Prasad Kumpatla" <quic_pkumpatl@quicinc.com>, "Mohammad Rafi Shaik"
- <quic_mohs@quicinc.com>
-X-Mailer: aerc 0.20.0
-References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-8-quic_pkumpatl@quicinc.com>
-In-Reply-To: <20250527111227.2318021-8-quic_pkumpatl@quicinc.com>
+MIME-Version: 1.0
+References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org> <20250528-pinctrl-const-desc-v1-1-76fe97899945@linaro.org>
+In-Reply-To: <20250528-pinctrl-const-desc-v1-1-76fe97899945@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 28 May 2025 14:36:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX7krbAssbYpJ1RA1EkpOP26nUhuhmtSW8X9nJkB5amBQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvOxqSsQb6hAAUjvGh24-ydFSS3wze_W2Lj6wpwfm4mEoNhN1lAYOnpqvg
+Message-ID: <CAMuHMdX7krbAssbYpJ1RA1EkpOP26nUhuhmtSW8X9nJkB5amBQ@mail.gmail.com>
+Subject: Re: [PATCH 01/17] pinctrl: starfive: Allow compile testing on other platforms
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Joel Stanley <joel@jms.id.au>, Avi Fishman <avifishman70@gmail.com>, 
+	Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, 
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
+	Benjamin Fair <benjaminfair@google.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Jesper Nilsson <jesper.nilsson@axis.com>, 
+	Lars Persson <lars.persson@axis.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Damien Le Moal <dlemoal@kernel.org>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Michal Simek <michal.simek@amd.com>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@axis.com, linux-riscv@lists.infradead.org, 
+	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue May 27, 2025 at 12:12 PM BST, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Hi Krzysztof,
+
+On Wed, 28 May 2025 at 12:41, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> Always descent to drivers/pinctrl/starfive/ because limiting it with
+> SOC_STARFIVE is redundant since all of its Kconfig entries are already
+
+... since its Makefile doesn't build anything if no Starfive-specific
+pin control Kconfig options are enabled?
+
+> have "depends on SOC_STARFIVE".  This allows compile testing on other
+> architectures with allyesconfig.
 >
-> Add nodes for WSA8830 speakers and WCD9370 headset codec
-> on qcm6490-idp board.
->
-> Enable lpass macros along with audio support pin controls.
->
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/qcm6490-idp.dts      | 96 +++++++++++++++++++
->  .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 24 +++++
->  2 files changed, 120 insertions(+)
+>  drivers/pinctrl/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/d=
-ts/qcom/qcm6490-idp.dts
-> index 7a155ef6492e..884abbda74fd 100644
-> --- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-> @@ -18,6 +18,7 @@
->  #include "pm7325.dtsi"
+> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> index ac27e88677d14f1c697e0d0be9f295c746556f4d..dcede70b25660833a158c298d1269d6ecea9dd8b 100644
+> --- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+> @@ -82,7 +82,7 @@ obj-y                         += sophgo/
+>  obj-y                          += spacemit/
+>  obj-$(CONFIG_PINCTRL_SPEAR)    += spear/
+>  obj-y                          += sprd/
+> -obj-$(CONFIG_SOC_STARFIVE)     += starfive/
+> +obj-y                          += starfive/
+>  obj-$(CONFIG_PINCTRL_STM32)    += stm32/
+>  obj-y                          += sunplus/
+>  obj-$(CONFIG_PINCTRL_SUNXI)    += sunxi/
 
-[..]
+The actual change LGTM, so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> +&swr0 {
-> +	status =3D "okay";
-> +
-> +	wcd937x_rx: codec@0,4 {
-> +		compatible =3D "sdw20217010a00";
-> +		reg =3D <0 4>;
-> +		qcom,rx-port-mapping =3D <1 2 3 4 5>;
-> +		qcom,rx-channel-mapping =3D /bits/ 8 <1 2 1 1 2 1 1 2>;
-> +	};
-> +};
-> +
-> +&swr1 {
-> +	status =3D "okay";
-> +
-> +	wcd937x_tx: codec@0,3 {
-> +		compatible =3D "sdw20217010a00";
-> +		reg =3D <0 3>;
-> +		qcom,tx-port-mapping =3D <1 1 2 3>;
-> +		qcom,tx-channel-mapping =3D /bits/ 8 <1 2 1 1 2 3 3 4 1 2 3 4>;
+Gr{oetje,eeting}s,
 
-It will be tremendously useful to add comments that elaborate the {rx,tx}-c=
-hannel-mapping
-(and port mapping for what it's worth) here like it is done in other dt fil=
-es.
-For example in the same way as it is done in sm8650-qrd.dts
-or like here:
-https://lore.kernel.org/linux-arm-msm/20250526-sm8750-audio-part-2-v3-3-744=
-29c686bb1@linaro.org/
+                        Geert
 
-Best regards,
-Alexey
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
