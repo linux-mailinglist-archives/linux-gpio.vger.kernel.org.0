@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20622-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20623-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43210AC617C
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 07:58:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1884AC6180
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 07:59:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE1AD3A9A60
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 05:58:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D9A777A62E9
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 05:58:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E508320E021;
-	Wed, 28 May 2025 05:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D490220E034;
+	Wed, 28 May 2025 05:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HeCs3UQT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1tV9d5S"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E2E20CCCA;
-	Wed, 28 May 2025 05:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B9284A35;
+	Wed, 28 May 2025 05:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748411919; cv=none; b=f14bO0suCgkqGHrG7xKlHgdq+w1IMEIv87AabHs1+1Igbh8TemUCLpnNrx7UsddykIa0k97PNKaNXgv3SSPsG0I6IxNvINrXLD2DN334HTv29by78G+F9rGVUTUh+F5OtTyAp7jwZOtzudinLvy5nNSmwOXfcmxeRn/U6rd9PYk=
+	t=1748411953; cv=none; b=EhGVhPSDxdQJYMqtxyHsR5FG4h1nD21ic74ApXGyrogl1WdvQljy7lR7J7LxpVX3S2l2di+hnd4zJa2QhmfNoTs2S8nSESI2pXBZQ7GaS676e8lVKh5tLq5vmTl04MElnjPxEFBuFOD5tcZK2ZUlU6f71vSiZYs0xmYLHrjJnYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748411919; c=relaxed/simple;
-	bh=s30BvmonDO22/VURRrlZYKuo5RtdHEqne6gVx66GPCg=;
+	s=arc-20240116; t=1748411953; c=relaxed/simple;
+	bh=UTvNIVWWhnhGQ65MdDP5oOsZnXPxBKSF/A15KmFo3Uk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BBEq0GCgQQzv5JiFMswS2tVUXl7OL3hKvGagaIcFDyxE9Wy8jJ2ncrZ23eu2lMEQUXser++2WdUqCHlby1XJ1GBnMtacYtax822JKExkTudonSr/Cjif9FkG20zvr3+aXv7vQXI41c+zl3hMfHrhMUrnhQiKRZs9KsK/azA73DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HeCs3UQT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8793C4CEE7;
-	Wed, 28 May 2025 05:58:34 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=ZA02qKU2oGK0ZAFK7PKDfcnhXCHE0Q8fXgMtR7/WZQDrQ/yz1uaPDvzKSMhpqT6N8SuIvqTLGKD28esEOGeO1eGicADIZDsmbQ963bk8bYAasLhmx057RCUr1V7iUQvc0HyOCa07Bg/mcFNXRuU6qYTA80OrdXPOxwsuhi1TMXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1tV9d5S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44EC1C4CEE7;
+	Wed, 28 May 2025 05:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748411919;
-	bh=s30BvmonDO22/VURRrlZYKuo5RtdHEqne6gVx66GPCg=;
+	s=k20201202; t=1748411953;
+	bh=UTvNIVWWhnhGQ65MdDP5oOsZnXPxBKSF/A15KmFo3Uk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HeCs3UQTv3j9qlYfMkDrFP/j139VPVsEQUVuxTebtdDHJ2JeaHz3/vf9F9YLVogbw
-	 NVfy6LlLJ00uF2CJMvAallTbWcLYKUg0H8phDOoA6MyDg5E8oKRvcgABfS3dOlBRJ6
-	 orydg9ofJ2MBy/cc2PTfHx+UAeY525p6K57IelFiu4EFLIbMNLv/2N+wQbfJODMIpA
-	 bHUCI6MVe3DVrJyZvGVqbyCGy7HEAiiO3yaZmmqy5thoSmP+KPy44kJ8JwIgXwuXLw
-	 B8Kn47GfnuoocVwO5N0d9fhHnQEaDar45uLh12675Nd6Z/nIAbbVI3fLfSLoJLyjng
-	 pIp134ioTJ4fQ==
-Message-ID: <8609abe9-8aac-42a2-a2a1-2ccd6eafb171@kernel.org>
-Date: Wed, 28 May 2025 07:58:32 +0200
+	b=S1tV9d5SKxXHN6owAkHT5cjDhewtybgTGpD/nB+1zsItUgDmYnfOK5RmFoS1+xIz+
+	 /GCcgJEOly29rFWfNX9koEVZlh4mKhaPk5FBap5aBSj5P7rpQS+iGMwXWaNcVyJI5b
+	 Rj9bIqoV6n1AcJ4q+OeGb3IZUV0eXX2bO0fy/0Ivp2SAViX68H2rjp7PsbO7JEtduR
+	 0R75NKg+qQ41w8CMm6jv9Pz6rQ7AvIlEgZ5TSlSEuQ/OhSTEsiidswMepYgXh78jCm
+	 WzqhBw7KZUhZ5vYxB4foht1DpHTenpLP+UZbs1HBZPtsNIXjpOGgmkIgaw8Vqx9dh9
+	 xcOe6zEJKX9Pg==
+Message-ID: <f41763a9-0371-4a1d-aa3b-0aadf54c0655@kernel.org>
+Date: Wed, 28 May 2025 07:59:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,23 +50,25 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/12] ASoC: dt-bindings: qcom,wsa881x: extend
- description to analog mode
+Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
 To: Alexey Klimov <alexey.klimov@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
  linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+ Dmitry Baryshkov <lumag@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
 References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-3-9eeb08cab9dc@linaro.org>
- <b0f472af-6a0f-493f-aca3-65321931bebe@linaro.org>
- <DA78AT6VV956.3FZVIIIM3ZTFZ@linaro.org>
+ <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
+ <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
+ <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
+ <b163bb31-2d02-47bb-a7a1-91c1fb007523@linaro.org>
+ <DA78C0GLXJDX.2Z7K375XWOZH3@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,87 +114,39 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <DA78AT6VV956.3FZVIIIM3ZTFZ@linaro.org>
+In-Reply-To: <DA78C0GLXJDX.2Z7K375XWOZH3@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/05/2025 22:34, Alexey Klimov wrote:
-> On Thu May 22, 2025 at 6:45 PM BST, Krzysztof Kozlowski wrote:
->> On 22/05/2025 19:40, Alexey Klimov wrote:
->>> WSA881X also supports analog mode when device is configured via i2c
->>> only. Document it, add properties, new compatibles and example.
+On 27/05/2025 22:36, Alexey Klimov wrote:
+> On Tue May 27, 2025 at 7:33 PM BST, Krzysztof Kozlowski wrote:
+>> On 27/05/2025 18:32, Alexey Klimov wrote:
+>>> On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
+>>>> On 22/05/2025 19:40, Alexey Klimov wrote:
+>>>>> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
+>>>>> are required to support audio playback and audio capture on sm6115 and
+>>>>> its derivatives.
+>>>>>
+>>>>> Cc: Konrad Dybcio <konradybcio@kernel.org>
+>>>>> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>>
+>>>> Just keep one CC.
 >>>
->>> Cc: Srinivas Kandagatla <srini@kernel.org>
->>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>> ---
->>>  .../devicetree/bindings/sound/qcom,wsa881x.yaml    | 66 +++++++++++++++++++---
->>>  1 file changed, 58 insertions(+), 8 deletions(-)
+>>> Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
+>>> email here?
 >>>
->>> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
->>> index ac03672ebf6de1df862ce282f955ac91bdd9167d..a33e2754ec6159dbcaf5b6fcacf89eb2a6056899 100644
->>> --- a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
->>> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
->>> @@ -12,15 +12,17 @@ maintainers:
->>>  description: |
->>>    WSA8810 is a class-D smart speaker amplifier and WSA8815
->>>    is a high-output power class-D smart speaker amplifier.
->>> -  Their primary operating mode uses a SoundWire digital audio
->>> -  interface. This binding is for SoundWire interface.
->>> -
->>> -allOf:
->>> -  - $ref: dai-common.yaml#
->>> +  This family of amplifiers support two operating modes:
->>> +  SoundWire digital audio interface which is a primary mode
->>> +  and analog mode when device is configured via i2c only.
->>> +  This binding describes both modes.
->>>  
->>>  properties:
->>>    compatible:
->>> -    const: sdw10217201000
->>> +    enum:
->>> +      - qcom,wsa8810
->>> +      - qcom,wsa8815
->>> +      - sdw10217201000
+>>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>>>>> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>>>>
+>>>> Missing SoB.
+>>>
+>>> IIRC I took Konrad's changes but at this point I don't remember how much was changed.
 >>
->> You never responded to my comments, never implemented them. Same problem
->> as before.
+>> And stripped his SoB?
 > 
-> You don't respond to emails sometimes and, while I want to move this forward,
-> I am not taking any chances replying to few months old thread, so if it okay
-> I'll respond here. Sorry for doing this.
-> 
-> Previous comment:
-> 
->> You implement only one compatible, so does it mean they are compatible?
->> If so, make them compatible.
-> 
-> There are two compatibles in wsa881x-i2c.c.
-> By looking at downstream sources and current code I think there is no diff
-> between wsa8810 and wsa8815 and it is handled by reading hw registers if
-> needed. So I am thinking that maybe it makes sense to reduce it to
-> "qcom,wsa881x".
-
-No, you need specific compatibles. That's the standard DT rule.
-Compatibility is expressed with list and fallback (see example-schema or
-any other qcom binding, really 95% of them have fallbacks).
-
-WSA usually have version registers so even if there are differences,
-they are fully detectable, thus one more argument for compatibility.
-
-> 
-> Previous comment:
->> Do not repeat property name as description. Say something useful. "GPIO
->> spec for" is redundant, it cannot be anything else, so basically your
->> description saod "mclk" which is the same as in property name.
-> 
->> Usually clocks are not GPIOs, so description could explain that.
-> 
-> Should the "GPIO spec for control signal to the clock gating circuit" be
-> changed to "control signal to the clock gating circuit"?
-
-I don't see previous code, cannot even reference it via reply-to
-link/header. That way of communication is not effective.
-
+> If the memory serves me well there was none.
+Sure, then the last part of my response is applicable (which was below
+above sentence).
 
 Best regards,
 Krzysztof
