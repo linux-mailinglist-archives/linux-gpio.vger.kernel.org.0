@@ -1,84 +1,84 @@
-Return-Path: <linux-gpio+bounces-20658-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20661-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CC21AC696E
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 14:37:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F74BAC69DE
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 14:56:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 445B34E47F7
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 12:37:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F29203B430B
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 12:55:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7CF2286402;
-	Wed, 28 May 2025 12:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8B1C286411;
+	Wed, 28 May 2025 12:56:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C900285411;
-	Wed, 28 May 2025 12:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E39421322F;
+	Wed, 28 May 2025 12:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748435798; cv=none; b=Pj7DAMbiJUyQA3VmpN1pt9p8y2BDlRiGAVnpqDsO1tnVO8Hv6vM8r6I7zpQkB9SGL/X+1AMQPFJMVwlbDy9Fn1UsVMqMoWhohU28UdlrddSiEGW+Nzw/U3Su2+Q1JAJru2j39dBeZRO6IJKB5om624U+shKp5X27zfWZIg2bRN8=
+	t=1748436964; cv=none; b=cQl/kupMyDYxygt4tezguJF6IgNAMQ3HQ91FlCfxckK4X0N2/GzsoI10VxY5q74BJDUV2lxRZcovm5uJY3BahVo6tLMosM3kRkFvu7QgMDmiT4CpcrHRmT7L5qCPQoph59DGqK8Js7wn3bsu9XedvLTsN86K4WUFb9BzpZ0nSh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748435798; c=relaxed/simple;
-	bh=Tb8JwKiZIuYCl3tOsCNwIpx036fyGp61/t1y80b2mTM=;
+	s=arc-20240116; t=1748436964; c=relaxed/simple;
+	bh=+PhLsl6QIi9rIQ0T45j63xL9sX0VWjfxjI9Tcf3ANwo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NWtc3N3dk/bKFKug90xxuDsMY8AMs8THXFrhR1zkDqpZp2kCn9gtiwNQXg03TfF0k9IZkjNjibX/fTezDgU9sstoxpouPpWgEKAGY/vR06/9vEhimhusMGxFtg6JuaobFzyczoEKT/fsYeCcnOdycLv0tZhqG+F906olnrIwKHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
+	 To:Cc:Content-Type; b=ZZzRc1BJFSWy+1J/9kFUHO6qz2+H1CRuLRf7XjNfBsErEoO8V4m+7nPDs48zli8ryNuqsjWgtecwmx/m62KFkRNmi7cSsr/UEJB9HTm6MzX4oPUMt9WZhPCQR/ncwRtw4VHKYl6EPDNtTuc1pZsFErSyIwGsmHKnKc5HeCc4Qnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so1273840241.2;
-        Wed, 28 May 2025 05:36:36 -0700 (PDT)
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47692b9d059so57543271cf.3;
+        Wed, 28 May 2025 05:56:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748435794; x=1749040594;
+        d=1e100.net; s=20230601; t=1748436961; x=1749041761;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EttMl+UEO23MQ5/zgKZh51X1fkqP6brx9qDrKYFmyoA=;
-        b=Zz8NzvcetK05jErEbx/ZP8QJVx1G1THE7k6BzGtuwnEbL2Qlt7JPbihNQNyZy+irtN
-         rGQ7yMEwBzW0E7ZED5ZGqtWh7NW37aMscQmtkpmsHXqc9XMsrrsoDFuXuNTdzqdE7y78
-         FjurhvWJA3n7ltUBXfXRQ4VFzUmv++koJilWjNF12as13Vk/8ZCzu6MSqt94ard3Qimx
-         jGUEDKZ5CMFWkwCSuyoYDgLnReAseueGT4/haA6zy+bnAkE0NYt1h+jD1CGnfUPFZSTR
-         lqzEDhVXDhcGLkQKATNACqsfNhRRU1Bmfu2CJj1yIey71WaMBiRPWy/46NFRJwkRgaW2
-         bH2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVa0JJeYhTLJ34WgLsKtf4mDSUfm5oirLJbNQ/y5wBvWOsu3olB3WLKOsMk+tPA+2+B1xWh/QuB+uRu2Ro=@vger.kernel.org, AJvYcCWRlyQmU8QDqHotGTZlOMYs8Asmdyini862gJvv11kqpghYsMN07kdDBR4P0FRWnLtLAl9L/PCTXZgU@vger.kernel.org, AJvYcCWUJT+wEWHZaGm0jBVz0QWYpTbEcBqHuiy7SOnk9H7HH4aDK8hEbcxPud7pga510WV4wOpOqt8rssHE@vger.kernel.org, AJvYcCX9UlbJpcH8IqGWQADHeY0dJCieWJSUkNSMjH0vw2lz+c4vyOvv3D6aiJdQyr2v9nYScwmq8H4U63ggqJfS@vger.kernel.org, AJvYcCXZasUqzV8vVyIZwXY2bJcoKtjTxpEPfMPoNP9KKJTdFBcnpIed0byge8siNpUPxAL3D3qAhLcmXHYVyvKfa4Fn8LA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywLC8EMdRBpVJuq2XMLXCLZCWjlI7JPL8afTt3Q+CEo8eH8mRd
-	UQlLg+O8cnCeBnhjb1GvWmGEVqmq4NBCjrwneizw+LwBS+aXxFYaeEjjW0036KVB
-X-Gm-Gg: ASbGncuEZYv5tV0/4YUZigYV5sBzjO1Rqe6YtjxRg0I8fwgHoxv874GIGzz9jmc+vkm
-	f8+FF+/ncD3WSM/Cs/ZzOnR09DLfvfZsdGjlaBNiL0VEbh1ogivtDBm64PpDWSXsPyce3CsJahp
-	BhsIdB+REanGq9TsKGrF9N+CRGvQNoirMmiIkAHflwl0kqPGYk6bfxyQWUEDMtqRfCKEOXj2HVI
-	uVnnBglR9aNrfkyj6Gz+l3xMT7IbhfSwZInfmOHI1QM8VPdpPidiC7fDUleHahoea/iP6a5z7z8
-	A4uqJARiEMdB/TFXFL07CuEJS1PpP3Ln7gYz1geQL9DFJVykJCpdETWQO51pvQxVXMIaCsR4JO6
-	tYfP1r0PDi5x09A==
-X-Google-Smtp-Source: AGHT+IFqX++8xVp+nCvnBBtE1xW7PBsDc7dPeyBs/u6wrEFcPIIOb+1g2Ka1Xfb5vCu7pD3ebvj7wg==
-X-Received: by 2002:a05:6122:d81:b0:526:720:704 with SMTP id 71dfb90a1353d-52f2c56e83emr12183548e0c.7.1748435793843;
-        Wed, 28 May 2025 05:36:33 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53066973c62sm872607e0c.44.2025.05.28.05.36.33
+        bh=kpBCbmssZZU2OxX6932Syq4YOVYfQLXpGhSUVPiLHKA=;
+        b=ab6dLn8w6c4GmA3zf/78J4M737G4B/QUoVh9dn1gtnoDGdng+UCBuPnexT8ilI3bJL
+         VItbrTw91zv7kiUDekbCyKKQhjEdVw+aLS9ua/DsQ4qxeCXUpyvu7OhuobfdQSKJbDnE
+         f9FMEKTxQpdQThKdQm3bpLFTDseaJ7xxZ0rXCV+rvSv64T+iBxHPiuULjO7hncf+KV4T
+         sV2WcKA8vhBh/vF92z4S1lQsojxuPbXJCJWdDGEIugAhDno8mQjBHsUtljHQ+XCFb4fa
+         jOY8dieBroDaLwqyglDV1y+TvOdVcn5j7dBNQ1AwaHyrt5OdreEav0NIyF7n4qG9NOOc
+         dbPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbchEUMvu1435+udPmlc1t7q/NBDQQNqpfLTFQfhYiFBCyvQ6uyKedhgR2cF1NcOZ/i6lxy82U+DTSlX88@vger.kernel.org, AJvYcCUuLHabSiSItSMIdkae9o7ZsMA94meVebHZCXBlRFtoTMQ+EHjjnUsRL+VenVQCZ7kOgw7OoiHo9QU7@vger.kernel.org, AJvYcCVnhUeyf/mb1POKCG/LLnkPEnxl0uA7WxI1reOVtY51+fyPbArS7mlHFXccYkVadZLrd5HA4VZlEy3f@vger.kernel.org, AJvYcCXBp/pNOYFE9Uc1cA/oyijJKjibLKRGDndapGCTqiltba41mfQEXh8SFtdsaxBsIoYce+g59DDLmFdAFgiWtlPq2kQ=@vger.kernel.org, AJvYcCXZLrxo+IhWXKeFae//nGo5g6J7hJZ37Wc93KrVXfli0fh/gsPf5Tl2NteHS8QrjTp7Hx0if5wA6UV/abo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+6LVpOayFVC7AcXs2/N1ypEOTaURZe6OxHuCk8j9GyTXH8yZd
+	1wRQlSypjMh8eos+VmGe9oH2PQFEWsPvf4OmY/APabAl8vMRghWj22nmxISMdruc
+X-Gm-Gg: ASbGncvY2bNUqn3kp0nkfZfxv3NF5NkdKn7g73TJo3LA4I/JRFjz2xbJqCHrPpcxABr
+	RzI68JXTnOYVd4R26in8SozRFcupVtsMcBycGsCCwddeDOSuGJMrP+eguaTdlfUZjK/CZJI3EBt
+	QoHWj6mV6hkD1hUlxumGV75PrDeZNgwEEIEEG/oQoBQ+ODnJW575Zr20S40gMH1HogoNvwyCfCe
+	PDh772oKkL+72jGu50pnClyLlo8NOZEQCLssqG3xbhly6kN5qDO0HzS8NzdaGAfH8Y+N7FCqUak
+	66Z85CS4giZ6wSU5EXqwC8sY0rzpGOf3zgeXIAtG1ZpZHFvL6TyidqPjF4LJnjF9Wm/ecW5Ap9G
+	n0EoO+16U7tgYRdZBsA==
+X-Google-Smtp-Source: AGHT+IHfeApnVHkjrZgUpPXzGnPyaya3Y+pEdPNILryJcS1vH+5VauihlFQrd6UcHdUAWv1LoKoerA==
+X-Received: by 2002:a05:622a:4a0b:b0:494:a447:5bbb with SMTP id d75a77b69052e-49f46657f26mr288348621cf.16.1748436961470;
+        Wed, 28 May 2025 05:56:01 -0700 (PDT)
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com. [209.85.222.179])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a3c80d7838sm5582141cf.64.2025.05.28.05.56.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 05:36:33 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-87dfe8388f8so834813241.0;
-        Wed, 28 May 2025 05:36:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUdZMdzQj2tjIztXLodfaEF0vTWGP+GzqSKV9mrRsm7pzPKRREnrw0WMod4EsutEqZrnYWnw4WVTDyZ@vger.kernel.org, AJvYcCV1RP1XBseuqv33llEzkRQYA/Sy4ZB7qtd5jKFVvorlYyQDCz5K1F5TsQvcI+f0d/SnvprpTIbabd0gLJr2tSY/bpY=@vger.kernel.org, AJvYcCVcq3wrLQ6S8UN+kGk9Xm8SfIvKmB3+/nsM20AoorYIR1rPd9bRxne9pg5teFw8KbqJOwBJIbJpEzUG@vger.kernel.org, AJvYcCW3Nug3JCEca+iJygNTK7HuzaGKOk2lY1tYBPVYpBFRJIxDcGylvOwwAsasTW0uvZr8zi9yh2VACqIy0sU=@vger.kernel.org, AJvYcCWoURuO9za1nINwJwZ3CyCghrYlBYTKN3WZv01ZrZZtE7tGUPyrmpVhFR0Vt8UhrfLa7pDYwvRGx3ZIKk+S@vger.kernel.org
-X-Received: by 2002:a05:6102:3e95:b0:4c5:1c2e:79f5 with SMTP id
- ada2fe7eead31-4e42415db7dmr12024574137.16.1748435792883; Wed, 28 May 2025
- 05:36:32 -0700 (PDT)
+        Wed, 28 May 2025 05:56:01 -0700 (PDT)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c59e7039eeso601643285a.2;
+        Wed, 28 May 2025 05:56:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMDpqNpfAz8+p88Omw201cvmzEYpO1XjThN/vuPN+7W3K/FOWkfsEvhdSkbZWHi4Fjc2L0I+C1PMby@vger.kernel.org, AJvYcCVqqdjRthiBroK1nefAWRIcvbAG3VaN2FQr9KS/OyY9aKm7AaeAOgir4KMAceJfXEUtptFH+5NkKcAk5PE4@vger.kernel.org, AJvYcCX/xa/dM6zXui3njLrJd33Kiy+uXqcj/Z6z15qDDQMHte5yXt15jm7TIPboZ+2OUzxWrm1OhXCHgw5xOky5jT98o6k=@vger.kernel.org, AJvYcCX8IJhVj/32he8yUgKYpzaONeOX/FhphBPw8ftrDMbjFnGlufp3oMapwogFG47huEM/nuEGgj6ZSrQF@vger.kernel.org, AJvYcCXQ55Xh6nybQB6YHiDYOLIbflIMzgH+XR6c2SjuYDElzBLjKUQoI/sHM+1FihDPeQi0aBAYSjMDmzipwj0=@vger.kernel.org
+X-Received: by 2002:a05:6102:3e94:b0:4dd:b9bc:df71 with SMTP id
+ ada2fe7eead31-4e4240b1619mr13395283137.10.1748436481362; Wed, 28 May 2025
+ 05:48:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org> <20250528-pinctrl-const-desc-v1-1-76fe97899945@linaro.org>
-In-Reply-To: <20250528-pinctrl-const-desc-v1-1-76fe97899945@linaro.org>
+References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org> <20250528-pinctrl-const-desc-v1-4-76fe97899945@linaro.org>
+In-Reply-To: <20250528-pinctrl-const-desc-v1-4-76fe97899945@linaro.org>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 28 May 2025 14:36:20 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX7krbAssbYpJ1RA1EkpOP26nUhuhmtSW8X9nJkB5amBQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvOxqSsQb6hAAUjvGh24-ydFSS3wze_W2Lj6wpwfm4mEoNhN1lAYOnpqvg
-Message-ID: <CAMuHMdX7krbAssbYpJ1RA1EkpOP26nUhuhmtSW8X9nJkB5amBQ@mail.gmail.com>
-Subject: Re: [PATCH 01/17] pinctrl: starfive: Allow compile testing on other platforms
+Date: Wed, 28 May 2025 14:47:49 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUWqvHGKHqUWf6xdVBzaungUq1Fq=g_+qFQRO5+fq4=vQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtImpXXWdP8CtUa2VgvQDuwNbZqXjPeWpaGOsf8DlxmYUgiiqknnvQgxJg
+Message-ID: <CAMuHMdUWqvHGKHqUWf6xdVBzaungUq1Fq=g_+qFQRO5+fq4=vQ@mail.gmail.com>
+Subject: Re: [PATCH 04/17] pinctrl: Constify pointers to 'pinctrl_desc'
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
 	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
@@ -88,11 +88,10 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Basavaraj Natikar <Basavaraj.Natik
 	Benjamin Fair <benjaminfair@google.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
 	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Sean Wang <sean.wang@kernel.org>, Jesper Nilsson <jesper.nilsson@axis.com>, 
-	Lars Persson <lars.persson@axis.com>, 
+	Scott Branden <sbranden@broadcom.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Jesper Nilsson <jesper.nilsson@axis.com>, Lars Persson <lars.persson@axis.com>, 
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Damien Le Moal <dlemoal@kernel.org>, 
 	Vladimir Zapolskiy <vz@mleia.com>, Michal Simek <michal.simek@amd.com>, 
 	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
@@ -108,39 +107,16 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Basavaraj Natikar <Basavaraj.Natik
 	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Krzysztof,
-
 On Wed, 28 May 2025 at 12:41, Krzysztof Kozlowski
 <krzysztof.kozlowski@linaro.org> wrote:
-> Always descent to drivers/pinctrl/starfive/ because limiting it with
-> SOC_STARFIVE is redundant since all of its Kconfig entries are already
-
-... since its Makefile doesn't build anything if no Starfive-specific
-pin control Kconfig options are enabled?
-
-> have "depends on SOC_STARFIVE".  This allows compile testing on other
-> architectures with allyesconfig.
+> Pin controller core code only stores the pointer to
+> 'struct pinctrl_desc' and does not modify it anywhere.  The pointer can
+> be changed to pointer to const which makes the code safer, explicit and
+> later allows constifying 'pinctrl_desc' allocations in individual
+> drivers.
 >
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/pinctrl/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> index ac27e88677d14f1c697e0d0be9f295c746556f4d..dcede70b25660833a158c298d1269d6ecea9dd8b 100644
-> --- a/drivers/pinctrl/Makefile
-> +++ b/drivers/pinctrl/Makefile
-> @@ -82,7 +82,7 @@ obj-y                         += sophgo/
->  obj-y                          += spacemit/
->  obj-$(CONFIG_PINCTRL_SPEAR)    += spear/
->  obj-y                          += sprd/
-> -obj-$(CONFIG_SOC_STARFIVE)     += starfive/
-> +obj-y                          += starfive/
->  obj-$(CONFIG_PINCTRL_STM32)    += stm32/
->  obj-y                          += sunplus/
->  obj-$(CONFIG_PINCTRL_SUNXI)    += sunxi/
 
-The actual change LGTM, so
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
