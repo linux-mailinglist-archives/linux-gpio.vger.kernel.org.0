@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20631-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C52A2AC64EC
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 10:57:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 69571AC6516
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 11:01:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59DAF1BA515F
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 08:57:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA9471BC00EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 09:01:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60487277814;
-	Wed, 28 May 2025 08:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23F442741AC;
+	Wed, 28 May 2025 09:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1FcPjnw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZSuuMhPm"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AFD2741AC;
-	Wed, 28 May 2025 08:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C793E266B56;
+	Wed, 28 May 2025 09:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748422534; cv=none; b=SsGw3mvEi/usQUC55iXM7KemSbVkPCUJKJkG8H/TpW6KoQ+218980uaoo9r8IOskcn75JThibgkm3d8G+HGOr6Zw5uC8Mk4aTYkt0Ifx9oTlhWkagSpk2NZDH3j9hn9pXFUBqdTxcwitITcKw2SZZcj46iD8ATUizSKQNTHB6Nw=
+	t=1748422862; cv=none; b=N80utUwraMgmnvKivlnwXSk5psZ18f6CbA6gsd2PyT798CZrZ1c91ZFYT1Rs+8TTHZyJLt//MGwLQ6o8d8MEOYaH7vfhgzt4L8hmpYF0IdJCvDAeCuiQHGTXbuzgzNlukERZQC6ybuxYkaKandpLFwekvGmkPe0han62W9N9vT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748422534; c=relaxed/simple;
-	bh=Ds1jmiTlYH0fpkMu9OyDsilhlkVbX/npUvsczO4YbAE=;
+	s=arc-20240116; t=1748422862; c=relaxed/simple;
+	bh=J3/nOkg/8f8JrZ1t4/PcLLyxxxqdmeW2cz37Tm5RRlw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=duIlFBqomvHUYAy5EJeG8vwtOZaA/g/8bLTzreHbIkmKPLr3Q0gE09k+IhliCGgQaPbJU3w0ThRfh50TZpFhUVXP4vdx/xmcbO2NJlWuPwXyCTC8/CRwzkqqcF0aDRlRdXlNNNJaiYgcIAE0HxJJJaQRZq5jcPaKH9myoamc2TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1FcPjnw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 690C5C4CEEB;
-	Wed, 28 May 2025 08:55:30 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=KYNaJl5u71PeiN47wFXIzvCQmtBECq785On0MRgy5RzgsiEWkXKp3HR1Ws77WuAvUemRhfq0HSuRYnqXMXBuKsbMMFwgH1yBUXqQfoeU3Gmd0XTFlkQu5bv036HtLeRQpU2xRhu6/4L45fIb8nQbwtO1IW3wa7AuM6n/bIY20l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZSuuMhPm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F008C4CEE7;
+	Wed, 28 May 2025 09:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748422533;
-	bh=Ds1jmiTlYH0fpkMu9OyDsilhlkVbX/npUvsczO4YbAE=;
+	s=k20201202; t=1748422862;
+	bh=J3/nOkg/8f8JrZ1t4/PcLLyxxxqdmeW2cz37Tm5RRlw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E1FcPjnwy+Z+bJX1gi8FQPSB900K+Xj3C0QWEp9vgstNpldp3biFrBcjBIFWVZd9n
-	 FfMirStte3ykoIzrHkQZcuqLS6r/3lGruQ0ahJAa3IXD08ljvNxu5eRWyRpVtCwN4W
-	 Io4J/Y1p2N3UhIgikJEIKxPyYM+LaRcmaFJwk1GoD3gRm7wA2uLXoRJJ2S3dK7FqUs
-	 +ycpEUq7dMmusgvZJfwOgfeiviwtUg1bvcaxj9M2rzPwUnmXe9jX7B0BDsxgUs3NU+
-	 gtl0+UYqXfwbnwHAJNYfzDu/OfWOlgMvJf0cvuU1URBqfHj8uA+wct7qvbzkFX7+Yk
-	 MOBdJBUg+UbmQ==
-Message-ID: <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
-Date: Wed, 28 May 2025 10:55:28 +0200
+	b=ZSuuMhPmYMGsEOJrNG1sqCanRwH+qk9qBp9C42OYbb/TextqwbmaBZyIWU1dUKt1b
+	 pW4Rzife6LdGXtdGQT0gUfw0JqkAFPBDP1US0/L5wZUyl64rdEpLl3IufIV1+z6/sb
+	 iyethRYargVBNMQSN0d3Ynq4IK86CrLfWNj2ebbvb5MXiv94pMW5nTsAeBFpTQ+mOU
+	 udXP+z5cI83BbIk57vN56IMASghjkWIkQImx2LotJC+jMIJ8WkcNekhyqPkyXysDMv
+	 s7BIaZwCX2MKS8D2zt2CT3APjerxiQXOtqEcjvxHIlDZpEsUQZWDbNvwqoT16UJ4CP
+	 Lw2X7Ejcmkgdw==
+Message-ID: <1c21f915-e067-4801-925a-3d4882f358f2@kernel.org>
+Date: Wed, 28 May 2025 11:00:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp13
+Subject: Re: [PATCH v3 6/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp15
 To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -62,7 +62,7 @@ Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org
 References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
- <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-6-bd6ca199466a@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,44 +108,33 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+In-Reply-To: <20250523-hdp-upstream-v3-6-bd6ca199466a@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 23/05/2025 14:38, Clément Le Goffic wrote:
-> Add the hdp devicetree node for stm32mp13 SoC family
+> Add the hdp devicetree node for stm32mp15 SoC family
 > 
 > Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 > ---
->  arch/arm/boot/dts/st/stm32mp131.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  arch/arm/boot/dts/st/stm32mp151.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
-> index 8512a6e46b33..b0537bcdb9d5 100644
-> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
-> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
-> @@ -951,6 +951,12 @@ dts: thermal@50028000 {
->  			clocks = <&rcc DTS>;
->  			clock-names = "pclk";
->  			#thermal-sensor-cells = <0>;
-
-Why are you enabling it? Commit msg should explain this and this should
-be sparate patch.
-
-> +		};
-> +
-> +		hdp: pinctrl@5002a000 {
-> +			compatible = "st,stm32mp131-hdp";
-> +			reg = <0x5002a000 0x400>;
-> +			clocks = <&rcc HDP>;
+> diff --git a/arch/arm/boot/dts/st/stm32mp151.dtsi b/arch/arm/boot/dts/st/stm32mp151.dtsi
+> index 0daa8ffe2ff5..b1b568dfd126 100644
+> --- a/arch/arm/boot/dts/st/stm32mp151.dtsi
+> +++ b/arch/arm/boot/dts/st/stm32mp151.dtsi
+> @@ -270,6 +270,13 @@ dts: thermal@50028000 {
 >  			status = "disabled";
-
-Why are you disabling it? What is missing?
-
 >  		};
 >  
-> 
+> +		hdp: pinctrl@5002a000 {
+> +			compatible = "st,stm32mp151-hdp";
+> +			reg = <0x5002a000 0x400>;
+> +			clocks = <&rcc HDP>;
+> +			status = "disabled";
 
+Same questions here and in further patches.
 
 Best regards,
 Krzysztof
