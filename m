@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-20678-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20679-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67F8DAC6E4B
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 18:46:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 601BCAC6E50
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 18:46:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 65A143AEE2F
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 16:45:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5363B3A5648
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 May 2025 16:46:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2504E28DF08;
-	Wed, 28 May 2025 16:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B3A428DEEF;
+	Wed, 28 May 2025 16:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="I8DfzcTo"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XhZ89rjO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E6F28DEF8
-	for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 16:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712C428DEE1
+	for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 16:46:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748450763; cv=none; b=oInBxTVMHjHwTKB7btRZD1xGIS2NO9rl6D4akjGS3otUTzqXy+PfD7phzK/uPzLbWfxCYS+eJbHosyIuOp5QdCzMiCbVzSUIEmMQmNeqyoJYZEZ99CMrRA+KmBDRntCVmvSp8MYqypC1b3dZLXPrhXROG288CusaasB7xjWfsjY=
+	t=1748450798; cv=none; b=GfnPjCJi6uigOpaBlbD0fJW1AvyTHL1ctbJFuvCgxDGNM2fyMqAN40414Ru7p7thifkWhzCMKf5R7mj+vhgwP0mKcBwy0EQzpwkjvl0x+vVO6s5Xhdg910c7x4/4IyqWlIh5ZgzTEPbHKFPHcQoES81BzUlGbfNEah/jMGP4HUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748450763; c=relaxed/simple;
-	bh=DmepkfV1uDO57Y5SMc5Alh4+4DNwBam01/LL8tNZMC4=;
+	s=arc-20240116; t=1748450798; c=relaxed/simple;
+	bh=fas8NjeBHx36fk2SeFaW4ahoas3ree6HOp9z1G1GKPA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hEkyIOF13VVLIUsjE0rUb+bihZWJEdAfeVPnz85CGxRZFwlGeSA4YhpYlLl0DeVsSXEb+fX67ySog2HPHFc2vTUaSIH5Xw/IZmXWP3E6Dn54z2FfKvjiKYqFubE9b6ikmmtOpa8eKve7z+TmTMBVB6glymN8aa/VifkY/zkqaPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=I8DfzcTo; arc=none smtp.client-ip=209.85.214.176
+	 In-Reply-To:Content-Type; b=qxAoqDFEHdAdK40vs7qYEUJs6YZD2dXf6+noLuTHhXyBHcQO738BpyRC4VwjH29X4BgL5zBzMqVJ9h47oHHbfJ/nEfyrrTU9cQ17lDjCjFfmuYGZu4As+CDzDx1xuwtxWFIAWl2blcSDJZUHvlBne5O0sy3rlP6j9fvbECrfDS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=XhZ89rjO; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2345c60507bso874185ad.0
-        for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 09:46:01 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-234f17910d8so886975ad.3
+        for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 09:46:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748450760; x=1749055560; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1748450796; x=1749055596; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=1SRpD7poP71J0Z5qeEtY8RTEWey1In+xs4H1dHguqyI=;
-        b=I8DfzcToYVkgy2PT2V/eqMpTyNNa9X6FK7bQQwFda3D1OSwcOqZn2I5glGj8wNBRiJ
-         9YBApwyypZyqxXMnbysOA8i10bGzor5WHsC0xCuCcrWzY2SCoRvkTlYKPdqUVsjINqnM
-         /BmrtI9/hV9wTlC0hZwFTF57yKlct2DXrZ0oI=
+        bh=bTrLQar6gjTjFnrAkyn0kezzixoXN+IjT1tsTT4veX4=;
+        b=XhZ89rjOXrmaNwv1rX3EsAV5kY9U493RpL6+RXX41CxFWq1AShjnlN+1EqbdzrD2B3
+         Sab2cMxEHlfce+TPOxCA5c2WcLfN6bph3U5UX/Bsmhb5JJF7EYz/faVK3C9jS7Jk/5sW
+         xn/C72oawNPVryD6x0MxFjry0zN9Il6OjeZEc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748450760; x=1749055560;
+        d=1e100.net; s=20230601; t=1748450796; x=1749055596;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1SRpD7poP71J0Z5qeEtY8RTEWey1In+xs4H1dHguqyI=;
-        b=Xf1Vj7jzKD6ulQXmIMG09VCpAUllG8hhtwAiNGlYFgTzkYJnaP9qsIkmQmRaZ8JdKJ
-         YMTzieLphul8sXsfCbbyrQx957mx0tjA1c/Gt6IpAApfZzfsytkuePmZbQ1IzQmhebOo
-         VmcWlC8ojVgAZgWqCjn+AGSKasMNv+5SijnHVprI6lrRkg4Vw+gmxj2N/kZke72j17dW
-         yvecxOvvmYZZZq7+KJVEHRQf9SOWiLHgaJoj9AlwMIp+V6PAW1i/FM9Pj8c86ucGQjFJ
-         D9iKfimdrF9ZaoMAjzI6kslZxxUJokw5ULh8YYWuOjx4gqd5YLZt8tXDhJxuJls1V0sw
-         hDgQ==
-X-Gm-Message-State: AOJu0YxDRPwl2yBwFKP/pWrXrwtta4OjkXhCBRvv4NPjYYbAfFnZzUsW
-	pizohYeVT25Mv2K5J8uR264c2ft9uf+n1o3JF0ZZLysnx+/DR7dpKpJur4NWPBMxhg==
-X-Gm-Gg: ASbGnctnPLwPL8CmP1SVOK1y84oPrnIu1yO5hEmdTimxuFX8przGurdWByRzY9VtmNu
-	1y/rooN1jGrxbw4VjDWB3idEPWvDv7lt+LY/b0xER/qaxLHEk0xVJJK1MYNZURP/w87Et1nPGnr
-	VxR0900pJT0qq7Qpf5TjNssA/dPqpJUzdokzV13Japi8Ds1Ak3Ht2I1MUZM6Hfe3PHVHR2tzUO1
-	0BWGUeZ5ZJy6J/5U9Bz2KBgRl/ZX0NTD4+6PIjoxH9fshMrYEE4Bg22ldLNFB3BxufvW9BNPD3z
-	Zq9vg02uTUVhNthTmg3b7VI4Wg52lIA0TbDbpeOqfb1Mz3O6Jke31YcGNdgUWAoWybq+MhY/g4q
-	mBBOhPmpTDyuySXU=
-X-Google-Smtp-Source: AGHT+IFDqqRyt96nyrm1smBWGPbaIUUGA60gdUbEGZQYCr4hXTXZ7qx/vOTbUl93u1wjePXxrv/QGQ==
-X-Received: by 2002:a17:902:d50b:b0:234:a734:4ac2 with SMTP id d9443c01a7336-234a7344be1mr87356785ad.9.1748450760577;
-        Wed, 28 May 2025 09:46:00 -0700 (PDT)
+        bh=bTrLQar6gjTjFnrAkyn0kezzixoXN+IjT1tsTT4veX4=;
+        b=ug8ikmmGY8SstGVUcLDmWRQ08ylRKHArs+tYxsC8HHwUvE9TwQrsPZhaxM8GzOvMBo
+         qqTC7wjM0OuRiAmnrZLlmQ2nWQxSI6UjEp9eMLOjqvuqsxoZyyduDt3obJe3peX36fE2
+         8dDPD3m2KzHV0fsLQSWj+kBWTox2isrK2SNjoBQHUHFCcRMy/EL4ktF1AkF0Vq886Ksb
+         Ht8ihwAkc9FCmMxBmsIm+RcZ08Od3T3fDEqEm3a2Unu9dTyZtND5DW+VEb7sveai5l0A
+         /JCk1zcgH1ixLxQ2MayRejYgaSj7XoedzNMyHkJ41+zN6pkjNgmwoUYsMr/DKO23LO12
+         KSZQ==
+X-Gm-Message-State: AOJu0YzX5apPdfq6NQmtdv9LfMRiyiJ95b4w8f4EhPKa6ZGdHkQupd6m
+	tdGd09r7062XYKIQACiSH37uauPX4zCmpXb40BK4+AOn6U7AnUMX8K+0KPA/RvJyJA==
+X-Gm-Gg: ASbGncvffBzG+r2gDYmFx8oD0Gscd2iQBR6pvb4Vud3XyyGRXPNFdly7tm8oWElRs+D
+	nmx1aN8z1fUKegU9o7cb5+PFNOGxfm/m18PdBDww7AiPrGJAwZQ0ycxf6F3ul2qFljMPQdMi3NP
+	BFXLpY/E4YERBbaN0PQoCg08xxfJ3Bu3xudltnLD3HtrUzer94NH8CESzgkEPnolfzHX6HMmoUL
+	jus/Vapb5kcgA4Y/UE6Tlyn8JM4J2DO3vd7XU5fT04+ocVZIA03XT8lYp4gk3S/ScU4AmZcu+Jk
+	R/nbhBUIPg0s8ayt1qjIE990aKsKIhlBZaGI6xVhC3iqeL33rtDgdqwZWCfgNtihsY/atmOmuCn
+	X3+2rMOgnc7vBnzI=
+X-Google-Smtp-Source: AGHT+IFZp5UK5jGx1R+UdIJR5to06T9Np6rNPVYDOR8PPYv1Mujf2unJbIiknwRlJEbu8Z7S2Ap77w==
+X-Received: by 2002:a17:902:e848:b0:234:8ac5:754 with SMTP id d9443c01a7336-2348ac50844mr145646295ad.4.1748450796372;
+        Wed, 28 May 2025 09:46:36 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d2fd22besm14180885ad.40.2025.05.28.09.45.51
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d2fe1854sm14097295ad.66.2025.05.28.09.46.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 09:45:59 -0700 (PDT)
-Message-ID: <4474875f-bfd7-4f98-836c-0624f75c0f27@broadcom.com>
-Date: Wed, 28 May 2025 09:45:49 -0700
+        Wed, 28 May 2025 09:46:35 -0700 (PDT)
+Message-ID: <0df6f879-f819-492b-b9c5-f91d544203ad@broadcom.com>
+Date: Wed, 28 May 2025 09:46:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,7 +79,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/17] pinctrl: bcm: Constify static 'pinctrl_desc'
+Subject: Re: [PATCH 08/17] pinctrl: bcm: cygnus-mux: Move fixed assignments to
+ 'pinctrl_desc' definition
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
  Linus Walleij <linus.walleij@linaro.org>,
  Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
@@ -118,7 +119,7 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com
 References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
- <20250528-pinctrl-const-desc-v1-7-76fe97899945@linaro.org>
+ <20250528-pinctrl-const-desc-v1-8-76fe97899945@linaro.org>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -153,13 +154,13 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250528-pinctrl-const-desc-v1-7-76fe97899945@linaro.org>
+In-Reply-To: <20250528-pinctrl-const-desc-v1-8-76fe97899945@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 5/28/25 03:41, Krzysztof Kozlowski wrote:
-> The local static 'struct pinctrl_desc' is not modified, so can be made
-> const for code safety.
+> Assign 'struct pinctrl_desc' .npins member in definition to make clear
+> that number of pins is fixed and have less code in the probe.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
