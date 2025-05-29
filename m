@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20693-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20694-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2ECCAC7ACB
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 11:13:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D47F5AC7ACF
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 11:14:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 802984A6F00
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 09:13:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C49A14A7656
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 09:13:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 856AB21C19A;
-	Thu, 29 May 2025 09:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 220DA21CA18;
+	Thu, 29 May 2025 09:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxBT9WGs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dm9EHB9D"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A582219E93;
-	Thu, 29 May 2025 09:13:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0DF219E93;
+	Thu, 29 May 2025 09:13:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748510016; cv=none; b=ugnRRK8+Eh3VZLfgb1HI2v37wNgMsGzASUCChpRCa5RVAHz4qx3Xkb1ay1oVp0jyhXM3ctiSrRFesRFiWM8pEwiUiuq9i4r4u8jUNFFhJwYg1l+Edp4eqVQeGnWXLbrhkhOIvxRGKGbgCh1DtwThU5NUl4Hc9TcSVWx4yNHjc3s=
+	t=1748510021; cv=none; b=gQ8AN/g/yy1vAUicL3uiKK08aIxsTB3mQmfYLM5Ndqj8hlLMRc/oifYezbvqpvaDrWZUg6zCFnmmpxlR4gBBp5dAuEfD3gMGxC4SYGVfqOkZRVr0i1/0rlAO9PH4+Pc7a85pH+FBG4ZFIguBoNqCfdSv4LsTFhewMH2so69jU9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748510016; c=relaxed/simple;
-	bh=gFDOG+jatwV6rYNZOZz9UhZcIaoeADx4JnPeT5iPYbQ=;
+	s=arc-20240116; t=1748510021; c=relaxed/simple;
+	bh=STUwJDo6edB2rYB+1OgDpYTIjZtzhbvx4FZHvhQiXeA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PkYpi79YxIb0VI5+jvKPgJ/VdPnamX82QVOA3QbcOF5g8KaRXhIiR3OsXqzHpOizIYmGGxB8F41wy1BrNJGPjurpBAa21Y89eexFEyHbKU2CyyqF9xROU+DSY2JGMH9fEXat1+exlBaqSnbbgrSC4Vwg7Pu3Wt3xgz5YSNcmIps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxBT9WGs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE604C4CEE7;
-	Thu, 29 May 2025 09:13:32 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=m6GlgxjgSZfVjS5k+W38tLBo1GeF3/MGkGNrB+8bmST17DUiPiW0FpEVuuY/htJyvwGUaybONe2i29jWX/nBLOt9004auygibyj1dsQjoh0OrMQ1HlZ0i6JwhVCpoVBLtTRU+4v+noIMloj1TpYBXXGqbQA4pUcVWufFGbI7Afg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dm9EHB9D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25031C4CEEB;
+	Thu, 29 May 2025 09:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748510015;
-	bh=gFDOG+jatwV6rYNZOZz9UhZcIaoeADx4JnPeT5iPYbQ=;
+	s=k20201202; t=1748510021;
+	bh=STUwJDo6edB2rYB+1OgDpYTIjZtzhbvx4FZHvhQiXeA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DxBT9WGsvST4NCVS3ui6dxSCWOzKzmr07o0PJOOHVhbKSsaO42ndoIDwgz77QEZMl
-	 XhsfXvs69G2kwWXxyhcZzgErhbs+xYE+n+q7s9uVpggOEFHHO26ZhcaNrgAi0Qzz7j
-	 nwxEFN3PJDKBlO36Xtb2UEyUrDpD9WBGyqQS434x7F5I5RXCrw0ipt2n+02v3aB0Fz
-	 QEWFmpmdB4JNbG1WL78Ma/hm0sHNySzwU9YLXksw39ZDQ67//gWEdTO/nLkXAZC6yF
-	 BuJ6BgRh4TL/RfG0V2J+d5BYqZzQgjIadz78g4Zl77Yx+2ZHWPRpsSWzpdD25LKiGy
-	 ceQ812x5YaNrQ==
-Message-ID: <c0336f46-1fbc-4766-9e0a-a3812d48083e@kernel.org>
-Date: Thu, 29 May 2025 11:13:30 +0200
+	b=Dm9EHB9Dym1P4YSNVcAw+j4JySIBaRBj7KwkbBbwFOKxXgrLYXFq9wwogw3AMj+SI
+	 5lluzAHzDnczCS2lAy49igbyZhsMt2DXVotzAP7mSgP7OR9JYxwxqzya03OX7JWd7d
+	 6vgU0t14XaCz1aWIMKek65jc/IrpjdSMohOBKqCdWnlWJ5ro6d1VR9iNHphlwJY4+A
+	 xzkhQAoRoMNujsiu9IARLgJepqidJWTYz3+Ugb1Lzsf2Sq4urg6YruSLvYqL/QwtYi
+	 1BPSRCUzgbxOyyqrMqtM4BnOeOhGFJXQZuj9WziJJv8v4Ib2/S8INK5ZbdVxkSrI6T
+	 MBXDD+5xQ8TxA==
+Message-ID: <e5b5a526-e710-4ed3-ae05-7c5bda55e293@kernel.org>
+Date: Thu, 29 May 2025 11:13:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp13
+Subject: Re: [PATCH v4 6/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp15
 To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -62,9 +62,9 @@ Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org
 References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
- <20250528-hdp-upstream-v4-5-7e9b3ad2036d@foss.st.com>
-Content-Language: en-US
+ <20250528-hdp-upstream-v4-6-7e9b3ad2036d@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -108,34 +108,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250528-hdp-upstream-v4-5-7e9b3ad2036d@foss.st.com>
+In-Reply-To: <20250528-hdp-upstream-v4-6-7e9b3ad2036d@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 28/05/2025 15:30, Clément Le Goffic wrote:
-> Add the hdp devicetree node for stm32mp13 SoC family
+> Add the hdp devicetree node for stm32mp15 SoC family
 > 
 > Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 > ---
->  arch/arm/boot/dts/st/stm32mp131.dtsi | 7 +++++++
+>  arch/arm/boot/dts/st/stm32mp151.dtsi | 7 +++++++
 >  1 file changed, 7 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
-> index 8512a6e46b33..9e3797ee1f7b 100644
-> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
-> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
-> @@ -954,6 +954,13 @@ dts: thermal@50028000 {
+> diff --git a/arch/arm/boot/dts/st/stm32mp151.dtsi b/arch/arm/boot/dts/st/stm32mp151.dtsi
+> index 0daa8ffe2ff5..b1b568dfd126 100644
+> --- a/arch/arm/boot/dts/st/stm32mp151.dtsi
+> +++ b/arch/arm/boot/dts/st/stm32mp151.dtsi
+> @@ -270,6 +270,13 @@ dts: thermal@50028000 {
 >  			status = "disabled";
 >  		};
 >  
 > +		hdp: pinctrl@5002a000 {
-> +			compatible = "st,stm32mp131-hdp";
+> +			compatible = "st,stm32mp151-hdp";
 > +			reg = <0x5002a000 0x400>;
 > +			clocks = <&rcc HDP>;
 > +			status = "disabled";
-Don't send new versions while discussion is going.
-
-My comments are still valid here.
+Same problem.
 
 Best regards,
 Krzysztof
