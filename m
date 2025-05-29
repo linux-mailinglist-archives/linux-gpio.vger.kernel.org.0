@@ -1,200 +1,247 @@
-Return-Path: <linux-gpio+bounces-20765-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20766-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54080AC8189
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 19:12:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97268AC846C
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 00:48:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 719163AB0A0
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 17:12:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61CFB1BA459F
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 22:49:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C21922E414;
-	Thu, 29 May 2025 17:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7031621E097;
+	Thu, 29 May 2025 22:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lQDMahUK"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="1oVi1I3f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A751222DF97
-	for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 17:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C61720F087;
+	Thu, 29 May 2025 22:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748538769; cv=none; b=XpAsWwAFFG8jaPVRaTt6A0F1zaUdsBP+PRfF/0+mOToG/PFv25ckO13/4S2trkjEU1qGlqxwCJ2oCJB8LX2MVJ4CWtiLjSuK0yk4P7yfmk5gWjgxzlNle8qNRJoU7vQjMTMvpi4M54FnlXSAwnwTwJJptc0cmOOGJteOdmXcl24=
+	t=1748558924; cv=none; b=piKuUeLzTbs26X1DR/1bUQTLF645HYZ01Gps4eZeX+jYRbcC0gvGmtqc6Wr18cRNWKdjh9srRSg/4Xu1ID6h+kYUSnZBBSw89xmVOKLYE208gBwurVl6GYBibYUdiWec95r4GZP+AUfV3m7/Ng+BmTWlHGtko1H5oYpm/BXxt4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748538769; c=relaxed/simple;
-	bh=Ug2jIoRzLCA5oUM8D+OSRBMvv7WFUOA/cp+F1k5Cq4E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dhaLj3P69MYoVN2xyrtpbAQvyspTz5zcZFXICgmpwXVIvtMPIDX5Vgaa4/mrHHk268pEWAsBehnc7LomvDI0tdfH5K3eaWb2mZ71EkW8wd376gK8PvckbrZpRXduyK+L2JYeLSwEkS8+CFrUn5yCM5U9+HsLVNtknOvg6d1yjrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lQDMahUK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TC1N0u008006
-	for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 17:12:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ys2JmP4bbvIcdLdQv1yBN6mYrOG0ArjDO9LWrdrX7ns=; b=lQDMahUKRG5MwAU8
-	TalKAq/XrTZrRm4pLM8EGdHxgqUDTVUsMXkJsuUtPHKbvF3/bhnmOb719H9KJbxJ
-	2L8ihzNBBM4NEKk/4bNw1b4Z5bD4w3zc8oEaEuaOiLYumQt4/1Ac1iKqjqevXv/k
-	Yimik3EVKrO9BQ7edxg1+sT1WuSWGZGRGHiCmqHF9GqAdy0GnG5rMqLFosFvpx3R
-	eJBNpLpqL/00atL2+VMk9YcnvTXTIY9tH3PjSZb8n69aXAHrEpf/lpFyh6hVf4Va
-	pEhk+e7SP7iUx7Fk4luYLWEPfD1qAAci5HFyjUH4aDcm06W+RmDZhHHVRMpT1ImD
-	tyBmsw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf6tt3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 17:12:46 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5ad42d6bcso22450785a.2
-        for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 10:12:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748538765; x=1749143565;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ys2JmP4bbvIcdLdQv1yBN6mYrOG0ArjDO9LWrdrX7ns=;
-        b=Le6NabXC1XWxB4U18f4L5mf2d3GZpDRcZOLjd1EV3MHHdYfj6nL2zMOMbtMvrSBNqx
-         vMSvmjTiSw9QusF/TGBpRCdlDvk0j31SfrgC7N1TiGPEZiVsmJEJ5tbCXJRCQADfNrvs
-         lEBtwwePWajf/mojOYenxFrpH6tdAPF3dd6reD3QihkNlKv7cytsz/tU17qmrg3JJ/Wh
-         kXQJyGDjBF9XlQaX0Um5AL3wjxQSaffrAIts6rfD9GOFrH+JmuafkkpEO03LiNgmqTjI
-         k9xPop/fHC0hNUn2CgLR5b5z5Vz7j9iP6FYxTPt1ivzPyD+PETa7NFo/qf2S31GalVnb
-         0o1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUeHdFB0PptJ3nDLfqlKj0Ajl5oT00sglEeXfj1BVKdR0zJHyk6/xUvWHMgaipcm814Oxf6RC8tagZN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbHDru+dI13IPic4ly24xC7lwjerG/l1mf7W6ccLdWFNYfAayX
-	wNpJkpTDrvAS5vZRYZXuO41CTVxbwYURJ/wZrC0BflQoSk/WZFJ20UO/+iKOm6tf4wFeoMdJMvf
-	+Bi/zcO9eDKROi/ech0jSK/Q2SB8JccoyF7fkQybMs+qKze3cixtEE8W+7+zzQMmv
-X-Gm-Gg: ASbGncsdQWxZI2qgGiEidOtrIhobr40Wkwve4ZsUVz5U3tHSsIbWEP53NxA4NwjEL+k
-	qf/cyeRzlf2UVQM55NzZK5/It0OsJU5y2Lx4njSBG3nrMcVem5tOthYBVrRLL0tgK8JhMUMWtCs
-	QjJdVM1cYSr1w9DL11DxO4TycyDOtyPa1nEwO8mV6yo2jQhQK2sWMnb9OVQTjU0pFl/mM9pOJ0A
-	cXTqx9m/f0S2/i3Tl38LQd2+yOWFuS9v1YhDqduciTekjkGR3+wpnORMr2HI5sFOQ57haYGBBw/
-	MjobvZfb1ch0+tsfIpQ6GMhgnyYjuy+RWZ/Ot8k/loKuXlmwxP1VF03tUIMaIa0HAg==
-X-Received: by 2002:a05:620a:2908:b0:7ce:e72d:8d34 with SMTP id af79cd13be357-7d0a1fa6ee7mr16074285a.3.1748538765284;
-        Thu, 29 May 2025 10:12:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEnHYWW2OFnp9a7ve3itNdjg5U8YXwmFgEwtPb5z3CzLgcPkiN+vLMT8pOGqxmuto+sCPYqkQ==
-X-Received: by 2002:a05:620a:2908:b0:7ce:e72d:8d34 with SMTP id af79cd13be357-7d0a1fa6ee7mr16071485a.3.1748538764700;
-        Thu, 29 May 2025 10:12:44 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5e2bf051sm172255866b.122.2025.05.29.10.12.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 10:12:44 -0700 (PDT)
-Message-ID: <d02dc31f-1031-4950-b8e4-5df38b8806f4@oss.qualcomm.com>
-Date: Thu, 29 May 2025 19:12:41 +0200
+	s=arc-20240116; t=1748558924; c=relaxed/simple;
+	bh=MUf1zRF11b2/Zim4UsDslgS8M+dVR0zpw3Iq52gtOPM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oFOaYfGNdyDq+deeubnIyNnUK4xNE/lvExdTP95nw8LaYE0WctORiZpCnaXJbPSC/pXInjXoWrvNQp010GBiWff8EW9i88Rpd/ELYsek0Jzc+JRzPJ2xU2w5Q3KkdKOuYtyXeQoiznvBmT3oVtMb+Fv+0ywY0fFBhS6ZwQR4AYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=1oVi1I3f; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TJlShB030330;
+	Thu, 29 May 2025 18:48:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=+1DV8yJjPDKROOOYMFwZ11kCKnF
+	Ly6F7f+evQvNjzko=; b=1oVi1I3fedpqDrj6JS/P1JRpwAc9m+GMCoulSLnBiK6
+	5bXwjlAN6CCQuGk56k/Hm3iV8PsWqkZfOlqC1s3JjgEC/CfMPqvvWGuybrty8GJC
+	eblcrt0N2aYi+a3ttbmk+rc1t6lgJUY1ZNok3tW86npvVK++qiRT8EOAVMBAcD8p
+	YPNsx8FtD0vEjqPT3CJ9LhkxS8Fkby+RNIlBYE2j80erBS/IrcTqWtzGG3aHGMUu
+	qJYjm6aoNvXJwropodCh7EEvhqCBBUw3gzQGlRN5qzLRxGwW1TZruA4dLsQnZwL4
+	ZLzDT+SltzPzfDLJS7GBc4dFmNbHAEuEvqGVHfHDUKw==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 46xth6hrva-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 18:48:20 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 54TMmJ5W010273
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 29 May 2025 18:48:19 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 29 May
+ 2025 18:48:19 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Thu, 29 May 2025 18:48:19 -0400
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 54TMlviV017121;
+	Thu, 29 May 2025 18:48:00 -0400
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
+        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
+        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <jonath4nns@gmail.com>, <dlechner@baylibre.com>,
+        <andriy.shevchenko@linux.intel.com>, <rafael@kernel.org>,
+        <djrscally@gmail.com>
+Subject: [PATCH v9 00/12] iio: adc: ad7768-1: Add features, improvements, and fixes
+Date: Thu, 29 May 2025 19:47:57 -0300
+Message-ID: <cover.1748447035.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
- being selected as SoC component
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexey Klimov <alexey.klimov@linaro.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
-        linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
- <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
- <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
- <7938374e-85fb-42b9-893c-ec3f7274f9c0@oss.qualcomm.com>
- <9c8fe115-97e8-4966-b332-6de94015f832@kernel.org>
- <b4235317-97c0-4225-b6af-f79358cbf508@oss.qualcomm.com>
- <a0b381ac-3280-42df-bff1-1998e0b9c154@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <a0b381ac-3280-42df-bff1-1998e0b9c154@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=6838958e cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=nd4FsyV9s3kkAaokxrwA:9
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: bhhC760dMxE_d45PTjv_k_IFVbh9xCCa
-X-Proofpoint-GUID: bhhC760dMxE_d45PTjv_k_IFVbh9xCCa
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDE2NyBTYWx0ZWRfXwOLmgbUIr5kD
- +8JP0E+4Q239I2KWWXgfjtKmJjrPRXu/RRNiT2tcgk9QJktQXZY9M8//LWB4fi/qQEaxH0riKYP
- Wce7teYIjf6wSC83Tc4lp/jE8VDwJfx1qoZGVjTDcYc+TocfUdTgEJ8Nhp56WfmzODsL5GPqMHF
- nOH2L3oZ7oFk8S8GIrM31LC/o+XeYOVMB57LRpQ2RjwiViMqZyBL9LlFDf8J6r9EDi6gKuuUTsZ
- Vb2Hw4ju3QoGvnOBmislouRDCGD+HvXsBDxRkVY/3mHcmj7HP7Kce35aoo4Wa3gZNG3NtvxBbGT
- fXmAfMmtuOJoMSQ1ZC+/PlM6D5qj/0TsyhnRNkbUyDvjmbCyAWdaoHn/t9PWrgixGih5kjb4h/V
- ZH4fxDr9h0DbfrS94Qxt2Qt+4u5ZuxXnmlgp+ya3LMHSrDyJ2kevMZxvMdoWRGyWu88HkICm
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=CccI5Krl c=1 sm=1 tr=0 ts=6838e434 cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=KVjtJqLLRZj_JVhx7eQA:9
+X-Proofpoint-ORIG-GUID: 1WpTrMaJzBKRpOgnHX6LFU6ow4G7muGG
+X-Proofpoint-GUID: 1WpTrMaJzBKRpOgnHX6LFU6ow4G7muGG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDIyMiBTYWx0ZWRfX7l+njXuUcNfn
+ gMcc20IH47mGpIc2Xal6CznXhO9euYvExKnUkVJ4kawVohmNYo3QO1IvcpCFjtvdauIX+7gPaXy
+ xWmhMGIcsNKo9j1b9VwVgJumdFIiAEg1LkVatoF299UdVi0GSUr3D1ZtR/xFeK7U/db/rOapJCW
+ aOFDCBaqWXIkOsfmTKzSYb8L00QJbdfcbkLvd58YcPDpWAWSkQIT/e9qRN4cI2Qe9B9QwdeDsi5
+ KICdF36+ZiXmqa6wpAhjsYISojOLJAMBlRGDY4TLKYiOEG2uo6MerxxRhOi9CesX0cczPMRUCr9
+ gQSABEkXzicVAUixAuxKPp2dabjs8KY0XDD1/Krmux/nnKibSNp09K18WuqAVCPGhEia4G5/ZB6
+ 749EszNsxdxZd8o2/+7aFvkmumTZiNQF2AVUbt209MizraP9rEU0QDK4hmQ7H7sjt2poDoh2
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-29_08,2025-05-29_01,2025-03-28_01
+ definitions=2025-05-29_10,2025-05-29_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ suspectscore=0 malwarescore=0 clxscore=1011 mlxscore=0 mlxlogscore=999
+ bulkscore=0 spamscore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ adultscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505290167
+ definitions=main-2505290222
 
-On 5/29/25 6:58 PM, Krzysztof Kozlowski wrote:
-> On 29/05/2025 18:34, Konrad Dybcio wrote:
->> On 5/29/25 8:58 AM, Krzysztof Kozlowski wrote:
->>> On 28/05/2025 18:58, Konrad Dybcio wrote:
->>>> On 5/28/25 4:37 PM, Alexey Klimov wrote:
->>>>> On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
->>>>>> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
->>>>>>> The pattern matching incorrectly selects "wsa" because of "sa" substring
->>>>>>> and evaluates it as a SoC component or block.
->>>>>>>
->>>>>>> Wsa88xx are family of amplifiers and should not be evaluated here.
->>>>>>>
->>>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>>>>>> ---
->>>>>>>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
->>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>>>>> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a811c4a13143efce3 100644
->>>>>>> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>>>>> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>>>>> @@ -23,7 +23,7 @@ description: |
->>>>>>>  select:
->>>>>>>    properties:
->>>>>>>      compatible:
->>>>>>> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
->>>>>>> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|smx1[ep])[0-9]+.*$"
->>>>>>
->>>>>> Why dropping front .*? Are you sure this matches what we want - so
->>>>>> incorrect compatibles? To me it breaks the entire point of this select,
->>>>>> so I am sure you did not test whether it still works. To remind: this is
->>>>>> to select incorrect compatibles.
->>>>>
->>>>> Thanks, great point. I tested it with regular dtbs checks with different
->>>>> dtb files but I didn't check if it selects incorrect compatibles.
->>>>
->>>> Maybe we can introduce a '-' before or after the socname, to also officially
->>>> disallow using other connecting characters
->>>
->>> It is already there.
->>
->> Pardon, but I don't see it, only in the 0-9 group
-> 
-> Then maybe we talk about different things? Because the one to fulfill
-> your request - to officially disallow using other characters, which is
-> part of the goal of this binding - is here:
-> 
-> "^qcom,(apq| <snip>  |sc|sd[amx]|sm|x1[ep])[0-9]+(pro)?-.*$
->                                             -----------^
-> 
-> That's the hyphen after soc name.
+This patch series introduces some new features, improvements,
+and fixes for the AD7768-1 ADC driver. 
 
-Aaaah ok it simply wasn't in the email context
+The goal is to support all key functionalities listed in the device
+datasheet, including filter mode selection, common mode voltage output
+configuration and GPIO support. Additionally, this includes fixes 
+for SPI communication and for IIO interface, and also code improvements
+to enhance maintainability and readability.
 
-Konrad
+---
+Changes in v9:
+* added fwnode_find_reference_args() patch.
+* Refactored ad7768_trigger_sources_get_sync() to avoid jumps and used 
+  fwnode_find_reference_args() to get the trigger-sources property with
+  proper cleanup.
+* Fixed oversampling_ratio_available attribute. Previous ranges did not 
+  follow a standard. Now we mix range (for sinc3) with list 
+  (for sinc5 and wideband).
+* Addressed review comments, see individual pacthes.
+* Link to v8: https://lore.kernel.org/linux-iio/cover.1747175187.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v8:
+* Removed "reorganize driver headers patch", since Jonathan said he picked 
+  it.
+* refactored ad7768_trigger_sources_get_sync() function.
+* Addressed review comments, see individual pacthes.
+* Link to v7: https://lore.kernel.org/linux-iio/cover.1746662899.git.Jonathan.Santos@analog.com/T/#t
+
+
+Changes in v7:
+* Added a new patch to reorganize driver headers.
+* Added the new files to MAINTAINERS.
+* Added dependencies to constrain the use of trigger-sources and
+  adi,sync-in-gpios properties at the same time.
+* Self triggering is enabled only when the trigger-sources property is
+  not defined. Added TODO to support other trigger sources when the subsystem
+  is available.
+* Refactor code to avoid forward declarations.
+* Mentioned that sampling frequency changes is not allowed in
+  buffered mode.
+* Addressed review comments, see individual pacthes.
+* Link to v6: https://lore.kernel.org/linux-iio/cover.1745605382.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v6:
+* Changed description and addressed other nits in the gpio-trigger patch.
+* Rewrote the #trigger-sources-cells description and removed mentions 
+  to offload engine.
+* Added adi,ad7768-1.h header with macros for the trigger source cells.
+* removed of_match_ptr() from regulator_desc.
+* Replaced deprecated .set callback with .set_rv in the gpio controller
+  patch.
+* Use `trigger-sources` as an alternative to `adi,sync-in-gpios`
+  (now optional), instead of replacing it.
+* Check trigger source by the compatible string (and the dev node for the
+  self triggering).
+* Addressed review comments, see individual pacthes.
+* Link to v5: https://lore.kernel.org/linux-iio/cover.1744325346.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v5:
+* Added gpio-trigger binding patch.
+* Include START pin and DRDY in the trigger-sources description.
+* increased trigger-source-cells to 1: this cell will define the trigger
+  source type.
+* Fixed the holes in the regmap ranges.
+* replace old iio_device_claim_direct_mode() for the new 
+  iio_device_claim/release_direct() functions.
+* Changed some commit messages.
+* Link to v4: https://lore.kernel.org/linux-iio/cover.1741268122.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v4:
+* Added missing `select REGMAP_SPI` and `select REGULATOR` to the device's Kconfig.
+* VCM output regulator property renamed.
+* Added direct mode conditional locks to regulator controller callbacks.
+* Renamed regulator controller.
+* Created helper function to precalculate the sampling frequency table and avoid
+  race conditions.
+* Link to v3: https://lore.kernel.org/linux-iio/cover.1739368121.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v3:
+* Fixed irregular or missing SoBs.
+* Moved MOSI idle state patch to the start of the patch, as the other fix.
+* fixed dt-binding errors.
+* Trigger-sources is handled in a different way, as an alternative to sync-in-gpio.
+  (this way we avoid breaking old applications).
+* VCM output is controlled by the regulator framework.
+* Added a second regmap for 24-bit register values.
+* Add new preparatory patch replacing the manual attribute declarations for
+  the read_avail from struct iio_info.
+* included sinc3+rej60 filter type.
+* Addressed review comments, see individual pacthes.
+* Link to v2: https://lore.kernel.org/linux-iio/cover.1737985435.git.Jonathan.Santos@analog.com/T/#u
+
+Changes in v2:
+* Removed synchronization over SPI property and replaced it for trigger-sources.
+* Added GPIO controller documentation.
+* VCM output control changed from an IIO attribute to a devicetree property (static value).
+* Converted driver to use regmap and dropped spi_read_reg and spi_write_reg pacthes.
+* replaced decimation_rate attribute for oversampling_ratio and dropped device specific documentation patch.
+* Added low pass -3dB cutoff attribute.
+* Addressed review comments, see individual pacthes.
+* Link to v1: https://lore.kernel.org/linux-iio/cover.1736201898.git.Jonathan.Santos@analog.com/T/#t
+
+Jonathan Santos (11):
+  device property: add fwnode_find_reference_args()
+  dt-bindings: trigger-source: add generic GPIO trigger source
+  dt-bindings: iio: adc: ad7768-1: add trigger-sources property
+  dt-bindings: iio: adc: ad7768-1: Document GPIO controller
+  dt-bindings: iio: adc: ad7768-1: document regulator provider property
+  iio: adc: ad7768-1: add regulator to control VCM output
+  iio: adc: ad7768-1: add multiple scan types to support 16-bits mode
+  iio: adc: ad7768-1: add support for Synchronization over SPI
+  iio: adc: ad7768-1: replace manual attribute declaration
+  iio: adc: ad7768-1: add filter type and oversampling ratio attributes
+  iio: adc: ad7768-1: add low pass -3dB cutoff attribute
+
+Sergiu Cuciurean (1):
+  iio: adc: ad7768-1: Add GPIO controller support
+
+ .../bindings/iio/adc/adi,ad7768-1.yaml        |  68 +-
+ .../bindings/trigger-source/gpio-trigger.yaml |  40 +
+ MAINTAINERS                                   |   4 +-
+ drivers/base/property.c                       |  32 +
+ drivers/iio/adc/Kconfig                       |   1 +
+ drivers/iio/adc/ad7768-1.c                    | 906 +++++++++++++++---
+ include/dt-bindings/iio/adc/adi,ad7768-1.h    |  10 +
+ include/linux/property.h                      |   6 +
+ 8 files changed, 952 insertions(+), 115 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+ create mode 100644 include/dt-bindings/iio/adc/adi,ad7768-1.h
+
+
+base-commit: 9415c8b5b9b7ba927d98f80022a2890e8639e9e4
+prerequisite-patch-id: fbb33747cd0293bacd5b6d801d6cfc087449a28e
+-- 
+2.34.1
+
 
