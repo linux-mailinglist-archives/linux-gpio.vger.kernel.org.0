@@ -1,221 +1,193 @@
-Return-Path: <linux-gpio+bounces-20744-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20745-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE3C0AC7EAF
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 15:24:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0E97AC7EB9
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 15:28:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FFC4A20D6A
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 13:24:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A10391C024E9
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 13:28:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9891225A4F;
-	Thu, 29 May 2025 13:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F96227B94;
+	Thu, 29 May 2025 13:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LQfEriaP"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="A3v8zUXn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADF31DC997
-	for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 13:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21722222D5
+	for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 13:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525055; cv=none; b=VhcAk25ZwutQhAn88DlN4Ps2V0bh9vQTpGcy7rhkkzClYHjU+BkeJDdi7t9flRJ+cKICU/mrKKvUieX/DIbhobeqiNG3sCfuClrb1aTlyxkzc3nd90NzgC6gP+XvHboesFAxZt309XBf3Uwofvuzh2g2ycHvjQChr/IV3KctUog=
+	t=1748525315; cv=none; b=c3fxqhYNj0PoitvOOgEm+ocvUzFnrJMzJqeL3uH8Q+iSH+XFxLrG9oIpkTZoMng7HxJrkQA1CGWRNtVDZjXWWo4qRQ3Mdifr1IZPYUGVntwbv9xPs0CBYFWtnKGUqFTX21kd6XQCBz/t8JbyF6z2zaYCd8gXbgbkviM+hWHKY/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525055; c=relaxed/simple;
-	bh=u6PXl/iHQww6rD3fUk3v7gcYp1gk8Tk5zANeoTZrfyY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ImNPJxxjVG1kUFcTcgY5KQDNGJUpAoyrFlYl0fKmt8mgBGORjH+ydQiFo104ZGQgy10flTCSZKHBF2BTkDgof0nhU1yzCfsZV6NSjVCMEPfVMS24DYcUx/Qz53RHOYPpuRZQjrQP4Ew8YNKLGJILC60ebZ/BTPR/FUL7eLtWiCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LQfEriaP; arc=none smtp.client-ip=209.85.128.67
+	s=arc-20240116; t=1748525315; c=relaxed/simple;
+	bh=dxaIdhwkxrcOH7PEuve5FxQGB0PHBCUqWE1E/dvQymc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DUwQSzN90EHnCeN5mf1aepZy/rc3LpK9X791oH8S1urkvOOg02OBBP+VifNERLIClPGYjhtJeKd0UEwcCG79DuVGOJXDTgcG+9ty4eoPS6B4xgDiHRn0DPe48KPyE0CN2TV7r2PYUhwISv6ikAHLCVyWwFhgrjZC/rSIeLUTKHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=A3v8zUXn; arc=none smtp.client-ip=209.85.208.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so5785675e9.3
-        for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 06:24:11 -0700 (PDT)
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so1623441a12.2
+        for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 06:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748525050; x=1749129850; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zoLc4ELQIKOc5XDzCSKwyjSpDnw0shMoP1mujhtDXfU=;
-        b=LQfEriaPUgXmPwCes1ZyM9mAhpWhMQYwczl4UnC8VYlflt8yZIr07y1ZVutw1LBkm9
-         AMB7DrFxXW76q7fmQS1UCzqhy1wVc+f5/IYqtytMRnYtbXtsA4VaU5BG4C2SpHuUt57f
-         otqTn35YQwZzHbmfgB8wlArzJ67djr7B1iVAirt5Ia6QBYTrvxH8RlzKsNgBG/4JWZt5
-         zgO4jcICIyKGu4WgqCYmgvVG4zpUOdXeaaHxbk+Uu+KiaTtPN8BXK/02ktsxBydFbADs
-         NHNz+hiSthhfCg2zAMffFe+kDEGkgD2A8hFdyOGK6EtlQCPOAIm6ZzcUbOFabm6GHjEI
-         1V9A==
+        d=suse.com; s=google; t=1748525310; x=1749130110; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1kiFDdDACgorTtuRk6Gy6UOaoSPvn2tyJrIu3RsE3v0=;
+        b=A3v8zUXnzauQLe9ygE6mTbuXx1BUCCXTZaNjNvsVuhlJM4xdoOkcJZVNMEHC21WEDR
+         oMYMuh6MVkOPh3tuPnDWs1noaLEPe2ioTEJQXn8E1p9L6RasaWKK9QHPk/ln0EOk09fN
+         VEx08SFJHeYBdvO6QuKBXlyJjwNfITKmr6qnoyTsioaxGdxDwrFLHXfumzowGdqWBusE
+         7oBr8AhYUM8JSI3APz2CfNeUkn2LfQyQWloaj7yEPiqWTooDA62nUc0Fr0ue6wnz1PoK
+         GCoULDD35NKBw87W4rVdP8ZADod79bcKFVf9+VFckjV5RhFS/xJKOon8BlGh7AWeBprf
+         m1gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748525050; x=1749129850;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zoLc4ELQIKOc5XDzCSKwyjSpDnw0shMoP1mujhtDXfU=;
-        b=b3xOKEluuQeq1N9WolJZfxiH0De4kUhfDIYvwEt1gjPVeDoKvDk6j/yxrmReogMD1C
-         sLTEOenNw2FTactONPhqhC53OzBfUJAPpMVhCrgVE5r0aUTUQX/VojT3AKCX5OpY7KI1
-         wMgzHT3t1TGhlouQdpki4/wtg/plyCZB0AYbT5ENZyYkq8nBEGA3rlc2eCMT0fVOWruQ
-         A9A+dJdhMrCcCaqLm66l0XMuhfKFVln+3m2axlatZTHHBFpAHFVQ3zbqoaJQQgbM2fzk
-         ou7Gq9wUtiLbRoeyfsoABL2FCgIxL0D8J0/vGgRgH/+5Pa/MlBIYxKnz5MiNfg4LiGh5
-         TKgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUP//tfVMgBdmNIv+1NSfEKhSSCe+3TjVXq2xTeEeXGZ1t51Hn7toFheyqdzH7ojISg1e2gYelZO4Hp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+SQciYMkRvx5ocFUl00L1dAs31Q2xMLikBSRUCwXZzz+2oPi6
-	btbnO7nIi/yWNuAVWCWlUqX+t0iU0E/K7B1zZuaBrAV4NdpsRD9Ouk/VGC/SHGuRTww=
-X-Gm-Gg: ASbGnculg83Y5ezam4TaJnmSU+q6I7l9OAwdkBnyu7PiUB5NGLvMBgmTwZwwQnRWbti
-	a+sgipyvwx75OcNwmP4NVGldoGoma9vrNl2Pf2rJXJZv3xtBAop2ZSDItt4PLVIud0TIJ8doK9S
-	n2c7IQXDFh2+aHAfv7UNEoW7/zqMjimX8HXLz3NoeyKvcvAbbEaOCv0/b44dhX9SyvFYSU6uzv+
-	+rsh71A5wbc5fieIoKYqWdUZoAk+TMZBCN3Gw4eNbe5Fle5htnktITfrI97lwtiI37F8mIN7xDt
-	d4WEBaRW3Q8x5eYHWq0G6zLAhxPaG0xCAG6cMrQdFpAuKWA1254=
-X-Google-Smtp-Source: AGHT+IGWA4BBkHB6xJjNhjPeH4ms8/V/tRLixJc1WNJXtJiU2mBdPy6sHFzIQWuccGGlqiqPKRQPnQ==
-X-Received: by 2002:a05:600c:1c8b:b0:450:cc3d:6a03 with SMTP id 5b1f17b1804b1-450cc3d6c38mr45073395e9.7.1748525050414;
-        Thu, 29 May 2025 06:24:10 -0700 (PDT)
-Received: from [192.168.0.34] ([37.222.66.194])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc15b6csm19894015e9.20.2025.05.29.06.24.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 06:24:10 -0700 (PDT)
-Message-ID: <bdd3fe2f-28eb-4c85-99b2-7220cb15b9bc@suse.com>
-Date: Thu, 29 May 2025 15:24:08 +0200
+        d=1e100.net; s=20230601; t=1748525310; x=1749130110;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1kiFDdDACgorTtuRk6Gy6UOaoSPvn2tyJrIu3RsE3v0=;
+        b=NOl80y1cJjDi43oLeLV0nNWfloBAyS7XkDT65ZBx4na4obvHrgff1IZwR1qFO988hv
+         iDEKmBaoxJLKqC2JEc2GPgHg3Gbb/m0nDO7BQ/pkTBRB4mwBI0lnxBgZEWJlX5jBZAKZ
+         JTPGc+WLESE6Qo/cM5enT46CrdC6PNNYlzkItA6YelniaeDa+Hu5JCLhSsyn83JEoiPv
+         mQGF7u412XCS78ekLNMOwkYC6QMToAsYU5FbSC44w+CRY1MXRdkFC9XxcNBpfLsWf0li
+         U2zEmxySu5WEPeG/HcFL7sB7be1EH9guib88l733C2IGX1v2jEGgtH/Sz+eR0dwW2U/1
+         K/NA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOt63QEfiQxZq05Y7uJ/s4el74sytAhLSsBplTxSnnl8jNo/Aa2XRxvuq2fHrDO99pka2QGFz/g40z@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwpmxOCzj2JkKTX3wQhipQyE5SEqKXNb5WqQH2irELP1Wz5kfJ
+	JC6+YQ8EelwEX2m3gfen7iNlLltcDxfkNPWIgiFeQ3/WVECKkeVsPuwmUJfR7/xL93U=
+X-Gm-Gg: ASbGncvYyxx7Mtxq9lA0Rw5oqXzqud1IpCvvgdkKPzJ3QFEucfLC00LGljyVrGg7kCK
+	9tGT3gyLMq6CrrtDw4wVcLxlEQ2/izNIsmV71+cL6+bTljLXy8DdHWD3iEjScGnUOu1TM+HhYE1
+	RtTsyrZ/8NpBQqHuUhmH8pvIZfRbsfvm40oQ4Pns8fdsiaYVdWIGXej28eR5dkjAnI++lH0tgZY
+	pU+lyw1+xZP4IYr7eBBhHCwlwF/QYhntjAhDa0A/KMJbJMVR55uPxeB6VEMy+mvwxzn6yswbZvQ
+	YEvxvRr4Bw98ml7TGgSXaeUeSXg/2ed39OD9QmeC8QI7CMvn4Nzv6R5bzd/70ShiRgddAz3nvYP
+	1p+Mk/138Z+YwQ6pFBMjfnCHtK4lx+7TD
+X-Google-Smtp-Source: AGHT+IHK4Y7PatnxnQUlnLwZj15PpOrDfyPqPLYipWAui/kq0fXHKQv8bz76vrMm7M/L8eA7f812UQ==
+X-Received: by 2002:a05:6402:27c6:b0:5fc:954e:bd4f with SMTP id 4fb4d7f45d1cf-602d906bc1amr16501831a12.8.1748525309931;
+        Thu, 29 May 2025 06:28:29 -0700 (PDT)
+Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6051d5d9587sm2364236a12.15.2025.05.29.06.28.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 06:28:29 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 29 May 2025 15:30:04 +0200
+To: Matthias Brugger <mbrugger@suse.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com
+Subject: Re: [PATCH v11 07/13] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <aDhhXF_MNn34Bu2N@apocalypse>
+References: <cover.1748522349.git.andrea.porta@suse.com>
+ <20250529124412.26311-2-andrea.porta@suse.com>
+ <bdd3fe2f-28eb-4c85-99b2-7220cb15b9bc@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 07/13] misc: rp1: RaspberryPi RP1 misc driver
-To: Andrea della Porta <andrea.porta@suse.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
- Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
-References: <cover.1748522349.git.andrea.porta@suse.com>
- <20250529124412.26311-2-andrea.porta@suse.com>
-Content-Language: en-US, ca-ES, es-ES
-From: Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; keydata=
- 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
- PVrr2NoUqi/bxI8fFQJD1jVj8K0=
-In-Reply-To: <20250529124412.26311-2-andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bdd3fe2f-28eb-4c85-99b2-7220cb15b9bc@suse.com>
 
+Hi Matthias,
 
+On 15:24 Thu 29 May     , Matthias Brugger wrote:
+> 
+> 
+> On 29/05/2025 14:43, Andrea della Porta wrote:
+> > The RaspberryPi RP1 is a PCI multi function device containing
+> > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > and others.
+> > 
+> > Implement a bare minimum driver to operate the RP1, leveraging
+> > actual OF based driver implementations for the on-board peripherals
+> > by loading a devicetree overlay during driver probe if the RP1
+> > node is not already present in the DT.
+> > 
+> > The peripherals are accessed by mapping MMIO registers starting
+> > from PCI BAR1 region.
+> > 
+> > With the overlay approach we can achieve more generic and agnostic
+> > approach to managing this chipset, being that it is a PCI endpoint
+> > and could possibly be reused in other hw implementations. The
+> > presented approach is also used by Bootlin's Microchip LAN966x
+> > patchset (see link) as well, for a similar chipset.
+> > In this case, the inclusion tree for the DT overlay is as follow
+> > (the arrow points to the includer):
+> > 
+> >   rp1-pci.dtso <---- rp1-common.dtsi
+> > 
+> > On the other hand, to ensure compatibility with downstream, this
+> > driver can also work with a DT already comprising the RP1 node, so
+> > the dynamically loaded overlay will not be used if the DT is already
+> > fully defined.
+> > 
+> > The reason why this driver is contained in drivers/misc has
+> > been paved by Bootlin's LAN966X driver, which first used the
+> > overlay approach to implement non discoverable peripherals behind a
+> > PCI bus. For RP1, the same arguments apply: it's not used as an SoC
+> > since the driver code is not running on-chip and is not like an MFD
+> > since it does not really need all the MFD infrastructure (shared regs,
+> > etc.). So, for this particular use, misc has been proposed and deemed
+> > as a good choice. For further details about that please check the links.
+> > 
+> > This driver is heavily based on downstream code from RaspberryPi
+> > Foundation, and the original author is Phil Elwell.
+> > 
+> > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+> > Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+> > Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
+> > Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # quirks.c, pci_ids.h
+> 
+> What changed in this patch so that you didn't include the Acked-by from Greg
+> [1], or is this an oversight?
 
-On 29/05/2025 14:43, Andrea della Porta wrote:
-> The RaspberryPi RP1 is a PCI multi function device containing
-> peripherals ranging from Ethernet to USB controller, I2C, SPI
-> and others.
-> 
-> Implement a bare minimum driver to operate the RP1, leveraging
-> actual OF based driver implementations for the on-board peripherals
-> by loading a devicetree overlay during driver probe if the RP1
-> node is not already present in the DT.
-> 
-> The peripherals are accessed by mapping MMIO registers starting
-> from PCI BAR1 region.
-> 
-> With the overlay approach we can achieve more generic and agnostic
-> approach to managing this chipset, being that it is a PCI endpoint
-> and could possibly be reused in other hw implementations. The
-> presented approach is also used by Bootlin's Microchip LAN966x
-> patchset (see link) as well, for a similar chipset.
-> In this case, the inclusion tree for the DT overlay is as follow
-> (the arrow points to the includer):
-> 
->   rp1-pci.dtso <---- rp1-common.dtsi
-> 
-> On the other hand, to ensure compatibility with downstream, this
-> driver can also work with a DT already comprising the RP1 node, so
-> the dynamically loaded overlay will not be used if the DT is already
-> fully defined.
-> 
-> The reason why this driver is contained in drivers/misc has
-> been paved by Bootlin's LAN966X driver, which first used the
-> overlay approach to implement non discoverable peripherals behind a
-> PCI bus. For RP1, the same arguments apply: it's not used as an SoC
-> since the driver code is not running on-chip and is not like an MFD
-> since it does not really need all the MFD infrastructure (shared regs,
-> etc.). So, for this particular use, misc has been proposed and deemed
-> as a good choice. For further details about that please check the links.
-> 
-> This driver is heavily based on downstream code from RaspberryPi
-> Foundation, and the original author is Phil Elwell.
-> 
-> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # quirks.c, pci_ids.h
+Nothing really, just an oversight. Thanks for spotting that out. I will resend V12
+with it as I also notice that are some inconsistencies with mail Message-id, as a
+result of subseqeunt invokation of git-format-patch from different branch.
 
-What changed in this patch so that you didn't include the Acked-by from Greg 
-[1], or is this an oversight?
+Thanks,
+Andrea
 
-Regards,
-Matthias
-
-[1] https://lore.kernel.org/linux-arm-kernel/2025042551-agency-boozy-dc3b@gregkh/
-
+> 
+> Regards,
+> Matthias
+> 
+> [1] https://lore.kernel.org/linux-arm-kernel/2025042551-agency-boozy-dc3b@gregkh/
+> 
 
