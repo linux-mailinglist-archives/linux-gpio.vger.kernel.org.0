@@ -1,80 +1,48 @@
-Return-Path: <linux-gpio+bounces-20689-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20690-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3C89AC7913
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 08:38:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E616AC7945
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 08:58:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8DF2502720
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 06:38:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61F6B1C05087
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 06:58:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA6D21DF73C;
-	Thu, 29 May 2025 06:38:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6B5256C6D;
+	Thu, 29 May 2025 06:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UddCykqn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djIWoKe+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604F11EE032
-	for <linux-gpio@vger.kernel.org>; Thu, 29 May 2025 06:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D737A2550BB;
+	Thu, 29 May 2025 06:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748500716; cv=none; b=hc5TrzOBc7uARxCjkvX5OLwY4K20qn3NdqTi8hyedgats6wC5KxS2ilH57SFEA46SA8Z3Vak1LNHf68UYuFRLVy9lW8sV4q1BzR0mrJCtqIw3CeRNrAp5HSCe/ZOB1ozjYPvG9VN+ONca5+yRT2orv/H9mmVijcTyr5IcMiWV5I=
+	t=1748501895; cv=none; b=fhc0UsVr+W30IIm7OskxEkrm4I2iocu/PwiIvn3x7sw8dYxu8pSK6gdfktilQB5r0ybBGSSlEVCZi51vUPAO6PlKsvOSBLvJ+UHNfL3pYiHr1q4o/Arcj75DtLR/nmFfJyraCH5s3NIhbA8TibDYFuufZL4YYw4Pr1PPVfMwciU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748500716; c=relaxed/simple;
-	bh=0aidQ5TH+mXzGykMadncfoYltrB58taVl1vxlpxmFuI=;
+	s=arc-20240116; t=1748501895; c=relaxed/simple;
+	bh=wfDpbU6U208CVjpqYiuBakHYUBvP/LaHUQsD+xtsfak=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XqcrjZ7789exyaq4tUr0AxBZmYaa457cZYWsWjSyeVObB2TqaJhloeFMe7cz4hk6/KB3oyJAcZSDz/yBly2Luj1RFye+5mz1sxyrXEmvktYh0vB8v1s4n0B+q0Pn3ugtg8T7J5R/IydHuy3NncsSHYwdCuxgw+cPEXqUvlNitKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UddCykqn; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4e62619afso80517f8f.1
-        for <linux-gpio@vger.kernel.org>; Wed, 28 May 2025 23:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748500713; x=1749105513; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=EY1aP3IrlRwlb4h50GQEgfZI127sO1qf07y90xDx+ws=;
-        b=UddCykqn07Mw1825AynhHhMIbNzKuPWEIK11ucGaMYcKsLs1KCy5ieOQRmmKwDZKdm
-         darbpZIZJsnlZljmzZ4Qm5rwysVclid6AZeJDKhsu0y91biMIJ2lD87PoDDJsIaZvCqA
-         SDPwqJBT2WulfsOJ0ZF7DdfZMlvmNK4Igaj+zEFqTbVVgeqgnzNuIUh8S8A78rMDI3Cx
-         Mw4Big6wiVBUS0UndXdosfZQZtr27tBBHpkYacGzYHElAmvEyI1cTRnyFZWGIoRvAsUu
-         v31mxv4tglZ5q/T0rbSRK+SQLnOvo3OdCr8ynip1rwAC+zh2O7weDJP/R+kqx+Yo9zpd
-         AlNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748500713; x=1749105513;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EY1aP3IrlRwlb4h50GQEgfZI127sO1qf07y90xDx+ws=;
-        b=tyWoHboxb+DDDA4I74c7KO+2uvf52ms4SfkYrP8mT8p23PK/J+KHYGbzhQifyxkaEi
-         M9E+OXxa6wBt7C+oN7pM63J87Kz2M2aQH8yhy4jJX0skd4iqoP7th+4gU/Ua9WGySHmS
-         UV97tTgO137twNl99op0B/M9PCApFhjDcUVer0dhULEZ/1/yIHcDE5QTl4v5R5GwZKNm
-         bAFQCQz3mR6xPmtDqXVW2Z0ETCsNIG94nNNxW9tEvSEbyJsTDrdc6EfNtQ1hiQSa8Q/R
-         gDof9rAkvTPxC4shrTRN4z/JC3GZ+48OEUAq74FlGJR5HsTsLV6pEsusHd12rkdpijLb
-         TWSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwtAvlwE5xhEsF2TGstzdonsMgQBAbjg5HWeVVRCT7gJtPb+9+5va/Ph80Siu9InpwKo3bZZqpqjH4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5ocUMlpTIiSeB3ebbQmpMiddmdSVzzb68xs2gZ4Nf6GrtoCwQ
-	nN84t7ZRLewO9Gq0yDAy+ptdJ8nFuE7iZT8EUd+MnzqB1Jejp42FAiLBcXnusDItNWI=
-X-Gm-Gg: ASbGncsgKfRA+yylSnA/+YKZYJXUSvySbd51DmBr6Avibm2q/nn1/2HJk3obhwmKnka
-	kBUcNQHzz8lc73mqCiuMQ8DwqEg2F9satO8Vt28v7Js/3/0/URx14Q+/ysVsh4TK/cWLTr/OUcE
-	11zlh+Q/rIve+lfUl2yRJAzH6qZarzWT3/aqlJso99acfUFgfW4ufZM4DusO+LFB960SIDWFM5k
-	/L3GhE26dP+auJfETI33uZ2/4OfrzhjdPHkD8p1cUPKUUcJi/PkebifzyMx0C7uCkTAtodRZH2P
-	/0K817WVR2l+kdKbhLBYpFfgezp9G4EtnXaNo3Bfz4EVH9FfVRfqNjtGYpAED5a5H+VXRUM=
-X-Google-Smtp-Source: AGHT+IEqC9+X7UdM4x6ymiMYpCXF2A9umIdi8++8F/hH+RGEfz5sKPNo1L21QYEspe606sPhJQ58Eg==
-X-Received: by 2002:a05:600c:3588:b0:439:a1c7:7b3a with SMTP id 5b1f17b1804b1-44ff400feb3mr16506235e9.1.1748500712596;
-        Wed, 28 May 2025 23:38:32 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe7440asm1019578f8f.58.2025.05.28.23.38.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 23:38:31 -0700 (PDT)
-Message-ID: <dccf91eb-c5b6-4057-a010-269dbc0f9b8a@linaro.org>
-Date: Thu, 29 May 2025 08:38:30 +0200
+	 In-Reply-To:Content-Type; b=nFThxTbESLz77X0zNDtIs3tldH6B+HPimAKPq8wfIxFpnkWm47P228iTWWlw/g812uWzyzCc6rcaumCR2ewBrLJSRsBM05UHujxvj61OvjUG3WFklK7Q6q8ykmhsbmnRXMTzaoK9T5GQnpFvuAqZeJOLdbt3ekiFsejxA8sEwak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djIWoKe+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31465C4CEE7;
+	Thu, 29 May 2025 06:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748501894;
+	bh=wfDpbU6U208CVjpqYiuBakHYUBvP/LaHUQsD+xtsfak=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=djIWoKe+t6RKq39EdUesuue/dDb9QwHCJvVKUC3+waBl5Qu/zLdnrYehIY4RJ+9lz
+	 AtIk1v5pr764l1ZEO/gzYwwTAiGB6Yoji06kQbw1ivVLNAJHKpndu9eRTZ7JwPXrTd
+	 VMoWYilgi4P6EBjVMjaKS62UlAPdw9PNF3ZN7Dy7/9ZSnOJBT6gaTJDaoeG7qd6qiJ
+	 BcwqI/NBTMLplenngeBBk9+FDBS1iXq7qQGZL4rNIMaoIztD8ZXwIyNG7NcXA0ay0t
+	 ad0svIRMPpLH18PPio35QcV7ycg3PK4ZC7Xoj3DT96JQ5S45U1YrKaCv3QaHhH31tH
+	 5Hsjj5iajlSaQ==
+Message-ID: <9c8fe115-97e8-4966-b332-6de94015f832@kernel.org>
+Date: Thu, 29 May 2025 08:58:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,13 +52,14 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
  being selected as SoC component
-To: Alexey Klimov <alexey.klimov@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Alexey Klimov <alexey.klimov@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
  linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
  Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
  Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
@@ -98,9 +67,10 @@ References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
  <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
  <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
  <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ <7938374e-85fb-42b9-893c-ec3f7274f9c0@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
  JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
@@ -110,102 +80,80 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  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
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
+ 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 a/A=
+In-Reply-To: <7938374e-85fb-42b9-893c-ec3f7274f9c0@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/05/2025 16:37, Alexey Klimov wrote:
-> On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
->> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
->>> The pattern matching incorrectly selects "wsa" because of "sa" substring
->>> and evaluates it as a SoC component or block.
+On 28/05/2025 18:58, Konrad Dybcio wrote:
+> On 5/28/25 4:37 PM, Alexey Klimov wrote:
+>> On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
+>>> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
+>>>> The pattern matching incorrectly selects "wsa" because of "sa" substring
+>>>> and evaluates it as a SoC component or block.
+>>>>
+>>>> Wsa88xx are family of amplifiers and should not be evaluated here.
+>>>>
+>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+>>>> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a811c4a13143efce3 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+>>>> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+>>>> @@ -23,7 +23,7 @@ description: |
+>>>>  select:
+>>>>    properties:
+>>>>      compatible:
+>>>> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
+>>>> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|smx1[ep])[0-9]+.*$"
 >>>
->>> Wsa88xx are family of amplifiers and should not be evaluated here.
->>>
->>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>> ---
->>>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a811c4a13143efce3 100644
->>> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>> @@ -23,7 +23,7 @@ description: |
->>>  select:
->>>    properties:
->>>      compatible:
->>> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
->>> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|smx1[ep])[0-9]+.*$"
+>>> Why dropping front .*? Are you sure this matches what we want - so
+>>> incorrect compatibles? To me it breaks the entire point of this select,
+>>> so I am sure you did not test whether it still works. To remind: this is
+>>> to select incorrect compatibles.
 >>
->> Why dropping front .*? Are you sure this matches what we want - so
->> incorrect compatibles? To me it breaks the entire point of this select,
->> so I am sure you did not test whether it still works. To remind: this is
->> to select incorrect compatibles.
+>> Thanks, great point. I tested it with regular dtbs checks with different
+>> dtb files but I didn't check if it selects incorrect compatibles.
 > 
-> Thanks, great point. I tested it with regular dtbs checks with different
-> dtb files but I didn't check if it selects incorrect compatibles.
-> 
-> 
->> (?!wsa)
->> Because qcom,x-wsa8845 should be matched and cause warnings.
-> 
-> This is now confusing. I thought that the main job for the pattern above
-> is to avoid selecting wsa88xx amplifiers in the first place. Or, if I can
-> quote yourself: "What is WSA8815 that it should be here?"
-> 
-> If said wsa8845 with incorrect or correct should be selected by that pattern
-> then why not just leave that pattern as it is then? I am lost.
+> Maybe we can introduce a '-' before or after the socname, to also officially
+> disallow using other connecting characters
 
-I guess I wanted to catch x-wsa8845 as well, but now never mind. It is
-not a soc so does not really matter for this file.
-
-
-> 
->> And probably we are getting past the point of readability, so could you
->> try:
->>
->> compatible:
->>   anyOf:
->>     - pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
->>     - pattern: "^qcom,.*(?!wsa)sa[0-9]+.*$"
-
-Here should be:
-s/wsa/w/
+It is already there.
 
 
 Best regards,
