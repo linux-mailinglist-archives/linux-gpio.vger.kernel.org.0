@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20690-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20691-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E616AC7945
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 08:58:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF7FBAC7A8B
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 11:01:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61F6B1C05087
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 06:58:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DEAF3A3CD8
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 09:01:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6B5256C6D;
-	Thu, 29 May 2025 06:58:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E4B72192FB;
+	Thu, 29 May 2025 09:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djIWoKe+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ISYwJir1"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D737A2550BB;
-	Thu, 29 May 2025 06:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1743C1B6D06;
+	Thu, 29 May 2025 09:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748501895; cv=none; b=fhc0UsVr+W30IIm7OskxEkrm4I2iocu/PwiIvn3x7sw8dYxu8pSK6gdfktilQB5r0ybBGSSlEVCZi51vUPAO6PlKsvOSBLvJ+UHNfL3pYiHr1q4o/Arcj75DtLR/nmFfJyraCH5s3NIhbA8TibDYFuufZL4YYw4Pr1PPVfMwciU=
+	t=1748509295; cv=none; b=TXurk30SDM4vnUpoINX938FI2nOpaKf44fPIRzm5B9vns8F3epWU8ZhQ9PeGCm+QjdxtgdbfqKx1yPC8GH1huSEowiFHWKOWA/k14EJ1XbAzH5n82IpPzkooKbhmT6nrnY36ap2nC0/HZH31s/AvSBee4uyCNDy9bZNkoCNE5L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748501895; c=relaxed/simple;
-	bh=wfDpbU6U208CVjpqYiuBakHYUBvP/LaHUQsD+xtsfak=;
+	s=arc-20240116; t=1748509295; c=relaxed/simple;
+	bh=/F6/DXzn9Rhch+OmnF6nx0kwrtWRRAJCYSnxlsc0kYE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nFThxTbESLz77X0zNDtIs3tldH6B+HPimAKPq8wfIxFpnkWm47P228iTWWlw/g812uWzyzCc6rcaumCR2ewBrLJSRsBM05UHujxvj61OvjUG3WFklK7Q6q8ykmhsbmnRXMTzaoK9T5GQnpFvuAqZeJOLdbt3ekiFsejxA8sEwak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djIWoKe+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31465C4CEE7;
-	Thu, 29 May 2025 06:58:09 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=KI3gzL6LKgV7w5oToDZEG7dIw4x/0mKp+ppPnS27/wZOaBkdb9Y0bT7/mp8THp/edfMGuaKgH7jUVYi0RRhhyCcfExZ0KbQaEb1KDnfHU6PCZED/UUtZp2Zx+sxPdWFcaCktMnQhwuC2A548t6MOIbVjGxjpspwL2CZAdKicS5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ISYwJir1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABC2C4CEE7;
+	Thu, 29 May 2025 09:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748501894;
-	bh=wfDpbU6U208CVjpqYiuBakHYUBvP/LaHUQsD+xtsfak=;
+	s=k20201202; t=1748509292;
+	bh=/F6/DXzn9Rhch+OmnF6nx0kwrtWRRAJCYSnxlsc0kYE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=djIWoKe+t6RKq39EdUesuue/dDb9QwHCJvVKUC3+waBl5Qu/zLdnrYehIY4RJ+9lz
-	 AtIk1v5pr764l1ZEO/gzYwwTAiGB6Yoji06kQbw1ivVLNAJHKpndu9eRTZ7JwPXrTd
-	 VMoWYilgi4P6EBjVMjaKS62UlAPdw9PNF3ZN7Dy7/9ZSnOJBT6gaTJDaoeG7qd6qiJ
-	 BcwqI/NBTMLplenngeBBk9+FDBS1iXq7qQGZL4rNIMaoIztD8ZXwIyNG7NcXA0ay0t
-	 ad0svIRMPpLH18PPio35QcV7ycg3PK4ZC7Xoj3DT96JQ5S45U1YrKaCv3QaHhH31tH
-	 5Hsjj5iajlSaQ==
-Message-ID: <9c8fe115-97e8-4966-b332-6de94015f832@kernel.org>
-Date: Thu, 29 May 2025 08:58:08 +0200
+	b=ISYwJir1bMRAPsuMiZOBJHVVkxaZF85KGfFJsJsp49oT+xk6HqQaqBs3Pi7zqRMA5
+	 jcu1X7IijkpyDWLOTnSAaux41T0/n7WH2MF7JSiBuJqv4CZgWCS/nbxVliZlcsbYs5
+	 GIgrWYAImzqd5lVN44E8pwXiRTZUgH5z9TVmKqTgr1soXWIeEyNGOKbiFi3vkhy1Lf
+	 8b+kgjJCjn1DnbD/KP96B7gHj+zypMqndAHMg4aNay296uIcL6ukFurz/njylxbQoo
+	 MQQTEttQGfqcd/8sltBHVGCzcSUWP2RtP7H+HKsXpIA/+UqKverteDBCzaExQG2Jqh
+	 f+/+qRWY3Bhsg==
+Message-ID: <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+Date: Thu, 29 May 2025 11:01:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,24 +50,21 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
- being selected as SoC component
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Alexey Klimov <alexey.klimov@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
- linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
- <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
- <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
- <7938374e-85fb-42b9-893c-ec3f7274f9c0@oss.qualcomm.com>
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -113,48 +110,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <7938374e-85fb-42b9-893c-ec3f7274f9c0@oss.qualcomm.com>
+In-Reply-To: <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/05/2025 18:58, Konrad Dybcio wrote:
-> On 5/28/25 4:37 PM, Alexey Klimov wrote:
->> On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
->>> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
->>>> The pattern matching incorrectly selects "wsa" because of "sa" substring
->>>> and evaluates it as a SoC component or block.
->>>>
->>>> Wsa88xx are family of amplifiers and should not be evaluated here.
->>>>
->>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a811c4a13143efce3 100644
->>>> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>> @@ -23,7 +23,7 @@ description: |
->>>>  select:
->>>>    properties:
->>>>      compatible:
->>>> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
->>>> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|smx1[ep])[0-9]+.*$"
->>>
->>> Why dropping front .*? Are you sure this matches what we want - so
->>> incorrect compatibles? To me it breaks the entire point of this select,
->>> so I am sure you did not test whether it still works. To remind: this is
->>> to select incorrect compatibles.
+On 28/05/2025 14:14, Clement LE GOFFIC wrote:
 >>
->> Thanks, great point. I tested it with regular dtbs checks with different
->> dtb files but I didn't check if it selects incorrect compatibles.
+>>> +		};
+>>> +
+>>> +		hdp: pinctrl@5002a000 {
+>>> +			compatible = "st,stm32mp131-hdp";
+>>> +			reg = <0x5002a000 0x400>;
+>>> +			clocks = <&rcc HDP>;
+>>>   			status = "disabled";
+>>
+>> Why are you disabling it? What is missing?
 > 
-> Maybe we can introduce a '-' before or after the socname, to also officially
-> disallow using other connecting characters
-
-It is already there.
-
+> Nothing is missing just disabled by default.
+> The node is then enabled when needed in board's dts file.
+Nodes should not be disabled by default if they are complete. That's why
+I asked what is missing. Drop.
 
 Best regards,
 Krzysztof
