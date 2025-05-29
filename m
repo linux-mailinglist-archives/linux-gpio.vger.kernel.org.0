@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20695-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20696-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D4BEAC7AD2
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 11:14:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 52F9BAC7AD6
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 11:15:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 70ABD1C015F6
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 09:14:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A5471C017E6
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 May 2025 09:16:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9447A21C16A;
-	Thu, 29 May 2025 09:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E16F921ABDC;
+	Thu, 29 May 2025 09:15:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjEjNiMm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BOqWRz9x"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB9621B192;
-	Thu, 29 May 2025 09:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B05D2FF;
+	Thu, 29 May 2025 09:15:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748510056; cv=none; b=i+G/zq6L8k6cdvEUH9++45TGapsNWmbCvNm4lp+BRmYflNJRdUj7un3DSEaU41i6Zb6JW71mnUhd9T+uaa2TpuZNS/QNzhIXAJ3/6YewYi5n94N3XugJ+WtAfoSzNbQHRsk6RB0cCPWNU9YkEQEbV0CfXO7xpwR/kT/R6RBFAd8=
+	t=1748510148; cv=none; b=GiAibv6S/9n8OLdaDcfVzoex44V4PyIBjE3upEEtqSzgNH5hzvIT5wwsXsr66K5Mv9w0V1i5Xnk+IhWsKXouhdKNBIhuUvzeMWujBsT5z9jl9LXyLRZoG02wftMcq1E1uGNAnTDfkNsEFWCt4ONgeHoONJsHegi2FmrCw1kAfNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748510056; c=relaxed/simple;
-	bh=nsB0nVxz+JJc3yI5M3RfBBdILPJfmZjk/4dwV4uYOAg=;
+	s=arc-20240116; t=1748510148; c=relaxed/simple;
+	bh=inZFYIcTejA8G1GdPwrsuH7UVnHj585geeq4wpJCGK8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IE7Qix8xCKdRDq1Hwsiiz4h6fX6nGB5af+AXZUPoSRouFgvOch9RG7FlmRtELqSC2Fl2a5cYKB/g2xFCh/PGyrxi/1XDQHDMD6IXoJ84PWu48+sRl4mfXTJlP1wtR/Z6HlAcFk7TeOE1pB1y9m7ItoA5tkPqQlZyHD9ExVJBhc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjEjNiMm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C015C4CEE7;
-	Thu, 29 May 2025 09:14:10 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=gSMYV4OdA5IXJ1aBtzuX+U1cENjf5P97z2k+73pUXzvTSR5eOQrC682rWYBC03zmhFK0GaLZ1C+MNbQvXG3qZSqijCgtelHHfgxYzdvvt4LrKwp3grliyC0QEmKjpsNPPoKfIGqbfTQxPbKQtoP4rgLtPFrNZh9MPw3Nxt+kwpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BOqWRz9x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A3BEC4CEE7;
+	Thu, 29 May 2025 09:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748510053;
-	bh=nsB0nVxz+JJc3yI5M3RfBBdILPJfmZjk/4dwV4uYOAg=;
+	s=k20201202; t=1748510148;
+	bh=inZFYIcTejA8G1GdPwrsuH7UVnHj585geeq4wpJCGK8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XjEjNiMmNF4QyQXKqZ96EBVPLdhph3Csowe2ehr9ecQcm2XIadsZIgL9YCdp32C0k
-	 CLRwHmltzlnY0rUqnrsRHaRXcLHbtCRfuJRYKTVJ4my7l7HAJCiJSorfqkoRf1PqzJ
-	 1f68M4vi/E9PDVHXF+6pCnr9bcXnXeJQ8+refWKu2w+54QJDkLJv+rkB7fwI7iB9Dn
-	 W90l0BB3jSJtlp77wiCIgNCB1UNGOqymRmi1fkcYeZCIJDH72wXRHw8R8q0qAHJyP6
-	 iprnfI4nFXLhMAsSWaMSMKHXAjU2QWGZ6dlVjsoOGUeLHgkV/aRIpB7Th+PfxejdYY
-	 v1uOTEgBJ25Sw==
-Message-ID: <57667ad9-d98f-4f8b-9b70-428960765ddb@kernel.org>
-Date: Thu, 29 May 2025 11:14:09 +0200
+	b=BOqWRz9xNUz7eIjJjJoG61gmIicXT8zH523w8z+2LYGsKJmQCldQD8O9qN7yR6MAC
+	 IOSBhPFU0a7SK/FkXZODZqJe6d/sa/cOTPuXpfE6Y4UDbNnlqt4WiYe9uBIX90I0FM
+	 OtYb1j/qlN2Uz2VGBej6N210H1r9B2kAIhrmXRT4y9WUYx3hhXFBPhVl6Nh6hmqaIL
+	 otMmRcV+MyUDIM567rD5vBM0fMfV+56/NBwjrD/0wF9Q2cnh+NSsRpEitrKvFynefP
+	 OKfobDq6zpykLp7U/WB8WAKL9Vxqk5jYj9osfd8gxQaAtri9B5BZSC9h9Gu+0N0+9H
+	 xwDJN7jZi0jMg==
+Message-ID: <673768c4-e727-4e5e-82e9-e69ef05e3975@kernel.org>
+Date: Thu, 29 May 2025 11:15:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,9 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -59,10 +60,11 @@ To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
  Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
- <20250528-hdp-upstream-v4-2-7e9b3ad2036d@foss.st.com>
+ linux-arm-kernel@lists.infradead.org
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,24 +110,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250528-hdp-upstream-v4-2-7e9b3ad2036d@foss.st.com>
+In-Reply-To: <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 28/05/2025 15:30, Clément Le Goffic wrote:
-> 'HDP' stands for Hardware Debug Port, it is an hardware block in
-> STMicrolectronics' MPUs that let the user decide which internal SoC's
-> signal to observe.
-> It provides 8 ports and for each port there is up to 16 different
-> signals that can be output.
-> Signals are different for each MPU.
+On 28/05/2025 14:14, Clement LE GOFFIC wrote:
+>>
+>>> +		};
+>>> +
+>>> +		hdp: pinctrl@5002a000 {
+>>> +			compatible = "st,stm32mp131-hdp";
+>>> +			reg = <0x5002a000 0x400>;
+>>> +			clocks = <&rcc HDP>;
+>>>   			status = "disabled";
+>>
+>> Why are you disabling it? What is missing?
 > 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Drop reviewed tag. It was given under assumption that you will test your
-code before sending.
-
+> Nothing is missing just disabled by default.
+> The node is then enabled when needed in board's dts file.
+> 
+How much time did you give me to respond to this feedback? 1 hour 15
+minutes. That's too short. We have also other work except constantly
+checking inbox.
 
 Best regards,
 Krzysztof
