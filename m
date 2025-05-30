@@ -1,118 +1,199 @@
-Return-Path: <linux-gpio+bounces-20819-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20821-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA40DAC9867
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 May 2025 01:43:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27D10AC9870
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 May 2025 01:46:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77B01173C32
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 23:42:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A2681C20692
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 23:46:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 020A728CF5E;
-	Fri, 30 May 2025 23:42:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF37128B7F5;
+	Fri, 30 May 2025 23:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RR9jq2Hp"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gm/dZo+m"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1C2224B09;
-	Fri, 30 May 2025 23:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440A22192EF
+	for <linux-gpio@vger.kernel.org>; Fri, 30 May 2025 23:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748648564; cv=none; b=RR3i9IumjSKqoaFKbLHpwRzm7qs9/tCeYwtvrtM+AyYuqegmCafJ2YTZQYoVSr+Ab02aV6I8H4A+LAqvE0Mk2Pks9Hhjit2NSXqYCknQVMIqYqcfR6xjXtkpGtxThxpoDeHVvIMHL2jAihD1FvFFmDWfXwcC3FrGcRg8JzoJEiQ=
+	t=1748648797; cv=none; b=i6jU47bAaSsN/w+3+9A1CJvH88ObJSCCqKMgpVGIJAIT0Uxyyfp+BqmDGUCl+lI/bTJdISbUEUWIUQUwOfy6XIJj+5B2cyzBZ7ogqu3ErC1FaOGkH/sUmWqUtfFtUQwmxCoREETpvsa7IFZri2qay0V0TW4fgUMPrHWXne/kcro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748648564; c=relaxed/simple;
-	bh=Sldt/dcFPmwzKO5QQ0JGVT1P3Ip9Z7K5U6usfVUWvk4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qxriW+VBwQ+fUmvx+WZADg+pbNcSaDxgIn9H65B8JZ52MjN0b7TmLNT25FrC2VXjPqXfzg8poGDc3riS+vnb6UuBIyb3gjwUrcwVqhH/Ywc4dMmHX8G6nIlVw/errGg7AfoNwcPfQ6e97rd80I6/4Z9H2/ypBlTeYzq5C0FR+f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RR9jq2Hp; arc=none smtp.client-ip=192.19.166.231
+	s=arc-20240116; t=1748648797; c=relaxed/simple;
+	bh=ZSDszH6DLZu8UGHrETxkA+vaMK7FtZI8vbb53B5onD8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pxK/00To4+Fd2oYVkhq3rOQ1MfTBn5NU6Mzz1oq/A4hbO/gD3iEjNvmhI45oH9izLTt1ezXzSYKGOZY5dm5sYlY+wqiugoTvG2f3CpdG5LkMlsm9xjTgjXjHsfW1GUbo1fjrZfYMveOynykDdVHtTFtX1/vDstkPGYJNirAQKzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gm/dZo+m; arc=none smtp.client-ip=209.85.214.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 4B6BCC000357;
-	Fri, 30 May 2025 16:42:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 4B6BCC000357
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1748648562;
-	bh=Sldt/dcFPmwzKO5QQ0JGVT1P3Ip9Z7K5U6usfVUWvk4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RR9jq2HpHC1h5MG9B4d/hwW14Ly0nRprPsCbDsjgOK7wbyCXRJef0wF+OD0NSj4/+
-	 CKd4FC66L4iR4CZ6QzFQV7l+C1/OfMr0pvG+yPyZaETy7ry67axNQqRBGvbMwClzBx
-	 mXo01itBv3VK6vXAbl1xl996dYrKd7cdCLZYuFxY=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id C6EB9180008FB;
-	Fri, 30 May 2025 16:42:41 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: bcm-kernel-feedback-list@broadcom.com,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com,
-	Matthias Brugger <mbrugger@suse.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v12 13/13] MAINTAINERS: add Raspberry Pi RP1 section
-Date: Fri, 30 May 2025 16:42:41 -0700
-Message-ID: <20250530234241.466206-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250529135052.28398-13-andrea.porta@suse.com>
-References: <cover.1748526284.git.andrea.porta@suse.com> <20250529135052.28398-13-andrea.porta@suse.com>
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-234fcadde3eso31482545ad.0
+        for <linux-gpio@vger.kernel.org>; Fri, 30 May 2025 16:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748648795; x=1749253595; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=uw+SDAnpbyE75QriiKMqcjkIQkdnuBseYuvRivKp4tE=;
+        b=gm/dZo+mF7EsyjCVM2ztZxfVsTT2mWkD9O7uKt4n0yvWpp8YJXI8/6KsN+R/eQKnH9
+         7lxaCzxZ8O9x7RQP0idHwz0fZksjabbK8R8kD4J/bulOZRPWLi3HglaNqQ2YJuhrRQdk
+         bLTRa7wi8bRIdNdJQVY+To+4D4SBYCXVYo+ks=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748648795; x=1749253595;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uw+SDAnpbyE75QriiKMqcjkIQkdnuBseYuvRivKp4tE=;
+        b=NEunnKD5Zs06dDuu5rvMqhZzZ5YiqHLKFLcJlp/4txvUblqbwaWAAz+BD1vBDrpmab
+         jMC1wRicD87hF1RUle6RULuV3n5pdeWQqEwP+Zk3xM7LR4V0aRNCDfs6tN3I/RIP95HB
+         BfXHFpGgUs833eTH5HTAxoEwhpvZl3UlG3zQxCwiRCQL5BaxOzBk9J6dfm09+ffV6gcu
+         OFZRKa89/ysoY3sNh6xke25/sBtm/hWUDINJ8GgSFKK0S140w6jkTt3NZcjfcz+UpyAQ
+         xZNuPuuMq1gcZCqgUX1DvPJgl3pfT8Oxiu8ork/2aSNBQ2MScBWV7Hoe8JPw5FJBsl6J
+         kxEA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdUBpdJt3fHklbqT7npQWN/4e96ke7BumpA8MHJuX7qzaN0ZoE1WAdt/lz1dC3upjDoL1VqwdQrsb1@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU0ZAQIIenuPQBE8C+QhCsl3U1k5WKotM6JYk2Go74TaR8XYPX
+	RnPlQ+VEMYHtuevpTKEX+kGKJC2Db4lqqHjWaxndD4RW4Ch+eBJ7HPtFxmKpAHAfSw==
+X-Gm-Gg: ASbGnctDz8ScIwaHIQebVeoypyA/mYERH3ylMqZ8Bx6HR24pUhXWz9jx4AuSuDcYtWu
+	f67+4rAh3OSH7lZO9kwmu6L70EPDXTEj9k81DRsCCxhdCYMZIx4nzr08an7z+bV0uqduQz5ZhvJ
+	SQJRNb8Fg6xSaAMGHR7nCbfqE9P3pVLwVn/vF4yetHusvtijPqnNPxcvyaZ/I6VXPP+tlHbdQ7D
+	lXm4N0F9JKzrFoSRKMDyYEwc2D8Y/GIFYBhG9Tm+jQh/LRymuyeCHeSVnU3L4W4kW/reK6DeQz/
+	DEJqVGhbj9nRlOqc+3P5FbV7pGHSC0GlTGLTv2p7HTtUCRbNggff5UNWFDVVWcRxzVwOYEQqng1
+	NRVrFKpOTIK4J/II=
+X-Google-Smtp-Source: AGHT+IG83D6Hba6mlpJeLWEewKcWggxnySdPP7v+S+J2gMmNbRwekT+k4Hu5mnjnjd6GtQ0EvgHHiQ==
+X-Received: by 2002:a17:902:f792:b0:22e:3e0e:5945 with SMTP id d9443c01a7336-2355fa0125dmr1403535ad.50.1748648795586;
+        Fri, 30 May 2025 16:46:35 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb0a005sm1768319a12.7.2025.05.30.16.46.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 16:46:34 -0700 (PDT)
+Message-ID: <0e154ae3-e0ab-4a4e-aa39-999ea1c720ed@broadcom.com>
+Date: Fri, 30 May 2025 16:46:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 0/13] Add support for RaspberryPi RP1 PCI device using
+ a DT overlay
+To: Arnd Bergmann <arnd@arndb.de>, Andrea della Porta
+ <andrea.porta@suse.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
+ "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
+ Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+References: <cover.1748526284.git.andrea.porta@suse.com>
+ <0580b026-5139-4079-b1a7-464224a7d239@kernel.org>
+ <aDholLnKwql-jHm1@apocalypse>
+ <7934ae2a-3fc5-4ea2-b79a-ecbe668fd032@app.fastmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <7934ae2a-3fc5-4ea2-b79a-ecbe668fd032@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-
-On Thu, 29 May 2025 15:50:50 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
-> Raspberry Pi RP1 is a southbridge PCIe device which embeds several
-> peripherals.
-> Add a new section to cover the main RP1 driver, DTS and specific
-> subperipherals (such as clock and pinconf/pinmux/gpio controller).
+On 5/29/25 23:03, Arnd Bergmann wrote:
+> On Thu, May 29, 2025, at 16:00, Andrea della Porta wrote:
+>> Hi Krzysztof,
+>>
+>> On 15:50 Thu 29 May     , Krzysztof Kozlowski wrote:
+>>> On 29/05/2025 15:50, Andrea della Porta wrote:
+>>>> *** RESENDING PATCHSET AS V12 SINCE LAST ONE HAS CLOBBERED EMAIL Message-Id ***
+>>>>
+>>> Can you slow down please? It's merge window and you keep sending the
+>>> same big patchset third time today.
+>>
+>> Sorry for that, I was sending it so Florian can pick it up for this
+>> merge window, and I had some trouble with formatting. Hopefully
+>> this was the last one.
 > 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
+> That's not how the merge window works, you missed 6.16 long ago:
+> 
+> Florian sent his pull requests for 6.16 in early may, see
+> https://lore.kernel.org/linux-arm-kernel/20250505165810.1948927-1-florian.fainelli@broadcom.com/
+> 
+> and he needed time to test the contents before sending them to me.
+> 
+> If the driver is ready to be merged now, Florian can pick it up
+> after -rc1 is out, and then include it in the 6.17 pull requests
+> so I can include them in the next merge window.
 
-Applied to https://github.com/Broadcom/stblinux/commits/maintainers/next, thanks!
---
+I have applied all of the patches in the respective branch as we had 
+discussed with Andrea and also merged all of the branches into my "next" 
+branch so we can give this some proper soak testing. Once 6.16-rc1 is 
+available, all those branches (devicetree/next, defconfig-arm64/next, 
+drivers/next, etc.) will be rebased against that tag such that the 
+patches that are already included will be dropped, and only this patch 
+set plus what I have accumulated will be applied on top (if that makes 
+sense).
+
+As Arnd says though, this is too late for 6.16 so this would be included 
+in 6.17. Andrea, thank you very much for your persistence working on 
+this patch series, and sorry that the request to merge those patches 
+came in during a time where I was away. The good news is that I am not 
+doing that again anytime soon.
+
+Thank you!
+-- 
 Florian
 
