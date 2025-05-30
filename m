@@ -1,105 +1,176 @@
-Return-Path: <linux-gpio+bounces-20794-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20795-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DAB8AC8CF3
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 13:31:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1C2BAC8E22
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 14:45:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A317D3B6573
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 11:31:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AB1BA43DB0
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 12:43:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D48B207DFE;
-	Fri, 30 May 2025 11:31:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49E78238151;
+	Fri, 30 May 2025 12:39:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cab.de header.i=@cab.de header.b="DEFcsjaf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3m5J/6R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx08-007fc201.pphosted.com (mx08-007fc201.pphosted.com [91.207.212.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066232288F7
-	for <linux-gpio@vger.kernel.org>; Fri, 30 May 2025 11:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE298238145;
+	Fri, 30 May 2025 12:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748604701; cv=none; b=pJmg//RZESYNyCaqmiPpCi6eMlxjzu7dDsiG4Lf/Gvc7o4S2RqdSGLruunKroZiw++c25TbB6Dvqv4Q+IPpHtuyDoABUycUKzTGds7b6fhjbJgLrC5hvDg/QdORMDur6XvOBi5wW6Ownb2Km/5YeGF5DS9vKG0twAP1zgGJNmJY=
+	t=1748608768; cv=none; b=pZ9i4k/oEsqTPRdU4mbBEO1yCbMhGY/BlpuFP6fk+gVyeMTz9hzq1JGMRE9nrWu0OO6YS2iY+x+EVtBc0EkMSgR6ZqMRLXT33+fsrT6JlGzD4IRgY7mqS0POpkPy5b4cBGZGiS7EH1DRz29pgge9Qlbp016PAlC8dEZGO3MRusE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748604701; c=relaxed/simple;
-	bh=nYruS45SapJ6MdDHZBSPzhCkox0vxpm9zGIk+nrkhSU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tjh1PpaiHEMF1Q9Qe/ttSHiVlojxwO0uoy5osya3k1s4Xw7YcdqmXA90LuiPyI7T4+EOfplTEyEC43LvI43ASnhiX0GnPjt7pPUIhKdKV+f0EVw977r//8o0qHNlchCTXtbAOLEcC5//LWZmDLODhrKlNo+yPgWMaQvJhfqJqJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de; spf=pass smtp.mailfrom=cab.de; dkim=pass (2048-bit key) header.d=cab.de header.i=@cab.de header.b=DEFcsjaf; arc=none smtp.client-ip=91.207.212.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cab.de
-Received: from pps.filterd (m0456229.ppops.net [127.0.0.1])
-	by mx08-007fc201.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UBPDs0019880;
-	Fri, 30 May 2025 13:25:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cab.de; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp-2025; bh=CEMjN/p92D20IW8ET6NlfzXK
-	ASsrGUdESbb01022h9M=; b=DEFcsjaf3U7wPiyYTCDt4SRcrfUIWy0gEIaSUGBp
-	WLi2PhJPT4cl3WR04drtKV8LeEV50NYv0oizdn052LCSRNAP93skWaUd2QPUEu/4
-	ywndlB+18dczx7k5Ei9FDx8hVEQFymzRQpNHahCyUZ8JWvyV+mf3BO2gkg0Y0SNi
-	1EmkvDv0bWr7zOPgHdoZhkPSRz5k7Ze/3aKxzg05hH4Qa/9Uh3aivyuObDKUIbPo
-	suH5QR26CwpDJVSdamU04ip9KjjX40YLJztZT/ivDLEcJFDoiPpzhQxeJgvhSAdL
-	OmmUGDiiTkv+4LxB0Y8nvzLfhKRzQAj/oxI5l/CHBTEJVQ==
-Received: from adranos.cab.de (adranos.cab.de [46.232.229.107])
-	by mx08-007fc201.pphosted.com (PPS) with ESMTPS id 46ut7k9yu5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 13:25:13 +0200 (MEST)
-Received: from KAN23-025.cab.de (10.100.0.38) by Adranos.cab.de (10.10.1.54)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 30 May
- 2025 13:25:27 +0200
-From: Markus Heidelberg <m.heidelberg@cab.de>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-CC: <linux-gpio@vger.kernel.org>, Markus Heidelberg <m.heidelberg@cab.de>
-Subject: [PATCH libgpiod] build: drop python3-config check from configure.ac
-Date: Fri, 30 May 2025 13:24:40 +0200
-Message-ID: <20250530112440.124178-1-m.heidelberg@cab.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1748608768; c=relaxed/simple;
+	bh=PFuS/P/Z3jWRUglB1GrBuK1+zlS+EyAfSjrB9hZYF+w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LYIRhQn+7eYQQucwBPu6b/qAZihnJ5+VrvVcWhqrzZz+xX8PN6Cpin3UBoN8QbA6HMaQdnkrUXehz/UKrV5cG7Z3PWnS3oMYhm0+pbZP8pD8ft2Gfn9KuEmTJVeGgyXe/6kHFNC6Vt9/cpCWQ+aWZ//+By1RztF/6onFp5+B2Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3m5J/6R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA90FC4CEF1;
+	Fri, 30 May 2025 12:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748608767;
+	bh=PFuS/P/Z3jWRUglB1GrBuK1+zlS+EyAfSjrB9hZYF+w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=k3m5J/6RcnhprR8zGpJYJ8cqNvIIzavpWwzWZyTnvdYg+I4uAaiOId7Y9tMXwGd5F
+	 RWr/s+OG/+mow9R1+nUqYb0KKxlc+PWA6dXtf2QXViQf1lOQ+mI2EW9qsc1MYaXfZ8
+	 OnAgcolbDidBDUtm8EwpmgLys0rIAxAa8GsablB9rAqUA1gGJ9CLR06PysaObLixm7
+	 AvkOdBOfJTwBnZsvanDvJod+F6afiN6SHfPuR43Wp/9qHGZKyPh4HdBsc1FUrHyiDj
+	 uLJjDLlfTAr96Tf/S7PQd0HYHZ7aXpMqOogx30a09m12zWYfYOBzzjopB7HMcQRfZO
+	 I+AN2APjuHkCg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Peng Fan <peng.fan@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	bgolaszewski@baylibre.com,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.15 26/30] gpiolib: of: Add polarity quirk for s5m8767
+Date: Fri, 30 May 2025 08:38:48 -0400
+Message-Id: <20250530123852.2574030-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250530123852.2574030-1-sashal@kernel.org>
+References: <20250530123852.2574030-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.15
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Adranos.cab.de (10.10.1.54) To Adranos.cab.de (10.10.1.54)
-X-Authority-Analysis: v=2.4 cv=aKbwqa9m c=1 sm=1 tr=0 ts=68399599 cx=c_pps a=LmW7qmVeM6tFdl5svFU9Cg==:117 a=LmW7qmVeM6tFdl5svFU9Cg==:17 a=6gx2k9LiueYA:10 a=dt9VzEwgFbYA:10 a=yU_-SeGVZe2lLadOBA8A:9
-X-Proofpoint-ORIG-GUID: wE1r0Z6-6_2dfxXhziOaxAHilxpMCdT-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA5OSBTYWx0ZWRfX+dKzRDmYfhX0 qoyKigbVJEE1Efstuu7143XxoOukNwiNaICnSqKXRMnjGWUK+H3N/s3QQnxgI5RZ+MpiVwYdOqL 3BISpiqJx64MzXsRa+K+7tE0S6yl5Qv1M6B5WlSYuMbWBLXjsOe93+QQBPCxmpdykVcVnU/N0TY
- aINXn9JKXkU/KPhleylaaGGs4TV93RXjjQQxOeoLn8ceZE8XLikNgt8lmNq94ocRjMAoMg4OsJ9 tjfORLsEntcBCDtvBWT5gr+5pGftQ8Q2iboanHr7cbcbfe1BuWdcTQH+Nct/iuYWHVFRqlzI4cO hUaQ3+WgXhRHYkR4cwz0dXQZpndaO7u8/Jg2d8WUK59FonS5PyPcOMy+HTmDracMlTaYoGddYh+ T/cjvCTR
-X-Proofpoint-GUID: wE1r0Z6-6_2dfxXhziOaxAHilxpMCdT-
 
-Since commit b7ba732e ("treewide: libgpiod v2 implementation")
-autotools are no longer used to build the Python bindings and thus
-python3-config is unused.
+From: Peng Fan <peng.fan@nxp.com>
 
-Fixes: 8aab09cb ("build: drop unused python-related bits from configure.ac")
-Signed-off-by: Markus Heidelberg <m.heidelberg@cab.de>
+[ Upstream commit 4e310626eb4df52a31a142c1360fead0fcbd3793 ]
+
+This is prepare patch for switching s5m8767 regulator driver to
+use GPIO descriptor. DTS for exynos5250 spring incorrectly specifies
+"active low" polarity for the DVS and DS line. But per datasheet,
+they are actually active high. So add polarity quirk for it.
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20250327004945.563765-1-peng.fan@oss.nxp.com
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- configure.ac | 6 ------
- 1 file changed, 6 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 416ae28..9b6c862 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -230,12 +230,6 @@ if test "x$with_bindings_python" = xtrue
- then
- 	AM_PATH_PYTHON([3.9], [],
- 		[AC_MSG_ERROR([python3 not found - needed for python bindings])])
--	AC_CHECK_PROG([has_python_config], [python3-config], [true], [false])
--
--	if test "x$has_python_config" = xfalse
--	then
--		AC_MSG_ERROR([python3-config not found - needed for python bindings])
--	fi
- fi
- 
- AC_ARG_ENABLE([bindings-rust],
+Based on my analysis of the commit, the code changes, and the kernel
+context: **YES** This commit should be backported to stable kernel
+trees. Here's my extensive analysis: **Code Analysis:** The commit adds
+a polarity quirk for the s5m8767 regulator driver by modifying
+`drivers/gpio/gpiolib-of.c`. It adds these entries to the
+`of_gpio_try_fixup_polarity` function: ```c #if
+IS_ENABLED(CONFIG_REGULATOR_S5M8767) /bin /bin.usr-is-merged /boot /dev
+/etc /home /init /lib /lib.usr-is-merged /lib64 /lost+found /media /mnt
+/opt /proc /root /run /sbin /sbin.usr-is-merged /snap /srv /sys /tmp
+/usr /var 0001-Fix-Clippy-warnings.patch 0002-Enhance-inference-prompt-
+to-utilize-CVEKERNELDIR-whe.patch 0003-Update-to-latest-version-of-
+clap.patch Cargo.lock Cargo.toml LICENSE README.md
+analyze_merge_commit.sh io_uring_analysis.txt ksmbd_analysis.txt
+merge_commit_analysis.txt model prompt src target test_gpio_cleanup.txt
+test_patch.txt According to S5M8767, the DVS and DS pin are 0001-Fix-
+Clippy-warnings.patch 0002-Enhance-inference-prompt-to-utilize-
+CVEKERNELDIR-whe.patch 0003-Update-to-latest-version-of-clap.patch
+Cargo.lock Cargo.toml LICENSE README.md analyze_merge_commit.sh
+io_uring_analysis.txt ksmbd_analysis.txt merge_commit_analysis.txt model
+prompt src target test_gpio_cleanup.txt test_patch.txt active-high
+signals. However, exynos5250-spring.dts use 0001-Fix-Clippy-
+warnings.patch 0002-Enhance-inference-prompt-to-utilize-CVEKERNELDIR-
+whe.patch 0003-Update-to-latest-version-of-clap.patch Cargo.lock
+Cargo.toml LICENSE README.md analyze_merge_commit.sh
+io_uring_analysis.txt ksmbd_analysis.txt merge_commit_analysis.txt model
+prompt src target test_gpio_cleanup.txt test_patch.txt active-low
+setting. model/ prompt/ src/ target/ { "samsung,s5m8767-pmic",
+"s5m8767,pmic-buck-dvs-gpios", true }, { "samsung,s5m8767-pmic",
+"s5m8767,pmic-buck-ds-gpios", true }, #endif ``` **Why this should be
+backported:** 1. **Clear Bug Fix**: This fixes incorrect GPIO polarity
+in existing Device Tree Source (DTS) files. The commit message clearly
+states that `exynos5250-spring.dts` incorrectly specifies "active low"
+polarity while the S5M8767 datasheet specifies these signals as "active
+high". 2. **Follows Established Pattern**: This change follows the exact
+same pattern as the similar commits I examined, all of which were marked
+as "Backport Status: YES". The structure and purpose are identical to
+successful backports like the TSC2005, Himax LCD, and Lantiq PCI quirks.
+3. **Preparation for Driver Conversion**: The commit message indicates
+this is a "prepare patch for switching s5m8767 regulator driver to use
+GPIO descriptor". Without this quirk, the driver conversion would break
+existing hardware using incorrect DTS polarity. 4. **Small and
+Contained**: The change is minimal - only 8 lines of code adding two
+entries to an existing quirk table. It's confined to the GPIO polarity
+handling subsystem. 5. **No Architectural Changes**: This doesn't change
+any kernel architecture or introduce new features. It's purely a
+compatibility fix for existing hardware. 6. **Critical for Hardware
+Functionality**: DVS (Dynamic Voltage Scaling) and DS (Deep Sleep) GPIO
+lines are critical for power management. Incorrect polarity could lead
+to system instability, power management failures, or hardware damage. 7.
+**Well-Tested Pattern**: The `of_gpio_try_fixup_polarity` mechanism is
+well-established and has been successfully used for similar fixes across
+multiple subsystems. 8. **Prevents Regression**: When the s5m8767 driver
+is converted to use GPIO descriptors (which respect polarity flags),
+existing systems with incorrect DTS would break without this quirk.
+**Risk Assessment:** - **Very Low Risk**: The change only affects
+devices with "samsung,s5m8767-pmic" compatible string and specific GPIO
+property names - **Contained Impact**: Only affects the specific GPIO
+properties mentioned, no broader system impact - **Follows Stable
+Rules**: Fixes important bugs with minimal risk, exactly what stable
+trees are for The commit perfectly fits the stable tree criteria: it's a
+targeted bug fix for existing hardware, has minimal risk of regression,
+and prevents functional issues when the related driver is modernized.
+
+ drivers/gpio/gpiolib-of.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 65f6a7177b78e..17802d97492fa 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -224,6 +224,15 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
+ 		 */
+ 		{ "lantiq,pci-xway",	"gpio-reset",	false },
+ #endif
++#if IS_ENABLED(CONFIG_REGULATOR_S5M8767)
++		/*
++		 * According to S5M8767, the DVS and DS pin are
++		 * active-high signals. However, exynos5250-spring.dts use
++		 * active-low setting.
++		 */
++		{ "samsung,s5m8767-pmic", "s5m8767,pmic-buck-dvs-gpios", true },
++		{ "samsung,s5m8767-pmic", "s5m8767,pmic-buck-ds-gpios", true },
++#endif
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
+ 		/*
+ 		 * DTS for Nokia N900 incorrectly specified "active high"
 -- 
-2.43.0
+2.39.5
 
 
