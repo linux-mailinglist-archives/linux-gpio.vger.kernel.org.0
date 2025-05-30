@@ -1,68 +1,90 @@
-Return-Path: <linux-gpio+bounces-20805-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20806-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8448AC9531
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 19:50:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98A07AC9553
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 19:55:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8376016D789
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 17:49:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C74353B542B
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 17:55:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E488275860;
-	Fri, 30 May 2025 17:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9927264A89;
+	Fri, 30 May 2025 17:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IAoAB/yo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481D62367CB;
-	Fri, 30 May 2025 17:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB8623E35B;
+	Fri, 30 May 2025 17:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627366; cv=none; b=bYGUQYzI9gjOFv7Ix3Qz4A43h78Gvgpa4LwlPtP1cVrQPxYNHJc+1T0Nyb6gam7IgKwADAt76Vxbr5VnKVrANkN9ATM5KpfHfMGagUSUGpD7r9EiS/hNjBoKk05tsm9RuoPi7ZzIqThRVDcZeeBSmMaT6PEi0OvFxAppFX6EePo=
+	t=1748627727; cv=none; b=dTFFD5haLdpcFuCeLmskP8Tg9YL/hhd8L0y1YGzKlMRrpp2Rew2ubdgY1X+NGhpZXggQMguZh1qFkmToP3IgMJZ8Q6I2KfuAlhxsK+UeIUnzC7ZjLZGIPTSsIgddVy1AOAP8DcNjq33Lwr76m2ygG+qTcT1EiLyGEuXAzQSpgfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627366; c=relaxed/simple;
-	bh=hxRWWOaBYp6tiVYo7uluS1eq98GxxBbeDU9cg7wTn6c=;
+	s=arc-20240116; t=1748627727; c=relaxed/simple;
+	bh=ZSmFHBwhFGzgKE51DBXBeP8jyHst6UlJH9/neaURwa8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6lVE98Mmn/f82GF+p8HEK2JFm81Gj/f9SFHrVVsIfKkqdnkbZUD1JTPlbVkmA+ZeFjiCkO36PYvkYNyfUOHpnk2p5UTyL/JxYn2bYypNG8L4ErFn7kb4dWiFRNJ1s6FytJEYgyDB3ZVE4bUkgqoA+iAiD20253k3e8r7WkU3VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: x4XEobw2RTmePI/Hq56d6Q==
-X-CSE-MsgGUID: C06xsM31Ta+d8MeuKRJtKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="49848350"
+	 Content-Type:Content-Disposition:In-Reply-To; b=ojv/uP5q/P1Llz6ZQJDpabjgaRi4q6glhOkYnfM1d+RryHi45P67BySmyGounfBiaN158OdNEXkDIvsIQOnHD17PeRsejgmRRXnKqsf83+MRFKIzMb/cUHG7FlPSX/tlL7sWah5fF00R5ot4Qedrzxl6O4AVX9iSEFq2ORnGRVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IAoAB/yo; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748627726; x=1780163726;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZSmFHBwhFGzgKE51DBXBeP8jyHst6UlJH9/neaURwa8=;
+  b=IAoAB/yoP4Eiia0bS6/ZTyXirQvzL8nHiAvCkA2vByq1P4A6zEiAPFru
+   InmFmokCGZ1iBiYcxZLqgyhGQtiyu/zxB/A6L/veIdPgjBAmZ9pYRH+ID
+   xsilGfRdeKJaWoJ98AS4tOeZnpuZivOoiGO1qXnV5JiHLmR4S5TiipjKb
+   fEO4iMAkIN7ZubOsuRV2aoTkBaG297YpXnxcqlKQ8aKoCTPYs5I0Uoh0n
+   yue2dXA2PjkOshRLn8nNdZG3ZRpv4woa7LlIGDCgSHk+uORHcOT5EmEin
+   OPvhrcdVs73ITtosOPMsmbOlXy2coamx4xeil4mFoJyVcqUJdo+nVdj4p
+   g==;
+X-CSE-ConnectionGUID: 7DDJOM5QQ5ijiB1nj3GfRg==
+X-CSE-MsgGUID: tkidEDKWQve8OiO7luFxWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="73259211"
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="49848350"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:49:25 -0700
-X-CSE-ConnectionGUID: 2zB/LkoLQsegjlKjPUVX4Q==
-X-CSE-MsgGUID: LX32MatAQjq41TRkJBXwZA==
+   d="scan'208";a="73259211"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:55:25 -0700
+X-CSE-ConnectionGUID: 5KdW+ZeYR3Kf/KTr2z0UcA==
+X-CSE-MsgGUID: SrlmHzGNQOugwsmwJqrvAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="144917079"
+   d="scan'208";a="148726373"
 Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:49:20 -0700
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:55:20 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uL3r2-000000024ZU-3t10;
-	Fri, 30 May 2025 20:49:16 +0300
-Date: Fri, 30 May 2025 20:49:16 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uL3wr-000000024ej-1SEu;
+	Fri, 30 May 2025 20:55:17 +0300
+Date: Fri, 30 May 2025 20:55:17 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, nuno.sa@analog.com,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
-	rafael@kernel.org, djrscally@gmail.com
-Subject: Re: [PATCH v9 00/12] iio: adc: ad7768-1: Add features, improvements,
- and fixes
-Message-ID: <aDnvnMqPd-Ahu5o6@smile.fi.intel.com>
-References: <cover.1748447035.git.Jonathan.Santos@analog.com>
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v10 02/11] mfd: Add max7360 support
+Message-ID: <aDnxBUDOYLQYiVaP@smile.fi.intel.com>
+References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-2-ce3b9e60a588@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,22 +93,17 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1748447035.git.Jonathan.Santos@analog.com>
+In-Reply-To: <20250530-mdb-max7360-support-v10-2-ce3b9e60a588@bootlin.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, May 29, 2025 at 07:47:57PM -0300, Jonathan Santos wrote:
-> This patch series introduces some new features, improvements,
-> and fixes for the AD7768-1 ADC driver. 
+On Fri, May 30, 2025 at 12:00:10PM +0200, mathieu.dubois-briand@bootlin.com wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 > 
-> The goal is to support all key functionalities listed in the device
-> datasheet, including filter mode selection, common mode voltage output
-> configuration and GPIO support. Additionally, this includes fixes 
-> for SPI communication and for IIO interface, and also code improvements
-> to enhance maintainability and readability.
+> Add core driver to support MAX7360 i2c chip, multi function device
+> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
 
-If you haven't run `make W=1 ...` build against this driver, do it with
-GCC and clang and fix all respective compilation warnings / errors,
-if any.
+LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
 With Best Regards,
