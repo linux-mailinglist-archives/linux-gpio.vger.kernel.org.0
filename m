@@ -1,176 +1,391 @@
-Return-Path: <linux-gpio+bounces-20798-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20799-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 633A0AC8F32
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 15:07:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91938AC91DD
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 16:52:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B0711C206D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 13:00:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49204500BDE
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 14:52:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4E81268FD9;
-	Fri, 30 May 2025 12:41:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB4D23504F;
+	Fri, 30 May 2025 14:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyTppEYp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o5rxh+P6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B343268C7F;
-	Fri, 30 May 2025 12:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6DC22DFAD
+	for <linux-gpio@vger.kernel.org>; Fri, 30 May 2025 14:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608869; cv=none; b=SN7khcI542ax26P9+iNdrooVUFjDhg+diJc5Cv7nVlPzXOb3NbwtfAf0Qx0MKauIhhZAunuTQtVahDdd9h8xG+kVfEXgiiipcpA9H3TxbcJGOPfE9Wu8fDBei71l10nkK0mdt9uH7MTHxV4vv3UNmVm/dC4hc2XEEku12pKeaFY=
+	t=1748616711; cv=none; b=AvJzBe3wCMi4u8mx2RuyiKBjxdsoBFBQUV3qJA6wYBiyrxKmRiUNkTQm7OJxVe8rJwI31dkU+enO4OGFTFrZE6i5btbQMSwj7NO2igE0jwgcgKRulYLrVnJJDzF2bR3sivAKLNUsLeNLlsARb/JDFgaicB/HZ26+HTdKMrfKWDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608869; c=relaxed/simple;
-	bh=5LpukfSploEVR67mxHqzkj4VIPHH+CNrASNyoPWR7qg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Zw0cTrtg9My8Kk9/m9MatuQHQ0aYRA5U1BI7DT6ChscpFVBJifr++paQtCJngKee5MulQCi1qgmGl+wI/Hw2iedM1v1aILurR03p2CKppDFcu3k/pR4lEY+abjedBrsmTmVAz2VxKGfejodorfGzvdktezXGz1o0vX1F7wizMUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyTppEYp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 833D8C4CEF0;
-	Fri, 30 May 2025 12:41:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608869;
-	bh=5LpukfSploEVR67mxHqzkj4VIPHH+CNrASNyoPWR7qg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gyTppEYpTvqgNTSssQj7FBifXHZs0fAY/B+xMgaWCnzR70u3F1pGFaiAoEncU4Bpi
-	 PsqfuuIFkXYhBzLXjfs9OPrDGk8+bFAufcDo05kHHSWSkpL6K4pKn1Xm4/eO3jPjwJ
-	 9FdrSUoza0wWNfbL7h8jqm4GRWwcZy0TG8SxsFbRCQfmYWOkuw7yG0XAwtQrRM4kOU
-	 W1P06nNRs4Z9J43GFViypsyHmrjWYdNv4iXgkNBQfpZXdDArullKnicz5Z6fWxCcZS
-	 9WieaoXI3Y9BGQsb9NCLAe7AVPWxYar9F0BikWbQRXvp2UZcs4YQpMVDdneOMZLSXn
-	 Vb5//mbMPqmkQ==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Peng Fan <peng.fan@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	bgolaszewski@baylibre.com,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 16/18] gpiolib: of: Add polarity quirk for s5m8767
-Date: Fri, 30 May 2025 08:40:45 -0400
-Message-Id: <20250530124047.2575954-16-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250530124047.2575954-1-sashal@kernel.org>
-References: <20250530124047.2575954-1-sashal@kernel.org>
+	s=arc-20240116; t=1748616711; c=relaxed/simple;
+	bh=Pozm0+L2zpnMRJcn3ae1TKMn6c26AOXd81hAFxL9Pgw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=T0Ysbpyhtz2f2uxRIvXNQygjU+DT8wGgjRkSK9lK7HfGsS8JE+leSBP146UQQ2teVdutTSHhowAowaCt4O4TUjG9FRyAyhNRFm+8yS4y+b8LyjHexO0+sfjJs0YG3VykPx9kvwPeb4V4VQEwZccKbrnqhJ/ouDArmZveLjTE9BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o5rxh+P6; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54e98f73850so2466257e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 30 May 2025 07:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748616706; x=1749221506; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ELdomJwnFSi74XtzdJRNt2bPgN9Fuu9BPaxW5bQWlGw=;
+        b=o5rxh+P6rsBf+aC47ECf4XAsWIX3PW62QnAe5+G3S6ZUUK/oz3rCC7Z5QWZuI4SM6L
+         QlhfAVjeMQMlVn+ym1ejJWPcMEo9gKYy/lpeIk8NEc9PTI1+QkWLi8wY/jIvCKWuBLPO
+         WUvg+KwCcv6KnErEv0CRkv1VbftDYCp5xP+INIKsjHQqc+FORsanliFgeEmpQjD01lo0
+         3Evzf4QixtZj0BTrKN5ofQ69X6p/nwjmnnvpq1iFt5u7FNRP6cZYB8gZ23JaTv4ZXLGE
+         djOCDQDbLx8A+D+OUPAzHuc07sTEdph3b4eh5ISZYp6CVG6XSOuHjrefpeNb7JEy/8O1
+         B+3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748616706; x=1749221506;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ELdomJwnFSi74XtzdJRNt2bPgN9Fuu9BPaxW5bQWlGw=;
+        b=fdpGnMGI7+KzPKI1aOWB4UVNpamUNbjv0CXlqzIkHBrW7oLd92oyZj4ashmY7IxjOF
+         E2VQ+1HGlwWCLgq84kxApDCsiYTA0s9g7OjwsHtjvjzbZ/b1H8FlLIBzNnLrNtDI/t1e
+         BxtgEr/u+aDMxPDwkmyPYWPWi9sjrsyXv+9ClgiBKfu8JCRJIycGap+fJr5eotq88Xen
+         K2TfukL/YDYC6QlDtzlLCedclKAYPz0ESjNYPo999rywkrYybZO/BNgeVoFgZfHOMQbr
+         dVhe9g94nc7diz3wd3Mg9eALqFHIY8zCm419krdszM683LL9iUZwgihrjaEPPOFNGQD1
+         +MvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdfBQvKvTcT9hd/R5Gcu+0zJE3Lu4khq0AqYLLGltgBZlCCIn0J6sYG81Zj7VBwqpLRJ/FwqG+z2Ns@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRJH8DmRGDF/nXSM61Q7/NDQSkR4NgFxkZ1FgxIito9VMnNZEI
+	+TBOihxNtWKQBGCXIbKa07JcY1ULGzOq+t3ZFsdS6SNtAXZq9d60Q7+MlLbgVq+sn8Q4ufK4F/f
+	AmJ1lqEl+ibieZUxJAwVtjcrTYh4vnXeaI/nMSU0WxQ==
+X-Gm-Gg: ASbGnct+iyFympdMgu9LLJwIG8a4zmiom/azKb2DdM35zNm5c7q6SaJffJN7w4Emnda
+	Zg9U9UpjuLqyAZ6LikMfg1AREomYg/fKGiGKcZ0tmFcBg9PqszsTZx8nuI+tTuQhqIEXe1zQIA3
+	b1BrGSKlbqoG+6hM96+3pkM4uWJKQrgkyX
+X-Google-Smtp-Source: AGHT+IE2wlcRsnSsyhlqlqS8glWDiRgfTyNoYraVlywZO6logkB7bDz/n+CgBBj8G0d3nwMdUWvOc69Flo17s1PmOfk=
+X-Received: by 2002:a05:6512:3084:b0:553:2c58:f971 with SMTP id
+ 2adb3069b0e04-5533b9079ffmr1376108e87.33.1748616705699; Fri, 30 May 2025
+ 07:51:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.92
-Content-Transfer-Encoding: 8bit
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 30 May 2025 16:51:33 +0200
+X-Gm-Features: AX0GCFu2pgXaj3hqiaBLtxdsZ5EhwHTNkd59xBCUC28P10mZZhYx0xFi8iSjy84
+Message-ID: <CACRpkdYuGv=mQJB+i_1itMCdeSYHVj4bcxrbVL1z=uJCEci8OQ@mail.gmail.com>
+Subject: [GIT PULL] pin control changes for the v6.16 kernel
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Peng Fan <peng.fan@nxp.com>
+Hi Linus,
 
-[ Upstream commit 4e310626eb4df52a31a142c1360fead0fcbd3793 ]
+this is the bulk of pin control changes for the v6.16 kernel cycle.
 
-This is prepare patch for switching s5m8767 regulator driver to
-use GPIO descriptor. DTS for exynos5250 spring incorrectly specifies
-"active low" polarity for the DVS and DS line. But per datasheet,
-they are actually active high. So add polarity quirk for it.
+An especially linear and sparse improvement and new drivers
+release. Nothing exciting. The biggest change in Bartosz changes
+to make gpiochip set/get calls return error codes. (Something we
+should have fixed ages ago but is now finally getting fixed.)
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20250327004945.563765-1-peng.fan@oss.nxp.com
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+Please pull it in! Details in the signed tag.
 
-Based on my analysis of the commit, the code changes, and the kernel
-context: **YES** This commit should be backported to stable kernel
-trees. Here's my extensive analysis: **Code Analysis:** The commit adds
-a polarity quirk for the s5m8767 regulator driver by modifying
-`drivers/gpio/gpiolib-of.c`. It adds these entries to the
-`of_gpio_try_fixup_polarity` function: ```c #if
-IS_ENABLED(CONFIG_REGULATOR_S5M8767) /bin /bin.usr-is-merged /boot /dev
-/etc /home /init /lib /lib.usr-is-merged /lib64 /lost+found /media /mnt
-/opt /proc /root /run /sbin /sbin.usr-is-merged /snap /srv /sys /tmp
-/usr /var 0001-Fix-Clippy-warnings.patch 0002-Enhance-inference-prompt-
-to-utilize-CVEKERNELDIR-whe.patch 0003-Update-to-latest-version-of-
-clap.patch Cargo.lock Cargo.toml LICENSE README.md
-analyze_merge_commit.sh io_uring_analysis.txt ksmbd_analysis.txt
-merge_commit_analysis.txt model prompt src target test_gpio_cleanup.txt
-test_patch.txt According to S5M8767, the DVS and DS pin are 0001-Fix-
-Clippy-warnings.patch 0002-Enhance-inference-prompt-to-utilize-
-CVEKERNELDIR-whe.patch 0003-Update-to-latest-version-of-clap.patch
-Cargo.lock Cargo.toml LICENSE README.md analyze_merge_commit.sh
-io_uring_analysis.txt ksmbd_analysis.txt merge_commit_analysis.txt model
-prompt src target test_gpio_cleanup.txt test_patch.txt active-high
-signals. However, exynos5250-spring.dts use 0001-Fix-Clippy-
-warnings.patch 0002-Enhance-inference-prompt-to-utilize-CVEKERNELDIR-
-whe.patch 0003-Update-to-latest-version-of-clap.patch Cargo.lock
-Cargo.toml LICENSE README.md analyze_merge_commit.sh
-io_uring_analysis.txt ksmbd_analysis.txt merge_commit_analysis.txt model
-prompt src target test_gpio_cleanup.txt test_patch.txt active-low
-setting. model/ prompt/ src/ target/ { "samsung,s5m8767-pmic",
-"s5m8767,pmic-buck-dvs-gpios", true }, { "samsung,s5m8767-pmic",
-"s5m8767,pmic-buck-ds-gpios", true }, #endif ``` **Why this should be
-backported:** 1. **Clear Bug Fix**: This fixes incorrect GPIO polarity
-in existing Device Tree Source (DTS) files. The commit message clearly
-states that `exynos5250-spring.dts` incorrectly specifies "active low"
-polarity while the S5M8767 datasheet specifies these signals as "active
-high". 2. **Follows Established Pattern**: This change follows the exact
-same pattern as the similar commits I examined, all of which were marked
-as "Backport Status: YES". The structure and purpose are identical to
-successful backports like the TSC2005, Himax LCD, and Lantiq PCI quirks.
-3. **Preparation for Driver Conversion**: The commit message indicates
-this is a "prepare patch for switching s5m8767 regulator driver to use
-GPIO descriptor". Without this quirk, the driver conversion would break
-existing hardware using incorrect DTS polarity. 4. **Small and
-Contained**: The change is minimal - only 8 lines of code adding two
-entries to an existing quirk table. It's confined to the GPIO polarity
-handling subsystem. 5. **No Architectural Changes**: This doesn't change
-any kernel architecture or introduce new features. It's purely a
-compatibility fix for existing hardware. 6. **Critical for Hardware
-Functionality**: DVS (Dynamic Voltage Scaling) and DS (Deep Sleep) GPIO
-lines are critical for power management. Incorrect polarity could lead
-to system instability, power management failures, or hardware damage. 7.
-**Well-Tested Pattern**: The `of_gpio_try_fixup_polarity` mechanism is
-well-established and has been successfully used for similar fixes across
-multiple subsystems. 8. **Prevents Regression**: When the s5m8767 driver
-is converted to use GPIO descriptors (which respect polarity flags),
-existing systems with incorrect DTS would break without this quirk.
-**Risk Assessment:** - **Very Low Risk**: The change only affects
-devices with "samsung,s5m8767-pmic" compatible string and specific GPIO
-property names - **Contained Impact**: Only affects the specific GPIO
-properties mentioned, no broader system impact - **Follows Stable
-Rules**: Fixes important bugs with minimal risk, exactly what stable
-trees are for The commit perfectly fits the stable tree criteria: it's a
-targeted bug fix for existing hardware, has minimal risk of regression,
-and prevents functional issues when the related driver is modernized.
+Yours,
+Linus Walleij
 
- drivers/gpio/gpiolib-of.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8=
+:
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index a0a2a0f75bba4..c1e83b2926ae4 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -203,6 +203,15 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
- 		 */
- 		{ "lantiq,pci-xway",	"gpio-reset",	false },
- #endif
-+#if IS_ENABLED(CONFIG_REGULATOR_S5M8767)
-+		/*
-+		 * According to S5M8767, the DVS and DS pin are
-+		 * active-high signals. However, exynos5250-spring.dts use
-+		 * active-low setting.
-+		 */
-+		{ "samsung,s5m8767-pmic", "s5m8767,pmic-buck-dvs-gpios", true },
-+		{ "samsung,s5m8767-pmic", "s5m8767,pmic-buck-ds-gpios", true },
-+#endif
- #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
- 		/*
- 		 * DTS for Nokia N900 incorrectly specified "active high"
--- 
-2.39.5
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.16-1
+
+for you to fetch changes up to 08dcbe30be481bc66eb5ee1e82a577d64e451612:
+
+  pinctrl: freescale: Add support for imx943 pinctrl (2025-05-21 10:12:14 +=
+0200)
+
+----------------------------------------------------------------
+Pin control bulk changes for v6.16:
+
+Core changes:
+
+- Add the devres devm_pinctrl_register_mappings() call that can
+  register some pin control machine mappings and have them go away
+  with the associated device.
+
+New drivers:
+
+- Support for the Mediatek MT6893 and MT8196 SoCs.
+
+- Support for the Renesas RZ/V2N SoC.
+
+- Support for the NXP Freescale i.MX943 SoC.
+
+Improvements:
+
+- Per-SoC suspend/resume callbacks in the Samsung drivers.
+
+- Set all pins as input (High-Z) at probe in the MCP23S08 driver.
+
+- Switch most GPIO chips to use the setters/getters with a return
+  value.
+
+- EGPIO support in the Qualcomm QCM2290 driver.
+
+- Fix up the number of available GPIO lines in Qualcomm QCS8300
+  and QCS615.
+
+----------------------------------------------------------------
+Alexander Stein (2):
+      pinctrl: freescale: Depend imx-scu driver on OF
+      pinctrl: freescale: Enable driver if platform is enabled.
+
+Andy Shevchenko (1):
+      pinctrl: at91: Fix possible out-of-boundary access
+
+AngeloGioacchino Del Regno (2):
+      dt-bindings: pinctrl: mediatek: Add support for MT6893
+      pinctrl: mediatek: Add pinctrl driver for MT6893 Dimensity 1200
+
+Bartosz Golaszewski (37):
+      pinctrl: at91-pio4: use new GPIO line value setter callbacks
+      pinctrl: rk805: use new GPIO line value setter callbacks
+      pinctrl: abx500: enable building modules with COMPILE_TEST=3Dy
+      pinctrl: abx500: use new GPIO line value setter callbacks
+      pinctrl: meson: use new GPIO line value setter callbacks
+      pinctrl: amlogic-a4: use new GPIO line value setter callbacks
+      pinctrl: sx150x: use new GPIO line value setter callbacks
+      pinctrl: ocelot: use new GPIO line value setter callbacks
+      pinctrl: cy8c95x0: use new GPIO line value setter callbacks
+      pinctrl: qcom: lpass-lpi: use new GPIO line value setter callbacks
+      pinctrl: qcom: msm: use new GPIO line value setter callbacks
+      pinctrl: qcom: spmi-gpio: use new GPIO line value setter callbacks
+      pinctrl: qcom: spmi-mpp: use new GPIO line value setter callbacks
+      pinctrl: qcom: ssbi-gpio: use new GPIO line value setter callbacks
+      pinctrl: qcom: ssbi-mpp: use new GPIO line value setter callbacks
+      pinctrl: amd: use new GPIO line value setter callbacks
+      pinctrl: axp209: use new GPIO line value setter callbacks
+      pinctrl: stmfx: use new GPIO line value setter callbacks
+      pinctrl: owl: use new GPIO line value setter callbacks
+      pinctrl: stm32: use new GPIO line value setter callbacks
+      pinctrl: ingenic: use new GPIO line value setter callbacks
+      pinctrl: microchip-sgpio: use new GPIO line value setter callbacks
+      pinctrl: at91: allow building the module with COMPILE_TEST=3Dy
+      pinctrl: at91: use new GPIO line value setter callbacks
+      pinctrl: armada-37xx: use new GPIO line value setter callbacks
+      pinctrl: pistachio: use new GPIO line value setter callbacks
+      pinctrl: samsung: use new GPIO line value setter callbacks
+      pinctrl: at91: drop unneeded dependency on OF_GPIO
+      pinctrl: mediatek: airoha: use new GPIO line value setter callbacks
+      pinctrl: mediatek: paris: don't double-check the GPIO number
+      pinctrl: mediatek: paris: use new GPIO line value setter callbacks
+      pinctrl: mediatek: moore: use new GPIO line value setter callbacks
+      pinctrl: mediatek: common: use new GPIO line value setter callbacks
+      pinctrl: bcm: nsp-gpio: use new GPIO line value setter callbacks
+      pinctrl: bcm: iproc-gpio: use new GPIO line value setter callbacks
+      pinctrl: bcm2835: use new GPIO line value setter callbacks
+      pinctrl: add stubs for OF-specific pinconf functions
+
+Cathy Xu (1):
+      dt-bindings: pinctrl: mediatek: Add support for mt8196
+
+Charles Han (1):
+      pinctrl: qcom: tlmm-test: Fix potential null dereference in tlmm
+kunit test
+
+Frank Li (2):
+      dt-bindings: pinctrl: convert fsl,vf610-pinctrl.txt to yaml format
+      dt-bindings: pinctrl: convert fsl,imx7ulp-pinctrl.txt to yaml format
+
+Gabor Juhos (7):
+      pinctrl: armada-37xx: use correct OUTPUT_VAL register for GPIOs > 31
+      pinctrl: armada-37xx: set GPIO output value before setting direction
+      pinctrl: armada-37xx: propagate error from
+armada_37xx_gpio_direction_output()
+      pinctrl: armada-37xx: propagate error from armada_37xx_gpio_get()
+      pinctrl: armada-37xx: propagate error from
+armada_37xx_pmx_gpio_set_direction()
+      pinctrl: armada-37xx: propagate error from
+armada_37xx_gpio_get_direction()
+      pinctrl: armada-37xx: propagate error from armada_37xx_pmx_set_by_nam=
+e()
+
+Guodong Liu (1):
+      pinctrl: mediatek: Add pinctrl driver on mt8196
+
+Hao Chang (2):
+      pinctrl: mediatek: Fix the invalid conditions
+      pinctrl: mediatek: pinctrl: mediatek: add mt8196 eint pin
+
+Jacky Bai (1):
+      pinctrl: freescale: Add support for imx943 pinctrl
+
+John Madieu (1):
+      pinctrl: apple: Make regmap_config static const and fix indentation
+
+Krzysztof Kozlowski (5):
+      pinctrl: meson: Do not enable by default during compile testing
+      pinctrl: uniphier: Do not enable by default during compile testing
+      dt-bindings: pinctrl: mediatek: Drop unrelated nodes from DTS example
+      dt-bindings: pinctrl: mediatek: Correct indentation and style in
+DTS example
+      pinctrl: meson: Drop unused aml_pctl_find_group_by_name()
+
+Lad Prabhakar (1):
+      pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+
+Lijuan Gao (4):
+      dt-bindings: pinctrl: qcom: correct gpio-ranges in examples for qcs61=
+5
+      dt-bindings: pinctrl: qcom: correct gpio-ranges in examples for qcs83=
+00
+      pinctrl: qcom: correct the ngpios entry for QCS615
+      pinctrl: qcom: correct the ngpios entry for QCS8300
+
+Linus Walleij (4):
+      pinctr: nomadik: abx500: Restrict compile test
+      Merge tag 'renesas-pinctrl-for-v6.16-tag1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
+into devel
+      Merge tag 'samsung-pinctrl-6.16' of
+https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung into
+devel
+      Merge branch 'ib-armada-for-v6.16' into devel
+
+Mike Looijmans (1):
+      pinctrl: mcp23s08: Reset all pins to input at probe
+
+N=C3=ADcolas F. R. A. Prado (1):
+      pinctrl: mediatek: eint: Fix invalid pointer dereference for v1 platf=
+orms
+
+Peter Griffin (4):
+      pinctrl: samsung: refactor drvdata suspend & resume callbacks
+      pinctrl: samsung: add dedicated SoC eint suspend/resume callbacks
+      pinctrl: samsung: add gs101 specific eint suspend/resume callbacks
+      pinctrl: samsung: Add filter selection support for alive bank on gs10=
+1
+
+Thomas Richard (2):
+      pinctrl: remove extern specifier for functions in machine.h
+      pinctrl: core: add devm_pinctrl_register_mappings()
+
+Wentao Liang (1):
+      pinctrl: at91: Add error handling for pinctrl_utils_add_map_mux()
+
+Wojciech Slenska (1):
+      pinctrl: qcom: pinctrl-qcm2290: Add egpio support
+
+Xianwei Zhao (1):
+      dt-bindings: pinctl: amlogic,pinctrl-a4: Add compatible string for A5
+
+Yixun Lan (2):
+      dt-bindings: pinctrl: spacemit: add clock and reset property
+      pinctrl: spacemit: add clock support for K1 SoC
+
+ .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       |    7 +-
+ .../bindings/pinctrl/fsl,imx7ulp-iomuxc1.yaml      |   99 +
+ .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt       |   53 -
+ .../bindings/pinctrl/fsl,vf610-iomuxc.yaml         |   83 +
+ .../bindings/pinctrl/fsl,vf610-pinctrl.txt         |   41 -
+ .../bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml  |   95 +-
+ .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml  |    5 -
+ .../bindings/pinctrl/mediatek,mt6893-pinctrl.yaml  |  193 ++
+ .../bindings/pinctrl/mediatek,mt7622-pinctrl.yaml  |   56 +-
+ .../bindings/pinctrl/mediatek,mt8183-pinctrl.yaml  |   70 +-
+ .../bindings/pinctrl/mediatek,mt8192-pinctrl.yaml  |   78 +-
+ .../bindings/pinctrl/mediatek,mt8196-pinctrl.yaml  |  236 ++
+ .../bindings/pinctrl/qcom,qcs615-tlmm.yaml         |    2 +-
+ .../bindings/pinctrl/qcom,qcs8300-tlmm.yaml        |    2 +-
+ .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      |   18 +
+ drivers/pinctrl/Kconfig                            |    4 +-
+ drivers/pinctrl/actions/pinctrl-owl.c              |    8 +-
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c              |    9 +-
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |    6 +-
+ drivers/pinctrl/bcm/pinctrl-nsp-gpio.c             |    6 +-
+ drivers/pinctrl/core.c                             |   29 +
+ drivers/pinctrl/freescale/Kconfig                  |   11 +
+ drivers/pinctrl/freescale/pinctrl-imx-scmi.c       |    4 +
+ drivers/pinctrl/mediatek/Kconfig                   |   22 +
+ drivers/pinctrl/mediatek/Makefile                  |    2 +
+ drivers/pinctrl/mediatek/mtk-eint.c                |   30 +-
+ drivers/pinctrl/mediatek/mtk-eint.h                |    7 +-
+ drivers/pinctrl/mediatek/pinctrl-airoha.c          |   19 +-
+ drivers/pinctrl/mediatek/pinctrl-moore.c           |   18 +-
+ drivers/pinctrl/mediatek/pinctrl-mt6893.c          |  879 ++++++
+ drivers/pinctrl/mediatek/pinctrl-mt8196.c          | 1860 ++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c   |    9 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |   15 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6893.h      | 2283 +++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h      | 3085 ++++++++++++++++=
+++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c           |   29 +-
+ drivers/pinctrl/meson/Kconfig                      |   24 +-
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c         |   22 +-
+ drivers/pinctrl/meson/pinctrl-meson.c              |    6 +-
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |   43 +-
+ drivers/pinctrl/nomadik/Kconfig                    |    6 +-
+ drivers/pinctrl/nomadik/pinctrl-abx500.c           |   12 +-
+ drivers/pinctrl/pinconf.h                          |   17 +
+ drivers/pinctrl/pinctrl-amd.c                      |    7 +-
+ drivers/pinctrl/pinctrl-apple-gpio.c               |   30 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c                |   18 +-
+ drivers/pinctrl/pinctrl-at91.c                     |   21 +-
+ drivers/pinctrl/pinctrl-axp209.c                   |   35 +-
+ drivers/pinctrl/pinctrl-cy8c95x0.c                 |   17 +-
+ drivers/pinctrl/pinctrl-ingenic.c                  |    8 +-
+ drivers/pinctrl/pinctrl-mcp23s08.c                 |    8 +
+ drivers/pinctrl/pinctrl-microchip-sgpio.c          |    8 +-
+ drivers/pinctrl/pinctrl-ocelot.c                   |   17 +-
+ drivers/pinctrl/pinctrl-pistachio.c                |    8 +-
+ drivers/pinctrl/pinctrl-rk805.c                    |   26 +-
+ drivers/pinctrl/pinctrl-scmi.c                     |    1 +
+ drivers/pinctrl/pinctrl-stmfx.c                    |   13 +-
+ drivers/pinctrl/pinctrl-sx150x.c                   |   23 +-
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c           |    6 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |    6 +-
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c             |   70 +-
+ drivers/pinctrl/qcom/pinctrl-qcs615.c              |    2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c             |    2 +-
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    6 +-
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            |    6 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |    7 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            |    7 +-
+ drivers/pinctrl/qcom/tlmm-test.c                   |    1 +
+ drivers/pinctrl/renesas/Kconfig                    |    1 +
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c            |  299 +-
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     |   52 +-
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |  294 +-
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |   28 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |   34 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    8 +-
+ drivers/pinctrl/spacemit/pinctrl-k1.c              |   10 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |    7 +-
+ drivers/pinctrl/uniphier/Kconfig                   |    2 +-
+ include/linux/pinctrl/machine.h                    |   19 +-
+ 79 files changed, 9753 insertions(+), 857 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-iomuxc1.yaml
+ delete mode 100644
+Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/fsl,vf610-iomuxc.yaml
+ delete mode 100644
+Documentation/devicetree/bindings/pinctrl/fsl,vf610-pinctrl.txt
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/mediatek,mt6893-pinctrl.yaml
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6893.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8196.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6893.h
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h
 
