@@ -1,170 +1,167 @@
-Return-Path: <linux-gpio+bounces-20779-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20780-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB67BAC8819
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 08:03:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECFF0AC89B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 10:06:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A326C1BA6FC9
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 06:04:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B60D54E1BB7
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 May 2025 08:06:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB45C1F0984;
-	Fri, 30 May 2025 06:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="1RHkxvfZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ie/YWIY8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19FF202F6D;
+	Fri, 30 May 2025 08:06:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AAF155C87;
-	Fri, 30 May 2025 06:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FB038B;
+	Fri, 30 May 2025 08:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748585021; cv=none; b=ps+UyY+FOAYfT0WtXe8Qt6ioQ1ClsIGxhvMJWfdDgWrZEWKwz6FYhySShOLleO+yxE3h0Gju8qTTE81MZtZEk2AH9tAunkFS97FA072hjL1u85jnhVQmBLOOBER7NnW1OARSRPjENrSMXtqmz8bZ/NMnxFk4rORrYoIPVcjsryU=
+	t=1748592397; cv=none; b=PS1DMPywh9PtnL0dZuCj/YHcTNBKnnoZrvk1rnDpyJ87BF+x62/wVUy0mNklku5emeuQwx3TP5DBXlZq2wAdUqJU4LP2uwrtfIZTdz0dq2UBUgb/ibKaZdoB9b0B2Oqlnka6D9OwE5t0lZ2hoqFSM2XWKHwC3kygD7PjFyoRBG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748585021; c=relaxed/simple;
-	bh=OZddS4g8nHiT92Hjmd8MP9h8P53X3sIYXOHERf0QsDQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qLZ/12CHQTbHv8UJ5az7REdqiF8fz+bazR+Wa4L5J5vwA8TUQqQFYD5RsNp+pMo7VYo+daHcgcpueVzBv8MnCp6/D35zYto9ThjclBY7UaKmeppoNqDcpViFP2i8d39JywONeR3pGMU2ip4tXCYplnlaWztN2Jxv9PQoakzsmUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=1RHkxvfZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ie/YWIY8; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 49795114015E;
-	Fri, 30 May 2025 02:03:38 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 30 May 2025 02:03:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748585018;
-	 x=1748671418; bh=i4haqSXLls4cGXCJV0jsL0/1LVmc6rWPImypim9zABc=; b=
-	1RHkxvfZRR7Km8IoSd1pTKrCV3lbuBltgiXlAz9CPu/cZM4DaR1rTQcvh+/Q9iQc
-	/qV/UpPn2bVRh1TIC3Jv4JiknU5ASCjckII5jnWHlDVfODCwLZ+uFACccUf8ZYJy
-	cbY470Oe58LhyVUG+uxY4/boQCUb/5HIkLG8K9R7+Bdk0ySexafuDe4VDgpqlDJ1
-	ho/MyP+uu8XpOjjeQ9F+kijniawhTH/7mAC5lWKxPfbfA/oVag0t1V7NpANMdc9I
-	KW6CK5NxZrjrRxfFXez+YddLTa/cjFDQAxzLjm2IrLnotIDuEFuRlIDR/sV36//P
-	bDXgW3jn0KNoQh3/otcjzQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748585018; x=
-	1748671418; bh=i4haqSXLls4cGXCJV0jsL0/1LVmc6rWPImypim9zABc=; b=I
-	e/YWIY87T+cUEAvQFtppd7cjOR332cAEv+X17P8BwTgZKHIXebSBUPV1a9BEtZ7R
-	b5U2BaEPF0H5QsgBj/0WtW/lAInLK1rW84pUo+urcmupFfI7NhvCpquRb3G4rArg
-	ahqi8ChDGt9a/AHCW4n82scvtV2J89YxCw5dVt8t/UArIGMJLnbYjxIhxcZ+veL3
-	x701C9FG8q4Q+s+bXLnS9UBKsBr4UVrSdzCdKcf/B0IqglFYkSa/BznyqbAkauPc
-	lJgZGXHpaIl1EY7BKrVqSp8K6qvCZITGxapyjj4wBPJYnTO9i2RfqBSPkVyVHZGJ
-	P8Lz+wWjFQwXWstVnz3EA==
-X-ME-Sender: <xms:OEo5aFMSBGzHZtO45qItzUyweRayyBWmiZtmaF1FoqeKZHG0B8rYzw>
-    <xme:OEo5aH97rMybNfXNW7BYwlmAOI1LHYHd73OY6mx1Y9PJ_s2BIJkTSRZSU9-Fl0rFY
-    Lmpnuo-doxr5lJOLqM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkedvgeculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefk
-    jghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfd
-    cuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpeefhfehteffuddv
-    gfeigefhjeetvdekteekjeefkeekleffjeetvedvgefhhfeihfenucffohhmrghinhepkh
-    gvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepfeejpdhmoh
-    guvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvghkrdhkihgvrhhnrghnsegrmhgu
-    rdgtohhmpdhrtghpthhtohepughrrghgrghnrdgtvhgvthhitgesrghmugdrtghomhdprh
-    gtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthht
-    ohepmhhtuhhrqhhuvghtthgvsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopegsrh
-    hglhessghguggvvhdrphhlpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohho
-    thhlihhnrdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlh
-    hinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohht
-    lhhinhdrtghomhdprhgtphhtthhopegstghmqdhkvghrnhgvlhdqfhgvvggusggrtghkqd
-    hlihhsthessghrohgruggtohhmrdgtohhm
-X-ME-Proxy: <xmx:OEo5aEQH2Q6JkkQH-Mlv0t1AMoGS16Ov8O8B30zEuqzVmPS6okklKg>
-    <xmx:OEo5aBucgj621crqtYvLM-vDiDsAUtyFBxlpmn2KDBs-BWsGvxW41g>
-    <xmx:OEo5aNd9BIUZkutK3ua0dDcK95tdzyAXLq6yuQIGKaAKzADNQwuc5g>
-    <xmx:OEo5aN1aE6H6kxyxHxd0clkYHHcMNSvW3A6L6TujH5b7Wplg8PK8MA>
-    <xmx:Oko5aPQ2arYbS3SdyF_6oXUPjPShCgul_31qN6OgSnW-bIWEuAIVFICC>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9918B700062; Fri, 30 May 2025 02:03:36 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1748592397; c=relaxed/simple;
+	bh=lvLxyVrYQzJysV3uOxVPsS5JhN/ohssoYL5mRw3MV+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wu0Iq8xxEEz2i+lDQombBrC+Hzki611Bqu3MckStmGSzufIzCTBpah+B19aT8u6/LCCxOsZ7w4rQXMHclqJXhj/KTlLGVk/BjOGfDam7ywnRC2p23F1Sh9B3MrMatXWKj9wmNTGxaTRwpCFPlS5uwaLCQrY0vg7y+Wg2vmV3I3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-87dfde2aea2so467738241.2;
+        Fri, 30 May 2025 01:06:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748592390; x=1749197190;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UODADZBFNNuhdOjNi7w1d1lWaPaCSwIUX58mKie6mVI=;
+        b=oNlFZsYdIE7gwINfDQw+t7ZjXs9pJFH2MiJIefyCXFRNb3LoyWIFRswXPo3vKrwZ0F
+         F55MT1izLI/2R+uV99dSjF5pNpfRbhCxbIBHXIoPR63zMmlom8CM6bndHjrEA1gQ19FH
+         upNBiHDADq5/3yDkSDQatZwDVhN9CwwK9pm9myVvQ3wTqMzfb9gMm6Pf3vE/9fIQBwlG
+         FPBMRXwCfClsTcXqfPV1OzVidxCuej9iNI0iOyy5Kbnb668jNV3uNxUWaky35sTb9OLv
+         ukGfw0j98Qkb0pLiOWTpuSckZeSqHEAnxfJllb9Psp4S7HLcgd6b/LTynWjoLZRdFM0h
+         Fnzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUB6rnhVVrN++sOInR6FEmPk2eDAoCMYh5ClQd83Js5Ns/5ppT9QL9I2iP2K+DR6gPxpthZGswbgAYrBF81@vger.kernel.org, AJvYcCUrZFgu/FNVDqaAlnrZJlZ2DcFPnG1zKJTf506odnyBQf86ukoNglHn1vU89nIUJhh5RZyxXhf56aj+@vger.kernel.org, AJvYcCVZO/1q/TLnFA5aZpgdNvMljM4KpXOY1oJQ4GWOISsjNwnPGNGgrJTu4UmSY2YGn087TV12NncXWiDfbYw=@vger.kernel.org, AJvYcCWdG9N/PeiGpZPwLWL7rQ7J5PAohS1x75HzTmrCyhyAKPGJ3lodStRgSQuih5w2pZAJFclaPx7wuQ/c@vger.kernel.org, AJvYcCXtnh+VMDUiq2uL04wSu7KB0McGMcV4mncuOvHR48xm3txR914KqHLrdDovfocMmyDYZYazL21QBqKpZJhKNqHlhnE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsXIuZPYofvTmPdqTrRKkA5c4bWeMD32QWLeHOmuRIQrmettog
+	WE5pWEeI1jMrYAcrH+R5mKw6nl+kw02d4lDow2JRgGv7M5DXiaTvatO7N1jvSEFj
+X-Gm-Gg: ASbGncvyu+cOWnwfz9IEBFd/IFUs0lh5xV8N3akIUKqjjnao3O3GNZpu+YK/KjmF315
+	c353egU9FOOC+udoVmKpZO0tpatocPWNw4A/R0A6y/sgJmzn30nCWqRQONrEwERaihroXw6zsB3
+	fBr2CsJb4OcrgN1Dnb1iUmRSOBN1ZHh7J9tw9FmS6N2Fk2sX4GzQcBEV1sAEzx5ge5htWF5XQzn
+	Qh5MXjRL8wVcKGYiptcZcFk3kpMhcNRwQxTC65UdBWv8a0j0pT5QFiy4mOomgpKu2WWeO7tGlHQ
+	q2W5Fldh/13fvdrk+78LWYwY9nsOp8eoJh206ZpXBPT9fC3TxrAo5QK9bWqiDjfmoqh7pWNUh1t
+	7JZ/lnjGkBf9b0IJtZw==
+X-Google-Smtp-Source: AGHT+IFWq1SXxMlo8s+dLVsk6Dc+TcdJkvf+UTgpCEvKu7cUsL4LnPlY+2mnpsxt3AQ+1ZkyBf/rWQ==
+X-Received: by 2002:a05:6102:508e:b0:4e5:a40b:5a72 with SMTP id ada2fe7eead31-4e6e40d93afmr2320037137.5.1748592390606;
+        Fri, 30 May 2025 01:06:30 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87e2a3b63c9sm2320275241.31.2025.05.30.01.06.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 01:06:29 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-527a2b89a11so728000e0c.2;
+        Fri, 30 May 2025 01:06:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZ5HETBlxCjIl/PE+SBuD3rCQluZPWGPXUYw+I/JLnNUrOsfeysr0WKJXMH9cEdPOkhXHTGR8+jiMz10g=@vger.kernel.org, AJvYcCUoWqKxhuWbBVn2M0caX90mfkkW3cwAqs7yi/7plCkst8iFwQHjJSbz76Hm7OD5/qPRocPp1i6HPRBC@vger.kernel.org, AJvYcCVqj+ulthrjb4OJEy1adZvC7MyimW/EYdxyzOOmHh1EP2fjgiZ50lR4ZTjDmQOCouiLxENqR2LykMIzPKpmrvipOvE=@vger.kernel.org, AJvYcCW87ir6kPgbN15zHj1/9dsZxVH+VY6WoFvnJ94ng4lS0HD1snAI9/gvZ4ynQ6+fA5ky9gojZEmBaO1g@vger.kernel.org, AJvYcCXi0Hxn1n6ckSApWBxIlxO2RWJ1dqZi6n7hQzWDQ+EpJ/0kEXI72JK483G2XIu9NinmCDJhv88WAI/KIoPz@vger.kernel.org
+X-Received: by 2002:a05:6122:17aa:b0:530:677b:1e93 with SMTP id
+ 71dfb90a1353d-53080df1088mr2012964e0c.0.1748592388616; Fri, 30 May 2025
+ 01:06:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tc6bcdd190696c0ef
-Date: Fri, 30 May 2025 08:03:16 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andrea della Porta" <andrea.porta@suse.com>,
- "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: "Michael Turquette" <mturquette@baylibre.com>,
- "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Florian Fainelli" <florian.fainelli@broadcom.com>,
- "Broadcom internal kernel review list"
- <bcm-kernel-feedback-list@broadcom.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
- "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Saravana Kannan" <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Stefan Wahren" <wahrenst@gmx.net>,
- "Herve Codina" <herve.codina@bootlin.com>,
- "Luca Ceresoli" <luca.ceresoli@bootlin.com>,
- "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- "Andrew Lunn" <andrew@lunn.ch>, "Phil Elwell" <phil@raspberrypi.com>,
- "Dave Stevenson" <dave.stevenson@raspberrypi.com>,
- kernel-list@raspberrypi.com, "Matthias Brugger" <mbrugger@suse.com>
-Message-Id: <7934ae2a-3fc5-4ea2-b79a-ecbe668fd032@app.fastmail.com>
-In-Reply-To: <aDholLnKwql-jHm1@apocalypse>
-References: <cover.1748526284.git.andrea.porta@suse.com>
- <0580b026-5139-4079-b1a7-464224a7d239@kernel.org>
- <aDholLnKwql-jHm1@apocalypse>
-Subject: Re: [PATCH v12 0/13] Add support for RaspberryPi RP1 PCI device using a DT
- overlay
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
+ <20250528-pinctrl-const-desc-v1-14-76fe97899945@linaro.org>
+ <CAMuHMdUGDf5n_Fg7pwiPumm95nPUXyH15geAy2ULwY3U+OtZJA@mail.gmail.com> <b6b7fb61-878e-4407-b964-564efb3524b1@linaro.org>
+In-Reply-To: <b6b7fb61-878e-4407-b964-564efb3524b1@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 May 2025 10:06:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUHyLYk0oSN8XDNCXUvLQLe2u0k0noVJLbR+pYWDTB4+w@mail.gmail.com>
+X-Gm-Features: AX0GCFuCNZIpijI8V-LFtD11RdEuCtx09JrM6Rph_c1WT65W3SrLJtlImd30cUI
+Message-ID: <CAMuHMdUHyLYk0oSN8XDNCXUvLQLe2u0k0noVJLbR+pYWDTB4+w@mail.gmail.com>
+Subject: Re: [PATCH 14/17] pinctrl: renesas: Move fixed assignments to
+ 'pinctrl_desc' definition
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Joel Stanley <joel@jms.id.au>, Avi Fishman <avifishman70@gmail.com>, 
+	Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, 
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
+	Benjamin Fair <benjaminfair@google.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Jesper Nilsson <jesper.nilsson@axis.com>, 
+	Lars Persson <lars.persson@axis.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Damien Le Moal <dlemoal@kernel.org>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Michal Simek <michal.simek@amd.com>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@axis.com, linux-riscv@lists.infradead.org, 
+	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 29, 2025, at 16:00, Andrea della Porta wrote:
-> Hi Krzysztof,
+Hi Krzysztof,
+
+CC wsa
+
+On Wed, 28 May 2025 at 19:55, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 28/05/2025 14:54, Geert Uytterhoeven wrote:
+> >>         .pmxops = &rzn1_pmx_ops,
+> >>         .confops = &rzn1_pinconf_ops,
+> >>         .owner = THIS_MODULE,
+> >> +       .pins = rzn1_pins,
+> >> +       .npins = ARRAY_SIZE(rzn1_pins),
+> >>  };
+> >>
+> >>  static int rzn1_pinctrl_parse_groups(struct device_node *np,
+> >> @@ -878,8 +880,6 @@ static int rzn1_pinctrl_probe(struct platform_device *pdev)
+> >>
+> >>         ipctl->dev = &pdev->dev;
+> >>         rzn1_pinctrl_desc.name = dev_name(&pdev->dev);
+> >
+> > ... if you would replace this assignment by a hardcoded name
+> > like "pinctrl-rzn1".
 >
-> On 15:50 Thu 29 May     , Krzysztof Kozlowski wrote:
->> On 29/05/2025 15:50, Andrea della Porta wrote:
->> > *** RESENDING PATCHSET AS V12 SINCE LAST ONE HAS CLOBBERED EMAIL Message-Id ***
->> > 
->> Can you slow down please? It's merge window and you keep sending the
->> same big patchset third time today.
->
-> Sorry for that, I was sending it so Florian can pick it up for this
-> merge window, and I had some trouble with formatting. Hopefully
-> this was the last one.
+> I saw it, but this would not be equivalent. dev_name includes platform
+> bus id, e.g. pinctrl-rzn1.0 which might matter here - conflict of names.
+> Are you sure this would work fine?
 
-That's not how the merge window works, you missed 6.16 long ago:
+There can be only one anyway.
+Most drivers used a fixed name:
 
-Florian sent his pull requests for 6.16 in early may, see
-https://lore.kernel.org/linux-arm-kernel/20250505165810.1948927-1-florian.fainelli@broadcom.com/
+drivers/pinctrl/renesas/pinctrl-rza1.c: rza1_pctl->desc.name = DRIVER_NAME;
+drivers/pinctrl/renesas/pinctrl-rza2.c: priv->desc.name = DRIVER_NAME;
+drivers/pinctrl/renesas/pinctrl-rzg2l.c: pctrl->desc.name = DRV_NAME;
+drivers/pinctrl/renesas/pinctrl-rzn1.c: rzn1_pinctrl_desc.name =
+dev_name(&pdev->dev);
+drivers/pinctrl/renesas/pinctrl-rzt2h.c: desc->name = DRV_NAME;
+drivers/pinctrl/renesas/pinctrl-rzv2m.c: pctrl->desc.name = DRV_NAME;
+drivers/pinctrl/renesas/pinctrl.c: pmx->pctl_desc.name = DRV_NAME;
 
-and he needed time to test the contents before sending them to me.
+It might change the path in debugfs (/sys/kernel/debug/pinctrl/) though.
+Wolfram?
 
-If the driver is ready to be merged now, Florian can pick it up
-after -rc1 is out, and then include it in the 6.17 pull requests
-so I can include them in the next merge window.
+Gr{oetje,eeting}s,
 
-      Arnd
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
