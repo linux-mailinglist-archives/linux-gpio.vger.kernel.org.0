@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-20848-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20849-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81A79AC9EE7
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 Jun 2025 16:50:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D452AC9EEC
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 Jun 2025 16:54:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E3973B5F03
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 Jun 2025 14:50:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 535DB1893148
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 Jun 2025 14:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5894B1E5210;
-	Sun,  1 Jun 2025 14:50:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A4E1EB5E6;
+	Sun,  1 Jun 2025 14:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8267VD6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FI1JHH6N"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0692A10957;
-	Sun,  1 Jun 2025 14:50:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C289B1E7C06;
+	Sun,  1 Jun 2025 14:54:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748789431; cv=none; b=YvrEeQ5YIAkYSxL1QCRtby17Mcfxe14qXbt9+GhWv616dt3PsOHfcQv24TUSW81ls+VmvfVujKKdW+FlYpwRJxT39XJOXQJml59mCRBbdORGvMVQGGYxC94CSvhcZBYZq5YfWWuygeVon4G+pWiAA2fd9j5gxWlSGX7PVvVjBR8=
+	t=1748789661; cv=none; b=DkVNZBg1p44vTHJMBkg19Yl+3dAcSKRK/ROiqKILERGrqw8Mm8Kh5gXvUX96e+7ADxTI+S6sE+BpfEWJMMt2aqrneeR3mncCtGOFVZlSauwIBa5lsTC6nXDYDU4OF7vitOciM7cD+UqfMK8/jgqQx0ugHb8Yu6knh8CX4YSUhzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748789431; c=relaxed/simple;
-	bh=ixaLK9WLy2mg4Der0wkQr0lj50YXHQCYJP5mQDMQsPo=;
+	s=arc-20240116; t=1748789661; c=relaxed/simple;
+	bh=0SVKNrwkWkmDrti3CG+Fax+U+qa5BJbvmazUGLksUNM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cT2LawE8GOSI68ygY4EuZXRZpvf9QOtOiiRbTAILzhjD7izRQ1z29HKVGMhMCjzpAK7DvXGqVDT8zMWrUrgz+0ACZJSh9HJujVLDZkrMtxtVNs8LMVZCbHIiM2qInCEiMJ26KMpoHhr7YIdyRXKLLZ4vjFNadi1WQXLkavHOrbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8267VD6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB0AC4CEE7;
-	Sun,  1 Jun 2025 14:50:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=oCJgkZWpxdFnjpitc6jA2Qxc7ymcUqcwSoPFWHX7lBKZhgPuKyz09KTHyl09YFlq3pQ4etXRkEZ5Fa1GlVc9dxL84XLQIPv+srlntzNheIM2jcISd+BHFPTbrGedULWKA/A/r0upyC/9A/Kg49SMN9auV8zLrnhw4tap2jr58b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FI1JHH6N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378DDC4CEED;
+	Sun,  1 Jun 2025 14:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748789430;
-	bh=ixaLK9WLy2mg4Der0wkQr0lj50YXHQCYJP5mQDMQsPo=;
+	s=k20201202; t=1748789661;
+	bh=0SVKNrwkWkmDrti3CG+Fax+U+qa5BJbvmazUGLksUNM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n8267VD6l0Hdov05vJEg+Y+QeLEiCiDc63+XSPyLjRrURLyEFd7hZuaZVP82F+jX/
-	 M95haVXVWkOs+yTXceBeYdPR4OG68bDCDTGG+l8+2Hi1tkLqM2wkveG44K1penUobi
-	 avUHWFfAyRWBanjtLVut076KC6Sh4GGzO+FB26WXePgf4SJDuppsC1d54Yk+9bNiff
-	 uwl+f+y2bu+4FG/KwIr5pcBdv2hLFHxQ0GLw0OCpHx6gF6xITFOrnz2uBZ33PTr5Np
-	 RqIbAkOlkub240lzvR3/g1a1FewX/u4L9nqrQwBU1s/8zCbBSbKxy9oz1U/2+QbP7w
-	 cumE8QqvDsiEg==
-Message-ID: <a126ee43-3e2e-4cbf-9c36-c41415df78af@kernel.org>
-Date: Sun, 1 Jun 2025 16:50:24 +0200
+	b=FI1JHH6NleFOj/v0947iOZX0VyFgOkg7O+8MaNazxedSro5C4MGFmWSxjPF6cbh2c
+	 mto29fsiGl6ALQU/DoB7TMCOdCPC6ttY/MSY4GgH1x3NWGXDEVieUnEQ58Pv2gCwD8
+	 JBa2pSZgFy+b1HXWjrRXh/pBQJrcrFhqnpYFmMadpy2WA/8irDh7YnkVbfpU4UG4YR
+	 2O9gIOjXFNlsrqY0u1TzT3JfwSufSrGpm9isKNhHG+vaq04XJD3mdJ8hCChSQs7SxS
+	 xGYIEoOPBlqI5xYLpadWGDyVErNSUuEcFoll18C8ID4bNmIutWGsJxjfUdcJWvfQ3Q
+	 6ORocWZa/Rxlg==
+Message-ID: <6d6a7643-fad3-4d3f-b410-3eb6e033c29b@kernel.org>
+Date: Sun, 1 Jun 2025 16:54:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/8] ASoC: dt-bindings: qcom: Manage clock settings for
- ADSP solution
+Subject: Re: [PATCH v4 5/8] arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830
+ speakers amplifier
 To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
  Bjorn Andersson <andersson@kernel.org>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
@@ -64,9 +64,9 @@ Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
  kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-3-quic_pkumpatl@quicinc.com>
- <171b980d-9c50-4891-86dc-e30d712f5384@kernel.org>
- <13b9cbec-3d7a-4deb-b356-685e73fdf2f1@quicinc.com>
+ <20250527111227.2318021-6-quic_pkumpatl@quicinc.com>
+ <c54b2243-fa0b-4de9-a780-e0fab795da25@kernel.org>
+ <319ab5a4-6e01-4d57-8df1-73af1d48eb93@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,43 +112,43 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <13b9cbec-3d7a-4deb-b356-685e73fdf2f1@quicinc.com>
+In-Reply-To: <319ab5a4-6e01-4d57-8df1-73af1d48eb93@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01/06/2025 14:45, Prasad Kumpatla wrote:
->>>         properties:
->>>           clocks:
->>> -          maxItems: 1
->>> +          minItems: 1
->>> +          maxItems: 3
->>>           clock-names:
->>> -          items:
->>> -            - const: mclk
->>> +          oneOf:
->>> +            - items:   # for ADSP based platforms
->>> +                - const: mclk
->>> +                - const: macro
->>> +                - const: dcodec
->>> +            - items:   # for ADSP bypass based platforms
->>> +                - const: mclk
+On 01/06/2025 14:52, Prasad Kumpatla wrote:
+> 
+> 
+> On 5/27/2025 5:29 PM, Krzysztof Kozlowski wrote:
+>> On 27/05/2025 13:12, Prasad Kumpatla wrote:
+>>> +	left_spkr: speaker@0,1 {
+>>> +		compatible = "sdw10217020200";
+>>> +		reg = <0 1>;
+>>> +		powerdown-gpios = <&tlmm 158 GPIO_ACTIVE_LOW>;
+>>> +		#sound-dai-cells = <0>;
+>>> +		sound-name-prefix = "SpkrLeft";
+>>> +		#thermal-sensor-cells = <0>;
+>>> +		vdd-supply = <&vreg_l18b_1p8>;
+>>> +		qcom,port-mapping = <1 2 3 7>;
+>>> +	};
+>>> +
+>>> +	right_spkr: speaker@0,2 {
+>>> +		compatible = "sdw10217020200";
+>>> +		reg = <0 2>;
+>>> +		powerdown-gpios = <&tlmm 158 GPIO_ACTIVE_LOW>;
 >>
->> This device always receives same amount of clocks. Hardware is not
->> different if you decide to not use ADSP.
-> for sc7280 clock handling only supports non-DSP based solution, macro
-
-ONLY?
-
-> and dcodec votes are placed using CPU-Powerdomains. Which are not under
-> clocking properties. In ADSP based platforms macro and dcodec votes 
-> should be placed from ADSP.>
-
-I don't understand this, that's barely a sentence. Anyway if that's
-ONLY, then seems pretty fixed and I don't get why you make it flexible.
-
-Expressing clocks as CPU powerdomains is not really correct.
-
-
+>>
+>> This will fail during runtime. You never booted your DTS.
+> 
+> No, its working fine, didn't seen any issues for far. Please help to 
+> provide at which point of line seen issue or provide more context to 
+> understand for me?
+Okay, so the driver uses non-exclusive GPIO. Well, this should be really
+fixed now. There is no excuse now "cannot work", because I fixed WSA884x
+so new DTS using this method should not be allowed. Non-exclusive in
+this driver is buggy and works by pure coincidence. You should see clear
+warnings and issues during probe, because working device WILL be reset
+by the other device.
 
 Best regards,
 Krzysztof
