@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-20851-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20852-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6941ACA346
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 01:44:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F151ACA32C
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 01:43:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6451D188A131
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 Jun 2025 23:43:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1383616EF73
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 Jun 2025 23:43:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 778EE27E7EF;
-	Sun,  1 Jun 2025 23:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D52DC27F195;
+	Sun,  1 Jun 2025 23:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ao17wwSL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsZu4DGC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE7C27E7D8;
-	Sun,  1 Jun 2025 23:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB3027F170;
+	Sun,  1 Jun 2025 23:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748820532; cv=none; b=gNxv5ivzWiciS2UEt/86N9dNghJm6HvtaFDVPDX8jiiyll/kjqX2GykjCot/oEa0/ZxOjgnTfhpdtbIrmxdhHq8sqdH/b37eW7+oFJUpJKbQJAMekT3T7ADDNrlqwF21XQDh3ahT1mXfHYv4CDyLFhoiNkAZmD/un474+4Frz48=
+	t=1748820533; cv=none; b=u19QFTBxoMaitoRUIJPFGQLNeRzLsiWXSO+gsftcbd8pRRud45vaCDlJTbEWT5PVIAMBbfh4JKAKz8+vCrus9a4+xyMD0m09FWv52J31jvtJ6eQZqOBhKvq86HlFFfwaOzjZTG4/8lsgOHRK9tLXWGqkmkhy5pHa0OjTQaDXqGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748820532; c=relaxed/simple;
-	bh=h38rPSHv9NrOPJgcJVStv0JO2Bs0iDHmgXZ8nMZC1jU=;
+	s=arc-20240116; t=1748820533; c=relaxed/simple;
+	bh=r9WINXBPqT7gwNqiQgu+Kym6QWX2Xe4dut5r/pLkLOE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cE6Vub+kxXjHqLqgCXiySZDEBmWZdqNHb94tRzeYwNizSxFmPfMIkD2x++7a5NI6pyqK7nHrc5Oy1aEtC0Hnvi9iNOdB6A5ZKBGJjTczAS7+7coSnyff913AEHW8UOz3FlkiSLlbcKlz767vlxZa0JYAx/Sxc+6JcMI3N53eEPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ao17wwSL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBAFC4CEE7;
-	Sun,  1 Jun 2025 23:28:50 +0000 (UTC)
+	 MIME-Version; b=Q1nOtNgV2UZbBbLcN4iG4dad7iDx04/ZFKEJkI55hTGkIwN42OGlgETjUGt0xjUGXectu1wYaMHvMk2ob27tUbk2OwOB9N2hEtmwQAQwzXx2B9p+0THdLl3hwa/0fpvpcV+e5bE9mXsu/aI0WUDPyNbGzfJGT2PyhX5Rrfd6G20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsZu4DGC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72682C4CEEE;
+	Sun,  1 Jun 2025 23:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748820532;
-	bh=h38rPSHv9NrOPJgcJVStv0JO2Bs0iDHmgXZ8nMZC1jU=;
+	s=k20201202; t=1748820533;
+	bh=r9WINXBPqT7gwNqiQgu+Kym6QWX2Xe4dut5r/pLkLOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ao17wwSLjKMGccS7x1UbQc0qp9hTEtHYFFs3ZE59B9xEKTxMETKsi0bsM1AU3Zq3T
-	 ZGReuIsH8T7HjraGscI/JBMwKjLhxnSRDRjR6z/0ErGYOskUdmVaCU09ViL5aa4rDA
-	 xWSzbeLmkJ9eu0Zo9rXq3a5vsOzkx7mDPntFkWuGua6yKBbVDn/WU2IIClxG24Uc8G
-	 td3UR/VubWJIV8xAn3tkkRH3t5CwkRo8i4EVxwz/zxurNpAd+C3OlcDyJwGE+dMipC
-	 oMPvbs4nQe9vB4LPGJIJMXhm59yuYa0h+KbhpAshk+fYE8jXivwHvGqLQtylHMl5zp
-	 mSwEfTnno+5NA==
+	b=WsZu4DGCJOaftf3XDZ1ycuKHR8U4abw+EiO59qiAn6CDUzOrSAIh/yD0D2MuzUbdC
+	 Ipb1i9Z6BgakKP7DW4qrfizz7MYVfiZm6gTweOd3GGFWo8Zflpz1ocOncd1WBGtasl
+	 LP8Oa+Kfrqd8DGAwr2dtB3ZKg530rbQHNRAv5NibIPcUcFjEy/tCaNlm+UpEoC9Slz
+	 wZgacSV+pc0cN3mWlDPE3yNvd9P6lqC5Kii+gYcdw88wrXDPBxTC228UNKLJs5Ni9g
+	 MIHiYPvR7sOPdMON8IJJ340+dYZ+ppvUn+n6AvT/Kr/Wc1M+F6DLK1ShyviJy4Q0nW
+	 V26A7i4VbACiw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -48,13 +48,12 @@ Cc: Peng Fan <peng.fan@nxp.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	robert.jarzmik@free.fr,
 	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.15 089/110] gpio: pxa: Make irq_chip immutable
-Date: Sun,  1 Jun 2025 19:24:11 -0400
-Message-Id: <20250601232435.3507697-89-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.15 090/110] gpio: grgpio: Make irq_chip immutable
+Date: Sun,  1 Jun 2025 19:24:12 -0400
+Message-Id: <20250601232435.3507697-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250601232435.3507697-1-sashal@kernel.org>
 References: <20250601232435.3507697-1-sashal@kernel.org>
@@ -71,109 +70,98 @@ Content-Transfer-Encoding: 8bit
 
 From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 20117cf426b677e7aced4e7a1b2b37f6080a46dc ]
+[ Upstream commit a30be40bf1d4437646b6885e7e4e71530e6f82c1 ]
 
 Kernel warns about mutable irq_chips:
 "not an immutable chip, please consider fixing!"
 
-Constify pxa_muxed_gpio_chip, flag the irq_chip as IRQCHIP_IMMUTABLE,
-add the new helper functions, and call the appropriate gpiolib functions.
+Constify grgpio_irq_chip, flag the irq_chip as IRQCHIP_IMMUTABLE, add the
+new helper functions, and call the appropriate gpiolib functions.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20250509-gpio-v1-9-639377c98288@nxp.com
+Link: https://lore.kernel.org/r/20250509-gpio-v1-2-639377c98288@nxp.com
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-**YES** This commit should be backported to stable kernel trees. Here's
-my extensive analysis: ## Backport Analysis: gpio: pxa: Make irq_chip
-immutable ### Code Changes Analysis The commit makes three key changes
-to `drivers/gpio/gpio-pxa.c`: 1. **Makes irq_chip structure const**:
-Changes `static struct irq_chip pxa_muxed_gpio_chip` to `static const
-struct irq_chip pxa_muxed_gpio_chip` 2. **Adds IRQCHIP_IMMUTABLE flag**:
-Includes `.flags = IRQCHIP_IMMUTABLE` in the irq_chip structure 3.
-**Adds resource helper macros**: Includes
-`GPIOCHIP_IRQ_RESOURCE_HELPERS` macro 4. **Updates mask/unmask
-functions**: Adds proper `gpiochip_disable_irq()` and
-`gpiochip_enable_irq()` calls in the mask and unmask functions
-respectively ### Why This Should Be Backported **1. Follows Established
-Pattern** This commit follows the exact same pattern as the reference
-commits marked "YES" for backporting: - Similar to gpio-vf610 (commit
-e6ef4f8ede09) which was backported - Identical to gpio-104-idio-16
-(commit 410a5041aa60) which was backported - Same transformation pattern
-as dozens of other GPIO drivers **2. Fixes Kernel Warning** The commit
-explicitly addresses a kernel warning: "not an immutable chip, please
-consider fixing!" This is the same warning addressed in all the
-reference "YES" commits. **3. Small, Contained Changes** - Only modifies
-one file (`drivers/gpio/gpio-pxa.c`) - Changes are minimal and
-mechanical - No architectural changes or new features - Low risk of
-introducing regressions **4. Important Bug Fix for Users** - Eliminates
-annoying kernel warnings that users encounter - Brings driver in
-compliance with modern kernel IRQ subsystem requirements - Improves
-system reliability by preventing dynamic modification of irq_chip
-callbacks **5. No Side Effects** - The changes are purely structural
-improvements - Maintains identical functionality - Does not change the
-driver's external behavior - Only makes the irq_chip structure immutable
-for safety **6. Critical Subsystem Compliance** - GPIO subsystem
-actively enforces immutable irq_chips - This is part of a kernel-wide
-migration to improve memory safety - Prevents potential security issues
-from dynamic irq_chip modification **7. Hardware Support Impact** The
-PXA GPIO driver supports widely-used ARM processors: - Intel PXA25x,
-PXA26x, PXA27x, PXA3xx series - Marvell PXA93x, MMP, MMP2, PXA1928
-series - These are found in many embedded systems and IoT devices ###
-Comparison with Current Tree The analysis shows that in the current
-kernel tree (`/home/sasha/linux/`), the gpio-pxa.c driver still has the
-old mutable irq_chip structure (line 523: `static struct irq_chip
-pxa_muxed_gpio_chip`), while the target directory shows it has already
-been converted. This confirms this is a legitimate conversion commit
-that needs backporting. ### Risk Assessment **Very Low Risk:** -
-Mechanical transformation following established pattern - No functional
-changes to GPIO operations - Extensive precedent from similar successful
-backports - Changes are compile-time enforced (const keyword) This
-commit represents a straightforward compliance fix that eliminates user-
-visible warnings while improving code safety, making it an ideal
-candidate for stable tree backporting.
+Now let me analyze this commit against stable backporting criteria:
+**YES** ## Analysis: ### 1. Bug Fix Nature This commit fixes a kernel
+warning about mutable irq_chips with the message "not an immutable chip,
+please consider fixing!" This is clearly a bug fix that addresses a
+runtime warning that affects users. ### 2. Code Changes Analysis The
+changes are minimal and well-contained within the grgpio driver: -
+**Line 173**: Added `gpiochip_disable_irq(&priv->gc, d->hwirq);` call in
+`grgpio_irq_mask()` function - **Line 183**: Added
+`gpiochip_enable_irq(&priv->gc, d->hwirq);` call in
+`grgpio_irq_unmask()` function - **Line 191**: Made `grgpio_irq_chip`
+struct `const` (immutable) - **Lines 196-197**: Added
+`IRQCHIP_IMMUTABLE` flag and `GPIOCHIP_IRQ_RESOURCE_HELPERS` macro ###
+3. Pattern Consistency with Similar Commits This commit follows the
+exact same pattern as the approved backport commits in the reference
+examples: - **Similar to gpio-104-idio-16** (Status: YES): Same pattern
+of making irq_chip const, adding IRQCHIP_IMMUTABLE flag, and adding
+gpiochip_enable/disable_irq calls - **Similar to gpio-vf610** (Status:
+YES): Identical changes - const irq_chip, IRQCHIP_IMMUTABLE, and proper
+helper function calls - **Similar to gpio-104-dio-48e** (Status: YES):
+Same transformation pattern ### 4. Risk Assessment - **Low Risk**:
+Changes are mechanical transformations following established GPIO
+subsystem patterns - **No Architectural Changes**: The commit doesn't
+modify core logic, just adapts to new GPIO framework requirements -
+**Well-Tested Pattern**: This exact change pattern has been applied
+across multiple GPIO drivers successfully ### 5. Stable Tree Compliance
+- **Important Bug Fix**: Eliminates kernel warnings that users encounter
+- **Minimal Risk**: The changes follow well-established patterns already
+proven in other GPIO drivers - **Contained Changes**: All modifications
+are within a single driver file with no cross-subsystem impact - **No
+New Features**: This is purely a compliance fix for the GPIO framework
+requirements ### 6. Framework Compliance The commit brings the grgpio
+driver into compliance with the modern GPIO framework's requirements for
+immutable irq_chips, which is a necessary change to prevent kernel
+warnings and ensure proper resource management. The changes are
+essential for maintaining driver functionality in current kernels and
+preventing user-visible warnings, making this an ideal candidate for
+stable tree backporting.
 
- drivers/gpio/gpio-pxa.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-grgpio.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-index 91cea97255fa6..530ddeaba2f19 100644
---- a/drivers/gpio/gpio-pxa.c
-+++ b/drivers/gpio/gpio-pxa.c
-@@ -497,6 +497,8 @@ static void pxa_mask_muxed_gpio(struct irq_data *d)
- 	gfer = readl_relaxed(base + GFER_OFFSET) & ~GPIO_bit(gpio);
- 	writel_relaxed(grer, base + GRER_OFFSET);
- 	writel_relaxed(gfer, base + GFER_OFFSET);
+diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+index 30a0522ae735f..68cca7751c0e5 100644
+--- a/drivers/gpio/gpio-grgpio.c
++++ b/drivers/gpio/gpio-grgpio.c
+@@ -170,6 +170,8 @@ static void grgpio_irq_mask(struct irq_data *d)
+ 	grgpio_set_imask(priv, offset, 0);
+ 
+ 	raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
 +
-+	gpiochip_disable_irq(&pchip->chip, gpio);
++	gpiochip_disable_irq(&priv->gc, d->hwirq);
  }
  
- static int pxa_gpio_set_wake(struct irq_data *d, unsigned int on)
-@@ -516,17 +518,21 @@ static void pxa_unmask_muxed_gpio(struct irq_data *d)
- 	unsigned int gpio = irqd_to_hwirq(d);
- 	struct pxa_gpio_bank *c = gpio_to_pxabank(&pchip->chip, gpio);
+ static void grgpio_irq_unmask(struct irq_data *d)
+@@ -178,6 +180,7 @@ static void grgpio_irq_unmask(struct irq_data *d)
+ 	int offset = d->hwirq;
+ 	unsigned long flags;
  
-+	gpiochip_enable_irq(&pchip->chip, gpio);
-+
- 	c->irq_mask |= GPIO_bit(gpio);
- 	update_edge_detect(c);
++	gpiochip_enable_irq(&priv->gc, d->hwirq);
+ 	raw_spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
+ 
+ 	grgpio_set_imask(priv, offset, 1);
+@@ -185,11 +188,13 @@ static void grgpio_irq_unmask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
  }
  
--static struct irq_chip pxa_muxed_gpio_chip = {
-+static const struct irq_chip pxa_muxed_gpio_chip = {
- 	.name		= "GPIO",
- 	.irq_ack	= pxa_ack_muxed_gpio,
- 	.irq_mask	= pxa_mask_muxed_gpio,
- 	.irq_unmask	= pxa_unmask_muxed_gpio,
- 	.irq_set_type	= pxa_gpio_irq_type,
- 	.irq_set_wake	= pxa_gpio_set_wake,
+-static struct irq_chip grgpio_irq_chip = {
++static const struct irq_chip grgpio_irq_chip = {
+ 	.name			= "grgpio",
+ 	.irq_mask		= grgpio_irq_mask,
+ 	.irq_unmask		= grgpio_irq_unmask,
+ 	.irq_set_type		= grgpio_irq_set_type,
 +	.flags = IRQCHIP_IMMUTABLE,
 +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
  };
  
- static int pxa_gpio_nums(struct platform_device *pdev)
+ static irqreturn_t grgpio_irq_handler(int irq, void *dev)
 -- 
 2.39.5
 
