@@ -1,144 +1,178 @@
-Return-Path: <linux-gpio+bounces-20873-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20874-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DA10ACA9FB
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 09:38:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09A7FACAA21
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 09:55:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E08E83AECDD
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 07:37:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE1F43A6AFB
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 07:54:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27B911AF0BF;
-	Mon,  2 Jun 2025 07:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 786B91BEF8C;
+	Mon,  2 Jun 2025 07:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RaOXfqCB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43BC2C324C;
-	Mon,  2 Jun 2025 07:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D032C3255
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Jun 2025 07:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748849889; cv=none; b=UHHlr+rIeEtAWUXQKpm+0E8MYtin3m3fhazfOM/vrUM/VBStC33vi2RDNBcmyFfYMRFs8uSHf8OReLcEXTS5DihyfVCXvAzjhyaGsyBuCGwUmPlY8wExGoSj+5xosnLQXekHfSF5GeaH7Z4zQQVlAldUAhMEOsS83DhXwj4J8bc=
+	t=1748850904; cv=none; b=F+HjQhhAEbMwjXKTCdEBNTqHBXbCJ+/OD5QjwXLKInLYKCaarrlgYlfAN1zQnMh14cLs/RkntVRUjfZIN445Dz7x44egwZXfZzfb4VL8P8xCyOzshC+QtCJzIuQcdubTQCOMeXsTLRBXXqtqe2VHxUKUK6Ddg8/dduz7XX6FwqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748849889; c=relaxed/simple;
-	bh=z/azy+31HbVsK3NrQuQsrL3BzDrnWedg01lhHJXkgHg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e/K23R84aibVbRFYq4wxkEbJsmhZFF9TnqcQKvSFzz1U/Ssx2RUeoLGZwpmeYeYLrr1QxxL5tqb9u2+w1SMFbGMxspcON48Rx1BAr4AotJ1Hl/dm+Bnhj34bdCIrryrdk2ntGCQtP/a3h8laFAsHwYjrWKv0p4qGZt5X3SU91lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4dfa2aeec86so1749303137.1;
-        Mon, 02 Jun 2025 00:38:06 -0700 (PDT)
+	s=arc-20240116; t=1748850904; c=relaxed/simple;
+	bh=/eCRwbS/rN2ZWoD/Lu11QTQjPmNCmF14z0tboBkD57o=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rroLuWKNhfm32lX/MB+nztsY+x2a3dNLRNSHvLVsnblkqQbVIxeonAa1LXKCWg4CvKo4UL2Uqki+fNmHztP1SuAxOv0WHiwwhXCA2OdKNWu4HSpeszzm9nsCxPI/6o3xN4K4LqISCJO2Iwlo/mZ/glY1husETfGy6kH7Rz8ELsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RaOXfqCB; arc=none smtp.client-ip=209.85.208.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-6049431b0e9so6610870a12.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Jun 2025 00:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748850900; x=1749455700; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pw+Y5BshWhNb94U5zV1jdIqM6Bb94uu0DoTvWRycrlQ=;
+        b=RaOXfqCBEFW13E47e6E6zE4xdki3YIJFWC4NEPVDyuFCCw/2yhDOFcZxkN438eveoQ
+         aTW3XtIUCK9jUWT/cBy6QAfOVsMGagaWd9ZKUxRl4CqyBDSb0Un4SZcIF9aTRUJKMa+D
+         bfxwvEW4YvALnZIXWYithVRASjMllUUSnlBhHP0qMhj9ODbeLHV9nC6bGJ1EaoqDmDDR
+         5PlPT83YmflW0D1RmSXAOkp37Oqf8aONdsI4kD7AlzpJhnB9FVGpxcPqcCKvFeNKtbMH
+         57WbTEBBxJio47Xu2DwJLZD401he5r1/ODrfxNilpoBz8k2VyB+JvvwdCEgZN9aeDByR
+         jW5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748849885; x=1749454685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KvF+qF++Ju4HjkLFrv9Tlh68BJ2ssPJrJXD0AyUXDac=;
-        b=IsffXbb6pwy10LLWqQPy1CEkPffz4qzZkBFFhj3fKl5AATj5nu03PLtniwBgg541sF
-         PUFzzw29U8NVF+JEawCFyxbTAW10IeF9sQn6/82ZR91DaarJNXPOc5+LDhmkNcE0d/fl
-         5vANJ/cQh5KKWUljmQ61l7BGi9NHzvizf4C9Ju8vPB0P3fyqUmMuOOTQQgL9UcaU2ZO/
-         9o0yYkQq4ljYsPHeGysQNSwx5MNSxA71Z9NKhgm2eT9eWPyi/2Qf+0hHLRFHGpR+NPx3
-         OeLmgpwaj+NfV09ln7aYFZa82RBnsvO1Y4zwfj1e9qLAHMtUx7FDgmA3QoENSusMs9GM
-         hxzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ0wlB+LPpfm8Spo3YP5btDzrBapzQC22cj51+Z8pNh50O5Zx2BXj2sCAaDXHRaOnLhDkcj5NkKccRGwPU+/O8b/s=@vger.kernel.org, AJvYcCVMAxuK1nMNfpDo6cu254o+V/FEs1NzsBV/L05/y4KSaxW8NPByhdVcjTPlWCaiuc0qNMCr8F9y/D7C0g==@vger.kernel.org, AJvYcCWQots3uZjZhILCgzAbNaPfdvbiQH91fOMmRD8BuPzquRiEVuWF+dSiTZqUNgobX1B6MW6Ta27IZY2S@vger.kernel.org, AJvYcCWuKuxLR9+mMRwR+d6fvU+VnaxpO9ANDAhUyd1x95KYoNrZ+MYjr7wmXcadWL2mlH2o8eYElnhuEj9ksLwc@vger.kernel.org
-X-Gm-Message-State: AOJu0YystoVgl7DWhJ7DvPCEJjencSgABbgJU56B8+CZQHUJQOyIftkI
-	DmAO6+qpwc4qN/NYsDOGBoq7S6KNTRWEwkSBt6og7s6QOO+IQqJbgxDHKMCRcPb7
-X-Gm-Gg: ASbGncsylB6dv75aaKIhbnVLwL4jkxbin8PwLQmmg15AG/k+IlgVeVUMfc+c8i6cXD9
-	xPsQVqY1rKjOmB56Vz+KuVICb0fGopGeDhsaAOseT/reTLQr9KUGG6Phh9guYaOs8N55mkxltD7
-	XCYqnWQfXW19Q7qIhg7besQL2JMaxsVE1scdt/1XCHFcriBXxRREGjtiDMrcTFjbFNKx9lQOrnl
-	pQZYp381gWfcKEUJYUMm4clM/23Sus1Lfzo7Q5W+Er/nccXA3vCHww3P8Er6kVARE3Lj8rwukEJ
-	PKTvqVCu/3ZAj4uEJbmFbgjrsUJi5t5VWGG5yQDm311HnvhyGybthhn1Q6HB08CENGlqmaHf2c+
-	mebFC2Nw5zT4THw==
-X-Google-Smtp-Source: AGHT+IGoQh49bLD7mAb41upUfLsuK/uirwnIDPQ1+qdF0F3eZUINEucXabOrg90uyU8y94EZ/vRIGw==
-X-Received: by 2002:a05:6102:41ab:b0:4e6:1a8c:13dd with SMTP id ada2fe7eead31-4e701bcd515mr3722156137.7.1748849884947;
-        Mon, 02 Jun 2025 00:38:04 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e6444644aesm6956659137.7.2025.06.02.00.38.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 00:38:04 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86fbb48fc7fso715382241.2;
-        Mon, 02 Jun 2025 00:38:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUF7ruovotgD7iXeZtg8NYtA9SXeLphVWjCpXakW73obNZUSe4fF3uFvoc8/FKkcgNsb5xzet+ar11M@vger.kernel.org, AJvYcCUSC9Q2aCCISgm7/rSznQ9uBIw0jzSM8cbLPqqTOgAEyiYXZ/sKKKrFDmyfi9/CVlB7lB4xIOOYBsf07A==@vger.kernel.org, AJvYcCXKwhI3iyzg/7UGmAAel3isENSMGlCob7BUWwFCPlnXPptq2UDKXuQZa5bHAP06NjWF4dJWt4imMboWkzAq@vger.kernel.org, AJvYcCXSQl16M1gZpSfLTRGMvJEFw12MYNgOQb7O28fSBoEzKYZ+jndPvEUTmI6DW8jrjrKoZY+ZuKb0i/7UjYO48lWxOTM=@vger.kernel.org
-X-Received: by 2002:a05:6102:cd4:b0:4e5:59ce:4717 with SMTP id
- ada2fe7eead31-4e701bd47dfmr4263071137.9.1748849884043; Mon, 02 Jun 2025
- 00:38:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748850900; x=1749455700;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pw+Y5BshWhNb94U5zV1jdIqM6Bb94uu0DoTvWRycrlQ=;
+        b=gaPAafKbkn7wddeyl1qEFIQuEiyXGY8y+UnwtYakLcuf9allImxCwmeLdrdVFSCmc4
+         hwnYo8pNWYnHUMIYkieWOXqLIfhlKnyQW0dFRNjbFCXPI2rBmFUYDxG8cwF4fIoipZgH
+         TxQkiBZcpauFMD0lEXHjyrh4J9SXyx4c7DLYM1F8czk8QzKbto3+IWHDggshDSpnsfzj
+         JxiWhPcnK6gf6ycRu3C3ynrYnwepUlGpCBpieqa/u7U+8FQo7zWLGzMEK41TiiAt/JML
+         aMpPmm6l7b6f/2F60ATW1TQz0LtjD0V/LdEm/mlAW6oKHa8/uvf8aUb9hw+8noCp5L1j
+         t3Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9o+hScmsK200nKu3GMr5CW68Ilk/5Nz+dY6+Ki0o9CVq+mOpqE9Bh52lIVxfHCFEOM4a+xiTNj8Rq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+yiuIGE5FX2T5AwLFPnz27AdMsTA3dwu2YzHi23XfIimKn920
+	KyoVzQozKDjAaanX+RgNjp+Fk3FExkkeLsHS8Oxoi978xImgfvFDOCULxd6P34R7CWM=
+X-Gm-Gg: ASbGnctJiuAOBZGxSd4s6Eaoq94R7VSmf6hYEEFdTVFR+bCdG3ftE1gDLUGe8yOneDD
+	PWOLYlSDuaNM1yX82PMFI39Ee6+s/jC44K9d6WXHQQUEmZAfcMTljVeens+Ad9YQjcsF+5s9MjF
+	V+qq56jD9KRT9NRzOXiItEpumg0b9BjqxOFsHu9WIAJQFvAa5u49ZuIgyCDDMRJVUxtO5iD+JJW
+	uodXrPy3vjTHegZDRAQs/MpMb07emb5/hX4ygtyjKkWZuBLSIPbLFcDXDVPLjurTHswej18Yum8
+	WKSNESwDUeun4xwEl7R0BbI63WU2Q8WLb1reh5ErRX3kLfUvEQS6f0vbe/91foVlzKnRbVoG/Bs
+	jZT413vgtgu6lNdPC4h7Isw==
+X-Google-Smtp-Source: AGHT+IHF9M9iH6tYPPh5MIhkY3Ci/eDAulcraBxUrXh9olFXnZZZyiItNIM7oMxNMVOCoyclD4K34g==
+X-Received: by 2002:a17:907:d8f:b0:ad8:8eb7:1c7a with SMTP id a640c23a62f3a-adb36c0767emr1041585566b.52.1748850900474;
+        Mon, 02 Jun 2025 00:55:00 -0700 (PDT)
+Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5dd045bbsm749892766b.118.2025.06.02.00.54.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 00:55:00 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 2 Jun 2025 09:56:36 +0200
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	"derek.kiernan@amd.com" <derek.kiernan@amd.com>,
+	"dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+Subject: Re: [PATCH v12 0/13] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <aD1ZNAeB4tpMNTGZ@apocalypse>
+References: <cover.1748526284.git.andrea.porta@suse.com>
+ <0580b026-5139-4079-b1a7-464224a7d239@kernel.org>
+ <aDholLnKwql-jHm1@apocalypse>
+ <7934ae2a-3fc5-4ea2-b79a-ecbe668fd032@app.fastmail.com>
+ <0e154ae3-e0ab-4a4e-aa39-999ea1c720ed@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519215734.577053-1-thierry.bultel.yh@bp.renesas.com>
- <20250519215734.577053-2-thierry.bultel.yh@bp.renesas.com>
- <CAMuHMdWHUuLiwG+-znzGxqWzYHo3Um7e+yrTJeb-Ei=SQ8TjGg@mail.gmail.com> <CA+V-a8vDMon-cHLYr3PknWvgT5EJ_4d9tv-J+iapst1iiPo0Ng@mail.gmail.com>
-In-Reply-To: <CA+V-a8vDMon-cHLYr3PknWvgT5EJ_4d9tv-J+iapst1iiPo0Ng@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 2 Jun 2025 09:37:50 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVebPgJP5wp9J-kBJERBFdvrSObXoSbGJ4tRFGU_4UrXQ@mail.gmail.com>
-X-Gm-Features: AX0GCFsij9B8ceLPh_XqmZWRKnVD9OsdXPDNAmXIT94jCXa0CeV26CPPbpztW_Q
-Message-ID: <CAMuHMdVebPgJP5wp9J-kBJERBFdvrSObXoSbGJ4tRFGU_4UrXQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: add compatible for Renesas RZ/T2H
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, thierry.bultel@linatsea.fr, 
-	linux-renesas-soc@vger.kernel.org, paul.barker.ct@bp.renesas.com, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e154ae3-e0ab-4a4e-aa39-999ea1c720ed@broadcom.com>
 
-Hi Prabhakar,
+Hi Florian,
 
-On Mon, 2 Jun 2025 at 09:12, Lad, Prabhakar <prabhakar.csengg@gmail.com> wr=
-ote:
-> On Mon, May 26, 2025 at 6:03=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> > On Mon, 19 May 2025 at 23:57, Thierry Bultel
-> > <thierry.bultel.yh@bp.renesas.com> wrote:
-> > > Document RZ/T2H (a.k.a r9a09g077) pinctrl
-> > >
-> > > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> >
-> > > --- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
-> > > @@ -194,3 +209,13 @@ examples:
-> > >                      power-source =3D <3300>;
-> > >              };
-> > >      };
-> > > +
-> > > +  - |
-> > > +    pinctrl: pinctrl@812c0000 {
-> >
-> > The unit address does not match the first reg property.
-> >
-> > > +            compatible =3D "renesas,pfc-r9a09g077";
-> > > +            reg =3D <0x802c0000 0x2000>,
-> > > +                  <0x812c0000 0x2000>;
-> > > +            gpio-controller;
-> > > +            #gpio-cells =3D <2>;
-> > > +            gpio-ranges =3D <&pinctrl 0 0 287>;
-> >
-> > GPIOs without interrupts?
-> >
-> I think the intention here was to go without interrupt support for the
-> initial series and when later support for ICU is added we add this
-> property. Hope thats OK?
+On 16:46 Fri 30 May     , Florian Fainelli wrote:
+> On 5/29/25 23:03, Arnd Bergmann wrote:
+> > On Thu, May 29, 2025, at 16:00, Andrea della Porta wrote:
+> > > Hi Krzysztof,
+> > > 
+> > > On 15:50 Thu 29 May     , Krzysztof Kozlowski wrote:
+> > > > On 29/05/2025 15:50, Andrea della Porta wrote:
+> > > > > *** RESENDING PATCHSET AS V12 SINCE LAST ONE HAS CLOBBERED EMAIL Message-Id ***
+> > > > > 
+> > > > Can you slow down please? It's merge window and you keep sending the
+> > > > same big patchset third time today.
+> > > 
+> > > Sorry for that, I was sending it so Florian can pick it up for this
+> > > merge window, and I had some trouble with formatting. Hopefully
+> > > this was the last one.
+> > 
+> > That's not how the merge window works, you missed 6.16 long ago:
+> > 
+> > Florian sent his pull requests for 6.16 in early may, see
+> > https://lore.kernel.org/linux-arm-kernel/20250505165810.1948927-1-florian.fainelli@broadcom.com/
+> > 
+> > and he needed time to test the contents before sending them to me.
+> > 
+> > If the driver is ready to be merged now, Florian can pick it up
+> > after -rc1 is out, and then include it in the 6.17 pull requests
+> > so I can include them in the next merge window.
+> 
+> I have applied all of the patches in the respective branch as we had
+> discussed with Andrea and also merged all of the branches into my "next"
+> branch so we can give this some proper soak testing. Once 6.16-rc1 is
+> available, all those branches (devicetree/next, defconfig-arm64/next,
+> drivers/next, etc.) will be rebased against that tag such that the patches
+> that are already included will be dropped, and only this patch set plus what
+> I have accumulated will be applied on top (if that makes sense).
+> 
+> As Arnd says though, this is too late for 6.16 so this would be included in
+> 6.17. Andrea, thank you very much for your persistence working on this patch
+> series, and sorry that the request to merge those patches came in during a
+> time where I was away. The good news is that I am not doing that again
+> anytime soon.
 
-Yes, that is fine.
+It was a pleasure, and many thanks for your patience too.
 
-Gr{oetje,eeting}s,
+Andrea
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> 
+> Thank you!
+> -- 
+> Florian
 
