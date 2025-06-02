@@ -1,93 +1,97 @@
-Return-Path: <linux-gpio+bounces-20908-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20909-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B1C6ACB9E1
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 18:53:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CEA8ACBA18
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 19:15:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 947567A7BF6
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 16:51:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 250221889730
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 17:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B352253E9;
-	Mon,  2 Jun 2025 16:52:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5EC5225771;
+	Mon,  2 Jun 2025 17:15:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4guQdPu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zt17EzvH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACE8221280;
-	Mon,  2 Jun 2025 16:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CADD1FDD;
+	Mon,  2 Jun 2025 17:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748883171; cv=none; b=b0WPd5ig0eLIYaHaPodTggJssrE3+04w7M/d5wIRCkiojpvzzo0Y4tU8HLfGACOhA9Pr1yzhdpbbrD72oPECugllQgkRdPjcplIjgV638Tq/RW4jhirL7qiLOQ1HpMmFCSA2Ywuws/pGXQ9U1zFjNvVaAS4bhMYsDDpnJUPa8r4=
+	t=1748884532; cv=none; b=jsPHi7mnSS/lExzEWOdQhP+FiWDpJrgZD+KFmzzSrGSf8i9rbcW+O3AlYe0ffUNbfEK//Oj6PPQKLJ9vRjBqemMYzXENvkNOk4jbMY2dig0fvFDuBs6XGU5U6ORhW8/89JptokrSlcoC8AMYQPlpjoxROw47N3ZfhzWca1udNu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748883171; c=relaxed/simple;
-	bh=ePf765SQYuwJZAPdzzPBFspRg6Q3ylotrkU8EfBBeHY=;
+	s=arc-20240116; t=1748884532; c=relaxed/simple;
+	bh=BSPZ+8k3j7hRfUMuTmnUvpVGMIHP+qqGksybdohOw0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aRsOjreXV2z5cf9Q12a/Vfm0HtzfTuiPqBafXFiaqtCv+1Y8xmMVzlL74cXpxqHFwHVyhgXh/c7aFgVqYNQNfNiGyg+jjX/nxag56TL4mYtaT/OxYjQm0Jxm8gwzr+GQPyYNLbbqJ0/j2MteZ5prtQ/eVodfj0SZqlRqWxp/sXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4guQdPu; arc=none smtp.client-ip=209.85.221.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=toO1FqEKvm2FnnLepxqw1xuSYsSVCDwOqmxhNZeojBXB5cY25mDxQBxI0KrHNMRr8D4tN2P9RNQxJ/jmT/0CpsHcZY7sg+yETZh+LyUVCO0UqTfrbj5IboETnapqexGMZdSeMdCQBhnO6OIidBFxbdZSef4/yF3MlNYjTaP5iHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zt17EzvH; arc=none smtp.client-ip=209.85.219.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-527a2b89a11so1790577e0c.2;
-        Mon, 02 Jun 2025 09:52:49 -0700 (PDT)
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fad77c3ce1so1178506d6.2;
+        Mon, 02 Jun 2025 10:15:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748883169; x=1749487969; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UaHylnij5ODN/rPLDB2SjQz/P4QohjD/xWcVVYel2fo=;
-        b=Y4guQdPuiwoDdzc2ilerX/Apcj7Onufr1LlkYV5CiVxppK4XXTLnsTAvvPrD9IwfQ6
-         rkrZA1iDrs0scMvtyxnUt+4AeCpoqfPRnBBt6JZHSqxpzzR8JepDA82E6C4flmETujge
-         fQ4BQ6SR2Mgjv7Faz4njz1qZDJtjorK8+fJ4dSgtOL/+VSgzGi3nK3EB+he5Id5yREk6
-         K6YP3Ox1ArfrJ+5qDegW2oxEII86Y8U//A0dH5s7/cGxbqibABVjHylhBzKCG2hoe2rb
-         kILHUu6EfYA/Ygvz66O4M2K04D0HH4EAYd8BXRe7JsAI1APGerME7iLHjkxy5hQNn/Mp
-         m9sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748883169; x=1749487969;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748884530; x=1749489330; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UaHylnij5ODN/rPLDB2SjQz/P4QohjD/xWcVVYel2fo=;
-        b=SAiQvLqOyElu1FA6v6m7kXz5IGt39dBh7xxMhqSN98J1/LYQWrpXS/3vLaIObvT4hw
-         Ook8r4x1T+DWzno3GUYomXyFwIuG/hn71EvE2kDTZIGqYGGjTyE1jll1/sOjATwhg47o
-         ddgg9wx5y0lb7PZBcp3P3tL9+U52AvbBT9ZjtsEzyRj2w8fdf2VHCfl+5cmhnlU1/Ri9
-         o72zZRQ8QrUSLqqnMFEcS8zJJuK3x2y/lwJv/WZlBXlPbU57zZ5hf93ntTibX+G7XNtO
-         bQE82uGXTPv1EXVp7b8KZUsSjSqIUx4+gZHi3hY8DGRcb3REw2JWqJ6dG3r0Os3zyGPn
-         PXxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUY1HirOpy3uUKdEG6Wfr8xuNsjgYD7hOU3a/nE/XGlIulED88MYVbx63cYwjVEp2Sm6I4nvP0lk6fjzeDF@vger.kernel.org, AJvYcCUzGwtfAOKYdB1zoLR4TKd56eVe3IWJ48Xf2MDXwDrBWFKWF3sCY1dZ4FakaYpXeP27Ipyblf99coAg@vger.kernel.org, AJvYcCVW6gxc692nH2SrKwLq2Qa+pTBiaHKb6qJf1j7by6YLzHo4J4NztyIVjv6hggZzinOgaco7sYwTSxAlyw==@vger.kernel.org, AJvYcCWGHCGKfDIkQMi9dmCpOqtjfBir2Wf3qMKeSjv5y38Qi/et5iFUEi1IqiYMjh9AkxU1yZXeTvAC0M1Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM92LcnePVGGT1rJYjhnmTd+sek2oNGQCblFCTY3m66zmRQnAp
-	7nhV+6zMvL0iLn22CH14/fm4zil5EQ1q5Jn17hukIul+O8lwttBS4FfE
-X-Gm-Gg: ASbGncv6TPQFdh3kc6QGhbyQbZDEmrmPltX6tyGwRXLNcv6P+GhrGKl1l+gs1iSwyWK
-	19OiZJ23W4CFGRLJshExLAuEjaohtIuk1+MZb5FncXtHvBKGcKG41IBV/2g3M6tbAtmszaw2sPu
-	ceuFDXOwBDQLxiOU3t3o4t4z7Uyez0UaLvY8PqhlV+72TTcV1++c0imYz2FNV5H6bHExeBcgWnT
-	MDj3w5e6g7V2QtU+BqFGeQrfg+QT4unTKVJjyZz780a73XZDmcUZltxwlbFsJHMwFp8QrZ+UUQU
-	iZ58KTD90uFSiQQiFwtolU4+wFVSU3yidG5WD9YL7av8dAFscjagY2nzBBuGpsuegpIZbwy7YC1
-	cAcNS
-X-Google-Smtp-Source: AGHT+IEdZ3vdLWHi5wrwjpkN9fh88F/jznYlhx4DCKgBK46LxS+SxZlTBGaOLUAZuZ12R7bzJaBKMw==
-X-Received: by 2002:a05:6122:8c0d:b0:520:4996:7d2a with SMTP id 71dfb90a1353d-530811020efmr9909613e0c.10.1748883168825;
-        Mon, 02 Jun 2025 09:52:48 -0700 (PDT)
-Received: from localhost ([2804:30c:406b:9100:2a26:16f5:c81:e61f])
-        by smtp.gmail.com with UTF8SMTPSA id 71dfb90a1353d-53074b09342sm7796437e0c.28.2025.06.02.09.52.47
+        bh=cPqj+hlUb15Vo0gwcmnc7OruGv7UIdZSe73EVhzlEf4=;
+        b=Zt17EzvHDopbB1vda7uvsy6AXNlsY0zQ0k854GltCZyM/RsYeCGXWNowKFTSMFtg/w
+         3Wy6TAe0dIElTio4stpy8Yw+1ECmRGrGQxxOsDE19AxJ2YAWt6RlEFsg8uaEylUHKX+Q
+         eFANk0NMewVcm3O4SdpaIFIrXeWCE8vAgJ+IoZMZcWoHK2oakRBiX30LdCj7ucWM37Bj
+         szOOS7WyiiMYM9rkhmvXv4m1Dsp0yONxbphUyCNi3cOfVvWfQ/+GAdpngZE6Mj97SO2p
+         wOhclhyWvS4G1XcBdx/VCFufCSuLcymMhgbdkm4bmoYkT14YVYRaZ5+IShItFF4mFos6
+         6z1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748884530; x=1749489330;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cPqj+hlUb15Vo0gwcmnc7OruGv7UIdZSe73EVhzlEf4=;
+        b=UaAqD+ZLdgXE4lkI8OMnTaphasTZdi/Q7XV3aChKiUiXJducH7lme/K35190731xhe
+         /4NYZ/OAG+iqQSGBDyu1dAUztWJEIMxaQYz8v2N1wN2XcdTIjV56EPoP9KQ2u32jtBZm
+         gdzcHHMlkJuJs00Q65oZCjtoXwGBqJAxmTIQOXqbC1uMJIwm7kIDDGHCZKtOo9WMZact
+         pRI+H9T86s92GZoPadENuXYwIotmioa4ckjME783xOALmQGPFCN4thJ3av2qxqwcZ/9U
+         cHsdcOWyoXsHnw2zb7f5pmueSZIEA+7pEHGoH78ESK8WmpaJJHGU399V/PAJoFYnrsqW
+         hRBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUO3YsEHvDU+5HduRSUeZ2ZlpMIC0aI+FV2OTvfANhlFtFqdJ23d18EdUTkJyVwbPc8ATaLS/MowM7Lvg==@vger.kernel.org, AJvYcCUiJXaj92fMYOtuhfNeq4hb/5AFO0H609YN2vgW5rV/0FAzNqq2weZeIPP4rJgkTincu8YlkEyW81pygcNE@vger.kernel.org, AJvYcCWUXw6B8zglvBTKrY87GMv0xD8thR3YC5ZZWBXM5mZ5SE2eiGEpkWGl1KvzGE/mFiUeLdZTcsWTBLxn@vger.kernel.org, AJvYcCWX23JNV6FnKWTff33cXxA4Sqy5XnlT5s4vj9KDfY/T5L78r+Kfpy15CyDyUWPi+oNf4AiXv/Zxg5T+fw==@vger.kernel.org, AJvYcCXfkFM5Abyc+7/paVpLJs0i08c8n+UoAM9uhvsFeYndcQEUbdvLNuh51pYx5FqvDhFbdYEgROM5uBen@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ8nVbx3W1Ye7iMH19Arw//n1c6BC5TqJctZ0MMCpOlNYM7niu
+	5RL1lu9KTiYhXBAEA2KQpxRcdDMd3IeHJCsWCyRSUcUP0DvQU1DAG1QF
+X-Gm-Gg: ASbGncvMVvNtNV5TSBMV+Pc0RnqGLmUa450B9WHTLdq8RfYR9U/KaCI4rphJPW+Nv81
+	vrkq5zJE0F9FOI8Bh8dH9svoX0TvQccfsuYmv8Lbu30bj5z6JGIU2RqE3tfP7dtFRGJnPoNGlzw
+	UgagZyMG8/VDadhMxj5h19fmswty3XkdJ+yF64IltZFv4TRhNOWaEgkTNx7JYx89PQ2Uw6IWztP
+	v1+ZKXM/8wcyFjbMpKNbzIJl1U/+jUO+xfa7oL7ym8hMFsAlu40wFkEW9XiKPDi9IiqxKOZdyGg
+	CfIYargcNxeqkionnEk/fc/E2RK0+9JUmm0cUQS2ZlHe6N5sSJxmGwoWMVuVfil8jgvHCD9xnYB
+	GVMky+hU=
+X-Google-Smtp-Source: AGHT+IEXoxkzXT24Ug4BWtO98apWkgU/PzoKpBIv7F4ljkTOJkULgLYOyNFTPtMiFl4pDML3ami7BQ==
+X-Received: by 2002:ad4:5ca5:0:b0:6fa:be81:e18f with SMTP id 6a1803df08f44-6fad059a7f8mr86733506d6.0.1748884529431;
+        Mon, 02 Jun 2025 10:15:29 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e1c800sm63659146d6.102.2025.06.02.10.15.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 09:52:47 -0700 (PDT)
-Date: Mon, 2 Jun 2025 13:54:25 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+        Mon, 02 Jun 2025 10:15:28 -0700 (PDT)
+Date: Mon, 2 Jun 2025 14:15:23 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
 To: Andy Shevchenko <andy@kernel.org>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1748829860.git.marcelo.schmitt@analog.com>
- <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
- <aD27cobHWeBX8o30@smile.fi.intel.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, dlechner@baylibre.com, rafael@kernel.org,
+	djrscally@gmail.com
+Subject: Re: [PATCH v9 09/12] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <aD3cK5PioN7Rw3pP@JSANTO12-L01.ad.analog.com>
+Reply-To: aDnuvAdkcTAP2tMt@smile.fi.intel.com
+References: <cover.1748447035.git.Jonathan.Santos@analog.com>
+ <27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
+ <aDnuvAdkcTAP2tMt@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -96,55 +100,65 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aD27cobHWeBX8o30@smile.fi.intel.com>
+In-Reply-To: <aDnuvAdkcTAP2tMt@smile.fi.intel.com>
 
-...
-> > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
+On 05/30, Andy Shevchenko wrote:
+> On Thu, May 29, 2025 at 07:50:29PM -0300, Jonathan Santos wrote:
+ 
+> > +static int ad7768_trigger_sources_sync_setup(struct device *dev,
+> > +					     struct fwnode_handle *dev_fwnode,
+> > +					     struct ad7768_state *st)
 > > +{
-> > +	/*
-> > +	 * The use of static_assert() here is to make sure that the comparison
-> > +	 * is adapted whenever struct ad4170_setup is changed.
-> > +	 */
-> > +	static_assert(sizeof(*a) ==
-> > +		      sizeof(struct {
-> > +				     u16 misc;
-> > +				     u16 afe;
-> > +				     u16 filter;
-> > +				     u16 filter_fs;
-> > +				     u32 offset;
-> > +				     u32 gain;
-> > +			     }));
-> 
-> I think it doesn't make much sense unless one uses memcpy().
-
-memcpy() is used to update the setups after reg write succeeds.
-Also, previously, memcmp() was used to compare setups.
-Since struct ad4170_setup has only unsigned integers (no floating point fields
-like ad7124 had [1]), ad4170 works properly when comparing setups with memcmp().
-Though, it was asked to do explicit field matching on previous reviews [2] so
-that's how it had been since then. Well, both ways work for ad4170. We can
-compare setup with memcmp(), or do the comparison field by field. I don't mind
-changing it again if requested. I guess we only need to reach an agreement about
-what to go with.
-
-[1]: https://lore.kernel.org/all/20250303114659.1672695-13-u.kleine-koenig@baylibre.com/
-[2]: https://lore.kernel.org/linux-iio/20250504192117.5e19f44b@jic23-huawei/
-
-> 
-> > +	if (a->misc != b->misc ||
-> > +	    a->afe != b->afe ||
-> > +	    a->filter != b->filter ||
-> > +	    a->filter_fs != b->filter_fs ||
-> > +	    a->offset != b->offset ||
-> > +	    a->gain != b->gain)
-> > +		return false;
+> > +	struct fwnode_reference_args args;
 > > +
-> > +	return true;
-> > +}
+> > +	struct fwnode_handle *fwnode __free(fwnode_handle) =
+> > +		fwnode_find_reference_args(dev_fwnode, "trigger-sources",
+> > +					   "#trigger-source-cells", 0,
+> > +					   AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
 > 
-> ...
+> I don't see how args are being used. This puts in doubt the need of the first
+> patch.
 > 
 
-Thanks,
-Marcelo
+If the wrapper is the issue, maybe it is better doing this instead?
+
+static int ad7768_trigger_sources_sync_setup(struct device *dev,
+					     struct fwnode_handle *dev_fwnode,
+					     struct ad7768_state *st)
+{
+	struct fwnode_reference_args args;
+	struct fwnode_handle *fwnode __free(fwnode_handle) = NULL;
+	int ret;
+
+	ret = fwnode_property_get_reference_args(dev_fwnode, "trigger-sources",
+						 "#trigger-source-cells", 0,
+						 AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
+	if (ret)
+		return ret;
+
+	fwnode = args.fwnode;
+> > +	/* First, try getting the GPIO trigger source */
+> > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
+> > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
+> > +							       NULL,
+> > +							       0,
+> > +							       GPIOD_OUT_LOW,
+> > +							       "sync-in");
+> > +		return PTR_ERR_OR_ZERO(st->gpio_sync_in);
+> > +	}
+> > +
+> > +	/*
+> > +	 * TODO: Support the other cases when we have a trigger subsystem
+> > +	 * to reliably handle other types of devices as trigger sources.
+> > +	 *
+> > +	 * For now, return an error message. For self triggering, omit the
+> > +	 * trigger-sources property.
+> > +	 */
+> > +	return dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
+> > +}
+
+Then we can get rid of the first patch.
+
+Regards,
+Jonathan S.
 
