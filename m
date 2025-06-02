@@ -1,211 +1,269 @@
-Return-Path: <linux-gpio+bounces-20899-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20900-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EE9DACB936
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 18:02:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4873ACB971
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 18:20:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E51943B1EB8
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 15:57:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 857A8174E7E
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 16:20:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6564B223301;
-	Mon,  2 Jun 2025 15:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9102224B0D;
+	Mon,  2 Jun 2025 16:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MSPCHRHO"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="YJHwBFwM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE4D22330F
-	for <linux-gpio@vger.kernel.org>; Mon,  2 Jun 2025 15:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748879873; cv=none; b=qcUoexZi/yDsj8Bc57M1NBG4fovNgoYvPstsXpj5b3Y5OGo1GKD58jZJWCaezfzaBN42ASJSSvjyUI0Bcbp5d6L6oL/Zn/lzNTowlduMVYniDUm4kQZEyRHvGKOI8UThX7wvy1fyFgOLpIKdnA7biVfls//q82Ts7zpZaCtt3ls=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748879873; c=relaxed/simple;
-	bh=r3/KInTIis2b68ucTZICsTDUQM2+trrNFPxqpe7VyhQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Do8yrA/7zP6EVfziY76ik4Z3e0uswLJGwxMMAd7L2cecpmXi0emT/se6ez+b48UCKgnk+rpX3rexDWeBORWAP4Kfj6hwj50NA9oARQQlZ2codU5jauGWYrYCALcPfnjGMNNBc7ZOuloafZywcVv1A5lS29G+iJYhfeI9PJjMYY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MSPCHRHO; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-234488c2ea6so48393135ad.3
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Jun 2025 08:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748879871; x=1749484671; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=V0HldRLBDlDdaFi1o6vWHUnaZIQg5Lpmr6+tFkz4pQ0=;
-        b=MSPCHRHOjwUtdoF6lLuiiWIm8HkWqFCfzaZwWMwFICsXo9Suqo2uG3M3MF6fgbo9as
-         izCHBBI5oIbjjxypGLMSr+3jekoh9TvQBKq+HzwiZ1SMk9+8e/0GQ/pWLD2FwF8zVIVC
-         3WYXR/TWmhMjxnjx1Wdhhw2QNkTyOq0z89f6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748879871; x=1749484671;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V0HldRLBDlDdaFi1o6vWHUnaZIQg5Lpmr6+tFkz4pQ0=;
-        b=JXG3mrRM3TIxWmX8somwl28go2MO5k7tU45AAq2JFh1QbOvcUbmfU+sypDGsTevipk
-         hB62A/Gzqs7KT5c6SpN2+SQYd1ZJXDxV95eyUgnXNI1IGuPjhsAK3alGMqjCg8oI/Vo9
-         F/MO/ZD3wMgW0xUUStYxae1zjbi+5jmlZP6aHjhx17X3KDf4asfG6vB2KqscmXWSNR7u
-         WA4mm9C5XB1B4kGvL6aA2xLHGO0vyCyQ7CwKrhRNXKzVuTTEg+EWLdRRzVx65Owr4NLu
-         5boiaoIhoUcMklF0q8xb4rD+HGD3g59uegdaeH1efRl1g1aIBX5E0z9Q/k7wwT9GxV/Z
-         E0mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTL1KSKBMF2JJDVTaOdiUSwG2A9gCbNuPHHPnpb5da/90cDNIKz83e0wqIE4nAA9qTHfmaDvSeyd1F@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1i4Rkf1/1wSjOLuNnjRtYr0CKAi5nbhAxgDgnX+I2EXvWenCX
-	IPUsuvGhzjxK94IAUvGG49ZOIFwfbBgPHVRe+wRkZZYMDlATkWelTvHetlqghRzV1g==
-X-Gm-Gg: ASbGncvwFxCVRxV/PKaK3juCIhnEZyEuIhn0kLsWtWwLlAql3bHHpX0kf6lEP3feXfE
-	0HTDSq7tF1OA4XOuK4lDpvOdu/s8GzJZcL3pws/Iqktp1tSDWCPpJhY6kcCRsrzO3cuCAGV2vid
-	4+6TcV3aVsNV+O8/Gx0YDrv/WOMeIhRVwwUUtp+EKMx/Na0afybqYBlcFHg8q5htUfeVml3BpOE
-	Teit6koaL+YAu+qvOeVIv4fQ6tdlpdUV77VyfBDJDLlUge15q3+dAyM1RThVxhUCmno3MeCxrHJ
-	OOxF4CKv9eTlu5Spxjtm0dPauG13/sP3rZdnHL2WnjqCPJrsMgWTuL9RZfrHQGwgqOaI7ZWVozW
-	SzsMkAiKBLfJi//I=
-X-Google-Smtp-Source: AGHT+IGQX/TTR/ORwQelCPj6foZ1YTf+Vd3yQv9rufQDqmNgYezZEjz7F6ipV2r7WIOBa7TL5zP2TA==
-X-Received: by 2002:a17:903:40c8:b0:235:15f3:ef16 with SMTP id d9443c01a7336-235390e0fd9mr158050305ad.13.1748879870804;
-        Mon, 02 Jun 2025 08:57:50 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd96f9sm72629995ad.98.2025.06.02.08.57.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jun 2025 08:57:49 -0700 (PDT)
-Message-ID: <891ac4ee-7c98-4035-9ac9-3c17d9dc6d4d@broadcom.com>
-Date: Mon, 2 Jun 2025 08:57:46 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB3121B9C7;
+	Mon,  2 Jun 2025 16:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748881214; cv=pass; b=MT3foRZWONLrj46Y+zXqtVBojcMqL+P965CdJqcmLw/TaE2G9VzwyJaaCzVyXILZuDg4uYLMockIGbkLdc6HKYpfezG2Q/p68st74XfSjctym2tdVFaZUUtexOC+hFMFs8bDlVxvlzkHV1pf3Q4ZVuuSA0rYgTm3Qd3q8dzYBrQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748881214; c=relaxed/simple;
+	bh=Gx9u1OaBa0YswmsedAMKnIm5kXBTYm/ji2Z8GNtflRc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q6rBIpHvgWU38PyCamWUM2r2/psOZbcLOBQ5RQpV8jlrWAZafcAJxlUX2v/orBnV3O/q6+ULghPYUGX7TR1J/1LEifUjxGK/QHR4FdQduzbZx0xwGed6hDKfA6m7LIbPOvRxKBGya+UNbhg1Qto9GR4HfJyOBBvaG+orRkpqqb8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=YJHwBFwM; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1748881178; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=EfYrjNRxPweosxh29/g6GIr6q6+9NzM8DbVrBhOC550hENN42nT2mbN+DhC0S1nGZ+sTDAPTeS6Ok6z+O+WeVJkX/IXaZxBQ3NXEdOoI3/5jTXTDmO6TLwfnux5sT2P3DZBu3kOaSeQ+O27C99jaz3FMHGr4k8gkKFjOkdIg730=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748881178; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=hx/HldExY4GTOZSh1i+YCNyPSP1ozFzxarOi6vvHmCQ=; 
+	b=OTBFKHxlIHj0FSVsOOJqmhPPqlWthptIFvl1+vEC93NSjN6D9YdtYKf7zYU9Cur0J/GGzWETriegLrviREgIE4LGmYB5VLIBrXy00t3X6mrLWbm2Z8usJE1T0y0LQ/Chkk3BraISHamVaARsyjs4T5fPHO5m4/XVXMbzFarTYrg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748881178;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=hx/HldExY4GTOZSh1i+YCNyPSP1ozFzxarOi6vvHmCQ=;
+	b=YJHwBFwMai1DWr7G16b959fu92/g+71oiyQiWJGTFGq+mPAIG0BdU1+ZUs7A27vi
+	dB42yIiCxVRx3Mv1cxsoWyJguewJdLsL08B0NubQyKlMsqVOrmjnH1FFDukKWrXL94+
+	5pfW76PoRBeOVOxGl2RmbaD5aNPj9NsSU/lhVH5s=
+Received: by mx.zohomail.com with SMTPS id 1748881176633199.43684770113896;
+	Mon, 2 Jun 2025 09:19:36 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: [PATCH v2 0/7] Add Rockchip RK3576 PWM Support Through MFPWM
+Date: Mon, 02 Jun 2025 18:19:11 +0200
+Message-Id: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 0/13] Add support for RaspberryPi RP1 PCI device using
- a DT overlay
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Krzysztof Kozlowski <krzk@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
- "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
- Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-References: <cover.1748526284.git.andrea.porta@suse.com>
- <0580b026-5139-4079-b1a7-464224a7d239@kernel.org>
- <aDholLnKwql-jHm1@apocalypse>
- <7934ae2a-3fc5-4ea2-b79a-ecbe668fd032@app.fastmail.com>
- <0e154ae3-e0ab-4a4e-aa39-999ea1c720ed@broadcom.com>
- <aD1ZNAeB4tpMNTGZ@apocalypse>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <aD1ZNAeB4tpMNTGZ@apocalypse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP/OPWgC/02OQQ6CMBBFr0Jm7ZhSoCAr72FYlDJKI1BsK2IId
+ 7eCC5dvkvf+LODIanJQRgtYmrTTZgjADxGoVg43Qt0EBs54xlKWo70nWS5wfPWYilzEdcMakhK
+ CMFq66nmLXaqdLT2eoen3I9TSESrT99qX0UCzx62bJQy+QqudN/a9PTPFm/HbLf53pxgZyvTEC
+ 6G4kgWdlek6WRsrjyEO1bquHwa5ZD7ZAAAA
+X-Change-ID: 20250407-rk3576-pwm-46761bd0deaa
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ William Breathitt Gray <wbg@kernel.org>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-iio@vger.kernel.org, kernel@collabora.com, 
+ Jonas Karlman <jonas@kwiboo.se>, 
+ Detlev Casanova <detlev.casanova@collabora.com>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
 
-On 6/2/25 00:56, Andrea della Porta wrote:
-> Hi Florian,
-> 
-> On 16:46 Fri 30 May     , Florian Fainelli wrote:
->> On 5/29/25 23:03, Arnd Bergmann wrote:
->>> On Thu, May 29, 2025, at 16:00, Andrea della Porta wrote:
->>>> Hi Krzysztof,
->>>>
->>>> On 15:50 Thu 29 May     , Krzysztof Kozlowski wrote:
->>>>> On 29/05/2025 15:50, Andrea della Porta wrote:
->>>>>> *** RESENDING PATCHSET AS V12 SINCE LAST ONE HAS CLOBBERED EMAIL Message-Id ***
->>>>>>
->>>>> Can you slow down please? It's merge window and you keep sending the
->>>>> same big patchset third time today.
->>>>
->>>> Sorry for that, I was sending it so Florian can pick it up for this
->>>> merge window, and I had some trouble with formatting. Hopefully
->>>> this was the last one.
->>>
->>> That's not how the merge window works, you missed 6.16 long ago:
->>>
->>> Florian sent his pull requests for 6.16 in early may, see
->>> https://lore.kernel.org/linux-arm-kernel/20250505165810.1948927-1-florian.fainelli@broadcom.com/
->>>
->>> and he needed time to test the contents before sending them to me.
->>>
->>> If the driver is ready to be merged now, Florian can pick it up
->>> after -rc1 is out, and then include it in the 6.17 pull requests
->>> so I can include them in the next merge window.
->>
->> I have applied all of the patches in the respective branch as we had
->> discussed with Andrea and also merged all of the branches into my "next"
->> branch so we can give this some proper soak testing. Once 6.16-rc1 is
->> available, all those branches (devicetree/next, defconfig-arm64/next,
->> drivers/next, etc.) will be rebased against that tag such that the patches
->> that are already included will be dropped, and only this patch set plus what
->> I have accumulated will be applied on top (if that makes sense).
->>
->> As Arnd says though, this is too late for 6.16 so this would be included in
->> 6.17. Andrea, thank you very much for your persistence working on this patch
->> series, and sorry that the request to merge those patches came in during a
->> time where I was away. The good news is that I am not doing that again
->> anytime soon.
-> 
-> It was a pleasure, and many thanks for your patience too.
+This series introduces support for some of the functions of the new PWM
+silicon found on Rockchip's RK3576 SoC. Due to the wide range of
+functionalities offered by it, including many parts which this series'
+first iteration does not attempt to implement for now, it uses multiple
+drivers hanging on a platform bus on which the parent "mfpwm" driver
+registers them.
 
-As a heads up, the kernel robot reported a build failure for 
-devicetree/next due to the missing pcie1 label, I have moved the DT 
-patches from devicetree/next to devicetree-arm64/next where Stanimir's 
-patches adding 2712 PCIe are already present.
+AUXBUS/MFD/PLATFORM BUS DISCUSSION: if you are currently wondering why
+you were Cc'd and are about to move onto the next e-mail, it may be
+because we're currently trying to figure out whether this smorgasbord of
+drivers should be a MFD driver, a platform bus driver, or an auxbus
+driver. It is currently implemented as a platform bus driver. Any
+additional insight from people who know the conceptual place that MFD
+has would be appreciated.
 
-Thanks!
+Here's some of the features of the hardware:
+- Continuous PWM output (implemented in this series)
+- One-shot/Finite repetition PWM output
+- PWM capture by counting high/low cycles (implemented in this series)
+- Sending IR transmissions in several TV remote protocols
+- Generating an interrupt based on the input being one of 16
+  user-specified values ("Power key capture")
+- Biphasic counter support
+- Using the hardware to measure a clock signal's frequency
+- Using the hardware to count a clock signal's pulses
+- Generating PWM output waveforms through a user-specified lookup table
+
+As you can tell, there's a lot. I've focused on continuous PWM output
+for now as the most important one for things like controlling fans. The
+PWM capture driver is an added bonus, because I needed at least two
+drivers to test things. Anyone doing consumer electronic devices like
+TVs based on the RK3576 may need to do the power key stuff at some
+stage, as it can be used to wake up the SoC with an IR remote. The IR
+transmission stuff in general may be a funny weekend project for someone
+at some point; I assume it's there so TV boxes can turn on and off TVs
+without needing the HDMI control stuff.
+
+At first, I considered simply integrating support for this new IP into
+the old pwm-rockchip driver, as the downstream vendor kernel did.
+However, the IP is significantly different from previous iterations.
+Especially if the goal is to support some of the additional
+functionality that the new silicon brings, doing it all in a single pwm
+driver would be untenable. Especially one that already supports other
+hardware with a way different set of registers.
+
+Hence, the mfpwm pattern: each device functionality is its own driver,
+and they all get registered as platform drivers by the parent mfpwm
+driver, which is the one that binds to the DT compatible. Each device
+function driver then has to _acquire and _release the hardware when it
+needs control of it. If some other device function is using the device
+already, -EBUSY is returned, which the device function driver can then
+forward to the user and everyone is happy.
+
+The PWM output driver, pwm-rockchip-v4, uses the new waveform APIs. I
+thought while writing a new driver that I might as well use the new
+APIs.
+
+The PWM capture driver, implemented as a counter driver, is somewhat
+primitive, in that it doesn't make use of things like the biphasic
+counter support or clock measuring, but it serves as a good way to
+showcase and test the mutual exclusion that the mfpwm framework tries to
+achieve. It also goes one step beyond just exposing the raw LPC/HPC
+counts and actually makes them usable in a non-theoretically-racey way
+by turning them into nanosecond period/duty cycle values based on the
+clock's rate. Shoutouts to the counter subsystem's documentation by the
+way, it is some of the best subsystem documentation I've come across so
+far, and was a great help.
+
+All instances of the PWM controller have three clocks that they can pick
+and choose to derive the PWM signal from. One is the default PLL from
+the CRU, one is the 24 MHz crystal oscillator (gated by the CRU), and
+one is an RC oscillator (also gated by the CRU). Each PWM channel can
+switch between these with a clock selection register in the PWM register
+range, hence this is implemented as a clock mux.
+
+Along the way, I also finally took the time to give us The One True
+HIWORD_UPDATE macro, which aims to replace all other copies of the
+HIWORD_UPDATE macro, except it's not called HIWORD_UPDATE because all of
+them have slightly different semantics and I don't want to introduce
+even more confusion. It does, however, do some compile-time checking of
+the function-like macro parameters.
+
+This series went through two substantial rewrites, because after I
+realised it needed to be multiple drivers (first rewrite) I then first
+wrote it as a couple of auxiliary bus drivers, until I became unsure
+about whether this should be auxiliary bus drivers at all, so it became
+a bunch of platform bus drivers instead. If anything looks like a weird
+vestigial leftover in the code, then that's probably why, but I made
+sure to get rid of all the ones I could find before submitting this.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Changes in v2:
+- bindings: make osc required (as it's present in all instances of the
+  hardware I'm aware of) and add the rc clock as well. I thought it
+  wasn't present on some instances of the PWM IP due to the vendor SoC
+  dtsi, but checking the CRU made me realise those clocks do exist for
+  all instances. Did not include Conor's R-b as this constitutes a
+  substantial enough change to necessitate a re-review
+- move bitfield write-enable mask macros into bitfield.h by replacing
+  the original rockchip-specific utils header patch with a bitfield.h
+  patch.
+- mfpwm: change all instances of WARN to be dev_warn instead, as we have
+  a device pointer.
+- mfpwm: replace the ad-hoc clock mux implementation that used a sysfs
+  interface with a generic clk-mux.
+- mfpwm: add the rc clock
+- mfpwm: rename all the pwmv4_ prefixed functions to have the
+  rockchip_pwm_v4_ prefix instead
+- mfpwm: remove the pwmclk indirection, hand chosen_clk to pwmf
+- mfpwm: move to use the new bitfield macros for the WE mask
+- mfpwm: mark reg access inline functions as static to fix build errors
+- pwm-rockchip-v4 pwm output: replace mult_frac with mul_u64_u64_div_u64
+- pwm-rockchip-v4 pwm output: don't return error if parameters are out
+  of range, just set them to the maximum
+- pwm-rockchip-v4 pwm output: add rate to debug message
+- pwm-rockchip-v4 pwm output: if rate is 0 and pwm is disabled, set
+  waveform parameters to 0. The clock is expected to not have a rate in
+  this case.
+- pwm-rockchip-v4 pwm output: add pwmchip_remove in remove callback,
+  which also necessitated using chip as the platdata instead of the
+  driver private struct
+- pwm-rockchip-v4 pwm output: rework PWMV4_CTRL_UPDATE_EN since it never
+  needs to be set to 0 by the driver
+- pwm-rockchip-v4 pwm output: add a limitations list
+- pwm-rockchip-v4 pwm output: handle initial hardware state during
+  probe, enabling the pwm clock if the PWM is on and in continuous mode
+- pwm-rockchip-v4 pwm output: rename pwmv4_is_enabled to use the
+  rockchip_pwm_v4_ prefix instead
+- pwm-rockchip-v4 pwm output: remove pwmclk indirection, use clk API
+  directly
+- pwm-rockchip-v4 pwm output: no longer claim the chip as being atomic,
+  as the clk_rate_exclusive_get calls may sleep.
+- rockchip-pwm-capture counter: remove pwmclk indirection, use clk API
+  directly
+- rockchip-pwm-capture counter: replace mult_frac with
+  mul_u64_u64_div_u64
+- rockchip-pwm-capture counter: don't output periods/duty cycles if the
+  period is longer than the chosen timeout; this works around the
+  hardware cycle counter seemingly being impossible to clear
+- dts: added osc and rc to every pwm node
+- dts: reordered properties in pwm0 to be sorted
+- Link to v1: https://lore.kernel.org/r/20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com
+
+---
+Nicolas Frattaroli (7):
+      dt-bindings: pinctrl: rockchip: increase max amount of device functions
+      dt-bindings: pwm: Add a new binding for rockchip,rk3576-pwm
+      bitfield: introduce HI16_WE bitfield prep macros
+      soc: rockchip: add mfpwm driver
+      pwm: Add rockchip PWMv4 driver
+      counter: Add rockchip-pwm-capture driver
+      arm64: dts: rockchip: add PWM nodes to RK3576 SoC dtsi
+
+ .../bindings/pinctrl/rockchip,pinctrl.yaml         |   2 +-
+ .../bindings/pwm/rockchip,rk3576-pwm.yaml          |  77 ++++
+ MAINTAINERS                                        |  11 +
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi           | 208 +++++++++
+ drivers/counter/Kconfig                            |  13 +
+ drivers/counter/Makefile                           |   1 +
+ drivers/counter/rockchip-pwm-capture.c             | 352 +++++++++++++++
+ drivers/pwm/Kconfig                                |  13 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-rockchip-v4.c                      | 372 ++++++++++++++++
+ drivers/soc/rockchip/Kconfig                       |  13 +
+ drivers/soc/rockchip/Makefile                      |   1 +
+ drivers/soc/rockchip/mfpwm.c                       | 398 +++++++++++++++++
+ include/linux/bitfield.h                           |  47 ++
+ include/soc/rockchip/mfpwm.h                       | 484 +++++++++++++++++++++
+ 15 files changed, 1992 insertions(+), 1 deletion(-)
+---
+base-commit: ba2b2250bbaf005016ba85e345add6e19116a1ea
+change-id: 20250407-rk3576-pwm-46761bd0deaa
+
+Best regards,
 -- 
-Florian
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+
 
