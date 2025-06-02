@@ -1,77 +1,78 @@
-Return-Path: <linux-gpio+bounces-20895-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20896-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E572ACB3D6
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 16:46:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7077ACB4DF
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 16:57:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C6777A8FDE
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 14:43:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34DD04A225E
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 14:47:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53F85227EAF;
-	Mon,  2 Jun 2025 14:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B876822424C;
+	Mon,  2 Jun 2025 14:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="S0fZv81P"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SZFyyx4G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013013.outbound.protection.outlook.com [40.107.162.13])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012068.outbound.protection.outlook.com [52.101.71.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3E22AE9A;
-	Mon,  2 Jun 2025 14:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F78421CA1E;
+	Mon,  2 Jun 2025 14:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748875187; cv=fail; b=gp5YYdRVnRaZ+jlDD+WsHD95SxU4Zux/IZgBEJa8/8AEKHlD/mOWkmR2DTPWnpDIrnk2aGaVHEj3aT/wDzS/0T8JC04NaXBmoqXhLgvj9q30OZ9HV5Kc6AhWZGAs4zvE6JtaOhB3cSwY00I8AtjYuQywvRzl7NfodqcbpRfNLCc=
+	t=1748875400; cv=fail; b=XDJVfWnz6nV/VnFvRN6YPOjDAFnziEyKklopLTljNFgpQTE7sGWKMIunAl9ktyUYQppvGI33BqwvQ45g3s86WN+FrOXuLGlDLaux5gn+hA6zhlT1AKzRACfGGnw0UxJCvfBqYJg4+dgru6s1vTuV5DzgQKUqDJ9AslOD9pajRsE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748875187; c=relaxed/simple;
-	bh=u1lgNTeWBLylJZl2pjbqXqBkwAdqBuRjSl0TDi1OyBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Q3wSz5aeQbUKOzHn+DAsiclo/WF/JR2CNYwr08rsohiZXW+HpD0avaeYRFOPXQRfDlLnOWbzavuPGiHH5CY92FOr0Pidp0+8m08N+pH4fwVAlxgHtXcIFAY3eZQee8oNnoQ//Qy6P7897jUL+xCv+cjfJ4Z/u65ppxBz2Eu27Tw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=S0fZv81P; arc=fail smtp.client-ip=40.107.162.13
+	s=arc-20240116; t=1748875400; c=relaxed/simple;
+	bh=lAoYIjnEblCEacuG9ZdktmZwuZ9TnDxePT8zZ+zjP9g=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=R6Z+ICMUqdDnkHKPm9ZtG3aFlxiKnFvg88Zrmg7bTQcpLVAZKyFRsYiv6JB619vBDkF55kt6wUXeJhcUwNCC7FTI0BXYVI2SiAjAPIs4dJdGGSxG59vdkoRUXpG5lCHO+ypcCTUHUg3s+qqXLz9WMGs2e/zFgu6ELxRigmWGL3w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SZFyyx4G; arc=fail smtp.client-ip=52.101.71.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cQrkejSrgUmFalWFpEl0st02SFKL6h1uCZtKKX4164Sl/APzFumg/VnH5yEuc6HFSmvsZ7ZPpx/OdfmGTOQ8YG09sgQ64slYMQaf7e00XTiz/n6pdbp0ISD4tTX8B5bFrd1nh1DRVnQ61COFt7HNiFlZ0O0HFktRGkwd/DeF1u7RBjaMYEjX8Xfjp6qc9XpkvsScPohgFO/DRsbwznVfpK0ZOo1ZfAhdYlsLDKF8CpcyPxRoRBmfLyyZcg/qbH6l9cx4VzxejDIMYKNQUzgACF38EOINZN25KmBQSWGCIh7IHFv50ZFRxGTOjx1MSs1ZxxRHVMi3bEXzvtNDzv1zRQ==
+ b=qyb3FjJaObXaMFEpsvkUQ7Rwy+3GYLFZSqfPseNKlazdpV/lhNOS6t5adFJfxlTK0THwwLvR11JofoZ7QlE5qDJLyf03WPfk7LKXN6lvIubcmQdSUbV15Iy6sjQE58vQ8Trpm6rsffKWhVmtZdXoJgeoQy+PjPEK6b6wOcO+BwmpsF+VRRKuQz6o12ZlWkhe1mavXlAiTWb+o48ubsHVLU8D7GSgqePe/C+N3cBjDMhYDaAdWylSxQ30XCOBTqGIyBdXKV5mLDw5w7xw+weCPNbOstgyZBJXeY4XqAj2bDpuiGiN14nuz0uAYEX2fjkwEdnbmL3qOI52ebrMIf1vtA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8H4qjor30QeI7PmGOQaOFhbkj7QWUZDzBZir18+3hwc=;
- b=AIv1XFqGKjVc4r2AfepK3EVgb+coVH5wHIausuHF2Iwgh1fYGcvtcYaznHSHo4DvrkxvOrYNqZZ7IJ05UeLZMqdhqQCtSpY9UvUz+sKT9bdJqxTOH+FPr8WcowWufvcO7qEw+znMc5Uxdr2vYjUR1YKnDX/99TdNOcBP6xK2mkLzhsMltmJeihOf+7gGpqC8fC24W8ES1W21eEyYYXyhQNFlTnK/oZgtdtI+SmcAAvdw0WKIoMF4jIu6ll1JPetBuftrWqIky+5amhulkaajtxqC+cNcFecFnmx3wTz6eRLwJoH5lLr7amYa999srNwYOEaHwpUbJxgy1yATfvDhcw==
+ bh=MCsxyhjh1JquqQOmUdz7eqmwJ/fJUADSbXlLyNcWpT8=;
+ b=a3lz/zWr33BjmCHmTemCdsKQEwS82F2HVqAGxkCHkb0mlI7k1QRdx85NKLLv/qMHmzVjYXCSTRm0hDfwpL+bJv+zExbmcsL8mtC16M9k1piEsp0EPgC5RFS+5IQy58eVwKccIbkiioxr8rCR0kdV4ANzhERq+i7Gekh8FXCaqVi1ULUAcHlPi4RO19Ron744KSK6m7oP+gi84q+mQaNTT3UrRlrLnbcmgjSqw49yBJV2yCcNlR8pnPcecgw7mamMfzsHLEZ2iHNMI+dUGg4rv5lpnqGXdPyC/O/b5N9SRc5O/Mj/1YQLvK/FrwsGZ5IQz4v1exL2HKYtv63Cw4n3sQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8H4qjor30QeI7PmGOQaOFhbkj7QWUZDzBZir18+3hwc=;
- b=S0fZv81PFQNWxCFML0P3ZIdH3bb0UeQ8YlAfdAurVq+Drgfz16MbCcAsKKtlyGLSQqEMCEDvq2fNK3JkQ69rRZMhqmBDx0IrXQ4IQg+KaoqbsvNnK0EkvjdB8WJTa+oO5eW9Cb0DYOhG4udfCWCWIfGYWh16/RY6Q30iIVUeArdUkma0JTzGZVC/Ofem9VxLDokB9ki5Vby9SLb8y5MByEjIPBzjnKy8+bxRrp12oFs3Uxh9fu4+7eV+xM/Kbkc7XmUOeFn2ElTeCzcqZTH4/65ZJnhp/d3rDu99SdGf+CDgmnw1Lvtnn0vnuOEChi3g6+CGXHjSlr4JjlThD7r9sQ==
+ bh=MCsxyhjh1JquqQOmUdz7eqmwJ/fJUADSbXlLyNcWpT8=;
+ b=SZFyyx4GJbB0ESt2pSpk7BhZME6XT7O+Hk0DRAjsZ1w791m4fBJVJDZVXvoFKUsfUNTNb0KwKxEC9+yzqDI6MdfsvBD1RzSDOq0XjfWZ9K2BdaSvNgLXnxKNM2jTwpNIYJX5yazI+Vw0GjaXqginh0PCnPZk9dUytxkS8X0l3nB7pmd2A25verPnQqoDZahPaZCSXGxMaOffX5CYk5LFNBymhE9quvMUGAlW/S50C40Bga/QZc2RfKs3rBTCYtgP9L1P+S9eLuuhvreJ1D37pX36qVW8h6dwtbB6nNGL2SAQ0o5SA8ahTzfz/d4sGmCakrgavjUc8BkyYfHE3DbRrg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by GV2PR04MB11304.eurprd04.prod.outlook.com (2603:10a6:150:2a8::15) with
+ by MRWPR04MB11286.eurprd04.prod.outlook.com (2603:10a6:501:79::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Mon, 2 Jun
- 2025 14:39:42 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 2 Jun
+ 2025 14:43:11 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Mon, 2 Jun 2025
- 14:39:42 +0000
+ 14:43:11 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
 	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
 	linux-kernel@vger.kernel.org (open list)
 Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dt-bindings: pinctrl: convert xp,lpc1850-scu.txt to yaml format
-Date: Mon,  2 Jun 2025 10:39:29 -0400
-Message-Id: <20250602143930.943830-1-Frank.Li@nxp.com>
+Subject: [PATCH 1/1] dt-bindings: gpio: convert nxp,lpc1850-gpio.txt to yaml format
+Date: Mon,  2 Jun 2025 10:42:58 -0400
+Message-Id: <20250602144259.944257-1-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: PH8P222CA0010.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:510:2d7::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SJ0PR03CA0212.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::7) To PAXPR04MB9642.eurprd04.prod.outlook.com
  (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -80,270 +81,245 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV2PR04MB11304:EE_
-X-MS-Office365-Filtering-Correlation-Id: ccc57e41-875b-4415-b2b1-08dda1e34faa
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|MRWPR04MB11286:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9a274e5-55e9-4d34-993d-08dda1e3cc64
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zS9BpzoDbVu0nCgQ4ocGDK0+ggIyvwW+HJ9+XMlF6XoC5ciBJKoWLtia587H?=
- =?us-ascii?Q?o00V3hsEx2W25VYIt608QBxmFrZAElWUoT75ALdWY6RhUn0v/aJToZy/ttHc?=
- =?us-ascii?Q?3Cr6DZMS5eRrFiappONmP9+y2ZagKLJqdgRTLiswpMe9ElGf7dyPIE5Bxawr?=
- =?us-ascii?Q?Cd7dz/+5clKa/tFjHt5yq2S0dyxey2hWML1RdcqRkbgVKXSaQdN9BO2T0ypB?=
- =?us-ascii?Q?M+7tmfrPZMx3WO0lA1wCkLn2WFRYR/wxDygwSJ6bGKnr58Dl/l40TDxa6wbk?=
- =?us-ascii?Q?8ugZWjp/GGq0036u0PUNfY0+busJ56lcwwvA9bq6zLa8wkTctwTBtMlBW140?=
- =?us-ascii?Q?RnSRHjPAvUDSZoShGj4Pg085MkIq6/4O5CijGqwM6A18jTIPsS2zRouLWfF0?=
- =?us-ascii?Q?EGvYZsN5jEKwgQVv1noDO43CJO8rk0OZ5vh++UngDa1vo+a6LC5WJBUrV+tM?=
- =?us-ascii?Q?GPmXP1vCLxX5J7OZvAKbHe5Uh+Ject8gK/Z8nc1pNWAGYj55fIOGy/Sb6tgZ?=
- =?us-ascii?Q?06pMsGvBbQeQx85x/Ugu3BYM8vvnqcqpLZMpJ40d5lMvmw+x5ZOgfd6wCMwc?=
- =?us-ascii?Q?+1zpzeyuQZdgGDrbz0K0cVxVMLYvBzwm+QeUK/BB2vv3jNvkikxzXBXeFeop?=
- =?us-ascii?Q?2wIvBiJ0yDwdQzalEC1ADFgq8HEml/nFsCQ5/stSiZ194hCWmMI9lGpbDPbs?=
- =?us-ascii?Q?aZCnocxx/BXg2PpoQLLsTpfP9xEi5KsjbYlEZRobzjzMC+dNu9Lb8dGw+baF?=
- =?us-ascii?Q?UWbm0UZws3oNB9K+7l7z4/Z9zzH+4hZ576UUVHCtWhR2DaJ69OnzqneUctUd?=
- =?us-ascii?Q?W+4ktCtxlPcQ+DMjhm8sOGsIvkFgxvcrZqwLwOWSwNPRtDl6dE5cY6vfqbAJ?=
- =?us-ascii?Q?Htpk040gIgoUYXuZYrv7ZrI+X1u05ArL0tyILu393MEWU70KGj7L8ksIbadi?=
- =?us-ascii?Q?bc4cQEi7JvdimnkqpYbRN96cKMuED95FadI2aEnJC4f3DHcu7loDBF3ZisbZ?=
- =?us-ascii?Q?EOBYYD51CKZBBFBLZ70NtyJdMEDu+4a5Wpb7+vh4kbZD+wAoAGUuKr4BDILj?=
- =?us-ascii?Q?5M34XWnq3UZUV0mliwyipO4bjSDNvRB2vqhxYo1qThgCod19ZWria++E3M9A?=
- =?us-ascii?Q?WRQgSzNLPOLj9Vj37VbtAc/WuGFOZACZxbX+z1pRoGd+YryyMEoaPudY60vp?=
- =?us-ascii?Q?zBG8NoPDets9cZBH2rhWg8uZsPlzq5vR6qgk3RLez9rtbbnLNs2vu1+lLVo7?=
- =?us-ascii?Q?6pRQAcPngQBrVHpSo5OoD7uuIzTvm7R1FUmJmT3DL7grRAv8r+SnJw7PosmR?=
- =?us-ascii?Q?pdTy9kNsYf8lotLbYMWdeRp2SwQhKD58qn+kOSCv4rF+diEFAIqip/nzh+af?=
- =?us-ascii?Q?roncWjXfF1YbCQXtJ1nnVAz3UeJPcE1iFx6TPugM7o2aDUQS5/K9C4Ul+H8R?=
- =?us-ascii?Q?TwTqJZJjc4+T7s9Ri3CaySc6VQHZsGNC?=
+	=?us-ascii?Q?fXwv6a7m/oMjtBkCfswhtV56ZkBHCnGIQCdU+FBSdfVWf0JFp4FaTI+qlylS?=
+ =?us-ascii?Q?7KxA/P5yBegpiR4d6Z/sgfKgDjpn24BPwuSC6jF0l3YQ/t9VvB/WFtZtjI54?=
+ =?us-ascii?Q?cK1+y6m0x7H14esCvq3X3GOSQvUKKDBCt1uj45ifkgJ/Xsz5kEYLIBZgQlOb?=
+ =?us-ascii?Q?1Owbl3DcnUCsY1AxNbkh+7CzTuNoJmjWW+1xaYLma0pSXlpe3UIQBrbP7FHR?=
+ =?us-ascii?Q?3WtQ/zwVJtff5RlykYVUqzHnm7QlY9HtLc0/cYK0F3iiSXhn5CQMf2UI2307?=
+ =?us-ascii?Q?DbhH2r1q9oSnbnlrdcS+JSJObJU97MSlhMvHVIAUVSlR+59r/aYCXHBMcsWl?=
+ =?us-ascii?Q?S2JAOEW7CNoURN226bKiPanjj134mYE/B144s7dXAr+6kk7pADIwpe/LUQyB?=
+ =?us-ascii?Q?5Wi7cBvVHqhIKenTD7an1MJN6Jb08CyIrjRQsssT1kTpXlyHpQMru2aS8I3u?=
+ =?us-ascii?Q?x36vojrxRqlgbUszSR5YgXrRiLIhKocjfH+9viZEwGTNDRkGQCtL/NPbtUZE?=
+ =?us-ascii?Q?qxNAZ6plDRJYqZ8bO3I8IXunV9Pk3/CA6vJtJIS4SLW9x//jhpmIyhg9gJ2L?=
+ =?us-ascii?Q?Pkw+kFagvUaRzP3nvMlvzHGm3jHWvLkSbsAEjusbs1QXo+4LQ/BSXvhX8Ebp?=
+ =?us-ascii?Q?4CXZjf2DSovN7sit4qM7CM2vc9zLZXhXKRbCRcwfjBSaQUmhvjcBhEXAx87P?=
+ =?us-ascii?Q?MnksUO24PjkxulQN7lRj7jzfqDtJ3J3+wpG034f1xYu4t6eBuBG/xUbCJ9KC?=
+ =?us-ascii?Q?OJrbo76eMZyTc/TSqhNSPCvUiDsi1tuFLCJZx+/BoXkVWyo7mloiv/9KBmxD?=
+ =?us-ascii?Q?eqo0L+Zb6ULCYPZkMktPr5GIpOYkB8EyOoVmOApsUpdiVpAvbHiIMpNcQuTI?=
+ =?us-ascii?Q?U83l/JMdPB4UZFOIJo6vg53rm6Y7RzAMHjgc/umpJav4KWDFi4dj+MOGj2FK?=
+ =?us-ascii?Q?CJQvyzgRa0iK6l4dCNyJh2Zp3dM8H/Yme8BHTW2TviOzLGqbFfZNpjy1OsPM?=
+ =?us-ascii?Q?eEN4SLqEPsF0w4nWEi+opCnnbNsmBRcF5YrxVWFyMqMsrmi4cbT9DD6R4eua?=
+ =?us-ascii?Q?0wrLQunDP38cl6fcalaBpohSuxHYlehX1SmiPwI2ZVRjeKFwNv5LqSVRLzd1?=
+ =?us-ascii?Q?1w96byL5LxY6dgRlqWNJ9qvcKMhEga+KtoJjhItecChNQa17jw5+GjJthTKR?=
+ =?us-ascii?Q?UAM1z3t580xDS/Me/gasMo4mCee/gjp6sboirSLzLoiyrGyToYemLPURTVvz?=
+ =?us-ascii?Q?3lua+2blubxDSJ44OAlSkY7P8A/H1JtFTCY6sDTamqeQrnwTc9UNRhiScqzh?=
+ =?us-ascii?Q?QcyaEZBxMw8yb977Qgd+OkWAqO4w7mm7pTFu+/eZN35COZKBA+Ez2V2AL5D/?=
+ =?us-ascii?Q?iO71DMAgNizPAyW/rzuILTmYJi+keI+4cYznoACkR0n8NLuOdgnK7L5kIEgn?=
+ =?us-ascii?Q?WD73Uq090RNcRGPXZzASJ7Ui8Y8a2k4E?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?B4veN94FBuiBngGdILpYEwFShXGsaRGpFoMPe7MB+n+7d/tlkSupZJzMyM+M?=
- =?us-ascii?Q?hs3/oTCmq2umhOYjoi58t6M4yvHhCxxjjXAqWfGp9uG6dCg7C1UlyQqdcFnT?=
- =?us-ascii?Q?QA4TNPLUtKxCOgQB6cEt6QMY8OL8bSupy5OXc6ygFb8JH8xjP5acLzS8iaXo?=
- =?us-ascii?Q?PutZLs7Q1AFFKpfES+Uj3fjUyrJL/Mcu4T4kKADr2CU/6UQTxK67EIvhBP4S?=
- =?us-ascii?Q?m9VgfCfaljcqKmciF7x857/tJx4XY6CC6TMd0mUmt06G3JD0+Dpu8IgTPQBm?=
- =?us-ascii?Q?Toi54W1//ognIWgNtiFPBdDYHW7dp4LVikZJWTI0JGDI2SzScusJtzdetKg+?=
- =?us-ascii?Q?umaezwzxsaKAk6hXX2xgCTT7WMhIQdwJyIrsoz28z6xrysAxmJES4YuwwNbo?=
- =?us-ascii?Q?zYbv4NYCL+WUaMbg3OQh14S5kZ0+f2xrw21m6Y9EFc8cU+PoE1jRlQfm+1QD?=
- =?us-ascii?Q?m+V+YWUASoUX/Hk+GATlu+MiK01q2Ae9LaqldUsVa10vk1VzwuwDmc9f3dQX?=
- =?us-ascii?Q?9FW9+utXhh4SZPHLlflAGZTzgsULgxuoQgWaOYzdQ+W/WRrkmN5aCm/pfug0?=
- =?us-ascii?Q?9bXC4M2zl1qbDJTTau64CXXVKw1R8PnHqhu32ROA1vA82d4Qgvn1JMNj81Ig?=
- =?us-ascii?Q?YU6nQc8ODsE2PJjl6wEnCurMguKXBV8Q0158iDfVW+BgT8LgirNbzW5+ra98?=
- =?us-ascii?Q?gGQDdMkkYADvk5Ef5Wo9Dh7y/d0eMZBMW0z2gVmCdwnvAkrpzsO2dZZrLHyW?=
- =?us-ascii?Q?v3wRY69DVhAzTJBDkIMMgS318dBojKG3e+QM6V8eEi6groV2bTJfWcL9yV66?=
- =?us-ascii?Q?+kIeYv6hB+b9rSw1sW7XBm7ptmluEYpu2gweAj91Xt0ogb0yerds4Sh7Qjnn?=
- =?us-ascii?Q?HCoJJ9uCRd7+tZ/WRTV2Gtq1/CR6tQXC1lWTmKlDh+yftosI1h69YOLbqaNt?=
- =?us-ascii?Q?FRoj6Utott7X158iDAWhfajKj2p8sO4R8kdLBstOPwON+WNv69ercf8D+5Se?=
- =?us-ascii?Q?bWIegcrYQwf5aZPe9CF7ynZtfZQXthK6s5WWc8u8IIgqyU2Yav8fIYlmNQL9?=
- =?us-ascii?Q?u9UYTouV4Ni+R4pXgAHADm70cGCyHxqDyY8jwEpskMm7bIGWvjzBvnOc7Eyo?=
- =?us-ascii?Q?fBkyI9ZKwWg/prkWkMunhoNp8Z+G8oqtDbjBGMViJ6vcL/PpiJYZBcouDiS9?=
- =?us-ascii?Q?Laa88L4C1upmkCyonQl5WDn4QVgceoo/cvNWRSiJbbMQpx5nWw+ndUY/eI7f?=
- =?us-ascii?Q?edfP6YT505Hkkbxq/R83QyzUjhcqHAQbauPwU7sJ769pwP6PFWMJq+HWsq8m?=
- =?us-ascii?Q?WfCp3JCLiJ91GXJBgIpnMV7wYB/ZWltlurFEHki6ohtgMvylwv+9vRdbE13g?=
- =?us-ascii?Q?THfKUq79tAis2edKgZxNhx5uPSCg2sjTg9nQY8S6Q3Ybd425P9ozTfq8CMSF?=
- =?us-ascii?Q?ApKjBVnt9nT6tC+5IovVmdvH08FpGtK2kDPTPSLaEfv5zfBY0LXWh3JXFGVC?=
- =?us-ascii?Q?CUC3kyjWPvUtKvGKSoPez1Q4o6b9ZoTr6rubq55oobQrQVv4ybeOL9bPuc13?=
- =?us-ascii?Q?7NC7dIrMh1gOOpwFzek=3D?=
+	=?us-ascii?Q?d1NYdAmhyS9dxcbclXFa5nOHYybaSqlC4RYhoIpchPAo4LOQM2u2D5dP8GLD?=
+ =?us-ascii?Q?oBIG46ABvHuKAh4FtSRahDNqqdM4eCfMYzGRPBRJGqV8DD1P78HihoWqvOhs?=
+ =?us-ascii?Q?hpz7Sdsr1RgFArlevuAcU76C3NZnZPIwNkeaIjHRfWPQ7DULmlg24f1jY1mj?=
+ =?us-ascii?Q?w+eYu9ekgqCA1OZZPow6s3ihng7hoPt6104AKp+C+Rb26meB8tr28yE2K6I+?=
+ =?us-ascii?Q?PO0QvLew9T2qunV6QNPILhXsRZUIkm/psPRnZVS/TDxhRPPoOIGGIrkxLuqD?=
+ =?us-ascii?Q?L1+SXyMrWcCeBaljHX3+ig7P6p0VJO0RIV3zgJdw6mrEydOk1PeHnVBUWlxU?=
+ =?us-ascii?Q?0mEvbGFxG2ik2AC+2tPUHrMBKOI9hVkdYCKhOZQ0NrYt1oJUcXkPFvyzB6ww?=
+ =?us-ascii?Q?DlOhwi4nde0D8CD935mhLRy31e0aLd1LPnH+BSF7GlA6ZW2qznjkOt+Nb+X/?=
+ =?us-ascii?Q?SenNe6SlmW6QhyDWcsHSke/S4G8IcBq8gSpv1M+hDiIGHhppw2CFrZtNSt4E?=
+ =?us-ascii?Q?RI8wgUortZl5PywqQJs3A5vfU00ApgpKucMMAcx4PNwY3SHKoyllxqmCdzU9?=
+ =?us-ascii?Q?YUy9sAYXQromv6ytI0CmorjO+jcsR8dH39oN6Q4gTB0mlDgKZAD80I/7zEYx?=
+ =?us-ascii?Q?8GUxXj92suqGrG2UuRiHl4qmnQK6MNUfmBSDJdA9gHZ/7TAEDe/r/HA1MwN5?=
+ =?us-ascii?Q?Kg2tuxTaC2FfJ2oWc3ienCe0LaBKGmrtxml4EaHgGE5CqoxKvc3kauPjnN4i?=
+ =?us-ascii?Q?IVS8UlXwzCBoLYdN3KECQHN/Om1+v5NzOkcEqgGkmMiJnZJJvyoRVTHFsXjA?=
+ =?us-ascii?Q?rYOrLpRqC1F956Kehvrt2Vn4iJeItjH+LBUt9KUXP2zs5stpj2LNLB0PpvLx?=
+ =?us-ascii?Q?S6F6mf+eldpzOLoHZB4dp4P4k08FBDogyENJxOkpeDQyDwru6eJqXkiIt3iB?=
+ =?us-ascii?Q?uLa+qSKjx+BeY1rHv2EJMPR9x/rJi8j1RvsRrasARJHPsuY77fV+RRxCrN0L?=
+ =?us-ascii?Q?qqc36tS/7C460VEOZenDX+0vu94rnz4JNzfEU39IPmRcpQNmkmpa+Q6wcOV9?=
+ =?us-ascii?Q?xWt20FcNfqMnohM6b+S+il5GiAS0ut5Jv7lvc/gmkMRdwWV3GQwBn+x/wrnB?=
+ =?us-ascii?Q?NWT8CqNE+9+HzTA2q6NOfqR2c4tR9auHTSnjDiusETAltqBpKCRa5AolJOuC?=
+ =?us-ascii?Q?YzO3Yf/0IX+/LycTcxJ6o0fjwqIlFEcDgDOZVyaEEag/216vxhkb8N6u5cRe?=
+ =?us-ascii?Q?H+0kr3KwBdMaF2cdVJQMnBpWRzdVzffGOWBkX0lptasj1ZXxFeqEYcYq+EWS?=
+ =?us-ascii?Q?o/Tbfuq++kairj289hu3ka83Rtm1JZIS8xHv6bt4iLfCZnLDXQ0kclBNnmwF?=
+ =?us-ascii?Q?K8l8RlFpImJ3OkgiJDogsZQJ5djQASa790N1od5XY0yYQJSUu5OVH2lGWnEC?=
+ =?us-ascii?Q?UpEm8hZPZUHxW5WeFbccgX263uvBwrAhyEUGwyLteeD6TOl5giAGzA3zd9xg?=
+ =?us-ascii?Q?M01jRYrV4OJG2kDHEi9CA5OHElxO34jwb5wKN31b5kBxGLUZ/Ii3NwjdRNEY?=
+ =?us-ascii?Q?z/+Vusmr/1fN2c8QqSxZ0sbsj9WHK1JLwtIBqUf5?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccc57e41-875b-4415-b2b1-08dda1e34faa
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9a274e5-55e9-4d34-993d-08dda1e3cc64
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:39:42.4413
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 14:43:11.8665
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /i5CVB+Qs3+g4I1R/L3jhBV+nKCu3v0yrsDDIQVPjx8zqokK6/DSc7fMO6yITnKfzRjTXgEtRElrXc+ZSgOIuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR04MB11304
+X-MS-Exchange-CrossTenant-UserPrincipalName: WKEjxeC4rc90xhda5UWfjq8LwaRjbQTpzkcpjDECvetR06p7tzLIw4dbHWR7RmHkRa5Q8n9uhundIqzggF54Xg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRWPR04MB11286
 
-Convert nxp,lpc1850-scu.txt to yaml format.
+Convert nxp,lpc1850-gpio.txt to yaml format.
 
 Additional changes:
-- keep child name *_cfg to align legancy very old platform dts file.
-- remove label in examples.
-- just keep one examples.
+- remove interrupt-controller and #interupt-cells from required list to
+  match existed dts files.
+- remove gpio consumer in examples.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- .../bindings/pinctrl/nxp,lpc1850-scu.txt      | 71 ---------------
- .../bindings/pinctrl/nxp,lpc1850-scu.yaml     | 91 +++++++++++++++++++
- 2 files changed, 91 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
+ .../bindings/gpio/nxp,lpc1850-gpio.txt        | 59 --------------
+ .../bindings/gpio/nxp,lpc1850-gpio.yaml       | 78 +++++++++++++++++++
+ 2 files changed, 78 insertions(+), 59 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
+diff --git a/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt b/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
 deleted file mode 100644
-index bd8b0c69fa447..0000000000000
---- a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
+index 627efc78ecf2d..0000000000000
+--- a/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
 +++ /dev/null
-@@ -1,71 +0,0 @@
--NXP LPC18xx/43xx SCU pin controller Device Tree Bindings
----------------------------------------------------------
+@@ -1,59 +0,0 @@
+-NXP LPC18xx/43xx GPIO controller Device Tree Bindings
+------------------------------------------------------
 -
 -Required properties:
--- compatible		: Should be "nxp,lpc1850-scu"
--- reg			: Address and length of the register set for the device
--- clocks		: Clock specifier (see clock bindings for details)
+-- compatible		: Should be "nxp,lpc1850-gpio"
+-- reg			: List of addresses and lengths of the GPIO controller
+-			  register sets
+-- reg-names		: Should be "gpio", "gpio-pin-ic", "gpio-group0-ic" and
+-			  "gpio-gpoup1-ic"
+-- clocks		: Phandle and clock specifier pair for GPIO controller
+-- resets		: Phandle and reset specifier pair for GPIO controller
+-- gpio-controller	: Marks the device node as a GPIO controller
+-- #gpio-cells 		: Should be two:
+-			  - The first cell is the GPIO line number
+-			  - The second cell is used to specify polarity
+-- interrupt-controller	: Marks the device node as an interrupt controller
+-- #interrupt-cells	: Should be two:
+-			  - The first cell is an interrupt number within
+-			    0..9 range, for GPIO pin interrupts it is equal
+-			    to 'nxp,gpio-pin-interrupt' property value of
+-			    GPIO pin configuration, 8 is for GPIO GROUP0
+-			    interrupt, 9 is for GPIO GROUP1 interrupt
+-			  - The second cell is used to specify interrupt type
 -
--The lpc1850-scu driver uses the generic pin multiplexing and generic pin
--configuration documented in pinctrl-bindings.txt.
--
--The following generic nodes are supported:
-- - function
-- - pins
-- - bias-disable
-- - bias-pull-up
-- - bias-pull-down
-- - drive-strength
-- - input-enable
-- - input-disable
-- - input-schmitt-enable
-- - input-schmitt-disable
-- - slew-rate
--
--NXP specific properties:
-- - nxp,gpio-pin-interrupt : Assign pin to gpio pin interrupt controller
--			    irq number 0 to 7. See example below.
--
--Not all pins support all properties so either refer to the NXP 1850/4350
--user manual or the pin table in the pinctrl-lpc18xx driver for supported
--pin properties.
+-Optional properties:
+-- gpio-ranges		: Mapping between GPIO and pinctrl
 -
 -Example:
--pinctrl: pinctrl@40086000 {
--	compatible = "nxp,lpc1850-scu";
--	reg = <0x40086000 0x1000>;
--	clocks = <&ccu1 CLK_CPU_SCU>;
+-#define LPC_GPIO(port, pin)	(port * 32 + pin)
+-#define LPC_PIN(port, pin)	(0x##port * 32 + pin)
 -
--	i2c0_pins: i2c0-pins {
--		i2c0_pins_cfg {
--			pins = "i2c0_scl", "i2c0_sda";
--			function = "i2c0";
--			input-enable;
--		};
--	};
+-gpio: gpio@400f4000 {
+-	compatible = "nxp,lpc1850-gpio";
+-	reg = <0x400f4000 0x4000>, <0x40087000 0x1000>,
+-	      <0x40088000 0x1000>, <0x40089000 0x1000>;
+-	reg-names = "gpio", "gpio-pin-ic",
+-		    "gpio-group0-ic", "gpio-gpoup1-ic";
+-	clocks = <&ccu1 CLK_CPU_GPIO>;
+-	resets = <&rgu 28>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-	gpio-ranges =	<&pinctrl LPC_GPIO(0,0)  LPC_PIN(0,0)  2>,
+-			...
+-			<&pinctrl LPC_GPIO(7,19) LPC_PIN(f,5)  7>;
+-};
 -
--	uart0_pins: uart0-pins {
--		uart0_rx_cfg {
--			pins = "pf_11";
--			function = "uart0";
--			bias-disable;
--			input-enable;
--		};
+-gpio_joystick {
+-	compatible = "gpio-keys";
+-	...
 -
--		uart0_tx_cfg {
--			pins = "pf_10";
--			function = "uart0";
--			bias-disable;
--		};
--	};
--
--	gpio_joystick_pins: gpio-joystick-pins {
--		gpio_joystick_1_cfg {
--			pins =  "p9_0";
--			function = "gpio";
--			nxp,gpio-pin-interrupt = <0>;
--			input-enable;
--			bias-disable;
--		};
+-	button0 {
+-		...
+-		interrupt-parent = <&gpio>;
+-		interrupts = <1 IRQ_TYPE_EDGE_BOTH>;
+-		gpios = <&gpio LPC_GPIO(4,8) GPIO_ACTIVE_LOW>;
 -	};
 -};
-diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
+diff --git a/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.yaml b/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.yaml
 new file mode 100644
-index 0000000000000..4df47fee3a228
+index 0000000000000..0ef5f90f69ff3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
-@@ -0,0 +1,91 @@
++++ b/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.yaml
+@@ -0,0 +1,78 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pinctrl/nxp,lpc1850-scu.yaml#
++$id: http://devicetree.org/schemas/gpio/nxp,lpc1850-gpio.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: NXP LPC18xx/43xx SCU pin controller
-+
-+description: |
-+  The following generic nodes are supported:
-+    - function
-+    - pins
-+    - bias-disable
-+    - bias-pull-up
-+    - bias-pull-down
-+    - drive-strength
-+    - input-enable
-+    - input-disable
-+    - input-schmitt-enable
-+    - input-schmitt-disable
-+    - slew-rat
-+  Not all pins support all properties so either refer to the NXP 1850/4350
-+  user manual or the pin table in the pinctrl-lpc18xx driver for supported
-+  pin properties.
++title: NXP LPC18xx/43xx GPIO controller
 +
 +maintainers:
 +  - Frank Li <Frank.Li@nxp.com>
 +
 +properties:
 +  compatible:
-+    const: nxp,lpc1850-scu
++    const: nxp,lpc1850-gpio
 +
 +  reg:
-+    maxItems: 1
++    minItems: 1
++    maxItems: 4
++
++  reg-names:
++    minItems: 1
++    items:
++      - const: gpio
++      - const: gpio-pin-ic
++      - const: gpio-group0-ic
++      - const: gpio-gpoup1-ic
 +
 +  clocks:
 +    maxItems: 1
 +
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    additionalProperties: false
++  resets:
++    maxItems: 1
 +
-+    patternProperties:
-+      '_cfg$':
-+        type: object
++  gpio-controller: true
 +
-+        allOf:
-+          - $ref: pincfg-node.yaml#
-+          - $ref: pinmux-node.yaml#
++  '#gpio-cells':
++    const: 2
 +
-+        unevaluatedProperties: false
++  interrupt-controller: true
 +
-+        properties:
-+          nxp,gpio-pin-interrupt:
-+            $ref: /schemas/types.yaml#/definitions/uint32
-+            minimum: 0
-+            maximum: 7
-+            description:
-+              Assign pin to gpio pin interrupt controller
-+              irq number 0 to 7. See example below.
++  '#interrupt-cells':
++    const: 2
++    description: |
++      - The first cell is an interrupt number within
++        0..9 range, for GPIO pin interrupts it is equal
++        to 'nxp,gpio-pin-interrupt' property value of
++        GPIO pin configuration, 8 is for GPIO GROUP0
++        interrupt, 9 is for GPIO GROUP1 interrupt
++      - The second cell is used to specify interrupt type
++
++  gpio-ranges: true
 +
 +required:
 +  - compatible
 +  - reg
 +  - clocks
++  - gpio-controller
++  - '#gpio-cells'
 +
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+unevaluatedProperties: false
++additionalProperties: false
 +
 +examples:
 +  - |
 +    #include <dt-bindings/clock/lpc18xx-ccu.h>
 +
-+    pinctrl@40086000 {
-+        compatible = "nxp,lpc1850-scu";
-+        reg = <0x40086000 0x1000>;
-+        clocks = <&ccu1 CLK_CPU_SCU>;
-+
-+        gpio-joystick-pins {
-+            gpio-joystick-1_cfg {
-+                pins = "p9_0";
-+                function = "gpio";
-+                nxp,gpio-pin-interrupt = <0>;
-+                input-enable;
-+                bias-disable;
-+            };
-+        };
++    gpio@400f4000 {
++        compatible = "nxp,lpc1850-gpio";
++        reg = <0x400f4000 0x4000>, <0x40087000 0x1000>,
++              <0x40088000 0x1000>, <0x40089000 0x1000>;
++        reg-names = "gpio", "gpio-pin-ic", "gpio-group0-ic", "gpio-gpoup1-ic";
++        clocks = <&ccu1 CLK_CPU_GPIO>;
++        resets = <&rgu 28>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
 +    };
++
 -- 
 2.34.1
 
