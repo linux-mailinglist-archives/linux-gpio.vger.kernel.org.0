@@ -1,180 +1,158 @@
-Return-Path: <linux-gpio+bounces-20870-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20871-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBB85ACA7D6
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 03:21:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52C50ACA8DB
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 07:17:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B935717DAD6
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 01:21:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D10D178B68
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Jun 2025 05:17:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D42C280CD6;
-	Sun,  1 Jun 2025 23:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 966C8188587;
+	Mon,  2 Jun 2025 05:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQOX+XZ+"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GP9bYpvp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E928E33DBB7;
-	Sun,  1 Jun 2025 23:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A5254640
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Jun 2025 05:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748821562; cv=none; b=bjK6cefRmCXIL68TyIQvNMzerFGIx8KmVoJq8mFWwJk11fp7zGoK744eFOFD5Uvitvvb3dVtkhRUlcoU94vsv3ticH9HpHyiSQxcpHFh3hR1m7PbytF8hLGWyeEJ6SdgpQ6B5LAcWKSCWPKpOeYx5hquykkrlOXWLPnRuUOgRz0=
+	t=1748841430; cv=none; b=BPQkRjiW09yPeTVdtfQq/h+5I6dWJ8q2jXUZwgeebTXlXLgigaQ9VuJz38lg2LNZsRf3K8kSgpkhWRtbVX/kG7JCJ29WWi93f6c5aPwL5oB9VdRUF54aNlm613kaeidVnoDZXH8RnQOx5EkvtekwyIwykLwLGBgnm3p83Z1Hyqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748821562; c=relaxed/simple;
-	bh=YwKrd9qS4+Kz6Th/IQtZuDHRosUBc8ALJeypSs1p7sw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JkQbamdfauj1zBKafzem/uHIEruZ8ZpXOXtAWSc4PQwAfWtkTeRcI8Y/1edwQVNq3YFO50menpQnWHLnTiL6AMdIUKW1jyvKnZSUvfqyCd9wo1x0wPqiDzq/lab54sFsfIxMiaGrBYquWn+OlAR943A8pkC5hawroYa1stpEL2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQOX+XZ+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1A5DC4CEE7;
-	Sun,  1 Jun 2025 23:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748821561;
-	bh=YwKrd9qS4+Kz6Th/IQtZuDHRosUBc8ALJeypSs1p7sw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kQOX+XZ+ob9mgQeAACryvi5f/+5fcAN0mgNZQmJ71NMMhi2A4b96NpULlkZnP2BB3
-	 YaCZUi6QXpjFVs/OZtdmFoRWxWEwV+9yyo8UUbqKXWmdVpfqbVJ1aLyQAhM+Z/SB/T
-	 l3pABgWOgX/yt1igq92+0g4BCPUsrbDf1y0PHYZuWXATEcXYLHyfwh+NMvf6ox4gCt
-	 gv5FKBL3NClHyxd5uoXmaRYc4fQ6C1pq4ncUyKboaK3Ilrff13uxMng8xQeLJkwrqB
-	 G5TUSQ8H3y5rujkd2dcxjjEO1TNOviSEb0ymQxtIkA4Mmg/kfPVNSFe/ckcaCC6vNx
-	 MAJD2G8rnYs9Q==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Peng Fan <peng.fan@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	robert.jarzmik@free.fr,
-	brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 19/22] gpio: pxa: Make irq_chip immutable
-Date: Sun,  1 Jun 2025 19:45:10 -0400
-Message-Id: <20250601234515.3519309-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250601234515.3519309-1-sashal@kernel.org>
-References: <20250601234515.3519309-1-sashal@kernel.org>
+	s=arc-20240116; t=1748841430; c=relaxed/simple;
+	bh=QlgZisWVY17SLtoiXdf351YXoW5eO2YEIBQ2EQVI5BE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J15QFaj49Lk227sxkiGXtflYhtSJMopL+ms8SYBxyiqfi8jKZg0Nzj6krIEWSW0pp8KDucq3kG5tknU3zgb5e+YAdksXixKHPmg++A5SXhgN2cgQ8MsXNrTIyluffD/8MIFC+vBHtbW6LVE1OEtfVo+Dg1iQTHhK21EEWuiSigM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GP9bYpvp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 551LnPw2016916
+	for <linux-gpio@vger.kernel.org>; Mon, 2 Jun 2025 05:17:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=BcvF3wu0+glYxRvQURwwkyPb
+	Iw+40g+dQPFaEyxFw88=; b=GP9bYpvpahtE5IBqlgEbKiOhXg6THipkPi4Sa5D2
+	SDZd1Ulu6vmJUpASjAQBAffcirieEVAqMA5mze5s3AHyEfOWMQ8K1OuOUMnKqacP
+	F2JWvLk7F2DwE5WPOmhf1PW9G7vPGgDGjAbDPqPbaXh3Zy/as4cENeh1CW32oAkh
+	RjFVpzP3HjJAdDEcoXLmmOG9Sq5ICWR3sjOXHv5EMs/Z5f0JgUA5LDniHTtk21PX
+	tgbI6FTDQnejfSJPJOgp6TvFP2ZlpDZ5ysdfstweYpronhBD1wOGuIiWFuUonZO3
+	iXmuM+5UbEyubg9ok1IjZwETRJCMSqMN4bbvr11Fio5UyA==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46ytpeue1s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Mon, 02 Jun 2025 05:17:07 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-311e7d05931so3802326a91.1
+        for <linux-gpio@vger.kernel.org>; Sun, 01 Jun 2025 22:17:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748841426; x=1749446226;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BcvF3wu0+glYxRvQURwwkyPbIw+40g+dQPFaEyxFw88=;
+        b=UQn4Lkx+vyalyuUROB+NdKBIESw1OV63x77zBe7U2utYKtImEaFjVa3iHCQpkloppF
+         e9fk/CH/g2Y1LR1qmF67neHoDTenR7QqnFEYtQW4Kn3t85p0qHvAvsePub73fUmJO3rJ
+         RMieZL3xdxk+aUXsC0Vx022+dxLc9prg4s3zKScvbmIwttObvs1BIYTeaI8U6FpF07xA
+         DJppXNuL8i9wOnL0OoobLY0pC/u5I8BTYF3MKkJI+c2nfwA8ZxaihusnyIIGY8kkDDJu
+         7gVOm0Yu9YNvrUl70EBRet2ocUzByV5I94Zsye4tdzqXQPdYxRHnCYQvYswSF8ZD4lli
+         7KSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULK3uqup/Jmi65+8tCWERSaGynUu7GQikMkiUIv36D7zy3nWu1Pin0QheHzsHSCaam7b5Rx70x1e8j@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvRz6249mxg/LeU8kfny1f2u1WatJEb905PXgFHQxVgITSsZ3R
+	fLA7O15hMPAqWexVqJMZTU9LpfOLqf4l8YnYSp8OGa3nYsB1+Q/Eb6l8RtzzmxujFtR5OUU2Rwj
+	ykdsDxBEUgm38nBR2aUOoZHhCJvNg2wEyzHUnJn6DOvQqRuDaNOGQMW0+Yf689yAJoFbYP7cQ07
+	rMooNRwy0muy2298Ua4Iiw/1BACcIvCUw8rRhCOWo=
+X-Gm-Gg: ASbGncvnnI80d6pjFAgDEkaxqL5l3P2UJ7chY95zMioEN2MgiQN97jfune+hOnq/NYW
+	Sb9NxXK5z6y08COX1gtB+qHmbdBLR8GlCNsnVe+ApkmZf11N0QxJtDecIBRUkL4vnq+/hHjYnpF
+	+85Ho=
+X-Received: by 2002:a17:90b:5828:b0:311:e8cc:4264 with SMTP id 98e67ed59e1d1-31250363513mr19184372a91.12.1748841426089;
+        Sun, 01 Jun 2025 22:17:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHChfK7PzYEZQwIvqSMCkJ/uvXJUWw56R0DX0Cq8T43ylpHzEa8bN6hcW7rjeT7ueXeX59XgKnJOr16AZ1SCX8=
+X-Received: by 2002:a17:90b:5828:b0:311:e8cc:4264 with SMTP id
+ 98e67ed59e1d1-31250363513mr19184328a91.12.1748841425612; Sun, 01 Jun 2025
+ 22:17:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.293
-Content-Transfer-Encoding: 8bit
+References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
+ <DA70A4LOJ57L.1RTX2K0Z6PU0L@linaro.org> <5b28e37d-6d46-472a-9aef-d2d86ea8f04b@quicinc.com>
+In-Reply-To: <5b28e37d-6d46-472a-9aef-d2d86ea8f04b@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Mon, 2 Jun 2025 08:16:54 +0300
+X-Gm-Features: AX0GCFtphupxUXzge-OP-7CeHDdsIOZC-CkWPj3OAeMdCwPb4GB5B5RCJ_MKFaQ
+Message-ID: <CAO9ioeUPQOTgAY1FDW=VCNbcTHv6jZFnjF7F0JdJb5Px3Dhotg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/8] Enable audio on qcs6490-RB3Gen2 and qcm6490-idp boards
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+Cc: Alexey Klimov <alexey.klimov@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+        kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Authority-Analysis: v=2.4 cv=H+fbw/Yi c=1 sm=1 tr=0 ts=683d33d3 cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=NEAV23lmAAAA:8 a=COk6AnOGAAAA:8 a=XMtzzObD5LvXkpxU5CkA:9 a=QEXdDO2ut3YA:10
+ a=rl5im9kqc5Lf4LNbBjHf:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: EZbhzBRDYnuvOwW4MEYxWq_dxIpEs_jn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAyMDA0MiBTYWx0ZWRfX5DgI1QP4nuIu
+ 2zhHZCb4fRyYeKj17AY6nm0q+VTcg/fD/LIextBtdAMzzTSaBEcjDovD5gbyIMtYOe6jkZnW8gU
+ 7LaiiWor6puLfexIEoAubJVTpPPnrbYlH3kvvOwMlDSDI8b1O0RrjtOJ+fm/xhUHzVLe7nOnVdV
+ mq6mHTQT3wMkJD4TnTXFT4b6O3fcDlFcWHdkojLcgk//tEqDFOmWyHONoD0sLNCbRhtlkKTaPwz
+ BsSA0P9+y8gl9RnLUJkbWbf8+5VyqILTfgiqqmbpSoNuLD8/F6GoAMBa8KJ/EmfcwLreZJ/Ev2W
+ O7HhSrOgO9ns9O00HUPuhcXrTy4/0UCldPCI6jzjLKP7KRzhuMSFgEO88HsJ5p3UY98WzAbHGOi
+ hhxnMQOL7IjpDt/a0GdiQXgDmikZm+8ibGKHZUBeIU1TgzQd/rYyH/Qln2vqpMFQqj6gKIo9
+X-Proofpoint-ORIG-GUID: EZbhzBRDYnuvOwW4MEYxWq_dxIpEs_jn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-02_01,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=954 adultscore=0 clxscore=1015 phishscore=0 spamscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2506020042
 
-From: Peng Fan <peng.fan@nxp.com>
+On Sun, 1 Jun 2025 at 16:02, Prasad Kumpatla <quic_pkumpatl@quicinc.com> wrote:
+>
+>
+>
+> On 5/27/2025 7:47 PM, Alexey Klimov wrote:
+> > On Tue May 27, 2025 at 12:12 PM BST, Prasad Kumpatla wrote:
+> >> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> >>
+> >> Audio support is now enabled on the qcs6490-RB3Gen2 and qcm6490-idp boards.
+> >> The updates include adding the necessary audio device tree support and the required
+> >> dependencies.
+> >
+> > Do you have topology file and mixers commands (or UCM profile) to test this?
+> >
+> > I already asked but I don't see any replies. How this can be tested?
+>
+> please use these below UCM config files
+> https://github.com/mohsRafi/alsa-ucm-conf/blob/qcs6490_qcm6490_hifi/ucm2/Qualcomm/qcs6490/QCS6490-RB3Gen2/HiFi.conf
+>
+> https://github.com/mohsRafi/alsa-ucm-conf/blob/qcs6490_qcm6490_hifi/ucm2/Qualcomm/qcm6490/QCM6490-IDP/HiFi.conf
 
-[ Upstream commit 20117cf426b677e7aced4e7a1b2b37f6080a46dc ]
+Is there anything there that isn't a part of the 1.2.14 release of
+alsa-ucm-conf?
 
-Kernel warns about mutable irq_chips:
-"not an immutable chip, please consider fixing!"
 
-Constify pxa_muxed_gpio_chip, flag the irq_chip as IRQCHIP_IMMUTABLE,
-add the new helper functions, and call the appropriate gpiolib functions.
-
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20250509-gpio-v1-9-639377c98288@nxp.com
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-**YES** This commit should be backported to stable kernel trees. Here's
-my extensive analysis: ## Backport Analysis: gpio: pxa: Make irq_chip
-immutable ### Code Changes Analysis The commit makes three key changes
-to `drivers/gpio/gpio-pxa.c`: 1. **Makes irq_chip structure const**:
-Changes `static struct irq_chip pxa_muxed_gpio_chip` to `static const
-struct irq_chip pxa_muxed_gpio_chip` 2. **Adds IRQCHIP_IMMUTABLE flag**:
-Includes `.flags = IRQCHIP_IMMUTABLE` in the irq_chip structure 3.
-**Adds resource helper macros**: Includes
-`GPIOCHIP_IRQ_RESOURCE_HELPERS` macro 4. **Updates mask/unmask
-functions**: Adds proper `gpiochip_disable_irq()` and
-`gpiochip_enable_irq()` calls in the mask and unmask functions
-respectively ### Why This Should Be Backported **1. Follows Established
-Pattern** This commit follows the exact same pattern as the reference
-commits marked "YES" for backporting: - Similar to gpio-vf610 (commit
-e6ef4f8ede09) which was backported - Identical to gpio-104-idio-16
-(commit 410a5041aa60) which was backported - Same transformation pattern
-as dozens of other GPIO drivers **2. Fixes Kernel Warning** The commit
-explicitly addresses a kernel warning: "not an immutable chip, please
-consider fixing!" This is the same warning addressed in all the
-reference "YES" commits. **3. Small, Contained Changes** - Only modifies
-one file (`drivers/gpio/gpio-pxa.c`) - Changes are minimal and
-mechanical - No architectural changes or new features - Low risk of
-introducing regressions **4. Important Bug Fix for Users** - Eliminates
-annoying kernel warnings that users encounter - Brings driver in
-compliance with modern kernel IRQ subsystem requirements - Improves
-system reliability by preventing dynamic modification of irq_chip
-callbacks **5. No Side Effects** - The changes are purely structural
-improvements - Maintains identical functionality - Does not change the
-driver's external behavior - Only makes the irq_chip structure immutable
-for safety **6. Critical Subsystem Compliance** - GPIO subsystem
-actively enforces immutable irq_chips - This is part of a kernel-wide
-migration to improve memory safety - Prevents potential security issues
-from dynamic irq_chip modification **7. Hardware Support Impact** The
-PXA GPIO driver supports widely-used ARM processors: - Intel PXA25x,
-PXA26x, PXA27x, PXA3xx series - Marvell PXA93x, MMP, MMP2, PXA1928
-series - These are found in many embedded systems and IoT devices ###
-Comparison with Current Tree The analysis shows that in the current
-kernel tree (`/home/sasha/linux/`), the gpio-pxa.c driver still has the
-old mutable irq_chip structure (line 523: `static struct irq_chip
-pxa_muxed_gpio_chip`), while the target directory shows it has already
-been converted. This confirms this is a legitimate conversion commit
-that needs backporting. ### Risk Assessment **Very Low Risk:** -
-Mechanical transformation following established pattern - No functional
-changes to GPIO operations - Extensive precedent from similar successful
-backports - Changes are compile-time enforced (const keyword) This
-commit represents a straightforward compliance fix that eliminates user-
-visible warnings while improving code safety, making it an ideal
-candidate for stable tree backporting.
-
- drivers/gpio/gpio-pxa.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-index 5c770b7891f71..177529aecc697 100644
---- a/drivers/gpio/gpio-pxa.c
-+++ b/drivers/gpio/gpio-pxa.c
-@@ -508,6 +508,8 @@ static void pxa_mask_muxed_gpio(struct irq_data *d)
- 	gfer = readl_relaxed(base + GFER_OFFSET) & ~GPIO_bit(gpio);
- 	writel_relaxed(grer, base + GRER_OFFSET);
- 	writel_relaxed(gfer, base + GFER_OFFSET);
-+
-+	gpiochip_disable_irq(&pchip->chip, gpio);
- }
- 
- static int pxa_gpio_set_wake(struct irq_data *d, unsigned int on)
-@@ -527,17 +529,21 @@ static void pxa_unmask_muxed_gpio(struct irq_data *d)
- 	unsigned int gpio = irqd_to_hwirq(d);
- 	struct pxa_gpio_bank *c = gpio_to_pxabank(&pchip->chip, gpio);
- 
-+	gpiochip_enable_irq(&pchip->chip, gpio);
-+
- 	c->irq_mask |= GPIO_bit(gpio);
- 	update_edge_detect(c);
- }
- 
--static struct irq_chip pxa_muxed_gpio_chip = {
-+static const struct irq_chip pxa_muxed_gpio_chip = {
- 	.name		= "GPIO",
- 	.irq_ack	= pxa_ack_muxed_gpio,
- 	.irq_mask	= pxa_mask_muxed_gpio,
- 	.irq_unmask	= pxa_unmask_muxed_gpio,
- 	.irq_set_type	= pxa_gpio_irq_type,
- 	.irq_set_wake	= pxa_gpio_set_wake,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static int pxa_gpio_nums(struct platform_device *pdev)
 -- 
-2.39.5
-
+With best wishes
+Dmitry
 
