@@ -1,164 +1,276 @@
-Return-Path: <linux-gpio+bounces-20925-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20926-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41BA8ACC8A3
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 16:01:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D409DACC9FD
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 17:18:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA6403A56AB
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 14:01:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1337A163478
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 15:17:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0381923815B;
-	Tue,  3 Jun 2025 14:01:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7138923C384;
+	Tue,  3 Jun 2025 15:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hX/ulD3n"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="UvgB2S7z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012062.outbound.protection.outlook.com [52.101.66.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DB8230268;
-	Tue,  3 Jun 2025 14:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748959279; cv=none; b=OD5mQbsRSakcS5C53SOosvGNBqitihi8TKLfRulVjLXMz1qq0IvTCjllcGCEfao2TV9oKoYjYWMor5J1FeWsuAiZguedpnpqgiyrx0mtx2zyzg6C6DiCmtjzjR5jH9NhwbNSUUhxtv1S4/ps41oMzvt86XPjQ7U1IdSvLCUbFBM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748959279; c=relaxed/simple;
-	bh=3q0Obe4Cn9KiuhkbJK81hf7Mt1MlSJlm7+3onifiVyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJLq0t77hqn4iJ6ic2eI4GNe9lpQffUh8S87PvWSxVfCSo7t2hMHNLNq+jpPnSwH/DlP0UBSXcxJMYs/yMNyo1xXdeFJspQrUfY1pXMA2wDaYkK+vcmxBJpVh1ZR2sIDmkgy+o0LfXqCaWjcIDFoJUbUGydniP6TkcjJmOr9RMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hX/ulD3n; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748959276; x=1780495276;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3q0Obe4Cn9KiuhkbJK81hf7Mt1MlSJlm7+3onifiVyc=;
-  b=hX/ulD3nsKTvvtGTE4P6egq7KjsvK8RlTdtGxdW2VCoOJU4Ws8y8cfSY
-   ACeeF8rdziLBHWq37XhaT7LPAl8jEOGmHX7/dEso0jKZHqxMY5ble39Gk
-   nAldIjf5JN+EjV4ePCGQWFGOzRlRuexUvEoXKoFh+U3MoX8liV3Tz6GDh
-   Xq6lTUsEHo0S7UhAotLI7iVOHd3L5QEWzm3oIB5tumAnaF6F8HhA9lPJG
-   APxXZX1+y5Q8mERJsvwPB55qGu3/AVIAvhdQCBp0q+gnuJuHJjN7Q+ado
-   HLDVITfgdffpxeS0hId9Nf067hX8s4kTJclw0Jm1S6wM/V6ARXfi7tW9P
-   Q==;
-X-CSE-ConnectionGUID: iHXR31chRJemZ2j6A2Tz2w==
-X-CSE-MsgGUID: CbeBxpZ4Q4OckJ/1W/EamA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="50917607"
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="50917607"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:01:15 -0700
-X-CSE-ConnectionGUID: 7a90o6iiTQC8JluBJZh12A==
-X-CSE-MsgGUID: JX6gQmiOR4GZElohKVUDVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="144898424"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 03 Jun 2025 07:01:11 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uMSCS-0002Uz-2q;
-	Tue, 03 Jun 2025 14:01:08 +0000
-Date: Tue, 3 Jun 2025 22:00:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linus.walleij@linaro.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <202506032131.wuzW0a3k-lkp@intel.com>
-References: <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBDA23099F;
+	Tue,  3 Jun 2025 15:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748963863; cv=fail; b=LKAu3AVRD2//MXoAI70zQC/w5chGNlpdQnFrmLmFftJRXsgSihrYxzmGYs8TtKEGH8z4LkShVyKUZwBP5FJvh3lVkxXqv4xu4AvRo5IdD3ICVG/OZZBGkUmWJkjek2DOI2iEk2b4C5hAQOHrL8XqR5knlrMs3LNPKa6w0HgXfzM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748963863; c=relaxed/simple;
+	bh=/DELRBVhXHfW4EVDu+lptufmwgWyXSABWF/6PVSmi6w=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=hiMvkMWCPJ832UeG0DzpC7rd+hKZb4ssxVwx0Z+n1fA+vK5Y/RvHC9khbF32AI3DeOwGhodh9H5t1b+sFs2YfIpPe1LunXTGCDnn3EgR7OHVeKHmxDriiRlvMv2KnmeOn8V+ywl+pC5CO4F2YlzB3EbCFSvvfVet4FzIsD8feKM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=UvgB2S7z; arc=fail smtp.client-ip=52.101.66.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bRl7FHALr3IOhEXAc7Vknp+EXCiHwU1x8aGkfU/pgqK1l0BlbTxkwVCC80z5GGXJqquupPE2AA5xl122hb3C0nIFlVuctIghkOBuvFgnPbS4WG+LXCdnCfrKRUbK36iwaT9EJOd2F+9NIYhE1f4iGTXkCAv0lknr7/MMsEpMY6wf+fHg/aGDsmnnRE0x8cU4+xJ+YtWv27lkvgsFyhGRnmEpU/0y3MG42pjen0MOMByLMOHGb/6XkzE5A+QeJiATcj5LGoa7JW1ImuhvvSVOr39+Zep2ZAjeB+jDaoSGIwzY4K0OtAeaUZOJTy/lMJskkKjslx2ZF7o9jfLcvwFcdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5qSWmeDQ0D225h4h8WYB8tge3xYP/P0Ff/5rDo2qPlg=;
+ b=sWu55d0FzQhfIJO4G23zLuX/SiLUI49quywG8IazjALKUYxVjS/6ERa7n/z+HrjxB+lUJibM4CwCJq5r1bDSd4SKnue1E/PBj6msdvA229+35h92kf08GzcaQoDWUN+Wq/nZmEsbLgmeH44cd8JQWRJrAx46hMtl45bZ0hIpvuIi4s/TMbnM8W6B1nwER5a/j84AwM/cNprzkzcs+q1hw46DHfCbW00/34dqWSzY34MdqZDCpG2eW3PUZAxlBxxe38zCIwnfWW8wAz8PbAEP1Ns/8Zm1mX8HsD2xaHijnpn76VH63tqn66bbRZqWhstDSgrPGCghDgbVy+jDoT79Yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5qSWmeDQ0D225h4h8WYB8tge3xYP/P0Ff/5rDo2qPlg=;
+ b=UvgB2S7zSjSV5a7s+SymJV+45kStoGu+gPJQCrSy6+Xp9eWdWqvg+4vl/BrkuPWKzyaK/MNyaVfgpBkiUtThbsYzRdmcEsFLoRFY92iVK7vJSxkeL8RhIv7TUPOUArXl/J1vwuUnKC6nIN0QeeIz9hyZMIVo8QAL9bwH3vjONkrVGWqvTtbMKpVKmZxQ6pWdYthRyOiYs4CcuKienEBQdEzaqYjmhIurBh0fD+sRP+rLCnuT+eAyv+gYJf00MaSrAJkxDTrqsQu0hPiod4/sleCEHFwWfOjbvmjddsoa8RZPObKaJb9fnJZCrJejjtSsrttt9iws5sKGMwxbuBD2GA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM9PR04MB8571.eurprd04.prod.outlook.com (2603:10a6:20b:436::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.33; Tue, 3 Jun
+ 2025 15:17:37 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Tue, 3 Jun 2025
+ 15:17:37 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev,
+	wahrenst@gmx.net
+Subject: [PATCH v2 1/1] dt-bindings: gpio: convert gpio-74xx-mmio.txt to yaml format
+Date: Tue,  3 Jun 2025 11:17:24 -0400
+Message-Id: <20250603151725.1068064-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0341.namprd03.prod.outlook.com
+ (2603:10b6:a03:39c::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8571:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b226043-3faa-44d5-6b0b-08dda2b1c62d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SJOkM7U1OaKhlaIJ3qQBPMWs8Up6pFQ7eakUBc1xS6bPI2zQyTNGp4bezMgK?=
+ =?us-ascii?Q?MXpHuPJbFg8rEwdIbIZ0mxe0iFbU0ypI4dpGXtKGGhPkzhE4mYblsWzAc33o?=
+ =?us-ascii?Q?iDfj3QMXjhemfVu6mlxa7kTIuabJHEteykbZ7JAAa20u1CwkhN5ynUrCFInr?=
+ =?us-ascii?Q?VB30MTclDjrp7bz3syFIDgbQuds/6SjEMyOG9BHh4MEzfbd9S70ombwLfXMs?=
+ =?us-ascii?Q?dt0iE3dbsTKSrH4TBkXjwmsPeknUwy6MPaIUgwAs/Q2+RsU+xccAYo6SyI5G?=
+ =?us-ascii?Q?2qFijn50NvH29X+xU0sFl0qDBNN+mdG4p1xSqiFlp+MP3+44wrk3n2UNbTYI?=
+ =?us-ascii?Q?0zPR1dIwoSnh5E8H57o9TWyiaOkVn3JTrKuRa7ldYc9V6T/dD2MXuclR2nFr?=
+ =?us-ascii?Q?fu6J3m1UUJupFczIgBr8PNX9BRc52rcZyfXypTyxA682cwxC8c9OdYJhoVU8?=
+ =?us-ascii?Q?7pY1Xuwa5+kp5kvuTgW0s9co2HKU6DcFfL4hPBPDTgugvBGT/OZQFctV92Bn?=
+ =?us-ascii?Q?6To5Abt+CEEcmIUdZIZlUMK4dKgpZi/LGmsCvlgluzLqU4GEAH3ffYTlPzig?=
+ =?us-ascii?Q?ElqYsqW4oF3wkazC5o+Fi9KRpI8Am+yFc238adBGK5MRE7TAwTdB1K8d/+6k?=
+ =?us-ascii?Q?iKxZEezdtUyVQSdofpmNH44vlAbS5SKUi1KJdyw8KXcXQfxrWp2WpaRcw3KH?=
+ =?us-ascii?Q?k9eBPIcGXailkfOHLb8cMGURjaM0134EiAjOXxMlHVgd2vZasr75cN7qbq5x?=
+ =?us-ascii?Q?ZSgiU7mbV8zHVhAmgODQLc8iHE5Lh64cq8IYJVjDPeyppngNoMNshKLUKm63?=
+ =?us-ascii?Q?R8ZEtUJcAbsS1RbJJv6K4x0EDFQseZ9a+NB2bxIyGOW82QrH2osOIKQlc6fr?=
+ =?us-ascii?Q?x4uONflOfobbzHIvBNLs6DqnI/Uf2oQJ2G6QLwkUMyVU25ifiJP8zyI6j+Eq?=
+ =?us-ascii?Q?/pNvAOSC/U/FCPDkFxhmmQpCr8PNtoCQ27KuWO2zb4ckh9v4o3jEqOZ3UCuO?=
+ =?us-ascii?Q?cgjAmP9u1AqxDbLa75vu6GfAihckdZnF4HcAlc5prqXWYsiY5ZD+48Bxf6B2?=
+ =?us-ascii?Q?DhIlrSWRGxn3ziSNJ7LfSxrn95MgEcVa//x5Wwn//OL+NKBB+Qh5QMkfJ4TJ?=
+ =?us-ascii?Q?vHaohUmAfQSYZjX0YvSFvbKFRqNUhnHR1O78kqYM//l1jSjASMNrlxrzhnKb?=
+ =?us-ascii?Q?qlJE2EfIoeGWZhcyP3NBtQoiqmUYURQrDcI9GvGzUXC6FrBlFPZqXYLro41P?=
+ =?us-ascii?Q?/RCK+8E9mHsMwOi4M9yJMyAzzOZ5VARYFOTI0nO6LQQeGmgnn/xVf/KkSSZk?=
+ =?us-ascii?Q?SnFi3UcNJvdU1mNdPSk3i+8j/3S63PLqkPKmc8bpxNpPva5dZzxF2g7qhtFM?=
+ =?us-ascii?Q?4hwcRTITRM5x65EGHSifi5qvOe+aHKHepclpy0op9A/0swg1/fQyLF69kLRg?=
+ =?us-ascii?Q?Iz+5k2P5VIGjA/BljAJvBEHn304quePK?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/YObbrhAzVxNrgtVGoBycSNzJOrdyFjBLbuw4erWDb84IDnlHWmWsPCsjloC?=
+ =?us-ascii?Q?R235bKfwRd8RRFf7arN7POIUTT6O5Tv0QUb/8lGFCzNF83HNOGczknlAMnrD?=
+ =?us-ascii?Q?Qy/DqXJGcfszfx3yMXDpD2M1Rp6aJLlDN9OtkTBEoKxrqnpj5Vwm0nI83VMx?=
+ =?us-ascii?Q?zgnhJqlhHCZLJnl0xsGFEBC7W1Jd9vtMtS3WoocCxIVA6rKqDrFSRTJzYJAc?=
+ =?us-ascii?Q?ZUaJSH0QxOZEm4sLAUMj1cU47uxOHPd1IYn/JKvdLgGKFY0PWlTJPBWw4Mp0?=
+ =?us-ascii?Q?uU3uOq5iXcTNuxF95bw01/nv1blZsVEd1kHt91vkFHsXPYHWAcwkwc9id0Vu?=
+ =?us-ascii?Q?aVHcf3AEZR8dVvi/Wj6mwsDwT4/W1KQBD2JZuDUgZUZgVyufkMlkFMVN+Exw?=
+ =?us-ascii?Q?GTEHyNTE6ml98MLrcqwRyAP8gSnj49I1lMu65u3OCutA6asba4CFHF18fkJb?=
+ =?us-ascii?Q?TxzLcD5WR43cnsuhfBe5fOzFFtUHpHJOsSydwYki+/7x6v/+ojotMfXrkoly?=
+ =?us-ascii?Q?e3K2XK2Gd/tty2gt8JgYmOjCmdQwJpKcZly+yMP1PqhKPw8nwW+vuabx8wWh?=
+ =?us-ascii?Q?rwiHHkY/mlpnHAUqOK1uQkOV2mzb6LdrTjhnFjxGMuKaIjms5Dk8usIQ/MVj?=
+ =?us-ascii?Q?+6Q93+MBgMkHOAYjcI0DIBU7ruvq/uJMEcQ7aZDCFg6wNof4ShX8+EKABxp2?=
+ =?us-ascii?Q?5/SREQsfS+3TikymXP1BApkdg+pXlhYaOYW+J9zBmq4UMZrIm4alNkq7wIg4?=
+ =?us-ascii?Q?dG5ZpZ4gi6h3YPt5UFsL7Vpp9XA8/s8h8fuOoFnr6WK6GNI9LhMv3P1W8cCK?=
+ =?us-ascii?Q?42R47G13xhI6mBh64yeytZkspVLPfPYHyqj2owirlXThl7lKjeQaWd4WNj+0?=
+ =?us-ascii?Q?9LkYZXuoLxoKd3dyAFfBE/Sob14DYHxJ73L3fDyxu1bg5XDf4mN9VRfZUBut?=
+ =?us-ascii?Q?kzESJ9sLF11xS3kqv388cEUq0XRv+FCoxZQw4cE72t2JvfD5scvvmOIpkdbX?=
+ =?us-ascii?Q?kReG5T8v6fL/taJTEk6KFwaoVJhCzWu04mdBM6XOvCe16CU5SRegCC7l75jC?=
+ =?us-ascii?Q?EX5hiPq0kzcglVjNhqpw7AlcQbp9DN9U3if9IiqgX02WhLLJZMSE8pYtyRBc?=
+ =?us-ascii?Q?xF1hef4+yuMVrP4GUbTViOLqDNq3pXct8Gu3i8H0li9JAPsn/pdtN82NM2T1?=
+ =?us-ascii?Q?VMJmqsEd5D5fFeAB2hylR+c3sPStCjsaWJxuQYRshO4fBK/x5tLLRr7x3TRO?=
+ =?us-ascii?Q?xf0J1GpVopben6YAxSJB7uQkFzwtfYkhqJzte2TgruybfyUw4pU7nYHWuH9M?=
+ =?us-ascii?Q?iMmL0ZlQyRu+wD82c0+dN1lNpRaAUOn+aXeHoGt/FHQoK9CjsdS/GbdyHuVS?=
+ =?us-ascii?Q?6cXg9VgxdCcQ/ai6ewyQup2LlUaHevZigMI6OBD7vVBTm23fTSt6kt0qcSL9?=
+ =?us-ascii?Q?dc8Jk/Whsd7TQtxrQ1lDZX3s9Z/XdAMzo2Ne7aFtopAEjLG3oMua3qf1CKF5?=
+ =?us-ascii?Q?0LBYzA/l1+gGDlymkgujsBgTIBOTYQiWvT3kITr2t/px9S6LyNAXv6bqdDvD?=
+ =?us-ascii?Q?IL4g7L5QyaNFFRKsc+EfpMjyEUJ4riQwj1STtbKu?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b226043-3faa-44d5-6b0b-08dda2b1c62d
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 15:17:37.6599
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mRGJpGqkdKFji5+hjCsR3SiGkWyPqIGS9SH2UBe6Lnjj9Sn10fZ1Iui0OhXR/WrwqTIHe4MhTFlNd9hmaUeT4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8571
 
-Hi Marcelo,
+Convert gpio-74xx-mmio.txt to yaml format.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+change in v2
+- remove trivial changes in commit message
+- add TI in title
+- fix additionalProperties
+---
+ .../bindings/gpio/gpio-74xx-mmio.txt          | 30 ----------
+ .../devicetree/bindings/gpio/ti,7416374.yaml  | 56 +++++++++++++++++++
+ 2 files changed, 56 insertions(+), 30 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/ti,7416374.yaml
 
-[auto build test WARNING on c06335516e8c14f501a479a4d9de0e6c09c52ef2]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Marcelo-Schmitt/dt-bindings-iio-adc-Add-AD4170/20250603-105744
-base:   c06335516e8c14f501a479a4d9de0e6c09c52ef2
-patch link:    https://lore.kernel.org/r/e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt%40analog.com
-patch subject: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250603/202506032131.wuzW0a3k-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250603/202506032131.wuzW0a3k-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506032131.wuzW0a3k-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/iio/adc/ad4170.c: In function 'ad4170_parse_reference':
->> drivers/iio/adc/ad4170.c:1130:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-    1130 |         int ret;
-         |             ^~~
-
-
-vim +/ret +1130 drivers/iio/adc/ad4170.c
-
-  1124	
-  1125	static int ad4170_parse_reference(struct ad4170_state *st,
-  1126					  struct fwnode_handle *child,
-  1127					  struct ad4170_setup *setup)
-  1128	{
-  1129		struct device *dev = &st->spi->dev;
-> 1130		int ret;
-  1131		u32 aux;
-  1132	
-  1133		/* Optional positive reference buffering */
-  1134		aux = AD4170_REF_BUF_FULL; /* Default to full precharge buffer enabled. */
-  1135		fwnode_property_read_u32(child, "adi,positive-reference-buffer", &aux);
-  1136		if (aux < AD4170_REF_BUF_PRE || aux > AD4170_REF_BUF_BYPASS)
-  1137			return dev_err_probe(dev, -EINVAL,
-  1138					     "Invalid adi,positive-reference-buffer: %u\n",
-  1139					     aux);
-  1140	
-  1141		setup->afe |= FIELD_PREP(AD4170_AFE_REF_BUF_P_MSK, aux);
-  1142	
-  1143		/* Optional negative reference buffering */
-  1144		aux = AD4170_REF_BUF_FULL; /* Default to full precharge buffer enabled. */
-  1145		fwnode_property_read_u32(child, "adi,negative-reference-buffer", &aux);
-  1146		if (aux < AD4170_REF_BUF_PRE || aux > AD4170_REF_BUF_BYPASS)
-  1147			return dev_err_probe(dev, -EINVAL,
-  1148					     "Invalid adi,negative-reference-buffer: %u\n",
-  1149					     aux);
-  1150	
-  1151		setup->afe |= FIELD_PREP(AD4170_AFE_REF_BUF_M_MSK, aux);
-  1152	
-  1153		/* Optional voltage reference selection */
-  1154		aux = AD4170_REF_REFOUT; /* Default reference selection. */
-  1155		ret = fwnode_property_read_u32(child, "adi,reference-select", &aux);
-  1156		if (aux > AD4170_REF_AVDD)
-  1157			return dev_err_probe(dev, -EINVAL,
-  1158					     "Invalid reference selected %u\n",
-  1159					     aux);
-  1160	
-  1161		setup->afe |= FIELD_PREP(AD4170_AFE_REF_SELECT_MSK, aux);
-  1162	
-  1163		return 0;
-  1164	}
-  1165	
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
+deleted file mode 100644
+index 7bb1a9d601331..0000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-* 74XX MMIO GPIO driver
+-
+-Required properties:
+-- compatible: Should contain one of the following:
+-   "ti,741g125": for 741G125 (1-bit Input),
+-   "ti,741g174": for 741G74 (1-bit Output),
+-   "ti,742g125": for 742G125 (2-bit Input),
+-   "ti,7474"   : for 7474 (2-bit Output),
+-   "ti,74125"  : for 74125 (4-bit Input),
+-   "ti,74175"  : for 74175 (4-bit Output),
+-   "ti,74365"  : for 74365 (6-bit Input),
+-   "ti,74174"  : for 74174 (6-bit Output),
+-   "ti,74244"  : for 74244 (8-bit Input),
+-   "ti,74273"  : for 74273 (8-bit Output),
+-   "ti,741624" : for 741624 (16-bit Input),
+-   "ti,7416374": for 7416374 (16-bit Output).
+-- reg: Physical base address and length where IC resides.
+-- gpio-controller: Marks the device node as a gpio controller.
+-- #gpio-cells: Should be two. The first cell is the pin number and
+-   the second cell is used to specify the GPIO polarity:
+-    0 = Active High,
+-    1 = Active Low.
+-
+-Example:
+-	ctrl: gpio@30008004 {
+-		compatible = "ti,74174";
+-		reg = <0x30008004 0x1>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/ti,7416374.yaml b/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
+new file mode 100644
+index 0000000000000..62bd371616daf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/ti,7416374.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI 74XX MMIO GPIO driver
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++properties:
++  compatible:
++    enum:
++      - ti,741g125 # for 741G125 (1-bit Input),
++      - ti,741g174 # for 741G74 (1-bit Output),
++      - ti,742g125 # for 742G125 (2-bit Input),
++      - ti,7474    # for 7474 (2-bit Output),
++      - ti,74125   # for 74125 (4-bit Input),
++      - ti,74175   # for 74175 (4-bit Output),
++      - ti,74365   # for 74365 (6-bit Input),
++      - ti,74174   # for 74174 (6-bit Output),
++      - ti,74244   # for 74244 (8-bit Input),
++      - ti,74273   # for 74273 (8-bit Output),
++      - ti,741624  # for 741624 (16-bit Input),
++      - ti,7416374 # for 7416374 (16-bit Output).
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++    description: |
++      The first cell is the pin number and
++      the second cell is used to specify the GPIO polarity:
++        0 = Active High,
++        1 = Active Low.
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - '#gpio-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio@30008004 {
++        compatible = "ti,74174";
++        reg = <0x30008004 0x1>;
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
