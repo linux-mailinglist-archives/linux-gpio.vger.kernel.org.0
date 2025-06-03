@@ -1,140 +1,131 @@
-Return-Path: <linux-gpio+bounces-20917-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20918-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42864ACC1FE
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 10:14:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F5ECACC226
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 10:27:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 56E7A1890A72
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 08:15:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D16216E66E
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 08:27:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2C5280A20;
-	Tue,  3 Jun 2025 08:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="orbCwSCG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5F2D280A58;
+	Tue,  3 Jun 2025 08:27:15 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC121B0F17;
-	Tue,  3 Jun 2025 08:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F62AEF1;
+	Tue,  3 Jun 2025 08:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748938478; cv=none; b=IabXX9ttD+TS3iV4VTJEKrQRc6P81KTUXW6hT7KX35kVh8G0IKK2an+qVC+X6+cCI5m8XX9FffB+Ze8prPX/AHT3Mbs1q65zS5kQRMUAokL0NKIO0pHs0j87bL9PbRtP5ocv6PCu3uUDXAYxdXMo6MuDmqUqXJr6ifdWhd+j1H8=
+	t=1748939235; cv=none; b=hmfjjez44NT3PXL6YcLIntMHqpVLLYtkbE1EF90SXTaV3zofsRt1oYPUJK0oqP2lgudM+sxYjfuSEqZPZZSqQxwO+HM4bUAtbgMI+5bfPA+0RHxG0zQwnHKClIi+Y2vnkw8lJc9qAiUMrvMPF3z9BNLJFlhNFnajeCD4VtCyO80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748938478; c=relaxed/simple;
-	bh=dciWodElUQWt/nXrnquDH/0Ryjyq88uAe2ACjLnKzJM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=jQLsj/C3/HNcOP8IgNVhVkaDNeDvml01bGX97PxeliALwTftWAHXNzN63tOdwVB/FWMuHuT01K3L9LQ56eKCcXoJ0qq0qZ+Trc4ZX3qaIqynrAbd4aDI3KqzCoWH4q22ZizGnxtqIIzxZXY6MsEro2F2/2YTiduVpjhxWCeoikY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=orbCwSCG; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1380A43257;
-	Tue,  3 Jun 2025 08:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748938468;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UYHP77MR1IeqsYPBtD9NN1v7/E7eVkbYx6AbgINVYYw=;
-	b=orbCwSCGGzbhHBFK/BK0BEM2p/QlLvy7H/nxBFMx/tecFgYTkvijDYrUr7gTCgNMmCAvM1
-	GgBeUNUI8ZBhCDjApp8SEELixeYMElQsL03fqopDzk/3uzsEjg8ZqTXGOi8b4HlsQeKecH
-	1skJpQx7+tF+g4uR9WJBzLs+cCToFOgHc5allLD3nrmonRx7jhVfBuosXRggq38o4oniAQ
-	4ckn5oAkPdZuULqQTNG3reW/ccBiU8pZDffJRu/XEtPKhOrtiVHhGSU40RJZQD1yZUuH2E
-	oR6knn/9fi9MkDy3SZNHRsuV8ue13QK1xx1byWCRWWjnOlhglYzjB6s36rOuwg==
+	s=arc-20240116; t=1748939235; c=relaxed/simple;
+	bh=BRrKnqgLltf6ieKDODpgazGoNdNRWTnRKZsItlQWc2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k4HqfFcZwwJRERBXpSObJ9wMrz7SoCNeUTLgGfXCq4DeF+9AwNjMCMNtwj8vNGSiKGbowqn7pZafw86EN/MvQ6KjkUyvne1HoUc12PKVobELhZ9ptylZWLzz1rpNQUnVDcNPPZM50ztoE4zz9U2UDuiLoEo8pela8A4+iIAbZw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: gHAVPs2CSTOgDiGH5drWsQ==
+X-CSE-MsgGUID: bhEds/3pTN6KmTGCAMv3HA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="54632278"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="54632278"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:27:14 -0700
+X-CSE-ConnectionGUID: i4BkCzHLR0Khp5rrO1zrTQ==
+X-CSE-MsgGUID: FLtNlArMRwyfc5yGc8HpFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="167968931"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 01:27:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uMMzC-000000035FG-0tXf;
+	Tue, 03 Jun 2025 11:27:06 +0300
+Date: Tue, 3 Jun 2025 11:27:05 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aD6x2caTMd1eBInM@smile.fi.intel.com>
+References: <cover.1748829860.git.marcelo.schmitt@analog.com>
+ <e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
+ <aD27cobHWeBX8o30@smile.fi.intel.com>
+ <aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 03 Jun 2025 10:14:24 +0200
-Message-Id: <DACQXYZZTRNB.2VJ47OLM9VP54@bootlin.com>
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>
-Subject: Re: [PATCH v10 01/11] dt-bindings: mfd: gpio: Add MAX7360
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
- <20250530-mdb-max7360-support-v10-1-ce3b9e60a588@bootlin.com>
- <082b50fb-813f-4b9f-968d-ed20acaeda53@kernel.org>
-In-Reply-To: <082b50fb-813f-4b9f-968d-ed20acaeda53@kernel.org>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdegtddtfeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkfevhffvuffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfeetvdfggeetheejjedtfefghfetvedvtddvjeelgefhfeeugfeltdetuddvteeknecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnv
- ghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon Jun 2, 2025 at 1:21 PM CEST, Krzysztof Kozlowski wrote:
-> On 30/05/2025 12:00, Mathieu Dubois-Briand wrote:
->> Add device tree bindings for Maxim Integrated MAX7360 device with
->> support for keypad, rotary, gpios and pwm functionalities.
->>=20
->> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
->> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->> ---
->>  .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 +++++++++
->>  .../devicetree/bindings/mfd/maxim,max7360.yaml     | 191 ++++++++++++++=
-+++++++
->>  2 files changed, 274 insertions(+)
->>=20
->
-> <form letter>
-> This is a friendly reminder during the review process.
->
-> It looks like you received a tag and forgot to add it.
->
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-> of patchset, under or above your Signed-off-by tag, unless patch changed
-> significantly (e.g. new properties added to the DT bindings). Tag is
-> "received", when provided in a message replied to you on the mailing
-> list. Tools like b4 can help here. However, there's no need to repost
-> patches *only* to add the tags. The upstream maintainer will do that for
-> tags received on the version they apply.
->
-> Please read:
-> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/s=
-ubmitting-patches.rst#L577
->
-> If a tag was not added on purpose, please state why and what changed.
-> </form letter>
->
+On Mon, Jun 02, 2025 at 01:54:25PM -0300, Marcelo Schmitt wrote:
 
-I previously decided to drop your Reviewed-by tag as I made some
-substantial changes since you gave it. Main difference since v4 of this
-series is add of the pinctrl bindings and some additional
-"rotary-encoder,*" properties.
+...
 
->
-> Best regards,
-> Krzysztof
+> > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
+> > > +{
+> > > +	/*
+> > > +	 * The use of static_assert() here is to make sure that the comparison
+> > > +	 * is adapted whenever struct ad4170_setup is changed.
+> > > +	 */
+> > > +	static_assert(sizeof(*a) ==
+> > > +		      sizeof(struct {
+> > > +				     u16 misc;
+> > > +				     u16 afe;
+> > > +				     u16 filter;
+> > > +				     u16 filter_fs;
+> > > +				     u32 offset;
+> > > +				     u32 gain;
+> > > +			     }));
+> > 
+> > I think it doesn't make much sense unless one uses memcpy().
+> 
+> memcpy() is used to update the setups after reg write succeeds.
+> Also, previously, memcmp() was used to compare setups.
+> Since struct ad4170_setup has only unsigned integers (no floating point fields
+> like ad7124 had [1]), ad4170 works properly when comparing setups with memcmp().
+> Though, it was asked to do explicit field matching on previous reviews [2] so
+> that's how it had been since then. Well, both ways work for ad4170. We can
+> compare setup with memcmp(), or do the comparison field by field. I don't mind
+> changing it again if requested. I guess we only need to reach an agreement about
+> what to go with.
 
-Best regards,
-Mathieu
+The question was "why do you need the static_assert() now?"
 
+> [1]: https://lore.kernel.org/all/20250303114659.1672695-13-u.kleine-koenig@baylibre.com/
+> [2]: https://lore.kernel.org/linux-iio/20250504192117.5e19f44b@jic23-huawei/
+> 
+> > > +	if (a->misc != b->misc ||
+> > > +	    a->afe != b->afe ||
+> > > +	    a->filter != b->filter ||
+> > > +	    a->filter_fs != b->filter_fs ||
+> > > +	    a->offset != b->offset ||
+> > > +	    a->gain != b->gain)
+> > > +		return false;
+> > > +
+> > > +	return true;
+> > > +}
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
