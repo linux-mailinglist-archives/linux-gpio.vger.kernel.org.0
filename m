@@ -1,133 +1,150 @@
-Return-Path: <linux-gpio+bounces-20930-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20931-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3865CACCD74
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 21:01:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F7E7ACD16A
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 02:56:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0271C164DFE
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jun 2025 19:01:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5397177CF1
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 00:55:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10EE720B81E;
-	Tue,  3 Jun 2025 19:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E211DD88F;
+	Wed,  4 Jun 2025 00:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QqT4KAou"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZs+kQ+m"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DF616E863;
-	Tue,  3 Jun 2025 19:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1671154423;
+	Wed,  4 Jun 2025 00:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748977312; cv=none; b=l+sLG90+d5adVoC/uPDkeBMm1jxBfnel0EXBSKZaLBduB69LW1s2vEVIX3BDa/2LeU6iUR725ToB4SdQNnaM6z+IhD0HFORsAvLEX9gJbdwabcnBb5GXJhg5wCo5voM/wjuQ42D09yq0AnN9U5TrrfxBtICqMKxIEqMNYXktUEg=
+	t=1748998340; cv=none; b=V2SEhZqWncrHrAhq1iLUBapLVC6X2ObIHIPVL8wRUZMD8cjNmZ7yn6fww0VGc7F/TCH5BjvyAluSvWwwHeT1dNp62ny7TFbx536SrFQYPso5DtvwJtXiVi/bMVKegEgdkPMDmtQEIhqcsdfBx6mUx+XSkpcmvXYOV7E+oTHKOL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748977312; c=relaxed/simple;
-	bh=c/UTLqD9DydJ/qJJI0guAN/88hV8mPnt6WlnWIuoELE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Usq5gC/0YryQAjUkNKpNoYmd0Aj/bjQ41NNfj64CU2eaymgzHayTJ1SkHx5ZYW9/5wDoLJEOB/rc7/p9FBH8GKreq8grSuYiORfzS2zO9YGaOQMd6A3Sn1zxLFMJc7BiUTRIrSJVxEWpptQls5dU50BGq7sj4RlMyj7okr9YyHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QqT4KAou; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37722C4CEEE;
-	Tue,  3 Jun 2025 19:01:49 +0000 (UTC)
+	s=arc-20240116; t=1748998340; c=relaxed/simple;
+	bh=2kRGOPkvhptSKXDiIvei8nHWVzu14Fiuvz/CG3AE8jk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IZKpUa2KC2Gv4nyjoiP56hp7/dYwvZzvNWTmfwIBuEB7eOa/mG5vny0+GtvBrGM0EiEth1nG6kY1xTGE9vC0VEY6EnTTp+5VS06CIelOEkBUZ0OUNFegQQpYmLC9tWw6UfNoH4JM9Ot7m+8PCl0WbZsepMgUXUD2aM6VQB+/iNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZs+kQ+m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B722C4CEF1;
+	Wed,  4 Jun 2025 00:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748977312;
-	bh=c/UTLqD9DydJ/qJJI0guAN/88hV8mPnt6WlnWIuoELE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QqT4KAouLssAqlSqVLKnxnb5e/k0V6oMMLTCaZ3Oi1VB9v0jXW06V5ePPWGbpUjlz
-	 avJ+JLq+mGFJ+W34RAfOI3ETzaaKpqe00AbCgwViwXqRiUq+TEaW2nn4vBzQOHUN/k
-	 gwxGnOLm4xDO38YS1bG1hR2zscCuRUFfa6CeHu3ovXoATWSZ3xzZML+eFBX4a7uv1E
-	 8lVahd4JV8ZALFXfW1epE0fgZAND1ZhWgjVsLUryjYHY80ICOtx637aWYUPmURKN0f
-	 Dqxb7SMe6FzapwgoDQhUZZhFUOr+2MbJHJw0rhSkudKQ8jHCi+Ne6ebrm9gX1qabaT
-	 JRVC7nt4GNY/w==
-Message-ID: <aa9ee815-3a3c-4f7d-aab7-1930750efe9e@kernel.org>
-Date: Tue, 3 Jun 2025 21:01:47 +0200
+	s=k20201202; t=1748998340;
+	bh=2kRGOPkvhptSKXDiIvei8nHWVzu14Fiuvz/CG3AE8jk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FZs+kQ+mN2PjafLuAv8mjHNOpRGdlkRrCP5b+K3L/VDKCcohff/HfRemeo1TcivJ3
+	 w/sKuqxrGJP2P98WXfYXAHjbFd4N2/zmxgoV0RyhdLnlqAbBnW0325BpRqH7VOgRKh
+	 2V0D6PJZtHKwrJnUAV5WScknKcPANelI/3X6t0HfvGrqJR1TNd55DdbZg7vtf8JRo4
+	 /KwZ5Xrq2debgpE4SkTnr9wkcwUjdSuPlxGFucb2dOcan5KAWw1nIaiXv+GzlOnaBd
+	 Hz0h0FbLIjVcJbUT0sRy2fCtwMHU0DqflPHXZbIEuDaEK+yY6bz8VPmSqaVDhYzd9A
+	 EongHKQJx3K0g==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Gabor Juhos <j4g8y7@gmail.com>,
+	Imre Kaloz <kaloz@openwrt.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	brgl@bgdev.pl,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.15 046/118] pinctrl: armada-37xx: propagate error from armada_37xx_pmx_set_by_name()
+Date: Tue,  3 Jun 2025 20:49:37 -0400
+Message-Id: <20250604005049.4147522-46-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250604005049.4147522-1-sashal@kernel.org>
+References: <20250604005049.4147522-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] dt-bindings: gpio: convert gpio-74xx-mmio.txt to
- yaml format
-To: Frank Li <Frank.Li@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "open list:GPIO SUBSYSTEM"
- <linux-gpio@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: imx@lists.linux.dev, wahrenst@gmx.net
-References: <20250603151725.1068064-1-Frank.Li@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250603151725.1068064-1-Frank.Li@nxp.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.15
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/06/2025 17:17, Frank Li wrote:
-> diff --git a/Documentation/devicetree/bindings/gpio/ti,7416374.yaml b/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
-> new file mode 100644
-> index 0000000000000..62bd371616daf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/ti,7416374.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI 74XX MMIO GPIO driver
-You still have here "driver" which I asked to remove correct. Heh.
+From: Gabor Juhos <j4g8y7@gmail.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+[ Upstream commit 4229c28323db141eda69cb99427be75d3edba071 ]
 
-Best regards,
-Krzysztof
+The regmap_update_bits() function can fail, so propagate its error
+up to the stack instead of silently ignoring that.
+
+Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-7-07e9ac1ab737@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+Based on my analysis of the commit and the code context, here's my
+assessment: **YES** This commit should be backported to stable kernel
+trees. Here's my extensive analysis: ## Code Analysis The commit changes
+`armada_37xx_pmx_set_by_name()` function from: ```c
+regmap_update_bits(info->regmap, reg, mask, val); return 0; ``` To: ```c
+return regmap_update_bits(info->regmap, reg, mask, val); ``` ## Why This
+Should Be Backported 1. **Bug Fix Nature**: This is a clear bug fix that
+addresses silent error handling. The `regmap_update_bits()` function
+returns an integer error code (0 on success, negative on failure), but
+the original code was ignoring this return value and always returning
+success (0). 2. **Error Propagation Impact**: The function
+`armada_37xx_pmx_set_by_name()` is called from: -
+`armada_37xx_pmx_set()` - the main pinmux set function -
+`armada_37xx_gpio_request_enable()` - GPIO request handler that already
+checks return values 3. **Consistency with Similar Fixes**: Looking at
+the historical commits provided: - **Similar Commit #2** (Backport
+Status: YES) shows the exact same pattern where
+`armada_37xx_gpio_request_enable()` was updated to check return values
+from `armada_37xx_pmx_set_by_name()` - This current commit completes
+that fix by ensuring the function actually returns errors when they
+occur 4. **Critical Subsystem**: This affects the pinctrl subsystem
+which is fundamental to GPIO and pin configuration. Silent failures in
+pin configuration can lead to: - Hardware not being configured correctly
+- GPIO requests appearing to succeed when they actually failed -
+Difficult-to-debug hardware issues 5. **Minimal Risk**: The change is
+extremely small and contained: - No new functionality added - No
+architectural changes - Simple error propagation fix - Maintains
+existing API contract 6. **Stable Tree Criteria Compliance**: - ✅ Fixes
+an important bug affecting users - ✅ Small, contained change - ✅ No new
+features - ✅ Minimal regression risk - ✅ Affects critical kernel
+subsystem 7. **Real-World Impact**: Without this fix, regmap failures
+(which can occur due to hardware issues, power management problems, or
+I2C/SPI communication errors) would be silently ignored, leading to
+unpredictable system behavior where pin configurations appear successful
+but are actually failed. The commit follows the pattern established in
+the historical commit #2 which was marked for backporting, and
+represents the completion of proper error handling in this driver's
+critical path.
+
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+index 335744ac83105..68fd469a338a7 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -358,9 +358,7 @@ static int armada_37xx_pmx_set_by_name(struct pinctrl_dev *pctldev,
+ 
+ 	val = grp->val[func];
+ 
+-	regmap_update_bits(info->regmap, reg, mask, val);
+-
+-	return 0;
++	return regmap_update_bits(info->regmap, reg, mask, val);
+ }
+ 
+ static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
+-- 
+2.39.5
+
 
