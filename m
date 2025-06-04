@@ -1,59 +1,65 @@
-Return-Path: <linux-gpio+bounces-20950-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20952-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9268ACD3B2
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 03:21:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77EF7ACD3F8
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 03:24:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71D0C16839A
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 01:21:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42D1B167E84
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 01:24:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F2B2267F43;
-	Wed,  4 Jun 2025 01:03:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71A9C220F41;
+	Wed,  4 Jun 2025 01:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0J+NbIh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pqq03vnI"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA23670813;
-	Wed,  4 Jun 2025 01:03:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEB11A29A;
+	Wed,  4 Jun 2025 01:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748999018; cv=none; b=XoTXuD8XeW81kEMngPtL5+f+nuaZqpulpFEYfERYfFyAQ9E8nn5ulw8BgkfpL0RDHI+LqrMuYC8DqvmmEn1FOOJ1KWV8mDQo+YIdrhTJWMBn0F2H1hSmFt3/3UWfN5PwrVh/305Xlx64SzQT/B5KhIFyy2fYFpSgcr6Rrk0HxwQ=
+	t=1748999086; cv=none; b=aTxY6C7XTTdDOcQS8OutSF+Wu7OcrThP5qh7juYtZTEhMmBAha201HnF/oDQ72i5sk/3OpvJAXvaGfs05zA7T/B8YEBQQQvNaeIRCuXHu7i058p2yM5HOD71RlwjDBqN+Cc8qNV3ft0TB0/pugUw2C42YQJpgu6Pga8LaS+B4bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748999018; c=relaxed/simple;
-	bh=rg64dCXOjPdxBtWsAxnAOK4vJnnFD/bZp+KW7OjIcX8=;
+	s=arc-20240116; t=1748999086; c=relaxed/simple;
+	bh=MufHod0A/BdviTTzQlbdv34CCtmNQk+UQzrnAhhW2fs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bRnAkn7XVAAHoStkC+tI4PM4WdusAjoLAMCwTskRmwvH/GIo3iDxhYYDSQTtIaoIPi5ggKbmkrLgQH6WNsdWPdJl9+00AlvSEC3vR1OLbsFeuQ0N2eWlKb9zisJvMRPZ+8fLawZOrSZo0/Q+S8NgfkuG7bhbwFeWLypJnsLoAXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0J+NbIh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F4DC4CEED;
-	Wed,  4 Jun 2025 01:03:37 +0000 (UTC)
+	 MIME-Version:Content-Type; b=OaAobS3cw5W0fUQK5gA3Bor4vhWqLSnDXoRDwaBQZi2MzuevGbOYzbVF5fwvRnurJx8F2xM/qVWX8cndEtAeFou81wsKW6ldoM4SQuHjaR7l9s6OKAji/QjYlBvJi4dZxA5+0541yDrHftKQ4Fjr1viDMb6mM1zgznR4P9C8IqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pqq03vnI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DFB5C4CEED;
+	Wed,  4 Jun 2025 01:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748999018;
-	bh=rg64dCXOjPdxBtWsAxnAOK4vJnnFD/bZp+KW7OjIcX8=;
+	s=k20201202; t=1748999083;
+	bh=MufHod0A/BdviTTzQlbdv34CCtmNQk+UQzrnAhhW2fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b0J+NbIhe2/neerX174dBxJAj2Knd77CRl7hgNvaB+9Q1eqf86ClIqMogmZYevtng
-	 nT/nJfedPHBoLeuTELNAK9T0DxWRvxmrH06LsKWNvltM8GyExk4QejCTLf4HZu5BEW
-	 lsOBqsrxKY+i55yggEn/hm7nRS5JgcCeYM39cwIj2ssIcE8y8VPHFimz5CxeBacDhf
-	 OoM0v9iJbN1adgRXbhonXlWpZ/ZZ43i4vpMaKxBw/CgOFEddHIGXzQAkyNL0i7T9x9
-	 3IwLlvJQ2cLoyGn2PDoKTGQQTYdWmYTjSA+IIGxW5C0GfM8/lUNQ2qIqStWbCAWRBX
-	 zez31QDMKGO2g==
+	b=Pqq03vnIL+eE11SJCKkhCvsEeObSP79n91M/rPKTlyRxuG92FWbgB+K9fEfWsT5O6
+	 FStAkem9YhWGqAfiC9xnRStwHn4oRT8351Gm8Xifg0r/r9QnlWhvmURLZZQQxOCYTQ
+	 /Zczf3fTt2wcckTI2sozIK0WJ9bQdVWUaNdGPzBK3qXLcB2lDlg6lnssJcV8ZL+nf7
+	 QEeeEEnQmPpqcFuMKRq69DprCIU5KgCLJQlCsnWerpaUsbRvSgk7wnmrUa4IXPiNQ7
+	 OWv+9zjrgZsRmNb1Dben7rkGvxnU4WQ8oqoOBg5EAXAtOebbz9npI+QmR09cp/SQfs
+	 S0UqecSjopgdg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Mike Looijmans <mike.looijmans@topic.nl>,
+Cc: Gabor Juhos <j4g8y7@gmail.com>,
+	Imre Kaloz <kaloz@openwrt.org>,
+	Andrew Lunn <andrew@lunn.ch>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	brgl@bgdev.pl,
+	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 48/62] pinctrl: mcp23s08: Reset all pins to input at probe
-Date: Tue,  3 Jun 2025 21:01:59 -0400
-Message-Id: <20250604010213.3462-48-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 21/46] pinctrl: armada-37xx: propagate error from armada_37xx_pmx_set_by_name()
+Date: Tue,  3 Jun 2025 21:03:39 -0400
+Message-Id: <20250604010404.5109-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250604010213.3462-1-sashal@kernel.org>
-References: <20250604010213.3462-1-sashal@kernel.org>
+In-Reply-To: <20250604010404.5109-1-sashal@kernel.org>
+References: <20250604010404.5109-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,114 +68,82 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.92
+X-stable-base: Linux 6.1.140
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Mike Looijmans <mike.looijmans@topic.nl>
+From: Gabor Juhos <j4g8y7@gmail.com>
 
-[ Upstream commit 3ede3f8b4b4b399b0ca41e44959f80d5cf84fc98 ]
+[ Upstream commit 4229c28323db141eda69cb99427be75d3edba071 ]
 
-At startup, the driver just assumes that all registers have their
-default values. But after a soft reset, the chip will just be in the
-state it was, and some pins may have been configured as outputs. Any
-modification of the output register will cause these pins to be driven
-low, which leads to unexpected/unwanted effects. To prevent this from
-happening, set the chip's IO configuration register to a known safe
-mode (all inputs) before toggling any other bits.
+The regmap_update_bits() function can fail, so propagate its error
+up to the stack instead of silently ignoring that.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-Link: https://lore.kernel.org/20250314151803.28903-1-mike.looijmans@topic.nl
+Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-7-07e9ac1ab737@gmail.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-Let me examine the exact change being made in the commit: Based on the
-commit analysis, here's my assessment: **YES** This commit should be
-backported to stable kernel trees. Here's my detailed analysis: ## Key
-Reasons for Backporting: ### 1. **Fixes a Real Safety Issue** The commit
-addresses a genuine safety problem where GPIO pins can be unexpectedly
-driven low during driver initialization. From the commit message: "Any
-modification of the output register will cause these pins to be driven
-low, which leads to unexpected/unwanted effects." This could cause
-hardware damage or system malfunction in real-world deployments. ### 2.
-**Small, Contained, and Safe Change** The code change is minimal and
-surgical: ```c + /bin /bin.usr-is-merged /boot /dev /etc /home /init
-/lib /lib.usr-is-merged /lib64 /lost+found /media /mnt /opt /proc /root
-/run /sbin /sbin.usr-is-merged /snap /srv /sys /tmp /usr /var +
-capability_test capability_test.c f2fs_folio_analysis.md
-ipv4_multipath_analysis.md ipv6_route_allocation_rcu_analysis.md
-ixgbe_e610_set_phys_id_analysis.md linux lpfc_timeout_analysis.md
-mac80211_mlo_mbssid_analysis.md pfcp_driver_historical_analysis.md
-rtl_bb_delay_analysis.md rtw89_mlo_analysis.md
-tcp_multipath_load_balance_analysis.md test_unaligned_diff
-test_unaligned_diff.c type_size_check type_size_check.c
-veth_driver_analysis.md wifi_mlo_mbssid_tx_link_id_analysis.md Reset the
-chip - we don't really know what state it's in, so reset +
-capability_test capability_test.c f2fs_folio_analysis.md
-ipv4_multipath_analysis.md ipv6_route_allocation_rcu_analysis.md
-ixgbe_e610_set_phys_id_analysis.md linux lpfc_timeout_analysis.md
-mac80211_mlo_mbssid_analysis.md pfcp_driver_historical_analysis.md
-rtl_bb_delay_analysis.md rtw89_mlo_analysis.md
-tcp_multipath_load_balance_analysis.md test_unaligned_diff
-test_unaligned_diff.c type_size_check type_size_check.c
-veth_driver_analysis.md wifi_mlo_mbssid_tx_link_id_analysis.md all pins
-to input first to prevent surprises. + linux/ + ret = mcp_write(mcp,
-MCP_IODIR, mcp->chip.ngpio == 16 ? 0xFFFF : 0xFF); + if (ret < 0) +
-return ret; ``` This simply writes all 1s to the MCP_IODIR register (I/O
-direction register), which according to the datasheet comment at line 29
-is the proper reset value: `#define MCP_IODIR 0x00 /bin /bin.usr-is-
-merged /boot /dev /etc /home /init /lib /lib.usr-is-merged /lib64
-/lost+found /media /mnt /opt /proc /root /run /sbin /sbin.usr-is-merged
-/snap /srv /sys /tmp /usr /var init/reset: all ones */` ### 3. **Aligns
-with Hardware Reset Behavior** The change makes the software behavior
-consistent with hardware reset behavior. The MCP_IODIR register defaults
-to 0xFF (all inputs) on hardware reset, so this ensures software reset
-has the same safe state. ### 4. **Minimal Risk of Regression** - The
-change occurs early in the probe function, before any other GPIO
-operations - Setting pins to input is the safest possible state - it
-cannot cause unexpected signal driving - The error handling is proper
-(returns on failure) - This matches the expected reset state per the
-hardware datasheet ### 5. **Affects Critical Subsystem Safety** GPIO
-drivers control physical hardware pins that can affect external
-circuits. Unexpected pin states can cause: - Hardware damage to
-connected devices - System instability - Safety issues in embedded
-systems ### 6. **No Architectural Changes** The fix doesn't introduce
-new features, change APIs, or modify the driver architecture. It simply
-ensures a known safe state during initialization. ### 7. **Similar
-Pattern to Other Stable Fixes** Looking at the similar commits provided,
-this follows the pattern of commit #3 (cy8c95x0 fix) which was marked as
-YES for backporting - both are small GPIO/pinctrl fixes that address
-real hardware behavior issues. ### 8. **Clear Problem Statement** The
-commit clearly explains the issue: "after a soft reset, the chip will
-just be in the state it was, and some pins may have been configured as
-outputs" - this is a well-defined problem that affects users. This
-commit meets all the criteria for stable backporting: it fixes an
-important bug that affects users, is small and contained, has minimal
-regression risk, and doesn't introduce new features or architectural
-changes.
+Based on my analysis of the commit and the code context, here's my
+assessment: **YES** This commit should be backported to stable kernel
+trees. Here's my extensive analysis: ## Code Analysis The commit changes
+`armada_37xx_pmx_set_by_name()` function from: ```c
+regmap_update_bits(info->regmap, reg, mask, val); return 0; ``` To: ```c
+return regmap_update_bits(info->regmap, reg, mask, val); ``` ## Why This
+Should Be Backported 1. **Bug Fix Nature**: This is a clear bug fix that
+addresses silent error handling. The `regmap_update_bits()` function
+returns an integer error code (0 on success, negative on failure), but
+the original code was ignoring this return value and always returning
+success (0). 2. **Error Propagation Impact**: The function
+`armada_37xx_pmx_set_by_name()` is called from: -
+`armada_37xx_pmx_set()` - the main pinmux set function -
+`armada_37xx_gpio_request_enable()` - GPIO request handler that already
+checks return values 3. **Consistency with Similar Fixes**: Looking at
+the historical commits provided: - **Similar Commit #2** (Backport
+Status: YES) shows the exact same pattern where
+`armada_37xx_gpio_request_enable()` was updated to check return values
+from `armada_37xx_pmx_set_by_name()` - This current commit completes
+that fix by ensuring the function actually returns errors when they
+occur 4. **Critical Subsystem**: This affects the pinctrl subsystem
+which is fundamental to GPIO and pin configuration. Silent failures in
+pin configuration can lead to: - Hardware not being configured correctly
+- GPIO requests appearing to succeed when they actually failed -
+Difficult-to-debug hardware issues 5. **Minimal Risk**: The change is
+extremely small and contained: - No new functionality added - No
+architectural changes - Simple error propagation fix - Maintains
+existing API contract 6. **Stable Tree Criteria Compliance**: - ✅ Fixes
+an important bug affecting users - ✅ Small, contained change - ✅ No new
+features - ✅ Minimal regression risk - ✅ Affects critical kernel
+subsystem 7. **Real-World Impact**: Without this fix, regmap failures
+(which can occur due to hardware issues, power management problems, or
+I2C/SPI communication errors) would be silently ignored, leading to
+unpredictable system behavior where pin configurations appear successful
+but are actually failed. The commit follows the pattern established in
+the historical commit #2 which was marked for backporting, and
+represents the completion of proper error handling in this driver's
+critical path.
 
- drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index fd97b6ee2a8d1..ca45c1f36a89b 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -612,6 +612,14 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+index 261b46841b9f6..df0683bd663b5 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -360,9 +360,7 @@ static int armada_37xx_pmx_set_by_name(struct pinctrl_dev *pctldev,
  
- 	mcp->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+ 	val = grp->val[func];
  
-+	/*
-+	 * Reset the chip - we don't really know what state it's in, so reset
-+	 * all pins to input first to prevent surprises.
-+	 */
-+	ret = mcp_write(mcp, MCP_IODIR, mcp->chip.ngpio == 16 ? 0xFFFF : 0xFF);
-+	if (ret < 0)
-+		return ret;
-+
- 	/* verify MCP_IOCON.SEQOP = 0, so sequential reads work,
- 	 * and MCP_IOCON.HAEN = 1, so we work with all chips.
- 	 */
+-	regmap_update_bits(info->regmap, reg, mask, val);
+-
+-	return 0;
++	return regmap_update_bits(info->regmap, reg, mask, val);
+ }
+ 
+ static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
 -- 
 2.39.5
 
