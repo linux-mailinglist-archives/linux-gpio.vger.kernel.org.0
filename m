@@ -1,252 +1,139 @@
-Return-Path: <linux-gpio+bounces-20977-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-20978-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02D5DACD99A
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 10:22:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A108CACDB73
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 11:54:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 164F61893EB0
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 08:21:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 403B03A4084
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jun 2025 09:53:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4DE42040B6;
-	Wed,  4 Jun 2025 08:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EC4D28CF53;
+	Wed,  4 Jun 2025 09:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pU0ZQv6F"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="k88xajP2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2C4264A90
-	for <linux-gpio@vger.kernel.org>; Wed,  4 Jun 2025 08:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BBB7082D
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Jun 2025 09:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749025229; cv=none; b=Jp7b9WFwhp6F/gy95mjuE6nyKhs5gmnr7CXYsMmgAK9TBPFNwdELajIGv5bIea/9Vi2rrZNPFB58FGrD9jZ7BW3uU8U/6Go6KWLplx8A5GVbuYgL1dMpz+C3pKImTHCc2iWSQIRaIs4SjcsJZaHDZ9QUWFbdSsGaUNnuoZuoBFA=
+	t=1749030848; cv=none; b=DQEl0bDJp/nGKbC0+EjAX2CawClsuNV//FIUmIBztq5npTo7mnMAf3YlbNfLMdVHVm65n/ITk4ZzZgLjqHyOR+5kIAqi7tndgZ3I8fNTFsQSiDBop+AAijenf1SvA9qpPltn2kbEBlnIppEayC2XkIWpTk1qheIumIW+H8WtOxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749025229; c=relaxed/simple;
-	bh=JGb+bcQ7NdVKw0dLe5OBFj+zTR3c/g4nArMOnaZSxa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XiArrJYVTXH0siGrXZAoJanKzIYUZAYuModFNrYAA5LMVYcAI26Jl6Yl/kiePyMqvcfMlsX5Fq7lflkZVTy6a2AI4WrDAb1/sDqm4fd7NzDbGoX82Hcdd8+th3K8/7Enh7yrBRRXelf5y8bjNPpZEjFQIVE1vKaVjIxnk0iV3fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pU0ZQv6F; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5547Aj3A000678
-	for <linux-gpio@vger.kernel.org>; Wed, 4 Jun 2025 08:20:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=JaRFKW90tCNGsHKMAQuGxaLk
-	aZHa3/TSvu4/2YBRcCs=; b=pU0ZQv6FnO0i8aTtrrczIVeKRWlpCSRMfvG0Rcjy
-	YboZDqCzyVe6UHk4mdT0OZJnREGDviF3MMx9BfKy2ef7p/hKj6hQ1Hi92z4aMs99
-	icvMXuQ2Pis0SoODIQftgotDe7h0lJnTu9Cl4yuHQBGIjbPz7oQhLVICewCmCw1Q
-	OF7IhwJf2O5zlruvxcwZWSlHTaClY2k74BkEY30MTslXPCj680oNRdTvRpF7JUMz
-	795wNusnbdyCRVLGkymOK6IRhXZMJ6mr0cScMO72IIRFBcC4Ue4y8TIOKQoO2Kv+
-	0VUAazL68NWJUHR+J2ksYmWv1DLQLvxZ+0ysMThAp5iiGA==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8q5ccu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 04 Jun 2025 08:20:26 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fafc5092daso797556d6.1
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Jun 2025 01:20:26 -0700 (PDT)
+	s=arc-20240116; t=1749030848; c=relaxed/simple;
+	bh=uEQ76NlH5lO8kMZwukda4UrTYqvsSsuybGdDVRVBWvQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qDgUz2YxrLWrrQXyBfWI5lztNHq4IH+FN3SWXIL/KppNdp6JF16fSOFm7leSGv5dP5MYVkViQQ0L+jFhDOGxGGn1sKMTg+b1l4n/UvRTblo1P9ktsMeuMFopgox3vBThNo6v5VYCfupTjlnZ78F5Dn2/piTp/rtlXTj1dbP9JhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=k88xajP2; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a366843fa6so3508246f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Jun 2025 02:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749030844; x=1749635644; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kv5CwvHVDzEGSO319Wt7rOhWIYk28Ayfv77Lv6Sbtqo=;
+        b=k88xajP2l5xcWeq69jnFTBXJuIeY2mEIwWbSnoHvK6OOuo3Xyu5QtX8jwKQ3zqR11z
+         9ciwV6WotG/dSrE2qCfQ+Ohv0Bx8NItkMeD8YhprDGeQqtd59jsTmKLv+ItPENTKGkX3
+         KzY0keWZZwYRcVw4WLJSjB3LzqLVpMiMVCiGamZX8znoGJubLW+bply1yTNi3jQ0x3SN
+         TDadEnj6yCto8gJpMex4omotKjWLZUjVBE1McYIHJMLyuha7l5RoeIv6Q7Hdl+AkK1As
+         RPmj9nr2Ys77MYVkiReT+tJkXbjfgXCRIK7tjYqCpGwYavYgYpHRobksHsVoAQaGBp/0
+         PumQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749025226; x=1749630026;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JaRFKW90tCNGsHKMAQuGxaLkaZHa3/TSvu4/2YBRcCs=;
-        b=n0sYsz2frE00Sic4SYk9FCo/qNh9l0F6tTHe4ejPyOpGvxRqaWpoJRXnSBpkBGDo92
-         HpS7JG1RMY25tXVa3blbXhW+jZEghA3cEVjKIpcbFOC7PRUbP5mECNazm7wtFDqG4Mv6
-         RaXIWd8h8LPiYk5KFMXpetmsui22eAUqklOt8vmSRXKl5KB1gLK2Rd5E4+XQBXRzxQxN
-         aYaIPYSgTJRwwa0q0G7jPLYCrZ6f7VWB898ChYSdcFIRNedNw2nQFiSiLcGdHNskEs0a
-         JBW2gPzx0FfCfRd5uVxniKuNJUR3hvNUZo1HS7NRrSdSXoHX5HxUyMx3Y9/qv1z3u0U9
-         zbAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAtUJ4/n/0bquU1NtwgSNMBXNUL+4XYBgFT60MucReKoyaJ83MlJ1PZ2LGeHhLsoeDONVoyOzHIIWk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwopWf6/a6vAJXh5b4r7JA1R8YuO5+gN75pVdi6E5xlyk0Xdzc2
-	heGnHwNgcggg7KYP7ydwWRuzfcwK85FKqpE6pY8p53ZomW3oesfQlLOcEEJ2gIrQPqxvOQjOYJd
-	aSO8gJfLWiiL10K6OWt3RhwgTOK7MTvduLIhLpTMH+gYP6yUC5N2BnYIXJg8l0DJNrh3cKm5tDA
-	4=
-X-Gm-Gg: ASbGncsFl0ZEdG3us8sVZEMhT42Tgnqysow5r23PKCaIWU+CZxrDdRTP8MTFU5ojgFG
-	Ys+pI91QTNqq6eTGFW4Gz5OuY5MsX9GyicKzhrh9gttrncokt9FmxJ7p2wuWcDoMhwcM91E3nsm
-	VUZlK/JFn9J9nQ29ljN5gntRsMJdzQoqZAr9lcr+bwLkyxaYMeIcBXHLbmSboRTeyCal974mfGN
-	mmZigqdDj85csjEue8qlX6Q0Ax9Uldv1zAkvsnSH4bJPtz6nlo/DaafRS+Tn1MYCu4n1TEKyq7Z
-	s+nIPHU9DStuUHt7XRzxP4cGhKVo76os1eWHCG2SOnipAmtd+u+f9sBHUhXV/g/I2i1ZPTelBwE
-	=
-X-Received: by 2002:ad4:5e8d:0:b0:6e2:485d:fddd with SMTP id 6a1803df08f44-6faf6a5edaemr36769346d6.1.1749025225864;
-        Wed, 04 Jun 2025 01:20:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IERKsmanwW4+EAKRRkksLhDnRdNukd08U7k5f/+bCH8VteShFBDGHrCAbfCdnarM2/Uk9qSpQ==
-X-Received: by 2002:ad4:5e8d:0:b0:6e2:485d:fddd with SMTP id 6a1803df08f44-6faf6a5edaemr36769026d6.1.1749025225527;
-        Wed, 04 Jun 2025 01:20:25 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a85bc4f55sm21266081fa.76.2025.06.04.01.20.24
+        d=1e100.net; s=20230601; t=1749030844; x=1749635644;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kv5CwvHVDzEGSO319Wt7rOhWIYk28Ayfv77Lv6Sbtqo=;
+        b=GchhMqVEZjvW6/pLSq8Eeg/NN9K5cM4WR0zbthZjxAiNMhzBxOaR/GqXipsGsO2Ysk
+         0D9Qs19JhM8S6E07hkIgNQr2pR0AhBNN2ZsYg436+MYXcv1QHblqKtue3iuLcLlbMlBn
+         ILdszs5vZFWfUvGL+7k/gWxVD5I+2kR/4UI5QmboC5N9MAS2edLbYtrupsrIM9s2jbLP
+         Wx02XqIkoJutw/zPagRBuxwn+97ZodBFnYxfZZ9tiNKDQyJ9hNHoKtx/vvGK5jYT9sqs
+         RJSBbl8fBXaYPM/urjG5x6CqhvwD56yEiWn06QvNcEwz3ZEYqkYuW6HZk6QVKpaUdFt4
+         IeEg==
+X-Gm-Message-State: AOJu0YwIkmTyW5rMrYBQWVtRrphmO9nM7aprSvYWUCnstFYy8FvM0BTQ
+	Ke7MYm8FHls4PgMFeAE8LU4/dp2fPIersPzLYd4XxJ3IBu4JTPxJTgC86llOEGCHEBE=
+X-Gm-Gg: ASbGncvJsP3pLMu1kZKVot3nsWTlpJ5yJHuRThbGdvllH3jvAeH/pPle2fQEmKLPA0U
+	YhJO6q6cLmcjr1JTI2wmsnlvYAqBWpV/rZjj8yi3QEpoiEATlhxBWgp3pshmCjoSkXpOvs/4cSY
+	PWG8gDNoq+huqbLpPM0dMVtr+Y4HROg8Ttn7mTus108Cav1MpJSyRvHdWwnF59jcS2huxKWdruJ
+	2hD5BkdLiB1JUtdVzjiCrkFkM4oscdSImKzlwSgLYfbEr5aXR3sxiT5C0i1T9vKHdva6hH8LsJP
+	urUnRS2xrpbgovmJsqQscTR7h9HV3JGjWuXFuJfgiyx8vYd6Ia/SI/7C
+X-Google-Smtp-Source: AGHT+IGiJc5Hq8VxNCFUCnUV/lBSFSUGu1bJiT+ew4NGmMwdQxHNnteeQqkY+bqitvTjQNj8zXRiow==
+X-Received: by 2002:a05:6000:4009:b0:3a4:f902:3872 with SMTP id ffacd0b85a97d-3a51d92fd2bmr1606925f8f.19.1749030844101;
+        Wed, 04 Jun 2025 02:54:04 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:e8d2:e71d:f170:23e7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00971e4sm21525640f8f.65.2025.06.04.02.54.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 01:20:24 -0700 (PDT)
-Date: Wed, 4 Jun 2025 11:20:23 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-        kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Subject: Re: [PATCH v4 5/8] arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830
- speakers amplifier
-Message-ID: <wqirhpizetdi3o46grz4jrz2hyoosf3ih3qlxa6i3hqmimanjs@4oqczqllyek4>
-References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-6-quic_pkumpatl@quicinc.com>
+        Wed, 04 Jun 2025 02:54:03 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH libgpiod 0/3] doc: add rust docs
+Date: Wed, 04 Jun 2025 11:53:54 +0200
+Message-Id: <20250604-rust-docs-v1-0-8ff23924a917@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527111227.2318021-6-quic_pkumpatl@quicinc.com>
-X-Proofpoint-GUID: EpUYgfn5Xz3qBL1SA73zqzQVrlcBY2VH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA0MDA2NCBTYWx0ZWRfX0tEXLeHlZZF7
- HcVkmZLlmRNIoMdxl351BperpyX7xJQex6Rjt2BmFL7+kKQwNmDERp9GrodrdlMXegQRe1Stdu6
- dxQWovi8JW5TJ0BoP6Lboakh6w/Co0JnBM3aZ7LRD5SYgiL4BS/0u2GpZkx2I2Yxjo2ewGdwgmB
- CrejL10vwa2Y9zHn2xFNMlxMzPpnIwaJ1EDPrUyFxTa7kICxmfcO+JBCAkWz3cusg+pkoFNQyd/
- sRfj0qH9FxHEcQtrRwDyMisFST13FUPvGLr7L+oGI5Po1CzSUiaM8z6Ntb38UYjB+vp1/mtFI5s
- 8DCcXqlhtVFoFezUzHVCfYiLknmvBocDI6IqkamhEEa/aS/zhM9ogTM0Klsu1lOysRh/YMKnK/b
- opSZYF8qWbZatMdlJP/TT8ttE715YQfLUMQSvGWETy1wUM4/P3jPgDTgGfVwBpYuATwU2PLi
-X-Proofpoint-ORIG-GUID: EpUYgfn5Xz3qBL1SA73zqzQVrlcBY2VH
-X-Authority-Analysis: v=2.4 cv=PrmTbxM3 c=1 sm=1 tr=0 ts=684001ca cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=B248RJrvpR2VuhuRRl4A:9 a=CjuIK1q_8ugA:10
- a=1HOtulTD9v-eNWfpl4qZ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-04_02,2025-06-03_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
- suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506040064
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALIXQGgC/x3MQQqAIBBA0avErBMmKYOuEi1SpxoIDaciCO+et
+ Hzw+S8IJSaBoXoh0c3CMRQ0dQVum8NKin0xaNQdGmxVuuRUPjpRHWpv3Lxo7C2U/ki08PO/Rtj
+ ZrgdHD1POH0uWekxlAAAA
+X-Change-ID: 20250604-rust-docs-502d6caf207b
+To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Erik Schilling <erik.schilling@linaro.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=912;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=uEQ76NlH5lO8kMZwukda4UrTYqvsSsuybGdDVRVBWvQ=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoQBe6GhQkCQGLV3oZPysTN0HRwvRNSLJns3YzN
+ //Yc5PE46KJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEAXugAKCRARpy6gFHHX
+ cseFD/4yhDrODMfcyL3RBcEz4QbHS2SG1VlrQqEhanrqfEh2qiie4A3J24y8OSGzI/t0gQ5zQix
+ 453+Isqm4ZbjQUUoXVd1++4EqPHqxiFb8XTxo8I5iQofdatCVpdFqi5G2Rk80eWGhettnWMomDB
+ tjOQ7tER3GtnwgZlfNbwd3zlbg1roE+GywmkQ4tWASGwsPr9+3X8JZdlngCuRPz+vQypRXQzACl
+ 5NNKiFEJWOqPpmAK+ntq1Ltv0MyOHUNSSX7lh1vrd3li98dNOHGuJ8fkPG+0flBecyOAtqbuTHo
+ Uc4AT8N2ufJsvdM2yzHhygNbNbCcvTQutn/3w9+cgYf0BQQBbf1O7cROEtgAqytR+2kHTutqdK5
+ R5UfMgIdQJBygV9DVaoFiWfyvXj3+f4GTonqx31sEV+3Rs7P62VEEhCHr+y8h6itTRRz7sgb1fR
+ /8aDkmIDFjSS/LVORXR9/fH+TpermNr/PWPuiC64kekh71EqjPiDKnY9j+OOA9OYwKCZ178iezx
+ lrIhoj0UgnBy9N0aeCRNemUnXCZFs1/j29rzKhKNYO3OvifEWsbrL6sqK2AkenO3KLnDmS013BB
+ l24aDE9t85uOF6L/cny6PWU3KADLYYzEDV55l3x1sV/3+61MXXh6OewdFuOWgY2aAyWJE/p7cpQ
+ mREE/bFPOiUaldw==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Tue, May 27, 2025 at 04:42:24PM +0530, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> 
-> Add nodes for WSA8830 speakers amplifier on qcs6490-rb3gen2 board.
-> 
-> Enable lpass_wsa and lpass_va macros along with pinctrl settings
-> for audio.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> ---
->  .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 18 ++++++++++
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts  | 35 +++++++++++++++++++
->  2 files changed, 53 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> index 4111091f77b2..542a39ca72bb 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> @@ -11,6 +11,24 @@
->  #include <dt-bindings/sound/qcom,q6afe.h>
->  #include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
->  
-> +&lpass_dmic01_clk {
-> +	drive-strength = <8>;
-> +	bias-disable;
-> +};
-> +
-> +&lpass_dmic01_data {
-> +	bias-pull-down;
-> +};
-> +
-> +&lpass_dmic23_clk {
-> +	drive-strength = <8>;
-> +	bias-disable;
-> +};
-> +
-> +&lpass_dmic23_data {
-> +	bias-pull-down;
-> +};
-> +
->  &lpass_rx_macro {
->  	/delete-property/ power-domains;
->  	/delete-property/ power-domain-names;
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> index 5fbcd48f2e2d..21cb392c36fa 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> @@ -19,6 +19,7 @@
->  #include "pm7325.dtsi"
->  #include "pm8350c.dtsi"
->  #include "pmk8350.dtsi"
-> +#include "qcs6490-audioreach.dtsi"
->  
->  /delete-node/ &ipa_fw_mem;
->  /delete-node/ &rmtfs_mem;
-> @@ -765,6 +766,14 @@ redriver_usb_con_sbu: endpoint {
->  	};
->  };
->  
-> +&lpass_va_macro {
+While full integration of Rust docs with sphinx is currently hard, if
+not impossible, we can still follow the pattern we used for GLib
+bindings and generate the docs using cargo, then linking to them from
+the sphinx page.
 
-[   10.942165] va_macro 3370000.codec: qcom,dmic-sample-rate dt entry missing
+While at it: fix some minor issues in conf.py.
 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (3):
+      doc: reformat conf.py with black
+      doc: improve the readability of the prefix variable
+      doc: integrate rust docs into the sphinx build
 
-> +	status = "okay";
-> +};
-> +
-> +&lpass_wsa_macro {
-> +	status = "okay";
-> +};
-> +
->  &mdss {
->  	status = "okay";
->  };
-> @@ -1039,6 +1048,32 @@ &sdhc_2 {
->  	status = "okay";
->  };
->  
-> +&swr2 {
-> +	status = "okay";
-> +
-> +	left_spkr: speaker@0,1 {
-> +		compatible = "sdw10217020200";
-> +		reg = <0 1>;
-> +		powerdown-gpios = <&tlmm 158 GPIO_ACTIVE_LOW>;
-> +		#sound-dai-cells = <0>;
-> +		sound-name-prefix = "SpkrLeft";
-> +		#thermal-sensor-cells = <0>;
-> +		vdd-supply = <&vreg_l18b_1p8>;
-> +		qcom,port-mapping = <1 2 3 7>;
-> +	};
-> +
-> +	right_spkr: speaker@0,2 {
-> +		compatible = "sdw10217020200";
-> +		reg = <0 2>;
-> +		powerdown-gpios = <&tlmm 158 GPIO_ACTIVE_LOW>;
-> +		#sound-dai-cells = <0>;
-> +		sound-name-prefix = "SpkrRight";
-> +		#thermal-sensor-cells = <0>;
-> +		vdd-supply = <&vreg_l18b_1p8>;
-> +		qcom,port-mapping = <4 5 6 8>;
-> +	};
-> +};
-> +
->  &tlmm {
->  	gpio-reserved-ranges = <32 2>, /* ADSP */
->  			       <48 4>; /* NFC */
-> -- 
-> 2.34.1
-> 
+ .readthedocs.yaml |  3 +++
+ docs/conf.py      | 43 ++++++++++++++++++++++++++++++++++---------
+ docs/rust_api.rst | 22 ++++++++++++++--------
+ 3 files changed, 51 insertions(+), 17 deletions(-)
+---
+base-commit: 088c66ef20662b76eebf03e71f11196a5ae14b33
+change-id: 20250604-rust-docs-502d6caf207b
 
+Best regards,
 -- 
-With best wishes
-Dmitry
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
 
