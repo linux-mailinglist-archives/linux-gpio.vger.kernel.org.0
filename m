@@ -1,124 +1,101 @@
-Return-Path: <linux-gpio+bounces-21049-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21050-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6BE5ACF0AC
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 15:33:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36494ACF0BC
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 15:34:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3D5F3AA6AD
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 13:31:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05B243AEC28
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 13:32:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B6623D2A2;
-	Thu,  5 Jun 2025 13:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 724C220C01B;
+	Thu,  5 Jun 2025 13:31:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VRvrueY8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZTgtrG+p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4FF2343AE
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Jun 2025 13:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7010918641
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Jun 2025 13:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749130157; cv=none; b=rqkX26DTjLLsjofV+DQSEQGPg1rLPl47DTZEvdwu+LKg6WlndEjXeYSlyKa+a+wfXghE3XMBNQZ6Z7Y9rBs7mg9sY/7GsbkGwrmf6MttXiw6j8KCxmMxHEdxXU81UAxdG8tEJSw7Gh8Prgo6G8RvF0YhtJhhGf2eRYJiY0bS3dA=
+	t=1749130313; cv=none; b=gw0B19VwMv0BC7L3McKFCb61QgtEP8HDHGahUXyTqePLz1L5bLorKPbWScOdqKNHJCv6AUIgdljHHpKe4SDTAgRCQKArz2Tlgzb6/PppqWOUH6EaUnIsKKNtKAvaP07rTLg2QoKWC8VHfMFLZp2zZ4Na+fKqF8424ckihwqiwRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749130157; c=relaxed/simple;
-	bh=h/yqq5HFi78JCobXR8PcMZdAb80vQUDHwHsEUDOOT5Q=;
+	s=arc-20240116; t=1749130313; c=relaxed/simple;
+	bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VGW3hvLJ2nCunrS9POva2+EkHerqRIElrT7zjItspw9lZ3O33K/mb9qkCuDwq+hdd99NSKlJwaateqxzU59OPmHl+I7lHRMHOJAC0ycAty1EJKPS60R4hc+ZiHHkjgxGgnwAhL60rPxshPcah295mXdeRI+l7s55/I7Hfyehjx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VRvrueY8; arc=none smtp.client-ip=209.85.167.44
+	 To:Cc:Content-Type; b=HBhpIY7qfLV9xhiSoLnAqow3bFzoV0ETgi6uaWBFGiZN2vnvIIegPW5EcA59opDIlPuod/8cQv4tHa6T5OYLVHoebdrluXI4epE9tgX1rqmkczFAxnmHsU9IrqX1t6mCVaFxb3e7p8WrWGQxKIgJro5xL7VrFbwhJ7P9UlBtaDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZTgtrG+p; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5533a86a134so936051e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Jun 2025 06:29:15 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3105ef2a06cso8078791fa.2
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Jun 2025 06:31:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749130154; x=1749734954; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749130309; x=1749735109; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4GUAkxOIFy9jpQLSmntQ+q8BrdugRJdUj6yz2GA9p8E=;
-        b=VRvrueY81niv9A4KBpHJnqMYu/vk2w7Z1qxHgvP75rDkVvY1kXuf7AYy5nJ3f54D/y
-         E7SMk6+kJ+lZQCz890DmNxVcoCleXmk2BFMeuJLfVTss2lUsYv9E4Uet4wClzb5rCIp/
-         xxmiBRcnezswDdLmlXrMyNXVMEk9M8AJCDxbmxiN2TIUC9UfL7DG47O57CKA5yWwPqFm
-         aH8svGBXySxBVolzWOCPoJ+VoqXcvznCN/7u/QscIVL0HxMW17OHDHeh8zDmqGrHZeNi
-         ThRtD4DCIrZlxjzWqa9CNKS+f4Wq3BvNPctqd2bM6qgRDWS4nlQtjnjynFGQRQJh6ctY
-         fSng==
+        bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
+        b=ZTgtrG+pCz+16QVRtN3gJYSXhZaVSvIuOEx9hh4+3y7ImKdbCNdu3jdznAuDhBm90y
+         TSBGxiQP0Jd1xwSeZwlwrr5r+NZXG5EworM7T+9NAhkaIHI67GtG+q6lwN7wKdVf4v1g
+         ljSNnA4AU6pYtWavPYG7H4RhDQwEQrYz3z2ye57FgDwEhMBBqo/oF6KTO5mKEvl0Dpja
+         fM+gJu/x53Wj0f+GC1zLxBP+KhkBpQrNw7bC9Herh4sHf5rHNQ+ETT51gTHzDz48h1qK
+         qgbvmOpP8kK7G3csEC8bqA0+KeNXHOnoxw28UKW+RQCsd9VZYk2fVhC97CjBHlHGvTQn
+         vxLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749130154; x=1749734954;
+        d=1e100.net; s=20230601; t=1749130309; x=1749735109;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4GUAkxOIFy9jpQLSmntQ+q8BrdugRJdUj6yz2GA9p8E=;
-        b=tmetVZyX6FttBmzp/6KgCxSN1aKPhFg7RqWnjwgJmaF2eehq8T6Iu9RaUa0w7mm5xt
-         0sMqkYOCnduD041Dr/jjZ7a7OZMZQgIiB6zEoeRjDBlCPXJcQqAqGEMJlNuHvqDTx2hP
-         zZ2DvdKsINXHqpNxBMbL7sdjhzjPqaLUUOHW5i86Xanu2IxUCbX3A4gE22yuuYyxeL8R
-         iINjifoXy8o4lBXaL1pLNKBf83/q0hCMV0ZoLCotjs4h+Wos/1Z51+mLmh4XDa758dP3
-         V31Vj3mj+jcl2pR6eS9Htu4++aNxz7zpVFzLzKhi8bIryFosHGDuespiTK6wtTRvIR4W
-         zhjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxSwkXrnqpzcEpUZ2BLzK9ouqdkOpAeTgXf3tvC088idWH+CgeDacNqplXS3Omwa62pe5PfACUw0Gm@vger.kernel.org
-X-Gm-Message-State: AOJu0YztI3QcQ7uJ+VIlDaIkUe1rVrW9hLqLc9+e+fGe6bl+KVHmJyYn
-	DTjJkxvkphH4lZtYUuquLW1ifDCJ2TN15uf8p2ZYZG1FjJHNfEKBxi/2OYmuVKS7mOSDi9NVi9q
-	9DZwEkwCuJCs+T3hF45aKSlOH3NXlBfpY5iQcZCys4A==
-X-Gm-Gg: ASbGncva88eJWSoYQhOmk9CdXdwxcwC0/hShCTzJgekCefPJ2Y+X+ARD3DOv7uLckwr
-	BLO0BT/m0J+PtCa7bbWicMoX4GPfzSIrVfunxThoe0lltJf9OlUsXKSytY7hSLbEzbGmeuTnoEC
-	MhXgnkK8DoVkyhXz3k9h1+Z7dhP5DWV3k+
-X-Google-Smtp-Source: AGHT+IHQ5la5bmYfspb0z+rHTezHnXmn8S0sJvRzX+sgZ7IiaN7ipgyy98pOXOBzrw28bsqpF2v0lH7bNQ0EOyTmIHU=
-X-Received: by 2002:a05:6512:3ca8:b0:553:2a56:2e8d with SMTP id
- 2adb3069b0e04-55356df1dd7mr2038017e87.40.1749130153902; Thu, 05 Jun 2025
- 06:29:13 -0700 (PDT)
+        bh=3Xp16Ul5W2xdqpl8OIkvkRsLmilUb5eDdkpE06xCKR4=;
+        b=dCS/XL64L1ye5ewTq82GCuQUiY+2soYcSw0fJDBien7y0IKaUIci4MQ2/Ay2EV7Ml5
+         bQ218faui5DQyremSpIog6ETs50BHE9rKjTrDO5InO+GLsIXiCBEpXEFNJ+brLpEguEa
+         ZwsNtt+i9HN8TDWD96norpFXo+WJezrjQr+LoOflnd+WLh/LIKAGwdyGO+nF0/nxBQFV
+         DQ1B5pfUkFuD/aZcYttyCHCYSdLm6bpcbmYtdmHOlSpRhgwcKgFFux+7XSKEdZMJhBzR
+         igNVmGFZ0Nm6nkOWMduu+GmJwAjZpZxQBziD+SrZgY33jhapJLUewzViXYrBInKI7qNk
+         xpuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrapaycFwiDdF70CU/1J30lP1eXwRu/GDAbN2cvGRfIMkJJ96EaTn9g6GBZ3qxH0Q8AKbMJ8Mp0CBj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6KEI+9hOQfDNUszbQW9CWrslPC5UBf+q5sfOduBs3ua1D4/iZ
+	6W2CrJgbvbBYxrcHFvgijmrBOBu9nX7hI4S4ZDK7Udfu1HAUbT2jjtdWt05wSkgo1RPLml3rNQw
+	eYgo1xrh8auZ1glzYT9TB1MojNq6+Xeqt6uIqyes1mQ==
+X-Gm-Gg: ASbGncsOGEC5YOeyaSSmwvm8OkHnzRgPhHw8J6J59z/EuW40glDVPugY+s/4+M7sGkg
+	nuA4wZ/B9HsKacZtAGOYPZbWXC5y9kGuZUiG7/ayF+UCaojfDg1My+aPi3CpYCTspzVW3hE81sK
+	RIoa05L+z7FjMeY1ugBJFOJYf6dbDcoFca
+X-Google-Smtp-Source: AGHT+IHSnKSDNQUJOOGzj78O2oKNC6lGuJm7j4wb7PTPZDyANZnfX0CVuXsuVoOMf6kUNk+ATNKuvBm/XvtBIQhaxeY=
+X-Received: by 2002:a2e:ae13:0:b0:31c:31a7:4679 with SMTP id
+ 38308e7fff4ca-32ac7258010mr17887721fa.37.1749130309416; Thu, 05 Jun 2025
+ 06:31:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com> <20250602-rk3576-pwm-v2-1-a6434b0ce60c@collabora.com>
-In-Reply-To: <20250602-rk3576-pwm-v2-1-a6434b0ce60c@collabora.com>
+References: <20250531195801.3632110-1-andriy.shevchenko@linux.intel.com> <20250531195801.3632110-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250531195801.3632110-2-andriy.shevchenko@linux.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 5 Jun 2025 15:29:03 +0200
-X-Gm-Features: AX0GCFv01J_2f7I-yQlAWEluILmgAXhjV0w8aFTFPw9c58Y0wmETNUPszWxuq5c
-Message-ID: <CACRpkdZRjLFa3Bni=wMG1LBoWnW+Zenj2FVP=_2s+U_1eykt7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] dt-bindings: pinctrl: rockchip: increase max
- amount of device functions
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	William Breathitt Gray <wbg@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, kernel@collabora.com, 
-	Jonas Karlman <jonas@kwiboo.se>, Detlev Casanova <detlev.casanova@collabora.com>, 
-	Conor Dooley <conor.dooley@microchip.com>
+Date: Thu, 5 Jun 2025 15:31:37 +0200
+X-Gm-Features: AX0GCFsbnofQ22BvZl1sODGZD9DlgA1gYR1ngBlv5uhGKV5q5X97cgJTuxkbKFE
+Message-ID: <CACRpkdZhBDCZi=-wdK=tNhgt+K=jjgScF+7FMN_Q=ge6eRrJxw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpio: Remove unused 'struct gpio' definition
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 2, 2025 at 6:20=E2=80=AFPM Nicolas Frattaroli
-<nicolas.frattaroli@collabora.com> wrote:
+On Sat, May 31, 2025 at 9:58=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> With the introduction of the RK3576, the maximum device function ID used
-> increased to 14, as anyone can easily verify for themselves with:
+> There is no user for the legacy 'struct gpio', remove it for good.
 >
->   rg -g '*-pinctrl.dtsi' '<\d+\s+RK_P..\s+(?<func>\d+)\s.*>;$' --trim \
->   -NI -r '$func' arch/arm64/boot/dts/rockchip/ | sort -g | uniq
->
-> Unfortunately, this wasn't caught by dt-validate as those pins are
-> omit-if-no-ref and we had no reference to them in any tree so far.
->
-> Once again kick the can down the road by increasing the limit to 14.
->
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Good riddance.
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Is this something I can just apply?
 
 Yours,
 Linus Walleij
