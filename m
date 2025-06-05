@@ -1,128 +1,163 @@
-Return-Path: <linux-gpio+bounces-21054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4461BACF21F
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 16:37:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17497ACF5B8
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 19:53:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 647D518876ED
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 14:36:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C66B0171F4D
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 17:53:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DA8417A2EC;
-	Thu,  5 Jun 2025 14:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9546627A105;
+	Thu,  5 Jun 2025 17:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="OSILMwkw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N3kPXvIw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F551527B4;
-	Thu,  5 Jun 2025 14:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749134155; cv=pass; b=HJEr62cWMRBnsEdvSQjdtBz8QbbBAZ83VyggiGm9z6KzirFdp+8Wt17C8X3E6Jz66AW0oWm7NRvOja89gXvtMahOg23/RWbZeXGK62JjyKugkORC/wl84OE8PkTpruyj8BsgasJblEH8Q1CZWSCIuTyeMAmNx0kAGtDDxGn9ga4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749134155; c=relaxed/simple;
-	bh=zDfM6k/ZV7EA2G43A/d5L8tp0cexa6Lz3lwBsr8Shio=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q4rE0E2d7ixC8Me7R/T+dPxgavCBOTzorNL50pz+/XtcmKvUTufsiQZ3bVvpwari6RJq+F4iWmV6hQa/3nkszdRbYzg5n5EJ83CrcalaxSh0FNdoOvxyuprH3DjD2HHub5202ITftKuvimn+F06r9mcCU8+wZp9QGmrj/20xLYA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=OSILMwkw; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1749134114; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NKn+SpOWGZY0QJiLOqY4x5Ai/Yv0TIZeaJezXC5g0ZWILWNQmwGJFWpEwycIA2HzIN1mCmRJ3lrQ+hHCgl6pjkXRIxothuFj2Ag8wxZl4+Ty/ThCLtpKCUsR4cTkTfcd7NP1DlPYr95uR7DP313/2QpjpFOHEQwx04AgqXCylHc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749134114; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=0uzu1/EqrenMvPymkgwGDWP8FLVCKuEu8+xxxlpKXEc=; 
-	b=LmLYwrivhz2E1yJeeGrUCihMh7inHsS0qrHwn1M+edFm2h8MYO4b8dGKP2O91A2LYT6yhG/u4seV30tnNEs+I/hgrhTBC7fMw/qyFiP6jdjelXdpn8fHFHGjX+ys+2vHF6bm3aA2cHibTTvwRpciXC+p8Iw4QuSvPDEAif/ZDUk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749134114;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=0uzu1/EqrenMvPymkgwGDWP8FLVCKuEu8+xxxlpKXEc=;
-	b=OSILMwkw/0Mp9nvmWRFPhHe7GWjcRXLUfogUADlprLqTFnfGNGmypMwGhjY1dvCe
-	0EmTHbfvP8VDn5JKm/e502sL90mToWYUGwiectxirFIjH5j1AD2h6HDBGLPRN0WzvdN
-	Jbh/ZHimXwKzwzBG6KNOXPJrui4kvu7M+EB3/NPA=
-Received: by mx.zohomail.com with SMTPS id 1749134112355222.8330067732718;
-	Thu, 5 Jun 2025 07:35:12 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- William Breathitt Gray <wbg@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-iio@vger.kernel.org, kernel@collabora.com,
- Jonas Karlman <jonas@kwiboo.se>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- Conor Dooley <conor.dooley@microchip.com>
-Subject:
- Re: [PATCH v2 1/7] dt-bindings: pinctrl: rockchip: increase max amount of
- device functions
-Date: Thu, 05 Jun 2025 16:35:05 +0200
-Message-ID: <5876990.GXAFRqVoOG@workhorse>
-In-Reply-To:
- <CACRpkdZRjLFa3Bni=wMG1LBoWnW+Zenj2FVP=_2s+U_1eykt7Q@mail.gmail.com>
-References:
- <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
- <20250602-rk3576-pwm-v2-1-a6434b0ce60c@collabora.com>
- <CACRpkdZRjLFa3Bni=wMG1LBoWnW+Zenj2FVP=_2s+U_1eykt7Q@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262C21DFF8
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Jun 2025 17:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749145986; cv=none; b=HpLJcPyfy0BigWQ65x/CIsNdsN8J0X1mQcyea6mZvNTc/KzeTFsVlKgwQjd34jo/5xUPWXEefBspbsmrcjUOpCVLOhd2t47h2PI1eQA7luBz3ewGTKN0H32A1BbCL/d3SQKVvI9j4zmrEc6+tIczK7CKA7ZCODLmSqaANNY4Lwk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749145986; c=relaxed/simple;
+	bh=9bzS54upE3rRAonWBAvA9rFLasmw9Br1LIIjE4DGYuQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QaVhHoFLCMA01+Reuc/4pnXkhCs2ih4vLMKwLgjbhjrEe7i8nS/qN+yAkCPCY6JOod23y/97mQXu8kZH2Sc7pdDfbPWJ8Xu0yJh4ONfY3KOfV1TvGnoVHhEd6ytmGcc3YMfXYy8c1oQD7ac4GR7m2Z0biTKbCxKKRBKk7KROxIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=N3kPXvIw; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553331c3dc7so1222506e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Jun 2025 10:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1749145982; x=1749750782; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qg8B5BhnvwwywdhBinf22u9UEobn5/4x1o1lWUndYM0=;
+        b=N3kPXvIwmX+CDcGbVtvQyBHqnAw4wRwfWsKoRmpClmjchCcMtJsDTnkxxp8Bq86x4m
+         4k5IFnZBE+AX4YgIUEa3F3+/bbOlXV7uVaGZ4T5P5bP6HUcTr6GlUgciNTod9rnBMhyp
+         cCcAARQwisqCyj+yGzLEcOVsrZECC8+UPVg2g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749145982; x=1749750782;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qg8B5BhnvwwywdhBinf22u9UEobn5/4x1o1lWUndYM0=;
+        b=PQmdhZ5VfzZFn/5e/izAB5DuyzpRqZ/kevCm48YbsrBzcSgOBkOsdfcW+BRibXhElT
+         sgSVlwty45k7E7uCGGahrCrDLboh+8s85linDxq5yWIIgajYuNEMLt+GKLxiMyK0RfUA
+         W4H6PZNjqUTPRcv34C9vdTskUjuYwx+dH0Yi6g/KXC7Pao4o+qN4u0wA9VUeimu+GOsN
+         OUjslQW0BBXVeFh8Lvu97Q+3VTtS2FjzKyL6jiK33wk2HcLG8DFMyu1aMx4RzGbUSXws
+         bDGhv2Nmpw0I9dR78pSz6X31aQNwqGqT72x/OHVTi/ldgC9MeOd1mu7LSQI2t4LbXFTW
+         C2qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfAON96LawyLqLBdHTC6gWPJdy2Uve8KoDCpQFlBt+FArEhFsGdB9qnL1JBOTeFqrxvaiRUcSn9TKo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoJus5BLGoLwY5lQkUHdAytkOiQdc2NHZInt/TQuiq68ONA8SC
+	UZ89OqE+xLmeBWXBk22Nf/+iRsOhbi1Yy6MDQZIgfqQUgmv2+2FlZJ3T1nOjilMBNQ==
+X-Gm-Gg: ASbGncs6DMZriYmxM7JIGZK25p+WU7f+pu0RpHhzKiVJAcRJjmoTvmm6bgatzGXd1LF
+	LxRaSYt9S9wrV8jRYagguiU9zH8O6o8nLTJXCXFmlts6BzJMIi8RtL5HAxNZ8FRP5E6Ssn07Ama
+	C4eH9VqIV7WdVHJOMvpsamapqRpXbRDxMFzF2I0iOLKqeszZ56pCJpVVcXA5VQhVXj56YAWWTMs
+	XQ5t01F8TNm0ZaImX4ktY1ZLZamfmcEbEB6NEPRfK/a+TM3Fpesa6Bc3Dj6hgUurDUmaoWbf1Te
+	VTxdMinSzY3A8Htnn2WufAd+fJb5OOk2BW2U67bSc7ktdI1YYoQRurZWiHhAViGeWWB+mQy+W+c
+	DRaUzETj6ACtn+q5Ktc4bpLyMMw==
+X-Google-Smtp-Source: AGHT+IGFGY6JTGI6n0VkqKupH8+3OyGz0rwOerV6A58fRuz/+CnpGIvq6+ZmFKqYacJXbJhZzyj18Q==
+X-Received: by 2002:a05:6512:3b89:b0:553:3892:5ead with SMTP id 2adb3069b0e04-55366bd23bbmr23901e87.2.1749145982087;
+        Thu, 05 Jun 2025 10:53:02 -0700 (PDT)
+Received: from ribalda.c.googlers.com (90.52.88.34.bc.googleusercontent.com. [34.88.52.90])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553379379c2sm2641210e87.251.2025.06.05.10.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 10:53:01 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Subject: [PATCH v2 00/12] media: uvcvideo: Add support for orientation and
+ rotation.
+Date: Thu, 05 Jun 2025 17:52:53 +0000
+Message-Id: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHXZQWgC/3WNyw7CIBREf6W5azGAoqkr/8N0gTzKXRTMhRJNw
+ 7+L3bs8kzkzG2RH6DLchg3IVcyYYgd5GMAEHWfH0HYGyaXiZ35iazUsdSUWXXqXKX/1YrRaafu
+ Ebr3IeXzvi4+pc8BcEn32gyp+6f+tKhhnQnNj1Kj0Rdq7CZQWXJdjohmm1toXP2vZL7EAAAA=
+X-Change-ID: 20250403-uvc-orientation-5f7f19da5adb
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.14.2
 
-On Thursday, 5 June 2025 15:29:03 Central European Summer Time Linus Wallei=
-j wrote:
-> On Mon, Jun 2, 2025 at 6:20=E2=80=AFPM Nicolas Frattaroli
-> <nicolas.frattaroli@collabora.com> wrote:
->=20
-> > With the introduction of the RK3576, the maximum device function ID used
-> > increased to 14, as anyone can easily verify for themselves with:
-> >
-> >   rg -g '*-pinctrl.dtsi' '<\d+\s+RK_P..\s+(?<func>\d+)\s.*>;$' --trim \
-> >   -NI -r '$func' arch/arm64/boot/dts/rockchip/ | sort -g | uniq
-> >
-> > Unfortunately, this wasn't caught by dt-validate as those pins are
-> > omit-if-no-ref and we had no reference to them in any tree so far.
-> >
-> > Once again kick the can down the road by increasing the limit to 14.
-> >
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
->=20
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> Is this something I can just apply?
->=20
-> Yours,
-> Linus Walleij
->=20
+The ACPI has ways to annotate the location of a USB device. Wire that
+annotation to a v4l2 control.
 
-Absolutely, there's no harm in it landing early, and is only tangentially
-related to the rest of the series because it came up while I was pinmuxing
-my PWM pins.
+To support all possible devices, add a way to annotate USB devices on DT
+as well. The original binding discussion happened here:
+https://lore.kernel.org/linux-devicetree/20241212-usb-orientation-v1-1-0b69adf05f37@chromium.org/
 
-Kind regards,
-Nicolas Frattaroli
+The following patches are needed regardless if we finally add support
+for orientation and rotation or not:
+- media: uvcvideo: Always set default_value
+- media: uvcvideo: Do not create MC entities for virtual entities
 
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+Changes in v2:
+- Add support for rotation
+- Rename fwnode to swentity
+- Remove the patch to move the gpio file
+- Remove patches already in media-committers
+- Change priority of data origins
+- Patch mipi-disco
+- Link to v1: https://lore.kernel.org/r/20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org
+
+---
+Ricardo Ribalda (12):
+      media: uvcvideo: Always set default_value
+      media: v4l: fwnode: Support ACPI's _PLD for v4l2_fwnode_device_parse
+      ACPI: mipi-disco-img: Do not duplicate rotation info into swnodes
+      media: ipu-bridge: Use v4l2_fwnode_device_parse helper
+      media: ipu-bridge: Use v4l2_fwnode for unknown rotations
+      dt-bindings: usb: usb-device: Add orientation and rotation
+      media: uvcvideo: Make uvc_alloc_entity non static
+      media: uvcvideo: Add support for V4L2_CID_CAMERA_ORIENTATION
+      media: uvcvideo: Add uvc_ctrl_query_entity helper
+      media: uvcvideo: Add get_* functions to uvc_entity
+      media: uvcvideo: Add support for V4L2_CID_CAMERA_ROTATION
+      media: uvcvideo: Do not create MC entities for virtual entities
+
+ .../devicetree/bindings/usb/usb-device.yaml        |  10 ++
+ drivers/acpi/mipi-disco-img.c                      |  15 ---
+ drivers/media/pci/intel/ipu-bridge.c               |  52 ++++----
+ drivers/media/usb/uvc/Makefile                     |   3 +-
+ drivers/media/usb/uvc/uvc_ctrl.c                   | 132 ++++++++++++++-------
+ drivers/media/usb/uvc/uvc_driver.c                 |  18 ++-
+ drivers/media/usb/uvc/uvc_entity.c                 |  11 ++
+ drivers/media/usb/uvc/uvc_swentity.c               | 118 ++++++++++++++++++
+ drivers/media/usb/uvc/uvcvideo.h                   |  29 +++++
+ drivers/media/v4l2-core/v4l2-fwnode.c              |  85 ++++++++++++-
+ include/linux/usb/uvc.h                            |   3 +
+ 11 files changed, 377 insertions(+), 99 deletions(-)
+---
+base-commit: 5e1ff2314797bf53636468a97719a8222deca9ae
+change-id: 20250403-uvc-orientation-5f7f19da5adb
+
+Best regards,
+-- 
+Ricardo Ribalda <ribalda@chromium.org>
 
 
