@@ -1,210 +1,170 @@
-Return-Path: <linux-gpio+bounces-21029-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21030-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C08CACEAA6
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 09:09:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CC91ACEB25
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 09:49:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE8001897371
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 07:09:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAD3D3AB924
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Jun 2025 07:48:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4927C1E7C03;
-	Thu,  5 Jun 2025 07:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66C031FCFEE;
+	Thu,  5 Jun 2025 07:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="NfO6bVeq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcJuM2IQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6DB1C84D9
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Jun 2025 07:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1631DC07D;
+	Thu,  5 Jun 2025 07:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749107358; cv=none; b=vCWHEyqkDg7CK4Sxf8lmNfp1ChtXYE018K7xzXACSE341WWCatDXkWiloXHfYGtCnI1iQtzW+gTMt6n+dC4SnIaqFBLRLA0IXN+9OKZKC17wekQzuB52Ksb8zhbeoqIUJ7+6zCfQq2akzzmxbjuv0SIVWmuGd8hcBigYdMzVm0s=
+	t=1749109732; cv=none; b=C0f49bWLHM/8Mha/N5SnSTgUNjerdZHQ6Pf3wNuqWy1lgnAlWHh0j8srBv4GVoFYR4QoZXdkQ30Tdml6KOV/RfS6RXy57Lo+MYvRcRijVUHNb9DzO8c2YYozaAqNHyTNATouQdYwlwwQiCJtDUzOZqzwDZ9c98gWJQli8yOFHb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749107358; c=relaxed/simple;
-	bh=VAnrDuCsj/ftouuxW93HEoRboeceO4ZhXRxXBOHxkYc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=ID8vLWenymPL7gAYg9VBQDR+Y23/QT0kDmSWpJbvADd3sZ5GfwDdGqz20t10mmOwuXs4PjKv2kYWzd/M/LdXVHMFnibWI8xxFLEezQNv8XXnO5n2w+vcNi6LEGnGosuqQIoM6MN41dp+GYMDpjPZKc+h0NeDePcWIuZV7ai8Cvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=NfO6bVeq; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad55d6aeb07so119394866b.0
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Jun 2025 00:09:15 -0700 (PDT)
+	s=arc-20240116; t=1749109732; c=relaxed/simple;
+	bh=gfeSM9koI63hy3Q9WzqLK9sjfRJOxYN3nlNQHMrI1nE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tdGZ5JCNTxTI7ZA7tqQ5wM4gcJdaHvuC2gntXgSaIY2faYOLwumytRMBbO6ogWpf8rycEBmAUQB7Yrwjfc5ibvyJrZT/wEhyT6r4pva5PtMl0D4sApRBDUV0VCC6hxkpHRIEF47IlEeu0L1pzt1+1MtQef7z8CJ/ntkxwdN3x8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kcJuM2IQ; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e8134dee405so733124276.1;
+        Thu, 05 Jun 2025 00:48:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749107354; x=1749712154; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749109729; x=1749714529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pdRHU3L9WlCsxe4PlviWg63qNglQMvknpPY4FpQninU=;
-        b=NfO6bVeqqVT8ArFUY0nBfUAJlVsLb7wUFWYKKfOo4lfm5qI3Yu604RHAaBwNyL16bQ
-         yACyuIoJeNmJz6NwWM9jqYgASsli8/r7QriQ+RjUoxITLvY+MfMRtSufjIDe00aT/23M
-         +1QsBQYaF5TKot3PgwR5TTS9FjdFF/S736qN6UcutOdTnIBHPsLlUsW0OE12WQyjNril
-         dZ8RkmS6g3aa0x2IC3cZ/mNoxQO2karbmXDPkRBszvzI8A/3wfiAUZxDu+ks0J2TcpC/
-         Uitu36sDZkT1Sp3KNe0yITHvjyKRnKEzDBkqjIlNzGOAy0d+/uuNTcEGrfn9xHC+qmCv
-         zTUg==
+        bh=laFJFuPEsuG/sJVW71TD9LCLTDYigCTdW1g0CHwdTGM=;
+        b=kcJuM2IQTIzwbDnL7jM34y2wnl+P15v0+eoAFHfKpCHKWnFLxiySaS0oTy3HmUeQsi
+         4P5YPD2Q8+IGj/GGPsfzQLZ+YvfN6kjKXsFzfaPIOEYhmCENeIe8q9AuZ/Xk4u3DbdrB
+         Hdhm7b4PKMpEAiH14zQEZsglPzV9HHHkFoSScNyGzGZyTsFQvWd0vbRI1b9w+qGVDiPv
+         ZWVFpM3R0Y1u1vQ7DodvFyYq7KoSlZBm7jUdH0pfEQtyQVUM/XRGUuDDFuiygIL1hjm8
+         FzmxkGalfJ++3PUMlhfbNN8NzRvC6WnxJ9/gi0zXefAJ4jnxX9xL+TutRUZCC7/NsTWf
+         ek7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749107354; x=1749712154;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pdRHU3L9WlCsxe4PlviWg63qNglQMvknpPY4FpQninU=;
-        b=j8DBYBUp31uNjkMsM10kaCUNUo1cVy6y1zlmwJcnvRcVaBtcyNPM5R1ZFeE5BWva1l
-         PWVUQuHsMIpT6qtiTiWg8DI4ZD39wLY8x9+OeflEeFbsuixWl05zaWR5rtLuxVEdupai
-         ZD/MA2OmQ+jhI6bDPBm0rd4b/FAxmsnN7XDDhbWphqZrMd82QS6/Q0dKWIq2WtXWDed9
-         7vXSQ95nlfquuqakZp/6+2gtKaloCrQx8TGp/n504+zDeocYW5xDYmcMZhE7yEBKdFay
-         Cl/NsjDd88pRNEUGCaqlVZC6kw4pmC6BIqw0nntZmBu4J2WXFGY0JDdUNZw0Mcl44QpJ
-         9OAA==
-X-Gm-Message-State: AOJu0Yz4UFawFlL7nPqyL+16xKW8nmY6aRtAQk36ygP/Lu+/mXoBtBw1
-	GwVKVURS9omcxbR8BIg1zS15Wq4lUSKvT+Ymxaisx39AeMVS9Bbx0eq+dGomtuRsqFM=
-X-Gm-Gg: ASbGncu19iLFiIyqEZ3Z9c5msgzmVvXGoyVM0RYLy1k00jYNe4JHtiKhWO7i7E9/h/K
-	Zg32G4dAnQqOwm/qhB0XP88dZIeeE2q9IBCeYV3TUaWjHBjSqncHoYraOT95fwH1Vy3gl0v4BYV
-	I2mfN8BB0CnpW3CW3Ia7E8FXRW/e7ScxW+vkLFxAyiBP3UumSuO1IfeDeNN+4jg9AV4TQQjoZyH
-	B7DCCYU0OHiGreYjn/0K63GPW7j5PQt8/vs3t7d+39k5UGQhn7a5YNHAK7Ro6IDk8fJvboQuxg8
-	3axIxr6znNA87WZW3FJPyRGvuJo=
-X-Google-Smtp-Source: AGHT+IFyqkX2xVFQtR+kqVXOvps+elWSFoZ4n2pgUq/dZkEvYohZuO1U4ErgzBbOEcJCsxeRBP1lBg==
-X-Received: by 2002:a17:906:7b56:b0:adb:2ef9:db38 with SMTP id a640c23a62f3a-addf8ebb630mr409258666b.36.1749107353752;
-        Thu, 05 Jun 2025 00:09:13 -0700 (PDT)
-Received: from localhost ([2001:9e8:d5bf:a700::f39])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60566c2abe0sm9893799a12.8.2025.06.05.00.09.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 00:09:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749109729; x=1749714529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=laFJFuPEsuG/sJVW71TD9LCLTDYigCTdW1g0CHwdTGM=;
+        b=ZYHb9N9agOp+bi7lw2QNeg95fZXsxYlqza82gSmCsSlel/nHwAQaleYpDtUtF9IcOO
+         52JW2W/BeBFAcctVmsgo8PVR2WxlgF2lRbmgS0WrEjxZQ/QW8QjuqRxHZ9HtOJx3Pn0T
+         IEG9zE2e/yLrBvMjEJcAX+x8izByz2dOCoGTfDLWwucOxl1Ud9PHCSw8KNYKWNU+lV7U
+         wpzerQcFHgzIQi0COhSvS4GpB1GC+yFQ++JGZeffsWAWUH3csCtw8rp51BR9g5SoTGTo
+         gjTyHDbXG5pOq68Z4MJ+LjJD1mCERW6xi2WwG/KJMCjYPlLhGFablOg7nyLwLWDWwUGo
+         +LkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIwVnI9qH2m+WY5u2Oyzi9xYBvMX9vZ0s2cwN6ERFn32xinZaT22+tS0B+RL7TAxF/yWa3RWY727uRMPqsTko=@vger.kernel.org, AJvYcCVCFnpehdmAHaXP8Z29fyxACdcX4CzDRU/a6DjZeohVwAmTGCiX1d7xTBVzGcPuwGXEzngR3Rlt@vger.kernel.org, AJvYcCVGtAskndKW38GDV79n2u9COF3f1Ai6HJtdZcSPriX7llZzP2qPZ/i9MmSSjFYO31N3R9PW1Oy92sM=@vger.kernel.org, AJvYcCVbU4Bwun5icz0jm3e2Bp5PcHy0ZEMYKfl2AUJgeayzKco+Knwev0xhoQhrggFeqx25oCbkAxHEPg5b@vger.kernel.org, AJvYcCVu3rlJj+X1lED64H44mR42ERF/8wKW/V7bBRvZDL50Eo+pPSYBzEKv8TzjgsgtbNeqn2qRnMpI9ymsUw==@vger.kernel.org, AJvYcCWSKaqvFJvZGsNK9zKxAZnhTCp0GzArP2+sfuLWEizXmzYGoBkVw+TgvkqhNTuk9utxlT5p2R3UU/25llk=@vger.kernel.org, AJvYcCWkrLivizjuXzlbH842WA9/PA9nhP+iFqsFdHzQJSt+vhz+LCjWq+PGbsZ9QzlRwZUofoDDUjMHaztY@vger.kernel.org, AJvYcCX8X0PEqMSSWMHVOyTttBndY/fKKnaDMW+DBm6zjw4E/C1hj1ExrKpc3KZs7A0dY0SArkW5I/vv2vNV88xT@vger.kernel.org, AJvYcCXvRX7zw12Gcxdm8iiwX+9dRO4z3U6sIJSg7fJw7POI8QmwkJjvhYoLmltQhkj6VLYhM6TbCnBrExOH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwkmNWotHIq/u9sWgjT0hKq6GeBhCB3iBd02wTnojDPALDHXiv
+	hZpp0wEjKlvMdkq4wSCzuboL8q6QwR5nSk9/zocCiVtl+yPVX0Cy3J5KsGGhQyNGiKuQk9Oo5gR
+	yWkZDv1LgG477fRygeKmnAXvegjGBUZs=
+X-Gm-Gg: ASbGncvl0vZysbBIhFwSil0igCPbzJBXx3UZmfEFdstJYqRjSqfxcQ1bZ/kwhDob5Z7
+	ktIJSgEscLn5iduubFkwwI4AHxFdRAEdhvEWdvKRDNYx0wbWUY6iGdHPFUzPpe/L6DL9VVN94oX
+	ONeU+J+RFTVnFmqvKd5USfGTE+QeHGEcn2kA3LMZiSF9S2gwtJdQIIhRMuRdJmyBKy6dk=
+X-Google-Smtp-Source: AGHT+IHIVmZX96nE9u8yp+n5lk7LxNK9FTCayZ4PrsjWGO2btr//2eZ4+WivGNhUZIzZvZhqyODqpSltdOW6AvZizLM=
+X-Received: by 2002:a05:6902:2b85:b0:e7d:b16f:f804 with SMTP id
+ 3f1490d57ef6-e8179c349a9mr7131699276.15.1749109729450; Thu, 05 Jun 2025
+ 00:48:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250604041418.1188792-1-tmyu0@nuvoton.com> <20250604041418.1188792-2-tmyu0@nuvoton.com>
+ <b4c15a6b-0906-4fea-b218-4467afdd8345@suse.com>
+In-Reply-To: <b4c15a6b-0906-4fea-b218-4467afdd8345@suse.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Thu, 5 Jun 2025 15:48:38 +0800
+X-Gm-Features: AX0GCFsDarHH9DuQaNq5zKQZ0HdR17wIgh9dOA3-2UA2UgIfsEX3Oo2Xza2mWFQ
+Message-ID: <CAOoeyxU1-HWSfNGLrXQCgaE8gC=3Q=yF7=S_N=J=q_26Kmh5PQ@mail.gmail.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Oliver Neukum <oneukum@suse.com>
+Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
+	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Ming Yu <tmyu0@nuvoton.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 05 Jun 2025 09:09:12 +0200
-Message-Id: <DAEET50ME6NU.294ZRFRVH2DX7@riscstar.com>
-Cc: <linux-gpio@vger.kernel.org>, "Bartosz Golaszewski"
- <bartosz.golaszewski@linaro.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Vincent Fazio"
- <vfazio@xes-inc.com>, "Kent Gibson" <warthog618@gmail.com>, "Linus Walleij"
- <linus.walleij@linaro.org>, "Erik Schilling" <erik.schilling@linaro.org>,
- "Viresh Kumar" <viresh.kumar@linaro.org>
-From: "Erik Schilling" <erik@riscstar.com>
-Subject: Re: [PATCH libgpiod 3/3] doc: integrate rust docs into the sphinx
- build
-X-Mailer: aerc 0.20.1
-References: <20250604-rust-docs-v1-0-8ff23924a917@linaro.org>
- <20250604-rust-docs-v1-3-8ff23924a917@linaro.org>
-In-Reply-To: <20250604-rust-docs-v1-3-8ff23924a917@linaro.org>
 
-On Wed Jun 4, 2025 at 11:53 AM CEST, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Dear Oliver,
+
+Thank you for reviewing,
+
+Oliver Neukum <oneukum@suse.com> =E6=96=BC 2025=E5=B9=B46=E6=9C=884=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:11=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> Follow the pattern we established with GLib bindings: generate a separate
-> set of docs for the rust bindings, make them part of the generated doc
-> bundle and point to the rust index.html from the dedicated sphinx page.
+> > +static void usb_int_callback(struct urb *urb)
+> > +{
+> > +     struct nct6694 *nct6694 =3D urb->context;
+> > +     unsigned int *int_status =3D urb->transfer_buffer;
+> > +     int ret;
+> > +
+> > +     switch (urb->status) {
+> > +     case 0:
+> > +             break;
+> > +     case -ECONNRESET:
+> > +     case -ENOENT:
+> > +     case -ESHUTDOWN:
+> > +             return;
+> > +     default:
+> > +             goto resubmit;
+> > +     }
+> > +
+> > +     while (*int_status) {
+> > +             int irq =3D __ffs(*int_status);
+> > +
+> > +             generic_handle_irq_safe(irq_find_mapping(nct6694->domain,=
+ irq));
+> > +             *int_status &=3D ~BIT(irq);
+> > +     }
 >
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  .readthedocs.yaml |  3 +++
->  docs/conf.py      | 38 +++++++++++++++++++++++++++++++-------
->  docs/rust_api.rst | 22 ++++++++++++++--------
->  3 files changed, 48 insertions(+), 15 deletions(-)
+> Does modifying the byte have any benefit?
 >
-> diff --git a/.readthedocs.yaml b/.readthedocs.yaml
-> index 5f4f5ac4954de70e060f1a7b2eafe3a731620c16..d81900c9ad9a60d8530b58e38=
-add3a3a353da718 100644
-> --- a/.readthedocs.yaml
-> +++ b/.readthedocs.yaml
-> @@ -14,6 +14,7 @@ build:
->    os: ubuntu-24.04
->    tools:
->      python: "3.12"
-> +    rust: "1.86"
->    apt_packages:
->        - autoconf
->        - autoconf-archive
-> @@ -24,6 +25,8 @@ build:
->        - gir1.2-glib-2.0-dev
->        - gobject-introspection
->        - graphviz
-> +      # Needed for stdbool.h in rust build
-> +      - libclang-dev
 
-Mostly it is needed for bindgen, right?
+I will update the code in the next patch to use __le32 for the
+variable to ensure proper endianness handling across architectures.
 
->        - libglib2.0-dev-bin
->        - libgudev-1.0-dev
->        - libtool
-> diff --git a/docs/conf.py b/docs/conf.py
-> index 04d1cea2a2175166555993c3e936e7cf1ebd0fe6..8c7bed234c98990f01adaec6c=
-a3d6db2c3171c65 100644
-> --- a/docs/conf.py
-> +++ b/docs/conf.py
-> @@ -54,15 +54,16 @@ except ImportError:
-> =20
->  html_theme =3D "sphinx_rtd_theme" if sphinx_rtd_theme else "default"
-> =20
-> +# We need to know where to put docs generated by gi-docgen and cargo but
-> +# app.outdir is only set once the builder is initialized. Let's delay ru=
-nning
-> +# gi-docgen until we're notified.
-> +#
-> +# For some reason on RTD we're in the docs/ directory while during a loc=
-al
-> +# build, we're still in the top source directory.
-> +prefix =3D "../" if os.getenv("READTHEDOCS") =3D=3D "True" else "./"
-> +
-> =20
-> -# We need to know where to put docs generated by gi-docgen but app.outdi=
-r is
-> -# only set once the builder is initialized. Let's delay running gi-docge=
-n
-> -# until we're notified.
->  def make_glib_docs(app):
-> -    # For some reason on RTD we're in the docs/ directory while during a=
- local
-> -    # build, we're still in the top source directory.
-> -    prefix =3D "../" if os.getenv("READTHEDOCS") =3D=3D "True" else "./"
-> -
->      subprocess.run(
->          [
->              "gi-docgen",
-> @@ -77,8 +78,31 @@ def make_glib_docs(app):
->      )
-> =20
-> =20
-> +def make_rust_docs(app):
-> +    subprocess.run(
-> +        [
-> +            "cargo",
-> +            "doc",
-> +            "--manifest-path",
-> +            f"{prefix}/bindings/rust/libgpiod/Cargo.toml",
-> +            "--target-dir",
-> +            f"{app.outdir}/rust/",
-> +        ],
+> > +resubmit:
+> > +     ret =3D usb_submit_urb(urb, GFP_ATOMIC);
+> > +     if (ret)
+> > +             dev_warn(nct6694->dev, "Failed to resubmit urb, status %p=
+e",  ERR_PTR(ret));
+> > +}
+> > +
+> > +static void nct6694_irq_lock(struct irq_data *data)
+> > +{
+> > +     struct nct6694 *nct6694 =3D irq_data_get_irq_chip_data(data);
+> > +
+> > +     mutex_lock(&nct6694->irq_lock);
+> > +}
+>
+> Why? Does this do anything but make it _harder_ to tell that you
+> cannot take the lock in interrupt?
+>
 
-This would narrow it down to only the libraries that actually matter:
+I plan to remove nct6694_irq_lock() and nct6694_bus_sync_unlock(), and
+instead add the spinlock directly inside the function like this:
+static void nct6694_irq_enable(struct irq_data *data)
+{
+    ...
+    spin_lock(&nct6694->irq_lock);
+    nct6694->irq_enable |=3D BIT(hwirq);
+    spin_unlock(&nct6694->irq_lock);
+}
 
-diff --git a/docs/conf.py b/docs/conf.py
-index 8c7bed2..e5baeb2 100644
---- a/docs/conf.py
-+++ b/docs/conf.py
-@@ -82,8 +82,11 @@ def make_rust_docs(app):
-     subprocess.run(
-         [
-             "cargo",
-             "doc",
-+            "--no-deps",
-+            "--package=3Dlibgpiod",
-+            "--package=3Dlibgpiod-sys",
-             "--manifest-path",
-             f"{prefix}/bindings/rust/libgpiod/Cargo.toml",
-             "--target-dir",
-             f"{app.outdir}/rust/",
+Do you think this approach is better?
 
-As the other stuff is just build dependencies, we probably do not need
-to include it in the output? But not having a strong opinion here.
 
-- Erik
-
+Best regards,
+Ming
 
