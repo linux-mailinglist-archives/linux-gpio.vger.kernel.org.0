@@ -1,143 +1,165 @@
-Return-Path: <linux-gpio+bounces-21094-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21095-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 155A9AD08BB
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Jun 2025 21:38:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9CB6AD0D55
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Jun 2025 14:19:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CD163AB52E
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Jun 2025 19:37:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C333D1890959
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Jun 2025 12:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F6F2147E3;
-	Fri,  6 Jun 2025 19:38:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 855E3220F25;
+	Sat,  7 Jun 2025 12:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1PmQOYr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON2RV2ra"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74166BA38;
-	Fri,  6 Jun 2025 19:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B431FA859;
+	Sat,  7 Jun 2025 12:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749238681; cv=none; b=DHZIxItXsGnbRrAPPDLm2n82McLLhHXnCNbUGt6tWgHUuhj+3grdzhycJWsZJUeoThhzncJ59R9WUCPvmZiGtZUz4kKj+tI8q6+hzmekk1gNIvdPnFzgwBt32m3SIVrFRRvsHDqQipMLjieUK/S6SBp8wlXZ+rXPltimT1LYJ9M=
+	t=1749298759; cv=none; b=uGC4HpbA4UzHs+oXdLQZ4NL64Ko8yKaRnyjRKZ35GWkS7Idvjh1L/AWy5OvEYt+QbczcUXM1L3UucEb+YMvZDLZAJt7A8swzQZFTc/KFdLorjup4KS/x/CsspwWrANC+sk7WW6wpm8loZOXCdIJpMlvgKi+cMLxqgde8DcDacnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749238681; c=relaxed/simple;
-	bh=ir1jj3w7RASgWM822FlUDrELte1gttYXfu3fuSt+TRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OGFf83z99bA2txmwirVr2xJgZqXWZrKPJKd0niiVE6A++skaQLfatIIIaN0gpAWV7qLeZnXLW8Tu0TnJPWGpEK5WJqTyc2aj5oy9AVLnCtxcKOo4tPPfxZZmzHoYGeeZB8rikFi0Y6Z8TDKTvb3rKG9ItgCTc4WWlfYt3o/DaJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1PmQOYr; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d094f67777so32226585a.1;
-        Fri, 06 Jun 2025 12:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749238678; x=1749843478; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BjtqGF5ZOGFFta8PvepE2weuvIOQh6h102Lg69MuG00=;
-        b=M1PmQOYrOZqs/ZXc+EftvF9Li7hm5QzK+rGJU6HXl1Rsq7eMlR/mGs2UCQupvczXr3
-         34jZiqah5TL3qDbEwU0axGvaYUwWb7exUaLrx3wBkideKiQrrEUJ58Jt9mgi0wSzvlVD
-         lfLEJJ92pQoKRupQ7oQXaDNhib3/jkcyz3FkSgvw38KhYXqbOF0adjGV1aknKGo/ZNg1
-         wckMN5MCAGgGVGEIn8FFDa2Uq5yI5DcVkoMQjzoYFpsPXABbqqRgyLbTaeeY1sk7lkvX
-         B2oTosRutbj7vg49OxB5nbJ4t0tvPFG2l3v4aNYybC9t97kn8ZjD8FOsi1aYQqb+gCbb
-         9cgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749238678; x=1749843478;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BjtqGF5ZOGFFta8PvepE2weuvIOQh6h102Lg69MuG00=;
-        b=IsnYuj3h4/DjyoBENzkKmDxNAsjWX7pBfe+Z8ZLp/okwky3A+0wIqm368P49d8q0EF
-         8SK83KIgwDTy+foaXdxWvuro7dYuABzo3rrUmasOOKWnPOfmrlKQcuoBpKRCKlmMTAOa
-         dCPNuwxuQW+/6RZwZKm5KwvwX4CT6w/7J93dsotMwkbBEjPn6NNbN7mB412RpbVRl2iC
-         iDbxXahPhFa81RoYG32jtZY1gkN2wXizmf8zD1k45+Rg8CXwCI16bKFA6xG1ytezP39r
-         4yZRzivQyDMFDBntLtKjYTA0EGWdiuhR6bk7tgraHMh0LmpL1SWapw/6WPmNfD2mwfwm
-         lXxA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9iBNMCcQQkZU0jaJdI7nktnWvLTljdGEm001wa2KA5FmIbciD9e6e6lQ5HLYLCdLIeW5tgMdPbuTn@vger.kernel.org, AJvYcCUdeiRxVfKIwXBnl5U9DmrKFiF3hi4+bH9hQaC0w88M81F3ZyhS/cx6cjBYbobXo2TwVWJPdNmqWIlJC4A9@vger.kernel.org, AJvYcCVdR6VbRL1H04UwCG/6OTwqx5Uo+uTmC2FS6ZNFCUqMfgVxQIGXgUk11MXDOC0nzSadWMmKnRvGzZQFuA==@vger.kernel.org, AJvYcCVxVTm0dubaRJvjN9w6HlVhT0b5+qiaL5PBvZJipEb+Tzs6UUJw/bFiVXRCf7iBazg1D8YcA6SjlSr0@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT8lGe9PGSuET0EcvZbjv6UFFRGvbX3kf6a5V4q8q2J32acoTd
-	waW7C91kaQE3boY8BvOLD1RxlyZSYLR4HKoPj4yheTULDiqAnWMvM94v
-X-Gm-Gg: ASbGncudofg+20vpson3niUDhcMu3OFfhTqVl1Qbgl7H2xU54B/pmAfGR++5wOqDCXw
-	H8K/klmJW0c3BsgYgOkrR+uCe6vWMOjxZENe5/IazM6w8tZA83Cd0Z6JP9YmRzgESQStouZ4m1A
-	qFYWe7xLZ3o4mTnYUbXI5wHk7K2M4S0WNsn5XQDjzhqnpsXT2UHxwxk0z16VpCSenKgF7dPXJbE
-	2CIs6mkjC1kSbXWtB9uY8Mw4FZmur/9r+6JC3VRIR6VJFKQ0JE2bE2BJMAmADM3Zwy1BATdXJhH
-	QiW6KVFhS9TUt+kzhlhOgcyD9ibcuvVdX9QXZKAU32VjAGEu+X3QTkvt0VNnius2uRZuDKXnuwA
-	DNmhkwzQ=
-X-Google-Smtp-Source: AGHT+IEr9PlpC7XQYPZn1E4QW5BFOw1Jgh0MjQScfApeePZX6yvxVkPL5XAuiClICqHeds9T6gToDg==
-X-Received: by 2002:a05:620a:40c6:b0:7c5:75ad:5c3a with SMTP id af79cd13be357-7d22996b0b4mr272770585a.8.1749238678242;
-        Fri, 06 Jun 2025 12:37:58 -0700 (PDT)
-Received: from JSANTO12-L01.ad.analog.com ([191.255.131.70])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a61b03fsm175643485a.92.2025.06.06.12.37.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 12:37:57 -0700 (PDT)
-Date: Fri, 6 Jun 2025 16:37:52 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, nuno.sa@analog.com,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, dlechner@baylibre.com,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v10 07/12] iio: adc: ad7768-1: Add GPIO controller support
-Message-ID: <aENDkMN597fGsTL0@JSANTO12-L01.ad.analog.com>
-Reply-To: ddb448f0-1cfc-497b-ac1f-9f3d9e9fcc3a@baylibre.com
-References: <cover.1749063024.git.Jonathan.Santos@analog.com>
- <eb48ea5f11503729b15a36ef00c89de3dd37bcc3.1749063024.git.Jonathan.Santos@analog.com>
- <aEEzZjfLVUW1kyC9@smile.fi.intel.com>
+	s=arc-20240116; t=1749298759; c=relaxed/simple;
+	bh=w2DyumJs7cOJbwAL33h6oxUYA9Api2hkt43KHYq+pT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CdvfwUgSxDZE3DYiFuYMEQDheZQDmXNn3Umwmj5fPCEbzIYr8cSYyFIaKD3cw3w19mhnu5FFV8/tXyS9TjdZETwmOWUX1cV7XEAda6ZMiK2u+FvdF44cdDLah+0XoU3HWN2xm5D952OMmy4BdcY+/Qjlcbm9Iky6fgo2X45qDfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON2RV2ra; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8787C4CEE4;
+	Sat,  7 Jun 2025 12:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749298758;
+	bh=w2DyumJs7cOJbwAL33h6oxUYA9Api2hkt43KHYq+pT8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ON2RV2ramxoF5zguFHhUHn7LVYh9wpZyiCbg+syejc3q3DgrsHBGJqrlhN5cSnJLf
+	 W4uUIAR5Q/LpJyZWHqfL9AAx0+a3AARedtzhkNTU8enoPdbAyRN/Ae3MIXiQOzgQze
+	 uCRKPQwLbF01cRXmg3qrURo+8pXIQW2A8OTKAxcTdetBtdiTqJwMfJAzEQE4auwoBI
+	 JKXs4CENbBVYh9NlWIauO7ya85xGFkcBTCINWAT7nelwsb20MfAJFdyeuJAClG1vhn
+	 DlWaH/NyK2p80l/gJHxHx1K5FYOqI+hEHcuL+InKAl44W1jhkraiJI+6rs/xB5Scih
+	 HyjS9OxfCw8rQ==
+Date: Sat, 7 Jun 2025 13:19:05 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: andriy.shevchenko@linux.intel.com, Andy Shevchenko <andy@kernel.org>,
+ Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, nuno.sa@analog.com,
+ Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, dlechner@baylibre.com, rafael@kernel.org,
+ djrscally@gmail.com
+Subject: Re: [PATCH v9 09/12] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <20250607131905.4e42cbcd@jic23-huawei>
+In-Reply-To: <aD4WndkKGIWVVWx6@surfacebook.localdomain>
+References: <cover.1748447035.git.Jonathan.Santos@analog.com>
+	<27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
+	<aDnuvAdkcTAP2tMt@smile.fi.intel.com>
+	<aD3cK5PioN7Rw3pP@JSANTO12-L01.ad.analog.com>
+	<aD4WndkKGIWVVWx6@surfacebook.localdomain>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEEzZjfLVUW1kyC9@smile.fi.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 06/05, Andy Shevchenko wrote:
-> On Wed, Jun 04, 2025 at 04:36:43PM -0300, Jonathan Santos wrote:
-> > From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> > 
-> > The AD7768-1 has the ability to control other local hardware (such as gain
-> > stages),to power down other blocks in the signal chain, or read local
-> > status signals over the SPI interface.
-> > 
-> > Add direct mode conditional locks in the gpio callbacks to prevent register
-> 
-> GPIO
-> 
-> > access when the device is in buffered mode.
-> > 
-> > This change exports the AD7768-1's four gpios and makes them accessible
-> 
-> GPIOs
-> 
-> > at an upper layer.
+On Tue, 3 Jun 2025 00:25:40 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> Mon, Jun 02, 2025 at 02:15:23PM -0300, Jonathan Santos kirjoitti:
+> > On 05/30, Andy Shevchenko wrote:  
+> > > On Thu, May 29, 2025 at 07:50:29PM -0300, Jonathan Santos wrote:  
 > 
 > ...
 > 
-> I haven't seen in the commit message nor in the comments why GPIO regmap can't
-> be used. (No need to resend, just reply here, but keep in mind in case of a new
-> version of the series.)
->
-
-We did discussed this, see [1] and [2]. It would need a few tweaks on
-the gpio regmap driver, but I will keep that in mind, thanks.
-
-[1]: https://lore.kernel.org/linux-iio/7c5e2364-038b-48a8-ad67-3cf0f2fd2be3@baylibre.com/
-[2]: https://lore.kernel.org/linux-iio/ddb448f0-1cfc-497b-ac1f-9f3d9e9fcc3a@baylibre.com/
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> > > > +static int ad7768_trigger_sources_sync_setup(struct device *dev,
+> > > > +					     struct fwnode_handle *dev_fwnode,
+> > > > +					     struct ad7768_state *st)
+> > > > +{
+> > > > +	struct fwnode_reference_args args;
+> > > > +
+> > > > +	struct fwnode_handle *fwnode __free(fwnode_handle) =
+> > > > +		fwnode_find_reference_args(dev_fwnode, "trigger-sources",
+> > > > +					   "#trigger-source-cells", 0,
+> > > > +					   AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);  
+> > > 
+> > > I don't see how args are being used. This puts in doubt the need of the first
+> > > patch.  
+> > 
+> > If the wrapper is the issue, maybe it is better doing this instead?
+> > 
+> > static int ad7768_trigger_sources_sync_setup(struct device *dev,
+> > 					     struct fwnode_handle *dev_fwnode,  
 > 
+> Name it fwnode...
 > 
+> > 					     struct ad7768_state *st)
+> > {
+> > 	struct fwnode_reference_args args;
+> > 	struct fwnode_handle *fwnode __free(fwnode_handle) = NULL;  
+> 
+> ...and this one something like 'ref'. Also I'm not sure the __free() will do
+> what you expect from it.
+> 
+> > 	int ret;
+> > 
+> > 	ret = fwnode_property_get_reference_args(dev_fwnode, "trigger-sources",
+> > 						 "#trigger-source-cells", 0,
+> > 						 AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
+> > 	if (ret)
+> > 		return ret;
+> > 
+> > 	fwnode = args.fwnode;  
+> 
+> Yes, please. This looks better.
+
+Take a look at the guidance in cleanup.h first.  Linus made it very clear
+that the = NULL then set it later pattern was not the way to go. That was
+one of the things buried deep in a discussion thread soon after the cleanup.h
+stuff was proposed and the lack of general knowledge of that preference lead
+to Dan adding that documentation to cleanup.h.
+
+If __free is used Linus always wants to see the constructor and destructor in the same line. 
+
+That is why I suggested the approach in patch 1.
+
+If that isn't acceptable (yet), wrap this up in a local function doing the equivalent
+of patch 1 and we can wait and see how common this ends up being.
+
+Jonathan
+
+
+> 
+> > > > +	/* First, try getting the GPIO trigger source */
+> > > > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
+> > > > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
+> > > > +							       NULL,
+> > > > +							       0,
+> > > > +							       GPIOD_OUT_LOW,
+> > > > +							       "sync-in");
+> > > > +		return PTR_ERR_OR_ZERO(st->gpio_sync_in);
+> > > > +	}
+> > > > +
+> > > > +	/*
+> > > > +	 * TODO: Support the other cases when we have a trigger subsystem
+> > > > +	 * to reliably handle other types of devices as trigger sources.
+> > > > +	 *
+> > > > +	 * For now, return an error message. For self triggering, omit the
+> > > > +	 * trigger-sources property.
+> > > > +	 */
+> > > > +	return dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
+> > > > +}  
+> > 
+> > Then we can get rid of the first patch.  
+> 
+
 
