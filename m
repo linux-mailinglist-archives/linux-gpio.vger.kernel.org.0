@@ -1,108 +1,100 @@
-Return-Path: <linux-gpio+bounces-21110-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21111-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDFB8AD16E9
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jun 2025 04:35:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2FD7AD187C
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jun 2025 08:07:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DF53188AD46
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jun 2025 02:35:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 985883ABAD5
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jun 2025 06:07:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D8462459F5;
-	Mon,  9 Jun 2025 02:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C51E9254AF4;
+	Mon,  9 Jun 2025 06:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIVMU2oK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdWFB4T+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6322459D8;
-	Mon,  9 Jun 2025 02:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1C0C2EF;
+	Mon,  9 Jun 2025 06:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749436477; cv=none; b=m/HLRlK5YF8vx23v3ZAnr6jVczECDjc4BrcqkYlo8HN0ACpI8RDHZyFLi0BHlUm1hmQcyI6SVIba2YePUZr1h0sVaoLOCLrdbbJsRkRv1DJ9N51YEUXT1P1KMF+oxJZT9VjjPBm75mmA7fDGJ0NLrLSorLSXe+2GQI1hbOo4zIo=
+	t=1749449243; cv=none; b=bb/cZXMo2AigwcOTTAZvl/M469nopfR59U5aavE3TGVAzHIXvw+Jbp3PlGcSM5HypfGOT47d8X0Cd28bLKQjwJzh+QgKPQFym0mSoaw+64HqhvCrtSxLlakQQV0hTIoNNoSiISY+bMQg0hevVlAZrMDeNBHxV+gMQOAL/6v/9OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749436477; c=relaxed/simple;
-	bh=UiTxvyaWkJtVvCM1n2gSps6GKf91xTUWK+4KWKfKPY8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EtXkMjySYdStW7tcE9pX+sG/I6WgO5G4e2ZuQFjB/e5j7Xon8EekRlTkHu221a/THWTIhl1WfvP//9G6C6zPHO8XMae8arvIPJpm6ktds2M9RGxT5Ibn8eRCrAGw9/Tpc0KH4HyALGGouQPvVSFUANyRdQ1keLjISosMkIiZls4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIVMU2oK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C898BC4CEEE;
-	Mon,  9 Jun 2025 02:34:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749436476;
-	bh=UiTxvyaWkJtVvCM1n2gSps6GKf91xTUWK+4KWKfKPY8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OIVMU2oKh2pYkrlRrBk2DoHQ6NkXiG72dcFcXHdjt0qwSi76lckGvrZQjDrDoXgp8
-	 mM2LvgFU/1iQ2eESkFOlM8wB9wqvxzs6zsCM8vKvayOzniRkb6cU2W3eqIYb9O438Z
-	 k+3nydtf7T/xVI+qpVdACsbt9pDJ7gQB5BMF7HMLlbtZUQNpR5TZgD3USxCTGNxVQ3
-	 7J/dqpH6oIPtoTFTyvuO+oGBthF5h/Zh+lFZrDP3RVcAV9dIqO/tdheT5yiQVSqcMO
-	 UbsKbyBj1jMFllNU8oSNzW0KM1rB7Fk9H0BAOsw5gaG4D7fegmzEasGHUZiMwLGb2m
-	 v/RuJbyg1/IHQ==
-From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	westeri@kernel.org,
-	andriy.shevchenko@linux.intel.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1749449243; c=relaxed/simple;
+	bh=QA0igcJkHnKFPJrn48iHey+Gnufxa+beVjKFor6/b3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZxUaXJWhp9H3WtnWtVKlOivmkKOdRLzzEydgeT3scUsYzZiErzuLXr/NVAyoxGEHLAZZq1ptT7dFQKZqMYFOxFiJHcTCjSNqnbX2eSFJuNlug8gJ/ZJk/VZug0lf7b5u1LB8PvcikBaNjZ75FHQfuylgzoHWyyQatlf9/4fN3OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdWFB4T+; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749449242; x=1780985242;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QA0igcJkHnKFPJrn48iHey+Gnufxa+beVjKFor6/b3o=;
+  b=FdWFB4T+CgWP/6El4htCQZc9qAqmdzEW1ZlSLQ8M+1A1MEuSNYqfy/H0
+   NF39/ZWYCYFNWCUQYHHev9CZFbNbAOlJC5R8o7oZWozH0rT0dHYmNLWUm
+   PnGdBg5PPKiDs9usrExzJ+PEkLlH+8/NNh9NBb4QYrqUrRdAQCNH7LeiX
+   fHIgso0C4T30OIaC59gVWQYpsweummwvkvu5xDDqkOobPGB+YVozM0XPO
+   V2NcQ+pEdrd3k5mxaJAVBUQCiFmBMK/aHLcg5bXpCNOFr2n/LuXKQx+Bq
+   0fX2DGKF0UW+gDkre2BefoqNHqeJcR0S/JJj4ZUJU5EhB0PUQUQJwpC1S
+   w==;
+X-CSE-ConnectionGUID: X8A1gIgvRmqi9jjHB06XaQ==
+X-CSE-MsgGUID: bw0Vhd9hTc2EI6kzAFpiwg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="69075107"
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="69075107"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 23:07:21 -0700
+X-CSE-ConnectionGUID: idwBHfMQR++LSpaCbOXetw==
+X-CSE-MsgGUID: W42gSgsfQVih+U0VP5uAAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="177354111"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 08 Jun 2025 23:07:19 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 99D941BC; Mon, 09 Jun 2025 09:07:17 +0300 (EEST)
+Date: Mon, 9 Jun 2025 09:07:17 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: mario.limonciello@amd.com, westeri@kernel.org,
+	andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+	brgl@bgdev.pl, linux-gpio@vger.kernel.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH] gpiolib: acpi: Add a quirk for Acer Nitro V15
-Date: Sun,  8 Jun 2025 21:34:08 -0500
-Message-ID: <20250609023424.372827-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+Subject: Re: [PATCH] gpiolib: acpi: Add a quirk for Acer Nitro V15
+Message-ID: <20250609060717.GF88033@black.fi.intel.com>
+References: <20250609023424.372827-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250609023424.372827-1-superm1@kernel.org>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Sun, Jun 08, 2025 at 09:34:08PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> It is reported that on Acer Nitro V15 suspend only works properly if the
+> keyboard backlight is turned off. In looking through the issue Acer Nitro
+> V15 has a GPIO (#8) specified in _AEI but it has no matching notify device
+> in _EVT. The values for GPIO #8 change as keyboard backlight is turned on
+> and off.
+> 
+> This makes it seem that GPIO #8 is actually supposed to be solely for
+> keyboard backlight.  Turning off the interrupt for this GPIO fixes the issue.
+> Add a quirk that does just that.
+> 
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4169
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-It is reported that on Acer Nitro V15 suspend only works properly if the
-keyboard backlight is turned off. In looking through the issue Acer Nitro
-V15 has a GPIO (#8) specified in _AEI but it has no matching notify device
-in _EVT. The values for GPIO #8 change as keyboard backlight is turned on
-and off.
-
-This makes it seem that GPIO #8 is actually supposed to be solely for
-keyboard backlight.  Turning off the interrupt for this GPIO fixes the issue.
-Add a quirk that does just that.
-
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4169
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/gpio/gpiolib-acpi-quirks.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
-index 219667315b2c5..c13545dce3492 100644
---- a/drivers/gpio/gpiolib-acpi-quirks.c
-+++ b/drivers/gpio/gpiolib-acpi-quirks.c
-@@ -331,6 +331,19 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
- 			.ignore_interrupt = "AMDI0030:00@11",
- 		},
- 	},
-+	{
-+		/*
-+		 * Wakeup only works when keyboard backlight is turned off
-+		 * https://gitlab.freedesktop.org/drm/amd/-/issues/4169
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "Acer Nitro V 15"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_interrupt = "AMDI0030:00@8",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
- 
--- 
-2.43.0
-
+Acked-by: Mika Westerberg <westeri@kernel.org>
 
