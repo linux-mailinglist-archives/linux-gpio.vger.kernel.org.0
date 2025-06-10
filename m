@@ -1,163 +1,166 @@
-Return-Path: <linux-gpio+bounces-21260-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21261-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CBFEAD3D94
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 17:40:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01A09AD3DDC
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 17:48:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D9BC1BA1B47
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 15:35:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F0945168847
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 15:48:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 450322376EF;
-	Tue, 10 Jun 2025 15:34:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74358238C0C;
+	Tue, 10 Jun 2025 15:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUdRhzdR"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="EC83WCWq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out.smtpout.orange.fr (out-72.smtpout.orange.fr [193.252.22.72])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F8A22A4CC;
-	Tue, 10 Jun 2025 15:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F601EB5B;
+	Tue, 10 Jun 2025 15:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569691; cv=none; b=ZHuFmM6LrtSmaLhP4k0s8fyOS86N4kC/zBcYez/CtS1aZA6jZSAZ1VAvu3zDtkNzHhi+1GiYRB4X6sB2OOn6RWcNXT+3Oml4WfRJEUYkHGMJNJjTdVzmLbETRy6wy1Cxy/WhUHm8k/jz1pf5BkpeBE6X8ZOl0kzhA1KT91B8TmU=
+	t=1749570511; cv=none; b=RN2K58O9fnMwPjTDIEvi8ZgJqcY0Zjvd0j5tbKwU2hcpP/q938p8cA2En6mbXeFxjHUSDEG5K9g4NpH5G84Y1qtctwD1n+FDEqqMPoPQDa4uSJacJKmdmbET+oSsDkv7gB2lUQ5HlSCSfZQRzEWjSgOBwXllJpAY+RqEP1iDaPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749569691; c=relaxed/simple;
-	bh=MqIeJ3Z/v9s5PB39f8ATtxRcPHFnymAolwGEhww+kAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=usPIpWpQZ1/nlX6/OuNk7ZZfnWJFFN236WKIwyekO2U5sVhJtjpCbUfcsO7U9Gcux8tt9TBPNB+gMz4ZVuD5v2UeZ86JM4rUE5b6c3Qg7u3H6WDoN4GKQ7tuwNICDgDVikzNMG9nlgKgRaRW0E1EI5oXQprSI6XEp4gjCZ+CRVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bUdRhzdR; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-551ed563740so6935453e87.2;
-        Tue, 10 Jun 2025 08:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749569687; x=1750174487; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MqIeJ3Z/v9s5PB39f8ATtxRcPHFnymAolwGEhww+kAw=;
-        b=bUdRhzdRSIG7PiIhtzBR+B3559hGuRAIhLZtlPV7RoZ/mWWyOwGVLLg71RbgeECBwC
-         QRb53niQ0/JEMSb8V/f/MgP+E47MFLYthXMTr42gBeJ45BLKzCVZt1s2f5XsqyW+30rE
-         9SdNZTku1orNJ6o+s4TS0XJv9l4OoAM0kVmkAYIYz26sxEGiwxs5cM5RfRFqeYLszCGM
-         IfAhtKBNARxVC2FTkwesNSVLX6GJQMa/n6Lw6FCmpVhVFwH3LuchCZw7y77sCf0ttupb
-         CZQzOBi5jnxKtaegdmEhVxCXKiK/IlkoqrYOI+akY7VytM9wsidLeWcZ4OEEO6JCpM9C
-         I3XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749569687; x=1750174487;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MqIeJ3Z/v9s5PB39f8ATtxRcPHFnymAolwGEhww+kAw=;
-        b=eMtEep6wf4CnXxlb6CBz3t2fITfhpWmkVsiAF19MdipT2Rh039bTS5ZhchEqmQw/ps
-         z1qj8LfgL+tzbGxzKLwqXru664xcTR7VagZms+UI1yZ9JPCyBHeRUeANuXkXpMRMh52D
-         zhl3vhi6td+utPT1KlhoPD5O0MDmnu3JCepnI5YAl4qi8qhCNYWhVY8PB5P0mg96rgy7
-         JpHiZbdBkVJ+xXdX3l2PhN0xv09Xy/nnWq5eL7VqbeUytaKWGbfZOBB9fSvwZZMR3/hV
-         +GoBD9RRImHE8tkOUJv3h+dxMSsK5czxkW842VL5wCu4V6hBGInfaMFxbgIbzeBjliLx
-         IHsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBQhy1QAdXINgHZxvl8wkWAU2fLKpEldr1nqeWzeNIP+BTpWFLQDTJRzbjQlpYXnEze3B7wLHI1nQz@vger.kernel.org, AJvYcCV3aCT6yIMufr1I6gVgAaqzSho1Toswf1FcWwkaRXKii/OCe/VSvteh+Ze4JhnyGyTVdSAHCVqIDzs5xw==@vger.kernel.org, AJvYcCVuQH8/p8XKY3wEG+KxFEXrTFsk6XmJf5U736Kvs5AESfzwiPNKeLwE/GCQ/A9aBpwj+4vaW6qN0rz1uoaj@vger.kernel.org, AJvYcCW8/oXf4nKigmKuAo4HGaapoP+OVvn/CqToejC7kM91SF8p9anLgs9na+VKH5Ut1oPmXwcGhyuYuXFigNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7rSBHkRzMeFwPM1ElZ6G4f5Jh5rX0Fmpb0ItLQWiYq+f/S/Ld
-	u7dz2Zgv44zxJ6WjDkCq5gSmjNTCGUwuq1ceuR/zXqONZ9H9IwL3fP/Lqxz2M3fuktpmvWTzywr
-	UXOACQIwk3gjSJ88i8zM3up4HldwlcHM=
-X-Gm-Gg: ASbGncvRIC9qUB5q1KurYOWKLMf+gdHK+aXpkHkNl8wx/Mhq3QJlUEUObEVF5xKH9uZ
-	UKp1hWwadyRTBY4MBuL1eMF9nLA7GZHNdCZfpUK7hhMZaBWYVkW34WWEk+eNKNtzWSOxf+ZuOJc
-	6E73wLhsFRkQzhKwOlERuxkbkv0QkWT7MUd9tRsCiDhmc=
-X-Google-Smtp-Source: AGHT+IEJ1ZmrGjCVMSTlbre49ihcrED5/bqIPNHDU9iGhqG87iTWzIVwBOxMYwIwqyAgvBsr9yQYrbRSg02Hs0mulTM=
-X-Received: by 2002:a05:6512:12ca:b0:549:8a44:493e with SMTP id
- 2adb3069b0e04-5539c0a32a6mr14812e87.5.1749569687142; Tue, 10 Jun 2025
- 08:34:47 -0700 (PDT)
+	s=arc-20240116; t=1749570511; c=relaxed/simple;
+	bh=DPCZKmqe6KLsdpWRELAuTfIYliurAwbzWQccF/Ay6zk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WxBXOMre/rvsX+7DbV6xD9ZAWdEJKLCYscmNoGsChR8Q4JkcBlKatNMGo3Bmi26glHMilKIqf5+IB85OdCoCM+YcF9UoE71na0QfgyzL+MbCzHTd6mXgH1P9VnPCSt1KiXdBw+5GYKCXOsAnw9+nztkgCCbWkQsczvV3uud43VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=EC83WCWq; arc=none smtp.client-ip=193.252.22.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id P1CsuQaoBVbicP1Cuu8707; Tue, 10 Jun 2025 17:48:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1749570505;
+	bh=hLNYfBAm8Db4RivC9m4UtJY5EbKQApeN/nL5cCj0Ugs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=EC83WCWq0Suc7xo7F75oL6tuLJhZcGgcA6T6SjE5M2HznAFXg+53/ja2YV2L9jlm4
+	 67XAJYZjzNIulLfpR9HbVmuA69kx2uRbqwRC7P4itIvQxYL7jWvnqZIqoFwUBoyCaG
+	 H3MPbtXKHrbdoEz3hjUlSsEwc2yUrPfZcdlFT5dWCWJJ/0qWSWULoXHqI8jwgTD9wt
+	 +88473ymjTW0O1lA5aOjECvA7xFkyKjOqMpuNk4fIXCc5bKmdofVWaX8JRwPiGBEKr
+	 AfmH/5enwlcQEMJBSCx3HPKFHMg8JhbUC/Q3N0I4p387Fb8+i1cIfr4CTBAhSvUx1/
+	 QTmOlFNpa0KAw==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 10 Jun 2025 17:48:25 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <b9ea7e0e-7dd1-460b-950a-083620dd52e9@wanadoo.fr>
+Date: Wed, 11 Jun 2025 00:48:09 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608-tegra186-pinctrl-v2-0-502d41f3eedd@gmail.com>
- <20250608-tegra186-pinctrl-v2-2-502d41f3eedd@gmail.com> <yw2uglyxxx22d3lwyezy34wdniouu32zppfgwqs5omny3ge5zd@iuqo4qmi55a2>
-In-Reply-To: <yw2uglyxxx22d3lwyezy34wdniouu32zppfgwqs5omny3ge5zd@iuqo4qmi55a2>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Tue, 10 Jun 2025 10:34:35 -0500
-X-Gm-Features: AX0GCFsd7xdIB9QWQua1RQ4pRCI39zZoWW2thwkZ7CPS9rox8nnF-LfaH58f7aE
-Message-ID: <CALHNRZ_gy_wJxAW85d0EnpY4Qa2h+tuR=CM2AE26r0UEdYz8ag@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Add Tegra186 pinmux driver
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] net: can: mcp251x: use new GPIO line value setter
+ callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ "Chester A. Unal" <chester.a.unal@arinc9.com>,
+ Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>
+References: <20250610-gpiochip-set-rv-net-v1-0-35668dd1c76f@linaro.org>
+ <20250610-gpiochip-set-rv-net-v1-3-35668dd1c76f@linaro.org>
+ <b2f87cff-3a81-482b-bfdd-389950b7ec8e@wanadoo.fr>
+ <CAMRc=MfCwz3BV15aATr_5er7wU=AmKV=Z=sHJyrjEvLwx2cMjQ@mail.gmail.com>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <CAMRc=MfCwz3BV15aATr_5er7wU=AmKV=Z=sHJyrjEvLwx2cMjQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 4:40=E2=80=AFAM Thierry Reding <thierry.reding@gmai=
-l.com> wrote:
->
-> On Sun, Jun 08, 2025 at 09:13:14PM -0500, Aaron Kling via B4 Relay wrote:
-> > From: Aaron Kling <webgeek1234@gmail.com>
-> >
-> > This is based on Nvidia's downstream 5.10 driver, rewritten to match th=
-e
-> > mainline Tegra194 pinmux driver.
->
-> A few words upfront, to justify why I'm being pedantic. Originally the
+On 10/06/2025 at 23:05, Bartosz Golaszewski wrote:
+> On Tue, Jun 10, 2025 at 3:55 PM Vincent Mailhol
+> <mailhol.vincent@wanadoo.fr> wrote:
+>>
+>> On 10/06/2025 at 21:37, Bartosz Golaszewski wrote:
+>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>
+>>> struct gpio_chip now has callbacks for setting line values that return
+>>> an integer, allowing to indicate failures. Convert the driver to using
+>>> them.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>
+>> This does not match the address with which you sent the patch: brgl@bgdev.pl
+>>
+>>> ---
+>>>  drivers/net/can/spi/mcp251x.c | 16 ++++++++++------
+>>>  1 file changed, 10 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+>>> index ec5c64006a16f703bc816983765584c5f3ac76e8..7545497d14b46c6388f3976c2bf7b9a99e959c1e 100644
+>>> --- a/drivers/net/can/spi/mcp251x.c
+>>> +++ b/drivers/net/can/spi/mcp251x.c
+>>> @@ -530,8 +530,8 @@ static int mcp251x_gpio_get_multiple(struct gpio_chip *chip,
+>>>       return 0;
+>>>  }
+>>>
+>>> -static void mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
+>>> -                          int value)
+>>> +static int mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
+>>> +                         int value)
+>>>  {
+>>>       struct mcp251x_priv *priv = gpiochip_get_data(chip);
+>>>       u8 mask, val;
+>>> @@ -545,9 +545,11 @@ static void mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
+>>>
+>>>       priv->reg_bfpctrl &= ~mask;
+>>>       priv->reg_bfpctrl |= val;
+>>> +
+>>> +     return 0;
+>>
+>> mcp251x_gpio_set() calls mcp251x_write_bits() which calls mcp251x_spi_write()
+>> which can fail.
+>>
+>> For this change to really make sense, the return value of mcp251x_spi_write()
+>> should be propagated all the way around.
+>>
+> 
+> I don't know this code so I followed the example of the rest of the
+> codebase where the result of this function is never checked - even in
+> functions that do return values. I didn't know the reason for this and
+> so didn't want to break anything as I have no means of testing it.
 
-I don't mind pedantic. Get it right the first time, save later pain.
+The return value of mcp251x_spi_write() is used in mcp251x_hw_reset(). In other
+locations, mcp251x_spi_write() is only used in functions which return void, so
+obviously, the return value is not checked.
 
-> pinmux drivers were generated using the tegra-pinmux-scripts[0]. This
-> project was later archived because Tegra210 was deemed to be the last
-> chip to need a pin controller. It then turned out that Tegra194 needed
-> pinmuxing for certain pins, and then more, so we ended up with a full
-> pinmux driver for it. However, we also deemed Tegra194 to be an
-> exception, so that's why that pinctrl driver was a one-off job.
+> Can you confirm that you really want the result to be checked here?
 
-Tegra234 also has a pinctrl driver, which makes tegra186 the
-exception, when looking at the driver list without any other context.
+That's the point of those new gpio setters, isn't it? If we do not check the
+result, I do not understand the purpose of the migration.
 
->
-> I now regret these decisions because the same formatting mistakes are
-> now proliferating, which is exactly what the scripts were meant to
-> avoid.
->
-> One thing that's not clear from this patch set is whether we actually
-> need the Tegra186 pinmux driver, or you're only adding it because it
-> happens to be present in a 5.10 downstream driver. Do you actually have
-> a requirement for setting pins dynamically at runtime? Do you need to be
-> able to set a static configuration at boot that can't be set using some
-> earlier bootloader/firmware mechanism?
 
-I have a device that's based on p3509+p3636 with an audio codec,
-originally targeting l4t r32. The odm provided instructions to use the
-codec was to first run the jetson pinmux python script after boot... I
-made that less bad by putting the pinmux in the kernel dt. But I see
-similar recommendations all over the nvidia dev forums, even for t194
-and t234. Solely for that reason, I'd think it reasonable to support
-the kernel pinmux driver on all tegra platforms: to allow easier
-porting of l4t devices. And a secondary argument could be made for the
-devkits: they have expansion headers with mux-able pins, prototyping /
-experimenting with those at runtime via sysfs is a valid use case.
+Yours sincerely,
+Vincent Mailhol
 
-Taking a look through the public cboot sources for t186, I'm not
-seeing that it handles pinmux at all. With one or two exceptions like
-the t194 pcie stuff. How is it expected to configure pinmux at the
-bootloader level? Using the auto-generated mb1 flash config? I'm
-unaware of this being publicly documented anywhere, not just for t186
-but for any tegra arch. And the format of those aren't particularly
-easy to read and hand modify.
-
->
-> If we really need this pinctrl driver it may be worth resurrecting the
-> tegra-pinmux-scripts so that we can add these drivers based on the
-> generated files as originally intended.
-
-Imo, this would be ideal. That will require some updates to the
-scripts to handle the main/aon split. I don't think it's something
-that can be done externally either as it depends on the internal only
-pinmux spreadsheets as the starting point for a soc or device. But if
-that's done, all the format issues will be sidestepped and this series
-will be superseded.
-
-Sincerely,
-Aaron Kling
 
