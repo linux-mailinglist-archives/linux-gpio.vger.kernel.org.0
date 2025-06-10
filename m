@@ -1,134 +1,128 @@
-Return-Path: <linux-gpio+bounces-21171-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21172-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50227AD35B3
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:13:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E082AD35CE
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:17:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A22918986F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:13:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6085017699D
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:17:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BD428EA6B;
-	Tue, 10 Jun 2025 12:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDC2A28F521;
+	Tue, 10 Jun 2025 12:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="IBiW8Pd2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xKAYnwT0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741AD28EA58;
-	Tue, 10 Jun 2025 12:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CF028F500
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 12:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749557578; cv=none; b=dXtpLNTVKr+RQCfhM7HaE4LXr3jPVOoF20FUu+CqyfWmQW+LMnD3VLho2MUXHNDWXYWmldK4hxZInW57oo2YrfU0wJ1QTfWMFGaPkjLPxU9XznvDEKlr7HFnMk2gUUXnPV3ysdEEL0BxHo6vMraTuUH125+t2jv2FUkeZTuO1es=
+	t=1749557824; cv=none; b=pjlHxfAKQvUpLQQhC+wN85bOIjXZ3BvUB0oomLK+9ESlf6MmLiTD4IY7x7LpCVVAv1EYay/mkHCta0BtcMMroMHl+bYIRhXeA4MMwNcQfffFC+AzY1FFGOrKvfPA72AUZnZfuk1XDpmmXEqWJuUgZqR4e0bfudqA+5aqksrcLE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749557578; c=relaxed/simple;
-	bh=zTU3AkzKUPbLNpOvwNZlm0Nojlq2PZZ8y5WaFs4xjW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=M89iYi0eSwr2U21dsupbaZFdAhjSrLOEqtWqf8EMMPZ1KsQTjEzU8h9owDCxj76VUv960Rwa9j1xG4kVqfEHYPgpLPOT1XGGMVd5a+d5jpWV9GW55AB7lKO6Ew89dc5KLjHC9Vjgfqk7xFw7WHMFfCk76HODk0YSXBH6duxbkCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=IBiW8Pd2; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AC97NU007654;
-	Tue, 10 Jun 2025 14:12:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	3JoIjs0rN0Mef0RCPvvnCGsgeRN+4kOPLLI4ZD9o2Mw=; b=IBiW8Pd2ALdNOtHN
-	XRPdHmX5cTFMzfSFGNahSDjWx6E60NVZHz7RlKXUmNwfGV20G7xd9V9G3HiR6ujB
-	s+AZQL0BORu4XoQQw2qgCAB1ogBecjXstW5BDDTJ1IdEXR5HIP5dzWhaDQwR2xTr
-	DN++VSdsEGrCF7mKiFWci9lVp2CO6zMKD0zCB5hhG1erz3Wu/jwuqg/GKdjloTbj
-	tBUQ6/vo43atWvHUG7qXWWX2LRMnpUjlBn8AmANT14iUFewIlwezop9IJIL2CRl5
-	Q6Pbbq/R0mNtnUVfPtNb2+Az+ReLy0hp7cE7LzTFCBZ5rEOk5XssMErKjm6G6nvk
-	K0WZLg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cs2mt3y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 14:12:43 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C66614006E;
-	Tue, 10 Jun 2025 14:11:39 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AB802B39A25;
-	Tue, 10 Jun 2025 14:11:27 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 14:11:26 +0200
-Message-ID: <e4a1bbd0-3886-4a88-bfaf-1e5ce5b27625@foss.st.com>
-Date: Tue, 10 Jun 2025 14:11:26 +0200
+	s=arc-20240116; t=1749557824; c=relaxed/simple;
+	bh=siXBLzRLss7mh07NwalB4yKgr7YnqKr9rIj6Xo6f3j4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=izGJe5BxF7gWu5PkyjAp9G7062SUww9A+ktG7d8nhZ2GCiTSulABCNJaixGounC22Dy6iTVee8Hh4SVVtiOrfYKX9l5Nvysy0Vl4rNj6kW0qK5QgsOT+i+sTAtWyZm8+eGYSrNghK8IBfiRe0EqjT6DyjXHA/mqES1wgAWn4Ekg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xKAYnwT0; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5534f3722caso6130103e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 05:17:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749557821; x=1750162621; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=siXBLzRLss7mh07NwalB4yKgr7YnqKr9rIj6Xo6f3j4=;
+        b=xKAYnwT01L2nhypvYKscjinTuM31ltvKGf5E3UmypxMkAwpbw3718/cE2rbHHKcZNz
+         Twzyryv3vHidqjN9rTY4zlibzIYqXCC7qtrthfAKCmLYrhLoF+3+ratQCgG38FhZ7mEK
+         bCLGlqOEZLloWdF8ACmzbyRRiwPhp3b2pjzLa+IPetGeksw5pVXtLJJkWbx1wNzq0X1i
+         u3M2Ag8GcLV9JpROERwk6wd7dZMrkuzwyt4y4m6KXmkuDFZTzhG7ZYnTSNU0/OTaMTJN
+         i8XbF0aThVtJ0UlYncCosCYbtpFwIwtCOar/SgjJTxlhXzRIBmIncQZhqpT0ajXjCUVA
+         TFIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749557821; x=1750162621;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=siXBLzRLss7mh07NwalB4yKgr7YnqKr9rIj6Xo6f3j4=;
+        b=mKvoZdSXfp9UP0tvEFDCvDRZBnQi+gDIK0U7YYaoatVp2U9k9fZ4Bl7RTC/jyUi0Sf
+         6591KVWPYuDgWAdFQKqp+j4OTi+o9WUOvbeLzqZ90/5IK0QbmQZz64OAowGhB72cOpEg
+         XDD812xvg1zBtxROar67NWCqGm6DkuHX+gcd1me8ljp7VYsvmsrrFOARdXgOn1p9fpPg
+         o22u5TmqTe5GPODmuUn7CONInN5gTWcEgbRZi5sgapBE24OrmQJZuGr99jBtjaWZQ7tI
+         JvjB9nynqo69kX1EXWKO45Q0bzZPpiYYCqZO1SdudV0FHzyP8rSZb4KS5VRvNf5daHcD
+         4N4A==
+X-Forwarded-Encrypted: i=1; AJvYcCX7GRp/jRmewo7IyXZvSk2GpKGykAWBNGctt6kp7JC3KqXN7AL+Gnt+mk8Y0WiehFArd38OXDmLHQqK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrjR3qcTnQlQyrrhQ8VNbrh2DgNqnQjCyGnXILdcLMSiQaGYdL
+	tdpVqPKGjWMNfnmQbLJesB6duJ5QqdruEdyK2QRm1yjyCzg7YTT9DVLymtCSita0aDl9Mun2Lb7
+	hX6Vb9K5K0pgAI/LucDPOu7dh/B2wnfnDGmM1mw7WZg==
+X-Gm-Gg: ASbGncuiTJ653OEgHyTxQpbJj6iUnxCZsCL8wQCbC5M3WF5s046Q53US/4rKpqp4WU5
+	equ0X1Og/A45giQXZFhn51jjYb2pCHxDegIo1kKoNhSnaGG6YTM61p53B4NqbmKCucAFgx5w/qH
+	I/1sMZutZ/wT8/vF2zueQnZXRW/hxl8XMdOBIidKGAsoD+ptMjQAUHJw==
+X-Google-Smtp-Source: AGHT+IFQxMti2+Q8Uenwhc0/S6UdaliHxGCkJGgDod8emAA4asQK/90KUnu0JtAhA4sI4nKXBC2mhVRJZkpkWFN1Jcw=
+X-Received: by 2002:a05:651c:2211:b0:32a:8591:66a9 with SMTP id
+ 38308e7fff4ca-32adfbb0c50mr43449421fa.6.1749557820819; Tue, 10 Jun 2025
+ 05:17:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp13
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
- <20250528-hdp-upstream-v4-5-7e9b3ad2036d@foss.st.com>
- <c0336f46-1fbc-4766-9e0a-a3812d48083e@kernel.org>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <c0336f46-1fbc-4766-9e0a-a3812d48083e@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
+References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
+In-Reply-To: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 10 Jun 2025 14:16:49 +0200
+X-Gm-Features: AX0GCFuA2Dfvx1J77MshD7Tzhu9rwDlijvkgXfC-wltdCoDdq-4uVh1ABAKFvmw
+Message-ID: <CACRpkdaQLq3YGfOg81gt5=1Wh2ZkoKHeK6H=NWaeW9aLbX4VCA@mail.gmail.com>
+Subject: Re: [PATCH 00/17] pinctrl: Constify pointers to 'pinctrl_desc' and more
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley <joel@jms.id.au>, 
+	Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
+	Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
+	Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
+	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Jesper Nilsson <jesper.nilsson@axis.com>, 
+	Lars Persson <lars.persson@axis.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Damien Le Moal <dlemoal@kernel.org>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Michal Simek <michal.simek@amd.com>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@axis.com, linux-riscv@lists.infradead.org, 
+	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/29/25 11:13, Krzysztof Kozlowski wrote:
-> On 28/05/2025 15:30, Clément Le Goffic wrote:
->> Add the hdp devicetree node for stm32mp13 SoC family
->>
->> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->> ---
->>   arch/arm/boot/dts/st/stm32mp131.dtsi | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
->> index 8512a6e46b33..9e3797ee1f7b 100644
->> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
->> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
->> @@ -954,6 +954,13 @@ dts: thermal@50028000 {
->>   			status = "disabled";
->>   		};
->>   
->> +		hdp: pinctrl@5002a000 {
->> +			compatible = "st,stm32mp131-hdp";
->> +			reg = <0x5002a000 0x400>;
->> +			clocks = <&rcc HDP>;
->> +			status = "disabled";
-> Don't send new versions while discussion is going.
-> 
-> My comments are still valid here.
-> 
-> Best regards,
-> Krzysztof
+Hi Krzysztof,
 
-Ok keep discussing in the V3 so.
+On Wed, May 28, 2025 at 12:41=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-Clément
+> In several drivers pointers to 'struct pinctrl_desc' is not modified, so
+> since core does not modify it, it can be made as const.
+
+will you rebase this series on v6.16-rc1, fix the snags and send a new vers=
+ion?
+It's all nice cleanups so it'd be great to just merge this.
+
+Yours,
+Linus Walleij
 
