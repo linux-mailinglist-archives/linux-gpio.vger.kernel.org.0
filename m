@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-21248-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21246-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0C7CAD3D09
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 17:28:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D866BAD3D01
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 17:28:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B02941649E6
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 15:25:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CCBB516F3C6
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 15:25:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65288244683;
-	Tue, 10 Jun 2025 15:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88BC323BCF2;
+	Tue, 10 Jun 2025 15:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5nU09hFO"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="yfULawb1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8410B23BCEC;
-	Tue, 10 Jun 2025 15:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A446B235060;
+	Tue, 10 Jun 2025 15:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568835; cv=none; b=gtVVJZfkQT9QqwztVIYD2m0dC1ZrVYnsK+UygUDZGiYmfILt2+jKk1FYIBaHLh7b1Nw98hOEJ7LpEdx4QMZBJ7RjsuQElRx/0oDMurErPSDkHoPBVUNKVLnXDOg8Vtizw/vtjEIKZMMPP8Q8I5gsVMH5uSNr80PvvpvGCpTGVFM=
+	t=1749568832; cv=none; b=RwQYLXj82NOttE4YTa7eVwAXEBh07H9eitN5KUPYfEtL7h8DkUFGcEx+2Jlsfr1EK3gG15f/PNbqW9iLR7qXkqyUYezI827UL4+9Mfn19PG8sVDgKP6yt77Dee0gt0FKVeeHQxyX0tFN9imhS7XtYCsHRAVBM+NcraHoO9N4/u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568835; c=relaxed/simple;
-	bh=djeR04w/75lWxkApA8z7LUOUKkq030Zmb0bpaqVQ+Yc=;
+	s=arc-20240116; t=1749568832; c=relaxed/simple;
+	bh=LMw9B13I0H9SXVXuGdE+hvMWY8Sl3UGv48j/sluw2Mo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hn8dp+Ip9VhzcFjci1He3StdwsUQHxlxmJxH5BoermEO5A8NKHMLH7alvE8wq1mng0KmpEG51cao99/8/ZIYelqr4b8EtcOHDfqxBeT92/Tm9AKULF+Op6+PXLIMoQke7g0p8V1P3CIzbtw41wvtPY04Y3TuCEACWdVYRtDSW04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5nU09hFO; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=ZrDvwCIN6PIAn+HP+4X4tkSp8RUiyGsjWOC8qqQfjn/z+u+Ke/sccBKqOxAmx+/wjUxn2kF4Gmx066rvbqmDtMCPGP1g3Z1jO1wBfSWXY19EqUHh51lO3/iSCBglrWitsYSAdWervou1fU3oX/AzoXFQQd7q2UTcxHcINbIR/Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=yfULawb1; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLClb032162;
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLDiq020330;
 	Tue, 10 Jun 2025 17:20:21 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	PV6mynfuvv42D/ePAoYQa09aeqeL9wkOTzavUKrfpmo=; b=5nU09hFOCgAyo8t6
-	qpe33cqR83YXTeBZVhrwz/PnfFc7IQ3QVBvmar91Z/Rw+Chai3hOHbJi1wO/uTMk
-	uydCn7XpnDJYjJy3XrqfUS1kFByzHAYVSTCg7X946tgUh+1yfoFmQYbmyqTXNhbT
-	j9jbfVRyEhB1HwlYYr4sY2TAkBmSFQubpSn1naH4vznOgm/qI0VnZsRz43xjztLP
-	45SqJScGeLIYS4n/1PQlnuIfRvQ/fn6tREIhSCNQ05phU/20hcTQNv06M+DcNn92
-	hWq5q6bp+b02v/NOvp9N7H7GTC/o4oOlQwTz0EagR6AAOFv9SzOweU/NGx4e5JGb
-	PyQ2Wg==
+	zgHCfxHCSrQZLBdhcD+8YVibXqq6yEAZb7msrNjGwik=; b=yfULawb1xYoeXaOH
+	H7Iw6CuLSzfK3VIpACq7JNmiqWLNx0hOvamJOUBoCiwREQ9UcI+RsQH9dnmh186l
+	Tl0gFFn08o1E1qKOfI7Tcu2zB14z0r5ntteiwYvSUYAGNQz+Q/AaO3GA6BscJ7Vt
+	30ZZRgFqp8QutVCGrLefqyVzUdvDw3/j0t68qQNsuMNeOR97J/1evh2xjUWKE96x
+	b66uuLb+B/9agX2lSQ0dSg0JH4gmk51MIbBZGAsz0KAAiTMy94o7YtwbuLsWbPM1
+	kRUYfUNnPLQFRg89iCfMJ1lqrsJD52dlJXWLEOFJQSRxhRpwTtxPsnDthWS/HFtw
+	m4IuwA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4750cntpqn-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aja58g3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 17:20:21 +0200 (MEST)
+	Tue, 10 Jun 2025 17:20:20 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CACD44004C;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6202B40046;
 	Tue, 10 Jun 2025 17:19:25 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1EE99B74509;
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A9CDFB74DC5;
 	Tue, 10 Jun 2025 17:18:43 +0200 (CEST)
 Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 17:18:42 +0200
+ 2025 17:18:43 +0200
 From: Antonio Borneo <antonio.borneo@foss.st.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -70,12 +70,10 @@ CC: Antonio Borneo <antonio.borneo@foss.st.com>,
 	<mcoquelin.stm32@gmail.com>,
         Fabien Dessenne <fabien.dessenne@foss.st.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 2/5] dt-bindings: pinctrl: stm32: Add RSVD mux function
-Date: Tue, 10 Jun 2025 17:18:34 +0200
-Message-ID: <20250610151837.299244-3-antonio.borneo@foss.st.com>
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 3/5] ARM: dts: stm32: Add pinmux for CM4 leds pins
+Date: Tue, 10 Jun 2025 17:18:35 +0200
+Message-ID: <20250610151837.299244-4-antonio.borneo@foss.st.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250610151837.299244-1-antonio.borneo@foss.st.com>
 References: <20250610151837.299244-1-antonio.borneo@foss.st.com>
@@ -93,60 +91,44 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-10_07,2025-06-10_01,2025-03-28_01
 
-From: Fabien Dessenne <fabien.dessenne@foss.st.com>
+The GPIO H7 on boards stm32mp15xx-dkx and the GPIO D8 on boards
+stm32mp15xx-ed1 are used by the coprocessor Cortex-M4.
+Linux running on Cortex-A should not use the GPIO and should left
+it available for the coprocessor.
 
-Document the RSVD (Reserved) mux function, used to reserve pins
-for a coprocessor not running Linux.
+Add two pinmux groups, one for each families of boards, setting
+the GPIO function as Reserved (RSVD).
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
 Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml     | 8 ++++++++
- include/dt-bindings/pinctrl/stm32-pinfunc.h               | 1 +
- 2 files changed, 9 insertions(+)
+ arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-index a28d77748095a..5d17d6487ae9c 100644
---- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-@@ -160,9 +160,13 @@ patternProperties:
-               * ...
-               * 16 : Alternate Function 15
-               * 17 : Analog
-+              * 18 : Reserved
-               To simplify the usage, macro is available to generate "pinmux" field.
-               This macro is available here:
-                 - include/dt-bindings/pinctrl/stm32-pinfunc.h
-+              Setting the pinmux's function to the Reserved (RSVD) value is used to inform
-+              the driver that it shall not apply the mux setting. This can be used to
-+              reserve some pins, for example to a co-processor not running Linux.
-               Some examples of using macro:
-                /* GPIO A9 set as alternate function 2 */
-                ... {
-@@ -176,6 +180,10 @@ patternProperties:
-                ... {
-                           pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
-                };
-+               /* GPIO A9 reserved for co-processor */
-+               ... {
-+                          pinmux = <STM32_PINMUX('A', 9, RSVD)>;
-+               };
+diff --git a/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
+index 40605ea85ee1d..835b034d0aa7e 100644
+--- a/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
+@@ -1304,6 +1304,20 @@ pins {
+ 		};
+ 	};
  
-           bias-disable:
-             type: boolean
-diff --git a/include/dt-bindings/pinctrl/stm32-pinfunc.h b/include/dt-bindings/pinctrl/stm32-pinfunc.h
-index 28ad0235086a6..af3fd388329a0 100644
---- a/include/dt-bindings/pinctrl/stm32-pinfunc.h
-+++ b/include/dt-bindings/pinctrl/stm32-pinfunc.h
-@@ -26,6 +26,7 @@
- #define AF14	0xf
- #define AF15	0x10
- #define ANALOG	0x11
-+#define RSVD	0x12
- 
- /* define Pins number*/
- #define PIN_NO(port, line)	(((port) - 'A') * 0x10 + (line))
++	/omit-if-no-ref/
++	m4_leds_orange_pins_a: m4-leds-orange-0 {
++		pins {
++			pinmux = <STM32_PINMUX('H', 7, RSVD)>;
++		};
++	};
++
++	/omit-if-no-ref/
++	m4_leds_orange_pins_b: m4-leds-orange-1 {
++		pins {
++			pinmux = <STM32_PINMUX('D', 8, RSVD)>;
++		};
++	};
++
+ 	/omit-if-no-ref/
+ 	mco1_pins_a: mco1-0 {
+ 		pins {
 -- 
 2.34.1
 
