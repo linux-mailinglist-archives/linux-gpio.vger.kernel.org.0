@@ -1,106 +1,133 @@
-Return-Path: <linux-gpio+bounces-21164-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21166-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80A95AD356D
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 13:59:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 841ABAD3588
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:04:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 515973B5BC3
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 11:59:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FD7E3B4FB8
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:04:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54CAD22CBFC;
-	Tue, 10 Jun 2025 11:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89F9D22F3B1;
+	Tue, 10 Jun 2025 12:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="uxkwqydq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D68622B8CC;
-	Tue, 10 Jun 2025 11:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970B322F173;
+	Tue, 10 Jun 2025 12:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749556785; cv=none; b=AFXUjUg5astdHlrctAgAEEKF/QHwGNzs+bcDy0HARltEqvGb6OWFfYZUrWcVZXt07hQeJa8tHwMl3f6tmse6nL+fOMoq5qz2CpbYzECCmeBDhzkMksmJUXNcfjISmIj+aWX7fgIKz3OJEPdZX4CqQFJowjUwFbwf53q+qMOqq7o=
+	t=1749557086; cv=none; b=B0QffD2/bXjD0WYt+23olK2HWt82xClo3Bw1W/kuHDhubLKQ7mUzU7gAHjM0ZXCUNs8mK3LCyUOCS4iUjLhQUxWwm0zq+gogoeMQTCT5IC9mLAxpfHab2xo7/dexk+mtJAk2rCPxL6VfCnSv8WvatLBodQ8nEmew2Pm+6/XrVtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749556785; c=relaxed/simple;
-	bh=MktQiHfELBx4PHWTInsfVDuNoRGhpjiHqP2Lv3lIPOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mNov2FsBf9o2IHWG/1AqsO86mFAqgIiP68PgF5rJkKnI0Q9h7FygtfztCGIJ4Z4DpmGcvkphxLdGFvPwJWbwij7X0+2xnJRqfcl0trGpmR6A6R1jfvfRp9jk1v2xYIeYkHc34Ga9veko/fLO8BRmHT/nLiFYI8E97B1ae8ARenw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.3])
-	by gateway (Coremail) with SMTP id _____8AxDGsrHkhoWacSAQ--.46071S3;
-	Tue, 10 Jun 2025 19:59:39 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.69.3])
-	by front1 (Coremail) with SMTP id qMiowMCxPscoHkhoUFUUAQ--.64953S2;
-	Tue, 10 Jun 2025 19:59:38 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] gpio: loongson-64bit: Correct Loongson-7A2000 ACPI GPIO access mode
-Date: Tue, 10 Jun 2025 19:59:26 +0800
-Message-ID: <20250610115926.347845-1-zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1749557086; c=relaxed/simple;
+	bh=FOVvDRtH0mywtOO2+ed9IL39TL5QFltNabVbXA78hiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=spgkqn3Z3FjnZ2h5uO5zKqJSVJAZVtci2DaSo3dygsg+7ZvsfD6+2EfDrawU9eSzZSEI3a6s+8eROcPM/Icug9sIoo1HSiPYXhBNOD886na+9qDzNs9jSAbuDiAkuKeBn7MNmMdiqxlqXkXKx9q5Dl+r5wwamI1xJvOATjB8JOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=uxkwqydq; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A9ILvm010710;
+	Tue, 10 Jun 2025 14:04:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	gqdWLmhlmvRAVAbQEmyb3OnvKFUT4lR61wher7OOzk8=; b=uxkwqydqfyLrmp7t
+	TJl3Ulbxd6zF2T+xkvCBu74SD8g9pfxIaq+Wx4f+3NsfoFn/aLhc/wEQ0W22K7qt
+	OzKjtrs7t++64ir1Z3zVov1dj3kFY6yVlBy30euB8rO+sUZUIgYwV9TaGGN+8C/n
+	p2HDupMKjgC5tITajvL/4tB0UMAGeKUUc6w6Nm36KVBrdKZaVDh+U2uErYt+qinW
+	eH/QibaZAAeyFICgO7TUz3Ycfp/1ZN1lhXoHugTDYpt6U7vxSSv3nvhU7UasK/WF
+	ib3EjRS/7SELBKfeh1X/Fw8ig3urGWYz4Nu2sV/taSA77PCIpdFb7hU46/a7ZClb
+	vfPkQg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y052bdd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 14:04:27 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2495040044;
+	Tue, 10 Jun 2025 14:03:25 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D6EAAB35036;
+	Tue, 10 Jun 2025 14:02:35 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 14:02:35 +0200
+Message-ID: <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
+Date: Tue, 10 Jun 2025 14:02:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxPscoHkhoUFUUAQ--.64953S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruw48WFykCrWDXFW5CryUurX_yoWkXFc_uF
-	1ftrW8JrW5ZFnFvw13u3WIkryIv3y7u3ZakFn2qayYq3s8twn8ur9rurySkF9rXry7urnx
-	Wa4kCFySvw4xWosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb4xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1l
-	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrw
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-	Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0x
-	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jrpnQUUUUU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
+ <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
 
-According to the description of the Loongson-7A2000 ACPI GPIO register in
-the manual, its access mode should be BIT_CTRL_MODE, otherwise there maybe
-some unpredictable behavior.
+On 5/29/25 11:01, Krzysztof Kozlowski wrote:
+> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
+>>>
+>>>> +		};
+>>>> +
+>>>> +		hdp: pinctrl@5002a000 {
+>>>> +			compatible = "st,stm32mp131-hdp";
+>>>> +			reg = <0x5002a000 0x400>;
+>>>> +			clocks = <&rcc HDP>;
+>>>>    			status = "disabled";
+>>>
+>>> Why are you disabling it? What is missing?
+>>
+>> Nothing is missing just disabled by default.
+>> The node is then enabled when needed in board's dts file.
+> Nodes should not be disabled by default if they are complete. That's why
+> I asked what is missing. Drop.
 
-Cc: stable@vger.kernel.org
-Fixes: 44fe79020b91 ("gpio: loongson-64bit: Add more gpio chip support")
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/gpio/gpio-loongson-64bit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Krzysztof, OK I better understand now.
+So yes the 'pinctrl-*' properties which are board dependent are lacking.
 
-diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
-index 26227669f026..70a01c5b8ad1 100644
---- a/drivers/gpio/gpio-loongson-64bit.c
-+++ b/drivers/gpio/gpio-loongson-64bit.c
-@@ -268,7 +268,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_data0 = {
- /* LS7A2000 ACPI GPIO */
- static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_data1 = {
- 	.label = "ls7a2000_gpio",
--	.mode = BYTE_CTRL_MODE,
-+	.mode = BIT_CTRL_MODE,
- 	.conf_offset = 0x4,
- 	.in_offset = 0x8,
- 	.out_offset = 0x0,
+In the last patch of my serie I add them (only for stm32mp157f-dk2) but 
+keep it disabled because the pin is on an external connector (the 
+Arduino connector of the board).
+This prevent any issue with a possible connected module.
 
-base-commit: e0d4a0f1d066f14522049e827107a577444d9183
--- 
-2.47.1
+> Best regards,
+> Krzysztof
 
 
