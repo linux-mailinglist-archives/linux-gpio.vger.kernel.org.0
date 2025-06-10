@@ -1,129 +1,167 @@
-Return-Path: <linux-gpio+bounces-21173-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21174-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63C82AD3613
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:23:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C770AD3656
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:34:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 560913B2F53
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:22:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C6DD3A82FA
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:34:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AA87290D9F;
-	Tue, 10 Jun 2025 12:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 983852951CE;
+	Tue, 10 Jun 2025 12:33:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="sB2y45r3"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DdAuaY49"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EFA290D84;
-	Tue, 10 Jun 2025 12:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654B6294A06
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 12:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558188; cv=none; b=KroyWTsXLwK0KLCFU+A46KPuJS7xMjfG1L7e7f1gEO+kHK+1111m3JNzufotYtFM6TNlM9rX5/EkW1xy6sOFodTyTxF50C4tZDURL1qL7umH6xuQ+JR3fepTRGuvYLgq+3A+RQuRAcHB/hPUJ/9Z2gqfhbufnC9aolOIKdnbRAk=
+	t=1749558806; cv=none; b=QzDCZ0yW1e822vlfNcFwUd3GsdjTEptgiEzmVyYhGVIoKOL3lB323P/eE6d4QIhaqnyQ/g5M2N+6Bek9u/aWxLxD2qtbqNx5oxh9gPg2b8jdroX17AILqVM5ydVm4wNGgiCCbuProV8stduoH/Lkfzt7gnAL3ecf0nJ2NauKYRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558188; c=relaxed/simple;
-	bh=KfeUVbcSCFP1T2kBXbqY1+q2hxmS4hdRneI4dnE/UAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HvscKPYEtkZ7VSUeVy/V6Sk0aW4kO2u2cuva3wxW6QfC3JfZcoraPQqhJ/aRr0XfpzHWJ8hEPdlDg5gTt0fgRYfm/fnTem1XDwsXUAHcJxlwP3PA38nLtfB+gnqvAwkw/SVFEfUEHzbKuWPfMGwaNe2TTDVK5Ecpviq3IfRNL8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=sB2y45r3; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLEIT013926;
-	Tue, 10 Jun 2025 14:22:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	vtivjLTREzj3xhUyN5Ni31CViS5Q+PvnvLeG0iZlrcE=; b=sB2y45r3vLSNQ2D3
-	Uvp21XuXqL78esQhQKZfXzybGiUPlzMD5WzROhXNXMhz5I2Qf6sA+3XtzhPR6yhA
-	z8goGGaGkQfFtjmXGXrITS0+041glQb3O3RAHkD58LC4eqNMq4bPjj/V9bRwFoH0
-	Oew+fMowKFeQ0HrorR+qQvpTuDI2ZqoHx3uNe14eopQ7fy/o5JjlOEA3njYbw8Du
-	HQTCZLXPseBl7Upk4UihrQCFvMqq4vL+M/eTnYzp4d/sxCysSXNVI6GfdpjxMVwc
-	VvtKTNsQVCO3Lo/tedoEj5C6QHjUPdt5wRzxrBEFflTbQF98Zr9vHHmVkQLz5bfH
-	jqVooQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cahm2yt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 14:22:55 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3F73440066;
-	Tue, 10 Jun 2025 14:21:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DD68CB2149E;
-	Tue, 10 Jun 2025 14:20:28 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 14:20:28 +0200
-Message-ID: <3a9e5a1b-41fd-4ddf-938a-bed98551a024@foss.st.com>
-Date: Tue, 10 Jun 2025 14:20:27 +0200
+	s=arc-20240116; t=1749558806; c=relaxed/simple;
+	bh=fWmHYF76bW96bFem7JRqwAgfxRBoy5ySHaPTeItooXg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o6bsLYQ/5LzvmHYlILVpiguhtVoiKJI20lRWijPGx4U0yTFy1x/JZsWuD84YYzSD/N692uz7F/yLrTz/VVH/7CW9yFkn7bRAm156yAMQae0v1qhchiOfUtOY3P1YetK877UkAB0cIi9MG9RrIF35j9nxPRmSlgDQNPjljyMMXnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DdAuaY49; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so44578895e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 05:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749558802; x=1750163602; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZhzmZkaOysW/GCSYD6XdHL+fOaPlZnqEL0PQsaxb3p8=;
+        b=DdAuaY49PgQ5JpsdlfU1TEzS8QOgwfoP4zczOlY3qFz/PMQhq2sTNxB5NzsSvJFzGj
+         M+juv/CxN/L0Ki5oyhfqu5ArL0uQ5/zP//XnT/Gqab239pGdyrZtucTQ4bYGkwhKWgZe
+         iE8suL1tyZIUReNQ20rlAM3oPdbv8rTY7LC0l3py/EB2OR8sVculv48RN6OJDYQxpJPJ
+         aqREJmcXzS44yOo6AASwVcugiERpnbeF8Z0tezSJtI8pccO2+am1qMJ+nLxL2IXTOF2p
+         qs2SKLER2LKCrSRya6BU9kEIgzOS8owVMojmd0FmO0zrTQZKyJ/PJ5d7sgJMbPcsxnNB
+         VcCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749558802; x=1750163602;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZhzmZkaOysW/GCSYD6XdHL+fOaPlZnqEL0PQsaxb3p8=;
+        b=do6xupSvUcLGZpe7LaUQdM2BGlp9JYoDLbcDjxjTfkr7OjUU3BkVAik7c+xCVTZS6c
+         LxxlBWTCvxWKpmCovBea4tJjR/SXzFBSwW+QsV4HPZLqk2Mu5DvAsyNo9QxKkfdqB7F/
+         P+TyWfvgK+JwdZ+kkotjcumD/pPml30WWdY+1ZbZF1RcHQN5dfqHgqPKcMdXr1DZ81Wy
+         Z0bRy4dVBIS/ZHa0S3vBAP2q76z9cJAAmH8ATxrj0UEQJeRdF630ENbGrlsXJNDU0C71
+         Sk61hvOto0wqK1Xwu0RDanBTyE12cPc4M+6/zf+5kaD7fYZVD1YR8GblACfih2RSpXMv
+         MWMw==
+X-Gm-Message-State: AOJu0YwOn+TxT8x1FzBNWWrSI1TFvmOknXeqkGLkiJtJtYiQOX2UVIN7
+	9iGrRBJ85d3sWBD0C8dsCvuQwcVNR6+f9ePHxRSK/K0XIBn1ZwOjFjY4t7Rb0SicFHZYa8J+yTm
+	aq67I
+X-Gm-Gg: ASbGncszfTdZHP778+4zpDI0RKmVkkKz+C7psAcovisl+/FPKD4sdi7DH9oPeYxw0nB
+	U3CryPVNWrG8QK/ch5FB5SwLnulYciUSkcSYEAlBFVCq07s4yShRf8JZ//xNry32Mxo/7ti8CQu
+	JI2JoVn7EHuYkIxdAa9xIHo1E0EdCaf+6NuNNSUSUoSchNRB7ImptknGpfSka+Ppn+KPVxW1n4J
+	MscpXx3BcQnVvn98RNUrzyOYzesakpBs7c2dwWLpibm5yUVbtUGS+zgbZ1cYk0Rl21BlfcUOY4h
+	9he9xHRyc8mBtldKwZkPx8FbpSggCawgmZfnGh8JI3LUreG8Ehx9sg==
+X-Google-Smtp-Source: AGHT+IFlnKIx2sPK6MrXH51mtosjIEJBmZxPRvw+nyl9XpBpBAq4wOuT9n5DEtW3OFTtEqksbAo5Kw==
+X-Received: by 2002:a05:600c:1909:b0:450:d019:263 with SMTP id 5b1f17b1804b1-45201437502mr155154265e9.18.1749558802123;
+        Tue, 10 Jun 2025 05:33:22 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53243661csm12290668f8f.53.2025.06.10.05.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 05:33:21 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/12] gpio: convert another round of GPIO drivers to using
+ new line value setters
+Date: Tue, 10 Jun 2025 14:33:10 +0200
+Message-Id: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/9] Introduce HDP support for STM32MP platforms
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
- <CACRpkdZ2NUfcn7O7tKSFDyAr8Hni3pvpTN6QpOz7N3J+EsFdLg@mail.gmail.com>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <CACRpkdZ2NUfcn7O7tKSFDyAr8Hni3pvpTN6QpOz7N3J+EsFdLg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAYmSGgC/x3MQQqAIBBA0avErBvQAYm6SrSQnHQ2KhoShHdPW
+ r7F/y9ULsIVtumFwk2qpDig5wnOYKNnFDcMpMgoQwv6LOkMkrHyjaX9RqMWbclZp2mFkebClzz
+ /dj96/wDxMn9UZgAAAA==
+X-Change-ID: 20250527-gpiochip-set-rv-gpio-5071a2dad129
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Daire McNamara <daire.mcnamara@microchip.com>, 
+ Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
+ Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
+ Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
+ Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
+ Grygorii Strashko <grygorii.strashko@ti.com>, 
+ Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ openbmc@lists.ozlabs.org, linux-omap@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2048;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=fWmHYF76bW96bFem7JRqwAgfxRBoy5ySHaPTeItooXg=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSCYLDKKT/3+Muqt6vpoLhH2yAyeaiX8AvzjKc
+ lz6bLAcJ8CJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEgmCwAKCRARpy6gFHHX
+ clG5EADX3eLse0M6879cp/rXFPzvNb0m0LUCg25b/7UyMAlntaEe6vfqpVdDnOymoShonFCkXzv
+ UAW5igUaY4Qv+2V2lp3v0/nKaaYeJrOCDfUqrVQOxgrjQbfGFE5/gVuucblr0r0CSv06TL7XYn3
+ 95jvOjxXJS1R46cvDsFOvc8iY/Ysk5EE2kaHqYX1Zez3Fxe0j+P+AhjsjUgxExgTaYkgj9X9zLp
+ Iu+nAJxFgnOojFHrmzm9mK4lntAhEgFQO/F1JWyaM3iBwo9mt6sM1y9VSJTI7BPRFEKas0gge/c
+ +WO+kKXAYEQ6wmlUILezREVVJGDIx+bRxn5AIWBFuOd/Z3PfayT5w1/Y9xACMAhzLxl9yx5XesP
+ nrKUhNloMEin8f0em+DkP0y8cvuSlidQRetWsqPNH0toyKsndjNNLfj2la3e3jr7a+jT80cJPNI
+ 1Avz+GrNf2pfgD4bWKTCV/os10gXRX886aWYB597vDmJtcg02a1ir2uHO7jVDLBeCnTA70tWjZI
+ N5X9rUNrlBfLU0A2y3Fuu4E2H5BoAFR97vPSCLg63FIrfsm7vPc6BLdNICULsKJ1K+aw/vp9fWi
+ KLUZjmJAwGPKjiCr8Wsw4Awh8QL0olPep0PXVM0IxA58xDrvoZkvlp/2/NT0SUetVd8mNoJ6G8j
+ rmFYfB/NS4+mWZg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On 6/5/25 15:03, Linus Walleij wrote:
-> On Wed, May 28, 2025 at 3:33 PM Clément Le Goffic
-> <clement.legoffic@foss.st.com> wrote:
-> 
->> Clément Le Goffic (9):
->>        gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
->>        dt-bindings: pinctrl: stm32: Introduce HDP
->>        pinctrl: stm32: Introduce HDP driver
->>        MAINTAINERS: add Clément Le Goffic as STM32 HDP maintainer
-> 
-> Can I apply the driver and bindings patches 1-4 separately
-> from the rest of the series?
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts another round of GPIO drivers.
 
-The MAINTAINERS file will need a fix in the future revision.
-I'll wait Krzysztof answers before submitting a V5 with the fix.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (12):
+      gpio: mmio: use new GPIO line value setter callbacks
+      gpio: mm-lantiq: use new GPIO line value setter callbacks
+      gpio: moxtet: use new GPIO line value setter callbacks
+      gpio: mpc5200: use new GPIO line value setter callbacks
+      gpio: mpfs: use new GPIO line value setter callbacks
+      gpio: mpsse: use new GPIO line value setter callbacks
+      gpio: msc313: use new GPIO line value setter callbacks
+      gpio: nomadik: use new GPIO line value setter callbacks
+      gpio: npcm-sgpio: use new GPIO line value setter callbacks
+      gpio: octeon: use new GPIO line value setter callbacks
+      gpio: omap: use new GPIO line value setter callbacks
+      gpio: palmas: use new GPIO line value setter callbacks
 
-Otherwise patch 1-3 can be merged, but I think you may need the 
-MAINTAINERS file to merge the driver + bindings.
+ drivers/gpio/gpio-mm-lantiq.c  | 12 +++++-----
+ drivers/gpio/gpio-mmio.c       | 53 ++++++++++++++++++++++++++----------------
+ drivers/gpio/gpio-moxtet.c     | 16 ++++++-------
+ drivers/gpio/gpio-mpc5200.c    | 12 ++++++----
+ drivers/gpio/gpio-mpfs.c       | 11 +++++----
+ drivers/gpio/gpio-mpsse.c      | 22 ++++++++----------
+ drivers/gpio/gpio-msc313.c     |  6 +++--
+ drivers/gpio/gpio-nomadik.c    |  8 ++++---
+ drivers/gpio/gpio-npcm-sgpio.c |  6 +++--
+ drivers/gpio/gpio-octeon.c     |  7 ++++--
+ drivers/gpio/gpio-omap.c       | 14 +++++++----
+ drivers/gpio/gpio-palmas.c     | 15 ++++++------
+ 12 files changed, 105 insertions(+), 77 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250527-gpiochip-set-rv-gpio-5071a2dad129
 
-Clément
-
-> 
->>        ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
->>        ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
->>        ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
->>        ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP pinctrl node
->>        ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-dk2 board
-> 
-> Or does it need to be merged along with these?
-> 
-> Yours,
-> Linus Walleij
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
