@@ -1,146 +1,187 @@
-Return-Path: <linux-gpio+bounces-21272-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21262-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEF25AD3E83
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 18:11:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F15BAD3E45
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 18:06:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC8FD3A64EA
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 16:10:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B88E3A51EC
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 16:05:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77E0242D93;
-	Tue, 10 Jun 2025 16:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E8D123C505;
+	Tue, 10 Jun 2025 16:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="is1xQi66"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eQLzL2y0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EEE241691;
-	Tue, 10 Jun 2025 16:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33564238C10
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 16:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571840; cv=none; b=SzA5ukSmVHyFmjeOpai7K0t607Tz6q5TAL1bz9+BoYv+y3G27Mu54q8eFzA4J97YcbNUc/hkkqZ9RYXD1348ywN0ep+8dS8cqIOSoD7D7UctM52FkBgWzKcfXv3271xiHKKxfzpedG+uX6h0ONevqPn782i9/BlCZIT/hLRYwic=
+	t=1749571570; cv=none; b=Fk5OZl1GTPCk9GzZ56O3hxprJv8/rX+uAmUKmMg07ViBwgc7QFQ0amsB6xnGtBuY9h7FdBHdo1G6iQ9f6NQvaxIkN2d6k1haZbiswQAoEUiOaBnBktINl93Qsoclir+HjKIBSNC54GqXU4LuY3taVR5qmXYGn0bt554184T0NSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571840; c=relaxed/simple;
-	bh=SXHxzaiiLT/m2k1jRME2dSR/Kfqf0in/78dSyfn423g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l8RYE3P6n6XqyJ8Z5TMQyl6BAu5zAxDFJdNTgT7QQnGVxi7182WhROicc89D1aVC1u7XxyTP3YY2/ys8VYXbeQ4YfRLyfOaZfkUEvkUPOYctWcO9GxeQQ6AnN6xPI50fp2GpEtnbruugvb1LEIfvGRE7YvSypFHy6Um7lfMOuSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=is1xQi66; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EFA7FC4CEED;
-	Tue, 10 Jun 2025 16:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749571840;
-	bh=SXHxzaiiLT/m2k1jRME2dSR/Kfqf0in/78dSyfn423g=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=is1xQi66VbkmDQLA6BmyUYeIDZwK7TCFnOQpK5v7y4eZFGN/SPkwTPlp6tEG4Ka6f
-	 5OOdYKqZbQAssMIQsSHwe7cHF/7PzXQRnWLVJx/pKtA17ma9ih/ptr9go7wiK8WzRD
-	 va99Vh6Ki4+SgSZc5Ioo2vvc38EBKLVOCBgjFHOevIbRj5pcYuZ9kSbbMiCLgRFOKz
-	 Ohg2/Gs5H75gFpl++0OnZVKm//imP9c/hMvooIh9hHVUGgzzQhPL2gfV1RshgIxUAY
-	 fqNHGHLUCa5rW5Pg5iW3y9sllOWuREZKP5fXLjCa0pUPqnEnG4lme0nJME2WX1EYIB
-	 HhJyg9nKbmNCQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BF2C5B543;
-	Tue, 10 Jun 2025 16:10:39 +0000 (UTC)
-From: Sven Peter <sven@kernel.org>
-Date: Tue, 10 Jun 2025 15:29:51 +0000
-Subject: [PATCH v7 10/10] arm64: dts: apple: t600x: Add SMC node
+	s=arc-20240116; t=1749571570; c=relaxed/simple;
+	bh=u6cGggZH3SoNATQpjfjKdz2DCIZcJJHBoyp8JLYX+lk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QwPeRGSC7YsxLPK75RkLnbsFAghE26vEOfMN0sZ7ZDBa3WJ95lio6A/XD338fVZuNuYdUnb9+Y9Lg32CAQq0L6rOoo+A9Vq1JnuEAIr12hhLoU2/8UZynS1tc9Wdhe251YWgUrxooV9YIzEImq0QXYJK/57EB92UTcK0GVadqc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eQLzL2y0; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54d98aa5981so6875465e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 09:06:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749571567; x=1750176367; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hBeEGoByLmNx0JymY4xT4q6q7D7j914xDLGGfvyG00M=;
+        b=eQLzL2y00GZ30dqiHn6Z1b8t15Dk78jqEBxhQOW7DYZJ0tatu3bvWrxkImq7R8+6oH
+         Sk8Kk+HmW4erRVPpuqSQuziMhY5h1ClbUuyf/rTCVyxgYXLDylH9a9OGKF3TVDx6lrPq
+         fOpbWE6tBhoIQP2vUi5otZpT255Az8Jvmm3wLpN2NnaUTa6/b2R3Wiw7BfuSNUgBjC7A
+         VV/DWSmphV21TDzFLEyvzo399gowzCR4YUxHsbkpXFU9yNrjmehqsArk5TBpsXeGWoyj
+         kJyEbitcGIs7cWEScx/9kS9/nm7sPOvjoDJr/zTudNI+DuDG1c8KD+TvjhgdXQ3Qg4i7
+         fX3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749571567; x=1750176367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hBeEGoByLmNx0JymY4xT4q6q7D7j914xDLGGfvyG00M=;
+        b=jUc9CjT0I9QteL8+A5LmS0uBKIsKSofYdHwx4jfklXXx02yIrH4QlIeS0tpHhmjj0+
+         JRd0cPjbQ4+VVSw2ZqCL1y+7rO7dRwGRKGQf8fGKuDIjwwf2YBWzLqf274OrkqWf90Xp
+         kvSJT50bHH1McBZ6A3RVzsf3wjJQojFzbnQhxNrcbSD339t8IEbtZLxwrFuW5FwfHJUP
+         dMXaDUsOy6x8UgyTBsRtuHQmJc8PQpfFPjHOfpHnP65rz7qfRjOu3X3T0MQN56cSwfvM
+         WOl+MzHT2h/frFBKQ5NWtzxSjLepKeMFoawFUf1hMnucq7E/t+f/JdTT+yFlaeVtcOKO
+         oNJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqMA+aijz1rUnVEWnDpM8hnO6vAWLVm1tLw2d764d6xjGMvFmN7KSoMxx2yYaXAnydUCq/o3SsPDQk@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZwLbjzPdjt6q7ZDFfe4ywrsdTO9HfpVz3Q1jc2fqVFPpvoLbe
+	N409ivQwXZEOT9VrZ1WaQ14PSNuJ46YPJULCTD0s9XF/bdQuq60JeahiZumlGu1CymJJSc3eINz
+	vF1kMEPUnNVpIOenCc+x2o43uoF8FN+sBg0gn50kF8iQ6oMtH9xyLusU=
+X-Gm-Gg: ASbGncuivs4ewyFWGune+MZRjURbV54oub6XLrF18n80plO0NbAgKnlWmCTc4KSMjvd
+	MR75Z35yXT/yw1zNmvrGeBlvKwoHCakU/BDJHN0rraSXidDRzttDlMdiBWriEQDq0fNr0H+T7nZ
+	6IGxf2Ltq3KQujNacalDFgVHes1Cm5KKgmpX/01sVZTAlLFC/VdktqVcRtp3Rk2EMh9uBiPjZA
+X-Google-Smtp-Source: AGHT+IHd3I1OVEWgMny7h2Baqh5DBJB572YkfzrpOW/nSB1wjoInAYuzH6/ihFE+HkYDZj2j7lo3/mOOSaalg7HeZM0=
+X-Received: by 2002:a2e:bc23:0:b0:32a:87ce:1235 with SMTP id
+ 38308e7fff4ca-32adfc3f54fmr52666951fa.36.1749571567213; Tue, 10 Jun 2025
+ 09:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-smc-6-15-v7-10-556cafd771d3@kernel.org>
-References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
-In-Reply-To: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
-To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
- Hector Martin <marcan@marcan.st>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
- Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>, 
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1916; i=sven@kernel.org;
- h=from:subject:message-id;
- bh=d8mVq62H2zbw5gGICFsvhQIy6YecpVCZ77lCLDSqOcw=;
- b=owGbwMvMwCHmIlirolUq95LxtFoSQ4aHf7Xmm8vulmtud8lsO1CmsHu10GnvyYerXR5GJgaz7
- tr5IjWro5SFQYyDQVZMkWX7fnvTJw/fCC7ddOk9zBxWJpAhDFycAjCRRGVGhh8v3rkm6f5/JP3w
- wBO+tq9hKctyLe2M47JVmIxSbrccMmRkWHBy5+cCl4eblr1InP2f7ajs802XfnbeubX0wrV9xTL
- bZ/AAAA==
-X-Developer-Key: i=sven@kernel.org; a=openpgp;
- fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
-X-Endpoint-Received: by B4 Relay for sven@kernel.org/default with
- auth_id=407
+References: <20250610-gpiochip-set-rv-net-v1-0-35668dd1c76f@linaro.org>
+ <20250610-gpiochip-set-rv-net-v1-3-35668dd1c76f@linaro.org>
+ <b2f87cff-3a81-482b-bfdd-389950b7ec8e@wanadoo.fr> <CAMRc=MfCwz3BV15aATr_5er7wU=AmKV=Z=sHJyrjEvLwx2cMjQ@mail.gmail.com>
+ <b9ea7e0e-7dd1-460b-950a-083620dd52e9@wanadoo.fr>
+In-Reply-To: <b9ea7e0e-7dd1-460b-950a-083620dd52e9@wanadoo.fr>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 10 Jun 2025 18:05:55 +0200
+X-Gm-Features: AX0GCFsFWH4b7yJkolxQLHQKmDUo4N7FgPgYNia8CjJoC_PxTolZxLLShEa2WEo
+Message-ID: <CAMRc=Mf4qupdJEm9mWPF3-B3hprn6AvP7Po2=aQYbaSvFf8OeA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] net: can: mcp251x: use new GPIO line value setter callbacks
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Andrew Lunn <andrew@lunn.ch>, 
+	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, "Chester A. Unal" <chester.a.unal@arinc9.com>, 
+	Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
+	Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Marc Kleine-Budde <mkl@pengutronix.de>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Hector Martin <marcan@marcan.st>
+On Tue, Jun 10, 2025 at 5:48=E2=80=AFPM Vincent Mailhol
+<mailhol.vincent@wanadoo.fr> wrote:
+>
+> On 10/06/2025 at 23:05, Bartosz Golaszewski wrote:
+> > On Tue, Jun 10, 2025 at 3:55=E2=80=AFPM Vincent Mailhol
+> > <mailhol.vincent@wanadoo.fr> wrote:
+> >>
+> >> On 10/06/2025 at 21:37, Bartosz Golaszewski wrote:
+> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>
+> >>> struct gpio_chip now has callbacks for setting line values that retur=
+n
+> >>> an integer, allowing to indicate failures. Convert the driver to usin=
+g
+> >>> them.
+> >>>
+> >>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> >>
+> >> This does not match the address with which you sent the patch: brgl@bg=
+dev.pl
+> >>
+> >>> ---
+> >>>  drivers/net/can/spi/mcp251x.c | 16 ++++++++++------
+> >>>  1 file changed, 10 insertions(+), 6 deletions(-)
+> >>>
+> >>> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp2=
+51x.c
+> >>> index ec5c64006a16f703bc816983765584c5f3ac76e8..7545497d14b46c6388f39=
+76c2bf7b9a99e959c1e 100644
+> >>> --- a/drivers/net/can/spi/mcp251x.c
+> >>> +++ b/drivers/net/can/spi/mcp251x.c
+> >>> @@ -530,8 +530,8 @@ static int mcp251x_gpio_get_multiple(struct gpio_=
+chip *chip,
+> >>>       return 0;
+> >>>  }
+> >>>
+> >>> -static void mcp251x_gpio_set(struct gpio_chip *chip, unsigned int of=
+fset,
+> >>> -                          int value)
+> >>> +static int mcp251x_gpio_set(struct gpio_chip *chip, unsigned int off=
+set,
+> >>> +                         int value)
+> >>>  {
+> >>>       struct mcp251x_priv *priv =3D gpiochip_get_data(chip);
+> >>>       u8 mask, val;
+> >>> @@ -545,9 +545,11 @@ static void mcp251x_gpio_set(struct gpio_chip *c=
+hip, unsigned int offset,
+> >>>
+> >>>       priv->reg_bfpctrl &=3D ~mask;
+> >>>       priv->reg_bfpctrl |=3D val;
+> >>> +
+> >>> +     return 0;
+> >>
+> >> mcp251x_gpio_set() calls mcp251x_write_bits() which calls mcp251x_spi_=
+write()
+> >> which can fail.
+> >>
+> >> For this change to really make sense, the return value of mcp251x_spi_=
+write()
+> >> should be propagated all the way around.
+> >>
+> >
+> > I don't know this code so I followed the example of the rest of the
+> > codebase where the result of this function is never checked - even in
+> > functions that do return values. I didn't know the reason for this and
+> > so didn't want to break anything as I have no means of testing it.
+>
+> The return value of mcp251x_spi_write() is used in mcp251x_hw_reset(). In=
+ other
+> locations, mcp251x_spi_write() is only used in functions which return voi=
+d, so
+> obviously, the return value is not checked.
+>
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Sven Peter <sven@kernel.org>
----
- arch/arm64/boot/dts/apple/t600x-die0.dtsi | 35 +++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Wait, after a second look GPIO callbacks (including those that return
+a value like request()) use mcp251x_write_bits() which has no return
+value. It probably should propagate what mcp251x_spi_write() returns
+but that's material for a different series. The goal of this one is to
+use the new setters treewide and drop the old ones from struct
+gpio_chip.
 
-diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-index 110bc6719512e334e04b496fb157cb4368679957..9eb9b0656bf9c570983c90e360795b7a7c71cf90 100644
---- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-+++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-@@ -24,6 +24,41 @@ aic: interrupt-controller@28e100000 {
- 		power-domains = <&ps_aic>;
- 	};
- 
-+	smc: smc@290400000 {
-+		compatible = "apple,t6000-smc", "apple,smc";
-+		reg = <0x2 0x90400000 0x0 0x4000>,
-+			<0x2 0x91e00000 0x0 0x100000>;
-+		reg-names = "smc", "sram";
-+		mboxes = <&smc_mbox>;
-+
-+		smc_gpio: gpio {
-+			compatible = "apple,smc-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+
-+		smc_reboot: reboot {
-+			compatible = "apple,smc-reboot";
-+			nvmem-cells = <&shutdown_flag>, <&boot_stage>,
-+				<&boot_error_count>, <&panic_count>;
-+			nvmem-cell-names = "shutdown_flag", "boot_stage",
-+				"boot_error_count", "panic_count";
-+		};
-+	};
-+
-+	smc_mbox: mbox@290408000 {
-+		compatible = "apple,t6000-asc-mailbox", "apple,asc-mailbox-v4";
-+		reg = <0x2 0x90408000 0x0 0x4000>;
-+		interrupt-parent = <&aic>;
-+		interrupts = <AIC_IRQ 0 754 IRQ_TYPE_LEVEL_HIGH>,
-+			<AIC_IRQ 0 755 IRQ_TYPE_LEVEL_HIGH>,
-+			<AIC_IRQ 0 756 IRQ_TYPE_LEVEL_HIGH>,
-+			<AIC_IRQ 0 757 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "send-empty", "send-not-empty",
-+			"recv-empty", "recv-not-empty";
-+		#mbox-cells = <0>;
-+	};
-+
- 	pinctrl_smc: pinctrl@290820000 {
- 		compatible = "apple,t6000-pinctrl", "apple,pinctrl";
- 		reg = <0x2 0x90820000 0x0 0x4000>;
-
--- 
-2.34.1
-
-
+Bart
 
