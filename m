@@ -1,110 +1,115 @@
-Return-Path: <linux-gpio+bounces-21167-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21168-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04C83AD3593
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:07:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F4F6AD35A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:10:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29C5C17619B
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:07:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42E693B4BA3
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:09:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 130C028DF4C;
-	Tue, 10 Jun 2025 12:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7362028E588;
+	Tue, 10 Jun 2025 12:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I2Cr7Xjc"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="fnDqXI6O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFE928DF10
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 12:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9892A28D854;
+	Tue, 10 Jun 2025 12:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749557225; cv=none; b=oRo3Odp2JR0kJ1FFhp0cAPk78oHem/8QN1gQAtDeMKrE94en1XvSIFB1BBbnCQ/V4WOqOPGji7RayzMxMNdosMoWDaoJAZbvmpoJxt+G4a8C7OJpGp9tBPh+Ile6D1khGrUy9cA99bf5D+F8/gVILEWu+vOdMhLZ43/6ZWxr0aY=
+	t=1749557399; cv=none; b=C4el1tMmGbAaIqULS/y6Yw/zWKDzwvDba2Z2OmjRANkNsRvjGq3G/SEeySIGQbXaQQnqUTcODdIWR35CzurW0fT6EahTS06DZDJnrmKnI7bIdziqAyv/7+eAV5Rnj90tl4vSHL3r2B9PhN7Fmh1QFhucK5ERY37ecLfIZvKgbIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749557225; c=relaxed/simple;
-	bh=upEgacp7mnJpqnEV2jZLm7bdZrVLCTZ4Uj3awIoWIUE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kTYv8ec++uhe28Cg7/u3sD1ELgBl7okw2nzqqghmfyy/altucHCmz7HWrNlX/WL1VyPAps92tWuMNhylSDSHYVw8VyeONyiJjC9DB6621rrFLGZBpno7oEW1J4k7pNDBl43a8pJaUwVn5kJADepiKVY72pzKlBnYQ3XXcwEvk1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I2Cr7Xjc; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32a9e5b6395so49812701fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 05:07:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749557222; x=1750162022; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=upEgacp7mnJpqnEV2jZLm7bdZrVLCTZ4Uj3awIoWIUE=;
-        b=I2Cr7XjcL6Qqwdyyk8lEcpav4v4NYbibMuKkuNCyWCLV2vwu8n6d+Lp/wRLAoCAFb4
-         f8S3onkfwz/AZ/YLNKxTxdSqPGITGRNfO0mNQcwTsqni5VsTD/3LjoOCD+HFdRT7Db3q
-         aN+ZVgwlQh1Kh00vXlGrgvZjtMRdWdAFKgTdk5Bf9xfdZX+jRcehCoEDw0vMqeo7vnV7
-         fex+mmoZUVsI5lkqDCV5eYxkLtT/S3FiX/TwedMUvsMNWrASwQim2BiAKNChrZ1APfKz
-         CCSbUdwNC7ZzGOxqZOpJg0enroMSvqJisuGKxogj7zrY+dtSLueDsqRPvjUiYPQhI3CF
-         JgxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749557222; x=1750162022;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=upEgacp7mnJpqnEV2jZLm7bdZrVLCTZ4Uj3awIoWIUE=;
-        b=D8NSsV7jVTr++0wVwiCLa1qgJWBb0STYeaIOEupO9T8xi4/8/BsGGDkEVLJTrj1bM6
-         4mnrkUmrAxxDRc7204vXqsE06zrgMF8llAxhUO7e1yFm2y8rm2jIzj+TaqjUC3qdx7ST
-         GhlnAYh0J/BNnpCqJPREdnQqIqmHKZEcQpt1s0m+F7KX+TlzyvDIlaRRKc3pnZFKCNv0
-         KdtLyK4q7/cgVtvQfH6OWVL7MNgimnuOz5/f3dRinuqQD0y7Yr9VczjncvtFVVSaNCPX
-         HROmK6aUmsztkWmhgW7PLkBgkzDLPBAATZQy7MkmulzUra8d63HrEyfUHL4l1bj8NOFu
-         5bVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxTB/VjlogUoSUlKs8uYchkvLsGWvBTH3i/U+leHdHNIKuKo+MErme4qv5D4bPBgkUkzlFwpIi7Zya@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwELjPHCHeNDfmPy5GtExiHaxalp+axKEesO8AC8Nl8ctSMf+g
-	3ET7sP29EFu2ouSQNxz2Oxf8b1UvNfTqd/DzlZXXlWENPD047LhgxbQ6vjfozfWWb/lqezdvDkW
-	B4jMxtDd9fJQgNH8z9oWtLzEuROv1d4oF5YfqExVm3Q==
-X-Gm-Gg: ASbGncuZrD48F5KIGQcwfoqw8QhEZq9apwZ8ysslK4HXQNy7/hAtnS8kbSDnseCuX98
-	6H+dNDYld6idbB+uxTLGMRGzcZUwwywWmyT3DIN+9Sru/2JyNnrymSXPzIdCz8CjecjXC8RZj0v
-	l16aGsZKYBRrccXD0EE7AOTBxEvf1BnJWQBm/HRRpQL6hfPtpUZzMIvA==
-X-Google-Smtp-Source: AGHT+IEqz0WMqtI0x3GGlKwfWemlBSbd12UaQPMKKY+qV7hhxbjKafYK8sYr8Wg2JEL7ScFpC5Ui0NiE4JM2Acs5Gg8=
-X-Received: by 2002:a05:651c:220d:b0:32a:ee4e:56ad with SMTP id
- 38308e7fff4ca-32b1533b1aemr8972041fa.33.1749557222298; Tue, 10 Jun 2025
- 05:07:02 -0700 (PDT)
+	s=arc-20240116; t=1749557399; c=relaxed/simple;
+	bh=sxCaVWyMI1/m+bD68f6pI/fH2+IWROB6x1dwutaaZEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=L42MkBPWQPVvgxdfVFgriH0a3VxVIliFONqGxq7w09TrLLm9U3wjXHwxh90cCNwBAOqkmhurN6ygZ+16nmy6myhqEAt/VHvSu7mvaPxL9utYob8GVka3277ekP3pQGmszIBoVpu90cqDFbWmDoEhu5SLLOfW3BUxADvv0zyXc8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=fnDqXI6O; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AC92oj024409;
+	Tue, 10 Jun 2025 14:09:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	rbT+/LcXhnguYXXSk/7BxGc8Wpdz3ZyHLa8xXsRBNrQ=; b=fnDqXI6O+WJPistn
+	bnZ8DY90tUXzuIBXtkCiwKYbQ0yuNFQecwxgJs/UlcPmsZrU2CYGPmTYSYmeZHOj
+	d1cwA+XuSl4xlbDUgNjsNZFueqhF7omyMWhJBDZLcyDmwHJloTFXQcDrWB9t7Zfi
+	R8NICF8GKNtMa1wWdwZflkEOHzfYOCCXd9lLfloPdd/+2Xdm3R1pizI6oATBcHGj
+	Xv8ZLdGa/f8d3eRrh8J/edSZpBF63QbwVD6xsN1woB5EezODMS1rKZcfP5B/8azg
+	ZzYoPNt/P5DXh3c/zWfQUTHVRZI9nR2TCnV2gzZQ3oZvabmZTbNMoqcMlufQNS6e
+	RLzqkA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cahm10e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 14:09:42 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 69F014006E;
+	Tue, 10 Jun 2025 14:08:34 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F3843B394F9;
+	Tue, 10 Jun 2025 14:07:48 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 14:07:48 +0200
+Message-ID: <7f7d6fb3-f696-4dd4-ac19-e5d77134a061@foss.st.com>
+Date: Tue, 10 Jun 2025 14:07:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523094319.10377-1-ot_cathy.xu@mediatek.com>
-In-Reply-To: <20250523094319.10377-1-ot_cathy.xu@mediatek.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 10 Jun 2025 14:06:50 +0200
-X-Gm-Features: AX0GCFuHU7ZhdHSe32gs089Kj2im6LDUCERAjIX60g6Meb5i30AmFDVd_Qjjj2o
-Message-ID: <CACRpkdaGMiNwBAa60hFzsboV3JCj=sWVz-NKah=eNk+vVnUHVw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] pinctrl: mediatek: Add pinctrl driver on mt8189
-To: Cathy Xu <ot_cathy.xu@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
-	Lei Xue <lei.xue@mediatek.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	Yong Mao <yong.mao@mediatek.com>, Wenbin Mei <Wenbin.Mei@mediatek.com>, 
-	Axe Yang <Axe.Yang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 8/9] ARM: dts: stm32: add alternate pinmux for HDP pin
+ and add HDP pinctrl node
+To: Linus Walleij <linus.walleij@linaro.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-8-bd6ca199466a@foss.st.com>
+ <CACRpkdaXY1=v_HY9-PDZ=HYwJrP7P8ncZoCDm1da=vxoEazD4Q@mail.gmail.com>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <CACRpkdaXY1=v_HY9-PDZ=HYwJrP7P8ncZoCDm1da=vxoEazD4Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
 
-On Fri, May 23, 2025 at 11:43=E2=80=AFAM Cathy Xu <ot_cathy.xu@mediatek.com=
-> wrote:
+On 6/5/25 14:57, Linus Walleij wrote:
+> On Fri, May 23, 2025 at 2:40 PM Clément Le Goffic
+> <clement.legoffic@foss.st.com> wrote:
+> 
+>> Introduce hdp node to output a user defined value on port hdp2.
+>> Add pinctrl nodes to be able to output this signal on one SoC pin.
+>>
+>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> 
+> That's nice, this is exactly how pin control is supposed to be
+> used!
 
-> This patch series introduces support for the MT8189 pinctrl driver, inclu=
-de
-> the driver implementation, new binding document and pinctrl header file.
+Hi Linus, thank you!
 
-Cathy will you rebase & resend this patch set based on v6.16-rc1?
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Yours,
+> Linus Walleij
 
-I think the code is ready as long as the device tree bindings get finalized=
-.
-
-Yours,
-Linus Walleij
 
