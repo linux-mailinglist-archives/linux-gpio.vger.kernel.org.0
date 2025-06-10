@@ -1,108 +1,120 @@
-Return-Path: <linux-gpio+bounces-21211-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21212-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E23A1AD3781
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:57:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E65A7AD3759
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:52:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00F2C3BE2AE
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:51:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 892497AD0AD
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB3F42D3217;
-	Tue, 10 Jun 2025 12:45:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97E772C0322;
+	Tue, 10 Jun 2025 12:46:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cdWLT90K"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hZoQ3j3I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D618C2BE7D0
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 12:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EFF2AF1E;
+	Tue, 10 Jun 2025 12:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559535; cv=none; b=dzK+fPSkM2XRQMLS2mM30NBMlBb7s/2xLvpOKuZYWpnJQJITC0pmnhD5B4gVfANxfZnjLGxHnb/+lfl7iLJW+WvK4MrUVX8b+U2Ve2H2JjNQcrUCGUX7TgiH4r0HNFGytnRbsf6gNC/TTtx3M2ThIAnxCal3NaBOlx5TJqZ+K0Y=
+	t=1749559588; cv=none; b=MGQ677CVh193UYci+sAXbQEuLIyB9F3zVkO1hemplgIiDAbIHo8mU5szHoDjofngSgdplR7vAizWkzqOe2FTKfucApe5OEWVgnmyESPD1B4DArcNDAdVt1UX5qdbmpDt07F88t4crfeNXqU3jgxSi4um8eO8NHbXIibDY9INEgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559535; c=relaxed/simple;
-	bh=sF3FchzuHdlUwCW3Mdst6w7S6yA7e0tQPeXt1aAxPg0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JdZ9mOWeNwyFyx27JKVD5C0UeSIpwR2am36HSUTmZwFZeP0fs1a9UgCkXPNrh9IrYQDzOwiMp5YTb3p7BgrdnoRJWaUmLP+1dt7uM5CCFEw2Drm7yEG+QmJ4dI7gfDMbuEI+WowPk5PP7CFDnu35q8ahi1Ceoa+UyjS7iQOyW1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cdWLT90K; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5532a30ac45so5011015e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 05:45:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749559532; x=1750164332; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sF3FchzuHdlUwCW3Mdst6w7S6yA7e0tQPeXt1aAxPg0=;
-        b=cdWLT90KdVDdw1FeZRif/kXP3wq3j1yji3n831jAbXEWZI9FtBXYnUk6v0OwkDghpQ
-         jeJjp9i/Ee1CdBTtS7sdRCEhRWsJWIcgg5naQlDPX5hzgiW/fB/6digZfrFcdnR7cdbW
-         15h44GQZOW4hiUNmAaQBWJibbypGQ2wfj1PSao1pB7ZIYy66QhpRTmxxNk6JuQid/B+F
-         dQDrwjib+jozs7g/T7Va1NE//MtpXrJj7Pn3xXMqKyNKsZXg6Qt9cAYkCFbIFYGYcuw4
-         Q8wKyMOH08CNApCsvZINcw9tAVJw2CmABqzCt2WhwtaOm+hXoBhg11lLhL2tsBhhCaD8
-         WNQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749559532; x=1750164332;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sF3FchzuHdlUwCW3Mdst6w7S6yA7e0tQPeXt1aAxPg0=;
-        b=YyFPVN2UAfKjQsOKGp57jlwicA7uoz5FeHt0LlJgv9/YU/bhXVb7pL4LYFRAhkh95M
-         YnCUzA6ILaJe6RgC+Sj35W+qkfoJ4hzNCWQn93SAMGnWkjmijv754nKdowyqKlZps18D
-         /Rj9s+WYclMw20D2R/3GFs2WUW0Fhn3tK13t/o8AqvLvs/MJZu2QKYQBcquk91V2eOCq
-         DKLRtGIg8W9V45Uost+KWjmwU0x+7vymXKtoHuE2M4+YGlJBF+A9UpnPkIP4Ms2TSwxG
-         oOBdgMmXEZb8IHnBGLDemlD9KStvQR5wHLOfUmhkJcr3mzxyiXIRdMEWcpRGQFcKmkmU
-         Xw8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWgEXWM7jsvM8nWHD/9m03p0FLh6/y99YCp/GICHnkLf4+EkWNdEPPfywj86IJImA0TtxT4dKtSc2Qd@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqOA/lxsgmfgZ7dqfdd0BdCUKz5aclp8tGfEXdcNsSUF8MENCO
-	AprG2p7sViAIIHBjW49LgpgaHUggqtvrwx42WsbHDBh6dTHzqA+6MQ12a1ine7p8p6J/YACUkzQ
-	IgWSk60hnahhP4pcmvmUYDO+o6kvIE7g1HADwnzm1bw==
-X-Gm-Gg: ASbGncuwzFBUT0qpw8uEY8UPk4skWCPfuvmKsoLak1z2yhD4OT/OBf9Cfk7jcTksi41
-	tpAtvS1EgPLkE8XzRxhqUhNoqfJJu8pDaTyUe3Y+azXSQOFlghd8yzmGtwVJMUXEy3oYDYe+GaE
-	+pdKrHJFN4SvdEYpVhSRsRinTc2J3m4v9QdVRwyAGIXJ/KbjtUxzuAsA==
-X-Google-Smtp-Source: AGHT+IGeGbzOznS3BG0D0jszT5lHYaE7HjuqbP1wt0m4nT4Evnfz8bKcaQ8NdIRwiSEm4rryiTNmXeZgEAh41G1MX+I=
-X-Received: by 2002:a05:6512:12d2:b0:551:f166:bbb with SMTP id
- 2adb3069b0e04-553931fec79mr844508e87.13.1749559532010; Tue, 10 Jun 2025
- 05:45:32 -0700 (PDT)
+	s=arc-20240116; t=1749559588; c=relaxed/simple;
+	bh=mSF2gA5Qb1wekKI7B0KlNmhWLve3DeW+P+aVaydV8OI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fDG8xMUzv9NRdY4XlWSv0IwB5J7nFcOzF9MAgRwtEZJzdBb7gDbTiK/g+CU5K3SRqmYiaGuzKwP2iYkOlqrswD1AmpqLosfkURrvpHuS0cQbscFwmevbnfatASowfe0UIPmDT83sIRFaYqaXKwQ3GIhbD3DbdVMyll1g5ma2D48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=hZoQ3j3I; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=IxovBajuiG9VZJ3XmWy0NzjagqDViV1ywWm/ai8Bd1M=; b=hZoQ3j3IzpoxwljSwnB8bccPSM
+	XRrBw7WFNZ8PxtzbiIXdJUnm/tkBx5fm8LE2KeugPzbPkZOxOSYZeqWHG27E/pZqa2VZB9z9EYDNc
+	cwy1nsznvNnVMKnbEY13v7IRURpmJET03jHqxGcIuSW+kSzh3eWH+oyjvx03UBx9A2i8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uOyMc-00FGUL-0t; Tue, 10 Jun 2025 14:46:02 +0200
+Date: Tue, 10 Jun 2025 14:46:02 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 4/4] net: phy: qca807x: use new GPIO line value setter
+ callbacks
+Message-ID: <5c9a127b-8538-4856-bdb3-cbee87993428@lunn.ch>
+References: <20250610-gpiochip-set-rv-net-v1-0-35668dd1c76f@linaro.org>
+ <20250610-gpiochip-set-rv-net-v1-4-35668dd1c76f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609-pinctrl-madera-devm-pinctrl-register-mappings-v1-1-ba2c2822cf6c@bootlin.com>
-In-Reply-To: <20250609-pinctrl-madera-devm-pinctrl-register-mappings-v1-1-ba2c2822cf6c@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 10 Jun 2025 14:45:20 +0200
-X-Gm-Features: AX0GCFv8wM1qzK88fvC3YYxO09_iv1tchDQeyw0PYmsnKvpSJ44gK7Ltfx9W9bk
-Message-ID: <CACRpkdZZoO4QxgiBr06BkzByiCouMNiP8jhz+qzxg5fQAjWDfQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cirrus: madera-core: Use devm_pinctrl_register_mappings()
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Lee Jones <lee@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610-gpiochip-set-rv-net-v1-4-35668dd1c76f@linaro.org>
 
-On Mon, Jun 9, 2025 at 1:51=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
+> -static void qca807x_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+> +static int qca807x_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+>  {
+>  	struct qca807x_gpio_priv *priv = gpiochip_get_data(gc);
+>  	u16 reg;
+> @@ -390,14 +390,12 @@ static void qca807x_gpio_set(struct gpio_chip *gc, unsigned int offset, int valu
+>  	val |= QCA807X_GPIO_FORCE_EN;
+>  	val |= FIELD_PREP(QCA807X_GPIO_FORCE_MODE_MASK, value);
+>  
+> -	phy_write_mmd(priv->phy, MDIO_MMD_AN, reg, val);
+> +	return phy_write_mmd(priv->phy, MDIO_MMD_AN, reg, val);
+>  }
 
-> Use devm_pinctrl_register_mappings(), so the mappings are automatically
-> unregistered by the core. If pinctrl_enable() failed during the probe,
-> pinctrl_mappings were not freed. Now it is done by the core.
->
-> Fixes: 218d72a77b0b ("pinctrl: madera: Add driver for Cirrus Logic Madera=
- codecs")
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+The full function is:
 
-Patch applied as non-urgent for v6.17.
+static void qca807x_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+{
+	struct qca807x_gpio_priv *priv = gpiochip_get_data(gc);
+	u16 reg;
+	int val;
 
-Yours,
-Linus Walleij
+	reg = QCA807X_MMD7_LED_FORCE_CTRL(offset);
+
+	val = phy_read_mmd(priv->phy, MDIO_MMD_AN, reg);
+	val &= ~QCA807X_GPIO_FORCE_MODE_MASK;
+	val |= QCA807X_GPIO_FORCE_EN;
+	val |= FIELD_PREP(QCA807X_GPIO_FORCE_MODE_MASK, value);
+
+	phy_write_mmd(priv->phy, MDIO_MMD_AN, reg, val);
+}
+
+The phy_read_mmd() could also fail and return an error code.
+
+    Andrew
+
+---
+pw-bot: cr
 
