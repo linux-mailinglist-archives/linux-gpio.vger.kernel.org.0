@@ -1,115 +1,123 @@
-Return-Path: <linux-gpio+bounces-21140-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21141-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87D83AD2FA5
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 10:13:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86F8CAD3071
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 10:33:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3C62188F53C
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 08:13:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 500C616BE11
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 08:33:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C1F6280319;
-	Tue, 10 Jun 2025 08:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F033220F28;
+	Tue, 10 Jun 2025 08:32:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="r44G/iT4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNUnm/0d"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855FE28001A
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 08:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CD61D555;
+	Tue, 10 Jun 2025 08:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543210; cv=none; b=PNUOoZdCTn6wdIHMFMgkg251YsFVJS/OGa/Tsvc7l+Cahtke997L5szHTfCj6pN86B0q8iGjy9FKSmf1BHVt2Cj+TI8bx28ECdTzhafroAix5k6R0KvRcwtZUPf+dlMvJVB/SQBS7mysIC+e2/lKIeJmBXzGFAaYLfqe5i0ZnuM=
+	t=1749544377; cv=none; b=WSJyQj6o3GeY2sw83lscGsK5Ud/uZuEg6hOQqsMua1VPJaX1mtO6UuhzSNV3FCbIp8tsEEemPVmAR0UB3STY87XpXxnrD82MZ4YC6AlJBfnyJ8EHvXLeaGRQngmdzER8fpj6bxH0iGeddC8SSVkC/KHqUQid7KLTer7l1f4rEO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543210; c=relaxed/simple;
-	bh=AGrB1k2K4d+j7W5uHQba0DcCDvIDpeMB5mA7xW6HOjs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tApf+5St3E/6EMWpj06ncuKvzCBjlWxBVJGMZmYh0aBhWxyhLDtyQ1zOR+DdE+JiUgWvfAvPJoxGtfCiPattDDapH0kKZ8QdoT7Mrlgp0DqVMFktwJjBO6OrClB4DFxDRX40+iG3BHuEHjQUXLiKQpYtDR4FZ1IEt38lKLAZahQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=r44G/iT4; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a3798794d3so4384089f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 01:13:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749543207; x=1750148007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3DDdOm3PjmMZGWv7sfjoGBzae0xVF6b9amq2E2mQlBQ=;
-        b=r44G/iT4eUJB2vQYCBF9R6Rtq4Ki0QcTQkyVz5TYvM+v5xM88rUW7HzlI96+q1dsjj
-         5MM1a8aMZxfmAgEV+drD0TXE/KdkJClfGWG4b+Sxlct13BHZHasqDpIbLmG6ZKcnfVqA
-         IE7pHnpmBxv5GWN6MihtSuNZbVfu5Gf3BD8KWFo29vToEX9uVDSgjwnUJvkrQBBfVNIP
-         aRd/ReaVihJyMFBhPCEAFOHsRWAcn2VEwrKRe/nomU4K8gcGNl15qD8EN5uuCg6XuIKu
-         PN3laAUP5fTLSYZ+v6D0ahJJoi9EPM0CRutMAT+5DAkH9VlVapT5GVLPxBXMacDQ8TX0
-         RfhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749543207; x=1750148007;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3DDdOm3PjmMZGWv7sfjoGBzae0xVF6b9amq2E2mQlBQ=;
-        b=c5KmCHv2iVlDtytaxnYQ9UqQ6WUGfeB8MYKjnjjDumjT6b6HuYDe+HTvWjBVo0vkZC
-         at7olY9Arxz6OGsVQa05XCTYn3TAbnQWrqDomfOJ/tkWx5LPfCOPdZhZkGvdZgv9/Qxy
-         R3VEC1U0xTHtRQOoqQ69X/0WQsRuPeonNnMO6F0dI8DZs4PocwOsH5uT6+PjXCNJugdg
-         Fqit0WBzdR1banz/PdEMCh/q034THAg8d3o0VGGhHY/4df2G22xiqjM2b3+7gQlonqAg
-         dC1wwAHdaQP7HGfCKJLdhtBhXd4bxuyV7cfRg9MIY7CvzQUBQhiIwZ0cLaB5ConoZ6iS
-         5qKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCtPtD5pS46yWbFAVbkBmERqgPy4No4U1kndCMw0EUnzsF+Uh/U0LE7xxfQCfdkJNRDPLWSNiQZNXt@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmzMJ/Qf1Wo+g1h/4lPwDK6zskHcMEqDvD+2qg4ojzDzJ17DpQ
-	9ZC8h6YF+Vtk0LDQPTzGjynCP+VWBW5yN0a+I25ihHnF5A6tcQGIjMBnHx3WNKTfRhU=
-X-Gm-Gg: ASbGncuhim1X94kKiL7OVXcL8P14Tu82BaMG2Wn4n/Tbls+JMJEa0lznNyHXdIy4Ykf
-	sJo91sxNcR0v1g3cV0jhTGQxP4zK5uGo8TLwe+kVj6ito2YmRK9g3H+dhzA15hIdQeBB8rqF4tI
-	gqSS3MPc4IsxrgptTs0FpVx1Rdu/wURFaw91obQCs9hS04eA5Kl2us37O6ZSR+puCXNXcbxM1UJ
-	9Kf19Hl/uQ1tvJex5l9rQeejhsSH+XJnuTRXf5vZ6D8WojRXBJGQkGn4EzYo4xKsQSK7YnrGzJC
-	v/gUFvLE/OlymKbpmT4pXWSOt//nzNWMLbeoPlCXjeYgDSvnq596yQQHmsoy
-X-Google-Smtp-Source: AGHT+IGd0hRk+75zKFj4sdKdcpiZwWHStM03Gr7kQJsVjryb0vZsuhZQnQD8wN1guY6/FynJa1139Q==
-X-Received: by 2002:a05:6000:25c6:b0:3a3:7749:9783 with SMTP id ffacd0b85a97d-3a531ce7324mr11978738f8f.51.1749543206999;
-        Tue, 10 Jun 2025 01:13:26 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b5147sm11852958f8f.37.2025.06.10.01.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:13:26 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	f.fangjian@huawei.com,
-	Yang Shen <shenyang39@huawei.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Update HiSilicon GPIO driver maintainer
-Date: Tue, 10 Jun 2025 10:13:19 +0200
-Message-ID: <174954319673.29199.11108527268991181680.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250529034023.3780376-1-shenyang39@huawei.com>
-References: <20250529034023.3780376-1-shenyang39@huawei.com>
+	s=arc-20240116; t=1749544377; c=relaxed/simple;
+	bh=SeM2fX3V7rJHEICuoUesxqz8Z/Gb6XXlCMnMM8yJjo4=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=LzyNRNp0d9ABMWoimqOC1hZCqQvhHCri7HnKGfsdumfe+KrbPn3M3NtJXlVKCN2xbJBj2UqyVXwTJ6RPw6ZuZ1pVUIAsAB+EyNDvY2yL2GRhfvgdq0ElmN/01ILKSKc690e3+4UFr/ngJP24UwcyW0gmluA+2zs1BPXwCF22L2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNUnm/0d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0218C4CEF0;
+	Tue, 10 Jun 2025 08:32:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749544376;
+	bh=SeM2fX3V7rJHEICuoUesxqz8Z/Gb6XXlCMnMM8yJjo4=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=oNUnm/0d0NSyV1KpxCElUMuB7NV/RWA1VylR1xJD38v2VZ4vXD3fAj7l+Purr3T+G
+	 /w/H19u1gmrtKw+9nu9ac/G594YLZ75qXNFE+b+9H7NQ8M5tX3xVKDyBXDZFw7Q3Lu
+	 S9j+gsEf1XeyyIHIGHQ8A2SIsJS+/tNlxu2XN6KS2GwnkIEYEMId6Vacjj8ONvLmxi
+	 oqAVfxRELEdUbuR9ifYUEhSNJooDSuS75RT2mDhOsV6yQ+d5wYsHDZlKjKjshtNQgi
+	 OOHBu58tOtWzhqK7ce88/rmpeD+7hiMN2A1s6BUpimb+E2FhHARmuVa9gP9VgRmosL
+	 WZverJznxiS6w==
+Date: Tue, 10 Jun 2025 03:32:55 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, michal.simek@xilinx.com, 
+ monstr@monstr.eu, 
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
+ "moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Conor Dooley <conor+dt@kernel.org>, Srinivas Neeli <srinivas.neeli@amd.com>, 
+ git@xilinx.com
+To: Michal Simek <michal.simek@amd.com>
+In-Reply-To: <dba4f2c39a25b54010c292c36e349cb289d6cd98.1749540869.git.michal.simek@amd.com>
+References: <dba4f2c39a25b54010c292c36e349cb289d6cd98.1749540869.git.michal.simek@amd.com>
+Message-Id: <174954437576.4177094.15371626866789542129.robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-xilinx: Mark clocks as
+ required property
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-
-On Thu, 29 May 2025 11:40:23 +0800, Yang Shen wrote:
-> Add Yang Shen as the maintainer of the HiSilicon GPIO driver,
-> replacing Jay Fang.
+On Tue, 10 Jun 2025 09:34:31 +0200, Michal Simek wrote:
+> On Microblaze platforms there is no need to handle clocks because the
+> system is starting with clocks enabled (can be described via fixed clock
+> node or clock-frequency property or not described at all).
+> With using soft IPs with SOC platforms there is mandatory to handle clocks
+> as is explained in commit 60dbdc6e08d6 ("dt-bindings: net: emaclite: Add
+> clock support").
+> That's why make clock as required in dt binding because it is present in
+> both configurations and should be described even there is no way how to
+> handle it on Microblaze systems.
 > 
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
+> 
+> Based on discussion at
+> https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
+> 
+> Actually this shouldn't be only targetting GPIO but also for example
+> xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
+> before starting to check other bindings.
+> 
+> ---
+>  Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Applied, thanks!
+My bot found errors running 'make dt_binding_check' on your patch:
 
-[1/1] MAINTAINERS: Update HiSilicon GPIO driver maintainer
-      https://git.kernel.org/brgl/linux/c/e0d4a0f1d066f14522049e827107a577444d9183
+yamllint warnings/errors:
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/fpga/fpga-region.example.dtb: gpio@40000000 (xlnx,xps-gpio-1.00.a): 'clocks' is a required property
+	from schema $id: http://devicetree.org/schemas/gpio/xlnx,gpio-xilinx.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/dba4f2c39a25b54010c292c36e349cb289d6cd98.1749540869.git.michal.simek@amd.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
