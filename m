@@ -1,190 +1,124 @@
-Return-Path: <linux-gpio+bounces-21133-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21134-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E639AD2EC4
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 09:34:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DC68AD2F3A
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 09:50:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F77518936DC
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 07:35:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 581563A544D
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 07:50:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A915F27F170;
-	Tue, 10 Jun 2025 07:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DDAD280007;
+	Tue, 10 Jun 2025 07:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iFAOY6Sx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="poqreVVk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063AD279346;
-	Tue, 10 Jun 2025 07:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749540885; cv=fail; b=iaRNt2sl/948l1tCkrCqoWogOib4Wx+aM/gmhUpRukVk9+NQrcYfQl3mvpzdlMm4Ad3QMaVqJmxenEMKkGbuF7b8JNRocqtY4LszTftRzyAeNHV8e+jsy7y7VrGspzvhQwScFli4NknIZ5ZBH6ZTIF9PhiCZO8q503IJbRiCgcA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749540885; c=relaxed/simple;
-	bh=MMcDQ01bLSUATUGDhbUHh+QSfPLgHb5EhVRX3EgyVYA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R7H2m8TomRAtUy09pslwzqspFYkMlnG+APpoMgMXwExHPYK2p983/SgCsmobNDH6c7x2enmVoNiW/FRi4s1QVZ251OCrsA2blPm8QbGSHu4vfag+aQKozUEH2xlTqm7uEedUvE5R+jOfqLrje7hloGedqDW3br/P3UWInlRdPb4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iFAOY6Sx; arc=fail smtp.client-ip=40.107.94.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bInQnWDIz1V72hWPYrR5MFm6AsA4ObHdABOtP6lGIZ8PvjKg8diTZff+fCZNQYDxN54UBeV5YsEEQNBGYXs/NateI4agnqiRpiPdF5NSIeGOKY8b7wn243HTtnaxctwou/pdoE1Kzl3Ke7N0T54ROOCHHXzN+khk120qfDOxvRdu91o2x++0+qPvmS80BUFgZMToCmO5Ufu7Kcr7F7Qdne8DmtUgyn0v2+6igaI99T3TbVubCTp8ItrMnjHZ8nxkWSBk0Fkcu1OmBhmpZUCrg/I/cPDx50zKAN3HIXhY9uMw8BDaSFb6/5t6RONqLtqKcYshTMTxRYxjkE4jwjbbUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yAcPWhJOD2uC+8nD7DYGGpOcWzqUQnKUKJG27J3Ym1M=;
- b=xIXQ9jkh4ia39OsWb+RUYY5DFBIFc3SETMD4jeGXTcAGobzU17z8h7khWrnnPNuH41pUqNA+9DNBjfdtuhzphcVxkGFI5ErkLvaWL3OJPLrC16/z3euow9Tk/KqqbePzmbbvGMiWB48vDEewdBmiWKK9ib5ksVDSrLy2FpURNtW9Qw9vn2/RD4sKxf9C6KTJKGh4i5/Hh85vwR+/HmMUIoQBEieyxMYpFmVGR8FFKECEN7ql4Ha7CcJ/fof17N3ErZOUz/ztUTWSMggNE2fvdcT5cx0cuXp+lnpljolC5K1PgvjCY0IdiX9+laEazfY8V0w6FeVhcizhBAu5zkNIQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yAcPWhJOD2uC+8nD7DYGGpOcWzqUQnKUKJG27J3Ym1M=;
- b=iFAOY6SxyieqLQbrW08ehJaX0t2doNWQ35t9lTx8ZuMhz9K4aalSLptGErRZsK38e/fUfWvAUQzX/YubBIVp0sg5crRGgYRQveb6XfJ8qBmOG5ikJVgQ0gqInZeOenz9XmO4JTifjab4E7OEvR0hFXmGf7wGOX7688lk6wWQV7U=
-Received: from MW4PR02CA0003.namprd02.prod.outlook.com (2603:10b6:303:16d::30)
- by MW5PR12MB5623.namprd12.prod.outlook.com (2603:10b6:303:199::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 10 Jun
- 2025 07:34:40 +0000
-Received: from SJ1PEPF000023CB.namprd02.prod.outlook.com
- (2603:10b6:303:16d:cafe::39) by MW4PR02CA0003.outlook.office365.com
- (2603:10b6:303:16d::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Tue,
- 10 Jun 2025 07:34:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000023CB.mail.protection.outlook.com (10.167.244.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 07:34:40 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 02:34:38 -0500
-Received: from localhost (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39 via Frontend
- Transport; Tue, 10 Jun 2025 02:34:37 -0500
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Shubhrajyoti Datta
-	<shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
-	<linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM"
-	<linux-gpio@vger.kernel.org>
-Subject: [PATCH] dt-bindings: gpio: gpio-xilinx: Mark clocks as required property
-Date: Tue, 10 Jun 2025 09:34:31 +0200
-Message-ID: <dba4f2c39a25b54010c292c36e349cb289d6cd98.1749540869.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D0927F725
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 07:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749541844; cv=none; b=Phphn1/Ks/I9THCviGvw41aIMct9az/+2O0FaK4Gz7fmRLtjNKobog/vWpgfW49MY2mkDQI88ADCfvwfsmpsaF2Tv3/vsxM9hW7z71vE6xMr4BwAgbQYOQVv5SozXHbHDfSXIq2+7ZhGnbILLLJrahPmwIAkmIOR0YEaXbTXWs8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749541844; c=relaxed/simple;
+	bh=aylXY0fD9jtU9RKWhQdUU+HQSSOljGOWfssP28hVkH0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VOjm87DW42E1VA0vZRct/Ow0q5L3b1ojA+Na4InmOQiDCvNsqzdiJXnYOadJM1T1MOaC+3YBjQFO0G0OSmeaeoSCEHi0ISRCxFqoZ930zNddMde0kHoLcPtl1TvTSss537+DQfCEWxawV4r4K7bTUD+uyqkn8aVrjqbdGsXkUmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=poqreVVk; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so4261415f8f.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 00:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749541840; x=1750146640; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f69urfFCSti5WMTV70Nc/FzGuVlpnkYrMDHZnd1PHVE=;
+        b=poqreVVkK6eOtDf5oDViXIKagFYHVbtzu5T1ILzI0TmMQB3ro6EC2kzjY2Xq7zk2WX
+         ek9dGcxS9A9hJxb37lXp6QYLjtIqgvTy9tlFuGXb3aur4s4/0sYhLig19IeBpJ2vZjw5
+         /dJ53Ba6z8ITnJYjUkByf1viz482ZNBnSd3F65YrkyDd3jQRhupyE4E/PEfmqLkeGlYW
+         kcEm6tguEcdEUVVzYdA4k4O6WE4liBUL+9fs5yan5PIBXAUjPSqvQlFoM8jcrTXrIK+q
+         syCBlNvXHwCoM9EygsePtmD6KF5ySUZycnpTT2V648+Wsm+2NpUDn9LamouZkcny7llh
+         d/Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749541840; x=1750146640;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f69urfFCSti5WMTV70Nc/FzGuVlpnkYrMDHZnd1PHVE=;
+        b=csC8LZfZfKvM3kivWBVficfi6vXGJ/sCFtb7Or9+3FAP6vMd2ruG2rSLd4baog+KsL
+         d5ky2atN/F1YEdccM7AT9mbt8JgIcTjGgqgR5xDrs+JQp3KO+P+O4ypHV2dJO3TKyetq
+         r8reQZ5TPXfObh1MhmX+zs3teqag7ydFjtKltp8OmLYgLg5Ltnk7NKfhRx285aNvvboK
+         KovKFJmtg/1ESFZX/tPJcgfTroKLlpib+olG5WxK81UJlkNoaPBZnzf7oppyJYVl1MSJ
+         nCcBR+N1Bf++5UNuQtqX7Qma2RtfU4nfO2BDmM0bTgdcpFVgcbgMQhof8iqtEhpVzJ8+
+         SrGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNM+AD/lUnL4cN5ww2sXwcbfrD5XzZd+adxG2/AOVdhBtRQOQqR7ckTx+kw4rk2Yjbah85cnHxc/1d@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5ag5tJmzkySOxfl9myRFcbqf57ysKCLA5G9ZUpetXMP5b2WW/
+	hxTH/sHyGzsbn3FETYPhawDczgj1Bm1TE364panlbpQokrrKBWWHHTwBVimTMHPigN0=
+X-Gm-Gg: ASbGncsX2to+BBTJ48qW/EpJ0VPO8SNlJF5ffZbkL+w6FSybAu3YE8WMfe9FbmNO1nS
+	FmBLcczdXdLjOtSaoiB+klmwIoSLkWRyB1lKuSLAn2xhj/PuIYX9ExU31i+E42y6/cCyTDH/MWK
+	5v68a0Xf1mLW9XZq8zoLj6DuJQQgNcEddeG+xlIks7ZciTVQrI5NIO2KmQ8i4aziFC/P+qY8MZr
+	IaM2gjVJBDg2FDGsOY/w+gLhSBQRFXUewYxLdfqy97rhR5Hdq2VZYXy2bfGokxrbnO+Ea/JwLcn
+	+sJKw6/PbhipNr0HBReGuUhV1u/V1luozoNYHdUFoar2fJulhoiYNVRhfuq7hYMNsKxF0bQ=
+X-Google-Smtp-Source: AGHT+IHJS5OltWlxcQGohgzSoeXfBjAAYsHVehBaI6Ajdj5eG5a7KBWerZLHZw0/esrSsUbeETCcjQ==
+X-Received: by 2002:a05:6000:4205:b0:3a4:e5fa:73f0 with SMTP id ffacd0b85a97d-3a531ab51edmr12960167f8f.20.1749541839276;
+        Tue, 10 Jun 2025 00:50:39 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e163113sm130617095e9.18.2025.06.10.00.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 00:50:38 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Vincent Fazio <vfazio@xes-inc.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Erik Schilling <erik@riscstar.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH libgpiod v2 0/3] doc: add rust docs
+Date: Tue, 10 Jun 2025 09:50:37 +0200
+Message-ID: <174954183429.26552.12037557820886384586.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250605-rust-docs-v2-0-883a0a3872c0@linaro.org>
+References: <20250605-rust-docs-v2-0-883a0a3872c0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1470; i=michal.simek@amd.com; h=from:subject:message-id; bh=MMcDQ01bLSUATUGDhbUHh+QSfPLgHb5EhVRX3EgyVYA=; b=owGbwMvMwCG2mv3fB7+vgl8ZT6slMWS4P+AwnqeqblsZ57Sx0EH026v7X6ZPSZw8xSCGiWMW9 3rxXF6FjlIWBjEOBlkxRZbpTDoOa75dWyq2PDIfZg4rE8gQBi5OAZjI5b8M/zQiYlk7PML35CWd ZnjdIdHiPTv2N/uT+IcOU3PWlVydZMnwT3PrgYWz1imsDvLNSylRuiy6R3/Z+ZtvGVRvLM/6xWI uzQYA
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: michal.simek@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023CB:EE_|MW5PR12MB5623:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef8ca43e-fbb2-4634-d517-08dda7f1429b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|36860700013|376014|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?37YNhr7wbfCCRWORyYjxQQJWGUlLGMTiPnqw7/jwj1vx1G/yN1hTffu+fdgZ?=
- =?us-ascii?Q?ZOJYACb8lM4dv80TEPdM14SnI1NdTa4LbwUZC2WAqwbdg7v/PVXMfmmylhBI?=
- =?us-ascii?Q?ap5iVUOqe9/19YN5dINxo1RccT1b6D4rbOrMsl3Cgb0XnhlrwvhZGt9y/Uup?=
- =?us-ascii?Q?9yhiqetQN5B+2+FzT1phrQ1hYrRV7FTtjrA+RWuUz4mHwrBOfnXGj0/UVlvE?=
- =?us-ascii?Q?Tj3f6gyNpZcqm0YfT4RNg4FxT3KaKBsYJ1YmcSLoIVLLFJCkvfTxuowSnU0m?=
- =?us-ascii?Q?3ioVnXpPavdJeAinJjdGnZEf7gkaYCg0GD/PLJu5aqF/lbGG9I5NEkbzk/aO?=
- =?us-ascii?Q?JQSz2AL8IvCafZ6RzLpcsqeinEX93z6lwKTO324gPboq9tb5wkYbj+Yt67mY?=
- =?us-ascii?Q?1Ln5g+IAayVqbJXrRSZyJb6/WHYU+mDWU7iSNmg10/Gy7UJTMk7ZFtaeKX/W?=
- =?us-ascii?Q?1DVjAf4fO8UNTnQDrwM2mLOb/StwcAHDB9/J3d+CbHwu7/tWJQsPrE33FEP1?=
- =?us-ascii?Q?E84Na6BB+0kVdKGYUfjbuGkNUhwSxpIOHuhl7DetkZIbqY4ii4QI4ZpYIkcV?=
- =?us-ascii?Q?6DqaS9X8i9FCCeU+HzEQ7jaja/fT1clQo915LCynpsbZlgPxyQy0PLdIo420?=
- =?us-ascii?Q?KYP5YI4OWTtE07dcS+XaEZ7+HSFGb5uGsA4UsWYPtX7fqzcb/ZZT8hLFpa0Q?=
- =?us-ascii?Q?K+K4OVyuSKjy0tWlTItmZ0zJa5Z/BmTkhzZzXFDg4TIEygly5aL3x64pLMXm?=
- =?us-ascii?Q?634FZo0ol4P4u3SAccYFZjOghZzNQj3vLJHmB+aSp107QkhDyc84TzbM5eFZ?=
- =?us-ascii?Q?ENJjrsg/2L64HTC9xXv+rQJuyIscoSUzZr9LtUgHd+oqQEp+FTmDpxyYktBK?=
- =?us-ascii?Q?v1q8tFxfNX6cMHTSTLmjYwwNg3tVPjpLB2Qcg0eLwrFCoH6JGfhPwK9wnbym?=
- =?us-ascii?Q?R8qjioFRb6k1jUSwuI8rFsScqk5dfwYqMAwJnNdcv/BjRiZXhDyD0bn0pq23?=
- =?us-ascii?Q?1wxgIsc6NWElEFWNnraKd6JtWXo9OVk2bH7KosWovOAnbDdt/Peri9Aw2i+8?=
- =?us-ascii?Q?ZgdDKHHWPJ5uJ+2W3rqcy5UvMS3seSq1oNkMsjI4FHA+rChjw+A7rpW5dWZR?=
- =?us-ascii?Q?Ixn50M0FHiqkE4L0OM8hvXVt0iUtby5gX+a9ziZfaBgPU2d4eXNAWi/AOlSX?=
- =?us-ascii?Q?vT68o2Yt0SHomEgZ7cAbEeZueERIpcV9SMBWDp7c5qx3TvBJDgrpS/xBT7Io?=
- =?us-ascii?Q?1J9scigGVJeCRrN0mk8fu3VweI5CAA/IGdkE15CrsvxOq8Q8yYVjaeTM0V/B?=
- =?us-ascii?Q?LaVkjeiBgRxO2+XBpIooCKaWfOcvmnusNZJohkkeyJekp7l5RbS6ZuijP3ku?=
- =?us-ascii?Q?+l4NuKl1TO2RNVPYyPpSTo9NWl5Td9x1teMvRJJfXn+YplsGZCkoUf1T2b5w?=
- =?us-ascii?Q?Vta6AUjN8cZ4/+xDvHhokK2pVzqiqm+Sgtyu2JZGGuM24RLGjXcSIA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(36860700013)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 07:34:40.1607
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef8ca43e-fbb2-4634-d517-08dda7f1429b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023CB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5623
 
-On Microblaze platforms there is no need to handle clocks because the
-system is starting with clocks enabled (can be described via fixed clock
-node or clock-frequency property or not described at all).
-With using soft IPs with SOC platforms there is mandatory to handle clocks
-as is explained in commit 60dbdc6e08d6 ("dt-bindings: net: emaclite: Add
-clock support").
-That's why make clock as required in dt binding because it is present in
-both configurations and should be described even there is no way how to
-handle it on Microblaze systems.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Michal Simek <michal.simek@amd.com>
----
 
-Based on discussion at
-https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
+On Thu, 05 Jun 2025 10:13:18 +0200, Bartosz Golaszewski wrote:
+> While full integration of Rust docs with sphinx is currently hard, if
+> not impossible, we can still follow the pattern we used for GLib
+> bindings and generate the docs using cargo, then linking to them from
+> the sphinx page.
+> 
+> While at it: fix some minor issues in conf.py.
+> 
+> [...]
 
-Actually this shouldn't be only targetting GPIO but also for example
-xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
-before starting to check other bindings.
+Applied, thanks!
 
----
- Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml | 1 +
- 1 file changed, 1 insertion(+)
+[1/3] doc: reformat conf.py with black
+      commit: 1c4199e56b74162838a9510097302e3a79fe4190
+[2/3] doc: improve the readability of the prefix variable
+      commit: 4b779774dbe73acc15e29b0b53b548248dcb8202
+[3/3] doc: integrate rust docs into the sphinx build
+      commit: e4427590d9d63a7104dd5df564dd6b7b0c784547
 
-diff --git a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
-index 8fbf12ca067e..7af4eb2d1858 100644
---- a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
-+++ b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
-@@ -117,6 +117,7 @@ properties:
- required:
-   - reg
-   - compatible
-+  - clocks
-   - gpio-controller
-   - "#gpio-cells"
- 
+Best regards,
 -- 
-2.43.0
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
