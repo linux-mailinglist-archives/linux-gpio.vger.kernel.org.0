@@ -1,65 +1,55 @@
-Return-Path: <linux-gpio+bounces-21220-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21221-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E433AD3980
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 15:39:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E9C1AD3A39
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 16:04:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3AF19169129
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 13:36:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34D4F17222B
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:04:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D488723ABBF;
-	Tue, 10 Jun 2025 13:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2442729B8D2;
+	Tue, 10 Jun 2025 14:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6WUHSa73"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="P1KTZe1X"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-71.smtpout.orange.fr [193.252.22.71])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2BA246BB8;
-	Tue, 10 Jun 2025 13:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B412949FF;
+	Tue, 10 Jun 2025 14:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562567; cv=none; b=Xp7zvYKu7ZwSCJRpjx0WdGR3KZqtD50q7E5CHRxoN2yVnYJCC7OMKywsr7SB96iAAf24RoeLwln2mhLXUU33YUU3AXtVrR8LE1aqs/E10ElcdLFqf5FSVlVrpolSCfWTSIyJm6WNmSgg25p1VT3TQvhUBHWJGHoC4J3uOqUMlao=
+	t=1749564291; cv=none; b=ORZnMKCc9JtM/hqcD7iOpuRjomqCfNbWc2alIWFQfQzHf+4gWtxPC87s/pL4Wt0iyRS/D+/BsOqbS+0MZ2JQMgCPEkNyaFAeuxIrpXtciG9DvAUlhwp50UoIWHBwEc9r2WBfjApK5mGePrau3qsKO8TbKtPAvzuxUDxxVlu4A44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562567; c=relaxed/simple;
-	bh=fpHJTV2BNny41O0KRlvrEr5Kwkx/Fp9ZACNun1M2bKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JFUgV214y9MxzdWrEXFC9bQLdyoeqVlTDsCk/Q4nDYIgke6w1i/iWYraq4zgzlUOXZHOR1oxbUHo4WSorECdMbwKky/gxhDFPaVZeEDWK3f4FU4lEg1IWVXTkqg/rsouEqV5KoTooMkQbVFShnwJ1GJdmcM12sOsGrJgcMfDNEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6WUHSa73; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLF7Y032713;
-	Tue, 10 Jun 2025 15:35:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	42qeGfPPG3Jy7TK8jhUurPhAnYCLeXZebkDWKVesGp8=; b=6WUHSa73SzuDwV+S
-	TnHceYDj6QtlhgnwIjJFSqEPVZV/NELe5/hM+nEMjhe205l0mg3+ZHgnKeiRPcWb
-	Q8GqAQNLUvn2jf5pmrSGbz6K61eM5T2Rn1cyoIo4kuEn8WdsUugpp2W3OcbKmfL1
-	XD8zE9KrTm2b1mdoErCSlrhGeNDxNhkcc2NRnlHYW/b3a9cU8BgBRzBjeik9Ta1g
-	o5Z/NRI2lP0GZpt0v8t1mUzeehlGQ28N28ZQtUToVPIxdVDc+JfI5FRU813vvj4x
-	xxxmbP2+hoMbFzbrUDx61zVjD9VglNArYLkrmHUt8lbnr1o04MbQVJwePkiQUcwU
-	4zl3JA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4750cnt341-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 15:35:51 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5A9E140045;
-	Tue, 10 Jun 2025 15:34:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7F44EB5F91C;
-	Tue, 10 Jun 2025 15:33:54 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 15:33:53 +0200
-Message-ID: <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
-Date: Tue, 10 Jun 2025 15:33:52 +0200
+	s=arc-20240116; t=1749564291; c=relaxed/simple;
+	bh=GtKVuDpQozzRxBMPBU/w2lBolsv0hs5W4XqJxSU4vlQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E5xBpF6CpYNpisvcj4yjZh7+iUC2i2y3lxEKg7EPN4QLP2zmiVcabhK7FQanVGA5BwJrtsVvU5Xi+IRjN/mDEjEbJmaj7MHfBo5p589KpcDuuqvtnNrGi3oQPyKHIOFdu8IGigOGeVhryaV49TbvMDFQyY7ms4O/MBbWR4Nh/TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=P1KTZe1X; arc=none smtp.client-ip=193.252.22.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id OzRPua8DmtcjXOzRWucHgO; Tue, 10 Jun 2025 15:55:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1749563722;
+	bh=Wos0TNL78fyhGvrTFiYrEZxgYaMHol2UDLlgx/6hyNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=P1KTZe1XOW4D9HHqh6ZcZ6lv4WTcn/C7pVhRAa1+zaEydyluMc6OJtiq4BSuGvwo4
+	 zZ6F8wPPNkIkgGWGp/7Kyz2SVyDorWCGgcbNdx52rvy4HTnz+/LXR4Ge5+jVFOYWcL
+	 ToqLT+TnHFeMaIpGMdK2C0vGayPFMxyqHv/UlevhhFAUGG+IEbv6uZRYU6vt3W+X6b
+	 jNkofwCMDpTA15G3gbYju8BKiSvLoIgQj3Oo393CFWP4cRNRLyvTi0il1sTGjZ0QHr
+	 7JBMs8s9gzJV3uKUgQama8YgXie5Mjte3Jg4AaIMGKQwPs5boHg6UVLzq1JoWP7jOQ
+	 VG2tBogHDMxng==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 10 Jun 2025 15:55:22 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <b2f87cff-3a81-482b-bfdd-389950b7ec8e@wanadoo.fr>
+Date: Tue, 10 Jun 2025 22:55:02 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -67,88 +57,129 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp13
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
- <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
- <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
- <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
- <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
- <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
- <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
+Subject: Re: [PATCH 3/4] net: can: mcp251x: use new GPIO line value setter
+ callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ "Chester A. Unal" <chester.a.unal@arinc9.com>,
+ Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>
+References: <20250610-gpiochip-set-rv-net-v1-0-35668dd1c76f@linaro.org>
+ <20250610-gpiochip-set-rv-net-v1-3-35668dd1c76f@linaro.org>
 Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <20250610-gpiochip-set-rv-net-v1-3-35668dd1c76f@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
 
-On 6/10/25 14:38, Krzysztof Kozlowski wrote:
-> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
->> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
->>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
->>>>>
->>>>>> +		};
->>>>>> +
->>>>>> +		hdp: pinctrl@5002a000 {
->>>>>> +			compatible = "st,stm32mp131-hdp";
->>>>>> +			reg = <0x5002a000 0x400>;
->>>>>> +			clocks = <&rcc HDP>;
->>>>>>     			status = "disabled";
->>>>>
->>>>> Why are you disabling it? What is missing?
->>>>
->>>> Nothing is missing just disabled by default.
->>>> The node is then enabled when needed in board's dts file.
->>> Nodes should not be disabled by default if they are complete. That's why
->>> I asked what is missing. Drop.
->>
->> Hi Krzysztof, OK I better understand now.
->> So yes the 'pinctrl-*' properties which are board dependent are lacking.
+On 10/06/2025 at 21:37, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> These are not properties of this node.
-
-Does this mean I should add 'pinctrl-*' properties in bindings yaml file ?
-I don't get it..
-
->>
->> In the last patch of my serie I add them (only for stm32mp157f-dk2) but
->> keep it disabled because the pin is on an external connector (the
->> Arduino connector of the board).
->> This prevent any issue with a possible connected module.
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 > 
-> Not relevant. Pin control for connector are board specific, but pinctrl
-> SoC part is SoC.
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-I think we don't understand each other here too. I don't understand the 
-end of your sentence "pinctrl SoC part is SoC".
+This does not match the address with which you sent the patch: brgl@bgdev.pl
 
-Maybe some informations that could help:
-The 'pinctrl-*' properties are used in the HDP case to select the 
-internal signal to output AND the alternate function on the pin to 
-output the HDP function.
+> ---
+>  drivers/net/can/spi/mcp251x.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+> index ec5c64006a16f703bc816983765584c5f3ac76e8..7545497d14b46c6388f3976c2bf7b9a99e959c1e 100644
+> --- a/drivers/net/can/spi/mcp251x.c
+> +++ b/drivers/net/can/spi/mcp251x.c
+> @@ -530,8 +530,8 @@ static int mcp251x_gpio_get_multiple(struct gpio_chip *chip,
+>  	return 0;
+>  }
+>  
+> -static void mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> -			     int value)
+> +static int mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> +			    int value)
+>  {
+>  	struct mcp251x_priv *priv = gpiochip_get_data(chip);
+>  	u8 mask, val;
+> @@ -545,9 +545,11 @@ static void mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
+>  
+>  	priv->reg_bfpctrl &= ~mask;
+>  	priv->reg_bfpctrl |= val;
+> +
+> +	return 0;
 
-> Best regards,
-> Krzysztof
+mcp251x_gpio_set() calls mcp251x_write_bits() which calls mcp251x_spi_write()
+which can fail.
+
+For this change to really make sense, the return value of mcp251x_spi_write()
+should be propagated all the way around.
+
+>  }
+>  
+> -static void
+> +static int
+>  mcp251x_gpio_set_multiple(struct gpio_chip *chip,
+>  			  unsigned long *maskp, unsigned long *bitsp)
+>  {
+> @@ -561,7 +563,7 @@ mcp251x_gpio_set_multiple(struct gpio_chip *chip,
+>  	val = FIELD_PREP(BFPCTRL_BFS_MASK, val);
+>  
+>  	if (!mask)
+> -		return;
+> +		return 0;
+>  
+>  	mutex_lock(&priv->mcp_lock);
+>  	mcp251x_write_bits(priv->spi, BFPCTRL, mask, val);
+> @@ -569,6 +571,8 @@ mcp251x_gpio_set_multiple(struct gpio_chip *chip,
+>  
+>  	priv->reg_bfpctrl &= ~mask;
+>  	priv->reg_bfpctrl |= val;
+> +
+> +	return 0;
+
+Same as above.
+
+>  }
+>  
+>  static void mcp251x_gpio_restore(struct spi_device *spi)
+> @@ -594,8 +598,8 @@ static int mcp251x_gpio_setup(struct mcp251x_priv *priv)
+>  	gpio->get_direction = mcp251x_gpio_get_direction;
+>  	gpio->get = mcp251x_gpio_get;
+>  	gpio->get_multiple = mcp251x_gpio_get_multiple;
+> -	gpio->set = mcp251x_gpio_set;
+> -	gpio->set_multiple = mcp251x_gpio_set_multiple;
+> +	gpio->set_rv = mcp251x_gpio_set;
+> +	gpio->set_multiple_rv = mcp251x_gpio_set_multiple;
+>  	gpio->base = -1;
+>  	gpio->ngpio = ARRAY_SIZE(mcp251x_gpio_names);
+>  	gpio->names = mcp251x_gpio_names;
+> 
+
+Yours sincerely,
+Vincent Mailhol
 
 
