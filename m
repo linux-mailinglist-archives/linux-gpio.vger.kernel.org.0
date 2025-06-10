@@ -1,115 +1,110 @@
-Return-Path: <linux-gpio+bounces-21165-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21167-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10233AD3581
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:03:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04C83AD3593
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:07:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9EE83A8B0F
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:02:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29C5C17619B
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 12:07:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1691226161;
-	Tue, 10 Jun 2025 12:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 130C028DF4C;
+	Tue, 10 Jun 2025 12:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L4840hl8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I2Cr7Xjc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC7722DA14;
-	Tue, 10 Jun 2025 12:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFE928DF10
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 12:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749556990; cv=none; b=accdPfhBfNe8YBEHBoYkukBtHuJ7GFg+sLQLrQ3nNX2wmdBzVvJOxGxscMybUMn7Rr/31MkXPex4V0idqjxOnV2D9hq+yF9tMxl/fucIfL8bRZUBTvLccFdsNESvmKt+8mseQ+9r4Mu9TNA2bacUyOTOrNgkBSHQmg9QJ29SkS4=
+	t=1749557225; cv=none; b=oRo3Odp2JR0kJ1FFhp0cAPk78oHem/8QN1gQAtDeMKrE94en1XvSIFB1BBbnCQ/V4WOqOPGji7RayzMxMNdosMoWDaoJAZbvmpoJxt+G4a8C7OJpGp9tBPh+Ile6D1khGrUy9cA99bf5D+F8/gVILEWu+vOdMhLZ43/6ZWxr0aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749556990; c=relaxed/simple;
-	bh=QmWiAygvj8edZR+MhBol5WXAZW9ghl6ZqYJhUHNoB1Q=;
+	s=arc-20240116; t=1749557225; c=relaxed/simple;
+	bh=upEgacp7mnJpqnEV2jZLm7bdZrVLCTZ4Uj3awIoWIUE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a3ofoEFRF+Ny2lfCV6X/0qD1oryUBo+aqCQpNffr9eqzACS1HRwOSfhW/SUXgk46b5y0l75pGbk0tL5dBiA0rm7S+1cWgUK2oCDqUSoUMODCwxWZrR+xrsZkdWY8wMOn9pQHma4paI2nFBOq95mRnLmtShmwAaBkh6+0+fmJrrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L4840hl8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A19BC4CEF5;
-	Tue, 10 Jun 2025 12:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749556990;
-	bh=QmWiAygvj8edZR+MhBol5WXAZW9ghl6ZqYJhUHNoB1Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=L4840hl8uQKdsxX9qnd5byyA7sAgQEdNhdt48OJX0fbDN6H/CUWUvrxJxcugSfCUv
-	 jFqBuPPvIxOb4HB+lFlUHsC7VxQxMIXTjBRyuK7zoTd8ufpiV5w/sa2JmkcWv+/KCU
-	 tyW//EV0/BVGetwgPPqqfm+qZTPAnALSnHoX0L6KPieWGY2Twn2usB/MQqn8onOk5p
-	 OiXXUa4H9D2PDTmtLHs3xh+Lmj2g7uscnSJaB5qSCVILYz7HTzoY76DwAgzNnGMGP8
-	 S4Mp1HVO7U5hinauqkAnNW/cZOeZTHcsmYYBJ00ncIQichhHyd6K1YNyCkB8YeEysT
-	 KLT+UFhQ1fQuw==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-607873cc6c4so7625217a12.1;
-        Tue, 10 Jun 2025 05:03:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUtanjRiQkoAf+m61bJCx9Vr9zAHuAYmtLTl6UOSnnPPkj7zz91k+e1YncZuZOl11QKuA/Qkb/5@vger.kernel.org, AJvYcCVktvJt5+yc4E+Tef8evfPkc0hgppMRj79VJ+gzxHBlvz1cKAcxBH+LFAFvYlMGENN4IwWhrlFILfke@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhTo0bNc9PA8CXpyIaDQh74U8ERF85OMrduq3NjJn6Bhfjf1Iv
-	DAslwS6moAbXKPBAQ1RCK4nS/XyJ4/0oD8eMGfjB1FEkVwYk9P03rsXUOXj7YI1TcwISdSqwewD
-	1o3rNXbMK//fgzGCAjwx3/jAQA0PTfOI=
-X-Google-Smtp-Source: AGHT+IFHCHL/ee2hFn9QEyn33ksXkw1BklvfIvjLzbDrvdjzzKtCaI+6os+z1UUnWFSFYHKinnnCWpQbo2OQNAi04jo=
-X-Received: by 2002:a05:6402:40c6:b0:602:a0:1f2c with SMTP id
- 4fb4d7f45d1cf-60818622f77mr2923922a12.9.1749556988625; Tue, 10 Jun 2025
- 05:03:08 -0700 (PDT)
+	 To:Cc:Content-Type; b=kTYv8ec++uhe28Cg7/u3sD1ELgBl7okw2nzqqghmfyy/altucHCmz7HWrNlX/WL1VyPAps92tWuMNhylSDSHYVw8VyeONyiJjC9DB6621rrFLGZBpno7oEW1J4k7pNDBl43a8pJaUwVn5kJADepiKVY72pzKlBnYQ3XXcwEvk1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I2Cr7Xjc; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32a9e5b6395so49812701fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Jun 2025 05:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749557222; x=1750162022; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=upEgacp7mnJpqnEV2jZLm7bdZrVLCTZ4Uj3awIoWIUE=;
+        b=I2Cr7XjcL6Qqwdyyk8lEcpav4v4NYbibMuKkuNCyWCLV2vwu8n6d+Lp/wRLAoCAFb4
+         f8S3onkfwz/AZ/YLNKxTxdSqPGITGRNfO0mNQcwTsqni5VsTD/3LjoOCD+HFdRT7Db3q
+         aN+ZVgwlQh1Kh00vXlGrgvZjtMRdWdAFKgTdk5Bf9xfdZX+jRcehCoEDw0vMqeo7vnV7
+         fex+mmoZUVsI5lkqDCV5eYxkLtT/S3FiX/TwedMUvsMNWrASwQim2BiAKNChrZ1APfKz
+         CCSbUdwNC7ZzGOxqZOpJg0enroMSvqJisuGKxogj7zrY+dtSLueDsqRPvjUiYPQhI3CF
+         JgxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749557222; x=1750162022;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=upEgacp7mnJpqnEV2jZLm7bdZrVLCTZ4Uj3awIoWIUE=;
+        b=D8NSsV7jVTr++0wVwiCLa1qgJWBb0STYeaIOEupO9T8xi4/8/BsGGDkEVLJTrj1bM6
+         4mnrkUmrAxxDRc7204vXqsE06zrgMF8llAxhUO7e1yFm2y8rm2jIzj+TaqjUC3qdx7ST
+         GhlnAYh0J/BNnpCqJPREdnQqIqmHKZEcQpt1s0m+F7KX+TlzyvDIlaRRKc3pnZFKCNv0
+         KdtLyK4q7/cgVtvQfH6OWVL7MNgimnuOz5/f3dRinuqQD0y7Yr9VczjncvtFVVSaNCPX
+         HROmK6aUmsztkWmhgW7PLkBgkzDLPBAATZQy7MkmulzUra8d63HrEyfUHL4l1bj8NOFu
+         5bVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxTB/VjlogUoSUlKs8uYchkvLsGWvBTH3i/U+leHdHNIKuKo+MErme4qv5D4bPBgkUkzlFwpIi7Zya@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwELjPHCHeNDfmPy5GtExiHaxalp+axKEesO8AC8Nl8ctSMf+g
+	3ET7sP29EFu2ouSQNxz2Oxf8b1UvNfTqd/DzlZXXlWENPD047LhgxbQ6vjfozfWWb/lqezdvDkW
+	B4jMxtDd9fJQgNH8z9oWtLzEuROv1d4oF5YfqExVm3Q==
+X-Gm-Gg: ASbGncuZrD48F5KIGQcwfoqw8QhEZq9apwZ8ysslK4HXQNy7/hAtnS8kbSDnseCuX98
+	6H+dNDYld6idbB+uxTLGMRGzcZUwwywWmyT3DIN+9Sru/2JyNnrymSXPzIdCz8CjecjXC8RZj0v
+	l16aGsZKYBRrccXD0EE7AOTBxEvf1BnJWQBm/HRRpQL6hfPtpUZzMIvA==
+X-Google-Smtp-Source: AGHT+IEqz0WMqtI0x3GGlKwfWemlBSbd12UaQPMKKY+qV7hhxbjKafYK8sYr8Wg2JEL7ScFpC5Ui0NiE4JM2Acs5Gg8=
+X-Received: by 2002:a05:651c:220d:b0:32a:ee4e:56ad with SMTP id
+ 38308e7fff4ca-32b1533b1aemr8972041fa.33.1749557222298; Tue, 10 Jun 2025
+ 05:07:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610115926.347845-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20250610115926.347845-1-zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 10 Jun 2025 20:02:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Aq=GoJpY6KH9FQX_RcPfx0D9XUtjjVf=ZfxEdhj93mQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuMIhw27w0kkeHJL2qow9985_yOnSIrlzLWYAsJ60bLBiVLgnww5FP0JEM
-Message-ID: <CAAhV-H5Aq=GoJpY6KH9FQX_RcPfx0D9XUtjjVf=ZfxEdhj93mQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: loongson-64bit: Correct Loongson-7A2000 ACPI GPIO
- access mode
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-gpio@vger.kernel.org, stable@vger.kernel.org
+References: <20250523094319.10377-1-ot_cathy.xu@mediatek.com>
+In-Reply-To: <20250523094319.10377-1-ot_cathy.xu@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 10 Jun 2025 14:06:50 +0200
+X-Gm-Features: AX0GCFuHU7ZhdHSe32gs089Kj2im6LDUCERAjIX60g6Meb5i30AmFDVd_Qjjj2o
+Message-ID: <CACRpkdaGMiNwBAa60hFzsboV3JCj=sWVz-NKah=eNk+vVnUHVw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] pinctrl: mediatek: Add pinctrl driver on mt8189
+To: Cathy Xu <ot_cathy.xu@mediatek.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
+	Lei Xue <lei.xue@mediatek.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	Yong Mao <yong.mao@mediatek.com>, Wenbin Mei <Wenbin.Mei@mediatek.com>, 
+	Axe Yang <Axe.Yang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-
-On Tue, Jun 10, 2025 at 7:59=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
+On Fri, May 23, 2025 at 11:43=E2=80=AFAM Cathy Xu <ot_cathy.xu@mediatek.com=
 > wrote:
->
-> According to the description of the Loongson-7A2000 ACPI GPIO register in
-> the manual, its access mode should be BIT_CTRL_MODE, otherwise there mayb=
-e
-> some unpredictable behavior.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 44fe79020b91 ("gpio: loongson-64bit: Add more gpio chip support")
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/gpio/gpio-loongson-64bit.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loong=
-son-64bit.c
-> index 26227669f026..70a01c5b8ad1 100644
-> --- a/drivers/gpio/gpio-loongson-64bit.c
-> +++ b/drivers/gpio/gpio-loongson-64bit.c
-> @@ -268,7 +268,7 @@ static const struct loongson_gpio_chip_data loongson_=
-gpio_ls7a2000_data0 =3D {
->  /* LS7A2000 ACPI GPIO */
->  static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_data1=
- =3D {
->         .label =3D "ls7a2000_gpio",
-> -       .mode =3D BYTE_CTRL_MODE,
-> +       .mode =3D BIT_CTRL_MODE,
->         .conf_offset =3D 0x4,
->         .in_offset =3D 0x8,
->         .out_offset =3D 0x0,
->
-> base-commit: e0d4a0f1d066f14522049e827107a577444d9183
-> --
-> 2.47.1
->
+
+> This patch series introduces support for the MT8189 pinctrl driver, inclu=
+de
+> the driver implementation, new binding document and pinctrl header file.
+
+Cathy will you rebase & resend this patch set based on v6.16-rc1?
+
+I think the code is ready as long as the device tree bindings get finalized=
+.
+
+Yours,
+Linus Walleij
 
