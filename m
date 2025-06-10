@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-21227-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21223-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38A0EAD3B38
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 16:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D6BABAD3B2E
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 16:33:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 233AB1885C5B
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:34:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E0BB189D4E8
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Jun 2025 14:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BEB219CD0E;
-	Tue, 10 Jun 2025 14:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93A9B19E992;
+	Tue, 10 Jun 2025 14:33:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="FTtIne1W"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="nfTY66za"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B403166F1A;
-	Tue, 10 Jun 2025 14:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B49246BA4;
+	Tue, 10 Jun 2025 14:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749565987; cv=none; b=IPQiHDwnbVQNm15np5wyaY0HvOb/0qZnV3Yc82hIkQ8CmCarGm1rYZ++8Sg51YugTSVpp1XvTLmoECMIkFFx4ywYyL+BQlCH8YsYykDyHpLEVZWQBqBR1Z5swi2VrALj9P2g/sXSbEzv1IISHG0KEtS0vMOBRrS2iNExYMzpXgg=
+	t=1749565980; cv=none; b=ANH/xRnJM0BqDZHKjo45cN2LFLYH1AChfw7NQPO8PHtshwTs58MLCYgzHcoQ4Kui82snqxa3ff2bMY90PhPjIJhe9ZrVItUZYOAR4jyjuU28qQUmMp/ZOGSS/V2zSqToaaM6pMG2RJVLq8Vx/N0xMtZ7jaGJoM2jaeKk+mEBjkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749565987; c=relaxed/simple;
-	bh=pvAKjjx1v66VECVXQbs5rBOd9Ls/LRJQzConIAFKaZo=;
+	s=arc-20240116; t=1749565980; c=relaxed/simple;
+	bh=mGM9I70m+qDSEJRukuPmO8m4OrkGWT9TxJfQIBK8xhU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B0Y7Wb42sFT96ogc7Ib0sqdH60TVsu8WWB9/gXgCdomXlOxa+VFGeCNUsgD19pWKSpRtr6NsspXzCf+2ldfmPA4xC0FZHVwJJmGr4DOn6yls4/uNnQ8muOPQehbh6PWRepv/V5WzLrVEs4STRbJSJHG6fVQAqQPu+cEaPkTfYr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=FTtIne1W; arc=none smtp.client-ip=185.132.182.106
+	 MIME-Version:Content-Type; b=tpuc0bkWrEdk9LPYAGYuiNEPjxrchslIhIsOeL8Q4vw/0Hrs/+rnNl83PNm3uZ8XOqxff+zw+ZomKI6Hwc2JDBB835ioSaEQOAbPwQ9oAVpsGowRHN4KNJFOXjuRgKMU5CZghvKGx+OV3lGm8i8j7vRnDomC5+AgXl+GQMkfJnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=nfTY66za; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLEH4010672;
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLD46020329;
 	Tue, 10 Jun 2025 16:32:46 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	QY6qi/R3mC6I0PBGDy1HO7PBzARIBULA1F9iuDzkGGs=; b=FTtIne1WwKDShxW6
-	qiQ75QMff5a8dSHQnou5WWxhav1a1CpZObjO/GlW35ywTJKm2JaNYiiTpoAurTJ3
-	Ol8HWttCSXxp8rjcp6HzykV7MEmhQzh28cZ7E3WvMYfioDZcM0ESVmLXYTvHH/yL
-	7jegI0dRQ77ToqyRlJCQHH2FbFvVzXgTjZq8wq/eSWI78aSq6LWEnr3lnG3QV4qo
-	3IeWdoGkBlbqLXNNSmFTHYwAJBR0POkO91sO1IgLI1a2MYyGtHzvpgIo1Wohml3X
-	brWHJXImgQtDINoMZWEoMCW5nPh5y+ZfyG45NMLQo+JeXWBfGdgtk0kWIAD3+NVg
-	o1daxg==
+	f1YjJZ+rVA0yqOXQO5b73/Moyy7cIi0WrLG+x3W7mq0=; b=nfTY66zaPBEo3liu
+	PuSm0b9RxZfTywjshCTMt5PTCY+GpD03ftSvm6NXO8SXRx6GtGaB7z3aN0ZiX2hH
+	BmtFQ6XNZcqe7cDvCGlENwyl5QA1iJfpm9hSQp98nao+8g0LBGrNp2ed++04vh4F
+	wzXihVJE2Ns3NFK87mklPXKiCd/iLVGN1ftd9bs3Rfn2WwM1B5W8jTkmD7XB9QLz
+	k+q0kPgKzaF9gmPz6k4YzmUJpYXaLqwEJ69SshDlGswediR0A3bocuVnIN4Khtqa
+	U44YNeFTBquxtMIuTsj7POHlA3ok9EBhN6zY7t3ltRM+dBOOO5RN0M8CAjVYEAXc
+	K2EDNA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y0531dr-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aja4vty-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 10 Jun 2025 16:32:46 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C99F54005C;
-	Tue, 10 Jun 2025 16:31:39 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5820A40061;
+	Tue, 10 Jun 2025 16:31:43 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B855FB37BD5;
-	Tue, 10 Jun 2025 16:30:46 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4F686B37BF4;
+	Tue, 10 Jun 2025 16:30:47 +0200 (CEST)
 Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 16:30:46 +0200
+ 2025 16:30:47 +0200
 From: Antonio Borneo <antonio.borneo@foss.st.com>
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -70,10 +70,12 @@ CC: Antonio Borneo <antonio.borneo@foss.st.com>,
         =?UTF-8?q?Cl=C3=A9ment=20Le=20Goffic?=
 	<clement.legoffic@foss.st.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2 1/5] pinctrl: stm32: Declare stm32_pmx_get_mode() as static
-Date: Tue, 10 Jun 2025 16:30:38 +0200
-Message-ID: <20250610143042.295376-2-antonio.borneo@foss.st.com>
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Cheick Traore
+	<cheick.traore@foss.st.com>
+Subject: [PATCH v2 2/5] pinctrl: stm32: Manage irq affinity settings
+Date: Tue, 10 Jun 2025 16:30:39 +0200
+Message-ID: <20250610143042.295376-3-antonio.borneo@foss.st.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250610143042.295376-1-antonio.borneo@foss.st.com>
 References: <20250610143042.295376-1-antonio.borneo@foss.st.com>
@@ -91,59 +93,32 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
 
-The commit acaa037970f6 ("pinctrl: stm32: Implement .get_direction
-gpio_chip callback") exported the function stm32_pmx_get_mode()
-and the struct stm32_gpio_bank, but these were never used outside
-the file that defines them.
+From: Cheick Traore <cheick.traore@foss.st.com>
 
-Declare the function as static, drop it from the include file and
-drop also the struct, not anymore visible outside the file.
+Trying to set the affinity of the interrupts associated to stm32
+pinctrl results in a write error.
 
+Fill struct irq_chip::irq_set_affinity to use the default helper
+function.
+
+Signed-off-by: Cheick Traore <cheick.traore@foss.st.com>
 Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 ---
- drivers/pinctrl/stm32/pinctrl-stm32.c | 5 +++--
- drivers/pinctrl/stm32/pinctrl-stm32.h | 4 ----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index ba49d48c3a1d1..3abf47e31c019 100644
+index 3abf47e31c019..e0e3e649976b8 100644
 --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
 +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -122,6 +122,8 @@ struct stm32_pinctrl {
- 	spinlock_t irqmux_lock;
+@@ -413,6 +413,7 @@ static struct irq_chip stm32_gpio_irq_chip = {
+ 	.irq_set_wake	= irq_chip_set_wake_parent,
+ 	.irq_request_resources = stm32_gpio_irq_request_resources,
+ 	.irq_release_resources = stm32_gpio_irq_release_resources,
++	.irq_set_affinity = IS_ENABLED(CONFIG_SMP) ? irq_chip_set_affinity_parent : NULL,
  };
  
-+static void stm32_pmx_get_mode(struct stm32_gpio_bank *bank, int pin, u32 *mode, u32 *alt);
-+
- static inline int stm32_gpio_pin(int gpio)
- {
- 	return gpio % STM32_GPIO_PINS_PER_BANK;
-@@ -798,8 +800,7 @@ static int stm32_pmx_set_mode(struct stm32_gpio_bank *bank,
- 	return err;
- }
- 
--void stm32_pmx_get_mode(struct stm32_gpio_bank *bank, int pin, u32 *mode,
--			u32 *alt)
-+static void stm32_pmx_get_mode(struct stm32_gpio_bank *bank, int pin, u32 *mode, u32 *alt)
- {
- 	u32 val;
- 	int alt_shift = (pin % 8) * 4;
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
-index 5e5de92ddd58c..8790fef2d58a2 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.h
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
-@@ -65,11 +65,7 @@ struct stm32_pinctrl_match_data {
- 	bool secure_control;
- };
- 
--struct stm32_gpio_bank;
--
- int stm32_pctl_probe(struct platform_device *pdev);
--void stm32_pmx_get_mode(struct stm32_gpio_bank *bank,
--			int pin, u32 *mode, u32 *alt);
- int stm32_pinctrl_suspend(struct device *dev);
- int stm32_pinctrl_resume(struct device *dev);
- 
+ static int stm32_gpio_domain_translate(struct irq_domain *d,
 -- 
 2.34.1
 
