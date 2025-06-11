@@ -1,122 +1,124 @@
-Return-Path: <linux-gpio+bounces-21404-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21405-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88811AD5A4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 17:24:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BC43AD5A3B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 17:22:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0820189B829
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 15:15:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7D2D164B2C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 15:18:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCBA81CAA6D;
-	Wed, 11 Jun 2025 15:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="An9ldRSC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3AC219CCFA;
+	Wed, 11 Jun 2025 15:18:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FC11C6FF4
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Jun 2025 15:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC901714AC;
+	Wed, 11 Jun 2025 15:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654849; cv=none; b=ZOsqvPSxRLpESFPfV8n3HL9VESAsGQ6o8z1NM+j47tS/EWDzPCqjFfjhwDzt/TGL97uJYQ7EpqFWY+wEnaFwKJhaUPFfZMjGwdAYXkjXvza2du32AHx2bkGRrjSZ+wvyboVAopiWjvsdd4a0T8rs00B/LsBgMP5Ob2Xjh6gvwDI=
+	t=1749655099; cv=none; b=pw/S3cgCnQGfwc5v1VY4LH02I62DWMc+hTIAupQFChGIoN4Kbb1xfuUKaCQjth2zqYSaQ8HeEjOcFkBh79gyy2gZ1SWSEaOzTtfnvj1IxbsiTcgNKbx1yOORbl0rFAux+XroVuzJN9gFJKhfgvs3UykplJki8dZ5vQejT6cd/os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654849; c=relaxed/simple;
-	bh=xXF1fKQYQwjTZw8iXbTlsihrAwKe/UiVkJhwQdslq/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=blI908fBuWrcDF5q+lom0zVuZxAgJFd8sWhR6Y+X1lTKruhuCN8rM5g605eJNvb0R8K3WXfSaEw/ONPuoFktkuM70SwcJ2VNhWDDcRnRcFGicaf0+Aas55nzhSI6qq1xFePxmLEEEhT6PIiZhVbzSpDQJQNc5yk8n0wQ5exaOHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=An9ldRSC; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553241d30b3so6202915e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jun 2025 08:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749654846; x=1750259646; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xXF1fKQYQwjTZw8iXbTlsihrAwKe/UiVkJhwQdslq/U=;
-        b=An9ldRSCdLRkipqgVv/skcPgiURxe11hGCS7E3tbTBbNHTK8cdAtHj8cDJjaXDYzfB
-         gd2yjyERbvy1MJPwo6HigNPfk1bcebLu5gjtwxn7MPvqbbTYmeCRPiYx59miRTYOVCHw
-         acDl5JX45HU2QvV+zF0Ob6sq5I1odFhCNvzhKFsuzl7SziC13LtY7y3ZnAN+/v6aOzXO
-         mYJWq0HrchckMgeczwD/LFcsVfouB5FECagEbxRMUcCZWTa0uufCWhMMW1AW1UD3wbAQ
-         ZvX32eH+wz7XO7IdPZck6hpDYcg8MbOf4N9LhWhUC1PEceIaS6YaxheylvzgpEpZLDcz
-         pKHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749654846; x=1750259646;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xXF1fKQYQwjTZw8iXbTlsihrAwKe/UiVkJhwQdslq/U=;
-        b=nSE+dQ1hxkTF/LWmyaDSDlWVNT9XhWNhHUQBd69J1D/K2QRt5Qs9yY307z+TR8uRy/
-         PKrhZWdBgCcyWCO6Kr1vw5mzqvaWhR/KEm5QPNlrSpTFToursyPj/5HZZx77SAq2hI9B
-         upBx/jLCXgxzsyI5rK1WbJFRgZxqQdEe40r+mAPFAlmIpmuCQAbg9bgwQu/rhb291qdU
-         /LQSeVbwdCQGg++W+NhcqTBx/ZOXcqRmYpiHVziWC/QvRJLiX5UVMlPQN1SqKldMn1Ej
-         HOY0b/dTfn9J7cc+tcI2t6ptn75M+4qFkJyRtYOovAHPWpHQJwwIT1Jk5vp1haaroVl6
-         RDSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjX35B9YHGnBwQM4bdnVqz61sqmNh3yZ9Ey5tWXUjetnEI2cMUOJx+NTFcUXvfFXU724nwmuer67Jl@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUlIFQjANTAuSYisV+2tfDTZ8wynCtykQhZ+t1qi4GAtY3cHbv
-	dEg2idmiFPpmp2TVVJsCvjjR/lToj/4krkSjgI/Fe020PGznao1VH8jUowuMZ1Ql2/g6D+2dQbq
-	O2gHWjYjQY1Tx1JlDhqJuyxRX7pHU2XxvohMMQ2ja7A==
-X-Gm-Gg: ASbGncvj+tNnP/sv76vjYSmaLudpyMM43o86/baHkljIHRRrv9jC1lpZedY2zwp9yQr
-	ho956FXi2mPQVAMyqLlq8YI2FswAIE6sGaFZSqlHL4shNiyuT1nCDnRvLQxGN+WMulzp6FAoTHa
-	FXEOMxVDjY0HAKm9SiLfLp6s+Oh6jMAJnw7HNLJsfekn39H3xvInlU+OOK7k0FMG3434PJ955eU
-	4Y=
-X-Google-Smtp-Source: AGHT+IGw+q2yvYWpmAIUWy0VGe58eE1SrQ78oJJGrnBnU83UjI38DO9zFzggcPEe+DrUAq6iTBI5SWIZkHBiPk9ESOc=
-X-Received: by 2002:a05:6512:2355:b0:553:3178:2928 with SMTP id
- 2adb3069b0e04-5539c0e243emr1434831e87.16.1749654846050; Wed, 11 Jun 2025
- 08:14:06 -0700 (PDT)
+	s=arc-20240116; t=1749655099; c=relaxed/simple;
+	bh=uEsItBPGgeCWoFaCt1VlZRMS1vfKbhl7qPQIzFhVU0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lq52U1y2Acc0trQ91cRPOrefr0TEyWvdP2bLh4pL/u4D6/bCAmPaKTz0sn473SIx1uvw2Qj3sGH8D5B0hX8whh1vNZs2pYlCZZtys2ubtzLgVFKQ+q+zughwxBMT4SqGSemSDoDxhQzGLsygIXMRQqRfCqB6Otwcv3BWqw3BMAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: ct7uZHPfTUSIxt9QhA0/FA==
+X-CSE-MsgGUID: DEFYsMHtS2+1DgZ1J2HoKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62839536"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="62839536"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:18:18 -0700
+X-CSE-ConnectionGUID: wJ16Cb+nRaC7FDUPLS4m5A==
+X-CSE-MsgGUID: mdZBOygwSXumz5p8Y8VXaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="148128870"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:18:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uPNDM-00000005gLk-42DS;
+	Wed, 11 Jun 2025 18:18:08 +0300
+Date: Wed, 11 Jun 2025 18:18:08 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Keerthy <j-keerthy@ti.com>, Vladimir Zapolskiy <vz@mleia.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+	imx@lists.linux.dev, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] gpio: Use dev_fwnode()
+Message-ID: <aEmeMOW5e3q9TrUu@smile.fi.intel.com>
+References: <20250611104348.192092-1-jirislaby@kernel.org>
+ <20250611104348.192092-6-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611143911.48501-1-brgl@bgdev.pl> <3i6ni6jfq7vzij5cj4h35sy4ceegeekuv3lr5b3nmyqtheky6q@mlrspoyavfwt>
-In-Reply-To: <3i6ni6jfq7vzij5cj4h35sy4ceegeekuv3lr5b3nmyqtheky6q@mlrspoyavfwt>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 11 Jun 2025 17:13:54 +0200
-X-Gm-Features: AX0GCFtymhBATZElPAXX9UTuzF3eRZfHttarjFE9PeI16lNBM-F_-vPrq_rdhb8
-Message-ID: <CAMRc=McF+eRfdo73Z_WHj75vOJcc3=yvd2QbVFwGNp7OOYyHHw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: msm: mark certain pins as invalid for interrupts
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611104348.192092-6-jirislaby@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Jun 11, 2025 at 5:03=E2=80=AFPM Bjorn Andersson <andersson@kernel.o=
-rg> wrote:
->
-> On Wed, Jun 11, 2025 at 04:39:11PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > When requesting pins whose intr_detection_width setting is not 1 or 2
-> > for interrupts (for example by running `gpiomon -c 0 113` on RB2), we'l=
-l
-> > hit a BUG() in msm_gpio_irq_set_type(). Potentially crashing the kernel
-> > due to an invalid request from user-space is not optimal, so let's go
-> > through the pins and mark those that would fail the check as invalid fo=
-r
-> > the irq chip as we should not even register them as available irqs.
-> >
->
-> I had to go dig into the code to understand why there is a problem with
-> GPIO 113 on RB2 (i.e. UFS_RESET on SM6115)... I think it would have been
-> better to document the actual reason for the problem, which is:
->
-> "The UFS_RESET pin doesn't have interrupt logic, but is registered as a
-> GPIO. Requesting the interrupt of this pin hits a BUG() in
-> msm_gpio_irq_set_type() because intr_detection_width is invalid"
+On Wed, Jun 11, 2025 at 12:43:34PM +0200, Jiri Slaby (SUSE) wrote:
+> irq_domain_create_simple() takes fwnode as the first argument. It can be
+> extracted from the struct device using dev_fwnode() helper instead of
+> using of_node with of_fwnode_handle().
+> 
+> So use the dev_fwnode() helper.
 
-The UFS_RESET() case is the one I figured out initially but then
-realized that the issue will be the same for other non-PINGROUP()
-macros which set all the interrupt related fields to -1 so I made the
-message more generic. I will include the above in v2.
+Thanks for this change. See my nit-pick below.
 
-Bart
+...
+
+> @@ -436,10 +436,8 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
+>  	struct device_node *np = dev->of_node;
+>  	int err;
+>  
+> -	priv->irq_domain =
+> -		irq_domain_create_linear(of_fwnode_handle(np), priv->num_gpios,
+> -				      &brcmstb_gpio_irq_domain_ops,
+> -				      priv);
+> +	priv->irq_domain = irq_domain_create_linear(dev_fwnode(dev), priv->num_gpios,
+> +						    &brcmstb_gpio_irq_domain_ops, priv);
+
+In cases like this, I would rather see something like
+
+	struct fwnode_handle *fwnode = dev_fwnode(dev);
+
+just near to the respective of node extraction. This will help to reduce churn
+when converting the rest of the code to use fwnode instead of of_node/np.
+
+>  	if (!priv->irq_domain) {
+>  		dev_err(dev, "Couldn't allocate IRQ domain\n");
+>  		return -ENXIO;
+
+Other than that I appreciate the series!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
