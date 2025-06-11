@@ -1,163 +1,233 @@
-Return-Path: <linux-gpio+bounces-21415-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B76E8AD6006
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 22:27:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51A47AD60A1
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 23:03:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 726E6189CD99
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 20:27:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 248233AADFF
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 21:02:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10F212BD5A7;
-	Wed, 11 Jun 2025 20:26:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B796A24339D;
+	Wed, 11 Jun 2025 21:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ehjIFapJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hojascee"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568B523C8A4
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Jun 2025 20:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F40919A;
+	Wed, 11 Jun 2025 21:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749673616; cv=none; b=atMV8PWTmzYKmQMOBoAIzq16lByYrKreYKp3/PnCXJ2LNA8ESt7KnMqZKRFxAwnLIJHTiOP40w6cRCKUaejzi4NbsKCRE3VotCmUFG447KCASqrePWgApzSfajEOQ0V4JArSRwj2qad3pPJ+jwTh24hlkbn3kL4FFctYlnD1Cbo=
+	t=1749675790; cv=none; b=omcPfXVEPBgtge+BLf9Gs/Pkb+eIbJWoIie5JgmuPJ6Y3eVvZOr25fQt7RkwyyxERSPxfbKzgDFv5J1J+aFvPo01swPsiT4S9o1qAApNar8WAGApje1oBo8SxMkESmGeWtPVy1yut8PEdndv6E3ltrljr670I+fAP3FJUmpg3s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749673616; c=relaxed/simple;
-	bh=4Nu0j98D6h/l9/aD/BI7DaWZwlDoKTZw120WkJ4+etI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tzdpECSLcNPW6uKA2zapq4PleTyI4D1YhC4/9bBFKKKqApGGVjcyNZjLAZLn7q0mz0Mkzxwj+wwLHx+VMm8SZWzQM3IAxuPPTBG2xqDYc2lU8TfVGEJCBJxcEllVm8SsOnB81uqxfRybOIE1W0LSdm49yOW5koU7qfC5RCbSROQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ehjIFapJ; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-735a9e65471so156165a34.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jun 2025 13:26:54 -0700 (PDT)
+	s=arc-20240116; t=1749675790; c=relaxed/simple;
+	bh=uhaxMZ7pEvrEqe0KuIX5jDb9dCyw5EALuBZfNdz+7aM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FeD27LIiMzlTRdqpsUn58mf6327ffes/q60TfQFKtEbVigLtwp7EM0uhQCiFE1nn/mXPUIML/qzr0c5LYhRr6pno1BlYA6VkPP+fgFNGPSc+vahq+1q3OHR1L+Y6tjv6WNtOfzLjLVfXzgaBps5myA/29j0l+tJmzDkavMwGnjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hojascee; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-742caef5896so352515b3a.3;
+        Wed, 11 Jun 2025 14:03:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749673613; x=1750278413; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=clQc+ALpEbRfKWwmdYpg7fRgJck1oxl3hljPINdz/zY=;
-        b=ehjIFapJ/TrzlhYOp+hzujH6+IJIwVdx/w/dSRLa1CAgiTHgNWHYKvQtb14YhkZ9MS
-         JXhc+0AYGZ6M6QDw3ETTy9JC2cbVHtRlE/cUw2p7/Z5l0pK/4x/R8ai6BmbxPVa4gW5v
-         AoKRaNjgtaStufNvQdksSu2mNqOC6KDWMK9jZPNgGK+QdNMgwC6wZmXpeI4OjJv5jr0z
-         3AkR47vSa+ItP/oS9VEOQmncp+3ZY/FJvafCEuxkyBUnUtHB2qTWkD3ydNLmcO4j2lAR
-         vVyBU0lJj7lJOjFQ4NNvuEOr8wKRCI1G5q3iUM9Vj9R9e1o1eYxKCvg5IfTpiCnVMIoi
-         APcA==
+        d=gmail.com; s=20230601; t=1749675788; x=1750280588; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KUQvYGXAJM9vFj/+RVHEyx0Hqdg+1ObhRxvVS6G9TV8=;
+        b=hojascee9YJHkqUhFleUbJlOoi313xMWxXntZazRUw7xI0Wk21NiovQWUWdXDtb10V
+         rTT3fPM7fthcJq4Vt+E9W7ErKIGIx4GM+0feNbWDaB4JjU64/Pi4pWje5KqQaE6kKsZX
+         2j7RrBh9ZSvq1tk/0z2kIHN4tLnkkKmz9+Ctu/IWcNRgGS029ZupNpCaDGHZf1GGlcZU
+         yKkQFQE/22NANbrX1FHZtMoMJCeyKtexf4xf49EhkOI6sXg2ZbFHF2iBLSaLnNgXnBlv
+         l7pO6HFk2ryoFvc0wE4NUFVPBOGlEIyTtaa/8XlF7YDppZpp25m3gMgYT8Tmq9zQEeKZ
+         kc/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749673613; x=1750278413;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=clQc+ALpEbRfKWwmdYpg7fRgJck1oxl3hljPINdz/zY=;
-        b=CB0qV0Q46YyFO6h17ybeImnvkg0rTGqpmz39YBEOuAQAYcOtAx0Vu5M3zNn7k1HvW9
-         Suq/2JkBOLSR6CxmfO1tDnO9zUw743FNv6LJ6ag8349/P0KsnQjsj9VidxcHNBV4Nzxa
-         y6sDIFKVnpuCRc/kTSjs0JfBoxr8HVNzKlQcIlOGcvIZOUB0kKrb1sActAvDz2cd1myQ
-         P9+Gq3WaSpjrrFv66xbckSVUrVwQb6xn1L0FBDcKiek0xAj48fx8IB+a6AKhN8078N1Q
-         r+5WnPYScp3KP5XOUnISPC9SbejU82iWxcUbLAGSEH/Qriup01e5xY/C8FEuwEgZszde
-         Bpag==
-X-Forwarded-Encrypted: i=1; AJvYcCXnRkxxmKfoJzUA5HhXu1OKxnabwOd1wqNFYwmIFyTdSRpjkx+nn0JDyP1mc82h1YKKVsyQH8giUDsO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxknhAfSvTrrGRCi7n1hG3QVYEKqPz5cMaxu2zjtlrieKk99Q73
-	cBPqfnhO8Q0eUzZXZOQ3FK4wW0zuNmSOR4+QApaQAclmt25JPzQL+NLLHYdPQHLCOHI=
-X-Gm-Gg: ASbGncuk/5TQVei2ifqiwJI2fMj2F8DKyvd6KsOQIWz66XdTSvS2DzcD14DYQP5l2t/
-	v5xViWdXCA43stSDwQ5sxJaoJNMFbxdz0y/P45DYHfGOTtALnbKDmzfQydhwGR7lOUBPF8Ply70
-	1P1CdI7AkhyjSdVmleBZs3mX4ha9j9HXoChLHqGiuelU09gI7qSN39N7rEx4U642mUVT+6F9I5J
-	sfZZ3RVJYkrt7hJuYIT5ktJsdKFoyLIq+9S4BLWIHGTStMU4/zOpMtdvCj0g50xdXSvmF1f2S/n
-	uKSGZ66IT3y8VW4ZEjpkkHfjZjjRpfrs9NeOk8PCgtrVcRZ3EVhgDrNMO91OGwMwdlggchqoxmI
-	KvUUV1MEvUpYcOKWLIos5ee53Hu/oyVLhIGnvkOg=
-X-Google-Smtp-Source: AGHT+IHVTR6x7Iywr4DoILca74HC62mQNiOYdv89GViJJzcv39NMYjFI9UxLuEQSNiTRmXfbxbG8uQ==
-X-Received: by 2002:a05:6870:3644:b0:2c2:4090:9e8 with SMTP id 586e51a60fabf-2ea96e8b67cmr2383236fac.22.1749673613362;
-        Wed, 11 Jun 2025 13:26:53 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4753:719f:673f:547c? ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2eab8df2448sm1925fac.23.2025.06.11.13.26.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 13:26:51 -0700 (PDT)
-Message-ID: <b4e3260d-ecf9-4a51-85c1-889d7741d287@baylibre.com>
-Date: Wed, 11 Jun 2025 15:26:50 -0500
+        d=1e100.net; s=20230601; t=1749675788; x=1750280588;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KUQvYGXAJM9vFj/+RVHEyx0Hqdg+1ObhRxvVS6G9TV8=;
+        b=IsF59amE5Hc30nMJEvjMsHP+7YECspneAM1T7RGwRNUutXl32D9EV+ZIW5uxxnW32O
+         hXk2RyJ273JC6efKx2w4tkQSgp/qJKEyIf/q6f20xRryu3a8YYySdqTIOjs5TjYC+flX
+         y1no8bsnIobV5xxa3j6Fmx6VrsiawTaVFf50KlSgoOBcVxU3BjDsms794roF0U+bn5ur
+         GFcNk0sZ/18t0d0Up9rvJ1DUcAeboS77p0HTqpclHNXnHDbCyTnW8R098oMHLuCYbuAT
+         Gd1+08FlcTTQ6MPGAZ/6z18iEs6tL49/nVbASN66DalqAQAt+azr3/Bsld6OrfpA2pOH
+         +MGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiVCu24aIXMWFVl9pWtoKf+eSdFKYQS5PKO+d5qYsNsGGbi+wD+6CTcviIQpDRRmiJ9EgQqxx2Mx0JgA==@vger.kernel.org, AJvYcCV+t+v8EGt1haZywHJFyHvFHFcHdU+n9RFWgEFQBWhwGH0UrZQnX9e6cVtkOzQNR8vnnP9wy6GDq3nu@vger.kernel.org, AJvYcCVYhQ0kk4KFRmQUtbHAugOquaJd+CvpsowVD/MnlguM7V6BbBsv16P23Oytp7KaoSNKRt8Gl5dsEBa0D/A8@vger.kernel.org, AJvYcCWJ0TTb1bZehm09S48NOiVo1N8guwItgni+vd+PEigiuswgWktuz2u/n6rpy2Bkp87nZEiZ8X6w1Irt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnYCA3R7wMSEroNXbVdn1Ut3SecVZ4HljiYCUxoCYhSjKbaQeO
+	sTyIvWvRzqwnGByT1ULZ8v07QnrvtrGS/kafmILpBES3qX3eGVYX5zfH
+X-Gm-Gg: ASbGncsruh4h2QOZMWp2zkaX+ejL2nolJH9+i+9a2h9b4LQiJehRMJjsKj8mVtdGAde
+	0SRnkdA+/Dy8XtyrDaCZmvGf/uhhDViC5tdnYJHpAb1hQcmChdP5oJsLFBdIqnMDfYk0aLMlKbX
+	obX/AhLcQgWFiCnKjqhvSErG4Nv9I+nuhahlkx2mfHzllSxxmid9qoEeteaAvOcT8lGDZ5rvw/F
+	/jZCop4jRn4bVfnEBy8dA/30qDzy4bH0n4phfCVC7Nn02oon6flEZv0lI0MHx+pe829mUS5K4tC
+	z/zQt06FeDqJtxQU48yvJC2NCC7RiZ8mfb1YDyYnPNluS79SDs3ioE/rGFdL0+dZQYtGOiw=
+X-Google-Smtp-Source: AGHT+IHlK8nHYrKD/bCEgRio+M7EtJzGL+GvmhPnyqnoxAK7qV/Wtjitblya1OljGJE7+lGZIlIjGA==
+X-Received: by 2002:aa7:8882:0:b0:73d:ff02:8d83 with SMTP id d2e1a72fcca58-7486cb21c08mr7368322b3a.3.1749675788093;
+        Wed, 11 Jun 2025 14:03:08 -0700 (PDT)
+Received: from localhost ([2804:30c:4000:5900:b4c4:6073:1a92:4077])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-748808962b3sm6396b3a.61.2025.06.11.14.03.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 14:03:06 -0700 (PDT)
+Date: Wed, 11 Jun 2025 18:04:49 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+ <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
+ <aEifWXPV1nsIyWbT@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] bus: ts-nbus: use bitmap_set_value8()
-To: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>,
- Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20250611-gpio-set-array-helper-v4-0-fb86a9b499ab@baylibre.com>
- <20250611-gpio-set-array-helper-v4-3-fb86a9b499ab@baylibre.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250611-gpio-set-array-helper-v4-3-fb86a9b499ab@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEifWXPV1nsIyWbT@smile.fi.intel.com>
 
-On 6/11/25 3:18 PM, David Lechner wrote:
-> Use bitmap_set_value8() instead of accessing the bitmap directly.
+On 06/11, Andy Shevchenko wrote:
+> On Tue, Jun 10, 2025 at 05:31:25PM -0300, Marcelo Schmitt wrote:
+> > From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+> > 
+> > The AD4170 is a multichannel, low noise, 24-bit precision sigma-delta
+> > analog to digital converter. The AD4170 design offers a flexible data
+> > acquisition solution with crosspoint multiplexed analog inputs,
+> > configurable ADC voltage reference inputs, ultra-low noise integrated PGA,
+> > digital filtering, wide range of configurable output data rates, internal
+> > oscillator and temperature sensor, four GPIOs, and integrated features for
+> > interfacing with load cell weigh scales, RTD, and thermocouple sensors.
+> > 
+> > Add basic support for the AD4170 ADC with the following features:
+> > - Single-shot read.
+> > - Analog front end PGA configuration.
+> > - Differential and pseudo-differential input configuration.
 > 
-> Accessing the bitmap directly is not considered good practice. We now
-> have a helper function that can be used instead, so let's use it.
+> ...
 > 
-> The bitmap has to be zero-initialized now to avoid a compiler warning
-> since bitmap_set_value8() does read/modify/write rather than just the
-> write that this is replacing.
+> > +	return spi_write(st->spi, st->tx_buf, size + 2);
 > 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> v4 changes:
-> - Fix typo s/get/set/ in commit message
-> - Zero-initialize the bitmap to avoid compiler warning
-> ---
->  drivers/bus/ts-nbus.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
-> index b4c9308caf0647a3261071d9527fffce77784af2..17540034e64a4e591ea61b0b4eef86a2081b02f5 100644
-> --- a/drivers/bus/ts-nbus.c
-> +++ b/drivers/bus/ts-nbus.c
-> @@ -10,6 +10,7 @@
->   * TS-4600 SoM.
->   */
->  
-> +#include <linux/bitmap.h>
->  #include <linux/bitops.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/kernel.h>
-> @@ -105,9 +106,9 @@ static void ts_nbus_set_direction(struct ts_nbus *ts_nbus, int direction)
->   */
->  static void ts_nbus_reset_bus(struct ts_nbus *ts_nbus)
->  {
-> -	DECLARE_BITMAP(values, 8);
-> +	DECLARE_BITMAP(values, 8) = { };
->  
-> -	values[0] = 0;
-> +	bitmap_set_value8(values, byte, 0);
+> ... + sizeof(reg) ?
 
-I got distracted by an appointment and forgot to compile test before
-sending. :-(
+The size of the specific ADC register is stored in the size variable.
+The result of sizeof(reg) can be different on different machines and will
+probably not be equal to the size of the register in the ADC chip.
 
-byte is undefined here. Will send v5 soon.
-
->  
->  	gpiod_multi_set_value_cansleep(ts_nbus->data, values);
->  	gpiod_set_value_cansleep(ts_nbus->csn, 0);
-> @@ -149,9 +150,9 @@ static int ts_nbus_read_byte(struct ts_nbus *ts_nbus, u8 *val)
->   */
->  static void ts_nbus_write_byte(struct ts_nbus *ts_nbus, u8 byte)
->  {
-> -	DECLARE_BITMAP(values, 8);
-> +	DECLARE_BITMAP(values, 8) = { };
->  
-> -	values[0] = byte;
-> +	bitmap_set_value8(values, byte, 8);
->  
->  	gpiod_multi_set_value_cansleep(ts_nbus->data, values);
->  }
+> ...
 > 
+> > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
+> > +{
+> > +	/*
+> > +	 * The use of static_assert() here is to make sure that, if
+> > +	 * struct ad4170_setup is ever changed (e.g. a field is added to the
+> > +	 * struct's declaration), the comparison below is adapted to keep
+> > +	 * comparing each of struct ad4170_setup fields.
+> > +	 */
+> 
+> Okay. But this also will trigger the case when the field just changes the type.
+> So, it also brings false positives. I really think this is wrong place to put
+> static_assert(). To me it looks like a solving rare problem, if any.
 
+I think it is unlikely that struct ad4170_setup declaration will ever change.
+The fields match the registers that are associated with a channel setup and
+the their types match the size of the respective registers. So, I do agree
+that triggering this assert would be something rare.
+
+> 
+> But I leave this to the IIO maintainers.
+> 
+> In my opinion static_assert() makes only sense when memcmp() is being used.
+> Otherwise it has prons and cons.
+
+I think the most relevant reason to have this static_assert would be to keep
+some consistency with ad4130, ad7124, and ad7173, but no strong opinion about it.
+Actually, I don't get why static_assert() would only matter if memcmp() was
+being used. Would it be better to not bother if the fields change type?
+
+Anyway, I'll go with whatever be IIO maintainer's preference.
+
+> 
+> > +	static_assert(sizeof(*a) ==
+> > +		      sizeof(struct {
+> > +				     u16 misc;
+> > +				     u16 afe;
+> > +				     u16 filter;
+> > +				     u16 filter_fs;
+> > +				     u32 offset;
+> > +				     u32 gain;
+> > +			     }));
+> > +
+> > +	if (a->misc != b->misc ||
+> > +	    a->afe != b->afe ||
+> > +	    a->filter != b->filter ||
+> > +	    a->filter_fs != b->filter_fs ||
+> > +	    a->offset != b->offset ||
+> > +	    a->gain != b->gain)
+> > +		return false;
+> > +
+> > +	return true;
+> > +}
+> 
+> ...
+> 
+> > +	/*
+> > +	 * Some configurations can lead to invalid setups.
+> > +	 * For example, if AVSS = -2.5V, REF_SELECT set to REFOUT (REFOUT/AVSS),
+> > +	 * and pseudo-diff channel configuration set, then the input range
+> > +	 * should go from 0V to +VREF (single-ended - datasheet pg 10), but
+> > +	 * REFOUT/AVSS range would be -2.5V to 0V.
+> > +	 * Check the positive reference is higher than 0V for pseudo-diff
+> > +	 * channels.
+> > +	 */
+> 
+> Right, the Q is, can refp contain an error code here, rather than negative
+> value? The code above hints that in some case it may, but are all those cases
+> were caught up already? (Comment can be extended to explain this)
+
+I don't think refp can contain an error code at this point. All regulators are
+read at ad4170_regulator_setup(). After that setup,
+st->vrefs_uv[AD4170_<SUPPLY>] will either contain the voltage read from the
+regulator framework (which is >= 0) or -ENODEV. Then, we check the supply value
+at the beginning of ad4170_get_input_range() (this function) and error out if
+the value is -ENODEV. Will extend the comment to explain that.
+
+> 
+> > +	if (refp <= 0)
+> > +		return dev_err_probe(dev, -EINVAL,
+> > +				     "REF+ <= GND for pseudo-diff chan %u\n",
+> > +				     ch_reg);
+> 
+...
+> 
+> > +	/* Assume AVSS at GND (0V) if not provided */
+> > +	st->vrefs_uv[AD4170_AVSS_SUP] = ret == -ENODEV ? 0 : -ret;
+> 
+> -ret ?!?!
+
+That's because AVSS is never above system ground level (i.e. AVSS is either GND
+or a negative voltage). But we currently don't have support for reading negative
+voltages with the regulator framework. So, the current AD4170 support reads
+a positive value from the regulator, then inverts signal to make it negative :)
+
+> 
+> Even if you know that *now* it can't have any other error code, it's quite
+> fragile.
+
+Yeah, I guess ADCs that can take bipolar power supplies are not that common.
+I couldn't think of any better way to have that, though.
+
+
+Thanks,
+Marcelo
 
