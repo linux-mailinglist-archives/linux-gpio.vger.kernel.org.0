@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-21357-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21358-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F46CAD4FB7
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 11:27:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 43749AD4FE3
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 11:33:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 345173A3F14
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 09:26:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB75A3A5602
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 09:32:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2910625F968;
-	Wed, 11 Jun 2025 09:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69DED2236E9;
+	Wed, 11 Jun 2025 09:33:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnwGGS1Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XuJ4VI4D"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B0B25F7A8;
-	Wed, 11 Jun 2025 09:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C5D2AEED;
+	Wed, 11 Jun 2025 09:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634020; cv=none; b=s1s+1EJa5iZ1+dWADj8LqoAEWQKl442MXb/RsHaO4dKoKFCt+lxCPMCaY9EymNbKEtq3QS81UG4IAwcxfM5GpQU2aYSyw9cCVmNBK5UKKtBUEKKeY+UagZWnOknrJ0NwmX/j+nnyHsLCamdxVkhC3yzAExzvjD/40jo8234gxjU=
+	t=1749634386; cv=none; b=KLK6cNfG15CBFCwsCsbKbUt1M3yubR6GDiOGwVgx8BI7EosjIHWR/r1KICOj9snng5tZKTU+fp6mg8TeP9Z4tXSzCgrEclwdfd8wwNQgbjHiEg0VLy9zia2UzYAECiJQ2T/bf/M0eRTajWLR5QOq70MdF9v+CPtLIXDwHGEYGMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634020; c=relaxed/simple;
-	bh=kubvO9a5J9TCMTW9jmX1mZZl7Tpjh1wDB67JD4ZFKvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sgbx9vqwDJEZsGf7HQHbHUQHVV56gbYxvUxeqpA4rDo7WS+srl2QtOdaepH4ck3eVykJik1fNwbfqODvvSzs66oV/+GBPkX4Mcq2PAt7+ooS+NqZZfHbz35+o9T383vnJGwVMd2lGRZuishQJQSiMcl1GVJ4fMb3lOeuL0yGt44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnwGGS1Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A28DC4CEEE;
-	Wed, 11 Jun 2025 09:26:56 +0000 (UTC)
+	s=arc-20240116; t=1749634386; c=relaxed/simple;
+	bh=xFb7df67RXQJJM6OYnc61HwRVo7NOSQCzNOagtm0TFc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=j4rcOX/OR+YBn+W75b0QRm3CHTqgkDizjsQuGtlLdMW6htdja7tXlGzbOUXTXwA0svRZkT+qpN2YYtmlL45mWkVCgjAEh1fCVDm+zRMsjFm+oxyJTpsflY5yfiw0511W8PD4dz/vHokr63mSoZGj7QKFlxV6Gf2A/zXpCGZpmMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XuJ4VI4D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3144C4CEEE;
+	Wed, 11 Jun 2025 09:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749634020;
-	bh=kubvO9a5J9TCMTW9jmX1mZZl7Tpjh1wDB67JD4ZFKvY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AnwGGS1ZBEfJhqAb/K5CbTN/+/F54cJYJWtE6Np8/DqerNZ5MHZxz9e6E3Cd/pBoK
-	 9OHJfP1IXv/NQmY9fzPAzgVCGR22vnM5GxZIF5R7F56P9e8tHpJ0i/VUEtQ/s1gbjl
-	 T0vfrKvt3VMdjZ0KCAEYJwYlgdZZ7GkSAz8nMqwxiw7/CXdSfsnKq2iTMg5JhHhA+H
-	 P0z9XsGBTwsOqRMa9YthsmNeZ2tra6ct2X+SDvA3yM0dnYJkf3Wg6prI5xcSDs9+TN
-	 Zjy4BmrAY24fRGvKqBF2h7SJlBtc3aaMwBJo0jOw4sH4q328qjqWqr2ETaBfkbz5wX
-	 9DWL7N/ek5gTg==
-Message-ID: <7e197546-4bae-441c-a69f-9ae2566e8600@kernel.org>
-Date: Wed, 11 Jun 2025 11:26:54 +0200
+	s=k20201202; t=1749634385;
+	bh=xFb7df67RXQJJM6OYnc61HwRVo7NOSQCzNOagtm0TFc=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=XuJ4VI4DlbRxAFJ/x1UXS1DGayFL2lguLqGNSC/cRa7KdtkkGEVtvdQ5yRRV1dnWs
+	 cVTsghconbTtqgCL1o2OCQHRiIdSjio57OiYCMhKcWRGUxdgfZ6oXW9Am2bS+eMiC7
+	 uvPY/WDT0PjDUL14e3u2FwQn4ecKroLs0HewZDgeqzIcwxN1XL1cTK9FpdQljEiq52
+	 /aFjsVcxFhKltJr0y/YgpU6MiOjVd6kT7yeb+kHu9RcHWJDKnyk2UNkhFhHdOjlDsu
+	 Ikj5gzPnc91zOJnxTU9fHG0mg9HPkl4sPg5uA1Udo2qSN6DxlRrallVB2th8jObvna
+	 RMioGv2e4CKZA==
+Message-ID: <d08cb08c-4bdd-4715-8273-9feb7de7474b@kernel.org>
+Date: Wed, 11 Jun 2025 11:32:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,30 +50,23 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
+Subject: Re: [PATCH v3 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
  audio AFE document
-To: =?UTF-8?B?RGFycmVuIFllICjlj7bpo54p?= <Darren.Ye@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "broonie@kernel.org" <broonie@kernel.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>, "tiwai@suse.com"
- <tiwai@suse.com>, "robh@kernel.org" <robh@kernel.org>,
- "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "perex@perex.cz"
- <perex@perex.cz>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-References: <20250610092852.21986-1-darren.ye@mediatek.com>
- <20250610092852.21986-9-darren.ye@mediatek.com>
- <20250611-private-magnificent-asp-63ef5d@kuoka>
- <bed13d4bba5923e0d71a5e32e61163c2e7958d68.camel@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+To: "Darren.Ye" <darren.ye@mediatek.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Rob Herring <robh@kernel.org>, linux-sound@vger.kernel.org,
+ Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-gpio@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+References: <20250514081125.24475-1-darren.ye@mediatek.com>
+ <20250514081125.24475-9-darren.ye@mediatek.com>
+ <e74d82b3-ed4a-433b-9305-a80b68130a6f@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -118,48 +111,77 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <bed13d4bba5923e0d71a5e32e61163c2e7958d68.camel@mediatek.com>
+In-Reply-To: <e74d82b3-ed4a-433b-9305-a80b68130a6f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 11/06/2025 11:09, Darren Ye (叶飞) wrote:
-> On Wed, 2025-06-11 at 10:27 +0200, Krzysztof Kozlowski wrote:
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
+On 14/05/2025 12:54, Krzysztof Kozlowski wrote:
+> On 14/05/2025 10:11, Darren.Ye wrote:
+>> From: Darren Ye <darren.ye@mediatek.com>
 >>
->>
->> On Tue, Jun 10, 2025 at 05:27:25PM GMT, Darren.Ye wrote:
->>> From: Darren Ye <darren.ye@mediatek.com>
->>>
->>> Add mt8196 audio AFE document.
->>>
->>> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
->>> ---
->>
->>
->> I gave you detailed instruction last time. Did you read it or you
->> decided to just ignore my review?
->>
->> Best regards,
->> Krzysztof
->>
+>> Add mt8196 audio AFE document.
 > 
-> Hi Krzysztof,
+> A nit, subject: drop second/last, redundant "document".
+> See also:
+> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+
+Since you asked what did you miss from previous review (and I replied
+that EVERYTHING) then maybe this will help:
+
+How did you implement this?
+
 > 
-> I would never ignore your suggestions, on the contrary, I really
-> appreciate them. I may have missed your advice, and I'm very sorry for
-> causing any confusion. However, I haven't noticed it so far. Could you
-> please point it out or directly paste what needs to be revised? Thank
-> you.
-You ignored all comments, so how can I point what was missing? Everything.
+>>
+>> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> 
+> 
+> ...
+> 
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - mediatek,vlpcksys
+>> +  - power-domains
+>> +  - memory-region
+>> +  - clocks
+>> +  - clock-names
+> 
+> 
+> Keep the same order as in properties:.
 
-If this helps you to understand the comments, then go to previous email,
-read each comment and respond to each how did you implement it. If you
-cannot come with the answer how you implement it, then you did not
-implement it...
+How did you implement this?
 
-I don't know how to be helpful? I even wrote long detailed instruction,
-with references, explaining you what to do.
+
+> 
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+How did you implement this?
+
+
+> 
+> <form letter>
+> This is an automated instruction, just in case, because many review tags
+> are being ignored. If you know the process, you can skip it (please do
+> not feel offended by me posting it here - no bad intentions intended).
+> If you do not know the process, here is a short explanation:
+> 
+> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+> of patchset, under or above your Signed-off-by tag, unless patch changed
+> significantly (e.g. new properties added to the DT bindings). Tag is
+> "received", when provided in a message replied to you on the mailing
+> list. Tools like b4 can help here. However, there's no need to repost
+> patches *only* to add the tags. The upstream maintainer will do that for
+> tags received on the version they apply.
+> 
+> Full context and explanation:
+> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+How did you implement this?
+
+Does such questions help you to find what was missing?
 
 Best regards,
 Krzysztof
