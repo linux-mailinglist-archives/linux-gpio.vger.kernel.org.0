@@ -1,131 +1,190 @@
-Return-Path: <linux-gpio+bounces-21370-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21371-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01CE6AD536B
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 13:14:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E88AAD5369
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 13:14:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C87D1C23B15
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 11:08:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DC543AB0D0
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 11:12:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3374A2E6108;
-	Wed, 11 Jun 2025 11:04:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36C821C19C;
+	Wed, 11 Jun 2025 11:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="bfUeNl7I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5FA2E6106;
-	Wed, 11 Jun 2025 11:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749639884; cv=none; b=IDiPF/KqXfpUBephJCA1auIJOf8HjGek7CIOnd63TgSYbNeGIdY6tYO1IuqnQsC9WLo0NUmDq+B7nPQZxO44IB1BsTVHKHHJMVjwDGqu6EXa7gfEIbpzAAgz4dziO3H9yZgJhVrRCxTqUpEB2JCiulDZJ/SEpzeQKjOtacQleGE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749639884; c=relaxed/simple;
-	bh=vKM9URE6VH8VYC800QExPP7HP+rcx4qnoJaslsSum4Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bwDLNRAWamL7DeRWqmP0Jul1qI2PqfpM4XWg71Sc2sZTXrv/sJgH+5tAsrEdslp4ZPtAWhMzkLgJNTWuqQmTVeZO70dYI+6n0L4z0Z0OyOji/it/MXtKShFkFr9oDdjJjl5Qnm1RBIW9G8ApWjf45DvNtHy/rYw2dwaTbMdcKIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553543ddfc7so6333651e87.0;
-        Wed, 11 Jun 2025 04:04:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749639876; x=1750244676;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xIkIaaPsxO4m2eJwDcrS1OSphLUaIwh9HxpS06D3sV0=;
-        b=hFOBOOwaijxCtO/Cab3ecih4dATLoHgU8oqW8VrvrWuIZER9mEpKFpbO8zV3jN7yg9
-         CvJOht1P94Z2VC1Tg+YWc+QHcPuaifvo30JEghcRVjq2mDwdz6CmyrurV+An0FFqyPB7
-         0MAUYy4o9eQaxWS1bJ6E+BAqWJVvXc6BJcwjwAKAgS8DeNE6V0rnXxzM+s5FrUaCy17R
-         fdz4+s4eeO+PuOLo+wet+vsBuJT7dplCzo7xI4JJPlgIa0ANp7fPjJz2kAGq3GYyupZi
-         L/Us8NDViIYyk6bVsUWXT1sMEmXw+5VpgGp83Tvzr1vrTj3jxv5RrorOn0cZvqDfpJyc
-         WpWw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2tD4prAP5/Clv3xwYWY3jeI6QN9zgKjEsp5qwG20ebhvHU+nAfCa1uESZlGReWC0InfAFRmsHNQNc@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjAbtIn8Lkmbjv+PYu2IDe7+5fzqbBQFfLFg966V7DRWELbfOh
-	MDy5X4ZykjjQDIjRfOkXm112+Z2LShsJqDE93+1zgawENSV5xRVEwXuD3KooVC+B
-X-Gm-Gg: ASbGnctNjabYXsGZnvxhJJ6oK+253MHdat/tAXSCwhjVcb44TC2ua21bMRpw2CvXgT2
-	SJ0r4goQWc/wZeBwdPtXxVjiuscqtB288OvAOVK2g7NIlXm6FIxuZeHpYnojfrG3GtL9zKzpgS6
-	EV1UzvfOL8yW+SsyjDUq/1DG9oqunNoURN3qkjTNPKmXX+V6SpLjwCmlzph3CSOCnoqKdnBbBhw
-	LGCQCKUhQB3LYlRmrw2/eUcMz6NOpBsv20gUBOrd6SMqFWjh0F/EFpkNJuEpcej6weprremMFG2
-	2SS5GvKs2R/SUB+vQ9m+MpBXFBqejSIi+gA6UbcNG0tkO0v/xln8OyhDykej2sVa9YpvkXA4YPa
-	AUd9TZuVsDuRhoENvVY4=
-X-Google-Smtp-Source: AGHT+IGFluEtmN/JqLEof4+a1SMqMCfED1WMKFyTmLvGqNeRw/zgxIsDLiJuaYElVWz1X+ec8RPOFw==
-X-Received: by 2002:a05:6512:15a5:b0:553:354f:1fe2 with SMTP id 2adb3069b0e04-5539c21f291mr948156e87.51.1749639875406;
-        Wed, 11 Jun 2025 04:04:35 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553676d7b37sm1905301e87.67.2025.06.11.04.04.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 04:04:34 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-32b019bdea3so27171171fa.2;
-        Wed, 11 Jun 2025 04:04:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWcEcv5AGruDc9xCN2bsoEO3PeyD2qdjmd74U2Wvx9q+m+O4hdZQZRMeuw/WmuLoez02qGNHVC/tiY3@vger.kernel.org
-X-Received: by 2002:a05:651c:b0d:b0:32a:648d:5c0f with SMTP id
- 38308e7fff4ca-32b21d1135cmr7885761fa.16.1749639873377; Wed, 11 Jun 2025
- 04:04:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0A82E6107;
+	Wed, 11 Jun 2025 11:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749640360; cv=pass; b=qX3V8hypHbB6ZoezQGaHzg9sHuon96VzyG2tqKwRs3B8YYz15Y7lcJtYIXsQh9eQqGPOfhOHnK71TZFUDKuRWKNAqrphBGkysajduRhf/A+2gRYVJ7jGHBmt0yqmEkiCKCa6GINAryVG1TctM6PwNKHbCrb9aq/8zIDZGT5RJXM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749640360; c=relaxed/simple;
+	bh=EefSXwOg6EnlDbaCsRdSPLkeXbRTPj72FblAFX989Pg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=krv01QXHZV0RgnCFYzOW1fIxo33kBb5HvYzPZ9qfUj/+iPZlqnpRu7c+9Eaups7N+ZslJwyjpAMItDP1gNTOFNfkalkwVeKtykzSeInoWTvOicbfGlo6fnae9z+mvbLnkgokZUxmOZytfpkYcxjJsH69LwCKhmiTfsNndPnIzXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=bfUeNl7I; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1749640329; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QG5faVQFbIILrQTW0ZBXfFI76UtWGMdYguxmkoNxLeYGZxz5CYct0Yx9iNLeae3/tCHH2I4N5a6bsxQ4mRDVLOBAlg/IZNk4PeTxILhhlr/u2hG/nICo8JhnfZa73EWj3mgeWLCpQLOQfNBv142DEpwNxQBscR6Rpe0r8P8wW4Y=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749640329; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=YGZIHHTdUio4mkdGxDuE5j03JDM6UM0QavShcW0kz4s=; 
+	b=OJ4Q9V8NQwUR04DQtcMguwUsuXp0JconZeDK71kK+3VwSMwd78fbknjfvi5uSAH0v8UO8FZuG5s1UZhNPzRWtQW0erifIJEhOcYwZWf8q730GpGYjQmRQzJqSDy9nd7rmdw78CBZ0dJLkJpJbdwoeXBm4lY6rEYw6XENBFPJ09Q=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
+	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749640329;
+	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=YGZIHHTdUio4mkdGxDuE5j03JDM6UM0QavShcW0kz4s=;
+	b=bfUeNl7IIh2Pr0yrDjsQ+LpveA1vvUP5D3xOghqP6cidbjLzkL8vOt0OtQHTLlqM
+	pFooA2LJg3iteB8yqobdy0VEnFFKR130gk7YxuCBNZpKqLUMOFYjvhPax9hnDm73bJv
+	6OAMhPUge9VeaEgSM/kl1OC4xsXVfwjRAVNFLxSg=
+Received: by mx.zohomail.com with SMTPS id 1749640327308121.2139749325595;
+	Wed, 11 Jun 2025 04:12:07 -0700 (PDT)
+Message-ID: <8e551fad9bd1627b9ed6f20be7d88bdc3438d482.camel@collabora.com>
+Subject: Re: [PATCH v4 01/10] ASoC: mediatek: common: modify mtk afe
+ platform driver for mt8196
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
+ <lgirdwood@gmail.com>,  Mark Brown <broonie@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno	 <angelogioacchino.delregno@collabora.com>,
+ Jaroslav Kysela <perex@perex.cz>,  Takashi Iwai <tiwai@suse.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+Date: Wed, 11 Jun 2025 13:12:01 +0200
+In-Reply-To: <20250610092852.21986-2-darren.ye@mediatek.com>
+References: <20250610092852.21986-1-darren.ye@mediatek.com>
+	 <20250610092852.21986-2-darren.ye@mediatek.com>
+Organization: Collabora Ltd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611104348.192092-1-jirislaby@kernel.org> <20250611104348.192092-17-jirislaby@kernel.org>
-In-Reply-To: <20250611104348.192092-17-jirislaby@kernel.org>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Wed, 11 Jun 2025 19:04:19 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64zi_gXQN+6y6W0AiAVBrfn6qO0=Qoy3b1ojEMNFWaBSQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtGlMh3Zzni8gRt8ry0nlQX_sI9OVMA75h6YXhmJIEc5H7iod5f7NlW8tI
-Message-ID: <CAGb2v64zi_gXQN+6y6W0AiAVBrfn6qO0=Qoy3b1ojEMNFWaBSQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: Use dev_fwnode()
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, 
-	Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-On Wed, Jun 11, 2025 at 6:44=E2=80=AFPM Jiri Slaby (SUSE) <jirislaby@kernel=
-.org> wrote:
->
-> irq_domain_create_simple() takes fwnode as the first argument. It can be
-> extracted from the struct device using dev_fwnode() helper instead of
-> using of_node with of_fwnode_handle().
->
-> So use the dev_fwnode() helper.
->
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Sean Wang <sean.wang@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
->
-> --
->
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Cc: Samuel Holland <samuel@sholland.org>
-> Cc: linux-mediatek@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-sunxi@lists.linux.dev
+On Tue, 2025-06-10 at 17:27 +0800, Darren.Ye wrote:
+> From: Darren Ye <darren.ye@mediatek.com>
+>=20
+> Mofify the pcm pointer interface to support 64-bit address access.
+>=20
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
 > ---
->  drivers/pinctrl/mediatek/mtk-eint.c   | 4 ++--
->  drivers/pinctrl/pinctrl-at91-pio4.c   | 6 +++---
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 +-
+> =C2=A0.../mediatek/common/mtk-afe-platform-driver.c | 47 ++++++++++++----=
+-
+> --
+> =C2=A0.../mediatek/common/mtk-afe-platform-driver.h |=C2=A0 2 +
+> =C2=A02 files changed, 33 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> b/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> index 6b6330583941..a86594dca2b7 100644
+> --- a/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> +++ b/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> @@ -86,29 +86,44 @@ snd_pcm_uframes_t mtk_afe_pcm_pointer(struct
+> snd_soc_component *component,
+> =C2=A0	const struct mtk_base_memif_data *memif_data =3D memif->data;
+> =C2=A0	struct regmap *regmap =3D afe->regmap;
+> =C2=A0	struct device *dev =3D afe->dev;
+> -	int reg_ofs_base =3D memif_data->reg_ofs_base;
+> -	int reg_ofs_cur =3D memif_data->reg_ofs_cur;
+> -	unsigned int hw_ptr =3D 0, hw_base =3D 0;
+> -	int ret, pcm_ptr_bytes;
+> -
+> -	ret =3D regmap_read(regmap, reg_ofs_cur, &hw_ptr);
+> -	if (ret || hw_ptr =3D=3D 0) {
+> -		dev_err(dev, "%s hw_ptr err\n", __func__);
+> -		pcm_ptr_bytes =3D 0;
+> +	unsigned int hw_ptr_lower32 =3D 0, hw_ptr_upper32 =3D 0;
+> +	unsigned int hw_base_lower32 =3D 0, hw_base_upper32 =3D 0;
+> +	unsigned long long hw_ptr =3D 0, hw_base =3D 0;
+> +	int ret;
+> +	unsigned long long pcm_ptr_bytes =3D 0;
+> +
+> +	ret =3D regmap_read(regmap, memif_data->reg_ofs_cur,
+> &hw_ptr_lower32);
+> +	if (ret || hw_ptr_lower32 =3D=3D 0) {
+> +		dev_err(dev, "%s hw_ptr_lower32 err\n", __func__);
+> =C2=A0		goto POINTER_RETURN_FRAMES;
+> =C2=A0	}
+> =C2=A0
+> -	ret =3D regmap_read(regmap, reg_ofs_base, &hw_base);
+> -	if (ret || hw_base =3D=3D 0) {
+> -		dev_err(dev, "%s hw_ptr err\n", __func__);
+> -		pcm_ptr_bytes =3D 0;
+> -		goto POINTER_RETURN_FRAMES;
+> +	if (memif_data->reg_ofs_cur_msb) {
+> +		ret =3D regmap_read(regmap, memif_data-
+> >reg_ofs_cur_msb, &hw_ptr_upper32);
+> +		if (ret) {
+> +			dev_err(dev, "%s hw_ptr_upper32 err\n",
+> __func__);
+> +			goto POINTER_RETURN_FRAMES;
+> +		}
+> =C2=A0	}
+> =C2=A0
+> -	pcm_ptr_bytes =3D hw_ptr - hw_base;
+> +	ret =3D regmap_read(regmap, memif_data->reg_ofs_base,
+> &hw_base_lower32);
+> +	if (ret || hw_base_lower32 =3D=3D 0) {
+> +		dev_err(dev, "%s hw_base_lower32 err\n", __func__);
+> +		goto POINTER_RETURN_FRAMES;
+> +	}
+> +	if (memif_data->reg_ofs_base_msb) {
+> +		ret =3D regmap_read(regmap, memif_data-
+> >reg_ofs_base_msb, &hw_base_upper32);
+> +		if (ret) {
+> +			dev_err(dev, "%s hw_base_upper32 err\n",
+> __func__);
+> +			goto POINTER_RETURN_FRAMES;
+> +		}
+> +	}
+> +	hw_ptr =3D ((unsigned long long)hw_ptr_upper32 << 32) +
+> hw_ptr_lower32;
+> +	hw_base =3D ((unsigned long long)hw_base_upper32 << 32) +
+> hw_base_lower32;
+> =C2=A0
+> =C2=A0POINTER_RETURN_FRAMES:
+> -	return bytes_to_frames(substream->runtime, pcm_ptr_bytes);
+> +	pcm_ptr_bytes =3D MTK_WORD_SIZE_ALIGN(hw_ptr - hw_base);
+> +	return bytes_to_frames(substream->runtime,
+> (ssize_t)pcm_ptr_bytes);
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_GPL(mtk_afe_pcm_pointer);
+> =C2=A0
+> diff --git a/sound/soc/mediatek/common/mtk-afe-platform-driver.h
+> b/sound/soc/mediatek/common/mtk-afe-platform-driver.h
+> index fcc923b88f12..9809e60db511 100644
+> --- a/sound/soc/mediatek/common/mtk-afe-platform-driver.h
+> +++ b/sound/soc/mediatek/common/mtk-afe-platform-driver.h
+> @@ -12,6 +12,8 @@
+> =C2=A0#define AFE_PCM_NAME "mtk-afe-pcm"
+> =C2=A0extern const struct snd_soc_component_driver mtk_afe_pcm_platform;
+> =C2=A0
+> +#define MTK_WORD_SIZE_ALIGN(x) ((x) & (0xfffffffff0))
+> +
+> =C2=A0struct mtk_base_afe;
+> =C2=A0struct snd_pcm;
+> =C2=A0struct snd_soc_component;
 
-Acked-by: Chen-Yu Tsai <wens@sie.org>
+Tested-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com> # on
+Mediatek Genio 510 EVK and Genio 1200 EVK
 
