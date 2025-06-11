@@ -1,98 +1,110 @@
-Return-Path: <linux-gpio+bounces-21408-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21409-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CBCFAD5C0F
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 18:26:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6849DAD5DDC
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 20:10:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 260EC1894E46
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 16:26:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1A11E7ACE34
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 18:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F3431F582E;
-	Wed, 11 Jun 2025 16:25:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B12F28315D;
+	Wed, 11 Jun 2025 18:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="duQbIDmM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmnYLyiu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1F81E521A;
-	Wed, 11 Jun 2025 16:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D18825BEEF;
+	Wed, 11 Jun 2025 18:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659138; cv=none; b=P+r4viBxV9rTNvxuMVjYvtZxAUq9WpOe+BeUM5LdgcZ+Mbm21svfbhv/1TP8gOit8z0nvw4m706HXGwWGMzOsJ443KR+d6H8drQCTVkNufasBUwgUEGhxsmoF4AJj7TogHLceUVpy8RJSMg7YWdFnE+T1IdHwsdH+Vh7o8kcsiM=
+	t=1749665402; cv=none; b=uxwBN6a9op8YFZ8r0WdWSE5wNa6E9ahoavgBEkXDwDUx0DC+xduunicrI5QV/nXYc8Py1GaBPq9NRJ+6Gz9+DnHfoH5Vnnp/k3rUZaot8UxYD7Q70FzaCoOCn2WNlL5P5yJOe7FeJLLHdI13royAtgNvkRkhQsh6pU6XWf7Hqq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659138; c=relaxed/simple;
-	bh=JoKvHcd/16FOMfJ8hZS2otWQ1fq0YEBXKYnmBQ5qxos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X3iBo4JzThsLQrEbNDXSfb5cK1gfkJwSSUSygiHDFlxKfcvTLZU/7HGwhr9u+8Yr9Ar/HBYQ53RZeAKRH7PLAEwaEsdqTQmFhT1epywWI25nrDujpHbFrl0rrnQYpOrjmLyDrg3V/4/IX5Ido0PDGeKuISe/72kVJi+wirzVvrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=duQbIDmM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B85C4CEEA;
-	Wed, 11 Jun 2025 16:25:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749659136;
-	bh=JoKvHcd/16FOMfJ8hZS2otWQ1fq0YEBXKYnmBQ5qxos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=duQbIDmML9WvmIyfdCPqarFvaytffHe4zKpMK0erbva9VbrUlErgN/6KcJi4OyCA7
-	 AN4DOtRiELMvi4IvMnKWVfkrD44EOr4cgyg12PZFlhvvCnuXmlgUXctRBNxlkg7NvZ
-	 Zn6fqbk5jhLnKDtn0FlKO0DJKbJ9U4MpM5KKc62GOFXRPFBUjlpEWIxZoMneaszy5U
-	 nk+2HWCa+0dsE9UkEF7TRsOorBHwcjDY0w7Iap3O+EcdS3hcbpzG/PkmsRwLNX9zWw
-	 clCwiLW/Wy2K+Q1KoMqG92sy56+6ak8cxblNoL6NqJ4Jv473Iy7X7fyWRrYgu27Db8
-	 vkq4KbbBM1IOQ==
-Date: Wed, 11 Jun 2025 17:25:31 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 1/5] dt-bindings: mfd: ti,tps6594: Add TI TPS652G1 PMIC
-Message-ID: <20250611-ion-barrette-1e43f2620c03@spud>
-References: <20250611133137.1686183-1-mwalle@kernel.org>
- <20250611133137.1686183-2-mwalle@kernel.org>
+	s=arc-20240116; t=1749665402; c=relaxed/simple;
+	bh=Vnhzu8nmVQq6xHlGY+U2p9a1qKEA6C6JDld4Frm94ho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GqqRYjbIjWP3r645kkrU2BCKnAE5aNYexKKMd/AbOoZ4XD9+bOSFlNDA5BH7dRVT58s4bIIQhL8V6M/rQsD1dAxSsG93SzXBoIlYU8b9hcVyar0rWOQ7s0rdkj07Q33dfJ4poQkrqMZI462qyssC04A9H17H9ecLsAzOrf6yd1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmnYLyiu; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749665400; x=1781201400;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Vnhzu8nmVQq6xHlGY+U2p9a1qKEA6C6JDld4Frm94ho=;
+  b=kmnYLyiuRVAAXJjJc9Z8Gzeg98k6Az3cah+eK04JnqxFIVjsHcfWz1ac
+   163YugX0s50dD2Uq3JKn8klcd4PovTNA+pAZc58borykdE4WMvjNRXaPe
+   L0fIusjj8mV+0YmiwhtqSA0Si25mZxajmVkc+3wxGvPh+TJRH8OGUaQN7
+   rOugfvd9IOE53dckTziSy33cWYOanqQZ0Hnac3IBQh3HsWlScwoQf/pjH
+   hqZCpcDQJaAPKDZrNYUMCtUc44yNu6vFAHV4dbUAKdUtfwr5TZswrzKxO
+   m9Sz2pcfOycko07Ka2+kUliaYx63jYxaZSmmAR+gCZDY1KQSByRKEvlFK
+   A==;
+X-CSE-ConnectionGUID: brhJZgxoSruWqKuO18M4PQ==
+X-CSE-MsgGUID: J52ckMyIRkaaWTm2bKiiPQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51686288"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="51686288"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:10:00 -0700
+X-CSE-ConnectionGUID: TXuK3Fq2QN+4xfoA7URDhA==
+X-CSE-MsgGUID: Z4qlnaGFSyi+Iv1LwpZ0WA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="152159437"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 11 Jun 2025 11:09:58 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 4072EF0; Wed, 11 Jun 2025 21:09:56 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] pinctrl: intel: fix build warnings about export.h
+Date: Wed, 11 Jun 2025 21:09:56 +0300
+Message-ID: <20250611180956.2780365-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NPyqz6VEAkXZBKkJ"
-Content-Disposition: inline
-In-Reply-To: <20250611133137.1686183-2-mwalle@kernel.org>
+Content-Transfer-Encoding: 8bit
 
+After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
+<linux/export.h> when W=1") and 7d95680d64ac8e836c ("scripts/misc-check:
+check unnecessary #include <linux/export.h> when W=1"), we get some build
+warnings with W=1:
 
---NPyqz6VEAkXZBKkJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+pinctrl-intel.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
 
-On Wed, Jun 11, 2025 at 03:31:33PM +0200, Michael Walle wrote:
-> The TPS652G1 is a stripped down version of the TPS65224. From a software
-> point of view, it lacks any voltage monitoring, the watchdog, the ESM
-> and the ADC.
->=20
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+So fix these build warnings for the driver code.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---NPyqz6VEAkXZBKkJ
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index d889c7c878e2..15f91fa198a3 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/cleanup.h>
++#include <linux/export.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/log2.h>
+-- 
+2.47.2
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEmt+wAKCRB4tDGHoIJi
-0qOfAP9B2sAwIv6xmvc26A60sTqWMV2cr7IVjvVfmX7DHSkg/wD/QjCLgH9LDlwO
-hmaJmmJp9+R/hjvg0es3TISpx02CFgU=
-=uyTT
------END PGP SIGNATURE-----
-
---NPyqz6VEAkXZBKkJ--
 
