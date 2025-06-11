@@ -1,185 +1,226 @@
-Return-Path: <linux-gpio+bounces-21340-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21344-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1389DAD4EFE
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 10:58:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55C9EAD4F1F
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 11:01:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9B8E3A6966
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 08:57:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DDCF1BC1CF5
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 09:01:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E755C244661;
-	Wed, 11 Jun 2025 08:57:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB03F25FA31;
+	Wed, 11 Jun 2025 09:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ry/wUV//"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aknfblDP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6E624339D;
-	Wed, 11 Jun 2025 08:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FB125E453;
+	Wed, 11 Jun 2025 09:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632276; cv=none; b=iLb3mFaK1T7OWuDlu0bItrgNbCb9RFFj/iuNMXrZ5UaKOm4ZAJU1ioA0pbstoNcp8dQq9H3db8Yv9KyGzV1z2VCM2Yl5pemGB4b/ebzjDMhp4VSnL3dTkrkXKc2mbq+hpeQhsikr2NdLPqW7g6uje8Dg4iazT2ncTV41cZiFgpc=
+	t=1749632422; cv=none; b=o7w45oVnUXBpIQ/Y35TrndnyouKr+jE/36gFZnhuxNVwtWh8+0BiOtcu7BKxbOsGPmplsj37YZ/kCzQUrmZaRTNHeDXGn1dGDee0leMdkKuXmB7h0HIFxGT4kF53430jBMyH1ZSTUdDGa01x9I2z5IBwdFNnDG3zsDOdseCmHkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632276; c=relaxed/simple;
-	bh=oCz3V+7ZTi4hFmVrBJWM7NCWZDfRFBK/IEiwC/HpnyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dkiVSZSjWnWs1rGRk7lUtG3Q8oTotxIVMKWYUpZpHlzToH+e6E1CJGwam+kQm27I6DaFcgA/gYhj3d/l4vEfjzAPgviyq/y8ZBAolBaVtOr7E9sbKx1yAWG44VeTbrW3nAewjJDdXsVHZxs4P8XO4qJnGcmahbgxSONXrU0lneo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ry/wUV//; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE43C4CEEF;
-	Wed, 11 Jun 2025 08:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749632276;
-	bh=oCz3V+7ZTi4hFmVrBJWM7NCWZDfRFBK/IEiwC/HpnyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ry/wUV///yloc7ZH6Z3DbDtkoWmr7OVO/u0DivsYbyhoZBnaBorMu9v5hUhXBncNC
-	 YoxHmILhOHrEfJTJi0nHycFYs0UF0JcddVe3oB/pN4P7zz17WOTVk+KbvIOlNb9myu
-	 ZW0Hlant5vbqQnPMJDnN4ewgVxmw3geWBQP3BkyDtrq8zeJoh0mdV2luoHm9sOpnHT
-	 X5m/7JqIF5vcvfqNeYMeCUlvkque0Bc+1nmQ6L6uIEiAeJSQ2p+pKhiZVkJT52E0uS
-	 SuuZ1pg1RU391hCzzdzM67q0tYp1DfBLnKyVQ+5oMURIFdL5U+vYL3fzjeA77sX7wR
-	 Sfc8KkK5zWsIA==
-Date: Wed, 11 Jun 2025 10:57:53 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Peter Griffin <peter.griffin@linaro.org>, Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 03/17] regulator: dt-bindings: add s2mpg11-pmic
- regulators
-Message-ID: <20250611-spectral-bullfrog-of-perfection-cb8e01@kuoka>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
- <20250606-s2mpg1x-regulators-v2-3-b03feffd2621@linaro.org>
+	s=arc-20240116; t=1749632422; c=relaxed/simple;
+	bh=/TszxrtN7Q75KACK8HeBQq9m6dROaYgn3MpRhoArex8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DNu8Xx0nmAXdql39UoMxIOv939yRMgWJIgfsg+WmSobJHwi119UDVpY/w0SOQhyLFC9BoGL8iXKdOau83x/LJ5VOb5USpbYFiwOSPnp6UfxH+rbWU9Y+W4FtKSYAybUy3tO6IFEZnhmPluC3VzT1NcEQU+GEU25lo4T3gwsiBqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aknfblDP; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 72D654330D;
+	Wed, 11 Jun 2025 09:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749632415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LNYYJz7D7BlrWVsNdpWiU7jtPOMg52gMBj/uwBmfiIo=;
+	b=aknfblDPQ7sPBBnSu+MMaUkHGe60TB+WujsblwVTBDX6XRjgtH3XftINhir1HlUdc6xCro
+	SOPh0hQvz/C/DoSx8LStEXVp1/tW6WH8eMsh51oK9g6hIMWCEDp7v64kb+CtNvjxiPzZL3
+	stSgfo9SMzzs8I93r+WDv2VKSzpycba47yxZHWYp8EbL4nADrDfEIbxbSoLgHgMFfXblqy
+	aXDy/SILd3MfDl9cmQ4iOpidYa5kiKcQks4HzHUPDU7qnhYuy46kVh5y8xxQgAA76+CsuU
+	g0FbHpIIScTrPoGGxBxPCvKSavwMtJKPmxqp/TTq+INbMdR0kTNQF2pbWoGdKQ==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v8 00/10] Add pinctrl support for the AAEON UP board FPGA
+Date: Wed, 11 Jun 2025 11:00:05 +0200
+Message-Id: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250606-s2mpg1x-regulators-v2-3-b03feffd2621@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJVFSWgC/4XSTWrDMBAF4KsEraswo59RlFXvUbqQZLkRJJYrO
+ 6Yl5O5VHEpSXPByxPDNe6ALG2JJcWD7zYWVOKUh5a4Ou5cNCwfXfUSemjozAUKBlcCdi7nj557
+ 77ErD+9SFsRz5cO77XEZud61TDiQoC6wifYlt+poPvL3f5xI/z/XOeH9k3g2Rh3w6pXG/mWiLx
+ EtAdls+pGHM5XsON+G8fcuBAnEtx4QcuFAGrY/CkMRXn/N4TN22nprxSfyCGiSaVVBUUBIKihK
+ cI7EE5QNUtcUaKCvYKjCGfAMU4xJUT6Cwq6CqoJdt2wZEhaZZgvoBalhPqG+VLZAW1mjT/FOZn
+ kCx+jkmqmATvDSafJSBlqB5gATrlU0F0XkjY4Dg7e4veL1efwAUl6Gl4QIAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+ linux-hardening@vger.kernel.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeetieejudffledvveeuvdeiuedvuefgkeegheejudefgfektdeuuddvfffhgffgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsr
+ dhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Fri, Jun 06, 2025 at 04:02:59PM GMT, Andr=C3=A9 Draszik wrote:
-> The S2MPG11 PMIC is a Power Management IC for mobile applications with
-> buck converters, various LDOs, power meters, and additional GPIO
-> interfaces. It typically complements an S2MPG10 PMIC in a main/sub
-> configuration as the sub-PMIC.
->=20
-> S2MPG11 has 12 buck, 1 buck-boost, and 15 LDO rails. Several of these
-> can either be controlled via software or via external signals, e.g.
-> input pins connected to a main processor's GPIO pins.
->=20
-> Add documentation related to the regulator (buck & ldo) parts like
-> devicetree definitions, regulator naming patterns, and additional
-> properties.
->=20
-> Since S2MPG11 is typically used as the sub-PMIC together with an
-> S2MPG10 as the main-PMIC, the datasheet and the binding both suffix the
-> rails with an 's'.
->=20
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
->=20
-> ---
-> Note: checkpatch suggests to update MAINTAINERS, but the new file is
-> covered already due to using a wildcard.
->=20
-> v2:
-> - fix commit message typos: s2mp1 -> s2mpg1
-> - mention GPIOs in commit message
-> ---
->  .../regulator/samsung,s2mpg11-regulator.yaml       | 150 +++++++++++++++=
-++++++
->  .../regulator/samsung,s2mpg10-regulator.h          |  18 +++
->  2 files changed, 168 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-=
-regulator.yaml b/Documentation/devicetree/bindings/regulator/samsung,s2mpg1=
-1-regulator.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..f2d596642501c197e2911ee3b=
-9caac189cf541a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regulat=
-or.yaml
-> @@ -0,0 +1,150 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/samsung,s2mpg11-regulator.y=
-aml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung S2MPG11 Power Management IC regulators
-> +
-> +maintainers:
-> +  - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> +
-> +description: |
-> +  This is part of the device tree bindings for the S2MG11 Power Manageme=
-nt IC
-> +  (PMIC).
-> +
-> +  The S2MPG11 PMIC provides 12 buck, 1 buck-boost, and 15 LDO regulators.
-> +
-> +  See also Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml for
-> +  additional information and example.
-> +
-> +definitions:
-> +  s2mpg11-ext-control:
-> +    properties:
-> +      samsung,ext-control:
-> +        description: |
-> +          These rails can be controlled via one of several possible exte=
-rnal
-> +          (hardware) signals. If so, this property configures the signal=
- the PMIC
-> +          should monitor. The following values generally corresponding t=
-o the
-> +          respective on-chip pin are valid:
-> +            - 0 # S2MPG11_PCTRLSEL_ON - always on
+This is the eighth version of this series. I just added a missing header
+file in gpio-aggregator driver to fix a build warning reported by a kernel
+test robot [1].
 
-Use regulator-always-on
+[1] https://lore.kernel.org/oe-kbuild-all/202506092324.XqSwWl1z-lkp@intel.com/
 
-> +            - 1 # S2MPG11_PCTRLSEL_PWREN - PWREN pin
+Best Regards,
 
-That's duplicating regulator in standby properties.
+Thomas
 
-> +            - 2 # S2MPG11_PCTRLSEL_PWREN_TRG - PWREN_TRG bit in MIMICKIN=
-G_CTRL
-> +            - 3 # S2MPG11_PCTRLSEL_PWREN_MIF - PWREN_MIF pin
-> +            - 4 # S2MPG11_PCTRLSEL_PWREN_MIF_TRG - PWREN_MIF_TRG bit in =
-MIMICKING_CTRL
-> +            - 5 # S2MPG11_PCTRLSEL_AP_ACTIVE_N - ~AP_ACTIVE_N pin
-> +            - 6 # S2MPG11_PCTRLSEL_AP_ACTIVE_N_TRG - ~AP_ACTIVE_N_TRG bi=
-t in MIMICKING_CTRL
-> +            - 7 # S2MPG11_PCTRLSEL_G3D_EN - G3D_EN pin
-> +            - 8 # S2MPG11_PCTRLSEL_G3D_EN2 - G3D_EN & ~AP_ACTIVE_N pins
-> +            - 9 # S2MPG11_PCTRLSEL_AOC_VDD - AOC_VDD pin
-> +            - 10 # S2MPG11_PCTRLSEL_AOC_RET - AOC_RET pin
-> +            - 11 # S2MPG11_PCTRLSEL_UFS_EN - UFS_EN pin
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v8:
+- gpio: aggregator: add missing export.h header file.
+- Link to v7: https://lore.kernel.org/r/20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com
 
-Now I have doubts these are real signals. Are you saying that S2MPG11
-has a pin named UFS_EN (such pin on ballmap)?
+Changes in v7:
+- all: rebase on v6.16-rc1.
+- pinctrl: take Reviewed-by tag
+- pinctrl: handle negative error code returned by
+  upboard_pinctrl_pin_get_mode() in upboard_pinctrl_dbg_show().
+- Link to v6: https://lore.kernel.org/r/20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com
 
-> +            - 12 # S2MPG11_PCTRLSEL_LDO13S_EN - VLDO13S_EN pin
-> +
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 12
-> +
-> +      samsung,ext-control-gpios:
+Changes in v6:
+- all: take Reviewed-by tags.
+- all: fix some nitpicks.
+- gpiolib: fix error reported by kernel test robot.
+- gpio: aggregator: handle correctly err_ptr returned by
+  devm_gpiochip_fwd_alloc().
+- gpio: aggregator: rework naming of GPIO fowarder API.
+- gpio: aggregator: all functions of GPIO fowarder API now take a gpiochip_fwd ptr as
+  parameter.
+- gpio: aggregator: fix some typos in kernel-doc and comments.
+- gpio: aggregator: in forwarder.h, remove unused linux/gpio/consumer.h and
+  linux/gpio/driver.h header files.
+- gpio: aggregator: add missing forward declaration in forwarder.h (struct
+  gpio_desc and struct gpio_chip).
+- gpio: aggregator: get_direction() operation now returns -ENODEV if there is no
+  GPIO descriptor for the line.
+- gpio: aggregator: handle correctly ptr returned by devm_gpiochip_fwd_alloc().
+- gpio: aggregator: free GPIO desc array after gpiochip_fwd_create().
+- pinctrl-upboard: remove useless cast in UPBOARD_UP_PIN_MUX() UPBOARD_UP_PIN_FUNC() macros.
+- pinctrl-upboard: rework the pinctrl mapping part (new struct upboard_pinctrl_map).
+- Link to v5: https://lore.kernel.org/r/20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com
 
-Same comments as previous patch.
+Changes in v5:
+- all: improve commit messages, fix some typos and nitpicks.
+- pinctrl: machine.h: add "Suggested-by: Andy Shevchenko <andy@kernel.org>"
+  and "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tags.
+- pinctrl: core: fix kernel doc for devm_pinctrl_register_mappings().
+- pinctrl: core: do not cast pointer in devm_pinctrl_unregister_mappings().
+- gpio: aggregator: remove a useless check in patch 5/12.
+- gpio: aggregator: fix condition to identify if the gpiochip forwarder can
+  sleep or not.
+- gpio: aggregator: add "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tag
+  in patch 10/12
+- string_choices: add "Suggested-by: Andy Shevchenko <andy@kernel.org>" and
+  "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tags.
+- string_choices: add missing parameter for str_output_input() macro.
+- Link to v4: https://lore.kernel.org/r/20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com
+
+Changes in v4:
+- gpiolib: use positive conditonal in gpiochip_add_pin_range_with_pins().
+- pinctrl: fix warning reported by kernel robot in
+  include/linux/pinctrl/machine.h.
+- pinctrl: add a patch to remove the extern specifier in machine.h.
+- pinctrl: use devm_add_action_or_reset() in
+  devm_pinctrl_register_mappings().
+- string_choices: add a patch to define str_input_output() and
+  str_output_input() helpers.
+- gpio: aggregator: set gpiochip_fwd as opaque and define getters
+  gpio_fwd_get_gpiochip() and gpio_fwd_get_data().
+- gpio: aggregator: add valid_mask in gpiochip_fwd struct to track already
+  registered gpio descs.
+- gpio: aggregator: add gpio_fwd_gpio_free() helper.
+- gpio: aggregator: add kdoc sections for exported functions.
+- gpio: aggregator: fix some nitpicks.
+- pinctrl-upboard: use str_input_output() helper.
+- pinctrl-upboard: fix some nitpicks.
+- pinctrl-upboard: add missing headers stddef.h and types.h.
+- pinctrl-upboard: add intermediate cast (unsigned long) for dmi_id->driver_data.
+- pinctrl-upboard: use getter gpio_fwd_get_gpiochip() and
+  gpio_fwd_get_data().
+- pinctrl-upboard: fix kernel robot warning 'unmet direct dependencies detected
+  for GPIO_AGGREGATOR when selected by PINCTRL_UPBOARD'.
+- pinctrl-upboard: use gpio_fwd_gpio_free() helper.
+- Link to v3: https://lore.kernel.org/r/20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com
+
+Changes in v3:
+- pinctrl: add devm_pinctrl_register_mappings()
+- gpiolib: rename gpiochip_add_pin_range() to
+  gpiochip_add_pin_range_with_pins() and add pins parameter
+- gpiolib: add stubs gpiochip_add_pin_range() and 
+  gpiochip_add_sparse_pin_range()
+- aggregator: split to more simpler patches
+- aggregator: add a namespace for the forwarder library
+- aggregator: rename header file to forwarder.h
+- aggregator: add some missing headers and declaration in forwarder.h
+- aggregator: forwarder.h provides consumer.h and driver.h
+- aggregator: fix error code returned by gpio_fwd_request()
+- pinctrl-upboard: fix order of header files
+- pinctrl-upboard: fix some nitpicks
+- pinctrl-upboard: rework macros to define pin groups
+- pinctrl-upboard: add missing container_of.h and err.h header files
+- pinctrl-upboard: handle correctly pointer returned by dmi_first_match()
+- pinctrl-upboard: use devm_pinctrl_register_mappings()
+- pinctrl-upboard: import GPIO_FORWARDER namespace
+- Link to v2: https://lore.kernel.org/r/20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com
+
+Changes in v2:
+- mfd: removed driver (already merged)
+- led: removed driver (already merged)
+- gpio-aggregator: refactor code to create a gpio-fwd library
+- pinctrl: refactor gpio part to use the gpio-fwd library
+- pinctrl: add pinctrl mappings for each board
+
+---
+Thomas Richard (10):
+      gpiolib: add support to register sparse pin range
+      gpio: aggregator: move GPIO forwarder allocation in a dedicated function
+      gpio: aggregator: refactor the code to add GPIO desc in the forwarder
+      gpio: aggregator: refactor the forwarder registration part
+      gpio: aggregator: update gpiochip_fwd_setup_delay_line() parameters
+      gpio: aggregator: export symbols of the GPIO forwarder library
+      gpio: aggregator: handle runtime registration of gpio_desc in gpiochip_fwd
+      gpio: aggregator: add possibility to attach data to the forwarder
+      lib/string_choices: Add str_input_output() helper
+      pinctrl: Add pin controller driver for AAEON UP boards
+
+ drivers/gpio/gpio-aggregator.c    |  388 ++++++++++++--
+ drivers/gpio/gpiolib.c            |   29 +-
+ drivers/pinctrl/Kconfig           |   19 +
+ drivers/pinctrl/Makefile          |    1 +
+ drivers/pinctrl/pinctrl-upboard.c | 1070 +++++++++++++++++++++++++++++++++++++
+ include/linux/gpio/driver.h       |   51 +-
+ include/linux/gpio/forwarder.h    |   41 ++
+ include/linux/string_choices.h    |    6 +
+ 8 files changed, 1547 insertions(+), 58 deletions(-)
+---
+base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
+change-id: 20240930-aaeon-up-board-pinctrl-support-98fa4a030490
 
 Best regards,
-Krzysztof
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
 
 
