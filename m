@@ -1,156 +1,117 @@
-Return-Path: <linux-gpio+bounces-21368-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21367-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FB0FAD5289
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 12:48:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D4BDAD528B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 12:48:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA97316F158
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 10:48:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 551F4189AEBC
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jun 2025 10:47:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01B322874E4;
-	Wed, 11 Jun 2025 10:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 519812750E4;
+	Wed, 11 Jun 2025 10:44:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxwd/KZP"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="FT8xB5QZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE81A27586B;
-	Wed, 11 Jun 2025 10:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CBF2749C2
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Jun 2025 10:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638677; cv=none; b=X4SmAvr9ezHpX+9lifhpCLygTM+zwhk/wXDdMuTRroEK7P0scZIfmI9Ra3MozKpsm9zT+1tHGbhYsC7/dMpztfRx2RITlk1mywGvg+JhgZ9/f1AuzL9j8EYB1gYsX4Jj7RZYBXaCQoEBhSTo8jDAd48UZrrqf+bUc5YfrLtr6qw=
+	t=1749638669; cv=none; b=pK3HM4yKq1l6pjmdybPJSJbWtZTfQNv6RWDQ54lzJKZzb0jmy1tsxKpxX2XMTDEoeeAk/JgRBfw35DBEM2KskicKTmn/4ZqHybNOuH2IEjqeI/TZ+XHF3fV6N2tzt/F/X5jDXhhH8bVS2W/HQQV0fOXsWDUI6eWFKH8kyIMnqjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638677; c=relaxed/simple;
-	bh=DFXb2Sd1AviR0meTWbNWr6As2FJfbh6fzCtv+oFGSEI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fGXjvgMmCEmeADZtctInqAZBcfd3msoY7ai19o9qr2xHqQjhH88LdRVQxjmfNblgobtJb2//dzdJrSCspn6nYzrtSAKCU6JPqFwzbBRbMfk6chv7KJjhcxFBAyDVqEwhfGv0DS9pTiRZuWGYhY2bvPuWJHBzh9M4ICi2rxYWFxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxwd/KZP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99AB5C4CEF3;
-	Wed, 11 Jun 2025 10:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638677;
-	bh=DFXb2Sd1AviR0meTWbNWr6As2FJfbh6fzCtv+oFGSEI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jxwd/KZPJJwG9Ywjh1/PhRGVdKW45Lk0qDePpntE/WGmu+0Cu+8m9ZsJhmwrjm15d
-	 pp0KgriTv6qpadEyjMj9KerrndYQbYAhprMi5SKtSuNmYGWRXdacFwBDwWd+S6CccU
-	 xqi2pRmxylUOrjjpZnm+QhpDOWYtok/3ghf8eiB3i2CckpHXr7l28hWPvOvng9giI8
-	 JHOqZZcVOEFSSG8xZdAYrrin2Ng2c/TGFsm72zZ6S7anjMveDsnWgTBpYoeS9KcUFk
-	 /O093vWRxY02LXlWByH+fKEDXWdRDV8IEaUzWwsu2fRxDZeuVcNLncmyA7dlrHU7Bu
-	 thZbbZf5ZCDFQ==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
+	s=arc-20240116; t=1749638669; c=relaxed/simple;
+	bh=5osS7sA8uiLOyq1ZOLmO7Mg7tci9YLluKF/Md1o2sCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EBlWTujRsi7m25PcgsCk90hyta/DPVYlkSjbbzWNfUbaQjmWaSNkubIpUTfYcGWSj66rrqsFtmhBgkDqbPz+rUwNzRZaamDe9mq3xuuxPwOb1wE3mmSHr7CH/KHQm3eJ2HE8krtOEm2zXBA3ncPjBq1NN9pMHNyTsv3eA4baRpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=FT8xB5QZ; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=5osS
+	7sA8uiLOyq1ZOLmO7Mg7tci9YLluKF/Md1o2sCY=; b=FT8xB5QZP4V/XqItEUIg
+	7kRO/fu+4WSJrCeC8Sr2yefjCt15u038uvLC0ecSTgnsCvKdkCIDIdxZzigSoMpl
+	suZNoOR6KrNcCWTOVgjzN5WuToLmRSG89+YhfBrLGYFSnquYs6/RGLsAWrfotmwi
+	6mxBeTh/X5lkvZ2SEsMsplT1zUFHyohme22iUsIUXR4hyH+K7DGO1tJmn8pxBwPi
+	5pZixd4Qg20CsVveL0+MxryDbTNBIVsvuy0SSrb7UUzonMS4dPZpfeU66Lf9dmpM
+	V2xnGfl/3GC/XeW2EPNyjjA164bCYOEEpXuF/exD7CPPkgOAiTairOhfMt6nAVk6
+	gw==
+Received: (qmail 3208399 invoked from network); 11 Jun 2025 12:44:25 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Jun 2025 12:44:25 +0200
+X-UD-Smtp-Session: l3s3148p1@Em0af0k3OpcujnuC
+Date: Wed, 11 Jun 2025 12:44:24 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev
-Subject: [PATCH] pinctrl: Use dev_fwnode()
-Date: Wed, 11 Jun 2025 12:43:45 +0200
-Message-ID: <20250611104348.192092-17-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250611104348.192092-1-jirislaby@kernel.org>
-References: <20250611104348.192092-1-jirislaby@kernel.org>
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 4/5] pinctrl: rzv2m: use new GPIO line value setter
+ callbacks
+Message-ID: <aEleCNuFRmMWGMu7@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-0-ad169a794ef0@linaro.org>
+ <20250611-gpiochip-set-rv-pinctrl-renesas-v1-4-ad169a794ef0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pgMNL4E+S76JB3TK"
+Content-Disposition: inline
+In-Reply-To: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-4-ad169a794ef0@linaro.org>
 
-irq_domain_create_simple() takes fwnode as the first argument. It can be
-extracted from the struct device using dev_fwnode() helper instead of
-using of_node with of_fwnode_handle().
 
-So use the dev_fwnode() helper.
+--pgMNL4E+S76JB3TK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Sean Wang <sean.wang@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
+On Wed, Jun 11, 2025 at 09:27:55AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: Samuel Holland <samuel@sholland.org>
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-sunxi@lists.linux.dev
----
- drivers/pinctrl/mediatek/mtk-eint.c   | 4 ++--
- drivers/pinctrl/pinctrl-at91-pio4.c   | 6 +++---
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index d906a5e4101f..9f175c73613f 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -561,8 +561,8 @@ int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
- 			goto err_eint;
- 	}
- 
--	eint->domain = irq_domain_create_linear(of_fwnode_handle(eint->dev->of_node),
--						eint->hw->ap_num, &irq_domain_simple_ops, NULL);
-+	eint->domain = irq_domain_create_linear(dev_fwnode(eint->dev), eint->hw->ap_num,
-+						&irq_domain_simple_ops, NULL);
- 	if (!eint->domain)
- 		goto err_eint;
- 
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index ca8a54a43ff5..57f105ac962d 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -1212,9 +1212,9 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
- 		dev_dbg(dev, "bank %i: irq=%d\n", i, ret);
- 	}
- 
--	atmel_pioctrl->irq_domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node),
--			atmel_pioctrl->gpio_chip->ngpio,
--			&irq_domain_simple_ops, NULL);
-+	atmel_pioctrl->irq_domain = irq_domain_create_linear(dev_fwnode(dev),
-+							     atmel_pioctrl->gpio_chip->ngpio,
-+							     &irq_domain_simple_ops, NULL);
- 	if (!atmel_pioctrl->irq_domain)
- 		return dev_err_probe(dev, -ENODEV, "can't add the irq domain\n");
- 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index bf8612d72daa..a090d78a3413 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -1646,7 +1646,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
- 		}
- 	}
- 
--	pctl->domain = irq_domain_create_linear(of_fwnode_handle(node),
-+	pctl->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev),
- 						pctl->desc->irq_banks * IRQ_PER_BANK,
- 						&sunxi_pinctrl_irq_domain_ops, pctl);
- 	if (!pctl->domain) {
--- 
-2.49.0
+--pgMNL4E+S76JB3TK
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhJXggACgkQFA3kzBSg
+KbbV7w/+NEqPv4JYNPBoU+KIg0B+PDk3HzXCKIV7bwtpg3izGxqPn+RgSYEB1INW
+eRCSEsPliFFxgKkl1Vmb7mhNVx7HJIftU2nUPLWph+9W65o8f40tYLBGXZdu0ggb
+15i0j248h851gbDK6VqvqhEx1LQ7WOqcku2j9ERmspcZ67S+hoZZpvmTIvMEOlGi
+6lMb72WvX+oHvOUoT/N0FET3qZaKrtpi0w4jkxnYH1kcdANUUt5PVHUtp9gQiomT
+fLXuqDlIOR9VPPmxJG4SAqFqmyi6JHd9Os6HRVkHZnqwTo8VLaHdHjNJa8rr1BbE
+RoAs0A1Tl0Sgdst2vIHpqkmWvgESR2TSLuFw3eXrSMa/M9+CZDuOPhjTXWK5txNu
+ovvaM5U/k+LW1duW6PeWX4TXBNm5+d+qtYht//jRTP2zBh37kOv/mgS5vmtmtOQM
+AJDXsKq/u2BzMsLAkHhs1M2cFqB05AXDV0K+Ez1m+bsDbQSEAoJXgE+lrBKPR9z1
+O7IFn00wQKkw0ETdfe4T1aYFfG+aCNZhDWivNQjYMkapQqCF9XE0oxpgFGzhjBg9
+0lV8p59d+CQTpJpwqMBwvAY/FqeNIPuHAZvHVRVbMslvYcYvijrgQuEfJkBT4KyS
+FXiYGQzB/VLIjmVJaqeg3lkxpXIdZLBZh+rRzMSl4hx+Ez5DlSc=
+=HW95
+-----END PGP SIGNATURE-----
+
+--pgMNL4E+S76JB3TK--
 
