@@ -1,151 +1,205 @@
-Return-Path: <linux-gpio+bounces-21428-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21429-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D4BEAD6E77
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 12:59:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F2EBAD6E99
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 13:06:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 693773B04E9
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 10:59:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0DA33AF6EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 11:05:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E03023C397;
-	Thu, 12 Jun 2025 10:59:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8039423C51E;
+	Thu, 12 Jun 2025 11:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6nN+AaH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5BJuoTc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF4923A57F
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 10:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B8923C4E1;
+	Thu, 12 Jun 2025 11:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725962; cv=none; b=h+02sw2LUxX5jL2cDE0D7UX42pGhm927ocCU7qsc2v/r2tlhRe51GAVlQUzr00Vh4hTdrjfkEWTEgHCzI15CBl+HLycLyIuqtfUfrW13Im3ndX7KeVClG1yX5EcPdGdiYm0DeEJc1B5zI6E4l7MfdBLv7MoiZXnRYBGDVzkAKTc=
+	t=1749726355; cv=none; b=r0l8sLStE2BLys29Qgj/9I7n1XOsTxiPJDW6Z1G8vbebkoNy/B6Mo1jjGVb52ZmzMxz+ijzX0Fim9/TklXKNZEbPxFoLUmtT3SbWq9fnVmwZJu7nTyBq7B5rZ6B1Xuupcq/ehX/Br5kkOhKURYq/PMo/kgisLZL423mwFMu7NZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725962; c=relaxed/simple;
-	bh=WWPYYggyKVUIqcpZRwtY3ch16mcUxM6fvmZKKpyOsWg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hI0CVhwBhY91MmA2/P/pFT1kYPerrPdf7zTn70qxdrI9nVng7NHtUD/RNCt5mG8Dy/wnKMC5RR6XvjAc0Tn1X1wJYpISXOwQrryKecuB47ryEsPfBdRbRADGhXH9+NXaHr/s5WyR19dpFH9MRK8hN/itpDYJM6RXHdBF6XVweNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r6nN+AaH; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so4569845e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 03:59:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749725957; x=1750330757; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OxVFpXC9gE/NnptI7yasZSeAwdsDwjZxI1xtlSOfvvA=;
-        b=r6nN+AaH1FFt9eiD/oBB6xuxgOlHpttnmzJhBx3WCbi/KaDm+x7tLBZyac03mSdqFT
-         n75/2p6JKdJjfULVxmhhVzlSK1CoWfbvx5ZN94xlE/oCvExe7Mpg/3DrCfHFBg38SpHw
-         AZbxEyi81sDmbs6yXTlIWc7Hcf82sdtAv/myAQnpqMUwIZOHCL9FCLTX/CZYOXeeTojw
-         ckQjb0s/Su47ljH+lKQ7oMYRtYI17ATM1q1zIqJjW2rNLvK6w0QCOxZ6WTYaUmTyURZo
-         6P96e6qJ076z6uZXdapfKqBNGdoQxxjyN9Uwfwu3kSwDbprln1I3fE14n8rVDFcPp6iL
-         4A6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749725957; x=1750330757;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OxVFpXC9gE/NnptI7yasZSeAwdsDwjZxI1xtlSOfvvA=;
-        b=RURJ0mu/MIYENiBojpEy+zzzfQQWRHTh4hM21lJtqoOy8suyfxGI1RBZqR1OjLjfnO
-         OHEDhYQqOEtFoM79NNNbNXoDdGespfgBOR7ftgvoeueytvDmapsK4IhVwgxO8NpOBGqk
-         wRuNxyZqLpQX6hrcj7QMutNkkGOH+tRRud5L+Q+33/kfX61+v0sl4H/S5Ml0ZUjB8vqj
-         wREO96idZ9uGL8cTYDUcjtB9TCeMLWbGZEPSgNwv2CLhTHiPAidziLsGL6Ojmvqj/rgI
-         jWsaWU4iHCEx1O6jRRvNF8pzYtNssoahkiVl/XICIrOlasAyPGhyzrS4DdwqU5KsoEQ7
-         w9jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUf7a/Kln9wOoHM90E+LuRZqleFssZO16OoMKuCSGhlFAIfAsIl7jvi9Es57QwcdAIHrp4GcDLlEOFc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCDl3UeqW7rwXGctFfsBF2+D960+51G1uJ4dqmBHuyQA5ZPLwH
-	Ka43v4hQ3U9Nu1B3zEmferU9jJ3LmMFWUj3mXUs8rWFHid9qcnmVUURs3TJ9049aKN0=
-X-Gm-Gg: ASbGncvbszlgEtr0SRFSsxloXE5oP27m23yVtu5uG9iX+M4Zxr5Z6S+JTmgBKLoABLR
-	YfInAuWysi8/RO4yGtdCCJTW38yLg71nOecoPnm4qJ4kH2ZlwEL3AMFozbrKKT7PO0fLB38ud4v
-	xRglBvjW+fhcQA4cqKko1E4UZbCRhGYpe5iqbndUfS0e9hCk/eZe4Bf0O3hRdP4Rx9XFRtTvk7j
-	hkgfuJl09vOUL02kzB5RPh/Iyta/dLg0+CPEPRNkwbdGob/BIwgIEUzlUB8r7LoolbN3U+nellr
-	0AhO2sGMeG1WPsZAyqkSJTVWE039pT+/VcHPdoPaDkBhPadoh/FSsZMg3x2nEvlEAA==
-X-Google-Smtp-Source: AGHT+IHqd8/I6PcH/SsGO4ZHasePxLhvFKcF2xtJG5ImKC1vi9knPoEYRyrNOkQXYTNCKl3KYXGlKw==
-X-Received: by 2002:a05:6000:4028:b0:3a5:1f2:68f3 with SMTP id ffacd0b85a97d-3a5586e9764mr5499812f8f.46.1749725956635;
-        Thu, 12 Jun 2025 03:59:16 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561976a20sm1681124f8f.19.2025.06.12.03.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 03:59:16 -0700 (PDT)
-Message-ID: <b090594cb2e61160a830b4cd73d7d8a529872130.camel@linaro.org>
-Subject: Re: [PATCH v2 02/17] regulator: dt-bindings: add s2mpg10-pmic
- regulators
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Peter Griffin	
- <peter.griffin@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Date: Thu, 12 Jun 2025 11:59:14 +0100
-In-Reply-To: <f5fcaac5-fa8e-41da-b1d2-e84197992e3c@sirena.org.uk>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
-	 <20250606-s2mpg1x-regulators-v2-2-b03feffd2621@linaro.org>
-	 <20250611-statuesque-dolphin-of-felicity-6fbf54@kuoka>
-	 <f5fcaac5-fa8e-41da-b1d2-e84197992e3c@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1749726355; c=relaxed/simple;
+	bh=J7zUfhMpAdwFfUP75/R8HkzXHrkbFmTeVwn8MXHX3wo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rt9r0YEEaCtllte0kd4Rt0aYY5By8lQ1TguGvIeVfBqy/CJ0Qo8jy1lN2argjzYsQSeVIJS7HHJr9MEHbUAWGwyGwK9TPsXha470o6MpE1v6/GHYJrk4fosduCsoHVk+tlVALq1HJYHmki3XEby6d7AnItXHz7u/UztVHOEjUgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5BJuoTc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA18C4CEEA;
+	Thu, 12 Jun 2025 11:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749726354;
+	bh=J7zUfhMpAdwFfUP75/R8HkzXHrkbFmTeVwn8MXHX3wo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=G5BJuoTc4SmTGNDTEXaxziELQuqow+YWxAYIBa3/bnaqCE15yWEFuB+v/S7567Gvd
+	 Es6LynGXcv5ll4OSjE7b0sk6pKbD4tcjBDTPMKy0m+gf8kBWR/FTNVY1UHRPM65bMt
+	 jmsBOplO9IAkKCWw3IIYTrg4EE1SZmPw3kvARLswbhZI1wwPsC9ByxfBscYrTvsDWY
+	 U20HQ4loBBP+hlcE3HQ17MbfgXB1G31CJveorWHgY5FV/+di1E7DxmFv8XsgB3/LVG
+	 caqfdKlvLBNYjRznPW9euvbbKUwZGxA0FIKed+mVcfm8SsxeNO4kCXn4mR5S9rOwYL
+	 xCMaGxB/I1bNA==
+Message-ID: <4f31f016-d250-41ea-b613-b074b8ea00d1@kernel.org>
+Date: Thu, 12 Jun 2025 13:05:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
+ <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+ <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
+ <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
+ <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
+ <42a0b7ab-d85d-4d52-a263-4a4648c7ff05@kernel.org>
+ <2865ab3a-1c20-4951-8132-4be98d73d70e@foss.st.com>
+ <f1a63830-0533-4f1c-9116-32e8c1e61a8b@kernel.org>
+ <26a4f12a-2295-402e-8e31-45733aa6582d@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <26a4f12a-2295-402e-8e31-45733aa6582d@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Mark,
+On 12/06/2025 11:31, Clement LE GOFFIC wrote:
+> On 6/11/25 17:48, Krzysztof Kozlowski wrote:
+>> On 11/06/2025 16:08, Clement LE GOFFIC wrote:
+>>> On 6/11/25 08:35, Krzysztof Kozlowski wrote:
+>>>> On 10/06/2025 15:33, Clement LE GOFFIC wrote:
+>>>>> On 6/10/25 14:38, Krzysztof Kozlowski wrote:
+>>>>>> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
+>>>>>>> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
+>>>>>>>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
+>>>>>>>>>>
+>>>>>>>>>>> +		};
+>>>>>>>>>>> +
+>>>>>>>>>>> +		hdp: pinctrl@5002a000 {
+>>>>>>>>>>> +			compatible = "st,stm32mp131-hdp";
+>>>>>>>>>>> +			reg = <0x5002a000 0x400>;
+>>>>>>>>>>> +			clocks = <&rcc HDP>;
+>>>>>>>>>>>       			status = "disabled";
+>>>>>>>>>>
+>>>>>>>>>> Why are you disabling it? What is missing?
+>>>>>>>>>
+>>>>>>>>> Nothing is missing just disabled by default.
+>>>>>>>>> The node is then enabled when needed in board's dts file.
+>>>>>>>> Nodes should not be disabled by default if they are complete. That's why
+>>>>>>>> I asked what is missing. Drop.
+>>>>>>>
+>>>>>>> Hi Krzysztof, OK I better understand now.
+>>>>>>> So yes the 'pinctrl-*' properties which are board dependent are lacking.
+>>>>>>
+>>>>>> These are not properties of this node.
+>>>>>
+>>>>> Does this mean I should add 'pinctrl-*' properties in bindings yaml file ?
+>>>>> I don't get it..
+>>>>
+>>>> These properties have no meaning here, so the hardware description is
+>>>> complete. You claim that you miss them thus device is incomplete is just
+>>>> not correct: these properties do not belong here! They belong to the
+>>>> board but even there they are totally optional. Why would they be a
+>>>> required resource?
+>>>>
+>>>> To remind: we talk here ONLY about required resources.
+>>>
+>>> Yes, 'pinctrl-*' properties belongs to the board and are not required.
+>>> So nothing is missing.
+>>>
+>>> This hdp node in the SoC dtsi file can be enabled by default.
+>>> But the hdp driver will probe and do nothing because without the
+>>> 'pinctrl-*' properties from the board files it would not be able to
+>>> access to any pin.
+>>
+>>
+>> Pinctrl has other features in general, including interfaces to userspace
+>> (as pretty often combined with gpio, although not sure if relevant here).
+> 
+> You're right. Also HDP pinctrl has a GPO feature accessible from userspace.
+> But by default the HDP is not connected to any pad; it needs the board 
 
-On Wed, 2025-06-11 at 14:53 +0100, Mark Brown wrote:
-> On Wed, Jun 11, 2025 at 10:55:44AM +0200, Krzysztof Kozlowski wrote:
-> > On Fri, Jun 06, 2025 at 04:02:58PM GMT, Andr=C3=A9 Draszik wrote:
->=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 For S2MPG10 l=
-do20m, the following values are valid
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- 0 # S2MPG10_PCTRLSEL_LDO20M_ON - always on
->=20
-> > No, use standard regulator properties - regulator-always-on
->=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- 1 # S2MPG10_PCTRLSEL_LDO20M_EN_SFR - VLDO20M_EN & LDO20M_SFR
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- 2 # S2MPG10_PCTRLSEL_LDO20M_EN - VLDO20M_EN pin
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- 3 # S2MPG10_PCTRLSEL_LDO20M_SFR - LDO20M_SFR in LDO_CTRL1 register
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- 4 # S2MPG10_PCTRLSEL_LDO20M_OFF - disable
->=20
-> > I don't think we allowed such property in the past. I don't get what is
-> > here the actual signal - you described registers in multiple places, no=
-t
-> > signals. Few of these duplicate standard properties, so this looks like
-> > exact copy of downstream which was doing exactly that way and that was
-> > exactly never upstreamed.
->=20
-> It looks like we can infer the configuration needed here from the
-> existing properties,
+OK, then that was the answer to my first question - what is missing.
+However aren't these pads connected internally also to other parts of
+the SoC (like in most other vendors)?
 
-For this ldo20, yes, and I'll update binding+driver to do so.
+> 'pinctrl-*' properties to configure the SoC pinctrl and expose HDP on 
+> the SoC pads.
+> 
+> That's why for me the enabling of the driver should be in the board file 
+> together with the SoC pinctrl configuration.
 
->  if a GPIO is provided then use value 2 otherwise
-> use value 3.
+And what are the default pad settings configured by HPD driver in
+bootloader (and by bootloader I mean one of few bootloaders this is
+going to be used on like U-Boot)
 
-Close :-) There is another register to say if this pctrlsel should be
-respected in the first place. Therefore if a GPIO is provided, then use
-value 2 for pctrlsel, otherwise the value doesn't matter, as pctrlsel
-will be ignored anyway. But doesn't really matter in the context of this
-discussion here, just for future reference :-)
+> 
+> The userland cannot change the pinctrl alternate function mux, this is 
+> statically defined by the devicetree.
 
-Thanks for your review!
+If you expose GPIO then userland needs this regardless of alternate mux.
+IOW, board level could not configure mux because it should be always
+configured to safe GPIO input.
 
-Thanks!
-Andre'
+Best regards,
+Krzysztof
 
