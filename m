@@ -1,221 +1,173 @@
-Return-Path: <linux-gpio+bounces-21445-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21446-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8296FAD713B
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 15:10:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 03C4CAD716D
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 15:16:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B73E11618EA
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 13:09:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF5931655A4
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 13:15:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B9B23C8AA;
-	Thu, 12 Jun 2025 13:09:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B4F244661;
+	Thu, 12 Jun 2025 13:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Thc8VYLw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DD30PPJy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B1D230BDF;
-	Thu, 12 Jun 2025 13:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0282244691
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 13:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749733763; cv=none; b=FCmX/McJCkuQZo6hTTBSLd+HTDkllS7vJR+NIvQHMrU8/7Y+1yq0vKJIq0eDQ30U8xViz6eryM61I6juBBz2zKxw7GILWfqcseuQSupg2zCMk10Dx8VAe+E5q0WKuPIdCZt+TOflUJfTPEQu0aRPtZP8AgPnxgua4meBSdb3cys=
+	t=1749734124; cv=none; b=GS3ku+wjX9/6l9fCs+LhT+3uPGmKdM8Kn0klP91pFrQzbdCFQAOZCnGzepaUBx2ryeWGeW+1nCToCk5NgrbR0n9aDlygTcwmTkWQdGLoJOUy1ir//TRzhzFbdyXZNm+lfLbB4Lo60t9E1JnLEimKM9syOJq1iIW7WZH+by513rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749733763; c=relaxed/simple;
-	bh=xwsOfIoKqY/0O3MBZxVMtaDtILPbFj+QdkHtUyoJUFc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O3N9T1du7PKJDeqdRwy/oudf14mxvsNNZtiSpOPg0rqQI5eyiCIPaMNghst46u4fdTyod+QoTfU/HSO7Q6PvrwWSJNLATsooIK+Qxwlvo42IFT6wQnAy9rzS33vGcgAy8Z+38Uw5jkEfOLaz9k9SBieBXCqeTFFZOW8XWcK6TBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Thc8VYLw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82141C4CEEA;
-	Thu, 12 Jun 2025 13:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749733762;
-	bh=xwsOfIoKqY/0O3MBZxVMtaDtILPbFj+QdkHtUyoJUFc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Thc8VYLwV9ycxoh6OCPv6fb9TKFrsN6OZNL+HE9u2OrJFW59kisCalpmjitcG4QVB
-	 PQo5djcB9rN92SYOuv27MzHOgNemSuEt+ys6MPN1t+u+hPdKuo0vQGMn8Sn0NO9jB2
-	 ATJBKl8eNIfHFcwqmchOq/ornWTwyntwhXNRvaLg1m86ZcTUkLKDt1bKEmHBMLBwzx
-	 PHoVNBjD3ISKNxqKWICQ1MmJmgzS4VhSVPIsBGe1Od+MhYzNXmjzfLWyAGwG9/ffWP
-	 1viIeJYrlof2gLAvAp6VCKqulTHO8NcT4WY+h2we0Z7n3gDT8fFpzAUOkC2rIUu91R
-	 pcPuwWWWaYnLQ==
-Message-ID: <30f8e319-4103-44ba-8f98-c01e7b0ba76c@kernel.org>
-Date: Thu, 12 Jun 2025 15:09:17 +0200
+	s=arc-20240116; t=1749734124; c=relaxed/simple;
+	bh=RR1LOd1WsQSlBgBjH2f7CoS6VLXc7E6SpyBe5UrVm7Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iLPyUzpCE+SgpugF1kHu2auQH9eRuJgbasVnUHN3v+r/NC4vV5+34Yo3Apy3K48VqcMLBzM3R6Czxpp2yKCYnrmLCtQbt5UJlI3gH9r8W+kwDjailjN0e0l4Gj4C1ZtynTXqLvO8sFSKJZ82px2pYgoALjY+1kKjyOiB142eLgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DD30PPJy; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a365a6804eso574584f8f.3
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 06:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749734121; x=1750338921; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2SUJrQZ3PU1yeKx3RCvPctng80jzOe5NjGlx/Li35HI=;
+        b=DD30PPJy0eNaE95G4iUe0dO2TvhxPOTgs8VpzxKt0Qr0cuU9fh0+HWCCJlCIQ6edLu
+         uhmXfaQo/upu5FEj0G3/1ts/qFhjKBncdrzs6W7BxAQ4HXmP16zuAncHP/h1ITNNb80C
+         yzMFABEn3zddyZ/jGF3Yf0JAaUKU0FkrvYtI65bsI9uJjdCb8WErA82Nq9S0LEnuk4ab
+         8Ulky4ygwwiYY/RxiRpi8wqyHzvUC7r5Edwj6XwfeMxsgqtlVka2m5ARjvAtf5o9jgqP
+         LCKO45V4slwW0gBb3Ncyh5S01izf+Ghfwc+K7wj6gqWsRO0Qwr8QuXtnGhSAXusRtDjy
+         yuog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749734121; x=1750338921;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2SUJrQZ3PU1yeKx3RCvPctng80jzOe5NjGlx/Li35HI=;
+        b=cgo0Ijj1d4jjGVZcSzkHdbc0FfGziFOwiViRugYCsN3r5QVz3RIEoQ7g+z7+yqPUxM
+         twkRKRqdVKXGqaagEHH3CTRd+AebSfGcC0tdGSaBmBQY3Uu5vFKxxhuqiIPGpn5IsMei
+         gQlFaV8isM18+O9PiCvEOyvRLtzK9bvjq917SeKJP9NcLfxjmdIpM9IQ9BykAawMoMwM
+         PsDTD6qPX+OZfAc4YSrDp6VzZHYuOZtKZd36Z/0ZGu91rSkmmxhUIcYl5b0r5bojtJGv
+         p07T+lnZA9hk/jUCZY0+Vk8bc2RKpdGFP6vZmGCrK4yhCgMQ4vAW+IDul3Aeqhdv8CxG
+         +9YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKOea7cBBJawZnORG4fYZ8TnEdf6nMww3cVSvdntJOCwOoDXHi8aZq5J+98zoKFc+JR/AsUIgn46vN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa4OyH6722aT+L0qOlq4I+oTp35iRlQvBe6ZUIxoK4zCpz61Xo
+	Qy1HRlCYpyXIWfKEgjGgeu7ZGRBvOM/LUUM7rsfxggGTrju+enXGYJ0LUepUmbGe7t4=
+X-Gm-Gg: ASbGncuSSyEdNuyxqT5ZHnMtHsDi6LmsxG6LxxSP6PzvkrgZbHc7Sl3PWy2L+em3OXY
+	XxMKvGwCSVi9TTTRLfrlbtyR0HjSfM8HLN6mkcNTxQqj3Xtq+XCoPTwPSWDpz5WPS2VYxD7TkCp
+	ILgtlQwfdq3z17SQBEvSN6KCxKpm6fn3t0zpsmIRCKH/CvNQY9mvEh5vQc/8Cdw3H4uef7brV/m
+	9jQZ10Fn64ICHK4/yqFZjal1YO4F7s58s12emGzEetH2wrmuOCCrC3KYwYOHPLUTHaYD1zfyOP/
+	hk/PotFU4ZlvtOh1yWzrAZlqP63hHXupxG99R/ZheAYcrw+CoDnJlKQ=
+X-Google-Smtp-Source: AGHT+IEGvLaK/L2RekqDVUDwvakAKw3oVVhhkhavlDULh5EU7f4jCZh3tBP0kZZ2oTyR7UEhkVrpcw==
+X-Received: by 2002:a05:6000:2409:b0:3a5:2cb5:63fa with SMTP id ffacd0b85a97d-3a558688b57mr6508483f8f.2.1749734120909;
+        Thu, 12 Jun 2025 06:15:20 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8b99:9926:3892:5310])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea17d7sm20619795e9.10.2025.06.12.06.15.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 06:15:20 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/16] pinctrl: use new GPIO line value setter callbacks
+Date: Thu, 12 Jun 2025 15:15:09 +0200
+Message-Id: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp13
-To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
- <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
- <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
- <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
- <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
- <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
- <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
- <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
- <42a0b7ab-d85d-4d52-a263-4a4648c7ff05@kernel.org>
- <2865ab3a-1c20-4951-8132-4be98d73d70e@foss.st.com>
- <f1a63830-0533-4f1c-9116-32e8c1e61a8b@kernel.org>
- <26a4f12a-2295-402e-8e31-45733aa6582d@foss.st.com>
- <4f31f016-d250-41ea-b613-b074b8ea00d1@kernel.org>
- <782763e2-99d6-4533-b0db-79b618577586@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <782763e2-99d6-4533-b0db-79b618577586@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN7SSmgC/x3NQQqDMBBG4avIrDugsWrtVYoLiWP8wY5hIlIQ7
+ 97g8tu8d1ISgyR6FyeZHEjYNKN6FOSXUYMwpmxypWvKtnIcIja/IHKSne3gCPW7rWzyHaHQwL2
+ XqXn2s3SvmnInmsz43Y/PcF1/7ZmJ2nMAAAA=
+X-Change-ID: 20250612-gpiochip-set-rv-pinctrl-remaining-9ced549fe783
+To: Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Support Opensource <support.opensource@diasemi.com>, 
+ Baruch Siach <baruch@tkos.co.il>, Sven Peter <sven@kernel.org>, 
+ Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Neal Gompa <neal@gompa.dev>, Viresh Kumar <vireshk@kernel.org>, 
+ Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, asahi@lists.linux.dev, soc@lists.linux.dev, 
+ linux-sunxi@lists.linux.dev, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2629;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=RR1LOd1WsQSlBgBjH2f7CoS6VLXc7E6SpyBe5UrVm7Q=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoStLgSkNL4EvOT4zpnpU9IIqDNbE7eRPbf/OwH
+ rSZHgbQsOyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaErS4AAKCRARpy6gFHHX
+ ctz7D/9jvCm68BYPL6TunUJVQLgfUQ3dtLSaDxTtxrPNSokhv/mexnuIy5dIVleZpLb3dblb32P
+ zFr8b2pggxEzCsnmCD2GZ5RkMtkubKgiwITqxk5jplEhE1h1liDAuwI8YnokO6BnQSWiNS48rBd
+ AYi1Ym3VvuWv3cbTU3mll5x4vbCXU37eAvODoZvw7a/sVrI/rYrVUUoRMtmXTugujw1gC8pbPHq
+ miPD5w3IkIxdeBR6BlNtJM7+LlNZG6lRxGmOkEwmWAHUT2TntD/d8v5Ma8iFs+M9bIayg5ham0k
+ Cr60F6x7eX0Tooqkb7P2Bw7OQeZcin+VgTHo6yrc6FXSfyyontOYIvBZi2XQSxDXmElLjyDDeHy
+ YsfRXnodKXRo0l5OqM2ikpB6A+rTBLEcnUGM1UDrJfCwdB+KUM+udgJ7j0IbHsUoZL0+Dq5YiOa
+ SvXNK/19oyyWJsMBta2KUTJ0Zw+h/BYSC1zO6Ec9m56ZjKqGyK0nCA52yI7jIMHYOpyCUX/SDQd
+ D1RtvyrZALe/PLM781ppAU3Oltm4Fpd6OQirzsr44x8cVQ2JxQpeD8H4msT5PSZSfpjDnuYF2oc
+ dADh1T12APm2chmqgJhy1+3wycdb7IRbxeh83FzTCWRab5szSTnck7pmAXICYSd/gLwKJhRiCb/
+ wX0s3E/AAtQdk3Q==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On 12/06/2025 15:02, Clement LE GOFFIC wrote:
-> On 6/12/25 13:05, Krzysztof Kozlowski wrote:
->> On 12/06/2025 11:31, Clement LE GOFFIC wrote:
->>> On 6/11/25 17:48, Krzysztof Kozlowski wrote:
->>>> On 11/06/2025 16:08, Clement LE GOFFIC wrote:
->>>>> On 6/11/25 08:35, Krzysztof Kozlowski wrote:
->>>>>> On 10/06/2025 15:33, Clement LE GOFFIC wrote:
->>>>>>> On 6/10/25 14:38, Krzysztof Kozlowski wrote:
->>>>>>>> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
->>>>>>>>> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
->>>>>>>>>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
->>>>>>>>>>>>
->>>>>>>>>>>>> +		};
->>>>>>>>>>>>> +
->>>>>>>>>>>>> +		hdp: pinctrl@5002a000 {
->>>>>>>>>>>>> +			compatible = "st,stm32mp131-hdp";
->>>>>>>>>>>>> +			reg = <0x5002a000 0x400>;
->>>>>>>>>>>>> +			clocks = <&rcc HDP>;
->>>>>>>>>>>>>        			status = "disabled";
->>>>>>>>>>>>
->>>>>>>>>>>> Why are you disabling it? What is missing?
->>>>>>>>>>>
->>>>>>>>>>> Nothing is missing just disabled by default.
->>>>>>>>>>> The node is then enabled when needed in board's dts file.
->>>>>>>>>> Nodes should not be disabled by default if they are complete. That's why
->>>>>>>>>> I asked what is missing. Drop.
->>>>>>>>>
->>>>>>>>> Hi Krzysztof, OK I better understand now.
->>>>>>>>> So yes the 'pinctrl-*' properties which are board dependent are lacking.
->>>>>>>>
->>>>>>>> These are not properties of this node.
->>>>>>>
->>>>>>> Does this mean I should add 'pinctrl-*' properties in bindings yaml file ?
->>>>>>> I don't get it..
->>>>>>
->>>>>> These properties have no meaning here, so the hardware description is
->>>>>> complete. You claim that you miss them thus device is incomplete is just
->>>>>> not correct: these properties do not belong here! They belong to the
->>>>>> board but even there they are totally optional. Why would they be a
->>>>>> required resource?
->>>>>>
->>>>>> To remind: we talk here ONLY about required resources.
->>>>>
->>>>> Yes, 'pinctrl-*' properties belongs to the board and are not required.
->>>>> So nothing is missing.
->>>>>
->>>>> This hdp node in the SoC dtsi file can be enabled by default.
->>>>> But the hdp driver will probe and do nothing because without the
->>>>> 'pinctrl-*' properties from the board files it would not be able to
->>>>> access to any pin.
->>>>
->>>>
->>>> Pinctrl has other features in general, including interfaces to userspace
->>>> (as pretty often combined with gpio, although not sure if relevant here).
->>>
->>> You're right. Also HDP pinctrl has a GPO feature accessible from userspace.
->>> But by default the HDP is not connected to any pad; it needs the board
->>
->> OK, then that was the answer to my first question - what is missing.
->> However aren't these pads connected internally also to other parts of
->> the SoC (like in most other vendors)?
-> 
-> No, HDP "output pads" are only connected to SoC pinctrl to route outside 
-> the internal SoC signals for debug purpose.
-> 
->>> 'pinctrl-*' properties to configure the SoC pinctrl and expose HDP on
->>> the SoC pads.
->>>
->>> That's why for me the enabling of the driver should be in the board file
->>> together with the SoC pinctrl configuration.
->>
->> And what are the default pad settings configured by HPD driver in
->> bootloader (and by bootloader I mean one of few bootloaders this is
->> going to be used on like U-Boot)
-> 
-> The default is to use the GPIO of the SoC pinctrl. The HDP is not routed 
-> outside.
->   >>
->>> The userland cannot change the pinctrl alternate function mux, this is
->>> statically defined by the devicetree.
->>
->> If you expose GPIO then userland needs this regardless of alternate mux.
->> IOW, board level could not configure mux because it should be always
->> configured to safe GPIO input.
-> 
-> For userland sight view, SoC GPIO are preferred instead of HDP.
-> HDP is only GPO not GPIO. 'pinctrl-*' properties configure at the same 
-> time the SoC pinctrl mux to HDP and the HDP pinctrl mux to one of the 
-> HDP functions (e.g. GPO).
-Thanks, that's explains, fine to keep it disabled. Unless it is obvious
-for everyone, it would be nice to put it in commit msg.
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts remaining pinctrl drivers that still use old APIs.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (16):
+      pinctrl: sppctl: use new GPIO line value setter callbacks
+      pinctrl: st: use new GPIO line value setter callbacks
+      pinctrl: da9062: use new GPIO line value setter callbacks
+      pinctrl: mcp23s08: use new GPIO line value setter callbacks
+      pinctrl: wmt: use new GPIO line value setter callbacks
+      pinctrl: aw9523: use new GPIO line value setter callbacks
+      pinctrl: xway: statify xway_pinconf_group_set()
+      pinctrl: xway: use new GPIO line value setter callbacks
+      pinctrl: digicolor: use new GPIO line value setter callbacks
+      pinctrl: apple: use new GPIO line value setter callbacks
+      pinctrl: pic32: use new GPIO line value setter callbacks
+      pinctrl: spear: use new GPIO line value setter callbacks
+      pinctrl: keembay: use new GPIO line value setter callbacks
+      pinctrl: sunxi: use new GPIO line value setter callbacks
+      pinctrl: as3722: use new GPIO line value setter callbacks
+      pinctrl: amdisp: use new GPIO line value setter callbacks
+
+ drivers/pinctrl/pinctrl-amdisp.c       |  6 ++++--
+ drivers/pinctrl/pinctrl-apple-gpio.c   |  6 ++++--
+ drivers/pinctrl/pinctrl-as3722.c       | 19 +++++++++++++------
+ drivers/pinctrl/pinctrl-aw9523.c       | 26 ++++++++++++++++----------
+ drivers/pinctrl/pinctrl-da9062.c       | 14 ++++++--------
+ drivers/pinctrl/pinctrl-digicolor.c    |  8 +++++---
+ drivers/pinctrl/pinctrl-keembay.c      |  9 +++++----
+ drivers/pinctrl/pinctrl-mcp23s08.c     | 20 +++++++++++++-------
+ drivers/pinctrl/pinctrl-pic32.c        |  8 +++++---
+ drivers/pinctrl/pinctrl-st.c           |  6 ++++--
+ drivers/pinctrl/pinctrl-xway.c         | 18 +++++++++---------
+ drivers/pinctrl/spear/pinctrl-plgpio.c | 11 +++++++----
+ drivers/pinctrl/sunplus/sppctl.c       |  6 ++++--
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c  |  8 +++++---
+ drivers/pinctrl/vt8500/pinctrl-wmt.c   | 17 ++++++++++++-----
+ 15 files changed, 112 insertions(+), 70 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250612-gpiochip-set-rv-pinctrl-remaining-9ced549fe783
 
 Best regards,
-Krzysztof
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
 
