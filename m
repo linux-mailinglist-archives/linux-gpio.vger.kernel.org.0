@@ -1,218 +1,175 @@
-Return-Path: <linux-gpio+bounces-21472-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21473-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E418AD744B
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 16:44:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBE5DAD747B
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 16:48:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96C8117BA46
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 14:43:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65F5118990C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 14:44:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4F9E24C06A;
-	Thu, 12 Jun 2025 14:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2858F25393B;
+	Thu, 12 Jun 2025 14:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CkdTmTKW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xc8ZAVex"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7812AD0F;
-	Thu, 12 Jun 2025 14:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CA223FC54;
+	Thu, 12 Jun 2025 14:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739209; cv=none; b=SLlV1doeaVHknI/34edVl0uoEvX9ekNlKQD8wEb1Odu6zaf7PGNGzaKo9njJ2MVGyDN9im2Vy6uMu/fIGjXS8vpjkpF6boEC5u2A77NfC1pWLz6qxb2S7nTlgc9lO7/a+QXUj6AYSxcHn7o4j4ean4IJh+qzI/Rw9PFkFLZ9x6k=
+	t=1749739268; cv=none; b=B9mzufX18sWz4aZ4Y+fRCZE8aY4yWt/Emo7AXvi8ThW3TWAdRtb3NHfcdjs0k5LtLbg2HUTsZqEy6R5kOYsAhtp42YjVGzLT1n+tbQNqyeIJtRhIqikAwOV1dOnx5o7g3KhFaVQ/mKnXmIS0qaZebG88fhlh9zig4vVUQUmwy04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739209; c=relaxed/simple;
-	bh=Y5WcRbSXxyMxHfUoci3SJStu8xIXVE3qYzIP9J0er6c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JMuEVqJSTkBM+3RVN1Q0DmjUPp3lY/JgoUPIoWxbJ4IVIsCqIjGEGbXZViLCSivMbtljcWehGeYSZ/tLN6PrOUsKECs6cdZvLzquUO7937Br3BtuimLzN60pwwNO/IVSRlxeB+/IDXUTIoNpRqsmzK5+9tRcKtNZM1aXLtBQYiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CkdTmTKW; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1749739268; c=relaxed/simple;
+	bh=HrIXxbRS7o44pmuf/yuZGjngQDdq7t0cP+O1OJL88j8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VqC7SHG8NJPVn2TEtZh94I8J8jYlqt7UhbnuvR0RPDql8+eNXUI0cxy/7SMT3LrOP5Vq12xKv5aIxqNozoM6OaV+sYHpaIIiTf00OT5RC6bRwUzNG+yajui7PcPrMD0MnqJ++qFT7+gIJoRPfXUvgU6iyRiHzsJeJ3gQzZ+opjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xc8ZAVex; arc=none smtp.client-ip=209.85.219.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4530921461aso9358525e9.0;
-        Thu, 12 Jun 2025 07:40:07 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e740a09eae0so967246276.1;
+        Thu, 12 Jun 2025 07:41:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749739206; x=1750344006; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XO5xW6STrJbOovaRRRVEdzdrcsGsRAbrSNjEp7XD5iI=;
-        b=CkdTmTKWXasNutNLpLg7Codhwd+ZbImW/iJajL0gIA0X55aQLCFq3bKoCCfKl/VAAD
-         iiACFKt89EGyDTNWnCYaa5ogGMTslOML6QqQO8dQTdJACdLnZOAtaIGVUWJv1SIr2heq
-         aqJL9zQDbVP3uZPldOZg1xVBVlTvhBEUnThgNVOJKX48mBxrylhTmDFVsVrffmj2HV3d
-         +doI9baDGCSzAYua0ne+dgtc3d+6XcDNmZylzIRmXwsUUyXX0miocXNHZew1Nq3ByBXm
-         D/RQ/W2uuk0MENnboiFu+p5MpNXZQq4734pXnoiuYWpT9hMVeocEXwzcp1dagUQ6w1UO
-         Sc/Q==
+        d=gmail.com; s=20230601; t=1749739266; x=1750344066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tEpDdSY+2jWUkNnS9iYms3NFnNi5IdWvmT0Vr9mFNCU=;
+        b=Xc8ZAVex4jR4+ai3zlbLPFYV60D26DWi7+7ZnYsj4ZxhVefyc0FjLeNIuMBnY93huO
+         lHdbcvbJgzkqWLWiVkp401jVRfAu5gxWwXKYpwlh5H/mMF3kaEKJ2rf6QNJrlxA8f0LR
+         jO115yiMD218EBY9yytBuSck3EvcI5ocrEcWaUK6CW9DwXpYQL2h9Bxu6lcNg4tKuxV0
+         G5CxDXD4zrMURDoj5pCdg0lxOBG4n9v3u/cLRj57nUuwlZYK/EZ5iPHaY15tILfHXFXA
+         q/e6TCMzPZIIjfxFTwYKHTSmkLp9ddMb53Ql835GHKJcbBFY2RRrv4dyWAw05p/V0fNN
+         Lg4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749739206; x=1750344006;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XO5xW6STrJbOovaRRRVEdzdrcsGsRAbrSNjEp7XD5iI=;
-        b=kDHWUcEs2PfmbxwOSwiiZAROguYf2hjO40cI4dxI/3X8uZyqKp3lPJdg1KKMeTRSAV
-         jpzOlRFfGisksVcqmKdaNSHrE4fOHrcdGnatGYjg1z2jnjWUYpHjtHo+PFSzYtOAB2lP
-         3oyNx9B/m+XNueOzU4d86P6PVi/daYbtRYmt0hyA4RtfMdv/YnpnZ78dXiueMjZ24tFH
-         vikpET7DJ7thHNxAf9VM4PrQpGaxPZe8oj5xpWDpkd0qv/hFsC1V0laqefyQri1xvrNh
-         DPigEEoGCjW2XWWPM5XuD+mIdpx+/+KzJdDtK+sDcmw+WRotkDYK/2Q2yGfs0ixAbEeW
-         W0LA==
-X-Forwarded-Encrypted: i=1; AJvYcCVF026NlRXFowMqNTokFqerpUz4vZP2ZgbHQOkWkK7SwaVdtpVJAOgXNJXidFguPTdkGDwjmrJqGmASh6E=@vger.kernel.org, AJvYcCWPofUKq5mJIsOq7LFI6jf+wSBnjx4m2/2EJFL34JSLUgy7tAUyu//2P0KpBji0O+8Y+sKC6Oxa0BB9@vger.kernel.org, AJvYcCWUnrUmpKGw6QG8wsQYVeWoyWIHwSwHpJ6EiO725zTp35t6GHv/rkkT1Ie1CYWWUEh59mQnoRs549jJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL63mJFJAdgp4cRM4bDW2eD+//GJwOswFvdVKhURIHujViogRP
-	juvHTxtG4omLIBQ8LiwQabB8ADOEva+nQxIko3WdfjvXE8aZvsfpXmb9
-X-Gm-Gg: ASbGnct7DEPKLEcHxiGBxw846hOrt3EBcoU4Z3IMYteTqBOZrbCBEv48FCNJHY/Pp5Z
-	cvTCewe72lsSi6mkON1v7d1Dc0TpKgUotgXsCs7ro7tvdPNmbP8dSGQ8CQnwRnWDWioNf7YGlt6
-	mXtbIOV2UHH7WmQMQPSGQcGCFmDZ+GLOz+27Rsf55yRvDMRXCnM2a8LmvyGL6kKYk2M76S5/Wvf
-	HX6h3eqA+NMri03G0aSq4pPlQra+rpNqj0xOjgmiNv2HRGSsKCOSuKTMq9qjFkf/DsaU/56cGLa
-	3v8BZTJ7La7VbC/CbROpnterpFtkxZfw2nNpCIA/gTqnNP56TjirFI4/hxKtBwyYtXf3FQ==
-X-Google-Smtp-Source: AGHT+IEgJVa7T9a/v6a+QdCQd7PLGm4gVqm4zt6VpmQF3J4pe3zCCTagGbfhHOAbgCS0XpfwKgiFSw==
-X-Received: by 2002:a05:600c:198a:b0:450:d00d:cc with SMTP id 5b1f17b1804b1-45326e9018amr64987205e9.2.1749739205818;
-        Thu, 12 Jun 2025 07:40:05 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25302dsm21987815e9.26.2025.06.12.07.40.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 07:40:05 -0700 (PDT)
-Message-ID: <4736b759609a9939b3a99a5c87df0fd5518a6af0.camel@gmail.com>
-Subject: Re: [PATCH v4 03/20] mfd: adp5585: enable oscilator during probe
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Lee Jones <lee@kernel.org>, nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <ukleinek@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov	 <dmitry.torokhov@gmail.com>,
- Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Liu Ying
- <victor.liu@nxp.com>
-Date: Thu, 12 Jun 2025 15:40:12 +0100
-In-Reply-To: <20250612142001.GH381401@google.com>
-References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
-	 <20250521-dev-adp5589-fw-v4-3-f2c988d7a7a0@analog.com>
-	 <20250612142001.GH381401@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+        d=1e100.net; s=20230601; t=1749739266; x=1750344066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tEpDdSY+2jWUkNnS9iYms3NFnNi5IdWvmT0Vr9mFNCU=;
+        b=Sx/jy3hThgUz3oVGrBpnRtzIDhKIzvjqqLIYkbHCZZmW0aIrjREaGsXZbU6s3i6RXi
+         qP1JXpkddZjHxPj+KUJWN53kOh1S88PVD8h2zFkHdHygUFjy748TrFu08+6w6OkNidQO
+         Mx0E88r4EBMl5cwHd1QupRmTUzDP0LJ5gkao0FAa5n7Ny4+sNqM+oH7q23/co/8INy92
+         B1ebSih2y5LkRdeeOpWscjIQawuaxXixNQTopbYLN3+jnxXriPgfUjfjIgzngZ2Y1WxE
+         cLpSoW2I18ccu/KSleNBZrEOcXcYLrMIM7NvGAaLWObeih5Nv/f+qlr+OFAhLmWiIPLR
+         FuWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUthQn2QrvX9y5H4+YKd29zMwPx7jMDytbjGsSa303CnDy4WVs2MXd548ElFyBGGKBbLDMIiespzN5l@vger.kernel.org, AJvYcCV8n8UVBRNoqze9fz4TQhgpZaw2hMqDLzDGNvWDqI/7B+LdU5CSjUH0Q7c0RoTR/foketLDwTASJtbdEAI=@vger.kernel.org, AJvYcCVFF48N5ri5FV9T1nI7am9QDnMchPmjPrfymosu9BGKKKw/inQSQDqpWf6BFOdOPeYmyelihd3w@vger.kernel.org, AJvYcCVQKIZ16YmXf6oD7ZfLx7EfmrMhm85UlM6PRaRS5cCE4v7ujlQm2OGvFLhR298KJr5Px4Zkr/t8P7Tq@vger.kernel.org, AJvYcCWH/vJpy/YVVCei1GnpzBM5e1lD3PNmvo78Wp2oBDNlrgYbO2BCre+5i8kMQl5Y2frdizSlLCJzufw=@vger.kernel.org, AJvYcCX0S0q9icaPAaptlUwbDGJU+pDrp0O4/HucISh3VQOvjfYXGd+Nm7XeIPD4ZE0a6C27+ogJtQpei6/1CVAWaCQ=@vger.kernel.org, AJvYcCX43prmBg7BDoHZsqoOIo3PrnTu5y963NUiO53BPRhJiLgK080R/Z+ScNQSlYv4+8jRahArMjL8jJA2zfr6@vger.kernel.org, AJvYcCXmGOjfWSZcl8DPYxjB8vL/8vTFtkMH711nmvMnY2+KdBIBVCI9jnhD+FVSZnckRZCvubtNF4t1O78HAQ==@vger.kernel.org, AJvYcCXpBDxYasujhOwWAiRw0Ct6ZqpZk9J333QfpU0xh9L9KXvO1cJPI1rLBsKgyHAhJVCReE/VLMiDPGTr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAE6iMggz2Yq4jc7yNJg5YVuRVMktooNo2NN+/reLPRODMM6xo
+	3UFZeLBhDENG4T653n/hOaRhXKGJz6m+9+Uel3Dy66v5QkrYCmjro6V/ZJj+u+TDX3S4RxpNjec
+	1IPUUiDKuV3LyZU6wOIeB9EG/tqn80ic=
+X-Gm-Gg: ASbGncvxV+cUzVKGAXIZpbUxbaSqfF3hPxsIr2G1PLTP/6xNEYC/PhJ+iNb3WDmtM3l
+	bGrvoAoEMbUbS724Rany9rSWaiBoEFUv5gzkVIoUYbxZT4pJbdA/PVSWjQIr6G8Z+gVjZo+W0hU
+	UvzqYDUnA9lnspfh5E2S61X1tUXieyVLuR0BuZUHS+TPM=
+X-Google-Smtp-Source: AGHT+IHbXkDYNuadtMxqrLv3eWpepQOun6qiF0ETWy2zrWyc5v6lbDG/lF+Rb/oCRSfW2as0T8+Q8KacySN6ARKlV7s=
+X-Received: by 2002:a05:6902:160c:b0:e81:a0b8:e351 with SMTP id
+ 3f1490d57ef6-e81fda04835mr10460738276.5.1749739265971; Thu, 12 Jun 2025
+ 07:41:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250604041418.1188792-1-tmyu0@nuvoton.com> <20250604041418.1188792-2-tmyu0@nuvoton.com>
+ <20250612140041.GF381401@google.com>
+In-Reply-To: <20250612140041.GF381401@google.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Thu, 12 Jun 2025 22:40:55 +0800
+X-Gm-Features: AX0GCFsHJ9k1Lm2CrO34dBCfeL0tuuLt-YrRc-whSYIUck_BRu3E49ZxjLYE8dA
+Message-ID: <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Lee Jones <lee@kernel.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Ming Yu <tmyu0@nuvoton.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-06-12 at 15:20 +0100, Lee Jones wrote:
-> On Wed, 21 May 2025, Nuno S=C3=A1 via B4 Relay wrote:
->=20
-> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
-> >=20
-> > Make sure to enable the oscillator in the top device. This will allow t=
-o
-> > not control this in the child PWM device as that would not work with
-> > future support for keyboard matrix where the oscillator needs to be
-> > always enabled (and so cannot be disabled by disabling PWM).
-> >=20
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> > ---
-> > =C2=A0drivers/mfd/adp5585.c=C2=A0=C2=A0=C2=A0=C2=A0 | 23 ++++++++++++++=
-+++++++++
-> > =C2=A0drivers/pwm/pwm-adp5585.c |=C2=A0 5 -----
-> > =C2=A02 files changed, 23 insertions(+), 5 deletions(-)
-> >=20
-> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> > index
-> > 806867c56d6fb4ef1f461af26a424a3a05f46575..f3b74f7d6040413d066eb6dbaecfa=
-3d5e6
-> > ee06bd 100644
-> > --- a/drivers/mfd/adp5585.c
-> > +++ b/drivers/mfd/adp5585.c
-> > @@ -147,6 +147,13 @@ static int adp5585_add_devices(struct device *dev)
-> > =C2=A0	return ret;
-> > =C2=A0}
-> > =C2=A0
-> > +static void adp5585_osc_disable(void *data)
-> > +{
-> > +	const struct adp5585_dev *adp5585 =3D data;
-> > +
-> > +	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
-> > +}
-> > +
-> > =C2=A0static int adp5585_i2c_probe(struct i2c_client *i2c)
-> > =C2=A0{
-> > =C2=A0	const struct regmap_config *regmap_config;
-> > @@ -175,6 +182,22 @@ static int adp5585_i2c_probe(struct i2c_client *i2=
-c)
-> > =C2=A0		return dev_err_probe(&i2c->dev, -ENODEV,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid device ID 0x%02x\n", id);
-> > =C2=A0
-> > +	/*
-> > +	 * Enable the internal oscillator, as it's shared between multiple
-> > +	 * functions.
-> > +	 *
-> > +	 * As a future improvement, power consumption could possibly be
-> > +	 * decreased in some use cases by enabling and disabling the
-> > oscillator
-> > +	 * dynamically based on the needs of the child drivers.
->=20
-> This is normal.=C2=A0 What's stopping us from doing this from the offset?
+Dear Lee,
 
-This is always needed when we have the input device registered. From my tes=
-ting,
-we also need it for GPIOs configured as input. So basically the only reason=
- this
-is not being done now is that it would not be trivial or really straightfor=
-ward
-and honestly the series is already big enough :)
+Thank you for reviewing,
 
-Laurent also agreed with this not being mandatory now so hopefully it's als=
-o
-fine with you.
+Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8812=E6=97=A5 =E9=
+=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:00=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+...
+> > +static const struct mfd_cell nct6694_devs[] =3D {
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > +
+> > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+>
+> Why have we gone back to this silly numbering scheme?
+>
+> What happened to using IDA in the child driver?
+>
 
-- Nuno S=C3=A1
->=20
-> > +	 */
-> > +	ret =3D regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
-> > ADP5585_OSC_EN);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable,
-> > adp5585);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > =C2=A0	return adp5585_add_devices(&i2c->dev);
-> > =C2=A0}
-> > =C2=A0
-> > diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-> > index
-> > 40472ac5db6410a33e4f790fe8e6c23b517502be..c8821035b7c1412a55a642e6e8a46=
-b66e6
-> > 93a5af 100644
-> > --- a/drivers/pwm/pwm-adp5585.c
-> > +++ b/drivers/pwm/pwm-adp5585.c
-> > @@ -62,7 +62,6 @@ static int pwm_adp5585_apply(struct pwm_chip *chip,
-> > =C2=A0	int ret;
-> > =C2=A0
-> > =C2=A0	if (!state->enabled) {
-> > -		regmap_clear_bits(regmap, ADP5585_GENERAL_CFG,
-> > ADP5585_OSC_EN);
-> > =C2=A0		regmap_clear_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
-> > =C2=A0		return 0;
-> > =C2=A0	}
-> > @@ -100,10 +99,6 @@ static int pwm_adp5585_apply(struct pwm_chip *chip,
-> > =C2=A0	if (ret)
-> > =C2=A0		return ret;
-> > =C2=A0
-> > -	ret =3D regmap_set_bits(regmap, ADP5585_GENERAL_CFG, ADP5585_OSC_EN);
-> > -	if (ret)
-> > -		return ret;
-> > -
-> > =C2=A0	return regmap_set_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
-> > =C2=A0}
-> > =C2=A0
-> >=20
-> > --=20
-> > 2.49.0
-> >=20
-> >=20
+In a previous version, I tried to maintain a static IDA in each
+sub-driver. However, I didn=E2=80=99t consider the case where multiple NCT6=
+694
+devices are bound to the same driver =E2=80=94 in that case, the IDs are no=
+t
+fixed and become unusable for my purpose.
+
+I=E2=80=99ve since realized that using pdev->id avoids the need for cell->i=
+d,
+so I reverted to the earlier approach.
+
+That said, do you think it would be a better solution to manage all
+the IDAs centrally within the driver? For example:
+in nct6694.c
+struct nct6694 {
+    struct device *dev;
+
+    struct ida gpio_ida;
+    struct ida i2c_ida;
+    struct ida can_ida;
+    struct ida wdt_ida;
+};
+
+static int nct6694_probe(struct platform_device *pdev)
+{
+    ida_init(&nct6694->gpio_ida);
+    ...
+}
+
+in gpio-nct6694.c
+static int nct6694_gpio_probe(struct platform_device *pdev)
+{
+    id =3D ida_alloc(&nct6694->gpio_ida, GFP_KERNEL);
+}
+
+
+Best regards,
+Ming
 
