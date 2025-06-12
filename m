@@ -1,66 +1,66 @@
-Return-Path: <linux-gpio+bounces-21480-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21481-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8094AAD7623
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 17:31:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BE54AD7634
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 17:33:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 836513B6D17
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 15:29:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84BBD3B340B
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 15:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EC9229DB95;
-	Thu, 12 Jun 2025 15:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0575F2C3254;
+	Thu, 12 Jun 2025 15:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hxhzogt2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBK70+8m"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC91329DB68;
-	Thu, 12 Jun 2025 15:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B8D2BF3DF;
+	Thu, 12 Jun 2025 15:23:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749741637; cv=none; b=ExTRwlcR7m4xUNcmAFWl1gmnovJCxrbq26F6myKU0wYb9XPggREXMqrEZ5qlzbrV7Myx49X8pRvZhYTaBU/hjU9gj8M8b4yGTaf3Am/6ZXfH9g9IrmHoCs8jxWum4GJ3q7IlPQVjI9UKm2paJyFGMu1bXIcpG7ptvKQj4xHtz1U=
+	t=1749741801; cv=none; b=ubFsq8l3K9/SEBP/fqQvoC0QsSeKuX/nrLrT8XPTrNrxvfS0yJdt7XiwN6lMxMbKFICh9S17nx0przsl+U3wl8emRfCT7cGqmaYJBVJOIEQAXl+0nl4jqCDRBsf5yJePDPZdMidUT4wVhP+OsYgBkKV3nco5A4Zkex2VJvdhc2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749741637; c=relaxed/simple;
-	bh=Dw+5SN04E/qbU62qNOsbR5TmNjRSAAmGNq1xSE5F7yQ=;
+	s=arc-20240116; t=1749741801; c=relaxed/simple;
+	bh=7+POKnao7dJbjl1goCWSf3SOuai5TxMCVJI0eCvMhl0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rr5dR8fW+Ku3bK2stHNaZJSrvDkkB8vTxq2e1lzKjsQu7uH13Fp/rEjU+dNNuOcUyOaBep22ES/7NA/oV1cpS/T4r9ggLSJYnd69KVP6l6/YjIIWgh9tG6zsZyAHbvSuyT/5YxkdSTBfRfYOo+lqMbnxWRo6foDPi+/o2ngr0IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hxhzogt2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA9EC4CEEA;
-	Thu, 12 Jun 2025 15:20:31 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNkO2JWjTzeqHm438qpva+KTCIUGy1joYCwlHdBWwYQXKIKxhGru2FUdgaC9J9jmTJ1J5m/+Eb9oaLMjw7rb8KunAoQzG9JiVUztZA4Wjn1mrwtyOdQH/5pKjFr/DCfwHLyJjwunRdFBkE/KoNYrjmFerj5JpAtgn9HFm6FaqhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBK70+8m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7476AC4CEEA;
+	Thu, 12 Jun 2025 15:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749741634;
-	bh=Dw+5SN04E/qbU62qNOsbR5TmNjRSAAmGNq1xSE5F7yQ=;
+	s=k20201202; t=1749741801;
+	bh=7+POKnao7dJbjl1goCWSf3SOuai5TxMCVJI0eCvMhl0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hxhzogt2FI//5nXAAX2AKe3dNMqKxSC31GT2aDwGQvHAJQ+FAMGtxcOTh46U1/HlT
-	 9MujscHMq67EXUAsISCmudzgzlqAR2pMwhpLBH/1R/7pCzoIq0o7swwG+7YC0oGN5e
-	 +FSwB2ss+cT+yaw71LdAHYrxTJ8wGLbBlXrMbUUd+MGH3COkjGXPkRYTP/f9TrNgcx
-	 9AUNJnyE7ye+qKmqCv89Yyn8DbIm0ZGMyHaAT/w5TswX0NErgAKC7A2GOd0/PiAxjp
-	 rljncSksprYfxZoE93bDgms2NtXE/ui2RaXHy75zvouAKDv05imNZdogBjEIjojJxW
-	 Rwcs/eZFfxkJQ==
-Date: Thu, 12 Jun 2025 16:20:29 +0100
+	b=XBK70+8mAD6hUz34u1ynNTORuPkMNSYLirTEViOINENBZ5407zYk4HLRqeP17W/9B
+	 r2T/RngfGRyjBXFassi3AwAo//t5JSlaSdlpTbSuktY5YqTigeFGAe14UPRecFFGrZ
+	 h4ANsE8KM7zyJ+MYcjcoFhRZh1spF96TQOIJ6ll/bwZ63quYEUyuRF3RQZ0aFaWp5z
+	 B7wzht3/RTptjwaOhYWbWSbdiH1a41WZVhZ3YqtuyUzJgiZa6Xf8DoATPYsjAnkWyw
+	 GbRMD5Y3RQ3ktzKKHY9r4VFDpYLxoWpTAVt4wQDa4FF7eEXPjkrKK3xkJNquJNO65f
+	 rwCl5GmA+SldA==
+Date: Thu, 12 Jun 2025 16:23:13 +0100
 From: Lee Jones <lee@kernel.org>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-input@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v4 03/20] mfd: adp5585: enable oscilator during probe
-Message-ID: <20250612152029.GO381401@google.com>
-References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
- <20250521-dev-adp5589-fw-v4-3-f2c988d7a7a0@analog.com>
- <20250612142001.GH381401@google.com>
- <4736b759609a9939b3a99a5c87df0fd5518a6af0.camel@gmail.com>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250612152313.GP381401@google.com>
+References: <20250604041418.1188792-1-tmyu0@nuvoton.com>
+ <20250604041418.1188792-2-tmyu0@nuvoton.com>
+ <20250612140041.GF381401@google.com>
+ <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -70,75 +70,82 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4736b759609a9939b3a99a5c87df0fd5518a6af0.camel@gmail.com>
+In-Reply-To: <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
 
-On Thu, 12 Jun 2025, Nuno Sá wrote:
+On Thu, 12 Jun 2025, Ming Yu wrote:
 
-> On Thu, 2025-06-12 at 15:20 +0100, Lee Jones wrote:
-> > On Wed, 21 May 2025, Nuno Sá via B4 Relay wrote:
-> > 
-> > > From: Nuno Sá <nuno.sa@analog.com>
-> > > 
-> > > Make sure to enable the oscillator in the top device. This will allow to
-> > > not control this in the child PWM device as that would not work with
-> > > future support for keyboard matrix where the oscillator needs to be
-> > > always enabled (and so cannot be disabled by disabling PWM).
-> > > 
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > > ---
-> > >  drivers/mfd/adp5585.c     | 23 +++++++++++++++++++++++
-> > >  drivers/pwm/pwm-adp5585.c |  5 -----
-> > >  2 files changed, 23 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> > > index
-> > > 806867c56d6fb4ef1f461af26a424a3a05f46575..f3b74f7d6040413d066eb6dbaecfa3d5e6
-> > > ee06bd 100644
-> > > --- a/drivers/mfd/adp5585.c
-> > > +++ b/drivers/mfd/adp5585.c
-> > > @@ -147,6 +147,13 @@ static int adp5585_add_devices(struct device *dev)
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +static void adp5585_osc_disable(void *data)
-> > > +{
-> > > +	const struct adp5585_dev *adp5585 = data;
-> > > +
-> > > +	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
-> > > +}
-> > > +
-> > >  static int adp5585_i2c_probe(struct i2c_client *i2c)
-> > >  {
-> > >  	const struct regmap_config *regmap_config;
-> > > @@ -175,6 +182,22 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
-> > >  		return dev_err_probe(&i2c->dev, -ENODEV,
-> > >  				     "Invalid device ID 0x%02x\n", id);
-> > >  
-> > > +	/*
-> > > +	 * Enable the internal oscillator, as it's shared between multiple
-> > > +	 * functions.
-> > > +	 *
-> > > +	 * As a future improvement, power consumption could possibly be
-> > > +	 * decreased in some use cases by enabling and disabling the
-> > > oscillator
-> > > +	 * dynamically based on the needs of the child drivers.
-> > 
-> > This is normal.  What's stopping us from doing this from the offset?
+> Dear Lee,
 > 
-> This is always needed when we have the input device registered. From my testing,
-> we also need it for GPIOs configured as input. So basically the only reason this
-> is not being done now is that it would not be trivial or really straightforward
-> and honestly the series is already big enough :)
+> Thank you for reviewing,
+> 
+> Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
+> >
+> ...
+> > > +static const struct mfd_cell nct6694_devs[] = {
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > +
+> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+> >
+> > Why have we gone back to this silly numbering scheme?
+> >
+> > What happened to using IDA in the child driver?
+> >
+> 
+> In a previous version, I tried to maintain a static IDA in each
+> sub-driver. However, I didn’t consider the case where multiple NCT6694
+> devices are bound to the same driver — in that case, the IDs are not
+> fixed and become unusable for my purpose.
 
-Agreed!
+Not sure I understand.
 
-> Laurent also agreed with this not being mandatory now so hopefully it's also
-> fine with you.
+> I’ve since realized that using pdev->id avoids the need for cell->id,
+> so I reverted to the earlier approach.
+> 
+> That said, do you think it would be a better solution to manage all
+> the IDAs centrally within the driver? For example:
+> in nct6694.c
+> struct nct6694 {
+>     struct device *dev;
+> 
+>     struct ida gpio_ida;
+>     struct ida i2c_ida;
+>     struct ida can_ida;
+>     struct ida wdt_ida;
+> };
+> 
+> static int nct6694_probe(struct platform_device *pdev)
+> {
+>     ida_init(&nct6694->gpio_ida);
+>     ...
+> }
+> 
+> in gpio-nct6694.c
+> static int nct6694_gpio_probe(struct platform_device *pdev)
+> {
+>     id = ida_alloc(&nct6694->gpio_ida, GFP_KERNEL);
+> }
 
-If there is no explicit plan to do this in the future, you may as well
-remove the comment.  TODOs have a tendency to rot after code is
-accepted.
+No that would be way worse.
 
 -- 
 Lee Jones [李琼斯]
