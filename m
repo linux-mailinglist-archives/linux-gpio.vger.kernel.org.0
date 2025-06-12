@@ -1,151 +1,197 @@
-Return-Path: <linux-gpio+bounces-21441-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21442-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B3D8AD70B1
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 14:46:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DF22AD70BB
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 14:48:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4074D3A14E8
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 12:46:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C11BF3A17AF
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 12:48:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 041DE230BD9;
-	Thu, 12 Jun 2025 12:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B15BD22F772;
+	Thu, 12 Jun 2025 12:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="X2lQWMd3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g+CNHlCq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FA0221DB7
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 12:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16132F432C;
+	Thu, 12 Jun 2025 12:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749732360; cv=none; b=iYfw25kwvVa5SkGD6klU0pZOgXoZDpoFA8etnuRj86J03lTSa8xM/EDD5UCEKr9Vt1xzJ7GUcTPKYMwkor2rXahadh5Up98vl+5Ws1kVC1RXbb/3I2We/NPOLOjGWNw72M9tWHwO5q4AQnqDtw/orVccngtQxhA3nDzzOrgnBmA=
+	t=1749732492; cv=none; b=GSEUbLuRTUgM3zV3odB2ObSPDwXiOVDv+aM4Dm8sFyGS+IyTk1lY2wXBv0NFpxbPKGXT+R7AJgYFv77D5PptVmneVrlnLDdC2+p5qQp4rHHPbw7DONsT7qcDqdcHg4pGpG338jb6FD7Uthl967fURJegYb8JtStqlkVAYeQw3dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749732360; c=relaxed/simple;
-	bh=1HdeTsKzO17uuGONKnmRpLqzCeVNHk7yoQQEiaXqA7E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YQBR+M7mp/i6lXUbILvylsa5tuR4+V8Hg+unM9YSr3V99C14ZTDz1u7vwtdDx5hI8+1NErpE2WwOmXt4Wk45mOYCsef98r/PlgyJbIQb/I1MrM1gbz6s0opBOMSEO4ar+nEDFXiZCZ1IKklKaUHdxC/k09yaqafvwp+/1/8azh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=X2lQWMd3; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553a4f3ae42so771269e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 05:45:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749732357; x=1750337157; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2U7VSbXiyqPZsh+GuDnhbJ8vkS2YTh1A7lk+84P+QSc=;
-        b=X2lQWMd3pZEbMHiKN9S9F7rjaOkARicttsTHwaHb+fSc9TciZ7ouVls5AY8GTiIM/V
-         fM3mYNRN9Z17bojgfx5bA/DgiY6X+6MhOyF36ZfdzqRd6kmfehsfNwgnNY2sttdqy3bn
-         58G5qccGsZA5iUAstRFG+q0xb24wkiIpu7oijB1tE65M9IlHYQmZVx0PUUc3frdEsyjN
-         kCK42wAFyVyIRpINTxfx6pfj0+qSR1M8d2vgbhPimXhO3K4+aHqqtjpZpqQpczf1krGY
-         rzYJITEQrJJftk/oEyZuAOtIbiyIj+EVqUdoZ4T4322fHjrjIU1EUc2VmLfO+TDCHzxa
-         ISmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749732357; x=1750337157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2U7VSbXiyqPZsh+GuDnhbJ8vkS2YTh1A7lk+84P+QSc=;
-        b=s8thWcj57fsi0VQ9qg9LufFKdiZ5AiZftcvgf/7HnP4/A6ec5jHg9nPa0NWkg04ump
-         rL/0Zxy8xhhVOJ21XWG53WsZKiRHkNLYYQxyDj7yqoFY2PuTdaM3SYqVC8M2rkBHZ+kr
-         +W44W7kT7I44bfbKUdNeM+49EBgL5uCm75LS3eagZtaA6P+kLmk5ujCklNiPy2MTE4Zg
-         FgYOj5+fT8JqoBov/6FStAQqbv3GQ4LcTetzPYyM30eq/n1AYfRp2RM0gN168exNUdFN
-         JNodzaegrokce91e2DdYTgfBlfvmIr+gPvqbRO112qe5mPVvu2Y2FQPgl5FVanhdoBXw
-         FSVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqcGOooeAeVyCoZciF5ZXvwULq63kbe4GJPY270iF2wa+MHgJXah+40oJCiIzMc8e7pZmPwTTH9kOo@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/zKMWvPL3RxloYo3neK1lei53+GD4k7ByZrnDNTMLFuPg2HNT
-	104xZOsz1U2BvImWIofFrty1i16sYza6Jhhpm8XwamLaTRzq3DTTODuuiSxzVF+KGdaSHPmrHPO
-	q6tmBt+VYuaaB78kQ4WnyH4Vl2OSBFXNq9Q6vnW8RHg==
-X-Gm-Gg: ASbGnctO8JmuTTsKHWjhrI9Jm+NHcI4ns9DFy+YvViFOAzkVs8MKjMkXYQwLxnC88tL
-	DGNPiyC2DW4k/QKoY2JAKbbYqBGIslVwmGon2l2NB9fsyx5CnqZTB5oJ/FjeLfkgrfeNqWMWOu3
-	WCBGbYyRqLtQRcwUe9+u3ovrLS3LD9MmgLmvK3dUpb4TKclG/dzHN5yNWmMToqjkUtlf4alJAoH
-	AY=
-X-Google-Smtp-Source: AGHT+IF+0Mekv6FpFqTRyts5+5VmEL5JiWmZ43lLx3r++M9HONAgJixQI4vI3imUBxU9EG9kgVe/b9KcTe0breTR6dg=
-X-Received: by 2002:a05:6512:2354:b0:553:2edd:a7e0 with SMTP id
- 2adb3069b0e04-5539c11671cmr2453917e87.16.1749732357132; Thu, 12 Jun 2025
- 05:45:57 -0700 (PDT)
+	s=arc-20240116; t=1749732492; c=relaxed/simple;
+	bh=Fjp9hcmXAIrCkfYCQtqV83QQT9g0u4DPzSNaZbioKKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IqGtM9QxaefmLEnFXhZ822opaN2I5OF/7y3PFO3unZwgivOQHtCli/h/6SL0E5P4yRD1kWyjQDXHCz4A0tOzhW1TmvIKHyewHZiWLAuMGZlhtfsDibe+zioyksf5pQ05YUaw6hvwQOWysXvFuPK2He5KNCce0g6bo8DN16CtjIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g+CNHlCq; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749732491; x=1781268491;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Fjp9hcmXAIrCkfYCQtqV83QQT9g0u4DPzSNaZbioKKM=;
+  b=g+CNHlCq0InXuXmU9CDXOTcmPMg0gXlRI27eFCwOY08aSf6ISFbTQhq6
+   RagmoBGcqK1ipgyFAL8rkB5nKV0yHNUpN64lrwz0qdMT1nIcXpc5G/fmS
+   3mw/o3WbulpKOsaa6CnyFIn87NiAuCalWfdP3u9gkppkfU5Z/hQTJKwT5
+   Ygu3YE27THdDWa6aEHePAmFeM+u9kaFsB/0Uea2EsupoqN4OLeokrJQT+
+   x/8b4WxWeAGqGOpNjcG2B55wKzALTljD0PV+L0Jk/P10h1UL9egx/3bvo
+   Fg2umBaRjklkb2TgYrXzYvQE1k1ahDAri6ViajAUeDx0MUaXLXOw3KkLL
+   w==;
+X-CSE-ConnectionGUID: eJlamKFvQlyD9WdNgHJ7WA==
+X-CSE-MsgGUID: 2/7kVuruTVuLt8uhzk3t1g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="55582807"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="55582807"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:48:10 -0700
+X-CSE-ConnectionGUID: 6hrNdlaVQpmn9K1K+Vr+jA==
+X-CSE-MsgGUID: X9pY8ZHGQNiXuIxi6mZ8ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="178414898"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:48:06 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPhLe-00000005x4y-2rhE;
+	Thu, 12 Jun 2025 15:48:02 +0300
+Date: Thu, 12 Jun 2025 15:48:02 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aErMgh6AKVStF4rQ@smile.fi.intel.com>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+ <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
+ <aEifWXPV1nsIyWbT@smile.fi.intel.com>
+ <aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612-gpiochip-set-rv-pinctrl-cirrus-v1-0-2d45c1f92557@linaro.org>
- <20250612-gpiochip-set-rv-pinctrl-cirrus-v1-2-2d45c1f92557@linaro.org> <aErJz7C7f1iC4Aqm@opensource.cirrus.com>
-In-Reply-To: <aErJz7C7f1iC4Aqm@opensource.cirrus.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 12 Jun 2025 14:45:45 +0200
-X-Gm-Features: AX0GCFu8U5zT7-CTdlghDirLZZrOO8-pxVidLweEpr2lAEyo77Jxgek7rDwDTzo
-Message-ID: <CAMRc=MeSTN51Zjn5Ou9+bbSwS6skPvHh-eGC4Zs9j0uCu=B9Bg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: cirrus: cs42l43: use new GPIO line value
- setter callbacks
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	David Rhodes <david.rhodes@cirrus.com>, patches@opensource.cirrus.com, 
-	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Jun 12, 2025 at 2:36=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
->
-> On Thu, Jun 12, 2025 at 02:19:54PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > struct gpio_chip now has callbacks for setting line values that return
-> > an integer, allowing to indicate failures. Convert the driver to using
-> > them.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> > +static int cs42l43_gpio_set(struct gpio_chip *chip, unsigned int offse=
-t,
-> > +                         int value)
-> >  {
-> >       struct cs42l43_pin *priv =3D gpiochip_get_data(chip);
-> >       unsigned int shift =3D offset + CS42L43_GPIO1_LVL_SHIFT;
-> > @@ -493,23 +494,27 @@ static void cs42l43_gpio_set(struct gpio_chip *ch=
-ip, unsigned int offset, int va
-> >               offset + 1, str_high_low(value));
-> >
-> >       ret =3D pm_runtime_resume_and_get(priv->dev);
-> > -     if (ret) {
-> > -             dev_err(priv->dev, "Failed to resume for set: %d\n", ret)=
-;
-> > -             return;
-> > -     }
-> > +     if (ret)
-> > +             return ret;
->
-> Is there a reason to lose the error message here? Always nice to
-> know which of the two paths failed when things go bad.
->
+On Wed, Jun 11, 2025 at 06:04:49PM -0300, Marcelo Schmitt wrote:
+> On 06/11, Andy Shevchenko wrote:
+> > On Tue, Jun 10, 2025 at 05:31:25PM -0300, Marcelo Schmitt wrote:
 
-No reason other than being in line with most other drivers which
-typically just return a value without a message. I don't care much, we
-can restore it.
+...
 
-Bart
+> > > +	return spi_write(st->spi, st->tx_buf, size + 2);
+> > 
+> > ... + sizeof(reg) ?
+> 
+> The size of the specific ADC register is stored in the size variable.
+> The result of sizeof(reg) can be different on different machines and will
+> probably not be equal to the size of the register in the ADC chip.
 
-> Thanks,
-> Charles
-> >
-> >       ret =3D regmap_update_bits(priv->regmap, CS42L43_GPIO_CTRL1,
-> >                                BIT(shift), value << shift);
-> >       if (ret)
-> > -             dev_err(priv->dev, "Failed to set gpio%d: %d\n", offset +=
- 1, ret);
-> > +             return ret;
-> >
-> >       pm_runtime_put(priv->dev);
-> > +
-> > +     return 0;
-> >  }
+Hmm... But shouldn't we have a variable type that respects the sizeof() of the
+register in HW to keep it there? 2 is magic.
+
+...
+
+> > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
+> > > +{
+> > > +	/*
+> > > +	 * The use of static_assert() here is to make sure that, if
+> > > +	 * struct ad4170_setup is ever changed (e.g. a field is added to the
+> > > +	 * struct's declaration), the comparison below is adapted to keep
+> > > +	 * comparing each of struct ad4170_setup fields.
+> > > +	 */
+> > 
+> > Okay. But this also will trigger the case when the field just changes the type.
+> > So, it also brings false positives. I really think this is wrong place to put
+> > static_assert(). To me it looks like a solving rare problem, if any.
+> 
+> I think it is unlikely that struct ad4170_setup declaration will ever change.
+> The fields match the registers that are associated with a channel setup and
+> the their types match the size of the respective registers. So, I do agree
+> that triggering this assert would be something rare.
+
+Yep, which thinks to me as an unneeded noise in the code, making it harder to
+read and maintain (in _this_ case).
+
+> > But I leave this to the IIO maintainers.
+> > 
+> > In my opinion static_assert() makes only sense when memcmp() is being used.
+> > Otherwise it has prons and cons.
+> 
+> I think the most relevant reason to have this static_assert would be to keep
+> some consistency with ad4130, ad7124, and ad7173, but no strong opinion about it.
+
+I would argue that those needs to be revisited for the same reasons as above.
+
+> Actually, I don't get why static_assert() would only matter if memcmp() was
+> being used. Would it be better to not bother if the fields change type?
+> 
+> Anyway, I'll go with whatever be IIO maintainer's preference.
+
+> > > +	static_assert(sizeof(*a) ==
+> > > +		      sizeof(struct {
+> > > +				     u16 misc;
+> > > +				     u16 afe;
+> > > +				     u16 filter;
+> > > +				     u16 filter_fs;
+> > > +				     u32 offset;
+> > > +				     u32 gain;
+> > > +			     }));
+> > > +
+> > > +	if (a->misc != b->misc ||
+> > > +	    a->afe != b->afe ||
+> > > +	    a->filter != b->filter ||
+> > > +	    a->filter_fs != b->filter_fs ||
+> > > +	    a->offset != b->offset ||
+> > > +	    a->gain != b->gain)
+> > > +		return false;
+> > > +
+> > > +	return true;
+> > > +}
+
+...
+
+> > > +	/* Assume AVSS at GND (0V) if not provided */
+> > > +	st->vrefs_uv[AD4170_AVSS_SUP] = ret == -ENODEV ? 0 : -ret;
+> > 
+> > -ret ?!?!
+> 
+> That's because AVSS is never above system ground level (i.e. AVSS is either GND
+> or a negative voltage). But we currently don't have support for reading negative
+> voltages with the regulator framework. So, the current AD4170 support reads
+> a positive value from the regulator, then inverts signal to make it negative :)
+
+This needs a good comment and ideally a TODO item in the regulator framework.
+(It might be easy to implement by adding a flag without changing the type of
+ the field, if it's unsigned.)
+
+> > Even if you know that *now* it can't have any other error code, it's quite
+> > fragile.
+> 
+> Yeah, I guess ADCs that can take bipolar power supplies are not that common.
+> I couldn't think of any better way to have that, though.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
