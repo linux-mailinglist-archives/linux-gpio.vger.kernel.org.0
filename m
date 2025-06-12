@@ -1,170 +1,214 @@
-Return-Path: <linux-gpio+bounces-21462-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21463-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCD90AD71B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 15:25:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BE3AAD71AF
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 15:24:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 998871C21666
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 13:19:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E51711718F8
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 13:24:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BB5125E460;
-	Thu, 12 Jun 2025 13:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E7F023E336;
+	Thu, 12 Jun 2025 13:23:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SkRfxQcO"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="XwySzSf7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCCF25CC61
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 13:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249341F3FF8;
+	Thu, 12 Jun 2025 13:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734149; cv=none; b=L5yRc3LIKpMmczfXkXYrhs5Mlj089c8gYkcCzH3M9YpHTv9Yv5CtckPkZziuhYzHn332FrSVwfwgC7BE8dsQGGIEF9EHxr0Vl7e6mXKA8iTFHLpe8jxIgYY1A+Da0TKVE74h8FQVaQohFWFJr+H9TVMJvM0DRHmz7wtKOqguw5Y=
+	t=1749734634; cv=none; b=oJZMhtVYOwqThpMwPkyHyjj/FJC8iKCKjTaWECiP4Sv/nPfdaUXshtl4A5q77ntoE4r/q4jfbw6nEDfvSRoZBTs1S8/ej1JwTGJW/2mexANKDiaJeCegL9Za2mBNVLAzaFYV6GDB+6+FviMeISItnajwTreF89XQKx6MHft7Tj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734149; c=relaxed/simple;
-	bh=5pAhRcgO1+EuPNUIzj/fNOn0kIQ0uu1BHYpfqb2hKXU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K2lJ3yR36+1ujYH9+ENMZdp7yjnJmuyNCy07QHnf0zN0pI/FrntIKLkVOkyX3wxwU6J+i90KJhjy42+QDwo2f28naV5wNgnAufKAaZDoE9C8Dg9m3ZwM3tPXJemw079BaZvUh9aQwrJyyEIkaKF5/Xr/UrY3S86sWT5UcXrVFKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SkRfxQcO; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4508287895dso13339225e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 06:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749734145; x=1750338945; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qXOeSoBKwd4+haJ3JvgSLXQF+sIOgqi9Fow9Bw5pk0w=;
-        b=SkRfxQcO1N/t5cF5Y+AM3MYCuN/m0UyqrouPoxAvqKBtRV/jr719Qt/rh+NDUWuSPd
-         z7kda4YcRP/rHxhv042q4ThNUWI3HFa9fgIpWmRSulpAL8T4UhQofhBzdU+ZnQtM+FBa
-         /WGBjNkcg2HKOgW1JGLXVpHbKFwLwi+AJ+e8mjE9JPD1QctuI6wdQ6dP+aHeXmPOFeuz
-         Tt63j/SgbLlnHie3yKYPXgCHMB7ubWfZJFWBYZh/rmjEN8RtEY3SG/1sNR+5mUdt5zlm
-         8QnlOHT/7h911rDwMWfSRxSZgEbElPkutSJsIcSMDRHgTTVaMFvZJvhvOD88SMa9QCMl
-         zTJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749734145; x=1750338945;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qXOeSoBKwd4+haJ3JvgSLXQF+sIOgqi9Fow9Bw5pk0w=;
-        b=PlqlBkNd3kXdEbbpmyaiHqNFjDt009f1hmi35xg+amLtveJ8dRcLL4fr2LQG85JW6K
-         tXabTRvf1cey8N0ssY2bbfY1XycJhe/0cecLfQDP2BFFXv/VRbGVOP7S4gUdKtQpjcba
-         Nj1rkgspQQWq93385FHdSIKWyyjvyX9iOMmhKA2o06EiATRtHMfH1O1RXacnHtCpFRQx
-         uv8+ydbohfoCvJ9aycOBMjU1lNvX3fwDvMDM/QssI0PEAhP6WUMnqG94yM9AgtdluBQh
-         oYfAFCtgeUQG8cQTT8HpBfS5IlW87/Z5S23p16e93X0aV9YJlRmdYYSmSqO0sGny5bIh
-         WixA==
-X-Forwarded-Encrypted: i=1; AJvYcCXm63UtsYFoo/BdPnKtY87p7a9KiFb2q2N9QXSGJjrW5fPjuuQGE/o5Cy0McJXYUYZ6IC2m0E4nVRb5@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAXCkpFUwsjE3PoDKQUNNoAScRY8/3imW1SdBF1WFzBRKNRlui
-	Z34LV3yGQWMWBmu2DrtfY9qmsDhV3M69g6G5WLvXXIqEi65VgPGLEOSTpUCN0VV+JGo=
-X-Gm-Gg: ASbGnctQ+1znEqhXgK7yWSGWh1ElUje+NSpWy3RTJaxOMpxVcPmGZr3YRJswABYgeOF
-	6Z8pvi4mEaLquu0iLlLEx7vcsXDrSZACyVZ9/F4DaiQrd56OBkJCpP8+rQePALMa+4WzipUpRx4
-	OqONatxKgZTY2v2zp6NoohWJWiiqEmdm59xbXVXqRI+R5S5lpM+Wa4ZJr/7Q+fqibyN6Cdm/+ED
-	c6XE06WUNJflvz3pQFz/VjWSK81l3csD6iodsNbMelDIkbmYoGNI0eloNSDn4iRzcwDOjPczNUe
-	WThPGpSAFsefwqR/rsnto+TXcM7hn7v86vu889U2r5HG9tYjN03J2NU=
-X-Google-Smtp-Source: AGHT+IEnpJ6Q4AZ8oPyYmaUzcDZGuReMq7lbniJezZBAPId2TYPV/p2NnMGPvdWDp/pysd3sY6Avhg==
-X-Received: by 2002:a05:6000:1acc:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3a5607fa6a9mr2707038f8f.16.1749734143769;
-        Thu, 12 Jun 2025 06:15:43 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8b99:9926:3892:5310])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea17d7sm20619795e9.10.2025.06.12.06.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 06:15:43 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 12 Jun 2025 15:15:25 +0200
-Subject: [PATCH 16/16] pinctrl: amdisp: use new GPIO line value setter
- callbacks
+	s=arc-20240116; t=1749734634; c=relaxed/simple;
+	bh=o479zEcN34If9gsRNoa+Rb2aUKHYTD0HfZNmEYpZ9lM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IOJkq7C4levHdnUTndtJ6JVvQIKQlUw892MYrHnyIKaQ1FVwjXVPqJi0q/SAVrv3oCZqy800uuOwFnWZ/qbl7Z/ZWhL3syWoH/X8Csyt0kIr5h3KuLJ3vWfZIWrBtjKzGbCUEN8kW+Dp0qVh+oiJjRsmLMOxtemXI2rSvBQR6IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=XwySzSf7; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CDDwF7016289;
+	Thu, 12 Jun 2025 15:23:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	/s+c05XapIIjOVl+x1SSWFS08/sFZmEJD1dfE0OiG48=; b=XwySzSf7vwO2P0p2
+	vm2H5MB9V4+yrLkmjAnpj1548o8qvKx+tEsePRnYdkDESf5nKtghaTjoTN5yCIc2
+	RiZPqhi+UXjWtGVH5qfTC7tKymH34oIqTPvzLDCBzT5By7htHST9yT0KKaWzI8fW
+	Zpz8Qev6wtXnQE5P/ZGxglBxzs43kk4WBNTYO7k3Y2TIdN4FZ+Zrx4S+juKv/Mv9
+	Yd7617eWJhu8HkkRVpqSy4xvAaZo56hTzPYJOdP5+xp/94tsHQPG1rez+jDDSPPO
+	XsJJteSRjX3U7PODiRYJuwGTiNvvaFb+WO7De25n4xm/bqYP7whYcNZqljkEScUu
+	ichOIw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cs30nga-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 15:23:37 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 76E2C40078;
+	Thu, 12 Jun 2025 15:22:29 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A1CA4AFD842;
+	Thu, 12 Jun 2025 15:21:24 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Jun
+ 2025 15:21:23 +0200
+Message-ID: <49e5b9ca-6860-4ebe-9856-ae550e1aff42@foss.st.com>
+Date: Thu, 12 Jun 2025 15:21:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
+ <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+ <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
+ <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
+ <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
+ <42a0b7ab-d85d-4d52-a263-4a4648c7ff05@kernel.org>
+ <2865ab3a-1c20-4951-8132-4be98d73d70e@foss.st.com>
+ <f1a63830-0533-4f1c-9116-32e8c1e61a8b@kernel.org>
+ <26a4f12a-2295-402e-8e31-45733aa6582d@foss.st.com>
+ <4f31f016-d250-41ea-b613-b074b8ea00d1@kernel.org>
+ <782763e2-99d6-4533-b0db-79b618577586@foss.st.com>
+ <30f8e319-4103-44ba-8f98-c01e7b0ba76c@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <30f8e319-4103-44ba-8f98-c01e7b0ba76c@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-16-556b0a530cd4@linaro.org>
-References: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
-In-Reply-To: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
-To: Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, 
- Support Opensource <support.opensource@diasemi.com>, 
- Baruch Siach <baruch@tkos.co.il>, Sven Peter <sven@kernel.org>, 
- Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Neal Gompa <neal@gompa.dev>, Viresh Kumar <vireshk@kernel.org>, 
- Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, asahi@lists.linux.dev, soc@lists.linux.dev, 
- linux-sunxi@lists.linux.dev, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1643;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=ME7t3PhskqpuTEodGS0joNb0JvX701e6DVecRBqhzik=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoStLn8MZgPfXtIzTahad3jneTgIaic/QOkZGyI
- SGVy3H/f3GJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaErS5wAKCRARpy6gFHHX
- cmoRD/0a+ixlOlllZnxdQ3IwiZjofhYGTNWzylVmVuilwkjx74Ac0WhwgNOgk5uCmmF2NGn47Lz
- E435pD4buRkFabuolt2o9TL8wMz/0RDBg32C9bjwz9fezuo6zTgzSwOjEh5cRd647C84rRl0KWc
- YHu+TOoz2o4uLlV75o3nQTqLM3l1jFVZ3+VSt31kn1Zavk6/31+PgUYiSjgTIsxlT/Gdps4VRtH
- wa/aiQgsQsiFHtCM7iv1U583mqmt1fyy3DcZukPCRuIyWOIBMDvi/gqk9leFU29A9h0srxVog+b
- 2atd0fQ4ad1OubxK41SjP79dMWtYCixfFespdF2IrwaZrVN03CtyobPyUeIkzlYqy+j+XcVocDO
- NjjWKIYMEYJkruZsAOCp6RnA720dgwIaPMSHCb9EL/t1FuLODewQSnenP5FeWSZaiw/y0s0HNWE
- u5xsj/scBHbfLBGmsXxgSr7mOO9hzjyNxYki8z8+PdJQHiEWRq0F1D+FoXcIHUqQ4YrQK5Dawhw
- aQuOGjzWqV36vIoUCA26atb3hiQS/pIePKqxAtnWOg9w2ghzZB8deMzBPTGDg632LEnQYGzr5eV
- 2jZt4jkSxcUYLzAs2RNnPoiDh546HzSIvkw36qrNT2LHX7VrBQPLJOJDSZX0Wb2L7MnN8xnEan/
- UkQWDDMnqWN8GnA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_08,2025-06-12_02,2025-03-28_01
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 6/12/25 15:09, Krzysztof Kozlowski wrote:
+> On 12/06/2025 15:02, Clement LE GOFFIC wrote:
+>> On 6/12/25 13:05, Krzysztof Kozlowski wrote:
+>>> On 12/06/2025 11:31, Clement LE GOFFIC wrote:
+>>>> On 6/11/25 17:48, Krzysztof Kozlowski wrote:
+>>>>> On 11/06/2025 16:08, Clement LE GOFFIC wrote:
+>>>>>> On 6/11/25 08:35, Krzysztof Kozlowski wrote:
+>>>>>>> On 10/06/2025 15:33, Clement LE GOFFIC wrote:
+>>>>>>>> On 6/10/25 14:38, Krzysztof Kozlowski wrote:
+>>>>>>>>> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
+>>>>>>>>>> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
+>>>>>>>>>>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>> +		};
+>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>> +		hdp: pinctrl@5002a000 {
+>>>>>>>>>>>>>> +			compatible = "st,stm32mp131-hdp";
+>>>>>>>>>>>>>> +			reg = <0x5002a000 0x400>;
+>>>>>>>>>>>>>> +			clocks = <&rcc HDP>;
+>>>>>>>>>>>>>>         			status = "disabled";
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Why are you disabling it? What is missing?
+>>>>>>>>>>>>
+>>>>>>>>>>>> Nothing is missing just disabled by default.
+>>>>>>>>>>>> The node is then enabled when needed in board's dts file.
+>>>>>>>>>>> Nodes should not be disabled by default if they are complete. That's why
+>>>>>>>>>>> I asked what is missing. Drop.
+>>>>>>>>>>
+>>>>>>>>>> Hi Krzysztof, OK I better understand now.
+>>>>>>>>>> So yes the 'pinctrl-*' properties which are board dependent are lacking.
+>>>>>>>>>
+>>>>>>>>> These are not properties of this node.
+>>>>>>>>
+>>>>>>>> Does this mean I should add 'pinctrl-*' properties in bindings yaml file ?
+>>>>>>>> I don't get it..
+>>>>>>>
+>>>>>>> These properties have no meaning here, so the hardware description is
+>>>>>>> complete. You claim that you miss them thus device is incomplete is just
+>>>>>>> not correct: these properties do not belong here! They belong to the
+>>>>>>> board but even there they are totally optional. Why would they be a
+>>>>>>> required resource?
+>>>>>>>
+>>>>>>> To remind: we talk here ONLY about required resources.
+>>>>>>
+>>>>>> Yes, 'pinctrl-*' properties belongs to the board and are not required.
+>>>>>> So nothing is missing.
+>>>>>>
+>>>>>> This hdp node in the SoC dtsi file can be enabled by default.
+>>>>>> But the hdp driver will probe and do nothing because without the
+>>>>>> 'pinctrl-*' properties from the board files it would not be able to
+>>>>>> access to any pin.
+>>>>>
+>>>>>
+>>>>> Pinctrl has other features in general, including interfaces to userspace
+>>>>> (as pretty often combined with gpio, although not sure if relevant here).
+>>>>
+>>>> You're right. Also HDP pinctrl has a GPO feature accessible from userspace.
+>>>> But by default the HDP is not connected to any pad; it needs the board
+>>>
+>>> OK, then that was the answer to my first question - what is missing.
+>>> However aren't these pads connected internally also to other parts of
+>>> the SoC (like in most other vendors)?
+>>
+>> No, HDP "output pads" are only connected to SoC pinctrl to route outside
+>> the internal SoC signals for debug purpose.
+>>
+>>>> 'pinctrl-*' properties to configure the SoC pinctrl and expose HDP on
+>>>> the SoC pads.
+>>>>
+>>>> That's why for me the enabling of the driver should be in the board file
+>>>> together with the SoC pinctrl configuration.
+>>>
+>>> And what are the default pad settings configured by HPD driver in
+>>> bootloader (and by bootloader I mean one of few bootloaders this is
+>>> going to be used on like U-Boot)
+>>
+>> The default is to use the GPIO of the SoC pinctrl. The HDP is not routed
+>> outside.
+>>    >>
+>>>> The userland cannot change the pinctrl alternate function mux, this is
+>>>> statically defined by the devicetree.
+>>>
+>>> If you expose GPIO then userland needs this regardless of alternate mux.
+>>> IOW, board level could not configure mux because it should be always
+>>> configured to safe GPIO input.
+>>
+>> For userland sight view, SoC GPIO are preferred instead of HDP.
+>> HDP is only GPO not GPIO. 'pinctrl-*' properties configure at the same
+>> time the SoC pinctrl mux to HDP and the HDP pinctrl mux to one of the
+>> HDP functions (e.g. GPO).
+> Thanks, that's explains, fine to keep it disabled. Unless it is obvious
+> for everyone, it would be nice to put it in commit msg.
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+You're welcome, so I'll provide the V6 with more information in the 
+commit message of patch [5-7] among other needed fixes.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/pinctrl-amdisp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-amdisp.c b/drivers/pinctrl/pinctrl-amdisp.c
-index 9256ed67bb20e9eefef6c6574f1b60d71814cdc0..2e706bf8bcde0536b9e09614665d46130e12c406 100644
---- a/drivers/pinctrl/pinctrl-amdisp.c
-+++ b/drivers/pinctrl/pinctrl-amdisp.c
-@@ -117,7 +117,7 @@ static int amdisp_gpio_get(struct gpio_chip *gc, unsigned int gpio)
- 	return !!(pin_reg & BIT(GPIO_CONTROL_PIN));
- }
- 
--static void amdisp_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
-+static int amdisp_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
- {
- 	unsigned long flags;
- 	u32 pin_reg;
-@@ -131,6 +131,8 @@ static void amdisp_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
- 		pin_reg &= ~BIT(GPIO_CONTROL_PIN);
- 	writel(pin_reg, pctrl->gpiobase + gpio_offset[gpio]);
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
- }
- 
- static int amdisp_gpiochip_add(struct platform_device *pdev,
-@@ -149,7 +151,7 @@ static int amdisp_gpiochip_add(struct platform_device *pdev,
- 	gc->direction_input	= amdisp_gpio_direction_input;
- 	gc->direction_output	= amdisp_gpio_direction_output;
- 	gc->get			= amdisp_gpio_get;
--	gc->set			= amdisp_gpio_set;
-+	gc->set_rv		= amdisp_gpio_set;
- 	gc->base		= -1;
- 	gc->ngpio		= ARRAY_SIZE(amdisp_range_pins);
- 
-
--- 
-2.48.1
+> 
+> Best regards,
+> Krzysztof
 
 
