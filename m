@@ -1,35 +1,35 @@
-Return-Path: <linux-gpio+bounces-21425-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21426-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1822EAD6E2F
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 12:48:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0269AD6E36
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 12:48:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 726641884133
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 10:47:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBC697A3160
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 10:47:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A889723AB9F;
-	Thu, 12 Jun 2025 10:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F361D23BF83;
+	Thu, 12 Jun 2025 10:48:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.175.55.52])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149AB1422DD;
-	Thu, 12 Jun 2025 10:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.175.55.52
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD8B523AB9F;
+	Thu, 12 Jun 2025 10:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725246; cv=none; b=V3oPaDuq5D+Pvlj9wSVpeLfJyxetiiv5PNQivZ6aOPTWgPtW0Z1VR+DML0UAouRscgWpcX3zGbDp1ZlDP1elJn3uat4fF/HNlJnJqiva3ImC4pwsKW18BPHryv0iUADn4BFgkxUXG696Oab7z+2RuDCQe8oM1ZqFv+1OaM6BdSc=
+	t=1749725309; cv=none; b=Xn15GS4ywfps/hCGjzVAnjtN0gmfQpFOjDriT/mymcwLzY1sHRUnnZFRTyWYCI264cZFc08kj3Zbj8wzLYacNdl/3dMfTPJOHS1y3GuSUsavmfkpZwDlWU2BzRpqmac4FFcSSg3Tgbj9DuWbaDTLMrUoZqEUL1ry+DddyF9eI+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725246; c=relaxed/simple;
+	s=arc-20240116; t=1749725309; c=relaxed/simple;
 	bh=E++j0VEKWl4vXpOMr+jNQnxTUhTcRw3k4Jgt5LDWoPA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gxBQ8vJu+fMV1QMce1e4hLaDFRnfhlZsHpmvqv32B7No79QrFtp9NV6LHf6rGLfpuTM0fXulusYc/6SnwDxGUzCQBHf+GjmP0a+29fuapOvW5Y4oNhvXFkTZfn5UTOkKl7w6OIa04UFc+Zbdd0Zm2VoYqDWheFGONUE0YeTL1uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.175.55.52
+	 MIME-Version; b=KdFwiqpuNid49Yzk/VAX+XqmuuJv5djyiWEDfcdoFvmtLl8s2H5XxW1mUJ+HMUSty7WYgL08fwNKIw/d/cssXGKDOJ4ELOjuepm1kDcy9/d3SNJjjEqbwDMZtesBMry1EmnuVxkYJqTKxIB+ghcScdbb3/sTrpoTM6QkFEUC9MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
 Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app2 (Coremail) with SMTP id TQJkCgAHp5UxsEpornyeAA--.2359S2;
-	Thu, 12 Jun 2025 18:47:15 +0800 (CST)
+	by app1 (Coremail) with SMTP id TAJkCgBXexFusEpo9nueAA--.22791S2;
+	Thu, 12 Jun 2025 18:48:16 +0800 (CST)
 From: Yulin Lu <luyulin@eswincomputing.com>
 To: linus.walleij@linaro.org,
 	robh@kernel.org,
@@ -52,8 +52,8 @@ Cc: ningyu@eswincomputing.com,
 	Samuel Holland <samuel.holland@sifive.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Subject: [PATCH v5 1/2] dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
-Date: Thu, 12 Jun 2025 18:47:10 +0800
-Message-Id: <20250612104710.1341-1-luyulin@eswincomputing.com>
+Date: Thu, 12 Jun 2025 18:48:11 +0800
+Message-Id: <20250612104811.1206-1-luyulin@eswincomputing.com>
 X-Mailer: git-send-email 2.31.1.windows.1
 In-Reply-To: <20250612104539.2011-1-luyulin@eswincomputing.com>
 References: <20250612104539.2011-1-luyulin@eswincomputing.com>
@@ -64,23 +64,23 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgAHp5UxsEpornyeAA--.2359S2
+X-CM-TRANSID:TAJkCgBXexFusEpo9nueAA--.22791S2
 X-Coremail-Antispam: 1UD129KBjvJXoW3XFW8KrWDGw45GryUZry7ZFb_yoW7Kr1xpF
 	43W34fJF1qqr1xGa9Ivw109F1fJan7AF9xAFyjyry3Xw1Yq3WSyr4ayr45WFWUWr4kJ343
-	Xayjqa4jqF4UCrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	Xayjqa4jqF4UCrJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9C14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
 	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
 	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
 	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
 	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Wrv_ZF1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
 	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
 	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRRKZX5UUUUU==
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxK
+	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
+	0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRna93UUUUU=
 X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
 Add EIC7700 pinctrl device for all configurable pins.
