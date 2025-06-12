@@ -1,95 +1,208 @@
-Return-Path: <linux-gpio+bounces-21419-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21420-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E75AAD6720
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 07:13:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2E1FAD67EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 08:24:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 607CD1BC0D36
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 05:13:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF3857AA16E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jun 2025 06:22:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DE91DDC11;
-	Thu, 12 Jun 2025 05:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13001F1538;
+	Thu, 12 Jun 2025 06:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lv5iX7Bf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xCfHSAI0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A993C1F;
-	Thu, 12 Jun 2025 05:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0121E25F2
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Jun 2025 06:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749705183; cv=none; b=pysXDgkFThZgoZEJyTT1KoWler3WLaCox+CsoDHWt28c8pOTl/MtrdWx5yNg7uUR5sf/g71GGLru94Z9CmzuPubUDILE4TI+eg0ZwKzkWr0+irldlb2ahOmI6u+jHpN/+HgTVmyxPK0xBwOTvg5OAZVmKptrp1m+uI6P074lTPs=
+	t=1749709442; cv=none; b=agngT20DQA6scxoQqlV743domMnhm0YqL5Z30OvaEWa7vQqJSjWmpsf6ucBr1qaH6l8iqKNBwZk4t33G6fqj4WyUIx+jDfy9bUYFTw9W+gC3/i/U4MWAdiB4Zx2YnPFgYlhiehjvM7IHdzuhFYR0IaMUb9KVM1kHyu8tlGzjWR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749705183; c=relaxed/simple;
-	bh=QWFEf2ukFKf3rQHtC5hHquBlExojXkKz0hH6h9kSNe0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rsCuLZm/Y3bXQl0+d8Yis86ylgKxu2T9UbTC8eZ55suEdvsRZ+H9i1OgZeD/tAzTrcfFaOc4LNk8ZGcib+9TTPaTvtrhrht+Hk8i1WbPx7yytsWbzzHWepfIqU4LjFZ9b2BBORZpo5il1lcb+V5WJ3fqfOikXpBaelfzIQZZSv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lv5iX7Bf; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749705181; x=1781241181;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QWFEf2ukFKf3rQHtC5hHquBlExojXkKz0hH6h9kSNe0=;
-  b=Lv5iX7BfUlwn9ByA74k3YzSnOaCDAHHNR5PW4nkhZ5ulqkzi0F2A2rsr
-   4NZ/h7C/uYG95qnM9spZoRlR3OV9FaOBHcVYVVCGlqr+F46SD0yRewI6B
-   pEfizqzjeAsnaexlFqCpn+vJ3StXoxHB05tOPIROPGNDy/QjDHviYLUO0
-   eymRAGwM2sa/9Rpb5SLPZMGnQRTUNjyWMcaxZ+gSCsGFHpZq53JxNtG8m
-   d0Z+MB5YkkNz5PtEG06Sm6hcfLkBRthEyZiLZNW56bDsNKmprMm5pD7pE
-   gfYkfvJVwF0hoTxIb/EDr1yjHz21zJWbdLPq+T/ji7hN1OsG+Yc+Yz81s
-   A==;
-X-CSE-ConnectionGUID: rGhe4flpRpael/jihH6YAQ==
-X-CSE-MsgGUID: TR1KBEPDRhuE0wCk22rRyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="50974480"
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="50974480"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 22:13:01 -0700
-X-CSE-ConnectionGUID: gM0b1NfMRVKTBXVvgA3EWA==
-X-CSE-MsgGUID: BHW8lFLgRoO0E5aUI1nCVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="151209937"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 11 Jun 2025 22:12:59 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 6E6CB191; Thu, 12 Jun 2025 08:12:58 +0300 (EEST)
-Date: Thu, 12 Jun 2025 08:12:58 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: intel: fix build warnings about export.h
-Message-ID: <20250612051258.GH2063270@black.fi.intel.com>
-References: <20250611180956.2780365-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1749709442; c=relaxed/simple;
+	bh=jljVNt6BPZD/UUQ9H+MR7vP5z5VUVx+PYWtSAHZEcXM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=DbF07qqd3LQrxayFl04XJOFRiClvHxlozzT2LDTFOcP7m6GG48ZB4E74M+2RmR4OPStdslLe/wzUICW7EoYQbq0XyXEFXnYhuizq8KuaJslFmvpi1iirsqe2iWglN8qwEpP724OO+70cobx6gciPdZL6LHUmiVUAz/SWFL98lrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xCfHSAI0; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-552206ac67aso485199e87.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jun 2025 23:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749709437; x=1750314237; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FX+vwXZpIRgv9MzwOtx1+r1I221i/Q8CEVWsZrvD4vo=;
+        b=xCfHSAI0sVYIf8jqfH0STxCFGkhRgeoz76J7jalyLG4GHqQoMS1jTExgP01Wvn09zv
+         zShZ0WoXI3qZLDXuvARTEA5gHdGnKdk4hh8vjlsynI7QvboWJzBghBdg/3Skm7Yrj5pq
+         D2kezgxdoubkdrxZ59eP6OKCEw8eOrT2R4KTDowK2Lc0xANIryxjDDL82Amyoj/LiouC
+         GekBJaa9IW4/+nJlzxj2Pc4VuM1wM60ThnPgo3xn7ME4sRDAecTrdAg8OOjRvf/TJ+VL
+         dE/qK6wvAMq+YjN6SeR7Q9dgTMraAp4LWjJiULaLHGhN95djD47o2ESd/56PuSgihuoT
+         k6xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749709437; x=1750314237;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FX+vwXZpIRgv9MzwOtx1+r1I221i/Q8CEVWsZrvD4vo=;
+        b=MILAlpz9hkWRX8F4qh3BDR0wwHU2Nqm/adRQoWC6KfrrG2u2/s9msRv1h8xK55pyQp
+         Zx43H5vspr5A7pvDLtSGMVKDUIni+S7ynRgFOipYzVNVDnjx8L8hxF5br4zilkb228JX
+         MS0jEpcMVnYwe1bUy29ElcfYzFUc4pCqUUMKssbsH6GbdiwjV3P2UxT2WLzyyseoxW9o
+         9f+rE/Hu8PHNIXtmpvhjRCifEDVIM8+Ga1DH2a9amT08waAjXmx/5YRoA50DeM6PxhXo
+         oTlEU3XccrU3xFBfPRNpytNLMBQ6pakzQ0zlE70AxFLbTq20IeGycoU7BzJZkhddBJvr
+         B5qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGzxIh7Q/Rs733qieNN52mgCl8jxh/X+M4KAPLp/x+3vEj1lZlwoZ1ENnw9aGSLkW48BIIYA37Zgyh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxphz5BBl8DVAiEsicsEXqj+3c7Gj9h5CYIuimfSSyNsG5Vx5Tm
+	s9Y4tQ6UmIzBNc665Kg9hAtvkPpZR3Di5WPmCDPzWlkFql+pLtsX7hJx1Q356PQMGHWV3BaL4ZA
+	6KhzcqxA2SkswCv92DZLdsGCBW+btEychuoqBkoFzTVltZ57CoJQ2vEo5Ag==
+X-Gm-Gg: ASbGncvL+Q8pcjs1mr3Jkt/qvtiO7Dk/z+GnfoxNlfrC9PLOFFteDmHB3+PajRjTB5H
+	IuYRd9plEu6KrHaIVohcGNARiXxg5a4PB1COtFxzwdzo77irSbDnz837jC6IZS4xRDgFOy4AiL4
+	GxJdqVEaxjbBMf9oJpN/VirID2dFeQJFwTnZl8Oad2ezw=
+X-Google-Smtp-Source: AGHT+IHiqtEaFEnU53BOIjWvNP/y8XLoZUmy6d6q8hVj7pnj1jo/Lb3aYWmh9pEA+2n/ULjXKv8QqT7kQYcfnPLgUx0=
+X-Received: by 2002:a05:6512:108c:b0:553:398f:7730 with SMTP id
+ 2adb3069b0e04-553a53dc4afmr645333e87.0.1749709437205; Wed, 11 Jun 2025
+ 23:23:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250611180956.2780365-1-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 12 Jun 2025 08:23:46 +0200
+X-Gm-Features: AX0GCFvnh3xByupXFFA9XIoamiMqBdjgp746Q9J1lzhrhz83kl42XAIxlwoR7Wk
+Message-ID: <CACRpkdYC5Ut3L9Og5-c=e1DmqzQD-6BSDS-cMyhcmQq2m+LsYQ@mail.gmail.com>
+Subject: Pin control fixes for v6.16
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 11, 2025 at 09:09:56PM +0300, Andy Shevchenko wrote:
-> After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
-> <linux/export.h> when W=1") and 7d95680d64ac8e836c ("scripts/misc-check:
-> check unnecessary #include <linux/export.h> when W=1"), we get some build
-> warnings with W=1:
-> 
-> pinctrl-intel.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-> 
-> So fix these build warnings for the driver code.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hi Linus,
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+here are some early fixes for v6.16, nothing special just some
+merge window noise in various drivers.
+
+Details in the signed tag. The first Qualcomm patch was something
+that was based on fixes submitted late for v6.15 so it wasn't in
+the v6.16-rc1 pull request as that was based on v6.15-rc1.
+
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.16-2
+
+for you to fetch changes up to 5558f27a58459a4038ebb23bcb5bd40c1e345c57:
+
+  pinctrl: sunxi: dt: Consider pin base when calculating bank number
+from pin (2025-06-10 14:35:40 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for v6.16:
+
+- Add some missing pins on the Qualcomm QCM2290, along with a
+  managed resources patch that make it clean and nice.
+
+- Drop an unused function in the ST Micro driver.
+
+- Drop bouncing MAINTAINER entry.
+
+- Drop of_match_ptr() macro to rid compile warnings in the TB10x
+  driver.
+
+- Fix up calculation of pin numbers from base in the Sunxi driver.
+
+----------------------------------------------------------------
+Chen-Yu Tsai (1):
+      pinctrl: sunxi: dt: Consider pin base when calculating bank
+number from pin
+
+Dmitry Baryshkov (1):
+      pinctrl: qcom: switch to devm_gpiochip_add_data()
+
+Krzysztof Kozlowski (3):
+      pinctrl: st: Drop unused st_gpio_bank() function
+      pinctrl: MAINTAINERS: Drop bouncing Jianlong Huang
+      pinctrl: tb10x: Drop of_match_ptr for ID table
+
+Wojciech Slenska (1):
+      pinctrl: qcom: pinctrl-qcm2290: Add missing pins
+
+ .../bindings/pinctrl/starfive,jh7110-aon-pinctrl.yaml         |  2 +-
+ .../bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml         |  2 +-
+ MAINTAINERS                                                   |  1 -
+ drivers/pinctrl/pinctrl-st.c                                  |  5 -----
+ drivers/pinctrl/pinctrl-tb10x.c                               |  2 +-
+ drivers/pinctrl/qcom/pinctrl-apq8064.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-apq8084.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-ipq4019.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-ipq5018.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-ipq5332.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-ipq5424.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-ipq8064.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-ipq9574.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-mdm9607.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-mdm9615.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm.c                            | 11 +----------
+ drivers/pinctrl/qcom/pinctrl-msm.h                            |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8226.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8660.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8909.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8916.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8917.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8953.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8960.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8976.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8994.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8996.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8998.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-msm8x74.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c                        | 10 +++++++++-
+ drivers/pinctrl/qcom/pinctrl-qcs404.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-qcs615.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-qdf2xxx.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-qdu1000.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-sa8775p.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-sar2130p.c                       |  1 -
+ drivers/pinctrl/qcom/pinctrl-sc7180.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sc7280.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c                        |  1 -
+ drivers/pinctrl/qcom/pinctrl-sc8280xp.c                       |  1 -
+ drivers/pinctrl/qcom/pinctrl-sdm660.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sdm670.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sdm845.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sdx55.c                          |  1 -
+ drivers/pinctrl/qcom/pinctrl-sdx65.c                          |  1 -
+ drivers/pinctrl/qcom/pinctrl-sdx75.c                          |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm4450.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm6115.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm6125.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm6350.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm6375.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm7150.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm8150.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm8250.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm8350.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm8450.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm8550.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm8650.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-sm8750.c                         |  1 -
+ drivers/pinctrl/qcom/pinctrl-x1e80100.c                       |  1 -
+ drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c                      |  8 ++++----
+ 64 files changed, 17 insertions(+), 80 deletions(-)
 
