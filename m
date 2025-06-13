@@ -1,397 +1,237 @@
-Return-Path: <linux-gpio+bounces-21560-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21561-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94353AD92D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 18:28:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37FABAD92E0
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 18:35:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A0B01BC0736
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 16:29:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CC733BA058
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 16:34:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C4A920F06A;
-	Fri, 13 Jun 2025 16:28:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB36F1F37D4;
+	Fri, 13 Jun 2025 16:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDCNr2Ck"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JplZWJxT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4A720A5E1;
-	Fri, 13 Jun 2025 16:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749832119; cv=none; b=fJffJxIEap3K/E6qgmMcP32fANrpmjQJWhtT24TGX1x6DH+9k4CjOWd3+JLlVswpqHYM3TaKQ/yxIpTkSRWS6wzr/uYXjcgBIFzBX3m0xTKTcIF4Pz/sCTIMV39toGPCzfnczsP8HdSVPQ32FiQPy7k9LJkh88gpUBBGPMGmLlU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749832119; c=relaxed/simple;
-	bh=LfgLcCh/Rd/dyzbnkE69yjafGpQ8BEikgpj0nsy/XCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=oovr4bBzSVD2VBn7LmEphjaVHl84Hjd1y/ETlin1i82qEMIzNXJqAvUPrgnCrYIdqFFkr2Mfc3/dD1tctVp9xlWJHyTFDvo7GUwFcCwpOaIXREbm4ipolng8pegyCo8+kRq7vTQ8krRR4L1EdoLMRC2s19WdbnD/4WJaEGSx77I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDCNr2Ck; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09430C4CEE3;
-	Fri, 13 Jun 2025 16:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749832119;
-	bh=LfgLcCh/Rd/dyzbnkE69yjafGpQ8BEikgpj0nsy/XCM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=MDCNr2Cktn5UWbBuKG/DM68N1yt5sia4wH4cn7qMVp9Yc7/l+XfUUa+XzvUnh77x/
-	 XBfmyi8zXzRdL1N9FHzRRKwv2rxfzileVZilD3BMkWF0wUWfNbigYIG10/C12C82j9
-	 Vx0I21/NAmbOvLKbPxYxmHBiZfXLtu60E9HxeB8DmMMPsplrmC6u6LKhWSOMGdx8Io
-	 ILd76j2aVcAdSEQ+zE6n/tmzVIIH4YaKVZpyNPBzpRgjaqVx+xXQs1cWSDsayIhCSI
-	 4hyE1GHdvqaDjbltQRQEcNJC4qscGrioIMvXyUq0txuZSiSILBlg0c0BwavuXcmCkM
-	 c6rhhz+T/uzkA==
-Date: Fri, 13 Jun 2025 11:28:37 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	vkoul@kernel.org, kishon@kernel.org, linus.walleij@linaro.org,
-	p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org, elbadrym@google.com, romlem@google.com,
-	anhphan@google.com, wak@google.com, yuxiaozhang@google.com,
-	BMC-SW@aspeedtech.com
-Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
-Message-ID: <20250613162837.GA962545@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61BF1E378C;
+	Fri, 13 Jun 2025 16:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749832505; cv=fail; b=pbIBXTe5t9h5RHiiFxN5kuy3mfb9V86d1jNRlP9PziFakdLRx5xDg6AkwfiokQTI07MZkoen25hC8ZJeL4NE0DoLQBAWenzuTqSVSuHYsuLckKWH6q2llh1WKS4+GXWYHAjmNFRntAJudRiVP09wpX6gRAiWGQsXm/LfCpuCptc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749832505; c=relaxed/simple;
+	bh=EOhy9ABZCwFPLb6ISn0pe9KVWu0y+n9AjuqArMWxiQ4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XRJuEJu+MC1e6FHER60/8Bd08R2Y56ns4mtSgrnTj8ajxFPhBxcG+AYJlRtn/FxXUemybbyXm2ukbkhR40vVhN4L8L6it/RIPxqAKNdmDFDSbWYBJZ62KXzLk7Vhg7ndb0T3wD3I3SSwzFZ+1DGOb9yRKlymnEUBk6LWa9/+vS8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JplZWJxT; arc=fail smtp.client-ip=40.107.243.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dR7tZwPPcPK84PA743WLFKVjBXAEKCQ6E7NJTPxuEZPSN5OsL5qPWVib7jZDYUnQh0baCI/ELBCbeH7Y6WINF4J2Ebqdff7AhblCIAHzPhLK5WViwiKnySRStir7Z25AGy5pIMngEwINmHZH2AS1B1IbifMquU7SUwd3HnE0zr7RPqBZ1hSUqydFeIGqms+tLBU6cDPAmI3phBuJXyYbCi0/Z3yQM4rzOQVm1pcQL1EmgAV21y/PmRNe7KAT0PCI1Ut3LZcOAWSQp7vhyKOCklr4Pb7Pe0Pv/OH3D1Prykx+9mgxRSnN1WGYRhmoRfbozPlZJjOoJBOCtB+yALcSeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oU9ImkQS3p72Inan8dmIXDlU8czeYoa/HFE1AcJWvWc=;
+ b=cgZssS4mcIwudM07rkDQKbY5TwQEez4+cpQgEFsgmboRyivadFco3TocfU0Erjzn7+2QzTON6Zqt1nx8QipcIADgHpP1jm1pKvOkSPbdrISk2mQpNp9qbtOgKy/e/vmmwfVg3HUa2QZSeWHfU+bzNe7O8qer289iEq8+Jgnxv0TF1o8dTUNqnz7SgRUdVzRlMrNgVWD1ZOTt2gBL1Xtl4/O78Uo3QUIbmXYDZd+JOihy/PSF6QBHZ/o2Fu2w3Az/TBdrZ2NALPIc0zFuIIyhcCyEdRCcSNNk02yB/ZQ/6Fk9RN0bv8PnC/bSHjQ02yAx9D7e2tUlEMhpqmrIrqAX9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oU9ImkQS3p72Inan8dmIXDlU8czeYoa/HFE1AcJWvWc=;
+ b=JplZWJxTyFRM9YHDgcYnG1WoZ1pswFZylXXseDgGTvxwJEvVBWNo7CJWYXdZmynxB9dVsHEVp89ljOKsu6SNR1WzRAioyGPErBbfcBmD6Mz04hRCbCF6mvbwbV/961wpzHGyLk/8kvx1axnZZjcxrwzSAu0412LeojlUmOt9fbJO0zK5bnD7WyeBQdaSyPjJG5hBihxaXxsf8aLDUFTL4CsbmjMsIp0bin4ZD1WoSO7HW79jsABM7eUGA8sRXExU7LsSjepQad+0535OmF2sR7VNB1Ej2pA0P/qW5nqnQ9slqzW/SUh6gasuOpGEURJnG8q0lV6ONjje/idvL4Qa/g==
+Received: from SJ0PR03CA0389.namprd03.prod.outlook.com (2603:10b6:a03:3a1::34)
+ by DS7PR12MB6357.namprd12.prod.outlook.com (2603:10b6:8:96::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.38; Fri, 13 Jun
+ 2025 16:35:00 +0000
+Received: from CO1PEPF000066EA.namprd05.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::37) by SJ0PR03CA0389.outlook.office365.com
+ (2603:10b6:a03:3a1::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Fri,
+ 13 Jun 2025 16:35:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1PEPF000066EA.mail.protection.outlook.com (10.167.249.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Fri, 13 Jun 2025 16:35:00 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 13 Jun
+ 2025 09:34:46 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 13 Jun
+ 2025 09:34:46 -0700
+Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.8)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Fri, 13
+ Jun 2025 09:34:45 -0700
+From: David Thompson <davthompson@nvidia.com>
+To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>
+CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "David
+ Thompson" <davthompson@nvidia.com>, Shravan Kumar Ramani
+	<shravankr@nvidia.com>
+Subject: [PATCH v1] gpio: mlxbf3: only get IRQ for device instance 0
+Date: Fri, 13 Jun 2025 16:34:43 +0000
+Message-ID: <20250613163443.1065217-1-davthompson@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066EA:EE_|DS7PR12MB6357:EE_
+X-MS-Office365-Filtering-Correlation-Id: 68e05159-13db-4c50-d66a-08ddaa983db1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zrugr9MpJq7BpgU91MXv7WRskrftMY3l+OktgHVK0DpOV39VDkD1CcThWpkY?=
+ =?us-ascii?Q?e3iAnhFrYw7SZxwpl9kMpdqH6zA0tk2R/a54XRMCPVTINsCG6Vdyaf8t18tB?=
+ =?us-ascii?Q?y5uL1hly6/VezK7r9AR3EWj1nKOg3upRSv2H0K3VYKZnUdPuv1RJDqXfNix/?=
+ =?us-ascii?Q?EGcILqRm0cBbqNWoVrnPwEdaRuOhT7p4rXYPHS5N5C5l9W9uIkMMPboeUCHm?=
+ =?us-ascii?Q?2VVQF8hRzmZmFB6/JWfyaKs1av8yKCnlLrd7JaGVWnqp0o4Xrv2H0ML203Lb?=
+ =?us-ascii?Q?51K2X3iIrtXD/RdkcTGqsg6dhaJd+TKTVVdyvlVd28sPdenJ89MhiVy/1CCG?=
+ =?us-ascii?Q?WQj2WK3MUp7trWm+tc+qSFcT78fr5NQjxShvEEFGtzi2tF9Frv8T/3HVEAv5?=
+ =?us-ascii?Q?oqrkPG3Hkgb/yUCbobAxytyPkwYFdfrarnUKBnX+1YNWxWvr/ZMaAyrU8Gmm?=
+ =?us-ascii?Q?9934Haco+sQ4dMfMVjvi53P9fCA5FRrz2u0P7eaylgSEdpfg5TxuXNeIYsTR?=
+ =?us-ascii?Q?Hr6rnw5zxGhCVh4HRTEo96wDJyFjPcH/LyZ76Kl8/dJqkIKUntOQV1Trz8FV?=
+ =?us-ascii?Q?0zHDF+TaevergN3CqipnjLwNd1540ri5c/fZMDcXrrZduOCtzDKCucCIoB4h?=
+ =?us-ascii?Q?PS72HSV+H8vynw3Uzr5kFKUQjDzXdGBQKrJdC5b1eMDvzF2dH8UhXzeWSsPI?=
+ =?us-ascii?Q?jWCiXTRgCqzC7MGK5n0r2oHu1ro/+1Vsst95NySYhU8w/SzBNu5ldkiE2bTC?=
+ =?us-ascii?Q?SFo1XGwZX2e4RQxEa2NK1+Fv/QD4SnqXfTJ5aA6qo+q8jIT0rP6JUoqvMoJo?=
+ =?us-ascii?Q?LIfNrfpugbbhjm3k5Hz3D/w9HF8hnjZmxTho9IPenkwJUvkPmeWGgw8k9lFy?=
+ =?us-ascii?Q?/uhiKceG1tuFjVPmEWNsFJLEE2lIqcdGPp8tgqA1appoCNOyCT9ehF+/Bnqu?=
+ =?us-ascii?Q?4a6mRhf8nDlBWtm4pvQgFYfoiJyQj3G6OTmHqYMNmJLiETJ6DSaIuFhgm+GX?=
+ =?us-ascii?Q?EJGdC/ZED/u3hx/eGTSMQlz1NbaM+CgGnkakFhUjMMwN7bhbrWYCYuBQMl3n?=
+ =?us-ascii?Q?yNi+oIjhsIXuaYeFzIb0zR9CVuf9/xgPuYSB7TVToBhBmbZ0DIjPcfDzEvGT?=
+ =?us-ascii?Q?0149Vlz8E478MnYC5rUXS4gHVYyurVXx+gc/3YI55QePU7IVJZWeucBtAJU/?=
+ =?us-ascii?Q?E8HD29Wd6tn5jSefHArmnGWfPuOnFF5TEAYIfMdD3qXZzZwqL+/0qdQFJ/rC?=
+ =?us-ascii?Q?aO8niGqtzm4jBikubB7TY6yAR8x52mBD2/xL/AlCLW6EJzqgW/gx7cOaOPKR?=
+ =?us-ascii?Q?L7fLuGWrbeaoACbWo/it7CKeZpPzgkcOkJXI8S5Gul1gXxbmzt0LUBLih7ns?=
+ =?us-ascii?Q?m1mhfFk8B14xU/L3II7cusmZCiOwvrr1r+ljAQ59XixMrULGpQB/Yvn0Y3lX?=
+ =?us-ascii?Q?M+sNSJ4TX9M9R3vMoJx0G9ru9uwFsnip2lb/DaEUFBYp5sydhdIptKjOGLWA?=
+ =?us-ascii?Q?CHNoBjpmdUdAo2W7/ee+dlSjF/ldn2qISWHV?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2025 16:35:00.1922
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68e05159-13db-4c50-d66a-08ddaa983db1
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066EA.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6357
 
-On Fri, Jun 13, 2025 at 11:30:01AM +0800, Jacky Chou wrote:
-> Introduce PCIe Root Complex driver for ASPEED SoCs. Support RC
-> initialization, reset, clock, IRQ domain, and MSI domain setup.
-> Implement platform-specific setup and register configuration for
-> ASPEED. And provide PCI config space read/write and INTx/MSI
-> interrupt handling.
+The gpio-mlxbf3 driver interfaces with two GPIO controllers,
+device instance 0 and 1. There is a single IRQ resource shared
+between the two controllers, and it is found in the ACPI table for
+device instance 0.  The driver should not attempt to get an IRQ
+resource when probing device instance 1, otherwise the following
+error is logged:
+  mlxbf3_gpio MLNXBF33:01: error -ENXIO: IRQ index 0 not found
 
-Make the subject match drivers/pci/controller/ style.
+Signed-off-by: David Thompson <davthompson@nvidia.com>
+Reviewed-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+---
+ drivers/gpio/gpio-mlxbf3.c | 54 ++++++++++++++++++++++++--------------
+ 1 file changed, 35 insertions(+), 19 deletions(-)
 
-> +config PCIE_ASPEED
-> +	bool "ASPEED PCIe controller"
-> +	depends on PCI
-> +	depends on OF || COMPILE_TEST
-> +	select PCI_MSI_ARCH_FALLBACKS
-> +	help
-> +	  Enable this option to add support for the PCIe controller
-> +	  found on ASPEED SoCs.
-> +	  This driver provides initialization and management for PCIe
-> +	  Root Complex functionality, including interrupt and MSI support.
-> +	  Select Y if your platform uses an ASPEED SoC and requires PCIe
-> +	  connectivity.
+diff --git a/drivers/gpio/gpio-mlxbf3.c b/drivers/gpio/gpio-mlxbf3.c
+index 10ea71273c89..9875e34bde72 100644
+--- a/drivers/gpio/gpio-mlxbf3.c
++++ b/drivers/gpio/gpio-mlxbf3.c
+@@ -190,7 +190,9 @@ static int mlxbf3_gpio_probe(struct platform_device *pdev)
+ 	struct mlxbf3_gpio_context *gs;
+ 	struct gpio_irq_chip *girq;
+ 	struct gpio_chip *gc;
++	char *colon_ptr;
+ 	int ret, irq;
++	long num;
+ 
+ 	gs = devm_kzalloc(dev, sizeof(*gs), GFP_KERNEL);
+ 	if (!gs)
+@@ -227,25 +229,39 @@ static int mlxbf3_gpio_probe(struct platform_device *pdev)
+ 	gc->owner = THIS_MODULE;
+ 	gc->add_pin_ranges = mlxbf3_gpio_add_pin_ranges;
+ 
+-	irq = platform_get_irq(pdev, 0);
+-	if (irq >= 0) {
+-		girq = &gs->gc.irq;
+-		gpio_irq_chip_set_chip(girq, &gpio_mlxbf3_irqchip);
+-		girq->default_type = IRQ_TYPE_NONE;
+-		/* This will let us handle the parent IRQ in the driver */
+-		girq->num_parents = 0;
+-		girq->parents = NULL;
+-		girq->parent_handler = NULL;
+-		girq->handler = handle_bad_irq;
+-
+-		/*
+-		 * Directly request the irq here instead of passing
+-		 * a flow-handler because the irq is shared.
+-		 */
+-		ret = devm_request_irq(dev, irq, mlxbf3_gpio_irq_handler,
+-				       IRQF_SHARED, dev_name(dev), gs);
+-		if (ret)
+-			return dev_err_probe(dev, ret, "failed to request IRQ");
++	colon_ptr = strchr(dev_name(dev), ':');
++	if (!colon_ptr) {
++		dev_err(dev, "invalid device name format\n");
++		return -EINVAL;
++	}
++
++	ret = kstrtol(++colon_ptr, 16, &num);
++	if (ret) {
++		dev_err(dev, "invalid device instance\n");
++		return ret;
++	}
++
++	if (!num) {
++		irq = platform_get_irq(pdev, 0);
++		if (irq >= 0) {
++			girq = &gs->gc.irq;
++			gpio_irq_chip_set_chip(girq, &gpio_mlxbf3_irqchip);
++			girq->default_type = IRQ_TYPE_NONE;
++			/* This will let us handle the parent IRQ in the driver */
++			girq->num_parents = 0;
++			girq->parents = NULL;
++			girq->parent_handler = NULL;
++			girq->handler = handle_bad_irq;
++
++			/*
++			 * Directly request the irq here instead of passing
++			 * a flow-handler because the irq is shared.
++			 */
++			ret = devm_request_irq(dev, irq, mlxbf3_gpio_irq_handler,
++					       IRQF_SHARED, dev_name(dev), gs);
++			if (ret)
++				return dev_err_probe(dev, ret, "failed to request IRQ");
++		}
+ 	}
+ 
+ 	platform_set_drvdata(pdev, gs);
+-- 
+2.43.2
 
-Alphabetize this entry by vendor to match the file.
-
-Add blank line between paragraphs.
-
-> + * Copyright 2025 Aspeed Technology Inc.
-
-Settle on "ASPEED" or "Aspeed" in text/comment/etc to match corporate
-style.  "aspeed" is good for the driver name, e.g., "PCI: aspeed: ..."
-for the subject.
-
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/kernel.h>
-> +#include <linux/msi.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/pci.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/irq.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-
-The trend is to alphabetize these #includes.
-
-> +/* AST2600 PCIe Host Controller Registers */
-> +#define PEHR_MISC_10		0x10
-> +#define DATALINK_REPORT_CAPABLE		BIT(4)
-
-Name register bits like these in a way that connects them with the
-register.
-
-> +static struct irq_chip aspeed_intx_irq_chip = {
-> +	.name = "ASPEED:IntX",
-
-Usual styling is "INTx".
-
-> +	.irq_ack = aspeed_pcie_intx_ack_irq,
-> +	.irq_mask = aspeed_pcie_intx_mask_irq,
-> +	.irq_unmask = aspeed_pcie_intx_unmask_irq,
-
-Name these functions to match the name of the function pointer, e.g.,
-aspeed_pcie_intx_irq_ack() instead of aspeed_pcie_intx_ack_irq()
-This makes grep/cscope more useful.
-
-> +static irqreturn_t aspeed_pcie_intr_handler(int irq, void *dev_id)
-> +{
-> +	struct aspeed_pcie *pcie = dev_id;
-> +	const struct aspeed_pcie_rc_platform *platform = pcie->platform;
-> +	unsigned long status;
-> +	unsigned long intx;
-> +	u32 bit;
-> +	int i;
-> +
-> +	intx = readl(pcie->reg + platform->reg_intx_sts) & 0xf;
-> +	if (intx) {
-
-Don't need "if (intx)" here; the loop is sufficient.
-
-> +		for_each_set_bit(bit, &intx, PCI_NUM_INTX)
-> +			generic_handle_domain_irq(pcie->irq_domain, bit);
-> +	}
-
-> +static int aspeed_ast2600_rd_conf(struct pci_bus *bus, unsigned int devfn,
-> +				  int where, int size, u32 *val)
-> +{
-> +	struct aspeed_pcie *pcie = bus->sysdata;
-> +	u32 bdf_offset;
-> +	int rx_done_fail = 0, slot = PCI_SLOT(devfn);
-> +	u32 cfg_val, isr, type = 0;
-> +	u32 link_sts = 0;
-> +	int ret;
-> +
-> +	/* Driver may set unlock RX buffere before triggering next TX config */
-
-s/buffere/buffer/
-
-> +	writel(PCIE_UNLOCK_RX_BUFF | readl(pcie->reg + H2X_DEV_CTRL),
-> +	       pcie->reg + H2X_DEV_CTRL);
-> +
-> +	if (bus->number == 128 && slot != 0 && slot != 8)
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +	type = (bus->number > 128);
-
-Weird.  What's all this?  Some kind of device you want to hide?
-Deserves a hint about what's special.
-
-> +	if (ret) {
-> +		dev_err(pcie->dev,
-> +			"[%X:%02X:%02X.%02X]CR tx timeout sts: 0x%08x\n",
-
-Conventional format is "%04x:%02x:%02x.%d" (4-digit domain, lower-case
-hex).
-
-> +			pcie->domain, bus->number, PCI_SLOT(devfn),
-> +			PCI_FUNC(devfn), cfg_val);
-> +		ret = PCIBIOS_SET_FAILED;
-> +		*val = ~0;
-
-PCI_SET_ERROR_RESPONSE(val)
-
-> +static int aspeed_ast2600_wr_conf(struct pci_bus *bus, unsigned int devfn,
-> +				  int where, int size, u32 val)
-> +{
-> +	u32 type = 0;
-> +	u32 shift = 8 * (where & 3);
-> +	u32 bdf_offset;
-> +	u8 byte_en = 0;
-> +	struct aspeed_pcie *pcie = bus->sysdata;
-> +	u32 isr, cfg_val;
-> +	int ret;
-> +
-> +	/* Driver may set unlock RX buffere before triggering next TX config */
-
-s/buffere/buffer/
-
-I don't understand this; I suppose it requires hardware knowledge.
-
-> +	writel(PCIE_UNLOCK_RX_BUFF | readl(pcie->reg + H2X_DEV_CTRL),
-> +	       pcie->reg + H2X_DEV_CTRL);
-> +
-> +	switch (size) {
-> +	case 1:
-> +		byte_en = 1 << (where % 4);
-> +		val = (val & 0xff) << shift;
-> +		break;
-> +	case 2:
-> +		byte_en = 0x3 << (2 * ((where >> 1) % 2));
-> +		val = (val & 0xffff) << shift;
-> +		break;
-> +	case 4:
-> +	default:
-> +		byte_en = 0xf;
-> +		break;
-> +	}
-> +
-> +	type = (bus->number > 128);
-
-You're not allowed to *read* bus 128, dev 1, but you can write it?
-
-> +static void aspeed_pcie_port_init(struct aspeed_pcie *pcie)
-> +{
-> +	u32 link_sts = 0;
-> +
-> +	regmap_write(pcie->pciephy, PEHR_LOCK, PCIE_UNLOCK);
-> +	regmap_write(pcie->pciephy, PEHR_GLOBAL, ROOT_COMPLEX_ID(0x3));
-> +
-> +	reset_control_deassert(pcie->perst);
-> +	mdelay(500);
-
-Where did this come from?  Should be a #define with reference to a
-spec.
-
-> +static int aspeed_ast2700_setup(struct platform_device *pdev)
-> +{
-> +	struct aspeed_pcie *pcie = platform_get_drvdata(pdev);
-> +	u32 cfg_val;
-> +
-> +	reset_control_assert(pcie->perst);
-> +
-> +	regmap_write(pcie->pciephy, PEHR_MISC_70,
-> +		     POSTED_DATA_CREDITS(0xc0) | POSTED_HEADER_CREDITS(0xa));
-> +	regmap_write(pcie->pciephy, PEHR_MISC_78,
-> +		     COMPLETION_DATA_CREDITS(0x30) | COMPLETION_HEADER_CREDITS(0x8));
-> +	regmap_write(pcie->pciephy, PEHR_MISC_58, LOCAL_SCALE_SUP);
-> +
-> +	regmap_update_bits(pcie->cfg, SCU_60,
-> +			   RC_E2M_PATH_EN | RC_H2XS_PATH_EN | RC_H2XD_PATH_EN | RC_H2XX_PATH_EN |
-> +			   RC_UPSTREAM_MEM_EN,
-> +			   RC_E2M_PATH_EN | RC_H2XS_PATH_EN | RC_H2XD_PATH_EN | RC_H2XX_PATH_EN |
-> +			   RC_UPSTREAM_MEM_EN);
-> +	regmap_write(pcie->cfg, SCU_64,
-> +		     RC0_DECODE_DMA_BASE(0) | RC0_DECODE_DMA_LIMIT(0xFF) | RC1_DECODE_DMA_BASE(0) |
-> +		     RC1_DECODE_DMA_LIMIT(0xFF));
-> +	regmap_write(pcie->cfg, SCU_70, DISABLE_EP_FUNC);
-> +
-> +	reset_control_assert(pcie->h2xrst);
-> +	mdelay(10);
-
-Source?
-
-> +	reset_control_deassert(pcie->h2xrst);
-> +
-> +	regmap_write(pcie->pciephy, PEHR_MISC_5C, CONFIG_RC_DEVICE);
-> +	regmap_read(pcie->pciephy, PEHR_MISC_60, &cfg_val);
-> +	regmap_write(pcie->pciephy, PEHR_MISC_60,
-> +		     (cfg_val & ~PORT_TPYE) | FIELD_PREP(PORT_TPYE, PORT_TYPE_ROOT));
-> +
-> +	writel(0, pcie->reg + H2X_CTRL);
-> +	writel(H2X_BRIDGE_EN | H2X_BRIDGE_DIRECT_EN, pcie->reg + H2X_CTRL);
-> +
-> +	/* The BAR mapping:
-> +	 * CPU Node0(domain 0): 0x60000000
-> +	 * CPU Node1(domain 1): 0x80000000
-> +	 * IO       (domain 2): 0xa0000000
-
-Are these addresses or sizes?  Should they come from DT?  Maybe it's
-something wired into the hardware?
-
-> +	writel(REMAP_BAR_BASE(0x60000000 + (0x20000000 * pcie->domain)),
-> +	       pcie->reg + H2X_REMAP_DIRECT_ADDR);
-> +
-> +	/* Prepare for 64-bit BAR pref */
-> +	writel(REMAP_PREF_ADDR_63_32(0x3), pcie->reg + H2X_REMAP_PREF_ADDR);
-> +
-> +	reset_control_deassert(pcie->perst);
-> +	mdelay(1000);
-
-Source?
-
-> +static int aspeed_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pci_host_bridge *host;
-> +	struct aspeed_pcie *pcie;
-> +	struct device_node *node = dev->of_node;
-> +	const void *md = of_device_get_match_data(dev);
-> +	int irq, ret;
-> +
-> +	if (!md)
-> +		return -ENODEV;
-> +
-> +	host = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> +	if (!host)
-> +		return -ENOMEM;
-> +
-> +	pcie = pci_host_bridge_priv(host);
-> +	pcie->dev = dev;
-> +	pcie->tx_tag = 0;
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	pcie->platform = md;
-> +	pcie->host = host;
-> +
-> +	pcie->reg = devm_platform_ioremap_resource(pdev, 0);
-> +
-> +	of_property_read_u32(node, "msi_address", &pcie->msi_address);
-> +	of_property_read_u32(node, "linux,pci-domain", &pcie->domain);
-> +
-> +	pcie->cfg = syscon_regmap_lookup_by_phandle(dev->of_node, "aspeed,pciecfg");
-> +	if (IS_ERR(pcie->cfg))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->cfg), "Failed to map pciecfg base\n");
-> +
-> +	pcie->pciephy = syscon_regmap_lookup_by_phandle(node, "aspeed,pciephy");
-> +	if (IS_ERR(pcie->pciephy))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->pciephy), "Failed to map pciephy base\n");
-> +
-> +	pcie->h2xrst = devm_reset_control_get_exclusive(dev, "h2x");
-> +	if (IS_ERR(pcie->h2xrst))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->h2xrst), "Failed to get h2x reset\n");
-> +
-> +	pcie->perst = devm_reset_control_get_exclusive(dev, "perst");
-> +	if (IS_ERR(pcie->perst))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->perst), "Failed to get perst reset\n");
-> +
-> +	ret = pcie->platform->setup(pdev);
-> +	if (ret)
-> +		goto err_setup;
-> +
-> +	host->sysdata = pcie;
-> +
-> +	ret = aspeed_pcie_init_irq_domain(pcie);
-> +	if (ret)
-> +		goto err_irq_init;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		goto err_irq;
-> +
-> +	ret = devm_request_irq(dev, irq, aspeed_pcie_intr_handler, IRQF_SHARED, dev_name(dev),
-> +			       pcie);
-> +	if (ret)
-> +		goto err_irq;
-> +
-> +	pcie->clock = clk_get(dev, NULL);
-> +	if (IS_ERR(pcie->clock))
-> +		goto err_clk;
-> +	ret = clk_prepare_enable(pcie->clock);
-> +	if (ret)
-> +		goto err_clk_enable;
-
-We need to observe PCIE_T_RRS_READY_MS (or
-PCIE_RESET_CONFIG_DEVICE_WAIT_MS or whatever name we eventually settle
-on) before pci_host_probe() starts issuing config reads.  Maybe this
-is accounted for by one of the sleeps above, but we need a generic
-#define that we can look for.
-
-> +	ret = pci_host_probe(host);
-> +	if (ret)
-> +		goto err_clk_enable;
-> +
-> +	return 0;
-
-Sorry, I see there's a lot of duplication with comments from other
-reviewers :)
-
-Bjorn
 
