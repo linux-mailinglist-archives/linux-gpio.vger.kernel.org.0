@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-21554-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21555-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C697AD9007
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 16:49:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07A75AD9044
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 16:55:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21C5D16E5E6
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 14:49:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4924618860D8
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 14:54:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E918199949;
-	Fri, 13 Jun 2025 14:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1B451E378C;
+	Fri, 13 Jun 2025 14:52:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rVsnaivI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j0dzixTX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436B233E1
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Jun 2025 14:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDF41DB13A
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Jun 2025 14:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749826156; cv=none; b=i7PvaEixi4cInMRzew1eoNnv0K0EkVpCXg9K+A174zIaGil+vk9Rzt2XuoACMszlK9h5iTRRUl13Wd7/i42hoO6D+vWLsG/+hJvubdtzXZrgkJIjvurqfjkEqYFOjZJ3s7MhpbaCkWoEZs4KnQ85NaihF2JTRxC+Zn6xgIYOgFM=
+	t=1749826374; cv=none; b=D9/yMoIdutOMwnnOZfKYMhhkH3K3lHuHXBAB3R9xYWUP0OPa32Vxt6hyRp4kAc6LcDVgqDBjrVFhuuWrKHwYHECB7djdwGu/p8AgYqOurQ2wAkv4mftSEqKzygtl5gtB1S8rwZXgyO+XdzqzxGO39sEMZYuKUxArDjZs++3hH1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749826156; c=relaxed/simple;
-	bh=2cJno2Hoj8gBQakrsjFx1WU6qLvNRnglSPMrwyBSsfw=;
+	s=arc-20240116; t=1749826374; c=relaxed/simple;
+	bh=uzggHLNmauKyLZnZNxfkll09fUrU/RimXTpX7sjHfFM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=i7SES6+1fP7qoBZ8mW9535sRC8YU7m22K5srTo/v/1zYEvcFmgC3fzoBEdWIt5uqECFXpFcMpup5X+EVdzBl85Z1UU1PAoR9adorwmyscBUqbrDokcBvF6K+QwkhfVXcRPvtM1iew6wMjzupewrjSJ5/q0/a970GTLPbJdvrx2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rVsnaivI; arc=none smtp.client-ip=209.85.221.54
+	 Content-Type:MIME-Version; b=n/NJdy2B4c9lxKQkPX52aUKRovDAauy2ql87tWnKIdUUT8S2FJ0TxzRjp1o0ZK6KqtqtUAWQ7ADWHX+T+s/ofmyMDotN/UaspK0AmgoQbDe1P/kYfsX06JDya84oYjokxysDuqNFbZWotZARaqZdxsHQsgxWyOE+P9WDex82kFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j0dzixTX; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a522224582so1264048f8f.3
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Jun 2025 07:49:13 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so1382992f8f.1
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Jun 2025 07:52:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749826152; x=1750430952; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749826371; x=1750431171; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=2cJno2Hoj8gBQakrsjFx1WU6qLvNRnglSPMrwyBSsfw=;
-        b=rVsnaivIXxckmHKkmEdauL+K9MnYezTJZ4JKghLmBef49U3l1sGT2L+nKfYOvTor3U
-         mZA2IWvhNwOiSuyRVYdpFRjnMPV6b8rCkqP4DHpowjrhEhrFGoCWj9vxJIbiSo0Vb2Vo
-         Lv43QVid+50SdqVOwt9fMR6ia0hgeF8vqqzucF/5CedOEGwP+u5bz03I0vbc7UuMB2x7
-         YHVsreRiIS49pa1bO+clZRn2EeTfsysRfTIybW5YlH1NNlesKwDOnW2zM2oC7/0ZEjik
-         T7FTmW/7ZOgch4nMvTmU9UTifZypG1x+TeNgbDYyOpeiDWyIAqrX7IelXLUbYFSMNw/F
-         +nlA==
+        bh=uzggHLNmauKyLZnZNxfkll09fUrU/RimXTpX7sjHfFM=;
+        b=j0dzixTXQjLZuCnkXsUKNjYlOy8bAUFIYvhWs7g3ncYFoM5h8UbZDC2qLfqKPL0Z21
+         QKB+7HJjdyzqfHiNEMIq+A0uVwwtuj75oDaSdsQYOVERwBhvoLLhkVaPAmqq+kF0vU3o
+         s55EFWDwcAyDnc1i4n1ZOvSaLBjUEqNYlUKnrUOjDGJZ+XntSBwI2yrhx9ZV0xvWtMoU
+         oCukR0eBpcAp5BI974S9XMIia3i4FWKzVP6NgCvfc/aOXTuzn/eBJpnBjEmcqb4x4u8D
+         bnFVf5bx5iuwajJXcUYj9uVXxxs2v6OTPXk2QiUN4LsnwCj5XT5R8ipyfy3jvTQ0BGCF
+         qeyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749826152; x=1750430952;
+        d=1e100.net; s=20230601; t=1749826371; x=1750431171;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2cJno2Hoj8gBQakrsjFx1WU6qLvNRnglSPMrwyBSsfw=;
-        b=BS/tG5kX5+TuROqHCrnrHPL2MvN92ZoD9R1XKKA5cdKuIPhiARHdZDWI+dkf9Qdejh
-         fJocR+ZxxgqLPNQyRKaF5FAP1EdD+jp4vuNN2qnJIwlU2adKJwL9RPl8hN0U0e4f77qI
-         R3GE+6WWXn03UBeYFsAI1XZDKkRF4qZFI5cb65IHu1ucFbhMGCDKNDfpGJUHPKvOOD5M
-         jpwkY/5Q6JWRNvjSMbY5o4BZkRK14TZSAhRuWy8vbURSxPe4g9G7Pq1FAy/7T7t+1ZQr
-         LjvpoDnDoaSIPz2XnGAq1Hj90WudXWTNdr4HMPJmPzSaNWjMh48su82W4yIfm999Bp5y
-         QMDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcYHKw7qSASzZhgjT752SoRR1oUFlC5xglZ+eW7PjZSqHRGwY4t8OZwPKDuxhHGG2+03weiRNhKXB2@vger.kernel.org
-X-Gm-Message-State: AOJu0YyINlnjdwDZAlqCi1V0GCdLkabhngyLR8EzbNiHXefZyiBXrlqV
-	hc10ZYGM7WTm59XC3WuqG3ZRfpSyQfoER2u4riyVPt0aVK2BxsJG4vH0iyj7LwWjFfU=
-X-Gm-Gg: ASbGncu28hijA+bd9Ba/wUnKtMntZB4ZLxRow4brmxnSksFmA1ftlOynp2EgH1YTYtP
-	KINYaI1d3bnHsFhQkLYMh2trIdfaSkQDTpebDQP9Mbc7HxKY/IYALDSCD1d90yg9SMDl0VIASmh
-	wdkYXi2yY93L7WtlwcoCYFMe/BAsNGv1g4xWUphs98ZUy+VJQmaS4ES6orxDhYGOJ3csI2TB4ik
-	i9kqK9WvXaT6dpJM8w8pcBpdc8bOgoeu1bV1OP9c935rVBC0hjNSLfMULfrwRahQYtfkn6Qhzxt
-	KP2Ph2AzOMZWwUJNis3t6h7ku91FU5dNF543vFpzollaviz+mdvzYTKIm5eKb1dTMQ==
-X-Google-Smtp-Source: AGHT+IHGGsFtFCfbuYCXq3oL8odq3HLL7l0GwRKDXbGKH51pl4haYPNqSjXxdeo1IqvXv5YDBnxJAw==
-X-Received: by 2002:a05:6000:250c:b0:3a5:2cca:6054 with SMTP id ffacd0b85a97d-3a572367c51mr3741f8f.4.1749826152548;
-        Fri, 13 Jun 2025 07:49:12 -0700 (PDT)
+        bh=uzggHLNmauKyLZnZNxfkll09fUrU/RimXTpX7sjHfFM=;
+        b=jOnKef/6V85wxO2GM8uU+smqmpKiBZrv725kbTYswhlR0MMNA0qMcjhD/zdrrUeUh0
+         5E3bnKfC7+LlUmP8iMwlCK0fmxNoN+FPrUkepVFQOl7JI3WDaQEMQh1uS7/7vimxuKfx
+         XZExCjiJQf0iLIjmChEOsuYwZ3hiw9r11sfxqpq6pI7iDv4kRv8WjKMiOv1LgY9NE9J5
+         fL3U5BM/32VQ/Ot5ZusJZYiG2XBhAICKDpFgqzSSHkPk7y4KJagZHB0UycVvcS268zS2
+         yp0CXTtla6eVZhh5F2Sv4aCbrlSBI+LvP4wwvumYnmjY51LByUIa8Y62MKlOja4nR3Ym
+         B2VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhRlSXinl/Gt8HiNS19aHxACxwkCw4HvRBGkwjYjJQ7GjzlBZJqwn4gNkJL3ee1X68TmG2jq0ovy+V@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgZ3G/MOISDqCTwLLLEpHOhR6LQtdEts40O1o+Wsp2gGTbTfGO
+	35JA5CYbbbH7T9qmEy9rWDMrkQuNHpYh4G3ZGKllPcomb6579CywnfXkGYuH3ilRHm4=
+X-Gm-Gg: ASbGncsf7P6FGhfYpN0FtDZ37R5kRvS+IVfsQB1P+hg5j8oni+nl/DhP2UjygxaUCJP
+	9S5r44vDadtgCkZTwrDZwl2WyfXCk1uuHlvTPiVqiDO5c+aFfFqVkT1T0Yp2H6BnlhS5mQSEJS6
+	rbJxO6hLWWvCoZl8mr4L1ge2iV1cHjnE9kPcedi2MaOuuyL414dM+bpCFjHggtxuJJL1GNoz3+o
+	FuA3cvgYmIK5hx/StNuRz/LWECnlxskyIVP4nDKnzNNs0wB5GZ8eAE2B/MYwOGuofcU7cnR51d1
+	wSKB30Qr5HKsJXF68xxKL0gwxw3RvY8osHZKR7eaZiFkknmLfhUsCs0mZuwhLkTo8g==
+X-Google-Smtp-Source: AGHT+IG2os3T69uU8xe8GheoIqFNES/C1cIVspYlMQzrl2qRtOCi+gxQL8uj3nxW1PiifYDCebD1JQ==
+X-Received: by 2002:a05:6000:4a03:b0:3a4:fc0a:33ca with SMTP id ffacd0b85a97d-3a572397d6amr13520f8f.4.1749826370906;
+        Fri, 13 Jun 2025 07:52:50 -0700 (PDT)
 Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b5c372sm2510723f8f.89.2025.06.13.07.49.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25e89fsm53198455e9.33.2025.06.13.07.52.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 07:49:12 -0700 (PDT)
-Message-ID: <05b9862c9a8f11bf7d7c8afdf60ecff30716a196.camel@linaro.org>
+        Fri, 13 Jun 2025 07:52:50 -0700 (PDT)
+Message-ID: <17434d4ceae1e65a5151bb1308b8e49dbbdaf021.camel@linaro.org>
 Subject: Re: [PATCH 07/17] mfd: sec-common: Instantiate s2mpg10 bucks and
  ldos separately
 From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
@@ -85,11 +85,12 @@ Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
  <willmcvicker@google.com>, kernel-team@android.com, 
 	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Date: Fri, 13 Jun 2025 15:49:10 +0100
-In-Reply-To: <20250613141902.GI897353@google.com>
+Date: Fri, 13 Jun 2025 15:52:49 +0100
+In-Reply-To: <05b9862c9a8f11bf7d7c8afdf60ecff30716a196.camel@linaro.org>
 References: <20250604-s2mpg1x-regulators-v1-0-6038740f49ae@linaro.org>
-	 <20250604-s2mpg1x-regulators-v1-7-6038740f49ae@linaro.org>
-	 <20250613141902.GI897353@google.com>
+		 <20250604-s2mpg1x-regulators-v1-7-6038740f49ae@linaro.org>
+		 <20250613141902.GI897353@google.com>
+	 <05b9862c9a8f11bf7d7c8afdf60ecff30716a196.camel@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.1-1 
@@ -100,56 +101,65 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Hi Lee,
-
-Thanks for your review!
-
-On Fri, 2025-06-13 at 15:19 +0100, Lee Jones wrote:
-> On Wed, 04 Jun 2025, Andr=C3=A9 Draszik wrote:
+On Fri, 2025-06-13 at 15:49 +0100, Andr=C3=A9 Draszik wrote:
+> Hi Lee,
 >=20
-> > Bucks can conceivably be used as supplies for LDOs, which means we need
-> > to instantiate them separately from each other so that the supply-
-> > consumer links can be resolved successfully at probe time.
+> Thanks for your review!
+>=20
+> On Fri, 2025-06-13 at 15:19 +0100, Lee Jones wrote:
+> > On Wed, 04 Jun 2025, Andr=C3=A9 Draszik wrote:
 > >=20
-> > By doing so, the kernel will defer and retry instantiating the LDOs
-> > once BUCKs have been created while without this change, it can be
-> > impossible to mark BUCKs as LDO supplies. This becomes particularly
-> > an issue with the upcoming support for the S2MPG11 PMIC, where
-> > typically certain S2MP10/11 buck rails supply certain S2MP11/10 LDO
-> > rails.
+> > > Bucks can conceivably be used as supplies for LDOs, which means we ne=
+ed
+> > > to instantiate them separately from each other so that the supply-
+> > > consumer links can be resolved successfully at probe time.
+> > >=20
+> > > By doing so, the kernel will defer and retry instantiating the LDOs
+> > > once BUCKs have been created while without this change, it can be
+> > > impossible to mark BUCKs as LDO supplies. This becomes particularly
+> > > an issue with the upcoming support for the S2MPG11 PMIC, where
+> > > typically certain S2MP10/11 buck rails supply certain S2MP11/10 LDO
+> > > rails.
+> > >=20
+> > > The platform_device's ::id field is used to inform the regulator driv=
+er
+> > > which type of regulators (buck or ldo) to instantiate.
 > >=20
-> > The platform_device's ::id field is used to inform the regulator driver
-> > which type of regulators (buck or ldo) to instantiate.
+> > I'm confused.
+> >=20
+> > There is nothing that differentiates the two, so why do you need to?
 >=20
-> I'm confused.
+> On gs101, we have two PMICs, s2mpg10 and s2mpg11. Several s2mpg10 LDOs
+> are consumers of various s2mpg10 bucks & s2mpg10 bucks, and several
+
+Small typo, should read:
+
+... Several s2mpg10 LDOs are consumers of various s2mpg10 bucks & s2mpg11
+bucks...
+
+> s2mpg11 LDOs are also supplied by various s2mpg10 bucks & s2mpg11 bucks.
 >=20
-> There is nothing that differentiates the two, so why do you need to?
-
-On gs101, we have two PMICs, s2mpg10 and s2mpg11. Several s2mpg10 LDOs
-are consumers of various s2mpg10 bucks & s2mpg10 bucks, and several
-s2mpg11 LDOs are also supplied by various s2mpg10 bucks & s2mpg11 bucks.
-
-So we have a circular dependency here. LDOs of one PMIC depend on bucks
-of the other.
-
-If all s2mpg10 rails are handled by the same instance of the s2mpg10
-regulator driver, probe will defer (and ultimately fail), because the
-supplies to the LDOs can not be resolved during probe.
-
-The same goes for s2mpg11.
-
-The result is that neither driver can probe successfully (unless you're
-_extremely_ lucky due to parallel probing, but we can not rely on that,
-of course).
-
-By splitting LDO and buck rails into separate instances, this circular
-dependency is gone, the buck-instance of each respective driver can probe,
-which then allows the LDO instance of the other driver to probe.
-
-Does that answer the question, or did I misunderstand it?
-
-
-Cheers,
-Andre'
-
+> So we have a circular dependency here. LDOs of one PMIC depend on bucks
+> of the other.
+>=20
+> If all s2mpg10 rails are handled by the same instance of the s2mpg10
+> regulator driver, probe will defer (and ultimately fail), because the
+> supplies to the LDOs can not be resolved during probe.
+>=20
+> The same goes for s2mpg11.
+>=20
+> The result is that neither driver can probe successfully (unless you're
+> _extremely_ lucky due to parallel probing, but we can not rely on that,
+> of course).
+>=20
+> By splitting LDO and buck rails into separate instances, this circular
+> dependency is gone, the buck-instance of each respective driver can probe=
+,
+> which then allows the LDO instance of the other driver to probe.
+>=20
+> Does that answer the question, or did I misunderstand it?
+>=20
+>=20
+> Cheers,
+> Andre'
 
