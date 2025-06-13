@@ -1,129 +1,101 @@
-Return-Path: <linux-gpio+bounces-21544-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21545-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41606AD8C8E
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 14:53:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB385AD8CC9
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 15:08:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69D23189C9BB
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 12:53:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E39916EAE6
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 13:08:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F34E1CAA4;
-	Fri, 13 Jun 2025 12:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660B08632E;
+	Fri, 13 Jun 2025 13:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQDKRhhD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5znlyp1"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89E617993;
-	Fri, 13 Jun 2025 12:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F3E3595A;
+	Fri, 13 Jun 2025 13:07:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749819206; cv=none; b=ffGxazt2HLr/99ObGq1jN+V7CuqiNHmkXBwrvQ7eoLMy1xWh774qiduLV4BmjI2ixr5FyrZf7WVfT79MA7Cct1iHGDvEpXwjIkxsFqf+DePpCllkVS03kNSoRO7nvOG2AxNEcaZyHSyQ7ks0pRzw0g5U+5t9kT/boqDAOTw+yM0=
+	t=1749820080; cv=none; b=okeBUGphRiRG2UpelZMd/ll9pNIv9h4hhfqhHjrYvebfh6p8sw/9A2U8GsisO+dM686b9++v5eQbPErH4eislCS9DcQWP6UBvw8anq+cbnuxmsKYaIU5zWNG66lcBWxj21JnOAZRjHOsayYcZ4ncQ8l7nkawx2UlOUGdITnc/5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749819206; c=relaxed/simple;
-	bh=9bKZsFj11JsEIuU5G0syifnAlEs0CyADlHgSACdxKsw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mpDOpzxfacsfrYbM2Wa7aCbxZFRt0ftZeYVWlvHyINI0fAsLtEqv9E+eq6JqeYSiFsCgqyKbt9Qq8xbe8/xSiB6AA3WZ7CODLf+AeWoTD4jmha1gNfTJ+6DcXqXyUeXgim1fcZbG5t0ZjLQzVxj5fzTTT6MY2ck9Ql4DoG12asA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQDKRhhD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF9FC4CEE3;
-	Fri, 13 Jun 2025 12:53:22 +0000 (UTC)
+	s=arc-20240116; t=1749820080; c=relaxed/simple;
+	bh=rtychsqz4b9aGmWoQ2Cv3JTMD17+FvibZTjfMu3M+nU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dz+nVq8xVbBJONuN3JhIJauMMyPHdDAUPnk82TkW/EegeBEtdMWuFxG7SCyzstM7kYuZJLBPykRzqq5V02BQA5+IF/hg5BhkwzUAfIdUymcet0vZfB9p6DFbCPCw4X9BtZi9t/oEXu2T2PcuZG7Hxd1UL6bKHmo8ON/aBW6f0yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5znlyp1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C70BDC4CEE3;
+	Fri, 13 Jun 2025 13:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749819205;
-	bh=9bKZsFj11JsEIuU5G0syifnAlEs0CyADlHgSACdxKsw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sQDKRhhDfCKqOsDfp8tpdaS7yaLs3Bs5QzNVbP2K47LuyiDX3T0Qq3xLT/NJ+pJAr
-	 UGLyXBDcQrIJyQICNf61RICiTzC5cupiLKV7PPgNpLu8YVYasioF+5G1wCYIYtuLu4
-	 OZFhzRF+qB8r7qEymmOBBvUT68RIWsmqQokk1aW/DFhM9ee64C8fahYDbIPgBKsSNp
-	 NnGM+c3SpoeWeh+P6q5vcLelKdDjmMcu3zHUgbznlCdp5S08BO8FWNlTlIxm5mM+XF
-	 bTVTvP/obal7otAUwOf5UZcPM9EM6FmV10QIW8orANXtRpYjEW3DPBTwstlFVF66vF
-	 54Xvd9sN/DYEQ==
-Message-ID: <f7ed19b4-4b4c-482b-81c7-3429f21d1def@kernel.org>
-Date: Fri, 13 Jun 2025 14:53:20 +0200
+	s=k20201202; t=1749820079;
+	bh=rtychsqz4b9aGmWoQ2Cv3JTMD17+FvibZTjfMu3M+nU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E5znlyp1oii/MKYWWT61lHFnq5WKaQ84AFRBmNuETuxIlvlhdSnbuhAxUZHhOIN00
+	 q+aJi6ojNyE+F3rPf9/l2l/OwutwrOelOpapnXQq8/FjchmMznLan/Dm3vZuXLGfM4
+	 MQG5tYSQ/OYit4aFAPuOUQzAxD6B4Qwy2vk85IXkDOA4udAEMFspCr69nS+nPR3thV
+	 VZGML054PAT/OYhM9ZQlD/TImxqHtHFrSc9PPlBAuJ/sv0XDedrBNO8g/p3waOPeh2
+	 J3d7jfoNuS+PcONakH2S3LvcixHLXQ/trfVJR/FOZ/ICucfWb5LIsEIp8AYp8MS0ga
+	 XQJ7yB71x8nnA==
+Date: Fri, 13 Jun 2025 14:07:53 +0100
+From: Simon Horman <horms@kernel.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux GPIO <linux-gpio@vger.kernel.org>,
+	Linux MTD <linux-mtd@vger.kernel.org>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux USB <linux-usb@vger.kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Weinberger <richard@nod.at>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>,
+	Felipe Balbi <balbi@kernel.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Subject: Re: [PATCH] Documentation: treewide: Replace remaining spinics links
+ with lore
+Message-ID: <20250613130753.GE414686@horms.kernel.org>
+References: <20250611065254.36608-2-bagasdotme@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250613-hdp-upstream-v5-0-6fd6f0dc527c@foss.st.com>
- <20250613-hdp-upstream-v5-2-6fd6f0dc527c@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250613-hdp-upstream-v5-2-6fd6f0dc527c@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611065254.36608-2-bagasdotme@gmail.com>
 
-On 13/06/2025 12:14, Clément Le Goffic wrote:
-> 'HDP' stands for Hardware Debug Port, it is an hardware block in
-> STMicrolectronics' MPUs that let the user decide which internal SoC's
-> signal to observe.
-> It provides 8 ports and for each port there is up to 16 different
-> signals that can be output.
-> Signals are different for each MPU.
+On Wed, Jun 11, 2025 at 01:52:55PM +0700, Bagas Sanjaya wrote:
+> Long before introduction of lore.kernel.org, people would link
+> to LKML threads on third-party archives (here spinics.net), which
+> in some cases can be unreliable (as these were outside of
+> kernel.org control). Replace links to them with lore counterparts
+> (if any).
 > 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
 > ---
+>  Documentation/driver-api/gpio/driver.rst                    | 2 +-
+>  Documentation/filesystems/ubifs-authentication.rst          | 2 +-
+>  .../networking/device_drivers/ethernet/ti/cpsw.rst          | 6 +++---
+>  Documentation/usb/gadget-testing.rst                        | 2 +-
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Thanks Bagas,
 
-Best regards,
-Krzysztof
+These changes look nice and correct to me.
+
+I am wondering if you considered also addressing
+the spinics.net links in gadget-testing.rst.
+They are the only other instances I see under Documentation.
 
