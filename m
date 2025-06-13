@@ -1,171 +1,110 @@
-Return-Path: <linux-gpio+bounces-21495-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21496-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BECFAAD83F7
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 09:20:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 030F7AD8401
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 09:22:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B39B9189AA2A
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 07:20:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70D973AB771
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 07:22:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E49BD2C3259;
-	Fri, 13 Jun 2025 07:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66BE02C3266;
+	Fri, 13 Jun 2025 07:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="P1vjmPIW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aJDF6bH9"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="MSC1dE1r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD65F27466E;
-	Fri, 13 Jun 2025 07:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8615613B58C
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Jun 2025 07:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749799232; cv=none; b=VvNZYqxF3qwlGe6S7fPjXjg/Uj0iD49RbXrblMaBl0BoRMKjFiQkVKQXlEjVq7L5hsj7RLT8IDrLhnWIkofYsXXRZ/lkHOxH816u8L5dau61q/Pvk9Xl7lP3fY0DxUMbsD1ziWWOvoqplDIeJpeZ8FiLSeOjLqSmleh1n+pvX4c=
+	t=1749799367; cv=none; b=jfEsGoI33cumAsrkdPIwk3JscI0t3x53kxtKMOtUz6EsWPljFQx0y5H74wol6InWr4n7wd9D4kZxoT9lDNFVLIwLus8dz6DF2AxDMFWN43XcSgoPUxZef4kTmckFjnYeoplqyRqvxrparGdTzdQUcTBkh7h+J9VNFU2mLRTsloo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749799232; c=relaxed/simple;
-	bh=+YjpX3ehJBzFyIlBBXVZgihirAzVPRAt2FcAqpuOgFA=;
+	s=arc-20240116; t=1749799367; c=relaxed/simple;
+	bh=b3lB0rcM9VOkECT6kNBX2H73+BzxMx1FRcYjmAgtr2I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYVYsG+bW4a7l3TyeDppKsDb7SHJ8je5P9NapWf4I6GK8FKVpkImgAt21uacrMFHLKrhtY8IKbUItCXt3ZuOKYnlNVocosFJwod88xA+MhTvWq9/PnctfUkDun5BCpP06gTKNA7wDI3yXiOe7Zfw23vlrkwBwot5OGdVU4ARdck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=P1vjmPIW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aJDF6bH9; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 650B91140176;
-	Fri, 13 Jun 2025 03:20:29 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Fri, 13 Jun 2025 03:20:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1749799229; x=1749885629; bh=jG3O/Ud05M
-	Zx4jdqboGk4v0NA5OIKt/wUnoKzAyvNxg=; b=P1vjmPIW2/wAUEeA7U/tXdD8iO
-	X2gFnzTYmpSLkVbC09w7bT6bPL1TULq8W2sUytLHHqJJ4aI0qfqwkpBqqo7q6w+v
-	a4ZHk6WXcFmwc2WPo9lyZCkx+u8Y/b+3YOlz1U1JWnCYeqPK9rF5mGZ4mzJYVWiF
-	A1c0n+byiXnzx0u/cTlX4daS5hB61IqB5DzXn0pSZ0svhFE7jSCbiy1lYy0KsGI6
-	nMMcRQ/Pi3oq7K89ZwjgmxFbeMhEhTJArNSb04t9Rd0AJSAYpwRQ1tGQsvvBj18f
-	JS2eTa6EAZhrLgZ/mimYfOFD3ZLrXAEAtU/b1qiCUau14sMkRX9Xz+pp3StA==
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPSmqvt3LT4lf6RjhRzgo3QbBPuDB/VYPpnTW5YKl0RYZwJy642sMMIaOCtTUFpFTFm7hoTfbCF736ICnTVqUajPsvKNLuUX624Lan6CGCef8DJAoqwKQ1KBYa4GzmZPO2dwSuYutyeX9F/4E4P5d4LiY2qr2E/qUikZIxSSKVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=MSC1dE1r; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1749799229; x=1749885629; bh=jG3O/Ud05MZx4jdqboGk4v0NA5OIKt/wUno
-	KzAyvNxg=; b=aJDF6bH96UoECz7OWyAzTsE/qMXwjlqUqMqdgelSBR4u823P+lA
-	OuIyyyna2iMtA+W+U5lFIt7HQwyx2w14Ve+gORg6fMrT/3ngWMY9mTAgrv2qgmAZ
-	TmyPb2cFdF7DtNdUbvw8lnK2Kd5oQ38Czjg5XXt0ZbJxebF/yAXygAk6r/243gkv
-	PQq+3hfhnC98ELI/3H19HjbTUm6s5YVUvYzt6D0uBT9Hp819sEFnFUcMVrX70PZ4
-	HVO36Qv2TaL+S4uiExs0XvgWXgmHSS7mQcMHpfv0dREkGJDIC07yCJM5R4AWwTOj
-	hQlV0rjzXHZKIj6cGNgjNUb7+Sz0ThOR6TQ==
-X-ME-Sender: <xms:OtFLaFzKONTfZkXILH3XYzZEUfG55o5HOePR8cyOYqgjQEheeXElRA>
-    <xme:OtFLaFTtwv46-jgC8eQlBk675fBDJDGwFoAGiEn6nElhmiFF-pJZg4bjG7pCyUo7P
-    bifV4GMC71OkTG2vzs>
-X-ME-Received: <xmr:OtFLaPXcCDMRRp9eE7KY1wBc1Thy0_u1RF6WWc0Bu6CQaDc08Ls5Xz72R7GZJoSuGa2FEalZSMpX0L-OqRD2ZTaK_VLLYkpSIjk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddujeefgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
-    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
-    cuggftrfgrthhtvghrnhepgfdvffevleegudejfeefheehkeehleehfefgjefffeetudeg
-    tefhuedufeehfeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepjhesjhgrnhhnrghurdhnvghtpdhnsggprhgtphhtthhopedvvddpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtth
-    hopeguvhhorhhkihhnsehtihgssghordgtohhmpdhrtghpthhtohepfigvlhhlshhluhht
-    fiesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlih
-    hnrghrohdrohhrghdprhgtphhtthhopehprghtrhhitggvrdgthhhothgrrhgusehfohhs
-    shdrshhtrdgtohhmpdhrtghpthhtohepshhuphhpohhrthdrohhpvghnshhouhhrtggvse
-    guihgrshgvmhhirdgtohhmpdhrtghpthhtohepsggrrhhutghhsehtkhhoshdrtghordhi
-    lhdprhgtphhtthhopehsvhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlhi
-    hsshgrsehrohhsvghniiifvghighdrihho
-X-ME-Proxy: <xmx:OtFLaHieCR7i3mjNcCHPqOC39MqmdSV6LhCiKBfiFb-q64TIIB5YUQ>
-    <xmx:OtFLaHANXNHonW-Il6-KF7ktKwZkTU5LCJT5a6FVkmtn9vomjsSZ3Q>
-    <xmx:OtFLaAL1atxc5kXngDg_VktyWDUvEDvh4xA-SzMkDl8AkEhtXk3jhw>
-    <xmx:OtFLaGCvH_4PXKngaqe3MEnUmB4JVoNxMqDElPwknNqXKyWeOim_ZA>
-    <xmx:PdFLaHUFclZvZJTCtf0C2rxGbtX2fEn1ZeQ73ehog305zlAuCf063FOc>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 13 Jun 2025 03:20:26 -0400 (EDT)
-Date: Fri, 13 Jun 2025 09:20:24 +0200
-From: Janne Grunau <j@jannau.net>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=b3lB
+	0rcM9VOkECT6kNBX2H73+BzxMx1FRcYjmAgtr2I=; b=MSC1dE1re8ahddE/Ncwf
+	qx5WDrUnFvJlCkSRNJHHdm+9/9s/9ABeBTpo8AMgiw6XP5a/xqdI9iZVFOkQVrfK
+	QWo2asGAIwaJ4RxB5nvXdxLcUmrRskWkCtNc23XFvXh2PGeObnjnAWtrMG99GM7T
+	4U1NWDs096+L6pDtJ2SPoT03Heu/h0cNXKNML4TJ3UQrEX6SDeRrqlRia0gB87+d
+	glKffrB3I24+BD7TtM9uHPaD/Kt7PP+wvtclp0/BQkOE1lnm0cm6YCFU4NvIeoF9
+	Zxfg4MLNXvH1wZu+YfJI2U2fiUzedbhl1h04Lb7p0BEiRWjSop3vU2lu6oPsYrox
+	ZQ==
+Received: (qmail 122092 invoked from network); 13 Jun 2025 09:22:38 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jun 2025 09:22:38 +0200
+X-UD-Smtp-Session: l3s3148p1@MN8z6W43cLYgAwDPXy2/ACpZfVCNKldR
+Date: Fri, 13 Jun 2025 09:22:33 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: sloppy-logic-analyzer: Fully open-code compatible
+ for grepping
+Message-ID: <aEvRuTTMO6DMl-Mx@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Baruch Siach <baruch@tkos.co.il>, Sven Peter <sven@kernel.org>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Viresh Kumar <vireshk@kernel.org>,
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
-	soc@lists.linux.dev, linux-sunxi@lists.linux.dev,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 10/16] pinctrl: apple: use new GPIO line value setter
- callbacks
-Message-ID: <20250613072024.GE3141695@robin.jannau.net>
-References: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
- <20250612-gpiochip-set-rv-pinctrl-remaining-v1-10-556b0a530cd4@linaro.org>
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20250613071627.46687-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gKr9pJH9WT+fA8Xg"
 Content-Disposition: inline
-In-Reply-To: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-10-556b0a530cd4@linaro.org>
+In-Reply-To: <20250613071627.46687-2-krzysztof.kozlowski@linaro.org>
 
-On Thu, Jun 12, 2025 at 03:15:19PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/pinctrl/pinctrl-apple-gpio.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-apple-gpio.c b/drivers/pinctrl/pinctrl-apple-gpio.c
-> index 0f551d67d482d96c7a1e4c28a6db580f0db6452e..dcf3a921b4df54250194403f06a3c1fb40110eaa 100644
-> --- a/drivers/pinctrl/pinctrl-apple-gpio.c
-> +++ b/drivers/pinctrl/pinctrl-apple-gpio.c
-> @@ -217,11 +217,13 @@ static int apple_gpio_get(struct gpio_chip *chip, unsigned offset)
->  	return !!(reg & REG_GPIOx_DATA);
->  }
->  
-> -static void apple_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-> +static int apple_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
->  {
->  	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
->  
->  	apple_gpio_set_reg(pctl, offset, REG_GPIOx_DATA, value ? REG_GPIOx_DATA : 0);
-> +
-> +	return 0;
->  }
->  
->  static int apple_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-> @@ -376,7 +378,7 @@ static int apple_gpio_register(struct apple_gpio_pinctrl *pctl)
->  	pctl->gpio_chip.direction_input = apple_gpio_direction_input;
->  	pctl->gpio_chip.direction_output = apple_gpio_direction_output;
->  	pctl->gpio_chip.get = apple_gpio_get;
-> -	pctl->gpio_chip.set = apple_gpio_set;
-> +	pctl->gpio_chip.set_rv = apple_gpio_set;
->  	pctl->gpio_chip.base = -1;
->  	pctl->gpio_chip.ngpio = pctl->pinctrl_desc.npins;
->  	pctl->gpio_chip.parent = pctl->dev;
 
-apple_gpio_set_reg() could pass the return value of regmap_update_bits()
-but I suppose this change to switch to the new callback is ok on its
-own.
+--gKr9pJH9WT+fA8Xg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Janne Grunau <j@jannau.net>
+On Fri, Jun 13, 2025 at 09:16:28AM +0200, Krzysztof Kozlowski wrote:
+> It is very useful to find driver implementing compatibles with `git grep
+> compatible`, so driver should not use defines for that string, even if
+> this means string will be effectively duplicated.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Janne 
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+
+--gKr9pJH9WT+fA8Xg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhL0bUACgkQFA3kzBSg
+KbY+IA//ef7jNGLhdkKLtTjvVJwVY2f72YXu2V215beViViJAKesgITfPKnuCMKY
+C5Ci6PihI0PNhezH/0Tib1P/wULxQxuWIe5k8SNslqgoJtOpEDtACKWa7hWt9pxT
+JYtsOU6soGRyqavOPll1Th65axt0/ZFI4UkBf02TWaW76bF6m7jcaZxZoExrPm3Q
+JXxFmfRqKoBet98aRb0+NvSdhQVTh5dq1kRTknx/u9oUmlP06pEKHYlSBuhRiomo
+yZCMJZefNkCGbkwQbqSFwgslHg995OVNedO3X5oUKz5yhL1yor9vZA0wi1wFhqUk
+pcOSzMuuEaKDsGZlVQoxwOD+I4qz0ijeAx40nApQPWZPIDgVrC2rRtIAHLlRtOHj
+PJEhUSbNfI2n0YMNkK3B1OZc0/0ITE+9m2+lRwdMaeEXg1hHMDP3lNfmGmriV/Ze
+WhxMB1rW6GpTuF3942NO8VEeQsnRJiyXYXFhZ0iCJ9iaOn7qA1Yj2bRQbdpQrmZU
+B14bR/Ynj+7YcjXla+tC6HmiCVbRhzOmerMzxrUorg0OKKhH408SKQ+zZb7tKKHE
+qOpk4n2r8AJQAwE5zVLmei6pQz+PANxxUIJE0nr73vSk7NB8JLJ33MJmtIS5DIGP
+eLiyHPzrx51UBGjAjlpwIxYX0RF2R8ZuCGHzxASWBOeSo/4kJcQ=
+=KPLM
+-----END PGP SIGNATURE-----
+
+--gKr9pJH9WT+fA8Xg--
 
