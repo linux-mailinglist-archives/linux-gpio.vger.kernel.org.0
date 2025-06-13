@@ -1,634 +1,309 @@
-Return-Path: <linux-gpio+bounces-21507-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21508-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59C45AD8864
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 11:48:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82366AD8873
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 11:50:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6EDB5189D9F2
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 09:48:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F4EB175536
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 09:50:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F9C129B233;
-	Fri, 13 Jun 2025 09:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3704129C328;
+	Fri, 13 Jun 2025 09:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSCDoLHh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EguPdziN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFF1189BB0;
-	Fri, 13 Jun 2025 09:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2981C84B9;
+	Fri, 13 Jun 2025 09:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749808106; cv=none; b=RlTipSPE3QcfhtsdTN2JA5bpSdK/5R2auVmdKLdg5XZlgvIxvd9dvhTvlNO8NxlWekhQgs/lthTqbiJFAbtom6kJ2QdRAcofmDE9cvRnrJklJ3q3HXafZixnWOm6vzQtmsgjMtToHZ3VDBIDjwgGz6R9FjSdSAGmcXwLfufkF9I=
+	t=1749808239; cv=none; b=LJFe+X8zFlCwBJkrjuAp6HFpZQp4osFgKsVnNdqVus0QcWJlGdpGNNrVoFzmQxea+D91JohxM+VDeKOGvl5bOnV8RZ37bid9ukD52YgUVfBUMedsFW+BwlRLYwP0V5Kabj5+HPtzseZYI7O2Lx/7fG/dvZfZ73SQLteY8gzd830=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749808106; c=relaxed/simple;
-	bh=mOQqltafqqukVQOVE55z8qhbFQfXvd7xHWPXPGiEBF4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rqRnljLHaR7icf3OwV3XKY5mHil8P9CqChNMuH31ha4bUJ1Nxs8CqLCrNxRkMhfJ9QscFtFnDGRrn5nqJgA25sORNQdPyNu+LhmiNZzcZ5rFwO6Yf5mgFtm4IA15F2IF79aHPuPTCuFt1IYmDVGDX/DPGmfGc1gR8jQLnx7Xqfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DSCDoLHh; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so12889565e9.2;
-        Fri, 13 Jun 2025 02:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749808102; x=1750412902; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=N5TddtOhaJkY/LAu0+57mXKi5xeLr8l9Rd/+/EhGbC8=;
-        b=DSCDoLHhmjqY+MEnsA9GtHseDd66DFcPWkx/UT1cua/7Ne2IRVy2KNqfDyvwq9d36K
-         ThBuez5OAJO8jkkN08druESlmVs23wNPcPhOmfAIfbGUc2Wc//MWg+2UG3jUX7GUmNW9
-         rDsRLGjLWxOgcvFnEEN+IiZduPvD8Y4CLk3w3L/FA8whL3X5npEWZLFKqLEyrEzUbM5n
-         xykTEg3tsu8UA/CD7ntDskDt/u8Ldw+wmyinJy79nl2uLUH2X+aqc0iyky70j23doEPo
-         cX3xpeaFCU/wnhFIfOPHY4fjv17f/5mX62KWcVSefX74ZTR3/EndkQWTL8ELvaOM1Epo
-         09jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749808102; x=1750412902;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N5TddtOhaJkY/LAu0+57mXKi5xeLr8l9Rd/+/EhGbC8=;
-        b=NOVLQbU6UzrtrxJ/gAGM5Mt7SUBeRT/rG5M3lNXvloL+gVvl40y4Qgp/CFj2JrB+J0
-         gPBEicuQaDLwATOQN+XYonXLw0l0bFcLUOAgH5jpFjXd3yY5wXfFOwFTztl/h5x8WU6p
-         /n6YSpTs4xK03BGPt4/ze2SPIREkb4Aew7285sXmKM065KBaE5sk5Q6/OEbZqC0yUzVm
-         EaAj6I2KH3zHi7DTAKtO+gwZXvtZ4X5vmk+P2oMt2UBrLVMLbfguqBrfFSYBc7NbVQVU
-         /Y5qZ32VKmeBVhGo0nuEoqXmimqmPUUhElvtIA4ET782mOEUmOr3f/Ah+qS2SxYRW0KP
-         y+rA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKZV6UH8eiZaJlx/PrRTwyavKIlwWuBHT5o8WomTGUPp00zTSagkZg3qJm0wURr16tlFmgCVgHZFYa@vger.kernel.org, AJvYcCXEhZhJCgwh0byhh5jMR0DeSNFmnw6cP2YVMl2QnNF6b1F+TKSi4rrfyYPmeughf//GU60H2JYAWZyL@vger.kernel.org, AJvYcCXTTQeo1wvJQVr2ktyopZOJCJ/ZWoxfAt+2r1EoaBwoMZfIQ6YY5Qw9vnYZXrEDJSRIHVh/h5wtMXcKEEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIU0EZgBmi7n8/+SYo5zLo7zkeLbxVMPLrtMtpMMOq3MAFTO96
-	V7+9VeX6L5C6/EelGT/7YZqKLOa/GXndszN+sUzZaEWs9TZbGCsY1Goa
-X-Gm-Gg: ASbGncvAnRqVTTjJ19SCkQRh6WCauOMWjqleURoG0SJUiKsk1SqwdSuL6ILTOgRqJgx
-	iZDtiuoJGBoJRboXzvmEJX44i5NlsjZs1CO39Y1Wf6awkSWCYZ4hojssBQkNhG0nS1vGTdTcVYD
-	0PhPWlDPXtoyou/xcqJh0HLjGy9X8IZHPTlgmN5He9JVjAhHp3MelYc5QdxmHR/wDu7w1gr2WbB
-	hh0ga3bmX3WXqnJ/JRbdrhtiPftcqK8B+EQ3ZfxDqTmATBMa99CuNqXcNEdN1wnuKvMu9mbpd9C
-	f4joNA2O9FqisJWDyR16SB2+12SXtDgyBlWkpJ//ZdyGUEhIlqHuUmhNt//3LAeTQVmK3Q==
-X-Google-Smtp-Source: AGHT+IG59S6Gd8Nugwhzdfm3/dQQkqaSAT16iX50bBqr0NH6EQw2Lt1xnI5j29t7hs539zMMxhEo6Q==
-X-Received: by 2002:a05:6000:4313:b0:3a4:f7db:6ff7 with SMTP id ffacd0b85a97d-3a56878834emr2476961f8f.52.1749808101610;
-        Fri, 13 Jun 2025 02:48:21 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089a7sm1807759f8f.49.2025.06.13.02.48.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 02:48:21 -0700 (PDT)
-Message-ID: <1fafdee7c86efdb4aebe3b1c4391f48807aa0aef.camel@gmail.com>
-Subject: Re: [PATCH v4 13/20] mfd: adp5585: support reset and unlock events
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Lee Jones <lee@kernel.org>, nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <ukleinek@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov	 <dmitry.torokhov@gmail.com>,
- Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Liu Ying
- <victor.liu@nxp.com>
-Date: Fri, 13 Jun 2025 10:48:28 +0100
-In-Reply-To: <20250612145542.GK381401@google.com>
-References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
-	 <20250521-dev-adp5589-fw-v4-13-f2c988d7a7a0@analog.com>
-	 <20250612145542.GK381401@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	s=arc-20240116; t=1749808239; c=relaxed/simple;
+	bh=aoiu36vRWs+xCRQ4i7I5bZ9e+mpCxXx2jTYnOagqdHc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iKN8xjpbXu3604SAlCoky5V25f3av6RWHnfeoaORSgqWyezYnc0s3yQ4IN83Mc5SzO0nWfcyCdhf++F1yKmKnWawZ5uDsEYqhmp8yu3BQjMqFNt80nFl43MTy5nbKIoFyyVYPj2A2YTl8mGExrejMqeK4sPOsyhROxjJD1Xuq4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EguPdziN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17EF6C4CEE3;
+	Fri, 13 Jun 2025 09:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749808236;
+	bh=aoiu36vRWs+xCRQ4i7I5bZ9e+mpCxXx2jTYnOagqdHc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EguPdziNfQVFXhGugXO7CxVDI9hmhHEse2V8d9DfmaJLP2zPCWPiwDCqETugb6aqg
+	 EovPSvD8xMKL6QL2InygSOr54EKhGof73pM1Sw26ZxLwBJp0iDPCWzXQPBoy2735ny
+	 +CkixnfG+TpDATOVwDAuoRdDpyXsEBJ6g/aW0oasj+3Q6ssDs1OU2v+UKnJcc85AlP
+	 SAYD3d+JNmJs1aIND1eplli51ZAh6hEB6EcmkGRWqGOYKnrheIUj87KvByxUndUVau
+	 /j0KhctSzqmpk6Gt6djtxuf/+M9582WOduahXLRpD2hXHINaVWyijCpqgdrgPAEPNU
+	 q403k+tQENT6w==
+Message-ID: <b387a2ed-af47-45a9-871e-d43a66e41f21@kernel.org>
+Date: Fri, 13 Jun 2025 11:50:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] dt-bindings: pci: Add document for ASPEED PCIe RC
+To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au, vkoul@kernel.org, kishon@kernel.org,
+ linus.walleij@linaro.org, p.zabel@pengutronix.de,
+ linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Cc: elbadrym@google.com, romlem@google.com, anhphan@google.com,
+ wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
+References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
+ <20250613033001.3153637-4-jacky_chou@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250613033001.3153637-4-jacky_chou@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-06-12 at 15:55 +0100, Lee Jones wrote:
-> On Wed, 21 May 2025, Nuno S=C3=A1 via B4 Relay wrote:
->=20
-> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
-> >=20
-> > The ADP558x family of devices can be programmed to respond to some
-> > especial events, In case of the unlock events, one can lock the keypad
-> > and use KEYS or GPIs events to unlock it. For the reset events, one can
-> > again use a combinations of GPIs/KEYs in order to generate an event tha=
-t
-> > will trigger the device to generate an output reset pulse.
-> >=20
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> > ---
-> > =C2=A0drivers/mfd/adp5585.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 270
-> > +++++++++++++++++++++++++++++++++++++++++++-
-> > =C2=A0include/linux/mfd/adp5585.h |=C2=A0 39 +++++++
-> > =C2=A02 files changed, 308 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> > index
-> > dcc09c898dd7990b39e21cb2324fa66ae171a802..6737d622a7ed9f280c439399f3709=
-ca816
-> > 2dee01 100644
-> > --- a/drivers/mfd/adp5585.c
-> > +++ b/drivers/mfd/adp5585.c
-> > @@ -170,6 +170,9 @@ static const struct adp5585_regs adp5585_regs =3D {
-> > =C2=A0	.int_en =3D ADP5585_INT_EN,
-> > =C2=A0	.gen_cfg =3D ADP5585_GENERAL_CFG,
-> > =C2=A0	.poll_ptime_cfg =3D ADP5585_POLL_PTIME_CFG,
-> > +	.reset_cfg =3D ADP5585_RESET_CFG,
-> > +	.reset1_event_a =3D ADP5585_RESET1_EVENT_A,
-> > +	.reset2_event_a =3D ADP5585_RESET2_EVENT_A,
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0static const struct adp5585_regs adp5589_regs =3D {
-> > @@ -177,8 +180,50 @@ static const struct adp5585_regs adp5589_regs =3D =
-{
-> > =C2=A0	.int_en =3D ADP5589_INT_EN,
-> > =C2=A0	.gen_cfg =3D ADP5589_GENERAL_CFG,
-> > =C2=A0	.poll_ptime_cfg =3D ADP5589_POLL_PTIME_CFG,
-> > +	.reset_cfg =3D ADP5589_RESET_CFG,
-> > +	.reset1_event_a =3D ADP5589_RESET1_EVENT_A,
-> > +	.reset2_event_a =3D ADP5589_RESET2_EVENT_A,
-> > =C2=A0};
-> > =C2=A0
-> > +static int adp5585_validate_event(const struct adp5585_dev *adp5585,
-> > unsigned int ev)
-> > +{
-> > +	if (adp5585->has_pin6) {
-> > +		if (ev >=3D ADP5585_ROW5_KEY_EVENT_START && ev <=3D
-> > ADP5585_ROW5_KEY_EVENT_END)
-> > +			return 0;
-> > +		if (ev >=3D ADP5585_GPI_EVENT_START && ev <=3D
-> > ADP5585_GPI_EVENT_END)
-> > +			return 0;
-> > +
-> > +		return dev_err_probe(adp5585->dev, -EINVAL,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid unlock/reset event(%u) for
-> > this device\n", ev);
-> > +	}
-> > +
-> > +	if (ev >=3D ADP5585_KEY_EVENT_START && ev <=3D ADP5585_KEY_EVENT_END)
-> > +		return 0;
-> > +	if (ev >=3D ADP5585_GPI_EVENT_START && ev <=3D ADP5585_GPI_EVENT_END)=
- {
-> > +		/* if it's GPI6 */
->=20
-> You have to tell us why this is a problem.
->=20
-> Nit: Comments should start with an upper case char.
+On 13/06/2025 05:29, Jacky Chou wrote:
+> Add device tree binding documentation for the ASPEED PCIe Root Complex
+> controller. This binding describes the required and optional properties
+> for configuring the PCIe RC node, including support for syscon phandles,
+> MSI, clocks, resets, and interrupt mapping. The schema enforces strict
+> property validation and provides a comprehensive example for reference.
+> 
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+> ---
+>  .../devicetree/bindings/pci/aspeed-pcie.yaml  | 159 ++++++++++++++++++
+>  1 file changed, 159 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml b/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
+> new file mode 100644
+> index 000000000000..5b50a9e2d472
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
 
-The error message kind of states the problem :). But I'll put it in the com=
-ment.
+Same comments.
 
-- Nuno S=C3=A1
->=20
-> > +		if (ev =3D=3D (ADP5585_GPI_EVENT_START + 5))
-> > +			return dev_err_probe(adp5585->dev, -EINVAL,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid unlock/reset
-> > event(%u). R5 not available\n",
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 ev);
-> > +		return 0;
-> > +	}
-> > +
-> > +	return dev_err_probe(adp5585->dev, -EINVAL,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid unlock/reset event(%u) for this
-> > device\n", ev);
-> > +}
-> > +
-> > +static int adp5589_validate_event(const struct adp5585_dev *adp5585,
-> > unsigned int ev)
-> > +{
-> > +	if (ev >=3D ADP5589_KEY_EVENT_START && ev <=3D ADP5589_KEY_EVENT_END)
-> > +		return 0;
-> > +	if (ev >=3D ADP5589_GPI_EVENT_START && ev <=3D ADP5589_GPI_EVENT_END)
-> > +		return 0;
-> > +
-> > +	return dev_err_probe(adp5585->dev, -EINVAL,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid unlock/reset event(%u) for this
-> > device\n",
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0 ev);
->=20
-> This line break is unnecessary.
->=20
-> > +}
-> > +
-> > =C2=A0static int adp5585_fill_variant_config(struct adp5585_dev *adp558=
-5,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct regmap_config *re=
-gmap_config)
-> > =C2=A0{
-> > @@ -191,6 +236,8 @@ static int adp5585_fill_variant_config(struct
-> > adp5585_dev *adp5585,
-> > =C2=A0		*regmap_config =3D adp5585_regmap_config_template;
-> > =C2=A0		adp5585->id =3D ADP5585_MAN_ID_VALUE;
-> > =C2=A0		adp5585->regs =3D &adp5585_regs;
-> > +		if (adp5585->variant =3D=3D ADP5585_01)
-> > +			adp5585->has_pin6 =3D true;
-> > =C2=A0		break;
-> > =C2=A0	case ADP5589_00:
-> > =C2=A0	case ADP5589_01:
-> > @@ -198,6 +245,8 @@ static int adp5585_fill_variant_config(struct
-> > adp5585_dev *adp5585,
-> > =C2=A0		*regmap_config =3D adp5589_regmap_config_template;
-> > =C2=A0		adp5585->id =3D ADP5589_MAN_ID_VALUE;
-> > =C2=A0		adp5585->regs =3D &adp5589_regs;
-> > +		adp5585->has_unlock =3D true;
-> > +		adp5585->has_pin6 =3D true;
-> > =C2=A0		break;
-> > =C2=A0	default:
-> > =C2=A0		return -ENODEV;
-> > @@ -207,6 +256,168 @@ static int adp5585_fill_variant_config(struct
-> > adp5585_dev *adp5585,
-> > =C2=A0	return 0;
-> > =C2=A0}
-> > =C2=A0
-> > +static int adp5585_parse_ev_array(const struct adp5585_dev *adp5585, c=
-onst
-> > char *prop, u32 *events,
-> > +				=C2=A0 u32 *n_events, u32 max_evs, bool
-> > reset_ev)
-> > +{
-> > +	struct device *dev =3D adp5585->dev;
-> > +	unsigned int ev;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * The device has the capability of handling special events through
-> > GPIs or a Keypad:
-> > +	 *=C2=A0 unlock events: Unlock the keymap until one of the configured
-> > events is detected.
-> > +	 *=C2=A0 reset events: Generate a reset pulse when one of the configu=
-red
-> > events is detected.
-> > +	 */
-> > +	ret =3D device_property_count_u32(dev, prop);
-> > +	if (ret < 0)
-> > +		return 0;
-> > +
-> > +	*n_events =3D ret;
-> > +
-> > +	if (!adp5585->has_unlock && !reset_ev)
-> > +		return dev_err_probe(dev, -EOPNOTSUPP, "Unlock keys not
-> > supported\n");
-> > +
-> > +	if (*n_events > max_evs)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid number of keys(%u > %u) for
-> > %s\n",
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 *n_events, max_evs, prop);
-> > +
-> > +	ret =3D device_property_read_u32_array(dev, prop, events, *n_events);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	for (ev =3D 0; ev < *n_events; ev++) {
-> > +		/* for unlock events, 127 is a wildcard */
->=20
-> As above and throughout the series.
->=20
-> If you define the wildcard magic number you can drop the comment.
->=20
-> > +		if (!reset_ev && events[ev] =3D=3D 127)
-> > +			continue;
-> > +
-> > +		if (adp5585->id =3D=3D ADP5585_MAN_ID_VALUE)
-> > +			ret =3D adp5585_validate_event(adp5585, events[ev]);
-> > +		else
-> > +			ret =3D adp5589_validate_event(adp5585, events[ev]);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int adp5585_unlock_ev_parse(struct adp5585_dev *adp5585)
-> > +{
-> > +	struct device *dev =3D adp5585->dev;
-> > +	int ret;
-> > +
-> > +	ret =3D adp5585_parse_ev_array(adp5585, "adi,unlock-events", adp5585-
-> > >unlock_keys,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 &adp5585->nkeys_unlock,
-> > ARRAY_SIZE(adp5585->unlock_keys),
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 false);
-> > +	if (ret)
-> > +		return ret;
-> > +	if (!adp5585->nkeys_unlock)
-> > +		return 0;
-> > +
-> > +	ret =3D device_property_read_u32(dev, "adi,unlock-trigger-sec",
-> > &adp5585->unlock_time);
-> > +	if (!ret) {
-> > +		if (adp5585->unlock_time > ADP5585_MAX_UNLOCK_TIME_SEC)
-> > +			return dev_err_probe(dev, -EINVAL,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid unlock time(%u >
-> > %d)\n",
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 adp5585->unlock_time,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 ADP5585_MAX_UNLOCK_TIME_SEC);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int adp5585_reset_ev_parse(struct adp5585_dev *adp5585)
-> > +{
-> > +	struct device *dev =3D adp5585->dev;
-> > +	u32 prop_val;
-> > +	int ret;
-> > +
-> > +	ret =3D adp5585_parse_ev_array(adp5585, "adi,reset1-events", adp5585-
-> > >reset1_keys,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 &adp5585->nkeys_reset1,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 ARRAY_SIZE(adp5585->reset1_keys),
-> > true);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D adp5585_parse_ev_array(adp5585, "adi,reset2-events",
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 adp5585->reset2_keys,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 &adp5585->nkeys_reset2,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 ARRAY_SIZE(adp5585->reset2_keys),
-> > true);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (!adp5585->nkeys_reset1 && !adp5585->nkeys_reset2)
-> > +		return 0;
-> > +
-> > +	if (adp5585->nkeys_reset1 && device_property_read_bool(dev,
-> > "adi,reset1-active-high"))
-> > +		adp5585->reset_cfg |=3D FIELD_PREP(ADP5585_RESET1_POL, 1);
-> > +
-> > +	if (adp5585->nkeys_reset2 && device_property_read_bool(dev,
-> > "adi,reset2-active-high"))
-> > +		adp5585->reset_cfg |=3D FIELD_PREP(ADP5585_RESET2_POL, 1);
-> > +
-> > +	if (device_property_read_bool(dev, "adi,rst-passthrough-enable"))
-> > +		adp5585->reset_cfg |=3D FIELD_PREP(ADP5585_RST_PASSTHRU_EN,
-> > 1);
-> > +
-> > +	ret =3D device_property_read_u32(dev, "adi,reset-trigger-ms",
-> > &prop_val);
-> > +	if (!ret) {
-> > +		switch (prop_val) {
-> > +		case 0:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_RESET_TRIG_TIME, 0);
-> > +			break;
-> > +		case 1000:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_RESET_TRIG_TIME, 1);
-> > +			break;
-> > +		case 1500:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_RESET_TRIG_TIME, 2);
-> > +			break;
-> > +		case 2000:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_RESET_TRIG_TIME, 3);
-> > +			break;
-> > +		case 2500:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_RESET_TRIG_TIME, 4);
-> > +			break;
-> > +		case 3000:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_RESET_TRIG_TIME, 5);
-> > +			break;
-> > +		case 3500:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_RESET_TRIG_TIME, 6);
-> > +			break;
-> > +		case 4000:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_RESET_TRIG_TIME, 7);
-> > +			break;
-> > +		default:
-> > +			return dev_err_probe(dev, -EINVAL,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid value(%u) for
-> > adi,reset-trigger-ms\n",
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 prop_val);
-> > +		}
-> > +	}
-> > +
-> > +	ret =3D device_property_read_u32(dev, "adi,reset-pulse-width-us",
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &prop_val);
->=20
-> Odd line break.
->=20
-> > +	if (!ret) {
-> > +		switch (prop_val) {
-> > +		case 500:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_PULSE_WIDTH, 0);
-> > +			break;
-> > +		case 1000:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_PULSE_WIDTH, 1);
-> > +			break;
-> > +		case 2000:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_PULSE_WIDTH, 2);
-> > +			break;
-> > +		case 10000:
-> > +			adp5585->reset_cfg |=3D
-> > FIELD_PREP(ADP5585_PULSE_WIDTH, 3);
-> > +			break;
-> > +		default:
-> > +			return dev_err_probe(dev, -EINVAL,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid value(%u) for
-> > adi,reset-pulse-width-us\n",
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 prop_val);
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > =C2=A0static void adp5585_remove_devices(void *dev)
-> > =C2=A0{
-> > =C2=A0	mfd_remove_devices(dev);
-> > @@ -307,6 +518,59 @@ static int adp5585_setup(struct adp5585_dev *adp55=
-85)
-> > =C2=A0	unsigned int reg_val, i;
-> > =C2=A0	int ret;
-> > =C2=A0
-> > +	/* Configure the device with reset and unlock events */
-> > +	for (i =3D 0; i < adp5585->nkeys_unlock; i++) {
-> > +		ret =3D regmap_write(adp5585->regmap, ADP5589_UNLOCK1 + i,
-> > +				=C2=A0=C2=A0 adp5585->unlock_keys[i] |
-> > ADP5589_UNLOCK_EV_PRESS);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	if (adp5585->nkeys_unlock) {
-> > +		ret =3D regmap_update_bits(adp5585->regmap,
-> > ADP5589_UNLOCK_TIMERS,
-> > +					 ADP5589_UNLOCK_TIMER, adp5585-
-> > >unlock_time);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		ret =3D regmap_set_bits(adp5585->regmap, ADP5589_LOCK_CFG,
-> > ADP5589_LOCK_EN);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	for (i =3D 0; i < adp5585->nkeys_reset1; i++) {
-> > +		ret =3D regmap_write(adp5585->regmap, regs->reset1_event_a +
-> > i,
-> > +				=C2=A0=C2=A0 adp5585->reset1_keys[i] |
-> > ADP5585_RESET_EV_PRESS);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	for (i =3D 0; i < adp5585->nkeys_reset2; i++) {
-> > +		ret =3D regmap_write(adp5585->regmap, regs->reset2_event_a +
-> > i,
-> > +				=C2=A0=C2=A0 adp5585->reset2_keys[i] |
-> > ADP5585_RESET_EV_PRESS);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	if (adp5585->nkeys_reset1 || adp5585->nkeys_reset2) {
-> > +		ret =3D regmap_write(adp5585->regmap, regs->reset_cfg,
-> > adp5585->reset_cfg);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		reg_val =3D 0;
->=20
-> Initialisation during declaration is preferred.
->=20
-> > +		/* If there's a reset1 event, then R4 is used as an output
-> > for the reset signal */
-> > +		if (adp5585->nkeys_reset1)
-> > +			reg_val =3D ADP5585_R4_EXTEND_CFG_RESET1;
-> > +		/* If there's a reset2 event, then C4 is used as an output
-> > for the reset signal */
-> > +		if (adp5585->nkeys_reset2)
-> > +			reg_val |=3D ADP5585_C4_EXTEND_CFG_RESET2;
-> > +
-> > +		ret =3D regmap_update_bits(adp5585->regmap, regs->ext_cfg,
-> > +					 ADP5585_C4_EXTEND_CFG_MASK |
-> > ADP5585_R4_EXTEND_CFG_MASK,
-> > +					 reg_val);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > =C2=A0	/* Clear any possible event by reading all the FIFO entries */
-> > =C2=A0	for (i =3D 0; i < ADP5585_EV_MAX; i++) {
-> > =C2=A0		ret =3D regmap_read(adp5585->regmap, ADP5585_FIFO_1 + i,
-> > &reg_val);
-> > @@ -351,7 +615,11 @@ static int adp5585_parse_fw(struct adp5585_dev
-> > *adp5585)
-> > =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid value(%u) for poll-
-> > interval\n", prop_val);
-> > =C2=A0	}
-> > =C2=A0
-> > -	return 0;
-> > +	ret =3D adp5585_unlock_ev_parse(adp5585);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return adp5585_reset_ev_parse(adp5585);
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0static void adp5585_irq_disable(void *data)
-> > diff --git a/include/linux/mfd/adp5585.h b/include/linux/mfd/adp5585.h
-> > index
-> > b6baf87907a567fe975f8b24f3c36753e6145066..5a1de5ae4bb144ed49a03a4e9e93e=
-b614a
-> > be9fa3 100644
-> > --- a/include/linux/mfd/adp5585.h
-> > +++ b/include/linux/mfd/adp5585.h
-> > @@ -68,6 +68,7 @@
-> > =C2=A0#define ADP5585_GPIO_DIRECTION_A	0x27
-> > =C2=A0#define ADP5585_GPIO_DIRECTION_B	0x28
-> > =C2=A0#define ADP5585_RESET1_EVENT_A		0x29
-> > +#define		ADP5585_RESET_EV_PRESS		BIT(7)
-> > =C2=A0#define ADP5585_RESET1_EVENT_B		0x2a
-> > =C2=A0#define ADP5585_RESET1_EVENT_C		0x2b
-> > =C2=A0#define ADP5585_RESET2_EVENT_A		0x2c
-> > @@ -118,6 +119,13 @@
-> > =C2=A0#define ADP5585_MAX_REG			ADP5585_INT_EN
-> > =C2=A0
-> > =C2=A0#define ADP5585_PIN_MAX			11
-> > +#define ADP5585_MAX_UNLOCK_TIME_SEC	7
-> > +#define ADP5585_KEY_EVENT_START		1
-> > +#define ADP5585_KEY_EVENT_END		25
-> > +#define ADP5585_GPI_EVENT_START		37
-> > +#define ADP5585_GPI_EVENT_END		47
-> > +#define ADP5585_ROW5_KEY_EVENT_START	1
-> > +#define ADP5585_ROW5_KEY_EVENT_END	30
-> > =C2=A0
-> > =C2=A0/* ADP5589 */
-> > =C2=A0#define		ADP5589_MAN_ID_VALUE		0x10
-> > @@ -128,6 +136,20 @@
-> > =C2=A0#define ADP5589_GPO_DATA_OUT_A		0x2a
-> > =C2=A0#define ADP5589_GPO_OUT_MODE_A		0x2d
-> > =C2=A0#define		ADP5589_GPIO_DIRECTION_A	0x30
-> > +#define ADP5589_UNLOCK1			0x33
-> > +#define		ADP5589_UNLOCK_EV_PRESS		BIT(7)
-> > +#define ADP5589_UNLOCK_TIMERS		0x36
-> > +#define		ADP5589_UNLOCK_TIMER		GENMASK(2, 0)
-> > +#define ADP5589_LOCK_CFG		0x37
-> > +#define		ADP5589_LOCK_EN			BIT(0)
-> > +#define ADP5589_RESET1_EVENT_A		0x38
-> > +#define ADP5589_RESET2_EVENT_A		0x3B
-> > +#define ADP5589_RESET_CFG		0x3D
-> > +#define		ADP5585_RESET2_POL		BIT(7)
-> > +#define		ADP5585_RESET1_POL		BIT(6)
-> > +#define		ADP5585_RST_PASSTHRU_EN		BIT(5)
-> > +#define		ADP5585_RESET_TRIG_TIME		GENMASK(4,
-> > 2)
-> > +#define		ADP5585_PULSE_WIDTH		GENMASK(1, 0)
-> > =C2=A0#define ADP5589_PWM_OFFT_LOW		0x3e
-> > =C2=A0#define ADP5589_PWM_ONT_LOW		0x40
-> > =C2=A0#define ADP5589_PWM_CFG			0x42
-> > @@ -138,6 +160,10 @@
-> > =C2=A0#define ADP5589_MAX_REG			ADP5589_INT_EN
-> > =C2=A0
-> > =C2=A0#define ADP5589_PIN_MAX			19
-> > +#define ADP5589_KEY_EVENT_START		1
-> > +#define ADP5589_KEY_EVENT_END		88
-> > +#define ADP5589_GPI_EVENT_START		97
-> > +#define ADP5589_GPI_EVENT_END		115
-> > =C2=A0
-> > =C2=A0struct regmap;
-> > =C2=A0
-> > @@ -158,6 +184,9 @@ struct adp5585_regs {
-> > =C2=A0	unsigned int ext_cfg;
-> > =C2=A0	unsigned int int_en;
-> > =C2=A0	unsigned int poll_ptime_cfg;
-> > +	unsigned int reset_cfg;
-> > +	unsigned int reset1_event_a;
-> > +	unsigned int reset2_event_a;
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0struct adp5585_dev {
-> > @@ -167,8 +196,18 @@ struct adp5585_dev {
-> > =C2=A0	struct blocking_notifier_head event_notifier;
-> > =C2=A0	enum adp5585_variant variant;
-> > =C2=A0	unsigned int id;
-> > +	bool has_unlock;
-> > +	bool has_pin6;
-> > =C2=A0	int irq;
-> > =C2=A0	unsigned int ev_poll_time;
-> > +	unsigned int unlock_time;
-> > +	unsigned int unlock_keys[2];
-> > +	unsigned int nkeys_unlock;
-> > +	unsigned int reset1_keys[3];
-> > +	unsigned int nkeys_reset1;
-> > +	unsigned int reset2_keys[2];
-> > +	unsigned int nkeys_reset2;
-> > +	u8 reset_cfg;
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0#endif
-> >=20
-> > --=20
-> > 2.49.0
-> >=20
-> >=20
+> @@ -0,0 +1,159 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/aspeed-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED PCIe Root Complex Controller
+> +
+> +maintainers:
+> +  - Jacky Chou <jacky_chou@aspeedtech.com>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+
+> +  Device tree binding for the ASPEED PCIe Root Complex controller.
+
+No, describe the hardware. Your current description is 100% redundant.
+It is never useful to say in DT binding description that it is a DT
+binding. It cannot be anything else, can it?
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2600-pcie
+> +      - aspeed,ast2700-pcie
+> +
+> +  device_type:
+> +    const: pci
+
+You need to include proper pci schema and drop all redundant properties.
+
+Look at other schemas.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ranges:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    description: IntX and MSI interrupt
+
+Need to list the items. Look at other schemas.
+
+> +
+> +  resets:
+> +    items:
+> +      - description: Module reset
+> +      - description: PCIe PERST
+> +
+> +  reset-names:
+> +    items:
+> +      - const: h2x
+> +      - const: perst
+> +
+> +  msi-parent: true
+> +
+> +  msi_address:
+
+Where is this property defined?  I do not see in kernel nor in dtschema.
+Drop and use existing properties. I am not even talking about coding
+style...
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: MSI address
+> +
+> +  aspeed,ahbc:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to ASPEED AHBC syscon.
+
+For what purpose?
+
+> +
+> +  aspeed,pciecfg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to ASPEED PCIe configuration syscon.
+
+For what purpose?
+
+> +
+> +  aspeed,pciephy:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to ASPEED PCIe PHY syscon.
+
+For what purpose?
+
+> +
+> +  clocks:
+> +    description: PCIe BUS clock
+
+Missing constraints.
+
+Just open any other  binding and do not implement things diferently.
+
+> +
+> +  interrupt-controller:
+> +    description: Interrupt controller node for handling legacy PCI interrupts.
+> +    type: object
+> +    properties:
+> +      '#address-cells':
+> +        const: 0
+> +      '#interrupt-cells':
+> +        const: 1
+> +      interrupt-controller: true
+> +
+> +    required:
+> +      - '#address-cells'
+> +      - '#interrupt-cells'
+> +      - interrupt-controller
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2600-pcie
+> +    then:
+> +      required:
+> +        - aspeed,ahbc
+
+else: make it false
+
+> +
+> +required:
+> +  - interrupts
+> +  - bus-range
+> +  - ranges
+> +  - resets
+> +  - reset-names
+> +  - msi-parent
+> +  - msi-controller
+> +  - aspeed,pciephy
+> +  - aspeed,pciecfg
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - interrupt-controller
+
+Messed order, missing properties. Open other bindings...
+
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/ast2600-clock.h>
+> +
+> +    apb {
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +      pcie0: pcie@1e7700C0 {
+> +        compatible = "aspeed,ast2600-pcie";
+> +        device_type = "pci";
+> +        reg = <0x1e7700C0 0x40>;
+
+Lower case hex. Please follow carefully DTS coding style.
+
+
+
+Best regards,
+Krzysztof
 
