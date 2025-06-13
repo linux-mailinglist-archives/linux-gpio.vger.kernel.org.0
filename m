@@ -1,221 +1,132 @@
-Return-Path: <linux-gpio+bounces-21493-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21494-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50E00AD82E4
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 08:02:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78B02AD83ED
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 09:16:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C33FA7A7B4B
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 06:00:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95736189A29F
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 07:16:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6632324DCF1;
-	Fri, 13 Jun 2025 06:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8081528D8DE;
+	Fri, 13 Jun 2025 07:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="WcpOqxT/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jtlhvIw5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E37183CA6;
-	Fri, 13 Jun 2025 06:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F9228CF61
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Jun 2025 07:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749794525; cv=none; b=lWCZYhHBF5NWID4OXntVyTYTATGeBCUFG0DFG2uB85zjnh9+JVeL63xD3xqPcHGm9AIoIlTKiZaCKlr4xJFMzEG/eATKcd1qvGtTXgZbtaflS0SV4jvRoG6KH7m2P8fvXPvyb/PMNHKYyzi0GNqx33Ui+wYJYW+hRtfIIGZr2q0=
+	t=1749798999; cv=none; b=n2D3+TB4ZRBPMjaYNi3TyIq6dDCmdwJTNTh0q42b6xAUDOEefajLCdqdYK/QGnSnm8r0mkEzO+RRZvOzYkZ7QGEO5ZkY/AkrslG+wX+vxkG5ubLbCd5LqeadWOVre45C/GmLJNQS2Lze82crhDe1NDaOZsiUVrEjNHuTA1X6Gqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749794525; c=relaxed/simple;
-	bh=vRQ8ZMLoPbaFwDBltMJ6qOm3lZshTN9aIziq1KOpcok=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=l64nN1cwmzvj218++gcJOBDIzneOnWsx7vcYfgpEkCGKhWxp7k5+/iV+XV30A0G0QxHtzeYuRh+fztLZq2/LIN8+z07XAzf8iKq/rq3zrb7LCa+SKVugqqgunOqCT/lqPm/LJ85BbgN50TmqvXVhXiWCF1hcgnofsXAsYl1x4ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=WcpOqxT/; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1749798999; c=relaxed/simple;
+	bh=uLqMD1ikwZk4jDZUwpPdjjE34o1A38fgA3R42TYK8w4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bIy+H8TGyJ78jdnlsXldBk36MhQBZrlm21I3bgiVj+unENTYDEkGogt0kAqJSz6Q0aZ+iySLbbG9OXeNddXftkNoM3r+aRMpToA1VVtzPcXJTgPBDvTCBJKMHIQC96KU3a+auIOo4llFw1R+GrhOt2jHRNBauXhxXhmKJzZhdVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jtlhvIw5; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-450cfb8b335so1514885e9.2
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Jun 2025 00:16:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1749794519;
-	bh=vRQ8ZMLoPbaFwDBltMJ6qOm3lZshTN9aIziq1KOpcok=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=WcpOqxT//6fi8yZ2KKz/UJrAIKrqIw//zlTiWMPiqHCy4NOCEmX4tyHVtzUXDhwLn
-	 cRoIDAIk+l0Yh1wp7os+nkjxPA+5MD0/OBlHkEcfONl7qTeVho7jSP35g+JuCJ87gm
-	 3ONEa92gOEh28qKDV5uOSHdnJ6YbYZh1Yi9fmmXuC73pcAE9HvJI4OIZxjyo41nloI
-	 /sbDbWU/IWvNqfAF9nPvH1K8i23NwP+e4OmYRV2tLlVuzMJ/FZ2DZbQHsO/INXmKdQ
-	 UpGmF7O0hdQf93ZOMxLhMjKm1MJKmkxWxpMJ5w+svteD2N183MO2IzAhOR7iUDpQlQ
-	 3p5fnOe4gD0sA==
-Received: from [192.168.68.112] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id A8A86680F3;
-	Fri, 13 Jun 2025 14:01:58 +0800 (AWST)
-Message-ID: <2cfe3813b7e330ba43f20a882c0c5035751fc7f0.camel@codeconstruct.com.au>
-Subject: Re: [PATCH] pinctrl: aspeed: Log error if SCU protection is active
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Tan Siewert <tan@siewert.io>, Linus Walleij <linus.walleij@linaro.org>, 
- Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
- openbmc@lists.ozlabs.org,  linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
-Date: Fri, 13 Jun 2025 15:31:57 +0930
-In-Reply-To: <20250612151900.32874-1-tan@siewert.io>
-References: <20250612151900.32874-1-tan@siewert.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+        d=linaro.org; s=google; t=1749798994; x=1750403794; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6c+aX61jkwbmsT/oE3ldzclDSvOJeQY9LNH4JsyNxI8=;
+        b=jtlhvIw50Mxx7a2/e7xe6bQmIi5WrjobeJWJP1h0/grQfYQGtjaL3AaM6rWwiCMm0r
+         n34+ILb17ETcr9+83ksgClTmKntg8nH0KNWOdSu5EVPPW4Obx+kqGu6vSNw1CUiQZRTE
+         UA/a4naG7Nv8V8hmvwGXAX4Sqr9/1RcEpg4egD/F5kxFv4j/3kHj9v1FqHuc7qVB4Gtq
+         7U41LpDfTmAyvheToyHaYSHBDixsV0SysQCQxncRpBgDs2//ewkHsnvyf56b+zDv01FQ
+         NYMArcXO1WtZPnpeEK1PIxsDUdNCgnGR5B/X+BA3nR6QJ+6q87MthiBuAuJD+rfx200t
+         Dr0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749798994; x=1750403794;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6c+aX61jkwbmsT/oE3ldzclDSvOJeQY9LNH4JsyNxI8=;
+        b=fr6E4AJW4jFQuBOdNjNvDSfowS8W7702jKH+pP/2/glAhD8v6ZYJovqsn8xSRDGyGd
+         qyhIcCI3cPF4P5ua60aPpRn4hzNdvOXpo8w3CXT9VeZUJrs2HFHra+Bov5nOdJPmce3R
+         1XpbMVnd0XjHQdnk8VO1YVZMdjiQDbw93SeT3AifYy9zjk/jO5AMl6jxtJkR9ylsXz4n
+         kJoqLo+BQDKBQfuAWudOr9CTbW7jKu9YmFGxf2Dd/1supn39YFpx+QEAa+JAE4XK1kgf
+         iw3JVJw9MV0yqrppSM6YkFX1wIkxKs+pAVX+pHqPLfFCin8ndHeye68b6AmwHUsPdcm5
+         XLCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxQw8iy7tfQl5ah+EmwnAkN2r5SxD3UtDwyoCa32QV//LpRJH82vqxCOUtbYPJGd5ZUsmCk9Y0dnsw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP/gnLsqnTQtwM8Aogy0Kw0b/dawKRaXpwedNvSwmoc3XMPL12
+	8ctY3RVqKdMEe68SYd27US1Sx5WqnMouL7/TR0a+93mrX6ddnLJj3DaAuVxoAzWKldE=
+X-Gm-Gg: ASbGnctgKWu1WVQPqWIkWcp8KAWAAHEPFWhmeTZP8eZCmEcgDQmR9vg49uTJKz67VQw
+	AthLi3h47RCnWfbqh2fEL2eS3vEjHg3tXI5WZKG53Yt3mSwWg1ckpzh/ALy88WyjiD5sUBtOM88
+	HCZeWCcaOLIDthoGh4/vf1ibE7aL74xigBclKpGvPNa+GAlaNmBYCKAqsz9bTsatzzUNLfUtvhk
+	+Fhvvwzm+OfpqBRy+UfbLePz7zepHBgBG8e/cd+ry8N42RO29VDzT4fqzkP6CxILm/kc90xaf+h
+	ecf9Nk4JSi3aahp6mOVsOAL106yYBXpH1zsoT1XWbTNz5nJ36RTNni7lU+Pn28hdZEzTjy4ygw=
+	=
+X-Google-Smtp-Source: AGHT+IFNj98jwyXNQSYPoKhPA/7VYwqqMd3mGfUcA0Zg65b6bZ732T4TLtCrPhjPGhXTDHCYXrqdJw==
+X-Received: by 2002:a05:600c:3d07:b0:43d:fa5e:50e6 with SMTP id 5b1f17b1804b1-45334bb5396mr6765075e9.9.1749798994449;
+        Fri, 13 Jun 2025 00:16:34 -0700 (PDT)
+Received: from kuoka.. ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54e71sm1438963f8f.1.2025.06.13.00.16.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jun 2025 00:16:33 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] gpio: sloppy-logic-analyzer: Fully open-code compatible for grepping
+Date: Fri, 13 Jun 2025 09:16:28 +0200
+Message-ID: <20250613071627.46687-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=927; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=uLqMD1ikwZk4jDZUwpPdjjE34o1A38fgA3R42TYK8w4=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoS9BLgF9K4JV8CHRk2dpoC2eYF2y3+yVWn/6qP
+ WT2nDYGdJaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEvQSwAKCRDBN2bmhouD
+ 1zJaD/44p2svcOC+1wtktO2m6S1H1QYIXL+khF0ZpFd05UA8dFSZGo1EgpNpGYmRC7o940VftTo
+ HrXGsydUYWDgtBODXNxmXBypMDi4W95D2EK1wPavgXQ2FbbK3cvhmwqWBsAAL+895tS0MPObMvH
+ BK60MyTSEqDlPU9og9GNGVIRIP3fSc8yUT57JybzgpI1PnJWpbsvcnZKta1SunqLKxeZ9Pz+1l5
+ dvlyL6XLEqmpqy7kIUXp/dA7TSu0z1yArOWzaFNEOXCtyCz9d1nZNziz/oTjQNPW/nEDVJH5xT5
+ 8wnlvkVi9Cc1EKEeCYXjawiztzHMcKsFFUzK7Tahjb719/NojmagcZ8cp1huGv/FsshkY5f06eM
+ WBhKVkB+8xjwwCmzCpFCeTrA82CSxan+dIQ+E74M8J8ezufnjByvyb/zZrmOMKj9RPc5jXisAQe
+ rz+hfx8md1EPau8FYV9BBmfmPJGWBFYxS8LQ/1F5e4mMgtuRMWg9o25/M4m+v5jpi/2mr7G4V8k
+ HBuj/idLJNrO4dHDtzoEzIfz42bjhsc8thffLJg4Oh78PqFQa/vdP8WW9D4z1FBfpVT34WId/4x
+ xFd5gZA3djwCOzLD9R49odRbCIy9MxnDJetHKAWOeOn6afur2UGdwWY46aZ5cKLRB497qeoKY3q bgsM64YsLWcdLlA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-06-12 at 17:18 +0200, Tan Siewert wrote:
-> ASPEED pinctrl and other drivers accessing SCU registers rely on the
-> bootloader to unlock the SCU before handing over to the kernel.
->=20
-> However, some userspace scripts may re-enable SCU protection via
-> /dev/mem,=C2=A0
->=20
+It is very useful to find driver implementing compatibles with `git grep
+compatible`, so driver should not use defines for that string, even if
+this means string will be effectively duplicated.
 
-Hmm, if this was caused by poking /dev/mem, then I'm not sure I'm in
-favour of it. The source of your problem wasn't apparent to me in our
-off-list discussion.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/gpio/gpio-sloppy-logic-analyzer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-"Don't do that" :/
+diff --git a/drivers/gpio/gpio-sloppy-logic-analyzer.c b/drivers/gpio/gpio-sloppy-logic-analyzer.c
+index 8cf3b171c599..969dddd3d6fa 100644
+--- a/drivers/gpio/gpio-sloppy-logic-analyzer.c
++++ b/drivers/gpio/gpio-sloppy-logic-analyzer.c
+@@ -306,7 +306,7 @@ static void gpio_la_poll_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id gpio_la_poll_of_match[] = {
+-	{ .compatible = GPIO_LA_NAME },
++	{ .compatible = "gpio-sloppy-logic-analyzer" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, gpio_la_poll_of_match);
+-- 
+2.45.2
 
-> causing pinctrl operations such as disabling GPIOD passthrough
-> to fail in not-so-obvious ways. For example, a GPIO request for GPID0 on
-> an AST2500 fails with:
->=20
-> =C2=A0 [=C2=A0 428.204733] aspeed-g5-pinctrl 1e6e2080.pinctrl: request() =
-failed for pin 24
-> =C2=A0 [=C2=A0 428.204998] aspeed-g5-pinctrl 1e6e2080.pinctrl: pin-24 (1e=
-780000.gpio:536) status -1
->=20
-> With dynamic_debug enabled, the SCU write failures become visible:
->=20
-> =C2=A0 [=C2=A0 428.204657] Disabling signal GPID0IN for GPID
-> =C2=A0 [=C2=A0 428.204673] Want SCU70[0x00200000]=3D0x1, got 0x1 from 0xF=
-122D206
-> =C2=A0 [=C2=A0 428.204708] Want SCU70[0x00200000]=3D0x0, got 0x1 from 0xF=
-122D206
->=20
-> Since SCU unlocking would need to be done in multiple drivers, adding
-> unlock logic to each is not viable. Instead, this patch adds an
-> explicit error message and early abort in `sig_expr_set()` if SCU
-> protection is detected by checking the SCU Protection Key Register.
->=20
-> Before:
->=20
-> =C2=A0 [=C2=A0 428.204733] aspeed-g5-pinctrl 1e6e2080.pinctrl: request() =
-failed for pin 24
-> =C2=A0 [=C2=A0 428.204998] aspeed-g5-pinctrl 1e6e2080.pinctrl: pin-24 (1e=
-780000.gpio:536) status -1
->=20
-> After:
->=20
-> =C2=A0 [=C2=A0=C2=A0 43.558353] aspeed-g5-pinctrl 1e6e2080.pinctrl: SCU p=
-rotection is active, cannot continue
-> =C2=A0 [=C2=A0=C2=A0 43.559107] aspeed-g5-pinctrl 1e6e2080.pinctrl: reque=
-st() failed for pin 24
-> =C2=A0 [=C2=A0=C2=A0 43.559434] aspeed-g5-pinctrl 1e6e2080.pinctrl: pin-2=
-4 (1e780000.gpio:536) status -1
->=20
-> Suggested-by: Andrew Jeffery <andrew@aj.id.au>
-> Signed-off-by: Tan Siewert <tan@siewert.io>
-> ---
-> =C2=A0drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c | 21 +++++++++++++++++
-> =C2=A0drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 24 +++++++++++++++++++=
--
-> =C2=A0drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 26 +++++++++++++++++++=
-+++
-> =C2=A03 files changed, 70 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c b/drivers/pinctrl=
-/aspeed/pinctrl-aspeed-g4.c
-> index 774f8d05142f..81680c032b3c 100644
-> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
-> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
-> @@ -28,6 +28,8 @@
-> =C2=A0#define SIG_EXPR_LIST_DECL_SINGLE SIG_EXPR_LIST_DECL_SESG
-> =C2=A0#define SIG_EXPR_LIST_DECL_DUAL SIG_EXPR_LIST_DECL_DESG
-> =C2=A0
-> +#define SCU_UNLOCKED_VALUE 0x00000001
-
-Bit of a nit-pick but I'm not sure this is worthwhile, or that the
-leading zeros are necessary. I'd be tempted just to use the constant
-'1' directly inline ...
-
-> +
-> =C2=A0/*
-> =C2=A0 * The "Multi-function Pins Mapping and Control" table in the SoC d=
-atasheet
-> =C2=A0 * references registers by the device/offset mnemonic. The register=
- macros
-> @@ -36,6 +38,7 @@
-> =C2=A0 * reference registers beyond those dedicated to pinmux, such as th=
-e system
-> =C2=A0 * reset control and MAC clock configuration registers.
-> =C2=A0 */
-> +#define SCU00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 0x00 /* Protection Key Register */
-> =C2=A0#define SCU2C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x2C /* Misc. Control Register */
-> =C2=A0#define SCU3C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x3C /* System Reset Control/Status Register */
-> =C2=A0#define SCU48=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x48 /* MAC Interface Clock Delay Setting */
-> @@ -2582,6 +2585,24 @@ static int aspeed_g4_sig_expr_set(struct aspeed_pi=
-nmux_data *ctx,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0if (desc->ip =3D=3D ASPEED_IP_SCU && desc->reg =3D=
-=3D HW_STRAP2)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0con=
-tinue;
-> =C2=A0
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0/*
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 * The SCU should be unlocked, with SCU00 returning 0x01.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 * However, it may have been locked, e.g. by a
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 * userspace script using /dev/mem.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0u32 value;
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0ret =3D regmap_read(ctx->maps[desc->ip], SCU00, &value);
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0if (ret < 0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return re=
-t;
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0if (value !=3D SCU_UNLOCKED_VALUE) {
-
-... i.e. `if (value !=3D 1)` here
-
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_err(c=
-tx->dev,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"SCU protection is active, cannot co=
-ntinue\n");
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -E=
-PERM;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0}
-> +
-
-Doing this test for each value in the signal expression seems a bit
-excessive.
-
-I was suggesting we only print the warning if we detect the writes
-failed to stick (this is checked towards the end of e.g.
-aspeed_g4_sig_expr_set())
-
-Andrew
 
