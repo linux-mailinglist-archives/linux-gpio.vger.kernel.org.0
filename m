@@ -1,116 +1,110 @@
-Return-Path: <linux-gpio+bounces-21498-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21499-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00D07AD8543
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 10:09:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FBA7AD862C
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 11:00:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DAE21883F40
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 08:09:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B35933B8009
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 09:00:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDDAE45948;
-	Fri, 13 Jun 2025 08:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C76239E8B;
+	Fri, 13 Jun 2025 09:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="gRWoF+yL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9025219A;
-	Fri, 13 Jun 2025 08:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B3C2DA751
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Jun 2025 09:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749802179; cv=none; b=Bifa5iBqnxi4T5Lk9k5OMSgiexv0sn9ZCq2Q3OMx7iczt/Zqu2cdEgVggMf1M6Uktsmcve4OjFLZOqAyD6ZV7vfm9RjUb08JFsqhZzqwsI8w1/sAo5bEbizJybxm0FD4rdVEv/eIZ5Rc1hBjjKJ9idye/Rt3Rg7bDO8LaK+GdwM=
+	t=1749805251; cv=none; b=PANm5EkwlnMzrwdXH4ev1u0oebfnkUipb7Kh3nhZVGBH5871tmqB4D6qVI/BryqF1YQsThlZcyhnSvStPaMR8BJHQaehAUW4RmM1V1ccQOsm1SVA61B+o4QR/kxbPcH2bSrzzkpCecxE9VTUfnYsxSa7oeB4FGF6BFFRqx4KE1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749802179; c=relaxed/simple;
-	bh=izGiYVBbmFETcGfVmpEcpFp+k0lDwOi42Kedzz3nYc4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qi+UjGF4mJSTIb9WoYYLJieYcMEX8HOs/tlVWnYU+rDd4oULvgH8SDd2PB0uqdxXZze5LAIoM9phIQllf9UKoXqzRmX4UPTlmHvQx98JYSLga0/PS3w+tXn6mQh1gkQWFTZZSP1wSdIcs4MjgZWKMFPqrjx0h64A8NlNs6pOwPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6398C4CEE3;
-	Fri, 13 Jun 2025 08:09:35 +0000 (UTC)
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>,
+	s=arc-20240116; t=1749805251; c=relaxed/simple;
+	bh=MX1ZhSMof9W5SnhQVgowW4g8YbmpKOTWDsVh+7Js8xg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DPIaUZ9DpdHmB5xyummzFxnGA7z/vVuO4A5JSOJ+qFj8CAHhFHnWv2qX4hcai+KYZq1kvWNsKjBKqA3DVdYZRm+qE7lWxVKDp/W8mi5C8vE2jtWL8C64CmSECLuvUfEtpZizDKvp+eqVw7vJfud5+f4HOhp0SZZSjPv/qJN0jkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=gRWoF+yL; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=+0Bq
+	zdLlDglF/nSPHWXiog9vV+pZLDTRXBAdu9rqcZY=; b=gRWoF+yLE8jp52aSKbMF
+	SJuLGDpZFx9pptq7CAiCNDvXBf0WVMuC0n+JY6WpwRqr+h3LXEsKNgVmnm/aasrw
+	Fgg9G06eYAMw06EA/TvMbfT1OIhuo8Drl24Qv+O0ww0g2POTUaxE3RvojWAB1mEQ
+	8qlfH7A2PwT0QaJ3vA99Jd4du9tC8Avq6L3xmJEeHl93s9RqeNzCsnl0K+qk/VeJ
+	UAz0yMDKOC9c7tF3Ql70YvBSiU7AzZEYDd6xeqDV7faPJC8NlLkAB5/YwhvEnIv8
+	Dj2hFy3HtHER+56bWKlQ+5lasSGpN1SjcS5hWIzlXxxKdBinhR836nRl6pGrqlUZ
+	Mw==
+Received: (qmail 151628 invoked from network); 13 Jun 2025 11:00:38 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jun 2025 11:00:38 +0200
+X-UD-Smtp-Session: l3s3148p1@eIGtR3A3nM4gAwDPXy2/ACpZfVCNKldR
+Date: Fri, 13 Jun 2025 11:00:38 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] gpio: rcar: Use new line value setter callbacks
-Date: Fri, 13 Jun 2025 10:09:29 +0200
-Message-ID: <b648ffcfe6268d3886b134a98908b2f91dbece56.1749801865.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	Magnus Damm <magnus.damm@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] gpio: rcar: Use new line value setter callbacks
+Message-ID: <aEvotoVqitiHxgYA@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Magnus Damm <magnus.damm@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+References: <b648ffcfe6268d3886b134a98908b2f91dbece56.1749801865.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IyZtLzjok06KW934"
+Content-Disposition: inline
+In-Reply-To: <b648ffcfe6268d3886b134a98908b2f91dbece56.1749801865.git.geert+renesas@glider.be>
 
-struct gpio_chip now has callbacks for setting line values that return
-integers, so they can indicate failures.  Convert the driver to using
-them.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpio/gpio-rcar.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+--IyZtLzjok06KW934
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-index 4fc7cad5032a7a80..130aa0cac186d0cb 100644
---- a/drivers/gpio/gpio-rcar.c
-+++ b/drivers/gpio/gpio-rcar.c
-@@ -359,7 +359,7 @@ static int gpio_rcar_get_multiple(struct gpio_chip *chip, unsigned long *mask,
- 	return 0;
- }
- 
--static void gpio_rcar_set(struct gpio_chip *chip, unsigned offset, int value)
-+static int gpio_rcar_set(struct gpio_chip *chip, unsigned int offset, int value)
- {
- 	struct gpio_rcar_priv *p = gpiochip_get_data(chip);
- 	unsigned long flags;
-@@ -367,10 +367,12 @@ static void gpio_rcar_set(struct gpio_chip *chip, unsigned offset, int value)
- 	raw_spin_lock_irqsave(&p->lock, flags);
- 	gpio_rcar_modify_bit(p, OUTDT, offset, value);
- 	raw_spin_unlock_irqrestore(&p->lock, flags);
-+
-+	return 0;
- }
- 
--static void gpio_rcar_set_multiple(struct gpio_chip *chip, unsigned long *mask,
--				   unsigned long *bits)
-+static int gpio_rcar_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				  unsigned long *bits)
- {
- 	struct gpio_rcar_priv *p = gpiochip_get_data(chip);
- 	unsigned long flags;
-@@ -378,7 +380,7 @@ static void gpio_rcar_set_multiple(struct gpio_chip *chip, unsigned long *mask,
- 
- 	bankmask = mask[0] & GENMASK(chip->ngpio - 1, 0);
- 	if (!bankmask)
--		return;
-+		return 0;
- 
- 	raw_spin_lock_irqsave(&p->lock, flags);
- 	val = gpio_rcar_read(p, OUTDT);
-@@ -386,6 +388,8 @@ static void gpio_rcar_set_multiple(struct gpio_chip *chip, unsigned long *mask,
- 	val |= (bankmask & bits[0]);
- 	gpio_rcar_write(p, OUTDT, val);
- 	raw_spin_unlock_irqrestore(&p->lock, flags);
-+
-+	return 0;
- }
- 
- static int gpio_rcar_direction_output(struct gpio_chip *chip, unsigned offset,
-@@ -537,8 +541,8 @@ static int gpio_rcar_probe(struct platform_device *pdev)
- 	gpio_chip->get = gpio_rcar_get;
- 	gpio_chip->get_multiple = gpio_rcar_get_multiple;
- 	gpio_chip->direction_output = gpio_rcar_direction_output;
--	gpio_chip->set = gpio_rcar_set;
--	gpio_chip->set_multiple = gpio_rcar_set_multiple;
-+	gpio_chip->set_rv = gpio_rcar_set;
-+	gpio_chip->set_multiple_rv = gpio_rcar_set_multiple;
- 	gpio_chip->label = name;
- 	gpio_chip->parent = dev;
- 	gpio_chip->owner = THIS_MODULE;
+
+>  	bankmask = mask[0] & GENMASK(chip->ngpio - 1, 0);
+>  	if (!bankmask)
+> -		return;
+> +		return 0;
+
+Doesn't that mean that the mask is invalid and we could return an error
+here? Or is '!bankmask' an expected use-case?
+
+
+--IyZtLzjok06KW934
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhL6LYACgkQFA3kzBSg
+KbbYChAAqCHL7AWGxGPu7Lo8VSyJDiJhZvgCLnnVbp5Unxwqs6sn7xdOajagBzKZ
+ODBBT5CJrYyYK6ENl4wc0jP2KumUYcgHgLniq/rzLCFynPClnK+ojm6KSEmm3Z/y
+4rUYmXH3nRL5d8oJZCnt6pdc9y5mXZ0jnPCYQMNBeyCkqS3fyzqYg8420RwiLRyK
+AQ1JzgreZenuDJM7VzLoO7Q7RQQY520H1/ozSOaOZZISsjR98+Qt+IGjG1eGQCSy
+j23YLLfYfWJ4q8hHX6ogEPA1sc3kzghdSmy7KmSejIsckED1vr3DD8xJy9yM5itu
+CMKgiY1wyuAcJ+wjtejQ4P7Nruj6UH6fRzKjUe1Q4JA1XpVyVuJX5gnzSZPCzsX1
+xPTFm1/dLnJeTMIMn+tckaSzmqnsmfKC8V/Crjxtu9FxrMSLkJRLE2ZewVoSqq2f
+MrhwyuPoLX4g9ePk+3yM0uvC5D3TZBH1XO2rPnDtQTwqopcoP+NJObXfC5oGCLCJ
+qKfrhxrRNx1jtbWeuVHxUlLHkmjpgHY4ZCBHrxsndGLtunxfiH5WeJTlqJx9ww3K
+K/+7mGNSTZcsXzSJhrCb63JwAh0y9W0XnLHkG+U6yMCjAegy/qBfp0Hs/tpL/upb
+GW5MCHJMltnbPH9yzkm1/Hz5LGL1x4nVIkpKfoBJIMctg8Gw0D8=
+=BnHO
+-----END PGP SIGNATURE-----
+
+--IyZtLzjok06KW934--
 
