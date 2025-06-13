@@ -1,69 +1,65 @@
-Return-Path: <linux-gpio+bounces-21550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D243AAD8F4E
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 16:20:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F47DAD8F64
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 16:23:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA0E03A8FA8
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 14:15:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 210B71888D36
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jun 2025 14:19:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E987918E377;
-	Fri, 13 Jun 2025 14:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CB152E11DA;
+	Fri, 13 Jun 2025 14:19:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYE4QuqY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3ktUf3q"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C582E11D8;
-	Fri, 13 Jun 2025 14:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35E12E11A0;
+	Fri, 13 Jun 2025 14:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749824124; cv=none; b=D4434tC1zrYj+xnLfPpnFIfaNsvu7aD2um9S5mc9qNOjHubaTbGFj6/+GCNSyCis/eh6zD6roRAsA6j5WIpsmw9ICTavlGGpPl/g4dxsU5HbjrIg1w2g/jQil2wteMNhdZhi2mVUlKeFFfId0xI7hHqVVEsdZjb0VFF6m0XYqRM=
+	t=1749824349; cv=none; b=HTIM1oTaAHPUXukgafsOc3CtaESZGJ2JxdTvfwh89wkovf1WLghHgadBWGRQXDooRIH/yi6Ov09BwH9Tqm5iryNM71KZcEl6IFye21di6hQL/7/TP4F27ShpRZyOuGy5ZwWpR8l8T72EB0+T/yBee4ZPoNclv9itenUJzuTbIpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749824124; c=relaxed/simple;
-	bh=cuekvKuodAn/cGpNTMhG5VZfX56fxI4VzRxlFbLFFYY=;
+	s=arc-20240116; t=1749824349; c=relaxed/simple;
+	bh=7NuewwxhjIpWCfA/4QVSJBmlPJfiIKAOM2O4WYjnn7Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t6UvGxbbPLjoiqhkYV6nKdzOTsiLggsr7Otg+IC6vytgHZshR9hVwzLtSHADfepDGwTNkUz8psn7j1O9pmp/G6lTtmNsyFpmKCNpHkicgjW3ZhDbaxrL5AUpjkVktYnhMLSNOrMtMpXokAbTxeW15sqWIfTsagZD4au/Qk6z6q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYE4QuqY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26FA0C4CEE3;
-	Fri, 13 Jun 2025 14:15:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ot+BQ2ywq/J8T1KEyyC7KsMaxYif0X7L67oKz1Modzpr9l+FoTpOuu+atHqNjrzErv3XkLf5UeWAw7XA4qKR5RbF2ChuoWENMZd20jts1XGP5EaZ4NbvwKH6UhUc243KtaEBblw2RV/jEIgWBIW2goV5ghktEg1EQqnUl7qEh80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3ktUf3q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7397DC4CEE3;
+	Fri, 13 Jun 2025 14:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749824124;
-	bh=cuekvKuodAn/cGpNTMhG5VZfX56fxI4VzRxlFbLFFYY=;
+	s=k20201202; t=1749824348;
+	bh=7NuewwxhjIpWCfA/4QVSJBmlPJfiIKAOM2O4WYjnn7Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sYE4QuqYAV4TW8H9u/uEh1p7jeIk0/4P1yqSwbR0PurZj5B5HurOZmlfAWKoYJq2q
-	 linnNymYEo2hZOrlU2zb77t3/YWIR2eMVohcSYJy93Iw8lHFTlOILiP3CzRi/fQbt7
-	 WPodGY9fYWMsfNFOgxdyme9qmB5/9EEaLZuGHBrBFbhwSiSvDHGCvPoWDLxr6yCMR8
-	 8lTg5ecFDVeZxJN8r5iBtRt5/QWWnsdsMLR/PtBMJ9kmJprRBNw4uhHgbmdzejIeX/
-	 UXFjWkf+IfnRaMD574HvOcwn4pm5m4oSLAHl8xRkKWVZuexr7U2oLQPQ84pZiMyny0
-	 EqovJndksA21Q==
-Date: Fri, 13 Jun 2025 15:15:17 +0100
+	b=Q3ktUf3qj4ZnrXBfTsZSTEqrTjZEQqDUVO1SfjZn1nPPO8B6rVbOv5zuIa4ayeM6W
+	 WYsBQ207IxsEQl9D539ovU8y42/Qs5FU3DgpefWliVOCZQR1tepM7/N39hH0ePIK4k
+	 U6ZZbbgW6SYDygD/wZ0FkX9JDrIey4bq7f6SpGGwC9KuitBDtJEm+MEzRI0XWHz/uc
+	 MdOJ/4o2XY87ZEk9Bx5/iaAT4HSav0oAb2KoHM6yOcNM3OePGs1C36owXnxhS+3CB6
+	 RIyNb2H3KiIJ0Za/ElPaPNlO55Lr1qj3dr6SW4IrZXGA75yCAVTEDLYDzLZW4YFafV
+	 WDWP4XjWczz/g==
+Date: Fri, 13 Jun 2025 15:19:02 +0100
 From: Lee Jones <lee@kernel.org>
-To: mathieu.dubois-briand@bootlin.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v10 02/11] mfd: Add max7360 support
-Message-ID: <20250613141517.GH897353@google.com>
-References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
- <20250530-mdb-max7360-support-v10-2-ce3b9e60a588@bootlin.com>
+	Peter Griffin <peter.griffin@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 07/17] mfd: sec-common: Instantiate s2mpg10 bucks and
+ ldos separately
+Message-ID: <20250613141902.GI897353@google.com>
+References: <20250604-s2mpg1x-regulators-v1-0-6038740f49ae@linaro.org>
+ <20250604-s2mpg1x-regulators-v1-7-6038740f49ae@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,30 +69,76 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530-mdb-max7360-support-v10-2-ce3b9e60a588@bootlin.com>
+In-Reply-To: <20250604-s2mpg1x-regulators-v1-7-6038740f49ae@linaro.org>
 
-On Fri, 30 May 2025, mathieu.dubois-briand@bootlin.com wrote:
+On Wed, 04 Jun 2025, André Draszik wrote:
 
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Bucks can conceivably be used as supplies for LDOs, which means we need
+> to instantiate them separately from each other so that the supply-
+> consumer links can be resolved successfully at probe time.
 > 
-> Add core driver to support MAX7360 i2c chip, multi function device
-> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+> By doing so, the kernel will defer and retry instantiating the LDOs
+> once BUCKs have been created while without this change, it can be
+> impossible to mark BUCKs as LDO supplies. This becomes particularly
+> an issue with the upcoming support for the S2MPG11 PMIC, where
+> typically certain S2MP10/11 buck rails supply certain S2MP11/10 LDO
+> rails.
 > 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> The platform_device's ::id field is used to inform the regulator driver
+> which type of regulators (buck or ldo) to instantiate.
+
+I'm confused.
+
+There is nothing that differentiates the two, so why do you need to?
+
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
 > ---
->  drivers/mfd/Kconfig         |  14 ++++
->  drivers/mfd/Makefile        |   1 +
->  drivers/mfd/max7360.c       | 171 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/max7360.h | 109 ++++++++++++++++++++++++++++
->  4 files changed, 295 insertions(+)
-
-Looks good to me now.
-
-I suggest this series goes through MFD.
-
-Ping me when you have all of the other Acks.
+>  drivers/mfd/sec-common.c            | 4 +++-
+>  include/linux/mfd/samsung/s2mpg10.h | 5 +++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/sec-common.c b/drivers/mfd/sec-common.c
+> index 42d55e70e34c8d7cd68cddaecc88017e259365b4..8a1694c6ed8708397a51ebd4a49c22387d7e3495 100644
+> --- a/drivers/mfd/sec-common.c
+> +++ b/drivers/mfd/sec-common.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/samsung/core.h>
+>  #include <linux/mfd/samsung/irq.h>
+> +#include <linux/mfd/samsung/s2mpg10.h>
+>  #include <linux/mfd/samsung/s2mps11.h>
+>  #include <linux/mfd/samsung/s2mps13.h>
+>  #include <linux/module.h>
+> @@ -35,7 +36,8 @@ static const struct mfd_cell s2dos05_devs[] = {
+>  
+>  static const struct mfd_cell s2mpg10_devs[] = {
+>  	MFD_CELL_NAME("s2mpg10-meter"),
+> -	MFD_CELL_NAME("s2mpg10-regulator"),
+> +	MFD_CELL_BASIC("s2mpg10-regulator", NULL, NULL, 0, S2MPG10_REGULATOR_CELL_ID_BUCKS),
+> +	MFD_CELL_BASIC("s2mpg10-regulator", NULL, NULL, 0, S2MPG10_REGULATOR_CELL_ID_LDOS),
+>  	MFD_CELL_NAME("s2mpg10-rtc"),
+>  	MFD_CELL_OF("s2mpg10-clk", NULL, NULL, 0, 0, "samsung,s2mpg10-clk"),
+>  	MFD_CELL_OF("s2mpg10-gpio", NULL, NULL, 0, 0, "samsung,s2mpg10-gpio"),
+> diff --git a/include/linux/mfd/samsung/s2mpg10.h b/include/linux/mfd/samsung/s2mpg10.h
+> index 9f5919b89a3c286bf1cd6b3ef0e74bc993bff01a..3e8bc65078472518c5e77f8bd199ee403eda18ea 100644
+> --- a/include/linux/mfd/samsung/s2mpg10.h
+> +++ b/include/linux/mfd/samsung/s2mpg10.h
+> @@ -8,6 +8,11 @@
+>  #ifndef __LINUX_MFD_S2MPG10_H
+>  #define __LINUX_MFD_S2MPG10_H
+>  
+> +enum s2mpg10_regulator_mfd_cell_id {
+> +	S2MPG10_REGULATOR_CELL_ID_BUCKS = 1,
+> +	S2MPG10_REGULATOR_CELL_ID_LDOS = 2,
+> +};
+> +
+>  /* Common registers (type 0x000) */
+>  enum s2mpg10_common_reg {
+>  	S2MPG10_COMMON_CHIPID,
+> 
+> -- 
+> 2.49.0.1204.g71687c7c1d-goog
+> 
 
 -- 
 Lee Jones [李琼斯]
