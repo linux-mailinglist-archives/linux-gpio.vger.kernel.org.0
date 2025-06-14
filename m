@@ -1,154 +1,98 @@
-Return-Path: <linux-gpio+bounces-21571-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21572-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 229C4AD99E2
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Jun 2025 05:08:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1357AD9C3C
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Jun 2025 12:51:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 706F93B173C
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Jun 2025 03:08:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1652B3BBD17
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Jun 2025 10:51:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F171A8412;
-	Sat, 14 Jun 2025 03:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36EFB247DF9;
+	Sat, 14 Jun 2025 10:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ui1+g3uh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eptmj3db"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACB61C28E;
-	Sat, 14 Jun 2025 03:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE451DE3A8;
+	Sat, 14 Jun 2025 10:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749870522; cv=none; b=M7BJIIcY+p2PAmZqXS+HQ/6vzUnXkA4Z2sB3CoKDoJvwgh02Qmqmuc2ChEP9mlDfPcIuUAVmqhqch/zi92K8JYNfson+LjSH5WQOfZE4nZok8bjtwZHWztYEJItT3D4scTQ7c2tjIdlLvcbV+b4z2+gUO52NJQPp0UJ+QkmFbVc=
+	t=1749898297; cv=none; b=XwWrIG8C+ZR6Q6E/8b0OwVS54RxmepbmzQjROqaH1YejAfEs3HUm2BgeRF2JZv9YL8+xPpCBH+V0/G1kFaM6Ilxl8/6CoBiYwXrF6nb/iQSAqaXGfGQVUTFvPp222qDbCSdgWsqLggcEint/xVa6kX97BeWhMvaxnBEUjtt+Y68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749870522; c=relaxed/simple;
-	bh=slU5/gRGZ+X+AdD9Jx/KursslTeI+BhugpMonKjI2tA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ph2PSe8mXEvE65JDflSMB/uhCNUwYpxXT5J86ONIvM9EdU53mWcmeXGMRtC6CaXF41ba+ijq+pPeynZTJrfWbqZMAZf3iSkmj5hrt8e+04+Yq3nYESZK/GUn5gGhRlzUCQSbmVwB7z3K2S1bGtoXpq4PmpkhsfiEafbcy3dpHJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ui1+g3uh; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso2254775a12.3;
-        Fri, 13 Jun 2025 20:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749870517; x=1750475317; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=slU5/gRGZ+X+AdD9Jx/KursslTeI+BhugpMonKjI2tA=;
-        b=Ui1+g3uhj+wkRTRD0EhNPCq0mkod8DZX8dzJYapp3AQSGrrWkcksSYBMSflc6hBxtX
-         Uw+eEcnwVFe5j+Vfdq0BG+boK/FdmB8e0oGY1SpKITAGzBccLb40CEYUzaQ9JBa+gCK7
-         tivzcy8kzgtkImPIgVwQ8nAsW8mSK+uZK5VmPZhi24xPY81pLhpquXs9D0yReATtjArd
-         0vyAGQHSWQTRVcI6pwbIWtEBrpQ0aj5ugupHJxzNJgdE45GSNQFeKFNBbtbZ/IXwx8En
-         kHipCMG19p3RX4zITSHw+A7pRL03zxh+kST4mc40/D2x7fbp61litvEkbP0ZxKcAOEJ2
-         ojvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749870517; x=1750475317;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=slU5/gRGZ+X+AdD9Jx/KursslTeI+BhugpMonKjI2tA=;
-        b=mELYatinwJKhWL36RF3A9mpzaX1GEJJjAmKTdrctpq9qb9ex5nLmAQYECjqbtVWZUB
-         TlKV+NL7uX/FYC7gJyK4AsejAkGuvj6qHSunh3yJrLjdWeOZKWA8rly9ooeaWNZmIkHL
-         p/gzrImNK0FtOFEchdnc8qMtqOwyT107/5niqpbWIC6y9UN2pqyXVBcepJsy3mg/xIpl
-         W6MflpXLkUeVO4jrgm63AsfMp4vt8LpHKTkyt+cbECWpxwtoMRG8Y/1/XxcMkYuTvDSZ
-         qOsTRmitOqYoxJo0yhm1TZBJnvlNxykWeCzueI4WWdZBGNKS8cOP86qYOcWea0pAR/KK
-         s6JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2FXVQQJWfHK6/h1hbKYJCYC5lhAQ7x2gj17/QXSAwDEFkpypAZ+KQnpAWR6BH3PB7Rg5tZpGa0WU=@vger.kernel.org, AJvYcCUuGVXNRBsaYjHfBPsyhFl8+qS7zUp/Xbj7sFk601fDFE5KDo8Y3JT3SPlXzc71RPMHbQObptLf@vger.kernel.org, AJvYcCVFeCFHmb2EPnBKLAO0Xw2Dq9zL9rQV/AQALmunElpd81o1/nXSdFZttuIHHF9fPtjxG9g2oxYLJHeAjw==@vger.kernel.org, AJvYcCVUGwP8ikxoeggWR5tG3Pgc2HmhPHXsQKMrs58N/TrSF6SR6WGpUb5AhOOnVrsiDeQsRW5cMfQjwCxq@vger.kernel.org, AJvYcCXZ5uWTBXxZaa42X096vGEwO+xdU3U/yt158uLqJ5SEOR1fMUXrHWLAYHW0I9+Y1LgUQh5veWW3y9ib@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb+uTpXARfBAauKJ6HCire6V6520geMtezaB9ix+ve3V8IhHjN
-	dqV7FOgUF8lCVZjxWTmzvTyDVWvu18tHTzL9U7z687wiH71eg5ULUSmE
-X-Gm-Gg: ASbGncsSDYeTD8yyyod1gXZFrjNOQ7jDgHUSl2JkZdL7EJjQOH2REaLVZbHY/D1JVqM
-	YzTM8fqrdZHhtTKdwhPUa93A4Uaj66iT96B/gdsaY6iM1sEUZEDAGL+yIziOVexoe8+jjQHbDLz
-	TuedGumZmUYRuvhJC1DUdOsk19ART8gwRrZO2OrNZQ2Rf7ZCCXp//bEaP27rTm5cM2KcoXb9CYD
-	fnr2sHDd97bzs0Gz931ZSZeIjoOKsW+nv96iOZxWf0gAcKEFkY01MKXd1AaBtt/B3FcwGEtqz9u
-	cCo7uSWDRklzgYAQbr1zJ0tH6p5lynD/DwcRsbzS++DsEZKvgYLQ4hY2vYR0JA==
-X-Google-Smtp-Source: AGHT+IGNdmkR+4nBshMH2dcC/WUsJgI6udsfA1wK5+AWZ7uxqXLAyPWbVmTGd4AoyOxlg6NwRnO3dg==
-X-Received: by 2002:a05:6a21:69b:b0:1ee:e655:97ea with SMTP id adf61e73a8af0-21fbd68e749mr2351293637.41.1749870517124;
-        Fri, 13 Jun 2025 20:08:37 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1639eb8sm2147060a12.10.2025.06.13.20.08.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 20:08:35 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 90EDE4241807; Sat, 14 Jun 2025 10:08:29 +0700 (WIB)
-Date: Sat, 14 Jun 2025 10:08:29 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Simon Horman <horms@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux GPIO <linux-gpio@vger.kernel.org>,
-	Linux MTD <linux-mtd@vger.kernel.org>,
-	Linux Networking <netdev@vger.kernel.org>,
-	Linux USB <linux-usb@vger.kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Weinberger <richard@nod.at>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>,
-	Felipe Balbi <balbi@kernel.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH] Documentation: treewide: Replace remaining spinics links
- with lore
-Message-ID: <aEznrV9XoXNpYKwa@archie.me>
-References: <20250611065254.36608-2-bagasdotme@gmail.com>
- <20250613130753.GE414686@horms.kernel.org>
+	s=arc-20240116; t=1749898297; c=relaxed/simple;
+	bh=70Kj5g5xree1/k5BJ+R8p4tct5cPQROl6hgLiXLF+h4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z/+bxmCEYRMDEK+tVDTuV8g9K/23of63qwja4vlW/SbrjXN8YKInzpucwHEtHIMt+bW8HIU5VuEE2G5T7J1Ar3KunJGd52pJ01Gz4tgHlm+DYW+FW3Lkwd5lo+PTMlZx1nQIp5r20ehAgbvLYCZufsN9Zfo58Axu4t2axZr5oiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eptmj3db; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2D8C4CEEB;
+	Sat, 14 Jun 2025 10:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749898296;
+	bh=70Kj5g5xree1/k5BJ+R8p4tct5cPQROl6hgLiXLF+h4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eptmj3dbGMAso+9Zg7IIrZRVG5KsMuB2xoNl1tUCUp8IArsmbRi/lWogkOELuRCVQ
+	 pX6j7JRXB4r0QO0q+6li6SEVjqF8ofUgGRpD/1mIs792LDcQJzSiQaCuXF3hFLWhh7
+	 256FsFFR2vZVyqXLFzk0NI4ns09rlASGSPDwI/3HfXlycoLlS0+kHLDdoeknBkuHWD
+	 MrPRYbjTIRl7Oj58YURZwFCGgLvzIqYgJMyTT+3jqrQ4toR82nWeiL8jfpjM9LyDhI
+	 kjeXNxRK/h45yAUc7+2FFhYvDowjRZCnQeEk7OkzrVSUnoPvfRv6cvFcSKpllmO1x2
+	 dFrakZY106+hg==
+Date: Sat, 14 Jun 2025 11:51:26 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ana-Maria Cusco <ana-maria.cusco@analog.com>,
+ lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
+ nuno.sa@analog.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
+Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <20250614115126.73b82431@jic23-huawei>
+In-Reply-To: <aEsg-3AWGRLTpvuJ@smile.fi.intel.com>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+	<48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
+	<aEifWXPV1nsIyWbT@smile.fi.intel.com>
+	<aEnvcaP2ZNPLhzXi@debian-BULLSEYE-live-builder-AMD64>
+	<aErMgh6AKVStF4rQ@smile.fi.intel.com>
+	<aEreFQUZXsdsgBSm@debian-BULLSEYE-live-builder-AMD64>
+	<aEsg-3AWGRLTpvuJ@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="GUjbLh60lsjawVfy"
-Content-Disposition: inline
-In-Reply-To: <20250613130753.GE414686@horms.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu, 12 Jun 2025 21:48:27 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
---GUjbLh60lsjawVfy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Thu, Jun 12, 2025 at 11:03:01AM -0300, Marcelo Schmitt wrote:
+> > On 06/12, Andy Shevchenko wrote:  
+> > > On Wed, Jun 11, 2025 at 06:04:49PM -0300, Marcelo Schmitt wrote:  
+> > > > On 06/11, Andy Shevchenko wrote:  
+> > > > > On Tue, Jun 10, 2025 at 05:31:25PM -0300, Marcelo Schmitt wrote:  
+> 
+> ...
+> 
+> > Not sure about sending a patch only adding a TODO to the regulator framework.
+> > Aren't developers expected to propose things?
+> > I'm anticipating 'talk is cheap, show me the code' coming.  
+> 
+> This maybe done in a form of the discussion started with the maintainers and
+> stakeholders of regulator framework. It doesn't mean we must have something
+> in the form of the patch right now.
+> 
 
-On Fri, Jun 13, 2025 at 02:07:53PM +0100, Simon Horman wrote:
-> I am wondering if you considered also addressing
-> the spinics.net links in gadget-testing.rst.
-> They are the only other instances I see under Documentation.
+Been quite a few years since we last looked at negative regulator voltages.
+Might be worth a revisit.
 
-I can't find on lore remaing spinics threads ([1], [2], [3]). These are all
-=66rom 2012-2013 and somehow lore doesn't have linux-usb archive on that ye=
-ar.
-
-Andrzej, Sebastian, what do you think?
-
-Thanks.
-
-[1]: https://lore.kernel.org/all/?q=3Ds%3A%22f_phonet+with+SOCK_DGRAM%22
-[2]: https://lore.kernel.org/all/?q=3Ds%3A%22pnxmit.c%2C+test+program%22
-[3]: https://lore.kernel.org/all/?q=3Ds%3A%22usb%2Fgadget%3A+the+start+of+t=
-he+configfs+interface%22
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---GUjbLh60lsjawVfy
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEznqAAKCRD2uYlJVVFO
-ozmUAP9e7U+IepwBR1/uxeix0k9gN0MnJUuM0zLK08IHd/ZQIwD/fznXO/qTwDWY
-XqpwyY9Zte61Q4ES2LZvcwCIW8VqzQk=
-=szxl
------END PGP SIGNATURE-----
-
---GUjbLh60lsjawVfy--
+J
 
