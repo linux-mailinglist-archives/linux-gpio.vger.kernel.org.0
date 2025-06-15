@@ -1,43 +1,43 @@
-Return-Path: <linux-gpio+bounces-21602-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21605-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 640AFADA07F
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jun 2025 03:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 442BBADA087
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jun 2025 03:14:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9E1E3B6717
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jun 2025 01:13:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B6F63B58B7
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jun 2025 01:14:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4775D139CE3;
-	Sun, 15 Jun 2025 01:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8B8F18DB02;
+	Sun, 15 Jun 2025 01:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="EMyPhRXG"
+	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="NeAYj8yc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2136.outbound.protection.outlook.com [40.107.101.136])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2103.outbound.protection.outlook.com [40.107.92.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B12D58210;
-	Sun, 15 Jun 2025 01:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4EC2E659;
+	Sun, 15 Jun 2025 01:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.103
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749950006; cv=fail; b=iXTuwqK8htRt7L5F2783a4btg1JjKPYGsv4BD1fMgDnPDTN+6Cm/3UtZVd6ixk9a7fJ3udahdevz+0c+pI/uBHBFoJ2TCCwreFAB+gYodE6yhDoNqcfFDLxcDbLbqVKQex+vhKYgNOoNxeGwWBSXMTRc6itboMumYv3v0zy1T2s=
+	t=1749950010; cv=fail; b=ipM4Ns5BN4J8zldfR7OO/tbV+EnuiNqVWGnkw2gW4Wpq5pHuYus+N3RENAkhyfgdVp2mzUjZAAYC8xHab3geSHfmu4iuOgXm3jje/RYoTp5GjaKWqA0RSJEtxRckboi0PvuvyZE7Jfxm1h3QgrhVSXwQZr5W7rsbiJ5ANmq6O7k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749950006; c=relaxed/simple;
-	bh=/vBIx0PvaTFGH1SIpT+R3QSDPnyJ6rpvlbvJSic5q1k=;
+	s=arc-20240116; t=1749950010; c=relaxed/simple;
+	bh=ax5WVHwMn9h9/QI+fZ1jJWwNN4R6eLWVvY8XrQOgkgA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l5irxs7M3lLcNO5Gwz3q0C8X2j+0P+k2d/Fo0jC2e03U/eL7iunXVkWjAbdwjo7tybBzf6QbUibuU0gwH8N2k6BkFHYkHZSdsTNf3KH3tVv/7yjJWiEXrHFkgGqhOsYAhi/jrlvTJSYsEfGqYDE1SRW1mQ4QsF+YNfrmbpl2FAY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=EMyPhRXG; arc=fail smtp.client-ip=40.107.101.136
+	 In-Reply-To:To:Cc; b=KEUSSxArIbpzgEOTjdp43sVX72jxfS+HwaPXGQ8e8NbTTJ/DjejQavEnmZ62uqKrpuvWCM5F6ENHb0JJ96nP7MC8tcQGb8H83X0irbwdKGe6zfyD8KqpQKBq7lidmANjgcxTDTKxlDPRpODDPAYwbl87l7x+ODgyyeM4lFMyeys=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=NeAYj8yc; arc=fail smtp.client-ip=40.107.92.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axiado.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QLGRVPwidW0Ie8AL14mC8J6kQZ62TbRLpkKm1KTvlYkcQ/p15WS/LFYMn2kgnyLG51aNHILazW7qx/Ot6OdPQWa9AxbZlUC702BDSBtwx+2AYw0PgzkKWFYMNMoLs1jGcXOQOp7cncINp+Louajh0nswM1AdAhnTdltP34T93ZZRqda6hu96sV2Ngz6Wg3x89fdrVGhPQlxRhdZKdm1nleXEpTBU/kAQ8xL2sIzmNjLvQPSWGbqX+LLuIXIO0A+ES5Oc/g2Wdb9kkETqUyhXTRQIlAUYTM5aXNBAO6ol/o7mp35Wh81Nj+rzOe6ZV7Sk0JDmi8Wci+kvasbJL3Weog==
+ b=tN/BCqR5kuXK9ZduGsdQDAcTuWYDsuadKcSQvP5Msp1fksJVdhY4nco6jG1btBdq6wQBY4PaT/3Arq40GhBRr6lysYw2MB4aEpannb7lUwdRLJkoxh52GUKjX55Vjn5E77cAUL0B81aQGixlAFUQT80RA75l9MPmBSvqi3A9yq2qNX1nN5CLU6JKBUCShoAA/rL3x3ufwgnqIMJ53ShDR5DU9BHHLa0JUqXSK9ZargUg/qrtUM1TodzZ4AcHByA9jjhZAfgT+EJ/K4uBtTdvj5dG0G8bqtwq9wjEfL/OF91BxYWtFAWwDTr7ehfXsmmEWrNBjWrfU57oOcxtIXSUMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9H3iMIVw76XdEFkS0pIFzApQRXQlkWuRuscTZnf8wLw=;
- b=QyyiJMkGNM5D2wBF/6HoI/GNQgHajeaQQooXYF+6Ss0sRwPN3kftlh5H2mvwJ6hTT49UBNg8jMzhpBOCwFu/CYTKAfCoToG4Aq3sOqLBWhx0JKlQYGAfijU0MRGNED+DV0g2mSe5wZy0P1pxQE5s+Hi3Bu832jRmSeaCdZY8NbaMqhjbrGGy/5Fj0YB5uraBSi5cl+3J/txMjs0hbeiKfJ9we8Wb4IELZP562mIGw0HOkZIlLnL6HwKQKsMpCN3Tr0RCkt03e2Ans9ik/tizr0Eaf3o0doWyj8CtYKYK1ftFQ6SAaJP0m2M3nfhNshrG3l643RQW0Ty/NQqSOl/grA==
+ bh=qTytpIyACWpdVOC1FrmEAlCiu3DOhyaJw9sL+z8P8t8=;
+ b=o1dsaz5djm0ehsLkUB2sEBR1TEq2YF2j6R7zHy9jjGhy6hZaOQr98UwHqcAu8wZOJDR+64mxmXVoip7+oCFE/6MoH7Y0gsD8J2iyCoxQeWDmRDsv/mkxC6plv77Y2GVpw/vszDJCiebPKSdgdMFmrpNqSgftT63z+cp7fqafz39z90zN7evjUXRSJSLFkpm92IPKMbOYEbV4G1dIRq65L8gjlqv/98142K6g5t9hUIsQzJyHnBUAPQ6qiBjnfX+kdRmLnjN1BWWroOxGQ/haMVH/2Sk70W6bbIfAtCl5boIdQUEkeJktDBIxlzilDuryOWOTY0p4srkS4EQJl8bXQQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
  50.233.182.194) smtp.rcpttodomain=arndb.de smtp.mailfrom=axiado.com;
  dmarc=none action=none header.from=axiado.com; dkim=none (message not
@@ -45,18 +45,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axiado.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9H3iMIVw76XdEFkS0pIFzApQRXQlkWuRuscTZnf8wLw=;
- b=EMyPhRXGyr3E7j+/1HQiVmny5ZGoPzCApsuR6nFF7vi3xC6fGeBPUIf3U3y/Z6LY9simwySvEvvetKf31zsOunUPDh1Wp+QvABlMNOdpO2nCodxlwOY7DT6iiPbNEgF4yHyMcTY1BlSQpvfdtCuRVgddxVY1nT49VYAEtun7jALjRu02KjQnSgusDMTNeml6T2VIpY6EnwI9eUt4BXJlLEW1gJIf2cCtK4E1StLg1W25QviUMsZzoKyO7hv9T5oxiWAAaKCkmCU5ZBZmZk8uwYamDXcAR1zJ+avFmL3KTu6NfTLY0SL57IDzWIhLQCv3T24RZIIT3uLrd1+slhvAzw==
-Received: from BY3PR05CA0017.namprd05.prod.outlook.com (2603:10b6:a03:254::22)
- by DM4PR18MB4254.namprd18.prod.outlook.com (2603:10b6:5:395::15) with
+ bh=qTytpIyACWpdVOC1FrmEAlCiu3DOhyaJw9sL+z8P8t8=;
+ b=NeAYj8ycKnNqi+k7uyHqp5bySBhkTCyPZSnr7edduTCBJbnsPqhw+Ms6ouST4P5XaYs5jyfjZT5Ex4XAPOYCvkBGseQJp8Kr+Cj1CcpIOo4Gbb3kQVnZbViwc9JPGMZKXOaC2qALWhsDQqBsbYSQfX2fHCKGFi7f4eLkw1Hwbhod4y/4WBjavPlSZD4M7m3WR+SkL42/bXlOVDjsaDQR/qTAPixdLjouIeWkYKVUAgpWGnzdJ0n6Yl//3XTOLbjXb/liFuKQ0eGOyRVxvoSrFdV8eBnGwadCFoKRrtd9XIz4MitxcIr1Gk5rdEzezwADryNsTDIVuUtYS4wBKmtsuQ==
+Received: from BY3PR05CA0003.namprd05.prod.outlook.com (2603:10b6:a03:254::8)
+ by SA0PR18MB3613.namprd18.prod.outlook.com (2603:10b6:806:71::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Sun, 15 Jun
- 2025 01:13:19 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Sun, 15 Jun
+ 2025 01:13:20 +0000
 Received: from MWH0EPF000989E7.namprd02.prod.outlook.com
- (2603:10b6:a03:254:cafe::98) by BY3PR05CA0017.outlook.office365.com
- (2603:10b6:a03:254::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Sun,
- 15 Jun 2025 01:13:19 +0000
+ (2603:10b6:a03:254:cafe::2c) by BY3PR05CA0003.outlook.office365.com
+ (2603:10b6:a03:254::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Sun,
+ 15 Jun 2025 01:13:20 +0000
 X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 50.233.182.194)
  smtp.mailfrom=axiado.com; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=axiado.com;
@@ -66,10 +66,11 @@ Received-SPF: Fail (protection.outlook.com: domain of axiado.com does not
 Received: from [127.0.0.1] (50.233.182.194) by
  MWH0EPF000989E7.mail.protection.outlook.com (10.167.241.134) with Microsoft
  SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Sun, 15 Jun 2025 01:13:18 +0000
+ via Frontend Transport; Sun, 15 Jun 2025 01:13:19 +0000
 From: Harshit Shah <hshah@axiado.com>
-Date: Sat, 14 Jun 2025 18:12:49 -0700
-Subject: [PATCH 3/6] dt-bindings: gpio: gpio-cdns: convert to YAML
+Date: Sat, 14 Jun 2025 18:12:50 -0700
+Subject: [PATCH 4/6] arm64: dts: axiado: Add initial support for AX3000 SoC
+ and eval board
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,8 +78,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-3-327ab344c16d@axiado.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-4-327ab344c16d@axiado.com>
 References: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-0-327ab344c16d@axiado.com>
 In-Reply-To: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-0-327ab344c16d@axiado.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -90,224 +91,780 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
  soc@lists.linux.dev, Harshit Shah <hshah@axiado.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4491; i=hshah@axiado.com;
- h=from:subject:message-id; bh=/vBIx0PvaTFGH1SIpT+R3QSDPnyJ6rpvlbvJSic5q1k=;
- b=owEB7QES/pANAwAKAfFYcxGhMtX7AcsmYgBoTh4oNEFEp6lD8oZ62lUlim8aru2yKDpvwyvGq
- fAoY6ghDV2JAbMEAAEKAB0WIQRO3pC/7SkLS2viWOvxWHMRoTLV+wUCaE4eKAAKCRDxWHMRoTLV
- +7EFC/484t+W/4uGk1jL7RR0Zwp5U2dB+NVhfvgSo+vHJmiCahHGvc5+E6Bp7FewxRRIENvsumv
- Uc1BMMprP9pQZ07HDQCtJ+cPm5qneI+jZ//7y5qqd3HeZdffLQx0bUGjNZurhkSgv0UDkcpCiKy
- uCbvgtT0j9844V0h15j4HtIvjK76yqO5gtCBsvIKfnzAtsxZ/9nwjYhBvTdk8tkasLxaWHUj1Kw
- ZprLB9SPqdviKQg/T26a1M4QDT7xOHqTkkXQYqrqGPNfs5gAgruOO2Lf/85Nq4NcvOT0oG7ZPZc
- 4jsLJ/ourc+7pI1fpClGea+KmpBFPZRyu6BHNqSoNtGhasK3MW45PpKRRLe4ctTUuWClrPCf2pu
- VQbWgH+arh4tQfXMpR2yWLQaP8HQrya0m2S97b8koOVT9bHsm7F/MHuutV8vaIHIqKtRzGc9/sp
- yJRi7y3Z9qGKigbMNUnsyEawUsSs9HhQgc6bOuwTTi1Gho51yp01BRG1Pdw4JDb58tarQ=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=19004; i=hshah@axiado.com;
+ h=from:subject:message-id; bh=ax5WVHwMn9h9/QI+fZ1jJWwNN4R6eLWVvY8XrQOgkgA=;
+ b=owEB7QES/pANAwAKAfFYcxGhMtX7AcsmYgBoTh4o0x9p4+NoG2FMxsJ/4Jjs83ulZafOxJzTK
+ oZWlB333mKJAbMEAAEKAB0WIQRO3pC/7SkLS2viWOvxWHMRoTLV+wUCaE4eKAAKCRDxWHMRoTLV
+ +yFUC/9fwWsGhvYSWq/mAVKVfViHBjWa/oU/cSv9a/v0+tjPrdVAmfLB/oqUrmQXXFwXGkWFyQ5
+ 5NQZBlppRKWFrlkGC1ykBSbcdprQA/AqC/ySwxf52ICkaugqv3caBG3SJGUi8aNrQ1Kf88H5DKP
+ gBkG60DNlVbuMhyz31Bomlvl6xBcP69HQuCbZr9q/aQusUM6kwH4TO8cP98YKQqopJ6BOlI5a73
+ /6FrP39HMWy5KmLxnAkSfwWpC+21ff19qlSspor3VU3uyrAVlJmnropR9EIWzZrQgsl0mczElKP
+ A2WdSg+Oc7D7GX1uq0wZsk7VC1LdNmCW/diore1Sx6VC0/7jLsTDtQkkBB0WUIUJIi9iKx08i3J
+ Z1psT+FRojXRNmLTuZ7l3YAxJTVetAU5uMbzi5L7EhkzVu982eMDq1fu8oAzIvtSyo57cOMYicM
+ kQfcHOzNV/olLXR9dzD+reEd+tjHpwlSl+jzel6fzohf6u6Za0VTsQm+g54zfEeX8wo0o=
 X-Developer-Key: i=hshah@axiado.com; a=openpgp;
  fpr=4EDE90BFED290B4B6BE258EBF1587311A132D5FB
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|DM4PR18MB4254:EE_
-X-MS-Office365-Filtering-Correlation-Id: a0ed7b83-4d36-46b6-be2a-08ddaba9d08d
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|SA0PR18MB3613:EE_
+X-MS-Office365-Filtering-Correlation-Id: cc2a224d-330e-442c-1290-08ddaba9d128
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014|13003099007;
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YUJ5dDNHdFlURkRRNU8zaHFRMERtUEIySGxRS2ViTUFNL29hL1V4anFreUF3?=
- =?utf-8?B?Z3IxZXBFTWEweUFTc0FrWDMrcHhsUEQ5M3BrUWxKUGZjN3FXRFhNaDlpcjV5?=
- =?utf-8?B?aVBMbThka0JVem5iOVRWaHBKaCtDUndIU25Iemh1a0hKMTROSGIrRWJLMzNI?=
- =?utf-8?B?cC9tM0xpTkVsdWZZSUZvUjdQR1NkVDVlV3dzMWVBQ2NvclZhTUkvSnMxTWFt?=
- =?utf-8?B?Qml0akFxK1ZRYXNLR0RNSU1UVmVWa2NzbkNIb2JlL2ovSW5UZXBkZkEwV0Y4?=
- =?utf-8?B?QnRNVUk4aXZibnliL3lVVEZFNjNvYnpRbklabHBkWXp6MjVZWEs1djRlUjJ3?=
- =?utf-8?B?NUZMTjZpL0lOUjVoOElJMGovdDBJVG41eGhnOTFUdy9GYmxTOGg5ZUNKbTYz?=
- =?utf-8?B?QXFJcklnTVYvM1d3SnJUdjBWcFd4anU2RmFaZ0JNMlhoU3c5RGxOWUNSNDBh?=
- =?utf-8?B?RmpmczJydVE4R3hRWUlCS2ZqNVJvL3RtZ3dDamphNFRYMlV1dnNNV0VwSmRM?=
- =?utf-8?B?dUx4czFjU2tYdTFRVUpwdjVWb0FWUW9QbUx0OFFLajZoSllxK29BSzVXQ0NT?=
- =?utf-8?B?YTd6Q2lvUXhhdGYyV2RXQ2JETk5YTWwyUEhZYmlOSUFPdDRjVGdURFVhamU0?=
- =?utf-8?B?TFh3elNFNjlsZVdFSHZldm1GTEJibkt1TlRJdW9GbzZIa0VSc2hOSTVaT1ov?=
- =?utf-8?B?TDB5ZVZvTldoSjFWeHNqWVdZMTdWRnk2MGxEV2RTLzhmNGMzbzU2RVVjaWx3?=
- =?utf-8?B?WVNkSnZBUFByemsxQVJrMXVMc3dqV2wrNkpNOUMxaG11SzY0Rk5DenRxSXVk?=
- =?utf-8?B?WG42QXd5aHdEOXJLazJtSEYvRW1kbSs2b3F6aFlsdzMxclU3bHg5Ykt2QThm?=
- =?utf-8?B?VGhsK1pYTXlTci9xNlVjM1h3ckU3RVBDbzlYZ0oyckZ0a2FmMmhYMU9TRXYx?=
- =?utf-8?B?VS9Qc0ZkSHZWL2JxL3ZiUXFpcVV4ZVdIbjJYd0xTOHR1Vk5IQlhienZONnJV?=
- =?utf-8?B?ZVZnMnExMFNlcHJKRWpna083OTlZdjlWM2ZCdEJNY25KZjZsNFBpdFlramwz?=
- =?utf-8?B?ZWNBTEYwcjE4WTd5ZE04R2p3eHFmMUQrdXdpcGd4Q2htbFZOKzE4MlFnQUNE?=
- =?utf-8?B?ekxiNERuZ1JiTXd0MVk4SXhzVElTOUEzd0xXWDRUZUpLMG0yakJhdWlVWEVW?=
- =?utf-8?B?cmJvQUwxUlE1SFZ1RzQ4c2pDWitnaVNuQmNHNGxraFdtcW44cUFINEN5cFRQ?=
- =?utf-8?B?bkdBWXFLNG1pT1V0OXNtMjJNNmw0ZTkydXZnd00zN09sWUlKclk4SXFPamdH?=
- =?utf-8?B?RVVUMGNlMFZUWlZFdkpTK3lPS21uUWsxeU93UHhKMmpaeWx1aE5lVmVvc2xn?=
- =?utf-8?B?NlZLempRRGVwazJRR0xXeWpJbFFqRm9ac0dyTEx5bXRvZ0tOQVpOZVM0ZHNv?=
- =?utf-8?B?NXRBN3kyWlJjM3I4a3BxS0NST2JkZFZHWFBZallBbjRiOTYvYlNnME4vZ1k4?=
- =?utf-8?B?U0FOcm9PZzVidTBPNkl4eFErT1ZEdE84M056eGN3ZVA1THBuY3QzM0ExUG9K?=
- =?utf-8?B?UTBGNE9QQnJ2WFd1MWc1VlVsU3pJOU5VWU03R3ZWekdJRFlUa2VGeVBra3R0?=
- =?utf-8?B?Z2VNcTVwTjhSWldMbVRtcXpXemtMQUhpLzhxTDhxVW9rcm96enQrUXdDYjBv?=
- =?utf-8?B?Z2xCU2dtVTUzQ1lEUVBWV05TRWx5c3hUcjlQZVA4YktkQ3ZOK2FmOXNaVzBx?=
- =?utf-8?B?MnhvaFJiTEVjU1dvWitldjhPWHlOL001M0xLQjJFeHlMeEpPZ2hHaUdnK2xz?=
- =?utf-8?B?dFcrdnJCa3oxYVhaeEd6WHluZGhudzVPeUN4dkhTZ2FpVkttZ2Iyc1dRMDl4?=
- =?utf-8?B?RnRHblhveTVydHk4SnR3NGhGZWIvSzZ6SVhlbmI4R3NXZzU4VjNoZzRrUzll?=
- =?utf-8?B?NHkzU2FPV01jK1hYNnd6RGdsbUlmSWl3Uk1pYnIrMVdPNExMMmdwMTFiODlM?=
- =?utf-8?B?R0FoTENFL0hBPT0=?=
+	=?utf-8?B?UEMxdjlQcDZjdUJDejFuUExFNE81d29GU1RlaHc4T2ExSFJmQUllaHdGUzNl?=
+ =?utf-8?B?Z2JCVXk2OXZtTVE3djFZRVRBZFN6WWdlbXZLUkVUUjNCMzhpaHdmSEc1VDAz?=
+ =?utf-8?B?UjJDK0ZVMmJJTWxTR0RVRllvQXYxRldwa0wzc2srNEpsWVZpN1BkUmhMd1RK?=
+ =?utf-8?B?alJVLzNvcEIvTHR0MHhoc1RpaDJLREhhUENncVJ6Q3M3Wkt4RmJlZHFSdE1U?=
+ =?utf-8?B?emxSL0J6YzRsRzgwYnBEUitRV2VIMkF4MEpZVFhya05rZFhOMjBFMG5hQjc1?=
+ =?utf-8?B?amtuVDhSN1ZlemFOaEhHTk9XYWg5Y2gvQ21vYlNpWTJ3VmYxL3JuUkFTOHA3?=
+ =?utf-8?B?MzNITkRidDFwNzAwY3NNQThGd1UybXpFNUUxTjM1YmlyQ2wwM0RUYjhpekFT?=
+ =?utf-8?B?TDVtYk5qc293a2UxeERabStlRVVKd2hUMG11NmM2QTVzaGhhWE5EUWJYR09C?=
+ =?utf-8?B?bTFNUHZTVS9rZWtvZWxHZnRSM3ZCWDdaZjFxWlc3Y3dZbWZ0KzFXSUVzUUJk?=
+ =?utf-8?B?alZ2a216WDNqUmFSdXArQ0VUN2k1Wi9adEVDRHNGWUpWVG5oY3lLV0EzSUZs?=
+ =?utf-8?B?NHhSNDNEV1VIT0orRVlQWmZDNFB3MmtSUzlJYUM2Sjd4ZnFLbXQ3V2t3UEIy?=
+ =?utf-8?B?Smd4UmN2VERYZWNKaDRzUDBScHhLc3Y4YWI3K2ZzRHBoRzRBRXQveFNOejFO?=
+ =?utf-8?B?Z2hTMjZKOXVOT1BwLzluaUlMYXBKTFZQblJycHlrQzRWcjNCMkxIUCtvejJS?=
+ =?utf-8?B?RTdYZFd0NFVnQWtrUDBPMDNaTnpRRmV1M0pRZnROMVVlb3ovNnRzSC9aOVFO?=
+ =?utf-8?B?QkpkYzNPeFl6ZVVkdkZHdUJMd2YzcVFLR0Fubm83QVJiQTE3cVR3SmluR3Jo?=
+ =?utf-8?B?S2xtemd4cnlqdWxRaXBUVWxxNWtuNXhuR0plY3QxaUpFWG9iT2VJaUQwYnhr?=
+ =?utf-8?B?UEREczlWQ0RPU3kwTmNNcXdRQlNuR2U4dkhFdE9XdVdWa3hOWGZOZ2I0bW41?=
+ =?utf-8?B?bEI2RGdBajFpNmhmNzZUYUE0bU5vTzF2Ujc4SlRBV3k0MkEwcjZ5cVIyN3FE?=
+ =?utf-8?B?eWFvdmZTa2tjMWVhVGcrVjJsaml6bTF0anVscmdzRTQvd2V2ek9Ra3I3VUtS?=
+ =?utf-8?B?MzJEUTJRSUlrL0dSdmU5SzgxSVhmSE1VZDQ1TG1IeTlZQ1BPTjBCRjhRZDFv?=
+ =?utf-8?B?SnJwSkJramxpazZjK0VmNmM4QlBLTytpQmJFdjJoeWQ0Q1NpbG85d3RibHd1?=
+ =?utf-8?B?YU9MVTdUekRPQjRNV3VQVml1TDhNWXk3bitNd2wyN0xFTXdpVmlDRWcxYXdt?=
+ =?utf-8?B?T1M0Y3dnVkhPRVIwY0xwQlkwbC9STHJTQWVMWWs5Z0ZpUGZoZE5TUG40M3RZ?=
+ =?utf-8?B?eUE5eXBkd0krR2UrM3VYNU80SXJ1TldtN2hKcjlaS1FKeUY5RVAxU25OWlQz?=
+ =?utf-8?B?T2J0RWhsOXBtV1VCNERWQVg1L0ZHZ2xTQWFKbzh0bUdWeEFpQWVYTTE5bTdt?=
+ =?utf-8?B?OUxUbW51bXFjZCt5QzFYOE1ORFd0RUU3QjB6dWJZa0h0QVFFOGQwR3BjUXdY?=
+ =?utf-8?B?MEx1NnFOSHdvdVZQRWp5WlhMUVpGRU9pY0dNS09IeWdkTE9PY2dmVEM4c3BB?=
+ =?utf-8?B?YXRNbjZFamlJRFZhMjdvaUJIQVovR2k4UGZMQmc1MGd0UzVhcm5RYjdoWmpo?=
+ =?utf-8?B?SDg5QjBDb0lYUzBrcVU3d3ZzclBUS0NPK1Z6UmVCQUZpRWt2T08wdjhaSG9R?=
+ =?utf-8?B?d1dQRThiVTkwZ0tFaWQ0VmdCcSs3OFdnY0ltTHdTZmpZNE0rb1cvbmlsZVNP?=
+ =?utf-8?B?cE9vbVF1OTJHNjA0VTJsZE1VK2pFZ3NUUVN1ZGI5R0YrT3RvRFluNXZmV3hv?=
+ =?utf-8?B?cmVyV1Z4d01WTC9BZCtWUDIzUnFnL0s4WU5NN3BMUHludHVnclpWb2tJak54?=
+ =?utf-8?B?NHpMVkV6bDlwMDBib3pzODI5RG9JOTBOOHdScnVEU1lxVDN1Z3BpYlM5b1Ro?=
+ =?utf-8?B?Y3diSW9PNXpQaThhbnZ2ckhCRFd4VXdwNU5jZzdnaXQrbU1PS3hlZlRZMWRz?=
+ =?utf-8?Q?evQepj?=
 X-Forefront-Antispam-Report:
-	CIP:50.233.182.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:[127.0.0.1];PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014)(13003099007);DIR:OUT;SFP:1102;
+	CIP:50.233.182.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:[127.0.0.1];PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1102;
 X-OriginatorOrg: axiado.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2025 01:13:18.9524
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2025 01:13:19.9416
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0ed7b83-4d36-46b6-be2a-08ddaba9d08d
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc2a224d-330e-442c-1290-08ddaba9d128
 X-MS-Exchange-CrossTenant-Id: ff2db17c-4338-408e-9036-2dee8e3e17d7
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=ff2db17c-4338-408e-9036-2dee8e3e17d7;Ip=[50.233.182.194];Helo=[[127.0.0.1]]
 X-MS-Exchange-CrossTenant-AuthSource:
 	MWH0EPF000989E7.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR18MB4254
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR18MB3613
 
-Convert Cadence family GPIO controller bindings to DT schema.
+Add initial device tree support for the AX3000 SoC and its evaluation
+platform. The AX3000 is a multi-core SoC featuring 4 Cortex-A53 cores,
+Secure Vault, AI Engine and Firewall.
 
-Changes during conversion:
-   - update the naming as per the other files.
-   - add gpio maintainers
+This commit adds support for Cortex-A53 CPUs, timer, UARTs, and I3C
+controllers on the AX3000 evaluation board.
 
 Signed-off-by: Harshit Shah <hshah@axiado.com>
 ---
- .../devicetree/bindings/gpio/cdns,gpio.txt         | 43 ------------
- .../devicetree/bindings/gpio/gpio-cdns.yaml        | 81 ++++++++++++++++++++++
- 2 files changed, 81 insertions(+), 43 deletions(-)
+ arch/arm64/boot/dts/Makefile              |   1 +
+ arch/arm64/boot/dts/axiado/Makefile       |   2 +
+ arch/arm64/boot/dts/axiado/ax3000.dtsi    | 584 ++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/axiado/ax3000_evk.dts |  72 ++++
+ 4 files changed, 659 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
-deleted file mode 100644
-index 706ef00f5c64951bb29c79a5541db4397e8b2733..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--Cadence GPIO controller bindings
--
--Required properties:
--- compatible: should be "cdns,gpio-r1p02".
--- reg: the register base address and size.
--- #gpio-cells: should be 2.
--	* first cell is the GPIO number.
--	* second cell specifies the GPIO flags, as defined in
--		<dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH
--		and GPIO_ACTIVE_LOW flags are supported.
--- gpio-controller: marks the device as a GPIO controller.
--- clocks: should contain one entry referencing the peripheral clock driving
--	the GPIO controller.
--
--Optional properties:
--- ngpios: integer number of gpio lines supported by this controller, up to 32.
--- interrupts: interrupt specifier for the controllers interrupt.
--- interrupt-controller: marks the device as an interrupt controller. When
--	defined, interrupts, interrupt-parent and #interrupt-cells
--	are required.
--- interrupt-cells: should be 2.
--	* first cell is the GPIO number you want to use as an IRQ source.
--	* second cell specifies the IRQ type, as defined in
--		<dt-bindings/interrupt-controller/irq.h>.
--		Currently only level sensitive IRQs are supported.
--
--
--Example:
--	gpio0: gpio-controller@fd060000 {
--		compatible = "cdns,gpio-r1p02";
--		reg =<0xfd060000 0x1000>;
--
--		clocks = <&gpio_clk>;
--
--		interrupt-parent = <&gic>;
--		interrupts = <0 5 IRQ_TYPE_LEVEL_HIGH>;
--
--		gpio-controller;
--		#gpio-cells = <2>;
--
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml b/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index 79b73a21ddc22b17308554e502f8207392935b45..47dd8a1a7960d179ee28969a1d6750bfa0d73da1 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -9,6 +9,7 @@ subdir-y += amlogic
+ subdir-y += apm
+ subdir-y += apple
+ subdir-y += arm
++subdir-y += axiado
+ subdir-y += bitmain
+ subdir-y += blaize
+ subdir-y += broadcom
+diff --git a/arch/arm64/boot/dts/axiado/Makefile b/arch/arm64/boot/dts/axiado/Makefile
 new file mode 100644
-index 0000000000000000000000000000000000000000..e71f0137912f88e69fb3fa20f096e1572211591c
+index 0000000000000000000000000000000000000000..eb5e08ba0f39c32cdbfd586d982849a80da30160
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-cdns.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/arm64/boot/dts/axiado/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++dtb-$(CONFIG_ARCH_AXIADO) += ax3000_evk.dtb
+diff --git a/arch/arm64/boot/dts/axiado/ax3000.dtsi b/arch/arm64/boot/dts/axiado/ax3000.dtsi
+new file mode 100644
+index 0000000000000000000000000000000000000000..d5d84986d18efe9dfbb446ceee42fc4e4dbf95d0
+--- /dev/null
++++ b/arch/arm64/boot/dts/axiado/ax3000.dtsi
+@@ -0,0 +1,584 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (c) 2021-25 Axiado Corporation (or its affiliates). All rights reserved.
++ */
 +
-+title: Cadence GPIO Controller
++/dts-v1/;
 +
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+  - Bartosz Golaszewski <brgl@bgdev.pl>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+properties:
-+  compatible:
-+    const: cdns,gpio-r1p02
++/memreserve/ 0x3c0013a0 0x00000008;	/* cpu-release-addr */
++/ {
++	compatible = "axiado,ax3000";
++	interrupt-parent = <&gic500>;
 +
-+  reg:
-+    minItems: 1
++	aliases {
++		i3c0 = &i3c0;
++		i3c1 = &i3c1;
++		i3c2 = &i3c2;
++		i3c3 = &i3c3;
++		i3c4 = &i3c4;
++		i3c5 = &i3c5;
++		i3c6 = &i3c6;
++		i3c7 = &i3c7;
++		i3c8 = &i3c8;
++		i3c9 = &i3c9;
++		i3c10 = &i3c10;
++		i3c11 = &i3c11;
++		i3c12 = &i3c12;
++		i3c13 = &i3c13;
++		i3c14 = &i3c14;
++		i3c15 = &i3c15;
++		i3c16 = &i3c16;
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
++		serial3 = &uart3;
++	};
 +
-+  clocks:
-+    maxItems: 1
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
 +
-+  ngpios:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Number of GPIO lines supported, maximum 32.
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x0>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x3c0013a0>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <128>;
++			i-cache-size = <0x8000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			next-level-cache = <&l2>;
++		};
 +
-+  gpio-controller: true
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x1>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x3c0013a0>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <128>;
++			i-cache-size = <0x8000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			next-level-cache = <&l2>;
++		};
 +
-+  "#gpio-cells":
-+    const: 2
-+    description: |
-+      - First cell is the GPIO line number.
-+      - Second cell is flags as defined in <dt-bindings/gpio/gpio.h>,
-+        only GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW supported.
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x2>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x3c0013a0>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <128>;
++			i-cache-size = <0x8000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			next-level-cache = <&l2>;
++		};
 +
-+  interrupt-controller: true
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x3>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x3c0013a0>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <128>;
++			i-cache-size = <0x8000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			next-level-cache = <&l2>;
++		};
 +
-+  "#interrupt-cells":
-+    const: 2
-+    description: |
-+      - First cell is the GPIO line number used as IRQ.
-+      - Second cell is the trigger type, as defined in
-+        <dt-bindings/interrupt-controller/irq.h>.
++		l2: l2-cache0 {
++			compatible = "cache";
++			cache-size = <0x100000>;
++			cache-unified;
++			cache-line-size = <64>;
++			cache-sets = <1024>;
++			cache-level = <2>;
++		};
++	};
 +
-+  interrupts:
-+    maxItems: 1
++	timer:timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic500>;
++		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
++			   <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
++			   <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
++			   <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
++		arm,cpu-registers-not-fw-configured;
++	};
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - gpio-controller
-+  - "#gpio-cells"
++	clocks {
++		refclk: refclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <125000000>;
++		};
 +
-+if:
-+  required: [interrupt-controller]
-+then:
-+  required:
-+    - interrupts
-+    - "#interrupt-cells"
++		ref_clk: ref_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <1>;
++		};
 +
-+additionalProperties: false
++		clk_ahb: clk_ahb {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <200000000>;
++			clock-output-names = "clk_ahb";
++		};
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    gpio0: gpio-controller@fd060000 {
-+        compatible = "cdns,gpio-r1p02";
-+        reg = <0xfd060000 0x1000>;
-+        clocks = <&gpio_clk>;
++		clk_xin: clk_xin {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <200000000>;
++			clock-output-names = "clk_xin";
++		};
 +
-+        interrupt-parent = <&gic>;
-+        interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++		clk_mali: clk_mali {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <500000000>;
++			clock-output-names = "clk_mali";
++		};
 +
-+        gpio-controller;
-+        #gpio-cells = <2>;
++		clk_pclk: clk_pclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <74250000>;
++			clock-output-names = "clk_pclk";
++		};
 +
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
++		spi_clk: spi_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++
++		apb_pclk: apb_pclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		interrupt-parent = <&gic500>;
++		ranges;
++
++		gic500: interrupt-controller@80300000 {
++			compatible = "arm,gic-v3";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			#redistributor-regions = <1>;
++			reg = <0x00 0x80300000 0x00 0x10000>,
++				  <0x00 0x80380000 0x00 0x80000>;
++			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++
++		};
++
++		uart0: serial@80520000 {
++			compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x00 0x80520000 0x00 0x100>;
++			clock-names = "uart_clk", "pclk";
++			clocks = <&refclk &refclk>;
++			status = "disabled";
++		};
++
++		uart1: serial@805a0000 {
++			compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x00 0x805A0000 0x00 0x100>;
++			clock-names = "uart_clk", "pclk";
++			clocks = <&refclk &refclk>;
++			status = "disabled";
++		};
++
++		uart2: serial@80620000 {
++			compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x00 0x80620000 0x00 0x100>;
++			clock-names = "uart_clk", "pclk";
++			clocks = <&refclk &refclk>;
++			status = "disabled";
++		};
++
++		uart3: serial@80520800 {
++			compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x00 0x80520800 0x00 0x100>;
++			clock-names = "uart_clk", "pclk";
++			clocks = <&refclk &refclk>;
++			status = "disabled";
++		};
++
++		/* GPIO Controller banks 0 - 7 */
++		gpio0: gpio-controller@80500000 {
++			compatible = "cdns,gpio-r1p02";
++			clocks = <&refclk>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x00 0x80500000 0x00  0x400>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			status = "disabled";
++		};
++
++		gpio1: gpio-controller@80580000 {
++			compatible = "cdns,gpio-r1p02";
++			clocks = <&refclk>;
++			reg = <0x00 0x80580000 0x00  0x400>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			status = "disabled";
++		};
++
++		gpio2: gpio-controller@80600000 {
++			compatible = "cdns,gpio-r1p02";
++			clocks = <&refclk>;
++			reg = <0x00 0x80600000 0x00  0x400>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			status = "disabled";
++		};
++
++		gpio3: gpio-controller@80680000 {
++			compatible = "cdns,gpio-r1p02";
++			clocks = <&refclk>;
++			reg = <0x00 0x80680000 0x00  0x400>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			status = "disabled";
++		};
++
++		gpio4: gpio-controller@80700000 {
++			compatible = "cdns,gpio-r1p02";
++			clocks = <&refclk>;
++			reg = <0x00 0x80700000 0x00  0x400>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			status = "disabled";
++		};
++
++		gpio5: gpio-controller@80780000 {
++			compatible = "cdns,gpio-r1p02";
++			clocks = <&refclk>;
++			reg = <0x00 0x80780000 0x00  0x400>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			status = "disabled";
++		};
++
++		gpio6: gpio-controller@80800000 {
++			compatible = "cdns,gpio-r1p02";
++			clocks = <&refclk>;
++			reg = <0x00 0x80800000 0x00  0x400>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			status = "disabled";
++		};
++
++		gpio7: gpio-controller@80880000 {
++			compatible = "cdns,gpio-r1p02";
++			clocks = <&refclk>;
++			reg = <0x00 0x80880000 0x00  0x400>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			status = "disabled";
++		};
++
++		/* I3C Controller 0 - 16 */
++		i3c0: i3c@80500400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80500400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c1: i3c@80500800 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80500800 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c2: i3c@80580400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80580400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c3: i3c@80580800 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80580800 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c4: i3c@80600400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80600400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c5: i3c@80600800 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80600800 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c6: i3c@80680400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80680400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c7: i3c@80680800 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80680800 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c8: i3c@80700400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80700400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c9: i3c@80700800 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80700800 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c10: i3c@80780400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80780400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c11: i3c@80780800 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80780800 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c12: i3c@80800400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80800400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c13: i3c@80800800 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80800800 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c14: i3c@80880400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80880400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c15: i3c@80880800 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80880800 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i3c16: i3c@80620400 {
++			compatible = "cdns,i3c-master";
++			clocks = <&refclk &clk_xin>;
++			clock-names = "pclk", "sysclk";
++			interrupt-parent = <&gic500>;
++			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-scl-hz = <100000>;
++			i3c-scl-hz = <400000>;
++			reg = <0x00 0x80620400 0x00 0x400>;
++			#address-cells = <3>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++	};
++};
+diff --git a/arch/arm64/boot/dts/axiado/ax3000_evk.dts b/arch/arm64/boot/dts/axiado/ax3000_evk.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0a183695e857a3a1e722ea6b7bee388bf650f0a3
+--- /dev/null
++++ b/arch/arm64/boot/dts/axiado/ax3000_evk.dts
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (c) 2021-25 Axiado Corporation (or its affiliates). All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "ax3000.dtsi"
++
++/ {
++	model = "Axiado AX3000 EVK";
++	compatible = "axiado,ax3000_evk", "axiado,ax3000";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	chosen {
++		bootargs = "console=ttyPS3,115200 earlyprintk nr_cpus=4 earlycon";
++		stdout-path = "serial3:115200";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		/* Cortex-A53 will use following memory map */
++		reg = <0x00000000 0x3D000000 0x00000000 0x23000000>,
++		      <0x00000004 0x00000000 0x00000000 0x80000000>;
++	};
++};
++
++/* GPIO bank 0 - 7 */
++&gpio0 {
++	status = "okay";
++};
++
++&gpio1 {
++	status = "okay";
++};
++
++&gpio2 {
++	status = "okay";
++};
++
++&gpio3 {
++	status = "okay";
++};
++
++&gpio4 {
++	status = "okay";
++};
++
++&gpio5 {
++	status = "okay";
++};
++
++&gpio6 {
++	status = "okay";
++};
++
++&gpio7 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
 
 -- 
 2.25.1
