@@ -1,42 +1,43 @@
-Return-Path: <linux-gpio+bounces-21599-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21600-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05F06ADA076
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jun 2025 03:13:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88E88ADA079
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jun 2025 03:13:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93C74173C14
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jun 2025 01:13:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D779173C22
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jun 2025 01:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EE0020330;
-	Sun, 15 Jun 2025 01:13:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E58487BF;
+	Sun, 15 Jun 2025 01:13:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="Cm4H0+xr"
+	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="k6NARhgV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2122.outbound.protection.outlook.com [40.107.102.122])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2130.outbound.protection.outlook.com [40.107.243.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEA010942;
-	Sun, 15 Jun 2025 01:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159021DFCB;
+	Sun, 15 Jun 2025 01:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.130
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749950000; cv=fail; b=qxov6PjxyRZ4zuv/3t0aioyt8XORfM85kKE8PoqpeiymcUbsrADiHFvWC5u1H01Hul719xqq/Uu6OHUAbzzIvm6HCxF8K6te10e9+3Vmdpx99gRYLdn3eOAp/PXmumTLSrf0CvFTJ/KNyi7/mKWm+8D9lXO6U2Xbp8d8Won+AuQ=
+	t=1749950003; cv=fail; b=equCbznhYLrZMP2CqzcySL9e+fVJR1SgDurSZdRZW/yJL7abpl+xwcag5t9gb2Rhth2owZScjoVv5zc2mKlHGTMTqM9OXkb6PCVw1NIx2HwJxOTvRojeG/QbWnuxNILAUQWqG7ukRVA/F9T6/3qXPIlLPJYeLOY7GQvbX9n2a/Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749950000; c=relaxed/simple;
-	bh=wbJwYkxQuX4n6ye9d64Qta+ZfJLLaApkRNuSLkCEjy4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CBLGYHYdseqr31QA3UPn/UiOey7kcw9tjk8O4EAqajJs0ps9d27tcSGk+w2S3Os5IE5JnDfhNXSMtAjWIWdLgk4XLlZbtrftf8Aw2IUkuMTGVEpdjXfr9h1QqNWqWgZmohJyF7wCKnT+uVD+anJT8vD3Y5FvTNFCyHEF2Iy7y3o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=Cm4H0+xr; arc=fail smtp.client-ip=40.107.102.122
+	s=arc-20240116; t=1749950003; c=relaxed/simple;
+	bh=k2bg1Idbmpr7InDb5GGMHb0LUKQqJAT8NkVZyKNijmk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KarDv91ayvNUnERZc9I0fcDHQiNlYCKjYbWqDeg8DA483sKHWDKh/Uu4SuvqBgb4jgKZO667vrrUPKn1MGouZ4SJyQIDxp73+T5yVZ7tS/kZdKooM06A2pcy+34KzK33ZOLwoTT+BQbH4b2Px7JRJKgOZxVyAm/WAEZafhrdaz8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=k6NARhgV; arc=fail smtp.client-ip=40.107.243.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axiado.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CvnNLDo4PdRnpsQ/nCI5gF/QJJuqELiEVdb47XJ0ZwuskLRy9bFcnr9WLNjRy6idSQXjLRGjm85YPREkIQ4XuK8xmKEpD0aGOGSnJejF3nzv6e+O20UOGGlTQiSZxbqKHpdjfkrrRsQMtwxA+4FtNoi8Z0aXs4O6SkRS7INsg12vB7SOTWP2NM7+VneyX9Ql+F1yiigK8CZTQSiFX/3B+BW3DZQ+d5AKDp+dAaL3+RMBDmcodeocx4olFCA+5cGcH2X5LjHkunpmaQ8SNZFa3qJSnxNatLBXQAsc83HPeDPSflMcDvSWEtWcSdsa0RwX4EddNOP2Xy1/kE9v7oCMLA==
+ b=umRqoC2ImZ/MSiU7JpTn6m86GizpSlnvX42ut3hZsWXUifJ2Xtqfx2wDCdpMoHBkZVULKuO/1s2vXb9+HGtWLeOmsSN247m+ElY94c+y5eh1IYZ9XDLiqTRmyLOgG6hZ4UZeJrtwqV5PEpUNDcCL/rXL+C+ffFAVC9H/PXZb7/TtLGietJSxOPPrkx3gmyDnUlW+cMKl0s7UsvK9/KcA3R7+c1cy2z5USOkHvXbRzxiHm82TFV7i6VKxhjTbV782kZKLdnWOfd8Nfl84XRC5oxe/WVT1nOB4YPDLM79YceG4veBQLqZNJx2pFy0KeKd0TCNlofA8lcRqSUQ4faKZhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=elwLs9ZjXxhMbUsm/5qE2cgP7Dcng+evA1SnF8RuY0s=;
- b=MF/wfLCHxEUCgSgM05IQY9++TQqtDA4HEI5iINMSj1B7TtbFgHGcaaBrSR9UACJ59OgXixDwzxQWzltSCNSZ3aRx4YNDMj18rolW7j2Fhkf1Qgd8VKrWJnnnIJFKY3g470yb2VjH8LuAdPl7gunQQFyk7vQhT6pgFgYIQAAU4xAwI8pixTYgGyhOatkXItCzhsCCLAaVVgOaFwS3htnu0LV7VzwcFg40Heuk6AicuBDSWTz6eaGA86DnQC7vvZFhECiLfx4PXU7gxqPnyHhZq2KeSwPp5f8m6LIZBKH9nKR2sSRlUu0aFxc2VhrRiOVvuc3qiMZ86jECkrB6ZbSceQ==
+ bh=LgF8+PR+/dKwRsE/gY6SrakSd+MSYhaWICfnygds71k=;
+ b=Hry9PL6QeUN+WMNlNiCp8CgkptkAapdBOOi4iJH/4x9xn/dYkXfqo83Uy48VgTNo/gO+70GoCNl/eTW9uxexGRnhlDN2SXYObL0oftqO98q0rMVaxp3J+u5UEK1/tkZhXZWN4GYiFbGuP0/coDc48K44aMvzvw1b7pWnBMPlF02/ACnYci4nIoZEfuHfVEPXrL+54Pc65XRPdkbdFjuP82FdQcn6ybdanvMDp7Y/nJL8pUi/cYhU1V3SbmttpPpkmhF8mXcoO8t4w0QIIWh4sHZ2umSUbuZyKauS0hGHcE9rBZzWHYuyG6UKq+kFK27OduFgixgjoX5dR0+n0Y9NZw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
  50.233.182.194) smtp.rcpttodomain=arndb.de smtp.mailfrom=axiado.com;
  dmarc=none action=none header.from=axiado.com; dkim=none (message not
@@ -44,18 +45,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axiado.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=elwLs9ZjXxhMbUsm/5qE2cgP7Dcng+evA1SnF8RuY0s=;
- b=Cm4H0+xr5ooZ5g1LDcZdgxw/0iv8+4g8MkOgjYCkajmUcEz2FtbQm7FLfRxDZVTsTUeAMH1E2UrlJIZFbF+W/B7yitFXANb1Zjg0bVCEbC3h4f6H8F79T5/SVbQjll2wTy92KH+waKTf1aVGurTT3dHUOluOHYFfywhZxCMIrwFUMbL4aWkKvH18hMjrKu4Ej+LcR+OjCne29w2gp4O7MDIoNEcbz+qvtHzkVAY/aETuQqrL4wP4aPmEMxRnP7PM0rXcrkZ5mXrfKpbviyrcAAadtSndkVK0IxQvi4XYwR0BLrMCTBMGyPYBonhUmmqoencSazJI+NAZOJ4M1zq6fw==
-Received: from BY3PR05CA0013.namprd05.prod.outlook.com (2603:10b6:a03:254::18)
- by IA2PR18MB5911.namprd18.prod.outlook.com (2603:10b6:208:4b9::8) with
+ bh=LgF8+PR+/dKwRsE/gY6SrakSd+MSYhaWICfnygds71k=;
+ b=k6NARhgV8muA68S4qqrdRsedsUeRIQsyC2A/lUT/MiOy8Lfutl1u/sOLIfoWpQgiz2uMwSF4WbnT9/MI1iuEqtnvhjRXTol/jPNGxeCUSLk501v6tznGuhM7fRrRIl9Wu6hIaqYbcmeer9t2DYaoFu3hRhQmh0jCm03T93eo1APwgNRIJvEXtwPhEiXSTbxZ+2t/hewZnbRzNIQPUVZI8Owd/vi7IvV02U//okvM3ZwjWaJz4WamU8eEjJrj64N/3glb50NZ+4kExnEf0Pw6QUZR+3ncgqXIsECKxI9l3wBRIUg0MqWlkWHxhUAWs1LSqODpzXEsbXEEPM/T3ovdJg==
+Received: from BY3PR05CA0017.namprd05.prod.outlook.com (2603:10b6:a03:254::22)
+ by IA0PPF86576F4F8.namprd18.prod.outlook.com (2603:10b6:20f:fc04::c2d) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Sun, 15 Jun
- 2025 01:13:15 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.23; Sun, 15 Jun
+ 2025 01:13:16 +0000
 Received: from MWH0EPF000989E7.namprd02.prod.outlook.com
- (2603:10b6:a03:254:cafe::e) by BY3PR05CA0013.outlook.office365.com
- (2603:10b6:a03:254::18) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:a03:254:cafe::43) by BY3PR05CA0017.outlook.office365.com
+ (2603:10b6:a03:254::22) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Sun,
- 15 Jun 2025 01:13:14 +0000
+ 15 Jun 2025 01:13:16 +0000
 X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 50.233.182.194)
  smtp.mailfrom=axiado.com; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=axiado.com;
@@ -65,11 +66,10 @@ Received-SPF: Fail (protection.outlook.com: domain of axiado.com does not
 Received: from [127.0.0.1] (50.233.182.194) by
  MWH0EPF000989E7.mail.protection.outlook.com (10.167.241.134) with Microsoft
  SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Sun, 15 Jun 2025 01:13:13 +0000
+ via Frontend Transport; Sun, 15 Jun 2025 01:13:15 +0000
 From: Harshit Shah <hshah@axiado.com>
-Subject: [PATCH 0/6] Axiado AX3000 SoC and Evaluation Board Support
-Date: Sat, 14 Jun 2025 18:12:46 -0700
-Message-Id: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-0-327ab344c16d@axiado.com>
+Date: Sat, 14 Jun 2025 18:12:47 -0700
+Subject: [PATCH 1/6] dt-bindings: vendor-prefixes: Add Axiado Corporation
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,10 +78,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAA8eTmgC/x2NQQrDMAwEvxJ0rkBO09D2K6UH2VZbQbGNnYRAy
- N8jchrmMLsbNKkqDZ7dBlUWbZqTibt0EH6cvoIazaGn/kajG5BX5ZgNVyLClgNyiigL/2eeLEa
- fuUZscym5Tuj8ffQDPyJzABstVT66noev974flzekN4AAAAA=
-X-Change-ID: 20250614-axiado-ax3000-soc-and-evaluation-board-support-1b86b4a9daac
+Message-Id: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-1-327ab344c16d@axiado.com>
+References: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-0-327ab344c16d@axiado.com>
+In-Reply-To: <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-0-327ab344c16d@axiado.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
  Linus Walleij <linus.walleij@linaro.org>, 
@@ -91,148 +90,97 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
  soc@lists.linux.dev, Harshit Shah <hshah@axiado.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3067; i=hshah@axiado.com;
- h=from:subject:message-id; bh=wbJwYkxQuX4n6ye9d64Qta+ZfJLLaApkRNuSLkCEjy4=;
- b=owEB7QES/pANAwAKAfFYcxGhMtX7AcsmYgBoTh4jaJKwIz1a0YzSuc1+KtPS/iVhr4+4tgIua
- fifkHt0gE+JAbMEAAEKAB0WIQRO3pC/7SkLS2viWOvxWHMRoTLV+wUCaE4eIwAKCRDxWHMRoTLV
- +3sxC/9OZKAUgefh42e/+MfIL3S29duR1359cxR7GGmOOSQ54EAgWjkKKpyu18C+dK+Svc4B3la
- Gepw2TBsY8eX2KB8iEYYnleBxzk0QrOhg3EFbu6xdC091bJ+A8SBCJfDHCAcKK5Jj81klLl0cFv
- +TsK7IsxOpA3rt3F7SxN7nc730XltUDW7fpguEqVbX5g31bGxLhFueE/FYLbO3D2hixXi/lZPT7
- JLT87VNl7v5h7Ju3Szgsdnudq2hkrvrcIPYMh+dawFk1Sz0Od0B4AUBWxTbqu+55joP1AIqcjOZ
- ELfFhOzAzVdXSuCSfYmENEj2afT3fHkOcmfj9+v2yMrW/F8h6irtfauqTRYe4+hmAaWUL/RDzwc
- WugjWHSHGdIlnVspXKJ0Ml6GvPdWH4gq8zldSbe9Cbq28mKXPIzOls1gzK65KeJS7KCNjWZAqfG
- AoYjCjYHR8cR6ddTz8izgsMZya9WguwFeZz8KhzEgOg385DloC7OUALee9AuQYKDiKTVE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=831; i=hshah@axiado.com;
+ h=from:subject:message-id; bh=k2bg1Idbmpr7InDb5GGMHb0LUKQqJAT8NkVZyKNijmk=;
+ b=owEB7QES/pANAwAKAfFYcxGhMtX7AcsmYgBoTh4n4ofhX4lUU0h22Eiws8TRXTpCTXovTB9yG
+ P2+zJkMJ/2JAbMEAAEKAB0WIQRO3pC/7SkLS2viWOvxWHMRoTLV+wUCaE4eJwAKCRDxWHMRoTLV
+ +8+eDACCGT43QlBJ90RdtYEinxf2Y6mU/NQ3oHQeKxkmTCmQuvZjrLzTTMn+XPmUTmDsQ85VLkq
+ ZWySoTk8/9rnmN+MUJ9NzKEnzj4xosp3ZPeAIybcGtu9mdmB3Aw5ffifh9jP5L6pEKupPNG1oZP
+ 4ykeQLywbWh7GQ969G3EWpDHNfIqbYQmJSFL9GT3gDzLNqZpI0gPNOhAEA8cuvyxYLiWa+ulzwi
+ rO31rOc4TvrVS1T3rAEWXqI5x0whTA6bSJWFymIX4q1EX3NB9oqq+RcuhzgPTCNN4YuNIuP+lKK
+ OO3+FE6jeJVakOKL63Vf64IMm9GeCKVMbsO9RIF+w3Q/UDLVjNMkwBqbyFdt0UD+amm67L97Uk+
+ hz9RJmYoXIvoTFDob+p2o0RvUsbA72hZvwOJVFYb8gILAle+JHXv9dYPhkgQm1R4iXzgA+kOcT3
+ 2czHWPQeFtx/ebSfJgVNoKRz3kaiVnv1ptQ+zElbudRKX4XZlv53G9YHLVqisWyZA+JCY=
 X-Developer-Key: i=hshah@axiado.com; a=openpgp;
  fpr=4EDE90BFED290B4B6BE258EBF1587311A132D5FB
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|IA2PR18MB5911:EE_
-X-MS-Office365-Filtering-Correlation-Id: 706ca5c5-c553-41c7-8d0a-08ddaba9cd8b
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|IA0PPF86576F4F8:EE_
+X-MS-Office365-Filtering-Correlation-Id: 98e17838-f14a-4caf-2834-08ddaba9ce9f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014|7053199007;
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WkhsMlZBeFdRQk8wOEt5eVFCNDA0T0lUeGtaWGl1NGtqYU80cjRqY0VNc1I4?=
- =?utf-8?B?bU1FM1dDRERrTzFTLzBoci9jL1dyTENqOVFIWmFkRFMvN05RNVZBSTUxbU56?=
- =?utf-8?B?MExOa2sxYVlGREhScmpBUDdBaVQybVkxWitsSVBEQjJUSnVQNkdLSXh1Zk85?=
- =?utf-8?B?UllEak1XVnhMTXFMZnNrR2R3T0hGVE5DL1BsM012QUZ5ejZpa0VzTllNUEg5?=
- =?utf-8?B?cm9ZUDZINmQ2VE52UEgwZUlLaW05SHlQeFZYc2R3YmJSR3JMNWNReW8wbnBp?=
- =?utf-8?B?eXpUWW5adW9tRGw2ajR3V0ZON245bGVNc09RbHdnVEx4VXdPV3BLblN0bi9J?=
- =?utf-8?B?SjNWbVNpZlY4UlBuRTZTUE9lRUg5TWtJNnhWYmdnd0YwQytqRUR1ZzVZMkJU?=
- =?utf-8?B?ZVphTTNWL2NwdEtlN1IybXRlb1Awb2NhdGxodVl2MFRXVk5hUkVkU290M1hW?=
- =?utf-8?B?NXJnZkUvdEVzNEkyV1lKenplcWdIeXQ3bHVGczN0TVFaSkdXZ0pOblovU2Rj?=
- =?utf-8?B?b29STFAvNmRFSGNjWlpGNEl5SkNYRW1WMHl2aEtoWnJXRWFvNjE3cmdTWVpU?=
- =?utf-8?B?UEIzS0ExRWphYTdjbUdiZHNKUGxUUWZzQW90eWtXUzRzMjN6WGpkc0hFL2po?=
- =?utf-8?B?V2pBY2thQ09QR0lSWjI5YnpNbjF2cHF1NlFvaXhoQU44bE5pQXRiTk9LWnBw?=
- =?utf-8?B?K2FPUEpxeDF0aTk2M1JhMk9zNGFqVnFNRVdyanVHTDBMZU9qSDhNL2xKSHpE?=
- =?utf-8?B?NkRSWElmSUwvS0t2cjl0R21OOHJsbFRZNnNqbFpmTlFiWHlKZW9saUF3cDZp?=
- =?utf-8?B?SjVVMDk0NGZ0R0lGdm44ZkVPN1FYREFBaWF2SXNpVkFQd202VzBPWDZCeDls?=
- =?utf-8?B?U09nRlhkOS8yVklmVVZ2WDMxOWY5a1BYcm9vdGdoQnd3TlNwZGhuM0RPcm5Y?=
- =?utf-8?B?dEtZcUpmS1FNT2Q4K0xDMDd4ZTNCNVdsL1ZjUHNNZkhSYi9IenBzY2dSbCsx?=
- =?utf-8?B?YXMxS1M4R2FpZ3NXODdWckJxTUJPUGFVc2MvbVV0K3BOYTU3ZHNGQW1tdVl1?=
- =?utf-8?B?R3o0ZjY1U3B6eFViMTZyN0k2L2NiMEhaSHVic2JmQ2dadnVRQ2NHTnFhSm5j?=
- =?utf-8?B?Uk9sRlg1SldBNkZyMDZoOENzYjJMeVJaMnlIWWZHZ2xSZFRRTkpNQzN4dnNP?=
- =?utf-8?B?ZTlEeU5uU0JleGI1Sk14WlFFY2xqT0RoYnpKNktzeTlTOU82RFpzZHZLOGpL?=
- =?utf-8?B?N1FINE9oL3ZtcTlQRFpJc05jR1JmT2ZBMkp2Sk9ncGVBV3Nuc0w1MjRTekJ6?=
- =?utf-8?B?WVNXb1M4aHRhWnpnS3JxWWsraXRvRE1idWpaT0x6MnJ3bnkwUnE0dEdDMThK?=
- =?utf-8?B?RTdUS2NsN243eGpCNmY5WUVmbUhXZlNlR29PZWdiMkxuNzg4emtRZ2VqcDZ6?=
- =?utf-8?B?UlFhY0lMUXAyVU5QWHl4RHZaZGIwMEQ3cWFVOXVYSnlHWC8wVkhVZUFRRmhY?=
- =?utf-8?B?THp1Q0cwWitiOGlGL2dOYUd2WXRMdVJWRWhRNlhLVWJsSkRlbHFtdkVoTHk5?=
- =?utf-8?B?SUloSFh6T3RJZDNITGdwc0ppMyt4S29RL3BzR3cyTUxVYjhYQjY5cnc5NTdH?=
- =?utf-8?B?eldCbUs5QzREeXNUQk9GMFVQbE9xdHk2bGk2SXZTeFhFYUYzMkRGNUxQcUNX?=
- =?utf-8?B?Z0VDWkpxVkZzVTBQdVU3d05qb2JxVEthcEFqVEV3UHVRcHpHcHNKU1NRcXhB?=
- =?utf-8?B?UXlJSWFFYUdvbUY3QVp3MmtybTY3NlhaNFVUSG42WFY0alJ6VmxhWHFvQjJX?=
- =?utf-8?B?cjZQUFg4TlhiSzl6WkJzdWNSOU9Kd2ZpYnRFUldPeTN5TklJU1dFa2xtQzlC?=
- =?utf-8?B?SFVGcjBRVEhaQlpIQVQrVU5TckRUaFpHbjVGb09OZTVqT1QrNkZxaUg4WVpV?=
- =?utf-8?B?WFNiYUk4L0hhenhNOVhQS1hlN0o2cGFadUdlWmx5b0VUYkY3TmZqZnU0M1N2?=
- =?utf-8?B?aSsvUTh2TlFOZFpyQzVsNlJiWHd5SkUrbFVjaitjZWIwUDdmTTY0WXFDYndu?=
- =?utf-8?Q?tK4tAm?=
+	=?utf-8?B?K0s4OWRjWW5uUXVHbnlma3dCRzl2ZGxmVkUxSlZQSXdCakMwRWtOR3ZpVzRJ?=
+ =?utf-8?B?U00ySXg5WnQweDNQYXVseU45NE5SVUEvTWxtcGVGWWg2Uk5LTktxUGxLVkJG?=
+ =?utf-8?B?SlFKaUJRZkQ4QVhmK0FGeW1UVklZd01YbWRZWGprNHpLSUc2TzdiR1FuZ2lO?=
+ =?utf-8?B?bnlKVXZFemJBUVNpeFpObllzQS9ESmN3c2UraXF5ZWdvYU1YcURJS3ZOZVlC?=
+ =?utf-8?B?VUdackN5WVRNS29XTXZIMEN1UDAxbmNzSVQ0ZHR3cHgvcER3ZHZBU1ppNVg4?=
+ =?utf-8?B?Rnk0SFlHWnRySElxbkZxc0t1TjJlWDF6cXpLVUxtSjZJd2ttV3VHZ084MlYz?=
+ =?utf-8?B?elYrQnN1OUF6VUxLeFlRcU1TTU1rZElQMW9rdmJxMGlmK0hGWHZQM292clc5?=
+ =?utf-8?B?a0NrNWFmeGQ0K0hUREsvWmN0a2ROVVBLNlBCMDh1YWpva2xPb1NoYVpnK0VJ?=
+ =?utf-8?B?b1kwTnRzalkwdTdxbEltTEJpbFF2dmNxYjVaNlRGTDdpcnBoeEU1djFEY0hU?=
+ =?utf-8?B?YTJBWFJoYWx6bS9FM0xVUUhnRU1vaEk5OWFnWG1oSXNhM05HMFJEWTNvK1lN?=
+ =?utf-8?B?ZEUyVzNjSkljVXBDZWN0ZlBQcWVta2NKTHd6d3FDcW1tYVA5ang1V1IwSHdF?=
+ =?utf-8?B?UXFyN081dTc3MFlaTFM0UTBsUFJiMWFNeGhTMkM1WWNONzY0SE1XdjRaMHRK?=
+ =?utf-8?B?Y3VLNTVrdjBWWmZacEhWQlgrSDF4VjVwY0syNzlHZVRvaEIzdlZkMnpxNVI1?=
+ =?utf-8?B?UStGeUtkVjlmYUZpcXZtU25Kb3FpeXlXVU9oOFp6QlovZUZKTHFRdFk2NEhi?=
+ =?utf-8?B?QVNMNkQ4WkpKMVNqa01oTVNtTkg1eEFhM2RzY3dWUFQvNjREQUgrNlE1T0Rm?=
+ =?utf-8?B?Z0pCLzBaWXpXSnZUbE04TUQ5b0llemRzanF3V2RBWUNXUGRjZzJwZmxsNE5E?=
+ =?utf-8?B?QzFZaWFISHVGWjkzOFVWZHpEeHB3bGdSN1lEbDVoK2tKQ0xFbzJhdTY5VDVs?=
+ =?utf-8?B?UC8rN056dTJhRForR2RvUmlYTG9vMkZicXJpb1BGTE9oYTIrZGd2VGU4d0t6?=
+ =?utf-8?B?NXdHR2xzV1o0NG5Xc3NzNWdFZWxGdUhUclFTU1R1eXovYjlJZUR5T25YdVB4?=
+ =?utf-8?B?S1dxcFJsVHllZThxQ200YThVMnphK2dWZ1Z2Tjh6OHpsNjVXOElrUFc3YUd2?=
+ =?utf-8?B?UUZVaE45MW1QUEtTY3ZZalp5ZG02UXd0dG0vSjVYSFpZUlhVUXJveTBmRTU0?=
+ =?utf-8?B?V1BUNXJOOGVNL1RBdTBZaFE5NjVVWnNjVC9XTm9ZZUZNQ1JqOURCRG1Geng0?=
+ =?utf-8?B?RmlIQko3QUFkeGhtUEhJYUk5Z0hWYWlIYWFjYU5wQTR3bTQ3UWlCM3RONkNa?=
+ =?utf-8?B?RjEyYWlKM3VDS2g0MEhiQXlGdEdHeVUrWm9XVEgvSUVlblNITHVtS2VvWGw2?=
+ =?utf-8?B?NTlZanBaV0dreXJXN25HYVFxR3JNTjhJbHA1c3NhUkJzNnc0cDc4WDZ6MTcw?=
+ =?utf-8?B?cklKRXl5MGRZQ3l4U0Qyc2NVNDg4RE9JMnV3dCtnMEVEditNei9FUjZsUHFP?=
+ =?utf-8?B?eU5SV05SNnJveWtsNU95MW1HaGpUanJqN2x1V1V3S2doR2dJWHFYUmwrRkVG?=
+ =?utf-8?B?VnI1SjZHc1lHWENNVzdKMDUyQjUvcTk5MnVuNms2L2ltdW5QV2puaVdvcndF?=
+ =?utf-8?B?U2pMMWROb0Z3T24wbk9vRkxsd2xEeUY4bzhhL3VPUlE0WVQzeW5RbElXdktH?=
+ =?utf-8?B?akIvTXhHZUVMS0Nia1NVZWlwNnRTTVJUSWhNaEliQUluVEdKYVNuQmxrZnFx?=
+ =?utf-8?B?ekJJb0hVNTl6ZktCN2RVNlNvV3dldUJvZkowZ1h2MitxdEdiOExZeURnNTBr?=
+ =?utf-8?B?ZThvTlFQdWFBbnN0WVdQbzNQL2VQWm1jblhCVkpzSlJKRlZhUHBEd1BEVC8y?=
+ =?utf-8?B?dXlQMWFSMzQxSU1aNFlCUVgrTjhqSVM2R1VnbWFTbm9mWHN5OXVsai8zWkVI?=
+ =?utf-8?B?QkVNNk1ZSWZ3PT0=?=
 X-Forefront-Antispam-Report:
-	CIP:50.233.182.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:[127.0.0.1];PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014)(7053199007);DIR:OUT;SFP:1102;
+	CIP:50.233.182.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:[127.0.0.1];PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014)(13003099007);DIR:OUT;SFP:1102;
 X-OriginatorOrg: axiado.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2025 01:13:13.8984
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2025 01:13:15.7102
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 706ca5c5-c553-41c7-8d0a-08ddaba9cd8b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98e17838-f14a-4caf-2834-08ddaba9ce9f
 X-MS-Exchange-CrossTenant-Id: ff2db17c-4338-408e-9036-2dee8e3e17d7
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=ff2db17c-4338-408e-9036-2dee8e3e17d7;Ip=[50.233.182.194];Helo=[[127.0.0.1]]
 X-MS-Exchange-CrossTenant-AuthSource:
 	MWH0EPF000989E7.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA2PR18MB5911
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF86576F4F8
 
-This patch series adds initial support for the Axiado AX3000 SoC and its
-evaluation board.
-
-The AX3000 is a multi-core system-on-chip featuring four ARM Cortex-A53
-cores, secure vault, hardware firewall, and AI acceleration engines. This
-initial support enables basic bring-up of the SoC and evaluation platform
-with CPU, timer, UART, and I3C functionality.
-
-The series begins by adding the "axiado" vendor prefix and compatible
-strings for the SoC and board. It then introduces the device tree files
-and minimal ARCH_AXIADO platform support in arm64.
-
-Patch breakdown:
-  - Patch 1 add the vendor prefix entry
-  - Patch 2 document the SoC and board bindings
-  - Patch 3 convert cdns,gpio.txt to gpio-cdns.yaml
-  - Patch 4 add SoC and board DTS files
-  - Patch 5 enable the ARCH_AXIADO platform and defconfig support
-  - Patch 6 update MAINTAINERS file
-
-Note: A few checkpatch.pl warnings appear due to DT binding conversions and
-MAINTAINERS update. The binding conversion and includes were kept together in 
-patch 3/6 due to their close relationship, but we are happy to split them if 
-preferred.
-
-Feedback and suggestions are welcome.
-
-Signed-off-by: Harshit Shah <hshah@axiado.com>
-
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Arnd Bergmann <arnd@arndb.de>
-To: Catalin Marinas <catalin.marinas@arm.com>
-To: Will Deacon <will@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org
-Cc: soc@lists.linux.dev
-
+Link: https://axiado.com
 Signed-off-by: Harshit Shah <hshah@axiado.com>
 ---
-Harshit Shah (6):
-      dt-bindings: vendor-prefixes: Add Axiado Corporation
-      dt-bindings: arm: axiado: add AX3000 EVK compatible strings
-      dt-bindings: gpio: gpio-cdns: convert to YAML
-      arm64: dts: axiado: Add initial support for AX3000 SoC and eval board
-      arm64: add support for ARCH_AXIADO
-      MAINTAINERS: Add entry for AXIADO
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
- .../devicetree/bindings/arm/axiado/axiado.yaml     |  23 +
- .../devicetree/bindings/gpio/cdns,gpio.txt         |  43 --
- .../devicetree/bindings/gpio/gpio-cdns.yaml        |  81 +++
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- MAINTAINERS                                        |   8 +
- arch/arm64/Kconfig.platforms                       |   6 +
- arch/arm64/boot/dts/Makefile                       |   1 +
- arch/arm64/boot/dts/axiado/Makefile                |   2 +
- arch/arm64/boot/dts/axiado/ax3000.dtsi             | 584 +++++++++++++++++++++
- arch/arm64/boot/dts/axiado/ax3000_evk.dts          |  72 +++
- arch/arm64/configs/defconfig                       |   1 +
- 11 files changed, 780 insertions(+), 43 deletions(-)
----
-base-commit: 8c6bc74c7f8910ed4c969ccec52e98716f98700a
-change-id: 20250614-axiado-ax3000-soc-and-evaluation-board-support-1b86b4a9daac
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5d2a7a8d3ac6c666c8b557c2ef385918e5e97bf9..5ada930c79e3b32ff1bf194ee66bb4bdb08d539e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -200,6 +200,8 @@ patternProperties:
+     description: Shanghai Awinic Technology Co., Ltd.
+   "^axentia,.*":
+     description: Axentia Technologies AB
++  "^axiado,.*":
++    description: Axiado Corporation
+   "^axis,.*":
+     description: Axis Communications AB
+   "^azoteq,.*":
 
-Best regards,
 -- 
-Harshit Shah <hshah@axiado.com>
+2.25.1
 
 
