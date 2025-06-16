@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-21621-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21622-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E828CADA7EF
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 08:05:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90157ADA7F3
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 08:06:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89F4B16D75E
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 06:05:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A74FC188E7E3
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 06:06:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8FA1C5F23;
-	Mon, 16 Jun 2025 06:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73C6E1CEADB;
+	Mon, 16 Jun 2025 06:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzUuj5EL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SSEJ/cIW"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6D913632B;
-	Mon, 16 Jun 2025 06:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F3B5A79B;
+	Mon, 16 Jun 2025 06:05:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750053912; cv=none; b=LN7ZEdyTs+Wp9PT7iU3GohvCLt6MFzRBcIWa8/KKnUNFqPzHMT6Q28BClo3Upfkxwe3He8pdJ8D61o5ue+6Oh0M/iRBI0/9NtrG5nPuxfINMeqRdLlU9XG2IYlXRgsp4a0l/HXPbOudMoJF6zE/IPf1LoaRzC8wEe1vBRH6iOJQ=
+	t=1750053958; cv=none; b=VAASN7cq15m8R9oZO21ys+usHsvpGTMhxCyM6GwEVQShafT4oQKBrhLwlKRB84SFkeh1o4B9w9TaaYUmNIzVm+r9+GP0pFj9XGtfbzISHZ3nqyuHVcP7NFiNdT3C1Tt2yu6IpfkGUnGk53LQc6tT90xNaNczlfxpjcXH/hJBe3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750053912; c=relaxed/simple;
-	bh=5BWz9FwN7V7x8vxN27g1twvyHPy+fK9jsrn1dGHbs8E=;
+	s=arc-20240116; t=1750053958; c=relaxed/simple;
+	bh=TzpmtX/vUICVRU32l59Sc0Qk3sBx7l2J4vSns0iJ/Lo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CsLDjjPqR28y/wpCXTG0YaB+sMQYLXVgTi7mr4uFlVJ1fCAhHtbvSpI0oQh2bnHZ8hJ7vki8EX7qApQ42auXYhORlT5vQXEBr9TcW+Hs7LG2o8IvcU8roSnv/PduApH0kF2EzQMAubknhJNqXbIcVif47kZsdsAvudFcHaOYg2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzUuj5EL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3643FC4CEEA;
-	Mon, 16 Jun 2025 06:05:07 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Y901svnNNwYYRDk/U57tTQSsKgUQcw+4i4YsPbJsp3ZafKT/JFlI/C9yZ4gspLh6EDBFOj8byWIKqbxdvEk6P9RLhBFpg4l+g3FUlHbAfs26uVJU9gixM9e0Bpu3Tgt0umnUrTPrvPrpCORNcXUTm5m+uTeAIiKxE8BlaV3AUUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SSEJ/cIW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D44C4CEEA;
+	Mon, 16 Jun 2025 06:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750053910;
-	bh=5BWz9FwN7V7x8vxN27g1twvyHPy+fK9jsrn1dGHbs8E=;
+	s=k20201202; t=1750053956;
+	bh=TzpmtX/vUICVRU32l59Sc0Qk3sBx7l2J4vSns0iJ/Lo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KzUuj5ELcLWrhCKWYAXP63RPq7giIHUlOjkVIxjpKX9+l7+dP1O4hROiNXWW+Z5l/
-	 dUXydJt+tW23f+r+SAljsgDRLc1qOF90aPNZ8+sM6s+2Z4apAVl0n+YV4nhGWX50vC
-	 Vit5Ium2lvwX5LsRrNgJTbowkU/oPaRzGcX/6rtQ5ek6sOAQzc3c1LIhD7S4BXxVoD
-	 vHohpvzI62G17mR43joZLiZmkR2Jd9vahCC56U4Iq4Oz3BxPOEdipgrgOfsbZ8g+IZ
-	 qxMv+yO0+GzNfz3d2P6c1bb/tIwwtujwGDXttUQ9tn/DAM1/yJ0nRd7ZkzdWZXze5n
-	 XFgUI78WZp7vQ==
-Message-ID: <67b1a8d3-e695-4ea6-8405-1a8563cbf5f2@kernel.org>
-Date: Mon, 16 Jun 2025 08:05:05 +0200
+	b=SSEJ/cIWWt8cawrwMkBQSkK05+pWBeBtXPg4a0NRoAIkecAIiL+P90ytHza2oX1sM
+	 KdQsXwMgmUKrGk2dHYyeC/0cy8RJPRDsHhKgcjRC4GiAEXlchVaeJq5ujEUyM5ZRI2
+	 MSeTkvrqpuEQVk4VSgqqtVY6g8re+iwXamKxHp9NJToVzTTiXusmxLy6epRQ67ydgA
+	 P2jTgB7ayPVxUgOADNly30Z1j/nBW7N41Ibcu24ljHQx+mN91MFp0mV1jtdEr1tLKq
+	 9c8W/VXZkm5njtgXHwbodNPAQxx9D4foQcr6hpJmRbgB47Bkea9M80MWizFb12nmGH
+	 CvqECjFZZoXiA==
+Message-ID: <f4430b9a-3275-405e-becf-ff62ae16f23c@kernel.org>
+Date: Mon, 16 Jun 2025 08:05:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/6] dt-bindings: gpio: gpio-cdns: convert to YAML
+Subject: Re: [PATCH v2 2/6] dt-bindings: arm: axiado: add AX3000 EVK
+ compatible strings
 To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -60,7 +61,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
  soc@lists.linux.dev
 References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
- <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-3-341502d38618@axiado.com>
+ <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-2-341502d38618@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,122 +107,52 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-3-341502d38618@axiado.com>
+In-Reply-To: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-2-341502d38618@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 16/06/2025 06:31, Harshit Shah wrote:
-> Convert Cadence family GPIO controller bindings to DT schema.
-> 
-> Changes during conversion:
->    - update the naming as per the other files.
-
-You made it entirely different than every other file and review.
-
->    - add gpio maintainers
-
-Not really, you need to find someone interested in that hardware, not
-subsystem maintainers.
-
+> Add device tree binding schema for Axiado platforms, specifically the
+> AX3000 SoC and its associated evaluation board. This binding will be
+> used for the board-level DTS files that support the AX3000 platforms.
 > 
 > Signed-off-by: Harshit Shah <hshah@axiado.com>
 > ---
->  .../devicetree/bindings/gpio/cdns,gpio.txt         | 43 ------------
->  .../devicetree/bindings/gpio/gpio-cdns.yaml        | 81 ++++++++++++++++++++++
+>  .../devicetree/bindings/arm/axiado/axiado.yaml     | 23 ++++++++++++++++++++++
 
-Previous filename was correct.
+Just arm/axiado.yaml
 
->  2 files changed, 81 insertions(+), 43 deletions(-)
+>  1 file changed, 23 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
-> deleted file mode 100644
-> index 706ef00f5c64951bb29c79a5541db4397e8b2733..0000000000000000000000000000000000000000
-> --- a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
-> +++ /dev/null
-> @@ -1,43 +0,0 @@
-> -Cadence GPIO controller bindings
-> -
-
-
-...
-
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml b/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml
+> diff --git a/Documentation/devicetree/bindings/arm/axiado/axiado.yaml b/Documentation/devicetree/bindings/arm/axiado/axiado.yaml
 > new file mode 100644
-> index 0000000000000000000000000000000000000000..e71f0137912f88e69fb3fa20f096e1572211591c
+> index 0000000000000000000000000000000000000000..f323162b7c3cf973754a3539b94a7534111886cf
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-cdns.yaml
-> @@ -0,0 +1,81 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/arm/axiado/axiado.yaml
+> @@ -0,0 +1,23 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-cdns.yaml#
+> +$id: http://devicetree.org/schemas/arm/axiado/axiado.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Cadence GPIO Controller
+> +title: Axiado Platforms
 > +
 > +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +  - Bartosz Golaszewski <brgl@bgdev.pl>
+> +  - Harshit Shah <hshah@axiado.com>
 > +
 > +properties:
+> +  $nodename:
+> +    const: '/'
 > +  compatible:
-> +    const: cdns,gpio-r1p02
-> +
-> +  reg:
-> +    minItems: 1
+> +    oneOf:
+> +      - description: AX3000 based boards
+> +        items:
+> +          - enum:
+> +              - axiado,ax3000_evk       # Axiado AX3000 Evaluation Board
 
-Why this is min and unconstrained...
+No underscores in compatibles (just look at any other example).
 
-> +
-> +  clocks:
-> +    maxItems: 1
-
-But this is max?
-
-maxItems: 1 in both cases (so clocks are correct, but why writing
-similar things entirely different?).
-
-> +
-> +  ngpios:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Number of GPIO lines supported, maximum 32.
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description: |
-> +      - First cell is the GPIO line number.
-> +      - Second cell is flags as defined in <dt-bindings/gpio/gpio.h>,
-> +        only GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW supported.
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +    description: |
-> +      - First cell is the GPIO line number used as IRQ.
-> +      - Second cell is the trigger type, as defined in
-> +        <dt-bindings/interrupt-controller/irq.h>.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +
-> +if:
-> +  required: [interrupt-controller]
-> +then:
-> +  required:
-> +    - interrupts
-> +    - "#interrupt-cells"
-
-Drop last one, core schema requires it.
 
 
 Best regards,
