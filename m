@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-21627-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21628-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86653ADA8FB
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 09:10:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05A9EADA907
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 09:13:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D8D416D2B0
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 07:10:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B3B716F4F3
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 07:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E501F2BA4;
-	Mon, 16 Jun 2025 07:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5325E1EF375;
+	Mon, 16 Jun 2025 07:13:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="foXC+KSo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkOdw6t+"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4131F0E53;
-	Mon, 16 Jun 2025 07:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0858827454;
+	Mon, 16 Jun 2025 07:13:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750057812; cv=none; b=X3ingyMg8ic+nv99YHRGMVRP5NBAkX6mE/8mf7Er+SnKKE11nixr06fA2VBZAvIkI9yOvKg0X5Wjj4jVf+/yvdsZb5km+lp/JPnzpMlC8A2ojirytc+41SIQ0Yo6tlQS/V8GhEiIX9p7GojiuKt0fqoVMNwo/xflOJugwEhuuZ0=
+	t=1750058015; cv=none; b=gBpmmZESu1oSZSjx/4uWQzEhbM1xt3YHKOZ4o0nPIFsHnqqDUStqqlebVq7NJScvsg6ZmcjbchSKBgK5Gsax6Ssukc4zxU5Th90AVRClg5N0hpXSskT4SEwJA016KlkPSkQa4OmKPdHD88hvnq4fpJfPWXt98puKIfoA2M2MdWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750057812; c=relaxed/simple;
-	bh=XLfzSkivHjRYA+mVosJ9ujkJjlJ+tk4TCl4EphFithc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=urJj7pwBIKhtqHWdzyAeEtbj0fSoRmPNFEFQpRCqyhVg+mXkFEJxY1UofE2hKn55dKg9ylKxT8rc1g/qva/29NqpxOX1Xdu5SnDsYMOPMlz/8Co87h1KIYxzUAMdQF7yzjjcg8cqcfc/icPyg7TJqVDKZB1kGdVUyMCXx1FVj+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=foXC+KSo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB96EC4CEEE;
-	Mon, 16 Jun 2025 07:10:08 +0000 (UTC)
+	s=arc-20240116; t=1750058015; c=relaxed/simple;
+	bh=2HOAUN6dq108J3ZNuIEcLUUDCZ/CPnyQ3kigk5uEtZA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TWWTvUUk8TcS/EqlWTLYFTO8a7ztXTQgQn8xS1U50cx9OgEPSNvkYpqz5iwAOkcI5fgQ1NSUmaBkAQdU+UQeCidRI13VgmsrxNGKgcb4y4GHqhbjtONuARgW4z3Tm/Q6i3dHDh+QFgK6dnJZxnVuK05qnlsgyJHXHJyWDCfEyzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkOdw6t+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38457C4CEEA;
+	Mon, 16 Jun 2025 07:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750057812;
-	bh=XLfzSkivHjRYA+mVosJ9ujkJjlJ+tk4TCl4EphFithc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=foXC+KSod9+DgFu+/3KEOsmITi7kbFKIRC3fU9FcDCTZs90PjWq3D2P/dKdgn3MRb
-	 Yp/TcrbDB5Vi/C0HBodTPrepW1y1ZIM4eBVi5q3KyLLItLk2b/Iiv8ADXLxCOfjdSC
-	 fTk/6tzpxt9ILfiW6K1t68wvWwHDhxnsWgJ4ulftY6AhWFNg1tdJGEnpRmZMFQYOMx
-	 nLteZ+I0hfktEZZ+WW1a9QelZmzyufhmE5naebZH2I0f7411TCatEKlybspVvQuRYw
-	 zN7MOXRFLlT5q6uqGA38B1chLye9gVk7rGKbH4JzUf16fSyzXCC+i5nsai6MG9Pl9A
-	 uGWumGmMW2OmQ==
-Message-ID: <1dfb2bbc-4ad5-454c-b046-b721500fbb91@kernel.org>
-Date: Mon, 16 Jun 2025 09:10:07 +0200
+	s=k20201202; t=1750058014;
+	bh=2HOAUN6dq108J3ZNuIEcLUUDCZ/CPnyQ3kigk5uEtZA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=jkOdw6t+3ZX1TFfcbzdO0ye02psL8hjHVuPCvP99f0Lrvu69YTR7gBwAeqE3OgtFq
+	 qXM/51rnFP0lps0KtMwEpZg6hE7wi2oaEKWskb8qy+p6PRFsuXZSmwXMakQPRQjVUu
+	 15fsDcvarTVPGYKKYrECreL+LbL4jPbTZRtg5ROfmOX1jacaFL2wbIqCt/RagwBxgZ
+	 jaVsEmlysVk9TQQ+c2NDnngi6yMszyKAuMAjMM53PBs3vDxAF9BkKi2kYBkDmlYhEa
+	 PgYKhwArWg+XuTKCMtrx7vYcH4lAJ/h7jl5o/uggoSx4e9delhojA/G20GH/2gYrNL
+	 kyyeRUxUMq49Q==
+Message-ID: <8c5ac938-6e58-4ff3-bc0c-d639b0c9ac14@kernel.org>
+Date: Mon, 16 Jun 2025 09:13:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,6 +52,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: gpio-xilinx: Mark clocks as
  required property
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
  monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
@@ -70,7 +71,7 @@ References: <8407ef56b11632c1a7abfce8a4534ed8a8ed56cc.1749809570.git.michal.sime
  <9dc04095-e397-4a51-a75c-8a5577be197e@amd.com>
  <1fced39f-1077-4af7-9294-affb99860984@kernel.org>
  <765a606b-3b87-4a08-8630-69a3c52ed138@amd.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <1dfb2bbc-4ad5-454c-b046-b721500fbb91@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -115,45 +116,54 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <765a606b-3b87-4a08-8630-69a3c52ed138@amd.com>
+In-Reply-To: <1dfb2bbc-4ad5-454c-b046-b721500fbb91@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/06/2025 08:51, Michal Simek wrote:
-> Hi,
-> 
-> On 6/16/25 08:41, Krzysztof Kozlowski wrote:
->> On 13/06/2025 13:26, Michal Simek wrote:
->>>>> Based on discussion at
->>>>> https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
->>>>>
->>>>> Actually this shouldn't be only targetting GPIO but also for example
->>>>> xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
->>>>> before starting to check other bindings.
->>>>
->>>> IIUC, patch #1 is a prerequisite, so you need to squash them. Otherwise
->>>> dt_binding_check is not bisectable and we want it to be bisectable.
->>>
->>> No issue with squash if necessary. I sent it as series to be applied together
->>> which won't break bisectability of tree and no new error is going to be reported.
+On 16/06/2025 09:10, Krzysztof Kozlowski wrote:
+> On 16/06/2025 08:51, Michal Simek wrote:
+>> Hi,
 >>
->> You did not say anything about dependencies and merging strategy, to
->> this would go via different trees. Sending something in one patchset
->> does not mean that there is a dependency.
+>> On 6/16/25 08:41, Krzysztof Kozlowski wrote:
+>>> On 13/06/2025 13:26, Michal Simek wrote:
+>>>>>> Based on discussion at
+>>>>>> https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
+>>>>>>
+>>>>>> Actually this shouldn't be only targetting GPIO but also for example
+>>>>>> xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
+>>>>>> before starting to check other bindings.
+>>>>>
+>>>>> IIUC, patch #1 is a prerequisite, so you need to squash them. Otherwise
+>>>>> dt_binding_check is not bisectable and we want it to be bisectable.
+>>>>
+>>>> No issue with squash if necessary. I sent it as series to be applied together
+>>>> which won't break bisectability of tree and no new error is going to be reported.
+>>>
+>>> You did not say anything about dependencies and merging strategy, to
+>>> this would go via different trees. Sending something in one patchset
+>>> does not mean that there is a dependency.
+>>
+>> No offense but I don't think I can agree with this. The main purpose of patchset 
+>> is to show sequence how things should go one after each other and series should 
+>> go via single tree.
 > 
-> No offense but I don't think I can agree with this. The main purpose of patchset 
-> is to show sequence how things should go one after each other and series should 
-> go via single tree.
+> Go through all patchsets on DT list touching different subsystems. You
+> will find only 1% of patchsets having above expectation implied (when
+> not explicitly stated).
+> 
+> Really. 99% of patchsets on DT list targeting different subsytems, have
+> opposite, so implied rule they go INDEPENDENTLY to separate subsystems.
+> 
+> And above (so implied rule of splitting things) is even documented in DT
+> submitting patches.
+> 
+One more thought: That was from submitter point of view. But from
+maintainers point of view, EVERY MONTH there is around one patchset on
+DT list which has implied merging like you described (but not explicitly
+stated) and MAINTAINERS pick them up independently causing breaks, so
+some or many MAINTAINERS also have such reasoning as I said.
 
-Go through all patchsets on DT list touching different subsystems. You
-will find only 1% of patchsets having above expectation implied (when
-not explicitly stated).
-
-Really. 99% of patchsets on DT list targeting different subsytems, have
-opposite, so implied rule they go INDEPENDENTLY to separate subsystems.
-
-And above (so implied rule of splitting things) is even documented in DT
-submitting patches.
+They will pick up individual bits from patchset unless told otherwise.
 
 Best regards,
 Krzysztof
