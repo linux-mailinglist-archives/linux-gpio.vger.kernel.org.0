@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-21673-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21674-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29490ADBB8B
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 22:53:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A2FAADBBBC
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 23:11:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C386E16AF85
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 20:53:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 127F917393C
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 21:11:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72AE0214818;
-	Mon, 16 Jun 2025 20:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826C821ABAC;
+	Mon, 16 Jun 2025 21:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="3e5LjKGi"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vW48Ws+G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61639211A3C
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 20:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465AB218E91
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 21:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750107190; cv=none; b=DJcJiMCfMXKclkVOmEnKog7sLDuTiwMvC5baMyosxDnRjy2bqV4GYyhIXRc8s9fKjqzHA0iXDdJ3N0UohunUmLSKO8nI438hCQVPMqSZNfpDBT2Zu3dKlrp0e4X+Sa5opeQ2LTo81aZLgMT1tOj5OhqYSynYHINexPqHZbmnM0w=
+	t=1750108293; cv=none; b=bBQYks6G5IH2RYRC/nk4UALAsnBIOSjJmDb5K9zd+usgN6Yq7duBdJU+eDmyrOvF/OUVcjfXr65zp7+r6QQ4ua2yc/oEPQ88SGFT8y92aaCwBXLSao3eY2buGbaCwp/6jVF6zneqkkVRHgK42M/BKTDGqjv6ODfSUR/bbwsD4SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750107190; c=relaxed/simple;
-	bh=Fgc2WWVhmZSNbwYEBSqxyC8hN2ImBZ7wr5GI6gGURtc=;
+	s=arc-20240116; t=1750108293; c=relaxed/simple;
+	bh=QDEJC9lNPPxMJgzIsPCXcaBWEEtBKY1BQcD54BSSUUg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c/6RUvf2vrj/rXYbN8Ox5YqLoBtI3DkLlBQqyW/o2NoM/AOWhRBsIcT1zt3IJg1sExXeBQoRlZY9GmkDJ9SODPJknz8CYNfXLA43S/qbg7BHL+W91M+HDbb99ewzpRvMKZW9Eos3eoDTW1dCMYTvs7CQMV/UHxtwu0skoVq2JIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=3e5LjKGi; arc=none smtp.client-ip=209.85.167.169
+	 In-Reply-To:Content-Type; b=jKF63rxkprbLZru1Zm1Cofz8lfch0DRyVIt/MfSuXcfOqgLDzV6vOP57r08IGwk7xpUJZ7i5fbB89/IOL0Tn8ey0w3sk0JFOEbR7amMy5lmtxSoGjH9QSRWaFGjj1yFQ3uBgFHiDaszYsRAPksIyoHN7hxcD8P38NTphoMGsLho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vW48Ws+G; arc=none smtp.client-ip=209.85.210.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-4066a0d0256so3242003b6e.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 13:53:08 -0700 (PDT)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-7311a8bb581so5048076a34.0
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 14:11:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750107187; x=1750711987; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750108290; x=1750713090; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=y8tqSOUPgM1bEdf4klAOUys4IG+Ji9moxOsELLoPJnk=;
-        b=3e5LjKGi+PaHpPwAxSWsy05puAGIByyAtxpKsXJe3l9dzhTesO/jCjl9ZLznA7MK1I
-         fnn0eSXXdYgyxvBH6soKWMdtwD7wM9P292MVT8PNw5XTIgBIW3lMSZTHL4gd4YI4btJ+
-         r/Rw7y+8CV1Zf+oU2t0QFybi8Mh29RsLg/ltE8YCuY5VHtsrNt9jeH71VAIpCzYcrqV+
-         oTgy7A+0Q8YrdRB7dwjT9cwjHMq5P5I9GawreWlDA2rWoM8Ez2laX8A0AdK0fZyLadpG
-         l3XeGRpgcoIWbcAmM1nm+WK+lHijSoOaadGkn6EMVIwVH25xWVbfXj108PhDWSziLd16
-         tiyQ==
+        bh=qYkNHZ7Min5h27AdAztgUbznbIMSIi9ilTeWa8MhK+E=;
+        b=vW48Ws+GXJxUskFWMuXzMMaakcBhTzo6DQIB4Hnm/eaH2/XJrnM8kfpk+QSoMN6Hml
+         UmyofMcVvMYyz/Y8FD6h//WFwJshRvWvRsviQ6zQhemWgrshK8HvKPj3iXnQehT+LdYZ
+         uhYwEQ2iJPB4Klvzd0boMZclTzEQPaYu160d+jJYQ0I5eDVt8GeetyAkz+aro3mTZbQw
+         udSUS0Ul61J0cYppKjdW8kVV9l8ANeWeDekwx+LC7EUC+rvHrfIgbNDw0qXwh66llwuK
+         r+zK59BasfH+NGffR8AVavN6DWhhNjs1DZgzPQj47WR0Kgjkd0rawP5wKk29DpKuWP/M
+         ft6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750107187; x=1750711987;
+        d=1e100.net; s=20230601; t=1750108290; x=1750713090;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y8tqSOUPgM1bEdf4klAOUys4IG+Ji9moxOsELLoPJnk=;
-        b=rheYB3RDMT2Xm5jd4xZaEi20f5d6tdJJBqepDYDz5ec0n6CQoS6KQGx1fZEf20IQXR
-         Txz0wO9vW389aTdMyWxOurWZunGM4FHgWBPHlIJEth08owpivp8aXEyqkJK6vyh9q6S3
-         cvska2BpOkWRUZsvCfOc6x78w6so1WAZ0waM6Xq34W36pmF7MnmrC9Vqsv0Aykqj3A9m
-         rdIE7dTI3suZpmW+A+IJv947S12tAa83E3+MZLTF+xVsiN07uVOoQ6XPPy0grdjpsdTH
-         peuPYOM37PdICUrBtkpyiRBYryF/z1WGQsEyCZ/iBAg+26EoqZqDKIuY0HLjHN27g/d7
-         TFHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjk3gDYhxvazqUq5x8QY79mS+AtKPEpy427rF+KEE/F+TUzw24X8mV82lMgzW/2cWBsNhxVztZOAGf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKfBXBYfPgq2YDdMzcZv672GKvyZaRKFfVXv+kDFjoscYNKHqO
-	QF/b4fpAKogZ/9kIEtukr3CoXA3jpcYovnwOlA84/XdbK50OJ39Oe13DnKZbyTG81Xg=
-X-Gm-Gg: ASbGnctRk/0Cex6OUOz32fseZWUy79GCNQx2UxVrnbHxf2GW3eUPVn56mb27wQGnbp6
-	SQ63Y+MXfwNs28aR67AaS2GEBpb+C/dgOWr7/uR1pgKilr4B5l0MC2BF3PdGksmlCMNqdUE5JPN
-	+7Ybi2+9zuAE9ZUjXaOp/zkb8Y3WLwbZo8HVScQBjGc1HDDI3+GxrwkX+i8JnMVjddiZ0i5UERm
-	UHN3OFx5EOhl0oN/MaYuVes29xKcjXUrYWBIKKNQYtQ4vSX4luUnwxhczLvnXlnwKBv9BUanoFV
-	UlfutBn8hjkT5+TiCSJ/UZQFKkSb6+AQnyJdSve0ihrnX4/n+Bs98UFw9/eK+3gtIJhPB5rEQQU
-	TovuAMlPbSTCia7EDlcTc4ohkE3dE7RItidO1uo7hze4ueqZ22A==
-X-Google-Smtp-Source: AGHT+IHzYq6GWzIf6b3qYtzYTGBw6n+PghC3rAzoIMdm1SgQulh9Kqlg0au1m+bSuRR9JTofx3sYSA==
-X-Received: by 2002:a05:6808:2026:b0:406:6d79:49d2 with SMTP id 5614622812f47-40a7c24c65cmr7434326b6e.26.1750107187404;
-        Mon, 16 Jun 2025 13:53:07 -0700 (PDT)
+        bh=qYkNHZ7Min5h27AdAztgUbznbIMSIi9ilTeWa8MhK+E=;
+        b=SdHiwhslexr12Tx80Wqz3KDbQotSVEodu4dWL4PHUze524dIaJpjmc/HOe8PkzM37r
+         2nsb22K2ltSEvdCF4R3fixq0lS3LT5Z/fFIHdqx8OKa/moQIPAil45GMdJ9PS4yFzEa9
+         4M+MMoUE9hZrzhjem1yPV141ZIsuccTeKM/Uhoje4iTfocyhOl90sP21Ujuc/5QA7/yA
+         8Hz95msd2KsSqwunu5Tut6CU2EQeYhUDCL4RHYBWD73F1+ILHjmZk4NlUzXCuMNzE/a0
+         j9sowxpMo8g6yGR01DoXCecNa0H5GHfqE0Dmy86wakR/QKQWndlex1f17jjUGiTrXeRt
+         MVhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCysp0HH7FkeG8Y/NeQBxH3yICIn1NBrmnyLmI/bqZvEhve3hfLmg0FJU1SLkubg3mGjEdvSnGaYp1@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe13W7FUWs47+AJEy+OrK1IxtqG3KjjzDfOzFTf1OGtH4OCU8N
+	5/ubkOSvswT14qVNnMk8SQum0ZJKosLUGTb3SLR1cOsqz8efgA6G30cV5Z0xSDYZpI0=
+X-Gm-Gg: ASbGncsPXi7Bm/ATfNx2avO9AycHC7SqZE4fpn+cIcgOsRsqzjs4+j9d3S0S9jriXxW
+	oJIlZMWgTk/L2XyG7wtC04G8t5IVIlx90WepYnmyVXS9rdBi00Ql4c7lDdv+hJqJGibULt5JJSk
+	Yh0EK6AxIxAwhIxhg0TZBzq+psVXScwNK3bE6is1SMtP3fI/ovsrbnZ9gxis3vBySBCsq3krRJd
+	JjogxOZYEnMWt9cIhH3g5WFLIuw7zaeAQn0BC8LaVuT8WOH1l2A8okPX2QWVktCNbygF4POR2/U
+	sFgcx0efFtbOCB6SXdbeCmu4uz1gzjWByeoIyeO9MkLH2PxDyxnP/YIwhQytuhA6brVYei8TZ1K
+	PiR+gsf56wqCCvmSP4L024decn1QKn9tkBWKa1qw=
+X-Google-Smtp-Source: AGHT+IEVfg00pTGaPRzK4Tu/NTTi24yJzRagmZrO6SxeTxUYhm24UeyDhh597dYIx3cwF5Ovt4WWcw==
+X-Received: by 2002:a05:6830:7203:b0:735:afba:ba99 with SMTP id 46e09a7af769-73a363069e3mr6270036a34.4.1750108290314;
+        Mon, 16 Jun 2025 14:11:30 -0700 (PDT)
 Received: from ?IPV6:2600:8803:e7e4:1d00:9583:1e37:58ed:10ae? ([2600:8803:e7e4:1d00:9583:1e37:58ed:10ae])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a740c2306sm1627122b6e.11.2025.06.16.13.53.06
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a283dbf9asm1344501a34.12.2025.06.16.14.11.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 13:53:07 -0700 (PDT)
-Message-ID: <ac4aa95e-2309-49a0-b498-2bc3ee232a36@baylibre.com>
-Date: Mon, 16 Jun 2025 15:53:06 -0500
+        Mon, 16 Jun 2025 14:11:29 -0700 (PDT)
+Message-ID: <656c43dd-c39d-4e35-a9d8-70383c0836a0@baylibre.com>
+Date: Mon, 16 Jun 2025 16:11:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,8 +82,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 05/11] iio: adc: ad4170: Add digital filter and sample
- frequency config support
+Subject: Re: [PATCH v5 07/11] iio: adc: ad4170: Add clock provider support
 To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org
@@ -92,35 +91,71 @@ Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
  conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
  marcelo.schmitt1@gmail.com
 References: <cover.1749582679.git.marcelo.schmitt@analog.com>
- <dd8a615936dfebb6cd7c8110db2fbe0b81776608.1749582679.git.marcelo.schmitt@analog.com>
+ <5ac4b2d54f426d997cbb067530ab8e9af9bdcf16.1749582679.git.marcelo.schmitt@analog.com>
 Content-Language: en-US
 From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <dd8a615936dfebb6cd7c8110db2fbe0b81776608.1749582679.git.marcelo.schmitt@analog.com>
+In-Reply-To: <5ac4b2d54f426d997cbb067530ab8e9af9bdcf16.1749582679.git.marcelo.schmitt@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/10/25 3:32 PM, Marcelo Schmitt wrote:
-> Add support for sinc3, sinc5, and averaged sinc5 digital filters along with
-> sample frequency configuration.
-
-Wouldn't mind having a sentence here explaining why post filter control
-was omitted.
-
+On 6/10/25 3:33 PM, Marcelo Schmitt wrote:
+> The AD4170 chip can use an externally supplied clock at the XTAL2 pin, or
+> an external crystal connected to the XTAL1 and XTAL2 pins. Alternatively,
+> the AD4170 can provide its 16 MHz internal clock at the XTAL2 pin. In
+> addition, the chip has a programmable clock divider that allows dividing
+> the external or internal clock frequency, however, control for that is not
+> provided in this patch. Extend the AD4170 driver so it effectively uses the
+> provided external clock, if any, or supplies its own clock as a clock
+> provider.
 > 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
 
 ...
 
->  
-> +static const char * const ad4170_filt_names[] = {
-> +	[AD4170_SINC5_AVG] = "sinc5+avg",
-
-Do we need to document this as possible type in
-Documentation/ABI/testing/sysfs-bus-iio?
-
-> +	[AD4170_SINC5] = "sinc5",
-> +	[AD4170_SINC3] = "sinc3",
-> +};
+> +static int ad4170_clock_select(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4170_state *st = iio_priv(indio_dev);
+> +	struct device *dev = &st->spi->dev;
+> +	struct clk *ext_clk;
+> +	int ret;
 > +
+> +	ext_clk = devm_clk_get_optional_enabled(dev, NULL);
+> +	if (IS_ERR(ext_clk))
+> +		return dev_err_probe(dev, PTR_ERR(ext_clk),
+> +				     "Failed to get external clock\n");
+> +
+> +	if (!ext_clk) {
+> +		/* Use internal clock reference */
+> +		st->mclk_hz = AD4170_INT_CLOCK_16MHZ;
+> +		st->clock_ctrl |= FIELD_PREP(AD4170_CLOCK_CTRL_CLOCKSEL_MSK,
+> +					     AD4170_CLOCK_CTRL_CLOCKSEL_INT_OUT);
+> +
+> +		if (!device_property_read_bool(&st->spi->dev, "#clock-cells"))
+
+This isn't a flag, so device_property_present() is probably more correct.
+
+> +			return 0;
+> +
+> +		return ad4170_register_clk_provider(indio_dev);
+> +	}
+> +
+> +	/* Read optional clock-names prop to specify the external clock type */
+> +	ret = device_property_match_property_string(dev, "clock-names",
+> +						    ad4170_clk_sel,
+> +						    ARRAY_SIZE(ad4170_clk_sel));
+> +
+> +	ret = ret < 0 ? 0 : ret; /* Default to external clock if no clock-names */
+> +	st->clock_ctrl |= FIELD_PREP(AD4170_CLOCK_CTRL_CLOCKSEL_MSK,
+> +				     AD4170_CLOCK_CTRL_CLOCKSEL_EXT + ret);
+> +
+> +	st->mclk_hz = clk_get_rate(ext_clk);
+> +	if (st->mclk_hz < AD4170_EXT_CLOCK_MHZ_MIN ||
+> +	    st->mclk_hz > AD4170_EXT_CLOCK_MHZ_MAX) {
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Invalid external clock frequency %u\n",
+> +				     st->mclk_hz);
+> +	}
+> +
+> +	return 0;
+> +}
+
 
