@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-21624-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21625-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47F96ADA7FC
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 08:10:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EF34ADA85F
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 08:41:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18C573B05CE
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 06:10:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7632B188F5B9
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 06:41:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 904281DDC0B;
-	Mon, 16 Jun 2025 06:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53A111DF26B;
+	Mon, 16 Jun 2025 06:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asCnOmIt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glv5U2X8"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED301C861D;
-	Mon, 16 Jun 2025 06:10:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A1420330;
+	Mon, 16 Jun 2025 06:41:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750054220; cv=none; b=nnBp3dJlv6JAB3janqCCrmytIkf2oJkrAKTM2onHF/ylQJMrEWbpLn+iIPCFVVdPcnEja6yQ4KdQzsS3BuAV29rd9Rzqnw1q7Mnj10AnYu0mDXv2x8wBZX8w4F0Dn1H0hmriQHM25y8dUz/JlVT0viK6RGU4Dgxikm3D60OhVi4=
+	t=1750056069; cv=none; b=PvNjZ/0o5ZwMOPtl3JFqny2/PSbfL1gNiRdX0Ni7aI2ChP814CXI5FxVoun+Gc7ii2tSwOwcTP+KDWUbtMvLbtuWi51Ni60hacwfdgnKDi/Dw/ekYK07Ry9Wp/Cvh7i00rSmCjyoCqKyDzWa8eInADx3QoJcM2QPdF5PkVDVNkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750054220; c=relaxed/simple;
-	bh=WoKvY44/sBycM6T+cfZ/BhpGMVbnWEl4zS0vYhUdZAM=;
+	s=arc-20240116; t=1750056069; c=relaxed/simple;
+	bh=77cNH834RuMYRPSuv5Xy1FndSiZZJ1xqOWYX8MLSqnc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WPIE16OlNX5QasZWtnDnG0NrrtxSakqVSvR4o/iCzznfeTFkgC3RY1tAIUrB8knGRmro5av6dR0Dso6/iLgOxMLf4OrCtu6FfEE4weOE4QbCNerQkUamTMF1bkef5AVPYC9wVd2rrP0H4/j2rMIbpZ+2L/hzK5EB/VB4U4kWZQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asCnOmIt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A19C4CEEA;
-	Mon, 16 Jun 2025 06:10:16 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=CMvSQbsEJ8AhI3MUmeiDM/yE03qLXIv9rEXJ32faLdnMnxSxuN7PXrhJycV8MG71IImv4djQXItntqnttkQApWFkPWry6EHLFzUXegIAFMip5kW5rBLB1yhEL3EZIt3q3OriA7b3j27isxZIj2HXZHmbAA6P+LUpnq85q/yODuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glv5U2X8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22077C4CEEA;
+	Mon, 16 Jun 2025 06:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750054219;
-	bh=WoKvY44/sBycM6T+cfZ/BhpGMVbnWEl4zS0vYhUdZAM=;
+	s=k20201202; t=1750056068;
+	bh=77cNH834RuMYRPSuv5Xy1FndSiZZJ1xqOWYX8MLSqnc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=asCnOmItavZQncepQ+66nUWOCERc1QUXXLDRvxV98SslL0ir/b4wyUD2Fjj/V2Zdd
-	 jLA6ex33KGata6dXfmATHkyWhyAUnpY3vu5soT0kdSoltXMS02KKd1xhiCQLtsm3nc
-	 INb3YpzWPQovdm6I9of12RC8KYxxBDUZrKZfqCvwnmRweQWSXOmlIb2MOEbHET1K0v
-	 kcom4NSKErkSL27tw3nIGF6O7VvIpJo0yY3Sph8d8EpCVvaFb9p30pmgX7KnGf+oTr
-	 D/6BQxcWYxb71cvcByIYSbN2iBpvSEvDGw/pZFuBuW4w0yaLDwNa2oBNhNv/3mekmo
-	 qJvPt/o3UTzBg==
-Message-ID: <bf91eaf1-4b70-4acd-bd1d-2246a12eb269@kernel.org>
-Date: Mon, 16 Jun 2025 08:10:14 +0200
+	b=glv5U2X8YAAE7wwMtqLtW1ofhSrDfNcd3Bg7rmB6C90fsrP0q6tUMjecYfl7XjNFD
+	 IPjUhpulAa51jJXqSjM7uveF1ozVsXjXZlrv0E1vyEPQ5fjl1GJOP+0E0jGW9XCR/t
+	 YkHNC+yCnKPPWBLPJ5a55z1SO1cg5BD90Mb/NdREFWsslNRbQ8x79kvqYk+/fSdn0K
+	 a3p7y6pNB59YJr1+CCUZoj7856CR4uNyL/Fcu+nbllWJyBLaI83pTDlmtchmQF3tYi
+	 ZedootY5L7ut9LaHMcfEazyMcsT5VaPkKFgOB5o34xbspyJ/AmKv+pIdMHyr4VC0vp
+	 0ayBoXCKCRMsQ==
+Message-ID: <1fced39f-1077-4af7-9294-affb99860984@kernel.org>
+Date: Mon, 16 Jun 2025 08:41:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,18 +50,24 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] arm64: dts: axiado: Add initial support for AX3000
- SoC and eval board
-To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- soc@lists.linux.dev
-References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
- <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: gpio-xilinx: Mark clocks as
+ required property
+To: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+ Srinivas Neeli <srinivas.neeli@amd.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/ZYNQ ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <8407ef56b11632c1a7abfce8a4534ed8a8ed56cc.1749809570.git.michal.simek@amd.com>
+ <cbde9b9e2b0f9d12fdd1ba24fddb1543159357aa.1749809570.git.michal.simek@amd.com>
+ <2fb10aee-6610-43f4-9d12-88a97e0f66e5@kernel.org>
+ <9dc04095-e397-4a51-a75c-8a5577be197e@amd.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,32 +113,27 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
+In-Reply-To: <9dc04095-e397-4a51-a75c-8a5577be197e@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/06/2025 06:31, Harshit Shah wrote:
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index 79b73a21ddc22b17308554e502f8207392935b45..47dd8a1a7960d179ee28969a1d6750bfa0d73da1 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -9,6 +9,7 @@ subdir-y += amlogic
->  subdir-y += apm
->  subdir-y += apple
->  subdir-y += arm
-> +subdir-y += axiado
->  subdir-y += bitmain
->  subdir-y += blaize
->  subdir-y += broadcom
-> diff --git a/arch/arm64/boot/dts/axiado/Makefile b/arch/arm64/boot/dts/axiado/Makefile
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..eb5e08ba0f39c32cdbfd586d982849a80da30160
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/axiado/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +dtb-$(CONFIG_ARCH_AXIADO) += ax3000_evk.dtb
-There is no such CONFIG symbol.
+On 13/06/2025 13:26, Michal Simek wrote:
+>>> Based on discussion at
+>>> https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
+>>>
+>>> Actually this shouldn't be only targetting GPIO but also for example
+>>> xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
+>>> before starting to check other bindings.
+>>
+>> IIUC, patch #1 is a prerequisite, so you need to squash them. Otherwise
+>> dt_binding_check is not bisectable and we want it to be bisectable.
+> 
+> No issue with squash if necessary. I sent it as series to be applied together 
+> which won't break bisectability of tree and no new error is going to be reported.
+
+You did not say anything about dependencies and merging strategy, to
+this would go via different trees. Sending something in one patchset
+does not mean that there is a dependency.
 
 Best regards,
 Krzysztof
