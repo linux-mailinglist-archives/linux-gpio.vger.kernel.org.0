@@ -1,128 +1,148 @@
-Return-Path: <linux-gpio+bounces-21659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DD31ADAC8E
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 11:58:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4B6DADB027
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 14:27:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A7CDA188E9FB
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 09:58:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D86273ACD3B
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 12:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB222749D6;
-	Mon, 16 Jun 2025 09:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950CD27380D;
+	Mon, 16 Jun 2025 12:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w/0ai9F/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5518A26D4ED
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 09:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3481EF36B
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 12:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750067889; cv=none; b=eB0c0fcPR460KyhfMBXEiy0IEnU2mdpUAxLOvM3xue2wx4kIdFa9bYUabT1gnIOIOrZBCcrL0ZPGvt3zMoDdFA0y4F7GDt5nWA9hFKNUkUsiR72/7+LcVh/V0CvbT5q2mnwtO1REuGONPao6WGoS8hyTxOJEv3jRLdOB9A+R2Do=
+	t=1750076841; cv=none; b=miqeGXzSFjjKCZhsa4Z8e50PmBK1ZDjETbIpqbCn8JZvwGruNwn0aBc1POpeIJd82Ne+jkeN0qrdus6mJB3+DxlX7rzpLG5LFcSemtDuxVI4OTMVXASn5mcbmaeaRWHUQA5765xZ7T3KrX8XfU5J1sCA81zojLsqHKeL0lm+SNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750067889; c=relaxed/simple;
-	bh=9HK13tBfv+jEnFNg79GNo9j4TrEZUStIBqXdIdGFZk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=izbSy38CyjTq3gs10mvfPINMLh4BaenQ70c+lGOAnQhZnO9u7vd/GIedutR+HUZg5y2y2zSB9fj513KsdPaXI74kWRLVlwW3g+pUjP6rdM5cuxUXhncHy6RByxBIEsYBUv4t2ye/dOEcBcbisfaH0XSsWgpGozS9NrUXGRYy4VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uR6b4-0002wJ-5K; Mon, 16 Jun 2025 11:57:46 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uR6b3-003mk9-2d;
-	Mon, 16 Jun 2025 11:57:45 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 7498F428696;
-	Mon, 16 Jun 2025 09:57:45 +0000 (UTC)
-Date: Mon, 16 Jun 2025 11:57:45 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, "Chester A. Unal" <chester.a.unal@arinc9.com>, 
-	Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
-	Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 4/5] net: can: mcp251x: use new GPIO line value setter
- callbacks
-Message-ID: <20250616-quick-blazing-dogfish-1d73c3-mkl@pengutronix.de>
-References: <20250616-gpiochip-set-rv-net-v2-0-cae0b182a552@linaro.org>
- <20250616-gpiochip-set-rv-net-v2-4-cae0b182a552@linaro.org>
+	s=arc-20240116; t=1750076841; c=relaxed/simple;
+	bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Caw798LReKCshvFbv2FZcKa8Ix/+vJCfUcm8gzotBeIQCh7/phuuz6aLLe4c6b6sP3qEei+HkWkw7P/taN31RT0odVdXKKBUAEpEkeHGa1BZtBw4N0roE0IDi7XX0BtK1F+v3d3H9Borz5aFdBG4O/4xT8ZqeciduiiC6oMc55c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=w/0ai9F/; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553644b8f56so4538172e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 05:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750076837; x=1750681637; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
+        b=w/0ai9F/1ouue8aP8TbGJVQbjyB2UDqm2QeFWXvQRbul16AkNaYo+7MQQk0QJ48nOD
+         jp4FCyxgzY1wWV50R6bhFJERRtTvIaeHZGB+Cy/CTO6CvgPT4FwXvCO/7+FrNPkD63vD
+         RT1I9KtQkDK8ZEDwjU/VooLFcH8FHHZEoekdkdBR1r/eeYW4f/hCZR6SS4wlKec6Y1cr
+         x2BktdqszWovKUhXeUOjt+UyyR0iy/oCO/5pIsN1Ud/F+T3h3kd/F0UFRyXk/p4o8x9/
+         NoaxA6mEVnnINHi1YBj4HaUTIFMPs7r/SLRFYv3nplxYQ9fmtY62hcOR7cOhsyD4aaQo
+         5QdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750076837; x=1750681637;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
+        b=bmUYlFPphyK5n+rjyon9Fa4bantd1js15wN1xSVX0H8OA/wwEhUb8x+CpufVI22eso
+         WIJ6ehtL0WU8u/N12IlwThNs5Dws/gWdsEfnIlh1IsqanAzi6qxDY/RpEHu/73BdlY2r
+         NuMITm+fZbvj7yE21qmtoYF+uni5zpiTP2J4WwNE2kU1LMD5DJF1PL9xQiTiZnh98oxi
+         BneN0tCf7JWWwWHjfNiCQXD9Rtp1GethxdvZBmTLxOWhESMYbpzQph4zFxEg3SpNIe6h
+         1ghcDZzcIZrU3MELxHuDXNRz77gOlTKvlKgzhI7ppQQfpAQ+NNBGXZskcJb3Okd/VDPg
+         sGyA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/692uN/NtMR1wbnDieIh5T0mKDoEMpDN+Seo0B7G8RSVkYnVZJotYQ1e+Mqm2LrJle9YDN3x3X5t+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0NSngiQEZqpts3xgmUemEPSedWlkypzyn39rfoQgG3PsFlqwA
+	kp4iT8ZhXIbreqfHZeGixT2G8wtmOwuB65hj6x0tgn0RkyVxM+odaVXRmNTc0R1rZfc9Ai6yPx3
+	A78E3G6DOklFU7YqqY45z4USXwNlW22UDbqQUOl1uVQ==
+X-Gm-Gg: ASbGncuQHKl3NoYScxK2gX53dFQ+Zcp0ao4ACrI4ThUGsA6hyjONv+xY26jqHBtHAll
+	kG5gTOKIZOmcFkw4dBPINxTl1lyh4uTbzfRyT2ZkR22MaaDAyPRW5RaT1srfUVBw+KGhvzc0X/f
+	fkCWFAsfkP6Nz4yebwBXdvIM+5M/4lMqRKGBVf0Oh9OgU3sBwd7hic68q+/uzUIWs0EyeCNgRfA
+	eY=
+X-Google-Smtp-Source: AGHT+IESdzbSr0hyb5ZTrddk2EekSKVqWpeLC69vtkyeTgrO9IfOok5XJzSK6MtFLNImcFxcWud6sO3MLnOLklka9Vc=
+X-Received: by 2002:a05:6512:1192:b0:553:addb:ef51 with SMTP id
+ 2adb3069b0e04-553b6e8c2f5mr2040920e87.18.1750076837237; Mon, 16 Jun 2025
+ 05:27:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cgo7ltpow6ehzxso"
-Content-Disposition: inline
-In-Reply-To: <20250616-gpiochip-set-rv-net-v2-4-cae0b182a552@linaro.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---cgo7ltpow6ehzxso
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org> <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
+In-Reply-To: <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 16 Jun 2025 14:27:06 +0200
+X-Gm-Features: AX0GCFvBiJSrqsy2NmICkTOhhNTaArcZZ0rZD9G4yrtV8RBEldgTv4LBOcVAA00
+Message-ID: <CAMRc=MdbYesiRDfvwSchZZ5jOnSRffS3JzUzQh++J1JZLwm1Wg@mail.gmail.com>
+Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip export/unexport
+ attribute pair
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 4/5] net: can: mcp251x: use new GPIO line value setter
- callbacks
-MIME-Version: 1.0
 
-On 16.06.2025 09:24:07, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Jun 13, 2025 at 10:02=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Bartosz,
+>
+> On Tue, 10 Jun 2025 at 16:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > Following our discussion[1], here's a proposal for extending the sysfs
+> > interface with attributes not referring to GPIO lines by their global
+> > numbers in a backward compatible way.
+> >
+> > Long story short: there is now a new class device for each GPIO chip.
+> > It's called chipX where X is the ID of the device as per the driver
+> > model and it lives next to the old gpiochipABC where ABC is the GPIO
+> > base. Each new chip class device has a pair of export/unexport
+> > attributes which work similarly to the global ones under /sys/class/gpi=
+o
+> > but take hardware offsets within the chip as input, instead of the
+> > global numbers. Finally, each exported line appears at the same time as
+> > the global /sys/class/gpio/gpioABC as well as per-chip
+> > /sys/class/gpio/chipX/gpioY sysfs group.
+> >
+> > First, there are some documentation updates, followed by a set of
+> > updates to the sysfs code that's useful even without the new
+> > functionality. Then the actual implementation of a parallel GPIO chip
+> > entry not containing the base GPIO number in the name and the
+> > corresponding sysfs attribute group for each exported line that lives
+> > under the new chip class device. Finally: also allow to compile out the
+> > legacy parts leaving only the new elements of the sysfs ABI.
+> >
+> > This series passes the compatibility tests I wrote while working on the
+> > user-space compatibility layer for sysfs[2].
+> >
+> > [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu=
+4iKQ5npwXk6GXA@mail.gmail.com/
+> > [2] https://github.com/brgl/gpio-sysfs-compat-tests
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Thanks for your series!
+>
+> I gave it a quick try, and it seems to work as expected, great!
+>
+> Given the /sys/class/gpio/chip* numbering is volatile, I expect
+> script writers should use topological path names instead, .e.g.
+> /sys/devices/platform/soc/e6052000.gpio/gpio/chip*/export and
+> sys/devices/platform/soc/e6052000.gpio/gpio/chip*/gpio19
+> (note the wildcards).
+>
 
-Reviewed-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Or they can use the chip label like what they would do with the
+character device. The relevant attribute is still there.
 
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---cgo7ltpow6ehzxso
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhP6pYACgkQDHRl3/mQ
-kZwhTgf/Rdvldz+sfHV1GPN68aLAO5qzKJUWpvJ05B1WZ62FpeQ32yATbOX4Gdza
-PXxXP4fcb4CI/tchuSLijWxILlaHeH3XmLKr6dbISHa+3fITiyTfrT8aIVrbXad7
-B7Lk/k3xCSpFeIy59IYjx3x/JuVeAlOnId9AnKiv2eXJAJbxta5HNL9XcwpJ59kl
-68PO//pu7LDxwyyuxtoMT2xkhBV72NEQPBnK/vzYuw0sVvTxpRi4LuJtW0Twth3G
-qSspMeG2q8te19InHtEwF/hvgGE5wPwMf+pH9DBwVdFH0R5yuu4O4mzKTt2Cg6Qv
-mNLmJthXx+uFjegch384egz7Aw7oyg==
-=8T2d
------END PGP SIGNATURE-----
-
---cgo7ltpow6ehzxso--
+Bartosz
 
