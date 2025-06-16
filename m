@@ -1,90 +1,108 @@
-Return-Path: <linux-gpio+bounces-21645-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21646-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 663AFADA982
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 09:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E348DADA9C4
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 09:44:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 166221709F6
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 07:34:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CBD0B1706B8
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 07:43:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23FB91E3762;
-	Mon, 16 Jun 2025 07:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563DF20F076;
+	Mon, 16 Jun 2025 07:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XWq5w4cu"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bB22ruTR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EB72C1A2
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 07:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B89620F063
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 07:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750059268; cv=none; b=TNsG/fjWFaz8ktAscRfAx0YzyBxtqfXpcWLJNaqOrPmVDP3aRmYzufHccIztCKuD6fJTXPTNJ6bZ9qqw/n/Cx52SJRS1EYWNMwL6hNO6szwE1guCmHFQ39rtqSr/vgr1H7SlSByyl7/KbHdlkmFWwIbUPkvV8m0q7FLqgAqa9ck=
+	t=1750059784; cv=none; b=DC6wKG2PQHASuhPvhppHKkE0zgWz/WUMJ1dWSRC1Rl8NtuDGO0AqwZ9roC9NndKyMnPInAPrDGXQY5UAZ+LCd/9v90SQdDlcO/S5Mh6kfs7ZTj6QUDI9A3gm1MAZpD1vsd0CkCbha0DxlInoVbm/KP5Oc6E+Lu7UbMaxzHu1fE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750059268; c=relaxed/simple;
-	bh=g2iX34IoxrIaM3UBcHz+mdIuH/BJpUNpXaFUUcajRvc=;
+	s=arc-20240116; t=1750059784; c=relaxed/simple;
+	bh=XmwoZ/1rXiFFhp5Ery36mi7aKpTwkqPeml15koxIPs4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B6AS8X+SAVY4J1J5nIBCKBToMIF9KVdeEpKUaJKm+KCCHkt058ajaCUMvwPiSyzf9ZoF3GM30VuwCL09g8Mw0BdWbMqsR1t+lBQacqcW1My3SffndViee042VKxAVhR54zWVwU1i+qrskFhD1cErWhTjsflZM47ZthGu+gUBCtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XWq5w4cu; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version:Content-Type; b=PWHxA4fOoucCTjVURWBeRq/l02g2tOkyPLV5qR1P6ktgcjOvoCvh8N9wz0GsEH2l6uIV0mmLZlX5Zd+GE3qc+OzYZDL2zA9c4y+na4g/BCitk+u/fAEJ2AxmMFwvxqDo1CZsxqnUrB0iRpVSzNdOvB7pfv/PqXIX8Zo1H5Nw2Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bB22ruTR; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so2327692f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 00:34:27 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so2331857f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 00:43:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750059266; x=1750664066; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750059781; x=1750664581; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NufnnT2z/L01xcT8J/hVS5CTO/xRwDlIelt9on8BTLQ=;
-        b=XWq5w4cuLD+9cn6ZYOrhDgpODg4mehTkFByZqT2czVUzAKpe7TrT2f8naPCzYetQcf
-         J0WlAvII6X0C6ceIa0j/1yfuLPd3chSrCibu198DD1ES13/Av0ldyadFzkoOesy2c9FT
-         ELC9QJ+LXiKRLdo3ewezsKPGGIyEMTxtvEToiRU+gjWouLB+8SL0LQNcxvYPM+0bl0MX
-         egEj8bybRM34NBgtY2Es7mMXJEy47oIlhKBjNLXhV0cGb2nj8DpPAIzwEB2ku3LXQC/6
-         3Y66KlHaoL561HNR7R3Jt6vkWy/qremLE+e9I8B22iqnexUOr08o1O8qf3p3iqpOy0z9
-         NdBQ==
+        bh=WTU9Zax5kLpMeKPmyeLAiww8adzxErGgDJ424AqFWP8=;
+        b=bB22ruTR1CRc4zosTiyYLHOhV3+wlgE6YQfD1gSlbnsY7MzW3GJSqvCD0uKJfmiJJe
+         m6pCkdGQ/T+N6n8F6RuGTLmLowFvLkv3FMxD81Uh/o3nBDazSZWqKPIiKyVEFroHMlFb
+         ReDTckMqu7lxNCq89O446IvHrRd+8wqNeJjqAMj6U46r4UhcxSrRT1mYFLnWd5PT4iki
+         JZl47NO10bZSaR1CnBh9/Z7Tm5yEZJwwcDwBpOHii5QtKYRNZ4hcRy/1sAtTSAJVdS79
+         u1R+oM8OnLCi/jUmhQlPZ1pPOqTb3ib+jlrnnEL6m6/b5mf2uARkKnipb40vNIhA+fM3
+         uGRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750059266; x=1750664066;
+        d=1e100.net; s=20230601; t=1750059781; x=1750664581;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NufnnT2z/L01xcT8J/hVS5CTO/xRwDlIelt9on8BTLQ=;
-        b=uMDgz18n52uCHhvnBV1UfP3qYEiEqXo5jbcVT+YIAlvNdmJhdK/5tKkvELEMO5VEsS
-         Ax/aoQ4I8B7Jl6dOPi7Lu62TKo+H6ijOwJe5HiQ6GZuVfC+u5GyJ7PACKIZBOraOwNuq
-         N5MVVX1poJSanKSxQT2NvpADPWO8yMLYrilWQlbe4qalxgFe/b7h3Hxe4+9+BUjjKLCJ
-         5Iy6QK6FYrOHjf36XEVqZRJV/X89MxiwuFFhKqfEWT85ZfIYuIL3faUfVP+12rEg4rsV
-         Fjl10mfO2aFrXVU5LB8dUbIeq0lb+2YFOpGkPcopD7tf+0PnwjkH3rWu8A/WfOLnVcrP
-         /T5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUP7DWUQlZ0I6ZMWCmb0YoTR4WLl++jMVV+QwX/Pf3WDmOMqop+gvpPDezYSLBw3ppLC18tYMI4ZKqw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+g1dySgfU8f0haC5up87Sqvc7uNEyGqcGbrO7R2wPTTugOFra
-	V3v7Ert2MTCYNNAj/vaFC1sjzo/tqbW4FHneUdkr9V9xn8fLgxcHiWeofbjSyEFvAIc=
-X-Gm-Gg: ASbGncvXIAigaOTvDHMhbHZ06zrcxqaZO+p2zbcmDfnzA0DphtUNvvAIXLVud0vVemB
-	/x23W9g0y3pXRM1C87wZnpqhEqOCnMQmffigRcupWurxX8MtTntr8dUpoQ6b/MOEoHEBiGGu4hh
-	cSouEw550ngMOT5+YqmwCdtQ50Hjgcd+pfgvzUS3JERWY1FV1pNNfWlqrywBf8P6d1THGIoaJvg
-	84F2N5It12dprWpVPRM+hdCiXGEdoDEM5mXThknVN5yNvFaOfE+ZmNdlxtKiwtjiLRfBICqqXOa
-	QNoNBkE7M0FBoRNEvVIaZWxfCf0w4ir+NL/EgHqE8PIzyiatdVOoxySCNrYSqMI=
-X-Google-Smtp-Source: AGHT+IFV0yz0l2515IeeTm9GioSRgS+MJm0JO7b1ZICcf7COUEwdawqQ7EAIvhjQwyAaNliNSkmk4Q==
-X-Received: by 2002:a05:6000:2c13:b0:3a4:d0dc:184d with SMTP id ffacd0b85a97d-3a5723a2d79mr7119025f8f.27.1750059265794;
-        Mon, 16 Jun 2025 00:34:25 -0700 (PDT)
+        bh=WTU9Zax5kLpMeKPmyeLAiww8adzxErGgDJ424AqFWP8=;
+        b=vCdMNYa7ezNZow95mCYw7Lr9zRo8rH+B0C7qJFHHiREwBZBBItDzNw+cKS3sGjVgVF
+         prcsUz8rNulWZ4q3YYsgJE9M71i1lDaoUstICvcflpUuV6abpsC3y+zEERbyFf3M+jzR
+         r2Lm9pLj7DkEtR3rhSrb/S6T9kDrwJcfTmtMj2kEJzmzGnmLEUtFU5RMlKCZ5kt0oe5G
+         Op14NBqTYy/8yVfRjcJbWdkik0o/T9ZlfPXbfe14unAKVHBihGDlyaCwCgdpIbsNYM34
+         8FHQaCduadm+YpK2p/9UmKUKySNFzV7d4NuRd0iz7hV2jMC5MEtE94OJrrrAAT28L/YN
+         o3MA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuhnDUNuGEKma3a++h91txxlzR8Bln8HyxGdQS9pL+JD+q4Kp37wSdi1I818dRfMA32rJ9612To0hp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqemiJnH8syW5FJhGwXw9a+aVp7GjRYgH5xnc2vdIVq4/44cIu
+	PovVNhQrPdpxd/uAXSqTS2wR+suzp4A7PKpvXbBhjrG5NmQmQXY9CPjGD0WTh3zTInA=
+X-Gm-Gg: ASbGncvZx7A8g5+ZNRDBfU0yf3vE7zBthAzQRuFh1t5ifD1AraXqvqyObtVYucRHaWp
+	9kWZLW0B/kjy0er2lKCOKgqCuw8li68JsujUH7PGp8fVNcOooc5mMgGiaZYgqIUSmMfrqjCNiDn
+	zfrX19DKBarWCKiicKmKnCFyLK198DhEJibAtLmrvYiP0CShg+yzgnwlz2BY+CVLmvv6/HDknLM
+	8JyhPn4tXWq0jdetww6HYGCMWRJP+0YE9KwR7WznkaJziZDhB+n2CVKOf8DDYvCk9aS382o1+q8
+	t20x7aZ7Srrcgy4OPNs4eaCb8frXvuWx4gHh63q+4gGfhABan+dsO3R+684Y8Po=
+X-Google-Smtp-Source: AGHT+IGNJS0KEiSwDJqSBbXx8uRkNhJkRtvXE4ajBKXtNWO8NPC5+V6AIpPTIVHjojheL91aJSa8eg==
+X-Received: by 2002:a05:6000:25c5:b0:3a5:26eb:b4af with SMTP id ffacd0b85a97d-3a572373c7fmr6714675f8f.18.1750059780880;
+        Mon, 16 Jun 2025 00:43:00 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4238:f8a4:c034:8590])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54b7asm10388705f8f.16.2025.06.16.00.34.25
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54d1fsm10151340f8f.2.2025.06.16.00.42.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 00:34:25 -0700 (PDT)
+        Mon, 16 Jun 2025 00:43:00 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	David Lechner <dlechner@baylibre.com>
+To: linux-kernel@vger.kernel.org,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	tglx@linutronix.de,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Keerthy <j-keerthy@ti.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Andy Shevchenko <andy@kernel.org>,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: virtuser: use gpiod_multi_set_value_cansleep()
-Date: Mon, 16 Jun 2025 09:34:22 +0200
-Message-ID: <175005925792.13944.4716742075474493399.b4-ty@linaro.org>
+	linux-arm-kernel@lists.infradead.org,
+	linux-pwm@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] gpio: Use dev_fwnode()
+Date: Mon, 16 Jun 2025 09:42:58 +0200
+Message-ID: <175005977568.15490.4738567496048769972.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250611-gpio-virtuser-use-gpiod_multi_set_value_cansleep-v1-1-43b4adf6c807@baylibre.com>
-References: <20250611-gpio-virtuser-use-gpiod_multi_set_value_cansleep-v1-1-43b4adf6c807@baylibre.com>
+In-Reply-To: <20250611104348.192092-6-jirislaby@kernel.org>
+References: <20250611104348.192092-1-jirislaby@kernel.org> <20250611104348.192092-6-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -97,16 +115,20 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Wed, 11 Jun 2025 13:50:26 -0500, David Lechner wrote:
-> Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
-> gpiod_set_array_value_cansleep().
+On Wed, 11 Jun 2025 12:43:34 +0200, Jiri Slaby (SUSE) wrote:
+> irq_domain_create_simple() takes fwnode as the first argument. It can be
+> extracted from the struct device using dev_fwnode() helper instead of
+> using of_node with of_fwnode_handle().
+> 
+> So use the dev_fwnode() helper.
 > 
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] gpio: virtuser: use gpiod_multi_set_value_cansleep()
-      https://git.kernel.org/brgl/linux/c/0a99f2d8ff5b31c3aaa70b23bde58692d1300bdc
+[1/1] gpio: Use dev_fwnode()
+      https://git.kernel.org/brgl/linux/c/7b2c2f1eb3914f5214a5b2ae966d7d7bb0057582
 
 Best regards,
 -- 
