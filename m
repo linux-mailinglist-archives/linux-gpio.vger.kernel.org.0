@@ -1,148 +1,212 @@
-Return-Path: <linux-gpio+bounces-21660-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21661-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4B6DADB027
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 14:27:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4765CADB1EE
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 15:30:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D86273ACD3B
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 12:27:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2B63161EBF
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 13:29:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950CD27380D;
-	Mon, 16 Jun 2025 12:27:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39E532D9ED8;
+	Mon, 16 Jun 2025 13:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w/0ai9F/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJX4ursR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3481EF36B
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 12:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25F32980B0;
+	Mon, 16 Jun 2025 13:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750076841; cv=none; b=miqeGXzSFjjKCZhsa4Z8e50PmBK1ZDjETbIpqbCn8JZvwGruNwn0aBc1POpeIJd82Ne+jkeN0qrdus6mJB3+DxlX7rzpLG5LFcSemtDuxVI4OTMVXASn5mcbmaeaRWHUQA5765xZ7T3KrX8XfU5J1sCA81zojLsqHKeL0lm+SNM=
+	t=1750080478; cv=none; b=IYvGeUUFf1XSwG8/UkkaqeyidWs5jkYU/SFgZgknzhLLqe1ExSbOr4CCqPzY0coaRisusLTpZVtZNemOIiVy5y6DZdefx7fGAUwFE6e+0X0ExLpHqpfWLOi6G8lzaywQJoyv/xpvft6ptz+CMehyQY5KjBHrkFEneBgt1Aeilxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750076841; c=relaxed/simple;
-	bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Caw798LReKCshvFbv2FZcKa8Ix/+vJCfUcm8gzotBeIQCh7/phuuz6aLLe4c6b6sP3qEei+HkWkw7P/taN31RT0odVdXKKBUAEpEkeHGa1BZtBw4N0roE0IDi7XX0BtK1F+v3d3H9Borz5aFdBG4O/4xT8ZqeciduiiC6oMc55c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=w/0ai9F/; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553644b8f56so4538172e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 05:27:19 -0700 (PDT)
+	s=arc-20240116; t=1750080478; c=relaxed/simple;
+	bh=gOQ5iOFvknvIf0NqR8lprZaU7amJcBfVS53KLfZWKIU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IGqC/brjTEt/GWe2Um5vSYk1NW9csY/jrqOCoHSG7/htTI1Y3sDkbi7QWpajPuLPmVTaqjx1dAy4qrrIKd1Vid1q91LXD8RB2Zs+mvbNDFDODgLvf1mARGUxEtprRN6pEW4SE2oNa9bbMhal156yfzEb1XcP0Yzk0JkqXwcZLSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EJX4ursR; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4530921461aso38060095e9.0;
+        Mon, 16 Jun 2025 06:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750076837; x=1750681637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
-        b=w/0ai9F/1ouue8aP8TbGJVQbjyB2UDqm2QeFWXvQRbul16AkNaYo+7MQQk0QJ48nOD
-         jp4FCyxgzY1wWV50R6bhFJERRtTvIaeHZGB+Cy/CTO6CvgPT4FwXvCO/7+FrNPkD63vD
-         RT1I9KtQkDK8ZEDwjU/VooLFcH8FHHZEoekdkdBR1r/eeYW4f/hCZR6SS4wlKec6Y1cr
-         x2BktdqszWovKUhXeUOjt+UyyR0iy/oCO/5pIsN1Ud/F+T3h3kd/F0UFRyXk/p4o8x9/
-         NoaxA6mEVnnINHi1YBj4HaUTIFMPs7r/SLRFYv3nplxYQ9fmtY62hcOR7cOhsyD4aaQo
-         5QdQ==
+        d=gmail.com; s=20230601; t=1750080474; x=1750685274; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RfLkLdbUr3hRGaqHqxx+0GHMmYhwozHBPTBmczCVDo4=;
+        b=EJX4ursR1bbz2Gn8tWFJvo0k0I6bqMyEsP+JIXHAddJ1WppTmRf2L62yFXRyS8gdOR
+         jZP9mSwZT3T1Ugwkn7S3Z+/AYsd8el9F+GCtLiCiGfjWVSlDi07aCy2KtOo5TOA8uoVc
+         x5vpIH1GbgxM28oG1rYvmCQYAgACK2DR1t3u2t2F8IrzRF8UJtJ3uBua1xIWnrB0bTYE
+         7FdlxPv15LsEFL//EAfXKimaiR5I5vMGBLoAGyWAAABdelbCWhN4rqaHOY8XSyEjBOkc
+         mmyKY1H+IvCiQy+CYYNjMJXJ0fzsuoBAWIMcrCmk5L45Zu+7iDnoPbCGQeLWrNjkUetW
+         si2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750076837; x=1750681637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2ZSVW7xdVqkJzk/JnmXPdnxEo5mO1cTfeEV5hSa3zGU=;
-        b=bmUYlFPphyK5n+rjyon9Fa4bantd1js15wN1xSVX0H8OA/wwEhUb8x+CpufVI22eso
-         WIJ6ehtL0WU8u/N12IlwThNs5Dws/gWdsEfnIlh1IsqanAzi6qxDY/RpEHu/73BdlY2r
-         NuMITm+fZbvj7yE21qmtoYF+uni5zpiTP2J4WwNE2kU1LMD5DJF1PL9xQiTiZnh98oxi
-         BneN0tCf7JWWwWHjfNiCQXD9Rtp1GethxdvZBmTLxOWhESMYbpzQph4zFxEg3SpNIe6h
-         1ghcDZzcIZrU3MELxHuDXNRz77gOlTKvlKgzhI7ppQQfpAQ+NNBGXZskcJb3Okd/VDPg
-         sGyA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/692uN/NtMR1wbnDieIh5T0mKDoEMpDN+Seo0B7G8RSVkYnVZJotYQ1e+Mqm2LrJle9YDN3x3X5t+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0NSngiQEZqpts3xgmUemEPSedWlkypzyn39rfoQgG3PsFlqwA
-	kp4iT8ZhXIbreqfHZeGixT2G8wtmOwuB65hj6x0tgn0RkyVxM+odaVXRmNTc0R1rZfc9Ai6yPx3
-	A78E3G6DOklFU7YqqY45z4USXwNlW22UDbqQUOl1uVQ==
-X-Gm-Gg: ASbGncuQHKl3NoYScxK2gX53dFQ+Zcp0ao4ACrI4ThUGsA6hyjONv+xY26jqHBtHAll
-	kG5gTOKIZOmcFkw4dBPINxTl1lyh4uTbzfRyT2ZkR22MaaDAyPRW5RaT1srfUVBw+KGhvzc0X/f
-	fkCWFAsfkP6Nz4yebwBXdvIM+5M/4lMqRKGBVf0Oh9OgU3sBwd7hic68q+/uzUIWs0EyeCNgRfA
-	eY=
-X-Google-Smtp-Source: AGHT+IESdzbSr0hyb5ZTrddk2EekSKVqWpeLC69vtkyeTgrO9IfOok5XJzSK6MtFLNImcFxcWud6sO3MLnOLklka9Vc=
-X-Received: by 2002:a05:6512:1192:b0:553:addb:ef51 with SMTP id
- 2adb3069b0e04-553b6e8c2f5mr2040920e87.18.1750076837237; Mon, 16 Jun 2025
- 05:27:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750080474; x=1750685274;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RfLkLdbUr3hRGaqHqxx+0GHMmYhwozHBPTBmczCVDo4=;
+        b=dh5uDibNpKEAbidsIr9wDZ2uu85jhWs62GSpCtpgT3RU6/xtnHqUC2uVQijqlkqlFq
+         8gTQPYeRF+oYIVzqHofFIEwaHwC7m9HwplA73Ia3rQJY2S5BkrRyV11TZLThYk20j8S3
+         IILx83raQuFrGAuEbRYJG92Vgo3xpNf1Mh8GVvr3vJAcxPcYwsXf8R+7atD4a60mMuhh
+         VVWasS/EdQvPasce+Z8dk7DkvFVAtXr6XT/3Ic2sGqTEGkL3ui9fgFUO9oHdW+2xHzsC
+         fFIBRJ7aM9PWziZhmjTCU5ScuqPH/wV+TVTr+EOIg8daBQoYgzmoP1uoiB1hH/uhWgxB
+         Ynyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ3ElsZra5Z4Z3tSf5+s83NzPhOEfbmNpFKtjbZDjGm5VNCnN8FayoeBrn+Vq7SedzBEErxWzM88ha@vger.kernel.org, AJvYcCX6z2kZ4LSTgKTn4tCTbhWQGy2RbSi9hLWrzzPi3Y7MHiwi7bs01t35J6xw+LJtGUd7WqNFxHgxu218gjTF@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRqcaR00uiovibYkSOmiyXaKRJmQY1mNPLl5Y6/eeT60/JDJwE
+	Wl7iuN2Zf2Ckqyw7jZz8VI53vTHzi8tr3LP15gOJo4AwVVCg12HEs/ef
+X-Gm-Gg: ASbGncsAa+y8lfEiGmhzH4L5c3S+TFC3OKYn8+F07qj4S73SVP0/RTaxkCf35+Nl8oj
+	LJteCAiC5+ExLzwrvsf9ZxCPgEd0ODkpT0lBsk0oL9NeDP2FAiUu4UOZyElCKx2ZWkz2R5rZs3H
+	b9M3AFMFOYjEWejocB2us3yX5+SuTNBfFhQn3pE2GejnxvGydPN8+qt4zRk/J9NLskiPqc2VNFq
+	Kmo4tSrArvC+SjCM1VfWYpdi0iItBHrCHM+W9QO7D9SWuKtFs/nB/HXhfY5nc8mK4Z7BYLHkPBs
+	JLjFUgMqri68TeyYpP4FrqIzI3PFT+qF0rCsDhMNPJWYv8g9okHglkQ+Nn9SUObFbu40fNpsQJV
+	tnXKNxWI1yTUrrdDanOA6CugBklfVJBU=
+X-Google-Smtp-Source: AGHT+IEH/hG5OFXO4uIu5EX1I60NRv2+jYS1WKU3eep/fEAn9xod/u7kXmYD2crC8ANAVrLy1v1yFQ==
+X-Received: by 2002:a05:600c:35ca:b0:442:e0f9:394d with SMTP id 5b1f17b1804b1-4533cab1298mr75941125e9.24.1750080473777;
+        Mon, 16 Jun 2025 06:27:53 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:4135:3769:337c:8a0c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e14fc8bsm145024815e9.28.2025.06.16.06.27.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 06:27:53 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] pinctrl: renesas: rzg2l: Validate pins before setting mux function
+Date: Mon, 16 Jun 2025 14:27:50 +0100
+Message-ID: <20250616132750.216368-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org> <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
-In-Reply-To: <CAMuHMdXca=EnNDE2doqUvu3dm7+aaWrG1nUYs3b08JCFqrKEvg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 16 Jun 2025 14:27:06 +0200
-X-Gm-Features: AX0GCFvBiJSrqsy2NmICkTOhhNTaArcZZ0rZD9G4yrtV8RBEldgTv4LBOcVAA00
-Message-ID: <CAMRc=MdbYesiRDfvwSchZZ5jOnSRffS3JzUzQh++J1JZLwm1Wg@mail.gmail.com>
-Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
-	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 10:02=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Bartosz,
->
-> On Tue, 10 Jun 2025 at 16:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > Following our discussion[1], here's a proposal for extending the sysfs
-> > interface with attributes not referring to GPIO lines by their global
-> > numbers in a backward compatible way.
-> >
-> > Long story short: there is now a new class device for each GPIO chip.
-> > It's called chipX where X is the ID of the device as per the driver
-> > model and it lives next to the old gpiochipABC where ABC is the GPIO
-> > base. Each new chip class device has a pair of export/unexport
-> > attributes which work similarly to the global ones under /sys/class/gpi=
-o
-> > but take hardware offsets within the chip as input, instead of the
-> > global numbers. Finally, each exported line appears at the same time as
-> > the global /sys/class/gpio/gpioABC as well as per-chip
-> > /sys/class/gpio/chipX/gpioY sysfs group.
-> >
-> > First, there are some documentation updates, followed by a set of
-> > updates to the sysfs code that's useful even without the new
-> > functionality. Then the actual implementation of a parallel GPIO chip
-> > entry not containing the base GPIO number in the name and the
-> > corresponding sysfs attribute group for each exported line that lives
-> > under the new chip class device. Finally: also allow to compile out the
-> > legacy parts leaving only the new elements of the sysfs ABI.
-> >
-> > This series passes the compatibility tests I wrote while working on the
-> > user-space compatibility layer for sysfs[2].
-> >
-> > [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu=
-4iKQ5npwXk6GXA@mail.gmail.com/
-> > [2] https://github.com/brgl/gpio-sysfs-compat-tests
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Thanks for your series!
->
-> I gave it a quick try, and it seems to work as expected, great!
->
-> Given the /sys/class/gpio/chip* numbering is volatile, I expect
-> script writers should use topological path names instead, .e.g.
-> /sys/devices/platform/soc/e6052000.gpio/gpio/chip*/export and
-> sys/devices/platform/soc/e6052000.gpio/gpio/chip*/gpio19
-> (note the wildcards).
->
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Or they can use the chip label like what they would do with the
-character device. The relevant attribute is still there.
+Ensure only valid pins are configured by validating pin mappings before
+setting the mux function.
 
-Bartosz
+Rename rzg2l_validate_gpio_pin() to rzg2l_validate_pin() to reflect its
+broader purpose validating both GPIO pins and muxed pins. This helps
+avoid invalid configurations.
+
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 45 ++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 59c32a0d87f1..2a10ae0bf5bd 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -493,6 +493,23 @@ static void rzv2h_pmc_writeb(struct rzg2l_pinctrl *pctrl, u8 val, u16 offset)
+ 	writeb(pwpr & ~PWPR_REGWE_A, pctrl->base + regs->pwpr);
+ }
+ 
++static int rzg2l_validate_pin(struct rzg2l_pinctrl *pctrl,
++			      u64 cfg, u32 port, u8 bit)
++{
++	u8 pinmap = FIELD_GET(PIN_CFG_PIN_MAP_MASK, cfg);
++	u32 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(cfg);
++	u64 data;
++
++	if (!(pinmap & BIT(bit)) || port >= pctrl->data->n_port_pins)
++		return -EINVAL;
++
++	data = pctrl->data->port_pin_configs[port];
++	if (off != RZG2L_PIN_CFG_TO_PORT_OFFSET(data))
++		return -EINVAL;
++
++	return 0;
++}
++
+ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
+ 				       u8 pin, u8 off, u8 func)
+ {
+@@ -536,6 +553,7 @@ static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
+ 	unsigned int i, *psel_val;
+ 	struct group_desc *group;
+ 	const unsigned int *pins;
++	int ret;
+ 
+ 	func = pinmux_generic_get_function(pctldev, func_selector);
+ 	if (!func)
+@@ -552,6 +570,10 @@ static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
+ 		u32 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
+ 		u32 pin = RZG2L_PIN_ID_TO_PIN(pins[i]);
+ 
++		ret = rzg2l_validate_pin(pctrl, *pin_data, RZG2L_PIN_ID_TO_PORT(pins[i]), pin);
++		if (ret)
++			return ret;
++
+ 		dev_dbg(pctrl->dev, "port:%u pin: %u off:%x PSEL:%u\n",
+ 			RZG2L_PIN_ID_TO_PORT(pins[i]), pin, off, psel_val[i] - hwcfg->func_base);
+ 
+@@ -806,23 +828,6 @@ static int rzg2l_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	return ret;
+ }
+ 
+-static int rzg2l_validate_gpio_pin(struct rzg2l_pinctrl *pctrl,
+-				   u64 cfg, u32 port, u8 bit)
+-{
+-	u8 pinmap = FIELD_GET(PIN_CFG_PIN_MAP_MASK, cfg);
+-	u32 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(cfg);
+-	u64 data;
+-
+-	if (!(pinmap & BIT(bit)) || port >= pctrl->data->n_port_pins)
+-		return -EINVAL;
+-
+-	data = pctrl->data->port_pin_configs[port];
+-	if (off != RZG2L_PIN_CFG_TO_PORT_OFFSET(data))
+-		return -EINVAL;
+-
+-	return 0;
+-}
+-
+ static u32 rzg2l_read_pin_config(struct rzg2l_pinctrl *pctrl, u32 offset,
+ 				 u8 bit, u32 mask)
+ {
+@@ -1287,7 +1292,7 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+ 	} else {
+ 		bit = RZG2L_PIN_ID_TO_PIN(_pin);
+ 
+-		if (rzg2l_validate_gpio_pin(pctrl, *pin_data, RZG2L_PIN_ID_TO_PORT(_pin), bit))
++		if (rzg2l_validate_pin(pctrl, *pin_data, RZG2L_PIN_ID_TO_PORT(_pin), bit))
+ 			return -EINVAL;
+ 	}
+ 
+@@ -1447,7 +1452,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+ 	} else {
+ 		bit = RZG2L_PIN_ID_TO_PIN(_pin);
+ 
+-		if (rzg2l_validate_gpio_pin(pctrl, *pin_data, RZG2L_PIN_ID_TO_PORT(_pin), bit))
++		if (rzg2l_validate_pin(pctrl, *pin_data, RZG2L_PIN_ID_TO_PORT(_pin), bit))
+ 			return -EINVAL;
+ 	}
+ 
+@@ -1687,7 +1692,7 @@ static int rzg2l_gpio_request(struct gpio_chip *chip, unsigned int offset)
+ 	u8 reg8;
+ 	int ret;
+ 
+-	ret = rzg2l_validate_gpio_pin(pctrl, *pin_data, port, bit);
++	ret = rzg2l_validate_pin(pctrl, *pin_data, port, bit);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.49.0
+
 
