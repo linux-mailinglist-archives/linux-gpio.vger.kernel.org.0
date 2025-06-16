@@ -1,224 +1,261 @@
-Return-Path: <linux-gpio+bounces-21670-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21671-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD83DADBB4A
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 22:40:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BBB0ADBB52
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 22:41:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E9F0175EE1
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 20:40:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 333E47A845C
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 20:40:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69D9620B7F9;
-	Mon, 16 Jun 2025 20:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06B3521018A;
+	Mon, 16 Jun 2025 20:41:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PRMTNEt+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XuHMbROX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88735136349
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 20:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6895D136349
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 20:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750106402; cv=none; b=Py3fS2dt6YJ1PYDAJYDN6nm8gClynCicNotJGu3UfgwfqVQdyEwOwHORhneiYUPT8IyPzlbeWbgPGBh3kjfqDMMiRBI/G1Xp41odiHAU0/BR4Qn4BZ4v/wpd0vm/h9helYMYSpgZRDtB6sedKGqniC+Nbv9txd9yN0SRbmghLcg=
+	t=1750106474; cv=none; b=qv6F4rVqVD7qw7AWi1g57p5gPzktAMFogm8yokdmO3YVLUqieZFVdbpUwZ+YPwhx/G0nlHIrg5UgttTBSFHALWq3T8f1OLPy1p388Ujiep3+JTYnjbn/9YhWlf/iTEabH41ZYSWop3MCpJFDfZhIKHKsaaMmPd5+Lj37YKiAokY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750106402; c=relaxed/simple;
-	bh=e9whwgCRlDrSJDH7euW+iZGCSNtoK/+pQofD5VLTCac=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=cSp+gX0xM3V65TIazjQRuYZNtCjzNCVrHoZH2ssOJajaiuEuIsm+e9Agy90ut/wUkI2iNFXBPphlme1vZshMZjeMhisFDTFsdHVJaR3VN4fCIn5fOYS/uzw9w+0bYgen3g8zXmBrB/4XNCYsb+T4A9J6ABAWXprbYXwukjq6/wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PRMTNEt+; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750106400; x=1781642400;
-  h=date:from:to:cc:subject:message-id;
-  bh=e9whwgCRlDrSJDH7euW+iZGCSNtoK/+pQofD5VLTCac=;
-  b=PRMTNEt+Y1ZtTtxh4CYw9lllrJ10YZEUuTyf2YIRwk0VjRaIJrY7IlRa
-   r8Pko5gIMLR/KVU5cgvgUub/Dty74SKvKQWTc0etYOKL0rXJy9aHr/3cf
-   7vjqTDJnhcIUu+XHn35Av+Pii9XJmFZGwvvca4oINmdzEYCIlHPY1bOn7
-   chDEZ3fYPhz8PNjONnrOahXNxFhGz6v9PQR2pjUFLZh+WSP+8SamMGi85
-   LV3R/mLLXyiJL8TPRtQTMqlsUCF3T0FvzXCBmw49delY1R0reqO81w4vS
-   G4LtR2PkZpmmwM5WbN34QB9gDp281gVQVkKtN2moye2TV6INzgvQbgVYc
-   g==;
-X-CSE-ConnectionGUID: 7OzbT65LTCWZtuzZTYtWCg==
-X-CSE-MsgGUID: LEQ0BqhRTXafNR5VTocTPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62535043"
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="62535043"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 13:39:58 -0700
-X-CSE-ConnectionGUID: LQOmYjPKR9iY2teR46+XoQ==
-X-CSE-MsgGUID: anC3SHvqTGi3yNamYOkExw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="179560967"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 16 Jun 2025 13:39:55 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRGcT-000FL6-24;
-	Mon, 16 Jun 2025 20:39:53 +0000
-Date: Tue, 17 Jun 2025 04:39:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 367864935785382bab95f5e5a691535d28f5a21b
-Message-ID: <202506170452.lPvdTPYz-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1750106474; c=relaxed/simple;
+	bh=I1ADj1YYA/0P9VYww4mRdxVOFiO6OjCF4bRvlcPDmRY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kj8838mv2uUBaSOUOqh4yTSM5yLpluQ3HBl82tnk5+9NfqVF/dnWS8sI/lKdvPuryKflKebPEuEEI1XFA6i6GlZ0bw5+KqfMwQHY9GhWLgE0krxbb9MNZgILrjRCLARCVMVbd6zp4AYhqrVY05A7n5BzJQj7HNcSZAagpoO2kf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XuHMbROX; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-73a43d327d6so1273115a34.2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jun 2025 13:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750106470; x=1750711270; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=im5kNIHpg71oIpCldz19fuuBQyresJi1tem3UV0h1IQ=;
+        b=XuHMbROXNaoCbeHPU9sw/Q84sLVt+xnwqOWM+u0WpJLZOyLBHz8Ka+3nl+JTxssMLG
+         pmRCwu2PKecsy0rFNc2Jc28ZFQV5+Qia1uGB7to4uRzev/rykrj7ruQzpPwAJw5dsrB9
+         av5eemvB8fzUtIk6R1+P8Y2sZMEAhSF8ZGpgjDvGZt5c02ey/YUBOdlKwG7sU2Xl6TWn
+         yq2ALoVYhpDWYONEzjrkUO9Tbql9d40V8sFzXKs7yAaFtK4cw1mMG6npFhII1WORQbd7
+         ZqIq6jkxNEWa0zfLrKGFWSGz3lHB/2ztudXKJ6STpQS47CJhl0UN1Z6U0EbDr6hnMi6q
+         oAmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750106470; x=1750711270;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=im5kNIHpg71oIpCldz19fuuBQyresJi1tem3UV0h1IQ=;
+        b=Rma0P6ODfqEht9o7tjmkqaQBVGJF66ZSYlIu8ZfkcupvV/Bt3YG9lNR7S1vHvuZByy
+         yCNmpaO03o65CEG0SOrvdhanG75i6MWPY4y9a0eXkm7btT68z9OUAsTzkLBLdMdJmi4L
+         QMFEqDaMl6FzZeSZL44MyR7yvcrppi9CpyQ8pgW9odCuriXsMbWi1xBh3w8gRCNxer2G
+         RmAi19KXwFvpU/LBVx4G+O3IMzzS3J7+RwXYp3oamY2W9SN+AOAtnVVSMzY/Oh6fDxj8
+         gQyqtfVlfYfKTdyD5DnZTZBEyBOkc9Bn1TTxYShIuBle/9/rBN+mLFkSAm+TPKBJzLSO
+         w2kA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoIG7VjUbZeX0ZwEjDW/eAkgkyxRVwpicYo95yZ3gKofMWFgLe0DJFulgpsaAI8xKzYBMo/cqAKvgg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwITCYfumCGmZxM5eSDMnzD2wonFYogyPwQpxtEM0ss3R1c5Ooq
+	72hgfkDvR7pBpVrEDEubWjkQuRY5dARZbk4i/McFnZ2iJ5eXuvfgL31Sc6mwNaBeuOA=
+X-Gm-Gg: ASbGnctqQJ1ggMPwf7iANFz/geIUN7CK/Cxjg5qBJMgHaufmwpa/UF1pVz4s58tZVzq
+	GEifl9aBLDWu6QacCCYpnEFPimVcxXs63sfJ7Oo3t4+I7f83Cz0hl+cu/8fI84hILEziNVnYujP
+	HL6gxlATU/dgFYYS/WFEaolVEk34GKmDwvv+snF7e3i7Yf/iUSQSzahd2b8jvQXYiJVe7RNB+n2
+	dw8t2XEHYiVCUo4WVfMugpwuq1T1G3lLYKh6NJgnD3+LVbVRS2wSawL3xwwOELaqqB2zQtdA9mI
+	1RmMiu0dJ3VeuYrJObklCMph5bGxHQgOQEZjGbe2lUhK3Kn1fNaDu6FRUJYc0XfwSauCOcbWKYy
+	XFqwA9FXIqjIivCzY+AoTwn7/5o3m0j7ScF4ygA+JapJdUXAt4A==
+X-Google-Smtp-Source: AGHT+IEsH+GjWx5DBPXhNJpG9GJzxKD3U06ehvPiNJ6zYbwHj4bcCVL5kJnMon+0twMR1UaMdanrvA==
+X-Received: by 2002:a05:6830:2c06:b0:72c:320c:d898 with SMTP id 46e09a7af769-73a363f5a90mr6912233a34.22.1750106470433;
+        Mon, 16 Jun 2025 13:41:10 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:9583:1e37:58ed:10ae? ([2600:8803:e7e4:1d00:9583:1e37:58ed:10ae])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a28402beesm1275336a34.19.2025.06.16.13.41.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 13:41:10 -0700 (PDT)
+Message-ID: <eeb66815-3f7d-41fc-9d32-c28a3dda7749@baylibre.com>
+Date: Mon, 16 Jun 2025 15:41:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/11] dt-bindings: iio: adc: Add AD4170
+To: Conor Dooley <conor@kernel.org>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org,
+ lars@metafoo.de, Michael.Hennerich@analog.com, nuno.sa@analog.com,
+ andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+ <4df9d4d0de83090300b6870afc8ae7b22279cd22.1749582679.git.marcelo.schmitt@analog.com>
+ <20250616-neurology-explicit-ec2a829bd718@spud>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250616-neurology-explicit-ec2a829bd718@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 367864935785382bab95f5e5a691535d28f5a21b  gpio: raspberrypi-exp: use new GPIO line value setter callbacks
+On 6/16/25 10:41 AM, Conor Dooley wrote:
+> On Tue, Jun 10, 2025 at 05:31:04PM -0300, Marcelo Schmitt wrote:
+>> Add device tree documentation for AD4170 and similar sigma-delta ADCs.
+>> The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
+>>
+>> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+>> ---
+>> Change log v4 -> v5
+>> - Dropped interrupt maxItems constraint.
+>> - Spelled out RC acronym in reference-buffer description.
+>> - Require to specify interrupt-names when using interrupts.
+>> - Added interrupt-names to the examples.
+>> - Made adi,excitation-pin properties identical to adi,ad4130.
+>> - Removed interrupt-parent props from the examples.
+>>
+>> Proposing new types and ways of describing hardware for weigh scale load cells
+>> and related sensors external to ADCs can lead to potential better description of
+>> how those components connect to the ADC. However, we must use what already
+>> exists for properties documenting features that are the same across different
+>> devices. 
+>>
+>> Maybe, we could use generic defs to define adi,excitation-current-n-microamp and
+>> adi,excitation-pin and avoid repetition with those. Though, that triggers a
+>> dt_binding_check warning. Also, having mixed notation (some prop declarations
+>> using defines and others not) seems to not be desirable.
+>>
+>> It looks like the only option left is making adi,excitation-pin properties
+>> identical to adi,ad4130.
+>>
+>> On one hand, dropping adi,excitation-pin defs and making those properties
+>> identical to adi,ad4130 preserves their syntax and semantics accross
+>> dt-bindings. OTOH, we end up with more text repetition in the doc.
+>>
+>>
+>>  .../bindings/iio/adc/adi,ad4170.yaml          | 564 ++++++++++++++++++
+>>  MAINTAINERS                                   |   7 +
+>>  2 files changed, 571 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+>> new file mode 100644
+>> index 000000000000..e3249ec56a14
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+>> @@ -0,0 +1,564 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Analog Devices AD4170 and similar Analog to Digital Converters
+>> +
+>> +maintainers:
+>> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
+>> +
+>> +description: |
+>> +  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converters.
+>> +  Specifications can be found at:
+>> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4170-4.pdf
+>> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4190-4.pdf
+>> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4195-4.pdf
+>> +
+>> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+>> +
+>> +$defs:
+>> +  reference-buffer:
+>> +    description: |
+>> +      Enable precharge buffer, full buffer, or skip reference buffering of
+>> +      the positive/negative voltage reference. Because the output impedance
+>> +      of the source driving the voltage reference inputs may be dynamic,
+>> +      resistive/capacitive combinations of those inputs can cause DC gain
+>> +      errors if the reference inputs go unbuffered into the ADC. Enable
+>> +      reference buffering if the provided reference source has dynamic high
+>> +      impedance output. Note the absolute voltage allowed on REFINn+ and REFINn-
+>> +      inputs is from AVSS - 50 mV to AVDD + 50 mV when the reference buffers are
+>> +      disabled but narrows to AVSS to AVDD when reference buffering is enabled
+>> +      or in precharge mode. The valid options for this property are:
+>> +      0: Reference precharge buffer.
+>> +      1: Full reference buffering.
+>> +      2: Bypass reference buffers (buffering disabled).
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    enum: [0, 1, 2]
+>> +    default: 1
+> 
+> Why make this property a uint32, rather than a string where you can use
+> something like "precharge", "full" and "bypass" (or "disabled")? The
+> next similar device could use something slightly different then the
+> binding becomes pretty clunky.
+> Can you explain why this is a dt property rather than something
+> adjustable at runtime?
+> 
+> Otherwise, what you have here looks sane enough to me - but I'd like to
+> see some comments from Jonathan or David etc about your approach to the
+> excitation properties.
 
-elapsed time: 734m
+This looks like something that should be in the devicetree to me. For example
+if the external reference supply is high impedance, buffering is pretty
+much required. And using precharge is an application design choice to
+reduce THD at the expense of other limitations.
 
-configs tested: 131
-configs skipped: 3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> 
+> Cheers,
+> Conor.
+> 
+>> +
+>> +properties:
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                            hsdk_defconfig    gcc-15.1.0
-arc                        nsim_700_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250616    gcc-15.1.0
-arc                   randconfig-002-20250616    gcc-15.1.0
-arm                              alldefconfig    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                     am200epdkit_defconfig    gcc-15.1.0
-arm                            hisi_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250616    gcc-12.4.0
-arm                   randconfig-002-20250616    gcc-15.1.0
-arm                   randconfig-003-20250616    clang-21
-arm                   randconfig-004-20250616    clang-21
-arm                           sunxi_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250616    gcc-8.5.0
-arm64                 randconfig-002-20250616    gcc-15.1.0
-arm64                 randconfig-003-20250616    clang-19
-arm64                 randconfig-004-20250616    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250616    gcc-13.3.0
-csky                  randconfig-002-20250616    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250616    clang-21
-hexagon               randconfig-002-20250616    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250616    gcc-12
-i386        buildonly-randconfig-002-20250616    gcc-11
-i386        buildonly-randconfig-003-20250616    clang-20
-i386        buildonly-randconfig-004-20250616    gcc-12
-i386        buildonly-randconfig-005-20250616    gcc-12
-i386        buildonly-randconfig-006-20250616    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch             randconfig-001-20250616    gcc-15.1.0
-loongarch             randconfig-002-20250616    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                       bvme6000_defconfig    gcc-15.1.0
-m68k                          sun3x_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250616    gcc-8.5.0
-nios2                 randconfig-002-20250616    gcc-10.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250616    gcc-8.5.0
-parisc                randconfig-002-20250616    gcc-9.3.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                        icon_defconfig    gcc-15.1.0
-powerpc                     rainier_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250616    clang-21
-powerpc               randconfig-002-20250616    clang-21
-powerpc               randconfig-003-20250616    clang-21
-powerpc64             randconfig-001-20250616    gcc-8.5.0
-powerpc64             randconfig-002-20250616    clang-21
-powerpc64             randconfig-003-20250616    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv             nommu_k210_sdcard_defconfig    gcc-15.1.0
-riscv                 randconfig-001-20250616    clang-19
-riscv                 randconfig-002-20250616    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250616    gcc-11.5.0
-s390                  randconfig-002-20250616    gcc-10.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                         ap325rxa_defconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250616    gcc-12.4.0
-sh                    randconfig-002-20250616    gcc-12.4.0
-sh                  sh7785lcr_32bit_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250616    gcc-13.3.0
-sparc                 randconfig-002-20250616    gcc-8.5.0
-sparc64                             defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250616    gcc-13.3.0
-sparc64               randconfig-002-20250616    gcc-8.5.0
-um                               alldefconfig    clang-21
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250616    clang-20
-um                    randconfig-002-20250616    clang-21
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250616    clang-20
-x86_64      buildonly-randconfig-002-20250616    clang-20
-x86_64      buildonly-randconfig-003-20250616    clang-20
-x86_64      buildonly-randconfig-004-20250616    clang-20
-x86_64      buildonly-randconfig-005-20250616    gcc-12
-x86_64      buildonly-randconfig-006-20250616    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  cadence_csp_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250616    gcc-13.3.0
-xtensa                randconfig-002-20250616    gcc-8.5.0
+...
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>> +allOf:
+>> +  # Some devices don't have integrated DAC
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - adi,ad4190
+>> +              - adi,ad4195
+>> +    then:
+>> +      properties:
+>> +        ldac-gpios: false
+>> +
+>> +  # Require to specify the interrupt pin when using interrupts
+>> +  - if:
+>> +      required:
+>> +        - interrupts
+>> +    then:
+>> +      required:
+>> +        - interrupt-names
+>> +
+>> +  # If an external clock is set, the internal clock cannot go out and vice versa
+>> +  - oneOf:
+>> +      - required: [clocks]
+>> +        properties:
+>> +          '#clock-cells': false
+>> +      - required: ['#clock-cells']
+>> +        properties:
+>> +          clocks: false
+>> +
+>> +patternProperties:
+
+...
+
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - avdd-supply
+>> +  - iovdd-supply
+>> +  - spi-cpol
+>> +  - spi-cpha
+>> +
+>> +unevaluatedProperties: false
+>> +
+
+It would be more logical to place these before patternProperties (actually
+really before allOf) so that they are close to the properties that they are
+referencing.
 
