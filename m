@@ -1,143 +1,180 @@
-Return-Path: <linux-gpio+bounces-21612-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5233ADA711
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 06:14:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF847ADA71C
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 06:25:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95ADB16C1F8
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 04:14:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E70FA3B0335
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jun 2025 04:25:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 159AB1A8F84;
-	Mon, 16 Jun 2025 04:13:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0B31A08BC;
+	Mon, 16 Jun 2025 04:25:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3Fxlm0E"
+	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="QZ1BLZHP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2104.outbound.protection.outlook.com [40.107.100.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D21872607;
-	Mon, 16 Jun 2025 04:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750047237; cv=none; b=Ip8N8ScoezQTjNWHDzEVunvzrfPQykGJ37QZToBy8tpGzFDIzeywbJzh0PKDeeIi+baZAqvXtPCIQeuO4hMhWlgWgdrsXKVtis36CODv++23jr6x6TkyVvFp7h5maDCAUPZVKLfRzepu5wNhUU+yho/9/sVPtv7blofVvT1cXfc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750047237; c=relaxed/simple;
-	bh=+q0guN9PwSiS5EAbareskBIti2BmPJU9JVXqOz/iUbk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vuyp6S2u3v3H5/PU2GDg6UFgZ5vZV/CfJxDIRodOq6tczErvWOj3MBOOZE+r/igLibwD4GuVZWcxMdRsLaYGJNMCQYT34P2rWa5fhxW4ChkS75RfSj5eDGLPtieeWul+pNzHut4cxna8a531wlmR+UyjJUSSWd79vvkZatDjqmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J3Fxlm0E; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c7a52e97so3316202b3a.3;
-        Sun, 15 Jun 2025 21:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750047235; x=1750652035; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P80b7O3kBzCHZeyPaqEFw3rG2WMhfBLYf+jpLfD2cC0=;
-        b=J3Fxlm0EKALYEBLHNAI6MTCGq9uYYKTCI0hHyVU9MtknUDeOLc9FDj4qAirVKclS5V
-         yok0r5bw4tGiPRNnI/4w1B84m6lQ+SEnRN6VeoVrowHm0J5ALmD6LPeIf+STvkEwcqSs
-         Xw1lQAWoC8mKa/ci0KY6SLazGXBnRgYu5k4+3yX8SJPFmAi0L6CNs3G8ILl6lK6DYU4e
-         pE7O4lIBUCsX29whQqZJbp8jWtts6SihIRcrXATOHK75rKWSSMHYMrnbcTQepTVOvIGC
-         RrwlLUwu7UD8e/q2i0b8Wr/7BqCX/USrRnnMLF1dt4NDNK+pkRcObF9VI0doaS5BHByJ
-         VbXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750047235; x=1750652035;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P80b7O3kBzCHZeyPaqEFw3rG2WMhfBLYf+jpLfD2cC0=;
-        b=dfSU6RyV8zlkJT7fzQz1OJR7p8AUF1Rqg++y/78PpB344wIf7gF5Nn/FOz2WAKEnWM
-         DCq9zhvWp1bUI6Zd1PR/h9ZvDOoXA2M97sZwVY1RnVXyEPWYQdHXCToiUu4Idj+/AJ/Z
-         Lvg7pnxFm8ChuizHtc6H+PAml61UDxUtKiA4Z6DJ4JckgeB2VXMLS0n5NqTkDHfuS+17
-         xs1tJauFnF/5C791EiL8Uw/6FFSrjlXpDu6ecOudLhvUfAf6BMMpIUfANDW7UKJBruFo
-         mjlrAOhRN8oruDmC+V992/IWLK4uv1Ikg0Y5vTkRQh/TWIa0p6WDI/sN/yCX1Ni/rmRA
-         lOWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVK/jxl4Vc5dvzIStz2WZCrgg0iI1lWg/YTICMbn3F/QZuUWkMK0vs3GlOMeUgXReo6buvBWSIIjNAWeA==@vger.kernel.org, AJvYcCW9/vP5SQ1jfTnkLdTMwSqw3QMWlm1zFL6n+cvdWYmauKY/Fu960T+UBGKWNRtVmVZg6PqZkqyF2UM=@vger.kernel.org, AJvYcCXi/AhJLqfJQl8jiW/JACqP/AJdVX866wYq6JFjx4V6b3I5FRyzUn5s0dnPCoOAB2B7GItWeuKSOZI3oPWT@vger.kernel.org, AJvYcCXpTx0NlOuTCnDqHjZPMLUgVdttNVCZi3gnCNW3/+GWuYkq8dzOdVR4dR5d9GcxAicdsS3hJISR1wo4@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOLHY3i9JzxsL1MrhSbOvgFTo1RBh/3LiHiGSYN8bB6k3i2oVh
-	4V4bd7GcoWKDSYQAtqMdSiQmtqUz5Px8AA7FGPTCvMm07/+9gEJYklgU
-X-Gm-Gg: ASbGncvwhPeWVbT2+rcfspyb1s1K7kP0zKeUeM1uiAlm8cOJ//UxqCTjUMWlxcyaPPc
-	PLY6rhfHXgqFbjlY+MhceofbhpCX3N/Qdu4/mcIKBgUtSNa9NpzNI2v31GkrNTBkYJB14nXPKZx
-	zMf25JZ5twZ6j/SFMAQSpHyKydKHCR635aRP7ncLuqTtSYNftGO29IFQXbJm6iggszqb8WtBdIa
-	cV06nDx+gnXxnOU+9POmH6rvUIj3nZtVEB3IGhgp/tkXhQHqs2eIM7K6FHYgUeSpkoxnH0KVnEP
-	aqk+a7GEKvr4FVhZIUOelgnGwLFk2j93MaucFCMYyEoswaBPVQck/K0ixZWEhGjK+SXV+KUg0wj
-	R7rwu3rXb
-X-Google-Smtp-Source: AGHT+IGj8afwiQBWMnNFiO8CZX12Uzqm0farJp4iABQXPdiIhq7hSOMuLQDUrIeTYhq1s+E7XXHTwA==
-X-Received: by 2002:a05:6a00:21c1:b0:748:323f:ba21 with SMTP id d2e1a72fcca58-7489cf5c8c2mr11015493b3a.1.1750047235481;
-        Sun, 15 Jun 2025 21:13:55 -0700 (PDT)
-Received: from [10.89.152.134] (wf121-134.ust.hk. [175.159.121.134])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890006059sm5937252b3a.55.2025.06.15.21.13.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Jun 2025 21:13:55 -0700 (PDT)
-Message-ID: <7297d4b1-84a2-4bb1-8a33-29c827247df7@gmail.com>
-Date: Mon, 16 Jun 2025 12:13:50 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8CB13A41F;
+	Mon, 16 Jun 2025 04:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750047944; cv=fail; b=DW08/2VRxKA6ks61lrieT+RG47NUdifNL0HgK6xd/ikSoIdwYtlFDcW87DwsF+pHK0twgBPxPZsbrhdoCxnz4q+FVsokNYXQqGrQMbJf2OdyKRq+a4i/0tRZqHyxylUZfoLLlFWUMAox1CxOm8yFh6GvKY6syW248PwRpDlNmr0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750047944; c=relaxed/simple;
+	bh=CuX1XQh4QIqj0OBqsC3MCSYDV6O2s1yTx7p4PzRw0nU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Qe8+BwcmfXscfwGfSYtL6s3HHoI/lefVm9rA3dYTNjWw64NGKFr044FMh05CdLj7Ooi1DwVflIWajQNMknibRsw4+qGkw3kme8GKwjcJ0AI9a0e48XNPE6cGqZTKbFREazzAF/FE9BjxniNtVcm88hOfVnFuAuS5Bgqo27eCLmA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=QZ1BLZHP; arc=fail smtp.client-ip=40.107.100.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axiado.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wUwyuol4iUDBtvwU5LHbr2bUGFwLdiumtZPP7meH2E7HkiBQCPPoKo7Lm2M0U0v9pTDLfQcnZ6KqfQVXG2ipq5siNjpQx7s4DVr6YpM67Llxr3iq1gcQvDDZikC0Z1RTLyrHf0qbGv01WOo+lA44LMZulITs2LbEcY3C+6ufzNLly8WxfmimQiTIbC0ghrjB1IK/fHc3ZkRHgPCnOd+ng3Hb5VhqnnMoNC5WPf3rJcsKFpkXmVkQwJOwGldSRn8O1RXBftpiV4N4LllbFt+MkDsiNAs07rJzS1A4o9DaX0UuzYKzrRcoaYXMD/4kH/fMlfqmUpyXtOL60FoTi8nmhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CuX1XQh4QIqj0OBqsC3MCSYDV6O2s1yTx7p4PzRw0nU=;
+ b=aEX6LB5gvmMSfIpt9rvVcz8fhg/svTQFL7x2KyNicb6JGlLi5NDJ9G1wn9GGI8AFt3qqYjGjk+OksIJk7kpHQk9d3xl6qA5QXgXtmXJMNkT1L/aAdQtQ/CjQDQcTpswkG5msGCVynoYwO2wR/yHolR0P9htIr/g7plNPILo9bio1PK7/jKX9cvcUzaWdenzAx9WEYHMMfm23twh4GNKtT+P8OJaN8CxjQGutPzHRbCHda3fnPfDC/y7VdQfW7xc1fsuhrQkcHQNL+HFWalVEKyyk45WKVCwj75BKSaigd27ZF0KqBz2Hjq2V2HWrEeMPEFvraoELp/zM3sXAPn3RhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axiado.com; dmarc=pass action=none header.from=axiado.com;
+ dkim=pass header.d=axiado.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axiado.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CuX1XQh4QIqj0OBqsC3MCSYDV6O2s1yTx7p4PzRw0nU=;
+ b=QZ1BLZHPj3iACxBSsD/0zitpOq05TppzG4CcsB58RefUjV3zy3P5dUqBTaCs0XIfcfBSxYL7JKHF3xhPJaHk4u7Pu72JrBM4dhJMEaEkLbz0/erZG02r3/txckY9f4q3JxIuLzcK9rmvDT9T0T3RZSjvYgQNXDNvYywK0d8T2VbUs5Xz4ex7lSz/V5Gg/nvhKD48XWyCnMxGOBWPWRuiQ438ZdEXXfR3C/d8ZzU6JDhLAQiJKXM6NUxesTpr0mcMlPDM6yiCbLnyQTaxgHLV6YGGDTb/EAdhzsCo/mBultOlxDZhZNqnFJUqqSmkCJ9gGrW9vyac8wBVkIOWzhGv/w==
+Received: from IA0PPFBEC4B1F8E.namprd18.prod.outlook.com
+ (2603:10b6:20f:fc04::c3d) by SA1PR18MB5945.namprd18.prod.outlook.com
+ (2603:10b6:806:3dc::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Mon, 16 Jun
+ 2025 04:25:39 +0000
+Received: from IA0PPFBEC4B1F8E.namprd18.prod.outlook.com
+ ([fe80::ca34:e235:13d9:3f5d]) by IA0PPFBEC4B1F8E.namprd18.prod.outlook.com
+ ([fe80::ca34:e235:13d9:3f5d%5]) with mapi id 15.20.8769.031; Mon, 16 Jun 2025
+ 04:25:39 +0000
+From: Harshit Shah <hshah@axiado.com>
+To: kernel test robot <lkp@intel.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+	<brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: "oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "soc@lists.linux.dev" <soc@lists.linux.dev>
+Subject: Re: [PATCH 6/6] MAINTAINERS: Add entry for AXIADO
+Thread-Topic: [PATCH 6/6] MAINTAINERS: Add entry for AXIADO
+Thread-Index: AQHb3ZKyJ4KbwhoafUeD7rxhhPkQ/LQDflcAgAGzeiI=
+Date: Mon, 16 Jun 2025 04:25:39 +0000
+Message-ID:
+ <IA0PPFBEC4B1F8E381366B3EADB63903279D570A@IA0PPFBEC4B1F8E.namprd18.prod.outlook.com>
+References:
+ <20250614-axiado-ax3000-soc-and-evaluation-board-support-v1-6-327ab344c16d@axiado.com>
+ <202506151027.IduXJqR2-lkp@intel.com>
+In-Reply-To: <202506151027.IduXJqR2-lkp@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axiado.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA0PPFBEC4B1F8E:EE_|SA1PR18MB5945:EE_
+x-ms-office365-filtering-correlation-id: 50b7e59c-e139-4f67-f4eb-08ddac8dd941
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|10070799003|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?sca9Ut6FifRfEhcAoDm0KRmlOfYt4+SaR3NatsiZeF79Juduf/0Ji2PUYU?=
+ =?iso-8859-1?Q?b180uHNStS642PoFZa2xtGsUjz84LQMSjKYpUMOtLALuKbdX26e90D+e9L?=
+ =?iso-8859-1?Q?v1ZBX60z8ammbNFrhbMwBl4n66XefkkqOr9L+nOamL9LVw4b3vS2Tq+iSE?=
+ =?iso-8859-1?Q?jl4ZLrieIkEZV0U0SOO49vu02dEITcAOBoEg9WHam5y08I7nMN1HJn4j0K?=
+ =?iso-8859-1?Q?em6k7GABBi4LK2kd4cGV8jEQEW97xSlMFOiXICnWf+0tBfSPgmdzFvAmd1?=
+ =?iso-8859-1?Q?9cMaMEBq1YYrXIF0lWytITu5niK3EAOeTgHhSk9Ak4cyg/v8QXWbqMZlfC?=
+ =?iso-8859-1?Q?bdAhX9/LNPI6CGvq/+/OwmvfRWqfAjWNDt9ErIchqjCCVSAtIidsrEj50Q?=
+ =?iso-8859-1?Q?uw2rzSrOc0Scl1h3uRFfkLiJomzAPSMTbZ6XTVlL7uQ+g+rF2z6ApXPZN9?=
+ =?iso-8859-1?Q?DC8tR3trK2N3DfOBUe/qwiMvkzCttnH1rKVFwkC3R7YDzfyy3PWkTTrqLc?=
+ =?iso-8859-1?Q?rAAhb7bVQ6yzGKeJEq2ru6nLysFnfO27kLFWpQUPdx1Blg/w6rBeDuZm9K?=
+ =?iso-8859-1?Q?dIwWTCaUONFGUlUSjN+WxiYqSpPKhYyqxEZRAaZAB+Rbv+78WaQ8m+8IDR?=
+ =?iso-8859-1?Q?sdwQV9IP47aKoq1fEFMMTdI2DIT3J8A/g1fLxdb0FfPt3+/T4CZsxrLdtC?=
+ =?iso-8859-1?Q?6fRbcbVPlOQXO0+8tLYx9aWdK27nX0JfQY3LzLlfUZ38rN3Bxagrbslc7P?=
+ =?iso-8859-1?Q?9Vs2jdQR/4NKZyahlfj0YrlcBqMeZCNeHvIfBabSgATnA28/RvTE0B0gKk?=
+ =?iso-8859-1?Q?LG177xs5NIkkpp82lGjlADLOxs67P5iVl96h9PrNy0vQ2iyLo9WHAWjIDO?=
+ =?iso-8859-1?Q?V4cVm+JcbHW4AxrAFXyqyXz5blP9VpTWrZuDbH81+K6dvZorRz/fDB2CSg?=
+ =?iso-8859-1?Q?l9neLOwADGsyvhIv7coI0v/9SMG//t1zgXHv8S9sRIAgXTGR0mROVuoAMJ?=
+ =?iso-8859-1?Q?d83/bRvFEhPdm2MnfT9zEHO7QGs4ln0Xu0cCG99uUirvYI9HCPsLfTNmfZ?=
+ =?iso-8859-1?Q?s6WVbMMOnYIN7XXloFje/cTSQbXkyWNC/7ss8blQcrNRWsRTgPQIyUkDMF?=
+ =?iso-8859-1?Q?m5nrLMdavIAssK+O+XvCROpDGUnaTnhOMXd6yM5eZqxl52nDsWiXe8IXFj?=
+ =?iso-8859-1?Q?yZW5RVQq3URYY/RhRF/2I/s+ai+C2W15rREG3BmGBa3Ccd/uExHP2s8Jei?=
+ =?iso-8859-1?Q?kijBD6TueupVH3fQB2Y9DpPyI9R0e/f/umJjYBSLE+vcYQB7hUVFdyYE7/?=
+ =?iso-8859-1?Q?F3SAgK0JxF0VfahPF5YHX6OomG16gSGEt3TAKn2KprpKajnd4FtDXyiUh8?=
+ =?iso-8859-1?Q?V4KAmYNFRdYYgoaTR0ZGTw79IdaMppqpg+bUUXKCB8yjj9OL+7tBF8WcaB?=
+ =?iso-8859-1?Q?ciHxaj7+1qCpyqQYAFpP3+EfdXKiONfakunp2fGvuwKX7CxVX0/pSnk88i?=
+ =?iso-8859-1?Q?Fc4YvqPJ2MUblZwxDrYcTAoSyBwyLDEqze9JVD7sBBYg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PPFBEC4B1F8E.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?iTTYYa6nTSF+PL0ry3/C09Ujz4Sg8uimRd8B5clSOqNQpr7IRcz8ffmfhE?=
+ =?iso-8859-1?Q?qp+DnCREH0DxsNepKOnyLdHVH7o0Hxs5JF8d4caymYjNs7eFhLTgTB/zzV?=
+ =?iso-8859-1?Q?koNIH805upDsAFVLLnOXRgbSp3VLD2+0JTLA53uMKVx+NJM7ziDwRw95jH?=
+ =?iso-8859-1?Q?Ams/r56w3Mk1plK7YAeHK7ZxpshGW4fOae7pObBgsgwDqlDYbODdY1KMli?=
+ =?iso-8859-1?Q?WMcNFrVta2gLz0ExNYNyk/mwVmPoggJQE3yq6TBxhUL9VPJbKo8xnHlDye?=
+ =?iso-8859-1?Q?N6A8lT9GksqkU9276oraU2kmFMm0bsuhiTmhOWDGn+24zpfp1Nomp3NlgF?=
+ =?iso-8859-1?Q?E8s0qOOe4q+VCGjA4YyzOr54JZFL3y9QSkpw+pXpeGlRHiZ8LBvfpmtb+m?=
+ =?iso-8859-1?Q?78ptG1NX/MHboNskMOpJ4MVvCl9+cDUAPzL1B9GkWYxR5yj7/Rd1EPhd7g?=
+ =?iso-8859-1?Q?0APYpNow2py60YupFmgTmqHIuvTfofnGgEm2rtYLkHj290aSDaJl2Tx0bf?=
+ =?iso-8859-1?Q?niiROLDos7+url+eluQonxE/3Tgoluv5e4zXa0KSIpcl38A3LXl+IlDm1z?=
+ =?iso-8859-1?Q?A6wijg5F6bJAWhr7NHebHys7TjZlbheBqrsF3odQ2XECT3/LxynU+AHSes?=
+ =?iso-8859-1?Q?wzfXGjmn0r+6XgRUXMcf1TXiJwO7fQQxo2vdo72gCQeTMNGCkUk8kaJGMb?=
+ =?iso-8859-1?Q?Bpknsv/HQx90fc0vAOtQjEAueb/z1PeK+lXsCNHech3fVdclxFzcImCHP/?=
+ =?iso-8859-1?Q?bmv4hoKEnWZerPqKZTKUh2PnAXVWa87GdM6Qw7eGfUZIZq7p/fnDYmSsCL?=
+ =?iso-8859-1?Q?Ccjo5lbiXLdbWZXK8wx5sanc6yKO7AYOkhxKHcmpUtDxJYhQTSN2ndhgRg?=
+ =?iso-8859-1?Q?shuRX4DfWYSD/WYUy7+huOj6u2xqfYXaGnmTA/YbBEIj9HnTWb6bnaUvsV?=
+ =?iso-8859-1?Q?KyIhg6HruNFtPuEVYjMKSCgLE5qznhTe/xUVQ5dSkpxVbE71w3VZBPJB5t?=
+ =?iso-8859-1?Q?BLf2EBQ0bddOUA73w0OhNbNFlv0IpKB0Y1fKY22MmC9LddxPvxA+VVSZmx?=
+ =?iso-8859-1?Q?Ec9+xBWS9o7Ql4iXK6hqr0Te9Orxh8HhOUjQxS5lP85Mb6fsrq4Cgc1QLs?=
+ =?iso-8859-1?Q?973CuHuzHsjHFqmmpCKkR4XKqci4qmmJ3d8t7nAxqKf3ObG7QxRQov+jf0?=
+ =?iso-8859-1?Q?oXG0OPyQY1Nh/WjHM98QaeOfUqV7ySy1YOrlPu1QEaI4G1OXKYwBOot0+W?=
+ =?iso-8859-1?Q?pc2ruKwVzcrjsbvHV6dNlVVA0+zq35XlSfR+ovStgDbhASQplsIhRf9ttG?=
+ =?iso-8859-1?Q?NNkCZ0yftzpc9vUYge10rvdKjBnsLOjvPmlKlSL4i3lvLbwldwnabAn3co?=
+ =?iso-8859-1?Q?FU5FIjOtqImpCfZNNCcw2nC4Wk1z2XBMPuDwvgAVJezInvcskcZoIkFUMi?=
+ =?iso-8859-1?Q?chcANMi2x7kw92aHhlfdmhNCU5x7OpD2bW+D4z6TBpwN/ua38sibK/qVAm?=
+ =?iso-8859-1?Q?GWysDr5YB7Z6RwlFdUb1Ej1Y+RZkbXCOBXL1DNvEQOH0VpMFpIsQuBEHhj?=
+ =?iso-8859-1?Q?MSgR0umRFI1vCwY540LwGQ4vRSNY2+9IodSlTRUia1DlAKveHAunVPJmX7?=
+ =?iso-8859-1?Q?5lgp9Z6FsXeNFg0sMEuU0BsNdxcmjMs7b8v+PSuRxo3C+en91Puyj2r55L?=
+ =?iso-8859-1?Q?TvOgpbbl3OEvq9mNMYI=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 07/10] power: reset: macsmc-reboot: Add driver for
- rebooting via Apple SMC
-To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>,
- Hector Martin <marcan@marcan.st>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
- <20250610-smc-6-15-v7-7-556cafd771d3@kernel.org>
-Content-Language: en-MW
-From: Nick Chan <towinchenmi@gmail.com>
-In-Reply-To: <20250610-smc-6-15-v7-7-556cafd771d3@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: axiado.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA0PPFBEC4B1F8E.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50b7e59c-e139-4f67-f4eb-08ddac8dd941
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2025 04:25:39.1277
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: ff2db17c-4338-408e-9036-2dee8e3e17d7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m0/SEclG33FYxM/n6nHQ2YMoeSmDhiFYE4zxsnwZkN4dLCbbSgIa5XjGf8J1I+7nIp2N9pfNGI2WOwdAU8K7ww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR18MB5945
 
-
-
-On 10/6/2025 23:29, Sven Peter wrote:
-> From: Hector Martin <marcan@marcan.st>
-> 
-> This driver implements the reboot/shutdown support exposed by the SMC
-> on Apple Silicon machines, such as Apple M1 Macs.
-> 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Reviewed-by: Neal Gompa <neal@gompa.dev>
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Signed-off-by: Sven Peter <sven@kernel.org>
-> ---
->  MAINTAINERS                         |   1 +
->  drivers/power/reset/Kconfig         |   9 ++
->  drivers/power/reset/Makefile        |   1 +
->  drivers/power/reset/macsmc-reboot.c | 290 ++++++++++++++++++++++++++++++++++++
->  4 files changed, 301 insertions(+)
-[...]
-
-It seems that the reboot driver still probes even without the smc_reboot node in the smc node:
-
-[    0.994942] macsmc 236000100.smc: RTKit: Initializing (protocol version 12)
-[    1.002862] macsmc-gpio macsmc-gpio: First GPIO key: gP01 (0x67503031)
-[    1.013156] macsmc-reboot: Failed to locate of_node [id: -1]
-[    1.048188] macsmc-reboot macsmc-reboot: Missing NVMEM cell shutdown_flag (-2)
-[    1.055359] macsmc-reboot macsmc-reboot: Missing NVMEM cell boot_stage (-2)
-[    1.062332] macsmc-reboot macsmc-reboot: Missing NVMEM cell boot_error_count (-2)
-[    1.069799] macsmc-reboot macsmc-reboot: Missing NVMEM cell panic_count (-2)
-[    1.076902] macsmc-reboot macsmc-reboot: Handling reboot and poweroff requests via SMC
-
-Best regards,
-Nick Chan
-
-
+=0A=
+=0A=
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation=
+/devicetree/bindings/axiado/=0A=
+=0A=
+Thank you for testing this. I will send the v2 with the fix.=
 
