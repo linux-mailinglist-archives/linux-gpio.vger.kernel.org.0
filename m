@@ -1,96 +1,92 @@
-Return-Path: <linux-gpio+bounces-21705-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21706-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCA80ADD637
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jun 2025 18:31:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBB5BADDBAB
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jun 2025 20:52:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 713643A549D
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jun 2025 16:23:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8C1C47A284A
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jun 2025 18:51:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAD44239561;
-	Tue, 17 Jun 2025 16:17:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD2662E06E9;
+	Tue, 17 Jun 2025 18:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3op10iv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CS7CaFXV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB6822DF80;
-	Tue, 17 Jun 2025 16:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FC12EF9D4;
+	Tue, 17 Jun 2025 18:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177041; cv=none; b=A01Ogq5qleH5krrzqOfD8YpRPkD9hVhPpZMletJhJ4uVaSZiMFtsuyRpxacPotzVpHTGfE0g7kHelzffTJuRdcgdJVV/Vf8wpzjQgARHCtvwOD5Sx5yEomDJuU6dAeQ1H3fmsuXex8bgV7ws6mNBcHmCSqrAmn8W8bjnkKm2wcs=
+	t=1750186341; cv=none; b=NUG9YtyZu30XAvUmunTrSzjlJ6UO0pmr38zJEF5nPN+fmOQccurxosCS5McXy8AitHUvvpOZvm0tM2A5ploVJw+/hbhFXGcPY0iKSpHb3VVDKo4LFeOYLhPlyaHtC0H7i+Q4ozdyl5PxAfNiUBuzpRq/gkUw8hv/hp0OIpp1V2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177041; c=relaxed/simple;
-	bh=oecCs2PWJBNrb+O9Kzm5FEOBYJVbUn0UtcA+nBuBlwo=;
+	s=arc-20240116; t=1750186341; c=relaxed/simple;
+	bh=qlusW2sr4sVU2uXJRPIMCSXV7SxcfJyTdbN5C74eRL4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tvnrug7tfRNgeUBX33OdlH731Mn6g/XBLwK65n+9Mn8uBiyWh99ORZZCPDc3dznFgMWZ8gFZPgqvEBAw6I0M6oI5iMvtHEGgifOB5zUFq22Hvjxy7ViHmBSP2cvobXyrbUla/rAaUJLdvPPJU4aWXT8SFarxd+oJI2xYF68s7fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c3op10iv; arc=none smtp.client-ip=209.85.221.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cx9jIPMZpNPfG5ux5QiJe7sHd/y2xfAITBeBcYtOX6BM1Jgob5ms3zaHENkwC6K+ML+Am0X5kHYQSDB9M5rfYWaZKiG60Zhuq7ZjKAJigTvrMhEYPlI9DqFBqebQkUKWZ7CB3RenJYtOWCmWSafLwnKiEaYeWCOAVnoI08wcs/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CS7CaFXV; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a528e301b0so793478f8f.1;
-        Tue, 17 Jun 2025 09:17:14 -0700 (PDT)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23649faf69fso60441425ad.0;
+        Tue, 17 Jun 2025 11:52:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750177033; x=1750781833; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W4IRp8lOuDYBi74yqX5sUOj7piA7uY8U+OIdNTvBqxM=;
-        b=c3op10iv82zBJB6s77v42N0VmDeB9yM3+lASgetDtrgRF09OaRgVtBCyGelDJb/25D
-         atohHJBoxuFFMalAroKNJwcWCM2PQhgtJKezW6TF03JGYmf50rK401waq5yHw9eweqas
-         5TL7wlHzQGKAkhYlAQrujuFVpdA2ktBa5D8I8dagifShfPMuzkdMNJVPI0ym8KgjAmtp
-         qG8GhebGlFy03WcFBFt68gh12KG+vHpPicBvV8DLeHZk1C1B7BFu9MgJAweExCdB0lM+
-         5qK2OfBujeBRNcxscwpoeAYyk/HOtAlhVkZjShe/5L8WANrQ2bwEP3ZC689HlxNxlooB
-         rPkA==
+        d=gmail.com; s=20230601; t=1750186339; x=1750791139; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rrjM2YpDGiy0ALMLMuxjn2ko9PVZeOACLyeqPzUnd5A=;
+        b=CS7CaFXVpPoowWtJiHDw3RuJ3q+zsPORiTN3ZUcMmRv7wDCg7rUyaoO5K7Abv1KCJS
+         lmz08A8uQk4hjGSKG3SedYF6+QUEjB60+htWfHJvHWMpDuM/v23Qvn8rvSoo7ieEleoN
+         vubjKw/YPqG/siV7M8FvbX229O4XIclvRZ4pH2+iGPAvcRJruwFnQshYxX19q2xDlirY
+         mDN5sFX/m5gW6p4nxvsFVhHyBoosu/EvIdOXkzjq+wHvPzamtNqNcPJFDeKC/Bo1MO8O
+         VDs9xrfxjrHlLoueLGGs+fNjNPFFUW6gzPrc7sGugJzV898YMxAXU2dI23hB8xUsKibc
+         IjRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750177033; x=1750781833;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W4IRp8lOuDYBi74yqX5sUOj7piA7uY8U+OIdNTvBqxM=;
-        b=g8Z3Znc4h9yutQ6c0pZL1UCKHuvj67Dme5RDYhPsRR7XDlEwptg/fUCqXBcS/kHBXa
-         P/yOBKJ8zlYdUrg8A2QVf2egOatzV0oWicY6CO0bJoeITWvj9dCmjdnJIccde+8X0r8t
-         eOYAk5cbz6Jy2YjW+qKwfjwIpvlWBaYEaj338yG0/fKIFiQZqY3OPDcymz72ukWM5/mP
-         keF8Xb1kbSDAsXQ0YYouctDsxprSTIgedE/pdvAPG3ZBi1iP48+fUGJvpkxQAnKizCST
-         neDjOwJaxrzAh2ngxjI1mxMbBjsJ+psOsLRACODDzWjUxsDn0ucSJHYbfGrQgM6iB77T
-         YnrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVppdb9PP67pMRiGtJZ5io8uSgo4dK3k6B9MmefXTI5/FM4Rienzq/BcRRTO+3tIUjEM2GadOHRX1MgA==@vger.kernel.org, AJvYcCV1rqZh94MNAQaNkbcX1UQ7Gkn3V+fcCt6eEcViw0ZCOZPoAnEYPhCCOeqEw1WF7tCxEEg4dpXeHfC9@vger.kernel.org, AJvYcCVjQEZmFKaM+4RqgGEmcyLKc0LvEfkxyej8gYn4czvIOefCroZ4voOlaIijgSJBQ9o5AnCKLvWbtQ2OeEpY@vger.kernel.org, AJvYcCXf3xvtwNDmKAkl+ettmR7H88bNwK/iIIPMPqcfdki0aPQIS+NEU+q5VjIXLzeIaynUdFPnmO/jOn7W@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzCp8NBiOrmzsltpqU6VgvUgIL+gSV0l61PYoVqYLteB3v2fia
-	Z3wefmsms6o6lX2EuKUg8R4MT4wprdzhqMQG2ynK2baED18bPcHZ69aD
-X-Gm-Gg: ASbGncsrMdUrNTU4F28lNUgt51tj/vT2OnnmV4FKkrOVLsB3VGXLZaU7d4ZbaeoZGFm
-	5FHd6Q64TxVZBCPERkuGbHV1N/HZPmSW4Td97V4uns7ZwqcpEZDlWlPL5RAElTw8ulstwzcwgMu
-	chcCXLBpDE6tr3U1Gxac3CnOy2Q3Tsss0ZTCMEYZoMLoagDdgKM2KWAV/rkdJ+MjQaeXJxDCIul
-	W4FaEnZR1draXhxc2Werdc9iglus06ZKT+Mz09OomCb1m3Y9R5K+e6dxfKIaNUVCAJPMOEQhJyj
-	zoNTNmvvfoZMLUOCYzsbh+voOGsyFGPhbf60HOM0MAyVyelmpMY0xu2KnMJ13Bevnk8vSzwJqNv
-	S5Y8GHDw=
-X-Google-Smtp-Source: AGHT+IHy4HYvP0zCPs29Z6Pt9vtjdN3X2LsRWCcO9xNMOK3GaEZ/sae43xY5py7YO0nSTpfphfLHSA==
-X-Received: by 2002:a05:6000:40cb:b0:3a5:78f6:c7c1 with SMTP id ffacd0b85a97d-3a578f6d4f8mr3102801f8f.1.1750177032732;
-        Tue, 17 Jun 2025 09:17:12 -0700 (PDT)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b48564sm14185037f8f.82.2025.06.17.09.17.07
+        d=1e100.net; s=20230601; t=1750186339; x=1750791139;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rrjM2YpDGiy0ALMLMuxjn2ko9PVZeOACLyeqPzUnd5A=;
+        b=HrEQTRsvR2fgZIJ7KIdfkYpas2l628XcFBxsetlVC2RaqQ5SiaTdXMdYY6dRpsWUBb
+         J9QLr2eX9Vn2jmAtN93CZ6RP2+n21X3KfaDBTBeh9fFxFojPWvOMni+SNV1eG741vWAg
+         tcGOayiGPJSzjlaT3zhQwcCw6g/yE3RIxK5o2IlNd9KEDPaEOKmzIW0urOKm3SgKjuM7
+         MZrREhEFS/LP6AsgI4+I7BTtG6TQsioOooz2gOIAs8hXwDIjRuSsFg9iugMVSPOW5Mv9
+         RfxZn2Rn6/frKBJHmNLlj7q07gdqv9aDWhsyr1RuwlLORRf3iJ7Bq8HFd+iwWHw+CFrT
+         Fh2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUbsSMIWpZ5/Xn02UWVRQB2dJqglAMj5taBiD3uXA03tSsU/6Ey/1joSbjWdQLcji+4io1bOplTjjWJWQ==@vger.kernel.org, AJvYcCV6QQ9Ca5dBLsbP64kV7bu7rMQw/JQo03KLdyIaozNqylwJpa5aAJv19hWR0KO0Nagbzw8dliSZlGMX@vger.kernel.org, AJvYcCVOBJ0bmT25E0wZhSkVfPrq76UCPD6xKmY4JrspRNPYhj6qg1ShANoiH0Kg2rV3Mz3pjX2ytKAH+os9OIQn@vger.kernel.org, AJvYcCXml1NQ+hXKvJP33XkebY144cKHWYBMCkJk9+a8tnijOg17+rquIfCcBsyusQheMIeUsdr2kFqt8n19@vger.kernel.org
+X-Gm-Message-State: AOJu0YxocRwehglKhzCHG90riSR5LQLEikGUiBhnUB+Lk4kIyh3qpend
+	2PlpNF4Dy00KUmGxn3abfOj+MyZpg0HCyNZYexezmBz/BsVEMYbyEmSK
+X-Gm-Gg: ASbGncsgr9RJIN7hbbyNT1kT/Q18om1Ush4b9s9/TQm6tw1FuFqZRGNaSgKvYbv51VC
+	UNw9GkGKVzdGRb1zTd6ty0SCsBvpmFLuCde2IBxqAk1Em9aAE1taCcCRNOcUEWIETMTWCRX9n9e
+	DNWuisvm1Z/P327DuMQqOzpw3cqJ99e2naZ8a5ip4LG+Fp6acRIQB+3PjIbpelGKbRIFLgrl59I
+	5bQZfXUOerBiT4Dp1/QAepUEPnfEo7hPJ5LoHtmb/KR5SsE/2mue6vKXxWqdtSqRKXRurGhIBbt
+	Abxr3zd1OjwckLwgPOcK+zXRl5EXRYSFg/HQ7C0j4uoFbk2NPoH5Um4RqgQYGm2mQj7LmCR/8q4
+	f/NhOZg==
+X-Google-Smtp-Source: AGHT+IEbxeRsrV9v0cFZpm/JNC9Jn+xijTCUioEIcN6OlyBZRQCnX9DQlgMFOHdhLztTsnPvJxpk4Q==
+X-Received: by 2002:a17:902:d552:b0:234:d7b2:2ab9 with SMTP id d9443c01a7336-2366b005cd2mr247602865ad.12.1750186339109;
+        Tue, 17 Jun 2025 11:52:19 -0700 (PDT)
+Received: from localhost ([2804:30c:4000:5900:b4c4:6073:1a92:4077])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365e0d0ab2sm84238655ad.246.2025.06.17.11.52.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 09:17:12 -0700 (PDT)
-Date: Tue, 17 Jun 2025 13:17:05 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, dlechner@baylibre.com
-Subject: Re: [PATCH v11 11/11] iio: adc: ad7768-1: add low pass -3dB cutoff
- attribute
-Message-ID: <aFGVAWi7CZAy0E8k@JSANTO12-L01.ad.analog.com>
-Reply-To: aEwd4cS7j0Vvypg8@smile.fi.intel.com
-References: <cover.1749569957.git.Jonathan.Santos@analog.com>
- <804d66f1858014d7278aec3344d81c223661e878.1749569957.git.Jonathan.Santos@analog.com>
- <aEwd4cS7j0Vvypg8@smile.fi.intel.com>
+        Tue, 17 Jun 2025 11:52:17 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:54:06 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, nuno.sa@analog.com,
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
+Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aFG5zufl_znUw3xL@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+ <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
+ <c29feb5b-2699-411a-87dc-249f5b9ff6c0@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -99,51 +95,60 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEwd4cS7j0Vvypg8@smile.fi.intel.com>
+In-Reply-To: <c29feb5b-2699-411a-87dc-249f5b9ff6c0@baylibre.com>
 
-On 06/13, Andy Shevchenko wrote:
-> On Wed, Jun 11, 2025 at 08:52:03AM -0300, Jonathan Santos wrote:
-> > Ad7768-1 has a different -3db frequency multiplier depending on
-> > the filter type configured. The cutoff frequency also varies according
-> > to the current ODR.
+On 06/16, David Lechner wrote:
+> On 6/10/25 3:31 PM, Marcelo Schmitt wrote:
+> > From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
 > > 
-> > Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-> > the user which bandwidth is being allowed depending on the filter
-> > configurations.
-> 
-> > +/* -3dB cutoff frequency multipliers (relative to ODR) for each filter type. */
-> > +static const int ad7768_filter_3db_odr_multiplier[] = {
-> > +	[AD7768_FILTER_SINC5] = 204,		/* 0.204 */
-> > +	[AD7768_FILTER_SINC3] = 262,		/* 0.2617 */
-> > +	[AD7768_FILTER_SINC3_REJ60] = 262,	/* 0.2617 */
-> > +	[AD7768_FILTER_WIDEBAND] = 433,		/* 0.433 */
-> 
-> Just to be sure, is it 0.433 or 0.4333(3) actually? Sometimes datasheets have
-> rounding that even may lead to problems (see TSC issues for some of the Intel
-> CPUs in the past). That's behind my question.
-> 
-
-Every reference I have specifies it as 0.433, so I believe that is it.
-
-> > +};
+> > The AD4170 is a multichannel, low noise, 24-bit precision sigma-delta
+> > analog to digital converter. The AD4170 design offers a flexible data
+> > acquisition solution with crosspoint multiplexed analog inputs,
+> > configurable ADC voltage reference inputs, ultra-low noise integrated PGA,
+> > digital filtering, wide range of configurable output data rates, internal
+> > oscillator and temperature sensor, four GPIOs, and integrated features for
+> > interfacing with load cell weigh scales, RTD, and thermocouple sensors.
+> > 
+> > Add basic support for the AD4170 ADC with the following features:
+> > - Single-shot read.
+> > - Analog front end PGA configuration.
+> > - Differential and pseudo-differential input configuration.
+> > 
 > 
 > ...
 > 
-> > +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-> > +		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-> > +		*val = DIV_ROUND_CLOSEST(temp, 1000);
+> > +static int ad4170_fill_scale_tbl(struct iio_dev *indio_dev,
+> > +				 struct iio_chan_spec const *chan)
+> > +{
+> > +	struct ad4170_state *st = iio_priv(indio_dev);
+> > +	struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
+> > +	struct device *dev = &st->spi->dev;
+> > +	int bipolar = chan->scan_type.sign == 's' ? 1 : 0;
+> > +	int precision_bits = chan->scan_type.realbits;
+> > +	int pga, ainm_voltage, ret;
+> > +	unsigned long long offset;
+> > +
+> > +	ainm_voltage = 0;
+> > +	ret = ad4170_get_ain_voltage_uv(st, chan->channel2, &ainm_voltage);
+> > +	if (ret < 0)
+> > +		return dev_err_probe(dev, ret, "Failed to fill scale table\n");
+> > +
+> > +	for (pga = 0; pga < AD4170_NUM_PGA_OPTIONS; pga++) {
 > 
-> MILLI? KILO/ MICRO/MILLI? ...?
+> From what I read in the datasheet, it sounds like if adi,reference-buffer is
+> precharge, then the PGA is bypassed, so there would only be 1 option in that
+> case (gain = 1).
 > 
+Although not explicit in the datasheet, looks like there are two precharge
+buffers. One precharge buffer is used with the voltage reference inputs and is
+associated with the adi,positive/negative-reference-buffer dt properties. The
+configuration of that buffer is set through the REF_BUF_P/M fields of AFE
+registers. The datasheet doesn't mention the PGA on the section dedicated to
+describing reference and reference buffering features.
 
-Yes, MILLI.
-
-Thanks,
-Jonathan S.
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+The other places a precharge buffer is mentioned refer to it as 'gain = 1 precharge'.
+My understanding is that the PGA bypass precharge buffer is a different buffer
+that is only used when PGA option 9 is set in the PGA_GAIN filed of AFE reg.
+The PGA bypass precharge buffer would be used in the analog input path while
+the reference buffers would be used in the reference input path.
 
