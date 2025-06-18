@@ -1,90 +1,83 @@
-Return-Path: <linux-gpio+bounces-21822-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21823-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76C23ADF526
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 19:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E202FADF568
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 20:02:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 482344A3260
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 17:56:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3592D17AFF8
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 17:59:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5050E2F49E8;
-	Wed, 18 Jun 2025 17:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 294063085DD;
+	Wed, 18 Jun 2025 17:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faZ9iWuv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JQ/X910X"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9023085AA;
-	Wed, 18 Jun 2025 17:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B11B3085BA;
+	Wed, 18 Jun 2025 17:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750269231; cv=none; b=KgliT5G5z9w4QMfkcACFYayFKGOkHbZaceyD6rD9YZYWNK4+oWj8MqkQg0gBESw6yw202HPim26+tFfasF/j9ND/NbfOk1RSVn17joDHGl22wyyKg45xk8o3A6sw5fT6AQ6CndWIx5PTq5sQsBjgK1ANxCv/MG/uoeXXkmjmWYI=
+	t=1750269568; cv=none; b=Pil1+dpMX0rQeyl18p3J/ZuM6LFpCft8pMd6Ban3vVmAu+uYIZGYZeHdzj8QqcCMI8PotVWTVRPeQt57RlMv8DI40l/vgBSMd5pVPkFWO/lI+GQoqxqQ1eGdaLrGFkFhD5MWsxxug9dRfvhOTuFscJVdfgwWxaXKRrQqFv6s/HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750269231; c=relaxed/simple;
-	bh=WELV8YgJbvt6iCJoz5AP8I6DHYf0HK+MqHNweU5Vmyg=;
+	s=arc-20240116; t=1750269568; c=relaxed/simple;
+	bh=VsQ9mjiyc4dnTIlr6g4DfKjP8V0Y85rIOMAAUGcigOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WdVJvWKJZtGWHii8kRwvZp/DB/K+r8qClE8awmwHb6N368ZJ30bAXYyT+ayR1/4K1axYLx0eetGctbT3gyzO/BxjFECKtHnOv4tQQISrTlAsbymBQWsfZBY8FNhYa8+gCHIvoTaAUB0X67pkeuS/XQeLsbSPbBzo3FNxfBjWk3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faZ9iWuv; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5534edc646dso7722850e87.1;
-        Wed, 18 Jun 2025 10:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750269227; x=1750874027; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p84+wxDg4u34Lm55oq6WOvopLTPICI6s2ti0ZOixglA=;
-        b=faZ9iWuvmBscANSMtFaZTE9sENYnfXJtQ+bw2MPcejXU5kjf3fUJ4+lYbwrc2OIRFQ
-         keaxnEtF/BHttY7J6oy8Y4bV0wZsiosLjdnnDap46Sj2KcPnlwR5zhl3iehb7eQv9P1g
-         yC/5d7dSo3gqL4Zg1A4qRVkQ/l3L33MKYZ7/WM7J26bpzoJUkZwN2DahEwVF4qpGqXS5
-         vItdM4/oDe4OcXv4n1/GXRsac5ne09t3fQQXIIvIv1tYRC/k7vLNM38Eugzo0+CYKExx
-         LEOlVsgPpc1pkKsNanlpX4FrnA6XqjoidVw8Dke+9w25XgzmP9zocu8cC9YZcPx7eCQP
-         WCgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750269227; x=1750874027;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p84+wxDg4u34Lm55oq6WOvopLTPICI6s2ti0ZOixglA=;
-        b=UFDZHi0xC72zNIPrT3aAYw7EDF+lKQUfMAm04zCTigWLW+flR+Ous7KV/jetVyw6l8
-         3U0asSoaZIwC0jHS0cyFFh2EbIpPnP/ZtWytfZ+xJFw5e1fP1XqAp4eHFosamUt5SlOG
-         NVGNN4gGjohbvKwPGDZcaCs0Ms/nIasZo4Axb25adjSHP25sD5rbww/i+zgkKIj+ad1g
-         tSEfiMjWFi3PzYg2a/4+w7MXs0842s7d3l241a02LnocpnOmNJn4+YcWL5UyvOjUIWkJ
-         ZXE9ULG2VGmSdvnLn0gb3emcl6+V3YPuBloyC3hgvcfXRgWXYocA7HgmjbYvMdNy6yje
-         gGBA==
-X-Forwarded-Encrypted: i=1; AJvYcCURA34HL4ouOcTtlZYibouYEcO5VxAXKqsg0NfIaAh4vvq+pS8ARfjdCUKPkMNpWdThKrSNxpeTEo4OMWar@vger.kernel.org, AJvYcCV8rLHezivod82P/A7DajNDaKOiqL5JemTItDpEufC0zwYY/XRPwpd8hB7N77HRPmqdUmSsTAQSz5H8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhfHOw9xq34uGLguGeYzgqQdVgNL8fGiPTX22iYygnfwc+l5gT
-	kmxLKSl2Mh3aji76imkiNngswlcP2NidA15E47VH8UzbGmXV7YWAXEIc
-X-Gm-Gg: ASbGncs64VV6MGrWKViuxx1GVAIdmLngHId5zaMDXhE1Vhi9bj+8jhsESgJl59F5wyV
-	CAQntUToiGNy1G+CgMuoWotbqto8dcQp2qytmy3gcpSz0B7ZEXJxD3Gfzd652nbMfgM1P5w4tVo
-	ZzSpejSPBvwZRWBRoUnBZ+p0uNwBW5qW9y1oiYpEDQL1oqZpa80MsRe6DUVrYCPOqaZs/dX1lFy
-	QG5gV40Qcaw5VI4eelYwlx66Z091+278njhOle4FiR9nlaLfgB4GTsGnmQJGyUgZrbUGpwGDc/E
-	yg1mfyv3uUnXP3a7oH/y/b56CsZy+fLLV62BoCIqfqzWyTkKY/FSkIGZt0o53hDBDZFexa2QHpc
-	IwA==
-X-Google-Smtp-Source: AGHT+IEw2MUxlg+9z0zOxwI2HIbA//xXYjnaeyhIQ0EYOe7raQRMF7DADSBZ+e1Qc+mzPINdbbw/jg==
-X-Received: by 2002:a05:6512:1193:b0:553:a272:4d18 with SMTP id 2adb3069b0e04-553b6ee2b8cmr5915844e87.20.1750269227022;
-        Wed, 18 Jun 2025 10:53:47 -0700 (PDT)
-Received: from localhost (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-553ac11ff75sm2315299e87.26.2025.06.18.10.53.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 10:53:46 -0700 (PDT)
-Date: Wed, 18 Jun 2025 19:53:46 +0200
-From: Klara Modin <klarasmodin@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Avi Fishman <avifishman70@gmail.com>, 
-	Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, 
-	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
-	Benjamin Fair <benjaminfair@google.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: mmio: don't use legacy GPIO chip setters
-Message-ID: <twqaezumdhalpivd46xkevzbfkwouwfrpr7wbw7yjeqcxberzv@sp36opkfttne>
-References: <20250618-gpio-mmio-fix-setter-v1-0-2578ffb77019@linaro.org>
- <20250618-gpio-mmio-fix-setter-v1-2-2578ffb77019@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XwTGFm82xCQ5prPUI4UdUCVmD6u97Sg8IArm4IHwLKexhqO+jwQ7yVArfnC58U0hg+EcWbbC1cw9DdhbnHHNEMHyOKyQf/FrpvCgM2DLmoPPz6IHa8eJl/Im429IPOF3y68Dz7CIkbJhL9WRWGFxlk3xxLkKaAyiRpKD3tD0Mww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JQ/X910X; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750269565; x=1781805565;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VsQ9mjiyc4dnTIlr6g4DfKjP8V0Y85rIOMAAUGcigOs=;
+  b=JQ/X910XcsAL1KSJ3KZQSO/u4W+jTqWZ30TXsI+zoEQZcxr6hkh+N5jy
+   7Soi5lgb494Ea5AY7jeEu+wWyXZQHLWO2ZlpKNXR88+wj1x/KCwZT60nF
+   5hndzq1pCMv50sPdr8yOdPKHPT3Ux3HDzYhKrcwG31JUzv8PcA7AOSFlb
+   9u5OwvgixAP1wv/jdVMB13cN2FiR31FwQLYFTcney4yMqWXB11i9xLQX3
+   lvY/SzdJ2jWoCs8zAj12EYbegIwisSfLdSmS/ZVoA5o7o/Nw6gJDZ3gjA
+   unPwJi7L1bSYyFJ1ovDM9eRL21tabH7BA+t3BN6kgb5G2yswbkTFyf/IC
+   w==;
+X-CSE-ConnectionGUID: nDPhsa4oRK6iKBy7txvr5g==
+X-CSE-MsgGUID: 0oQedp24QTCYeOrK8OynyA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="51734706"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="51734706"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 10:59:25 -0700
+X-CSE-ConnectionGUID: ulQXaGOQTyCSlh6Kla1M5w==
+X-CSE-MsgGUID: 4AskfPP0Rc6Mp7Knk70Z+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="150654595"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 10:59:20 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uRx48-00000007okJ-279d;
+	Wed, 18 Jun 2025 20:59:16 +0300
+Date: Wed, 18 Jun 2025 20:59:16 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: oe-kbuild@lists.linux.dev, Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	linus.walleij@linaro.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aFL-dLs5EQsde8Cq@smile.fi.intel.com>
+References: <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
+ <d6ae8122-ff38-4fca-8e02-f27c7ac2ccd8@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -93,91 +86,78 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618-gpio-mmio-fix-setter-v1-2-2578ffb77019@linaro.org>
+In-Reply-To: <d6ae8122-ff38-4fca-8e02-f27c7ac2ccd8@suswa.mountain>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 2025-06-18 15:02:07 +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Jun 18, 2025 at 08:37:53PM +0300, Dan Carpenter wrote:
+> Hi Marcelo,
 > 
-> We've converted this driver to using the new GPIO line value setters but
-> missed the instances where the legacy callback is accessed directly using
-> the function pointer. This will lead to a NULL-pointer dereference as
-> this pointer is no longer populated. The issue needs fixing locally as
-> well as in the already converted previously users of gpio-mmio.
+> kernel test robot noticed the following build warnings:
 > 
-> Fixes: b908d35d0003 ("gpio: mmio: use new GPIO line value setter callbacks")
-> Reported-by: Klara Modin <klarasmodin@gmail.com>
-> Closes: https://lore.kernel.org/all/2rw2sncevdiyirpdovotztlg77apcq2btzytuv5jnm55aqhlne@swtts3hl53tw/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpio-74xx-mmio.c | 2 +-
->  drivers/gpio/gpio-en7523.c    | 2 +-
->  drivers/gpio/gpio-mmio.c      | 6 +++---
->  3 files changed, 5 insertions(+), 5 deletions(-)
+> url:    https://github.com/intel-lab-lkp/linux/commits/Marcelo-Schmitt/dt-bindings-iio-adc-Add-AD4170/20250611-101842
+> base:   4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6
+> patch link:    https://lore.kernel.org/r/48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt%40analog.com
+> patch subject: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
+> config: powerpc-randconfig-r072-20250613 (https://download.01.org/0day-ci/archive/20250614/202506140009.GdV0BtKr-lkp@intel.com/config)
+> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
 > 
-> diff --git a/drivers/gpio/gpio-74xx-mmio.c b/drivers/gpio/gpio-74xx-mmio.c
-> index c7ac5a9ffb1fd1cc9439e3320d54574bf0cebbf6..3ba21add3a1c669171578ceaf9cc1728c060d401 100644
-> --- a/drivers/gpio/gpio-74xx-mmio.c
-> +++ b/drivers/gpio/gpio-74xx-mmio.c
-> @@ -100,7 +100,7 @@ static int mmio_74xx_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
->  	struct mmio_74xx_gpio_priv *priv = gpiochip_get_data(gc);
->  
->  	if (priv->flags & MMIO_74XX_DIR_OUT) {
-> -		gc->set(gc, gpio, val);
-> +		gc->set_rv(gc, gpio, val);
->  		return 0;
->  	}
->  
-> diff --git a/drivers/gpio/gpio-en7523.c b/drivers/gpio/gpio-en7523.c
-> index 69834db2c1cf26be379c0deca38dda889202f706..c08069d0d1045e9df4a76cad4600bf25d4e3a7c5 100644
-> --- a/drivers/gpio/gpio-en7523.c
-> +++ b/drivers/gpio/gpio-en7523.c
-> @@ -50,7 +50,7 @@ static int airoha_dir_set(struct gpio_chip *gc, unsigned int gpio,
->  	iowrite32(dir, ctrl->dir[gpio / 16]);
->  
->  	if (out)
-> -		gc->set(gc, gpio, val);
-> +		gc->set_rv(gc, gpio, val);
->  
->  	iowrite32(output, ctrl->output);
->  
-> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-> index 9169eccadb238efe944d494054b1e009f16eee7f..57622f45d33e0695f97c7e0fa40e64f9fd5df1e0 100644
-> --- a/drivers/gpio/gpio-mmio.c
-> +++ b/drivers/gpio/gpio-mmio.c
-> @@ -362,7 +362,7 @@ static int bgpio_dir_out_err(struct gpio_chip *gc, unsigned int gpio,
->  static int bgpio_simple_dir_out(struct gpio_chip *gc, unsigned int gpio,
->  				int val)
->  {
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->  
->  	return bgpio_dir_return(gc, gpio, true);
->  }
-> @@ -427,14 +427,14 @@ static int bgpio_dir_out_dir_first(struct gpio_chip *gc, unsigned int gpio,
->  				   int val)
->  {
->  	bgpio_dir_out(gc, gpio, val);
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->  	return bgpio_dir_return(gc, gpio, true);
->  }
->  
->  static int bgpio_dir_out_val_first(struct gpio_chip *gc, unsigned int gpio,
->  				   int val)
->  {
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->  	bgpio_dir_out(gc, gpio, val);
->  	return bgpio_dir_return(gc, gpio, true);
->  }
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> | Closes: https://lore.kernel.org/r/202506140009.GdV0BtKr-lkp@intel.com/
 > 
-> -- 
-> 2.48.1
+> smatch warnings:
+> drivers/iio/adc/ad4170.c:1181 ad4170_parse_adc_channel_type() warn: passing zero to 'dev_err_probe'
 > 
+> vim +/dev_err_probe +1181 drivers/iio/adc/ad4170.c
+> 
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1170  static int ad4170_parse_adc_channel_type(struct device *dev,
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1171  					 struct fwnode_handle *child,
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1172  					 struct iio_chan_spec *chan)
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1173  {
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1174  	int ret, ret2;
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1175  	u32 pins[2];
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1176  
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1177  	/* Parse pseudo-differential channel configuration */
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1178  	ret = fwnode_property_read_u32(child, "single-channel", &pins[0]);
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1179  	ret2 = fwnode_property_read_u32(child, "common-mode-channel", &pins[1]);
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1180  	if (!ret && ret2)
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10 @1181  		return dev_err_probe(dev, ret,
+>                                                                                           ^^^
+> ret is zero, so this returns success.  s/ret/ret2/.
+> 
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1182  			"single-ended channels must define common-mode-channel\n");
 
-This also fixes the null pointer dereference for me on the Banana Pi
-BPI-F3 from my report.
+Instead of ret and ret2 this code should be refactored to use
+_preperty_present() beforehands and return an error to the caller if it's
+present but failed to be read or not optional at all.
 
-Thanks,
-Tested-by: Klara Modin <klarasmodin@gmail.com>
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1184  	if (!ret && !ret2) {
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1185  		chan->differential = false;
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1186  		chan->channel = pins[0];
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1187  		chan->channel2 = pins[1];
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1188  		return 0;
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1189  	}
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1190  	/* Failed to parse pseudo-diff chan props so try diff chan */
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1191  
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1192  	/* Parse differential channel configuration */
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1193  	ret = fwnode_property_read_u32_array(child, "diff-channels", pins,
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1194  					     ARRAY_SIZE(pins));
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1195  	if (!ret) {
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1196  		chan->differential = true;
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1197  		chan->channel = pins[0];
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1198  		chan->channel2 = pins[1];
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1199  		return 0;
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1200  	}
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1201  	return dev_err_probe(dev, ret,
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1202  		"Channel must define one of diff-channels or single-channel.\n");
+> dfefd2b2405829 Ana-Maria Cusco 2025-06-10  1203  }
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
