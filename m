@@ -1,212 +1,180 @@
-Return-Path: <linux-gpio+bounces-21792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21778-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27660ADF076
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 16:58:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BB1BADF03C
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 16:53:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34B3917FCAE
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 14:57:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5D82188D132
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 14:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8752F005F;
-	Wed, 18 Jun 2025 14:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1751A2EE5ED;
+	Wed, 18 Jun 2025 14:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="eyNWBs4t"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="V5RWvryj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazolkn19011030.outbound.protection.outlook.com [52.103.66.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D0A2EE5FA;
-	Wed, 18 Jun 2025 14:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.66.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258491; cv=fail; b=MQPan0zu/cjWAjkWM/lTUWpRbdtVCZ5TfMCyjobCj7HcavaxPFSl3j8j5f9M2qJqqiMedel2wiBLmuFoFEQEmFXyH9zmCEe9NxQlVm54iDVukclwGYeCz34emQ3lJ6Xw3ix6lRVmoXK2AmJHK0d5ui9r68Q6NloUc8U1g9/G2Ts=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258491; c=relaxed/simple;
-	bh=3uF4iHRlfv4JMVr2rJ8qpGb9KE8C70hOqN20bebHeAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YvBbqirWLo3LeDgH2WbuU8eAN0G0xhfeIGPIOTLvTkDt1CfS+UEDgNancmdHY0P8V3AVnBHds6PF42Su+PiVpzdHv/Wpcblr8H/i5+P2IByw+p+qegcdMp/VOfG2X2n6Pz8gjU8yo3KgMs/0luMq/fVkLbG6VONFz0BRd9bKHpk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=eyNWBs4t; arc=fail smtp.client-ip=52.103.66.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D0s8EN1kch1AsMREHPk7Bz16bYSeoKN40KJtnkvyHN9h5E4tC3kzwiadSz0UIC9Ik5EfkIR0YO6fNPzP6+WAGaDlwlcIxAwPi1MNUACE2i0aCtCjJBcPFszy99ctLYT+2TJBuIFbOYIJWLfrMKhMHXqskNAFjOrO853dnfWpEzYsw86TsheHxMturtUs2zmEA+7xCiNUDD+hFUHCpjw+JPLmH1hOKP1aTXdqaTMmEf2jaIkudvZ9F5riroE2Nz+Fzk4n03v/TYm/g5yteyg+lW+SzWwedvPqMH5YlBfmHrpiTx/cmd2NZ7Hzx4cgSaec/lCUSqS7bWNQeGF8PQkNcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7NWmYFa3EeHeBMV+JOhAudRHn4ptPaXw8LgToMu0QeY=;
- b=VEKX4mOQ20A49BmoXE+wtO1Xw1xPQT+0exeKVjdOrfwFGrD1AA482nFgz0jLI84MyQbhlVqpSNutDYlF0ZV7mlpLC70QdIt+570l71SCFnhDV5uDSeT7M1Paw5l+NBUB25uGYf9Tu8e0hPSacroNWMXirigsBtAv/RN2UbsvlznwJ+CWakdfiuVFu6i2MNwKIEJjORNamLkzXk/BR2LXjxK7jPpAt+ica9nUYcKVvN52+xupMz8AoRridM5y7B81FAP4KPfUAngIkrudS1TKsVhjaDldATivT7Tr6qp2Prnz1lekMIaAPLtMI6YhUfYTS7O2/xfPmMji7LSAo7easA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7NWmYFa3EeHeBMV+JOhAudRHn4ptPaXw8LgToMu0QeY=;
- b=eyNWBs4ti1we226+88FNCiEzchXG31vKOflzwiO5zPOXGMP2mSIYOzlkM8gKKQbQ99fhvpbrD2H87ybx9ZC0rKGQvbJYgWEWUpTqa1GS1won9D1SVB9WmT11D925kunC0Ak+QxGEh12NqlnyaqeMf7Ed5Yy6a7OBDyVsWJXR1HmBklCjIFOqFVIhYOkan5ajWSZAZrT9+VhtL+ofpxMUU6riNBt0kTqWOOuYjvBh+/DmV5jTaTpvgMmMAFG3WejW9WFLTgwSg3rVKDtTLjuO5FSiFg+6sLTvqund0SqbiBJH4hJ/RiSF0p1XxfftlGib1K7QVrpuzAWWkkt7jU2t/Q==
-Received: from OSBPR01MB1670.jpnprd01.prod.outlook.com (2603:1096:603:2::18)
- by TYYPR01MB10545.jpnprd01.prod.outlook.com (2603:1096:400:30e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
- 2025 14:54:43 +0000
-Received: from OSBPR01MB1670.jpnprd01.prod.outlook.com
- ([fe80::c00:ec4e:ee7e:9b7f]) by OSBPR01MB1670.jpnprd01.prod.outlook.com
- ([fe80::c00:ec4e:ee7e:9b7f%7]) with mapi id 15.20.8857.016; Wed, 18 Jun 2025
- 14:54:43 +0000
-From: Shiji Yang <yangshiji66@outlook.com>
-To: linux-mips@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-spi@vger.kernel.org
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	John Crispin <john@phrozen.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Shiji Yang <yangshiji66@outlook.com>
-Subject: [PATCH 13/16] MIPS: vpe-mt: drop unused functions vpe_alloc() and vpe_start()
-Date: Wed, 18 Jun 2025 22:53:26 +0800
-Message-ID:
- <OSBPR01MB1670B2637AF066C7811F557CBC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <OSBPR01MB1670163BDCA60924B3671D45BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
-References: <OSBPR01MB1670163BDCA60924B3671D45BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0054.apcprd01.prod.exchangelabs.com
- (2603:1096:4:193::22) To OSBPR01MB1670.jpnprd01.prod.outlook.com
- (2603:1096:603:2::18)
-X-Microsoft-Original-Message-ID:
- <20250618145329.25517-14-yangshiji66@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A7A3B1AB
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 14:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750258422; cv=none; b=EHc6Bmg7YkDaziWZ5RJTXzyl7qVBcrkfdUTV2e+COTcbjfi6Pr6TKxYUuLfDI0exJoO5jZPNdQc8QJEIu25qEYL/WX6AcQrBUfv9/Qt2zEcFR6TYyangQPPznTwMwj2/yYeGl8tvSAiorytiqJBf0w9h3lJcR6bIC6dywj5PnaU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750258422; c=relaxed/simple;
+	bh=d1bTMcMzxYwoA+D7FedJtqCDcbroa+Mc/37/DE2ipe8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pq1y62ACQ/ypDDAn86KOCkF5G5lkrAa85aOeQViIUHRZ5I8NK7jTxZPZyWfpiefgc+xexCRsRmaA1bLslzJQZ47eMwaGhxCVkt2cHRFp/278id+6FVoI4SmUsXLjeL6VqktR9xLU66ChVvdiLsnariFW5tTbxZRbPa421rs3Mr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=V5RWvryj; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54e98f73850so6620389e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 07:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750258417; x=1750863217; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QILoQ0cg9dCm9DSe1PZh99lLZifnpwxayvJF2llOsWw=;
+        b=V5RWvryjKoVyvKHsAXD/uO7JeR1qYTCtKWPezfMlGA+LLwyN2NBVjsygv7V76Lg9vE
+         ZLDkj0K0Okgk/qq2pLtVBrncrXmhds1l9mMaZTZLk0PynuZvvZrphCzp4kQQB3chZ2o1
+         +W+/RomCET7vFeGZkJoP6toOI5Y///Lc/oRsr//dwlD/MKaYV0wODRRRtgui3g2v5HbG
+         zaoCTJtaEgva+aiximCDFF+C9jzinv7N+8EJRFGAoUU/vW++uvbtNEcD7nlxujtnjdxb
+         5+iC3lXf11U5KlJ5rPZ9Zl4UNhCHKPqChhRxqE8HVL2WY7tr8L0gcOnmospuW1eaM3LW
+         iWBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750258417; x=1750863217;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QILoQ0cg9dCm9DSe1PZh99lLZifnpwxayvJF2llOsWw=;
+        b=GmzSMgT3tejzJcCt1C0CHn2rYf8xCTfkl33pJYFJliMqfYHYJBQH1JBvz9vw8TTqRA
+         mWXGG7peJZvfmNqEAwZbqy0V9mGgvPR2ebekChO0HZyZ7OcaQQW/xu8YN5QDmR17myiW
+         1lDMILDITjSrlrkyW0i7xGLcDna7HKmuk+N5aITtlBtoXkJN1DmtTtnzKL1SX8j9k9IH
+         2VkBsWNiIpRsdTdN48DN9u4QgwykAVG5eW/ZsowLveLjY89VaRukgiJ6j53yVICTTVKl
+         Ir/oC5H+22/zhOGihrxJO9AlB/9osjmSvYSM5MKntE3GNONZl56FpfVqyvGTah6xTYPJ
+         a2vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWeZwcZL6TLmoJKekwQWD4zDK/KNl6S9DsRlnsun71+gYq8cItJblJqvGuZPnbk0hIOKKICDNsH5R7f@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT5tUmb25BqaVSqzCh3Ex7aALqeY8h+ppI/EpDwX9+y7RcGayT
+	S7xFIT0KMYhbhlpyxmAQUDbzJU88r1NtuhbUFl56i4V+H6g//JGvwLXCLFaPFIz2iaSbqlsTXLD
+	cFcukaGI3G3Y/FNDHYZE2ApJ98HJA2+qA3mQ9YE/v8Q==
+X-Gm-Gg: ASbGncs1SIsHhV0XFQf4AbkSapX791OBiZO8N18+gWvf574L35N9MBW5htKod/3GL/x
+	KFHxywWp6lAJ118aG6E3V8IDdiEg7OLDf4ANdxQoh1PsXmDaLNC+OqaozurXoq1cJFpHRe3kJ0C
+	KpQPU7Zssl8qXCr6rxcg+CQzRYi9IL4ChSdW1EaAX7RVloWbNoj2NcoW2F5QrJORBtsSssmcLq1
+	Q==
+X-Google-Smtp-Source: AGHT+IGiCcrgYRMbum6nuXJpOo6iTxGGvz1fmMPK+AhjjIqJxDaE2WGG9FQliOn9F9chuEGZlOPblHk5QtCZaRkBmoU=
+X-Received: by 2002:a05:6512:b97:b0:553:241d:4e7d with SMTP id
+ 2adb3069b0e04-553b6f25d30mr4824208e87.42.1750258417343; Wed, 18 Jun 2025
+ 07:53:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSBPR01MB1670:EE_|TYYPR01MB10545:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b1f80d9-2898-4dee-a6e2-08ddae780f4f
-X-MS-Exchange-SLBlob-MailProps:
-	Cq7lScuPrnodj9mcbuBOlkXQjsuE+OXdzdYiTPyiuogWnoDg3+Yb0dlRx7jD2MA3qRCTyfQ6KKZxfCqYeEL4rfiAW8BsXQhk6K7YNb7wVipJYbV5ZstmLg0rHS6zh/HGr2SAn8uICY0rCT1sRhS4QCB9A1dZoWPxiXU7KrksqqMhHvVggG6neUH+4ZIjWKi1pdlVwJBJ9QDiTsQRKW7gHJG0GjIK07Y46JhPA9XvTNYqmSuC7cSHJYshB00+laepTQeBKzvQZgsBoRF6xrBN7D5HQO2r33ZLIh0ndM7NBx/R3KD3a2gEw/RYxJecTsJfEDwHlJPcTD4kYBVgizZvPhxoc8yB/TO6L7a0ysSicqV9fvk1fj8KRGJZvjPs8VHOhXkg6rdltjzagzBn/bk2rYnVgd1Ssmompy7KksftlMu1LprH8NF5Tzv0XNPLsxRKnEthXsizS0R3QUpHZZQPE6yMShF4eK/M3yTj/ipnpgtRzdvbwststCA02UBqaVc2knLQG2cJVM5qyFpWG14UgNn6oXsgkDVTsdy2xCS+6esfoRAu67s1IG62MWGCye4LOhK68lM8BPZiAGM41hiefwMPAYAecZkLM2X1SGkh76+mItmLqFkCamWiC3z/bvry9IlNlT9ipyE7Nj9C07RnuRNLXzmaXGTlNzyyNcG2MeFS4e8jdpnl6zNcB+oG1Y29kIb9ZqHZWxY+UmeyN3v8CqdJ5gYOOCxvPwTB/CVQ+neVhHd4MFmwH4v4Xgs6IDzIGmx0PA6Nnwo=
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|7092599006|8060799009|19110799006|15080799009|5072599009|461199028|41001999006|3412199025|440099028|40105399003|51005399003|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4gwDYYmi8qfiIdsPhJY61M+pvCRX9tJyl8eqXFYhDYwRMTxmOVv9FNLv2WBf?=
- =?us-ascii?Q?UOBggWn1QS53yySnLRouERv7h0dgDUA0fOqpcRXQCGyfllsJgbByq4Ki/0Sr?=
- =?us-ascii?Q?10NFhriSXf7zAkUdFsVX7EP3rBpMDn2xukEH5DrfEyBbUgPh71XG0Pc31sK6?=
- =?us-ascii?Q?2toRUzEMp+m/cY2V5BdbOHZpaNxhQAAHiO3q5PD2yrgS9UsiX7nBYIvjNVza?=
- =?us-ascii?Q?rjN0hEPkYDa3EQJgwdxM4oz0cy1xmut18GDLH+PfCQESfHFwbBdugTap4b7W?=
- =?us-ascii?Q?IUKJaILwvuJUFSV32j53t8UbnYUiaW2urb3DmeubIpXUuCWV+96CnonN9hma?=
- =?us-ascii?Q?OKNG9ABhwvEXChjKBwU7W9dIb+fxWq4jvsVogTMLAxUwD13PlZO6oDxv5dbP?=
- =?us-ascii?Q?qTsiBObpsCglk9iQkuLKno5ubc8/O9U5a+zWFerf+M1asZmLFcjNncIVIC2s?=
- =?us-ascii?Q?fs11zEsBYl9lNqjag2LTX41AY9eQADLwpjTZ0jYw13Z2kuC6zmfqu6AXwHDE?=
- =?us-ascii?Q?pPWALm6HcSMhNsAPcEJxMmPlij+1x6/ruONzQI0lP52YrSjZMXSoDADABi5U?=
- =?us-ascii?Q?YdtqWzkFaYZOzyBbrjlzN/Y0G+MqP/JMt2Hv0PFDD6z+1e1LQ6IsOSfMV5gZ?=
- =?us-ascii?Q?Ff8PRDB3ZcU+ZUFHwu9i/lWqmu+lETjcCYzTFFNkSh0cYXpdhvE375ilnnGx?=
- =?us-ascii?Q?mxuCGnx6+iGV6LCz/FiaanycnpJVmlgNLr713qaOVTgXK4AbTRxNSakOuUGg?=
- =?us-ascii?Q?2UMcHCXh9R0yHSLXVPdPEVm0i/gJ1/msBqtMAjT4wluz495lfBdKESvM9aQr?=
- =?us-ascii?Q?vChn3PCpNwg2wL79Xn86eRXIV5+F7Uq9PvY0/N6ongNCBcerWp6la1Mq/7is?=
- =?us-ascii?Q?itBdfsspQeo9kTUfe8TZ5heuh4NyjetKI+skxpBeSFS7V4tqow6vRUMQBXer?=
- =?us-ascii?Q?rCMbk77o4Um0kJXMaxQ2eLj+4vpJR7YwQeby0gleDLxKw/VOZT6URCyRAQ2e?=
- =?us-ascii?Q?G3PGKRbc+9XeYb1AOw0+ohzAy7VVvANqh7Tcg9xbDxs9ERL1GM50MDgkGj6+?=
- =?us-ascii?Q?ygfElHKIwanFqHgfL9oqHbgw8DVYvuFupZ5uCh6sY/xb5KAfkseMyqz/Z356?=
- =?us-ascii?Q?ApiLcMqYOwBh1wZXsdMeRaDroh623F9MtDKIrmzlP8Q+xhIEG/OBHRSGM05F?=
- =?us-ascii?Q?iRzALyCnzVzbDnPVXcO06+K78veVauSSiwshzYyCXc3OcrNjWSfCUz8WDjs?=
- =?us-ascii?Q?=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RBaPRK6M/MZsCUpSIRfLc8UalhRfbJRngWYdBO9LvI7i8MU3CExTUVuKo9Gu?=
- =?us-ascii?Q?KQH2zA6sCZD6a1WAvVpFNZXuYPWgVluOooFi3sW4tNZhfEp4IwWpbSL8WVBG?=
- =?us-ascii?Q?Hs58VcOV83HxFqHghTQe3OCoiQrwpUXH9gbatcOQKPCQ5y6qgz77mmX4/M+x?=
- =?us-ascii?Q?25UleitdDxLELQyEcWW9S6QQ3CtWzJWG0UmhbyZubDoSRciH4xCiKh7rC5O1?=
- =?us-ascii?Q?v+rl2tN+FZ3aqRP/hN2ALg3bp37uPf6glDGxMe5NzZgHSaeIheUezj8Ext5U?=
- =?us-ascii?Q?AI79mpbEMBogh6JY48uzuwcGvZknGmAG9b/8IqRT2qG6PlRMG9VGmBhoLpIV?=
- =?us-ascii?Q?nRycHHVFaB00/o7sdY+Yg1YjsFIymC2k4n9dtV9FiVDUeCG4x0bw0FOxhsUk?=
- =?us-ascii?Q?c1d7QfP+A7lF3WumDTrHtd2K2ewSQeMJydW/gIy44Esb+hTSzxBDXqGGzbgB?=
- =?us-ascii?Q?WqhT4zxlDDY7V+CobXW2eLEU1K/7Vnpk1WQU/1RyIT5RsKNHM4+KzWyLvKHN?=
- =?us-ascii?Q?K2XrE2s8Xcm785xLOv0YQMmNyNR2hCibGsaXIngGpa7FculE6Bdp83ZxyJOB?=
- =?us-ascii?Q?K5wnknq4YJ0S2L8cNH7E2Zfa9tnMqHCSfF0nQHQYoDogCsvIAgOCXy7WuJGQ?=
- =?us-ascii?Q?DKpUm59YL1oiFs1/rD/R6hLCjFyITbIBmGzQS7QB1n7MGpA7RYWiPcoftsZ7?=
- =?us-ascii?Q?9s5gcAxlwYQwUGPC12zjtWOugPRfrnVF7DTd9HymXRtXigHno8JnhcNvAwff?=
- =?us-ascii?Q?pHfCL3uUrImsA2jveyD/Xl7XYvOyQXlpNdtUk9CpBHawaLkB7GKgk5RfOGjd?=
- =?us-ascii?Q?spLZrR0oKdpMuGFFwgJa45CmuDKZowXBsFNz9587Qpe2xK1B/Kv+Ci7zgPGd?=
- =?us-ascii?Q?atNQ5C3rwRGFEb2J5/KxjXRM5RiKcQgVHuZO78TXAhLy3hxK5Fyd7644bVqA?=
- =?us-ascii?Q?ViX3dtv34CcqTFKhhsN/+Unj2im1pNnznu0nlXwifX/K7TCpHelMeOtzZbgq?=
- =?us-ascii?Q?fLERCPB6yKQ8tPnJhIAopm/IVXOKOxNbxu+PI3vGK6dj8Bcbtw+w6Lwdpxg8?=
- =?us-ascii?Q?l1RK6xmqIS2LV6HY1CqSmTc3XhwCo93PL7gD2saZd+NjDaK0qClgW0XX7xHx?=
- =?us-ascii?Q?nVmxjhww8ouQZi9HIQlyGXdXtxvvY/vtQHYzdVXOZWqEwG9egjWb1OrL1KJ+?=
- =?us-ascii?Q?kovOzHlC4LSOuZmIEbhz071UPTOiLYZemjKtDdcwvS+G0zIijWpAlJo3bTrK?=
- =?us-ascii?Q?8v63Yv0HK9dKpyU4eKSv?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b1f80d9-2898-4dee-a6e2-08ddae780f4f
-X-MS-Exchange-CrossTenant-AuthSource: OSBPR01MB1670.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 14:54:43.6502
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB10545
+References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org> <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
+In-Reply-To: <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 18 Jun 2025 16:53:26 +0200
+X-Gm-Features: AX0GCFv-EtuLfkkAl-rHEpXj6Jbb19BXN6r2Zc9P3RRMCwt_-SJ6mmJG2IaqrXo
+Message-ID: <CAMRc=MdgYqk3RuM7vVUJPdtPH8zSCmr8fuDvV++7UE9F10WVzg@mail.gmail.com>
+Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip export/unexport
+ attribute pair
+To: =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-These two functions are defined but unused. Removing them to silence
-the missing prototypes warnings:
+On Wed, Jun 18, 2025 at 3:38=E2=80=AFPM Jan L=C3=BCbbe <jlu@pengutronix.de>=
+ wrote:
+>
+> Hi Bartosz,
+>
+> On Tue, 2025-06-10 at 16:38 +0200, Bartosz Golaszewski wrote:
+> > Following our discussion[1], here's a proposal for extending the sysfs
+> > interface with attributes not referring to GPIO lines by their global
+> > numbers in a backward compatible way.
+> >
+> > Long story short: there is now a new class device for each GPIO chip.
+> > It's called chipX where X is the ID of the device as per the driver
+> > model and it lives next to the old gpiochipABC where ABC is the GPIO
+> > base. Each new chip class device has a pair of export/unexport
+> > attributes which work similarly to the global ones under /sys/class/gpi=
+o
+> > but take hardware offsets within the chip as input, instead of the
+> > global numbers. Finally, each exported line appears at the same time as
+> > the global /sys/class/gpio/gpioABC as well as per-chip
+> > /sys/class/gpio/chipX/gpioY sysfs group.
+> >
+> > First, there are some documentation updates, followed by a set of
+> > updates to the sysfs code that's useful even without the new
+> > functionality. Then the actual implementation of a parallel GPIO chip
+> > entry not containing the base GPIO number in the name and the
+> > corresponding sysfs attribute group for each exported line that lives
+> > under the new chip class device. Finally: also allow to compile out the
+> > legacy parts leaving only the new elements of the sysfs ABI.
+> >
+> > This series passes the compatibility tests I wrote while working on the
+> > user-space compatibility layer for sysfs[2].
+> >
+> > [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu=
+4iKQ5npwXk6GXA@mail.gmail.com/
+> > [2] https://github.com/brgl/gpio-sysfs-compat-tests
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> thanks for implementing this! I tried it on one of our boards and noticed=
+ a few
+> things.
+>
+> After unexporting a GPIO from the chipX dir, the subdirectory is not remo=
+ved:
+>  root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > export
+>  root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > unexport
+>  root@lxatac-00006:/sys/class/gpio/chip9# ls -l gpio1/
+>  total 0
+>  -rw-r--r-- 1 root root 4096 Jun 18 12:52 active_low
+>  -rw-r--r-- 1 root root 4096 Jun 18 12:52 direction
+>  -rw-r--r-- 1 root root 4096 Jun 18 12:52 edge
+>  -rw-r--r-- 1 root root 4096 Jun 18 12:52 value
+> Subsequent attempts to export it again fail.
+>
 
-arch/mips/kernel/vpe-mt.c:180:7: error: no previous prototype for 'vpe_alloc' [-Werror=missing-prototypes]
-  180 | void *vpe_alloc(void)
-      |       ^~~~~~~~~
-arch/mips/kernel/vpe-mt.c:198:5: error: no previous prototype for 'vpe_start' [-Werror=missing-prototypes]
-  198 | int vpe_start(void *vpe, unsigned long start)
-      |     ^~~~~~~~~
+Ah, seems like one of the last-minute rebases made me drop the
+relevant sysfs_remove_groups(). Thanks for catching it.
 
-Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
----
- arch/mips/kernel/vpe-mt.c | 29 -----------------------------
- 1 file changed, 29 deletions(-)
+> The contents of /sys/kernel/debug/gpio don't really fit any more:
+>  gpiochip10: GPIOs 660-663, parent: i2c/0-0024, pca9570, can sleep:
+>   gpio-660 (DUT_PWR_EN          |tacd                ) out hi
+>   gpio-661 (DUT_PWR_DISCH       |tacd                ) out lo
+>   gpio-662 (DUT_PWR_ADCRST      |reset               ) out lo
+> The header is inconsistent: it uses the 'gpiochip' prefix, but not the ba=
+se as
+> the old class devices in /sys/class/gpio/. Perhaps something like this?
+>  chip10: GPIOs 0-2 (global IDs 660-663), parent: i2c/0-0024, pca9570, can=
+ sleep:
+>   gpio-0 (660) (DUT_PWR_EN          |tacd                ) out hi
+>   gpio-1 (661) (DUT_PWR_DISCH       |tacd                ) out lo
+>   gpio-2 (662) (DUT_PWR_ADCRST      |reset               ) out lo
+> If GPIO_SYSFS_LEGACY is disabled, the global IDs could be hidden.
+>
 
-diff --git a/arch/mips/kernel/vpe-mt.c b/arch/mips/kernel/vpe-mt.c
-index 694b3bfc1..a6dd358bc 100644
---- a/arch/mips/kernel/vpe-mt.c
-+++ b/arch/mips/kernel/vpe-mt.c
-@@ -172,35 +172,6 @@ void cleanup_tc(struct tc *tc)
- 	local_irq_restore(flags);
- }
- 
--/* module wrapper entry points */
--/* give me a vpe */
--void *vpe_alloc(void)
--{
--	int i;
--	struct vpe *v;
--
--	/* find a vpe */
--	for (i = 1; i < MAX_VPES; i++) {
--		v = get_vpe(i);
--		if (v != NULL) {
--			v->state = VPE_STATE_INUSE;
--			return v;
--		}
--	}
--	return NULL;
--}
--EXPORT_SYMBOL(vpe_alloc);
--
--/* start running from here */
--int vpe_start(void *vpe, unsigned long start)
--{
--	struct vpe *v = vpe;
--
--	v->__start = start;
--	return vpe_run(v);
--}
--EXPORT_SYMBOL(vpe_start);
--
- /* halt it for now */
- static int vpe_stop(void *vpe)
- {
--- 
-2.50.0
+I have not paid attention to the debugfs output TBH. Let me check it in v2.
 
+> Unix permissions/ownership just works.
+>
+>
+> As far as I can see, this is basically everything I need to replace the o=
+ld
+> global ID based GPIO access in labgrid. Thanks again! :)
+>
+
+Bart
 
