@@ -1,106 +1,154 @@
-Return-Path: <linux-gpio+bounces-21774-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21775-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46FC2ADEDAF
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 15:21:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0C61ADEDFD
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 15:39:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96A28189ADD4
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 13:21:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A2FD3AD3E6
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 13:38:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FE2E2E92AA;
-	Wed, 18 Jun 2025 13:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zbatMD3p"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B3B2E92CF;
+	Wed, 18 Jun 2025 13:38:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594F22E92A9
-	for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 13:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFDB2165E9
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 13:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252830; cv=none; b=srp4qtQ7Iexnv7s8xOlBsx1NORmvMFlJAzABHIy+XsUxvXzMdaWVAy4+03ayeCGqaTkkIas61Szy3xeBtMLzF0LO5MWxlYDNGgjNszMsYRnDWx+OGj8bpWOZEnHiOAg+N8gJnIW5InyZjBOidQEUS02O2Jb0nryw3QRiEjfKLXU=
+	t=1750253938; cv=none; b=Hr4Hcc9y2vu9sxclzQm/JwH6Z7s8gGgiRtrEyBo3S+tRlzuKHGbln5ZCcgylcX95zIQLOIZOTtzw3I5zHkhbfRFTEnu18Fwss1LatSEv8WpbitpW5l408JyDks/hOLeZIXkj06NW9r8NleDq9a8LqafHvmvlYM3AccxVi5q1sic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252830; c=relaxed/simple;
-	bh=pTJodfwDi8QPGf5WUlAYBwDMYVFJGpwnkqkpDJ/bZ6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mQ3aqDwyul2v546uar3Pl4xSWFUP9Kr0/qCjJ57w8dZ3r8Kt48rnmjOWMZ49iEvOYhYcfZ+k+aD9q9AYLQqmYItD/ZEns7eksqp7DFSiGFJ52TcTv89ItNg/9/cHm+xsJuFU6Mf66m6Qa3Fv9jIj12WjoBCO0SlcHfioZY8w54Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zbatMD3p; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b60de463so5347801e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 06:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750252827; x=1750857627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pTJodfwDi8QPGf5WUlAYBwDMYVFJGpwnkqkpDJ/bZ6s=;
-        b=zbatMD3pr29TlJKA3nraDWfRJpQ8Z7Ny39U4JWTjtJGPY1sP5RgC7Zvs+2rQatiKm3
-         IoL/Wq4ymBIEOyAPJc877iNO93bP5m9R7l6G+XznYx1ikrocQAKeqlLWbRC8jKh9For1
-         /229qQ8oaJWtqLWTiiLgYUrq7qMjf+yUBY5I2dWBeV+HQt4O6flaaFbrrsQSTebzJljY
-         asmsPFcgjJNDcKK0oN1HRkJWiudgqxVhQnIU7GF8RO7Aew0/4yR8ZRRAQLW4Hk+hbz9+
-         X6523v1ub+wGAwMiu3+eb3eqsIyOD32CwR+ntnRdriFdR5SCAlFxG7N1DpqpzQVGOf9I
-         rS/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750252827; x=1750857627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pTJodfwDi8QPGf5WUlAYBwDMYVFJGpwnkqkpDJ/bZ6s=;
-        b=jjhIUs+6vrC5qOsnq9KMBgU5stWjt/trLO3La0KZF7c+PEEd9j8Lg9368vSopfoSmy
-         tvSjdFIDi3XOKptXNJb7LqkVc5bp5pLO0iQvO3H6S4AeyCw8vHgriQ1CIIL4yysqDr+3
-         9MxaPlyZF3aKWtLwExeEVDdW+P5YP1MdofjWwJ7IC87CR1M39imasmSytzqoFzs2N9jx
-         nY2wxt2fgwe9eksI8NYspv7afRNPT9k/oqa3EQnHTCNhalOzjIuRosIAUHf+4JWBQrpJ
-         HRz30BGuortcyl4SU48dr4reQYq2zOHttvaaFkXIM8O/hhDJP8zU1tBRZCKqjBLXo2pn
-         ksww==
-X-Gm-Message-State: AOJu0Yzd+pwgR/1t6hwmwk1aoKR6gmsKtDxeqgdtL2XuN7ec7nktyaEY
-	mUZxfuBwdQdRxUb35HlqAEFv812Sr2uQjP+CCIsnjyvMlkaZVARwvRoxVqI+eurvJrWEBj7xEba
-	qa5f0biYtLmhnifTpTPj3vXQyrTaToagUY2XZduF2WQ==
-X-Gm-Gg: ASbGnctmSod7T+08WPPuTQoLGcQ/GzfzwgaECdE+9Wxq9PihX6cpLY3O5KQr1qOIVcV
-	O1O6orqIbtCg4mhxPybj9pLmAAvYNq9OWXa6a9LsQ7Rdr9BuMlZcuLnuvzBN6Io7LhIRDXAXaOl
-	HZaOu3q8NkasVrAl0jibMlf82ZPvn2tg2LSmkabRB99WNqlEsRKkgDYOh+noG6jR4ZUS4s09Z+v
-	g==
-X-Google-Smtp-Source: AGHT+IEnYD8c9DRu+sgeZ4/zra50A8zvr1u0tIjWrrYY7aXbyZM2E14drwd7rS61sdCTAqyts6sNZw5w8k+gQFEYycQ=
-X-Received: by 2002:a05:6512:b2a:b0:553:5e35:b250 with SMTP id
- 2adb3069b0e04-553b6f2106cmr5254173e87.32.1750252827241; Wed, 18 Jun 2025
- 06:20:27 -0700 (PDT)
+	s=arc-20240116; t=1750253938; c=relaxed/simple;
+	bh=Je0tGAOTAzvEt2AtG6g843V3mh+EJS9RuHYgCeIxE/s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aj0LJKqWdcTSP/quzCj+rUE/LY8//rk0YLwvsv21QzNv/d+jyfWbTpSWcm+RvD3hfhkALodYIptOFpJbyAPvp79haoX5fjg8sUh4jmKAXasvU75kEEGRGULuT6k/co0bpmS7S3C63KdBz8zAbwFLrhXuvVMCxaS5/B/lfe2NhlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uRt08-0003BG-M3; Wed, 18 Jun 2025 15:38:52 +0200
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uRt08-00499l-0f;
+	Wed, 18 Jun 2025 15:38:52 +0200
+Received: from localhost ([127.0.0.1] helo=[IPv6:::1])
+	by ptz.office.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uRt08-002lkJ-03;
+	Wed, 18 Jun 2025 15:38:52 +0200
+Message-ID: <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
+Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip
+ export/unexport attribute pair
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Ahmad Fatoum
+ <a.fatoum@pengutronix.de>,  Kent Gibson <warthog618@gmail.com>, Marek Vasut
+ <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus
+ Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz
+	Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 18 Jun 2025 15:38:51 +0200
+In-Reply-To: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618124319.19220-1-kabel@kernel.org>
-In-Reply-To: <20250618124319.19220-1-kabel@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 15:20:15 +0200
-X-Gm-Features: AX0GCFvPKxznhkvAPEwnvWIVZ6FbwqZ_QWUKHDjPShs0JKLfijHXyi7OUR-B7c8
-Message-ID: <CAMRc=MfdPc0T_6G7uRUW7BAjFaBQYFFs=u2NGKj29eJGSjRVCw@mail.gmail.com>
-Subject: Re: [PATCH] platform: cznic: turris-omnia-mcu: Use new GPIO line
- value setter callbacks
-To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: jlu@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Wed, Jun 18, 2025 at 2:43=E2=80=AFPM Marek Beh=C3=BAn <kabel@kernel.org>=
- wrote:
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
-> ---
+Hi Bartosz,
 
-What's going on with this patch? I sent it a few days ago, now you
-just resent it without changes. Who should pick it up?
+On Tue, 2025-06-10 at 16:38 +0200, Bartosz Golaszewski wrote:
+> Following our discussion[1], here's a proposal for extending the sysfs
+> interface with attributes not referring to GPIO lines by their global
+> numbers in a backward compatible way.
+>=20
+> Long story short: there is now a new class device for each GPIO chip.
+> It's called chipX where X is the ID of the device as per the driver
+> model and it lives next to the old gpiochipABC where ABC is the GPIO
+> base. Each new chip class device has a pair of export/unexport
+> attributes which work similarly to the global ones under /sys/class/gpio
+> but take hardware offsets within the chip as input, instead of the
+> global numbers. Finally, each exported line appears at the same time as
+> the global /sys/class/gpio/gpioABC as well as per-chip
+> /sys/class/gpio/chipX/gpioY sysfs group.
+>=20
+> First, there are some documentation updates, followed by a set of
+> updates to the sysfs code that's useful even without the new
+> functionality. Then the actual implementation of a parallel GPIO chip
+> entry not containing the base GPIO number in the name and the
+> corresponding sysfs attribute group for each exported line that lives
+> under the new chip class device. Finally: also allow to compile out the
+> legacy parts leaving only the new elements of the sysfs ABI.
+>=20
+> This series passes the compatibility tests I wrote while working on the
+> user-space compatibility layer for sysfs[2].
+>=20
+> [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu4i=
+KQ5npwXk6GXA@mail.gmail.com/
+> [2] https://github.com/brgl/gpio-sysfs-compat-tests
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Bart
+thanks for implementing this! I tried it on one of our boards and noticed a=
+ few
+things.
+
+After unexporting a GPIO from the chipX dir, the subdirectory is not remove=
+d:
+ root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > export=20
+ root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > unexport=20
+ root@lxatac-00006:/sys/class/gpio/chip9# ls -l gpio1/
+ total 0
+ -rw-r--r-- 1 root root 4096 Jun 18 12:52 active_low
+ -rw-r--r-- 1 root root 4096 Jun 18 12:52 direction
+ -rw-r--r-- 1 root root 4096 Jun 18 12:52 edge
+ -rw-r--r-- 1 root root 4096 Jun 18 12:52 value
+Subsequent attempts to export it again fail.
+
+The contents of /sys/kernel/debug/gpio don't really fit any more:
+ gpiochip10: GPIOs 660-663, parent: i2c/0-0024, pca9570, can sleep:
+  gpio-660 (DUT_PWR_EN          |tacd                ) out hi=20
+  gpio-661 (DUT_PWR_DISCH       |tacd                ) out lo=20
+  gpio-662 (DUT_PWR_ADCRST      |reset               ) out lo=20
+The header is inconsistent: it uses the 'gpiochip' prefix, but not the base=
+ as
+the old class devices in /sys/class/gpio/. Perhaps something like this?
+ chip10: GPIOs 0-2 (global IDs 660-663), parent: i2c/0-0024, pca9570, can s=
+leep:
+  gpio-0 (660) (DUT_PWR_EN          |tacd                ) out hi=20
+  gpio-1 (661) (DUT_PWR_DISCH       |tacd                ) out lo=20
+  gpio-2 (662) (DUT_PWR_ADCRST      |reset               ) out lo  =20
+If GPIO_SYSFS_LEGACY is disabled, the global IDs could be hidden.
+
+Unix permissions/ownership just works.
+
+
+As far as I can see, this is basically everything I need to replace the old
+global ID based GPIO access in labgrid. Thanks again! :)
+
+
+Regards,
+Jan
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
