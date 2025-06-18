@@ -1,143 +1,222 @@
-Return-Path: <linux-gpio+bounces-21714-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21715-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FB5BADDDB1
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jun 2025 23:11:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D821ADE008
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 02:34:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BBA03ACBBC
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jun 2025 21:10:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A3D51660CD
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 00:34:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB6B2F0037;
-	Tue, 17 Jun 2025 21:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF72814EC73;
+	Wed, 18 Jun 2025 00:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yb3NEH+Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aX4z7LJh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9DB2EAB62;
-	Tue, 17 Jun 2025 21:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB89149C6F
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 00:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750194640; cv=none; b=PEXFgWegeN6VKqvPZJPCqEVlk4bJiUKE01BXeROzNHsAqiDsTadzaaf3rNmEmuWLU1MMY/ouJ2DnB+6PwX6/G5Ew+PWCMGB4z4bAxWDcAsfyLowU8OLiz9k/X6NG6Aj8ahcPQgo3lYNg4yoNJMw3bI86Iw/C9VaOC1/OInfZaIw=
+	t=1750206877; cv=none; b=GRE2g+Y9jZ4VNBse53QlzvJgvLtls4v6lTBZF5mxknHnXY0WaNeUaO+gug1JamiwjxBjmPSl9geHafRodHev4j2quEGM/8Xu40CwU89XECcjmE1V0jDTKdxzUfR0ncHPu2tn41QpL2SH24S9EwcMff6VoiCE5bTPTOvTeZiIZ1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750194640; c=relaxed/simple;
-	bh=sApRyw/83FX0mHOukxosCTIJQnSPeVEGxB42AaW+5to=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7cTsCk3bXXBAEfdJDvM/m8M1ZCBIrANrdA1c+GCl6ke8riS13jkxzLDgGyeqbMEoxXZU7qIFxaapqHQFKf+6v0cYfRlNQyAH08R6/DoNzJMOX0KV62Angrm4W/yY6PQQwOrSjsgmJ5s7zEoE3+qWfq4Xf7n1SOqro23Mcz5JDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yb3NEH+Y; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af51596da56so5606076a12.0;
-        Tue, 17 Jun 2025 14:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750194638; x=1750799438; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pacpGAeIB8vccBmUPzGNrrDXKDk1i4FugJTPtb8YCUI=;
-        b=Yb3NEH+YVgz3Ke/N/wpfuFtfg0oQnw5eA2ArM6VhyzuSmK3y0RNVrzG0DcOEgKBDUM
-         JuYl5uRTgUkmEYDBzpGWAhoPgoNzhAZ89lpkyGJ2aQ1XQtbuD0RgGDTkQuC4ZVkYyUWM
-         KjPHGa3lPLIju0ywPPvowFFGv50LbuLg+bIQN29GH302a3YCJiNOTiUCpE2b72Yx6tUF
-         KD5ZZGJ0PbEAK51MA2ClHPKenuqT7CmrpdQpVc3rRa9WGfmEXr58C72wF7Z+FZ2ci69D
-         41G8UD2jHWA+muNbrYI0QS80drbuXzfECnbybmbnYNJdsirNZxi14xpvWKnDt/Pf8ryK
-         PeIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750194638; x=1750799438;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pacpGAeIB8vccBmUPzGNrrDXKDk1i4FugJTPtb8YCUI=;
-        b=QTPEUpG8SHsyDP6zKE3cUo3vMkP3PKh2rOrEDTqSKY50HQjuwYJ4MYRhu7IzxO5wtB
-         k4FGoElSSlTJmd/0FReK4+w8dn6i9OvCH0lMt+gEAXHTANM7q76tS10p3mfqtrJ0VbMv
-         Jzx2C8ZqFTh0UfaVCoZ2eZpdOTdN8u0QD1Hxk5ag/ZnaY13IVPbgrqvsloDpd+7K4C4t
-         JPh5a2z71cwY3ww0bOmpfN6+F4yiV7yv31XwoVkQkLGAtah4VKSKJeDhY9U9kBADBoY+
-         h/F385Pa1NgGR00l4GAnWE6Lu9KLCzuNHC8Ic6joE3lfqVeHxPIiNgVD6HWpwjJLCq9+
-         Lpdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpOvmGPBXZwbe40cv2lEm4IB18jyJZBMz/TiD8mb/UQHM+XzLIw2Qh13cIteC1n5+vBPLKW6rLSRxiXDA=@vger.kernel.org, AJvYcCXUnRRp5ajK5dGRYHNJrnPPnPwsISVVTUZiQTl9FEW9rbLqUH/gxPMln15dc6Ci6iGBwtvvgobErZ2w@vger.kernel.org, AJvYcCXYJZPgEbSzrgzzgya9Rc7eKdbnhNTXDqU3Th6BRH88NNXPACuikrWE38zI4Q/CCVi4Ufv6igrwATS6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCUvQtaPd0K1ssHcGfgyAL9I9eADGESSONdOmJ2vWSCs/nf99k
-	YPgHcp6qgs6MXo3rJINUa1Q0lZJh/rmdrCJYeKyYJL5jlgEYLgMwz0ga
-X-Gm-Gg: ASbGnctBEHzLt28yBJeY6sj3AeD2Ql9T3Xvid18y6uWhZdZuk+r4H5QQlz8IVlIi9KQ
-	Mzhf7AOxK8r3bJ2yIYW1jq/d3k0uQV+R0zz6B9if4d6/zQ7NoiFaRsRS0eazOtBs9zzqtpAakhq
-	YJfXeUvS52/bilVeAzbcEp/ocfP6eSlTSg2ACbyl1jIJKY5n4IqBm3gXkIDbLvSABpHOlAtlqbb
-	ct9bUWBFXO49n8orCDGX5MKULXBD43aJDH4szw3gAM7Z2dAokZjDvy3TvdZzlIIFjc+pvZ/Hj0B
-	ZynQuN9Q0Sv1qWb2w/sjdREDdMv/tjcR/flTnkKZqkp6Td8bd8aSrZOEkTBk5RI=
-X-Google-Smtp-Source: AGHT+IHeZPR21+uN+iM3V0TWJomLWQgMoI4gIh8EmsTejpP79DYSaVKbQxz9iI5Kblcxysbl6x4XOQ==
-X-Received: by 2002:a05:6a21:62c9:b0:218:9b3e:e8bd with SMTP id adf61e73a8af0-21fbd4d5553mr20905329637.10.1750194638536;
-        Tue, 17 Jun 2025 14:10:38 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:8d7d:9cdc:2836:83cb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffecd29sm9395962b3a.31.2025.06.17.14.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 14:10:38 -0700 (PDT)
-Date: Tue, 17 Jun 2025 14:10:35 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v5 16/20] Input: adp5585: Add Analog Devices ADP5585/89
- support
-Message-ID: <bq4dj2ptdp2mahc3gekgy6lxwljv7p3frpohtmjp7kaif63sqm@n7hvwsf43wpb>
-References: <20250614-dev-adp5589-fw-v5-0-7e9d84906268@analog.com>
- <20250614-dev-adp5589-fw-v5-16-7e9d84906268@analog.com>
+	s=arc-20240116; t=1750206877; c=relaxed/simple;
+	bh=XAuVXGePhPBm5I7M8MUkZYkrGSwB+QldKR09ZEW5VVU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=kTLk94iY1+ExAI+kiCkzfNBauqIL3wv32P9RpejtcPqeffYXccAZfisYHgKSLiIXtmWzlcJq8FOyjzObh6rbtN4N2kJpmO18M0dUpzOjOEfRm4P5hTH3e7rx2xGU3m/tH34Z0hL2PrPJ3mO2jKESJS/sVJe2SpSNsX3w2gB+ffw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aX4z7LJh; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750206876; x=1781742876;
+  h=date:from:to:cc:subject:message-id;
+  bh=XAuVXGePhPBm5I7M8MUkZYkrGSwB+QldKR09ZEW5VVU=;
+  b=aX4z7LJhgRasSaB/f2T4b6NN4KwkCWu3e/eEeVmoaqj0ZZSVZBpnKTfN
+   iDLioIwK4SzH5IUUo6DcGqerze8YeBvOvum5hhqMi1ysIdHnLhpbNKR4i
+   eQxhCq52IC794TujNaNa74kddj89X0BBCJXfDJbvCCdMTZDpNbjXMsteN
+   cxkcaQCJy6x1THUSOPGV20heDgfmt2/Goba9TLxgTrS05QStvxxlDgUWJ
+   D1ghNmsK2mP/otRtmXlG6/Jf4h6RuDj+puhByijJs79b93Do6wqJiicwB
+   kVpiUUK8Y/qVxIHKU/PGW7/B1PdFy+ORWMYEJ8p+LpPzlMXS2sH+m67fj
+   Q==;
+X-CSE-ConnectionGUID: FTJe2aVZTWqwaF1GaDgiPw==
+X-CSE-MsgGUID: 01hHq1+DR4mw2G9WgwDf3w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="62683903"
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="62683903"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:34:36 -0700
+X-CSE-ConnectionGUID: cgSdwzTHQwaEStkTNXRg+Q==
+X-CSE-MsgGUID: VY8ftmjDTuWQgOIFsUIJ7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="153889818"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 17 Jun 2025 17:34:34 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRgl6-000JFO-1e;
+	Wed, 18 Jun 2025 00:34:32 +0000
+Date: Wed, 18 Jun 2025 08:33:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ f3763403a6bbc3a18379fe4c415bda899a111d55
+Message-ID: <202506180827.kwdefWxg-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250614-dev-adp5589-fw-v5-16-7e9d84906268@analog.com>
 
-Hi Nuno,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: f3763403a6bbc3a18379fe4c415bda899a111d55  gpio: palmas: use new GPIO line value setter callbacks
 
-On Sat, Jun 14, 2025 at 03:36:07PM +0100, Nuno Sá via B4 Relay wrote:
-> From: Nuno Sá <nuno.sa@analog.com>
-> 
-> The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> matrix decoder, programmable logic, reset generator, and PWM generator.
-> This driver supports the keyboard function using the platform device
-> registered by the core MFD driver.
-> 
-> The ADP5589 has 19 pins and also features an unlock function.
-> 
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+elapsed time: 902m
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+configs tested: 129
+configs skipped: 4
 
-with a small nit:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->  
-> +config KEYBOARD_ADP5585
-> +	tristate "ADP5585 and similar  I2C QWERTY Keypad and IO Expanders"
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                     nsimosci_hs_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250617    gcc-11.5.0
+arc                   randconfig-002-20250617    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                     davinci_all_defconfig    clang-19
+arm                       multi_v4t_defconfig    clang-16
+arm                   randconfig-001-20250617    gcc-8.5.0
+arm                   randconfig-002-20250617    clang-21
+arm                   randconfig-003-20250617    clang-21
+arm                   randconfig-004-20250617    clang-21
+arm                         wpcm450_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250617    gcc-11.5.0
+arm64                 randconfig-002-20250617    clang-21
+arm64                 randconfig-003-20250617    gcc-8.5.0
+arm64                 randconfig-004-20250617    gcc-12.3.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250617    gcc-13.3.0
+csky                  randconfig-002-20250617    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250617    clang-21
+hexagon               randconfig-002-20250617    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250617    gcc-12
+i386        buildonly-randconfig-002-20250617    clang-20
+i386        buildonly-randconfig-003-20250617    gcc-12
+i386        buildonly-randconfig-004-20250617    gcc-12
+i386        buildonly-randconfig-005-20250617    gcc-12
+i386        buildonly-randconfig-006-20250617    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch             randconfig-001-20250617    gcc-15.1.0
+loongarch             randconfig-002-20250617    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                          ath25_defconfig    clang-21
+nios2                         10m50_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250617    gcc-10.5.0
+nios2                 randconfig-002-20250617    gcc-14.2.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250617    gcc-8.5.0
+parisc                randconfig-002-20250617    gcc-8.5.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                   motionpro_defconfig    clang-21
+powerpc                      pcm030_defconfig    clang-21
+powerpc                      ppc64e_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20250617    gcc-8.5.0
+powerpc               randconfig-002-20250617    clang-16
+powerpc               randconfig-003-20250617    gcc-12.4.0
+powerpc64             randconfig-001-20250617    gcc-14.3.0
+powerpc64             randconfig-002-20250617    clang-21
+powerpc64             randconfig-003-20250617    gcc-13.3.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250617    clang-21
+riscv                 randconfig-002-20250617    gcc-10.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250617    clang-21
+s390                  randconfig-002-20250617    clang-20
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                        dreamcast_defconfig    gcc-15.1.0
+sh                        edosk7760_defconfig    gcc-15.1.0
+sh                          polaris_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250617    gcc-12.4.0
+sh                    randconfig-002-20250617    gcc-14.3.0
+sh                          sdk7786_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250617    gcc-12.4.0
+sparc                 randconfig-002-20250617    gcc-13.3.0
+sparc64                             defconfig    gcc-15.1.0
+sparc64               randconfig-001-20250617    gcc-15.1.0
+sparc64               randconfig-002-20250617    gcc-9.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250617    gcc-12
+um                    randconfig-002-20250617    clang-21
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250617    clang-20
+x86_64      buildonly-randconfig-002-20250617    clang-20
+x86_64      buildonly-randconfig-003-20250617    gcc-11
+x86_64      buildonly-randconfig-004-20250617    gcc-12
+x86_64      buildonly-randconfig-005-20250617    gcc-12
+x86_64      buildonly-randconfig-006-20250617    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250617    gcc-10.5.0
+xtensa                randconfig-002-20250617    gcc-12.4.0
 
-I think this should say "ADP558x keypad support" because this sub-driver
-does not provide GPIOs anymore. If you decide to keep the original title
-then please remove double space.
-
-> +	depends on MFD_ADP5585
-> +	select INPUT_MATRIXKMAP
-> +	help
-> +	  This option enables support for the KEYMAP function found in the Analog
-
-s/KEYMAP/KEYPAD maybe?
-
-> +	  Devices ADP5585 and similar devices.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called adp5585-keys.
-> +
-
-Thanks.
-
--- 
-Dmitry
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
