@@ -1,115 +1,108 @@
-Return-Path: <linux-gpio+bounces-21750-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21751-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E908ADEA64
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 13:39:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB5C8ADEAE8
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 13:53:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 281077AE960
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 11:34:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46408164C6F
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 11:52:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84FCB28000E;
-	Wed, 18 Jun 2025 11:32:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8218F2BD593;
+	Wed, 18 Jun 2025 11:52:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BFp4fz7b"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aiB6xGUZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3752E06FA
-	for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 11:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714122957CE
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 11:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750246338; cv=none; b=UXoI9zJI2Vsp2XgjH91/U8LJ5nhWcGDpH7PmkF7OR8iIBGRQa/kqA5fUCCynlfxC2PRKpC6EAa/TvLbDgEhrHMEZi0dz9pCjkZh5KTub/o1aPl1e3morloLiusU2anFOtngHGfBbb+Gwip4Xl2kvHybaTIPlOqNBaoMOtcdO9OY=
+	t=1750247545; cv=none; b=B7aUVN2sxA1aTpxqvP+gL3nYNfRf80h982gzF2aj88bruHZw895ZKHE4wKw3V5W3vVKsrDf/OtOkmRUroLZDhokex0uRnBJFH6vMjuC7occqXgR3G/bGzF/RGMTuoG5hTMpaQeiu/AsOtO3zBzdnHHAO9xdmu/agrQtJF8l0B1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750246338; c=relaxed/simple;
-	bh=Dn2ph2mkRUbTFNZLkAEFvorPY5MaAM3g9LKeDgumlGU=;
+	s=arc-20240116; t=1750247545; c=relaxed/simple;
+	bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PGN5sbc15h0w3SjLhJAlBVnqve8rmYAUQa16OOS+F8DvL3QxrLmv3PWA8UCvF1tp8XyZx+dZbeG9TMwJq4a8MoktwQLkTpq8eXF7WaMrmNXAIvtHg0A1MZ1gZ/SVv7WMunRftn5pkJoF39FH1huC5wIUhAPd1SGKoT/bdc/lwmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BFp4fz7b; arc=none smtp.client-ip=209.85.167.41
+	 To:Cc:Content-Type; b=n2fP5dft0TVVy32FyxkGZXFDaKBve65yMWO9as7lm/+0hVTWoP/ABRrlmPKwwN2MGTj+/2EzooYwxfBZ5ltv3BKCJF/MPZxMoEuVUiJ+KxMkQguOwgD0FqurqM3dkfCdRh3Flh7VAT74lo2S+bPfRtipzvignREyRwWKr4VNKDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aiB6xGUZ; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-553b584ac96so5260231e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 04:32:16 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5534edc6493so7326990e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 04:52:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750246334; x=1750851134; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750247542; x=1750852342; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dn2ph2mkRUbTFNZLkAEFvorPY5MaAM3g9LKeDgumlGU=;
-        b=BFp4fz7bOY3Md0H/fnwzevjZjP0acx6Yo3eVji3SmP1oNZzYZDp52a3E65OHcQM6Yd
-         7EbzrKGEgdwkFFfxJRs6myFTdPIUjoXWO9n92BiMAvnlaSieV04aWb/GPeXN+/o55gbd
-         9ubuYCkGzubPXrCzpNpSg6MANFs0WCBhpSEk4Iji4vbUoCrdKX+H4Br28Rlw97kfBiov
-         6r8hLqwNX6Os6SAK5RQZOlh5f4jjWd4Q4Fdk/RG80vs1OTpE9fibxdzdRFlyLjL8VwlV
-         Vs4Bfv/tpOTH8cTdppsgpdCY1lpe/DHbuQJLF1TZPoe8Hot1kOhFIWALJUqlncQ/19he
-         RhfA==
+        bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
+        b=aiB6xGUZOykjxsf3HYlkaHplMNq57ST94UOJs+JYv9XKSphRWgYNkKAXLIuWfg44QP
+         HqUwoknbkVAZFbCL7yUBwqrBuH7aVlEIea3beXfbXwXtJP9js+eswPzqsTUHqF+9v0fl
+         8UGr/Kp7i7Vr8PxUsoBUA2aQO5fPIx9tUqMDrgn56A8knewnIchmCT7r2dGcv4gJpmpm
+         7C9ibt6wNoiw6ECW7rrwrvyzHRjhBxOZkv307erGff9QCYgxOBBf49PtxXwjuYRsjRmC
+         Gk/fQ7YBf1v/oL1byEkjEqVzpGm2xLDuzr47OmJPmIfXWsGvos4ivhwdkBYXMyuYfP5j
+         az7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750246334; x=1750851134;
+        d=1e100.net; s=20230601; t=1750247542; x=1750852342;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Dn2ph2mkRUbTFNZLkAEFvorPY5MaAM3g9LKeDgumlGU=;
-        b=Xa0qCZgm4LlwbAqtI9uyrQaehZx8QOZN7s0Rp7ypo9jFKWRrYYcjOvbwOc/7X3NoHI
-         znIox8uu34Trnp3+NPmXKE+nKojvcLHYvmxwVqg3dN2DLHcwCnwOUFW2DH7tO1l73ti6
-         vs0BQz7ATcscxQs9o3Z0X0hQHcx2A+dSK64Yf107vXk51vR7/1L2HJYAF/jZ0UnpxQUV
-         B23A9FgFlUC5gSNPeR0W7Qe6QHd7lJpFCv/VjlmM3yD4PY/tszMJ/tNtjf6h7Y/UwYis
-         aFeplQvp3QWnaD0sapi48rFN/Ki6Xx4AG8VxJn9x+YUjFY9zgUKsFk/6CpWmZzxJZUA4
-         +NIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPXicWdsLbeo3GX9meyBcHxMFLHGmpQj9rOKufupgF7hMi+FsvQMvXuUDWEoG0T5Wl/s1Pbx5WXGuj@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMMQ0VYeXnpS4Dv6CsnGCQyyA8xH/Y7V1mkhBZRYzauNOIJ9Y8
-	f7RDEnImR58tsJvICbeh07CF2VFXJQN3oKKCGCEoeUk+iV12uHfWc+r/hme1X9jnbxBg0rCOHvW
-	24BRWijFzSkKlxZP40L3mnztcYar6WGVfxpwN8fDrqQ==
-X-Gm-Gg: ASbGncs0RULD5WxnZC/L561m0mUyfA9iDr1D70ZbheY5YNAsy/5ESEMJ4LSGX0sif1K
-	Bd43sk6zt3Gk5hK/D3trwz+RJoAp/wWiAO2QoN2O0Y7FkX5kNKlU8a3wSEPn+OqrFX41iupikYb
-	wULFUnhLfbB4JxQ/+8XQjQKtwNUy8tyGiuV05pVUMD2pk=
-X-Google-Smtp-Source: AGHT+IG/cXE1HQ3EEXy0cPSnaDLNTuKJgzCF0qLdhOb/5CcGOOw+a/DTjj5TWhlAS5cXMjlqM/mbx0AMV43GUJjmW2k=
-X-Received: by 2002:a05:6512:31d6:b0:553:2e4a:bb58 with SMTP id
- 2adb3069b0e04-553b6e7337amr4658199e87.9.1750246334530; Wed, 18 Jun 2025
- 04:32:14 -0700 (PDT)
+        bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
+        b=o1IL2E4rjbKpS6VfzixNLokn60N8xSLUSF2VA6ncFXIOzFq3Zhn3B6xV9Yka28wrRt
+         jJ1pAMvJ4An2iNtdfpV4Z4sBBxRLuNEYlN6CqBRYiq991ANBdPDv3xLIMi/+oYUZAske
+         2f+K9WggmkxFVGCwXB6l5rMeZVIqbE24IgGLzP8gjE3oSaIz9sB+lOxzJmTqJ2ZJStkd
+         pSY1aiBzZRNm+yBO0gOov8Fwi20s3MpDwm8N5xPWbIHKrMA3uc1+qatPohxlt8MdQSwh
+         eOMHedmDfqmtRK/8PUhf2LdYUUIIA7lZ/p8lZPU+6sLwUsQzsT1SHwkBHyOMNx3Zu9hI
+         bU+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXSeBlVRq1BNahuL1TUMmNMqD+YlQ4eTt3KtbtiExvu9pVF6dt3RQfVamvMeY68v8uO9oVT7hkUlJP1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe40UsiDQAItcSAcJhOR/FaRofPKyZzZ5kPoZme/7Zwmwh2SH4
+	vlR8xu2ogSbx2Uzbb9MWNjgcsH3aG3EQ8gmQdLlkBXSVK+zaG5D3I6I2qFVH7fDij2zqZD1X0GH
+	j3Lv7IUToKYAht5XI4sfKihnCXefa2Cpk8wckvzNivA==
+X-Gm-Gg: ASbGnctS+hASURncRHnkPAMP4q0GLdQBq15foNNVjY5E6/koe8oo9oLNXbUSUslkmyO
+	eirg7M/AL0ZeNUvH/bJq7rigJDD4y1xRanWYtqGLLLMuwDouW4P+t16S9Kbw4wl5ryWzaL0Qpkw
+	gT0FcItkqwl9nRY76prMXVzV4alO34cqqY6ITlGhZgpMk=
+X-Google-Smtp-Source: AGHT+IHjWdSTmS4aDTVqDd7NBp2OPbykUx652+t/IZOVkWWGf64J/RLFbhbxDCwVOIM7rfV41BeoBeUWfyaPxf5hCjU=
+X-Received: by 2002:a05:6512:3092:b0:549:8675:c388 with SMTP id
+ 2adb3069b0e04-553b6f5fa33mr4843249e87.52.1750247541573; Wed, 18 Jun 2025
+ 04:52:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611104348.192092-1-jirislaby@kernel.org> <20250611104348.192092-17-jirislaby@kernel.org>
-In-Reply-To: <20250611104348.192092-17-jirislaby@kernel.org>
+References: <20250613114518.1772109-1-mwalle@kernel.org> <20250613114518.1772109-4-mwalle@kernel.org>
+In-Reply-To: <20250613114518.1772109-4-mwalle@kernel.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 13:32:03 +0200
-X-Gm-Features: AX0GCFvVR50_3aX2UCUBcxsZuxXj9BpNTfKCs9hxZHJvTphADGhBSjR3yjyWU08
-Message-ID: <CACRpkdYkgHzEnqN3VA2MqBChjtwjC+Fhem7Bo3PdnfGZQgQ99Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: Use dev_fwnode()
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, 
-	Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Date: Wed, 18 Jun 2025 13:52:10 +0200
+X-Gm-Features: AX0GCFvi_Kw1gkeOTQZNsLTIvoCnOqNgSVyelJU-92RYyRLKgU7_lLqQN3HGdew
+Message-ID: <CACRpkdabkT4cGLVVrAfSk_ehiiY9HLzpfsvUOEXH4wH0bXxPuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] pinctrl: pinctrl-tps6594: Add TPS652G1 PMIC
+ pinctrl and GPIO
+To: Michael Walle <mwalle@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 12:44=E2=80=AFPM Jiri Slaby (SUSE) <jirislaby@kerne=
-l.org> wrote:
+On Fri, Jun 13, 2025 at 1:45=E2=80=AFPM Michael Walle <mwalle@kernel.org> w=
+rote:
 
-> irq_domain_create_simple() takes fwnode as the first argument. It can be
-> extracted from the struct device using dev_fwnode() helper instead of
-> using of_node with of_fwnode_handle().
+> The TPS652G1 is a stripped down version of the TPS65224. Compared to the
+> TPS65224 it lacks some pin mux functions, like the ADC, voltage
+> monitoring and the second I2C bus.
 >
-> So use the dev_fwnode() helper.
->
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Sean Wang <sean.wang@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Michael Walle <mwalle@kernel.org>
 
-Patch applied!
+I guess the #defines for this to work are in other patches so it all needs
+to go in at the same time, so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
