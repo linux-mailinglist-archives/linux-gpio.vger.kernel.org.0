@@ -1,220 +1,181 @@
-Return-Path: <linux-gpio+bounces-21717-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21718-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A9BCADE0D1
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 03:44:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A84E8ADE1BA
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 05:40:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9796617B026
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 01:44:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC387189B51B
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jun 2025 03:40:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43C521922DE;
-	Wed, 18 Jun 2025 01:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HkCkgDIo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141FC1DA61B;
+	Wed, 18 Jun 2025 03:40:25 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2136.outbound.protection.partner.outlook.cn [139.219.146.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF261362
-	for <linux-gpio@vger.kernel.org>; Wed, 18 Jun 2025 01:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750211085; cv=none; b=aePkGbMg1ZTvTFUNH5OX81fP96d187Jvt240xFHgwrkLTjtyAY5Fvh/BhfwcLx1Gok5hD3Zwle+9uhLQbVzpz9QeoPHKuoAN+Tq2rwG0/QldGNF7Ydcbi0bVxTWjc1kDTVnOzjIkDRRQSTeEiVcHOMUx+NCKTwbxpp/dfm2ht+Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750211085; c=relaxed/simple;
-	bh=aSwskcJGLOa+QY4LYg/SkDI+ITe+Fc4ZedWpykfPDJM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=sJWniLOP6geu3SmHi8E7tAXOVUOS2WQpOupWzaIvqNDfCT2CuEdtB9ni0T/41YGvFluKqQ9z78OeCnIRhzYSxR2R6RCj0i1nlQHbxh5Fh09aAkBDy4PXZ6HqDvXBxF5zMP1HagNQ6UFgZW46Tpmp3eUiFIYlZmpRo+ptpF3dFt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HkCkgDIo; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750211083; x=1781747083;
-  h=date:from:to:cc:subject:message-id;
-  bh=aSwskcJGLOa+QY4LYg/SkDI+ITe+Fc4ZedWpykfPDJM=;
-  b=HkCkgDIo1DNz8VtKAwxvzNhdNTYQtNGQh4BZk4LqD08pPEEULZy2ARe+
-   5jjj8fO9v4OcMXWL9MRII5RBjQDjFQLWSKiydLY/DQkhPY9ae0ClXixUX
-   jwx/MlrIbWr8Z3n5QIj829kdaQAXBc+8P0ExjzTA9pUhOxy5drekedGI7
-   8fkIWIyufowii19cO+KyYguE/ZGfUevcnzTXz7h3TeNXuibIC7slbchGU
-   l7EOjGdH2/aC4EQM+878f/2oLDOlfkP2SK0pXkAn5MB8OhWv7P+1UO1uy
-   t+3FtdffkP1PX7isM3IwWPksizS7B5Joel/3Qdp3kcN6H4WY0P+4NInz5
-   A==;
-X-CSE-ConnectionGUID: Zm7i5ArrSPKfyYPXIrUuuw==
-X-CSE-MsgGUID: 8xEUwnSTRFGBruYbSXyimQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52503033"
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="52503033"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 18:44:42 -0700
-X-CSE-ConnectionGUID: aTK1DK19SbWcfJILuN5F3A==
-X-CSE-MsgGUID: oqzkzIy4TtWMzsFt2U8jGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="149909621"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 17 Jun 2025 18:44:41 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRhqw-000JIE-27;
-	Wed, 18 Jun 2025 01:44:38 +0000
-Date: Wed, 18 Jun 2025 09:44:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 0a1db19f66c0960eb00e1f2ccd40708b6747f5b1
-Message-ID: <202506180912.MdDT3DE7-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDC92F5313;
+	Wed, 18 Jun 2025 03:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750218024; cv=fail; b=PXT2D4/PACAaOLH1DyJGF8YuNCIaLXyxooZO/SsS0ozgm1H8EpLTQ0Brbr8ECGWIaY1U8rkAfy0L/4b5MBXboHQ3T2lusO0gI+20yhYvo3g63Ckih06bcxXcQs+RpilrpI8oX+RgneGLZwNtCPTzdlNHerRrnL1OG0wfVaL6EwM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750218024; c=relaxed/simple;
+	bh=rjN9u6vVcO/ok0ZxZiHlExgQ2IwSIUlZr+59Hv7Yhpg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=DyUKhHlsKfChk+t1rtQAqsxZuEezJgVoO68qS572peN2RhLvfPp52m5KO12aZZWVk3NWPybxLFyn8IU7rRHQBD1bfOhcrD5l3chkERvHS1HXh7dy2yH/f3Na9dTbONxnF44O4S+WBoW87iYgMCr5jkm2bOgm81zlF2RZq3fWz1Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I142ze/W/k3CD3H4mlIr1DJIHZZYEYdGtCoUSbx9lWUsjv4Me39O/22jF72EpUAOG6H/42O7/w8xbewGnJWqX7umGuWNYawh/HtqUhQarHYVVs5JUuUfRr55r9r0Ug+N+HVRg3SDBcATS/gkZGMYj0rwscjkpMkARMnpaBitOQsmifS38cKyHLL+tBrRJ4qPyc7bgqbjuQF4+Wuu31W3wquW3MYo4QaBGALegNHmpvMMhkl93abUzUrJNuEqjH8OJYJo/vY1mQ6pQv0bXkj+r1iQ1da9C8NKEBr+Qk4IIN95Z3+v4iqurEyergLyyYxOqjwNpdtZeUVX03f8tcjDfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rjN9u6vVcO/ok0ZxZiHlExgQ2IwSIUlZr+59Hv7Yhpg=;
+ b=GsEtl32QLNxfjVUhUnBT4q3YfsP84EnHfk56UVI7LIUpVcWEwq3REocsNGwTWw5a5Q13gJbJNW4lJ1XrS/RJjWTHtG5orMvpeoK+KYKdaEJVtQatCAgLmF6wzddT5OApom3e+sO9XvYeYSH2VB6WxLM1lvosJwPQQLA7UEOUACCMoyAMXVS/ZBFa+3VmC2a0CJExLtCQuoh/vkLfnpqOCtbmxy2xREIrqNR8rrV2vmdm/57R4eOXtMN1BW/Pk5EaqmAEOP5RIKCYa567Uv6lb2lNPiu35zzFlIzyWpt7W6doHFG+gIGJCq/N1gLtyWUTJdjsPGKxcj0MU4YKo41j9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14) by ZQ2PR01MB1305.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:6::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
+ 2025 03:24:28 +0000
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2595:ef4d:fae:37d7]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2595:ef4d:fae:37d7%6]) with mapi id 15.20.8792.044; Wed, 18 Jun 2025
+ 03:24:28 +0000
+From: Hal Feng <hal.feng@starfivetech.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Emil Renner Berthing
+	<kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, Linus
+ Walleij <linus.walleij@linaro.org>
+CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bartosz
+ Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: RE: [PATCH 2/2] pinctrl: starfive: jh7110: use new GPIO line value
+ setter callbacks
+Thread-Topic: [PATCH 2/2] pinctrl: starfive: jh7110: use new GPIO line value
+ setter callbacks
+Thread-Index: AQHb25T3mz1zcBa6O0egwOXLRhTs2bQISSBw
+Date: Wed, 18 Jun 2025 03:24:28 +0000
+Message-ID:
+ <ZQ2PR01MB13077459D994A40701B14725E6722@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
+References:
+ <20250612-gpiochip-set-rv-pinctrl-starfive-v1-0-8507b46516f5@linaro.org>
+ <20250612-gpiochip-set-rv-pinctrl-starfive-v1-2-8507b46516f5@linaro.org>
+In-Reply-To:
+ <20250612-gpiochip-set-rv-pinctrl-starfive-v1-2-8507b46516f5@linaro.org>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1305:EE_
+x-ms-office365-filtering-correlation-id: 6b8941aa-80f1-4a50-d720-08ddae17a259
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|41320700013|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ 26sXRzlxmrAZUIpjGbmv6zoU/szHgS/Kczf21ReqtjMs9ELP6L1djxQSFb8cZ0dfUEeh2zkJgJZyWHmZW/hwlsWngtXU8gQbATphk/XBN7ilgb3kAVjY8GIAiuFCeRi3v6L0FQA0AAn2LJyKFlGb8PVPLxTgNLotvrUEe0/8d/9P3WRlm0Irv0lW4QrhcHniV12MQeh53EtPlkjxpyBkd25X81erDNbu5SIahBoyPYWhLCpaYM6YvBlFafTO+BjNoRYhu1IQO5+YfLFdZXJIqsIv/m6D1BN7kd/TpbjdA698szKgrpShutfX/PwbARMJVhTn5PcWhbDNA+dXSRUk7DAamJle8M5jCUNmV/lvmHwOMWOtnjS5FI/7V5a/UOwX9D1j3ivRuZq8OfUOSXb5bdbxt29gJLb3xLIbGnDrPn8rl1vL9eU6lzDotHvXOpT8po+SNc7A8GNYhU3n3mYEH8vS5VSwK6MuVmIMnOsB8WFA0m3el88dx+3SPjrQp7306kSACRSPxv81xeZp5k3dWtgEP+7QBG3YQJwEkZIAXua5us9AGrahUlDXCkZL034ntdJ9lyc7/HdxzuU/wP/r/g==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?dldSVzZjaFFXRHBaNURrbHdLc1V6Q1FlcTNaaUVXU0FMZ0NNL3RKSmIxSXAx?=
+ =?utf-8?B?Q2hqemg3cy9STW0xL0JzNjJnVkR2d3ZTZkxkUyt3aTlFR1ZnYnZlYTFSOS9S?=
+ =?utf-8?B?WEQ4LzVTQ3dxb1Y1OW8yeTltQitnMUJBTW43eHBSNG1jazA1MTFqRW96VVpS?=
+ =?utf-8?B?QkViRGQ1Wk9nZkxzVVlFczhHcVdyWTBQSjhRZ00yUnlkREcyOXdLMlMxSWtL?=
+ =?utf-8?B?VTRiYS9uTHQ2U1FPNXdXcjEvWGt6YUFRb0pzaUhqK2I5QTRCUXcrRm5nYzlQ?=
+ =?utf-8?B?SlFXdTgzeGkvT2l0Ri9SbmJwcDRaRy9lZGtSWDc1V29QYWxNVHdoNml1Q1Uy?=
+ =?utf-8?B?ZGlxVzRkMjdYUXF0T05PTmhPWnlzT3R1SzdJaHZiSEdKSUcwd3JHcjFONjRx?=
+ =?utf-8?B?OFRnTGtDYURWdkdzdVdwWkdCOFpLVWVwdmsxVkJYamFWNHRySlFXUjNDSDFV?=
+ =?utf-8?B?cFl2Q292bDdBUUQ1ZzJSZjdHZlJRMm02YlVDRlJ6TmprNDJDQmUwSkhaK3pV?=
+ =?utf-8?B?bHlwNmFMbzR1ZTNkYXQ1K09EeDFMbXZkdW1xODJ6MG5LbURLYTZYMGJjOU8w?=
+ =?utf-8?B?bDlwTk4xWFJra3dScWViSnhqUHI5Y2grdTQzR2xvVlp1TnFXQzU0OVhhd2d1?=
+ =?utf-8?B?RTBsbkZSZG9QdkxpcVRZbEVLNjBKRFhieVFyOWRHK1N1azFSLzNPd0JHVGUy?=
+ =?utf-8?B?dGJCbFhtRTdvYXVnYWNzam1qall2N0tGemNNU1llVmxGVjI1UkNVeVpvRFhh?=
+ =?utf-8?B?SG4xc1J6YTFnMHlMTXNEN1lzcmFjdS9OWStVZVQ0V0pxRTltRVozbEthNjVW?=
+ =?utf-8?B?MEJkNUE0UDN1WElMUzVkTWQ1dktOdFhNd3Q2VzB0WEFYcnBwMm1GMWh1ZGNt?=
+ =?utf-8?B?eTV1Vk5BbGpsZ0hkWmFqVndaUWpTWFZCRXV1NDhhbk5SeGtTMTRqLzJqZHlh?=
+ =?utf-8?B?T2kvYVNIa3d5ZFRNWkhUZE5LcWwyZVBUSGJaWWdISHh2YkJibVZiZ0wxNDF6?=
+ =?utf-8?B?M1JqK0Zua0dsSXZCTUVwUVNXWHlIM3lhUmtYS0Rrd3pOcGh1aDVYbFBlcC9E?=
+ =?utf-8?B?c3VUcE0yZm9lTk45REo4VWYrZXV1YkhUaDQreGU3c203UU1GUUJiZmFLbGUw?=
+ =?utf-8?B?Q1hGMTRuWVQwTUdRU1loamFibmg4MjFOTXNPWnlyWmczNTRXZml6b04yZDR1?=
+ =?utf-8?B?RkRrMWg1bVNpRXJvdEZtd1VoczkwU0Y0ckxMd0VkZnpqc1h3YmF1Zm0ybWEx?=
+ =?utf-8?B?bVUyUU5Kaklic2VjV2laUktIUFJHb0s3QWZITVBJME01T01jamRnMFI5MHFw?=
+ =?utf-8?B?WlZZZkpEbWZZTUpQQTFQdkZibVp5UEVXekN4U3RYbjVNZFUyWDdUemFqOWRN?=
+ =?utf-8?B?K1BISDB1akptOHFDWXowY0tiQ044ZlFoakJjZmhMOStNeEcybjNQbXRjNVlX?=
+ =?utf-8?B?N0JCajg1dkFxZ1BCaEdJOWNpTTZHQlg0UE95NHNIVkFTVGc3SWw5TExKYXdv?=
+ =?utf-8?B?bVdvNkdIUVk5U1ZTTXluYUIzRU9hUUltYUVhL1FtQ3F4RHI0dklneDhUYkVm?=
+ =?utf-8?B?RnZuMTBhUkV2dFI4aFQva09ZSXk1NERhNG5RVGJ2bmJIUWhWc2dUa1FnWGo4?=
+ =?utf-8?B?M2VNRVJOdjY3Nm9zd1h0VFRsTVp5YmIrbmUzc2VhWXdBZHpaakE0TmcyNUpx?=
+ =?utf-8?B?Vkt4MlV3dVFWYm44Nm1GNmJ5S0ZvaTJKcFFoTmVvUVVNMTFXZ1dUb2J2WUhv?=
+ =?utf-8?B?QkhwRExJVWsxUFdpOHJacTVXYUxEQ3MvVEJvVFhEU2JxY0RJUjk0akcwVC9r?=
+ =?utf-8?B?bFJjMUVFaVpSU2VOY1dTWVA2MDdoYmFFWGFieXFpaStVMDdqNDBBM2ZpcVoz?=
+ =?utf-8?B?RFMrRk9KOFN1RkpQVU51WGcrUG1yMHdRL2ovMmJqNkdpR0s2Yk9pK0kvbmtT?=
+ =?utf-8?B?NGFEU1c1Mjl3N2RtbXNMZWRWM1J1K0NXenM1blhPZWIyRVlDckFaOXhudHdQ?=
+ =?utf-8?B?MDFrMXBKd2RRdjZUczU0NnMyZExYWCtjOTA1U04yVHpNUnhlQVJBcHgyWFNC?=
+ =?utf-8?B?ZGxFVmVDa0t5SkN6TGNCbWtpelNWT0MzL1g4Mjk2N2ZsNlgzeWJCSW9mTVk2?=
+ =?utf-8?Q?gWfIoIVWGqTSxKrMq9Y/tALZ6?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b8941aa-80f1-4a50-d720-08ddae17a259
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 03:24:28.7563
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UHpouvuCrZaiENOj4dmiDQBZQiKie4pr6FKGdQSQ1nqguwhxwJwgrvYH1nsG5h6hxb0XUrv4v6j7kyZifGmQLuasJqYJbcviaJ9f7b1xMUU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1305
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 0a1db19f66c0960eb00e1f2ccd40708b6747f5b1  gpio: pca953x: fix wrong error probe return value
-
-elapsed time: 973m
-
-configs tested: 127
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250617    gcc-11.5.0
-arc                   randconfig-002-20250617    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                            hisi_defconfig    gcc-15.1.0
-arm                         lpc32xx_defconfig    clang-17
-arm                          pxa3xx_defconfig    clang-21
-arm                   randconfig-001-20250617    gcc-8.5.0
-arm                   randconfig-002-20250617    clang-21
-arm                   randconfig-003-20250617    clang-21
-arm                   randconfig-004-20250617    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250617    gcc-11.5.0
-arm64                 randconfig-002-20250617    clang-21
-arm64                 randconfig-003-20250617    gcc-8.5.0
-arm64                 randconfig-004-20250617    gcc-12.3.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250617    gcc-13.3.0
-csky                  randconfig-002-20250617    gcc-12.4.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250617    clang-21
-hexagon               randconfig-002-20250617    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250617    gcc-12
-i386        buildonly-randconfig-002-20250617    clang-20
-i386        buildonly-randconfig-003-20250617    gcc-12
-i386        buildonly-randconfig-004-20250617    gcc-12
-i386        buildonly-randconfig-005-20250617    gcc-12
-i386        buildonly-randconfig-006-20250617    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch             randconfig-001-20250617    gcc-15.1.0
-loongarch             randconfig-002-20250617    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                          sun3x_defconfig    gcc-15.1.0
-microblaze                       alldefconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                         db1xxx_defconfig    clang-21
-mips                           ip30_defconfig    gcc-15.1.0
-nios2                            alldefconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250617    gcc-10.5.0
-nios2                 randconfig-002-20250617    gcc-14.2.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250617    gcc-8.5.0
-parisc                randconfig-002-20250617    gcc-8.5.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                      arches_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250617    gcc-8.5.0
-powerpc               randconfig-002-20250617    clang-16
-powerpc               randconfig-003-20250617    gcc-12.4.0
-powerpc64             randconfig-001-20250617    gcc-14.3.0
-powerpc64             randconfig-002-20250617    clang-21
-powerpc64             randconfig-003-20250617    gcc-13.3.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                    nommu_k210_defconfig    clang-21
-riscv                 randconfig-001-20250617    clang-21
-riscv                 randconfig-002-20250617    gcc-10.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250617    clang-21
-s390                  randconfig-002-20250617    clang-20
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250617    gcc-12.4.0
-sh                    randconfig-002-20250617    gcc-14.3.0
-sh                           sh2007_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250617    gcc-12.4.0
-sparc                 randconfig-002-20250617    gcc-13.3.0
-sparc64                             defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250617    gcc-15.1.0
-sparc64               randconfig-002-20250617    gcc-9.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250617    gcc-12
-um                    randconfig-002-20250617    clang-21
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250617    clang-20
-x86_64      buildonly-randconfig-002-20250617    clang-20
-x86_64      buildonly-randconfig-003-20250617    gcc-11
-x86_64      buildonly-randconfig-004-20250617    gcc-12
-x86_64      buildonly-randconfig-005-20250617    gcc-12
-x86_64      buildonly-randconfig-006-20250617    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250617    gcc-10.5.0
-xtensa                randconfig-002-20250617    gcc-12.4.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+PiBPbiAxMS4wNi4yNSAxNDoxNCwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToNCj4gDQo+IHN0
+cnVjdCBncGlvX2NoaXAgbm93IGhhcyBjYWxsYmFja3MgZm9yIHNldHRpbmcgbGluZSB2YWx1ZXMg
+dGhhdCByZXR1cm4gYW4gaW50ZWdlciwNCj4gYWxsb3dpbmcgdG8gaW5kaWNhdGUgZmFpbHVyZXMu
+IENvbnZlcnQgdGhlIGRyaXZlciB0byB1c2luZyB0aGVtLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
+QmFydG9zeiBHb2xhc3pld3NraSA8YmFydG9zei5nb2xhc3pld3NraUBsaW5hcm8ub3JnPg0KDQpS
+ZXZpZXdlZC1ieTogSGFsIEZlbmcgPGhhbC5mZW5nQHN0YXJmaXZldGVjaC5jb20+DQoNCj4gLS0t
+DQo+ICBkcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1zdGFyZml2ZS1qaDcxMTAuYyB8
+IDcgKysrKy0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlv
+bnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3Ry
+bC1zdGFyZml2ZS1qaDcxMTAuYw0KPiBiL2RyaXZlcnMvcGluY3RybC9zdGFyZml2ZS9waW5jdHJs
+LXN0YXJmaXZlLWpoNzExMC5jDQo+IGluZGV4DQo+IDFkMGQ2YzIyNGMxMDRlN2U5NzBkNWUzMWU1
+MmIyZmUzYjE5ZTJjYWQuLjA4MmJiMWM2Y2VhOWIyOTI1N2IxDQo+IDk3ZjA2NWMxYTlkZWViYzk5
+N2ZkIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1zdGFy
+Zml2ZS1qaDcxMTAuYw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1z
+dGFyZml2ZS1qaDcxMTAuYw0KPiBAQCAtNjA4LDggKzYwOCw3IEBAIHN0YXRpYyBpbnQgamg3MTEw
+X2dwaW9fZ2V0KHN0cnVjdCBncGlvX2NoaXAgKmdjLA0KPiB1bnNpZ25lZCBpbnQgZ3BpbykNCj4g
+IAlyZXR1cm4gISEocmVhZGxfcmVsYXhlZChyZWcpICYgQklUKGdwaW8gJSAzMikpOyAgfQ0KPiAN
+Cj4gLXN0YXRpYyB2b2lkIGpoNzExMF9ncGlvX3NldChzdHJ1Y3QgZ3Bpb19jaGlwICpnYywNCj4g
+LQkJCSAgICB1bnNpZ25lZCBpbnQgZ3BpbywgaW50IHZhbHVlKQ0KPiArc3RhdGljIGludCBqaDcx
+MTBfZ3Bpb19zZXQoc3RydWN0IGdwaW9fY2hpcCAqZ2MsIHVuc2lnbmVkIGludCBncGlvLCBpbnQN
+Cj4gK3ZhbHVlKQ0KPiAgew0KPiAgCXN0cnVjdCBqaDcxMTBfcGluY3RybCAqc2ZwID0gY29udGFp
+bmVyX29mKGdjLA0KPiAgCQkJc3RydWN0IGpoNzExMF9waW5jdHJsLCBnYyk7DQo+IEBAIC02MjUs
+NiArNjI0LDggQEAgc3RhdGljIHZvaWQgamg3MTEwX2dwaW9fc2V0KHN0cnVjdCBncGlvX2NoaXAg
+KmdjLA0KPiAgCWRvdXQgfD0gcmVhZGxfcmVsYXhlZChyZWdfZG91dCkgJiB+bWFzazsNCj4gIAl3
+cml0ZWxfcmVsYXhlZChkb3V0LCByZWdfZG91dCk7DQo+ICAJcmF3X3NwaW5fdW5sb2NrX2lycXJl
+c3RvcmUoJnNmcC0+bG9jaywgZmxhZ3MpOw0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICB9DQo+IA0K
+PiAgc3RhdGljIGludCBqaDcxMTBfZ3Bpb19zZXRfY29uZmlnKHN0cnVjdCBncGlvX2NoaXAgKmdj
+LCBAQCAtOTM0LDcgKzkzNSw3DQo+IEBAIGludCBqaDcxMTBfcGluY3RybF9wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCXNmcC0+Z2MuZGlyZWN0aW9uX2lucHV0ID0gamg3
+MTEwX2dwaW9fZGlyZWN0aW9uX2lucHV0Ow0KPiAgCXNmcC0+Z2MuZGlyZWN0aW9uX291dHB1dCA9
+IGpoNzExMF9ncGlvX2RpcmVjdGlvbl9vdXRwdXQ7DQo+ICAJc2ZwLT5nYy5nZXQgPSBqaDcxMTBf
+Z3Bpb19nZXQ7DQo+IC0Jc2ZwLT5nYy5zZXQgPSBqaDcxMTBfZ3Bpb19zZXQ7DQo+ICsJc2ZwLT5n
+Yy5zZXRfcnYgPSBqaDcxMTBfZ3Bpb19zZXQ7DQo+ICAJc2ZwLT5nYy5zZXRfY29uZmlnID0gamg3
+MTEwX2dwaW9fc2V0X2NvbmZpZzsNCj4gIAlzZnAtPmdjLmFkZF9waW5fcmFuZ2VzID0gamg3MTEw
+X2dwaW9fYWRkX3Bpbl9yYW5nZXM7DQo+ICAJc2ZwLT5nYy5iYXNlID0gaW5mby0+Z2NfYmFzZTsN
+Cj4gDQo+IC0tDQo+IDIuNDguMQ0KDQo=
 
