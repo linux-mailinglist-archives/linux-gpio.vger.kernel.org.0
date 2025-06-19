@@ -1,149 +1,191 @@
-Return-Path: <linux-gpio+bounces-21884-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21885-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 202EFAE0921
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 16:51:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57D03AE0A66
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 17:28:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 170215A5CB2
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 14:50:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 456073B347B
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 15:28:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20F8F21C9E1;
-	Thu, 19 Jun 2025 14:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11E2A231858;
+	Thu, 19 Jun 2025 15:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V+eTYu+1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtEyfa2K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F23422126C
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Jun 2025 14:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E023085DB;
+	Thu, 19 Jun 2025 15:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344515; cv=none; b=d+cSXa+I36nPoD9GumalI+sDUSYBqNOtC1HVuwo1BjBKNKNLjKO5SN6igpifqWOJvgoPMEklfmoV+7anNfZqsmo/Dcqne1xj4oTW9uKB3cbdPpdcCYrxoi6DHNcufppm9ii1uA80wQMAWErgKF3t2DFgq0OTSCLbxNF8eXtzzUc=
+	t=1750346901; cv=none; b=lAVDOS7/lcSUPqoZbHHgIueyFRYRSpTZycSgTi2ZbjExpjYo0FQVgDhuEEpHKj35pwQ+MpYA9V1uY3Nrx7Zj/ROJms1vikHVP/WDF11Gny5sBWxZ8gTne+ru9AIOLGKUAMkUr/N9mEN6jo8a2h4jUyQvmigy0u9DF//ETqqo0us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344515; c=relaxed/simple;
-	bh=XQbO+MeU7LphEXYmi3GPh+fSnb0aMig4WX9RiVNilV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=M9speLB67VjlPgUUdpnOay35iICM9pKLDy64KNEYA1gyaon3S4MvobMRpg/+jj/AgSWLEjF9FgJ+SL9iws/xZZnXtUXJpIAD9MN0DzBSP1iWr9b8mtBtUPWr47pA2gmQZ+zPrhFIUiZwKJV4eM2NUDFCO6ExWiOtM2imDkAfpjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V+eTYu+1; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-73a45bb28f1so452521a34.1
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jun 2025 07:48:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750344513; x=1750949313; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Uve89EMzkitmRjOaJNdbWQJ/RDIXjqQq2KcXNC17HOs=;
-        b=V+eTYu+1ahtFEjU64PoY3holXoxMfQNGYTBSLbK1vLLeRaI6txdw4YzuNHsQOFi2gR
-         OQf0R5e7xrvZPbHrS8DhGfM7QWWUcEIj4R7alMr9CFEzy1fSfHTncyiad5VFA8WBQfk/
-         2HeiNwwhB2P7/+z918UDG5dWPH57TqqijtkFvb4c+iDSuPpCrAxKLol5PWox6lUjJEZ1
-         SaEbCnIjl6/pMJ+bdfMcfWjEBSJijjKkKjIZTV59RwC8oDiWGrCO0og00Vuo0ahmz1b9
-         1W98AUpPlR3nu3umIjqurEt2qMS+A9o/HjRNv2kV3kfnKT+47goBlc3atwyavF+FZQxW
-         nDIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750344513; x=1750949313;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uve89EMzkitmRjOaJNdbWQJ/RDIXjqQq2KcXNC17HOs=;
-        b=mlFBvqfVsf8ptbPqgy/BbgW8nX+6u7F/t9flGeN9rYV7k+xiINAIewZVbh+MHdQ+FF
-         QO8MqYR6uQfpZsWuNztIlJJBL7B7EK3pZUIyf71tyxrTY7J77e9ofVamz1oBeY7T3ZS1
-         nDvSo3PIJHdjHM9MSp//H2XIWqTtCy2K3Wco2OK2j5TVyzJKy9UCZZbeRxWqWRuu/Uco
-         dafOaPm5I26ZGynBIgAGU3QPdallEaEOJuw1DVAGSyArAWNcEhnaZAobUCPCm2ClRVUR
-         9rQRJHhKxCuZoNqE5trSBDp24RSDrIg4wZ7DcPVuR0NqMAQnN5R9PpEJs+2kdov/5lPu
-         CJ6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXR92cpZZwgeH2Dqg+YL66zj5KpHZx3aCIkKZnBtRLC6+UFq9mDkjl46cfXPguibVZQKXF66TT589Xi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYI4e1ytFJkLd40rT2eOpy5pTYrRg3NhmRE7270GnKzfSZe29G
-	8VrRU6tIyjpy8560046n4USQ2XD8Mw8wDsOqyDh00Dc/XvqEnsuQ970d0oFw4YG//a4=
-X-Gm-Gg: ASbGncuvnUVbncozWfjAD9HJhOoY8MQxZ3e5vD71HBwBUWVCSFqD616zGhtpA2nU27r
-	fWNfZmZ9fDGOMzHZKtDkbZRGKuyaQG8A9awH+cmR2DJ5DUr3Xw7Tj3JJ3p7VjxwuCDW28k7opf9
-	+9t80sFfwI129U2scceL7ZXYv4pRzK20UoG3J1CiTZCHLxg/Ew8dzevqU5kNOegwxwRqFmZDf0v
-	Nyg4wZEgMUab7vpSVB01qTVbzcZKVMoJQiUSGGSwKsATx147iMITRU9jkOTLIfLysQ6PQ/MNsD4
-	ilNlR4lmBR1Xa4cOewLxhTc4Cns2X+S9G0wYo5tI9Db2/CvfY9E6ewaPZlUrYh46tPXByw==
-X-Google-Smtp-Source: AGHT+IFQB8JILX7sEXumld5e4Y3/ldgg/AQr8eFGAOqhptgecy59aQAmbClEqPPBViAJFk+qgfNH2w==
-X-Received: by 2002:a05:6870:8894:b0:2d5:97d0:c03c with SMTP id 586e51a60fabf-2eb9ecd771bmr2508756fac.18.1750344513157;
-        Thu, 19 Jun 2025 07:48:33 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:67e2:ece8:b2f5:738f])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ebb30b0653sm139118fac.8.2025.06.19.07.48.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 07:48:31 -0700 (PDT)
-Date: Thu, 19 Jun 2025 17:48:30 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [linusw-pinctrl:devel 42/53] drivers/pinctrl/pinctrl-aw9523.c:658
- aw9523_gpio_set_multiple() warn: inconsistent returns '&awi->i2c_lock'.
-Message-ID: <4efce873-0542-4dff-9a77-fca9d582f1aa@suswa.mountain>
+	s=arc-20240116; t=1750346901; c=relaxed/simple;
+	bh=nkBVuy8yaSRVyY7240jNJJUyi5FunCZ+peQkhFA/csM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FpPcsarb3ZkS2yenQdTwbl1sEcdDb4b+XBqz1xBN/b9HH1ecVWsUXObt/nAMPCJI27vFQq8QlLA4tsiX5rGMimzK+60E57ghnXSnn8cqpBT9DCEQJ5r2Q+ZFeI9DjUNUERc50po21EpIf3IWOTvtVZGqZsTNniRIfAcM80L0Bw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtEyfa2K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DFBC4CEEA;
+	Thu, 19 Jun 2025 15:28:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750346901;
+	bh=nkBVuy8yaSRVyY7240jNJJUyi5FunCZ+peQkhFA/csM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UtEyfa2K8XZUovYXxPzSvi1B6sGFrKKf5w0404gJgSUfaiqDcwouKi3F5OY2vJRwH
+	 tEgizBKEFsPK6NAhMu9Y/vxnEiUcvIgudryHoLidQKCNtyMfMFsbJ2KRPgMJellZkA
+	 DvsqCB6tYVkm6bWc8YNG5fVkPRo/+2b0M2llnbJmkeyb8A8BZalVR1qZTL0MUwtMjE
+	 fUbvdqYyJCLosgCmBnjTwqMXDbtNCghKERGQ0pxjoJRXMrAY/Q926eA1djUl3KWfyo
+	 xa2Jztnw1w/aJ8IC1u3MaO2fGMLXMAcNndfCWf8NMyngNoWUdvkQjvLl/VzhJRKUUr
+	 tkiEIDhWMvGcg==
+Date: Thu, 19 Jun 2025 16:28:14 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250619152814.GK795775@google.com>
+References: <20250604041418.1188792-1-tmyu0@nuvoton.com>
+ <20250604041418.1188792-2-tmyu0@nuvoton.com>
+ <20250612140041.GF381401@google.com>
+ <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
+ <20250612152313.GP381401@google.com>
+ <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
+ <20250613131133.GR381401@google.com>
+ <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
+ <20250619115345.GL587864@google.com>
+ <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-head:   62be3d6e481122f02364993fee8322a681072918
-commit: dffe286e2428a32bf5a70648d22a678b83080414 [42/53] pinctrl: aw9523: use new GPIO line value setter callbacks
-config: x86_64-randconfig-161-20250619 (https://download.01.org/0day-ci/archive/20250619/202506191952.A03cvn22-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+On Thu, 19 Jun 2025, Ming Yu wrote:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202506191952.A03cvn22-lkp@intel.com/
+> Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午7:53寫道：
+> >
+> > On Fri, 13 Jun 2025, Ming Yu wrote:
+> >
+> > > Lee Jones <lee@kernel.org> 於 2025年6月13日 週五 下午9:11寫道：
+> > > >
+> > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > >
+> > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
+> > > > > >
+> > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
+> > > > > >
+> > > > > > > Dear Lee,
+> > > > > > >
+> > > > > > > Thank you for reviewing,
+> > > > > > >
+> > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
+> > > > > > > >
+> > > > > > > ...
+> > > > > > > > > +static const struct mfd_cell nct6694_devs[] = {
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > > > > > > > +
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+> > > > > > > >
+> > > > > > > > Why have we gone back to this silly numbering scheme?
+> > > > > > > >
+> > > > > > > > What happened to using IDA in the child driver?
+> > > > > > > >
+> > > > > > >
+> > > > > > > In a previous version, I tried to maintain a static IDA in each
+> > > > > > > sub-driver. However, I didn’t consider the case where multiple NCT6694
+> > > > > > > devices are bound to the same driver — in that case, the IDs are not
+> > > > > > > fixed and become unusable for my purpose.
+> > > > > >
+> > > > > > Not sure I understand.
+> > > > > >
+> > > > >
+> > > > > As far as I know, if I maintain the IDA in the sub-drivers and use
+> > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
+> > > > > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
+> > > > > However, when a second NCT6694 device is connected to the system, it
+> > > > > will receive IDs 16~31.
+> > > > > Because of this behavior, I switched back to using platform_device->id.
+> > > >
+> > > > Each of the devices will probe once.
+> > > >
+> > > > The first one will be given 0, the second will be given 1, etc.
+> > > >
+> > > > Why would you give multiple IDs to a single device bound to a driver?
+> > > >
+> > >
+> > > The device exposes multiple peripherals — 16 GPIO controllers, 6 I2C
+> > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
+> > > is independently addressable, has its own register region, and can
+> > > operate in isolation. The IDs are used to distinguish between these
+> > > instances.
+> > > For example, the GPIO driver will be probed 16 times, allocating 16
+> > > separate gpio_chip instances to control 8 GPIO lines each.
+> > >
+> > > If another device binds to this driver, it is expected to expose
+> > > peripherals with the same structure and behavior.
+> >
+> > I still don't see why having a per-device IDA wouldn't render each
+> > probed device with its own ID.  Just as you have above.
+> >
+> 
+> For example, when the MFD driver and the I2C sub-driver are loaded,
+> connecting the first NCT6694 USB device to the system results in 6
+> nct6694-i2c platform devices being created and bound to the
+> i2c-nct6694 driver. These devices receive IDs 0 through 5 via the IDA.
+> 
+> However, when a second NCT6694 USB device is connected, its
+> corresponding nct6694-i2c platform devices receive IDs 6 through 11 —
+> instead of 0 through 5 as I originally expected.
+> 
+> If I've misunderstood something, please feel free to correct me. Thank you!
 
-New smatch warnings:
-drivers/pinctrl/pinctrl-aw9523.c:658 aw9523_gpio_set_multiple() warn: inconsistent returns '&awi->i2c_lock'.
+In the code above you register 6 I2C devices.  Each device will be
+assigned a platform ID 0 through 5. The .probe() function in the I2C
+driver will be executed 6 times.  In each of those calls to .probe(),
+instead of pre-allocating a contiguous assignment of IDs here, you
+should be able to use IDA in .probe() to allocate those same device IDs
+0 through 5.
 
-vim +658 drivers/pinctrl/pinctrl-aw9523.c
-
-dffe286e2428a3 Bartosz Golaszewski        2025-06-12  628  static int aw9523_gpio_set_multiple(struct gpio_chip *chip,
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  629  				    unsigned long *mask,
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  630  				    unsigned long *bits)
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  631  {
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  632  	struct aw9523 *awi = gpiochip_get_data(chip);
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  633  	u8 mask_lo, mask_hi, bits_lo, bits_hi;
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  634  	unsigned int reg;
-dffe286e2428a3 Bartosz Golaszewski        2025-06-12  635  	int ret = 0;
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  636  
-4210ef801a2482 Andy Shevchenko            2024-03-29  637  	mask_lo = *mask;
-4210ef801a2482 Andy Shevchenko            2024-03-29  638  	mask_hi = *mask >> 8;
-4210ef801a2482 Andy Shevchenko            2024-03-29  639  	bits_lo = *bits;
-4210ef801a2482 Andy Shevchenko            2024-03-29  640  	bits_hi = *bits >> 8;
-4210ef801a2482 Andy Shevchenko            2024-03-29  641  
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  642  	mutex_lock(&awi->i2c_lock);
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  643  	if (mask_hi) {
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  644  		reg = AW9523_REG_OUT_STATE(AW9523_PINS_PER_PORT);
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  645  		ret = regmap_write_bits(awi->regmap, reg, mask_hi, bits_hi);
-091655b9285d83 Andy Shevchenko            2024-03-29  646  		if (ret)
-dffe286e2428a3 Bartosz Golaszewski        2025-06-12  647  			goto out;
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  648  	}
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  649  	if (mask_lo) {
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  650  		reg = AW9523_REG_OUT_STATE(0);
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  651  		ret = regmap_write_bits(awi->regmap, reg, mask_lo, bits_lo);
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  652  		if (ret)
-dffe286e2428a3 Bartosz Golaszewski        2025-06-12  653  			goto out;
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  654  	}
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  655  	mutex_unlock(&awi->i2c_lock);
-
-This unlock should be after the out: label.
-
-dffe286e2428a3 Bartosz Golaszewski        2025-06-12  656  
-dffe286e2428a3 Bartosz Golaszewski        2025-06-12  657  out:
-dffe286e2428a3 Bartosz Golaszewski        2025-06-12 @658  	return ret;
-576623d706613f AngeloGioacchino Del Regno 2024-03-01  659  }
+What am I missing here?
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Lee Jones [李琼斯]
 
