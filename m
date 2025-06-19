@@ -1,148 +1,199 @@
-Return-Path: <linux-gpio+bounces-21839-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21840-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52A70ADFE94
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 09:21:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5C27ADFF80
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 10:14:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDA193A180D
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 07:21:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48B9D164EBD
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 08:14:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F18A158DAC;
-	Thu, 19 Jun 2025 07:21:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E1E9261390;
+	Thu, 19 Jun 2025 08:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nsJI4aCh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRCScuqd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9BF24418E
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Jun 2025 07:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8D621A424;
+	Thu, 19 Jun 2025 08:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750317708; cv=none; b=ZsTsY6K6QPKNRxoPFr7bJIM791ZS9zc9nE6VkkWUwmC1PwD5QxLmOdSGTWYqnMxNz+KKWwRGkELHsahaMBEuoemuXmujEwlS11d5kSaocCxWijzdy9y25Y9hbnIxu8Y5duO4u2Xjr8pMqgIdeOp3LP6406Y2fp2wJznsWnAxdZw=
+	t=1750320881; cv=none; b=jnkiMqK+qVMHCGlFADW4tt0A4b0pp2cFGqAND5B59n3lur0AMA91h/vq1kz7kNZFP5gkjDQTUCijNHd7mLNiSjR2e4vgQyHNgdLTyEpO4qUTgsJQmWDRk4B6FYmbEIHfwrvLjoTj4k0yT++83b6Shvjvah/bA0v1gqpOiUkf9RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750317708; c=relaxed/simple;
-	bh=JzJWHis4wkaAT5LGBZYcjeOsPjRm/vt6Rf3X3gEadcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L/QglrMjfkY7Jppssx9aidA0peSOcUk4FkDySwyPUy9dkgaR7hTm/wV59P1HQ8y5hbdhSKbSOAMYVgl7qi7fDyXBUryiUzcMOTDzMzl20JqDnZctRQTCrVKH3vg814kLrfzw3bJw5wur/NEFDXJFfAlKRu24cpaIWPEmxkgnkaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nsJI4aCh; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553b60de463so456282e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jun 2025 00:21:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750317705; x=1750922505; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i2REX8f1H3qE3TCrycXPdBwYvBe5kQ22cbStBAf1MQA=;
-        b=nsJI4aChNE4VXcwvzIE/aT5hcJ83Lg9kyktw4LSt4+hft1N3+8C/SL5VFi6K0g5rAy
-         QS7En0sgBoiShCA4udYlkLfBzFNokpUEA7zZIet8Z3JLgwN1rADwJyu/ZzRSgKLZaCU3
-         Prw2mDl8cJriy8vKWaXuv1tR1jrDeTg8n3xIj/uxupbWIrIRrOB0aZgmbJo92jlkCjfF
-         FbVRqdt5ctij+RmpjOXVM0JFSi4PfuxYa+/QSAQ7aj1PmEFkcKTG/0YPrvR/DMTERZ3i
-         BNKQxMbUK93wc/cCbu3SBokXyOsB/lVbR3EEKtV6s5y89ka4qgrYYh805ylSlXnuvAs/
-         wURQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750317705; x=1750922505;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i2REX8f1H3qE3TCrycXPdBwYvBe5kQ22cbStBAf1MQA=;
-        b=PZKhTkni9K/AcRVASjKO4DGTwlzI401ZOJOs5hediV4mEeH6sJ+OGJSd6nxFIIMisc
-         ybQMt9pixZqU+rNfhmf68UP63PwI4+JN9YcyAPvjkbDan9jml3q96OScY/UQ4LkMjDfA
-         NotwkOtWghNZFCN8memJ2Qn7YH6V554IQC6q5OuXn39K6skoyoLqmxON10jNNwHt4ZkV
-         Ex+yB1ytarWt2WMAyEyvakCMowTSgC8pX9jLw/zA6Amzyxu4Qxvr+kHE+2EOrhsmS3eC
-         PSw55Ii+VrHKtSM2mX2xferCSWzSIe6udO05QjIfWXZCOSixwsQmZ2FNmzN0/eXzTRlt
-         N9tw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7kGTVka8Bn7usjhRjZ7CRrC3GPolSYg511m+NOC896nbk9WxSCvjjw36TloKrQHYT990wnphqNgd6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTejBg8JS70Xk4DrWwWtLfEoced5Teb2DI96+FO8bp7GHZH4TT
-	+G5sB2WmzEW2fc6svMD+TDcG3ly0mmCvMVAFD1jSzl01aweUBbTMmeIjWgDL9uxhDX1LAF+SrGp
-	yVgGTyeHEGnftbMyAlSIO5tEVwqppNdKdnb1ZDHYieQ==
-X-Gm-Gg: ASbGnctuP2H+kqpN42XH8J55fo7wVjB1rDUS70pVo/IlQfylW0CpyVqI79cVoAmBX9c
-	CVgwNBb7X5JS1EPXRkn9xucZnz5ZlB8vpMTxiV1DhWOoytjqtNhGEDzwGP08uVruLsK+1XER3v6
-	y8puv7T7t6Ght8++zf/oe5OLlHy5WGh/8FJunBZAbA09b0n61Mgxo7WOIWnHKjVE1HJtVILZFNK
-	Tk=
-X-Google-Smtp-Source: AGHT+IEh54Pu16jXn4P+irLbn846Wet4MTiIBtxZ5XCuFceE2ajC9TqO8oRVjTcWCkeViL2vbItUiC+8YwBhD/ZWW4o=
-X-Received: by 2002:a05:6512:15a4:b0:553:50c6:b86c with SMTP id
- 2adb3069b0e04-553b6f6b5ebmr5729673e87.57.1750317704976; Thu, 19 Jun 2025
- 00:21:44 -0700 (PDT)
+	s=arc-20240116; t=1750320881; c=relaxed/simple;
+	bh=4HJuJePFef9p2ELqf3SzVRO850tg1GWyQ2TzfThmE6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oIRBIrlUSfnMI4MEBZQyyyQxH2KD9F/c7e8bJf7sSiqFxKvdgOI18HoNrrajb0E0ZDlZ1eRlzvSMJbWZQsOoaR/mpnofWGS92qtegFqsUYl4n5pAp/idlOFKz9uaQI6fWJLygAR4m5uRJT7THkBwNJ/m6DXE1hdESXFuSkAFoqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRCScuqd; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750320879; x=1781856879;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4HJuJePFef9p2ELqf3SzVRO850tg1GWyQ2TzfThmE6U=;
+  b=kRCScuqdpD2i8aN/J2/WEnRUwgBy/Gv933/d4wygDccTCb6DUr4O+02l
+   MCwHMF4tpTVEfvZJpBwbamisvb/uHfRI59esyD8bzKf0XwPvHvfhwujqM
+   5E+Acu2B3NXp4NAYRpm9ncseRaVX99UIUrCb7qbQ83b0ePLbiutDoQBBI
+   MnZW+tksKEADrBaXKogpyEI1+1WULlDgJCA3oBvDWbCHH+Op75tmkv4bI
+   g1Xokg1HzOWbRkrXPfQR7CMLD4U8B+hKQLViswX97dL08om7nsPLo8MA8
+   6norZHP86Scem0JGgM0r6y/hkaaMrthIIjK70omooK7oZoGJjvmAO/mBP
+   w==;
+X-CSE-ConnectionGUID: dNObG1LyQTyfrImNPTZGkg==
+X-CSE-MsgGUID: OifD8hRDQziF40V/+K+ofw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="55197737"
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="55197737"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 01:14:37 -0700
+X-CSE-ConnectionGUID: wS0++O/HRfKzXmL0I2HRjg==
+X-CSE-MsgGUID: 1GwMLCrPRHesJQpM8C7HWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
+   d="scan'208";a="156336448"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 19 Jun 2025 01:14:31 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSAPk-000KYk-1C;
+	Thu, 19 Jun 2025 08:14:28 +0000
+Date: Thu, 19 Jun 2025 16:14:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
+	kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, elbadrym@google.com, romlem@google.com,
+	anhphan@google.com, wak@google.com, yuxiaozhang@google.com,
+	BMC-SW@aspeedtech.com
+Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
+Message-ID: <202506191639.jNEto4NW-lkp@intel.com>
+References: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613-hdp-upstream-v5-0-6fd6f0dc527c@foss.st.com>
- <CAMRc=MeTmwgbHv9R_=GFmjkAV4Nvc-SeSCOz1k6pnGUrF+R9Mg@mail.gmail.com>
- <CACRpkdax9ojguF1SAfiN9iZi=x3VFpCea6KnhzL3JBD9EXZepw@mail.gmail.com>
- <CAMRc=Me8KZPU_KbbifL-j74GMPSuDgmmacw9g1UEfy=zeGyZcw@mail.gmail.com> <CACRpkdYUr+82AKndieXm24Eg1-HY4LyfKZ9J_kTFKT1Nyyju1A@mail.gmail.com>
-In-Reply-To: <CACRpkdYUr+82AKndieXm24Eg1-HY4LyfKZ9J_kTFKT1Nyyju1A@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 19 Jun 2025 09:21:34 +0200
-X-Gm-Features: AX0GCFvQx5dYUJVAAbuivosq23yF4paNEi7sLTcojRfNtcaypuIpqfvXVp5M46I
-Message-ID: <CAMRc=Meq9+hnmvjXnq-YUJRPOOBvAV+pjHQ25k1wgFqV30Vo=A@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Introduce HDP support for STM32MP platforms
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
 
-On Wed, Jun 18, 2025 at 3:45=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Wed, Jun 18, 2025 at 2:32=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
->
-> > I have a rework of gpio-mmio in progress that removes the bgpio
-> > specific fields from struct gpio_chip. This includes moving the flags
-> > into a separate gpio/generic.h header. I really need to either apply
-> > it myself or get an immutable tag from you with this change.
->
-> OK try this, if you pull in this to your tree and work with refactorings
-> on top, everything should work out fine in the end:
->
-> The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd13544=
-94:
->
->   Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-> tags/ib-gpio-mmio-no-input-tag
->
-> for you to fetch changes up to 4fb8c5d36a1cfd97cd715eb4256708bc09724f3d:
->
->   gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip (2025-06-18
-> 15:40:29 +0200)
->
-> ----------------------------------------------------------------
-> Simple change for no-input MMIO GPIO
->
-> ----------------------------------------------------------------
-> Cl=C3=A9ment Le Goffic (1):
->       gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
->
->  drivers/gpio/gpio-mmio.c    | 11 ++++++++++-
->  include/linux/gpio/driver.h |  1 +
->  2 files changed, 11 insertions(+), 1 deletion(-)
->
->
-> Yours,
-> Linus Walleij
+Hi Jacky,
 
-Hi Linus,
+kernel test robot noticed the following build errors:
 
-Sorry I didn't notice this one. But I see you already responded that
-you pulled my PR from today. Should I ignore it?
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus robh/for-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.16-rc2 next-20250618]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Bartosz
+url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Chou/dt-bindings-phy-Add-document-for-ASPEED-PCIe-PHY/20250613-113331
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250613033001.3153637-8-jacky_chou%40aspeedtech.com
+patch subject: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
+config: x86_64-randconfig-007-20250619 (https://download.01.org/0day-ci/archive/20250619/202506191639.jNEto4NW-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250619/202506191639.jNEto4NW-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506191639.jNEto4NW-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: vmlinux.o: in function `arch_setup_msi_irqs':
+>> drivers/pci/msi/legacy.c:31: undefined reference to `msi_domain_first_desc'
+>> ld: drivers/pci/msi/legacy.c:31: undefined reference to `msi_next_desc'
+   ld: vmlinux.o: in function `arch_teardown_msi_irqs':
+   drivers/pci/msi/legacy.c:45: undefined reference to `msi_domain_first_desc'
+   ld: drivers/pci/msi/legacy.c:45: undefined reference to `msi_next_desc'
+   ld: vmlinux.o: in function `pci_msi_setup_check_result':
+   drivers/pci/msi/legacy.c:60: undefined reference to `msi_domain_first_desc'
+   ld: drivers/pci/msi/legacy.c:60: undefined reference to `msi_next_desc'
+   ld: vmlinux.o: in function `pci_msi_legacy_setup_msi_irqs':
+>> drivers/pci/msi/legacy.c:72: undefined reference to `msi_device_populate_sysfs'
+   ld: vmlinux.o: in function `pci_msi_legacy_teardown_msi_irqs':
+>> drivers/pci/msi/legacy.c:78: undefined reference to `msi_device_destroy_sysfs'
+
+
+vim +31 drivers/pci/msi/legacy.c
+
+a01e09ef123789 Thomas Gleixner 2021-12-06  18  
+a01e09ef123789 Thomas Gleixner 2021-12-06  19  int __weak arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+a01e09ef123789 Thomas Gleixner 2021-12-06  20  {
+a01e09ef123789 Thomas Gleixner 2021-12-06  21  	struct msi_desc *desc;
+a01e09ef123789 Thomas Gleixner 2021-12-06  22  	int ret;
+a01e09ef123789 Thomas Gleixner 2021-12-06  23  
+a01e09ef123789 Thomas Gleixner 2021-12-06  24  	/*
+a01e09ef123789 Thomas Gleixner 2021-12-06  25  	 * If an architecture wants to support multiple MSI, it needs to
+a01e09ef123789 Thomas Gleixner 2021-12-06  26  	 * override arch_setup_msi_irqs()
+a01e09ef123789 Thomas Gleixner 2021-12-06  27  	 */
+a01e09ef123789 Thomas Gleixner 2021-12-06  28  	if (type == PCI_CAP_ID_MSI && nvec > 1)
+a01e09ef123789 Thomas Gleixner 2021-12-06  29  		return 1;
+a01e09ef123789 Thomas Gleixner 2021-12-06  30  
+ae24e28fef1468 Thomas Gleixner 2021-12-06 @31  	msi_for_each_desc(desc, &dev->dev, MSI_DESC_NOTASSOCIATED) {
+a01e09ef123789 Thomas Gleixner 2021-12-06  32  		ret = arch_setup_msi_irq(dev, desc);
+a01e09ef123789 Thomas Gleixner 2021-12-06  33  		if (ret)
+a01e09ef123789 Thomas Gleixner 2021-12-06  34  			return ret < 0 ? ret : -ENOSPC;
+a01e09ef123789 Thomas Gleixner 2021-12-06  35  	}
+a01e09ef123789 Thomas Gleixner 2021-12-06  36  
+a01e09ef123789 Thomas Gleixner 2021-12-06  37  	return 0;
+a01e09ef123789 Thomas Gleixner 2021-12-06  38  }
+a01e09ef123789 Thomas Gleixner 2021-12-06  39  
+a01e09ef123789 Thomas Gleixner 2021-12-06  40  void __weak arch_teardown_msi_irqs(struct pci_dev *dev)
+a01e09ef123789 Thomas Gleixner 2021-12-06  41  {
+a01e09ef123789 Thomas Gleixner 2021-12-06  42  	struct msi_desc *desc;
+a01e09ef123789 Thomas Gleixner 2021-12-06  43  	int i;
+a01e09ef123789 Thomas Gleixner 2021-12-06  44  
+ae24e28fef1468 Thomas Gleixner 2021-12-06  45  	msi_for_each_desc(desc, &dev->dev, MSI_DESC_ASSOCIATED) {
+a01e09ef123789 Thomas Gleixner 2021-12-06  46  		for (i = 0; i < desc->nvec_used; i++)
+a01e09ef123789 Thomas Gleixner 2021-12-06  47  			arch_teardown_msi_irq(desc->irq + i);
+a01e09ef123789 Thomas Gleixner 2021-12-06  48  	}
+a01e09ef123789 Thomas Gleixner 2021-12-06  49  }
+aa423ac4221abd Thomas Gleixner 2021-12-06  50  
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  51  static int pci_msi_setup_check_result(struct pci_dev *dev, int type, int ret)
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  52  {
+ae24e28fef1468 Thomas Gleixner 2021-12-06  53  	struct msi_desc *desc;
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  54  	int avail = 0;
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  55  
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  56  	if (type != PCI_CAP_ID_MSIX || ret >= 0)
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  57  		return ret;
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  58  
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  59  	/* Scan the MSI descriptors for successfully allocated ones. */
+ae24e28fef1468 Thomas Gleixner 2021-12-06  60  	msi_for_each_desc(desc, &dev->dev, MSI_DESC_ASSOCIATED)
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  61  		avail++;
+ae24e28fef1468 Thomas Gleixner 2021-12-06  62  
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  63  	return avail ? avail : ret;
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  64  }
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  65  
+aa423ac4221abd Thomas Gleixner 2021-12-06  66  int pci_msi_legacy_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+aa423ac4221abd Thomas Gleixner 2021-12-06  67  {
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  68  	int ret = arch_setup_msi_irqs(dev, nvec, type);
+60bf9b33c82c0e Thomas Gleixner 2021-12-06  69  
+ffd84485e6beb9 Thomas Gleixner 2021-12-10  70  	ret = pci_msi_setup_check_result(dev, type, ret);
+ffd84485e6beb9 Thomas Gleixner 2021-12-10  71  	if (!ret)
+ffd84485e6beb9 Thomas Gleixner 2021-12-10 @72  		ret = msi_device_populate_sysfs(&dev->dev);
+ffd84485e6beb9 Thomas Gleixner 2021-12-10  73  	return ret;
+aa423ac4221abd Thomas Gleixner 2021-12-06  74  }
+aa423ac4221abd Thomas Gleixner 2021-12-06  75  
+aa423ac4221abd Thomas Gleixner 2021-12-06  76  void pci_msi_legacy_teardown_msi_irqs(struct pci_dev *dev)
+aa423ac4221abd Thomas Gleixner 2021-12-06  77  {
+ffd84485e6beb9 Thomas Gleixner 2021-12-10 @78  	msi_device_destroy_sysfs(&dev->dev);
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
