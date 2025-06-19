@@ -1,61 +1,66 @@
-Return-Path: <linux-gpio+bounces-21878-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21879-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16365AE0772
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 15:35:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F3DCAE0796
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 15:40:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A878616F21F
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 13:35:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 728FC3B2A16
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 13:38:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77DAE2737F5;
-	Thu, 19 Jun 2025 13:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F2A826FD90;
+	Thu, 19 Jun 2025 13:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNtFV97u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bn/uqpPL"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6D025C83F;
-	Thu, 19 Jun 2025 13:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CE225D1E1;
+	Thu, 19 Jun 2025 13:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750340121; cv=none; b=ShfqVGfh7sCa+9Y7kHnmjjr8FXcUkxG4+r0Ul3EecN+bK3tCOaH61KFwfbLaJ6bvQcgKe+qH/Z5D0Xs8PLqNJHP52ilnlznSWV267OuiItGLjVmiG6ew/UBzuPiAew+LnDERB8U4wbD8LNc5ol/m0G2dVFRP6BwhnIZwEhTp8UE=
+	t=1750340320; cv=none; b=QSqf5tg2JtgNj3pkIMLi46roQv6vCPyxKxR/ZAI492CNkn/6M+jA410L+Tf2yL8Pw6UnqKz4t8tIU0sERbvwzvHgPykHpFguRKRGrekJdqRK2ucazD3/pbzPI6QtbZap2gogjRfTmFgh4NfAJlnMmtSaraPBucAPBs9BFfBB6+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750340121; c=relaxed/simple;
-	bh=nGBE81iJlu8wL29VIgLNBJjptMMyVWKnbJ7tJuB3pfU=;
+	s=arc-20240116; t=1750340320; c=relaxed/simple;
+	bh=MUcIIYeNFNdVSgZmodd9gQcOciHLU+o3JjUKidTW6Rk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q2OnWwJQr3Aa/ss3c9r8lC9pJEpQtr6pKkhks9peoFtjIlJcYSqD0bkIqQljcqYXcpBcEPdUeIiuCoHy22kYinKCv/WwZN4iGCWAHBolnR/FP+26BiWnUz7JLadbbReMAzrlQgZG+/OruHa8azSnWfJpBWRgTCGDe9AooNgCqFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNtFV97u; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32BF6C4CEEA;
-	Thu, 19 Jun 2025 13:35:17 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=it0AsmEFBrM3oidTKSeGEV7mjGhyLTndimcy5rJfHQD+FJvF5OIpqq1Sg4rv18NJUAQVC/4rWoAAiqXRv+lQTTanFm63OAEHFiJTJWumORO1SrI4tQTnX+b8zmOFzwEpbUMyO/L7tW6kEdHo7iLhvP3prWoLCmUNiIYAGpr+hI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bn/uqpPL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4625CC4CEEA;
+	Thu, 19 Jun 2025 13:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750340120;
-	bh=nGBE81iJlu8wL29VIgLNBJjptMMyVWKnbJ7tJuB3pfU=;
+	s=k20201202; t=1750340320;
+	bh=MUcIIYeNFNdVSgZmodd9gQcOciHLU+o3JjUKidTW6Rk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LNtFV97ufpF+IrmqkPnD8MMoRkrDrl5EMNIC4OxW0JWQbBjv10yWzKeiNcQcWn+tl
-	 Iwxc+qNptGUA6+Mzc7pWHqw3ctIjImmV2x/Fa0qTovAYWVvgK7I4a7m+waK6lq7ZK0
-	 cnXjurgZHWhfCoOQiaKLrWpm0dDSjxpr2UE+SlbfEoXbMqCYDc7vaAm6fVyMJxCfxE
-	 xU2ZIWV+pktlZNZ4tXjc4lXO4WfRFN4G6Sl3dJQ35jmMPjTUmP6dCu3iLEwvfNoLH5
-	 Vhs8k1A1r159FzyhY9b+Uu8hzFWGDUiv87y4QqFkYOHSdAYSgrTAZfpZAvQQzhZhRm
-	 F3JvmylKIqcmg==
-Date: Thu, 19 Jun 2025 14:35:15 +0100
+	b=Bn/uqpPLTn9jf0Bo4wvXQrPX8Y24/pIIvQ+CaLLBDcBdTErtzU3W0EDw6MbGwIJDY
+	 tKHh3G5R5dXY7GUhHDbN76D/4vnwr0GmGZ57E8HPXqc8+uxSfFx08JfhZvNt7hLJ4Y
+	 JrmMMImGG2rllZOkTenw62vFdthBUvsI9UVikGjaEnj7Mi63FAriMNqAG+ex0xPs4J
+	 mrhGGcDptQfO4jTiReVbtfQHCe3X+fEy0faM5Ms3LuS7M3iNpCE/LI4U2WbncMa/Lq
+	 siz96CEIokVZaW948esbokgoZqdLgS4NyiqrIPkROuEuzd4vljtB0NkwxPqTe2pd2w
+	 78XvWGSLoH85Q==
+Date: Thu, 19 Jun 2025 14:38:34 +0100
 From: Lee Jones <lee@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] mfd: tps6594: Add TI TPS652G1 support
-Message-ID: <20250619133515.GB795775@google.com>
-References: <20250613114518.1772109-1-mwalle@kernel.org>
- <20250613114518.1772109-2-mwalle@kernel.org>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Liu Ying <victor.liu@nxp.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 00/20] mfd: adp5585: support keymap events and drop
+ legacy Input driver
+Message-ID: <20250619133834.GC795775@google.com>
+References: <20250614-dev-adp5589-fw-v5-0-7e9d84906268@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,25 +70,102 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250613114518.1772109-2-mwalle@kernel.org>
+In-Reply-To: <20250614-dev-adp5589-fw-v5-0-7e9d84906268@analog.com>
 
-On Fri, 13 Jun 2025, Michael Walle wrote:
+On Sat, 14 Jun 2025, Nuno Sá via B4 Relay wrote:
 
-> The TPS652G1 is a stripped down version of the TPS65224. From a software
-> point of view, it lacks any voltage monitoring, the watchdog, the ESM
-> and the ADC.
+> Hi all,
 > 
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+> Here it goes v4. Main changes is to drop chip info based struct and
+> directly use an enum in the FW .data pointer, use the notifier API for
+> dispatching events and multiple calls to mfd_add_devices().
+> 
+> Regarding the last point, I think I could have used multiple calls to
+> devm_mfd_add_devices() and avoid those gotos in adp5585_add_devices()
+> but I do not feel that would have been "correct".
+> 
+> Thanks!
+> - Nuno Sá
+> 
 > ---
->  drivers/mfd/tps6594-core.c  | 88 ++++++++++++++++++++++++++++++++++---
->  drivers/mfd/tps6594-i2c.c   | 10 ++++-
->  drivers/mfd/tps6594-spi.c   | 10 ++++-
->  include/linux/mfd/tps6594.h |  1 +
->  4 files changed, 99 insertions(+), 10 deletions(-)
+> Changes in v5:
 
-Looks good.
+In future, these should be inside the patches themselves please.
 
-Let me know when you get the misc Ack.
+> - Patch 2:
+>   * Use the existing devm_mfd_add_devices().
+> - Patch 3:
+>   * Remove TODO comment.
+> - Patch 4:
+>   * Mention in the commit message the Copyright update.
+> - Patch 6:
+>   * Return a struct regmap_config pointer in
+>     adp5585_fill_regmap_config();
+>   * Just leave a blank entry in the adp5585_regmap_defaults array.
+> - Patch 13:
+>   * Improve comments for pin6 (row5) validation;
+>   * Don't use magic numbers;
+>   * Drop some odd line breaks;
+>   * Initialize vartiable when declaring.
+> - Patch 14:
+>   * Drop double spaces;
+>   * Don't use magic numbers;
+>   * Improve some comments.
+> - Patch 16:
+>   * Fix missing semicolon.
+> - Patch 20:
+>   * DS -> datasheet. 
+> 
+> - Link to v4: https://lore.kernel.org/r/20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com
+> - Link to v3: https://lore.kernel.org/r/20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com
+> - Link to v2: https://lore.kernel.org/r/20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com
+> - Link to v1: https://lore.kernel.org/r/20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com
+> 
+> ---
+> Nuno Sá (20):
+>       dt-bindings: mfd: adp5585: ease on the required properties
+>       mfd: adp5585: only add devices given in FW
+>       mfd: adp5585: enable oscilator during probe
+>       mfd: adp5585: make use of MFD_CELL_NAME()
+>       dt-bindings: mfd: adp5585: document adp5589 I/O expander
+>       mfd: adp5585: refactor how regmap defaults are handled
+>       mfd: adp5585: add support for adp5589
+>       mfd: adp5585: add a per chip reg struture
+>       gpio: adp5585: add support for the adp5589 expander
+>       pwm: adp5585: add support for adp5589
+>       dt-bindings: mfd: adp5585: add properties for input events
+>       mfd: adp5585: add support for event handling
+>       mfd: adp5585: support reset and unlock events
+>       mfd: adp5585: add support for input devices
+>       gpio: adp5585: support gpi events
+>       Input: adp5585: Add Analog Devices ADP5585/89 support
+>       Input: adp5589: remove the driver
+>       mfd: adp5585: support getting vdd regulator
+>       dt-bindings: mfd: adp5585: document reset gpio
+>       mfd: adp5585: add support for a reset pin
+> 
+>  .../devicetree/bindings/mfd/adi,adp5585.yaml       |  240 ++++-
+>  .../devicetree/bindings/trivial-devices.yaml       |    2 -
+>  MAINTAINERS                                        |    1 +
+>  drivers/gpio/Kconfig                               |    1 +
+>  drivers/gpio/gpio-adp5585.c                        |  364 ++++++-
+>  drivers/input/keyboard/Kconfig                     |   21 +-
+>  drivers/input/keyboard/Makefile                    |    2 +-
+>  drivers/input/keyboard/adp5585-keys.c              |  371 +++++++
+>  drivers/input/keyboard/adp5589-keys.c              | 1066 --------------------
+>  drivers/mfd/adp5585.c                              |  743 +++++++++++++-
+>  drivers/pwm/pwm-adp5585.c                          |   78 +-
+>  include/linux/mfd/adp5585.h                        |  118 ++-
+>  12 files changed, 1799 insertions(+), 1208 deletions(-)
+> ---
+> base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+> change-id: 20250311-dev-adp5589-fw-e04cfd945286
+> --
+> 
+> Thanks!
+> - Nuno Sá
+> 
+> 
 
 -- 
 Lee Jones [李琼斯]
