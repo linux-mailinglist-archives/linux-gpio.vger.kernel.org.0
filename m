@@ -1,102 +1,83 @@
-Return-Path: <linux-gpio+bounces-21832-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21833-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BE1CADFC36
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 06:05:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13FB0ADFD9C
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 08:24:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC5B73B44ED
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 04:05:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58A827AC9CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 06:22:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E32F823BCF2;
-	Thu, 19 Jun 2025 04:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB9CD1DDC3F;
+	Thu, 19 Jun 2025 06:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="c8r1P5P4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHYb75Ev"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C4121B9CD;
-	Thu, 19 Jun 2025 04:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982A42459C9;
+	Thu, 19 Jun 2025 06:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750305937; cv=none; b=oAMOrKzp5NvVwUycS2zlZTgzBXoZm4sm+2P34ZmtzXMZ0A1n5SfFlYSpu1wP2ABo56ojP/F4A8mkWwMoUXLRBpJsPeqwIAOp5xclTOnybpAExesZt9JeX6oQcskb7/U12rbe2EOkLxvgXSQU/YgmyfgSVQW/VZFuzj8GJ//gsks=
+	t=1750314220; cv=none; b=j9FLBuKzRo2TnDhg8ZgYxhhX8zLAUYw9TQZ/JCxtM3tGTIDrzI7C/44wn0qN+KQLNbuXcFWZNuTGZVBBIdKUZcD5+B7aXtzMh3BLHayqVTNMHJ83g98U3vrdNnqnaUU4gMoIBJpqWfWLgEJXinIvkqDqWSzVXh+ffSnnB8Hr4KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750305937; c=relaxed/simple;
-	bh=AAYnKV+Ib6IADL7L7vo20VmbTbhdkeLrlyQxqalj2Qo=;
+	s=arc-20240116; t=1750314220; c=relaxed/simple;
+	bh=Nn65hSR9UlIemUIeEDX5mj8rkfTymVHYBcs+i3YyeWo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BaZuEeOmYY8wb9WMRRb8VI1eB4D5Ob4G0pg1nU/ZASOiRVC8bhqIYv5ZdHK0TgWY/r/RocPvuejwSV9G3K+vyFOmqP8pww0Mutg+4GV8C4zq7Q8MG1Bb7yR2eNaGYi+MDXP6rPw/aP4iKd/m9UfbsRPXxvwsyd/TxSA0mUaME2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=c8r1P5P4; arc=none smtp.client-ip=220.197.32.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=LU7QhYjxOqOH4zbvw6oM0dtf5fFvFxSixl3GW1jJGTw=;
-	b=c8r1P5P4xE0Kb3/i+H2dW91s0RkOZn33p8n76h5J7WpdAfONeFvuQYZ1B7936F
-	EK/EPsIEAzrXOu1pQ6ERZKymZQV3Z8VQhybSR9Z/6MCo4yb3obETCifpFGzJoF0B
-	TC/HLpaHvgH+aE3WKx1JA/OCruq+eSOsSYCQsB7CtBsUQ=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgDHZsPUiVNoFnv8AA--.41662S3;
-	Thu, 19 Jun 2025 11:53:58 +0800 (CST)
-Date: Thu, 19 Jun 2025 11:53:56 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Haibo Chen <haibo.chen@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	peng.fan@nxp.com, wahrenst@gmx.net, conor@kernel.org,
-	Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v3 3/3] ARM64: dts: add ngpios for vf610 compatible gpio
- controllers
-Message-ID: <aFOJ1OXvpEP8gaxL@dragon>
-References: <20250520-gpio-dts-v3-0-04771c6cf325@nxp.com>
- <20250520-gpio-dts-v3-3-04771c6cf325@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=R5lk5ZMHMMrL/+hbnLBCL52rSp2lrNW4q6a9b9KChSWc3ReQITclM8NDuzaMd1X07PZWy2GYU7mIz3JXhxugKCXBS6pcQU/WFTnWP4F5+OHrEfOQx68bQoWjZJeWqIxk232pzmN1++K8wQAZ7DAyVU5zr3IVExRuG8Aq3+0wsfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHYb75Ev; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFF83C4CEEA;
+	Thu, 19 Jun 2025 06:23:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750314220;
+	bh=Nn65hSR9UlIemUIeEDX5mj8rkfTymVHYBcs+i3YyeWo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iHYb75EvamCwaN6j5CePBsXnALV4HkuuduAr8g0HZFpX8YPdR1uoVa0Ygq91hAXxU
+	 /gmLxnS73RxoEqm/5Sp7znjQuY2jKGNzZcjVv8vSen+zRBemuUj60XIL68k/TbtK6q
+	 lGA1kvUB3s1+1G2Xt+Q0iqoiCY9AkNqdQ0EgThBvY+KJHPQgRfynrjSUHwqjprsml7
+	 6FK4YzvGnNRNDlfeSBq/7YNnnF6K5/1tYR9HxLbrXOED3kcmGglT1ChGFCH4eWJblg
+	 flWbPvfYpiQdzPdmkU5DTwFx16/CBrn0ZiJt6XW71SrBX/jzgXefdsvPR7o80Z5/U6
+	 v3AY/rJDqpj2w==
+Date: Thu, 19 Jun 2025 08:23:36 +0200
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH RESEND] platform: cznic: use new GPIO line value setter
+ callbacks
+Message-ID: <t7hcmduglk3wwtx7rjytlywvxd64m4xu4atud6hk7bklp3uc5s@7bkttrzktx43>
+References: <20250610-gpiochip-set-rv-platform-cznic-v1-1-30afd2444756@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250520-gpio-dts-v3-3-04771c6cf325@nxp.com>
-X-CM-TRANSID:Ms8vCgDHZsPUiVNoFnv8AA--.41662S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JFW5Kr4fXw4UWr1kKFWfZrb_yoWfArc_CF
-	W0qw4UZws5uFWxKw47Kr4Ivr18Ca4fZw13Wry7Gr93Ja4YqrnrtFs3JrW3JayUWFs8KasI
-	kry5tr48Aw4agjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbUKsUUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIReG62hTideU6wAA3B
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610-gpiochip-set-rv-platform-cznic-v1-1-30afd2444756@linaro.org>
 
-On Tue, May 20, 2025 at 11:46:14AM +0800, Haibo Chen wrote:
-> After commit da5dd31efd24 ("gpio: vf610: Switch to gpio-mmio"),
-> the vf610 GPIO driver no longer uses the static number 32 for
-> gc->ngpio. This allows users to configure the number of GPIOs
-> per port.
+On Tue, Jun 10, 2025 at 11:43:58AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> And some gpio controllers did have less pads. So add 'ngpios' here,
-> this can save some memory when request bitmap, and also show user
-> more accurate information when use gpio tools.
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 > 
-> Besides, some gpio controllers have hole in the gpio ranges, so use
-> 'gpio-reserved-ranges' to cover that, then the gpioinfo tool show the
-> correct result.
-> 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-Historically we use "ARM: dts: ..." prefix for arch/arm/boot/dts changes,
-but use "arm64: dts: ..." for arch/arm64/boot/dts ones.
+Acked-by: Marek Behún <kabel@kernel.org>
 
-Fixed the prefix up and applied, thanks!
+> Nodoby picked this one up for v6.16, resending for v6.17.
 
-Shawn
+Bart, I think you can pick this up via linux-gpio.
 
+Marek
 
