@@ -1,123 +1,120 @@
-Return-Path: <linux-gpio+bounces-21891-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21892-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEBA1AE0BFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 19:35:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71CF8AE0C42
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 20:01:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71850188B0C2
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 17:36:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A92C07AF4A1
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 18:00:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D115428C000;
-	Thu, 19 Jun 2025 17:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 145E028DB58;
+	Thu, 19 Jun 2025 18:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="p5UVphOM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5I0A1/a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14C71D9A5F
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Jun 2025 17:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04B124290B;
+	Thu, 19 Jun 2025 18:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750354545; cv=none; b=LRTJMxIdVCOWyNtrL6u26rVTVk4LZfqD4XaUJ/Gz5FggFJcXETC5edA+zQ1+q7A678vmx457fCKxwQx3ehl/7OB0LssmQ6SiWJjqPtPF8G1pb1RD6eoYaF25cfgSdehIlW/z8pGCgTRc55/8SASglrpQSiKetmdGyF7a0yDV1wE=
+	t=1750356049; cv=none; b=vGFWM/dqI5uQkPPLsmmsfDCajWsSnb2oSim5ae9dp4qSegCuc+C9AeUFDHF45dkZv+r/LPBLlkHdrmr729XaPNGXmel+phnLD+gU4gHPU/zD2kGngeHatVnJBBhzXHgtijLsqAq+CK/IKVdUuRPWgL02bAkswAxR6l+r+1H3iHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750354545; c=relaxed/simple;
-	bh=DIxRg08LQ4Wnf9yoZGtSsTUBAIMgxjQdUlAbMXiawLo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IsKEALp3SUMqgnhdrven1WM3DKzy9KYKFfM6g8MB9pk0wqIuno2AwVLqNMCkaFiwyP3d1r4mCjLHQLtvWRC7sa2sp+Q7GziSO1pK47mOxwLrwmmnjpsAzLpFeSbblh5RSk8Bx4iwKWprUsrwQOTQeJQ3PqPzP+2K7zvFMfGJymw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=p5UVphOM; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-453636fa0ceso3387195e9.3
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jun 2025 10:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750354542; x=1750959342; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ToAOdTmq5s5XOCUlWw8XCgzHw+VGCfhPWa+zkrjEB4o=;
-        b=p5UVphOM5qvx7XEOGeh9QXCNOtrTmr3eJ1gpRJu67ezCMM1sRJh9k3uDnuHOxhoPTw
-         1Cj/BGNxLQBHHDPVc8rOVei+8NXKlYMLOYp7H4F5ZZYE0bYeTw5sMPMViaPU86ncRnCw
-         NN6tFm4EQmxkI2inpZwEJidrQrY1qt5nIngdfJgx24d2vG/5214ZjS0qVJW4bkBW+xL0
-         2ITPgTlTmcH/HOu9k75rC6TQKPQxL4nM+VJWFYPo8ADb4xZNuIA6lJ1uabUzbwZNaH7p
-         nSqHyL1dmypBPnAnh4rLv4NXR3ZegPxgMvIvIrfrEnbO6suuT0DHtrQS24AFl+ea8/YI
-         GGEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750354542; x=1750959342;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ToAOdTmq5s5XOCUlWw8XCgzHw+VGCfhPWa+zkrjEB4o=;
-        b=SAt5RiqfO+mfTLBKk0eFDSRVBcf2mWPhoM6kxHOngsYhEDsXGY2W/VZLGFe4SxkCxn
-         qEJM4sA1ZLvDF9Otdf11WTuBfVuNGdHpENKhQPWznMqV7aUY0DhYKzQwxDS1Y4aGezcD
-         cJH1J+/WVApC2wEhuCw8zmgHVkPQgHmRkw9iZQ6OyDgLfXymJiCh5s4T7vtopFHo0scV
-         EhTVxu28oaN4sLm28lRgW58MTnjgHZPXp8BxBKe/rcvesg28CU8I1IoCa3vTNIidy6FV
-         3yr5aiITkGBtHxHNXKCPXpSi4ymdJjRxxAHtBEruniLH1nrz9gxrErsVoDCWx192maSh
-         E8BQ==
-X-Gm-Message-State: AOJu0Yy4VjX4bza/vaBZP1b4YVWO7bQPPvZ076IM0wG2ALIB2ygddiux
-	3AVolJvzIAdEqouFW9qs4pRC0QHdOCfpmP+znRrE/fe+IcXhUGKiBN20VxtkX2eX9U4=
-X-Gm-Gg: ASbGncvpaYSsXy3ieTHLVQpj7RVsPJdTxmSAUI8bsHYT1AtmwGQR8sWqrxLG5iy3J4Z
-	m9cYWci+fcbDQOYqH/gyn+Z88j4aMHpETD+tnnBaDTgoCFLqj/yXPmcLcQaOpnqoUL33tFJi4nq
-	upZEdqNI2/pxgGHq+MX0NB/Gf3bN1YJ+ijaq0TFIrvVSmw4oEoJVKPE/LoZ9djM1N9uELjK2K2c
-	nCEZxHU7tb+b5WMEEoCZ/5aoVrQ/OjkIc/ksN6d2x7DQ6DROEtAMgTS7zAbb3VzyC8kpRaiPeY0
-	imkOwErJva7mXX/1FB+t13/0SxvYO2BwwUUCl0lQVLo3wO6rmsTuKI1HJZH3aSw=
-X-Google-Smtp-Source: AGHT+IF616XQ9rBNp7YWYVBhGneXz5E6RZly2Cectt+D2w6ZUUlD4nbQ/o1uJeeix2qxHhBrt1B1Ww==
-X-Received: by 2002:a05:600c:8b66:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-4533cb0c164mr183178165e9.24.1750354541541;
-        Thu, 19 Jun 2025 10:35:41 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c485:fe15:c9ab:c72f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e741b43sm36311535e9.0.2025.06.19.10.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 10:35:41 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	kernel test robot <lkp@intel.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH] pinctrl: aw9523: fix mutex unlock in error path
-Date: Thu, 19 Jun 2025 19:35:37 +0200
-Message-ID: <20250619173537.64298-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1750356049; c=relaxed/simple;
+	bh=Srwp2iLw4QM9QiJcm+XyF2ewuN6J1w1QzFgVha1WoaA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Ton16bxfSIkeaJreQjiCddTOQbsdVEmBcQDZpdknVE/mpp7P1V0XlZJ7nGZ3P1xcZCYF6D1W/iv1im2vk5936P/6HbIMx2sccdsPwhKamqqk+qpHLX6Zq1MWjUyRJjWrh5vVU/SHusb59rTsZqLogl5pscl/MwNyrml4g+Rz07g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5I0A1/a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0524C4CEF0;
+	Thu, 19 Jun 2025 18:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750356049;
+	bh=Srwp2iLw4QM9QiJcm+XyF2ewuN6J1w1QzFgVha1WoaA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=M5I0A1/aUJtATUyvDp6wFYVlrNghgCcIX6X08SPbxlg9C4rwi77I7Erp39cEWFBXT
+	 48k2Cz1swL6iCoQo0bL2Rpmdq0NX8w7oPTucWpbVo5doSwdvR5zzyOhqj50L9ssIbV
+	 3XtLd0wlYHITA7lj/M7QPYAsGGDftAzdhUTak6Rwqv5pejFVrT9SOlOduvFCNqkBB2
+	 dQXwcAJ2BdX4hXm5wN9iSN3KmfSkmvXd5iz35qs2LV1/gomSeRmbnLibBP6gWBw6cg
+	 fbjEU/dT6aKDAy24cnOTDiNv/UNJ59IGgY3g81+yAcjjIVG1ic9pDeJQ6WDqHbNpAO
+	 eyI+G3yf++aCg==
+From: Mark Brown <broonie@kernel.org>
+To: linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-spi@vger.kernel.org, Shiji Yang <yangshiji66@outlook.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ John Crispin <john@phrozen.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <OSBPR01MB1670163BDCA60924B3671D45BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
+References: <OSBPR01MB1670163BDCA60924B3671D45BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
+Subject: Re: (subset) [PATCH 00/16] MIPS: some compilation fixes for the
+ Lantiq platform
+Message-Id: <175035604752.283409.17816680036110051430.b4-ty@kernel.org>
+Date: Thu, 19 Jun 2025 19:00:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, 18 Jun 2025 22:53:13 +0800, Shiji Yang wrote:
+> This patch series fixes some MIPS Lantiq platform compilation issues
+> found on the 6.12 kernel[1].
+> 
+> [1] https://github.com/openwrt/openwrt/pull/18751
+> 
+> Shiji Yang (16):
+>   MIPS: lantiq: xway: mark ltq_ar9_sys_hz() as static
+>   MIPS: lantiq: xway: mark dma_init() as static
+>   MIPS: lantiq: xway: mark dcdc_init() as static
+>   MIPS: lantiq: irq: fix misc missing-prototypes warnings
+>   MIPS: lantiq: xway: add prototype for ltq_get_cp1_base()
+>   MIPS: pci: lantiq: marks pcibios_init() as static
+>   MIPS: lantiq: falcon: fix misc missing-prototypes warnings
+>   MIPS: lantiq: falcon: sysctrl: remove unused falcon_trigger_hrst()
+>   MIPS: lantiq: falcon: sysctrl: add missing header prom.h
+>   MIPS: lantiq: falcon: sysctrl: fix request memory check logic
+>   MIPS: lantiq: xway: gptu: mark gptu_init() as static
+>   MIPS: vpe-mt: mark vpe_free() and vpe_stop() as static
+>   MIPS: vpe-mt: drop unused functions vpe_alloc() and vpe_start()
+>   pinctrl: xway: mark xway_pinconf_group_set() as static
+>   pinctrl: falcon: mark pinctrl_falcon_init() as static
+>   spi: falcon: mark falcon_sflash_xfer() as static
+> 
+> [...]
 
-We must unlock the mutex *after* the `out` label or we'd trigger a
-deadlock in error path.
+Applied to
 
-Fixes: dffe286e2428 ("pinctrl: aw9523: use new GPIO line value setter callbacks")
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/r/202506191952.A03cvn22-lkp@intel.com/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/pinctrl-aw9523.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
-index c84454038419..2935b2cceb03 100644
---- a/drivers/pinctrl/pinctrl-aw9523.c
-+++ b/drivers/pinctrl/pinctrl-aw9523.c
-@@ -652,9 +652,9 @@ static int aw9523_gpio_set_multiple(struct gpio_chip *chip,
- 		if (ret)
- 			goto out;
- 	}
--	mutex_unlock(&awi->i2c_lock);
- 
- out:
-+	mutex_unlock(&awi->i2c_lock);
- 	return ret;
- }
- 
--- 
-2.48.1
+Thanks!
+
+[16/16] spi: falcon: mark falcon_sflash_xfer() as static
+        commit: 5fc2c383125c2b4b6037e02ad8796b776b25e6d0
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
 
