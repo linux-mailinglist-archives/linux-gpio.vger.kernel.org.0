@@ -1,65 +1,70 @@
-Return-Path: <linux-gpio+bounces-21871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21872-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6758AE0452
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 13:50:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4528AAE0462
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 13:54:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F6711706EB
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 11:50:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F329176871
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jun 2025 11:54:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3F71230BEB;
-	Thu, 19 Jun 2025 11:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B65022E402;
+	Thu, 19 Jun 2025 11:53:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJBUADiP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLK1SjZk"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824A7221704;
-	Thu, 19 Jun 2025 11:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE8521FF26;
+	Thu, 19 Jun 2025 11:53:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750333805; cv=none; b=IA/eBxlT3Bh10/IlZcH7n2gYe/SmzHhuXGqjsafqtnKxrPpZ4szfwjYWYvOxCAsNPrh9UD9G2MAyaWMuDvlTJZEOh9k2JmOd0nWzqXRv9AOMvJBKO0pXAeE5g7NIzy5821ZTWmzn4sTWy6pt+Jn/SCWRhAVLyzi7cxZJpIVqeiA=
+	t=1750334032; cv=none; b=s+P+uH55Ibacxvjb7GtNO5Iew/h5QcYDdyKt6OOWhBYj3ZkKaieilmOUhE7g2my+wLc3K1o10pwJ5D/B8C768tfMZY34/jamT8ZJcNW/pf2hPfwf5/d+wwdUH2bQbAII7uz49lIWpo3Qj5e9Gg90uUpR3r+XCqZNMmNydoid5F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750333805; c=relaxed/simple;
-	bh=xcXMxMStMR8/rb3GKA1jioXnMSxQsU2Ozqjqe/yF1w4=;
+	s=arc-20240116; t=1750334032; c=relaxed/simple;
+	bh=Tfq8NMCtMxIzB90AN2oTeQY3u4pSOFzZv4JlxXKP5Dw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cYyh2maadk7gA6pk2/oD9AbS4sVsxNvk8N+7bsHs/ltZJgHeBULH4JsHNFk3m5ZhxTgSWUlK8a6sUPSsngEVLqLH3/yn/XU8ZoQiLXvU36B6zdn3qq1ppAFH/Tc80kjo+KpTNTDlsUypmlCc3zTeYguQ+0pTOeNhn4vyOxTCyiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJBUADiP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92B52C4CEEA;
-	Thu, 19 Jun 2025 11:50:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=NSf9Nhytq9rykCyvfgCBC5HfpXUckT+wNhN1p6gWDaG/xN43ROh+VKDxa3pRNlIe5R1PZXNKFd1Tr9r9MIYbqVMw10EbcrxCAM2jGxRuCm28JO3EPvJxuItvKknaiX86m6zvCbeuhx1YFtUTRnBhGewiPDXIwvOV4fR3zdmG5XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLK1SjZk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D61C3C4CEEA;
+	Thu, 19 Jun 2025 11:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750333805;
-	bh=xcXMxMStMR8/rb3GKA1jioXnMSxQsU2Ozqjqe/yF1w4=;
+	s=k20201202; t=1750334032;
+	bh=Tfq8NMCtMxIzB90AN2oTeQY3u4pSOFzZv4JlxXKP5Dw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iJBUADiP0/X9+azGm/g0vceCBNhs6nGkYRctOjZ0QujbBcVw07QEuw90FiyNinK/F
-	 NfZ37rkV0sUP/G0oblx/GVCfEyXj/nhORcmp5qDKSX0KH3ot5K7K59vws1ab9u98Lq
-	 EJoWZgGz25N5q51nkLZxnbG4upiC8/EdjQ/1y/YDTUhEIrC8aEDgvYIxCJ8RpieFcI
-	 rVHrJS0yuA3ss51VZzsJ4cSoJHpoOVA5SxIfiC93NY9Py8Y8VzT/lpbSGO9BzGefL0
-	 Vz9D/grzsbiLENfOJmkZpKpjPCCVMTxRsZEVtE/ahvL6O4duPDOE61p95G5saaxSRZ
-	 FiFGUqm7XKKiQ==
-Date: Thu, 19 Jun 2025 12:49:58 +0100
+	b=TLK1SjZkJKtOa2GDJx0KT8zWbLM0Onmv52DVFQ4AgL5lHXTrikKxzDBx0mCXJu0EN
+	 Kikw4V92eV1H6BgfWAD0506FOAnY8rnH1rNzo65+cKAO7IxMzGgfpByWyUWKoN/oQZ
+	 a/375VH0yWoRtXkMpmxMPNo+RdAMgQClaCjI+Lt8kFC68jMuzWKaiaPhAm3LPn25eI
+	 5Vy86Tzf6tejlWflhZQN+1rjxhvEe5apntIF1YAuOrVyqUvW7YVikRy+Q996WPIZP4
+	 kAlTbt4BkJHrwYniPmoJu47rcDrOBqbU6tXRNpgMfWqdRT9Ggd1nwTem3wpNIbwqLL
+	 kNsKtxHhfGesA==
+Date: Thu, 19 Jun 2025 12:53:45 +0100
 From: Lee Jones <lee@kernel.org>
-To: Sven Peter <sven@kernel.org>
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v7 05/10] mfd: Add Apple Silicon System Management
- Controller
-Message-ID: <20250619114958.GJ587864@google.com>
-References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
- <20250610-smc-6-15-v7-5-556cafd771d3@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250619115345.GL587864@google.com>
+References: <20250604041418.1188792-1-tmyu0@nuvoton.com>
+ <20250604041418.1188792-2-tmyu0@nuvoton.com>
+ <20250612140041.GF381401@google.com>
+ <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
+ <20250612152313.GP381401@google.com>
+ <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
+ <20250613131133.GR381401@google.com>
+ <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,39 +74,90 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610-smc-6-15-v7-5-556cafd771d3@kernel.org>
+In-Reply-To: <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
 
-On Tue, 10 Jun 2025, Sven Peter wrote:
+On Fri, 13 Jun 2025, Ming Yu wrote:
 
-> The System Management Controller (SMC) on Apple Silicon machines is a
-> piece of hardware that exposes various functionalities such as
-> temperature sensors, voltage/power meters, shutdown/reboot handling,
-> GPIOs and more.
+> Lee Jones <lee@kernel.org> 於 2025年6月13日 週五 下午9:11寫道：
+> >
+> > On Fri, 13 Jun 2025, Ming Yu wrote:
+> >
+> > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
+> > > >
+> > > > On Thu, 12 Jun 2025, Ming Yu wrote:
+> > > >
+> > > > > Dear Lee,
+> > > > >
+> > > > > Thank you for reviewing,
+> > > > >
+> > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
+> > > > > >
+> > > > > ...
+> > > > > > > +static const struct mfd_cell nct6694_devs[] = {
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > > > > > +
+> > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+> > > > > >
+> > > > > > Why have we gone back to this silly numbering scheme?
+> > > > > >
+> > > > > > What happened to using IDA in the child driver?
+> > > > > >
+> > > > >
+> > > > > In a previous version, I tried to maintain a static IDA in each
+> > > > > sub-driver. However, I didn’t consider the case where multiple NCT6694
+> > > > > devices are bound to the same driver — in that case, the IDs are not
+> > > > > fixed and become unusable for my purpose.
+> > > >
+> > > > Not sure I understand.
+> > > >
+> > >
+> > > As far as I know, if I maintain the IDA in the sub-drivers and use
+> > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
+> > > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
+> > > However, when a second NCT6694 device is connected to the system, it
+> > > will receive IDs 16~31.
+> > > Because of this behavior, I switched back to using platform_device->id.
+> >
+> > Each of the devices will probe once.
+> >
+> > The first one will be given 0, the second will be given 1, etc.
+> >
+> > Why would you give multiple IDs to a single device bound to a driver?
+> >
 > 
-> Communication happens via a shared mailbox using the RTKit protocol
-> which is also used for other co-processors. The SMC protocol then allows
-> reading and writing many different keys which implement the various
-> features. The MFD core device handles this protocol and exposes it
-> to the sub-devices.
+> The device exposes multiple peripherals — 16 GPIO controllers, 6 I2C
+> adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
+> is independently addressable, has its own register region, and can
+> operate in isolation. The IDs are used to distinguish between these
+> instances.
+> For example, the GPIO driver will be probed 16 times, allocating 16
+> separate gpio_chip instances to control 8 GPIO lines each.
 > 
-> Some of the sub-devices are potentially also useful on pre-M1 Apple
-> machines and support for SMCs on these machines can be added at a later
-> time.
-> 
-> Co-developed-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Reviewed-by: Neal Gompa <neal@gompa.dev>
-> Signed-off-by: Sven Peter <sven@kernel.org>
-> ---
->  MAINTAINERS                |   2 +
->  drivers/mfd/Kconfig        |  18 ++
->  drivers/mfd/Makefile       |   1 +
->  drivers/mfd/macsmc.c       | 498 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
->  5 files changed, 798 insertions(+)
+> If another device binds to this driver, it is expected to expose
+> peripherals with the same structure and behavior.
 
-This is ready.  Let me know when you have all of the other driver/* Acks.
+I still don't see why having a per-device IDA wouldn't render each
+probed device with its own ID.  Just as you have above.
 
 -- 
 Lee Jones [李琼斯]
