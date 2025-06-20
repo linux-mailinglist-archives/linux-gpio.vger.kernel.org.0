@@ -1,109 +1,159 @@
-Return-Path: <linux-gpio+bounces-21900-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21901-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0757FAE10D9
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 03:54:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A77B3AE1128
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 04:39:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B0087A6CFA
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 01:52:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51B9117844D
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 02:39:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EBCC72630;
-	Fri, 20 Jun 2025 01:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09EB31B5EB5;
+	Fri, 20 Jun 2025 02:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I3jJ0Jah"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjsweRWm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9F030E820;
-	Fri, 20 Jun 2025 01:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A160D1AD3E0;
+	Fri, 20 Jun 2025 02:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750384450; cv=none; b=GDc3Os1yTclXGl5Mpmk/KBDdcxlhQfS28vOapJWfDGUn0/z/iglW5BZ43whOiKtc0L93nNk8gKUavdpbZgKe87V/Jqr7juN9GvNG8h1cTiaAyrz2YOuIj50KeYSchbUXioZkiMoVv+NPh0TQ/eIpjUHHPCdDSfLKvag7lIOeGkU=
+	t=1750387162; cv=none; b=c/RgNmflDzoMW+iF27E8dwa4jAKd3KrhKzGCnRJOzQ8OqiK6ug4QFzkaoRkwESVwi2KmprDLblpOlbiFR4bXxolnxi5BqFl/pqwNUCTSTbJbOPzE0Mf4HCI87990bkW32ePPFdF/ut4OH7OW/bn4fkgPxiMlp0ZxPrs5xyAqgjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750384450; c=relaxed/simple;
-	bh=HgKJ66InTHc5FcGkiLK7686jr3/n9jhyfn/anAugw0Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G+mkTAD3nJm6N2uooGzca8Za8lRc1X71IfzJmOUp+ZnrN7rP4qrv66KqztQHSdn/H1NBzuG4Olg5Q+0E9RFQTrakgugZvvv+UOmTAM7U0NGCWsowLDsk2nvSHuDGlmHU/wV2+IuL97gOMQGfYaoDr8gkALXbOmY2B7wXzoRdZBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I3jJ0Jah; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=je
-	Mo98SG+3dISIhlQop9C8b7HiFoi5Bn5yZa+1PM7Go=; b=I3jJ0Jah6hpt1VOky1
-	4GRcq8n5/JtBbOhcDMBAEWiNZjkMafBptWOU1viNRVWr4ga7qFRfqcNSRTY6fP4h
-	03hlt830HJBPjLbFoOvt4KVEA5DbY+gSNQ3WqIjYfHwWD7lqK/J2bJdh2mB49sXM
-	XCHHtX0EHl+Xy7j/qsvlC3uso=
-Received: from 163.com (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgDnpiEtv1RoUz5tAA--.15576S2;
-	Fri, 20 Jun 2025 09:53:49 +0800 (CST)
-From: Yuan Chen <chenyuan_fl@163.com>
-To: linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenyuan_fl@163.com,
-	Yuan Chen <chenyuan@kylinos.cn>
-Subject: [PATCH] pinctrl: berlin: fix memory leak in berlin_pinctrl_build_state()
-Date: Fri, 20 Jun 2025 09:53:43 +0800
-Message-Id: <20250620015343.21494-1-chenyuan_fl@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750387162; c=relaxed/simple;
+	bh=3drL4oHsjY/dEdUwunUtmzdGsZY1x4KQYqNZRtpHoVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KaNCNP8wdCwzcdh6XJZ7wlKp8QY62uif2zK8w2eI8HPxTooviyj7If3qWdl72b5nOwfGlsRcLZtuMVPK0bPsYLi2JiqNhPvdB3ZMmf6otiW1WAwrOKjjnVD5y6PshcSIX671FMoCJJjqIDmCEx3Zl22eF9kA9maV2AG9479rFfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjsweRWm; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750387160; x=1781923160;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3drL4oHsjY/dEdUwunUtmzdGsZY1x4KQYqNZRtpHoVg=;
+  b=hjsweRWmDD1S9Ueu0CI5EUhE98IQqTLiBrHC1/A8edOjMQ0/zKm3kaLP
+   bOPxqZt4j4hnK1wjtaALXkhTPiIsMlIfY++/5bGxaAhKIB86ZkpqxiRM0
+   iFH95vFE32C2+lvNvlg9DWvjeX+cBEo1NaaORDIcw8Xo50u8zcJ8rIa6G
+   Xekm4jkW3VckZ5meFmOFweNLfBXCxdtYQBC0XKaSrhhM0yk82pewVTJtw
+   BZzucNLrCCUEOao7CMXT6BouUl7jEnrgHOGnYltatkzAnQUd38AjNUbb+
+   fB2/myQT7yD+oY2x0t9SCDM7PNS6EUaAxGqBiX9Nn65qgS1XngNhlU43Y
+   Q==;
+X-CSE-ConnectionGUID: QHJDS2meRR2d+7qwfTyiwg==
+X-CSE-MsgGUID: AHZuD7ExR9i0yWOnuXdj0w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52724083"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="52724083"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 19:39:19 -0700
+X-CSE-ConnectionGUID: aBfS2HT9QGyt9Ikt559Z1g==
+X-CSE-MsgGUID: yo3FoJHNQ0aGo0Aoeyp8NA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="181810233"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 19 Jun 2025 19:39:15 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSRer-000LJ4-0S;
+	Fri, 20 Jun 2025 02:39:13 +0000
+Date: Fri, 20 Jun 2025 10:38:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, jic23@kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, dlechner@baylibre.com,
+	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, broonie@kernel.org, lgirdwood@gmail.com,
+	marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v6 06/12] iio: adc: ad4170: Add digital filter and sample
+ frequency config support
+Message-ID: <202506201000.WjqDvyXl-lkp@intel.com>
+References: <bc0261373936511a6ae5b25082e36ac5f112f6db.1750258776.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgDnpiEtv1RoUz5tAA--.15576S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw4UXrW5ZFy3Xr4rAr1kXwb_yoW8XFW5pa
-	98CF1jkr1UJr4Iqr1rJrZavFy3Gan7tw4UW34jg347Zw45JryktFs8KryYq3yDu398Ar1S
-	va15ZwnFv3ZayrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pioa0DUUUUU=
-X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiUQdyvWhUs9eAxgACsF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bc0261373936511a6ae5b25082e36ac5f112f6db.1750258776.git.marcelo.schmitt@analog.com>
 
-From: Yuan Chen <chenyuan@kylinos.cn>
+Hi Marcelo,
 
-In the original implementation, krealloc() failure handling incorrectly
-assigned the original memory pointer to NULL after kfree(), causing a
-memory leak when reallocation failed.
+kernel test robot noticed the following build warnings:
 
-Fixes: de845036f997 ("pinctrl: berlin: fix error return code of berlin_pinctrl_build_state()")
-Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
----
- drivers/pinctrl/berlin/berlin.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+[auto build test WARNING on 4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6]
 
-diff --git a/drivers/pinctrl/berlin/berlin.c b/drivers/pinctrl/berlin/berlin.c
-index c372a2a24be4..9dc2da8056b7 100644
---- a/drivers/pinctrl/berlin/berlin.c
-+++ b/drivers/pinctrl/berlin/berlin.c
-@@ -204,6 +204,7 @@ static int berlin_pinctrl_build_state(struct platform_device *pdev)
- 	const struct berlin_desc_group *desc_group;
- 	const struct berlin_desc_function *desc_function;
- 	int i, max_functions = 0;
-+	struct pinfunction *new_functions;
- 
- 	pctrl->nfunctions = 0;
- 
-@@ -229,12 +230,15 @@ static int berlin_pinctrl_build_state(struct platform_device *pdev)
- 		}
- 	}
- 
--	pctrl->functions = krealloc(pctrl->functions,
-+	new_functions = krealloc(pctrl->functions,
- 				    pctrl->nfunctions * sizeof(*pctrl->functions),
- 				    GFP_KERNEL);
--	if (!pctrl->functions)
-+	if (!new_functions) {
-+		kfree(pctrl->functions);
- 		return -ENOMEM;
-+	}
- 
-+	pctrl->functions = new_functions;
- 	/* map functions to theirs groups */
- 	for (i = 0; i < pctrl->desc->ngroups; i++) {
- 		desc_group = pctrl->desc->groups + i;
+url:    https://github.com/intel-lab-lkp/linux/commits/Marcelo-Schmitt/dt-bindings-iio-adc-Add-AD4170/20250619-014200
+base:   4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6
+patch link:    https://lore.kernel.org/r/bc0261373936511a6ae5b25082e36ac5f112f6db.1750258776.git.marcelo.schmitt%40analog.com
+patch subject: [PATCH v6 06/12] iio: adc: ad4170: Add digital filter and sample frequency config support
+config: microblaze-randconfig-r133-20250620 (https://download.01.org/0day-ci/archive/20250620/202506201000.WjqDvyXl-lkp@intel.com/config)
+compiler: microblaze-linux-gcc (GCC) 8.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250620/202506201000.WjqDvyXl-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506201000.WjqDvyXl-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/iio/adc/ad4170.c: In function 'ad4170_read_avail':
+>> drivers/iio/adc/ad4170.c:1237:18: warning: array subscript 4294967274 is above array bounds of 'int[3][18][2]' [-Warray-bounds]
+      *vals = (int *)st->sps_tbl[f_type];
+                     ^~
+
+
+vim +1237 drivers/iio/adc/ad4170.c
+
+  1219	
+  1220	static int ad4170_read_avail(struct iio_dev *indio_dev,
+  1221				     struct iio_chan_spec const *chan,
+  1222				     const int **vals, int *type, int *length,
+  1223				     long info)
+  1224	{
+  1225		struct ad4170_state *st = iio_priv(indio_dev);
+  1226		struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
+  1227		enum ad4170_filter_type f_type;
+  1228	
+  1229		switch (info) {
+  1230		case IIO_CHAN_INFO_SCALE:
+  1231			*vals = (int *)chan_info->scale_tbl;
+  1232			*length = ARRAY_SIZE(chan_info->scale_tbl) * 2;
+  1233			*type = IIO_VAL_INT_PLUS_NANO;
+  1234			return IIO_AVAIL_LIST;
+  1235		case IIO_CHAN_INFO_SAMP_FREQ:
+  1236			f_type = ad4170_get_filter_type(indio_dev, chan);
+> 1237			*vals = (int *)st->sps_tbl[f_type];
+  1238			*type = IIO_VAL_INT_PLUS_MICRO;
+  1239			switch (f_type) {
+  1240			case AD4170_SINC5_AVG:
+  1241			case AD4170_SINC3:
+  1242				*length = ARRAY_SIZE(ad4170_sinc3_filt_fs_tbl) * 2;
+  1243				return IIO_AVAIL_LIST;
+  1244			case AD4170_SINC5:
+  1245				*length = ARRAY_SIZE(ad4170_sinc5_filt_fs_tbl) * 2;
+  1246				return IIO_AVAIL_LIST;
+  1247			default:
+  1248				return -EINVAL;
+  1249			}
+  1250		default:
+  1251			return -EINVAL;
+  1252		}
+  1253	}
+  1254	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
