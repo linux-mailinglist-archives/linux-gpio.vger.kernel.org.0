@@ -1,159 +1,327 @@
-Return-Path: <linux-gpio+bounces-21901-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21903-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A77B3AE1128
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 04:39:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C80DAAE1167
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 04:55:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51B9117844D
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 02:39:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 333A81BC1C67
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 02:55:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09EB31B5EB5;
-	Fri, 20 Jun 2025 02:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B4D1DE2A1;
+	Fri, 20 Jun 2025 02:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjsweRWm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2hUiqD1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A160D1AD3E0;
-	Fri, 20 Jun 2025 02:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B6B1D54F7;
+	Fri, 20 Jun 2025 02:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750387162; cv=none; b=c/RgNmflDzoMW+iF27E8dwa4jAKd3KrhKzGCnRJOzQ8OqiK6ug4QFzkaoRkwESVwi2KmprDLblpOlbiFR4bXxolnxi5BqFl/pqwNUCTSTbJbOPzE0Mf4HCI87990bkW32ePPFdF/ut4OH7OW/bn4fkgPxiMlp0ZxPrs5xyAqgjA=
+	t=1750388099; cv=none; b=ogLSgRGAX7EHRxm0Vrs1ZQ//u9vGHQZ3B3/pc+kD0jSNYcwvfbsfrSdmDw613F1IBgYz7dVr7SYSzY0FxqAW3McFGi3zSRAnbYQXXSe+ZUDT/C9pvW7s5+00Y1aQtMcIMyiXSfhHn81LvDPLr9i5bY/FgA2szkbZZVCNsGDRlT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750387162; c=relaxed/simple;
-	bh=3drL4oHsjY/dEdUwunUtmzdGsZY1x4KQYqNZRtpHoVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KaNCNP8wdCwzcdh6XJZ7wlKp8QY62uif2zK8w2eI8HPxTooviyj7If3qWdl72b5nOwfGlsRcLZtuMVPK0bPsYLi2JiqNhPvdB3ZMmf6otiW1WAwrOKjjnVD5y6PshcSIX671FMoCJJjqIDmCEx3Zl22eF9kA9maV2AG9479rFfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjsweRWm; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750387160; x=1781923160;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3drL4oHsjY/dEdUwunUtmzdGsZY1x4KQYqNZRtpHoVg=;
-  b=hjsweRWmDD1S9Ueu0CI5EUhE98IQqTLiBrHC1/A8edOjMQ0/zKm3kaLP
-   bOPxqZt4j4hnK1wjtaALXkhTPiIsMlIfY++/5bGxaAhKIB86ZkpqxiRM0
-   iFH95vFE32C2+lvNvlg9DWvjeX+cBEo1NaaORDIcw8Xo50u8zcJ8rIa6G
-   Xekm4jkW3VckZ5meFmOFweNLfBXCxdtYQBC0XKaSrhhM0yk82pewVTJtw
-   BZzucNLrCCUEOao7CMXT6BouUl7jEnrgHOGnYltatkzAnQUd38AjNUbb+
-   fB2/myQT7yD+oY2x0t9SCDM7PNS6EUaAxGqBiX9Nn65qgS1XngNhlU43Y
-   Q==;
-X-CSE-ConnectionGUID: QHJDS2meRR2d+7qwfTyiwg==
-X-CSE-MsgGUID: AHZuD7ExR9i0yWOnuXdj0w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52724083"
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="52724083"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 19:39:19 -0700
-X-CSE-ConnectionGUID: aBfS2HT9QGyt9Ikt559Z1g==
-X-CSE-MsgGUID: yo3FoJHNQ0aGo0Aoeyp8NA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
-   d="scan'208";a="181810233"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 19 Jun 2025 19:39:15 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSRer-000LJ4-0S;
-	Fri, 20 Jun 2025 02:39:13 +0000
-Date: Fri, 20 Jun 2025 10:38:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, jic23@kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl, broonie@kernel.org, lgirdwood@gmail.com,
-	marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v6 06/12] iio: adc: ad4170: Add digital filter and sample
- frequency config support
-Message-ID: <202506201000.WjqDvyXl-lkp@intel.com>
-References: <bc0261373936511a6ae5b25082e36ac5f112f6db.1750258776.git.marcelo.schmitt@analog.com>
+	s=arc-20240116; t=1750388099; c=relaxed/simple;
+	bh=yTftLcaxaoxroo4obRqJKYKCN5x3YoLvapUy9LHGCYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ThWYfcWX7Y/4luf/pkORKwJgNQweh3nHd7PT2RdjIn48WOAqDyPN2qaWpUbo1t3wF4JcNIBbrrhmZSJYkPzz+t1eyEF8YfvmDv1Ml1B4JJREdDIO1F5iPPUGQ/+OXyP/tiZGJRYuRVrazLQlCq71un9D3wZSQDYDT569iTdsfJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2hUiqD1; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70e3980757bso11729497b3.1;
+        Thu, 19 Jun 2025 19:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750388096; x=1750992896; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PL5ZfUXg5yLET4pHMFIAv22Wx0+Nt+MISjgpqe1im+U=;
+        b=Y2hUiqD1GJEQWbK8aPA+CsfKmOiFaaZVqrLsSjjGjVzcDXgfAqF5o/kMjoCP4/lrLM
+         lFyagcxOnjnpDUOHCX7/yCgPrIj/tDOfLTeoZM10PH6reQOOgb0RO/Y0Fk5VBVX8Psf7
+         tFe0JWEKGO/G/jQvuXnCB0yOZCJ/u3e8PTW7KNQLzvRXnmmUgUXxgENATwkjr6axfKLJ
+         fmDDsu43xCI0bScuwz5/cWXKWm2svjKgAphtPLh3OlAh/a2vUstUa9uYadULAIx7k05u
+         hYVESEIWA12OxMBRR1/p4F4Gxdokrkwn5NQ26HwhZu1xH9NL9W+bqoqHVoXOKTnChrFa
+         vHDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750388096; x=1750992896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PL5ZfUXg5yLET4pHMFIAv22Wx0+Nt+MISjgpqe1im+U=;
+        b=G2UVfhUCqQ+7Xy/N95iVxPLRKyl/padKKAzeueuAI7uhlYclPo2V8JjymiSFdz/u8U
+         3JMdykzdCg0jCkpRuWjYNa/MmjT5FiaBusdetfUbrU78RLxOovpU/P1KRFR40f2Fit2W
+         nPBbx6wuNHyLKIaN1+RGUA8TZG6m/3QWy8Dp6qvzoGUWMW+F5oO2z2PsXvekR1aD+ShV
+         fLgsR/zbe9plRTeQf7ln4raDckYNLoCYCuefmHpd771qT6dgVEhVyPsmgvMtvRLuziet
+         VVnctdqTYz9kHILiXzd4npg4CEa3tvEOBxw+MMJuRJQCe+xjw2YhzMM59ZuocHqua+MP
+         TVZg==
+X-Forwarded-Encrypted: i=1; AJvYcCULTXfVMmUY6HjofCZzXRX9hHJ6uRzmDRaPgEZf+6zOzHoui2WAuEKvenw5yV9goPztYlLCX12ZdUNLsWs=@vger.kernel.org, AJvYcCUOr/GATiFsKRGaVRpLPBnisMhJLDSbozACtkFy3QRchgJ1vBJyZxFRRv+Sd4/t+kiyQtEtxqSZN0gW@vger.kernel.org, AJvYcCUlYeliml7Y5yD0miFij5BF5E/kn3HTEQreS55IecKTG7fuwJ+ZtsVuEORROMs+SBUcCJAMj7DUSbeW@vger.kernel.org, AJvYcCV9reZ07yucwKnHt/yQUA6j+0jTDOK1p1C0CEd6lEK7syv8XGzCWdK5Kqgx7+WKUAVqM25GPdEA/V0=@vger.kernel.org, AJvYcCVFO8SpG345yR9PL3YifnkC7ild9cIJCZZIcPW6kgM4tvkIfhv8U5Y3+XLPKp0IjUbj7C3Y9w4Ta/pJYMV5AiM=@vger.kernel.org, AJvYcCVlPFeMbMQDjGhtMPGBawS7s9Wnnj1ouDyFBkTuBOmhhOeGAZRHtA6qruUGFcqqVtp0pzzo+ddNDqGGmAlv@vger.kernel.org, AJvYcCWmKYjzNrLywr/gsOrIHtlrKGc8YiT/tEd7joHcN1xEf/7w+9diglMVrTJ3MOYc49iaS1LkVix/@vger.kernel.org, AJvYcCXfA1WFyK0PRgNodbZ6WO4QDOwaVVJ80CIf2a/DvxnFZLyNZFsvOsKqjl+5sEZQqxJCZa5Txqb7yj661Q==@vger.kernel.org, AJvYcCXogaanxKMtpVANdRt2ud9ofgRZLL95Z9oNHglL7QEaoCFPPouKn/l4tXy/CLX1QPyrbURhQ1quuMaR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT0X1aRCUCZuhzGol1daTAOPh/5cxv93cNnrvnvQz8OMbMNrbS
+	VPGdoMBhSf2Q1ilo03qWDm9Y8kiFM9kAJD58fcoC8v0o0WxmmdarfjyJxN5Sn8TCzllNWgG3t2Y
+	vCOKh+ieBzj7URRU5uKszlClKb5qi7Ko=
+X-Gm-Gg: ASbGncsC3ci2rLVfPmMdHOowoZutdE0F84K5e1420fQjVFn7u3GZvgScfriyYQlf76T
+	542Xy6N77cAO8YkUzuWPR95sU64zOwTF0/pgOkSv2TMyUrjbG8tqFNhEhN4f8inwhGKLTuHPjPu
+	f3Myq9mkmM/0YYBm7IjjYf/REgU30XeAGHKDgLrJVr/sDxe+saySbkxuVOulZbVS6Q9qAG/2A9M
+	pr0og==
+X-Google-Smtp-Source: AGHT+IGOaj/XfTCr9Sxl3v8frQyHM5q4GUw9KJI7wNyCuiixCs4wA+KSCVYIEYO5/2GOKyYczURT3DEa106mX3Ct9pQ=
+X-Received: by 2002:a05:690c:9683:b0:6f9:4c00:53ae with SMTP id
+ 00721157ae682-712ca356122mr8571437b3.8.1750388096062; Thu, 19 Jun 2025
+ 19:54:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc0261373936511a6ae5b25082e36ac5f112f6db.1750258776.git.marcelo.schmitt@analog.com>
+References: <20250612152313.GP381401@google.com> <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
+ <20250613131133.GR381401@google.com> <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
+ <20250619115345.GL587864@google.com> <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
+ <20250619152814.GK795775@google.com> <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
+ <2025061910-skies-outgoing-89cc@gregkh> <644dfd66-ad30-47cb-9ec4-50d9a003433b@roeck-us.net>
+ <2025061914-sternum-factoid-4269@gregkh>
+In-Reply-To: <2025061914-sternum-factoid-4269@gregkh>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Fri, 20 Jun 2025 10:54:44 +0800
+X-Gm-Features: AX0GCFvM1po7kadcnzGUSgDruiL08eSqKUPiA5kZyOYEApP7QJqtO3AY5gi443I
+Message-ID: <CAOoeyxUcB1xc_kMBADWoV8RnnFJ+uCYa_kJ7_BdyR8W_WZfsAg@mail.gmail.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de, 
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Ming Yu <tmyu0@nuvoton.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Marcelo,
+Dear Guenter and Greg,
 
-kernel test robot noticed the following build warnings:
+Thank you for reviewing,
 
-[auto build test WARNING on 4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6]
+Greg KH <gregkh@linuxfoundation.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8820=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:18=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, Jun 19, 2025 at 09:58:04AM -0700, Guenter Roeck wrote:
+> > On 6/19/25 09:20, Greg KH wrote:
+> > > On Fri, Jun 20, 2025 at 12:03:01AM +0800, Ming Yu wrote:
+> > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8819=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:28=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > > > >
+> > > > > On Thu, 19 Jun 2025, Ming Yu wrote:
+> > > > >
+> > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8819=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:53=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > > > > > >
+> > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > > > > >
+> > > > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=
+=8813=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=889:11=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > > > >
+> > > > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > > > > > > >
+> > > > > > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=
+=9C=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:23=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+> > > > > > > > > > >
+> > > > > > > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > > Dear Lee,
+> > > > > > > > > > > >
+> > > > > > > > > > > > Thank you for reviewing,
+> > > > > > > > > > > >
+> > > > > > > > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=
+=E6=9C=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:00=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> > > > > > > > > > > > >
+> > > > > > > > > > > > ...
+> > > > > > > > > > > > > > +static const struct mfd_cell nct6694_devs[] =
+=3D {
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 0),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 1),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 2),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 3),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 4),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 5),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 6),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 7),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 8),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 9),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 10),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 11),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 12),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 13),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 14),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
+, 0, 15),
+> > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
+ 0, 0),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
+ 0, 1),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
+ 0, 2),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
+ 0, 3),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
+ 0, 4),
+> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
+ 0, 5),
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Why have we gone back to this silly numbering sch=
+eme?
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > What happened to using IDA in the child driver?
+> > > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > > In a previous version, I tried to maintain a static=
+ IDA in each
+> > > > > > > > > > > > sub-driver. However, I didn=E2=80=99t consider the =
+case where multiple NCT6694
+> > > > > > > > > > > > devices are bound to the same driver =E2=80=94 in t=
+hat case, the IDs are not
+> > > > > > > > > > > > fixed and become unusable for my purpose.
+> > > > > > > > > > >
+> > > > > > > > > > > Not sure I understand.
+> > > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > As far as I know, if I maintain the IDA in the sub-driv=
+ers and use
+> > > > > > > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the M=
+FD, the first
+> > > > > > > > > > NCT6694 device bound to the GPIO driver will receive ID=
+s 0~15.
+> > > > > > > > > > However, when a second NCT6694 device is connected to t=
+he system, it
+> > > > > > > > > > will receive IDs 16~31.
+> > > > > > > > > > Because of this behavior, I switched back to using plat=
+form_device->id.
+> > > > > > > > >
+> > > > > > > > > Each of the devices will probe once.
+> > > > > > > > >
+> > > > > > > > > The first one will be given 0, the second will be given 1=
+, etc.
+> > > > > > > > >
+> > > > > > > > > Why would you give multiple IDs to a single device bound =
+to a driver?
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > The device exposes multiple peripherals =E2=80=94 16 GPIO c=
+ontrollers, 6 I2C
+> > > > > > > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each=
+ peripheral
+> > > > > > > > is independently addressable, has its own register region, =
+and can
+> > > > > > > > operate in isolation. The IDs are used to distinguish betwe=
+en these
+> > > > > > > > instances.
+> > > > > > > > For example, the GPIO driver will be probed 16 times, alloc=
+ating 16
+> > > > > > > > separate gpio_chip instances to control 8 GPIO lines each.
+> > > > > > > >
+> > > > > > > > If another device binds to this driver, it is expected to e=
+xpose
+> > > > > > > > peripherals with the same structure and behavior.
+> > > > > > >
+> > > > > > > I still don't see why having a per-device IDA wouldn't render=
+ each
+> > > > > > > probed device with its own ID.  Just as you have above.
+> > > > > > >
+> > > > > >
+> > > > > > For example, when the MFD driver and the I2C sub-driver are loa=
+ded,
+> > > > > > connecting the first NCT6694 USB device to the system results i=
+n 6
+> > > > > > nct6694-i2c platform devices being created and bound to the
+> > > > > > i2c-nct6694 driver. These devices receive IDs 0 through 5 via t=
+he IDA.
+> > > > > >
+> > > > > > However, when a second NCT6694 USB device is connected, its
+> > > > > > corresponding nct6694-i2c platform devices receive IDs 6 throug=
+h 11 =E2=80=94
+> > > > > > instead of 0 through 5 as I originally expected.
+> > > > > >
+> > > > > > If I've misunderstood something, please feel free to correct me=
+. Thank you!
+> > > > >
+> > > > > In the code above you register 6 I2C devices.  Each device will b=
+e
+> > > > > assigned a platform ID 0 through 5. The .probe() function in the =
+I2C
+> > > > > driver will be executed 6 times.  In each of those calls to .prob=
+e(),
+> > > > > instead of pre-allocating a contiguous assignment of IDs here, yo=
+u
+> > > > > should be able to use IDA in .probe() to allocate those same devi=
+ce IDs
+> > > > > 0 through 5.
+> > > > >
+> > > > > What am I missing here?
+> > > > >
+> > > >
+> > > > You're absolutely right in the scenario where a single NCT6694 devi=
+ce
+> > > > is present. However, I=E2=80=99m wondering how we should handle the=
+ case where
+> > > > a second or even third NCT6694 device is bound to the same MFD driv=
+er.
+> > > > In that situation, the sub-drivers using a static IDA will continue
+> > > > allocating increasing IDs, rather than restarting from 0 for each
+> > > > device. How should this be handled?
+> > >
+> > > What is wrong with increasing ids?  The id value means nothing, they
+> > > just have to be unique.
+> > >
+> >
+> > Unless they are used in the client driver as index into an array, as in
+> > "this is the Nth instance of this device for this chip". There has to b=
+e
+> > _some_ means to pass N to the client driver.
+>
+> Ick, that should just be walking the list of child devices instead, as
+> obviously no one is hard coding array sizes for devices these days,
+> right?  :)
+>
+> Anyway, sure, if you _have_ to have a specific id, then use a specific
+> id, but really, it should not matter.
+>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Marcelo-Schmitt/dt-bindings-iio-adc-Add-AD4170/20250619-014200
-base:   4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6
-patch link:    https://lore.kernel.org/r/bc0261373936511a6ae5b25082e36ac5f112f6db.1750258776.git.marcelo.schmitt%40analog.com
-patch subject: [PATCH v6 06/12] iio: adc: ad4170: Add digital filter and sample frequency config support
-config: microblaze-randconfig-r133-20250620 (https://download.01.org/0day-ci/archive/20250620/202506201000.WjqDvyXl-lkp@intel.com/config)
-compiler: microblaze-linux-gcc (GCC) 8.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250620/202506201000.WjqDvyXl-lkp@intel.com/reproduce)
+I need fixed IDs in order to communicate with the sub-devices
+correctly. For instance, the I2C driver registers 6 devices, and the
+userspace interface needs to know which specific I2C controller (e.g.,
+index 0 ~ 5) to target with custom commands. Using fixed IDs allow the
+driver to maintain a consistent mapping between device instances and
+register sets.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506201000.WjqDvyXl-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/iio/adc/ad4170.c: In function 'ad4170_read_avail':
->> drivers/iio/adc/ad4170.c:1237:18: warning: array subscript 4294967274 is above array bounds of 'int[3][18][2]' [-Warray-bounds]
-      *vals = (int *)st->sps_tbl[f_type];
-                     ^~
+I'm open to better alternatives, but so far, using fixed
+platform_device->id has been the most straightforward way to achieve
+this.
 
 
-vim +1237 drivers/iio/adc/ad4170.c
-
-  1219	
-  1220	static int ad4170_read_avail(struct iio_dev *indio_dev,
-  1221				     struct iio_chan_spec const *chan,
-  1222				     const int **vals, int *type, int *length,
-  1223				     long info)
-  1224	{
-  1225		struct ad4170_state *st = iio_priv(indio_dev);
-  1226		struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
-  1227		enum ad4170_filter_type f_type;
-  1228	
-  1229		switch (info) {
-  1230		case IIO_CHAN_INFO_SCALE:
-  1231			*vals = (int *)chan_info->scale_tbl;
-  1232			*length = ARRAY_SIZE(chan_info->scale_tbl) * 2;
-  1233			*type = IIO_VAL_INT_PLUS_NANO;
-  1234			return IIO_AVAIL_LIST;
-  1235		case IIO_CHAN_INFO_SAMP_FREQ:
-  1236			f_type = ad4170_get_filter_type(indio_dev, chan);
-> 1237			*vals = (int *)st->sps_tbl[f_type];
-  1238			*type = IIO_VAL_INT_PLUS_MICRO;
-  1239			switch (f_type) {
-  1240			case AD4170_SINC5_AVG:
-  1241			case AD4170_SINC3:
-  1242				*length = ARRAY_SIZE(ad4170_sinc3_filt_fs_tbl) * 2;
-  1243				return IIO_AVAIL_LIST;
-  1244			case AD4170_SINC5:
-  1245				*length = ARRAY_SIZE(ad4170_sinc5_filt_fs_tbl) * 2;
-  1246				return IIO_AVAIL_LIST;
-  1247			default:
-  1248				return -EINVAL;
-  1249			}
-  1250		default:
-  1251			return -EINVAL;
-  1252		}
-  1253	}
-  1254	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Ming
 
