@@ -1,229 +1,186 @@
-Return-Path: <linux-gpio+bounces-21919-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21921-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6E61AE172C
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 11:09:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B28DAE17EF
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 11:43:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D0D21675BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 09:10:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5484D5A71DE
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 09:42:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D157827FB14;
-	Fri, 20 Jun 2025 09:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F08A284663;
+	Fri, 20 Jun 2025 09:41:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BVQ+H02l"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lEYcEjTK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E31723312D
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Jun 2025 09:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A752836BD;
+	Fri, 20 Jun 2025 09:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750410594; cv=none; b=mgSRhnCupw7EiMEWUaCSqDkyPCT7f+0PdOEzEUFwwS/c1enItXWhJLl4ryGMkNGHW/Y3TeQypfSjYDmUpy4ol5n7/enpYZKVA5k0WBH05qg6LYdwJ5OsXWYhzyfSXdO3K44op2TzQO5cadcNzQDbZdgEq+qZr1wDEVstqw7b1Hw=
+	t=1750412517; cv=none; b=pLtuW4ZNcXprLuNhKAN6EyjeaSRgaqd2BmSfuJ7jBpTZdq3rB0hV05TnqHpEuoBw3UGxDLYbOFSsKW12/yxR38MRZVshsO7bAVERqbaC6BHdq+K5vSrwi2k15/kRtLrfUae9t+/km3bCmSj8/lUpt0keHUhpTQbCH9UTPi6BMQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750410594; c=relaxed/simple;
-	bh=G44e59JFAUcxsggaBubt3RnoIGwAc0VQbTd0KzQhQ/U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=pZPS5on1H0kM6S3JaypGTz/dcx7dEX7bx6+zRKUIw6eo1prROAZk2RKmw9IiLGUL8rpzvIwcJtwQ6ivujX/T/jZ2u5zf0SfS7q6ucsE3gEg7uvyqmwXZoOcCZ2uYSOaYXHDHvJmB1lSUa5Yp6PxKzp6B9wM8psBCZqqiJfsLuMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BVQ+H02l; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750410593; x=1781946593;
-  h=date:from:to:cc:subject:message-id;
-  bh=G44e59JFAUcxsggaBubt3RnoIGwAc0VQbTd0KzQhQ/U=;
-  b=BVQ+H02lvu4K0KfPy/7pIUUS0jFCUVF9255tMpPMU5MWJmvMolE7bLlP
-   836CAhzqyrXgDFzAT9pnQYIgTYxKgvDaqCAwG3eIjadDY1TursserPJt4
-   IgJmVgir2D2uzjqJF4nG77UEaT9ua4A+h2nZelBAmWPNDTxjw+3Pf7Vzm
-   xbIhzFpgJ3Av8ucWervZ99RVUyECM7M0tyYb8KHNNmnoA4fTvl99H5ASx
-   lqe1F7qUbYUEERoD9A7vm7Hf0/zUg7AO7GQmV0KQmvjXcynn3P4BZDrzd
-   7kY3LS3BOSfWidk/JINCbRbLyUbQRpV6CbVtiDrmjIcitcx1SYrXGn5gX
-   Q==;
-X-CSE-ConnectionGUID: VY/iSahRQbaBB+0Q5If6eg==
-X-CSE-MsgGUID: CWb6/J5URhSzcwMNSZDdjg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52595835"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="52595835"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 02:09:52 -0700
-X-CSE-ConnectionGUID: rUaITj/GTAWN5JHsml4Rcg==
-X-CSE-MsgGUID: 0XreWr9vSumy15LhCpEhvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="150456731"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 20 Jun 2025 02:09:51 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSXkr-000LYQ-1x;
-	Fri, 20 Jun 2025 09:09:49 +0000
-Date: Fri, 20 Jun 2025 17:09:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 62be3d6e481122f02364993fee8322a681072918
-Message-ID: <202506201702.M0kZKtzH-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1750412517; c=relaxed/simple;
+	bh=xZvpzL4UwS6OA0cviJ0wNDA0ufchrjZ270t9oe6fHOk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pCOg2rZ/1zTQhyoAZ3v9Kd8OHT32ssG1P0WzaQCGS1L1n92OZz1s/puGSMXLbHN9+ZAWtgES0QaYnoYC8nSh/3D/bd8uIt/2/yPh5OS1hlVO0HvsxfnktErnt5OKKT8BRh4NPskM2S9gUK36oohCMwpP5qrDxKSN9K2clc5oy0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=lEYcEjTK; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: c7dc8bee4dba11f0b33aeb1e7f16c2b6-20250620
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=pvjx1+pIn8urUTUBBnPuT3kuiMR9emrqej8CWWxMjYc=;
+	b=lEYcEjTKVl2SamqWhEvi++wqtSlckJCgn6v1CduSzPH5gaOxiEmTom6dxd8U+kTpPgvNtNDExXDYtZAELWRaSjPOGtX+ZdZ34DB0nC9vCv8CmlXgmSaodgkIgjFIjAViZNllJT9AzerToeO6EmFoktuB7KEAulkRmbHfn2jYOlk=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.3,REQID:98639b19-8b6f-4fc8-bd99-03b834f9a3e3,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:09905cf,CLOUDID:6a233277-7521-4364-b0ef-cd7d9c0ecbde,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|102,TC:nil,Content:0|50,EDM:-3,IP
+	:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
+	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: c7dc8bee4dba11f0b33aeb1e7f16c2b6-20250620
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+	(envelope-from <darren.ye@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 79943254; Fri, 20 Jun 2025 17:41:46 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 20 Jun 2025 17:41:44 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 20 Jun 2025 17:41:43 +0800
+From: Darren.Ye <darren.ye@mediatek.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
+	<darren.ye@mediatek.com>
+Subject: [PATCH v5 00/10] ASoC: mediatek: Add support for MT8196 SoC
+Date: Fri, 20 Jun 2025 17:40:33 +0800
+Message-ID: <20250620094140.11093-1-darren.ye@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-MTK: N
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 62be3d6e481122f02364993fee8322a681072918  Merge tag 'gpio-mmio-bgpiof-no-input-flag-for-v6.17' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel
+From: Darren Ye <darren.ye@mediatek.com>
 
-Unverified Warning (likely false positive, kindly check if interested):
+This series of patches adds support for Mediatek AFE of MT8196 SoC.
+Patches are based on broonie tree "for-next" branch.
 
-    drivers/pinctrl/pinctrl-aw9523.c:658 aw9523_gpio_set_multiple() warn: inconsistent returns '&awi->i2c_lock'.
+Changes since v4:
+ - modify the mediatek,mt8196-afe.yaml commit message and add reviewed owner.
+ - modify the mediatek,mt8196-nau8825.yaml commit message.
+ - modify the audio common code based on reviewer's suggestions.
+ - add reviewed and tested owners in the audio common code submission message.
+ - fix cm update cnt calculation issue.
 
-Warning ids grouped by kconfigs:
+Changes since v3:
+ - the AFE TOP CG index is added to the common header.
+ - remove the audsys clk register and directly read and write to the regmap of afe cg clk.
+ - modify the clk logic according to the suggestions.
+ - remove the macro definition of MTKAIF4
+ - remove the tdm cg event and directly read and write the tdm cg reg form the widget.
+ - remove the i2s and cm cg event and directly read and write cg reg.
+ - afe hopping and f26m clk cg are placed in remap_register_patch and enable.
+ - the yaml file is modified according to the suggestions.
+ - replace SND_SOC_DAIFMT_CBS_CFS with SND_SOC_DAIFMT_CBC_CFC.
 
-recent_errors
-`-- x86_64-randconfig-161-20250619
-    `-- drivers-pinctrl-pinctrl-aw9523.c-aw9523_gpio_set_multiple()-warn:inconsistent-returns-awi-i2c_lock-.
+Changes since v2:
+  - remove the mtk_memif_set_channel interface modify.
+  - remove duplicate definitions from the header file.
+  - move the afe gate clk to the audio driver for management and registration
+    and manage the afe clk gate in each dai driver.
+  - delete the useless clk source.
+  - the i2s driver adds i2s clk gate management, removes the additional dts
+    configuration of i2s4.
+  - the afe and i2s dai driver,memif and irq data structs are encapsulated using
+    macros to reduce the amount of code.
+  - the volatile reg is modified as suggested.
+  - mt6681 codec is not supported, the mt6681 keyword is removed.
+  - the name of the machine driver is changed from mt8196-mt6681.c to mt8196-nau8825.c
+  - remove the i2s4 configuration from mt8196-afe.yaml and make the modifications as suggested.
+  - change the mt8196-mt6681.yaml to mt8196-nau8825.yaml and make the modifications as suggested.
 
-elapsed time: 1452m
+Changes since v1:
+  - modify mtk_memif_set_channel and mtk_afe_pcm_pointer interfaces
+    are improved to support mt8196.
+  - remove duplicate definitions in the mt8196 common header file.
+  - cm logic is merge into the afe platform driver.
+  - modify afe clk to return judgment logic and remove useless clk sources.
+  - refactor the mt8196 adda dai driver.
+  - remove the gpio module and use SND_SOC_DAPM_PINCTRL to manage it.
+  - removes CONNSYS_I2S related functions that are not supported in i2s dai driver.
+  - fixed mt8196-afe.yaml and mt8196-mt6681.yaml syntax issues.
+  - modify log printing in all modules.
+  - optimize the header file included for machine driver.
 
-configs tested: 126
-configs skipped: 3
+Darren Ye (10):
+  ASoC: mediatek: common: modify mtk afe platform driver for mt8196
+  ASoC: mediatek: mt8196: add common header
+  ASoC: mediatek: mt8196: support audio clock control
+  ASoC: mediatek: mt8196: support ADDA in platform driver
+  ASoC: mediatek: mt8196: support I2S in platform driver
+  ASoC: mediatek: mt8196: support TDM in platform driver
+  ASoC: mediatek: mt8196: add platform driver
+  ASoC: dt-bindings: mediatek,mt8196-afe: add support for MT8196 audio
+    AFE controller
+  ASoC: mediatek: mt8196: add machine driver with nau8825
+  ASoC: dt-bindings: mediatek,mt8196-nau8825: Add audio sound card
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+ .../bindings/sound/mediatek,mt8196-afe.yaml   |   157 +
+ .../sound/mediatek,mt8196-nau8825.yaml        |   102 +
+ sound/soc/mediatek/Kconfig                    |    30 +
+ sound/soc/mediatek/Makefile                   |     1 +
+ .../mediatek/common/mtk-afe-platform-driver.c |    47 +-
+ .../mediatek/common/mtk-afe-platform-driver.h |     2 +
+ sound/soc/mediatek/mt8196/Makefile            |    17 +
+ sound/soc/mediatek/mt8196/mt8196-afe-clk.c    |   728 +
+ sound/soc/mediatek/mt8196/mt8196-afe-clk.h    |    80 +
+ sound/soc/mediatek/mt8196/mt8196-afe-common.h |   213 +
+ sound/soc/mediatek/mt8196/mt8196-afe-pcm.c    |  2657 ++++
+ sound/soc/mediatek/mt8196/mt8196-dai-adda.c   |   888 ++
+ sound/soc/mediatek/mt8196/mt8196-dai-i2s.c    |  3970 +++++
+ sound/soc/mediatek/mt8196/mt8196-dai-tdm.c    |   836 ++
+ .../mediatek/mt8196/mt8196-interconnection.h  |   121 +
+ sound/soc/mediatek/mt8196/mt8196-nau8825.c    |   869 ++
+ sound/soc/mediatek/mt8196/mt8196-reg.h        | 12068 ++++++++++++++++
+ 17 files changed, 22770 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml
+ create mode 100644 sound/soc/mediatek/mt8196/Makefile
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-clk.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-clk.h
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-common.h
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-pcm.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-adda.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-i2s.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-tdm.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-interconnection.h
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-nau8825.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-reg.h
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250619    gcc-15.1.0
-arc                   randconfig-002-20250619    gcc-15.1.0
-arc                    vdk_hs38_smp_defconfig    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                             mxs_defconfig    clang-21
-arm                   randconfig-001-20250619    clang-21
-arm                   randconfig-002-20250619    gcc-8.5.0
-arm                   randconfig-003-20250619    gcc-8.5.0
-arm                   randconfig-004-20250619    gcc-10.5.0
-arm                       versatile_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250619    gcc-8.5.0
-arm64                 randconfig-002-20250619    gcc-9.5.0
-arm64                 randconfig-003-20250619    gcc-10.5.0
-arm64                 randconfig-004-20250619    gcc-10.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250619    gcc-11.5.0
-csky                  randconfig-002-20250619    gcc-9.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250619    clang-21
-hexagon               randconfig-002-20250619    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250619    gcc-12
-i386        buildonly-randconfig-002-20250619    gcc-12
-i386        buildonly-randconfig-003-20250619    clang-20
-i386        buildonly-randconfig-004-20250619    clang-20
-i386        buildonly-randconfig-005-20250619    clang-20
-i386        buildonly-randconfig-006-20250619    clang-20
-i386                                defconfig    clang-20
-loongarch                        alldefconfig    gcc-15.1.0
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch             randconfig-001-20250619    gcc-15.1.0
-loongarch             randconfig-002-20250619    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                          amiga_defconfig    gcc-15.1.0
-m68k                        stmark2_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                      bmips_stb_defconfig    clang-21
-mips                           ip32_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250619    gcc-8.5.0
-nios2                 randconfig-002-20250619    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-openrisc                  or1klitex_defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250619    gcc-11.5.0
-parisc                randconfig-002-20250619    gcc-8.5.0
-powerpc                     akebono_defconfig    clang-21
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                     mpc83xx_defconfig    clang-21
-powerpc               randconfig-001-20250619    gcc-9.3.0
-powerpc               randconfig-002-20250619    clang-21
-powerpc               randconfig-003-20250619    gcc-10.5.0
-powerpc                     redwood_defconfig    clang-21
-powerpc                  storcenter_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250619    gcc-11.5.0
-powerpc64             randconfig-002-20250619    clang-21
-powerpc64             randconfig-003-20250619    gcc-10.5.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250619    gcc-11.5.0
-riscv                 randconfig-002-20250619    clang-16
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250619    clang-19
-s390                  randconfig-002-20250619    gcc-13.2.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250619    gcc-9.3.0
-sh                    randconfig-002-20250619    gcc-9.3.0
-sh                          rsk7269_defconfig    gcc-15.1.0
-sh                          sdk7780_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250619    gcc-14.3.0
-sparc                 randconfig-002-20250619    gcc-10.3.0
-sparc64                             defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250619    gcc-13.3.0
-sparc64               randconfig-002-20250619    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250619    clang-19
-um                    randconfig-002-20250619    clang-21
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250619    clang-20
-x86_64      buildonly-randconfig-002-20250619    gcc-12
-x86_64      buildonly-randconfig-003-20250619    clang-20
-x86_64      buildonly-randconfig-004-20250619    gcc-12
-x86_64      buildonly-randconfig-005-20250619    clang-20
-x86_64      buildonly-randconfig-006-20250619    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250619    gcc-9.3.0
-xtensa                randconfig-002-20250619    gcc-8.5.0
+-- 
+2.45.2
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
