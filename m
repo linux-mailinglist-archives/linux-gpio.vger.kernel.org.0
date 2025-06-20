@@ -1,327 +1,229 @@
-Return-Path: <linux-gpio+bounces-21903-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21902-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C80DAAE1167
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 04:55:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20D76AE1136
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 04:48:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 333A81BC1C67
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 02:55:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B073A4A031D
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 02:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B4D1DE2A1;
-	Fri, 20 Jun 2025 02:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FAA561FF2;
+	Fri, 20 Jun 2025 02:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2hUiqD1"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="F7LaarX0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010066.outbound.protection.outlook.com [52.101.84.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B6B1D54F7;
-	Fri, 20 Jun 2025 02:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750388099; cv=none; b=ogLSgRGAX7EHRxm0Vrs1ZQ//u9vGHQZ3B3/pc+kD0jSNYcwvfbsfrSdmDw613F1IBgYz7dVr7SYSzY0FxqAW3McFGi3zSRAnbYQXXSe+ZUDT/C9pvW7s5+00Y1aQtMcIMyiXSfhHn81LvDPLr9i5bY/FgA2szkbZZVCNsGDRlT4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750388099; c=relaxed/simple;
-	bh=yTftLcaxaoxroo4obRqJKYKCN5x3YoLvapUy9LHGCYg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ThWYfcWX7Y/4luf/pkORKwJgNQweh3nHd7PT2RdjIn48WOAqDyPN2qaWpUbo1t3wF4JcNIBbrrhmZSJYkPzz+t1eyEF8YfvmDv1Ml1B4JJREdDIO1F5iPPUGQ/+OXyP/tiZGJRYuRVrazLQlCq71un9D3wZSQDYDT569iTdsfJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2hUiqD1; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70e3980757bso11729497b3.1;
-        Thu, 19 Jun 2025 19:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750388096; x=1750992896; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PL5ZfUXg5yLET4pHMFIAv22Wx0+Nt+MISjgpqe1im+U=;
-        b=Y2hUiqD1GJEQWbK8aPA+CsfKmOiFaaZVqrLsSjjGjVzcDXgfAqF5o/kMjoCP4/lrLM
-         lFyagcxOnjnpDUOHCX7/yCgPrIj/tDOfLTeoZM10PH6reQOOgb0RO/Y0Fk5VBVX8Psf7
-         tFe0JWEKGO/G/jQvuXnCB0yOZCJ/u3e8PTW7KNQLzvRXnmmUgUXxgENATwkjr6axfKLJ
-         fmDDsu43xCI0bScuwz5/cWXKWm2svjKgAphtPLh3OlAh/a2vUstUa9uYadULAIx7k05u
-         hYVESEIWA12OxMBRR1/p4F4Gxdokrkwn5NQ26HwhZu1xH9NL9W+bqoqHVoXOKTnChrFa
-         vHDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750388096; x=1750992896;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PL5ZfUXg5yLET4pHMFIAv22Wx0+Nt+MISjgpqe1im+U=;
-        b=G2UVfhUCqQ+7Xy/N95iVxPLRKyl/padKKAzeueuAI7uhlYclPo2V8JjymiSFdz/u8U
-         3JMdykzdCg0jCkpRuWjYNa/MmjT5FiaBusdetfUbrU78RLxOovpU/P1KRFR40f2Fit2W
-         nPBbx6wuNHyLKIaN1+RGUA8TZG6m/3QWy8Dp6qvzoGUWMW+F5oO2z2PsXvekR1aD+ShV
-         fLgsR/zbe9plRTeQf7ln4raDckYNLoCYCuefmHpd771qT6dgVEhVyPsmgvMtvRLuziet
-         VVnctdqTYz9kHILiXzd4npg4CEa3tvEOBxw+MMJuRJQCe+xjw2YhzMM59ZuocHqua+MP
-         TVZg==
-X-Forwarded-Encrypted: i=1; AJvYcCULTXfVMmUY6HjofCZzXRX9hHJ6uRzmDRaPgEZf+6zOzHoui2WAuEKvenw5yV9goPztYlLCX12ZdUNLsWs=@vger.kernel.org, AJvYcCUOr/GATiFsKRGaVRpLPBnisMhJLDSbozACtkFy3QRchgJ1vBJyZxFRRv+Sd4/t+kiyQtEtxqSZN0gW@vger.kernel.org, AJvYcCUlYeliml7Y5yD0miFij5BF5E/kn3HTEQreS55IecKTG7fuwJ+ZtsVuEORROMs+SBUcCJAMj7DUSbeW@vger.kernel.org, AJvYcCV9reZ07yucwKnHt/yQUA6j+0jTDOK1p1C0CEd6lEK7syv8XGzCWdK5Kqgx7+WKUAVqM25GPdEA/V0=@vger.kernel.org, AJvYcCVFO8SpG345yR9PL3YifnkC7ild9cIJCZZIcPW6kgM4tvkIfhv8U5Y3+XLPKp0IjUbj7C3Y9w4Ta/pJYMV5AiM=@vger.kernel.org, AJvYcCVlPFeMbMQDjGhtMPGBawS7s9Wnnj1ouDyFBkTuBOmhhOeGAZRHtA6qruUGFcqqVtp0pzzo+ddNDqGGmAlv@vger.kernel.org, AJvYcCWmKYjzNrLywr/gsOrIHtlrKGc8YiT/tEd7joHcN1xEf/7w+9diglMVrTJ3MOYc49iaS1LkVix/@vger.kernel.org, AJvYcCXfA1WFyK0PRgNodbZ6WO4QDOwaVVJ80CIf2a/DvxnFZLyNZFsvOsKqjl+5sEZQqxJCZa5Txqb7yj661Q==@vger.kernel.org, AJvYcCXogaanxKMtpVANdRt2ud9ofgRZLL95Z9oNHglL7QEaoCFPPouKn/l4tXy/CLX1QPyrbURhQ1quuMaR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT0X1aRCUCZuhzGol1daTAOPh/5cxv93cNnrvnvQz8OMbMNrbS
-	VPGdoMBhSf2Q1ilo03qWDm9Y8kiFM9kAJD58fcoC8v0o0WxmmdarfjyJxN5Sn8TCzllNWgG3t2Y
-	vCOKh+ieBzj7URRU5uKszlClKb5qi7Ko=
-X-Gm-Gg: ASbGncsC3ci2rLVfPmMdHOowoZutdE0F84K5e1420fQjVFn7u3GZvgScfriyYQlf76T
-	542Xy6N77cAO8YkUzuWPR95sU64zOwTF0/pgOkSv2TMyUrjbG8tqFNhEhN4f8inwhGKLTuHPjPu
-	f3Myq9mkmM/0YYBm7IjjYf/REgU30XeAGHKDgLrJVr/sDxe+saySbkxuVOulZbVS6Q9qAG/2A9M
-	pr0og==
-X-Google-Smtp-Source: AGHT+IGOaj/XfTCr9Sxl3v8frQyHM5q4GUw9KJI7wNyCuiixCs4wA+KSCVYIEYO5/2GOKyYczURT3DEa106mX3Ct9pQ=
-X-Received: by 2002:a05:690c:9683:b0:6f9:4c00:53ae with SMTP id
- 00721157ae682-712ca356122mr8571437b3.8.1750388096062; Thu, 19 Jun 2025
- 19:54:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9E51A288;
+	Fri, 20 Jun 2025 02:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750387684; cv=fail; b=lTS/XNwSL602NqeIMSc58bVT3eGEcSwbeF2rUoTSGMzQd4pJBrzaI2gD7yNeJ5VK4avs2VQcK1cKCgmBF6JIHIT5MumdfXYbx9c/i3E/2l5Szuh0WXsabs/QveR69NbvT1us9yyL4x1hO3RjXYXDT+1eVh/cxqiwfJuIRjww8Fo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750387684; c=relaxed/simple;
+	bh=ow/B2XCtistnPKfN42lllUnt67q8bggOtkwZRC6XZcs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QMLVG01WGO4flzZiMIpq1XIVAtHyprWL4X6tkhypKtyVIyf6mVb65haM7ekKG0u1+iHxby6IUFWkP6s3qDWPDeCNgkwxzDD4aVYEyRwb9Yh9hKfOruXYuxuFwzHV1/To61H+6b22k9Zpd49AwSL8g+0Bq2XON7jZ47M6tQVeHk0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=F7LaarX0; arc=fail smtp.client-ip=52.101.84.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I3qYa4uBTkbJhRe/anu45JsftYobpzMKMqcYi49nb6EE41aID1+bcSHClDEkLk+KiKTBACk8DP+GQfMGR+GB1RyhILWIO4eueHLIzPnQ53r+JmPWPpNs95o1G0LfH7RrQ6n+vTqKXHrm7OaL/I+LXQYdJLC3HEfQ12bRk/NV1oUhZ3Y3J//wsP1UHRQs/+TSY6qbRxnjQYOf0NG47w4Zci7YvOJ5zR4QN+ztz9MrpVmaOAGZoEKO6d/6gw0tq35byY2vTV1RLgCBW4XXAK8cTBNkIYYyufXMhzbBZOyPaHRy/V+OvVFN9A/uVW9pHGWJWzoq+IFgHaglWRzcVxRX4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UhpoMyaieHMtMe0X8vBhxMlTCcMMeWdO/YVjI1cG7NM=;
+ b=eucsda9DNo3iFI8JJGCfUy9Pq67VCICboI8LQG/BrqSNPyFrBBJPslBENqXiIcwKy0ZfmQ9f1HstzxkkRQIK3NDzuHnRbIbYigRk3IACKPoIknd8NqfKxQoRShQHBWAebjyVnLhTAZg9ySEagyYVuPsyiLbTsBLvjwsswBLxcQIBmUYRWD/fQ4zNEKthHWqFfTA94CoRzTpHyzcD07GnLW3XhyrtNHjkcqJE9XdUqBArZ45CdVNISaGELhzo7CI8vUuiSueGLKw7obU5RW10wJGryM00pRhGw+/yUueoWmAwB9rQkZNljVyjb/4bFmoc6/mZ/kzlvxVQh8AR7ad2/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UhpoMyaieHMtMe0X8vBhxMlTCcMMeWdO/YVjI1cG7NM=;
+ b=F7LaarX0EwmeAK8+p+6Vn3r1/2cJWM6eIkvYSUK9a0m5JFcf7xrTC5rBQZVWOKOPGAbeW2G8/jM4VHs/xUGJRg807e1tYylAAjY6ueLh6uq8gRLhAxNnGSnvthhs+LC0zGc86KH2o90akHoYipoMxiCBtL71ZmDMjqso+F0EQyHmzqBomxjT6iOM03/91bYw4E2ZbcyTzlbbClT1ly0jb3HXa0LLlt7qPmXrN88q8QNUVLJnrILaZ2CDbocTTCJOxIpLfcpggJ9Rkvx0i1u24/ROP8JkUuWugH5rmnB6kB5w6RUOCf7mG/o7q6jA5kSa3ChvuRazSnYkTWLDrREs+g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PA4PR04MB9568.eurprd04.prod.outlook.com (2603:10a6:102:26e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Fri, 20 Jun
+ 2025 02:47:58 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8857.021; Fri, 20 Jun 2025
+ 02:47:58 +0000
+Date: Fri, 20 Jun 2025 11:58:16 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Peng Fan <peng.fan@nxp.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Aisheng Dong <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
+ scmi cpufreq
+Message-ID: <20250620035816.GA21846@nxa18884-linux>
+References: <PAXPR04MB8459A73179FFF0ED0C9A51E488D12@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <Z9AdICiyaCmzKh-N@bogus>
+ <Z9FnZzBQuZ1j5k3I@bogus>
+ <Z9Fv9JPdF5OWUHfk@bogus>
+ <20250313052309.GA11131@nxa18884-linux>
+ <20250409035029.GC27988@nxa18884-linux>
+ <20250409-incredible-attentive-scorpion-fa9def@sudeepholla>
+ <20250417-diligent-anteater-of-felicity-70bff3@sudeepholla>
+ <20250420140944.GB31933@nxa18884-linux>
+ <20250422-vigorous-cockatoo-of-growth-bacdb7@sudeepholla>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250422-vigorous-cockatoo-of-growth-bacdb7@sudeepholla>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI2PR01CA0001.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::13) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612152313.GP381401@google.com> <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
- <20250613131133.GR381401@google.com> <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
- <20250619115345.GL587864@google.com> <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
- <20250619152814.GK795775@google.com> <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
- <2025061910-skies-outgoing-89cc@gregkh> <644dfd66-ad30-47cb-9ec4-50d9a003433b@roeck-us.net>
- <2025061914-sternum-factoid-4269@gregkh>
-In-Reply-To: <2025061914-sternum-factoid-4269@gregkh>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Fri, 20 Jun 2025 10:54:44 +0800
-X-Gm-Features: AX0GCFvM1po7kadcnzGUSgDruiL08eSqKUPiA5kZyOYEApP7QJqtO3AY5gi443I
-Message-ID: <CAOoeyxUcB1xc_kMBADWoV8RnnFJ+uCYa_kJ7_BdyR8W_WZfsAg@mail.gmail.com>
-Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de, 
-	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Ming Yu <tmyu0@nuvoton.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA4PR04MB9568:EE_
+X-MS-Office365-Filtering-Correlation-Id: d4fbb89b-6b52-4270-9c13-08ddafa4ddae
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VE1sSFVpTmJyWUJ0T09LMGhyS211cXZJTnR0dFhIMTVZK1JCVGRVbXRKYkhk?=
+ =?utf-8?B?WmtjVjRQeGw2bjBubitwNDY5SDlmSFliSnVDYUpZcml0WGdGdGx1L0xqc25S?=
+ =?utf-8?B?VnN3Z1NEcWl4WlNDOGt4UEtFeU5pbTQ0UUtMbDRLbUk1c0N3MWRSNjlISHcz?=
+ =?utf-8?B?NTlwS3QreC9JK29nTWN2c0pNTUNPTkN6VWRkNC9LWTZGM1BQLzJBRVhxYks5?=
+ =?utf-8?B?aTRiWVN1UklZSDFIaFU2Vm5wVE12Q3cycXI2SzZISTRKQmlqTldJYjd0YTJS?=
+ =?utf-8?B?Vm9aendPQlZ6eXl0KzNzOHFRbzdoNS9jUjdsRmtZdG9mbENIZHRabTlZTTdl?=
+ =?utf-8?B?ZDhHc2pxOGtpK0VqTW9JOVBVbkFVODNiTEh6UUhqaUhhSXhqeHp2REpERlln?=
+ =?utf-8?B?N3FURnpVdEQrNVBaalBmNU1rTGt5MXd3eks3NGptcmV3YkdGVHVBbnZueUtT?=
+ =?utf-8?B?TytoWU5EZG1YWnRna1J3cjc1cENwUDBGVC9XRng0aEltNFhtVU91aDdsMHhu?=
+ =?utf-8?B?M254WFJtSk1RVGpqTWFCRXBDNGFzN2MxUlBLVWlLcHVOVTk1NGlFbDl0UWdT?=
+ =?utf-8?B?akNDRGt6NGNSd3dNV2tPRlJNdEVkNCtSOEdsOHFxZkJqMWRzZUwrT2tPbmhF?=
+ =?utf-8?B?aU5NWkJ1NEZ4MDJ1K0c4SElQa0FnK1VvempibFJMTCtQYTlrbE5IT3EzRDZn?=
+ =?utf-8?B?Z1ZSWkp2c3dLMEp2YmNQRmtZeGZLanRHOUFZVEZUVTJjRGZlRUZkM1h2SDds?=
+ =?utf-8?B?eXRHcno0djJCTXpjbFNXaE4zUG9hektza0ZxUGMydEcweWNJYkRrN2lNbWQ0?=
+ =?utf-8?B?NEtDbnkwV3FJY2Z4cU5OckMzcTNobVdZbWMzZVpyNk1oT0FiUjZxZkVnYVkw?=
+ =?utf-8?B?T09EZDdoeHBWOVRKMFFDdzV4THE4VnhobnZjVGpoZWtaRWpqSklRL1FRc0JD?=
+ =?utf-8?B?T3hNV0JFajRhYWxaY2ZVbUpaVTMyVUhrNTFyVnN3VXA3ejlieUpDazFLdEZk?=
+ =?utf-8?B?cGJvSkxFTUY4dTVxbjRlSGRXU2E4QjV2QytXSVJuVGY5KzZKZDJRd2ovNkIv?=
+ =?utf-8?B?MFVYNkZNdkN2WFl4Q0Q1QW1vRDN3czIyakxiYWt6K1FOeEwyYlF1S1VnNWpx?=
+ =?utf-8?B?SU4vbHMyc0ovOTN1cTJhY0VOcFhZajVPeTNvR0ZVUFhCM1UyTzJvRXNNY2Ey?=
+ =?utf-8?B?TjJpbXBsKzgxc3ZQUmV3K3RlZWJDaktmV1gxTzNseVpxSGlVdjIxY0VpWWxt?=
+ =?utf-8?B?TWNLdytwZjJXNFhnVjE2KzRqblhDZlFDSmJBSVAyMkdrbzAraDgrWHlRaFIz?=
+ =?utf-8?B?Vy9iRlRkUkdIbVdJemhQa1NQblZmbGNMaGZvMTJrQXJTaGNNWkJDT29hSWpW?=
+ =?utf-8?B?RXZoTUVDTUFWREN0NUdUU0VRSWdCSjdXNWhYcUtnQzV4cFNNV2Nwb2dvUjNO?=
+ =?utf-8?B?dUlVa05MdktnQkxRMG9OU254b1l5NEMxZlh5Mm1IdjVhNnprQ1Y3TDNwcmpK?=
+ =?utf-8?B?Zkh6akpwZUZPeDJzRjVlM1Q4VVk3dS95UmlKQjRhNE1DZkFXMEVMYWV2cjF1?=
+ =?utf-8?B?Njl0dTZQcHIxaitIUGdsbTNNYXJOajlsY2UvSVpWQjJieDh1MFdlOC95cnJq?=
+ =?utf-8?B?VzBvMnFKR0kzbmpBRncyV2dIWmQwOHR4NzFhMFR1Y3psNlZQeFh5SjFIMXk3?=
+ =?utf-8?B?aG42czJsS0xEN2hUeDk3a1VnQmJBZEtQSmRxVlZvdjlMYzVyZk5SZ2YydFZW?=
+ =?utf-8?B?ZUNVSXNOMW82U0dhRjM2eGlxSSs1c1NHa2dkbGhkQ1B0ZTNmL2tndXBrRGJx?=
+ =?utf-8?B?bjkxZWdXYXdaMTArZis1RW1JNkVUd0tmMnExUzZmRC9lM2toZDdNUUlVMEVL?=
+ =?utf-8?B?a01hNE1ldXZmbkVTVGFsT0JQZ2thdHJJMXdZNm1VV0IzdW9Hb3E1MEFmdjZk?=
+ =?utf-8?B?eitMK1lnd2w4bkIvTkFtVUpsbW5abDJPOGtJalNnWXMyQ3h4RStpNFRydHRM?=
+ =?utf-8?Q?QOVjO5lD4lcLySiMkeGELZW7Ul5BY0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N0dPRDFpN1hkY0VqOUVCTHhMaHc0WUVucmJvb1lNSmpnN2UydXlwS2tPeUVj?=
+ =?utf-8?B?VUp0VU54Z3lLdjNTTmNscW16dkpFQ3lRZWtZUTVoYTI4WWhGUEhFYUlXeWNl?=
+ =?utf-8?B?dzZhQUFUYk5oNXhIQTNIVEh4djJMbmt2b1NiWFZjYVZpdGdsRmh6RDkwTERU?=
+ =?utf-8?B?TzEyVFRMZ2xLNWl6OGRmU0ZqTmNaVkp6dHdKUmdFY3QvdFMwN2VMQTBoeERR?=
+ =?utf-8?B?VUxVZEd0YytNWi8vUHBOUjRPSERhaVhraG9zRVFFVGFCQkliUFlrWWwwU25I?=
+ =?utf-8?B?MnpDV0dQWkZ2cncyZ2NDNnBnTUNLQldXOUY3SUdkNmNmTXRwcE9mWmh2eU4z?=
+ =?utf-8?B?a3FsRmN3TUF5UTI0djFwbHR6dndYckZpa0F4YzJQcGdQZzZJbHZQa3dHSnJh?=
+ =?utf-8?B?ekduN1RIV0J5ak1sTjZXdVB4MitUeGU3UHRUMmhPaG1MdkorQ21TVTFianhL?=
+ =?utf-8?B?eTEwbDE0ck5iTU5JMm1sbmdBQkpXQlBIS0k1eGhnVTNTUFNnQ21DNXIwZW5J?=
+ =?utf-8?B?M0R6WGpDUTQzYnMvdkc3VGx6WDJTeVBOb25HcFZWM0VzdFlLeEpUL2ErUGlh?=
+ =?utf-8?B?ckNHblYzTnRzUkhIZzg5STlqTlNUeVB5RWJQVXp0MFJPUVZXNjF0cVBOYWlF?=
+ =?utf-8?B?czZsNEVjREQxOUdkU05Ra3ZLSnM5OVd2K2c5L0ljRU0wNVg3Smk2aUttYUlM?=
+ =?utf-8?B?ZGRGd3llUmdaZUc5WkI3M1V6TVZ2NE9wdW9LakZaU3hXZ1N4M1o3a2RiRG8w?=
+ =?utf-8?B?MURkeDFNeGNZWGlXSUZiRDdkTkRadVZOVktIT1FwMThBL0tuNmZJN1BoenBT?=
+ =?utf-8?B?UkVoWnByMVZBMXN3QTVYUDZtanF0TGd5TnpDY2Z4RGpQZjhWM0trU0ZGOU80?=
+ =?utf-8?B?c00zZlVSNzVGQkdqSXFkWEtNR0pzRkp5SVMrV3duVVEydDY0UnNDNGlRWjNK?=
+ =?utf-8?B?d3ZiY290NVRnQkJVU1drV0RrZExuZVpEZ0hjdlVZZk1heC93RXZPd3RkVEdq?=
+ =?utf-8?B?N25SeW1nMThhRGthWi9DWkFWRitxNU1BVTJOOVFtRzNDWkdWckZ6bHpJZnZB?=
+ =?utf-8?B?eSs0MWFjaG1YMjZpZ1QwRm5peHZwTGk1ejVucU14MC96Znh1TDJ1ZCtkQTR3?=
+ =?utf-8?B?WnBFQ2ZNM1FrdmNNalM3SDZ4T1ZWbjhXeTYvSStadTU3Qnd3dXQvbGM3TWhQ?=
+ =?utf-8?B?OGFCRWh0TG54eHhBMytCT2MrNjhWcGVhbWVEcE1NeDBLYUNyVkNQM0krVmEw?=
+ =?utf-8?B?bEhEa3liRGt3NnFia09BS3RIK1dKZVQyWUJ4a3JGcWg2M1JxNHhyVnNpWFJZ?=
+ =?utf-8?B?TkpmZ2Nwa1A4SUsvQTFaQU9JMjFNN2p2SzdTSnVmN3NuOGpWNDk2YUcxYW9V?=
+ =?utf-8?B?bDRPWG9jNlg1T2ZRZE9zc2xUMy9rTDMzcjFJaXIyTnozc3Bzd2dYWFRQSDh4?=
+ =?utf-8?B?OFRLT0VvUlRsQndKVXpVQ3FmREtrN3lTL0ZLZkRDZys2ZSt5Y0htYlp2REtk?=
+ =?utf-8?B?NFdoUXdRZS84OTUzcVhrbVU2RFU4WjZsL1pvdjFneVZaR2xlVkllZDFZVkJB?=
+ =?utf-8?B?L1BJNTB2R0FFRzFpanhSNVVIUkZuWi9EYzFSZGhHbDdiNUlxRGMzc1NNVHMz?=
+ =?utf-8?B?YlVkVXdZaVY2TnBBQzhuTm1GUjVTTVZZNHFHQVJqRkt5QkJJYzdxdytpVDBn?=
+ =?utf-8?B?ZUR0ZlQyRUlkQkZtSHB6djJWVUN1VEswWVlrdllmSDhTeGJhQkh3S3JqTFNk?=
+ =?utf-8?B?bjZtSlJocDRIbHpPL1pJNDdZdTQyRUVENkw5RWUxcEVXS3JnY0gyQzMrQXZR?=
+ =?utf-8?B?MzcwVUJQM3NSTmdNU0hTRkpQZzIvakRsTlo1Q29iNVhSSkUyaFpPT1FYUUx4?=
+ =?utf-8?B?UlYwZVR1N2ZTWE9ITjlWeVBWWW9RZXdWZWN2cmpUVjlVdDAwSXFZR3MrVGVu?=
+ =?utf-8?B?RjhIekd0ZHBOSnJOWS9CZi9Uc1FCQzBTUjdjMFlEN3VnNlVvOUZLM1hHUXVw?=
+ =?utf-8?B?NXlhSVRpZVEvTVJOalRHN0l2SmJkUHE4ZWNSU1JTK0FaL1NINW94T3VkYUxY?=
+ =?utf-8?B?eFhUNzNlUTM4QjVqOXduM0lvSTNHMmpvSUgwRGJHZ3d1ZUFueGwyeDMyQXZW?=
+ =?utf-8?Q?t7Ov7SfO2SssYGaZL3Twgmbk1?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4fbb89b-6b52-4270-9c13-08ddafa4ddae
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 02:47:58.7773
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6trJyHky3xquCqsCqoPvHuDmRn8xt2W/FWM+yUuePNadEfK8FH7wv9lKPzjQhY5XD7BFWTzLYOD++uI0Q5feAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9568
 
-Dear Guenter and Greg,
-
-Thank you for reviewing,
-
-Greg KH <gregkh@linuxfoundation.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8820=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:18=E5=AF=AB=E9=81=93=EF=BC=9A
+Hi Sudeep,
+On Tue, Apr 22, 2025 at 11:16:44AM +0100, Sudeep Holla wrote:
+>On Sun, Apr 20, 2025 at 10:09:44PM +0800, Peng Fan wrote:
+>> On Thu, Apr 17, 2025 at 03:26:42PM +0100, Sudeep Holla wrote:
+>> 
+>> >Revert to old behaviour and driver request fw_devlink dependencies to
+>> >be created if they rely on them. I am not sure if that is better approach.
+>> 
+>> This requires to update various drivers(clk,power,perf,pinctrl,regulator) to
+>> set the flag SCMI_DEV_SET_FWNODE.
+>> 
+>> Using SCMI_DEV_NO_FWNODE would avoid updating the various drivers.
+>> 
 >
-> On Thu, Jun 19, 2025 at 09:58:04AM -0700, Guenter Roeck wrote:
-> > On 6/19/25 09:20, Greg KH wrote:
-> > > On Fri, Jun 20, 2025 at 12:03:01AM +0800, Ming Yu wrote:
-> > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8819=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:28=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > > > >
-> > > > > On Thu, 19 Jun 2025, Ming Yu wrote:
-> > > > >
-> > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8819=
-=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:53=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > > > > > >
-> > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > > > > >
-> > > > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=
-=8813=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=889:11=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> > > > > > > > >
-> > > > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > > > > > > >
-> > > > > > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=
-=9C=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:23=E5=AF=AB=E9=81=
-=93=EF=BC=9A
-> > > > > > > > > > >
-> > > > > > > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > > Dear Lee,
-> > > > > > > > > > > >
-> > > > > > > > > > > > Thank you for reviewing,
-> > > > > > > > > > > >
-> > > > > > > > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=
-=E6=9C=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:00=E5=AF=AB=E9=
-=81=93=EF=BC=9A
-> > > > > > > > > > > > >
-> > > > > > > > > > > > ...
-> > > > > > > > > > > > > > +static const struct mfd_cell nct6694_devs[] =
-=3D {
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 0),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 1),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 2),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 3),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 4),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 5),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 6),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 7),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 8),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 9),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 10),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 11),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 12),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 13),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 14),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL=
-, 0, 15),
-> > > > > > > > > > > > > > +
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
- 0, 0),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
- 0, 1),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
- 0, 2),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
- 0, 3),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
- 0, 4),
-> > > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL,=
- 0, 5),
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Why have we gone back to this silly numbering sch=
-eme?
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > What happened to using IDA in the child driver?
-> > > > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > > In a previous version, I tried to maintain a static=
- IDA in each
-> > > > > > > > > > > > sub-driver. However, I didn=E2=80=99t consider the =
-case where multiple NCT6694
-> > > > > > > > > > > > devices are bound to the same driver =E2=80=94 in t=
-hat case, the IDs are not
-> > > > > > > > > > > > fixed and become unusable for my purpose.
-> > > > > > > > > > >
-> > > > > > > > > > > Not sure I understand.
-> > > > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > As far as I know, if I maintain the IDA in the sub-driv=
-ers and use
-> > > > > > > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the M=
-FD, the first
-> > > > > > > > > > NCT6694 device bound to the GPIO driver will receive ID=
-s 0~15.
-> > > > > > > > > > However, when a second NCT6694 device is connected to t=
-he system, it
-> > > > > > > > > > will receive IDs 16~31.
-> > > > > > > > > > Because of this behavior, I switched back to using plat=
-form_device->id.
-> > > > > > > > >
-> > > > > > > > > Each of the devices will probe once.
-> > > > > > > > >
-> > > > > > > > > The first one will be given 0, the second will be given 1=
-, etc.
-> > > > > > > > >
-> > > > > > > > > Why would you give multiple IDs to a single device bound =
-to a driver?
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > The device exposes multiple peripherals =E2=80=94 16 GPIO c=
-ontrollers, 6 I2C
-> > > > > > > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each=
- peripheral
-> > > > > > > > is independently addressable, has its own register region, =
-and can
-> > > > > > > > operate in isolation. The IDs are used to distinguish betwe=
-en these
-> > > > > > > > instances.
-> > > > > > > > For example, the GPIO driver will be probed 16 times, alloc=
-ating 16
-> > > > > > > > separate gpio_chip instances to control 8 GPIO lines each.
-> > > > > > > >
-> > > > > > > > If another device binds to this driver, it is expected to e=
-xpose
-> > > > > > > > peripherals with the same structure and behavior.
-> > > > > > >
-> > > > > > > I still don't see why having a per-device IDA wouldn't render=
- each
-> > > > > > > probed device with its own ID.  Just as you have above.
-> > > > > > >
-> > > > > >
-> > > > > > For example, when the MFD driver and the I2C sub-driver are loa=
-ded,
-> > > > > > connecting the first NCT6694 USB device to the system results i=
-n 6
-> > > > > > nct6694-i2c platform devices being created and bound to the
-> > > > > > i2c-nct6694 driver. These devices receive IDs 0 through 5 via t=
-he IDA.
-> > > > > >
-> > > > > > However, when a second NCT6694 USB device is connected, its
-> > > > > > corresponding nct6694-i2c platform devices receive IDs 6 throug=
-h 11 =E2=80=94
-> > > > > > instead of 0 through 5 as I originally expected.
-> > > > > >
-> > > > > > If I've misunderstood something, please feel free to correct me=
-. Thank you!
-> > > > >
-> > > > > In the code above you register 6 I2C devices.  Each device will b=
-e
-> > > > > assigned a platform ID 0 through 5. The .probe() function in the =
-I2C
-> > > > > driver will be executed 6 times.  In each of those calls to .prob=
-e(),
-> > > > > instead of pre-allocating a contiguous assignment of IDs here, yo=
-u
-> > > > > should be able to use IDA in .probe() to allocate those same devi=
-ce IDs
-> > > > > 0 through 5.
-> > > > >
-> > > > > What am I missing here?
-> > > > >
-> > > >
-> > > > You're absolutely right in the scenario where a single NCT6694 devi=
-ce
-> > > > is present. However, I=E2=80=99m wondering how we should handle the=
- case where
-> > > > a second or even third NCT6694 device is bound to the same MFD driv=
-er.
-> > > > In that situation, the sub-drivers using a static IDA will continue
-> > > > allocating increasing IDs, rather than restarting from 0 for each
-> > > > device. How should this be handled?
-> > >
-> > > What is wrong with increasing ids?  The id value means nothing, they
-> > > just have to be unique.
-> > >
-> >
-> > Unless they are used in the client driver as index into an array, as in
-> > "this is the Nth instance of this device for this chip". There has to b=
-e
-> > _some_ means to pass N to the client driver.
+>Agreed and good point.
 >
-> Ick, that should just be walking the list of child devices instead, as
-> obviously no one is hard coding array sizes for devices these days,
-> right?  :)
+>> Anyway, you decide which to go :)
 >
-> Anyway, sure, if you _have_ to have a specific id, then use a specific
-> id, but really, it should not matter.
+>Still undecided 🙁
+
+Is this still in you list?
+
+Thanks,
+Peng.
 >
-
-I need fixed IDs in order to communicate with the sub-devices
-correctly. For instance, the I2C driver registers 6 devices, and the
-userspace interface needs to know which specific I2C controller (e.g.,
-index 0 ~ 5) to target with custom commands. Using fixed IDs allow the
-driver to maintain a consistent mapping between device instances and
-register sets.
-
-I'm open to better alternatives, but so far, using fixed
-platform_device->id has been the most straightforward way to achieve
-this.
-
-
-Best regards,
-Ming
+>-- 
+>Regards,
+>Sudeep
 
