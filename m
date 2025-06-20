@@ -1,43 +1,44 @@
-Return-Path: <linux-gpio+bounces-21898-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21899-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16E51AE1089
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 03:04:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87B51AE10B6
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 03:27:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97E065A0026
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 01:04:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1FC7C3B8112
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jun 2025 01:27:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F881758B;
-	Fri, 20 Jun 2025 01:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EC0645038;
+	Fri, 20 Jun 2025 01:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S2aHwtrP"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="NoZcchrT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9430763CF;
-	Fri, 20 Jun 2025 01:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1297B35950;
+	Fri, 20 Jun 2025 01:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750381472; cv=none; b=sppGvoo9ReeTscjtIzQDIklkZ/7rRhJTyrmJvjWs1sX1dpnvHQQcD0Z1KXtS1oET/f/tocWipdmKBbCVd81jbJ16eT1knjC/shs9gUJtw84R4W/qNUFNlLi0Dbt5pbxi/jJvvWeDRWMCLYT3fBDwQ9uVLPDOB04+6HiRvv6qI3Q=
+	t=1750382866; cv=none; b=r+E4sUQgZE6xGqhkLhQLPM79qBtvsyQwJB40hh2ik/YJRxaRroAGy54dnidqNq3ogE62wVkL+2RMkNbbfoZieD7nedhqQdcpeneqhjPS3p7378CNp9Kx5l4WaZ/d6vvI6uLxpFYxOqiNmwsCldx7zXh3bCSUZxt3FN5BAItLtSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750381472; c=relaxed/simple;
-	bh=1RU9OFwdAOgI84I9GEHqAphNSYKWAXhPW6s13EAF1Vs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RkE47B2yV31BDTGhU77tl748RznVx/9r1kdzs5WXJhtdqcicnhy2nYrYpYnTdmIhvITuOiM7Yo76epJBTRryZUufCHNFoN+kVRpJQAgx5G//05sWfzplLNIToGCIbNJEyBif+cvpgLrBZkw+xyS58W4T508UqLkNAsUsJZBAz4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S2aHwtrP; arc=none smtp.client-ip=220.197.31.3
+	s=arc-20240116; t=1750382866; c=relaxed/simple;
+	bh=jRrcd3jIEsF31VWDqmff6c9MGZTpyAF3UKfV3oVeAUI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=twRNaEJ1kJ/Sfh8t8Dpb2z9ZKOVF8fpiZ/8EClXLxnQ+AahYZZGmuE7sGn+nSxg7SugvaMcZ4hW+1qHeONYWRi5wHwQo5l3TEOx4zn+HuJn3XWDBqLW7ktMbGjij0UyHPmOD2lfx9iy2Hhe1AOnIORqysJywm4bW4dusmJ+tdvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=NoZcchrT; arc=none smtp.client-ip=117.135.210.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=8/
-	2XLIJnNinS9+K18/3lu/lVK35HJN1wS4il3Erb/Fo=; b=S2aHwtrPdIB5hr7uA+
-	v2AOZf1lXUj73jKH/JRl7oJY9VIaz2wpvyfFIMUmQZehwkTlMBKHiSlgPivcRpma
-	oXoLMXd9J1QyUMbOaOqh1FJa//L9Rr8dAOaM+QvjwA6ij+MCZLnUTueve4Cpjaw5
-	A/oJpP6S/wFYOzt+bs5/foHUY=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ie
+	mo//66rGggfhMsVrvcGWLgvsP6AIerLHEFJXsGHqE=; b=NoZcchrTVa7ylagmGp
+	10DCENAV5t5AdQUraRYv0/832vC7XNiZLVYGPoJNFCx2mHGwgy4k6o7BdgByZCe7
+	Y5GUcT1qcydPv87OTVOqXMhRIbP3r/51fL7637uWfl4V/ZCwY1ezkqurkJOmuyLq
+	2xxTEmb0EiyjiM8bch+IEEe4Q=
 Received: from 163.com (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgAHrIF3s1Ro7thPAQ--.27905S2;
-	Fri, 20 Jun 2025 09:03:53 +0800 (CST)
-From: chenyuan <chenyuan_fl@163.com>
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wCX4izzuFRoCzlJAg--.49566S2;
+	Fri, 20 Jun 2025 09:27:15 +0800 (CST)
+From: Yuan Chen <chenyuan_fl@163.com>
 To: linus.walleij@linaro.org,
 	wens@csie.org
 Cc: linux-gpio@vger.kernel.org,
@@ -45,11 +46,13 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	chenyuan_fl@163.com,
-	chenyuan <chenyuan@kylinos.cn>
-Subject: [PATCH] pinctrl: sunxi: Fix memory leak on krealloc failure in sunxi_pctrl_dt_node_to_map
-Date: Fri, 20 Jun 2025 09:03:45 +0800
-Message-Id: <20250620010345.11247-1-chenyuan_fl@163.com>
+	Yuan Chen <chenyuan@kylinos.cn>
+Subject: [PATH v2] pinctrl: sunxi: Fix memory leak on krealloc failure in sunxi_pctrl_dt_node_to_map
+Date: Fri, 20 Jun 2025 09:27:08 +0800
+Message-Id: <20250620012708.16709-1-chenyuan_fl@163.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250620010345.11247-1-chenyuan_fl@163.com>
+References: <20250620010345.11247-1-chenyuan_fl@163.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,22 +60,22 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgAHrIF3s1Ro7thPAQ--.27905S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw45KF45JF17Xr1UGF48JFb_yoW8Xryxpa
-	yfGry5Ar4rJF4Sg3yay398ZFy3Gan7J3y5G3Wj934Yvrn8Arn8Xr15KFWjyw4DCrWrXr1S
-	vF4DA3429r1DA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEL0e9UUUUU=
-X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiUQxyvWhUp3X19gAAs-
+X-CM-TRANSID:_____wCX4izzuFRoCzlJAg--.49566S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw45KF45JF17Xr1UJw45GFg_yoW8Xryfpa
+	1fGry5Ar4rJF4Sg3y3A398WFy3Gan7JrW5G3Wj934Yvrn8Arn5XF15KFWjyw4DCrWrXr1S
+	vF4DA3429F1DA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEAR6UUUUUU=
+X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiJxJyvWhUsxR6wQABsb
 
-From: chenyuan <chenyuan@kylinos.cn>
+From: Yuan Chen <chenyuan@kylinos.cn>
 
 In sunxi_pctrl_dt_node_to_map(), when krealloc() fails to resize the pinctrl_map
 array, the function returns -ENOMEM directly without freeing the previously
 allocated *map buffer. This results in a memory leak of the original kmalloc_array
 allocation.
 
-Fix: e11dee2e98f8 ("pinctrl: sunxi: Deal with configless pins")
-Signed-off-by: chenyuan <chenyuan@kylinos.cn>
+Fixes: e11dee2e98f8 ("pinctrl: sunxi: Deal with configless pins")
+Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
 ---
  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 11 ++++++++---
  1 file changed, 8 insertions(+), 3 deletions(-)
