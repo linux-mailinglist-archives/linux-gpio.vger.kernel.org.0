@@ -1,70 +1,98 @@
-Return-Path: <linux-gpio+bounces-21955-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21956-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 936E5AE2B63
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jun 2025 21:14:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22E90AE2C32
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jun 2025 22:20:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40E70189710A
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jun 2025 19:14:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79DF83B3C06
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jun 2025 20:20:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1329426A0F3;
-	Sat, 21 Jun 2025 19:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0090E26FA69;
+	Sat, 21 Jun 2025 20:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="c5nMNP/2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADAA217704
-	for <linux-gpio@vger.kernel.org>; Sat, 21 Jun 2025 19:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76861211F;
+	Sat, 21 Jun 2025 20:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750533235; cv=none; b=aOB9JaSvo7UPkmdxq3jD8ACb3/OazyMwAhKbr4RkCwGGl9FGNF4BKY4KH8W6jmsZKm7DcepRZ5Vj7iHDiCc81Fz6s0wxJiA589xAM/yiKXt9yTiTVOv6Xwoh12wHu0mJV+8MKwPPfVpguA2q9qp/ID4mdDIsy++sxkyT++xivXQ=
+	t=1750537233; cv=none; b=uhH8U4tzXyxpx6pBu7nlGjQVq558dNyviKyrlZOr1m503jIG76PEBAmcS5hOwKwFti8HjKG5zdfEqKalpey26y8aTt7+/z8benQEZMaQegh3EI11gzq6H3Ct8+IJ65LQYgr5XCYVcXDL2EYDM6jx1ANZTLVleRwC4BzyVb0jsSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750533235; c=relaxed/simple;
-	bh=3DgPE0stiAgy6zwxgjL4iwaZWfm9/g/fP6vmY1+Sulc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X3icJP6G5SzcvYBqMcCeoxgxq/fiqQ40XWJQfLVo1hQxXHOoCPLRyK76xHuqoXTQC/DZinE0VFr5HyNixKjknXcTtxdG91x1Eu9W9mD8b7Wn6pf21vtZNizqEo5/oeOKm2pecQrCIR3qdupPCMzhaXTIz7PTmNBYAvfQL0EhbSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id b409b2db-4ed3-11f0-9764-005056bdd08f;
-	Sat, 21 Jun 2025 22:12:41 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 21 Jun 2025 22:12:41 +0300
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 2/2] gpio: make gpiod_is_equal() arguments stricter
-Message-ID: <aFcEKWZvRKQRA6dl@surfacebook.localdomain>
-References: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
- <20250620-gpiod-is-equal-improv-v1-2-a75060505d2c@linaro.org>
+	s=arc-20240116; t=1750537233; c=relaxed/simple;
+	bh=w4e/fCUU/aHzOrTZ+cnX4K1qrjxfJtCzZePU7cxhMoY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Kh3NoSo+pPuvc5scRj3aT2HD6owuUNEQ17TyqxSGXZRL3fAVWAkYV3LHfLLTrf6QAk4Q7rdljCeDyLAdu3N8PmRn2ORrMZmCUCM6x6UnbNHMjE5JxQg7CE5zC2w9n9V+zw7Le0vIrEOxY+Ed8J57ea4ZAv5G8MX6zlrEmlPEB8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=c5nMNP/2; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 1BC0B41F2B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1750537231; bh=BgrJoGYd1mlrQAvjw00oAqv1vfs8tpuQ/PQr4mdOjT0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=c5nMNP/2rORiVZKNR5nxxpagZ7Vjk0xZ002qNSm1qRFkPkIBhrJTdHsDXQDggITIG
+	 3XMiaifHQXINW1tov05JaKr1zddotqjSZ8cvZnE59Am2g2dsKT0Wv9rOzCUCz6eaNj
+	 x0PTqBZQL5Ka6vQ5DzYcK5teb46+AX0ozbDiDDiuPobf+bbZJcz8JFAkhGZ1drwH3K
+	 pwZWcsmIXj1HlX32esd6prlWqqweh38Noqn1SaqfQPkiCrurOJYhkoT214F73veU+R
+	 5Sh4LwFtWSWR1LnxLzvll5hK2zl9DMxr5xabw5qsvb/nDSgcoH9FqApaVThMAJBd8Y
+	 WLfGxqBYKyavg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9:67c:16ff:fe81:5f9b])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 1BC0B41F2B;
+	Sat, 21 Jun 2025 20:20:31 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Documentation
+ <linux-doc@vger.kernel.org>, Linux GPIO <linux-gpio@vger.kernel.org>,
+ Linux MTD <linux-mtd@vger.kernel.org>, Linux Networking
+ <netdev@vger.kernel.org>, Linux USB <linux-usb@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Richard Weinberger <richard@nod.at>, Zhihao Cheng
+ <chengzhihao1@huawei.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Andrzej Pietrasiewicz
+ <andrzejtp2010@gmail.com>, Felipe Balbi <balbi@kernel.org>, Mauro Carvalho
+ Chehab <mchehab+huawei@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>, Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: [PATCH] Documentation: treewide: Replace remaining spinics
+ links with lore
+In-Reply-To: <20250611065254.36608-2-bagasdotme@gmail.com>
+References: <20250611065254.36608-2-bagasdotme@gmail.com>
+Date: Sat, 21 Jun 2025 14:20:30 -0600
+Message-ID: <87tt48c0dt.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620-gpiod-is-equal-improv-v1-2-a75060505d2c@linaro.org>
+Content-Type: text/plain
 
-Fri, Jun 20, 2025 at 02:58:02PM +0200, Bartosz Golaszewski kirjoitti:
-> 
-> It makes no sense for a GPIO descriptor comparator to return true when
-> the arguments passed to it are NULL or IS_ERR(). Let's validate both and
-> return false unless both are valid GPIO descriptors.
+Bagas Sanjaya <bagasdotme@gmail.com> writes:
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Long before introduction of lore.kernel.org, people would link
+> to LKML threads on third-party archives (here spinics.net), which
+> in some cases can be unreliable (as these were outside of
+> kernel.org control). Replace links to them with lore counterparts
+> (if any).
+>
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> ---
+>  Documentation/driver-api/gpio/driver.rst                    | 2 +-
+>  Documentation/filesystems/ubifs-authentication.rst          | 2 +-
+>  .../networking/device_drivers/ethernet/ti/cpsw.rst          | 6 +++---
+>  Documentation/usb/gadget-testing.rst                        | 2 +-
+>  4 files changed, 6 insertions(+), 6 deletions(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Applied, thanks.
 
-
+jon
 
