@@ -1,120 +1,129 @@
-Return-Path: <linux-gpio+bounces-21951-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21952-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23A8BAE2A00
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jun 2025 17:51:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE110AE2A4F
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jun 2025 18:28:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B88EF16B211
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jun 2025 15:51:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E13A1897F84
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jun 2025 16:28:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AD2521CC54;
-	Sat, 21 Jun 2025 15:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFF521D3EC;
+	Sat, 21 Jun 2025 16:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXtULFaV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSZnu0gN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214861426C;
-	Sat, 21 Jun 2025 15:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0E30E859;
+	Sat, 21 Jun 2025 16:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750521100; cv=none; b=udTewYSw9AK+lB1CvnfDioTjWRk94WpWlhmQuxQn0t+MCVxElfAJgmhu6JSy+G1uikReKnEKfrYSRdiNDkZ5NrRmuK7p8cWxkTeLEfG5JABpVR4GCLvr5wYBlTD0fw+M+vHrEdNJSVgSSBRBkHBIhlwVe+qYngV/nDH0ivExc+c=
+	t=1750523298; cv=none; b=bYXFOym3fw6/eCY7DcCSOZnLWsM4pdlEibu4DFFBpjbAUeCzCi8mRfNNQsEQPW3mW6FgDbbcfYamqre3hrXiDHomV0sbm9VEK3SkXMATF9Pr9A/oTHtIiwQvmZ2s7JAfiyZiw/UxphTaBUoPh0vj7q0dpRQ5ju+EinAiqG1ZgC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750521100; c=relaxed/simple;
-	bh=RwP81emvQorDLrxRkfUbpFTx2KvYq1XkDDhakXZLA38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=elt1qELhyhj+FnWqUXwqz+VQP5VayAN8bxYY6HuYCQknhfoUInqaS8mMQgXy/6nXOdzseL+z+8atDTybUZiO6NxSFXUFsKR77xbbvodGRj8MI8+Qi68qY+uRrkxfXp4GsNeKc2zDkJuDVmmW6cVJOO9l4qIw83Y+KV/4MTk2z2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXtULFaV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78776C4CEE7;
-	Sat, 21 Jun 2025 15:51:35 +0000 (UTC)
+	s=arc-20240116; t=1750523298; c=relaxed/simple;
+	bh=6TLyncxbiWa3QR4O3QZL40faVkmdmv9hfurNhPDlKI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I+GiHnZMhnHJLH01e3xa+rjxqX6COGNBU2JnP/67TSqTWH3KvmBVgDaTa4Tnv8nf0VkOI+ZWzldhHF8ytY17wZo6xIk6dta3lvALfcbTSL98nVypWST8erbj26U1TKhNBYe9aghn1IEwQitrlR1nxJqurAmwGvGKa+9m1Rkub5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSZnu0gN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A38C4CEE7;
+	Sat, 21 Jun 2025 16:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750521099;
-	bh=RwP81emvQorDLrxRkfUbpFTx2KvYq1XkDDhakXZLA38=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aXtULFaVgekIStsylN4vdg7HUyzivNz0nR/MJSwVzTkpruzTLf09+mzKvXkhSxwD6
-	 RfdN8Od5f/jxKMfkRbddhs5qxoS+QoS46W+d0+b1qS8+AJxa+pObgodXZycAnqJbL5
-	 gem5fqZiCD+HRYOrXaZXZmKHTNeK1QgLdynUz9VXQ5u4JDhZP5nOO3CQXZfDQZudBp
-	 d6cX58KTKDdUT5SRafdvX4onFl9UpYAy5YNgB7V0VjO2pugG98guCnmakD1DhOMOvP
-	 IbTJOhfMjLOTL7cCYtNtILPzxbrr9AtexQUIJRZ/m8HT5DhA72WLDVkeB3m3VNKief
-	 vEVYcskD2Qe6g==
-Message-ID: <f30406ae-90ed-4f81-9519-e6ae2dcc9e03@kernel.org>
-Date: Sat, 21 Jun 2025 17:51:33 +0200
+	s=k20201202; t=1750523298;
+	bh=6TLyncxbiWa3QR4O3QZL40faVkmdmv9hfurNhPDlKI8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fSZnu0gNmiIiQoieyVjJpI2tN/8I+Ne1vrehIbv3wqpVI0h9dpgFkTpYY6bQM1drs
+	 M2dX8Lct3XJngcX/CndTpHkIx21fg4NEpHKh/rpaC1mS6AXEA2JnNgNkFnfSGNyVSo
+	 bhspClhqM4xi87BBLJnEi0JRw8tGNbPyoG4ALFDBmP+qPQGKOO/wcUyzdqwyNnCJ/a
+	 3M7KkDomWJji06YPnvSb74H3r7LTuMEjGxjIcrHKQDUfofalpHoKgccXM0KUs+9hwb
+	 eJjbh8db6ffDtkeldXh7T73UWkyNh9aT0fDkWBMEnhxDUZrWTC+vy0KGqigTWUorX+
+	 iAqZ17CT7Smgw==
+Date: Sat, 21 Jun 2025 17:28:08 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Conor Dooley <conor@kernel.org>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lars@metafoo.de,
+ Michael.Hennerich@analog.com, nuno.sa@analog.com, andy@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v5 01/11] dt-bindings: iio: adc: Add AD4170
+Message-ID: <20250621172808.6f304023@jic23-huawei>
+In-Reply-To: <eeb66815-3f7d-41fc-9d32-c28a3dda7749@baylibre.com>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+	<4df9d4d0de83090300b6870afc8ae7b22279cd22.1749582679.git.marcelo.schmitt@analog.com>
+	<20250616-neurology-explicit-ec2a829bd718@spud>
+	<eeb66815-3f7d-41fc-9d32-c28a3dda7749@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 05/10] mfd: Add Apple Silicon System Management
- Controller
-To: Lee Jones <lee@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
- <20250610-smc-6-15-v7-5-556cafd771d3@kernel.org>
- <20250619114958.GJ587864@google.com>
-Content-Language: en-US
-From: Sven Peter <sven@kernel.org>
-In-Reply-To: <20250619114958.GJ587864@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 19.06.25 13:49, Lee Jones wrote:
-> On Tue, 10 Jun 2025, Sven Peter wrote:
+
+> >> +
+> >> +$defs:
+> >> +  reference-buffer:
+> >> +    description: |
+> >> +      Enable precharge buffer, full buffer, or skip reference buffering of
+> >> +      the positive/negative voltage reference. Because the output impedance
+> >> +      of the source driving the voltage reference inputs may be dynamic,
+> >> +      resistive/capacitive combinations of those inputs can cause DC gain
+> >> +      errors if the reference inputs go unbuffered into the ADC. Enable
+> >> +      reference buffering if the provided reference source has dynamic high
+> >> +      impedance output. Note the absolute voltage allowed on REFINn+ and REFINn-
+> >> +      inputs is from AVSS - 50 mV to AVDD + 50 mV when the reference buffers are
+> >> +      disabled but narrows to AVSS to AVDD when reference buffering is enabled
+> >> +      or in precharge mode. The valid options for this property are:
+> >> +      0: Reference precharge buffer.
+> >> +      1: Full reference buffering.
+> >> +      2: Bypass reference buffers (buffering disabled).
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    enum: [0, 1, 2]
+> >> +    default: 1  
+> > 
+> > Why make this property a uint32, rather than a string where you can use
+> > something like "precharge", "full" and "bypass" (or "disabled")? The
+> > next similar device could use something slightly different then the
+> > binding becomes pretty clunky.
+> > Can you explain why this is a dt property rather than something
+> > adjustable at runtime?
+> > 
+> > Otherwise, what you have here looks sane enough to me - but I'd like to
+> > see some comments from Jonathan or David etc about your approach to the
+> > excitation properties.  
 > 
->> The System Management Controller (SMC) on Apple Silicon machines is a
->> piece of hardware that exposes various functionalities such as
->> temperature sensors, voltage/power meters, shutdown/reboot handling,
->> GPIOs and more.
->>
->> Communication happens via a shared mailbox using the RTKit protocol
->> which is also used for other co-processors. The SMC protocol then allows
->> reading and writing many different keys which implement the various
->> features. The MFD core device handles this protocol and exposes it
->> to the sub-devices.
->>
->> Some of the sub-devices are potentially also useful on pre-M1 Apple
->> machines and support for SMCs on these machines can be added at a later
->> time.
->>
->> Co-developed-by: Hector Martin <marcan@marcan.st>
->> Signed-off-by: Hector Martin <marcan@marcan.st>
->> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
->> Reviewed-by: Neal Gompa <neal@gompa.dev>
->> Signed-off-by: Sven Peter <sven@kernel.org>
->> ---
->>   MAINTAINERS                |   2 +
->>   drivers/mfd/Kconfig        |  18 ++
->>   drivers/mfd/Makefile       |   1 +
->>   drivers/mfd/macsmc.c       | 498 +++++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
->>   5 files changed, 798 insertions(+)
-> 
-> This is ready.  Let me know when you have all of the other driver/* Acks.
+> This looks like something that should be in the devicetree to me. For example
+> if the external reference supply is high impedance, buffering is pretty
+> much required. And using precharge is an application design choice to
+> reduce THD at the expense of other limitations.
 > 
 
-They've all been reviewed by the respective maintainers.
+Agreed that this pretty much only makes sense in DT.
 
-I assume you want to take this all through the mfd tree and we'll need 
-acks from Sebastian for power/reset and either Linus or Bartosz for gpio 
-then.
+In the ideal world we would have firm rules on when to enable buffering
+etc and then the DT would describe the impedance of the circuit connected
+and any other relevant properties and then we'd have the driver enable it
+only when those rigid rules dictated that we should.
 
-The one line change inside drivers/soc/apple would usually go through my 
-tree and I'm fine with taking that through mfd instead.
+Sadly no such simple rules exist (as far as I know) so we just expose the thing
+that gets set dependent on someone's judgement of the suitability of
+the buffering choice given the circuit being connected to the input.
+
+If we pushed it to userspace we'd just end up with a per device blob
+that dictated the mode to pick on boot and left it like that.  So effectively
+another bit of firmware :(
 
 
-Sven
+J
 
+<cropping other comments>
 
