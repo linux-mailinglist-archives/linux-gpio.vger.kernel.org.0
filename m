@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-21959-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21960-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55BA7AE2F3A
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Jun 2025 11:43:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EF6DAE2F42
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Jun 2025 11:49:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 964553A4489
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Jun 2025 09:43:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0180F189425C
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Jun 2025 09:50:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA671B424F;
-	Sun, 22 Jun 2025 09:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B649199920;
+	Sun, 22 Jun 2025 09:49:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSf1wYRn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZC5htukG"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE1E372;
-	Sun, 22 Jun 2025 09:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE0179F2;
+	Sun, 22 Jun 2025 09:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750585400; cv=none; b=u3HwHpXdVZ23OXbTFj9K1AtZ4N+lolrbzbBzGWJO5NB8JjOG173K7ladRTDepoj0Jrq9P3SiUP3H1/DxG7DMoQxZTibtiH7uvNDV4dmz3LzGmLvs6BSnGRX8T0A1zWtV8wvDoMg9iKz2IV5E5TQTtN0P1iF2yLG0m0DgDk4delA=
+	t=1750585790; cv=none; b=pLPc2/nHb7bydY5aGWM2wYgv6gtWki6lZNN+bnGyjO8/C8Rrx0sXClk/wZb0QOY9C3RRY/i6cXwRPgKf9clbfvVkOHAyJFztpBlmpt8OsZwZp/shF2ihofX6alSKjBl99rCPbsF4wskpo/hG0oea59DRRotRGLmYclMUdPp+bgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750585400; c=relaxed/simple;
-	bh=e1iTg55YXGYZf/uvlSW1Nxdb1Xs0RNsU3Mekj6cFODU=;
+	s=arc-20240116; t=1750585790; c=relaxed/simple;
+	bh=iwltcif6vICScgREcP+h+g1nFFViLlwsSAlyON+V8C0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Up28UNx3le4oxlOnuFuP9PqYyGThUW5TUKRDXNUuHKE1WV9Y9yFpUXf4K/NtIZlk1hoo+QyxgY0gXZStJ87oMx7rNpihwNi7LyUXMlqu3+2QKulL53yYHWY4JTQlmNZn4EnJLx8Kyi8WGXtZjULRGiQ+0VWEEijnv39A+BhZctQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSf1wYRn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60EFDC4CEE3;
-	Sun, 22 Jun 2025 09:43:13 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=IsjXYnqGCDqSCI7gSiUL0Gu6BdkpNFZs8GK7Z8oFCF1VxQeIEvNjRgJ+vASdrLHQGtj7JIXzC6DFAUCQrayJntKiPY415GbLjuEMzld1F1rLmleANzBHJ6U7ZFdF0tMXJTQtJJA/wbOyG6ipoBYy7tRBq1ae2Rbd0DUOZmyho8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZC5htukG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F19FC4CEE3;
+	Sun, 22 Jun 2025 09:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750585397;
-	bh=e1iTg55YXGYZf/uvlSW1Nxdb1Xs0RNsU3Mekj6cFODU=;
+	s=k20201202; t=1750585789;
+	bh=iwltcif6vICScgREcP+h+g1nFFViLlwsSAlyON+V8C0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CSf1wYRnx6mhnlUz/ZS0L086OYQTAsug3WeLL8oprIsrJWpznpYTOJbYEReD8p4nb
-	 RVDvFBFNnhx/O+e8DxwpdZZDDSjpJxe3TQbTfYCyKwanYyoAc8lNuxg1GOqk696f+7
-	 6I/NwAGswkku/MZ+h4aYXp5+gE6lVBr2WLlwpqBFSuK4fXcXNk7layHpXsFHVL7ewz
-	 nBWsO2hZbO24pqQr4XiS8U1GXBrzMQap11RpoYr46IwSKT5P9PcgKl2KfdgVbR+9JP
-	 lQb3ddRSO05mMe8a69nCAjky5nj1hGZNYPBF5OzdUM32DyQkbniLk/fW58edMW6vHt
-	 4TbLgMIrv4q5Q==
-Message-ID: <011093f8-85a1-4c3c-b3fa-7be9e6df8a25@kernel.org>
-Date: Sun, 22 Jun 2025 11:43:11 +0200
+	b=ZC5htukG+JujMTd/Oouril8iRlgg7NBrGcD84+g6QR7kh87GrsZG6LMmgoiCQzJPX
+	 ir60lA5pI4pl3uTWjDJOOayp9QmgA2amNdlzrnFh3fxJfiSpU4wFMIT8a14VfSLXlI
+	 NI3l6OSgGBze94S1jfT15CddeajuXfda+WpelDz01XCFsFAp72KaZgjR8Zno2ZE4cX
+	 Vpb7TnUQNM47F0RymTq9zdSN0FdoNCF7jRAi1giLW4Qy1xfFK9gQf9YzDPkJg42j5+
+	 2cngnJtoqq8fyCaIbsSob8f0Sxjt0uHRWfAtuwV8GeOJ5ZbKmUuurhHNxgHE6iPGn4
+	 sy8siG8TeeWpQ==
+Message-ID: <5163d9d8-d106-47f3-a0f9-0eaa01f15498@kernel.org>
+Date: Sun, 22 Jun 2025 11:49:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,22 +50,25 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
- support for MT8196 audio AFE controller
-To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250620094140.11093-1-darren.ye@mediatek.com>
- <20250620094140.11093-9-darren.ye@mediatek.com>
+Subject: Re: [PATCH v2 4/6] arm64: dts: axiado: Add initial support for AX3000
+ SoC and eval board
+To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "soc@lists.linux.dev" <soc@lists.linux.dev>
+References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
+ <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
+ <6ef92d1a-39cc-409f-8ebe-d28ad2006988@kernel.org>
+ <bfcde082-270f-4152-b474-7828beab7cb9@axiado.com>
+ <9012cc61-b499-4213-9753-54cf4d24c822@kernel.org>
+ <bdc4408c-6fe4-48cd-bb40-3a17aed79cb6@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,30 +114,38 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250620094140.11093-9-darren.ye@mediatek.com>
+In-Reply-To: <bdc4408c-6fe4-48cd-bb40-3a17aed79cb6@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/06/2025 11:40, Darren.Ye wrote:
-> From: Darren Ye <darren.ye@mediatek.com>
+On 20/06/2025 23:18, Harshit Shah wrote:
+> On 6/19/2025 11:08 PM, Krzysztof Kozlowski wrote:
+>>>>> +
+>>>>> +             spi_clk: spi_clk {
+>>>>> +                     compatible = "fixed-clock";
+>>>>> +                     #clock-cells = <0>;
+>>>>> +                     clock-frequency = <25000000>;
+>>>>> +             };
+>>>>> +
+>>>>> +             apb_pclk: apb_pclk {
+>>>> No underscores in node names, but all these look incorrect - don't you
+>>>> have clock controller?
+>>> Noted, we will remove the "_" from the nodes. We do have clock
+>>> controller however that is being accessed by other CPU before Linux will
+>>> come-up.
+>> What does it mean? Is the clock controller not available at all for
+>> Linux or any other OS?
 > 
-> This patch adds initial support for the audio AFE(Audio Front End) controller
-
-Why this was changed to undesired 'This patch' (see submitting patches)?
-I think you are circling back to previous versions, reintroducing issues
-fixed in between.
-
-> on the mediatek MT8196 platform.
+> Apologies for the confusion. Yes, clock controller is available however 
+> it is only accessible by another CPU which boots up before Linux comes up.
 > 
-> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> This another CPU is setting up the various output clocks (& PLLs) before 
+> the Linux comes up.
+> 
+> So, that's the reason haven not added the clock controller in this DTS 
+> but only will add fixed clocks.
 
-
-Subject: I asked to drop document, because the rest was correct and you
-totally rewritten it to unnecessary too long subject.
-
-Well, at least the rest you implemented, but I just don't get why, when
-asked to change something you change several things to less desired style.
+And what happens if that other part decides to change frequencies?
 
 Best regards,
 Krzysztof
