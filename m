@@ -1,174 +1,141 @@
-Return-Path: <linux-gpio+bounces-21958-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21959-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5F42AE2DA9
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Jun 2025 02:51:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55BA7AE2F3A
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Jun 2025 11:43:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 451591892548
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Jun 2025 00:51:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 964553A4489
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Jun 2025 09:43:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2649224CC;
-	Sun, 22 Jun 2025 00:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA671B424F;
+	Sun, 22 Jun 2025 09:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="f+3EfA9y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSf1wYRn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9041EA29;
-	Sun, 22 Jun 2025 00:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750553472; cv=pass; b=Znewi+cj4aYxSHtVOK/+N42UWr/PdQwwkUFVk0vA/gsGK6Bv6kPjG/hzs9QPeD9kxrjWwjGs7pmvU9VaDtIyCu7JP64wIQh788KlQSHZPyld7CL2T/rxCkIfoRQPwYgbdoW91TuybzAHTwMKheR4eGdUpJurA3N9yPXqQS9QOP0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750553472; c=relaxed/simple;
-	bh=eP4cyAVzJysY20FB2yPSJBaBtIXAbyQKZqa8mZ2WuN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZxo78xHbe3HcOlXf1g//14HWZGxUPEFmAwymhsRp+raY4YdLK095JsRNGRlog2wqWdBpM+th2wKfQSnYysTnkpEa3tQ3TRftefzb8rJvH5c3Ebg7EwGbs5AtopJWeLvUxMR/3xeWeQOowJYUfBZ6YOfj4ZutEWGRgThvR8ar40=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=f+3EfA9y; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1750553434; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=nTaZPuxdEjw5EDw3tPF6Qy0HTEagp2m1aPmSyKRU2f+HJ4+u4ZC9f9ngF5plydcBC9kimI5uBnGvZW1ulzgKNnL3OTVtWFNbwWu5fIcuR2q571R50jIQsJVnfwvJRyo5awpB1R0KUQNeWe6IQABQCXGhl2E48HfHk3DK3Co/Mhg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750553434; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=urvg2EBUVSXLilCyfEaHeQbpskk5FRYN4N/flVkvV78=; 
-	b=VMwG6vR1GWzzfCk+Cx29KkHCudiWzscFawcybcqqs6bzMGajtS1tj+BohE9OpogqjM4tnDrOnbkVmS/ssCvr4wn2nMO8ofiGtwuwVAOEyibWApOl3/OTLFoA8RT2+Bsy0iBJbPPGD0KhjBYciUTt84Qr4RPzxpaw6YzPak7nVfI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750553434;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=urvg2EBUVSXLilCyfEaHeQbpskk5FRYN4N/flVkvV78=;
-	b=f+3EfA9yIO3WRuPNshg8xFVyn5cJqqTmm+HuH6SYP2wxA8YbGSB9NVhIfxv1Srqu
-	g78eV9eGHUVlWk5ocPdAIe4R9O5qpDtklKq5fy+NKC4huRj++YXYgvw4q8DYOmHA2Vg
-	BsJH1d6xAxvoJ1mU3nqshGz+Ejf3jcaht79PvMpI=
-Received: by mx.zohomail.com with SMTPS id 1750553431554582.0728404463048;
-	Sat, 21 Jun 2025 17:50:31 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 15EE4180692; Sun, 22 Jun 2025 02:50:26 +0200 (CEST)
-Date: Sun, 22 Jun 2025 02:50:26 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Sven Peter <sven@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linus Walleij <linus.walleij@linaro.org>, Janne Grunau <j@jannau.net>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v7 05/10] mfd: Add Apple Silicon System Management
- Controller
-Message-ID: <pqjz6jyfsoaf5matffwsly7ba6xwbw5fsumokmpow6eox7vjdx@fbuxkcjjyh6n>
-References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
- <20250610-smc-6-15-v7-5-556cafd771d3@kernel.org>
- <20250619114958.GJ587864@google.com>
- <f30406ae-90ed-4f81-9519-e6ae2dcc9e03@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE1E372;
+	Sun, 22 Jun 2025 09:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750585400; cv=none; b=u3HwHpXdVZ23OXbTFj9K1AtZ4N+lolrbzbBzGWJO5NB8JjOG173K7ladRTDepoj0Jrq9P3SiUP3H1/DxG7DMoQxZTibtiH7uvNDV4dmz3LzGmLvs6BSnGRX8T0A1zWtV8wvDoMg9iKz2IV5E5TQTtN0P1iF2yLG0m0DgDk4delA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750585400; c=relaxed/simple;
+	bh=e1iTg55YXGYZf/uvlSW1Nxdb1Xs0RNsU3Mekj6cFODU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Up28UNx3le4oxlOnuFuP9PqYyGThUW5TUKRDXNUuHKE1WV9Y9yFpUXf4K/NtIZlk1hoo+QyxgY0gXZStJ87oMx7rNpihwNi7LyUXMlqu3+2QKulL53yYHWY4JTQlmNZn4EnJLx8Kyi8WGXtZjULRGiQ+0VWEEijnv39A+BhZctQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSf1wYRn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60EFDC4CEE3;
+	Sun, 22 Jun 2025 09:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750585397;
+	bh=e1iTg55YXGYZf/uvlSW1Nxdb1Xs0RNsU3Mekj6cFODU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CSf1wYRnx6mhnlUz/ZS0L086OYQTAsug3WeLL8oprIsrJWpznpYTOJbYEReD8p4nb
+	 RVDvFBFNnhx/O+e8DxwpdZZDDSjpJxe3TQbTfYCyKwanYyoAc8lNuxg1GOqk696f+7
+	 6I/NwAGswkku/MZ+h4aYXp5+gE6lVBr2WLlwpqBFSuK4fXcXNk7layHpXsFHVL7ewz
+	 nBWsO2hZbO24pqQr4XiS8U1GXBrzMQap11RpoYr46IwSKT5P9PcgKl2KfdgVbR+9JP
+	 lQb3ddRSO05mMe8a69nCAjky5nj1hGZNYPBF5OzdUM32DyQkbniLk/fW58edMW6vHt
+	 4TbLgMIrv4q5Q==
+Message-ID: <011093f8-85a1-4c3c-b3fa-7be9e6df8a25@kernel.org>
+Date: Sun, 22 Jun 2025 11:43:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xcojizk7w6niahmw"
-Content-Disposition: inline
-In-Reply-To: <f30406ae-90ed-4f81-9519-e6ae2dcc9e03@kernel.org>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/250.540.22
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
+ support for MT8196 audio AFE controller
+To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250620094140.11093-1-darren.ye@mediatek.com>
+ <20250620094140.11093-9-darren.ye@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250620094140.11093-9-darren.ye@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 20/06/2025 11:40, Darren.Ye wrote:
+> From: Darren Ye <darren.ye@mediatek.com>
+> 
+> This patch adds initial support for the audio AFE(Audio Front End) controller
+
+Why this was changed to undesired 'This patch' (see submitting patches)?
+I think you are circling back to previous versions, reintroducing issues
+fixed in between.
+
+> on the mediatek MT8196 platform.
+> 
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 
---xcojizk7w6niahmw
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 05/10] mfd: Add Apple Silicon System Management
- Controller
-MIME-Version: 1.0
+Subject: I asked to drop document, because the rest was correct and you
+totally rewritten it to unnecessary too long subject.
 
-Hi,
+Well, at least the rest you implemented, but I just don't get why, when
+asked to change something you change several things to less desired style.
 
-On Sat, Jun 21, 2025 at 05:51:33PM +0200, Sven Peter wrote:
-> On 19.06.25 13:49, Lee Jones wrote:
-> > On Tue, 10 Jun 2025, Sven Peter wrote:
-> >=20
-> > > The System Management Controller (SMC) on Apple Silicon machines is a
-> > > piece of hardware that exposes various functionalities such as
-> > > temperature sensors, voltage/power meters, shutdown/reboot handling,
-> > > GPIOs and more.
-> > >=20
-> > > Communication happens via a shared mailbox using the RTKit protocol
-> > > which is also used for other co-processors. The SMC protocol then all=
-ows
-> > > reading and writing many different keys which implement the various
-> > > features. The MFD core device handles this protocol and exposes it
-> > > to the sub-devices.
-> > >=20
-> > > Some of the sub-devices are potentially also useful on pre-M1 Apple
-> > > machines and support for SMCs on these machines can be added at a lat=
-er
-> > > time.
-> > >=20
-> > > Co-developed-by: Hector Martin <marcan@marcan.st>
-> > > Signed-off-by: Hector Martin <marcan@marcan.st>
-> > > Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > > Reviewed-by: Neal Gompa <neal@gompa.dev>
-> > > Signed-off-by: Sven Peter <sven@kernel.org>
-> > > ---
-> > >   MAINTAINERS                |   2 +
-> > >   drivers/mfd/Kconfig        |  18 ++
-> > >   drivers/mfd/Makefile       |   1 +
-> > >   drivers/mfd/macsmc.c       | 498 ++++++++++++++++++++++++++++++++++=
-+++++++++++
-> > >   include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
-> > >   5 files changed, 798 insertions(+)
-> >=20
-> > This is ready.  Let me know when you have all of the other driver/* Ack=
-s.
-> >=20
->=20
-> They've all been reviewed by the respective maintainers.
->=20
-> I assume you want to take this all through the mfd tree and we'll need ac=
-ks
-> from Sebastian for power/reset and either Linus or Bartosz for gpio then.
->=20
-> The one line change inside drivers/soc/apple would usually go through my
-> tree and I'm fine with taking that through mfd instead.
-
-I'm fine with the power/reset driver going through mfd once the
-recent probe discussion has been solved.
-
--- Sebastian
-
---xcojizk7w6niahmw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhXU1EACgkQ2O7X88g7
-+pp5mBAAqeYtgkz3ot6SuhXbvwuOhMII4zpE8jhfW1y9qUm85/HabSF/PRrM8fTX
-mrOmos/ImxU32f83/mPZshVf0+mESLu/t8jEcfWUZp9OCDWwIP22zJ0BScizgWpg
-d6vfEd4K8zdCjpEwNTmghrqahi7gGfapSzfpOGoZ7yLnGSp19rWdfG8CvQ4BI6b6
-EIy+2XySeO6V2n+fGt/78Td4+LVQ8k6gm6B/9/grN5WP2OBC2KwTSAsmieBXXpCD
-GBT911zqqYpJ3wfaSndyeztq1sOfKH6feAYTbCKjlz2frvOG5A+0A2nRLD4UXvCW
-JQmbyzwj7d03GFgqOIa95RyYZL2C0H3gdw1ZV+KO5OCGKIHWcrbRGsUnU0gzSyQj
-sRP6gLNKPNXeIgcvTBVNAiuy+NA/UUTzovImxl47hAO1jfbqjMc4rGYZVGwqYevJ
-szl41k3EmNjCU+Wb7Wm3xoQLb7xhjPBd4CbZBBnxJ9Zq6aRSTgyHPV6Q09/X7npU
-SJG9k/V+dqhpRWtSyhJVsQ326oWDeNatp5iSKU+ZCaLN3QI+7ouH0pAi/MPlpeoq
-UuK9iVt2lITPAvuHZ07XKQUHjxa/5tir3DpJJP2WAVPQM/n7ejypyXh/SHolX8G8
-M5BUD7E9puP4hgXS8ETreeIi0UlYz/STD6ck27xMFk8yVIyyyik=
-=Yc2m
------END PGP SIGNATURE-----
-
---xcojizk7w6niahmw--
+Best regards,
+Krzysztof
 
