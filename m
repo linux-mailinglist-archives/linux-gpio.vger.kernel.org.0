@@ -1,133 +1,152 @@
-Return-Path: <linux-gpio+bounces-21995-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21996-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71F54AE37A8
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 10:01:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A109AE37AD
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 10:02:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 388F8188EABF
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 08:02:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BF661892B38
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 08:02:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2454E1F416B;
-	Mon, 23 Jun 2025 08:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C7621F6667;
+	Mon, 23 Jun 2025 08:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bB9CRF3D"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="D4YRDySO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B3E537F8;
-	Mon, 23 Jun 2025 08:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968801F3BBB
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 08:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750665711; cv=none; b=GDO0Mu6HaajBKaZY+1sxvbLVk6ehPS7ZtV6Jah1fPSop5oCnrTrisXQatvQaHcUDhM9s/UeVjoZsJhUhHaC5OHuAdG13xkyIjRis783Fl5+5dxzKj306iE4Dm8TI1JXJUMl0AjSmzLS6oW2ammj5johkwbZtaiNuj0xpKWYCWpc=
+	t=1750665742; cv=none; b=jhe30Bsf1rQ1XCwwXYwVZQgoiICrLYX5a7ANzFrL9J+xcf8iFoOT6bFwiwqzwYQp1MBoJRBkv35tfeYk3I8KVSm4kxJBwULw607LvU51UFU4BxqM1CttAFcPbeSFPbA8AZehmguURjyK+13fnNgeQxHR0iiSwMMdCXm5m2lvCRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750665711; c=relaxed/simple;
-	bh=TAR1cdtcLVU/hOIHwRsbxlpEDGpvTNlzvB0o60PEETs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GmCrd+Mo9SPh3QssjxEaIrpjgRfB0oX8/5+/u5Shyfzl0ClTe6tkBpOax//Oz3wDOv3/+CSAvTbKw2rZTC9rvW4J+wMsIQMao7uHNekf84p1UxFFNkpjIt8CnZAkDZH2k13vNhqIqBA37Ao2UwANTLGCKfZmWAUEVleT3eWCAcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bB9CRF3D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89131C4CEED;
-	Mon, 23 Jun 2025 08:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750665711;
-	bh=TAR1cdtcLVU/hOIHwRsbxlpEDGpvTNlzvB0o60PEETs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bB9CRF3DemtCO6pIeXGhn711ozWhySaYyGI4ckiKwmfj7WGa2ZgPBgpwP6IeYKweM
-	 jemMjUpZMGXeGIYUtQ5ImOFTXMo5zPK4yvFV894hJrd33Npt7X4v4NUi2VXbyx3Qs0
-	 V7BjDr7VFl/7gr/gY4uqoSnImv94o5L+Xz+Th2TGHiS8XvHL5KXyI8z2PfXmuyF4oY
-	 pPNYk7KJVAKbR3gQOx2XbsbY6xba2sBC9Y6j7ktabFfZQpQLpZUmD7abpD7MHJtWWJ
-	 H1sOvirqNuIE5T8MVmaMU5Os4vEemmvCdJtDuICxMQedubkUqCf+LZKdw2GASnNH8p
-	 VG4gFdQI20wcA==
-Message-ID: <f752cf84-0159-4ef6-a7cd-57b6fc578a74@kernel.org>
-Date: Mon, 23 Jun 2025 10:01:44 +0200
+	s=arc-20240116; t=1750665742; c=relaxed/simple;
+	bh=Q1XA+JXOXCtWnCp7t/Ht+LN00pee1Odcfo7xDqQpe9M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G/K4sLbovD69sOQmj1C+/8JDsa+lj1esWEbtLvPGAItAU3w+0lUpz4x3r71nQPF8qlXZVl3JlK056VlwhKeZssiefwmJctRkfyoCY3ITegu6uWeWQtoSrH42iVByL/0UvP/RK3W+K2W7geom1cvVYaDsnuH71UMHZN3NEFBWhWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=D4YRDySO; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55351af2fc6so3955570e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 01:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750665739; x=1751270539; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=90hYW1+aPldHsph4xdNI+bk1oOWB4WZEP2NZvvKLy10=;
+        b=D4YRDySOH9FmimArWTAMwZnEKhzSqXMdMjCSFUeHq+cvo21FE+OnsuSMgzWsW2Y1IY
+         Yw5YA2stcOLa7+MnvzxbFQsWjZNvMcjpJkxxBbsUpOeErSaHaDgA4oGylByJFsUcJ3ad
+         IQtISQ76Yjtp6O0m6tiBKpqrl+MoEvhx7gnDqwSouIlSIQoy0tdTdcI85ewXzuMehz/a
+         3rFMBTE39bkRSW9RuB7PIA2iKouHOrWgvMTfhNMHjeQO59bDKaz7BO5nhxtm8o6wyem8
+         oGyY2h26qZz3wqFDx1AtwDFT4xBajozUSf5aab35U4tX0SmLF8akfz9W2a5eGDJGbRRg
+         ZlPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750665739; x=1751270539;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=90hYW1+aPldHsph4xdNI+bk1oOWB4WZEP2NZvvKLy10=;
+        b=S7a4LSlT5sOXIbT2J9xwT/w+cuRUr45uxD6Jg6bmqJF4HmTtMpayvyXIEGxUD8NuJ9
+         oi8PcuMYTdRuS744mc711zEkGnVUzEY6T87aK286BtwqY6cKRkvCqa2uXg4PwYlLzgEm
+         Zlty1m03tOIXhB3RLQPkBBnWyAyDEctkqj88rSFjuzqJJtXakr1lddFS52uyiUrAGvil
+         n8u1jZasMzGk8SjHfnGLDfdy56QPzKM6SJZQag5J0e5ZjzP4ebsbKGchx0hlvEUT9uCM
+         i9q1gewJnlg3KFl88T1I1BaC4tD8CWMXfz6sAwHNVUMEY/Is0dlxpfEuwYjanusYu5Lh
+         ytbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTBYOSPEAMd/swGlpgoAcEgPm0qBf3+MAghYW0pUGYUYCZVkLu2+yf3lnrkCY3NXPO3YxIbrDkhkI8@vger.kernel.org
+X-Gm-Message-State: AOJu0YytbY7neMCtw7Jrf1jCBMYrP1D9e0itapNa2BKT+SqCrNzXlCXB
+	njxG+PRnqHnELF0OU2++7RhzOBqjnaC3vipNhjz1XKWL9Z25QvAECKv8TaFqPiPmgZZD3fKWOBm
+	JxUgAsssubClnbZY3mzKHT5OkztJRZt1yctVFDFVZQw==
+X-Gm-Gg: ASbGncs/FfvkHIhiHNTJxI+oeJdTpGfmR+pR4qFyvxpi7RH/eqsjnn2/Ev5JOnbNKaX
+	i1D82ca1I2b/D4HwPzo1wgSAuQ++wXaTBT/bywXAc5J00ONvYHRc5MmeDl9xT1qV0MwSoHqZ0VB
+	yqjlcnh0YMwBKnd+7mOmku+O8TgmiVWm+YaRLbS90oRgG+SgB3s/QIcVDp/asssZiDy2hV/0htq
+	iIlvIHDchFP
+X-Google-Smtp-Source: AGHT+IEFylPNpljR3XEed8pOfJjdvyjRz09M/WdcYWwyhunaD1GCVyLqOiEz7HDVLXwhU8X3xjf+1mUDhqvI4bVZzDk=
+X-Received: by 2002:a05:6512:220b:b0:553:5e35:b250 with SMTP id
+ 2adb3069b0e04-553e3bf3becmr3556332e87.32.1750665738699; Mon, 23 Jun 2025
+ 01:02:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] ASoC: codecs: wsa883x: Handle shared reset GPIO
- for WSA883x speakers
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
- Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, quic_pkumpatl@quicinc.com,
- kernel@oss.qualcomm.com
-References: <20250620103012.360794-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250620103012.360794-3-mohammad.rafi.shaik@oss.qualcomm.com>
- <f9f96bf0-3539-4e77-8d3e-b87ddc561925@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <f9f96bf0-3539-4e77-8d3e-b87ddc561925@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+ <20250610-gpio-sysfs-chip-export-v1-7-a8c7aa4478b1@linaro.org> <CACRpkdZ0W10E7UX7KDnej0SX_Jtuo8r1xSTJsGmXDrDYwArO7Q@mail.gmail.com>
+In-Reply-To: <CACRpkdZ0W10E7UX7KDnej0SX_Jtuo8r1xSTJsGmXDrDYwArO7Q@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 23 Jun 2025 10:02:07 +0200
+X-Gm-Features: AX0GCFtqPzZP2-oWr-aSqSDePQwxUQnU63M4YMuZivBMwcnE-5malFS4943V3L0
+Message-ID: <CAMRc=Meaif1zDeV5mQj3sdJB5et36a_6RctLoVLQc+EH8ig9LQ@mail.gmail.com>
+Subject: Re: [PATCH RFC/RFT 07/15] gpio: sysfs: add a parallel class device
+ for each GPIO chip using device IDs
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20/06/2025 20:35, Dmitry Baryshkov wrote:
-> On 20/06/2025 13:30, Mohammad Rafi Shaik wrote:
->> On some Qualcomm platforms, such as QCS6490-RB3Gen2 and QCM6490-IDP,
->> multiple WSA8830/WSA8835 speakers share a common reset (shutdown) GPIO.
->> To handle such cases, use the reset controller framework along with the
->> "reset-gpio" driver.
-> 
-> How does this handle the fact that resetting one codec will also 
-> silently reset another one?
-Will not, that's the entire point of reset framework. See also my talk
-from last year OSS NA for some graphs/explanations.
+On Wed, Jun 11, 2025 at 10:27=E2=80=AFAM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+>
+> On Tue, Jun 10, 2025 at 4:38=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+>
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > In order to enable moving away from the global GPIO numberspace-based
+> > exporting of lines over sysfs: add a parallel, per-chip entry under
+> > /sys/class/gpio/ for every registered GPIO chip, denoted by device ID
+> > in the file name and not its base GPIO number.
+> >
+> > Compared to the existing chip group: it does not contain the "base"
+> > attribute as the goal of this change is to not refer to GPIOs by their
+> > global number from user-space anymore. It also contains its own,
+> > per-chip export/unexport attribute pair which allow to export lines by
+> > their hardware offset within the chip.
+> >
+> > Caveat #1: the new device cannot be a link to (or be linked to by) the
+> > existing "gpiochip<BASE>" entry as we cannot create links in
+> > /sys/class/xyz/.
+> >
+> > Caveat #2: the new entry cannot be named "gpiochipX" as it could
+> > conflict with devices whose base is statically defined to a low number.
+> > Let's go with "chipX" instead.
+>
+> That's unfortunate but it's good to separate them, and
+> gpio/gpiochip is a bit tautological so this is a better sysfs name
+> anyway.
+>
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> > +       /chipX ... for each gpiochip; #X is the gpio device ID
+> > +           /export ... asks the kernel to export a GPIO at HW offset X=
+ to userspace
+> > +           /unexport ... to return a GPIO at HW offset X to the kernel
+> > +           /label ... (r/o) descriptive, not necessarily unique
+>
+> Not necessarily *globally* unique, I think it's required to be unique
+> per-gpiochip right? Otherwise it will be hard to create these files.
+>
 
-Best regards,
-Krzysztof
+Yes, this must be updated as well, the labels are of course unique.
+
+Bart
+
+> > +           /ngpio ... (r/o) number of GPIOs exposed by the chip
+>
+> I like this approach, it's a good compromise between different
+> desires of the sysfs ABI.
+>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Yours,
+> Linus Walleij
 
