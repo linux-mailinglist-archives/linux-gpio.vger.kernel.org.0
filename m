@@ -1,322 +1,121 @@
-Return-Path: <linux-gpio+bounces-22031-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22032-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8679AAE5529
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 00:08:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98B5DAE566C
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 00:20:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32BBE1BC3C82
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 22:08:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A2187B27BB
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 22:19:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B16AB225785;
-	Mon, 23 Jun 2025 22:08:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B6D2253B0;
+	Mon, 23 Jun 2025 22:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMZzeHkF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSwtV+FA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B390421FF2B;
-	Mon, 23 Jun 2025 22:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A889223DE8;
+	Mon, 23 Jun 2025 22:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750716504; cv=none; b=ajk9GwgaCOka31vGyfI0tEe9pRSahlHM+Ug8ynjqrM/Svgd3QylejOUaBfg3g4yHZHHJmcFOaIuoV4XsE0Uv6vQWynn69JqdOqXw1FNtCAto239Wi9oAEl0WgNO2PiZTg6M+hxCMiUZJgKg60Eg8kpRs6aBXYtvT+d7h1nqsHM8=
+	t=1750717229; cv=none; b=pA0Qwflvl2da80/D+01/SAPvcqER2fTCG3dE6n64B7S6T/OdEfgLtM9j490j30gChqdwenTlrlmFwCk45LYkHtmy+ohcn463cGQTUsM9qojkId90VG+cPRH2WTfMl8gICsu7aQAs2uCcWjogfMILNgcgQCh5S1SXxakUft8ZndQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750716504; c=relaxed/simple;
-	bh=4ubACdoLtmTWspA2/xYT1/XL3PMWzVKt/9CdDgzP9aU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WHJDk1xN85I0+ZvOecsdLce5CW/Q1q1JLIoBhMnlftOgZ/ZNlihhBXJsrmTyAPTR0ZTdqhx4jRI8a7FtTRehyKPGNIqA4D21p9RIo7Yz6Ca8AOloroOlvDKZN9pr3cYK7DJCss0E80JlVUT5Mmn5tVIXRvBp/sYtW7kkJEtvVk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMZzeHkF; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750716503; x=1782252503;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4ubACdoLtmTWspA2/xYT1/XL3PMWzVKt/9CdDgzP9aU=;
-  b=SMZzeHkFBlwuWE3OzrpLvjXFUhrMZc4Ib3AmXJDB9Tjy6vbNQBDR67Br
-   yoU+5mfamdMQD1DgmvUt9/GBQ5UamL1yh0ZDjzYRumEhoYcaLffi1Hh3U
-   4W8pabUXlzslN40keWCDSbwqKI7gIammzIZyZRm11DM3E1FHtsA4Nn5w+
-   7VCWFpX/QfgWUaeGcHC5M2JZ5Qqsrn7T2x2ZSWaI8a359QE6UsRcBY/IZ
-   8aHVJvUKKmYJ9FDdLapyj7/a4WXT9EM0pNUpVP3VVplRgvrzwQGgX8/EU
-   ZJBsYhbguEMCjnG14Bd0TfAupQ2IN0HjycDeUBC+7vDwGBOjauEOcNAYF
-   A==;
-X-CSE-ConnectionGUID: OakrEHm3QYen6zNY/ZqgZA==
-X-CSE-MsgGUID: YIBc2Y+xRlmBdHJWldSJFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56744829"
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="56744829"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 15:08:22 -0700
-X-CSE-ConnectionGUID: DqMHNaMSQMa9rG6dqUY0cg==
-X-CSE-MsgGUID: 3rLef4w7T2CHBV7sorbZrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,259,1744095600"; 
-   d="scan'208";a="151138052"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 23 Jun 2025 15:08:18 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTpKq-000QsA-0E;
-	Mon, 23 Jun 2025 22:08:16 +0000
-Date: Tue, 24 Jun 2025 06:07:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Kent Gibson <warthog618@gmail.com>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/9] gpio: sysfs: export the GPIO directory locally in
- the gpiochip<id> directory
-Message-ID: <202506240548.l2wS2XW6-lkp@intel.com>
-References: <20250623-gpio-sysfs-chip-export-v2-7-d592793f8964@linaro.org>
+	s=arc-20240116; t=1750717229; c=relaxed/simple;
+	bh=BJC/cYs9cEh7PKovZypWQEdafr7gizAG2cEeGgnbsHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WrtWiIVOCBqm7bxOmmT30by63v5UPC4SmECkRO4tVXYuvZaf7GKiPwbIVQaiP7lPdVU7+AFJjl4SgQnV4srdO5UrKS32Te68gSXz9Z5ZbwnPOFUKezvx4GT5WJcnC7Ov9dTel6Z2RXjaJsNfjvwkGgkH+IBivFv19/dACV6wIKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSwtV+FA; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so2390603f8f.1;
+        Mon, 23 Jun 2025 15:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750717226; x=1751322026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RcMrKot8tsQrFqCwcQ2eONIC0xSNkQ3UV7nsULcvCSQ=;
+        b=eSwtV+FAu54NAIcK0LlWMCwv7cLpsi6EYG4Z7i7BzS+H8GrLlv98lN1dz00SZfkkU8
+         GisgL8yJhNQwYJefKEr7kF0TkMy775lDDvSgkYWofCix7WsZKgy5hu3qFPnlCmy6Ea8X
+         ZNyQii+5mlgShfg0FGpGh7mVYNM4W3X/Unnt8/13qIvJqsRewYR5ah9oqsMd/S+g1KoF
+         41JH/b+YQBjnIvBlR28FlVR7TdJGDBQg6/X7YvmOgp023qn63gzLu19Im941DK+Hncnx
+         X9fWDgUi19hel2WX/gFZgBvEqMmsXS9C+m+QS0XRYIHr5qAs925FRIatI968YKzJfr4x
+         RKHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750717226; x=1751322026;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RcMrKot8tsQrFqCwcQ2eONIC0xSNkQ3UV7nsULcvCSQ=;
+        b=TGA4v1h+XBNmiSuOyFCNG/65oZsZnzxUvECYuT5dlZc4DaC9AAFoR2uxxs9XXsGBXD
+         b9CxjvaovanPwqb1GrSzLpDQPW1RoIXreE7CF+Drgusgf/kam1lsW+MMXOEMCg8sGWjw
+         OPlkm+WyD7d0IUrKClL+xjD/yJ4VPMJ4njJ7LNU04VQmyIg2ciUd+8rkukAN18FX3jeu
+         FWTEDxrXwlkJkYznQpvgtKs1dN2vzImpEd6O5DlcunEeKrDdpYP6XwnqpojcGDc0BxFj
+         +rDE36k0k4+RXK99nI31ReGt7JG11k7pn02erf/0+7WvXDyQc9cDefZIlkuoVPkRx2Ti
+         YxgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQnwBSicev/9jdnheta/6Cl5T3jj1SB76XBr/hp5cif0z4SvpvMr2iBF0GAat6MFABF7+37JoGmuFg@vger.kernel.org, AJvYcCXySKxIxYtTT6ILbEnHIwkuyucw/QIRMGbDX+Jsgfvwy8Io0e3Dgr5FZFixJaX/So/suILL2hXX+D6WXM3c@vger.kernel.org
+X-Gm-Message-State: AOJu0Yybijjxld42KMBv+bU3lklC/2BJOtaXKtmglQP58ze2v9Z1vjS7
+	tggFZ7Uo69joB7Wi3U14GDFSuernp3pUg2akX+1nF7lFvyJxoCDsw4cc
+X-Gm-Gg: ASbGncvIDGKfKl4PVU4zkYEz5g6HJkElvRmE2nbrEROYx72+3KFQQPFgbzidbGbBVay
+	15ANM1CeTLuda2CSIrM3SkS9Gqii0LYjqSwcpwj3SlRVnWVjVBtB3jE5FlyeIz7t60OfxxqECBE
+	hVQ1zpKqgrZpsEU0LKKnyCYWsbvpj4yLSBOWYYSbgQ+qi4GnsdCo/QZWkvpMELxi1fmKiRi7zlb
+	6uHPUK3k+tp6ltztuD2JBGGb6txXh+HP06T/9p78xDUBloyVG+RFpRYp+7ASZ02b6+/aiMidOMG
+	o22BzOCteTp8JY5OsjnsHURQ5sbFZ+ayRZgDnia1HH8uekcFl2TsWILNkrqsTTO1e3A0Je4=
+X-Google-Smtp-Source: AGHT+IFDcQVwpR1EfYUdBzIvJdwoQefp5kX0q+VQqZm09KfS9ZDPMXNVhIJNfMOFJtVYhv0rrocsJw==
+X-Received: by 2002:a05:6000:1aca:b0:3a5:2465:c0c8 with SMTP id ffacd0b85a97d-3a6d119291fmr11591377f8f.7.1750717225851;
+        Mon, 23 Jun 2025 15:20:25 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4536470415csm121799395e9.31.2025.06.23.15.20.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 15:20:25 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Yulin Lu <luyulin@eswincomputing.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-gpio@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] pinctrl: eswin: Fix unsigned comparison to less than zero issue
+Date: Mon, 23 Jun 2025 23:20:04 +0100
+Message-ID: <20250623222004.280928-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-7-d592793f8964@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Bartosz,
+The u32 variable voltage is being compared to less than zero and
+this can never be true. Fix this by making voltage an int type which
+is the same type as the return from the call to regulator_get_voltage.
 
-kernel test robot noticed the following build errors:
+Fixes: 5b797bcc00ef ("pinctrl: eswin: Add EIC7700 pinctrl driver")
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/pinctrl/pinctrl-eic7700.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[auto build test ERROR on cb908f3699fb137e28017a8fdf506c35762b3eb6]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-sysfs-add-a-parallel-class-device-for-each-GPIO-chip-using-device-IDs/20250623-170412
-base:   cb908f3699fb137e28017a8fdf506c35762b3eb6
-patch link:    https://lore.kernel.org/r/20250623-gpio-sysfs-chip-export-v2-7-d592793f8964%40linaro.org
-patch subject: [PATCH v2 7/9] gpio: sysfs: export the GPIO directory locally in the gpiochip<id> directory
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240548.l2wS2XW6-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240548.l2wS2XW6-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506240548.l2wS2XW6-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/gpio/gpiolib-sysfs.c:802:3: error: cannot jump from this goto statement to its label
-     802 |                 goto err_free_name;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-         |               ^
-   drivers/gpio/gpiolib-sysfs.c:795:3: error: cannot jump from this goto statement to its label
-     795 |                 goto err_put_dirent;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-         |               ^
-   drivers/gpio/gpiolib-sysfs.c:786:3: error: cannot jump from this goto statement to its label
-     786 |                 goto err_put_dirent;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-         |               ^
-   drivers/gpio/gpiolib-sysfs.c:780:3: error: cannot jump from this goto statement to its label
-     780 |                 goto err_unregister_device;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-         |               ^
-   drivers/gpio/gpiolib-sysfs.c:773:3: error: cannot jump from this goto statement to its label
-     773 |                 goto err_free_data;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-         |               ^
-   drivers/gpio/gpiolib-sysfs.c:733:3: error: cannot jump from this goto statement to its label
-     733 |                 goto err_clear_bit;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-         |               ^
-   drivers/gpio/gpiolib-sysfs.c:727:3: error: cannot jump from this goto statement to its label
-     727 |                 goto err_clear_bit;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:804:8: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     804 |         char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-         |               ^
-   7 errors generated.
-
-
-vim +802 drivers/gpio/gpiolib-sysfs.c
-
-   677	
-   678	/**
-   679	 * gpiod_export - export a GPIO through sysfs
-   680	 * @desc: GPIO to make available, already requested
-   681	 * @direction_may_change: true if userspace may change GPIO direction
-   682	 * Context: arch_initcall or later
-   683	 *
-   684	 * When drivers want to make a GPIO accessible to userspace after they
-   685	 * have requested it -- perhaps while debugging, or as part of their
-   686	 * public interface -- they may use this routine.  If the GPIO can
-   687	 * change direction (some can't) and the caller allows it, userspace
-   688	 * will see "direction" sysfs attribute which may be used to change
-   689	 * the gpio's direction.  A "value" attribute will always be provided.
-   690	 *
-   691	 * Returns:
-   692	 * 0 on success, or negative errno on failure.
-   693	 */
-   694	int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
-   695	{
-   696		struct gpiodev_data *gdev_data;
-   697		struct gpiod_data *desc_data;
-   698		struct gpio_device *gdev;
-   699		struct attribute **attrs;
-   700		int status;
-   701	
-   702		/* can't export until sysfs is available ... */
-   703		if (!class_is_registered(&gpio_class)) {
-   704			pr_debug("%s: called too early!\n", __func__);
-   705			return -ENOENT;
-   706		}
-   707	
-   708		if (!desc) {
-   709			pr_debug("%s: invalid gpio descriptor\n", __func__);
-   710			return -EINVAL;
-   711		}
-   712	
-   713		CLASS(gpio_chip_guard, guard)(desc);
-   714		if (!guard.gc)
-   715			return -ENODEV;
-   716	
-   717		if (test_and_set_bit(FLAG_EXPORT, &desc->flags))
-   718			return -EPERM;
-   719	
-   720		gdev = desc->gdev;
-   721	
-   722		guard(mutex)(&sysfs_lock);
-   723	
-   724		if (!test_bit(FLAG_REQUESTED, &desc->flags)) {
-   725			gpiod_dbg(desc, "%s: unavailable (not requested)\n", __func__);
-   726			status = -EPERM;
-   727			goto err_clear_bit;
-   728		}
-   729	
-   730		desc_data = kzalloc(sizeof(*desc_data), GFP_KERNEL);
-   731		if (!desc_data) {
-   732			status = -ENOMEM;
-   733			goto err_clear_bit;
-   734		}
-   735	
-   736		desc_data->desc = desc;
-   737		mutex_init(&desc_data->mutex);
-   738		if (guard.gc->direction_input && guard.gc->direction_output)
-   739			desc_data->direction_can_change = direction_may_change;
-   740		else
-   741			desc_data->direction_can_change = false;
-   742	
-   743		gpiod_attr_init(&desc_data->dir_attr, "direction",
-   744				direction_show, direction_store);
-   745		gpiod_attr_init(&desc_data->val_attr, "value", value_show, value_store);
-   746		gpiod_attr_init(&desc_data->edge_attr, "edge", edge_show, edge_store);
-   747		gpiod_attr_init(&desc_data->active_low_attr, "active_low",
-   748					active_low_show, active_low_store);
-   749	
-   750		attrs = desc_data->attrs;
-   751		desc_data->attr_group.is_visible = gpio_is_visible;
-   752		attrs[GPIO_SYSFS_LINE_ATTR_DIRECTION] = &desc_data->dir_attr.attr;
-   753		attrs[GPIO_SYSFS_LINE_ATTR_VALUE] = &desc_data->val_attr.attr;
-   754		attrs[GPIO_SYSFS_LINE_ATTR_EDGE] = &desc_data->edge_attr.attr;
-   755		attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =
-   756					&desc_data->active_low_attr.attr;
-   757	
-   758		desc_data->attr_group.attrs = desc_data->attrs;
-   759		desc_data->attr_groups[0] = &desc_data->attr_group;
-   760	
-   761		/*
-   762		 * Note: we need to continue passing desc_data here as there's still
-   763		 * at least one known user of gpiod_export_link() in the tree. This
-   764		 * function still uses class_find_device() internally.
-   765		 */
-   766		desc_data->dev = device_create_with_groups(&gpio_class, &gdev->dev,
-   767							   MKDEV(0, 0), desc_data,
-   768							   desc_data->attr_groups,
-   769							   "gpio%u",
-   770							   desc_to_gpio(desc));
-   771		if (IS_ERR(desc_data->dev)) {
-   772			status = PTR_ERR(desc_data->dev);
-   773			goto err_free_data;
-   774		}
-   775	
-   776		desc_data->value_class_node = sysfs_get_dirent(desc_data->dev->kobj.sd,
-   777							       "value");
-   778		if (!desc_data->value_class_node) {
-   779			status = -ENODEV;
-   780			goto err_unregister_device;
-   781		}
-   782	
-   783		gdev_data = gdev_get_data(gdev);
-   784		if (!gdev_data) {
-   785			status = -ENODEV;
-   786			goto err_put_dirent;
-   787		}
-   788	
-   789		list_add(&desc_data->list, &gdev_data->exported_lines);
-   790	
-   791		desc_data->attr_group.name = kasprintf(GFP_KERNEL, "gpio%u",
-   792						       gpio_chip_hwgpio(desc));
-   793		if (!desc_data->attr_group.name) {
-   794			status = -ENOMEM;
-   795			goto err_put_dirent;
-   796		}
-   797	
-   798		desc_data->parent = &gdev_data->cdev_id->kobj;
-   799		status = sysfs_create_groups(desc_data->parent,
-   800					     desc_data->attr_groups);
-   801		if (status)
- > 802			goto err_free_name;
-   803	
-   804		char *path __free(kfree) = kasprintf(GFP_KERNEL, "gpio%u/value",
-   805						     gpio_chip_hwgpio(desc));
-   806		if (!path) {
-   807			status = -ENOMEM;
-   808			goto err_remove_groups;
-   809		}
-   810	
-   811		desc_data->value_chip_node = kernfs_walk_and_get(desc_data->parent->sd,
-   812								 path);
-   813		if (!desc_data->value_chip_node) {
-   814			status = -ENODEV;
-   815			goto err_remove_groups;
-   816		}
-   817	
-   818		return 0;
-   819	
-   820	err_remove_groups:
-   821		sysfs_remove_groups(desc_data->parent, desc_data->attr_groups);
-   822	err_free_name:
-   823		kfree(desc_data->attr_group.name);
-   824	err_put_dirent:
-   825		sysfs_put(desc_data->value_class_node);
-   826	err_unregister_device:
-   827		device_unregister(desc_data->dev);
-   828	err_free_data:
-   829		kfree(desc_data);
-   830	err_clear_bit:
-   831		clear_bit(FLAG_EXPORT, &desc->flags);
-   832		gpiod_dbg(desc, "%s: status %d\n", __func__, status);
-   833		return status;
-   834	}
-   835	EXPORT_SYMBOL_GPL(gpiod_export);
-   836	
-
+diff --git a/drivers/pinctrl/pinctrl-eic7700.c b/drivers/pinctrl/pinctrl-eic7700.c
+index 719cd11e276a..4874b5532343 100644
+--- a/drivers/pinctrl/pinctrl-eic7700.c
++++ b/drivers/pinctrl/pinctrl-eic7700.c
+@@ -622,8 +622,8 @@ static int eic7700_pinctrl_probe(struct platform_device *pdev)
+ 	struct pinctrl_dev *pctldev;
+ 	struct eic7700_pinctrl *pc;
+ 	struct regulator *regulator;
+-	u32 voltage, rgmii0_mode, rgmii1_mode;
+-	int ret;
++	u32 rgmii0_mode, rgmii1_mode;
++	int ret, voltage;
+ 
+ 	pc = devm_kzalloc(dev, struct_size(pc, functions, EIC7700_FUNCTIONS_COUNT), GFP_KERNEL);
+ 	if (!pc)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.50.0
+
 
