@@ -1,146 +1,144 @@
-Return-Path: <linux-gpio+bounces-21973-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21974-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50737AE3546
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 08:05:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 25F65AE3587
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 08:15:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7329E3AEA0D
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 06:04:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94B143A46F5
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 06:15:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC7E01DB366;
-	Mon, 23 Jun 2025 06:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6302C1D2F42;
+	Mon, 23 Jun 2025 06:15:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e37E4B6H"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VmBVQn/L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAC77E0E4;
-	Mon, 23 Jun 2025 06:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2541DC9BB
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 06:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750658696; cv=none; b=LnSNbzAVdxNteXWX63hD8YdCETy6pypOiQHAaI8QIDY3z1Evn/4uoK35KQRB0Th6Zklj7MUA3AVb3YYkT0z+2k0c1FROqGrR+xCBLGnMJjAtYMBP65r+bLbsfjgzrRRA7zdmlHo0QM7nHVn8XBudAFXAtpUuatVyBnlUyN2yetY=
+	t=1750659323; cv=none; b=Wm+d5mRLRQ23VuV22tPYbb5JJlqHtd3yYsacecggO2NWxqpIRLy4DHEyRvc+n5NlR4KmPWrel69SoXfm4hmG0Oq9TPzr89ESyFsuyV5qXGHA7IOkAJ5sBLIrL1B57M5DZsCt70xM6ImIeHbHEVULKp31DhDckPE0a4uDRmjw8jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750658696; c=relaxed/simple;
-	bh=sS/dGjyTxAzwA3uG987pgo3ICOfSDwvIN8sR2GOsAvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i/gDrjtURxJiC3ymqnsPRigIPkeVJ7N6u7mBdK7mbfnotHd1n+YtjPpaPqx55vEwZu85BtksC0ZPxjrmcL3RnK8MkQ3vl7WfhdRtbLqFC0COeAosUtIRQWqUTCZ9c5GhmahaDj51PITvvQczL3+iIuhZFFlzpK882plKcoCB4Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e37E4B6H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59A48C4CEED;
-	Mon, 23 Jun 2025 06:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750658695;
-	bh=sS/dGjyTxAzwA3uG987pgo3ICOfSDwvIN8sR2GOsAvw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e37E4B6H6sbKdecMUCkSYAmskdB9Nfw/TK6Z8YpfWLTj+/omFii2BdRBH67R0rZe/
-	 vpN+6hkd/LffHR7nlQWSB3jgSaxVu4EF6UPjc71cZdX53w37l49pW502kCO1TpGVyy
-	 WLnQJzuJbTKcg3x8z2SkkR5xPeSLivl5fZnGb+8HpXjDyTJjGE+csgKbC1GNO+ehNK
-	 DeDW5KCdMwblPfYNNkrqJ+DIYSQv1H4xyTbrFYzOA0tb+igUe6yy4hdtCYu3RudGmq
-	 xK8PpnI9OeTM5T7GtHQ48Y1iy0doIocXjty6i/5vVIA+lXgBvzkLG2IhZikUEE+dSv
-	 RFgflx8B5nbGw==
-Message-ID: <955a19db-eb76-488c-8361-6ec8b558485e@kernel.org>
-Date: Mon, 23 Jun 2025 08:04:50 +0200
+	s=arc-20240116; t=1750659323; c=relaxed/simple;
+	bh=8dExokAvCBdhQOYv7n+ZVSUPc/CVbCGAYKdL9PCwj30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pp7X7L4TE1taEiW0RcFppXcTduaFULxJPXEmHOJ5bNL8seWpqoMU6UnDw5akgBd3BZBMRfzclRchOSNszHr+aTNAqecmHd6Q1YGtMQC7Aic6Ml4zW0aFRt357IACVcHO0vU1qDUO6QEkU83/TtmiuTbD8vnUzedSkX7zUCWO2a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VmBVQn/L; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750659322; x=1782195322;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8dExokAvCBdhQOYv7n+ZVSUPc/CVbCGAYKdL9PCwj30=;
+  b=VmBVQn/LbP001mTyrBpZWv793cYoMl/oyt2wXXAmfObokWspwb0hTVwB
+   cmn2I+Jn8XbNO4eOJKcBUXlw04nSP2JjSB5MTas0qb/dw23TQAsZ2ASbS
+   kA/Qj9cIvRigI8br/wGmo7s12dtqw1FXau2lFt/kaiwPViEqhNM5uvtv6
+   vVmZfC9zJangl6WN4KoRCijaLi2zppX6IXkCr4DBJLCRiquan7h9+6vIO
+   2DYtjjCTmp5e0h55z/Kb2CNzvKUUAo9SHGaBUKSe7HqbJCLpAFJf0RrpX
+   3uRX+JR+45i3MOEB5OVfeDwcUiSsCVeJSWk6ywM3V5+cL3vL6dha3OiqB
+   A==;
+X-CSE-ConnectionGUID: +dLsgKVTQM+Y3qe/VT6W7g==
+X-CSE-MsgGUID: Kv5umd09QHuPU8Upy7CVaA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="78262916"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="78262916"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2025 23:15:21 -0700
+X-CSE-ConnectionGUID: OIR39lX+QVO7NSw55CS1Xg==
+X-CSE-MsgGUID: VJoO+cCiS02/7/tFVypbQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="151647055"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 22 Jun 2025 23:15:19 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 2F3F8224; Mon, 23 Jun 2025 09:15:17 +0300 (EEST)
+Date: Mon, 23 Jun 2025 09:15:17 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [RFC] pinctrl: intel: Stop setting IRQF_NO_THREAD ?
+Message-ID: <20250623061517.GU2824380@black.fi.intel.com>
+References: <18ab52bd-9171-4667-a600-0f52ab7017ac@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] arm64: dts: axiado: Add initial support for AX3000
- SoC and eval board
-To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "soc@lists.linux.dev" <soc@lists.linux.dev>
-References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
- <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-4-341502d38618@axiado.com>
- <6ef92d1a-39cc-409f-8ebe-d28ad2006988@kernel.org>
- <bfcde082-270f-4152-b474-7828beab7cb9@axiado.com>
- <9012cc61-b499-4213-9753-54cf4d24c822@kernel.org>
- <bdc4408c-6fe4-48cd-bb40-3a17aed79cb6@axiado.com>
- <5163d9d8-d106-47f3-a0f9-0eaa01f15498@kernel.org>
- <56044658-925d-473c-9859-d4f10aa9330e@axiado.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <56044658-925d-473c-9859-d4f10aa9330e@axiado.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <18ab52bd-9171-4667-a600-0f52ab7017ac@kernel.org>
 
-On 23/06/2025 07:56, Harshit Shah wrote:
-> So, I am planning to add only following as a part of this patchset.
-> 
->       clocks {
->                 clk_xin: clock-200000000 {
->                         compatible = "fixed-clock";
->                         #clock-cells = <0>;
->                         clock-frequency = <200000000>;
->                         clock-output-names = "clk_xin";
->                 };
->                 refclk: clock-125000000 {
->                         compatible = "fixed-clock";
->                         #clock-cells = <0>;
->                         clock-frequency = <125000000>;
->                 };
->         };
-> 
-> Later, we will add more patches as a part of next-separate series for 
-> the controller, clocks(those can change) and other peripherals.
-Yes
+Hi,
 
-Best regards,
-Krzysztof
+On Sat, Jun 21, 2025 at 10:49:33AM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> While debugging the following lockdep report:
+> 
+> =============================
+>  [ BUG: Invalid wait context ]
+>  ...
+>  swapper/10/0 is trying to lock:
+>  ffff88819c271888 (&tp->xfer_wait){....}-{3:3},
+>   at: __wake_up (kernel/sched/wait.c:106 kernel/sched/wait.c:127)
+>  ...
+>  Call Trace:
+>  <IRQ>
+>  ...
+>  __raw_spin_lock_irqsave (./include/linux/spinlock_api_smp.h:111)
+>  __wake_up (kernel/sched/wait.c:106 kernel/sched/wait.c:127)
+>  vsc_tp_isr (drivers/misc/mei/vsc-tp.c:110) mei_vsc_hw
+>  __handle_irq_event_percpu (kernel/irq/handle.c:158)
+>  handle_irq_event (kernel/irq/handle.c:195 kernel/irq/handle.c:210)
+>  handle_edge_irq (kernel/irq/chip.c:833)
+>  ...
+>  </IRQ>
+> 
+> I realized after a while that the root-cause here is the IRQF_NO_THREAD
+> usage in pinctrl-intel.c. This was introduced in 1a7d1cb81eb2 ("pinctrl:
+> intel: Prevent force threading of the interrupt handler") to avoid problems
+> caused by using request_irq() for what should be a chained irq handler
+> (which itself is a workaround because of a shared IRQ on some platforms).
+> 
+> Generally speaking using IRQF_NO_THREAD is undesirable for 2 reasons:
+> 
+> 1. It introduces extra latency on PREEMPT-RT kernels
+> 2. Setting IRQF_NO_THREAD requires all interrupt handlers for GPIO
+>    interrupts to use raw-spinlocks only since normal spinlocks can
+>    sleep in PREEMPT-RT kernels and with IRQF_NO_THREAD the interrupt
+>    handlers will run in an atomic context
+> 
+> 2. is what is causing the lockdep report above, by simply using a
+> wake_up(&wq_head) call in an interrupt handler, since wait-queues
+> use normal spinlocks not raw spinlocks.
+> 
+> I've tried just removing the IRQF_NO_THREAD flag and that fixes
+> the lockdep report. I've also tried reproducing the problem for
+> which the flag was added in commit 1a7d1cb81eb2 by using a kernel
+> with CONFIG_IRQ_FORCED_THREADING and "threadirqs" on the kernel
+> commandline. And the problem not reproduce. I'm not sure this is
+> 100% proof that the flag is no longer necessary though ...
+
+Can you try also with CONFIG_PREEMPT_RT and see if that triggers the issue?
+If not then:
+
+> So 2 questions:
+> 
+> 1. Should we maybe just drop the flag ?
+> 2. Or should we have 2 different code-paths for GPIO controllers
+> with/without shared IRQs and use a chained-irq approach for the
+> not shared case, to at least reduce the usage of the flag ?
+
+I would just drop the flag then.
 
