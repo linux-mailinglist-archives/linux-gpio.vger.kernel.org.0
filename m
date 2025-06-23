@@ -1,65 +1,66 @@
-Return-Path: <linux-gpio+bounces-21988-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21989-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6693CAE36FE
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 09:34:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF46AAE3703
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 09:34:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F0A0D7A189A
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 07:32:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7549188243D
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 07:34:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8925C221729;
-	Mon, 23 Jun 2025 07:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24B0E221F3E;
+	Mon, 23 Jun 2025 07:32:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="sNHI+Joc"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="erWCrgmC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670DA1FECAF;
-	Mon, 23 Jun 2025 07:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD18202983;
+	Mon, 23 Jun 2025 07:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750663977; cv=none; b=O6kE5yUp04mFppyq2JR00A29KQ+t3sNOpu+OtIqHfRBa+BQGGcISun8S6F8lyKbMNo5JdX2V1wmekEmYxMox0uswY++LvKWk7Ubg3sTfG2AZkhe50w9fqhqcqHf1uAvLAPFZZavsVX+WyCjW93O3Lg9ltqINrV/dBoHpQbGfLS8=
+	t=1750663977; cv=none; b=VhbCl+0ss4AdhIqevIsPAW4aJr+vZC1kH32HxrJ9pR+h+OICC2+ALjx9EaDnBRCHdDqhuVTTWtLioSH8B8CDFXhUinku/GwvOU/+iRJffLl7kMIchEJjs9S/m+aVaj7w+bkK658zH35NxFt6JNYyzRajF+y4zqn8FJXv+fJIUTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750663977; c=relaxed/simple;
-	bh=lZAmebscBQ8MX02hjVnAxNLQv0xvYWt7K93oblYTI5Q=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=A4BX/288+ekBH2x/WleIUVMxhgESW9zufpeKk0ydIIyhjCLbXXm+Mtl+ZhbUFMw+7AqIVNO+qi+qf7xipgoKi8Mxl14d+w/zAXC8xP5yyw2AYZIORe/xC+kiokoqfcV76YRm/JltcXoovPYEeJWJKLGGhWZE2r68Fqdt7bo240c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=sNHI+Joc; arc=none smtp.client-ip=185.132.182.106
+	bh=VF/gfP5Nok6z3bdVoIS8jDUhe6V/p+W6EikTEmfJqms=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=b2E3iLXu/8055jpHUV09L4bYDjlsmEtqvNmE37LfQEDaAZPXdKdYaiGdYd9lWp7AdwJuoAw6NQ/m7SlhlsdTbKwLxMAzb48kOOX8f1c4mMo0/jr6bOMS04ei4jPQQjKgk9BdpNt5L8CCypF2qjybehMagMoEVWgG1tOyga/R3Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=erWCrgmC; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N5XHLY031861;
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N6s8tX016185;
 	Mon, 23 Jun 2025 09:32:41 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=9H1lc3RXGVHF2geyU88kye
-	jPbwZf42Tzp+LcwADoOnQ=; b=sNHI+JocG7GuQFGF/zcLKISfCOzxtPok4o7Ltc
-	931IDUk1ilDObUqR5IbtIR0/tXDMW8AF0HdXqOquq4jeOS09roGhFhW+eA2v7cy1
-	Hm/1cE2hBKmJxFzPVXjPviZyiiuGXhxV7vMhHPhzs4xBz5JyAfQ9Nq1wRIwy13Yb
-	ARom9b1U0SCHNmr3hST3a3uwNH5Ta/Jrtz/vDDD1AC9loxQ/3fZD0L9AfH82RoOB
-	9L4yZ9LGDSNvK866fPlXqQ5Gkdu268tc5nCBUX0fhgsD3/StyoCw08eNVJxvVTbm
-	dd55uHekR1zlZCSCVLGACVv+UObZS8EO3QTPOExW+vTFG2vQ==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	yavrQ6KbQIbRG7UX8VD2nP7vtEPRhEmqJLgT+KFhNHI=; b=erWCrgmClO9nbjBJ
+	bttoawGXkoegx0hi5ZSeke/XqgCTwGgGQKRGQRGiZjE67qbLK8de5WrlbKG3LdtE
+	dp87GW/QRdVF7z6D5S1+AsyD1pve89SqyiS8WyPPVTRdNGkglYRdGZEcA/gPkMlU
+	F8Wf7lZAyEiABQtMY3WPWWxupy5KtvgaaDZQntdJjga59jKu+9J7lnSd9ufLDTA5
+	swrKrSLQPB0b8c0eQStMn2up77VBDUHUv6EXq+pA64twDmxB0CPwSCq7JkufzEge
+	A6oGcyrJ2s19dfzeaL8zlXpzxgOnfBGx3/tZANx/uzqv+JbP9TI5eAJYnpQyyAP8
+	X1eMsg==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dj5ner7y-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dj5ner7x-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 23 Jun 2025 09:32:41 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 08BD340050;
-	Mon, 23 Jun 2025 09:31:36 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 83E5C4004A;
+	Mon, 23 Jun 2025 09:31:35 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EF75EB52731;
-	Mon, 23 Jun 2025 09:29:40 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DAED2B53C00;
+	Mon, 23 Jun 2025 09:29:41 +0200 (CEST)
 Received: from localhost (10.252.18.29) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
- 2025 09:29:40 +0200
+ 2025 09:29:41 +0200
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Subject: [PATCH v6 0/8] Introduce HDP support for STM32MP platforms
-Date: Mon, 23 Jun 2025 09:29:10 +0200
-Message-ID: <20250623-hdp-upstream-v6-0-387536f08398@foss.st.com>
+Date: Mon, 23 Jun 2025 09:29:11 +0200
+Subject: [PATCH v6 1/8] dt-bindings: pinctrl: stm32: Introduce HDP
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,12 +69,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAEYCWWgC/23NQW7DIBCF4atErEsEAzMxXfUeVReYgZpFYgtcq
- 1Xku5dEqpI4Xb6Rvn/OosaSYxWvu7Mocck1j6c26GUnwuBPn1FmbluAAlQAVg48ya+pziX6oyS
- AiOy19S6JRqYSU/6+5t4/2h5yncfyc60v+nL9C+FjaNFSScfKukBojPJvaax1X+d9GI/iklrgx
- hHUhkPjaBL1XY8phe6Zm3tuNtw03jMFr52zRP98t/e823Db+CG63ngGZYifOd446e13bJwSU1I
- cEA7hka/r+gvxdvc0pgEAAA==
-X-Change-ID: 20250224-hdp-upstream-622e5da14a9f
+Message-ID: <20250623-hdp-upstream-v6-1-387536f08398@foss.st.com>
+References: <20250623-hdp-upstream-v6-0-387536f08398@foss.st.com>
+In-Reply-To: <20250623-hdp-upstream-v6-0-387536f08398@foss.st.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor Dooley <conor+dt@kernel.org>,
@@ -98,97 +96,214 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-23_02,2025-06-20_01,2025-03-28_01
 
-This patch series introduces the Hardware Debug Port (HDP) support for
-STM32MP platforms.
+'HDP' stands for Hardware Debug Port, it is an hardware block in
+STMicrolectronics' MPUs that let the user decide which internal SoC's
+signal to observe.
+It provides 8 ports and for each port there is up to 16 different
+signals that can be output.
+Signals are different for each MPU.
 
-It includes updates to the mmio gpio driver, the addition of device tree
-bindings, the HDP driver, and updates to the device tree files for
-STM32MP13, STM32MP15,
-and STM32MP25 SoCs.
-The series also updates the MAINTAINERS file to include myself as the
-maintainer for the STM32 HDP driver and adds the necessary
-pinmux configurations for HDP pins on STM32MP157C-DK2 as example.
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
-Changes in v6:
-- Add Krzysztof Kozlowski's 'Reviewd-by' trailer on bindings.
-- Remove gpio mmio patch as taken by Bartosz Golaszewski:
-  https://lore.kernel.org/all/175031700235.8154.11042956002137082224.b4-ty@linaro.org/
-- Link to v5: https://lore.kernel.org/r/20250613-hdp-upstream-v5-0-6fd6f0dc527c@foss.st.com
+ .../devicetree/bindings/pinctrl/st,stm32-hdp.yaml  | 187 +++++++++++++++++++++
+ 1 file changed, 187 insertions(+)
 
-Changes in v5:
-- (Better) Change the bindings file name:
-  's/st,stm32-pinctrl-hdp.yaml/st,stm32-hdp.yaml/g'
-- Remove Krzysztof Kozlowski's 'Reviewed-by' trailer on bindings.
-- Add Linus Walleij's 'Reviewed-by' trailers.
-- Refine SoC dtsi patch's commit message to explain the need of keeping
-  the HDP node disabled.
-- Link to v4: https://lore.kernel.org/r/20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml
+new file mode 100644
+index 000000000000..d0eaee7f52c8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml
+@@ -0,0 +1,187 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) STMicroelectronics 2025.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/st,stm32-hdp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STM32 Hardware Debug Port Mux/Config
++
++maintainers:
++  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
++
++description:
++  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
++  It allows to output internal signals on SoC's GPIO.
++
++properties:
++  compatible:
++    enum:
++      - st,stm32mp131-hdp
++      - st,stm32mp151-hdp
++      - st,stm32mp251-hdp
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++patternProperties:
++  "^hdp[0-7]-pins$":
++    type: object
++    $ref: pinmux-node.yaml#
++    additionalProperties: false
++
++    properties:
++      pins:
++        pattern: '^HDP[0-7]$'
++
++      function: true
++
++    required:
++      - function
++      - pins
++
++allOf:
++  - $ref: pinctrl.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32mp131-hdp
++    then:
++      patternProperties:
++        "^hdp[0-7]-pins$":
++          properties:
++            function:
++              enum: [ pwr_pwrwake_sys, pwr_stop_forbidden, pwr_stdby_wakeup, pwr_encomp_vddcore,
++                      bsec_out_sec_niden, aiec_sys_wakeup, none, ddrctrl_lp_req,
++                      pwr_ddr_ret_enable_n, dts_clk_ptat, sram3ctrl_tamp_erase_act, gpoval0,
++                      pwr_sel_vth_vddcpu, pwr_mpu_ram_lowspeed, ca7_naxierrirq, pwr_okin_mr,
++                      bsec_out_sec_dbgen, aiec_c1_wakeup, rcc_pwrds_mpu, ddrctrl_dfi_ctrlupd_req,
++                      ddrctrl_cactive_ddrc_asr, sram3ctrl_hw_erase_act, nic400_s0_bready, gpoval1,
++                      pwr_pwrwake_mpu, pwr_mpu_clock_disable_ack, ca7_ndbgreset_i,
++                      bsec_in_rstcore_n, bsec_out_sec_bsc_dis, ddrctrl_dfi_init_complete,
++                      ddrctrl_perf_op_is_refresh, ddrctrl_gskp_dfi_lp_req, sram3ctrl_sw_erase_act,
++                      nic400_s0_bvalid, gpoval2, pwr_sel_vth_vddcore, pwr_mpu_clock_disable_req,
++                      ca7_npmuirq0, ca7_nfiqout0, bsec_out_sec_dftlock, bsec_out_sec_jtag_dis,
++                      rcc_pwrds_sys, sram3ctrl_tamp_erase_req, ddrctrl_stat_ddrc_reg_selfref_type0,
++                      dts_valobus1_0, dts_valobus2_0, tamp_potential_tamp_erfcfg, nic400_s0_wready,
++                      nic400_s0_rready, gpoval3, pwr_stop2_active, ca7_nl2reset_i,
++                      ca7_npreset_varm_i, bsec_out_sec_dften, bsec_out_sec_dbgswenable,
++                      eth1_out_pmt_intr_o, eth2_out_pmt_intr_o, ddrctrl_stat_ddrc_reg_selfref_type1,
++                      ddrctrl_cactive_0, dts_valobus1_1, dts_valobus2_1, tamp_nreset_sram_ercfg,
++                      nic400_s0_wlast, nic400_s0_rlast, gpoval4, ca7_standbywfil2,
++                      pwr_vth_vddcore_ack, ca7_ncorereset_i, ca7_nirqout0, bsec_in_pwrok,
++                      bsec_out_sec_deviceen, eth1_out_lpi_intr_o, eth2_out_lpi_intr_o,
++                      ddrctrl_cactive_ddrc, ddrctrl_wr_credit_cnt, dts_valobus1_2, dts_valobus2_2,
++                      pka_pka_itamp_out, nic400_s0_wvalid, nic400_s0_rvalid, gpoval5,
++                      ca7_standbywfe0, pwr_vth_vddcpu_ack, ca7_evento, bsec_in_tamper_det,
++                      bsec_out_sec_spniden, eth1_out_mac_speed_o1, eth2_out_mac_speed_o1,
++                      ddrctrl_csysack_ddrc, ddrctrl_lpr_credit_cnt, dts_valobus1_3, dts_valobus2_3,
++                      saes_tamper_out, nic400_s0_awready, nic400_s0_arready, gpoval6,
++                      ca7_standbywfi0, pwr_rcc_vcpu_rdy, ca7_eventi, ca7_dbgack0, bsec_out_fuse_ok,
++                      bsec_out_sec_spiden, eth1_out_mac_speed_o0, eth2_out_mac_speed_o0,
++                      ddrctrl_csysreq_ddrc, ddrctrl_hpr_credit_cnt, dts_valobus1_4, dts_valobus2_4,
++                      rng_tamper_out, nic400_s0_awavalid, nic400_s0_aravalid, gpoval7 ]
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32mp151-hdp
++    then:
++      patternProperties:
++        "^hdp[0-7]-pins$":
++          properties:
++            function:
++              enum: [ pwr_pwrwake_sys, cm4_sleepdeep, pwr_stdby_wkup, pwr_encomp_vddcore,
++                      bsec_out_sec_niden, none, rcc_cm4_sleepdeep, gpu_dbg7, ddrctrl_lp_req,
++                      pwr_ddr_ret_enable_n, dts_clk_ptat, gpoval0, pwr_pwrwake_mcu, cm4_halted,
++                      ca7_naxierrirq, pwr_okin_mr, bsec_out_sec_dbgen, exti_sys_wakeup,
++                      rcc_pwrds_mpu, gpu_dbg6, ddrctrl_dfi_ctrlupd_req, ddrctrl_cactive_ddrc_asr,
++                      gpoval1, pwr_pwrwake_mpu, cm4_rxev, ca7_npmuirq1, ca7_nfiqout1,
++                      bsec_in_rstcore_n, exti_c2_wakeup, rcc_pwrds_mcu, gpu_dbg5,
++                      ddrctrl_dfi_init_complete, ddrctrl_perf_op_is_refresh,
++                      ddrctrl_gskp_dfi_lp_req, gpoval2, pwr_sel_vth_vddcore, cm4_txev, ca7_npmuirq0,
++                      ca7_nfiqout0, bsec_out_sec_dftlock, exti_c1_wakeup, rcc_pwrds_sys, gpu_dbg4,
++                      ddrctrl_stat_ddrc_reg_selfref_type0, ddrctrl_cactive_1, dts_valobus1_0,
++                      dts_valobus2_0, gpoval3, pwr_mpu_pdds_not_cstbydis, cm4_sleeping, ca7_nreset1,
++                      ca7_nirqout1, bsec_out_sec_dften, bsec_out_sec_dbgswenable,
++                      eth_out_pmt_intr_o, gpu_dbg3, ddrctrl_stat_ddrc_reg_selfref_type1,
++                      ddrctrl_cactive_0, dts_valobus1_1, dts_valobus2_1, gpoval4, ca7_standbywfil2,
++                      pwr_vth_vddcore_ack, ca7_nreset0, ca7_nirqout0, bsec_in_pwrok,
++                      bsec_out_sec_deviceen, eth_out_lpi_intr_o, gpu_dbg2, ddrctrl_cactive_ddrc,
++                      ddrctrl_wr_credit_cnt, dts_valobus1_2, dts_valobus2_2, gpoval5,
++                      ca7_standbywfi1, ca7_standbywfe1, ca7_evento, ca7_dbgack1,
++                      bsec_out_sec_spniden, eth_out_mac_speed_o1, gpu_dbg1, ddrctrl_csysack_ddrc,
++                      ddrctrl_lpr_credit_cnt, dts_valobus1_3, dts_valobus2_3, gpoval6,
++                      ca7_standbywfi0, ca7_standbywfe0, ca7_dbgack0, bsec_out_fuse_ok,
++                      bsec_out_sec_spiden, eth_out_mac_speed_o0, gpu_dbg0, ddrctrl_csysreq_ddrc,
++                      ddrctrl_hpr_credit_cnt, dts_valobus1_4, dts_valobus2_4, gpoval7 ]
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32mp251-hdp
++    then:
++      patternProperties:
++        "^hdp[0-7]-pins$":
++          properties:
++            function:
++              enum: [ pwr_pwrwake_sys, cpu2_sleep_deep, bsec_out_tst_sdr_unlock_or_disable_scan,
++                      bsec_out_nidenm, bsec_out_nidena, cpu2_state_0, rcc_pwrds_sys, gpu_dbg7,
++                      ddrss_csysreq_ddrc, ddrss_dfi_phyupd_req, cpu3_sleep_deep,
++                      d2_gbl_per_clk_bus_req, pcie_usb_cxpl_debug_info_ei_0,
++                      pcie_usb_cxpl_debug_info_ei_8, d3_state_0, gpoval0, pwr_pwrwake_cpu2,
++                      cpu2_halted, cpu2_state_1, bsec_out_dbgenm, bsec_out_dbgena, exti1_sys_wakeup,
++                      rcc_pwrds_cpu2, gpu_dbg6, ddrss_csysack_ddrc, ddrss_dfi_phymstr_req,
++                      cpu3_halted, d2_gbl_per_dma_req, pcie_usb_cxpl_debug_info_ei_1,
++                      pcie_usb_cxpl_debug_info_ei_9, d3_state_1, gpoval1, pwr_pwrwake_cpu1,
++                      cpu2_rxev, cpu1_npumirq1, cpu1_nfiqout1, bsec_out_shdbgen, exti1_cpu2_wakeup,
++                      rcc_pwrds_cpu1, gpu_dbg5, ddrss_cactive_ddrc, ddrss_dfi_lp_req, cpu3_rxev,
++                      hpdma1_clk_bus_req, pcie_usb_cxpl_debug_info_ei_2,
++                      pcie_usb_cxpl_debug_info_ei_10, d3_state_2, gpoval2, pwr_sel_vth_vddcpu,
++                      cpu2_txev, cpu1_npumirq0, cpu1_nfiqout0, bsec_out_ddbgen, exti1_cpu1_wakeup,
++                      cpu3_state_0, gpu_dbg4, ddrss_mcdcg_en, ddrss_dfi_freq_0, cpu3_txev,
++                      hpdma2_clk_bus_req, pcie_usb_cxpl_debug_info_ei_3,
++                      pcie_usb_cxpl_debug_info_ei_11, d1_state_0, gpoval3, pwr_sel_vth_vddcore,
++                      cpu2_sleeping, cpu1_evento, cpu1_nirqout1, bsec_out_spnidena, exti2_d3_wakeup,
++                      eth1_out_pmt_intr_o, gpu_dbg3, ddrss_dphycg_en, ddrss_obsp0, cpu3_sleeping,
++                      hpdma3_clk_bus_req, pcie_usb_cxpl_debug_info_ei_4,
++                      pcie_usb_cxpl_debug_info_ei_12, d1_state_1, gpoval4, cpu1_standby_wfil2,
++                      none, cpu1_nirqout0, bsec_out_spidena, exti2_cpu3_wakeup, eth1_out_lpi_intr_o,
++                      gpu_dbg2, ddrctrl_dfi_init_start, ddrss_obsp1, cpu3_state_1,
++                      d3_gbl_per_clk_bus_req, pcie_usb_cxpl_debug_info_ei_5,
++                      pcie_usb_cxpl_debug_info_ei_13, d1_state_2, gpoval5, cpu1_standby_wfi1,
++                      cpu1_standby_wfe1, cpu1_halted1, cpu1_naxierrirq, bsec_out_spnidenm,
++                      exti2_cpu2_wakeup, eth2_out_pmt_intr_o, gpu_dbg1, ddrss_dfi_init_complete,
++                      ddrss_obsp2, d2_state_0, d3_gbl_per_dma_req, pcie_usb_cxpl_debug_info_ei_6,
++                      pcie_usb_cxpl_debug_info_ei_14, cpu1_state_0, gpoval6, cpu1_standby_wfi0,
++                      cpu1_standby_wfe0, cpu1_halted0, bsec_out_spidenm, exti2_cpu1__wakeup,
++                      eth2_out_lpi_intr_o, gpu_dbg0, ddrss_dfi_ctrlupd_req, ddrss_obsp3, d2_state_1,
++                      lpdma1_clk_bus_req, pcie_usb_cxpl_debug_info_ei_7,
++                      pcie_usb_cxpl_debug_info_ei_15, cpu1_state_1, gpoval7 ]
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++
++    pinctrl@54090000 {
++      compatible = "st,stm32mp151-hdp";
++      reg = <0x54090000 0x400>;
++      clocks = <&rcc HDP>;
++      pinctrl-names = "default";
++      pinctrl-0 = <&hdp2_gpo>;
++      hdp2_gpo: hdp2-pins {
++        function = "gpoval2";
++        pins = "HDP2";
++      };
++    };
 
-Changes in v4:
-- 's/Add/add/g' in MAINTAINERS commit message.
-- Fix the (wrong) status update for the thermal node in stm32mp131.dtsi
-  file.
-- Do not enable HDP by default during compile testing.
-- Change the bindings file name:
-  's/st,stm32-pinctrl-hdp.yaml/st,stm32-hdp.yaml/g'
-- Add Krzysztof Kozlowski's 'Reviewd-by' trailer on bindings.
-- Link to v3: https://lore.kernel.org/r/20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com
-
-Changes in v3:
-- Use `bgpio_init()` function:
-    - Add add patch to create the `BGPIOF_NO_INPUT` flag needed for the
-     `bgpio_setup_direction()` used in `bgpio_init()`
-    - Remove `stm32_hdp_gpio_get` and `stm32_hdp_gpio_set`
-- Use `static` pm ops
-- Update bindings:
-    - add pattern instruction for pin values
-    - remove function's maxItems to use `function: true`
-    - fix the compatible in the exemples
-- Link to v2: https://lore.kernel.org/r/20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com
-
-Changes in v2:
-- Remove bindings header files with function name as #define
-- Add match_data with function name for three compatible:
-  "st,stm32mp131-hdp", "st,stm32mp151-hdp" and "st,stm32mp251-hdp".
-- Rework a bit the driver to use match_data.
-- Remove the use of `dev_err_probe(` in the resume ops.
-- Remove `MODULE_ALIAS(`.
-- Remove the vertical bar in bindings description paragraph.
-- Fix an error in the `pinctrl-0` parameter of the binding example, it
-  was refering a node that wasn't existing.
-- Use uppercase pin names.
-- Link to v1: https://lore.kernel.org/r/20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com
-
----
-Clément Le Goffic (8):
-      dt-bindings: pinctrl: stm32: Introduce HDP
-      pinctrl: stm32: Introduce HDP driver
-      MAINTAINERS: add Clément Le Goffic as STM32 HDP maintainer
-      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
-      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
-      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
-      ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP pinctrl node
-      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-dk2 board
-
- .../devicetree/bindings/pinctrl/st,stm32-hdp.yaml  | 187 ++++++
- MAINTAINERS                                        |   6 +
- arch/arm/boot/dts/st/stm32mp131.dtsi               |   7 +
- arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi        |  25 +
- arch/arm/boot/dts/st/stm32mp151.dtsi               |   7 +
- arch/arm/boot/dts/st/stm32mp157c-dk2.dts           |   6 +
- arch/arm64/boot/dts/st/stm32mp251.dtsi             |   7 +
- drivers/pinctrl/stm32/Kconfig                      |  14 +
- drivers/pinctrl/stm32/Makefile                     |   1 +
- drivers/pinctrl/stm32/pinctrl-stm32-hdp.c          | 720 +++++++++++++++++++++
- 10 files changed, 980 insertions(+)
----
-base-commit: cc42860b8789f3aac4e42cc223f8e8325a3cfa33
-change-id: 20250224-hdp-upstream-622e5da14a9f
-
-Best regards,
 -- 
-Clément Le Goffic <clement.legoffic@foss.st.com>
+2.43.0
 
 
