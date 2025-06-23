@@ -1,102 +1,121 @@
-Return-Path: <linux-gpio+bounces-21977-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21978-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED67AE3681
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 09:12:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA57FAE3687
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 09:16:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9AC0F1892ACC
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 07:12:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8293D1890005
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 07:16:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A34C1F1306;
-	Mon, 23 Jun 2025 07:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CBED1DF97C;
+	Mon, 23 Jun 2025 07:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LuYKb2xU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F091F4C8C
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 07:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260B9847B
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 07:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750662712; cv=none; b=Mzg9pryo6NyTmW9Um+Bh2XwVbdm86V8jaXU0ZixydDviP68h4xlaklKpr7ePDm7o+wKUcknbZ2NIC57ycMNaCijs46WnnGuc+0AUA6hvg8ejF72lM5+roPERGMOOnbEFHFF488fIIwcd2eQhPjfq5lHE8F+6nsXuqB3VWNsOdto=
+	t=1750662997; cv=none; b=X/Gx799EYmE4uDJSyeDDetLNhkpjSs2BGCWmj95/du1oD3oyd6CeXlC2kwuV2RqFUItd9her9yYUTcTCXepWLwcZgaxjjiX7AywrTn5JDfG9uJKLpUumW+KgI3Gfaq95JmSsyDVqo+QJbOuajStQ1TyABMPBb0BR5366ls3ma48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750662712; c=relaxed/simple;
-	bh=8E9pKEeqU9K5+berDfkrRQez1dGqpjpeYbjpaAzRN7U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SiRDw+U7Je3RbN0pTXnxBOLz3g/NOqN0vYhHdp/R0MZ5L+PnHMSYUV4eQAI6Z8gzcZmc0mZizLhV4wUh2MCtEKx3za3JfP7j2W5PumS8CW8bFVsUQQl4MXk5EHHH9AxAGLqoCaKiH6A8gyWN2hXR1AMShZO2QONGHrusx8sVnk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uTbL3-0003AE-8Z; Mon, 23 Jun 2025 09:11:33 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uTbL2-004uJr-0o;
-	Mon, 23 Jun 2025 09:11:32 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uTbL2-0005Oi-0T;
-	Mon, 23 Jun 2025 09:11:32 +0200
-Message-ID: <c1b2f651f73b4469a410f1f5027f974b4e07ddd2.camel@pengutronix.de>
-Subject: Re: [PATCH v1 2/2] ASoC: codecs: wsa883x: Handle shared reset GPIO
- for WSA883x speakers
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Mohammad Rafi
- Shaik <mohammad.rafi.shaik@oss.qualcomm.com>, Srinivas Kandagatla
- <srini@kernel.org>,  Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela
- <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, quic_pkumpatl@quicinc.com,
- kernel@oss.qualcomm.com
-Date: Mon, 23 Jun 2025 09:11:32 +0200
-In-Reply-To: <f9f96bf0-3539-4e77-8d3e-b87ddc561925@oss.qualcomm.com>
-References: <20250620103012.360794-1-mohammad.rafi.shaik@oss.qualcomm.com>
-	 <20250620103012.360794-3-mohammad.rafi.shaik@oss.qualcomm.com>
-	 <f9f96bf0-3539-4e77-8d3e-b87ddc561925@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1750662997; c=relaxed/simple;
+	bh=8O3gEP3+T88+/ojbk5Me4OyvYjohYzBZc1dpuIx8xFQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jP/ldD8BBrloZzoJovhvWSiGkW2jU3w4kLdPdrqZ3GetT6YkYeqMVHMMYWNnpbYYiNxRuXWQFXJZ9mVaFwxdDEOTYOGCOugF7EQ24bfJSuO14ojVmlt9G07sZpg9kMfh0mDe56C0jlxIq82vlEbGQp+P14ohkw4qPJpwaPUzTr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LuYKb2xU; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453608ed113so33316995e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 00:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750662993; x=1751267793; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=liJJPl8dY//CdYSiJkeFpH4++k9pjjPDNYZyNxezwf8=;
+        b=LuYKb2xUAfYl1wIPyyoyLP9z9reBK6z3qvAlj6uG8x+Yk7V+b0DH2Sz1fckIDi6Gzm
+         ZZFn+diGS5rswhqotr+h/inVp8s+06sPek89sGs/nstWGgarubkXncCowgmzulw6a+q9
+         bp1CYyNhiOz2/PsNG0290cv2TQWIblgPqfqSGXksPh8/iTouu+38NQDNUlyifNZbnbDZ
+         VLS869ME0EKq2znK7xo8MaDOnCXa26E+udcbEQvf7p3GlsFSWtuaZ3hzJsY2mOyF20Fh
+         CSVVKyEJgnKDqicgGexCDBnJNPrCZzHYFyXDdHiu0xZQByLAGJEZ8MiZSQinrJmdIAkL
+         pFcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750662993; x=1751267793;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=liJJPl8dY//CdYSiJkeFpH4++k9pjjPDNYZyNxezwf8=;
+        b=WMsq5vT1P60C5i7BLWJQFxDmKEZzxDr1HWVboq78bsi6Dlqf7gwJLWmlccTzA+OlxJ
+         +20R8m6xq77S6SIwqFhpIsKP7ONiAWv/6xR80iRIj4VQcpui/bWAUuww70pwtbcGNqvs
+         zWMcEwq69Q6yKXC5GYUsKfKr9kuBJLr8tFuO1Q0NbpbcpEScNHzB8YPWdnjz+cOLNguV
+         JjPbtWFuEALtx1bpPDHriALsnbWmePTvShiLBog2e0YtOfj7tmWr5kZp9sK1BSdIDTjo
+         Dm3Y73ljK1ULbW7ScHOnAvN8KzW6g63ahmtlWsWgfIkuuB97mUKU6i5aJAGK2xFAjAue
+         YPdg==
+X-Gm-Message-State: AOJu0Yzp1ql9THLCSr/XaMZeoEknubavCZMCBUDo6yOd7Hu/A8jLTyfc
+	faRMgjjsrtbb6wgcdvb1izIl+TZr7nFL95/lXbPnRu3rEs6SaMhxt18PNag3NgYFFPuZgnxRThd
+	85oRwLOE=
+X-Gm-Gg: ASbGnctGCTWtbyxDNVpwuuIi5iYMK3illqYe3YNR2YYYD8TZ2udG05ehXKA/BeUtiKZ
+	SEbpMNUyQaowt7RLn9rbCz1/kBNsXh9kw4mzHX+ABRIm6PvrVrio5fh/FkSEflnH36Da973lVDb
+	5/oVePf3loCbn+guljDl4wyHDtRA6mxXY0/QJgbppNu3pKcYQm5kJ2arNcAIJ1kY7WjgmPLVZFY
+	u80LD/NWI4iXcYd/pjxC+ZrofEWh9gUG7vhpeZPIsmdxCA4fpjaX2RfydOKWuKziS5vsOxkB9ps
+	8iZ36fQIt9B9qM55T3aOKFoqi5gbg+5dXWUzXMNvhsNtQ6bm9NLI5UkxXRFEEBmn5Vk62jpd
+X-Google-Smtp-Source: AGHT+IHzyDpp2qGypLpfXfJVxyNiDlToFHj9XUgSVxBPe6NLXlydGzO5SPHyU+bIMznf3ug7wz4S1Q==
+X-Received: by 2002:a05:600c:190b:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-453659eebd5mr115535635e9.17.1750662992653;
+        Mon, 23 Jun 2025 00:16:32 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:5ce:238e:62a6:cbbc])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535eac92c6sm134894595e9.22.2025.06.23.00.16.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 00:16:32 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	Antonio Quartulli <antonio@mandelbit.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib-sysfs: fix use-after-free in error path
+Date: Mon, 23 Jun 2025 09:16:30 +0200
+Message-ID: <175066296706.10516.10782817854642788186.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250622220221.28025-1-antonio@mandelbit.com>
+References: <20250622220221.28025-1-antonio@mandelbit.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fr, 2025-06-20 at 21:35 +0300, Dmitry Baryshkov wrote:
-> On 20/06/2025 13:30, Mohammad Rafi Shaik wrote:
-> > On some Qualcomm platforms, such as QCS6490-RB3Gen2 and QCM6490-IDP,
-> > multiple WSA8830/WSA8835 speakers share a common reset (shutdown) GPIO.
-> > To handle such cases, use the reset controller framework along with the
-> > "reset-gpio" driver.
->=20
-> How does this handle the fact that resetting one codec will also=20
-> silently reset another one?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-It's the other way around. Since shared reset controls have a common
-deassertion refcount, actual reset assertion only happens once
-reset_control_assert() has been called on all shared reset controls
-[1]. The speakers would only be put back into reset once the last one
-is unbound.
 
-[1] https://docs.kernel.org/driver-api/reset.html#shared-and-exclusive-rese=
-ts
+On Mon, 23 Jun 2025 00:02:21 +0200, Antonio Quartulli wrote:
+> When invoking device_create_with_groups() its return
+> value is stored in `data->cdev_base`.
+> However, in case of faiure, `data` is first
+> freed and then derefernced in order to return
+> `data->cdev_base`.
+> 
+> Fix the use-after-free by extracting the error
+> code before free'ing `data`.
+> 
+> [...]
 
-regards
-Philipp
+Thanks for the catch. I tweaked the commit message and added the Fixes: tag.
+Applied, thanks!
+
+[1/1] gpiolib-sysfs: fix use-after-free in error path
+      https://git.kernel.org/brgl/linux/c/e6bb78570f7d531622ec572ef9ddbe6e66ff16ce
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
