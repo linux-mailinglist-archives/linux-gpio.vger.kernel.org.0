@@ -1,192 +1,125 @@
-Return-Path: <linux-gpio+bounces-21981-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-21991-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14447AE36CB
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 09:30:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D03DAE3709
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 09:35:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4A5F1893076
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 07:30:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AAE7A16E3FD
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jun 2025 07:35:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF01C1F8733;
-	Mon, 23 Jun 2025 07:30:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AF97201270;
+	Mon, 23 Jun 2025 07:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zmh8NBlJ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gxoLlVjq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC2F1519A6
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 07:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EA91E7C2E
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 07:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750663823; cv=none; b=ok/lwYj6F21LFXFr0UyPm6m0AzoEn0u5Ppx4ZAR4fPTUPvYcoJ6XgNa5I+mpqseFtWe/5hVW7DwKqXVTRaSKyy7CLdjYvWCzdTNwUNtYQhn7kCvVSzibGVv7WgHfgfWHGBrGMVq3fz1wIImpi5dpKFzmM4bDbb6xUR9t5dzk9VM=
+	t=1750664035; cv=none; b=Xjj21gYAbNdoZMLOPfsfpEpyytPQhGwelZQwGyPSQvJ1w9SkbPfWey15C2BSk4vAktGojM7tRLXtr5RrC/YSSVrkoEaQLMRHNR1IZugbSghoarE2ORydvPrrTA6nlWidxKa4VJtEb/QMWdnwnV6HbHGkX6hJcnkITtakg8TOfyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750663823; c=relaxed/simple;
-	bh=1H4Bg1xSrIFZOITWzyXEdnXralTg6Df4XFkD/EzqYK4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TeVOx6csiwXSDhrZhRlRRHZNq33PNmRCJakdDGGkxfeXNzcy37C+Qdie77eEA06cA3Dci9lskSX98gFKLT3NoByNVrCrMm1Xqi2wQ2nVtZKqSAqHFVZmo5zzVZwDFiguhTVuxRrh4tSAkuoh/FcV4vLoRuIKXsyocLfAD+2saAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zmh8NBlJ; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4f64cdc2dso565349f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 00:30:19 -0700 (PDT)
+	s=arc-20240116; t=1750664035; c=relaxed/simple;
+	bh=hZqwKFrQ22pH+J6FCqtPgcrjFb7CkKy8B23+PKK0y8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OUP6HJ3+NF1JAoHicQ1s71aJUocxcAI7x0vo1dJKoCgJwlncxpK/ROKt0dpliYBOvDzwAOnXmIg2U/4hXYqpd71VBS5XbqvLPHIV+FXDwHQILRL4isSEKd/1YhsAGCOz7jgfCtzNwP4bs5ELfSA6C2qQ/naUy5fRVezI/OFhVfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gxoLlVjq; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54d98aa5981so5114965e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 00:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750663818; x=1751268618; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=JyX7Id45J55w0I/fP0ufUOPO5FO7kbptXGfhsQYTedw=;
-        b=zmh8NBlJ43y+YhVlIOzdEx82ohFYHpmrNJYOsfx7RTzGSJOR4D1yrF1GamsOXuBV59
-         yUsfQLWfopbxfhZl0PSIgFBjzR/ywxemqJaMYfvjwLAZzooaMI9/8uHtnhlXnahTVgBO
-         mt+gZWv6b40oo3HZaOgaOiu+SNXXYaPj6xnezt9dLIimEk919ivtIxtq+Nf22M9k4Qlo
-         HR5srk46NTpMr47ZNGbQ/wWA9BKOiBgdpKpZfXBl3yoxGCezBA4key8KSeT4lik0l95c
-         rcmHVU5Eu9isRI7nMdAYsvzR8X8zzP/F6ko0gY8oF8rIOA0AzjeD2lGz/BfXtxBWWbeC
-         ea7A==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750664032; x=1751268832; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e/FmDVYFDGwW5KMGc8hcV6hExdC2WI6OVDkBnOBtebc=;
+        b=gxoLlVjq7UAq81SKleh0Z67563NNike1VukXSYueZBWksTROPOITfzXDsexJQXB7UE
+         gsSWZFUfYxakoUtIqjb1aOGlpIX5thWlq2hFxnjFf1d85FzqvnA5k7EgOqcmAU50coQT
+         G71FSEG7TNaIaHswOgiYYAUYzg/UhHfuG7ZwWrJW5Cuwi2v7YjFM9wF6iIGt4Q9fKot8
+         zoNnFnIhFB677I+/avdqujD4Y+n2+vjYzpg8QYb11ZyFWvjEHsZxUI5nhT2M/22yp8gU
+         Q7JrCPV0+FvEhPMegJ0Xd7sE1yQ3oObfTAxeLviSNoMa4ZbHlgvTe25pMdutOaL9b8Rt
+         EK+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750663818; x=1751268618;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JyX7Id45J55w0I/fP0ufUOPO5FO7kbptXGfhsQYTedw=;
-        b=ttBXmxveaThhjoeV0NWVgv9U6qsRmCdgkrO0IAVX3EC3YA8AUHMfsd2nehTPnYCuU4
-         b3GtafHEgjPy/xHB12dhOn3Q08Gul1JaXd/dFeZJNiepG2iPFtKo2ic5jglVP3V+q4om
-         isTUMseZjVctVYGcyIq4CNFB7bUwHDSksxlzMkohdAQGzw6iyj2dHmuDkuZy22GRPmQ6
-         mB+yqYljOV3pavRkOeJp3m7+UHVGw8L2rncq/HJ1j4YLDUYTHhI5X4ecpoGIiWxtkQeL
-         /AAJ1OR5Oq/AA2e3t3Vi37ffH05EF9How5QwHZWC4C9tB2kfBhGBHCWjv1vLZyQCDOyP
-         61Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCX82gYF73v0f4GZSDSfNME+Jlxbuy/mP5RTDgOYpL053p+FynRgPmqFYaezhPt1e3PkRGTVYUqS8p0h@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6dJD17SwrFKO2ORAfA8x2EuqI6oGHd+Z7jhMezuM56STs43Yz
-	D566ocIH/0qEJjKLxl3oVOVJp0wZo0w4xV+8THE0Ql7EBbnnUXGgyETIyGdeVRFvOJM=
-X-Gm-Gg: ASbGncs6+cs/lPBtgcF0EHff9HWcXHDANxUi5lchwYW/mYYXqU4Rm6yFWe893iQUigB
-	rL6+h2Afkv7GRPDvWnpzplYZQNLtkM+JbAMq24pMNTVNxH5MbY7L2uGuGrxVV3JsUaCabSnAVvD
-	V2EbXSB4xivNm0CpAgbG2XoFPXejYXxnPfkoL345d437MKAePTV1YbmTCRZENwoI8OuMO7BtPyJ
-	NvaPuUAVs2c+m1Z3oXd2pFgaOE6SvUY46xGA1lsr/Xx1DlRs7wOJY/AuiYmVM/xTun1DycKOKYF
-	4V16yhU0hfzrdRX4TfoEobmftM8wofL2zqVzSdnunAg+BQdno6OxGWXZWUR4EjMNy4QgGReWaiN
-	6Bbl0yvbh6GrU0y+uvg==
-X-Google-Smtp-Source: AGHT+IE5sAJn2EldwKQPeiP4adLRE3U5OsQwf6bTownItGgAHFLMi64HBwYJ6D64VqjEns0LJrnYrg==
-X-Received: by 2002:a05:600c:3549:b0:43d:fa5e:50e6 with SMTP id 5b1f17b1804b1-453659ddde0mr39535235e9.9.1750663818470;
-        Mon, 23 Jun 2025 00:30:18 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646fd816sm101186905e9.24.2025.06.23.00.30.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jun 2025 00:30:17 -0700 (PDT)
-Message-ID: <16ae3a9e-4ba5-48a0-959c-4c593d1f90b6@linaro.org>
-Date: Mon, 23 Jun 2025 09:30:16 +0200
+        d=1e100.net; s=20230601; t=1750664032; x=1751268832;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e/FmDVYFDGwW5KMGc8hcV6hExdC2WI6OVDkBnOBtebc=;
+        b=fRkqCmK2ExIQ03rYxkZA8AClq1zC9TmH5RE9JDxbU9JbejeX5NTGgyH6eFzyHmj1/N
+         9hZVihnWQYXZodDK20elYRWz/zZBwcZLIBRKAXkqI5005FF5m2lmnnVnoE4mlMOYPU2H
+         KK62v46ZUPxAgjTqYCrqR/7zkZpudchevg6T0d2Cx+XFaqRUM9TYZWcgABFzHMRJX/F3
+         W+kZjZCIX5ENgsRnD2jb0OiaEizALIVmVj8+TbCr13sJ16hpfpVflNmdpN7KhC+uCHSb
+         5ox2OtUxI6tVLBcE6olRvzof24L1puiQn6rtsKHR3ZxvfOow7Ob9llfkXUjQ4CUImNaW
+         0qMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMCkZM0n+8BDp9tTSlKmlMimszf+S36YWdnYwDv1zGH6PI+xBb9qpARdLyWzBi1xYDx8qEYUCaQnxS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi01p3Vj/t1lByt8xkki+R8h6LIE5bZ05iXyZ7Kg4GBehdS4Qa
+	1hrp+xPRQ+yDTuEwJ1S4DA6XcgZRXklHhTv7EppKjnDGpvhzJx1XfVHYlVMlc4Mhp7BUOizWmzI
+	SE1xoO8nzIUwe8iD/6TVEVyje2wrW3s7aVRAwhi7EkA==
+X-Gm-Gg: ASbGncvz4NqNRBP4rrTR0wHDCtgzIjVVXMxb7ScBbdA9wbiUkwwdZ0G8GCbucTxdxlE
+	cqdEJKUjzSNFLCkC6nqCCsGgi30UQZhY3+AXeYobHsoaJ1G9VEDzDvh9hTOk1N/jKyRKZPhES9p
+	ZCFGd8rqXQVd1r8T1a/39NB1Tv+zMbzrs+c3ZpixCzZMgKugCEpljMirNI8mIVLoDbCPTbQFl08
+	w==
+X-Google-Smtp-Source: AGHT+IHXbQ1G61S6XTmap3R9KFxqdYburMPb7gYbxhsdAd+vhJ5pZrPzhPGsI5r9CHk6R8GllO6W7NbS7Xfzhgc6R0U=
+X-Received: by 2002:a05:6512:1153:b0:553:a4a8:b860 with SMTP id
+ 2adb3069b0e04-553e3af3b66mr3432565e87.0.1750664031428; Mon, 23 Jun 2025
+ 00:33:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
- support for MT8196 audio AFE controller
-To: =?UTF-8?B?RGFycmVuIFllICjlj7bpo54p?= <Darren.Ye@mediatek.com>,
- "krzk@kernel.org" <krzk@kernel.org>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "broonie@kernel.org" <broonie@kernel.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>, "tiwai@suse.com"
- <tiwai@suse.com>, "robh@kernel.org" <robh@kernel.org>,
- "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "perex@perex.cz"
- <perex@perex.cz>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <20250620094140.11093-1-darren.ye@mediatek.com>
- <20250620094140.11093-9-darren.ye@mediatek.com>
- <011093f8-85a1-4c3c-b3fa-7be9e6df8a25@kernel.org>
- <3562cdd32d6f723a35ed063b65560a8e25801255.camel@mediatek.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <3562cdd32d6f723a35ed063b65560a8e25801255.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250610-gpiochip-set-rv-soc-v1-0-1a0c36c9deed@linaro.org>
+In-Reply-To: <20250610-gpiochip-set-rv-soc-v1-0-1a0c36c9deed@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 23 Jun 2025 09:33:40 +0200
+X-Gm-Features: AX0GCFvZI7j6aCfaYMvSqKv_YVgtIm3etGx79fDwp0jhT33AUgmaBnK_549jfVI
+Message-ID: <CAMRc=McVV=VBw0DRiz-4tTjh7ZtRLWg=N_LQ2-7O1sKyW30rxw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] soc: use new GPIO line value setter callbacks
+To: Qiang Zhao <qiang.zhao@nxp.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23/06/2025 08:52, Darren Ye (叶飞) wrote:
->>> This patch adds initial support for the audio AFE(Audio Front End)
->>> controller
->>
->> Why this was changed to undesired 'This patch' (see submitting
->> patches)?
->> I think you are circling back to previous versions, reintroducing
->> issues
->> fixed in between.
-> 
-> Thanks for you feedback. Just to confirm, for the next version, should
-> I revert the subject/description back to previous version and only drop
-> the document part, whitout making other changes?
-> 
-> 
-> Please see the following change:
-> 
-> ASoC: dt-bindings: mediatek,mt8196-afe: add audio AFE
+On Tue, Jun 10, 2025 at 2:38=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+> values") added new line setter callbacks to struct gpio_chip. They allow
+> to indicate failures to callers. We're in the process of converting all
+> GPIO controllers to using them before removing the old ones. This series
+> converts all GPIO chips implemented under drivers/soc/.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> Bartosz Golaszewski (2):
+>       soc: fsl: qe: use new GPIO line value setter callbacks
+>       soc: renesas: pwc-rzv2m: use new GPIO line value setter callbacks
+>
+>  drivers/soc/fsl/qe/gpio.c       | 6 ++++--
+>  drivers/soc/renesas/pwc-rzv2m.c | 8 +++++---
+>  2 files changed, 9 insertions(+), 5 deletions(-)
+> ---
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20250523-gpiochip-set-rv-soc-14e1d9414f70
+>
+> Best regards,
+> --
+> Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
 
-Yes
+I see Geert queued patch 2/2, who would take patch 1/2?
 
-> 
-> Add mt8196 audio AFE.
-
-This can be longer, but just read submitting patches regarding preferred
-style. Changing to less preferred makes me thinking you did not read
-that document.
-
-Anyway, don't send new version just for that.
-
-Best regards,
-Krzysztof
+Bart
 
