@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22043-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22044-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D592AE5D0E
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 08:45:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25D62AE5D11
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 08:46:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1582189F782
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 06:45:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D4164A687D
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 06:46:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D57B246BA8;
-	Tue, 24 Jun 2025 06:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BB10246BBA;
+	Tue, 24 Jun 2025 06:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIGmr+LG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kspPuAEQ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C661C6FE9;
-	Tue, 24 Jun 2025 06:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A90442065;
+	Tue, 24 Jun 2025 06:45:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750747533; cv=none; b=GFHvktgzcpTSCpTNynVbFcE2dnmM4YqLdkMAeUyEe3MN22lajtu+gh7IHrJGYXZSdwsLSiGWJUco7NGoE0DIYR7LFSgNY3CYxXevHiE+wQK0lsioIo1fbU9LD7w1eV/ASC+sLLl27RdYeaCEA0MZYXU/3lYr4w1TnxT0v6FVm20=
+	t=1750747556; cv=none; b=iPRwSIVv07lGoGD8bdQiT/TZMusa9rMDz7pHJUEbxcu6sxteyNiMWH4clnXMm3/pe0dursFa/dY+qSAN1hmPPBfmylJmXwkC8OMnFhCAbWANWTMlPkuSOerpfYzOp36K/pj5R4931ntyFLMOm23PKch16ioH2tZFz7EZXyyfGLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750747533; c=relaxed/simple;
-	bh=ZjF5W+taFxhk5gEPkkprCxApugodn5zxsYqvo1EHlkU=;
+	s=arc-20240116; t=1750747556; c=relaxed/simple;
+	bh=Ht83Vts5Nikx4Hos0A9Sqa+RdgKYjKb5+54OxdwWUZM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nHqvuJk0wlLk+ATahIk1j30T6s2opOtS5Pn3yg3B2jdBzSlgX9UBNdusn4cfhGYCS6WMU3H177rBevvw2d8fseYg6fp3HsWuv3LlC1Bn+cXObRqUIxDOna/RUDhXzmty0yN7U/Ujja9BNF87Hsc27B1LEtLIaEv+54jAoyoqzA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIGmr+LG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C70C4CEEF;
-	Tue, 24 Jun 2025 06:45:29 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=tRcwKzZRUts5sCV0CxD/sCjGSjJ8aA/V+0/gdjdtfGm4MUc4V0ov7Wn+O73LnhpKLrlGiK1xtaTiHGxaWiuczBvqctUNewk+7s3IdBAvLdB/zkDs9JNp2SalcqJ9tLVqBPkr0W5CUmXHU0JlxK4VkqBdz/ZPpENL8AFdCZZa9Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kspPuAEQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FF9EC4CEE3;
+	Tue, 24 Jun 2025 06:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750747533;
-	bh=ZjF5W+taFxhk5gEPkkprCxApugodn5zxsYqvo1EHlkU=;
+	s=k20201202; t=1750747555;
+	bh=Ht83Vts5Nikx4Hos0A9Sqa+RdgKYjKb5+54OxdwWUZM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RIGmr+LG8U3+z/2/gj+BrMniElsr1NMnZMGAer8GP9ZhPKW4uuROurjs28NGA2dQ5
-	 1z6m4gdFQovSyYHSqtz5YYZtc6Ep2y4ZAaQPpABXbr1OsUH1bpodrT51ah1Y354yFi
-	 GJvo5N7ZuIM+MXco3U+XLwZd0vF8LGf3nFm/oAD0wgwHPjdsfTTTnmxNgXBStVXZBP
-	 +6sY26CwUntdFI9QLX6sBg4ABnk2Xx70Q+yqgZNP/MF1NawBKh04rrr3VrHec33wK8
-	 QZRUY8Sp2u5CA5QaErTaCemha6v+bPAS9QaMO7q8A8sXBJlR5t1hdZpz7D6fogyqYJ
-	 2/5UXM9rvEcOg==
-Message-ID: <de124c73-df0f-40a1-91dd-ea5287cb90c7@kernel.org>
-Date: Tue, 24 Jun 2025 08:45:28 +0200
+	b=kspPuAEQWHNFErWEKu3JBLy9IsjWT68yYgf9pNlpUs5YStXbsxE/vCzGZPzOYwCwl
+	 qLx2IRXVMDtFc71BkbFYAz5DteRFOiWYA/uqOTmyW+N00M/1gj41DwoZ2klWY971gB
+	 Gd56qzqUd1y9fn+IN/pL8YFqX4uPYwCOkPl/p/Lg/Smu1q8LATiVa99GjyqN5I35px
+	 fg0YTX1ty9FYrCXtBrLHX7HyHc/WOPCAcFuOe8kvUgZH0Fcfkx9wewbZ3uZ9DKocuI
+	 igUnwp34x5dUWWS+lRBjBL1GLZJ1UiXBjKniSXJHyi5z5ofOUV/R3TIrOi3qkIfOjj
+	 jm/Am+Il1S4bw==
+Message-ID: <085d5ebd-515c-4608-825b-b3319bc3bf7d@kernel.org>
+Date: Tue, 24 Jun 2025 08:45:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] arm64: defconfig: enable the Axiado family
+Subject: Re: [PATCH v3 7/7] MAINTAINERS: Add entry for Axiado
 To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -61,7 +61,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
  soc@lists.linux.dev
 References: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-0-b3e66a7491f5@axiado.com>
- <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-6-b3e66a7491f5@axiado.com>
+ <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-7-b3e66a7491f5@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,18 +107,18 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-6-b3e66a7491f5@axiado.com>
+In-Reply-To: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-7-b3e66a7491f5@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 23/06/2025 19:28, Harshit Shah wrote:
-> Enable the Axiado SoC family in the arm64 defconfig.
+> Add entry for Axiado maintainer and related files
 > 
 > Signed-off-by: Harshit Shah <hshah@axiado.com>
 > ---
->  arch/arm64/configs/defconfig | 1 +
-
-
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
