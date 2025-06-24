@@ -1,258 +1,170 @@
-Return-Path: <linux-gpio+bounces-22034-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22035-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD35DAE5A29
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 04:43:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28EDCAE5BC1
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 07:10:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 961BE18843F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 02:44:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C259443D80
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 05:10:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C600202C46;
-	Tue, 24 Jun 2025 02:43:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B127B221F3E;
+	Tue, 24 Jun 2025 05:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N/Q3ScHk"
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="CeZ0FHuv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011032.outbound.protection.outlook.com [52.101.125.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83555256D
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 02:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750733027; cv=none; b=rP6rAt/6rzcWUW6vtusyzQx3KnM8EahsUEQMKHfABxwOctkkjN9i4knW5nto6QYrj1AAFw0q5LGPtn/BksZomAceHUAm+Sdgu8I0enxX+w3PvKXY9ZIQq6ij4DunHJLt9EGXaMET8CkCuYf0SGVfsaI8RrSbBrvNDq2NiHQQD2M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750733027; c=relaxed/simple;
-	bh=FHL+gsjsPdHuYxFfYAjijvJ6tRyazCSteFsgvpJW5HQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7nI7WJvchBI7KlBaqcd3yGu+00TmaPsrQ0CwCNZDfa6TtiyH6ljTjMTb8gK7cYqKcJ/Rt4BZxmAcUJiIEGw81y9lH7pN10IppwnP6L0Je5M38CM5UOxSrdjhkf+oGvXlgvo+1hUsyUP/r04SC9ou8NNqleP73HquzQCp/VpgI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N/Q3ScHk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NID54X020586
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 02:43:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=KN3XXvaKtZM+YmK/jTYgNUfD
-	5TIEnLm1ZgvjPuBqaac=; b=N/Q3ScHkA8ejc2FoLAPivBDZY5hNDMftlsjPB9ma
-	ER3bqn7xi9t3J+WV8Uffr5IbDMu1+Ck9EJaUhM042yfLQ1oax+kxERBazLauXmVB
-	LfnD6j0uzVsdz5bIlIXPMYlQqSrg73ghFFC4JUnc3bCwQ9ZuUOHiRVIUtbv2FPsw
-	xQBrzJoflyPy3++ZmHt4kdJjkMrR/1pztntBV2USCCK5o3QJiKNmSdsZgg6/kJXm
-	h0dzB7E40GgXoIJeRg1U8IxK8BkBJLhCMA7mGG7fOMMJ6tZhWBK42GXs//wTVNQS
-	ojDKZL6If3CVdbXr1cxG9Tf4IZBPwGiGxOGFHKSpArMWug==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec264skf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 02:43:44 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d399065d55so573836785a.1
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jun 2025 19:43:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750733023; x=1751337823;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KN3XXvaKtZM+YmK/jTYgNUfD5TIEnLm1ZgvjPuBqaac=;
-        b=o6I6zMp0lW+G4eEdZf2GT8Fw0OzWpU62jHVnfRp3bgOCotNSYmlO4W+DKp5vx0CLXl
-         rPApHQD0daoFmPgyUNov03LnJIuna332d8Fsi7VgvlC6O4nG3ZlfDnClFo3JhpUzzNTz
-         VGv7NoxMSb+k8aEiETBoTAyoRRM4XdO1b+R8p906q7oTUkJI8qcskvrXpJTRsrKd18Xj
-         D6DiOT9eGorB5aZpH8vV9Tg+ZWto4UPo5U6y/M9VFmo3hnj5XYuSEKtWkw1p01abpT8s
-         LragaopN8MkSZkCVDkTRBPPh5NbPiCBzkVEKxjblZGkDrjBVWW5xYdtQFesjwz8a3wWk
-         O2ug==
-X-Forwarded-Encrypted: i=1; AJvYcCUrx+UKlb9MpDujNMj2Eprac5TitwZJQpB04iJufbe9nJvjBHiofnTXIrw2MVZ0iAOvvBU1wvtDs1Wt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAgqSGg5c2l938x3ak02RMff4jX6zbtz2Q5KcveCM2dixxqLEt
-	GzYXwPMecRQoFnWpug2vKF0Bo9mq4Fn3guwcJSc8LWT0Khd+86Un6iypvSrpYTu7oK50NyNZjNw
-	1dNROnVmUOamJPNsdphQO6kokEMEtFc4fvUK6f/37ccAmpPtNohoGbUyzDy2SQvl7
-X-Gm-Gg: ASbGncvdpuj39ET1w1cK6Qy3XpzLGTsNkj2bfuXgRfsQC2se1qjo6j/YTQBM6woRN9n
-	GE/w+mX4xKvPZgPcu0R0a/AFpM6NkyMv0uxpkcNBlP0iBvLneCn4vH4yROZCWZNCIU7vYGWgIhM
-	eJCsY0yVk3kgg2hpePhA/F4XCEUmyJmD5Zqekl2KOK+QknfzrxHNxWx18c243kzu39yBNhSAGFf
-	35QGj1763SiDWa3zf2aEhbxufvenUqiPw1oKInFbN2Bsz4DTYWrAAKhA6i+rnMPire/YwEAHbvU
-	NZp2e/nekDuApMywZqHDe5Rl0ETfzGh9bgBtHGZCme3/RqIe5fc0g8BpvBDswu0rgZ8AlHKCMfK
-	KBnODEX/fmzz2LIF/UDnAsYVrGdQ2XM8zmEc=
-X-Received: by 2002:a05:620a:17a2:b0:7c5:4adb:782a with SMTP id af79cd13be357-7d3f98c7db9mr2276708085a.9.1750733023181;
-        Mon, 23 Jun 2025 19:43:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGit7DNQ9/dBe0d3sh4hHnQ03gUGXShhl+f6zGzYJBNK03gLkKyzMUdUA7ErzCdFn1GhoLtsA==
-X-Received: by 2002:a05:620a:17a2:b0:7c5:4adb:782a with SMTP id af79cd13be357-7d3f98c7db9mr2276707285a.9.1750733022781;
-        Mon, 23 Jun 2025 19:43:42 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b97f5916dsm15255841fa.2.2025.06.23.19.43.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 19:43:40 -0700 (PDT)
-Date: Tue, 24 Jun 2025 05:43:39 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-Cc: Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org,
-        linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com
-Subject: Re: [PATCH v1 2/2] ASoC: codecs: wsa883x: Handle shared reset GPIO
- for WSA883x speakers
-Message-ID: <v7oxwbf6xjc2gxeviwe4tayovzasysqig5smk752an74qd2e46@q25ymfyru3ze>
-References: <20250620103012.360794-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250620103012.360794-3-mohammad.rafi.shaik@oss.qualcomm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FDB35946;
+	Tue, 24 Jun 2025 05:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750741848; cv=fail; b=jwUeb13OiBeAK1ccrSy0aTxMQwIrnmpm9pRU42pawusFFWU0An5dvq945fdP1V4x/oqep7od8Pup3W1a3pkStuV4PhOEzwr5Y4GHCmUhFMIZHT0MyMyZ8f4EgSp4sPtA8Qtv0xnS7XIdyoO6VMXps5avrc2edSurF5dB4Uis3/8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750741848; c=relaxed/simple;
+	bh=t0ANQ5e3Nm7W9Gy5vW9gLaBYNDfSpHJoi0B+vcTupns=;
+	h=Message-ID:From:Subject:To:Cc:Content-Type:Date:MIME-Version; b=jpYdwKBRpqUUASEi9pp9DhFhIcSZ65vwfVyLvUyVs2T8I24lsZlIlDiAA1a/4nLQXegRe/li98eS5HewJjbkWL8UuCUcfEXGwQudmHLuyFOmnsGxzZPV7jByTCjrGa/Pk8ObOhS1aLYONUKOCl6KrzqluTRyrYBtDdi1koA3gGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=CeZ0FHuv; arc=fail smtp.client-ip=52.101.125.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=E7HQ8q770cXfewEAUHjEg6zX9fiuSH2/wtfBe3ldIZ/SKu68pLqGkszlNXFl1/23xSFKZ8hzNFmjHvIO4jMkmZ5Srh6rtqzNS12Vpnrl9IQnF/gPI9wSjoD/GbwH8uIatxLI7dwDqC3lrx3N/26EtvRsYdg3iZqN2GbhfKCogwAaZLu/GHHycQRV8THY49Xg2ck2kN28lxJgaCos9KX60NnnWQOnlBgLlncQQ6BYqc0NKApXOKEHshvBvFZm8443KiZgjactMGPpI0mmKKGpCMOGDKxMZUknio5WacMmFtPQrNa0xuF5l+BOZYgOsT2UsIgKedDPXuSRAgW51w3E7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OghIMYygF8wUkgY3v+mBTrddzPFjCgpvLPktnJuOloQ=;
+ b=hj9kLKc3x80vu+ARKrHb1uauOP/PH+TXDuS3hAbWgRkHeKaysxUcm5RlJQ5x2WXSa0DI8G98RmPJn9lGk06Dh+mYwNSu8sH/i3qjH6i+wygtkMnxp28iQFsVU2mlN/J+cKjFtpLHjiZYKj8OzU/XPAU2SC7eVGgWkaUEHuPnW852OlPkPgifvhWRl5y+LkleQvJOEaYPT+Yw/JIP9rVLKbcVeR24gIbFtNttvzKrSgEvnhRv/hX0Tan66pEldQhSPi0jdMw5uj391Kq9ixMs2IbUAHZJxZtE9274NiyJvTiosg6YBRdC5yj30TzxJbK5WcX0ZzQICQRoGdi2HL9xlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OghIMYygF8wUkgY3v+mBTrddzPFjCgpvLPktnJuOloQ=;
+ b=CeZ0FHuvvG6uUWhhageLkl9XDk7CpEH+Ks6Ugd5/Py9oywAjrXBFkw3zb0buponasJ568t+Bpb5em4o2roTlLpbuFUPnKRQUUU11GTN805oVvzYlGY+RVZxVYvI6yBH84YJijm496M09+wlJLoLX2r3gNPtaH2ON8K0NDtY0Z44=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11) by OS7PR01MB15007.jpnprd01.prod.outlook.com
+ (2603:1096:604:39a::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Tue, 24 Jun
+ 2025 05:10:43 +0000
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11%4]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
+ 05:10:42 +0000
+Message-ID: <87ecv9ragd.wl-kuninori.morimoto.gx@renesas.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: [PATCH 0/2] pinctrl: renesas: tidyup Kconfig
+User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Date: Tue, 24 Jun 2025 05:10:42 +0000
+X-ClientProxiedBy: TY4PR01CA0024.jpnprd01.prod.outlook.com
+ (2603:1096:405:2bf::18) To TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620103012.360794-3-mohammad.rafi.shaik@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDAyMSBTYWx0ZWRfX6+giaAErjzOw
- eIak8HNY3Rbe1nCbhTV3SfkrJzDC+Kmqa9dY48ZB4wkGHa8cp9NL6PhjFnERZL/IHtdPfROtdiC
- vhHng0lAPmZUZViT1ESHuHYYivv/6wMVXOTDucDulgjOcbG4MF/n6Ui9L91Hcuw5Wm6aU+ibrs/
- XBtNqTAXzc46giMpgHsrh1ThPokoHTqSTYD4lvlhblw3ha6/dU07NUZtLNz4SbFTO5rLe1DLh5b
- V4RSKV11gan+YdQH2r8LYXelK4tAIGZnEEQ1AA4lcL35jVEU1XbWyLtq8x8RlqhBqGo66RTCMFh
- 7dqNH8KEm+F01Z9D3eOuzDTmqU94fefeZRHDWDGQmiXge2vWtPKomLk85geVu56ArCovVVliFmn
- 30VTErrMPZukh0Nu6k1NYX8C0ebq92BeWyTdA1uWXd2GNv11zPNRrl+dyuEbdpkn8hVFOJUt
-X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685a10e0 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=5E2qFXZqrqlClrV78BEA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: tAcrP0frO46kClDoThK9IZbLXpWcTGeP
-X-Proofpoint-ORIG-GUID: tAcrP0frO46kClDoThK9IZbLXpWcTGeP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_01,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
- spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506240021
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|OS7PR01MB15007:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2fe7da17-c3a2-404b-e585-08ddb2dd77ed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?h21GZqFK1JGGVWhJ2FtTgLhFM8VMlQNxgnG6sLKH+2relVQj6l7znaafVD81?=
+ =?us-ascii?Q?dVEKKgw/92Lw4H8oVZ0Ixvgc1eWv6eu30sWf+Q0tjbmvLXeFDa0/woH+pSBl?=
+ =?us-ascii?Q?JJXEKswcHcYWCps/UjNXAEJDc1M6wDg0lU7WNJqj3SPymm9MpTSMUMXv/0Ih?=
+ =?us-ascii?Q?iU6exlQY5tkI/BhS0fW6vcddsXF7YhcqR3WJedjkSchpEAuJ9XxdFIpL2Jnn?=
+ =?us-ascii?Q?+S+LztRFpEOW4pv4eMyuP7FPpFQXtMQQAwaSVl2ycVFgzaAzdn12n1C3/3c2?=
+ =?us-ascii?Q?ZZSHfiZDGal9aqVmzuQarI4RWzVu+ffzPKbHhupy3yvMNE70OEC9gsK8aZYw?=
+ =?us-ascii?Q?8CbsgtUCRsLM9fECbLdDje822hgDGURSQ4P/JF+M7MFcA0PaIROLQhYp3z5T?=
+ =?us-ascii?Q?lIJAEbgTwEFTqwvXaRqhIBzF6LnjRMAhQcs6dlixSBuML55KlyPVkNs+Zcp7?=
+ =?us-ascii?Q?UjT+FOU458Kn/cQbEQMFtyF19+6R/azsIZUYAKmjflyrZ0wQMCKXAkDjhpEh?=
+ =?us-ascii?Q?JK2oDaxq+BdeDa2ZrHpsP6Y7sRK3IL6jDk4nlrDrSezqfQX085idOWJ0op5L?=
+ =?us-ascii?Q?kmCWKebn01tZsyL9tbzssVDrzrFCBpCK0tjCHXuclmMUBz1Byv9ONpGKU048?=
+ =?us-ascii?Q?2tq3ajGkvdA1FYcYD2XqsvpHEwLdjjB6zGRtfoItQ5WdIChGwWUT21AnfrCL?=
+ =?us-ascii?Q?/4rFi2qoLBcdf3XszbyrcIYHbXUXN1FvTscgHZqpAVIGLg/fvBwGcSrKTEcu?=
+ =?us-ascii?Q?KL+E9l3oEErjKZ9esA2baIVulb/zRQUjVCOpXzo9j+oKMt0GuqD9ublnC52R?=
+ =?us-ascii?Q?r9XeZhAfin5eCn7ez4RcSm2zizeIRixZ9uI+S6AOwMosmae8w38UMCUnSK2t?=
+ =?us-ascii?Q?RxSWGOycwp3sFAkDP72MYlz1gnImW3LtCmXZr14TpN6KQ6u2H2EPRT49AuYE?=
+ =?us-ascii?Q?vrwi90rSty4BGX5oX7KIIGk+9Ku2gH7OGM1dIcUpnHfx/V52a5llxFZXVnlU?=
+ =?us-ascii?Q?iOZoiv+gKhwxQfyqWF1BuO+jj7g5MQ6fu6pqZ90SgVXo/O9vK++HI14Lwp1m?=
+ =?us-ascii?Q?crnhBwXAb2jeexMuvstVCm/bHbklY3uNur9Aqrs6DhOVm9/C7uVyYQTycib+?=
+ =?us-ascii?Q?VBsC+WoW0F78DKAlG+U2wmKFXn0W4ragI1zOF90ajWIde1zwv8BHsWjq77zP?=
+ =?us-ascii?Q?5TKkJAeBWf6SxFVng5ZLogX+0UbtFS8Z8KDE5r2HWbsNfTkp+NihN4u2GKAI?=
+ =?us-ascii?Q?EeRQiPIud/oXzcG9m9BqCKoCZquD9UjdCMnQB0HMeoS/l3SrdxCXSERV7UUe?=
+ =?us-ascii?Q?lOg1lW0m6H2DoKJdyYYBC4TP22K1wK6lp4uwCCrOKQ+tOtEgySC9ccea1u1w?=
+ =?us-ascii?Q?wSTtlU0Y7/zVZswgqkSM213B6PLjLpeD9VqizfocO1sZ1qcGcYt/1wzoPszx?=
+ =?us-ascii?Q?PI910G6z3wfcfVNrNe6rzYcRGohbsi8gIKq5uK2qxCPkhHFOsszwzw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kqv36yBIOWPUUW00hjbgLCGBeMj8irB9S8A3HfU9ghWkps18NHaqGzoYEZhV?=
+ =?us-ascii?Q?4Lz7cZzleAlFH8qnJug0Q4C+qUwKwKKRonGxrhFsgXPcwG4RERDHOruVN4mr?=
+ =?us-ascii?Q?SaSosOYWj7pC+xT0MsEN2k8UUk5Ej+vDDhnSTYd/8yAuKBnhl//Epl4WrHub?=
+ =?us-ascii?Q?mN5XHMO7mHeA+U7ZKHaVSRTJLY5qFRcuJ2ZEvIjMC71cPEuM9RpDmYiYaszI?=
+ =?us-ascii?Q?LkoYfGAohYN3m6ABUmxm681hOgS3vYhnWS1x7F8fiAMkY59Vum1PCoEYkIYB?=
+ =?us-ascii?Q?Qz3GZuxInLL2w8V2SLruMxL+FUzvogEwQlg/EFu+otqxmTJKCsGoHISv9RDN?=
+ =?us-ascii?Q?UsgrYq0564oZuA5ZNwilT9qkuuSqMJ7URPVm4ZLVK8D7pAhuKOBjkV/0S+L0?=
+ =?us-ascii?Q?xpJWRuau214+TzZ/E7cg5/91vFna8LroY34e6yqo0UztOv37urg9nH5mgATx?=
+ =?us-ascii?Q?vYZaif5EYBi4uboVq+XUXalOLuLnBIeKzhuNpcLo4LX3wUEXvOyoKNDIDx1L?=
+ =?us-ascii?Q?bJImHyKH/fLdOJmDIEz2A8KcKcC/m0oul4LO3sGkNbCQ2QWqMzbS+hd/7HBr?=
+ =?us-ascii?Q?IMAyv13QnignZNXjl0O1Ga7i5rGbbZz0P5JOfvAxUIaBwGXamEyzq99RJh8U?=
+ =?us-ascii?Q?/DOuZ5VJ5qj6M6Ph8RgnoksvuDWqVHlYEajCbTdNQ99lDyhPRpblhSqxef3s?=
+ =?us-ascii?Q?c3mhbxN683EY4wIDHwEIiaiTuEQqx0JdABjPQDMxXAE6gK125t2NbUb+Ecch?=
+ =?us-ascii?Q?fj1J3aAsPT/+g5kotShGrf745IB11RmWyE3P+Icy7ao2Ob22EoMDAS9zQg34?=
+ =?us-ascii?Q?uw9Txm6bEvHlD0jRxbQ3sYXg3nAuFUwSfUv+3coiv9qMzUtEw+a+n9ywdawi?=
+ =?us-ascii?Q?ABT+ktngrCET/lhuqzIiJCw1kgSGHPdEvInhsqDl2nUxJJqIJr/eUnLr3BGk?=
+ =?us-ascii?Q?phK19Qn50855BX7deSG+X4WDpVPgPDr+4ZKsNQ+pWWOyTm3PyOPOcLUgSkhR?=
+ =?us-ascii?Q?rp4cIlyZWirbnq7Cma29KwhMYaS/qO8kfkZu+jHJ+F1utD56oqvCat91TbxH?=
+ =?us-ascii?Q?V1LHWyIoGfkkVzHNLF98PpM1xG2qh1Ld5whbEzh4hQQrOz/ZP/5IKUBlu1ng?=
+ =?us-ascii?Q?MDJF54mcLolZmQYhwCyOKG+ScnsFrXOCx2H76gggO/O3l94terhPtE04o1DQ?=
+ =?us-ascii?Q?Gt5aubMxXcRdKvNVpNTLbXuP4W3OXiiawcowhiHn4cTbWb6vqwmd/8uPMG5g?=
+ =?us-ascii?Q?rs8k66NjTjGlbdjsnXuNbIOKxcmlWTUshw5RlbzCAGuQ4SzbesGYQGYxWDA/?=
+ =?us-ascii?Q?lqH+NfH+jJjhX5epYUfk+84lRjVIijGmWPdXS0G9UbrRgUWI4+xq3jVk87fq?=
+ =?us-ascii?Q?UIITC1ht5ZXtvL2qN/5VfXMRZwQXRhivBvbUa9Ts/47KIfcxoPbjGApoLh8z?=
+ =?us-ascii?Q?2PDyVdyvJ5k3cFgTmC2CbeJwb89Bx+cYbZovay6HeVRj8CPHWapNdA4k4RER?=
+ =?us-ascii?Q?fZMgQ7sGOQDiB33vMl7BIJ8WQLxlBai5oNBEkzm6CctdZt5cuWDV+OGzQwP+?=
+ =?us-ascii?Q?1Kvc5VYbwlcmFN/oKXPrO3DE/4VJibk8dbJjae6llSUTkJElRYX6h/6A4cRy?=
+ =?us-ascii?Q?khSU+jkb7qdaicJSEn6CejU=3D?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fe7da17-c3a2-404b-e585-08ddb2dd77ed
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 05:10:42.7544
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SP/x5xe/TWXWi/L56tA7JUVACqC7yLNZETxiVkfpJUdW2MXTFp3Bfo1UbHRYtuLvcow34m/Maz9b49JYVFE+BClOn11y8ADlBOT9jdlJsc3CqR555zHYF99dxB6o2wCu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB15007
 
-On Fri, Jun 20, 2025 at 04:00:12PM +0530, Mohammad Rafi Shaik wrote:
-> On some Qualcomm platforms, such as QCS6490-RB3Gen2 and QCM6490-IDP,
-> multiple WSA8830/WSA8835 speakers share a common reset (shutdown) GPIO.
-> To handle such cases, use the reset controller framework along with the
-> "reset-gpio" driver.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-> ---
->  sound/soc/codecs/wsa883x.c | 57 ++++++++++++++++++++++++++++++++------
->  1 file changed, 48 insertions(+), 9 deletions(-)
-> 
-> diff --git a/sound/soc/codecs/wsa883x.c b/sound/soc/codecs/wsa883x.c
-> index 13c9d4a6f015..b82b925c1f8d 100644
-> --- a/sound/soc/codecs/wsa883x.c
-> +++ b/sound/soc/codecs/wsa883x.c
-> @@ -14,6 +14,7 @@
->  #include <linux/printk.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
->  #include <linux/slab.h>
->  #include <linux/soundwire/sdw.h>
->  #include <linux/soundwire/sdw_registers.h>
-> @@ -468,6 +469,7 @@ struct wsa883x_priv {
->  	struct sdw_stream_runtime *sruntime;
->  	struct sdw_port_config port_config[WSA883X_MAX_SWR_PORTS];
->  	struct gpio_desc *sd_n;
-> +	struct reset_control *sd_reset;
->  	bool port_prepared[WSA883X_MAX_SWR_PORTS];
->  	bool port_enable[WSA883X_MAX_SWR_PORTS];
->  	int active_ports;
-> @@ -1547,6 +1549,44 @@ static const struct hwmon_chip_info wsa883x_hwmon_chip_info = {
->  	.info	= wsa883x_hwmon_info,
->  };
->  
-> +static void wsa883x_reset_powerdown(void *data)
-> +{
-> +	struct wsa883x_priv *wsa883x = data;
-> +
-> +	if (wsa883x->sd_reset)
-> +		reset_control_assert(wsa883x->sd_reset);
-> +	else
-> +		gpiod_direction_output(wsa883x->sd_n, 1);
-> +}
-> +
-> +static void wsa883x_reset_deassert(struct wsa883x_priv *wsa883x)
 
-Please name these two functions in using antonyms (e.g. init/fini,
-powerup / powerdown, assert / deassert, etc).
+Hi Geert
 
-> +{
-> +	if (wsa883x->sd_reset)
-> +		reset_control_deassert(wsa883x->sd_reset);
-> +	else
-> +		gpiod_direction_output(wsa883x->sd_n, 0);
-> +}
-> +
-> +static int wsa883x_get_reset(struct device *dev, struct wsa883x_priv *wsa883x)
-> +{
-> +	wsa883x->sd_reset = devm_reset_control_get_optional_shared(dev, NULL);
-> +	if (IS_ERR(wsa883x->sd_reset))
-> +		return dev_err_probe(dev, PTR_ERR(wsa883x->sd_reset),
-> +				     "Failed to get reset\n");
-> +	else if (wsa883x->sd_reset)
+Current Renesas pincontrol Kconfig is randomly sorted.
+And, the menu prompt is also ramdom.
+This patches tidyup these.
 
-No need for 'else' here.
+Kuninori Morimoto (2):
+  pinctrl: renesas: sort Renesas Kconfig configs
+  pinctrl: renesas: unify config naming
 
-> +		return 0;
-> +	/*
-> +	 * else: NULL, so use the backwards compatible way for powerdown-gpios,
-> +	 * which does not handle sharing GPIO properly.
-> +	 */
-> +	wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
-> +						GPIOD_FLAGS_BIT_NONEXCLUSIVE | GPIOD_OUT_HIGH);
-> +	if (IS_ERR(wsa883x->sd_n))
-> +		return dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
-> +				     "Shutdown Control GPIO not found\n");
-> +	return 0;
-> +}
-> +
->  static int wsa883x_probe(struct sdw_slave *pdev,
->  			 const struct sdw_device_id *id)
->  {
-> @@ -1567,13 +1607,9 @@ static int wsa883x_probe(struct sdw_slave *pdev,
->  	if (ret)
->  		return dev_err_probe(dev, ret, "Failed to enable vdd regulator\n");
->  
-> -	wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
-> -						GPIOD_FLAGS_BIT_NONEXCLUSIVE | GPIOD_OUT_HIGH);
-> -	if (IS_ERR(wsa883x->sd_n)) {
-> -		ret = dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
-> -				    "Shutdown Control GPIO not found\n");
-> -		goto err;
-> -	}
-> +	ret = wsa883x_get_reset(dev, wsa883x);
-> +	if (ret)
-> +		return ret;
->  
->  	dev_set_drvdata(dev, wsa883x);
->  	wsa883x->slave = pdev;
-> @@ -1596,11 +1632,14 @@ static int wsa883x_probe(struct sdw_slave *pdev,
->  	pdev->prop.simple_clk_stop_capable = true;
->  	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
->  	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
-> -	gpiod_direction_output(wsa883x->sd_n, 0);
-> +
-> +	wsa883x_reset_deassert(wsa883x);
-> +	ret = devm_add_action_or_reset(dev, wsa883x_reset_powerdown, wsa883x);
-> +	if (ret)
-> +		return ret;
->  
->  	wsa883x->regmap = devm_regmap_init_sdw(pdev, &wsa883x_regmap_config);
->  	if (IS_ERR(wsa883x->regmap)) {
-> -		gpiod_direction_output(wsa883x->sd_n, 1);
->  		ret = dev_err_probe(dev, PTR_ERR(wsa883x->regmap),
->  				    "regmap_init failed\n");
->  		goto err;
-> -- 
-> 2.34.1
-> 
+ drivers/pinctrl/renesas/Kconfig | 246 ++++++++++++++++----------------
+ 1 file changed, 123 insertions(+), 123 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.43.0
+
 
