@@ -1,108 +1,110 @@
-Return-Path: <linux-gpio+bounces-22084-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22085-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9995AE6F42
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 21:11:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C805AE6F57
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 21:16:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3EC581BC5BF8
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 19:12:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8272417F27E
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 19:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32C252E763C;
-	Tue, 24 Jun 2025 19:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 159D7246BBA;
+	Tue, 24 Jun 2025 19:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VASYgr/m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YpSnrxcg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182462D5437
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 19:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096E11946DF
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 19:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750792300; cv=none; b=O949CDoWCIagI1MQ8ctdCi8pQ6l2Jw5clM37+WRBzSx7PbvGRxIrbwRqsj3QNg2qaiUSkA+e4yAo2W28Fjuv27NY9npzUHssNScaACF1JK2+O/w/xoH5w8ICfoXk8RmA+m5038+vOUWs+V7D/SKi2U5PCw9xYb9EsMUaihvS/h0=
+	t=1750792573; cv=none; b=dHUgZnk8t7E00ipLKgvCb3pUVASzsKyh3EVVGgurn4tyJ+WplPU8sckJQ3Ro3Cc/ZtaOn+fj3U18H4DfGgsfd8GU82buJWrGxbch9rLtWt4q3gA5LS8fqsYLCMGd2xm7C8qbL8xY7TMKsmDz7Az5cgvPTlpbFvtDetiIK/G9NNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750792300; c=relaxed/simple;
-	bh=jU7ham2ZpaXnAos1mikQBqGdMASmlPh7XObjrBZWKb0=;
+	s=arc-20240116; t=1750792573; c=relaxed/simple;
+	bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dw23usrJ2TXyF3tZBa9wnxY1Mwr2prBOrv3zCh8AQonZJSuFQfwlHJNZ2wwmHM2b7ofZ0SdYh1CPYby1A+ZPEav8N2lChehekMjoO1NO6P5db0LKAQvhYtvP24xWUU+5OC4knrSS/BfeZeZNr0KTrLi+PMtcLwRdCU1FEgvai0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VASYgr/m; arc=none smtp.client-ip=209.85.208.170
+	 To:Cc:Content-Type; b=Q9K7aq1IeOnh6TXo0Bu0Sc0UWQMS3SorgD1XDI3j0tOYV9iOgGTxwgjTjDQPUj/xyIq7sLN2pLDRuRqItEX5YoYXKJsPLT5iiCyuHIcf0xGQe8rcrxNXtDTGKR9xmZ+A2aOs92CEONRxwvAPa+i/PJx2WUJIBZei1Nv/KqU/LzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YpSnrxcg; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32add56e9ddso47538251fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 12:11:37 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-551efd86048so826761e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 12:16:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750792296; x=1751397096; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750792570; x=1751397370; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jU7ham2ZpaXnAos1mikQBqGdMASmlPh7XObjrBZWKb0=;
-        b=VASYgr/m1Yw2WFdku9uZxMKoy2p5N97xe4QSKPh1yjLJtFNjwJAIXaICqYJRGlo3QM
-         ESxjsbxKDl8J70G3dZLu0VuB+L5iaLCzhZnEOajt0HklUI3ZIubXtJNdLE7Ay9aULzBD
-         UuqC5ZmoONs5VzObQF/Hl+YvIaS+iXjwMAV0SozfdylXkpbcjn1To0ZkoUhAwOqwPMmA
-         av4aSy1eS952MCP9PQhqdafPitfCEEUktJ6rclPGlJzPZvtDAaC8r4RnARcsCP9+CPu7
-         MLnBy4az9y5od8D00BCGPDlUoQzSxCfZPi5MKMTcfnjMMWfgQVazLZyXDewYv/7n94u8
-         xUGQ==
+        bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
+        b=YpSnrxcgP6His/jiye0hx5Tm1sOZSmfyn0sJdK7DtV9f4uim+LANBvNc8LUDl59lLm
+         tmmhp313Uz4S7donnbcaJ0JF8NUMpc6Ru7CAILtRtikbmGbIJ/zYLAFaxY0r88YudGZ/
+         IBVp+hHIyGZSLR2Gx2jimgSI/BP5toWa06oBMJiqFYDidQZR/4Rr3hxf7XQUVJV60xVW
+         Tlokco5egdeRs4+5XGuxNlEE+fpWvz9wyffeD/e/LgwAw1bP6yVrL/Jur3ZmDKS2AP2S
+         h3ik/aD+ZmHB6NYpNm9mNZnARiM137HofJmqV3k1b7n3bhIN4uOKhHI+uj11rxunhcoq
+         g1ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750792296; x=1751397096;
+        d=1e100.net; s=20230601; t=1750792570; x=1751397370;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jU7ham2ZpaXnAos1mikQBqGdMASmlPh7XObjrBZWKb0=;
-        b=rGNaKpcgBIZX6U3wUnhiLtpLyyKZbJrx7qACz6BwS6G7mqXj9DQHxjRCBY54pT1Oq8
-         ZDbtyHOxt0E4HwDOgYHu4AUg6ep1PqF5/Dvb38KSqv8gf5hRTEqgOjePgzVLmccGTvxX
-         Lf7A9b9Weaa8aFuWx4oVqIPDjnJ8+5b9bgHgNzYsK4AwKj4EdYOne8ubmEvO5CLCoir2
-         WEpjULjRKE4+jR99v12svRVKlZqYVKWzphOiZlAHcOFn60kb0pPZvSK/Ud1PxqYb3yRz
-         q9TQCH+a1wre4DlslXs+VQOK5+p6dBjaoKxXVRtBr+vJuyoBuLc5g/X/srt4JTMdqWDr
-         CT9Q==
-X-Gm-Message-State: AOJu0YzQww+bd4kWdxBnNt+LmXhpkU2H86b44eJ5s/ydQ9nHiyLi4xD3
-	miQgil0VOAbCHpJCU694ukoluNV/rY1fRW0XBpHhut8KmzAT8391zCkREenQUK1/OF7442p/jhN
-	eQ9tVd2s6HWkfmzr3CgqAMCHSs8/pbRQ3SfhBvAAXeg==
-X-Gm-Gg: ASbGnculf1xAz30bgU/eAp0KfcXqDU3W7atR5vZso+6qbe8n1awvYwvJKIE1kWRMsqj
-	dzmXBFimMqq4hfSYVC8p0yn379NnAewtA0B2H8PnkJfUTSTOn4kRd156Zc38iMov+kZOLVocWVP
-	GgGNI65oCh0DQjiWfJSi7YdPW3LTz2q6bXxUjXDJAVNo4=
-X-Google-Smtp-Source: AGHT+IEXDpnYChKc3UImdSr+zJ8YwEKjpbFFrt5NAlDdblQlouaa/RGw1DjssZH/qYmdil/9nF6I3aEfuSDSDliuODQ=
-X-Received: by 2002:a05:651c:50d:b0:32b:35e6:bbe8 with SMTP id
- 38308e7fff4ca-32b98f16b81mr55858771fa.21.1750792296056; Tue, 24 Jun 2025
- 12:11:36 -0700 (PDT)
+        bh=ihWWakMukXt8Os5zOHseSTg4tzKTY1m9zw8OxkJuiHM=;
+        b=Qd7uPy/B1VKKQotoWyZxR86+rbMMan6EVgy/Yd4+z+YqFkr7vX4FOakI3fxn58xyyZ
+         TwYwR318s2YsFUhvrzBEBI1B/H/GQMPqwT/A5C++ohlVFAwUrhxHR6gxR6hgDm/iRykC
+         foETwmrwHXJqlvViRQ1ns+lUd7052IzzgWZ1PKRgQMVLJurnbKChQj8kGGcc6eZ6euZC
+         p0s+vGZSxUa6jClwHMT5uzmYXduH+8PkF8gSomAe9pdnTrNGNktvKHn/CIfOK44mJIS/
+         v3snYrttboB3zbIcSgf9LdOENXAgJjxFr5sDVlF5VlTkB1GOW7t1CafeCSOAcxqUqmD2
+         O7Lg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDc7LfttIVqT/o7ud8N4u6z5ykI5lrvoBeQOPqRKDLhsQOOScNzXkG6dLBxpUnqz4a7gTunum2KNJc@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK1pDV5sCnb904vKzrPcnwdWp1FN5DjEZBAO7HuV4zVjnVSIXQ
+	ly/ciKL4HFwEmzm7BHvUMjvSK3SDub2nxeH1csoCBcswlV/VWHAnj0Mt9fTPzn+W+tvYudzhpNJ
+	MPl8b5uASHOPH0xctFZUylMgzIoOZy7nH9nIXOI/Kkg==
+X-Gm-Gg: ASbGncvTdykff66ltOhjUxrlyAQeGGfTnX4ochGgEuaJYDZGq7e0I9S1Rw9kqUcfBPb
+	YcYlNghWHl7nYmsno7lxW/3jwfbNa7nHvQoH2x/7chsek09hMt++MAkB+4cCmESoHAe4nVQ2+uG
+	xupojVtZrYjkWVJ27ZPL3IhMem3C2c6GLtlPa+hYeEKuA=
+X-Google-Smtp-Source: AGHT+IHmRRS+snn9ezdisZXjq9pNKvNF1NOIie7MqflwaPNY3SKz61GchJJ41LtKpgJIpimyXyrJyvJ1Pacxv1Ru12U=
+X-Received: by 2002:ac2:4c45:0:b0:552:1c1b:561 with SMTP id
+ 2adb3069b0e04-554fdd23ba8mr18893e87.23.1750792570121; Tue, 24 Jun 2025
+ 12:16:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619173537.64298-1-brgl@bgdev.pl>
-In-Reply-To: <20250619173537.64298-1-brgl@bgdev.pl>
+References: <20250620010345.11247-1-chenyuan_fl@163.com> <20250620012708.16709-1-chenyuan_fl@163.com>
+In-Reply-To: <20250620012708.16709-1-chenyuan_fl@163.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 21:11:25 +0200
-X-Gm-Features: AX0GCFsc_c4phLtpzdxGlCxh0REYBtAY2fuDOH_rU0XESF2pp_pRuIm0OUyOk0U
-Message-ID: <CACRpkdYY0-W3+XLKt_h=8nBqrdOD3vA8D9coTNY5sL96A5UjEQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: aw9523: fix mutex unlock in error path
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
+Date: Tue, 24 Jun 2025 21:15:58 +0200
+X-Gm-Features: AX0GCFs0q4vtQFV_NNK7FgYpbrOMY93VLrNBvqqOTi5xPuc96sQtOMY9VoZarF0
+Message-ID: <CACRpkdaA8UQYX8bFeHn4JCxLgK_-UxR_n=ZCZmgbk8tqSgnFAw@mail.gmail.com>
+Subject: Re: [PATH v2] pinctrl: sunxi: Fix memory leak on krealloc failure in sunxi_pctrl_dt_node_to_map
+To: Yuan Chen <chenyuan_fl@163.com>
+Cc: wens@csie.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Yuan Chen <chenyuan@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 7:35=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Fri, Jun 20, 2025 at 3:27=E2=80=AFAM Yuan Chen <chenyuan_fl@163.com> wro=
+te:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> From: Yuan Chen <chenyuan@kylinos.cn>
 >
-> We must unlock the mutex *after* the `out` label or we'd trigger a
-> deadlock in error path.
+> In sunxi_pctrl_dt_node_to_map(), when krealloc() fails to resize the pinc=
+trl_map
+> array, the function returns -ENOMEM directly without freeing the previous=
+ly
+> allocated *map buffer. This results in a memory leak of the original kmal=
+loc_array
+> allocation.
 >
-> Fixes: dffe286e2428 ("pinctrl: aw9523: use new GPIO line value setter cal=
-lbacks")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/r/202506191952.A03cvn22-lkp@intel.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Fixes: e11dee2e98f8 ("pinctrl: sunxi: Deal with configless pins")
+> Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
 
-Patch applied!
+Patch applied for fixes!
 
 Yours,
 Linus Walleij
