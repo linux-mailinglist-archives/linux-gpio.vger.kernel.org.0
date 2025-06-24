@@ -1,79 +1,68 @@
-Return-Path: <linux-gpio+bounces-22075-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22076-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E64CAE6BA8
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 17:48:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 037B9AE6BDB
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 17:53:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C73C1C41772
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 15:41:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9697A5A38BB
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 15:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6C6A3074AD;
-	Tue, 24 Jun 2025 15:41:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9922274B56;
+	Tue, 24 Jun 2025 15:53:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpBF33O5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMzZ2gJG"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836AF307480;
-	Tue, 24 Jun 2025 15:41:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9127C3074A1;
+	Tue, 24 Jun 2025 15:53:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750779660; cv=none; b=QAvXLa6qgEOVx5OdFxou6GXgtVjz4CKuUCAwzSdyOcamP97v2TUQZqhke0ernH1rIFLf2FoI0oXAHLFDbP71nuEt1if3W6CwW7oO3rJiIgQzIopoT+VE8mdk/kfUqHOMcmkHBjbAhSYXt4vqZyHL43y09kwPWEL/0kZZkWucX5w=
+	t=1750780427; cv=none; b=CIcpDI1ZJMctViq8m6+5zoffNDegUgYdXViOqFcnr9meGVSUcigywbtJgQJ2cBCiBvr9zuktT3PlutIZB8HzOAR2RXA/5GHZpgX1cbGnvfrcgknhJkwrrhZVpt6QAp6UAWuFMilp31ZLHgoI632BRjm7itCdMrF3JQ0QM+lD56o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750779660; c=relaxed/simple;
-	bh=V4cFT1hqRldsR5zu8HOg3Q2LTneYk9DIMbOYJXD5/V0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MwKWmF7fKgq/MOHyZpCsMkz3xwYVdFWh9LKNkmCyRLaF49jPa3eCAnqerfdAUvgB1CLb+k3q6XUugkBy/lOZTDuhs5kBV42PTJVUm24gkb0HGsoxOfzC4w+0qKqJrfLY0H89D2MVUpieEi0gJSOJrolmII3rGJYYbZgFaKvlsyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpBF33O5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D022AC4CEE3;
-	Tue, 24 Jun 2025 15:40:59 +0000 (UTC)
+	s=arc-20240116; t=1750780427; c=relaxed/simple;
+	bh=5gIuZaIyM0SgNtIvnnpKjpM1YltAyHByEE6D09stErU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sImN6caA5St/mipH/l1cYiSoqhOTs+LyI6pnfHkws81V8ZNZTv8ok+liVOncuc9nyQr8G6mQtj20ZmpuqZO6xTJyZ92hLHbyLYIWBcuRXQIx1sa0esJt6vxtD6pdiweY0ccp88/50wYcJRZFNcOTkvu1L80qyvEKexZJPxX3FgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMzZ2gJG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FCA4C4CEE3;
+	Tue, 24 Jun 2025 15:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750779660;
-	bh=V4cFT1hqRldsR5zu8HOg3Q2LTneYk9DIMbOYJXD5/V0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SpBF33O5DmWK2ju99YB+4lma9jKXpW06Qy7WaO72fUGRR1bwapxUreARlC7ACWT6K
-	 d7vv4X3sGIn9LGbgcTNo3m5HJIra8v37CKiK8VkCbUNooIqlcYyh8VByADcphLjB9W
-	 hYlSLlPFnIJKGwnFPitY38ytqBnIwNYFchiWpKgQFsRDQMDIhi5yhHtaKUrJqUIfhI
-	 M+utXRuCz03/g3TIw4+WeJGu3yf5PFgqTBHYBduyJ+DgVZQ5TroV2E01VPGEMlzJrk
-	 LU61+IsoQyxe1V5snMuI1Aeg04lidkunp9VMazrO8DDzUHZSLfluTSyWQAZA4nsWG6
-	 Cps8jR3ACfGjQ==
-Date: Tue, 24 Jun 2025 10:40:58 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"vkoul@kernel.org" <vkoul@kernel.org>,
-	"kishon@kernel.org" <kishon@kernel.org>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"elbadrym@google.com" <elbadrym@google.com>,
-	"romlem@google.com" <romlem@google.com>,
-	"anhphan@google.com" <anhphan@google.com>,
-	"wak@google.com" <wak@google.com>,
-	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
-	BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
-Message-ID: <20250624154058.GA1478094@bhelgaas>
+	s=k20201202; t=1750780427;
+	bh=5gIuZaIyM0SgNtIvnnpKjpM1YltAyHByEE6D09stErU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uMzZ2gJG0TMEGpMVxiZHeLdfiXSAJ+T3/T4x4bgZPBc9wtt2C3vBJZPx7RUO7pzV7
+	 lD1VDfRASF6KaK7Ww3fKSeaTkws+AN8Mzz8FMLUOawupf+ELUiRAimpcF0vDk8mbXP
+	 IT2Dpmqp/nyuQzLRfPWyJoODLt0LUIFydHyeIgh7EQz3onJNCtYU1NVsLwBA+lMiIC
+	 3I1D6u/4aXIIzafWyePJlp1uBqE6C21sn79PgMfrG5DZtfAQVTAYUfx1EwPkUWAb9J
+	 0lYpVqNzO1TQycN+lcjutyS5WcGz8+JUjiIwEzBUNzXdOGud8oNexRNPY5l/c6a9mC
+	 IdwDZTxK4Twug==
+Date: Tue, 24 Jun 2025 16:53:40 +0100
+From: Lee Jones <lee@kernel.org>
+To: Sven Peter <sven@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>, Janne Grunau <j@jannau.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v7 05/10] mfd: Add Apple Silicon System Management
+ Controller
+Message-ID: <20250624155340.GL795775@google.com>
+References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
+ <20250610-smc-6-15-v7-5-556cafd771d3@kernel.org>
+ <20250619114958.GJ587864@google.com>
+ <f30406ae-90ed-4f81-9519-e6ae2dcc9e03@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,38 +72,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <SEYPR06MB5134973F678EB5B163DD50809D79A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+In-Reply-To: <f30406ae-90ed-4f81-9519-e6ae2dcc9e03@kernel.org>
 
-On Mon, Jun 23, 2025 at 05:41:13AM +0000, Jacky Chou wrote:
+On Sat, 21 Jun 2025, Sven Peter wrote:
 
-[Apparently you trimmed out some of the lines that show who said what;
-there should be more lines here like:
-
-  > On Fri, Jun 13, 2025 at 03:03:55PM +0300, Ilpo Järvinen wrote:
-  > > On Fri, 13 Jun 2025, Jacky Chou wrote:
-]
-
-> > > +#include <linux/irqchip/chained_irq.h> #include <linux/irqdomain.h>
-
-> > > +/* TLP configuration type 0 and type 1 */
-> > > +#define CRG_READ_FMTTYPE(type)		(0x04000000 | (type << 24))
-> > > +#define CRG_WRITE_FMTTYPE(type)		(0x44000000 | (type << 24))
+> On 19.06.25 13:49, Lee Jones wrote:
+> > On Tue, 10 Jun 2025, Sven Peter wrote:
 > > 
-> > These are straight from PCIe spec, right?
+> > > The System Management Controller (SMC) on Apple Silicon machines is a
+> > > piece of hardware that exposes various functionalities such as
+> > > temperature sensors, voltage/power meters, shutdown/reboot handling,
+> > > GPIOs and more.
+> > > 
+> > > Communication happens via a shared mailbox using the RTKit protocol
+> > > which is also used for other co-processors. The SMC protocol then allows
+> > > reading and writing many different keys which implement the various
+> > > features. The MFD core device handles this protocol and exposes it
+> > > to the sub-devices.
+> > > 
+> > > Some of the sub-devices are potentially also useful on pre-M1 Apple
+> > > machines and support for SMCs on these machines can be added at a later
+> > > time.
+> > > 
+> > > Co-developed-by: Hector Martin <marcan@marcan.st>
+> > > Signed-off-by: Hector Martin <marcan@marcan.st>
+> > > Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> > > Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > Signed-off-by: Sven Peter <sven@kernel.org>
+> > > ---
+> > >   MAINTAINERS                |   2 +
+> > >   drivers/mfd/Kconfig        |  18 ++
+> > >   drivers/mfd/Makefile       |   1 +
+> > >   drivers/mfd/macsmc.c       | 498 +++++++++++++++++++++++++++++++++++++++++++++
+> > >   include/linux/mfd/macsmc.h | 279 +++++++++++++++++++++++++
+> > >   5 files changed, 798 insertions(+)
 > > 
-> > I think those should come from defines inside
-> > include/uapi/linux/pci_regs.h, there might not be one already, so
-> > you might have to add them.
-> > 
-> > I also think you should actually use the type as boolean, and
-> > return one of the two defines based on it. A helper to do that
-> > might be generic PCI header material as well.
+> > This is ready.  Let me know when you have all of the other driver/* Acks.
 > > 
 > 
-> Agreed.  This definition is used on TLP header.  Maybe I will try to
-> add some definitions to pci_regs.h or pci.h
+> They've all been reviewed by the respective maintainers.
+> 
+> I assume you want to take this all through the mfd tree and we'll need acks
+> from Sebastian for power/reset and either Linus or Bartosz for gpio then.
 
-This values might come from the PCIe spec, but unless they are needed
-outside drivers/pci, any #defines should probably go in
-drivers/pci/pci.h.
+That's right.
+
+> The one line change inside drivers/soc/apple would usually go through my
+> tree and I'm fine with taking that through mfd instead.
+
+If there are no build-time dependencies on it, you can take it.
+
+I'm happy to take only the inter-dep ones or all (except the arch/ ones).
+
+-- 
+Lee Jones [李琼斯]
 
