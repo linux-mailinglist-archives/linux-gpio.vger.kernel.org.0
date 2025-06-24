@@ -1,173 +1,109 @@
-Return-Path: <linux-gpio+bounces-22081-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22082-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0C31AE6F05
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 20:58:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEEC4AE6F25
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 21:05:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E30477B1D3C
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 18:57:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58B4F17F600
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 19:05:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B342E7F32;
-	Tue, 24 Jun 2025 18:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBCF22E7F18;
+	Tue, 24 Jun 2025 19:05:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TWE7unGS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="greaUKvA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85402E762F
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 18:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDC62E7F32
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 19:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791497; cv=none; b=kxR7VLWngw4LMK9FL/3eEpxRw2IozxQgADTqnnb70VzVAyhTNDVixtmn8PWp3cKnYngVkQ/lvtLwIVI717WXaAyM1ZUMA9UOfuBd5eUmmtOLiiwxV6Qsza+BCu50KF3G+8rGAxGjcrEmdNJpER7/HWSmZA4+Mq/UyD9Xurue0Xc=
+	t=1750791905; cv=none; b=R5acuotjRKcOyFYOF6hpyXJi4asIPN95oUm5ZYmX32I/n2cUmOVTiQdDba81d5ikSj7t9eGOYKYDKTAwIhSa+3hIoUrnCHO8hReT4bnN7wPce+20/LDDHRYipOMFDpTyj0zODWPXUrnOJLpds0CNoeh7ocE04jNw8Xz9lb4kX1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791497; c=relaxed/simple;
-	bh=npWwWKZPd5rdEqfk5ixF6kz+HcjFPiAMk+Q3wRxBc94=;
+	s=arc-20240116; t=1750791905; c=relaxed/simple;
+	bh=mbsb9+fWnbzsLx5rxji39vFSDusnvdjQ+VlMMWao5NE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X411aRzpkSBRNGhV76+YL+xm0VQdsk1ACqQKkrNclb5x0ILMgYZxAJGyr6wu1wEwMotqbaTKAb9D7f41zyPh+T747peGkrlAUT2zaqhEwXXWWF1DHZo1wp/FGIDibBrFRoK/qUoVQf3qtO6A4KS6euvmmLEFJMx4cif74asEnyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TWE7unGS; arc=none smtp.client-ip=209.85.208.181
+	 To:Cc:Content-Type; b=mPraDtIhTBJTM1UibnUeuw19wyLVbsft27kWGZLS0dTODtJsAHVErtt8efrrXFqbSXEwun6W4Dtu2SP1PowFMCaukpdhv/yRvRnq/yBg9pxOWNbHCEpvhZx4EX1N61ZPnCI9zI37HiyR9ofgCKO8Zl++Y6GuHAWOeqiBivLg+w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=greaUKvA; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32b7f41d3e6so1744901fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 11:58:13 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32b7cf56cacso7646471fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 12:05:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750791492; x=1751396292; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750791902; x=1751396702; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h7ui9krklnTDspgMC7AGFpPjhbbUuQIxEzApTtxeYDw=;
-        b=TWE7unGSOuUxfA+RiQdEGtRaCAkTg6IrkT6bSQZThodttjPogdODQZyNfBW7I0xwJu
-         nfX0au6WniRbRkA6iSosgwB2XHlBrOB8l1Ir84cbw6EE3+4nKpyPpjKEBG02qm7+HCo+
-         4G6OYmTl6sdT0zTlxTzay5ScHkIele/6R3nM3bspbLGecKP8S1shvdHOE3nG2fb5FlR8
-         4uB6+uMXvRdf39Cg8vJYEGKJ15dUAzj5hpGFkdKIHqmcwMN/TK1PsAsps7MqQJySIPSa
-         FslFK2BVGdK36mkdfYhLdoalgGuUOd1ZQu0ByZOY/HlAEki88ioL6yFpb8L4yP6knnQe
-         thlQ==
+        bh=zgrYreYVLH8FvHoQvhsa3zUNDQAJAjppKx7XORV5c4c=;
+        b=greaUKvA3QPRnMukNkOtP1Rs94G9Ik3Gynpo7TPJAyRdeEM9OjvRLrU3i2BCZwhSdL
+         Xf6FZTMGRCZBRaXrjV7KEvJxLjCtam936SnmNhEbi5zGwqsQ8870DKYTZnZGjs/3ATZI
+         vXQkYyIL+CU2XRdapzIgeH9hWKovuYpX/ceNUtEXFAlYSw+8uCj45VudVx9pKnyLReAy
+         s6JbA2D67mA3mo1H02O/adj99e34r8NpL6nnuugv8FQJc8KHJU12ZvBjVbycR+tuu9ud
+         l9vWfZuSSoBh0T2sw66WaF7RUGEIvjFNrbTbwpBFr7HUtKCIwZ+o+R0gLNaI9SukfQ66
+         Fgew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750791492; x=1751396292;
+        d=1e100.net; s=20230601; t=1750791902; x=1751396702;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h7ui9krklnTDspgMC7AGFpPjhbbUuQIxEzApTtxeYDw=;
-        b=PvdiMuTiMQyGOzNFeMtVXeCXYm8SXQdC2ayojQ6d3TgGL6uxEnfhlxa/G0ODy9VrNa
-         +lbjYX0xRj6+MQ5ECY8WdlZxSHIEmMHdTCBg8b8px6LsXThFNoSYhZB2jHN0cfJYhODo
-         PXVOY3JwjzJI01oE4kYz2CVn9Q4dNdRftDce+fi5209qOd2hriSVQA4ZoKYwNRI9qsrG
-         JD01L4Mvtk2Oh3gWJIfdVdUdA6D/i7Om2czFIm1Ig4Idc7RhBCGM+yK4QE01/uqfPIme
-         DmsMt6dcqtCtYstrNLlAoJB4VCMtCPqrEM5sau7EWNqW7alaXcQ5MMd8uajB6rJ3cBwK
-         NqQg==
-X-Forwarded-Encrypted: i=1; AJvYcCXg6yn3g0P+8RBrVPPlWUZtm6v8w23OMywdKzvXOe0jrQozRHdWIML30P5AAn7lRgH+BYT5SSYCK3vv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFr8Y2GRklAYaiSrrqYQ4xbet6XrTNwWiRSXlxeB4/nMJ5m+/D
-	ezwL+fU++fFsrD8bNzi1kJEncWIDo+uvadR1rieR8uFAiqoAeTpWEaNY5+lYuyP/irywKPwO8Qq
-	2ZV7xtDhja4ZLmvPGIKyHKipG5jWjhNoHeU2HijhHnA==
-X-Gm-Gg: ASbGnctyD9N68yFYCa6eU2ozoRZj9Mdn95IhZvps/ruXvC4IvT3GUT6/IeVgcGINbG7
-	rmBe1Mtib197YnzWo0MRWV+J4JjNONBGs3uJ4t2lmTapaKheuc4UDkEzAQovKqbM31vaZ9RW42A
-	PoDMcXqzid6CQ11EnlijlkKYhmaekBa2wSUa6RAmCn0ck=
-X-Google-Smtp-Source: AGHT+IFHkwtjvOJNCrFEWstn9L634lZ8TSAnodhGn+aKzDIVOJMa02nwLbdMCDdRl+xviZehHHIuiwGlHeUOdx9D6us=
-X-Received: by 2002:a05:651c:214b:b0:32c:a690:724b with SMTP id
- 38308e7fff4ca-32cb968d882mr10090081fa.19.1750791491756; Tue, 24 Jun 2025
- 11:58:11 -0700 (PDT)
+        bh=zgrYreYVLH8FvHoQvhsa3zUNDQAJAjppKx7XORV5c4c=;
+        b=gi+8lxQiXRV2c/LI4zhveKj2JjH17yuTrBjfHK3Kxvat0QEvErNzjSNoiwyjJHeC15
+         39LN2bkzDBaxpsA1cR46OkQgt/iVxkSeoCpvovntOMVuJSrPPVbdltNsMGJ90P7HQBB4
+         cl7xg5ZbahC60I4+847ue5KdarYEZnm7JyDQmuas2UWajqgNcCTTRGPMQgkMiWLrdeP6
+         Ag+K6VazOumUebARgvvrzYQn4ONlXlgB513Yo2qyM2kDsgBOiNiBbgkbZsaX2JQydDxR
+         jHedMndWkyTI74tK6K0GYOzErgHmLqnv+pbnswIP49gMRG5vR6rp8pcZB2/Qw8KRbRVS
+         rMQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWL5J4nhfOyIHRxewugZn4kEzM9oAeTEAeLxyexdkcT2sJCQ5OTv+TEcFwbSyy2diWrKKpnBQbC5+pL@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDQDn8u4sJ0Y+VeDriXP2PtgWJ+BYwP6Ed+D8o+dt2Ry2/c8id
+	Lht9YAaTV6H+TvGajk5IXGOzSEKfaPW6iGSdAkoKqlwE1HMqAVr0q3lHWmgD8GH28TUi84qi/+F
+	6Js0Vvqf2cO2phNO3cfgdDRGXx5FsoTmU/898FteyAw==
+X-Gm-Gg: ASbGncspArq2FMOPdKtKorcD9LB1cAGQSi5RhrAj5b6O39yuIpRVNI6OqkCfTF4tFZn
+	1S8mJxYlco0yV8CHnCobOPoGVh09W9q7IUCddRO/i0HGbK7W4RXRFvykAuMXGrApgM564fIXMpR
+	+A5q0MpkI7Z9H9fh06dfRXHx9an0+jCNaCK6Mil1F6Rms=
+X-Google-Smtp-Source: AGHT+IGRAdbblRlD3BsEideIncBbEmzKvsoZaeWYiP0C3/Bj6arnBv99h8pdXRsP35lURKgQ2I/vILxQ5IGPRudpng0=
+X-Received: by 2002:a2e:a54c:0:b0:32b:72c8:9a5d with SMTP id
+ 38308e7fff4ca-32cc4d3d6f2mr2458331fa.0.1750791901594; Tue, 24 Jun 2025
+ 12:05:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618095858.2145209-1-demonsingur@gmail.com> <20250618095858.2145209-5-demonsingur@gmail.com>
-In-Reply-To: <20250618095858.2145209-5-demonsingur@gmail.com>
+References: <OSBPR01MB1670163BDCA60924B3671D45BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB1670163BDCA60924B3671D45BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 20:58:00 +0200
-X-Gm-Features: AX0GCFv3Y0xzvM4_ytzUY9wWsLoaPRcLNq10rxfdsma9gTvF5iQYKz-0B24NXH0
-Message-ID: <CACRpkdYwBAaEi--y64oVwVcAMH9z0LO5ZG_fvNK-CuxdERiYBQ@mail.gmail.com>
-Subject: Re: [PATCH v4 04/19] dt-bindings: media: i2c: max96717: add support
- for pinctrl/pinconf
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
-	Julien Massot <julien.massot@collabora.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS" <linux-media@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>, 
-	"open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)" <linux-gpio@vger.kernel.org>, Cosmin Tanislav <cosmin.tanislav@analog.com>
+Date: Tue, 24 Jun 2025 21:04:50 +0200
+X-Gm-Features: AX0GCFtEg0ndXbqdWy7FvRv-qpkhJSjku68IPxwnvAyNolU9JWUszgMqSgQ21Yk
+Message-ID: <CACRpkdZhHVBc+aGA91Y3hHOe13C4TYwM1E_mH526dTECBZaP8Q@mail.gmail.com>
+Subject: Re: [PATCH 00/16] MIPS: some compilation fixes for the Lantiq platform
+To: Shiji Yang <yangshiji66@outlook.com>
+Cc: linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-spi@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	John Crispin <john@phrozen.org>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Cosmin,
+On Wed, Jun 18, 2025 at 4:54=E2=80=AFPM Shiji Yang <yangshiji66@outlook.com=
+> wrote:
 
-thanks for your patch! Overall this looks good!
+> This patch series fixes some MIPS Lantiq platform compilation issues
+> found on the 6.12 kernel[1].
 
-On Wed, Jun 18, 2025 at 11:59=E2=80=AFAM Cosmin Tanislav <demonsingur@gmail=
-.com> wrote:
+Thanks!
 
-> MAX96717 is capable of configuring various pin properties.
->
-> Add pinctrl/pinconf properties to support this usecase.
->
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 (...)
-> +      slew-rate:
-> +        description: |
-> +          Slew rate.
-> +          0 - Fastest
-> +          1 - Fast
-> +          2 - Slow
-> +          3 - Slowest
-> +        maximum: 3
+>   pinctrl: xway: mark xway_pinconf_group_set() as static
 
-Would be great to have some SI units on this? Like how many milliseconds
-etc.
+I already got a similar patch from Bartosz.
 
-> +      maxim,jitter-compensation:
-> +        type: boolean
-> +        description: Enables jitter compensation.
+>   pinctrl: falcon: mark pinctrl_falcon_init() as static
 
-What does that mean?
-
-> +      maxim,gmsl-tx:
-> +        type: boolean
-> +        description: Enable transmitting pin value to GMSL link.
-> +
-> +      maxim,gmsl-rx:
-> +        type: boolean
-> +        description: Enable receiving pin value from GMSL link.
-> +
-> +      maxim,gmsl-tx-id:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Identifier used while transmitting value to GMSL link.
-> +          Default value matches the pin number.
-> +        minimum: 0
-> +        maximum: 31
-> +
-> +      maxim,gmsl-rx-id:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Identifier used while receiving value from GMSL link.
-> +          Default value matches the pin number.
-> +        minimum: 0
-> +        maximum: 31
-
-Maybe add some words about what an GMSL link is somewhere?
-
-> +      maxim,rclkout-clock:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +          Clock value.
-> +          0 - XTAL / 1 =3D 25MHz
-> +          1 - XTAL / 2 =3D 12.5MHz
-> +          2 - XTAL / 4 =3D 6.25MHz
-> +          3 - Reference PLL output
-> +        minimum: 0
-> +        maximum: 3
-
-I'm no expert but isn't this something the clock framework has some standar=
-d
-binding for? assigned-clock-rates?
+Patch applied!
 
 Yours,
 Linus Walleij
