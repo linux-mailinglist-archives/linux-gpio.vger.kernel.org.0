@@ -1,126 +1,100 @@
-Return-Path: <linux-gpio+bounces-22102-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22103-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BDFAAE7030
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 21:52:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61026AE7087
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 22:22:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C1ADB7B4547
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 19:50:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C7BC5A41EC
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 20:21:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E7082E6D0F;
-	Tue, 24 Jun 2025 19:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D5AF2E92D0;
+	Tue, 24 Jun 2025 20:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bx4nC00S"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4eC1VJh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F95C2512DD
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 19:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16C01C84DF;
+	Tue, 24 Jun 2025 20:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750794703; cv=none; b=EQmbM+WPiN/XqeZse9b9M0TgBeX8Hnxco7t1/G8Hd5hK6jNmdIZeEODrlEHxTA35U6YKEzx86O24NqoE0DwAG6YuOWRSAiqEAFxDceledCTWmkGa1Jyh6VnXgRtpMDu32rncyZQUobMtkMnkdjeamXhYmHiJ326tvEZFNuLAzrU=
+	t=1750796536; cv=none; b=tEjOvTZ7xPi3Kqr3WE72I4jLaC2peo4lFwwSDYHIqw8c3ilJA6YI1JLAQ6FhFGpmsejIL7xIOpB+Jvo97ZxFBkIQdkIATqr2V04xVypTOVjD0BZxRN4OcPlVqlHBgi1aGylkWy7tCX3L2cjSJXLhBeBsWhmPnu7CPdHyzkHl1zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750794703; c=relaxed/simple;
-	bh=B/ULaHUETU6DovdIQRhQ/RyujC0Dkl9fSx3NjtmEe7Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HEL4qEkxrKwVl4rjf3Njjp8lx3nlZVK2ARTH9168o9bADF78kq/qaGA78fG8p+pcjCL7ldTp9iw+9LLLHQZFOunjRuOPDY7LBlKakVt40oHEBerakbgqW3FR8RBRO/w318hmDTEY/a463iXJeVdKjj5j6XBaNcAJbNry51V7Ir0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bx4nC00S; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55220699ba8so6233916e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jun 2025 12:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750794699; x=1751399499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B/ULaHUETU6DovdIQRhQ/RyujC0Dkl9fSx3NjtmEe7Q=;
-        b=bx4nC00S1X0r3LL2R/hiqiaf8/D6l8Q6+/3VxcLz6FsOkAcJu15PLb3a11a5Ea3Pum
-         ILW8cMasruwTlIVvM8njMKJA9urHb5nK3ePOPakW19RW/ieOjdzAJ57Z7ul4OPDxKFFx
-         soZK1wyh7s2ydB2jZS0f66zZ2qhb70eQDaj3v/iVqxpA5T5XnLZqgtXjJ9cJYJC+CoDR
-         qEnkJAIG41ScY4k8Bk1eWej5sRj5cKZJltwtuxvyFU44zGBbABPhGOCLbBi4bgZymI7H
-         ztnf4+U0rK/C+O6sAqhPW2QMGm+2Mt0ZhpuCUa9WePXAd4hqJzPl4qgnnqsTJ2M4AxKL
-         23Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750794699; x=1751399499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B/ULaHUETU6DovdIQRhQ/RyujC0Dkl9fSx3NjtmEe7Q=;
-        b=ldFTI54GNLg2a85SFPxB+7uzS/bjM0xLNMsaVrEGXzcDDWzHJkZ7ghkFOh2mfH/ULJ
-         2UwVGiY8aTWfVAkBi6xJwPLn0WISNdPnOwyL4ZNcAKNyW6e6qUWZchl5Ar4ICzXEjL6I
-         hdjakVtaN9xGWXautaEsIlCVUYS1mBso4gsWijGG0T0fGOmtMDPar8P8kexNj+5czXX7
-         Do6HmOI626eddOrpwCE+2J8UKTtxJvTEyIm2BVuSWozhVAm0nMBa08ttJKwISXHbrgf+
-         2TGhxL1HP0teOTNPweZfbuUarp2c1/zK6ZwjAdsH7HILCv1nMKWhzL2qCUdIDvQ4aFtV
-         09iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlPprFE+W7CYVUEGxebOcTPVZFLlEYuNBm2ZBNurpKw/fR1TDSlsBnAJveGHMJEm9JnNACpwwHdfmE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP/JfZJv7uqvItcVFFHzTZveTHZpS+5NIbxBf0uy6/PxqtaCyW
-	dyrxEK5221QgyjhKYpiWLukqg08l71CyR6TzeWFLGxlzEv9hzWRLUIeJwQU5BzAjKidi+vo3nmE
-	zRCHHD1brP8VS7lF20ZPGFNjBk7RU2Nvu3lCiB0zLWQ==
-X-Gm-Gg: ASbGncs7Pg5U/rWzIXlTYwfm6HpP7bkWGxTBWrAGyopbV1KDnxZelQjBv2lDxtmYiTD
-	H4czqz9jrkLPsAuTZI5ZvmgNpAjRhWQmtmkqsisQ3aqk/mJPQhzTgl/6qxqBCgAzHIi2zTIflAo
-	kwBPZWcBSwtLcEV+OLN/KMexs2lfv+iRcDKZF9ZYQclSI=
-X-Google-Smtp-Source: AGHT+IE7ZhidhDycmbWSPBv1SXukyv4UOsTnptIV0NVFDdvfjdJisylDEZywOQMLRXTZuVgtEJHSpJFFFA3MmjtlJ4s=
-X-Received: by 2002:a05:6512:3b9d:b0:553:358e:72a8 with SMTP id
- 2adb3069b0e04-554fdd5d263mr47305e87.38.1750794699262; Tue, 24 Jun 2025
- 12:51:39 -0700 (PDT)
+	s=arc-20240116; t=1750796536; c=relaxed/simple;
+	bh=6auYCtU+8baJ0FLq4ANhah9LDZ1XhBI5uIF6MnrAl54=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n/udYdC0sYNbwoqlbvA8oA/Q+arWjo8gfSx2AolcFcV4FGUIV6Rhh95A+sA5z6HB14L2taNp23kxlMU/2xufDJ1B7JBO/NhjE8e/yAVOyluooMa/Iexsp53drX69XNhBG+yDPivnYpOfqLu7StdWE/ncnAhBtbMa/wWy0P7ejI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4eC1VJh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 553E4C4CEEF;
+	Tue, 24 Jun 2025 20:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750796535;
+	bh=6auYCtU+8baJ0FLq4ANhah9LDZ1XhBI5uIF6MnrAl54=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Y4eC1VJh4kgei481XqjkJ/ydH3v2V95pamb0n+1at0+9jrNNYNNIvE7CRH3gsRh14
+	 zyjLSfOCXiwxX28mjgmV/ZxLkNdcc6jo8kfACM/gqX3T1O0eIx0aGhRL6hDgLKBF4T
+	 HTjLDCJKJ5e3DGBHLlOvjGV6dLFJ7luv2cmPBqBlb/fJHE3/OcbVYDtsM6NiKEN7v1
+	 JuhLbq5ESG+Z2HGFHeiErITWa2g5PkWTuSZi+fmgS+JNTcC5ZBVXE8EAsTmkAjM7r0
+	 L9U/8N2DGOevqa/sl0g2fJM2ZucQdxwQiyFTdc6PQZoNdX55WjUJKtahlJV191FcOg
+	 Wear+dm8dScMg==
+From: Mario Limonciello <superm1@kernel.org>
+To: Hans de Goede <hansg@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-gpio@vger.kernel.org (open list:GPIO ACPI SUPPORT),
+	linux-acpi@vger.kernel.org (open list:GPIO ACPI SUPPORT),
+	linux-kernel@vger.kernel.org (open list),
+	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH 0/2] Fix soc-button-array debounce
+Date: Tue, 24 Jun 2025 15:22:09 -0500
+Message-ID: <20250624202211.1088738-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624-gpio-mmio-rework-v1-0-aea12209d258@linaro.org>
-In-Reply-To: <20250624-gpio-mmio-rework-v1-0-aea12209d258@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 21:51:27 +0200
-X-Gm-Features: AX0GCFuix9QqcfdydgWIF-t3O-vbnn63nX5F5wQyNw4KZuxuAr9t5L-dWlGRbto
-Message-ID: <CACRpkdYdZQ4rKXPbiUve4n-p6q+HG4QS_oFkY1JDkJeqP4mZwg@mail.gmail.com>
-Subject: Re: [PATCH 0/8] gpio: move generic GPIO chip fields out of the
- top-level gpio_chip struct
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24, 2025 at 3:27=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-> The conversion of GPIO drivers to using the new line value setters is
-> moving nicely along and we're on track to have all the existing
-> providers converted upstream after the next merge window. There's
-> another piece of technical debt that bothers me - the fact that struct
-> gpio_chip contains a bunch of fields that are only relevant to the
-> generic GPIO chip implementation from gpio-mmio.c.
->
-> Let's work towards moving them out of struct gpio_chip and into their
-> own struct gpio_generic_chip. Doing this in a single series would
-> require some ~40 commits which is way too many to review at a time.
-> There are also users of gpio-mmio under drivers/pinctrl/ and
-> drivers/mfd/ which would require cross-subsystem merges. I think it's
-> better to do this in stages over 3 release cycles. This series adds a
-> new API for gpio-mmio users, hiding the implementation details and
-> converts the first set of GPIO drivers. Once upstream, we'll convert all
-> remaining users and once that's done, we'll move all the
-> gpio-mmio-specific fields to the new structure, convert the internals to
-> using them and remove bgpio_init(). The last step will be done in a
-> backward-compatible way, not affecting the users.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+I have some hardware in front of me that uses the soc-button-array
+driver but the power button doesn't work.
 
-I'm in. And I know you will push through with it as well.
-Patch 1/8 looks like a dream, approved.
+Digging into it, it's because the ASL prescribes a debounce of 0 for
+the power button, but the soc-button-array driver hardcodes 50ms.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hardcoding it to what the ASL expects the power button works.
 
-Yours,
-Linus Walleij
+I looked at the callpath into the GPIO core and I believe it's
+because the debounce value from _CRS is never programmed to the
+hardware the way that the GPIO gets setup.
+
+This series add that programming path and then drops the hardcoded
+value.  Hopefully Hans can confirm this continues to work on the
+hardware that he originally developed the hardcoding for.
+
+If it doesn't work on that hardware, I think it's more scalable
+to introduce a quirk for it so that the kernel can at least set
+the values intended by the firmware.
+
+Mario Limonciello (2):
+  gpiolib: acpi: Program debounce when finding GPIO
+  Revert "Input: soc_button_array - debounce the buttons"
+
+ drivers/gpio/gpiolib-acpi-core.c      | 4 ++++
+ drivers/input/misc/soc_button_array.c | 2 --
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+2.43.0
+
 
