@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22039-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22040-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD4A9AE5CD7
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 08:33:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49911AE5CDA
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 08:35:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 399B37A4A55
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 06:32:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0D584A64C3
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 06:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAB1F238D53;
-	Tue, 24 Jun 2025 06:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DBD423C515;
+	Tue, 24 Jun 2025 06:35:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HoqPmJgg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dso2UFGV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C12D13B284;
-	Tue, 24 Jun 2025 06:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF73E13B284;
+	Tue, 24 Jun 2025 06:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750746832; cv=none; b=LCwhVDJq4Z3dxxL21VVsGHS/RR7Cda9Tnla3HvicQh5Zn5yCZ4UiazBuVttZ/Deyohd+JX+QA72kyjdaGCSfWC9QfMm6iYPGLzelKXLybsdSMveM+54Ew+GFVeAuuQu3+4wvKi+lsaLJ5BhfnXJPfX/YfH9l2lekS+jOUdAowAo=
+	t=1750746901; cv=none; b=t3URxUalWY2FT+zEfldKqlL9AND1LCbSSlDuf6HtjD2s6mk3wyN8a/yhjlDc6NayL85XcSJsT733dL+vT3XLfQz+8EioOcu2DeYsi1FN5xuY9uPHAUIyZ1zfyrHKYeNfjdyEcfZFDsAIzw78Q4yq6RwTKK8vlyxv0ObFS1Xj+dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750746832; c=relaxed/simple;
-	bh=CMEL+KH7MaW3oeP91lSEwnYnA71/fN/9HCo5FyBpZws=;
+	s=arc-20240116; t=1750746901; c=relaxed/simple;
+	bh=j7rITJ4juKP2Yy9KV+vQi/jLoYOyZ9Hp6gowzhX2NCE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FbI/lxXiJmo/e48n8kaXYUw76G7lnU9rnmj3MbRapKFhUNxTVy18qDSf9/1EnceWnujHygr6eFHY1raYatlisSWdeK1/ej4PX8nW82wAwZi7TytUz5aItZR5nz08TndKRoSbd7NQn7Mjyf3V9Jt81cKy+PBJZY6Mk3zI4WdN7D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HoqPmJgg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BACB3C4CEE3;
-	Tue, 24 Jun 2025 06:33:47 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=KB4nL7p1ev9UxmFNbIVZUMODLl7wYsWYXCByKeYA/I6+w4vs/QdMtWpK2YvZvOa0iVsHGl3a7YcoWb8+pdz3DphuZXLTuadGi4dpHq/aEUOH0Nn+Tv7UHcsPvfjYWsKHGYO4YZhyjrJleXhwrri3Rl7Nu57uiH0S6qzSwM5S3Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dso2UFGV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D9EEC4CEE3;
+	Tue, 24 Jun 2025 06:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750746831;
-	bh=CMEL+KH7MaW3oeP91lSEwnYnA71/fN/9HCo5FyBpZws=;
+	s=k20201202; t=1750746900;
+	bh=j7rITJ4juKP2Yy9KV+vQi/jLoYOyZ9Hp6gowzhX2NCE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HoqPmJgg+lWPoRK2cWQFnTLaWzuhqBZqPEjdR0g6HxcsRL/iZHtRLvQarL9KwrubD
-	 O0IvHLsjOvNgJpSYyi1xVLmPtF48uD74zb586MnpCQbo6egPzx0qlnld7z7L1ivWyy
-	 q9TND8nGrg75iUd7qf6FWROt424YxgQzR7ChDFOCi2UZn53TMAXUFg2VwdJ526AM1y
-	 Qw5JD3kGcuawcA46Dhi+LllsWZwi2mwChxIPXY98ZG2c+O4JAVweK2uEgsOFkcJCSk
-	 bcLOk5Cz922d9dYBiRqVqDjKuc0qROJFb3iefI4zp6tvAl06qzwMlusRjQhCBZihOr
-	 FmZ+uviU6lOCQ==
-Message-ID: <cdfa9d1a-dd73-40fe-95ca-75a8693e27ac@kernel.org>
-Date: Tue, 24 Jun 2025 08:33:46 +0200
+	b=Dso2UFGVZhSPK07zy48+dT4AVbc5r9e/locALBZ4uLyOSScRY77FhnOFMO1X1KTA3
+	 c28rsXvc3xUg/jEumrqRAF/+zqCI6nV9O3/fk95Z88RePLvJAubIsoRmEPIT38xQRl
+	 gv/H2efAdNwdHip/dmzzoQymVfuqud27Yzjz+On1OILWrBH9jF+iuEX6uvsWHww1VD
+	 H1BF7EIpOajmBdy51aTsWvCcF6m3+vKk2rnsHG/YRz98WjtfKL7g6HXqUGfoq4BacO
+	 U6N5gyiTkfqktcwSFgxju/U1Kgba4hdeHNtPQ40ONFRW7WFj8y0WsJaPBiBpy12ese
+	 eTBodiOpM1vUQ==
+Message-ID: <1f1eb736-5b04-4e59-afb5-9e5925900100@kernel.org>
+Date: Tue, 24 Jun 2025 08:34:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/7] dt-bindings: arm: axiado: add AX3000 EVK
- compatible strings
+Subject: Re: [PATCH v3 3/7] dt-bindings: gpio: gpio-cdns: convert to YAML
 To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -62,7 +61,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
  soc@lists.linux.dev
 References: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-0-b3e66a7491f5@axiado.com>
- <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-2-b3e66a7491f5@axiado.com>
+ <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-3-b3e66a7491f5@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,19 +107,58 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-2-b3e66a7491f5@axiado.com>
+In-Reply-To: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-3-b3e66a7491f5@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 23/06/2025 19:28, Harshit Shah wrote:
-> Add device tree binding schema for Axiado platforms, specifically the
-> AX3000 SoC and its associated evaluation board. This binding will be
-> used for the board-level DTS files that support the AX3000 platforms.
-> 
-> Signed-off-by: Harshit Shah <hshah@axiado.com>
-> ---
+> +$id: http://devicetree.org/schemas/gpio/cdns,gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cadence GPIO Controller
+> +
+> +maintainers:
+> +  - Jan Kotas <jank@cadence.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: cdns,gpio-r1p02
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  ngpios:
+> +    minimum: 1
+> +    maximum: 32
+> +    description: Number of GPIO lines supported, maximum 32.
+
+Don't repeat constraints in free form text.
+
+No need to resend just for that.
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+<form letter>
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, just skip it entirely
+(please do not feel offended by me posting it here - no bad intentions
+intended, no patronizing, I just want to avoid wasted efforts). If you
+do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here ('b4 trailers -u ...'). However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for tags received on the version they apply.
+
+Full context and explanation:
+https://elixir.bootlin.com/linux/v6.15/source/Documentation/process/submitting-patches.rst#L591
+</form letter>
+
 
 Best regards,
 Krzysztof
