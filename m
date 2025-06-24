@@ -1,227 +1,136 @@
-Return-Path: <linux-gpio+bounces-22050-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22051-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78F21AE6032
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 11:06:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E06BAE62DF
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 12:50:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FE9919243E2
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 09:06:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46C903A721D
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jun 2025 10:50:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC0EF27AC34;
-	Tue, 24 Jun 2025 09:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9D8284B2E;
+	Tue, 24 Jun 2025 10:50:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZOM+WFCg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M3PYrtoQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9184D19CD01;
-	Tue, 24 Jun 2025 09:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764D01ADFFB;
+	Tue, 24 Jun 2025 10:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750755978; cv=none; b=AZ8Qstq7ywG2sfXJyiqQ6yPZK3P6D/cuyjCjC22cqLvo6cdG0LbLflaHaDR0KtzWC8lY0E1Q5bGgEPieVUxjBMdoZr0QUlZTLbT5Xrery700Sk/9k3i/Ac2J/+USfxUCpkW+Q3BRLdT17Or6io785Bf0i+p1Bp2qwCSP53IcEYw=
+	t=1750762222; cv=none; b=L0gYBff9C0VQKmsZmhnC9G9Uj0/w4CU9feZqQuLtfvnjs+aVjV8/qpUb84z+SXgL4k9w6boGsoT1sLrGdJXhcmfcIVhxISAsm8P2S73gItu2u+b7SQ4FkL1hDMlKuvu9mYFFi0s9ajKTLokoGTfkxVdSfQX8Am49SMR+Fb3WjTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750755978; c=relaxed/simple;
-	bh=HsWccBeQOAdF9Qsr2o+WddLltnhc1Ev0pc3kEbe3iY4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F9wQppLjZQfKF1dZO08L2VlX8uOlm8Yj2LK2wGEjJkoM44ix07CdzrBmYR/pjTMxt7UMVoCoWnOCVE8ty5fjxNA5XchXz2b2Mt0WDLNoAcJex/4pY+6675frB8CdRD0a/nMt0geFBuaCHLOuAvaZzbfILvNtYklh8vCW/S+xBhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZOM+WFCg; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8xQV0022985;
-	Tue, 24 Jun 2025 09:06:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=XQk0+U0bQplq6kWPaa4GSZLJWHoca74kTIK
-	1mfcnAHE=; b=ZOM+WFCg6+E5vfpCvV2dpwqoe+QFDZKT445gAWjP/S9MOWp0LWP
-	rtu1IsQg5QkVLD52agnhl+MOwcg6+MC+q6WsG/qutQ/Rt81YWUcbp9bcgstw/vtK
-	HY5yk6eU8QqLc8D/u7mkMwPblVb3IaKadyZeLFL6alT30vQuUfdqxdTFtQiHWPCl
-	Rhb8+sXlyv0IEVe1afiqiQqZXgDIKJleL0xJ5IQizqj7EpyuPHaQT8Xy9FLsMT5M
-	LUxk2i3FRZbaiNMa6xgp6aTJhMAOrjYkdvDL/+CvBslfogeoetkQta4buqmvooxJ
-	j981dH1XvuJhdoyX/VJwfTaeU8u2Maq2ucQ==
-Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgbg0m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 09:06:11 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55O968RM030167;
-	Tue, 24 Jun 2025 09:06:08 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 47dntm4axq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 09:06:08 +0000
-Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55O968l2030161;
-	Tue, 24 Jun 2025 09:06:08 GMT
-Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 55O967Q2030160
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 09:06:08 +0000
-Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4571896)
-	id 8584B37C3; Tue, 24 Jun 2025 17:06:06 +0800 (CST)
-From: Yuanjie Yang <quic_yuanjiey@quicinc.com>
-To: andersson@kernel.org, linus.walleij@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: kernel@oss.qualcomm.com, quic_tingweiz@quicinc.com,
-        quic_yuanjiey@quicinc.com
-Subject: [PATCH v2] pinctrl: qcom: add multi TLMM region option parameter
-Date: Tue, 24 Jun 2025 17:06:00 +0800
-Message-Id: <20250624090600.91063-1-quic_yuanjiey@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750762222; c=relaxed/simple;
+	bh=dv6ZN9qLcc39VhlOnYfqWOhVKBnveT9waBSLrEElVx8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jhHcRCo9rjmB7DPFFAyThl62KZsWu/EGwzH/d3bvKI2WWRBww8O22cmZhCiXvmVDhUdFhdQ8nmPv8OZwzCicaAtH1+0I365kEMBU4Yca8IyO9jfcwFwToRzalVpuJFxdBcG1qMlsTJ6X7/i8WQnFmUGiyOUGje75oJtSt/ZZ4B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M3PYrtoQ; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750762221; x=1782298221;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=dv6ZN9qLcc39VhlOnYfqWOhVKBnveT9waBSLrEElVx8=;
+  b=M3PYrtoQw2Q3Y3UpwxgLkOzNE/Pjfq9u58YN1eAI7RiDopKcDwpi20QB
+   38c05Ed24Ga7dy5ZB/Tpdme5mZtaY9lVKWIY0W1qVdVhUBihJcC0jbwEK
+   ZeOObmQUEfkX43vhzzUahpFRV3MSS0if8cSZsIKJtysKo377fv+O5gTnV
+   Fi7ygrHsa0x1n2D7SC6lO2iELof1+SWNvUlB5pQgF/7xjjOIV2FU077MP
+   JSL43Egovs8nGCn3NIUX8copsPG+Z7rRa3Ias5UMd/oP0G/lSl+yzwRRv
+   V6ccFChkCPzBY4DIh2TEZ1zlhLkVMXTemytHFr9xtTL8GMApz5kRtGyFY
+   Q==;
+X-CSE-ConnectionGUID: rlsl62z2SW+JqbDoPDCKUA==
+X-CSE-MsgGUID: XJIXwVxtRy6NaxJ+Y1hZmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="64352256"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="64352256"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 03:50:20 -0700
+X-CSE-ConnectionGUID: P3jobHMUQAe9pUeBJdc30Q==
+X-CSE-MsgGUID: JnGhA3LFT8aHV12Y11RQCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="151306478"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 03:50:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 24 Jun 2025 13:50:06 +0300 (EEST)
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+cc: "bhelgaas@google.com" <bhelgaas@google.com>, 
+    "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+    "kwilczynski@kernel.org" <kwilczynski@kernel.org>, 
+    "mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
+    "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
+    "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+    "joel@jms.id.au" <joel@jms.id.au>, 
+    "andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>, 
+    "vkoul@kernel.org" <vkoul@kernel.org>, 
+    "kishon@kernel.org" <kishon@kernel.org>, 
+    "linus.walleij@linaro.org" <linus.walleij@linaro.org>, 
+    "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, 
+    "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, 
+    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+    "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+    "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>, 
+    "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, 
+    "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+    "elbadrym@google.com" <elbadrym@google.com>, 
+    "romlem@google.com" <romlem@google.com>, 
+    "anhphan@google.com" <anhphan@google.com>, 
+    "wak@google.com" <wak@google.com>, 
+    "yuxiaozhang@google.com" <yuxiaozhang@google.com>, 
+    BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller
+ driver
+In-Reply-To: <SEYPR06MB5134973F678EB5B163DD50809D79A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+Message-ID: <a618588d-54fe-69a9-27f7-7b19ba905a52@linux.intel.com>
+References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com> <20250613033001.3153637-8-jacky_chou@aspeedtech.com> <40d1c5bd-0457-55ea-2514-ba27e6a4c720@linux.intel.com> <SEYPR06MB5134973F678EB5B163DD50809D79A@SEYPR06MB5134.apcprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: qAYcjN7DvlgY23TohpjWPL1oZxHfcPS5
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA3NyBTYWx0ZWRfX+eQU/aRLmmJv
- 7z7KdqkzmK/nZUUnaAhJxIfdU4oScbRJIN1MSbGCmsKG9HdO/uDfMaY6Wpld0yaaK6sDA4p9k7I
- iHC4LF4PgIOYzb1SUDW5wUawbQT4Cm1uiccvJSeJ/9h3EtqRJP4w/IYRv9nKHriXO3xNMtB3spz
- TP5Q8fVH2DqbxLWHkgzB5WDN59ZCZE2oDPhZcCAmO1S5GoWhXPRAsObfsRhX9sk2beiUJBqxyas
- QZiOmS9Qr70aGw15aAv8MtJDV3qMBCq1KqkrI9YfXIM0X53hF44wzSnQ+hN0fDmBz66yUpIm4P5
- YDCLx/NHas20pFL97xDsg1cPm5KaJXOLS2WQ6Gf8GZWNHmHaKPc8DsGZOyPnzEsA16V84yhu757
- Gl6AiWEw/TWx9xbFbq3VsqmwOSJLRMksFf5T29OwxKSz8V8KZ/8nl9u4BeDZXUiIGc0A08SM
-X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685a6a83 cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=vwwexvYrekbnnILydekA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: qAYcjN7DvlgY23TohpjWPL1oZxHfcPS5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_03,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
- adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506240077
+Content-Type: text/plain; charset=US-ASCII
 
-Add support for selecting multiple TLMM regions using the
-tlmm-test tool.
-The current implementation only selects the TLMM Node region
-0, which can lead to incorrect region selection.
+On Mon, 23 Jun 2025, Jacky Chou wrote:
 
-QCS 615 TLMM Node dts reg:
-	tlmm: pinctrl@3100000 {
-		compatible = "qcom,qcs615-tlmm";
-		reg = <0x0 0x03100000 0x0 0x300000>,
-		      <0x0 0x03500000 0x0 0x300000>,
-		      <0x0 0x03d00000 0x0 0x300000>;
-		reg-names = "east",
-			    "west",
-			    "south";
+> > > +static bool aspeed_ast2700_get_link(struct aspeed_pcie *pcie) {
+> > > +	u32 reg;
+> > > +	bool link;
+> > > +
+> > > +	regmap_read(pcie->pciephy, PEHR_MISC_300, &reg);
+> > > +	if (reg & CAPABILITY_GEN2) {
+> > > +		regmap_read(pcie->pciephy, PEHR_MISC_344, &reg);
+> > > +		link = !!(reg & LINK_STATUS_GEN2);
+> > > +	} else {
+> > > +		regmap_read(pcie->pciephy, PEHR_MISC_358, &reg);
+> > > +		link = !!(reg & LINK_STATUS_GEN4);
+> > 
+> > While I don't entirely know the meaning of these bits, what if the link is not
+> > using maximum speed it is capable of, does this check misbehave?
+> > 
+> 
+> In our AST2700, there are gen4 RC and gen2 RC.
+> Therefore, here will get capability to confirm it is gen2 or gen4.
+> And the link status is in different register.
 
-QCS615 gpio57 is in the south region with an offset of 0x39000,
-and its address is 0x3d39000. However, the default region selection
-is region 0 (east region), resulting in a wrong calculated address
-of 0x3139000.
+Okay, but then I'm a bit worried the naming of the defines as "Link 
+Status" has a well-known meaning in PCIe Spec so it is confusing to call 
+something else LINK_STATUS_*. Does that name come from some AST spec? In 
+not, change the define naming. If yes, you should prefix it with so it is 
+clear this is not referring to a generic PCIe thing and I suggest also 
+adding a comment above those defines too so anyone looking them later 
+won't wonder if you're just duplicating something from the PCIe spec.
 
-Add a tlmm option parameter named tlmm_reg_name to select the region.
-If the user does not input the parameter, the default region is 0.
-
-Signed-off-by: Yuanjie Yang <quic_yuanjiey@quicinc.com>
----
-Changes in v2:
-- when input name can't match reg name, set error code
-- Link to v1: https://lore.kernel.org/all/20250624065121.4000885-1-quic_yuanjiey@quicinc.com/
-
----
- drivers/pinctrl/qcom/tlmm-test.c | 47 +++++++++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/qcom/tlmm-test.c b/drivers/pinctrl/qcom/tlmm-test.c
-index 7b99e89e0f67..7d7fff538755 100644
---- a/drivers/pinctrl/qcom/tlmm-test.c
-+++ b/drivers/pinctrl/qcom/tlmm-test.c
-@@ -16,6 +16,7 @@
- #include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
-+#include <linux/slab.h>
- 
- /*
-  * This TLMM test module serves the purpose of validating that the TLMM driver
-@@ -38,7 +39,10 @@
- #define TLMM_REG_SIZE		0x1000
- 
- static int tlmm_test_gpio = -1;
-+static char *tlmm_reg_name = "default_region";
-+
- module_param_named(gpio, tlmm_test_gpio, int, 0600);
-+module_param_named(name, tlmm_reg_name, charp, 0600);
- 
- static struct {
- 	void __iomem *base;
-@@ -570,6 +574,47 @@ static const struct of_device_id tlmm_of_match[] = {
- 	{}
- };
- 
-+static int tlmm_reg_base(struct device_node *tlmm, struct resource *res)
-+{
-+	const char **reg_names;
-+	int count;
-+	int ret;
-+	int i;
-+
-+	count = of_property_count_strings(tlmm, "reg-names");
-+	if (count <= 0) {
-+		pr_err("failed to find tlmm reg name\n");
-+		return count;
-+	}
-+
-+	reg_names = kcalloc(count, sizeof(char *), GFP_KERNEL);
-+	if (!reg_names)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_string_array(tlmm, "reg-names", reg_names, count);
-+	if (ret != count) {
-+		kfree(reg_names);
-+		return -EINVAL;
-+	}
-+
-+	if (!strcmp(tlmm_reg_name, "default_region")) {
-+		ret = of_address_to_resource(tlmm, 0, res);
-+	} else {
-+		for (i = 0; i < count; i++) {
-+			if (!strcmp(reg_names[i], tlmm_reg_name)) {
-+				ret = of_address_to_resource(tlmm, i, res);
-+				break;
-+			}
-+		}
-+		if (i == count)
-+			ret = -EINVAL;
-+	}
-+
-+	kfree(reg_names);
-+
-+	return ret;
-+}
-+
- static int tlmm_test_init_suite(struct kunit_suite *suite)
- {
- 	struct of_phandle_args args = {};
-@@ -588,7 +633,7 @@ static int tlmm_test_init_suite(struct kunit_suite *suite)
- 		return -EINVAL;
- 	}
- 
--	ret = of_address_to_resource(tlmm, 0, &res);
-+	ret = tlmm_reg_base(tlmm, &res);
- 	if (ret < 0)
- 		return ret;
- 
-
-base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
 -- 
-2.34.1
+ i.
 
 
