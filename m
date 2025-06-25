@@ -1,157 +1,106 @@
-Return-Path: <linux-gpio+bounces-22231-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22232-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF078AE8FD5
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 23:05:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EDC6AE908E
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 23:58:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03EE7175E13
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:05:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7A57C7B0A4C
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:57:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5252220F076;
-	Wed, 25 Jun 2025 21:04:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014DB26E6E5;
+	Wed, 25 Jun 2025 21:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcsXt6oS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxLG2Fsh"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27171C84DF;
-	Wed, 25 Jun 2025 21:04:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A105626E16C;
+	Wed, 25 Jun 2025 21:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750885498; cv=none; b=RnadZxYpuRbXYsZEfzZdZjY0gJZ5+IEq/yEAeG0sjP0CPFbMtV43qygdGSQaOHR3M4XA0ZTIUQWTJOh3mpA2slOF3PofkQxRxav6nYwF3eisI7Pi4cLxJkQWSLMXI8p2zGbSZuyVtiwnSIpoD82UgBRH2GYBfsdYjLmd4o4/9Lw=
+	t=1750888701; cv=none; b=jqpX3tJISRzA6Mv+LzIQ2MEX1Ai0LYbC9AgExf7xxmW1IinlZrzDbxzdgMpb3iVn6pJLNFRFcF5JfO6mID4ltdtyYBL8jBIcoa+rilNVe4rPquZLaIpA9OgGaBp3Mo+r4DPLUp3LwMA6QXwGllOm+QG2KwLj5Uq+UKOEQ/4gJxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750885498; c=relaxed/simple;
-	bh=TwGs9xcqNKKZwXveR38XoItJjJjoTUCut41NngfDuik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jnOe2mImGgwIgZDR6q7iH/yOUidOx3q4y0IrTLzLw+MRGnRvZXWCFdn7SDWcf35Mha4jlFpl8pZG467tx8NL5aQvcAg6L8V8OWQ3X2xTopo36yPMhkeZFO4eQDtEki/TgQftMLm90OUXnw1rMjUnTRCtZ8LM0QhJzx9xYKAJhvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcsXt6oS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DDAFC4CEEA;
-	Wed, 25 Jun 2025 21:04:57 +0000 (UTC)
+	s=arc-20240116; t=1750888701; c=relaxed/simple;
+	bh=2hn641omImvYU5gLtEpaq8RLDoVT/VHEiycegqsfvlk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k7pKOL/vPTXZ3tQ2ycE9zcZz5vBKyStbzU0Ieih6y82xga/+PUttHR1aUmFuXauTddqCLODOJ6ZyhDpqq7f7Q0wtVnbljKF+jomIN+NdSbP3M4p6ZGjRwqGi02D2R7xVY6uaQN4Ak0HRyep+6GYS/QQlTgTac779SYebMuZ7G9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxLG2Fsh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DF3FC4CEEA;
+	Wed, 25 Jun 2025 21:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750885497;
-	bh=TwGs9xcqNKKZwXveR38XoItJjJjoTUCut41NngfDuik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fcsXt6oS90PgQatLapdwcdjg5ia5EOeRBAAxyHyXaqEq509DGgKqAH4YB16oiKVbi
-	 gCHFaQ6danRokdU3VaXQHaDBpqN/4H24MIIog8UlfyAJYxnzu99ooq2/0+YXRDMXjk
-	 a9h+XgpAz6LVGHwkYUTGPmFSqAw6Rfoq3exAjLjg2aU6Zz53xULEhZAIRc0t8jhoT9
-	 keXTLpmUQpCKAziaUZLLNRHIFLP9x6Qp6neDgp5c2sLkHaPj7K9hMh7DOMSGfE1WEI
-	 Dn4XES7ca5/ZSM6IXyhhIwbx4CwW+gZ1caGsKqpyzW1G/Hnkz0ubIxFbpmYQvQhnkv
-	 O3QPMeeYOd9Og==
-Date: Wed, 25 Jun 2025 16:04:56 -0500
-From: Rob Herring <robh@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
-	kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
-	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-	elbadrym@google.com, romlem@google.com, anhphan@google.com,
-	wak@google.com, yuxiaozhang@google.com, BMC-SW@aspeedtech.com
-Subject: Re: [PATCH 3/7] dt-bindings: pci: Add document for ASPEED PCIe RC
-Message-ID: <20250625210456.GA2177479-robh@kernel.org>
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
- <20250613033001.3153637-4-jacky_chou@aspeedtech.com>
+	s=k20201202; t=1750888701;
+	bh=2hn641omImvYU5gLtEpaq8RLDoVT/VHEiycegqsfvlk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mxLG2FshFo6jEwPQpg9c5Hpjvy/mrynHZoMJxOWA1rGV9rYsRGVLCb36OyG7zZwTI
+	 ubPm5a/hm7BjJOOhDqmpqXMn9skGhLNqd42a+IXPtJ01dGOHXTzx84TuFVEmbnCEPu
+	 coQm9DaXHhtEAnoeM98sh9iYXVl61Ls+i4pA0rnar+CfDV8gRT+MmDNtnpw103NLvG
+	 iUWRgiySlDgtuY8BLBBLHQ9pvwQ5rKBs6uFo423iUHc5MCQuUE4m7mIrTsewck/ZNW
+	 u+bmGb8AmK2aWzDwO23CPg26XiWR50Ob5SvfcHUIZXb6MU2vQFbPd1nbGP8PKD2anS
+	 bxxxd4gg9Ii2Q==
+From: Mario Limonciello <superm1@kernel.org>
+To: Hans de Goede <hansg@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-gpio@vger.kernel.org (open list:GPIO ACPI SUPPORT),
+	linux-acpi@vger.kernel.org (open list:GPIO ACPI SUPPORT),
+	linux-kernel@vger.kernel.org (open list),
+	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v3 0/4] Fix soc-button-array debounce
+Date: Wed, 25 Jun 2025 16:58:09 -0500
+Message-ID: <20250625215813.3477840-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613033001.3153637-4-jacky_chou@aspeedtech.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 11:29:57AM +0800, Jacky Chou wrote:
-> Add device tree binding documentation for the ASPEED PCIe Root Complex
-> controller. This binding describes the required and optional properties
-> for configuring the PCIe RC node, including support for syscon phandles,
-> MSI, clocks, resets, and interrupt mapping. The schema enforces strict
-> property validation and provides a comprehensive example for reference.
-> 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->  .../devicetree/bindings/pci/aspeed-pcie.yaml  | 159 ++++++++++++++++++
->  1 file changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml b/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
-> new file mode 100644
-> index 000000000000..5b50a9e2d472
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/aspeed-pcie.yaml
-> @@ -0,0 +1,159 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/aspeed-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ASPEED PCIe Root Complex Controller
-> +
-> +maintainers:
-> +  - Jacky Chou <jacky_chou@aspeedtech.com>
-> +
-> +description: |
-> +  Device tree binding for the ASPEED PCIe Root Complex controller.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - aspeed,ast2600-pcie
-> +      - aspeed,ast2700-pcie
-> +
-> +  device_type:
-> +    const: pci
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ranges:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  interrupts:
-> +    description: IntX and MSI interrupt
-> +
-> +  resets:
-> +    items:
-> +      - description: Module reset
-> +      - description: PCIe PERST
-> +
-> +  reset-names:
-> +    items:
-> +      - const: h2x
-> +      - const: perst
-> +
-> +  msi-parent: true
-> +
-> +  msi_address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: MSI address
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-What's this for?
+I have some hardware in front of me that uses the soc-button-array
+driver but the power button doesn't work.
 
-> +
-> +  aspeed,ahbc:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to ASPEED AHBC syscon.
-> +
-> +  aspeed,pciecfg:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to ASPEED PCIe configuration syscon.
-> +
-> +  aspeed,pciephy:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to ASPEED PCIe PHY syscon.
+Digging into it, it's because the ASL prescribes a debounce of 0 for
+the power button, but the soc-button-array driver hardcodes 50ms.
 
-Use the phy binding and make the phy control a separate driver.
+Hardcoding it to what the ASL expects the power button works.
 
-Rob
+I looked at the callpath into the GPIO core and I believe it's
+because the debounce value from _CRS is never programmed to the
+hardware the way that the GPIO gets setup.
+
+This series add that programming path and then sets the hardcoded
+value on on some quirked systems.  Hopefully Hans can confirm this
+continues to work on the hardware that he originally developed the
+hardcoding for.
+
+---
+v3:
+ * Use Hans suggestion to force software debounce instead of a quirk
+ * Fix a resume issue identified from testing this series
+
+Mario Limonciello (4):
+  gpiolib: acpi: Add a helper for programming debounce
+  gpiolib: acpi: Program debounce when finding GPIO
+  Input: Don't program hw debounce for soc_button_array devices
+  Input: Don't send fake button presses to wake system
+
+ drivers/gpio/gpiolib-acpi-core.c      | 25 ++++++++++++++-----------
+ drivers/input/keyboard/gpio_keys.c    | 14 ++++++--------
+ drivers/input/misc/soc_button_array.c |  1 +
+ include/linux/gpio_keys.h             |  2 ++
+ 4 files changed, 23 insertions(+), 19 deletions(-)
+
+-- 
+2.43.0
+
 
