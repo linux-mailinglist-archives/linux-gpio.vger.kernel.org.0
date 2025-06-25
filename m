@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22115-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22116-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CA18AE76B0
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 08:06:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 874A5AE76B5
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 08:06:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 639D31728E2
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 06:06:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C43FD172C5C
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 06:06:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D741E47B3;
-	Wed, 25 Jun 2025 06:05:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20D4B1E990E;
+	Wed, 25 Jun 2025 06:06:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxPFDjWo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYg/lktl"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD068182BC;
-	Wed, 25 Jun 2025 06:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53361E32D7;
+	Wed, 25 Jun 2025 06:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750831557; cv=none; b=OM9jOO84kuegFFWJeKVB6qY/GfCT64hoZUTF8BkN5EVHWs0dzh205r7Zy94upkoPOjxA8ags6cCvGjPwB9oLS5Zag+Ut+p1unufdA1iFkrwZSoe07EulybFywouTE0muB/NclKractnyt0hpZtnDh3jLD2C/SsGVTjFujtqMGKg=
+	t=1750831611; cv=none; b=ZwPJT5aCy1CsKwLV6kOF3BzldQfglDZxNJBigqA/HaP/sGBTi13uxQ02zHINa4faP2KfiWydpK6oQoz5kZJf4z7JfCk2EMbMZ21dA2RMuxXYymsneS+IrYyyEJbPCOTI8lJAo1HoylDbrAIJKz1e4pgvNKKIO33//Plki/wljgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750831557; c=relaxed/simple;
-	bh=mlSg9lIHtnrO/DSwiOZdc8wwacrIJ2lGTmmKvsPErCo=;
+	s=arc-20240116; t=1750831611; c=relaxed/simple;
+	bh=5Q+7+Op3gsbZEqApPIdeBKD5P5akCCrtXGnS9a+5VXs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I0a/wUecBXu/TqgcZpoGZDdj5zhVqF/Y3rNlDfYMeq9dsR4KeRHIYwzauoL0QzZcjLTRZ7bHMc+XYQwSve4Wy6PG9nODOCDQ0Ptqws4htT8QLuB4G7If/Mozq/yWGeUykwsAl0JFAS3u7ShJ7Zt5/4dkYhZXNZckrA5JTORpwPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxPFDjWo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C814BC4CEEA;
-	Wed, 25 Jun 2025 06:05:53 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=tjq7ZlHLzE3kLfC561KSu1Zi6na9F2AcchT+yGtvFzqz0Qi318PtMKMkxtzzUAd8BBKdu8S2BFFNCw9Zt6n0kD65uHQ1aGjTwwHvNiG49AlFiMHg28dfBRzaNeYhp9zi4fJ3JScolzOadmKR7ySHKD4UOFCTrwpQzJf6dtpfEbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYg/lktl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D42E6C4CEEA;
+	Wed, 25 Jun 2025 06:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750831557;
-	bh=mlSg9lIHtnrO/DSwiOZdc8wwacrIJ2lGTmmKvsPErCo=;
+	s=k20201202; t=1750831611;
+	bh=5Q+7+Op3gsbZEqApPIdeBKD5P5akCCrtXGnS9a+5VXs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PxPFDjWocxmsoIWWpzgyx3AmmB7LtjHB8cOR3tTUYprPGkheEEY3xPbyTCvyvqlsj
-	 VXYCM6uzQ60no5DzAL/c6jKu3dW8/SsFc0lIJ+kYXfN1TIOKELqESNNsTkpHZS1hqs
-	 6UNLEXKo6EUjiAIKzAwH1HUP9eJWaIvVr/jp559ag7T3fi8LeO4p/6bur6WuVYLFOu
-	 EQ4Kt11jPO3BkO5qiKKqcmsQV3FbwgtWbGsajfMDcYOHcCaT4yhPzZTcXLIlLwSrKg
-	 XD1s9aZpEpcI1lYU7N4C+8Ynua0qB0cNRPbyn3wxtYXHLca2DXwP04/yshsRPqFTOX
-	 0EQovDgK+ovMA==
-Message-ID: <a0feb67f-3a73-4247-8383-7255616cb22b@kernel.org>
-Date: Wed, 25 Jun 2025 08:05:52 +0200
+	b=GYg/lktlw61cmx0Z+GPSyMOC8zIesl62vOmdkfcmaGhFXR/Ao6yfJ9ObaCSUOa2Nn
+	 bziIprPvtefzF1RtmGIm51+pnvwzNIlMrK97euitf6gJzea0o1tBFPSWd68/U9Ky6M
+	 6ju6d1K46OkMRWzQlLulCT/p6QAX2fHooBKh8A52kaB5+tJwx7KezW7NCP4LAiP1dm
+	 m59EdteMaEN9TyoKVeRBhhPWQ30AQxYXsdgTQQrePP6Lyfy9JVdjl4bW12+ZpsTwF4
+	 i5uDYNKvpUf6lW1qclTjyF866+HIBIkmknJamHusFw42vdxZ8p5vSiX+y0FbuDjAk0
+	 +uiO9nssSjRmA==
+Message-ID: <4cac3350-3e96-40f8-97c5-07388703264e@kernel.org>
+Date: Wed, 25 Jun 2025 08:06:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/7] arm64: dts: axiado: Add initial support for AX3000
- SoC and eval board
+Subject: Re: [PATCH v3 7/7] MAINTAINERS: Add entry for Axiado
 To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -65,9 +64,9 @@ Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
  "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
  "soc@lists.linux.dev" <soc@lists.linux.dev>
 References: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-0-b3e66a7491f5@axiado.com>
- <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-5-b3e66a7491f5@axiado.com>
- <0709a0a6-1313-452c-85e7-2926a6a03741@kernel.org>
- <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
+ <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-7-b3e66a7491f5@axiado.com>
+ <085d5ebd-515c-4608-825b-b3319bc3bf7d@kernel.org>
+ <73e7df5e-14d8-4d8d-8e26-55d2ef262f1d@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -113,137 +112,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
+In-Reply-To: <73e7df5e-14d8-4d8d-8e26-55d2ef262f1d@axiado.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 25/06/2025 04:16, Harshit Shah wrote:
-> Thank you for the reviews. I have some questions/feedback to clarify 
-> before I fix some of them.
-> 
+On 25/06/2025 01:33, Harshit Shah wrote:
 > On 6/23/2025 11:45 PM, Krzysztof Kozlowski wrote:
->>
 >> On 23/06/2025 19:28, Harshit Shah wrote:
->>> +                     clocks = <&refclk>;
->>> +                     interrupt-parent = <&gic500>;
->>> +                     interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
->>> +                     gpio-controller;
->>> +                     #gpio-cells = <2>;
->>> +                     interrupt-controller;
->>> +                     #interrupt-cells = <2>;
->>> +                     status = "disabled";
->>> +             };
->> Please follow DTS coding style.
+>>> Add entry for Axiado maintainer and related files
+>>>
+>>> Signed-off-by: Harshit Shah <hshah@axiado.com>
+>>> ---
+>>>   MAINTAINERS | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> Sorry, I didn't got this comment. Is this for the spaces between the 
-> nodes or something else?
-> 
-> The current GPIO node is as follows:
+> Thank you Krzysztof. I was not aware of this before, apologies for the 
+> same. I will add this line of this from next patchset as per your 
+> suggestion.
 
-There is always, always line break between nodes.
+I don't understand why you are replying to my reviews and what you
+wanted to say.
 
-> 
-> gpio0: gpio-controller@80500000 {
->                          compatible = "cdns,gpio-r1p02";
->                          reg = <0x00 0x80500000 0x00 0x400>;
->                          clocks = <&refclk>;
->                          interrupt-parent = <&gic500>;
->                          interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
->                          gpio-controller;
->                          #gpio-cells = <2>;
->                          interrupt-controller;
->                          #interrupt-cells = <2>;
->                          status = "disabled";
->                  };
-> 
-> I checked the document: 
-> https://elixir.bootlin.com/linux/v6.15/source/Documentation/devicetree/bindings/dts-coding-style.rst#L112.
-> 
->>
->>> +             gpio1: gpio-controller@80580000 {
->>> +                     compatible = "cdns,gpio-r1p02";
->> This should not be accepted without specific compatible, but that's some
->> old binding so maybe matters less. Anyway, if you ever need quirk or
->> custom properties they I will reject them based on what you claim here.
-> 
-> Yes, we are not changing anything on this driver. Is it okay?
-
-I meant for future. I would expect to follow writing bindings now, so
-have front specific compatible, but if you do not then whatever issues
-you have in the future with this driver, they should be rejected, right?
-
-> 
-> 
->>
->>
->>> +             i3c16: i3c@80620400 {
->>> +                     compatible = "cdns,i3c-master";
->>> +                     reg = <0x00 0x80620400 0x00 0x400>;
->>> +                     clocks = <&refclk &clk_xin>;
->>> +                     clock-names = "pclk", "sysclk";
->>> +                     interrupt-parent = <&gic500>;
->>> +                     interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
->>> +                     i2c-scl-hz = <100000>;
->>> +                     i3c-scl-hz = <400000>;
->>> +                     #address-cells = <3>;
->>> +                     #size-cells = <0>;
->>> +                     status = "disabled";
->>> +             };
->>> +             uart0: serial@80520000 {
->> Looks like not ordered by unit address. What is the ordering rule you
->> are going to adopt for entire arch?
-> 
-> Apologies for the confusion. I should have updated in last patch-set 
-> comments.
-> 
-> We are following alphabetical ordering rule. In those we are grouping 
-> some nodes together based on the numbers.
-> 
-> cpus
-> 
-> clocks
-> 
-> soc {
-> 
->     gic500 { }
-> 
->     gpio0-7 { }
-> 
->     i3c0-16 { }
-> 
->     uart0-3 { }
-> 
-> }
-> 
-> timer
-> 
-> 
-> Is this okay?
-
-alphabetical ordering is not mentioned in dts coding style. Maybe it
-should, but I think the only user of second style with grouping nodes -
-Renesas - still uses ordering by unit address in general.
-
-The trouble with your approach is that if you ever need to change the
-name, you will need to re-order and move entire node.
-
-Anyway, not a problem for me.
-
-> 
->>
->>> +                     compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
->> NAK, you do not have xlnx here. Look at your SoC: name of vendor is
->> axiado. Not xlnx. How is your SoC called? Also zynqmp? You cannot just
->> randomly pick any compatibles and stuff them around.
->>
->> Please carefully read writing bindings from DT directory.
-> 
-> 
-> We are using the "cdns,uart-r1p12" for the UART. However, that alone 
-> can't be added alone in the compatible as per the DT bindings doc.
-
-Exactly. See writing bindings... or any guides/talks.
-
+Please read submitting patches, which I linked in one of responses.
 
 Best regards,
 Krzysztof
