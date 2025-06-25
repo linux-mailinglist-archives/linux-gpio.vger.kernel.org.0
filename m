@@ -1,136 +1,152 @@
-Return-Path: <linux-gpio+bounces-22199-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22200-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8B3CAE876A
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 17:05:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 77E31AE8784
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 17:10:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94700189FE91
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 15:06:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 74E6B1BC37D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 15:11:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA2BD269AEE;
-	Wed, 25 Jun 2025 15:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 617F226A0B1;
+	Wed, 25 Jun 2025 15:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kKSQ+wo9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IBWyN1jp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6147269817
-	for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 15:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCAA263F40;
+	Wed, 25 Jun 2025 15:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750863940; cv=none; b=XgAjhCwQ55Pr5UFzZpCvdIHT1d7LOJqfxDJk4wTaqTPpgcK1+VE25wdD/V8teVdseRJbVdHpzIkw8w64Y7ZFoPUastknWj/plLQKYXbIIghj2dhrwgvTC0mtBHxYlSdHZ0g+KyDtJPe8c/P4xc3FiOOHW8rvHvi5omyHqRS9ddk=
+	t=1750864238; cv=none; b=m+Z+LHRCEujUvk2PCom3RKY1hXfmfsrpekxrC7poogxySgldSlhAmElFfCOTTpTn5iEirY+G11U5q3mgubrBWoBxnGQ1H6Dwx5nJL/kTi1crLzZi2/3RDMDAhWQQuO3kt8+8GZuS9AO4TGCiReK4LaU/cXLQuyXKqtxe1J0iZ84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750863940; c=relaxed/simple;
-	bh=wlj7HklWXe5YtCatjQKwWuAP/xP3g/dB4xsuny3pKlk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tuBPXlZC/nHreol0FviH/s9ScmEY2EGRLqaW4TFVClMM7buML3E9AtwkU3BNrnuJmOo/T83G4mPK3j8DUsBJaa82pOKlP2yd4DTiiwh11Qhp3Oyk3pVs4kAFfPHS+qG//2AMxQqMTmqCr4CHvVFS6z4P5CAL48nmeaqtrXWR6JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kKSQ+wo9; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so27787f8f.0
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 08:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750863937; x=1751468737; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wlj7HklWXe5YtCatjQKwWuAP/xP3g/dB4xsuny3pKlk=;
-        b=kKSQ+wo9oT4PkbrUUZKhpI+S+N4jOlQGfiE8lvJWDeGpX8dhARAQSHw6Zd5qkTLbm2
-         /rZ2srKSxSFCLeipJLGV85UllC0v60+4WdUdKmS3isHvluM8yN4kDtgZTXPd9vBQ+0xQ
-         b1kdAw0P5xPgiohw1eb0X5AZCd7OoRz3Zgm5GBJOw2DuqhJhGCuHLHEJ7IPxTdVPE01U
-         WOQhacOtW/oRcYO7YIoJYvu01RheQr5c0MZYn1zEBXmung0hdZ5XO53Vgl6QYTASHgm5
-         tF3a/cpD7F59refays/NJAGYlVtedrQg+YKWKVy21xnxMrgNolepnscnjbgHrZO61LDA
-         MY/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750863937; x=1751468737;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wlj7HklWXe5YtCatjQKwWuAP/xP3g/dB4xsuny3pKlk=;
-        b=UA5ytzSjRfcuiRfsFtmMJhfeh6U7yOugRDPLPylmF1K7tjoNo4Iy9Kaxtvf8qcYu+N
-         eUW1/XG/rAlR29JkyQvqwjMB1155xDDX7BDWLfMjiH3DsmjLMSOsA48JrHj7dMuIV6jw
-         hpZ8pmjBP4W7ClwEilaDpt6VxpoOTTYA0epf6DRZCPIwPlkA/GnrxVJ0eZ5fm2FhsOD5
-         xEJGKBBuFwUQP5Qi/XYYBLc7040cn0v3Zo974ROVujoPE7RGekdLrX3/SiYMDwUc2aKo
-         XJ3sOMb0/L7HqfhMFv+qe0bKrGkx8+JMt/jPZ9o2TEZjeRHmShheeKpqxa4m0WCmIwp9
-         mQLw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+psUyKhaJGLv3TydXpVpGQIw+2lwYX3qyYlTVOBtOEsiPzeaLel8TVBs3jJ1KIAs+rWaJLXjqHLaT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhaRg43kDtlXKTUznMAqAAUHt9yXDsS/Ne5yFrrncXpbtgglah
-	it9kCrRFP6Vq3QFV151vufYr85Fwb+ulSWiwA+iS4pEwQAJJRcLpuJ2bsloXXrtocVs=
-X-Gm-Gg: ASbGncvhPB73aMVJ4eYlZ3Isg9RtYaxWEs+Po0HfjMplITwTHP+CEuE/gGJOON/4l0F
-	AXt/F0PwsunflV4Pj3fpOhMMM1vXGOyiOfZqjzmG4gMVCd3D6kunZfC6DMYJp3cvEifokhhfsNz
-	6nxcO25Enz/YgkmdyqQd/mYEuTBlELX3PzR/EK2dLNjb5epTRbzSEXCf8RqHsahcNNcB4EBCajX
-	0swxbLXiJptcw/L+peNar/hQ47IkajR7defCgDeSwtVCxB8d3fhM4n7i+75FdHpni3uR6c6UdtQ
-	cRZajJmWezIOYOfx9tlI84xoolz1oBHghAACIW2LHQVdW3Xhhihx3InTX8JpJLNrkg==
-X-Google-Smtp-Source: AGHT+IEQo60y4nSkYuBCYnImSLe6MfyhEpVaq6bM9xHgfeeGrTtXV15DQSuydeKSFGHOA76Afhx/vg==
-X-Received: by 2002:a05:6000:1882:b0:3a5:5136:bd25 with SMTP id ffacd0b85a97d-3a6e71b8792mr7030428f8f.1.1750863936643;
-        Wed, 25 Jun 2025 08:05:36 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234957esm22170335e9.11.2025.06.25.08.05.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:05:35 -0700 (PDT)
-Message-ID: <1ada43bbb20b806975d6b0503e36a3b464287612.camel@linaro.org>
-Subject: Re: [PATCH v2 01/17] dt-bindings: firmware: google,gs101-acpm-ipc:
- convert regulators to lowercase
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,  Lee Jones <lee@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Peter
- Griffin <peter.griffin@linaro.org>, Will McVicker	
- <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Date: Wed, 25 Jun 2025 16:05:34 +0100
-In-Reply-To: <013f55a0adf0b23e0836e33ee4ea0e1e7864a467.camel@linaro.org>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
-		 <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
-		 <20250611-robust-vehement-dog-2bf6ac@kuoka>
-	 <013f55a0adf0b23e0836e33ee4ea0e1e7864a467.camel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1750864238; c=relaxed/simple;
+	bh=2vYg8CGu9BAqmlZuYpCFtNSeJb0sljjiAyb9B6pMNPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RlBSWxChr1SsvQgp4gGawLuL2HVhh+xnOaQvvjALBhkreCMGMHI/hadMLZlM6CPfYvXjMVSD0KLnUYc1lc/6nLruAEO8lVoxUqVYqA0K2RZjU14zzSWQr3JLHTKinnapsyzKoWRA44JFWQFKfDTU+ylKLs6aZ4uMRMgwXq/yFjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IBWyN1jp; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750864236; x=1782400236;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=2vYg8CGu9BAqmlZuYpCFtNSeJb0sljjiAyb9B6pMNPM=;
+  b=IBWyN1jpG5aGB1YxaC/45ayPe3CDHzlZTT/1KaGXisAknt+JQU0T4UZm
+   L9bdHIrNWEDjgFDOCROsDPBE1+lpKR1CYzo4mfJF8tK6808XHRQut8tUz
+   KLAOXRAkNqBmfx0KHtvTughjeZ1LAvctq6527bSSiGKaaccvPXfHVxSyb
+   doHSw6DmVMooRsCs8NM/HiEqchexlVtte9TU/RRDv9diJC8uFJ0UIuIo3
+   AafyeI5XbhgfqwQfwJXdFpzhVllNBjB9/m47BSDPeKuSpK8dLCkP/5Hbu
+   xATq+PO9nBaPHpdl3U9ZnJ/t8RirXYhhpsKqXjoIOwxcobgZr3CwLll1V
+   w==;
+X-CSE-ConnectionGUID: 8ZIgltamR1Cc/0jLIBe7CQ==
+X-CSE-MsgGUID: WDK5Z55NTLieJrA1NLn+0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53074329"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="53074329"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:10:35 -0700
+X-CSE-ConnectionGUID: vz/s4aTuQoaXCf0RhIfy1Q==
+X-CSE-MsgGUID: hnpThCZdRQKZftIn4Ys6Mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="152014619"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:10:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uURld-00000009oSY-08xw;
+	Wed, 25 Jun 2025 18:10:29 +0300
+Date: Wed, 25 Jun 2025 18:10:28 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
+ buttons"
+Message-ID: <aFwRZO30wf8GxQea@smile.fi.intel.com>
+References: <20250624202211.1088738-1-superm1@kernel.org>
+ <20250624202211.1088738-3-superm1@kernel.org>
+ <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+ <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+ <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
+ <625952d3-01e9-426e-9739-86fe5cdfeb35@kernel.org>
+ <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Krzysztof,
+On Wed, Jun 25, 2025 at 03:02:18PM +0000, Limonciello, Mario wrote:
+> On 6/25/25 9:41 AM, Mario Limonciello wrote:
+> > On 6/25/25 9:31 AM, Hans de Goede wrote:
+> >> On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
+> >>> On 6/25/25 4:09 AM, Hans de Goede wrote:
+> >>>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
 
-On Wed, 2025-06-11 at 10:08 +0100, Andr=C3=A9 Draszik wrote:
-> Hi Krzysztof,
->=20
-> On Wed, 2025-06-11 at 11:04 +0200, Krzysztof Kozlowski wrote:
-> > On Fri, Jun 06, 2025 at 04:02:57PM GMT, Andr=C3=A9 Draszik wrote:
-> > > Using lowercase for the buck and ldo nodenames is preferred, as
-> > > evidenced e.g. in [1].
-> > >=20
-> > > Convert the example here to lowercase before we add any bindings
-> > > describing the s2mpg1x regulators that will enforce the spelling.
-> > >=20
-> > > Link: https://lore.kernel.org/all/20250223-mysterious-infrared-civet-=
-e5bcbf@krzk-bin/=C2=A0[1]
-> > > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > > ---
-> > > =C2=A0Documentation/devicetree/bindings/firmware/google,gs101-acpm-ip=
-c.yaml | 4 ++--
-> > > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > So this is also a dependency for the rest of the patches?
->=20
-> My thinking was that it makes sense to have it in context with
-> the other patches, but it indeed could go stand-alone if that's the
-> preference.
+...
 
-Can you take just that patch as-is from this series (then it's at
-least out of the way :-), or should I resend it separately?
+> >> Ok, so specifically the gpiod_set_debounce() call with 50 ms
+> >> done by gpio_keys.c is the problem I guess?
+> > 
+> > Yep.
+> > 
+> >> So amd_gpio_set_debounce() does accept the 50 ms debounce
+> >> passed to it by gpio_keys.c as a valid value and then setting
+> >> that breaks the wake from suspend?
+> > 
+> > That's right.
 
-Cheers,
-Andre'
+> >>> Also comparing the GPIO register in Windows (where things work) 
+> >>> Windows never programs a debounce.
+> >>
+> >> So maybe the windows ACPI0011 driver always uses a software-
+> >> debounce for the buttons? Windows not debouncing the mechanical
+> >> switches at all seems unlikely.
+> >>
+> >> I think the best way to fix this might be to add a no-hw-debounce
+> >> flag to the data passed from soc_button_array.c to gpio_keys.c
+> >> and have gpio_keys.c not call gpiod_set_debounce()  when the
+> >> no-hw-debounce flag is set.
+> >>
+> >> I've checked and both on Bay Trail and Cherry Trail devices
+> >> where soc_button_array is used a lot hw-debouncing is already
+> >> unused. pinctrl-baytrail.c does not accept 50 ms as a valid
+> >> value and pinctrl-cherryview.c does not support hw debounce
+> >> at all.
+> > 
+> > That sounds a like a generally good direction to me.
+
+Thinking a bit more of this, perhaps the HW debounce support flag should be
+per-GPIO-descriptor thingy. In such cases we don't need to distinguish the
+platforms, the GPIO ACPI lib may simply set that flag based on 0 read from
+the ACPI tables. It will also give a clue to any driver that uses GPIOs
+(not only gpio-keys).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
