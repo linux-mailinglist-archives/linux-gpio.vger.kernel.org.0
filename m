@@ -1,182 +1,174 @@
-Return-Path: <linux-gpio+bounces-22177-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22178-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B1E5AE7F94
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 12:36:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A2A3AE7FD1
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 12:42:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C39824A0F92
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 10:36:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DDC097B25B5
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 10:41:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0CB62D6624;
-	Wed, 25 Jun 2025 10:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48C2929E0F8;
+	Wed, 25 Jun 2025 10:42:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qooIYMrd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdZlfoNl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17492D5414
-	for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 10:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EE829B23C;
+	Wed, 25 Jun 2025 10:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750847637; cv=none; b=bJtqBwkZYLAXUehEGH36t+0SDHehf7FQH3t7JZXFdCVhYmGqJBOIKNdKCXmqOxM/ErGkrUBITiknk49TFDsMBLitdoQXndEKad8n7dVpAG3zC7Fn75UAtXQof3fuliAP4oE+3YldvptvRyjXe/+rDbyk2pPtYFxDSzLx15ZhMo4=
+	t=1750848134; cv=none; b=mwo+G4gzDyFlM8knymqBFeuNf9w5GfgaGIkNusujK/MU/IO8Gqw/LDx7AOPSQb2Waqv/Gqw1UZ6+OIxztMYn/Exv2z+qz5nuSXnSMwBqZtwoslo/ub0m0xMnCP8n+689Qac08L7WHHI6l/A6kp4OEXVwYDbHcrlvB2bHbwUFqAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750847637; c=relaxed/simple;
-	bh=GEuDJx5QPTHM5tc+m1g3q7+5FM3B/iURX5AMDE0fWQE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZPgqLg7Zc00hK+41UlFaqPeei4VTEGTcULQ/QW7ctH3Hr3KUZ3/oJ3VLKxr1knSqd303ZDkRmrqj9QASsps7MMFdPN21q4/dyqMg6vE/lEtjFWGbEfZ3FuXAD9kNliVsYrqlBX3XQ9C9EYpi7nJgabLmsJZu+9TQQ+XoXBJdQK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qooIYMrd; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a589d99963so6294333f8f.1
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 03:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750847633; x=1751452433; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NC7Pu9soozWv+X4KdcyQ3wROHwf5kQLULZRPlnwsRdk=;
-        b=qooIYMrdt0EPptZzUHhspOp+T5VCn3xaUQWN8L0lNrYGK01w5G3TTIDe8RcIEFy91E
-         W0YZL0wtW/Pc7EVplWX5KGSoy2bRKWhuh/ultWDElCjPHd0pmMr6kPlaEHKntXUdKmXm
-         pxQBi21vCY/ZPMqApxkhVMmJouYoJTEIHJ9mWudgNHfyJ/zyqPabaTLTocvZxGyZIqGN
-         3MpbRnM+SVWVoxFEyyude5ebCa79oDVyrnlxTlptUYiiH3W9MHaLjtWUIMYb4mXGipFK
-         LeCN7JZtJQBJvpOOHROwqNjZxfyjyEje8K4UL8v08ticuUDNQNyqqYENF4UIvEc8BvQ1
-         jGWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750847633; x=1751452433;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NC7Pu9soozWv+X4KdcyQ3wROHwf5kQLULZRPlnwsRdk=;
-        b=ggqkkacULTrkyXArYzcqUwek1UsvG6TDlYpJIep8hESch5ldsCpeJVgD2CVMPha6ku
-         +Qnqp8pO5OwQ2671tA2JzzIGFrVfugnjQamrd1rjPDgu/31P0doND7EJY8iFcWSJtxcH
-         VbeZi63FuBODEk/P4yIW3DgmEuuo4oUDK3ntbNFA9kguTLSBa4A7fian7einM0hgfIsf
-         DNBPH4fOcDcO88J2dl3I2gDiEiT50yOE1JRa4nbazO+9nefAdBKg1wHn859SKhL29QZ7
-         kzk3Xu3WiDf2wOE5hJBvRTl7x7Bk4rQlmyIabSagaCw9JlQL0t7kv7qCr91afplYKlAw
-         /RvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWB0c7vLOpUj8J6+FocvOXLfb3VR0BHkNdWZL6eA7BzNtY74E6zoR8pNPXwn3Yk38phqi9AzgHADsTV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+rBFryekdqR9HH38mQJ9QFgvyDBpI37dq8yeMbJex2Z/wVYiO
-	Vfq+i6sVPY8p62CLIy4BOfHCHIcgShmsaFn7HZmmpzlolmxcXHF/FkPKltGca3adnPIn6t3EWcl
-	RWsInmeY=
-X-Gm-Gg: ASbGncujLmAr98nSgIwP3yuSxF6CGEIeUrkutvsg4mGpJXL+h4EgucUCt6lJOQej+E2
-	/8DN3hZ1MWrF5as8cIz5aVr/WJH1+TSEQh1CQTRXNdQj+3vNiXIE2er1mLX8Q5BlbfalOx8mVT3
-	oAiHFhFat+OaeIfMFrWbTOxMVOBugxC/LkPTRRrpL+i78m7YRZa0tNAwGpOYUPHJthkcotoJaR8
-	Uz2IRXnq1/nnhEnsDaUtHLIZZ2PLgIs1fa++pg9fh3NAwZaoIp13dbXQzCfJ1UNs7ETnzPz1Pdr
-	XsJ0LzqdIoV0TCJvwaDwvAU/JV/N3S2zeswG3ex3YdAi3VpqeOmS4LWz
-X-Google-Smtp-Source: AGHT+IHxR2qvRGmElBXq67F0SKZPrxii/yocT/jg1I7d7lhCDWU0MVv4VQ0cqFQ8XWvWsQzZJx/Yjg==
-X-Received: by 2002:a5d:6f18:0:b0:3a5:8a68:b823 with SMTP id ffacd0b85a97d-3a6ed60755dmr1812393f8f.23.1750847633454;
-        Wed, 25 Jun 2025 03:33:53 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:d216:42f3:1e7e:472e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45382373c86sm16133195e9.33.2025.06.25.03.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 03:33:52 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 25 Jun 2025 12:33:35 +0200
-Subject: [PATCH 12/12] gpio: tc3589x: use new GPIO line value setter
- callbacks
+	s=arc-20240116; t=1750848134; c=relaxed/simple;
+	bh=KhFN1TxOoGEmZA8OZHUI01EMEP3LX35H19OmFZ+F6GY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mRGPggS9kfg5pP4JLIY6HXijXZgbh0nApOd2AwDtxG7RrutsqEcl8Sz6q5U+NRcwYqamZhiThKuS4xiCoXBURVjKeFp0KrAfCO6d8t1WKHbXyiwXSOeOWarIuqsgCC5PWUMkJZe22u+hLbjZiS5/hTq6I5tEPSlDSaPyBWy/wwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdZlfoNl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1486C4CEEA;
+	Wed, 25 Jun 2025 10:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750848133;
+	bh=KhFN1TxOoGEmZA8OZHUI01EMEP3LX35H19OmFZ+F6GY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DdZlfoNlv/H7Af1L1xaYMvRGXMUgDT6xnCPcQxGoruRELBvqLyCfYCryua+hOi6aK
+	 QlwhkKD4HctTsYZVYHzfaSC9sQFWnSLGTNFXb2qUfGhUM4Xw59I2bZbJgCmV0ma8TH
+	 YsPr0egj300IuGlPpIENtBm8DTnIyo1qmeowAmFre7+KVfIaW2cuKVxbNDdHg4igqo
+	 Qwc19o4YJQ4g+AwcJ5blORv2P1DZeiGTP/etdLfoiiWLyR5esfmZ0Ou1lvRrthTeAP
+	 Z99cZf2w2w8dyAA3gXZVF23Z9/hUpeamI6AycNq/z8Xs6gazVipKx+g1Rs63DngSW4
+	 DGmam5kfZJtXA==
+Message-ID: <33c99324-a50b-4e0f-bcc7-012d3244d47a@kernel.org>
+Date: Wed, 25 Jun 2025 12:42:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-gpiochip-set-rv-gpio-round2-v1-12-bc110a3b52ff@linaro.org>
-References: <20250625-gpiochip-set-rv-gpio-round2-v1-0-bc110a3b52ff@linaro.org>
-In-Reply-To: <20250625-gpiochip-set-rv-gpio-round2-v1-0-bc110a3b52ff@linaro.org>
-To: Ludovic Desroches <ludovic.desroches@microchip.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
- Thorsten Scherer <t.scherer@eckelmann.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2164;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=rb/GoPaCoaNCEXEQPUk26EQjk/xqS/m+eP+cKDaCCqo=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoW9CA575QX9X7E+WHE5PW5iX86bog1E6GPj/k+
- 5sFRK+FqfOJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFvQgAAKCRARpy6gFHHX
- coHHD/wMH31t1wMzv3QMkuAnqPWJ4IxSDFv1ZkrRfqK+WIEZZxs4GldQzrDhHJxVM9B3Zzy03Fb
- bvX/ND0cQ3SI+J2zOWX0fHQcj2xA+0ifJsiNXu87Eyad0w5lDmO9bdKEN2LyKDDZim6lcAVsbti
- hdgbzWxvuI4jmQkAT6cyxZNyHwvcegXwpRUz+zLhzf3kym7keBczoqdjcm0xSu0iFc3uHIeW9jM
- xMEaTrLbsSbDeZrt61DYlgkMG5qgy6Mu13GvMKDnkI9zpduu/0EsTWrNAsVMUmFb4bnTt70W4iE
- xNtlJWglIEdv8FdUFf7jeCXtULeoBTpjycxN56IraT4sgqt2HobWV/XKvbp8bia3nQ8mXH6Q2hT
- 3Hu1kLt+Cw6fVUP+P3uTsvGiB9tGA5YPXuMc5jIRx/j6fNtXgEYRJ/8Bx7ZAYR/Aess6RFci1fn
- ctW05dqgrdFEBPMNOI1rEPNEutdTpLmiAD3bWHElDMDPL2+0Lq1fFXg0IMcSQTma9yHnfxPK/z+
- lULXHRCP0lqNRXlKxW6f1n/G5jg5FdktLY9gGWbukblkSYdXc+plpftzge5t9UC3369vcSOK57E
- J981JOpgHxMxN2mEgtJm9Ia9ir6wIUceZ6AuLO7I63GooqvnLgso58PnGKlFhj3ehmzut0m3/Rv
- wBMQPc2MAszYITQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT 2/6] gpio: mmio: get chip label and GPIO base from
+ device properties
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>,
+ Russell King <linux@armlinux.org.uk>, Alim Akhtar <alim.akhtar@samsung.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-samsung-soc@vger.kernel.org
+References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
+ <20250624-gpio-mmio-pdata-v1-2-a58c72eb556a@linaro.org>
+ <CACRpkdavsQJTfiwn-F+ML5MK6ADtr-31bBxLA4gV7MTAYR0YGQ@mail.gmail.com>
+ <CACMJSestPPEvsUrWaqz7yZ8OxZTMEOBY7htE7c8BV-VBumj1Lw@mail.gmail.com>
+ <6c64751d-67f6-4c30-a312-af289d9f432e@kernel.org>
+ <CAMRc=MdEZkjoDR83JFg5OPP07_DkAfeZixN9C+uxhkqkxaKypg@mail.gmail.com>
+ <b9c6f5bf-ac43-497a-9354-6448cfb2839c@kernel.org>
+ <CAMRc=MdEWmgj8hTY3fQrXnDDv6pmK9XPvT9gE=5oGEs8R7GOVA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAMRc=MdEWmgj8hTY3fQrXnDDv6pmK9XPvT9gE=5oGEs8R7GOVA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 25/06/2025 12:28, Bartosz Golaszewski wrote:
+> On Wed, Jun 25, 2025 at 12:26 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>>>>>> I wouldn't be stoked to see device trees abusing the "gpio-mmio,base"
+>>>>>> property all of a sudden just because it now exists as a device
+>>>>>> property though... I kind of wish we had a way to opt out of exposing
+>>>>>> this to all the sub-property paths. But it seems tiresome, so:
+>>>>>>
+>>>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>>>>
+>>>>>> Yours,
+>>>>>> Linus Walleij
+>>>>>
+>>>>> That's not a problem - this property is not in any DT bindings and as
+>>>>> such is not an allowed property in DT sources. For out-of-tree DTs? We
+>>>>> don't care about those.
+>>>> That's not true, we do care about implied ABI. Try changing/breaking
+>>>> this later, when users complain their out of tree DTS is affected, and
+>>>> explaining this all to Greg.
+>>>>
+>>>
+>>> Wait, seriously? I thought that the upstream bindings are the source
+>>> of truth for device-tree sources...
+>>
+>>
+>> They are, until they are not... ok, we don't really care that much about
+>> out of tree DTS, but in-tree DTS still could use these and don't care
+>> about bindings check, right?
+>>
+> 
+> Could they though? I can imagine this happening by accident but in
+> general: you'd expect new sources to follow the bindings and be
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Yes, that is what I would expect.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-tc3589x.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+> verifiable against them? Otherwise, what's the point of the schema?
 
-diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-index e62ee7e56908f9125ccb6deb21130a5d9043fbde..0bd32809fd682bac7b16b1f251887abebb44acdc 100644
---- a/drivers/gpio/gpio-tc3589x.c
-+++ b/drivers/gpio/gpio-tc3589x.c
-@@ -49,7 +49,7 @@ static int tc3589x_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	return !!(ret & mask);
- }
- 
--static void tc3589x_gpio_set(struct gpio_chip *chip, unsigned int offset, int val)
-+static int tc3589x_gpio_set(struct gpio_chip *chip, unsigned int offset, int val)
- {
- 	struct tc3589x_gpio *tc3589x_gpio = gpiochip_get_data(chip);
- 	struct tc3589x *tc3589x = tc3589x_gpio->tc3589x;
-@@ -57,7 +57,7 @@ static void tc3589x_gpio_set(struct gpio_chip *chip, unsigned int offset, int va
- 	unsigned int pos = offset % 8;
- 	u8 data[] = {val ? BIT(pos) : 0, BIT(pos)};
- 
--	tc3589x_block_write(tc3589x, reg, ARRAY_SIZE(data), data);
-+	return tc3589x_block_write(tc3589x, reg, ARRAY_SIZE(data), data);
- }
- 
- static int tc3589x_gpio_direction_output(struct gpio_chip *chip,
-@@ -67,8 +67,11 @@ static int tc3589x_gpio_direction_output(struct gpio_chip *chip,
- 	struct tc3589x *tc3589x = tc3589x_gpio->tc3589x;
- 	u8 reg = TC3589x_GPIODIR0 + offset / 8;
- 	unsigned int pos = offset % 8;
-+	int ret;
- 
--	tc3589x_gpio_set(chip, offset, val);
-+	ret = tc3589x_gpio_set(chip, offset, val);
-+	if (ret)
-+		return ret;
- 
- 	return tc3589x_set_bits(tc3589x, reg, BIT(pos), BIT(pos));
- }
-@@ -146,7 +149,7 @@ static const struct gpio_chip template_chip = {
- 	.label			= "tc3589x",
- 	.owner			= THIS_MODULE,
- 	.get			= tc3589x_gpio_get,
--	.set			= tc3589x_gpio_set,
-+	.set_rv			= tc3589x_gpio_set,
- 	.direction_output	= tc3589x_gpio_direction_output,
- 	.direction_input	= tc3589x_gpio_direction_input,
- 	.get_direction		= tc3589x_gpio_get_direction,
+Of course, but do you really think most SoC maintainers even run
+dtbs_check on their existing or new code?
 
--- 
-2.48.1
+I think some maintainers pay attention, but RISC-V and my tree are the
+only ones actually actively checking this for existing and new code.
+Except me, no other maintainer even referenced maintainer-soc-clean-dts
+profile.
 
+I can easily imagine DTS with warnings and undocumented ABI gets merged
+and then released in some kernel. And when you release such kernel in
+v6.17 with DTS and drivers, isn't this already an implied ABI?
+
+Best regards,
+Krzysztof
 
