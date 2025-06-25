@@ -1,109 +1,217 @@
-Return-Path: <linux-gpio+bounces-22219-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22220-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB0EAE8DF7
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:08:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B162AE8DFD
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:09:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF38A1C25407
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 19:09:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5671517F264
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 19:08:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D512DAFB0;
-	Wed, 25 Jun 2025 19:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 941DA2DECAE;
+	Wed, 25 Jun 2025 19:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyBBKXOw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M18Pgbvz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129C915278E;
-	Wed, 25 Jun 2025 19:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4781B2DA752;
+	Wed, 25 Jun 2025 19:04:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750878227; cv=none; b=sFLm42lYeQn8krcRQYE0+paoGc6efJRQWdcIlbPl+FZV56F10v+yT7lwttIKGLlepEkp4ZBAr8lxjHsW3J6UIHq2Lni4EcqUSwSyCtoR6sCPdUQCm26OV0KLDZfyvGd6U09BXJG9WWqrLzD95hKIMX58Z9sEOmZJeoclmGa51XU=
+	t=1750878242; cv=none; b=ANfIA4sfNFrvtbv75HB24Kpc4zXQey5zGe/MSBILtaO4KOMSRXLBEHoVHJe/lvX5iLrBvT+Qp9R89hqKJjy21nT62VNffPqFA3srM/UQyi84sucKSd4tUfD0ulyTEntZWQjVOSO50mGxSl2mw3+fDffIN91tOnBylY4szK6KjC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750878227; c=relaxed/simple;
-	bh=klFBqqktO+5hBILMy1Yyqcdg/qsxpTv08B4SUmcvGX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lEHKy+ELb9tbI9dBHv9RRGOCCevZFpO3+fcAffYBHEA8f1KHMIA2EhIBUaTjNwKYkiKs7UsRmZ8d14ahK8gbOAWDFxiZV4YD6f/OCplYWHkzwYL7n2ezhdMDNpv9Xvh0XTNoEssAIQjWDgO0RCn4sHR+J9COpmnvCyyE630LbdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyBBKXOw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62EA9C4CEEA;
-	Wed, 25 Jun 2025 19:03:45 +0000 (UTC)
+	s=arc-20240116; t=1750878242; c=relaxed/simple;
+	bh=AVNgT0uZYuL7fGENFceaiSlLmc1/7qinR+ZKMhGYmbM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H0qzhanogsxdDCb2vwDewiqfUrTI4oUddwMPl+eFMkM0kKJnGeu5OuKCuAWmnEmmkrBVLfoL3k2QtUQZWHvOpo8dPJGbfxqCHFB108H+s5a59FAn5wrGJvFw77PHxmB8hTRrB34OPTUKEbOfdQHzNdk60PXNJEUh18m1z1SCjmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M18Pgbvz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA1BFC4CEEA;
+	Wed, 25 Jun 2025 19:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750878225;
-	bh=klFBqqktO+5hBILMy1Yyqcdg/qsxpTv08B4SUmcvGX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oyBBKXOwF3m96jrO7yH8LwgCWA5SYwBc31Yn+nPXckxzBV5pgCHczzrfvNf8a3f3X
-	 qw+QbmC6iZhYRqw+NXn3obFj6jUAD0HHRBF5ECGWdq3nGrHz7DofMuNemLsOT5pSEO
-	 ONA/lJe8G0ay+G95byCo06/DADOxeNMwDCR/Rt3FMyURI6oiwrkNExOKMA0LZA077P
-	 lb2Uew9edSNpcTwEW43v4aYb4QqsU7MBZ+tS6mTekTd474m0MvRYGYvE34nVzxQkUJ
-	 KwOlHWGPjPbvfgzuJStQvdykJqsz+5XZv/EcCfvAxC2cF67WPoAgk2DtdTyhq1Myxv
-	 YvsNFZEBSAoKw==
-Date: Wed, 25 Jun 2025 14:03:44 -0500
-From: Rob Herring <robh@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 01/17] dt-bindings: firmware: google,gs101-acpm-ipc:
- convert regulators to lowercase
-Message-ID: <20250625190344.GA2023865-robh@kernel.org>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
- <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
- <20250611-robust-vehement-dog-2bf6ac@kuoka>
- <013f55a0adf0b23e0836e33ee4ea0e1e7864a467.camel@linaro.org>
- <1ada43bbb20b806975d6b0503e36a3b464287612.camel@linaro.org>
+	s=k20201202; t=1750878241;
+	bh=AVNgT0uZYuL7fGENFceaiSlLmc1/7qinR+ZKMhGYmbM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M18PgbvzZRWM/kK+gtLvtfS3R44wAk2YabfWVehw3jxuBd7lt9DCq0ZECSOc2cuh6
+	 qRWNj1Pg6TCmOuBrG8Bn44ucPG0Q1F7Xm7N4Wtr6H8ofzMCXMN5ylNhIudUhCmWWur
+	 5UiDCox0H5ubxp9eClt9grFW9GgiYDpRV7mL7gTwENw6i8jmqRytQ2MnVAvqn70iHl
+	 XKMIGaH+A961GH1E8u9+hQDPyzJpN4ux+nI96Zibr27cPiW5x3MN3alsnlvVyndTpi
+	 JReZ4xCtmmdS6yaplplSwNzJW8LTh6uPKNLLiWX8SX2Vu6pbtduOPfXydK9QTwKf1f
+	 zQIhgyH79P0tw==
+Message-ID: <f5e1d50f-d85e-45a3-a131-f2da603c620c@kernel.org>
+Date: Wed, 25 Jun 2025 21:03:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1ada43bbb20b806975d6b0503e36a3b464287612.camel@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] Input: soc_button_array: Only debounce cherryview
+ and baytrail systems
+To: Mario Limonciello <superm1@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250625181342.3175969-1-superm1@kernel.org>
+ <20250625181342.3175969-4-superm1@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250625181342.3175969-4-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 25, 2025 at 04:05:34PM +0100, André Draszik wrote:
-> Hi Krzysztof,
+Hi,
+
+On 25-Jun-25 8:13 PM, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> On Wed, 2025-06-11 at 10:08 +0100, André Draszik wrote:
-> > Hi Krzysztof,
-> > 
-> > On Wed, 2025-06-11 at 11:04 +0200, Krzysztof Kozlowski wrote:
-> > > On Fri, Jun 06, 2025 at 04:02:57PM GMT, André Draszik wrote:
-> > > > Using lowercase for the buck and ldo nodenames is preferred, as
-> > > > evidenced e.g. in [1].
-> > > > 
-> > > > Convert the example here to lowercase before we add any bindings
-> > > > describing the s2mpg1x regulators that will enforce the spelling.
-> > > > 
-> > > > Link: https://lore.kernel.org/all/20250223-mysterious-infrared-civet-e5bcbf@krzk-bin/ [1]
-> > > > Signed-off-by: André Draszik <andre.draszik@linaro.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > So this is also a dependency for the rest of the patches?
-> > 
-> > My thinking was that it makes sense to have it in context with
-> > the other patches, but it indeed could go stand-alone if that's the
-> > preference.
+> commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+> hardcoded all soc-button-array devices to use a 50ms debounce timeout
+> but this doesn't work on all hardware.  The hardware I have on hand
+> actually prescribes in the ASL that the timeout should be 0:
 > 
-> Can you take just that patch as-is from this series (then it's at
-> least out of the way :-), or should I resend it separately?
+> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
+>          "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+> {   // Pin list
+>     0x0000
+> }
+> 
+> Many cherryview and baytrail systems don't have accurate values in the
+> ASL for debouncing and thus use software debouncing in gpio_keys. The
+> value to use is programmed in soc_button_array.  Detect Cherry View
+> and Baytrail using ACPI HID IDs used for those GPIO controllers and apply
+> the 50ms only for those systems.
+> 
+> Cc: Hans de Goede <hansg@kernel.org>
+> Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-No. If you take it out, then the rest of the series will have warnings.
+I'm not a fan of this approach, I believe that we need to always debounce
+when dealing with mechanical buttons otherwise we will get unreliable /
+spurious input events.
 
-Rob
+My suggestion to deal with the issue where setting up debouncing at
+the GPIO controller level is causing issues is to always use software
+debouncing (which I suspect is what Windows does).
+
+Let me copy and pasting my reply from the v1 thread with
+a bit more detail on my proposal:
+
+My proposal is to add a "no_hw_debounce" flag to 
+struct gpio_keys_platform_data and make the soc_button_array
+driver set that regardless of which platform it is running on.
+
+And then in gpio_keys.c do something like this:
+
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index f9db86da0818..2788d1e5782c 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -552,8 +552,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+ 		bool active_low = gpiod_is_active_low(bdata->gpiod);
+ 
+ 		if (button->debounce_interval) {
+-			error = gpiod_set_debounce(bdata->gpiod,
+-					button->debounce_interval * 1000);
++			if (ddata->pdata->no_hw_debounce)
++				error = -EINVAL;
++			else
++				error = gpiod_set_debounce(bdata->gpiod,
++						button->debounce_interval * 1000);
+ 			/* use timer if gpiolib doesn't provide debounce */
+ 			if (error < 0)
+ 				bdata->software_debounce =
+
+So keep debouncing, as that will always be necessary when dealing with
+mechanical buttons, but always use software debouncing to avoid issues
+like the issue you are seeing.
+
+My mention of the BYT/CHT behavior in my previous email was to point
+out that those already always use software debouncing for the 50 ms
+debounce-period. It was *not* my intention to suggest to solve this
+with platform specific quirks/behavior.
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+> v2:
+>  * commit message
+>  * quirk systems instead of revert
+> ---
+>  drivers/input/misc/soc_button_array.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+> index b8cad415c62ca..56abc93f23e0c 100644
+> --- a/drivers/input/misc/soc_button_array.c
+> +++ b/drivers/input/misc/soc_button_array.c
+> @@ -129,6 +129,13 @@ static const struct dmi_system_id dmi_invalid_acpi_index[] = {
+>  	{} /* Terminating entry */
+>  };
+>  
+> +static const struct acpi_device_id force_software_debounce_ids[] = {
+> +	{ "INT33FF" },
+> +	{ "INT33B2" },
+> +	{ "INT33FC" },
+> +	{ }
+> +};
+> +
+>  /*
+>   * Get the Nth GPIO number from the ACPI object.
+>   */
+> @@ -149,11 +156,17 @@ static int soc_button_lookup_gpio(struct device *dev, int acpi_index,
+>  	return 0;
+>  }
+>  
+> +static int soc_button_match_acpi_device_ids(struct device *dev, const void *data)
+> +{
+> +	return acpi_match_device(data, dev) ? 1 : 0;
+> +}
+> +
+>  static struct platform_device *
+>  soc_button_device_create(struct platform_device *pdev,
+>  			 const struct soc_button_info *button_info,
+>  			 bool autorepeat)
+>  {
+> +	struct device *quirkdev __free(put_device) = NULL;
+>  	const struct soc_button_info *info;
+>  	struct platform_device *pd;
+>  	struct gpio_keys_button *gpio_keys;
+> @@ -181,6 +194,10 @@ soc_button_device_create(struct platform_device *pdev,
+>  	if (dmi_id)
+>  		invalid_acpi_index = (long)dmi_id->driver_data;
+>  
+> +	quirkdev = bus_find_device(&platform_bus_type, NULL,
+> +				   force_software_debounce_ids,
+> +				   soc_button_match_acpi_device_ids);
+> +
+>  	for (info = button_info; info->name; info++) {
+>  		if (info->autorepeat != autorepeat)
+>  			continue;
+> @@ -220,7 +237,8 @@ soc_button_device_create(struct platform_device *pdev,
+>  		gpio_keys[n_buttons].desc = info->name;
+>  		gpio_keys[n_buttons].wakeup = info->wakeup;
+>  		/* These devices often use cheap buttons, use 50 ms debounce */
+> -		gpio_keys[n_buttons].debounce_interval = 50;
+> +		if (quirkdev)
+> +			gpio_keys[n_buttons].debounce_interval = 50;
+>  		n_buttons++;
+>  	}
+>  
+
 
