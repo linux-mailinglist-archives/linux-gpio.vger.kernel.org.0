@@ -1,193 +1,184 @@
-Return-Path: <linux-gpio+bounces-22207-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22208-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64E18AE8B16
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 19:07:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1F79AE8BD8
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 19:56:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F13D4C0694
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 17:05:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 827601BC34A8
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 17:56:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D92C2D663F;
-	Wed, 25 Jun 2025 16:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D6B2D541F;
+	Wed, 25 Jun 2025 17:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cj5qxTzJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lLLjwv2V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F472BEC33
-	for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 16:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40072C08A5;
+	Wed, 25 Jun 2025 17:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750870747; cv=none; b=Ih7v2Pxr/ViyQkPQrdy/7wfg4HbIqiHEaGocH9W+tnPVH5dZLHpZxh+GrBFjZg0mgVxvy18XLakuZBg14cyJAJh8NlHPMXBi0APt25vX8NmlnTEtBrmzgU3He+TI3aKmD3pgJWguNZZu9nL/tB7cR/15ZPudn8IYRygmafIQM7Q=
+	t=1750874166; cv=none; b=tcVVwtvtucfdjWoYmpap45Ul369l4c7fxU29OVUEH3ytQaxrtyakaL9M7TLd8IGMyg1E6ptPDLjX0KmCk7R+d5pNVkoz4Nl4fwkHRmWGfiwuVYXXi65PSiOqm0s140l41lJxToqf/M7RRLwxmDOQlyWhmAS0RBcgG/NILA+INTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750870747; c=relaxed/simple;
-	bh=AiD45k4vuULrLAZh9PqgNvI06dMF/oD688wKh2h2yWU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=lBrmCTS4HG9iZwF1yrBVKcF9WaUM9uVOf/y0isq+nXpgsm7VZuf7B03uCO6q0yYQlnRF9UeoGIpKYVZX6otWHfB+C3ZvpuISAGwljNY30m6XpBWqX9kSvoMq3DVkghir6nuAtF/J+V+Xko5AqU2CtOJu03Ih0m2lofcgPdS+81w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cj5qxTzJ; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750874166; c=relaxed/simple;
+	bh=bu5iQw1CLF7QIZG9KbNG3IwzNGML3JMs21WuLSzDcl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tdo8+1TXoxpdM1875zOYHWPeEtE/WxQdvvz7ZTWfBqxcfqcLqjmaeJCXvqJHsc1WMrgxk7u56/f2YhOxegUmN0CvH11aH2IPnLvqASu6lgVXtXPACQ9d8QdSIMwb04JpZQZx/FbdhF1dmEX8C4+R6ih5AXUEPCwMLgGRG9acA3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lLLjwv2V; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750870746; x=1782406746;
-  h=date:from:to:cc:subject:message-id;
-  bh=AiD45k4vuULrLAZh9PqgNvI06dMF/oD688wKh2h2yWU=;
-  b=cj5qxTzJxh+J066ECLzzn7Cl+t7BfvY5NqKW3uU9uUHSetJYHa64QYc4
-   CTg6sulmQmBQn9/8ZbN5njt8cDPNaAdUEHw/F5p5+0uqjA8mS3ulFn973
-   MuOGQBczkuxKm6djzvuwpT8OtiPKI8VG31uCFTXDBmyLLRx1+tnf3g96/
-   SYNS1Rhz1r7KDo6SiiBdHOAgib5xyMkGY+LzD3h3ffNxtZNot8/v8lX0x
-   A4mdXa/GB/GY8giRd5Hp2b7UosOvDv7cmcH3rv7Yko+BP0cfTX7nZSDcJ
-   I1eEJh04rj/z06vYg0xiWimzRUsPA3OWL+H9lbE2yAS3C4gGyy+sGJS8X
+  t=1750874164; x=1782410164;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=bu5iQw1CLF7QIZG9KbNG3IwzNGML3JMs21WuLSzDcl4=;
+  b=lLLjwv2V9xPdALogVSO5wosN4WhCYOSSS7FdxJALrCU+OEnIHmsJwq57
+   B5rAKC+OeUHBE1wJ0h+4/h4Tf4ZtreF9XUGaTvIz4uWc//AahGf6j4GjD
+   Bwy3kVI6/zFiQrpeiakTsxU0hVmWnwgy/Ck5+KqHPjt+T7HCpx8bgLeSU
+   uVTyAnXMyXylX8R3tYzfVp0jEqNl1PBor1hZlHS3nO/pprNlgzHso7PYy
+   qzsK+t8CFl3GKvtxc4G8I8/X0PLx2fQ4lANwoNRME+Yr/rNbYU565kOhJ
+   OCV6Dr0kMg9+SrbaHMfzUoMyoFGComwNLeDizVJQpeJOUdLgVALB17Oa+
    A==;
-X-CSE-ConnectionGUID: GK5hQ70HTWuHqw32Kn2F5A==
-X-CSE-MsgGUID: 03s+FfcxRWSVq8utD9bzvQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="56936080"
+X-CSE-ConnectionGUID: I/OkDkXNRm+CJXnhfJEZzw==
+X-CSE-MsgGUID: bARxgZxGRAWx0Wt5XzISqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53221513"
 X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="56936080"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:59:05 -0700
-X-CSE-ConnectionGUID: qEtE2AjTQL+FN562CiczLA==
-X-CSE-MsgGUID: 5mnbT7y+Qq6Hi5pyuAFGEA==
+   d="scan'208";a="53221513"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 10:54:25 -0700
+X-CSE-ConnectionGUID: 3eHJrar+STCeBVkm+snsYg==
+X-CSE-MsgGUID: 6iXZVSoVRI2XMG/GMgKgNg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="183299423"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 25 Jun 2025 09:59:04 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUTSf-000TLM-2Z;
-	Wed, 25 Jun 2025 16:59:01 +0000
-Date: Thu, 26 Jun 2025 00:58:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 4ab401099d4764d1479914fd4c8b9876d5b3aca1
-Message-ID: <202506260052.00P86JgC-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="152774431"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 10:54:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUUKB-00000009vzU-0jqb;
+	Wed, 25 Jun 2025 20:54:19 +0300
+Date: Wed, 25 Jun 2025 20:54:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
+ buttons"
+Message-ID: <aFw3yhVUkdtNnWXT@smile.fi.intel.com>
+References: <20250624202211.1088738-3-superm1@kernel.org>
+ <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+ <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+ <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
+ <625952d3-01e9-426e-9739-86fe5cdfeb35@kernel.org>
+ <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
+ <aFwRZO30wf8GxQea@smile.fi.intel.com>
+ <be57dcd1-a9ba-44f6-af9e-9b40f2b5c870@amd.com>
+ <aFwTCUXQydxRVEfk@smile.fi.intel.com>
+ <6c0514e5-0ea6-4f66-9bc0-4230d7ef0d4b@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c0514e5-0ea6-4f66-9bc0-4230d7ef0d4b@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 4ab401099d4764d1479914fd4c8b9876d5b3aca1  pinctrl: amlogic: Staticize some local structs
+On Wed, Jun 25, 2025 at 03:34:55PM +0000, Limonciello, Mario wrote:
+> On 6/25/25 10:17 AM, Andy Shevchenko wrote:
+> > On Wed, Jun 25, 2025 at 03:14:40PM +0000, Limonciello, Mario wrote:
+> >> On 6/25/25 10:10 AM, Andy Shevchenko wrote:
+> >>> On Wed, Jun 25, 2025 at 03:02:18PM +0000, Limonciello, Mario wrote:
+> >>>> On 6/25/25 9:41 AM, Mario Limonciello wrote:
+> >>>>> On 6/25/25 9:31 AM, Hans de Goede wrote:
+> >>>>>> On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
+> >>>>>>> On 6/25/25 4:09 AM, Hans de Goede wrote:
+> >>>>>>>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
 
-elapsed time: 1224m
+...
 
-configs tested: 100
-configs skipped: 1
+> >>>>>> Ok, so specifically the gpiod_set_debounce() call with 50 ms
+> >>>>>> done by gpio_keys.c is the problem I guess?
+> >>>>>
+> >>>>> Yep.
+> >>>>>
+> >>>>>> So amd_gpio_set_debounce() does accept the 50 ms debounce
+> >>>>>> passed to it by gpio_keys.c as a valid value and then setting
+> >>>>>> that breaks the wake from suspend?
+> >>>>>
+> >>>>> That's right.
+> >>>
+> >>>>>>> Also comparing the GPIO register in Windows (where things work)
+> >>>>>>> Windows never programs a debounce.
+> >>>>>>
+> >>>>>> So maybe the windows ACPI0011 driver always uses a software-
+> >>>>>> debounce for the buttons? Windows not debouncing the mechanical
+> >>>>>> switches at all seems unlikely.
+> >>>>>>
+> >>>>>> I think the best way to fix this might be to add a no-hw-debounce
+> >>>>>> flag to the data passed from soc_button_array.c to gpio_keys.c
+> >>>>>> and have gpio_keys.c not call gpiod_set_debounce()  when the
+> >>>>>> no-hw-debounce flag is set.
+> >>>>>>
+> >>>>>> I've checked and both on Bay Trail and Cherry Trail devices
+> >>>>>> where soc_button_array is used a lot hw-debouncing is already
+> >>>>>> unused. pinctrl-baytrail.c does not accept 50 ms as a valid
+> >>>>>> value and pinctrl-cherryview.c does not support hw debounce
+> >>>>>> at all.
+> >>>>>
+> >>>>> That sounds a like a generally good direction to me.
+> >>>
+> >>> Thinking a bit more of this, perhaps the HW debounce support flag should be
+> >>> per-GPIO-descriptor thingy. In such cases we don't need to distinguish the
+> >>> platforms, the GPIO ACPI lib may simply set that flag based on 0 read from
+> >>> the ACPI tables. It will also give a clue to any driver that uses GPIOs
+> >>> (not only gpio-keys).
+> >>
+> >> But 0 doesn't mean hardware debounce support is there, 0 means that
+> >> hardware debounce is not required to be programmed for this GPIO.
+> >>
+> >> That is - if another system had a non-zero value in the GpioInt entry I
+> >> would expect this to be translated into the GPIO register.
+> > 
+> > Correct. The question is only about 0. So the flow will look like
+> > 
+> > 1) if the GPIO is defined with 0 debounce, set the flag;
+> > 2) if the GPIO is defined with non-zero value, try to apply it;
+> > 3) if the step 2) fails, warn and set the flag.
+> > 
+> > Would it make sense?
+> > Hans?
+> 
+> But so on these problematic BYT/CYT tablets which "layer" should be 
+> setting the 50ms debounce?
+> That should still be a quirk at the soc_button_array layer, right?
+> 
+> Because gpio_keys_setup_key() will already fallback to software 
+> debounce, and the goal here is that both of those only use the 50ms 
+> specifically with software debouncing.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Probably gpiod_set_debounce() should become a no-op in this case?
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                   randconfig-001-20250625    gcc-11.5.0
-arc                   randconfig-002-20250625    gcc-11.5.0
-arc                   randconfig-002-20250625    gcc-12.4.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-21
-arm                               allnoconfig    gcc-15.1.0
-arm                              allyesconfig    clang-19
-arm                   randconfig-001-20250625    clang-21
-arm                   randconfig-001-20250625    gcc-11.5.0
-arm                   randconfig-002-20250625    gcc-11.5.0
-arm                   randconfig-003-20250625    gcc-11.5.0
-arm                   randconfig-003-20250625    gcc-13.3.0
-arm                   randconfig-004-20250625    gcc-11.5.0
-arm                   randconfig-004-20250625    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250625    gcc-11.5.0
-arm64                 randconfig-002-20250625    clang-20
-arm64                 randconfig-002-20250625    gcc-11.5.0
-arm64                 randconfig-003-20250625    gcc-11.5.0
-arm64                 randconfig-003-20250625    gcc-12.3.0
-arm64                 randconfig-004-20250625    clang-20
-arm64                 randconfig-004-20250625    gcc-11.5.0
-csky                              allnoconfig    gcc-15.1.0
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-21
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                          allyesconfig    clang-19
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20250625    clang-20
-i386        buildonly-randconfig-001-20250625    gcc-12
-i386        buildonly-randconfig-002-20250625    gcc-12
-i386        buildonly-randconfig-003-20250625    gcc-12
-i386        buildonly-randconfig-004-20250625    gcc-12
-i386        buildonly-randconfig-005-20250625    clang-20
-i386        buildonly-randconfig-005-20250625    gcc-12
-i386        buildonly-randconfig-006-20250625    clang-20
-i386        buildonly-randconfig-006-20250625    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    gcc-15.1.0
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250625    gcc-12
-x86_64      buildonly-randconfig-002-20250625    clang-20
-x86_64      buildonly-randconfig-002-20250625    gcc-12
-x86_64      buildonly-randconfig-003-20250625    clang-20
-x86_64      buildonly-randconfig-003-20250625    gcc-12
-x86_64      buildonly-randconfig-004-20250625    clang-20
-x86_64      buildonly-randconfig-004-20250625    gcc-12
-x86_64      buildonly-randconfig-005-20250625    clang-20
-x86_64      buildonly-randconfig-005-20250625    gcc-12
-x86_64      buildonly-randconfig-006-20250625    clang-20
-x86_64      buildonly-randconfig-006-20250625    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
+-- 
+With Best Regards,
+Andy Shevchenko
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
 
