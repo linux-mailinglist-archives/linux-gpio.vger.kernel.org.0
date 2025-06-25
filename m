@@ -1,107 +1,136 @@
-Return-Path: <linux-gpio+bounces-22236-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22237-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF5A6AE909E
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 23:59:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 75F17AE90E6
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 00:16:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75B8F3B9E2D
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:58:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 792B83AD13E
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 22:16:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B2A270ED2;
-	Wed, 25 Jun 2025 21:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DF2D2F3627;
+	Wed, 25 Jun 2025 22:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHKKCO8J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRgvI8Ki"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07F5270EA9;
-	Wed, 25 Jun 2025 21:58:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD0C2F2C74;
+	Wed, 25 Jun 2025 22:16:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750888706; cv=none; b=Yz5Kn+4ZWKGa0mJYto6OaDUqPifxyyEylT/KC4+yLNIYmDgkFQs8Ldau3GaSZNxLrjceiXhRZAbjynsV4f21VFXJDnKbLAx+fZPY2PFx7izQWNOmf9lopVFEer6R7v+vhNs16lpDQEymkPjXboaIYzKbUis4z/oOmWykQaLVaYM=
+	t=1750889815; cv=none; b=eaD2qdEDzZ1k3edNa0VTwWik+OXDT0Sd/H4N57rSZHwoseRMgu2MiUrcIWJgeemVFcz28rCxrkzEgJ6yd9/YSorSIuV5FXMe7X4rldlpLczRjV4fjL4gCdGCzyQKwTkFpOCuT13SBMFGYyvoKBvZx4QuxuCgCKFp1bHcV3eWnSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750888706; c=relaxed/simple;
-	bh=/KGAfdZApRqdSBJiStS7lAI+cxyl0kdckHot23fdv4c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WPhPpBHaAHGZiwVoMlEXO8srCO+t6+4QrDOykH4sprbkA43a5neXxn4NAOeA3ralyOt6CBmrXYmYKeW69ld8jJBh8po323pTful1SMBJwpSf6HSvoC+N6PIN3pk1TcRM0cAvtWhMoGf+9OTyxycW6XS1C53vXM00D+BbBja/H9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHKKCO8J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F417C4CEF0;
-	Wed, 25 Jun 2025 21:58:25 +0000 (UTC)
+	s=arc-20240116; t=1750889815; c=relaxed/simple;
+	bh=JPCUTE7k+d+bV0g/ym3IuJKj3lnwuQfByYVszEgGuWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NeSVpqgzIkqaIPZGvhJHmt8y55GBejV7wyBDj9AOb+PPTDNx//Fv0bEUvQL5DLXFdGUGQEOLkKJ0ddRmRsfJ9q+mN3xU4eWs1PWZeICvxPk72HncwguGd8Ppaa+lnnj+B1wy/iYITgsNW652YvnwLVPH5UWnlWfwJbTRffwJIS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRgvI8Ki; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2720CC4CEEA;
+	Wed, 25 Jun 2025 22:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750888706;
-	bh=/KGAfdZApRqdSBJiStS7lAI+cxyl0kdckHot23fdv4c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qHKKCO8J3xCyk5qZosNv/nKsmSRr/2T6uVS1g1YU229s4OndgCWhZB6kk/3euHOU6
-	 KCZlvXUPFYUldf391z7keLSUi5k05KynMqMLQVs3QK74sEk0TQKnKhIrQEFS1ba2P0
-	 36jRSqpTgYavOTXeaLvxE3tidnUggCJTfk0KmSYdAO5gMp0OQRlOt5rI0he00La14e
-	 7LX1UQdE4+wscnODknuqUO/Va/lF28toVNV7CPzGO/GkuDlS7BZbRXpkIdRiuE04aG
-	 tBI76hkmNvBlVn4KVJh+mWbZZq1acmiogagLnDCi4Mmwc8ypbO9vUKf06hUvvzdYuJ
-	 jFDhGwTYC9mow==
-From: Mario Limonciello <superm1@kernel.org>
-To: Hans de Goede <hansg@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-gpio@vger.kernel.org (open list:GPIO ACPI SUPPORT),
-	linux-acpi@vger.kernel.org (open list:GPIO ACPI SUPPORT),
-	linux-kernel@vger.kernel.org (open list),
-	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v3 4/4] Input: Don't send fake button presses to wake system
-Date: Wed, 25 Jun 2025 16:58:13 -0500
-Message-ID: <20250625215813.3477840-5-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625215813.3477840-1-superm1@kernel.org>
-References: <20250625215813.3477840-1-superm1@kernel.org>
+	s=k20201202; t=1750889815;
+	bh=JPCUTE7k+d+bV0g/ym3IuJKj3lnwuQfByYVszEgGuWY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FRgvI8Ki3o+8iAvZxOIOLv4YJj2pE/da5dKHPk4INdG0jov6rqfxyEemaXfjw7Gch
+	 7/EpZGNRiorCi7p4OgarRC8qCQ/dx0UQ9I2J3SoVMztSbhHzrqfQSuT5BuAZWrnCwa
+	 0Gf4FPtA2UdyAGdoY7lWk0pnZG+LvElbmEFkd4erB8Ioo259Q2nrKXZ55Hh9EC0oXK
+	 /Q4N+vlPGYoJ5/LWKa3MzpD9yjxG6/yfB+QoaWFgwrx9j4i7mUTYPOOdtxwcB+6NlK
+	 o14doDX3YsC5c5DLWuPCeGWr/HKA5g9BOUlP184kbOtrpIE2lKxBg1GnhPxjAbEP3Y
+	 Vwjm1PXyLnUZg==
+Date: Wed, 25 Jun 2025 17:16:53 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"elbadrym@google.com" <elbadrym@google.com>,
+	"romlem@google.com" <romlem@google.com>,
+	"anhphan@google.com" <anhphan@google.com>,
+	"wak@google.com" <wak@google.com>,
+	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: =?utf-8?B?5Zue6KaGOiDlm57opoY=?= =?utf-8?Q?=3A?= [PATCH 5/7]
+ ARM: dts: aspeed-g6: Add PCIe RC node
+Message-ID: <20250625221653.GA1590146@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SEYPR06MB51346BC9292066243CB845699D7BA@SEYPR06MB5134.apcprd06.prod.outlook.com>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Wed, Jun 25, 2025 at 08:27:26AM +0000, Jacky Chou wrote:
+> > > > > +				resets = <&syscon ASPEED_RESET_H2X>,
+> > > > > +					 <&syscon ASPEED_RESET_PCIE_RC_O>;
+> > > > > +				reset-names = "h2x", "perst";
+> > > >
+> > > > PERST# is clearly a per-Root Port item since it's a signal on the
+> > > > PCIe connector.  Can you separate this and any other per-Root Port
+> > > > things into a Root Port stanza to leave open the possibility of
+> > > > future hardware that supports multiple Root Ports in the RC?
+> > >
+> > > The PCIe RC that designed by us is only one root port.
+> > 
+> > Yes.  But this driver may be used in the future for other RCs that include more
+> > than one Root Port, and it would be good if that didn't require structural
+> > changes to the DT.  Also, there are RCs from other vendors that include more
+> > than one Root Port, and I'd like all the DTs and drivers to have similar
+> > structure.
+> 
+> Thanks.
+> Is the "pciec" node in arch/arm/boot/dts/marvell/armada-385.dtsi
+> what you said?  Or could you provide some examples for us to modify
+> our pcie rc node?
 
-Sending an input event to wake a system does wake it, but userspace picks
-up the keypress and processes it.  This isn't the intended behavior as it
-causes a suspended system to wake up and then potentially turn off if
-userspace is configured to turn off on power button presses.
+Here are some examples of DT bindings and corresponding driver code:
 
-Instead send a PM wakeup event for the PM core to handle waking the system.
+* drivers/pci/controller/dwc/pcie-kirin.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml?id=v6.16-rc1#n108
 
-Cc: Hans de Goede <hansg@kernel.org>
-Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/input/keyboard/gpio_keys.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+    kirin_pcie_parse_port():
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-kirin.c?id=v6.16-rc1#n399
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 773aa5294d269..4c6876b099c43 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
- 		pm_stay_awake(bdata->input->dev.parent);
- 		if (bdata->suspended  &&
- 		    (button->type == 0 || button->type == EV_KEY)) {
--			/*
--			 * Simulate wakeup key press in case the key has
--			 * already released by the time we got interrupt
--			 * handler to run.
--			 */
--			input_report_key(bdata->input, button->code, 1);
-+			pm_wakeup_event(bdata->input->dev.parent, 0);
- 		}
- 	}
- 
--- 
-2.43.0
+* drivers/pci/controller/pci-mvebu.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/marvell,kirkwood-pcie.yaml?id=v6.16-rc1#n125
+
+    mvebu_pcie_parse_port():
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-mvebu.c?id=v6.16-rc1#n1252
+
+* drivers/pci/controller/pcie-mt7621.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml?id=v6.16-rc1#n111
+
+    mt7621_pcie_parse_port():
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-mt7621.c.c?id=v6.16-rc1#n198
+
+* drivers/pci/controller/pcie-mediatek.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mediatek-pcie.txt?id=v6.16-rc1#n85
+
+    mtk_pcie_parse_port():
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-mediatek.c.c?id=v6.16-rc1#n909
 
 
