@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22139-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22140-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E003DAE7A9A
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 10:45:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25B78AE7AA2
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 10:45:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDA0116AD76
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 08:45:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 308911BC3DBC
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 08:46:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC0C828750F;
-	Wed, 25 Jun 2025 08:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 162A2285CB7;
+	Wed, 25 Jun 2025 08:44:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRWHL92c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaA24/eV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597C4286D69;
-	Wed, 25 Jun 2025 08:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E9227280E;
+	Wed, 25 Jun 2025 08:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841069; cv=none; b=R+S1/h63n2CIoHeDsrvEi5b8yJZKNgs7ddCXX/h9IhUDjySOnjVWsnoM2l/cmBZ11Js3cL9CzGDaDlF4eyv1kg0ow+rMqVGCEaf4wApk0a4ymWpzirJoXZjMrG+KPnyLzpX1p+wvKwnw1HHt+iAdrYnnMBbDowLBGn+3cgVtfGY=
+	t=1750841097; cv=none; b=dl53133X46qQezdrOEPDIo8ShAkd115qluH/zfpRA1uKS1/I/5lJt8i8/ojEsRf3gOMVTukdSjPpSfMiy3G6CwZKNyyQWUsq/LvHai0zD5F0VHyuJoblCZHS/WZiTYT8rWd7r+o1Dv42uKT6QUSzCvoe9QiMnZLZdEMNR5y4/a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841069; c=relaxed/simple;
-	bh=4CzVjs/m5dJ5MuMGQRXkPrzpOySszDlWe05a8hHTYaY=;
+	s=arc-20240116; t=1750841097; c=relaxed/simple;
+	bh=QMe3XkL13KplpKarUEsTie/WivYKB4KY46eqsvTmXj0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SLhZ8MAZldi8dN+lqTf3nDz1zOtXu4tFdfUgQoXUATEsP4r6j85udo03v5cLtWD97ixyE5aJxtgcb7b12k1z4E0+9/BudwyViGpFTtXHQiVDCh75pfCkpiAfO+IISxOM9/RMFp3TDqcMb4Jqy2W46FQXxJb6Vg14+wSqE/6XPwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRWHL92c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 052F8C4CEEE;
-	Wed, 25 Jun 2025 08:44:24 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=C07Kq+9vAJJZekyIc75EfHEc3rSWQ15Gpt66U3j7G6IJ3QMsMFbIQOJn+UEN/Pi2HMSV3MW8DeM3eABkjGVMLdmLz6eakOGz96Py3mDw5dMZf/XwXb3enZOhnl163OxQ36M0JTtkhg/TAUVELoddzRa2E9HBC/chGBvzMx/FB+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaA24/eV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94280C4CEEA;
+	Wed, 25 Jun 2025 08:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750841068;
-	bh=4CzVjs/m5dJ5MuMGQRXkPrzpOySszDlWe05a8hHTYaY=;
+	s=k20201202; t=1750841097;
+	bh=QMe3XkL13KplpKarUEsTie/WivYKB4KY46eqsvTmXj0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eRWHL92ch+CuPCNuw6exD7uhSZ7bWC1pkhW02lAOgKIQInv2oVVrDxElc3t9VrUQc
-	 6RDdE4EloujjiQ0WA3aNIPimgYS7uPBkaQQq2ZJzyQVC1Y+UeIogofDcKdlzK2I1UM
-	 dPVKUtkEr+JxumSdFzhg/OybPfcSB+q6/NtSnqJq3fFz7Lhj4F31WnurWS1//BAAdR
-	 E6NCKWpNQkjtMGwF/mkIh8sjaiTosocFatT8JTiz2oe052aSty3eFo/lZw4R9LZhrq
-	 SaVlKTzVVQsXHmAHso3zn1kqN1H2DYCScwfDo3cM2Dp5BlqNI6BU0u0E9GtTE2uDLR
-	 MVf7TnVqGIMXA==
-Message-ID: <14e0e012-0283-4a17-8cb1-fe96785b11ac@kernel.org>
-Date: Wed, 25 Jun 2025 10:44:23 +0200
+	b=PaA24/eV01+iY8pBASJ6nbmiZdRwlrWwSSdFMwQYOw1pLQC5PwExDygUFOP6vc/57
+	 +U4ovRVeJudu2GlUCb5u4TvyDYA93gVSkuhknD3dhJJqQEJo9HnjSSOSMn0Ev+Z+gi
+	 e7xsOgq8JkgFEqtrKLMdESmtPzzzIvgiDfQ0Wf2yYIkybYA+Mt/oN7lue+nIB8WSqV
+	 N+SWZVrOVx8Me+fda9IZF77D6Tj9njEMp/n8jg0c3ZhNvJRTRCwjDunAIKcNpi+S3A
+	 8HNdOUbp1lfr8CBO8O0jYWRepXVjQ59P6Cclqwvubv+gsFYDrkhz8ApYj7SGiuvCrK
+	 0aJgnJyIVN95A==
+Message-ID: <b9767a66-ac0c-4399-9ccb-26677f2a4d34@kernel.org>
+Date: Wed, 25 Jun 2025 10:44:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -119,43 +119,14 @@ On 25/06/2025 10:29, Prasad Kumpatla wrote:
 > 
 > Manage clock settings for ADSP solution.
 > 
-> On Existing ADSP bypass solutions, The macro and dcodec GDSCs are
 
-s/The/the/
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-OK, this has to be expressed in schema - oneOf in top-level for presence
-(required) power domains or clocks (contains for these names).
-
-
-> enabled using power domains in lpass-va-macro which is not applicable
-> for ADSP based platform.
-> 
-> Reference:
->  - qcom,lpass-tx-macro.yaml
->  - qcom,lpass-rx-macro.yaml
-
-I don't understand this reference.
-
-> 
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> ---
->  .../bindings/sound/qcom,lpass-va-macro.yaml        | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> index f41deaa6f4df..38679a4f21fa 100644
-> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> @@ -75,14 +75,20 @@ allOf:
->          compatible:
->            contains:
->              const: qcom,sc7280-lpass-va-macro
-> +
-
-Why? It's a different style now. Don't introduce random whitespace changes.
-
+There is no "qcom" prefix.
 
 Best regards,
 Krzysztof
