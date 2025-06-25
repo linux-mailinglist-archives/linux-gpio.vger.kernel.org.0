@@ -1,174 +1,250 @@
-Return-Path: <linux-gpio+bounces-22114-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22115-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35282AE750C
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 05:01:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CA18AE76B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 08:06:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 984F517A9AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 03:01:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 639D31728E2
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 06:06:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D980978F2F;
-	Wed, 25 Jun 2025 03:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D741E47B3;
+	Wed, 25 Jun 2025 06:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="aO76Twib"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxPFDjWo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010005.outbound.protection.outlook.com [52.101.229.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B87C3074BF;
-	Wed, 25 Jun 2025 03:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.5
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750820479; cv=fail; b=K7oyA1aU7tOpgj41ZZ5bQU9sjBSFTDubMoLt5DBndAi/qO2Nqrl2UGq0pH4rLT/lw1xrwsqaZ/GYrn0980hFsPIRBFuFWKclbWK8EhRy3Up/SmKAZeefg4IwMvwrr1HUqdA+T1r1Q+Vh7lYWLg0pytoBBMT6JJ/6GMivPszY8eI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750820479; c=relaxed/simple;
-	bh=pXd3Sr3y80l0W6Nh14H41kL6p2bLOsNa2AGf3kLCNtw=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=YRPDilfBzTJvMNV8v1rmrce0+kGzvIZpn6mjx7k0zFAdD1uv9JtHvMT/tjzARZN0oR4E4cclJ4uarT3y6/h9iRaKXW0GQp/OrJM0I9sywwXovMgjRlDe5rvAKqICAfhBGOIkqllPMZMnRlvcvkWpldf2jSMSzoigmt2ghTdCYTQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=aO76Twib; arc=fail smtp.client-ip=52.101.229.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ib0mPQunAKy674GTjR//p9vZGeht3vVym3n0XsFZ2/+vJrOBTTP9d0Qo3W24mYFgMJr6467PUmhrz6AQ/hWXcqb683I9I+JoowTDl57KgsUyVY9A9REa3ushI0xZBI9QtPjbOew9p/yupduYNDywwPYByIR+Bj0Gbj2yS2mali1YNAolY7XdPaKV3hUlNiaXcM0EqelDuN4Nw+W8abtrOSq+PrVp7o1pZOBoxRkbNcmySMTtBDwfvY4pk8z5c+6Ea1Xx6obKcq6SMrh6Wnaygi9cL6b46qYWO8JZT5MsscH/ILwQ2TBu7l+zkOchpOKZF4HpGeJrBNcZQAjBr8GQaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pXd3Sr3y80l0W6Nh14H41kL6p2bLOsNa2AGf3kLCNtw=;
- b=sU8kxSoHQyEfw+ZHaossgGWiqMQjJuJESBiA8WWn1WLctVeonkcgxb42l/1DGeJ9VPxlsXLsNK3NribWGEgT/hTowWYp/AAp3kgavS1DISojkcN8kacqa5HeONkGy7nqIv2bm6Aq0nS2MQMmmqSE1lNhIFfuZWPFATBvNT1K0WMtEzY4CEJ/UnSeCqCSp/pUh3J3pzJgH4/+RM/sK2VzQGpHcMG2S2DWE7O4KAleIasJYVVOA76K1NTJVWJtgO8wwcCbVLh6/yDhDE6xI+3EpBoOZ2SIVAk96dLqC16WC7DQ2Q2VttRIWg35fj8ne41sPsrBfc+CJ7FJT/POPZILUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pXd3Sr3y80l0W6Nh14H41kL6p2bLOsNa2AGf3kLCNtw=;
- b=aO76TwibN/exL1I2VlRhgx0tl4yt5ojbok1fFq0ut9fD4YmyYo0QgL7fdT4MzYxzTpWr4mNkRpEd9lqil1HZlZR79odzt+/30XBY/r6l+Zlfu9e1PRq3BG/yNxi/ESTDCx8AsjAmVryGlsN2fY7a21P/xdP57f7kVguQ6nGNs3c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11) by OS3PR01MB8285.jpnprd01.prod.outlook.com
- (2603:1096:604:1a0::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
- 2025 03:01:10 +0000
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11%4]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 03:01:10 +0000
-Message-ID: <875xgk4j9l.wl-kuninori.morimoto.gx@renesas.com>
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/2] pinctrl: renesas: tidyup Kconfig
-In-Reply-To: <87ecv9ragd.wl-kuninori.morimoto.gx@renesas.com>
-References: <87ecv9ragd.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
-Content-Type: text/plain; charset=US-ASCII
-Date: Wed, 25 Jun 2025 03:01:10 +0000
-X-ClientProxiedBy: TYCP286CA0074.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:31a::19) To TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD068182BC;
+	Wed, 25 Jun 2025 06:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750831557; cv=none; b=OM9jOO84kuegFFWJeKVB6qY/GfCT64hoZUTF8BkN5EVHWs0dzh205r7Zy94upkoPOjxA8ags6cCvGjPwB9oLS5Zag+Ut+p1unufdA1iFkrwZSoe07EulybFywouTE0muB/NclKractnyt0hpZtnDh3jLD2C/SsGVTjFujtqMGKg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750831557; c=relaxed/simple;
+	bh=mlSg9lIHtnrO/DSwiOZdc8wwacrIJ2lGTmmKvsPErCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I0a/wUecBXu/TqgcZpoGZDdj5zhVqF/Y3rNlDfYMeq9dsR4KeRHIYwzauoL0QzZcjLTRZ7bHMc+XYQwSve4Wy6PG9nODOCDQ0Ptqws4htT8QLuB4G7If/Mozq/yWGeUykwsAl0JFAS3u7ShJ7Zt5/4dkYhZXNZckrA5JTORpwPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxPFDjWo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C814BC4CEEA;
+	Wed, 25 Jun 2025 06:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750831557;
+	bh=mlSg9lIHtnrO/DSwiOZdc8wwacrIJ2lGTmmKvsPErCo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PxPFDjWocxmsoIWWpzgyx3AmmB7LtjHB8cOR3tTUYprPGkheEEY3xPbyTCvyvqlsj
+	 VXYCM6uzQ60no5DzAL/c6jKu3dW8/SsFc0lIJ+kYXfN1TIOKELqESNNsTkpHZS1hqs
+	 6UNLEXKo6EUjiAIKzAwH1HUP9eJWaIvVr/jp559ag7T3fi8LeO4p/6bur6WuVYLFOu
+	 EQ4Kt11jPO3BkO5qiKKqcmsQV3FbwgtWbGsajfMDcYOHcCaT4yhPzZTcXLIlLwSrKg
+	 XD1s9aZpEpcI1lYU7N4C+8Ynua0qB0cNRPbyn3wxtYXHLca2DXwP04/yshsRPqFTOX
+	 0EQovDgK+ovMA==
+Message-ID: <a0feb67f-3a73-4247-8383-7255616cb22b@kernel.org>
+Date: Wed, 25 Jun 2025 08:05:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|OS3PR01MB8285:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ae4170d-46f8-43f8-e9a3-08ddb39489c2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?C8L+En05Bn+YuRKZWlQ/e6Oi8skyk60pvjmrCHWZ/wfGtaqcY/atNVPfLRbM?=
- =?us-ascii?Q?0clXIk1YK9ypZoqwpbWN/+uuHjBiYnI+yoI+XBMnQAdcm2zIrJ56NY+34WVh?=
- =?us-ascii?Q?obCZ7TrsHbGi+6cxn1FsjUyie+zJt8m6ebWtTEpVoCrC38vKqMbKkTllwrqe?=
- =?us-ascii?Q?O1kDJSItvMzN4o5qQr0l2zysMZORE5TImQKHnkV6NfyKNpFUiccFaGLlGb8z?=
- =?us-ascii?Q?DRVbUTb7ze6IFOpMJkef2YOaYKyzCrxWLOSPd+Vqx169zq8k3Fnls82gbk3D?=
- =?us-ascii?Q?u7FdIZ+xqfMc1whYs0RwSk62VyGZ5jWutUJyHZpIFf6XM970WR7xIFxBadL7?=
- =?us-ascii?Q?RQGmAyTVs3ZgZlzhLC8xGZLagTwLmN4ZWUQzDne3uKEM8s0ErE/qo9KODm+U?=
- =?us-ascii?Q?N/ACmTgsmCwl/zOHf4XGEQSov9DgbyF91N3II4D3SqtOcuOVsdZ/hgeW4WHt?=
- =?us-ascii?Q?5XeublHOxjxiMgSXhfWZ7RTGE6Q6CFcpVB5FzDK9+qMvT7d1H5FyUbLUOigo?=
- =?us-ascii?Q?6q3AH5x+Tg8I/Eb+N/B4iBwI6A0vWFckm/Fr//y7fAxms8jBbOLdYjGTgghV?=
- =?us-ascii?Q?K3RPluIR8ZxO+JQf7jUQTWwg4CFleZYHPm3jW8dMLPmX5pMdP65j5IoUKSZl?=
- =?us-ascii?Q?jQC9CnK3NJwZuRw8OzIBOBzo67gfJDsslQHMUZ17kv2jiPKPS/gmfyN3CNHM?=
- =?us-ascii?Q?ucaYENI0AnMx5EU7Mvt7dcKTPOOCUaD5mnE53aiZCk4c4CrcwzcgywZLgzlL?=
- =?us-ascii?Q?/RTEwmilYjBIGDDzgNvHI04eYx6anBHzoQldRBZyZ1iNR5faWrco+o6+6zJm?=
- =?us-ascii?Q?Ksy3Qnb/3g8W5+v46RxR80iHi+ERCr10WIZIGsGo5ylPidDMGU+lS4BvMKI9?=
- =?us-ascii?Q?+44Hsb1R6uKnLvAiuljMn8/LJy51kNFc8BI7aQb2gBqK0hQJX1Lgdsyg7yR0?=
- =?us-ascii?Q?CI9bR7F8Lel/r26Y6Uht7tLpJjzGrmkBjypPfYIHoZpIEu9H2LRnlKTcUiUV?=
- =?us-ascii?Q?TgGBTZXwvk+wXRFI7SKqm5iYoTG9SJc9k2xlp9nbbBHy0prD+72wlirAQxxx?=
- =?us-ascii?Q?RTXKs5CLgZIS/uKQxwYhLt9pPiGNtyqYYHWc6gzomiifCnWSuP1JSBLcjlfn?=
- =?us-ascii?Q?JJzOiO0vO0r2M6KlSni4wlRB+cuGOIuYymfjNuf1qDPFy3R0izL5kIHsIkdi?=
- =?us-ascii?Q?SpVNb54FY3+ryM0QVyyCsz6EO3vEqgahCNV0qApHUK1zOfMFxZAWxo3t3FPO?=
- =?us-ascii?Q?d0gpIroL34UFCXuGsESvMee/ytcwgchfU/7NMs+VHSH7fIf5lroJs7wxoRzR?=
- =?us-ascii?Q?DihsReyvsZ9j2pk6mvC86OqhARLr8KJPtRw5igtsn65rZCgP5VPBPLgZtJYJ?=
- =?us-ascii?Q?pHAvYpqFnwe52gPuxY2FDvsxPVSOcQ3cxKgtJv/Pp9AzemfVjpSPdTCJ9KkO?=
- =?us-ascii?Q?FNe7EIB8SLdK6zAP/aHGBfYE0bTH8xzOB5R5qCQPGxa7VDuu5OvuEbKsPwCv?=
- =?us-ascii?Q?FFxVcK/HC61hj7I=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gomOyHRULRv5Nw3Ga6645H9C1T+UhRNQ7reK4xAjxFQl6TeJnMRZHLxvraFA?=
- =?us-ascii?Q?VNBTxaRTEEHPsy/ee3y9mPMMvwRiA+IEFyd/dqrO9R6v6xWL3ztZqJtTia1P?=
- =?us-ascii?Q?r88dHaZXWLn7hg3dSZwps7FcvKaDH7ygYte/ud2Spx3CWmsYiV80/JZuSMzc?=
- =?us-ascii?Q?BlYeE1VkOEStZcEd+MnbwGtj1gnkyHhyPFiuK5s4953LHoIfLQYaSBbKTK1L?=
- =?us-ascii?Q?cnZ9T9igw1edNo+vuoLJfHDhFP+5gi1Wbmp/SxSbrJ6slip0h5loO1CIIgEJ?=
- =?us-ascii?Q?8aT+JvUYuqmOExFIX2MwkFReWLKVzPHXpLxusfYNBz1DFmkMWFWTSNlwGi0B?=
- =?us-ascii?Q?L43Hpts646LzY3GU3G4xYBGDKLEVYveoobqPydmxK/iqDrweo8Qjnb+svsUh?=
- =?us-ascii?Q?rs4DMQB5yPfy0MlgZZzl+y0obCQz/Je20tTzyJPYvHKkesftoC2NMYtJU+4S?=
- =?us-ascii?Q?3xy7U3ArNLs4mDM34DtXtTdpeMBwh+VGeqwHAs3AlE677ikBG69qdE0aM7Nf?=
- =?us-ascii?Q?9EHwxLibfCLKlCnQQTqdERSwHzHHHUr6DKbw+DwDTP24sS3SLqDMo/jmKmnj?=
- =?us-ascii?Q?Bks1l8uplrNO4NsJvvrTWX31jZxHpTFQ6ruTFwPPO8Q+lAYcj4NrJiRE/0Be?=
- =?us-ascii?Q?EInGEXIDn9kJS9hxOaN0fgEuiJEUTIn+cnfQs5Unfa41vIDHCODAtq5y1YpX?=
- =?us-ascii?Q?I4orAiO4vmWAAW7wAAIgtk77kJ+wEHyokjltdPpOihyfIinC9IFVs9Hx+3Hb?=
- =?us-ascii?Q?7zmuvckMDdgNH0QCyPaL3HmSY66ma5dtjJia/KoMeHESbZT8jAHT0qejXud6?=
- =?us-ascii?Q?F45iChQ89cXUpqYBFs3wmmUGyvdsZIyTvQJVuCYBX3SrKIFIdcrzZYDOP+zp?=
- =?us-ascii?Q?uyn6jV4F5UVCCrBozKKJbi8oI7hL+SeZb6qTWsc5fM0RqX07J0hphypNlg24?=
- =?us-ascii?Q?B9pfaal535e3xLlMA4nb6lGpfn28zGUrC8aywvPX0AVLt+RSweSdj1CC4wOQ?=
- =?us-ascii?Q?8hs3NM5pXm1ctBykorme/ZnBrkjuvO0ZF5ngIf2PPZEz4jYM2EgQpBWIzqU9?=
- =?us-ascii?Q?vOqnXgaBgzskDrWIYQDmo9YmDQqtDBxhvjeoQfW49q5uPD+eDEeKm0KZ0nas?=
- =?us-ascii?Q?8qLjcZYbG5udz2LzFu9sDTvIqNWemf+Fx76hw3fX2YL7jRP/6PMgr3RF/av0?=
- =?us-ascii?Q?3BTnukS8rqn8WGWZIkyemDEqFn06sWCPR3etyunE7p7Gi+gziNjmHRzWutja?=
- =?us-ascii?Q?jc9O8HZsAnBAs5DnzP0GwK8H8nn3qeWgYjwE9QoD39LOqHmVzcQl7NJpMGdX?=
- =?us-ascii?Q?fnMbhPNzhvHaoJQPXv/TzIWbYOS+v3r4w9gluvsw9yJ504DbuEKd/IWaGHdq?=
- =?us-ascii?Q?OiXopzXpgqmriT+1BZGDWA7+k1UiDaoNq7r4I6veVd+WpPtd5eNRnF9OeGfO?=
- =?us-ascii?Q?SfEB7tRf8eJ4gFGWqSAcisaGTTEexY1p7FdUsUHJJuay3o/Wphx0I/ajObjS?=
- =?us-ascii?Q?hO0B2RGq7mWCaje1C3bSGgeNjD5u24Ueck8iAY0BkFYGky6MtPVpe7hdQRgy?=
- =?us-ascii?Q?dL2bWGseQIUf2UfpN/Jtykn0wbbKGKydieWWASXzeHBVy6j/WxquQvCrPevu?=
- =?us-ascii?Q?vXbH9NBxUfb3yqLuA7rJDyE=3D?=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ae4170d-46f8-43f8-e9a3-08ddb39489c2
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 03:01:10.5621
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XC/UVIgmxywKG0Lwv399pZOQRlBhkft7Ci2FmeN7M2NHPzXPjJxFkZ5IsbCRHdSDkVJvotv4k8pXkdHlh5c7dO30kyuboOttnhkPHmXlrgDldVkcPqmic1u+Fbte7JKf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB8285
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/7] arm64: dts: axiado: Add initial support for AX3000
+ SoC and eval board
+To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Jan Kotas <jank@cadence.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "soc@lists.linux.dev" <soc@lists.linux.dev>
+References: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-0-b3e66a7491f5@axiado.com>
+ <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-5-b3e66a7491f5@axiado.com>
+ <0709a0a6-1313-452c-85e7-2926a6a03741@kernel.org>
+ <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On 25/06/2025 04:16, Harshit Shah wrote:
+> Thank you for the reviews. I have some questions/feedback to clarify 
+> before I fix some of them.
+> 
+> On 6/23/2025 11:45 PM, Krzysztof Kozlowski wrote:
+>>
+>> On 23/06/2025 19:28, Harshit Shah wrote:
+>>> +                     clocks = <&refclk>;
+>>> +                     interrupt-parent = <&gic500>;
+>>> +                     interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+>>> +                     gpio-controller;
+>>> +                     #gpio-cells = <2>;
+>>> +                     interrupt-controller;
+>>> +                     #interrupt-cells = <2>;
+>>> +                     status = "disabled";
+>>> +             };
+>> Please follow DTS coding style.
+> 
+> Sorry, I didn't got this comment. Is this for the spaces between the 
+> nodes or something else?
+> 
+> The current GPIO node is as follows:
+
+There is always, always line break between nodes.
+
+> 
+> gpio0: gpio-controller@80500000 {
+>                          compatible = "cdns,gpio-r1p02";
+>                          reg = <0x00 0x80500000 0x00 0x400>;
+>                          clocks = <&refclk>;
+>                          interrupt-parent = <&gic500>;
+>                          interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+>                          gpio-controller;
+>                          #gpio-cells = <2>;
+>                          interrupt-controller;
+>                          #interrupt-cells = <2>;
+>                          status = "disabled";
+>                  };
+> 
+> I checked the document: 
+> https://elixir.bootlin.com/linux/v6.15/source/Documentation/devicetree/bindings/dts-coding-style.rst#L112.
+> 
+>>
+>>> +             gpio1: gpio-controller@80580000 {
+>>> +                     compatible = "cdns,gpio-r1p02";
+>> This should not be accepted without specific compatible, but that's some
+>> old binding so maybe matters less. Anyway, if you ever need quirk or
+>> custom properties they I will reject them based on what you claim here.
+> 
+> Yes, we are not changing anything on this driver. Is it okay?
+
+I meant for future. I would expect to follow writing bindings now, so
+have front specific compatible, but if you do not then whatever issues
+you have in the future with this driver, they should be rejected, right?
+
+> 
+> 
+>>
+>>
+>>> +             i3c16: i3c@80620400 {
+>>> +                     compatible = "cdns,i3c-master";
+>>> +                     reg = <0x00 0x80620400 0x00 0x400>;
+>>> +                     clocks = <&refclk &clk_xin>;
+>>> +                     clock-names = "pclk", "sysclk";
+>>> +                     interrupt-parent = <&gic500>;
+>>> +                     interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+>>> +                     i2c-scl-hz = <100000>;
+>>> +                     i3c-scl-hz = <400000>;
+>>> +                     #address-cells = <3>;
+>>> +                     #size-cells = <0>;
+>>> +                     status = "disabled";
+>>> +             };
+>>> +             uart0: serial@80520000 {
+>> Looks like not ordered by unit address. What is the ordering rule you
+>> are going to adopt for entire arch?
+> 
+> Apologies for the confusion. I should have updated in last patch-set 
+> comments.
+> 
+> We are following alphabetical ordering rule. In those we are grouping 
+> some nodes together based on the numbers.
+> 
+> cpus
+> 
+> clocks
+> 
+> soc {
+> 
+>     gic500 { }
+> 
+>     gpio0-7 { }
+> 
+>     i3c0-16 { }
+> 
+>     uart0-3 { }
+> 
+> }
+> 
+> timer
+> 
+> 
+> Is this okay?
+
+alphabetical ordering is not mentioned in dts coding style. Maybe it
+should, but I think the only user of second style with grouping nodes -
+Renesas - still uses ordering by unit address in general.
+
+The trouble with your approach is that if you ever need to change the
+name, you will need to re-order and move entire node.
+
+Anyway, not a problem for me.
+
+> 
+>>
+>>> +                     compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
+>> NAK, you do not have xlnx here. Look at your SoC: name of vendor is
+>> axiado. Not xlnx. How is your SoC called? Also zynqmp? You cannot just
+>> randomly pick any compatibles and stuff them around.
+>>
+>> Please carefully read writing bindings from DT directory.
+> 
+> 
+> We are using the "cdns,uart-r1p12" for the UART. However, that alone 
+> can't be added alone in the compatible as per the DT bindings doc.
+
+Exactly. See writing bindings... or any guides/talks.
 
 
-Hi Geert
-
-> Current Renesas pincontrol Kconfig is randomly sorted.
-> And, the menu prompt is also ramdom.
-> This patches tidyup these.
-
-Ah... this is menu alphabetical order, instead of SYMBOL...
-OK, please drop this patches.
-
-Thank you for your help !!
-
-Best regards
----
-Kuninori Morimoto
+Best regards,
+Krzysztof
 
