@@ -1,189 +1,223 @@
-Return-Path: <linux-gpio+bounces-22158-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22159-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E4FAAE7CA8
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 11:27:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F8CEAE7DD4
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 11:47:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E7591C24693
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 09:26:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 458D0188EC90
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 09:44:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80EF32D1F72;
-	Wed, 25 Jun 2025 09:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="4D5wxwNW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6D7D2E424B;
+	Wed, 25 Jun 2025 09:36:59 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023082.outbound.protection.outlook.com [52.101.127.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E402BEFEA
-	for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 09:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750843104; cv=none; b=YK4dAvssnCsfy2JCW3oEEX0a7JNPWmOBQ5yZ1GnCR/JH4ghMsu0UzuOLLgRG7WSaMZktB+3X5E/olPbKRt+uVjcF1Lv8/Z/jhpt1pXRqjLqm++LmM9fhki+XGeoNb+vD3pqbXB/WQ6KrKgxUSCQi360CnBYHRFU2XKaoNQm/3CQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750843104; c=relaxed/simple;
-	bh=5o4DwhEuzb0pZeAz4ygBSx9BKxTK6B7CFL6Pbp9UvHM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iUdBKd/8n8JrSos4u0EP2M4z5CHtvYFaVLgUY8j2vjXmRlfK4p5VDpX3SL/cPcd7KlYDqC1QJxB/3gglVS8gd+lVLzEVpY6S/fV0bBpEvTr6z9i7s3If9OaqWaz4+DTnI4i3MqlIVBaNHLNNlgLb3MR4mYJFLXcLMUfGVHXeuBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=4D5wxwNW; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso11565397a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 02:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750843100; x=1751447900; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8sxsJ8fLdh34TSstwWUME6Yys/TR6ScHGZgu8ZZNgAU=;
-        b=4D5wxwNWufVkiHSwx52xvtXpTC/nk0K+UeWH9Z1DRIQDaM3oFUCDUjARVoyxgqBlVS
-         JOvlIdEyK3Z+xOAqe22J2kTQZt5cwuBohSlybnoki8c3ui0HOLLlNMt3rE7pfXaMdB3T
-         ly7KVTKorqcl/yz7lrmS+ce9/NT1pOiA5/DmFxkOt84zBE9uA1RcvYCVeYW3IWpFglpW
-         7vNwp73xSwwTYZiQX33TGasnPSW8xHvo3Xts6nxB9eJhdSmWT5HOI7Q8pwlN/XdbDwI9
-         kaRYRdDwjAGrwO5rUqvtC4zHICU/jYRuSW5dqjfPBOq977ZGKrYGT8W5zYrQjvHUCUwX
-         MNtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750843100; x=1751447900;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8sxsJ8fLdh34TSstwWUME6Yys/TR6ScHGZgu8ZZNgAU=;
-        b=CNeqb37BSlXpw8C3TwZLXk3crrchV+V/cgMVkwbPpiCRpHEBKIxcAYlxoCq9MeS0d5
-         t7CW50uXi6hzghBCPPzQXIWk1B+JvTmi5/HRxcIlSDcKdP//OHDnme4GhDmxIFqNT3Kl
-         UIWO6k/BmBB4SXXi/hRyeeqyYP7FePLBIQDOSVw1nwcQkxazCBlcuwU8jkg6XeZDYSe/
-         M5OV1sdeclQhhXIFBzDJoaMUV8N5Mw6R5tmI8qaJPl70L4p5DWlupS8G5sXB9Pv1hW18
-         iNXqRu+Jc/LioCBl4FqgHfITEVJKtqSyCUmpmOm5i7nmD/IlK7/iqH/9HEmoiEIvUL0T
-         PEYw==
-X-Forwarded-Encrypted: i=1; AJvYcCURUvZ+5MHdm/UqJxiOtIhsnxZSGmT8Q6VafTdpko7XGsFMnm+rl3ULJmkB25zmnO6gjSREaVKWXUVq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEfovAXA4+edAdQJti8adX2zp7Up30cHKIFcbxScRronoTy0Lg
-	S1nUR1wEpjkTGsJoordimoh1Rcis/uZjRDfe72hrVzzbAZKN1UTJb+gbNcgVt42QWaU=
-X-Gm-Gg: ASbGncv8l06hSBa58cHc0jcTi6fl2ZwRN8x1irYDq/hX14Q8r8wlO+8VIV6474KdLgP
-	nnlXkhjFaTnf5TMjiAex1LKJSxL82aH9+r9FYCxBOldQM4J0chToJKl++T6PGcXyOACG00UjS7l
-	MKq4Y8ose/1v8NQKDPqzcriEerYSaxzPxcTFl/4Gg+raaoP4X9qSXz1afJSZkbSWHIkEDpyyIhf
-	A19UgC5odhajqF4Th2edi9d7Yn2zmhUyFSv8BUOspo0GcLLgcF0H2TgszoCqIDEZ2KVGG5naP1A
-	RM2QI01ytyWurirQzaSurGyZV7n/VKxeN1D3BVCEDTBNogEG3J41YbccEH0wtvJ64Mg46WAjbMt
-	6OE3mFveQxXdQ6u1r422hua+cH0sZWJNC
-X-Google-Smtp-Source: AGHT+IEP66kc+zZDdWg7Icad9MqZ3w7YASShODOYdGAZ2tanUn2oS/uFbju3FQ9gBmHRuPLclDgo0A==
-X-Received: by 2002:a17:907:7ba2:b0:ad8:a41a:3cd2 with SMTP id a640c23a62f3a-ae0be8601a5mr252590566b.16.1750843099212;
-        Wed, 25 Jun 2025 02:18:19 -0700 (PDT)
-Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209c85sm1009952366b.160.2025.06.25.02.18.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 02:18:18 -0700 (PDT)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Wed, 25 Jun 2025 11:18:05 +0200
-Subject: [PATCH 4/4] arm64: dts: qcom: Add PMIV0104 PMIC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1663F29AB02;
+	Wed, 25 Jun 2025 09:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750844219; cv=fail; b=KB6KjzX6mkK/5U4oDGAsvpHh6JmXmJ/81p8PYDw35f1sZ36ZxjOeC2Hie3tkkj9Y58MGRtZkXvLkvYRexUKwKzlLxy/GYKZs6gON8ltHwNfnfdmvdqQUOihDlQy0Wl4BHQCVYS9xZJgtyfbTqKEOHSr7J6UTOOSKuEx0MBFPgT8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750844219; c=relaxed/simple;
+	bh=2xnxuQtF0alhdR5IIF229uA7qRCtuNz4uBqslE4tm+U=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=LdrrOkKnOxH40fnaOJGtk6DxIpUhBz2MC6i/uh66DUgqMpWUAw8CkOxHO/ct8EjeMKJkc3BUgWEgfb4L9jE1PtpDuOziCQAsRPAB4DgFAbxObmZAbPP/i6VkC6bYT6q4PZ7llk/c7S4aMdY8VMY/kgOUjDW0DuFW4Uofx+0BJGk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com; spf=pass smtp.mailfrom=linumiz.com; arc=fail smtp.client-ip=52.101.127.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linumiz.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LLm15d3NAKxEYeCB9B7ajh8Lq+CuimLC5xE72w1edRbX3n2Kpow1QO+ZQUU3C3DMj8rzfVPiX5TTB1yjY/99rbBU21PjfdIzZ7EUP8fxBan87EJWbWcwbOuZFy4wmipr4rsS6c6HhOUPxYq0adTXvaGXox2PZ6lGCW7o2cFMOXD6FSuU8sHUVW9jDHCKdjtdUxqvT3TE9DCucpu8BE3wWKrAcuDlBs2FQnlCCWM3Gb8ewb0j0QUh7JOHmRPkzJuuendFvPJZ+Xyz136yGQlgtBw1xZZljuu7xooT+ooM9AK19kSY5RH/kJ3hukrvQHw3ro0EMeNn9bja6HPLBtzqHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yKHINoz0dTYVGL3Z0AVDcICInEqbHBazU/BmNHaemQo=;
+ b=vZv+6xpTVW4OKZ1Ty8LR/R10/Tf9JNsm+wQc/d+Mibm/nwKUmrlzodzxofcBg6hCsDxD9ST2simRMF2qjpYNe4/zRl/OyvthiZ1s/+B8wKLl2vGTIZTmzoyMkLcYi0Y4CEPkP6RSByC9MYuH2/qPchG+Lgefo36Z+YCgpdH6zRxr0ToM8Ju8H/M49t7LshQHageabIfjNLwBWLlg4sHXket1X16Imcg9/qseEsDT0gCT7Eyf5IJOFrn0h4verkapytB0CZjHIwkGZW2cy+IAlarLoyb0CcHMWrhTVqSmYllvp9fXEGOogpjdpUzWyRNYaggJjflE1U8L4AM08i3dLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=linumiz.com; dmarc=pass action=none header.from=linumiz.com;
+ dkim=pass header.d=linumiz.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=linumiz.com;
+Received: from TYZPR06MB6935.apcprd06.prod.outlook.com (2603:1096:405:3c::9)
+ by KL1PR0601MB5776.apcprd06.prod.outlook.com (2603:1096:820:b4::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
+ 2025 09:36:50 +0000
+Received: from TYZPR06MB6935.apcprd06.prod.outlook.com
+ ([fe80::9e42:3253:9a2e:b565]) by TYZPR06MB6935.apcprd06.prod.outlook.com
+ ([fe80::9e42:3253:9a2e:b565%7]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
+ 09:36:49 +0000
+Message-ID: <9c3ea5fb-a045-46bd-9753-26ffa67fe1bc@linumiz.com>
+Date: Wed, 25 Jun 2025 15:06:43 +0530
+User-Agent: Mozilla Thunderbird
+Cc: parthiban@linumiz.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Linus Walleij <linus.walleij@linaro.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH 10/22] pinctrl: sunxi: add missed lvds pins for a100/a133
+To: Paul Kocialkowski <paulk@sys-base.io>
+References: <20241227-a133-display-support-v1-0-13b52f71fb14@linumiz.com>
+ <20241227-a133-display-support-v1-10-13b52f71fb14@linumiz.com>
+ <aFu3fAMa8KPwjPbX@shepard>
+Content-Language: en-US
+From: Parthiban <parthiban@linumiz.com>
+Organization: Linumiz
+In-Reply-To: <aFu3fAMa8KPwjPbX@shepard>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0088.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ae::13) To TYZPR06MB6935.apcprd06.prod.outlook.com
+ (2603:1096:405:3c::9)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-sm7635-pmiv0104-v1-4-68d287c4b630@fairphone.com>
-References: <20250625-sm7635-pmiv0104-v1-0-68d287c4b630@fairphone.com>
-In-Reply-To: <20250625-sm7635-pmiv0104-v1-0-68d287c4b630@fairphone.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750843094; l=1937;
- i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
- bh=5o4DwhEuzb0pZeAz4ygBSx9BKxTK6B7CFL6Pbp9UvHM=;
- b=8RGv708E31vt2d2JuAXjtINii0ZlMIcFpJA4UhzxKcT4R83TlDqC2QyLDV+ZFI3Qpsv66fo/J
- /ndG8Yo/44SAolhMeh6g32cHxm0sRZ9Q3TA6mqQS24au9n8K9zKJpzW
-X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
- pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR06MB6935:EE_|KL1PR0601MB5776:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8dcbf53e-6409-413b-3e5e-08ddb3cbcf0a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bnRZaUNBMm1hVnRwMVdmMkduaDRBSE5SYUVDN3VIWnAraUd3LzBTZThLMHdm?=
+ =?utf-8?B?VlJHc21NN0VIdzZtMXNTTUNqaU9MNEREaUREbFRORWhsUVd4MXNLcHhkcHlm?=
+ =?utf-8?B?T0xWL3hIS2hCZkI3ZmRVYXR5cTFsTzVFMGRoaWh2Wm5wdzMwb2MvREt3UDdm?=
+ =?utf-8?B?R0kzcTZKNjFlLzBRMkpaZ2ZMMlFjR0doRkNXbTlRMlN5WU9oV3VjSm1MTTUy?=
+ =?utf-8?B?UGpyMjNHSnlNN0pKMlRvZ3dYWFllSzBQR3JyUlI4R3JXaFlqdGJobHd5UzZp?=
+ =?utf-8?B?UmhISU1OWHYvTUsxaVcxbUNMOHJqazdXckNzY0phTDIveXFaYlFUa0FHek1L?=
+ =?utf-8?B?SWhXT0JtZ0tNTFhPN3dleDZOTnJZZTBVMCtPSXN0TzZ3bzJnSkcxeGhlQndR?=
+ =?utf-8?B?Unc0dHNWYk13RTRaL1oxZXFBWnJXWEh6VkVYZlkzTFQ0TXZVcWgwWUxzb3NG?=
+ =?utf-8?B?eVhGNWxZcWo2czhpYkZWdmpNU3U5MDZINFZXNjh5NEdkMnNsZTVmbHhKUHdN?=
+ =?utf-8?B?anlxdjAzdXlUTlYvbTVuL1FtYTkxYTJ2ZjNSQVp0ZVFDcXNXb09NYUIvZEp3?=
+ =?utf-8?B?eFpCandycHpwYW1UWEVqUk1MNUpWQm5rdmE3WncxWWcySkFYdFg2VUdJNU9y?=
+ =?utf-8?B?TVEzOWtIeFJsSE5BTEpYYXhBOXQxUURNcjljMVZaeFlhQzUvN2U2bHFwSVU1?=
+ =?utf-8?B?cXJnODY1MlUvc2RRMTdpZERRa0NGaVdNRW1kNEpqMklMZVVBMG1nUnpQbjEv?=
+ =?utf-8?B?N1FtV0U3K2xOWS8rSmUyWFpUU29Ya2lkMHV2VWdSdHhJVzk1UFp2c252Yisz?=
+ =?utf-8?B?TTZzTzVSRjd0MEdSYnRBUllqOFVzeEUvNy80V0hBTk5yNVk3czRIMzc4V0Y1?=
+ =?utf-8?B?UnQrck5BMXZwYVhsMWJGQnpoMmF1dFlvdjcrTUpRVTk0ZGtUcVgwa2tUV1FQ?=
+ =?utf-8?B?M2dHQ1dycG1mLzVuSkw5MGVNUVZ2aUpQbkEybms3eUQ5MzFMSHNzamlqUGJZ?=
+ =?utf-8?B?a21VZVhSNnRXa2JyWEEzMUZDSXIyNk5UcENPeXVpSnJHZzhUYTZxRFhlUnla?=
+ =?utf-8?B?K3dDV2xtbFJuRTYvNHAyUXVZRXVxb1pudnRKNWJsdStERVRCUW9maUU1YS9u?=
+ =?utf-8?B?c3lBQlJUYXp6a2tpclNiUktqdDZuVDQ2bVA3cUlsUzVGdk16OU9VaVc1d1pW?=
+ =?utf-8?B?V3c5TE1UNHN5ZnpKV0Mrb216Yi9Qb1RHRHdXM1hFVWpjdFpPK0t1QzF5Tjcr?=
+ =?utf-8?B?MUF0WGtkRVZGbUdFM2UvaUFyNXFqSkRPaHQ2NS91OEpzYTY4QTduNXVSUmY0?=
+ =?utf-8?B?c0x5QlBScEh4ZDZwYXlBbEtXS0plYWxGV0NZVmhmcWo2Z2Z1TFo0Qys3Y3lz?=
+ =?utf-8?B?YzVQK3F5dGFKdzhNUTRobURNdk0rRytQbXJyZVRRK0RkcHRBbkIydE9WUmdU?=
+ =?utf-8?B?UmpNV0ZObVdKbER4azBmUXZaSjcvNlZnaWZJNnIyREJFZ3BnT0s0UlZhTU4z?=
+ =?utf-8?B?VEo1aVlPUlRvc1A4Vi9aQ0IxSVZMaGJQWEx3b2p1ZmxMaitYYlBENEhXTFlp?=
+ =?utf-8?B?TzF4am5IalZYM21PN0NrelRUMk4xRVdFKzVYMHMxVXprRXVjOGRaMGlHbVk5?=
+ =?utf-8?B?TFBzZUVaeFVoWS9lS245K1FmNDNzdERjdGlhUFRSTk94L2NSRTVGdnhMNHp0?=
+ =?utf-8?B?WnV6eUR2RzlGdlNKcFhDSWhLMjRwRHlWa09NeVRES0I4Tm9tNTRTTHIvM1Az?=
+ =?utf-8?B?ZkIzRHVWdFc3L2ZreDdYSXkyaEp2QU5DRTFpT3dodlFLbTdPRXFWb0tjZ2c2?=
+ =?utf-8?B?eGVZY0ZHZ0FJcXJaVitDR1AyS1EyQy93UUNWdnBWWFprUElzaTlDRXdDcEti?=
+ =?utf-8?B?UW01eGdWcnJnVjRRWUlYNmNkTWRESHJ3RTZINGFZNzdVZFVza2ViM0dlZk81?=
+ =?utf-8?Q?iks0Xe8ap04=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB6935.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UWQ1cjRRS0FkU1hPY1haREx1U2tnWEt6S2RaMGdyaUk3dW5CVnd1cHYyYmVX?=
+ =?utf-8?B?NURxZU0vSnJnQ0FyRXR4dGxpZk4rRHhBdndvUWFySWZoMFc1MnBDTmNVdkpL?=
+ =?utf-8?B?bGllMnpMS216dXl6MVRGLzhhTy9CRmo3b2Qyc0tqNGRUMk5pbjhwQmJ5TUR0?=
+ =?utf-8?B?ajdqQnVnUDVqQTNiZHpya1ZTL0EvVDZkcmlFdWhUR0NBRm1pZVl6RThlNVBB?=
+ =?utf-8?B?MXR5bE1GRVZXcTg0NTVrSDcxNThCclMvVUY0ZG1nVEpxT1hYQkF0TC9OOW5N?=
+ =?utf-8?B?eXNQZDRNamduZjg4dkl3UXJjT2ZsemhKbXFIb3FXeGFMRXhzTWhmcllDVXB4?=
+ =?utf-8?B?bWFQL3NnTE1lMUlNcGxpZloxYnVEZ2pEVnBsUno4RnJQUmY2OGJqUUpvb2kx?=
+ =?utf-8?B?ZTJINXVQKzF2c2wwLzBoWDJ6akEwV2JlVlNjeG1ubDN5UlhNSWMvYUhYbE9P?=
+ =?utf-8?B?MTY2WGhTOFdoQjdBc0RkYVdsaHcyZUVqNkFqNmwvS2M2cU41Ync1MHlnS0JF?=
+ =?utf-8?B?dUNTKzVDZTFMMjVUbHFpajFBQy8rMmZnU1dvYXBYSmNXK05FZnljbnVVYS91?=
+ =?utf-8?B?L0pCRVg1ai9CTGVvWVRYay9EZjFqNnZldnpQN085c1lQcU1VaDlvdExSL1pX?=
+ =?utf-8?B?K21Ec2Job3Z5S1JEMXVBeEtidTZuMzhZNm9NOURMU09PT3kyZkhOUTBGZThy?=
+ =?utf-8?B?MDZqYittUlZIR1F3dnBXMkRuZDBPRlM0Y2lLYkhPT3VBU2ExKzk0ZlRjSVhE?=
+ =?utf-8?B?SHgraVdqNDU0UFp3c2NuR2FjSzhmODlxS2dOT3U5Y0FWQkxTeWNJTzNHb21i?=
+ =?utf-8?B?OXVoNXFEcEthUTg0WWpzWG1kMzBIVUs2L2JmOXo5RkVzZUd6NnNCcHQvSm1k?=
+ =?utf-8?B?Qzc4YlJUajU0cmEyck5XSlpJbTUxZGFHOE85WURaRmFUeTBTUXkxcis1bzNM?=
+ =?utf-8?B?UU9OS2F1WGJjSG10OEdQcUpPY0dLSFIxc2l5alZmZ0dETEFpL0Z1QzJkSTln?=
+ =?utf-8?B?T3MyMFJwcnVDTGQ5RUhEaGU3OXBmcnQ2QlBQVWpHOUQ3NjVJTFoxTHQxNnkx?=
+ =?utf-8?B?c2hDNUxlRXdjTkhIM3FRYk84Wi85RG1VMC9HTXNJSGFUR3VyYURsZnVyWUYx?=
+ =?utf-8?B?UHVxVHBiZGc4TER4S3dPaCsrT1h5UTBwTFgyTWdoTkRKalIxVXVMemJCV1Bi?=
+ =?utf-8?B?Rll0YWluaWJHRzFBWVdzZ1FQT1d1S0JUb2Q4Zkx3NEJ0Vis4YnVPMUZJTjdk?=
+ =?utf-8?B?OW5kWWlaYUhvd1ZwNStsSERBUUI5QUovaWZCb3FORHI4djBWKzdTR1MrMFZJ?=
+ =?utf-8?B?R09NMzBnWlp3bk1aejRnLy9Kcng4M1N0MXVRL0swdVIreUJ3c0J6Zi9PK0gw?=
+ =?utf-8?B?NXJCbmRBT2pEMCtrTnczY25zRmswTVB6USs2TExBbkgyeElxQWc1SE1OSng4?=
+ =?utf-8?B?bWlZa1FUbWNxTzNmUkU1L095aFM5cXY2bUZ4VXJob2pMVFBGMU9Nbm5mM3Rv?=
+ =?utf-8?B?bXZ0b2djK0l3WkpmQmtlRE5tYmoyK09wM1c4eU1aMm95YU5CcXg4Mk5rcEt6?=
+ =?utf-8?B?YTltQ3kwbkN2empzQmFxYjBib3ZlTzBrZjN4MEo4NnRvQmZHdUZGT1lqVzFW?=
+ =?utf-8?B?UFdjY0gxTXdHS1MrWUxIVGZnbEtvSXFNdXNUb2VFREdtdGVJaVdPNGV1YXk0?=
+ =?utf-8?B?bUt3M3VhVkdLdHpPdHRnZlR1c00vZ0tJZzlrZ2EvZlRvS1B1ajRYSVFmVTRq?=
+ =?utf-8?B?czhza1BjR2xjUTNGVzVyYWNxaEM0VzB0Uis2dzl2emxDWlFIM3ZaZHowQ3hB?=
+ =?utf-8?B?V0FkTDZIN1pCWTBvSno1Yjk5Q3pYeVdXeTNqelJPU0tqbjlVbFVMeVRGUzR3?=
+ =?utf-8?B?ZUo3a3FKdmp5b1ZYK0s3bHNKbE9yOGE0OGM2eDRMbVI0NWtEZ3krYnB0a3Vj?=
+ =?utf-8?B?K1ozamhHQnhJWndqZ25MWU53Yzl1L1hPQ1h1MUo3UG9wL3pwOXRBUml0cHU5?=
+ =?utf-8?B?UHZGdmJWbHA2MTM4aklnZHlaak1veUpKTzE0OU80R3dCOWFReXZ0M3g3Z3Vh?=
+ =?utf-8?B?YmFFOVJQMnN4WUlaZVdOQXZObDlzdEM4QWtZemtVWnBPYkN4RDZFRVBvekk5?=
+ =?utf-8?B?QjI2c1J3Q3NSZ1pZY25QZ2taMnhHQUdIWDcveVN6RTFCMlk0Q21wbHdkTmxn?=
+ =?utf-8?B?dWc9PQ==?=
+X-OriginatorOrg: linumiz.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dcbf53e-6409-413b-3e5e-08ddb3cbcf0a
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB6935.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 09:36:49.1684
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 808466aa-232a-41f4-ac23-289e3a6840d4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BnWhQiwWilaFuSIpSve9W77XZyGtlxf0o6rvvsW6Zb+megMg7I8ISlZHD/AKvufkUO+Hw5qkf6emyabWHduNPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0601MB5776
 
-Add a dts for the PMIC used e.g. with SM7635 devices.
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- arch/arm64/boot/dts/qcom/pmiv0104.dtsi | 63 ++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+On 6/25/25 2:16 PM, Paul Kocialkowski wrote:
+> Hi and thanks for your work!
+> 
+> On Fri 27 Dec 24, 16:37, Parthiban Nallathambi wrote:
+>> lvds, lcd, dsi all shares the same GPIO D bank and lvds0
+>> data 3 lines and lvds1 pins are missed, add them.
+> Would it also make sense to submit device-tree pin definitions here?
 
-diff --git a/arch/arm64/boot/dts/qcom/pmiv0104.dtsi b/arch/arm64/boot/dts/qcom/pmiv0104.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..04d929db76f409c49c47ef0147a3de568006973a
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/pmiv0104.dtsi
-@@ -0,0 +1,63 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2025, Luca Weiss <luca.weiss@fairphone.com>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/spmi/spmi.h>
-+
-+/ {
-+	thermal-zones {
-+		pmiv0104-thermal {
-+			polling-delay-passive = <100>;
-+
-+			thermal-sensors = <&pmiv0104_temp_alarm>;
-+
-+			trips {
-+				trip0 {
-+					temperature = <95000>;
-+					hysteresis = <0>;
-+					type = "passive";
-+				};
-+
-+				trip1 {
-+					temperature = <115000>;
-+					hysteresis = <0>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&spmi_bus {
-+	pmic@PMIV0104_SID {
-+		compatible = "qcom,pmiv0104", "qcom,spmi-pmic";
-+		reg = <PMIV0104_SID SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pmiv0104_temp_alarm: temp-alarm@a00 {
-+			compatible = "qcom,spmi-temp-alarm";
-+			reg = <0xa00>;
-+			interrupts = <PMIV0104_SID 0xa 0x0 IRQ_TYPE_EDGE_BOTH>;
-+			#thermal-sensor-cells = <0>;
-+		};
-+
-+		pmiv0104_gpios: gpio@8800 {
-+			compatible = "qcom,pmiv0104-gpio", "qcom,spmi-gpio";
-+			reg = <0x8800>;
-+			gpio-controller;
-+			gpio-ranges = <&pmiv0104_gpios 0 0 10>;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		pmiv0104_eusb2_repeater: phy@fd00 {
-+			compatible = "qcom,pmiv0104-eusb2-repeater";
-+			reg = <0xfd00>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+};
+this patch is already merged. 
+git show --stat cef4f1b5ba99a964cd6dd248bb373520573c972f
+commit cef4f1b5ba99a964cd6dd248bb373520573c972f
+Author: Parthiban Nallathambi <parthiban@linumiz.com>
+Date:   Fri Dec 27 16:37:57 2024 +0530
 
--- 
-2.50.0
+    pinctrl: sunxi: add missed lvds pins for a100/a133
+    
+    lvds, lcd, dsi all shares the same GPIO D bank and lvds0
+    data 3 lines and lvds1 pins are missed, add them.
+    
+    Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+    Link: https://lore.kernel.org/20241227-a133-display-support-v1-10-13b52f71fb14@linumiz.com
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+Do you mean the consumer/board devicetree changes?
+
+Thanks,
+Parthiban
+
+> 
+> Thanks!
+> 
+> Paul
 
 
