@@ -1,121 +1,109 @@
-Return-Path: <linux-gpio+bounces-22218-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22219-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0450DAE8DA7
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:01:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EB0EAE8DF7
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:08:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 263FD4A7D50
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 19:01:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF38A1C25407
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 19:09:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89FB02E9ED9;
-	Wed, 25 Jun 2025 18:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D512DAFB0;
+	Wed, 25 Jun 2025 19:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkirKdIu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyBBKXOw"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A022DECDA;
-	Wed, 25 Jun 2025 18:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129C915278E;
+	Wed, 25 Jun 2025 19:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877919; cv=none; b=jkFTPRm/GGj6ID8O+cy3eiauwpnrId4PBCBXZ/Q3h8Qt5hQO1KdZdkQSIzlNds5+0M4OsB7cgkJqDfN90KRAMmou6unZ8cWVBMFaGItoCLbjRIKZgUEYYAGPyQSsB9laM59aVU7OIZXgknCqPXUDWr/kcOHtb0SjY+CWXWHKfFk=
+	t=1750878227; cv=none; b=sFLm42lYeQn8krcRQYE0+paoGc6efJRQWdcIlbPl+FZV56F10v+yT7lwttIKGLlepEkp4ZBAr8lxjHsW3J6UIHq2Lni4EcqUSwSyCtoR6sCPdUQCm26OV0KLDZfyvGd6U09BXJG9WWqrLzD95hKIMX58Z9sEOmZJeoclmGa51XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877919; c=relaxed/simple;
-	bh=1F7cHi0zdFkUjQtQvOihS+a8sD0TCE1tJFcjKn/2wIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RyBEOFNGyX0f6VTqhQOhkNEBOynouRTWD3YlPdE0ZYrPSSWp1gjWFhGJbOK7GdBZHLcpclsdHJRlK730SystYq43WycF8bg5Q3Nvpu0NVnyMZddJXI1RX2Rks9ExU0WeVmW+3PbbbtIMGZF5ADCDP37juQf6gKSxoDtR7lIy4/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkirKdIu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73720C4CEF4;
-	Wed, 25 Jun 2025 18:58:36 +0000 (UTC)
+	s=arc-20240116; t=1750878227; c=relaxed/simple;
+	bh=klFBqqktO+5hBILMy1Yyqcdg/qsxpTv08B4SUmcvGX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lEHKy+ELb9tbI9dBHv9RRGOCCevZFpO3+fcAffYBHEA8f1KHMIA2EhIBUaTjNwKYkiKs7UsRmZ8d14ahK8gbOAWDFxiZV4YD6f/OCplYWHkzwYL7n2ezhdMDNpv9Xvh0XTNoEssAIQjWDgO0RCn4sHR+J9COpmnvCyyE630LbdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyBBKXOw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62EA9C4CEEA;
+	Wed, 25 Jun 2025 19:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750877918;
-	bh=1F7cHi0zdFkUjQtQvOihS+a8sD0TCE1tJFcjKn/2wIA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jkirKdIu7ZMIwfYhSJchhl36UCyPaf3xu7UtXWACXpg+9oW86ZrU73CDLIwtkh61s
-	 oPzUs+Ejol37osnL0mmT4n5WgTRVBZCLSPK6CNh+IOAEDaJnvRfzJZXzC9DFGB9loO
-	 B759nDbQbt3eQboy2obZ9dxkh9pC/U6/nqVUZgCvw/c8t3yDYFXz2kE/witvEptNb7
-	 wnSoJqRVd0xi4SUtkO5S7QMm884AYniM2YJHoalbcpMv0V3FW/N3xk/vXUuyzYjCAh
-	 Sq+/4MVz7l9rTL0niyg95mRkkHpj1GaMgvxyKvZTXkKtstiwTY9Pt/oP3eyTs8Ni+x
-	 WmoYR0WZ2ednQ==
-Message-ID: <817fec2c-a9c0-4cbf-9d7a-714a0f752eb3@kernel.org>
-Date: Wed, 25 Jun 2025 20:58:34 +0200
+	s=k20201202; t=1750878225;
+	bh=klFBqqktO+5hBILMy1Yyqcdg/qsxpTv08B4SUmcvGX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oyBBKXOwF3m96jrO7yH8LwgCWA5SYwBc31Yn+nPXckxzBV5pgCHczzrfvNf8a3f3X
+	 qw+QbmC6iZhYRqw+NXn3obFj6jUAD0HHRBF5ECGWdq3nGrHz7DofMuNemLsOT5pSEO
+	 ONA/lJe8G0ay+G95byCo06/DADOxeNMwDCR/Rt3FMyURI6oiwrkNExOKMA0LZA077P
+	 lb2Uew9edSNpcTwEW43v4aYb4QqsU7MBZ+tS6mTekTd474m0MvRYGYvE34nVzxQkUJ
+	 KwOlHWGPjPbvfgzuJStQvdykJqsz+5XZv/EcCfvAxC2cF67WPoAgk2DtdTyhq1Myxv
+	 YvsNFZEBSAoKw==
+Date: Wed, 25 Jun 2025 14:03:44 -0500
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 01/17] dt-bindings: firmware: google,gs101-acpm-ipc:
+ convert regulators to lowercase
+Message-ID: <20250625190344.GA2023865-robh@kernel.org>
+References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
+ <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
+ <20250611-robust-vehement-dog-2bf6ac@kuoka>
+ <013f55a0adf0b23e0836e33ee4ea0e1e7864a467.camel@linaro.org>
+ <1ada43bbb20b806975d6b0503e36a3b464287612.camel@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] gpiolib: acpi: Program debounce when finding GPIO
-To: Mario Limonciello <superm1@kernel.org>,
- Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250625181342.3175969-1-superm1@kernel.org>
- <20250625181342.3175969-3-superm1@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250625181342.3175969-3-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1ada43bbb20b806975d6b0503e36a3b464287612.camel@linaro.org>
 
-Hi,
-
-On 25-Jun-25 8:13 PM, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
+On Wed, Jun 25, 2025 at 04:05:34PM +0100, André Draszik wrote:
+> Hi Krzysztof,
 > 
-> When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
-> which will parse _CRS.
+> On Wed, 2025-06-11 at 10:08 +0100, André Draszik wrote:
+> > Hi Krzysztof,
+> > 
+> > On Wed, 2025-06-11 at 11:04 +0200, Krzysztof Kozlowski wrote:
+> > > On Fri, Jun 06, 2025 at 04:02:57PM GMT, André Draszik wrote:
+> > > > Using lowercase for the buck and ldo nodenames is preferred, as
+> > > > evidenced e.g. in [1].
+> > > > 
+> > > > Convert the example here to lowercase before we add any bindings
+> > > > describing the s2mpg1x regulators that will enforce the spelling.
+> > > > 
+> > > > Link: https://lore.kernel.org/all/20250223-mysterious-infrared-civet-e5bcbf@krzk-bin/ [1]
+> > > > Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > So this is also a dependency for the rest of the patches?
+> > 
+> > My thinking was that it makes sense to have it in context with
+> > the other patches, but it indeed could go stand-alone if that's the
+> > preference.
 > 
-> acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
-> gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
-> gpiod_get_index (drivers/gpio/gpiolib.c:4877)
-> 
-> The GPIO is setup basically, but the debounce information is discarded.
-> The platform will assert what debounce should be in _CRS, so program it
-> at the time it's available.
-> 
-> Cc: Hans de Goede <hansg@kernel.org>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Can you take just that patch as-is from this series (then it's at
+> least out of the way :-), or should I resend it separately?
 
-Thanks, patch looks good to me:
+No. If you take it out, then the rest of the series will have warnings.
 
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-Regards,
-
-Hans
-
-
-
-> ---
-> v2:
->  * Make non fatal by using helper from patch 1 (Andy)
-> ---
->  drivers/gpio/gpiolib-acpi-core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-> index 1895e45bd9f16..15222bfc25bb2 100644
-> --- a/drivers/gpio/gpiolib-acpi-core.c
-> +++ b/drivers/gpio/gpiolib-acpi-core.c
-> @@ -962,6 +962,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
->  
->  	acpi_gpio_update_gpiod_flags(dflags, &info);
->  	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
-> +	acpi_set_debounce_timeout(desc, info.debounce);
->  	return desc;
->  }
->  
-
+Rob
 
