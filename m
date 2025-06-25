@@ -1,91 +1,90 @@
-Return-Path: <linux-gpio+bounces-22221-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22222-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21A9DAE8DFE
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:09:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 829E0AE8E0E
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 21:10:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6A9217B092C
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 19:07:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3909165344
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 19:10:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F2CF2DFA4F;
-	Wed, 25 Jun 2025 19:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8342C285C9F;
+	Wed, 25 Jun 2025 19:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qjs7O3FQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/vTAuvU"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349C52DA752;
-	Wed, 25 Jun 2025 19:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360DB1F4CB2;
+	Wed, 25 Jun 2025 19:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750878254; cv=none; b=BIyNh4oZIMJ6gzKoZFdQrIfq5+2P1VFMMotavwgL8WW7IsolQ4mVDZkeZHIkHU7b6oSaujM8Oy5fCXdSPms0qEzJQbxciZGeIGkFoq+nFM1zjRFCyfMys7thHsmMqFjgE1OxL19T76J/tnq63WXg7l8B3Uv2M5fj/GasR9KDjHQ=
+	t=1750878520; cv=none; b=kZ0JRsmb8AaIxNsKsL5d2dGHvhUxv9WPxDoloOFs3FbOhybs8Mo0o+he+VzZUXleeEJxXtAYdj8zrqEbhf0FeD4DSZo7HDXwlqOn3q4jSNXrflCUhkCwdsBFxF+z7hJtCga8Y0zzBFr2prJ08jM+m12YnlceMEXvz+CJoKyPH/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750878254; c=relaxed/simple;
-	bh=LUWB9Eb61V9HjLpTF0w5obOuUqX387nmjakU4den64w=;
+	s=arc-20240116; t=1750878520; c=relaxed/simple;
+	bh=z1gAPx6OY/jnhOzLuEXFWO6EY4yZIbfg2MNyRqOx1gM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bi+R74CWArKPtCwkjDogqnmLGqHZMTXoxSHnJDAprKPMxSLIJP8MK5CRhGLyk2maYuSaTsErNlUvbHflY+sMYOFi4gwZ6yidZa9BuAkGGgOa6jMivdXf6khDmYtYTK7rL70hePhph0R+MFXHmIFJJipmvl1lC/UhY9h2h6OK+x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qjs7O3FQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9053BC4CEF0;
-	Wed, 25 Jun 2025 19:04:13 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=muptMqLdmy/b5iP94ILjkAXwnn6ku7GK32IjHbKHwCTdYZG6ay2e7L3GkU2Hov4eS0oVlwr/wd0eLqqo47oN26bcduZ8gxISwC/ZXXjObVyoL9ZWzklEePOzg2a+OeudnUpzTd9Zgo/yY2U4zFisU7nxKzsRmjSYZCkLXmV8j6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/vTAuvU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E8BC4CEEA;
+	Wed, 25 Jun 2025 19:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750878253;
-	bh=LUWB9Eb61V9HjLpTF0w5obOuUqX387nmjakU4den64w=;
+	s=k20201202; t=1750878519;
+	bh=z1gAPx6OY/jnhOzLuEXFWO6EY4yZIbfg2MNyRqOx1gM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qjs7O3FQiRGsi2y6To/++keHWR78/5TFsK6SYKyHHMYYxEJEeffMoT5pc4yiJU13a
-	 vKebR8SzlbO0utXZFDZOCOUf+GySf6+SD8dfYl5B+v7IWN9OpxfOTERw0cxn9u2uGf
-	 61wOjYwH11OYCjDBCn0oZYuVzSIAhD0HesvYW5aXA0n50iGpNzZyHUb/+GE9SxOtMI
-	 IT+xxR5x8hW9fRnQwp4pon/eayH+OLvliC9G58jFc/HSCUoMnmr6PMfqzrRMUnZWWA
-	 gbVPgWbfedsNIk2huEGJelVlaTl4TN49g99afx8x1UsLFenGj5SFN8Ptnk4EtKy+aT
-	 /xSa8d54PG1EQ==
-Date: Wed, 25 Jun 2025 14:04:12 -0500
+	b=T/vTAuvUGg/KVt0IJdr0wIXFd/t8bkhpVODu6rIOR28WRkw6V+0OGpCxlT3IMYRUq
+	 f7B90yIqOEG/rtEiW1chW8G/7nmsdLKZy8nYRR/tWIgNZKtIisfMgLWER+eMfBf5+H
+	 6fx04ngDGVbDlU0Ble9/LyyVU9MjFMIrUtWzNOpD5+M8OWiW+zsNAF2+alr5ZZhapN
+	 fHHbY7Ot3y0p9GocrEGPTvgxLk0CY7WJKirZ2PzHhTtsAXvz/Yj+aBLilEHpcabtxn
+	 XvZtVHXtaTHAjCZ/KlJlsZ7awvmfhn5Nbt5In4DVomA1EJUpPJaLtPoaajWQ7q4jZs
+	 kTdlJoEE+b+Qg==
+Date: Wed, 25 Jun 2025 14:08:38 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: devicetree@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, kernel-team@android.com,
-	linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
-	Will McVicker <willmcvicker@google.com>,
-	linux-samsung-soc@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 01/17] dt-bindings: firmware: google,gs101-acpm-ipc:
- convert regulators to lowercase
-Message-ID: <175087825207.2044005.6909193130559642909.robh@kernel.org>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
- <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>, imx@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] dt-bindings: pinctrl: convert nxp,lpc1850-scu.txt
+ to yaml format
+Message-ID: <175087851837.2053063.15257795513103591902.robh@kernel.org>
+References: <20250606160359.1356555-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
+In-Reply-To: <20250606160359.1356555-1-Frank.Li@nxp.com>
 
 
-On Fri, 06 Jun 2025 16:02:57 +0100, André Draszik wrote:
-> Using lowercase for the buck and ldo nodenames is preferred, as
-> evidenced e.g. in [1].
+On Fri, 06 Jun 2025 12:03:58 -0400, Frank Li wrote:
+> Convert nxp,lpc1850-scu.txt to yaml format.
 > 
-> Convert the example here to lowercase before we add any bindings
-> describing the s2mpg1x regulators that will enforce the spelling.
+> Additional changes:
+> - keep child name *_cfg to align legancy very old platform dts file.
+> - remove label in examples.
+> - just keep one examples.
 > 
-> Link: https://lore.kernel.org/all/20250223-mysterious-infrared-civet-e5bcbf@krzk-bin/ [1]
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> change in v2
+> - drop generic pin list at top description
+> - fix subject miss n at vendor prefix
+> ---
+>  .../bindings/pinctrl/nxp,lpc1850-scu.txt      | 71 -----------------
+>  .../bindings/pinctrl/nxp,lpc1850-scu.yaml     | 79 +++++++++++++++++++
+>  2 files changed, 79 insertions(+), 71 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,lpc1850-scu.yaml
 > 
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 
