@@ -1,201 +1,200 @@
-Return-Path: <linux-gpio+bounces-22196-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22197-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FAC5AE86CE
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 16:42:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C6D34AE8727
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 16:53:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55B453B881C
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 14:41:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F145C3BE099
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 14:53:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8B426980F;
-	Wed, 25 Jun 2025 14:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D022627E9;
+	Wed, 25 Jun 2025 14:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4qpNxN9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEVPBNft"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E040265CC5;
-	Wed, 25 Jun 2025 14:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D1F1D5165;
+	Wed, 25 Jun 2025 14:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750862513; cv=none; b=eLerz1bG8EWcGbxCFORLCBDYE5KCthVxaDQj+cMeHHgF0ovDEs/GCbfVkMvIgRlGiJNonpC5Fo07oNx4gAfXApUCD7n6SgmBfy09qtt/f/LrnZ8lx1beSampcH1srkUpPwW07hGekA7EFSN3cW0+CXQ4zgnk1M2w0GViLVyQPEo=
+	t=1750863209; cv=none; b=kU4zPKBm8njAFWmdB2XmLsZyVnDL64sEsZxyfZZONdNCOP+884WlIyUS1DpXY+2YdN7THbmsxabFVj3eV92/K/gQkJWEhZouk7iLCp+4zUPFt67K1Nta41DuogIXy/S7ZKTWN9ZOItIZczy6vWHo58kR5AMO9hykH0lxsokxsK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750862513; c=relaxed/simple;
-	bh=HbrmvPszGJbU3fqYSZC3uZA+lhL1yUXVrJ7I7BH6WzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uq46uw/zgf6U16w7W2CnL9LmWR+ow2I3h8JRosYKjZDp3KZP+x9d/hb0ImcO/gT75PdmhokKQ7j1Rk9WaBO5kOoR7uCapl5qzDEswf+ouway+7iE3hWcfvmm8s9I7tEBzvs0WhifMIzCnJr4EjYWPEDs+ScO3hstIDHLCmm6tZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4qpNxN9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C51C8C4CEEA;
-	Wed, 25 Jun 2025 14:41:51 +0000 (UTC)
+	s=arc-20240116; t=1750863209; c=relaxed/simple;
+	bh=IJe6mOkdno5hFkqOuZzP6lWj3MzgBpaudeFCugaeW5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAt1tjPIzZkIJoIYkr0k3ztq16seMjP5OlFLwx5w6umNWdUV9k5Ks5ogMJWUTHt8beFoObIk1koseH25F2THMP2hqTb2m0V2ukh0WTZvtrdgqs3nWzP068ylvqTKb0036VMZg2aN7V23ciQOH1RtEjaY1k/a7J2ClgAslOUnkqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEVPBNft; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ECC9C4CEEA;
+	Wed, 25 Jun 2025 14:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750862512;
-	bh=HbrmvPszGJbU3fqYSZC3uZA+lhL1yUXVrJ7I7BH6WzU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U4qpNxN9mwxN013tZBA8h7r1s9VJq3FJ7G2ai8w20AVX3ykxGMvtmcGxdfqoR5MUH
-	 r9s4T+apXI+sj2xJCuc/5qNCmg+yQIh/E4kip0bXpKayGRCBTjUuzHQP7MbJRnlRxm
-	 IDA4UQUMqcTbZb7yen9KpHXGj5G5Ie5/FuMu1eZUR886bef6YKlLA9XEcJ2yWfyqeT
-	 ziL2LdP2NN1fje9SfTsxdZyzoJ1QXTtzmOOZw18tW3yiEjdHIT29LdDPUNgh/ZJJ/t
-	 WC2T4ceETOPFMvpTGEIKnRTSsV1fwLFDHj39nZXB80+QLN4uVxlWVdMkDk1XMc+PWG
-	 CIJ1+4ELcv0SA==
-Message-ID: <625952d3-01e9-426e-9739-86fe5cdfeb35@kernel.org>
-Date: Wed, 25 Jun 2025 09:41:51 -0500
+	s=k20201202; t=1750863208;
+	bh=IJe6mOkdno5hFkqOuZzP6lWj3MzgBpaudeFCugaeW5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vEVPBNft67yFnyq10OuAhQPYNrznG7vdFztn5fo09zOvfI1ukOyexva0fcqBcgH1+
+	 Poc+Rb0Q5wYPAF/RBKgwIjSfT2BhCBTKF+H8lEqIVVYj1XhQ6eqImEr0zIkf9KMqw7
+	 wiDedspcBMpswvzBkjaXn7mWBDM8TOacEww3P7XsmLAiB3sIDsxxwTjSwKOjvnR7Q1
+	 1NxF/XUkzI+5ZbrxOPPItZejLHz6Wxesu97Cz+s5IctHQ6Mtt4IqKBjldDxRny3SM9
+	 0ysMFTmtKsCs2h7HEwnIh6QfiPwtGQI/kkcruqpQN+baPGTpL/7UmgHyPI+QBY9a7o
+	 2QdK6TZwf1GhQ==
+Date: Wed, 25 Jun 2025 15:53:21 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250625145321.GZ795775@google.com>
+References: <20250613131133.GR381401@google.com>
+ <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
+ <20250619115345.GL587864@google.com>
+ <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
+ <20250619152814.GK795775@google.com>
+ <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
+ <20250625090133.GP795775@google.com>
+ <CAOoeyxWoxC-n3JjjFe8Ruq_VydXk=jev=mopKfL5B7gsaSg=Ag@mail.gmail.com>
+ <20250625134634.GY795775@google.com>
+ <CAOoeyxVuu-kKoQa84mGOX=thAc0hnzQU8L=MnycoRRhzoZMnNw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
- buttons"
-To: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250624202211.1088738-1-superm1@kernel.org>
- <20250624202211.1088738-3-superm1@kernel.org>
- <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
- <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
- <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxVuu-kKoQa84mGOX=thAc0hnzQU8L=MnycoRRhzoZMnNw@mail.gmail.com>
 
-On 6/25/25 9:31 AM, Hans de Goede wrote:
-> Hi Mario,
+[...]
+
+> > > > > > In the code above you register 6 I2C devices.  Each device will be
+> > > > > > assigned a platform ID 0 through 5. The .probe() function in the I2C
+> > > > > > driver will be executed 6 times.  In each of those calls to .probe(),
+> > > > > > instead of pre-allocating a contiguous assignment of IDs here, you
+> > > > > > should be able to use IDA in .probe() to allocate those same device IDs
+> > > > > > 0 through 5.
+> > > > > >
+> > > > > > What am I missing here?
+> > > > > >
+> > > > >
+> > > > > You're absolutely right in the scenario where a single NCT6694 device
+> > > > > is present. However, I’m wondering how we should handle the case where
+> > > > > a second or even third NCT6694 device is bound to the same MFD driver.
+> > > > > In that situation, the sub-drivers using a static IDA will continue
+> > > > > allocating increasing IDs, rather than restarting from 0 for each
+> > > > > device. How should this be handled?
+> > > >
+> > > > I'd like to see the implementation of this before advising.
+> > > >
+> > > > In such a case, I assume there would be a differentiating factor between
+> > > > the two (or three) devices.  You would then use that to decide which IDA
+> > > > would need to be incremented.
+> > > >
+> > > > However, Greg is correct.  Hard-coding look-ups for userspace to use
+> > > > sounds like a terrible idea.
+> > > >
+> > >
+> > > I understand.
+> > > Do you think it would be better to pass the index via platform_data
+> > > and use PLATFORM_DEVID_AUTO together with mfd_add_hotplug_devices()
+> > > instead?
+> > > For example:
+> > > struct nct6694_platform_data {
+> > >     int index;
+> > > };
+> > >
+> > > static struct nct6694_platform_data i2c_data[] = {
+> > >     { .index = 0 }, { .index = 1 }, { .index = 2 }, { .index = 3 }, {
+> > > .index = 4 }, { .index = 5 },
+> > > };
+> > >
+> > > static const struct mfd_cell nct6694_devs[] = {
+> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[0], sizeof(struct
+> > > nct6694_platform_data), 0),
+> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[1], sizeof(struct
+> > > nct6694_platform_data), 0),
+> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[2], sizeof(struct
+> > > nct6694_platform_data), 0),
+> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[3], sizeof(struct
+> > > nct6694_platform_data), 0),
+> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[4], sizeof(struct
+> > > nct6694_platform_data), 0),
+> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[5], sizeof(struct
+> > > nct6694_platform_data), 0),
+> > > };
+> > > ...
+> > > mfd_add_hotplug_devices(dev, nct6694_devs, ARRAY_SIZE(nct6694_devs));
+> > > ...
+> >
+> > No, that's clearly way worse.  =:-)
+> >
+> > The clean-up that this provides is probably not worth all of this
+> > discussion.  I _still_ think this enumeration should be done in the
+> > driver.  But if you really can't make it work, I'll accept the .id
+> > patch.
+> >
 > 
-> On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
->> On 6/25/25 4:09 AM, Hans de Goede wrote:
->>> Hi Mario,
->>>
->>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
->>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
->>>> hardcoded all soc-button-array devices to use a 50ms debounce timeout
->>>> but this doesn't work on all hardware.  The hardware I have on hand
->>>> actually prescribes in the ASL that the timeout should be 0:
->>>>
->>>> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
->>>>            "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
->>>> {   // Pin list
->>>>       0x0000
->>>> }
->>>>
->>>> Let the GPIO core program the debounce instead of hardcoding it into a
->>>> driver.
->>>>
->>>> This reverts commit 5c4fa2a6da7fbc76290d1cb54a7e35633517a522.
->>>
->>> This is going to cause problems I'm afraid I just checked and
->>> based on randomly checking a few DSDTs of the tablets this driver
->>> is used on, it seems the DSDT always specifies a debounce timeout
->>> of 0 like your example above. And on many many devices using
->>> the soc_button_array driver debouncing is actually necessary.
->>
->> That's unfortunate to hear.
->>
->>>
->>> May I ask what problem you are seeing with the 50ms debounce timeout /
->>> what problem you are exactly trying to fix here ?
->>
->> The power button doesn't work to wake from suspend.  I bisected it down to your commit and then later traced that debounce from the ASL never gets set (pinctrl-amd's amd_gpio_set_debounce() is never called).
+> Okay, I would like to ask for your advice regarding the implementation of IDA.
 > 
-> Ok, so specifically the gpiod_set_debounce() call with 50 ms
-> done by gpio_keys.c is the problem I guess?
-
-Yep.
-
+> Using a global IDA in the sub-driver like this:
+> (in i2c-nct6694.c)
+> static DEFINE_IDA(nct6694_i2c_ida);
 > 
-> So amd_gpio_set_debounce() does accept the 50 ms debounce
-> passed to it by gpio_keys.c as a valid value and then setting
-> that breaks the wake from suspend?
-
-That's right.
-
-Here is what /sys/kernel/debug/gpio has for the bad case (no patches):
-
-  gpio     int|active|trigger|S0i3| S3|S4/S5| Z|wake|pull|  orient| 
-  debounce|reg
-#0        😛|     b|   edge|    |   |     |⏰|    |  ↑ |input  ↑|b (🕑 
-046875us)|0x8151ce3
-
-And then for the good case (these two patches):
-
-  gpio     int|active|trigger|S0i3| S3|S4/S5| Z|wake|pull|  orient| 
-  debounce|reg
-#0        😛|     b|   edge|    |   |     |⏰|    |  ↑ |input  ↑| 
-       |0x8151c00
-
-
+> static int nct6694_i2c_probe(struct platform_device *pdev)
+> {
+>     ida_alloc(&nct6694_i2c_ida, GFP_KERNEL);
+>     ...
+> }
 > 
->> Also comparing the GPIO register in Windows (where things work) Windows never programs a debounce.
+> causes IDs to be globally incremented across all devices. For example,
+> the first NCT6694 device gets probed 6 times and receives IDs 0–5, but
+> when a second NCT6694 device is added, it receives IDs starting from
+> 6, rather than starting again from 0. This makes per-device ID mapping
+> unreliable.
 > 
-> So maybe the windows ACPI0011 driver always uses a software-
-> debounce for the buttons? Windows not debouncing the mechanical
-> switches at all seems unlikely.
+> To solve this, I believe the right approach is to have each NCT6694
+> instance maintain its own IDA, managed by the MFD driver's private
+> data. As mentioned earlier, for example:
+> (in nct6694.c)
+> struct nct6694 {
+>     struct device *dev;
+>     struct ida i2c_ida;
+> };
 > 
-> I think the best way to fix this might be to add a no-hw-debounce
-> flag to the data passed from soc_button_array.c to gpio_keys.c
-> and have gpio_keys.c not call gpiod_set_debounce()  when the
-> no-hw-debounce flag is set.
+> static int nct6694_probe(struct platform_device *pdev)
+> {
+>     ...
+>     ida_init(&nct6694->i2c_ida);
+>     ...
+> }
 > 
-> I've checked and both on Bay Trail and Cherry Trail devices
-> where soc_button_array is used a lot hw-debouncing is already
-> unused. pinctrl-baytrail.c does not accept 50 ms as a valid
-> value and pinctrl-cherryview.c does not support hw debounce
-> at all.
-
-That sounds a like a generally good direction to me.
-
-I think I would still like to see the ASL values translated into the 
-hardware even if the ASL has a "0" value.
-So I would keep patch 1 but adjust for the warning you guys both called out.
-
-As you have this hardware would you be able to work out that quirk?
-
-Or if you want me to do it, I'll need something to go on how to how to 
-effectively detect BYT and CYT hardware.
-
+> (in i2c-nct6694.c)
+> static int nct6694_i2c_probe(struct platform_device *pdev)
+> {
+>     id = ida_alloc(&nct6694->i2c_ida, GFP_KERNEL);
+> }
 > 
->> So that's where both patches in this series came from.
->>
->>>
->>> drivers/input/keyboard/gpio_keys.c first will call gpiod_set_debounce()
->>> it self with the 50 ms provided by soc_button_array and if that does
->>> not work it will fall back to software debouncing. So I don't see how
->>> the 50 ms debounce can cause problems, other then maybe making
->>> really really (impossible?) fast double-clicks register as a single
->>> click .
->>>
->>> These buttons (e.g. volume up/down) are almost always simply mechanical
->>> switches and these definitely will need debouncing, the 0 value from
->>> the DSDT is plainly just wrong. There is no such thing as a not bouncing
->>> mechanical switch.
->>
->> On one of these tablets can you check the GPIO in Windows to see if it's using any debounce?
-> 
-> I'm afraid I don't have Windows installed on any of these.
-> 
-> But based on your testing + the DSDT specifying no debounce
-> for the GPIO I guess Windows just follows the DSDt when it
-> comes to setting up the hw debounce-settings and then uses
-> sw-debouncing on top to actually avoid very quick
-> press-release-press event cycles caused by the bouncing.
-> 
+> This way, each device allocates IDs independently, and each set of
+> I2C/GPIO instances gets predictable IDs starting from 0 per device. I
+> think this resolves the original issue without relying on hardcoded
+> platform IDs.
+> Please let me know if this implementation aligns with what you had in mind.
 
-Yeah that sounds like a plausible hypothesis.
+This sounds like an acceptable way forward.
 
-
+-- 
+Lee Jones [李琼斯]
 
