@@ -1,333 +1,353 @@
-Return-Path: <linux-gpio+bounces-22180-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22181-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0447EAE8062
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 12:56:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 65A14AE8224
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 13:57:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A75804A50DC
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 10:56:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 305881647ED
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 11:56:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA0DA2D4B47;
-	Wed, 25 Jun 2025 10:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA2C325F998;
+	Wed, 25 Jun 2025 11:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuvgTef4"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="x9ey9EOE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2882D2389;
-	Wed, 25 Jun 2025 10:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C70E25D8FB
+	for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 11:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848878; cv=none; b=tQ9P5I9SnWGeNp2GAaejB+mTMf/X3VxA9ZuUUKFXXk1xyYIjfghvOsZs/5bL34B7FCdtIuGtoe7SHJbE0X1sMIm5lDKX4bRx2ysY8IvpVyv0SBkDFCxTFhBIp7icDdD4CzwIAScfzkUA7zMwN3O/BTslKlc6bkH/P+25uBRl0zI=
+	t=1750852446; cv=none; b=q1vQlpWSXjfPgi5Qc/z67pJSnaRuWeCICtEeKKxSgo5roVp1oq2sHOfSSb/K8p8dN93B/GDUOMU+9ol0azmhV5l5U8NY2fZdV6+7ruNmlQqiOuCF0Su+XOui+P15ul367FTClhOdBKicXdtvVp43ty3B1joYfX4Vb44UQFGjboo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848878; c=relaxed/simple;
-	bh=1pw+uqroMWF349QulkbaV2L+xoGUQiIDrgQhwjrbgLU=;
+	s=arc-20240116; t=1750852446; c=relaxed/simple;
+	bh=KhjX0z/51Fw3l+Xei6RSm8mmvRTHdgxdtyEdZ0C+96o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S6DVZ1tgLPatQ9bmvdRHVOAsyUykXc9I/29LzoUHWA7lPG4crMqXQNupyOHxTlB8SWzMaTQcOpYlaCEEmpueJMb2dcN42x6ssmnHZgh+dxrxhRG3uMF4BG1iWZx2NqX4tTCY9lPR4qBaWIC5DIalE+gXul/qy1xit94LRZLNyE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KuvgTef4; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso5606420276.2;
-        Wed, 25 Jun 2025 03:54:36 -0700 (PDT)
+	 To:Cc:Content-Type; b=dnNtpw8tjCcugfu5CDm2L2AQl9NEaSWvs3o39vcvgxbISlOy6m6IH5bh5EyfrRvbsiJSqWn0RqpivF5/0n3ngGSEFZXOwzTunn7Oc95wNVotqlj/7ZRb5O0rWAlviMqtv3+3GeRckHD6AgF1kGFYYjZuiV+MzrhVtWLxi3Z2xPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=x9ey9EOE; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553dceb342fso1310913e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jun 2025 04:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750848875; x=1751453675; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750852443; x=1751457243; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cilMFj2BlrrsofpUWF0eRD8610fy8kvLozLNgBSSemY=;
-        b=KuvgTef4Sem4pyBuzeuGbV+ddyxuQOWsDiMlUbXu0HUcQdy7OG+B9YuRDLn0pcH8bf
-         J+OQE+Jqsgkp4UQOD7xVN1eUFqMDQgu/ta1Cjr1vhdtZ5oli3CXf11+OLSM+bSYFTNoI
-         4hUAMLRHVYWHKWjyjzuF67esK7aq75b3hOXYwnIftGlTC/ATj01nUoOhCXHRRClcXzuj
-         oIKzAWLmoWA3E/R6Aju9NE6WpyzVtBi26Zw4l6QvCw+CTGFxCksyEJlbF+/YZ98ljJ7w
-         VR+fXv0nYXJqkFptBOcpSygc+ObtkqDPt2cHZlnmAZPVPNJK4jIsHOulO5xRuJExsXRi
-         qvKA==
+        bh=BjmCX0VZd6PcKfJiZ+sWk0vCJKxEzzMlbheiZOncprA=;
+        b=x9ey9EOEKPSc6si0NmjpDEogROldI/ReqUrke4YFpkrGwKmVvq9mzW29mN6QMP43VI
+         CATd4MCmoqBDUdchAdWwIQj+EcmWG1Brj+b19lqnYLHPAsXcr2arvANBSAXhJcFHx15J
+         szurGdjO0FDKaMv4+W/WIXKMTMTo7jWel9Wk2kBTp8EsfpCuOzxsuQoLXBS17m2sYiFv
+         UfTzSl/Jv43J6N9OtnzJKNP3YbmdwR9f7Sw8lFUhBlga+1wxA/Y66Y3rCI3vDm0DaqjK
+         icZuhfYUjHrPMnyD9GS7N51vYJ2KSo2F/Ok/mXL9UELms0s6hD9hJLyLFLWLdGh3Hn6k
+         aUyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750848875; x=1751453675;
+        d=1e100.net; s=20230601; t=1750852443; x=1751457243;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cilMFj2BlrrsofpUWF0eRD8610fy8kvLozLNgBSSemY=;
-        b=mrKDqHIVdVkR1FkbLM3+r3YyEsLzm7t0WcIzq3YQUiro34Pcwtc8kjTcYhQm5Wv/Sl
-         uQtrhadkf4Qtf/ZX34S2htkniE4tBBFUZQJTbFjMY8usovId7t3BKRETvG7gh5ztPKPN
-         LcF+yMcLzrnljCT0+MBCgyOPGNUocLhc5IP5SvQRwbhECW3/33QjAYJ3Ozi070zKP3KX
-         z+Z6YvOVY4pFdgZknvbrp+43qBrYRlTgIbt/B2npj7vGSEO/lrMfBHBEEWBLy1fjVIce
-         wk0YdTg49Q0UCavfRDHGInp1G0jqXfMB0spnUbWD2CktMNCfMXsLuJpPM5MAZ/J0EK1K
-         w7cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBHJ85O+xBvW6pu0EaTOOu0LeuVZuJHtrOeNu43R2eXKhQnl8RG2db+rrS0csM71NAmoDyi6/Qg+Nv@vger.kernel.org, AJvYcCVBvi1OEgetd9M/VsgcBBYVrZNCJYomCOc2QnJJiyJEoy7lbhB00wt83R/MY8xCfhkn2lxJfeSZm9k=@vger.kernel.org, AJvYcCVKsHjuf3Z8ZzdqV/EW2npVJGbn2Cnmd9JaNhmksHM0cpz4jN2lScn2Y0kJA0JWmlP/quJtz6vGCrp4BfN6xEw=@vger.kernel.org, AJvYcCWdSu82R3PJ0L1TAPIaYqKeHI2DG/8D+Jh81jCgB07grxXzA6JdzZT80aoRZmDUq/XJaSWSQlgBHHmh@vger.kernel.org, AJvYcCX1cUepK3vR5s+CCUTk1H8hQHO2ffqh9eBOAiLGO2D94K1YJn9pKEOTPUUtUyWTAmXhL/Q3yQGXzFcH/YQ=@vger.kernel.org, AJvYcCXc6fPhNXDlCgYaHuq+5xWuOLH8GEHT0D5xHZZlkbMY0J8oMfIhKRXS/Sz2UbN4YGB7hsXWknGVtm1GMA==@vger.kernel.org, AJvYcCXfjJnLQCos9DuPaQY/YUAHQaACR2hDK8lG8X8TQopkmXaFBWcLKUTb/nGPw7XjQCvWI90Jek5exmnn@vger.kernel.org, AJvYcCXhlGAlMvYy6+r9lSEqT0gNNqw0wYGidkJv6qE5CtMxOS9uTSE8JTrv1NT9kTEAtFxNfq/PXVZv@vger.kernel.org, AJvYcCXihyNHvvrBHw59ROpM7XLn3/0YGIiBng8igjW4NHONyaiTbo02vN4Wo0C7iTMY3/WPMU/jI8PxImWk2wXD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWrtGAwjcIWGMqVnCysk3Twd6Ljgq0dudpCSmfE31rfyTKL8R/
-	TIq2EMKnNP0PHieep4ERASw7d+nxQ5weHau86YWTTFXVxktV/jixkEo0fMciPy50j0zGjHiPvrU
-	waFrG2IaUXznyPMj4A9SLD0AWM8FaSBs=
-X-Gm-Gg: ASbGncvkLqNfuPrPaDIoquE4xF72u35Cjqtvwwx01zHy8p3wiprykwkOKUbLRpeU0GE
-	x5eFoEFx5Qf0Q/YnHJUaQXC8c/+Ktsb9EnnBQJsyGnfOsOVUcrxbbypbAfIH1/Gdz4R09t7a7cc
-	0Zo+Hoi9/uFz1jwTHI2Bk4utfbv2njMkgWWUQ+U2mu7uauHjehnZN39orJ0S5qruKJoXw4ZkmAA
-	XDh8A==
-X-Google-Smtp-Source: AGHT+IEu+R//w0LIcJJxZLM8KxbNtqpVsxRk+v2CqE6RW+SjfC+UBYI6SfhQaDEj74VCCVaHizUOSlRb/0YomJcnvOo=
-X-Received: by 2002:a05:690c:6384:b0:709:197d:5d3c with SMTP id
- 00721157ae682-71406cd24f9mr36191427b3.11.1750848875500; Wed, 25 Jun 2025
- 03:54:35 -0700 (PDT)
+        bh=BjmCX0VZd6PcKfJiZ+sWk0vCJKxEzzMlbheiZOncprA=;
+        b=GDa6JKatzgZRs2PWOzOlg03imMxYTBPT5JkwkK4he9ULu61OxphTxS5VgdYoXYA5nM
+         cuLBbh0WrrDc7uQstFM+qTvy4QQI3oMqNh3anwGsAhJ8MkoNKTe+wYvq9MqqQQ2ej854
+         1yM1t7CZ5aX0DwwLUipv4e+yYO47ItKD++Bxwbeoak2Be5enSZP5/gcZH2Ri33R6M3EP
+         KBWMfQm1xOwbSDnx5ypHfBuuvI64SATo3xVmsXu113a/u/QvssHALhVqWAidQDby8/hf
+         zSb559s/MPbke47k91wlkg3cdqzRZ7m+JQHs5zXkFc9Lrp0WSBDJkh6ng2A59Nw66DbT
+         hykw==
+X-Gm-Message-State: AOJu0Yz3vmO9vMzjlfsmSftEltiq7D7L87ce31QiEd9wN5+890EUnKDZ
+	jKJ9vpScKIYLJu6cHPwBHJkVq/NMKNszm0sRYcTlTFkGVX886z2VurdylrVfmL1SsIgISlncZWn
+	tefLonC3TwsaKh7m0yaxNUt6UWbc+w0cemW96ur18KA+WZfxniPSJxyA=
+X-Gm-Gg: ASbGncsvbslLnanZOExOkQRLGbX8IfJlRfppDNQry1rSvNRK/6PYtcqwZ9XiyXKiAxX
+	zFiYusEHWvMOZEwRpWCou8PTB3aTYAu6CHsZA04lb85cdcCvCXZt/BL/aW/dG4CzLw9LE7FroVP
+	PnEFbz5OVTSsoT/ZCO0CF45zxxvWdI+d6iINquGhSvTLqSw21kUTmQRpDHKwJhkCe/0KB5fAeci
+	6lI7t6L5kFGJw==
+X-Google-Smtp-Source: AGHT+IG7vJ6YkF8QoC86ukAvRHZZSW1pd7N0dFNcJmYfYNXgLyGFwTscyXL7CfcB+VIo/tRZI5deZqZrhh6EwIWpdDY=
+X-Received: by 2002:a05:6512:10c6:b0:54e:81ec:2c83 with SMTP id
+ 2adb3069b0e04-554fdd1922bmr791851e87.18.1750852442530; Wed, 25 Jun 2025
+ 04:54:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612140041.GF381401@google.com> <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
- <20250612152313.GP381401@google.com> <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
- <20250613131133.GR381401@google.com> <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
- <20250619115345.GL587864@google.com> <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
- <20250619152814.GK795775@google.com> <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
- <20250625090133.GP795775@google.com>
-In-Reply-To: <20250625090133.GP795775@google.com>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Wed, 25 Jun 2025 18:54:20 +0800
-X-Gm-Features: Ac12FXyG2HoWaId__CawR23MZ8rb9Qa6uz_UMfhCNFjrCMpzymOvuItjHHgDfoE
-Message-ID: <CAOoeyxWoxC-n3JjjFe8Ruq_VydXk=jev=mopKfL5B7gsaSg=Ag@mail.gmail.com>
-Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
-To: Lee Jones <lee@kernel.org>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Ming Yu <tmyu0@nuvoton.com>
+References: <20250617204402.33656-1-mariagarcia7293@gmail.com> <20250617204402.33656-3-mariagarcia7293@gmail.com>
+In-Reply-To: <20250617204402.33656-3-mariagarcia7293@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 25 Jun 2025 13:53:51 +0200
+X-Gm-Features: Ac12FXz26V1TlzuQHhzVNzW3ioRsrkP7zJrftKmu_1mlzVnvngnceRHvxPQKwoc
+Message-ID: <CAMRc=Mftput7DO+nmOA0yMcB0SvtsDf5U25ukkMVuOnV4XfX=g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: pca953x: Add support for TI TCA6418
+To: Maria Garcia <mariagarcia7293@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maria Garcia <mgarcia@qblox.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Dear Greg and Lee,
+On Tue, Jun 17, 2025 at 10:44=E2=80=AFPM Maria Garcia <mariagarcia7293@gmai=
+l.com> wrote:
+>
+> The TI TCA6418 is a 18-channel I2C I/O expander. It is slightly
+> different to other models from the same family, such as TCA6416,
+> but has enough in common with them to make it work with just a
+> few tweaks, which are explained in the code's documentation.
+>
+> Signed-off-by: Maria Garcia <mariagarcia7293@gmail.com>
+> ---
 
-Thank you for your comments.
-I've reviewed your suggestions, but would appreciate your feedback on
-a few remaining points.
+Thanks, looks good overall. Just a few nits below.
 
-Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8825=E6=97=A5 =E9=
-=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=885:01=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On Fri, 20 Jun 2025, Ming Yu wrote:
+> +/* Helper function to get the correct bit mask for a given offset and ch=
+ip type.
+> + * The TCA6418's input, output, and direction banks have a peculiar bit =
+order:
+> + * the first byte uses reversed bit order, while the second byte uses st=
+andard order.
+> + */
+> +static inline u8 pca953x_get_bit_mask(struct pca953x_chip *chip, unsigne=
+d int offset)
+> +{
+> +       unsigned int bit_pos_in_bank =3D offset % BANK_SZ;
+> +       int msb =3D BANK_SZ - 1;
+> +
+> +       if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE && offse=
+t <=3D msb)
+> +               return BIT(msb - bit_pos_in_bank);
+> +       else
+> +               return BIT(bit_pos_in_bank);
+
+No need for else.
+
+>  static bool pca953x_readable_register(struct device *dev, unsigned int r=
+eg)
+>  {
+>         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
+> @@ -362,6 +407,9 @@ static bool pca953x_readable_register(struct device *=
+dev, unsigned int reg)
+>                 bank =3D PCA957x_BANK_INPUT | PCA957x_BANK_OUTPUT |
+>                        PCA957x_BANK_POLARITY | PCA957x_BANK_CONFIG |
+>                        PCA957x_BANK_BUSHOLD;
+> +       } else if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE) =
+{
+> +               /* BIT(0) to indicate read access */
+> +               return tca6418_check_register(chip, reg, BIT(0));
+>         } else {
+>                 bank =3D PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
+>                        PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
+> @@ -384,6 +432,9 @@ static bool pca953x_writeable_register(struct device =
+*dev, unsigned int reg)
+>         if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA957X_TYPE) {
+>                 bank =3D PCA957x_BANK_OUTPUT | PCA957x_BANK_POLARITY |
+>                         PCA957x_BANK_CONFIG | PCA957x_BANK_BUSHOLD;
+> +       } else if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE) =
+{
+> +               /* BIT(1) for write access */
+> +               return tca6418_check_register(chip, reg, BIT(1));
+>         } else {
+>                 bank =3D PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
+>                         PCA953x_BANK_CONFIG;
+
+Can you convert these to a switch statement for better readability? I
+have a slight preference for cases over ifelserry.
+
+> @@ -403,6 +454,9 @@ static bool pca953x_volatile_register(struct device *=
+dev, unsigned int reg)
 >
-> > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8819=E6=97=A5=
- =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:28=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > On Thu, 19 Jun 2025, Ming Yu wrote:
-> > >
-> > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8819=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:53=E5=AF=AB=E9=81=93=EF=BC=9A
-> > > > >
-> > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > > >
-> > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8813=
-=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=889:11=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > > > > > >
-> > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > > > > >
-> > > > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=
-=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:23=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> > > > > > > > >
-> > > > > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
-> > > > > > > > >
-> > > > > > > > > > Dear Lee,
-> > > > > > > > > >
-> > > > > > > > > > Thank you for reviewing,
-> > > > > > > > > >
-> > > > > > > > > > Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=
-=9C=8812=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:00=E5=AF=AB=E9=81=
-=93=EF=BC=9A
-> > > > > > > > > > >
-> > > > > > > > > > ...
-> > > > > > > > > > > > +static const struct mfd_cell nct6694_devs[] =3D {
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 0),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 1),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 2),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 3),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 4),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 5),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 6),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 7),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 8),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 9),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 10),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 11),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 12),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 13),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 14),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0,=
- 15),
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, =
-0),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, =
-1),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, =
-2),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, =
-3),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, =
-4),
-> > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, =
-5),
-> > > > > > > > > > >
-> > > > > > > > > > > Why have we gone back to this silly numbering scheme?
-> > > > > > > > > > >
-> > > > > > > > > > > What happened to using IDA in the child driver?
-> > > > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > In a previous version, I tried to maintain a static IDA=
- in each
-> > > > > > > > > > sub-driver. However, I didn=E2=80=99t consider the case=
- where multiple NCT6694
-> > > > > > > > > > devices are bound to the same driver =E2=80=94 in that =
-case, the IDs are not
-> > > > > > > > > > fixed and become unusable for my purpose.
-> > > > > > > > >
-> > > > > > > > > Not sure I understand.
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > As far as I know, if I maintain the IDA in the sub-drivers =
-and use
-> > > > > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, =
-the first
-> > > > > > > > NCT6694 device bound to the GPIO driver will receive IDs 0~=
-15.
-> > > > > > > > However, when a second NCT6694 device is connected to the s=
-ystem, it
-> > > > > > > > will receive IDs 16~31.
-> > > > > > > > Because of this behavior, I switched back to using platform=
-_device->id.
-> > > > > > >
-> > > > > > > Each of the devices will probe once.
-> > > > > > >
-> > > > > > > The first one will be given 0, the second will be given 1, et=
-c.
-> > > > > > >
-> > > > > > > Why would you give multiple IDs to a single device bound to a=
- driver?
-> > > > > > >
-> > > > > >
-> > > > > > The device exposes multiple peripherals =E2=80=94 16 GPIO contr=
-ollers, 6 I2C
-> > > > > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each per=
-ipheral
-> > > > > > is independently addressable, has its own register region, and =
-can
-> > > > > > operate in isolation. The IDs are used to distinguish between t=
-hese
-> > > > > > instances.
-> > > > > > For example, the GPIO driver will be probed 16 times, allocatin=
-g 16
-> > > > > > separate gpio_chip instances to control 8 GPIO lines each.
-> > > > > >
-> > > > > > If another device binds to this driver, it is expected to expos=
-e
-> > > > > > peripherals with the same structure and behavior.
-> > > > >
-> > > > > I still don't see why having a per-device IDA wouldn't render eac=
-h
-> > > > > probed device with its own ID.  Just as you have above.
-> > > > >
-> > > >
-> > > > For example, when the MFD driver and the I2C sub-driver are loaded,
-> > > > connecting the first NCT6694 USB device to the system results in 6
-> > > > nct6694-i2c platform devices being created and bound to the
-> > > > i2c-nct6694 driver. These devices receive IDs 0 through 5 via the I=
-DA.
-> > > >
-> > > > However, when a second NCT6694 USB device is connected, its
-> > > > corresponding nct6694-i2c platform devices receive IDs 6 through 11=
- =E2=80=94
-> > > > instead of 0 through 5 as I originally expected.
-> > > >
-> > > > If I've misunderstood something, please feel free to correct me. Th=
-ank you!
-> > >
-> > > In the code above you register 6 I2C devices.  Each device will be
-> > > assigned a platform ID 0 through 5. The .probe() function in the I2C
-> > > driver will be executed 6 times.  In each of those calls to .probe(),
-> > > instead of pre-allocating a contiguous assignment of IDs here, you
-> > > should be able to use IDA in .probe() to allocate those same device I=
-Ds
-> > > 0 through 5.
-> > >
-> > > What am I missing here?
-> > >
-> >
-> > You're absolutely right in the scenario where a single NCT6694 device
-> > is present. However, I=E2=80=99m wondering how we should handle the cas=
-e where
-> > a second or even third NCT6694 device is bound to the same MFD driver.
-> > In that situation, the sub-drivers using a static IDA will continue
-> > allocating increasing IDs, rather than restarting from 0 for each
-> > device. How should this be handled?
+>         if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA957X_TYPE)
+>                 bank =3D PCA957x_BANK_INPUT;
+> +       else if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE)
+> +               /* BIT(2) for volatile access */
+> +               return tca6418_check_register(chip, reg, BIT(2));
+>         else
+>                 bank =3D PCA953x_BANK_INPUT;
 >
-> I'd like to see the implementation of this before advising.
+> @@ -489,6 +543,15 @@ static u8 pcal6534_recalc_addr(struct pca953x_chip *=
+chip, int reg, int off)
+>         return pinctrl + addr + (off / BANK_SZ);
+>  }
 >
-> In such a case, I assume there would be a differentiating factor between
-> the two (or three) devices.  You would then use that to decide which IDA
-> would need to be incremented.
+> +static u8 tca6418_recalc_addr(struct pca953x_chip *chip, int reg_base, i=
+nt offset)
+> +{
+> +       /* reg_base will be TCA6418_INPUT, TCA6418_OUTPUT, or TCA6418_DIR=
+ECTION
+> +        * offset is the global GPIO line offset (0-17)
+> +        * BANK_SZ is 8 for TCA6418 (8 bits per register bank)
+> +        */
+
+Please use regular kernel comments, not the networking style.
+
+> +       return reg_base + (offset / BANK_SZ);
+> +}
+> +
+>  static int pca953x_write_regs(struct pca953x_chip *chip, int reg, unsign=
+ed long *val)
+>  {
+>         u8 regaddr =3D chip->recalc_addr(chip, reg, 0);
+> @@ -529,11 +592,14 @@ static int pca953x_gpio_direction_input(struct gpio=
+_chip *gc, unsigned off)
+>  {
+>         struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+>         u8 dirreg =3D chip->recalc_addr(chip, chip->regs->direction, off)=
+;
+> -       u8 bit =3D BIT(off % BANK_SZ);
+> +       u8 bit =3D pca953x_get_bit_mask(chip, off);
 >
-> However, Greg is correct.  Hard-coding look-ups for userspace to use
-> sounds like a terrible idea.
+>         guard(mutex)(&chip->i2c_lock);
+>
+> -       return regmap_write_bits(chip->regmap, dirreg, bit, bit);
+> +       if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE)
+> +               return regmap_write_bits(chip->regmap, dirreg, bit, 0);
+> +       else
+> +               return regmap_write_bits(chip->regmap, dirreg, bit, bit);
+>  }
 >
 
-I understand.
-Do you think it would be better to pass the index via platform_data
-and use PLATFORM_DEVID_AUTO together with mfd_add_hotplug_devices()
-instead?
-For example:
-struct nct6694_platform_data {
-    int index;
-};
+No need for else.
 
-static struct nct6694_platform_data i2c_data[] =3D {
-    { .index =3D 0 }, { .index =3D 1 }, { .index =3D 2 }, { .index =3D 3 },=
+>  static int pca953x_gpio_direction_output(struct gpio_chip *gc,
+> @@ -542,7 +608,7 @@ static int pca953x_gpio_direction_output(struct gpio_=
+chip *gc,
+>         struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+>         u8 dirreg =3D chip->recalc_addr(chip, chip->regs->direction, off)=
+;
+>         u8 outreg =3D chip->recalc_addr(chip, chip->regs->output, off);
+> -       u8 bit =3D BIT(off % BANK_SZ);
+> +       u8 bit =3D pca953x_get_bit_mask(chip, off);
+>         int ret;
+>
+>         guard(mutex)(&chip->i2c_lock);
+> @@ -552,15 +618,20 @@ static int pca953x_gpio_direction_output(struct gpi=
+o_chip *gc,
+>         if (ret)
+>                 return ret;
+>
+> -       /* then direction */
+> -       return regmap_write_bits(chip->regmap, dirreg, bit, 0);
+> +       /* then direction
+> +        * (in/out logic is inverted on TCA6418)
+> +        */
+> +       if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE)
+> +               return regmap_write_bits(chip->regmap, dirreg, bit, bit);
+> +       else
+> +               return regmap_write_bits(chip->regmap, dirreg, bit, 0);
+>  }
+
+Same here.
+
+>
+>  static int pca953x_gpio_get_value(struct gpio_chip *gc, unsigned off)
+>  {
+>         struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+>         u8 inreg =3D chip->recalc_addr(chip, chip->regs->input, off);
+> -       u8 bit =3D BIT(off % BANK_SZ);
+> +       u8 bit =3D pca953x_get_bit_mask(chip, off);
+>         u32 reg_val;
+>         int ret;
+>
+> @@ -577,7 +648,7 @@ static int pca953x_gpio_set_value(struct gpio_chip *g=
+c, unsigned int off,
+>  {
+>         struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+>         u8 outreg =3D chip->recalc_addr(chip, chip->regs->output, off);
+> -       u8 bit =3D BIT(off % BANK_SZ);
+> +       u8 bit =3D pca953x_get_bit_mask(chip, off);
+>
+>         guard(mutex)(&chip->i2c_lock);
+>
+> @@ -588,7 +659,7 @@ static int pca953x_gpio_get_direction(struct gpio_chi=
+p *gc, unsigned off)
+>  {
+>         struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+>         u8 dirreg =3D chip->recalc_addr(chip, chip->regs->direction, off)=
+;
+> -       u8 bit =3D BIT(off % BANK_SZ);
+> +       u8 bit =3D pca953x_get_bit_mask(chip, off);
+>         u32 reg_val;
+>         int ret;
+>
+> @@ -597,10 +668,17 @@ static int pca953x_gpio_get_direction(struct gpio_c=
+hip *gc, unsigned off)
+>         if (ret < 0)
+>                 return ret;
+>
+> -       if (reg_val & bit)
+> +       /* (in/out logic is inverted on TCA6418) */
+> +       if (reg_val & bit) {
+> +               if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE)
+> +                       return GPIO_LINE_DIRECTION_OUT;
+> +               else
+> +                       return GPIO_LINE_DIRECTION_IN;
+
+Same here.
+
+> +       }
+> +       if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE)
+>                 return GPIO_LINE_DIRECTION_IN;
+> -
+> -       return GPIO_LINE_DIRECTION_OUT;
+> +       else
+> +               return GPIO_LINE_DIRECTION_OUT;
+
+
+And here.
+
+>  }
+>
+>  static int pca953x_gpio_get_multiple(struct gpio_chip *gc,
+> @@ -1120,6 +1198,11 @@ static int pca953x_probe(struct i2c_client *client=
+)
+>         if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCAL653X_TYPE) {
+>                 chip->recalc_addr =3D pcal6534_recalc_addr;
+>                 chip->check_reg =3D pcal6534_check_register;
+> +       }  else if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE)=
  {
-.index =3D 4 }, { .index =3D 5 },
-};
+> +               chip->recalc_addr =3D tca6418_recalc_addr;
+> +               /* We don't assign chip->check_reg =3D tca6418_check_regi=
+ster directly here.
+> +                * Instead, the wrappers handle the dispatch based on PCA=
+_CHIP_TYPE.
+> +                */
+>         } else {
+>                 chip->recalc_addr =3D pca953x_recalc_addr;
+>                 chip->check_reg =3D pca953x_check_register;
+> @@ -1157,6 +1240,8 @@ static int pca953x_probe(struct i2c_client *client)
+>         if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA957X_TYPE) {
+>                 chip->regs =3D &pca957x_regs;
+>                 ret =3D device_pca957x_init(chip);
+> +       } else if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE) =
+{
+> +               chip->regs =3D &tca6418_regs;
+>         } else {
 
-static const struct mfd_cell nct6694_devs[] =3D {
-    MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[0], sizeof(struct
-nct6694_platform_data), 0),
-    MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[1], sizeof(struct
-nct6694_platform_data), 0),
-    MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[2], sizeof(struct
-nct6694_platform_data), 0),
-    MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[3], sizeof(struct
-nct6694_platform_data), 0),
-    MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[4], sizeof(struct
-nct6694_platform_data), 0),
-    MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[5], sizeof(struct
-nct6694_platform_data), 0),
-};
-...
-mfd_add_hotplug_devices(dev, nct6694_devs, ARRAY_SIZE(nct6694_devs));
-...
+Same thing about if-elses.
 
-Thank you again for your support.
+>                 chip->regs =3D &pca953x_regs;
+>                 ret =3D device_pca95xx_init(chip);
+> @@ -1325,6 +1410,7 @@ static const struct of_device_id pca953x_dt_ids[] =
+=3D {
+>         { .compatible =3D "ti,pca9536", .data =3D OF_953X( 4, 0), },
+>         { .compatible =3D "ti,tca6408", .data =3D OF_953X( 8, PCA_INT), }=
+,
+>         { .compatible =3D "ti,tca6416", .data =3D OF_953X(16, PCA_INT), }=
+,
+> +       { .compatible =3D "ti,tca6418", .data =3D (void *)(18 | TCA6418_T=
+YPE | PCA_INT), },
+>         { .compatible =3D "ti,tca6424", .data =3D OF_953X(24, PCA_INT), }=
+,
+>         { .compatible =3D "ti,tca9535", .data =3D OF_953X(16, PCA_INT), }=
+,
+>         { .compatible =3D "ti,tca9538", .data =3D OF_953X( 8, PCA_INT), }=
+,
+> --
+> 2.43.0
+>
 
-
-Best regards,
-Ming
+Bartosz
 
