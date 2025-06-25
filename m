@@ -1,262 +1,161 @@
-Return-Path: <linux-gpio+bounces-22190-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22191-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA063AE8517
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 15:46:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77FD4AE85CC
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 16:10:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4124D3B4B44
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 13:46:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F03731BC051D
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jun 2025 14:09:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C61122638B5;
-	Wed, 25 Jun 2025 13:46:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE6EE265288;
+	Wed, 25 Jun 2025 14:09:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+3JNYzO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ikIPi8cU"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C50A45945;
-	Wed, 25 Jun 2025 13:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718B13074B2;
+	Wed, 25 Jun 2025 14:09:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750859202; cv=none; b=OVnW02cAhuwqbAGqVJGjAgmqklIfRniiRIiZmShk4fy9NMLuuA9oKrJ5Q5ypfDn/4VayswwvQTxwd04x5WyN2E0npBmlKRjfSkfSqTakwo3T3Lgx7p7ygmn8k4nZeQokFPwgM4JnY9RQCvVkPz0h0T3gp0C6BDSFJjG/84gXdJc=
+	t=1750860577; cv=none; b=BCbKiOVfVT1mQrS26aD+Ezx2eOHlJhrt54e3UoweDZ0Jl6RG5lqiehGmdAFtHmB7G3sHLWcCFR5unyX1QPdVyxi42tQrNEg0PAJCx7JPnU2D1zaK20DrwcAcamDo1L6oixFKj/G+D0IWmDriqYzMKowoM2P4ID3vrhPvwjqtxhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750859202; c=relaxed/simple;
-	bh=5LIJn4O8qODMP1/vpG3/SgOca2iqWuGuWartE1ccmzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ajd9b1UK9/MZDrbCK9Ul/ugRJ3HCoEAdUhkK5/AGTf+ZRj6UK0BiAKwSogZmcpqJVZwzISzIYMtQMwgUhv/LTdF0I/9ymigdLWO7Qj4ytNTsfi3kFqwvr5lml1ThkJyLnXlfen5M3PEXMy1540ayxBFF+Pq4rdCRijg8iiiHDaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+3JNYzO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D485C4CEEE;
-	Wed, 25 Jun 2025 13:46:37 +0000 (UTC)
+	s=arc-20240116; t=1750860577; c=relaxed/simple;
+	bh=mKmabAIo8Fb88oFDDtzqpED5rlh6TYCDvirbbBC1noU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UMo0vbncQksdlWieqF8T0XPSNZPT43dWvG4eWMHZGmUZyJuc7VtmUAZj5r8GcWtJt6bHyFSghhr7pbkxonPTGPPFeBd6Y9Eid1F5Qjc5WXzQYcrI0mVSsIw07lJ5flB4N+tNWHHnGv9y2lJKp6Pqx1ssV/Pz1p66a+hnlnIve1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ikIPi8cU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A0E1C4CEEA;
+	Wed, 25 Jun 2025 14:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750859201;
-	bh=5LIJn4O8qODMP1/vpG3/SgOca2iqWuGuWartE1ccmzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K+3JNYzOjCYi1nJqRGNeJ+GYeKa+QCZj5XNdvjrSHde40k5RvXWCP9r1EamwvFAVq
-	 CagkinWZgVffasyujf9WB9B4zxNbWFWCma1qO/Ea7x5RVSOFfjgirEEWXjtRJoH5YO
-	 QyMoqO6I8Zojo6MbEI4AreXpGFQO74uuabxwaQHk+YdD/48YP7UqSLeHtowdVuK540
-	 RxL77KWUrF+BWuqS0WIXZ1psUi2Iy9r7cFOr+4EpyO/oDwsCO2p5x9tV+O5QEhjmHI
-	 ymk/1iz7E9CbukplTbdHKFj5afvGqZoRqWzQgTB6FlzcRt2Q2giStUXJuj3qvznPPT
-	 /H5LtbHZfECBQ==
-Date: Wed, 25 Jun 2025 14:46:34 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
-	linux@roeck-us.net, jdelvare@suse.com,
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org, netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
-	Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20250625134634.GY795775@google.com>
-References: <20250612152313.GP381401@google.com>
- <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
- <20250613131133.GR381401@google.com>
- <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
- <20250619115345.GL587864@google.com>
- <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
- <20250619152814.GK795775@google.com>
- <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
- <20250625090133.GP795775@google.com>
- <CAOoeyxWoxC-n3JjjFe8Ruq_VydXk=jev=mopKfL5B7gsaSg=Ag@mail.gmail.com>
+	s=k20201202; t=1750860576;
+	bh=mKmabAIo8Fb88oFDDtzqpED5rlh6TYCDvirbbBC1noU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ikIPi8cU1y28w0Q0boFWDBnZ7Q66EBU8Jrs/z58KjVcd0wXNfEaS1l+nO6OjlPBkW
+	 3UNYbKb8l6urSqohhLJf/LD1fy+MA1h7TU6d+MA/00usOcv7+uyK+LWFo5U6x4Jm+A
+	 q7QbEz4Ss/b8IGu8DOjzaMs6uio9dsJ76VEBibUfufC3Dqqb+q9039NaALhPlJbaAg
+	 8RjLX5lk3jY17LZFgCinIjgyY3y79CiU9CJgFKaciq9JieEupd996VLvrYppFLTdpr
+	 Dp81d76OW9iIIGHVY917h4y6PU/hBi45WIvHdF7P9upx37wqY0w+vLhtDZcs1SMO+e
+	 zaQflR4c/EZFA==
+Message-ID: <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+Date: Wed, 25 Jun 2025 09:09:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOoeyxWoxC-n3JjjFe8Ruq_VydXk=jev=mopKfL5B7gsaSg=Ag@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
+ buttons"
+To: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250624202211.1088738-1-superm1@kernel.org>
+ <20250624202211.1088738-3-superm1@kernel.org>
+ <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 25 Jun 2025, Ming Yu wrote:
+On 6/25/25 4:09 AM, Hans de Goede wrote:
+> Hi Mario,
+> 
+> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+>> hardcoded all soc-button-array devices to use a 50ms debounce timeout
+>> but this doesn't work on all hardware.  The hardware I have on hand
+>> actually prescribes in the ASL that the timeout should be 0:
+>>
+>> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
+>>           "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+>> {   // Pin list
+>>      0x0000
+>> }
+>>
+>> Let the GPIO core program the debounce instead of hardcoding it into a
+>> driver.
+>>
+>> This reverts commit 5c4fa2a6da7fbc76290d1cb54a7e35633517a522.
+> 
+> This is going to cause problems I'm afraid I just checked and
+> based on randomly checking a few DSDTs of the tablets this driver
+> is used on, it seems the DSDT always specifies a debounce timeout
+> of 0 like your example above. And on many many devices using
+> the soc_button_array driver debouncing is actually necessary.
 
-> Dear Greg and Lee,
-> 
-> Thank you for your comments.
-> I've reviewed your suggestions, but would appreciate your feedback on
-> a few remaining points.
-> 
-> Lee Jones <lee@kernel.org> 於 2025年6月25日 週三 下午5:01寫道：
-> >
-> > On Fri, 20 Jun 2025, Ming Yu wrote:
-> >
-> > > Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午11:28寫道：
-> > > >
-> > > > On Thu, 19 Jun 2025, Ming Yu wrote:
-> > > >
-> > > > > Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午7:53寫道：
-> > > > > >
-> > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > > > >
-> > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月13日 週五 下午9:11寫道：
-> > > > > > > >
-> > > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
-> > > > > > > >
-> > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
-> > > > > > > > > >
-> > > > > > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
-> > > > > > > > > >
-> > > > > > > > > > > Dear Lee,
-> > > > > > > > > > >
-> > > > > > > > > > > Thank you for reviewing,
-> > > > > > > > > > >
-> > > > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
-> > > > > > > > > > > >
-> > > > > > > > > > > ...
-> > > > > > > > > > > > > +static const struct mfd_cell nct6694_devs[] = {
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
-> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
-> > > > > > > > > > > >
-> > > > > > > > > > > > Why have we gone back to this silly numbering scheme?
-> > > > > > > > > > > >
-> > > > > > > > > > > > What happened to using IDA in the child driver?
-> > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > In a previous version, I tried to maintain a static IDA in each
-> > > > > > > > > > > sub-driver. However, I didn’t consider the case where multiple NCT6694
-> > > > > > > > > > > devices are bound to the same driver — in that case, the IDs are not
-> > > > > > > > > > > fixed and become unusable for my purpose.
-> > > > > > > > > >
-> > > > > > > > > > Not sure I understand.
-> > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > As far as I know, if I maintain the IDA in the sub-drivers and use
-> > > > > > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
-> > > > > > > > > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
-> > > > > > > > > However, when a second NCT6694 device is connected to the system, it
-> > > > > > > > > will receive IDs 16~31.
-> > > > > > > > > Because of this behavior, I switched back to using platform_device->id.
-> > > > > > > >
-> > > > > > > > Each of the devices will probe once.
-> > > > > > > >
-> > > > > > > > The first one will be given 0, the second will be given 1, etc.
-> > > > > > > >
-> > > > > > > > Why would you give multiple IDs to a single device bound to a driver?
-> > > > > > > >
-> > > > > > >
-> > > > > > > The device exposes multiple peripherals — 16 GPIO controllers, 6 I2C
-> > > > > > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
-> > > > > > > is independently addressable, has its own register region, and can
-> > > > > > > operate in isolation. The IDs are used to distinguish between these
-> > > > > > > instances.
-> > > > > > > For example, the GPIO driver will be probed 16 times, allocating 16
-> > > > > > > separate gpio_chip instances to control 8 GPIO lines each.
-> > > > > > >
-> > > > > > > If another device binds to this driver, it is expected to expose
-> > > > > > > peripherals with the same structure and behavior.
-> > > > > >
-> > > > > > I still don't see why having a per-device IDA wouldn't render each
-> > > > > > probed device with its own ID.  Just as you have above.
-> > > > > >
-> > > > >
-> > > > > For example, when the MFD driver and the I2C sub-driver are loaded,
-> > > > > connecting the first NCT6694 USB device to the system results in 6
-> > > > > nct6694-i2c platform devices being created and bound to the
-> > > > > i2c-nct6694 driver. These devices receive IDs 0 through 5 via the IDA.
-> > > > >
-> > > > > However, when a second NCT6694 USB device is connected, its
-> > > > > corresponding nct6694-i2c platform devices receive IDs 6 through 11 —
-> > > > > instead of 0 through 5 as I originally expected.
-> > > > >
-> > > > > If I've misunderstood something, please feel free to correct me. Thank you!
-> > > >
-> > > > In the code above you register 6 I2C devices.  Each device will be
-> > > > assigned a platform ID 0 through 5. The .probe() function in the I2C
-> > > > driver will be executed 6 times.  In each of those calls to .probe(),
-> > > > instead of pre-allocating a contiguous assignment of IDs here, you
-> > > > should be able to use IDA in .probe() to allocate those same device IDs
-> > > > 0 through 5.
-> > > >
-> > > > What am I missing here?
-> > > >
-> > >
-> > > You're absolutely right in the scenario where a single NCT6694 device
-> > > is present. However, I’m wondering how we should handle the case where
-> > > a second or even third NCT6694 device is bound to the same MFD driver.
-> > > In that situation, the sub-drivers using a static IDA will continue
-> > > allocating increasing IDs, rather than restarting from 0 for each
-> > > device. How should this be handled?
-> >
-> > I'd like to see the implementation of this before advising.
-> >
-> > In such a case, I assume there would be a differentiating factor between
-> > the two (or three) devices.  You would then use that to decide which IDA
-> > would need to be incremented.
-> >
-> > However, Greg is correct.  Hard-coding look-ups for userspace to use
-> > sounds like a terrible idea.
-> >
-> 
-> I understand.
-> Do you think it would be better to pass the index via platform_data
-> and use PLATFORM_DEVID_AUTO together with mfd_add_hotplug_devices()
-> instead?
-> For example:
-> struct nct6694_platform_data {
->     int index;
-> };
-> 
-> static struct nct6694_platform_data i2c_data[] = {
->     { .index = 0 }, { .index = 1 }, { .index = 2 }, { .index = 3 }, {
-> .index = 4 }, { .index = 5 },
-> };
-> 
-> static const struct mfd_cell nct6694_devs[] = {
->     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[0], sizeof(struct
-> nct6694_platform_data), 0),
->     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[1], sizeof(struct
-> nct6694_platform_data), 0),
->     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[2], sizeof(struct
-> nct6694_platform_data), 0),
->     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[3], sizeof(struct
-> nct6694_platform_data), 0),
->     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[4], sizeof(struct
-> nct6694_platform_data), 0),
->     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[5], sizeof(struct
-> nct6694_platform_data), 0),
-> };
-> ...
-> mfd_add_hotplug_devices(dev, nct6694_devs, ARRAY_SIZE(nct6694_devs));
-> ...
+That's unfortunate to hear.
 
-No, that's clearly way worse.  =:-)
+> 
+> May I ask what problem you are seeing with the 50ms debounce timeout /
+> what problem you are exactly trying to fix here ?
 
-The clean-up that this provides is probably not worth all of this
-discussion.  I _still_ think this enumeration should be done in the
-driver.  But if you really can't make it work, I'll accept the .id
-patch.
+The power button doesn't work to wake from suspend.  I bisected it down 
+to your commit and then later traced that debounce from the ASL never 
+gets set (pinctrl-amd's amd_gpio_set_debounce() is never called).
 
--- 
-Lee Jones [李琼斯]
+Also comparing the GPIO register in Windows (where things work) Windows 
+never programs a debounce.
+
+So that's where both patches in this series came from.
+
+> 
+> drivers/input/keyboard/gpio_keys.c first will call gpiod_set_debounce()
+> it self with the 50 ms provided by soc_button_array and if that does
+> not work it will fall back to software debouncing. So I don't see how
+> the 50 ms debounce can cause problems, other then maybe making
+> really really (impossible?) fast double-clicks register as a single
+> click .
+> 
+> These buttons (e.g. volume up/down) are almost always simply mechanical
+> switches and these definitely will need debouncing, the 0 value from
+> the DSDT is plainly just wrong. There is no such thing as a not bouncing
+> mechanical switch.
+
+On one of these tablets can you check the GPIO in Windows to see if it's 
+using any debounce?
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+>>
+>> Cc: Hans de Goede <hansg@kernel.org>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   drivers/input/misc/soc_button_array.c | 2 --
+>>   1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+>> index b8cad415c62ca..99490df42b6f2 100644
+>> --- a/drivers/input/misc/soc_button_array.c
+>> +++ b/drivers/input/misc/soc_button_array.c
+>> @@ -219,8 +219,6 @@ soc_button_device_create(struct platform_device *pdev,
+>>   		gpio_keys[n_buttons].active_low = info->active_low;
+>>   		gpio_keys[n_buttons].desc = info->name;
+>>   		gpio_keys[n_buttons].wakeup = info->wakeup;
+>> -		/* These devices often use cheap buttons, use 50 ms debounce */
+>> -		gpio_keys[n_buttons].debounce_interval = 50;
+>>   		n_buttons++;
+>>   	}
+>>   
+> 
+
 
