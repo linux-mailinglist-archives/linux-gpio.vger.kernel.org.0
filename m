@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22290-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22291-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34375AEA5F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 20:58:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B386AAEA608
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 21:04:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF9703B7D33
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 18:57:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F06714A45BA
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 19:04:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18232EF2B6;
-	Thu, 26 Jun 2025 18:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACF82EF64E;
+	Thu, 26 Jun 2025 19:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5fzGcgT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqSDtkhG"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579E925DCFD;
-	Thu, 26 Jun 2025 18:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7C221348;
+	Thu, 26 Jun 2025 19:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750964296; cv=none; b=O4TweabDThDBIs4VjoSPqU3WJB0ODdG7F3cEUg8vcGqqX/BwQgfzlDsDvI7r1UPlc+squ4JTsGRvdMJH290lLNNh/zkRLWSiWcOLZCAgdNuokdvrFu4doUvdUnYg1q4oI/oe/RIE66ldbluYbAmATVY3f88zB3QEzryGE+pBTxA=
+	t=1750964668; cv=none; b=KRV5boHeJOz2/KeXAlZfrrabF+MOIS5EPZwSpBOJY3XmbgEkTgYFmhono+G+AmSsnMA2lJ6JFTodW6Og1fGHG4ToMy6wI4rM14AP5LqfIGpleF1dDBJmdSt8wzrAXLobTIROwlYwUwrr1H46HfxX8l8FH4KghVWZb4xWbZiAKHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750964296; c=relaxed/simple;
-	bh=VuGdCO3UIva2y3pUx7i14W0KejS0P5aGUDN2EygFrdU=;
+	s=arc-20240116; t=1750964668; c=relaxed/simple;
+	bh=7vHHdrXzQ7Nq0GaMQuRAdKCCIVuoi375BU2LqyZQ+8E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d6bWqfZbXPffNp81VTYViEaBm6A2qTUyoV7YwCIjiAzxASXyE97Ny+1z60aAuTlxmDcuAZj1CHc6xkSswsW8+QLY9Coty9/Z3KrCBoX8iJ9oiq99Mafy93m9Hd5STATSYSlloT21RyFKKAb5E+daX6nhloWb7m17jbxigH/8HRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5fzGcgT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48D7C4CEEB;
-	Thu, 26 Jun 2025 18:58:14 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=s8odBerVC5pKxdIlfWSOdR9d58BI8hXVofhpuk9iglxOoNeBHmCbESObiKOVUX4wCChyFuXI3mt15mXGaabZfl9JxyllV/hdgJtJTmxVl+ahvzUTbMBp+WSFb9NGho0+nBYCnC9R1PJhlIwqhT7YxJFL4PhV6ltC8R1cCp/tAAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqSDtkhG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F63C4CEEB;
+	Thu, 26 Jun 2025 19:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750964296;
-	bh=VuGdCO3UIva2y3pUx7i14W0KejS0P5aGUDN2EygFrdU=;
+	s=k20201202; t=1750964668;
+	bh=7vHHdrXzQ7Nq0GaMQuRAdKCCIVuoi375BU2LqyZQ+8E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U5fzGcgToOg1k6OP+Kk7KkJRXM1qcE0oFZaU7eOl7gfCRVqMAZHYvgwTMBU+5+CMY
-	 1FpBjjP+ZmPzO465fbgJtv7Yy2kvPRLMsjVReQ9VaeQxSyfggthbkNQW0+sLXz2liq
-	 xqC26eaLDzPGH5NJWY3kfJ2QqNyjjJ2/J+sipJU2Sgz1Pg9b8hMiJXbX+JXYQ7CYG1
-	 HS3k86UNlXONgQpm35x1FIDbqPtwuCnt8SzH70Ew9a9dca+00EBVQzAwnlLo8uUR/K
-	 nFdA/K/SQ3qVl1Qcbg4apnZuBD9KSa50OlfZbpOZTlxmWkz3vaaQsXdoVkEYV3czvZ
-	 0fFP0Enr+O1YQ==
-Message-ID: <6b51c18a-c8e9-40c4-8a6b-07f2af1cb531@kernel.org>
-Date: Thu, 26 Jun 2025 13:58:14 -0500
+	b=lqSDtkhGBuEq2GekOnGgZlLlnGRLkmF3udg7t1+zDnLVRErsaF9TIChW7Tr7Unt4A
+	 q0G4p3WK+L4oLU2yjLfe2pDR2zufPq4SciPWQHpQzGBzMjhSiyvXoTrMt9Xh2J4uBi
+	 QmccO6nVhT1Azdehhaht9B+r6teR/3hPL+8Nxar3xP6vbqGgJGSaEVjrCoYGXaAt0X
+	 ukE+509EziFej/A8E0b4UZ+Y0CdlhOuQUm6jXQhpdi+BTfKYXVEtjHGO+X0VqTjXRj
+	 0hxqkPn94pPR6OYqwaHWy7s6if8DLJMfaRdlyhsVmMbayf0enW1/ebPbspYdZJnn+n
+	 9Ikh9LYUKEfsw==
+Message-ID: <06ad432d-e138-4457-8180-bc35f08feed6@kernel.org>
+Date: Thu, 26 Jun 2025 21:04:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,8 +52,9 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 3/3] Input: soc_button_array: Only debounce cherryview
  and baytrail systems
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Mario Limonciello <superm1@kernel.org>
+Cc: Mika Westerberg <westeri@kernel.org>,
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
  Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
  <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
@@ -70,13 +71,15 @@ References: <20250625181342.3175969-1-superm1@kernel.org>
  <du46jt3mmkvceestjadbqmxbztp5xcurg4pzwzmqavo3pnfmak@tcfnufcu6de5>
  <55b4cd56-1812-4048-bf16-4b5b94a842d7@kernel.org>
  <vmjnwfg2mqr2anugefjtzezimcep27gi64d4wsctiu476w73rl@oo6r4o33jk44>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
 In-Reply-To: <vmjnwfg2mqr2anugefjtzezimcep27gi64d4wsctiu476w73rl@oo6r4o33jk44>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 6/26/2025 1:53 PM, Dmitry Torokhov wrote:
+Hi Dmitry,
+
+On 26-Jun-25 20:53, Dmitry Torokhov wrote:
 > On Thu, Jun 26, 2025 at 01:30:15PM -0500, Mario Limonciello wrote:
 >> On 6/26/2025 1:27 PM, Dmitry Torokhov wrote:
 >>> On Wed, Jun 25, 2025 at 03:34:07PM -0500, Mario Limonciello wrote:
@@ -96,9 +99,9 @@ On 6/26/2025 1:53 PM, Dmitry Torokhov wrote:
 >>>>>>>> actually prescribes in the ASL that the timeout should be 0:
 >>>>>>>>
 >>>>>>>> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
->>>>>>>>              "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+>>>>>>>>             "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
 >>>>>>>> {   // Pin list
->>>>>>>>         0x0000
+>>>>>>>>        0x0000
 >>>>>>>> }
 >>>>>>>>
 >>>>>>>> Many cherryview and baytrail systems don't have accurate values in the
@@ -133,8 +136,8 @@ On 6/26/2025 1:53 PM, Dmitry Torokhov wrote:
 >>>>>>> --- a/drivers/input/keyboard/gpio_keys.c
 >>>>>>> +++ b/drivers/input/keyboard/gpio_keys.c
 >>>>>>> @@ -552,8 +552,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->>>>>>>              bool active_low = gpiod_is_active_low(bdata->gpiod);
->>>>>>>                if (button->debounce_interval) {
+>>>>>>>             bool active_low = gpiod_is_active_low(bdata->gpiod);
+>>>>>>>               if (button->debounce_interval) {
 >>>>>>> -            error = gpiod_set_debounce(bdata->gpiod,
 >>>>>>> -                    button->debounce_interval * 1000);
 >>>>>>> +            if (ddata->pdata->no_hw_debounce)
@@ -142,9 +145,9 @@ On 6/26/2025 1:53 PM, Dmitry Torokhov wrote:
 >>>>>>> +            else
 >>>>>>> +                error = gpiod_set_debounce(bdata->gpiod,
 >>>>>>> +                        button->debounce_interval * 1000);
->>>>>>>                  /* use timer if gpiolib doesn't provide debounce */
->>>>>>>                  if (error < 0)
->>>>>>>                      bdata->software_debounce =
+>>>>>>>                 /* use timer if gpiolib doesn't provide debounce */
+>>>>>>>                 if (error < 0)
+>>>>>>>                     bdata->software_debounce =
 >>>>>>>
 >>>>>>> So keep debouncing, as that will always be necessary when dealing with
 >>>>>>> mechanical buttons, but always use software debouncing to avoid issues
@@ -238,15 +241,24 @@ On 6/26/2025 1:53 PM, Dmitry Torokhov wrote:
 > off, there is nothing more to it, is there?
 > 
 > I feel there is a deeper problem that we simply trying to paper over.
-> 
 
-I never said the power button is a simple mechanical switch connected to 
-the GPIO.
+Note that on x86 wakeup events and GPIO IRQs typically use a different
+event mechanism / path under the hood (PME events to resume from suspend).
+It is not just a case of marking the IRQ used while running as a wakeup
+source.
 
-A lot of designs I've seen have the EC connected to the power button 
-GPIO and the EC does it's own debouncing of a physical switch to decide 
-to assert GPIO 0.
+So it is possible that setting the hw-debouncing is in some way interfering
+with the reporting of x86 PME events while the system is suspended.
 
-My point here is if the firmware is asserting that there shouldn't be a 
-debounce programmed, programming one can lead to problems.
+Most systems where soc_button_array is used don't support hw-debouncing
+in the first place, so on most systems this change is a no-op.
+
+As such I'm in favor of the fix for this from the v3 series to disable
+hw-debouncing in gpio_keys.c when used from soc_button_array.c code.
+
+Regards,
+
+Hans
+
+
 
