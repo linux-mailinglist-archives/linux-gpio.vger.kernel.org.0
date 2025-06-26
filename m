@@ -1,150 +1,123 @@
-Return-Path: <linux-gpio+bounces-22255-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22256-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69364AE98F7
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 10:51:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3298EAE990B
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 10:53:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6A24178BC8
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 08:51:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E60445A067F
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 08:53:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E651429552A;
-	Thu, 26 Jun 2025 08:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE06729615C;
+	Thu, 26 Jun 2025 08:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGuXnmX0"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uuUy6mmD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F21E25FA;
-	Thu, 26 Jun 2025 08:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D71F1E25FA
+	for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 08:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750927863; cv=none; b=H6kdv3gtXtdzNAhnCb8/SFtqGZBYHIY2+rpHmMU3kaySmcwKzhiUsP/m+XDaYNMN6ndT2zReMechU+nqN5vo1r7lnihhaYUJbshJoHPHICkQJj0YKghz3WZNnbN8v7LBVBEUIX01ZH/EvEdLSjmxXWrNLc3/8wHElr8sF/BZ6ow=
+	t=1750928017; cv=none; b=MBA7QDzRiHFhBxX4u9jmR66bJHx+C96tn4j0NVzcmrPnyVAzT3rAzMxI3Orwe8ReMw9L//g7FuUC4RcSNqounormIJNujqDPWg2Lf0JZILdye/+PHuEIw5X7eK7y3KafoAq8KNK2ST4x9KhtdNyxaaKxAkL8DTAm7071K6eRLXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750927863; c=relaxed/simple;
-	bh=e2p4f2/iOiUSQDA2nFxcMvv3DWNGbwvjFJsWM+uhxF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mUc3Y1567WngwbA3zwtCkmpPEMoM/PmR/ooaT+3M1e0VF0KXfq1kMURjnqF7l7N7Cc8U8vDPOPgtj8U/a0DAq8SQdxQkQ3RY/SltjPpgVrkQzGbxhOeqNEN7M4crCTd0lOFjkQRSxOnCkXSbkXIv32AypsAJfZ4b1LYgtKX6Vdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGuXnmX0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E730C4CEEB;
-	Thu, 26 Jun 2025 08:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750927863;
-	bh=e2p4f2/iOiUSQDA2nFxcMvv3DWNGbwvjFJsWM+uhxF8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WGuXnmX00NjICaTXz1kB4Shl3++Lrg9p6SAZubUXY8TNcQS1r8r4A0+QyugGPhqm+
-	 hWoITMejv6nZA/45MR9pPJJuDRaIF40oCWzEQ0MI7kWrT4pec4pOFGHaC2QUwX5oxY
-	 gwKJaHtxOb42clnxt3DuzXx0W4ywSuuUPCbWYORpor1w4mqcetagfC5oFsaYfgx4s0
-	 yhr0Ruha0QLATWCuvga7bDdZPtQqClro2CouKjOZdZZFtU5pPIZtHUUGFF8s5axbT5
-	 pJBQ3KTRgDp1//DbOxPp4To26fztv41/sqxnAVBgbBCeG0ig67y0wkHvCsywepTAL+
-	 //5aTQ7sIfiUg==
-Message-ID: <3660b275-8513-4017-aba4-5c4432eb5b6b@kernel.org>
-Date: Thu, 26 Jun 2025 10:50:55 +0200
+	s=arc-20240116; t=1750928017; c=relaxed/simple;
+	bh=V+Sp7fen2qtQZs4jIVXJToPjVuPycMR9pNG6QZbuznU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aQmLVgQeMBCp8XXniqTzjt8j9qPeymh8hpLEceEJ0uxLIFyozUKF35F6vz/+cZorsm9hAKyenvQtspSu76IDabfsUqSmvIY8ZRrz2Mi3lylCQ/bubf+dKw5Djy6MBxAVSxrgj6CEcelLxB5K6nXhTlC6q/hM/q8CnGXk5VRS+8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uuUy6mmD; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso666967f8f.3
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 01:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750928014; x=1751532814; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hHFSivCg/spytmsC03nloc7zaZxjmdS54OyFvtvWpeY=;
+        b=uuUy6mmDx0T6es7fu9IALBG5qN/L6R+PSicW0y19hdNJ7u1EVtDtHe45M5ReDuP+oQ
+         u3/VqovNf6IiYIqWyyoY9QFc7mwlCCxRsFN3xlqFJFVNXPYObWPkc9w6dQV6goz31fr5
+         Zlzx5nY17bp/VynUiLjckCOU4WuBkR3dzV3QLdwimTfVToMGNCkNjJp0EJQpFqmCOjnZ
+         DVjFHeVYzZ+BT4rYBUdcpT6iXQqiOwrC4G1c3p9k/v6C6W+0M2lshIDaWswUFfA0X7En
+         RAlK1akBvdTs7HbSelaeJfaqaXywPN4AqGaC+e0mQgBmvOVxgup4SQ2VlIsGcK7SPvF/
+         rjrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750928014; x=1751532814;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hHFSivCg/spytmsC03nloc7zaZxjmdS54OyFvtvWpeY=;
+        b=cSvJJYLcK9i63y6yU5NyiKZF4upANDHp/vnQPTzZLN0rpthclAXUsxoCgyou3v7PSf
+         gpyZYdt+K3Q9Au7ztuv8GYRLNtSvKdqqoC1tBUMwwb+IBr9CdcV9Gna3DOXbOcGNx6AJ
+         iWx76P56ddqFiRTO/Jzo6W5lnmXsBabgvj6+XiU3p/MMpMDoYCjTTxiqxVFe3x8fzHL2
+         wqOnWVdDSuTRxWLUBYAnWXaQZmHtuP2qCeygVoG7GaQuLfWUvE417BjLxcgRLU5GtPVL
+         X+k6VDnSwpjIZsLoSbRMZg+/sxoXIE+XYAhON7AKYz9CpkrVDZxTq8m04p3yHsnkZFFD
+         UOrg==
+X-Forwarded-Encrypted: i=1; AJvYcCW304OR6i0e8Dsx6jrwBJzvVikhcVQY0dBS1tIb+QbFUPsiFqRd+9OoywVu8OBQpKihk5M5jydtfTMq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1d02iiXJeseRj0d2IpCIUg8v90xQgZ3brDu3qiz8HjntzV4u1
+	/eh5K/YuiofidGBweHwSvdnZvD63xdavJA6Na+Zrurscpp1idvDphxCFtSCyMYTPv1k=
+X-Gm-Gg: ASbGncuy8iVCQgi5u7kl3krD/MkPrcTozOC0BAWm1lOKN5GumiAKRPAZ/qwvMmiw327
+	29R98KyuRbvPq+2/Uzmo3rT8Fs13GsTadNtRddLfKWRunBrH/BDStWnzeQOLvlllJy6CCJtAi2F
+	8v7iGctsq7cTDroU7mqelXz9OFdshH3e99SWWv+4drQ9qxsHbloi/ejkmusMTkV3sEtEvghXEAP
+	kCPcSn9NlBpDiyT2r15rcESi903WU967ru79n/7hYdXoUwLpKOz12pQjrzaSdu0pq9wmxLg3/0q
+	bdq6qzfmjITJ33CTYyh+xgK0WuwHTy0RoAnhdng+BWh7abhcKAxw/h1tY1CS
+X-Google-Smtp-Source: AGHT+IENF+K1asS+T1pwLUr98Oz5aclWqP5A7IgCOFSxouvNv74nb2b4HyqVL83k4pH1phQaYMyNsQ==
+X-Received: by 2002:a5d:5f92:0:b0:3a4:d722:5278 with SMTP id ffacd0b85a97d-3a6ed646577mr5688868f8f.39.1750928013671;
+        Thu, 26 Jun 2025 01:53:33 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:e29b:52b:8f3d:6109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad01csm43261615e9.22.2025.06.26.01.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 01:53:33 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] gpio: rcar: Use new line value setter callbacks
+Date: Thu, 26 Jun 2025 10:53:32 +0200
+Message-ID: <175092800962.17393.17614855967697488644.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1750838486.git.geert+renesas@glider.be>
+References: <cover.1750838486.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/7] arm64: dts: axiado: Add initial support for AX3000
- SoC and eval board
-To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Jan Kotas <jank@cadence.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "soc@lists.linux.dev" <soc@lists.linux.dev>
-References: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-0-b3e66a7491f5@axiado.com>
- <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-5-b3e66a7491f5@axiado.com>
- <0709a0a6-1313-452c-85e7-2926a6a03741@kernel.org>
- <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
- <a0feb67f-3a73-4247-8383-7255616cb22b@kernel.org>
- <a6e27c0e-0703-4444-b6e7-d4db1340e802@axiado.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <a6e27c0e-0703-4444-b6e7-d4db1340e802@axiado.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 26/06/2025 03:31, Harshit Shah wrote:
-> On 6/24/2025 11:05 PM, Krzysztof Kozlowski wrote:
->>>
->>>
->>>>> +                     compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
->>>> NAK, you do not have xlnx here. Look at your SoC: name of vendor is
->>>> axiado. Not xlnx. How is your SoC called? Also zynqmp? You cannot just
->>>> randomly pick any compatibles and stuff them around.
->>>>
->>>> Please carefully read writing bindings from DT directory.
->>>
->>> We are using the "cdns,uart-r1p12" for the UART. However, that alone
->>> can't be added alone in the compatible as per the DT bindings doc.
->> Exactly. See writing bindings... or any guides/talks.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Wed, 25 Jun 2025 10:05:45 +0200, Geert Uytterhoeven wrote:
+> 	Hi all,
 > 
-> We will add the "compatible = "axiado,ax-uart", "cdns,uart-r1p12". We 
-> will append in the dt-bindings doc and driver.
+> This patch series converts the R-Car GPIo driver to the new line value
+> setter callbacks.
 > 
-> Is this name look good?
+> Changes compared to v1:
+>   - New patch "gpio: rcar: Remove checks for empty bankmasks".
+> 
+> [...]
 
-No, all compatibles for SoC must be SoC specific. Take any recent
-Qualcomm SM8650 or SM8750 as example.
+Applied, thanks!
 
-I asked to read writing bindings. Did you read it? It covers exactly
-this case.
+[1/2] gpio: rcar: Remove checks for empty bankmasks
+      https://git.kernel.org/brgl/linux/c/28a9ab01f6ac87afb78cb18098bc37a74db0d8f0
+[2/2] gpio: rcar: Use new line value setter callbacks
+      https://git.kernel.org/brgl/linux/c/3315e39e5639ac770782b658e499d45f68ea7d82
 
 Best regards,
-Krzysztof
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
