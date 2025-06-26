@@ -1,42 +1,42 @@
-Return-Path: <linux-gpio+bounces-22250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0333AE97D2
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 10:14:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F21D7AE97FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 10:19:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BAE15A42B5
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 08:13:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C416E1C21EF9
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 08:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 743782609DC;
-	Thu, 26 Jun 2025 08:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C884025F78D;
+	Thu, 26 Jun 2025 08:14:31 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE2F25FA03;
-	Thu, 26 Jun 2025 08:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13526256C73;
+	Thu, 26 Jun 2025 08:14:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925617; cv=none; b=PAfXndeA+I5R7bfFbuBcvgNtYr7r3MJZZQXRipFhHtucX+BJNwx2UWLQQlk3N9m85YMoO4efeGu5mYLPgeV4NjiV57AsDQ4wGpajRovaPkDYS0kLz96eyTowTcwHujtIDql4iFsRehQNXxuHFiHsfFVOTO2msJxplIerKy2oeSg=
+	t=1750925671; cv=none; b=M9B7wZaQw4dSUgcZuJTD/aSq2I/WMkkB9/iz1wgdHrWgEcbOAmbV9tNpIVmynb5FYBkF3atHL0srUTe74qr3VraGF1pYOU0j52vaWS8gwp+waFPJPBTGjuuQ7vwfbDhVfb6HB0K3+Mg6iZABCciZW/2Wygl8ODxN8nRTs2oW0H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925617; c=relaxed/simple;
-	bh=9R+INZ8e/SyHHgxDz0lyFa2OoSq9ExLuFg+fW4krK0I=;
+	s=arc-20240116; t=1750925671; c=relaxed/simple;
+	bh=bKBKj/g6dLdmBtJ1nKja2cElFDqCQJuZbjQv2dPcf0k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q1ZibP1bkdq0bzFn7AtSq+cRJ0tosIU4a09aKA/laf71G5lNn+3aWovXI8Hu2QgzZ27YZBC9fEH0dQqLLKVyZCo6msZBmjC6KE8v55h6RAYhiMvKzPk6EFgyepDAo++f15VES1+ySErEyjpsvwxmkZolmzYULCvwcLqqbDlXLSM=
+	 MIME-Version; b=d+e/AqS8YKpvX8moWUlm3Qr3pJf++yRkmWCN/WQH4a2yyj46wJ9+1XrLDdyZ8sAUMzfaBgS7asGfR9k3VK8AJKEV5VPqPMWDj0QHyfVw6knG7bgUwxJMVPyYkzMJKRDKJ85vMP2bldkPTX/Wh8Uba5s89CzOnhf2n4kEOc7IFz4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
 Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id C7EA11F0004B;
-	Thu, 26 Jun 2025 08:13:32 +0000 (UTC)
+	by leonov.paulk.fr (Postfix) with ESMTPS id 02B2E1F0004B;
+	Thu, 26 Jun 2025 08:14:27 +0000 (UTC)
 Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id 31515AC7F89; Thu, 26 Jun 2025 08:13:32 +0000 (UTC)
+	id 6B57DAC7F8A; Thu, 26 Jun 2025 08:14:27 +0000 (UTC)
 X-Spam-Level: *
 Received: from localhost.localdomain (unknown [192.168.1.65])
-	by laika.paulk.fr (Postfix) with ESMTP id 3ACB4AC7F7B;
+	by laika.paulk.fr (Postfix) with ESMTP id B8B27AC7F74;
 	Thu, 26 Jun 2025 08:09:41 +0000 (UTC)
 From: Paul Kocialkowski <paulk@sys-base.io>
 To: netdev@vger.kernel.org,
@@ -59,9 +59,9 @@ Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Andre Przywara <andre.przywara@arm.com>,
 	Paul Kocialkowski <paulk@sys-base.io>
-Subject: [PATCH 3/5] dt-bindings: net: sun8i-emac: Add A100 EMAC compatible
-Date: Thu, 26 Jun 2025 10:09:21 +0200
-Message-ID: <20250626080923.632789-4-paulk@sys-base.io>
+Subject: [PATCH 4/5] arm64: dts: allwinner: a100: Add EMAC support
+Date: Thu, 26 Jun 2025 10:09:22 +0200
+Message-ID: <20250626080923.632789-5-paulk@sys-base.io>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250626080923.632789-1-paulk@sys-base.io>
 References: <20250626080923.632789-1-paulk@sys-base.io>
@@ -73,27 +73,46 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Allwinner A100/A133 has an Ethernet MAC (EMAC) controller that is
-compatible with the A64 one. It features the same syscon registers for
-control of the top-level integration of the unit.
+The Allwinner A100/A133 Ethernet MAC (EMAC) is compatible with the A64
+one and needs access to the syscon register for control of the
+top-level integration of the unit.
 
 Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 ---
- .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml       | 1 +
- 1 file changed, 1 insertion(+)
+ .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index 7b6a2fde8175..0ae415f1e69c 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -21,6 +21,7 @@ properties:
-       - items:
-           - enum:
-               - allwinner,sun20i-d1-emac
-+              - allwinner,sun50i-a100-emac
-               - allwinner,sun50i-h6-emac
-               - allwinner,sun50i-h616-emac0
-               - allwinner,sun55i-a523-emac0
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+index 1c4e71b32911..205faa90d37b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+@@ -420,6 +420,26 @@ i2c3: i2c@5002c00 {
+ 			#size-cells = <0>;
+ 		};
+ 
++		emac: ethernet@5020000 {
++			compatible = "allwinner,sun50i-a100-emac",
++				     "allwinner,sun50i-a64-emac";
++			reg = <0x5020000 0x10000>;
++			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			clocks = <&ccu CLK_BUS_EMAC>;
++			clock-names = "stmmaceth";
++			resets = <&ccu RST_BUS_EMAC>;
++			reset-names = "stmmaceth";
++			syscon = <&syscon>;
++			status = "disabled";
++
++			mdio: mdio {
++				compatible = "snps,dwmac-mdio";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		ths: thermal-sensor@5070400 {
+ 			compatible = "allwinner,sun50i-a100-ths";
+ 			reg = <0x05070400 0x100>;
 -- 
 2.49.0
 
