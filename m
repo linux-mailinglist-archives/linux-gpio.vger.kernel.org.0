@@ -1,187 +1,169 @@
-Return-Path: <linux-gpio+bounces-22308-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22309-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9F3CAEA986
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 00:21:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBFCEAEA98D
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 00:21:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D0893B8E2C
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 22:20:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2446C4E1DF1
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 22:21:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F1F21930B;
-	Thu, 26 Jun 2025 22:21:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BACD261365;
+	Thu, 26 Jun 2025 22:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTrt4WkV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E768515278E
-	for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 22:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C3C2185AC;
+	Thu, 26 Jun 2025 22:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976461; cv=none; b=Z/vZNc+zC9Ew+Zjxvk7VMivwFD+x+4JVPdqN2AajCM3OaWMrLKdztD3jet5cnIuRU0Q/uw4BRzeAjVrALtYTrWyjDM8noZQuU5CpQxsBUJIx+T3WVEI+pz5ueFPd9rPg7jNBl2u4E3jZlpi4xTdmLNNGGWh9+AH0NMvgTWRAPa4=
+	t=1750976498; cv=none; b=jJzS73F9Rt2O3l2J4tN6+HaVav7clkwYM1ZPhXzs49PhvPGbiDGlOLdm3gLE+DSL/25WabwY5WGg9/3cKMlcfpjAVUZwqpu8OpM3JEoquUmIcmNaHfukxGy4vp5qNg2cVZbHatqdGnWbyvT87AScF2KMQT1VxCQorRrkXp8h+pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976461; c=relaxed/simple;
-	bh=r1HSdZ6WNVEi/Mi83UVnh9NXStJTYzNzdw0G+GYtays=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oD1n3icFWwjaXK/4ph3XzgL8FBEQR6NS58zu8N28gA8CPLmI+Uib2fDs3vJ6XV+hzFJw6SJuHdKBsm2uhr+IpqU+2eligPEoDHK4rdRQmjsbtvEGEbH/jQQW0msIPJJwUaMIcRAYfDPYeDcjaduJspfDWUduOlrO55ATOIe8/CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A922F169E
-	for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 15:20:41 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F41293F66E
-	for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 15:20:58 -0700 (PDT)
-Date: Thu, 26 Jun 2025 23:20:43 +0100
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-omap@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-samsung-soc@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH RFT 3/6] mfd: vexpress-sysreg: set-up software nodes for
- gpio-mmio
-Message-ID: <aF3Hu0bMVfkbXdFn@e110455-lin.cambridge.arm.com>
-References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
- <20250624-gpio-mmio-pdata-v1-3-a58c72eb556a@linaro.org>
+	s=arc-20240116; t=1750976498; c=relaxed/simple;
+	bh=S4MQ+wCspDRAXFvPxNkjxgXfaczwIPQ46HAjeRIjCq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TFyViSp40makklYOZuQtOVkhJGpdrxTtjFJLoQBYlglvkypDP9zZbrmhaNLWRn/DmVxag79QtKiC74LZXRen/XmuvRf0mDPanREgLw5Nax4S9s1YDXn8eiLyJptqXNKvK3+u70jwkZy/zN1xUjJWKXGtsgyBLJj/nXTtumVkZFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTrt4WkV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F778C4CEEB;
+	Thu, 26 Jun 2025 22:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750976498;
+	bh=S4MQ+wCspDRAXFvPxNkjxgXfaczwIPQ46HAjeRIjCq4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CTrt4WkVJKOL0eSc1X21mUYuVtrkxMBdcEjoCNAmbsmyoMWFkKbdFDlNqDDc6s5FZ
+	 iuproVump4dstGukb02DSUrq7f6BkEjdBkd8JBUILPB4M2Z6rHZKIub3M+avK011W7
+	 YRUPGu4pKS/dtuJ6gOaeLzuSnBW1pvmKTajcunoD8NhqQMHwrPNFkzXjqAeEDETgu6
+	 hs0oILjp6poL1wZwYYCn5lWH6rzwsGNtZwbFTrpz3Z21Ubi3NL+R+L07BsgfSUMimX
+	 4qsijFyNhKs5oMA9C+nq5GzPxhySYJ3or8hI46ElNzrqp61OvkXE/bf0SAfJ6gc6Wo
+	 3IPvaCXKRTowg==
+Message-ID: <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
+Date: Thu, 26 Jun 2025 17:21:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
+ <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
+ <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
+ <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
+ <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org>
+ <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
+ <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
+ <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
+ <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
+ <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
+ <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250624-gpio-mmio-pdata-v1-3-a58c72eb556a@linaro.org>
 
-On Tue, Jun 24, 2025 at 03:19:14PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 6/26/2025 2:40 PM, Dmitry Torokhov wrote:
+> On Thu, Jun 26, 2025 at 09:31:12PM +0200, Rafael J. Wysocki wrote:
+>> On Thu, Jun 26, 2025 at 9:28 PM Dmitry Torokhov
+>> <dmitry.torokhov@gmail.com> wrote:
+>>>
+>>> On Thu, Jun 26, 2025 at 09:18:56PM +0200, Rafael J. Wysocki wrote:
+>>>> On Thu, Jun 26, 2025 at 9:16 PM Hans de Goede <hansg@kernel.org> wrote:
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> On 26-Jun-25 21:14, Dmitry Torokhov wrote:
+>>>>>> On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On 26-Jun-25 20:48, Dmitry Torokhov wrote:
+>>>>>>>> On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
+>>> [...]
+>>>>>>>>> I want to note this driver works quite differently than how ACPI power
+>>>>>>>>> button does.
+>>>>>>>>>
+>>>>>>>>> You can see in acpi_button_notify() that the "keypress" is only forwarded
+>>>>>>>>> when not suspended [1].  Otherwise it's just wakeup event (which is what my
+>>>>>>>>> patch was modeling).
+>>>>>>>>>
+>>>>>>>>> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
+>>>>>>>>> [1]
+>>>>>>>>
+>>>>>>>> If you check acpi_button_resume() you will see that the events are sent
+>>>>>>>> from there. Except that for some reason they chose to use KEY_WAKEUP and
+>>>>>>>> not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
+>>>>>>>> multiple other platforms.
+>>>>>>>
+>>>>>>> Interesting, but the ACPI button code presumably only does this on resume
+>>>>>>> for a normal press while the system is awake it does use KEY_POWER, right ?
+>>>>>>
+>>>>>> Yes. It is unclear to me why they chose to mangle the event on wakeup,
+>>>>>> it does not seem to be captured in the email discussions or in the patch
+>>>>>> description.
+>>>>>
+>>>>> I assume they did this to avoid the immediate re-suspend on wakeup by
+>>>>> power-button issue. GNOME has a workaround for this, but I assume that
+>>>>> some userspace desktop environments are still going to have a problem
+>>>>> with this.
+>>>>
+>>>> It was done for this reason IIRC, but it should have been documented
+>>>> more thoroughly.
+>>>
+>>> I assert that it should not have been done and instead dealt with in
+>>> userspace. There are numerous drivers in the kernel emitting
+>>> KEY_POWER. Let userspace decide how to handle this, what keys to ignore,
+>>> what keys to process and when.
+>>
+>> Please see my last message in this thread (just sent) and see the
+>> changelog of commit 16f70feaabe9 ("ACPI: button: trigger wakeup key
+>> events").
+>>
+>> This appears to be about cases when no event would be signaled to user
+>> space at all (power button wakeup from ACPI S3).
 > 
-> Replace struct bgpio_pdata - that we plan to remove - with software
-> nodes containing properties encoding the same values thatr can now be
-> parsed by gpio-mmio.
+> Ahh, in S3 we do not know if we've been woken up with Sleep or Power
+> button, right? So we can not send the "right" event code and use
+> "neutral" KEY_WAKEUP for both. Is this right?
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-
-I'm OK with this going through the GPIO tree.
-
-Best regards,
-Liviu
-
-> ---
->  drivers/mfd/vexpress-sysreg.c | 46 ++++++++++++++++++++++++++-----------------
->  1 file changed, 28 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/mfd/vexpress-sysreg.c b/drivers/mfd/vexpress-sysreg.c
-> index ef03d6cec9ff6927668d051ca459eb1d8ff7269e..fc2daffc4352cca763cefbf6e17bdd5242290198 100644
-> --- a/drivers/mfd/vexpress-sysreg.c
-> +++ b/drivers/mfd/vexpress-sysreg.c
-> @@ -11,6 +11,7 @@
->  #include <linux/module.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/property.h>
->  #include <linux/slab.h>
->  #include <linux/stat.h>
->  
-> @@ -37,22 +38,34 @@
->  
->  /* The sysreg block is just a random collection of various functions... */
->  
-> -static struct bgpio_pdata vexpress_sysreg_sys_led_pdata = {
-> -	.label = "sys_led",
-> -	.base = -1,
-> -	.ngpio = 8,
-> +static const struct property_entry vexpress_sysreg_sys_led_props[] = {
-> +	PROPERTY_ENTRY_STRING("label", "sys_led"),
-> +	PROPERTY_ENTRY_U32("ngpios", 8),
-> +	{ }
->  };
->  
-> -static struct bgpio_pdata vexpress_sysreg_sys_mci_pdata = {
-> -	.label = "sys_mci",
-> -	.base = -1,
-> -	.ngpio = 2,
-> +static const struct software_node vexpress_sysreg_sys_led_swnode = {
-> +	.properties = vexpress_sysreg_sys_led_props,
->  };
->  
-> -static struct bgpio_pdata vexpress_sysreg_sys_flash_pdata = {
-> -	.label = "sys_flash",
-> -	.base = -1,
-> -	.ngpio = 1,
-> +static const struct property_entry vexpress_sysreg_sys_mci_props[] = {
-> +	PROPERTY_ENTRY_STRING("label", "sys_mci"),
-> +	PROPERTY_ENTRY_U32("ngpios", 2),
-> +	{ }
-> +};
-> +
-> +static const struct software_node vexpress_sysreg_sys_mci_swnode = {
-> +	.properties = vexpress_sysreg_sys_mci_props,
-> +};
-> +
-> +static const struct property_entry vexpress_sysreg_sys_flash_props[] = {
-> +	PROPERTY_ENTRY_STRING("label", "sys_flash"),
-> +	PROPERTY_ENTRY_U32("ngpios", 1),
-> +	{ }
-> +};
-> +
-> +static const struct software_node vexpress_sysreg_sys_flash_swnode = {
-> +	.properties = vexpress_sysreg_sys_flash_props,
->  };
->  
->  static struct mfd_cell vexpress_sysreg_cells[] = {
-> @@ -61,22 +74,19 @@ static struct mfd_cell vexpress_sysreg_cells[] = {
->  		.of_compatible = "arm,vexpress-sysreg,sys_led",
->  		.num_resources = 1,
->  		.resources = &DEFINE_RES_MEM_NAMED(SYS_LED, 0x4, "dat"),
-> -		.platform_data = &vexpress_sysreg_sys_led_pdata,
-> -		.pdata_size = sizeof(vexpress_sysreg_sys_led_pdata),
-> +		.swnode = &vexpress_sysreg_sys_led_swnode,
->  	}, {
->  		.name = "basic-mmio-gpio",
->  		.of_compatible = "arm,vexpress-sysreg,sys_mci",
->  		.num_resources = 1,
->  		.resources = &DEFINE_RES_MEM_NAMED(SYS_MCI, 0x4, "dat"),
-> -		.platform_data = &vexpress_sysreg_sys_mci_pdata,
-> -		.pdata_size = sizeof(vexpress_sysreg_sys_mci_pdata),
-> +		.swnode = &vexpress_sysreg_sys_mci_swnode,
->  	}, {
->  		.name = "basic-mmio-gpio",
->  		.of_compatible = "arm,vexpress-sysreg,sys_flash",
->  		.num_resources = 1,
->  		.resources = &DEFINE_RES_MEM_NAMED(SYS_FLASH, 0x4, "dat"),
-> -		.platform_data = &vexpress_sysreg_sys_flash_pdata,
-> -		.pdata_size = sizeof(vexpress_sysreg_sys_flash_pdata),
-> +		.swnode = &vexpress_sysreg_sys_flash_swnode,
->  	}, {
->  		.name = "vexpress-syscfg",
->  		.num_resources = 1,
-> 
-> -- 
-> 2.48.1
+> Thanks.
 > 
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+I did some more experiments with this affected system that started this 
+thread (which uses s2idle).
+
+I only applied patch 3 in this series to help the debounce behavior and 
+figure out impacts from patch 4 with existing Linux userspace.
+
+If suspended using systemd in GNOME (click the GUI button) on Ubuntu 
+24.04 the GNOME workaround mitigates this problem and no visible impact.
+
+If I suspend by hand using the kernel interface and then press power 
+button to wake:
+
+# echo mem | sudo tee /sys/power/state:
+
+* When GNOME is running:
+I get the shutdown popup and it eventually shuts down.
+
+* When GNOME isn't running (just on a VT):
+System shuts down.
+
+
 
