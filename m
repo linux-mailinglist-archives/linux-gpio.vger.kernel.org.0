@@ -1,169 +1,196 @@
-Return-Path: <linux-gpio+bounces-22309-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22310-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBFCEAEA98D
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 00:21:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06EEDAEAA2A
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 01:06:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2446C4E1DF1
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 22:21:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50CD94A6B12
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 23:06:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BACD261365;
-	Thu, 26 Jun 2025 22:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84DD02236F8;
+	Thu, 26 Jun 2025 23:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTrt4WkV"
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="pbxg1Nc5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010006.outbound.protection.outlook.com [52.101.228.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C3C2185AC;
-	Thu, 26 Jun 2025 22:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976498; cv=none; b=jJzS73F9Rt2O3l2J4tN6+HaVav7clkwYM1ZPhXzs49PhvPGbiDGlOLdm3gLE+DSL/25WabwY5WGg9/3cKMlcfpjAVUZwqpu8OpM3JEoquUmIcmNaHfukxGy4vp5qNg2cVZbHatqdGnWbyvT87AScF2KMQT1VxCQorRrkXp8h+pA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976498; c=relaxed/simple;
-	bh=S4MQ+wCspDRAXFvPxNkjxgXfaczwIPQ46HAjeRIjCq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TFyViSp40makklYOZuQtOVkhJGpdrxTtjFJLoQBYlglvkypDP9zZbrmhaNLWRn/DmVxag79QtKiC74LZXRen/XmuvRf0mDPanREgLw5Nax4S9s1YDXn8eiLyJptqXNKvK3+u70jwkZy/zN1xUjJWKXGtsgyBLJj/nXTtumVkZFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTrt4WkV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F778C4CEEB;
-	Thu, 26 Jun 2025 22:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750976498;
-	bh=S4MQ+wCspDRAXFvPxNkjxgXfaczwIPQ46HAjeRIjCq4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CTrt4WkVJKOL0eSc1X21mUYuVtrkxMBdcEjoCNAmbsmyoMWFkKbdFDlNqDDc6s5FZ
-	 iuproVump4dstGukb02DSUrq7f6BkEjdBkd8JBUILPB4M2Z6rHZKIub3M+avK011W7
-	 YRUPGu4pKS/dtuJ6gOaeLzuSnBW1pvmKTajcunoD8NhqQMHwrPNFkzXjqAeEDETgu6
-	 hs0oILjp6poL1wZwYYCn5lWH6rzwsGNtZwbFTrpz3Z21Ubi3NL+R+L07BsgfSUMimX
-	 4qsijFyNhKs5oMA9C+nq5GzPxhySYJ3or8hI46ElNzrqp61OvkXE/bf0SAfJ6gc6Wo
-	 3IPvaCXKRTowg==
-Message-ID: <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
-Date: Thu, 26 Jun 2025 17:21:35 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845D118871F;
+	Thu, 26 Jun 2025 23:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750979174; cv=fail; b=TVRZDE262Scnphh3ZFTU4SUPzjCiOLafm93rFZVGUgg7XBe8Vfhxmpe7POhFaVg8RE3Qe2El7kAY0xPSOSRyiftdbjc3M7Yhgf4og/LeU6SsjtaIHmhkxjqZkxGmYuFsPTQvM8CW7oPJ6dK9soV0fIjqeHCk2XsFoL5elPGp/+8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750979174; c=relaxed/simple;
+	bh=uARGc66XmY8MN11UnvPn6Gx1le4Z7aXsOsTE+H0IGjE=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=mA2jymvFMzM8YtsupVbOWfXnwXEssJRNud9a2CR1OmsiROYrtF+mggxBFwGlDpGRpCtCQ8I1ldu34+gWV9H7QVumRdDMmp1u4/InxForgP3dDNOQxii6pOSmeTo95r4btQbwkVoPhR1SReMQkl1rlsa6sLsLTIkukSaTPA46JFw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=pbxg1Nc5; arc=fail smtp.client-ip=52.101.228.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m9+yeqiA8j97OhZadf+zKi9OS1NeBH+8aBbgfhljU6WEyyKAQCPtfhJsW3CmdFyw2aUGirXaevJ/kOpvqeuLfNjnJFpkb8pKxrcqYl3LDS6ZyR6QpoCoF5Y69HWTxoCo0ve3aDcVtkRpGUS4KL0foD6iWX0YZlxs1URs+jxoKF7+asHqTA4fkeq8DNHny8DuDozox8MnwXFcOYzZ5v4ou1UyfQrHcbBzSszln8uc4x9mGE67wwcOK5wRFxIQWRWELz0HMwImYfSW8BznlR6hdXu5QbJiHCZ+SjIFnEmH/fC7dEsp6hmhhlEJMPp/q+9e1Yov44cWDfijyiwANiUyJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=voHul8xpD1tP8uUIHwGg7y6jP2b1TGCCTzTtUT5xpb8=;
+ b=abtub0/ef8beQYsqP3NefTVDyzGRe1yRkJcpRAhkZniABoHFDmXCOyFn6sETFvb4dRo8+qR2EYmMXFieWdKr9DkRn2qd+uO/4BmajTFtEkavaDc/3rjfXqa8tVy86O4F+XsH+cxoAXzhUBogJuok9klR+9IhMoS9c0ECkSZUgEvG2VSw9+6srZmdXGgBaZ96JIbPG67fG8RcRPi16m/QezrOopJ3o2RSO4fWyes6GBPPPXKM4F8PL2FQwSufxdCOxxaUQtvfj5JuOcchi/TzcRZ1B4L9abfXQCjFbI5tz2swlULHet6po47Ki08LGK9lCEcLUrnGX/20syPxEu/mMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=voHul8xpD1tP8uUIHwGg7y6jP2b1TGCCTzTtUT5xpb8=;
+ b=pbxg1Nc5aUMkj5XkJFaMLGOLVlI55B061tN7qGBxucMzTvDJcr8uzv83x+JJPn+ld4jmPGU9SYs02cZUBp/g4bYo3/CkO2Emphq+s8cITpvEGwjpMKgiLjh4DiW/g0Fo3Py4LmF3aoRdA6vvV2rYDc0O/aBtz1Q3J+DAy0k3lR4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11) by OSZPR01MB7697.jpnprd01.prod.outlook.com
+ (2603:1096:604:1b1::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.18; Thu, 26 Jun
+ 2025 23:06:04 +0000
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11%4]) with mapi id 15.20.8880.021; Thu, 26 Jun 2025
+ 23:06:03 +0000
+Message-ID: <87ecv6gl2h.wl-kuninori.morimoto.gx@renesas.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 0/2] pinctrl: renesas: tidyup Kconfig
+In-Reply-To: <CAMuHMdWst5fhcUgWbTqzG_DQmuL8tWtUuCpg4BoeqhnCfo_MVw@mail.gmail.com>
+References: <87ecv9ragd.wl-kuninori.morimoto.gx@renesas.com>
+	<875xgk4j9l.wl-kuninori.morimoto.gx@renesas.com>
+	<CAMuHMdWst5fhcUgWbTqzG_DQmuL8tWtUuCpg4BoeqhnCfo_MVw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
+Content-Type: text/plain; charset=US-ASCII
+Date: Thu, 26 Jun 2025 23:06:02 +0000
+X-ClientProxiedBy: TYCP286CA0224.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c5::8) To TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
- <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
- <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
- <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
- <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org>
- <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
- <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
- <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
- <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
- <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
- <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|OSZPR01MB7697:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7357ec0-160b-47e5-1e15-08ddb50605dd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DrqF+XLaS/6KlQBoh0H3bQfQ0b1maDUQwif/w8T1EHa44zmgyocSSfl42WJ2?=
+ =?us-ascii?Q?gf9ipEUvpRe53h4UbRvoCJNSNBMvdH0h2TyJEoj5HFm2fakSZMqI8kjxtvJ7?=
+ =?us-ascii?Q?JWkMuATqCbkdHOFsNts/eUZPsXEt2+yRWb1Y4ij42EElZadXTej9Gq3VaDk4?=
+ =?us-ascii?Q?COVw1Oh2KmjdNhzpTHPz+Dl8ZFD4vVBF6swOei2buDMaZNj3B5v1XTNeSFte?=
+ =?us-ascii?Q?rpK6bsIvHrWahUYQsLrP+IJms3+krEsGDq17Q8sOXPw5rZS3PX8oLZy2SIFs?=
+ =?us-ascii?Q?FgRcMHxS6VvU331BfGCTi+8l7LMQYc+bz9N07a8YDQPdUDRPBZoFBwNU+Zvj?=
+ =?us-ascii?Q?Khg+waJ2CDnGCYyI1bJIIbZGS+thIkKpb+EX5rg0BsrE6Azm6NFM2HkyoxU5?=
+ =?us-ascii?Q?47OILhszdvGEaLwKTgCoohGTIqhgH/8Kb4vxylpyOPCxsYmQV+Iah5A+VdaZ?=
+ =?us-ascii?Q?HHswNza/9Qy/4MB43bZ8Ckn4I5GUK9v6wfiRpXZ+/XQ/MSStlA/ihtBzfIcz?=
+ =?us-ascii?Q?9+1htwbuZA/eoWmEdjwiJ8k+pSWo2lGVQ3IFF08/05jQeEdjwOuzbxKXRXOG?=
+ =?us-ascii?Q?q4YxtTko8rBvt6w3mEOj8UGqdgBC747KrJmdQEhEnDqAZY3Uv22yoQUNOce7?=
+ =?us-ascii?Q?5h0O7UorQ9ACdR/C3J7vcMZbCQYSHbgBc04aqtQ5nrpwhFo8D5Tb2ZJCqPhN?=
+ =?us-ascii?Q?r3x5MiN2Y8gs4K1RkxcB1l3hCEXXH8fAAzZTdy/KYvXDHkCn00ZW9o5B4QV6?=
+ =?us-ascii?Q?/krAogSwgE/Veb3ZvcEDvTY1IrGK2Xd3MIInxj3f/K2Q8TmjyBi3YqnNRT4z?=
+ =?us-ascii?Q?7F8GYcoFcgStRHwPlKsGyvfmDAfZpeNTJ3FZ1bIaQalud/HbDRdRoU/VgBvq?=
+ =?us-ascii?Q?g7ozLRn+3KLKRnjGVY1BhTuZcgLb9eAST/vlWLKyfb5MuAGO4KEDNhF8poQ2?=
+ =?us-ascii?Q?ngqK6ksTza19kojBxykOtMvslS3nLRat0q+Pdo9HAriFXLNK+LAw3uta4GsX?=
+ =?us-ascii?Q?sYsyu4JlC0C/rHko90iuWnIFSxazM/rFmJNCAgaGRyEaD9BzMMFtangqzLpp?=
+ =?us-ascii?Q?SO6G2Fvwjtt4zHKsO78DvoCAEV9/WP7ftZb5GuCTlrjaY52NiLFL1hCcA8az?=
+ =?us-ascii?Q?rEyk6580L59YGt1O5IVVRpZi9NOwJXrNfsDcLX2/OdlbhBo1uVzDBvxugp7S?=
+ =?us-ascii?Q?52xytRqJGTZNqQBXDOH7XD6Fn+GuBy1bG0HJWu9UKbUlYQZB4XdyGjoEgNQe?=
+ =?us-ascii?Q?+Ye82Hh3qd9NS5AwldMXQSRNN1Y/L8suwp40mYkDT3A1rqxAOt7VAqziPb2K?=
+ =?us-ascii?Q?WutDPbHgZ66J/X0WMA3sH4PK1rLolahS6zeSSeLInLU9YJfAtf/RghFLk9v4?=
+ =?us-ascii?Q?hNErcCRqVDboHciy9PTbfBx1e/O0xTg9CEO+YKQNvXU0BRLSnl+gSc4Y3hGU?=
+ =?us-ascii?Q?ONxYhJlab+3YHn8K08wzhBMsHyRA0Vkm0cVB9agVDGhWg5d5e58p+g=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?11mJOsMmL1yXDu0duVRcaSozOzztJgsig7dcemcjU5+9ziJcsnDRa224jp9o?=
+ =?us-ascii?Q?Ar+5phr66AUIWU2SiVuo037G8MEXyvBNj6Zyhgh2HGn/YmE0U8ZCMiXhJG9U?=
+ =?us-ascii?Q?SwKgLvG/lE4eU6qmKFfJTdUSvSV4sE506FohGcR2w2Z+5SgVlq2yP5nfKnUD?=
+ =?us-ascii?Q?OeUJCPU5mtiFsEk1RaffIHiA2xXQlv/pl7G/8GSvNl15mfXisC8H9zvoBodT?=
+ =?us-ascii?Q?Aou3GgOh3HXxmna43sDmIVetBa2Et8pQp5V/+a1n14YbUoQqANOseTqGpOBt?=
+ =?us-ascii?Q?C230eXsGKtvh/PBB8cHTKdNNupZM57Vq60gS561u8ZMLExv69wcVE64FGJPX?=
+ =?us-ascii?Q?eBxwN0UpgOjVtYC1Eu/4zgGJFQsswTnQ1fpTKJsBFoPEvwYq20/7+IICXwnW?=
+ =?us-ascii?Q?98dtjl5FK7OmohWoKDzvydP5aOCHoHmnM1I7MgqH4dELrgsYWtgF+hhaDpiZ?=
+ =?us-ascii?Q?VaV/cvyos3vLNOq87N4PieWtcYE3B9dtMOeSIqEIxWO6jD3m0TBiw0fAW78F?=
+ =?us-ascii?Q?W1Aav80SyINVgyanv2S1Ew970bYM81SNANJx2oz6sW6Lb6Z2wO8nOh83gIQV?=
+ =?us-ascii?Q?C8y9XhdojYNgAlKGiB9xWyZWI9fEl9Pz2M2D0RybiwEoKHDTuVIWFJzodXmV?=
+ =?us-ascii?Q?eFWpH5aUuRtXUMjMAijcGFjQK3ISFbp9+wS1xxTkJEGeRVn6uxI4w9o8zA+3?=
+ =?us-ascii?Q?WfOdvdIyHwvVnxZRCbMqqg5ONFyyQXu3OV/uPRK/8npQ3kUs/qfrMnf25YZY?=
+ =?us-ascii?Q?o7v0Md2wQpR7MgQnVSp/W0SLH/tAP/LUxuwXb35N0fEQ2AocuzYeYYD6EY/5?=
+ =?us-ascii?Q?kYG9ZAyoiyhxHxZ0B1IbNvmvUsv6tj+wBBIxM1yFYtkLaB/E8dFbd0cihMH1?=
+ =?us-ascii?Q?C3xaf8wBrHRpeKQe3WNpz8Izpqo/kRf9P+zJycaC+T+uGH1ezJSmiH7yBTqW?=
+ =?us-ascii?Q?ctVi1EF1CE7aQGH9L9+JsSmwSisRUMUzmyIq4FIl7yVU5wJ9JpKA2wKvcvPf?=
+ =?us-ascii?Q?TOs7y+/xQdL3+PhS5kL9Q2OvgLFwdnUB7hfqC2EofI8dnbASrvb4xc2aS37P?=
+ =?us-ascii?Q?dUWS/3WOknjTPdAE9XgVPDJNT9wsBRliafgB87FAZ7+TqB9bizBSzlBqx5RW?=
+ =?us-ascii?Q?JEf3x5KWQtwZoggMyrTmQiIWNHppHomrLCD2I6RRv2NwQMHl5Ic0DHXFcrOU?=
+ =?us-ascii?Q?sbomfNdBZgjYyNjyMW8cZrmt6/WIdiNXsrVzVD823v3x25ypRfKOU+e8FeNd?=
+ =?us-ascii?Q?sCieBCto/bcI799PyvWDh98YaJFIyOrdPSKCFz0Cqxkp/RoRm9o5lkFNxFjM?=
+ =?us-ascii?Q?xMS1NnMlUfBcr/46GqnMr+keeQKYtVeDTqxt3h+ILa8x9h25BoB+Y7Uz+kbE?=
+ =?us-ascii?Q?4KIWnTs7ZUlYEMEyBlnH4aRBA1xsAIXfYK3lIjrzNvud6hp9GpUQHIClSK2V?=
+ =?us-ascii?Q?QEqJ8PiN6gaaJE95qJcSMBwouoNexC/QdZBR38UVAUe3ZpzrgBk0HxczPAxW?=
+ =?us-ascii?Q?QBo06tsZkoNjpaPtHFpgP8Sf0OkQpt7C28lAzCAlQ6Jha2/Dho2KODOC5Jyn?=
+ =?us-ascii?Q?tq/8Dlg1DQ+EJbMu94u8us5ikdQWCnpraM3mtYfPnxVy2d++E+SzzKbwUvcm?=
+ =?us-ascii?Q?qdr5QogH/c7GGgjkGa0Lqpc=3D?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7357ec0-160b-47e5-1e15-08ddb50605dd
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 23:06:03.0631
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6BYUX9EQFLVKc64WLTlAvZMttwuX041R3v3UK01m4xxFWYL3g0KIBuZJZeMAjP84C5/fBdY0Iry7aApTXMshAmF/vo3nM40IxYHOFIsGVUkjIjXtnfqSl6ar48eDr3bj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB7697
 
-On 6/26/2025 2:40 PM, Dmitry Torokhov wrote:
-> On Thu, Jun 26, 2025 at 09:31:12PM +0200, Rafael J. Wysocki wrote:
->> On Thu, Jun 26, 2025 at 9:28 PM Dmitry Torokhov
->> <dmitry.torokhov@gmail.com> wrote:
->>>
->>> On Thu, Jun 26, 2025 at 09:18:56PM +0200, Rafael J. Wysocki wrote:
->>>> On Thu, Jun 26, 2025 at 9:16 PM Hans de Goede <hansg@kernel.org> wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>> On 26-Jun-25 21:14, Dmitry Torokhov wrote:
->>>>>> On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
->>>>>>> Hi,
->>>>>>>
->>>>>>> On 26-Jun-25 20:48, Dmitry Torokhov wrote:
->>>>>>>> On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
->>> [...]
->>>>>>>>> I want to note this driver works quite differently than how ACPI power
->>>>>>>>> button does.
->>>>>>>>>
->>>>>>>>> You can see in acpi_button_notify() that the "keypress" is only forwarded
->>>>>>>>> when not suspended [1].  Otherwise it's just wakeup event (which is what my
->>>>>>>>> patch was modeling).
->>>>>>>>>
->>>>>>>>> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
->>>>>>>>> [1]
->>>>>>>>
->>>>>>>> If you check acpi_button_resume() you will see that the events are sent
->>>>>>>> from there. Except that for some reason they chose to use KEY_WAKEUP and
->>>>>>>> not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
->>>>>>>> multiple other platforms.
->>>>>>>
->>>>>>> Interesting, but the ACPI button code presumably only does this on resume
->>>>>>> for a normal press while the system is awake it does use KEY_POWER, right ?
->>>>>>
->>>>>> Yes. It is unclear to me why they chose to mangle the event on wakeup,
->>>>>> it does not seem to be captured in the email discussions or in the patch
->>>>>> description.
->>>>>
->>>>> I assume they did this to avoid the immediate re-suspend on wakeup by
->>>>> power-button issue. GNOME has a workaround for this, but I assume that
->>>>> some userspace desktop environments are still going to have a problem
->>>>> with this.
->>>>
->>>> It was done for this reason IIRC, but it should have been documented
->>>> more thoroughly.
->>>
->>> I assert that it should not have been done and instead dealt with in
->>> userspace. There are numerous drivers in the kernel emitting
->>> KEY_POWER. Let userspace decide how to handle this, what keys to ignore,
->>> what keys to process and when.
->>
->> Please see my last message in this thread (just sent) and see the
->> changelog of commit 16f70feaabe9 ("ACPI: button: trigger wakeup key
->> events").
->>
->> This appears to be about cases when no event would be signaled to user
->> space at all (power button wakeup from ACPI S3).
+
+Hi Geert
+
+> > Ah... this is menu alphabetical order, instead of SYMBOL...
 > 
-> Ahh, in S3 we do not know if we've been woken up with Sleep or Power
-> button, right? So we can not send the "right" event code and use
-> "neutral" KEY_WAKEUP for both. Is this right?
-> 
-> Thanks.
-> 
+> Courtesy of your commit d89a08f52b0dd30d ("pinctrl: sh-pfc: Tidy up
+> driver description title") in v5.10...
+(snip)
+> Actually I prefer the sorting by Kconfig symbol/part number, and
+> somewhat regret applying the aforementioned commit.
 
-I did some more experiments with this affected system that started this 
-thread (which uses s2idle).
+Yeah, actually, I agree...
 
-I only applied patch 3 in this series to help the debounce behavior and 
-figure out impacts from patch 4 with existing Linux userspace.
+One excuse from my side is that, from "menuconfig user" side point of view,
+"description alphabetical order" is easy to find driver, because it
+indicates "SoC Name" instead of "SoC Serial Number".
 
-If suspended using systemd in GNOME (click the GUI button) on Ubuntu 
-24.04 the GNOME workaround mitigates this problem and no visible impact.
+But from "developer point of view", indeed SYMBOL number order is better,
+but it makes "menuconfig user" confuse, because description doesn't indicate
+SoC Serial Number.
 
-If I suspend by hand using the kernel interface and then press power 
-button to wake:
+> I am happy to take this series!
 
-# echo mem | sudo tee /sys/power/state:
+This patch ([1/2]) sorts it by "SYMBOL number" (= developer happy), and also
+indicate "SoC Chip Name" (= user happy) ([2/2]).
 
-* When GNOME is running:
-I get the shutdown popup and it eventually shuts down.
+> Then we're just left with fixing drivers/pmdomain/renesas/Kconfig
+> and drivers/soc/renesas/Kconfig ;-)
 
-* When GNOME isn't running (just on a VT):
-System shuts down.
+I'm happy to help it if you want to me.
 
+Thank you for your help !!
 
+Best regards
+---
+Kuninori Morimoto
 
