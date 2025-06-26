@@ -1,78 +1,123 @@
-Return-Path: <linux-gpio+bounces-22265-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22266-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36835AE9F62
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 15:51:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9862AEA091
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 16:31:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6F293BB06B
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 13:50:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BC241C26860
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 14:30:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAA3E2E765F;
-	Thu, 26 Jun 2025 13:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A93D92E8DFF;
+	Thu, 26 Jun 2025 14:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6zCviau"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3932E764B;
-	Thu, 26 Jun 2025 13:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143C313B58B;
+	Thu, 26 Jun 2025 14:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750945843; cv=none; b=UrCvTudg9nvNXrJ8ww3HZgKJAk2ggyUOEbTJ+jhOcAVhdlqRpoYQGcDBvhOb14Qaqok7bV4uMc80netLA9n1UhhCtjUKc38EjH7/xPhoIuHF0XvH4cFVJGpjK5DpayDv8fdC8FH4yOXa9yH0ee7E83ArgaEU/b2w3RsVZm1RAkk=
+	t=1750948182; cv=none; b=oFfOMP4sxn90QvOfvpw46O5S1hvT6JOqka5Kunq85e6jxSSYwt77FWIDTW3sYPF8gxzh/8ZcT8LOEoP7zAxIWOKOsCR53PJgaFH53VEuzrbLAB3/CwLvd3PKBvwDUdPP1MkrUpigIV4VJVf8CTSEUKAMR1xcZCmZX0pllCULIwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750945843; c=relaxed/simple;
-	bh=2pm7+UaQeiFKBALBenUwi2QOVjDVLmCXKtN4Q63Dj0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bD/fhojnFATt2g5aLdr0TT+tntEtx9AEn4BKluGxvN/jAWlxDp6hopPc6uYJiIa+pbVPKfDMT3W3EwqrQs+rmBFnl/o9hccLfIjhgvohefsb8/UGPviIAnmyiAsDmSqAW9qz6Dx69wsN+pmjwBs3g1emImnSjBq1JhaALDOgG/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7A4C4CEF3;
-	Thu, 26 Jun 2025 13:50:41 +0000 (UTC)
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: renesas: Simplify PINCTRL_RZV2M logic
-Date: Thu, 26 Jun 2025 15:50:39 +0200
-Message-ID: <d74843e06f73cd4c6e822d65f606e6042a50a0b7.1750945516.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750948182; c=relaxed/simple;
+	bh=UIAz9RAwELfU0OEgEwo3hJoP9RNGZV0++tXX3piu9KM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Do/VNUa8g17nS68qaRYY7ByOwN+XkjbHBzDLyNhKb5+XHu+XffiKml5t53W/krwgtlyrRCowAQkf0SDPGr5UaozNY4RiBI64G1itO1Y+Fljx8jYVaY+XSm2NMbb0GQTJb+pSXjwz7fM8BIIS/BJvSX4C9GBBqBPhOjKHqd+y19A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6zCviau; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750948181; x=1782484181;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UIAz9RAwELfU0OEgEwo3hJoP9RNGZV0++tXX3piu9KM=;
+  b=C6zCviauGF0mkpYVk6CALEzmTN5pVCnk6aIYGIjJvuRyuW1IGNiXAGoV
+   G5I8Q59PH6qpj+jOZJiafC1FETxW6HjlyomR8QBsFd07WMwQ4iER6i2Tj
+   K0mPbiUixpkMAo5qcdlnjtUzHA2MWk6mOEizf5tLv0bZl+YWHRC7yRhCo
+   ofNu+mnIcWlmYqNQVaiV/6yGkP46tfTlxVIX6joQIxzYWH27ZVAKGzmXL
+   c5DFmSSGchJMSpauAZVkRnwhP/2om/dP/N6PGZzNhPcBg6PuBaRGx1IT1
+   0rbx4I1PuwTyqLcRbBzn5dAfW10ovdqkbMCgYhgXMkbBiONOKJbez0LJ8
+   Q==;
+X-CSE-ConnectionGUID: XU3lZyZyTj6jt+hnW14lxw==
+X-CSE-MsgGUID: kWcPPXO1SqSsIJAb7T+JVA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70675651"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="70675651"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:29:40 -0700
+X-CSE-ConnectionGUID: 07gvzv9nRaW8MU8M0IRrVg==
+X-CSE-MsgGUID: tnTiW4raT3iFHNA/xssLsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="152829607"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:29:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUnba-0000000ACTu-3tWu;
+	Thu, 26 Jun 2025 17:29:34 +0300
+Date: Thu, 26 Jun 2025 17:29:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 1/4] gpiolib: acpi: Add a helper for programming
+ debounce
+Message-ID: <aF1ZTrq4FLnpSz0q@smile.fi.intel.com>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625215813.3477840-2-superm1@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-PINCTRL_RZV2M is selected by ARCH_R9A09G011, hence there is no need to
-depend on the latter.  Move the dependency on COMPILE_TEST to the symbol
-prompt, like is done for all other auto-selected pin control symbols.
+On Wed, Jun 25, 2025 at 04:58:10PM -0500, Mario Limonciello wrote:
+> 
+> Debounce is programmed in two places and considered non-fatal in one of
+> them. Introduce a helper for programming debounce and show a warning
+> when failing to program.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued in renesas-pinctrol for v6.17.
+> This is a difference in behavior for the call
+> in acpi_dev_gpio_irq_wake_get_by().
 
- drivers/pinctrl/renesas/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+When I meant "both", I was thinking of the _single_ existing case and new one
+which you are about to add. In principle, I think changing behaviour here is
+undesired. We provoke BIOS writers to make mistakes with debounce settings in
+GpioInt() resources.
 
-diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
-index 5d7e6d5dbfa90e3e..bbcbb9f33f71d6a6 100644
---- a/drivers/pinctrl/renesas/Kconfig
-+++ b/drivers/pinctrl/renesas/Kconfig
-@@ -250,9 +250,8 @@ config PINCTRL_RZN1
- 	  This selects pinctrl driver for Renesas RZ/N1 devices.
- 
- config PINCTRL_RZV2M
--	bool "pin control support for RZ/V2M"
-+	bool "pin control support for RZ/V2M" if COMPILE_TEST
- 	depends on OF
--	depends on ARCH_R9A09G011 || COMPILE_TEST
- 	select GPIOLIB
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
+I agree on the patch...
+
+> -			/* ACPI uses hundredths of milliseconds units */
+> -			ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
+> -			if (ret)
+> -				return ret;
+> +			acpi_set_debounce_timeout(desc, info.debounce);
+
+...except this hunk.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
 
