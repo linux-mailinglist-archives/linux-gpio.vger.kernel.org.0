@@ -1,136 +1,106 @@
-Return-Path: <linux-gpio+bounces-22257-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22258-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C15FDAE9C8F
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 13:33:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B02C3AE9DF5
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 14:58:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E1B11C27073
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 11:33:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DBD85A5BBC
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 12:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2DCC26AA88;
-	Thu, 26 Jun 2025 11:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtSe9HZf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F16F2E425A;
+	Thu, 26 Jun 2025 12:58:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7545A17BA5;
-	Thu, 26 Jun 2025 11:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D1D2E1C51;
+	Thu, 26 Jun 2025 12:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750937590; cv=none; b=eI4dL4bPTsMeQi2RlUkqE++HX+zMWA7OZRAuJyFX6h0nKAEpOd7+uJVzxPV2Ky7xlSoyuamJkT/Tb5p+xdh+NbSM9pXdM6v0GT/kZUpOF65Wfywvur4GBiiXT72EuJSrKkxu1mS7LNqRrZsX5kX4IVWmZRx2LrZsPxETXZP12DQ=
+	t=1750942710; cv=none; b=VIU017bXVlrlQshgur5a1tR8MoeZeS9MIYj9ZMfmG3VFOiGhNCmc1cCBxRunbNQI/nHbYjjjBgbABouQqnwMMAfvCIyH8Gs0+Up8r1apUmZrrA5C7h6X5ihZsKnQV8G5XRm60tWM6J8R/jveWXG+w8YbTOvTrUZLSanvrtBMqME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750937590; c=relaxed/simple;
-	bh=xNNGbFh2wsJes74tor0RiVvoVzoUaZ9XjJ4mHjEG10o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rAJFwsdXLxNrVspwnLD47sgpYTO9Qm8wlx3VYVWI/NOz2YaCT0MNCnFpCQ+KBWys4y933UzF5KZBv9OjPXTQ2GoOpoczYbwB6VVQSZvy4nVYr9wNIZ4n5pgX2E/0mx1mNDKsYO1DLf/RMl/Bd7Ng0hA3j0Cig/SFYtOAnvHzn+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtSe9HZf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14517C4CEEB;
-	Thu, 26 Jun 2025 11:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750937590;
-	bh=xNNGbFh2wsJes74tor0RiVvoVzoUaZ9XjJ4mHjEG10o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RtSe9HZfMvfkJBx7YBgx9Oq9DqpdzUgG6gfBEUK4kGGwBB4sitcig369ayeEGvPnh
-	 7krEeAUt7B9cf9MsxMDeGZ0BrOdkjXACLLUkuGuXzoeoDVu0mNXsJWbuVghHvg4Wvc
-	 j5A170qvNf2nt1mp5lQHDMp4abpNMh/H/XRGjxJy3q8O+yIReT2A9VBG5Yf39m4LeD
-	 XMdlpHz3VfwmxRrp4OppnZXkfo6TIv5DAiwgz3qHRK06U7ElLlf9t+i4lvrQbUog/8
-	 7NYp4VWnsj4ogZs7nynth1Vkd/sJEamcYmCmY5jZ3vux/6XGv9QMCB2PNb3svHvGcg
-	 h5xkGOV4TJm5w==
-Message-ID: <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
-Date: Thu, 26 Jun 2025 06:33:08 -0500
+	s=arc-20240116; t=1750942710; c=relaxed/simple;
+	bh=t4pxBLbqxxPIz9D2At4HMJPxGgXLJB+JnotsqRyP56Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AJgZ47pCL8kcjMRXXua8LdIcX7AyXLhE2FArs25FFjXkWWRfoUK6JqfwNjCc2SyqEun7EGdUtMHG4epxm9JLyOGZSFqaJKj5TLsYZJztgfChKIUG9Bj853SNaZFIQhE1oE70bVexEuvmLvVSGbkyH5MqgXSBzLJznTyrgNsUYNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-53167fb5690so347419e0c.3;
+        Thu, 26 Jun 2025 05:58:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750942707; x=1751547507;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qf/4wlX2i1QC3Ii3lUg37yjArJzQsO6siXDkyQcsJXg=;
+        b=wkLbWG1otfRRBe3tjtrgeJS5Ox+HRf2bw2Du4crHjPNT9Nc/SQAt4xbP26+h7Rr3Ru
+         bik4ZIAxstg4rpYz3yqvxSuAwJv4zRz6KpbK9d4Q2vIeHMAnR+6R+J1m9P41vQQesABH
+         ahuNHImv6zA2YsMUuN1Le0S+juz+QxX1QRPgMN1PJTUAkLQ0ijLtkP3okSe+1Pq7A159
+         /EkaLsrr5dhg98BbXtZnPgRIEopz+5TFR/nuN0DNcf+efx4kJl81X3XRgrBc4Rn/by+q
+         tvzE59qzpiFEYmpsxJ8lOKJ4ZQ4Nf+H62nA8fDIqBkDNXbTrKsndyiUWiYndE4HFBdo3
+         b5ug==
+X-Forwarded-Encrypted: i=1; AJvYcCUY/yRbwcJr+X/D1zNI45OqVJziwFbbkH+xmWPj/NTWoBREF6MPZYhhLJ+JGNZhKybb8Yb2F2tgRosaVC1jWoXBSZI=@vger.kernel.org, AJvYcCV0XIdJ86RaqHTnGs5ppuvv7cDevnvyyAwv9pBiTVbUWS8FPWIZ0xmCTJBCTTeOkWXntgc8czCbklLa@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzUI8scM+ruZht3nSnDKvVAjN6JeiFU1fmSoTn2+Z4BBt/Efu9
+	U+rM+yba61+0onUeIEIR0SxE3zxc0J/R42FkxUvLgV//37b5KtA9yo0V2D0X3t/2
+X-Gm-Gg: ASbGncsVFEFGYjew7buTJayzYkNNM2888ksNupKtAoBiQohx97e0Av4G/TcAsP/P50q
+	hLShUFQN2jFtDWH6uz6HLrKoZrJkg5eCv69VBLOCReLqmGhUjBGA8bjKxs2hkpF1304WGmSMwFD
+	dwLpdVp3MbrP7xx+1uCm9AMewOvVF4ce7fExHE0fH9amKguT7q3UQ/gIZ/P/HplG9GsbPTa7mv1
+	HoEjXWYsuWZ5lH4CFtSUdDNaaZz8RCOVWt26YpjsvFgHItyvFzJz+BcyyvPbTc6wI4tZxb0EzXV
+	MQVPgF1vFfh4ch2yukd2TN/X5UAYjprx5NSU+ZLbtI7+nf5eH2Pq41fdALedzlY5PAKepQl8P7I
+	2RCRq+yVqijHyZdJKngvqZ41Qlk7q
+X-Google-Smtp-Source: AGHT+IEbIILD+HXby+FUlqlZKe8TD7fXTiOrWFr6BKZ+laZdXrAvOgUKeui4kOXGO7huSwN1GBCSkQ==
+X-Received: by 2002:a05:6122:1ac2:b0:52a:9178:d281 with SMTP id 71dfb90a1353d-532ef53fa2emr5870824e0c.2.1750942707059;
+        Thu, 26 Jun 2025 05:58:27 -0700 (PDT)
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-531ab37e4a6sm2284438e0c.40.2025.06.26.05.58.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 05:58:26 -0700 (PDT)
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5313ea766d8so346036e0c.0;
+        Thu, 26 Jun 2025 05:58:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUXkeIj0dIuflJyPmuU2qqeK7gChxTU/Qa0ahZJg73kcqXa/jgkI4l5gGtsBoXJaWtgOCJ2UQvZPJP7x8WIUIPQUEE=@vger.kernel.org, AJvYcCUlePgkW6LtVbZvrmFAqP3HzlCbvKovCgnwQMjeqYr8He7luMZJ8w8mBixlw1yzxh01rC3w1PYW3RdC@vger.kernel.org
+X-Received: by 2002:a05:6122:8299:b0:530:720b:abe9 with SMTP id
+ 71dfb90a1353d-532ef638acdmr5485618e0c.7.1750942706217; Thu, 26 Jun 2025
+ 05:58:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250625215813.3477840-1-superm1@kernel.org>
- <20250625215813.3477840-5-superm1@kernel.org>
- <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <87ecv9ragd.wl-kuninori.morimoto.gx@renesas.com> <87cyatrafh.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87cyatrafh.wl-kuninori.morimoto.gx@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 26 Jun 2025 14:58:14 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUb4DxraEEr6HB-seQpJ3nij7ydE+B_4AP=gMf1NLZWow@mail.gmail.com>
+X-Gm-Features: Ac12FXytY2D8l01bk8a4r8WewuWWXJNIXUmrLX-3512PduRulCNJwQaQ8BLLprs
+Message-ID: <CAMuHMdUb4DxraEEr6HB-seQpJ3nij7ydE+B_4AP=gMf1NLZWow@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: renesas: sort Renesas Kconfig configs
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 24 Jun 2025 at 07:11, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> Current Renesas Kconfig is randomly arranged. Let's sort it by
+> alphabetical/number order, same as Makefile.
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On 6/26/25 3:35 AM, Hans de Goede wrote:
-> Hi Mario,
-> 
-> On 25-Jun-25 23:58, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> Sending an input event to wake a system does wake it, but userspace picks
->> up the keypress and processes it.  This isn't the intended behavior as it
->> causes a suspended system to wake up and then potentially turn off if
->> userspace is configured to turn off on power button presses.
->>
->> Instead send a PM wakeup event for the PM core to handle waking the system.
->>
->> Cc: Hans de Goede <hansg@kernel.org>
->> Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/input/keyboard/gpio_keys.c | 7 +------
->>   1 file changed, 1 insertion(+), 6 deletions(-)
->>
->> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
->> index 773aa5294d269..4c6876b099c43 100644
->> --- a/drivers/input/keyboard/gpio_keys.c
->> +++ b/drivers/input/keyboard/gpio_keys.c
->> @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
->>   		pm_stay_awake(bdata->input->dev.parent);
->>   		if (bdata->suspended  &&
->>   		    (button->type == 0 || button->type == EV_KEY)) {
->> -			/*
->> -			 * Simulate wakeup key press in case the key has
->> -			 * already released by the time we got interrupt
->> -			 * handler to run.
->> -			 */
->> -			input_report_key(bdata->input, button->code, 1);
->> +			pm_wakeup_event(bdata->input->dev.parent, 0);
->>   		}
->>   	}
->>   
-> 
-> Hmm, we have the same problem on many Bay Trail / Cherry Trail
-> windows 8 / win10 tablets, so  this has been discussed before and e.g.
-> Android userspace actually needs the button-press (evdev) event to not
-> immediately go back to sleep, so a similar patch has been nacked in
-> the past.
-> 
-> At least for GNOME this has been fixed in userspace by ignoring
-> power-button events the first few seconds after a resume from suspend.
-> 
+Gr{oetje,eeting}s,
 
-The default behavior for logind is:
+                        Geert
 
-HandlePowerKey=poweroff
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Can you share more about what version of GNOME has a workaround?
-This was actually GNOME (on Ubuntu 24.04) that I found this issue.
-
-Nonetheless if this is dependent on an Android userspace problem could 
-we perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
-
-Most people not using Android would be compiling with that enabled in 
-their kernel I'd expect.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
