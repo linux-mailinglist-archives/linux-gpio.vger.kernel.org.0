@@ -1,105 +1,187 @@
-Return-Path: <linux-gpio+bounces-22307-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22308-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31E01AEA96C
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 00:14:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9F3CAEA986
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 00:21:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1835A7A52D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 22:12:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D0893B8E2C
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 22:20:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3AD02609CC;
-	Thu, 26 Jun 2025 22:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHMrCZgi"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F1F21930B;
+	Thu, 26 Jun 2025 22:21:01 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657C823B634
-	for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 22:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E768515278E
+	for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 22:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976053; cv=none; b=kL9ciVMOmW2zDOfIUFIfmxUswJuesa5eO+V48JGZYWAk6MBeLaIn5ViRZv2ZbEyxqs52teAYZ1DEnkzZVTXgLA/iQ0R2LVJBMuvxAjo2H+fNb2bkqVuckydGbIGqC3eNdYCjrnLAUx4vfZyMV8XP+vUKo64EkUPH53bLU1BUXTg=
+	t=1750976461; cv=none; b=Z/vZNc+zC9Ew+Zjxvk7VMivwFD+x+4JVPdqN2AajCM3OaWMrLKdztD3jet5cnIuRU0Q/uw4BRzeAjVrALtYTrWyjDM8noZQuU5CpQxsBUJIx+T3WVEI+pz5ueFPd9rPg7jNBl2u4E3jZlpi4xTdmLNNGGWh9+AH0NMvgTWRAPa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976053; c=relaxed/simple;
-	bh=gC56RmKKAhF68pqoNPPH7KgGZDtwgImiwR3h/lnssx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G4yXPXvMVYtAjRJhr25TAGmn3+jXZyTX63fBo265O+skTPoE9j2Tfb2bmDOPltzP9BBdsPGuvbr01JcFlDmxTVEz78WpEPd/KrR26Z3MVFR9xNrXB+/DSzV9ETLciznNK00ZlulbqoeJgYmZItiEMmduzu37RprEeFByK+0VKtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHMrCZgi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395DAC4CEEB;
-	Thu, 26 Jun 2025 22:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750976052;
-	bh=gC56RmKKAhF68pqoNPPH7KgGZDtwgImiwR3h/lnssx0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YHMrCZgis6JxjnkFXILeJqjntX+esdvAS4C40yJcl6MbXZRjV4EnpkNeFfUZXQ+M4
-	 hfUUgRBXIYgxqHjQpOruY8CU/ymGFT/mr1606z1beViR8H0kxenWCEexyUXAla464q
-	 7n+N67ictGy/2NKeM2NiUZG2QClrezphN4kilIjTWA1oKbUTFQRWEC6gyU2YtfiZnd
-	 g0yVAM5OfXRaT1v1K9zLI+i8cCTBR6vawjpHx7zq7ldXQRcD1nTWYgSF1WWFKt8JRI
-	 CcDll9TVWeofP3UTmPR7BjZbR8nAZ6le7joTgur6BMXvsJd1u3tRLuPzERfPD78cDI
-	 ZwF8I84/WcsLA==
-From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	Basavaraj.Natikar@amd.com,
-	Shyam-sundar.S-k@amd.com,
-	linus.walleij@linaro.org,
-	dmitry.torokhov@gmail.com,
-	hansg@kernel.org
-Cc: linux-gpio@vger.kernel.org
-Subject: [PATCH] pinctrl: amd: Clear GPIO debounce for suspend
-Date: Thu, 26 Jun 2025 17:14:08 -0500
-Message-ID: <20250626221409.2256551-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750976461; c=relaxed/simple;
+	bh=r1HSdZ6WNVEi/Mi83UVnh9NXStJTYzNzdw0G+GYtays=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oD1n3icFWwjaXK/4ph3XzgL8FBEQR6NS58zu8N28gA8CPLmI+Uib2fDs3vJ6XV+hzFJw6SJuHdKBsm2uhr+IpqU+2eligPEoDHK4rdRQmjsbtvEGEbH/jQQW0msIPJJwUaMIcRAYfDPYeDcjaduJspfDWUduOlrO55ATOIe8/CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A922F169E
+	for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 15:20:41 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F41293F66E
+	for <linux-gpio@vger.kernel.org>; Thu, 26 Jun 2025 15:20:58 -0700 (PDT)
+Date: Thu, 26 Jun 2025 23:20:43 +0100
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-omap@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-samsung-soc@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH RFT 3/6] mfd: vexpress-sysreg: set-up software nodes for
+ gpio-mmio
+Message-ID: <aF3Hu0bMVfkbXdFn@e110455-lin.cambridge.arm.com>
+References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
+ <20250624-gpio-mmio-pdata-v1-3-a58c72eb556a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250624-gpio-mmio-pdata-v1-3-a58c72eb556a@linaro.org>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Tue, Jun 24, 2025 at 03:19:14PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Replace struct bgpio_pdata - that we plan to remove - with software
+> nodes containing properties encoding the same values thatr can now be
+> parsed by gpio-mmio.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-soc-button-array hardcodes a debounce value by means of gpio_keys
-which uses pinctrl-amd as a backend to program debounce for a GPIO.
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
 
-This hardcoded value doesn't match what the firmware intended to be
-programmed in _AEI. The hardcoded debounce leads to problems waking
-from suspend. There isn't appetite to conditionalize the behavior in
-soc-button-array or gpio-keys so clear it when the system suspends to
-avoid problems with being able to resume.
+I'm OK with this going through the GPIO tree.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>
-Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
-Link: https://lore.kernel.org/linux-input/mkgtrb5gt7miyg6kvqdlbu4nj3elym6ijudobpdi26gp4xxay5@rsa6ytrjvj2q/
-Link: https://lore.kernel.org/linux-input/20250625215813.3477840-1-superm1@kernel.org/
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/pinctrl/pinctrl-amd.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Best regards,
+Liviu
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 5cf3db6d78b79..4276bbe77e0e9 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -979,6 +979,13 @@ static int amd_gpio_suspend_hibernate_common(struct device *dev, bool is_suspend
- 				  pin, is_suspend ? "suspend" : "hibernate");
- 		}
- 
-+		/* clear debounce */
-+		if (gpio_dev->saved_regs[i] & (DB_CNTRl_MASK << DB_CNTRL_OFF)) {
-+			amd_gpio_set_debounce(gpio_dev, pin, 0);
-+			pm_pr_dbg("Clearing debounce for GPIO #%d during %s.\n",
-+				  pin, is_suspend ? "suspend" : "hibernate");
-+		}
-+
- 		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
- 	}
- 
+> ---
+>  drivers/mfd/vexpress-sysreg.c | 46 ++++++++++++++++++++++++++-----------------
+>  1 file changed, 28 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/mfd/vexpress-sysreg.c b/drivers/mfd/vexpress-sysreg.c
+> index ef03d6cec9ff6927668d051ca459eb1d8ff7269e..fc2daffc4352cca763cefbf6e17bdd5242290198 100644
+> --- a/drivers/mfd/vexpress-sysreg.c
+> +++ b/drivers/mfd/vexpress-sysreg.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/property.h>
+>  #include <linux/slab.h>
+>  #include <linux/stat.h>
+>  
+> @@ -37,22 +38,34 @@
+>  
+>  /* The sysreg block is just a random collection of various functions... */
+>  
+> -static struct bgpio_pdata vexpress_sysreg_sys_led_pdata = {
+> -	.label = "sys_led",
+> -	.base = -1,
+> -	.ngpio = 8,
+> +static const struct property_entry vexpress_sysreg_sys_led_props[] = {
+> +	PROPERTY_ENTRY_STRING("label", "sys_led"),
+> +	PROPERTY_ENTRY_U32("ngpios", 8),
+> +	{ }
+>  };
+>  
+> -static struct bgpio_pdata vexpress_sysreg_sys_mci_pdata = {
+> -	.label = "sys_mci",
+> -	.base = -1,
+> -	.ngpio = 2,
+> +static const struct software_node vexpress_sysreg_sys_led_swnode = {
+> +	.properties = vexpress_sysreg_sys_led_props,
+>  };
+>  
+> -static struct bgpio_pdata vexpress_sysreg_sys_flash_pdata = {
+> -	.label = "sys_flash",
+> -	.base = -1,
+> -	.ngpio = 1,
+> +static const struct property_entry vexpress_sysreg_sys_mci_props[] = {
+> +	PROPERTY_ENTRY_STRING("label", "sys_mci"),
+> +	PROPERTY_ENTRY_U32("ngpios", 2),
+> +	{ }
+> +};
+> +
+> +static const struct software_node vexpress_sysreg_sys_mci_swnode = {
+> +	.properties = vexpress_sysreg_sys_mci_props,
+> +};
+> +
+> +static const struct property_entry vexpress_sysreg_sys_flash_props[] = {
+> +	PROPERTY_ENTRY_STRING("label", "sys_flash"),
+> +	PROPERTY_ENTRY_U32("ngpios", 1),
+> +	{ }
+> +};
+> +
+> +static const struct software_node vexpress_sysreg_sys_flash_swnode = {
+> +	.properties = vexpress_sysreg_sys_flash_props,
+>  };
+>  
+>  static struct mfd_cell vexpress_sysreg_cells[] = {
+> @@ -61,22 +74,19 @@ static struct mfd_cell vexpress_sysreg_cells[] = {
+>  		.of_compatible = "arm,vexpress-sysreg,sys_led",
+>  		.num_resources = 1,
+>  		.resources = &DEFINE_RES_MEM_NAMED(SYS_LED, 0x4, "dat"),
+> -		.platform_data = &vexpress_sysreg_sys_led_pdata,
+> -		.pdata_size = sizeof(vexpress_sysreg_sys_led_pdata),
+> +		.swnode = &vexpress_sysreg_sys_led_swnode,
+>  	}, {
+>  		.name = "basic-mmio-gpio",
+>  		.of_compatible = "arm,vexpress-sysreg,sys_mci",
+>  		.num_resources = 1,
+>  		.resources = &DEFINE_RES_MEM_NAMED(SYS_MCI, 0x4, "dat"),
+> -		.platform_data = &vexpress_sysreg_sys_mci_pdata,
+> -		.pdata_size = sizeof(vexpress_sysreg_sys_mci_pdata),
+> +		.swnode = &vexpress_sysreg_sys_mci_swnode,
+>  	}, {
+>  		.name = "basic-mmio-gpio",
+>  		.of_compatible = "arm,vexpress-sysreg,sys_flash",
+>  		.num_resources = 1,
+>  		.resources = &DEFINE_RES_MEM_NAMED(SYS_FLASH, 0x4, "dat"),
+> -		.platform_data = &vexpress_sysreg_sys_flash_pdata,
+> -		.pdata_size = sizeof(vexpress_sysreg_sys_flash_pdata),
+> +		.swnode = &vexpress_sysreg_sys_flash_swnode,
+>  	}, {
+>  		.name = "vexpress-syscfg",
+>  		.num_resources = 1,
+> 
+> -- 
+> 2.48.1
+> 
+
 -- 
-2.43.0
-
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
 
