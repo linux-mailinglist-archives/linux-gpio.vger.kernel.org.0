@@ -1,107 +1,185 @@
-Return-Path: <linux-gpio+bounces-22259-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22260-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78DA9AE9DFA
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 14:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 70313AE9E0F
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 15:01:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D02DE7A7583
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 12:57:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8D5CE7AEAD8
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 13:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC682E4273;
-	Thu, 26 Jun 2025 12:58:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF29A2E426E;
+	Thu, 26 Jun 2025 13:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q28LkwpJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5310D2E3AFC;
-	Thu, 26 Jun 2025 12:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76D82E336E;
+	Thu, 26 Jun 2025 13:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750942736; cv=none; b=uWxTr0aUFOkqhRjP6O9M07Omkp0Eb90bp75qyTHyCY84sBsdan5ev46GeyRiTegGsNKC85vvZ7LIpdMXDenh4qx8yVBnOGP0s5rgO16tmoBfIvMGsj8fUaa29lfZRXbiCF9uloBRYf/U+7ku0jho7dyshlPt2mPY0f+egIxst9M=
+	t=1750942876; cv=none; b=c1aKcSXYjTQ7QGOSPTd8Bm2UoHD9yIhDIFX8oZfwujmajEBNr7FOScnezRe00qt6oZLr8L6Al9QGs5c7pWT4oeOmSXsMtBFMV1c4jHZzoHeL1oeil85pBBdZjgnuoitK0hpcqN8nBSRxy5gYXB7jQCKtmAf10cKHsZy2DhB86yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750942736; c=relaxed/simple;
-	bh=Rxz31s1jalybzhHEpZO9plZ1vsduJDIIv0TPADNN5ZY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N2alVDyL5x7yqiKMeajIalDHj3Z8v+yCJr0XYTD7MvlHmPk38LQpAlyeJ2dHxxBt9d5woYDs98+OmjAF8824CDVix2GWSJrG/iV+NCbsaoJz0/WnLWq5objq2Iw9tVgHq2GBMGsNR5h6OTePBzO1kzUiZ3a4ev2x9y7US9wdrVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-53145c74e15so303070e0c.0;
-        Thu, 26 Jun 2025 05:58:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750942730; x=1751547530;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kaL9PeUTcn0rjs8U7iTEFfi3hBYAet6RyYfN2TBKzfM=;
-        b=Tu7izLz4NspXkJlTQhybmFmcVVGtfmIANH1pKuOa8rnOCc+yo8cDd4o7/ORjQ44/YB
-         SQdyJ0IB6L9oQWcxE2sXdMfIMSCnPUACqAKcCozZ8PUVuJdstlh73iotoVQBTNiIuxUM
-         XjthxuGBFQO/rivzxvRazItN1ym0ewBnHBQSH+SZ7Y8fiQaTo2eFpQDo6VCUVubkJaGQ
-         acGqeieay/WliHZK221zAcFNF+u+JcFyy/AvrVjcRLZitR9anWs6wwDyZJozPDhHy/Ws
-         1NTvNj//pt7k/iWFC/mmwyEcqlfxIHNWUBKgxTFsjMVdmXwEBFwXpoE/mTAEuk/Ok7ZE
-         +K1w==
-X-Forwarded-Encrypted: i=1; AJvYcCU3nhKUye+EH73ge4xAD+zOgAh0eI8q7ycdOLkBq7Z6gIlL/yQiPwEjelPOjhPnDekcW7B4gkVWXCcp@vger.kernel.org, AJvYcCVpmciNNGSR0nj9jWbX7kSKs0KHcgwhnvKHIO5+Ex1sH58eYM+G6QT+D2f9OXBvwY3lCCjZb6VcXMEHr3hWVy0YQms=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1IKcdE5rrfjWKh4YgqjzfC/sCxXXuNaIOIsb52P9AacLi4Y04
-	0KvZzdKPjJGi9WVU9j4/quNtJYC1Wu2HM6JgBsgDXpTkxF1Yr73zXR/bd+6d72T4
-X-Gm-Gg: ASbGncsR7mMnpHkjwZfUz6aFvBnSv/PxZxKP5Y/UtRqG+oSTFUHTKdWvUs0BYqJZ5Sa
-	hwHivqX06QzQVKzOTIEDd4SoLo/Q04Ku6u86eYmIAtulIDkn6wLT/vGu67KLqYvrjOp2koqKWyV
-	qoUo+B7IveOxKJp3DCReqswNHtTzhvxYhyUi7s7oB3rdzU+V2/FBv5+aMedi0+6aU/NGNPj3w17
-	CeHKMtntUw8XSSpGj3TsqqRY+IXtMqzpvttZLn5uSLBHfvWXZIQCKfYJ3zKnDJ7z/epolZD0tSu
-	6UkmJBty27b47+8ARS28EMHorxCHHMdDxdWE8KM2QAfSj2ygI3BsWNYPFOUCBkxasrg3+SjqMq/
-	hCClQ3hSkq+i8+OONyhZIYq/kjPBd8+sXQQI=
-X-Google-Smtp-Source: AGHT+IEtfdFPll7isOvRO1XBZm70yopFgktd1+R58P77zKcYLIWu7+3/HWRf7/KviuxIRfiOUpXhFg==
-X-Received: by 2002:a05:6122:6608:b0:531:312c:a715 with SMTP id 71dfb90a1353d-532fae286e3mr3120168e0c.2.1750942730319;
-        Thu, 26 Jun 2025 05:58:50 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-531ab2311fesm2270587e0c.16.2025.06.26.05.58.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 05:58:49 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e7fac85892so242350137.3;
-        Thu, 26 Jun 2025 05:58:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUWN+9rCRby0vPBP8ePCzDZ0fDDIOhlly1/o7lExjUYd6Tph2M9GqGtrb6UlnxWgegUFAkSC18Lnb/0@vger.kernel.org, AJvYcCWVhxxZEC3gY1spMpQZ6n1DXcq8tiyBjjy0mbVRuqBzIBFIL09XeiqW6ecku316oW0iavZjrKfygoYeUEzUTa1XXXM=@vger.kernel.org
-X-Received: by 2002:a05:6102:f09:b0:4ec:b143:86ce with SMTP id
- ada2fe7eead31-4ecda119bfcmr3166068137.8.1750942729449; Thu, 26 Jun 2025
- 05:58:49 -0700 (PDT)
+	s=arc-20240116; t=1750942876; c=relaxed/simple;
+	bh=yIokvzezyxkaDoR3N6Db1QnHti3wLHxdRvurH4Gd3hQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CiAX0H22kCBiKqX8ovzyD/ymhUYKHmyxqBoQSdldMNyxIKTE2rSp+nDLIP8Yq+cH3rFwNoo8xKsBs2O8G8G7M+H8yFw86jvB9rn8B6vsVhZ5mPwE4KI/MkNHEFMynzUs0rL7usVt5xo3q5uAkE0bAIP3rJIiS2AbJlndHuxHyvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q28LkwpJ; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750942875; x=1782478875;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yIokvzezyxkaDoR3N6Db1QnHti3wLHxdRvurH4Gd3hQ=;
+  b=Q28LkwpJD91V9C2PpGlriGKY1Ti1Crda0ka8xO2wHlCYkD5b1bOfp6gx
+   LG7h7IPLDQivtRi59e0Td4V1YIppR0t6yx1Etv+lFWQbIxiUSMkbqbUoC
+   pquddECptbu18NylqIYgYMjLnOLc0LAwSIWxFK0arZmdw3v3vQed79lWt
+   hY5SV0AE6Uhj4XYfqRoB04hSWA2bB+Au1wMhEnsjEi6sTflGTo07aDC9M
+   PWPZhQEW6AyTjmSO2Vrv+mhfaa+PvR5xTu8yRHC1NnZoHHgfe1TTW/9Ug
+   CJg+G2NHlH4Gn1OhiGfpzYXuPyNvsmzunuo1robCzmJbqvPeAyfOdYui6
+   g==;
+X-CSE-ConnectionGUID: ffUVeZtAQburegXcMPnnAw==
+X-CSE-MsgGUID: T9TpO67TTeSVhUfyVN7umA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="78672894"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="78672894"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:01:14 -0700
+X-CSE-ConnectionGUID: Om+uTs5ZRLepCITQ05kCIw==
+X-CSE-MsgGUID: 4veAPY2LToqV56gdbka4rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="153014283"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 26 Jun 2025 06:01:12 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 650952E2; Thu, 26 Jun 2025 16:01:10 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <westeri@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH v1 1/1] Documentation: firmware-guide: gpio-properties: Spelling and style fixes
+Date: Thu, 26 Jun 2025 16:01:09 +0300
+Message-ID: <20250626130109.215848-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87ecv9ragd.wl-kuninori.morimoto.gx@renesas.com> <87bjqdraf1.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87bjqdraf1.wl-kuninori.morimoto.gx@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 26 Jun 2025 14:58:37 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUC_wnzEoK07DYxjQZWanirHRoHmpurSBomvJK65H91tw@mail.gmail.com>
-X-Gm-Features: Ac12FXwMTHyHZQw9vOIFZvzp3v-9uQkHC-QpbOQ9GH5HV6sr4KaEYuT2R1Q8bM4
-Message-ID: <CAMuHMdUC_wnzEoK07DYxjQZWanirHRoHmpurSBomvJK65H91tw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: renesas: unify config naming
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 24 Jun 2025 at 07:11, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> Renesas SoC has chip number / chip name. Some SoC is using chip number,
-> and some SoC is using chip name on current Renesas pincontrol Kconfig.
-> Let's unify "pin control support for ${CHIP_NUMBER} (${CHIP_NAME}).
->
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+- Use consistent style for active-high and active-low
+- For C and ASL code snippets use 4-space indentation consistently
+- Interleave case examples with the explanations of the certain case
+- Remove or add commas when appropriate
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ .../firmware-guide/acpi/gpio-properties.rst   | 30 +++++++++----------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
+index db0c0b1f3700..5addf7aaa833 100644
+--- a/Documentation/firmware-guide/acpi/gpio-properties.rst
++++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
+@@ -6,7 +6,7 @@ _DSD Device Properties Related to GPIO
+ 
+ With the release of ACPI 5.1, the _DSD configuration object finally
+ allows names to be given to GPIOs (and other things as well) returned
+-by _CRS.  Previously, we were only able to use an integer index to find
++by _CRS. Previously we were only able to use an integer index to find
+ the corresponding GPIO, which is pretty error prone (it depends on
+ the _CRS output ordering, for example).
+ 
+@@ -49,11 +49,11 @@ index
+ pin
+   Pin in the GpioIo()/GpioInt() resource. Typically this is zero.
+ active_low
+-  If 1, the GPIO is marked as active_low.
++  If 1, the GPIO is marked as active-low.
+ 
+ Since ACPI GpioIo() resource does not have a field saying whether it is
+-active low or high, the "active_low" argument can be used here.  Setting
+-it to 1 marks the GPIO as active low.
++active-low or active-high, the "active_low" argument can be used here.
++Setting it to 1 marks the GPIO as active-low.
+ 
+ Note, active_low in _DSD does not make sense for GpioInt() resource and
+ must be 0. GpioInt() resource has its own means of defining it.
+@@ -231,8 +231,8 @@ In those cases ACPI device identification objects, _HID, _CID, _CLS, _SUB, _HRV,
+ available to the driver can be used to identify the device and that is supposed
+ to be sufficient to determine the meaning and purpose of all of the GPIO lines
+ listed by the GpioIo()/GpioInt() resources returned by _CRS.  In other words,
+-the driver is supposed to know what to use the GpioIo()/GpioInt() resources for
+-once it has identified the device.  Having done that, it can simply assign names
++the driver is supposed to know what to use from the GpioIo()/GpioInt() resources
++for once it has identified the device. Having done that, it can simply assign names
+ to the GPIO lines it is going to use and provide the GPIO subsystem with a
+ mapping between those names and the ACPI GPIO resources corresponding to them.
+ 
+@@ -252,9 +252,9 @@ question would look like this::
+   static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
+ 
+   static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
+-    { "reset-gpios", &reset_gpio, 1 },
+-    { "shutdown-gpios", &shutdown_gpio, 1 },
+-    { }
++      { "reset-gpios", &reset_gpio, 1 },
++      { "shutdown-gpios", &shutdown_gpio, 1 },
++      { }
+   };
+ 
+ Next, the mapping table needs to be passed as the second argument to
+@@ -270,7 +270,7 @@ Using the _CRS fallback
+ 
+ If a device does not have _DSD or the driver does not create ACPI GPIO
+ mapping, the Linux GPIO framework refuses to return any GPIOs. This is
+-because the driver does not know what it actually gets. For example if we
++because the driver does not know what it actually gets. For example, if we
+ have a device like below::
+ 
+   Device (BTH)
+@@ -292,7 +292,7 @@ The driver might expect to get the right GPIO when it does::
+ 	...error handling...
+ 
+ but since there is no way to know the mapping between "reset" and
+-the GpioIo() in _CRS desc will hold ERR_PTR(-ENOENT).
++the GpioIo() in _CRS the desc will hold ERR_PTR(-ENOENT).
+ 
+ The driver author can solve this by passing the mapping explicitly
+ (this is the recommended way and it's documented in the above chapter).
+@@ -318,15 +318,15 @@ Case 1::
+   desc = gpiod_get(dev, "non-null-connection-id", flags);
+   desc = gpiod_get_index(dev, "non-null-connection-id", index, flags);
+ 
++Case 1 assumes that corresponding ACPI device description must have
++defined device properties and will prevent from getting any GPIO resources
++otherwise.
++
+ Case 2::
+ 
+   desc = gpiod_get(dev, NULL, flags);
+   desc = gpiod_get_index(dev, NULL, index, flags);
+ 
+-Case 1 assumes that corresponding ACPI device description must have
+-defined device properties and will prevent to getting any GPIO resources
+-otherwise.
+-
+ Case 2 explicitly tells GPIO core to look for resources in _CRS.
+ 
+ Be aware that gpiod_get_index() in cases 1 and 2, assuming that there
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.47.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
