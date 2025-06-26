@@ -1,125 +1,158 @@
-Return-Path: <linux-gpio+bounces-22252-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22253-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C059DAE9804
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 10:20:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AF4CAE9842
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 10:27:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 340EC3B7786
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 08:18:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93B654A17D5
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jun 2025 08:27:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7781265CB0;
-	Thu, 26 Jun 2025 08:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7591B25F960;
+	Thu, 26 Jun 2025 08:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSnP3GMD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EB425D1F1;
-	Thu, 26 Jun 2025 08:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F11206F23;
+	Thu, 26 Jun 2025 08:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925727; cv=none; b=oyC9fkCpidF4C1omKUbZyhaav0yTHGD1C43o5P1gvUfFbhovNLVLvVF/BCqGtQq9LQZ/RNAgdQ49aZblE6heye5thq0UTKBRwyNNBEVIr+Dk2FxBIZsST+hxhp6Yt2lwqv+FlHS5xcAhzJGL1eKul1nk/Bx2TgHZsBdD4f3M8JE=
+	t=1750926427; cv=none; b=fRDo3bztdjdEyt+f7NfTgn6sHJtgkQQUwRIsaxtfk1Ox67NWyH9IZ24WJlzhtd9gz7O1HWCR4lm5AWcQlNK4x7ZSARCphwX93Uux5Q7dZorhLxgm3vlLUeyQ6Qz5TsmxrXolFRVqD4Fypjzp1R8xt0BMVNW0k9f1264RMe4589s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925727; c=relaxed/simple;
-	bh=PEZYGH+OI3VJSlIhgXQphteONYdoErA4jc7oo1FClP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ntr3aOC8/MC6d+bQ3dJY0Y6O89H76n7TkwmybZHCMpKL18VcnBZoCwaTpizp8Ho3U9+3piTadp3L2AGQvCVRBiCiglPvL3vUrOK6SZcYZfdfpZUlemOrje2s5teY2l9P88lkIPdQ8fbwkdIGK/HCRcCe2cQoVIf/LpbTNij9f20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id 5C6011F0004B;
-	Thu, 26 Jun 2025 08:15:24 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id A5A52AC7F8D; Thu, 26 Jun 2025 08:15:23 +0000 (UTC)
-X-Spam-Level: *
-Received: from localhost.localdomain (unknown [192.168.1.65])
-	by laika.paulk.fr (Postfix) with ESMTP id 6F66CAC7F7C;
-	Thu, 26 Jun 2025 08:09:42 +0000 (UTC)
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Paul Kocialkowski <paulk@sys-base.io>
-Subject: [PATCH 5/5] arm64: dts: allwinner: a133-liontron-h-a133l: Add Ethernet support
-Date: Thu, 26 Jun 2025 10:09:23 +0200
-Message-ID: <20250626080923.632789-6-paulk@sys-base.io>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250626080923.632789-1-paulk@sys-base.io>
-References: <20250626080923.632789-1-paulk@sys-base.io>
+	s=arc-20240116; t=1750926427; c=relaxed/simple;
+	bh=S7XC0tUcCHKvkT+Ed0WOUsQ6fokGOML9A7PYuyOW2Js=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oWMFpAOxw8ey4b7R3VWlA3nMtCmDcvW03zzZyThE0XJKVunhsRxDIPzyRg5ehCArh0E7YhCmfqhp76clY2pYnfMGZc6cDU+beHxmD0ohwRBwIuOYv+w1uIVithFccqckooVxzq1v90JgQHEYtvwBYR1A/YGXo2GqDKjKCEFUvQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSnP3GMD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4973AC4CEEB;
+	Thu, 26 Jun 2025 08:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750926426;
+	bh=S7XC0tUcCHKvkT+Ed0WOUsQ6fokGOML9A7PYuyOW2Js=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XSnP3GMD0cNxXVox/QwHFndk0tVEsnIBiJSb/MkTiDKTc0rn69/+3Q/YS9Brvun73
+	 637vfIkKFfd/6j7jMcmLHlqGYn5IlQqgC4h6wIjAerTblRWu1YBvGM+jQzNiqOuAtY
+	 K1SzHvcR+nKc3HfJK4YionNXMtDavQ4BrChdt2hp6qopr0V+heN0T1JTiyM3bjCYn7
+	 DpWEe9kAS8r/KCA4M/5/ZTMVCarDS+VZwZmCU7pR821lfGJ7le3fOV3x0ScBvP4j2g
+	 A/A2M6x4L1LUX/9UlzDCNCrncH2fG5n+QOgM/dUXe/kBDJrOE36eq+3XErdgacayBb
+	 KFIa8yGMmhQJw==
+Message-ID: <61843beb-263d-475b-9876-fb273dd8d7fe@kernel.org>
+Date: Thu, 26 Jun 2025 10:27:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] Input: Don't program hw debounce for
+ soc_button_array devices
+To: Mario Limonciello <superm1@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-4-superm1@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250625215813.3477840-4-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The Liontron H-A133L board features an Ethernet controller with a
-JLSemi JL1101 PHY. Its reset pin is tied to the PH12 GPIO.
+Hi,
 
-Note that the reset pin must be handled as a bus-wide reset GPIO in
-order to let the MDIO core properly reset it before trying to read
-its identification registers. There's no other device on the MDIO bus.
+On 25-Jun-25 23:58, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> Programming a hardware debounce of 50ms causes problems where a button
+> doesn't work properly anymore on some systems.  This debounce is intended
+> for compatibility with systems with a mechanical switch so soc_button_array
+> devices should only be using a sofware debounce.
+> 
+> Add support for indicating that a driver is only requesting gpio_keys
+> to use software debounce support and mark that in soc_button_array
+> accordingly.
+> 
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-The datasheet of the PHY mentions that the reset signal must be held
-for 1 ms to take effect. Make it 2 ms (and the same for post-delay) to
-be on the safe side without wasting too much time during boot.
+Thanks, patch looks good to me:
 
-Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
----
- .../sun50i-a133-liontron-h-a133l.dts          | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Reviewed-by: Hans de Goede <hansg@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a133-liontron-h-a133l.dts b/arch/arm64/boot/dts/allwinner/sun50i-a133-liontron-h-a133l.dts
-index fe77178d3e33..04dd7f781894 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a133-liontron-h-a133l.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a133-liontron-h-a133l.dts
-@@ -65,6 +65,25 @@ &ehci1 {
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rmii_pins>;
-+	phy-handle = <&rmii_phy>;
-+	phy-mode = "rmii";
-+	status = "okay";
-+};
-+
-+&mdio {
-+	reset-gpios = <&pio 7 12 GPIO_ACTIVE_LOW>; /* PH12 */
-+	reset-delay-us = <2000>;
-+	reset-post-delay-us = <2000>;
-+
-+	rmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
--- 
-2.49.0
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/input/keyboard/gpio_keys.c    | 7 +++++--
+>  drivers/input/misc/soc_button_array.c | 1 +
+>  include/linux/gpio_keys.h             | 2 ++
+>  3 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> index f9db86da0818b..773aa5294d269 100644
+> --- a/drivers/input/keyboard/gpio_keys.c
+> +++ b/drivers/input/keyboard/gpio_keys.c
+> @@ -552,8 +552,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+>  		bool active_low = gpiod_is_active_low(bdata->gpiod);
+>  
+>  		if (button->debounce_interval) {
+> -			error = gpiod_set_debounce(bdata->gpiod,
+> -					button->debounce_interval * 1000);
+> +			if (ddata->pdata->no_hw_debounce)
+> +				error = -EINVAL;
+> +			else
+> +				error = gpiod_set_debounce(bdata->gpiod,
+> +							   button->debounce_interval * 1000);
+>  			/* use timer if gpiolib doesn't provide debounce */
+>  			if (error < 0)
+>  				bdata->software_debounce =
+> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+> index b8cad415c62ca..dac940455bea8 100644
+> --- a/drivers/input/misc/soc_button_array.c
+> +++ b/drivers/input/misc/soc_button_array.c
+> @@ -232,6 +232,7 @@ soc_button_device_create(struct platform_device *pdev,
+>  	gpio_keys_pdata->buttons = gpio_keys;
+>  	gpio_keys_pdata->nbuttons = n_buttons;
+>  	gpio_keys_pdata->rep = autorepeat;
+> +	gpio_keys_pdata->no_hw_debounce = TRUE;
+>  
+>  	pd = platform_device_register_resndata(&pdev->dev, "gpio-keys",
+>  					       PLATFORM_DEVID_AUTO, NULL, 0,
+> diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
+> index 80fa930b04c67..c99f74467fda6 100644
+> --- a/include/linux/gpio_keys.h
+> +++ b/include/linux/gpio_keys.h
+> @@ -48,6 +48,7 @@ struct gpio_keys_button {
+>   * @enable:		platform hook for enabling the device
+>   * @disable:		platform hook for disabling the device
+>   * @name:		input device name
+> + * @no_hw_debounce:	avoid programming hardware debounce
+>   */
+>  struct gpio_keys_platform_data {
+>  	const struct gpio_keys_button *buttons;
+> @@ -57,6 +58,7 @@ struct gpio_keys_platform_data {
+>  	int (*enable)(struct device *dev);
+>  	void (*disable)(struct device *dev);
+>  	const char *name;
+> +	bool no_hw_debounce;
+>  };
+>  
+>  #endif
 
 
