@@ -1,212 +1,223 @@
-Return-Path: <linux-gpio+bounces-22370-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22371-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB7FAEC0F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 22:30:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F31D9AEC153
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 22:44:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 784D61C470D7
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 20:30:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81E597B67CC
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 20:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800D32236FD;
-	Fri, 27 Jun 2025 20:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1933A2ECD06;
+	Fri, 27 Jun 2025 20:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7YBeB7k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BS/w/NCq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358F6C2FB;
-	Fri, 27 Jun 2025 20:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE04022D9E6;
+	Fri, 27 Jun 2025 20:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751056196; cv=none; b=IkEHG+VXZVQC915wnx9XhEAMOCMOTtnM/ozFN3z0Gfq6g6t4DHOboDGqCu7xTJMAQT4Ge1NLLMhy3a5zhRwjVeWtBdFLoVn9AGlv5Q4k00Y5PZhaSn0JqtnGxph21CJXEmffh9KmquqUbc3kbqf3oWZBD5QsVRX836DdidaDaRs=
+	t=1751057073; cv=none; b=jz5vqTxRAs4XSJ6/onPNyXFd6NOgoz8wkYkDJ/pshJwsZpDseQCJC0YgTM/hlos0oZw28HH5jaZqR/Db5BF87h7ZkAkhUT5BOXqhSofPErLebshd0xUIWW+grQMbUheUSoxcL1/qCZRinRBrIYz+kVEreMrhPz3XcbY6vdqCU9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751056196; c=relaxed/simple;
-	bh=gT6NJnsYHPg1UMCs3hQfS9bGXsHDce6/hgDoZLEZD4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KeDgXsslPfUi78t6ZRrhEK8MfPAP0kPGGf+MsSPnD6xXBY0l3MjuL82V8NshqqhfSnB230ofljgp6DjCI4VDzpBaQ8RB7vwRoykrUpJU6JIDGTzA+b8ZAKpnhYovj3IahiLbcfTGltgqCfJ4YNXZdVUFmx0w5NHYG8THG/CZf4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7YBeB7k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B6FFC4CEE3;
-	Fri, 27 Jun 2025 20:29:54 +0000 (UTC)
+	s=arc-20240116; t=1751057073; c=relaxed/simple;
+	bh=5ybwmpFE7Qlupb6N5xt8amFVW1JpJnPiApvCG8fYQqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t1klHhum042rdyemOdS0b11FNzJ/rbKyrjz8qAXxRsjFQoMbsGSbcwSgWNorbIzRCCFy5n16FruA1WrbLIxkJiHmEkQgDAYLIwwMV+FqgR6uroK8PPD9phyLU3Mu/RD7323ISa+sL974CK3wLlIxgYCc8q05YEiJNt9poyAGfSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BS/w/NCq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3247CC4CEE3;
+	Fri, 27 Jun 2025 20:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751056195;
-	bh=gT6NJnsYHPg1UMCs3hQfS9bGXsHDce6/hgDoZLEZD4Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s7YBeB7kPh6XCsL6L5cdqezAkuSLTOVU3YHMPkD80Dz27soyoWERV9VgIGm6ZqZpM
-	 G0BOl1vNBuccaWoV8F9VMXBOrNd5FG919HYP9IVmfNccCY2eiCoCVi2ykr6rJT1vkh
-	 Yxe1eeKTyVnb+6RuDPSooOtkaQjsCYbj3tn2FLcvxvqHqvdy6ubz5e8I6ZhkLFaOms
-	 mknOVCV3DzzZzaQRKLeee+f3Bs0UDTFqlar7pRGNi5WFQg0jMod8eWmcJq9k/52Vpn
-	 Ty0YH9DeCu6q+YfaQNI+2c7jowk/9k5LSdGEoT3YcTPUm7LCU7adJ+Cl6sycQTwtOf
-	 svzTDwv/aiiCA==
-Message-ID: <01d6d630-2b78-4109-8197-af461631b048@kernel.org>
-Date: Fri, 27 Jun 2025 15:29:53 -0500
+	s=k20201202; t=1751057073;
+	bh=5ybwmpFE7Qlupb6N5xt8amFVW1JpJnPiApvCG8fYQqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BS/w/NCqjH3hHE5sHfhxr0jVJSeRPB9XqdSFBvjLlmc9a2FiaPdaNFyEhkxYdwMnK
+	 l1yCNocVHitRQveBmK6BQTW1wMjFet/sfy/EvuN6nt/0I8xPGzKaQdzUzJf7CJORVq
+	 geyrk4nD1hg1OP8lGwq/TFZiYeb1GVXLurk2p6HWnnAfgm9J37E0U2xbBQ2BxAFOyl
+	 V5/CcjvwVuh2ez5E9RPhrm93ekxmicI3fHAgSrxF7nv9Pm5c2o3u45euAEtGi2lUvP
+	 bU5LI5hh8rrjq+cZKebh+OeKfHMIg5peSs8XYq8F96TVfYFDVNwe4pun4DHXp11cPz
+	 lVdeasbNuAHNQ==
+Date: Fri, 27 Jun 2025 15:44:32 -0500
+From: Rob Herring <robh@kernel.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: document the SM7635 Top Level
+ Mode Multiplexer
+Message-ID: <20250627204432.GA45217-robh@kernel.org>
+References: <20250625-sm7635-pinctrl-v1-0-ebfa9e886594@fairphone.com>
+ <20250625-sm7635-pinctrl-v1-1-ebfa9e886594@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Hans de Goede <hansg@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
- <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
- <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
- <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
- <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
- <13025910-7639-400b-878a-cd0780c6534c@kernel.org>
- <4ajmcrl3bqeikki2etek5bafzszelgevr322tvuubx4pxxyju2@qqxz6lzcb6e5>
- <fdd635ce-5e8e-4123-8e8e-241a57b4d7fe@kernel.org>
- <eaf7bva2skjz6oo2s2f4agooplthvuztyr6tssa7rux764qw35@kscd3rtejfvn>
- <9f5e0c21-bc25-44d0-a4d4-6fd6e58a9f2e@kernel.org>
- <ly3mww7nq7uuqvdx7p2uzcrphhboeuep3yuwbaxwfimesitjaa@hf72i4vu5quo>
- <584af55f-1b73-4c17-bf85-c2d3ecf6692e@kernel.org>
- <e0469bf9-f12a-48a7-bd58-3ae346354987@kernel.org>
- <5c8ca17f-2f77-4492-ade7-a78dba45df7d@kernel.org>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <5c8ca17f-2f77-4492-ade7-a78dba45df7d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625-sm7635-pinctrl-v1-1-ebfa9e886594@fairphone.com>
 
-On 6/27/2025 3:25 PM, Hans de Goede wrote:
-> Hi,
+On Wed, Jun 25, 2025 at 11:12:01AM +0200, Luca Weiss wrote:
+> Document the Top Level Mode Multiplexer on the SM7635 Platform.
 > 
-> On 27-Jun-25 9:44 PM, Mario Limonciello wrote:
->> On 6/27/2025 2:38 PM, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 27-Jun-25 9:18 PM, Dmitry Torokhov wrote:
->>>> On Fri, Jun 27, 2025 at 01:56:53PM -0500, Mario Limonciello wrote:
->>>>> On 6/27/2025 1:36 PM, Dmitry Torokhov wrote:
->>>>>> On Fri, Jun 27, 2025 at 05:56:05PM +0200, Hans de Goede wrote:
->>>>
->>>> [ ... trim ... ]
->>>>
->>>>>>
->>>>>> 2. There is a patch from Mario (a8605b0ed187) suppressing sending
->>>>>> KEY_POWER as part of "normal" wakeup handling, pretty much the same as
->>>>>> what he and you are proposing to do in gpio-keys (and eventually in
->>>>>> every driver keyboard or button driver in the kernel). This means we no
->>>>>> longer can tell if wakeup is done by power button or sleep button (on
->>>>>> systems with dual-button models, see ACPI 4.8.3.1).
->>>>>
->>>>> Actually a8605b0ed187 was about a runtime regression not a suspend
->>>>> regression.  I didn't change anything with sending KEY_POWER during wakeup
->>>>> handling.
->>>>
->>>> Ah, right, ignorng events for "suspended" buttons was done in
->>>> e71eeb2a6bcc ("ACPI / button: Do not propagate wakeup-from-suspend
->>>> events"). Again trying to add heuristic to the kernel instead of
->>>> enlightening userspace.
->>>>
->>>> I am curious why the system is sending "Notify Wake" events when not
->>>> sleeping though?
->>>>
->>>> [ .. skip .. ]
->>>>
->>>>>
->>>>> FTR I did test Hans suggestion and it does work effectively (code below).
->>>>>
->>>>> diff --git a/drivers/input/keyboard/gpio_keys.c
->>>>> b/drivers/input/keyboard/gpio_keys.c
->>>>> index f9db86da0818b..3bc8c95e9943b 100644
->>>>> --- a/drivers/input/keyboard/gpio_keys.c
->>>>> +++ b/drivers/input/keyboard/gpio_keys.c
->>>>> @@ -425,7 +425,8 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void
->>>>> *dev_id)
->>>>>                            * already released by the time we got interrupt
->>>>>                            * handler to run.
->>>>>                            */
->>>>> -                       input_report_key(bdata->input, button->code, 1);
->>>>> +                       input_report_key(bdata->input, *bdata->code, 1);
->>>>> +                       input_sync(bdata->input);
->>>>
->>>> I start wondering if we should keep the fake press given that we do not
->>>> know for sure if wakeup truly happened because of this button press...
->>>
->>> AFAIK we cannot drop the fake press because then Android userspace
->>> will immediately go back to sleep again assuming the wakeup was
->>> e.g. just some data coming in from the modem which did not result
->>> in a notification to show, so no need to turn on the display,
->>> but instead immediately go back to sleep.
->>>
->>> IIRC last time we had this discussion (man years ago) the reason
->>> to send KEY_POWER was to let Android know that it should actualy
->>> turn on the display and show the unlock screen because the user
->>> wants that to happen.
->>>
->>> I believe this is also what the KEY_WAKEUP thing in the ACPI button
->>> code is for.
->>>
->>>> Can we track back to the wakeup source and determine this? It will not
->>>> help your problem, but I still believe userspace is where policy should
->>>> live.
->>>
->>> There is /sys/power/pm_wakeup_irq we could correlate that to the IRQ
->>> number of the ISR and then AFAICT we will definitively know if
->>> the power-button was the wakeup source ?
->>>
->>
->> So at least in my case when woken up by this power button press the IRQ isn't the one for the GPIO itself, but rather for the GPIO controller master interrupt.
->>
->> # cat /sys/power/pm_wakeup_irq
->> 7
->> # grep . /sys/kernel/irq/7/*
->> /sys/kernel/irq/7/actions:pinctrl_amd
->> /sys/kernel/irq/7/chip_name:IR-IO-APIC
->> /sys/kernel/irq/7/hwirq:7
->> /sys/kernel/irq/7/name:fasteoi
->> /sys/kernel/irq/7/per_cpu_count:0,0,0,0,0,5,0,0
->> /sys/kernel/irq/7/type:level
->> /sys/kernel/irq/7/wakeup:enabled
->>
->> # grep . /sys/kernel/irq/102/*
->> /sys/kernel/irq/102/actions:power
->> /sys/kernel/irq/102/chip_name:amd_gpio
->> /sys/kernel/irq/102/hwirq:0
->> /sys/kernel/irq/102/per_cpu_count:0,1,0,2,1,0,0,1
->> /sys/kernel/irq/102/type:edge
->> /sys/kernel/irq/102/wakeup:disabled
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  .../bindings/pinctrl/qcom,sm7635-tlmm.yaml         | 133 +++++++++++++++++++++
+>  1 file changed, 133 insertions(+)
 > 
-> Ah, right.
-> 
-> But thinking more about this I do not think believe
-> that wakeup racing is really a big issue here.
-> 
-> Wakeup racing only hits if the button ISR runs before
-> gpio_keys_resume() has run and cleared the bdata->suspended
-> flag. IOW the button was pressed before the system has
-> completely resumed in that case the users intend to me
-> very clearly was to wakeup the system.
-> 
-> So I still believe that sending key-wakeup for the simulated
-> keypress is the right thing to do in wakeup race cases even
-> if the system was actually woken up by e.g. network traffic.
-> 
-> As for Mario's patch from earlier in the thread that needs
-> some more work because it will release the wrong code if
-> the release ISR runs after gpio_keys_resume().
- > > But working further on that only is useful if we can get
-> agreement from Dmitry on that approach.
-> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..3f49239efb6e866015b40e3477a8bd0edd21b1fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml
+> @@ -0,0 +1,133 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm7635-tlmm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. SM7635 TLMM block
+> +
+> +maintainers:
+> +  - Luca Weiss <luca.weiss@fairphone.com>
+> +
+> +description:
+> +  Top Level Mode Multiplexer pin controller in Qualcomm SM7635 SoC.
+> +
+> +allOf:
+> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm7635-tlmm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  gpio-reserved-ranges:
+> +    minItems: 1
+> +    maxItems: 84
+> +
+> +  gpio-line-names:
+> +    maxItems: 167
+> +
+> +patternProperties:
+> +  "-state$":
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-sm7635-tlmm-state"
+> +      - patternProperties:
+> +          "-pins$":
+> +            $ref: "#/$defs/qcom-sm7635-tlmm-state"
+> +        additionalProperties: false
 
-Right; good catch.  I had thought this was a risk but didn't want to 
-over-invest in solving it until we had alignment.  I mostly wanted to 
-share it to demonstrate the idea works.
+Is there really value in continuing this complicated QCom pattern? Can 
+we just have 1 level or 2 levels only?
 
+> +
+> +$defs:
+> +  qcom-sm7635-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-5][0-9]|16[0-7])$"
+> +            - enum: [ ufs_reset, sdc2_clk, sdc2_cmd, sdc2_data ]
+> +        minItems: 1
+> +        maxItems: 36
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +        enum: [ gpio, aoss_cti, atest_char, atest_usb, audio_ext_mclk0,
+> +                audio_ext_mclk1, audio_ref_clk, cam_mclk, cci_async_in0,
+> +                cci_i2c_scl, cci_i2c_sda, cci_timer, coex_uart1_rx,
+> +                coex_uart1_tx, dbg_out_clk, ddr_bist_complete, ddr_bist_fail,
+> +                ddr_bist_start, ddr_bist_stop, ddr_pxi0, ddr_pxi1, dp0_hot,
+> +                egpio, gcc_gp1, gcc_gp2, gcc_gp3, host2wlan_sol, i2s0_data0,
+> +                i2s0_data1, i2s0_sck, i2s0_ws, ibi_i3c, jitter_bist, mdp_vsync,
+> +                mdp_vsync0_out, mdp_vsync1_out, mdp_vsync2_out, mdp_vsync3_out,
+> +                mdp_vsync_e, nav_gpio0, nav_gpio1, nav_gpio2, pcie0_clk_req_n,
+> +                pcie1_clk_req_n, phase_flag, pll_bist_sync, pll_clk_aux,
+> +                prng_rosc0, prng_rosc1, prng_rosc2, prng_rosc3, qdss_cti,
+> +                qdss_gpio, qlink0_enable, qlink0_request, qlink0_wmss,
+> +                qlink1_enable, qlink1_request, qlink1_wmss, qspi0, qup0_se0,
+> +                qup0_se1, qup0_se2, qup0_se3, qup0_se4, qup0_se5, qup0_se6,
+> +                qup1_se0, qup1_se1, qup1_se2, qup1_se3, qup1_se4, qup1_se5,
+> +                qup1_se6, resout_gpio_n, sd_write_protect, sdc1_clk, sdc1_cmd,
+> +                sdc1_data, sdc1_rclk, sdc2_clk, sdc2_cmd, sdc2_data,
+> +                sdc2_fb_clk, tb_trig_sdc1, tb_trig_sdc2, tgu_ch0_trigout,
+> +                tgu_ch1_trigout, tmess_prng0, tmess_prng1, tmess_prng2,
+> +                tmess_prng3, tsense_pwm1, tsense_pwm2, uim0_clk, uim0_data,
+> +                uim0_present, uim0_reset, uim1_clk_mira, uim1_clk_mirb,
+> +                uim1_data_mira, uim1_data_mirb, uim1_present_mira,
+> +                uim1_present_mirb, uim1_reset_mira, uim1_reset_mirb, usb0_hs,
+> +                usb0_phy_ps, vfr_0, vfr_1, vsense_trigger_mirnat, wcn_sw,
+> +                wcn_sw_ctrl ]
+> +
+> +    required:
+> +      - pins
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    tlmm: pinctrl@f100000 {
+> +        compatible = "qcom,sm7635-tlmm";
+> +        reg = <0x0f100000 0x300000>;
+> +
+> +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +
+> +        gpio-ranges = <&tlmm 0 0 168>;
+> +
+> +        gpio-wo-state {
+> +            pins = "gpio1";
+> +            function = "gpio";
+> +        };
+> +
+> +        qup-uart5-default-state {
+> +            pins = "gpio25", "gpio26";
+> +            function = "qup0_se5";
+> +            drive-strength = <2>;
+> +            bias-disable;
+> +        };
+
+Please make the example more complete showing the multiple levels of 
+states and pins if you are going to keep that.
+
+Rob
 
