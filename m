@@ -1,185 +1,119 @@
-Return-Path: <linux-gpio+bounces-22317-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22318-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9F36AEAD2F
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 05:09:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8886BAEAD8C
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 05:51:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45ED9566EA1
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 03:09:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 997FF1C20D6F
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 03:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4539660DCF;
-	Fri, 27 Jun 2025 03:09:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D7B19F420;
+	Fri, 27 Jun 2025 03:51:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="h/OYDXWg"
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="OTP/ch+F"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010049.outbound.protection.outlook.com [52.101.228.49])
+Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4B623DE;
-	Fri, 27 Jun 2025 03:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2A22AD2D;
+	Fri, 27 Jun 2025 03:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750993777; cv=fail; b=OWb8nyNUNaypYhDCWOSMDs/ZXs9hWdkOeMkLcdXUQbES2tlYgBaLR+xvy4TedSCK9BvsQF+qwq65ey261ZJUCzpg5kzytHxTJ8dR2/x6y9ZdVoZXKf01QfgE9j/wOrNOe/Ej27rAqotC5tqnKtylQE34LdSLNL0KqWsdBwL9gTs=
+	t=1750996305; cv=pass; b=VDYuXg1hSoxaEIJ1A5c7tw2osTQq1SsuvIELgPJfX+5hF4Yd4JzcWgUyrwtW++njbOBHhoU4Ejj3VSK8qtx85M7lhsOiDh0GcuAn6gMRCGp1eK6H/BgQunFfmdWFeeqYT42fN/aFINAe/AojzzpptLXn57QMiUUKvCI31PVdVzM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750993777; c=relaxed/simple;
-	bh=D+kDFGdBbbnwoaakysH0iLuZSTKLCmn5CGNUMJVxZcY=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=pLterOfKHLyViJ5N87lQ2m6Ncym8VdOv/oBTuR4hzC4ZH6NFatd96RKNaBpZ9nbSDLn16eLtXxyh3GTjYpktZGr+RzO4R1QRKQorsYrUqqOPgeCvp9q0Gj/0/RGudqwNfhAI2NmGqpogfu250IQNBTX2avCw7l9tmh1WT05vV+I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=h/OYDXWg; arc=fail smtp.client-ip=52.101.228.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=so2deON4Elo4yr9GKdCSU9rka9d7gy3IIguc/U5pRaXGPWqKK2Fy0A8aBkh/rLIwF/V3iaWyTNe8A5/qY21cDhBZblIB+rhUcAcSg53H8j/5/M9Qqe31eJ62W+LFeejc16bwz3+JiJi2nQrNIrLVs5uFuDBwd/PnHSz3ymxYZGTLEVj5DigQmrFVMrApbLj8acSqCzqdBoRca4s7OsbKWSabkJqmN8dXegy7kXFm7svuh3otuQlH6lde3oPqH6NmkSw9ey6rwHw7IaKFW5OShRsiQqfbojZ59YcCOl8LcRvNunIsmRXRAYwPB6K3MRqNrrRPP3yWB587M576cl1sVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XTD2FR1wZCfmoB4FsX5yGZDuvi9pCOyBscl8gNDXSY0=;
- b=I6v3OlqC+tbzlXKkzjCa8sJbUwvXtzbQ3IFDp3n7Hm+AgydHDxPcYW7uzoY+Lx0bVaYCcl8jahaSRIvhvkX12TEYpeAZKuS+NnsWJFv3EduzzoZ6ZV8EZL0mrMnnDG0Te5DuDkrrvqd097/egVMvTlItig79bW8VR5rNiSomTI1035Do/8q6/POlMos+9mkmWJ0GEDmAHjT1nFKhur98zFTauB0idAH2CYX68gBcyYfDeI1vQznApH9vsUnzwK5Q/uF9S+ddL1utAre2fEfmNY/d1K/pE5IBCaJuoQfKFWgjrQT9+44z7VU8W8Klv/Iub+A8EHAWxdjpaHGPacY1Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XTD2FR1wZCfmoB4FsX5yGZDuvi9pCOyBscl8gNDXSY0=;
- b=h/OYDXWgJORdO6g5u4GR302Rvw1N5SfzuHXIWHN+O+XO+PKBD+X8BbJxWdjzcUyJ5871F5++NaJxfE6ir8Ss0MZd1hZOpMy0/HILvYi7L0uTpdKFGgNyI8n+3/kRZwcT4Vx3Vi8eddFOtdIURtirfNL6gG63MxBqRX+TFgMAJcs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11) by OS0PR01MB5569.jpnprd01.prod.outlook.com
- (2603:1096:604:bf::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.23; Fri, 27 Jun
- 2025 03:09:31 +0000
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11%4]) with mapi id 15.20.8880.021; Fri, 27 Jun 2025
- 03:09:31 +0000
-Message-ID: <878qldhod1.wl-kuninori.morimoto.gx@renesas.com>
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/2] pinctrl: renesas: tidyup Kconfig
-In-Reply-To: <87a55thpu1.wl-kuninori.morimoto.gx@renesas.com>
-References: <87ecv9ragd.wl-kuninori.morimoto.gx@renesas.com>
-	<875xgk4j9l.wl-kuninori.morimoto.gx@renesas.com>
-	<CAMuHMdWst5fhcUgWbTqzG_DQmuL8tWtUuCpg4BoeqhnCfo_MVw@mail.gmail.com>
-	<87a55thpu1.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
-Content-Type: text/plain; charset=US-ASCII
-Date: Fri, 27 Jun 2025 03:09:30 +0000
-X-ClientProxiedBy: TYCP286CA0360.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:405:7c::6) To TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11)
+	s=arc-20240116; t=1750996305; c=relaxed/simple;
+	bh=5AYcBrideLs4hDAn9zuRWjDRQaY7IfcE1BJ+L3LUIUs=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=GyO0VEUVUqABlntICa/S0mNIPNeJMX9LOoP0n+w5/WyZyvG14LYQCHG5Ke6CQ3txKymd/zUshOpss403H2xejRvp6a6RGVGTmu/eSasQ8V/V75LoYc5EGqpmqzKtpRy2+X9xMvZq0gUbTly4Orbs9vym5aEblfEB1GSFaYTqzWw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=OTP/ch+F; arc=pass smtp.client-ip=136.143.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+ARC-Seal: i=1; a=rsa-sha256; t=1750996282; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=a9VINmaxLbisjgFXX3+g57q5xks90pKm/hFnHoJsxIMkJmugl1JsGyTb5nkPYpDtEqJ3FxOF0UB5IZi/hw1d28m5MpCcIigOBNAmvv/+hiRcx+zJfiXfwqTxli0u4Jwv8kGU2L4pJFMHRwLQVwIAY2AG1fN0jb42w+CVV7bT70s=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750996282; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5AYcBrideLs4hDAn9zuRWjDRQaY7IfcE1BJ+L3LUIUs=; 
+	b=TSEtq5OylRIBiWRT2GWxy2kRGuziEqfH9/I8CTrRy7lQmrCkU5HeoKw4W7AJ79ANkZxrBHfz05kfwp1skgZjR/U+o9APDuQmsBT0oT3IbXA6lYeIn+5m3ctmaO6i5vxSxbwyArcZSUw1h8Lct2ewkZk2LXJt9/tM2VZUss7levA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750996282;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=5AYcBrideLs4hDAn9zuRWjDRQaY7IfcE1BJ+L3LUIUs=;
+	b=OTP/ch+Fcgg1E6qULfuCqxOhgIndH4RosFP1aLLrSGFEXG2fBZevuni8mz8AmeCv
+	AngUL9Wn4mTCtH+bzUmNgotuHXhYDUjDbZp1DEEY4NTDfoy3cy+G4Y8jAZBX6cOv0oR
+	LgYyBfIZ9g3BmBPuDfWKiLtbqMOIhoL4Aw2yu4s0=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 175099628184387.56678600701446; Thu, 26 Jun 2025 20:51:21 -0700 (PDT)
+Received: from  [212.73.77.104] by mail.zoho.com
+	with HTTP;Thu, 26 Jun 2025 20:51:21 -0700 (PDT)
+Date: Fri, 27 Jun 2025 07:51:21 +0400
+From: Askar Safin <safinaskar@zohomail.com>
+To: "Mario Limonciello" <superm1@kernel.org>
+Cc: "Linux i2c" <linux-i2c@vger.kernel.org>,
+	"linux-acpi" <linux-acpi@vger.kernel.org>,
+	"regressions" <regressions@lists.linux.dev>,
+	"DellClientKernel" <Dell.Client.Kernel@dell.com>,
+	"linux-gpio" <linux-gpio@vger.kernel.org>,
+	"Raul E Rangel" <rrangel@chromium.org>,
+	"Benjamin Tissoires" <benjamin.tissoires@redhat.com>,
+	"Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+	"Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+	"Werner Sembach" <wse@tuxedocomputers.com>,
+	"Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Message-ID: <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com>
+In-Reply-To: <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
+References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com> <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
+Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
+ from suspend
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|OS0PR01MB5569:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5216ce3-0ad3-4238-88aa-08ddb52808ca
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6Z8BOlnNvkobCEJyZqjwTwhZa7FUB7gFpWqjjrJqEGoULvucrZ6K25GB7W8j?=
- =?us-ascii?Q?fepY6jtFvMaxG7g5XiruLw1S/BsHMR1lzhM5OlZbVR3wwzFLkXnsfRrYeaK3?=
- =?us-ascii?Q?czDA4C5TC0Q5VvUY2VAqH/xiWL2RL/NZzzdqdwdVUdFuZAJHKUhlC9I0Qve+?=
- =?us-ascii?Q?FsMrw4kwEcyZcRv3DiButmpYJ3Tm4NZ89WFAI4Q/VYy7yaXGS4hbZi9RYnWN?=
- =?us-ascii?Q?AkudBML273PTRdOVaEjKR7yYB2IFvozCUFEWCLPIFUZy8GBmS2oLcQidmFni?=
- =?us-ascii?Q?40MQES4tNW6JKZHnnrct33mUVNPoUFI80j8iiChZWKeR7eITHpgK+ruwQ2FO?=
- =?us-ascii?Q?XLtEkzaet2cylqqqSPYgr8qyjI5cnV2mjPsbyVScaDb7QtrGRGrTGp5JU0l9?=
- =?us-ascii?Q?fnqWbUSo7LV5rw1wvgz9okZWtPru13+JtIkbugZArvm3TFu5sRFQFtnSesDQ?=
- =?us-ascii?Q?Fg0jCDqSH9Z5TVZeuQd+WmquZPt5d9So7QwzBkhNpUuQFRKNQPfGIvp/fPzh?=
- =?us-ascii?Q?/fA7Nq60r05Gsng6n1g+KYHNILluQ3HNAdydCZ0+HzYhNoXggeeP5K0Ld/VA?=
- =?us-ascii?Q?+Y5txaxu5uI8Bc7IFope1XU0xrtPEq33YYQP+UJd3+Owu+/EFoCU1n0sfb8l?=
- =?us-ascii?Q?3iJ2fQcZZ+z+1D2q/WWCwGmbG9LdqXXSdBH0DHxS8l3x05I64zDcJOYM3Ogd?=
- =?us-ascii?Q?NAwHpVNJhZCggA+g43chIkMinjsPCUTgBFt1mNAOds+cd2HX7Tz58Luq+RoY?=
- =?us-ascii?Q?g694LkUoZ87GNmifXz7ybfS9NrMx/AfLMPwAJ5FhjwqXVD7rsKGTER2WRBAj?=
- =?us-ascii?Q?8JW4VRAFSBJBi+mOfBomYIThp4AxUkgp4fZep2nS0Hw9FNOYXklYijyecapc?=
- =?us-ascii?Q?ReQQHaT3J2psiIBw6k7gwmCmJMs1mPFDgU3AdrzIxWPlIWVPkDejkCc4qCZc?=
- =?us-ascii?Q?JFhBSyhSRcYKa2RFqTEs+xczLLzxA5N8UhoF1dbQgbztQ9u/gattOtezI4Qo?=
- =?us-ascii?Q?A3VdGqaTtEnBHWkPt5MiBBsuoLRJcg5AEvlZdxPirS4sPOfOV5wgsQXdiM/X?=
- =?us-ascii?Q?HHIz+WAsnwVQRxboBX8NNLwMyXoLDrJHnn1425W9V62pBmZQxexNXHeUGe1t?=
- =?us-ascii?Q?X+OIBzKV+UwSz4iag+BucBwiuKpBC7xnu7AM9LdH4K7tOldT7aUdR7ttJBfe?=
- =?us-ascii?Q?6zSCoKj0HmY9fnfOoh3TG7wD5pgNp9WUq10bMN2NPYNCJbkhY604YhMlmQl5?=
- =?us-ascii?Q?xDIalytLG9VcFC+up7bcJ3vPgK1Sgv/P8lM3nJfThiFbrqCrWIDdPV1Oxihi?=
- =?us-ascii?Q?tB0OxD7P1XmvP+JhOmki5Clpd5mlDUN8a7w6rxc7jAItRDlWpvP+CrO7xWm1?=
- =?us-ascii?Q?Vht3baFl3RdPjN7K+oXSEc0EukPf/T/n+kElWZjM/xKFXsJ2hENqJt7+Jflu?=
- =?us-ascii?Q?tvU9RGWtxIMT0h5QD8PpN70pztFH2zeU/fVwOpshQ6fpXnDEdvuioA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LOAwAga0jtku+8mPXGcgtJZhcs85j2fgyyEQ43ggpJ7cINBIQM9LVXz7N6CJ?=
- =?us-ascii?Q?1w6dhLWicJ4Veb63OS7tCnJkpAS3DIHohVNzawktR+WmG2eAfHWtKAFwhiy9?=
- =?us-ascii?Q?9u9uk+50UyGGZRwmcIWobsGEX6IEzGga/chexFKTpsTjF6Re/7rHVw7smrGd?=
- =?us-ascii?Q?s0eAmfWAffPeV6EE0R2SNmb5+aRpvOKmJeIoZS9zIjqj1ayC8q+eVYe5hMIg?=
- =?us-ascii?Q?agjL/GXxHvdZDEgT+uVMW5hCu94d4QbIUQO4BiViobX27MJz0sgmWoUUHGry?=
- =?us-ascii?Q?jej2SS12Nc7DZY/wxmnOjEPspgHRUvd6e/WqVglt5QJvAk7hDquxjB6s8Mwa?=
- =?us-ascii?Q?VSd9NVMv4w72R0Xe3Gb4poLPg2Q4Qr87ULk8G5cJHxF0Am3e8cD7ShF3zz3n?=
- =?us-ascii?Q?WuVG4ROqSRJYyqnvnCW4qit6KRHhk9vEyFVZiZX6R9q8GSco/8jGouYIqKWY?=
- =?us-ascii?Q?Tt8gUphFgHtrNzCJ89o47k1XoZ6a5d+SQpy9BwIxynHeuspKgxpaDvW7+9hg?=
- =?us-ascii?Q?ZSYm0f36TM9MQMerrEYf3Lk6oQIeDClfRf8CsGQzt2wHgd8UtcJZeMmqUlUH?=
- =?us-ascii?Q?2z73PpcR/gGMjbeeYXA1t1DUUuIKtznCl4WOT7GEOCuCKPWPiOrQCxPSFtHu?=
- =?us-ascii?Q?MW4feELlfpEioOdnB7Z5xgqyhtaq+GBPjQn0uXXRocyGmaakm8TDqtc9E1Kr?=
- =?us-ascii?Q?Esm9lGAlflWvbDZ6QebZNIkWERNJ58U8mLui2UCe3L5I3xXMlv0UV6B8eYlW?=
- =?us-ascii?Q?9/yRv883HkaqV07joufCCZ96CotGLD0THktvce7q6iHrsQj14z1u+iiYv5pe?=
- =?us-ascii?Q?TLbKP7ZLNTuH+fDncfgI7tYS8v5DZsfpUs0Zu9xyvpAYpi4REYsNQr/YRBqS?=
- =?us-ascii?Q?SV00Pnh20JUxm5P5EX4R5sfJxNIV9PAwm+BqhVVUAvNul5aItpYs28652vSY?=
- =?us-ascii?Q?mX6LjN3mavwKftT7aQCb/s/aV4jIvH/vO1twV2gWNXFqqC8z9LlSyh7zOQpl?=
- =?us-ascii?Q?WDM5kvttfF1mJ0Zn/IHyeQzcQ6dP2lE2xcFK+3EPY4DVx4Ai9OM/9RpVW2/h?=
- =?us-ascii?Q?avRZymmuJtta3ZTmCCO3RzVrVyBqycgD1VfmcV2P9MPbJ4dqyySW4ON6hvg3?=
- =?us-ascii?Q?iF3TPGd85laQ28fCJm4YSyD1dIDZDXT9eEu3N95in7skJrT5D9nmVL5HXG9C?=
- =?us-ascii?Q?1o5XNpgljgZGvIEQHLkAYmaBR2NvZAFMr4iCIN4SQIA/pVFtOrtGoXFgNuSk?=
- =?us-ascii?Q?BWMKWzXO9fmyboG57RGh5heHHMt24Xb8fWMN0MblnBc/bGDA3/LPZtJ6rV7G?=
- =?us-ascii?Q?+QDV2Bn5nvqVV82giISWvd24wyIaoQSlo7chjsHEcSFIa+5arhQla1uwK+fT?=
- =?us-ascii?Q?XacviSMExqcGIL3w7h/0WYexc4v9/T+QuRiQxpbaY5cb0+xuwe4RkcZGZ++a?=
- =?us-ascii?Q?bXV+sXXer2Oc9enL1wbtEQEWtFzaMZU6tgAZiJ7NG7uS6f/PP+QvznWB2sZb?=
- =?us-ascii?Q?etS2cQMMwiEkrpupMFx06GnVc3mdWqC/mKgwOj9zTQb/zayZtSGf6wJ0gziy?=
- =?us-ascii?Q?WwXjIldCuOQbLR5G5STlbvNrQiUpEml6lYC7HD+vdylh2V0ZXrOhwJ6Lpe8v?=
- =?us-ascii?Q?zWVhzVIKlfu0pynr68gX2PA=3D?=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5216ce3-0ad3-4238-88aa-08ddb52808ca
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 03:09:30.9201
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j5FJTXJyEB+iNdxj/W+0tfuf3s846eiHh/C7KZoH9AlhoiIiGgivrKKEEjheH+ixwSIWOja/79uqBlxLjSRo4pt2PRjq7i5xow8+T0rFPLldY7v3ylXlFdfFjeAsIdQj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS0PR01MB5569
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Feedback-ID: rr080112274f48b69713fe3fba97faaa16000047410b64f453a5ff951e4610c2519fd5b59000be79ef552d9b:zu08011227060bb99a6d6a18eaef967a040000f1adc5e739dfadb567ffffd3b48cd7a2a4079a5a00b0da6259:rf0801122b14bb9dc632592ca1a2e9e51d0000e6a2fb7c0811e37372739fd5c9b0f8dce4bc127d88f7732d720f4beaec:ZohoMail
 
+Okay, so here are results of new expirements.
 
-Hi Geert, again
+Now I write 1 to /sys/power/pm_debug_messages in the beginning.
 
-> soc Kconfig is categorizing ARM32/ARM64/RISCV by if ARM. It can avoid
-> unnecessary compile, and makes distinction clear. Can we use it on pinctrl
-> too ?
-> 	[ ] pin control support for R8A7745 (RZ/G1E)
-> 	[ ] pin control support for R8A77470 (RZ/G1C)
-> 	-*- pin control support for R8A774A1 (RZ/G2M)
-> 	-*- pin control support for R8A774B1 (RZ/G2N)
-> 	-*- pin control support for R8A774C0 (RZ/G2E)
-> 	-*- pin control support for R8A774E1 (RZ/G2H)
-> 	[ ] pin control support for R8A7778 (R-Car M1A)
-> 	[ ] pin control support for R8A7779 (R-Car H1)
-> 	                                   ^^^
+I was unable to find "last_hw_sleep" in /sys/power/suspend_stats on these particular kernel configurations.
+But I print all other files in /sys/power/suspend_stats .
 
-Ah, sorry, it is not ARM32/ARM64 issue...
-Sorry for my noise.
+I used same minimized config as in previous expirements.
+I used modified script:
 
-Thank you for your help !!
+https://zerobin.net/?bccdd94f5f07bf85#8jop5IXDG32p0I7SBfEc29ng0/MdAFZgrqI9x+4A/Fo=
 
-Best regards
----
-Kuninori Morimoto
+Here is dmesg for "good" commit "d86388c902b45fe2" without external mouse:
+https://zerobin.net/?90d41139996f1cd8#Xuy0UjyxtXrOyLxq4YMP/IzUB559v7ESEIqsd/4Fqo0=
+
+Here is dmesg for "bad" commit "1796f808e4bb2c07" without external mouse:
+https://zerobin.net/?181b4d79c16fd9b3#nu0HyJX/r9cFtKitVxJB+3CZsGfwKHc6JLYX4OyZHR4=
+
+Here is dmesg for "good" commit "d86388c902b45fe2" with external mouse:
+https://zerobin.net/?a13c513b12549f62#LPLtc3MA1iSEPUjaizDk6xwBgEitH16hZE/WUWdgr6c=
+
+Here is dmesg for "bad" commit "1796f808e4bb2c07" with external mouse:
+https://zerobin.net/?cda0d7dd920ad66a#VHWKTp8motWKNJawyFC+v+qNP55an/ZR7HTlhmLJ7gA=
+
+As we can see, external USB wireless mouse doesn't really change anything.
+No wonder, I have CONFIG_USB_SUPPORT disabled in my minimized config. :)
+
+--
+Askar Safin
+https://types.pl/@safinaskar
+
 
