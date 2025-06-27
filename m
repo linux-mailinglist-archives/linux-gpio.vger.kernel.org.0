@@ -1,89 +1,107 @@
-Return-Path: <linux-gpio+bounces-22373-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22374-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F9CFAEC1E3
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 23:21:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 519DBAEC2B0
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 00:40:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 560F41BC05D2
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 21:21:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BF0E6563957
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jun 2025 22:40:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3162262801;
-	Fri, 27 Jun 2025 21:21:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C37C3290D87;
+	Fri, 27 Jun 2025 22:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="psLuxavv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTVInjYJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A572125FA34;
-	Fri, 27 Jun 2025 21:21:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EFE2900AD;
+	Fri, 27 Jun 2025 22:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059290; cv=none; b=AK/AjusXb7yvpWWZWNXJGEGeWZ+OAClUnRwL9Hfkwz9RNijukz63V4SyvCGzA5H4bE2IupaZ0cwzvx+G/spFmvhS45p5MrZSkAqzcRaV8cSWggxa2QG5tq68GqomrVWj8er5OYZI8to1akUzh2O5v4VS30TPhrCWNuprZfAytLA=
+	t=1751063992; cv=none; b=oJNleUO4By6tXcFextT8O+YwCckxL/Djwkd13X3erNLwq8FZ6/p6aVVGn6YAY9Ook3skUPh7qlcvLGm3h9HSqsIrPDpoSqQFh4i9rkop8So6xFxVrxEb7x0gD1ZP+SSNh7Tk75ga1Yi9zahpsEn2XL1ao92MwqmeUaGXkwAKMHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059290; c=relaxed/simple;
-	bh=eJ4JeujYEqEr8p7iiInQq4CDjHaLLtwxoaNgL3PVvp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X56baIPlAzxPuauJfU/pTyuI+ikGJDNINfSD3XtUfSeUgAH6vv39CGxkSnzKBoYmbD68eM4AcJox49CzVtAuFuww/fMWxUPAHy910WGPnbXJscP6LwrGdRYnozGMVFDYU4LaPClhIuYj598N/XxpNc7zyQPack7jukGfYjT6FfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=psLuxavv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C38C4CEE3;
-	Fri, 27 Jun 2025 21:21:30 +0000 (UTC)
+	s=arc-20240116; t=1751063992; c=relaxed/simple;
+	bh=tC2vIW1KfS8CnL2FBG9wDbx9ZyXXV7ai5+nzpmwJDIU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Q5Q4qRP/1FEsR0UeoneLAzxQgakQ0hrc/6ATLEne8Mc97aagAySiV8MKHVQwRywSuRq2DnYuHMHYUU5gONC4Q/vcMh7ycHbAQ8DmRnJxqfGD352OBycD8SEBBD69cWKU3hWMdtUx13cV5kJeqsn3M03Vpw2Np8ivE9DKxaPE4Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTVInjYJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DCB8C4CEF1;
+	Fri, 27 Jun 2025 22:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751059290;
-	bh=eJ4JeujYEqEr8p7iiInQq4CDjHaLLtwxoaNgL3PVvp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=psLuxavvIHRpyHijNtJpBPYSZpd4z1Or+RCc530bVYrLFxdjtwPN17Codm1L/WOcn
-	 e+rbD54Bx3bwH7Uh+ZPJ2P42eQx9eN8u+e4GBoJN0agDLkSgZs3SSCQWGRjJdeRkl7
-	 DLgm6dfoUUcVxoIbeNS2wiE3I01fvhgLu5WXALbMwY76Vku508KckvxCi51oX1YF6v
-	 +4txAazDN069CRN7dbiyIZaxcUAejbfraSXeqTe0A1Xp4JN/aO/pWdZyyVZNniFGrC
-	 tELVeQJuBp3Ls8JgnsVFQJYN/HWtPxsAqoWDZYr4KXsXnQ8l7N3O5WQtUusBMfgOa+
-	 WAKb7Cxk9EG9g==
-Date: Fri, 27 Jun 2025 16:21:29 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Paul Kocialkowski <paulk@sys-base.io>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-	Chen-Yu Tsai <wens@csie.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Andre Przywara <andre.przywara@arm.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Samuel Holland <samuel@sholland.org>, linux-sunxi@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: net: sun8i-emac: Add A100 EMAC
- compatible
-Message-ID: <175105928901.164047.15283634095632177281.robh@kernel.org>
-References: <20250626080923.632789-1-paulk@sys-base.io>
- <20250626080923.632789-4-paulk@sys-base.io>
+	s=k20201202; t=1751063992;
+	bh=tC2vIW1KfS8CnL2FBG9wDbx9ZyXXV7ai5+nzpmwJDIU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LTVInjYJxu8kXmclqrJt26Ca5DLFAjh72dl/u7V4JlFc1VMOJWZ6ukryUhO8UQ/eG
+	 pcm5yO7mMMRdpHKiknFq9g5gDiJil5lqAhA39pjAdIINqVMMETZCaYEAfIhEgBJMY6
+	 obFOHJCWxnR0jraquCE/py2GeaoMLf0GmypCRlYbppiQwiqyT0BGA5qIjjhRcqup7p
+	 +5tq5/g20mvHmMitOMXe0Nwno/S9pjH2hrDV1eC024KTV0vkhoGoVk42dlWMj/47fR
+	 N1eEafpOtZSbN5ZXmwazIV6f9jO2CMLK7iYg6TydvbjeoTPL9i4JbSbmoYFuaUCb3s
+	 0prV94SUiHCtQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D2238111CE;
+	Fri, 27 Jun 2025 22:40:19 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626080923.632789-4-paulk@sys-base.io>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/5] Allwinner A100/A133 Ethernet MAC (EMAC) Support
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175106401799.2079310.7398461677356212518.git-patchwork-notify@kernel.org>
+Date: Fri, 27 Jun 2025 22:40:17 +0000
+References: <20250626080923.632789-1-paulk@sys-base.io>
+In-Reply-To: <20250626080923.632789-1-paulk@sys-base.io>
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, wens@csie.org, jernej.skrabec@gmail.com,
+ samuel@sholland.org, linus.walleij@linaro.org, andre.przywara@arm.com
 
+Hello:
 
-On Thu, 26 Jun 2025 10:09:21 +0200, Paul Kocialkowski wrote:
-> The Allwinner A100/A133 has an Ethernet MAC (EMAC) controller that is
-> compatible with the A64 one. It features the same syscon registers for
-> control of the top-level integration of the unit.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 26 Jun 2025 10:09:18 +0200 you wrote:
+> This series adds support for the Alwinner A100/A133 Ethernet MAC (EMAC)
+> and uses it in the Liontron H-A133L board.
 > 
-> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
-> ---
->  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml       | 1 +
->  1 file changed, 1 insertion(+)
+> Paul Kocialkowski (5):
+>   pinctrl: sunxi: Fix a100 emac pin function name
+>   arm64: dts: allwinner: a100: Add pin definitions for RGMII/RMII
+>   dt-bindings: net: sun8i-emac: Add A100 EMAC compatible
+>   arm64: dts: allwinner: a100: Add EMAC support
+>   arm64: dts: allwinner: a133-liontron-h-a133l: Add Ethernet support
 > 
+> [...]
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Here is the summary with links:
+  - [1/5] pinctrl: sunxi: Fix a100 emac pin function name
+    (no matching commit)
+  - [2/5] arm64: dts: allwinner: a100: Add pin definitions for RGMII/RMII
+    (no matching commit)
+  - [3/5] dt-bindings: net: sun8i-emac: Add A100 EMAC compatible
+    https://git.kernel.org/netdev/net-next/c/0a12c435a1d6
+  - [4/5] arm64: dts: allwinner: a100: Add EMAC support
+    (no matching commit)
+  - [5/5] arm64: dts: allwinner: a133-liontron-h-a133l: Add Ethernet support
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
