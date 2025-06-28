@@ -1,107 +1,158 @@
-Return-Path: <linux-gpio+bounces-22376-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22377-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9053CAEC4EA
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 06:39:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21120AEC71A
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 14:31:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E4561BC10FB
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 04:39:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15BBB17EE12
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 12:31:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88F1D21ABDD;
-	Sat, 28 Jun 2025 04:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07ED52472AE;
+	Sat, 28 Jun 2025 12:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VV/HQj/O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECAD2BCFB;
-	Sat, 28 Jun 2025 04:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EC139855;
+	Sat, 28 Jun 2025 12:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751085576; cv=none; b=GGUxyAVFc5+Z1v0I5cMG5xvm6tGcW+xA8YIdw2GniIOMS8QoGsnZ3ErlNTrfmycszWdsbtFFTmFWr5PDTetaTbefTDKLhEhH0jjhCirtyS9J4ojLs/c4tFYY8ieX35SiZiBCjltwMSUZjA9CcBzeQ5Rtap88YCZ7C8QtQL5MNcs=
+	t=1751113870; cv=none; b=bXCliI1oLOnJpXU/PJhC4G2rwNmWmuCKGt3x0+PjZF1rgcPMWCyHosUGU6itHztcnAJZQl0IvF2lzgpBLGoMPA2fxvgENDy+c04G3G0DQi1CkCyPBevdiK84efYo02lxdOuR3WSbYJA1MZCReTvJEwsh6f+83gr3yT0QsfJLtho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751085576; c=relaxed/simple;
-	bh=XjehE0byLT6LFQc5LPjjr+h2YCj0kTxyUsbUd1G/6bU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tZ9VVxIN8LrCs9FvwxJbnTW+rHpA3pFmleof18qBc1ES2V4h5wjJtcozELsMrtfoZp5nze/wajSnWLE0CqLGg3XqjJq0ptm4DZlhRm6SSOJF7smSe4RvVtaGoc6JgqPFAjVK8HtJgHgQAm03OrX7aF8TsMNHLdaIdK1kZWN60Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553b60de463so467871e87.3;
-        Fri, 27 Jun 2025 21:39:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751085571; x=1751690371;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XjehE0byLT6LFQc5LPjjr+h2YCj0kTxyUsbUd1G/6bU=;
-        b=p/Zer3j8XrqONRsrWxsJ+QDpVP+W4gYdRNE+0MeZR3RKbQn3jVYgfCIQ0FVnzGM45P
-         XfGZcCcn5+4nWtgGao7syBA7K0Sc212o+5BC/TLLQ2CAxKBJNHJ7efV8km+ZAlxDJ27h
-         MpsepZCuYySCpN6btpKK6dGZifFdX+8iaWZdFk0Tfwc6NZAbb9xmAPaP3+hI6BgtZJrn
-         5c1ezTjUkLMcU8FTcf8kVf4x5qmebyVi+B5UR/gvOKbnA5K3NV/gYQ5GyUpE9oQMp4Ii
-         t9D6qmK//0adBuVtXfw9wmtHKirAt7Z5Kzk2MXAQRQt842kC0bu7oynhkIEW7P91xCQU
-         GLxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgGjh1GtlCPaEpBB8RObw4V+/4+TEvw8PgHhZdA/neCfmRoNRhsepx/W9XmEHzBXa6ogjooaV5oJ8feg==@vger.kernel.org, AJvYcCWHjFPnlpup/lIOnDpgKA5BRzBDJRSeOycQZcRSq2inGnOiu+Bg2h7/ncwXpC1OMcuXm/gkc4DMQ3VJ0Bga@vger.kernel.org, AJvYcCXqjDtLH51BVUGqiRtrPTxRIz3T2Gh10AZNCcrDCrhSzWYsFuNJktJqX8yDHkoyvGxMRn6bvcY1FmDe@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOx6ZapciUVjSFtGjqnBAcRFMspUkKE2PmLlfb43nWqkFPeM2n
-	Xdk7Hkl5tu2cHGQTw+Y3V/7oWKJ/GZXnJ2KV5mPYeAlMj+MiWBRi5dRb7DRQ87Fa
-X-Gm-Gg: ASbGnctoSko77ZN4yh570o5eg0Gq+FPL4Cyd3o733IXns+MlT4MtDrUY81P4jmNx/zR
-	G8QanuzSv5wuQch/zZH9HSwPFRQc9vX5tzZ+c60xqE3aWk16pnNG7R8TwIawAa2qOSiqUtfvPCc
-	3recUpL17UE+c11kmk8qpfuBZAZvffbHrZyq+MAIs8fpx24jglRTlF5P4ZfnTylwhmpBQAw7nO7
-	IJ0J1FrpU+GTMY9UO4/0TgIWeuLsoSbYNb8boPBiIGRYRPZxuKf4Aa5M41epJ8oo6yHsmPMOWms
-	5TYSv/sdA+V+MXNDwrhNgZK3fPeGMJafSvuZUMjkfa9mFpN4BOzhbvOCDtEpang6fc81Zrq0jCo
-	+9AKmI18BV9+Gaekd7dLqKtlB4oYY9A==
-X-Google-Smtp-Source: AGHT+IFAAFdqx0e30R4m2bLiTy55BpIjGpeKnNOchkj6cDxL04RM+oDcY0i0orscnrqx9ykTtykybw==
-X-Received: by 2002:a05:6512:3ca4:b0:553:5e35:b250 with SMTP id 2adb3069b0e04-5550b8d27demr2212542e87.32.1751085571245;
-        Fri, 27 Jun 2025 21:39:31 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2d7c35sm663358e87.205.2025.06.27.21.39.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 21:39:30 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b31afa781so3794311fa.3;
-        Fri, 27 Jun 2025 21:39:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVhTowp86Owi+yOBdFTcXSX1Y1R6D4xZjHSWrET2l5nmaCxS5JRAPlUVUcs+40UrslmUuKR//bnqM1ko52N@vger.kernel.org, AJvYcCVl8BU9hOmJEfWRCmn1Kp2fJXgZRA+ULgmdWKhOvVf+RHIpoVWcjurwNea5vpHrnlPTsdIRKgr3zXBhug==@vger.kernel.org, AJvYcCXd31eaOjHL3evfBUEu3sn7lnd4Fc25WdrXzekGxVMB4qjbB0Y6U/hfOxp3OE6khvQFXGLs/TpbE03A@vger.kernel.org
-X-Received: by 2002:a05:651c:304f:b0:32a:6c63:935 with SMTP id
- 38308e7fff4ca-32cdc4480afmr15261101fa.4.1751085570044; Fri, 27 Jun 2025
- 21:39:30 -0700 (PDT)
+	s=arc-20240116; t=1751113870; c=relaxed/simple;
+	bh=GuHOq+CbdP3Dl1cSzwH/wbg08DUJMROIFu5pK37Vl78=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=LWyf+7QTSGLKJ5sqPwz1pz8IAJdtUXAPgX/rmz16xJ/j/MXpO/mSrQq4updLjqcCRsuq5dFJtLixi5Iqh8h/fufc9+t6UWro5mQ5Q+Ex0bzAagT/FV5hPJKUQoaR51BCOSvmll28hf/MTjQnquC6RZ9NSM91Sb8riINEI4Co6jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=VV/HQj/O; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1751113830; x=1751718630; i=markus.elfring@web.de;
+	bh=9dvPgfxBni1dCb8wk5xV/eYN0Q/Wf+q8ejkIbyh5sxc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=VV/HQj/O/TZI18JKc09uqN9Ka+v9zaAkTRctmxSuu1pIpyPG694I3jG1MNLQA3Nq
+	 E4ipZl1QzgCn8F08XMZALYXxSyY/Htyy+wce5hX8Q16f6A+hDQGSy06hJC3iNako+
+	 J74KrQPxl24vrG2TvRPHXVxrxXqIkp1Xp3IDVfdqpX8AsbgAI8ZEiJhfzQUpaoy8n
+	 IjNUm8pfGQ4FyVAfB/+evf6KoxLwUgWUNh4RC6f9gphEXhjeGhJGOnGZ87iwOEBO3
+	 fnG4H3aNG2wNDM+YPd1KaYjALQKIQQNlUY4uRKivWGMN2rQiRlQUHfwrc51cOdlIk
+	 yBoLKFg6MN6h4tr64g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.176]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MLAVc-1uDHKG1Nj8-00TXkk; Sat, 28
+ Jun 2025 14:30:30 +0200
+Message-ID: <76f34610-6792-4be6-a5d6-622fba7d85da@web.de>
+Date: Sat, 28 Jun 2025 14:30:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626080923.632789-1-paulk@sys-base.io> <20250626080923.632789-2-paulk@sys-base.io>
-In-Reply-To: <20250626080923.632789-2-paulk@sys-base.io>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Sat, 28 Jun 2025 12:39:17 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67VVc4ckvzy+w++wcEUPSvV9Uxju2H4qTRNhjwAgYpzXg@mail.gmail.com>
-X-Gm-Features: Ac12FXwd7he7qKrnxN9KLQmU6bishZKuh8vNiwYMugN6VxIMRflq-7o7dltAy1M
-Message-ID: <CAGb2v67VVc4ckvzy+w++wcEUPSvV9Uxju2H4qTRNhjwAgYpzXg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] pinctrl: sunxi: Fix a100 emac pin function name
-To: Paul Kocialkowski <paulk@sys-base.io>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Andre Przywara <andre.przywara@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Ming Yu <a0282524688@gmail.com>, linux-can@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ netdev@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?= <linux@roeck-us.net>,
+ Jakub Kicinski <kuba@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+ Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Marc Kleine-Budde <mkl@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>,
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Ming Yu <tmyu0@nuvoton.com>, LKML <linux-kernel@vger.kernel.org>
+References: <20250627102730.71222-2-a0282524688@gmail.com>
+Subject: Re: [PATCH v13 1/7] mfd: Add core driver for Nuvoton NCT6694
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250627102730.71222-2-a0282524688@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GARg2unvR393v0ddrdFf+gCoE5GBk7DkTlawIl6DtqhxD5KbjS4
+ XwhEnClEhPUjptkfwCX0vZRNAJUHgoZkMd7Z1r0rvpp+F8YsxTy0Q4r2IW1f7ahFswzYTl3
+ T/qL292DDL+KBIEbtSr7M895enORtm8y5FMPxW7oc9VLnOsjowYtP32Iiqb8ruCjpGSgnq5
+ V9VNSdLblBEeHmR/+40SA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:rzNGavO/eAM=;eLzsOP7ZRUA9Ll8EVS5QMxBRvGt
+ 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
+ zRhhE+zhiUQ==
 
-On Thu, Jun 26, 2025 at 4:10=E2=80=AFPM Paul Kocialkowski <paulk@sys-base.i=
-o> wrote:
->
-> The Allwinner A100/A133 only has a single emac instance, which is
-> referred to as "emac" everywhere. Fix the pin names to drop the
-> trailing "0" that has no reason to be.
->
-> Fixes: 473436e7647d ("pinctrl: sunxi: add support for the Allwinner A100 =
-pin controller")
-> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+=E2=80=A6
+> +++ b/drivers/mfd/nct6694.c
+> @@ -0,0 +1,390 @@
+=E2=80=A6
+> static void nct6694_irq_enable(struct irq_data *data)
+> +{
+=E2=80=A6
+> +	spin_lock_irqsave(&nct6694->irq_lock, flags);
+> +	nct6694->irq_enable |=3D BIT(hwirq);
+> +	spin_unlock_irqrestore(&nct6694->irq_lock, flags);
+> +}
+=E2=80=A6
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Will development interests grow to apply a statement
+like =E2=80=9Cguard(spinlock_irqsave)(&nct6694->irq_lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.16-rc3/source/include/linux/spinlock.h=
+#L585-L588
+
+Regards,
+Markus
 
