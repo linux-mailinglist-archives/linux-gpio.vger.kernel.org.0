@@ -1,55 +1,88 @@
-Return-Path: <linux-gpio+bounces-22377-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22378-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21120AEC71A
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 14:31:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A929EAEC7B3
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 16:34:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15BBB17EE12
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 12:31:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F085188899D
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jun 2025 14:34:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07ED52472AE;
-	Sat, 28 Jun 2025 12:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 844F8248866;
+	Sat, 28 Jun 2025 14:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VV/HQj/O"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Er8+EO/Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EC139855;
-	Sat, 28 Jun 2025 12:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C56B1DDA15
+	for <linux-gpio@vger.kernel.org>; Sat, 28 Jun 2025 14:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751113870; cv=none; b=bXCliI1oLOnJpXU/PJhC4G2rwNmWmuCKGt3x0+PjZF1rgcPMWCyHosUGU6itHztcnAJZQl0IvF2lzgpBLGoMPA2fxvgENDy+c04G3G0DQi1CkCyPBevdiK84efYo02lxdOuR3WSbYJA1MZCReTvJEwsh6f+83gr3yT0QsfJLtho=
+	t=1751121229; cv=none; b=kW4gZHTmoasfQE0ffmNax0NP6t2T+XXBsJFhdu0wneYAj57/HXkM/RVaLQz5ERWFDvcXDWqx6moPXOWVDWwrkb+2OjI4qNa7X4KCi+3yr4kmZi9alYzRt2hQkp6LxhEeJ+uu9pLkGnqYSromwzxjl6OT5CAuNbFeVRfHy3/XHYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751113870; c=relaxed/simple;
-	bh=GuHOq+CbdP3Dl1cSzwH/wbg08DUJMROIFu5pK37Vl78=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=LWyf+7QTSGLKJ5sqPwz1pz8IAJdtUXAPgX/rmz16xJ/j/MXpO/mSrQq4updLjqcCRsuq5dFJtLixi5Iqh8h/fufc9+t6UWro5mQ5Q+Ex0bzAagT/FV5hPJKUQoaR51BCOSvmll28hf/MTjQnquC6RZ9NSM91Sb8riINEI4Co6jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=VV/HQj/O; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1751113830; x=1751718630; i=markus.elfring@web.de;
-	bh=9dvPgfxBni1dCb8wk5xV/eYN0Q/Wf+q8ejkIbyh5sxc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=VV/HQj/O/TZI18JKc09uqN9Ka+v9zaAkTRctmxSuu1pIpyPG694I3jG1MNLQA3Nq
-	 E4ipZl1QzgCn8F08XMZALYXxSyY/Htyy+wce5hX8Q16f6A+hDQGSy06hJC3iNako+
-	 J74KrQPxl24vrG2TvRPHXVxrxXqIkp1Xp3IDVfdqpX8AsbgAI8ZEiJhfzQUpaoy8n
-	 IjNUm8pfGQ4FyVAfB/+evf6KoxLwUgWUNh4RC6f9gphEXhjeGhJGOnGZ87iwOEBO3
-	 fnG4H3aNG2wNDM+YPd1KaYjALQKIQQNlUY4uRKivWGMN2rQiRlQUHfwrc51cOdlIk
-	 yBoLKFg6MN6h4tr64g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.176]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MLAVc-1uDHKG1Nj8-00TXkk; Sat, 28
- Jun 2025 14:30:30 +0200
-Message-ID: <76f34610-6792-4be6-a5d6-622fba7d85da@web.de>
-Date: Sat, 28 Jun 2025 14:30:14 +0200
+	s=arc-20240116; t=1751121229; c=relaxed/simple;
+	bh=H/z1iLiEZXOU4uzftN0AnKLKkX0XaCAs2CMguHD8mao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WiNfWwNPDqpk8c9Ho1ggws1nBvv1FjJ8mGOEc4lOELJxENTjV+1dns6vn+m1+vEcRcgSBgd2837jRh2Bt2UcxhYXh5ZOhZRbLRfqTe6HvjLLIDhAlckB2VjqMXKWAx+wktSld3HzwwANbbDzd6ZcZEGWHNuxxTPhH57pVuXMjNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Er8+EO/Z; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55S3Snob028573
+	for <linux-gpio@vger.kernel.org>; Sat, 28 Jun 2025 14:33:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HuVOl6ZxJLGQ7rcb1ieCWzhWudrjJUbl0x5e2lJC0QE=; b=Er8+EO/ZK69WgHqO
+	Ck2djVAHNvo8e6tzV4dwm764jGaPgLwdDVIGgy8/qCY7wUkD+4dC7Sty8lMi+zcZ
+	DzmQRqn7/ydTmUyL6k/+mh3pRFoE/whwMnSDnlOCW6VeUkNKo/81nYvb3nxkc2Wl
+	DbF8C+KXaa9zFOROIXMJn0goehAcweStzWOSg5DNTD8J+64fd/to8A1zwwn/imai
+	ObPbhdlPOZLsfOBknjSP+d8Zcea8/3zuJpsqmFn4Gf+88nNSTg1Aqhp62yydrgu0
+	5Jry/U602mxmMnLyy2tj54NBra1k0DbZdlojYgVmAwjtqczNXjVnQpAVbxrUkF6u
+	AohWjQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j801rsta-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Sat, 28 Jun 2025 14:33:45 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fb53b1e007so7505946d6.0
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Jun 2025 07:33:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751121224; x=1751726024;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HuVOl6ZxJLGQ7rcb1ieCWzhWudrjJUbl0x5e2lJC0QE=;
+        b=mXNAyEGiUW5ynKXsyTUlElLdofECQR5e9gq8QXYsksWcyw5mVhpyzJ01qir0eAMWF7
+         DdN/u672ZYOcSNWWTxg2kdtgOHVsC5+WfF9bCn2N4oHadarCXYrD8siQ/+h2K+am1BiW
+         WDzqTMomcERI5T/IzG+MtzOoj4UlRc34TjohjDqWIz5agal6J/oCFvDhlNCVuh/aM4K+
+         gxzK2O6vWw9Xndnyxjx0OhyhOMGQzXYN5UE7RCBTcjm6qclj89QsTwTyqTfKpunESBzX
+         rPVHRjeaOw60yqdFZCt9+coPOYsj9YEF5Lk7mHprTB/W8uDKx7xtdmnSoAkY62mVv2H4
+         hyaA==
+X-Forwarded-Encrypted: i=1; AJvYcCU67VwvW0lsfl6IRTuQU2m2ngEzlll7t+eyk+0ebo28RshMCb0NcIslXML0x2zqIqjfYMHDYEOIsPQw@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKU521b01qBpKRjkGlEXWf8u08HgZSvMrqzkGsQ04tru7uRoRI
+	Kb0825lez9bdVizhvAEUyhu4vlGFjuzGE9LzZpPAL5MckoO/GScf/PxwZUjBlaBak7S3j2AgCuA
+	GUtVcGcPD0l4/Zarm0JkmCJ3XBN9yeyJwL42+IhiohlvKIPcNwl3NxOab+jIL0f1G
+X-Gm-Gg: ASbGncsGcJ4/pV6BSlkIYtilZ+h+9RqsBs3MnUYa1JbPH0ZuS5TkRpEzrUBCx1O1Gx9
+	aYvIsg+ahZwF9QRv9veC6ZZBqI03iZxTiT9/B7P29slZFd63IzrAzGA5FDQDj/qZYbA5K7z0fWB
+	uQIQuxwAqD3rd6Vb1qag4LBDtUTZjAxHpVOjTVO9S5lvnODoAXEQzoBtmkwdJ+w1clNs3HkeoFQ
+	eVmfNO9TN+L8NhOC8I4mCzi/PeqEqwPc+TFFtU2IzVvgoBKOK/bRLmBxUknZUP5a9fJ8xBR81Dk
+	ztKArK3IRzgB6LuRNP73AYojXOZGpejdDUpDibKuIkpHewH5z5Wm60oCuG/CCGQww30HGgkiLZF
+	HHBA=
+X-Received: by 2002:a05:620a:468f:b0:7c3:d798:e8ae with SMTP id af79cd13be357-7d44c1e865bmr174083185a.2.1751121224260;
+        Sat, 28 Jun 2025 07:33:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFqoPiCw9YRPSLc7lTHGilnDJ3WRFqDc+rvgBEJtqW7+0Cd1vSfc7+jJ37iPWQdoj4t8l0x/Q==
+X-Received: by 2002:a05:620a:468f:b0:7c3:d798:e8ae with SMTP id af79cd13be357-7d44c1e865bmr174080385a.2.1751121223668;
+        Sat, 28 Jun 2025 07:33:43 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c831ff8b3sm3057699a12.67.2025.06.28.07.33.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Jun 2025 07:33:43 -0700 (PDT)
+Message-ID: <80079934-c341-4557-b1fc-29e2c132dd3b@oss.qualcomm.com>
+Date: Sat, 28 Jun 2025 16:33:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,102 +90,122 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Ming Yu <a0282524688@gmail.com>, linux-can@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
- netdev@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Andi Shyti <andi.shyti@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Bartosz Golaszewski <brgl@bgdev.pl>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?= <linux@roeck-us.net>,
- Jakub Kicinski <kuba@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Marc Kleine-Budde <mkl@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>,
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
- Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Ming Yu <tmyu0@nuvoton.com>, LKML <linux-kernel@vger.kernel.org>
-References: <20250627102730.71222-2-a0282524688@gmail.com>
-Subject: Re: [PATCH v13 1/7] mfd: Add core driver for Nuvoton NCT6694
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250627102730.71222-2-a0282524688@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: document the SM7635 Top Level
+ Mode Multiplexer
+To: Rob Herring <robh@kernel.org>, Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625-sm7635-pinctrl-v1-0-ebfa9e886594@fairphone.com>
+ <20250625-sm7635-pinctrl-v1-1-ebfa9e886594@fairphone.com>
+ <20250627204432.GA45217-robh@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250627204432.GA45217-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GARg2unvR393v0ddrdFf+gCoE5GBk7DkTlawIl6DtqhxD5KbjS4
- XwhEnClEhPUjptkfwCX0vZRNAJUHgoZkMd7Z1r0rvpp+F8YsxTy0Q4r2IW1f7ahFswzYTl3
- T/qL292DDL+KBIEbtSr7M895enORtm8y5FMPxW7oc9VLnOsjowYtP32Iiqb8ruCjpGSgnq5
- V9VNSdLblBEeHmR/+40SA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:rzNGavO/eAM=;eLzsOP7ZRUA9Ll8EVS5QMxBRvGt
- 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
- zRhhE+zhiUQ==
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: i7vgvMJc_IycrLSm70xxJk6WkV2nlHqJ
+X-Authority-Analysis: v=2.4 cv=YPWfyQGx c=1 sm=1 tr=0 ts=685ffd49 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gEfo2CItAAAA:8 a=6H0WHjuAAAAA:8
+ a=z9lO1hKNhkvoeKZr6R8A:9 a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22
+ a=sptkURWiP4Gy88Gu7hUp:22 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-ORIG-GUID: i7vgvMJc_IycrLSm70xxJk6WkV2nlHqJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDEyMSBTYWx0ZWRfX8G2w3y9enUJw
+ M69wWyIC1NMnYrHJK6hJNNV4kWDPWtHJY8wEwccpzxU6Y019T7RSJ2/6YILT9YerEz03XfKlyDp
+ bDJsWut47M8e3PNWq92MFZI51G5HrQVH8Pu3hiKa04Gcw6EiFWeIZW6HnVRQX42/POx8y6xyQoQ
+ 2sFPqU/ofa81/23dkhJV4YzpPRx0ps0eWND9DylFKj6PmKNMTx36M6QPDQVfhpAOQGPLyIfjRKD
+ 4XfASX6HJkdZRiJrHHwnfquvbg66Crd7bLoINj3R4XHTKe8tp+QwtkG54ZEDxi0NrjztgkiCeLy
+ LLAva42dfhd0rZEzgamei0fFR8Qm4KTjdyS34mJWaQBqq+xNm2hIVHdCNt3SSzqSjBrSgbiAF3q
+ DCbcwNsYAwQ3K04UbrsuC0yxaot55is/RGDlS3hE6UxpbRAvBxKqJ9to+PWJtMaZ21xWoqkC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506280121
 
-=E2=80=A6
-> +++ b/drivers/mfd/nct6694.c
-> @@ -0,0 +1,390 @@
-=E2=80=A6
-> static void nct6694_irq_enable(struct irq_data *data)
-> +{
-=E2=80=A6
-> +	spin_lock_irqsave(&nct6694->irq_lock, flags);
-> +	nct6694->irq_enable |=3D BIT(hwirq);
-> +	spin_unlock_irqrestore(&nct6694->irq_lock, flags);
-> +}
-=E2=80=A6
+On 6/27/25 10:44 PM, Rob Herring wrote:
+> On Wed, Jun 25, 2025 at 11:12:01AM +0200, Luca Weiss wrote:
+>> Document the Top Level Mode Multiplexer on the SM7635 Platform.
+>>
+>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> ---
+>>  .../bindings/pinctrl/qcom,sm7635-tlmm.yaml         | 133 +++++++++++++++++++++
+>>  1 file changed, 133 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..3f49239efb6e866015b40e3477a8bd0edd21b1fc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml
+>> @@ -0,0 +1,133 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm7635-tlmm.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Technologies, Inc. SM7635 TLMM block
+>> +
+>> +maintainers:
+>> +  - Luca Weiss <luca.weiss@fairphone.com>
+>> +
+>> +description:
+>> +  Top Level Mode Multiplexer pin controller in Qualcomm SM7635 SoC.
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: qcom,sm7635-tlmm
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  gpio-reserved-ranges:
+>> +    minItems: 1
+>> +    maxItems: 84
+>> +
+>> +  gpio-line-names:
+>> +    maxItems: 167
+>> +
+>> +patternProperties:
+>> +  "-state$":
+>> +    oneOf:
+>> +      - $ref: "#/$defs/qcom-sm7635-tlmm-state"
+>> +      - patternProperties:
+>> +          "-pins$":
+>> +            $ref: "#/$defs/qcom-sm7635-tlmm-state"
+>> +        additionalProperties: false
+> 
+> Is there really value in continuing this complicated QCom pattern? Can 
+> we just have 1 level or 2 levels only?
 
-Will development interests grow to apply a statement
-like =E2=80=9Cguard(spinlock_irqsave)(&nct6694->irq_lock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.16-rc3/source/include/linux/spinlock.h=
-#L585-L588
+The 1-level pattern is useful for states that contain settings for
+a single pin (or a common set of settings for multiple pins), whereas
+the 2-level one makes sense for groups of differently-set pins that
+are logically coupled (e.g. a set of SDHCI-active states)
 
-Regards,
-Markus
+Only keeping 1 would increase the boilerplate as each group of
+logically-adjacent pins would need to be referred to individually in
+pinctrl-n = <>, whereas keeping only option 2 would increase
+boilerplate in the state definitions (think creating a 2d array for
+a single scalar value)
+
+So I think both are rather useful in their own regard..
+
+Konrad
 
