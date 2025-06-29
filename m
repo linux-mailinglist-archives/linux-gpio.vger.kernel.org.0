@@ -1,87 +1,116 @@
-Return-Path: <linux-gpio+bounces-22381-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22382-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85630AECC1B
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Jun 2025 12:14:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B851BAECF42
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Jun 2025 19:40:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0878016E439
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Jun 2025 10:14:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C39FD1892825
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Jun 2025 17:40:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9674021D3F0;
-	Sun, 29 Jun 2025 10:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB902356B9;
+	Sun, 29 Jun 2025 17:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SugUPofI"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RTlHbRL/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506281DDA15;
-	Sun, 29 Jun 2025 10:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1AA1C36;
+	Sun, 29 Jun 2025 17:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751192049; cv=none; b=VjTaQctfvtaMk2U09OlKvlXdAGN2CNuvjex7Z2l5U4voal5P1WIpQLc3frk/gbopyM4QAJzznM1TyxJfMmftuVV2b9ktba8Q5H4/4HNWu1g0HoLwvfFf/Inmxp+IFDfN1NPRC06qqY5wzMMwFuiczfV8IgGyOstoVt0AbzaO/hc=
+	t=1751218825; cv=none; b=TxoI7CzYvQ1+Sogw9rjaL0mZoJ44vdjlrLwBb3dt4ux5olf2xS5I60jCA3NzHtk1rwbuwCCSvj9yLwjp05eXqHkVgkEMIy8veXCvERLV/9TTdwQj3XD2xQKNq+TwwCPGbyY2ztfskdlfiNTY4sFOE/GL008sLc81WP6cenrQ++M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751192049; c=relaxed/simple;
-	bh=XdbvY3hb9xbkGi10tmDHNYZ5H0m/0HmqoivDL+4z5O0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t0xvwgKOsyEoevFKcZR2eFYrvCM5kJLt+d3XQHXYhV51xvGUXjRVQnDl5jLDh1iyWVaaqKKP4gZRKp7MIHK8GlCDSZ3D+jWZmTJ1sfPqCM8+3MztdHMkhSZKOAZB+hLtkQOUrnE15vR8mjeYp6FJFATOnPHjljXElyTYXyn3XoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SugUPofI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DF04C4CEEB;
-	Sun, 29 Jun 2025 10:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751192048;
-	bh=XdbvY3hb9xbkGi10tmDHNYZ5H0m/0HmqoivDL+4z5O0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SugUPofIsg+lg/f0zWJ0eM1weJyTWWTh4pZGUf00/yh10BYPJMMU8tAOArt33fM+X
-	 Lrg9UQXcGn1JwWmbGlX9Ra+Uqjtq03yjDRZoMhzCllwJliKA0gQXdHcnMCzZMJTabP
-	 AfqbPy/yoEpMPlpSKyEfWcnpL1MdNWgsqfoQAYalEJit4MNRTFFR0xcT65l9l2lfc+
-	 2DX9+SjQGLSYUlD2au+1RX5NnmJsOkU2eiqMSxfLyrsOgue9LB/OSBYES7/7DlZVwh
-	 WT4czD+Qe3wvwlO9uTnh6laUIZxySZ4mKbQsaEyrWFKRBxw9Q7vXaGkaxkzMru8lNV
-	 /4RuxbWqQUIjw==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
+	s=arc-20240116; t=1751218825; c=relaxed/simple;
+	bh=kNTnA/HEHbrY20Y20zsb2ywwOhUAzW+t5QxcQgfHaLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WyL3sSOKO2kJiDapBF58K5yHXIGTuV84vmwSdfdbyrloiT1F7O3gIkQcve3kiBwxrzpLoHrQTp/0EMCKUyKsPK6uXeqEvQaWMIUvHcPjURZaRs0XEZHqCHpbxwNTsRDpZkW/MKnreB1DLemhHyDrp3jxIycSXmKk+DtQm+wuS9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=RTlHbRL/; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id CB96E16D7;
+	Sun, 29 Jun 2025 19:40:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751218801;
+	bh=kNTnA/HEHbrY20Y20zsb2ywwOhUAzW+t5QxcQgfHaLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RTlHbRL/r/r1gaRrFFI0Pgsd6sC5iZnTaGjpvzCh8yDmQqqJ36UICUp5SPUJBsuDD
+	 lZupLJwM96TKcMkxICNw74LmgHCLEZVmqe83P4sC7/4cE6SKjVlIJ8yuY96uTjnV/T
+	 y1JjJHo8g7Kwt1wTgFXX8fSGsp17BL0Ujaa6rc8k=
+Date: Sun, 29 Jun 2025 20:39:58 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH] regulator: sy8827n: make enable gpio NONEXCLUSIVE
-Date: Sun, 29 Jun 2025 17:57:16 +0800
-Message-ID: <20250629095716.841-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 01/12] media: uvcvideo: Always set default_value
+Message-ID: <20250629173958.GA6260@pendragon.ideasonboard.com>
+References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
+ <20250605-uvc-orientation-v2-1-5710f9d030aa@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250605-uvc-orientation-v2-1-5710f9d030aa@chromium.org>
 
-On some platforms, the sy8827n enable gpio may also be used for other
-purpose, so make it NONEXCLUSIVE to support this case.
+Hi Ricardo,
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- drivers/regulator/sy8827n.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thank you for the patch.
 
-diff --git a/drivers/regulator/sy8827n.c b/drivers/regulator/sy8827n.c
-index f11ff38b36c9..0b811514782f 100644
---- a/drivers/regulator/sy8827n.c
-+++ b/drivers/regulator/sy8827n.c
-@@ -140,7 +140,8 @@ static int sy8827n_i2c_probe(struct i2c_client *client)
- 		return -EINVAL;
- 	}
- 
--	di->en_gpio = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_HIGH);
-+	di->en_gpio = devm_gpiod_get_optional(dev, "enable",
-+			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
- 	if (IS_ERR(di->en_gpio))
- 		return PTR_ERR(di->en_gpio);
- 
+On Thu, Jun 05, 2025 at 05:52:54PM +0000, Ricardo Ribalda wrote:
+> If the control does not support GET_DEF, the field default_value will be
+> left uninitialized during queryctrl.
+> 
+> Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+
+Media CI rules require a Cc: stable.
+
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/uvc/uvc_ctrl.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> index 44b6513c526421943bb9841fb53dc5f8e9f93f02..47e8ccc39234d1769384b55539a21df07f3d57c7 100644
+> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> @@ -1497,6 +1497,8 @@ static int __uvc_queryctrl_boundaries(struct uvc_video_chain *chain,
+>  	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_DEF) {
+>  		v4l2_ctrl->default_value = uvc_mapping_get_s32(mapping,
+>  				UVC_GET_DEF, uvc_ctrl_data(ctrl, UVC_CTRL_DATA_DEF));
+> +	} else {
+> +		v4l2_ctrl->default_value = 0;
+>  	}
+
+While at it we can drop the curly braces.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  
+>  	switch (mapping->v4l2_type) {
+
 -- 
-2.49.0
+Regards,
 
+Laurent Pinchart
 
