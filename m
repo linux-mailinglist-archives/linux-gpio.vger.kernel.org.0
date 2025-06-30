@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-22399-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22400-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20EFAAED7F6
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 10:58:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92BEBAED81B
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 11:03:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97B23163522
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 08:58:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97B9B3B73CE
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 09:03:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CDF424167B;
-	Mon, 30 Jun 2025 08:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89571219A7D;
+	Mon, 30 Jun 2025 09:03:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vICJWPed"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JMOgk5TK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B477238C1F
-	for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 08:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB9011CAF
+	for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 09:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273878; cv=none; b=scFnMVueg3HRqgpUXFKTj4wbbaLwAO/Z26j7AVyl0TWc2GNqo9KVGOV9oNUVCEXy71z7uoqiBMKpeQd3WT8/CYXo3jj/G6DZGqEd/GDYgLzxgPvA0+NiRYZFRmESSSlFcuCoV0YD+EYwEutAd0pP1UcIquGlk9Ktj/07cE3lgh8=
+	t=1751274202; cv=none; b=NzoAeXduh/fyOSnxAVBXlgAksWxMXwHfadySeaMLyxlcQQeqzxlPhrmxxcNDfpMAn401yvKJVlvF0cnGfOn5rw81SpixiesZ8Gte3behLvi+sqXw0OvmMpMoIixX2N9KFzgH2Sis/hawoFKc4064F7IM21Fd0vI99AUdpWddILo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273878; c=relaxed/simple;
-	bh=onLgqf9wBQTKSo4b8bzwNbk/HjG4OEyCuw7AQptX5lc=;
+	s=arc-20240116; t=1751274202; c=relaxed/simple;
+	bh=jhiz5uTGaBjjPcT0ccLSwhRZYUnDPnjS6PAZW9PeMfw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NwfEI07+8TyeBGgHLK+jD92DH/KBkNErRBVcfLfhd8aLRbOxtEtMjmAwPEXpjusbSM3FIgiUZDVh3px+gqitaVE5t4c/WXky6PjmjBP9z1WHdg2e4wF3/aMgkVoiuYbyLFm3Myh88CqNxOPckSlaOR2spRvjBMCdrw2vsv1JlR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vICJWPed; arc=none smtp.client-ip=209.85.167.47
+	 To:Cc:Content-Type; b=hllOfAW7hqriq9bmlbtrSAwE9qpl/JwAyzFs+gKDzgNsSuESUryayJUHSen+A5Kpew2dT9DiNCVfZzzzzqLvdsak80G3EBLquZXPstZAhtKasPhRnw4pZYd5wO3QyX5hQjloNPhtGQDAnMyohzRhk4ty9HXU+k0o+aWG0pPjtgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JMOgk5TK; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so5730598e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 01:57:56 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553b60de463so2099347e87.3
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 02:03:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751273875; x=1751878675; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751274199; x=1751878999; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aFXh1Z91L70sdrJwqWRqSBN592H16a2JIB1wd9q9WPE=;
-        b=vICJWPed84G7CviciejousAgpZUjAY9W7mXrPCSzycY6Lf4+tS3rQSfRDGzHtxWvEF
-         cD84eLu5UKyVKxNVXy7UMhw5vzqLN8g18KuTEKErg12jAIFQYjvgw2hsnYbIDAfw9uMt
-         VLET3VctgLCQxshJ0+Fru9GmmfZD/LlARt6ZmQ7t2mBxJ1vm8sFJCYXnZUey4MrtCCGf
-         a5GG2bZKwTADX9adF0ITpS08n0XvI/7Eos35WhTl85QQNZ454EOX1iQ18OLdqgK+3UNc
-         a8+7QGnkiUHoGFBeT27047mqL91tse/uT/hTJGXPD0ZmRiJtzRCofrUQskDFRjqQ3d3d
-         1VVA==
+        bh=tWfytxAE0yR5JMaVn6nj9jza361wcodwPKcuA2pMsu4=;
+        b=JMOgk5TKhVqI7GoLaXd3udzqkXeov3TEFhzD/oWMpbqI2K9fQfznHK9aUEEA99kury
+         eA+gJ3Du6Jpw2/Ay7bVymcHWhKVyAYuOX/T7TE4FzupGClU27bGhPbMq24wbZLxUTlWB
+         o6NKwLRgGwJEIwXPuuIMKe+u1Oa8iJqVJhWlZ5UH57SVuPGlCsen1wSM5/M1TZmbAJSa
+         Xfb+2oiG8+SfqHP/ostdsX31kTCoNmQXL5e9eFb1bbSLH9J7OKyKi1gTyP2TLKA7QBar
+         v+PnEmbtJe2YxqOlb9H/q2awkW2tHBldb93jbs4mlgOpR4vLlpod+bPnZ4ug+TfyHofQ
+         FufQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751273875; x=1751878675;
+        d=1e100.net; s=20230601; t=1751274199; x=1751878999;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aFXh1Z91L70sdrJwqWRqSBN592H16a2JIB1wd9q9WPE=;
-        b=rKUfZLpEdZNcBPOs7BeXLNLA0VVwOuUrdaRrTWS/YLyxOctVBk2fb2pZhlGMTikNJH
-         c7AaxONWMGw522mBkdgHV7NGRwhG0et3BSQRTf5PqSgc9f1xTwgMlCtsSQVuDlLQ7CDh
-         FaY4CWGQ02qkyBdx5TJS6DergqKGbRfAFuGL5B08BpZMfTnbUL70fEtHO02OJoZo+w+j
-         t7QICxl7mmeuEUKXrK9fKBGCZaj+v+Rel6XCNMtJEJKq+mqCmwwURxPonYtEkf75FLJU
-         E5t6UVpZ/1K8f95QP/N1l8Gs7xpArmGKCdVpRzMG1UiSmAB9aZjZfntyG8DE6MxCz47F
-         x1jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVW5KuUjwvVQZ/6iETo6ANpDRB8q3/evDgo0Va21mliIwFc3evzskzzdC+eRqYnAHGb2b7MedI0otxD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yytgs5zdknpk2DJFGf8QuT9BULGO02KPkaaLma/g6ONnkoX0AxE
-	01PYP/BPL56ixV8YIY5mbT0JknFG+fHoWE742KdKIzhptbRazRkg55tKYLhYBRQJ8HnWr5Nc6dx
-	ZC4QT02BJ2NX2u4aGrv4q70YZDzGA4RUODbzOBoGUrA==
-X-Gm-Gg: ASbGnctobG9dBw4L3fyPjoAY/9C1noTjvYstIuVIPulj3ixpmsV4+w3QeQZMHDLhv+o
-	IKJsN9U0aQRR9/5Bamk5zEy4k11pD10lGoRrVJ/XNzsKLQmpEp/V/AEX2oPN+y2o1zgxr75HoiI
-	7o7dwjb+b8umPA8oJnzJfKFhx+e6p6B4PLECmFpQ6AcVAladI5zVyuHFnDt7WkMsd1RRE6B1Biu
-	iw=
-X-Google-Smtp-Source: AGHT+IHOVxPAMJSWh0SZLmaax8LuaMUfFhCW4STA1Hrax7bYhPG3/h1ZqtEQ5/+skwDUgLGcELqi8cmedawhg6Ze3Rg=
-X-Received: by 2002:ac2:4bd1:0:b0:554:f82f:180e with SMTP id
- 2adb3069b0e04-55502cb4e30mr5622503e87.16.1751273875362; Mon, 30 Jun 2025
- 01:57:55 -0700 (PDT)
+        bh=tWfytxAE0yR5JMaVn6nj9jza361wcodwPKcuA2pMsu4=;
+        b=ma95QTCkPsUksN+hzwojNhUW88THi4Rbi2zbYlv1aJSbHNbXFTTep56fRLlpk1pS8c
+         5GHleRb5MIPytcreexwovNbSA8k3VGLJDsZb7k/YTFfwCVid8t7rrF95AXflmbfHWD+d
+         pCjSJy1mUaGKNyMnZgMKkqzR1PB9RFp9zF+JzYrQnWaxCDM+a3KIkwEcVzbvl7RGCE8s
+         VrL1ZSgKnSZaxINc/Y29RVCtQdr35kWukkPTK5I31LGvJIverNj8Mo93meqW6zfECBq9
+         0A+8ZO0u8rmAEDlaqhkH0y2txBrm6xHbBAtUO8vkcmnys9cym0eV5ZUbpMltZMeaHBr5
+         PrvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVODOuOLbldWwqGHx8z36tr8CbtR4W6HKs9cgI45nDh2R+p2GnDItNHRsQMz22BcZ/cCcdLMeUXf/Fp@vger.kernel.org
+X-Gm-Message-State: AOJu0YycAKm7u3x4/OQTpYWIjDac11XJC1QEXpMwL/XPnRMzKVjeT95F
+	mYMCWTDKIgIbiCv3QteMLc+t42AtsRoXPQIloc6QL5vNnzmRT0etQ3VMbjRIXVu1/ajO3FRKmIn
+	ARuEVQ5eh8UyHUVrkjQ+WBkqUjcBKA4UHhGS1uINvog==
+X-Gm-Gg: ASbGnctuWA0KUDUtO+o8FWcdLVF6EymK1RmQrY/TPSpYC2CF28Wik02tEZ6zZieIs0h
+	Pu4eJDTlZY1rCHj2xph+sx80Ml/jyJaBRgm8gOPRisW0weW83b9bT6PWhycJv+Pvhp/iYsFeLU4
+	VVEtpvIOPUQWI2BaYBLKfWa7B88chOs8xuJONfrKW/k2EKqeyEgUIlqspDSFjKqIfjNspfAjdG1
+	v6I7fMIviZoUQ==
+X-Google-Smtp-Source: AGHT+IEZM94paauPN9kvyN5Wy0jAVk6uUDoM5NB/O/ifpnz8OMcjWjTVIWjVVV88LAhS1A3q1SKAqCf3uJXQmzaN7aA=
+X-Received: by 2002:a05:6512:3ca4:b0:553:5e35:b250 with SMTP id
+ 2adb3069b0e04-5550b8d27demr4364859e87.32.1751274198860; Mon, 30 Jun 2025
+ 02:03:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,12 +76,13 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
- <20250623-gpio-sysfs-chip-export-v2-5-d592793f8964@linaro.org> <aF68N4ZYKupWHJoL@black.fi.intel.com>
-In-Reply-To: <aF68N4ZYKupWHJoL@black.fi.intel.com>
+ <20250623-gpio-sysfs-chip-export-v2-5-d592793f8964@linaro.org>
+ <aF68N4ZYKupWHJoL@black.fi.intel.com> <CAMRc=Me9QX8OWwFcTHQjXgDKiu_90gaLGeQp600aSSJi0yzbYg@mail.gmail.com>
+In-Reply-To: <CAMRc=Me9QX8OWwFcTHQjXgDKiu_90gaLGeQp600aSSJi0yzbYg@mail.gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 30 Jun 2025 10:57:44 +0200
-X-Gm-Features: Ac12FXyIhO7e-cJUzkPo19wadzgUrXNHYc5Zx6JLIkPswC_feeEvjBGPtz7bWAE
-Message-ID: <CAMRc=Me9QX8OWwFcTHQjXgDKiu_90gaLGeQp600aSSJi0yzbYg@mail.gmail.com>
+Date: Mon, 30 Jun 2025 11:03:07 +0200
+X-Gm-Features: Ac12FXx7mT93_RUnod8ZjnTuvOmNDb0--jhnoYMQ5ORLT9Cbc4o-DnA9kg0kdWo
+Message-ID: <CAMRc=MfrqmBKZFGvTzyasTnAf6NcVBhTPaZHj5ncEeCVxH_LSQ@mail.gmail.com>
 Subject: Re: [PATCH v2 5/9] gpio: sysfs: rename the data variable in gpiod_(un)export()
 To: Andy Shevchenko <andriy.shevchenko@intel.com>
 Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
@@ -92,34 +93,47 @@ Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 5:43=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
+On Mon, Jun 30, 2025 at 10:57=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 >
-> On Mon, Jun 23, 2025 at 10:59:53AM +0200, Bartosz Golaszewski wrote:
+> On Fri, Jun 27, 2025 at 5:43=E2=80=AFPM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
 > >
-> > In preparation for future commits which will make use of descriptor AND
-> > GPIO-device data in the same functions rename the former from data to
-> > desc_data separately which will make future changes smaller and easier
-> > to read.
+> > On Mon, Jun 23, 2025 at 10:59:53AM +0200, Bartosz Golaszewski wrote:
+> > >
+> > > In preparation for future commits which will make use of descriptor A=
+ND
+> > > GPIO-device data in the same functions rename the former from data to
+> > > desc_data separately which will make future changes smaller and easie=
+r
+> > > to read.
+> >
+> > ...
+> >
+> > > +     attrs =3D desc_data->attrs;
+> > > +     desc_data->attr_group.is_visible =3D gpio_is_visible;
+> > > +     attrs[GPIO_SYSFS_LINE_ATTR_DIRECTION] =3D &desc_data->dir_attr.=
+attr;
+> > > +     attrs[GPIO_SYSFS_LINE_ATTR_VALUE] =3D &desc_data->val_attr.attr=
+;
+> > > +     attrs[GPIO_SYSFS_LINE_ATTR_EDGE] =3D &desc_data->edge_attr.attr=
+;
+> > >       attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =3D
+> > > -                                             &data->active_low_attr.=
+attr;
+> > > +                             &desc_data->active_low_attr.attr;
+> >
+> > These were added in the previous patch and immediately got rewritten?!
+> > Sounds like a wrong patch order.
+> >
 >
-> ...
+> Yeah, bad rebase. Thanks for catching it.
 >
-> > +     attrs =3D desc_data->attrs;
-> > +     desc_data->attr_group.is_visible =3D gpio_is_visible;
-> > +     attrs[GPIO_SYSFS_LINE_ATTR_DIRECTION] =3D &desc_data->dir_attr.at=
-tr;
-> > +     attrs[GPIO_SYSFS_LINE_ATTR_VALUE] =3D &desc_data->val_attr.attr;
-> > +     attrs[GPIO_SYSFS_LINE_ATTR_EDGE] =3D &desc_data->edge_attr.attr;
-> >       attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =3D
-> > -                                             &data->active_low_attr.at=
-tr;
-> > +                             &desc_data->active_low_attr.attr;
->
-> These were added in the previous patch and immediately got rewritten?!
-> Sounds like a wrong patch order.
->
+> Bart
 
-Yeah, bad rebase. Thanks for catching it.
+Ah, no actually I got misled by the indentation difference. It was
+supposed to be like this but maybe it is better to change places of
+those two patches.
 
 Bart
 
