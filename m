@@ -1,168 +1,94 @@
-Return-Path: <linux-gpio+bounces-22453-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22454-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E07BAEE096
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 16:25:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EAE8AEE1D9
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 17:04:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6760C3BCCEA
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 14:25:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5589F189E13E
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 15:02:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EB8A28AAEA;
-	Mon, 30 Jun 2025 14:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D8E428D8C4;
+	Mon, 30 Jun 2025 15:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qY9AJzoq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzGUY+mY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA6672633
-	for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 14:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDE028CF65;
+	Mon, 30 Jun 2025 15:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293548; cv=none; b=a8tEsz2yDmWG14Ak8NkyAQAk6Nkp3d25GZ9fPydXQbnqptLyDSRYDbJwqNE8NOeonZhxv1d7veJTFd5UTCLpNP0Q/V6wV9iR301mztK4/7tSi/FHXGEeeLXR89/J2YbhATHVM1t544iLRDjhItL5Okgh+GiWQUMu47/Ecz3suE0=
+	t=1751295748; cv=none; b=kWMeLJLetpY4oU8H/xty7wVJbGZMUGueIg582LBeEAWuFmEgFv/5JzzF8AP0Z7NitZjl0peN4FDcTnOQNC4R0W6gmBjt0B17Adoo6h2vT3TP5QZXAJg/vWONDyCWvCX85S1YldItJfp/5maXYJ4jq4PSOioHA+ZuNHtjWdb4S+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293548; c=relaxed/simple;
-	bh=6R7boCYEzLpJ45qSgAlkXya0/J8kHqvdKuCYBUv67Ew=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sm+o+G0kkO5Kwbs2Sp4ynyh4x4hTIwnXgF3dP8PLa5Erudkj6w8yOXhSkT9KDFsaFaYAkSXYjH9MGOYp9UPSxXefPWAypKvgsEtlzlMNxVnw46v39YBiW9sipNEUpjsBUSC4QfjmPHhj2bzAA5EpVUz2LtAitvpykQ8aSKZhrV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qY9AJzoq; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553b6a349ccso2424195e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 07:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751293544; x=1751898344; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oCR9YY4zlxmSg4QDtfwUqkbq4za44RoO62WAzLMjonE=;
-        b=qY9AJzoqhUivjP/6JO2g6+OHeTDxamaKiLXxzGaNzybCntu4jWkb+j/Dm+2WeG0wTJ
-         JQqIWrByOsemQf6h/9zgMd3tC4ewwO6hjsjZ9Nc2B8lCHMd4xDauikX8eyZYyaQal7Na
-         9SNN4ZFC040f9TQGPoKJxrPiDhqIpg3PoBVJMsj3QTLE1YwUFEelpTcrLdmoIuwAW17k
-         tdv4iEHlOi1qpWXDFi5pwkva1Z5wpIfxKeUoiEKwCx+EUeZH347fKP0xmh2mzWirKNjv
-         /Q/mU7+2zUYQWC0NywP9BB8ngHJ4stGfNU3Lo5qTUcW8nG4PpzYGbjFui2T0KZYv5sNf
-         vwFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751293544; x=1751898344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oCR9YY4zlxmSg4QDtfwUqkbq4za44RoO62WAzLMjonE=;
-        b=Cb44tBkbIPBB/5DrbPAqEBt0TABSQN0zLdv6fmF8TeVw3IkQ95ZJ6Cm+FlBTcgHueZ
-         oZJ8Sz3JBsfDVso52HfQ8Zjc7AGzC/MJBM3jdi1NeggX0YP6bQ41Jw992KoOYZ6lalJg
-         QZjvmQVU/Yn8RJwi7RwHeAi/nr5WbGNVxw4UhW/2Bh/F+GTge67dANd5BrsB6oDZKs9u
-         mpU9CMuDyZ0CoUJ78+XkLiFYu6zg2OjidUxkRxZwVOgLrsB1szoBt21dZ3VQw5DEIzC4
-         Bu4uGFGP0biindfLqnbn0n2nMdncbfZqNT+9btXZC005U9EUYAFNfnbt/A+gU47dJ+9j
-         ALzA==
-X-Gm-Message-State: AOJu0YyCBqgdYyhk3ynA8EuHkyT4uafBWm83zxZLYmQEc/VnRsTGg/zi
-	PAEmmhR+VzrABC7ZusaQfRDRSOZCOsbSkFuOTLLdMiRelGVz7HubKMe8pC87pnaj1oI0GyEDtv8
-	zbv/A8Sq+qkqD32S8bU/fpZigWAHD2V/MYufBvU9oghovVbfAajl/vkY=
-X-Gm-Gg: ASbGncs4GVrmWFMlb9OP4dBQnlmJi/0IG84VZf82JK5xrpxAhsWIdNwXpGUS33bzCxO
-	5hSuOzmNeYIQBcwY9TdHvFu2CHSbdthRNuycV0pzT6m9kiDa8tYj3alh6cXeUZ7opkApsfE3EMk
-	gsefMhKlED/dkrYy+NDZOYFpo6clVS85yiA27BcGPTnrNt+V3sJIJdCz+fgljfaX3e2RSobiC72
-	9k=
-X-Google-Smtp-Source: AGHT+IE0uBH6+ITRBmBSJrC2fYht9fM+n6ikjfShXTb6XmSRwz4dqFnbf76KXSA5X9En+j6dUmfpsL29n4sPTw2iBmI=
-X-Received: by 2002:a05:6512:10d2:b0:554:e7f2:d759 with SMTP id
- 2adb3069b0e04-5550b8977dbmr3983718e87.28.1751293544206; Mon, 30 Jun 2025
- 07:25:44 -0700 (PDT)
+	s=arc-20240116; t=1751295748; c=relaxed/simple;
+	bh=YcLHh+k63YrGnVqc3FfVtSUGIQrzXb+AYCgJwkR+5pI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9uC4MUCHNobQi37TYObIa9idNW9Hgv9sKPTjEhbvCFXzqvcW8zFf8Hmyp4eLDUCfG4Xaldr5JUZIC2IJz775oJOc9K/A850qxGWg7dsG+FG/EsTk4QhMO42jFB9ZAx/ZvBs6XPfUtB+pntZClUGCV3FTF13teiIvGTzOjeU5DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzGUY+mY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F321C4CEE3;
+	Mon, 30 Jun 2025 15:02:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751295748;
+	bh=YcLHh+k63YrGnVqc3FfVtSUGIQrzXb+AYCgJwkR+5pI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IzGUY+mYP6jvnj1LGpydx71+PntTMbfbP/wiaFdQ81g3O01NsfQvbqEDCwoQEnvQi
+	 cYdzDOAebK7BivmaHB8+HU45Ri1Fkpfs+0LuekXZxRbrbSzm8k9YKNKFbB/JUkz1LI
+	 IAiEeC0N/mmrqYV/8IYWOuAfXpb376Y+gaDOOYgDGwUaCgjgqNppjDoMABVpZ3RsiQ
+	 lQpx4KXd4NRLbI7GM/f4+6Lwhhxj8CK5DEuJp/aL9mSNFVD4EE9nUTQ3X0g/2TIypk
+	 j8FftQcLJBVTdsNXhg5/YGZjim8FMDNn+gRx8xSEVtwefJO0neUxfJojsc0eULDFka
+	 ZJN/MD1bnkMUw==
+Date: Mon, 30 Jun 2025 16:02:24 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] regulator: sy8827n: make enable gpio NONEXCLUSIVE
+Message-ID: <440c4bcd-0fd7-4c12-85a6-5eb343fc3f91@sirena.org.uk>
+References: <20250629095716.841-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6f289fc5-d959-475d-9d75-0557c5bb8350@wavecable.com>
-In-Reply-To: <6f289fc5-d959-475d-9d75-0557c5bb8350@wavecable.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 30 Jun 2025 16:25:32 +0200
-X-Gm-Features: Ac12FXykgLbfuWUlzADo6JIjn8mTnt8CwxTWNgi4cjpC_ebuUZhZAoqZVh_bfjo
-Message-ID: <CAMRc=MdR70kWDA9ts-ycprNEVeM1-NgeVNLPc8kSvU4n5ZwE6g@mail.gmail.com>
-Subject: Re: [libgpiod] Version 2.3.0 fails with RPi OS with Kernel 6.12
-To: "Thomas D. Dean" <tomdean@wavecable.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UAVpDRsTcs9rWeUL"
+Content-Disposition: inline
+In-Reply-To: <20250629095716.841-1-jszhang@kernel.org>
+X-Cookie: Say no, then negotiate.
 
-On Fri, Jun 13, 2025 at 1:58=E2=80=AFAM Thomas D. Dean <tomdean@wavecable.c=
-om> wrote:
->
-> I installed gpiod version 2.3.0 on three RPi model 4.  All have the same
-> RPi OS but different kernels. I name these rpi-4b-[1:3]
->
-> I have different results with the code at the bottom.
->
->  > lsb_release -a
-> No LSB modules are available.
-> Distributor ID: Debian
-> Description:    Debian GNU/Linux 12 (bookworm)
-> Release:        12
-> Codename:       bookworm
->
-> They have different kernels.  One rt10-v8 and two SMP PREEMP.
->
-> rpi-4b-1: works
->  > uname -a
-> Linux rpi-4b-1 6.6.74+rpt-rpi-v8 #1 SMP PREEMPT Debian 1:6.6.74-1+rpt1
-> (2025-01-27) aarch64 GNU/Linu
->
-> rpi-4b-2: fails - Exception:  [Errno 16] Device or resource busy
->  > uname -a
-> Linux rpi-4b-2 6.12.33-v8+ #1 SMP PREEMPT Thu Jun 12 06:11:58 PDT 2025
-> aarch64 GNU/Linux
->
-> rpi-4b-3: works
->  > uname -a
-> Linux rpi-4b-3 6.12.32-rt10-v8+ #1 SMP PREEMPT Thu Jun  5 19:06:02 PDT
-> 2025 aarch64 GNU/Linux
->
-> The code at the bottom, a simple chip.request_lines(...) works on
-> rpi-4b-1 and rpi-4b-3, but, fails on rpi-4b-2.
->
-> These tests were run just after boot with no other user process running.
->
-> I did not make any kernel config changes other than the rt patch. I used
-> patches-6.12.28-rt10.tar.xz as it seemed closest. There were no errors.
->
-> I guess the best way to proceed is with bisect. I have not done this for
-> several years. But, what difference does rt10-v8 make? Maybe bisect from
-> 6.6.74 to 6.12.33?
->
 
-That would be tricky, these are divergent branches. Have you tried
-v6.6 and v6.12 from mainline tree?
+--UAVpDRsTcs9rWeUL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[snip]
+On Sun, Jun 29, 2025 at 05:57:16PM +0800, Jisheng Zhang wrote:
+> On some platforms, the sy8827n enable gpio may also be used for other
+> purpose, so make it NONEXCLUSIVE to support this case.
 
->
-> Working output from rpi-4b-3:
->  > ~/aorus/work/Python/one-line.py
-> gpiod version  2.3.0
-> <class 'dict'>
-> {18: gpiod.LineSettings(direction=3Dgpiod.line.Direction.OUTPUT,
-> edge_detection=3Dgpiod.line.Edge.NONE, bias=3Dgpiod.line.Bias.AS_IS,
-> drive=3Dgpiod.line.Drive.PUSH_PULL, active_low=3DFalse,
-> debounce_period=3Ddatetime.timedelta(0),
-> event_clock=3Dgpiod.line.Clock.MONOTONIC,
-> output_value=3Dgpiod.line.Value.ACTIVE)}
-> <LineRequest chip=3D"gpiochip0" num_lines=3D1 offsets=3D[18] fd=3D4>
->
-> Failing output from rpi-4b-2:
->  > ~/aorus/work/Python/one-line.py
-> gpiod version  2.3.0
-> <class 'dict'>
-> {18: gpiod.LineSettings(direction=3Dgpiod.line.Direction.OUTPUT,
-> edge_detection=3Dgpiod.line.Edge.NONE, bias=3Dgpiod.line.Bias.AS_IS,
-> drive=3Dgpiod.line.Drive.PUSH_PULL, active_low=3DFalse,
-> debounce_period=3Ddatetime.timedelta(0),
-> event_clock=3Dgpiod.line.Clock.MONOTONIC,
-> output_value=3Dgpiod.line.Value.ACTIVE)}
-> Exception:  [Errno 16] Device or resource busy
->
+When you say "other purpose" which other purposes do you mean - another
+regulator, or something else?
 
-What is the output of gpioinfo in both cases?
+--UAVpDRsTcs9rWeUL
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Bart
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhipv8ACgkQJNaLcl1U
+h9DxHAf+JT3YzGFqndvQ0ENy2+4cVQ0wAn87m0sf5KKOPGcAagu/qzrWbxNVpY0Z
+9xVpDOL3pDUy6jBKiqVGUItGJEW9BxTsGie8CTlAgJt3O4F5YAy3hR6Q+JsdoL+J
+x1FRT+iieyFHruz1FNz20aJxgfHvbwuBWciXLc2AWQmvRbMslHenRLE+1eFqYkR4
+Xp6zf8wYuafw9HOGGvVkM0fpw0Nm9n/Kx77+ULrIMJo/wZj+k7iGqrcE76MU7TO+
+b8UiE+5w+gcpk0aFcYTWaol0o7d8ViAj9ccE0Ywt+21Qk2g6+iUCOq5NGOMTd9Ch
+knAzJVkvsXqOlrfNdbEVL4WaOco/Fg==
+=Dpr1
+-----END PGP SIGNATURE-----
+
+--UAVpDRsTcs9rWeUL--
 
