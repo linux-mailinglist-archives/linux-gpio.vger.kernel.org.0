@@ -1,145 +1,116 @@
-Return-Path: <linux-gpio+bounces-22393-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22391-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B079CAED52E
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 09:07:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4136AED513
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 08:59:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37A0A3B12ED
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 07:06:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CEDF1634F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 06:59:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F57B220F2A;
-	Mon, 30 Jun 2025 07:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3821202976;
+	Mon, 30 Jun 2025 06:59:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mypwy5m2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xe9xc3Hl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF5721A43D;
-	Mon, 30 Jun 2025 07:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCED1422DD
+	for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 06:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751267197; cv=none; b=bIgGV8oTuWn+pDpaI+BlxfSq2hC71tPfSLfsYjUhxEW/hoDfwxNhr3PKBv+DERAIUKuwZNnXlQG/iXISOUCf23rUAtFszV1APEvm984VZA29Ou/L98yp9tT03WaFmYGysrpLIsh68LyFfeR/Y17YAyS1hElVkWduPWvxB6ypEpI=
+	t=1751266752; cv=none; b=oijTIbRS1RhSUyX641i5oiNHcwcpOS/tybUt66Mi+fMUdvsVi4EJ1QlJXztFCaOsLAp8rLO7AFqAiz/Fo2z/NsLF+brppkJKFOyYfq3Pf5Akc7jalmmdecm0ztXkcx2iM+bYkEk25cgeKqkYlcblQ2pUXysFNSW+CtT8e90LIM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751267197; c=relaxed/simple;
-	bh=0ArGKK/lkY6jJnv1t6+jlB9HHmUv7yTPBu8XsLA9hUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U/hjOzMt9ujm6Iz2QD3zy3SbXsIRbbKrxBAwaCwdnVZibLGj6GSTQx1aH3DfqaQ5l3r5Y/W2DKJn2wo62D4TeXpkCpz5Wmr3sHDwjwoe44ycH5bcg3TYPWwlrzcrS0Z72xPyfYpi+C2aXgFA7/fZsVP1lo7jJBMDHlyahAnhnJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mypwy5m2; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751267196; x=1782803196;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0ArGKK/lkY6jJnv1t6+jlB9HHmUv7yTPBu8XsLA9hUg=;
-  b=Mypwy5m26F16DOVuRjTzhagpyTGQkTGqtsPqO0YE2+iyunQAjyo6Ieuz
-   leA8R0Ssq2DsGiBErPNPm0jDlbnMjjtRy/Pt17bjuW+N/qu3lszZ7965o
-   7MJrdNytz/IqOmtilQz1cXxckHpMdfx6rWXKQeiPOe/PfIh46fxwlH+jg
-   ZXGK4j0/inpwd6ojAr7JYLGAHqf87+2HnwhgkuuFQ7RmLojfRInWw6kDA
-   5HplSnILUmGyF0Ghun9cdfI+Ij+VoqcqqnA9uzYk4g+YwVg6WKB13Bt+g
-   7mlV0yKJD/iQ3TgrIuri1gjxJ0zQh48UEUSsTxIB0/Sz0N6ltA1APdiks
-   Q==;
-X-CSE-ConnectionGUID: E9b7NcTJRD+BRfxLFipZXw==
-X-CSE-MsgGUID: gIGuLEklRLaqGCpk/lBWyQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="52600166"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="52600166"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:06:36 -0700
-X-CSE-ConnectionGUID: n+rhYOdUQraQUgje9WuR5g==
-X-CSE-MsgGUID: Nb5t3SU+QjKU8jB4pmu9vA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="177046708"
-Received: from agladkov-desk.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.57])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:06:31 -0700
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 8A86644409;
-	Mon, 30 Jun 2025 10:06:29 +0300 (EEST)
-Message-ID: <b6d9b737-3cd1-4407-a08a-4346ba001ffb@linux.intel.com>
-Date: Sun, 29 Jun 2025 12:24:41 +0300
+	s=arc-20240116; t=1751266752; c=relaxed/simple;
+	bh=N8NcPPJxadXWse0HT/QBGjpeBDejSpL4abXtBlKXbck=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QtBfIQXVrE6y++y2UEWUbAt2y6YcUKdBXo7uBuvRvOx4xuL9eEL3hGj95ZAR2UH2qSnJyfjql8kTgER8SWnJSeUByx9SMYZRy+QzRyG1SAMIPSNWEUIpJAmBXgoviIidSp9YewUAQ0YuKW0K3ZWv3lQKWQiv1F2LD2t2cXm+CMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xe9xc3Hl; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a510432236so1255693f8f.0
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Jun 2025 23:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751266749; x=1751871549; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rVc+xIvEP7q6mVJvo+SAFYvuaUIIBVDDa8cApMBL5oc=;
+        b=xe9xc3HlPX8LXegkX0gjRzPIbtIryZyHqpA6AkhiH9JoKyElnk2aHozSII7rR97PP7
+         Z66bhK7Z0gCcsProyh8BE3SZ1y3NI52XP/Md2FajcBcQywk858GIEQwuqM7U0kah5Kru
+         N2a/ww2Nqsq6+ymbl4AITOQpi7ZwYSLPS7rAclMKAjd7Mz883MH+5+x5G3qxwSirH5g4
+         FVXmkYw6pA9M4A23vjgbfClM5oR/p87EBsk6W9vDpz41TxMwcr6GHm5YH93Z6NK43utF
+         x3PdsuFV5ZqMq7YVilgjbkL8Qba5W4lliaRWSOJdjtd9fcYRaXXJfFFe7fJSWAXjHCpS
+         HHvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751266749; x=1751871549;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rVc+xIvEP7q6mVJvo+SAFYvuaUIIBVDDa8cApMBL5oc=;
+        b=wKbVS2vu8Xt+gZIGViqXIkuXNuJEsQlAq742Fbec+DjUwhFrbF6lfA8lcQQdJnId7F
+         NpPuFJ140QHy3hwNoN8qqBhmFiEVtueBzJSxTzZsYlzQYx7/aBrlS/OZYcAxVDtVZ5S1
+         k17Latud2TEmSJGNd9E3HVK0vF3ks/eNT61rMKTuJsiarG4uMOhaVe6DgXjkc4GeD78o
+         +tbxBQUghc+2xRt0gaMCfUJmL6uGcjbZPuInsC27uh/k7U5B1zPZHWoIFlxdAy8ptbJ2
+         5nJlhgA7eChKr4+FVBYEYHQC7NsG4YeLYFPy/zt14tbcOeCWG9I7NGzvM3iEnFjrvjlF
+         FHtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKfJIBa4BDyliCTtwe0m2nKXzOVEyVjz/Vh3eDFc8ICptonbYOl5WUw40jSEPf9cmvX6q72a/QlRs+@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN9o8VBt82hNi48nyU+Ql1N58HimnXtOKweoeDVqtlgwnQHbXA
+	BkMYBWoXs9jBiyYWPEVHXKWgz/1nlLMm89A4UxQ+Hb//fJtWxcRZzPEThpfEYgXWfOk=
+X-Gm-Gg: ASbGncsnUYhTZsr1swdk50DJGnSSN1G7gg1QrPfEvuimp57SJD0/7bSQf5h9NZDaTjV
+	4zcuhhE9KZN1TyhTKcL3aCzTeCe+iH+7gl/uHRWYW972jZuJFzmovw/MBBI7ouJU+ZWDS5BeZHl
+	gc6lz1fALyQTgaqMJrLZiLH4UW0RgUMgH3q8UVUMuzitOr+ypZI41im/irU2SFpagh1mRBN3IU3
+	1JFvqzGy9G7tNK2KjvAlqISHEhNJmHxaSiTdvZsbqNiIFhKNKaG7tvjQaBS9MXtHeXZB7q67FBu
+	zi1esG6BZ45ZUkqsyvgo4at/DKRoUxINTdcMEXm0Xc8zSFuwacb5QKHhdyYYQBw=
+X-Google-Smtp-Source: AGHT+IEnf1e311CHx7pGdkMuMp3hPcgdVROv8BNvfkAw7T5EXn7m4sv+gadF6ts7WpBEDZmQ9c71rw==
+X-Received: by 2002:a05:6000:2d08:b0:3a4:ec23:dba5 with SMTP id ffacd0b85a97d-3a8f435e55dmr7677203f8f.5.1751266749380;
+        Sun, 29 Jun 2025 23:59:09 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7481sm9686783f8f.14.2025.06.29.23.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 23:59:09 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 0/2] gpio: improve gpiod_is_equal()
+Date: Mon, 30 Jun 2025 08:58:43 +0200
+Message-ID: <175126671926.7549.9629868942672241575.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
+References: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/12] ACPI: mipi-disco-img: Do not duplicate rotation
- info into swnodes
-Content-Language: en-US
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
- <20250605-uvc-orientation-v2-3-5710f9d030aa@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-In-Reply-To: <20250605-uvc-orientation-v2-3-5710f9d030aa@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Ricardo,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 6/5/25 20:52, Ricardo Ribalda wrote:
-> The function v4l2_fwnode_device_parse() is not capable of parsint the
-> _PLD method, there is no need to duplicate the rotation information in a
-> swnode.
+
+On Fri, 20 Jun 2025 14:58:00 +0200, Bartosz Golaszewski wrote:
+> This short series contains small improvements to the gpiod_is_equal()
+> GPIO descriptor comparator added last cycle.
 > 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->   drivers/acpi/mipi-disco-img.c | 15 ---------------
->   1 file changed, 15 deletions(-)
-> 
-> diff --git a/drivers/acpi/mipi-disco-img.c b/drivers/acpi/mipi-disco-img.c
-> index 5b85989f96beeb726f59ac9e12e965a215fb38f6..b58b5ba22a47a4afc5212998074d322f0b7586dc 100644
-> --- a/drivers/acpi/mipi-disco-img.c
-> +++ b/drivers/acpi/mipi-disco-img.c
-> @@ -617,21 +617,6 @@ static void init_crs_csi2_swnodes(struct crs_csi2 *csi2)
->   
->   	adev_fwnode = acpi_fwnode_handle(adev);
->   
-> -	/*
-> -	 * If the "rotation" property is not present, but _PLD is there,
-> -	 * evaluate it to get the "rotation" value.
-> -	 */
-> -	if (!fwnode_property_present(adev_fwnode, "rotation")) {
-> -		struct acpi_pld_info *pld;
-> -
-> -		if (acpi_get_physical_device_location(handle, &pld)) {
-> -			swnodes->dev_props[NEXT_PROPERTY(prop_index, DEV_ROTATION)] =
-> -					PROPERTY_ENTRY_U32("rotation",
-> -							   pld->rotation * 45U);
-
-As "rotation" property won't come via software nodes anymore in DisCo 
-for Imaging, please remove ACPI_DEVICE_SWNODE_DEV_ROTATION from struct 
-acpi_device_swnode_dev_props as well.
-
-> -			kfree(pld);
-> -		}
-> -	}
-> -
->   	if (!fwnode_property_read_u32(adev_fwnode, "mipi-img-clock-frequency", &val))
->   		swnodes->dev_props[NEXT_PROPERTY(prop_index, DEV_CLOCK_FREQUENCY)] =
->   			PROPERTY_ENTRY_U32("clock-frequency", val);
 > 
 
+Applied, thanks!
+
+[1/2] gpio: constify arguments of gpiod_is_equal()
+      https://git.kernel.org/brgl/linux/c/08ad63bbd681ae4eeb50644564435035c38e5795
+[2/2] gpio: make gpiod_is_equal() arguments stricter
+      https://git.kernel.org/brgl/linux/c/26981e8906bb5c902e2d34874f64ecfa975d28c8
+
+Best regards,
 -- 
-Regards,
-
-Sakari Ailus
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
