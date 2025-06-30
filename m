@@ -1,152 +1,267 @@
-Return-Path: <linux-gpio+bounces-22434-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22435-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3388EAEDD28
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 14:40:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E8D6AEDE88
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 15:13:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EC66189C35F
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 12:40:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C996740058C
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 13:10:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E48F28C5D2;
-	Mon, 30 Jun 2025 12:37:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADBF128A73D;
+	Mon, 30 Jun 2025 13:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SUurTdlm"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OvP4la4T"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896EF28C2C1
-	for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 12:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B10C286419
+	for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 13:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287055; cv=none; b=MPoOVJYY0r1IgGko6uoW2A0gzh8E0hKdijwP9TwrS+rmdIo7pjBIC2a1zt36tipUL7dGt7oU2SNU3nj0HL47oa9Ky+r9KIChguYlwll5AbwJabSWim2MO6+jfTY79ZspXXYyFQhkVefKrlt7ULd8c5hwcdV8uGZOay+iBEpZGQE=
+	t=1751288665; cv=none; b=BWw9MmL3Pbg+owX81MqWvvhrGVRx+Yw97s+8WGWFT5jzZBMmV4WJIg7pbxB5l9XaS6fyD0B3ZtZNgKOoTtHNt0X+nXg/xkoHB5J3jH2gX/sYvpn5aDnrEcomu4sfXlx7rZVpnX7b67jZeETzQ/nuF50HqgTUb5Icq/TiA6WLaOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287055; c=relaxed/simple;
-	bh=qKH/Xx/gFP86G5ibgMZ3u7lxWPymmr9dQIqXb3a5NY0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Bz8GLKNND3qwq4YspZNLewVvKa5koFcV7F672XwOVpCb3rMepvBhL2tETV2bEfZHefgm5/i9WwB2IOo8/3YSXcNMmPG9yllJVe3g/d/45pAkL93n0bAZX5CBmrcl4to01ilgDryp50UVi4T/CZ5JbEQ3AFl0rsa9OPBA5o4GyYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SUurTdlm; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1751288665; c=relaxed/simple;
+	bh=8ma29XIVyrlocB2TwxvieiVhXjMJz8cDSr2I0wEXjA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W0Ht0r7rwS2fBW7Cz4xl5OwpECPoy19UH02s9fWWxolRLpDliIU6YQ9fZbv3XibV2p8dvbZFOIf8oBQE2HYOwJeHi0tLIrsQuovQzQD8HPuiyy9Ma4gSaike8oidxgmpWcZtoKam5Vedbq/RIJ/zrmWQ/FwqGWYgTA8XfcVmu6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OvP4la4T; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a575a988f9so2844801f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 05:37:33 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a522224582so2281611f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jun 2025 06:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751287052; x=1751891852; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Tm+AP9yf/4s1zahGdn4RMNsFWWCbX0hdSX+OspH82js=;
-        b=SUurTdlmaJjfBsFQaeHjC8gq7c/ln5p/jSHcl3ddJvdvbkjr9GOGGcqtBNlatEfpLf
-         cVdIiD8fPmsT+9JG9EOUnqEYYvWdoL3V4Q9UVxYNgf+qb/uFXSCv0GdRFi3pDA6Ymxz3
-         zbBdXKdF+8fOyI8Fbs+7qDlpulq91lqfLBkGD9Wu7skIySXmE2gHLTA0IcWWT/2wugAC
-         h5U9xX65XXDhUser2WZWTB5kJPkDA+JPXbZAYmMk7C0vCBViUeL+RcyT8IZd7rKottQa
-         MM2Zzf9f33YrS+EMZzbl1bRp0VL5hsm8d0pUatLNBBS97sf+vLVRt37HpkWH7C13C/aY
-         OaSQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751288662; x=1751893462; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jtRCoaZRuy3SHZyDIOBlh8AQRBZoYHsrOyl5I3M3Usg=;
+        b=OvP4la4Ts2imD7kHl11x6TSySGOLVGHb5zDHKhB69o7ZV22ItVIVbriWPX0MKk8L8F
+         lwcfw2hItq9Ju0XCvwx4rxVh2EjMybs4C0L3WeIN6fcgpMAsr9qrvVIF7mX6tgg1p6FR
+         /mDNMM7k81px30WZPQoA9ds986DYq4ON6hRoJK9EoN6ZqrkXRngBpiQ64MKmdzRFVul2
+         F/smPVSrHgWQwroWqHWv8sfOZ9lzNQB87EL8w8OMH00oCuf7vcANK0mMKUhDAR+L9hte
+         wUqzaYGOc34hOBfOd67ZJA+vPodAG1eAGSz4OwIrR+rhOhS5TuHBn/7TaCoknExSl523
+         zuNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751287052; x=1751891852;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tm+AP9yf/4s1zahGdn4RMNsFWWCbX0hdSX+OspH82js=;
-        b=pLVQla5GlWWq30sk6+0qbfxn6A9DkNOZmOZ8xx7nmRNcT8O/lcjebKbLNWF0BiDd/p
-         6GEzczONH8wNiu5UEOpnIwfOq9OkCzF4jKKYoSaRlpLR+hGa8/hEHPoTa/mxneV3L25g
-         W5EbXEwfkr4oYDil1zaVKP5zZ0xc+YCq89ZhLRGKiKOfoANG9FYsHITdmEhof6KU6WJM
-         7IuXcZtbjOmeGT1DE40l5+klVitipAeUGhm/nDGHIfg242wy9e7EjTOcK6OTle5sZRdw
-         VWl8DAGNFp62QGjpWNywRCH2C4w6eMTWjnLo2yCUT+ZUfawcJVqmtiUgBRd9/bmAdbrH
-         IiKQ==
-X-Gm-Message-State: AOJu0Ywj8Ku72qdk5HVDgXPlfHWDHitCNTbX5jpWH5cynEYsyGa23czV
-	Xwc+9YqtSC1QnQfduwp0xcO0b0LULIvNjd71zYtj93BFE4INs5TKoxQPfOQlfcv6oLQ=
-X-Gm-Gg: ASbGnctrQ8CuJBA/14mfs3JudbBxlmyrSVi8oEqyGKgdgh0sW2U7sMRwvc+joYBy/uw
-	1UqyamisW+Emm0MJVoYisJhmrKQ3cYymCy3PaiNt3hnYyrQu0BoFmESUZE8OAcYHvChl7DIk141
-	DWCeWhzGxchkXe5sqGto47f8npHuRRBj5pJp5H4EDLHQ6jywA3YDhy8O7GpdoveDf2yaKaWxn8X
-	Vraw8GUWGywZ2wAhG1/0wlIaK1TudALb6/YIPL8o4XeMuqVbn5R49rBEv1x4FnSsQLqPMFAoJwJ
-	Neiszp4eAJ3HZBT2dnw6MFsSKh2Vgacu6icpUSImVq1nD3In3JIJT6wf
-X-Google-Smtp-Source: AGHT+IEdVt31nj+P++csUDxqjuagbEh5ULVO4D3+RMjfhmemFzD9hX4NJb0J2PaR7MVDdJHgA5O3JA==
-X-Received: by 2002:adf:e007:0:b0:3a4:f55a:4ae2 with SMTP id ffacd0b85a97d-3a9014bb92emr8982583f8f.50.1751287051637;
-        Mon, 30 Jun 2025 05:37:31 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fa2a7sm10238192f8f.21.2025.06.30.05.37.30
+        d=1e100.net; s=20230601; t=1751288662; x=1751893462;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jtRCoaZRuy3SHZyDIOBlh8AQRBZoYHsrOyl5I3M3Usg=;
+        b=CacqMkJZUrTVWZ6SD8+nu8HmKqDpTishwMicucJeFZz2nZOe4sRvTSTtXErkhai28r
+         xi0b1bCf5t3MQzXWkMgKi74rNRICpkcw4xd88IqaBSq0rftsktMXywlKOORb5AeOE65y
+         R9tTLR50qE5YfgSgpsx4aiP+9nu/jElJe8cx8EFSbQvrq1NMDo6reaSRFEgs/vOwLq1j
+         NwsjElJyG8U8uh/ITbisZD49DCHgQSiWK9uhGIhaIJufUiSiNgDTFmm9/zyvHngjDITi
+         dtun1pfYf4DB+b6OA+5ycCIaATboo7+IRNN5dppxNfBMPGLSHcR2lcwsBtZuXIQ6ZiUA
+         s8YQ==
+X-Gm-Message-State: AOJu0YzW94ud8HX7A8zSjocHE/rhjy+GxtIEfSxDckpd2JrCefwYiD0U
+	hBxG4vFRtk/GTnWcXKIFvCNWm6CQA+wpVqrX4Gj53MNV6qUIbv8hcX4Gs9sL/yr2hl/Li6YPHM8
+	R3AzXNvI=
+X-Gm-Gg: ASbGnctKB64blMAgT9Y9eIRBSCvWCOSC8SZDY0l8jt0sBCIThruQFWLNeI5bjyY3TH+
+	t4f18GPEumA7lz5+bLZPihqREmGgWR5PjXTo0k8C92+2YC4mX5CADnZDAHBPaBx0MQP9agxMeTT
+	P/1pS9FTCfbEMIgfWEs5we0cUcVnS6sQcKNC4+xuZb8gj2jFPz3G4Pdn3L6aFy7sUEjTO/ckinc
+	OwMSrZLdvToDTgNgdZozOR61AccrKCOJmuipicee3tMcq/gW3/S58PB/jbTWVLpJN8bBryJltLl
+	zkNMchhThgEXfh3P+rqaoo+Or4etr0AkNLYyQucD55dpCmgmCxSO/ae8LWnkVOQ=
+X-Google-Smtp-Source: AGHT+IG+KISEPRT59mnSmUbFYKshwUKdJDSOtcgpmTFgZsp3fC/pg+et65cMv5g4qUkmZujHStqtzA==
+X-Received: by 2002:adf:b649:0:b0:3a0:7d27:f076 with SMTP id ffacd0b85a97d-3a8fdb29f1emr11225299f8f.2.1751288660266;
+        Mon, 30 Jun 2025 06:04:20 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7facb3sm10447413f8f.30.2025.06.30.06.04.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 05:37:31 -0700 (PDT)
+        Mon, 30 Jun 2025 06:04:17 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 30 Jun 2025 14:37:17 +0200
-Subject: [PATCH v3 10/10] gpio: TODO: remove the task for the sysfs rework
+To: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: sim: allow to mark simulated lines as invalid
+Date: Mon, 30 Jun 2025 15:03:57 +0200
+Message-ID: <20250630130358.40352-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250630-gpio-sysfs-chip-export-v3-10-b997be9b7137@linaro.org>
-References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
-In-Reply-To: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>, 
- Kent Gibson <warthog618@gmail.com>, 
- =?utf-8?q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
- Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Andy Shevchenko <andriy.shevchenko@intel.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1371;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=F4uLYTcDjYHCQKRyv318429+cTJ5TfubDfqP7y0o1W8=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoYoT/m2wkA9V8TfStoUWd68mbhltDznQO6A7er
- E4fseJxa4WJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGKE/wAKCRARpy6gFHHX
- cuhPD/kB83m2s6pNRR1PsJWHQ9BqzEv0Ac0JcnFNcB1PlAZu0GRcIUZDdLUGlnysVsl7FbMu0fQ
- hNG0m4AVpLj4DTxL3NuQy7zp26fhyGPXV9EbF9Ix1uzwPLJttB61ZAM55UdWXQDtpx0i6s0CZak
- 9oXDOblTPkTC0EtGrIjEfFIPfvXSHzYypAMntPcG6HzbCCPqzR+h+IxYaGDI/espshbADclK0Sx
- Wy5sSj+n6Nx91MbrYS9hTKaszydfbqZmiBbUr+G+N20pKt28OJJWrKQvaRxH20Kzcf99wPNC5zM
- jRLKoGyu9vAB8+N6axUml+ofIvCgRoHxfZ71gICWRIWlcE5qIr3rAy3XJrXMTqVmJe0t/fxhcop
- iUbEHXExcAVvxVrAJ9KZOEEt921L2KOI6iVbsWlEaydpvSLrdAt7KXZvsi0AtHcH03sNJfIjL2J
- 2qwXCiacm9+JYAjjlhjqyZQEL1qKdhKexSQliR1EeNHmPI5yzADHPFIzdylG8ZIrvj9uW8fKHk1
- B5pS+l61XXQeSs5JcDVKooqff5RvfT96onwX/dsILpkHybdjajWuJsLxSV55zj3sCjwbwQkGMFm
- DayRQO/XObUexmv2r4AHgJrH+C2SI9P2pTEbpvPDQP2LfRwUZccJ1VEn6OLbXH4OJuqL8e8JujV
- 4790VcjfuWcyy1A==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Remove the completed task tracking the rework of the sysfs interface.
+Add a new line-level, boolean property to the gpio-sim configfs
+interface called 'valid'. It's set by default and the user can unset it
+to make the line be included in the standard `gpio-reserved-ranges`
+property when the chip is registered with GPIO core. This allows users
+to specify which lines should not be available for requesting as GPIOs.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/TODO | 13 -------------
- 1 file changed, 13 deletions(-)
+ Documentation/admin-guide/gpio/gpio-sim.rst |  7 +-
+ drivers/gpio/gpio-sim.c                     | 83 ++++++++++++++++++++-
+ 2 files changed, 86 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index ef53892cb44d7c01d100f10f1b805c0aca561b46..a6380e51699cc5704aebefbda906762fa60cfef3 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -188,19 +188,6 @@ remove the old ones and finally rename the new ones back to the old names.
+diff --git a/Documentation/admin-guide/gpio/gpio-sim.rst b/Documentation/admin-guide/gpio/gpio-sim.rst
+index 35d49ccd49e0..f5135a14ef2e 100644
+--- a/Documentation/admin-guide/gpio/gpio-sim.rst
++++ b/Documentation/admin-guide/gpio/gpio-sim.rst
+@@ -50,8 +50,11 @@ the number of lines exposed by this bank.
  
- -------------------------------------------------------------------------------
+ **Attribute:** ``/config/gpio-sim/gpio-device/gpio-bankX/lineY/name``
  
--Extend the sysfs ABI to allow exporting lines by their HW offsets
--
--The need to support the sysfs GPIO class is one of the main obstacles to
--removing the global GPIO numberspace from the kernel. In order to wean users
--off using global numbers from user-space, extend the existing interface with
--new per-gpiochip export/unexport attributes that allow to refer to GPIOs using
--their hardware offsets within the chip.
--
--Encourage users to switch to using them and eventually remove the existing
--global export/unexport attribues.
--
---------------------------------------------------------------------------------
--
- Remove GPIOD_FLAGS_BIT_NONEXCLUSIVE
+-This group represents a single line at the offset Y. The 'name' attribute
+-allows to set the line name as represented by the 'gpio-line-names' property.
++**Attribute:** ``/config/gpio-sim/gpio-device/gpio-bankX/lineY/valid``
++
++This group represents a single line at the offset Y. The ``valid`` attribute
++indicates whether the line can be used as GPIO. The ``name`` attribute allows
++to set the line name as represented by the 'gpio-line-names' property.
  
- GPIOs in the linux kernel are meant to be an exclusive resource. This means
-
+ **Item:** ``/config/gpio-sim/gpio-device/gpio-bankX/lineY/hog``
+ 
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index f638219a7c4f..9503296422fd 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -39,7 +39,7 @@
+ #include "dev-sync-probe.h"
+ 
+ #define GPIO_SIM_NGPIO_MAX	1024
+-#define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
++#define GPIO_SIM_PROP_MAX	5 /* Max 4 properties + sentinel. */
+ #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
+ 
+ static DEFINE_IDA(gpio_sim_ida);
+@@ -629,6 +629,7 @@ struct gpio_sim_line {
+ 
+ 	unsigned int offset;
+ 	char *name;
++	bool valid;
+ 
+ 	/* There can only be one hog per line. */
+ 	struct gpio_sim_hog *hog;
+@@ -744,6 +745,36 @@ gpio_sim_set_line_names(struct gpio_sim_bank *bank, char **line_names)
+ 	}
+ }
+ 
++static unsigned int gpio_sim_get_reserved_ranges_size(struct gpio_sim_bank *bank)
++{
++	struct gpio_sim_line *line;
++	unsigned int size = 0;
++
++	list_for_each_entry(line, &bank->line_list, siblings) {
++		if (line->valid)
++			continue;
++
++		size += 2;
++	}
++
++	return size;
++}
++
++static void gpio_sim_set_reserved_ranges(struct gpio_sim_bank *bank,
++					 u32 *ranges)
++{
++	struct gpio_sim_line *line;
++	int i = 0;
++
++	list_for_each_entry(line, &bank->line_list, siblings) {
++		if (line->valid)
++			continue;
++
++		ranges[i++] = line->offset;
++		ranges[i++] = 1;
++	}
++}
++
+ static void gpio_sim_remove_hogs(struct gpio_sim_device *dev)
+ {
+ 	struct gpiod_hog *hog;
+@@ -844,9 +875,10 @@ static struct fwnode_handle *
+ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
+ 			  struct fwnode_handle *parent)
+ {
++	unsigned int prop_idx = 0, line_names_size, ranges_size;
+ 	struct property_entry properties[GPIO_SIM_PROP_MAX];
+-	unsigned int prop_idx = 0, line_names_size;
+ 	char **line_names __free(kfree) = NULL;
++	u32 *ranges __free(kfree) = NULL;
+ 
+ 	memset(properties, 0, sizeof(properties));
+ 
+@@ -870,6 +902,19 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
+ 						line_names, line_names_size);
+ 	}
+ 
++	ranges_size = gpio_sim_get_reserved_ranges_size(bank);
++	if (ranges_size) {
++		ranges = kcalloc(ranges_size, sizeof(u32), GFP_KERNEL);
++		if (!ranges)
++			return ERR_PTR(-ENOMEM);
++
++		gpio_sim_set_reserved_ranges(bank, ranges);
++
++		properties[prop_idx++] = PROPERTY_ENTRY_U32_ARRAY_LEN(
++						"gpio-reserved-ranges",
++						ranges, ranges_size);
++	}
++
+ 	return fwnode_create_software_node(properties, parent);
+ }
+ 
+@@ -1189,8 +1234,41 @@ static ssize_t gpio_sim_line_config_name_store(struct config_item *item,
+ 
+ CONFIGFS_ATTR(gpio_sim_line_config_, name);
+ 
++static ssize_t
++gpio_sim_line_config_valid_show(struct config_item *item, char *page)
++{
++	struct gpio_sim_line *line = to_gpio_sim_line(item);
++	struct gpio_sim_device *dev = gpio_sim_line_get_device(line);
++
++	guard(mutex)(&dev->lock);
++
++	return sprintf(page, "%c\n", line->valid ? '1' : '0');
++}
++
++static ssize_t gpio_sim_line_config_valid_store(struct config_item *item,
++						const char *page, size_t count)
++{
++	struct gpio_sim_line *line = to_gpio_sim_line(item);
++	struct gpio_sim_device *dev = gpio_sim_line_get_device(line);
++	bool valid;
++	int ret;
++
++	ret = kstrtobool(page, &valid);
++	if (ret)
++		return ret;
++
++	guard(mutex)(&dev->lock);
++
++	line->valid = valid;
++
++	return count;
++}
++
++CONFIGFS_ATTR(gpio_sim_line_config_, valid);
++
+ static struct configfs_attribute *gpio_sim_line_config_attrs[] = {
+ 	&gpio_sim_line_config_attr_name,
++	&gpio_sim_line_config_attr_valid,
+ 	NULL
+ };
+ 
+@@ -1399,6 +1477,7 @@ gpio_sim_bank_config_make_line_group(struct config_group *group,
+ 
+ 	line->parent = bank;
+ 	line->offset = offset;
++	line->valid = true;
+ 	list_add_tail(&line->siblings, &bank->line_list);
+ 
+ 	return &line->group;
 -- 
 2.48.1
 
