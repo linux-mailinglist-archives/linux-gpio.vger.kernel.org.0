@@ -1,94 +1,109 @@
-Return-Path: <linux-gpio+bounces-22454-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22455-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EAE8AEE1D9
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 17:04:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BCAAAEE6EB
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 20:40:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5589F189E13E
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 15:02:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A187716E41B
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 18:40:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D8E428D8C4;
-	Mon, 30 Jun 2025 15:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9258C28DF29;
+	Mon, 30 Jun 2025 18:40:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzGUY+mY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrh7l/gM"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDE028CF65;
-	Mon, 30 Jun 2025 15:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409672F4A;
+	Mon, 30 Jun 2025 18:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751295748; cv=none; b=kWMeLJLetpY4oU8H/xty7wVJbGZMUGueIg582LBeEAWuFmEgFv/5JzzF8AP0Z7NitZjl0peN4FDcTnOQNC4R0W6gmBjt0B17Adoo6h2vT3TP5QZXAJg/vWONDyCWvCX85S1YldItJfp/5maXYJ4jq4PSOioHA+ZuNHtjWdb4S+8=
+	t=1751308827; cv=none; b=fDiuBe7HTMwHso/Crq6rNTvleHCntLjscogkOLvCBQdiO+rVbDJUqtX5Q8unvHXlUJVYYQCKtaOh1EoucvCjfeR7s5a7JiorGtOq8x6LT4/+63U5H8gND+Oy0ay2aRRxAaCuIKwGdeJuLjvg2eK7dUEZaRHXoenwp5dE4+d8ZIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751295748; c=relaxed/simple;
-	bh=YcLHh+k63YrGnVqc3FfVtSUGIQrzXb+AYCgJwkR+5pI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9uC4MUCHNobQi37TYObIa9idNW9Hgv9sKPTjEhbvCFXzqvcW8zFf8Hmyp4eLDUCfG4Xaldr5JUZIC2IJz775oJOc9K/A850qxGWg7dsG+FG/EsTk4QhMO42jFB9ZAx/ZvBs6XPfUtB+pntZClUGCV3FTF13teiIvGTzOjeU5DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzGUY+mY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F321C4CEE3;
-	Mon, 30 Jun 2025 15:02:27 +0000 (UTC)
+	s=arc-20240116; t=1751308827; c=relaxed/simple;
+	bh=HvnvaBYgdENhHqpQAACls3hq+6edewLfz6BoI0wweO4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YT1FzN80Fb4SicxlQp2i7SScndy47+3htWlW70xRubkHSxH4fmuhI8GccOQqvefrcKgX+kZoIlWPATGNOJe4BZGutCBT1rzR0tJxt0Vkxv9NHo+Awe1JKr765yXKraYbWrOQcVIelzfmCRsbFpHw+3cknUBBJRnP8QM0egMjNRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrh7l/gM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7372C4CEE3;
+	Mon, 30 Jun 2025 18:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751295748;
-	bh=YcLHh+k63YrGnVqc3FfVtSUGIQrzXb+AYCgJwkR+5pI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IzGUY+mYP6jvnj1LGpydx71+PntTMbfbP/wiaFdQ81g3O01NsfQvbqEDCwoQEnvQi
-	 cYdzDOAebK7BivmaHB8+HU45Ri1Fkpfs+0LuekXZxRbrbSzm8k9YKNKFbB/JUkz1LI
-	 IAiEeC0N/mmrqYV/8IYWOuAfXpb376Y+gaDOOYgDGwUaCgjgqNppjDoMABVpZ3RsiQ
-	 lQpx4KXd4NRLbI7GM/f4+6Lwhhxj8CK5DEuJp/aL9mSNFVD4EE9nUTQ3X0g/2TIypk
-	 j8FftQcLJBVTdsNXhg5/YGZjim8FMDNn+gRx8xSEVtwefJO0neUxfJojsc0eULDFka
-	 ZJN/MD1bnkMUw==
-Date: Mon, 30 Jun 2025 16:02:24 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] regulator: sy8827n: make enable gpio NONEXCLUSIVE
-Message-ID: <440c4bcd-0fd7-4c12-85a6-5eb343fc3f91@sirena.org.uk>
-References: <20250629095716.841-1-jszhang@kernel.org>
+	s=k20201202; t=1751308826;
+	bh=HvnvaBYgdENhHqpQAACls3hq+6edewLfz6BoI0wweO4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rrh7l/gMT1u4tR6AO151tNM7udPNrjM40kmIEOjv49+M4ij+HeUQOH/M/TDNzf9Yz
+	 YH6kL0z/UQorYHo2qDSGiG2TAG1ZC121FvUi+HWJazRIpo7oM2a4NhsHl4ea5V3erT
+	 QdOpIfKwM16cqy6PG/5Tu2qZmUQPKlXwUi2FvRbFGF2JWDkh5HE6/9nlKboE5MMt4L
+	 Hlo5C5Ag9JcsCD/8o5BZj0hKpSGc/5i3TDZA7Z3i/EBpKKQmZ9w8/v2rhdaSEgNyaI
+	 wiHFfTey5e0QEOvDDQRrYzgkFi8SlWcufbyaQeDlpFFrLmq6kjhgiORA8QI1wJVbnr
+	 ps4FOhKyxI3ow==
+Message-ID: <9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org>
+Date: Mon, 30 Jun 2025 14:40:28 -0400
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UAVpDRsTcs9rWeUL"
-Content-Disposition: inline
-In-Reply-To: <20250629095716.841-1-jszhang@kernel.org>
-X-Cookie: Say no, then negotiate.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
+ from suspend
+To: Askar Safin <safinaskar@zohomail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux i2c <linux-i2c@vger.kernel.org>,
+ linux-acpi <linux-acpi@vger.kernel.org>,
+ regressions <regressions@lists.linux.dev>,
+ DellClientKernel <Dell.Client.Kernel@dell.com>,
+ linux-gpio <linux-gpio@vger.kernel.org>, Raul E Rangel
+ <rrangel@chromium.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Werner Sembach <wse@tuxedocomputers.com>
+References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com>
+ <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
+ <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com>
+ <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
+ <197bfafc23e.e6344936595425.1881540896161671378@zohomail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <197bfafc23e.e6344936595425.1881540896161671378@zohomail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 6/30/2025 3:14 AM, Askar Safin wrote:
+>   ---- On Fri, 27 Jun 2025 07:58:15 +0400  Mario Limonciello <superm1@kernel.org> wrote ---
+>   > That's odd.  It should be made when the PMC core driver binds.  Maybe
+>   > others will know what's missing here.
+> 
+> Command "grep -r -E -I last_hw_sleep ." in culpit kernel (1796f808e4bb2c074824d)
+> shows nothing. (This is somewhere around 6.1).
+> 
+> So, culpit commit is too old.
+> 
+> If you want, I can retest this thing on current master and on current master with
+> revert 1796f808e4bb2c074824d.
+> 
+>   > I see in your bad config interrupt 14 is waking the system.  In the good
+>   > config interrupt 8 is waking it.
+>   >
+>   > What is in /proc/interrupts?
+> 
+> /proc/interrupts from culpit kernel: https://paste.debian.net/1382819/
+> 
+> --
+> Askar Safin
+> https://types.pl/@safinaskar
+> 
 
---UAVpDRsTcs9rWeUL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Looks like your interrupt 14 is ACPI device INTC1085:00.
 
-On Sun, Jun 29, 2025 at 05:57:16PM +0800, Jisheng Zhang wrote:
-> On some platforms, the sy8827n enable gpio may also be used for other
-> purpose, so make it NONEXCLUSIVE to support this case.
+Some quick searches this seems to be an Intel GPIO controller.
 
-When you say "other purpose" which other purposes do you mean - another
-regulator, or something else?
+Andy,
 
---UAVpDRsTcs9rWeUL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhipv8ACgkQJNaLcl1U
-h9DxHAf+JT3YzGFqndvQ0ENy2+4cVQ0wAn87m0sf5KKOPGcAagu/qzrWbxNVpY0Z
-9xVpDOL3pDUy6jBKiqVGUItGJEW9BxTsGie8CTlAgJt3O4F5YAy3hR6Q+JsdoL+J
-x1FRT+iieyFHruz1FNz20aJxgfHvbwuBWciXLc2AWQmvRbMslHenRLE+1eFqYkR4
-Xp6zf8wYuafw9HOGGvVkM0fpw0Nm9n/Kx77+ULrIMJo/wZj+k7iGqrcE76MU7TO+
-b8UiE+5w+gcpk0aFcYTWaol0o7d8ViAj9ccE0Ywt+21Qk2g6+iUCOq5NGOMTd9Ch
-knAzJVkvsXqOlrfNdbEVL4WaOco/Fg==
-=Dpr1
------END PGP SIGNATURE-----
-
---UAVpDRsTcs9rWeUL--
+Any ideas how to debug next?
 
