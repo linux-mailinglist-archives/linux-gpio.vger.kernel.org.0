@@ -1,159 +1,170 @@
-Return-Path: <linux-gpio+bounces-22456-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22457-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC58AAEE769
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 21:24:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8B07AEE780
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 21:33:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 294D316A5C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 19:24:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F396189E0CA
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jun 2025 19:33:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 361502E267A;
-	Mon, 30 Jun 2025 19:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1E601D9324;
+	Mon, 30 Jun 2025 19:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kef4Qk5f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzHLCqZz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B1628BAA9;
-	Mon, 30 Jun 2025 19:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B0D43AA8;
+	Mon, 30 Jun 2025 19:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751311437; cv=none; b=iABG/JLhoKf0EtdHztR+u4ABgPE1Hc4CHO6oFEN+iaKi+aRQ9HjMDJZDkZJPvf+n8HChbS6dkvmNxJ1XxWMdzpMLtzyzCH9gGmCFFVg1t/qNU37OZPtu8jQkCWHwoqMzD0Is0MMUScA/jkXVnok9e/Y8BcuyOyK48Hl1QYS4mE8=
+	t=1751312002; cv=none; b=WW3h5wDw0DHRg6jquE1zET/m5xhj92pGKNO7fbSDhjEOlLukqwfY8BrkN/4gWV+PcKyn7m0YN/dAXVWu6tqTZui+Bfpq3m/0GVOejUYfuPoefKDPj49nl6l50zl9plHb+MO3HBtyPBm/ZCFPhUorBarAo6No9TwQvjaEsp6/jNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751311437; c=relaxed/simple;
-	bh=vx8p4LrmwwD+sMFaTXDI5Q728j6qK0yWBF9XsU5gmE4=;
+	s=arc-20240116; t=1751312002; c=relaxed/simple;
+	bh=kAgCkIezU6dLBy1qMupKYWlktOvfEHFfvi2Jw9Kl2mQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QGAig5Ne6SdmVKfAOcYwTNwCjBKDLYLBrHBwKem+3v8lVQS4VcokirVaWT3ZDuhB3CVKuIRIwz4RoWUAQeGKajfGekACHcU1FHQ5Wc6QWlB0m+ChJClLSY2eNtMQ9ElBsFkUJ5esnKsq5EFaAp+jTeN//a/yEX3/1MLkAnKmUas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kef4Qk5f; arc=none smtp.client-ip=209.85.167.45
+	 To:Cc:Content-Type; b=TjjQoDDKxPVn8yI/CijBA23Vqp/qnIODtsmp4w6wLDghuSfe/Ec9fw379/owGeUIOLcXkaC1kBDiaakeadjYjuGuTbvbJozSQxw1WspMcJaWza666MURhYn7O49N3w8N5wXA/Z6EEMadADYwFh5FEH4LxkBfOL6stUKnSn0GIb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UzHLCqZz; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b10594812so2950867e87.1;
-        Mon, 30 Jun 2025 12:23:55 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553b6a349ccso2815743e87.0;
+        Mon, 30 Jun 2025 12:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751311433; x=1751916233; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751311999; x=1751916799; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jn/+L4pxELuf1sWjbIbM9DsEd5pufNcwaC9b4Pd43GI=;
-        b=Kef4Qk5fMq/VU+z5YoHoFIyDmTu2YzYy4xAtKapVtATMxrnfXa5FOSfr3fb7y9n8OE
-         JP8asMrYAOeOYLOdYdN/eZsy00YgJgNfDDlhQSdtogBIWlxSt7jBjxUnOy3pNJj5n65c
-         A/2c5QnzeyDgvUIgUrvNDkLfSueQ+zd3pCethy3ALSbv5ELtMcQZDcqfUeo+vpBk+cwb
-         0cUrO4KuVJAFn1NGxEDFUuOwYKBZEbUZ5IYapzGfa4eT32yACrxZS806Xv5QI+E/HSsV
-         8k7Y87H0ZFhEve7IAdrtnXcOnhFH4OcV55b9ehY0Mf8BBPFCIO1SemcwZugQ2gpV8tad
-         aZ5w==
+        bh=UFs/ehALtL0+qFoc09farxfhDThHkq27kEeWKbJRfGk=;
+        b=UzHLCqZzj5VdFge5P2m69zRTiOQb3akVYozKL8eB0wVLA3pt1BpronGJobo/KBWeWD
+         DSO/85yqe0mhDPHOnvTFU0OatKWF4komXCQlESno6uhogZM7h2Oy2WTqMDoNUCFPnGrW
+         YKjZrC/vxJBeXQZBxnpZRJaPGZ7zkbVLrFD2lK8j/wmcb035sfZzAsN1+SWYGxN2TkOB
+         O+nxy2YSHVLj8OCJVSK4EGOFIx701r2DT1BAQthXg1RzLrVMiQNQ/+QrHEyxjKu9JUIO
+         vawL+9+nHbMVCiihEaA2QWnRCVmPgOXAW3+XaJN4DEl66O95ggUwDQMQDlMygnQD0bOT
+         hkYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751311433; x=1751916233;
+        d=1e100.net; s=20230601; t=1751311999; x=1751916799;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jn/+L4pxELuf1sWjbIbM9DsEd5pufNcwaC9b4Pd43GI=;
-        b=FFdBilapkVvJbDPd+gA6gEalQgNfBEdFRTDpSOSznLt4hcvErLLerwu32hCHSl/HTY
-         K4wFaxQpV23k/+Td3a2XustuhIJEfms4QYMC7+ASs2x7TEX1tKyLMhg6em8taXD5cUf4
-         Cj8vCgrDWNw+tosCR1R6M2VlQluIiiarnJDA5L3qzMe5Ss0T8Dbq6UMq5KaiQHLRQVNr
-         +fVaeWutmGeF6jdhIzMy+xOVrmYWChmplSZhdagIyi46Ota9hIhwbBNjU3Q6Ma5K96cQ
-         /nxDDAA2a+CYkLqOVTI6dynDUt+NSCLKUEjxv8et2VBkKobn972e1BV7dzGg1cv70849
-         yHbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGKrHmtKcSGyCQP/3ce+rE4hF37J7OxyfSbkRjgGMHK2hU2fMuRMIXCGzoJwnP6IzVyeH40c+kIMCXRI8K@vger.kernel.org, AJvYcCVHUFZjcs+bBRwjoQe5dx/DJgs8OqsLGDuahXQFrQGL1A092XtsT6zUBR/TBrq4G8CGBHVON7JJIi56iQ==@vger.kernel.org, AJvYcCWkkEWRDU5K/4FhCgHFsQ76FRA1CD9CnCBiJZPE8V8CFC1p3YNCnx6O+qqH5mhSeyNnITgs1TofXkkMHwQ=@vger.kernel.org, AJvYcCXywtg/hZXhOnMUUJiatctt2Fbm0gP/vOJFyMqAd1H4p3oSI6gDWzmyvOLE2EtqOzxuRKFfvSoHTO1Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGr2Xs6BEsPhk5Our6kQAYQqEgenOW0XDyCHHBmPJSF9QTKWaS
-	nXcobR0+1AMUh8CLZNQ/8TPRlwt0Lfl9A7O26fM9X8rxHFn2UBLm1cH16SRoZ64IOwq7EALmbIn
-	WU8GbSp4XijhsWlmidA3eg9VR09wFFOA=
-X-Gm-Gg: ASbGncvbbuD/vzhC18/9j1H76flrwJrZ4XB11m7k5bdfRreGkzgjiovUh5HcH+hhOMO
-	Rfj0tAobw2PjbL3LczsSfrJyB4LcauXg+tCGfuxaK8ck7HUhpp2n1hbVotIXwaZAiSSh0nrkVFU
-	+C5QZB3W6FMudqTk+8ujceps8RiFxDX5cuIgB8eDT45aA=
-X-Google-Smtp-Source: AGHT+IHSvtk2+mcwHs2ctXMmbQbvFIwjvr/sEpRif7t8chrU/jIjLv7TuxBVBAZMUEYrxjjLff8xGAgBFVWFtqdhxcg=
-X-Received: by 2002:a05:6512:2c0b:b0:553:d910:9328 with SMTP id
- 2adb3069b0e04-5550ba1c986mr4772818e87.44.1751311433216; Mon, 30 Jun 2025
- 12:23:53 -0700 (PDT)
+        bh=UFs/ehALtL0+qFoc09farxfhDThHkq27kEeWKbJRfGk=;
+        b=cpK0K8QGhudYWkGClAZwbZT45awnVDRI43QUsHR6bSrE1ua/fHa4dydXAPGqVV8a2j
+         DHE+mm3Q+IOoZCJ9G7V+ON8CqH3GVgcFn45+31Mqw7pCjwmb3XuQ1Its6W0rMr5NlKrD
+         MiCFjDB9/sYyglhQyMDK+9PSrx6PquISztLTmzgHY6NAo/1UrjRWU8+26k5y8cNnYEzW
+         Xob6lK4Z+Q5jpAPYfI36b/GmFBTLFsM8PXlT+Qc1Bg29r8xgeLIkFnfU7bxYY2ddAP+O
+         nSneXA/QcjR3Zs5qDY3ivnsVy/ItOT3TzxOxdWt+Akvao5gVPvMRPJRMpcZcHorymtz9
+         jqVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOFlw9So+YVi4sIyijQBrOly/lQQd+rmBnJrOCEwO6RALdjATTgUfwoqDEcCbPaD8SOsI1IfyJdA/SbPpO@vger.kernel.org, AJvYcCVkPBcB5VDrm3SbVUNg61LkAl8ktNstWfjHk5TehnzhEK7QugLjDJHXLc01mQYP/NmypdRQ2KBTCGSN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuFEDAzxFPB9m3HZ0x1KAphZ8IXU7/9r9GRT+nDfitCQy09YTr
+	vpa9tLAUg4ms4USKd5ofgVfPelolXY0nBGYbYzYl8QSZ7Le9HiMZgdt9C/sSK79O1ZcKSiu27I7
+	zLqgZxiUa2esTbWzu3QrkqaZZPw1AgAk=
+X-Gm-Gg: ASbGnctyGWeif/he9M2GEx0ChYrgnnVIjvMxutD0bi8sYB4zEsx7wGg/4A3cVoY9wmK
+	HZfAp3K98o36je5fqMcC1VluVuv9Gd41YXk/8N4sDHH8P+gR/OHByotkZCRvtv4r4xipAnaAw4M
+	4UXluQ1iYgmFxupI6ZreBaRx8Wb1NrfDPBXAhmwQv3sws=
+X-Google-Smtp-Source: AGHT+IGL1mELHdrz6HdxzWEWB3SBn7d/Rnj0vx3ffhkVy9NM2gVR9bObheCFocjQaqGhjFns4WPlclmCGQsLdR2UqGw=
+X-Received: by 2002:a05:6512:3055:b0:553:cc61:1724 with SMTP id
+ 2adb3069b0e04-5550b84e53dmr4479902e87.24.1751311998729; Mon, 30 Jun 2025
+ 12:33:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608-tegra186-pinctrl-v2-0-502d41f3eedd@gmail.com>
- <20250608-tegra186-pinctrl-v2-2-502d41f3eedd@gmail.com> <yw2uglyxxx22d3lwyezy34wdniouu32zppfgwqs5omny3ge5zd@iuqo4qmi55a2>
- <CACRpkdZha_ucjWvP_NQ+z2vbD65Y3u7Q0U57NYbJ=vqQ6uPGGA@mail.gmail.com> <yslfabklduaybg255d3ulaxmzpghyj54zdfeqkx3oxgisxf6fo@2wecuqpvvefc>
-In-Reply-To: <yslfabklduaybg255d3ulaxmzpghyj54zdfeqkx3oxgisxf6fo@2wecuqpvvefc>
+References: <20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com> <CAMRc=Mdwa=DuubA6P+EnjUAQE8XupYsbo=3LuH-jYEBttREGqg@mail.gmail.com>
+In-Reply-To: <CAMRc=Mdwa=DuubA6P+EnjUAQE8XupYsbo=3LuH-jYEBttREGqg@mail.gmail.com>
 From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 30 Jun 2025 14:23:42 -0500
-X-Gm-Features: Ac12FXwjhZP5aLmd3zOs5OWbEltS7LC-Virp8dRvQq07XXeGgRwfJ1dPyQiwFuI
-Message-ID: <CALHNRZ8jq++KVKxKP2-GwMA6CauP=cM2_wt==MRAV4mOzK2kxw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Add Tegra186 pinmux driver
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 30 Jun 2025 14:33:07 -0500
+X-Gm-Features: Ac12FXxKnkWwA36VsVoD5Hl-K0ZXp6mKLB_zzh_TkqusAXbCh-DmgE3rxpQWCi4
+Message-ID: <CALHNRZ9=u9hrXZ79N3VzMwdFuJO75TomOzRzgDxzmcTEeatzAQ@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: palmas: Allow building as a module
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 10:23=E2=80=AFAM Thierry Reding
-<thierry.reding@gmail.com> wrote:
+On Mon, Jun 2, 2025 at 4:48=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 >
-> On Wed, Jun 11, 2025 at 08:58:49AM +0200, Linus Walleij wrote:
-> > On Tue, Jun 10, 2025 at 11:40=E2=80=AFAM Thierry Reding
-> > <thierry.reding@gmail.com> wrote:
+> On Fri, May 23, 2025 at 12:22=E2=80=AFAM Aaron Kling via B4 Relay
+> <devnull+webgeek1234.gmail.com@kernel.org> wrote:
 > >
-> > > One thing that's not clear from this patch set is whether we actually
-> > > need the Tegra186 pinmux driver, or you're only adding it because it
-> > > happens to be present in a 5.10 downstream driver. Do you actually ha=
-ve
-> > > a requirement for setting pins dynamically at runtime? Do you need to=
- be
-> > > able to set a static configuration at boot that can't be set using so=
-me
-> > > earlier bootloader/firmware mechanism?
+> > From: Aaron Kling <webgeek1234@gmail.com>
 > >
-> > Actually, speaking as the maintainer of pin control I hear the followin=
-g
-> > a lot:
+> > The driver works fine as a module, so allowing building as such. This
+> > drops the driver specific init in favor of the module macro which does
+> > the same, plus handling exit.
 > >
-> > - We don't need pin control, the BIOS/firmware deals with it
-> > - We don't need runtime pin control, the BIOS/firmware deals
-> >   with it
-> > - We don't need runtime pin control, static set-up should be
-> >   enough
+> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > ---
+> > Changes in v2:
+> > - Drop module alias and add module device table
+> > - Link to v1: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v1-1-=
+d6b1a3776ef5@gmail.com
+> > ---
+> >  drivers/gpio/Kconfig       |  2 +-
+> >  drivers/gpio/gpio-palmas.c | 10 +++++-----
+> >  2 files changed, 6 insertions(+), 6 deletions(-)
 > >
-> > These are all enthusiastic estimates, but in practice, for any
-> > successful SoC we always need pin control. Either the BIOS
-> > firmware authors got things wrong or made errors (bugs) and
-> > there is no path to upgrade the firmware safely, or runtime
-> > usecases appear that no-one ever thought about.
+> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> > index f2c39bbff83a33dcb12b2d32aa3ebc358a0dd949..be5d823516d0e2bff4b4231=
+dac6a82bf10887118 100644
+> > --- a/drivers/gpio/Kconfig
+> > +++ b/drivers/gpio/Kconfig
+> > @@ -1464,7 +1464,7 @@ config GPIO_MAX77650
+> >           These chips have a single pin that can be configured as GPIO.
 > >
-> > Aarons case looks like that latter.
+> >  config GPIO_PALMAS
+> > -       bool "TI PALMAS series PMICs GPIO"
+> > +       tristate "TI PALMAS series PMICs GPIO"
+> >         depends on MFD_PALMAS
+> >         help
+> >           Select this option to enable GPIO driver for the TI PALMAS
+> > diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
+> > index 28dba7048509a3ef9c7972c1be53ea30adddabb0..eaef29f59292de5281f31e1=
+96961d90974e65b75 100644
+> > --- a/drivers/gpio/gpio-palmas.c
+> > +++ b/drivers/gpio/gpio-palmas.c
+> > @@ -140,6 +140,7 @@ static const struct of_device_id of_palmas_gpio_mat=
+ch[] =3D {
+> >         { .compatible =3D "ti,tps80036-gpio", .data =3D &tps80036_dev_d=
+ata,},
+> >         { },
+> >  };
+> > +MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
+> >
+> >  static int palmas_gpio_probe(struct platform_device *pdev)
+> >  {
+> > @@ -191,9 +192,8 @@ static struct platform_driver palmas_gpio_driver =
+=3D {
+> >         .driver.of_match_table =3D of_palmas_gpio_match,
+> >         .probe          =3D palmas_gpio_probe,
+> >  };
+> > +module_platform_driver(palmas_gpio_driver);
+> >
+> > -static int __init palmas_gpio_init(void)
+> > -{
+> > -       return platform_driver_register(&palmas_gpio_driver);
+> > -}
+> > -subsys_initcall(palmas_gpio_init);
 >
-> This was a long time ago now, but I have a vague recollection about
-> hardware engineers telling software engineers that muxing pins
-> dynamically at runtime wasn't safe for all pins and hence we had to
-> do static configuration during early boot.
+> This being put into an earlier initcall than device_initcall() makes
+> me think, someone had a reason for it and this change can break this.
+> I'm Cc'ing the original author who seems to still be active in the
+> kernel.
 >
-> But then along came devkits with expansion headers and then people
-> started using scripts to mux pins to the right functions and such.
+> Laxman: can you verify that this can be safely moved to module_initcall()=
+?
 >
-> > I think it'd be wise to send the message to any SoC system
-> > architects (or Linux base port overseer or whatever title
-> > this person may have) that a pin control driver is usually
-> > needed.
-> >
-> > The SCMI people heard the message and have added pin
-> > control into the specification for that firmware interface.
->
-> I'd agree with you that there's plenty of evidence that we need these
-> drivers, so maybe I need to go back and look at what exactly the risks
-> are that come with this and maybe there's something we need to do to
-> avoid that (I'm thinking along the lines of certain pins being generally
-> safe to mux at runtime, but not all).
->
-> Thierry
 
-So what's the path forward on this? Will this series be used, or is
-Nvidia going to bring back the pinmux scripts and regenerate
-everything in a new series?
+Reminder about this patch/question. It's well into the 6.16 cycle now.
+If Laxman doesn't respond, is this mergeable? I didn't see any issues
+in my basic boot tests on a tegra124 device using a tps65913. But I
+didn't do anything close to full functionality tests.
 
 Aaron
 
