@@ -1,162 +1,124 @@
-Return-Path: <linux-gpio+bounces-22468-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22469-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB35AEF34B
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jul 2025 11:28:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F2176AEF467
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jul 2025 12:06:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 487681BC5A9E
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jul 2025 09:29:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 01587188B2A7
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jul 2025 10:05:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94BCA26FA5C;
-	Tue,  1 Jul 2025 09:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z8s/K30a"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1812727281A;
+	Tue,  1 Jul 2025 10:02:10 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DABA26D4CA
-	for <linux-gpio@vger.kernel.org>; Tue,  1 Jul 2025 09:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C62CD26FA50;
+	Tue,  1 Jul 2025 10:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362105; cv=none; b=oC66dfTkgzkFotH5gUw+3+HO3spoV0yfEpTayvUhT8RKTsaf/ydXOO3A3/2N/hoD01nfXStqWW7/OO2CR/cxGP5x73liWi4D2tQjVaI7DpfR2LhG40J+7MV2fDIxI9YNju3b1n0QhdePSWBuwep37nJoMgC+BRALWMe9+QoGuts=
+	t=1751364129; cv=none; b=LlGEkfRtv7HBevWSlbbBonHyJdXymtJJeITEZWGvCAuanBfxMgzncYBM/Xqwv1xfsGdcLeJzm4ihZKnHs6em0QZqYNZyNMf/5lLc+5tU+s2XI3goKWSf8bjbnuTOXIFnZ5+ToEtL7rgc9fn1tD8eKT1QH14N/X52i4YlsEDJgN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362105; c=relaxed/simple;
-	bh=xU+kDdU0gwzb9LPPDqkZf5rUekFrGYUlG52+CjTps7A=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pNFSgsRfKTqPAJnBfD400CXAoyM46Z+Fr1t5/wV+5hUmU2Fme8EXfm5Dysv6KI8LxaLqR84jtmICNNc7LGh6mMuJtplAoLb3VcKzUe9NHG9loJMOFJs0RCLaPtFWSzprs0urR20sxloE7TT8HizFXpIDjhpNdewy1qFsjA1SG7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z8s/K30a; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so4980884a12.3
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Jul 2025 02:28:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751362101; x=1751966901; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vW8tXWZC+/EOEMWh/X8OhS7IFKfYxgh/KBq6rDgPsK4=;
-        b=Z8s/K30aun/xPgKGqAjd0fMnXCDU3mgK0OgZbHXARIBxjPzOL3aQ60RPO7OmD0ETKn
-         Rfe4sLdiiP8HTDHybRwu2slNwtUM204NfDhAeCqMl8q6DME2aEFWaIr5Btak2+Odytpm
-         M1U25VIpmqsW43umLqsTK5jVNv9x4iXFCiJkA0assksKUv/WB90O2JqNfRx6zkXRIbJb
-         pCijUpnNDCc9pVw36K7nrSkXGkZsYwnrVTGTNvJ++/x943jGME9P/7zqcVO3dOeYKQLm
-         DBfa1royiNE+C6c9QTGYw4dZrHriapjZRAGwdbw/rs5MOV0RpEkn/lekzvfK5MNyDgEp
-         vF6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751362101; x=1751966901;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vW8tXWZC+/EOEMWh/X8OhS7IFKfYxgh/KBq6rDgPsK4=;
-        b=wMF+NhIp7vW5vlWvmzYh8lEQBSlhU7MqNbYiI8OEp76jCzjn9OOLIgiSBqaOewDKNt
-         BHhkfAWHHvkTPwxdYfVSNUMhYXmnsa1k3YqbA8OCGL3Z4DeTbH1jDXBMRsUmD6xx3POm
-         esA5a+S1aneXpsr8LRl/MGY+KEQpb4j17rICpdhQ2bt6znTFJMoGBwwLco0eVOCSDxoz
-         z+gmBmnv99IVOtWdoZDtSTKeddRe+u358/fTuH4mrjklYR13vJk15Wn9Mze9Z0BLgr1v
-         ONTjTwNdHj6ivf3Xdevt/0WZx8gi03R1/gr80NMwg4xCyFdExPgAQjvUKCLxiP3QsHj/
-         l2Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6e8TyL3hjWxOOeHcvQHxo2V+nfnDSRUI1W5Vl51m9on1PUJUxOLgn5S//hVDBcIf4VkUHDf+6ATAB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYF8csX3EBGkneNHjBEnhe5+HSyToCuCFODSBqOSrb2jJiWHY3
-	lqr0sdURkL/yNTAgKp9t0cuFHnlKC8CDoHFpMpjjbu67bHHOuzZftmJiQqIif93d1BM=
-X-Gm-Gg: ASbGncvUd2Xj2o7lVa3EHZWMg/dQWfDtpoOu+9adkL4W7inYb/gpBYZuf/ZsSBVzI88
-	WV3gq799/Zt45pk5U2GGfyKWHGidb9W/JQHAjI6gNO8ej6XhIIabAqvODuUBsC07dHA38rvoJAQ
-	F8dXgmqO5is9vxt1n4sAZBYN7hcZR8VoY6DsAjlv0j8pavTtJt94WqFGpSbjQXZp3STS8bAsp5u
-	xi+M0+5zb/SeV4piSnn0FosrZmKTjWdcsYVcILZw/mronWGvaDNs2pXuVMogA09EKcVYOHoLuEk
-	mqCtzBM8DZp1i1aKEONY8vZw/RWTKyTap83FFCfbA7J5HL3ZQ5PezNPeew5KqXDWUlXW9FUAnFQ
-	FxA1RV5dNoxO1Qzg3/QhiiTImOFO7U3ay
-X-Google-Smtp-Source: AGHT+IHbFo4CW/gWO5mfmqvdr8G+K+m/vpRfFZfo55Xt83CarSb1cUQYS0Vzv+Vrkh5sEZMITIneQQ==
-X-Received: by 2002:a17:907:a4e:b0:ae0:635c:a400 with SMTP id a640c23a62f3a-ae35016b435mr1478913866b.51.1751362101509;
-        Tue, 01 Jul 2025 02:28:21 -0700 (PDT)
-Received: from localhost (host-79-23-237-223.retail.telecomitalia.it. [79.23.237.223])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60e2a743d53sm1292386a12.28.2025.07.01.02.28.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 02:28:21 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 1 Jul 2025 11:30:01 +0200
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: rp1: silence uninitialized variable warning
-Message-ID: <aGOqmd5cvCeBjWMI@apocalypse>
-References: <748d256a-dc9d-4f85-aaa4-d480b7c4fd22@sabinyo.mountain>
+	s=arc-20240116; t=1751364129; c=relaxed/simple;
+	bh=b6Mws18//UdUf1HAPjqDRRtl5fVPkeBMSpyAAgA9X1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cCNBMV/+WJdaDO6aoyNpQk1XpJtMEWx+ucd4jKDf7gS3dV+RqZXGqdCx24yzy6dlI2EAmoX9hTHyL8EUsCDkZxuILNqp5jImNcYXKnmXDUFOhyxZG7Zv7Y2ZvoBWXk+Kc+DMICsKV/jmiCrRcvG62w3/GFVSbJqXjkniXubHqlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: C9RaqKrsTw6n2g0fCGxmnw==
+X-CSE-MsgGUID: eoZCzhebQha4hbp/0KtrKg==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 01 Jul 2025 19:01:59 +0900
+Received: from localhost.localdomain (unknown [10.226.92.52])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1272540223EB;
+	Tue,  1 Jul 2025 19:01:56 +0900 (JST)
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH] pinctrl: renesas: rzg2l: Don't switch to GPIO during resume
+Date: Tue,  1 Jul 2025 11:01:52 +0100
+Message-ID: <20250701100154.37536-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <748d256a-dc9d-4f85-aaa4-d480b7c4fd22@sabinyo.mountain>
+Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+Even though some pins are set correctly during resume(e.g.: PS0), due
+to the unconditional switch to GPIO for restoring the PFC register is
+triggering spurious IRQ on RZ/G3E. So avoid switch to GPIO if the pin
+is configured correctly during resume.
 
-On 14:35 Mon 30 Jun     , Dan Carpenter wrote:
-> This default path could probably can't be reached but Smatch can't
-> verify it so it complains that "arg" isn't initialized on this path.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 35 ++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
-Thanks for your patch!
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 2a10ae0bf5bd..09ee771b1e36 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -3118,27 +3118,36 @@ static void rzg2l_pinctrl_pm_setup_pfc(struct rzg2l_pinctrl *pctrl)
+ 		pm = readw(pctrl->base + PM(off));
+ 		for_each_set_bit(pin, &pinmap, max_pin) {
+ 			struct rzg2l_pinctrl_reg_cache *cache = pctrl->cache;
++			u32 pfc_mask;
++			u32 pfc_val;
++			u8 pmc_val;
+ 
+ 			/* Nothing to do if PFC was not configured before. */
+ 			if (!(cache->pmc[port] & BIT(pin)))
+ 				continue;
+ 
+-			/* Set pin to 'Non-use (Hi-Z input protection)' */
+-			pm &= ~(PM_MASK << (pin * 2));
+-			writew(pm, pctrl->base + PM(off));
++			pfc_val = readl(pctrl->base + PFC(off));
++			pmc_val = readb(pctrl->base + PMC(off)) & BIT(pin);
++			pfc_mask = PFC_MASK << (pin * 4);
+ 
+-			/* Temporarily switch to GPIO mode with PMC register */
+-			pmc &= ~BIT(pin);
+-			writeb(pmc, pctrl->base + PMC(off));
++			if (!pmc_val || ((cache->pfc[port] & pfc_mask) != (pfc_val & pfc_mask))) {
++				/* Set pin to 'Non-use (Hi-Z input protection)' */
++				pm &= ~(PM_MASK << (pin * 2));
++				writew(pm, pctrl->base + PM(off));
+ 
+-			/* Select Pin function mode. */
+-			pfc &= ~(PFC_MASK << (pin * 4));
+-			pfc |= (cache->pfc[port] & (PFC_MASK << (pin * 4)));
+-			writel(pfc, pctrl->base + PFC(off));
++				/* Temporarily switch to GPIO mode with PMC register */
++				pmc &= ~BIT(pin);
++				writeb(pmc, pctrl->base + PMC(off));
+ 
+-			/* Switch to Peripheral pin function. */
+-			pmc |= BIT(pin);
+-			writeb(pmc, pctrl->base + PMC(off));
++				/* Select Pin function mode. */
++				pfc &= ~pfc_mask;
++				pfc |= cache->pfc[port] & pfc_mask;
++				writel(pfc, pctrl->base + PFC(off));
++
++				/* Switch to Peripheral pin function. */
++				pmc |= BIT(pin);
++				writeb(pmc, pctrl->base + PMC(off));
++			}
+ 		}
+ 	}
+ 
+-- 
+2.43.0
 
-> ---
-> I didn't add a Fixes tag because this likely isn't a real bug.  Plus this
-> code is very new so it doesn't need to be backported anyway.
-> 
-> Also checkpatch complains:
-> 
-> 	WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
-> 
-> But I left it that way so it's consistent with the other return in
-> the function.  Maybe we should change both?
-
-We really can't get rid of that warning by replacing ENOTSUPP with
-EOPNOTSUPP because the core pinctrl code still rely on the 'wrong'
-define, like this excerpt from drivers/pinctrl/pinconf-generic.c:
-
-...
-	if (gname)
-		ret = pin_config_group_get(dev_name(pctldev->dev),
-					   gname, &config);
-	else
-		ret = pin_config_get_for_pin(pctldev, pin, &config);
-	/* These are legal errors */
-	if (ret == -EINVAL || ret == -ENOTSUPP)
-		continue;
-...
-
-Also, many drivers still rely on ENOTSUPP. Maybe a patch that will
-fix all of them at once (drivers and core code) is in order, I have
-it in my todo list, indeed.
-Besides that,
-
-Reviewed-by: Andrea della Porta <andrea.porta@suse.com>
-
-Many thanks,
-Andrea
-
-> 
->  drivers/pinctrl/pinctrl-rp1.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
-> index d300f28c52cd..f9cc6b28994c 100644
-> --- a/drivers/pinctrl/pinctrl-rp1.c
-> +++ b/drivers/pinctrl/pinctrl-rp1.c
-> @@ -1524,6 +1524,8 @@ static int rp1_pinconf_get(struct pinctrl_dev *pctldev, unsigned int offset,
->  		case RP1_PAD_DRIVE_12MA:
->  			arg = 12;
->  			break;
-> +		default:
-> +			return -ENOTSUPP;
->  		}
->  		break;
->  	case PIN_CONFIG_BIAS_DISABLE:
-> -- 
-> 2.47.2
-> 
 
