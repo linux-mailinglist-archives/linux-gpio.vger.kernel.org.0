@@ -1,132 +1,183 @@
-Return-Path: <linux-gpio+bounces-22477-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22478-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C314AEF65A
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jul 2025 13:20:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E487AEF65E
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jul 2025 13:20:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C075B4A1BC1
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jul 2025 11:20:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14D851BC3C7F
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Jul 2025 11:20:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53554270579;
-	Tue,  1 Jul 2025 11:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC51272E41;
+	Tue,  1 Jul 2025 11:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KSc2qsg0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XLZ1GENW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9148821;
-	Tue,  1 Jul 2025 11:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D99726E71F
+	for <linux-gpio@vger.kernel.org>; Tue,  1 Jul 2025 11:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751368818; cv=none; b=WQ1TPqAP9vKmeBUOuxPegMxtG14KasY6WnjUc/R1AgDD1iYlbQiGxrQS25MRD/nqByymtoIOMAiRN7pDp02kgT5614garCbgREA5pU4ow8w/eTclsUWyjLOB1qV+1P/JLHARY1xOhzp/qUJrU+TjMTBIiULhStipX21P829hTNk=
+	t=1751368832; cv=none; b=HscYdhMqarVn7b0MFYHFlGU8hf0cAxPSbKEC835rbEUZqWOqg+W4LEKBkAsTUTvHoyUpseg+Is67Sh9kkWZB/SP/f5lo96ne1ZoUaI4NfBSud2U+88o7kSfgSyzlqEKeJCwitcU/exMc8iKGs6H0R1WfVaGzid6IbplinIQNGVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751368818; c=relaxed/simple;
-	bh=6NvyQEt4one+DKAwE2RIPkutjUkQuQadH7DyHnGtB34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=beKZxd+Lp4bRYcJFIcv3fQKvFRc/wRd+Oqern2yKGsyaqhe6SQkGFa1EqeF+zo1dyUfLNaR/cNqc8rWmrN7Q3Od09FiWMIm8WTlSFovFp2IAx7jlxV94bVQDfRc9jBS908EXP9Mxb1fdvSJNCOPZi0dr1x/a0yyyl+xJOySCZCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=KSc2qsg0; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 5018A78C;
-	Tue,  1 Jul 2025 13:19:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751368792;
-	bh=6NvyQEt4one+DKAwE2RIPkutjUkQuQadH7DyHnGtB34=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KSc2qsg0Zn/jhb2/nc2LjA+UWJLDvQbd6PyEeWViejh3xJ4CdhnU8unrZLyRAUl/R
-	 /Dqg643nt9PvWm4Wj8Opp/bProj7hJzpNIt4HMzEoabC3Uy3Xi/U9ac9q2/FG4cwe+
-	 5whM2pe3UVFoExQkU43usyvquFcjZLElxjd8rAGo=
-Date: Tue, 1 Jul 2025 14:19:48 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, nuno.sa@analog.com,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v5 00/20] mfd: adp5585: support keymap events and drop
- legacy Input driver
-Message-ID: <20250701111948.GK15184@pendragon.ideasonboard.com>
-References: <20250614-dev-adp5589-fw-v5-0-7e9d84906268@analog.com>
- <20250619133834.GC795775@google.com>
- <d20682874dbd65acde8b80efa004706a09b23248.camel@gmail.com>
- <20250701110522.GK10134@google.com>
- <15ba1febb0f0acf4057af64c5c84db0633cab864.camel@gmail.com>
+	s=arc-20240116; t=1751368832; c=relaxed/simple;
+	bh=9ksikN0iTD/GCWHlwVzlhstVFQF+DnzhexLRXUKHtb4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nS5bUZLiMS26wNDZjlMsHY1ym/jzDex+MSIRO8sHRahRfWXpE4CsCaCHOy6lAIPeLiJWV6IGyybsRVwZ8kHRZdoSDlQfnBmB55YY+jxcid6e60kxB8Q2qH8cbcxSQqcxnR8yY48lP82WZt9hAc4dibPw/42stMdqDeijuYgqqYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XLZ1GENW; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55516abe02cso2722805e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Jul 2025 04:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751368829; x=1751973629; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zZwGCtkc+w6FZ7pTS+qyfMjlhro6+usoRehWf2lDots=;
+        b=XLZ1GENWaTZHJsvjR1C6IgtMzwQPcaEStMHg7AXXcUAA1lg2uzHFy5/UOk2MjEvKLJ
+         xmLydFIIBYjVCiSegySJRt75IqIrAQ3753zbhwX6bCzSiQluTjmiB5GdKaQDOujiIFko
+         etJiBK2E/YvdXL8OgfSOVZefKi/lrtEAuM+wk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751368829; x=1751973629;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zZwGCtkc+w6FZ7pTS+qyfMjlhro6+usoRehWf2lDots=;
+        b=j6qNo+rZ+Kzv5ONOdOUOpCytgaHOge6p69SvjcuQonsqXoG+m0R4PZcKqSXtc9xxaP
+         H5TKgAYjZtQuccfZYxA6uHA+wLrdvbp6ZLrsGKUTbePBKxYQpWDPUx/CYL0NQjp7CP48
+         NJonUAzJsjitsfYXN5mLOWABZOILg4vsdTkASUfRrmSI+/np2J5NfNxZQ4WVJb9+uFeY
+         J/SMwdi2O6wRNJi6dpdwnlcGiyh9glJ8tD4nf+cFwvSX0qrKkEemuVFxcdOLeATcXa4U
+         xIedzVIi0hxYhXwdYjvwPokzP6tAyYacve2dnepIG6wdu6gmFKnaFY6gSYjT247L+VHs
+         nuxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiDFeOtPC3vXVMlJnlLhzpAT54RZgqgNv+/9XaT6aG9qDqExvV9eqkXrXtrCD7k9z1wxhyd/n5MGFZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz0pwJbh8QhmwaVfLgNcVc9PA9WNbyuxnu5z8je9H4g7lsAc3O
+	bkrP5ATPSXWCmybzEWO6UZQWARvjtvBn80Wufj9eL/0cqn4rFuE8MbYia+Y2e3jg0jg4IfUhKmI
+	DdFx0sQ==
+X-Gm-Gg: ASbGncsvUNBmka3tYKyzn+loutswnV32r7wylA2+NbYS4UA26MMqLCexvDpzesIgEWk
+	2ui67JoXVZ3nUNwsuMIUWQDeyT1gs0bucblBpjTMlKKgkzWkKyn5fCIygXStgtibVXH3l9JVq8B
+	EbNqhk4m64e5le4KTZHf00Duw+RRwcu36QheDC1CnaCb8G1aEKbkKC8sAwGbkH7+SjoBD1hZzHy
+	kzoLZCQL3Yh0lMb/eJeHsJ7QP8wdJWUPcStJA9qkUZbr+cEnAl+oy1tWDJtcOAWAa2sA4ioUKtt
+	eL92E7eoR2ZacMoCMMCTGBvrLss62TPKeO63/wg7aEvBT+0rGcfCL788u3cU3OxeQRDKXMm2wmE
+	BogvVptq9r3pbvLGBn/N2wERu
+X-Google-Smtp-Source: AGHT+IGT7dWidSH52SXdoCyk0vFP8CCCNI3hVe1TcgfKsW0IoVGq5ZE2H0twsBMIbouRdWr8/S5g5g==
+X-Received: by 2002:a05:6512:e96:b0:555:130:1fa8 with SMTP id 2adb3069b0e04-5561f8d30dbmr999262e87.22.1751368828510;
+        Tue, 01 Jul 2025 04:20:28 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2a73f6sm1789229e87.138.2025.07.01.04.20.27
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 04:20:27 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so7201798e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Jul 2025 04:20:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMAis8X9YhrTtYG/X4GTJf3dRzmrz7SfmHmlWkDH8gBHt6Tv4P0GxEOi64aT4kP5kSe7zCCpy4dv40@vger.kernel.org
+X-Received: by 2002:a05:6512:3f24:b0:553:2159:8716 with SMTP id
+ 2adb3069b0e04-556235309fdmr606439e87.26.1751368826374; Tue, 01 Jul 2025
+ 04:20:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <15ba1febb0f0acf4057af64c5c84db0633cab864.camel@gmail.com>
+References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
+ <20250605-uvc-orientation-v2-12-5710f9d030aa@chromium.org> <20250629180534.GN24912@pendragon.ideasonboard.com>
+In-Reply-To: <20250629180534.GN24912@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 1 Jul 2025 13:20:13 +0200
+X-Gmail-Original-Message-ID: <CANiDSCvcQ9MA+WBMQTpUzSxDLNiKpvaHsb-pDHTuiUQekgXvQA@mail.gmail.com>
+X-Gm-Features: Ac12FXzZWFSV19mV0XJRYxH4cTBUxCR__A0Z2BgypZ23AIk9o_remHKEgYijnOg
+Message-ID: <CANiDSCvcQ9MA+WBMQTpUzSxDLNiKpvaHsb-pDHTuiUQekgXvQA@mail.gmail.com>
+Subject: Re: [PATCH v2 12/12] media: uvcvideo: Do not create MC entities for
+ virtual entities
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jul 01, 2025 at 12:09:11PM +0100, Nuno Sá wrote:
-> On Tue, 2025-07-01 at 12:05 +0100, Lee Jones wrote:
-> > On Fri, 27 Jun 2025, Nuno Sá wrote:
-> > 
-> > > On Thu, 2025-06-19 at 14:38 +0100, Lee Jones wrote:
-> > > > On Sat, 14 Jun 2025, Nuno Sá via B4 Relay wrote:
-> > > > 
-> > > > > Hi all,
-> > > > > 
-> > > > > Here it goes v4. Main changes is to drop chip info based struct and
-> > > > > directly use an enum in the FW .data pointer, use the notifier API for
-> > > > > dispatching events and multiple calls to mfd_add_devices().
-> > > > > 
-> > > > > Regarding the last point, I think I could have used multiple calls to
-> > > > > devm_mfd_add_devices() and avoid those gotos in adp5585_add_devices()
-> > > > > but I do not feel that would have been "correct".
-> > > > > 
-> > > > > Thanks!
-> > > > > - Nuno Sá
-> > > > > 
-> > > > > ---
-> > > > > Changes in v5:
-> > > > 
-> > > > In future, these should be inside the patches themselves please.
-> > > 
-> > > Hi Lee,
-> > > 
-> > > I'm about to send v6. I just have a question regarding the above. Do you
-> > > mean to
-> > > have the log in the commit message itself like DRM or do it with git notes?
-> > 
-> > I have no idea what git notes is.
-> 
-> It pretty much adds a note before the diff stat but with an annoying "Notes:"
-> line. b4 seems to ignore it anyways.
-> 
-> > Simply place the Changelog inside the patch, just above the diff stat.
-> 
-> There's already some emails about this on v6. I ended up doing it DRM style
-> because tweaking the patch before sensing is surprisingly non trivial with b4.
-> Unless I missed something.
+Hi Laurent and Hans
 
-You can record the changelog in the commit message below a 
 
----
+On Sun, 29 Jun 2025 at 20:06, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> Thank you for the patch.
+>
+> I would use "software entities" and not "virtual entities" in the
+> subject line and everywhere else, as those entities are not virtual.
+>
+> On Thu, Jun 05, 2025 at 05:53:05PM +0000, Ricardo Ribalda wrote:
+> > Neither the GPIO nor the SWENTITY entities form part of the device
+> > pipeline. We just create them to hold emulated uvc controls.
+> >
+> > When the device initializes, a warning is thrown by the v4l2 core:
+> > uvcvideo 1-1:1.0: Entity type for entity SWENTITY was not initialized!
+> >
+> > There are no entity function that matches what we are doing here, and
+> > it does not make to much sense to create a function for entities that
+> > do not really exist.
+>
+> I don't agree with this. The purpose of reporting entities to userspace
+> through the MC API is to let application enumerate what entities a
+> device contains. Being able to enumerate software entities seems as
+> useful as being able to enumerate hardware entities.
 
-line asyou modify commits. That way you won't have to write the
-changelogs when sending the patches, and b4 should not cause any issue.
+What function shall we use in this case? Nothing here seems to match a
+software entity
+https://www.kernel.org/doc/html/latest/userspace-api/media/mediactl/media-types.html
+
+Any suggestion for name?
+Shall we just live with the warning in dmesg?
+
+>
+> > Do not create MC entities for them and pretend nothing happened here.
+> >
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_entity.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_entity.c b/drivers/media/usb/uvc/uvc_entity.c
+> > index d1a652ef35ec34801bd39a5124b834edf838a79e..2dbeb4ab0c4c8cc763ff2dcd2d836a50f3c6a040 100644
+> > --- a/drivers/media/usb/uvc/uvc_entity.c
+> > +++ b/drivers/media/usb/uvc/uvc_entity.c
+> > @@ -72,6 +72,16 @@ static int uvc_mc_init_entity(struct uvc_video_chain *chain,
+> >  {
+> >       int ret;
+> >
+> > +     /*
+> > +      * Do not initialize virtual entities, they do not really exist
+> > +      * and are not connected to any other entities.
+> > +      */
+> > +     switch (UVC_ENTITY_TYPE(entity)) {
+> > +     case UVC_EXT_GPIO_UNIT:
+> > +     case UVC_SWENTITY_UNIT:
+> > +             return 0;
+> > +     }
+> > +
+> >       if (UVC_ENTITY_TYPE(entity) != UVC_TT_STREAMING) {
+> >               u32 function;
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+
 
 -- 
-Regards,
-
-Laurent Pinchart
+Ricardo Ribalda
 
