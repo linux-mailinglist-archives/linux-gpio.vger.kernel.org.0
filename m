@@ -1,148 +1,180 @@
-Return-Path: <linux-gpio+bounces-22554-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22555-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2CC7AF0AFA
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 07:56:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3AC9AF0B53
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 08:10:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C2F23A6D23
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 05:56:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D330116D31F
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 06:10:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BCE71F5820;
-	Wed,  2 Jul 2025 05:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD03217730;
+	Wed,  2 Jul 2025 06:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tx7K539G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWDG0isC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034761E5B70;
-	Wed,  2 Jul 2025 05:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287C51F4621;
+	Wed,  2 Jul 2025 06:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751435793; cv=none; b=h0QIPGElHyk1YSiC2kdBTrKlWTSsDaSADWjnc1/XoKPe8+iAOmKca9X7KFKueY/i3+hl9Lh83nOuMRSbukqZQelVM1XtmWkzmvoXHzozySZBU2WszRbeBfEc30Fy2L0o5OIL9dBuqSFbZJbJX8WonD1RegKke3x4Yob8xVnOx3s=
+	t=1751436631; cv=none; b=jUdpKjB9rkaAFy1avxKc1dgBxgCP6dtxlPuqMLAOYBSXLLnwvH1MUK0f946Xu3ZPYJiP2iJq/jFsJ9gJFra3iFiHLDTvp50BmCv9D4cIfzwUTU0F4JY6AnqLTxmGptMro6mBLNY43gbnm5KzATHr5d8JGRfnb6IdU3Y35iacOsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751435793; c=relaxed/simple;
-	bh=jslbkJL0O5bOdAAZ/MmetGmEMVRPjlROegRHIkFK8Rs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cm/Z1yuTJiyG7pPDLF0TRJefMMbAgAU1UkjR7a6sLtgLD1RiWcDV2jUz5FI6jYnq3uPlUYRujY8AXlfoasC+2tWoSPuwBRxTS7LuqocgA9ez6pKLhStEG5fbxKfaGs1V5Fq/Oq5FRSFDeggXwO468fweRITI/UjdhA2B484pA+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tx7K539G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 87327C4CEEE;
-	Wed,  2 Jul 2025 05:56:31 +0000 (UTC)
+	s=arc-20240116; t=1751436631; c=relaxed/simple;
+	bh=jTxeZTxuIEmptXyaI8i1uVNMBzq5osaRO+bZp5mu0is=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aQEh/cuomr2gv92L0EEpAWD/3wQ21hMGIoEyAxINUuaSKeg/NxA/mbC5KoEt3zmgfhcPfYuFzszo9bjVCXTjjtOn4IQn1Bc3u0mDbJZ8MV3shW4ZAyk706UWCXkB/D/7mA7E3l/At9uCeyJ+qIP6Z1VcIbSYVuFEiCBS9Ehy1wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWDG0isC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C363C4CEEE;
+	Wed,  2 Jul 2025 06:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751435791;
-	bh=jslbkJL0O5bOdAAZ/MmetGmEMVRPjlROegRHIkFK8Rs=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=tx7K539GA8ZhaA5D+SukCGIJ/hTulbUlFsH8qIPpBLESPotpZv7p1xmyulsAUh2f7
-	 hvEd7I5QD8JqnXFUmR5VKXKCzsCTz3o8x51LxvdTnChuKyjJGju/mhnVwJBoSMYdrt
-	 QLnkjqi25J/IowN6o6EAPX+gno4efjEBASuVKNZneIOsYOafnn21EtUP5jo1kk3EyS
-	 2hffpVO60KvIsAHZz1UzrHkZ/iVvQY+rEJbIsPIUCV5puZ1vI8ZGbQaVF5z5RK4yrJ
-	 E+cZPPPrU3/Yk+lqnu3dKywl7aOVn+yh5OliJ+u5jrnZE54J7bCrV+pB3iiQqnR0TP
-	 1Nfhmi59U6tNg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7404EC7EE30;
-	Wed,  2 Jul 2025 05:56:31 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Wed, 02 Jul 2025 00:56:26 -0500
-Subject: [PATCH v3] gpio: palmas: Allow building as a module
+	s=k20201202; t=1751436630;
+	bh=jTxeZTxuIEmptXyaI8i1uVNMBzq5osaRO+bZp5mu0is=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NWDG0isC2uNjFuDe3JPfxbgnNDiLAKGklW9DTAz2P2ytBJL6UdEXbpir70IkxkiAq
+	 SYkAm13wd/ZsySAUN5mpMILP27UykLjLZUAdZ6vezYSbTyP9dQxmkL9u/OyZAYHu/i
+	 X3LQcVAgGFGbEzb+q8Z531JFZRAQo0bpaB0ZDV/3xFobNA5KtUEBq4kNjYPGXQduZI
+	 8oVmPxcqY6payAVFbG7VJsnuXAKVzeVVxQwGG/pG8UoCPEwlLYYuWOpJke1I3ef+M+
+	 8KCc9jnbv0IxFnscmMd4Mw+jJ9Vt7o/dWCo1vsVauS75cHMsFA/slfRWgrJdUO8p+Y
+	 0R/P3vu3ytNbA==
+Date: Wed, 2 Jul 2025 08:10:28 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Waqar Hameed <waqar.hameed@axis.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Julien Panis <jpanis@baylibre.com>, 
+	William Breathitt Gray <wbg@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, 
+	Cosmin Tanislav <cosmin.tanislav@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Matteo Martelli <matteomartelli3@gmail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Francesco Dolcini <francesco@dolcini.it>, 
+	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
+	Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>, Mudit Sharma <muditsharma.info@gmail.com>, 
+	Gerald Loacker <gerald.loacker@wolfvision.net>, Song Qiang <songqiang1304521@gmail.com>, 
+	Crt Mori <cmo@melexis.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Karol Gugala <kgugala@antmicro.com>, 
+	Mateusz Holenko <mholenko@antmicro.com>, Gabriel Somlo <gsomlo@gmail.com>, Joel Stanley <joel@jms.id.au>, 
+	Claudiu Manoil <claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, 
+	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Sebastian Reichel <sre@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Han Xu <han.xu@nxp.com>, Haibo Chen <haibo.chen@nxp.com>, 
+	Yogesh Gaur <yogeshgaur.83@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Souradeep Chowdhury <quic_schowdhu@quicinc.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+	Bard Liao <yung-chuan.liao@linux.intel.com>, Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+	Daniel Baluta <daniel.baluta@nxp.com>, Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, kernel@axis.com, 
+	linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-input@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, imx@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-spi@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, 
+	sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH] Remove error prints for devm_add_action_or_reset()
+Message-ID: <zxtyk4vly2salnoy3lng2ni7pzu3wg6qnmucadnclfigrd2m2m@i6xcrmvh34r5>
+References: <pnd7c0s6ji2.fsf@axis.com>
+ <ylr7cuxldwb24ccenen4khtyddzq3owgzzfblbohkdxb7p7eeo@qpuddn6wrz3x>
+ <CAHp75Ve=Zas8=6YKoPeTRrvjCaTyyRAyJG1gBLripqZgQpfg7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-gpio-palmas-gpio-v3-1-e04633e0bc54@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAnKZGgC/4XNSwrCMBCA4avIrI0k6cu48h7iYsyjHWibkkhQS
- u9uWhEEF+7mH5hvZog2kI1w2s0QbKJIfsxR7HegOxxby8jkBsllxSvJWTuRZxP2A8b3jEo5zcv
- a6MZBPpuCdfTYyMs1d0fx7sNz+5DEuv1g8hdLgglm6pvAomlq66pzOyD1B+0HWLEk/wEyA0flJ
- FemRFWqb2BZlhe1sK618QAAAA==
-X-Change-ID: 20250520-gpio-palmas-gpio-a99fc046dc7f
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751435790; l=2298;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=wuPE+Xa58DGHAJ94TOlU6rlu8eroAUhZO7AO/CSPQEY=;
- b=iYX8TbCNm5Bdn/chuijhB+twCaPd6mcIeWGhUpxAQnndjZBy+dh3QaEZLvHY1b7jGyAXRm/fl
- sNHA7INVOLECzegyyW6+4F5xWqVes+IwNKrXFlwiv66T0AsvcrXLQ6N
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
-
-From: Aaron Kling <webgeek1234@gmail.com>
-
-The driver works fine as a module, so allowing building as such. This
-adds an exit handler to support module unload.
-
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
-Changes in v3:
-- Drop use of module init macro and add exit handler
-- Link to v2: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com
-
-Changes in v2:
-- Drop module alias and add module device table
-- Link to v1: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v1-1-d6b1a3776ef5@gmail.com
----
- drivers/gpio/Kconfig       |  2 +-
- drivers/gpio/gpio-palmas.c | 11 +++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index f2c39bbff83a33dcb12b2d32aa3ebc358a0dd949..be5d823516d0e2bff4b4231dac6a82bf10887118 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1464,7 +1464,7 @@ config GPIO_MAX77650
- 	  These chips have a single pin that can be configured as GPIO.
- 
- config GPIO_PALMAS
--	bool "TI PALMAS series PMICs GPIO"
-+	tristate "TI PALMAS series PMICs GPIO"
- 	depends on MFD_PALMAS
- 	help
- 	  Select this option to enable GPIO driver for the TI PALMAS
-diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
-index 28dba7048509a3ef9c7972c1be53ea30adddabb0..232b3ac52b3362c33ea8b068d5932f682816a5e4 100644
---- a/drivers/gpio/gpio-palmas.c
-+++ b/drivers/gpio/gpio-palmas.c
-@@ -140,6 +140,7 @@ static const struct of_device_id of_palmas_gpio_match[] = {
- 	{ .compatible = "ti,tps80036-gpio", .data = &tps80036_dev_data,},
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
- 
- static int palmas_gpio_probe(struct platform_device *pdev)
- {
-@@ -197,3 +198,13 @@ static int __init palmas_gpio_init(void)
- 	return platform_driver_register(&palmas_gpio_driver);
- }
- subsys_initcall(palmas_gpio_init);
-+
-+static void __exit palmas_gpio_exit(void)
-+{
-+	platform_driver_unregister(&palmas_gpio_driver);
-+}
-+module_exit(palmas_gpio_exit);
-+
-+MODULE_DESCRIPTION("TI PALMAS series GPIO driver");
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_LICENSE("GPL");
-
----
-base-commit: b36ddb9210e6812eb1c86ad46b66cc46aa193487
-change-id: 20250520-gpio-palmas-gpio-a99fc046dc7f
-
-Best regards,
--- 
-Aaron Kling <webgeek1234@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="k77zpjuydsxyj3qv"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Ve=Zas8=6YKoPeTRrvjCaTyyRAyJG1gBLripqZgQpfg7g@mail.gmail.com>
 
 
+--k77zpjuydsxyj3qv
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] Remove error prints for devm_add_action_or_reset()
+MIME-Version: 1.0
+
+Hello Andy,
+
+On Tue, Jul 01, 2025 at 08:57:02PM +0300, Andy Shevchenko wrote:
+> On Tue, Jul 1, 2025 at 8:44=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
+rnel.org> wrote:
+> > On Tue, Jul 01, 2025 at 05:03:33PM +0200, Waqar Hameed wrote:
+>=20
+> ...
+>=20
+> > With that
+> >
+> >         ret =3D devm_add_action_or_reset(dev, meson_pwm_s4_put_clk,
+> >                                        meson->channels[i].clk);
+> >         if (ret)
+> >                 return dev_err_probe(dev, ret,
+> >                                      "Failed to add clk_put action\n");
+> >
+> > from drivers/pwm/pwm-meson.c is optimized to
+> >
+> >         ret =3D devm_add_action_or_reset(dev, meson_pwm_s4_put_clk,
+> >                                        meson->channels[i].clk);
+> >         if (ret)
+> >                 return ret;
+> >
+> > .
+> >
+> > I would prefer this approach, because a) there is no need to drop all
+> > dev_err_probe()s after devm_add_action_or_reset() and b) the
+> > dev_err_probe()s could stay for consistency in the error paths of a
+> > driver.
+>=20
+> Why do we need a dev_err_probe() after devm_add_action*()? I would
+> expect that the original call (if needed) can spit out a message.
+
+I'm not a big fan of API functions that emit an error message. In
+general the caller knows better what went wrong (here:
+devm_add_action_or_reset() doesn't know this to be about the clk_put
+action), so the error message can be more expressive.
+
+Also in general an API function doesn't know if a failure is fatal or if
+the consumer handles the failure just well and if the call is part of a
+driver's .probe() so it's unclear if dev_err_probe() can/should be used.
+(I admit that the last two probably don't apply to
+devm_add_action_or_reset() but that's not a good enough reason to
+make this function special. Every special case is a maintanance burden.)
+
+My two =C2=A2,
+Uwe
+
+--k77zpjuydsxyj3qv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhkzVEACgkQj4D7WH0S
+/k4QBQf9Em2pqsnQTecp04ABJJapZRnih78NLCfEr+OSLp62HS+/R6qdnaueQp3c
+snWhr/KeS8lMJkfhBrRz7mtGC8nKRmUxJX5dVG2x47hs2LAAyBQ528DJscHxvlZf
+GMOpPcMVMCyEE2s+LXKg+027cbqGV3oa60NL6VbzadTPoGrjxEdftDezQftDsxsu
+TGm7XMEbxP+TO6ZdVtF8HmKAfaLmh5QKwXn0D8UCSe8LVjtlvlDD7RI6MNqpHNiH
+yr28f1rCDnAut6qhCa9g3zsSYlmBpztpd56Y3hSn3kLXtVz3OBx+Py7jDsyV/QuU
+NBEpFQGKyurRCKocUTGotAcog+9ozA==
+=azmY
+-----END PGP SIGNATURE-----
+
+--k77zpjuydsxyj3qv--
 
