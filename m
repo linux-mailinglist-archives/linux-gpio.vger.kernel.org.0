@@ -1,61 +1,62 @@
-Return-Path: <linux-gpio+bounces-22549-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22550-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B46E8AF08B8
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 04:53:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58BA5AF08F4
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 05:06:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7AAC16F271
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 02:53:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 787821C07480
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 03:06:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B21AC1C5F06;
-	Wed,  2 Jul 2025 02:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81A941DFDAB;
+	Wed,  2 Jul 2025 03:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="aZa8P6c6"
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="UvQX87Eu"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBEB46BF;
-	Wed,  2 Jul 2025 02:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564C41A38E4;
+	Wed,  2 Jul 2025 03:05:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751424803; cv=pass; b=AI0BHiRXoNqP7mb9Il8ddIrFBLeZIFsYmueWbvL/dhKgDu0VLIBFa/g7pslrearONbX08TeRQ/QVoIC76G668d33KluJTG8wiLb8M3zIrN3hbd3uUty0CU29UTCPQ2L7KiNIkEHW8QvWWdK6vVTLNZwvzCGUeJ+WnzVenZZLI5E=
+	t=1751425511; cv=pass; b=gJPUNuYQylaG3uvttLwPSXpGXt0epzSWJUnFJYQIGkc3mgQhIPNHaqio3Xup8YCDQEEbNObwQJ1mmwuSPVGRUCOVMFyfYh7tovdvZB4d0sNzr0McnYw9t+v28JcBpYdAmyDcYV3b6I82VhMs79dOo72P/tLq0drBS/qtNqTd5BE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751424803; c=relaxed/simple;
-	bh=8djG8WqbgQUjheVgZ2REIAEuyGK2m7kH11olGFqdbSU=;
+	s=arc-20240116; t=1751425511; c=relaxed/simple;
+	bh=kCjo++jxPb2m26uPX5nEv2seRmQSxTmYhd+wC5dx3tQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=G0TSRQ1uNoO9CIsS2ggyxiqDzNkdKViSZADYYiGrDnqJRM9GW4Q5YOcKm08YOU5/s+r1Q4xST6WxSMN32OkOMl2vX1E6kVSO5jl4qZpZ4sxQtjWo/F70Zoo8ZgXTf8snuGyvxL+A+JklXpLH9NKWrAvNuhxABRlhMxnbRL+lZh4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=aZa8P6c6; arc=pass smtp.client-ip=136.143.188.12
+	 Content-Type:MIME-Version; b=hJ140ga6YzCN5ULBboDuzqLV0YgFfAP2fFzlL5HHc6AhuqVhIhGsDbXUxrHEw64klhYopE7ezeFfL9EpACH+kMIVFO/H26xr7IXpm6s00rKh9xXiQ9zP7dYhvrGBpAW2Cor3YoZx/dTZXuetOc6s5zttfokqVsYnTvI6Ps7BCpc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=UvQX87Eu; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-ARC-Seal: i=1; a=rsa-sha256; t=1751424742; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1751425470; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=mrA3avk9M/kuiMlSOraXS90FYqh0uN7Iwu6NapwxmSegHecv5+P4PUbEMsTeOrRusu1BagsOFD6Ft+rQJAETUjm/3BCg8x38Sngb2r3jtdxoEcJL4BbtE2vO27ELCchZgt24AWoBljLbYjwRQGS9hY2Q39s0IRn7CXVGNH+D2x8=
+	b=XUfxS/9WxCXUjsdlc0UxWCoHfuTflL9TbGEtvjoMBMJfPpjXH2e5Z6tAUQIj2zdQZDm1D4RMmiyDcufXUZ1JKT+Q2Nq3rRClA09tGYI8AowATgGGTYBEtxwTqpa15bbVL40zX9CcOhmgxJVfG82hwnm8EPTn2NuyxNYR9WtLBvg=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751424742; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8djG8WqbgQUjheVgZ2REIAEuyGK2m7kH11olGFqdbSU=; 
-	b=HViJtwRdnwVaWMUd+/Rho9adtqSpBKBmwx4P9X5KnlMUBJvMR2rZQoDGBEQOzXNV5kjq8kaHF1LskRhdXTJ2EO0Rj0UVXg4PWI8xLebK1G2O1st7snNv4/NBnODZbaF+IdT1oPV1nzNzKg5i8wIe/SGlCMkU7v+TAY1FhCkVz80=
+	t=1751425470; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kCjo++jxPb2m26uPX5nEv2seRmQSxTmYhd+wC5dx3tQ=; 
+	b=awTBKLvKqgEtc5Moi4QyIUUzAJWegDz66GnMm4LmgwqhqrrzX1JO39za4oeJH6pRNOq897pbHk2PP4zZ8KLsZJjZiOh6jCgljxgpmTnMEyKK69cbDVTtXsczeoDahH3y5h1Y+IN+YilEXJvox0AWE0TJr1jmhsDKiqvM59J54pU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=icenowy.me;
 	spf=pass  smtp.mailfrom=uwu@icenowy.me;
 	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751424742;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751425470;
 	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
 	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=8djG8WqbgQUjheVgZ2REIAEuyGK2m7kH11olGFqdbSU=;
-	b=aZa8P6c6JFbALioZzkB15M/OExk2j5KPthXbGCX9mnmtMnvLkWJNSrpIkXQoksMn
-	VrA0lPoiyXlg1YxBxyo5ALCKSqfpaTCOS/XeYEX3YMaWdJL2uqyq8/CXFgU6e1ih5K5
-	Zehy4xmgE8dWIEvBV/b+rRdid/cpmoXXrz74mXGeiDqXD/P5Xm6Cvnc0LcKr6CCT8ro
-	eDIjS9pHFy5YYrm6IzVL8pamvuqO55GB1IRDTJq0eikQYut6tjGH/nVeEHi6NyZonoN
-	q4sqIiLCTSMQzFAHkP1qterjuJrSDLais/B9aj8urMv9zLAF26BLxWs9aqTWICdbJvE
-	/l3ltWEUYg==
-Received: by mx.zohomail.com with SMTPS id 1751424740371995.4237846805278;
-	Tue, 1 Jul 2025 19:52:20 -0700 (PDT)
-Message-ID: <4bc1c1fd9aa1e97a04d964fc5601155ade52cd2d.camel@icenowy.me>
-Subject: Re: [PATCH 5/5] drm/sun4i: Run the mixer clock at 297 MHz on V3s
+	bh=kCjo++jxPb2m26uPX5nEv2seRmQSxTmYhd+wC5dx3tQ=;
+	b=UvQX87EuDyQL6heWHjlgUaK9WLUyis9VEiqNpnfswdPVykTchPYe2wUdC4Sp397W
+	jdveOjIw8ACk1Cf8ccnv6m+HbruCvDkDuGGWNZNoKZdMt0anRzEMACCzr8dXf5IlzJ0
+	N8kB/vSdKpDtyALos+X1fTtr/RiittEV2DjvXpBAmQodgL3w3m3/KeSInotUYC4M6XX
+	PA3jVp6AtiU8poqLk0/jULBDldc2P/HKbCMcrX3xRLhGWQpMcpKQH+39A/Wo4tFu3qc
+	FPrhBnk+FXULWKGWicXbFJkpExmUbbhhsNkGpaSYkzcyL9SgCNoqJPwVLNVIbY2ewui
+	XhtoSsE8MA==
+Received: by mx.zohomail.com with SMTPS id 1751425468750404.3223451135418;
+	Tue, 1 Jul 2025 20:04:28 -0700 (PDT)
+Message-ID: <04ee563fda1411961e6f16bb1a2ab0a3163d550d.camel@icenowy.me>
+Subject: Re: [PATCH 1/5] pinctrl: sunxi: v3s: Fix wrong comment about UART2
+ pinmux
 From: Icenowy Zheng <uwu@icenowy.me>
 To: Paul Kocialkowski <paulk@sys-base.io>, linux-media@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
@@ -72,13 +73,13 @@ Cc: Yong Deng <yong.deng@magewell.com>, Rob Herring <robh@kernel.org>,
  <tzimmermann@suse.de>,  David Airlie <airlied@gmail.com>, Simona Vetter
  <simona@ffwll.ch>, Linus Walleij <linus.walleij@linaro.org>,  Icenowy Zheng
  <icenowy@aosc.xyz>, Andre Przywara <andre.przywara@arm.com>
-Date: Wed, 02 Jul 2025 10:52:10 +0800
-In-Reply-To: <20250701201124.812882-6-paulk@sys-base.io>
+Date: Wed, 02 Jul 2025 11:04:18 +0800
+In-Reply-To: <20250701201124.812882-2-paulk@sys-base.io>
 References: <20250701201124.812882-1-paulk@sys-base.io>
-	 <20250701201124.812882-6-paulk@sys-base.io>
+	 <20250701201124.812882-2-paulk@sys-base.io>
 Organization: Anthon Open-Source Community
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -88,79 +89,29 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-ZohoMailClient: External
 
-=E5=9C=A8 2025-07-01=E6=98=9F=E6=9C=9F=E4=BA=8C=E7=9A=84 22:11 +0200=EF=BC=
-=8CPaul Kocialkowski=E5=86=99=E9=81=93=EF=BC=9A
-> The DE mixer clock is currently set to run at 150 MHz, while the
-> Allwinner BSP configures it at 300 MHz and other platforms typically
-> run at 297 MHz.
->=20
-> 150 MHz appears to be enough given the restricted graphics
-> capabilities
-> of the SoC (with a work area of only 1024x1024). However it typically
-> causes the DE clock to be parented to the periph0 pll instead of the
-> video PLL.
->=20
-> While this should generally not be a concern, it appears (based on
-> experimentation) that both the DE and TCON clocks need to be parented
-> to the same PLL for these units to work. While we cannot represent
-> this
-> constraint in the clock driver, it appears that the TCON clock will
-> often get parented to the video pll (typically running at 297 MHz for
-
-Ah I think pixel clocks are arbitary and nothing could be predicted
-about it...
-
-> the CSI units needs), for instance when driving displays with a 33
-> MHz
-> pixel clock (33 being a natural divider of 297).
->=20
-> Running the DE clock at 297 MHz will typically result in parenting to
-> the video pll instead of the periph0 pll, thus making the display
-> output functional.
->=20
-> This is all a bit fragile but it solves the issue with displays
-> running
-> at 33 Mhz and brings V3s to use the same frequency as other
-> platforms,
-> making support more unified.
->=20
-> Also align and sort the fields of the v3s mixer config while at it.
->=20
-> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
-> ---
-> =C2=A0drivers/gpu/drm/sun4i/sun8i_mixer.c | 12 ++++++------
-> =C2=A01 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> index 8b41d33baa30..35fdc2451060 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> @@ -670,12 +670,12 @@ static const struct sun8i_mixer_cfg
-> sun8i_r40_mixer1_cfg =3D {
-> =C2=A0};
-> =C2=A0
-> =C2=A0static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg =3D {
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.vi_num =3D 2,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.ui_num =3D 1,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.scaler_mask =3D 0x3,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.scanline_yuv =3D 2048,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.ccsc =3D CCSC_MIXER0_LAYOUT,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.mod_rate =3D 150000000,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.ccsc=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=3D CCSC_MIXER0_LAYOUT,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.mod_rate=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=3D 297000000,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.scaler_mask=C2=A0=C2=A0=C2=A0=
-=C2=A0=3D 0x3,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.scanline_yuv=C2=A0=C2=A0=C2=
-=A0=3D 2048,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.ui_num=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=3D 1,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.vi_num=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=3D 2,
-> =C2=A0};
-> =C2=A0
-> =C2=A0static const struct sun8i_mixer_cfg sun20i_d1_mixer0_cfg =3D {
+5ZyoIDIwMjUtMDctMDHmmJ/mnJ/kuoznmoQgMjI6MTEgKzAyMDDvvIxQYXVsIEtvY2lhbGtvd3Nr
+aeWGmemBk++8mgo+IFRoZSBvcmlnaW5hbCBjb21tZW50IGRvZXNuJ3QgbWF0Y2ggdGhlIHBpbiBh
+dHRyaWJ1dGlvbiwgcHJvYmFibHkgZHVlCj4gdG8gYSBoYXN0eSBjb3B5L3Bhc3RlLgo+IAo+IFNp
+Z25lZC1vZmYtYnk6IFBhdWwgS29jaWFsa293c2tpIDxwYXVsa0BzeXMtYmFzZS5pbz4KPiAtLS0K
+PiDCoGRyaXZlcnMvcGluY3RybC9zdW54aS9waW5jdHJsLXN1bjhpLXYzcy5jIHwgMiArLQo+IMKg
+MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvcGluY3RybC9zdW54aS9waW5jdHJsLXN1bjhpLXYzcy5jCj4gYi9kcml2
+ZXJzL3BpbmN0cmwvc3VueGkvcGluY3RybC1zdW44aS12M3MuYwo+IGluZGV4IDY5NmQ3ZGQ4ZDg3
+Yi4uMmUzYmQzNmE0NDEwIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9zdW54aS9waW5j
+dHJsLXN1bjhpLXYzcy5jCj4gKysrIGIvZHJpdmVycy9waW5jdHJsL3N1bnhpL3BpbmN0cmwtc3Vu
+OGktdjNzLmMKPiBAQCAtNDUsNyArNDUsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHN1bnhpX2Rl
+c2NfcGluIHN1bjhpX3Yzc19waW5zW10KPiA9IHsKPiDCoMKgwqDCoMKgwqDCoMKgU1VOWElfUElO
+KFNVTlhJX1BJTkNUUkxfUElOKEIsIDMpLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLAo+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwKPiAtwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgyLCAidWFydDIi
+KSzCoMKgwqDCoMKgwqDCoMKgwqAvKiBEMSAqLwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDIsICJ1YXJ0MiIpLMKgwqDCoMKgwqDCoMKgwqDCoC8q
+IENUUyAqLwoKTEdUTS4gQmxhbWUgdG8gbXkgQURIRCA7LSkKClJldmlld2VkLWJ5OiBJY2Vub3d5
+IFpoZW5nIDx1d3VAaWNlbm93eS5tZT4KCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBTVU5YSV9GVU5DVElPTl9JUlFfQkFOSygweDYsIDAsIDMpKSzCoMKgLyogUEJfRUlOVDMK
+PiAqLwo+IMKgwqDCoMKgwqDCoMKgwqBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oQiwgNCks
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDAs
+ICJncGlvX2luIiksCgo=
 
 
