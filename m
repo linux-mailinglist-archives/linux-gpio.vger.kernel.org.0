@@ -1,92 +1,93 @@
-Return-Path: <linux-gpio+bounces-22667-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22668-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C11B0AF6208
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 20:57:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A4B9AF63A6
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 23:00:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D24701C47229
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 18:57:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85ED05220A7
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 21:00:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DCF527A469;
-	Wed,  2 Jul 2025 18:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 920751E5711;
+	Wed,  2 Jul 2025 21:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5dIntmv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrvHPqnS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC842F7CE2;
-	Wed,  2 Jul 2025 18:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34102DE712;
+	Wed,  2 Jul 2025 21:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751482635; cv=none; b=T0G3roFewziXUqwpaUGNVvi1vPR0S6pxxggD3g13Dn0IgkkoJOMTf9HpwyCkaTQfYxgUuvpUJ4juMXkkuvaA/pHx7GZdXDWpejia5hUQE2cSfzd3Wst03BiVNn2bBkq7wPIUmbwhcxt2wW0oBfAmm2T7//lLMDTVhqxzv/qnL38=
+	t=1751490027; cv=none; b=XzvANJV6hjd51x3FppuDiLLOtpzPwxR4eh3Z5CTSUjnYnh6hyaGKur+bCBWG5y7aHcSYzimWdGNIxzQqep8KN6CNsoOAda8gUj2ALiSvCrekhBxpIIaGfuvBfgIhGeppfaPGQml8V/EqKi5j/enGcU8snn8TXJtt6EkY8wWaZfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751482635; c=relaxed/simple;
-	bh=kC3Ij0+TwzLPJxztlRCaWKRcoSyo8G6Yo4Whg2rzTmk=;
+	s=arc-20240116; t=1751490027; c=relaxed/simple;
+	bh=bg34YmmeS70FFPT/uwXB8HPdNMd9xBbgYpLNVAACqC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IeUsI+FHU6tuDjQkRJOd2tse8qvweqzo2g+gG5iJ30Io9KAGniGy3vmLMBtoMJASmW2Ngh8jbNqvBg1txMujzsRqOKahFZqJCOBhi1wsT4ZHOJos4vDtWrRNwFkP23sNRHBgMOWe5Nlo4o9grtgZ9uK3TXINsAWtqF+U4G1aNsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l5dIntmv; arc=none smtp.client-ip=209.85.222.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=OdaBdbaf88cOVXuGUn2r3PoGpiTiKat6zIgQA0gBbCcbcfB2XCypiFI9SGJSXGT3MYtCT8QBq1pKDXzTjLQEQTMX+tN/MrOblBCQ8N/+xJ/vkVCzwazSpCU/RF7Xny7mQa2x9hb3kBFbDdNM2LSUklVCb5AQZdTBtVP6V6OqNA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QrvHPqnS; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d402c901cbso662829385a.3;
-        Wed, 02 Jul 2025 11:57:14 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235a3dd4f0dso45998005ad.0;
+        Wed, 02 Jul 2025 14:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751482633; x=1752087433; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751490025; x=1752094825; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kZIAXJvKauaAlRkK7qxQW9qPzH50AGsUAE8RQQJUH+Y=;
-        b=l5dIntmv5gBD/Be/Dqr/8HjR8lnXUy71WaB8vAxr/KBygeJkh/Ult/xV5NlMMmI4ES
-         8Bua5rVADe9UY4NUj8lE0XayyFo3mkb2sTQ67UYn9jTSIR8QmUlwdeq2XJPcFHX9bgfC
-         6nGHwiEbi4G5kO4Bq2FTpYFm1/x2qMcDlFBlKMunUQrSLfVWhqNeaDgIt19KUuiNeoPn
-         fMUsps6GiiJCLpxmxR2yp5JZszSoTjJaFPjZuRq5SoGU06MC7n+bE4CqNQa6YomG2GsZ
-         BlfOKGX46jR8iYz5lZ6kRM4CDojvqmq5eiMM47q8A3gIcf48Ko4UwxOuXSC062AFQfqJ
-         da0w==
+        bh=2xfvGPO1Ksya3OuQDaPHkRfGmdWKE6WGfobY/qdxMtI=;
+        b=QrvHPqnS1ZRpWm7etXR9jCNbAyZQ50luAIs33QsLySSclzKIch7SavfsmKCIt6hFRn
+         u6mCuxMK3t/UuxhqpH6P4nr22rINj60EBMnUou+JhYefXr2BLeyaFcv3tZmxh6UbJrIb
+         fa/Ct3NnLMKa64CwKgmh6+mQejkldoBU3nUslXHw+y3ZmjCQNGyRnAGFLPYDxiI85125
+         dCvkedHIYyLddEDmTeDky0WeHKi2XzJH8PeMZS/GcfcrQmHswKJBkHZ6OgGt/l3XufTZ
+         HMyXl6PWebwODkk2S4H4BcTUT5SoJETo4F2IHZ8lLAFv9WFY3OaJXJ08vLLWC23kFJKp
+         fzDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751482633; x=1752087433;
+        d=1e100.net; s=20230601; t=1751490025; x=1752094825;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kZIAXJvKauaAlRkK7qxQW9qPzH50AGsUAE8RQQJUH+Y=;
-        b=eT1sBOTPc/UB5IMSKBDDHT7Q5QoQ9Ai666tY8XKE7xRPeCmPQII+6w42AGCtHaQE6b
-         EXWEwKvP8BdP9wYq86cJQ2vuJrm4klLa+Bp2Y9yuBra5lVQO4NZxTRFZMikbEKm02+1M
-         +p6lnPbpgUt/YI2Akahj4Q6kZXni3STREcfb4CTvSVE9WU5XNPfahhSWtg1b7wZagyfQ
-         cMqY96EZgBxDZlqGT4W7Ypjjt8i2R6EAoQgtxMXMUp8YdFP4/Q20xP/EavU9T7d8l0zk
-         0rlBYKAkP7lBj3S4Y/actHAL6sd1iTS+Bm7UJK5VGDD8j7RLfyATXu0NseB9lr2cuQ6u
-         Tn+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWMLZzbTYm80phW/XUDd+HuKjzKsutGvRf3yiJWeG1ZRScI9NanpEbgiMaD8pOU7HxQzkgsMEm2rV3cRcki@vger.kernel.org, AJvYcCXT7SzJF0GkpuBEVs2HGj2JU0CVtBR73MRHXw4moFFkM8C6C2ZOAwpwdYjAUWt82Z6Z1YEe6Gs0wY8e@vger.kernel.org, AJvYcCXcY7XDKra33ME9vsw4oT8e1wlpK7Un6p58xuvlk4e3AQhNkbisySeyV/mzmA1NhWs8Yaydiuzo3z8o@vger.kernel.org, AJvYcCXqtdGLVkK5wP67CbgcEj810Yr+6UXMGXdN3SYJM9bCfO5Ug1r+kiJls6pMLNU/YE1vVa7gp/D8qXf8qA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF8o8ivc6vXUNCpAARedPzMa8nHdZbhx8Q3xRpe41b4HkTrt6G
-	RFFCG7dIgrZiJiSvjuVxHrzI9SSf2wVzMTClMoBHbD2NuyrXEXj4DURu
-X-Gm-Gg: ASbGnctNcQVN7HEpDOgKuTTidPY7+CgiCvynako/jMj7eRIR1TZ5IYX0TiSTkZKdJI3
-	aY5zjP6dmMFWkOoWss29L/IGZR+J2yPE8Ndz+NydAgB6xny5C+fQcMYSfcanvn0vQMkFdTeEUrB
-	25zfogu4aABmLoo0WvI9rw9DPHX6Vlmr73PxhLSjxqGUpoOCNDGH4R5kYVFQVMp9Hlw3RpWMQ2C
-	1R+l+GRymWQMBRLQG2BYXnyJKqgUJQws24enmp60wSiptMKUFkfjSHJeYZLrz+Lo6sFTtagVrbi
-	KdTdUCdERVlxljM++xUkbsOf9YyZWMdwp5NTLxUKjQx1FsZxDe6pIJdpDgWw2nr7tegsVg==
-X-Google-Smtp-Source: AGHT+IEDEXEIqda75EtSySR3EUVNGEIZON8yl5WQFsWtxwa8n1GITiIvSiibTZKgp2uaIs7UnnNvOw==
-X-Received: by 2002:a05:620a:4489:b0:7cd:5b2a:979e with SMTP id af79cd13be357-7d5c470457emr455087985a.30.1751482632870;
-        Wed, 02 Jul 2025 11:57:12 -0700 (PDT)
-Received: from localhost ([2804:30c:b15:b200:425a:de22:1d7f:2d4b])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d443139b31sm990700685a.7.2025.07.02.11.57.11
+        bh=2xfvGPO1Ksya3OuQDaPHkRfGmdWKE6WGfobY/qdxMtI=;
+        b=Be/rCIuUb6Kx4CL7hY5MZEQd/66/jSQLH6Gj++SIX2hdJHEeYeb1KH8tOfaHRWwc4O
+         bBjti7FmnMQ0RiB9MPSnkeSNmDLqItzyMT6lq6dT2MPLoqHWPy6js1XBOXdvFV8Mi1CI
+         yYSIVR/2T0ibPEbkSTwaC+uy9UaHpsU9NP+ulkeyHthYneWu2Ya+yrK+9WpsXy4D9K7m
+         nCBomnVw8uLYE2RejgMPByQUJS7dWynw5KKnW7Hpx59VM7wGhOxVJHEejAHxazZo+USS
+         FPRiRrE65JMd0o7JXD894DkGhW4ZZ7v15LhvJ83fBiHApniaGopxWJxNf7jPvYjIMhxp
+         hN7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUHEgCtFLxQmIVGoNxM04OhoUNAJqtcv7wMuCMKVKEcJHJJcWlxc8pemRUsENyzW8FAs/CWH4IRdHqW@vger.kernel.org, AJvYcCVG+8sOTxIF/uRquN7F4Hwd6M1+uMxHD0A2S9SKd+hyVsF8bUttHorXULGJiorgp+Gz/uzRA5EaCy0k@vger.kernel.org, AJvYcCW8hK+o4zfFn/X03gQqR1p69BLzjRlz4ImYDraI7mdWU/nmNBPsN2heXnXYNvphyrmFx3zT7HcgHEIiyQ==@vger.kernel.org, AJvYcCWnIMIrDaWDQSSmBc1/EVcAaYZfKRnKKBh2fSe03x1yBvj9zubJb1AbdZ5KlB0aHUcoL1VZfGWUXaS/6Koe@vger.kernel.org, AJvYcCXSwUWUaAtxQFEVa9RBTK1YrTI/nVa00t3SLO4KPdrLvtTcO/rItQkpx2oUZbbcIKdUmbvnw44wNssan2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn0fHFkAio/W+nywhXEE16H9XpP3SlD+Ov4yDXg1k5MNoY2fvK
+	O3kMmNVEvmbaWCgX+uewh9Ikc6hv4YrreFDnMprCpuSKWS9XQnLOYYv1
+X-Gm-Gg: ASbGncv7j++xsmb4wWXLjImTaY1mZSuPaaX6RK0S3wq/qHRj2MM9MHqnQpFrafvQY3K
+	O7ewbhIs1m1NdDIZ8AINF8Xa57+vXXUFBk+DsOA+t3pX1H8GdxC32tJl6FU/hlSeUt6uh7d3TVh
+	E7HV6AbF/oGCBEmcKAanNlUhPEMFHe3ZON65lsp6bPfv/7izq3IedsNRsh+5cCglLUtkN5w3uIY
+	/1Fiv+SRQoop/SWIZroNsKAYGMJgld2kvdtt8Lh6adTB9hF7RSsu2T8zsiOKALYtkdaleHWlUwq
+	eSL6HQ96OLN9Rlv/gM2D734JcCYn+swTtf078DAkLc23ChZ5lDrcgAxD/WgiOBc=
+X-Google-Smtp-Source: AGHT+IFwtUIm+14PZZznaUVeBL4d9kvfMJHlGFaNbp2ss/KcjJLiMnWF42EXMssj52lvwKsLwDaCgg==
+X-Received: by 2002:a17:902:e54b:b0:223:4d7e:e52c with SMTP id d9443c01a7336-23c6e4d683cmr74426775ad.5.1751490024982;
+        Wed, 02 Jul 2025 14:00:24 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:918b:9ece:525a:9158])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3c4b2esm143163835ad.211.2025.07.02.14.00.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 11:57:12 -0700 (PDT)
-Date: Wed, 2 Jul 2025 15:59:12 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl, broonie@kernel.org, lgirdwood@gmail.com
-Subject: Re: [PATCH v7 00/12] iio: adc: Add support for AD4170 series of ADCs
-Message-ID: <aGWBgLLtOzVGwXek@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1751289747.git.marcelo.schmitt@analog.com>
- <aGTpNNaW7cXC18Jt@smile.fi.intel.com>
- <aGUfapky2uh2tsFt@debian-BULLSEYE-live-builder-AMD64>
- <aGUi7r2dgnbqLOAH@smile.fi.intel.com>
+        Wed, 02 Jul 2025 14:00:24 -0700 (PDT)
+Date: Wed, 2 Jul 2025 14:00:19 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v10 09/11] input: keyboard: Add support for MAX7360 keypad
+Message-ID: <uibf7p6niiljlymzp24h2sk5dzhw5xschaqxj6wfpgge6b7hdo@czpfchjl7pvw>
+References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-9-ce3b9e60a588@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -95,49 +96,26 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGUi7r2dgnbqLOAH@smile.fi.intel.com>
+In-Reply-To: <20250530-mdb-max7360-support-v10-9-ce3b9e60a588@bootlin.com>
 
-On 07/02, Andy Shevchenko wrote:
-> On Wed, Jul 02, 2025 at 09:00:42AM -0300, Marcelo Schmitt wrote:
-> > On 07/02, Andy Shevchenko wrote:
-> > > On Mon, Jun 30, 2025 at 10:57:32AM -0300, Marcelo Schmitt wrote:
-> 
-> ...
-> 
-> > > >  6 files changed, 3601 insertions(+)
-> > > 
-> > > This is weird. At least patches 11 & 12 have '-' lines...
-> > > 
-> > Yeah, sorry about that. These ADCs are fancy such that the base driver is about
-> > 1500 LoCs due to channel setup handling and support for multiple combinations of
-> > voltage references and channel setups.
-> > 
-> > About the '-' lines, I will rework ad4170_parse_channel_node() on earlier
-> > patches to avoid 3 line removals in patch 11. Patch 12 is only makes sense
-> > after patch 7 and I think it would lead to '-' lines if coming before patch 10
-> > since both increment the number of IIO channels. Anyway, I'll see how to further
-> > reduce the number of lines being removed.
-> 
-> My point is that the above statistics is mangled and I don't know how I can
-> trust the contents of this series if it already lied about that.
+Hi Mathieu,
 
-Looks like git format-patch summarizes the changes from all patches when
-printing the statistics to the cover letter. Also, git format-patch doc [1]
-says the 'changes' dirstat option (default behavior) doesn't count
-rearranged lines as much as other changes. There are cover letters of other
-patch sets where the number of '-' lines don't match the sum of lines
-removed by each patch. [2] and [3] are examples of that.
+On Fri, May 30, 2025 at 12:00:17PM +0200, Mathieu Dubois-Briand wrote:
+> +	if (!in_range(max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN,
+> +		      MAX7360_DEBOUNCE_MAX - MAX7360_DEBOUNCE_MIN)) {
+> +		dev_err(dev, "Invalid keypad-debounce-delay-ms: %u, should be between %u and %u.\n",
+> +			max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN, MAX7360_DEBOUNCE_MAX);
+> +		return -EINVAL;
 
-[1]: https://git-scm.com/docs/git-format-patch
-[2]: https://lore.kernel.org/linux-iio/20250630-losd-3-inv-icm42600-add-wom-support-v6-0-5bb0c84800d9@tdk.com/
-[3]: https://lore.kernel.org/linux-iio/20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com/
+Is it inclusive of MAX7360_DEBOUNCE_MAX or exclusive? Do we need + 1
+here?
 
-This set doesn't remove stuff that existed prior to it so I think it makes
-sense the cover letter to show that lines are only being added.
+Anyway,
 
-I'll send v8 with the change I mentioned earlier. Unless patches 11 and 12
-already look good the way they are in v7.
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Best regards,
-Marcelo
+Thanks.
+
+-- 
+Dmitry
 
