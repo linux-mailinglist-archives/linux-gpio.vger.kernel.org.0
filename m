@@ -1,177 +1,138 @@
-Return-Path: <linux-gpio+bounces-22585-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22586-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AFAEAF0FA3
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 11:17:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 879CBAF0FB7
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 11:19:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 023C27B5155
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 09:16:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA7921C26BB6
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 09:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A424825B31E;
-	Wed,  2 Jul 2025 09:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE9A2417F8;
+	Wed,  2 Jul 2025 09:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="g/bBa63l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHa0mXnd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E17255E20
-	for <linux-gpio@vger.kernel.org>; Wed,  2 Jul 2025 09:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C20B24113C;
+	Wed,  2 Jul 2025 09:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751447668; cv=none; b=HJJHLJ77GC8fFSLtBPFmUD+3r8ZfTnplULWM8+IZNJ3pftD8Pf4sxORps68lqPW9QHc77+IWWaOMngfQpKY3xDmZc+NNx2sxAEmT9edLcTXKXMrGqbJAlWs6GzQtNHU83deEaA4FgeFXp1PC4IHYFS2ijFgwX/erAH2hcSbJLxk=
+	t=1751447922; cv=none; b=B8pSo/o0pqRiuklC75K+w+dfOn+kv74LASrnuv0WpbWPFEaVycicMWfbilR09S44IaD/PjEqG74bV62ke2WDVWVxSbHesvy57iJ5Tedmj0/P8nDjtqZ3obTeesywySd96t/WTM1uhT+ws56HYlShF80t9Kut9IQAMcG5f63TIck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751447668; c=relaxed/simple;
-	bh=NN72aqjpwJSv2irviEDiSUqnOMzC4st1teZcnfhIUJs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zbjzai8Et/yNT7all3guU/4XoB//Na9ghKUl6PWPzn+IYUwi4a30gLf5Pn1sBW1PHa3n9IlS9LgiU8eZFC8XG6LkXV3S3hOMpO4qdIYhGjx/piz09qU4LvSlrZd9z97dq7HoExpHP/F7rXyfEzKqEg39gXsu2Z5J9GziW8UOF9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=g/bBa63l; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a6f2c6715fso4406902f8f.1
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Jul 2025 02:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751447665; x=1752052465; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Zmv3tRKIBVq49AP27DBsRvEkqxDC0NdKZdExvK5QdPc=;
-        b=g/bBa63lD/jr6iRfDzYLsFEwsb9Dksnzy+gQCdTT3JluZVP8StBAnYHpmzyaLlaktn
-         0pkR+aoGn4kxpAIZaLJaswAKVkEESQDR2k1PKQS2CTjITRb3EfPFRvAesnunaGkmG6if
-         Tffs+uCl4Lcp6Ti59LkwGVHNqQhDXhKNqJ+fQZMyX+dnHOQzwqNb4+3ixg0CnhKgP65P
-         ul5Y0g8zUy99e231hoiEYKR3XQHLZ6MrpD8r0BNhc93LrDlsk79it6I4mMhrpDXDV0ad
-         PHXUx2Er89zMRCiZGNNe2gM3Kc3q22ksIZV6onkNXCgwdPWCHtJzf+nNzEgjefX3AerQ
-         T8Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751447665; x=1752052465;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zmv3tRKIBVq49AP27DBsRvEkqxDC0NdKZdExvK5QdPc=;
-        b=XDapGKeC/qeLVZPvhRa4E92asPqy1krRya/uMXwDljzFSYlxTeZ5e5DpzLi1tRXIxS
-         IFUG1TDL71+1CHfE8hAGYqwUm+jftTkmGADBdODwm+76awC1yTILyMZ3F9jEK1Ubi6+e
-         Etyl8C4jG4aUUPZvwfsz99vLwXAT5Pcl+uP/vh5VAJsNT2vlKkEvwxB9JRCiJdgXvpdG
-         /8npD2Lf1kIIKF1QeaDtxtlf5aAHfhpPixVfl2nXTvHM8SPDRMBlTwbBrlwkVWVB4yze
-         HMVU1EMJRwX4ItS35HlRtzrJuU905ZRYZAP+X23DSLtoLhlrSHvRLJMPG3JP4MeF2MmP
-         Z80A==
-X-Gm-Message-State: AOJu0YwYJR1Gr8SnT7kRVdYaX8x8F57eT/sPASBBMcH3bKV5QCmOkVqD
-	cBL1mPZmKwBKY7ulnwulztQGEhD4htIbAxi10fCY/QAsNjDmOheLPIH/59fL3nwJfPU=
-X-Gm-Gg: ASbGncsWCtFmjKQQSsX58ly7YmuzSqTjIsrLp5MgVU0N6p6UHVBkYyJKdCKWOrqlXuz
-	M6+/n32YbOeqzOuwvRzedyD4FsEy3MUVCfPcFM6z3mUiJ4+lfA5ttZTSq+tueTIA9Oj3PzzUjMt
-	pJ6Exyl56OUbHq1nh2f7gViHlSi10142O79qh1FriR0ODOMec16l0bWgWwui0MjUGFE4QIABVso
-	gZYqOUjPtVea8+P3eSBXNoG8YqCuZpd89IHvc9ROWTir7ymVrPj3oRlYEW8eqLm00inBwolajMx
-	6lFihNO8ZUq+50mymc+VX1dqsuuGbAvxxyrYqMMW8YXQXz2ag2jT1Q==
-X-Google-Smtp-Source: AGHT+IGTmm4jTikwN2VGwBNAxx51rzCBt9ao4TX3exq/7NZm6Hiin2DGw8Q7fWQBOSkwwMPNJ/w3zw==
-X-Received: by 2002:a05:6000:2509:b0:3a4:f7ae:77ca with SMTP id ffacd0b85a97d-3b1fdc20aa1mr1411408f8f.3.1751447664576;
-        Wed, 02 Jul 2025 02:14:24 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8827:d0e:25e:834a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e6f8bsm16027213f8f.17.2025.07.02.02.14.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 02:14:24 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 02 Jul 2025 11:14:13 +0200
-Subject: [PATCH 12/12] gpio: tps6586x: use new GPIO line value setter
- callbacks
+	s=arc-20240116; t=1751447922; c=relaxed/simple;
+	bh=YgIsYbsQFBijlbHTYsgXc9tCHNmRLzh8Vr+Nl8ZnQ3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxJ478Vskn/ZuAM/zgH0PYkg4VXZkJUkHRMy5GKmCvmBsDmfs1eXxPCkoTpun93e37P7mnUmo9KmJmaVSylsGkPw2OLdEMWiYekjTUOihxDT3uA4/TUXYhu/bjmM5fy5971B7I0ciTKdRqun4t2Y4CLuHHMY1JvsIasrYPHq+QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHa0mXnd; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751447921; x=1782983921;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YgIsYbsQFBijlbHTYsgXc9tCHNmRLzh8Vr+Nl8ZnQ3Y=;
+  b=NHa0mXndNPsqjlQrfnWjAXFl0IMSNhz84cndMG2tSKjw+euM/Oyp9vFa
+   ixo1LLXfEIm9HtzAE1ubpLWvHg4bv8TUeMSD2U/GUWQ/hk7P85yndqVcX
+   wfl/BQmx2E2ZfEEb+QW9hChTSpulkYFuC6bbRN4nqmR37f/MkJIe3m/Ue
+   PXccaMN8oeLtYrXgITAR3jwszyIoaJ2jvPktZqBfosvEPTHXlbS3cKATq
+   dxtPq+yy2idujdWfTJFXnHEYP4bD5xDHIvYj2QfdUFVWtw89we8XjVo+I
+   XMbazlG4XKfyLikroo4TRYHVUzQ1PDXCYtNISQus8pwnJcp6gGosfUCtu
+   Q==;
+X-CSE-ConnectionGUID: +itLhkHVSiqOACp35zLYFQ==
+X-CSE-MsgGUID: SEjAjsBxRdWyilKroVWb2A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="64427969"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="64427969"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:18:39 -0700
+X-CSE-ConnectionGUID: vxd1XndcT3OoMKfVHJDRig==
+X-CSE-MsgGUID: gpP80ZaVRkCf3Rmd/W+dKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="159538616"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 02 Jul 2025 02:18:36 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWtbu-0000RX-0P;
+	Wed, 02 Jul 2025 09:18:34 +0000
+Date: Wed, 2 Jul 2025 17:17:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: gpio: Create a trivial GPIO schema
+Message-ID: <202507021740.qURVV9D8-lkp@intel.com>
+References: <20250701225355.2977294-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-gpiochip-set-rv-gpio-round3-v1-12-0d23be74f71d@linaro.org>
-References: <20250702-gpiochip-set-rv-gpio-round3-v1-0-0d23be74f71d@linaro.org>
-In-Reply-To: <20250702-gpiochip-set-rv-gpio-round3-v1-0-0d23be74f71d@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, Robert Richter <rric@kernel.org>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, 
- Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2077;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=dzEZyQb/TffciTBuglIB85TDIVsqFc54rkSmHofFPX8=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoZPhhtYULyctCIg0hBfEEWvehjyvTXWYFEXCBG
- SErYwBkd42JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGT4YQAKCRARpy6gFHHX
- cjVFEACPDNGwDFvzi5UCZgFldPon9+X/rScnJUb2vh/WsnJHJyD/0LaFIwkAQtbCOo1CqKXzY75
- D6wnIjv5S7bEKT2CTsx1I2Z8T+Sn7pBZ82Kmz33kLiX6cKNG2ghc7Vxmy1T66bOQIQNQZ3UgURT
- s5YaykSkWDjUQOv//cCjbByPlw8IpEo3oVT6a6hpZSO1AsmWzBTRfv1l1JxAWexfPzwqBLJg8fb
- DGCEXceEl5X6LtC2WvCRbtUQDGNf9qcM2XFLIvYANLs1LFw8VVfmPN44DlwBxbACf2G/Ig5Btlz
- tblCQgh2mbB8V/O9UmbJ60UmJ5iEb/Z2rG8GoIYr10rxm/yGz1A1z6VFH06Uepa1UPkjqQQyHXn
- kYFjn1grhI6OzTB7nUqKd8+ktUppIJBeaPAB7yoU11sr96MdVvBopa2syhHl7EI6RVdc6QmCwxl
- I9UVisYsVV9WOHJCCmE7xrSOBM1ySQMdrHFZpDJcxoWV+W7iuMwKVe05/2zXzgcM2nLZEfL/ISC
- eigHTL3e+d7vFQidKXf2qWeEz09CdSozw/8fhwUg2HwIu/9EyLrw3bNlJ3CN2iqlUTQ/PeYoegZ
- YQj2GmsteV+0fJm3FWKKc7FdD3dlU25KwVEsfqD8jQicxUcPJ4Mn8cTvqexel3TncXL9NSIkmBG
- YNjyg562TerE/NA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701225355.2977294-1-robh@kernel.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Rob,
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-tps6586x.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+[auto build test WARNING on brgl/gpio/for-next]
+[also build test WARNING on linus/master v6.16-rc4 next-20250701]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/gpio/gpio-tps6586x.c b/drivers/gpio/gpio-tps6586x.c
-index d277aa951143ccf9560bd77d461786f120e46a52..f1ced092f38a5e491378fec2d80dcc1eb1182cbd 100644
---- a/drivers/gpio/gpio-tps6586x.c
-+++ b/drivers/gpio/gpio-tps6586x.c
-@@ -40,13 +40,13 @@ static int tps6586x_gpio_get(struct gpio_chip *gc, unsigned offset)
- 	return !!(val & (1 << offset));
- }
- 
--static void tps6586x_gpio_set(struct gpio_chip *gc, unsigned offset,
--			      int value)
-+static int tps6586x_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			     int value)
- {
- 	struct tps6586x_gpio *tps6586x_gpio = gpiochip_get_data(gc);
- 
--	tps6586x_update(tps6586x_gpio->parent, TPS6586X_GPIOSET2,
--			value << offset, 1 << offset);
-+	return tps6586x_update(tps6586x_gpio->parent, TPS6586X_GPIOSET2,
-+			       value << offset, 1 << offset);
- }
- 
- static int tps6586x_gpio_output(struct gpio_chip *gc, unsigned offset,
-@@ -54,8 +54,11 @@ static int tps6586x_gpio_output(struct gpio_chip *gc, unsigned offset,
- {
- 	struct tps6586x_gpio *tps6586x_gpio = gpiochip_get_data(gc);
- 	uint8_t val, mask;
-+	int ret;
- 
--	tps6586x_gpio_set(gc, offset, value);
-+	ret = tps6586x_gpio_set(gc, offset, value);
-+	if (ret)
-+		return ret;
- 
- 	val = 0x1 << (offset * 2);
- 	mask = 0x3 << (offset * 2);
-@@ -95,7 +98,7 @@ static int tps6586x_gpio_probe(struct platform_device *pdev)
- 
- 	/* FIXME: add handling of GPIOs as dedicated inputs */
- 	tps6586x_gpio->gpio_chip.direction_output = tps6586x_gpio_output;
--	tps6586x_gpio->gpio_chip.set	= tps6586x_gpio_set;
-+	tps6586x_gpio->gpio_chip.set_rv	= tps6586x_gpio_set;
- 	tps6586x_gpio->gpio_chip.get	= tps6586x_gpio_get;
- 	tps6586x_gpio->gpio_chip.to_irq	= tps6586x_gpio_to_irq;
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Rob-Herring-Arm/dt-bindings-gpio-Create-a-trivial-GPIO-schema/20250702-065536
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20250701225355.2977294-1-robh%40kernel.org
+patch subject: [PATCH] dt-bindings: gpio: Create a trivial GPIO schema
+reproduce: (https://download.01.org/0day-ci/archive/20250702/202507021740.qURVV9D8-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507021740.qURVV9D8-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: Documentation/devicetree/bindings/mfd/lp3943.txt references a file that doesn't exist: Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+>> Warning: Documentation/devicetree/bindings/powerpc/nintendo/wii.txt references a file that doesn't exist: Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+   Warning: Documentation/devicetree/bindings/regulator/siliconmitus,sm5703-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/siliconmitus,sm5703.yaml
+   Warning: Documentation/hwmon/g762.rst references a file that doesn't exist: Documentation/devicetree/bindings/hwmon/g762.txt
+   Warning: Documentation/translations/ja_JP/SubmittingPatches references a file that doesn't exist: linux-2.6.12-vanilla/Documentation/dontdiff
+   Warning: Documentation/translations/ja_JP/process/submit-checklist.rst references a file that doesn't exist: Documentation/translations/ja_JP/SubmitChecklist
+   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/translations/zh_CN/how-to.rst references a file that doesn't exist: Documentation/xxx/xxx.rst
+   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
+   Warning: arch/riscv/kernel/kexec_image.c references a file that doesn't exist: Documentation/riscv/boot-image-header.rst
+   Warning: drivers/clocksource/timer-armada-370-xp.c references a file that doesn't exist: Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
+   Using alabaster theme
 
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
