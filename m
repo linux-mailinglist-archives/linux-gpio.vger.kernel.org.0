@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6DCCAF0B7F
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 08:20:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 488EBAF0B96
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 08:23:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F532484331
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 06:20:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 802673B31E2
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 06:21:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C73E221FC7;
-	Wed,  2 Jul 2025 06:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1812C21FF50;
+	Wed,  2 Jul 2025 06:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3J07Gj0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzZO5UGi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FD3221294;
-	Wed,  2 Jul 2025 06:20:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE242AE8B;
+	Wed,  2 Jul 2025 06:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751437220; cv=none; b=qDrT4E1PVWDJ1MZhWgsjtfRcQaXvKupkPJZNtgEKfQqinYPtC9WTXGfudnkPHuLe2Q7uY8X5k7bFiOrTFJm0tKzkX0OUgUmZbhPRT+4Olc+WRwdM+6ob0tX5SdosK/XtEHsEu7qeBZE2OJdDzCApGTIhb2+gzth1bxV1df8JK1Q=
+	t=1751437246; cv=none; b=CGpvLPmc4s6pZay7euT1RDvWRkomAAsJFJiSMXSrlnCujxFcxoDU01ywexlvWFx6weWho3jCSbdZdMBsWnxU7Fro8iWupGdyps6DSB1wQxJ8GoGpExlrqJne+/27wZTFfBrQt9Vt0y0aMFqxoudz5tPkMDVxeat8HWWOmmV11G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751437220; c=relaxed/simple;
-	bh=FNS8tHHGDtPXNHJghX/TxVAMGrPJFdEQtCrjNVg3+g8=;
+	s=arc-20240116; t=1751437246; c=relaxed/simple;
+	bh=VLRieSIqs4BjM9SJJCKqQMY/f955o1jMxFMZny9Me74=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AhmOtJ6r5mWbX/ZO02LLjJIF0EhaluaU3al4i4ZoUXd23hxhlVwcDJnUQ+EkrMGWR4hAxSJ3FdKY0ediSsEQrFxKj20T22dgUxNAtc+Tl8+8+ba6Tm21s8CnRvn+VQMBFBqtjQT6bQtUi9sWbKlfwzG8QpI3HTgxdLXHhH94ckI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3J07Gj0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D2BC4CEEE;
-	Wed,  2 Jul 2025 06:20:14 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=GirloVZWngnGLKU1v0WjFpQF8OEMoaXSMxuP/PDRwm1oZTrpMEV8CX22nnic7yQsxFMK6NZJX5sxNdgTN6FwQBcENmQIHYincOYBrkkSA9nIFGT41TpXjM9D6VWMz5Bn9qs5iDcvr1Jr9bx3opkr9p7tCJfefH9vvGlD0e5mB1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzZO5UGi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99CD8C4CEEE;
+	Wed,  2 Jul 2025 06:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751437219;
-	bh=FNS8tHHGDtPXNHJghX/TxVAMGrPJFdEQtCrjNVg3+g8=;
+	s=k20201202; t=1751437245;
+	bh=VLRieSIqs4BjM9SJJCKqQMY/f955o1jMxFMZny9Me74=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B3J07Gj0IvJKShLOvqcxZA339Um8bbv2dKasivBitmSZ++gYrHhyG5x8bsGeLCXEZ
-	 smXFh7HMC/IIJYWrJ9/DnSYTw3t1mREuoj8v5FX7TlwB9CaS4PQJqQAFWJdOXIFN5/
-	 RKCnus1zDsKFrM2cda614u6OmlDSrWJ0JKJpOPIvh3sLilyuI6rorc3r5SgjBwKhR3
-	 5vKhWxC4sdCeDWjp0LsxCDsDG1TZSq0+CrBZOh13n1mKVrlfiViFXl6BvvqZVYIwkN
-	 j+kP1nMILC3NKh4omMGM9q4beUClj3anEOGotwwPgt29CLqx9HyU5joluKwQiEJY8r
-	 gpu0Z8tJhdFfQ==
-Message-ID: <c03c2251-9bf0-45b6-94d8-1ff3b5d7bcfd@kernel.org>
-Date: Wed, 2 Jul 2025 08:20:12 +0200
+	b=pzZO5UGils/MykmiDQ9C9bAw7mPtwgrdHFiRG4g1BeW3K8vNkikcugoWFXyKzLH6A
+	 tz15e2vYVjq270vvpxEvOwdTeLYob7mCWJj18OXqis82U0ww47IFiK5HC/CH7jqFEx
+	 +c/1I7ywgFTOGKvfYQl4mum8kdfbRAtWeOpJDlzJtTCcaHdneQ3J6aBr33UAowWweT
+	 u+a2Y+M4U/iC9QIXlmhmdV1VXh4ILkbCQgfPCTD4wHI17PPaYURHaFPC39WKYPgZTq
+	 lwSyVd/tC/lur2sE7Qk19/3GlCwhaNb38gmF6Os/WUXaEVrpCzYZZJjUU/91gsIlOu
+	 wP5qHp5QgEGwA==
+Message-ID: <88f3b2f5-17a2-4e59-a920-3d9a52564f14@kernel.org>
+Date: Wed, 2 Jul 2025 08:20:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/10] dt-bindings: i3c: cdns: add Axiado AX3000 I3C
- controller
+Subject: Re: [PATCH v4 08/10] arm64: dts: axiado: Add initial support for
+ AX3000 SoC and eval board
 To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -67,7 +67,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  soc@lists.linux.dev, linux-serial@vger.kernel.org,
  linux-i3c@lists.infradead.org
 References: <20250701-axiado-ax3000-soc-and-evaluation-board-support-v4-0-11ba6f62bf86@axiado.com>
- <20250701-axiado-ax3000-soc-and-evaluation-board-support-v4-6-11ba6f62bf86@axiado.com>
+ <20250701-axiado-ax3000-soc-and-evaluation-board-support-v4-8-11ba6f62bf86@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -113,46 +113,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250701-axiado-ax3000-soc-and-evaluation-board-support-v4-6-11ba6f62bf86@axiado.com>
+In-Reply-To: <20250701-axiado-ax3000-soc-and-evaluation-board-support-v4-8-11ba6f62bf86@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 01/07/2025 22:27, Harshit Shah wrote:
-> Add binding for AX3000 I3C controller. So far, no changes known,
-> so it can fallback to default compatible.
+> Add initial device tree support for the AX3000 SoC and its evaluation
+> platform. The AX3000 is a multi-core SoC featuring 4 Cortex-A53 cores,
+> Secure Vault, AI Engine and Firewall.
+> 
+> It adds support for Cortex-A53 CPUs, timer, UARTs, and I3C
+> controllers on the AX3000 evaluation board.
 > 
 > Signed-off-by: Harshit Shah <hshah@axiado.com>
 > ---
->  Documentation/devicetree/bindings/i3c/cdns,i3c-master.yaml | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.yaml
-> index cad6d53d0e2e35ddaaad35215ec93dd182f28319..bd3f31a03376b3351276ae2cd247615ee4eff52f 100644
-> --- a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.yaml
-> +++ b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.yaml
-> @@ -14,7 +14,13 @@ allOf:
->  
->  properties:
->    compatible:
-> -    const: cdns,i3c-master
-> +    oneOf:
-> +      - description: Cadence I3C controller
-> +        const: cdns,i3c-master
-> +      - description: Axiado AX3000 I3C controller
+>  arch/arm64/boot/dts/Makefile              |   1 +
+>  arch/arm64/boot/dts/axiado/Makefile       |   2 +
+>  arch/arm64/boot/dts/axiado/ax3000-evk.dts |  79 +++++
+>  arch/arm64/boot/dts/axiado/ax3000.dtsi    | 520 ++++++++++++++++++++++++++++++
+>  4 files changed, 602 insertions(+)
 
-Same comments, drop descriptions,
 
-> +        items:
-> +          - const: axiado,ax3000-i3c
-
-This should be enum.
-
-> +          - const: cdns,i3c-master
->  
->    reg:
->      maxItems: 1
-> 
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
