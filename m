@@ -1,91 +1,152 @@
-Return-Path: <linux-gpio+bounces-22663-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22664-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96AACAF60CD
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 20:07:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56BAFAF6116
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 20:23:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9961525095
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 18:07:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A6851C40C30
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 18:23:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC1762E03F8;
-	Wed,  2 Jul 2025 18:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72A4F2E498F;
+	Wed,  2 Jul 2025 18:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHHKi4ac"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8tDE0kA"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85183253351;
-	Wed,  2 Jul 2025 18:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7DD2E498A;
+	Wed,  2 Jul 2025 18:22:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751479651; cv=none; b=f8bK+N1M1Klg7YlxsrAipIhp0r8mcLuWY+qQNCW7JM96rSQQcsXEpKcHHtge3jUMTcv/9C/SIMDrXUjnxF9Ud7qFJb7wM43CHj5UA3Ghne9w+eJUfxZqE/fuVFPcWvkXPukR9daBKZfh6+FbCg9BnaMOwFfo2LpbQdY+ArP/bps=
+	t=1751480579; cv=none; b=Nw6xzuHazS9ddiLUUCL/2AFKKUfaSKa+3j4oC4y+XWWJaD06WcA2KUH2vXn7MLQe3RwwnlgmMYZk87oWpli26+DHaWvE6LN00Toe5d6+ILaBMDOp/boh0jh8tDGdlmNf2dWd5EKcdf3SDp5Nq5nFIP6w7FXpYIWeT2SpnC23hf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751479651; c=relaxed/simple;
-	bh=CAna35rJ6GALV6IbfjyVSBAdiNUhdYkS0obyApasYHA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YN8kBiXgWdFf3biCsqxa6YYdfxmduGZvXDHEZ0UpUHVPWxSEgRsVi6j6QDwMcrdfWJ66SHjpJDhrzXwp2aRa5Rt/3p4WiRzlUNTveDMPad1+ziv4WB79VaqcAoHtJi/MtqmsVLeT6/Noj/lic1sLSXHvhu378NPzcmhXEpvJ7DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHHKi4ac; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 016D6C4CEE7;
-	Wed,  2 Jul 2025 18:07:31 +0000 (UTC)
+	s=arc-20240116; t=1751480579; c=relaxed/simple;
+	bh=YP2MPlGskJVnWUdfQs7e4oSd7UUpWeF7Jwjc0h89YJ0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=i3hEf/yc8PjFyGwJuZPrSWKksLNQ9K1cgviiLRU4kymD9Wd4we/GkUWgmQp+t1aMx3Ed8UmGWvR+86gtQ8eJ8dfSHZpcLeUwag5NykG7kAaTu4wB5NK3PFAln7vyNFvhGMYIYcME4ikkRsTLSvGbdsOHXTiMVhzFw2Sw8C0E1TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8tDE0kA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AF3A1C4CEE7;
+	Wed,  2 Jul 2025 18:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751479651;
-	bh=CAna35rJ6GALV6IbfjyVSBAdiNUhdYkS0obyApasYHA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cHHKi4acxaVV+tHbNmbzBpn4Mk/9YnVaqvDchgSyWT/eNrKngO0RsSspl7QAz4tMK
-	 gF4sWTsWC8mmP56QNElLuJlxTbd5V9c7rx3MfLYwQmJhhwtA5XwGfGjBABdMsEPKnN
-	 +EOpvVtGVflL9qmsoQBen+If6Bc/Z/0ggJmTvRbrtiZJaJh+YaFPbywCdAGpoCPOhU
-	 eL2KYTeOEsGvOngjx16OS+fijy4ZhFSC6NyN5Hjo6yBeZNSWxnjbqQ3crh5Q5mWDuI
-	 +fthoLiHL2d41Z5q/0e575CwbbZVi4zdcFqCmG4050KKpPQuOP2BqEikASPqqt2yIz
-	 IcoY+W4Qe7OHQ==
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c47631b4cso3482617a34.1;
-        Wed, 02 Jul 2025 11:07:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUAhFjTrjYT+NbLThP0u+87xqE5ssc1nOY39yJ1sv4dpBmEM+ffRK3q9TXOhdOkKu5m3TZ3VbDmRiPBrjj9@vger.kernel.org, AJvYcCVZtRY+mj3TgcmT/XP0Kay5lRyUpIrTFXnURJYX/GY4o9u1bs/MI/GxtQ0Rj9DPdk7MHr2OmEwAEu+d@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYzXYaL2RDSUNxg1hqZWYbL+H990OVD600i/sg5aeQn6x+h7jM
-	g2zb7V6C6UghOm4oGRMVbXHg3e38vvQSAVTyvHY2pwP6mGgh7n+Ro5y9lJKM22Fq6f7CxoXX9rA
-	ZGE4O+QR5eSnlCbVr29KR2WpL1iTtEzA=
-X-Google-Smtp-Source: AGHT+IGWKwFOYlhIbYrgckIt5yGU/A31JTxlNE8phOBfmGIbSbxfaWqy7svZGEFTnrGzcmkJ4G0we3c4LZ92Xt3Tj0Y=
-X-Received: by 2002:a05:6808:f88:b0:40a:52e5:37df with SMTP id
- 5614622812f47-40b8911371amr3195467b6e.39.1751479650323; Wed, 02 Jul 2025
- 11:07:30 -0700 (PDT)
+	s=k20201202; t=1751480578;
+	bh=YP2MPlGskJVnWUdfQs7e4oSd7UUpWeF7Jwjc0h89YJ0=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=Y8tDE0kAH4/TrIa93i3aDgxU8CLD/LJ9ixes9THs8dcrY6RHG5vzkHtvnMFCKRcB7
+	 rpZhd8OcC7Lux0V4c0DmSo5CWr3fiBgWmD3NtXghL49BrXNKs4bukEcwJOH7S2RgcZ
+	 QXQktT4kSKhZm0MUhnMjfjLdnXI0cX2qpxnJm9ai3tqhn8qaKenT4fKg16ojYAGR+W
+	 imM4SRgtle8Eb/y7JD0p0hLHgaDpphX0Vnh3kSlJeoW6OwS4O3v7+Oj3q5ZBap2CDh
+	 FMvz+CLtfeKYyOcvIwPL0AhrcfbIgl0Bai8t0P7kdNCADJI/DoBJNmqbTvJfbMO4SY
+	 SlKa8pbX5k80Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D957C8303C;
+	Wed,  2 Jul 2025 18:22:58 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Wed, 02 Jul 2025 13:22:51 -0500
+Subject: [PATCH v4] gpio: palmas: Allow building as a module
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626130109.215848-1-andriy.shevchenko@linux.intel.com> <20250627044722.GN2824380@black.fi.intel.com>
-In-Reply-To: <20250627044722.GN2824380@black.fi.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 20:07:19 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j08S-Q9bXV-CyEFfVuTgDMjhqF+WnKuDCAq=zr_=PUiQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwsUsP4b5PpYllMsXAo2qo1Wl8GWy5NaokNmmPhjzm31VnJ5-8owbQiAT0
-Message-ID: <CAJZ5v0j08S-Q9bXV-CyEFfVuTgDMjhqF+WnKuDCAq=zr_=PUiQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] Documentation: firmware-guide: gpio-properties:
- Spelling and style fixes
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-gpio-palmas-gpio-v4-1-26ba48252f27@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAPp4ZWgC/4XPywrCMBAF0F+RrI3k2RhX/oe4SPNoA21TEglK6
+ b+bVkRRwd3cgXuGmUCy0dsEDpsJRJt98mEogW03QLdqaCz0pmRAEOGIEwSb0Qc4qq5X6TErKZ1
+ GrDJaOFBqY7TOX1fydC659ekS4m29kPGyfWLkG8sYYmiqGisqRGUdPza98t1Ohx4sWCb/AFKAv
+ XQEScOUZPIToC9AoF8ALYAt/1BqUa05ewfmeb4D6FVqUTIBAAA=
+X-Change-ID: 20250520-gpio-palmas-gpio-a99fc046dc7f
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751480578; l=2399;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=ivC7eqcoxMdy7HJHAY3izwyHHqtk1ICVncUYA+Giqr0=;
+ b=7/hqoROkVeC0zMqs0IU+Xu0Uq8nlXGOZLpZ73PiK44wpaf8kKhKH4HADhq0fUZUSvVPkPH3UU
+ iP6hE9FDpkUBIM0WpDBtjICRNpeop1Tif5EApuZsa8wnr/WXODVlDwD
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Fri, Jun 27, 2025 at 6:47=E2=80=AFAM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Thu, Jun 26, 2025 at 04:01:09PM +0300, Andy Shevchenko wrote:
-> > - Use consistent style for active-high and active-low
-> > - For C and ASL code snippets use 4-space indentation consistently
-> > - Interleave case examples with the explanations of the certain case
-> > - Remove or add commas when appropriate
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Aaron Kling <webgeek1234@gmail.com>
 
-Applied as 6.17 material, thanks!
+The driver works fine as a module, so allowing building as such. This
+adds an exit handler to support module unload.
+
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+Changes in v4:
+- Rebased on next-20250702
+- Link to v3: https://lore.kernel.org/r/20250702-gpio-palmas-gpio-v3-1-e04633e0bc54@gmail.com
+
+Changes in v3:
+- Drop use of module init macro and add exit handler
+- Link to v2: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com
+
+Changes in v2:
+- Drop module alias and add module device table
+- Link to v1: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v1-1-d6b1a3776ef5@gmail.com
+---
+ drivers/gpio/Kconfig       |  2 +-
+ drivers/gpio/gpio-palmas.c | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 44f922e10db2f8dcbdacf79ccd27b0fd9cd93564..dcea3c1bb31c81cafb88a66a4c25ed28090612c0 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1501,7 +1501,7 @@ config GPIO_MAX77759
+ 	  called gpio-max77759.
+ 
+ config GPIO_PALMAS
+-	bool "TI PALMAS series PMICs GPIO"
++	tristate "TI PALMAS series PMICs GPIO"
+ 	depends on MFD_PALMAS
+ 	help
+ 	  Select this option to enable GPIO driver for the TI PALMAS
+diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
+index a076daee00658a9e423a0d78f14ad48d61956d7a..9329d8ce8f59842cfe95f41b85c8e5ea6bf440b8 100644
+--- a/drivers/gpio/gpio-palmas.c
++++ b/drivers/gpio/gpio-palmas.c
+@@ -139,6 +139,7 @@ static const struct of_device_id of_palmas_gpio_match[] = {
+ 	{ .compatible = "ti,tps80036-gpio", .data = &tps80036_dev_data,},
+ 	{ },
+ };
++MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
+ 
+ static int palmas_gpio_probe(struct platform_device *pdev)
+ {
+@@ -196,3 +197,13 @@ static int __init palmas_gpio_init(void)
+ 	return platform_driver_register(&palmas_gpio_driver);
+ }
+ subsys_initcall(palmas_gpio_init);
++
++static void __exit palmas_gpio_exit(void)
++{
++	platform_driver_unregister(&palmas_gpio_driver);
++}
++module_exit(palmas_gpio_exit);
++
++MODULE_DESCRIPTION("TI PALMAS series GPIO driver");
++MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
++MODULE_LICENSE("GPL");
+
+---
+base-commit: 50c8770a42faf8b1c7abe93e7c114337f580a97d
+change-id: 20250520-gpio-palmas-gpio-a99fc046dc7f
+
+Best regards,
+-- 
+Aaron Kling <webgeek1234@gmail.com>
+
+
 
