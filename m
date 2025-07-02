@@ -1,159 +1,148 @@
-Return-Path: <linux-gpio+bounces-22553-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22554-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4994AAF0973
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 05:55:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2CC7AF0AFA
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 07:56:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E8723B6304
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 03:54:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C2F23A6D23
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 05:56:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62F761D7E41;
-	Wed,  2 Jul 2025 03:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BCE71F5820;
+	Wed,  2 Jul 2025 05:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pjh0jrCz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tx7K539G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E8715A858;
-	Wed,  2 Jul 2025 03:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034761E5B70;
+	Wed,  2 Jul 2025 05:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751428497; cv=none; b=m3LMd25YBCRLpJKhHAyD7yWyfvOVoupsOKd/J1oxu99N00zTG2t8y+qPHbDz5R3xEMk6d7HX8HzEkobLhqsySCiqGFVSZmGJ9eO9UnI4/DDmumPVUwI+TI/JSLy+spEZmS5p4yuz+o6htSF1ZeWTP4NP/viLE+bwOF/Q/dXIBik=
+	t=1751435793; cv=none; b=h0QIPGElHyk1YSiC2kdBTrKlWTSsDaSADWjnc1/XoKPe8+iAOmKca9X7KFKueY/i3+hl9Lh83nOuMRSbukqZQelVM1XtmWkzmvoXHzozySZBU2WszRbeBfEc30Fy2L0o5OIL9dBuqSFbZJbJX8WonD1RegKke3x4Yob8xVnOx3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751428497; c=relaxed/simple;
-	bh=7H4BV7ZIVTytOwiwWbSrEbGoMGiTPL28bTiVllN5tZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lz+DYL/0C2LECuvV14ghVJcr7uXh6scDSbzu+WhiOSVY3H21MxR77AqVPZC2r2C2jsIj61QV0pZEBPD/TrqwTzDas221RyNgnJzVCsDzAE5Q5H8/nuFniOj2xqU5D6+ndPnONp9v1S6jv6PNg1+w4SlP1jFq6Y6jTIppWajRQh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pjh0jrCz; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c33677183so54543845ad.2;
-        Tue, 01 Jul 2025 20:54:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751428493; x=1752033293; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SeVVML8rF/Yg7PwP3kkWgdCem6ZWbPVvKczMSjjevlc=;
-        b=Pjh0jrCzPUwJLOR2CnzBBHO0cfFouuF3gUg9veURMEFOgu53ym64jDBfriGU+FxGhs
-         Y8uX+LUv2u/9J9/iP6Fn0e/1Aw3OOlyKskJY3Aemud6/ejLw5lEzyeF1wKcwz5b8ZPuX
-         Kr8YMDJQKgjydDgeNRdFGfE8o6StOw0olz6VtJ+txVCkRdaeWw3Mv2vAtB6+P5CFZEIx
-         1quIKXdifsVdP9cEA/r9I5LqxludGo0zxTCuMMZur1PZoYwGBYPqOZuHBVsMv2ytuV12
-         ssav6rFY2Plscv0wEVSiw7xa1VDgq8s43PkNFni2cJql4RFQknwD4Lu1eaEG3Xay0E7W
-         fPPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751428493; x=1752033293;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SeVVML8rF/Yg7PwP3kkWgdCem6ZWbPVvKczMSjjevlc=;
-        b=MrVQk3A6YV75aBmaFvjm7GpT4cfN6ZAlmKJ+P4B8w2ddfZcnjDh5Wqr7j4tUfyDWk7
-         DzY4wPtdfegxnhZTCKNXdbVlucEi5c+l10Z0uRHaJe8E0wuoMyjf+yR5oHS9JkxckRBL
-         RefqRBNRrkoNaK+hSn1AZ+fqb40x+wmEY1Q/qO72ZtaZgSeQPnVju13VsDBJkJtOkWKp
-         wO8m8GVApvRQJeb8T7rGtWWdC2meXgvDuKorm6iEGwXYpK274VeMwdlbr3pT6UfVU5Hd
-         iqNgVWdaETigpKKDjWcH+zA8MeQfenMb0RwrQqx0fCFzueeispuWMYSmOeCsq9n9ZEgU
-         vT/w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7w8FA7tkf9vJJNWIcnV2/7z6KAa2tUEcV7Zu/P9HscVaS77mNN/wsxDK3S9OOdTmpreywctlSIYDK@vger.kernel.org, AJvYcCVMC1gxk+DvYipQAjYMxqU+eoptQbv08XB2leUtmhqWj1vaKhaz7YSXyHKBGMLGpWjep3STTSd9RyQgIyj4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9EB2VU1X1qa2RX09gfF2iQqqOGPM6scYI6aFDMVwc26pvnKud
-	UhYDrgD4Nw7DHLwlU561L2dtPrtKuUalQKdDtIq/IUB1p345y7Lv+QnPK2GpEw==
-X-Gm-Gg: ASbGncsRPbJavvLq59bpZ9NerkxODuRb4sElmJvuAOFxgFjJS0bNwBVRpio/vknzdFt
-	I4C4Gll1UIaTPqX2asswy0fEV3fHvDKDeDdwpZ11w2ZQ65DAd83du7aN9+SYD6ygrF4kmJvMf1g
-	qFUZRCBeApUnzDnBbLPA8o1/7q20zhBV8SzxzvcaClyu4ZrWwr9KCUayVCJoV8ApVcbB83N+abp
-	J/wxPyDH1i1fGyS9iM8go4YMGNlVzIZL/7pErkgPhFmQvi68prxFvHk5B+Pa0Ez4OScR1yAYvJu
-	I+We053Uyv3tapFxgRIE6v6cw4ccLWY5RVIoicQGhnMevGVCUkjRba8oQDQo7CE4W42iMwz+ILr
-	I3Xk=
-X-Google-Smtp-Source: AGHT+IE4TblemtH1kKq4GH3b2FhyKV7tenYanLvI77N+gxp0fw1TUBg/JQQBduObx5PhTYrPi8Vt3A==
-X-Received: by 2002:a17:902:ce12:b0:234:8ec1:4af1 with SMTP id d9443c01a7336-23c6e403e4amr20093145ad.0.1751428492835;
-        Tue, 01 Jul 2025 20:54:52 -0700 (PDT)
-Received: from rigel (61-68-193-107.tpgi.com.au. [61.68.193.107])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f17f5sm124260415ad.62.2025.07.01.20.54.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 20:54:52 -0700 (PDT)
-Date: Wed, 2 Jul 2025 11:54:39 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-Message-ID: <20250702035439.GA20273@rigel>
-References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
- <aGPrFnDxG4W7S9Ym@smile.fi.intel.com>
+	s=arc-20240116; t=1751435793; c=relaxed/simple;
+	bh=jslbkJL0O5bOdAAZ/MmetGmEMVRPjlROegRHIkFK8Rs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cm/Z1yuTJiyG7pPDLF0TRJefMMbAgAU1UkjR7a6sLtgLD1RiWcDV2jUz5FI6jYnq3uPlUYRujY8AXlfoasC+2tWoSPuwBRxTS7LuqocgA9ez6pKLhStEG5fbxKfaGs1V5Fq/Oq5FRSFDeggXwO468fweRITI/UjdhA2B484pA+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tx7K539G; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 87327C4CEEE;
+	Wed,  2 Jul 2025 05:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751435791;
+	bh=jslbkJL0O5bOdAAZ/MmetGmEMVRPjlROegRHIkFK8Rs=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=tx7K539GA8ZhaA5D+SukCGIJ/hTulbUlFsH8qIPpBLESPotpZv7p1xmyulsAUh2f7
+	 hvEd7I5QD8JqnXFUmR5VKXKCzsCTz3o8x51LxvdTnChuKyjJGju/mhnVwJBoSMYdrt
+	 QLnkjqi25J/IowN6o6EAPX+gno4efjEBASuVKNZneIOsYOafnn21EtUP5jo1kk3EyS
+	 2hffpVO60KvIsAHZz1UzrHkZ/iVvQY+rEJbIsPIUCV5puZ1vI8ZGbQaVF5z5RK4yrJ
+	 E+cZPPPrU3/Yk+lqnu3dKywl7aOVn+yh5OliJ+u5jrnZE54J7bCrV+pB3iiQqnR0TP
+	 1Nfhmi59U6tNg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7404EC7EE30;
+	Wed,  2 Jul 2025 05:56:31 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Wed, 02 Jul 2025 00:56:26 -0500
+Subject: [PATCH v3] gpio: palmas: Allow building as a module
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGPrFnDxG4W7S9Ym@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-gpio-palmas-gpio-v3-1-e04633e0bc54@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAnKZGgC/4XNSwrCMBCA4avIrI0k6cu48h7iYsyjHWibkkhQS
+ u9uWhEEF+7mH5hvZog2kI1w2s0QbKJIfsxR7HegOxxby8jkBsllxSvJWTuRZxP2A8b3jEo5zcv
+ a6MZBPpuCdfTYyMs1d0fx7sNz+5DEuv1g8hdLgglm6pvAomlq66pzOyD1B+0HWLEk/wEyA0flJ
+ FemRFWqb2BZlhe1sK618QAAAA==
+X-Change-ID: 20250520-gpio-palmas-gpio-a99fc046dc7f
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751435790; l=2298;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=wuPE+Xa58DGHAJ94TOlU6rlu8eroAUhZO7AO/CSPQEY=;
+ b=iYX8TbCNm5Bdn/chuijhB+twCaPd6mcIeWGhUpxAQnndjZBy+dh3QaEZLvHY1b7jGyAXRm/fl
+ sNHA7INVOLECzegyyW6+4F5xWqVes+IwNKrXFlwiv66T0AsvcrXLQ6N
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Tue, Jul 01, 2025 at 05:05:10PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 30, 2025 at 02:37:07PM +0200, Bartosz Golaszewski wrote:
-> > Following our discussion[1], here's a proposal for extending the sysfs
-> > interface with attributes not referring to GPIO lines by their global
-> > numbers in a backward compatible way.
-> >
-> > Long story short: there is now a new class device for each GPIO chip.
-> > It's called chipX where X is the ID of the device as per the driver
-> > model and it lives next to the old gpiochipABC where ABC is the GPIO
-> > base. Each new chip class device has a pair of export/unexport
-> > attributes which work similarly to the global ones under /sys/class/gpio
-> > but take hardware offsets within the chip as input, instead of the
-> > global numbers. Finally, each exported line appears at the same time as
-> > the global /sys/class/gpio/gpioABC as well as per-chip
-> > /sys/class/gpio/chipX/gpioY sysfs group.
-> >
-> > The series contains the implementation of a parallel GPIO chip entry not
-> > containing the base GPIO number in the name and the corresponding sysfs
-> > attribute group for each exported line that lives under the new chip
-> > class device as well as a way to allow to compile out the legacy parts
-> > leaving only the new elements of the sysfs ABI.
-> >
-> > This series passes the compatibility tests I wrote while working on the
-> > user-space compatibility layer for sysfs[2].
->
-> It seems I never expressed my overall opinion about this. I think the poking
-> sysfs and making it working with a new schema won't solve the issues that
-> character device was developed to target. If so, doing this just brings yet
-> another broken interface. I would be happy to be mistaken!
->
-> If I am mistaken, I would like to see a summary here that explains that clearly
-> that the new sysfs approach does not inherit design flaws of the original
-> implementation.
->
+From: Aaron Kling <webgeek1234@gmail.com>
 
-Indeed.  I've already expressed my reservations about supporting the whole
-of the existing sysfs capabilties, but I've otherwise tried to remain out
-of the discussion.
+The driver works fine as a module, so allowing building as such. This
+adds an exit handler to support module unload.
 
-To reiterate my position:
-While I am all for maintaining sysfs in some form to cater for those
-rare cases where cdev is too heavyweight, IMHO it is a mistake to
-support the existing sysfs capabilities in toto.  Take the opportunity to
-remove the parts of the sysfs interface that don't work well.
-The new sysfs should only provide the features required by those rare use
-cases, which IIUC would be basic sets and gets, and exclude those features
-not required, particularly warts like edges.
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+Changes in v3:
+- Drop use of module init macro and add exit handler
+- Link to v2: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com
 
-If you need more advanced features then use cdev.
-If all you need is basic sets and gets then sysfs is probably fine.
+Changes in v2:
+- Drop module alias and add module device table
+- Link to v1: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v1-1-d6b1a3776ef5@gmail.com
+---
+ drivers/gpio/Kconfig       |  2 +-
+ drivers/gpio/gpio-palmas.c | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-If that isn't the case then there should be some explanation as to why those
-sysfs features are being maintained.  Treat this as a new interface.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index f2c39bbff83a33dcb12b2d32aa3ebc358a0dd949..be5d823516d0e2bff4b4231dac6a82bf10887118 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1464,7 +1464,7 @@ config GPIO_MAX77650
+ 	  These chips have a single pin that can be configured as GPIO.
+ 
+ config GPIO_PALMAS
+-	bool "TI PALMAS series PMICs GPIO"
++	tristate "TI PALMAS series PMICs GPIO"
+ 	depends on MFD_PALMAS
+ 	help
+ 	  Select this option to enable GPIO driver for the TI PALMAS
+diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
+index 28dba7048509a3ef9c7972c1be53ea30adddabb0..232b3ac52b3362c33ea8b068d5932f682816a5e4 100644
+--- a/drivers/gpio/gpio-palmas.c
++++ b/drivers/gpio/gpio-palmas.c
+@@ -140,6 +140,7 @@ static const struct of_device_id of_palmas_gpio_match[] = {
+ 	{ .compatible = "ti,tps80036-gpio", .data = &tps80036_dev_data,},
+ 	{ },
+ };
++MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
+ 
+ static int palmas_gpio_probe(struct platform_device *pdev)
+ {
+@@ -197,3 +198,13 @@ static int __init palmas_gpio_init(void)
+ 	return platform_driver_register(&palmas_gpio_driver);
+ }
+ subsys_initcall(palmas_gpio_init);
++
++static void __exit palmas_gpio_exit(void)
++{
++	platform_driver_unregister(&palmas_gpio_driver);
++}
++module_exit(palmas_gpio_exit);
++
++MODULE_DESCRIPTION("TI PALMAS series GPIO driver");
++MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
++MODULE_LICENSE("GPL");
 
-Cheers,
-Kent.
+---
+base-commit: b36ddb9210e6812eb1c86ad46b66cc46aa193487
+change-id: 20250520-gpio-palmas-gpio-a99fc046dc7f
+
+Best regards,
+-- 
+Aaron Kling <webgeek1234@gmail.com>
 
 
 
