@@ -1,135 +1,164 @@
-Return-Path: <linux-gpio+bounces-22606-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3446AF14BF
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 13:59:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F3F6AF14F1
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 14:05:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEFC24E756A
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 11:59:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 222B2189BB1A
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 12:05:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE5D326A0E7;
-	Wed,  2 Jul 2025 11:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6V1V95K"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FA8A26C3B8;
+	Wed,  2 Jul 2025 12:05:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10A9267713;
-	Wed,  2 Jul 2025 11:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED74F253F15;
+	Wed,  2 Jul 2025 12:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457525; cv=none; b=cMSqCNxUorsK2f8LVsGodY0pmPdQwfjoBJIEvzVexCsKVf4M8b9y1hohhFOoZZGiSdjOdgYa5iSIvqAvT/pJI1BtOnQ1bTfRCmR6GgK1Yo7BsWqBLlOmpkF/iyFKniRbaVVmhv63dqv30xCmrBXPjZqkbEHXD+O1CsS9XH2rqZ8=
+	t=1751457934; cv=none; b=UgHiSWs+KpxEjQsOzkjcZYUiyUKVzWm143zY5KZZLeY79sIXNYCMXjczNfiRqZfa1nEXLIDzOVxsmX/94rn7e81MInM0pPGpRPGPbK8y9lvWSxh4WoV/ag4A8XrYEhaFhPVuaM2m1NE5o9JX/l5ijUjZ4OfXME0abNrd7zyz4Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457525; c=relaxed/simple;
-	bh=j4zaQk3443uwBFzN3RZeEtxMq4iWxUJyfn0v7hoCR7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6ELi/JM05pl8etXcWcnPEzT+CHMMZaxk2e0yGa3EcosWRrvZfnnh7bvBuE31ekoNiqavhWFgY2Ep/fd5V4BUF7UfWDdzxkktprkAnx9a7/VF6ZK+Pd0wOIFyyADRwqtBGx5TgZg7ZWZZARSCYKmMvb6Dh53zWsd5sQU2fI0xfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S6V1V95K; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1751457934; c=relaxed/simple;
+	bh=UiDm7a9UThCV+8q/0XXk+kAX0bvrKKV7VdUwrD2V2OU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EZY9rOxkd6PaLeLSUrN8p+G8Shfub9oXqEGAsaJUlXrZBlWrQxis4K/i3OkaWQGCqgBRJECiQmFdMZkq0mS0PV+FRjQqa+IHDj6RIyjOgIjXc358rb8iiE2jj7FA7isUCIs5DD/6Id0jxatg8RV3ODRXG4tHJdaPMB8oefK/jPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6f8aa9e6ffdso75306006d6.3;
-        Wed, 02 Jul 2025 04:58:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751457523; x=1752062323; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AHdUSz6zdOBXdzjVDNzo7fcMdTxOR8Umz2c1aHrjcZM=;
-        b=S6V1V95KSpxBoT11m3dXCJWoc/ikc2fGEE+OQwKmRchFCnjwzFqC7J/ukzlkVwf5X6
-         bKztY/adz+RtTGU18DUTFBpSZwPGkA1b9yAmuR03TwX2noIv078U3JYE/RVGdXtEri52
-         xxJQR0tEqPKfeZYNjE4OBwGfZFzyt//AQ7M7DwL9XiFzYZqCPNTHxzKZMG+4NYKMddFD
-         fNWh+XLXfjT4yDnOKUG2dwnnU/8NDRpwuzRjhqVHUEi6Fh2kpScKeOHohYKxr7iy6QSz
-         yU3Pt52lThaQ0vp4BrR8o8/BEnw4wLkM9v763St49R/LZrZuYIyjBG8BlkJvhV9Z9dul
-         nfsg==
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7d09f11657cso623010685a.0;
+        Wed, 02 Jul 2025 05:05:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751457523; x=1752062323;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AHdUSz6zdOBXdzjVDNzo7fcMdTxOR8Umz2c1aHrjcZM=;
-        b=dhcJswMZOrni8oB6e3Q6a/vrEVOLTJWlpAMJiH913CVsozsRkkfeFA4CzZ0bbVCdyM
-         rDHFTZlRctpx2Nwn4VaZZsmyJL2sUfqZTPkWkgrrYw/CkqRK83gEbw/Q4GC3a+j6kYFx
-         DDlLZz+erAfxPlMJpBURr05DFi38j0Q+oFj/0wOA2PzzsHiKg17/no5tMfkTn1dEjTJp
-         XKWWYYDKaFyftVgG0yzeyFVEEUbCRIJxttO59aG4W1Jty7GEvAiBEynhRpEkmr4nnJNc
-         egLTgzkoMFH/DU/HBElCpGO/lpb8q5K3WdljdPIjzSi6vKfSDYmtMEMwz2gOu+eUHz11
-         ooQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaSqwyY+o99abdteEKkfKWuxgSQ+q5MjZmvASqciBKAloLx/hy9owPUHwpvCKXfYniqHJ0GQouqBEZbQ==@vger.kernel.org, AJvYcCWRfn8dXV8EbATrI4HoOKOq6CJV8EvvyKPGBdDFUCzj/Mp/OdmdFWig9DYvbgrjNxbYULTqDd0QFYXP@vger.kernel.org, AJvYcCX4BJ4pdmWR611CsJjdyPWZkJM+e5CkO/clXNUlib/Fq2BiMQ4HmTnt1Jj8qkoG2/Ff8JoZJhAnLibI4YAX@vger.kernel.org, AJvYcCXNaj3tveLLg3cfWhIX38d8fQMCbygX2frlYOrVAT1zeUIP5wHKc6kCyJH9hP2nGbpUjMhsG1nu2EjH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHr3fsb2TCV2OQzJwdKYtDed3jtvog52//3SZk/LbNxlM/CleL
-	3cRCzJYQ72yL1gLVmJ6RvC8m0lYHbs8syUT15UZgD6rBDfqhra1t28eO
-X-Gm-Gg: ASbGncuC2c6hk9zGazZwJW0OIlSGeM4vPMEHLJutRTTB4flR/cruXZ+AwLGJTG21c5N
-	6iX66ysQsLScc/C9MU0kBMOPWoDCs0QukpYtJiDsnGjngl4EYWw6dCKCRv94pGeeInyKPmISD4T
-	bP4CTH6oxEgvViP2Szj2s/BsPSz/4b9eKqwNlukxJzS/77M68F5T+QgxYI11zfuxAInT4pBN5DB
-	PTvh35hzGGSrbGKZqgOQtK1j3V442NkjhopoW+XHEcv6pzi5jk3Y9K0BvBFa7CtElvoEbfMlbtc
-	co1FYuOyHjrmI2RJsI411sdOrnKyM0AUZcVp1EL5Nu8RJV96zq+51zPPYEfN8y9yi6MU1w==
-X-Google-Smtp-Source: AGHT+IEf0/M+lgmZ5heO4bWoN5HQq4mwLRCA+lYJli7e01rqSm4ANHsGq8i+pZuPVqMEdYxF2RE6Tg==
-X-Received: by 2002:ad4:5dc2:0:b0:6fa:a0af:7644 with SMTP id 6a1803df08f44-702b1be899amr39658716d6.27.1751457522760;
-        Wed, 02 Jul 2025 04:58:42 -0700 (PDT)
-Received: from localhost ([2804:30c:b15:b200:425a:de22:1d7f:2d4b])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fd7730b726sm98600096d6.114.2025.07.02.04.58.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 04:58:42 -0700 (PDT)
-Date: Wed, 2 Jul 2025 09:00:42 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl, broonie@kernel.org, lgirdwood@gmail.com
-Subject: Re: [PATCH v7 00/12] iio: adc: Add support for AD4170 series of ADCs
-Message-ID: <aGUfapky2uh2tsFt@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1751289747.git.marcelo.schmitt@analog.com>
- <aGTpNNaW7cXC18Jt@smile.fi.intel.com>
+        d=1e100.net; s=20230601; t=1751457930; x=1752062730;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FHdlp2ZdrIG3etpYbGlvmwT2yy2H0TFuQerZNRAw3Xg=;
+        b=MdOcOfEGn4JerMUTgBCFPSmwwRaqFYB/zWKEMjgqqvbCsXvXiyqNSiJnRcblDR3+Gn
+         UzjA6Kc20qugJRulalmjmCHL0EK3ERt3B3a0c0tGOOKQK0J/ZOx/ocmUwoNH39PQYXLq
+         oGsW0kOuo3wGXiO4zYYT/6OeYppLu2ckjXfXmTCE6VarXqVi+jr/+8i9+OwbLuCAZ931
+         HOgOzPB4MrD8nWSosbu8Bm9SLYsb0djVdwWBbllWI6ItB4HNe3bRwNvNVLhyGZhlS4LW
+         IyNVD04ZzX0NIdusxZaAy51hLrdzwIiAPOnASaoBFQljmA9/7TutT9+1BkEX8SBLPxwT
+         crpw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3ZTi1FDeRK+tFIVJumg1/8ZDouyT5e0x+YBN5KQ6cNdQgK9cz5o/D0Dll6RdnNeA66vXxUoYqvFGc@vger.kernel.org, AJvYcCVYeJIY9MkhrVcDO80BTFcxejWxd2vFOjxvLD8+YuVoZEOp2gogom9wnXICXcVFoBpoYQIdMwIU9EnzLWf8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyzwWRjc3LwnwGm7feYML/BY4+TzA24vgBWwk1jg9FpwOQ5GsG
+	mlj6xHS0bVfqifiTxSPCSX3ehliNG4U9eExVBnipJ4WJyjEFYgiug3YKjINrDI56
+X-Gm-Gg: ASbGncuCLcdL922g9v2PJrfuYxSROieKwX0loGgI9wsvrXyY9svYGrRMiiBSNB72Wlc
+	EJOZovsAi4pZJ3WJJ+40IitMbFGMiz7gUlTMimA6R7uKhizhmkhGs4jn+6m7OAcLPOX90w9EkQd
+	OvxHjPY7GKLh54jijEIBZ2LuWXFCZTPkwlPRibDLdOiTXthBVSnbxI15Wxo30qSMvx5XOU1Ppt/
+	KUtni85tzPGU94HYqxVkbFevO/rceoH6DETFaBENuQyU1gEO0ABOncg3zDaafTXHATi58Br4Vq7
+	mzuMKVbFi9GPUUgo0Z7lj/ZUIvOLPyZ5/smkyMqnDCCoZC/RzEx6Y/jKgapf6XY0rdUF71aJCm9
+	NNH/q+Yj0xb1WtQH0LlteL8/9vou8
+X-Google-Smtp-Source: AGHT+IFe6DUfG+wlnC4UE9wPq5TXur0VjbKotgt0+clxjN+Sv0Oc3dniv/8Ovz9/ANPcH0lXlND05w==
+X-Received: by 2002:a05:620a:2693:b0:7ce:b7fc:6b6f with SMTP id af79cd13be357-7d5c47f757cmr366406185a.58.1751457930252;
+        Wed, 02 Jul 2025 05:05:30 -0700 (PDT)
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com. [209.85.222.176])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44320572dsm920928185a.69.2025.07.02.05.05.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 05:05:29 -0700 (PDT)
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d09f11657cso623005785a.0;
+        Wed, 02 Jul 2025 05:05:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWj3iHUS1bnQB3W0NbsqhNFogIH2l8/Bu5KHewzBxbXLQdkAhEgjZ+LaibWC+s7arr6+I3R/3/cHW8Yep3B@vger.kernel.org, AJvYcCWvkXtJXA8eTJxLEbAR9iMSfR773dTpU27ZJJ9/t6yiGGAwhbT+IrJcmwLzxgEY1JOAYobxh+19xqpu@vger.kernel.org
+X-Received: by 2002:a05:620a:46a0:b0:7d4:5e0a:28cd with SMTP id
+ af79cd13be357-7d5c47c60d8mr449259985a.49.1751457928033; Wed, 02 Jul 2025
+ 05:05:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGTpNNaW7cXC18Jt@smile.fi.intel.com>
+References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
+ <aGPrFnDxG4W7S9Ym@smile.fi.intel.com> <20250702035439.GA20273@rigel>
+ <CAMRc=MftawBB4rtj4EKS_OwMCU9h53sA8QxcFq_ZY0MRg2OLag@mail.gmail.com>
+ <20250702101212.GA47772@rigel> <CAMRc=MeuMpo0=ym+FvDh5sCNXM00+iOSNFgTxMqagO78ZS64_g@mail.gmail.com>
+ <20250702110127.GA51968@rigel>
+In-Reply-To: <20250702110127.GA51968@rigel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 2 Jul 2025 14:05:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVFURtVovo4xUddULjchzK2Qae+ePHA3VKBeBo700a=gg@mail.gmail.com>
+X-Gm-Features: Ac12FXxAle-6go22Q_dabyHOkvjGoV0yuEFExkrpUFVeVY3yXxBt9jQV-ftKO74
+Message-ID: <CAMuHMdVFURtVovo4xUddULjchzK2Qae+ePHA3VKBeBo700a=gg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
+ attribute pair
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
+	Andy Shevchenko <andriy.shevchenko@intel.com>, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
+	Marek Vasut <marex@denx.de>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/02, Andy Shevchenko wrote:
-> On Mon, Jun 30, 2025 at 10:57:32AM -0300, Marcelo Schmitt wrote:
-> > Hello,
-> > 
-> > AD4170 support v7 comes after testing the driver with even more variations of
-> > channel setups. Signal offset and amplification can be tricky to grasp at times.
-> > 
-> > Thank you to all reviewers of previous versions. This intends to comply with all
-> > comments and suggestions to v6.
-> > 
-> > Same amount of patches than v6.
-> 
-> ...
-> 
-> >  6 files changed, 3601 insertions(+)
-> 
-> This is weird. At least patches 11 & 12 have '-' lines...
-> 
-Yeah, sorry about that. These ADCs are fancy such that the base driver is about
-1500 LoCs due to channel setup handling and support for multiple combinations of
-voltage references and channel setups.
+On Wed, 2 Jul 2025 at 13:01, Kent Gibson <warthog618@gmail.com> wrote:
+> On Wed, Jul 02, 2025 at 12:28:01PM +0200, Bartosz Golaszewski wrote:
+> > On Wed, Jul 2, 2025 at 12:12=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > >
+> > > > I tend to not interpret it as adding new features. We really just
+> > > > *move* what exists under a slightly different path when you think
+> > > > about it.
+> > > >
+> > > > So what are you suggesting, remove the `edge` attribute and polling
+> > > > features from the new `value` attribute?
+> > > >
+> > >
+> > > Exactly. I'm not suggesting ANY changes to the old sysfs, only your n=
+ew
+> > > non-global numbering version.  The idea being don't port everything o=
+ver
+> > > from the old sysfs - just the core feature set that non-cdev users ne=
+ed.
+> > >
+> >
+> > I mean, if someone shows up saying they need this or that from the old
+> > sysfs and without they won't switch, we can always add it back I
+> > guess... Much easier than removing something that's carved in stone.
+>
+> Exactly - expect to be supporting whatever goes in now forever.
+>
+> > Anything else should go away? `active_low`?
+> >
+>
+> I don't personally see any value in 'active_low' in the sysfs API if you
+> drop edges. It is easy enough to flip values as necessary in userspace.
+> (From time to time I think it should've been dropped from cdev in v2 but,=
+ as
+> above, it is carved in stone now so oh well...)
 
-About the '-' lines, I will rework ad4170_parse_channel_node() on earlier
-patches to avoid 3 line removals in patch 11. Patch 12 is only makes sense
-after patch 7 and I think it would lead to '-' lines if coming before patch 10
-since both increment the number of IIO channels. Anyway, I'll see how to further
-reduce the number of lines being removed.
+IMHO active_low is only really useful if you have some hardware
+description that provides it, at which point you may be better off
+having a real Linux
+driver for the thing connected to the GPIO...
 
+People who mess with GPIO /sysfs better know their hardware,
+so they should be aware of the polarity.
 
-Best regards,
-Marcelo
+From my toolbox:
+  - For pcf857x (which is pseudo-bi-directional), I usually just set
+    direction to "in" (pulled high) or "out" (driven low),
+  - For everything else, switching direction to "out" is ill-defined,
+    so I do not write to ".../value", but set direction and value
+    together by writing "high" or "low" to ".../direction",
+  - For reading, I do use ".../value", of course.
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+My 0.02=E2=82=AC...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
