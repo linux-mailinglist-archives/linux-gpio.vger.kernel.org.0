@@ -1,138 +1,171 @@
-Return-Path: <linux-gpio+bounces-22586-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22587-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 879CBAF0FB7
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 11:19:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EC80AF0FC4
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 11:22:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA7921C26BB6
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 09:19:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D40B1C27B54
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 09:22:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE9A2417F8;
-	Wed,  2 Jul 2025 09:18:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36212246767;
+	Wed,  2 Jul 2025 09:22:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHa0mXnd"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZWy9KPXs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C20B24113C;
-	Wed,  2 Jul 2025 09:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B9124466C
+	for <linux-gpio@vger.kernel.org>; Wed,  2 Jul 2025 09:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751447922; cv=none; b=B8pSo/o0pqRiuklC75K+w+dfOn+kv74LASrnuv0WpbWPFEaVycicMWfbilR09S44IaD/PjEqG74bV62ke2WDVWVxSbHesvy57iJ5Tedmj0/P8nDjtqZ3obTeesywySd96t/WTM1uhT+ws56HYlShF80t9Kut9IQAMcG5f63TIck=
+	t=1751448139; cv=none; b=R5+a40r6cAsuZ79983Sgd8PxaYXeXQOdh8O0b4YsEiWwH6NiY051Yx394XgwuhC4T08S6+I1mZX5mzEXX4C6cWKz67yaQx5tM0kkfJG9o83q8tjz+F9Zdqq7a3vl9UioC8ZW7xTB+Cu63mDnrs+GYbW+c8Oy44ILHDZwey15bpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751447922; c=relaxed/simple;
-	bh=YgIsYbsQFBijlbHTYsgXc9tCHNmRLzh8Vr+Nl8ZnQ3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GxJ478Vskn/ZuAM/zgH0PYkg4VXZkJUkHRMy5GKmCvmBsDmfs1eXxPCkoTpun93e37P7mnUmo9KmJmaVSylsGkPw2OLdEMWiYekjTUOihxDT3uA4/TUXYhu/bjmM5fy5971B7I0ciTKdRqun4t2Y4CLuHHMY1JvsIasrYPHq+QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHa0mXnd; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751447921; x=1782983921;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YgIsYbsQFBijlbHTYsgXc9tCHNmRLzh8Vr+Nl8ZnQ3Y=;
-  b=NHa0mXndNPsqjlQrfnWjAXFl0IMSNhz84cndMG2tSKjw+euM/Oyp9vFa
-   ixo1LLXfEIm9HtzAE1ubpLWvHg4bv8TUeMSD2U/GUWQ/hk7P85yndqVcX
-   wfl/BQmx2E2ZfEEb+QW9hChTSpulkYFuC6bbRN4nqmR37f/MkJIe3m/Ue
-   PXccaMN8oeLtYrXgITAR3jwszyIoaJ2jvPktZqBfosvEPTHXlbS3cKATq
-   dxtPq+yy2idujdWfTJFXnHEYP4bD5xDHIvYj2QfdUFVWtw89we8XjVo+I
-   XMbazlG4XKfyLikroo4TRYHVUzQ1PDXCYtNISQus8pwnJcp6gGosfUCtu
-   Q==;
-X-CSE-ConnectionGUID: +itLhkHVSiqOACp35zLYFQ==
-X-CSE-MsgGUID: SEjAjsBxRdWyilKroVWb2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="64427969"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="64427969"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:18:39 -0700
-X-CSE-ConnectionGUID: vxd1XndcT3OoMKfVHJDRig==
-X-CSE-MsgGUID: gpP80ZaVRkCf3Rmd/W+dKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="159538616"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 02 Jul 2025 02:18:36 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWtbu-0000RX-0P;
-	Wed, 02 Jul 2025 09:18:34 +0000
-Date: Wed, 2 Jul 2025 17:17:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: gpio: Create a trivial GPIO schema
-Message-ID: <202507021740.qURVV9D8-lkp@intel.com>
-References: <20250701225355.2977294-1-robh@kernel.org>
+	s=arc-20240116; t=1751448139; c=relaxed/simple;
+	bh=IDsUBmMl4vmxwpChddfz/0o/3m8yos2rsQrr3srBtqw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=p97rP8edrqbBeAkehCymtDL+tOkbZxOAVuaJFP7SwBmTm1Ddaf82yEw2ZFPaYPjSJyIETVIOr4g4bMEdYf8gtYVw6/GcqriSDPZRpCsNVUQHaux5i1S4xak7qeawOh4qIl4ung0NjQaTTEcMJebw/TXUnA0G0v14pQzqTpkf3y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZWy9KPXs; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a6e8b1fa37so3625228f8f.2
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Jul 2025 02:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751448135; x=1752052935; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dJOUAJfKVX2aPL9IEMk2+/CliU7l5+z7z5St/kFtJDA=;
+        b=ZWy9KPXs2kBVGqLFM73rAglXSVZ4aEJR000c+aDcNkdmuBoleFHMt2Zh+toY5sq2fj
+         Mo88IYoYft/nikZ+T4nxudGx4YQl1XlgDVwulPuI6WpqVDqJVI1nLfPWCFvd2IUOl0mG
+         H+4l+tBN/C9BYoYO6j3m+bPyawAJ26EKk2CPfP0/jha0IIGuClQ3dR/dinbqVSh7iidU
+         GI2pgKgetDDlM5lhRJpYn2rGSQM9TKDmzHl7BdYQpNZfaKq0+SGRyqq6p2dRbx5fCgE9
+         v4jOp37kD7x1OpLuIe2K6c3YLww5ebBYZfDNplp8mzY8R/G5E2NP/zR5JzlrHlw4hovQ
+         fg7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751448135; x=1752052935;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dJOUAJfKVX2aPL9IEMk2+/CliU7l5+z7z5St/kFtJDA=;
+        b=gpe85XCAqMaC/V+UAZ+xrSjFdUGZ3iriNcMwr8nJMLN0I6dcnAVn33fP9o+zRO7zti
+         KTIW4nUrOg71YUeS2hN20epk3e/pdLZAgHhUb2LwOc7e+eDfmPL9Bc/kJwit1Gx+e2mO
+         g1yJSELLpOFECdNkE7rgyhaBmDjH4kDTWjV29cxcwz0aszvKMKWk0kHG/0MoLSIeTsZ5
+         Zo5i1ZkwKOqc9WiBclefjTLW2RN8UAu4b60E+WTpJh0IDxmV3ktD8jOEgOW86e68SPxl
+         H+7WDwp/fr6mcASTffJPH08PtuUStVjGrDhrsPdESbgDugY+mQfiy1ZPPchBlaY15Vd3
+         YM2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVDqSTl9M0gTFxlI0yx2DlRJ5p+tG5EnammjMrsYhMcwZmFoMzm3ForoQUKTBCvDUp3x4IeFUlnDVRz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4FptpIZ+r4tRDZoUSMvkzCnlfR4aJY+Nf8Qar/oeCBwHU4HFb
+	oDBmZqVjnr1bpl3le+6We1GZmq34HE1jNfPqXFCWJ0iZ9UOUyU2KhuD7mMW7y+E2inY=
+X-Gm-Gg: ASbGnctr0pZGVo2OOJuaYwCTi4xRvsKDFk3Tzs/rxPsKDTJpvA4Xi+BRoSU6ndzrA2H
+	1Fi+iUmtNZlcQKRHbQQW0oTKQWQigodnYuhy+5Myz8OhIexqByyKsSM/COYt4HGFWFJdtk05Q5Z
+	dqxFUVR+ssla9c1ioQomX9yahTAwAZu9kTwbvc8Or6iDPsT3XmXFswVHCAal7CGHnz0YlzE01Ah
+	SB7pWPAyXRb21w7Nm5dM3nfMfvwlNLhPyszyI73R9PjvlPz94DzVJv41FmfNdZYxuhlVwjQhWP3
+	R2JgqCy0CiBITNaEXq62acMa5t2MB4x1/EO0zsUnVyW0K6jy4Q/AAJbJAT9SRsvY
+X-Google-Smtp-Source: AGHT+IGRtI5EizlyYaagGIEM5B9cIXG2G3RtfcUDuM69KE2zVYdf1i0pFG68QB2VU8jMhrLhfO7HYA==
+X-Received: by 2002:a05:6000:188c:b0:3a4:dfa9:ce28 with SMTP id ffacd0b85a97d-3b1fdf01fedmr1581155f8f.5.1751448134571;
+        Wed, 02 Jul 2025 02:22:14 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8827:d0e:25e:834a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a406489sm195844165e9.27.2025.07.02.02.22.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 02:22:14 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 0/8] gpio: move generic GPIO chip fields out of the
+ top-level gpio_chip struct
+Date: Wed, 02 Jul 2025 11:22:07 +0200
+Message-Id: <20250702-gpio-mmio-rework-v2-0-6b77aab684d8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701225355.2977294-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD/6ZGgC/2WNwQ6CMBBEf4Xs2ZqyAhFP/IfhsIGlbBRKtgY1p
+ P9uJd68TPImmTcbBFbhAJdsA+VVgvg5AR4y6EaaHRvpEwNaLG1lK+MW8WaaUig/vd4M4VB0xak
+ mqitIs0V5kNeuvLaJRwkPr+/9Yc2/7U+Gxb9szY01xJQj2rrH8tzcZSb1R68O2hjjB2ELMa+xA
+ AAA
+X-Change-ID: 20250606-gpio-mmio-rework-a2f4c439aa96
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2506;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=IDsUBmMl4vmxwpChddfz/0o/3m8yos2rsQrr3srBtqw=;
+ b=kA0DAAoBEacuoBRx13IByyZiAGhk+kPIvzlcY34zkh2Nj4PaZstktliKWBcYWZ3+v8XzOCbDD
+ IkCMwQAAQoAHRYhBBad62wLw8RgE9LHnxGnLqAUcddyBQJoZPpDAAoJEBGnLqAUcddyvM8QALht
+ p+0/5kj0hAd1GH7XCSJQj1xtclo+EbYwl+bIW4Ppol5rzy/Ww+YmiN7UfX/LQmQM81ByNclCOk8
+ 8yVuwOiCUfYJuB5mKWYrWLwiGZCFX18PXJaf2eDjbSuGXxBAaq6sv5p6gWUjzkmKXGd3R1j38FN
+ 2MP84vl/De+q+j+gS7qOICkoFnew3ASVw+Sehu5b9KiRNdNyC3RyESwRBvE+rSiB/SxJWGVmRZQ
+ Vd9BDYTEglata0+NQUyij9ENWct0NzUdygyVwa6a+M5y/OfxRgVizsGIUuKPJh42tXK+7eENAaK
+ lTDM+bpEsrkroP/o32TIo2RazbpVv+To7qR17XNdfdoWNiqonSruJF16yPfZ6l4mxaLX9vQB//G
+ voAf3FRniA6ym8jCePwxqGGGX0mJL29lHxiMCItsnkBLbZKbQhTGq4+VaLcletzTe9Ydtw+1bE4
+ skQO84IjV4PI71bOpfgrvkBRksQGm6k0+urSfW9uzq0q4FZG+yjdZinvNUniWeC6qByqdtnilQU
+ LPZ4zjnM6y8hiw92JS8Y3Xfo26+SY+49p7fL2tBZgRwAIJGe9eH7aaKFgcJB1OSccqGFDWIibKV
+ 27KSY1CtQxooxZ/ZU8T2Lq+5lDJ+omh7OW8vD0sPCBItzUdDE/8lq9GMhFs/KZhZWVHmS9EapOa
+ xcgFa
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Hi Rob,
+The conversion of GPIO drivers to using the new line value setters is
+moving nicely along and we're on track to have all the existing
+providers converted upstream after the next merge window. There's
+another piece of technical debt that bothers me - the fact that struct
+gpio_chip contains a bunch of fields that are only relevant to the
+generic GPIO chip implementation from gpio-mmio.c.
 
-kernel test robot noticed the following build warnings:
+Let's work towards moving them out of struct gpio_chip and into their
+own struct gpio_generic_chip. Doing this in a single series would
+require some ~40 commits which is way too many to review at a time.
+There are also users of gpio-mmio under drivers/pinctrl/ and
+drivers/mfd/ which would require cross-subsystem merges. I think it's
+better to do this in stages over 3 release cycles. This series adds a
+new API for gpio-mmio users, hiding the implementation details and
+converts the first set of GPIO drivers. Once upstream, we'll convert all
+remaining users and once that's done, we'll move all the
+gpio-mmio-specific fields to the new structure, convert the internals to
+using them and remove bgpio_init(). The last step will be done in a
+backward-compatible way, not affecting the users.
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.16-rc4 next-20250701]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v2:
+- rebase on top of recent driver changes
+- pick up review tags
+- Link to v1: https://lore.kernel.org/r/20250624-gpio-mmio-rework-v1-0-aea12209d258@linaro.org
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rob-Herring-Arm/dt-bindings-gpio-Create-a-trivial-GPIO-schema/20250702-065536
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20250701225355.2977294-1-robh%40kernel.org
-patch subject: [PATCH] dt-bindings: gpio: Create a trivial GPIO schema
-reproduce: (https://download.01.org/0day-ci/archive/20250702/202507021740.qURVV9D8-lkp@intel.com/reproduce)
+---
+Bartosz Golaszewski (8):
+      gpio: generic: add new generic GPIO chip API
+      gpio: mxc: use lock guards for the generic GPIO chip lock
+      gpio: mxc: use new generic GPIO chip API
+      gpio: clps711x: use new generic GPIO chip API
+      gpio: cadence: use lock guards
+      gpio: cadence: use new generic GPIO chip API
+      gpio: 74xx-mmio: use new generic GPIO chip API
+      gpio: en7523: use new generic GPIO chip API
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507021740.qURVV9D8-lkp@intel.com/
+ drivers/gpio/gpio-74xx-mmio.c |  32 +++++------
+ drivers/gpio/gpio-cadence.c   |  60 ++++++++++-----------
+ drivers/gpio/gpio-clps711x.c  |  27 ++++++----
+ drivers/gpio/gpio-en7523.c    |  36 ++++++-------
+ drivers/gpio/gpio-mxc.c       |  87 +++++++++++++++---------------
+ include/linux/gpio/generic.h  | 120 ++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 243 insertions(+), 119 deletions(-)
+---
+base-commit: 3f804361f3b9af33e00b90ec9cb5afcc96831e60
+change-id: 20250606-gpio-mmio-rework-a2f4c439aa96
 
-All warnings (new ones prefixed by >>):
-
->> Warning: Documentation/devicetree/bindings/mfd/lp3943.txt references a file that doesn't exist: Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
->> Warning: Documentation/devicetree/bindings/powerpc/nintendo/wii.txt references a file that doesn't exist: Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
-   Warning: Documentation/devicetree/bindings/regulator/siliconmitus,sm5703-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/siliconmitus,sm5703.yaml
-   Warning: Documentation/hwmon/g762.rst references a file that doesn't exist: Documentation/devicetree/bindings/hwmon/g762.txt
-   Warning: Documentation/translations/ja_JP/SubmittingPatches references a file that doesn't exist: linux-2.6.12-vanilla/Documentation/dontdiff
-   Warning: Documentation/translations/ja_JP/process/submit-checklist.rst references a file that doesn't exist: Documentation/translations/ja_JP/SubmitChecklist
-   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_CN/how-to.rst references a file that doesn't exist: Documentation/xxx/xxx.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
-   Warning: arch/riscv/kernel/kexec_image.c references a file that doesn't exist: Documentation/riscv/boot-image-header.rst
-   Warning: drivers/clocksource/timer-armada-370-xp.c references a file that doesn't exist: Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
-   Using alabaster theme
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
 
