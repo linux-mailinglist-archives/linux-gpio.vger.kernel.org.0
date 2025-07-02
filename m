@@ -1,208 +1,181 @@
-Return-Path: <linux-gpio+bounces-22597-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22598-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79280AF10EA
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 11:58:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4716EAF115B
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 12:12:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C9573BA36A
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 09:58:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 450BC1C2496F
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 10:12:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FD9324BBF0;
-	Wed,  2 Jul 2025 09:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D41A24A07A;
+	Wed,  2 Jul 2025 10:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQLsAQ9T"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC9F23816C;
-	Wed,  2 Jul 2025 09:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9654ADF42;
+	Wed,  2 Jul 2025 10:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751450318; cv=none; b=rvj7JB1YJBp49RF0a2pAoCmSsj/N4LPN8xmXKv9WCgEFzS9XYz5KNrQv8zyXci6qsVpmHUarVfndexxe4XEIY5uK1/fJqvXfivG7cO33xFwj9VkM/PY7ivIBoxEGUJL30ds3wdJQXwLCiCzGsMDwrFJDYAxzSY2RxPKn9185fCg=
+	t=1751451145; cv=none; b=JuYVVwJA01MNL2yhRV/kyiNt9kBlYJyJUCxBF0SZDr+vuPSgstnAra1kIFEiPlNktBzuFSnYelZG4FyDd5Rc/hmkqmwxwlo10ondLVs8VOZR+D/Y+/JXW8swcbjL1HoNyjZ5JFXkt9aA6zyPZtXefU6TTqPUfvlj+ymrA1jwebo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751450318; c=relaxed/simple;
-	bh=ac1WHXY9uU6sg9VG9LlQUm/TQKiiff0h5oFc/3+SBzY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D1o5FWMQg66xzNOBz0Px8/T9GIoyqwDXuFCMmW5HS6VoLme9tUfqt3x1dgIbpPhF8tmangdHgyES6Uy87w/C6qLLiPxAGGH+qPbWonAXVjZZHDXxu3EaHHbHBQWvZ9y8345y/6hx5JBHjjecvQAPWEgegBbZn1OrLDzc98PQgxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXFdQ6LTjz6L55h;
-	Wed,  2 Jul 2025 17:55:38 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B5DAB1404FD;
-	Wed,  2 Jul 2025 17:58:31 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 11:58:28 +0200
-Date: Wed, 2 Jul 2025 10:58:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-CC: Jonathan Cameron <jic23@kernel.org>, Waqar Hameed <waqar.hameed@axis.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>, "Julien Panis" <jpanis@baylibre.com>,
-	William Breathitt Gray <wbg@kernel.org>, "Linus Walleij"
-	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin
-	<peda@axentia.se>, David Lechner <dlechner@baylibre.com>, Nuno
- =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy Shevchenko
-	<andy@kernel.org>, Cosmin Tanislav <cosmin.tanislav@analog.com>, "Lars-Peter
- Clausen" <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Matteo Martelli
-	<matteomartelli3@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Francesco
- Dolcini <francesco@dolcini.it>, =?ISO-8859-1?Q?Jo=E3o?= Paulo
- =?ISO-8859-1?Q?Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>, Hugo
- Villeneuve <hvilleneuve@dimonoff.com>, Subhajit Ghosh
-	<subhajit.ghosh@tweaklogic.com>, Mudit Sharma <muditsharma.info@gmail.com>,
-	Gerald Loacker <gerald.loacker@wolfvision.net>, Song Qiang
-	<songqiang1304521@gmail.com>, Crt Mori <cmo@melexis.com>, Dmitry Torokhov
-	<dmitry.torokhov@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Karol
- Gugala <kgugala@antmicro.com>, Mateusz Holenko <mholenko@antmicro.com>,
-	Gabriel Somlo <gsomlo@gmail.com>, Joel Stanley <joel@jms.id.au>, Claudiu
- Manoil <claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
-	<kishon@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Sebastian Reichel <sre@kernel.org>, "Neil
- Armstrong" <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, Han Xu <han.xu@nxp.com>, Haibo Chen
-	<haibo.chen@nxp.com>, Yogesh Gaur <yogeshgaur.83@gmail.com>, Mark Brown
-	<broonie@kernel.org>, Avri Altman <avri.altman@wdc.com>, Bart Van Assche
-	<bvanassche@acm.org>, "James E.J. Bottomley"
-	<James.Bottomley@hansenpartnership.com>, "Martin K. Petersen"
-	<martin.petersen@oracle.com>, Souradeep Chowdhury
-	<quic_schowdhu@quicinc.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, "Peter Ujfalusi"
-	<peter.ujfalusi@linux.intel.com>, Bard Liao
-	<yung-chuan.liao@linux.intel.com>, Ranjani Sridharan
-	<ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>, Pierre-Louis Bossart
-	<pierre-louis.bossart@linux.dev>, Jaroslav Kysela <perex@perex.cz>, "Takashi
- Iwai" <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
-	<s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, <kernel@axis.com>,
-	<linux-iio@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
-	<linux-input@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-	<imx@lists.linux.dev>, <netdev@vger.kernel.org>,
-	<linux-phy@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-	<linux-scsi@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>, <sound-open-firmware@alsa-project.org>,
-	<linux-sound@vger.kernel.org>, "Joe Perches" <joe@perches.com>, Andy
- Whitcroft <apw@canonical.com>, "Dwaipayan Ray" <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: Re: [PATCH] Remove error prints for devm_add_action_or_reset()
-Message-ID: <20250702105826.0000315e@huawei.com>
-In-Reply-To: <jeajjewfbg5qo736imozpghnpxln2pux74aegtqsi57qsbpug2@opndel6zc3m3>
-References: <pnd7c0s6ji2.fsf@axis.com>
-	<ylr7cuxldwb24ccenen4khtyddzq3owgzzfblbohkdxb7p7eeo@qpuddn6wrz3x>
-	<20250701185519.1410e831@jic23-huawei>
-	<jeajjewfbg5qo736imozpghnpxln2pux74aegtqsi57qsbpug2@opndel6zc3m3>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751451145; c=relaxed/simple;
+	bh=JQTO+UOM/QWolB7pSFU7RNeEKcoIknujotB62whEi3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SKGtUNpIi5Y5I11O0IXftnxhGVCldTWgtpIJtPn7Kt91cw8WK7I6LnCmO/iZflWQfobar/LDw1XtlcsrPPWvuyaQtALiALwLr7hG4ejQ2Q5sn1MdBYYUMKc+Y4+xXijzfBO2NEP9jDztB9oJVMxA7+cs7cGhhRiXlOE1BORDGbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TQLsAQ9T; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235e1d710d8so78593215ad.1;
+        Wed, 02 Jul 2025 03:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751451143; x=1752055943; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eW4eCP7VTxRFLhKK4Kf4ed+TI/vlcwvs/Q6OEwxNNys=;
+        b=TQLsAQ9TAavIuhhC20ZlQxTNvLXtqmKXYZHzA2qPdXNZSMrETvlw7QOFNf1KwKLU0o
+         3SLZkKIji35Cs8XDdR+Vkzzuu9DQlngDyDZhYFIMEgO4jNcMP16Fz0KoKEGp3o1WatQv
+         R8MwffrVtCdoCHFzKHz517T7NI/gG1k2m2CwP4wpDVy5rlq+IDNNy3VqmueLga7zGCsf
+         QPb2uiiReOJNzlaT2Z2zAoLUCGZFJ+d9od3+DuWSNqA19FAXu5m/IjDlJSgJNfNrcfCH
+         fIL425hTaIAeU5zI1RN9QwOkoHgi2KMS6PU4M9SHTS+fWqH6fTzizBrI1Cq1k+Mn0eTg
+         /dOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751451143; x=1752055943;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eW4eCP7VTxRFLhKK4Kf4ed+TI/vlcwvs/Q6OEwxNNys=;
+        b=lsPgo6A7+RH0ZiTsE+QMztcnJ9fQXpxbTx+X/G4IpuPEai1fV9ytKhibS+axVYD8rs
+         qBWC4NtkkeUlrlcbFxel4ZNl/57KetF29c88bxYWAOuyGwglTuo3sX5Lf0GydEfrTZot
+         F910WxkVd8qpupRUvBO9V8/RxqXsN/8xiOE+ehwuQuGyCCqcCSy2oZohP61CImFJwH9Y
+         tz2/TQ9G2/GcvrlKmRK3Bz7DtD0Ph8/BkClBVhSvrwIqHyHchx0BxBIrqen+7zHvlLpz
+         5J3z3hGVq1VdPYwqe1gdXS5BvaxrupweFaLX8Dv0DO8/iPfrzzFTarMq/l1QDGVuR9mc
+         /avw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkOZPDKKu0sSHrR09kMty3Vs2nhrYJrr+cn5hn1O/hVNX1Vhwu8l5/cFqYIGNGougI0hln0qBdECfLEJni@vger.kernel.org, AJvYcCV/SDWjgo0f1PP2ljz+BZlEALuXRrUawivway32c1K5wG0uFVN1PBl/rsTDcFw+S0dqqVCAc48qEZ7S@vger.kernel.org
+X-Gm-Message-State: AOJu0YwALEkLH/Gvyk+5EGIMN0eNjgHzIj8WjxIKe/cZlfoCX3AQSKXg
+	+DIKBy0vtngmVGFBhv3LWHMXQAPqETeU2dHDDqheBG9XBbrBqOY1AGKy
+X-Gm-Gg: ASbGnctXbtU9yl+k/VfDBs9j3quca1CymZQ9EY43eW8x8UO7afKdqEBw6NR/Olne0kA
+	Lmwf9uCj7v3WpWyI6aLjKd4IRFPJ8gQdajHUfg3S2N+5u63WJbH2qa5Wa0KKZTA8qeNcnkIxxMC
+	pGUijC89wkUZshe1u/tzA3wnWirdhGH/FSFHatmmGTcYlt9XxlUUGxDJHKrw4qVjAAHCx/FeyPE
+	1Jpj2kfQR26Ok9vA18/rk2b/i3ZmIc3Qve8Buq8fM9ZCP8VlzlGr7fYz3uqiDJ+CG71w6UboOnk
+	Ll3ftjEU0WdqTe+0cfKW48Ac6gH83C4oHKyCDG0Otl28RZub8ReDZZFfrEq1hKv9ZmtiWlgP1tM
+	xIlA=
+X-Google-Smtp-Source: AGHT+IF3ur8T5TTo9e5Hv2ILk9E/xYfEj/MBxH3RqihGdYMLYMtVbHA61Nvl4xjspllEAwBawx28Qg==
+X-Received: by 2002:a17:902:f682:b0:235:f1e4:3383 with SMTP id d9443c01a7336-23c6e4e1723mr28573325ad.7.1751451142711;
+        Wed, 02 Jul 2025 03:12:22 -0700 (PDT)
+Received: from rigel (61-68-193-107.tpgi.com.au. [61.68.193.107])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e21b2sm136943885ad.43.2025.07.02.03.12.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 03:12:22 -0700 (PDT)
+Date: Wed, 2 Jul 2025 18:12:12 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
+ attribute pair
+Message-ID: <20250702101212.GA47772@rigel>
+References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
+ <aGPrFnDxG4W7S9Ym@smile.fi.intel.com>
+ <20250702035439.GA20273@rigel>
+ <CAMRc=MftawBB4rtj4EKS_OwMCU9h53sA8QxcFq_ZY0MRg2OLag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MftawBB4rtj4EKS_OwMCU9h53sA8QxcFq_ZY0MRg2OLag@mail.gmail.com>
 
-On Wed, 2 Jul 2025 08:54:48 +0200
-Uwe Kleine-K=F6nig <ukleinek@kernel.org> wrote:
-
-> Hello Jonathan,
->=20
-> On Tue, Jul 01, 2025 at 06:55:19PM +0100, Jonathan Cameron wrote:
-> > On Tue, 1 Jul 2025 19:44:17 +0200
-> > Uwe Kleine-K=F6nig <ukleinek@kernel.org> wrote:
-> >  =20
-> > > On Tue, Jul 01, 2025 at 05:03:33PM +0200, Waqar Hameed wrote: =20
-> > > >  drivers/pwm/pwm-meson.c                          | 3 +--   =20
-> > >=20
-> > > Looking at this driver I tried the following: =20
-> >=20
-> > I'm not sure what we actually want here.
-> >=20
-> > My thought when suggesting removing instances of this
-> > particular combination wasn't saving on code size, but rather just
-> > general removal of pointless code that was getting cut and
-> > paste into new drivers and wasting a tiny bit of review bandwidth.
-> > I'd consider it bad practice to have patterns like
-> >=20
-> > void *something =3D kmalloc();
-> > if  (!something)
-> > 	return dev_err_probe(dev, -ENOMEM, ..);
-> >=20
-> > and my assumption was people would take a similar view with
-> > devm_add_action_or_reset().
+On Wed, Jul 02, 2025 at 11:45:02AM +0200, Bartosz Golaszewski wrote:
+> On Wed, Jul 2, 2025 at 5:54 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > It is a bit nuanced to have some cases where we think prints
-> > are reasonable and others where they aren't so I get your
-> > point about consistency. =20
->=20
-> The problem I see is that there are two classes of functions: a) Those
-> that require an error message and b) those that don't. Class b) consists
-> of the functions that can only return success or -ENOMEM and the
-> functions that emit an error message themselves. (And another problem I
-> see is that for the latter the error message is usually non-optimal
-> because the function doesn't know the all details of the request. See my
-> reply to Andy for more details about that rant.)
->=20
-> IMHO what takes away the review bandwidth is that the reviewer has to
-> check which class the failing function is part of. If this effort
-> results in more driver authors not adding an error message after
-> devm_add_action_or_reset() that's nice, but in two months I have
-> forgotten the details of this discussion and I have to recheck if
-> devm_add_action_or_reset() is part of a) or b) and so the burden is
-> still on me.
+> > On Tue, Jul 01, 2025 at 05:05:10PM +0300, Andy Shevchenko wrote:
+> > >
+> > > It seems I never expressed my overall opinion about this. I think the poking
+> > > sysfs and making it working with a new schema won't solve the issues that
+> > > character device was developed to target. If so, doing this just brings yet
+> > > another broken interface. I would be happy to be mistaken!
+> > >
+> > > If I am mistaken, I would like to see a summary here that explains that clearly
+> > > that the new sysfs approach does not inherit design flaws of the original
+> > > implementation.
+> > >
+>
+> You cut out the link to the discussion that preceded this series where
+> a good summary is in the very first email. Anyway: the gist is: people
+> need to do some basic GPIO fiddling early on from initramfs that may
+> not have any tools other than basic shell utils from busybox. This
+> series is not about improving or extending the sysfs interface - it's
+> about removing its reliance on global GPIO numbers. And that's about
+> it. We don't add any new features really, just move the GPIO line
+> groups into their respective chip directories and make exporting use
+> the hardware offsets, not global numbers.
+>
 
-Maybe this is a job for checkpatch, at least for the common cases.
+And that is the problem I have with it - it is just removing the global
+numbering, while keeping all the other sysfs baggage.
+Instead I think it should be thought of as adding a new minimal sysfs
+alternative to cdev, based on the old sysfs.
 
-There is already a check for kmalloc etc.
-https://elixir.bootlin.com/linux/v6.16-rc4/source/scripts/checkpatch.pl#L64=
-42
+> >
+> > Indeed.  I've already expressed my reservations about supporting the whole
+> > of the existing sysfs capabilties, but I've otherwise tried to remain out
+> > of the discussion.
+> >
+> > To reiterate my position:
+> > While I am all for maintaining sysfs in some form to cater for those
+> > rare cases where cdev is too heavyweight, IMHO it is a mistake to
+> > support the existing sysfs capabilities in toto.  Take the opportunity to
+> > remove the parts of the sysfs interface that don't work well.
+>
+> Doesn't the last patch do it? We cannot remove it without giving
+> user-space some time to switch. This series does everything in a
+> backward compatible way and then isolates the old bits under ifdefs so
+> that when the time comes it's just a matter of removing everything
+> guarded by them.
+>
 
-+CC Joe (who wrote the allocation functions test years ago) and other check=
-patch
-folk.
+Not suggesting any changes to the existing sysfs here, only your new.
 
+> > The new sysfs should only provide the features required by those rare use
+> > cases, which IIUC would be basic sets and gets, and exclude those features
+> > not required, particularly warts like edges.
+> >
+> > If you need more advanced features then use cdev.
+> > If all you need is basic sets and gets then sysfs is probably fine.
+> >
+> > If that isn't the case then there should be some explanation as to why those
+> > sysfs features are being maintained.  Treat this as a new interface.
+> >
+>
+> I tend to not interpret it as adding new features. We really just
+> *move* what exists under a slightly different path when you think
+> about it.
+>
+> So what are you suggesting, remove the `edge` attribute and polling
+> features from the new `value` attribute?
+>
 
->=20
-> So to give my answer on your question "What do we actually want here?":
-> Please let us get rid of the need to care for a) or b).
->=20
-> > The code size reduction is nice so I'd not be against it as an extra
-> > if the reduction across a kernel builds is significant and enough
-> > people want to keep these non printing prints. =20
->=20
-> To complete implementing my wish all API functions would need to stop to
-> emit an error message. Unfortunately that isn't without downsides
-> because the result is that there are more error strings and so the
-> kernel size is increased. So you have to weight if you prefer individual
-> error messages and easier review/maintenance at the cost of a bigger
-> binary size and more dev_err_probe() calls in drivers eating vertical
-> space in your editor.
->=20
-> I know on which side I am, but I bet we won't find agreement about that
-> in the kernel community ...
+Exactly. I'm not suggesting ANY changes to the old sysfs, only your new
+non-global numbering version.  The idea being don't port everything over
+from the old sysfs - just the core feature set that non-cdev users need.
 
-
->=20
-> Best regards
-> Uwe
->=20
-
+Cheers,
+Kent.
 
