@@ -1,131 +1,91 @@
-Return-Path: <linux-gpio+bounces-22662-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22663-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87803AF608B
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 19:56:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96AACAF60CD
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 20:07:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2A261C4618B
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 17:56:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9961525095
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 18:07:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CAF30B9A6;
-	Wed,  2 Jul 2025 17:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC1762E03F8;
+	Wed,  2 Jul 2025 18:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="K6gmh1XI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHHKi4ac"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06C7309A75;
-	Wed,  2 Jul 2025 17:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85183253351;
+	Wed,  2 Jul 2025 18:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751478994; cv=none; b=SPVhC3ae/q+XG25CI0kCUxfI2sbHBkhRLf+Yt9MVZg3/t9SvSc8wZnTH+O+5wROqSTvD8oxpC4lLBiLMnjWigtLBRzz15kG7nldy+zTte9aOfhaZuPbhbR84F09IhUZMPcD0yDjFL0IG82WoxEpbPaVl+luW9vzCiUWOLf9OS2k=
+	t=1751479651; cv=none; b=f8bK+N1M1Klg7YlxsrAipIhp0r8mcLuWY+qQNCW7JM96rSQQcsXEpKcHHtge3jUMTcv/9C/SIMDrXUjnxF9Ud7qFJb7wM43CHj5UA3Ghne9w+eJUfxZqE/fuVFPcWvkXPukR9daBKZfh6+FbCg9BnaMOwFfo2LpbQdY+ArP/bps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751478994; c=relaxed/simple;
-	bh=2JufP1vE8BWmTAgWOhaC6QCXSRwArHKrkTbWIH5lo3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DwXFtH6qjoQz/IKN8mFIj5vcLmbaXknV52WZzUZkvCfg09h19QWxsY6xyjmn7fvczwt/m65RAxlLSE37p62aMlLLvJ2XL0dQ1mIy2YKk/0t0AR8HsDovFCb5yvqgd0zBE8VsRkdUTk2itcVLdYU7WLanaQ9jY4NY6uLJ1tmIRIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=K6gmh1XI; arc=none smtp.client-ip=192.19.144.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id BB7CBC0005DE;
-	Wed,  2 Jul 2025 10:56:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com BB7CBC0005DE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1751478985;
-	bh=2JufP1vE8BWmTAgWOhaC6QCXSRwArHKrkTbWIH5lo3k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K6gmh1XIas7rreYOGWF7e3SvInmhH2x5EqJ8fTop24IEcvYAba46WnkVkN7rc6yEp
-	 /uUZ3+WYmmWIKQ774jCOcjs0taXYigqQJHmXMu/tqDcjSA1Mn8gtwsBqtWTK2CDov7
-	 hXnDTHl3HihzK5EDb1UDRtMuy552ayRhE5gSuj1I=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 30F1118000A5F;
-	Wed,  2 Jul 2025 10:56:25 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: bcm-kernel-feedback-list@broadcom.com,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com,
-	Matthias Brugger <mbrugger@suse.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 stblinux/next 2/2] clk: rp1: Implement remaining clock tree
-Date: Wed,  2 Jul 2025 10:56:24 -0700
-Message-ID: <20250702175624.1714748-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <17e5c6e0c085cfa0bf4b63b639cdc92c6a4c1418.1750714412.git.andrea.porta@suse.com>
-References: <c20066500908db854aa4816b40e956296bab526a.1750714412.git.andrea.porta@suse.com> <17e5c6e0c085cfa0bf4b63b639cdc92c6a4c1418.1750714412.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1751479651; c=relaxed/simple;
+	bh=CAna35rJ6GALV6IbfjyVSBAdiNUhdYkS0obyApasYHA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YN8kBiXgWdFf3biCsqxa6YYdfxmduGZvXDHEZ0UpUHVPWxSEgRsVi6j6QDwMcrdfWJ66SHjpJDhrzXwp2aRa5Rt/3p4WiRzlUNTveDMPad1+ziv4WB79VaqcAoHtJi/MtqmsVLeT6/Noj/lic1sLSXHvhu378NPzcmhXEpvJ7DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHHKi4ac; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 016D6C4CEE7;
+	Wed,  2 Jul 2025 18:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751479651;
+	bh=CAna35rJ6GALV6IbfjyVSBAdiNUhdYkS0obyApasYHA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cHHKi4acxaVV+tHbNmbzBpn4Mk/9YnVaqvDchgSyWT/eNrKngO0RsSspl7QAz4tMK
+	 gF4sWTsWC8mmP56QNElLuJlxTbd5V9c7rx3MfLYwQmJhhwtA5XwGfGjBABdMsEPKnN
+	 +EOpvVtGVflL9qmsoQBen+If6Bc/Z/0ggJmTvRbrtiZJaJh+YaFPbywCdAGpoCPOhU
+	 eL2KYTeOEsGvOngjx16OS+fijy4ZhFSC6NyN5Hjo6yBeZNSWxnjbqQ3crh5Q5mWDuI
+	 +fthoLiHL2d41Z5q/0e575CwbbZVi4zdcFqCmG4050KKpPQuOP2BqEikASPqqt2yIz
+	 IcoY+W4Qe7OHQ==
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c47631b4cso3482617a34.1;
+        Wed, 02 Jul 2025 11:07:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAhFjTrjYT+NbLThP0u+87xqE5ssc1nOY39yJ1sv4dpBmEM+ffRK3q9TXOhdOkKu5m3TZ3VbDmRiPBrjj9@vger.kernel.org, AJvYcCVZtRY+mj3TgcmT/XP0Kay5lRyUpIrTFXnURJYX/GY4o9u1bs/MI/GxtQ0Rj9DPdk7MHr2OmEwAEu+d@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYzXYaL2RDSUNxg1hqZWYbL+H990OVD600i/sg5aeQn6x+h7jM
+	g2zb7V6C6UghOm4oGRMVbXHg3e38vvQSAVTyvHY2pwP6mGgh7n+Ro5y9lJKM22Fq6f7CxoXX9rA
+	ZGE4O+QR5eSnlCbVr29KR2WpL1iTtEzA=
+X-Google-Smtp-Source: AGHT+IGWKwFOYlhIbYrgckIt5yGU/A31JTxlNE8phOBfmGIbSbxfaWqy7svZGEFTnrGzcmkJ4G0we3c4LZ92Xt3Tj0Y=
+X-Received: by 2002:a05:6808:f88:b0:40a:52e5:37df with SMTP id
+ 5614622812f47-40b8911371amr3195467b6e.39.1751479650323; Wed, 02 Jul 2025
+ 11:07:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250626130109.215848-1-andriy.shevchenko@linux.intel.com> <20250627044722.GN2824380@black.fi.intel.com>
+In-Reply-To: <20250627044722.GN2824380@black.fi.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 20:07:19 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j08S-Q9bXV-CyEFfVuTgDMjhqF+WnKuDCAq=zr_=PUiQ@mail.gmail.com>
+X-Gm-Features: Ac12FXwsUsP4b5PpYllMsXAo2qo1Wl8GWy5NaokNmmPhjzm31VnJ5-8owbQiAT0
+Message-ID: <CAJZ5v0j08S-Q9bXV-CyEFfVuTgDMjhqF+WnKuDCAq=zr_=PUiQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] Documentation: firmware-guide: gpio-properties:
+ Spelling and style fixes
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+On Fri, Jun 27, 2025 at 6:47=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Thu, Jun 26, 2025 at 04:01:09PM +0300, Andy Shevchenko wrote:
+> > - Use consistent style for active-high and active-low
+> > - For C and ASL code snippets use 4-space indentation consistently
+> > - Interleave case examples with the explanations of the certain case
+> > - Remove or add commas when appropriate
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-On Mon, 23 Jun 2025 23:46:28 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
-> The RP1 clock generator driver currently defines only the fundamental
-> clocks such as the front PLLs for system, audio and video subsystems
-> and the ethernet clock.
-> 
-> Add the remaining clocks to the tree so as to be completed, which means
-> that the following RP1 peripherals could now consume their specific clocks
-> and be enabled to work (provided that the relevant driver changes for each
-> specific peripheral, if any, are committed):
-> 
-> - ADC
-> - Audio IN/OUT
-> - DMA controller
-> - I2S
-> - MIPI DPI/DSI
-> - PWM
-> - SDIO
-> - UART
-> - Video Encoder
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
-
-Applied to https://github.com/Broadcom/stblinux/commits/drivers/next, thanks!
---
-Florian
+Applied as 6.17 material, thanks!
 
