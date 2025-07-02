@@ -1,140 +1,150 @@
-Return-Path: <linux-gpio+bounces-22601-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22602-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B1C9AF1326
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 13:05:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EB1AAF1329
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 13:05:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC8FF4A049A
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 11:04:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78EE41C402DF
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Jul 2025 11:05:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00CAF262FE3;
-	Wed,  2 Jul 2025 11:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D1B25E80B;
+	Wed,  2 Jul 2025 11:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2DI2UzU"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oOZImIpD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7C724A07A;
-	Wed,  2 Jul 2025 11:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D001F264A9E
+	for <linux-gpio@vger.kernel.org>; Wed,  2 Jul 2025 11:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751454100; cv=none; b=f446/vMt7wOFHAvkMnX9lb4isonB8Sx3Epjxi9AZqXZNJtcrJTre+KaTwPEqVRsmtyEDdVGQnTqNZU7mrLtz1Ifpqtcss6f5TZnUKLFllJxZoUB0Va2/U3KnzLHOmFmZZ4As4Uq0R5jp6kufHuOG5ECzo73GqCxv6H5sL77ZBAo=
+	t=1751454199; cv=none; b=vDyp0A5sWl2NiEr/C3/KU2nvXdeFTFTv4PtCRjccl3+4YTezUj1sg36VKhshxZfoOJ0cHwoRF0PCAlaIBAPNsPdBNaGJ35x9EBo50ZleFbGxtPgllWEzYdX/FYtz6WRqqWr0p+lrzg69l1qo+M0GODRESDZ74QV7taJujLOJLa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751454100; c=relaxed/simple;
-	bh=Jx3nrA3y02nN1a8g4PQwns0WXAh0O1ZzASAoOCJAAOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MiNYgj4cNzNEEks3BFcSJHS9/L3siw07DE97E1CMHY9eXL29S5C/TZFUr4vfu/4Wc8xiKT1btmAfxW+7KmJUi9jaSRiWUHXduVEXt26EMTjK0tiDsWntD7sBNXCWsBMBfTBxdzNBMqMh83ItVgGK8E94EklQw0H5WbAaOa0uiIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2DI2UzU; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235a3dd4f0dso41553835ad.0;
-        Wed, 02 Jul 2025 04:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751454098; x=1752058898; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WOPaH+YDPVrASXxcxRgC02h4qR2oQtnWUqk9fTWuytQ=;
-        b=U2DI2UzUMt5U3pWr2PEeyqQq/KXJRRQAlQqu4SuBxqmQvGgbSYBHqCWhczc5t9r6BJ
-         +deVtHKS7rnAJUvqEvwkMHC7FWzGHkqcZJ7PM9tUWmqX8P21R1BJ3wxPz6uKv479LvqZ
-         r+g3N5wbXOOvqv49QuQqZ43dHOQkWjVTajRGa3rTYIv6WLX7BA1o5+3+7hMaLMvnjXJb
-         DzQHe83ANvnei+k0zlY8nwRMQHC+PPAOfudw3czAybi8bzdbK2YdoUMLXQZ/0vEJBzou
-         /ZMjSi3xSkBobi0jaeP4m7KKRubT8Z5srYBjBVOroQ0iKMhwbWJ7EXi696K2pnQm+6CP
-         Gj2A==
+	s=arc-20240116; t=1751454199; c=relaxed/simple;
+	bh=UqsOoiEtRgi2jrNVhPu8IraMKM1WqaHrnLwWkgQObBc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ncGhbRfO89LppTo0Y4fPAP3nREEeSZ5+HYx+QUsf+hYFNMF9v9ElnKSd8fmAiZeP3xEJjd3KwmTemCe0BuMEpR6cu+oh5DeE9KGeaPccBAO9J80u/PEK1Iyx7zd9yq1z2+298ewlGlP5ny/aZx0SIXgLJUT9Ts+VYOfmYjLbyuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oOZImIpD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5629VCXE024441
+	for <linux-gpio@vger.kernel.org>; Wed, 2 Jul 2025 11:03:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	iZ0+erNLxw7VuccyfYjtf67X1Uezd2e0x85nHdRkqBc=; b=oOZImIpDzQ5d4D30
+	AfrRTjcIPEq3Z08qYVXJQF1qDlcB8O3CKRwR9qQaPLEDxWfdbu0d+XhbN3Fr4hXa
+	pgqKNrLyujH20Kr+A5zoKjOnCohjAEXmdB9EG+gYDKg20N/p4JsMFedsljJVbH8N
+	YdIeKwuELqtPJMplkT4/OkOoK6d6Y6Bs8UR/8siv5IBE7ftjs3Fkd1aXFrJ5cjwR
+	oE/CtlvBTKmug+LTMvbPCjD7soNQ9xhUp3svfvBhiUAO5lv/QFDOj/+KJUqw8D09
+	Lf1XtNEh1ZNorFHS8pzQxFg9iGDKQeUFwWHR8PExmXfsOX4fh3Z0yD0f5ODgl5ys
+	UY9NzQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bvvav2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 02 Jul 2025 11:03:16 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d440beeb17so71189285a.0
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Jul 2025 04:03:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751454098; x=1752058898;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1751454195; x=1752058995;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WOPaH+YDPVrASXxcxRgC02h4qR2oQtnWUqk9fTWuytQ=;
-        b=c/lzUY5hxVXjwPVTzLWG+UdiW3khqbD9iPBFEWCE2UIFcnjqAxCuitcm23zDRheOFh
-         5mlR7DnwEtObRaU87HW5N3ui04YDXHJhJHQfgF/uakrUmVmp9Gp0rhTckkWOifHdL5n8
-         KDOd3YFPShO18va44mdzw59RaAGjm6U3TPLlHBSoq/CMCxVwO3fAbgAUdDHo48Mg/ywG
-         a7s9qDXvyzlXYZ6xyoDSIT8IVKotyGZWORJx8qMcyCHhs7xPdwnw9iWbLwJqJys+grMK
-         mgtHASSP4puwqkgb+SbEi036lmYzvHzVK3LT4B/uwdaA5IIK9Pf8DSMctiElEQEZX1So
-         12rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0Q4dHLehuViX+U30JwzySz9OZ5kDuO+5LfXoG52/UQ0sxymtJ2UjE+Z7WWwOQZP27OePcMizNdraK2OVq@vger.kernel.org, AJvYcCVXYEDH5an0sBcH9mtiC4zAqYI1dmNEQ+KpLdiB2JCWXWe0LFWKH6lYxPiSoblpkuMWCXh8t9bTEqTy@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU5Mnu0QDWNwZMuHU2SdBg7/sL5cuPvMpR2CE27GFC7vAkVDCI
-	1/ZKinQtwYVxPBvFqOzcifY0ZF2mEd1yb8qGM0cCqJnv85DYy5Whisyi
-X-Gm-Gg: ASbGncu6dIyP8GmZbrmFMBV8fIb4sDoPMcHVUBPLpfJbEOUFEWC5lgIJUmK8AtSHT9+
-	P/2fleh9AoX9aPRZpOqAT8IvGLFIg5x76rV1vl7fPQfGE7DVifFUb+xtgNww7aSU1zmB9VJYClc
-	Fkt3v9Vl37j9KcQ0h+29+Tac43+AL34VY7GLXDDzPm5hehZBKc6khjc4n9NBgP8kwVEU5tAlkGg
-	M0rpWLYdzX8pr5uEwFIhVJlido5V8CRvgeOIgTsFnozW5muW70dWBFnWfBh4qmd25NI3/kidTvV
-	yLJoSQ2PXxnwoddiHXb3vYh4luNDdjY6ldfrwhRpUZ1ya1IRe3OHm4wUL78kwmj/2mMFAU2Z6Kp
-	aDsk=
-X-Google-Smtp-Source: AGHT+IH3iDn2QARp1hU12Ij89unmFmTckuBxbgbwVWw3NsxmxzgB5zxbKWqK6YrXdS5LmZnaITwGiw==
-X-Received: by 2002:a17:903:4405:b0:234:d2fb:2d0e with SMTP id d9443c01a7336-23c6e4d680fmr37152175ad.10.1751454098421;
-        Wed, 02 Jul 2025 04:01:38 -0700 (PDT)
-Received: from rigel (61-68-193-107.tpgi.com.au. [61.68.193.107])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e3a23sm135084225ad.1.2025.07.02.04.01.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 04:01:38 -0700 (PDT)
-Date: Wed, 2 Jul 2025 19:01:27 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>, Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-Message-ID: <20250702110127.GA51968@rigel>
-References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
- <aGPrFnDxG4W7S9Ym@smile.fi.intel.com>
- <20250702035439.GA20273@rigel>
- <CAMRc=MftawBB4rtj4EKS_OwMCU9h53sA8QxcFq_ZY0MRg2OLag@mail.gmail.com>
- <20250702101212.GA47772@rigel>
- <CAMRc=MeuMpo0=ym+FvDh5sCNXM00+iOSNFgTxMqagO78ZS64_g@mail.gmail.com>
+        bh=iZ0+erNLxw7VuccyfYjtf67X1Uezd2e0x85nHdRkqBc=;
+        b=ukx6v7NcVMJPrr8b2jjthyCd2R9aFi1pnsrF5dbut0oQuieuh0KnQOoBBUYyPhEvt7
+         D7fyqEIAUjAYDgVVLkafxn5/EyWlUSjDvPFIOQDca6AjoTYhacchwzGBFgDeB6gFJJuT
+         VpNWrKLmgY5+aLtnPp/kU0vDazhv0aiIpCdAtdLKxiACoggrhUGJ/FMfbjzinquK14xn
+         SPsc5G0xiTfs5MnhRwlq4aiVlW/egKjdRqlE3ZI0wP5RoBz0lX359FnPa7EGEcoo6Q1M
+         SX0ZAz8J/kiP0+IoIgjyIq9d8ern/Y+w0/WoKmN2+q3KGkTY8XoTTJMEJnGOGdmobvst
+         IKNg==
+X-Gm-Message-State: AOJu0YybgXDZpWRUW03juetHVHWu2p3QRirH2wDfJq2RC3AyjZpIKM4l
+	51NcmDaeAG1XIwpGKfh9dtT/OOZoEzl6RQ3hsDv9Vic3v8MUo9U7MbQ88YV/41t4jt8fxKYiKDG
+	ljxZjjAdJFdWXQSdo4TBkGbqfHlMG6NIqbqyPn0wPSnRJwTVbp3fA5kOPYGpdaFL4U/VZNSnK
+X-Gm-Gg: ASbGncv4DxkrivRYV9qfv6WHWEaynjN9eqkaaDUZsbOpXfS9s0pIFkTG9303eJLovrV
+	0G2C8SGyeDbtf/VRRsf/PpxRQ8oRToLufaFTc6U2hm/FhtWHcUVVPX638xcbWBFOxgIOVhhYnqh
+	XeFGFZihQP14t2YRusHzjEmpuPtf/0nj5dnm7XvHSuJofeHWU1VJODJn09G2fPCMWufAnJXOKMd
+	W6/OjRTrWaLDP2DUrhmEhYbgMyP7WueuJ+Weo6AvTV/kteOv8TWlsBe3lpf9R2KtVw3bkgcbwXo
+	O0c1B3zp5HrBMPtBcUprJWE8ohbNuUJeJfF+VaazrdYs3klCx3Mgj8Bn1CX1I76YqqXFDBS5k1V
+	xzpo=
+X-Received: by 2002:a05:620a:192a:b0:7c5:8ece:8b56 with SMTP id af79cd13be357-7d5c47175d2mr120699785a.4.1751454194957;
+        Wed, 02 Jul 2025 04:03:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJmVaoky9zcbK8IX4+0F2FowsM3fLObjXG5U1FlDD2lNhegepSkRgmdrUwoNZH1FaJWrApHQ==
+X-Received: by 2002:a05:620a:192a:b0:7c5:8ece:8b56 with SMTP id af79cd13be357-7d5c47175d2mr120698785a.4.1751454194496;
+        Wed, 02 Jul 2025 04:03:14 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8290eaefsm8869551a12.34.2025.07.02.04.03.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 04:03:13 -0700 (PDT)
+Message-ID: <5a58fb6d-8ddb-4835-9da9-4c449825367f@oss.qualcomm.com>
+Date: Wed, 2 Jul 2025 13:03:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeuMpo0=ym+FvDh5sCNXM00+iOSNFgTxMqagO78ZS64_g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/5] pinctrl: introduce the concept of a GPIO pin
+ function category
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Alexey Klimov <alexey.klimov@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250702-pinctrl-gpio-pinfuncs-v1-0-ed2bd0f9468d@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250702-pinctrl-gpio-pinfuncs-v1-0-ed2bd0f9468d@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: NKSoSCirz-i4BQic1GCWog1nAmtzybB0
+X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=686511f4 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=FT0SUlyUvFbnnB8yFIkA:9
+ a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10 a=zZCYzV9kfG8A:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: NKSoSCirz-i4BQic1GCWog1nAmtzybB0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA4OSBTYWx0ZWRfXxHluAucuX1K4
+ jtozeMajD6OqUcYDO36LTyicCJ86EWDGnLs2UeYiw9gZe+t4/5+a3CdOF+8/da101G4L7D56JR+
+ vbvhg8nwDRmY2Bsw7FETCS9klxohaojx/juL6zKKb6d407PEmScsKeahBbrCqqafFnfhyiy5pFa
+ 9wz6S51osZnHiS2OdA3AbvRdEZNO7iAsSZRJvu4BwbR+810FYTmLHcup57hseqS0MUqRRhw5WsN
+ JVM0AOf2dkmS7uxB/8MHl+bUflidvEyePVPO+kwciJKhhuxnj9KP8dPAG/1rk+wH0vWhqI9hUNJ
+ f0KC69yWB+yFq04G7h0SfH+sh4tLbQTEPBet8qiWNR/SyxyOAOAV+Y+/ZI5KVeZuqvlQ5jRBsWS
+ ysi8RClAEcAre4iI5dqCzSDvBtUNXWM5F4G4Bt+MzYMCcM2K7cXOqFqdhDtmUcv3qaNHfy8D
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=764 adultscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020089
 
-On Wed, Jul 02, 2025 at 12:28:01PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Jul 2, 2025 at 12:12 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > >
-> > > I tend to not interpret it as adding new features. We really just
-> > > *move* what exists under a slightly different path when you think
-> > > about it.
-> > >
-> > > So what are you suggesting, remove the `edge` attribute and polling
-> > > features from the new `value` attribute?
-> > >
-> >
-> > Exactly. I'm not suggesting ANY changes to the old sysfs, only your new
-> > non-global numbering version.  The idea being don't port everything over
-> > from the old sysfs - just the core feature set that non-cdev users need.
-> >
->
-> I mean, if someone shows up saying they need this or that from the old
-> sysfs and without they won't switch, we can always add it back I
-> guess... Much easier than removing something that's carved in stone.
->
+On 7/2/25 10:45 AM, Bartosz Golaszewski wrote:
+> Note: this really is an RFC. Please don't spend too much time revieweing
+> the code in detail. I'd like to figure out if that's a good approach at
+> all first. Also: while I tested it on sm8650-qrd and sc8280xp-crd, the
+> last patch cannot be applied until all Qualcomm platforms are converted.
+> 
+> Problem: when pinctrl core binds pins to a consumer device and the
+> pinmux ops of the underlying driver are marked as strict, the pin in
+> question can no longer be requested as a GPIO using the GPIO descriptor
+> API. It will result in the following error:
+> 
+> [    5.095688] sc8280xp-tlmm f100000.pinctrl: pin GPIO_25 already requested by regulator-edp-3p3; cannot claim for f100000.pinctrl:570
+> [    5.107822] sc8280xp-tlmm f100000.pinctrl: error -EINVAL: pin-25 (f100000.pinctrl:570)
 
-Exactly - expect to be supporting whatever goes in now forever.
+I can confirm the above no longer appears on the same SC8280XP CRD with
+this series applied
 
-> Anything else should go away? `active_low`?
->
-
-I don't personally see any value in 'active_low' in the sysfs API if you
-drop edges. It is easy enough to flip values as necessary in userspace.
-(From time to time I think it should've been dropped from cdev in v2 but, as
-above, it is carved in stone now so oh well...)
-
-Cheers,
-Kent.
+Konrad
 
