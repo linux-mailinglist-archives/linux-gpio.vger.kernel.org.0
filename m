@@ -1,161 +1,113 @@
-Return-Path: <linux-gpio+bounces-22705-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22706-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80F69AF720F
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 13:26:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDC6BAF7251
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 13:32:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 955FF4E730F
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 11:26:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E4F543ABBB3
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 11:31:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1347A2E2EED;
-	Thu,  3 Jul 2025 11:26:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFE0F2874E1;
+	Thu,  3 Jul 2025 11:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrLNGPzz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geBbCfz8"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32F72DE6E2;
-	Thu,  3 Jul 2025 11:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7173F1BD4F7;
+	Thu,  3 Jul 2025 11:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751541976; cv=none; b=eJDkuIWrKELhdtLAn4HCytvcEGVPLNgouVlTTtwWvf02nknt6SM5DH715VPYHJJcQsgGhX8lbwm/DNRl30S2qEBJW2/u/wxSmcXqilMW1CfLfkM9O6hJsj3mjJyFm95xbHr1qRMeUmAXB4+XSMKoSuvrIHVqjb/UsrtfS6s6BFM=
+	t=1751542324; cv=none; b=m1SV8Fpc/hIMjyjj8aC9YhTT71cYeg5O5XfQmRgIauQXrngYYvB/xcZW0zZqJ3YgVTTJOVUoyGYJs4p9OmGl26y1wUWRumBVPl/mSfiA2psninpALxNWqz6a3uQXSWu3qr0oT8x3aYicLJY6Dt/SayHt+Lqwv1ztxmohjhsDgxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751541976; c=relaxed/simple;
-	bh=FqPC6uGW5OzXvjCe6hrUGgryMViaeWnFpu0l5rbGbGg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e8TJReyDGVWdzyOdZO0eRWhO5xiYaBJyxCpxTEIgvksQyV3adv2QDlYZiXibilJqIknIYkvftdCG4yPSPu1WKT8tes3f2Bi2WcPKf4KYf1aaDjwOZTd7glxbhrVBaEve+IRD/AqnvkFZjVW/U1nJTA+F4jiZniDKpW8/yANnH8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrLNGPzz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1229FC4CEE3;
-	Thu,  3 Jul 2025 11:26:12 +0000 (UTC)
+	s=arc-20240116; t=1751542324; c=relaxed/simple;
+	bh=wzQZ6BxFT/0DZ7LabLhcVgcpyOzEp2kAoXYH0G+txl8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ubw0JYRGGzEGfRaYLUQc0KAudIlYBrHlkV4SslNgVqP/EQpxWU5MeJVQnQXT/tXRAkUV+PSADou4COK+9fPcZ1Qb9zhpnPjk73mR37a/dL9msjLCVVMOxMz/TEEud6p4ziG4G2aZv6Nk1+9eTVsXZcdESDrcZnOIL6gIW76yTq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geBbCfz8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 471AAC4CEE3;
+	Thu,  3 Jul 2025 11:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751541976;
-	bh=FqPC6uGW5OzXvjCe6hrUGgryMViaeWnFpu0l5rbGbGg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RrLNGPzz9nvK+QBMAl6UI2OYdieCX8KPobdOiGL7O+MNzDJvyoqq0ebFjPPPKqXCX
-	 iU8q2CdheykGK3zQtFenmnTFgukkpGOhuVtt5+ZUvNGdOMwLBcgWgUPrZ+SwQelv0d
-	 cLIJ2ODwPwtYs3DO1KMeF1Sg9KPVay8ogNElAYU8fDP6bTzzIs8rzu1SyXhWLvuNTz
-	 Wknid0H13igBhqj0429YpLLBg9vmrs56JapXzLBMORBXQ++YTsnsfXDy8m1+FYS8d5
-	 m150E+WCWV6tb2ln6dnVkkI5/FaIePsA+LagS9FPQAME3uF+dAz2dHUQv4eOEx59Ah
-	 szYdmByRXDKsg==
-Message-ID: <424285fb-14a0-452b-8d18-6165d2a78497@kernel.org>
-Date: Thu, 3 Jul 2025 13:26:11 +0200
+	s=k20201202; t=1751542323;
+	bh=wzQZ6BxFT/0DZ7LabLhcVgcpyOzEp2kAoXYH0G+txl8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=geBbCfz8FblGrXrPHesvEa/mkg9LowWgrWRHEqQmmPN/cMo7sLtTNf7hyun4M/qv8
+	 0p4JW5rm+bvHxo5Oxqp4sPdzulHuryt03U581lSj0F6mKFXJuNJfaqU6KK8SrLepU4
+	 ZnmPIFg3V5bbD42CnfbRN8T6ROu5eA6UTeieWoGojdxPAKcszeocumvR6P/yXjKTxO
+	 cSqNxw4du40DhgWLedRAOhzEOD73L2KiYdrdTFK066oTNqFSPOM/jnIFKp6e4OHjJT
+	 c8lnFovjYCRts6QKWZ7KKyxI4UTyP+9ehYTUJVtcgWKsDpppA657ePeNaxM3GxYZyA
+	 QnsknswzCeejQ==
+From: Michael Walle <mwalle@kernel.org>
+To: Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Julien Panis <jpanis@baylibre.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Michael Walle <mwalle@kernel.org>
+Subject: [PATCH v3 0/8] mfd: tps6594: Add TI TPS652G1 support
+Date: Thu,  3 Jul 2025 13:31:45 +0200
+Message-Id: <20250703113153.2447110-1-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: document the Milos Top Level
- Mode Multiplexer
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Luca Weiss <luca.weiss@fairphone.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
- <20250702-sm7635-pinctrl-v2-1-c138624b9924@fairphone.com>
- <20250703-daring-burgundy-limpet-a1c97e@krzk-bin>
- <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
- <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/07/2025 12:04, Konrad Dybcio wrote:
-> 
-> 
-> On 03-Jul-25 09:44, Luca Weiss wrote:
->> On Thu Jul 3, 2025 at 9:41 AM CEST, Krzysztof Kozlowski wrote:
->>> On Wed, Jul 02, 2025 at 05:56:16PM +0200, Luca Weiss wrote:
->>>> Document the Top Level Mode Multiplexer on the Milos Platform.
->>>
->>> What is Milos platform? Does it have some sort of model number how we
->>> usually expect? Wasn't this SM7325 or similar?
->>>
->>> The problem with such new naming that it awfully sounds like family
->>> names, so just expand the name and explain it.
->>
->> Please go argue with Bjorn/Konrad about this, wasn't my idea.
->>
->> https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
->> https://lore.kernel.org/linux-arm-msm/b98d305b-247f-415b-8675-50d073452feb@oss.qualcomm.com/
-> 
-> Milos is the "real-est" name of this silicon. All the associated
-> S[AM]|QC[MS]s are just variations of it, with different fusing.
-> 
-> You'll stumble upon it across e.g. firmware build strings, as
-> well as in any documentation pieces.
-> 
-> There are various internal reasons for the switch, but the most
-> obvious external-facing one is not to have the user buy a devkit
-> and wonder whether they should use QCS9100 or QCS9075 DTB, and
-> why there's zero drivers code for these magic numbers (they
-> include SA8775P). We can simply point them to "codename" and
-> all C code will refer to it as well.
+Add support for the TI TPS652G1 PMIC which is a stripped down
+version of the TPS65224. Support for the latter has already been
+merged. Refactor the regulator driver to ease adding new devices.
+After doing that adding the TPS652G1 variant is really straight
+forward. Some care has to be taken by the interrupt handling (of the
+regulator part) because there interrupts are used for voltage
+monitoring which this variant doesn't have.
 
-These are different SoCs, optionally with different firmware, so they
-cannot use the same top-level compatible chain. I hope you did not
-propose that.
+As there are conflicts in the regulator tree (some constify
+patches) and my patches make use of them, only the first two (or
+four, that's up to Lee) can go through the MFD tree. Lee, could
+you please provide an immutable tag for the other trees to merge?
 
-For me list like "qcs9100, sa8775p" is clear enough, but if you want
-"qcs9100, koala-bear" or "brown-bear, koala-bear" it is fine as well.
-You just cannot use koala-bear for all of them.
+v3:
+ - (re)add dt binding patch that I've accidentally missed in v2
 
+v2:
+ - refactor tps6594 regulator driver to make it easier to add new
+   variants
 
-Best regards,
-Krzysztof
+Michael Walle (8):
+  dt-bindings: mfd: ti,tps6594: Add TI TPS652G1 PMIC
+  mfd: tps6594: Add TI TPS652G1 support
+  misc: tps6594-pfsm: Add TI TPS652G1 PMIC PFSM
+  pinctrl: pinctrl-tps6594: Add TPS652G1 PMIC pinctrl and GPIO
+  regulator: tps6594-regulator: remove interrupt_count
+  regulator: tps6594-regulator: remove hardcoded buck config
+  regulator: tps6594-regulator: refactor variant descriptions
+  regulator: tps6594-regulator: Add TI TPS652G1 PMIC regulators
+
+ .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
+ drivers/mfd/tps6594-core.c                    |  88 ++++++-
+ drivers/mfd/tps6594-i2c.c                     |  10 +-
+ drivers/mfd/tps6594-spi.c                     |  10 +-
+ drivers/misc/tps6594-pfsm.c                   |  31 ++-
+ drivers/pinctrl/pinctrl-tps6594.c             |  35 +++
+ drivers/regulator/tps6594-regulator.c         | 219 +++++++++++-------
+ include/linux/mfd/tps6594.h                   |   1 +
+ 8 files changed, 285 insertions(+), 110 deletions(-)
+
+-- 
+2.39.5
+
 
