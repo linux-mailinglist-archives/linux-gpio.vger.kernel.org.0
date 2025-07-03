@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-22767-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22768-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 694F5AF82EF
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 23:55:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6ABCAF82F2
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 23:56:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB126583FAB
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 21:55:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 153565A0943
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 21:56:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363A324C06A;
-	Thu,  3 Jul 2025 21:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24FF2989B2;
+	Thu,  3 Jul 2025 21:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DIAXaAw/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWyqy1IB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457B023909C
-	for <linux-gpio@vger.kernel.org>; Thu,  3 Jul 2025 21:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDDE23909C
+	for <linux-gpio@vger.kernel.org>; Thu,  3 Jul 2025 21:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751579733; cv=none; b=by7JUNKrvVMc73ByA+TT9HMonrHcxYjvZCSgXruCGiJ20ZKTuJdt5V1RbN2oQvcZBDI34FqD9s5m+nFhTUngJz4p/cafl5T1Y884mz8usFwIN0wUvDOtgq4qNTom0FQl+sqGmBwKJCz0hQvDtBsns/cPVHpYthRVqcLHwbK8S8k=
+	t=1751579760; cv=none; b=OqYp8UpiQSaczZLWeTSftxjKbMg9gbeBjlilsEyCInxoRP4ysK0IKbJv4zffeBg8jbCg+KgAU5rhaVXwGqQ5oWGXag0yiwiQepKP/CnCCwv4cQWNa8GEMNTwHgDQEMeqOXr1t53R7N1Ag0f4LwDmr6eEQuPIrbjk4w4rLZ2/wvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751579733; c=relaxed/simple;
+	s=arc-20240116; t=1751579760; c=relaxed/simple;
 	bh=YGEkDXVNOX9wPiYmSwP7ApJGABwjYWXqzCX16ikn5to=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MJ1IyNGoNzLA2sCUrEE/5H8IvslGwcxzxBCug19yl/ByxSz6JJyawktngXo0MZ9wi07wgiId6SyOgEmVqSd0JesofCi+LvM4C+P9wVgg16brNtJVhHsWZLKM7HBAgBGFywn1n2zJ6EwDUBfs2GQ0LrLBZ9e+ajXD6TiN9Z1L9ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DIAXaAw/; arc=none smtp.client-ip=209.85.167.45
+	 To:Cc:Content-Type; b=WgMNXe5uKa+aL7ZDh6k6z/LJ/1pBmaQjZjS6TDRl/aWHY584yHdwjz15wERyJgNXyJyCekq78KAGWycCmi1NxqcpzSlDSq7e2YibvlzV3MeDmb77xoiM0CZtORS3NtoRkm4T4Pbg5Y4BVe0OXU6leUIGLGh110gki1NkTIu4nE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bWyqy1IB; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553dceb342fso374633e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Jul 2025 14:55:30 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32adebb15c5so2739481fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Jul 2025 14:55:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751579729; x=1752184529; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751579757; x=1752184557; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
         bh=YGEkDXVNOX9wPiYmSwP7ApJGABwjYWXqzCX16ikn5to=;
-        b=DIAXaAw/6jCpCnH9WPVnrT/smB2pxpu+nlrVZoInw5ey/7TuWTs6qBXdapRzgHkW/h
-         42bhO4PjsEiejJ2YF0SNFtlrn7MsnicwNqQKZNceyyQPHszXZnf3KchjnMM/nEJ8htzI
-         3lzEbB6Z05wHBLjPBpcETp8ZcGQTLsaSBRMAku1M7pHHIrR4f6E5nAmzng2srkBPLkd7
-         oCzX76UChjCdTQPS6SZ91RloCyyEMAyBKT7vLYtyKIbB0ZPFpAFyKgtuDHXcRtj3ViIT
-         DIu9Ol+sOfOwd53mrz1SRV4n3S92m7U75qzLaT1Rjt3jwaB4Gt7YLr68A9Z3Ywffad5v
-         Y+9w==
+        b=bWyqy1IBCzRXd2OHO7XovA2Oxu+XZE2bCT5SzIaPA2UEjDiZal6gMhXBU5cVNLIyzK
+         R96ovz7e5B41iyeJ6fwBMfRg3FKWGvor1RkZe5DLD3Ky0UfJe2ZZxdREYlSh9Mk6kSb+
+         41Lx0zrFd9hZmiT5mxZ79rKQB4Tm7lixfmEGO375L2pKK5ZuTBxauQ7coFhrytSi2568
+         UX58opaRHQPy+Zx0i18uVjXh0vThBXv+qcGbV6+kethHeRgUY4/QR2BuMqNFFkZr08cq
+         WCSGAK7Gf3bYdS6VjhlzG9AP4hJt6eYYUJ4MisKBbNZ+OEU+/uN1thDuhF7Mty4O5XB1
+         uavw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751579729; x=1752184529;
+        d=1e100.net; s=20230601; t=1751579757; x=1752184557;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
         bh=YGEkDXVNOX9wPiYmSwP7ApJGABwjYWXqzCX16ikn5to=;
-        b=N+y65+iAb+w0sBA3brT705tjkUYLlRRMg5x0w2zOJ2hGbPJ3H3T4tamXlLwa88XfBz
-         R0yap8NtE5fVf/dMCWprP0RodOfTl2tqMdWTArvgq8Wa1TRyoPxHfAcIljn5gmBGGkAD
-         mzzTD34Vk3uFlNvzsqZGICN+Wwysm2MyDTR6J0qOn48VBbqwN9Lp9N3zIycO2oSZsXif
-         e9II4IgVm3HKyI49fzYXR+v2gKLZBdJR3+5JtEoWnsDD5ntFvyOQ6/zZ//0qxO/UoyGm
-         a/7bAY6RxaXAlrTFZUjuFJu9+jyiovderPw28Q3c15wLOPRg7pl071S9QhPdXqixppla
-         26xg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqXYgu36Gm+z/Q6RchpPYutJb48m9VEYETpB85rzONupgddYA5Jg/73MFO02YOsQNtt/hdkPgfdZoI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgPzKlsiEhQeq7YDxna+SLR0E5BIKya8ADW0WsEnWz9jHZew6m
-	8X3sVu8H9NVeanovnIoUrb2xAfxRI71lcgWB2kiiXas5v7GV3gE0ZoULyFO9QNPtJ7C0dpcxi4v
-	ZadzwtuPrwntixZEi6VyKQDKnAVSWD2lkk+siSfjMpQ==
-X-Gm-Gg: ASbGncuHWz0rGUa0ayH+v60O6MCSKyh+A1whRBrgI8lpw3N16g3Q9ovDhxrx+ulV4WY
-	IWJPh194b83lWDbuLvp4FAkSCGHnjApDmpDmkrZa3PNlcRx5W5u9jjFLasC7GEfeKLmobG4TqKV
-	JSiKZqilBquu8zcmti6IKo619RnvAvEkk1lHW3GsK/Kp/d7tnKg9mwkA==
-X-Google-Smtp-Source: AGHT+IHy+6VU1NwR5hSQKpWzK3RCXChUuB9Un+z3AYwhqdaiRedo471AkDhodxUcy7i+LlhTDM6edhCtprSC1oAz8MQ=
-X-Received: by 2002:a05:6512:ac1:b0:554:f7ec:3b23 with SMTP id
- 2adb3069b0e04-556dca2b8f1mr22283e87.15.1751579729319; Thu, 03 Jul 2025
- 14:55:29 -0700 (PDT)
+        b=boPBNGkGYTH9XOB21kDJJ1LxDXGdg4CBPoXjU2MyujXXblGcDWl4uyy1tKDk6fdmLp
+         8iCsNm9G+gtT8wPfyby9OTDf4DZE/5sHzRzdKfatOGUoS0gBYgwEHT0bzkqm+PUexZdx
+         uUbKTc2tfX9s9/t7PzidyRaiRvf7DcH5P7GtMqEyfr2aUNukrP83vxJ0GALdfbSgXq28
+         k5a0ecx6poRdmcejVmOYZhDaSXTOlmUzFODAHluw4XF93jzQ/u1cbrTUF1vlNvKOx6R1
+         AJQS9+/PvascLjeYZu5hfIKlGJVhwxBmG7z5Vc0FiaTxhnLjVCiztP1CwK95UAxS+zAu
+         GgRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXk5y+BjQTKODXvSjkGR8CcB3xsm+cK+Gghbup+jwx4CBHbq75E0pPj1qRODQlEYVteCng6YzTTYtj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1PeLa/DzhzsPVP3YjlgS0sWoZrb+bM1Gm/aPeiv5os8Qg9GJ8
+	XSB/YIvDeDvCbnC02bTHKsLpDa6oT75n/rxBspTH/Kl2RIympibPnqxf4wkbDynvR5rIw/3FufE
+	pIs5uu0uOSurlDibPHnQE8lXGtLdvbK5mL08gSt3Vpw==
+X-Gm-Gg: ASbGncuN9XXfowQEZM0UAawq6pj3ThawarsnyXETXpJ72jrDKSt5dNckZvPxl5hzIYn
+	k94pQnNCzqaaVrJ5bvcU4v/L4qi9SYt9QKkxsIKh07h4CHXLokhXiOcQ2x1ncgGdAEbDCF5HLBC
+	Iby8PvBV1agNSPhOiitwk33Lswy896CREyMG5ahHYnV70=
+X-Google-Smtp-Source: AGHT+IHaNTjaTi4rRrNiknGoZhKdAy0nR6vSTWwutP5sj+WgtzM1iPq+I6faszK16by8wPiLXBJSSCeRTyl3tRP9WBs=
+X-Received: by 2002:a2e:a9a0:0:b0:32a:8153:6934 with SMTP id
+ 38308e7fff4ca-32e5a4b393bmr565651fa.1.1751579756933; Thu, 03 Jul 2025
+ 14:55:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,13 +75,13 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250625-gpiochip-set-rv-gpio-round2-v1-0-bc110a3b52ff@linaro.org>
- <20250625-gpiochip-set-rv-gpio-round2-v1-8-bc110a3b52ff@linaro.org>
-In-Reply-To: <20250625-gpiochip-set-rv-gpio-round2-v1-8-bc110a3b52ff@linaro.org>
+ <20250625-gpiochip-set-rv-gpio-round2-v1-12-bc110a3b52ff@linaro.org>
+In-Reply-To: <20250625-gpiochip-set-rv-gpio-round2-v1-12-bc110a3b52ff@linaro.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 3 Jul 2025 23:55:18 +0200
-X-Gm-Features: Ac12FXzOS746MKEQ8T_6q3redzT1OE7J4o6V1m0jt5q39x7cc8PQ_RL8cK-Gjdc
-Message-ID: <CACRpkdYgx-XGu+yg1u421Pwb8o+7OW7xBgCkcP1KUzRUz6dUuQ@mail.gmail.com>
-Subject: Re: [PATCH 08/12] gpio: stmpe: use new GPIO line value setter callbacks
+Date: Thu, 3 Jul 2025 23:55:46 +0200
+X-Gm-Features: Ac12FXyJ5knyp1mOJyZQmth8ooUCQJdl18NRhMK4RYZjhZxWH_hhFCTHLqF6V_M
+Message-ID: <CACRpkdZ7B7FZtU6a+n8qcvNhhuqhzeZ=jfs+xQPqAWLa5n2LAw@mail.gmail.com>
+Subject: Re: [PATCH 12/12] gpio: tc3589x: use new GPIO line value setter callbacks
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, Andy Shevchenko <andy@kernel.org>, 
 	Thorsten Scherer <t.scherer@eckelmann.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
