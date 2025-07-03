@@ -1,87 +1,86 @@
-Return-Path: <linux-gpio+bounces-22729-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22730-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AE02AF750E
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 15:08:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9548AF751C
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 15:10:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C2514A0BCD
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 13:07:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB5B11C4787C
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 13:10:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CB902E6D29;
-	Thu,  3 Jul 2025 13:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC3982E7185;
+	Thu,  3 Jul 2025 13:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PWeSYD5S"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Fm3QByJS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5382E6115
-	for <linux-gpio@vger.kernel.org>; Thu,  3 Jul 2025 13:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42AA2E6D25
+	for <linux-gpio@vger.kernel.org>; Thu,  3 Jul 2025 13:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751548090; cv=none; b=dVuao1TcEhnWh/89PNcz5dU0O6D8yK7Q6pALwk/bZbbSXgGT/GfKMeUQgTmVal5ItYO10yA7c9bj/l8bwmAyI/DnEEjpytKKQssYk8iW+07g5nWrojPlmtI8RUoFDy4fX3Q55AxdrEkdXMeyTsceB3HVgs2Mc58iG4qdw5CzhzI=
+	t=1751548226; cv=none; b=EbWb7ZvfJok2wAbg7c/SxuooymdNEF2QfNveBekX/HJXgZB4xOkFdRzXchp9pIvFx+4ZgIWwsBJREA+sASaV+NWYmwDBnYBVHvn/YK58t3mOCodoxTBmbImjXPntZPaTCKuGi+p1P85l/76D6tUnBVExnVaHD+fy257R8HWLvEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751548090; c=relaxed/simple;
-	bh=JanBi7K9weyr7XmGzKurXsUQYBOqj7Q+2l2ycsuOc8k=;
+	s=arc-20240116; t=1751548226; c=relaxed/simple;
+	bh=Gb1IkFXCIe7rVjXkOXMxbgXAPrqKvgtCMq1ITbov+90=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dKLSzBCXwe8h0P67MFXRfM31rCFxAOnK6FGE2imJFYPf74F8P/atkhG+BWgwgAFo0F7N+uOlRdjDMEPH4H1Fz9kw+QQcgoZxsXpxV9IsuijnpJ42UqtAC2uF1t/rmNEWBm7nvScQUXlaR7t2dzcKk5axEczxBtryWt69xNl4XP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PWeSYD5S; arc=none smtp.client-ip=209.85.208.177
+	 To:Cc:Content-Type; b=i948rFDLVE8jqf9aPOXI17bncjTWpshZeVyPuET+WNlBHEsGvAs/XW7lM7YKi1021kAeQ9tPntWn6aVtA3Vfkgz3GXZNSGddHX4AYnhQAHIN7qPxNXBIe4sHyNYkZRug/N2W65xZrPEQj2fIJBWgqL+10Kxl7kUUUz/+2CK3qrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Fm3QByJS; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32b78b5aa39so54534611fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Jul 2025 06:08:08 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32b50f357ecso50860031fa.2
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Jul 2025 06:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751548087; x=1752152887; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751548223; x=1752153023; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GK4OKlfFeC5d0xwGKjxMnVvoaWzs29QyrzbuIGizZlk=;
-        b=PWeSYD5SWBijTvkMp8+pdC3F42Wvc8bShMdaIarmiNHYsfTwGUu4cjj66QiRndUosu
-         owYgOcbIkhR3gAczs4Wc61L7kXgHXAkbNx+2O7PQ4Jd0S2zLips/ZViGXmjNeKmAZGKS
-         rrq+z3SXmEVtRJP1OxYEOUT6BJWmxY1+eXsG6dzjvgkUUxWf9vmZKo+ve2WNZAl2Z/BZ
-         NUSuo6z1V0JvVQx2/3NAvvHb6PVNzeU9z1kjWePYgPwLXb2nmbqreGls7ths9z3tsxbF
-         mIRhzI8KqTZk4Oe8R+h2alG3xMQeaJszZcNmjbxtIhva6mPUFiKPH6pPaHT8SUbtyVG0
-         FezQ==
+        bh=bjaTGEjolLFoNk/E0+rgtJfC0Bhrwp6bJIAjq+oqaKQ=;
+        b=Fm3QByJS1yrxbRmZp3fOZbS12FUsmKzC2qR7cr2S+7KhebkmQmRw3L+fqVH2FLiepS
+         NSw86W06C7Spe5LBxo6PM9Gk89o8eKYgwkgJX9TXS7fs+/yfDQWf03dQU2YhcaPM2mNx
+         x/r0xAx0ILvD0EXqW3YrUNh3MfagoLNiYc/LjA/hJazb4zn6YCW4DCfu3fZglztQKjjy
+         RF2UG1hPgCdwYlDaLGeW/1WSSEZbM0uGTxJSiZeZiOp5/RnNI2f2fHJ+FmRCHU+tbE8I
+         N20c55GoqW60+x+MWu5yMJ8wzYMLiA4gVc+RYZ4tEEfH/jxSCVbbaVBzN/dEf7ZSGio0
+         xKww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751548087; x=1752152887;
+        d=1e100.net; s=20230601; t=1751548223; x=1752153023;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GK4OKlfFeC5d0xwGKjxMnVvoaWzs29QyrzbuIGizZlk=;
-        b=ms4S+kK2kU5/Ui1B0aq7fpSLV3Cl2SIAObsoLixKp5nmIMEp188dMCWD1OtP8cs63D
-         TTx5zXbDSemGhVdv69RrmdI5Htd967BS4hTDUTcmsYBlZ2JBSAt9rectMAGmidbjj7qh
-         UuxTV9ymhBnlt7mJpemFA4UQeQZQcxQDnCfCLnZWkbb9gZD5PGL77EP5cfU8bett2bMu
-         c7GtxqGnvT0sBHvBNczQERx6s58y1sJk+4OiC8cs7IjThAXwt25SD2vgdDQ5N1l6CyG5
-         cTkka2U6IckSKwkOnOuECykeMvAS2BdfqrHbrbn58zgULkvFKdz4hKAVjpFUIPnjlUl3
-         I/Kw==
-X-Gm-Message-State: AOJu0Yzo2AQxtmI7TfSrxvBfIrlwV8FModxok+V6LiMJ6K2MHgMxID37
-	xgHSu8u1lS3uuMRtuIoZzf9P4LvZGV/2YKKmVimtXu3Uu6/ZaevXy03S5GhkTvDKz+ykquOpicU
-	ZyRzSTqSgjzyaCJKsIAU+09Z/LSXW55i326mCHmghpA==
-X-Gm-Gg: ASbGncu1W2JCD/1FuRuy+kli0eJM2oU7Zh1vv+DsTTFv45BSIvEBUEVJQ5BsRJxIfTB
-	XWxtAjoCo/Iv5oM7p6EwCrxIaLRh1cYzd77NL1HseNZtTE9y7GVoqIQoWQSB4+4Cr3sKXZN0hNp
-	dE3R9UTtQPyTbjrW29MM14UJ3VhjDyBGLjGg0Dy0VfJFdeeokBnJExlDZ58KDUzD5LacN4RuScH
-	Q==
-X-Google-Smtp-Source: AGHT+IFBpm7cQyJ+Bp1kO1gYZd6KKdHwC5WEoxgmE5pWV9k610l17z8/GvmnTu9RQrdixKBfL2RDfjtMmjSVA+fh0hc=
-X-Received: by 2002:a05:6512:68d:b0:553:2375:c6d9 with SMTP id
- 2adb3069b0e04-5562838b7c6mr2703310e87.55.1751548087045; Thu, 03 Jul 2025
- 06:08:07 -0700 (PDT)
+        bh=bjaTGEjolLFoNk/E0+rgtJfC0Bhrwp6bJIAjq+oqaKQ=;
+        b=hD0NBXv6zPXETfUAG3BRJSMWZOyo1P8z521g/+EP1nI+CraTsm6rpYzcg5QvOtR1yR
+         KtUAmsfic0k7Z+ygA2k1snBUGIcGYnpImxcJtJth0e/9ykfMz4llexKiovlVkax1VtPJ
+         ZI8luy/sM6cLkVxoIQ+Js/oSXniJ/gy2KqzSMMLYCfT8kVHikX2uMaEEde+ZmgDi0WJv
+         5cC8AMMMVVN0Kge8e3MPBUkvWv48Jk3Hg8T+rvEBi13x92bx7kJIsA4atIHqQpcXOZDi
+         QMCad2VNPpiMUI97YKieMD9GXzoPp6qEb/Hb1szSHGpXRIhNhWUpnLzNYY9YD1AwA5DN
+         GnCg==
+X-Gm-Message-State: AOJu0YwAsgYL7joT7IvUqGXST3cG5L4MchbH80bc4pHvzffHEEsA9J9K
+	Da+EBmXaFPPqPvSZmatn/A2CCj6rEKCAc//2hEtXDbWo351EZIV9tGm+IG33lF2MXWXf50Vg93m
+	QzLp6i9h8ZBNX1SIf6K8OQQfzp7tks+U/EMM6FGx+FQ==
+X-Gm-Gg: ASbGnctkTSDJf8PlaF5rNvl7o+367tWKpLyTpQ3zyDpAaCzV5JzyjfWEi7tbom8uvMk
+	1xOAtPZtuqCBMhijBIKypIocX5DugrE9xS5nvAoad60EyM/h6/7N1Fgjk/4GehtgJ6BYzNA0dLd
+	wY83aIwDxe7wbPKtENTAWpaONm6PmuMAJFl1G/gmqKcFDsfCXKz7qLmy5cUtBH1kPVxaLLaDy3B
+	g==
+X-Google-Smtp-Source: AGHT+IHxWXlh+Xi5UEoyYXBIiyt+vfXSa6QG+Av8aHQdIOn0y2uNTayumcpylHFwtGf6UVpFfTW0gACu+FLBVk2PB+I=
+X-Received: by 2002:a05:6512:12d1:b0:553:3178:2928 with SMTP id
+ 2adb3069b0e04-556282c250bmr2816540e87.16.1751548223074; Thu, 03 Jul 2025
+ 06:10:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617204402.33656-1-mariagarcia7293@gmail.com>
- <20250617204402.33656-3-mariagarcia7293@gmail.com> <CAMRc=Mftput7DO+nmOA0yMcB0SvtsDf5U25ukkMVuOnV4XfX=g@mail.gmail.com>
-In-Reply-To: <CAMRc=Mftput7DO+nmOA0yMcB0SvtsDf5U25ukkMVuOnV4XfX=g@mail.gmail.com>
+References: <20250701161629.9782-1-mariagarcia7293@gmail.com> <20250701161629.9782-3-mariagarcia7293@gmail.com>
+In-Reply-To: <20250701161629.9782-3-mariagarcia7293@gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 3 Jul 2025 15:07:56 +0200
-X-Gm-Features: Ac12FXy6w3XoUynazt1SiD5Ofkz80TXW3KXY7DW_5eZ5Fql3aGlbenMkOR_6Sy8
-Message-ID: <CAMRc=MeEj574YPgX17S8z5Z0miaksWw-2NQMhpwsjNL0z8FT-w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: pca953x: Add support for TI TCA6418
+Date: Thu, 3 Jul 2025 15:10:11 +0200
+X-Gm-Features: Ac12FXwrt5arm8lRyaVLiwyu4dMeVOLCnYVwDOO42VXwvsCRxSv67Szmz7sFT_Y
+Message-ID: <CAMRc=MdEr+bP1y9DHYa-qrXGJT3-zEvemWm7FzHvkqyfBZC2bw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] gpio: pca953x: Add support for TI TCA6418
 To: Maria Garcia <mariagarcia7293@gmail.com>
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
@@ -90,23 +89,53 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 1:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Tue, Jul 1, 2025 at 6:16=E2=80=AFPM Maria Garcia <mariagarcia7293@gmail.=
+com> wrote:
 >
-> >
-> > +static u8 tca6418_recalc_addr(struct pca953x_chip *chip, int reg_base,=
- int offset)
-> > +{
-> > +       /* reg_base will be TCA6418_INPUT, TCA6418_OUTPUT, or TCA6418_D=
-IRECTION
-> > +        * offset is the global GPIO line offset (0-17)
-> > +        * BANK_SZ is 8 for TCA6418 (8 bits per register bank)
-> > +        */
+> The TI TCA6418 is a 18-channel I2C I/O expander. It is slightly
+> different to other models from the same family, such as TCA6416,
+> but has enough in common with them to make it work with just a
+> few tweaks, which are explained in the code's documentation.
 >
-> Please use regular kernel comments, not the networking style.
+> Signed-off-by: Maria Garcia <mariagarcia7293@gmail.com>
+> ---
 >
+> +/* Helper function to get the correct bit mask for a given offset and ch=
+ip type.
+> + * The TCA6418's input, output, and direction banks have a peculiar bit =
+order:
+> + * the first byte uses reversed bit order, while the second byte uses st=
+andard order.
+> + */
 
-I asked for this under version 1. It's still not fixed in version 3.
+No networking-style comments in drivers/gpio/ please.
+
+> +static inline u8 pca953x_get_bit_mask(struct pca953x_chip *chip, unsigne=
+d int offset)
+> +{
+> +       unsigned int bit_pos_in_bank =3D offset % BANK_SZ;
+> +       int msb =3D BANK_SZ - 1;
+> +
+> +       if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D TCA6418_TYPE && offse=
+t <=3D msb)
+> +               return BIT(msb - bit_pos_in_bank);
+
+Since you're going to respin it anyway, please add newlines between
+one return here and elsewhere.
+
+>
+> +/* TCA6418 breaks the PCA953x register order rule */
+> +static bool tca6418_check_register(struct pca953x_chip *chip, unsigned i=
+nt reg,
+> +                                  u32 access_type_mask)
+> +{
+> +       /*  Valid Input Registers - BIT(0) for readable access */
+> +       if (reg >=3D TCA6418_INPUT && reg < (TCA6418_INPUT + NBANK(chip))=
+)
+> +               return (access_type_mask & BIT(0));
+
+Same here, please sprinkle in some newlines when returning for better
+readability.
 
 Bart
 
