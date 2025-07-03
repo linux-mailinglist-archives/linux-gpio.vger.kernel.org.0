@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22704-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22705-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CD35AF7206
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 13:24:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 80F69AF720F
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 13:26:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC8084E7292
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 11:24:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 955FF4E730F
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 11:26:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E87D2E336C;
-	Thu,  3 Jul 2025 11:24:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1347A2E2EED;
+	Thu,  3 Jul 2025 11:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EBbMtqu4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrLNGPzz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63A2E2EFE;
-	Thu,  3 Jul 2025 11:24:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32F72DE6E2;
+	Thu,  3 Jul 2025 11:26:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751541841; cv=none; b=WHFFWQQRisHaxiJRd1+eUwIyncUsSLg7Rw4ktaSytVShcnjNN/366RQnKzlOgEXYc8kh0Piz9mISGVMo/xG45VusBIf9HBO8qoIOMZgZ+c1/Nr8GWIBo8L0oY/EVz4aJl7dmMuDYhU6ChkFJGOYU3FHL6NdLxit8I6g2t8WSM8U=
+	t=1751541976; cv=none; b=eJDkuIWrKELhdtLAn4HCytvcEGVPLNgouVlTTtwWvf02nknt6SM5DH715VPYHJJcQsgGhX8lbwm/DNRl30S2qEBJW2/u/wxSmcXqilMW1CfLfkM9O6hJsj3mjJyFm95xbHr1qRMeUmAXB4+XSMKoSuvrIHVqjb/UsrtfS6s6BFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751541841; c=relaxed/simple;
-	bh=qdMPMaWhAdjs0zICvQE3fxorvk/Gs4a0C1/nlgKrdDc=;
+	s=arc-20240116; t=1751541976; c=relaxed/simple;
+	bh=FqPC6uGW5OzXvjCe6hrUGgryMViaeWnFpu0l5rbGbGg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WOiE+qnUq4LFm+CAiyvEfMqfqDjxD+hp15IQRfIlQSX8gux3SQCaNmhNppGvRofhJrdMz1/Oc8cNlE4Ds6JLZe5ETBmFJZVxggoiW6H/Bf2wSouLxHglnV1SLBtQafufISBpA6tXTCAk0Q3M0B83Ph3OKRlene0MLhjmTjuckEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EBbMtqu4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D7ECC4CEE3;
-	Thu,  3 Jul 2025 11:23:56 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=e8TJReyDGVWdzyOdZO0eRWhO5xiYaBJyxCpxTEIgvksQyV3adv2QDlYZiXibilJqIknIYkvftdCG4yPSPu1WKT8tes3f2Bi2WcPKf4KYf1aaDjwOZTd7glxbhrVBaEve+IRD/AqnvkFZjVW/U1nJTA+F4jiZniDKpW8/yANnH8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrLNGPzz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1229FC4CEE3;
+	Thu,  3 Jul 2025 11:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751541840;
-	bh=qdMPMaWhAdjs0zICvQE3fxorvk/Gs4a0C1/nlgKrdDc=;
+	s=k20201202; t=1751541976;
+	bh=FqPC6uGW5OzXvjCe6hrUGgryMViaeWnFpu0l5rbGbGg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EBbMtqu4GeUGpMSibpJn/E4iY5cmMx5SCnl5CxGwmkirVAo3iA2EWCJmcwTZUuMop
-	 vkxBJLxP0Vbzn0sYN/l5bjHKNwADqP/ZOa3ok6x7o2oFrUtk2yU+PhbCaVKch2z9nu
-	 ThHD3X/NlpbmUH03npYj/BtA8Ik/lBCgXdr+z0lSkq90UxiXCnwS0hrwE7jyW73C01
-	 eAqgjw2m8hQamZJTfJyW+VOXsnXzzOlvvYDOZtdwOLEP0CKfUSbZ+u9gs9aRb1k69S
-	 Pv6J5Re87kS0H+LydT/KkIlaNqRIi09gBvLzIRGD4Mq0IrwkNEiGNQpptwSK5Rw3I7
-	 N1Ik1wK2I82rg==
-Message-ID: <3116cbdc-f18f-43d4-a26d-79e66561183f@kernel.org>
-Date: Thu, 3 Jul 2025 13:23:55 +0200
+	b=RrLNGPzz9nvK+QBMAl6UI2OYdieCX8KPobdOiGL7O+MNzDJvyoqq0ebFjPPPKqXCX
+	 iU8q2CdheykGK3zQtFenmnTFgukkpGOhuVtt5+ZUvNGdOMwLBcgWgUPrZ+SwQelv0d
+	 cLIJ2ODwPwtYs3DO1KMeF1Sg9KPVay8ogNElAYU8fDP6bTzzIs8rzu1SyXhWLvuNTz
+	 Wknid0H13igBhqj0429YpLLBg9vmrs56JapXzLBMORBXQ++YTsnsfXDy8m1+FYS8d5
+	 m150E+WCWV6tb2ln6dnVkkI5/FaIePsA+LagS9FPQAME3uF+dAz2dHUQv4eOEx59Ah
+	 szYdmByRXDKsg==
+Message-ID: <424285fb-14a0-452b-8d18-6165d2a78497@kernel.org>
+Date: Thu, 3 Jul 2025 13:26:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,7 +52,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: document the Milos Top Level
  Mode Multiplexer
-To: Luca Weiss <luca.weiss@fairphone.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Luca Weiss <luca.weiss@fairphone.com>
 Cc: Bjorn Andersson <andersson@kernel.org>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -64,6 +65,7 @@ References: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
  <20250702-sm7635-pinctrl-v2-1-c138624b9924@fairphone.com>
  <20250703-daring-burgundy-limpet-a1c97e@krzk-bin>
  <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
+ <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,27 +111,50 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
+In-Reply-To: <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03/07/2025 09:44, Luca Weiss wrote:
-> On Thu Jul 3, 2025 at 9:41 AM CEST, Krzysztof Kozlowski wrote:
->> On Wed, Jul 02, 2025 at 05:56:16PM +0200, Luca Weiss wrote:
->>> Document the Top Level Mode Multiplexer on the Milos Platform.
->>
->> What is Milos platform? Does it have some sort of model number how we
->> usually expect? Wasn't this SM7325 or similar?
->>
->> The problem with such new naming that it awfully sounds like family
->> names, so just expand the name and explain it.
+On 03/07/2025 12:04, Konrad Dybcio wrote:
 > 
-> Please go argue with Bjorn/Konrad about this, wasn't my idea.
 > 
-> https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
-> https://lore.kernel.org/linux-arm-msm/b98d305b-247f-415b-8675-50d073452feb@oss.qualcomm.com/
+> On 03-Jul-25 09:44, Luca Weiss wrote:
+>> On Thu Jul 3, 2025 at 9:41 AM CEST, Krzysztof Kozlowski wrote:
+>>> On Wed, Jul 02, 2025 at 05:56:16PM +0200, Luca Weiss wrote:
+>>>> Document the Top Level Mode Multiplexer on the Milos Platform.
+>>>
+>>> What is Milos platform? Does it have some sort of model number how we
+>>> usually expect? Wasn't this SM7325 or similar?
+>>>
+>>> The problem with such new naming that it awfully sounds like family
+>>> names, so just expand the name and explain it.
+>>
+>> Please go argue with Bjorn/Konrad about this, wasn't my idea.
+>>
+>> https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
+>> https://lore.kernel.org/linux-arm-msm/b98d305b-247f-415b-8675-50d073452feb@oss.qualcomm.com/
+> 
+> Milos is the "real-est" name of this silicon. All the associated
+> S[AM]|QC[MS]s are just variations of it, with different fusing.
+> 
+> You'll stumble upon it across e.g. firmware build strings, as
+> well as in any documentation pieces.
+> 
+> There are various internal reasons for the switch, but the most
+> obvious external-facing one is not to have the user buy a devkit
+> and wonder whether they should use QCS9100 or QCS9075 DTB, and
+> why there's zero drivers code for these magic numbers (they
+> include SA8775P). We can simply point them to "codename" and
+> all C code will refer to it as well.
 
-I don't think you got my point. I want it to be explicit in commit msg.
+These are different SoCs, optionally with different firmware, so they
+cannot use the same top-level compatible chain. I hope you did not
+propose that.
+
+For me list like "qcs9100, sa8775p" is clear enough, but if you want
+"qcs9100, koala-bear" or "brown-bear, koala-bear" it is fine as well.
+You just cannot use koala-bear for all of them.
+
 
 Best regards,
 Krzysztof
