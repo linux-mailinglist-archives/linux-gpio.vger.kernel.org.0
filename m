@@ -1,165 +1,122 @@
-Return-Path: <linux-gpio+bounces-22758-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22759-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DB1CAF8129
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 21:15:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B9B7AF817F
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 21:42:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB0724E1AA9
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 19:15:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DEE4B1C8851B
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Jul 2025 19:42:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 170E02F2C7D;
-	Thu,  3 Jul 2025 19:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB1782F5C41;
+	Thu,  3 Jul 2025 19:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="aLJoApOJ"
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="yBzBlY8L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA5B2F2347;
-	Thu,  3 Jul 2025 19:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5AC2DE6EE;
+	Thu,  3 Jul 2025 19:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751570108; cv=none; b=QldXQG7cldBSChFgfuAeetA+kf7vRvJdERXYCrt82PGfi6G3m6bBoTawXRaj1PjSwOBV1ckBI4PYPQas7XR3U2aOVQrWOsnMctEiULi/MvBu85dGfOWMQb4159573j2ILo7svh/xykTG93xjb5yS1D7tDSgylfKym9DF5h5kw7Q=
+	t=1751571730; cv=none; b=KoVbYsL34vY7dOl8nFseHf81GZigYVkEaM40aOl1N/wJZMiFN99KFfJ6mRa8fGzcY1B1gWU5c73+2jWHGPSXAAvfVrHduubJI+uQyaaPjQECLvs3JQCdKT6n60spkAJF++zgrRJlVx5ZJAq9bTxoNbSdktoA/R6305PF2Pe0E60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751570108; c=relaxed/simple;
-	bh=quFgesJQX765rdt1fi6yptGzSszZVEQ2BE38W+7Yywk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LRdQT+Uwt9HSPGLGyRq/V+XuhewYQyCrABRGuwpUHDj02S/uYb0+DnvEuAsaOm5gsOjOVSJE4LVkoFxBFrUGWunKxVGd/fdAl4ObF4sVrBKjsdNMPObss1KoE1n/E2XWpFiNGVtH0gtf2r9N6ugVRr1rYuxFbh1ecFqo/47ble4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=aLJoApOJ; arc=none smtp.client-ip=80.12.242.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id XPFcu2Q1bTY5mXPFcuUi59; Thu, 03 Jul 2025 21:05:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751569542;
-	bh=T8p3xjVqVI/tRIrpOi6EWSLUaRRZHSg1oPB+NKQ4tT4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=aLJoApOJfC6omuYxSn1+vmUuNYrypDQEEoM3f0OWfzxsEmISQXjGij2N/4M/lTk0Q
-	 ao6hbI0J8bKuSOPE5uugku/f2A0kkYpCKLoNGs9h16IQP5nBFrpM5JiICj3cG3cvM1
-	 iDf1ayrJfEl2uUf1nXDei44tw2J6mN6znK1izNLqzvQ5qv9arDZT9ot7GMWHHRqwlf
-	 CuxtpEc9CLimno2lpDsfnfnmpqjJDnpkDyFZZdaP4iApk+DDjJUEfmBRr6b7MY0zEc
-	 iONE+jOJ8VKAE2RmDD7OfcXl1MzjwS81N5R0M3ARiXTypkO0hIHFG0Y9jGvMEmaRap
-	 XrC8SDkAA+u6g==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 03 Jul 2025 21:05:42 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <780d9307-4c47-4772-b527-bfd94486b931@wanadoo.fr>
-Date: Thu, 3 Jul 2025 21:05:40 +0200
+	s=arc-20240116; t=1751571730; c=relaxed/simple;
+	bh=ZPgvTQEAtNA5WcOn6LUP1VJstYlJfcMlYcQavNL3cmU=;
+	h=From:To:Cc:Date:Message-Id:MIME-Version:Subject; b=AluQHQzlG77afKOg+miA/I+oX3IEqmD5m4/JdKRMzJv4BIfFPAirShiRxQZFo9BpMNxw7gJWz5+2nYmD2jRvItbxNvnQMFdLJglaFpb5byUrJdonQHnq+/VVMbnftXIBhWc61kATam3QKn7ejz2A1WeyjghFzWO0+mh1NqkKNec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=yBzBlY8L; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
+	:From:subject:date:message-id:reply-to;
+	bh=za2z2+bViAfwIYdsI8uZdJAEJbOJgv4ShAC1Qa9i2PQ=; b=yBzBlY8L+Hq0u3FKAaG2PJYygN
+	9bvf4D7N/ZkkxD30jih6NcYUiizYXBCiWK5Mf4WH2bdzl9wJNF03KetpYpkUbiFYPHS26jYsoP4Tf
+	Bv/lNksTMaU7vRLos21Vtwo7pahVYuzGmnKUq+0UC+mGDs02/vd3J8rSmGjHYG3C/SiA=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:36484 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1uXPS4-00069V-Gh; Thu, 03 Jul 2025 15:18:32 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: hugo@hugovil.com,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	stable@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Date: Thu,  3 Jul 2025 15:18:29 -0400
+Message-Id: <20250703191829.2952986-1-hugo@hugovil.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] gpio: tps65219: Add support for TI TPS65214 PMIC
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>, aaro.koskinen@iki.fi,
- andreas@kemnade.info, khilman@baylibre.com, rogerq@kernel.org,
- tony@atomide.com, linus.walleij@linaro.org, brgl@bgdev.pl,
- linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Cc: m-leonard@ti.com, praneeth@ti.com, jcormier@criticallink.com
-References: <20250703180751.168755-1-s-ramamoorthy@ti.com>
- <20250703180751.168755-3-s-ramamoorthy@ti.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250703180751.168755-3-s-ramamoorthy@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+Subject: [PATCH] gpiolib: fix efficiency regression when using gpio_chip_get_multiple()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-Le 03/07/2025 à 20:07, Shree Ramamoorthy a écrit :
-> Add support for the TI TPS65214 PMIC with the addition of an id_table,
-> separate TPS65214 template_chip, and device-specific _change_direction
-> functions.
-> 
-> - Use platform_get_device_id() to assign dev-specific information.
-> - Use different change_direction() functions since TPS65214's GPIO
->    configuration bits are changeable during device operation through bit
->    GPIO_CONFIG in GENERAL_CONFIG register.
-> - Remove MODULE_ALIAS since it is now generated by MODULE_DEVICE_TABLE.
-> 
-> Reviewed-by: Jonathan Cormier <jcormier@criticallink.com>
-> Tested-by: Jonathan Cormier <jcormier@criticallink.com>
-> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-> ---
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-...
+commit 74abd086d2ee ("gpiolib: sanitize the return value of
+gpio_chip::get_multiple()") altered the value returned by
+gc->get_multiple() in case it is positive (> 0), but failed to
+return for other cases (<= 0).
 
-> +static int tps65214_gpio_change_direction(struct gpio_chip *gc, unsigned int offset,
-> +					  unsigned int direction)
-> +{
-> +	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
-> +	struct device *dev = gpio->tps->dev;
-> +	int val, ret;
-> +
-> +	/* Verified if GPIO or GPO in parent function
+This may result in the "if (gc->get)" block being executed and thus
+negates the performance gain that is normally obtained by using
+gc->get_multiple().
 
-Nitpick: should the /* be on a separate line?
+Fix by returning the result of gc->get_multiple() if it is <= 0.
 
-> +	 * Masked value: 0 = GPIO, 1 = VSEL
-> +	 */
-> +	ret = regmap_read(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = !!(val & BIT(TPS65219_GPIO0_DIR_MASK));
-> +	if (ret)
-> +		dev_err(dev, "GPIO%d configured as VSEL, not GPIO\n", offset);
-> +
-> +	ret = regmap_update_bits(gpio->tps->regmap, TPS65219_REG_GENERAL_CONFIG,
-> +				 TPS65214_GPIO0_DIR_MASK, direction);
-> +	if (ret)
-> +		dev_err(dev,
-> +			"Fail to change direction to %u for GPIO%d.\n",
+Also move the "ret" variable to the scope where it is used, which as an
+added bonus fixes an indentation error introduced by the aforementioned
+commit.
 
-Nitpick: keep it on the previous line?
+Fixes: 74abd086d2ee ("gpiolib: sanitize the return value of gpio_chip::get_multiple()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+---
+ drivers/gpio/gpiolib.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> +			direction, offset);
-> +
-> +	return ret;
-> +}
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index fdafa0df1b43..3a3eca5b4c40 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3297,14 +3297,15 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
+ static int gpio_chip_get_multiple(struct gpio_chip *gc,
+ 				  unsigned long *mask, unsigned long *bits)
+ {
+-	int ret;
+-	
+ 	lockdep_assert_held(&gc->gpiodev->srcu);
+ 
+ 	if (gc->get_multiple) {
++		int ret;
++
+ 		ret = gc->get_multiple(gc, mask, bits);
+ 		if (ret > 0)
+ 			return -EBADE;
++		return ret;
+ 	}
+ 
+ 	if (gc->get) {
 
-...
+base-commit: b4911fb0b060899e4eebca0151eb56deb86921ec
+-- 
+2.39.5
 
-> +static const struct gpio_chip tps65214_template_chip = {
-> +	.label			= "tps65214-gpio",
-> +	.owner			= THIS_MODULE,
-> +	.get_direction		= tps65214_gpio_get_direction,
-> +	.direction_input	= tps65219_gpio_direction_input,
-> +	.direction_output	= tps65219_gpio_direction_output,
-> +	.get			= tps65219_gpio_get,
-> +	.set_rv			= tps65219_gpio_set,
-> +	.base			= -1,
-> +	.ngpio			= 2,
-> +	.can_sleep		= true,
-> +};
-> +
->   static const struct gpio_chip tps65219_template_chip = {
->   	.label			= "tps65219-gpio",
->   	.owner			= THIS_MODULE,
-> @@ -154,7 +218,7 @@ static const struct gpio_chip tps65219_template_chip = {
->   	.direction_input	= tps65219_gpio_direction_input,
->   	.direction_output	= tps65219_gpio_direction_output,
->   	.get			= tps65219_gpio_get,
-> -	.set			= tps65219_gpio_set,
-> +	.set_rv			= tps65219_gpio_set,
-
-Is this correct? Does it even compile?
-tps65219_gpio_set() returns void and .set_rv() expects a return value.
-
-(same for tps65214_template_chip above)
-
->   	.base			= -1,
->   	.ngpio			= 3,
->   	.can_sleep		= true,
-
-...
-
-CJ
 
