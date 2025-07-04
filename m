@@ -1,142 +1,128 @@
-Return-Path: <linux-gpio+bounces-22781-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22782-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA40AAF8984
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 09:31:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A91AAF8A5C
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 09:58:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 001841CA0E6A
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 07:32:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6AB76E5026
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 07:57:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 932D927F4F5;
-	Fri,  4 Jul 2025 07:31:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C8B629B224;
+	Fri,  4 Jul 2025 07:54:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AHZeYaLY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AYgFMUr9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9712227F18B;
-	Fri,  4 Jul 2025 07:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828F92868B0;
+	Fri,  4 Jul 2025 07:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751614287; cv=none; b=g9JDrgWVCU8YImCJ9UIZpa2hxh7T0fVqr88lLm5LtR0gv46tG/1EIbK79ecanA3F/nYElr4+1cNPA8XZcMvVX1G7kgkwtwE7tfCfuhyHjNVYmyWxdLSWc3myQBcCmUY7/bXibI38hxKCxuSvXGgsXKeBnqOAa3XdSSAmK2LPd3g=
+	t=1751615655; cv=none; b=Tn/U7VRKeRwPZFRO1xBOoMN/96aMET8jP4UyJUJZaMomLvbBSZWABdTxzUwpWAUuBG201U0lUA/kARcHoehc6NFJoLxx6XFVXG6cUVl3hGqq6YBQAXve1KckZudhLuwqYIALl+56yjJxfQ52ti2jb8vxDSifjceStk7eNlkf3Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751614287; c=relaxed/simple;
-	bh=I0BQB5Y0sAR1ONC1TeJSE+OpNExr7IsFBX7iMmg16MA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ii5DmzTDQHZ2THQZ6lizjwWEaXsr66aeGoWtVREnj9cNKGX72jzyLjT8iJ1EjjS5gI7ZXIG2QN4Pnbo8pv99Fp0zWuX1FfxwuK4QmMC26pq7te0tVy2ApEKZC85hOUF8f9oRIoP5hysjNdQJ41ETaWKDQh+unk3EDEaVpJZL5Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AHZeYaLY; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751615655; c=relaxed/simple;
+	bh=PvexKr9/gRErtk+6ItgG0gzd86lk0Sl8dtRD60EIQqM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=R0crOhn7+i3grBmvSdHLk9evI3uQnYup19wGXeskOqhXAB6qi+F6k1Jk7BfsAqAZva9LMiKmKMa8em/Zg0RQdJyhfzdoVztuZgJCs/4dBA9XDZhaMekpn5gJZY9m86Kvf0TkDsVH2/ijEE0lyVraVLlI2x9xaItXmDzHVD1+3sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AYgFMUr9; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751614286; x=1783150286;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I0BQB5Y0sAR1ONC1TeJSE+OpNExr7IsFBX7iMmg16MA=;
-  b=AHZeYaLYKkLhsBO3qpELo4KicLw7pHGxZNqL6tJL/yN4exoIh5ihiHUZ
-   fXh3FWRT1DXapA4oOzX/Hh0MGhlz5wsCYlWxTC3MPGNBgOHmCXT0/jVmG
-   hVI8ghPGNjcB/LyQAG15HZ7Y67hw2l/kGdJKrVKmtPpf4NP2WEqjN1+dy
-   lb/3fgOh9C58m4aPkiI6AsO9CUOFRlJj69a433RgsJA65QUtUGK+aHxie
-   tHXrVOGJiK2PdtSxu7HXl5KPRtK4y+HY6p+E9nBDgCppHxcSDxFyXLBwB
-   kqakufG6Qtu8hqbgK7ed8CGbOn+ZooFnI5Nvc0F/2UmrMA9pBAkORRuZc
+  t=1751615653; x=1783151653;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=PvexKr9/gRErtk+6ItgG0gzd86lk0Sl8dtRD60EIQqM=;
+  b=AYgFMUr9yFEE26Msfn4p7pIVR2K891YYXwF8bjPP0yS9P8yUSJm2QVTw
+   nWxCpswOy5rNtY+NATuSykpA8cLVbIf2mWJA5jUq6igUu0w+FVOZMLKDp
+   xg0waGsvd28GlucfaGOCPJlrkDHtEay0s5EaHQvvJ1FqC7hZBXlp19+ym
+   JCm7L2kNgTc7tdY2uejcZhLLyXfgaXW8Ejw77bXLR3PsZf3U8KunDnkU3
+   p3TpOhh72YRubrtclJyviyQO2MzzaJe6EkklDMcdRGeRgGQTVqXallKUp
+   CAPZZxjopONjsuQe3jQ14e6hdmI3wWQgMt8gTdFOSUGZ2xno4nzZ0LEqK
    A==;
-X-CSE-ConnectionGUID: hYpzsugWTXqB1k3VPtp8yw==
-X-CSE-MsgGUID: tPNspjYyS+yhQKppjTZRng==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="53871627"
+X-CSE-ConnectionGUID: 8JgaxZAWTKmgaYlkL8elfA==
+X-CSE-MsgGUID: IRAvMsEUQHKTxUe4ikzvrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494532"
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="53871627"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:31:25 -0700
-X-CSE-ConnectionGUID: NOGy6WoYRjKXVfBseLKXdA==
-X-CSE-MsgGUID: ob6MCjr8SRKu3k2TGvctbA==
+   d="scan'208";a="76494532"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:12 -0700
+X-CSE-ConnectionGUID: tiWNuHgPTZOgE7yQViXsfw==
+X-CSE-MsgGUID: ykaMj68pQ/CpLYcV53Unlw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="155337062"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 04 Jul 2025 00:31:21 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXatD-0003Rn-10;
-	Fri, 04 Jul 2025 07:31:19 +0000
-Date: Fri, 4 Jul 2025 15:31:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>, aaro.koskinen@iki.fi,
-	andreas@kemnade.info, khilman@baylibre.com, rogerq@kernel.org,
-	tony@atomide.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, m-leonard@ti.com,
-	praneeth@ti.com, jcormier@criticallink.com
-Subject: Re: [PATCH v6 2/2] gpio: tps65219: Add support for TI TPS65214 PMIC
-Message-ID: <202507041537.da8R2iEX-lkp@intel.com>
-References: <20250703180751.168755-3-s-ramamoorthy@ti.com>
+   d="scan'208";a="158924199"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:10 -0700
+Received: from svinhufvud.lan (localhost [IPv6:::1])
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 7216444424;
+	Fri,  4 Jul 2025 10:54:08 +0300 (EEST)
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 15/80] gpio: arizona: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:08 +0300
+Message-Id: <20250704075408.3217690-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703180751.168755-3-s-ramamoorthy@ti.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Shree,
+pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+pm_runtime_mark_last_busy().
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+The cover letter of the set can be found here
+<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
 
-[auto build test ERROR on v6.16-rc4]
-[also build test ERROR on linus/master next-20250703]
-[cannot apply to tmlind-omap/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+In brief, this patch depends on PM runtime patches adding marking the last
+busy timestamp in autosuspend related functions. The patches are here, on
+rc2:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shree-Ramamoorthy/gpio-tps65219-Update-_IDX-_OFFSET-macro-prefix/20250704-021048
-base:   v6.16-rc4
-patch link:    https://lore.kernel.org/r/20250703180751.168755-3-s-ramamoorthy%40ti.com
-patch subject: [PATCH v6 2/2] gpio: tps65219: Add support for TI TPS65214 PMIC
-config: hexagon-randconfig-002-20250704 (https://download.01.org/0day-ci/archive/20250704/202507041537.da8R2iEX-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 61529d9e36fa86782a2458e6bdeedf7f376ef4b5)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250704/202507041537.da8R2iEX-lkp@intel.com/reproduce)
+        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+                pm-runtime-6.17-rc1
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507041537.da8R2iEX-lkp@intel.com/
+ drivers/gpio/gpio-arizona.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-All errors (new ones prefixed by >>):
-
->> drivers/gpio/gpio-tps65219.c:208:14: error: incompatible function pointer types initializing 'int (*)(struct gpio_chip *, unsigned int, int)' with an expression of type 'void (struct gpio_chip *, unsigned int, int)' [-Wincompatible-function-pointer-types]
-     208 |         .set_rv                 = tps65219_gpio_set,
-         |                                   ^~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-tps65219.c:221:14: error: incompatible function pointer types initializing 'int (*)(struct gpio_chip *, unsigned int, int)' with an expression of type 'void (struct gpio_chip *, unsigned int, int)' [-Wincompatible-function-pointer-types]
-     221 |         .set_rv                 = tps65219_gpio_set,
-         |                                   ^~~~~~~~~~~~~~~~~
-   2 errors generated.
-
-
-vim +208 drivers/gpio/gpio-tps65219.c
-
-   200	
-   201	static const struct gpio_chip tps65214_template_chip = {
-   202		.label			= "tps65214-gpio",
-   203		.owner			= THIS_MODULE,
-   204		.get_direction		= tps65214_gpio_get_direction,
-   205		.direction_input	= tps65219_gpio_direction_input,
-   206		.direction_output	= tps65219_gpio_direction_output,
-   207		.get			= tps65219_gpio_get,
- > 208		.set_rv			= tps65219_gpio_set,
-   209		.base			= -1,
-   210		.ngpio			= 2,
-   211		.can_sleep		= true,
-   212	};
-   213	
-
+diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+index e530c94dcce8..89ffde693019 100644
+--- a/drivers/gpio/gpio-arizona.c
++++ b/drivers/gpio/gpio-arizona.c
+@@ -39,7 +39,6 @@ static int arizona_gpio_direction_in(struct gpio_chip *chip, unsigned offset)
+ 		return ret;
+ 
+ 	if (change && persistent) {
+-		pm_runtime_mark_last_busy(chip->parent);
+ 		pm_runtime_put_autosuspend(chip->parent);
+ 	}
+ 
+@@ -82,7 +81,6 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 			return ret;
+ 		}
+ 
+-		pm_runtime_mark_last_busy(chip->parent);
+ 		pm_runtime_put_autosuspend(chip->parent);
+ 	}
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.5
+
 
