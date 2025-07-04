@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22778-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22779-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E651FAF885F
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 09:02:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6F7BAF8862
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 09:02:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7CC3F1C28281
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 07:02:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7197A48040D
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 07:02:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E3F7270542;
-	Fri,  4 Jul 2025 07:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6FE92727ED;
+	Fri,  4 Jul 2025 07:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUAlVfzH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="llo6uspO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296C71E47AD;
-	Fri,  4 Jul 2025 07:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550F81E47AD;
+	Fri,  4 Jul 2025 07:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751612543; cv=none; b=gV591XSbxpgB6ZvQ14w2tLOEm5rSvM0tpIoQeZ2wrxvxnE08eQ++YwIDfJjebkJkp9C9tKB1Bu4oC7kmZoDm5rAwLT1qqQYnfC0C5RmV06Tnn+LjaLzgXvrfehn808AssPfLRSNOAMeUXnv46Idq9EuWxm4tW7IgZEjzanSmu8Y=
+	t=1751612549; cv=none; b=ltqyVsubTZ1R8r61mRm+Njxt2sJM8YxQTCSfiVTqoCAtWTPWJg7V8/UMKwFQz69m7ML6xAVMVLEIwKvfW7l8uMItWrjpiCfm2/kQ/me7ykXVPlenQgz9d/qdCb747C09u7G7EkpTeyfMW2GMbWNwHshrRUk/EaKgk8A+7ah60bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751612543; c=relaxed/simple;
-	bh=jr9AGxZaoLH141StMmIlo99XBnkohTJbr+5ZlwGj9dA=;
+	s=arc-20240116; t=1751612549; c=relaxed/simple;
+	bh=C47jAzKFX+keTRxbBe1Xb9p5orpam0fMTfx0p4dmAJw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HFrznZi9qhh9hVU0Ah8D9uEVvr/GVOlvEyqbFPnpPieNTx0s8prmo4itRLik3qgyCMWPRgCXM2og5QulMqaihlIibKvHsa3UauHy1TVlbEwrKFqCjQc+aqHs49BTVj7/zY9deow2722Y4khQtRARZFvcTgtbY2EkBPC2DC+RtY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUAlVfzH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 621C7C4CEE3;
-	Fri,  4 Jul 2025 07:02:17 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=PKQtmjIEtv6RSG9jRdXsY2MVrRlyCYuy+RVDMQzjXTN0D1gA4YrCSaOIqSGa2tpj+ALQBoOCAqdbt9dOeHXIRfExbK7qPF+Vmoh1X0MIHNV4QUjLDBkq9tU739JSn+1RoYqLcBjhYwo/661AmRuJtrFJzyRL0Y7N17hHnvvCB5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=llo6uspO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B87C4CEED;
+	Fri,  4 Jul 2025 07:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751612542;
-	bh=jr9AGxZaoLH141StMmIlo99XBnkohTJbr+5ZlwGj9dA=;
+	s=k20201202; t=1751612548;
+	bh=C47jAzKFX+keTRxbBe1Xb9p5orpam0fMTfx0p4dmAJw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qUAlVfzHgfyFoB8PVvqTpAgLx6sTUU0ZH07cQC9eUnwi3WV4nxe41FUxoLH8lWvSC
-	 YFdNaLVuNHO1wR4kbWJwaTPje+kin7Sz8f0w0JRSueQ3DTAYeiw3p0Wa1h3uSfv00d
-	 a3diaR3WXLGSKlQOnVN1ebAGfnIz5wtfXKVj0c6FtDJfwYRQrLcJmSdSmAXmExCT+e
-	 JARZstyIsuEV308BHKJcxzOkkmaL2QihP4v54OfZc5DwSt0K0CCLpzE4hneFD026Hk
-	 ZNKYSOmGFketj1YxW6cIczAZ8RASEzeeafLQxt51uWkzFn5Dw3XQ6KwaxwUeRScaoK
-	 gj4k2piXiXuIw==
-Message-ID: <9ca025e9-c6ad-4ecb-803b-73d2aded86d4@kernel.org>
-Date: Fri, 4 Jul 2025 09:02:15 +0200
+	b=llo6uspOSi9J8N1NIWF2R3ZwKU7PNWQ1ayDpHtwXFbsBsY8AqyH/nTyyF3301Aaht
+	 u+DhYpbiy1lKcpEDuyoyW16t43SX07BT8LTnrJY1hsydUQJ6XCLRiahtOW6HOYu/Sg
+	 hnuKNOK/J9ye3hIDSQSx1uypZXbYl4e9x4cSevnOU3f0API/Oe2l/xXtK57jmPey4T
+	 6fG6B4NJYHtwVKuPyspEScIp3L3pgKjZUOcSvupb4YXMoF2QOV5CEIZUPODBpzPrwH
+	 XpuLmsngb4PyMM3/7QcCzYM3TPMctMKZTdOtthlZaaFLuvlKamnTjhclObg39W2jCO
+	 cJBU7BBTwAicA==
+Message-ID: <948ae892-0918-4b75-9d8c-0c2f00c989f0@kernel.org>
+Date: Fri, 4 Jul 2025 09:02:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/10] dt-bindings: serial: cdns: add Axiado AX3000
- UART controller
+Subject: Re: [PATCH v6 04/10] dt-bindings: gpio: cdns: add Axiado AX3000 GPIO
+ variant
 To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -67,7 +67,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  soc@lists.linux.dev, linux-serial@vger.kernel.org,
  linux-i3c@lists.infradead.org
 References: <20250703-axiado-ax3000-soc-and-evaluation-board-support-v6-0-cebd810e7e26@axiado.com>
- <20250703-axiado-ax3000-soc-and-evaluation-board-support-v6-5-cebd810e7e26@axiado.com>
+ <20250703-axiado-ax3000-soc-and-evaluation-board-support-v6-4-cebd810e7e26@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -113,13 +113,13 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250703-axiado-ax3000-soc-and-evaluation-board-support-v6-5-cebd810e7e26@axiado.com>
+In-Reply-To: <20250703-axiado-ax3000-soc-and-evaluation-board-support-v6-4-cebd810e7e26@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 03/07/2025 20:20, Harshit Shah wrote:
-> Add binding for AX3000 UART controller. So far, no changes known,
-> so it can fallback to default compatible.
+> Add binding for Axiado AX3000 GPIO controller. So far, no changes
+> are known, so it can fallback to default compatible.
 > 
 > Signed-off-by: Harshit Shah <hshah@axiado.com>
 > ---
