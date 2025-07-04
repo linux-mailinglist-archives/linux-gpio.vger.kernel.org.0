@@ -1,160 +1,234 @@
-Return-Path: <linux-gpio+bounces-22809-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22810-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65444AF994E
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 18:50:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57995AF9C82
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jul 2025 00:37:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC960584BF7
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 16:50:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 522F34A79F2
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 22:36:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F8C1922ED;
-	Fri,  4 Jul 2025 16:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Nbus9nel"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97DBC28CF73;
+	Fri,  4 Jul 2025 22:37:15 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBF919C546
-	for <linux-gpio@vger.kernel.org>; Fri,  4 Jul 2025 16:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342DB1991D2;
+	Fri,  4 Jul 2025 22:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751647811; cv=none; b=UPpf9ocXfYulGJy4ba9eLDAQhYtY1Coc6vJIPq2GPcGLfR9roduxS8CW9hivdznPnEp9acPfmhvHk/xc0A6HGVoZqlWm4OepBWkOG+O4MVutdgQH8Clm7yA9167hCQVFphoNZgu/3Darqrw9kfR23NeHiruccOd6aQNKhuA+KS4=
+	t=1751668635; cv=none; b=u1Ky3YKa2sP+Sb6tYni6cN3zfhn4hyc8Vq7Y0dYih86M7zt2hSyqGyn9o1hjit1e7yzQRj0yOEKVU9WwUDyb90FXtETth084dX89NQS3Y6knJ+zS9NxnQPS1718Vs33RFzKD4ElCttlA1Dc6C/2cvnDaDf7PL7tbRV+qiLnLlG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751647811; c=relaxed/simple;
-	bh=csbEb0KENiAbOhaEZqVV0SELhvMQVqF7Txk57mtfHe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iv5ImHl7/HQfquUaui5aYgslA+8BlvfImUoxsFLwLEwiETMY3Ce8lOWXUVZ6yQvzq0PU2q8UF/M1Kdvth1+98LETnDWOhi/qf1tGJ8HenKOLzVhyPC7AuSvKlBq0535vxNUqggkrjReqz5HLK86hhkG8RQdBTUnxnTGiEWMybt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Nbus9nel; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 564ECmxU022019
-	for <linux-gpio@vger.kernel.org>; Fri, 4 Jul 2025 16:50:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wEM4j1XOLi6BZwo1cLv2zjvJBeM0ee0P0ue89+lcOSQ=; b=Nbus9nelbqg4FSna
-	93HfDfdeto7B2/ugkW/4Ws0fH/pDoriS1o95UxOs6u6ShkE4zj1iE4iKMLCwrn4A
-	clUM2W6i6yGumd3cyWy6koyrmQViLHoDDYM/gKqn0/NA0+1+0+nwT6mmr1Nhqv4z
-	9zDVDsCE3eJIG8K2MPNG7PK4BcJkCcHnQotoE3GNnCL0XGbhDf2vetMfObCnRZfs
-	u+Uor4qXhiq5WEZarpZblNzsR9bF7NlVJVqDwhpSS36FiHXutebS0HiSriSb5tR2
-	XxKc+4/ZAIBdNWyOxEuDW2GWaOC1NAsEwogfaq0ubdX6Bj3IZ32jO8WCcpsCUBdg
-	Hj1v6Q==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8fxvm3q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Fri, 04 Jul 2025 16:50:08 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d4576e83cdso288067385a.1
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Jul 2025 09:50:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751647808; x=1752252608;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wEM4j1XOLi6BZwo1cLv2zjvJBeM0ee0P0ue89+lcOSQ=;
-        b=BcqIdmQmxYOc+UBRBJUMXxqmoef9iA0hEtTFLzwRJLuSX3X2pKovNXT/BnGuVzEBAI
-         u1wnaTTpUUqIt9VVjRBio9W1XbHoscv88J0fG7E690z7wpLTFfbzNHq/y/P7YooHrrfU
-         xAJM23xW/1sLJ1yufQib/RUD2ieTxzITn4FxDq+5wSZzcrJ7jFqHy4jy02gXl1zR0kmV
-         wmef/bZ2kuM6DxvNiv6vDpXCF6T99uu7pHAobrZ9IVSUk4U0pZg54QVgAL4lNZyaDKcu
-         o98gmRp0khTm/Lk16kgqwV/Co4257rXJWf6B+bjBLxagELVDyH62N/+mkuqcuSpQJszd
-         vspg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQCq3S26EP0aNKDZmrHgjUVhyLe5m36MA4xdaX3J1mls3tUIuT5Ykjbuai1zquUoklY/oC78jEHHN0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt3NTv/qDTUOLw3vYmez70i7oVM3ebBtDo2f76zvNiV7wDMtfI
-	p7S8lZQ4D/bryiXl5BGzUPzkbzYGx5y+AF9Yw1E5fKeIRovlRQ60kjn9TISFPLFp5DvA4Hje8Il
-	FCuCa7BkgYNKCI7kJXw53niN8XvmERTLQcYkWAQeGdzp3RS0K3F0kaoIx7Sb/eKTc
-X-Gm-Gg: ASbGncukTLykZXU8qNGJb4O8Fw0BtT5liSX9qQiM4Sxww5W3wvJ2Bbh/W8+h0r+a/br
-	jQWd8ghv27HSUsDwJ17mpGJP60h/fFTm5VZqgDGho9eAfQUwLpk8EV81LS5/bxvs15cMh9RUqum
-	y1+fe4SCvsiZDVOnG26sdTfBmO3qOWUfio+Gbw+2yf/4wjoiqg7oHyhes8Y5ZcCfuJXExLI4wkH
-	OLIjE0aeDjKk3ZZIhTaVFtKpmS3MGv2bkJgi7TSAjJtEHBy2voGfEAHWJm5BPfEOZ9QYFRayR0R
-	LXjZMo9qIXKSETtcB5A4KKOEGckgQVcfjLAhBHGqBC/zoC4oUdZZi7KIJ0WDSye2nQkBrbiSOhj
-	3IBzLQrYStqAWUyrDF1qNHkc84p0W/lO32hc=
-X-Received: by 2002:a05:620a:261b:b0:7d4:63a0:e0c2 with SMTP id af79cd13be357-7d5ddae41camr392082485a.15.1751647807813;
-        Fri, 04 Jul 2025 09:50:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHPoGPvTmGMkFyX/qytnycN+mM326tGMOLxBZbe002Y3SgEer69CCflWTfw/Q2aA0VrRAuyyw==
-X-Received: by 2002:a05:620a:261b:b0:7d4:63a0:e0c2 with SMTP id af79cd13be357-7d5ddae41camr392079285a.15.1751647807416;
-        Fri, 04 Jul 2025 09:50:07 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556383baf0asm304624e87.7.2025.07.04.09.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 09:50:06 -0700 (PDT)
-Date: Fri, 4 Jul 2025 19:50:04 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Alexey Klimov <alexey.klimov@linaro.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH RFC 3/5] pinctrl: qcom: sm8650: mark the `gpio` pin
- function as a non-strict function
-Message-ID: <efods2cmjrhbjvpffswvsubm52u2hvkd6rry7gjwm3k5c7ezo3@b7wc6p6ieiof>
-References: <20250702-pinctrl-gpio-pinfuncs-v1-0-ed2bd0f9468d@linaro.org>
- <20250702-pinctrl-gpio-pinfuncs-v1-3-ed2bd0f9468d@linaro.org>
- <qwlhmbsd5gqrgjsfzvaqha43pztq34bxjswske72igg2z37euw@2rkx76ikaclq>
- <CAMRc=Mdk+fGiVOH_Zq0K_gRpo-c2Gyh=SakKL77bL2BscS_PKQ@mail.gmail.com>
+	s=arc-20240116; t=1751668635; c=relaxed/simple;
+	bh=tzv9gHuqyrtu+ATJnK9d/TDJWr8Z26mlqIb4+5gWW2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F+7zLaffjAIcEOKRdYILWDkvqsUndU/45JrulG7Z85cqN8mdyoD9D27HQrhKKpQhF6b1mWypjCd6XQu1bfOqy7B1tE2YfK1hvh8rRjA+02QNx/1hL9jYCD1P7yI/dtAKqq9IhuSMhqCLymVZl6rZlVZ54Uu1+T9BJcxvkw/74C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CDBB153B;
+	Fri,  4 Jul 2025 15:36:58 -0700 (PDT)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E15A83F63F;
+	Fri,  4 Jul 2025 15:37:09 -0700 (PDT)
+Date: Fri, 4 Jul 2025 23:35:35 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu
+ Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
+ Holland <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5] pinctrl: sunxi: Fix a100 emac pin function name
+Message-ID: <20250704233535.4b026641@minigeek.lan>
+In-Reply-To: <20250626080923.632789-2-paulk@sys-base.io>
+References: <20250626080923.632789-1-paulk@sys-base.io>
+	<20250626080923.632789-2-paulk@sys-base.io>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mdk+fGiVOH_Zq0K_gRpo-c2Gyh=SakKL77bL2BscS_PKQ@mail.gmail.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDEyNyBTYWx0ZWRfXwDH3AiwuO9Fj
- 1ZzoUYvyvaPF8ls90XcNbXQHK36XXmdhz4KWpls1CXlhm9JpVoxaOYQ7KpEyonfAKqLjJM/uzr0
- KWFXBK7GS/FaZ8ZsxIhpWljGoUvWvMD8VjrqkN+Zu5BKbuV3jNuKdB5ZRWu02dLYrgp3ENY3H8c
- 9YRuU4JZ0Kt/7LLRlG0SuIMiZ0H3iyD16XiyV0Lo7IaiotN0GVGEEOI2mTWZx3Hf9gOBFt6/s9/
- EJYzfa+5qyuHjgvUUF1MLsIVDxtuFbRP14N6W8XlsTyonyVBqTicde3viWrGBMqev8HPr/G7BgK
- VzqwDgzB7e1GiQMZdv9s4gLosfTHcjcBElZwfizSCth1vsTXMGiwypDpnC2yosdFpnA9IZnjhRF
- dkxHUD8kwN2WymAzVhZA6ysesQjl9QX+sfyx7Ba73eFBwiMwYBt3icPpDJJi5iFlTMHKEeC/
-X-Proofpoint-GUID: 7yHYYGahOg5ZTsQ-vWbQJ_hadHbgwUiR
-X-Proofpoint-ORIG-GUID: 7yHYYGahOg5ZTsQ-vWbQJ_hadHbgwUiR
-X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=68680640 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=Xwy0tvpjcyFCf_kMTfYA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_06,2025-07-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 mlxlogscore=832 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
- impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507040127
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 03, 2025 at 10:17:43AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jul 3, 2025 at 12:50 AM Dmitry Baryshkov
-> <dmitry.baryshkov@oss.qualcomm.com> wrote:
-> >
-> > On Wed, Jul 02, 2025 at 10:45:33AM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Allow pins muxed to the "gpio" function to be requested as GPIOs even if
-> > > pinmux_ops say the controller should be strict.
-> >
-> > This is a strange commit message, shouldn't "gpio" function behave
-> > exactly like that - mark the pin as a GPIO?
-> >
+On Thu, 26 Jun 2025 10:09:19 +0200
+Paul Kocialkowski <paulk@sys-base.io> wrote:
+
+Hi Paul,
+
+> The Allwinner A100/A133 only has a single emac instance, which is
+> referred to as "emac" everywhere. Fix the pin names to drop the
+> trailing "0" that has no reason to be.
+
+Sorry, but this is wrong. There *is* a second EMAC on the A133 die: it's
+indeed not mentioned in the manual, but you can probe its MMIO
+registers (@0x5030000), and there is a second syscon register
+(@0x03000034). It's mentioned in several BSP code places ([1]).
+It seem like no suitable pins are connected on the A133
+package, but that should not affect the A100 .dtsi (we use a similar
+approach for the H616 and A523).
+
+So I think we should keep the emac0 name.
+
+Cheers,
+Andre
+
+
+[1]
+https://github.com/qiaoweibiao/T507_Kernel/blob/main/arch/arm64/boot/dts/sunxi/sun50iw10p1.dtsi
+
+
 > 
-> They should but they don't. I should maybe rework the commit message
-> to say: "muxed to the function called `gpio`...". The "gpio" here is
-> just a name, it could as well be saying "dmitry" or "123456", the
-> pinctrl core doesn't interpret it in any special way. What I'm doing
-> here, is marking the associated struct pinfunction object as one that
-> should allow pinmux core to export this pin as a GPIOLIB GPIO.
+> Fixes: 473436e7647d ("pinctrl: sunxi: add support for the Allwinner A100 pin controller")
+> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c | 32 ++++++++++-----------
+>  1 file changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> index b97de80ae2f3..95b764ee1c0d 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> @@ -546,33 +546,33 @@ static const struct sunxi_desc_pin a100_pins[] = {
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SCK */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD1 */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD1 */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 0)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SDA */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD0 */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD0 */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 1)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SCK */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXCTL */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXCTL */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 2)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SDA */
+>  		  SUNXI_FUNCTION(0x3, "cir0"),		/* OUT */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* CLKIN */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* CLKIN */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 3)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "uart3"),		/* TX */
+>  		  SUNXI_FUNCTION(0x3, "spi1"),		/* CS */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD1 */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD1 */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 4)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> @@ -580,14 +580,14 @@ static const struct sunxi_desc_pin a100_pins[] = {
+>  		  SUNXI_FUNCTION(0x2, "uart3"),		/* RX */
+>  		  SUNXI_FUNCTION(0x3, "spi1"),		/* CLK */
+>  		  SUNXI_FUNCTION(0x4, "ledc"),
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD0 */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD0 */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 5)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "uart3"),		/* RTS */
+>  		  SUNXI_FUNCTION(0x3, "spi1"),		/* MOSI */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXCK */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXCK */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 6)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> @@ -595,7 +595,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
+>  		  SUNXI_FUNCTION(0x2, "uart3"),		/* CTS */
+>  		  SUNXI_FUNCTION(0x3, "spi1"),		/* MISO */
+>  		  SUNXI_FUNCTION(0x4, "spdif"),		/* OUT */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXCTL */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXCTL */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 7)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> @@ -611,7 +611,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
+>  		  SUNXI_FUNCTION(0x2, "dmic"),		/* DATA0 */
+>  		  SUNXI_FUNCTION(0x3, "spi2"),		/* CLK */
+>  		  SUNXI_FUNCTION(0x4, "i2s2"),		/* BCLK */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* MDC */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* MDC */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 9)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> @@ -619,7 +619,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
+>  		  SUNXI_FUNCTION(0x2, "dmic"),		/* DATA1 */
+>  		  SUNXI_FUNCTION(0x3, "spi2"),		/* MOSI */
+>  		  SUNXI_FUNCTION(0x4, "i2s2"),		/* LRCK */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* MDIO */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* MDIO */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 10)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> @@ -642,33 +642,33 @@ static const struct sunxi_desc_pin a100_pins[] = {
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x3, "i2c3"),		/* SCK */
+>  		  SUNXI_FUNCTION(0x4, "i2s3"),		/* MCLK */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* EPHY */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* EPHY */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 13)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 14),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x4, "i2s3"),		/* BCLK */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD3 */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD3 */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 14)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 15),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x4, "i2s3"),		/* LRCK */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD2 */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD2 */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 15)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 16),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x3, "i2s3_dout0"),	/* DOUT0 */
+>  		  SUNXI_FUNCTION(0x4, "i2s3_din1"),	/* DIN1 */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXCK */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* RXCK */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 16)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 17),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x3, "i2s3_dout1"),	/* DOUT1 */
+>  		  SUNXI_FUNCTION(0x4, "i2s3_din0"),	/* DIN0 */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD3 */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD3 */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 17)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 18),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> @@ -676,7 +676,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
+>  		  SUNXI_FUNCTION(0x2, "cir0"),		/* OUT */
+>  		  SUNXI_FUNCTION(0x3, "i2s3_dout2"),	/* DOUT2 */
+>  		  SUNXI_FUNCTION(0x4, "i2s3_din2"),	/* DIN2 */
+> -		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD2 */
+> +		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD2 */
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 18)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
 
-Ack
-
--- 
-With best wishes
-Dmitry
 
