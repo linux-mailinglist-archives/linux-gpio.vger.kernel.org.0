@@ -1,87 +1,87 @@
-Return-Path: <linux-gpio+bounces-22785-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22786-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FFB8AF8B50
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 10:24:52 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1611CAF8B75
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 10:27:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 088BC1891544
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 08:22:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1BE98B42272
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 08:21:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99EA12FF483;
-	Fri,  4 Jul 2025 08:05:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48C44302076;
+	Fri,  4 Jul 2025 08:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IVfgHXpt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m7Dxg61r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996A22FEE11
-	for <linux-gpio@vger.kernel.org>; Fri,  4 Jul 2025 08:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64A8302047
+	for <linux-gpio@vger.kernel.org>; Fri,  4 Jul 2025 08:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751616338; cv=none; b=e0ESu8Ib9qhRFJXpNCGi3ucZ60Tw9QgzEOh4IDYVewMlSnyfN5TCda/3gdfNvxNw4LpbJPNy716amY+FaUDh8ugesMYzLBRsuSK4T6ApaDJxuM1ub4YZ+Wk9N2kAqoAcKu3SF6j3xW9o3cOdYoNqSPu8IOlNYLhHG461l2SVK9k=
+	t=1751616371; cv=none; b=o73h4u1uC9AGURfNsJDwbKtpAQ7f1w1Qg/cahnxEyPi8Pot7qijakah7yX+n8GFRj2FqNYtIpk2zxx5qodBhwcSW4nH4pcJVbHNIrzPgyk6LEwyw3oMdDw2MKhIpy9vbKo28b4lyPmv1bVf9XYhCdWqNhDSvxomA9vjXjwpmoRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751616338; c=relaxed/simple;
-	bh=gLSnd6giDnfbWcxYXT2wcpNKMruUI8d8nbGjFJ7L3e8=;
+	s=arc-20240116; t=1751616371; c=relaxed/simple;
+	bh=iYjHFLywNzV7OEwa4CTvdElL7MT4P4TG7dHCmKKDGj0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WyVRAL0wPqMGwJgMaTzSU2yaOIXWSdQgH5NfX+voIMxEWurla1Xde3Et1h5Hpx74aRJYj449Jk5tiuf8bQIYlGYBmdDhd0rk5LjMEAxnYCPT9oirCdBKzwFg/HvEt9fzN7+m6X1iGxhNadUATW3z/yDolnzk2nRXy+l5XDZq54A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IVfgHXpt; arc=none smtp.client-ip=209.85.208.176
+	 To:Cc:Content-Type; b=J16fk3ocqYH/RzZQHZ4PM/V1S8bGC83JKba/CclII6xkFPnY7xzEKxB+uy8SatPapsLOalItaJuBmpJy9vf/ZlwmwoF0qar/J3bupUMlqQQ/u/E1qgn7txiTpMagwhe9F4iO4n6vI/D/Kd7qjz0iizppRjyP0uwcilN3OLqccUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m7Dxg61r; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-32add56e9ddso5949991fa.2
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Jul 2025 01:05:35 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-555163cd09aso665499e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Jul 2025 01:06:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751616333; x=1752221133; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751616367; x=1752221167; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gLSnd6giDnfbWcxYXT2wcpNKMruUI8d8nbGjFJ7L3e8=;
-        b=IVfgHXptx3+ju7va/qniKcTy30vstmHwSGutSFL+XdxVUJUqloDkJyoHfJ/hXDDRwx
-         cFq/Cl1AJyywMKM2ykx21EyhEbygSfQTOtIY3JmKJnCNDcjr3orJfGfpZbWS5MGAGJoc
-         uiCGqcrO3xO/YrgaFKR2mKZI02P1+jmtnRoTdIJarVZrxyalDIeAmDd6g52EF+p5vH6T
-         DL1UtS3kQ2rgZ1yUxe0pDJJz/WEfdeKH5yaP2Hq5Ye7f7j3aOTONOYN86Ooc7no2Cws+
-         zbv67o13LZx0gh4Ea9j4Ad/7qdh8Pm6X2tXcwDf2YM64bVSzNrm/ijV79CSiR846Hz2D
-         ICxQ==
+        bh=iYjHFLywNzV7OEwa4CTvdElL7MT4P4TG7dHCmKKDGj0=;
+        b=m7Dxg61real4fJueBgaPfG2/AADLuxUCOuhnDiusCVpU17bM0s/Jdh2zpU1MbTEKva
+         J03l81O71o9+e+t1DP2Nf3n4GN+QFJ42jhkwxl3L8Py4XyxorjD7MdpmzUh+OMadllou
+         N+MWsBZcRqNYZTNckUyuk0EVEGaI5dR9nytOb9R8l5vobGymJ7RoV0E3qCpaCsQpOb8N
+         FrZS1cE3mK6Q2v6x1a/sHoH8HwdxtakE+9pu8FkDyqxjCjayV+X2zZ9AbcL4qeSJgmdr
+         ck01HYfxE17uMrrIWQOHAAVlKuXLoLwEAplA2KVo9Z/L6rQIF7Qyn8ClhqWvjJFR/sJv
+         NZJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751616333; x=1752221133;
+        d=1e100.net; s=20230601; t=1751616367; x=1752221167;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gLSnd6giDnfbWcxYXT2wcpNKMruUI8d8nbGjFJ7L3e8=;
-        b=vUJvgC8Z7wiumwODNcBrcTKvfBPae0GpASTqlEWj4uL9+KvJHrFY5mMxdRStky/hq5
-         Xo328S81Sjss0IJGjM2aF5BZTQtbz4Hg79I4IwM0Fki0lpV7krX951dYo5FjKJ+EKFPr
-         9l3GKBm8CHa2QVYfN1p1gkxMDZpHEsY9XT1eaEGGCmS58OZCPvgBh1uQiKfxouswe/i5
-         ugF3g9uURPbywpv7ba7tH6zYAmAqE8oOs15MWst6Om6vjpY6Pz2mWY1dJjpuT/tyF0E1
-         JGs9e5b3AqH95t82D9WqCqQzPQ+xaB0rx2crbn2wwQMEqtFaqMIcvI/DoI/T9k7mHf7d
-         RmtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXoE9w1pmfalW0It+HMUMFxoTqxBw5y9N9+ee86gOEs/U62RfAgBygLcCkMxuIbGeraQauOPzDZjD9X@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAHIZl44rXcLpSxlBllsCiNE5zmsH+2H1e7d8mM6OPuaSrLTBk
-	cFSs2CsQXw2yIYAetPktEpLBM4Gtbgdlksb19TmjptQBTck7WC/NEzONVH6YL+E5hVLAbxnTiV1
-	ChUGCUZW6+KRyE40KZULucYvnMuRZjrAlamll7M/JVQ==
-X-Gm-Gg: ASbGncvEK3bczFbWq72MPqG1s7SWtri116FEN4dPour2G7jEW2hrnjNYneXl6fETXK1
-	z+sxvL4dFy4XNRZNnr2+OtHi4MqBPBzrOn73SKZOegzlN13rpS/13F92SDhwm5n1XPDc6PVWPCR
-	iQ5RLLMCSgcrXANhX04KI9FNWx/y4SXkj/pdUeHdIffPY=
-X-Google-Smtp-Source: AGHT+IFctPLcSJg4ykfhGL/MZ+g9vuXZvLZVkJpJyt2M2asLefjSEl5BwFpp7OuvBfV1YT/bzHqI/PtScrnLd3/qkSk=
-X-Received: by 2002:a05:651c:411a:b0:32b:488a:f561 with SMTP id
- 38308e7fff4ca-32e5f5992cbmr3352351fa.18.1751616333296; Fri, 04 Jul 2025
- 01:05:33 -0700 (PDT)
+        bh=iYjHFLywNzV7OEwa4CTvdElL7MT4P4TG7dHCmKKDGj0=;
+        b=hLj4cPXlEZ97bJH8oXsyWRyEnB0RA+LsmfSK/X8/1MAdSBoGhOhtISCIgd42yNz40D
+         r2hoD9jzec5qfX9HywmX6gwRCY74vXCKdR7lEYL4NMrT/TVXH1xOYyQeGanYJnZxuleC
+         aFJVGWfFdXhBqJQg+nhnng8l/3cklMPae1whbJkWKTLdY3Hb4+BInJ1/w/0+XehtEhaD
+         odmUhRA2kVMJ5OIcUiZ0KIpcgeW2zdVdAUfljVcqwOr7JxyM58hVV9FVQK8WlFBOd/1q
+         r05vFiTTLWvdRhG5dIhOZdI3Cshma7OGx56ajv2+wvedRhmBGl+XkEo3hvWQLBGEepKz
+         TRrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmj9cForJKhP1L+p2l5WNx/1KnyzmV+/WRxM0hE2PO9M85FMVfKP7qlOrf04g8X/SP7fW9xo5kI26n@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzJvjvMX20boGLgk33AL1Z6a4BGxhZLvnyOh+RAnbPdNHIzeCZ
+	XkCzdaCwBSmxZS8uHSzYNEsAYlSAyq2Bgc3VR/mRSk8yuhE+lhu1GyjYoeb/JCw6KuHo98IiQ1K
+	Gxx9toTpYoDiomiPoWflMxG6CyGNh1NLfT7Dq+Ub5PQ==
+X-Gm-Gg: ASbGncuyvsUCDqXXeDlHUiXmJz+u9AA8kbQrygejK/yDoi7m0+9TyjncqEhij7yuX6Q
+	DCjYTbBgvjpM0C5Yqjs1+ffGNG/2Lyd6u0fffiUgS26x3IqxnHjP0AVZwTRDM4uubC17KV3QTYv
+	QLG6v6pWnfzGvminXkBK4RVx91TjEjmG9HLGAW6uk6LBk=
+X-Google-Smtp-Source: AGHT+IHIdKRqrobIs7JkcY2DmFJK+DrHWeLwNL32NlyqRbJB9YUEeji6aqqcPI/LdM/czsecMqh3fHpNhbAd4cnlP08=
+X-Received: by 2002:a05:6512:1589:b0:553:2e37:6952 with SMTP id
+ 2adb3069b0e04-556e73fd335mr433200e87.55.1751616366867; Fri, 04 Jul 2025
+ 01:06:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org> <20250630-gpio-sysfs-chip-export-v3-1-b997be9b7137@linaro.org>
-In-Reply-To: <20250630-gpio-sysfs-chip-export-v3-1-b997be9b7137@linaro.org>
+References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org> <20250630-gpio-sysfs-chip-export-v3-3-b997be9b7137@linaro.org>
+In-Reply-To: <20250630-gpio-sysfs-chip-export-v3-3-b997be9b7137@linaro.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 4 Jul 2025 10:05:22 +0200
-X-Gm-Features: Ac12FXwBzNCj1y-ZrLdw9OXFh5sOrrWzfZ4fOjTViVGgzsj5minz_lC6w5id4wM
-Message-ID: <CACRpkdY0DcuXD5sY-RSa_uCbHFcOB=CRoiTdENM7yQg_oQssPQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/10] gpio: sysfs: use gpiod_is_equal() to compare
- GPIO descriptors
+Date: Fri, 4 Jul 2025 10:05:55 +0200
+X-Gm-Features: Ac12FXx4FWu-wxT4lMUgSqCnMbYqNhJBpHAH0TrYnyEPKzhBOIXHuwpVv46xut0
+Message-ID: <CACRpkdb26XOnUyNm8-8=iz4YDynkGp__jQi_kvnX6KgVNoAyZw@mail.gmail.com>
+Subject: Re: [PATCH v3 03/10] gpio: sysfs: only get the dirent reference for
+ the value attr once
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
 	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
@@ -96,10 +96,11 @@ On Mon, Jun 30, 2025 at 2:37=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
 
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> We have a dedicated comparator for GPIO descriptors that performs
-> additional checks and hides the implementation detail of whether the
-> same GPIO can be associated with two separate struct gpio_desc objects.
-> Use it in sysfs code
+> There's no reason to retrieve the reference to the sysfs dirent every
+> time we request an interrupt, we can as well only do it once when
+> exporting the GPIO. While at it: change the name of the kernfs node
+> field to value_class_node ahead of adding a second one for the
+> chip-local GPIO line value attribute.
 >
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
