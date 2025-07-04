@@ -1,152 +1,149 @@
-Return-Path: <linux-gpio+bounces-22806-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22807-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5966CAF94EA
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 16:03:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C885BAF9665
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 17:11:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7A653AB8F7
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 14:03:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F0F0F7BB603
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 15:10:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B221547EE;
-	Fri,  4 Jul 2025 14:03:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BE7628FAA8;
+	Fri,  4 Jul 2025 15:11:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="W4RmNA2s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dINeEi1k"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09714273F9;
-	Fri,  4 Jul 2025 14:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1449423A58E
+	for <linux-gpio@vger.kernel.org>; Fri,  4 Jul 2025 15:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637802; cv=none; b=KBDul8koS+weuyu5xVW554RvvsiZ/cwcElRyJKsb0kJUAw/4xK8W6Os9eXSq8rmGlibT0Qgg53nl+vqO2BHgoppqSsmABpQ2sSf7be30Vjoyqu+TgRZR05ySIIs5mc1oNXIlG7Lbw6+Ut2NosdZdjPkAZE6AdyPeHpEncrX2sjU=
+	t=1751641883; cv=none; b=ISaUDU62sjeI6YcPfG37oBjag25xWNyC8BDzJufgFt9pWk+BrwYG/lQgwkhHu4qwH1rlb8SFQ/4YWYVMnoqsXVHrptbNTCZ+s0b8a3daFo5zmYi/3w2XhPWpVp+o48iHfa/Bed8B0djDU0x8909glkzDa54Z5KmkUTgIM1+p+m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637802; c=relaxed/simple;
-	bh=MIkKO3ROEAcvFmZbM08D9Naq8WPWPvTABFHJbqIruaI=;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
-	 Content-Type:Subject; b=qpz9wpFaautWRfQtYXY8qLgBtBAWBpkswNLhgSZYvNZy1BJUMf9kNsUspQzE3Yr0AbqeqmLQZo2PlnZf+UbKsP3e4FJoJ4OCoiKIuoEWW2ob+7wtREEzSklXxJKj8+Qr7U79OTr+w/D8elz2Q/EZSTJIMJehEKWjWfBiuBRkdvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=W4RmNA2s; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=ptAkVOvHyjTU5vzUWd4lQ7vWlCuqotN7mv/qbmEOs8s=; b=W4RmNA2smiG/nfQ7Vj3oPjaqAg
-	8bEXTVD8+p6M3o9TiOnJkv5OSt4vIIK37GkX7D5kafwuigL9v0Y3zyOGBecedhm4n0HNNP/toeFpZ
-	E0R2dGS5LXd5EZhPNe3kl0n5I0fq1BIPiIE6lhjRbP9BdTg5QwfsbIxAatxXOTqsXShg=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:33412 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1uXh0Q-0002kj-QQ; Fri, 04 Jul 2025 10:03:11 -0400
-Date: Fri, 4 Jul 2025 10:03:09 -0400
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Hugo Villeneuve
- <hvilleneuve@dimonoff.com>, stable@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <20250704100309.efe7a82ac66fd43fedc09ef6@hugovil.com>
-In-Reply-To: <CAMRc=MdP5BMVF0p5W9qSRZuPKBa0YCTxB-gLQWT_r0hBp+8ksA@mail.gmail.com>
-References: <20250703191829.2952986-1-hugo@hugovil.com>
-	<CAMRc=MdP5BMVF0p5W9qSRZuPKBa0YCTxB-gLQWT_r0hBp+8ksA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751641883; c=relaxed/simple;
+	bh=5waSe9JNG3bmoZ4Dl76hVYYd3LVFKdDlnURf+9XosaU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HG4Eza7POgoZqcDELmYd2zvULKyyOUb8j2j7o6GotZEUqMlXfHbLq85CEZtl8RW4cH+i/jQVeah96xV1nNacpRiKlv8fg5tTH8XarH3e4q/dSdPn1wZDuRbxF9Ne0mYnakdqGpOfvu69ReU9ME4L0N2nOLnAD/dxl+dPldICsYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dINeEi1k; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a575a988f9so641839f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Jul 2025 08:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751641879; x=1752246679; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d0fTEoeFH2CCKRZ2GxYERj8nq+92LKFVKj9HqnOJJLg=;
+        b=dINeEi1kgZWQgFEYAJ5FVwmFBPT5EzLOv33qfoPmv7r4IE0mgMMTfMsGwcRyuRe61K
+         FMkjIBZSJIecG2RitvoOimj6hMLBTAIV1TaS5zpnBYcGTdxIi3lr8/Up6IzFeh1D2qja
+         39f4WyarFFq255vcCosZ+jh7p++fRISzDvr1ZTaGDlZnF8iivGDatb1CKjKpbUkvJlh7
+         yu08I2szKq4Gx4MvWFPB27Ys/njhieh/zhJjsYoPaL/at6nIkKl0INB+XBIUPMr8fldA
+         /pefZShXVZnyVxYycrUDATLgiTbIU2NNQ5i4XxlIBUsOoN01fRuT23OGkjx3QerUwVZ5
+         1HaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751641879; x=1752246679;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d0fTEoeFH2CCKRZ2GxYERj8nq+92LKFVKj9HqnOJJLg=;
+        b=DJAv6z/CUQCVsty+nQoDgh/qw2v0BxDkkDGF0CVqdMfu/98Oq7BIG/DTFPFV6q8XMU
+         +MY/gBBbJiO6jP7W2MtuxAaA+HpNd5iVG/Xtye8lXgdnrN3PqB0ONXuXZggYs544q1Wk
+         0+s4ZLM/rsI2CRFZyGzuAoiq00CTLHhhyCxVccIupX+Pc9PYfBa5phNO6ZtRGfcMD1VQ
+         CJvOQ6CjPVHFGy4Bn9hXq/DW2qHaIk3H6nZRpcXIcGMfOzhm9bGYn75aFTRh+hTzahDY
+         X9DffHD21YfTSkO+1L/xWHik+QcP3O/0tUWSQMT1l1KgN0jq2c9+f7IdcK7tn26wgi7t
+         cTTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRuS5K84yNNy8odYiqzFaQEkcuqQX2mfO/6nnsHgaA3gaOfMY9O9cyZvXenG6y2QCzhzwRMbbIIity@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNEavjoQ5NY9wcaso4qnvNsBhKh71FkABXwKKrFQ8Mrge/yW7n
+	8L25tvcIrXRb8MBvnSAv4sC0CdOhf9BYkssHdht/xoUEbhrIzkggRTpgQqxT6fzNdWM=
+X-Gm-Gg: ASbGncsAvCxq+c/f6OaIqvCZHDXscb/fTuFARBcjtvEBN3FVWO+7/JF9+CCUh864XFq
+	MEXeQTHD3qQROinShPC021rkBmDW2W5ii7IvaJO2GpYogEET7DklchK7Nfzj8hrd7yqYrikm8TH
+	jAHu/iRrisN00Dojn+8P+F55N/z/JJ+sg55+bP1j/eQgNrbi9bl89pSwMB4Z2fM3TwFWShCUF0W
+	RbyKBmryzDZtKO0BU4vXFC8ZnpN7wyLJTPE1tSc1IYX4F/zEqJMNomd9I7pRnB9DWwvkNxDcFXq
+	efpvI4+SYRfRhAnTMXrJ/S9aBasb+h4c61bUs/Cl3xa2mvJjrCLgpfQ/Cy3DTXLNcKfS/3UpyNn
+	JekyEFug=
+X-Google-Smtp-Source: AGHT+IEK4aTwZb/t+iBAfYaNAla4w2TjyMyeRG101P7FjyngDibQMih+NwFX/4yVby7V0AceGcPGpg==
+X-Received: by 2002:a05:6000:1a8c:b0:3a5:8905:2df9 with SMTP id ffacd0b85a97d-3b4964dc1famr2429125f8f.37.1751641879342;
+        Fri, 04 Jul 2025 08:11:19 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b470e928aesm2675416f8f.44.2025.07.04.08.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 08:11:18 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
+References: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
+Subject: Re: (subset) [PATCH v3 0/6] Add support for Amlogic S7/S7D/S6
+ pinctrl
+Message-Id: <175164187861.2868628.1382846991470897290.b4-ty@linaro.org>
+Date: Fri, 04 Jul 2025 17:11:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -0.3 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH] gpiolib: fix efficiency regression when using
- gpio_chip_get_multiple()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-Hi Bartosz,
+Hi,
 
-On Fri, 4 Jul 2025 10:26:58 +0200
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-> On Thu, Jul 3, 2025 at 9:18 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> >
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> >
-> > commit 74abd086d2ee ("gpiolib: sanitize the return value of
-> > gpio_chip::get_multiple()") altered the value returned by
-> > gc->get_multiple() in case it is positive (> 0), but failed to
-> > return for other cases (<= 0).
-> >
-> > This may result in the "if (gc->get)" block being executed and thus
-> > negates the performance gain that is normally obtained by using
-> > gc->get_multiple().
-> >
-> > Fix by returning the result of gc->get_multiple() if it is <= 0.
-> >
-> > Also move the "ret" variable to the scope where it is used, which as an
-> > added bonus fixes an indentation error introduced by the aforementioned
-> > commit.
+On Tue, 27 May 2025 13:23:27 +0800, Xianwei Zhao wrote:
+> In some Amlogic SoCs, to save register space or due to some
+> abnormal arrangements, two sets of pins share one mux register.
+> A group starting from pin0 is the main pin group, which acquires
+> the register address through DTS and has management permissions,
+> but the register bit offset is undetermined.
+> Another GPIO group as a subordinate group. Some pins mux use share
+> register and bit offset from bit0 . But this group do not have
+> register management permissions.
 > 
-> Thanks, I queued it for fixes. I typically keep local variables at the
-> top of the function (just a personal readability preference) but since
-> this function already has scope-local variables, let's do it. What is
-> the indentation error you're mentioning exactly?
+> [...]
 
-Ok, I was under the assumption that having local-scope variables was the preferred approach in the kernel, as I sometimes see patches just for fixing variables scope. If it is something specific to the GPIO subsystem, no problem.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.17/arm64-dt)
 
-The ret variable was indented ok, but an empty line with spaces was introduced just after it.
+[4/6] dts: arm64: amlogic: add S7 pinctrl node
+      https://git.kernel.org/amlogic/c/9291207753c733dcd9f1c08749950323f7f071e8
+[5/6] dts: arm64: amlogic: add S7D pinctrl node
+      https://git.kernel.org/amlogic/c/bd42a25d696e0d5ccc9e27de388d4ca9ff52f710
+[6/6] dts: arm64: amlogic: add S6 pinctrl node
+      https://git.kernel.org/amlogic/c/fb183c8d7a5a90cdee953701d8a5b92642a2e917
 
-Thanks for applying the patch.
+These changes has been applied on the intermediate git tree [1].
 
-Hugo.
+The v6.17/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
 
-> > Fixes: 74abd086d2ee ("gpiolib: sanitize the return value of gpio_chip::get_multiple()")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > ---
-> >  drivers/gpio/gpiolib.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index fdafa0df1b43..3a3eca5b4c40 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -3297,14 +3297,15 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
-> >  static int gpio_chip_get_multiple(struct gpio_chip *gc,
-> >                                   unsigned long *mask, unsigned long *bits)
-> >  {
-> > -       int ret;
-> > -
-> >         lockdep_assert_held(&gc->gpiodev->srcu);
-> >
-> >         if (gc->get_multiple) {
-> > +               int ret;
-> > +
-> >                 ret = gc->get_multiple(gc, mask, bits);
-> >                 if (ret > 0)
-> >                         return -EBADE;
-> > +               return ret;
-> >         }
-> >
-> >         if (gc->get) {
-> >
-> > base-commit: b4911fb0b060899e4eebca0151eb56deb86921ec
-> > --
-> > 2.39.5
-> >
-> 
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
 
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 
 -- 
-Hugo Villeneuve <hugo@hugovil.com>
+Neil
+
 
