@@ -1,157 +1,102 @@
-Return-Path: <linux-gpio+bounces-22792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97B4AAF8BEF
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 10:37:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 414D2AF8C66
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 10:46:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08DD45681EE
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 08:37:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 50712B6043D
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Jul 2025 08:37:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05C632BDC2E;
-	Fri,  4 Jul 2025 08:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B174A328B0C;
+	Fri,  4 Jul 2025 08:31:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nznebFvT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dPG9eN9s"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C162BD038
-	for <linux-gpio@vger.kernel.org>; Fri,  4 Jul 2025 08:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A391E328AE4
+	for <linux-gpio@vger.kernel.org>; Fri,  4 Jul 2025 08:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751617633; cv=none; b=tXfsS8q+tAKQYfkJ8qFTs7RJJQqTPqWbKwg4HJi4A5DZwt3sYFDd9hSNxPW4brT0v0DmcTYjFuvGTqQ05ecjbggPOlKcv5B8nXBKfo40lq1SqVrjlo8QAi48TCr9eH0xxDccaB1uoDvA+hP3P7DDJoLsl6zH+UgRzFjRPz/UOQQ=
+	t=1751617900; cv=none; b=NVcpjchS4+48hq8PlyPdahJ8SMyrJbFd2tKPp1Baj/+rH+P1fhgRn8o9riQ7WfhHFPGrxVqzNNq73G7UmbY6BaIvvc3N71bBE480I5XsMdHjIncocXDDof+3gtUMx/bh6SQ1tocBp6L+IGMmo1miiGwI4EMGk5o+gf2bu1Tvgws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751617633; c=relaxed/simple;
-	bh=KyQG4/PtXk1I0N8JEou8JyB93SVP5PTQ2ACI4AMtZdw=;
+	s=arc-20240116; t=1751617900; c=relaxed/simple;
+	bh=RvN2Un6f2xSlS7HughJpiOFyEdo67EsciAuBpKgNWC8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O8eYijMnZ9RB5mxgOdKYMSC/QLoieIR0Rth7VFrFYNWU0+kXSvtk59sepUObrwrlUMGs94ECTAxqCs2yhsndVNPoVa4cpQMdEbnFVLLIHcbFx+5SbCqfWF0H7nVdNX3ECMG1/oeyQipy9QEaZD5G2bS8MRfClmPcZqWk3jVsasU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nznebFvT; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-32b43846e8cso6322811fa.0
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Jul 2025 01:27:11 -0700 (PDT)
+	 To:Cc:Content-Type; b=UACp1pe7DMde+sbujb/ncPtAI+osEsvEI9Qw9oLgPeVaj512kbOc21DD8xpo9WbSI/gXtqZPcfaNLphgzwKeS/vnfQIF4EQHBtJzk6i2GpeZ3Ceu7FCCDqTTtSctLe4oAqT2tw1vwvBMWW5ul9yruhk1OKbpNrfB8bRT1ZoJE8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dPG9eN9s; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b10594812so913880e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Jul 2025 01:31:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751617630; x=1752222430; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751617897; x=1752222697; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7MAVLF41QmphRvqRBx4yeoftDy/YqQapTAiNPyaFzl8=;
-        b=nznebFvTA22RTOMZvHFZzsd7rNJKGAKZIFJb0n2qrjV34Xjzn2Tjtq4LMWqtwv6pfI
-         BBvozIQhxce9sKDdqvPLkgI437YypMrKbYxUaPhDCGyMxyaewXZVUdcd8tbZAzqkaZKI
-         C9MpDcFi3eHy2Np0yeeHIjt6tAMfMlxLWtZBX+W5Tb9oUME6YalO8Cl+2UyszUMSIiFw
-         wRZZX1r9aE1yQWHR402+iA8SWD/D9AQbVL+0YKmjFPRuBFYuFcWIwQbNqQquci+gAqTX
-         Vt8+sKkvotYx0QXeIr8Os86DxhRQQcIQ7q9sUkE9LOijaViykqUJQdUVoVvu9kUIGP0F
-         dlEA==
+        bh=RvN2Un6f2xSlS7HughJpiOFyEdo67EsciAuBpKgNWC8=;
+        b=dPG9eN9sa51UWzgbfGykSUDaw2lR/L8scGAJSNov4qFHMztfbW6Ke2O9GD8DLw6nqq
+         84v4vT+lU3k3jCJYEobDn8G2YfyCampcuJkY46UFzFo8YFxnsfVyHYvhSnYjgZ8SQ6Kx
+         y7jFdMhksLH4h3FPfnm7y/iie2zDpsdfeE3lbaP+4qCAaRC61mWB4MmfYOA7o08iDi7r
+         epkpFlxGr+WE5FNOnF16OMGpxu2KZkE7TYgFk62b4iNrz1tkh+FBwzdDkiGDzLqidmyO
+         GLMB0AlZiZvdl1hxo7G3/syIDp8/xRChJBeYZMaQ1lJn0nuENMdUV2mR1UXpxECI46rd
+         iqSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751617630; x=1752222430;
+        d=1e100.net; s=20230601; t=1751617897; x=1752222697;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7MAVLF41QmphRvqRBx4yeoftDy/YqQapTAiNPyaFzl8=;
-        b=trnVOYnd6hxgGqhzD4oR5Ag5FLkHrnKv8s1fg4aX45UwVZRoP/o4XyISc4JB4O9YUD
-         7TKmDyZXg/EL4C4/osiZzTO9HeK1M6n89w/i+HMBYp0+lsb5mz1NWku8Uzu2VZph652p
-         +uYXMQPEh8BLhmm+cFvpbDu4h1LQVLy/8WMYY+9Fg4fg5vLSR/o3YKfoMil4ZgmVVVR0
-         Ei6GLIpgoeAib3SRWEbhoRkR0IqKnjxNkVv/Jx/5dlqkXm45ZXBtOQ8m2cZa/sAFVfkD
-         LhWMCmb2TMPfRFr5Yeqp5GQS3Yyt3iUQhuKRn52jrKQBVfo9gJ6OMUSiCGYc3BKP82ko
-         9RFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1pkJIV+Z0zw/gLNpokov8cWG0auCScOpm8SRnltea+Gctyc3m9C2tywqumEQOI6V0mR/dc9C7sKf4@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHS+Lc3LOER3WWUQBB3SZBplzZowVA8R53ltJ/57jzy2JGLulp
-	HUKVvqLna+pe3UJPlzvtn1B96AdJq7O480zGRwv5Z9NPIcCecbK4v6t6O7WDzahIv8MpHQlTw+U
-	nvx3zSpH3c2z1AVp+Hl0hTSe2JzyFITY7G8ZNFW9pkD9F78UdW6hzLno=
-X-Gm-Gg: ASbGncszXkrHoATP6iHUEfOuTtHfGR2797v/E8qlrkmKz/ENVM8taCCtFAEuNvO2L6o
-	uEpakaITnXfz32SQR81JpEciofyLD8UNh07SAqtJEsB3/Ln74Gb83XA11llf91BoCTAJMgERF2Q
-	Zj9Fbdim2zR5EpEEZR2+PKrY028L+B4YFS2dy0a18jI/Fak/6OKSBQYBWqEwTaA6IFuV3bhWYPj
-	w==
-X-Google-Smtp-Source: AGHT+IFs9a89t3WB+Sx+Cdpp8ljm2QeBOISKgp49Ml1f7/SqzSNJCWirzIGOCGoUWJUDcONIPDY/mAc44F8rbBRpRLE=
-X-Received: by 2002:a2e:8a84:0:b0:32b:50c5:2593 with SMTP id
- 38308e7fff4ca-32e5f59c739mr2995621fa.18.1751617630354; Fri, 04 Jul 2025
- 01:27:10 -0700 (PDT)
+        bh=RvN2Un6f2xSlS7HughJpiOFyEdo67EsciAuBpKgNWC8=;
+        b=oyG7cSdKCPDxkgwyE8/6SUGCZYMPdUQpAVDtCLs7+4FFJq12jKNtRIeY5sRcJ5z+g9
+         NWawLRRhhT/9Li4uxd3R+d3cZMUK+rqW8+22z5IB/UXehyOQWOC2vv5h9E5lrsAd1una
+         K4AOAnABN+6E8AtV4vrVtZylTHplvkQdNN7Y2We/Yy03oJqrIwsqVxMs/BUXdtlGxRtQ
+         bHPHvEIfVGWPzbTjE303LQz+cwX053Tj2UPtdp1Qvn8cXSXG4rj34kjySj103PPPIUC2
+         mZ9oPPmNt//LP9QLXEybDcfBUhJyl0pTkIwesGjmVzWdy18B/mxzZ8sX8DxTtDrxwuis
+         TiVw==
+X-Gm-Message-State: AOJu0YxOoxq17d9C7WoUjf83Yh1aq85kdqrvK4Z4e/V0XnukIuyQqzH1
+	PeT3yS1SlnWh0FNRbN2VJDDuJ/EHLBhGjYvTus5qzfnyrcEvuZlgae5DOSMNdE6L9FBRLw2cvUo
+	Nmk7QrFpmWItlwNdYqksSp1sVe4aPZL0TlFpx1dXFpg==
+X-Gm-Gg: ASbGncvUxwCYKzXbz2tRfwAYcfi5QVgvp9ODASHB8KOldWPSgcV7g12hH3U63P5rSnC
+	BBRV2MhyU47t8K++CoI2Yiil+DhIE8+gve8qNayJzMRz5xp687hgb+sxlSUNgy99IHQteABluvC
+	3IsOF5GZqfUVGj8ff1JgComEd/OW5ZlotpAZAQ2P6OfMXquv3rY0LGiA==
+X-Google-Smtp-Source: AGHT+IGn+kXvbuhkTWM2jRg7AZexmx4hsQZ+rHES1ugrlCG7rv9TjBidI2dQZm+dURqHkBY2T7JElheKLsd+CUcc+g0=
+X-Received: by 2002:a05:6512:110c:b0:553:2fa8:8405 with SMTP id
+ 2adb3069b0e04-557ab2febd4mr274029e87.56.1751617896571; Fri, 04 Jul 2025
+ 01:31:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703191829.2952986-1-hugo@hugovil.com>
-In-Reply-To: <20250703191829.2952986-1-hugo@hugovil.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 4 Jul 2025 10:26:58 +0200
-X-Gm-Features: Ac12FXyuss_6x_4e0DROEyXhPHF7MGwZ75tlcuNi7uvqnc0xqRBj_OAhsSL1laQ
-Message-ID: <CAMRc=MdP5BMVF0p5W9qSRZuPKBa0YCTxB-gLQWT_r0hBp+8ksA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix efficiency regression when using gpio_chip_get_multiple()
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
-	stable@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250703143039.5809-1-milan.krstic@gmail.com>
+In-Reply-To: <20250703143039.5809-1-milan.krstic@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 4 Jul 2025 10:31:25 +0200
+X-Gm-Features: Ac12FXzCpp3nQ7kq2hELMov7t_cIx4248LXRTsEkDtKyF2500jka7bfNQPEUa-k
+Message-ID: <CACRpkdZJ--Jt6VhXUQz6RTpCZG5VELksYij5S9vy2Xg1+Fyipw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: aw9523: fix can_sleep flag for GPIO chip
+To: Milan Krstic <milan.krstic@gmail.com>
+Cc: linux-gpio@vger.kernel.org, David Bauer <mail@david-bauer.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 3, 2025 at 9:18=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> w=
-rote:
->
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
->
-> commit 74abd086d2ee ("gpiolib: sanitize the return value of
-> gpio_chip::get_multiple()") altered the value returned by
-> gc->get_multiple() in case it is positive (> 0), but failed to
-> return for other cases (<=3D 0).
->
-> This may result in the "if (gc->get)" block being executed and thus
-> negates the performance gain that is normally obtained by using
-> gc->get_multiple().
->
-> Fix by returning the result of gc->get_multiple() if it is <=3D 0.
->
-> Also move the "ret" variable to the scope where it is used, which as an
-> added bonus fixes an indentation error introduced by the aforementioned
-> commit.
+On Thu, Jul 3, 2025 at 4:33=E2=80=AFPM Milan Krstic <milan.krstic@gmail.com=
+> wrote:
 
-Thanks, I queued it for fixes. I typically keep local variables at the
-top of the function (just a personal readability preference) but since
-this function already has scope-local variables, let's do it. What is
-the indentation error you're mentioning exactly?
+> The GPIO expander is connected via I2C, thus the can_sleep flag has to
+> be set to true. This fixes spurious "scheduling while atomic" bugs
+> in the kernel ringbuffer.
+>
+> Signed-off-by: David Bauer <mail@david-bauer.net>
+> Signed-off-by: Milan Krstic <milan.krstic@gmail.com>
 
-Bart
+Patch applied.
 
->
-> Fixes: 74abd086d2ee ("gpiolib: sanitize the return value of gpio_chip::ge=
-t_multiple()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> ---
->  drivers/gpio/gpiolib.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index fdafa0df1b43..3a3eca5b4c40 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3297,14 +3297,15 @@ static int gpiod_get_raw_value_commit(const struc=
-t gpio_desc *desc)
->  static int gpio_chip_get_multiple(struct gpio_chip *gc,
->                                   unsigned long *mask, unsigned long *bit=
-s)
->  {
-> -       int ret;
-> -
->         lockdep_assert_held(&gc->gpiodev->srcu);
->
->         if (gc->get_multiple) {
-> +               int ret;
-> +
->                 ret =3D gc->get_multiple(gc, mask, bits);
->                 if (ret > 0)
->                         return -EBADE;
-> +               return ret;
->         }
->
->         if (gc->get) {
->
-> base-commit: b4911fb0b060899e4eebca0151eb56deb86921ec
-> --
-> 2.39.5
->
+Yours,
+Linus Walleij
 
