@@ -1,356 +1,363 @@
-Return-Path: <linux-gpio+bounces-22815-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22816-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4942EAF9E56
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jul 2025 07:06:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 32DD3AF9E5A
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jul 2025 07:08:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72BF87ADB1D
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jul 2025 05:05:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83BE07B0DC0
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Jul 2025 05:07:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 059B218FDD2;
-	Sat,  5 Jul 2025 05:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87554263F5B;
+	Sat,  5 Jul 2025 05:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzY5CjFk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ln99sg0M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D219920330
-	for <linux-gpio@vger.kernel.org>; Sat,  5 Jul 2025 05:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B72718FDD2;
+	Sat,  5 Jul 2025 05:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751691984; cv=none; b=fqXv+MhIcCj5psHVBDLBjPzZOiTQXQ/jxPTyjUByXYz0BKodwnukuN1uslp+XAQYI6MzFYOHV2Z3nGcaaJ5Uhib2G00fs2RPwQacNeGSZKwYGEDoeTdFBPE0yYQygwrQAnHHN/C8aLpooHp1wowPc8bRfiipBcYpsVm0OGuOso0=
+	t=1751692107; cv=none; b=dYkVMOCd+V833jinrKH/17vkm6ss/qU0j8ASDhgh4sOhxs91VCDNVihl64iX3uy89VofpmxkJcvaSaqS3CS0/bm50RSBJBwdb3u4+5CegelYOE/FnP3cBV2Wu8UX5JfNVNKs5uTL0mQBoZu4ENlvUf7JiiK9SwqwWhT25eruBEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751691984; c=relaxed/simple;
-	bh=++SJSkd14653yJeKgNS3GvugbyrMB+ZllIR3cR+egYU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=jQu8tiF8SRQKwk/GX4CoH6GLALdd+fiFxJ9zlxm01yA6hyjw42cdrraW3sizLmFOmwqIKk4kohoMHJEiUWdZedzdkFKswUy6XWIvJQhkn6C0OXSMrry3f2vCm4C4+EG7GzxHwTeeUbOFr4ICw5Pt3KmNgXDrtfbK2VRQVYMqBwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzY5CjFk; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1751692107; c=relaxed/simple;
+	bh=y4YbVKjIpJUvJyG6P+uiV9yZeiRLnh3BlJE9dI35KLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+UPI9bQf2eFKPT+LRvvjTDB9jPuti9HZvLhrRN5ea6qihWFjVC4N0dSFVbYqeTkH61i41FgI/NQ3mJ8Datn8CEqkYWRBX5EeGe8VZnZVqudSE7R79/VhTywtaXCCoX6q4MyBoyamu17QVF/XazSxgJrX0o122Jm2fUOnO1+AqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ln99sg0M; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751691982; x=1783227982;
-  h=date:from:to:cc:subject:message-id;
-  bh=++SJSkd14653yJeKgNS3GvugbyrMB+ZllIR3cR+egYU=;
-  b=bzY5CjFkzmAUlvXlfCODjzdhFic6vWM1ZneyfwKulLbHSYPrb8cQTvZP
-   JOCkIXvCbxof9jQo6BM9KneFavrxVacfffO4Es+OshgObgwDoubXUEHnP
-   TegboSqGrtyg6PTTsPcZUjNse6E7q4A5zmMR/KyKrVE+QE88ernlgVAQk
-   JGyRunaZMxXJmofuX9dF4IrRFx6r+y/jxBUJsoOpVVY/2Un0e+nuR9AvK
-   mOxn+9KeDtb4w3DzkX19VTuDgWL9PayH8+5VbppEn2tgi0vKTfpzz7OBl
-   mLPMMlnPxbkfnqLP6Lxs/kjJ5zpyuafcHK2RuQ9N9Jb+LX0qD9foTAh7X
-   g==;
-X-CSE-ConnectionGUID: B9fScGjMT9C3FyYmK6xnvQ==
-X-CSE-MsgGUID: H+LK93rYRieE8DepXKEJtA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="71437937"
+  t=1751692105; x=1783228105;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=y4YbVKjIpJUvJyG6P+uiV9yZeiRLnh3BlJE9dI35KLo=;
+  b=Ln99sg0M2VHTs68nEXUishPTw6uj86Wt6X0jERgFdSPNaaUT1+onKPTY
+   c6AuHmELRckFCUZELX4556gcNE0TiJIMjmj8Q9OBhhBE+We5TtHcvZzCA
+   tslZV0OTRMs9pR8kFh7sjFF0OLNE1enrtuR0OBHHxTJfd6Fx0DGb0R9Fd
+   fx+C9laohUdGdai4+L+nCRFHQBvCUIrhsEWiWiSrSMpBhiJn88gKKWd0M
+   00fLQ4tTqCM+SlXRJMkB2xEpZh3SPPaNSixlvf3TzDn9ag7NwZ022UKqb
+   ev0nC8tyy4jplOcHohy0SpwOJyWHPI4Sa7NgKj4uen9n9mcF5e79WX+j7
+   Q==;
+X-CSE-ConnectionGUID: y5SBai1/TIuWM7jACK94sg==
+X-CSE-MsgGUID: 5vXN95XUQhqTcBo0U8ACLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="79443469"
 X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
-   d="scan'208";a="71437937"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 22:06:22 -0700
-X-CSE-ConnectionGUID: nR0IGJWBQ5OmKHDR6i2b4A==
-X-CSE-MsgGUID: 2bxlOxeOS129W1gf1jx/uw==
+   d="scan'208";a="79443469"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 22:08:24 -0700
+X-CSE-ConnectionGUID: I8XUcSjlT9S3JX+2sWvfGw==
+X-CSE-MsgGUID: R0W+LATIQlKLp+hRX+hGKQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
-   d="scan'208";a="154896590"
+   d="scan'208";a="160440705"
 Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 04 Jul 2025 22:06:21 -0700
+  by orviesa005.jf.intel.com with ESMTP; 04 Jul 2025 22:08:22 -0700
 Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uXv6Q-0004IV-1f;
-	Sat, 05 Jul 2025 05:06:18 +0000
-Date: Sat, 05 Jul 2025 13:06:04 +0800
+	id 1uXv8M-0004Ih-2g;
+	Sat, 05 Jul 2025 05:08:18 +0000
+Date: Sat, 5 Jul 2025 13:07:20 +0800
 From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 5285b5ed04ab6ad40f7b654eefbccd6ae8cbf415
-Message-ID: <202507051352.iP6u8ZEk-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+To: Peter Griffin <peter.griffin@linaro.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
+	Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH] pinctrl: samsung: Fix gs101 irq chip
+Message-ID: <202507051248.6qkGauvn-lkp@intel.com>
+References: <20250702-fix-gs101-irqchip-v1-1-ccc84b44ad72@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702-fix-gs101-irqchip-v1-1-ccc84b44ad72@linaro.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 5285b5ed04ab6ad40f7b654eefbccd6ae8cbf415  pinctrl: aw9523: fix can_sleep flag for GPIO chip
+Hi Peter,
 
-elapsed time: 946m
+kernel test robot noticed the following build errors:
 
-configs tested: 263
-configs skipped: 4
+[auto build test ERROR on 2aeda9592360c200085898a258c4754bfe879921]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/intel-lab-lkp/linux/commits/Peter-Griffin/pinctrl-samsung-Fix-gs101-irq-chip/20250702-201914
+base:   2aeda9592360c200085898a258c4754bfe879921
+patch link:    https://lore.kernel.org/r/20250702-fix-gs101-irqchip-v1-1-ccc84b44ad72%40linaro.org
+patch subject: [PATCH] pinctrl: samsung: Fix gs101 irq chip
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20250705/202507051248.6qkGauvn-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507051248.6qkGauvn-lkp@intel.com/reproduce)
 
-tested configs:
-alpha                             allnoconfig    clang-21
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    clang-19
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    clang-21
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    clang-19
-arc                   randconfig-001-20250704    gcc-8.5.0
-arc                   randconfig-001-20250705    clang-21
-arc                   randconfig-002-20250704    gcc-15.1.0
-arc                   randconfig-002-20250705    clang-21
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-19
-arm                          gemini_defconfig    clang-20
-arm                         orion5x_defconfig    clang-21
-arm                          pxa168_defconfig    clang-19
-arm                   randconfig-001-20250704    gcc-8.5.0
-arm                   randconfig-001-20250705    clang-21
-arm                   randconfig-002-20250704    clang-21
-arm                   randconfig-002-20250705    clang-21
-arm                   randconfig-003-20250704    gcc-8.5.0
-arm                   randconfig-003-20250705    clang-21
-arm                   randconfig-004-20250704    gcc-13.4.0
-arm                   randconfig-004-20250705    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    clang-21
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    clang-19
-arm64                 randconfig-001-20250704    gcc-14.3.0
-arm64                 randconfig-001-20250705    clang-21
-arm64                 randconfig-002-20250704    clang-21
-arm64                 randconfig-002-20250705    clang-21
-arm64                 randconfig-003-20250704    clang-16
-arm64                 randconfig-003-20250705    clang-21
-arm64                 randconfig-004-20250704    gcc-10.5.0
-arm64                 randconfig-004-20250705    clang-21
-csky                              allnoconfig    clang-21
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    clang-19
-csky                  randconfig-001-20250704    gcc-15.1.0
-csky                  randconfig-001-20250705    gcc-9.3.0
-csky                  randconfig-002-20250704    gcc-15.1.0
-csky                  randconfig-002-20250705    gcc-9.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-19
-hexagon               randconfig-001-20250704    clang-21
-hexagon               randconfig-001-20250705    gcc-9.3.0
-hexagon               randconfig-002-20250704    clang-21
-hexagon               randconfig-002-20250705    gcc-9.3.0
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250704    gcc-12
-i386        buildonly-randconfig-001-20250705    gcc-12
-i386        buildonly-randconfig-002-20250704    clang-20
-i386        buildonly-randconfig-002-20250705    gcc-12
-i386        buildonly-randconfig-003-20250704    clang-20
-i386        buildonly-randconfig-003-20250705    gcc-12
-i386        buildonly-randconfig-004-20250704    clang-20
-i386        buildonly-randconfig-004-20250705    gcc-12
-i386        buildonly-randconfig-005-20250704    clang-20
-i386        buildonly-randconfig-005-20250705    gcc-12
-i386        buildonly-randconfig-006-20250704    clang-20
-i386        buildonly-randconfig-006-20250705    gcc-12
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250705    gcc-12
-i386                  randconfig-002-20250705    gcc-12
-i386                  randconfig-003-20250705    gcc-12
-i386                  randconfig-004-20250705    gcc-12
-i386                  randconfig-005-20250705    gcc-12
-i386                  randconfig-006-20250705    gcc-12
-i386                  randconfig-007-20250705    gcc-12
-i386                  randconfig-011-20250705    clang-20
-i386                  randconfig-012-20250705    clang-20
-i386                  randconfig-013-20250705    clang-20
-i386                  randconfig-014-20250705    clang-20
-i386                  randconfig-015-20250705    clang-20
-i386                  randconfig-016-20250705    clang-20
-i386                  randconfig-017-20250705    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-21
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20250704    gcc-15.1.0
-loongarch             randconfig-001-20250705    gcc-9.3.0
-loongarch             randconfig-002-20250704    gcc-15.1.0
-loongarch             randconfig-002-20250705    gcc-9.3.0
-m68k                             allmodconfig    clang-19
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    clang-19
-m68k                             allyesconfig    gcc-15.1.0
-m68k                         amcore_defconfig    clang-21
-m68k                                defconfig    clang-19
-m68k                            mac_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    clang-19
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    clang-19
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                     cu1000-neo_defconfig    clang-21
-mips                      pic32mzda_defconfig    clang-21
-mips                         rt305x_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-14.2.0
-nios2                               defconfig    gcc-15.1.0
-nios2                 randconfig-001-20250704    gcc-8.5.0
-nios2                 randconfig-001-20250705    gcc-9.3.0
-nios2                 randconfig-002-20250704    gcc-10.5.0
-nios2                 randconfig-002-20250705    gcc-9.3.0
-openrisc                          allnoconfig    clang-21
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-12
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-21
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250704    gcc-14.3.0
-parisc                randconfig-001-20250705    gcc-9.3.0
-parisc                randconfig-002-20250704    gcc-8.5.0
-parisc                randconfig-002-20250705    gcc-9.3.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-21
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc                       ebony_defconfig    clang-21
-powerpc                     ep8248e_defconfig    gcc-15.1.0
-powerpc                       ppc64_defconfig    clang-21
-powerpc               randconfig-001-20250704    clang-21
-powerpc               randconfig-001-20250705    gcc-9.3.0
-powerpc               randconfig-002-20250704    gcc-9.3.0
-powerpc               randconfig-002-20250705    gcc-9.3.0
-powerpc               randconfig-003-20250704    clang-21
-powerpc               randconfig-003-20250705    gcc-9.3.0
-powerpc64             randconfig-001-20250704    clang-18
-powerpc64             randconfig-001-20250705    gcc-9.3.0
-powerpc64             randconfig-002-20250704    gcc-10.5.0
-powerpc64             randconfig-002-20250705    gcc-9.3.0
-powerpc64             randconfig-003-20250704    clang-18
-powerpc64             randconfig-003-20250705    gcc-9.3.0
-riscv                            allmodconfig    clang-21
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    clang-21
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250704    clang-21
-riscv                 randconfig-001-20250705    gcc-12
-riscv                 randconfig-002-20250704    clang-21
-riscv                 randconfig-002-20250705    gcc-12
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250704    gcc-15.1.0
-s390                  randconfig-001-20250705    gcc-12
-s390                  randconfig-002-20250704    gcc-8.5.0
-s390                  randconfig-002-20250705    gcc-12
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-12
-sh                                  defconfig    gcc-15.1.0
-sh                ecovec24-romimage_defconfig    gcc-15.1.0
-sh                          r7785rp_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250704    gcc-15.1.0
-sh                    randconfig-001-20250705    gcc-12
-sh                    randconfig-002-20250704    gcc-13.4.0
-sh                    randconfig-002-20250705    gcc-12
-sh                  sh7785lcr_32bit_defconfig    clang-21
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250704    gcc-11.5.0
-sparc                 randconfig-001-20250705    gcc-12
-sparc                 randconfig-002-20250704    gcc-8.5.0
-sparc                 randconfig-002-20250705    gcc-12
-sparc64                             defconfig    clang-20
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250704    gcc-13.4.0
-sparc64               randconfig-001-20250705    gcc-12
-sparc64               randconfig-002-20250704    clang-20
-sparc64               randconfig-002-20250705    gcc-12
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250704    clang-21
-um                    randconfig-001-20250705    gcc-12
-um                    randconfig-002-20250704    clang-21
-um                    randconfig-002-20250705    gcc-12
-um                           x86_64_defconfig    clang-21
-um                           x86_64_defconfig    gcc-12
-x86_64                           alldefconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250704    clang-20
-x86_64      buildonly-randconfig-001-20250705    gcc-12
-x86_64      buildonly-randconfig-002-20250704    gcc-12
-x86_64      buildonly-randconfig-002-20250705    gcc-12
-x86_64      buildonly-randconfig-003-20250704    clang-20
-x86_64      buildonly-randconfig-003-20250705    gcc-12
-x86_64      buildonly-randconfig-004-20250704    clang-20
-x86_64      buildonly-randconfig-004-20250705    gcc-12
-x86_64      buildonly-randconfig-005-20250704    clang-20
-x86_64      buildonly-randconfig-005-20250705    gcc-12
-x86_64      buildonly-randconfig-006-20250704    gcc-12
-x86_64      buildonly-randconfig-006-20250705    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250705    clang-20
-x86_64                randconfig-002-20250705    clang-20
-x86_64                randconfig-003-20250705    clang-20
-x86_64                randconfig-004-20250705    clang-20
-x86_64                randconfig-005-20250705    clang-20
-x86_64                randconfig-006-20250705    clang-20
-x86_64                randconfig-007-20250705    clang-20
-x86_64                randconfig-008-20250705    clang-20
-x86_64                randconfig-071-20250705    clang-20
-x86_64                randconfig-072-20250705    clang-20
-x86_64                randconfig-073-20250705    clang-20
-x86_64                randconfig-074-20250705    clang-20
-x86_64                randconfig-075-20250705    clang-20
-x86_64                randconfig-076-20250705    clang-20
-x86_64                randconfig-077-20250705    clang-20
-x86_64                randconfig-078-20250705    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250704    gcc-12.4.0
-xtensa                randconfig-001-20250705    gcc-12
-xtensa                randconfig-002-20250704    gcc-15.1.0
-xtensa                randconfig-002-20250705    gcc-12
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507051248.6qkGauvn-lkp@intel.com/
 
---
+All errors (new ones prefixed by >>):
+
+   include/linux/lockdep.h:279:7: note: expanded from macro 'lockdep_assert'
+     279 |         do { WARN_ON(debug_locks && !(cond)); } while (0)
+         |              ^
+   include/asm-generic/bug.h:132:3: note: expanded from macro 'WARN_ON'
+     132 |                 __WARN();                                               \
+         |                 ^
+   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:15:1: note: expanded from here
+      15 | ".pushsection __bug_table, \"aw\"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"drivers/net/wireless/realtek/rtw88/hci.h\"; .popsection; .long 10002b - .; .short 197; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "drivers/net/wireless/realtek/rtw88/hci.h"; .popsection; .long 10002b - .; .short 197; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;
+         |                                                                                                                                             ^
+   In file included from drivers/net/wireless/realtek/rtw88/rtw8822c.c:6:
+   In file included from drivers/net/wireless/realtek/rtw88/main.h:2136:
+   drivers/net/wireless/realtek/rtw88/hci.h:197:2: error: unexpected token
+     197 |         lockdep_assert_held(&rtwdev->mutex);
+         |         ^
+   include/linux/lockdep.h:285:2: note: expanded from macro 'lockdep_assert_held'
+     285 |         lockdep_assert(lockdep_is_held(l) != LOCK_STATE_NOT_HELD)
+         |         ^
+   include/linux/lockdep.h:279:7: note: expanded from macro 'lockdep_assert'
+     279 |         do { WARN_ON(debug_locks && !(cond)); } while (0)
+         |              ^
+   include/asm-generic/bug.h:132:3: note: expanded from macro 'WARN_ON'
+     132 |                 __WARN();                                               \
+         |                 ^
+   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:15:1: note: expanded from here
+      15 | ".pushsection __bug_table, \"aw\"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"drivers/net/wireless/realtek/rtw88/hci.h\"; .popsection; .long 10002b - .; .short 197; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "drivers/net/wireless/realtek/rtw88/hci.h"; .popsection; .long 10002b - .; .short 197; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;
+         |                                                                                                                                             ^
+   In file included from drivers/net/wireless/realtek/rtw88/rtw8822c.c:6:
+   In file included from drivers/net/wireless/realtek/rtw88/main.h:2136:
+   drivers/net/wireless/realtek/rtw88/hci.h:186:2: error: unexpected token
+     186 |         lockdep_assert_held(&rtwdev->mutex);
+         |         ^
+   include/linux/lockdep.h:285:2: note: expanded from macro 'lockdep_assert_held'
+     285 |         lockdep_assert(lockdep_is_held(l) != LOCK_STATE_NOT_HELD)
+         |         ^
+   include/linux/lockdep.h:279:7: note: expanded from macro 'lockdep_assert'
+     279 |         do { WARN_ON(debug_locks && !(cond)); } while (0)
+         |              ^
+   include/asm-generic/bug.h:132:3: note: expanded from macro 'WARN_ON'
+     132 |                 __WARN();                                               \
+         |                 ^
+   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:12:1: note: expanded from here
+      12 | ".pushsection __bug_table, \"aw\"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"drivers/net/wireless/realtek/rtw88/hci.h\"; .popsection; .long 10002b - .; .short 186; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "drivers/net/wireless/realtek/rtw88/hci.h"; .popsection; .long 10002b - .; .short 186; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;
+         |                                                                                                                                             ^
+   In file included from drivers/net/wireless/realtek/rtw88/rtw8822c.c:6:
+   In file included from drivers/net/wireless/realtek/rtw88/main.h:2136:
+   drivers/net/wireless/realtek/rtw88/hci.h:186:2: error: unexpected token
+     186 |         lockdep_assert_held(&rtwdev->mutex);
+         |         ^
+   include/linux/lockdep.h:285:2: note: expanded from macro 'lockdep_assert_held'
+     285 |         lockdep_assert(lockdep_is_held(l) != LOCK_STATE_NOT_HELD)
+         |         ^
+   include/linux/lockdep.h:279:7: note: expanded from macro 'lockdep_assert'
+     279 |         do { WARN_ON(debug_locks && !(cond)); } while (0)
+         |              ^
+   include/asm-generic/bug.h:132:3: note: expanded from macro 'WARN_ON'
+     132 |                 __WARN();                                               \
+         |                 ^
+   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:12:1: note: expanded from here
+      12 | ".pushsection __bug_table, \"aw\"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"drivers/net/wireless/realtek/rtw88/hci.h\"; .popsection; .long 10002b - .; .short 186; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "drivers/net/wireless/realtek/rtw88/hci.h"; .popsection; .long 10002b - .; .short 186; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;
+         |                                                                                                                                             ^
+>> drivers/net/wireless/realtek/rtw88/rtw8822c.c:4364:6: error: unexpected token
+    4364 |         if (WARN_ON(bw > RTW_CHANNEL_WIDTH_40 || nrx >= RTW_RF_PATH_MAX))
+         |             ^
+   include/asm-generic/bug.h:132:3: note: expanded from macro 'WARN_ON'
+     132 |                 __WARN();                                               \
+         |                 ^
+   include/asm-generic/bug.h:109:19: note: expanded from macro '__WARN'
+     109 | #define __WARN()                __WARN_FLAGS("", BUGFLAG_TAINT(TAINT_WARN))
+         |                                 ^
+   arch/loongarch/include/asm/bug.h:47:2: note: expanded from macro '__WARN_FLAGS'
+      47 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:42:1: note: expanded from here
+      42 | ".pushsection __bug_table, \"aw\"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"drivers/net/wireless/realtek/rtw88/rtw8822c.c\"; .popsection; .long 10002b - .; .short 4364; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "drivers/net/wireless/realtek/rtw88/rtw8822c.c"; .popsection; .long 10002b - .; .short 4364; .short (1 << 0)|(((9) << 8)); .popsection; 10001: break 1;
+         |                                                                                                                                             ^
+   In file included from drivers/net/wireless/realtek/rtw88/rtw8822c.c:6:
+   In file included from drivers/net/wireless/realtek/rtw88/main.h:2136:
+   drivers/net/wireless/realtek/rtw88/hci.h:248:2: error: unexpected token
+     248 |         WARN(addr & 0x3, "should be 4-byte aligned, addr = 0x%08x\n", addr);
+         |         ^
+   include/asm-generic/bug.h:141:3: note: expanded from macro 'WARN'
+     141 |                 __WARN_printf(TAINT_WARN, format);                      \
+         |                 ^
+   include/asm-generic/bug.h:113:3: note: expanded from macro '__WARN_printf'
+     113 |                 __WARN_FLAGS("", BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+         |                 ^
+   arch/loongarch/include/asm/bug.h:47:2: note: expanded from macro '__WARN_FLAGS'
+      47 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:18:1: note: expanded from here
+      18 | ".pushsection __bug_table, \"aw\"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"drivers/net/wireless/realtek/rtw88/hci.h\"; .popsection; .long 10002b - .; .short 248; .short (1 << 0)|((1 << 3) | ((9) << 8)); .popsection; 10001: break 1;"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "drivers/net/wireless/realtek/rtw88/hci.h"; .popsection; .long 10002b - .; .short 248; .short (1 << 0)|((1 << 3) | ((9) << 8)); .popsection; 10001: break 1;
+         |                                                                                                                                             ^
+   In file included from drivers/net/wireless/realtek/rtw88/rtw8822c.c:6:
+   In file included from drivers/net/wireless/realtek/rtw88/main.h:2136:
+   drivers/net/wireless/realtek/rtw88/hci.h:248:2: error: unexpected token
+     248 |         WARN(addr & 0x3, "should be 4-byte aligned, addr = 0x%08x\n", addr);
+         |         ^
+   include/asm-generic/bug.h:141:3: note: expanded from macro 'WARN'
+     141 |                 __WARN_printf(TAINT_WARN, format);                      \
+         |                 ^
+   include/asm-generic/bug.h:113:3: note: expanded from macro '__WARN_printf'
+     113 |                 __WARN_FLAGS("", BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+         |                 ^
+   arch/loongarch/include/asm/bug.h:47:2: note: expanded from macro '__WARN_FLAGS'
+      47 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:18:1: note: expanded from here
+      18 | ".pushsection __bug_table, \"aw\"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"drivers/net/wireless/realtek/rtw88/hci.h\"; .popsection; .long 10002b - .; .short 248; .short (1 << 0)|((1 << 3) | ((9) << 8)); .popsection; 10001: break 1;"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 2; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "drivers/net/wireless/realtek/rtw88/hci.h"; .popsection; .long 10002b - .; .short 248; .short (1 << 0)|((1 << 3) | ((9) << 8)); .popsection; 10001: break 1;
+         |                                                                                                                                             ^
+   In file included from drivers/net/wireless/realtek/rtw88/rtw8822c.c:6:
+   In file included from drivers/net/wireless/realtek/rtw88/main.h:2136:
+   drivers/net/wireless/realtek/rtw88/hci.h:197:2: error: unexpected token
+     197 |         lockdep_assert_held(&rtwdev->mutex);
+         |         ^
+   include/linux/lockdep.h:285:2: note: expanded from macro 'lockdep_assert_held'
+     285 |         lockdep_assert(lockdep_is_held(l) != LOCK_STATE_NOT_HELD)
+         |         ^
+   include/linux/lockdep.h:279:7: note: expanded from macro 'lockdep_assert'
+     279 |         do { WARN_ON(debug_locks && !(cond)); } while (0)
+         |              ^
+   include/asm-generic/bug.h:132:3: note: expanded from macro 'WARN_ON'
+     132 |                 __WARN();                                               \
+         |                 ^
+   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:15:1: note: expanded from here
+
+
+vim +4364 drivers/net/wireless/realtek/rtw88/rtw8822c.c
+
+479c4ee931a677c Tzu-En Huang 2019-09-09  4353  
+479c4ee931a677c Tzu-En Huang 2019-09-09  4354  #define RTW_CCK_PD_MAX 255
+479c4ee931a677c Tzu-En Huang 2019-09-09  4355  #define RTW_CCK_CS_MAX 31
+479c4ee931a677c Tzu-En Huang 2019-09-09  4356  #define RTW_CCK_CS_ERR1 27
+479c4ee931a677c Tzu-En Huang 2019-09-09  4357  #define RTW_CCK_CS_ERR2 29
+479c4ee931a677c Tzu-En Huang 2019-09-09  4358  static void
+479c4ee931a677c Tzu-En Huang 2019-09-09  4359  rtw8822c_phy_cck_pd_set_reg(struct rtw_dev *rtwdev,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4360  			    s8 pd_diff, s8 cs_diff, u8 bw, u8 nrx)
+479c4ee931a677c Tzu-En Huang 2019-09-09  4361  {
+479c4ee931a677c Tzu-En Huang 2019-09-09  4362  	u32 pd, cs;
+479c4ee931a677c Tzu-En Huang 2019-09-09  4363  
+479c4ee931a677c Tzu-En Huang 2019-09-09 @4364  	if (WARN_ON(bw > RTW_CHANNEL_WIDTH_40 || nrx >= RTW_RF_PATH_MAX))
+479c4ee931a677c Tzu-En Huang 2019-09-09  4365  		return;
+479c4ee931a677c Tzu-En Huang 2019-09-09  4366  
+479c4ee931a677c Tzu-En Huang 2019-09-09  4367  	pd = rtw_read32_mask(rtwdev,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4368  			     rtw8822c_cck_pd_reg[bw][nrx].reg_pd,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4369  			     rtw8822c_cck_pd_reg[bw][nrx].mask_pd);
+479c4ee931a677c Tzu-En Huang 2019-09-09  4370  	cs = rtw_read32_mask(rtwdev,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4371  			     rtw8822c_cck_pd_reg[bw][nrx].reg_cs,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4372  			     rtw8822c_cck_pd_reg[bw][nrx].mask_cs);
+479c4ee931a677c Tzu-En Huang 2019-09-09  4373  	pd += pd_diff;
+479c4ee931a677c Tzu-En Huang 2019-09-09  4374  	cs += cs_diff;
+479c4ee931a677c Tzu-En Huang 2019-09-09  4375  	if (pd > RTW_CCK_PD_MAX)
+479c4ee931a677c Tzu-En Huang 2019-09-09  4376  		pd = RTW_CCK_PD_MAX;
+479c4ee931a677c Tzu-En Huang 2019-09-09  4377  	if (cs == RTW_CCK_CS_ERR1 || cs == RTW_CCK_CS_ERR2)
+479c4ee931a677c Tzu-En Huang 2019-09-09  4378  		cs++;
+479c4ee931a677c Tzu-En Huang 2019-09-09  4379  	else if (cs > RTW_CCK_CS_MAX)
+479c4ee931a677c Tzu-En Huang 2019-09-09  4380  		cs = RTW_CCK_CS_MAX;
+479c4ee931a677c Tzu-En Huang 2019-09-09  4381  	rtw_write32_mask(rtwdev,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4382  			 rtw8822c_cck_pd_reg[bw][nrx].reg_pd,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4383  			 rtw8822c_cck_pd_reg[bw][nrx].mask_pd,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4384  			 pd);
+479c4ee931a677c Tzu-En Huang 2019-09-09  4385  	rtw_write32_mask(rtwdev,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4386  			 rtw8822c_cck_pd_reg[bw][nrx].reg_cs,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4387  			 rtw8822c_cck_pd_reg[bw][nrx].mask_cs,
+479c4ee931a677c Tzu-En Huang 2019-09-09  4388  			 cs);
+760bb2abfef252a Ping-Ke Shih 2020-11-09  4389  
+760bb2abfef252a Ping-Ke Shih 2020-11-09  4390  	rtw_dbg(rtwdev, RTW_DBG_PHY,
+760bb2abfef252a Ping-Ke Shih 2020-11-09  4391  		"is_linked=%d, bw=%d, nrx=%d, cs_ratio=0x%x, pd_th=0x%x\n",
+760bb2abfef252a Ping-Ke Shih 2020-11-09  4392  		rtw_is_assoc(rtwdev), bw, nrx, cs, pd);
+479c4ee931a677c Tzu-En Huang 2019-09-09  4393  }
+479c4ee931a677c Tzu-En Huang 2019-09-09  4394  
+
+-- 
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
 
