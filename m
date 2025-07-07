@@ -1,192 +1,106 @@
-Return-Path: <linux-gpio+bounces-22891-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22892-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0693AFB5B9
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 16:19:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED27EAFB67F
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 16:50:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBA793A89AF
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 14:18:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E74C164D59
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 14:50:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB2B22D8390;
-	Mon,  7 Jul 2025 14:18:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED032D97A5;
+	Mon,  7 Jul 2025 14:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgNdtAJR"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="VYDIQ8bI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout2.mo534.mail-out.ovh.net (smtpout2.mo534.mail-out.ovh.net [51.210.94.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E382D8393;
-	Mon,  7 Jul 2025 14:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F73A28A1D6
+	for <linux-gpio@vger.kernel.org>; Mon,  7 Jul 2025 14:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.210.94.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897936; cv=none; b=l9nf1Wa5wgYwfvgwYmg6+Z/C2en6KlgpFS/Hq8yLofa302S1rqE/kXX3Kko/5nvdkilanhiPxTIv8Wt0X0A4fON65s5/F63n5V0sEN7f3tmR7m5i51t9wvUUzmrMPsyLwnoLNPVFiu+zG49bIiFGB5oCokDGyX2ItGd8dQ+MuFM=
+	t=1751899803; cv=none; b=iVN+ngvCFEW/ikFvzqAIWv1FIPErW7DWmR4mI/0GvvVT1BH8eykej5oIfnc2GhPon9hMCBvZmFo8gCdK49FjcnWPC+fAodaIvfQ26PEmjrR0befek3TUEezVo6LR0xh5xBvpwQAl0oKf1YmRP6K5l9MbrZmw4mvmRLBPVCtRup0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751897936; c=relaxed/simple;
-	bh=RCqVNrzJHaDjGi0nTRmKOCM2IBNClaZu6a32Pmp0POs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ldEP2Floi9UruVmp8Wh/VB55qSuXbnS78G2MhSLwkRfcrsl97L359Wllg6pbGgfObrZhlqpGbzuBJdj93f/trJ2Z1M4KNkarGVEmjvOEbSFJDUEuNal6Q+ITz3h9JdoXoT7vVdG8yAbeuSJBGdEJ8TSlOtOLJiNwnkMv6mjq+F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgNdtAJR; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so2194084f8f.0;
-        Mon, 07 Jul 2025 07:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751897933; x=1752502733; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIhIWADLdNO/nd33yinxD1H8qsnfEtBKs3ChjZsVi4s=;
-        b=NgNdtAJRAgmXiCUZHVeuB0r9oi5uz/Usng+0P58uuI0kzRq/7b3MoswdmByXRTYqvZ
-         Pta+9hcn+eb0jqZcQVvdha7bjntUlrISLMgacYYgsaxNfGBDb7ImHZ3MEzZ5GD23uaII
-         v+Nzg5wkgESL3Sr7PETJ3+bwS/CkuEVHinrQ0qos+2tEf8Hw/4n6CSHqmVra8pLLAk22
-         0xXsnOVR8FMc6LHuEJwaEMsudYDnylgAhOjVBP8NzIBdqwH4f8iubb7tDNX8ichC1ibh
-         6DvtggfDojbzcSiXjtDKI/wHo8EDJuT58Dk50YsLMDVVB4qgLywo760HS191YeQRxfZh
-         pzjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751897933; x=1752502733;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIhIWADLdNO/nd33yinxD1H8qsnfEtBKs3ChjZsVi4s=;
-        b=d2VE/DAR84EmLMf8V9unRvRe+BvH4nEp6btC/AX60psQ0oHv4XgjmIzLIKXmdWl0Ue
-         1gYCuN3/rys9eqiIP6EW7ZfFksUX/hFivfk7VQAkQLxB8Fz36BKMzX1bZVuc1eOZz783
-         J3q6BYbzE2lIA45p6KsENSvQ2Sum+n2RtPi6Gsh4A+L0ylynOOvsYkJWh9Ba2ojkHO/J
-         kxLfH5ZCMBvS84EdxQK41azxDTGzG4NDFck1AmYmTYacjt2y59uh2S6Fy043k4WEuBdL
-         xqAZv7X6lRri3FkegQiSF+9uAR21bFwOonTErnruZKIrDJdaA50pBsbLWaSrGruAhDEI
-         QoJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULQKSjrzRq0vRw6oXzjMYbW5FPz+eCJTHrcQve6B9EuJbTEQbn8VqREHSz2gq/G0oPDW3v5Tailvpy@vger.kernel.org, AJvYcCVqM889bbNGej18YNHtCATz0oCh2guWJd85mnPm6VlVHZcs5t+3q54iFg7T3Tx9HwC4SerkUohVHZkhpsD9@vger.kernel.org, AJvYcCWPdBN4HoEpuNqVthTynZFp3MCfmdd6UVkdzoYNgxzKie5WASKX8/AP92Q/yRQbTUmaLp+JgrAJI8oTAg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtHk2Jk+EZyc22Btsus0hxHq0fo5wK7EOZZsYlp03ItLpWs7c9
-	nsUCpcvtLqiiS9nMJh6YXhr4to2ByVZCg6JAKMGNrBodxwJQV1DIFCXt
-X-Gm-Gg: ASbGncvvRRF3NxNw6pB3BY4e203/8bzWqGNH1sfGgym6+DeWt7cXxzwywbtCtK+zhTc
-	7WVZuBMj7JjcZG5W5Hd8KFmzYvwExmmI399ZQUIsqwUrqYXhah1vnUwElD2tt4xXY3/J8rIgVmG
-	0k6pqjS2me628Par0xtilWXQVWdSw+SIXx2DCL1agSOvWqV+wnhx8VH28C2LfTSebGxHcI8bbdX
-	4WjztYAKp3h5gTBGB29OY3o5LNWIPaFFzm0v7PUQRWR0yiAe/QYAgU1ipSsJSMbBDFAbCU+Fh3k
-	ao9tcC2qYEXOXGQK+rKOK6RoNrh4i2nSdbXDztUrTglH/EUuqWRbnu49yiwuuRuWvCv3iYUsmM8
-	FzBZ0cOd0oLIVji6ciNc=
-X-Google-Smtp-Source: AGHT+IGjLz6S5fM35cF5+hKHA2tlk2smJKUGXb+pW5FqZs9HjzbC9U07thu3RNUJDSRoioKMADfuCA==
-X-Received: by 2002:a05:6000:200c:b0:3b3:9c56:b825 with SMTP id ffacd0b85a97d-3b4955895fbmr11097185f8f.22.1751897932896;
-        Mon, 07 Jul 2025 07:18:52 -0700 (PDT)
-Received: from iku.example.org ([2a06:5906:61b:2d00:d418:e5eb:1bc:30dd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b966cbsm10131868f8f.49.2025.07.07.07.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 07:18:52 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: [PATCH v3 3/3] pinctrl: renesas: rzt2h: Add support for RZ/N2H SoC
-Date: Mon,  7 Jul 2025 15:18:48 +0100
-Message-ID: <20250707141848.279528-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250707141848.279528-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250707141848.279528-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1751899803; c=relaxed/simple;
+	bh=zdEdHDTjhZ5ckA/m4c31bIgqREMkIWk9k23WQNtiaEs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IkAb0Boa53lQplpGVpllwiBEEM6TLPIJF4NA+R5+B2uu2gTFwAqy6TyncFzz/opJhQfNHqSiY01m6b+aurnnNsi2G8KP8A4J6rFH76S028BTRUBlbm1F7O3ip0ncc7Bjs1og7LSpTcfUEJQ/q946xkKuGBdm9RC+XWn/pFRvFp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=VYDIQ8bI; arc=none smtp.client-ip=51.210.94.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net [79.137.60.37])
+	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4bbRwb4QCwz6Fg8;
+	Mon,  7 Jul 2025 14:49:51 +0000 (UTC)
+Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net. [127.0.0.1])
+        by director4.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <brgl@bgdev.pl>; Mon,  7 Jul 2025 14:49:51 +0000 (UTC)
+Received: from mta7.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.109.231.53])
+	by director4.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4bbRwb0w8Fz1y3l;
+	Mon,  7 Jul 2025 14:49:51 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.6])
+	by mta7.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 59EE7C3CDA;
+	Mon,  7 Jul 2025 14:49:50 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-99G003226193a2-2a6d-4ede-9af5-e8ebec56eebd,
+                    F886D19416C0B9BC8E07D11B456840F184BAC853) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:79.116.47.195
+Message-ID: <3f80b31d-855c-4591-9237-272895165f13@orca.pet>
+Date: Mon, 7 Jul 2025 16:49:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: vortex86: add new GPIO device driver
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ linux-gpio@vger.kernel.org
+References: <20250707132154.771758-1-marcos@orca.pet>
+ <CAMRc=Me5dfNFLS1qF0AWgg8sb_vk9J=d-JV3-C5xWv7pZM+sFg@mail.gmail.com>
+Content-Language: es-ES
+From: Marcos Del Sol Vives <marcos@orca.pet>
+In-Reply-To: <CAMRc=Me5dfNFLS1qF0AWgg8sb_vk9J=d-JV3-C5xWv7pZM+sFg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 16037036800080565979
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefvddtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnheptdegudfgiedugfekudfhlefgjefguedvjeffieevgeetjedvvdeihfeiudejvdehnecukfhppeduvdejrddtrddtrddupdejledrudduiedrgeejrdduleehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheefgegmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=OJu8pJoid5qMGA+qH1sillUwasBPAhGzZR0zvE2aRfI=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1751899791;
+ v=1;
+ b=VYDIQ8bIzbLQZfTrc9BetegfdOkRinM3Pn/VY8VcgnLmYh097v0eoWJrxIgcd8Tsvn2pSoU8
+ hiTpGjJOjquzBvWQchMUzH3ZScKtNkYAtzSRkR4D+t41udrfq+kACDOF7JzugMNobx4ML4kipKV
+ 4bAmlfby201ZgrhmgtgkLvr6JTM/6PsT7kGt/dmzttDdk+rLDyWrf4YqcrC+Kte5WByyQHWb8Rd
+ d8DfyR/uUV2x1LhKamyQZfjZShuqRCos1rK/OKDzcTjiEBPykoJ7t/PqMSppUp2Kw9FT23iBoSZ
+ CkH/SszOpk99p6Dy8gGzjIodSnuN4KR+KvR4ZuU825vdA==
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+El 07/07/2025 a las 16:10, Bartosz Golaszewski escribió:
+> Hi!
+> 
+> This patch immediately rings alarm bells in my head because the chip
+> is not registered with the driver model. It's not 2005 anymore so I'd
+> need some more explanation. IMO there's nothing that makes it
+> impossible to implement this as a platform device. Could you elaborate
+> more on why you chose to implement it this way?
+> 
+> Bart
 
-The RZ/N2H (R9A09G087) SoC from Renesas shares a similar pin controller
-architecture with the RZ/T2H (R9A09G077) SoC, differing primarily in the
-number of supported pins-576 on RZ/N2H versus 729 on RZ/T2H.
+Hi Bart!
 
-Add the necessary pin configuration data and compatible string to enable
-support for the RZ/N2H SoC in the RZ/T2H pinctrl driver.
+This is my first time writing a driver in general, so the only reason is
+that the drivers I used as a reference (gpio-it87 and gpio-winbond) look
+more or less like this. I used those because they are fairly simple and
+also use fixed x86 ports for control.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-v2->v3:
-- No changes.
+I see now on gpio-f7188x that it is possible to detect if the SoC matches
+using platform_driver and platform_device. I guess that is what you were
+referring to? Should I thus make a V2 patch using those facilities? 
 
-v1->v2:
-- New patch.
----
- drivers/pinctrl/renesas/Kconfig         |  3 ++-
- drivers/pinctrl/renesas/pinctrl-rzt2h.c | 17 +++++++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
-index 0d0920f4678b..8cbd79a13414 100644
---- a/drivers/pinctrl/renesas/Kconfig
-+++ b/drivers/pinctrl/renesas/Kconfig
-@@ -45,6 +45,7 @@ config PINCTRL_RENESAS
- 	select PINCTRL_RZG2L if ARCH_R9A09G056
- 	select PINCTRL_RZG2L if ARCH_R9A09G057
- 	select PINCTRL_RZT2H if ARCH_R9A09G077
-+	select PINCTRL_RZT2H if ARCH_R9A09G087
- 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
- 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
- 	select PINCTRL_PFC_SH7269 if CPU_SUBTYPE_SH7269
-@@ -304,7 +305,7 @@ config PINCTRL_RZN1
- 	  This selects pinctrl driver for Renesas RZ/N1 devices.
- 
- config PINCTRL_RZT2H
--	bool "pin control support for RZ/T2H" if COMPILE_TEST
-+	bool "pin control support for RZ/N2H and RZ/T2H" if COMPILE_TEST
- 	depends on 64BIT && OF
- 	select GPIOLIB
- 	select GENERIC_PINCTRL_GROUPS
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzt2h.c b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
-index 877f6d00830f..55c64d74cb54 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzt2h.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
-@@ -764,6 +764,12 @@ static const u8 r9a09g077_gpio_configs[] = {
- 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f,
- };
- 
-+static const u8 r9a09g087_gpio_configs[] = {
-+	0x1f, 0xff, 0xff, 0x1f, 0, 0xfe, 0xff, 0, 0x7e, 0xf0, 0xff, 0x1,
-+	0xff, 0xff, 0xff, 0, 0xe0, 0xff, 0xff, 0, 0xff, 0xff, 0xff, 0x1,
-+	0xe0, 0xff, 0xff, 0x7f, 0, 0xfe, 0xff, 0x7f, 0, 0xfc, 0x7f,
-+};
-+
- static struct rzt2h_pinctrl_data r9a09g077_data = {
- 	.port_pins = rzt2h_gpio_names,
- 	.n_port_pins = ARRAY_SIZE(r9a09g077_gpio_configs) * RZT2H_PINS_PER_PORT,
-@@ -771,11 +777,22 @@ static struct rzt2h_pinctrl_data r9a09g077_data = {
- 	.n_ports = ARRAY_SIZE(r9a09g077_gpio_configs),
- };
- 
-+static struct rzt2h_pinctrl_data r9a09g087_data = {
-+	.port_pins = rzt2h_gpio_names,
-+	.n_port_pins = ARRAY_SIZE(r9a09g087_gpio_configs) * RZT2H_PINS_PER_PORT,
-+	.port_pin_configs = r9a09g087_gpio_configs,
-+	.n_ports = ARRAY_SIZE(r9a09g087_gpio_configs),
-+};
-+
- static const struct of_device_id rzt2h_pinctrl_of_table[] = {
- 	{
- 		.compatible = "renesas,r9a09g077-pinctrl",
- 		.data = &r9a09g077_data,
- 	},
-+	{
-+		.compatible = "renesas,r9a09g087-pinctrl",
-+		.data = &r9a09g087_data,
-+	},
- 	{ /* sentinel */ }
- };
- 
--- 
-2.49.0
-
+Thanks,
+Marcos
 
