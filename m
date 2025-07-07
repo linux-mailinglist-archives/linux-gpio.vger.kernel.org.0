@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-22834-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22835-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A285AFAAC8
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 07:12:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E3BDAFAACF
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 07:23:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F0CC91793C9
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 05:12:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9937C16E311
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 05:23:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC0C262FD3;
-	Mon,  7 Jul 2025 05:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD856262FEC;
+	Mon,  7 Jul 2025 05:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DNT/jjJp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="WSVX+csF"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="hNBc1W2q";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="RtllfmDL"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0181B442C;
-	Mon,  7 Jul 2025 05:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222A42E3716;
+	Mon,  7 Jul 2025 05:23:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751865172; cv=none; b=ne0YEO9b3GjUogwjQSzGiWynLMsmRUWRU1Ml4kxI0ehqxXH1z67YlAGVW6uraspRXSO/eyIJJTy56A7ATUYXIs2w3DBL5lWgloG67cDAgRzhOsBHCUPaWy7ZWC2sJfIIpRXE1PDdKPn0ZPvRUGIqP5WaNjYRzU8KQGVdV2b8pJg=
+	t=1751865790; cv=none; b=WxiwvjaisrcO7gr6vcd4xlzPqOwhT+MNMAJ2VodpiOc6HxdRxLIbJ13sWF3aGs7+WMRPpgfWEf/leQ7a5NAl+nGpVip1fNM0GePwcb+QUPihZNefC8egP573/znCugId/ist/QQ9GRf97EaXlXniJBg0IWiAJ09fHZvJPJxf3Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751865172; c=relaxed/simple;
-	bh=brjNfnegOGAX0qXp7j2ojb4YstGXgVTSohtW8jpSOrQ=;
+	s=arc-20240116; t=1751865790; c=relaxed/simple;
+	bh=x5ClnhVxoTppU8mcAz2GviFtfU98kezUnu2JV0mVGtE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=azyXtb3zn2jTscndqyXb6cVxeCCHft/N1hif6/WHaxcx36EgaG/SP3JQYWuNuZlPndsDacyJgtlnwoUQFC8PnNYmpHw59j3sffNYjIHeJ7PFnWfuTD7UNcYhu4xHG24RxngBzvz0TgWiGm4V0EdYRWvf5SlDtozdNJNc4pGBUnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DNT/jjJp; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=WSVX+csF reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+	 MIME-Version:Content-Type; b=R1Au1Hy3Mk7PmYKBbXNuWVIljXzxqKZ9X1qwltIGXvXw5HZq9I0gM8CSO7QhPRMKOljQiGLLt8X2HldwlQiQOe3qvLxLfgDcHereMO2ziRuDWFiMobOQToWdU1OlDUtmwPMtt4ijRLFM3tu2/rOytL0wT7m0cSEz5WiL22AG278=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=hNBc1W2q; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=RtllfmDL reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1751865169; x=1783401169;
+  t=1751865787; x=1783401787;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3qmvtsFXy8GXUm5ySVjZhDV2Qyo3x2/7ps/KKt+4zLU=;
-  b=DNT/jjJpFQPxu9zSG2GqxKiT/0bRFzSGeb0nYlwgU61fZwdj8Vptg+yO
-   HnRHeN7vsMziKe+03fUHLnPITyyVelMiJ4lkvCf5yHC4dxVY6h0+FjAOM
-   /Gj3hNalgNpC+A7nIPZg79S2N5fyt2vEhy673ps8Kb5L7KEuh4Nertujm
-   o0WVTA3mL7JTgS5GzQCmADv61qu0ik1bddoAkyPH286zJEVsuu+Z0ClK6
-   NglALXb9xc1NpOrVcc1/4SwSU4Sd7pDNGqgN3UyI6yXXrv4zAykPVgHKg
-   PB8q8nXsnGrLI8QKGtdnY33Gdmn7r4ACIQRdfSHK0iESLxeerKAFCRpb5
-   Q==;
-X-CSE-ConnectionGUID: 1uP/5fIuSu+29hjxQ59HvA==
-X-CSE-MsgGUID: ZDoxFLSfSHi+K+Vai2haVA==
+  bh=tAFzTdvEL/g2hW5e7OE/YHFfQnWN6WPVOHZ43Rh/S78=;
+  b=hNBc1W2qJoU13apQ72jiXddV+3X/3kUYw/LeV4tmGlGSbl6wV4AMFT3v
+   lFQ+GIuAXSptDeaGmUJAXdATGfvI6M7u2Kg++eDrhNlLdYDZxye4IV+kY
+   PHC+dYnEbUuZj0ULzanLbL6VABJlbBtQBvBlh7ZcIQfg1uKv3FUVa2SiB
+   72xZ17x09qaH+t9Vopli+adFMDmF0fK3P/tNfjYUxJ6nAOqO/ZXW2LruN
+   QH556G38ItUk2xkPGTvqwMKc6b2lvCl/zpUgFKtC7N0CMo+Ea8zXx/ys0
+   N8XPt9IPUZ/lTow3/UIcR5FQJyaJv7wMgtnrb+FO3TBbAjSVvImZ4HGqR
+   w==;
+X-CSE-ConnectionGUID: 9IcLi66/TAKgMudn+Tfuow==
+X-CSE-MsgGUID: yWmDf2cXSrKDRFiWqJ8AGw==
 X-IronPort-AV: E=Sophos;i="6.16,293,1744063200"; 
-   d="scan'208";a="45049662"
+   d="scan'208";a="45049793"
 Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 07 Jul 2025 07:12:46 +0200
-X-CheckPoint: {686B574E-10-BB1FFBB0-EB2CC75E}
-X-MAIL-CPID: 81232A621B7B84834251B541EF21C99E_2
-X-Control-Analysis: str=0001.0A006377.686B575D.0009,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 69C4F164002;
-	Mon,  7 Jul 2025 07:12:40 +0200 (CEST)
+  by mx1.tq-group.com with ESMTP; 07 Jul 2025 07:23:03 +0200
+X-CheckPoint: {686B59B7-13-943DFC15-D71A48EE}
+X-MAIL-CPID: C0CD751F9E2B6DA5070A76C743CE7991_5
+X-Control-Analysis: str=0001.0A006372.686B59EE.0019,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 122AC161583;
+	Mon,  7 Jul 2025 07:22:57 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1751865162;
+	s=dkim; t=1751865778;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3qmvtsFXy8GXUm5ySVjZhDV2Qyo3x2/7ps/KKt+4zLU=;
-	b=WSVX+csFu3ge71/40KRMwOXMzV4Hx5FTCveZ1j2VTPfcOcUKLuBTCZ7yD5gIY2PtXEY5vy
-	7aU91A/hf9GAk+aShMUewnQNvUjfFjzyyJ+ebm3EwhobkEwLY7rRPPGvdXTWW1am6CzbuJ
-	ROdkdEzYr865OAOUwgat4FtqvS7oS7UJHf5TN7AbpfI41G159Oi4DDaHrylC0nCNWPaRxf
-	0Nl6QPnL/QohyM4KxCzp3OJkag+GkHfja2mI8B8rrz+gl5bXmprTjCfI3wnhUvn67a4eAc
-	1zIvwwBP6ooRVxK9al9dPOCk4o1CuG6OTKRbmg3bHGESdONwQCePHh7nfdO7Iw==
+	bh=tAFzTdvEL/g2hW5e7OE/YHFfQnWN6WPVOHZ43Rh/S78=;
+	b=RtllfmDLili5K+5wVLFQJ3haQIUGJmPTG8r0NaW/hCoaYOlep+G5s3XmAl/dfWgZmmCxEy
+	yjjNAXPEhFK9kjX0uYRyiy3C1UXkiI/KkPh6UTPpmD0UdWXoT1ltgJqxXxBuKDATfpFqvG
+	CBLtkRpB1HenMqt2hoJbTaQVhc1fsL+9Gct9WqTNGk53eaJeuAkKU/pJ80uaiLDDhN9hvF
+	SuMgve0n8q1PP8Z6s3Yn7JSgarjJZ17K+RcKjkGasYpd7SfPYooffFbDBRHm1sUpbmy0O5
+	mJ4DZvuB2/PM0xGqP+1inJuBF84o/XGzGaHuK+vKOLh+Kz9gTH/M4Q0VNbmuBQ==
 From: Alexander Stein <alexander.stein@ew.tq-group.com>
 To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
  Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
@@ -77,14 +77,15 @@ To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
 Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
  Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Subject: Re: [PATCH 1/2] ASoC: codec: tlv320aic32x4: Drop aic32x4_pdata usage
-Date: Mon, 07 Jul 2025 07:12:40 +0200
-Message-ID: <5000946.GXAFRqVoOG@steina-w>
+Subject:
+ Re: [PATCH 2/2] ASoC: codec: tlv320aic32x4: Convert to GPIO descriptors
+Date: Mon, 07 Jul 2025 07:22:57 +0200
+Message-ID: <3372384.44csPzL39Z@steina-w>
 Organization: TQ-Systems GmbH
-In-Reply-To: <20250706-asoc-gpio-1-v1-1-f0912095e923@nxp.com>
+In-Reply-To: <20250706-asoc-gpio-1-v1-2-f0912095e923@nxp.com>
 References:
  <20250706-asoc-gpio-1-v1-0-f0912095e923@nxp.com>
- <20250706-asoc-gpio-1-v1-1-f0912095e923@nxp.com>
+ <20250706-asoc-gpio-1-v1-2-f0912095e923@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -97,70 +98,139 @@ X-Last-TLS-Session-Version: TLSv1.3
 
 Hi,
 
-Am Sonntag, 6. Juli 2025, 03:04:23 CEST schrieb Peng Fan:
-> There is no machine is using aic32x4_pdata as platform_data, so
-> remove the dead code.
+Am Sonntag, 6. Juli 2025, 03:04:24 CEST schrieb Peng Fan:
+> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+>  - Use devm_gpiod_get_optional to get GPIO descriptor, and set consumer
+>    name.
+>  - Use gpiod_set_value to configure output value.
+>=20
+> While at here, reorder the included headers.
+>=20
+> Checking the DTS that use the device, all are using GPIOD_ACTIVE_LOW
+> polarity for reset-gpios, so all should work as expected with this patch.
 >=20
 > Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>
 > Cc: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-
-Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 > ---
->  include/sound/tlv320aic32x4.h    | 9 ---------
->  sound/soc/codecs/tlv320aic32x4.c | 9 +--------
->  2 files changed, 1 insertion(+), 17 deletions(-)
+>  sound/soc/codecs/tlv320aic32x4.c | 44 ++++++++++++++++++++--------------=
+=2D-----
+>  1 file changed, 22 insertions(+), 22 deletions(-)
 >=20
-> diff --git a/include/sound/tlv320aic32x4.h b/include/sound/tlv320aic32x4.h
-> index 0abf74d7edbd69484c45ad6a1c39b3f67d61bd63..b779d671a99576deadc6e647e=
-dff9b1b3a5d33c2 100644
-> --- a/include/sound/tlv320aic32x4.h
-> +++ b/include/sound/tlv320aic32x4.h
-> @@ -40,13 +40,4 @@
->  struct aic32x4_setup_data {
->  	unsigned int gpio_func[5];
->  };
-> -
-> -struct aic32x4_pdata {
-> -	struct aic32x4_setup_data *setup;
-> -	u32 power_cfg;
-> -	u32 micpga_routing;
-> -	bool swapdacs;
-> -	int rstn_gpio;
-> -};
-> -
->  #endif
 > diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320ai=
 c32x4.c
-> index 54ea4bc58c276d9ab39a15d312287dfb300dbab9..7dbcf7f7130b04a27f58f20be=
-b83eb3676c79c3d 100644
+> index 7dbcf7f7130b04a27f58f20beb83eb3676c79c3d..1423186f5a6c181a20dd2dd55=
+2679d33174edaee 100644
 > --- a/sound/soc/codecs/tlv320aic32x4.c
 > +++ b/sound/soc/codecs/tlv320aic32x4.c
-> @@ -1346,7 +1346,6 @@ int aic32x4_probe(struct device *dev, struct regmap=
- *regmap,
->  		  enum aic32x4_type type)
->  {
->  	struct aic32x4_priv *aic32x4;
-> -	struct aic32x4_pdata *pdata =3D dev->platform_data;
->  	struct device_node *np =3D dev->of_node;
->  	int ret;
+> @@ -9,27 +9,26 @@
+>   * Based on sound/soc/codecs/wm8974 and TI driver for kernel 2.6.27.
+>   */
 > =20
-> @@ -1363,13 +1362,7 @@ int aic32x4_probe(struct device *dev, struct regma=
-p *regmap,
+> -#include <linux/module.h>
+> -#include <linux/moduleparam.h>
+> -#include <linux/init.h>
+> -#include <linux/delay.h>
+> -#include <linux/pm.h>
+> -#include <linux/gpio.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/cdev.h>
+> -#include <linux/slab.h>
+>  #include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+>  #include <linux/of_clk.h>
+> +#include <linux/pm.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
 > =20
->  	dev_set_drvdata(dev, aic32x4);
+> -#include <sound/tlv320aic32x4.h>
+>  #include <sound/core.h>
+> +#include <sound/initval.h>
+>  #include <sound/pcm.h>
+>  #include <sound/pcm_params.h>
+>  #include <sound/soc.h>
+>  #include <sound/soc-dapm.h>
+> -#include <sound/initval.h>
+>  #include <sound/tlv.h>
+> +#include <sound/tlv320aic32x4.h>
+
+Mh, maybe create a single commit sorting these headers.
+
 > =20
-> -	if (pdata) {
-> -		aic32x4->power_cfg =3D pdata->power_cfg;
-> -		aic32x4->swapdacs =3D pdata->swapdacs;
-> -		aic32x4->micpga_routing =3D pdata->micpga_routing;
-> -		aic32x4->rstn_gpio =3D pdata->rstn_gpio;
-> -		aic32x4->mclk_name =3D "mclk";
-> -	} else if (np) {
-> +	if (np) {
->  		ret =3D aic32x4_parse_dt(aic32x4, np);
->  		if (ret) {
->  			dev_err(dev, "Failed to parse DT node\n");
+>  #include "tlv320aic32x4.h"
+> =20
+> @@ -38,7 +37,7 @@ struct aic32x4_priv {
+>  	u32 power_cfg;
+>  	u32 micpga_routing;
+>  	bool swapdacs;
+> -	int rstn_gpio;
+> +	struct gpio_desc *rstn_gpio;
+>  	const char *mclk_name;
+> =20
+>  	struct regulator *supply_ldo;
+> @@ -1236,7 +1235,14 @@ static int aic32x4_parse_dt(struct aic32x4_priv *a=
+ic32x4,
+> =20
+>  	aic32x4->swapdacs =3D false;
+>  	aic32x4->micpga_routing =3D 0;
+> -	aic32x4->rstn_gpio =3D of_get_named_gpio(np, "reset-gpios", 0);
+> +	/* Assert reset using GPIOD_OUT_HIGH, because reset is GPIO_ACTIVE_LOW =
+*/
+> +	aic32x4->rstn_gpio =3D devm_gpiod_get_optional(aic32x4->dev, "reset", G=
+PIOD_OUT_HIGH);
+> +	if (IS_ERR(aic32x4->rstn_gpio)) {
+> +		return dev_err_probe(aic32x4->dev, PTR_ERR(aic32x4->rstn_gpio),
+> +				     "Failed to get reset gpio\n");
+> +	} else {
+> +		gpiod_set_consumer_name(aic32x4->rstn_gpio, "tlv320aic32x4_rstn");
+> +	}
+> =20
+>  	if (of_property_read_u32_array(np, "aic32x4-gpio-func",
+>  				aic32x4_setup->gpio_func, 5) >=3D 0)
+> @@ -1372,26 +1378,20 @@ int aic32x4_probe(struct device *dev, struct regm=
+ap *regmap,
+>  		aic32x4->power_cfg =3D 0;
+>  		aic32x4->swapdacs =3D false;
+>  		aic32x4->micpga_routing =3D 0;
+> -		aic32x4->rstn_gpio =3D -1;
+> +		aic32x4->rstn_gpio =3D ERR_PTR(-ENOENT);
+
+Shouldn't this be NULL similar to when devm_gpiod_get_optional() doesn't
+find any reset GPIO?
+
+Despite that, looks good and works as intended:
+Tested-By: Alexander Stein <alexander.stein@ew.tq-group.com>
+
+>  		aic32x4->mclk_name =3D "mclk";
+>  	}
+> =20
+> -	if (gpio_is_valid(aic32x4->rstn_gpio)) {
+> -		ret =3D devm_gpio_request_one(dev, aic32x4->rstn_gpio,
+> -				GPIOF_OUT_INIT_LOW, "tlv320aic32x4 rstn");
+> -		if (ret !=3D 0)
+> -			return ret;
+> -	}
+> -
+>  	ret =3D aic32x4_setup_regulators(dev, aic32x4);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to setup regulators\n");
+>  		return ret;
+>  	}
+> =20
+> -	if (gpio_is_valid(aic32x4->rstn_gpio)) {
+> +	if (!IS_ERR(aic32x4->rstn_gpio)) {
+>  		ndelay(10);
+> -		gpio_set_value_cansleep(aic32x4->rstn_gpio, 1);
+> +		/* deassert reset */
+> +		gpiod_set_value_cansleep(aic32x4->rstn_gpio, 0);
+>  		mdelay(1);
+>  	}
+> =20
 >=20
 >=20
 
