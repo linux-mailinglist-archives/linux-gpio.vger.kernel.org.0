@@ -1,311 +1,211 @@
-Return-Path: <linux-gpio+bounces-22885-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22872-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DE19AFB57F
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 16:00:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AFC5AFB529
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 15:50:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A9DE3AB574
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 13:59:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D41AD3A8605
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 13:50:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7F7191499;
-	Mon,  7 Jul 2025 14:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9031F1F460B;
+	Mon,  7 Jul 2025 13:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="pJaIQ5ew"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout2.mo533.mail-out.ovh.net (smtpout2.mo533.mail-out.ovh.net [51.210.94.139])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659752BD5BC
-	for <linux-gpio@vger.kernel.org>; Mon,  7 Jul 2025 14:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.210.94.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47A5194A73;
+	Mon,  7 Jul 2025 13:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751896805; cv=none; b=b0h0Rcs6NccKDtT8CnwLxjdC1OkngtFHV5dwhrdsCDGD/QCXcH5ZtE8n1i8ac4PJZGTBcQOBQtikc98sHIhY2wjBHAb75BL5i4+GZIkQ/YMI48jUuNjPLAvnW6oXJhoOdvXOYmEdCWa2+ZtX2/+e7YCxtEnByJm0q97W/aim2a0=
+	t=1751896252; cv=none; b=Kngd4Ii3LCFoo1pokOjXv6lJ7SFaou1/ULKEW9pQZAdwIqjdH+JzdxFZOf1EuSJtqTA6WGwLHrvw92DKS4YeCQ7Tl63mBpy42fzyrlSbfC+agbNM0VGVWwYqL/CeSxrdVypwnRy2rF2miOYLnFktfEj6fUhV+wTIsEG8HdHjl2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751896805; c=relaxed/simple;
-	bh=MwcR/DXMTj/JAiWzH/o5SeI/n04Ums7+03DlTeSZFYs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Nk2TNbXCJWyxEO0f/32M1Z0Zjb9kwuY56dQGwIUe1oZJO4B07g/ivzIhuteop+OeT0arBpeUuMNl9C4S8vVTQM7ROfY/UegVLbaCE/kRTEgrjgR7/rk19/KCihwCConYrSblOjXwU4AQIOsDm0hiNPIJHVVOSFlumt4+UpnAwSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; arc=none smtp.client-ip=51.210.94.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net [79.137.60.37])
-	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4bbPzb43ZSz6Mmp;
-	Mon,  7 Jul 2025 13:22:19 +0000 (UTC)
-Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net. [127.0.0.1])
-        by director4.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Mon,  7 Jul 2025 13:22:19 +0000 (UTC)
-Received: from mta2.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.168.57])
-	by director4.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4bbPzb2ZL9z1xrj;
-	Mon,  7 Jul 2025 13:22:19 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.7])
-	by mta2.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id A2E14BA429A;
-	Mon,  7 Jul 2025 13:22:18 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-102R004443e23e6-7882-48e7-9962-a2a9bd782506,
-                    F886D19416C0B9BC8E07D11B456840F184BAC853) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:147.156.42.5
-From: Marcos Del Sol Vives <marcos@orca.pet>
-To: linux-kernel@vger.kernel.org
-Cc: marcos@orca.pet,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio: vortex86: add new GPIO device driver
-Date: Mon,  7 Jul 2025 15:21:51 +0200
-Message-Id: <20250707132154.771758-1-marcos@orca.pet>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1751896252; c=relaxed/simple;
+	bh=hSv+oI+RF0ez/63FrrphVj/k+AL+mIcvA7BZbrlUNN0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UNAHvEYI1YLMJ0sPwtRCfIUVw7PvoFjLZryuOfd0xR6bT0IUFmEurzzEDsLzHESgOr9C+poiav7wHbFInOdb2i7RMXtpGdj9z48aUVvWPrAHEdl4UQzALGVdK24iKh+IUTbpkRr1FSmvYiQ7GzXwoQ325GoroU8FUWr29VPlszQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=pJaIQ5ew; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 567D1HmN026990;
+	Mon, 7 Jul 2025 09:50:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=TE28+rWHWv1guN3wNh5GDHZufsL
+	o4KSJ3yYH4b3pZas=; b=pJaIQ5ewXJ8J/KxjHEKWQ+0PAY2p0/cnKazye/qLveb
+	F0NjF/aaFBwopyHVt7ejsbsZuylt/F1jSKsC1ZwAclTd/86S81NKZ8sWcffvLedR
+	D8A7YXbRFUzl5OGnPgRSAGOKvTUVfhcD2QASFVMivhKQZWc5kINxXLKgmIi+y3z9
+	BfiYcpPTk1K2LIsj+2NY1zCWczJcYIkzATMdKB76zUDMwW5S/fjRLHxaehLjR4Rq
+	gEnZXRyJ1WanCROkQYavvLmQ/T7zTt3gVkhj6IQGIVP/Jf7+OVL3iYUeYRZIVxp/
+	8fwdCw3dXH/EeoRlq5qQTRrIF3QArKaNZWObvCGFCzQ==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47rayqh6dx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 09:50:16 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 567DoFPU013303
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Jul 2025 09:50:15 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 7 Jul
+ 2025 09:50:14 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Mon, 7 Jul 2025 09:50:14 -0400
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 567Dnpvu016068;
+	Mon, 7 Jul 2025 09:49:54 -0400
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
+        <andriy.shevchenko@intel.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <marcelo.schmitt1@gmail.com>
+Subject: [PATCH v8 00/12] iio: adc: Add support for AD4170 series of ADCs
+Date: Mon, 7 Jul 2025 10:49:46 -0300
+Message-ID: <cover.1751895245.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 14558730224674428635
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefudeltdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffogggtgfesthekredtredtjeenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnhepveeiueeugeeuteekgeegudegveeljeduieekkeeuleehiefhieeiudelhfdvieffnecuffhomhgrihhnpegumhhprdgtohhmrdhtfienucfkphepuddvjedrtddrtddruddpudegjedrudehiedrgedvrdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeehpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehmrghrtghoshesohhrtggrrdhpvghtpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehfeefmgdpmhhoug
- gvpehsmhhtphhouhht
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=AP9nYgXq c=1 sm=1 tr=0 ts=686bd099 cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8
+ a=jSzwRb7mbQI_SljNwmoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA4MCBTYWx0ZWRfX6XRzwetZqQCs
+ nOEed4HPMEhf18KiXT9U3BN5h0hprX0ITcUc6KBQdWtwGb4UgHiM+6DBYDnuhgGT79imGUetb8Z
+ jLEDu6Pu9x/sDW90FYxmai7qdw83vxan6DEQpbqlSAwI+zzjaujMxHhYmE2BkJrIlBoXEJq+DQY
+ YlVlvHFMRgmYaqUT/pKNDLECntBozbOAZsYotGrEOEKNzj45JHs9fs+aJ7QT8hBPBYIo0cKPgE4
+ XZHIGQqn6Rta0/APT4aP+f+giWzd5F4oHfBkaivcWtTunykrHR06FAusxpdqqf0tyGVYP6iRFn9
+ 3d7DtZxPIDZ7o9DsUz+445cY+SUSUX2751Av5V9bZCXzWaZ5o+R0BbtpT+ZX/3/kzuil3rNZdm9
+ OuWMGW+goLuAPgLEY5lH7o0x6xHfmNBhlvhhkyvDdW4fMObN0UeMvVkKkJAWjRDNyqXXSKnS
+X-Proofpoint-ORIG-GUID: BIMeXA3Mrhr5qwgPUszeEIR7QAcH_PB9
+X-Proofpoint-GUID: BIMeXA3Mrhr5qwgPUszeEIR7QAcH_PB9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-07_03,2025-07-07_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1011 lowpriorityscore=0 impostorscore=0 malwarescore=0 adultscore=0
+ spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507070080
 
-Add a new simple GPIO device driver for Vortex86 lines of SoCs,
-implemented according to their programming reference manual [1].
+Hi,
 
-This is required for detecting the status of the poweroff button and
-performing the poweroff sequence on ICOP eBox computers.
+AD4170-4 v8 most significant differences from v7 is the timestamp patch comes
+earlier in the series and struct ad4170_state fields have been rearranged
+to better align to cache line boundaries.
 
-IRQs are not implemented as they are available for less than half the
-GPIO pins, and they are not the ones required for the poweroff stuff, so
-polling will be required anyway.
+Jonathan, I see you have applied v7 to testing. Thank you. Though, if still
+possible to pick v8 instead, that will provide patches with fewer line removals.
+Totally fine if you prefer to keep v7, though.
 
-[1]: http://www.dmp.com.tw/tech/DMP_Vortex86_Series_Software_Programming_Reference_091216.pdf
+Thank you to all reviewers of previous versions.
 
-Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
----
- MAINTAINERS                  |   6 ++
- drivers/gpio/Kconfig         |  10 +++
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-vortex86.c | 161 +++++++++++++++++++++++++++++++++++
- 4 files changed, 178 insertions(+)
- create mode 100644 drivers/gpio/gpio-vortex86.c
+v8 has:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fad6cb025a19..3e0ef902d003 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -26574,6 +26574,12 @@ VOLTAGE AND CURRENT REGULATOR IRQ HELPERS
- R:	Matti Vaittinen <mazziesaccount@gmail.com>
- F:	drivers/regulator/irq_helpers.c
- 
-+VORTEX86 GPIO DRIVER
-+R:	Marcos Del Sol Vives <marcos@orca.pet>
-+L:	linux-gpio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/gpio/gpio-vortex86.c
-+
- VRF
- M:	David Ahern <dsahern@kernel.org>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 44f922e10db2..b51aa06bb11b 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1066,6 +1066,16 @@ config GPIO_TS5500
- 	  blocks of the TS-5500: DIO1, DIO2 and the LCD port, and the TS-5600
- 	  LCD port.
- 
-+config GPIO_VORTEX86
-+	tristate "Vortex86 GPIO support"
-+	depends on CPU_SUP_VORTEX_32 || COMPILE_TEST
-+	help
-+	  Driver to access the five 8-bit bidirectional GPIO ports present on
-+	  all DM&P Vortex86 SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gpio-vortex86.
-+
- config GPIO_WINBOND
- 	tristate "Winbond Super I/O GPIO support"
- 	select ISA_BUS_API
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 88dedd298256..9d9ce589cc78 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -196,6 +196,7 @@ obj-$(CONFIG_GPIO_VIPERBOARD)		+= gpio-viperboard.o
- obj-$(CONFIG_GPIO_VIRTUSER)		+= gpio-virtuser.o
- obj-$(CONFIG_GPIO_VIRTIO)		+= gpio-virtio.o
- obj-$(CONFIG_GPIO_VISCONTI)		+= gpio-visconti.o
-+obj-$(CONFIG_GPIO_VORTEX86)		+= gpio-vortex86.o
- obj-$(CONFIG_GPIO_VX855)		+= gpio-vx855.o
- obj-$(CONFIG_GPIO_WCD934X)		+= gpio-wcd934x.o
- obj-$(CONFIG_GPIO_WHISKEY_COVE)		+= gpio-wcove.o
-diff --git a/drivers/gpio/gpio-vortex86.c b/drivers/gpio/gpio-vortex86.c
-new file mode 100644
-index 000000000000..6f79db392baa
---- /dev/null
-+++ b/drivers/gpio/gpio-vortex86.c
-@@ -0,0 +1,161 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *  GPIO driver for Vortex86 SoCs
-+ *
-+ *  Author: Marcos Del Sol Vives <marcos@orca.pet>
-+ *
-+ *  Based on the it87xx GPIO driver by Diego Elio Pettenò
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/errno.h>
-+#include <linux/ioport.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/spinlock.h>
-+
-+#define GPIO_PORTS	5
-+#define GPIO_PER_PORT	8
-+#define GPIO_COUNT	(GPIO_PORTS * GPIO_PER_PORT)
-+
-+#define GPIO_DATA_BASE		0x78
-+#define GPIO_DIRECTION_BASE	0x98
-+
-+static DEFINE_SPINLOCK(gpio_lock);
-+
-+static int vortex86_gpio_get(struct gpio_chip *chip, unsigned int gpio_num)
-+{
-+	uint8_t port = gpio_num / GPIO_PER_PORT;
-+	uint8_t bit  = gpio_num % GPIO_PER_PORT;
-+	uint8_t val;
-+
-+	val = inb(GPIO_DATA_BASE + port);
-+	return !!(val & (1 << bit));
-+}
-+
-+static int vortex86_gpio_direction_in(struct gpio_chip *chip, unsigned int gpio_num)
-+{
-+	uint8_t port = gpio_num / GPIO_PER_PORT;
-+	uint8_t bit  = gpio_num % GPIO_PER_PORT;
-+	unsigned long flags;
-+	uint8_t dir;
-+
-+	spin_lock_irqsave(&gpio_lock, flags);
-+
-+	dir = inb(GPIO_DIRECTION_BASE + port);
-+	dir &= ~(1 << bit); /* 0 = input */
-+	outb(dir, GPIO_DIRECTION_BASE + port);
-+
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+static void vortex86_gpio_set(struct gpio_chip *chip, unsigned int gpio_num, int value)
-+{
-+	uint8_t port = gpio_num / GPIO_PER_PORT;
-+	uint8_t bit  = gpio_num % GPIO_PER_PORT;
-+	unsigned long flags;
-+	uint8_t dat;
-+
-+	spin_lock_irqsave(&gpio_lock, flags);
-+
-+	dat = inb(GPIO_DATA_BASE + port);
-+	if (value)
-+		dat |= (1 << bit);
-+	else
-+		dat &= ~(1 << bit);
-+	outb(dat, GPIO_DATA_BASE + port);
-+
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+}
-+
-+static int vortex86_gpio_direction_out(struct gpio_chip *chip, unsigned int gpio_num, int value)
-+{
-+	uint8_t port = gpio_num / GPIO_PER_PORT;
-+	uint8_t bit  = gpio_num % GPIO_PER_PORT;
-+	unsigned long flags;
-+	uint8_t dir, dat;
-+
-+	spin_lock_irqsave(&gpio_lock, flags);
-+
-+	/* Have to set direction first. Else writes to data are ignored. */
-+	dir = inb(GPIO_DIRECTION_BASE + port);
-+	dir |= (1 << bit); /* 1 = output */
-+	outb(dir, GPIO_DIRECTION_BASE + port);
-+
-+	dat = inb(GPIO_DATA_BASE + port);
-+	if (value)
-+		dat |= (1 << bit);
-+	else
-+		dat &= ~(1 << bit);
-+	outb(dat, GPIO_DATA_BASE + port);
-+
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+static char labels[GPIO_COUNT][sizeof("vortex86_gpXY")];
-+static char *labels_table[GPIO_COUNT];
-+
-+static struct gpio_chip gpio_chip = {
-+	.label			= KBUILD_MODNAME,
-+	.owner			= THIS_MODULE,
-+	.get			= vortex86_gpio_get,
-+	.direction_input	= vortex86_gpio_direction_in,
-+	.set			= vortex86_gpio_set,
-+	.direction_output	= vortex86_gpio_direction_out,
-+	.base			= -1,
-+	.ngpio			= GPIO_COUNT,
-+	.names			= (const char * const *)labels_table,
-+};
-+
-+static int __init vortex86_gpio_init(void)
-+{
-+	int rc = 0, i;
-+
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_VORTEX) {
-+		pr_err("Not a Vortex86 CPU, refusing to load\n");
-+		return -ENODEV;
-+	}
-+
-+	/* Request I/O regions for data and direction registers */
-+	if (!request_region(GPIO_DATA_BASE, GPIO_PORTS, KBUILD_MODNAME))
-+		return -EBUSY;
-+	if (!request_region(GPIO_DIRECTION_BASE, GPIO_PORTS, KBUILD_MODNAME)) {
-+		release_region(GPIO_DATA_BASE, GPIO_PORTS);
-+		return -EBUSY;
-+	}
-+
-+	/* Set up GPIO labels */
-+	for (i = 0; i < GPIO_COUNT; i++) {
-+		sprintf(labels[i], "vortex86_gp%u%u", i / 8, i % 8);
-+		labels_table[i] = &labels[i][0];
-+	}
-+
-+	rc = gpiochip_add_data(&gpio_chip, &gpio_chip);
-+	if (rc) {
-+		release_region(GPIO_DATA_BASE, GPIO_PORTS);
-+		release_region(GPIO_DIRECTION_BASE, GPIO_PORTS);
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit vortex86_gpio_exit(void)
-+{
-+	gpiochip_remove(&gpio_chip);
-+	release_region(GPIO_DATA_BASE, GPIO_PORTS);
-+	release_region(GPIO_DIRECTION_BASE, GPIO_PORTS);
-+}
-+
-+module_init(vortex86_gpio_init);
-+module_exit(vortex86_gpio_exit);
-+
-+MODULE_AUTHOR("Marcos Del Sol Vives <marcos@orca.pet>");
-+MODULE_DESCRIPTION("GPIO driver for Vortex86 SoCs");
-+MODULE_LICENSE("GPL");
+Patch 1 adds device tree documentation for the parts.
+Patch 2 adds basic device support.
+Patch 3 adds support for calibration scale.
+Patch 4 adds support for calibration bias.
+Patch 5 adds sinc5+avg to filter_type_available IIO ABI documentation.
+Patch 6 adds support for sample frequency along with filter type configuration.
+Patch 7 adds support for buffered ADC reading.
+Patch 8 (was patch 12 on v7) adds timestamp channel
+Patch 9 adds clock provider support
+Patch 10 adds GPIO controller support.
+Patch 11 adds internal temperature sensor support.
+Patch 12 adds support for external RTD and bridge circuit sensors.
+
+Despite the updates, no functional change has been made in v8.
+This patch series was generated using the "histogram diff" algorithm
+(git format-patch --histogram option).
+
+Change log v7 -> v8
+
+[Generic changes]
+- Update patches to make struct ad4170_state fields align well with both 32
+  and 64-bit size cache lines after all patches are applied.
+
+[Device tree changes]
+- Updated device name in patch description (AD4170 -> AD4170-4).
+- Removed extra blank line at the end of the doc.
+
+[Basic driver patch]
+- Early declare and use sensor type local variable to reduce diff in ext sensor patch.
+- Make early check of IIO chan type to reduce diff in temperature support patch.
+- Dropped 'int_pin_sel' field from struct ad4170_state. int_pin_sel is now local.
+- Renamed AD4170_MAX_CHANNELS -> AD4170_MAX_ADC_CHANNELS for better readability.
+
+[Timestamp channel patch]
+- Moved from end of the series to right after buffer support patch.
+- Reworked timestamp patch so it doesn't add 'num_adc_chans' field to struct ad4170_state.
+
+[Internal temperature sensor patch]
+- Reduced number of line removals in code diff.
+
+[External sensor patch]
+- Reworded external sensor support patch description.
+- Reduced number of line removals in code diff.
+- Updated ad4170_parse_external_sensor() param: u8 s_type -> unsigned int s_type.
+
+
+Link to v7: https://lore.kernel.org/linux-iio/cover.1751289747.git.marcelo.schmitt@analog.com/
+Link to v6: https://lore.kernel.org/linux-iio/cover.1750258776.git.marcelo.schmitt@analog.com/
+Link to v5: https://lore.kernel.org/linux-iio/cover.1749582679.git.marcelo.schmitt@analog.com/ 
+Link to v4: https://lore.kernel.org/linux-iio/cover.1748829860.git.marcelo.schmitt@analog.com/
+Link to v3: https://lore.kernel.org/linux-iio/cover.1747083143.git.marcelo.schmitt@analog.com/
+Link to v2: https://lore.kernel.org/linux-iio/cover.1745841276.git.marcelo.schmitt@analog.com/
+Link to v1: https://lore.kernel.org/linux-iio/cover.1744200264.git.marcelo.schmitt@analog.com/
+
+
+Ana-Maria Cusco (1):
+  iio: adc: Add basic support for AD4170-4
+
+Marcelo Schmitt (11):
+  dt-bindings: iio: adc: Add AD4170-4
+  iio: adc: ad4170-4: Add support for calibration gain
+  iio: adc: ad4170-4: Add support for calibration bias
+  Documentation: ABI: IIO: Add sinc5+avg to the filter_type_available
+    list
+  iio: adc: ad4170-4: Add digital filter and sample frequency config
+    support
+  iio: adc: ad4170-4: Add support for buffered data capture
+  iio: adc: ad4170-4: Add timestamp channel
+  iio: adc: ad4170-4: Add clock provider support
+  iio: adc: ad4170-4: Add GPIO controller support
+  iio: adc: ad4170-4: Add support for internal temperature sensor
+  iio: adc: ad4170-4: Add support for weigh scale, thermocouple, and RTD
+    sens
+
+ Documentation/ABI/testing/sysfs-bus-iio       |    1 +
+ .../bindings/iio/adc/adi,ad4170-4.yaml        |  554 +++
+ MAINTAINERS                                   |    8 +
+ drivers/iio/adc/Kconfig                       |   16 +
+ drivers/iio/adc/Makefile                      |    1 +
+ drivers/iio/adc/ad4170-4.c                    | 3027 +++++++++++++++++
+ 6 files changed, 3607 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170-4.yaml
+ create mode 100644 drivers/iio/adc/ad4170-4.c
+
+
+base-commit: 66ffb9f5accc6769d1ea7b9d7ac4c5ec477f9575
 -- 
-2.34.1
+2.47.2
 
 
