@@ -1,185 +1,380 @@
-Return-Path: <linux-gpio+bounces-22861-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22862-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77EF5AFAEDD
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 10:47:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F47EAFAFF3
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 11:40:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B790E3AA993
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 08:46:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27B921AA21D2
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Jul 2025 09:40:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4773D286885;
-	Mon,  7 Jul 2025 08:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="B/TzbIf9";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="qBxI6JBt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A5F3290D97;
+	Mon,  7 Jul 2025 09:40:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC9D2E3712;
-	Mon,  7 Jul 2025 08:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751878039; cv=fail; b=iKoGMPrmNHkWqIigFolFiKHMZmywSJpDPIySZ9uG9/qCsBUUbP1QjVo18LL6CKXPHWypeGZ9mSHlsBWi+3MeB15NhA/Z53gQ6xz1Ve/wZau7clxoyTF1sKIOTw1q4PXwij4RuVNDp3RKSMXuFPlA4BIA5mrCKT/ZnYZIn9dlzPY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751878039; c=relaxed/simple;
-	bh=RIHp19mSES6I1Gm/jrsRwS2dSOltLIrmH2F9Px8UWHE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6604C28D849;
+	Mon,  7 Jul 2025 09:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751881210; cv=none; b=C+1LB8mN58hU75/+aKUVEPUd3ekn3SPKj9FM5qyiwG/UygsU26ROu33xpKm79uSBSxKLDlPkp3OWk1T4w9P6Z/ejKS1kon8dqoUnmq6v18B3PTuiYhrSUmrqOcRW+q0CrnS6/iX6TK1l1iWjVd5QbrChtbYfjOK3sIFgbfermuQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751881210; c=relaxed/simple;
+	bh=HqkmcGU9dL/ZH9AJzYzw+pKoFAAO5/uPXfjPh2ihPrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UaHi3cm1CREbAhvCmLau5nE/ncV2NMrJxWBTgbIaxUixE1FOrei4oB1AnCWDw6fZMYdqR2kGbwITfATq7Dq4Nu8gZrBPfvCL9C2DAsejtaKBxolrYdh9Q1j2gOiVr0idGVpA3UUnvOnEWIdJM2azq86KIn36Ref8Qu/5ncjcqcI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=B/TzbIf9; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=qBxI6JBt; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5675NILK006550;
-	Mon, 7 Jul 2025 03:47:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=PODMain02222019; bh=nvGXyV16Jp1S08o1ZQ
-	yNDUhQmLPnDXHmmtUWkgicaP4=; b=B/TzbIf9esTZCs+wB2joYDdYmItlYWjqwu
-	7DkMvQyJwjnXp/8J1vOCUqd1L3TQpbWvpxmsIOTGyxNQt7216X7/xyi/NJNhskas
-	rhSW8QTKpvu+caZJyzlUBkLj1grs4LsZINfLJtqpYZU4KvE/4DIe7iCBLsXNOMJb
-	si2k0PS0IeFoMAYgZBJTZauIeZuzViVe/DMfqOcjGilsZHjpy82u41mh7IDOaHkW
-	4uY89y72A1K1cYZAdRHMbCAv8+koopIP+m6Fk9dJi0ZkGeCBnnv+kfNXeMHMxC0v
-	80oITLD03czFueB0uV/lOnXCu6HGJ9Km11jOm65flV017xxqYbiA==
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10on2127.outbound.protection.outlook.com [40.107.94.127])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 47q1f3hy8f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 03:47:07 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w1EAOfDSRe158Ek3ceh+p6NF+Eb2Ssm+pTy79VHsi8Zm2Id86ZtconTBaC3xGNRQrxhOEhrPF20iPu89lDLOcmfBcEf4vs7V4v3Q7A9yJvhrKdmh9EcbNmRwKRJ/brqvVj/YFOei94Z1pPnV1rpNFgojLWAldTOlOQX5H70hMbDv+m3N+akPhDk/boQF5dDOJ0flx0Cgr2d+F+DLn7BGfqmNqhvERimWxeBGy6Q3uZ2wSmxvjRNVKmZ3UNpqSd3HDGGL9+nS37TdS4du+FMk571rFW94ChZmUJE7z2WvPRPIwa4I+oPtL2VGHcXmMCSwXnaJQVTfJFF/jSNf79wftg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nvGXyV16Jp1S08o1ZQyNDUhQmLPnDXHmmtUWkgicaP4=;
- b=AxSrcZDEj/7oKVL0BUeCqUhLfATu0xcsRB/pV9bnlMHmJEeE5jIQCR3ejAOlkqOWAQXT/PVuDIMBUFvBgNsMo+aTiB9xK+pXh+sLBhWiwyQ5W8izDi60Ll8bZWuLIbYU4YxfpKxzzczyK2mIuv3FE5Wr1FhTwEyiGJqj4piZSbf7bWpZWIPBkE7Mtj7G3fNg+QrZ7etCy2l/Vh8Cjoh9p4qCPl2rL4qpZL4B0YftVxVs6Pxe+l3JdadrHPKlNrFhcCQYFUyGgDTgSDRTMB/cScm9T/cJAEzraVECKCMmtDEcdrxzmC9myCZu77FjkZ+83Kl1bDujhy1zCsrS1FrNxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=bgdev.pl smtp.mailfrom=opensource.cirrus.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nvGXyV16Jp1S08o1ZQyNDUhQmLPnDXHmmtUWkgicaP4=;
- b=qBxI6JBt/xjTElnD0JjsGmDL63OmSMceXSQ/VtDSF0+lS2NBICzK612VItleHJZmIR6N+NCZK5hZOiZHAs3wQv0A8+1is82TH7YxXIwEPDVcRtOOVxHSd1gOfqfAO31Vae1Uk06mCvlTylGTJUfiJ6xNuOIW9hb+nLaDAgoi3JI=
-Received: from MN2PR07CA0026.namprd07.prod.outlook.com (2603:10b6:208:1a0::36)
- by SJ4PPF8338AE8D8.namprd19.prod.outlook.com (2603:10b6:a0f:fc02::a38) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.15; Mon, 7 Jul
- 2025 08:47:03 +0000
-Received: from BN1PEPF00005FFD.namprd05.prod.outlook.com
- (2603:10b6:208:1a0:cafe::cd) by MN2PR07CA0026.outlook.office365.com
- (2603:10b6:208:1a0::36) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.24 via Frontend Transport; Mon,
- 7 Jul 2025 08:47:02 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
- does not designate 84.19.233.75 as permitted sender)
- receiver=protection.outlook.com; client-ip=84.19.233.75;
- helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- BN1PEPF00005FFD.mail.protection.outlook.com (10.167.243.229) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.20
- via Frontend Transport; Mon, 7 Jul 2025 08:47:01 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 9A235406541;
-	Mon,  7 Jul 2025 08:46:59 +0000 (UTC)
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 7D904820249;
-	Mon,  7 Jul 2025 08:46:59 +0000 (UTC)
-Date: Mon, 7 Jul 2025 09:46:53 +0100
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, patches@opensource.cirrus.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/80] gpio: arizona: Remove redundant
- pm_runtime_mark_last_busy() calls
-Message-ID: <aGuJfSPcDn3NEwMk@opensource.cirrus.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
- <20250704075408.3217690-1-sakari.ailus@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4snKO1F/QA8SEwhBmwuXAghDxB0TN0mvyp+BgbWrEuT4brNXZR2QCVl5baP9HwMpgRStUI6Yqc5AOktpCsTLdlSGXqSiVP55AaHI6hJjLwdznHP/+q6WAUF2rDRjslWoo9F4GJb9ygnd5FQIWGXlBU7GZ5iwqUDuaR/Vln5uvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 3A6DE1F00057;
+	Mon,  7 Jul 2025 09:39:50 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 2989EACAC6A; Mon,  7 Jul 2025 09:39:49 +0000 (UTC)
+X-Spam-Level: 
+Received: from collins (unknown [192.168.1.1])
+	by laika.paulk.fr (Postfix) with ESMTPSA id 61394ACAC6F;
+	Mon,  7 Jul 2025 09:39:44 +0000 (UTC)
+Date: Mon, 7 Jul 2025 11:39:42 +0200
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Andre Przywara <andre.przywara@arm.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5] pinctrl: sunxi: Fix a100 emac pin function name
+Message-ID: <aGuV3gcKSRIyey53@collins>
+References: <20250626080923.632789-1-paulk@sys-base.io>
+ <20250626080923.632789-2-paulk@sys-base.io>
+ <20250704233535.4b026641@minigeek.lan>
+ <20250705153825.2be2b333@minigeek.lan>
+ <aGm8n_wJPiGk85E4@collins>
+ <CAGb2v66s-nWA2dFRpgX6DbDET3dWOm1jPKWm1k9SmGSqhTWoWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XdpP7rZ162aJGq60"
 Content-Disposition: inline
-In-Reply-To: <20250704075408.3217690-1-sakari.ailus@linux.intel.com>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00005FFD:EE_|SJ4PPF8338AE8D8:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6bf4977-ea74-439e-0cdb-08ddbd32d730
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|61400799027|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2UsIg3zOl2dzqhITR0rlGlFVHKVtdWkF9pCEhFuvODDHVepbbthLKrqNIZXq?=
- =?us-ascii?Q?iYsNTZAZVYm0AotnmZVGWVwa1l5OmhoHNE7rJUIRVCORqSx+Px7DBdLZzLBY?=
- =?us-ascii?Q?PgyT15W362RMof/SOqEXOkGfsmEXcpgNrQIdEr50pTwrU/cYAFb+ESLDiHfk?=
- =?us-ascii?Q?QtJo5+LCPkkJw5DEtPTayGfMlt20K1mr+jeYGfPJqQAOHxFpukr7AKoYah1g?=
- =?us-ascii?Q?M7wy7nBaHKeC5UOwOAEuhYg4W4qbk5NfJM1YdvRCW27FaIpVbpHjKL+uUUKG?=
- =?us-ascii?Q?UEiRelD1T+SWD1XhNujuaRG2sQIURBfhezx/dc6T098senPduXGZ/l7bcmQH?=
- =?us-ascii?Q?eOdl4T8ryvlQM3TLdUPg7WjfhG+ZyuO2EDULYdJq0sAgpoEWv+mjiSpnpKeV?=
- =?us-ascii?Q?YcHHEaRpQzk1O/pW7fglth7tryaYAbXN1Kcs0j6N+K6elMvzd/G+5nIP4wpm?=
- =?us-ascii?Q?DqNom6jslF3DaA3xyPyIRKBpyXh/ncCs//K20BImFhdtHbrDUWtLtitNSx8Z?=
- =?us-ascii?Q?4CBDK9dvPHJEFTJAoHpzzKvw/9OMjz6Hgn7jfU6WdDvxVGUNxMdr35T+L18n?=
- =?us-ascii?Q?v2Uxrri0yYDKBTsgS7sJsJ6lBeUaXwo/E1HGw1l4ldmff2oWxaA+FLV8N6NU?=
- =?us-ascii?Q?cgHwYCbhinLJ4kAUk5cbD3/gx1De8dUDgookcf4+sNKphw0XQWLRVCTCiegI?=
- =?us-ascii?Q?JZ7nE8tXz4Ad/4IQbNWA6Vdi6qMXKDWBBVgqGvp1xzD7ZvSHQX9lPGcKYn5U?=
- =?us-ascii?Q?SNHiGcupvH1x1a3CJ1jaNvQf2g7mJNohdif+sPWc5dPyBsf5c0E369d02xmy?=
- =?us-ascii?Q?hC++y6DsDQiZ1Z2XAWZ9/VmKm5kJf1ZE+eOEXZJp11Q2HQHBxjtlfpC8kIuA?=
- =?us-ascii?Q?BPvkjMVf9S6eNjwMmH8emBbaHQEDFdssmALte3WbE+HmqcYU6TCtfF7+v975?=
- =?us-ascii?Q?kGjF6Joi17RCCPO3Rddzw86yNHSkG2wYfpbQdWFnKxLpBtlEIbJwY3FZhN+f?=
- =?us-ascii?Q?pEAFXMqZJUiZi9t8kd6c5ok//jc/c6mlLJ/mfY0csttQMdXc5m6Y5hGSN8bL?=
- =?us-ascii?Q?M6jM3fsq8329InpNRBBJkCMM3sBuVTT9dg/NCjpqAZxhJbLiPJcPfkBQX6ym?=
- =?us-ascii?Q?4TvD511L+4xxU2Uibmv/DOcLaVG0E3aeerStoU/1WtAg6A4lfJmgTbh7RQZ7?=
- =?us-ascii?Q?FiqvtSdxDyrCcmgywVJY0pUvkfFG2nEE/pxyW0wept6ZmBxWUYHuFPBAI3C9?=
- =?us-ascii?Q?w+HKmLuBAjdiksY91/pwNpTgvx7WNBIGAO3jp84nxeBy0pobUXspYGhS+CG9?=
- =?us-ascii?Q?iTpHexJ2cQLomlf30+rISKuW8SK2ecZu0JudNMEyjWkiMBlOGg4lBKFwcjoA?=
- =?us-ascii?Q?ABABf39nKIlbezcW0bKMk07RLSOSIiKTqk9d4UugCe7kP5cTy/Ek2PQQl315?=
- =?us-ascii?Q?WLkuhN9vMgC1mnws/n9JwAPVGs3vdN/xBUTBLbYZoA2nIvWYbjORe/TlBbkv?=
- =?us-ascii?Q?pA9dBfSH+ADbO7uKeI7F+zNRuZrWu7jJZSfS?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(36860700013)(61400799027)(376014)(82310400026);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 08:47:01.0589
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6bf4977-ea74-439e-0cdb-08ddbd32d730
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00005FFD.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ4PPF8338AE8D8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA1MCBTYWx0ZWRfX1TpJwMnamtZO WcT5xRe1Ct1Az9w91iIbcgSMsGOripQucPWMFrLcOpRcD+MVL9CGx9mOrXWEg9soTx9mbM/Dq7Z tucE/P5btiU+FLAFjUwQCtqcybX8+0rb2zu0ITWHzocsau3cqK606ie4jHw+ZRL0AndDJAoVoSR
- Pf0pGJfGED9/MLnXEZp8mR3pwqr1YRobWS9Uhy8HIAFeSnOsxrdRGT/t3LWyLO5dy7FhB/vF0Zl zJMLcsqeQmpRSpqfXEYib3sTfiSLVS0y5yn2PA27VE8+Zy5SmcnHQPmHFQRC5Bn0kHp4PHumk3a pG/YjIhGsQju/50pmAcm27bI/KQGWvnxyR8YFmA/Jc+gFT7bDMWxTAb99Zb9yBe9KOFxdYuxfzi
- l9lhfchMXxBL9yr9iJSGxmXeJ4Za39AqMFXcEYLL+ZDpfD8fL9kvLoD7OkUYM3hBBnRhI1w6
-X-Proofpoint-GUID: n8sYSffAm-JEW56SLF2VPJHzkMnJSGBU
-X-Proofpoint-ORIG-GUID: n8sYSffAm-JEW56SLF2VPJHzkMnJSGBU
-X-Authority-Analysis: v=2.4 cv=YNafyQGx c=1 sm=1 tr=0 ts=686b898b cx=c_pps a=Cg167on8DXnp+5xx4O92Xg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=RWc_ulEos4gA:10 a=QyXUC8HyAAAA:8 a=w1d2syhTAAAA:8 a=QXuSEnVgnoAJZhOi9yIA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <CAGb2v66s-nWA2dFRpgX6DbDET3dWOm1jPKWm1k9SmGSqhTWoWA@mail.gmail.com>
 
-On Fri, Jul 04, 2025 at 10:54:08AM +0300, Sakari Ailus wrote:
-> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-> pm_runtime_mark_last_busy().
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+--XdpP7rZ162aJGq60
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Charles
+Hi Chen-Yu,
+
+Le Sun 06 Jul 25, 23:04, Chen-Yu Tsai a =C3=A9crit :
+> On Sun, Jul 6, 2025 at 8:00=E2=80=AFAM Paul Kocialkowski <paulk@sys-base.=
+io> wrote:
+> >
+> > Hi Andre,
+> >
+> > Le Sat 05 Jul 25, 15:38, Andre Przywara a =C3=A9crit :
+> > > On Fri, 4 Jul 2025 23:35:35 +0100
+> > > Andre Przywara <andre.przywara@arm.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > > On Thu, 26 Jun 2025 10:09:19 +0200
+> > > > Paul Kocialkowski <paulk@sys-base.io> wrote:
+> > > >
+> > > > Hi Paul,
+> > > >
+> > > > > The Allwinner A100/A133 only has a single emac instance, which is
+> > > > > referred to as "emac" everywhere. Fix the pin names to drop the
+> > > > > trailing "0" that has no reason to be.
+> > > >
+> > > > Sorry, but this is wrong. There *is* a second EMAC on the A133 die:=
+ it's
+> > > > indeed not mentioned in the manual, but you can probe its MMIO
+> > > > registers (@0x5030000), and there is a second syscon register
+> > > > (@0x03000034). It's mentioned in several BSP code places ([1]).
+> > > > It seem like no suitable pins are connected on the A133
+> > > > package, but that should not affect the A100 .dtsi (we use a similar
+> > > > approach for the H616 and A523).
+> > > >
+> > > > So I think we should keep the emac0 name.
+> > >
+> > > just thinking that it's even worse: this changes the DT visible pinct=
+rl
+> > > function name, so it's a DT ABI change. With the "emac0" function nam=
+e,
+> > > Ethernet would work with stable kernels already (as everything is
+> > > compatible, it's just about DT changes). But with this change, pinctrl
+> > > drivers in older kernels would not match.
+> >
+> > Given that the port is still very early and experimental and has very f=
+ew users
+> > and no field deployment so I don't really think it would have annoyed a=
+nybody in
+> > practice. But yes in principle you are right, while the header renames =
+keep the
+> > same value, the string names are used to match the device-tree definiti=
+ons and
+> > this constitues ABI that needs to remain stable.
+> >
+> > > So I would very much like to see this patch moved out. Is it just in
+> > > LinusW's tree so far? I don't see it in -next yet.
+> >
+> > I don't think the patches were accepted for over a week so we can proba=
+bly
+> > still act. I will send reverts, unless maintainers want to manually rem=
+ove
+> > these commits?
+>=20
+> I can drop the dts patches from the sunxi tree. Linus might be able to
+> drop the pinctrl patch.
+>=20
+> You definitely need to send a revert for the DT binding patch that is
+> already in net-next.
+
+Should this really affect the bindings though?
+
+=46rom what Andre reported, both EMAC0 and EMAC1 should be the same block s=
+o it
+doesn't seem particularly necessary to have a different compatible.
+
+Looking at Allwiner's BSP code for the A133[0], I don't see any difference
+between the two. While there's device_type property in Allwinner's dt, it's
+apparently not used by the driver[1].
+
+So I think we're still fine with a single compatible (without the controller
+index in it).
+
+[0]: https://github.com/engSinteck/A133_Image/blob/main/longan/kernel/linux=
+-4.9/arch/arm64/boot/dts/sunxi/sun50iw10p1.dtsi#L2016
+[1]: https://github.com/engSinteck/A133_Image/blob/main/longan/kernel/linux=
+-4.9/drivers/net/ethernet/allwinner/sunxi-gmac.c
+
+All the best,
+
+Paul
+
+>=20
+> ChenYu
+>=20
+>=20
+> > Cheers,
+> >
+> > Paul
+> >
+> > > Cheers,
+> > > Andre.
+> > >
+> > > > [1]
+> > > > https://github.com/qiaoweibiao/T507_Kernel/blob/main/arch/arm64/boo=
+t/dts/sunxi/sun50iw10p1.dtsi
+> > > >
+> > > >
+> > > > >
+> > > > > Fixes: 473436e7647d ("pinctrl: sunxi: add support for the Allwinn=
+er A100 pin controller")
+> > > > > Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+> > > > > ---
+> > > > >  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c | 32 ++++++++++-----=
+------
+> > > > >  1 file changed, 16 insertions(+), 16 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c b/driver=
+s/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > index b97de80ae2f3..95b764ee1c0d 100644
+> > > > > --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > @@ -546,33 +546,33 @@ static const struct sunxi_desc_pin a100_pin=
+s[] =3D {
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x2, "i2c0"),          /* SCK */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD1 */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD1 */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 0)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x2, "i2c0"),          /* SDA */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD0 */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD0 */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 1)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x2, "i2c1"),          /* SCK */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXCTL */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXCTL */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 2)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x2, "i2c1"),          /* SDA */
+> > > > >             SUNXI_FUNCTION(0x3, "cir0"),          /* OUT */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* CLKIN */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* CLKIN */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 3)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* TX */
+> > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* CS */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD1 */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD1 */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 4)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > @@ -580,14 +580,14 @@ static const struct sunxi_desc_pin a100_pin=
+s[] =3D {
+> > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* RX */
+> > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* CLK */
+> > > > >             SUNXI_FUNCTION(0x4, "ledc"),
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD0 */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD0 */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 5)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* RTS */
+> > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* MOSI */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXCK */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXCK */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 6)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > @@ -595,7 +595,7 @@ static const struct sunxi_desc_pin a100_pins[=
+] =3D {
+> > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* CTS */
+> > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* MISO */
+> > > > >             SUNXI_FUNCTION(0x4, "spdif"),         /* OUT */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXCTL */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXCTL */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 7)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > @@ -611,7 +611,7 @@ static const struct sunxi_desc_pin a100_pins[=
+] =3D {
+> > > > >             SUNXI_FUNCTION(0x2, "dmic"),          /* DATA0 */
+> > > > >             SUNXI_FUNCTION(0x3, "spi2"),          /* CLK */
+> > > > >             SUNXI_FUNCTION(0x4, "i2s2"),          /* BCLK */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* MDC */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* MDC */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 9)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > @@ -619,7 +619,7 @@ static const struct sunxi_desc_pin a100_pins[=
+] =3D {
+> > > > >             SUNXI_FUNCTION(0x2, "dmic"),          /* DATA1 */
+> > > > >             SUNXI_FUNCTION(0x3, "spi2"),          /* MOSI */
+> > > > >             SUNXI_FUNCTION(0x4, "i2s2"),          /* LRCK */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* MDIO */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* MDIO */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 10)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > @@ -642,33 +642,33 @@ static const struct sunxi_desc_pin a100_pin=
+s[] =3D {
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x3, "i2c3"),          /* SCK */
+> > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* MCLK */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* EPHY */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* EPHY */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 13)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 14),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* BCLK */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD3 */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD3 */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 14)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 15),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* LRCK */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD2 */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD2 */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 15)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 16),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout0"),    /* DOUT0 */
+> > > > >             SUNXI_FUNCTION(0x4, "i2s3_din1"),     /* DIN1 */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXCK */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXCK */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 16)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 17),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout1"),    /* DOUT1 */
+> > > > >             SUNXI_FUNCTION(0x4, "i2s3_din0"),     /* DIN0 */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD3 */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD3 */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 17)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 18),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > @@ -676,7 +676,7 @@ static const struct sunxi_desc_pin a100_pins[=
+] =3D {
+> > > > >             SUNXI_FUNCTION(0x2, "cir0"),          /* OUT */
+> > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout2"),    /* DOUT2 */
+> > > > >             SUNXI_FUNCTION(0x4, "i2s3_din2"),     /* DIN2 */
+> > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD2 */
+> > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD2 */
+> > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 18)),
+> > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
+> > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > >
+> > > >
+> > >
+> >
+> > --
+> > Paul Kocialkowski,
+> >
+> > Independent contractor - sys-base - https://www.sys-base.io/
+> > Free software developer - https://www.paulk.fr/
+> >
+> > Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--=20
+Paul Kocialkowski,
+
+Independent contractor - sys-base - https://www.sys-base.io/
+Free software developer - https://www.paulk.fr/
+
+Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--XdpP7rZ162aJGq60
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhrld4ACgkQhP3B6o/u
+lQxhGg//RkhulMqu+NDFCtXDYdtwjWBuUBSul6anTse4p1HDcTCsQwm5F9QTP+tZ
+dvgl02rfFlH0W/ylYmmN3aFjR3d/EuhicBUiNVpVlSBW2JzZ0EK9ge2ulNkNy0r2
+OAyA+SJjVUK4jNN6Cv9TI1C5I0lrTQRhl/RHdjb7lL+8141MChuF1l8PTKstLK+Q
+uSxcYr4f2FFssp0ZsaTlTl6YmZHT1MVvMHdpM4KiV/3Nt9HcdlXtQdoB4tpAFNj+
+1dSFiF0arpuRVKDMCstvd6QZFdpTfQPWmRB0kvSwlYAWU1bm1JZwW2KG15GoHAnW
+BuumXSZvVtKD2oMjtVVKbgJJirquzv0WgUvf6gAjGPcdAYTNJ8Tka78zXcFkkSx5
+VwqGI+wiBs/m6ICPVO7UACgjOeZGKUfJ6TuZl/59Em6kGo+AgHP6YK7bV2IlIhJw
+GXJSJ7b54rin3O666Aag10RMIWW8s7SzlqmEukbn61nlAPdqvEpCaDqHyTe9XPaJ
+HMdA56CxqXIA7SBOky1pP4kUAcATGNYuRjvXfGjVR67UXv+yngOeBNARenWBkTX7
+ybRbzcFT/38IifMTxrjc9c0TLtHNFsMUNaXFF5PRRKBsxcSEw+AJ3pCmxVDzpyru
+msl7lUFLn0XoV+6PnPRQJ/j4bbSK5mNMVsXUgiOGA1AaQNrlB3E=
+=tq5K
+-----END PGP SIGNATURE-----
+
+--XdpP7rZ162aJGq60--
 
