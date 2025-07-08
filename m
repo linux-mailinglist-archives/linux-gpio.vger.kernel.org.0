@@ -1,68 +1,65 @@
-Return-Path: <linux-gpio+bounces-22941-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22942-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D787AFD4F4
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 19:15:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BF75AFD7AE
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 21:55:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7AA0189C90A
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 17:15:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD845176007
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 19:55:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07CC82E5B3C;
-	Tue,  8 Jul 2025 17:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5807923C4FF;
+	Tue,  8 Jul 2025 19:55:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnPxz3QT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ez6qp2MK"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9BA1DC9B5;
-	Tue,  8 Jul 2025 17:15:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09893204096;
+	Tue,  8 Jul 2025 19:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751994917; cv=none; b=f8YvEPg6vti1urf2yg0mrloE1p+gg2zHDissathVDP8sEoLU5R9ST1Ixwlbsi5WuJ2Z9B+pDTHR7cslIOl5JpiB8dWFD9Nnb43/DWZ+NNtznASgmB1g0ArdeFPYGZQEMJQEb2JtASocKAWvtbWrR4V4m7qe0VIVnuIf9rPg/1Fo=
+	t=1752004527; cv=none; b=BCkHEbDRFtYXA8kHfuswobyFW4G471Gt1zSF5NSWD9FjavATr1433wHNnkutdi7FF8/TSnZ1C+YY1VQE5cOxWvwBbCwV39i7Vuw8htcVQLi1qY8y9rdaa6Le39Qq56NQpSoTOsCwsVvZC/anGE/XpBOIzuRbsw0Mr/7UkwWWsac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751994917; c=relaxed/simple;
-	bh=zN56Kcanmm2CK6PlyASbW3cQE6ADHzafSCUuBxwC2dY=;
+	s=arc-20240116; t=1752004527; c=relaxed/simple;
+	bh=THklj9+DZKasC/I7ZV05zBVQQT7G6vPIipQ3X2d3as4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6pewuxpc1+tpALTGiUyjVatU7k8iCrMFwvHn86eToBkohMkKLGk/z8pVmo3PKuEzcXQp98SwxIoiwDBqfx2RJbx9Gj4dEAzt7eIQcyrBjNRaIvCoyCI4Pqm9ps8MwbtJEKr8ch1V5lQbX2K4VFg9s72RUyPVaN/uLJnM17529Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnPxz3QT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF322C4CEED;
-	Tue,  8 Jul 2025 17:15:16 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q2hFneQss9wk5RplpJ3vq0Saj3+85q5WMy0uqzYyKIrZiHrNJ2FZcYVu7aJg2iP9gkFrff2Ut/4MY/g4oGIPldm1SB5EU3AT9e4Q8Mn40ltlKewWo7k7Xl1I8ldwo2TboNq04OXp4aD81gn6qiQN2rhbEmjOxrm5WeCijRC+KIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ez6qp2MK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 545BFC4CEED;
+	Tue,  8 Jul 2025 19:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751994917;
-	bh=zN56Kcanmm2CK6PlyASbW3cQE6ADHzafSCUuBxwC2dY=;
+	s=k20201202; t=1752004526;
+	bh=THklj9+DZKasC/I7ZV05zBVQQT7G6vPIipQ3X2d3as4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fnPxz3QTmKrnPuKFneFht/NRDKDsD+03YX3V7I+FRPaggTCn1DWx+XA0g34uivyTV
-	 odRko5WyDqDPAUIRXHjw5k6wNeY7CEXWhxwczwutDGalGgsX5ipQ5PH/rWiPlyC+pn
-	 WtfWqtRxtJTLG1yWk5r2E5KfgJHNiy/YGBx+ljwsfSRsECeKZwMIdqUzUy+XD6llCm
-	 q4g2HlwDbaaBhN30eh3JOBY4Tng6F5sbeDuPZ8ydx7SZgvtm+cInudZbCWPK5YiHGl
-	 EINgcElxaLfa/KeT4B8WuGzNWiPz/+GjJjHsEHSmVUSm8PVxJps20YraFSW96YAe9M
-	 /fqFxIcYeyzjg==
-Date: Tue, 8 Jul 2025 12:15:15 -0500
+	b=Ez6qp2MKiHw0jYLyulx5FcTB2KGMIkMOc+KyNt7zGek54/NNNY9XcQ/Mwy5ZkbwYh
+	 ab4XJErcOSeGzYy4hISXxqRGqm9gk4V58pm6WNv5N9BVhOR35WrMfmjp4/r0UeRRxu
+	 mIT9z60lYc5qAcdliYfKtOg87mXryl5QTqhypXdK4WkWpoBrBTJS1EshmKwGDo8ZF0
+	 obxCyvvCbIJZWhfK2rYSSLHtUyQN6lNt6K5F2GtNpFc1XICGbiPdcF7MhXvgnVRU5Y
+	 UQwmjZUkf5IWwozadjr2j/syFxtGjOQEP6Fd5PXBQ6Ocr9ulQHobU3vhlRJrqBKpve
+	 B702aNdAMfLKA==
+Date: Tue, 8 Jul 2025 14:55:25 -0500
 From: Rob Herring <robh@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Luca Weiss <luca.weiss@fairphone.com>,
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: document the Milos Top
- Level Mode Multiplexer
-Message-ID: <20250708171515.GA640511-robh@kernel.org>
-References: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
- <20250702-sm7635-pinctrl-v2-1-c138624b9924@fairphone.com>
- <20250703-daring-burgundy-limpet-a1c97e@krzk-bin>
- <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
- <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
- <424285fb-14a0-452b-8d18-6165d2a78497@kernel.org>
- <3d3g2sq4r7pruu4c2sl2itclx7xuja6inasaicm67t4sx6u5fl@xq5g7h4rabno>
+	Magnus Damm <magnus.damm@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: renesas: document RZ/T2H
+ and RZ/N2H SoCs
+Message-ID: <20250708195525.GA837365-robh@kernel.org>
+References: <20250707141848.279528-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250707141848.279528-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,87 +68,202 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3d3g2sq4r7pruu4c2sl2itclx7xuja6inasaicm67t4sx6u5fl@xq5g7h4rabno>
+In-Reply-To: <20250707141848.279528-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Thu, Jul 03, 2025 at 12:31:46PM -0500, Bjorn Andersson wrote:
-> On Thu, Jul 03, 2025 at 01:26:11PM +0200, Krzysztof Kozlowski wrote:
-> > On 03/07/2025 12:04, Konrad Dybcio wrote:
-> > > 
-> > > 
-> > > On 03-Jul-25 09:44, Luca Weiss wrote:
-> > >> On Thu Jul 3, 2025 at 9:41 AM CEST, Krzysztof Kozlowski wrote:
-> > >>> On Wed, Jul 02, 2025 at 05:56:16PM +0200, Luca Weiss wrote:
-> > >>>> Document the Top Level Mode Multiplexer on the Milos Platform.
-> > >>>
-> > >>> What is Milos platform? Does it have some sort of model number how we
-> > >>> usually expect? Wasn't this SM7325 or similar?
-> > >>>
+On Mon, Jul 07, 2025 at 03:18:46PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> Milos is the actual name of the SoC.
+> Document the pin and GPIO controller IP for the Renesas RZ/T2H
+> (R9A09G077) and RZ/N2H (R9A09G087) SoCs, and add the shared DTSI
+> header file used by both the bindings and the driver.
 > 
-> > >>> The problem with such new naming that it awfully sounds like family
-> > >>> names, so just expand the name and explain it.
-> > >>
-> > >> Please go argue with Bjorn/Konrad about this, wasn't my idea.
-> > >>
-> > >> https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
-> > >> https://lore.kernel.org/linux-arm-msm/b98d305b-247f-415b-8675-50d073452feb@oss.qualcomm.com/
-> > > 
-> > > Milos is the "real-est" name of this silicon. All the associated
-> > > S[AM]|QC[MS]s are just variations of it, with different fusing.
-> > > 
-> > > You'll stumble upon it across e.g. firmware build strings, as
-> > > well as in any documentation pieces.
-> > > 
-> > > There are various internal reasons for the switch, but the most
-> > > obvious external-facing one is not to have the user buy a devkit
-> > > and wonder whether they should use QCS9100 or QCS9075 DTB, and
-> > > why there's zero drivers code for these magic numbers (they
-> > > include SA8775P). We can simply point them to "codename" and
-> > > all C code will refer to it as well.
-> > 
-> > These are different SoCs, optionally with different firmware, so they
-> > cannot use the same top-level compatible chain. I hope you did not
-> > propose that.
-> > 
+> The RZ/T2H SoC supports 729 pins, while the RZ/N2H supports 576 pins.
+> Both share the same controller architecture; separate compatible
+> strings are added for each SoC to distinguish them.
 > 
-> No they are not different SoCs, and that's the problem with the current
-> naming scheme.
+> Co-developed-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2->v3:
+> - Dropped refference to gpio.txt instead pointed to
+>   in include/dt-bindings/gpio/gpio.h.
 > 
-> > For me list like "qcs9100, sa8775p" is clear enough, but if you want
-> > "qcs9100, koala-bear" or "brown-bear, koala-bear" it is fine as well.
-> > You just cannot use koala-bear for all of them.
-> > 
+> v1->v2:
+> - Added a new DT binding file
+> ---
+>  .../pinctrl/renesas,rzt2h-pinctrl.yaml        | 132 ++++++++++++++++++
+>  .../pinctrl/renesas,r9a09g077-pinctrl.h       |  22 +++
+>  2 files changed, 154 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
+>  create mode 100644 include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
 > 
-> It looks "clear enough", but it's wrong. The problem is that sa8775p,
-> qca9100, and qcs9075 are the "same" hardware and firmware.
-> 
-> The difference between sa8775p and qcs9100 is the reserved-memory map,
-> the difference between qcs9100 and qcs9075 is one IP block being status
-> = "okay" vs "disabled", due to fuses.
-> 
-> It's exactly the same problem we first saw in QRB5165, but we let the
-> problem explode. Now we use the names sc7280, sm7325, qcm6490, and
-> qcs6490 for the same SoC.
-> 
-> Using the SoC's actual name here will remove the need for playing games
-> with DT includes etc to try to map things to the current naming scheme.
-> 
-> 
-> The one case that isn't being taking care of such naming is when there
-> are differences in the firmware. But as can be seen in the "sc7280"
-> familiy, those software differences doesn't align with the chosen names.
-> And even within a given SoC, with a (overall) given firmware, the
-> reserved-memory map ends up differing.
-> 
-> 
-> So, the name of the SoC in this patch is "Milos". We already have ways
-> of dealing with firmware and/or hardware variations within one SoC, we
-> should use them (and refine them as necessary), rather than pretending
-> that something like SM7325 will define those properties.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..ead5ab7e7ebb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/renesas,rzt2h-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/T2H Pin and GPIO controller
+> +
+> +maintainers:
+> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> +
+> +description:
+> +  The Renesas RZ/T2H SoC features a combined Pin and GPIO controller.
+> +  Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+> +  Each port features up to 8 pins, each of them configurable for GPIO function
+> +  (port mode) or in alternate function mode.
+> +  Up to 8 different alternate function modes exist for each single pin.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - renesas,r9a09g077-pinctrl # RZ/T2H
+> +      - renesas,r9a09g087-pinctrl # RZ/N2H
+> +
+> +  reg:
+> +    minItems: 1
+> +    items:
+> +      - description: Non-safety I/O Port base
+> +      - description: Safety I/O Port safety region base
+> +      - description: Safety I/O Port Non-safety region base
+> +
+> +  reg-names:
+> +    minItems: 1
+> +    items:
+> +      - const: nsr
+> +      - const: srs
+> +      - const: srn
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +    description:
+> +      The first cell contains the global GPIO port index, constructed using the
+> +      RZT2H_GPIO() helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
+> +      (e.g. "RZT2H_GPIO(3, 0)" for P03_0). The second cell represents the consumer
+> +      flag. Use the macros defined in include/dt-bindings/gpio/gpio.h.
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +additionalProperties:
+> +  anyOf:
+> +    - type: object
+> +      additionalProperties: false
+> +      allOf:
+> +        - $ref: pincfg-node.yaml#
+> +        - $ref: pinmux-node.yaml#
+> +
+> +      description:
+> +        Pin controller client devices use pin configuration subnodes (children
+> +        and grandchildren) for desired pin configuration.
+> +        Client device subnodes use the below standard properties.
+> +
+> +      properties:
+> +        pinmux:
+> +          description:
+> +            Values are constructed from GPIO port number, pin number, and
+> +            alternate function configuration number using the RZT2H_PORT_PINMUX()
+> +            helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>.
+> +        pins: true
+> +        gpio-hog: true
+> +        gpios: true
+> +        input: true
+> +        input-enable: true
+> +        output-enable: true
+> +        output-high: true
+> +        output-low: true
+> +        line-name: true
+> +
+> +    - type: object
+> +      additionalProperties:
+> +        $ref: "#/additionalProperties/anyOf/0"
 
-I for one prefer 1 compatible per die. We often don't know if that's 
-the case, but in this case we do so let's take advantage of it. 
+Again, please define some common suffix or prefix for the node names. 
+Any name is for existing bindings *only*.
+
+patternProperties:
+  '-pins$':
+     type: object
+     ...
+
+  '-state$':
+     type: object
+     additionalProperties:
+       $ref: '#/patternProperties/-pins$'
+
+I don't care what prefixes you use here...
+
+(Note some regex's don't work as JSON pointers and then you would have 
+to use a $defs section.)
+
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +  - clocks
+> +  - power-domains
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
+> +    #include <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
+> +
+> +    pinctrl@802c0000 {
+> +        compatible = "renesas,r9a09g077-pinctrl";
+> +        reg = <0x802c0000 0x2000>,
+> +              <0x812c0000 0x2000>,
+> +              <0x802b0000 0x2000>;
+> +        reg-names = "nsr", "srs", "srn";
+> +        clocks = <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        gpio-ranges = <&pinctrl 0 0 288>;
+> +        power-domains = <&cpg>;
+> +
+> +        sci_pins: serial0 {
+> +            pinmux = <RZT2H_PORT_PINMUX(38, 0, 1)>, /* Tx */
+> +                     <RZT2H_PORT_PINMUX(38, 1, 1)>; /* Rx */
+> +        };
+> +
+> +        sd1-pwr-en-hog {
+
+This is exactly why no name pattern is a problem. Nothing in the schema 
+says you even have hog nodes which are a totally different kind of node. 
+It only passes because you have 0 required properties (probably an 
+error because an empty node shouldn't be valid).
+
+This node does happen to get validated only because we match on nodes 
+with 'gpio-hog' property which is an unusual pattern and may likely change.
 
 Rob
+
+> +            gpio-hog;
+> +            gpios = <RZT2H_GPIO(39, 2) 0>;
+> +            output-high;
+> +            line-name = "sd1_pwr_en";
+> +         };
+> +    };
 
