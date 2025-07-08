@@ -1,269 +1,194 @@
-Return-Path: <linux-gpio+bounces-22942-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22943-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BF75AFD7AE
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 21:55:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DED9DAFDBF3
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 01:47:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD845176007
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 19:55:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 388C73B21EC
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 23:46:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5807923C4FF;
-	Tue,  8 Jul 2025 19:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD4B8238141;
+	Tue,  8 Jul 2025 23:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ez6qp2MK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePNnI1Rk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09893204096;
-	Tue,  8 Jul 2025 19:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B9818E3F;
+	Tue,  8 Jul 2025 23:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752004527; cv=none; b=BCkHEbDRFtYXA8kHfuswobyFW4G471Gt1zSF5NSWD9FjavATr1433wHNnkutdi7FF8/TSnZ1C+YY1VQE5cOxWvwBbCwV39i7Vuw8htcVQLi1qY8y9rdaa6Le39Qq56NQpSoTOsCwsVvZC/anGE/XpBOIzuRbsw0Mr/7UkwWWsac=
+	t=1752018410; cv=none; b=imX2ALCHwkJNxbmopHhOmcc0UO6knc+B6wSla3znsV3/xkLgG4qAAfavoAQmfcQrFNhLcc1YJOcnXbKKSGYi6hTVneJU2ME+U5W2DQsGHPIHJGBsipzhwocyaBJTpiaZ0jbAZEP7OkLRs+8OyS+BWGax8ViGp1liy9hUsqWKHqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752004527; c=relaxed/simple;
-	bh=THklj9+DZKasC/I7ZV05zBVQQT7G6vPIipQ3X2d3as4=;
+	s=arc-20240116; t=1752018410; c=relaxed/simple;
+	bh=MlpSgduVRBJdk395iMJ6yLimjvXQpIqGCCEMgZlsg6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q2hFneQss9wk5RplpJ3vq0Saj3+85q5WMy0uqzYyKIrZiHrNJ2FZcYVu7aJg2iP9gkFrff2Ut/4MY/g4oGIPldm1SB5EU3AT9e4Q8Mn40ltlKewWo7k7Xl1I8ldwo2TboNq04OXp4aD81gn6qiQN2rhbEmjOxrm5WeCijRC+KIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ez6qp2MK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 545BFC4CEED;
-	Tue,  8 Jul 2025 19:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752004526;
-	bh=THklj9+DZKasC/I7ZV05zBVQQT7G6vPIipQ3X2d3as4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ez6qp2MKiHw0jYLyulx5FcTB2KGMIkMOc+KyNt7zGek54/NNNY9XcQ/Mwy5ZkbwYh
-	 ab4XJErcOSeGzYy4hISXxqRGqm9gk4V58pm6WNv5N9BVhOR35WrMfmjp4/r0UeRRxu
-	 mIT9z60lYc5qAcdliYfKtOg87mXryl5QTqhypXdK4WkWpoBrBTJS1EshmKwGDo8ZF0
-	 obxCyvvCbIJZWhfK2rYSSLHtUyQN6lNt6K5F2GtNpFc1XICGbiPdcF7MhXvgnVRU5Y
-	 UQwmjZUkf5IWwozadjr2j/syFxtGjOQEP6Fd5PXBQ6Ocr9ulQHobU3vhlRJrqBKpve
-	 B702aNdAMfLKA==
-Date: Tue, 8 Jul 2025 14:55:25 -0500
-From: Rob Herring <robh@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=YirD9FG8efdxxGgfRop/ua55RsH0NLfUeRiERaiB4zn4GOQRC0ZSoW0RSTZOJD/ClrBorbpM1Hy1lVNfodRGjeQHKNnR9Xty1tXU+hvsXI2nxxzJd4T9r76Ql2GOw8WoNmjzIF8ycMeAj5jWJ2ONRPUaOmyw4Bgg01meFrfP5Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePNnI1Rk; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752018408; x=1783554408;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=MlpSgduVRBJdk395iMJ6yLimjvXQpIqGCCEMgZlsg6M=;
+  b=ePNnI1Rklo/1c2CII06FDMTNPFxv5YffmQbqisch/9WWMn35i+LhjeB0
+   JaxFqVmki9COX8GuMa5qaIta9S3tGP18/v4L6PcdfIHXwS2yqhA+28BP1
+   F2T84YjhWXKsh+ydKTWNK5VF0aUiBGosWL/H6liiHAoZhCb9mm6c5yZCE
+   yNnRyexqtIqGVX91SlABMJbPGLXyUDjLifoRaO88jHw3xafxH8fLk5N5O
+   81iFyste7mneSFlAgw1FdZkkR6908EV7sWpB7xu5c1G6kPWckSDY/QPwX
+   LcjU9Zicw1R4GWSFkWG4IIGM4sEYUW3kCNV+VWSwUgFolloVkpn9OGATB
+   A==;
+X-CSE-ConnectionGUID: 28bilIjgSmSguQIamSAKww==
+X-CSE-MsgGUID: yNVnkYAaSVqHo/4g1PqZUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="54412895"
+X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
+   d="scan'208";a="54412895"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2025 16:46:47 -0700
+X-CSE-ConnectionGUID: q7oi4U30RgSdrHZGPh6ycA==
+X-CSE-MsgGUID: 7IJhBtTFS2G52EautX/oBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
+   d="scan'208";a="179305651"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.102])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2025 16:46:43 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 5D9BD11F8A6;
+	Wed,  9 Jul 2025 02:46:41 +0300 (EEST)
+Date: Tue, 8 Jul 2025 23:46:41 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: renesas: document RZ/T2H
- and RZ/N2H SoCs
-Message-ID: <20250708195525.GA837365-robh@kernel.org>
-References: <20250707141848.279528-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250707141848.279528-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 05/12] media: ipu-bridge: Use v4l2_fwnode for unknown
+ rotations
+Message-ID: <aG2t4cxwXKJ9MSQX@kekkonen.localdomain>
+References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
+ <20250605-uvc-orientation-v2-5-5710f9d030aa@chromium.org>
+ <aGw_1T_Edm8--gXW@kekkonen.localdomain>
+ <CANiDSCup2iRx+0RcaijSmbn04nBY4Ui9=esCPFsQzOKe=up9Gg@mail.gmail.com>
+ <aGzjTRSco39mKJcf@kekkonen.localdomain>
+ <CANiDSCsqEHTnbvzLMoe_yxi8JRzp+2PQe3ksXhD=Y3+AqC_9hw@mail.gmail.com>
+ <aG0NI2V0Tfh2HZ6O@kekkonen.localdomain>
+ <CANiDSCu=wU_Oi7CLPcYTC3Xf_pGbDroaVitPAiAj7ND5pXy-6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250707141848.279528-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiDSCu=wU_Oi7CLPcYTC3Xf_pGbDroaVitPAiAj7ND5pXy-6g@mail.gmail.com>
 
-On Mon, Jul 07, 2025 at 03:18:46PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Jul 08, 2025 at 04:58:25PM +0200, Ricardo Ribalda wrote:
+> On Tue, 8 Jul 2025 at 14:21, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> >
+> > Hi Ricardo,
+> >
+> > On Tue, Jul 08, 2025 at 02:09:28PM +0200, Ricardo Ribalda wrote:
+> > > On Tue, 8 Jul 2025 at 11:22, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> > > >
+> > > > Hi Ricardo,
+> > > >
+> > > > On Tue, Jul 08, 2025 at 11:16:25AM +0200, Ricardo Ribalda wrote:
+> > > > > Hi Sakari
+> > > > >
+> > > > > Thanks for your review
+> > > > >
+> > > > > On Mon, 7 Jul 2025 at 23:45, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> > > > > >
+> > > > > > Hi Ricardo,
+> > > > > >
+> > > > > > On Thu, Jun 05, 2025 at 05:52:58PM +0000, Ricardo Ribalda wrote:
+> > > > > > > The v4l2_fwnode_device_properties contains information about the
+> > > > > > > rotation. Use it if the ssdb data is inconclusive.
+> > > > > >
+> > > > > > As SSDB and _PLD provide the same information, are they always aligned? Do
+> > > > > > you have any experience on how is this actually in firmware?
+> > > > >
+> > > > > Not really, in ChromeOS we are pretty lucky to control the firmware.
+> > > > >
+> > > > > @HdG Do you have some experience/opinion here?
+> > > > >
+> > > > > >
+> > > > > > _PLD is standardised so it would seem reasonable to stick to that -- if it
+> > > > > > exists. Another approach could be to pick the one that doesn't translate to
+> > > > > > a sane default (0°).
+> > > > >
+> > > > > I'd rather stick to the current prioritization unless there is a
+> > > > > strong argument against it. Otherwise there is a chance that we will
+> > > > > have regressions (outside CrOS)
+> > > >
+> > > > My point was rather there are no such rules currently for rotation: only
+> > > > SSDB was being used by the IPU bridge to obtain the rotation value,
+> > > > similarly only _PLD is consulted when it comes to orientation.
+> > >
+> > > So something like this:?
+> > >
+> > > static u32 ipu_bridge_parse_rotation(struct acpi_device *adev,
+> > >                                      struct ipu_sensor_ssdb *ssdb,
+> > >                                      struct
+> > > v4l2_fwnode_device_properties *props)
+> > > {
+> > >         if (props->rotation != V4L2_FWNODE_PROPERTY_UNSET)
+> > >                 return props->rotation;
+> > >
+> > >         switch (ssdb->degree) {
+> > >         case IPU_SENSOR_ROTATION_NORMAL:
+> > >                 return 0;
+> > >         case IPU_SENSOR_ROTATION_INVERTED:
+> > >                 return 180;
+> > >         }
+> > >
+> > >         dev_warn(ADEV_DEV(adev),
+> > >                  "Unknown rotation %d. Assume 0 degree rotation\n",
+> > >                  ssdb->degree);
+> >
+> > Maybe:
+> >
+> >         acpi_handle_warn(acpi_device_handle(adev), ...);
+> >
+> > ?
+> >
+> > >         return 0;
+> > > }
+> >
+> > Looks good to me. Maybe something similar for orientation?
 > 
-> Document the pin and GPIO controller IP for the Renesas RZ/T2H
-> (R9A09G077) and RZ/N2H (R9A09G087) SoCs, and add the shared DTSI
-> header file used by both the bindings and the driver.
+> Do you mean using ssdb also for orientation or using acpi_handle_warn?
 > 
-> The RZ/T2H SoC supports 729 pins, while the RZ/N2H supports 576 pins.
-> Both share the same controller architecture; separate compatible
-> strings are added for each SoC to distinguish them.
 > 
-> Co-developed-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v2->v3:
-> - Dropped refference to gpio.txt instead pointed to
->   in include/dt-bindings/gpio/gpio.h.
+> I cannot find anything related to orientation for SSDB
+> https://github.com/coreboot/coreboot/blob/main/src/drivers/intel/mipi_camera/chip.h#L150
 > 
-> v1->v2:
-> - Added a new DT binding file
-> ---
->  .../pinctrl/renesas,rzt2h-pinctrl.yaml        | 132 ++++++++++++++++++
->  .../pinctrl/renesas,r9a09g077-pinctrl.h       |  22 +++
->  2 files changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
->  create mode 100644 include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..ead5ab7e7ebb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
-> @@ -0,0 +1,132 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/renesas,rzt2h-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas RZ/T2H Pin and GPIO controller
-> +
-> +maintainers:
-> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> +
-> +description:
-> +  The Renesas RZ/T2H SoC features a combined Pin and GPIO controller.
-> +  Pin multiplexing and GPIO configuration is performed on a per-pin basis.
-> +  Each port features up to 8 pins, each of them configurable for GPIO function
-> +  (port mode) or in alternate function mode.
-> +  Up to 8 different alternate function modes exist for each single pin.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - renesas,r9a09g077-pinctrl # RZ/T2H
-> +      - renesas,r9a09g087-pinctrl # RZ/N2H
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description: Non-safety I/O Port base
-> +      - description: Safety I/O Port safety region base
-> +      - description: Safety I/O Port Non-safety region base
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    items:
-> +      - const: nsr
-> +      - const: srs
-> +      - const: srn
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +    description:
-> +      The first cell contains the global GPIO port index, constructed using the
-> +      RZT2H_GPIO() helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
-> +      (e.g. "RZT2H_GPIO(3, 0)" for P03_0). The second cell represents the consumer
-> +      flag. Use the macros defined in include/dt-bindings/gpio/gpio.h.
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +additionalProperties:
-> +  anyOf:
-> +    - type: object
-> +      additionalProperties: false
-> +      allOf:
-> +        - $ref: pincfg-node.yaml#
-> +        - $ref: pinmux-node.yaml#
-> +
-> +      description:
-> +        Pin controller client devices use pin configuration subnodes (children
-> +        and grandchildren) for desired pin configuration.
-> +        Client device subnodes use the below standard properties.
-> +
-> +      properties:
-> +        pinmux:
-> +          description:
-> +            Values are constructed from GPIO port number, pin number, and
-> +            alternate function configuration number using the RZT2H_PORT_PINMUX()
-> +            helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>.
-> +        pins: true
-> +        gpio-hog: true
-> +        gpios: true
-> +        input: true
-> +        input-enable: true
-> +        output-enable: true
-> +        output-high: true
-> +        output-low: true
-> +        line-name: true
-> +
-> +    - type: object
-> +      additionalProperties:
-> +        $ref: "#/additionalProperties/anyOf/0"
+> Am I looking in the right place?
 
-Again, please define some common suffix or prefix for the node names. 
-Any name is for existing bindings *only*.
+Ah, maybe SSDB has only rotation? At least it's less duplicated information
+in different format, so that's a good thing. So this just applies to
+rotation, it seems.
 
-patternProperties:
-  '-pins$':
-     type: object
-     ...
-
-  '-state$':
-     type: object
-     additionalProperties:
-       $ref: '#/patternProperties/-pins$'
-
-I don't care what prefixes you use here...
-
-(Note some regex's don't work as JSON pointers and then you would have 
-to use a $defs section.)
-
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +  - clocks
-> +  - power-domains
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
-> +    #include <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
-> +
-> +    pinctrl@802c0000 {
-> +        compatible = "renesas,r9a09g077-pinctrl";
-> +        reg = <0x802c0000 0x2000>,
-> +              <0x812c0000 0x2000>,
-> +              <0x802b0000 0x2000>;
-> +        reg-names = "nsr", "srs", "srn";
-> +        clocks = <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&pinctrl 0 0 288>;
-> +        power-domains = <&cpg>;
-> +
-> +        sci_pins: serial0 {
-> +            pinmux = <RZT2H_PORT_PINMUX(38, 0, 1)>, /* Tx */
-> +                     <RZT2H_PORT_PINMUX(38, 1, 1)>; /* Rx */
-> +        };
-> +
-> +        sd1-pwr-en-hog {
-
-This is exactly why no name pattern is a problem. Nothing in the schema 
-says you even have hog nodes which are a totally different kind of node. 
-It only passes because you have 0 required properties (probably an 
-error because an empty node shouldn't be valid).
-
-This node does happen to get validated only because we match on nodes 
-with 'gpio-hog' property which is an unusual pattern and may likely change.
-
-Rob
-
-> +            gpio-hog;
-> +            gpios = <RZT2H_GPIO(39, 2) 0>;
-> +            output-high;
-> +            line-name = "sd1_pwr_en";
-> +         };
-> +    };
+-- 
+Sakari Ailus
 
