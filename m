@@ -1,217 +1,157 @@
-Return-Path: <linux-gpio+bounces-22940-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22941-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6705BAFCE60
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 16:59:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D787AFD4F4
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 19:15:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3015B7ACDD1
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 14:57:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7AA0189C90A
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 17:15:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 979212E0B4B;
-	Tue,  8 Jul 2025 14:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07CC82E5B3C;
+	Tue,  8 Jul 2025 17:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T+q0A+tc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnPxz3QT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6F82E0402
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Jul 2025 14:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9BA1DC9B5;
+	Tue,  8 Jul 2025 17:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751986723; cv=none; b=HUb1mPzoZranYDce7f/gjEmIVxakfJNTMUKqom+BD5HME8Zjyjk2usIm4/B2NiRMk0PFddr8VhQZ+qiUKlF778j5uS4Mt/z8CRT7Yy8A89LdMlgM45IhmgvJ/bXif5pdTyWp9d3TNM/qUO99UN6vDXaLutm3bzjaSnk18PPrXwg=
+	t=1751994917; cv=none; b=f8YvEPg6vti1urf2yg0mrloE1p+gg2zHDissathVDP8sEoLU5R9ST1Ixwlbsi5WuJ2Z9B+pDTHR7cslIOl5JpiB8dWFD9Nnb43/DWZ+NNtznASgmB1g0ArdeFPYGZQEMJQEb2JtASocKAWvtbWrR4V4m7qe0VIVnuIf9rPg/1Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751986723; c=relaxed/simple;
-	bh=HGTpVxEEJn+4Z8F/2vfMSUr1vMJyUPWvL7WDo/xrVN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nbvbmE4px4f3hu/XgaPqmw6sb/iKGNpz8FWoMRVdQpyXhuvuVRTQHEA8XNpVY7nC19kiuqabVDYk7+L73FLqS/2f+/OU6JmBzAOXKn4R8D6lR0YJaTq6UEu1N9uA8npGE+oDs5gOgXk6jnzdeFHxtshu1w2fi8Hh2MU4E25T5fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=T+q0A+tc; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-55502821bd2so4852668e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Jul 2025 07:58:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751986719; x=1752591519; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lsjEc9LmeMOTlM1N3xvojXwrwvOBpBec3I1iTp5IlDk=;
-        b=T+q0A+tcLVdKzFU+yOQ0k6BaEoc5AWhk6k1MsMu1cITFtwXThAqJb3RmygaNIGf31N
-         /szqbHwyxB3ZDe52XXbLvE7d0L4NhKQeysd22oYr2EbvjSnkNB7jbV82mixUCasB11aC
-         TXWBvIuoqia2FREsX6TsRxkhQefcmr9IWrw38=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751986719; x=1752591519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lsjEc9LmeMOTlM1N3xvojXwrwvOBpBec3I1iTp5IlDk=;
-        b=qYPXI9UnZaM4rr1ydvOS3XbyjyEHY9EbUak67VqqNJo+SikHre511uZZoOA0yjlkC0
-         WJuEn4va2zXXvWZCy0ZZlMTGe5pecEhD4xnL8c5Cal3AFVqVr38+ugtVFL/nmzvepRBf
-         D4ZjOOc2rc8BZV2SlfFqxjQea0r6xAYI4rb66Xjc8BT07sxKcec7AZWs43A4YRwO802Q
-         DUQ/non9m30qGtkjEilobDaRJ5lqEOA6BKY6eZLTGm91nBF0AviUsAzflm/51wQ2W1Oi
-         GtQn5CK3JR4+jO6mqDH4fsjq0JKNnfK580elASSHoIFIkdO3lMzR1koSBjiRbCNK33at
-         ZYVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOWgPX1Y4ehb/OxD6jx6iTa9k4So+FbwMXrm0bY9LnLnGpnj+nEsWPw2bGYfOlab8BZzMHzt5Lq3gb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq2o7pllaYBWdJHQKOVtTpS3aOG+kAWcvRG0y11gt6EjsbKias
-	eIhIbK9aaTNorX5XZp8qB7En+0bL+cr0rPg/CHidIc8j0Qv1hG5eGIEVd+PgcygEiHiZ/ahqqN6
-	LIZim6AJ8
-X-Gm-Gg: ASbGncsZi7LZXKlHP5t0sXw2IayI+nPsFpfdgjr1/p44A0/VGM8zARbSj+FUa6ynqrY
-	L9sAUriLMlwElH7gGEYcHKL8hwaFUdaclhFhueqqO6JUA37uAigUZsEoELoy5scCmYpXAT3KdpI
-	jhCQd1czgfeIs+Dtg+FaeQGqnRzVyauq431aTLji5fHUndGKAL0C2Wpelmcw+qe6ro+cpRH0Swc
-	gv2uSjQ120OnMhX74uS+ooBNd+wzYCHUOBZv8knellYp9r0+/TNnN/P7WQiTnhFhUxYWjrlv+5g
-	+EW9embatu0tDHv0e/XFdhMvah/GBCPGm0SVyH1QHyCzKJgQJApDyEeYn+mWIpIx4KivN9/C8LL
-	7RCaBd2cf3kjlO2lw+RZ8Xn4s
-X-Google-Smtp-Source: AGHT+IE0B1/1w1jn+AEvGWBkd7MVTkEUyyItMvf1q97wJf0CS0VZWfVoH65EXs6+GHfNFdRZLrjHyA==
-X-Received: by 2002:a05:6512:3c84:b0:553:297b:3d4e with SMTP id 2adb3069b0e04-556de363d36mr4941199e87.52.1751986719459;
-        Tue, 08 Jul 2025 07:58:39 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384a68f3sm1700933e87.144.2025.07.08.07.58.38
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Jul 2025 07:58:38 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55511c3e203so4057549e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Jul 2025 07:58:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUqPK8bCFrY1azfxDfJqHYDO/ailoa7MA1eN+jT4pz1DlW+927ac/skcoZ5zuF/1g6VyS1of3jYXK+S@vger.kernel.org
-X-Received: by 2002:a05:6512:ac8:b0:553:3028:75ae with SMTP id
- 2adb3069b0e04-556de076273mr5727105e87.46.1751986718368; Tue, 08 Jul 2025
- 07:58:38 -0700 (PDT)
+	s=arc-20240116; t=1751994917; c=relaxed/simple;
+	bh=zN56Kcanmm2CK6PlyASbW3cQE6ADHzafSCUuBxwC2dY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6pewuxpc1+tpALTGiUyjVatU7k8iCrMFwvHn86eToBkohMkKLGk/z8pVmo3PKuEzcXQp98SwxIoiwDBqfx2RJbx9Gj4dEAzt7eIQcyrBjNRaIvCoyCI4Pqm9ps8MwbtJEKr8ch1V5lQbX2K4VFg9s72RUyPVaN/uLJnM17529Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnPxz3QT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF322C4CEED;
+	Tue,  8 Jul 2025 17:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751994917;
+	bh=zN56Kcanmm2CK6PlyASbW3cQE6ADHzafSCUuBxwC2dY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fnPxz3QTmKrnPuKFneFht/NRDKDsD+03YX3V7I+FRPaggTCn1DWx+XA0g34uivyTV
+	 odRko5WyDqDPAUIRXHjw5k6wNeY7CEXWhxwczwutDGalGgsX5ipQ5PH/rWiPlyC+pn
+	 WtfWqtRxtJTLG1yWk5r2E5KfgJHNiy/YGBx+ljwsfSRsECeKZwMIdqUzUy+XD6llCm
+	 q4g2HlwDbaaBhN30eh3JOBY4Tng6F5sbeDuPZ8ydx7SZgvtm+cInudZbCWPK5YiHGl
+	 EINgcElxaLfa/KeT4B8WuGzNWiPz/+GjJjHsEHSmVUSm8PVxJps20YraFSW96YAe9M
+	 /fqFxIcYeyzjg==
+Date: Tue, 8 Jul 2025 12:15:15 -0500
+From: Rob Herring <robh@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Luca Weiss <luca.weiss@fairphone.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: document the Milos Top
+ Level Mode Multiplexer
+Message-ID: <20250708171515.GA640511-robh@kernel.org>
+References: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
+ <20250702-sm7635-pinctrl-v2-1-c138624b9924@fairphone.com>
+ <20250703-daring-burgundy-limpet-a1c97e@krzk-bin>
+ <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
+ <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
+ <424285fb-14a0-452b-8d18-6165d2a78497@kernel.org>
+ <3d3g2sq4r7pruu4c2sl2itclx7xuja6inasaicm67t4sx6u5fl@xq5g7h4rabno>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
- <20250605-uvc-orientation-v2-5-5710f9d030aa@chromium.org> <aGw_1T_Edm8--gXW@kekkonen.localdomain>
- <CANiDSCup2iRx+0RcaijSmbn04nBY4Ui9=esCPFsQzOKe=up9Gg@mail.gmail.com>
- <aGzjTRSco39mKJcf@kekkonen.localdomain> <CANiDSCsqEHTnbvzLMoe_yxi8JRzp+2PQe3ksXhD=Y3+AqC_9hw@mail.gmail.com>
- <aG0NI2V0Tfh2HZ6O@kekkonen.localdomain>
-In-Reply-To: <aG0NI2V0Tfh2HZ6O@kekkonen.localdomain>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 8 Jul 2025 16:58:25 +0200
-X-Gmail-Original-Message-ID: <CANiDSCu=wU_Oi7CLPcYTC3Xf_pGbDroaVitPAiAj7ND5pXy-6g@mail.gmail.com>
-X-Gm-Features: Ac12FXx3zIz7eqEIVhgOFhdr-yyA-k97hK_sQ1bucetsK4DfnOnoX-8awEd9Sp8
-Message-ID: <CANiDSCu=wU_Oi7CLPcYTC3Xf_pGbDroaVitPAiAj7ND5pXy-6g@mail.gmail.com>
-Subject: Re: [PATCH v2 05/12] media: ipu-bridge: Use v4l2_fwnode for unknown rotations
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d3g2sq4r7pruu4c2sl2itclx7xuja6inasaicm67t4sx6u5fl@xq5g7h4rabno>
 
-On Tue, 8 Jul 2025 at 14:21, Sakari Ailus <sakari.ailus@linux.intel.com> wr=
-ote:
->
-> Hi Ricardo,
->
-> On Tue, Jul 08, 2025 at 02:09:28PM +0200, Ricardo Ribalda wrote:
-> > On Tue, 8 Jul 2025 at 11:22, Sakari Ailus <sakari.ailus@linux.intel.com=
-> wrote:
-> > >
-> > > Hi Ricardo,
-> > >
-> > > On Tue, Jul 08, 2025 at 11:16:25AM +0200, Ricardo Ribalda wrote:
-> > > > Hi Sakari
-> > > >
-> > > > Thanks for your review
-> > > >
-> > > > On Mon, 7 Jul 2025 at 23:45, Sakari Ailus <sakari.ailus@linux.intel=
-.com> wrote:
-> > > > >
-> > > > > Hi Ricardo,
-> > > > >
-> > > > > On Thu, Jun 05, 2025 at 05:52:58PM +0000, Ricardo Ribalda wrote:
-> > > > > > The v4l2_fwnode_device_properties contains information about th=
-e
-> > > > > > rotation. Use it if the ssdb data is inconclusive.
-> > > > >
-> > > > > As SSDB and _PLD provide the same information, are they always al=
-igned? Do
-> > > > > you have any experience on how is this actually in firmware?
-> > > >
-> > > > Not really, in ChromeOS we are pretty lucky to control the firmware=
-.
-> > > >
-> > > > @HdG Do you have some experience/opinion here?
-> > > >
-> > > > >
-> > > > > _PLD is standardised so it would seem reasonable to stick to that=
- -- if it
-> > > > > exists. Another approach could be to pick the one that doesn't tr=
-anslate to
-> > > > > a sane default (0=C2=B0).
-> > > >
-> > > > I'd rather stick to the current prioritization unless there is a
-> > > > strong argument against it. Otherwise there is a chance that we wil=
-l
-> > > > have regressions (outside CrOS)
-> > >
-> > > My point was rather there are no such rules currently for rotation: o=
-nly
-> > > SSDB was being used by the IPU bridge to obtain the rotation value,
-> > > similarly only _PLD is consulted when it comes to orientation.
-> >
-> > So something like this:?
-> >
-> > static u32 ipu_bridge_parse_rotation(struct acpi_device *adev,
-> >                                      struct ipu_sensor_ssdb *ssdb,
-> >                                      struct
-> > v4l2_fwnode_device_properties *props)
-> > {
-> >         if (props->rotation !=3D V4L2_FWNODE_PROPERTY_UNSET)
-> >                 return props->rotation;
-> >
-> >         switch (ssdb->degree) {
-> >         case IPU_SENSOR_ROTATION_NORMAL:
-> >                 return 0;
-> >         case IPU_SENSOR_ROTATION_INVERTED:
-> >                 return 180;
-> >         }
-> >
-> >         dev_warn(ADEV_DEV(adev),
-> >                  "Unknown rotation %d. Assume 0 degree rotation\n",
-> >                  ssdb->degree);
->
-> Maybe:
->
->         acpi_handle_warn(acpi_device_handle(adev), ...);
->
-> ?
->
-> >         return 0;
-> > }
->
-> Looks good to me. Maybe something similar for orientation?
+On Thu, Jul 03, 2025 at 12:31:46PM -0500, Bjorn Andersson wrote:
+> On Thu, Jul 03, 2025 at 01:26:11PM +0200, Krzysztof Kozlowski wrote:
+> > On 03/07/2025 12:04, Konrad Dybcio wrote:
+> > > 
+> > > 
+> > > On 03-Jul-25 09:44, Luca Weiss wrote:
+> > >> On Thu Jul 3, 2025 at 9:41 AM CEST, Krzysztof Kozlowski wrote:
+> > >>> On Wed, Jul 02, 2025 at 05:56:16PM +0200, Luca Weiss wrote:
+> > >>>> Document the Top Level Mode Multiplexer on the Milos Platform.
+> > >>>
+> > >>> What is Milos platform? Does it have some sort of model number how we
+> > >>> usually expect? Wasn't this SM7325 or similar?
+> > >>>
+> 
+> Milos is the actual name of the SoC.
+> 
+> > >>> The problem with such new naming that it awfully sounds like family
+> > >>> names, so just expand the name and explain it.
+> > >>
+> > >> Please go argue with Bjorn/Konrad about this, wasn't my idea.
+> > >>
+> > >> https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
+> > >> https://lore.kernel.org/linux-arm-msm/b98d305b-247f-415b-8675-50d073452feb@oss.qualcomm.com/
+> > > 
+> > > Milos is the "real-est" name of this silicon. All the associated
+> > > S[AM]|QC[MS]s are just variations of it, with different fusing.
+> > > 
+> > > You'll stumble upon it across e.g. firmware build strings, as
+> > > well as in any documentation pieces.
+> > > 
+> > > There are various internal reasons for the switch, but the most
+> > > obvious external-facing one is not to have the user buy a devkit
+> > > and wonder whether they should use QCS9100 or QCS9075 DTB, and
+> > > why there's zero drivers code for these magic numbers (they
+> > > include SA8775P). We can simply point them to "codename" and
+> > > all C code will refer to it as well.
+> > 
+> > These are different SoCs, optionally with different firmware, so they
+> > cannot use the same top-level compatible chain. I hope you did not
+> > propose that.
+> > 
+> 
+> No they are not different SoCs, and that's the problem with the current
+> naming scheme.
+> 
+> > For me list like "qcs9100, sa8775p" is clear enough, but if you want
+> > "qcs9100, koala-bear" or "brown-bear, koala-bear" it is fine as well.
+> > You just cannot use koala-bear for all of them.
+> > 
+> 
+> It looks "clear enough", but it's wrong. The problem is that sa8775p,
+> qca9100, and qcs9075 are the "same" hardware and firmware.
+> 
+> The difference between sa8775p and qcs9100 is the reserved-memory map,
+> the difference between qcs9100 and qcs9075 is one IP block being status
+> = "okay" vs "disabled", due to fuses.
+> 
+> It's exactly the same problem we first saw in QRB5165, but we let the
+> problem explode. Now we use the names sc7280, sm7325, qcm6490, and
+> qcs6490 for the same SoC.
+> 
+> Using the SoC's actual name here will remove the need for playing games
+> with DT includes etc to try to map things to the current naming scheme.
+> 
+> 
+> The one case that isn't being taking care of such naming is when there
+> are differences in the firmware. But as can be seen in the "sc7280"
+> familiy, those software differences doesn't align with the chosen names.
+> And even within a given SoC, with a (overall) given firmware, the
+> reserved-memory map ends up differing.
+> 
+> 
+> So, the name of the SoC in this patch is "Milos". We already have ways
+> of dealing with firmware and/or hardware variations within one SoC, we
+> should use them (and refine them as necessary), rather than pretending
+> that something like SM7325 will define those properties.
 
-Do you mean using ssdb also for orientation or using acpi_handle_warn?
+I for one prefer 1 compatible per die. We often don't know if that's 
+the case, but in this case we do so let's take advantage of it. 
 
-
-I cannot find anything related to orientation for SSDB
-https://github.com/coreboot/coreboot/blob/main/src/drivers/intel/mipi_camer=
-a/chip.h#L150
-
-Am I looking in the right place?
-
-Regards!
->
-> --
-> Regards,
->
-> Sakari Ailus
-
-
-
---=20
-Ricardo Ribalda
+Rob
 
