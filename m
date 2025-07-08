@@ -1,212 +1,231 @@
-Return-Path: <linux-gpio+bounces-22931-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22932-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F25DAFC96D
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 13:20:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E59E6AFC9AB
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 13:32:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A6A8189424F
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 11:20:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D80BF4819A2
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Jul 2025 11:31:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E1402DC350;
-	Tue,  8 Jul 2025 11:18:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C07E32DAFB7;
+	Tue,  8 Jul 2025 11:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="r8YfxBV0"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kcAJJqIG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4BB2DBF47;
-	Tue,  8 Jul 2025 11:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380EF2D8DD6;
+	Tue,  8 Jul 2025 11:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751973526; cv=none; b=MTPvjgRjc+LWCBTvcB1LaAq9Wys7NLnW4NCVq6L9hb151CxODIKBXLqh7g9syNtJPGGd6HCOPkxyjKne7TYo1SKVfH0atyYSZrwbILZ6WU3ncHarEKirmadIZ71qKNDo0u/Hic62ngeidnmB/0rYwkVAzGezeBMCb30EdgZjDF4=
+	t=1751974286; cv=none; b=Yz+9ul4AxbsZHgo+xLlEVOMbeDiEjs4lmNSzDS9nV/k7K9GMS1x8l7bsVcJr36YEtDscvjSJ8vjy7S0X4Erx33N/IqMob8EpwlsvIynjQwp5DNbdRZlMU/Kq8ZCvIEbearIEYT78gtbyFCJpqfxsH4Z0XOhOyFUhlH4qzQvEgnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751973526; c=relaxed/simple;
-	bh=jM3rK3LR7ItmU8eaElmBJymsobv+3YObG+DJvjlIRJs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hpEl9suKila9aWbGJnoPLvZqgl0kfl+/zXN3bZjT4BoyE37U+9olcPnD3R0l6eS1olaRi3lhdZchrs+2wybADunize/y79CUXKw49hrxQCL0vdfw0Fb88XEsHv3vXg9zZ/LU/vPgx5NY2Ko8oIe+lqdyZZoRTY+C2CjyQxmUpvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=r8YfxBV0; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 4aef39425bed11f0b33aeb1e7f16c2b6-20250708
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=CQdbGu3oTwc5hqt9jRWRc5/LOjUerkQxt3ZG9u6Vhds=;
-	b=r8YfxBV0fZN5XVvPf2wPxpQp2uvve5QBKIdZ0W1yi1UqtPNUyZjEvEt7mu99ZHVM0aWuS9Is00ioFoxhoUy6FVOTm77xGiRnJR6f1px3S1me+uKZUazetQ8CpDoqsY4dwEFO5xuMryk+idJopAnc6RvUTp76hg/SjZHwRheH4q8=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.2,REQID:92f6039b-978f-41be-bed6-bb37af488fa7,IP:0,UR
-	L:25,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:25
-X-CID-META: VersionHash:9eb4ff7,CLOUDID:1621b4bc-a91d-4696-b3f4-d8815e4c200b,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:11|97|99|83|106|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:
-	0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 4aef39425bed11f0b33aeb1e7f16c2b6-20250708
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
-	(envelope-from <darren.ye@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 13001346; Tue, 08 Jul 2025 19:18:37 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Tue, 8 Jul 2025 19:18:35 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Tue, 8 Jul 2025 19:18:34 +0800
-From: Darren.Ye <darren.ye@mediatek.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linus
- Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
-	<darren.ye@mediatek.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 10/10] ASoC: dt-bindings: mediatek,mt8196-nau8825: Add audio sound card
-Date: Tue, 8 Jul 2025 19:16:02 +0800
-Message-ID: <20250708111806.3992-11-darren.ye@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250708111806.3992-1-darren.ye@mediatek.com>
-References: <20250708111806.3992-1-darren.ye@mediatek.com>
+	s=arc-20240116; t=1751974286; c=relaxed/simple;
+	bh=k6NRDXgZjHB0dbMWOAtajHFgB3DAi0mz4xkaerrE8ho=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=Aq/TnrG9m42KcJI2Vv21xPz6DIQ3eNaHO/cq2hmR4cx14ig2FNeZiu2fr07U49SyXo5C672+bYF3reIvgFX8w9foFbpbOW3mLf8OHqzuZ6DwCWEH93VgL/NoquxnmO2o/LEYenNESUlK6+zTvbJZRsNA7ee36xhg9OWjuxwJ7H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kcAJJqIG; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AE02C4424F;
+	Tue,  8 Jul 2025 11:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751974280;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7LSoQx5fTD/38a4GcvM7MJ0lnfSUZP0mXkSlQAQ16fY=;
+	b=kcAJJqIGoTN6u8HQpcIa/He+1R90CcM4yzYK5u+GV5EA3rdxyM2k4e3DnyspYG+je4+DLf
+	cmyh2XmrXrXmct3O7MKeaHdKf80zmraU6tchGd0W59NOCrptvBSSb/KfpsFPkGRnTGx8Us
+	9i49WkZv+ZbpdavADPVS9E0tC4AzawJSmlyzyJKVgCLWtjlz+GNVXLdZgZZt5INeCTS0ek
+	MHcaaLb7FxoQmolSENmWj2o06XIqoUPNvzvrAnMw1izZniD7K/TL74CTNxpzLQpf2HDy0z
+	iNWsoY2uJSgSKNA+iSavjTbFnVCg//Jiy7oe5UIaeTFw38OuODyVUp8srbuyZA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 08 Jul 2025 13:31:19 +0200
+Message-Id: <DB6N1SVPVSQJ.15KQKOBOCHDCQ@bootlin.com>
+Subject: Re: [PATCH v10 04/11] pwm: max7360: Add MAX7360 PWM support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-4-ce3b9e60a588@bootlin.com>
+ <amukbuzpu34jbcjhmzmvfgh6eik5isrwcicfmlqmsyibvhij72@nnmhdj3celnt>
+In-Reply-To: <amukbuzpu34jbcjhmzmvfgh6eik5isrwcicfmlqmsyibvhij72@nnmhdj3celnt>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefgeehiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkefhkeeifeethfejteevfeduheduvddvuedvvddugfffhfevkefftefhuefftddunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtt
+ hhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-From: Darren Ye <darren.ye@mediatek.com>
+On Wed Jun 18, 2025 at 8:45 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
+> On Fri, May 30, 2025 at 12:00:12PM +0200, mathieu.dubois-briand@bootlin.c=
+om wrote:
+>> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ...
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-max7360.c
+>> @@ -0,0 +1,180 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright 2025 Bootlin
+>> + *
+>> + * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
+>> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> + *
+>> + * Limitations:
+>> + * - Only supports normal polarity.
+>> + * - The period is fixed to 2 ms.
+>> + * - Only the duty cycle can be changed, new values are applied at the =
+beginning
+>> + *   of the next cycle.
+>> + * - When disabled, the output is put in Hi-Z.
+>> + */
+>> +#include <linux/bits.h>
+>> +#include <linux/dev_printk.h>
+>> +#include <linux/err.h>
+>> +#include <linux/math64.h>
+>> +#include <linux/mfd/max7360.h>
+>> +#include <linux/minmax.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pwm.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/time.h>
+>> +#include <linux/types.h>
+>> +
+>> +#define MAX7360_NUM_PWMS			8
+>> +#define MAX7360_PWM_MAX_RES			255
+>> +#define MAX7360_PWM_PERIOD_NS			(2 * NSEC_PER_MSEC)
+>> +
+>> +struct max7360_pwm_waveform {
+>> +	u8 duty_steps;
+>> +	bool enabled;
+>> +};
+>> +
+>> +static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device=
+ *pwm)
+>> +{
+>> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
+>> +
+>> +	return regmap_write_bits(regmap, MAX7360_REG_PWMCFG(pwm->hwpwm),
+>> +				 MAX7360_PORT_CFG_COMMON_PWM, 0);
+>> +}
+>
+> Do you need to undo that in .free()?
+>
 
-Add soundcard bindings for the MT8196 SoC with the NAU8825 audio codec.
+No, this is just to make sure we use the individual PWM configuration
+register and not the global one, so there is no need to revert it later.
 
-Signed-off-by: Darren Ye <darren.ye@mediatek.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../sound/mediatek,mt8196-nau8825.yaml        | 102 ++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml
+I'm adding a comment explaining that.
 
-diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml
-new file mode 100644
-index 000000000000..5c4162e64004
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mediatek,mt8196-nau8825.yaml
-@@ -0,0 +1,102 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/mediatek,mt8196-nau8825.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek MT8196 ASoC sound card
-+
-+maintainers:
-+  - Darren Ye <darren.ye@mediatek.com>
-+
-+allOf:
-+  - $ref: sound-card-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt8196-nau8825-sound
-+      - mediatek,mt8196-rt5682s-sound
-+      - mediatek,mt8196-rt5650-sound
-+
-+  mediatek,platform:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle of MT8188 ASoC platform.
-+
-+patternProperties:
-+  "^dai-link-[0-9]+$":
-+    type: object
-+    description:
-+      Container for dai-link level properties and CODEC sub-nodes.
-+
-+    properties:
-+      link-name:
-+        description:
-+          This property corresponds to the name of the BE dai-link to which
-+          we are going to update parameters in this node.
-+        items:
-+          enum:
-+            - TDM_DPTX_BE
-+            - I2SOUT6_BE
-+            - I2SIN6_BE
-+            - I2SOUT4_BE
-+            - I2SOUT3_BE
-+
-+      codec:
-+        description: Holds subnode which indicates codec dai.
-+        type: object
-+        additionalProperties: false
-+        properties:
-+          sound-dai:
-+            minItems: 1
-+            maxItems: 2
-+        required:
-+          - sound-dai
-+
-+      dai-format:
-+        description: audio format.
-+        items:
-+          enum:
-+            - i2s
-+            - right_j
-+            - left_j
-+            - dsp_a
-+            - dsp_b
-+
-+      mediatek,clk-provider:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description: Indicates dai-link clock master.
-+        enum:
-+          - cpu
-+          - codec
-+
-+    additionalProperties: false
-+
-+    required:
-+      - link-name
-+
-+required:
-+  - compatible
-+  - mediatek,platform
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    sound {
-+        compatible = "mediatek,mt8196-nau8825-sound";
-+        model = "mt8196-nau8825";
-+        mediatek,platform = <&afe>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&aud_pins_default>;
-+        dai-link-0 {
-+            link-name = "I2SOUT6_BE";
-+            dai-format = "i2s";
-+            mediatek,clk-provider = "cpu";
-+            codec {
-+                sound-dai = <&nau8825>;
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.45.2
+> ...
+>
+>> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX_RES, duty_steps);
+>> +	wfhw->enabled =3D !!wf->duty_length_ns;
+>
+> How does the output behave if you clean the respective bit in
+> MAX7360_REG_GPIOCTRL? Unless it emits a constant low signal (and not
+> e.g. High-Z) you have to do
+>
+> 	wfhw->enabled =3D !!wf->period_length_ns;
+>
+> here. Please document the behaviour in a paragraph at the top of
+> the driver. Look at other drivers for the right format. The questions to
+> answer are:
+>
+>  - How does the driver behave on disable? (Typical is constant low or
+>    High-Z or freezing. Does it stop instantly or does it complete the
+>    currently running period?)
+>
+>  - How does the driver behave on a (non-disabling) reconfiguration? Can
+>    it happen that there are glitches? (Consider for example that
+>    duty_cycle changes from 0.5 ms to 1.5ms while the hardware is just in
+>    the middle of the 2ms period. Does the output go high immediately
+>    then producing two 0.5ms pulses during that period?)
+>
+
+Ok, I'm fixing the wfhw->enabled value.
+
+About the comment, I believe we already have everything, I'm just adding
+that on disable, the output is put in Hi-Z immediately.
+
+>> +	return 0;
+>> +}
+>> +
+>> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+>> +					     const void *_wfhw, struct pwm_waveform *wf)
+>> +{
+>> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
+>> +
+>> +	wf->period_length_ns =3D wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
+>> +	wf->duty_offset_ns =3D 0;
+>> +	wf->duty_length_ns =3D DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PER=
+IOD_NS,
+>> +					  MAX7360_PWM_MAX_RES);
+>
+> This should be 0 if !wfhw->enabled to make *wf a valid setting.
+>
+
+OK.
+
+> A check for that in the core (with CONFIG_PWM_DEBUG) would be great.
+>
+
+I can submit a patch, but I'm not sure what that check should be.
+
+So I believe the check would have to be made in __pwm_set_waveform(),
+making sure wf_rounded.duty_length_ns is 0 if the PWM is not enabled or
+in other words, if wf->period_length_ns is 0. I believe calling
+pwm_wf_valid() on wf_rounded would be enough. Maybe I should add that as
+a first check in pwm_check_rounding() to cover all call sites.
+
+We already call pwm_check_rounding() code, so me already make sure that
+if wf->period_length_ns is 0, wf_rounded->period_length_ns is 0. And
+adding pwm_wf_valid(), would make sure that if
+wf_rounded->period_length_ns is 0, wf_rounded->duty_length_ns is also 0.
+
+Any opinion?
+
+> ...
+>
+> Best regards
+> Uwe
+
+OK with all other comments.
+
+Thanks for your review!
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
