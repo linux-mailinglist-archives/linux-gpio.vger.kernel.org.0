@@ -1,192 +1,129 @@
-Return-Path: <linux-gpio+bounces-22965-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22966-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E0D8AFE136
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 09:23:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 60A05AFE198
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 09:46:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 716C14E531A
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 07:22:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 895DE3AB018
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 07:46:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 730B926FA53;
-	Wed,  9 Jul 2025 07:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3857E26E70D;
+	Wed,  9 Jul 2025 07:46:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="orQ8efhA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+/9BIyP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAB32AD2F;
-	Wed,  9 Jul 2025 07:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D5B221282;
+	Wed,  9 Jul 2025 07:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752045797; cv=none; b=dkJUkOmo1bheFKsHo6leVnT0qkxh/jMtSNPSugAbLUD/Q7T4dT90OCp7shgH7m2siiBaAS7nYZabv+AD54t3+OGP3Rpx0NujuBpt9PopaloEnnWzg64J4HG8Tnz+tECzqSHHjtIWd+lkHrR3DnU9K2hqnGG/lJT4ibRM9GvFT54=
+	t=1752047194; cv=none; b=RBQCLFiKbp5CroVgi/q1F+6R3FIoAQZh83T/rsWZR/tRqpmCFYDJ3uJEvlgrz1zyzVZAJI0h1bo7HHVzxhNGAZQeISmtH35hKsYEKmNO/zuxVYUCpp7qN+MoCOE7AcNFNd1SLgxFx5YqhbPRpxnTp18GlCkKUlCV+dapy7me4zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752045797; c=relaxed/simple;
-	bh=q0ZQ0QrJfAp5C5X+jeNN4b0UDlY8E81ZtxAgCpRn+y4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J8kvz1XvWl/NecN80QR5LYcFfpiNmJkYVW2J99uRmYg4xZaLWJwdp9SA514WU0NBMEPd7tPZhM8yuvvZ2jpDAPbpFTJQ9t5+7YFADC/KJ2yttbyeBACgr/byiBb8J+gob4qmBUNsppxX0weldXa1LmrVFgxHZNKd20xYkP1tOXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=orQ8efhA; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=BS97jhDzzUjHilWkR1sT96zjI2f6GoRHScLPeEPg0RU=; b=orQ8efhAs5v/QafXjseL9pXPI/
-	CgaVQ97Na5+Upe7AffCWgKzKclIueLLeSr2poR4A3+cdqCc5Tkufd4htI5GsURYhYZW5mxkfhnpXr
-	5ezQccvInW7nwm1p1x2TFO8fAwLZvKI2sgNWQjAz0GoCsWvZNaJMra6m81ANjGODJ7PXvaQCYKESJ
-	0Gw3nLDwyfs/UPk9uulyn8UZn2BGbrLZNcX6UYjg6sP0Iz3tUvBvwWyV8RcrddWFU59MvqiHEHiIz
-	w5ZCETu3nbXgEWuguQe87tnyoP0eTCScwST/H1L3E3qYohjbgctjSV+rW8AT+0KMgP8cGSrTCqfSb
-	Eef0xYSQ==;
-Received: from i53875a79.versanet.de ([83.135.90.121] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uZP8t-0001Yu-5E; Wed, 09 Jul 2025 09:22:59 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- William Breathitt Gray <wbg@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-iio@vger.kernel.org, kernel@collabora.com,
- Jonas Karlman <jonas@kwiboo.se>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Subject: Re: [PATCH v2 4/7] soc: rockchip: add mfpwm driver
-Date: Wed, 09 Jul 2025 09:22:57 +0200
-Message-ID: <8203440.zQ0Gbyo6oJ@diego>
-In-Reply-To: <20250602-rk3576-pwm-v2-4-a6434b0ce60c@collabora.com>
-References:
- <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
- <20250602-rk3576-pwm-v2-4-a6434b0ce60c@collabora.com>
+	s=arc-20240116; t=1752047194; c=relaxed/simple;
+	bh=mRT6Rx7Qww8LyJu4u9N9tkJu9ASaymvfPiXsGIp7lxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aVxjFybhVkSWD6/2dPQR8CrvMUTNVkoawToK6aim6CV5W++nzMPjy88/26C267VQmDHCZCX9xF1L+Jwk+AqRVtTI/Lslbg2ffdrwwTSLLy4VRUkzG2/y8lbaQXA+995btFx8D/ZVH8+bLC3xYLWo31w1PHJKGuLLezOrQmJjyKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+/9BIyP; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so10268454a12.3;
+        Wed, 09 Jul 2025 00:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752047190; x=1752651990; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=05ls/TIVTzEqK91Ulv03Khd011EHnIA0GHHkneM853U=;
+        b=j+/9BIyPj6nVKjMWbaXwN+Zyqw2V8Q7ocAAjJnrx/LThSMZZUM38QtZZxmXrFRCs/a
+         AqzPj+PwA5CpYcqSNxQY3uexz+dPipUHkl2vyE2cSDHKJ7FnBw6VbFkGW1ovkvsGOaeA
+         xx0QTIuOugtZBoEmKRDqhkTGMnkYYYnJ9/8LMqpaf57i3XbeVNp0Ijn7EW3CL6BjBhCx
+         jaVP8gOGDHMVOdLFYyE87WDQJvc4qWnrWE/OgfVWWhJ5DkW9MffjHUj1cHj6+CvCZUDx
+         /gqIw3dRYRVzAcKH/LPtD36LNcBN6OPHYmg2rWsn1IOgXDy2ExHnD45QR3dauCr2qpHZ
+         qlKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752047190; x=1752651990;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=05ls/TIVTzEqK91Ulv03Khd011EHnIA0GHHkneM853U=;
+        b=Y5dV2u4a6/U5w1boVXD52eEV6q6wGEW2VEAGERX8Muf4AdulWMZ512Yhju9fsPXA/k
+         ZPzuLlY+M9LogNphgQIG46LixUBketDGQ4GJA1k98otP/BiRriE5xEmnLx+XE6PIMq1g
+         DmNXzJIeVB8U9mX+drF4U3BdB0m8bU1QXJE57T9QZSBhuecuR6+/457lFcqQ1OVc8ajh
+         WumRAq4mfOAuMRc2M4Uz0quE1O7VM7IsaFF45KAFoPG0iSx3r7b7bo6y6xYWk533C/Do
+         uqUd2IRfH3GIrVGD6RDRpV0sOwLDSoTogroG7X5QHmUGgCewvp/eJ3xynAvkpinHuFbc
+         Q9bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhD5TVc5sksop1chCaJMwrm2TNgk5NtqelefxW/3SCi0AXKnHSYidOuiwVFu5dh0GcR0qtqkEF8DG2aTI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6V1KjLTR8kVMvU9ctQufqpO3C6+6t0GymwDiO8+y0sjjF9v67
+	q2rM/s+l8jD8MsJVNqJrHqHt6veT6B+Q/MyO9hR9/uo7krmbJmHZDE7Xrv+cYw==
+X-Gm-Gg: ASbGncuvtfwX2BT4KyLAf3cGFhAPhUk9yI/mNNSTdUjF69hI53EOCLdBMuRM3r0yFO1
+	WJtCzAJ7aYMKYJRv2KFrviDFErXsFp7jFMcn6Ac8pV9YmqYTex3zpIKGLChiQY/2sn89787NdmS
+	i/6W2h7id5swgfQPuaBwF54GQuNFPhyZj3yQ/wJ5f5YyI5BS+6kbje48N1AX/ZBxdz7ugVf0TZK
+	iHYlXmJO27idU2yeBC7iJ1JGjpjxxhFABaz57I25hIUxjltXfjmTiWJxqKVLnjJKMbB9UzUr01K
+	hF/PpkjseXr/is3EkPFkkCLdlrmWAMRTGuUyDzwnQQIYYJ+HSw/0g76exCoDcQ==
+X-Google-Smtp-Source: AGHT+IGffJCqSF/CMbIuG57p2fuyx7LmK58Jxk3KXLTMDgY3yqkElDAjf1pCpFnR+T2YdigqIaXuFg==
+X-Received: by 2002:a17:907:2d1f:b0:acb:abff:a5b6 with SMTP id a640c23a62f3a-ae6cf5bc2c5mr135488366b.13.1752047190138;
+        Wed, 09 Jul 2025 00:46:30 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6d8b49299sm28532766b.164.2025.07.09.00.46.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jul 2025 00:46:29 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id D3DDC424E298; Wed, 09 Jul 2025 14:46:23 +0700 (WIB)
+Date: Wed, 9 Jul 2025 14:46:23 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] MAINTAINERS: remove bouncing address for Nandor Han
+Message-ID: <aG4eT557hI8AT38G@archie.me>
+References: <20250709071825.16212-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0uJFV4fLsoSQ4T3b"
+Content-Disposition: inline
+In-Reply-To: <20250709071825.16212-1-brgl@bgdev.pl>
+
+
+--0uJFV4fLsoSQ4T3b
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Hi Nicolas,
+On Wed, Jul 09, 2025 at 09:18:24AM +0200, Bartosz Golaszewski wrote:
+> -XRA1403 GPIO EXPANDER
+> -M:	Nandor Han <nandor.han@ge.com>
+> -L:	linux-gpio@vger.kernel.org
+> -S:	Maintained
+> -F:	Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
+> -F:	drivers/gpio/gpio-xra1403.c
 
-Am Montag, 2. Juni 2025, 18:19:15 Mitteleurop=C3=A4ische Sommerzeit schrieb=
- Nicolas Frattaroli:
-> With the Rockchip RK3576, the PWM IP used by Rockchip has changed
-> substantially. Looking at both the downstream pwm-rockchip driver as
-> well as the mainline pwm-rockchip driver made it clear that with all its
-> additional features and its differences from previous IP revisions, it
-> is best supported in a new driver.
->=20
-> This brings us to the question as to what such a new driver should be.
-> To me, it soon became clear that it should actually be several new
-> drivers, most prominently when Uwe Kleine-K=C3=B6nig let me know that I
-> should not implement the pwm subsystem's capture callback, but instead
-> write a counter driver for this functionality.
->=20
-> Combined with the other as-of-yet unimplemented functionality of this
-> new IP, it became apparent that it needs to be spread across several
-> subsystems.
->=20
-> For this reason, we add a new platform bus based driver, called mfpwm
-> (short for "Multi-function PWM"). This "parent" driver makes sure that
-> only one device function driver is using the device at a time, and is in
-> charge of registering the platform bus devices for the individual device
-> functions offered by the device.
->=20
-> An acquire/release pattern is used to guarantee that device function
-> drivers don't step on each other's toes.
->=20
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
+Shouldn't the driver status be orphaned?
 
-> +/**
-> + * mfpwm_register_subdev - register a single mfpwm_func
-> + * @mfpwm: pointer to the parent &struct rockchip_mfpwm
-> + * @target: pointer to where the &struct platform_device pointer should =
-be
-> + *          stored, usually a member of @mfpwm
-> + * @name: sub-device name string
-> + *
-> + * Allocate a single &struct mfpwm_func, fill its members with appropria=
-te data,
-> + * and register a new platform device, saving its pointer to @target. The
-> + * allocation is devres tracked, so will be automatically freed on mfpwm=
- remove.
-> + *
-> + * Returns: 0 on success, negative errno on error
-> + */
-> +static int mfpwm_register_subdev(struct rockchip_mfpwm *mfpwm,
-> +				 struct platform_device **target,
-> +				 const char *name)
-> +{
-> +	struct rockchip_mfpwm_func *func;
-> +	struct platform_device *child;
-> +
-> +	func =3D devm_kzalloc(&mfpwm->pdev->dev, sizeof(*func), GFP_KERNEL);
-> +	if (IS_ERR(func))
-> +		return PTR_ERR(func);
-> +	func->irq =3D mfpwm->irq;
-> +	func->parent =3D mfpwm;
-> +	func->id =3D atomic_inc_return(&subdev_id);
-> +	func->base =3D mfpwm->base;
-> +	func->core =3D mfpwm->chosen_clk;
-> +	child =3D platform_device_register_data(&mfpwm->pdev->dev, name, func->=
-id,
-> +					      func, sizeof(*func));
-> +
-> +	if (IS_ERR(child))
-> +		return PTR_ERR(child);
-> +
-> +	*target =3D child;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mfpwm_register_subdevs(struct rockchip_mfpwm *mfpwm)
-> +{
-> +	int ret;
-> +
-> +	ret =3D mfpwm_register_subdev(mfpwm, &mfpwm->pwm_dev, "pwm-rockchip-v4"=
-);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D mfpwm_register_subdev(mfpwm, &mfpwm->counter_dev,
-> +				    "rockchip-pwm-capture");
-> +	if (ret)
-> +		goto err_unreg_pwm_dev;
-> +
-> +	return 0;
-> +
-> +err_unreg_pwm_dev:
-> +	platform_device_unregister(mfpwm->pwm_dev);
-> +
-> +	return ret;
-> +}
+Thanks.
 
-I still had this lingering feeling that this _is_ a MFD just with added
-sprinkles, so asked Lee on IRC about it:
+--=20
+An old man doll... just what I always wanted! - Clara
 
-	<lag> Looks like an MFD to me
-	<lag> Yes, you can use an MFD core driver to control state / manage single=
-=2Duse resources
+--0uJFV4fLsoSQ4T3b
+Content-Type: application/pgp-signature; name=signature.asc
 
-So, citing Jean Luc Picard, "Make it so" ... please :-)
+-----BEGIN PGP SIGNATURE-----
 
-Heiko
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaG4eSgAKCRD2uYlJVVFO
+oxJkAQDS8bBRFgcwq+N155tKrci/YCyKKy1d917ibKgi8olm8gEA9zJP2DoZYfAr
+HIDit7FenDruqGNFPaiU6gr3QBm/ZwA=
+=pcgV
+-----END PGP SIGNATURE-----
 
-
+--0uJFV4fLsoSQ4T3b--
 
