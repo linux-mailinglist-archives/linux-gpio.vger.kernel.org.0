@@ -1,281 +1,254 @@
-Return-Path: <linux-gpio+bounces-23004-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23005-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DC28AFEC0D
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 16:34:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95371AFEC28
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 16:39:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2A11189142F
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 14:32:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED3B47A7449
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 14:37:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 204E02E542E;
-	Wed,  9 Jul 2025 14:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13542E5B0D;
+	Wed,  9 Jul 2025 14:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KDXN8jcT"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lbpJ+dQL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012000.outbound.protection.outlook.com [52.101.71.0])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9468D2E3AFC;
-	Wed,  9 Jul 2025 14:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752071520; cv=fail; b=A0U+f5WwbD72gBrZYKIiPRII8uhyzjzoiAiJyv6T7DbOkHyzYn6MCJ6ofzc/bewlqxLBoy5B63/Q4Zw8QVT0EBxexip7luI+JjEVua/HFJIEPVaO9/FzIHFJKwPlGq/jr0pECTCl4iFY/HAp5SLtFYDnOlNR6A+cUaddQh21Q5I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752071520; c=relaxed/simple;
-	bh=xfZOx1Wp2TSRdzyLsXun/wIq/MjDYT3/O7xYqAKF+eU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Twe2K4dPSF9zUcdBt5rFh23pudtVzIft0jvFGkBTS38mpw/Gt+9HrGtsvHUEMbFuGN0+MnTpjePWRSRRb/RUOJrtng32LCRLmxuq4poAA2erzFhEdIgZlB7wodtY67qAkGc4UdmAXQKIgXI4F4wxb4siHMUzYt1mrmJ/+AIgH1I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KDXN8jcT; arc=fail smtp.client-ip=52.101.71.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZMmgYYaafHJscSwAWJLfY6qrionfvyMsGP3Ujs2Tdhv1PyunKlIRcVRz2GMfcSbmlTiOq1vyLN9uYPfF5h27tQ2Qly96S0H84ThpgP4qJbHYuTimU5AK13en7Shh8B1iK8GlMq8f0Q/upZ92Ed9H8yayn7x2tob4OOGNCFys+snwighbPisiE2Y8EikHvKq+qVrsnzpOYCXitObDY3QxX5lf0DhXPukvnPyc9lumcHOUZ6lwk/8izfJxm7HS5QTQWUlk5P1sqYoWAB7oK4TddFdvHdme0b/kCylWTi1jSGLjfiuBLa2I4SchmUw1QWe/3X6sFE8vfJ7r5ji7Mw+6ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sXgJS1jxWxWoxeeFVTathsZ5NI1B2aC42I25gi0Y0qI=;
- b=N1A7i4PWDizQf3qTqKGgIRFIuGkLTp8sTYPQIqUJWmzSTtajk0m4oD4AzaFVuizMrgIUsUHS3bxN8OuI+ew2SKQRHKjN14ReprTHUya4TMUYyOL0RzCpnUHR5Y8Y8Syaw+s4g+VNUXJwXTL44FEY1x5/Olfqf2UpcMaCRbr/6no+Hns8b66NAhOZCj6hYQhYXkyKPFSJevO/YyqHLsOAJjTazs5KgJN8aeoGRz4TzQpEazXOEENejCeiuZnyrG84xUCg5mtW3F4NHCrUthEho2fvwBpbvdIJo1pzWQ24zb+l5A9UHwBjtqsVXBsv5VKy1zmrfwklzW2dKTP6uSI+jQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sXgJS1jxWxWoxeeFVTathsZ5NI1B2aC42I25gi0Y0qI=;
- b=KDXN8jcT1r1DuOWFi6bdomvq9fRdqBLpUYvWOmIXF+EPmLcp4U9FIrObUwDexVPl8Jr2+T9gMLlYZsCf7Pifco6XgYqBomVJ80m+YCk8q++CXxo9AmL0xn8sKwRv8VEex+Y9eCKgy+XE9VPgUU7D1rSiwa+UGCV4AsjrXH5Lzsi5/EeUsCOm2uuJN38YTUZXIPZfQUlT23Sdn31G3hsBjTwaT52TTOVFve3cDm+gxLFiXWvgYqZkt+oT3duCNUv/1P0rkIxbqxsayo5HeqPjgIJ9KmEfJEvWLK4crIOgS6YMmsuG8D9/7RvaxKO+Cv6LvXQea9CHmx6RRZ5f2aSIhA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
- by GV1PR04MB11488.eurprd04.prod.outlook.com (2603:10a6:150:282::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.24; Wed, 9 Jul
- 2025 14:31:55 +0000
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e]) by AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e%5]) with mapi id 15.20.8880.030; Wed, 9 Jul 2025
- 14:31:55 +0000
-Date: Wed, 9 Jul 2025 17:31:51 +0300
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Shawn Guo <shawnguo@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Lee Jones <lee@kernel.org>, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH 2/9] dt-bindings: fsl,fpga-qixis-i2c: extend support to
- also cover the LX2160ARDB FPGA
-Message-ID: <6qeqx64uwhkooe3f6g2eid567rg4ubh6djdtybwlg3oc4xdyaf@sllekrl7wzea>
-References: <20250709112658.1987608-1-ioana.ciornei@nxp.com>
- <20250709112658.1987608-3-ioana.ciornei@nxp.com>
- <c8ddfc31-95a5-4879-b392-18b915095b5d@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c8ddfc31-95a5-4879-b392-18b915095b5d@kernel.org>
-X-ClientProxiedBy: FR2P281CA0161.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:99::20) To AS8PR04MB8868.eurprd04.prod.outlook.com
- (2603:10a6:20b:42f::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A458819F13F
+	for <linux-gpio@vger.kernel.org>; Wed,  9 Jul 2025 14:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752071949; cv=none; b=rc9exyOMQW0wPVREBPH1RxFksGUyDRyesvYpECyZkLssAZvkUIBO93L+A4oKe6KicpliqIRLSMdSRNIZlafajw11nCE7db2bcO8z9n3iqnMQ5/eJwV13/kD840ThBhosvxwLkX4nMSckcnVeAzJ3uqLOTSm12yQdjVVfbM/dE3c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752071949; c=relaxed/simple;
+	bh=w2AMNntG5JVT3VerofkPkRvA2VCCC+PT/juzVmGpslY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DSyDtQrjdffsWp+c1VBm+dFFHJxK+REWCgqn1vWkB//ESjnsfzorR6mCHRKJ5JF+tkolHnTrvqosygjvWmnRAYUY4bx7ldILjgIHmNfuk8BlwrFk/2ZoB34udVaQ0kDfAyXTVSbyw1T4QXD1X/c9DW6eqA1hL3nA+oy/00M65d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lbpJ+dQL; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a54700a46eso5956f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Jul 2025 07:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752071945; x=1752676745; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nGW+WcdeiRfvOUE6wxK/N2/741CbLaR8Z9s9+1BfVcQ=;
+        b=lbpJ+dQLpOB3TaNT+JFabnHKu7xaUFI2eqgJt7eUjMhwtZ3QZ02VzXydrpg82DXrFw
+         OH+i8PIJTQTeiIX0KWQp3m4eBlsJ9IdvszvAocmyeZHobZXLcF9kMur4o9l6XDLasSp6
+         ICUMh+kCWMex5SgAgtS6ROTrWz8sgkHfS8Of1nKbUMpyc418/Ir30ddrCdzdXtTaF8fk
+         392raCg0gU2XFiE5NcSgHbeBUc/HeOmD2Dy6WJp+cj43R7VfTW5rBdGFsyTsYo5XSsC4
+         HCxVIXc32hZiYIxvFB30/61IiVkwAuonzmnPCpkf9F2DDvmeQP9Ggy8fh8QXSfRt1QND
+         FC7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752071945; x=1752676745;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nGW+WcdeiRfvOUE6wxK/N2/741CbLaR8Z9s9+1BfVcQ=;
+        b=Ury90IbEu3/85nkshPro+CweZW7AmSIy0PA5S5aWCfItWud0LilhIvce3pojYIjQZY
+         m0iLg0wmjGZ40XCQNFx0nYkSkTqdYOzB5gjQ2GlHyBBM43BbawnUlDMsWrxUhh2412Z0
+         4q7BUXlvP2AC5qF8cTHXSAAE9qEB76tM0U2ybmfkeh8ijZcQEIfVMCEtiGVA9EWrl8eq
+         EGt1Hl9MMLG14fbX4Uz8x7l7NepbGF2nLmttk9exwilaETh3zXN93JzUloPce9WVokWP
+         iCfUkrywO6KMwqfh/xfqw3EzYmnuWeBSXkWZ1mfFb9sFDfxzOz+fWij3RFUA6lE5swiP
+         nKDw==
+X-Gm-Message-State: AOJu0YyhRjtpmZzp39lqLjFljBKlIil/EauhyZ0CT5nyGtHJqbTHi5Ii
+	PsFdM0OUJUXS1OrUa6wXb4sh/F843aHPZPuCSkGQECHh4OrliEhlbPKu15vONnQozrx+grJS/Hh
+	DnBX+L0w=
+X-Gm-Gg: ASbGnctfdids281mbC9G2FM07vuP4k94lAWqjl+8BTDGNcLianMF6ZIAgqWE71eOyeO
+	Et9B4LfOsn+WzUOfm1ufQzQwW51iDKP0n8IrXDV7S9d5C3YQF/Av0Hwy4odciOJrrxeyM3nqEeR
+	2t1RW2vtFoPbdot1e3V0RUMuEEnEghlIINatQuy0/xi0+meFaKfDinCvYjIJUNQJzyelBL8oNcT
+	z0CWkV5TzA6rQ8qeM6scOkCglSKtTOe/xwjMoTtR9aRTZ008jWNdFPzuciDtXts0O3tLKNVd9wW
+	mJEf3qWox8CPseR3Nb/F4qQUR1A/+jwv+HnDDxiSC6xxyfoMaOE9jYg=
+X-Google-Smtp-Source: AGHT+IGlmNbINJm0KaMDSzduhfz+ShajpBiESmd1e8fY/sU5o0YXtokQMoXhTCKRgRKzszNX/KJjcA==
+X-Received: by 2002:a05:6000:310e:b0:3a5:85cb:e9f3 with SMTP id ffacd0b85a97d-3b5e44e3b34mr2285526f8f.12.1752071945022;
+        Wed, 09 Jul 2025 07:39:05 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:b04e:cfc4:3bd9:6180])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5dfbf56c9sm4480687f8f.79.2025.07.09.07.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jul 2025 07:39:04 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 00/12] pinctrl: introduce the concept of a GPIO pin
+ function category
+Date: Wed, 09 Jul 2025 16:38:56 +0200
+Message-Id: <20250709-pinctrl-gpio-pinfuncs-v2-0-b6135149c0d9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|GV1PR04MB11488:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfb0bde8-626a-4bdc-6431-08ddbef55a8b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|19092799006;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sIvNfzQRh22gSxva4Rl4ugbhEMUHn588R5xHfmrmgjrjN/TAPfKiTHHnXSK8?=
- =?us-ascii?Q?rjhNasghIuXvN4DyaZSe0e4wEMCjmxtbmbNmiX/mFT+5jLosJjG3jgmdsu5G?=
- =?us-ascii?Q?mYlXrSVi9PIMyhQ/vhQ5wCNZCVvvME1D1PZq0ckhS5vP5/B3B7OloVHKRsUJ?=
- =?us-ascii?Q?XBAq7fm5hEimZbkygrnt8hoMuoNserJpwcpYP9Wh11d89GaDJxlmj9Nch2x7?=
- =?us-ascii?Q?TgtbqlH/JL95oFPgY/vRvwmUxLLi9acNLXysAf0+KKbAz7pwBEngOSsrWsVG?=
- =?us-ascii?Q?nw29JHd5FhPNHY7mvhjfPmu8HqAKNDSfDjj4yDmtgAd18bqO2VelJgi5/o76?=
- =?us-ascii?Q?BZe77lz8OSnCI6sIRfxbZbRE3XMKCST1uQzMUYIdU8Iw3Td8zNXW0jKq0HhX?=
- =?us-ascii?Q?eeq1rD4y/XSuvL7Tw2X6fUXycpW5AhRkmFRzP8qpec0SCHKye0nWMSsLetHG?=
- =?us-ascii?Q?ozVPvzEp/PU7T4O/guc9kTbp+nm161W7bGEBIccy9vTU+j5Op3Lk8jsaAvEC?=
- =?us-ascii?Q?ir3xta49MiHudk+2NtHpwcFJaLo/i2itpVYVvISW5UkGdTejkNC8rBuQDjPc?=
- =?us-ascii?Q?3Kpugj6d0bpMbBb+tIIjT8/Enw1Nt0Pa+XoWoVn4pPX5pwaU1zK9yASZKPKU?=
- =?us-ascii?Q?jkellEim9h7HvR2UEHVG5Of9lapmB3Jscp/2NwM/v3Zug7lMGkx3iK55OTv8?=
- =?us-ascii?Q?xxoL58EfXJsn6n2U3HKMEj6Q/M4Tz9ZRTqYsiDSSlzz0m1E7Ejqps1nIkB4w?=
- =?us-ascii?Q?dxWtYiZxZbEqx4yPLd/BAn5oQsvgXrkJUXsjQCR1Hwv2k9qX60XchDIOhXGc?=
- =?us-ascii?Q?6/U98hfRu7bR/U6p9B3dZoFLZNiTlpcCbPqt6VFUYRmGFV+Oi6ULiXgYGew7?=
- =?us-ascii?Q?xREko5efh0WqvfbVWl01poTBveWZ4f6NPX8gHx42bJD4jjcm3CNLXsypqrB5?=
- =?us-ascii?Q?VZchEQorw0JWHjGgiMteItvzoKsogiwKBrrWaLfhlWgp9ssv/gfYg7jJmcUg?=
- =?us-ascii?Q?gAYhZ49MkxKV/lZagZ0KRE0X7A8Q0+yW0b1Xw/Z9qUTuSf/H3RN1lRgk5vkA?=
- =?us-ascii?Q?3Nk+hjaMo0fDVOAjW9l5bSYGNgILy/e95oGKrZ/2bL4e2i/NKENFcUR/gDSk?=
- =?us-ascii?Q?gVAcR3KMbFYIIE7M0knohsBsR6F8P93PbD/cuVpUSKA0FdGjkA/P1HRARUC9?=
- =?us-ascii?Q?btdlNgHHzUwLbabEcHiM60UKX50DfO1/3t4RWW2InPQw59gJQf3qHjYB+Psq?=
- =?us-ascii?Q?fHOxjF/FYxKXSDNYaJZDKzc2dbbWj48kJ/VZFm2VFFabZwKtOPlrYrBBZNJ+?=
- =?us-ascii?Q?SYyO3YLi8nP+Fu0hmqHyAlFFuAax0PZwCSBBLK9I+MVnODA7ArF/jOehZsVM?=
- =?us-ascii?Q?6PVEmDxJbuDJdOqAv4dhQ0FyfgGGsC0vi0T3Y8osXnib7MOLgSn6kG1WeAXj?=
- =?us-ascii?Q?mWCTIK7On1E=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(19092799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?OYrQ1fruYI95ygMRpSbNA4JFtkBkVJWcJ1Veh9dvs7mJAmFpcUUybeI5Qep7?=
- =?us-ascii?Q?G9iR0j76o3DT9H85Z2TqRMaUoHDf5tG8h6310np2qPuSSf25K0fX+U9O1uIM?=
- =?us-ascii?Q?+mH1YJFS9moGQ1KRSaekk5GibViWpizGESrUGeylkPy9pi0OH6Wo3kht9vJg?=
- =?us-ascii?Q?ACVcfs4cCfpnvnrQeAkSndn2YFUr155iBs9fVjzggDXONbTjQ8OnIX4vKyNC?=
- =?us-ascii?Q?7upbBY64jRQ208ms6W1zcs+TrKv5uSsPyGcHlLXQmK+3T4du7yqIS76jR+u/?=
- =?us-ascii?Q?oIdVx5Y3Doy4l8iIsotx14ngEdPiGF2PU4KYnB1bf5dLT/vFLwcCcheTL5CE?=
- =?us-ascii?Q?xBP1mOS82POVnK+fBjJbpGGiVrch+9r7pJoNman5DTD/ih4utaIKLS6YepHA?=
- =?us-ascii?Q?+Bntvt40mIhnlgevKYh8NbQ914BskedMxQjdp00d4KxwVtu5JRu6ZwQ4eWDM?=
- =?us-ascii?Q?PireW6fZfGpeRX7KevNjL7mBUOp0QVV+MZ9EultTsYEVajki9R6OiXitm2rG?=
- =?us-ascii?Q?9bPLENpaPHSLRTVb9muB66oTgmTmlpb/UfWFLukt68xAYEXKc9ljbE/daL8E?=
- =?us-ascii?Q?FF85yJ3ge57TgqYM1comct+yiVHkN24qI+UUCfLL1MS5kO8p2V60XRh2u2C+?=
- =?us-ascii?Q?eJ0je920hVzAVJxgUl9M7b+/CJLnoU6B2UKf1KFchEA0Bs2xi0zOGUcPNWJp?=
- =?us-ascii?Q?HRnN5V01X1WExfqjCIyB5S/HlCnBRKf8WjO3n9NZVsaOMlx9YIfKlrlHBvrE?=
- =?us-ascii?Q?WwN0VcL/wLiMVo22/F4YPdFK/hComqQsVavzRJ9ve86GPhd5HP6Rlb2rtWcU?=
- =?us-ascii?Q?bN+j2XChdql4HAC2EqPDFhrgrHvSVKXuLypXC3+LiedCqGUNAAJV/zufZ8yY?=
- =?us-ascii?Q?72935KsihkWeCqvZNNSOh8RKuQgtlicpUNft2ASEotxdnfV2q/STOEoPJuJC?=
- =?us-ascii?Q?byvevYgupRf10bIrxICQ59iqO1kr/4TG/+YJAbvxh0wgNe2BieoWY4oCbMxb?=
- =?us-ascii?Q?jJBHiVrpVhm7A21ZR+FOtstLKH+JgzBeyJX6HEdofJNrlAt0OpvD90CRW0u3?=
- =?us-ascii?Q?560psRv1Q0/n2blgBz8omby4mIgkboAFz6hdiZNnflAF7RUf+ZdEL4xmGMUD?=
- =?us-ascii?Q?Uoc4XJVrd419hCmvhRoAgCQDoH3YiLU0g2n9IeIh8Zkd6dgAPJyzALU28ZFq?=
- =?us-ascii?Q?y+KXlGRaVu+RH5QjgzW20cex7V1crs40YODAi2iZCr+NwmELzimDWUOa+1pd?=
- =?us-ascii?Q?nHylXwHj5GFGqw3tQe1WyIy9KdhzXBTwx2Dr0Dhz8fUIc3xF33G17fzYSN1S?=
- =?us-ascii?Q?zgEXdJDv4WDdl3Aq1aWEDQa8JQASVrMvup1qK7V7oWegN0AZNywUBg0Z3y5Z?=
- =?us-ascii?Q?ILXx9SURjTzI2Tfr1thZIZvsdqO0y/tE0X0Klw5T9JAJ0q9gpRif/yP+IITW?=
- =?us-ascii?Q?B733by/wpw8V6NCOCMxhztEoi6jFQN0IWSDPWWGpwfQJ2T87nfWsiRAoNRnx?=
- =?us-ascii?Q?OOlsIRPkoSTqIS9SoEMdirt1Q7r4dJX95IVmj6vD/GS3/HtrL/hQ9RLX4aW7?=
- =?us-ascii?Q?k0oe7hkWcVLGkLYWFsDQwjSzIuGWdteuJv2hxbKi?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfb0bde8-626a-4bdc-6431-08ddbef55a8b
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2025 14:31:55.4417
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1hNhnm6rNYJo2HxoI5fzU45JG2vdJ1Qee7vX1ZxmpBR/aKAEptlOGwp64d2kr5mutuTVNE5CGsMx1O083neYrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB11488
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAB/bmgC/3XNQQrCMBCF4auUWRtJY9XWlfeQLmIySQdKEia1K
+ KV3Ny24dPk/mG8WyMiEGW7VAowzZYqhhDpUYAYdPAqypUFJdZZXWYtEwUw8Cp8obuFewWRhsVV
+ P22ltmhOU28To6L27j770QHmK/NnfzPW2/kT1R5xrIQXaokrXNZfW3kcKmuMxsod+XdcvW1Uqa
+ LsAAAA=
+X-Change-ID: 20250701-pinctrl-gpio-pinfuncs-de82bd9aac43
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Alexey Klimov <alexey.klimov@linaro.org>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Paul Cercueil <paul@crapouillou.net>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6786;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=w2AMNntG5JVT3VerofkPkRvA2VCCC+PT/juzVmGpslY=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBobn8FcI2D8a2Ufzx8VsJewJjibpjtoV8Anwj6Z
+ 4AYVKn2//WJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaG5/BQAKCRARpy6gFHHX
+ cqoDD/964u1f+lWknrafDtpv0WfPWN5NREEtSN7drjx3BL14jCkt4IMpDUezTrfyJj51VERF0Wh
+ ggzSBcZlFHXNCYl9m28YdowM3YiIZPiFZGhhNPLDY6x71wQWUv6Cb5WYgMror7IrwY4RQXdxmZL
+ qy1UMm7AzAcfMIj8iCZ7i1RKHnVPUtgHoUdWS7xNWQFCp+N7P0sDz+KP0JlRPZOvy/i/fmjvvAT
+ Wafa+olH9ayiJuPhhcv3Kc+CBVRk5/Xc6W5evNrwBGzeWmzmx5Ydx3673n4gcfwCzmwun0D1En+
+ cQiRV3oWObr0AO+efugfncDZmZt6NtcG9LO01y+TZ3EazHqjEl04ftk26VWzjPd5fc+SRdS3C4A
+ qW5LNAubEiaEs5ymQeisGE7MyJ1FYwwzuCh3nSfFIAvx3ayvGbyhAaamXDwLtRjwGr4awg9uZD/
+ j37T+Lcg6gl+lG49b87QCUFwksuxw8okPKZfr18AZdj7z4fDxpyXWoyshHQpT9Me2jmI7AhtIJ1
+ cgl1SWyPozFCx4xxUvr3CeRfDSnyxtK+H27o62hQchKsIfWV64N03z1mlqTaBu9WhJQ7TrepMQB
+ NMxVE7VgSCIyezknKFPn0oPdeVACVbI8pRMiIU9HYSimjgTAUowd4kaZn7lOiLksBYinqp9B4BQ
+ 5/l/iNCr3VCCa+Q==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Wed, Jul 09, 2025 at 02:17:27PM +0200, Krzysztof Kozlowski wrote:
-> On 09/07/2025 13:26, Ioana Ciornei wrote:
-> > Extend the list of supported compatible strings with fsl,lx2160ardb-fpga.
-> > 
-> > Since the register map exposed by the LX2160ARDB's FPGA also contains
-> > two GPIO controllers, accept the necessary GPIO pattern property. At the
-> > same time, add the #address-cells and #size-cells properties as valid
-> > ones.
-> > 
-> > This is needed because when defining child devices such as the GPIO
-> > controller described in the added example, the child device needs a the
-> > reg property to properly identify its register location.
-> > 
-> > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> > ---
-> >  .../bindings/board/fsl,fpga-qixis-i2c.yaml    | 35 +++++++++++++++++++
-> 
-> So here is the board? Why FPGA is in the board...
+Problem: when pinctrl core binds pins to a consumer device and the
+pinmux ops of the underlying driver are marked as strict, the pin in
+question can no longer be requested as a GPIO using the GPIO descriptor
+API. It will result in the following error:
 
-I think because its usage and integration is very much dependant on the
-board? I am really not sure why it was added there in the first place as
-a .txt file.
+[    5.095688] sc8280xp-tlmm f100000.pinctrl: pin GPIO_25 already requested by regulator-edp-3p3; cannot claim for f100000.pinctrl:570
+[    5.107822] sc8280xp-tlmm f100000.pinctrl: error -EINVAL: pin-25 (f100000.pinctrl:570)
 
-> 
-> >  1 file changed, 35 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/board/fsl,fpga-qixis-i2c.yaml b/Documentation/devicetree/bindings/board/fsl,fpga-qixis-i2c.yaml
-> > index 28b37772fb65..e8981f974210 100644
-> > --- a/Documentation/devicetree/bindings/board/fsl,fpga-qixis-i2c.yaml
-> > +++ b/Documentation/devicetree/bindings/board/fsl,fpga-qixis-i2c.yaml
-> > @@ -22,6 +22,13 @@ properties:
-> >                - fsl,lx2160aqds-fpga
-> >            - const: fsl,fpga-qixis-i2c
-> >            - const: simple-mfd
-> > +      - const: fsl,lx2160ardb-fpga
-> 
-> Weird, your first patch added three compatibles, this adds only one.
+This typically makes sense except when the pins are muxed to a function
+that actually says "GPIO". Of course, the function name is just a string
+so it has no meaning to the pinctrl subsystem.
 
-The first patch added 3 compatibles for the registers exposed by this
-FPGA that act as a GPIO controller. There are 3 compatibles and not just
-one because the registers backing them have different layouts, each
-exposing different control/status bits.
-As you have pointed out in your last reply on patch 1/9, two of those
-compatibles can be merged into a single one.
+We have many Qualcomm SoCs (and I can imagine it's a common pattern in
+other platforms as well) where we mux a pin to "gpio" function using the
+`pinctrl-X` property in order to configure bias or drive-strength and
+then access it using the gpiod API. This makes it impossible to mark the
+pin controller module as "strict".
 
-In this patch I am adding a new compatible for the QIXIS FPGA found on
-the LX2160ARDB board so that the simple-mfd-i2c driver has something to
-probe on and expose its regmap to the child devices - the gpio
-controllers.
+This series proposes to introduce a concept of a sub-category of
+pinfunctions: GPIO functions where the above is not true and the pin
+muxed as a GPIO can still be accessed via the GPIO consumer API even for
+strict pinmuxers.
 
-> 
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> >  
-> >    interrupts:
-> >      maxItems: 1
-> > @@ -32,6 +39,10 @@ properties:
-> >    mux-controller:
-> >      $ref: /schemas/mux/reg-mux.yaml
-> >  
-> > +patternProperties:
-> > +  "^gpio(@[0-9a-f]+)?$":
-> 
-> Why unit address is optional? Anyway, this is wrong. You do not have
-> ranges here and earlier you already said children do not have any
-> addressing. Look at mux.
+First, we introduce a new helper for adding pin functions to a pinctrl
+device: pinmux_generic_add_pinfunction(). It requires less arguments and
+will be more flexible once we extend struct pinfunction. Next we use it
+in a couple existing drivers (not related to qualcomm but I figured it
+makes sense to add some users). After that we convert pinctrl-msm to
+using the generic pinmux function callbacks.
 
-Agree on the '?' not being needed here since my plan is to enforce that
-if the dts has a GPIO controller defined as a child device then it needs
-a unit address.
+Next, we implement the GPIO pin category functionality in pinctrl core,
+and add local infrastructure to pinctrl-msm. Finally we convert all
+Qualcomm platforms to using it for "gpio" and "egpio" functions and then
+enable the strict flag in pinctrl-msm.
 
-The unit address is there to convey to the driver what is the address of
-the register backing the GPIO controller. I am not sure how else could I
-cleanly do that.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v2:
+- Extend the series with providing pinmux_generic_add_pinfunction(),
+  using it in several drivers and converting pinctrl-msm to using
+  generic pinmux helpers
+- Add a generic function_is_gpio() callback for pinmux_ops
+- Convert all qualcomm drivers to using the new GPIO pin category so
+  that we can actually enable the strict flag
+- Link to v1: https://lore.kernel.org/r/20250702-pinctrl-gpio-pinfuncs-v1-0-ed2bd0f9468d@linaro.org
 
-My current plan is to:
- - Not change how the board DT files which already define their QIXIS FPGAs
-   look like, meaning that they will keep their FPGA child nodes without
-   addressing. Very much like the mux is used currently in the
-   fsl-lx2160a-qds.dts.
- - For any new boards that need a GPIO driver to be probed on one of the
-   FPGA's registers, impose the use of the unit address.
+---
+Bartosz Golaszewski (12):
+      pinctrl: pinmux: open-code PINCTRL_FUNCTION_DESC()
+      pinctrl: provide pinmux_generic_add_pinfunction()
+      pinctrl: equilibrium: use pinmux_generic_add_pinfunction()
+      pinctrl: airoha: use pinmux_generic_add_pinfunction()
+      pinctrl: mediatek: moore: use pinmux_generic_add_pinfunction()
+      pinctrl: keembay: use pinmux_generic_add_pinfunction()
+      pinctrl: ingenic: use pinmux_generic_add_pinfunction()
+      pinctrl: qcom: use generic pin function helpers
+      pinctrl: allow to mark pin functions as requestable GPIOs
+      pinctrl: qcom: add infrastructure for marking pin functions as GPIOs
+      pinctrl: qcom: mark the `gpio` and `egpio` pins function as non-strict functions
+      pinctrl: qcom: make the pinmuxing strict
 
-I acknowledge the fact that this a bit confusing, I am open to
-suggestions, but I currently do not know another way forward which
-cleanly does what I need.
+ drivers/pinctrl/mediatek/pinctrl-airoha.c |  8 ++--
+ drivers/pinctrl/mediatek/pinctrl-moore.c  |  5 +--
+ drivers/pinctrl/pinctrl-equilibrium.c     |  7 +---
+ drivers/pinctrl/pinctrl-ingenic.c         |  5 +--
+ drivers/pinctrl/pinctrl-keembay.c         | 10 ++---
+ drivers/pinctrl/pinmux.c                  | 62 +++++++++++++++++++++++++++----
+ drivers/pinctrl/pinmux.h                  | 13 +++----
+ drivers/pinctrl/qcom/pinctrl-ipq5018.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq5332.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq5424.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ipq9574.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-mdm9607.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-mdm9615.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c        | 45 ++++++++--------------
+ drivers/pinctrl/qcom/pinctrl-msm.h        |  5 +++
+ drivers/pinctrl/qcom/pinctrl-msm8226.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8660.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8909.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8916.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8917.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8953.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8960.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8976.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8994.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8996.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8998.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm8x74.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c    |  4 +-
+ drivers/pinctrl/qcom/pinctrl-qcs404.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs615.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c    |  4 +-
+ drivers/pinctrl/qcom/pinctrl-qdu1000.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sa8775p.c    |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sar2130p.c   |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sc7180.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sc7280.c     |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c    |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sc8280xp.c   |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sdm660.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdm670.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdm845.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdx55.c      |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdx65.c      |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdx75.c      |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm4450.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm6115.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm6125.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm6350.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm6375.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm7150.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8150.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8250.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8350.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8450.c     |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sm8550.c     |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8650.c     |  4 +-
+ drivers/pinctrl/qcom/pinctrl-sm8750.c     |  4 +-
+ drivers/pinctrl/qcom/pinctrl-x1e80100.c   |  2 +-
+ include/linux/pinctrl/pinctrl.h           | 14 +++++++
+ include/linux/pinctrl/pinmux.h            |  2 +
+ 62 files changed, 167 insertions(+), 127 deletions(-)
+---
+base-commit: 58ba80c4740212c29a1cf9b48f588e60a7612209
+change-id: 20250701-pinctrl-gpio-pinfuncs-de82bd9aac43
 
-> 
-> > +    $ref: /schemas/gpio/fsl,fpga-gpio.yaml
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -68,3 +79,27 @@ examples:
-> >          };
-> >      };
-> >  
-> > +  - |
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        board-control@66 {
-> > +            compatible = "fsl,lx2160ardb-fpga";
-> > +            reg = <0x66>;
-> > +            #address-cells = <1>;
-> > +            #size-cells = <0>;
-> > +
-> > +            gpio@19 {
-> 
-> And what is the meaning of @19?
-
-The register found at address 0x19 is the one backing this GPIO
-controller.
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
