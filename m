@@ -1,109 +1,124 @@
-Return-Path: <linux-gpio+bounces-22967-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22968-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CCABAFE23D
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 10:16:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20031AFE2B9
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 10:33:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F9AF581943
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 08:16:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFDFC1C42E51
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 08:33:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5083223B61B;
-	Wed,  9 Jul 2025 08:13:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2069427510B;
+	Wed,  9 Jul 2025 08:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="b2hOwPrF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGo62AK4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EA423B613
-	for <linux-gpio@vger.kernel.org>; Wed,  9 Jul 2025 08:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FCF22A7F9;
+	Wed,  9 Jul 2025 08:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752048791; cv=none; b=u3C948uz6mg1UZ/loMlJCmSCzydRJtSJFJ5HqozZrgIvyL6RVANaOEph/XaG6GPanCM36j90DJbonnGbbaYaIGkRT4sxqWIE0RDMUVXXwFuUaa1HlWN8DAmq3bB8Lqng9mS7+Pn6anz83ewety12U89wjughhnhdBcraF7o88DU=
+	t=1752050000; cv=none; b=NbMfMqY1CY4lKrruqZ7P1sW6MG8vx0/t+ktdEGOCE4mLtl5kGTFA+OZ+HIdzjJ/dWO+SB4efd4R+k3JHaIHtPu1HvozssjAwNqeA+9ueOuRqjG2Y2bkLS/K8Hk41deYfbwxUYn/Flg74GPYmlSvDFDbAa48M2SwyID0QxKUGw+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752048791; c=relaxed/simple;
-	bh=DH9NUD8mzU5ovthvNp8ZKZYQRFFPM1EeEMXe9n7EirA=;
+	s=arc-20240116; t=1752050000; c=relaxed/simple;
+	bh=9+WyfIJGHjg13rme9Flpy+sQDjb/Qfg+lpK+DYWwHoQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLik/QzeKMhUfWuFruJVrUeWZP9tUcCuBdBcj+UnbsNlhIWvp8PuUUys151mrCuzvbWnuYiPpxdyf1itT5S4Ms/NB+QrMoN5AlCyUEfUzeGaWqjJvUvK9BfcF2m27vNghe51YyUasFSYIa1bhR1nvfyxQwNdB2PSIR6z8MqvIsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=b2hOwPrF; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b7123edb9so60323051fa.2
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Jul 2025 01:13:09 -0700 (PDT)
+	 To:Cc:Content-Type; b=CnGdfCCY5BPa9mJ9xnK13NkE0B4jzlXAQGMtItd6zCvIUlw8hzWeI85svfj2boskOhIlT78HsL82Ng48ubHY7mwGJyfyu90hO2QtSuRR4rfktTf2WPlVKoDyh6OXqsPzFkjrpJXyJweILahl9VMEQVWJCXOjbdHK93VHvgPheyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CGo62AK4; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae0de0c03e9so907680366b.2;
+        Wed, 09 Jul 2025 01:33:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752048787; x=1752653587; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1752049997; x=1752654797; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=865uQGi3JHs9gU6SJdGaHyOjW16oPlGySA+XL9vzYmY=;
-        b=b2hOwPrFTgRG0MGHTN+J0+KxYyJHJh/GJuJHifKKlR/x/o1R+O8LGbeizacvpVQC0z
-         VP5pLEgEYfV5dug8jHL6S1lzAo2UEITF/uNaRx3n0oT7iAq5uphjcJOx8Qa0gD8twSTG
-         DnGOx6yTVuP50JNgnA9d7nb69htAAGW02S0oGcTaYMGpMo+cqsxlaMu/iQH0ezL6iXFb
-         i0Nip6eS/Y7XRL7Xnu4gUxdRAgUjYi7Vp2DPoR1oiSlEkpjnlMyjJ2ml0xx+SxNaYggu
-         rv2QXZx7brS53Npv3agLLu4OleM+gSR5nLpY5EamojJlBIr6KNyziHduczrwqfONcZnf
-         EMwQ==
+        bh=rSx8Je+RgwnMEIAcCKMHtWK8TOYZz4SAUO07h86htJM=;
+        b=CGo62AK4I44IDGFQVYWvGs79ewEJYzlEsVV7i1echo6H5X4WnOysKiphS2ASauaaad
+         V0DdojLsLyoyxCiZeL04PYeEgBv949J9dom2dbRp/S4Wb69t+uhvumzSciscbc1Y3Y8o
+         YMJl/6ljBM6hdynem6Sf+yBRIrKSFg9BXgBRkH5Bb1gLEqOrgW7w54T/m61Cx/EILsjI
+         mnAe8txp0Hm5GOqVeyWIzNj24ZREkUmvOtD03/AJZuZOFgyMPj6fupn9nbUKsCVRllxy
+         VMs2g6RUxE0/lykNyMTnbGcBzP50SkwI/HE8qW6EhDeD22eaT8XLppXwnv2aHHn53ZNo
+         125A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752048787; x=1752653587;
+        d=1e100.net; s=20230601; t=1752049997; x=1752654797;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=865uQGi3JHs9gU6SJdGaHyOjW16oPlGySA+XL9vzYmY=;
-        b=QViEYUztRyXShNvC0x+HmY7Do+VeQrpc7/nLsnlIc9HzZqBkQaoBT9ruJwR3uYeU+I
-         ltnUbmcpiMg2Wx589myuL39XhfDyB+hTO3ZsFXj9XGjBp6t8aM37iOBbXriroQ1MBMH5
-         sj0JcRmaY5JExMXuFpVBMrCM8A7l+e4wXl1TtH6sVRaRkM8men0rXC5iuCE0DDThelr2
-         AW053zG0lywEZ/pz6CHntyustU7EjvA85Iy7UDSFOj6i06QrZayOuhWhUZQW5KFs1rYl
-         yYk6v01jNlilnSn9aAQ5o84hesOS6733LzYVnjyyQhWaahV8qHdKbovJhzzhfSHZQaL8
-         wjow==
-X-Forwarded-Encrypted: i=1; AJvYcCVBQK2YmtzAsWaGiNUw3MfESdMe4DYd+kUBkJpFfsgIcfMA5IfLxDrR5D79PXUHOdu1PC6SuYv9p6x6@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVldgYZrx2cQQe96oTl5t6l2TedU5/TKWCVmopMYnMVfFKLgnn
-	ZJnUUwj/rLhhJm6VowUEQ4Z8StbKYwYgyybILo2HuKAPmMiw1oYOXHBf1qzhaoIUJNNFreJRH9q
-	NuU+cLzXrU50v6PYLvGNxB1JP0rqWtsepiarQkvU1VA==
-X-Gm-Gg: ASbGncuGCgLbtJZ95j13oCUXjGYsXRSBuTApfVsMBBSS3+53o4FwmbRYhA1F9olHUe6
-	rmXrn4tWe+h0V6uy9fvxhmGVo8Fj/25CZjcqkhq6XWNGmP0sqsKWTc5XGi26+6dRkyNVyOBlrX4
-	zW7A2PeRN7nlHKq4P7YzMfIztLUwuLowxbout31MUTNjbxZhBmFHMKIGX1elpo1yN8tMWVquWvX
-	DI=
-X-Google-Smtp-Source: AGHT+IGdXHk9MOPcJEsIkrUcBBcrbdbZTeRRspKa0o7hVMdnKdwLyq1jVJADdc+lM8sJtrMggELmxg/v0AA8YEwt7qk=
-X-Received: by 2002:a05:651c:3044:b0:32c:102a:f02d with SMTP id
- 38308e7fff4ca-32f485c5877mr3801891fa.30.1752048787410; Wed, 09 Jul 2025
- 01:13:07 -0700 (PDT)
+        bh=rSx8Je+RgwnMEIAcCKMHtWK8TOYZz4SAUO07h86htJM=;
+        b=Ko/F0HrcJTJaf9jBLiw1BxEpfBKwi5I9oRCSqP4i9NonJ3voWJc1NNOLujSN47ahc/
+         p8schXVwf1y5NgvgGYIDhsk8SgRDePM3U0xWBY7z68dm+XBeDfezZdo0v0cvK7aCiLr8
+         LK0+AmTrzHiTbKfiMZluRJsCzizJm/T6bHJbhTuhgZzOUbh8NuaxejWRw3ohVddFliqv
+         C1c0m85MJE7C278luNdRcxiAc9Q3766Y+XkctVQIxgnXOsak4H0DJ2zrEy5vKFDHv6MX
+         l0l7xJneW1jb7j7g4iLyG9L9sTL7l4nX8LbA9nH2vpBISDk23dHQZuMRuQ6MNhf3WF64
+         qoYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNtY5Fr2gx/tTMuyWfv+CivujD00q/FP1uzx7jXB0QeK0s3LFtfBu/fmMRYIvnWe+4GhQjY/lkknOBj7Nn@vger.kernel.org, AJvYcCXP+suH5sffBazhYvQm7askazsJSOWlAUxmhKwh7L8yROeQCQMBgO1Kt80yPRIXvcSPlDkpkM2BB+lG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNNKYTPFc742LPdQbLhZpkJMnPtVKWOTk8KXhm6w5D1e41Q6ln
+	lVsKIN9kdBVWZ5dSAViMtl0GZFfSTFYhpXB5jfYN0+cn0SPIloC+OcEopnSH5n5yYz4ghxYC1EK
+	jNydkqCtKxl8K40Jq6lwrGVdeaghzowk=
+X-Gm-Gg: ASbGncsY0msyI2REGllh3qJm53CLn/rAT25+RmN9Nnw1IGCiIHCBkcb6HOu0xDncr2q
+	a0qjoWq/H2Y49Gav86YSxijvehwAF2N4eCAzDfnzQ+Ohwu3m03wmdCX1J+eLAyNQM/rNdXu2E5z
+	UAmpEuMYrPKduktWIgXekYjQHo+jAonA0wjP++e5xGoe9dleenu3y0P5KL
+X-Google-Smtp-Source: AGHT+IF/ot5abuPWaIOwiRC4JZt3VIY7aaAsHT4N9dAkO57tMuiiTFRQbOKdu5Dhl8ZD0DF4+QEKTtLhXBuMHBQgEMU=
+X-Received: by 2002:a17:907:7fa5:b0:ad8:87a1:4da8 with SMTP id
+ a640c23a62f3a-ae6cf5d79a3mr174652966b.14.1752049997183; Wed, 09 Jul 2025
+ 01:33:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250709071825.16212-1-brgl@bgdev.pl> <aG4eT557hI8AT38G@archie.me>
-In-Reply-To: <aG4eT557hI8AT38G@archie.me>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 9 Jul 2025 10:12:56 +0200
-X-Gm-Features: Ac12FXy7aI3Qs7lgagRv3GPU9z2XcHjmSgG0_MnFsJ-CNXmaAn1fS4KYQmiWBC8
-Message-ID: <CAMRc=MehnbMsYj9EW3P6T-20-tYBBJ1CeKUCf8qRxva3UFdpzw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: remove bouncing address for Nandor Han
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
+References: <20250709-gpiochip-set-rv-gpio-remaining-v1-0-b8950f69618d@linaro.org>
+ <20250709-gpiochip-set-rv-gpio-remaining-v1-4-b8950f69618d@linaro.org>
+In-Reply-To: <20250709-gpiochip-set-rv-gpio-remaining-v1-4-b8950f69618d@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 9 Jul 2025 11:32:40 +0300
+X-Gm-Features: Ac12FXyhWxVavHHS1_aYBkGHdup2qwUn7gx7FkWSFs41ui6Np3n3cHuITzjjqpU
+Message-ID: <CAHp75VckSCyDiAtP+q8nGGiJBuMFi3Nke7Puh0SE9nBX4vUX+w@mail.gmail.com>
+Subject: Re: [PATCH 04/19] gpio: wcove: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, 
+	Srinivas Neeli <srinivas.neeli@amd.com>, Michal Simek <michal.simek@amd.com>, 
+	Nandor Han <nandor.han@ge.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, 
+	linux-arm-kernel@lists.infradead.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 9, 2025 at 9:46=E2=80=AFAM Bagas Sanjaya <bagasdotme@gmail.com>=
- wrote:
+On Wed, Jul 9, 2025 at 9:42=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 >
-> On Wed, Jul 09, 2025 at 09:18:24AM +0200, Bartosz Golaszewski wrote:
-> > -XRA1403 GPIO EXPANDER
-> > -M:   Nandor Han <nandor.han@ge.com>
-> > -L:   linux-gpio@vger.kernel.org
-> > -S:   Maintained
-> > -F:   Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
-> > -F:   drivers/gpio/gpio-xra1403.c
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Shouldn't the driver status be orphaned?
->
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 
-It falls under the higher-level GPIO subsystem umbrella.
+...
 
-Bartosz
+>         if (value)
+> -               regmap_set_bits(wg->regmap, reg, 1);
+> -       else
+> -               regmap_clear_bits(wg->regmap, reg, 1);
+> +               return regmap_set_bits(wg->regmap, reg, 1);
+> +
+> +       return regmap_clear_bits(wg->regmap, reg, 1);
+
+return regmap_assign_bits(...);
+
+Otherwise LGTM,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
