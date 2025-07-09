@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-22998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22999-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 376B3AFE8A4
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 14:15:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7345AFE8AB
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 14:17:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D071B18994DE
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 12:15:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D50823BC0EF
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 12:17:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 486552D9484;
-	Wed,  9 Jul 2025 12:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 409F123B61F;
+	Wed,  9 Jul 2025 12:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jx4RxIt7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYfoydNz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2417290092;
-	Wed,  9 Jul 2025 12:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9781DFFD;
+	Wed,  9 Jul 2025 12:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752063294; cv=none; b=E8jhWe0byJ7CX+cqJ6Wluw9EtI5DJ3BCMeuGJO/SN5XsHgg62ZnkbQp/8wbgI5ereLP1c1m4ry+6sKIrL6DBD9n91bpSHeX3a36e083OOA2pzdMZuW6ab2X4KzbmgbFsvElydQZOnioKNP7gI7JFLa2g2ApslvISrisKZkp+0oY=
+	t=1752063452; cv=none; b=l9INfjG5YTt1kT5fcf44rEKdE027r1IjDbrzNjiGoNTxg2bGRXB9IQIyApCa2W+IR2kJfcQlXcAmn5LZafUwg692/lPDWFdqiV6HASbDenBD1zCRA/HkH5bZH7/H5hjM0G7FlfOTL8sebE5DeydIBoNsxNO8cqzh0gmUKKmgNag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752063294; c=relaxed/simple;
-	bh=C0jnHX5ZIYrcjGrLWg1TUWOzEzr/PZY5bj2b/zzE6EQ=;
+	s=arc-20240116; t=1752063452; c=relaxed/simple;
+	bh=bAemRyyhGncCCDGcLOv/rDMSzxPTbiBd+gD8PwD8fgY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W5lk8gDYAu0wJqeP9qDfBjfzzg6b12kWJTDKBt1mcoj9ZYTwUSTItLOer72/rhD9lh6rZVC7gWqjzX3IEXIkgWUscZQi1Y++CQ76WPquO0NFNPeNWDk2VSgIEEniGjIc1RFTVb/3ileNxWQFg8Q2okpbFdG6EdU2omkx+OrWRNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jx4RxIt7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A8EC4CEEF;
-	Wed,  9 Jul 2025 12:14:49 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=CUGrIjoAOX6dUkQqACZHog4uKOoLghU+zf6TO5Px6OXYOBYy+qUQ8e6YgwLzL3IUsklRnDRJX79xDyl3knMsHbb04pJqPsPzZKlosNRVajPNQT429v/EuZf1BtL/SVJFYv+OSSxfnqMIl5eL9mdzRcRV4gKSepaM4U8AELTvOEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYfoydNz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5067C4CEEF;
+	Wed,  9 Jul 2025 12:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752063293;
-	bh=C0jnHX5ZIYrcjGrLWg1TUWOzEzr/PZY5bj2b/zzE6EQ=;
+	s=k20201202; t=1752063451;
+	bh=bAemRyyhGncCCDGcLOv/rDMSzxPTbiBd+gD8PwD8fgY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Jx4RxIt7wS9R3IZNmxH0o8Tama+FOuHmqTgXjLmBn1XDG1wGmOgqRJqaL0NlUp8MV
-	 M5YXs8fWFXBIo7EpXsIW4U70lA4Pikt8fqfpxzJTKaMySGZ2G3ymt2bVvlvOnbbdJB
-	 1Vc327UnVCreNS7QdRAAw+keWq+r4RSZdiitqpbrwRMUDrgivtKDmmOwKOeKEz/6WY
-	 LppQGavosioDwHroRTAn4wvXQOh5ORfJ3N5aL0G3XfBT8yDxOIXtXqtNedY6ViciQC
-	 wTsvj/cIxQb5KPf+EJ9beURjN28tiHRWp5H/FXqvvzTDOnDMqetjagjOHJQpNKJ1Ti
-	 3e7QJpfBmbwNQ==
-Message-ID: <9aff4894-a8aa-47d2-8800-62959e064254@kernel.org>
-Date: Wed, 9 Jul 2025 14:14:47 +0200
+	b=aYfoydNzAOLtaiLOUN8IupS68jWBAsYg1/6lh+WPg01ZmILMXfRcTRGKoKTSmzH0F
+	 cinKeRo1TAc1CoPYVIxKOfSOpwy86SctX5Mhux65yLWWOr3kpx7NH+0jJLSN5ejR6v
+	 66Wg6hcZIM3/j9aEWrdG0DJC4j180fudR5x3znMA8nDbifv2Qf+dqEAPppeGTIPSfs
+	 LBgWvqh0+E780gQVeBnLKNUK45vmF45qN/JnfaQwN+wyv250hi2QYmgQizZMx8pwsL
+	 MvYv5Zi38ktodrImrbYmsmwC4cV7TpnN5cOMJSRHgAmphsHlCuVP1F+WxGLbs8X3e+
+	 oPCvYUpZqBGuA==
+Message-ID: <c8ddfc31-95a5-4879-b392-18b915095b5d@kernel.org>
+Date: Wed, 9 Jul 2025 14:17:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/9] dt-bindings: gpio: add bindings for the QIXIS FPGA
- based GPIO controller
+Subject: Re: [PATCH 2/9] dt-bindings: fsl,fpga-qixis-i2c: extend support to
+ also cover the LX2160ARDB FPGA
 To: Ioana Ciornei <ioana.ciornei@nxp.com>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org
@@ -61,9 +61,9 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Shawn Guo <shawnguo@kernel.org>, Michael Walle <mwalle@kernel.org>,
  Lee Jones <lee@kernel.org>, Frank Li <Frank.Li@nxp.com>
 References: <20250709112658.1987608-1-ioana.ciornei@nxp.com>
- <20250709112658.1987608-2-ioana.ciornei@nxp.com>
-Content-Language: en-US
+ <20250709112658.1987608-3-ioana.ciornei@nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -107,72 +107,85 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250709112658.1987608-2-ioana.ciornei@nxp.com>
+In-Reply-To: <20250709112658.1987608-3-ioana.ciornei@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 09/07/2025 13:26, Ioana Ciornei wrote:
-> Add a device tree binding for the QIXIS FPGA based GPIO controller.
-> Depending on the board, the QIXIS FPGA exposes registers which act as a
-> GPIO controller, each with 8 GPIO lines of fixed direction.
+> Extend the list of supported compatible strings with fsl,lx2160ardb-fpga.
 > 
-> Since each QIXIS FPGA layout has its particularities, add a separate
-> compatible string for each board/GPIO register combination supported.
+> Since the register map exposed by the LX2160ARDB's FPGA also contains
+> two GPIO controllers, accept the necessary GPIO pattern property. At the
+> same time, add the #address-cells and #size-cells properties as valid
+> ones.
+> 
+> This is needed because when defining child devices such as the GPIO
+> controller described in the added example, the child device needs a the
+> reg property to properly identify its register location.
 > 
 > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-
-Your changelog explains patches, which is kind of redundant - we see
-that - but does not explain the dependency you have here between patches.
-
-A nit, subject: drop second/last, redundant "bindings". The
-"dt-bindings" prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-
 > ---
->  .../bindings/gpio/fsl,fpga-gpio.yaml          | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/fsl,fpga-gpio.yaml
+>  .../bindings/board/fsl,fpga-qixis-i2c.yaml    | 35 +++++++++++++++++++
+
+So here is the board? Why FPGA is in the board...
+
+>  1 file changed, 35 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/fsl,fpga-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl,fpga-gpio.yaml
-> new file mode 100644
-> index 000000000000..dc7b6c0d9b40
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/fsl,fpga-gpio.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/fsl,fpga-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: GPIO controller embedded in the NXP QIXIS FPGA
-> +
-> +maintainers:
-> +  - Ioana Ciornei <ioana.ciornei@nxp.com>
-> +
-> +description: |
-> +  This module is part of the QIXIS FPGA found on some Layerscape boards such as
-> +  LX2160ARDB and LS1046AQDS. For more details see
-> +  ../board/fsl,fpga-qixis-i2c.yaml.
+> diff --git a/Documentation/devicetree/bindings/board/fsl,fpga-qixis-i2c.yaml b/Documentation/devicetree/bindings/board/fsl,fpga-qixis-i2c.yaml
+> index 28b37772fb65..e8981f974210 100644
+> --- a/Documentation/devicetree/bindings/board/fsl,fpga-qixis-i2c.yaml
+> +++ b/Documentation/devicetree/bindings/board/fsl,fpga-qixis-i2c.yaml
+> @@ -22,6 +22,13 @@ properties:
+>                - fsl,lx2160aqds-fpga
+>            - const: fsl,fpga-qixis-i2c
+>            - const: simple-mfd
+> +      - const: fsl,lx2160ardb-fpga
 
-There are no "board" bindings, so this does not feel like correct path.
+Weird, your first patch added three compatibles, this adds only one.
 
 > +
-> +  Each controller supports a maximum of 8 GPIO lines and each line has a fixed
-> +  direction which cannot be changed using a direction register.
+> +  "#address-cells":
+> +    const: 1
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,lx2160ardb-fpga-gpio-sfp2
-> +      - fsl,lx2160ardb-fpga-gpio-sfp3
+> +  "#size-cells":
+> +    const: 0
+>  
+>    interrupts:
+>      maxItems: 1
+> @@ -32,6 +39,10 @@ properties:
+>    mux-controller:
+>      $ref: /schemas/mux/reg-mux.yaml
+>  
+> +patternProperties:
+> +  "^gpio(@[0-9a-f]+)?$":
 
-What is the difference between these?
+Why unit address is optional? Anyway, this is wrong. You do not have
+ranges here and earlier you already said children do not have any
+addressing. Look at mux.
 
-> +      - fsl,ls1046aqds-fpga-gpio-stat-pres2
+> +    $ref: /schemas/gpio/fsl,fpga-gpio.yaml
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -68,3 +79,27 @@ examples:
+>          };
+>      };
+>  
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        board-control@66 {
+> +            compatible = "fsl,lx2160ardb-fpga";
+> +            reg = <0x66>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            gpio@19 {
 
-Keep list sorted.
+And what is the meaning of @19?
 
 
 Best regards,
