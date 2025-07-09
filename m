@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-23026-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23025-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 174EDAFEE96
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 18:09:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 713D8AFEEA1
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 18:09:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E00EF543E03
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 16:08:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD59F188803C
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 16:09:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E4042EA14C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11E752E9EDC;
 	Wed,  9 Jul 2025 16:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQpXxVWa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsoYIvWG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4513F2E9722;
-	Wed,  9 Jul 2025 16:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023A82E5B0E;
+	Wed,  9 Jul 2025 16:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752077319; cv=none; b=EDSiKn8z/ajbLYkpBkXo5LvgYXLBncca22DjrPsLE6x6a6jkrjIbB+5xlARqRd9V/z8QnxgVxm2/P7gYiRONmeBuNnXC45iZLsi8sAPTA7jVwfnzF+Ppz3miEvbj8zW27fIOroIc8Bjj4DahEOe97d4hsQmuBqCKeU1gBEy7nfM=
+	t=1752077318; cv=none; b=SAytKvrZOeP1wO7f+eZHd//cXj4ytkBLv93EnWTTahyWcWMM3/199ct/vEHmgABdGyTiZVA66ciBbVnIIJ48sJ/cMPbgElOseifZoh6vVgHU+UIsUZQozpQBwY3CLkqLCDTzazZuZBOJr/J8vbpz6pP3Mo7a7NhmycWK6sYpkSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752077319; c=relaxed/simple;
-	bh=FEefdo7gGWDr8pupO9oyHxETp/w8tXE1asAKs8xFNf4=;
+	s=arc-20240116; t=1752077318; c=relaxed/simple;
+	bh=eyzMrV4oXkoY0Xog7pWNxsaUDeTlHVhYnqbpICNTXzw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hUV73Op7XpsJdJPZY4yrVkev0TksrW3eShGwjF4lhvkjKB+G2sJiBaMsOKxfgKPdN28qAruJWh9ZY0MgvWilB7g/HjMaWidkcZoZiM5ETi2RXR4Mg+5mXoZBpbAhwwHOfhEouQX98A4/xOo72VEFtEEa33zvFs6SMM0o/7r4phk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bQpXxVWa; arc=none smtp.client-ip=209.85.221.51
+	 MIME-Version; b=rpSHlXHEIH+ch/zGeWLE8DmJUutV6eofg1d8CjoaClYov9GWoLauMhDiIvrgSEWiec0UG0oDR5pzR4AGXxF5hKOqlZwz0Ddsxq4Z/Yjn2bo3I05bfg3Vi1vu/fb9kd+lCzcC3Ls7sX6lgQvEJHW3FyRit2X53gJBSqLj+fWdTPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZsoYIvWG; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso76398f8f.2;
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3b45edf2303so109563f8f.2;
         Wed, 09 Jul 2025 09:08:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1752077315; x=1752682115; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=76nVrXKIo/jAoyMI3XJ2QxZEzzS9N+bzV0hB2Ue/F9s=;
-        b=bQpXxVWa/DTj/z2n4K6r+/f2ruX/hBNbuIvgULKLIoIzAuF6xXmRNzfpHhbMQ4F0me
-         8f3Mm1VKB9Nfae2EhUGVy7624IP7eZm6/iIJONQOGOS5+J+UlGBHoMJmFSNkMh6Z8jV8
-         CTUjfWJti7y+gDZ8rQlgvaLoIVC/957ld74ouwHwRUh1rsqjYOLeEG+zVsBDJqjtVaby
-         gtp8EJ10uzRFcyCDT4JOyS60NQ1J+OReMX4QBwKJJ8YxZgWcQiow4WaN7PrMTI+QWCfg
-         0thyjYcbReAn5wGyBlUgeq1kpF4cmDG9zkgVW0SOFr2gK71HJF66ethWhqFgHHJvdVwh
-         ANhw==
+        bh=WbEQbP0gHmoeU8ky70blwCNCDEnSUfgldHxfZOgWw5I=;
+        b=ZsoYIvWG1MjTGfsqarWX3GUVeqRnIrCwhBuWnVFe+cmPr0ufTdH32IMGcn8bHa0Efe
+         U5Eq0jpCsTIbyXqaZLGNg01vbk9JSQqDBPiwwDqw9j48Mz9Y5DJGpbRzjwqk23/9q7qM
+         0/OxrizS9qwgMhqnNEHF/YA/iQFGd8Kgv+rwTiSIRlo7TXOYpnVDf49qEXNaLYSmz1nt
+         6fAjH7j4vIpTlxve/M7122PHnYeUKvVrGEGRWQn8CuRDBdT9yrtWvAVx+Fc2UxccR2XD
+         m3Sgxdpa/LivEJpv6XL3VnYuTLe9Mt4+78RKZUxUdV1xIYON0tkZ2K11higN5HoQuTpd
+         kxyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1752077315; x=1752682115;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=76nVrXKIo/jAoyMI3XJ2QxZEzzS9N+bzV0hB2Ue/F9s=;
-        b=V2ApXnDMHu0LfvP7QBN+DpSYR7VADBmadukkb4gpI3EoD78aNcBILN9Di0AM1rsEFA
-         F0/XfcYzBjX1Dd28deP4gK8DBPMSg/jlEosPvottg6lauHfxnV0oj8j3cwLs3g6ZyuLD
-         LvPP+Fl1IREysXqIuYAPpsaJKmiDsg8u1qdp6QurSarReONlE4lXMM/yLYIRL4H5kP8o
-         UbSSgoWnhDdgoCbbg1yB2Tw8SEEDlBhtdeJkrhsP1j0SVTBVmAWSxceTOy//hE3+CoXi
-         88+EaoMPlwCJSXeIsw6amMoMJHKTxdxJLM+Bof6YHtf7xN4nkxUKXDX/jMnahFqScPmF
-         KRCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAo6z2TlMPSFXeXMrg2noYPmVGgchwgjPv4l9Ab9UzE5aCiJ3jGu5Z1ZNQLTVLNtQjLqdt9wlQjJZQ@vger.kernel.org, AJvYcCXMrgtUclHKkj6Qw7UgXOvH7/HnssaddbG2a8idGCNq6Y/oef0Kx8UN+Si/XvxUb7S+538UEzaddm38N3kN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJJrZp7Xbg0s6gjn9nGGC1/cfUWdSK4pRpIfN66KlO76YasL/c
-	tM4x0H37U7Vn1oZwymwnmulJdzxeIJDdArf1AMAmjV7Ql7tYFX6a5H4D
-X-Gm-Gg: ASbGncs3H6iqvEHRKFgXhhBaMRAg6jXZxQZq6X5WX3fwl41yCweIqSAbDS83ZgyffTs
-	WDt+7QDfcmFf6vYIjLwKAL4U8QVozrWM57OiiKNyMC5FdYLVF7IBH0U8YCCIgRYVWBp6kWX3P9K
-	sd/HgpmnZ2kKVdHOV0XFAOyg2x/UX5rjVLF2CSR9HMGJv1IIfsqvtCWDH98PeUQthafy2u7DG7m
-	z23vuOB0oxH6tlLzsrcU4u7lyUbDimScZUBaJd6+l+0BZlh7YrGsTeeu6gL2HOB6Hv3Drx9NDho
-	NVok3+n9dTe14ISnT31DhWNmocCs/u2O8tIcmyFgNw7RlWgT8dwHSrzemBglOz+zaBZUmadQd9S
-	hdsnwGpcurXg=
-X-Google-Smtp-Source: AGHT+IFuCxtYJhXND6eyKWWcAAqQN0A94wPLMPZtK2WkaLNK7Rw8E5vO4D2G3lHFasSYQ96k2Cs5KQ==
-X-Received: by 2002:a05:6000:220d:b0:3a4:ed10:c14 with SMTP id ffacd0b85a97d-3b5e44e94damr2641451f8f.14.1752077314326;
-        Wed, 09 Jul 2025 09:08:34 -0700 (PDT)
+        bh=WbEQbP0gHmoeU8ky70blwCNCDEnSUfgldHxfZOgWw5I=;
+        b=A3HBxapCs0L6yEXt7+8+Qu2ZOoPjnqnoZzkRorOl5IrY7VTLxP0lgRgcAAyECKshI3
+         5FbSTeZNdC9vK8RE47OcvaBSZw700nKBCx0fph3/exGSFnVaStye1BfTG3fcxa79Xoia
+         WId9K/WB6N2rA98fk8GiDRKLp/X7nZovIrgZchcLtHZzXA2f9+twVaPuguAaqD3EwUuH
+         2ttZPNJqvbt0TXsXClmhxL2TrpYZeIo2zi8vrPttuE5PXCCT90CmVXGU77V5evGOm+dF
+         Yo01HPB3NsslPaVGzXgu9KiQhba7B8O5KFo4qoRW6KlrLIcjR+mpSJzjR5q6F16fyz9b
+         UlFg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6UCiNV6XQTnf04Ko1ce/aDlzvsPzie0XRo7yLV5Kb9N+v/rcBauLK37r55VKBGYdcG+bcov91ICZuGL2+@vger.kernel.org, AJvYcCUZfBHEnkOzZpqXyeTrY7wQ+JvZh6l4vfVdlUseDtz5+003km0l97VTABfggxjv16OzjCneo5UNKXAl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyPAZCvLhn7dtWZxEFlrB4O5Sj1pNWpqLbAVAP4/8/xQ+Akg31
+	oodWeHpGkzW2IK9D1KiOvfX1QhR4G7cXeCI13mt/AVnA2oiFzE4PFhv7
+X-Gm-Gg: ASbGnctL1Y3YAyKzBp8jHAv9sOPH4MtLjXAJ7enIu5oajk/dj4nVu/19uWfBMnisSoa
+	RBJ3fnPC4lzBfVq1Z0FwV8LEaQYutAzrlwB9NyYaotD50Y5whPjHJdP6HeWajXANldUZtm8X0Bm
+	F+FeOI4U9+Lt3cKSRQVT3wkpY5kU5DFly8A7sjqmE6LS8cmNuNCpyWBrJmJvKaxrQho1JEF6lti
+	JXaCUDmKUsJjB+7HMpFcCrLE7PJPx3UyjJLinB+AvKk6mXIVbqdpAmaVwYyX1uFoJusIcpnLo6E
+	tRfUdHXZVHdDOa0o7DlmOvfnuaKDWRZuvU2963gQOumMW8t3xoswY5uVNqIPakgzVOnvyuUqIan
+	yeVfhyHAAUK8a1vsIP2vHkg==
+X-Google-Smtp-Source: AGHT+IEZcEEvfIU/FjGFchPJNxOYfIPPGBA1O+qz1PV9gOHFHWQo3MX10WhWH6m/oCxo/TXjelyY+w==
+X-Received: by 2002:a05:6000:4608:b0:3a5:2ef8:34f9 with SMTP id ffacd0b85a97d-3b5e45245e9mr2722850f8f.27.1752077315108;
+        Wed, 09 Jul 2025 09:08:35 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:c930:b02d:bf60:750b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b9671asm16639686f8f.53.2025.07.09.09.08.33
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b9671asm16639686f8f.53.2025.07.09.09.08.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Jul 2025 09:08:33 -0700 (PDT)
+        Wed, 09 Jul 2025 09:08:34 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -85,9 +85,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	John Madieu <john.madieu.xa@bp.renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 2/7] pinctrl: renesas: rzg2l: parameterize OEN register offset
-Date: Wed,  9 Jul 2025 17:08:14 +0100
-Message-ID: <20250709160819.306875-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 3/7] pinctrl: renesas: rzg2l: Unify OEN access by making pin-to-bit mapping configurable
+Date: Wed,  9 Jul 2025 17:08:15 +0100
+Message-ID: <20250709160819.306875-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250709160819.306875-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250709160819.306875-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -101,135 +101,133 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Prepare for supporting SoCs with varying OEN register locations by
-parameterizing the OEN offset in the rzg2l driver. Introduce an `oen`
-field in the rzg2l_register_offsets structure and update rzg2l_read_oen(),
-rzg2l_write_oen(), suspend/resume caching, and SoC hwcfg entries to use
-this offset instead of the hard-coded ETH_MODE value.
+Refactor the RZG2L pinctrl driver to support reuse of the common
+rzg2l_read_oen() and rzg2l_write_oen() helpers across SoCs with
+different output-enable (OEN) bit mappings.
+
+Introduce a new `pin_to_oen_bit` callback in `struct rzg2l_pinctrl_data`
+to allow SoCs to provide custom logic for mapping a pin to its OEN bit.
+Update the generic OEN read/write paths to use this callback when present.
+
+With this change, SoCs like RZ/G3S can reuse the common OEN handling
+code by simply supplying their own `pin_to_oen_bit` implementation.
+The previously duplicated `rzg3s_oen_read()` and `rzg3s_oen_write()`
+functions are now removed.
+
+This improves maintainability and prepares the driver for supporting
+future SoCs with minimal duplication.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 52 +++++++------------------
+ 1 file changed, 13 insertions(+), 39 deletions(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index af4a40ca0a98..75b5bd032659 100644
+index 75b5bd032659..345ee709363b 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -146,7 +146,6 @@
- #define SD_CH(off, ch)		((off) + (ch) * 4)
- #define ETH_POC(off, ch)	((off) + (ch) * 4)
- #define QSPI			(0x3008)
--#define ETH_MODE		(0x3018)
- #define PFC_OEN			(0x3C40) /* known on RZ/V2H(P) only */
+@@ -296,6 +296,7 @@ struct rzg2l_pinctrl_data {
+ #endif
+ 	void (*pwpr_pfc_lock_unlock)(struct rzg2l_pinctrl *pctrl, bool lock);
+ 	void (*pmc_writeb)(struct rzg2l_pinctrl *pctrl, u8 val, u16 offset);
++	int (*pin_to_oen_bit)(struct rzg2l_pinctrl *pctrl, unsigned int _pin);
+ 	u32 (*oen_read)(struct rzg2l_pinctrl *pctrl, unsigned int _pin);
+ 	int (*oen_write)(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oen);
+ 	int (*hw_to_bias_param)(unsigned int val);
+@@ -1070,7 +1071,9 @@ static u32 rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
+ {
+ 	int bit;
  
- #define PVDD_2500		2	/* I/O domain voltage 2.5V */
-@@ -221,11 +220,13 @@ static const struct pin_config_item renesas_rzv2h_conf_items[] = {
-  * @pwpr: PWPR register offset
-  * @sd_ch: SD_CH register offset
-  * @eth_poc: ETH_POC register offset
-+ * @oen: OEN register offset
-  */
- struct rzg2l_register_offsets {
- 	u16 pwpr;
- 	u16 sd_ch;
- 	u16 eth_poc;
-+	u16 oen;
+-	bit = rzg2l_pin_to_oen_bit(pctrl, _pin);
++	if (!pctrl->data->pin_to_oen_bit)
++		return 0;
++	bit = pctrl->data->pin_to_oen_bit(pctrl, _pin);
+ 	if (bit < 0)
+ 		return 0;
+ 
+@@ -1084,9 +1087,11 @@ static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oe
+ 	int bit;
+ 	u8 val;
+ 
+-	bit = rzg2l_pin_to_oen_bit(pctrl, _pin);
++	if (!pctrl->data->pin_to_oen_bit)
++		return -EINVAL;
++	bit = pctrl->data->pin_to_oen_bit(pctrl, _pin);
+ 	if (bit < 0)
+-		return bit;
++		return -EINVAL;
+ 
+ 	spin_lock_irqsave(&pctrl->lock, flags);
+ 	val = readb(pctrl->base + oen_offset);
+@@ -1120,40 +1125,6 @@ static int rzg3s_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
+ 	return bit;
+ }
+ 
+-static u32 rzg3s_oen_read(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
+-{
+-	int bit;
+-
+-	bit = rzg3s_pin_to_oen_bit(pctrl, _pin);
+-	if (bit < 0)
+-		return 0;
+-
+-	return !(readb(pctrl->base + pctrl->data->hwcfg->regs.oen) & BIT(bit));
+-}
+-
+-static int rzg3s_oen_write(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oen)
+-{
+-	u16 oen_offset = pctrl->data->hwcfg->regs.oen;
+-	unsigned long flags;
+-	int bit;
+-	u8 val;
+-
+-	bit = rzg3s_pin_to_oen_bit(pctrl, _pin);
+-	if (bit < 0)
+-		return bit;
+-
+-	spin_lock_irqsave(&pctrl->lock, flags);
+-	val = readb(pctrl->base + oen_offset);
+-	if (oen)
+-		val &= ~BIT(bit);
+-	else
+-		val |= BIT(bit);
+-	writeb(val, pctrl->base + oen_offset);
+-	spin_unlock_irqrestore(&pctrl->lock, flags);
+-
+-	return 0;
+-}
+-
+ static int rzg2l_hw_to_bias_param(unsigned int bias)
+ {
+ 	switch (bias) {
+@@ -3310,6 +3281,7 @@ static struct rzg2l_pinctrl_data r9a07g043_data = {
+ #endif
+ 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
+ 	.pmc_writeb = &rzg2l_pmc_writeb,
++	.pin_to_oen_bit = &rzg2l_pin_to_oen_bit,
+ 	.oen_read = &rzg2l_read_oen,
+ 	.oen_write = &rzg2l_write_oen,
+ 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
+@@ -3327,6 +3299,7 @@ static struct rzg2l_pinctrl_data r9a07g044_data = {
+ 	.hwcfg = &rzg2l_hwcfg,
+ 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
+ 	.pmc_writeb = &rzg2l_pmc_writeb,
++	.pin_to_oen_bit = &rzg2l_pin_to_oen_bit,
+ 	.oen_read = &rzg2l_read_oen,
+ 	.oen_write = &rzg2l_write_oen,
+ 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
+@@ -3343,8 +3316,9 @@ static struct rzg2l_pinctrl_data r9a08g045_data = {
+ 	.hwcfg = &rzg3s_hwcfg,
+ 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
+ 	.pmc_writeb = &rzg2l_pmc_writeb,
+-	.oen_read = &rzg3s_oen_read,
+-	.oen_write = &rzg3s_oen_write,
++	.pin_to_oen_bit = &rzg3s_pin_to_oen_bit,
++	.oen_read = &rzg2l_read_oen,
++	.oen_write = &rzg2l_write_oen,
+ 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
+ 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
  };
- 
- /**
-@@ -1073,11 +1074,12 @@ static u32 rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
- 	if (bit < 0)
- 		return 0;
- 
--	return !(readb(pctrl->base + ETH_MODE) & BIT(bit));
-+	return !(readb(pctrl->base + pctrl->data->hwcfg->regs.oen) & BIT(bit));
- }
- 
- static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oen)
- {
-+	u16 oen_offset = pctrl->data->hwcfg->regs.oen;
- 	unsigned long flags;
- 	int bit;
- 	u8 val;
-@@ -1087,12 +1089,12 @@ static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oe
- 		return bit;
- 
- 	spin_lock_irqsave(&pctrl->lock, flags);
--	val = readb(pctrl->base + ETH_MODE);
-+	val = readb(pctrl->base + oen_offset);
- 	if (oen)
- 		val &= ~BIT(bit);
- 	else
- 		val |= BIT(bit);
--	writeb(val, pctrl->base + ETH_MODE);
-+	writeb(val, pctrl->base + oen_offset);
- 	spin_unlock_irqrestore(&pctrl->lock, flags);
- 
- 	return 0;
-@@ -1126,11 +1128,12 @@ static u32 rzg3s_oen_read(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
- 	if (bit < 0)
- 		return 0;
- 
--	return !(readb(pctrl->base + ETH_MODE) & BIT(bit));
-+	return !(readb(pctrl->base + pctrl->data->hwcfg->regs.oen) & BIT(bit));
- }
- 
- static int rzg3s_oen_write(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oen)
- {
-+	u16 oen_offset = pctrl->data->hwcfg->regs.oen;
- 	unsigned long flags;
- 	int bit;
- 	u8 val;
-@@ -1140,12 +1143,12 @@ static int rzg3s_oen_write(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oe
- 		return bit;
- 
- 	spin_lock_irqsave(&pctrl->lock, flags);
--	val = readb(pctrl->base + ETH_MODE);
-+	val = readb(pctrl->base + oen_offset);
- 	if (oen)
- 		val &= ~BIT(bit);
- 	else
- 		val |= BIT(bit);
--	writeb(val, pctrl->base + ETH_MODE);
-+	writeb(val, pctrl->base + oen_offset);
- 	spin_unlock_irqrestore(&pctrl->lock, flags);
- 
- 	return 0;
-@@ -3164,7 +3167,7 @@ static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
- 	}
- 
- 	cache->qspi = readb(pctrl->base + QSPI);
--	cache->eth_mode = readb(pctrl->base + ETH_MODE);
-+	cache->eth_mode = readb(pctrl->base + pctrl->data->hwcfg->regs.oen);
- 
- 	if (!atomic_read(&pctrl->wakeup_path))
- 		clk_disable_unprepare(pctrl->clk);
-@@ -3189,7 +3192,7 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
- 	}
- 
- 	writeb(cache->qspi, pctrl->base + QSPI);
--	writeb(cache->eth_mode, pctrl->base + ETH_MODE);
-+	writeb(cache->eth_mode, pctrl->base + pctrl->data->hwcfg->regs.oen);
- 	for (u8 i = 0; i < 2; i++) {
- 		if (regs->sd_ch)
- 			writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
-@@ -3241,6 +3244,7 @@ static const struct rzg2l_hwcfg rzg2l_hwcfg = {
- 		.pwpr = 0x3014,
- 		.sd_ch = 0x3000,
- 		.eth_poc = 0x300c,
-+		.oen = 0x3018,
- 	},
- 	.iolh_groupa_ua = {
- 		/* 3v3 power source */
-@@ -3256,6 +3260,7 @@ static const struct rzg2l_hwcfg rzg3s_hwcfg = {
- 		.pwpr = 0x3000,
- 		.sd_ch = 0x3004,
- 		.eth_poc = 0x3010,
-+		.oen = 0x3018,
- 	},
- 	.iolh_groupa_ua = {
- 		/* 1v8 power source */
 -- 
 2.49.0
 
