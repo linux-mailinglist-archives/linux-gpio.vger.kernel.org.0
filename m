@@ -1,149 +1,157 @@
-Return-Path: <linux-gpio+bounces-22976-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22977-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03ECEAFE597
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 12:22:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87FE4AFE799
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 13:23:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6CF5C7B1424
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 10:20:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAA863B4A62
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 11:22:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9694B289374;
-	Wed,  9 Jul 2025 10:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EA07298CD1;
+	Wed,  9 Jul 2025 11:22:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iYa7rJiz"
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="TxaTxBuS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895B32877D7
-	for <linux-gpio@vger.kernel.org>; Wed,  9 Jul 2025 10:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934592980BF
+	for <linux-gpio@vger.kernel.org>; Wed,  9 Jul 2025 11:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752056515; cv=none; b=SZb3q+d4oHDY7AglT+QvV84aeD4EUda/2BVkkYwb3QUCQt4O9Sh5Sxu8HsuKsSspeySnxpN5ChxN9gKQUiKKER0p09xTHqfIUSzXN7OIIvuZdSGVQVFXL7ZDaCVL4DMp8SoRQAG92CeKjBaWanhDLI0AWI8wmq0nkleBGtdINdc=
+	t=1752060160; cv=none; b=idwmStwm1S3Tma33Ly7vBRMOwHJKa36lTTeCmVSXa9drLRznkMkxLSl8v5I3TibNpyWqqVYYNPpnp2fsDyaHCSZIBbGLlTrGwi9m79M3gat8OMXgf3hXO47EzhUedT7gPm/Zd7pvgm7CMlN2Z4nMlReKnxlrcqEmH4s/+lcfeGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752056515; c=relaxed/simple;
-	bh=wIqPLRw2HOvarV36h3OAvicgvKrGbpwiOzAHWe3Pt3Y=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=JUlnhs7dCeFNQ7rW6/3HdhWUHzwiUE8nI0R1Apj9AXzlz9SECamJdY/cg6qtJLNbGpcqu40y/gnxvm4+fGCeAkmWSZPfUpHUFuLq8Rp2fZBPxJOgzAlld0lVUAMdDcQS6WoYukyx35WKdTkokZphzUR7y4UV4Z60cGoienxs4Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iYa7rJiz; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32f3ef6178bso11970011fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Jul 2025 03:21:53 -0700 (PDT)
+	s=arc-20240116; t=1752060160; c=relaxed/simple;
+	bh=e5zAe4LytXHoMKx6I/SASM+3m+FmFrGqkcUpklIa1v0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=U1uBsE6uzzLwEchp531WyZSiKOZI3nAlBzK81/HPZ3B8Y02DPhGAeQrPRqNIX1DKE92hSgiqyvwBypRHPH1UcugWjMFukvCj6bMx3wmKmV3ThoiqJiV59S/cP84G7AZCwQfsWJpqMed6Jf5ksRR2NDx8UgBcmg9Owr0owoXlH6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=TxaTxBuS; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae0d7b32322so845346466b.2
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Jul 2025 04:22:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752056512; x=1752661312; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DnYi4NSxelKtKJI4OL4GTqIMsRDkT7cGv2pD1bYfX0g=;
-        b=iYa7rJizl75g9yi+gDIFL4i+AI0P56Bb9DDi2A3XqHj7m6u+vDowoYbawO90Om0K0n
-         EYPE1y+R2L5nQQ8swfAhx0NzFF/kq6rHHUpwbfo8eT39BTnv5v3fVXJS4d2wnw5xVwiB
-         BxP2OM/C61Dh7VqLdugoa4L1CQM6fRu0j3tenJXjiB0wbBAs7zDQEs8KQ9/ZvRcK2AVF
-         +xsLrNl10uKmkh2kKq5U06KykNIs7lK2BOobt3uR1TjC2jCgFuN2WMl+cL/zY+RA8UcK
-         aAp+w2DoB+1F/pbXNByW9/G9gJWWp6bnDHUrx5JgrghjkxsBEXhfw82vUKp7ZxuyYmTI
-         l40Q==
+        d=fairphone.com; s=fair; t=1752060157; x=1752664957; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xQUJHdPyj8W0gi2bd1ROwjjs1qRB3JgMZnsFYuser6g=;
+        b=TxaTxBuSX5u9ZIVQnsDNUIBUSmsWXIRETtzKz9ySoOBMN+3xLJNV53Mqp3fN0PnCLd
+         61ghfhTCWxKWZRjkvExvg1+a+8CmHWyxteSNZ8j7wjfxPmsp4Cps43Lny/xUbruYzgud
+         Hr1sqLBly9fVbifmt5LC0mR4HqjVYcMHECbSaMciSEgogfg7zgXdY0xlR6hGgdWxArSh
+         ioVLdypRyg1rjB7f29foxYvQQktRxS6cF8lSPcKpd7KF7+h1tvyWWnYd/QK9Ecj03Nd7
+         p+7tfd7xm7NlkqNks7BzQQ7KqRubymbOGMV6FB+34wSfoOPEwfF0DYVZ2Mr60DyDvyOj
+         eoTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752056512; x=1752661312;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DnYi4NSxelKtKJI4OL4GTqIMsRDkT7cGv2pD1bYfX0g=;
-        b=HYdu5FD2opq770pPjlyJRO7bzfrwwMBTmIxzXOkcQK2LhCrkVudBQtM5RC35LwQS5H
-         H0Sp0ldgjzqALADgbp4GKPhDoDpyUzILzfcZjFPJw3FvfW/YDSmUVzj6HvKyTiaEdP2l
-         AAzt2lb6LHFGm8IQerg3L/mTTPw2fUBC7OHi/qFeq2n6RgHyTx8kjPQ7xP0KN2B2IEA4
-         9ssyK1Jaenobag/6BJMRVJprYfQUBmeBIDMAr+PzzwSJJcBHXxqUyGd+AXO2jDb15YUW
-         9SbShHS/f8vWrMlmV/uDMYypS+ylkqr7zC79oZfEHfVJJbmm3zEduwbOmD6Za4wsD12/
-         wwQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGF3D5l5Jhs0n7XPUH/CNXAml1EkDmTlovhWpMFrjOabfj0/nDHH/dV6MRR7lzzpyTDewuqJEkuUK8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYeRfVhQTFDz8jXPZgto1eX96deGPwpxFJao2QvXpwc09g+M27
-	98IVA/3Z0TJPAO+VtpK2DsuyvkeahqYfQF6eYYsZRezSHaPxXwi01XmpA2OL8cCFLlfIScMeMrm
-	a3EnTqiYN3+JJwbpb8IVLBulXLG4xMtG6HiveqqQUBg==
-X-Gm-Gg: ASbGncu9QSjJDSpRxz4BvVEn4X+trTCa28SLxfNX+fWIvPgV5Br6rLIL0fRlIswar5X
-	t/3TpuUwE/tA7klwQ10jkqzvW9hbufaEe+NrVQKoWatZ5Kn20buGRPcqwDHj8kfQnneMpX6SNb0
-	NGoNF96X2ubsx1Gso9jvbVFDls9MAQyphtkrRGpwLbaOo=
-X-Google-Smtp-Source: AGHT+IHSPJfxh6GXrGcKI1DP68kz97ujql/EuTBRM/jvIvYqGbvtieEObAlF+0aiWntKSzdWqidNEKxOo0NgV4jV7SA=
-X-Received: by 2002:a2e:a370:0:b0:32b:78ce:be8e with SMTP id
- 38308e7fff4ca-32f48585e59mr3497221fa.32.1752056511343; Wed, 09 Jul 2025
- 03:21:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752060157; x=1752664957;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xQUJHdPyj8W0gi2bd1ROwjjs1qRB3JgMZnsFYuser6g=;
+        b=PJLIAMJfkLFCgJJZl4POFx2r+UcHittnfdhszXmW5h9rVO1t4gvPRT9i/LThsRTWcg
+         APLOkfQQszHHllI8lDAP9isgh0muKSktTX5pbKK/AUgE+vxyOlyUj4O7x7hWCXJde1Ij
+         objQU+rgjw1VwMeXgKNkGCNqjhvhrWZ8KE6Usvk7g+P2Pwww+n/BbH0TgOQgNIuoE7Uo
+         Mgiu7rGKyf72qjUTqOr0gosxGEzZzbMxFYF1OVLGae0BFGeJabVyZmbylT8bBE2eK/7A
+         dZfn0cMfthLo7tEJBHNvtgpFI5WBRpSd6uBI4pdSNukv77j9dKaMdzT2n/3AFpCJddGL
+         W6Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKDb0dUnbtFriE06x4sO4kMdvn1LvARWJLmZ0ohCzePEQGPuqM41mRNLGGrAJq9xp5x2OPS/r536Km@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiAAmPmged5QoQvavlv9mS7oZqNfRA6Q6mOkBEUHVUEk/ari5B
+	vJkJDku0Qp+ksO6cuM6f3iYe6U4lkCxOtduonf/qPMZOaidl5gFDowQ+NFA5QEQQDWU=
+X-Gm-Gg: ASbGnctbcqf5Xsi/Cl83FUoo2Wu6lO/BzH+vIe4uRFyc66ZhEMMG3WnjhG4xuftf2lM
+	4lfahMG3aOc7cenwBMhchQv2xgK0WG0LcqmGhqHcVBPTamgjaERpvSiYLWDrg6ddgi23RuC7zrY
+	NhK8xxO9L9NwAMslJb6kxeTatz+IFPsnGZMeVIf1fNC6pSwmeLx/bgk/U1vJAAIzWIp9VvNr82g
+	Q/boQBhYS+leJuTjTOPIT4LuQ17Ze6jQXUH4NBjjKEFpHi2q3G3ZMyfMtXiZYzxwgNr0w+R1pqV
+	ZslqX/buAeid8aNk1/msrRE5/B0spo3c2Z6XYcBqWeLf8rQHkZVZbiZ0KdRcama1bp28Tm6alje
+	0z+AR6KbdZhjUsPHZVnfvz7E6Z8i0ScDJ
+X-Google-Smtp-Source: AGHT+IHTfG6JAQuOkgrCHZh/dTq0UW8icnexBa5jfYXWv+zlfUgceZ6v69fBma7jvSHLlIpUiGQFIQ==
+X-Received: by 2002:a17:907:944b:b0:ade:44f6:e3d6 with SMTP id a640c23a62f3a-ae6cf78bcc9mr209824266b.46.1752060156792;
+        Wed, 09 Jul 2025 04:22:36 -0700 (PDT)
+Received: from otso.local (144-178-202-139.static.ef-service.nl. [144.178.202.139])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66d93basm1079861066b.4.2025.07.09.04.22.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jul 2025 04:22:36 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Subject: [PATCH v2 0/4] Add support for PMIV0104 PMIC
+Date: Wed, 09 Jul 2025 13:22:25 +0200
+Message-Id: <20250709-sm7635-pmiv0104-v2-0-ebf18895edd6@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 9 Jul 2025 12:21:40 +0200
-X-Gm-Features: Ac12FXyoZXoQflju9o9tYtb_0UNR6yMkEYYNVK3VI5ezRpYr41t18RFM2aqmrUY
-Message-ID: <CACRpkdZB=mYnmZU14Gn9buB7jE2b-7Fu+dgf3pcAcVj0FgvHiQ@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v6.16
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPFQbmgC/2WQzW6DMBCEXwX53I38g23g1PeocjCwDj7wE9tYi
+ SLevYa0olKPs9r5ZnZfJKB3GEhTvIjH5IKbpyz4R0G6wUw3BNdnTTjlkipOIYxaCQnL6BJltAR
+ RGqXrWui+7kl2LR6texzEr+tbe7yvGRzfw5ObYw4qU4BraDl4XNBE9BDXyU03sFIJwTrVMmuax
+ MnfUr/ms9LOOBG015WVUvOa2iax3duagNDN4+hiUyR1ybm+Y2RvObgQZ/883pCX95o/ePnv4sS
+ Agqp6XumubJWgn9Y4vwzzhJdMJ9dt274Buvw45FgBAAA=
+X-Change-ID: 20250620-sm7635-pmiv0104-34a679937d9d
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Luca Weiss <luca.weiss@fairphone.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1752060155; l=1851;
+ i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
+ bh=e5zAe4LytXHoMKx6I/SASM+3m+FmFrGqkcUpklIa1v0=;
+ b=8t4l9dFepB9Ly8RCD74D5+Qlo4TsdWYEOdCTY1tu1FRXtor7wWzTX9sYLYo6XhnEq3/9Qlt4o
+ L9H3a/QVk85DPbufDPeB7egSAojAkhMhLwhCJ8sMqptK7Qh0/BmGAGd
+X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
+ pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
-Hi Linus,
+The PMIV0104 PMIC is used in conjuction with the Milos SoC. Add binding
+docs, GPIO support and the devicetree description for it.
 
-here are some pin control fixes for the v6.16 series.
+Depends on the eUSB2 repeater patchset, as specified by the b4 deps.
 
-Nothing special, just driver fixes, the AMD one is especially
-nice to have and will probably spill over to stable as well.
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+Changes in v2:
+- Update commit messages to mention Milos instead of SM7635
+- Add critical thermal trip
+- Pick up tags
+- Link to v1: https://lore.kernel.org/r/20250625-sm7635-pmiv0104-v1-0-68d287c4b630@fairphone.com
 
-Please pull it in, details in the signed tag!
+---
+Luca Weiss (4):
+      dt-bindings: mfd: qcom,spmi-pmic: Document PMIV0104
+      dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIV0104 support
+      pinctrl: qcom: spmi: Add PMIV0104
+      arm64: dts: qcom: Add PMIV0104 PMIC
 
-Yours,
-Linus Walleij
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.yaml    |  1 +
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml           |  2 +
+ arch/arm64/boot/dts/qcom/pmiv0104.dtsi             | 73 ++++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  1 +
+ 4 files changed, 77 insertions(+)
+---
+base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
+change-id: 20250620-sm7635-pmiv0104-34a679937d9d
+prerequisite-change-id: 20250616-eusb2-repeater-tuning-f56331c6b1fa:v2
+prerequisite-patch-id: 5c504d171a4d1acd9ec376e01e0dd0fddbad92b8
+prerequisite-patch-id: 0c97dcf5472fbed8ef4cffbd482f3169fe1e972d
+prerequisite-change-id: 20250620-sm7635-eusb-repeater-0d78f557290f:v1
+prerequisite-patch-id: 5c504d171a4d1acd9ec376e01e0dd0fddbad92b8
+prerequisite-patch-id: 0c97dcf5472fbed8ef4cffbd482f3169fe1e972d
+prerequisite-patch-id: a618abb349c3de5b49f79b4b0f86d9ab502ad500
+prerequisite-patch-id: 09f91ff3a25c16a0375bdfec80604a64eab0b4fb
+prerequisite-patch-id: 8fca8b09d70409c5c78f9f1b77d0a4c75bce38cf
+prerequisite-patch-id: f5c2c24d2baefcd7ff91718529ab2f2c264ab99f
 
+Best regards,
+-- 
+Luca Weiss <luca.weiss@fairphone.com>
 
-The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
-
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.16-3
-
-for you to fetch changes up to 5285b5ed04ab6ad40f7b654eefbccd6ae8cbf415:
-
-  pinctrl: aw9523: fix can_sleep flag for GPIO chip (2025-07-04 10:31:50 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v6.16 series:
-
-- Mark som pins as invalid for IRQ use in the Qualcomm
-  driver.
-
-- Fix up the use of device properties on the MA35DX
-  Nuvoton, apparently something went sidewise.
-
-- Clear the GPIO debounce settings when going down
-  for suspend in the AMD driver. Very good for some
-  AMD laptops that now wake up from suspend again!
-
-- Add the compulsory .can_sleep bool flag in the
-  AW9523 driver, should have been there from the
-  beginning, now there are users finding the bug.
-
-- Drop some bouncing email address from MAINTAINERS.
-
-----------------------------------------------------------------
-Bartosz Golaszewski (2):
-      pinctrl: qcom: msm: mark certain pins as invalid for interrupts
-      MAINTAINERS: drop bouncing Lakshmi Sowjanya D
-
-Mario Limonciello (1):
-      pinctrl: amd: Clear GPIO debounce for suspend
-
-Milan Krstic (1):
-      pinctrl: aw9523: fix can_sleep flag for GPIO chip
-
-Miquel Raynal (1):
-      pinctrl: nuvoton: Fix boot on ma35dx platforms
-
- MAINTAINERS                            |  3 +--
- drivers/pinctrl/nuvoton/pinctrl-ma35.c | 10 ++++++++--
- drivers/pinctrl/pinctrl-amd.c          | 11 +++++++++++
- drivers/pinctrl/pinctrl-aw9523.c       |  2 +-
- drivers/pinctrl/qcom/pinctrl-msm.c     | 20 ++++++++++++++++++++
- 5 files changed, 41 insertions(+), 5 deletions(-)
 
