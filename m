@@ -1,129 +1,109 @@
-Return-Path: <linux-gpio+bounces-22966-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-22967-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60A05AFE198
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 09:46:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CCABAFE23D
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 10:16:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 895DE3AB018
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 07:46:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F9AF581943
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 08:16:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3857E26E70D;
-	Wed,  9 Jul 2025 07:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5083223B61B;
+	Wed,  9 Jul 2025 08:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+/9BIyP"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="b2hOwPrF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D5B221282;
-	Wed,  9 Jul 2025 07:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EA423B613
+	for <linux-gpio@vger.kernel.org>; Wed,  9 Jul 2025 08:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752047194; cv=none; b=RBQCLFiKbp5CroVgi/q1F+6R3FIoAQZh83T/rsWZR/tRqpmCFYDJ3uJEvlgrz1zyzVZAJI0h1bo7HHVzxhNGAZQeISmtH35hKsYEKmNO/zuxVYUCpp7qN+MoCOE7AcNFNd1SLgxFx5YqhbPRpxnTp18GlCkKUlCV+dapy7me4zA=
+	t=1752048791; cv=none; b=u3C948uz6mg1UZ/loMlJCmSCzydRJtSJFJ5HqozZrgIvyL6RVANaOEph/XaG6GPanCM36j90DJbonnGbbaYaIGkRT4sxqWIE0RDMUVXXwFuUaa1HlWN8DAmq3bB8Lqng9mS7+Pn6anz83ewety12U89wjughhnhdBcraF7o88DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752047194; c=relaxed/simple;
-	bh=mRT6Rx7Qww8LyJu4u9N9tkJu9ASaymvfPiXsGIp7lxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aVxjFybhVkSWD6/2dPQR8CrvMUTNVkoawToK6aim6CV5W++nzMPjy88/26C267VQmDHCZCX9xF1L+Jwk+AqRVtTI/Lslbg2ffdrwwTSLLy4VRUkzG2/y8lbaQXA+995btFx8D/ZVH8+bLC3xYLWo31w1PHJKGuLLezOrQmJjyKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+/9BIyP; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so10268454a12.3;
-        Wed, 09 Jul 2025 00:46:31 -0700 (PDT)
+	s=arc-20240116; t=1752048791; c=relaxed/simple;
+	bh=DH9NUD8mzU5ovthvNp8ZKZYQRFFPM1EeEMXe9n7EirA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fLik/QzeKMhUfWuFruJVrUeWZP9tUcCuBdBcj+UnbsNlhIWvp8PuUUys151mrCuzvbWnuYiPpxdyf1itT5S4Ms/NB+QrMoN5AlCyUEfUzeGaWqjJvUvK9BfcF2m27vNghe51YyUasFSYIa1bhR1nvfyxQwNdB2PSIR6z8MqvIsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=b2hOwPrF; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b7123edb9so60323051fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Jul 2025 01:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752047190; x=1752651990; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=05ls/TIVTzEqK91Ulv03Khd011EHnIA0GHHkneM853U=;
-        b=j+/9BIyPj6nVKjMWbaXwN+Zyqw2V8Q7ocAAjJnrx/LThSMZZUM38QtZZxmXrFRCs/a
-         AqzPj+PwA5CpYcqSNxQY3uexz+dPipUHkl2vyE2cSDHKJ7FnBw6VbFkGW1ovkvsGOaeA
-         xx0QTIuOugtZBoEmKRDqhkTGMnkYYYnJ9/8LMqpaf57i3XbeVNp0Ijn7EW3CL6BjBhCx
-         jaVP8gOGDHMVOdLFYyE87WDQJvc4qWnrWE/OgfVWWhJ5DkW9MffjHUj1cHj6+CvCZUDx
-         /gqIw3dRYRVzAcKH/LPtD36LNcBN6OPHYmg2rWsn1IOgXDy2ExHnD45QR3dauCr2qpHZ
-         qlKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752047190; x=1752651990;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752048787; x=1752653587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=05ls/TIVTzEqK91Ulv03Khd011EHnIA0GHHkneM853U=;
-        b=Y5dV2u4a6/U5w1boVXD52eEV6q6wGEW2VEAGERX8Muf4AdulWMZ512Yhju9fsPXA/k
-         ZPzuLlY+M9LogNphgQIG46LixUBketDGQ4GJA1k98otP/BiRriE5xEmnLx+XE6PIMq1g
-         DmNXzJIeVB8U9mX+drF4U3BdB0m8bU1QXJE57T9QZSBhuecuR6+/457lFcqQ1OVc8ajh
-         WumRAq4mfOAuMRc2M4Uz0quE1O7VM7IsaFF45KAFoPG0iSx3r7b7bo6y6xYWk533C/Do
-         uqUd2IRfH3GIrVGD6RDRpV0sOwLDSoTogroG7X5QHmUGgCewvp/eJ3xynAvkpinHuFbc
-         Q9bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhD5TVc5sksop1chCaJMwrm2TNgk5NtqelefxW/3SCi0AXKnHSYidOuiwVFu5dh0GcR0qtqkEF8DG2aTI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6V1KjLTR8kVMvU9ctQufqpO3C6+6t0GymwDiO8+y0sjjF9v67
-	q2rM/s+l8jD8MsJVNqJrHqHt6veT6B+Q/MyO9hR9/uo7krmbJmHZDE7Xrv+cYw==
-X-Gm-Gg: ASbGncuvtfwX2BT4KyLAf3cGFhAPhUk9yI/mNNSTdUjF69hI53EOCLdBMuRM3r0yFO1
-	WJtCzAJ7aYMKYJRv2KFrviDFErXsFp7jFMcn6Ac8pV9YmqYTex3zpIKGLChiQY/2sn89787NdmS
-	i/6W2h7id5swgfQPuaBwF54GQuNFPhyZj3yQ/wJ5f5YyI5BS+6kbje48N1AX/ZBxdz7ugVf0TZK
-	iHYlXmJO27idU2yeBC7iJ1JGjpjxxhFABaz57I25hIUxjltXfjmTiWJxqKVLnjJKMbB9UzUr01K
-	hF/PpkjseXr/is3EkPFkkCLdlrmWAMRTGuUyDzwnQQIYYJ+HSw/0g76exCoDcQ==
-X-Google-Smtp-Source: AGHT+IGffJCqSF/CMbIuG57p2fuyx7LmK58Jxk3KXLTMDgY3yqkElDAjf1pCpFnR+T2YdigqIaXuFg==
-X-Received: by 2002:a17:907:2d1f:b0:acb:abff:a5b6 with SMTP id a640c23a62f3a-ae6cf5bc2c5mr135488366b.13.1752047190138;
-        Wed, 09 Jul 2025 00:46:30 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6d8b49299sm28532766b.164.2025.07.09.00.46.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Jul 2025 00:46:29 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id D3DDC424E298; Wed, 09 Jul 2025 14:46:23 +0700 (WIB)
-Date: Wed, 9 Jul 2025 14:46:23 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] MAINTAINERS: remove bouncing address for Nandor Han
-Message-ID: <aG4eT557hI8AT38G@archie.me>
-References: <20250709071825.16212-1-brgl@bgdev.pl>
+        bh=865uQGi3JHs9gU6SJdGaHyOjW16oPlGySA+XL9vzYmY=;
+        b=b2hOwPrFTgRG0MGHTN+J0+KxYyJHJh/GJuJHifKKlR/x/o1R+O8LGbeizacvpVQC0z
+         VP5pLEgEYfV5dug8jHL6S1lzAo2UEITF/uNaRx3n0oT7iAq5uphjcJOx8Qa0gD8twSTG
+         DnGOx6yTVuP50JNgnA9d7nb69htAAGW02S0oGcTaYMGpMo+cqsxlaMu/iQH0ezL6iXFb
+         i0Nip6eS/Y7XRL7Xnu4gUxdRAgUjYi7Vp2DPoR1oiSlEkpjnlMyjJ2ml0xx+SxNaYggu
+         rv2QXZx7brS53Npv3agLLu4OleM+gSR5nLpY5EamojJlBIr6KNyziHduczrwqfONcZnf
+         EMwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752048787; x=1752653587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=865uQGi3JHs9gU6SJdGaHyOjW16oPlGySA+XL9vzYmY=;
+        b=QViEYUztRyXShNvC0x+HmY7Do+VeQrpc7/nLsnlIc9HzZqBkQaoBT9ruJwR3uYeU+I
+         ltnUbmcpiMg2Wx589myuL39XhfDyB+hTO3ZsFXj9XGjBp6t8aM37iOBbXriroQ1MBMH5
+         sj0JcRmaY5JExMXuFpVBMrCM8A7l+e4wXl1TtH6sVRaRkM8men0rXC5iuCE0DDThelr2
+         AW053zG0lywEZ/pz6CHntyustU7EjvA85Iy7UDSFOj6i06QrZayOuhWhUZQW5KFs1rYl
+         yYk6v01jNlilnSn9aAQ5o84hesOS6733LzYVnjyyQhWaahV8qHdKbovJhzzhfSHZQaL8
+         wjow==
+X-Forwarded-Encrypted: i=1; AJvYcCVBQK2YmtzAsWaGiNUw3MfESdMe4DYd+kUBkJpFfsgIcfMA5IfLxDrR5D79PXUHOdu1PC6SuYv9p6x6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVldgYZrx2cQQe96oTl5t6l2TedU5/TKWCVmopMYnMVfFKLgnn
+	ZJnUUwj/rLhhJm6VowUEQ4Z8StbKYwYgyybILo2HuKAPmMiw1oYOXHBf1qzhaoIUJNNFreJRH9q
+	NuU+cLzXrU50v6PYLvGNxB1JP0rqWtsepiarQkvU1VA==
+X-Gm-Gg: ASbGncuGCgLbtJZ95j13oCUXjGYsXRSBuTApfVsMBBSS3+53o4FwmbRYhA1F9olHUe6
+	rmXrn4tWe+h0V6uy9fvxhmGVo8Fj/25CZjcqkhq6XWNGmP0sqsKWTc5XGi26+6dRkyNVyOBlrX4
+	zW7A2PeRN7nlHKq4P7YzMfIztLUwuLowxbout31MUTNjbxZhBmFHMKIGX1elpo1yN8tMWVquWvX
+	DI=
+X-Google-Smtp-Source: AGHT+IGdXHk9MOPcJEsIkrUcBBcrbdbZTeRRspKa0o7hVMdnKdwLyq1jVJADdc+lM8sJtrMggELmxg/v0AA8YEwt7qk=
+X-Received: by 2002:a05:651c:3044:b0:32c:102a:f02d with SMTP id
+ 38308e7fff4ca-32f485c5877mr3801891fa.30.1752048787410; Wed, 09 Jul 2025
+ 01:13:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0uJFV4fLsoSQ4T3b"
-Content-Disposition: inline
-In-Reply-To: <20250709071825.16212-1-brgl@bgdev.pl>
-
-
---0uJFV4fLsoSQ4T3b
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250709071825.16212-1-brgl@bgdev.pl> <aG4eT557hI8AT38G@archie.me>
+In-Reply-To: <aG4eT557hI8AT38G@archie.me>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 9 Jul 2025 10:12:56 +0200
+X-Gm-Features: Ac12FXy7aI3Qs7lgagRv3GPU9z2XcHjmSgG0_MnFsJ-CNXmaAn1fS4KYQmiWBC8
+Message-ID: <CAMRc=MehnbMsYj9EW3P6T-20-tYBBJ1CeKUCf8qRxva3UFdpzw@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: remove bouncing address for Nandor Han
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 09, 2025 at 09:18:24AM +0200, Bartosz Golaszewski wrote:
-> -XRA1403 GPIO EXPANDER
-> -M:	Nandor Han <nandor.han@ge.com>
-> -L:	linux-gpio@vger.kernel.org
-> -S:	Maintained
-> -F:	Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
-> -F:	drivers/gpio/gpio-xra1403.c
+On Wed, Jul 9, 2025 at 9:46=E2=80=AFAM Bagas Sanjaya <bagasdotme@gmail.com>=
+ wrote:
+>
+> On Wed, Jul 09, 2025 at 09:18:24AM +0200, Bartosz Golaszewski wrote:
+> > -XRA1403 GPIO EXPANDER
+> > -M:   Nandor Han <nandor.han@ge.com>
+> > -L:   linux-gpio@vger.kernel.org
+> > -S:   Maintained
+> > -F:   Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
+> > -F:   drivers/gpio/gpio-xra1403.c
+>
+> Shouldn't the driver status be orphaned?
+>
 
-Shouldn't the driver status be orphaned?
+It falls under the higher-level GPIO subsystem umbrella.
 
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---0uJFV4fLsoSQ4T3b
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaG4eSgAKCRD2uYlJVVFO
-oxJkAQDS8bBRFgcwq+N155tKrci/YCyKKy1d917ibKgi8olm8gEA9zJP2DoZYfAr
-HIDit7FenDruqGNFPaiU6gr3QBm/ZwA=
-=pcgV
------END PGP SIGNATURE-----
-
---0uJFV4fLsoSQ4T3b--
+Bartosz
 
