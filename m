@@ -1,34 +1,34 @@
-Return-Path: <linux-gpio+bounces-23020-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23021-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C90ADAFED4F
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 17:13:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DC64AFED98
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 17:21:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01D9B4A11C0
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 15:09:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FBBE5C3E4A
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 15:18:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2612E5B0D;
-	Wed,  9 Jul 2025 15:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F0E62E7BB7;
+	Wed,  9 Jul 2025 15:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FAWPm5uy"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="y8wzZTnp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7322E2678;
-	Wed,  9 Jul 2025 15:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7037535958;
+	Wed,  9 Jul 2025 15:17:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752073762; cv=none; b=IL+wygg+pgY45xR1gtSYAl3EzGMkfOwhOm2E9t/zB3MQlmSVDV4Ivr2b6I85uInM6WgT25ebMMnOPRJ47xcjq/+U462VO3iJ7Ir581U/dCxFPFffU9ykWg8uZbdJXHbNxdcjPX3rsyRDtholFpYeStrniL8Sqyn6U40oPZo2kT4=
+	t=1752074241; cv=none; b=SSBjq4K2pxyybWNZRXXpSYMnFFMlovD9eZ0HpsoABzX9WkhggrGwO+E0uNjBsV04tEj/72+Kju8M9io6x0zU7+EAKUTFTeiAFwRjoeJ2115v0KpnOXYH3fWe4TJcbtAMTzrqVfDWTRy0InLVJu8l4SEIDMCbDJ8d8cRO3Suwb/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752073762; c=relaxed/simple;
-	bh=pPy2FKFkThlDVPMouYhG0qFiHsCT6VIKIzN17kas5VE=;
+	s=arc-20240116; t=1752074241; c=relaxed/simple;
+	bh=fW+9x2s6lvNsCTljHhcU4z5uUSJOFa9JnhC+Ifk1fVQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6K3fltPj76vU0tEaGOt6lMAfOGgJY2gCjKsiAoEA5Jv/r6Pf1mRNiGLVxSZZKi7s4MkAAFtuEOAsL4UDCeDUZou/2Z/qhKdcCrAek2zWfy5o/oTqNGXn9qI1W2tw4hTTktfiXHoJ/vhwWpbAcuuUzKTPG4mXWAEda4S1vwjgZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=FAWPm5uy; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4I6Q45NVNuQwL1Eu+RVVCqTv0NKDoFam30i19amkVSOrPrdytOvZxJcmfEqEforFXVSksTNm8NU9of/JAIR1Q++nWiy3GeHWlKynktVyKopuBtOhn0AbxBxrPhJM3LYX/BN2qp1LPT7SmM0Fgc9kAo15Hzl0sn2+w63mPw+JgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=y8wzZTnp; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -36,13 +36,13 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=5fTnbnfI2D0SW9Wd78YXcLrbOHt8ziweqWLL9StcYkQ=; b=FAWPm5uy6nPc15hpxU3RR511Jg
-	Tc8DelvKLdVlYFxHWtnEt/iAWsIh+jdVvO1PmXKMvvJ8CeE+UqxXKz9HctVZkPkvV7IDZMKkqOLZS
-	dtwVH/SZHK7vsK7b1bZSPVjbf3ArK81Px1Jns8WQv17ZTkbeId18fpJmmHcOpVK1y0vQ=;
+	bh=xOjCg4XbxOkhT8S8sZPEP73rpNtOVJZ5nJWx075Q+eE=; b=y8wzZTnpsTg0FnFL3ruJPMnfCs
+	4SAUf9W1zsjwJ9bwsBAqpEkCDCK441+3WUMr+3M5HjRS4r68s07b7M1DCm5fZoyBxTp4uZ+ORdJlx
+	IrKAcri0wEJcSe6UuHU3ZWu9cftE4qz4TnB/+agXCAzn35OfwCx3AL9UFzvN2o1BmIBQ=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1uZWQ9-000xH4-4l; Wed, 09 Jul 2025 17:09:17 +0200
-Date: Wed, 9 Jul 2025 17:09:17 +0200
+	id 1uZWXu-000xJZ-3C; Wed, 09 Jul 2025 17:17:18 +0200
+Date: Wed, 9 Jul 2025 17:17:18 +0200
 From: Andrew Lunn <andrew@lunn.ch>
 To: Ioana Ciornei <ioana.ciornei@nxp.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -54,10 +54,10 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Shawn Guo <shawnguo@kernel.org>, Michael Walle <mwalle@kernel.org>,
 	Lee Jones <lee@kernel.org>, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH 4/9] gpio: regmap: add the .get_direction() callback
-Message-ID: <0d0e9cee-2aaa-402d-a811-8c4704aadd74@lunn.ch>
+Subject: Re: [PATCH 5/9] drivers: gpio: add QIXIS FPGA GPIO controller
+Message-ID: <898af9ea-9b90-4d1f-8e0d-a8e0686d72a7@lunn.ch>
 References: <20250709112658.1987608-1-ioana.ciornei@nxp.com>
- <20250709112658.1987608-5-ioana.ciornei@nxp.com>
+ <20250709112658.1987608-6-ioana.ciornei@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,45 +66,38 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250709112658.1987608-5-ioana.ciornei@nxp.com>
+In-Reply-To: <20250709112658.1987608-6-ioana.ciornei@nxp.com>
 
-On Wed, Jul 09, 2025 at 02:26:53PM +0300, Ioana Ciornei wrote:
-> There are GPIO controllers such as the one present in the LX2160ARDB
-> QIXIS CPLD which are single register fixed-direction. This cannot be
-> modeled using the gpio-regmap as-is since there is no way to
-> present the true direction of a GPIO line.
-> 
-> In order to make this use case possible, add a new callback to the
-> gpio_config structure - .get_direction() - which can be used by user
-> drivers to provide the fixed direction per GPIO line.
-> 
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> ---
->  drivers/gpio/gpio-regmap.c  | 17 ++++++++++++++++-
->  include/linux/gpio/regmap.h |  3 +++
->  2 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index 87c4225784cf..dac2acb26655 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -32,6 +32,8 @@ struct gpio_regmap {
->  	unsigned int reg_dir_in_base;
->  	unsigned int reg_dir_out_base;
->  
-> +	int (*get_direction)(struct gpio_regmap *gpio, unsigned int offset);
-> +
+> A GPIO controller has a maximum of 8 lines (all found in the same
+> register). Even within the same controller, the GPIO lines' direction is
+> fixed, either output or input, without the possibility to change it.
 
-This is not my area, so i will deffer to the GPIO
-Maintainers. However, it is not clear to me what get_direction()
-should return. Is it the current direction, or the supported
-directions? Maybe it should be called get_fixed_direction()?
+Since this is an FPGA, not silicon, is the selection of output or
+input a syntheses option?
 
-I then wounder how it will be implemented. Since it is fixed, it is
-probably just a constant bitmap, and you look at the offset bit in
-this batmap? At minimum a ready made helper could be provided, or
-rather than have this op, just provide the bitmap, and gpio-regmap.c
-can look at the bit in the bitmap?
+> +static const struct of_device_id qixis_cpld_gpio_of_match[] = {
+> +	{
+> +		.compatible = "fsl,lx2160ardb-fpga-gpio-sfp2",
+> +		.data = &lx2160ardb_sfp2_cfg,
+> +	},
+> +	{
+> +		.compatible = "fsl,lx2160ardb-fpga-gpio-sfp3",
+> +		.data = &lx2160ardb_sfp3_cfg,
+> +	},
+> +	{
+> +		.compatible = "fsl,ls1046aqds-fpga-gpio-stat-pres2",
+> +		.data = &ls1046aqds_stat_pres2_cfg,
+> +	},
+
+Does the FPGA have an ID register you can read to confirm it is what
+you think it is?
+
+Or is the bitstream downloaded at boot by another driver? Can you ask
+that driver what bitstream it downloaded?
+
+Given how similar these devices are, it seems like a typ0 could give a
+mostly working device which passes testing, so doing some validation
+of the compatible against the actual FPGA would be nice.
 
 	Andrew
 
