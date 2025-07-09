@@ -1,70 +1,133 @@
-Return-Path: <linux-gpio+bounces-23022-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23023-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEF63AFEDE0
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 17:36:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77221AFEE90
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 18:08:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28CAA4A2403
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 15:37:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69D111890527
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Jul 2025 16:08:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775B52E888D;
-	Wed,  9 Jul 2025 15:36:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB472DC339;
+	Wed,  9 Jul 2025 16:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A22rOxGQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA30EEA8;
-	Wed,  9 Jul 2025 15:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7710F74059;
+	Wed,  9 Jul 2025 16:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752075414; cv=none; b=eUk896c7IA0Wj/H3fJtB7zXq6bicwrUE7+DegBARLogyMGu+kAHKn8im2rtHhJPH3E3eZSqxFb+/RFHxWTGlaaD5sO+dIDA9mEK9F9sp4nMFdFso+UMg525KrzfP0IZwfQn+2Ms8yLmfUhFsJ/exThH083s40vAkPeVWn866w9Y=
+	t=1752077316; cv=none; b=hcedx3srXENp2sBVQe3jTW4jkMhtBRzvZ4aaq9KM8FK8jhNDfkoHlp7sojsmODKrJXHmc/8XXFR0OGpi+Fv/JcE2ZkYYtYcMIZF9e/odhtdiLnDX4E65upoYNb2uOppIbH0T6XEBfDK4WuyqxLCIEAvzOI30s57MA8DzF18e1xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752075414; c=relaxed/simple;
-	bh=Ra0q1YRk8dc9wL0sB8bADJNs5V8YEwxRwJMrTAmQyqQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=l1yg22UBBADTb85yEK6z/ADfdpRoK2yOf9mMbTXAH8p9qNNeRJTnDeFNhCCdFYplmoeWVkMW4T8IufvsdqwqmSY9SgmFoh7tyxSVr4Tu30zuiTYzBGIp/IwrHGRd/vFLTvyiPQfSSagnTjOxlrKX81VBGJ8U4KcjYRsqSObHkSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=walle.cc; arc=none smtp.client-ip=159.69.201.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
-Received: from localhost (unknown [IPv6:2a02:810b:4320:1000:4685:ff:fe12:5967])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3ffe.de (Postfix) with ESMTPSA id 4F76E299;
-	Wed,  9 Jul 2025 17:36:50 +0200 (CEST)
+	s=arc-20240116; t=1752077316; c=relaxed/simple;
+	bh=nv3o4hh7pxIJ0AsyLDGU1qhdxiyzuJeE899Ov8H8xKc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D1we4RPuZ40IFlLOBNzXQk7UjgoVQYEhwTgJBcxzSDTobf4NLTgmyEO0h5/UA3Qfrx+An6tNWJ+e8V4naOlxkUp5HTIRkuhL7NijeAuLfOYX64UT78TimHqiZQvK5QDftBV+ja98g89o5GyyHPiZMt4xcJ3M8iT+O8n4RInNsuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A22rOxGQ; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45348bff79fso142235e9.2;
+        Wed, 09 Jul 2025 09:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752077313; x=1752682113; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kn1Ia4Fe2gy7SYFQufa6rdVQFZ/jITGDbYtxmnLlr/I=;
+        b=A22rOxGQU4wVaU7SCPzIB0QKmtEJIriQsselMtqjHO2RRKaUwVzwIo3XH45Bv+b3iw
+         KmuYKXiabZiFF2V1P3jJjM3Cw5blGtxnpBoGqWsAhDO1nB5uIRGeZx6wzZwZGk5lTyFj
+         roxYjbcQyBp/R8Ehsg2AkkSGlTkhteRmTe/uZC7yVFBT96nuTr5jY+4A39g3nnpKiVKz
+         8i1FMCwRx6jCu3IKPgjCkxCv3Jk1dmbUQ6gTXS7ooKNYuLaYhb2J6a7Mz5vsg/P5RwXD
+         l81MT+yK/eSwCUSz73Zl6GunMysNIPLDreOpUDMrzllgo4RFj8O+ZTtV2gcxYU/GbGZ6
+         GAvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752077313; x=1752682113;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kn1Ia4Fe2gy7SYFQufa6rdVQFZ/jITGDbYtxmnLlr/I=;
+        b=mRJsdZMkKSL/MDaPOdbJXj0bVWraUC2yFwRNIrgLRIYO9mXXwQsQlUpwZ8A6WArQD9
+         C7zCVHRW09R0P27ENBckxJgKm1Z+5NB70BVadC5yFNnHXi0+3nNhW6PplFtlrJ7ail4F
+         bJqz4nSecAq3D8LLCG+QMzLJSiJkv9hvhp7LzDhJMruJFYQv0IDFQ524VMSH4MMKT7vX
+         cLlpyXwFSIbqGXss+bXhZomlLQSkfOAIcNz9oDECTBlrPathmaRNgc9lb0GIeWCRPFmm
+         nCjcRDrTUiAtwwB4EKr9/4+3fbV+PWPWUbr7eGLMy86ZBowebx0z4ubDUElPPqBCSII+
+         GGew==
+X-Forwarded-Encrypted: i=1; AJvYcCVrerBc39jVdhzUrmItKBJMFjUdhbj7YRIoZhFPEse/EnYxzOQf+N3SRAk+/VZ3yj2O/KKuRmgzlamhRMXi@vger.kernel.org, AJvYcCXO7Ffiiu2UdXHhF4iEOrCJfC0tZa2s55Nw4zJ4vbdJtcZB0kcWOyuavKO0eCZr/LctE3lzIe1Ki6k7@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMppMnaRosW3urAU8Mc7CalRiGSPSjtQig/Aa3YGpm1J9gQ2Rr
+	pSE7++z6SZLDjBi3ekTLNEUpXsyJ5TcCThT7xV5nJvAhHswCmH1FieEg0RqVHQ==
+X-Gm-Gg: ASbGncsJgg+teFeLJCN098QLbcIkQpVK563P/wIKBCc0phxKEG1VNG5cDjN+anAzfMO
+	QqVT2UBMyEcnQjLndCwFat020uZCCjyRV24uJfN3dgiG3rp1ZRhO9NIpygqD4/5DqVRHE5njTjQ
+	HC5gJXTyxq7y1GCYtZkpeVlg3k/kGhOtzPG8i8t/xiYSnHqbiP0sfuZXNdQHFuUxpNi6E8wS1m7
+	O8UiEwMMMvnXDVSfsrfWzjmh4PHJ+Cnau6nMbG4QuzqxzFlz+mI7l3lR3aUvc3QXkQ45B1Eh0b1
+	/c0kiSYrT3dSCFfSUGJpofZR0+7aGmeYh3D7QS1kSP5Don3/Q8IW5KLQHcagr07Q9F6N72DdEoM
+	nBxAui0CGOi8=
+X-Google-Smtp-Source: AGHT+IEBrBn+Pf9Xxxz2YDUuaHH2INn/FVl+bL1gLVy9LuZGTmblH0P6nxV4nQP0xpUg7bxlsIVOEw==
+X-Received: by 2002:a05:600c:8b73:b0:453:6b3a:6c06 with SMTP id 5b1f17b1804b1-454d53ef405mr30907355e9.29.1752077312308;
+        Wed, 09 Jul 2025 09:08:32 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:c930:b02d:bf60:750b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b9671asm16639686f8f.53.2025.07.09.09.08.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jul 2025 09:08:31 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	John Madieu <john.madieu.xa@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/7] pinctrl: renesas: rzg2l: Unify OEN handling
+Date: Wed,  9 Jul 2025 17:08:12 +0100
+Message-ID: <20250709160819.306875-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 09 Jul 2025 17:36:50 +0200
-Message-Id: <DB7MWBOS4YDK.2QIYX7WQ3X1KU@kernel.org>
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Linus Walleij"
- <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>, "Shawn
- Guo" <shawnguo@kernel.org>, "Lee Jones" <lee@kernel.org>, "Frank Li"
- <Frank.Li@nxp.com>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Andrew Lunn" <andrew@lunn.ch>, "Ioana Ciornei" <ioana.ciornei@nxp.com>
-Subject: Re: [PATCH 4/9] gpio: regmap: add the .get_direction() callback
-X-Mailer: aerc 0.16.0
-References: <20250709112658.1987608-1-ioana.ciornei@nxp.com>
- <20250709112658.1987608-5-ioana.ciornei@nxp.com>
- <0d0e9cee-2aaa-402d-a811-8c4704aadd74@lunn.ch>
-In-Reply-To: <0d0e9cee-2aaa-402d-a811-8c4704aadd74@lunn.ch>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> just provide the bitmap, and gpio-regmap.c can look at the bit in
-> the bitmap?
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-I like that idea.
+Hi all,
 
--michael
+This series unifies the OEN handling in the rzg2l pinctrl driver, allowing
+support for RZ/G3E SoC and removing redundant code paths for RZ/G2L,
+RZ/V2H, and RZ/V2N SoCs. The changes include
+- Parameterizing the OEN register offset to support different SoCs.
+- Unifying OEN access functions to use a common pin-to-bit mapping.
+- Adding support for RZ/G3E SoC with a new PFC_OEN register.
+
+v1->v2:
+- patches 1-5 and 7 are new
+- patch 6 has been updated to adopt with the new unified OEN handling
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (7):
+  pinctrl: renesas: rzg2l: Fix invalid unsigned return in
+    rzg3s_oen_read()
+  pinctrl: renesas: rzg2l: parameterize OEN register offset
+  pinctrl: renesas: rzg2l: Unify OEN access by making pin-to-bit mapping
+    configurable
+  pinctrl: renesas: rzg2l: Remove OEN ops for RZ/G3E
+  pinctrl: renesas: rzg2l: Unify OEN handling across RZ/{G2L,V2H,V2N}
+  pinctrl: renesas: rzg2l: Add PFC_OEN support for RZ/G3E SoC
+  pinctrl: renesas: rzg2l: Drop oen_read and oen_write callbacks
+
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 189 +++++++++++-------------
+ 1 file changed, 85 insertions(+), 104 deletions(-)
+
+-- 
+2.49.0
+
 
