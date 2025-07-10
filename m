@@ -1,44 +1,44 @@
-Return-Path: <linux-gpio+bounces-23046-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23054-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58AACAFF5BD
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 02:21:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73090AFF5F1
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 02:28:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0ECF17FE46
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 00:21:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EAF31C42F15
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 00:28:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72AD83B280;
-	Thu, 10 Jul 2025 00:21:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFDB71DFF7;
+	Thu, 10 Jul 2025 00:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=coasia.com header.i=@coasia.com header.b="oPaFNhxf"
+	dkim=pass (1024-bit key) header.d=coasia.com header.i=@coasia.com header.b="eAhzeI/B"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from spam.coasia.com (mail2.coasia.com [112.168.119.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36F978F43
-	for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 00:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996E572622
+	for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 00:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=112.168.119.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752106866; cv=none; b=kAGzIcnimCGhZWfCxBdWKTX9OEsNyzf1Zgi+MOZudYJ2hGZfksztbpfLD4aAWeDPw2ZLo7sFam5kgwPESnotaCg0c5IN+RH1xvznvoJHsgAohfkCjEJjL+SGCCNzJKgBbmEH838vZ/a0nDc8ACcW7OKuDePsKyXN+xuAgWxISqI=
+	t=1752107265; cv=none; b=Sn/zEDOnzTVN5bI/eg2Jn3UWx28/6vImLqB+CsVOegesXAO8cUbQNG/ddKHwH6mpsFRWKLm7jWaPp1SrlLR2nHu4ayAZjbRNUh/TJSQ137CVxdAAkejFXW/GMGP4oX0fY+gQfO8JHa6JH/lFTt76UGIriEU52Sh4vrpkQAdC8Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752106866; c=relaxed/simple;
-	bh=qWmBsEXjof5WOQG7ffmGQJRoOEwMaSMpAylD9izQWXg=;
+	s=arc-20240116; t=1752107265; c=relaxed/simple;
+	bh=HzX1zisBeXJccCKCkQDSqJxMFj7T5nTRdM+oS4si8Qo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f0a92I2YsquZV0mtslZBA+etHh1wXS+Ta+BL4CDWLsqSN5D+edg19hRpf4YVNf4+gf3ewkig7ZECeMtuxXs1nc++CIYbp0+h37wW4I0D8/RlRGeALtemv5eOLp1WnHyZE4HlagQvHNJXahP1xDPD9FEcAjWW/4bDtvry4yFSmzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=coasia.com; spf=pass smtp.mailfrom=coasia.com; dkim=pass (1024-bit key) header.d=coasia.com header.i=@coasia.com header.b=oPaFNhxf; arc=none smtp.client-ip=112.168.119.159
+	 MIME-Version; b=UrFhvDKrAqXNFrXrZ9kPqr8dIhZS5Uyzlo7e47L+xnkr3lynbpw6rewKTjCIgPa6O4hOCS3beBnafoudpS0aAruFos5kGvSk8qUpZz8Fr0mBhKj3gCPCT4fBmlleDzXUY/H5/UZVMPLIHuES9fqZS8l/7HOvHGhfjonfY53gi3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=coasia.com; spf=pass smtp.mailfrom=coasia.com; dkim=pass (1024-bit key) header.d=coasia.com header.i=@coasia.com header.b=eAhzeI/B; arc=none smtp.client-ip=112.168.119.159
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=coasia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coasia.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=coasia.com; s=coasia;
-	t=1752106860; bh=qWmBsEXjof5WOQG7ffmGQJRoOEwMaSMpAylD9izQWXg=;
-	l=4602; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=oPaFNhxfnEZww+BKf7+XBo/rHhX9uQl3190LEwR8k3BI6DDu46lXXlhTG0IiH32ri
-	 b9xIGlmp45c0SVAwiHGOWS57eGupn5t6qd6OjqwPXmRZ9USySPEBB/0xmG9nDO83+c
-	 q4EEO3EPr5l3RhOv269nXrzMG7NZHmj78Hv6h0Gw=
+	t=1752106861; bh=HzX1zisBeXJccCKCkQDSqJxMFj7T5nTRdM+oS4si8Qo=;
+	l=851; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=eAhzeI/BWxU0N8PYUoP2HPb+YsE/NFasQXlmLamrkQHw2D53N1YfcvYBx6rHySTce
+	 df/YnIvZ70hCXKDTat1uWIyC9VS87yAy2dUbTi66Dy5O28V0q7Gf1iJ6Pjuc8f4dwL
+	 jw1/OrzdNodRfp9e10xVEU7TFRBE+1C1XdIfkikY=
 Received: from unknown (HELO kangseongu..) (ksk4725@coasia.com@115.23.218.194)
-	by 192.168.10.159 with ESMTP; 10 Jul 2025 09:21:00 +0900
+	by 192.168.10.159 with ESMTP; 10 Jul 2025 09:21:01 +0900
 X-Original-SENDERIP: 115.23.218.194
 X-Original-SENDERCOUNTRY: KR, South Korea 
 X-Original-MAILFROM: ksk4725@coasia.com
@@ -57,16 +57,16 @@ X-Original-RCPTTO: jesper.nilsson@axis.com,
 	catalin.marinas@arm.com,
 	will@kernel.org,
 	arnd@arndb.de,
-	ravi.patel@samsung.com,
-	ksk4725@coasia.com,
-	smn1196@coasia.com,
 	kenkim@coasia.com,
 	pjsin865@coasia.com,
 	gwk1013@coasia.com,
+	ksk4725@coasia.com,
 	hgkim05@coasia.com,
 	mingyoungbo@coasia.com,
+	smn1196@coasia.com,
 	pankaj.dubey@samsung.com,
 	shradha.t@samsung.com,
+	ravi.patel@samsung.com,
 	inbaraj.e@samsung.com,
 	swathi.ks@samsung.com,
 	hrishikesh.d@samsung.com,
@@ -79,8 +79,7 @@ X-Original-RCPTTO: jesper.nilsson@axis.com,
 	linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	soc@lists.linux.dev,
-	v.pavani@samsung.com
+	soc@lists.linux.dev
 From: ksk4725@coasia.com
 To: Jesper Nilsson <jesper.nilsson@axis.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -96,17 +95,17 @@ To: Jesper Nilsson <jesper.nilsson@axis.com>,
 	Tomasz Figa <tomasz.figa@gmail.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Ravi Patel <ravi.patel@samsung.com>,
-	SeonGu Kang <ksk4725@coasia.com>,
-	SungMin Park <smn1196@coasia.com>
+	Arnd Bergmann <arnd@arndb.de>
 Cc: kenkim <kenkim@coasia.com>,
 	Jongshin Park <pjsin865@coasia.com>,
 	GunWoo Kim <gwk1013@coasia.com>,
+	SeonGu Kang <ksk4725@coasia.com>,
 	HaGyeong Kim <hgkim05@coasia.com>,
 	GyoungBo Min <mingyoungbo@coasia.com>,
+	SungMin Park <smn1196@coasia.com>,
 	Pankaj Dubey <pankaj.dubey@samsung.com>,
 	Shradha Todi <shradha.t@samsung.com>,
+	Ravi Patel <ravi.patel@samsung.com>,
 	Inbaraj E <inbaraj.e@samsung.com>,
 	Swathi K S <swathi.ks@samsung.com>,
 	Hrishikesh <hrishikesh.d@samsung.com>,
@@ -119,11 +118,10 @@ Cc: kenkim <kenkim@coasia.com>,
 	linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	soc@lists.linux.dev,
-	Varada Pavani <v.pavani@samsung.com>
-Subject: [PATCH 10/16] clk: samsung: artpec-8: Add clock support for CMU_PERI block
-Date: Thu, 10 Jul 2025 09:20:40 +0900
-Message-Id: <20250710002047.1573841-11-ksk4725@coasia.com>
+	soc@lists.linux.dev
+Subject: [PATCH 11/16] dt-bindings: pinctrl: samsung: Add compatible for ARTPEC-8 SoC
+Date: Thu, 10 Jul 2025 09:20:41 +0900
+Message-Id: <20250710002047.1573841-12-ksk4725@coasia.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250710002047.1573841-1-ksk4725@coasia.com>
 References: <20250710002047.1573841-1-ksk4725@coasia.com>
@@ -135,122 +133,28 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Hakyeong Kim <hgkim05@coasia.com>
+From: SeonGu Kang <ksk4725@coasia.com>
 
-Add clock support for below CMU block in ARTPEC-8 SoC.
- - CMU_PERI
+Document the compatible string for ARTPEC-8 SoC pinctrl block,
+which is similar to other Samsung SoC pinctrl blocks.
 
-Signed-off-by: Varada Pavani <v.pavani@samsung.com>
-Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
+Signed-off-by: SeonGu Kang <ksk4725@coasia.com>
 ---
- drivers/clk/samsung/clk-artpec8.c | 90 +++++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/samsung/clk-artpec8.c b/drivers/clk/samsung/clk-artpec8.c
-index 7ccec4ff8f70..f45bc9c113f0 100644
---- a/drivers/clk/samsung/clk-artpec8.c
-+++ b/drivers/clk/samsung/clk-artpec8.c
-@@ -20,6 +20,7 @@
- #define CMU_CPUCL_NR_CLK		(DOUT_CLK_CPUCL_PCLKDBG + 1)
- #define CMU_FSYS_NR_CLK			(DOUT_SCAN_CLK_FSYS_MMC + 1)
- #define CMU_IMEM_NR_CLK			(MOUT_IMEM_JPEG_USER + 1)
-+#define CMU_PERI_NR_CLK			(DOUT_PERI_DSIM + 1)
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+index de8460856141..9386dcd418c2 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+@@ -35,6 +35,7 @@ properties:
  
- /* register offset definitions for cmu_cmu (0x12400000) */
- #define PLL_LOCKTIME_PLL_AUDIO			0x0000
-@@ -798,3 +799,92 @@ static void __init artpec8_clk_cmu_imem_init(struct device_node *np)
- 
- CLK_OF_DECLARE(artpec8_clk_cmu_imem, "axis,artpec8-cmu-imem",
- 	       artpec8_clk_cmu_imem_init);
-+
-+/* Register Offset definitions for CMU_PERI (0x16410000) */
-+#define PLL_CON0_MUX_CLK_PERI_AUDIO_USER		0x0100
-+#define PLL_CON0_MUX_CLK_PERI_DISP_USER			0x0120
-+#define PLL_CON0_MUX_CLK_PERI_IP_USER			0x0140
-+#define MUX_CLK_PERI_I2S0				0x1000
-+#define MUX_CLK_PERI_I2S1				0x1004
-+#define DIV_CLK_PERI_DSIM				0x1800
-+#define DIV_CLK_PERI_I2S0				0x1804
-+#define DIV_CLK_PERI_I2S1				0x1808
-+#define DIV_CLK_PERI_PCLK				0x180c
-+#define DIV_CLK_PERI_SPI				0x1810
-+#define DIV_CLK_PERI_UART1				0x1814
-+#define DIV_CLK_PERI_UART2				0x1818
-+
-+static const unsigned long cmu_peri_clk_regs[] __initconst = {
-+	PLL_CON0_MUX_CLK_PERI_AUDIO_USER,
-+	PLL_CON0_MUX_CLK_PERI_DISP_USER,
-+	PLL_CON0_MUX_CLK_PERI_IP_USER,
-+	MUX_CLK_PERI_I2S0,
-+	MUX_CLK_PERI_I2S1,
-+	DIV_CLK_PERI_DSIM,
-+	DIV_CLK_PERI_I2S0,
-+	DIV_CLK_PERI_I2S1,
-+	DIV_CLK_PERI_PCLK,
-+	DIV_CLK_PERI_SPI,
-+	DIV_CLK_PERI_UART1,
-+	DIV_CLK_PERI_UART2,
-+};
-+
-+static const struct samsung_fixed_rate_clock peri_fixed_clks[] __initconst = {
-+	FRATE(0, "clk_peri_audio", NULL, 0, 100000000),
-+};
-+
-+PNAME(mout_peri_ip_user_p) = { "fin_pll", "dout_clkcmu_peri_ip" };
-+PNAME(mout_peri_audio_user_p) = { "fin_pll", "dout_clkcmu_peri_audio" };
-+PNAME(mout_peri_disp_user_p) = { "fin_pll", "dout_clkcmu_peri_disp" };
-+PNAME(mout_peri_i2s0_p) = { "dout_peri_i2s0", "clk_peri_audio" };
-+PNAME(mout_peri_i2s1_p) = { "dout_peri_i2s1", "clk_peri_audio" };
-+
-+static const struct samsung_mux_clock cmu_peri_mux_clks[] __initconst = {
-+	MUX(MOUT_PERI_IP_USER, "mout_peri_ip_user", mout_peri_ip_user_p,
-+	    PLL_CON0_MUX_CLK_PERI_IP_USER, 4, 1),
-+	MUX(MOUT_PERI_AUDIO_USER, "mout_peri_audio_user",
-+	    mout_peri_audio_user_p, PLL_CON0_MUX_CLK_PERI_AUDIO_USER, 4, 1),
-+	MUX(MOUT_PERI_DISP_USER, "mout_peri_disp_user", mout_peri_disp_user_p,
-+	    PLL_CON0_MUX_CLK_PERI_DISP_USER, 4, 1),
-+	MUX(MOUT_PERI_I2S0, "mout_peri_i2s0", mout_peri_i2s0_p,
-+	    MUX_CLK_PERI_I2S0, 0, 1),
-+	MUX(MOUT_PERI_I2S1, "mout_peri_i2s1", mout_peri_i2s1_p,
-+	    MUX_CLK_PERI_I2S1, 0, 1),
-+};
-+
-+static const struct samsung_div_clock cmu_peri_div_clks[] __initconst = {
-+	DIV(DOUT_PERI_SPI, "dout_peri_spi", "mout_peri_ip_user",
-+	    DIV_CLK_PERI_SPI, 0, 10),
-+	DIV(DOUT_PERI_UART1, "dout_peri_uart1", "mout_peri_ip_user",
-+	    DIV_CLK_PERI_UART1, 0, 10),
-+	DIV(DOUT_PERI_UART2, "dout_peri_uart2", "mout_peri_ip_user",
-+	    DIV_CLK_PERI_UART2, 0, 10),
-+	DIV(DOUT_PERI_PCLK, "dout_peri_pclk", "mout_peri_ip_user",
-+	    DIV_CLK_PERI_PCLK, 0, 4),
-+	DIV(DOUT_PERI_I2S0, "dout_peri_i2s0", "mout_peri_audio_user",
-+	    DIV_CLK_PERI_I2S0, 0, 4),
-+	DIV(DOUT_PERI_I2S1, "dout_peri_i2s1", "mout_peri_audio_user",
-+	    DIV_CLK_PERI_I2S1, 0, 4),
-+	DIV(DOUT_PERI_DSIM, "dout_peri_dsim", "mout_peri_disp_user",
-+	    DIV_CLK_PERI_DSIM, 0, 4),
-+};
-+
-+static const struct samsung_cmu_info cmu_peri_info __initconst = {
-+	.mux_clks		= cmu_peri_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(cmu_peri_mux_clks),
-+	.div_clks		= cmu_peri_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(cmu_peri_div_clks),
-+	.fixed_clks		= peri_fixed_clks,
-+	.nr_fixed_clks		= ARRAY_SIZE(peri_fixed_clks),
-+	.nr_clk_ids		= CMU_PERI_NR_CLK,
-+	.clk_regs		= cmu_peri_clk_regs,
-+	.nr_clk_regs		= ARRAY_SIZE(cmu_peri_clk_regs),
-+};
-+
-+static void __init artpec8_clk_cmu_peri_init(struct device_node *np)
-+{
-+	samsung_cmu_register_one(np, &cmu_peri_info);
-+}
-+
-+CLK_OF_DECLARE(artpec8_clk_cmu_peri, "axis,artpec8-cmu-peri",
-+	       artpec8_clk_cmu_peri_init);
+   compatible:
+     enum:
++      - axis,artpec8-pinctrl
+       - google,gs101-pinctrl
+       - samsung,s3c2412-pinctrl
+       - samsung,s3c2416-pinctrl
 -- 
 2.34.1
 
