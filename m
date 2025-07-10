@@ -1,44 +1,44 @@
-Return-Path: <linux-gpio+bounces-23040-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23043-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36445AFF5A2
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 02:21:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 04ED5AFF5B0
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 02:21:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1ECCC3A5427
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 00:20:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 822793A19DE
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 00:21:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B587782899;
-	Thu, 10 Jul 2025 00:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CF41537A7;
+	Thu, 10 Jul 2025 00:21:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=coasia.com header.i=@coasia.com header.b="uMMMoSJ2"
+	dkim=pass (1024-bit key) header.d=coasia.com header.i=@coasia.com header.b="nCEnAlGn"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from spam.coasia.com (mail2.coasia.com [112.168.119.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920631CAB3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1888B1E522
 	for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 00:20:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=112.168.119.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752106863; cv=none; b=D0u0giLVOhoLZb2dj0RVuuBCvSBobZQJCqvajzy7S03/At4oPjHXYe29CpCMFWjfbF/FufcnEL8Vimulo4VAFGMjRfvW9LVvV8OxvK+ksl5ZofAMczB3gW8hnql58JbT9PJ4U3IF/RhwTgjg8et5GWQ5SThgfp3ZWQojnJ4ouAo=
+	t=1752106863; cv=none; b=nQCjx3G09dylLeaTlA2l/oc5JSGxt9KBTW7fwM3KVHsNiPk6yysEmGaSbCE3kxjgVQog0hU+oY4LKxm+we9/QeV62/dEegCustsk2dDgMd+ybghCOjO2kYdvDg4CCwKDf8iD1WMjGfwqQGfYgeMl4rsygwwzBTjZjtARND8Pugk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752106863; c=relaxed/simple;
-	bh=DPuahl419ZI8H8sIxt4+AyDZsbJtqz9HQjp9C1Tkzek=;
+	bh=j6y4CRKseQoEZyQ+Mx7uaatjudKpQjwG59w6BIf/0iw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uTxIZvbO8XpatF0YJHIzMaJpzCqXTM8bxTQBTQP09le5BWmJv6Qg1wmFApcyQ0ZEIbNTqy/8xA3XZWB7528knK+u9S4fYcxP+4FVHSr3Cfhw4GDYuNFXYLyCJDKvVnx2QFJKbrMCFWRYCyx/yXj/p66zjXK75bRGBLt9xf1Pp28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=coasia.com; spf=pass smtp.mailfrom=coasia.com; dkim=pass (1024-bit key) header.d=coasia.com header.i=@coasia.com header.b=uMMMoSJ2; arc=none smtp.client-ip=112.168.119.159
+	 MIME-Version; b=O1O/8UAmiJH8k7V/kAxmZ6tg9gyqPzEk4azcHs3qRNNSPInnWpKRJtDMPFdmYC7v1Vpju0vLvref11OL4AIjjn2QcOMsepr/WzKf5vlBX1rjVx9wmT2m7mA0xWPRrtJEd8dJCASswomHPBtVG6amABB0gwq9hWwZaanG9a4RkRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=coasia.com; spf=pass smtp.mailfrom=coasia.com; dkim=pass (1024-bit key) header.d=coasia.com header.i=@coasia.com header.b=nCEnAlGn; arc=none smtp.client-ip=112.168.119.159
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=coasia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coasia.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=coasia.com; s=coasia;
-	t=1752106856; bh=DPuahl419ZI8H8sIxt4+AyDZsbJtqz9HQjp9C1Tkzek=;
-	l=2845; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=uMMMoSJ2Jnq0N9tjsiml/673AJH3xj8Azva0xHCbjtgJ/p3fhDBy7Or71nZSAYiEG
-	 Zp0jA5ly/65J3Uy5Kv1Y7V2IAMO7RPlVqTCPyKD7bYMskiAWmjsWN6oUkTgxhkwxEc
-	 sGqCAl6RAtvwWPLGmZMIRd096rYwQmrHXyvs+jjs=
+	t=1752106858; bh=j6y4CRKseQoEZyQ+Mx7uaatjudKpQjwG59w6BIf/0iw=;
+	l=2936; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=nCEnAlGn93Nbggu1Wktf5vQnLKtFTsB8hSyHRWlALZ0K60bzWHz9/OGS1RaEp8IEb
+	 qNzlVbZf+K98zlFQKZ6Bywbq4j4oAtcQMWzL4HiTPhmfyTkjfQ9PprXFYEU0wCrXFk
+	 wiPFfuBr1sT/hWABZSVsA8p/95wAd3I6CBXaPKkU=
 Received: from unknown (HELO kangseongu..) (ksk4725@coasia.com@115.23.218.194)
-	by 192.168.10.159 with ESMTP; 10 Jul 2025 09:20:56 +0900
+	by 192.168.10.159 with ESMTP; 10 Jul 2025 09:20:58 +0900
 X-Original-SENDERIP: 115.23.218.194
 X-Original-SENDERCOUNTRY: KR, South Korea 
 X-Original-MAILFROM: ksk4725@coasia.com
@@ -121,9 +121,9 @@ Cc: kenkim <kenkim@coasia.com>,
 	linux-gpio@vger.kernel.org,
 	soc@lists.linux.dev,
 	Varada Pavani <v.pavani@samsung.com>
-Subject: [PATCH 06/16] clk: samsung: artpec-8: Add clock support for CMU_BUS block
-Date: Thu, 10 Jul 2025 09:20:36 +0900
-Message-Id: <20250710002047.1573841-7-ksk4725@coasia.com>
+Subject: [PATCH 07/16] clk: samsung: artpec-8: Add clock support for CMU_CORE block
+Date: Thu, 10 Jul 2025 09:20:37 +0900
+Message-Id: <20250710002047.1573841-8-ksk4725@coasia.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250710002047.1573841-1-ksk4725@coasia.com>
 References: <20250710002047.1573841-1-ksk4725@coasia.com>
@@ -138,7 +138,7 @@ Content-Transfer-Encoding: 8bit
 From: Hakyeong Kim <hgkim05@coasia.com>
 
 Add clock support for below CMU block in ARTPEC-8 SoC.
- - CMU_BUS
+ - CMU_CORE
 
 Signed-off-by: Varada Pavani <v.pavani@samsung.com>
 Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
@@ -147,64 +147,64 @@ Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
  1 file changed, 45 insertions(+)
 
 diff --git a/drivers/clk/samsung/clk-artpec8.c b/drivers/clk/samsung/clk-artpec8.c
-index 1ef9e52ad24b..648abdd2f510 100644
+index 648abdd2f510..f41b7941c630 100644
 --- a/drivers/clk/samsung/clk-artpec8.c
 +++ b/drivers/clk/samsung/clk-artpec8.c
-@@ -15,6 +15,7 @@
- 
+@@ -16,6 +16,7 @@
  /* NOTE: Must be equal to the last clock ID increased by one */
  #define CMU_CMU_NR_CLK			(DOUT_CLKCMU_VPP_CORE + 1)
-+#define CMU_BUS_NR_CLK			(DOUT_CLK_BUS_PCLK + 1)
+ #define CMU_BUS_NR_CLK			(DOUT_CLK_BUS_PCLK + 1)
++#define CMU_CORE_NR_CLK			(DOUT_CLK_CORE_PCLK + 1)
  #define CMU_IMEM_NR_CLK			(MOUT_IMEM_JPEG_USER + 1)
  
  /* register offset definitions for cmu_cmu (0x12400000) */
-@@ -431,6 +432,50 @@ static void __init artpec8_clk_cmu_cmu_init(struct device_node *np)
- CLK_OF_DECLARE(artpec8_clk_cmu_cmu, "axis,artpec8-cmu-cmu",
- 	       artpec8_clk_cmu_cmu_init);
+@@ -476,6 +477,50 @@ static void __init artpec8_clk_cmu_bus_init(struct device_node *np)
+ CLK_OF_DECLARE(artpec8_clk_cmu_bus, "axis,artpec8-cmu-bus",
+ 	       artpec8_clk_cmu_bus_init);
  
-+/* Register Offset definitions for CMU_BUS (0x12c10000) */
-+#define PLL_CON0_MUX_CLK_BUS_ACLK_USER			0x0100
-+#define PLL_CON0_MUX_CLK_BUS_DLP_USER			0x0120
-+#define DIV_CLK_BUS_PCLK				0x1800
++/* Register Offset definitions for CMU_CORE (0x12410000) */
++#define PLL_CON0_MUX_CLK_CORE_ACLK_USER			0x0100
++#define PLL_CON0_MUX_CLK_CORE_DLP_USER			0x0120
++#define DIV_CLK_CORE_PCLK				0x1800
 +
-+static const unsigned long cmu_bus_clk_regs[] __initconst = {
-+	PLL_CON0_MUX_CLK_BUS_ACLK_USER,
-+	PLL_CON0_MUX_CLK_BUS_DLP_USER,
-+	DIV_CLK_BUS_PCLK,
++static const unsigned long cmu_core_clk_regs[] __initconst = {
++	PLL_CON0_MUX_CLK_CORE_ACLK_USER,
++	PLL_CON0_MUX_CLK_CORE_DLP_USER,
++	DIV_CLK_CORE_PCLK,
 +};
 +
-+PNAME(mout_clk_bus_aclk_user_p) = { "fin_pll", "dout_clkcmu_bus_bus" };
-+PNAME(mout_clk_bus_dlp_user_p) = { "fin_pll", "dout_clkcmu_bus_dlp" };
++PNAME(mout_clk_core_aclk_user_p) = { "fin_pll", "dout_clkcmu_core_main" };
++PNAME(mout_clk_core_dlp_user_p) = { "fin_pll", "dout_clkcmu_core_dlp" };
 +
-+static const struct samsung_mux_clock cmu_bus_mux_clks[] __initconst = {
-+	MUX(MOUT_CLK_BUS_ACLK_USER, "mout_clk_bus_aclk_user",
-+	    mout_clk_bus_aclk_user_p, PLL_CON0_MUX_CLK_BUS_ACLK_USER, 4, 1),
-+	MUX(MOUT_CLK_BUS_DLP_USER, "mout_clk_bus_dlp_user",
-+	    mout_clk_bus_dlp_user_p, PLL_CON0_MUX_CLK_BUS_DLP_USER, 4, 1),
++static const struct samsung_mux_clock cmu_core_mux_clks[] __initconst = {
++	MUX(MOUT_CLK_CORE_ACLK_USER, "mout_clk_core_aclk_user",
++	    mout_clk_core_aclk_user_p, PLL_CON0_MUX_CLK_CORE_ACLK_USER, 4, 1),
++	MUX(MOUT_CLK_CORE_DLP_USER, "mout_clk_core_dlp_user",
++	    mout_clk_core_dlp_user_p, PLL_CON0_MUX_CLK_CORE_DLP_USER, 4, 1),
 +};
 +
-+static const struct samsung_div_clock cmu_bus_div_clks[] __initconst = {
-+	DIV(DOUT_CLK_BUS_PCLK, "dout_clk_bus_pclk", "mout_clk_bus_aclk_user",
-+	    DIV_CLK_BUS_PCLK, 0, 4),
++static const struct samsung_div_clock cmu_core_div_clks[] __initconst = {
++	DIV(DOUT_CLK_CORE_PCLK, "dout_clk_core_pclk",
++	    "mout_clk_core_aclk_user", DIV_CLK_CORE_PCLK, 0, 4),
 +};
 +
-+static const struct samsung_cmu_info cmu_bus_info __initconst = {
-+	.mux_clks		= cmu_bus_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(cmu_bus_mux_clks),
-+	.div_clks		= cmu_bus_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(cmu_bus_div_clks),
-+	.nr_clk_ids		= CMU_BUS_NR_CLK,
-+	.clk_regs		= cmu_bus_clk_regs,
-+	.nr_clk_regs		= ARRAY_SIZE(cmu_bus_clk_regs),
++static const struct samsung_cmu_info cmu_core_info __initconst = {
++	.mux_clks		= cmu_core_mux_clks,
++	.nr_mux_clks		= ARRAY_SIZE(cmu_core_mux_clks),
++	.div_clks		= cmu_core_div_clks,
++	.nr_div_clks		= ARRAY_SIZE(cmu_core_div_clks),
++	.nr_clk_ids		= CMU_CORE_NR_CLK,
++	.clk_regs		= cmu_core_clk_regs,
++	.nr_clk_regs		= ARRAY_SIZE(cmu_core_clk_regs),
 +};
 +
-+static void __init artpec8_clk_cmu_bus_init(struct device_node *np)
++static void __init artpec8_clk_cmu_core_init(struct device_node *np)
 +{
-+	samsung_cmu_register_one(np, &cmu_bus_info);
++	samsung_cmu_register_one(np, &cmu_core_info);
 +}
 +
-+CLK_OF_DECLARE(artpec8_clk_cmu_bus, "axis,artpec8-cmu-bus",
-+	       artpec8_clk_cmu_bus_init);
++CLK_OF_DECLARE(artpec8_clk_cmu_core, "axis,artpec8-cmu-core",
++	       artpec8_clk_cmu_core_init);
 +
  /* Register Offset definitions for CMU_IMEM (0x10010000) */
  #define PLL_CON0_MUX_CLK_IMEM_ACLK_USER			0x0100
