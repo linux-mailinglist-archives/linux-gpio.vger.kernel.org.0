@@ -1,170 +1,154 @@
-Return-Path: <linux-gpio+bounces-23085-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23086-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A9E8B002B7
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 14:59:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 608BFB003DA
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 15:41:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CDC001883BE2
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 12:59:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1508172265
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 13:39:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 073A725DB0B;
-	Thu, 10 Jul 2025 12:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF356259CA3;
+	Thu, 10 Jul 2025 13:39:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="hzJL1xtJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DvSyP+t1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vm0E40b3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C2D206F27;
-	Thu, 10 Jul 2025 12:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF75D85C5E
+	for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 13:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752152339; cv=none; b=qW+z81r7fhnJbNSakSsy7EEDiTFMxb1ZnPVqZsCNwanmPVfy9zQB/3QxffwQ/Fo5CLaMWI9dK+sM9myc/bZj40z3ggF/6NSK7Bqns42dwVHGmK41W3/NbbTXeLbNqUBmXPUv/sxX51vQQuaZrseMOnPGqBp+MoogrOEFwOPwtok=
+	t=1752154752; cv=none; b=HxSiDkq0tMRjFLioTgbz0nWH5WEMq9CBPjfgKe2E1nLx1t7ybSE/2y0YcjXzzbd7PNPpOOJT4OAYJkXO8bC7K6h6zSztBcrrMqxbX63mSqg85yFb8nqEGUFRz9DXIfNot4csK1t3BOmjcPtNjm3OLvTQVmnN9JDtcc2yDOvBO9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752152339; c=relaxed/simple;
-	bh=KaOKgVdFL+irKfHLZ1OrF2/R9hakLs/vVkiHY6HzRAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IMAsamh1zVJHXGV4a4zxgrvZFKQIAWKdhAV72sG1WhCnKlBMon3zp/g2wAaqZ7b6oz5MNi0SKLwr7tdlzHGaudKjJ+CqcqkbVy8OTt3uyMGs+fElaNOHjyiAgDHwNvepvoYNKZUlkhGSzSJk8YFAIqpnOz8LepwQbfgNEGUvsB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=hzJL1xtJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DvSyP+t1; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id DC44CEC023A;
-	Thu, 10 Jul 2025 08:58:55 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Thu, 10 Jul 2025 08:58:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1752152335;
-	 x=1752238735; bh=il8eonhKTAZA9tfDODVbMii9tJYel1jfdub1bKHHm2M=; b=
-	hzJL1xtJd+D+6TXTB21oRkhb+mj12BoIV09MtrUj7TZVnU9C6RosTyPkn55ePtY0
-	+sqJeXae82RrRV2BjcIp7SAV8Pawxw2W4/Tx7o3CC+WVPxIHbB0qd5LbrFdix80D
-	Smg1dZPkILRkWoGo6f0sXMBStEy0jUE734/k0YLUebBkFpD5T0VyDJnJsdX901m2
-	myPyvzZC5FNrBqYtSlJyAj/Htu+/0ZR/PdhABkCRQ2jWXWaRq9eJFrL9xVqZ8knO
-	FKT+tT3IiAxeCmIgCDzZvWuGl1EwQxQiQUOYO6mXpp81xfzbRe4KntQNWW9Xqmbe
-	byHpVZ8BN5EU33XcEt0QUw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1752152335; x=
-	1752238735; bh=il8eonhKTAZA9tfDODVbMii9tJYel1jfdub1bKHHm2M=; b=D
-	vSyP+t1opKAAtGi9yV+OV/nqeTKvfoTIvEXmRmKuFDpnc+1kQP7//ZHhLXWscc2q
-	E4k7lKRipgoj5nTNxgmUNPLghL9mGJDthcVFxoNMZjs77g4bVXkqRe7uxy2EAigb
-	OMWWgqLOjmt7K5Qa9/Y5WGfIRXKpDw7uJA58BjrGNR/l53RADNb78xkhwoF9plA1
-	gXIMLkcNJ+/SCYRth32+FbNdmZe0tQIv+hpnAyHnOC/RFMMibFrKspYAfQWDHhC4
-	iRBNTzQVGb5B9jQcfE5pGxQaaS23nCWHrUhjf9TcCBDsae9wDknq3iSyO/QRHYXd
-	EDinlHVI/LSi2RxVRJOiw==
-X-ME-Sender: <xms:D7lvaDVCKuYwOcVwYNebC_rfg4HI8Z17qYQ1mz6Wln8ZuusFtydTSQ>
-    <xme:D7lvaMWdy1zR5v7UPRHdhknyZ6W6cH1_dTkXCj8AwvB41o9bTjSUkELAxCrTfmcNy
-    HQ0meeU27-17Qjk7Yc>
-X-ME-Received: <xmr:D7lvaLhJPUlElgCutZxt7JO2uQkz7ayvoAqN2GyeFaY7MJ87wRbdAcLY4nyvMoVl_uFd-UOJ-eQWNmZQUN743qnsE9rNGYNecA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegtdehtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheppfhikhhlrghs
-    ucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrth
-    gvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepveetgedtvddvhfdtkeeghfeffeehteeh
-    keekgeefjeduieduueelgedtheekkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgr
-    thgvtghhrdhsvgdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthho
-    pehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrh
-    hglhessghguggvvhdrphhlpdhrtghpthhtohepmhgrghhnuhhsrdgurghmmhesghhmrghi
-    lhdrtghomhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdr
-    khgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:D7lvaPYp_NJmjGcKl0V3Bqok7vZcJ4ruiR4BrU3t2XWoMS46MobK8Q>
-    <xmx:D7lvaArmpmSKxVAyWQPcVa9ys-C_YEXF64CMn0TXihvIlbzaEKqm5A>
-    <xmx:D7lvaEPKOHaEbhRFtQOUqojqDHJlsbXeoWAgsVoLnv-9eKdoYcP0KA>
-    <xmx:D7lvaLq-WXptoeNNoLriayuc9Dy4zJw8j6tYTmbxwvsoBNWLPqvCpw>
-    <xmx:D7lvaL-fUgaaa6RKLaaZ3Y07Lj7UeOUiCf2etFQZk400Lg1JTnfZTYQM>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 10 Jul 2025 08:58:54 -0400 (EDT)
-Date: Thu, 10 Jul 2025 14:58:52 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] gpio: rcar: Convert to DEFINE_SIMPLE_DEV_PM_OPS()
-Message-ID: <20250710125852.GB2234326@ragnatech.se>
-References: <e201140426daacaa799d73e2f76bfd96b6f5718f.1752086619.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1752154752; c=relaxed/simple;
+	bh=AKXQs7l/JnXnGET0gMtJ1sU9EPmcS39N6hUdQpcxAYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qzn89deGr+7VWwsqpqeEYoIQqbMXsaRzjNuxME+tgP0bP8jtKpp/6TmWDB0q5yQBqCGAICuiVHadTCOctG5YOwXKjHFdeXejoDqZbZtR/yQpV7JNrbtB0mV4UvWKaZjk6pTcJV8MqfE5nKgb0mD/HUHjCgCSNSbfjvnoWhZ4sx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vm0E40b3; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so2407795e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 06:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752154749; x=1752759549; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TrVJz6seKnsGWdk+TcTY9r2vqG/4YZecUgijiRF40No=;
+        b=vm0E40b3KJdBYURwDB2SGyiajheBsl+ABER84/3zfU8FaDh4lF6D+Y/bDXTVWCd9Ls
+         wQfPH4WyJavgbd8gLpfhWeorCRWjjAyQcxsQtlmdoTuhFAaXygoHlpbIkAatNIyqGeYf
+         hMUuBVb+N5evrFuB/8yu1RKA8mSwBKBtq0yHfBL45cazgVdQZ8RQfLEguPTL+dFVFh1E
+         64e8JIl8v4CJLQ1lapFPopee8/ozT93rpi/nuBbxFyskVLYXtfpmtq53J99V+8182n/d
+         V42bW7RcFbcLGnUAPuYz/umho+C3YZ4eCMWc4dndAKcTvXekjhXd+80++2qIoBdAAnbh
+         Wq0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752154749; x=1752759549;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TrVJz6seKnsGWdk+TcTY9r2vqG/4YZecUgijiRF40No=;
+        b=o1TqG5hdkC5ZqC5nABPJXN/pDwhBOgHyonpQTwdTVrDcnipMzqlgaB1L9iFAa/H+B3
+         i/YR0K3jMnnQ++EneCAaWp0ODKoJb7v6JLtwn6aBvPTBO7DkqzIvGrfzIYoz/eFUMq9D
+         C9wsfnvsYeXCJtytyIH9xdFaw1lS2UBGFjgwe0PfCIaUR9t4vQtoGXpQ39cDl5PgX4Bc
+         hbjJpEeBJIWibj1v5rMNwJgo/lRkpq4V0daTjbl5PfaxwzV9LMHQYZwWYo4pM1SG9B5g
+         8r15x7NLF5Pp/yYfRIATMC3yD844cBDAoOTml1/VUhQrqlyX7uDgzWj+Qna2UEbp1JEU
+         4pHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpObWom64Gxwj6xwEA/b3hqk+xZTD3qajTYiRq0qZ5/C4R8BijeMLm3ksLortS6Im6Qm00mkxxaR35@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxFNvzeHGyjDHcuVjHLuEQLZ8hfKykfc0h/NNpf9E1HtdJf3E9
+	O/c0g4X5XL2KYOH5u3xOCfE1s0l14MHcqorEpUOY0yz7fi8BUOvoy1ErSGGUXDpRDmwem7lp0Ds
+	JaxpIWFPuo0iOZAgWilc1mLiFQqN9ZmMY9lx6EF5chw==
+X-Gm-Gg: ASbGncvA+nzilNVrBkB9E6mv18g+rcj2RpspgU3sGs7MH3PX5FilBSaM+zonLBh5CGl
+	UWwnpz5vmgX3rL5e9GovJff+BdL0S+f3bKrkQCrIeWRXq8ppNxZu1QrBodjCQbcN34nfhgi4jXr
+	5oB9tZUCWS1lCzHt2cFJAljM8H4QXzoixRL9RikVwbGrQ/NFYiKyqbkvLLyvpi8DZO9VdhDf0Uc
+	Rk=
+X-Google-Smtp-Source: AGHT+IGB6UUmFZhzqKjRvGV4lr9BeyGDE6WH9O1sGiazwi8CZoRnZBbYDI50VNLpbqgC1sRg+VYVXXWLsDZF+CuXQF4=
+X-Received: by 2002:a05:6512:1587:b0:54a:c4af:15 with SMTP id
+ 2adb3069b0e04-5590071b7c3mr1264610e87.19.1752154748737; Thu, 10 Jul 2025
+ 06:39:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e201140426daacaa799d73e2f76bfd96b6f5718f.1752086619.git.geert+renesas@glider.be>
+References: <20250709-pinctrl-gpio-pinfuncs-v2-0-b6135149c0d9@linaro.org>
+ <20250709-pinctrl-gpio-pinfuncs-v2-8-b6135149c0d9@linaro.org> <46a506ee-0472-4c7a-8fd8-b3a1f39105b5@oss.qualcomm.com>
+In-Reply-To: <46a506ee-0472-4c7a-8fd8-b3a1f39105b5@oss.qualcomm.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 10 Jul 2025 15:38:57 +0200
+X-Gm-Features: Ac12FXwUS6h2JE4LNA_vmGF3f9mhet3j6NKR8eSjHb_k-YJ2CoyhrM-67s3nQ-g
+Message-ID: <CAMRc=Mc7KSSTF=Jsu-_1C6eWrTXNKB=_Q9fnZor8K_4nnQ5m4g@mail.gmail.com>
+Subject: Re: [PATCH v2 08/12] pinctrl: qcom: use generic pin function helpers
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+On Thu, Jul 10, 2025 at 2:25=E2=80=AFPM Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 7/9/25 4:39 PM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Use the existing infrastructure for storing and looking up pin function=
+s
+> > in pinctrl core. Remove hand-crafted callbacks.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+>
+> [...]
+>
+> >  int msm_pinctrl_probe(struct platform_device *pdev,
+> >                     const struct msm_pinctrl_soc_data *soc_data)
+> >  {
+> > +     const struct pinfunction *func;
+> >       struct msm_pinctrl *pctrl;
+> >       struct resource *res;
+> >       int ret;
+> > @@ -1606,6 +1581,14 @@ int msm_pinctrl_probe(struct platform_device *pd=
+ev,
+> >               return PTR_ERR(pctrl->pctrl);
+> >       }
+> >
+> > +     for (i =3D 0; i < soc_data->nfunctions; i++) {
+> > +             func =3D &soc_data->functions[i];
+> > +
+> > +             ret =3D pinmux_generic_add_pinfunction(pctrl->pctrl, func=
+, NULL);
+> > +             if (ret < 0)
+> > +                     return ret;
+> > +     }
+>
+> It's good in principle, but we're now going to house two copies of
+> the function data in memory... Can we trust __initconst nowadays?
+>
 
-Thanks for your work.
+Well, if I annotate the functions struct with __initconst, then it
+does indeed end up in the .init.rodata section if that's your
+question. Then the kernel seems to be freeing this in
+./kernel/module/main.c so I sure hope we can trust it.
 
-On 2025-07-09 20:43:59 +0200, Geert Uytterhoeven wrote:
-> Convert the Renesas R-Car GPIO driver from SIMPLE_DEV_PM_OPS() to
-> DEFINE_SIMPLE_DEV_PM_OPS() and pm_sleep_ptr().  This lets us drop the
-> check for CONFIG_PM_SLEEP, and reduces kernel size in case CONFIG_PM or
-> CONFIG_PM_SLEEP is disabled, while increasing build coverage.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Do I understand correctly that you're implicitly asking to also
+annotate all affected _functions structures across all tlmm drivers?
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Alternatively: we can provide another interface:
+pinmux_generic_add_const_pinfunction() which - instead of a deep-copy
+- would simply store addresses of existing pinfunction structures in
+the underlying radix tree.
 
-> ---
->  drivers/gpio/gpio-rcar.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-> index 1d121a4275905e09..cd31580effa9037f 100644
-> --- a/drivers/gpio/gpio-rcar.c
-> +++ b/drivers/gpio/gpio-rcar.c
-> @@ -592,7 +592,6 @@ static void gpio_rcar_remove(struct platform_device *pdev)
->  	pm_runtime_disable(&pdev->dev);
->  }
->  
-> -#ifdef CONFIG_PM_SLEEP
->  static int gpio_rcar_suspend(struct device *dev)
->  {
->  	struct gpio_rcar_priv *p = dev_get_drvdata(dev);
-> @@ -651,16 +650,16 @@ static int gpio_rcar_resume(struct device *dev)
->  
->  	return 0;
->  }
-> -#endif /* CONFIG_PM_SLEEP*/
->  
-> -static SIMPLE_DEV_PM_OPS(gpio_rcar_pm_ops, gpio_rcar_suspend, gpio_rcar_resume);
-> +static DEFINE_SIMPLE_DEV_PM_OPS(gpio_rcar_pm_ops, gpio_rcar_suspend,
-> +				gpio_rcar_resume);
->  
->  static struct platform_driver gpio_rcar_device_driver = {
->  	.probe		= gpio_rcar_probe,
->  	.remove		= gpio_rcar_remove,
->  	.driver		= {
->  		.name	= "gpio_rcar",
-> -		.pm     = &gpio_rcar_pm_ops,
-> +		.pm     = pm_sleep_ptr(&gpio_rcar_pm_ops),
->  		.of_match_table = gpio_rcar_of_table,
->  	}
->  };
-> -- 
-> 2.43.0
-> 
-> 
-
--- 
-Kind Regards,
-Niklas Söderlund
+Bartosz
 
