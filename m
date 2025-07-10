@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23059-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23060-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF051AFFA74
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:11:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 244F1AFFA7C
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:12:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 210E8166220
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 07:11:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECEB94E4D7B
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 07:12:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F612882B0;
-	Thu, 10 Jul 2025 07:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D0112882C9;
+	Thu, 10 Jul 2025 07:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAeG1Z8f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJd0K9f9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1911FFC1D;
-	Thu, 10 Jul 2025 07:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB016FC1D;
+	Thu, 10 Jul 2025 07:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752131456; cv=none; b=juVV8GK/XhbrYD8sKOaeF/NOVC7k795sHm1lTZ52uNzGj12tPeJrswVgmWxaKLRvNpS2Pl+YDcqkK9+I2sOL5wqJDKgzM23nNVG2DiUtv8bZIm1ZTwMxNk0efEaSUFY73FBttMlcXIJPYtko3WooNNma18eBAdS7/1VdHSvUV5Y=
+	t=1752131572; cv=none; b=oDtDzTo87gwGd+noefdE7ll9LZQBOHQCIctAEhiK1Jw/BXf/IQatZKJQJkunv3+xtQ2qVwYoweuOEcDCaSu1emn5IvtuyBMBJBdSzpVKsPobA6WKYR3Latyfy6C2vATjDVMrJfLbJ0mYdZa2STNFBmamXaTzgUM7aXLf9I4Zp3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752131456; c=relaxed/simple;
-	bh=PkKCrCcuyuxh4trwp8qE8i2qCxJqLT90JXicLKiO9cA=;
+	s=arc-20240116; t=1752131572; c=relaxed/simple;
+	bh=ifYIHg5zJ607ENbj97kebFOOUjlK1jPRWMHY7Y4wlW4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gxwoA+MnXfyLbq15yaLAp+ZCoVaZxC7zO9jrMCUn2tfycrd7QmPtWTzOa+9IgyV+tiPlPCFhV1YwFo5hvf7c19qRBMOzQKVZx/XMjzbGIgkAoZcMEu6iRDYKES70WdvtltPq+gNY1s1vr2YL9xKwuw1eFMNOKgZHMtqbv0rDw1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAeG1Z8f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3C0C4CEE3;
-	Thu, 10 Jul 2025 07:10:47 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Y3wqNxuoRhqizjcESbiYH5/aIi0jt+2F5pNKoETepUJO70HsZN6u3C6iRWp/hf2/VQvTZB3es1JMlrT/VHV/C+pIUM4J3yIy8oKjTyDS6KFHTkcveArTjVpiv1+phs5CRJbofW7y/4fe8xUoOdpWX8Mgw4adsrWsnN1L7tDff9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJd0K9f9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F350AC4CEF4;
+	Thu, 10 Jul 2025 07:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752131455;
-	bh=PkKCrCcuyuxh4trwp8qE8i2qCxJqLT90JXicLKiO9cA=;
+	s=k20201202; t=1752131572;
+	bh=ifYIHg5zJ607ENbj97kebFOOUjlK1jPRWMHY7Y4wlW4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jAeG1Z8frnlkFN+0+0Nw0xKkqVZXOpspn0FYUUkeiW8FbebUB1TRP6wihV2qGCaBz
-	 upffSTPPJ+5TU0GY+D1Am7yDN3eZZRLKCkvAjS1b3vyAvSZTze2402CjDpG9X/yTCR
-	 0OiNSikEc3O72nfXpRJ86dh62L5FM+Ohwp+tz7CCL2MjxXkNltCMKzFsZQhWbfX2g+
-	 osyX2l4l+qqXsEHtZHq8C8aTOxj6DzP8FMyq19Q4oYGfS64m99zsNUuSvlC10vYakQ
-	 GpSdkAdr0TfiDmdmYTn+p1z8SENh6WaMij/5mUrXjnqjebTGEUnhFqDvgWcnswsgmE
-	 8D2G8ON4F6DYw==
-Message-ID: <7b9a8203-2d66-4735-a6a2-762f57fb5cef@kernel.org>
-Date: Thu, 10 Jul 2025 09:10:45 +0200
+	b=YJd0K9f9Ta/osGMRvXxjmSPbkZYH+3UTUdoLEB+RKOIxv7bQ9orex8Q3v+qy06/mz
+	 YgnzdX/ZlV3Flzi8K3MdHFQgnBVZMAm6vgdgULbEdqoy1fGLS5QyFpLMEy3Wkj32/6
+	 6wg2p2t4wTk09YvccZ0YkbhaxOuGb2yOqC1BVKVNSc4ExhKLoXSVQ86B2qocnX4GRo
+	 Tjs1HKMJBW3DAai3jb4Jo8bwpIZTQOYq38Fqos3+vIhgsrJF36u390+NocP6Q39buG
+	 Vplurk8XhM3harDeHSKJ1U6EiPnMVOroJE0JrgyLpK2j6C7wzeliapuTJ/oCdfbxZF
+	 ZTmSw1NhMXj2A==
+Message-ID: <48677b18-3936-464a-a581-26a44ef76c80@kernel.org>
+Date: Thu, 10 Jul 2025 09:12:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/16] dt-bindings: clock: Add ARTPEC-8 CMU bindings
+Subject: Re: [PATCH 04/16] clk: samsung: artpec-8: Add initial clock support
 To: ksk4725@coasia.com, Jesper Nilsson <jesper.nilsson@axis.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -73,7 +73,7 @@ Cc: kenkim <kenkim@coasia.com>, Jongshin Park <pjsin865@coasia.com>,
  linux-arm-kernel@axis.com, linux-clk@vger.kernel.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, soc@lists.linux.dev
 References: <20250710002047.1573841-1-ksk4725@coasia.com>
- <20250710002047.1573841-3-ksk4725@coasia.com>
+ <20250710002047.1573841-5-ksk4725@coasia.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -119,148 +119,55 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250710002047.1573841-3-ksk4725@coasia.com>
+In-Reply-To: <20250710002047.1573841-5-ksk4725@coasia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 10/07/2025 02:20, ksk4725@coasia.com wrote:
 > From: Hakyeong Kim <hgkim05@coasia.com>
 > 
-> Add dt-schema for ARTPEC-8 SoC clock controller.
+> Add initial clock support for ARTPEC-8 SoC which is required
+> for enabling basic clock management.
 > 
-> Add device-tree binding definitions for following CMU blocks:
-> - CMU_CMU
-> - CMU_BUS
-> - CMU_CORE
-> - CMU_CPUCL
-> - CMU_FSYS
-> - CMU_IMEM
-> - CMU_PERI
+> Add clock support for below CMU block in ARTPEC-8 SoC:
+>  - CMU_IMEM
 > 
 > Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
 > Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
-
-Confusing order, unless you really understand this, but considering you
-did not add your own SoB I claim you do not understand this. What does
-Ravi's SoB mean here?
-
 > ---
->  .../bindings/clock/axis,artpec8-clock.yaml    | 224 ++++++++++++++++++
->  1 file changed, 224 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
+>  drivers/clk/samsung/Kconfig       |  8 ++++
+>  drivers/clk/samsung/Makefile      |  1 +
+>  drivers/clk/samsung/clk-artpec8.c | 62 +++++++++++++++++++++++++++++++
+>  3 files changed, 71 insertions(+)
+>  create mode 100644 drivers/clk/samsung/clk-artpec8.c
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml b/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
-> new file mode 100644
-> index 000000000000..baacea10599b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
-> @@ -0,0 +1,224 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/axis,artpec8-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Axis ARTPEC-8 SoC clock controller
-> +
-> +maintainers:
-> +  - Jesper Nilsson <jesper.nilsson@axis.com>
-> +
-> +description: |
-> +  ARTPEC-8 clock controller is comprised of several CMU units, generating
-> +  clocks for different domains. Those CMU units are modeled as separate device
-> +  tree nodes, and might depend on each other. The root clock in that root tree
-> +  is an external clock: OSCCLK (25 MHz). This external clock must be defined
-> +  as a fixed-rate clock in dts.
-> +
-> +  CMU_CMU is a top-level CMU, where all base clocks are prepared using PLLs and
-> +  dividers; all other clocks of function blocks (other CMUs) are usually
-> +  derived from CMU_CMU.
-> +
-> +  Each clock is assigned an identifier and client nodes can use this identifier
-> +  to specify the clock which they consume. All clocks available for usage
-> +  in clock consumer nodes are defined as preprocessor macros in
-> +  'include/dt-bindings/clock/axis,artpec8-clk.h' header.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - axis,artpec8-cmu-cmu
-> +      - axis,artpec8-cmu-bus
-> +      - axis,artpec8-cmu-core
-> +      - axis,artpec8-cmu-cpucl
-> +      - axis,artpec8-cmu-fsys
-> +      - axis,artpec8-cmu-imem
-> +      - axis,artpec8-cmu-peri
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 5
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 5
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
+> diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
+> index 76a494e95027..289591b403ad 100644
+> --- a/drivers/clk/samsung/Kconfig
+> +++ b/drivers/clk/samsung/Kconfig
+> @@ -13,6 +13,7 @@ config COMMON_CLK_SAMSUNG
+>  	select EXYNOS_5420_COMMON_CLK if ARM && SOC_EXYNOS5420
+>  	select EXYNOS_ARM64_COMMON_CLK if ARM64 && ARCH_EXYNOS
+>  	select TESLA_FSD_COMMON_CLK if ARM64 && ARCH_TESLA_FSD
+> +	select ARTPEC8_COMMON_CLK if ARM64 && ARCH_ARTPEC8
 
-reg goes second, after compatible (Samsung bindings are not the best
-example because I converted them long time ago before many coding style
-practices were encouraged)
+Here and:
 
+>  
+>  config S3C64XX_COMMON_CLK
+>  	bool "Samsung S3C64xx clock controller support" if COMPILE_TEST
+> @@ -102,3 +103,10 @@ config TESLA_FSD_COMMON_CLK
+>  	help
+>  	  Support for the clock controller present on the Tesla FSD SoC.
+>  	  Choose Y here only if you build for this SoC.
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#clock-cells"
-> +  - clocks
-> +  - clock-names
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
+> +config ARTPEC8_COMMON_CLK
 
-Drop contains.
+here, place it before EXYNOS_3250_COMMON_CLK.
 
-> +            const: axis,artpec8-cmu-cmu
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: External reference clock (25 MHz)
-> +
-> +        clock-names:
-> +          items:
-> +            - const: fin_pll
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: axis,artpec8-cmu-bus
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: External reference clock (25 MHz)
-> +            - description: CMU_BUS BUS clock (from CMU_CMU)
-> +            - description: CMU_BUS DLP clock (from CMU_CMU)
-> +
-> +        clock-names:
-> +          items:
-> +            - const: fin_pll
-> +            - const: dout_clkcmu_bus_bus
-> +            - const: dout_clkcmu_bus_dlp
-
-All these names should be changed to match what is the input. Look at
-latest bindings, we moved away from that style.
+> +	bool "Axis ARTPEC-8 clock controller support" if COMPILE_TEST
+> +	depends on COMMON_CLK_SAMSUNG
+> +	help
 
 
 
