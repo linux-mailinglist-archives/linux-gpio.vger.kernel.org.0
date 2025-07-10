@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-23068-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23069-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0159AFFE52
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 11:40:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FC7DAFFE64
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 11:47:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16833581CD2
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:40:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C8C84A6F72
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:47:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBDA22D3EDC;
-	Thu, 10 Jul 2025 09:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E2242D3EE5;
+	Thu, 10 Jul 2025 09:47:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHXdnvVv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0XhsrQF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A018E28D82F;
-	Thu, 10 Jul 2025 09:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D841E4A11;
+	Thu, 10 Jul 2025 09:47:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752140403; cv=none; b=rLggcGAgI/bzfJsS+BM99qyMlAsixdBTM2a/dzLEj8AW/Y++CFHZrMcBj9LQGL9dDJ/peysI9YxFwKK1qiZkGglGKVQ6q6bv9aM1QhjpzJR0SXWzITOb9SRAoOL2aHO+yyqY+9eJH6tYkEWiIVCYG9d8TjRTUaD/ZPa3qzNlkiA=
+	t=1752140860; cv=none; b=hy6+Qxk+MIyzs43nhScwu543g+lPVxHHNjsrL/uFDJsT5SZ7bjBOvxC0SEDxarVLmku3J2V+byGjExZx9hZkoOZq1Le8sWUXpYLKfOjgR3iBGkuSjAluMQxiiSCHUmMq49jv5Sf/r8CUjGQnmDH2b6dOxfDN8XQJ3rSrXmONNIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752140403; c=relaxed/simple;
-	bh=4st+5aAzqLkQT7Cxyn38f5ob3o7iaHCYDX+qabL93jA=;
+	s=arc-20240116; t=1752140860; c=relaxed/simple;
+	bh=/SH99nulsmsIPihSCZGmK0lFUhhNcG7Tobx27X0iTlA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ggpjjjZ0p9NYQmC8m8OFT9l1ADvEt+sk14jVl8M1tI0WE6GmuH8js704p4r6SUPO8+TBi0KXIWZNptK723ZP6KxhwX+ErUCgC9ClDqWB10KRjWd95P3xwlNBsV9ZWNH0Lz2iD+sD1HIOjJ5L7wj7xa15DKEvo1EEEXRCPamXL7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHXdnvVv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE8BDC4CEE3;
-	Thu, 10 Jul 2025 09:40:00 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=FqX8zvqFSEmJnMkcaw0AmUbdnvQEYtJPTpX1577FXy102WP0dCo9SeFSxRmJY0aW17DHzWoZQIU3crlDWcPSJ7MAWGZIgJt1ix5LSUMMo5uYFBPqOvZaqnjwoo0mwp5EHbj6H10lbPhRUgip/pAGxZqEXHWKgyyfipUb/Y2Ge2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0XhsrQF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B28AC4CEE3;
+	Thu, 10 Jul 2025 09:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752140403;
-	bh=4st+5aAzqLkQT7Cxyn38f5ob3o7iaHCYDX+qabL93jA=;
+	s=k20201202; t=1752140859;
+	bh=/SH99nulsmsIPihSCZGmK0lFUhhNcG7Tobx27X0iTlA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RHXdnvVvg0RJrkrbCDHeQJ/oLUWhoyH2UXFb3dGn4y27daTLYP1+dV/pEQcpE18Xk
-	 2YYNd5mNRIHGK9xtLmfffiCA1/T4P+RrVfEeLV0Msl5gUv2uilYfl5j+8nxUHiBRqX
-	 dnDl7b5ahG/LkxnzeXpKKwlKX5vXiXbsFH2tGpKECKPSX33CivITRcdLwsAk/3VvrV
-	 8CHaBGj6ZxkoDQZIKOikNn9P0RzZWAK+hnh9bnrNJ5+chTcaeIuXexkZ6daH08UPJu
-	 KdG3iVpvyrEm/gUOFwfwvth/zkl4+Am1DId+v/ubXVt9cB7MK7r2c2A5yitwb83cD+
-	 FvK2jBPYvtT6g==
-Date: Thu, 10 Jul 2025 10:39:57 +0100
+	b=n0XhsrQFffw/cOHd+zvsUb1elpUAYde/VFsmNEHYSuuquGY0EdNldjyYpQqGu7HaX
+	 McQoFU/yt0DGYazDg4O5keuiMNDmrVTNjHPuf2YO2Kt4v2t66+dBa2MPPhiHTsJlqA
+	 1mpVnmDIvzwD7E6sw9nLlCVyS+s63wGvkm8orIWpbMncc761dJLHA3lOY6NJf7N+81
+	 hJWfV6tS6X1MijScWsQQg36lI++iZ5yIasBWOf98YTzDl0oEtv3RpIHF0rZzkDVG0N
+	 JJKttz4c4FkHi+sR4Qtf4Um/T/XBGjE9K+ClEgxfb4zkh4Ge2IbSyUpuu24xaFa7CX
+	 XWPHzHJQr4ctQ==
+Date: Thu, 10 Jul 2025 10:47:34 +0100
 From: Lee Jones <lee@kernel.org>
 To: Michael Walle <mwalle@kernel.org>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -52,9 +52,12 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] mfd: tps6594: Add TI TPS652G1 support
-Message-ID: <20250710093957.GE1431498@google.com>
-References: <20250703113153.2447110-1-mwalle@kernel.org>
+Subject: Re: [PATCH v2 1/7] mfd: tps6594: Add TI TPS652G1 support
+Message-ID: <20250710094734.GF1431498@google.com>
+References: <20250613114518.1772109-1-mwalle@kernel.org>
+ <20250613114518.1772109-2-mwalle@kernel.org>
+ <20250710090025.GD10134@google.com>
+ <baa1eccc55fd406b3c42f6a5466b6be5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,27 +67,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250703113153.2447110-1-mwalle@kernel.org>
+In-Reply-To: <baa1eccc55fd406b3c42f6a5466b6be5@kernel.org>
 
-On Thu, 03 Jul 2025, Michael Walle wrote:
+On Thu, 10 Jul 2025, Michael Walle wrote:
 
-> Add support for the TI TPS652G1 PMIC which is a stripped down
-> version of the TPS65224. Support for the latter has already been
-> merged. Refactor the regulator driver to ease adding new devices.
-> After doing that adding the TPS652G1 variant is really straight
-> forward. Some care has to be taken by the interrupt handling (of the
-> regulator part) because there interrupts are used for voltage
-> monitoring which this variant doesn't have.
+> Hi Lee,
 > 
-> As there are conflicts in the regulator tree (some constify
-> patches) and my patches make use of them, only the first two (or
-> four, that's up to Lee) can go through the MFD tree. Lee, could
-> you please provide an immutable tag for the other trees to merge?
+> > > @@ -82,6 +87,7 @@ static const struct of_device_id
+> > > tps6594_spi_of_match_table[] = {
+> > >  	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
+> > >  	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
+> > >  	{ .compatible = "ti,tps65224-q1", .data = (void *)TPS65224, },
+> > > +	{ .compatible = "ti,tps652g1", .data = (void *)TPS652G1, },
+> > 
+> > I get warnings about this being undocumented.
+> > 
+> > Should it be added to:
+> > 
+> >   Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
 > 
-> v3:
->  - (re)add dt binding patch that I've accidentally missed in v2
+> I've accidentally forgot the DT patch in v2 of this series. This series was
+> superseeded by v3 which has the DT patch again.
+> 
+> https://lore.kernel.org/all/20250703113153.2447110-1-mwalle@kernel.org/
 
-Ah, that explains it!
+Spotted that now.  Thanks.
 
 -- 
 Lee Jones [李琼斯]
