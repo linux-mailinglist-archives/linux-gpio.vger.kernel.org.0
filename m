@@ -1,212 +1,206 @@
-Return-Path: <linux-gpio+bounces-23073-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23074-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19169AFFEAA
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 12:02:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93B53AFFEE3
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 12:14:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2E283A9CDC
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 10:01:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4602E7B9B89
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 10:13:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489E22D3EE9;
-	Thu, 10 Jul 2025 10:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10BF52D837E;
+	Thu, 10 Jul 2025 10:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="N6qqztwa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyQIaiUs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012014.outbound.protection.outlook.com [52.101.71.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5C91A3178;
-	Thu, 10 Jul 2025 10:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752141727; cv=fail; b=iqNeNlfhiZOP2LlUsF1BOITpE6EaeXxjz3qCEuz3PWECZyfBoQzX2y9C1zSv9yACpYhO0L+vHXJbqCAuNIvhpaCXzUNTbbKefISCjdMqqhDUM7wpJgciYpgFOccXhRQPoE9TDvK3SdcfJovStFpf6iZPACFtMNlsQksjNABSzpg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752141727; c=relaxed/simple;
-	bh=1zwhrBL/THi42EB0l0ks1G/DSPvgt8arbYHuIzLdyuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PEc39cCbOkZW1KHGzfwVZ5sQh7/9CENmn45pUopIxV3WFSoEMhbkqaDpwvJeu5hiwKYiGzt36tG0nrIZKYoLqkMA2hyfoUGTniKnQrfIoPKUQkWUrKMC3W8YCBLzVKVgbfdBfuMy1mjqMZ1jP2OBLT+gT4CvpZ71UjflCETdqUk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=N6qqztwa; arc=fail smtp.client-ip=52.101.71.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sOPx+QnLgoXaKSdPDD8q6rof4MGvujMbphDm7Ckt6t6fAffdHhvutNqf8BGNhbQJCQ0VQp6RyXF3xg1ff/kLV/1NFATpn8+B2hxkIj61eeL5vwR1a/CqUSczCvdZKjtHF9lnSqdOzl/lN51ZfqNsnmflGx5L6OUOSD8YnHNk42GnSaysVp7jq/0NtJ+Xr7/7FjjOO+pZvRW/wEshB3o1iHLdRT2Q0Oxw7+GLg4w8zFyelDI3gU6ZOOGVe68LJnzneeZVVyoGmSM87rt3jg1rg6LInHQo0iCfR8X5/01vM0cIbrKCyQ3sjHKkekWDPkr4Ocsq4luFOu8RyJPBy9b+5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8QdOr/MTvYoxHGx+Yaae1YbuHtcqs1erFlYkNvsj1CA=;
- b=gDC7JF7Tv1QgmH1oh1g1YEBBP3BCM3d9tCGK5sGkRoBmEMPAU8hJWnRIfWi6dgYA/PJUmPBkfpr+A/h1dO1rfIOa1hKeFNLb5jtpxkXaYp7GVRdwCarl0DZ/ibfPvRtKd5TOnROZY3HFg0IZ/mycuDoQWjXkQXdn07yUC3zF/8idQYs0JM/rMhf67AITPRH+Y2qEKv7vEkMhTbOUpeolnfth4Ra/FSRNjU9c/ujSfRa6M2/7BZitHW2ol7pbTs3uvhI7xjYOdrA2R/pB5MMGhXdoumu6SMrQNJ+xr8IwEbrgVhgk9Uy4+IC1rgKdQTyD+UHIdKiY/JLS9vCtBDhF4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8QdOr/MTvYoxHGx+Yaae1YbuHtcqs1erFlYkNvsj1CA=;
- b=N6qqztwaeNbMHZPsy7QCRWqo0cMs9+yn7YK1MY9vr4VpP2sFS/47h8FSYENBb8XkpFMhK/N4b8gKar9SDih/PPi/Cco7WsSaGIuwjj9+4X0BKA9xb/dmfEbgM4P3LyJTcI5ojrMKtsC1E3rhAnXUzYlLU41Wx+Bl59htVbKAu5XW43zvQq9VTnSAi8/xCO66v2gsQEFjKyNpjkKbuP9f1vPnAxco6JzlPiQapBrgb7tP8ppU6whIyJWNGQProLDdQ0fwPU/1rbARUdEEQys5efkVyIHQ5cs9gOpH+guGuAwO6rjAvTdMuUNcP++INChFfIv5flGVvopu9QDGbYkXhA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
- by PA1PR04MB11311.eurprd04.prod.outlook.com (2603:10a6:102:4f3::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.29; Thu, 10 Jul
- 2025 10:02:02 +0000
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e]) by AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e%5]) with mapi id 15.20.8880.030; Thu, 10 Jul 2025
- 10:02:02 +0000
-Date: Thu, 10 Jul 2025 13:01:58 +0300
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Shawn Guo <shawnguo@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Lee Jones <lee@kernel.org>, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH 5/9] drivers: gpio: add QIXIS FPGA GPIO controller
-Message-ID: <o5v2xdlrtjcgcd6usrfmtq6qffyigudvx3flhhetnd4ufg2mcx@5tem3jrlpxw5>
-References: <20250709112658.1987608-1-ioana.ciornei@nxp.com>
- <20250709112658.1987608-6-ioana.ciornei@nxp.com>
- <898af9ea-9b90-4d1f-8e0d-a8e0686d72a7@lunn.ch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <898af9ea-9b90-4d1f-8e0d-a8e0686d72a7@lunn.ch>
-X-ClientProxiedBy: FR4P281CA0279.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:e6::11) To AS8PR04MB8868.eurprd04.prod.outlook.com
- (2603:10a6:20b:42f::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9326D2D6628;
+	Thu, 10 Jul 2025 10:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752142460; cv=none; b=Dro31YAFQ7HfbBEuyeZNW/wWflRYzaK6krr52m3J0R9i7IKGVGd/tGcYdC2OwGaxaJRLYwaRnwbD0tx2MoQFdJJXYoUq33HS0yUK8+kzoaXiJNcq+LXZfdKYHIS6hfBQ60U2NYf4ydPogAEIGRTrN1qjoVnEUJEUcwybTSjQrII=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752142460; c=relaxed/simple;
+	bh=qATw6ZD37x/XT/B5MCjb1qOwnXiW8HLBo9mIN9I0R3g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eBY+eo5BgshJrVdLmnNfH3MlH6roc/cFeNNjOKj3+rvDCDImsss8M26VYC3IQzwzeo3MANR7UO8Lfxkvrf5Rh6YS1V9cVuK6FQmC9A2pqVEoM1lQi8gDEbAFMa6v1aTtZPpF5uQa8u0NceGjDpF73bws4xcf1BP6SX1KERI2Q9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyQIaiUs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A02EFC4CEF5;
+	Thu, 10 Jul 2025 10:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752142460;
+	bh=qATw6ZD37x/XT/B5MCjb1qOwnXiW8HLBo9mIN9I0R3g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DyQIaiUs1pOLCr6gIs/azzr6zC2/moryuNU3UAInevb5nD5O/dcuT8sE8gp8d5ZFl
+	 5VNvilLKEPrcZ2R75ojm5IYNV91VLqeOC9kW1B8ZmPpR96HVwZqqE93AofpeH2az7U
+	 I/M5XovAKqh3MfW3pt/G59uIxMzKQxKjfK+Z5GbEFZdFeZcosU5kTrGDUj+qHKCKfM
+	 quueYdCtq7I9FgyFob+ymo3624rGscjBcGF+IWhRZXA7D6FQYh69zMJMOz7vWzNV8U
+	 nTUKsPC5maC1U4GukMIC1sg5fg0fGy6PhNFuiuimPiXm5Ea8SYYncPv9FQrBUguvub
+	 DvcK8vYFUJFgA==
+Message-ID: <53130960-e054-4de9-b62a-cde384444a78@kernel.org>
+Date: Thu, 10 Jul 2025 12:14:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|PA1PR04MB11311:EE_
-X-MS-Office365-Filtering-Correlation-Id: fefe6965-be60-4103-4627-08ddbf98d0f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8UyHbVSJzF8hCtpj5OGxAkjMgyEb27NZaSrDWs6JF7a1+no8Cs7Pv1Uj8TKN?=
- =?us-ascii?Q?4zfVZ5S8rPOyTfQbkytZIxVl4PpXSgQjNDZaT5X8IGAvQplsJBX4fQ+c1rhW?=
- =?us-ascii?Q?HknthBJRyZK731GJvHl9kCj8thTG1JncnR9IgBW1H0vkdKH5PCWrvb148Nr0?=
- =?us-ascii?Q?84/40iQCDYexwAr1VsUiD35y0us9+CdDlWe1ep0EFlXFOEEhtLwnLL0t9RiB?=
- =?us-ascii?Q?nJd6AH2XS+TpcLZlLrqxw1Bzjr4/fcqhE0uARsLFBKjRDFu03sMZTufqO0gA?=
- =?us-ascii?Q?P4bida1qR2hHtP0RtxxsowWopakertK2oxQJNudmAGhyjSuKhLljkhs/YH9K?=
- =?us-ascii?Q?y7EM+tZrMeYIptWhur/g6OnKzFyapbAYbL6aVA1ggcqTm/M0fOsDATkVyaMc?=
- =?us-ascii?Q?3RUZ5XCHVPadfJMN7PMcJhPTGhvu+NMFp55ftY1SFXHBsrDIqbvXwJRmW//q?=
- =?us-ascii?Q?Lct0QcBEFJEpbDdglZhyM4tEoQsldX+msOjyldEOYjCDcK22v8m+/l0LjBWC?=
- =?us-ascii?Q?kZS6GUVNPdn1P0Ex/205WA2vACBsCyWbivTZOH5qB6vcYZVCWvWZllkYGuHI?=
- =?us-ascii?Q?McPfwyyycN7w4pAaHMnLp5L+NE/i+B9iZY+L4llfqKPfUrQJlO5v8aQ837ih?=
- =?us-ascii?Q?1iv+Q0KnBcqU/XR/ywD9MR2m6PEv+vkTFYv5G87h/hcI/WTdFrQt3794D0AU?=
- =?us-ascii?Q?b+B3/tXM2MumUl6Mjfp+4xl6/X/IH1QoMAGHqljIZq65q9MfNaDedKMxrpQM?=
- =?us-ascii?Q?iJl/+gHt3LzyWYrxPdOvw0dwGUjt8nnCtjuoWPAtpp0M8BdLiokFzOvXjL8k?=
- =?us-ascii?Q?OC5Rx3MK46t5OBFr1Vnz9mQ7hHxDKCJQhywr9J7wPukoA4KkTsbvp/64vqdU?=
- =?us-ascii?Q?BMiGB60k0ysGtG6l9RiyTIGO8hgtLMEjg+yU50W/rI361cythq+tlaZdF3qZ?=
- =?us-ascii?Q?PYU7kWp0rTPVtAZ8quUi0hfLfpaSNlLdWmnEb5Ah68g4Q7E9gb/d13S2NT/F?=
- =?us-ascii?Q?4h0f7RpTJTsyWuzp+VMsEyKsbJvek8Zu/CD1JcS8Ued+A87XS95JJNnF6Ezp?=
- =?us-ascii?Q?RNit3+K7hfT8ewy4FMgmUxX9KVQ4nmOlUXA0HY9GDAaoJq76yzgdKI3AenNA?=
- =?us-ascii?Q?OIGRA12ILeGcZN7zF+xSXHCUEFOC0xZQ9m9cHvnl5KXhCOwB9CMC26IqtVvm?=
- =?us-ascii?Q?KUEjSt2zGL6wMi/6TUc7SCeBryIDZMqD321ccwgDGBXgLs1ek2/UFRqmecXK?=
- =?us-ascii?Q?GaW7Wyol5sLMPLhsuzmgUDnGUBSkjZD6hZjV2TTv/5eF4CnukZ5XhxNx2z5x?=
- =?us-ascii?Q?5Zelc0ENyFruxP09BxvD1MNPhp50OJuS3E/RKN1h96RLby8vKxRn6RlXo244?=
- =?us-ascii?Q?FsXuC6Y9xBMUq9Wk2j7HJU6pjo68pdYu840i9lYxeworDKFGgg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YZHgG00GEu54EWRY7NGdwjQ7echqQftrUWrDI/GjiELg1dM/Q6nsJ3gA24Cq?=
- =?us-ascii?Q?sDfI5jEM759ZBlAvoC1sy2uA8NNcC+RAJbysd0iDaOH+Jyr2ddlHex2ZiSKd?=
- =?us-ascii?Q?m9A2e3oFgsRKpV+rb3DgG6H9N8MaV5exytW8I1riHVE9A9B2UY+yStQCUtxT?=
- =?us-ascii?Q?q3JTTLuCyAOTxDHFsTJi9DdUFjNWSRyMXzkKXlGlNhwsgSLRYtZTHGVaA2PY?=
- =?us-ascii?Q?45O5jiW1SlsUF0kGO848yfZq5Mfm/DnD91Apd4jcEjfDXwi4jaK1C1dX1iYX?=
- =?us-ascii?Q?2GkgBuaL6DBIl8L3Q/YVwbsk8CHy0VC0ChxO+8/SOnDABIb+MIz+DptClFth?=
- =?us-ascii?Q?39SZezdQxroteXpCkjpVjJ0esyw5SMZ8Z59dvjV+kwHBIn/s+6sFphLPOSut?=
- =?us-ascii?Q?twl1DlgshpsYh1gjUY0WWS+/ZFYjuU70AG1hdOXXhTSpyOtg1GMaNuS3BkOF?=
- =?us-ascii?Q?WGrcDXjVpdsuf67WOb59aRfXuUvkfDrzBxhSZl+r1En1KukYQijB2jwhdnMq?=
- =?us-ascii?Q?hQBKQRNVEa1mlHa6qEN9I6OXFuHKIhl9tK4JwcmPCOejt9bH4dNOUbQSkBDY?=
- =?us-ascii?Q?xVpUvl1BwUKiSV2AKDesHPZRDR4H9ISJIdOz2MZPeJVgkwheY9xr4IOSsOv8?=
- =?us-ascii?Q?QAOxlR9/zfWXTVMv2fPeeg2j74yth0pwD/qAKJ9Yo68lsPHc/zshl3g5B+7V?=
- =?us-ascii?Q?TOGU3GDl762dtwbz/SkLpiQsBDULFjGxuCuTs11oWTLqNEK9FRKKpuiyOVd/?=
- =?us-ascii?Q?BOKS8RUKmxl43EqSZuwFCY/gEpEMf7cWUCkl9053BeuKL7UOOerVnuSgBonC?=
- =?us-ascii?Q?LHLyfu8Xza6gMzBKL2KqPAGBw2/OPSyhoe2yD52pwwO5X+u8YMzoQYEXSzje?=
- =?us-ascii?Q?Y4hxAJi2xo8bz5BUNJJM2T/Dvm9+z5Ft/wbLKBIwQyN1YavPh56UF8e28tsL?=
- =?us-ascii?Q?rbtIbyELWYvWdbvWqfWaY7Mer0FooFLVdtYpQWyVvWwO0kzMDzkhMrt0FG7f?=
- =?us-ascii?Q?kVvhzv+ahtbMow0KGk6pVOhmQWZBMqhySoitKUCBN2+kECP1yUV4X1ZC6uTx?=
- =?us-ascii?Q?K5Q4M1JqaJWFayRGKCFBiYoUsOa5ePj5pxiO9V19AnKsYSqYUebzm0I/w/8c?=
- =?us-ascii?Q?rEvaeuku5a5BexagXJ/ZffoRi/aw2yyElVcNp07z30CR04qICkT/GsNOSHjm?=
- =?us-ascii?Q?J5/fBA+Em3aW6NTFW7jYcjS/Cdxv9DMttgdHudLSU/gJIHahU/fu145x5xde?=
- =?us-ascii?Q?j69CdJi7NS5PF2SABc/xBnuKVD4BSvKGCpCRTgpVywTUC4O9mg6rCnDZOLic?=
- =?us-ascii?Q?/ZfuWdZF10+Hwx3j9kx1iHQBLvHhOWY/OFJLbamAfDt5TJIqueHgZnPCgI5v?=
- =?us-ascii?Q?QtcGmqg6VpqBKn1YZKwcGfuP5FFv7zEeRBsYCZJM0Ei5HyVUjMhzJV/aY0Fl?=
- =?us-ascii?Q?ctVQdho1fHg8BqTjkSK8a5m9KQu1gmibM1V+F8na2s2DOZNUMXwxCOFxzJIJ?=
- =?us-ascii?Q?Nx0DaE8+MtYVP3DPIC6ZsCnd6PoVuD/0MCKguDRMmQ+2vNXDXH7hY4qMRrKW?=
- =?us-ascii?Q?TH5wteWv/+bSed6EM01DfXrFf/GCrRl033qUoBV+?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fefe6965-be60-4103-4627-08ddbf98d0f8
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2025 10:02:02.1689
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: p1mGKMm1N7TNc2x2XOfVaIeosbxYa/v17S614FhttHIMR1A6FGmtRf/LiEFFYZXtIVoLXFtcupoaSKJefH5I8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11311
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 14/16] arm64: dts: axis: Add initial device tree support
+To: Arnd Bergmann <arnd@arndb.de>, ksk4725@coasia.com,
+ Jesper Nilsson <jesper.nilsson@axis.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa
+ <tomasz.figa@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Ravi Patel <ravi.patel@samsung.com>,
+ SungMin Park <smn1196@coasia.com>
+Cc: kenkim <kenkim@coasia.com>, Jongshin Park <pjsin865@coasia.com>,
+ GunWoo Kim <gwk1013@coasia.com>, HaGyeong Kim <hgkim05@coasia.com>,
+ GyoungBo Min <mingyoungbo@coasia.com>,
+ Pankaj Dubey <pankaj.dubey@samsung.com>, Shradha Todi
+ <shradha.t@samsung.com>, Inbaraj E <inbaraj.e@samsung.com>,
+ Swathi K S <swathi.ks@samsung.com>, Hrishikesh <hrishikesh.d@samsung.com>,
+ Dongjin Yang <dj76.yang@samsung.com>, Sang Min Kim
+ <hypmean.kim@samsung.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-kernel@axis.com, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, soc@lists.linux.dev
+References: <20250710002047.1573841-1-ksk4725@coasia.com>
+ <20250710002047.1573841-15-ksk4725@coasia.com>
+ <5494bedb-6907-43dc-8580-04ef1e47c8d0@app.fastmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <5494bedb-6907-43dc-8580-04ef1e47c8d0@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 09, 2025 at 05:17:18PM +0200, Andrew Lunn wrote:
-> > A GPIO controller has a maximum of 8 lines (all found in the same
-> > register). Even within the same controller, the GPIO lines' direction is
-> > fixed, either output or input, without the possibility to change it.
+On 10/07/2025 09:48, Arnd Bergmann wrote:
+> On Thu, Jul 10, 2025, at 02:20, ksk4725@coasia.com wrote:
+>> From: sungminpark <smn1196@coasia.com>
+>>
+>> Add initial device tree support for Axis ARTPEC-8 SoC and Grizzly board.
+>> This SoC contains four cores of cortex-a53 CPUs and other various
+>> peripheral IPs.
 > 
-> Since this is an FPGA, not silicon, is the selection of output or
-> input a syntheses option?
-
-I suppose so, yes. The idea is that in this particular case, the fixed
-direction for each GPIO line (bit in the register) matches the use case
-and will not be changed. For example, the presence detect or rx los
-GPIOs for the SFP cages are only input, while the tx enable one is
-output always.
-
->
-> > +static const struct of_device_id qixis_cpld_gpio_of_match[] = {
-> > +	{
-> > +		.compatible = "fsl,lx2160ardb-fpga-gpio-sfp2",
-> > +		.data = &lx2160ardb_sfp2_cfg,
-> > +	},
-> > +	{
-> > +		.compatible = "fsl,lx2160ardb-fpga-gpio-sfp3",
-> > +		.data = &lx2160ardb_sfp3_cfg,
-> > +	},
-> > +	{
-> > +		.compatible = "fsl,ls1046aqds-fpga-gpio-stat-pres2",
-> > +		.data = &ls1046aqds_stat_pres2_cfg,
-> > +	},
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index fa1e04e87d1d..371005f3f41a 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -2320,6 +2320,20 @@ F:	drivers/crypto/axis
+>>  F:	drivers/mmc/host/usdhi6rol0.c
+>>  F:	drivers/pinctrl/pinctrl-artpec*
+>>
+>> +ARM/ARTPEC ARM64 MACHINE SUPPORT
+>> +M:	Jesper Nilsson <jesper.nilsson@axis.com>
+>> +M:	Ravi Patel <ravi.patel@samsung.com>
+>> +M:	SeonGu Kang <ksk4725@coasia.com>
+>> +M:	SungMin Park <smn1196@coasia.com>
+>> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>> +L:	linux-samsung-soc@vger.kernel.org
+>> +L:	linux-arm-kernel@axis.com
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/clock/axis,artpec*-clock.yaml
+>> +F:	arch/arm64/boot/dts/axis/
+>> +F:	drivers/clk/samsung/clk-artpec*.c
+>> +F:	include/dt-bindings/clock/axis,artpec*-clk.h
 > 
-> Does the FPGA have an ID register you can read to confirm it is what
-> you think it is?
+> I'm trying to understand the SoC family tree here. I see that
+> you have an entry for ARTPEC SoCs above it, which currently
+> covers artpec6 (Cortex-A9, apparently not Samsung based).
 > 
-> Or is the bitstream downloaded at boot by another driver? Can you ask
-> that driver what bitstream it downloaded?
+> Is the reason for having two entries here that artpec6/7 and
+> artpec8/9 are two separate SoC families, or is this just because
+> they are using 32-bit and 64-bit cores, respectively?
+
+These should be entirely different families. Artpec6 was not done by
+Samsung and this one - Artpec 8 - is basically Samsung SoC, just like
+they did designs for Tesla and Google GS101.
+
+I don't know about Artpec 9.
+
+All this should be explained in DTS or bindings commit msg, btw.
+
 > 
-> Given how similar these devices are, it seems like a typ0 could give a
-> mostly working device which passes testing, so doing some validation
-> of the compatible against the actual FPGA would be nice.
+>>
+>> +config ARCH_ARTPEC
+>> +	bool "Axis Communications ARTPEC SoC Family"
+>> +	help
+>> +	   This enables support for the ARMv8 based ARTPEC SoC Family.
+>> +
+>> +config ARCH_ARTPEC8
+>> +	bool "Axis ARTPEC-8 SoC Platform"
+>> +	depends on ARCH_ARTPEC
+>> +	depends on ARCH_EXYNOS
+>> +	select ARM_GIC
+>> +	help
+>> +	  This enables support for the Axis ARTPEC-8 SoC.
+>> +
 > 
+> I would prefer to be less fine-grained here, especially as
+> it seems that ARTPEC9 is again quite similar to ARTPEC8, as
+> far as I can guess from public information.
+> 
+> Could you fold both entries into a single ARCH_ARTPEC?
 
-The FPGA does have an ID register that we could verify and match against
-the board type that we expect.
+So far ARCH_ARTPEC = ARCH_ARTPEC8, so obviously it can be folded. I
+don't know if Artpec 9 will ever be upstreamed. This Artpec 8 is like 4
+or 5 year effort - they sent first patches some years ago, but DTS was
+not ready. Therefore I think we should not assume there will be Artpec 9
+yet. If it comes, we can always split things.
 
-On the other hand, I am not 100% on board with the idea to check this
-from the GPIO driver which teoretically should only touch its one
-register. Maybe from the parent's driver we could do that and prevent
-the probing of children if things don't match up. But this does prove to
-be complicated since those drivers are simple-mfd (for LS1046AQDS) and
-simple-mfd-i2c (for LX2160ARDB). And I don't think it would be wise to
-add some specific board logic into of/platform.c.
 
-Ioana
+Best regards,
+Krzysztof
 
