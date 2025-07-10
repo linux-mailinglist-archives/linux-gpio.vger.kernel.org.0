@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23058-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23059-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D1DBAFFA6A
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:08:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF051AFFA74
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:11:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9645178460
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 07:08:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 210E8166220
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 07:11:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D69342882AB;
-	Thu, 10 Jul 2025 07:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F612882B0;
+	Thu, 10 Jul 2025 07:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8K53krC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAeG1Z8f"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFDD2877D2;
-	Thu, 10 Jul 2025 07:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1911FFC1D;
+	Thu, 10 Jul 2025 07:10:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752131278; cv=none; b=icuuIljWwlpdiVgzUX1xGfKjYgfQNdiBjM3EGbffEfMOv9fdb2wGMhac0YRXhVINqGsQdMERfd678gjVd+BEFODhIPXQc/ZpRbAFHMWsnE97lF7F6lf4NcQdg1m1538sBeZK5uCqNxxyVpxD9QO/oUuo0iQU2Bzgd5L9XJTsbag=
+	t=1752131456; cv=none; b=juVV8GK/XhbrYD8sKOaeF/NOVC7k795sHm1lTZ52uNzGj12tPeJrswVgmWxaKLRvNpS2Pl+YDcqkK9+I2sOL5wqJDKgzM23nNVG2DiUtv8bZIm1ZTwMxNk0efEaSUFY73FBttMlcXIJPYtko3WooNNma18eBAdS7/1VdHSvUV5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752131278; c=relaxed/simple;
-	bh=Y7YZ2fMn/3ThKl/vacuZkoN5BDx/Wl+6oligcSLNzjU=;
+	s=arc-20240116; t=1752131456; c=relaxed/simple;
+	bh=PkKCrCcuyuxh4trwp8qE8i2qCxJqLT90JXicLKiO9cA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o0oMJM4aHr57A0QeA1frJArcamssJpjA9/wSvf1i85nMDgrv/a4bamzIrKhyhTKC+3DDAS9WugANXpEPVXh2B1n6UuUin1MVmXtpHijcrmNUL09FtSvkVW/wULpDNN6sC1hlortC40B+/ipwDrprBSbU5f620fQ0Lll+BzRKFEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8K53krC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D87C4CEF4;
-	Thu, 10 Jul 2025 07:07:47 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=gxwoA+MnXfyLbq15yaLAp+ZCoVaZxC7zO9jrMCUn2tfycrd7QmPtWTzOa+9IgyV+tiPlPCFhV1YwFo5hvf7c19qRBMOzQKVZx/XMjzbGIgkAoZcMEu6iRDYKES70WdvtltPq+gNY1s1vr2YL9xKwuw1eFMNOKgZHMtqbv0rDw1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAeG1Z8f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3C0C4CEE3;
+	Thu, 10 Jul 2025 07:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752131278;
-	bh=Y7YZ2fMn/3ThKl/vacuZkoN5BDx/Wl+6oligcSLNzjU=;
+	s=k20201202; t=1752131455;
+	bh=PkKCrCcuyuxh4trwp8qE8i2qCxJqLT90JXicLKiO9cA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c8K53krCkPXYugudBnep2MTDCfHMbO2lq6DkY3ErsCKpKXN5njzKSPwzs3W0Dk5Xv
-	 5ItBrkAVmEs7MorgOLt5WnssVymbguhXULW7pW+caOQLcosyaJFy5j7AF/dO/Ejk1M
-	 N4fBj3ilUeFFJebbrHe7DtQf9AaCl9GcgLCrVx5pjbtIXJpdheiBZ3lSU0yzRKSIu+
-	 gYOeaAxGIu9Ehj1utbSssjTt/lOQKaU07FNoMfxAmjdazlWUtNhhS2h093MR3Gm87K
-	 huDwL5gtmqRywYo7YZPuIhiYRBDn2sRNh2gGFPsT8+fN6le1GWXyBB+nnBy6nWKVMU
-	 lN5lp1tsgH1dA==
-Message-ID: <cd5c268b-1340-4d66-9b08-75e2b7efd241@kernel.org>
-Date: Thu, 10 Jul 2025 09:07:43 +0200
+	b=jAeG1Z8frnlkFN+0+0Nw0xKkqVZXOpspn0FYUUkeiW8FbebUB1TRP6wihV2qGCaBz
+	 upffSTPPJ+5TU0GY+D1Am7yDN3eZZRLKCkvAjS1b3vyAvSZTze2402CjDpG9X/yTCR
+	 0OiNSikEc3O72nfXpRJ86dh62L5FM+Ohwp+tz7CCL2MjxXkNltCMKzFsZQhWbfX2g+
+	 osyX2l4l+qqXsEHtZHq8C8aTOxj6DzP8FMyq19Q4oYGfS64m99zsNUuSvlC10vYakQ
+	 GpSdkAdr0TfiDmdmYTn+p1z8SENh6WaMij/5mUrXjnqjebTGEUnhFqDvgWcnswsgmE
+	 8D2G8ON4F6DYw==
+Message-ID: <7b9a8203-2d66-4735-a6a2-762f57fb5cef@kernel.org>
+Date: Thu, 10 Jul 2025 09:10:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/16] dt-bindings: clock: Add CMU bindings definitions
- for ARTPEC-8 platform
+Subject: Re: [PATCH 02/16] dt-bindings: clock: Add ARTPEC-8 CMU bindings
 To: ksk4725@coasia.com, Jesper Nilsson <jesper.nilsson@axis.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -74,7 +73,7 @@ Cc: kenkim <kenkim@coasia.com>, Jongshin Park <pjsin865@coasia.com>,
  linux-arm-kernel@axis.com, linux-clk@vger.kernel.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, soc@lists.linux.dev
 References: <20250710002047.1573841-1-ksk4725@coasia.com>
- <20250710002047.1573841-2-ksk4725@coasia.com>
+ <20250710002047.1573841-3-ksk4725@coasia.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -120,25 +119,150 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250710002047.1573841-2-ksk4725@coasia.com>
+In-Reply-To: <20250710002047.1573841-3-ksk4725@coasia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 10/07/2025 02:20, ksk4725@coasia.com wrote:
-> From: Ravi Patel <ravi.patel@samsung.com>
+> From: Hakyeong Kim <hgkim05@coasia.com>
 > 
-> Add device tree clock definitions constants for ARTPEC-8 platform.
-> ARTPEC-8 platform has separate instances for each particular CMU.
-> So clock IDs in this bindings header also start from 1 for each CMU block.
+> Add dt-schema for ARTPEC-8 SoC clock controller.
 > 
-> Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
+> Add device-tree binding definitions for following CMU blocks:
+> - CMU_CMU
+> - CMU_BUS
+> - CMU_CORE
+> - CMU_CPUCL
+> - CMU_FSYS
+> - CMU_IMEM
+> - CMU_PERI
+> 
 > Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
-> ---
->  include/dt-bindings/clock/axis,artpec8-clk.h | 122 +++++++++++++++++++
->  1 file changed, 122 insertions(+)
->  create mode 100644 include/dt-bindings/clock/axis,artpec8-clk.h
+> Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
 
-This is not a separate commit, squash with bindings.
+Confusing order, unless you really understand this, but considering you
+did not add your own SoB I claim you do not understand this. What does
+Ravi's SoB mean here?
+
+> ---
+>  .../bindings/clock/axis,artpec8-clock.yaml    | 224 ++++++++++++++++++
+>  1 file changed, 224 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml b/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
+> new file mode 100644
+> index 000000000000..baacea10599b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
+> @@ -0,0 +1,224 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/axis,artpec8-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Axis ARTPEC-8 SoC clock controller
+> +
+> +maintainers:
+> +  - Jesper Nilsson <jesper.nilsson@axis.com>
+> +
+> +description: |
+> +  ARTPEC-8 clock controller is comprised of several CMU units, generating
+> +  clocks for different domains. Those CMU units are modeled as separate device
+> +  tree nodes, and might depend on each other. The root clock in that root tree
+> +  is an external clock: OSCCLK (25 MHz). This external clock must be defined
+> +  as a fixed-rate clock in dts.
+> +
+> +  CMU_CMU is a top-level CMU, where all base clocks are prepared using PLLs and
+> +  dividers; all other clocks of function blocks (other CMUs) are usually
+> +  derived from CMU_CMU.
+> +
+> +  Each clock is assigned an identifier and client nodes can use this identifier
+> +  to specify the clock which they consume. All clocks available for usage
+> +  in clock consumer nodes are defined as preprocessor macros in
+> +  'include/dt-bindings/clock/axis,artpec8-clk.h' header.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - axis,artpec8-cmu-cmu
+> +      - axis,artpec8-cmu-bus
+> +      - axis,artpec8-cmu-core
+> +      - axis,artpec8-cmu-cpucl
+> +      - axis,artpec8-cmu-fsys
+> +      - axis,artpec8-cmu-imem
+> +      - axis,artpec8-cmu-peri
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 5
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 5
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+
+reg goes second, after compatible (Samsung bindings are not the best
+example because I converted them long time ago before many coding style
+practices were encouraged)
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#clock-cells"
+> +  - clocks
+> +  - clock-names
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+
+Drop contains.
+
+> +            const: axis,artpec8-cmu-cmu
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: External reference clock (25 MHz)
+> +
+> +        clock-names:
+> +          items:
+> +            - const: fin_pll
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: axis,artpec8-cmu-bus
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: External reference clock (25 MHz)
+> +            - description: CMU_BUS BUS clock (from CMU_CMU)
+> +            - description: CMU_BUS DLP clock (from CMU_CMU)
+> +
+> +        clock-names:
+> +          items:
+> +            - const: fin_pll
+> +            - const: dout_clkcmu_bus_bus
+> +            - const: dout_clkcmu_bus_dlp
+
+All these names should be changed to match what is the input. Look at
+latest bindings, we moved away from that style.
+
+
 
 Best regards,
 Krzysztof
