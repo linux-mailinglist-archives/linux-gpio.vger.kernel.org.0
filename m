@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23060-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23061-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 244F1AFFA7C
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:12:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AC01AFFA86
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:13:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECEB94E4D7B
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 07:12:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80E2B64021F
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 07:13:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D0112882C9;
-	Thu, 10 Jul 2025 07:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663FA288C19;
+	Thu, 10 Jul 2025 07:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJd0K9f9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lm6U3D2b"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB016FC1D;
-	Thu, 10 Jul 2025 07:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9CE2882BF;
+	Thu, 10 Jul 2025 07:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752131572; cv=none; b=oDtDzTo87gwGd+noefdE7ll9LZQBOHQCIctAEhiK1Jw/BXf/IQatZKJQJkunv3+xtQ2qVwYoweuOEcDCaSu1emn5IvtuyBMBJBdSzpVKsPobA6WKYR3Latyfy6C2vATjDVMrJfLbJ0mYdZa2STNFBmamXaTzgUM7aXLf9I4Zp3E=
+	t=1752131610; cv=none; b=Ee0dvjgu04sL9yFhYd7fI0suT/orYoWT74ASCfsWVo6WCua6nMTkhRYG6aJP8CKVbCJXF0LAJ59LeYMdQ57DiBVxpMq/Hl91iz+IkSkjL8xb8Yqejs5joIa+KLuahR7zUwsFTqSDeX3KR0tzvCUEuZZ0lSiEn79Smg+sx/yTQNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752131572; c=relaxed/simple;
-	bh=ifYIHg5zJ607ENbj97kebFOOUjlK1jPRWMHY7Y4wlW4=;
+	s=arc-20240116; t=1752131610; c=relaxed/simple;
+	bh=5CO94RFf3zvAv5SFpLNvTSDn+Zr8YbKVonCBXLb4N90=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y3wqNxuoRhqizjcESbiYH5/aIi0jt+2F5pNKoETepUJO70HsZN6u3C6iRWp/hf2/VQvTZB3es1JMlrT/VHV/C+pIUM4J3yIy8oKjTyDS6KFHTkcveArTjVpiv1+phs5CRJbofW7y/4fe8xUoOdpWX8Mgw4adsrWsnN1L7tDff9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJd0K9f9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F350AC4CEF4;
-	Thu, 10 Jul 2025 07:12:42 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=QVBTsvrWqPXvpnXLzHFSF9M5w4WA7wsLkdp5gJVa/+hkVka/1QbmbDczeFroxr1BJD6Peye3C5Q9hNQZwCos+zZX5hpaCTWV5HRYrIiH89VHbsNDpeHH6UXFRso5VRK++Rs1pc1On7cT+5IWRNJtyU4ZAlQ/KdwKsnQiaR1Z4ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lm6U3D2b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2844CC4AF09;
+	Thu, 10 Jul 2025 07:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752131572;
-	bh=ifYIHg5zJ607ENbj97kebFOOUjlK1jPRWMHY7Y4wlW4=;
+	s=k20201202; t=1752131609;
+	bh=5CO94RFf3zvAv5SFpLNvTSDn+Zr8YbKVonCBXLb4N90=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YJd0K9f9Ta/osGMRvXxjmSPbkZYH+3UTUdoLEB+RKOIxv7bQ9orex8Q3v+qy06/mz
-	 YgnzdX/ZlV3Flzi8K3MdHFQgnBVZMAm6vgdgULbEdqoy1fGLS5QyFpLMEy3Wkj32/6
-	 6wg2p2t4wTk09YvccZ0YkbhaxOuGb2yOqC1BVKVNSc4ExhKLoXSVQ86B2qocnX4GRo
-	 Tjs1HKMJBW3DAai3jb4Jo8bwpIZTQOYq38Fqos3+vIhgsrJF36u390+NocP6Q39buG
-	 Vplurk8XhM3harDeHSKJ1U6EiPnMVOroJE0JrgyLpK2j6C7wzeliapuTJ/oCdfbxZF
-	 ZTmSw1NhMXj2A==
-Message-ID: <48677b18-3936-464a-a581-26a44ef76c80@kernel.org>
-Date: Thu, 10 Jul 2025 09:12:40 +0200
+	b=lm6U3D2bkulQxMZnbWuHcxjDtc4ryRLAT5ogvHyJ/Zz0rgDmgdA4VTmqBnDmW6oWB
+	 Sq0dkrTT27QLzKAvXnA8KaGcJpvCpy9Kk3lA7pr00cP/nuAHNK0eYoQeQiy8Rpb3nJ
+	 3MTIQkLTzEEWkjV+LpRLNCCyS7KYldpjuFR2zYRrJIFz3J2SHgo5NG1Y8ifZAvBxOr
+	 2M0EQtkPt4v2jDl2eD/lqnYsd8PO4ekyx2lsOelH2GodWNZpYxdCd7n8RakaTkvbaC
+	 QUZccAWmtPCn3xboPBWTjYv7EZVqevdvC/WfmGXGHgoC40Vt9XoeqGw9f+XDvyj4cK
+	 nU6q5UZHyrW8Q==
+Message-ID: <6d5b4e08-ddf0-438b-a188-fd8b48f3e2d2@kernel.org>
+Date: Thu, 10 Jul 2025 09:13:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/16] clk: samsung: artpec-8: Add initial clock support
+Subject: Re: [PATCH 10/16] clk: samsung: artpec-8: Add clock support for
+ CMU_PERI block
 To: ksk4725@coasia.com, Jesper Nilsson <jesper.nilsson@axis.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -71,9 +72,10 @@ Cc: kenkim <kenkim@coasia.com>, Jongshin Park <pjsin865@coasia.com>,
  <hypmean.kim@samsung.com>, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
  linux-arm-kernel@axis.com, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, soc@lists.linux.dev
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, soc@lists.linux.dev,
+ Varada Pavani <v.pavani@samsung.com>
 References: <20250710002047.1573841-1-ksk4725@coasia.com>
- <20250710002047.1573841-5-ksk4725@coasia.com>
+ <20250710002047.1573841-11-ksk4725@coasia.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -119,57 +121,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250710002047.1573841-5-ksk4725@coasia.com>
+In-Reply-To: <20250710002047.1573841-11-ksk4725@coasia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 10/07/2025 02:20, ksk4725@coasia.com wrote:
 > From: Hakyeong Kim <hgkim05@coasia.com>
 > 
-> Add initial clock support for ARTPEC-8 SoC which is required
-> for enabling basic clock management.
+> Add clock support for below CMU block in ARTPEC-8 SoC.
+>  - CMU_PERI
 > 
-> Add clock support for below CMU block in ARTPEC-8 SoC:
->  - CMU_IMEM
-> 
-> Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
+> Signed-off-by: Varada Pavani <v.pavani@samsung.com>
 > Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
 > ---
->  drivers/clk/samsung/Kconfig       |  8 ++++
->  drivers/clk/samsung/Makefile      |  1 +
->  drivers/clk/samsung/clk-artpec8.c | 62 +++++++++++++++++++++++++++++++
->  3 files changed, 71 insertions(+)
->  create mode 100644 drivers/clk/samsung/clk-artpec8.c
-> 
-> diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
-> index 76a494e95027..289591b403ad 100644
-> --- a/drivers/clk/samsung/Kconfig
-> +++ b/drivers/clk/samsung/Kconfig
-> @@ -13,6 +13,7 @@ config COMMON_CLK_SAMSUNG
->  	select EXYNOS_5420_COMMON_CLK if ARM && SOC_EXYNOS5420
->  	select EXYNOS_ARM64_COMMON_CLK if ARM64 && ARCH_EXYNOS
->  	select TESLA_FSD_COMMON_CLK if ARM64 && ARCH_TESLA_FSD
-> +	select ARTPEC8_COMMON_CLK if ARM64 && ARCH_ARTPEC8
+>  drivers/clk/samsung/clk-artpec8.c | 90 +++++++++++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
 
-Here and:
-
->  
->  config S3C64XX_COMMON_CLK
->  	bool "Samsung S3C64xx clock controller support" if COMPILE_TEST
-> @@ -102,3 +103,10 @@ config TESLA_FSD_COMMON_CLK
->  	help
->  	  Support for the clock controller present on the Tesla FSD SoC.
->  	  Choose Y here only if you build for this SoC.
-> +
-> +config ARTPEC8_COMMON_CLK
-
-here, place it before EXYNOS_3250_COMMON_CLK.
-
-> +	bool "Axis ARTPEC-8 clock controller support" if COMPILE_TEST
-> +	depends on COMMON_CLK_SAMSUNG
-> +	help
-
-
+Please squash all the clock driver patches.
 
 Best regards,
 Krzysztof
