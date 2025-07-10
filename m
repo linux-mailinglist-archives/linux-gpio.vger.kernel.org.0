@@ -1,175 +1,171 @@
-Return-Path: <linux-gpio+bounces-23078-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23079-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86C38B000DB
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 13:55:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42E3AB0019D
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 14:25:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 889191C44162
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 11:56:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D8DC560CF7
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 12:25:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 916852494F0;
-	Thu, 10 Jul 2025 11:55:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FD3C2550D8;
+	Thu, 10 Jul 2025 12:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="YXhZDUkt";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="MhpX0a4k"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BCBl8BQn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963D52222AB;
-	Thu, 10 Jul 2025 11:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D7325229C
+	for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 12:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752148547; cv=none; b=qIlOf06OGvRnpPVtwnW+jJvyV2grimhcQVl0nsigOObetz2bG2JYXGDDxw5cw9Rxr4CwJfL4sPNqXSdSwfwheQ1li02UpWrIjJQh0asR2DLAq71QpLHC8w5TT7oMAYk8WfO4tBT7i+GbyjHUZQU5NmwgogPoAeH4LYgIA53qMPM=
+	t=1752150321; cv=none; b=Tg0brDdJOyNpWPmhnz3XhjS5mt1cxqhadjDfbtwCWc9GrQ7Yd/6KoTin86LV/4aIYV3QVz6kpwg2i4xOLcGHiI2B7VR9lfWCUDr4XdkgZ7TlzZfJ+PMmG2PXb3OzoVGaGAZPIXZeJ8e/fsh+NqEVeyUarEJTaftogzOAUg2YnGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752148547; c=relaxed/simple;
-	bh=3juJXtwRqTMRqGAqlCmyVvx+e7eoGT6bsJ70gv6r93M=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dxPWdvd6VlUUOK3y058MZS6RIQ39K2l5MIlb2nr/tZOZnOqjbzty9/SfQ/ZZp1twWoXiWKhPnjufxewF32Gp6uI81yaiBQucAQIL+YeO07nkAdJz8j3roH+o5MCSnYyJjunJXzH+hPeUlA/h/fzES5h7xT65N9vf0G3o7ppNObY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=YXhZDUkt; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=MhpX0a4k reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1752148543; x=1783684543;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=1M/8ZPDR+jqD9KgmK8AzTlm6VYkQ4n5iRWmdgmfKnjw=;
-  b=YXhZDUktCbCDjEqyIhLHalAtlGyHojyxYJOClqsZKvuEc32+haz97EAG
-   RCNkJsaEuwUkzG32p9W2pWmRXLbW3lFGY7UoyqpADhKyqWptjlv1JxOat
-   xRbbyq1s+JsO8+7z0Otbq6d593RtE2ji2v3gLjUIgr9ezsgGqLqi0n7EP
-   ZHeOZauqaa1Ar5siTQmDxenaMjOdiKdTfWxHcWA749KmTW88F9oOZbuKz
-   9qqpx8L44YkgS3MXU4qUuEamYnf8s0MqcJRB6xMs8NHUVcH+FPjvQcIED
-   4fk62zeMmywaSdhyWclab1opj3lpDA8AD7XXoIsfTTCFqUMbsqike0b8t
-   g==;
-X-CSE-ConnectionGUID: p3swa5/FQxurqVfx6Se2Tw==
-X-CSE-MsgGUID: sZub9Ib2Rp+Q8uPhcjJ4rg==
-X-IronPort-AV: E=Sophos;i="6.16,300,1744063200"; 
-   d="scan'208";a="45137225"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 10 Jul 2025 13:55:34 +0200
-X-CheckPoint: {686FAA35-26-A38CADE4-FD2ABC4A}
-X-MAIL-CPID: 4B1FD4FB117D508654D687B6302666B6_3
-X-Control-Analysis: str=0001.0A006397.686FAA49.0009,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 816DE168182;
-	Thu, 10 Jul 2025 13:55:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1752148529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1M/8ZPDR+jqD9KgmK8AzTlm6VYkQ4n5iRWmdgmfKnjw=;
-	b=MhpX0a4krtgS/76DyMt/ZA3ruTx1AiGsyMjQRadoRYZTnpXZMlOT023OSX1rE7jwpvlMc4
-	W12hqbjo4X7TK6eBbkTrn+/zNP1qs5CwSG52xcFoBxQDauH92P+Oub9EooaA0aOzotDfnh
-	hs+GoALxaDL9BYeVUHt1H3kJ9OTTlyzKh54k7wdsjKz/W4nHXChfbZ0/9ciAgJwofulpkt
-	oTvbAz2ljGCqvyT/tPPfA4wDF24ig14aw15YWkjWE7OXXBf+cAKnrZfa8yLEK/upv36RZ1
-	aumvfjjhBVisolO02gYQA48hNa3xfxdR57PzWiqp9W0opZYMIIxM+N4md2ZETQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lukas Schmid <lukas.schmid@netcube.li>
-Subject:
- Re: BUG: "scheduling while atomic" with MCP23008 + matrix_keypad IRQ mode on
- Linux 6.15.5
-Date: Thu, 10 Jul 2025 13:55:29 +0200
-Message-ID: <6072675.MhkbZ0Pkbq@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <15509576.tv2OnDr8pf@lukas-hpz440workstation>
-References: <15509576.tv2OnDr8pf@lukas-hpz440workstation>
+	s=arc-20240116; t=1752150321; c=relaxed/simple;
+	bh=FgzRt8ZR7RE+rp15IyUmQeD1Nnm06vrWcpPbcGFEZc8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CHKQde6wDP+r2Cl629bFnTIGQST9GP+mHxPqrr9iVlCoCrd7iT8YEEUiHvWtBr/6u8KlU3ZNt2U/JkoZX9P3XjLTB1ZzhI3OJ06XFye959CRF0XKIfpFlTExq17a2+wkzB0fMWuwgxV1957oquMS4rpTVYChK645N2h7FVoBuzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BCBl8BQn; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56A9YAt0002616
+	for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 12:25:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ytbTCzKHlppw2SwuVFycJKbJ22dHTAoFO6LLPths6vk=; b=BCBl8BQnoib8Svq+
+	gfbo5fvs1mFg9wD06+fQV4mO1Yujoh6bcMlpk5i47P8zlnXcU5yE4ZPwbEecRf7z
+	HReJSijPmv9Gp6e0mRCjmIfajjbIqmhe3BWdIlgQb6g38Hx/ZsuGU9wx4aia/xCq
+	t65mAn4ocuHMxGM3JMLfvliRQ5mq3GSqvx+vUYklz9zLmSMOwausfZgxwXWK+7pV
+	ascfe6QsPtHKFrGuwBjcVjOkEd5w391snbN4+StyJ49NENL9SDRm9P/7M6Jw740Y
+	ZM2RR9kJr6fV2QFImPUZcizk7Q6lu8vj3hI3OZxb1BKUqfpC/fc5ge10boKpxYZ6
+	dv6zdA==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pu2bg67e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 12:25:18 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a804126ed6so3940481cf.1
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Jul 2025 05:25:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752150317; x=1752755117;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ytbTCzKHlppw2SwuVFycJKbJ22dHTAoFO6LLPths6vk=;
+        b=Peuxs6RipmxvS8iwG4kmK5yGGxL/IwbcQkhwf/QqW5nZy8nOne7APpXNZmQV8X8yYp
+         xU3/Um86ERF/lw/2/Jg1Wgwp5Z6SnbJ8zVk4Nfy6vVxiO/CLrCp9Ah4XzrH+9qC5ut86
+         9FQKRnxXm7k89Yzo1RlJuBok9HwCVYm9+wKF2Y7JmT7TYO8qhZPGJkA/2RQ9q1GYxsgf
+         2vkhtUGGbrXPjQQAUisiSRc9WxEIFbUSJrpteylKtCJEcMgRyTl7YgPBOo3s3ra6p//i
+         RYTLOSoerkYUVcgHd0+QYf/GNCXBpRA/HkWfLvAf6So/AGw/4adGkhUTPQZUeBQ+4CsN
+         Jxbg==
+X-Gm-Message-State: AOJu0Yz8PPFguK4Mw9e/d+r4kurkZjDj/EIVjiPqNZywPZYq0uVxq5fQ
+	z7gmnNQt7oaJ32S2ePItO+CcmSBbutWKvLItijh3DHDBXH8sd9GdXF71qyhDu6V92kmmF3QD0Mj
+	ocC9T0/1FE3+BrNJz3BXzAB1HNoN9qA7Zqbg8zrEmMGed+fS8/url1Vr2Lv3Hok9f
+X-Gm-Gg: ASbGncvvvCh242zEtHr9nrk48PIsSBh2ieW4WRTHk83VL6KRjAKzMHryaxRmsmFHA0X
+	WMCUsQ8qPXyD7XJDadBQLiGBy39QeYaJsdbzhXerdKo4EZP1VSmuyYeAFRLmwaQn8HnhcRcC6mc
+	v28EbtjLkm7IZPKkC2zDGi35XwFlM9/0ouvZQCC85GIOZgbupumm+xsoRXJf7lnEO2lGNHL0447
+	XzRk5RJRMR5GIdUORKQA5GoITLfok+hnaM1JYPgT4L+yUZdp8X1RVwgwHKrpX+ySH15Vp5tfcnj
+	N06/kWYdV5KKSK/x0LmGaiZcny8jcz4sLkU+cHTbLhII1rFljezHGXckRHROVl4f8OQE6uC2KLe
+	7oms=
+X-Received: by 2002:a05:622a:18a9:b0:474:faeb:50aa with SMTP id d75a77b69052e-4a9e72c759dmr23061821cf.5.1752150317023;
+        Thu, 10 Jul 2025 05:25:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHL2upV2JP4A2q8XY4xH5jOb8YXZErvSG6S/PQkLmFjLIJfoL6nTfAPNahLLoITNqEwR13IJQ==
+X-Received: by 2002:a05:622a:18a9:b0:474:faeb:50aa with SMTP id d75a77b69052e-4a9e72c759dmr23061571cf.5.1752150316273;
+        Thu, 10 Jul 2025 05:25:16 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-611d1062950sm455639a12.65.2025.07.10.05.25.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Jul 2025 05:25:15 -0700 (PDT)
+Message-ID: <46a506ee-0472-4c7a-8fd8-b3a1f39105b5@oss.qualcomm.com>
+Date: Thu, 10 Jul 2025 14:25:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/12] pinctrl: qcom: use generic pin function helpers
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Alexey Klimov <alexey.klimov@linaro.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250709-pinctrl-gpio-pinfuncs-v2-0-b6135149c0d9@linaro.org>
+ <20250709-pinctrl-gpio-pinfuncs-v2-8-b6135149c0d9@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250709-pinctrl-gpio-pinfuncs-v2-8-b6135149c0d9@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzEwMDEwNiBTYWx0ZWRfX6AUBlBUly/oz
+ rfkMDrVslG9IoBsiQSuqip2+HfcJrXhLFGmMKr9fS02hXxIYH439yqtIvW8j1oGxohXoNZTE1Db
+ 5hNZeLST/zQ583CIpAqIcq8aEYcv+JCGFpWBv+w9WluENtVIVj4EgK9D2qvuhuPITKn/iWJNetn
+ j/9wgmWGrWPwRlI1Q6V1xsDCfey2RAov5tO+8iLSdQS5tKR+p7djzPNLEZU84MMbvTygkotWENJ
+ HrcZu+EcX91+ZwKiksF8sqTMTfpdhe+Anrn5OSxGKkCG59N7lK4pG46ygEeFBRbGdFqYCXLLBXK
+ 4vFvPsZa7ZZ5lW3Ti/gKBiAQGSfAWmJwb8mbDCppjQgz0LqMYMM1kW0Mr0I339DoWGCy9N1v+6g
+ MzoV/7AFHokamQDbAv1dpQrurjujXOww3czXEJ3qXf2SEISeOSGb6rj63JkcJ5IBYdPVj90k
+X-Proofpoint-ORIG-GUID: BKYzvxdR2yJKZCcSxflSOv5PCsGjYQVN
+X-Proofpoint-GUID: BKYzvxdR2yJKZCcSxflSOv5PCsGjYQVN
+X-Authority-Analysis: v=2.4 cv=erTfzppX c=1 sm=1 tr=0 ts=686fb12e cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8 a=SCCoO-_AHFKZ3jW1OIgA:9
+ a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-10_02,2025-07-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 impostorscore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=764 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507100106
 
-Am Donnerstag, 10. Juli 2025, 13:44:01 CEST schrieb Lukas Schmid:
-> Hi all,
->=20
-> I'm encountering a "BUG: scheduling while atomic" when using the MCP23008=
- GPIO=20
-> expander with the `matrix_keypad` driver in IRQ mode on Linux v6.15.5
->=20
-> Hardware setup:
-> - MCP23008 connected via I2C
-> - 4x4 matrix keypad hooked to MCP23008 GPIOs
-> - SoC: Allwinner T113-s3 SoC
-> - Using devicetree configuration for `microchip,mcp23008` and `gpio-
-> matrix-keypad`
->=20
-> When I press buttons on the keypad, after some amount of presses I get th=
-e=20
-> following error from the Kernel:
->=20
-> [   81.921114] BUG: scheduling while atomic: kworker/1:4/383/0x00000002
-> [   81.921155] Modules linked in: esp32_sdio(O) bluetooth ecdh_generic ec=
-c=20
-> cfg80211 rfkill ipv6 af_packet evdev matrix_keypad matrix_keymap=20
-> pinctrl_mcp23s08_i2c pinctrl_mcp23s08 sun8i_ce crypto_engine uio_pdrv_gen=
-irq=20
-> uio
-> [   81.921287] CPU: 1 UID: 0 PID: 383 Comm: kworker/1:4 Tainted: G       =
-    O       =20
-> 6.15.4 #1 PREEMPT=20
-> [   81.921305] Tainted: [O]=3DOOT_MODULE
-> [   81.921310] Hardware name: Generic DT based system
-> [   81.921317] Workqueue: events matrix_keypad_scan [matrix_keypad]
-> [   81.921343] Call trace:=20
-> [   81.921353]  unwind_backtrace from show_stack+0x18/0x1c
-> [   81.921381]  show_stack from dump_stack_lvl+0x68/0x74
-> [   81.921398]  dump_stack_lvl from __schedule_bug+0x5c/0x70
-> [   81.921423]  __schedule_bug from __schedule+0xb48/0xd24
-> [   81.921451]  __schedule from schedule+0x34/0x144
-> [   81.921472]  schedule from schedule_preempt_disabled+0x24/0x34
-> [   81.921494]  schedule_preempt_disabled from __mutex_lock.constprop.
-> 0+0x308/0xaa4
-> [   81.921519]  __mutex_lock.constprop.0 from mcp23s08_irq_bus_lock+0x20/=
-0x30=20
-> [pinctrl_mcp23s08]
-> [   81.921553]  mcp23s08_irq_bus_lock [pinctrl_mcp23s08] from=20
-> __irq_get_desc_lock+0x84/0xac
-> [   81.921584]  __irq_get_desc_lock from enable_irq+0x38/0xa8
-> [   81.921605]  enable_irq from matrix_keypad_scan+0x2b8/0x3ac [matrix_ke=
-ypad]
-> [   81.921626]  matrix_keypad_scan [matrix_keypad] from=20
-> process_one_work+0x160/0x410
-> [   81.921649]  process_one_work from worker_thread+0x25c/0x408
-> [   81.921668]  worker_thread from kthread+0x144/0x264
-> [   81.921685]  kthread from ret_from_fork+0x14/0x38
-> [   81.921699] Exception stack(0xc896dfb0 to 0xc896dff8)
-> [   81.921709] dfa0:                                     00000000 0000000=
-0=20
-> 00000000 00000000
-> [   81.921720] dfc0: 00000000 00000000 00000000 00000000 00000000 0000000=
-0=20
-> 00000000 00000000
-> [   81.921730] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
->=20
-> Happy to test patches or provide further debugging info.
+On 7/9/25 4:39 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Use the existing infrastructure for storing and looking up pin functions
+> in pinctrl core. Remove hand-crafted callbacks.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-The culprit is
-> scoped_guard(spinlock_irq, &keypad->lock) {
-> 	keypad->scan_pending =3D false;
-> 	enable_row_irqs(keypad);
-> }
+[...]
 
-Here a spinlock is held, while during enable_irq() call the function
-mcp23s08_irq_bus_lock() is called. The latter one tries to lock a mutex
-while holding a spinlock. This doesn'twork.
+>  int msm_pinctrl_probe(struct platform_device *pdev,
+>  		      const struct msm_pinctrl_soc_data *soc_data)
+>  {
+> +	const struct pinfunction *func;
+>  	struct msm_pinctrl *pctrl;
+>  	struct resource *res;
+>  	int ret;
+> @@ -1606,6 +1581,14 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+>  		return PTR_ERR(pctrl->pctrl);
+>  	}
+>  
+> +	for (i = 0; i < soc_data->nfunctions; i++) {
+> +		func = &soc_data->functions[i];
+> +
+> +		ret = pinmux_generic_add_pinfunction(pctrl->pctrl, func, NULL);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
 
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+It's good in principle, but we're now going to house two copies of
+the function data in memory... Can we trust __initconst nowadays?
 
-
+Konrad
 
