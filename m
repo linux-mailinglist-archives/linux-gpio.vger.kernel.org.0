@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23061-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23062-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AC01AFFA86
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:13:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 361C8AFFA9D
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 09:15:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80E2B64021F
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 07:13:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 312D31895AA5
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 07:16:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663FA288C19;
-	Thu, 10 Jul 2025 07:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91FA328852B;
+	Thu, 10 Jul 2025 07:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lm6U3D2b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlpwZ4Jv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9CE2882BF;
-	Thu, 10 Jul 2025 07:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C80F8F5E;
+	Thu, 10 Jul 2025 07:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752131610; cv=none; b=Ee0dvjgu04sL9yFhYd7fI0suT/orYoWT74ASCfsWVo6WCua6nMTkhRYG6aJP8CKVbCJXF0LAJ59LeYMdQ57DiBVxpMq/Hl91iz+IkSkjL8xb8Yqejs5joIa+KLuahR7zUwsFTqSDeX3KR0tzvCUEuZZ0lSiEn79Smg+sx/yTQNw=
+	t=1752131737; cv=none; b=Gx+3H5Fh19o8rfFMKMuLsl3lHW9YWoyesJQcVhD2jHDh/pswhUxYEKzB2yA+WKtnRWvmG2TNWKTx+zFHadvxscGUx8ObNk74LsPZ87R38u0dSuBzQ1a1WAmhM4VbFxOu10FdqoXulVOjC2PPenhoCThQBzHyuf33DQvnYGqG70U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752131610; c=relaxed/simple;
-	bh=5CO94RFf3zvAv5SFpLNvTSDn+Zr8YbKVonCBXLb4N90=;
+	s=arc-20240116; t=1752131737; c=relaxed/simple;
+	bh=r/IHHg2/rKtSBRBIR9amX8nuBDjwCD7GzpJ+h1lge4k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QVBTsvrWqPXvpnXLzHFSF9M5w4WA7wsLkdp5gJVa/+hkVka/1QbmbDczeFroxr1BJD6Peye3C5Q9hNQZwCos+zZX5hpaCTWV5HRYrIiH89VHbsNDpeHH6UXFRso5VRK++Rs1pc1On7cT+5IWRNJtyU4ZAlQ/KdwKsnQiaR1Z4ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lm6U3D2b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2844CC4AF09;
-	Thu, 10 Jul 2025 07:13:18 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=W/TmrAfoM3LHfFuSXwr8N+2VF5Nol4XxmFvZVlmByxeVhDc+WLm0UFbHgjstv2tHQSxOwPCWHh+tJfpPUecPaA4ljYFVIiiVkvbu4HoSATC3PXCn3DOnABSHieMFK0PwjVnYIJ+8CncSIdFLLqU92je7cN3daueaRJv1nqZAhjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlpwZ4Jv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E746C4CEE3;
+	Thu, 10 Jul 2025 07:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752131609;
-	bh=5CO94RFf3zvAv5SFpLNvTSDn+Zr8YbKVonCBXLb4N90=;
+	s=k20201202; t=1752131737;
+	bh=r/IHHg2/rKtSBRBIR9amX8nuBDjwCD7GzpJ+h1lge4k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lm6U3D2bkulQxMZnbWuHcxjDtc4ryRLAT5ogvHyJ/Zz0rgDmgdA4VTmqBnDmW6oWB
-	 Sq0dkrTT27QLzKAvXnA8KaGcJpvCpy9Kk3lA7pr00cP/nuAHNK0eYoQeQiy8Rpb3nJ
-	 3MTIQkLTzEEWkjV+LpRLNCCyS7KYldpjuFR2zYRrJIFz3J2SHgo5NG1Y8ifZAvBxOr
-	 2M0EQtkPt4v2jDl2eD/lqnYsd8PO4ekyx2lsOelH2GodWNZpYxdCd7n8RakaTkvbaC
-	 QUZccAWmtPCn3xboPBWTjYv7EZVqevdvC/WfmGXGHgoC40Vt9XoeqGw9f+XDvyj4cK
-	 nU6q5UZHyrW8Q==
-Message-ID: <6d5b4e08-ddf0-438b-a188-fd8b48f3e2d2@kernel.org>
-Date: Thu, 10 Jul 2025 09:13:16 +0200
+	b=UlpwZ4JvhE6CfOq0Pbz4STUIAcRcaah8QMiRskKTCFnyVu7v38Q4Mr4man6iVgkOa
+	 B7E9fQKKswgNnYucbpERIhir7fJqOmVfQmuNcoMfdAyGlwJg66GMvNnd+tF13ursvc
+	 A2luUMvGlDgIUzYDu6+Wq7brLSscz9CK3JvcE/n5P7U9KBNCIfxvD9iCXzLAVK4mfE
+	 P7m9DpuQAQybIz29bhn7CGpjgBz4vjp3XMuNzuBWZuO/8x7pkaG0lKLwpy8UEaMjTt
+	 +gprlr5nd+Fgh96aupBrFo/cBwcP7SRfqnIqy1KGEqcMc5ji5FeBOplIZuDxr4RD+S
+	 vwicw7TpkC5sw==
+Message-ID: <e805be4b-4fe8-42e6-9269-84112a16392f@kernel.org>
+Date: Thu, 10 Jul 2025 09:15:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/16] clk: samsung: artpec-8: Add clock support for
- CMU_PERI block
+Subject: Re: [PATCH 13/16] dt-bindings: arm: Add Axis ARTPEC SoC platform
 To: ksk4725@coasia.com, Jesper Nilsson <jesper.nilsson@axis.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -61,7 +60,8 @@ To: ksk4725@coasia.com, Jesper Nilsson <jesper.nilsson@axis.com>,
  Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa
  <tomasz.figa@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>,
  Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Ravi Patel <ravi.patel@samsung.com>, SungMin Park <smn1196@coasia.com>
+ SungMin Park <smn1196@coasia.com>, Ravi Patel <ravi.patel@samsung.com>,
+ linux-arm-kernel@axis.com
 Cc: kenkim <kenkim@coasia.com>, Jongshin Park <pjsin865@coasia.com>,
  GunWoo Kim <gwk1013@coasia.com>, HaGyeong Kim <hgkim05@coasia.com>,
  GyoungBo Min <mingyoungbo@coasia.com>,
@@ -71,11 +71,10 @@ Cc: kenkim <kenkim@coasia.com>, Jongshin Park <pjsin865@coasia.com>,
  Dongjin Yang <dj76.yang@samsung.com>, Sang Min Kim
  <hypmean.kim@samsung.com>, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-kernel@axis.com, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, soc@lists.linux.dev,
- Varada Pavani <v.pavani@samsung.com>
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, soc@lists.linux.dev
 References: <20250710002047.1573841-1-ksk4725@coasia.com>
- <20250710002047.1573841-11-ksk4725@coasia.com>
+ <20250710002047.1573841-14-ksk4725@coasia.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -121,23 +120,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250710002047.1573841-11-ksk4725@coasia.com>
+In-Reply-To: <20250710002047.1573841-14-ksk4725@coasia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 10/07/2025 02:20, ksk4725@coasia.com wrote:
-> From: Hakyeong Kim <hgkim05@coasia.com>
+> From: Ravi Patel <ravi.patel@samsung.com>
 > 
-> Add clock support for below CMU block in ARTPEC-8 SoC.
->  - CMU_PERI
+> Add device tree bindings for the Axis ARTPEC-8 SoC platform
+> and ARTPEC-8 Grizzly board.
 > 
-> Signed-off-by: Varada Pavani <v.pavani@samsung.com>
-> Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
-> ---
->  drivers/clk/samsung/clk-artpec8.c | 90 +++++++++++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
+> Also move the existing ARTPEC-6 related bindings from .txt
+> to yaml format.
 
-Please squash all the clock driver patches.
+Don't mix conversion with new boards.
+
+> 
+> Signed-off-by: sungminpark <smn1196@coasia.com>
+> Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
+
+Same problems about SoB chain...
+
+> ---
+
+
 
 Best regards,
 Krzysztof
