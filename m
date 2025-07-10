@@ -1,270 +1,161 @@
-Return-Path: <linux-gpio+bounces-23109-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23110-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BED47B00BC9
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 21:05:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28788B00CFA
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 22:22:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 119725C365B
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 19:05:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BCC41C43053
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Jul 2025 20:22:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CF82FCFE1;
-	Thu, 10 Jul 2025 19:05:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCD882FD872;
+	Thu, 10 Jul 2025 20:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X96A0IEL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTF/m2jZ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFDA25760;
-	Thu, 10 Jul 2025 19:05:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8DB2749D1;
+	Thu, 10 Jul 2025 20:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752174332; cv=none; b=oY+a+MqSFzOwmHyiHnQKiDlpsmqAW3cDtfY0Zt62jgJ/yZVI+dWRI6ZoqdPceuZcNlui2mmA7dzYVEqmabxj7POkTb/AWXgN464CUrs11w84N6Vu9BAFNdIDsdwwHbvlzFYwtqivpzMVwp5O6/ZRk8qpgL7n00zv4TYY8NT8vmc=
+	t=1752178918; cv=none; b=m57m45OIXx8PtuWFNIehK8tjyFjRJm42LDXhJX95lZMqsNqmr4fRZiA/mAy1bDBZG6nceohT0jNZf9c8YgATB4DX4NNxBpeBteWLGEyViZ21LswOhtqwHpzM5AZcqw8w3cd/+9NrZ7NTh3tFajRS/fQwfRAy+N27t79M+VTXGfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752174332; c=relaxed/simple;
-	bh=nq4P94K7NnOvJLO8d45yCqbCaMd8n4bXcI1o6Gfq3qw=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=hIYAL8e9qVx1ufcZPOFU9JwRJjcTeXke/CI5IibqBfU6rMk6Hdejldoqv2CSdPKMVQFgkStWwPJ1Vxtth6xj56IXghuzPqVTsSf9Mez6GKRQvy6Lfiz2vbYcSLEbWmCRxjmDPWpOGboTtUwya59BfaIVSoWnWivv2aZ5S/hgHxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X96A0IEL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0C6C4CEE3;
-	Thu, 10 Jul 2025 19:05:31 +0000 (UTC)
+	s=arc-20240116; t=1752178918; c=relaxed/simple;
+	bh=I/H9BnWKae5+EgQRia3ov8/49jcWJjRuFEhnoiWa0Jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cLH/W7EsCeXklYaIdN1H/L41wlFINJpHtez4FR8xDvcQzid3Cb5dpGZSUs4221v5UNnrp/SFVQ1djBp/F7SDR5YEo3iQpbV6MQ0yfl6bLgmM8hV2O+M+qwQjsfFJ9Z683JmhQD5ElfEq7Qx0Oo0MN8B4lx22pkp0EQFq4Sw5PrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTF/m2jZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADB5C4CEE3;
+	Thu, 10 Jul 2025 20:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752174332;
-	bh=nq4P94K7NnOvJLO8d45yCqbCaMd8n4bXcI1o6Gfq3qw=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=X96A0IELAv9SZ+VR9k5w1AOOMqUPUNQPhx1ShNNNKQjHciKOHXAwwsY9qGO414uwW
-	 kCXUcpbDLDcuuTxNAKgRFqIQkS9RS5/S/lZwKIiOT/wz8pmOwOq9Ywlb/xvPb/O5vz
-	 qhqMy8PfkV/Fip2oIPkhJ++NuawPVySEBOvRST+MYkhIZdNgaXfKWoOiEZY3ohSz81
-	 JFDw/JLN1IkcDNMSslHlhmwlFJF8hNQKFTQ0lh6PjTNXU1OjhaIBYInsC5eExxvOQ1
-	 8DCQM+IrdfWeemAhKzR2gXls8PIys6WGoZo+FNEyZipC3r9dhVTaLrs+EE5N7ZG2kP
-	 E7kkAqiipgt4w==
-Date: Thu, 10 Jul 2025 14:05:31 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1752178918;
+	bh=I/H9BnWKae5+EgQRia3ov8/49jcWJjRuFEhnoiWa0Jc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hTF/m2jZLQEOu/55eqFOHpdTzqZ3hmyLzgZlM/2jdH2T+yBOAZ/3FLgs4XSh4Jbm6
+	 EbJm+YE6HP/0V0OCFyyFrch0U01vnjN2LP9k1THmvGDKtOx/B7SCcDEYcMiPG0BgQ+
+	 gm+OetqlRYPcK33LVX4klARbtSRfTqYDY+jmNN0giJycUZJq40Esr+DuzGD+wD1i+p
+	 TQ0ot+LL14MZSzv8HZZtcYic/eYtaSAVN48vmFjv/8MPinyf01HhYkTGD1XrsTI+0u
+	 vbvw9XbEk1vZzzKShgqUz9yyqz3KKa/JSPuHDfVsa7bEx7SS6e/XgF8QB2bdTnXCe3
+	 DpsHArr/mRIPg==
+Date: Thu, 10 Jul 2025 15:21:56 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Luca Weiss <luca.weiss@fairphone.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
+	phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: document the Milos Top
+ Level Mode Multiplexer
+Message-ID: <hdocf4qsja3i5qlj3qzzgfyibgbwytlkmdoc4n4lvryilez5uf@7bwnbnav3bui>
+References: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
+ <20250702-sm7635-pinctrl-v2-1-c138624b9924@fairphone.com>
+ <20250703-daring-burgundy-limpet-a1c97e@krzk-bin>
+ <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
+ <a453bd90-b7c7-42eb-b769-b4c87b6dac12@oss.qualcomm.com>
+ <424285fb-14a0-452b-8d18-6165d2a78497@kernel.org>
+ <3d3g2sq4r7pruu4c2sl2itclx7xuja6inasaicm67t4sx6u5fl@xq5g7h4rabno>
+ <20250708171515.GA640511-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: imx@lists.linux.dev, s32@nxp.com, eballetb@redhat.com, 
- festevam@gmail.com, linux-arm-kernel@lists.infradead.org, rafael@kernel.org, 
- shawnguo@kernel.org, clizzi@redhat.com, brgl@bgdev.pl, aisheng.dong@nxp.com, 
- devicetree@vger.kernel.org, s.hauer@pengutronix.de, 
- Ghennadi.Procopciuc@nxp.com, linus.walleij@linaro.org, 
- gregkh@linuxfoundation.org, ping.bai@nxp.com, echanude@redhat.com, 
- aruizrui@redhat.com, mbrugger@suse.com, chester62515@gmail.com, 
- conor+dt@kernel.org, srini@kernel.org, larisa.grigore@nxp.com, 
- krzk+dt@kernel.org, linux-kernel@vger.kernel.org, lee@kernel.org, 
- linux-gpio@vger.kernel.org, vincent.guittot@linaro.org, 
- kernel@pengutronix.de
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-In-Reply-To: <20250710142038.1986052-1-andrei.stefanescu@oss.nxp.com>
-References: <20250710142038.1986052-1-andrei.stefanescu@oss.nxp.com>
-Message-Id: <175217427055.3135637.1158613245040167779.robh@kernel.org>
-Subject: Re: [PATCH v7 00/12] gpio: siul2-s32g2: add initial GPIO driver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250708171515.GA640511-robh@kernel.org>
 
-
-On Thu, 10 Jul 2025 17:20:23 +0300, Andrei Stefanescu wrote:
-> This patch series adds support for basic GPIO
-> operations(set, get, direction_output/input, set_config).
+On Tue, Jul 08, 2025 at 12:15:15PM -0500, Rob Herring wrote:
+> On Thu, Jul 03, 2025 at 12:31:46PM -0500, Bjorn Andersson wrote:
+> > On Thu, Jul 03, 2025 at 01:26:11PM +0200, Krzysztof Kozlowski wrote:
+> > > On 03/07/2025 12:04, Konrad Dybcio wrote:
+> > > > 
+> > > > 
+> > > > On 03-Jul-25 09:44, Luca Weiss wrote:
+> > > >> On Thu Jul 3, 2025 at 9:41 AM CEST, Krzysztof Kozlowski wrote:
+> > > >>> On Wed, Jul 02, 2025 at 05:56:16PM +0200, Luca Weiss wrote:
+> > > >>>> Document the Top Level Mode Multiplexer on the Milos Platform.
+> > > >>>
+> > > >>> What is Milos platform? Does it have some sort of model number how we
+> > > >>> usually expect? Wasn't this SM7325 or similar?
+> > > >>>
+> > 
+> > Milos is the actual name of the SoC.
+> > 
+> > > >>> The problem with such new naming that it awfully sounds like family
+> > > >>> names, so just expand the name and explain it.
+> > > >>
+> > > >> Please go argue with Bjorn/Konrad about this, wasn't my idea.
+> > > >>
+> > > >> https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
+> > > >> https://lore.kernel.org/linux-arm-msm/b98d305b-247f-415b-8675-50d073452feb@oss.qualcomm.com/
+> > > > 
+> > > > Milos is the "real-est" name of this silicon. All the associated
+> > > > S[AM]|QC[MS]s are just variations of it, with different fusing.
+> > > > 
+> > > > You'll stumble upon it across e.g. firmware build strings, as
+> > > > well as in any documentation pieces.
+> > > > 
+> > > > There are various internal reasons for the switch, but the most
+> > > > obvious external-facing one is not to have the user buy a devkit
+> > > > and wonder whether they should use QCS9100 or QCS9075 DTB, and
+> > > > why there's zero drivers code for these magic numbers (they
+> > > > include SA8775P). We can simply point them to "codename" and
+> > > > all C code will refer to it as well.
+> > > 
+> > > These are different SoCs, optionally with different firmware, so they
+> > > cannot use the same top-level compatible chain. I hope you did not
+> > > propose that.
+> > > 
+> > 
+> > No they are not different SoCs, and that's the problem with the current
+> > naming scheme.
+> > 
+> > > For me list like "qcs9100, sa8775p" is clear enough, but if you want
+> > > "qcs9100, koala-bear" or "brown-bear, koala-bear" it is fine as well.
+> > > You just cannot use koala-bear for all of them.
+> > > 
+> > 
+> > It looks "clear enough", but it's wrong. The problem is that sa8775p,
+> > qca9100, and qcs9075 are the "same" hardware and firmware.
+> > 
+> > The difference between sa8775p and qcs9100 is the reserved-memory map,
+> > the difference between qcs9100 and qcs9075 is one IP block being status
+> > = "okay" vs "disabled", due to fuses.
+> > 
+> > It's exactly the same problem we first saw in QRB5165, but we let the
+> > problem explode. Now we use the names sc7280, sm7325, qcm6490, and
+> > qcs6490 for the same SoC.
+> > 
+> > Using the SoC's actual name here will remove the need for playing games
+> > with DT includes etc to try to map things to the current naming scheme.
+> > 
+> > 
+> > The one case that isn't being taking care of such naming is when there
+> > are differences in the firmware. But as can be seen in the "sc7280"
+> > familiy, those software differences doesn't align with the chosen names.
+> > And even within a given SoC, with a (overall) given firmware, the
+> > reserved-memory map ends up differing.
+> > 
+> > 
+> > So, the name of the SoC in this patch is "Milos". We already have ways
+> > of dealing with firmware and/or hardware variations within one SoC, we
+> > should use them (and refine them as necessary), rather than pretending
+> > that something like SM7325 will define those properties.
 > 
-> There are two SIUL2 hardware modules: SIUL2_0 and SIUL2_1.
-> However, this driver exports both as a single GPIO driver.
-> This is because the interrupt registers are located only
-> in SIUL2_1, even for GPIOs that are part of SIUL2_0.
-> 
-> There are two gaps in the GPIO ranges:
-> - 102-111(inclusive) are invalid
-> - 123-143(inclusive) are invalid
-> 
-> These will be excluded via the `gpio-reserved-ranges`
-> property.
-> 
-> Writing and reading GPIO values is done via the PGPDO/PGPDI
-> registers(Parallel GPIO Pad Data Output/Input) which are
-> 16 bit registers, each bit corresponding to a GPIO.
-> 
-> Note that the PGPDO order is similar to a big-endian grouping
-> of two registers:
-> PGPDO1, PGPDO0, PGPDO3, PGPDO2, PGPDO5, PGPDO4, gap, PGPDO6.
-> 
-> I have other patches for this driver:
-> - interrupt support
-> - power management callbacks
-> 
-> which I plan to upstream after this series gets merged
-> in order to simplify the review process.
-> 
-> v7 -> v6
-> - fixed MAINTAINERS wrong file path
-> - add unevaluatedProperties, change siul2 node name, remove
->   jtag_pins label in the device tree schema
-> - change compatible definition in schema
-> - change node name in dtsi
-> - mentioned binding deprecation in commit messages
-> - split mfd cell conversion commit in two: one for the
->   previous refactoring, one for the mfd cell conversion
-> - removed Acked-by: Linus Walleij from commit:
->   "pinctrl: s32: convert the driver into an mfd cell"
->   because of changes to that commit
-> - deprecate the nxp,s32g2-siul2-pinctrl binding
-> - add NVMEM MFD cell for SIUL2
-> - made the GPIO driver not export invalid pins
->   (there are some gaps 102-111, 123-143)
-> - removed the need for gpio-reserved-ranges
-> - force initialized pinctrl_desc->num_custom_params to 0
-> 
-> v6 -> v5
-> - removed description for reg in the dt-bindings and added
->   maxItems
-> - dropped label for example in the dt-bindings
-> - simplified the example in the dt-bindings
-> - changed dt-bindings filename to nxp,s32g2-siul2.yaml
-> - changed title in the dt-bindings
-> - dropped minItmes from gpio-ranges/gpio-reserved-ranges
->   and added maxItems to gpio-reserved-ranges
-> - added required block for -grp[0-9]$ nodes
-> - switch to using "" as quotes
-> - kernel test robot: fixed frame sizes, added description
->   for reg_name, fixed typo in gpio_configs_lock, removed
->   uninitialized ret variable usage
-> - ordered includes in nxp-siul2.c, switched to dev-err-probe
->   added a mention that other commits will add nvmem functionality
->   to the mfd driver
-> - switched spin_lock_irqsave to scoped_guard statement
-> - switched dev_err to dev_err_probe in pinctrl-s32cc in places
->   reached during the probing part
-> 
-> v5 -> v4
-> - fixed di_div error
-> - fixed dt-bindings error
-> - added Co-developed-by tags
-> - added new MFD driver nxp-siul2.c
-> - made the old pinctrl driver an MFD cell
-> - added the GPIO driver in the existing SIUL2 pinctrl one
-> - Switch from "devm_pinctrl_register" to
->   "devm_pinctrl_register_and_init"
-> 
-> v4 -> v3
-> - removed useless parentheses
-> - added S32G3 fallback compatible
-> - fixed comment alignment
-> - fixed dt-bindings license
-> - fixed modpost: "__udivdi3"
-> - moved MAINTAINERS entry to have the new GPIO driver
->   together with other files related to S32G
-> 
-> v3 -> v2
-> - fix dt-bindings schema id
-> - add maxItems to gpio-ranges
-> - removed gpio label from dt-bindings example
-> - added changelog for the MAINTAINERS commit and
->   added separate entry for the SIUL2 GPIO driver
-> - added guard(raw_spinlock_irqsave) in
->   'siul2_gpio_set_direction'
-> - updated the description for
->   'devm_platform_get_and_ioremap_resource_byname'
-> 
-> v2 -> v1
-> dt-bindings:
-> - changed filename to match compatible
-> - fixed commit messages
-> - removed dt-bindings unnecessary properties descriptions
-> - added minItems for the interrupts property
-> driver:
-> - added depends on ARCH_S32 || COMPILE_TEST to Kconfig
-> - added select REGMAP_MMIO to Kconfig
-> - remove unnecessary include
-> - add of_node_put after `siul2_get_gpio_pinspec`
-> - removed inline from function definitions
-> - removed match data and moved the previous platdata
->   definition to the top of the file to be visible
-> - replace bitmap_set/clear with __clear_bit/set_bit
->   and devm_bitmap_zalloc with devm_kzalloc
-> - switched to gpiochip_generic_request/free/config
-> - fixed dev_err format for size_t reported by
->   kernel test robot
-> - add platform_get_and_ioremap_resource_byname wrapper
-> 
-> Andrei Stefanescu (12):
->   dt-bindings: mfd: add support for the NXP SIUL2 module
->   mfd: nxp-siul2: add support for NXP SIUL2
->   arm64: dts: s32g: change pinctrl node into the new mfd node
->   pinctrl: s32cc: small refactoring
->   pinctrl: s32cc: change to "devm_pinctrl_register_and_init"
->   dt-bindings: pinctrl: deprecate SIUL2 pinctrl bindings
->   pinctrl: s32g2: change the driver to also be probed as an MFD cell
->   pinctrl: s32cc: implement GPIO functionality
->   MAINTAINERS: add MAINTAINER for NXP SIUL2 MFD driver
->   nvmem: s32g2_siul2: add NVMEM driver for SoC information
->   MAINTAINERS: add MAINTAINER for NXP SIUL2 NVMEM cell
->   pinctrl: s32cc: set num_custom_params to 0
-> 
->  .../bindings/mfd/nxp,s32g2-siul2.yaml         | 163 +++++
->  .../pinctrl/nxp,s32g2-siul2-pinctrl.yaml      |   2 +
->  MAINTAINERS                                   |   3 +
->  arch/arm64/boot/dts/freescale/s32g2.dtsi      |  48 +-
->  arch/arm64/boot/dts/freescale/s32g3.dtsi      |  48 +-
->  drivers/mfd/Kconfig                           |  12 +
->  drivers/mfd/Makefile                          |   1 +
->  drivers/mfd/nxp-siul2.c                       | 414 +++++++++++
->  drivers/nvmem/Kconfig                         |  10 +
->  drivers/nvmem/Makefile                        |   2 +
->  drivers/nvmem/s32g2_siul2_nvmem.c             | 232 +++++++
->  drivers/pinctrl/nxp/pinctrl-s32.h             |   4 +-
->  drivers/pinctrl/nxp/pinctrl-s32cc.c           | 652 ++++++++++++++----
->  drivers/pinctrl/nxp/pinctrl-s32g2.c           |  32 +-
->  include/linux/mfd/nxp-siul2.h                 |  55 ++
->  15 files changed, 1502 insertions(+), 176 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/nxp,s32g2-siul2.yaml
->  create mode 100644 drivers/mfd/nxp-siul2.c
->  create mode 100644 drivers/nvmem/s32g2_siul2_nvmem.c
->  create mode 100644 include/linux/mfd/nxp-siul2.h
-> 
-> --
-> 2.45.2
-> 
-> 
+> I for one prefer 1 compatible per die. We often don't know if that's 
+> the case, but in this case we do so let's take advantage of it. 
 > 
 
+I like this definition, and to the best of my knowledge these are all
+examples of "it's the same die".
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/v6.16-rc3-116-ge34a79b96ab9 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/freescale/' for 20250710142038.1986052-1-andrei.stefanescu@oss.nxp.com:
-
-arch/arm64/boot/dts/freescale/s32g399a-rdb3.dtb: pinctrl@4009c000 (nxp,s32g3-siul2): 'gpio-reserved-ranges' does not match any of the regexes: '-hog(-[0-9]+)?$', '-pins$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/nxp,s32g2-siul2.yaml#
-arch/arm64/boot/dts/freescale/s32g274a-evb.dtb: pinctrl@4009c000 (nxp,s32g2-siul2): 'gpio-reserved-ranges' does not match any of the regexes: '-hog(-[0-9]+)?$', '-pins$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/nxp,s32g2-siul2.yaml#
-arch/arm64/boot/dts/freescale/s32g274a-rdb2.dtb: pinctrl@4009c000 (nxp,s32g2-siul2): 'gpio-reserved-ranges' does not match any of the regexes: '-hog(-[0-9]+)?$', '-pins$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/nxp,s32g2-siul2.yaml#
-
-
-
-
-
+Regards,
+Bjorn
 
