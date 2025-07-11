@@ -1,131 +1,98 @@
-Return-Path: <linux-gpio+bounces-23129-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23132-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07A0CB0150A
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 09:45:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D040B0150E
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 09:46:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6687A189F009
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 07:45:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D814D7B37DD
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 07:44:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E2B20E6E3;
-	Fri, 11 Jul 2025 07:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F7981F582E;
+	Fri, 11 Jul 2025 07:44:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="h8udlMQ5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K577jTrm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEB61F4261;
-	Fri, 11 Jul 2025 07:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D363D1F0E24;
+	Fri, 11 Jul 2025 07:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752219846; cv=none; b=rdHLXva54c2yiVFU5wAm6nv/kpMpESJz5Tk83BktrsXAOkblDMjznrhzk91psgctsBXd0XMtgPkf6bXsXw8Aq/aJgGCl790fJiyYwKdwyEPfmeGGLOypLLYCGaxwJQwJmx6GLmWrLNP2OsdFAO1376Fov/21amIUPB2FrbX4tVs=
+	t=1752219862; cv=none; b=qyTzjjYjdgrhOahVUyguQ3gkI1ml0cOtkNEhE61Bsr34klXAPTG3HJGqxzpnQ65Hdb3w/JJ9npmyf+bO2EaomHqaRMvCzVVioH/Y3gqXSf7Ld8/FDAMpSVj3mgEGpkblhWsagvdBNod5FKv0a674mM/pAbfkV7sjkso8f9XNFNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752219846; c=relaxed/simple;
-	bh=P8a+DcLfMOt2qJJBryEw3cxweFZmrrMySmHyPB0vk8g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=g/FH/EODX6Y2k8caXCcWMu6qvq7d4Q2vZVz2UTKbEag3Gf1eTvyhoAWYGrhMXBo0sqz+FVTJGPNeBpbe6+N/qKEifR1Ai1JleHT/lLVcqbhAaoZZQ3cMudNxQTvFEfWgkQEZolx5UA4N1tFhht6ykhSpCopVRG9bj5hBkfOE2+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=h8udlMQ5; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56B6UUJ4017493;
-	Fri, 11 Jul 2025 09:43:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	ZTQBEKKpUKJ2EHlkrbcRSsrVXSaMIyD8QzSmT3bFAXA=; b=h8udlMQ5JQcOmKhl
-	7/VYWLy8KSe1xbm3A503rSQqr/f1AzjyOVfshZFJNXw1IPds48g2U7l60OEOOauj
-	dz3oo5rIZ5ztDyrh1PTbmo7gwbTa1ODZW8NiFZ5ObKEyo7t+MM3XbjLQn4W0OV94
-	1N883Jkwmb+Sb8pJmgf1s5goE38WQz3bGmxdw1BGzea/6gqx3/qCDgTbmLqFAtKq
-	mWT5mtMQ3PUqhJdmr3ZPF0WILeFDTGQegMF9ZgEu/XdD/O+sFPiAhuWo409vo1EP
-	w4yrrMjhjDumNOabChSzk1M/wjNeRDVyOx7rn94cWTXYioT1UzLCyU9HiKMmqeoF
-	abCGWw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47qdm6arj4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Jul 2025 09:43:46 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BDFE740055;
-	Fri, 11 Jul 2025 09:42:47 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3BD07B118FD;
-	Fri, 11 Jul 2025 09:41:44 +0200 (CEST)
-Received: from localhost (10.252.16.187) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Jul
- 2025 09:41:44 +0200
-From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Fri, 11 Jul 2025 09:41:26 +0200
-Subject: [PATCH v7 8/8] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp157c-dk2 board
+	s=arc-20240116; t=1752219862; c=relaxed/simple;
+	bh=mJ8f0o4lu7/7z2kky8W5rnqHSfBhvDECmO3dfujPoko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FDnesCb6FQvctXkL8M3KmbOMuR8ehmPKsWWB3aDK8bEk+CXqvRZp/N1qJ1DYhyRQbchlS0a4v4QfqUMXPUCUq5jogWJHbq8blsoFFa20uYHOC5Uo77vNoGLrnK58qK0YdXcLV5hMYTrKFV1HY0hIGZa2sQ0aSsobWdCZAVAGlHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K577jTrm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6DB7C4CEED;
+	Fri, 11 Jul 2025 07:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752219861;
+	bh=mJ8f0o4lu7/7z2kky8W5rnqHSfBhvDECmO3dfujPoko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K577jTrmkOxDdg3Tnq0u8ziyEvFSwFZMaHhSd1j+ngRE/JDj6+K15g4c+5VMx56Bx
+	 WS1jufZqmt3z94c/LrQuyxIMjzGE55ioQl+ofJPsLPOObRIa8/VipCbc42GRG2pKfK
+	 cC78IdNJSvS3XAWWxC6FTQjycJomYzCFcLBzGqkXJY7YFQCSnlRXneWsxdWq4IpYwr
+	 wFdEEJgTI35efM+LTgFw0GfmWo3sgg+14J1FztUcTki6KCm4KrohC6ivf255CNTFw6
+	 Q960jQGwIaKXKjCRZTuB1AumE5T33HX7fFA3KwmIxWVc1AnoV6JM8pN7D2XhYNkuHR
+	 FfOUwBedIQA6g==
+Date: Fri, 11 Jul 2025 09:44:18 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, chester62515@gmail.com, mbrugger@suse.com, 
+	Ghennadi.Procopciuc@nxp.com, larisa.grigore@nxp.com, lee@kernel.org, shawnguo@kernel.org, 
+	s.hauer@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com, ping.bai@nxp.com, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, srini@kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, s32@nxp.com, clizzi@redhat.com, aruizrui@redhat.com, 
+	eballetb@redhat.com, echanude@redhat.com, kernel@pengutronix.de, imx@lists.linux.dev, 
+	vincent.guittot@linaro.org
+Subject: Re: [PATCH v7 06/12] dt-bindings: pinctrl: deprecate SIUL2 pinctrl
+ bindings
+Message-ID: <20250711-inquisitive-dainty-foxhound-6feeb4@krzk-bin>
+References: <20250710142038.1986052-1-andrei.stefanescu@oss.nxp.com>
+ <20250710142038.1986052-7-andrei.stefanescu@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250711-hdp-upstream-v7-8-faeecf7aaee1@foss.st.com>
-References: <20250711-hdp-upstream-v7-0-faeecf7aaee1@foss.st.com>
-In-Reply-To: <20250711-hdp-upstream-v7-0-faeecf7aaee1@foss.st.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Antonio
- Borneo <antonio.borneo@foss.st.com>,
-        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?=
-	<legoffic.clement@gmail.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?=
-	<clement.legoffic@foss.st.com>
-X-Mailer: b4 0.15-dev-7616d
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-11_02,2025-07-09_01,2025-03-28_01
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250710142038.1986052-7-andrei.stefanescu@oss.nxp.com>
 
-On the stm32mp157fc-dk2 board, we can observe the hdp GPOVAL function on
-SoC pin E13 accessible on the pin 5 on the Arduino connector CN13.
-Add the relevant configuration but keep it disabled as it's used for
-debug only.
+On Thu, Jul 10, 2025 at 05:20:29PM +0300, Andrei Stefanescu wrote:
+> The existing SIUL2 pinctrl bindings don't correctly describe the
+> hardware. The SIUL2 module also offers GPIO control and exposes some
+> registers which contain information about the SoC. Adding drivers for
+> these functionalities would result in incorrect bindings with a lot of
+> carved out regions for registers. For more details see the discussions
+> on the community [1] and [2].
+> 
+> The existing SIUL2 pinctrl dt-bindings will be deprecated. The new SIUL2
+> MFD dt-bindings are to be used from now on.
+> 
+> [1] -
+> https://lore.kernel.org/linux-gpio/20241003-overall-unblended-7139b17eae23@spud/
+> [2] -
+> https://lore.kernel.org/all/a924bbb6-96ec-40be-9d82-a76b2ab73afd@oss.nxp.com/
 
-Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
----
- arch/arm/boot/dts/st/stm32mp157c-dk2.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+After fast glance I see only nvmem is outside and missing in these
+bindings. I don't see a problem nvmem being a separate device node, so I
+don't see justification for dropping old bindings.
 
-diff --git a/arch/arm/boot/dts/st/stm32mp157c-dk2.dts b/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
-index 1b34fbe10b4f..a6ae6ca14cdc 100644
---- a/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
-+++ b/arch/arm/boot/dts/st/stm32mp157c-dk2.dts
-@@ -63,6 +63,12 @@ &dsi_out {
- 	remote-endpoint = <&panel_in>;
- };
- 
-+&hdp {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&hdp2_gpo &hdp2_pins_a>;
-+	pinctrl-1 = <&hdp2_sleep_pins_a>;
-+};
-+
- &i2c1 {
- 	touchscreen@38 {
- 		compatible = "focaltech,ft6236";
+Anyway, bring the full raltionale here - describe the memory layout
+proving that you cannot add nvmem and GPIO in your system without
+breaking ABI or without making this binding unreadable.
 
--- 
-2.43.0
+Best regards,
+Krzysztof
 
 
