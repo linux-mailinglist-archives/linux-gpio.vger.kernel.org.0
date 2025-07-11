@@ -1,128 +1,110 @@
-Return-Path: <linux-gpio+bounces-23145-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23146-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5E31B017EC
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 11:33:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA656B01892
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 11:45:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D625C7BE722
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 09:31:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F5558E033D
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 09:45:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A552B281368;
-	Fri, 11 Jul 2025 09:30:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA8827E052;
+	Fri, 11 Jul 2025 09:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g17GWOvo"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jYYsPlUT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFDE27E7DA;
-	Fri, 11 Jul 2025 09:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D0820F07C;
+	Fri, 11 Jul 2025 09:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752226242; cv=none; b=iNHgXrowk3FLvzr8k0nEisPg85us0tiIoKZjCdZce5AOd+kbh37bxc3Xv+SSHZQHQcdYkmUf6qlU+VNzQxdvzP3u1DOHf9ZLAY54jk1Ychr/J9TzRc2i7dKiFvPzFj9ZtPDKdKi4fENRHVkl/r17go23jk5o1pEgFvfaUloqUyk=
+	t=1752227131; cv=none; b=lEMx/CBkXUcpndi2iRYOWPGOS6QZ1m1coI6KT0G9iiqitV4Tg3L2wDy+HTS3m8uwsjk1cJuJ/nM2wRYmcv7+D3MLseYltiPFmNo+Zw88Xk5zR9/4uKVSPetvlG1Z3dZ20yZm90657Dvna/p5XekVGGpeFvHEcwmiXJ9c1HxQWAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752226242; c=relaxed/simple;
-	bh=jlaQE+mBCVIwqEguA1eCJbvaVXOs/PTbp4pNB9rSZPg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VN26NsLK6M/AzrWPHOKqaGniDFgq8KGo3OiYp14x3Dot1LttWJkgXqsYQNj864ItWEifR7xwe6nDQcpUvIEHD1phJSd87Vrc+MiXbdR2oXMjK3OHZnxG5987UzJgYy7/fjWQopQhs01DqjlqLxCE7p82ynlVgvRYYI18/CWs40M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g17GWOvo; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D014743A23;
-	Fri, 11 Jul 2025 09:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1752226234;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YX1y/TAYW9gFFD0bPjtqpqJsDxZpj/LtkE9fuNee9O4=;
-	b=g17GWOvob+l+fMiYzsflIPvis2t9E3uAFZjYSD+PyfSr2O3VRI5jLUCf6iCS0GEdNc1wbE
-	OioT8ScpQWW6wCql42FcOygHcQUPqiozhaLdR8TLRjKIBRGbUyy8HVvoPh9smC0tdp1Y2M
-	VIhI6ryxU57PA5OSd6M+1wWlBHI6ClcFXUr3j4xwH+YOwSbEB95vkAXafGgHZNT+gp9sd5
-	nYK430FawaG63hStQquDsUs58KD/0nfz+QlF4F3XJTZE+h2ugj3H31DdtuK5izROVfH8YG
-	zbsjdMPVp9qWSf+Hn0wZEmZnvTRnFCGFiTRJuBLCyymLHOVIZrUGLo5QDyKStA==
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Fri, 11 Jul 2025 11:29:50 +0200
-Subject: [PATCH v11 10/10] MAINTAINERS: Add entry on MAX7360 driver
+	s=arc-20240116; t=1752227131; c=relaxed/simple;
+	bh=9pQfytPzzOeBUo37Fje/p+jXJ9D8dzhqa3GSTAPdyoQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b2Ll6UJoc9hMQjTMBMkWhebQMmCOTU0F0GhuOFreBzXHYzgV0oHTXBa5FtLjLi+ZRCekypg343aDSDefwi4ZNqeZD5w7d0uGgldDkuw6TIaNXHtSamMe1qpN49xj57NDVLYl+yCAyQgZ3BX4STwguxwKEajUrXR81qmr2yrVm1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=jYYsPlUT; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: c2fbbd345e3b11f0b1510d84776b8c0b-20250711
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ugswZi9v4nFVpgCGJexfIal8N3se7IPyZh1DkN9RTwQ=;
+	b=jYYsPlUTyb6XCBAqkoNIkgpHV5ouToWYT814RsExmOFyTbLHq3K/qJKiDwTplqZm1a6FPMPkzuN1eFHgnn8o0zjwV52osIUAwOr+oW8IDTYbWCDavHPCz9ws055+VdqbWIhSrPM1iIvycdEqmMQZstviyJrJqqy1BhTudSCDrQg=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.2,REQID:3c0adb97-35a3-4bd0-b5bd-dc004385f7a9,IP:0,UR
+	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-30
+X-CID-META: VersionHash:9eb4ff7,CLOUDID:2aee19d8-b768-4ffb-8a44-cd8427608ba6,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil
+	,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
+	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: c2fbbd345e3b11f0b1510d84776b8c0b-20250711
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
+	(envelope-from <ot_cathy.xu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1608721168; Fri, 11 Jul 2025 17:45:21 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 11 Jul 2025 17:45:19 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 11 Jul 2025 17:45:18 +0800
+From: Cathy Xu <ot_cathy.xu@mediatek.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>
+CC: Lei Xue <lei.xue@mediatek.com>, <linux-gpio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	Yong Mao <yong.mao@mediatek.com>, Wenbin Mei <Wenbin.Mei@mediatek.com>, Axe
+ Yang <Axe.Yang@mediatek.com>, Cathy Xu <ot_cathy.xu@mediatek.com>
+Subject: [PATCH v2 0/3] pinctrl: mediatek: Add pinctrl driver on mt8189
+Date: Fri, 11 Jul 2025 17:44:56 +0800
+Message-ID: <20250711094513.17073-1-ot_cathy.xu@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250711-mdb-max7360-support-v11-10-cf1dee2a7d4c@bootlin.com>
-References: <20250711-mdb-max7360-support-v11-0-cf1dee2a7d4c@bootlin.com>
-In-Reply-To: <20250711-mdb-max7360-support-v11-0-cf1dee2a7d4c@bootlin.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1752226224; l=1082;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=jlaQE+mBCVIwqEguA1eCJbvaVXOs/PTbp4pNB9rSZPg=;
- b=xkAWR+f0YXCFa50KQg3Nk/PGiSNumgMki5xODJj6nQGqhVoLYou6LWCqArUOrAvc7W8cWQcjM
- m5LiI84ZM8FCB+TwFh4VMKr28WMAwycRDTRS9ZT+MV53YzzrINy7681
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegvdeliecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdfhgeetvddvheejieehheehueetjeelkedtfeehhefgfeeglefhteegtddthfetnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpfihmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvl
- hdrohhrghdprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Add myself as maintainer of Maxim MAX7360 driver and device-tree bindings.
+This patch series introduces support for the MT8189 pinctrl driver,
+include the driver implementation, new binding document and pinctrl header file.
 
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
----
- MAINTAINERS | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Changes in v2:
+- Modify the coding style of dt-binding.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fad6cb025a19..81423ac75720 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14806,6 +14806,19 @@ L:	linux-iio@vger.kernel.org
- S:	Maintained
- F:	drivers/iio/temperature/max30208.c
- 
-+MAXIM MAX7360 KEYPAD LED MFD DRIVER
-+M:	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
-+F:	Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
-+F:	drivers/gpio/gpio-max7360.c
-+F:	drivers/input/keyboard/max7360-keypad.c
-+F:	drivers/input/misc/max7360-rotary.c
-+F:	drivers/mfd/max7360.c
-+F:	drivers/pinctrl/pinctrl-max7360.c
-+F:	drivers/pwm/pwm-max7360.c
-+F:	include/linux/mfd/max7360.h
-+
- MAXIM MAX77650 PMIC MFD DRIVER
- M:	Bartosz Golaszewski <brgl@bgdev.pl>
- L:	linux-kernel@vger.kernel.org
+Cathy Xu (3):
+  dt-bindings: pinctrl: mediatek: Add support for mt8189
+  arm64: dts: mediatek: mt8189: Add pinmux macro header file
+  pinctrl: mediatek: Add pinctrl driver on mt8189
+
+ .../pinctrl/mediatek,mt8189-pinctrl.yaml      |  213 ++
+ arch/arm64/boot/dts/mediatek/mt8189-pinfunc.h | 1125 ++++++++
+ drivers/pinctrl/mediatek/Kconfig              |   12 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8189.c     | 1700 ++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8189.h | 2452 +++++++++++++++++
+ 6 files changed, 5503 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8189-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8189-pinfunc.h
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8189.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8189.h
 
 -- 
-2.39.5
+2.45.2
 
 
