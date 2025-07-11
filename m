@@ -1,98 +1,112 @@
-Return-Path: <linux-gpio+bounces-23169-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23170-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E721FB02317
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 19:46:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D7FEB0231B
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 19:47:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 264CE1CC1E75
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 17:46:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A00D3A6A4A
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 17:46:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97BAB2F2C69;
-	Fri, 11 Jul 2025 17:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A42E2EF64B;
+	Fri, 11 Jul 2025 17:47:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uj9dfWnj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CiPk5+Pn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE142F1FEA;
-	Fri, 11 Jul 2025 17:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C8A155C97
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Jul 2025 17:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752255952; cv=none; b=rMMDoweITyxmGIUBKq7JMDKeqb5VELY9bH6rVO8BWPYyoXr+dl+hsnBKGN+OH4qnfucgHmjm4JXGkT5rchCQ3+avyzdtRscng8I9v1LvxOzKBFPF5rRv6dbB/z7k20shGFmWU4rUuWKe+KW4Mh4dex2Oc57ajIsKLMLHfdGoH7E=
+	t=1752256038; cv=none; b=qxqI9TOuSuxx4Z/9xmSdroVJGD3e5tnWVfOpij1zW24l6Cjhw89Y5VifIYQ/I65DMhb8ZfnQRCmtV/9+p0RB20/FU3MbPlg7sVBXXyRp4Ql26RVeCMHAZhhPcj1Ht/6AiQy2DS2MK2sED2ii9hSppFBjNJ4mIxZyn43GTkcjE3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752255952; c=relaxed/simple;
-	bh=gTtmzGAho0/kpLMq/rQ9GiAbaHXVkLQwGlLy9bJFCg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pX4YC7qq4/AjCWyB03kvZZPIPZUJumvMMXXikWOuTJlKuLT3qxF31qEmwM8p0XAd6EPzFgUlnmnqEYETEgqkO4EDYWASqxEreSU5tihWnPX9Z51pVXPj5CreGn6Q6P8jGS7JdNHg2rUwDNJAcxOtxLyvYRqr86n/jDQL+aUHlCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uj9dfWnj; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=ExkamNC7McGBH1hZ10p19CgCVaSCJSLnaf81SQJSzIk=; b=uj
-	9dfWnjyR/w4hG/rdGRjwMdIleCeHoy/6FZH+ucO2J8OrlJBpQVGfx62VjfuKOZB6b+0ZVvuC9kubI
-	INSGgJHMz6xNLFNqcl4CTieX9KZr8IoeCt+LAhOVsFj5A4aOJMsairdRTHfa8PmlQCiIA1yl/sPCU
-	Jd34ctbyNym9sRA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uaHoi-001Fy5-2H; Fri, 11 Jul 2025 19:45:48 +0200
-Date: Fri, 11 Jul 2025 19:45:48 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ioana Ciornei <ioana.ciornei@nxp.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Shawn Guo <shawnguo@kernel.org>, Michael Walle <mwalle@kernel.org>,
-	Lee Jones <lee@kernel.org>, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH 4/9] gpio: regmap: add the .get_direction() callback
-Message-ID: <55e7aeb5-565f-4452-bc11-55968dcc0a9e@lunn.ch>
-References: <20250709112658.1987608-1-ioana.ciornei@nxp.com>
- <20250709112658.1987608-5-ioana.ciornei@nxp.com>
- <0d0e9cee-2aaa-402d-a811-8c4704aadd74@lunn.ch>
- <CACRpkdYDTXA7+YN2zRCsQxu2AKEAwbDVq8-m27ah5XTw9iRNPw@mail.gmail.com>
+	s=arc-20240116; t=1752256038; c=relaxed/simple;
+	bh=Kbh5lzG1/MmpNMzFmA7c0uNWesP/syy+KMxcW9SydSI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=elEpTPgVWa30lRCLRc3JXA09PRraiyec6GvAFlTwSLLryul7nn3iV+vniURQHd36u3+yr/P4s5ZJWMO07J9gPdsN8pKwXxM4B9IppRaeFuJWMfiaMmcXoA59WMLLBKy43BTa+d6ODkV4B4+WD441BWfu29yyMuSiU7ndNEayXsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CiPk5+Pn; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-32f1aaf0d60so21201431fa.1
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Jul 2025 10:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1752256033; x=1752860833; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7cOfUcs8bO2r/HGvePRD4ra10KW6myCvruW5dIJCDLE=;
+        b=CiPk5+PngLXj2NBNsPwvQ9oTfTgBnGQ6kO3w9bWvVlcottVJUrB0GOg/wBAFkIynjz
+         sJ4BJdstFjjFEXxjWZ9+PeN6Dk/Xzhpv7FVX/CyUNqR896dQFsvXOTzEmzf770IQtLWN
+         5VuVtMxEtvK+KlXbHvtSpkk2MmZX52LYcAwKC3N03HuL3lx4jDd+744FgFLsAGzPcfkW
+         rng63J6dJbiYxC+Ctwu0xyIXdO2bXPifH6RLwh8EcrSffTz3rLI73yAouPC59NTdlf68
+         IAgGI44ZEzgF6LaURIoBZy8oBVstnzwWbmdiFR1Ou+aHnXwgagvIKQL4ry9Ixf5XAJej
+         zwrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752256033; x=1752860833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7cOfUcs8bO2r/HGvePRD4ra10KW6myCvruW5dIJCDLE=;
+        b=ZqBMv4ryRDTwgGVNLSCp866uWEcPGbiFCt8YGL+5lGk/idK6NPua9cYSDjanfsiZRy
+         y1bRVE3U17yxEkvlCH4PDlulbbQ5Q51c+TGYvoztdquw+2EujhNQkt2yoYnzivp+h7LH
+         Ix8u6KqbiU8SAdwlGZixD3oHCNRFDOX3TAEiSlsalKlKvFr2sVtrfKy0amR4PbzZ66P+
+         3JWG6JS01UYXjrIwqYh/arHyxB9rfL6dpGPRSan9GauTmfhsWNiH1m0stDcOqPl24XyE
+         kYutVC9Hrd9v5cUketh2juNs2knqZTDYtZ6HfQCqw2YmnzalwNE8zZWAsMwc4nJE1uvM
+         j3hA==
+X-Gm-Message-State: AOJu0YwN8bK1zNLa+To9ezNVRENwIAf8awc1RZRgdCxfMJi6WiXQVcxc
+	3Fbqz2IHo9i9Jy4yKIc1aTOraZ4rkUaFMkvfK2EmPYDFLpv+Kcbwct6kesDn6rz1DZysVlTAB03
+	eo/76CQDg0RJ0VVuJRMYvZlaMEg0A/iBZQ+bdZX2sXFOVcXoL52r4
+X-Gm-Gg: ASbGnctgm64/cAAJzwfoXZJ3/mA4OOGkmdlDFd8wd7nN29LhN6h6ZE3SVzP1dD6/Qyk
+	JlOMkWQF3Zcehfnr2IxlsHqQdYVea8dZwYTlH6q7dOhb+E6sTBbUcci3oao7c28c+cDxrT72lZp
+	sBpSKe982rMZ3wULOV2pLnu8agnrQh25KOAd1TVc4FZUNsA1el5g1RUd62mqQPVMc0zjjORvN+j
+	+lyWtg=
+X-Google-Smtp-Source: AGHT+IE29/tPzCUZgOFnp3M5AVqflNjt3TR6DbBd8FFhQgMpt6TpX5xeioJd9itBxmX3C7MryhgeiBUJZrvf4/FB9ds=
+X-Received: by 2002:a05:651c:2205:b0:32c:bc69:e940 with SMTP id
+ 38308e7fff4ca-33053499dfamr18435051fa.29.1752256033501; Fri, 11 Jul 2025
+ 10:47:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdYDTXA7+YN2zRCsQxu2AKEAwbDVq8-m27ah5XTw9iRNPw@mail.gmail.com>
+References: <cover.1752090472.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1752090472.git.geert+renesas@glider.be>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 11 Jul 2025 19:47:01 +0200
+X-Gm-Features: Ac12FXzXv7_pbXFvCvY5VMYSBH-pyPi7J1iDA0jUPQyzNP6Vv_OpEDAS7DBK7h0
+Message-ID: <CACRpkda3kVfChCwzgEiPmA2dDomV3n4zpFPcTNr4Qr-meRdRsA@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.17 (take two)
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 11, 2025 at 07:43:13PM +0200, Linus Walleij wrote:
-> On Wed, Jul 9, 2025 at 5:09 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > This is not my area, so i will deffer to the GPIO
-> > Maintainers. However, it is not clear to me what get_direction()
-> > should return.
-> 
-> This callback should return the current direction as set up
-> in the hardware.
-> 
-> A major usecase is that this is called when the gpiochip is
-> registered to read out all the current directions of the GPIO
-> lines, so the kernel has a clear idea of the state of the
-> hardware.
-> 
-> Calling this should ideally result in a read of the status from
-> a hardware register.
+On Wed, Jul 9, 2025 at 10:14=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-O.K, so completely different to what is proposed in this patch.
+> The following changes since commit 52161035571cd62be9865039b4be65615860dc=
+e0:
+>
+>   pinctrl: renesas: rzg2l: Validate pins before setting mux function (202=
+5-06-19 19:25:20 +0200)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v6.17-tag2
+>
+> for you to fetch changes up to 7000167796a00d64322dc3ed0c0970e31d481ed6:
+>
+>   pinctrl: renesas: Simplify PINCTRL_RZV2M logic (2025-07-02 20:16:45 +02=
+00)
 
-Maybe you can suggest a better name.
+Pulled in, thanks Geert!
 
-	Andrew
-
+Yours,
+Linus Walleij
 
