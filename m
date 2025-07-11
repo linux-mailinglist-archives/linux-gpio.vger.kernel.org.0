@@ -1,218 +1,226 @@
-Return-Path: <linux-gpio+bounces-23160-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23161-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63DE4B01C2A
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 14:39:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B4F09B01E61
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 15:53:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 100D4763360
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 12:39:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F5B43B6F69
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 13:52:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB8372BE620;
-	Fri, 11 Jul 2025 12:39:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5732D97AF;
+	Fri, 11 Jul 2025 13:53:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="VggWe66g"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="NyCH9oSK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012018.outbound.protection.outlook.com [52.101.71.18])
+Received: from 11.mo533.mail-out.ovh.net (11.mo533.mail-out.ovh.net [87.98.181.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBBD3C26;
-	Fri, 11 Jul 2025 12:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752237560; cv=fail; b=BUI5V17Pf4HYqpugeUN9DC9wO/NxHiubR3KlVBHPXqlPQ96Ixos1lUrq4ARB96KSqeLI/VH+ddTCfjdjDbdRA/qpr7yrbzrNQ8RupCz7l3uOdGLykAg0f4YMRJPzK2zsQXl+WajicK4Dc/UZniF2WtDEq+3DVsEP1EE6QW0SdhY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752237560; c=relaxed/simple;
-	bh=/OG8EeO6OQ6ezwdBZr70nCdlVMsJDCt3g/3PRWbGPSo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SQcZtXYLDqe4Q3mZYWYXwED5of7MVa5h7iuLtW8CubW6XqudP3cG+VBjWidnd8h9+aT9lgcb8wQ35IqWhLTqa9eW8ZV425JC1/jG07f0OBE84mJmdLEdWH833sGt4SkStEl3CSGfX+VQtvkYvlLORwJjE/MZUujieL6pMmu/wd0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=VggWe66g; arc=fail smtp.client-ip=52.101.71.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QQRzTpxLR0s4sMpPEBjSoOA4/eNwfDO8tmln2c1tZJgHT+NspUadrUN6kmLygdp/7loVxpmayYYFRngHb9sXsI8Cj9Xbrq6aPnfGw8C8AquCb3rYGvvq8If8TFOS0tokCLGRScQfiAGubti2/rARQD/BgpzoLglA+LEjkxRzCt4p6CzZ54xhf5B8F/4VtUwoCA9PdRZgi6L36DQHdNBf51OOXjl2sFmk2WJYj2ZYP5yZQ5FIuI0P1TLSNMsewgfKA7qv2i9aLPYtvmJlUo7dXyaKxi5XCHDht6OdJMHVHPkgzyK20TPTKO+65j6CSGE3fXH06EJYE1Re/5skeMOtug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9/VY0s0yhwlT9oMeuDzV+68cyDaBQt9zCCad7+GWn0k=;
- b=orZf7/87+gIdpguhJnM9pItkBmSLluJY4afHQoTh0mFcLBAoM3cVfzD9CjgwQFx7wfOld/A+nT/6BZGIzHq7aY1U4mTR3gPffzNxVBSZi+dLlTrSmjCYQ9PEXQYo7jtbJCAOlHXbU0s3WAXTtCCLEGC2iUfmyOsu40F1yjhf/y5z4tFfmwXvC+Z3nVQKSH8i6z4h7kWvD8TR4c+SXqe376my+OFfR6AkM3gadkBDX0PhJRtWxys/Y2kfai2dXmtvM6LvlAj3/sjOosa39AsKPPE0GN+4D0RKENqHodH6vOyaBsD9gwtTqymgN9nYjKX5gV/3forY62S/yDsMzVG5Lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9/VY0s0yhwlT9oMeuDzV+68cyDaBQt9zCCad7+GWn0k=;
- b=VggWe66gSqNgomOnKjjMFIa/Kwi2xaadijQYBICMQWKWDH5KcnS5Jfkmzft8w9yU8M86SzchUlxK9xO8wr0i/nROmiOd+/ouK2DqTXrfaPq7UusytwJ9wNkfyT035igJcDyAQ2LMdB1PUpu5m5pSEzBZwa0U1vA+Zec8aBxJgwpiYTlUhXjoHEKwNpIilnpWA8GijEI+vs8fz9QWiOauR464hr4FKJIApvAD5zjJL/BvN+Op9bfh9uLuhm1xI5r0SjxwYbuelBMrUnfoHhsb6sdyvCRyR2QVDcFv3TDsDRGs1pdmO3/9syRjjjOLEnJ36u8zvawgA26n/N3nTF2WuA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from AM9PR04MB8487.eurprd04.prod.outlook.com (2603:10a6:20b:41a::6)
- by AS8PR04MB7896.eurprd04.prod.outlook.com (2603:10a6:20b:2a2::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.29; Fri, 11 Jul
- 2025 12:39:15 +0000
-Received: from AM9PR04MB8487.eurprd04.prod.outlook.com
- ([fe80::6d7a:8d2:f020:455]) by AM9PR04MB8487.eurprd04.prod.outlook.com
- ([fe80::6d7a:8d2:f020:455%5]) with mapi id 15.20.8901.028; Fri, 11 Jul 2025
- 12:39:15 +0000
-Message-ID: <fa24772b-0038-4f51-87c6-15b810d8d454@oss.nxp.com>
-Date: Fri, 11 Jul 2025 15:39:11 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 10/12] nvmem: s32g2_siul2: add NVMEM driver for SoC
- information
-To: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- krzk+dt@kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>,
- Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
- Larisa Grigore <larisa.grigore@nxp.com>, Lee Jones <lee@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, aisheng.dong@nxp.com,
- Jacky Bai <ping.bai@nxp.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Srinivas Kandagatla <srini@kernel.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, NXP S32 Linux Team <s32@nxp.com>,
- Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
- Enric Balletbo <eballetb@redhat.com>, echanude@redhat.com,
- Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev,
- Vincent Guittot <vincent.guittot@linaro.org>
-References: <20250710142038.1986052-1-andrei.stefanescu@oss.nxp.com>
- <20250710142038.1986052-11-andrei.stefanescu@oss.nxp.com>
- <9d004ea4-0bb2-4a21-8501-82ecf3482c3e@app.fastmail.com>
-Content-Language: en-US
-From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-In-Reply-To: <9d004ea4-0bb2-4a21-8501-82ecf3482c3e@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0200.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:e5::9) To AM9PR04MB8487.eurprd04.prod.outlook.com
- (2603:10a6:20b:41a::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06824210F53
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Jul 2025 13:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=87.98.181.139
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752241981; cv=none; b=O90NWWJY3dmikCYZIQc0TDXr1S42aZuuHiLTBtvOD3A+Gh33lcMSlh96CGQil8ekwF1JEQJv1acnw0YVADpz4WkQUjn1AB99wTvrRn7Y0IM5wcHcZtQ+KxxCiiIk86khr0LfRCUNl7i+BU0SJne1z0y9+Je9O+KnLAN4nYQuTd8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752241981; c=relaxed/simple;
+	bh=k6JanZD6Tlmh3GHH1j8AP7XOS7EDtLC73/YqamY9sYQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wsb0jV+QTXV6YzLcGI1SHYhEkDZJlO7kAnzi2g3PQ6clkBgr04XaZ4syGF6V37tPMUHqjMuUGPK2UtzwG6J0G98sz4D/Z6NebKtejPjKrMPfhImGIngROqXtvnunaZryXwUU5PZwi/Al59N7wHZNeXMvaKutvpUG1O59SHzrDaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=NyCH9oSK; arc=none smtp.client-ip=87.98.181.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director2.derp.mail-out.ovh.net (director2.derp.mail-out.ovh.net [79.137.60.36])
+	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4bdtSw4kBCz5yNq;
+	Fri, 11 Jul 2025 13:52:48 +0000 (UTC)
+Received: from director2.derp.mail-out.ovh.net (director2.derp.mail-out.ovh.net. [127.0.0.1])
+        by director2.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <brgl@bgdev.pl>; Fri, 11 Jul 2025 13:52:48 +0000 (UTC)
+Received: from mta10.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.113.103])
+	by director2.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4bdtSw2cLfz1y7x;
+	Fri, 11 Jul 2025 13:52:48 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.0])
+	by mta10.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id A5B29DA3D8A;
+	Fri, 11 Jul 2025 13:52:47 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-99G00353bc4b02-1b04-4c83-8ffe-0aa17afcaf6d,
+                    7A323F8B11C8C4ADDA8261290F78C257F5C293A5) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:79.117.112.86
+Message-ID: <99b67e0f-783a-4ac0-971f-07cf1544a651@orca.pet>
+Date: Fri, 11 Jul 2025 15:52:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB8487:EE_|AS8PR04MB7896:EE_
-X-MS-Office365-Filtering-Correlation-Id: 81d52441-4d3a-443a-8a22-08ddc077f20a
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|19092799006|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T0tVZWJoMTBIN1NLMFZVUWxDQjZJQWR6UXE1cW95N3NlSHAwak44c1I0NU4w?=
- =?utf-8?B?RzNQMUs0d0tVWmhRYjVVTnQ5RnZBeXA3Y3RMVjhSMHVuV3lEbDJmZlhRY2V0?=
- =?utf-8?B?VWEvSFF5TVNIZy9BWE15S0pIamNvOHBnTUdYMU0rMzBHMXlVMmdwQUs0NkRH?=
- =?utf-8?B?R2c0OTdpaUdyK3M2czFCUm9YYjZxUWE3MkNoVXBHcWZkcjNncHVIMXJoeVZ6?=
- =?utf-8?B?RlBYTFVlTHV3Q0w5V0h5VEdSWTV3QVQ3QWVQSHcrS0hKQTducDFuMGIrTUJ0?=
- =?utf-8?B?N2VLQ3lzM3dOVEp1Z21wSGI1OTVMNHdWVmZieFFoSUJXNzVIQWxGT0h2R3cx?=
- =?utf-8?B?SFBlOUtXeHFkcnBqRWxFazZQUlBVYXczMzRSVVhKU1JvbnlkVGdGOG53M0pw?=
- =?utf-8?B?aml1ckdDcjVCWEdGMG1OcmhEWWdKang5TDY4cmxnZHNyckJVYkF2aXJzTTZO?=
- =?utf-8?B?dnN1Z1VIVDgvU3R1VzZCUXdiak9VVmdSSzlaT3ZxQ0ZtOGUzSjVJdWIrRWxW?=
- =?utf-8?B?QWRRQ0F6YjJULzBQNFFEKzJBRXpSUTNBVUxnWlJOMVlnaXQrTy9tWE1GTFlQ?=
- =?utf-8?B?Q0Z4bUNINUw2MmxSS2N0K1liUk9haThJOUluZlNHVVBjMlFUK1FRakdlbXpq?=
- =?utf-8?B?ZEZ1TGpiNFgxdFZ5aDNkRkZtdU9zb0dSZE5jT2FyS0ZrajZpMjZac01VUUU1?=
- =?utf-8?B?OTNTZkM0V3FQeStnNzJxKzQrY1RlazRxVDl3aGY0WlQybm5sSlRmOFVzRXlK?=
- =?utf-8?B?d0tkNkpVaGVpYTI4MWw5N2NTdkVSWmFaU2dvN01tRkdEN3hmS0NyQXgxQ0k5?=
- =?utf-8?B?cmUzWnAzQ2pjS2hCaEFwS0VMd3NYRCtvNUFjNi9hV29WK1pQbWJoR1pYQlFP?=
- =?utf-8?B?OHVQcEZrTEJjcEQ2cmN6WlNKMlZZS1IvaGU5NDBxN01wTWFidng2VnJlVURK?=
- =?utf-8?B?b1FxQ3dxOUpiekVON2ovbzdvSHVTNE9YNU03eTF3RE1MTDJ6RXpmdlBlV09h?=
- =?utf-8?B?dUdQMDVlQUJ1Z1lnNkxMcjI4WGdkWVRxN2JIQzJzdS9pS1NIbmlXYUJXRC9O?=
- =?utf-8?B?L2prRUp6bTd5ZGlGa1BWTTkwMm1SQy93SHV0SFExMTNVaklBa0c5ZlhUN3pH?=
- =?utf-8?B?UTdXQk5uMHVqN0xXd01KTDd6ZE5XdUFYM2FQa2doM0E5U2szQ2M0Z0pJU0RF?=
- =?utf-8?B?VnVhNmVHUVJsblRFbi9CU1dPd0tUR3FUTWdTVmd5MnNNd2h3REZGaHVnOW4w?=
- =?utf-8?B?VjFvWnBDcHhHS2xRZS9mL3hZRHU2cVZXd2FzYkNzUTN0UXJqY2JTSkJiTnFE?=
- =?utf-8?B?REdZbWswN3ZSRHpUYnp2dFZaY2M5Q2IvcUUvYnJ6RGk0ci92UUVzVnoydG1j?=
- =?utf-8?B?NERlbld3c0hxdGNtakx0ZFVic3graGp6ZW1wOXJIK0pWdFppNGRmZTRkN3dO?=
- =?utf-8?B?bzNIN3B6T2Z4OSs3d2lUbndsczZrMjZMQ25lUm5tZDM3VGlObXgySjJIdGFo?=
- =?utf-8?B?VUxKMHhwSmFFWElTK3kwd0t1ZEZvZ0d5TU9wMmUxdWh1RHFhZTBmNGZ3Qlpi?=
- =?utf-8?B?YmM3YmN4Qy8rU1RNN29YQ1JvM2ZmSUh5T2pEZzZkWjRLbUR1akZ1cTgvdW5y?=
- =?utf-8?B?WXlQUzdsbkJ2Qnpad3BEOVQzRVlTbytHeG54OEFkbUtkeWRqK05lUkxUSVdn?=
- =?utf-8?B?a3RXbVg1TGY1Q3hIODJqaGlFVTBpcTJBcXhPQ3ZObTZadXE0eWNhR2FqM1hz?=
- =?utf-8?B?VDlnVFBza053Tlg3SUxjZnROV29wSjlVUWgzRTN5ZjdGY0NlWTUxZmpZV0pG?=
- =?utf-8?B?cVlXRlR6bFpZNVpZWjQ3RUo0Tm9aZFp2M2VobTVKOFRrT0tzWmVNdGhzbFdW?=
- =?utf-8?B?bDZFbWVabU9ITFg3RXd6ZkFkSWxYblpIN2NyMkM1ODZINXNiL2E4U1kzeW9K?=
- =?utf-8?B?Z3liSWlFTnhrMjJDNVUyZnYzRUhnYmtGalV0a0pQUmROSEsvdHBieHdqcGpL?=
- =?utf-8?B?WkxlSkZaN2l3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8487.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(19092799006)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MUdSNHlZQWZHWno3bVMxNXhCSWQxYWhTbURRdTllMHVtOVZrckdBbGNmNlBP?=
- =?utf-8?B?b28wRHpkQ3I0NTlzWXVGc3Jmd0NQdUR1UVpWZnI3TytvYUFTMlNtcWIvTDU5?=
- =?utf-8?B?RGh4YjdzM3JCa3Fnc3JaNlpZVE5IZDl3YVhmK0t2dVVGcmVlcWNlcnE3djZu?=
- =?utf-8?B?KzQ5Q1hoN05LeTM4cWxXcjBjYWNTYW9LaHRyREsvamRxSlNiSWpJZk16dVVR?=
- =?utf-8?B?d0swOGNURmVuVFNXOXYwWHl4NStqQ2c2NDVjTVc5d2syUlQ3RzM3MkIrNzVB?=
- =?utf-8?B?Q2c3WnFoT2RNaGh2TVpwOTNXTWdGZmJGeFhxUWxwMlNLcXBVN1NJRTVMZmt6?=
- =?utf-8?B?ay9qcHlHTVA2OWtuZzh3bEllQjJZcG52UkRZUUp2dGRoNmJWemtTeTM1MUVw?=
- =?utf-8?B?cWJZKzUxSnI5U1BVRktyaUJnS00vaDZEeVJEUmovZk5tRVJYdWZiQVJrZVZW?=
- =?utf-8?B?b3BpeUtjdE1BRmNkd2ZVOEozSWxDM1VjYzFrZkRQb3ZVMm9kYXg5QWhlWVJw?=
- =?utf-8?B?LysxZm5FeGhLRnRGS2hPMUNYTFErOU43MkdWZnRVQm5qZHh3eC8wZm80QWp6?=
- =?utf-8?B?eEtTRUNNOXE4emg0c3BxQW1ZblBndXpFSDMwUzdIYUtWMVhWSjhHYTFuZEt4?=
- =?utf-8?B?TG9kRVVob1VNVDRIWmliS1FxbmpiWW9KVm91eDI3T0N6TEpOSHVtQ3BlSFcy?=
- =?utf-8?B?cGdDK3BkVzhBclVRdTBCK0dNQ1lqNGYvUWZJNFBHU05ENmtIT2h4eForTFRr?=
- =?utf-8?B?aUc5cXhqZG03UU5sRlNzV2txQ2ZnR3pSd3NCM3g3TFZqSVIwYXlaVFBvQy9s?=
- =?utf-8?B?V0xFOTFjTks0dFFsVHZUTGlZVHVZb2tNcDhwNE5qdjlNeHcxYWc0UC9Xem5D?=
- =?utf-8?B?SUozczNQRUU2bEczdGI0ZlViT05xclN4TllEbHhjSEFvNVhJZkRWWDB4eHJ4?=
- =?utf-8?B?RVZURTQyMHVSSURack5lZE85VXhBRW42dmxVS0FJRzgzWkx1YW1laVRTYnFJ?=
- =?utf-8?B?WU1VajVCeStIOU4yelNNcGZkTW5mME5BT1hnRzRhY0tnd2N4UjEyOGJYR3lt?=
- =?utf-8?B?YTU3YmFMNnM2QjltdnR0RUdMOUxPdzhKa3FmeGpWcWtjTWhQaDNkUHc5M0VH?=
- =?utf-8?B?NWZDSmNjT292b2ZtZWNOS2dnMVc1ZmZCOXhUSjZmbmxjTkFVRkVjZnVGSDdy?=
- =?utf-8?B?SDVIbmNaYVNIZDA0RUhtaTlIR2Nrd1RXdTRDcDVIdExwUlVyV1FWcXY5dmVj?=
- =?utf-8?B?NWNUZSsvS2JoLzg4NHJjb2JqSk1yMVdqT1BsWm1iVDNiYTNHU2ZYSW5iVVZt?=
- =?utf-8?B?UEFZQVltZWxEK040K1N3VE9tVFdJd21kWWdRK2gxRjVSWWhZMFo3V2UyclNS?=
- =?utf-8?B?ZGRYamlxb1Q1SGZqMnR5SGVheWNBMjEwL0tyQ21uaHZEUXM3YXJQMjdsUG5o?=
- =?utf-8?B?TmpWYzB1TW4zcTB5Y1lsM2NCYVp1OFRvNGFqQjR6VkZXY25iN00vM2dsQlBV?=
- =?utf-8?B?SWRBWUcwTTBJR0dwNDJHMmtaOTNJMmFiVXp6YVE5RzN2dWV4LzFhRXJ0MlNj?=
- =?utf-8?B?TTdkYU9tczY3N2dVMkwrdTY0VmxjM01TLzBtTzJZTTZEcWtYa3VjOW8yZ0Nh?=
- =?utf-8?B?eXJJdlRvdEpSWFZEcCtyRmFZdy8wd0dFZXNxaEpRMUF1WDFPYndOeG9EMkpY?=
- =?utf-8?B?SVBKSm1LUXJEUmZxc1NFWS8xV3lra3N2Lzh5a3VMNTJlZEtsN3puWEZFa1d6?=
- =?utf-8?B?bTVrelpkS0FxZittKys4M0UyUXZUdDFjak5mQzJXbEFjbEM3eHpHd2licmMz?=
- =?utf-8?B?QXdCNG1tdThBa3BkUFBIaEFmUzYzZm9jV0MrMnBENEd2TkxQek4yNnNaQ0Ez?=
- =?utf-8?B?enB4Yis0MUxUcmpBQlkvQzdKWTRQc2t0Vlkrc2k1QjNXdXRpN0xrZnVBNGt2?=
- =?utf-8?B?bDVOd3FMOHBJMlRyMlZBQ1FHSUw1ZTdaSThwUGxtRk8wUXNtd3lsbGVJb0NK?=
- =?utf-8?B?NUphbGU4aW5ZNGR3MDc1T2FqT0poalBkZWZnMGNFdEhkQ1hlTEc3L2ZYODRq?=
- =?utf-8?B?aS9LQkh0aFdTVmJJVHg2Y1plQ1V1a0ZpTERsbTJFS0JQakpVRTlaWHhmS1dk?=
- =?utf-8?B?K1NzWUFsQ09sLytzRkI4bm1lVUFwb0Jvejc4aU5YM0VOZ1pLZXpzcFpTTGx6?=
- =?utf-8?B?R3c9PQ==?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81d52441-4d3a-443a-8a22-08ddc077f20a
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8487.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2025 12:39:15.3113
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QK5i21Bzue/7PWOpIaB5hpsNm6IR3EWgvGNVpDnty6uMgV70TVA8UPpdPc9M5vm/PJq1IWVwCg9t3MTSHhSwNhR/KVpX4MQgSqiyLI9cE0k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7896
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] gpio: vortex: add new GPIO device driver
+To: Andy Shevchenko <andriy.shevchenko@intel.com>,
+ William Breathitt Gray <wbg@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+References: <20250709091542.968968-1-marcos@orca.pet>
+ <aHD40TD8MLug0C6b@black.fi.intel.com>
+Content-Language: es-ES
+From: Marcos Del Sol Vives <marcos@orca.pet>
+In-Reply-To: <aHD40TD8MLug0C6b@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 1670835462901421787
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegfeegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnheptdegudfgiedugfekudfhlefgjefguedvjeffieevgeetjedvvdeihfeiudejvdehnecukfhppeduvdejrddtrddtrddupdejledruddujedrudduvddrkeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepfigsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+ fovfetjfhoshhtpehmohehfeefmgdpmhhouggvpehsmhhtphhouhht
+DKIM-Signature: a=rsa-sha256; bh=Kc84mVu2NtFT7Ce947ypedeEqm3SlMwYbBeMPVZ54zI=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1752241969;
+ v=1;
+ b=NyCH9oSKSQbAxeH2OWmAssqg2Vjc69R8iDbzKe1MiF6fzvvimM0jORAgE9qENEAl7mVPS7kL
+ QkWMPMBA4QeS9JhBY60UiFB3FFw9b0gvmZvidDxiBIiLMIgh5The9XMJ+QRwQLzQItNetPMhrDH
+ rQrJfgQcKU5bo0JNom3RlF4+QRnBXs5LMPzNVhhbX08agw+FCHuy3JbPMyeoMYwKQmugoNhesRa
+ i8vjFCW42lFtWN2S4VmCTiPgm1VTdL8M+tLpQOc1PeFiVc6A60mdcMreFZS0quzdyKgK3lm+oAS
+ SoSXDDYbRDhZoewtR+cf6tB2TpJtDlJcScMmEZB+HcTcw==
 
-Hi Arnd,
-
->> The SIUL2 hardware module has registers which expose information about
->> the given SoC (version, SRAM size, presence of some hw modules).
->>
->> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+El 11/07/2025 a las 13:43, Andy Shevchenko escribió:
+>> + *  Based on the it87xx GPIO driver by Diego Elio Pettenò
 > 
-> This does not look like an nvmem at all, it appears that you
-> are creating an alternative to the soc_device infrastructure
-> based on a binary interface tunneled through the nvmem subsystem.
+> Why that driver can't be reused?
 > 
-> Why not just make this a soc_device and have drivers use
-> soc_device_match() if they need to know what chip they are
-> running on?
 
-Thank you for the review! I've just taken a look over soc_device
-and I agree, this driver should be a soc_device. I will convert
-it in the next revision.
+The driver uses a completely different port address and operation. It is
+based in the sense I used it as an example of how a I/O mapped GPIO driver
+should work, but nothing else.
 
-Best regards,
-Andrei
+>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> 
+> Why? The driver should use dev_*() macros which will uniquely define the device
+> for what the message is printed.
+
+The error thrown if the module is attempted to load on a non-Vortex
+processor happens before the platform device is created.
+
+>> +static DEFINE_SPINLOCK(gpio_lock);
+> 
+> Global lock? Why?
+
+Becase at most there'll be one GPIO device of this kind loaded, so it didn't
+make sense to me to create a dynamically-allocated private structure of data
+for a single global lock.
+
+> So, the above is pretty much simple, why doesn't it use gpio-regmap with the
+> respective configuration? Moreover, SX and DX variants are differ since the
+> latter one may provide an IRQ chip, for which gpio-regmap also can be used,
+> i.o.w. with that done, it will be quite easy to support both.
+
+Again, I am not an expert on the Linux kernel, but I did not see any code
+or examples using neither gpio-mmio nor gpio-regmap for I/O-mapped registers.
+
+IRQ is only available for the first two ports out of the five available.
+As said in the comment, for shutting down the machine, port 3 is required
+so I'm gonna need to poll anyway.
+
+>> +static int vortex_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +	/* Set up GPIO labels */
+>> +	for (int i = 0; i < GPIO_COUNT; i++) {
+>> +		sprintf(labels[i], "vortex_gp%u%u", i / 8, i % 8);
+>> +		labels_table[i] = &labels[i][0];
+> '&...[0]' is redundant.
+> Why this can't be made static once?
+
+It absolutely can.
+
+>> +		.owner = THIS_MODULE,
+> 
+> This field is not needed for ages (15+ years). Is this driver got dusted for this long?
+
+I saw the field on the documentation as well as on the IT87 driver I was
+using as a reference, so I kept it.
+
+>> +static struct resource vortex_gpio_resources[] = {
+>> +	DEFINE_RES_IO_NAMED(GPIO_DATA_BASE, GPIO_PORTS, KBUILD_MODNAME " data"),
+>> +	DEFINE_RES_IO_NAMED(GPIO_DIRECTION_BASE, GPIO_PORTS, KBUILD_MODNAME " dir"),
+> 
+> Named resources? Why?
+
+So they appear with the proper name in /proc/iomem. That's the only reason:
+
+0000-0cf7 : PCI Bus 0000:00
+  0000-001f : dma1
+  0020-0021 : pic1
+  0040-0043 : timer0
+  0050-0053 : timer1
+  0060-0060 : keyboard
+  0061-0061 : PNP0800:00
+  0064-0064 : keyboard
+  0070-0071 : rtc0
+  0078-007c : gpio_vortex-data
+  0080-008f : dma page reg
+  0098-009c : gpio_vortex-dir
+  00a0-00a1 : pic2
+  00c0-00df : dma2
+  00f0-00ff : PNP0C04:00
+...
+
+>> +static int __init vortex_gpio_init(void)
+>> +{
+>> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_VORTEX) {
+>> +		pr_err("Not a Vortex86 CPU, refusing to load\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	pdev = platform_create_bundle(&vortex_gpio_driver, vortex_gpio_probe,
+>> +			vortex_gpio_resources, ARRAY_SIZE(vortex_gpio_resources),
+>> +			NULL, 0);
+>> +	return PTR_ERR_OR_ZERO(pdev);
+>> +}
+> 
+> Oh my... Can you elaborate more on this ugly hack. Why do we need this at all?
+> What's wrong with the BIOS or other firmware that is provided?
+> (The documentation mentions BIOS, btw.)
+> 
+> Also, is this anyhow visible as a PCI device? Is it part of LPC (docs suggests
+> so for SX, but not so clear in DX diagram)?
+
+The device is available at a hardcoded address for all Vortex86 devices, but
+it is not part of any device in particular, and I don't see any good way
+to enable it on all Vortex devices other than checking the CPU vendor.
+
+These are the PCI devices on my DX3:
+
+00:00.0 Host bridge [0600]: RDC Semiconductor, Inc. R6023 Host Bridge [17f3:6023] (rev 02)
+00:01.0 PCI bridge [0604]: RDC Semiconductor, Inc. PCI/PCI-X to PCI-E Bridge [17f3:1031] (rev 01)
+00:02.0 PCI bridge [0604]: RDC Semiconductor, Inc. PCI/PCI-X to PCI-E Bridge [17f3:1031] (rev 01)
+00:07.0 ISA bridge [0601]: RDC Semiconductor, Inc. R6035 ISA Bridge [17f3:6035] (rev 01)
+00:07.1 ISA bridge [0601]: RDC Semiconductor, Inc. R6035 ISA Bridge [17f3:6035] (rev 01)
+00:0a.0 USB controller [0c03]: RDC Semiconductor, Inc. R6060 USB 1.1 Controller [17f3:6060] (rev 14)
+00:0a.1 USB controller [0c03]: RDC Semiconductor, Inc. R6061 USB 2.0 Controller [17f3:6061] (rev 08)
+00:0c.0 IDE interface [0101]: RDC Semiconductor, Inc. R1012 IDE Controller [17f3:1012] (rev 02)
+00:0d.0 VGA compatible controller [0300]: RDC Semiconductor, Inc. RDC M2015 VGA-compatible graphics adapter [17f3:2015]
+00:0e.0 Audio device [0403]: RDC Semiconductor, Inc. R3010 HD Audio Controller [17f3:3010] (rev 01)
+01:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev 07)
+
+There's no multipurpose device that actually claims ownership of these I/O
+ports according to the PCI's configuration section.
+
+In fact the Vortex86MX-based EBOX-3350MX mini PC has a different host bridge
+(R6021) and different ISA bridges (R6031), but has the very same GPIO.
+
+And in "dmidecode" I just see a lot of lies (this device certainly does NOT
+have fans or a parallel port) plus "To Be Filled By O.E.M." fields. Also
+matching on BIOS does not seem a good idea since there are other industrial
+machines that may not be using or reporting the same BIOS versions.
+
+> On top of that the GPIO3 is marked as one with the pin muxing. Where is the driver
+> for it? Or what are the plans about it?
+> 
+> GPIO4 seems muxed with UART, so also subject to pin muxing.
+
+The documentation does not cover how to use those UARTs and the pins default
+to I/O, so I would say they're not a problem for now.
+
+Ultimately, as mentioned, the goal is implementing a correct power off
+sequence for ICOP EBOX machines and DM&P evaluation boards, which require
+manually polling for the power off button, then setting an output pin
+low to shut off power to the machine.
 
