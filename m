@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-23120-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23121-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1DFAB014CB
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 09:36:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA838B014D0
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 09:38:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 27B977AC17D
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 07:35:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 066905A1B83
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 07:38:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD7911EFF8B;
-	Fri, 11 Jul 2025 07:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C09E1EFFBB;
+	Fri, 11 Jul 2025 07:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDiyKLTj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJ21gcZ6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA5D1EE7A1;
-	Fri, 11 Jul 2025 07:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B051DDC15;
+	Fri, 11 Jul 2025 07:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752219404; cv=none; b=A4LFswNRR5dkEH0GDUgZoVTZygSMZA14iM3+OKa8KRMy6D0R9bhgZJ8KXqyzDY1IWFFaUZp3btttyhAPNLiquP9vbcopMs8OvL3F+Dp3bOwWkfv8+J0BQPYVav6677XxmtmLExjkftzOHjnYl6i/m2wh1U9kA6gAEvMFL1fOnQk=
+	t=1752219476; cv=none; b=pTFmFka84srtCFv4b8wrOZy4YCguR0LQwdtjtcznxY3qGA4RT18saxmNQy8JLvUOnk9qIyIaH+pU69majbRJ00TjSi5Tq+0sLHXWf7MxkMDH8OrSMuZPqPvDterZoPMfGkMiwlFXU2OBkrg3DV7Idsakw8hV7CPFH655W7eF5AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752219404; c=relaxed/simple;
-	bh=a0wdQROj3hyxjpHmI3TPp1B/1v9dnKkpod7Q3zxg27o=;
+	s=arc-20240116; t=1752219476; c=relaxed/simple;
+	bh=hlaTSOfwU5t5uUBJH15EMSZMX/iXkdPXO1i1im6HrmY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ou7dClAW4i9Etu2VgHSC9yQFojiHxF+gUrjk9t7xwG/H1PCZakEJn0wlOz4U1hL4/1qP05Rfg/DiVT+ycojZ1cXrxVdiHEh/FP1mYTCbb4DhvEKDWj+3QyMsVjUGApTCaPy2cqIo6evkDqdY4kPyVFT4Z6mNdOhkqMj255Z9Tqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDiyKLTj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A59FC4CEED;
-	Fri, 11 Jul 2025 07:36:43 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=rs3WQ5M9MndK/M8iEeg3IqooURpmFbeNmlX1mEhFclb8o7SX6A1p/2eIjKX3Q0RpoA4Q3NhZAVk8YaZ1v+Q38PQxHEe+tuCID++9TRcEHEq/mbGWVpYT6SaPVJpiJ4bnjTsa4hs58clQSo2MZcocV+IF/GHebjGqVg/Q7L/zRcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJ21gcZ6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF13BC4CEED;
+	Fri, 11 Jul 2025 07:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752219404;
-	bh=a0wdQROj3hyxjpHmI3TPp1B/1v9dnKkpod7Q3zxg27o=;
+	s=k20201202; t=1752219476;
+	bh=hlaTSOfwU5t5uUBJH15EMSZMX/iXkdPXO1i1im6HrmY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pDiyKLTj2+sXbOPoA09zNCj+YoGUJjOjlVrtsiy2CXqLzoOX57nGU7EqPOQre5vS5
-	 SA9h4C+3e0Itmc0CPM/zi7oX76RjAbolfE8D1d8V6CHKfAbiXJnudy5TmDfu2QMuNP
-	 y5L9Ese8GdUsfdKg9WekbMeczMdcyvsPUBBsN9boSbSzQovZVqAsCBRiWoINqgINJ7
-	 vYFi2Pexu7Sl1acSNEPKZiYH/RUIQjzmcNmIxTcnDXIiZM28G/+QHuqjpiEmKSpvqR
-	 QzR9ipvKvQR7nUJh2Sq2wINeUPQO3Y0XtsJGgt20qywberxIUO1y6y8sXM93YskG9H
-	 2d+YQDEjcDTZg==
-Date: Fri, 11 Jul 2025 09:36:41 +0200
+	b=EJ21gcZ6wG8Uj0HdA04vOksRm0n2/UU4SoJfCNz3NmrhNV24uv9zxFXii8sKLVNsF
+	 m5Rh6w1zUQTpkVJ9HyCfSpFEmRrTJVXUQf2AAAe1P/5dPD6/o8wXhhcVJ5eZ/FoMn4
+	 Fq52ac5fiXga0CofTseD3XacSQs3FADD8hmgVHT+KSbm57/u9WPDrCT4uqguPk0GL1
+	 t54Z43UWfWMTQthbWjWwB1DmU/bNbVU7t9TN+FKgVqAlpikG0MggjHm8/UNFEN3jaR
+	 YIVdQs0LoW+Qz4ZCcItWXfbs9tcjH136a6cOD+VlNjHO7BrcZWtpUPWucg66dF69hS
+	 rGyIlMUNsP1DA==
+Date: Fri, 11 Jul 2025 09:37:53 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
 Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh@kernel.org, 
@@ -55,7 +55,7 @@ Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh@kernel.org,
 	vincent.guittot@linaro.org
 Subject: Re: [PATCH v7 01/12] dt-bindings: mfd: add support for the NXP SIUL2
  module
-Message-ID: <20250711-fluorescent-malamute-of-glory-b1c585@krzk-bin>
+Message-ID: <20250711-lean-burrowing-jacamar-38fcc5@krzk-bin>
 References: <20250710142038.1986052-1-andrei.stefanescu@oss.nxp.com>
  <20250710142038.1986052-2-andrei.stefanescu@oss.nxp.com>
 Precedence: bulk
@@ -69,18 +69,32 @@ Content-Disposition: inline
 In-Reply-To: <20250710142038.1986052-2-andrei.stefanescu@oss.nxp.com>
 
 On Thu, Jul 10, 2025 at 05:20:24PM +0300, Andrei Stefanescu wrote:
-> Add the dt-bindings for the NXP SIUL2 module which is a multi
-> function device. It can export information about the SoC, configure
-> the pinmux&pinconf for pins and it is also a GPIO controller with
-> interrupt capability.
-> 
-> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-> ---
->  .../bindings/mfd/nxp,s32g2-siul2.yaml         | 163 ++++++++++++++++++
->  1 file changed, 163 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/nxp,s32g2-siul2.yaml
+> +        properties:
+> +          bias-disable: true
+> +          bias-high-impedance: true
+> +          bias-pull-up: true
+> +          bias-pull-down: true
+> +          drive-open-drain: true
+> +          input-enable: true
+> +          output-enable: true
+> +
+> +          pinmux:
+> +            description: |
+> +              An integer array for representing pinmux configurations of
+> +              a device. Each integer consists of a PIN_ID and a 4-bit
+> +              selected signal source(SSS) as IOMUX setting, which is
+> +              calculated as: pinmux = (PIN_ID << 4 | SSS)
+> +
+> +          slew-rate:
+> +            description: Supported slew rate based on Fmax values (MHz)
+> +            enum: [83, 133, 150, 166, 208]
+> +        required:
+> +          - pinmux
+> +
+> +        unevaluatedProperties: false
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+I noticed Frank's comment and he pointed out that this changed, so all
+':true' lines before should be removed as well.
 
 Best regards,
 Krzysztof
