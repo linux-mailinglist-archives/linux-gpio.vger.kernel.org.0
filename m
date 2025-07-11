@@ -1,120 +1,150 @@
-Return-Path: <linux-gpio+bounces-23183-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23184-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85A25B0242A
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 20:53:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85BE3B02696
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 23:58:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 943941CC3753
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 18:53:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E651A61592
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Jul 2025 21:58:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8331E491B;
-	Fri, 11 Jul 2025 18:53:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65EF221D001;
+	Fri, 11 Jul 2025 21:58:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lwgFoPz2"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="c5OY+ThE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 12.mo533.mail-out.ovh.net (12.mo533.mail-out.ovh.net [178.33.248.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193331D8E07
-	for <linux-gpio@vger.kernel.org>; Fri, 11 Jul 2025 18:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06980149DFF
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Jul 2025 21:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.248.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752259999; cv=none; b=NAi1uwcUPBJ5RNu9tsd5EZMp/uBOPdAsdUGrSpA5t76uYTQMB1rfKkMdl7RHMkwDZQ8c5oJNZeRVmx5MCCO7Rxi8XdU8I+nWTN9M5fUBqycLEyrYcexg43pwbnAVLlEHZJoP5dex9toaZHJyEUMcIOzmRrfRjD6p+C7K1zuSPcY=
+	t=1752271122; cv=none; b=JwpXtPUNZro/ejjYArE/776nuKRdtWB3hp3YqekN33Hxidebmkj7MTy1UZIYTA1GJULQQOTCpt/zuR4B64l4+CirAnrQ1eFQ9YOUrGdA/jH7VsWj2S5SqhA75D6uF6PRjS9UawCALZYt0kjrEKLSdv8m7Jbmyxoq1iUgd7E7HNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752259999; c=relaxed/simple;
-	bh=6oa0VmGb0K5iYELBtraMc+ym3sVQgZnaB1e6wip7Kyg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kPCKbtII4+uZCRWWYd+wfC4fTQqysele+5Uxh51XXQcmp0k1Ul/iiHGdW8MJxakJVp/fAoGHntnpLMGPmffkQ4ea+Z6CUoq4wSs/wtaurGZik6bCSusPkBYCrWPkOm7KVYyr6uU7/LMscWPv5OtCY3h/9aq24NUyHHYOO3d6jtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lwgFoPz2; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e8600c87293so1937981276.1
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Jul 2025 11:53:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752259996; x=1752864796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lnMNvTF+R8ofXhs9BIQ7FQl/jHKBWLPO/PBptuTPHgQ=;
-        b=lwgFoPz2EVHuxJIHsoIfsNZnVcYxxE1kRoZhOs417OHb3eubPlOeWTiWEsmyI8XoYS
-         uwjidk62k7FV1mWq2B9sVO9eamU+Ml+4r61lV4eX2gBeJnYCmr1v803RqgGEAMQB2MSg
-         0S90oLmCea4CaQSFvjnK5/mi0g22cHlkIuQ9dhnf4Ipdz6Ew20xnjXzmZn6Y+cuhATwW
-         OUTzC6ZUqeRi/V/E929+DrdLPqt1JNGMjnZL9l7fjfVobB1PXpXOjQW7jb2D4q8umDZU
-         0+GjgJ9Qh6+SiTYCfASAypGLUy3ak2h97GkQSBNVUTpbE9fwBvHtZXK2vqUW5hpSQZVC
-         SQhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752259996; x=1752864796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lnMNvTF+R8ofXhs9BIQ7FQl/jHKBWLPO/PBptuTPHgQ=;
-        b=Oyq1UAKXmbUDnDQwW8JxXPkbhSyltQOdFbZ3TYjCq/hy7EzKeOzZy6OTHBnpeRQEOl
-         qlKfV45MyhKeSIowoxT1l2KVkSbLdHJtDHoHA8OpfIGzddFMuO/zSKy3n/dS8w7GuTlN
-         0Q2f2bxnDh1pq3Ua/RlPPy3JsQ3bHjtLITpjX6gTWhrgOmbIXNm+UDpJxTqA9jettrAA
-         zMeoOxw8AbmyNW3AQHaNXoqROX+6mau188F5owH49z4Luc7DvHvfhyXsO16LVPnoK/vI
-         GSyeTWjETlpTTMYenqqH9ty/TqEzLO6HEqBcUAJwFPc8gn6Zd2CuqGdVRdU0Qf58ulSU
-         XNRg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2owJEHjCBPi0BFFGNpV5900S+tEklNfg0r2o5eUGmFtCSPj9lFJ7XkAOd3yTdSpxha7HdvkrsAUe2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI6wHdke806rTvDHO7zowS1R3WyybhFyeaDSEz6RAkv+T4et0j
-	3bamjTCMp+pIp+IBuqXpm1Qgn0DnMxY2QivkaIq1UKu+hjrbNafUJD1vl4OSxuVGbNhhzitZE/5
-	U59XeSUGygmmPQ0Xt8jHydrHSvpj7/xWW507XCnaPhw==
-X-Gm-Gg: ASbGnctyPQSOYS7Ogtor9FMGCKsEn/Nwm0uQcLpv6vrW3WNPzDO3ki4dMor6vMWyIlm
-	SphzOHp2EsLN9V8BgB74jkUh49iKGQbyhuEUTnIrNOIR3mDT0j8uPQ1CPIIws+wZNu/1x+XzhJn
-	tlwrzybVI9hd2sg9GPH+2jkSiJ4BfX+HtTEt9sryZcd7qu6GI3L9FQkgQ4rrEKPKef7EtXLD7s5
-	wps9fzLp58ba8X8LA==
-X-Google-Smtp-Source: AGHT+IHNGHaJapXfEwRUcTXNTWlTsMHXEiPIQ/b0KTpye4KQsUdp1sxBRmAZdNG++EC1bw7xLSQza58HYJgLAxUXYQU=
-X-Received: by 2002:a05:690c:6282:b0:70f:87c5:5270 with SMTP id
- 00721157ae682-717d5daccbfmr86777077b3.19.1752259996008; Fri, 11 Jul 2025
- 11:53:16 -0700 (PDT)
+	s=arc-20240116; t=1752271122; c=relaxed/simple;
+	bh=5ZpdH1e3Mnjz/edR4oQbt2lj8bvKNeEGbz1MEakwSBc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lpv7lOXFvef9jIg79CoQHXJ3gY7FtmhzLf/3AaSN3v1JrLLD4rl1dQSlkO2eXmRsQWbw8YNAw+CAlIYjQc671HuSlBAZgeHtVPqck5Jx8W9Ca4CeTgbbY3d1cFZ7bzK3WndXrGiaCwhfeTdGL7szETVJtgtA7ZCDbITnXe32r6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=c5OY+ThE; arc=none smtp.client-ip=178.33.248.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net [51.68.80.175])
+	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4bf5FQ4Jx7z6VDs;
+	Fri, 11 Jul 2025 21:58:34 +0000 (UTC)
+Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net. [127.0.0.1])
+        by director1.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <brgl@bgdev.pl>; Fri, 11 Jul 2025 21:58:34 +0000 (UTC)
+Received: from mta3.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.0.100])
+	by director1.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4bf5FP72c8z5wGg;
+	Fri, 11 Jul 2025 21:58:33 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.6])
+	by mta3.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 3F6B43A42E9;
+	Fri, 11 Jul 2025 21:58:33 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-104R00583b81c07-b8ab-4c1b-865f-96b19cefac45,
+                    7A323F8B11C8C4ADDA8261290F78C257F5C293A5) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:79.117.112.86
+Message-ID: <03f3b414-e17a-4d84-b094-3e9937cd3417@orca.pet>
+Date: Fri, 11 Jul 2025 23:58:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250711-hdp-upstream-v7-0-faeecf7aaee1@foss.st.com>
-In-Reply-To: <20250711-hdp-upstream-v7-0-faeecf7aaee1@foss.st.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 11 Jul 2025 20:52:58 +0200
-X-Gm-Features: Ac12FXxLjA7peUDZIWJhb4cndI_Q2FwVXxO2uVEd8E-6LJKHyzTLqNgXqkM6VhY
-Message-ID: <CACRpkda9M6R_vi5FMGvo6PyThB8OJjX7PMMusHjjs5HcX0OF4g@mail.gmail.com>
-Subject: Re: [PATCH v7 0/8] Introduce HDP support for STM32MP platforms
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Antonio Borneo <antonio.borneo@foss.st.com>, 
-	=?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] gpio: vortex: add new GPIO device driver
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+References: <20250709091542.968968-1-marcos@orca.pet>
+ <CAMRc=MdLXP=DgHEh6hoNYhDgB4aESmC29VH6hsH=AONNgsjXQQ@mail.gmail.com>
+ <e00c97c2-04f4-4683-9c56-8894617998fa@orca.pet>
+ <aHEnVTCSwfdijvzQ@smile.fi.intel.com>
+Content-Language: es-ES
+From: Marcos Del Sol Vives <marcos@orca.pet>
+In-Reply-To: <aHEnVTCSwfdijvzQ@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 9874705137076688603
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeggeegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnhepueeigeetfffhhefgffekhfdvgeettddviedtfefhgeeiledtjeetieehffelkeevnecuffhomhgrihhnpehorhgtrgdrphgvthdptghomhhprggtthhptgdrtghomhdrthifpdhkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpjeelrdduudejrdduuddvrdekieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohephedprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+ hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeffegmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=CA93cMaoJ63k1Nl3nGykOIl/kyk1LNknHWjR5sb7/KA=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1752271114;
+ v=1;
+ b=c5OY+ThEza8L487Cc+2EoUstfvHyWZ+43rGEQpRV0FIhjC785dlG6jKCMzokgdi2ZyBHJ7bl
+ +D7JbEwdt7xMx98DQMZy62Sw9WGRUgbZVO56j9tZGvi/Z3gp6kGbObo/az7/rqYH41rTBhKamJh
+ TKy09zvt9VuqBsvTgs6ubN2IyGvBNOxeJVKQsOfgMFbhKP0GbA/dDXIvYD1rk3RURhhkV8tK2Sc
+ 7uPe0NlEZDi+eJXaQzBz22z0eOPck2rsy5sY+/JPnh4W40j4J1lLWyMnG48nLz4mn2gSU58abAo
+ ywhgKafR6wOZ7Dxf5zTLXV7lJVjoW4BdHU7y+IYy67bSg==
 
-On Fri, Jul 11, 2025 at 9:43=E2=80=AFAM Cl=C3=A9ment Le Goffic
-<clement.legoffic@foss.st.com> wrote:
+El 11/07/2025 a las 16:53, Andy Shevchenko escribió:
+> Can you share (via some sharing resource) the following (as root user!):
+> 1) `dmesg` to the boot to shell when kernel command line has 'ignore_loglevel'
+> 2) `lspci -nk -vv`
+> 3) `acpidump -o vortex-dx3.dat` (the *.dat file)
+> 4) `grep -H 15 /sys/bus/acpi/devices/*/status`
+> 5) `cat /proc/interrupts`
+> 6) `cat /proc/iomem`
+> 7) `cat /proc/ioport`
 
-> Cl=C3=A9ment Le Goffic (8):
->       dt-bindings: pinctrl: stm32: Introduce HDP
->       pinctrl: stm32: Introduce HDP driver
->       MAINTAINERS: add Cl=C3=A9ment Le Goffic as STM32 HDP maintainer
+I have uploaded all the files to https://orca.pet/vortex/gpio-patch-files.tar.xz.
+I have also added the configuration file I used for the kernel, as well as
+the cmdline.
 
-The three patches applied to the pinctrl tree.
+The machine is currently running Linux on commit
+d006330be3f782ff3fb7c3ed51e617e01f29a465 with this patch and another that
+builds upon it for poweroff applied.
 
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
->       ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP pinct=
-rl node
->       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-dk2 b=
-oard
+The cmdline has pci=nomsi due to a hardware issue acknowledged by DM&P
+(https://2018.compactpc.com.tw/2014%20DMP%20Webiste/Linux%20Support%20List/debian_9.4_installation_guide.pdf)
+for which I have already submited another patch to the PCI mailing list to
+disable it automatically
+(https://lore.kernel.org/all/20250705233209.721507-1-marcos@orca.pet/).
 
-Please apply these through the SoC tree.
+If you need any other files please let me know :)
 
-Yours,
-Linus Walleij
+> Is that the only datasheet you have?
+
+Yes. I guess I could ask DM&P or ICOP for another under NDA but as of today
+I do not have access to anything else.
+
+El 11/07/2025 a las 17:01, Andy Shevchenko escribió:
+>> Again I want to point out I am not an expert by any means. This is my first
+>> kernel driver and I am writting it as a hobbyst, not as a company employee.
+> 
+> Oh, I see. Sorry that I'm asking too much (do I?) Unfortunately the review
+> might be not well appreciated process by the author, but we are all for
+> having the better solutions. That's the part of learning and R&D process.
+
+Not at all, you're not asking for too much at all! I understand you don't
+want to merge a half baked driver in the kernel.
+
+I was just mentioning that to clarify that if the driver looks sloppy at
+the moment is not because of a lack of care, it's rather because of a lack
+of experience - I am not familiar with neither the Linux driver model nor
+the technologies that are deprecated and should be avoided.
+
+Also and to clarify that, as I said above, I do not have access to the
+documentation an employee would have about the SoC's inner workings.
+
+>> The company is seemingly launching next year also a Vortex86EX3 with proper
+>> i686 and SSE2 support, I guess because Intel's patents have finally expired.
+>>
+>> So I do not think removing i486 support is gonna be an issue except for
+>> very ancient processors that the company is not making anymore anyway.
+> 
+> Thanks for clarifications here!
+> 
+> And thank you for your efforts, I would like to help as much as I can.
+> Again, sorry, if my first messages looked a bit rejecting. I do not mean
+> that, it's just a professional deformation due to tons of reviews I have
+> done in the past.
+> 
+
+No problem, sir! :)
 
