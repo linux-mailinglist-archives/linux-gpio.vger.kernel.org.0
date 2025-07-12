@@ -1,227 +1,147 @@
-Return-Path: <linux-gpio+bounces-23189-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23190-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D915AB02BC0
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jul 2025 17:53:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C6CBB02C9E
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jul 2025 21:27:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 207F016E5CA
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jul 2025 15:53:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F09CD3AE1EA
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Jul 2025 19:26:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D669227781E;
-	Sat, 12 Jul 2025 15:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AD7028DB78;
+	Sat, 12 Jul 2025 19:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ab2038Eu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WhaAgGSX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E31F18D
-	for <linux-gpio@vger.kernel.org>; Sat, 12 Jul 2025 15:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F24B28D8ED
+	for <linux-gpio@vger.kernel.org>; Sat, 12 Jul 2025 19:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752335578; cv=none; b=Xepe4CBxC6phwDPUg15v6lhXJcS+YPj9CRRif33goBdC3ltLrvHPHijSwFYhqh33hx+RYyj9/47YTWR/2VL4lMcGWxr+vf3/1hQrjVnbaxMoc0zs/9/fBnSl5Be37birTkPLM49vJO/Lt27i7r++wwhA+ygNkIxegV90on891mg=
+	t=1752348432; cv=none; b=ffARTgtfHeh2xup2l3BBgc52ZK49HzgMKrk9L5uOgUADiC6OoyKMZC7LCoh8Pyh3W8RlqLnQQdLzSlBxiBfenasSDV5201dF3wBtWKYiM5Mrkz7gUN+8PQVmkKOJCA6a0jhJ4Eecl1/DFIT7gYKWkrGTuZaF2xCQQ4+TObAsa1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752335578; c=relaxed/simple;
-	bh=9KWNZn7uepo5fe+Lasg3rQbk6oqgczsyb9iPaTZb1MY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=A1HLF39G2UKvBiLuphz7fxumA9p7P7X4Sw1ecNURQECEJYRDKaSRN1772LTF/+B7hm4/+l0G+K4nHwCN8jApPK34Typ70KqOg9vGiG8Th4qCSDzIec5KUT1ZoIdAqzSfg9LYWgKe44O9bIBQj5rW9wvOtm9ZMZPbX/HH90Ygjr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ab2038Eu; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752335576; x=1783871576;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9KWNZn7uepo5fe+Lasg3rQbk6oqgczsyb9iPaTZb1MY=;
-  b=Ab2038EuCdNYpjD172s51c6FgbDWeLodOETJ7tldw61HfT7THRk5ZKzi
-   4rRulcQec2a5ab+tT/kotTsn/18J1AcyfcjXNmjWptoFfD7E55MybMP+2
-   Jkkq4J01eI9DALUsN7juzOtkoxGS7v4fCI/vSLExcgnNcoUgsDCok9Bf7
-   zxsz+9C2kqRIftOcfxq9a37SqZOyqXNcseviuLhjuvkHa/oSnwsvFJ6IH
-   RCd578erH4AvkRtJAAP/SYz17koNxjiWOlTY7lM/+YyzQqn7HqwX4WNnP
-   h9sWplNMmj9UnQlrzMvP+SqfHgsHi0P8ZHaHKrSB5w35ldAjtdpjZvA7E
-   g==;
-X-CSE-ConnectionGUID: eFhfGDL6R0yH7GsdKii/0A==
-X-CSE-MsgGUID: UGqYzGyaRV2mwxgsR3Wk2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="58366340"
-X-IronPort-AV: E=Sophos;i="6.16,306,1744095600"; 
-   d="scan'208";a="58366340"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2025 08:52:55 -0700
-X-CSE-ConnectionGUID: FbIBj8DCQY6rlSKEuAevxg==
-X-CSE-MsgGUID: Tfqjf4/MSzWCvv6n37qGzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,306,1744095600"; 
-   d="scan'208";a="162264842"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 12 Jul 2025 08:52:55 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uacWy-0007RO-1F;
-	Sat, 12 Jul 2025 15:52:52 +0000
-Date: Sat, 12 Jul 2025 23:52:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- f2dd69908b3a456cefdfed2993ff0c878d3a9175
-Message-ID: <202507122317.pYoCc2Uz-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1752348432; c=relaxed/simple;
+	bh=/hOKuusE5jMFtwzQjB1VDvpOrtRiFiTDNJiNJFK2Dmk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DGyQRM6tJpzXe4y7IfcmfSEh2uwvMr4O43EYOtjASRVaCW6HeQVr91uncrpJ+4AZ6QAu906o9PZ3/h/CgIXWZIErf/eDudE0YeWct2/WowsKTHLtaBgaHrKzAVqt5wlNOz3pVJZhqoVtBsKUOzbeRuwkk8/MIBC8jqjAaPT7YbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WhaAgGSX; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b5931037eso23539361fa.2
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Jul 2025 12:27:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1752348429; x=1752953229; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YmdrDokSvSEbkPXVz0WTUYECUUDrY3dIue4l79myHLA=;
+        b=WhaAgGSXAZ2GkhcFDEsP6qj+RKcZn8+l/TjHOEB0rc5PFabu3pbbhJKkKcGNOjN/XS
+         x58mToAJHF0fTCi79Km1iUhMdQ+WUraWoGTrV6zDdtnYEbpGEWWOFfyT6KxCX6fc0kJj
+         rX/Et2DH8vPoHqnQNHUQf8PRakWhKpNMuI0W5PH3cU4JgL5REt1UEcWVvEgPMZyS6E6n
+         Msv1LhhXTSFkn3sCAJ0GXDhVH2/g0xUEaEFG2qcVjCBhSEe1a3qQ08SrV6vv0obAIEvt
+         J9SY5jzLcS1zzrg+9ZvcX6/Vq9e5o8fJoRMTDoldYcsHjtlBjezR2yapWFfJHIc4wUtH
+         a2rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752348429; x=1752953229;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YmdrDokSvSEbkPXVz0WTUYECUUDrY3dIue4l79myHLA=;
+        b=Wd74GKxaWf7SYHvXY2Hs/MezybGlOXFz2DkmVulHiTXqea91keWKOWIdtHIqyUVWMO
+         xI6YInah5YZW6ya5/xXxOwfm5mLq4iJwXIA4g66tFug8V7TbvjuRYR9C3emGkykcs9ze
+         PO7zZ65R/iKdlJRSjHK0+956vvOFwmWqSgHgJtSh3s0KpT9KiOMPFV5FPNQpgNJmk9GO
+         QoPdMs7dYd3AmC5e47GYkQesdQnLf6uaFL5LemQTHMdTrdd3ABXvi0j4sf8kFnRWq3Gn
+         gTknYYHN4sElHBIPAqxrb8KPXCfXT86bOhqhUkgeykxXaro/aePvvtDOmvr+yBJOsp4k
+         THdw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9+A72WYbT5oVSsSCgclU7NZOfl7qlllCqq3oVEJOiDGXw46DnrvxeUwloGbC3b4r5pGUDv5sdSoWN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDlyifUzi7hXfV8poi6zOJBB7KM16fRQJx1lWtECmpunwwmfwx
+	CSOuNPzwGDXjrXJ1TO4c4/DFjKxpFqB21u2zEyMWOGd3iJLdkngp0Zmb5rqBP0bMc7MAP6E/dRn
+	6rwuvOWuB+G6vwTTkUwlrZ9fRSXGQD4F2abPwrEd6VQ==
+X-Gm-Gg: ASbGnct/BjoU+t7NF1h+6J3tVC8LZ9YB79KIj+Z/UnCsTuJ/36PEv+gPFFBsBW1Obfp
+	UQowg/7pk28OyjcGUTAY5FzVlBIO2lWi49KlS5zXZ9Ufn8vH91SV02jIkT6YeQLR4SxF0yEb/t2
+	CweoxlIGXJlnphFitQFe6yQngho4vbgsmbX8d9ep5moztY2Wr9FOjEZEQrDCKEngwZrGgkvTirt
+	VmJYjs=
+X-Google-Smtp-Source: AGHT+IEg/39vWPjh633ZUj8UqZLuNkeQ4zJb+DeEXqhdOGqkb2UzJv4loDelR2kMaTSHX23IkdKGCBQxVkP3ySeashA=
+X-Received: by 2002:a05:651c:4ca:b0:32b:755e:6cd7 with SMTP id
+ 38308e7fff4ca-3305509f9c8mr19310751fa.32.1752348428638; Sat, 12 Jul 2025
+ 12:27:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250710002047.1573841-1-ksk4725@coasia.com>
+In-Reply-To: <20250710002047.1573841-1-ksk4725@coasia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 12 Jul 2025 21:26:57 +0200
+X-Gm-Features: Ac12FXwfRBs5js5oSquCaRb4DKz10a2pVgF5CqiS_5Na7OWkjOlWh-jR8X6bLJY
+Message-ID: <CACRpkdaxAr8i-AByUsxnBmoSNtEDvik3VFvxAzk525GD=pH97Q@mail.gmail.com>
+Subject: Re: [PATCH 00/16] Add support for the Axis ARTPEC-8 SoC
+To: ksk4725@coasia.com
+Cc: Jesper Nilsson <jesper.nilsson@axis.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Tomasz Figa <tomasz.figa@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, kenkim <kenkim@coasia.com>, 
+	Jongshin Park <pjsin865@coasia.com>, GunWoo Kim <gwk1013@coasia.com>, 
+	HaGyeong Kim <hgkim05@coasia.com>, GyoungBo Min <mingyoungbo@coasia.com>, 
+	SungMin Park <smn1196@coasia.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, 
+	Shradha Todi <shradha.t@samsung.com>, Ravi Patel <ravi.patel@samsung.com>, 
+	Inbaraj E <inbaraj.e@samsung.com>, Swathi K S <swathi.ks@samsung.com>, 
+	Hrishikesh <hrishikesh.d@samsung.com>, Dongjin Yang <dj76.yang@samsung.com>, 
+	Sang Min Kim <hypmean.kim@samsung.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-arm-kernel@axis.com, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, soc@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-p=
-inctrl.git for-next
-branch HEAD: f2dd69908b3a456cefdfed2993ff0c878d3a9175  MAINTAINERS: add Cl=
-=C3=A9ment Le Goffic as STM32 HDP maintainer
+Hi Hakyeong,
 
-elapsed time: 1213m
+thanks for your patch!
 
-configs tested: 128
-configs skipped: 4
+On Thu, Jul 10, 2025 at 2:20=E2=80=AFAM <ksk4725@coasia.com> wrote:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> Add basic support for the Axis ARTPEC-8 SoC.
+> This SoC contains four Cortex-A53 CPUs and other several IPs.
+>
+> Patches 1 to 10 provide the support for the clock controller,
+> which is similar to other Samsung SoCs.
+>
+> The remaining patches provide pinctrl support and
+> initial device tree support.
+>
+> Hakyeong Kim (9):
+>   dt-bindings: clock: Add ARTPEC-8 CMU bindings
+>   clk: samsung: Add clock PLL support for ARTPEC-8 SoC
+>   clk: samsung: artpec-8: Add initial clock support
+>   clk: samsung: artpec-8: Add clock support for CMU_CMU block
+>   clk: samsung: artpec-8: Add clock support for CMU_BUS block
+>   clk: samsung: artpec-8: Add clock support for CMU_CORE block
+>   clk: samsung: artpec-8: Add clock support for CMU_CPUCL block
+>   clk: samsung: artpec-8: Add clock support for CMU_FSYS block
+>   clk: samsung: artpec-8: Add clock support for CMU_PERI block
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                         haps_hs_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250712    gcc-10.5.0
-arc                   randconfig-002-20250712    gcc-13.4.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                          gemini_defconfig    clang-20
-arm                         lpc18xx_defconfig    clang-21
-arm                   randconfig-001-20250712    gcc-8.5.0
-arm                   randconfig-002-20250712    gcc-10.5.0
-arm                   randconfig-003-20250712    clang-21
-arm                   randconfig-004-20250712    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250712    gcc-12.3.0
-arm64                 randconfig-002-20250712    gcc-12.3.0
-arm64                 randconfig-003-20250712    gcc-8.5.0
-arm64                 randconfig-004-20250712    gcc-13.4.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250712    gcc-14.3.0
-csky                  randconfig-002-20250712    gcc-11.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250712    clang-21
-hexagon               randconfig-002-20250712    clang-18
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250712    clang-20
-i386        buildonly-randconfig-002-20250712    gcc-11
-i386        buildonly-randconfig-003-20250712    gcc-12
-i386        buildonly-randconfig-004-20250712    gcc-12
-i386        buildonly-randconfig-005-20250712    gcc-12
-i386        buildonly-randconfig-006-20250712    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-21
-loongarch             randconfig-001-20250712    gcc-15.1.0
-loongarch             randconfig-002-20250712    gcc-14.3.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                           gcw0_defconfig    clang-21
-mips                           ip27_defconfig    gcc-15.1.0
-mips                         rt305x_defconfig    clang-21
-mips                           xway_defconfig    clang-21
-nios2                         10m50_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250712    gcc-11.5.0
-nios2                 randconfig-002-20250712    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250712    gcc-8.5.0
-parisc                randconfig-002-20250712    gcc-12.4.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                      ep88xc_defconfig    gcc-15.1.0
-powerpc                 linkstation_defconfig    clang-20
-powerpc                  mpc866_ads_defconfig    clang-21
-powerpc                      ppc64e_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250712    gcc-15.1.0
-powerpc               randconfig-002-20250712    gcc-8.5.0
-powerpc               randconfig-003-20250712    clang-21
-powerpc                    sam440ep_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250712    gcc-8.5.0
-powerpc64             randconfig-002-20250712    clang-21
-powerpc64             randconfig-003-20250712    clang-19
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250712    gcc-8.5.0
-riscv                 randconfig-002-20250712    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250712    clang-21
-s390                  randconfig-002-20250712    clang-21
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                     magicpanelr2_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250712    gcc-15.1.0
-sh                    randconfig-002-20250712    gcc-14.3.0
-sh                           se7751_defconfig    gcc-15.1.0
-sh                             sh03_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250712    gcc-13.4.0
-sparc                 randconfig-002-20250712    gcc-15.1.0
-sparc64               randconfig-001-20250712    clang-20
-sparc64               randconfig-002-20250712    gcc-14.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250712    gcc-12
-um                    randconfig-002-20250712    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250712    gcc-12
-x86_64      buildonly-randconfig-002-20250712    gcc-12
-x86_64      buildonly-randconfig-003-20250712    clang-20
-x86_64      buildonly-randconfig-004-20250712    clang-20
-x86_64      buildonly-randconfig-005-20250712    gcc-12
-x86_64      buildonly-randconfig-006-20250712    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250712    gcc-8.5.0
-xtensa                randconfig-002-20250712    gcc-8.5.0
+Out of the 9 patches there are 7 patches related to "CMU" without
+any explanation or even expansion of this acronym.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Camera Management Unit? I think I'm not supposed to
+guess. Is is an Axis-custom piece of hardware? (Would make
+sense.)
+
+Please expand this acronym and state clearly that (if this
+is a correct assumption) that you are not supplying any
+bindings and even less a driver for the "CMU" thing, just the
+clocks. (That's fine the actual CMU can come later, but
+it should be clear *what* it is.)
+
+Yours,
+Linus Walleij
 
