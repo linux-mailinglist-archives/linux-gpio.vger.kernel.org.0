@@ -1,145 +1,189 @@
-Return-Path: <linux-gpio+bounces-23199-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23200-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59C35B03433
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 03:38:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 859D2B0363D
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 07:46:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A148B3B6564
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 01:38:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3F0C162127
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 05:46:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 200F918C031;
-	Mon, 14 Jul 2025 01:38:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04F4F1EFF9B;
+	Mon, 14 Jul 2025 05:45:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCiDyx0h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c++Zmpjn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE722E630;
-	Mon, 14 Jul 2025 01:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E3D19A;
+	Mon, 14 Jul 2025 05:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752457102; cv=none; b=hQiAcTULYQHoCmaCJ6MJoTsqrO0FYMzG1TonZwCJwMEoZJKPmuHcxFwbfPFS5Ko0GTTWHukHSs1kf+AHwKMHCe09ur+M6UwtwLLZGDTgokKfWkJkChOIeMzYUQqxEmfTe9+fsxR+6lVDqocmqA0SEDuUHAan+26bPYU2rKlQDSM=
+	t=1752471954; cv=none; b=TQR/wiw0GSFXxgPLk91QSRWEZDB10EL1R0EjcsP6MVOpHXQq8OIo5lzJ46askLl/q0ALuwZPCGPZenrJ0DHej3aaLWPlsxhBrFnxX8I6Pe70nrPlY8koM1sm3cQY8vlvTG6y4Wf2Xl0vXwlnkUjzosjdthXV5POP4NjGzDdRXuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752457102; c=relaxed/simple;
-	bh=DHusJ3vyligIBarK8AcXZdKTmRrphxVq4ktA+nGAWI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sfG/VxMGCwXfZ6Mfko6mm9MLcxPeX8xpJK31rngQlYeYeDpjHz5+YEqC4zTq3TueIkPH7buyOkgFmqmYw6LsMaXWj3i8bM3jlwZljf7ufEQA4GEDxQ7HgtEx1eQH3QAkiq+P9Ndo17NXi++WdCfCgd1uv4y8yJodlrqD/qZBMIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCiDyx0h; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1752471954; c=relaxed/simple;
+	bh=6z8Sp3Tr8iV1COqe+xw273i57IQTfJG7JA5LvjkRnQE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lkM1VeVaHZIh1uex/wp2q2Fo/z7W4chwSXGU7g7BKMgH87nx7e0E2qj+KAFWXhbx1qeYnd5BBLEouy/D0syzSpUVQ7+nWunxEagBq3c/yD/yCEiXzuzUWyLidd47AzPGduPINpuoePbxfq8VFhBacCzoKM3b7KryLDWMsn+AlPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c++Zmpjn; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234d3261631so29370745ad.1;
-        Sun, 13 Jul 2025 18:38:21 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b6a349ccso4804041e87.0;
+        Sun, 13 Jul 2025 22:45:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752457101; x=1753061901; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CtcreD6AJjdJvbgPMY2aPGi0VXiodaMP38me0CGQ908=;
-        b=UCiDyx0hIAWjLBzVlTfe74nwQ81doQqiVMy+C4HEHTL3Bo5UN36pNq2lkGcCV8W9K/
-         5DVyqwNGZ5JGkeTXc5cVvPnUHdq41BEQckWmnECHdk2SUCHvl8JJctFOn55sBsvyJus0
-         g+sD1tForp0JEBMFUvBdI4WFg2BG7XXl8i6EDeO7KndHf5o9ioM9RNubMB6YQfgcSZKB
-         NoeLB3AVs7dkaahBQZ2s8QQNbhHNvq+CPeqRNIABpnjUUAvzwNRSKmNN+4+o8wGZ0X9W
-         EXqUQS7CA/hjefQIFAu/IW5eLKSsK2xczx/+0RzRUPbjToTZfCGXOoJotYXd74vXICVU
-         mSng==
+        d=gmail.com; s=20230601; t=1752471951; x=1753076751; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pVTYNalbBM5olFEChg+MjuhuKNcUdjwiKE1Nx8DyHVc=;
+        b=c++Zmpjnhwy7wO5lCXM5aMRM8ON0u6EZEu6G/JV36xwDYlsOxComlpPwmn8qtvSh7X
+         sN5ZRWfDO1iW4m6Ue9T/800CMD9WvVsmJ/cU2VdAPrYMBluNHNfiHgZD0mRVdUfg0yhh
+         oPLwvCh7MERVcevIs9ALUQnq/lKjpXcDOBvrC46V/ORbzK4vuivbhXOyX/6sf8uWDXTk
+         dIoUk3aK/CO+VPkYRzeoMgdJxLfZbNOMW2Cx9voHzBbF5gyaFK9D0bqc4H5+3R0fG10l
+         FlJfh216e8VCkB3w7WJHZAoQEQ6Nz3qbtsenHoc/SFjVTBY7gnNHGUnEwvlKtni5gTCe
+         7D1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752457101; x=1753061901;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CtcreD6AJjdJvbgPMY2aPGi0VXiodaMP38me0CGQ908=;
-        b=Oljyz5Sc8/1BtZWdbSJk3SDBEOzQIuv7Dxso4KG9vMEAJ0+r5nX7fjPbuld7Wb4jpz
-         iBBQJs9kAwpz2sEe8xpx9J9qdlkbR+FiyOopQVon+HdAhKKvmBfK0FX5cdpBM8yf1YRd
-         Zhav7pNj89CN7m84FEvUUOMZHBu7MG969/e1paKhYBv+2LsXiWg827+5NJ/h4Bllu5Tm
-         X8fJOGGpqzu5AK5IqWZMXJhUV+9ur4zYC+BkmRqiAU5+nTZMSFE34U3VH4d7SACkaJes
-         8CChA3ap2mGiTjhwV0c7roKR8tLPA4lzpMw3otGu2ZUh6+s4fqyhYOWRcwbs1xlLMe8x
-         GImw==
-X-Forwarded-Encrypted: i=1; AJvYcCVD5RJ2Il201ODSWong10sd7w3T0/hJ+guJfJMW8OGG4Nrtpa7ZMSPe6JqO5qxkIFdbtw/p8ztUJyiS@vger.kernel.org, AJvYcCXzursX3SkkLX7VOzNMcprQ9bER3yJWHFlzHI+0B1y6oN3sWD/UfXMs7gzfRBPn6EMX0Olsvg64uXIF5lqq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgqXlctAAUkRmqXea8q8GGlCSMb2HYTVqRmYbxg3VSN6KDkswa
-	SM2vL3wLhDBMsgvWe7fda8d0KprTGa88QD9asVDtenPJRTQG8a+mrCqx
-X-Gm-Gg: ASbGncsGD3cT1sf0n96BuOYU7vbGStSeXP3kGZitsaAnuzfaIG3VMez+D5pt6jeLssQ
-	cQYkabotRG82qtLhW1IlPii8Lb5Bc8wl4pUQHvEiOo+H/UfugEsDtr7oCG83hOF+0dnT2DweMC8
-	0BC370TqGWMxO0AWO75Ods6z81dQxONKO6NAHGJ82Ka9sd6gxkSpughIc3lJ5nAzfmg41mybza4
-	fZn9fslllG74yWHiwfbn3zg9aH1bGRwzYftV0ic8ZI3WUGhruiZEyCc8jC8T0Aiz+lGxvX4LM1f
-	nCUxYzJeOiWBaoHPVvldZRgaO6zZWdq9p+obuMCON60RdTrp27jf+GPzYxA64la4Y8lrFm6jFyA
-	TBSmolviat+46GCbckvqi7gv50e0W1dx+dkfBM5XtVi+clER1wQ==
-X-Google-Smtp-Source: AGHT+IEIRUYRqdI+zg7zKmJp6H3n+T7xR/d9+UN+LenXlPemYbXlm4SkmvEEau4mVAJEmnAi/H+H7A==
-X-Received: by 2002:a17:903:46cd:b0:235:655:11aa with SMTP id d9443c01a7336-23dede92f44mr173918115ad.39.1752457100589;
-        Sun, 13 Jul 2025 18:38:20 -0700 (PDT)
-Received: from rigel (61-68-193-107.tpgi.com.au. [61.68.193.107])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de4359b6fsm81283295ad.212.2025.07.13.18.38.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Jul 2025 18:38:19 -0700 (PDT)
-Date: Mon, 14 Jul 2025 09:38:13 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 00/10] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-Message-ID: <20250714013813.GA12284@rigel>
-References: <20250704-gpio-sysfs-chip-export-v4-0-9289d8758243@linaro.org>
- <CAMRc=Mc7HaVjchDWN_oWUuqgVZbj3ZVYvU-bwiA+ZUH+0gEXSQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1752471951; x=1753076751;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pVTYNalbBM5olFEChg+MjuhuKNcUdjwiKE1Nx8DyHVc=;
+        b=IyA+7uojjNX+mlcazBXKaguB0IkqBX1Z4/dCMuFHgC2vryJr4t7gbc9OwlKlp/J29C
+         ZutzSxovwcROF2bNpxtyXaW4eR4qY63kG/HcwZQ7wrbQEc29PShueJ3aSH9KNoA6NchY
+         4jxWelE+nEyA5j9PoCk3VsOvi0wwxhWivNjH0DF8ckMDw7mYjk4ON5VZVB7flgE5O7tM
+         x+LkResBbtLAyG1NQ5Dn+3r8CZwQzExdgbrl409ZkEHRsWj+ytIK1jZtQSX3xQ3+MNOS
+         FhrXgUqngODiwwM+dLhelyCKoEieYZTYixw7kDzeKk7jfJrBhjPkVGKC9TWcB6oZnZDO
+         R34g==
+X-Forwarded-Encrypted: i=1; AJvYcCVArAsY7pKo4JQt7rjkUY43p5+8hL0g8FY4RjsWhO911Li9K0eCogY7lgbXHqnytAHI3wcakM0LK0jcUow=@vger.kernel.org, AJvYcCVo64v7fb0vpKLUQrH4n86T8Z3JvP8nCN6mkzZblODxSPz1BnJZt60ytwPM6U88CGEy3QrdzDR/VnYd@vger.kernel.org, AJvYcCWm4iTnpPKaGBYegCNa2nArwG8GIxwI6Ix1InBID34FBu99Z4GqP6pmTaZZlmQECR72rGgbP2bpIhOrwg==@vger.kernel.org, AJvYcCXBhMOq3jomlM0brQ6+R84hGbArXY+BJrsuDNxiLLOrI4xc4PUitn1Q56JSVh8gBFFpKqmIgMDQDccT/qKC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpLP9FIbm3RhAe9RmTJ6ixRKpQauOxt3UA+sjAHCwxs95YZtZl
+	IfTCbxzcjegP/Mk3zoqi7iNt4bYab4otdgSYZE6SPArXtLO9RrTtGnps7wntAbow7cNP11llODl
+	AUNBQoQ+TD3fYeIvCpVvjPiflScLOaRo=
+X-Gm-Gg: ASbGncsgeBY3sQ4a3f1t/1hSvSZZDHpshQK8OldOXtoZYBwM22nV8QM9Mya1b3Rne3V
+	XOFTOtrOEzwRyDEKdPjsL8KtDBAU3+3cpEKIHeGztveqivm9PO3KTlGJYi4Tur3VJdPDsniST5d
+	/kUWAbwnJFu1zHLg/ZbVqFuBh43vDg9t0qTnFpuW97Kv9wQNT/CW5GDVCxk1teetAqqh7vxRwgy
+	j2S9Fk=
+X-Google-Smtp-Source: AGHT+IEeFJTEdcgxGRq7MSRIyL+pUGzAE+SuHtAzHjgTjInquw6BxQB4oD1jE6z8Ny+HIzeJdEcgoGSVQf6JVav6crA=
+X-Received: by 2002:a05:6512:3a86:b0:553:291f:92d with SMTP id
+ 2adb3069b0e04-55a04642322mr3412376e87.57.1752471951120; Sun, 13 Jul 2025
+ 22:45:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mc7HaVjchDWN_oWUuqgVZbj3ZVYvU-bwiA+ZUH+0gEXSQ@mail.gmail.com>
+References: <20250608-tegra186-pinctrl-v2-0-502d41f3eedd@gmail.com>
+ <20250608-tegra186-pinctrl-v2-2-502d41f3eedd@gmail.com> <yw2uglyxxx22d3lwyezy34wdniouu32zppfgwqs5omny3ge5zd@iuqo4qmi55a2>
+ <CACRpkdZha_ucjWvP_NQ+z2vbD65Y3u7Q0U57NYbJ=vqQ6uPGGA@mail.gmail.com>
+ <yslfabklduaybg255d3ulaxmzpghyj54zdfeqkx3oxgisxf6fo@2wecuqpvvefc>
+ <CALHNRZ8jq++KVKxKP2-GwMA6CauP=cM2_wt==MRAV4mOzK2kxw@mail.gmail.com> <xc72g7j7png443pjxu2wpsuqofgrpxvn43emkt3rv5qrjzf7vt@qzvsiy3eakub>
+In-Reply-To: <xc72g7j7png443pjxu2wpsuqofgrpxvn43emkt3rv5qrjzf7vt@qzvsiy3eakub>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 14 Jul 2025 00:45:39 -0500
+X-Gm-Features: Ac12FXybSVq_CahVKZ6mV4emprpB0sz1OeXMOs2OzYzElXfBnQGbjICI8iX-vqs
+Message-ID: <CALHNRZ928+=85FbvfKt1c4VX7RudU7ehuOa6wwLj8JJNz+=W-A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Add Tegra186 pinmux driver
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 13, 2025 at 10:48:03AM +0200, Bartosz Golaszewski wrote:
-> On Fri, Jul 4, 2025 at 2:58 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Jul 3, 2025 at 2:08=E2=80=AFAM Thierry Reding <thierry.reding@gmail=
+.com> wrote:
+>
+> On Mon, Jun 30, 2025 at 02:23:42PM -0500, Aaron Kling wrote:
+> > On Wed, Jun 11, 2025 at 10:23=E2=80=AFAM Thierry Reding
+> > <thierry.reding@gmail.com> wrote:
+> > >
+> > > On Wed, Jun 11, 2025 at 08:58:49AM +0200, Linus Walleij wrote:
+> > > > On Tue, Jun 10, 2025 at 11:40=E2=80=AFAM Thierry Reding
+> > > > <thierry.reding@gmail.com> wrote:
+> > > >
+> > > > > One thing that's not clear from this patch set is whether we actu=
+ally
+> > > > > need the Tegra186 pinmux driver, or you're only adding it because=
+ it
+> > > > > happens to be present in a 5.10 downstream driver. Do you actuall=
+y have
+> > > > > a requirement for setting pins dynamically at runtime? Do you nee=
+d to be
+> > > > > able to set a static configuration at boot that can't be set usin=
+g some
+> > > > > earlier bootloader/firmware mechanism?
+> > > >
+> > > > Actually, speaking as the maintainer of pin control I hear the foll=
+owing
+> > > > a lot:
+> > > >
+> > > > - We don't need pin control, the BIOS/firmware deals with it
+> > > > - We don't need runtime pin control, the BIOS/firmware deals
+> > > >   with it
+> > > > - We don't need runtime pin control, static set-up should be
+> > > >   enough
+> > > >
+> > > > These are all enthusiastic estimates, but in practice, for any
+> > > > successful SoC we always need pin control. Either the BIOS
+> > > > firmware authors got things wrong or made errors (bugs) and
+> > > > there is no path to upgrade the firmware safely, or runtime
+> > > > usecases appear that no-one ever thought about.
+> > > >
+> > > > Aarons case looks like that latter.
+> > >
+> > > This was a long time ago now, but I have a vague recollection about
+> > > hardware engineers telling software engineers that muxing pins
+> > > dynamically at runtime wasn't safe for all pins and hence we had to
+> > > do static configuration during early boot.
+> > >
+> > > But then along came devkits with expansion headers and then people
+> > > started using scripts to mux pins to the right functions and such.
+> > >
+> > > > I think it'd be wise to send the message to any SoC system
+> > > > architects (or Linux base port overseer or whatever title
+> > > > this person may have) that a pin control driver is usually
+> > > > needed.
+> > > >
+> > > > The SCMI people heard the message and have added pin
+> > > > control into the specification for that firmware interface.
+> > >
+> > > I'd agree with you that there's plenty of evidence that we need these
+> > > drivers, so maybe I need to go back and look at what exactly the risk=
+s
+> > > are that come with this and maybe there's something we need to do to
+> > > avoid that (I'm thinking along the lines of certain pins being genera=
+lly
+> > > safe to mux at runtime, but not all).
+> > >
+> > > Thierry
 > >
-> > Following our discussion[1], here's a proposal for extending the sysfs
-> > interface with attributes not referring to GPIO lines by their global
-> > numbers in a backward compatible way.
-> >
-> > Long story short: there is now a new class device for each GPIO chip.
-> > It's called chipX where X is the ID of the device as per the driver
-> > model and it lives next to the old gpiochipABC where ABC is the GPIO
-> > base. Each new chip class device has a pair of export/unexport
-> > attributes which work similarly to the global ones under /sys/class/gpio
-> > but take hardware offsets within the chip as input, instead of the
-> > global numbers. Finally, each exported line appears at the same time as
-> > the global /sys/class/gpio/gpioABC as well as per-chip
-> > /sys/class/gpio/chipX/gpioY sysfs group except that the latter only
-> > implements a minimal subset of the functionality of the former, namely:
-> > only the 'direction' and 'value' attributes and it doesn't support event
-> > polling.
-> >
-> > The series contains the implementation of a parallel GPIO chip entry not
-> > containing the base GPIO number in the name and the corresponding sysfs
-> > attribute group for each exported line that lives under the new chip
-> > class device as well as a way to allow to compile out the legacy parts
-> > leaving only the new elements of the sysfs ABI.
-> >
-> > This series passes the compatibility tests I wrote while working on the
-> > user-space compatibility layer for sysfs[2].
-> >
-> > [1] https://lore.kernel.org/all/CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com/
-> > [2] https://github.com/brgl/gpio-sysfs-compat-tests
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> 
-> Alright, so what are we doing about this? Should I queue these patches
-> for v6.17? Kent, any additional comments?
+> > So what's the path forward on this? Will this series be used, or is
+> > Nvidia going to bring back the pinmux scripts and regenerate
+> > everything in a new series?
+>
+> Let's bring back the pinmux scripts. I don't have much time to look into
+> this right now. If you have some spare cycles to take a stab, that'd be
+> great.
+>
+> For most of these newer chips it should be far less work to get this
+> going because we really only need the SoC bits, for which all of the
+> information is available. For earlier chips where all of the default
+> configuration had to be done by Linux there was a lot more generation
+> needed, but newer chips do all of the default settings in early
+> firmware, so we don't need a whole lot of pinmuxing in DT, only where
+> it deviates from the defaults.
 
-Nothing beyond what I've already said.
+I started looking at the pinmux scripts a few days ago, but updating
+the pinmux driver import/export for the t194 style spiderwebbed out of
+control quickly. I expected it to be hairy, but that was an
+underestimation. Doesn't help that I'm not the most proficient at
+python either. I'll continue the effort later, but if someone with
+more familiarity wants to try, it might be quicker.
 
-Cheers,
-Kent.
+Aaron
 
