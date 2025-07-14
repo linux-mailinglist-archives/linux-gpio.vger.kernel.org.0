@@ -1,174 +1,1057 @@
-Return-Path: <linux-gpio+bounces-23232-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23233-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 212CBB04579
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 18:30:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5B4BB04857
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 22:20:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 498A43BE1D4
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 16:30:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC53F4A5590
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 20:20:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEB9F26136D;
-	Mon, 14 Jul 2025 16:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4627F23185E;
+	Mon, 14 Jul 2025 20:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UqK26IC3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6jlabKW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2C57262A;
-	Mon, 14 Jul 2025 16:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA04D19E97A;
+	Mon, 14 Jul 2025 20:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752510636; cv=none; b=EY/cPgJ3KjUS86hq1eqxIf5swPt0XVpL1PWTosjDwVWQQ3F25Gy5/sWll3KaMFCTGyV0f4AINwvsmherIAyFE/rAsOWG0w7Z4Az1ZTkhLHZocVOwfkzD6Kml1Ilu/OzeG5Uq9kzz6OWkoCUe3QMU7+hGQnYhHcw99mPsPdpwo4Y=
+	t=1752524410; cv=none; b=i+yBiOUWsNZEEX53oTwvA6qFJHHBmd6WmqvcIjARURBxtpxF4Sc0eK2f53ZABakPuIcx8X+Fju+CdXELTVUDmMfHaIygZ8kb8W54z2y/TCsN9L1cjSDUWNdb+qcf16qec+lATZOTURaI75S1c9DXGLAFw17lOyQmjOpWmxNNTQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752510636; c=relaxed/simple;
-	bh=lpG4IZ6Ioq/EzhqQaI7oezuh5rcGhQxbRRwnUfAZ4QU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/0GrvvP7tF4q8u2naAoTVIR85CsfWLoZHVdyOZh//LTMfv2Mdq2hLyXYu3RTmkWauQKiSaKej3rLIS4gBY87izOYOlV6vtNt4e5lSBrq5dqxMCm4NLTKww4Rd4K/ZxnLbJkds/2QLWlFG7kTYfLI2JKTylsALeIcGH3D1r5SpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=UqK26IC3; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id C7AC11127;
-	Mon, 14 Jul 2025 18:30:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1752510601;
-	bh=lpG4IZ6Ioq/EzhqQaI7oezuh5rcGhQxbRRwnUfAZ4QU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UqK26IC3nrteCaDdSqP4/6c5LRJvIFIKHrPP5hoaIEntyWXbglU0Ud7wrmyYOE09Q
-	 b52LWzlDeplUKoLkikXQ7jdTUw2wUxSueHsUV8heHEKyg0qqzuOpkW5m5S3yZnR3vs
-	 htRQ7bNTqyiHfISZ57ALngPRq/z9fJTNvQSmqMFs=
-Date: Mon, 14 Jul 2025 19:30:01 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1752524410; c=relaxed/simple;
+	bh=Cp/nyvxWYU1fOl5O08vvgXoxFuGY/YhcVuJFWYgzr7o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X9Wfjr3SJTxRqaCeOieULnsU5IvCp52tRk96DQeui/la7zC5lF8rY16C+HRkg4HTZyZJ78PEKk2xsEx3jzJfO+3/zbfsG6ONlgvDnWm94enQ1ZpB6IMoQwyYugaLPHckGtd5dx/GofKcxy9q7V+QPDOu5o+As2/e87EvU+B2CnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6jlabKW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E17C4CEED;
+	Mon, 14 Jul 2025 20:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752524409;
+	bh=Cp/nyvxWYU1fOl5O08vvgXoxFuGY/YhcVuJFWYgzr7o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=A6jlabKWnbtiOWL2mE/iTI8H8P/juLDFfd6ADIB3gMDjbr93Jo5FWGvnXdzeliSZL
+	 p2pQ54uugpeSLSlUdIlogyxTwmDrU1DygU5zT6voL00WLeBesSzKdMIXG3umnH8eYr
+	 3t3UBa4j/XFeKxOPKn3L62TYlWHWRsdnAHAXSUFi323s9pPvwo4SX1EccNsLyJOLq+
+	 v9BTKQFpcPBYk/v17N/PiDuYyr2JEmAcLpOCQMcFaMxcbNjAfFSjhoCiudY2z11CQx
+	 gT6S5dxzehtv3uUyYxTc/0TN/fzrC+FYTnLIe1K+d9Y4Xjb+r7GXd6fl8Sr3DKSJNw
+	 NcAIXdaCxgXFw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 12/12] media: uvcvideo: Do not create MC entities for
- virtual entities
-Message-ID: <20250714163001.GB20231@pendragon.ideasonboard.com>
-References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
- <20250605-uvc-orientation-v2-12-5710f9d030aa@chromium.org>
- <20250629180534.GN24912@pendragon.ideasonboard.com>
- <CANiDSCvcQ9MA+WBMQTpUzSxDLNiKpvaHsb-pDHTuiUQekgXvQA@mail.gmail.com>
- <CANiDSCtq0cr1LgFCgvdBtWcE3z1MWZEjc0e1wTH_BYPETC+s4Q@mail.gmail.com>
- <20250714143617.GK8243@pendragon.ideasonboard.com>
- <CANiDSCud66tcaODuVA1TreEQ3k8u4k-6ghzRQedTPFcT3j+9VQ@mail.gmail.com>
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Lee Jones <lee@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2] dt-bindings: gpio: Create a trivial GPIO schema
+Date: Mon, 14 Jul 2025 15:19:51 -0500
+Message-ID: <20250714201959.2983482-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANiDSCud66tcaODuVA1TreEQ3k8u4k-6ghzRQedTPFcT3j+9VQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 14, 2025 at 06:04:50PM +0200, Ricardo Ribalda wrote:
-> On Mon, 14 Jul 2025 at 16:36, Laurent Pinchart wrote:
-> > On Tue, Jul 08, 2025 at 08:28:21AM +0200, Ricardo Ribalda wrote:
-> > > On Tue, 1 Jul 2025 at 13:20, Ricardo Ribalda wrote:
-> > > > On Sun, 29 Jun 2025 at 20:06, Laurent Pinchart wrote:
-> > > > > Hi Ricardo,
-> > > > >
-> > > > > Thank you for the patch.
-> > > > >
-> > > > > I would use "software entities" and not "virtual entities" in the
-> > > > > subject line and everywhere else, as those entities are not virtual.
-> > > > >
-> > > > > On Thu, Jun 05, 2025 at 05:53:05PM +0000, Ricardo Ribalda wrote:
-> > > > > > Neither the GPIO nor the SWENTITY entities form part of the device
-> > > > > > pipeline. We just create them to hold emulated uvc controls.
-> > > > > >
-> > > > > > When the device initializes, a warning is thrown by the v4l2 core:
-> > > > > > uvcvideo 1-1:1.0: Entity type for entity SWENTITY was not initialized!
-> > > > > >
-> > > > > > There are no entity function that matches what we are doing here, and
-> > > > > > it does not make to much sense to create a function for entities that
-> > > > > > do not really exist.
-> > > > >
-> > > > > I don't agree with this. The purpose of reporting entities to userspace
-> > > > > through the MC API is to let application enumerate what entities a
-> > > > > device contains. Being able to enumerate software entities seems as
-> > > > > useful as being able to enumerate hardware entities.
-> > > >
-> > > > What function shall we use in this case? Nothing here seems to match a
-> > > > software entity
-> > > > https://www.kernel.org/doc/html/latest/userspace-api/media/mediactl/media-types.html
-> > > >
-> > > > Any suggestion for name?
-> > > > Shall we just live with the warning in dmesg?
-> > >
-> > >  I just realised that if/when we move to the control framework, the
-> > > software entity will be gone.... So to avoid introducing a uAPI change
-> > > that will be reverted later I think that we should keep this patch.
-> >
-> > You know my opinion about moving to the control framework, so that's not
-> > a very compelling argument :-)
-> 
-> Correct me if I am wrong, your opinion is that it will take too much
-> work, not that it can't be done or that it is a bad idea.
+Many simple GPIO controllers without interrupt capability have the same
+schema other than their compatible value. Combine all these bindings
+into a single schema. The criteria to be included here is must use 2
+cells, have no interrupt capability, have 0 or 1 "reg" entries, and
+have no other resources (like clocks).
 
-My opinion is that it's not worth the time needed to write patches, nor
-the time needed to review them. It would be a big change, with risks of
-regressions, for minimal gain, if any. I don't know if it can be done,
-but I think it's a bad idea. Don't fix something that isn't broken, the
-patches backlog is big enough, let's focus on useful changes.
+Note that "ngpios" is now allowed in some cases it wasn't before and
+constraints on it have been dropped.
 
-> Will send a patch using MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER, but
-> when/if we use the control framework, please let me drop the swentity.
-> 
-> Thanks!
-> 
-> > We could use MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER, as that's the
-> > function already used by XUs, and the SWENTITY fulfills the same role as
-> > XUs in some devices.
-> >
-> > > > > > Do not create MC entities for them and pretend nothing happened here.
-> > > > > >
-> > > > > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > > > > ---
-> > > > > >  drivers/media/usb/uvc/uvc_entity.c | 10 ++++++++++
-> > > > > >  1 file changed, 10 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/media/usb/uvc/uvc_entity.c b/drivers/media/usb/uvc/uvc_entity.c
-> > > > > > index d1a652ef35ec34801bd39a5124b834edf838a79e..2dbeb4ab0c4c8cc763ff2dcd2d836a50f3c6a040 100644
-> > > > > > --- a/drivers/media/usb/uvc/uvc_entity.c
-> > > > > > +++ b/drivers/media/usb/uvc/uvc_entity.c
-> > > > > > @@ -72,6 +72,16 @@ static int uvc_mc_init_entity(struct uvc_video_chain *chain,
-> > > > > >  {
-> > > > > >       int ret;
-> > > > > >
-> > > > > > +     /*
-> > > > > > +      * Do not initialize virtual entities, they do not really exist
-> > > > > > +      * and are not connected to any other entities.
-> > > > > > +      */
-> > > > > > +     switch (UVC_ENTITY_TYPE(entity)) {
-> > > > > > +     case UVC_EXT_GPIO_UNIT:
-> > > > > > +     case UVC_SWENTITY_UNIT:
-> > > > > > +             return 0;
-> > > > > > +     }
-> > > > > > +
-> > > > > >       if (UVC_ENTITY_TYPE(entity) != UVC_TT_STREAMING) {
-> > > > > >               u32 function;
-> > > > > >
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+We could also do this for ones with interrupts, but that seems a bit
+more varied.
 
+v2:
+ - Add Cirrus EP7209
+ - Update references and MAINTAINERS
+---
+ .../devicetree/bindings/gpio/fcs,fxl6408.yaml |  59 ----------
+ .../bindings/gpio/gateworks,pld-gpio.txt      |  19 ---
+ .../bindings/gpio/gpio-clps711x.txt           |  28 -----
+ .../devicetree/bindings/gpio/gpio-lp3943.txt  |  37 ------
+ .../bindings/gpio/gpio-max77620.txt           |  25 ----
+ .../devicetree/bindings/gpio/gpio-moxtet.txt  |  18 ---
+ .../devicetree/bindings/gpio/gpio-palmas.txt  |  27 -----
+ .../bindings/gpio/gpio-pca9570.yaml           |  56 ---------
+ .../bindings/gpio/gpio-tpic2810.yaml          |  51 --------
+ .../devicetree/bindings/gpio/gpio-ts4800.txt  |  20 ----
+ .../devicetree/bindings/gpio/gpio-ts4900.txt  |  30 -----
+ .../devicetree/bindings/gpio/gpio-xgene.txt   |  22 ----
+ .../bindings/gpio/ibm,ppc4xx-gpio.txt         |  24 ----
+ .../bindings/gpio/loongson,ls1x-gpio.yaml     |  49 --------
+ .../bindings/gpio/nintendo,hollywood-gpio.txt |  26 -----
+ .../gpio/rockchip,rk3328-grf-gpio.yaml        |  50 --------
+ .../bindings/gpio/snps,creg-gpio.txt          |  21 ----
+ .../devicetree/bindings/gpio/ti,7416374.yaml  |  56 ---------
+ .../bindings/gpio/trivial-gpio.yaml           | 110 ++++++++++++++++++
+ .../devicetree/bindings/mfd/lp3943.txt        |   2 +-
+ .../bindings/powerpc/nintendo/wii.txt         |   4 -
+ .../devicetree/bindings/soc/rockchip/grf.yaml |   8 +-
+ MAINTAINERS                                   |   3 -
+ 23 files changed, 116 insertions(+), 629 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/fcs,fxl6408.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-ts4800.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-ts4900.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/ti,7416374.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/trivial-gpio.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpio/fcs,fxl6408.yaml b/Documentation/devicetree/bindings/gpio/fcs,fxl6408.yaml
+deleted file mode 100644
+index b74fa81e7d05..000000000000
+--- a/Documentation/devicetree/bindings/gpio/fcs,fxl6408.yaml
++++ /dev/null
+@@ -1,59 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/gpio/fcs,fxl6408.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Fairchild FXL6408 I2C GPIO Expander
+-
+-maintainers:
+-  - Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+-
+-properties:
+-  compatible:
+-    enum:
+-      - fcs,fxl6408
+-
+-  reg:
+-    maxItems: 1
+-
+-  "#gpio-cells":
+-    const: 2
+-
+-  gpio-controller: true
+-
+-  gpio-line-names:
+-    minItems: 1
+-    maxItems: 8
+-
+-patternProperties:
+-  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+-    type: object
+-    required:
+-      - gpio-hog
+-
+-required:
+-  - compatible
+-  - reg
+-  - gpio-controller
+-  - "#gpio-cells"
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    i2c {
+-        #address-cells = <1>;
+-        #size-cells = <0>;
+-
+-        gpio_expander_43: gpio-expander@43 {
+-            compatible = "fcs,fxl6408";
+-            reg = <0x43>;
+-            gpio-controller;
+-            #gpio-cells = <2>;
+-            gpio-line-names = "Wi-Fi_W_DISABLE", "Wi-Fi_WKUP_WLAN",
+-                              "PWR_EN_+V3.3_WiFi_N", "PCIe_REF_CLK_EN",
+-                              "USB_RESET_N", "USB_BYPASS_N", "Wi-Fi_PDn",
+-                              "Wi-Fi_WKUP_BT";
+-        };
+-    };
+diff --git a/Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt b/Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt
+deleted file mode 100644
+index d543fd1b8b23..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-Gateworks PLD GPIO controller bindings
+-
+-The GPIO controller should be a child node on an I2C bus.
+-
+-Required properties:
+-- compatible: Should be "gateworks,pld-gpio"
+-- reg: I2C slave address
+-- gpio-controller: Marks the device node as a GPIO controller.
+-- #gpio-cells: Should be <2>. The first cell is the gpio number and
+-  the second cell is used to specify optional parameters.
+-
+-Example:
+-
+-pld@56 {
+-	compatible = "gateworks,pld-gpio";
+-	reg = <0x56>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt b/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
+deleted file mode 100644
+index 0a304ad29d81..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Cirrus Logic CLPS711X GPIO controller
+-
+-Required properties:
+-- compatible: Should be "cirrus,ep7209-gpio"
+-- reg: Physical base GPIO controller registers location and length.
+-  There should be two registers, first is DATA register, the second
+-  is DIRECTION.
+-- gpio-controller: Marks the device node as a gpio controller.
+-- #gpio-cells: Should be two. The first cell is the pin number and
+-  the second cell is used to specify the gpio polarity:
+-    0 = active high
+-    1 = active low
+-
+-Note: Each GPIO port should have an alias correctly numbered in "aliases"
+-node.
+-
+-Example:
+-
+-aliases {
+-	gpio0 = &porta;
+-};
+-
+-porta: gpio@80000000 {
+-	compatible = "cirrus,ep7312-gpio","cirrus,ep7209-gpio";
+-	reg = <0x80000000 0x1>, <0x80000040 0x1>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-lp3943.txt b/Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+deleted file mode 100644
+index 80fcb7d70e13..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-TI/National Semiconductor LP3943 GPIO controller
+-
+-Required properties:
+-  - compatible: "ti,lp3943-gpio"
+-  - gpio-controller: Marks the device node as a GPIO controller.
+-  - #gpio-cells: Should be 2. See gpio.txt in this directory for a
+-                 description of the cells format.
+-
+-Example:
+-Simple LED controls with LP3943 GPIO controller
+-
+-&i2c4 {
+-	lp3943@60 {
+-		compatible = "ti,lp3943";
+-		reg = <0x60>;
+-
+-		gpioex: gpio {
+-			compatible = "ti,lp3943-gpio";
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-		};
+-	};
+-};
+-
+-leds {
+-	compatible = "gpio-leds";
+-	indicator1 {
+-		label = "indi1";
+-		gpios = <&gpioex 9 GPIO_ACTIVE_LOW>;
+-	};
+-
+-	indicator2 {
+-		label = "indi2";
+-		gpios = <&gpioex 10 GPIO_ACTIVE_LOW>;
+-		default-state = "off";
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-max77620.txt b/Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+deleted file mode 100644
+index 410e716fd3d2..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-max77620.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-GPIO driver for MAX77620 Power management IC from Maxim Semiconductor.
+-
+-Device has 8 GPIO pins which can be configured as GPIO as well as the
+-special IO functions.
+-
+-Required properties:
+--------------------
+-- gpio-controller : 	Marks the device node as a gpio controller.
+-- #gpio-cells : 	Should be two.  The first cell is the pin number and
+-			the second cell is used to specify the gpio polarity:
+-				0 = active high
+-				1 = active low
+-For more details, please refer generic GPIO DT binding document
+-<devicetree/bindings/gpio/gpio.txt>.
+-
+-Example:
+---------
+-#include <dt-bindings/mfd/max77620.h>
+-...
+-max77620@3c {
+-	compatible = "maxim,max77620";
+-
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt b/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
+deleted file mode 100644
+index 410759de9f09..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
++++ /dev/null
+@@ -1,18 +0,0 @@
+-Turris Mox Moxtet GPIO expander via Moxtet bus
+-
+-Required properties:
+- - compatible		: Should be "cznic,moxtet-gpio".
+- - gpio-controller	: Marks the device node as a GPIO controller.
+- - #gpio-cells		: Should be two. For consumer use see gpio.txt.
+-
+-Other properties are required for a Moxtet bus device, please refer to
+-Documentation/devicetree/bindings/bus/moxtet.txt.
+-
+-Example:
+-
+-	moxtet_sfp: gpio@0 {
+-		compatible = "cznic,moxtet-gpio";
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		reg = <0>;
+-	}
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-palmas.txt b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+deleted file mode 100644
+index 08b5b52a3ae0..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-Palmas GPIO controller bindings
+-
+-Required properties:
+-- compatible:
+-  - "ti,palams-gpio" for palma series of the GPIO controller
+-  - "ti,tps80036-gpio" for Palma series device TPS80036.
+-  - "ti,tps65913-gpio" for palma series device TPS65913.
+-  - "ti,tps65914-gpio" for palma series device TPS65914.
+-- #gpio-cells : Should be two.
+-  - first cell is the gpio pin number
+-  - second cell is used to specify the gpio polarity:
+-      0 = active high
+-      1 = active low
+-- gpio-controller : Marks the device node as a GPIO controller.
+-
+-Note: This gpio node will be sub node of palmas node.
+-
+-Example:
+-	palmas: tps65913@58 {
+-		:::::::::::
+-		palmas_gpio: palmas_gpio {
+-			compatible = "ti,palmas-gpio";
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-		};
+-		:::::::::::
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+deleted file mode 100644
+index 6f73961001b7..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
++++ /dev/null
+@@ -1,56 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/gpio/gpio-pca9570.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: PCA9570 I2C GPO expander
+-
+-maintainers:
+-  - Sungbo Eo <mans0n@gorani.run>
+-
+-properties:
+-  compatible:
+-    enum:
+-      - dlg,slg7xl45106
+-      - nxp,pca9570
+-      - nxp,pca9571
+-
+-  reg:
+-    maxItems: 1
+-
+-  gpio-controller: true
+-
+-  '#gpio-cells':
+-    const: 2
+-
+-  gpio-line-names:
+-    minItems: 4
+-    maxItems: 8
+-
+-  label:
+-    description: A descriptive name for this device.
+-
+-required:
+-  - compatible
+-  - reg
+-  - gpio-controller
+-  - "#gpio-cells"
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    i2c {
+-        #address-cells = <1>;
+-        #size-cells = <0>;
+-
+-        gpio@24 {
+-            compatible = "nxp,pca9570";
+-            reg = <0x24>;
+-            gpio-controller;
+-            #gpio-cells = <2>;
+-        };
+-    };
+-
+-...
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+deleted file mode 100644
+index 157969bc4c46..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
++++ /dev/null
+@@ -1,51 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/gpio/gpio-tpic2810.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: TPIC2810 GPIO controller
+-
+-maintainers:
+-  - Aswath Govindraju <a-govindraju@ti.com>
+-
+-properties:
+-  compatible:
+-    enum:
+-      - ti,tpic2810
+-
+-  reg:
+-    maxItems: 1
+-
+-  gpio-controller: true
+-
+-  "#gpio-cells":
+-    const: 2
+-
+-  gpio-line-names:
+-    minItems: 1
+-    maxItems: 32
+-
+-required:
+-  - compatible
+-  - reg
+-  - gpio-controller
+-  - "#gpio-cells"
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    #include <dt-bindings/gpio/gpio.h>
+-
+-    i2c {
+-        #address-cells = <1>;
+-        #size-cells = <0>;
+-        gpio@60 {
+-            compatible = "ti,tpic2810";
+-            reg = <0x60>;
+-            gpio-controller;
+-            #gpio-cells = <2>;
+-            gpio-line-names = "LED A", "LED B", "LED C";
+-        };
+-    };
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-ts4800.txt b/Documentation/devicetree/bindings/gpio/gpio-ts4800.txt
+deleted file mode 100644
+index 92ea9c8f6399..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-ts4800.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-* TS-4800 FPGA's GPIO controller bindings
+-
+-Required properties:
+-- compatible: Must be "technologic,ts4800-gpio".
+-- #gpio-cells: Should be two. The first cell is the pin number.
+-- reg: Physical base address of the controller and length
+-       of memory mapped region.
+-
+-Optional property:
+-- ngpios: See "gpio.txt"
+-
+-Example:
+-
+-gpio1: gpio {
+-	compatible = "technologic,ts4800-gpio";
+-	reg = <0x10020 0x6>;
+-	ngpios = <8>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-ts4900.txt b/Documentation/devicetree/bindings/gpio/gpio-ts4900.txt
+deleted file mode 100644
+index 3f8e71b1ab2a..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-ts4900.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-* Technologic Systems I2C-FPGA's GPIO controller bindings
+-
+-This bindings describes the GPIO controller for Technologic's FPGA core.
+-TS-4900's FPGA encodes the GPIO state on 3 bits, whereas the TS-7970's FPGA
+-uses 2 bits: it doesn't use a dedicated input bit.
+-
+-Required properties:
+-- compatible: Should be one of the following
+-		"technologic,ts4900-gpio"
+-		"technologic,ts7970-gpio"
+-- reg: Physical base address of the controller and length
+-       of memory mapped region.
+-- #gpio-cells: Should be two. The first cell is the pin number.
+-- gpio-controller: Marks the device node as a gpio controller.
+-
+-Optional property:
+-- ngpios: Number of GPIOs this controller is instantiated with,
+-  the default is 32. See gpio.txt for more details.
+-
+-Example:
+-
+-&i2c2 {
+-	gpio8: gpio@28 {
+-		compatible = "technologic,ts4900-gpio";
+-		reg = <0x28>;
+-		#gpio-cells = <2>;
+-		gpio-controller;
+-		ngpios = <32>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+deleted file mode 100644
+index 86dbb05e7758..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-APM X-Gene SoC GPIO controller bindings
+-
+-This is a gpio controller that is part of the flash controller.
+-This gpio controller controls a total of 48 gpios.
+-
+-Required properties:
+-- compatible: "apm,xgene-gpio" for X-Gene GPIO controller
+-- reg: Physical base address and size of the controller's registers
+-- #gpio-cells: Should be two.
+-	- first cell is the pin number
+-	- second cell is used to specify the gpio polarity:
+-		0 = active high
+-		1 = active low
+-- gpio-controller: Marks the device node as a GPIO controller.
+-
+-Example:
+-	gpio0: gpio0@1701c000 {
+-		compatible = "apm,xgene-gpio";
+-		reg = <0x0 0x1701c000 0x0 0x40>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt b/Documentation/devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt
+deleted file mode 100644
+index d58b3958f3ea..000000000000
+--- a/Documentation/devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-* IBM/AMCC/APM GPIO Controller for PowerPC 4XX series and compatible SoCs
+-
+-All GPIOs are pin-shared with other functions. DCRs control whether a
+-particular pin that has GPIO capabilities acts as a GPIO or is used for
+-another purpose. GPIO outputs are separately programmable to emulate
+-an open-drain driver.
+-
+-Required properties:
+-	- compatible: must be "ibm,ppc4xx-gpio"
+-	- reg: address and length of the register set for the device
+-	- #gpio-cells: must be set to 2. The first cell is the pin number
+-		and the second cell is used to specify the gpio polarity:
+-		0 = active high
+-		1 = active low
+-	- gpio-controller: marks the device node as a gpio controller.
+-
+-Example:
+-
+-GPIO0: gpio@ef600b00 {
+-	compatible = "ibm,ppc4xx-gpio";
+-	reg = <0xef600b00 0x00000048>;
+-	#gpio-cells = <2>;
+-	gpio-controller;
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
+deleted file mode 100644
+index 1a472c05697c..000000000000
+--- a/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
++++ /dev/null
+@@ -1,49 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/gpio/loongson,ls1x-gpio.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Loongson-1 GPIO controller
+-
+-maintainers:
+-  - Keguang Zhang <keguang.zhang@gmail.com>
+-
+-properties:
+-  compatible:
+-    const: loongson,ls1x-gpio
+-
+-  reg:
+-    maxItems: 1
+-
+-  gpio-controller: true
+-
+-  "#gpio-cells":
+-    const: 2
+-
+-  ngpios:
+-    minimum: 1
+-    maximum: 32
+-
+-required:
+-  - compatible
+-  - reg
+-  - gpio-controller
+-  - "#gpio-cells"
+-  - ngpios
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    gpio0: gpio@1fd010c0 {
+-        compatible = "loongson,ls1x-gpio";
+-        reg = <0x1fd010c0 0x4>;
+-
+-        gpio-controller;
+-        #gpio-cells = <2>;
+-
+-        ngpios = <32>;
+-    };
+-
+-...
+diff --git a/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+deleted file mode 100644
+index df63da46309c..000000000000
+--- a/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-Nintendo Wii (Hollywood) GPIO controller
+-
+-Required properties:
+-- compatible: "nintendo,hollywood-gpio"
+-- reg: Physical base address and length of the controller's registers.
+-- gpio-controller: Marks the device node as a GPIO controller.
+-- #gpio-cells: Should be <2>. The first cell is the pin number and the
+-  second cell is used to specify optional parameters:
+-   - bit 0 specifies polarity (0 for normal, 1 for inverted).
+-
+-Optional properties:
+-- ngpios: see Documentation/devicetree/bindings/gpio/gpio.txt
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells: Should be two.
+-- interrupts: Interrupt specifier for the controller's Broadway (PowerPC)
+-  interrupt.
+-
+-Example:
+-
+-	GPIO: gpio@d8000c0 {
+-		#gpio-cells = <2>;
+-		compatible = "nintendo,hollywood-gpio";
+-		reg = <0x0d8000c0 0x40>;
+-		gpio-controller;
+-		ngpios = <24>;
+-	}
+diff --git a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml
+deleted file mode 100644
+index d8cce73ea0ae..000000000000
+--- a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml
++++ /dev/null
+@@ -1,50 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/gpio/rockchip,rk3328-grf-gpio.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Rockchip RK3328 General Register Files GPIO controller
+-
+-description:
+-  The Rockchip RK3328 General Register File (GRF) outputs only the
+-  GPIO_MUTE pin, originally for codec mute control, but it can also be used
+-  for general purpose. It is manipulated by the GRF_SOC_CON10 register.
+-  If needed in the future support for the HDMI pins can also be added.
+-  The GPIO node should be declared as the child of the GRF node.
+-
+-  The GPIO_MUTE pin is referred to in the format
+-
+-  <&grf_gpio 0 GPIO_ACTIVE_LOW>
+-
+-  The first cell is the pin number and
+-  the second cell is used to specify the GPIO polarity
+-    0 = Active high
+-    1 = Active low
+-
+-maintainers:
+-  - Heiko Stuebner <heiko@sntech.de>
+-
+-properties:
+-  compatible:
+-    const: rockchip,rk3328-grf-gpio
+-
+-  gpio-controller: true
+-
+-  "#gpio-cells":
+-    const: 2
+-
+-required:
+-  - compatible
+-  - gpio-controller
+-  - "#gpio-cells"
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    grf_gpio: gpio {
+-      compatible = "rockchip,rk3328-grf-gpio";
+-      gpio-controller;
+-      #gpio-cells = <2>;
+-    };
+diff --git a/Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt b/Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
+deleted file mode 100644
+index 1b30812b015b..000000000000
+--- a/Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-Synopsys GPIO via CREG (Control REGisters) driver
+-
+-Required properties:
+-- compatible : "snps,creg-gpio-hsdk" or "snps,creg-gpio-axs10x".
+-- reg : Exactly one register range with length 0x4.
+-- #gpio-cells : Since the generic GPIO binding is used, the
+-  amount of cells must be specified as 2. The first cell is the
+-  pin number, the second cell is used to specify optional parameters:
+-  See "gpio-specifier" in .../devicetree/bindings/gpio/gpio.txt.
+-- gpio-controller : Marks the device node as a GPIO controller.
+-- ngpios: Number of GPIO pins.
+-
+-Example:
+-
+-gpio: gpio@f00014b0 {
+-	compatible = "snps,creg-gpio-hsdk";
+-	reg = <0xf00014b0 0x4>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-	ngpios = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/ti,7416374.yaml b/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
+deleted file mode 100644
+index 33472f091101..000000000000
+--- a/Documentation/devicetree/bindings/gpio/ti,7416374.yaml
++++ /dev/null
+@@ -1,56 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/gpio/ti,7416374.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: TI 74XX MMIO GPIO
+-
+-maintainers:
+-  - Frank Li <Frank.Li@nxp.com>
+-
+-properties:
+-  compatible:
+-    enum:
+-      - ti,741g125 # for 741G125 (1-bit Input),
+-      - ti,741g174 # for 741G74 (1-bit Output),
+-      - ti,742g125 # for 742G125 (2-bit Input),
+-      - ti,7474    # for 7474 (2-bit Output),
+-      - ti,74125   # for 74125 (4-bit Input),
+-      - ti,74175   # for 74175 (4-bit Output),
+-      - ti,74365   # for 74365 (6-bit Input),
+-      - ti,74174   # for 74174 (6-bit Output),
+-      - ti,74244   # for 74244 (8-bit Input),
+-      - ti,74273   # for 74273 (8-bit Output),
+-      - ti,741624  # for 741624 (16-bit Input),
+-      - ti,7416374 # for 7416374 (16-bit Output).
+-
+-  reg:
+-    maxItems: 1
+-
+-  gpio-controller: true
+-
+-  '#gpio-cells':
+-    const: 2
+-    description: |
+-      The first cell is the pin number and
+-      the second cell is used to specify the GPIO polarity:
+-        0 = Active High,
+-        1 = Active Low.
+-
+-required:
+-  - compatible
+-  - reg
+-  - gpio-controller
+-  - '#gpio-cells'
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    gpio@30008004 {
+-        compatible = "ti,74174";
+-        reg = <0x30008004 0x1>;
+-        gpio-controller;
+-        #gpio-cells = <2>;
+-    };
+diff --git a/Documentation/devicetree/bindings/gpio/trivial-gpio.yaml b/Documentation/devicetree/bindings/gpio/trivial-gpio.yaml
+new file mode 100644
+index 000000000000..0299d4a25086
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/trivial-gpio.yaml
+@@ -0,0 +1,110 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/trivial-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Trivial 2-cell GPIO controllers
++
++maintainers:
++  - Bartosz Golaszewski <brgl@bgdev.pl>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - cirrus,ep7312-gpio
++          - const: cirrus,ep7209-gpio
++      - enum:
++          - apm,xgene-gpio
++          - cirrus,ep7209-gpio
++          - cznic,moxtet-gpio
++          - dlg,slg7xl45106
++          - fcs,fxl6408
++          - gateworks,pld-gpio
++          - ibm,ppc4xx-gpio
++          - loongson,ls1x-gpio
++          - maxim,max77620
++          - nintendo,hollywood-gpio
++          - nxp,pca9570
++          - nxp,pca9571
++          - rockchip,rk3328-grf-gpio
++          - snps,creg-gpio-hsdk
++          - technologic,ts4800-gpio
++          - technologic,ts4900-gpio
++          - technologic,ts7970-gpio
++          - ti,741g125 # for 741G125 (1-bit Input),
++          - ti,741g174 # for 741G74 (1-bit Output),
++          - ti,742g125 # for 742G125 (2-bit Input),
++          - ti,7474    # for 7474 (2-bit Output),
++          - ti,74125   # for 74125 (4-bit Input),
++          - ti,74175   # for 74175 (4-bit Output),
++          - ti,74365   # for 74365 (6-bit Input),
++          - ti,74174   # for 74174 (6-bit Output),
++          - ti,74244   # for 74244 (8-bit Input),
++          - ti,74273   # for 74273 (8-bit Output),
++          - ti,741624  # for 741624 (16-bit Input),
++          - ti,7416374 # for 7416374 (16-bit Output).
++          - ti,lp3943-gpio
++          - ti,palmas-gpio
++          - ti,tpic2810
++          - ti,tps80036-gpio
++          - ti,tps65913-gpio
++          - ti,tps65914-gpio
++
++  reg:
++    maxItems: 1
++
++  '#gpio-cells':
++    const: 2
++
++  gpio-controller: true
++
++  gpio-line-names: true
++
++  ngpios: true
++
++  # Don't add more properties
++
++patternProperties:
++  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
++    type: object
++    required:
++      - gpio-hog
++
++required:
++  - compatible
++  - '#gpio-cells'
++  - gpio-controller
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - maxim,max77620
++              - rockchip,rk3328-grf-gpio
++              - ti,lp3943-gpio
++              - ti,palmas-gpio
++              - ti,tps80036-gpio
++              - ti,tps65913-gpio
++              - ti,tps65914-gpio
++    then:
++      properties:
++        reg: false
++    else:
++      required:
++        - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio@1701c000 {
++        compatible = "apm,xgene-gpio";
++        reg = <0x1701c000 0x40>;
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
+diff --git a/Documentation/devicetree/bindings/mfd/lp3943.txt b/Documentation/devicetree/bindings/mfd/lp3943.txt
+index e8591d6b11b4..ca5324ed0df4 100644
+--- a/Documentation/devicetree/bindings/mfd/lp3943.txt
++++ b/Documentation/devicetree/bindings/mfd/lp3943.txt
+@@ -7,7 +7,7 @@ Required properties:
+ LP3943 consists of two sub-devices, lp3943-gpio and lp3943-pwm.
+ 
+ For the LP3943 GPIO properties please refer to:
+-Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
++Documentation/devicetree/bindings/gpio/trivial-gpio.yaml
+ 
+ For the LP3943 PWM properties please refer to:
+ Documentation/devicetree/bindings/pwm/pwm-lp3943.txt
+diff --git a/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt b/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
+index 6f69a9dfe198..df060a0d7d4a 100644
+--- a/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
++++ b/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
+@@ -139,10 +139,6 @@ Nintendo Wii device tree
+   - interrupt-controller
+   - interrupts : should contain the cascade interrupt of the "flipper" pic
+ 
+-1.l) The General Purpose I/O (GPIO) controller node
+-
+-  see Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+-
+ 1.m) The control node
+ 
+   Represents the control interface used to setup several miscellaneous
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+index ccdcc889ba8e..1ab0b092e2a5 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+@@ -179,10 +179,12 @@ allOf:
+       properties:
+         gpio:
+           type: object
++          properties:
++            compatible:
++              contains:
++                const: rockchip,rk3328-grf-gpio
+ 
+-          $ref: /schemas/gpio/rockchip,rk3328-grf-gpio.yaml#
+-
+-          unevaluatedProperties: false
++          additionalProperties: true
+ 
+         power-controller:
+           type: object
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 35f692c81df8..099405ced395 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2574,7 +2574,6 @@ F:	Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm
+ F:	Documentation/devicetree/bindings/bus/moxtet.txt
+ F:	Documentation/devicetree/bindings/firmware/cznic,turris-mox-rwtm.txt
+ F:	Documentation/devicetree/bindings/firmware/cznic,turris-omnia-mcu.yaml
+-F:	Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
+ F:	Documentation/devicetree/bindings/interrupt-controller/marvell,mpic.yaml
+ F:	Documentation/devicetree/bindings/leds/cznic,turris-omnia-leds.yaml
+ F:	Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
+@@ -24197,7 +24196,6 @@ F:	drivers/reset/reset-axs10x.c
+ SYNOPSYS CREG GPIO DRIVER
+ M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
+ F:	drivers/gpio/gpio-creg-snps.c
+ 
+ SYNOPSYS DESIGNWARE 8250 UART DRIVER
+@@ -27495,7 +27493,6 @@ XRA1403 GPIO EXPANDER
+ M:	Nandor Han <nandor.han@ge.com>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
+ F:	drivers/gpio/gpio-xra1403.c
+ 
+ XTENSA XTFPGA PLATFORM SUPPORT
 -- 
-Regards,
+2.47.2
 
-Laurent Pinchart
 
