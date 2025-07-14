@@ -1,129 +1,101 @@
-Return-Path: <linux-gpio+bounces-23214-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23215-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2715AB03FF4
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 15:31:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2699FB04029
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 15:37:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 62D6E7ADC6F
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 13:29:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE67D1672E2
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 13:34:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAAB723A9BB;
-	Mon, 14 Jul 2025 13:31:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E4EC1FBE8A;
+	Mon, 14 Jul 2025 13:33:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqTALYUi"
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="LMB9TRQc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5432E36E5;
-	Mon, 14 Jul 2025 13:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153CD24A054;
+	Mon, 14 Jul 2025 13:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752499870; cv=none; b=Lf4myGrF10XM3zdv7ezv43MnBlrlmu8s7+TDjX6OebyXCD+Jm1XMOrLx/CMJh+VHWaI1FvqjRAiYTVJOfuiFGsGWNn6Yu5AflUAAcWIILMLBcWH0nHyQFr7aw0dkoqnYbZuj77+97qc296ml2QOQeFkW4YrczmH3EtPNW4M4YBE=
+	t=1752500020; cv=none; b=h5r53QaSMd13qCL49Ram3HiYpybFHdgKG/KtC8VyVTr2pG8e3uemln6t5zYHbEicM0IeLDTgQJgFmxj6UZByIjAvAMWpmaDFtbo/vBwe77B2c1b10pc63T4VXr5+aY8AxOn+s0wCGyUJEII0Owl4UnWzCskcpxIhbbss6wp3ffc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752499870; c=relaxed/simple;
-	bh=YkRnsX/tnvbZ3o3AEuquJmvgf1eoPe1aSLUVprvpuh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZuX5C5ziwx4yXovXtj0yvx0vwGoCs8czuVab6kP7RRgO/Ynu9Ri2Bcb5J8mdIJCQrUp46r9hmRGWcMZe1PK5iPJOgttCTunBKLDzuY6xuOrNhrVIZGysNwidyR49xiOwPzXKck/YAyQLQg6nnqXhkID/FkCBWK5KVWlKl0K0tTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqTALYUi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3133DC4CEED;
-	Mon, 14 Jul 2025 13:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752499870;
-	bh=YkRnsX/tnvbZ3o3AEuquJmvgf1eoPe1aSLUVprvpuh0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BqTALYUi1bmxjRdcMoInbUbbODAaFAcMAMF05bc9xSg2bnN2DunFcAqP2YaITGlwQ
-	 zuFqauoz8khrkj/sknJLqETl7VCJH0Lvrss29Sxaj2hTWZm2uubO2gFlR7QdEy79Id
-	 7648ZvprDr6QEULxGzR28yCeoqOsRZir5pPgFvRlce4pyHmod5dGM07py1UDkiqZdV
-	 3Ws/JIQPhW6eQHGz2s4tnea00/0Y5aj6RNDMKdmN+cVPmIJN5lddgtMD/EK9EGpQMM
-	 Xw7A1bSyNcf95OhLMDXPjiY3oX5JP+ejOW35uCdfMikc74mnJC39AX6664vndNUFHb
-	 u2V2WQeCdg1Qw==
-Message-ID: <e9c2bec9-4320-480c-89c1-514c995cf387@kernel.org>
-Date: Mon, 14 Jul 2025 15:31:04 +0200
+	s=arc-20240116; t=1752500020; c=relaxed/simple;
+	bh=CN7meXqcjOQl8Q5QLFDMsdkb5s/t5q/RVkICRRAqXxk=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=MCJif94/2NsuAdR/6BOYKWsmwuFU1Xnhz6EhIZ9cH/mnwAat9zKt4znGP2EPHw8w7z7AIeUS5K3bfPao/AegxIWqAZ4zaRGAsVysf8/OdDEtTpcS/TowCSfQJZTnpW6YOL+9vDWqzVzSa2k6oZ+2O2+aqHpShzISAxkjLeIkz0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=LMB9TRQc; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=lLXoJeyxFBMFgfiUZIb4L0UR3mTeCKQZPxkrChu09mY=; b=LMB9TRQcR3UgTSCrnCjkXER1rv
+	D4pSz81iFNg/8m6ofnxT8hkoa3ca/fji0uo4ZNfBuqMfl63i+cWOg47pBMe1WxGQwyXmhh1e1R3X9
+	qT+G7V+K3bDlLl0hWAnFS8mYqzG1DlwKWKqfsxUW1MnZg8O2yEfzIdjpJLn1wLIbpyP8=;
+Received: from [184.161.19.61] (port=36668 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1ubJJA-0002Rb-Uy; Mon, 14 Jul 2025 09:33:30 -0400
+Date: Mon, 14 Jul 2025 09:33:28 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <20250714093328.4aad6ae61a6eda364b7b7738@hugovil.com>
+In-Reply-To: <CAMRc=MeJh2H0zYg5mfkuZreNoRAOWar9oR68+xrAar+-W2gJqg@mail.gmail.com>
+References: <20250709201028.2175903-1-hugo@hugovil.com>
+	<CAMRc=MeJh2H0zYg5mfkuZreNoRAOWar9oR68+xrAar+-W2gJqg@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/12] media: uvcvideo: Make uvc_alloc_entity non
- static
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
- <20250605-uvc-orientation-v2-7-5710f9d030aa@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250605-uvc-orientation-v2-7-5710f9d030aa@chromium.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -2.9 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH] gpio: pca953x: use regmap_update_bits() to improve
+ efficiency
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-Hi,
+On Fri, 11 Jul 2025 12:22:40 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-On 5-Jun-25 19:53, Ricardo Ribalda wrote:
-> The function is useful for other compilation units.
+Hi Bart,
+
+
+> On Wed, Jul 9, 2025 at 10:10 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> >
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> >
+> > Using regmap_update_bits() allows to reduce the number of I2C transfers
+> > when updating bits that haven't changed on non-volatile registers.
+> >
+> > For example on a PCAL6416, when changing a GPIO direction from input to
+> > output, the number of I2C transfers can be reduced from 4 to just 1 if
+> > the pull resistors configuration hasn't changed and the output value
+> > is the same as before.
+> >
+> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > ---
 > 
-> This is just a refactor patch, no new functionality is added.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> Nice! Can you rebase it on top of gpio/for-next, it doesn't apply
+> after recent changes to the driver.
 
-Thanks, patch looks good to me:
+Sure, I will send a V2 shortly.
 
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/media/usb/uvc/uvc_driver.c | 4 ++--
->  drivers/media/usb/uvc/uvcvideo.h   | 2 ++
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index da24a655ab68cc0957762f2b67387677c22224d1..bcc97f71fa1703aea1119469fb32659c17d9409a 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -792,8 +792,8 @@ static const u8 uvc_media_transport_input_guid[16] =
->  	UVC_GUID_UVC_MEDIA_TRANSPORT_INPUT;
->  static const u8 uvc_processing_guid[16] = UVC_GUID_UVC_PROCESSING;
->  
-> -static struct uvc_entity *uvc_alloc_entity(u16 type, u16 id,
-> -		unsigned int num_pads, unsigned int extra_size)
-> +struct uvc_entity *uvc_alloc_entity(u16 type, u16 id, unsigned int num_pads,
-> +				    unsigned int extra_size)
->  {
->  	struct uvc_entity *entity;
->  	unsigned int num_inputs;
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index b9f8eb62ba1d82ea7788cf6c10cc838a429dbc9e..dc23d8a97340dc4615d4182232d395106e6d9ed5 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -684,6 +684,8 @@ do {									\
->   */
->  
->  struct uvc_entity *uvc_entity_by_id(struct uvc_device *dev, int id);
-> +struct uvc_entity *uvc_alloc_entity(u16 type, u16 id, unsigned int num_pads,
-> +				    unsigned int extra_size);
->  
->  /* Video buffers queue management. */
->  int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type);
-> 
-
+Hugo.
 
