@@ -1,84 +1,146 @@
-Return-Path: <linux-gpio+bounces-23204-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23205-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2868BB03859
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 09:53:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D43EB03990
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 10:28:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C451B178FE4
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 07:53:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEEF6188ACBB
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 08:27:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79EA9235BE8;
-	Mon, 14 Jul 2025 07:53:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F7D523BF96;
+	Mon, 14 Jul 2025 08:27:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UdGuz8X+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bCgiBBie"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C8823816E;
-	Mon, 14 Jul 2025 07:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E1D157A6B
+	for <linux-gpio@vger.kernel.org>; Mon, 14 Jul 2025 08:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752479594; cv=none; b=K63cVi6wawg9q+tkk9o+2XUfDMD3pgadliw5pjUeZZMDeGaJvxa/Tn7muq5xKh1cs8YVc7TZ7HR0VyvR8ongP5whujvWjEdgc2Yd++m6lEQdCN1q6Zi1POUZTXsKSN6Q7Nj2Kw7DNLapDBEk/vyEBdOGc9Gf6Zzz6wws3djfAuc=
+	t=1752481625; cv=none; b=ZFBcENIBFUaFO8x4R0T0iyGAlLi3DqiBCT70di/HMaYKnMXPZrduC9gIXnSt/618s8SB8Is1EDSefYjCiQcemL7qX7+0ik38Ivt4RT1k90uqcGHG+WWUAAryR201EfK0mYhAzoSZQiV4ViZdnZOSICGyUN2wOAnpghv3CmWvox0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752479594; c=relaxed/simple;
-	bh=WyBsH6Kxr3hdAgdiGisPWnZhro430nfyV/zbVdiDpHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AFZ8FhpPP/bioegmA3hNg0dVYlHIS+TVfTOcKNo4Owlxt9JGGN9UGuWOyPuKZHqirlXABhwKXBEAmPO2AiobGs77vfkUVCDKBS85+rgcw92A5viieAofT8jzWXrig9FHyg/01J2OL85+PaJrX1AU/DyAm9Orh8JCEgl82q/CLvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UdGuz8X+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BA81C4CEF6;
-	Mon, 14 Jul 2025 07:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752479593;
-	bh=WyBsH6Kxr3hdAgdiGisPWnZhro430nfyV/zbVdiDpHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UdGuz8X+SZTnxwRMQ4Ku8I12IdU7nKmsXDcpINxZz5/DsmmIHHJpfNLG8lRvr22mh
-	 a5SvxkgfZhurFFI+qwC4YuYhdlIpFrS1UkEf724svoHxVTdNGATDEMS2RDNGDrkEwV
-	 FR1Rm7RfhP3mhKOIJKIqfWM33qJNgs9uEDbC7t4b9SnAt1uI7cy+C6681LoIrZxkJU
-	 jVHUnuM/NIlMd/sDXGrBLAduvled/NyiUZMqYPe2dxNUluVeOmti4bGcafgAVreiQr
-	 PGFQJ+iOakMytLzmYAcfjfVh1uNfP5Fb00OfGRczZeI2xG24R2vXH5souGsXCIKz3h
-	 sGucDBULIbGvA==
-Date: Mon, 14 Jul 2025 09:53:10 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Cathy Xu <ot_cathy.xu@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	Yong Mao <yong.mao@mediatek.com>, Wenbin Mei <Wenbin.Mei@mediatek.com>, 
-	Axe Yang <Axe.Yang@mediatek.com>
-Subject: Re: [PATCH v2 0/3] pinctrl: mediatek: Add pinctrl driver on mt8189
-Message-ID: <20250714-subtle-ambitious-penguin-c4a8c6@krzk-bin>
-References: <20250711094513.17073-1-ot_cathy.xu@mediatek.com>
+	s=arc-20240116; t=1752481625; c=relaxed/simple;
+	bh=/CjdMCxH+t7eZzUgZZR6OKIB+scw7udT/yylQaArevM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=b6H+Eoodgnxktd78ajpCYLYYnzI71gF1JKwf10nRtdNEUEHTKlU1WwvbzRd0ygVgjsec465ReVDmcgvWrgRG9eLVeOh+HBKsbSzHSF5MuAKAah6bo9t9mdtYL1iBBRCWvTY47iO3WX/kzV8U9P0QfGyCql8qNCuPM+kI17hVyy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bCgiBBie; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752481624; x=1784017624;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=/CjdMCxH+t7eZzUgZZR6OKIB+scw7udT/yylQaArevM=;
+  b=bCgiBBiesmhcOLXwDytv3CSJj3Bm8Ji/V7wiC/l2but5DdHjx0ELFCw7
+   7oNrqEIGTzJ1pjLCe2Q4q73Nd7YQ3YMtRr7kdEeyNe5r6X/B5qumketsO
+   9zRkrN9VvvSkQQq25dbRL5y2k+qUbmgOPdLz3GF+Z7HDOp0hd4mA2fK9O
+   vkJDZygLDm25LFDZhSMfmh++fl+FqF6+wsTkPOmVsFEXmF2+ud734YcwA
+   QqqvMzeku74Khfc02YMq6N1INM/cnVbBi0eALYdzBRT7aGzbs68+Fl8/Z
+   lag7CpfzDLLFdwYYStKEjXUf2uqS8ldeaR7ho19FKhOIGxj865SwhCfd+
+   g==;
+X-CSE-ConnectionGUID: PQCTKO80RM+76+UP/MMdcQ==
+X-CSE-MsgGUID: eS0K6ccsRWGg4pr7VAXTgg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54636291"
+X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
+   d="scan'208";a="54636291"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 01:27:03 -0700
+X-CSE-ConnectionGUID: LLRZXEM1QBiujCt/0xXAIw==
+X-CSE-MsgGUID: arR7AeMsSle8kuJhzSzQ9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
+   d="scan'208";a="194078482"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 14 Jul 2025 01:27:02 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 7E7F6152; Mon, 14 Jul 2025 11:27:00 +0300 (EEST)
+Date: Mon, 14 Jul 2025 11:27:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linux pin control <linux-gpio@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 6.17-1
+Message-ID: <aHS_VEcokVeCde2g@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250711094513.17073-1-ot_cathy.xu@mediatek.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Jul 11, 2025 at 05:44:56PM +0800, Cathy Xu wrote:
-> This patch series introduces support for the MT8189 pinctrl driver,
-> include the driver implementation, new binding document and pinctrl header file.
-> 
-> Changes in v2:
-> - Modify the coding style of dt-binding.
+Hi Linux pin control  maintainers,
 
-This is too vague. Anything can be "modify" and anything can be "coding
-style".
+Quite small PR for Intel pin control related drivers. May be applied as
+v6.16-rcX or v6.17-rc1 material (up to you). It has been in Linux Next
+for a few weeks without any regression reports. Please, pull.
 
-What exactly happened here? There is also no v1 link to actually check
-previous discussions.
+Thanks,
 
-Best regards,
-Krzysztof
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v6.16-1
+
+for you to fetch changes up to 3b4408038da935be7b1efb7589cc1badb6d10a67:
+
+  pinctrl: intel: fix build warnings about export.h (2025-06-12 15:19:08 +0300)
+
+----------------------------------------------------------------
+intel-pinctrl for v6.16-1
+
+* Use new GPIO line value setter callbacks (Bartosz Golaszewski)
+* Add missed export.h to the main driver
+
+The following is an automated git shortlog grouped by driver:
+
+baytrail:
+ -  use new GPIO line value setter callbacks
+
+cherryview:
+ -  use new GPIO line value setter callbacks
+
+intel:
+ -  fix build warnings about export.h
+ -  use new GPIO line value setter callbacks
+
+lynxpoint:
+ -  use new GPIO line value setter callbacks
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      Merge patch series "pinctrl: intel: use new GPIO line value setter callbacks"
+      pinctrl: intel: fix build warnings about export.h
+
+Bartosz Golaszewski (4):
+      pinctrl: baytrail: use new GPIO line value setter callbacks
+      pinctrl: cherryview: use new GPIO line value setter callbacks
+      pinctrl: intel: use new GPIO line value setter callbacks
+      pinctrl: lynxpoint: use new GPIO line value setter callbacks
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c   |  8 +++++---
+ drivers/pinctrl/intel/pinctrl-cherryview.c |  6 ++++--
+ drivers/pinctrl/intel/pinctrl-intel.c      | 20 ++++++++++++++------
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c  |  6 ++++--
+ 4 files changed, 27 insertions(+), 13 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
