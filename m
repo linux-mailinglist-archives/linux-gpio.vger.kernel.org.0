@@ -1,57 +1,57 @@
-Return-Path: <linux-gpio+bounces-23241-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23242-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1CF5B04883
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 22:31:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DA7FB04886
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 22:31:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 628637A81BA
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 20:29:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 628764A7AEC
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 20:30:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE57727A107;
-	Mon, 14 Jul 2025 20:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 407F128136F;
+	Mon, 14 Jul 2025 20:28:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVFn0NAY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMWk+uKl"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B0D25A65A;
-	Mon, 14 Jul 2025 20:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBE323ABB5;
+	Mon, 14 Jul 2025 20:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752524926; cv=none; b=enjvl2dK+YxTKjkzZxRhOoHY5gQlZdUKCdA0gtkZK+ikCsIbm/0Zf+ib7fwu1JfQewJmhH/QXKqnQe8EoAegABHjKIqv0BVySpK0JWON2zLxcVvtALeIoFzbRMCHZNpEq/l+EfUufvprHN1Inho+SkJ1Sv+WgwpwS6G+R1lc9RU=
+	t=1752524936; cv=none; b=YUxk3+NoTkedOuK4XTL0iNPt83TmHAmhJBajSzlDXBA9otbup3iBDEBzsEjuyUIVBuZOK9rhasTngPH5MfS3Vk+Vm+33mCPYV1bXrLD0J36ifao1jOJSqJqeFtYAtgCGL8uKKcEiTZZ1fCWfCFx4RTyLDQx7EcBKgZZqBRM0A/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752524926; c=relaxed/simple;
-	bh=uo2q/5pQ1zJdZyjcJ9AxyXbq4sdhhFtUtELFQrXtiXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sDCfflpApB3AfcOO1JsqEIp8tKbzIbFO8tW6xX7gtdx2Neqx8W6HpDA1kEavOkXwRVEoX/UVpTShFQ4Kn98VxM4VCJYq8aoj+deTN/lJpJYKX2M89nDAFCGTSz4rq8JLzsaWkQq18Ts0jPs+izZWp3A8Ho0xdW03gge7taBhA1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVFn0NAY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8787C4CEED;
-	Mon, 14 Jul 2025 20:28:45 +0000 (UTC)
+	s=arc-20240116; t=1752524936; c=relaxed/simple;
+	bh=okck3br5hYlUvLvW+5zS8S+h0K8zkABaei8u39lUfJc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YtSipk5hriivXdAkgf/YopQxvzfmJcPfCS7ku2OxWjuQ5pAxBjkY5824nSCOKNWLlLEQyqTdqS+MzQRSiHkPl8TftAVNC5Z1lDoMDCyxbA4qNFKDJV0Nn3lMSMJWarJ0n8fIKGIJKn3vgXjCOQpayqTc2IvFQ/QgvkEPzO5VNBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMWk+uKl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D22C4CEED;
+	Mon, 14 Jul 2025 20:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752524926;
-	bh=uo2q/5pQ1zJdZyjcJ9AxyXbq4sdhhFtUtELFQrXtiXE=;
+	s=k20201202; t=1752524935;
+	bh=okck3br5hYlUvLvW+5zS8S+h0K8zkABaei8u39lUfJc=;
 	h=From:To:Cc:Subject:Date:From;
-	b=fVFn0NAYFtCp0vRKW6+utJoZptb16RW3kpr30j3NbYV3XRdt2/WC6m1y+6Tz07iI+
-	 GdnNOCn3UoDqUWlTZS4j5ENJ8mKIKjRM6gMlsxnjjWtlOc4hExeYnKc8fIx9qSfnFA
-	 RqmarDcMcFuPQvYpxjXagdNk2H96i9Q1dQEi3fV7oB+S7TAz/N8hA0gpilxZw0LPYb
-	 skqhSjV6BeQesEYqJ/g05Vp9YL0UgMyroEv720SrO2q8xr8W6+Ekx1hlDcUG5ANqGs
-	 7ZEGfXWGq1LmfMOuePa9aGwWOFsCx13tsgwE5TvoGq4+G+ASux2sxDADtyKVZsTiKO
-	 pQXHwLMRKA69A==
+	b=AMWk+uKlk+90lCUNPK4Zgd/IzInIUOE379PyNidMY/XYSdR+dVdwekI7bHFcwzyNm
+	 5lTmGoAbdaJ8Ayhjv69/x1+FFQXgDDSHRgtAGvSE+QFRcYTA9WSAKPzS858c3hDcug
+	 pKH5QxusbyQCHJJv4aDR9eLJb12AR3dS5EHEl0TR1V7kiTBJ8ftyPL4CsHxciIXAgs
+	 0unHwxjB6qirVirzrVYi8CzVktfGhIfP37DbsHV0OFAD21imDETzh3tuctykjh/zGY
+	 OJqUfpgDHY9fgCQpul7w4999V17P+ijU0+aZ31tA7ZiNnb1kf2SlcDRaT7tor8olm+
+	 zNSkC1Alx7xZw==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>
+	Grygorii Strashko <grygorii.strashko@ti.com>
 Cc: linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpio: Convert maxim,max3191x to DT schema
-Date: Mon, 14 Jul 2025 15:28:41 -0500
-Message-ID: <20250714202843.3011698-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: gpio: Convert ti,keystone-dsp-gpio to DT schema
+Date: Mon, 14 Jul 2025 15:28:49 -0500
+Message-ID: <20250714202850.3011952-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -61,108 +61,97 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Maxim MAX3191x and similar GPIO binding to DT schema format.
-It's a straight forward conversion.
+Convert the TI Keystone DSP GPIO binding to DT schema format. The
+"ti,syscon-dev" property was wrong and should be "gpio,syscon-dev"
+instead.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/gpio/gpio-max3191x.txt           |  59 ----------
- .../bindings/gpio/maxim,max31910.yaml         | 104 ++++++++++++++++++
- 2 files changed, 104 insertions(+), 59 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/maxim,max31910.yaml
+ .../bindings/gpio/gpio-dsp-keystone.txt       | 39 -----------
+ .../bindings/gpio/ti,keystone-dsp-gpio.yaml   | 65 +++++++++++++++++++
+ 2 files changed, 65 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/ti,keystone-dsp-gpio.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt b/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt b/Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
 deleted file mode 100644
-index b3a6444b8f45..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
+index 0423699d74c7..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
 +++ /dev/null
-@@ -1,59 +0,0 @@
--GPIO driver for Maxim MAX3191x industrial serializer
+@@ -1,39 +0,0 @@
+-Keystone 2 DSP GPIO controller bindings
 -
--Required properties:
-- - compatible:		Must be one of:
--			"maxim,max31910"
--			"maxim,max31911"
--			"maxim,max31912"
--			"maxim,max31913"
--			"maxim,max31953"
--			"maxim,max31963"
-- - reg: 		Chip select number.
-- - gpio-controller:	Marks the device node as a GPIO controller.
-- - #gpio-cells: 	Should be two. For consumer use see gpio.txt.
+-HOST OS userland running on ARM can send interrupts to DSP cores using
+-the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
+-This is one of the component used by the IPC mechanism used on Keystone SOCs.
 -
--Optional properties:
-- - #daisy-chained-devices:
--			Number of chips in the daisy-chain (default is 1).
-- - maxim,modesel-gpios: GPIO pins to configure modesel of each chip.
--			The number of GPIOs must equal "#daisy-chained-devices"
--			(if each chip is driven by a separate pin) or 1
--			(if all chips are wired to the same pin).
-- - maxim,fault-gpios: 	GPIO pins to read fault of each chip.
--			The number of GPIOs must equal "#daisy-chained-devices"
--			or 1.
-- - maxim,db0-gpios:	GPIO pins to configure debounce of each chip.
--			The number of GPIOs must equal "#daisy-chained-devices"
--			or 1.
-- - maxim,db1-gpios:	GPIO pins to configure debounce of each chip.
--			The number of GPIOs must equal "maxim,db0-gpios".
-- - maxim,modesel-8bit:	Boolean whether the modesel pin of the chips is
--			pulled high (8-bit mode).  Use this if the modesel pin
--			is hardwired and consequently "maxim,modesel-gpios"
--			cannot be specified.  By default if neither this nor
--			"maxim,modesel-gpios" is given, the driver assumes
--			that modesel is pulled low (16-bit mode).
-- - maxim,ignore-undervoltage:
--			Boolean whether to ignore undervoltage alarms signaled
--			by the "maxim,fault-gpios" or by the status byte
--			(in 16-bit mode).  Use this if the chips are powered
--			through 5VOUT instead of VCC24V, in which case they
--			will constantly signal undervoltage.
+-For example TCI6638K2K SoC has 8 DSP GPIO controllers:
+- - 8 for C66x CorePacx CPUs 0-7
 -
--For other required and optional properties of SPI slave nodes please refer to
--../spi/spi-bus.txt.
+-Keystone 2 DSP GPIO controller has specific features:
+-- each GPIO can be configured only as output pin;
+-- setting GPIO value to 1 causes IRQ generation on target DSP core;
+-- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
+-  pending.
+-
+-Required Properties:
+-- compatible: should be "ti,keystone-dsp-gpio"
+-- ti,syscon-dev: phandle/offset pair. The phandle to syscon used to
+-  access device state control registers and the offset of device's specific
+-  registers within device state control registers range.
+-- gpio-controller: Marks the device node as a gpio controller.
+-- #gpio-cells: Should be 2.
+-
+-Please refer to gpio.txt in this directory for details of the common GPIO
+-bindings used by client devices.
 -
 -Example:
--	gpio@0 {
--		compatible = "maxim,max31913";
--		reg = <0>;
+-	dspgpio0: keystone_dsp_gpio@2620240 {
+-		compatible = "ti,keystone-dsp-gpio";
+-		ti,syscon-dev = <&devctrl 0x240>;
 -		gpio-controller;
 -		#gpio-cells = <2>;
--
--		maxim,modesel-gpios = <&gpio2 23>;
--		maxim,fault-gpios   = <&gpio2 24 GPIO_ACTIVE_LOW>;
--		maxim,db0-gpios     = <&gpio2 25>;
--		maxim,db1-gpios     = <&gpio2 26>;
--
--		spi-max-frequency = <25000000>;
 -	};
-diff --git a/Documentation/devicetree/bindings/gpio/maxim,max31910.yaml b/Documentation/devicetree/bindings/gpio/maxim,max31910.yaml
+-
+-	dsp0: dsp0 {
+-		compatible = "linux,rproc-user";
+-		...
+-		kick-gpio = <&dspgpio0 27>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/ti,keystone-dsp-gpio.yaml b/Documentation/devicetree/bindings/gpio/ti,keystone-dsp-gpio.yaml
 new file mode 100644
-index 000000000000..82a190a715f9
+index 000000000000..59f81621408b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/maxim,max31910.yaml
-@@ -0,0 +1,104 @@
++++ b/Documentation/devicetree/bindings/gpio/ti,keystone-dsp-gpio.yaml
+@@ -0,0 +1,65 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/gpio/maxim,max31910.yaml#
++$id: http://devicetree.org/schemas/gpio/ti,keystone-dsp-gpio.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Maxim MAX3191x GPIO serializer
++title: Keystone 2 DSP GPIO controller
 +
 +maintainers:
-+  - Lukas Wunner <lukas@wunner.de>
++  - Grygorii Strashko <grygorii.strashko@ti.com>
++
++description: |
++  HOST OS userland running on ARM can send interrupts to DSP cores using
++  the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
++  This is one of the component used by the IPC mechanism used on Keystone SOCs.
++
++  For example TCI6638K2K SoC has 8 DSP GPIO controllers:
++   - 8 for C66x CorePacx CPUs 0-7
++
++  Keystone 2 DSP GPIO controller has specific features:
++  - each GPIO can be configured only as output pin;
++  - setting GPIO value to 1 causes IRQ generation on target DSP core;
++  - reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
++    pending.
 +
 +properties:
 +  compatible:
-+    enum:
-+      - maxim,max31910
-+      - maxim,max31911
-+      - maxim,max31912
-+      - maxim,max31913
-+      - maxim,max31953
-+      - maxim,max31963
++    const: ti,keystone-dsp-gpio
 +
 +  reg:
 +    maxItems: 1
@@ -172,80 +161,33 @@ index 000000000000..82a190a715f9
 +  '#gpio-cells':
 +    const: 2
 +
-+  '#daisy-chained-devices':
-+    description: Number of chips in the daisy-chain.
-+    default: 1
-+
-+  maxim,modesel-gpios:
++  gpio,syscon-dev:
 +    description:
-+      GPIO pins to configure modesel of each chip. The number of GPIOs must
-+      equal "#daisy-chained-devices" (if each chip is driven by a separate pin)
-+      or 1 (if all chips are wired to the same pin).
-+
-+  maxim,fault-gpios:
-+    description:
-+      GPIO pins to read fault of each chip. The number of GPIOs must equal
-+      "#daisy-chained-devices" or 1.
-+
-+  maxim,db0-gpios:
-+    description:
-+      GPIO pins to configure debounce of each chip. The number of GPIOs must
-+      equal "#daisy-chained-devices" or 1.
-+
-+  maxim,db1-gpios:
-+    description:
-+      GPIO pins to configure debounce of each chip. The number of GPIOs must
-+      equal "maxim,db0-gpios".
-+
-+  maxim,modesel-8bit:
-+    description:
-+      Boolean whether the modesel pin of the chips is pulled high (8-bit mode).
-+      Use this if the modesel pin is hardwired and consequently
-+      "maxim,modesel-gpios" cannot be specified. By default if neither this nor
-+      "maxim,modesel-gpios" is given, the driver assumes that modesel is pulled
-+      low (16-bit mode).
-+    type: boolean
-+
-+  maxim,ignore-undervoltage:
-+    description:
-+      Boolean whether to ignore undervoltage alarms signaled by the
-+      "maxim,fault-gpios" or by the status byte (in 16-bit mode). Use this if
-+      the chips are powered through 5VOUT instead of VCC24V, in which case they
-+      will constantly signal undervoltage.
-+    type: boolean
++      Phandle and offset of device's specific registers within the syscon state
++      control registers
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    items:
++      - items:
++          - description: phandle to syscon
++          - description: register offset within state control registers
 +
 +required:
 +  - compatible
 +  - reg
 +  - gpio-controller
 +  - '#gpio-cells'
++  - gpio,syscon-dev
 +
-+allOf:
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+unevaluatedProperties: false
++additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        gpio@0 {
-+            compatible = "maxim,max31913";
-+            reg = <0>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+
-+            maxim,modesel-gpios = <&gpio2 23>;
-+            maxim,fault-gpios   = <&gpio2 24 GPIO_ACTIVE_LOW>;
-+            maxim,db0-gpios     = <&gpio2 25>;
-+            maxim,db1-gpios     = <&gpio2 26>;
-+
-+            spi-max-frequency = <25000000>;
-+        };
++    gpio@240 {
++        compatible = "ti,keystone-dsp-gpio";
++        reg = <0x240 0x4>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio,syscon-dev = <&devctrl 0x240>;
 +    };
 -- 
 2.47.2
