@@ -1,126 +1,112 @@
-Return-Path: <linux-gpio+bounces-23207-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23208-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D759BB03D67
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 13:29:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89F87B03F23
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 15:01:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C712317E4E2
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 11:29:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB1183BD39C
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 13:00:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4E65246BBE;
-	Mon, 14 Jul 2025 11:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F41C924DD1F;
+	Mon, 14 Jul 2025 13:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="gFzHwEOu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNdgVl1D"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BE11C54AF;
-	Mon, 14 Jul 2025 11:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9988424DCEF;
+	Mon, 14 Jul 2025 13:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752492551; cv=none; b=cg2hIWEsrdiUkmjB9Z/YZvZuMnysRdy4Lz8jIGc/KA1Mr07qcCYh/BVDBr0InLMUqo5wrBkiCvsvKv1yzjf+CdG7Ozbf7OJda5DhlmVAfV4g8Pg/NhHo4pDc55adPtiXFaHZl1Dj5qrgqqgCkzVSqKFyaL8fHn+CPmBD9NoRv70=
+	t=1752498056; cv=none; b=s5xWL64R2TrAiNCm3gobj2mr3yBckUOX2jjH7vyTzlkgqbiany0k2aq2ly7VvCUgC9ZAS8r9ufXERG07wdbrbKOlIAwdIwCqx9uQxRUGRkexWMzQmBxhIn6XqtvfTdv7w4omeubsf2EsR8+ySnzPx16BE3OcG4lL0YgL1YGMW24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752492551; c=relaxed/simple;
-	bh=IHeaZkmR3o1h+r0vSawI9hhyMrY40fjBlCfxkbgtCHE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WgNsNw2znpRks9DrerJfsSMIQaHvnnsQAS1Q9mk2RwKOJ2Bsycsij3cHOfIbGFAfF9jKl0DrjGSZwCPgPVvjpVi5veg8U1yS1HuB0RFHhyR1RbeFoM1nLHUr1vi955E5EnuCJd63NXXXJ0JShBIlRsXgxb8Q9M8inntbZcDdTBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=gFzHwEOu; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=Yt0pEgiOw5D20asS7w9+koIyg+3FrGpHgzGJycRNdqs=; b=gFzHwEOunPxcWiAMs5c57JGmBA
-	1i9gdYcrvYX29m70SzdEFbb949zBkFdvThNwJKQhzyJ3vz63/HJ1jVg/SqRuGP6n4gWIfjUiccouh
-	P6KnCGtkMsx1a1QQNrL8jQIZ49P75WLOx+rlYn0bQB+2wVwhdnl721IvhTuDmNYdNVe5pAbt9ry3r
-	/RoZjj89dZL+hcZYQojrwClpv3YSiPvK4/2ywr4rKpCY38bVQj98vjQR3JbcWmt8iXRlTCD0vcUbS
-	UQwyw9zH6H36xlLQYifZECz0isuti6nChKskuuzSIiEqCqAEDnDQFMnIb/oDf1WYaJgVwW4dg+ZXE
-	kcLZNHaA==;
-Received: from i53875a13.versanet.de ([83.135.90.19] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1ubHMj-0007NV-40; Mon, 14 Jul 2025 13:29:01 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Alexey Klimov <alexey.klimov@linaro.org>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Paul Cercueil <paul@crapouillou.net>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject:
- Re: [PATCH v2 09/12] pinctrl: allow to mark pin functions as requestable
- GPIOs
-Date: Mon, 14 Jul 2025 13:29:01 +0200
-Message-ID: <5911205.31r3eYUQgx@diego>
-In-Reply-To: <20250709-pinctrl-gpio-pinfuncs-v2-9-b6135149c0d9@linaro.org>
-References:
- <20250709-pinctrl-gpio-pinfuncs-v2-0-b6135149c0d9@linaro.org>
- <20250709-pinctrl-gpio-pinfuncs-v2-9-b6135149c0d9@linaro.org>
+	s=arc-20240116; t=1752498056; c=relaxed/simple;
+	bh=3fFhHtDAfgbxPP8AUkNDxHi1qI9xVRX1525H3vua2/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V/Ov1OuRyL0L2z/8k2XVYaDCGNoPFMZP4nqVROLpmarFDkCBg0uv2DG3L6PgOCPjLzrNLbwypy6Md0x+Ph7oYYC/XBxiDFFTd1f0l/KKC+GHBagMF22aPV2Q9uPlRnXQWk9q1XQuRxmxBfuQWIZHpzdQyif+Cg2GuVNYdYDdgek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNdgVl1D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C9FBC4CEED;
+	Mon, 14 Jul 2025 13:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752498055;
+	bh=3fFhHtDAfgbxPP8AUkNDxHi1qI9xVRX1525H3vua2/w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VNdgVl1DAstjWQEzWPvoLL79v/Z1u7vah+UeNYRAcqfB9d+nuxOwDelMwgRkLqFdw
+	 lvQN4Iyjr6Z+JMM/vhHONsIcslzWpr/xTvkxeLAYHJHK73eaOP5fwT+oeE4IwvFiuj
+	 xoBhfNUzgoh028SGZFb4fX1powEPvcCRavNvf4ZEuoa1x1wBOb7fZyakWWdsfjDhI7
+	 1Y3MR6hVMREgnFrfEJd7lnhYy5WY+R+fGg7OrCjGg5Jw1MDCatPz3MQsaJmTUcmdUZ
+	 PO0lJ3CSX3HKroDOomdMT5GDq0dUcz2F+M+sIcS4sjRvs5gXoiKe/du2rOKE2DM2Ww
+	 z5eUshw1SeKXg==
+Message-ID: <6459daf0-ed7f-476f-8503-aaa3a8fb309a@kernel.org>
+Date: Mon, 14 Jul 2025 15:00:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/12] media: uvcvideo: Always set default_value
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
+ <20250605-uvc-orientation-v2-1-5710f9d030aa@chromium.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250605-uvc-orientation-v2-1-5710f9d030aa@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am Mittwoch, 9. Juli 2025, 16:39:05 Mitteleurop=C3=A4ische Sommerzeit schri=
-eb Bartosz Golaszewski:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> The name of the pin function has no real meaning to pinctrl core and is
-> there only for human readability of device properties. Some pins are
-> muxed as GPIOs but for "strict" pinmuxers it's impossible to request
-> them as GPIOs if they're bound to a devide - even if their function name
-> explicitly says "gpio". Add a new field to struct pinfunction that
-> allows to pass additional flags to pinctrl core. While we could go with
-> a boolean "is_gpio" field, a flags field is more future-proof.
->=20
-> If the PINFUNCTION_FLAG_GPIO is set for a given function, the pin muxed
-> to it can be requested as GPIO even on strict pin controllers. Add a new
-> callback to struct pinmux_ops - function_is_gpio() - that allows pinmux
-> core to inspect a function and see if it's a GPIO one. Provide a generic
-> implementation of this callback.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi,
+
+On 5-Jun-25 19:52, Ricardo Ribalda wrote:
+> If the control does not support GET_DEF, the field default_value will be
+> left uninitialized during queryctrl.
+> 
+> Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+
+Thanks, patch looks good to me,
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+with Laurent's remarks addressed.
+
+Regards,
+
+Hans
+
 > ---
-
-[...]
-
-> diff --git a/include/linux/pinctrl/pinmux.h b/include/linux/pinctrl/pinmu=
-x.h
-> index d6f7b58d6ad0cce421aad80463529c9ccc65d68e..6db6c3e1ccc2249d4b4204e6f=
-c19bf7b4397cc81 100644
-> --- a/include/linux/pinctrl/pinmux.h
-> +++ b/include/linux/pinctrl/pinmux.h
-> @@ -66,6 +66,8 @@ struct pinmux_ops {
->  				    unsigned int selector,
->  				    const char * const **groups,
->  				    unsigned int *num_groups);
-> +	bool (*function_is_gpio) (struct pinctrl_dev *pctldev,
-> +				  unsigned int selector);
-
-hmm, I think using the set_mux function arguments here might make this
-usable by more drivers? Aka func_selector + group_selector ?
-
-While the generic pinmux might not need that, when pinmuxings are
-arranged in functions + pingroups in them, this would be helpful.
-
-
-Heiko
-
-
+>  drivers/media/usb/uvc/uvc_ctrl.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> index 44b6513c526421943bb9841fb53dc5f8e9f93f02..47e8ccc39234d1769384b55539a21df07f3d57c7 100644
+> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> @@ -1497,6 +1497,8 @@ static int __uvc_queryctrl_boundaries(struct uvc_video_chain *chain,
+>  	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_DEF) {
+>  		v4l2_ctrl->default_value = uvc_mapping_get_s32(mapping,
+>  				UVC_GET_DEF, uvc_ctrl_data(ctrl, UVC_CTRL_DATA_DEF));
+> +	} else {
+> +		v4l2_ctrl->default_value = 0;
+>  	}
+>  
+>  	switch (mapping->v4l2_type) {
+> 
 
 
