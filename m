@@ -1,175 +1,124 @@
-Return-Path: <linux-gpio+bounces-23248-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23249-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD000B048A2
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 22:33:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68FDBB049CA
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 23:57:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25D861A60036
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 20:33:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A30F43B8E8A
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Jul 2025 21:57:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D131427815E;
-	Mon, 14 Jul 2025 20:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 976CF265CD0;
+	Mon, 14 Jul 2025 21:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gW5Pb9/a"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NxcSBAez"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FB9239E97;
-	Mon, 14 Jul 2025 20:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D286B2367DF
+	for <linux-gpio@vger.kernel.org>; Mon, 14 Jul 2025 21:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752524986; cv=none; b=OR80CmrWesnLln66zIc8aK37WCQyPvv+SDccg2xahraS4T5Yi1RCmZVbpp8dWgne6lhiO2YuLkwYjapBOc4G70TXTkXRn3+0cTh0CuKRkLhMqSx2Am9tvbyhfh+FCnj99kzFIqhlZbei/V25ooXAewHMvoPjkEx7ytZ9cesQU+8=
+	t=1752530245; cv=none; b=keDXf5SshivAMtfB+VT815xe6UHygOeAIPF3hzGqXCVArWjN4eo88QhclIrXTCd40KrFrEiz+apiuR3hwhLutZereYQ2YOVJcBAnp2Kctyfj7KGwRthL7zwkboJn7/wJSAllZKbuL5+/y/zs2Dvgs41ONSoIuTIY2GctxUwnPMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752524986; c=relaxed/simple;
-	bh=M2jBlVykSqgpKIbdwPfdRivn6FmOBX/bBqJ5c01oet4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rn9MIhwYOnPiQBsja0mUqAsN//d0Xs7wtSmrluvPbbV2EOob6VtvqZxIohPtlk3Uxtr4/bZ7XgmYC+/IxBhpL2i+Vw/L6i2hQ6yRp4T4LFax6jT8fzQXvBXdBoAX6NXWTagmBDxXhozgnnR0VLLx2REFJNzLDxSebjKeqSJQfFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gW5Pb9/a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3242C4CEED;
-	Mon, 14 Jul 2025 20:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752524985;
-	bh=M2jBlVykSqgpKIbdwPfdRivn6FmOBX/bBqJ5c01oet4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gW5Pb9/aCxj48ILwq7EEUCzLcxDWNVymhfH5zmaO/0TaRZeEqQuzxvZAFfIGxMoNx
-	 J8b3vdwdN2amjaDjzWDWDldwew0I1nIxiGHx7R0f7OQNWiyEsqN0QqWDqKE4ITBrDT
-	 9VBq2WaZvd4jt08xr2QiEUQ4FHNvqyfmuzud3JBL5oZIX048xlr+wQQWzGPg/GRdot
-	 D+j1kVduKQDVFU3dJ/CXToyymrYUdBD5Zqbs1DuqUSklH1XA0hOEsuk7yuh/dFUy8n
-	 3oPso3uV10FDe9eL2CSZtLlj5vhUpvuPfK001VKs4XQ/Sd4c7m/rYDjyJ8HgWfVYJn
-	 Ymy7xexB8RKTw==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpio: fsl,qoriq-gpio: Add missing mpc8xxx compatibles
-Date: Mon, 14 Jul 2025 15:29:40 -0500
-Message-ID: <20250714202941.3013390-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1752530245; c=relaxed/simple;
+	bh=sibXfpJqisAOk08oPxjnKGs1rYDnWjX8lMUuy5TF1sM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=HD57F11qRy0tK0wQesfIj37IDMDT0ipQ7l3lDyTHhrG55S1QmLqXCGlIDthC6ETo5lzhNksW045ZIzVDAGhqAQWnexrisqE7W50ZvZ5aerAQUW71rgvBA2HyCqp69uAVMTM0Osb9SLRj2wiYMkPCR2KPinIvfc2Y5Ls6buig3pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NxcSBAez; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752530243; x=1784066243;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=sibXfpJqisAOk08oPxjnKGs1rYDnWjX8lMUuy5TF1sM=;
+  b=NxcSBAezbzVZZ4QeRh0v/E/c8CZvfUMPa08SUzOEQjL+fWGj4CgLAbtJ
+   XKMHGKYX7VVvOGRydPGDBNLibaJ0eQJtF5+g1saUFKmPRuyoehHwWdjHc
+   GpPGlhLG+6dAuqO1vr/tbMHtWDYpS65yV/i+OIz4pxXe/pEZpAEOifYN2
+   EMuC6vlM/+1DdccsqpKLxv2Gk/SLnvopI+cQmFUhmQEkqHe9Uj7sHO8qc
+   g8083wZIzmtjTHTn65PFYZWojwivSEocrA3sK/w+kIm9CugeHpywyGRnF
+   sFbqNJIGFyENx3cpUK1fvWtu+j2K1A/OgbLBICjlOg+7HZiUIShsrUBmI
+   A==;
+X-CSE-ConnectionGUID: 17AyKADQRhKe6ZxyECBejQ==
+X-CSE-MsgGUID: t7JdSlIQQjyhy1Zxoht/3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="53844475"
+X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
+   d="scan'208";a="53844475"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 14:57:23 -0700
+X-CSE-ConnectionGUID: IbkmvqnURxmN6WdXhBS2bg==
+X-CSE-MsgGUID: FkrJiHkeQBeO0aWxXb9wHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
+   d="scan'208";a="157388414"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 14 Jul 2025 14:57:22 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ubRAm-0009Nf-0d;
+	Mon, 14 Jul 2025 21:57:20 +0000
+Date: Tue, 15 Jul 2025 05:56:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [linusw-pinctrl:devel 14/81] drivers/pinctrl/pinctrl-tb10x.c:815:34:
+ warning: 'tb10x_pinctrl_dt_ids' defined but not used
+Message-ID: <202507150541.0WfZDWlE-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The fsl,mpc8349-gpio, fsl,mpc8572-gpio, and fsl,mpc8610-gpio compatibles
-are already documented in fsl,qoriq-gpio.yaml. Add the additional
-compatibles that use fsl,mpc8349-gpio as a fallback. With that,
-the 8xxx_gpio.txt binding document is redundant and can be removed.
+Hi Krzysztof,
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../devicetree/bindings/gpio/8xxx_gpio.txt    | 72 -------------------
- .../bindings/gpio/fsl,qoriq-gpio.yaml         |  7 ++
- 2 files changed, 7 insertions(+), 72 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
+First bad commit (maybe != root cause):
 
-diff --git a/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt b/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
-deleted file mode 100644
-index 973362eb3f1e..000000000000
---- a/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
-+++ /dev/null
-@@ -1,72 +0,0 @@
--GPIO controllers on MPC8xxx SoCs
--
--This is for the non-QE/CPM/GUTs GPIO controllers as found on
--8349, 8572, 8610 and compatible.
--
--Every GPIO controller node must have #gpio-cells property defined,
--this information will be used to translate gpio-specifiers.
--See bindings/gpio/gpio.txt for details of how to specify GPIO
--information for devices.
--
--The GPIO module usually is connected to the SoC's internal interrupt
--controller, see bindings/interrupt-controller/interrupts.txt (the
--interrupt client nodes section) for details how to specify this GPIO
--module's interrupt.
--
--The GPIO module may serve as another interrupt controller (cascaded to
--the SoC's internal interrupt controller).  See the interrupt controller
--nodes section in bindings/interrupt-controller/interrupts.txt for
--details.
--
--Required properties:
--- compatible:		"fsl,<chip>-gpio" followed by "fsl,mpc8349-gpio"
--			for 83xx, "fsl,mpc8572-gpio" for 85xx, or
--			"fsl,mpc8610-gpio" for 86xx.
--- #gpio-cells:		Should be two. The first cell is the pin number
--			and the second cell is used to specify optional
--			parameters (currently unused).
--- interrupts:		Interrupt mapping for GPIO IRQ.
--- gpio-controller:	Marks the port as GPIO controller.
--
--Optional properties:
--- interrupt-controller:	Empty boolean property which marks the GPIO
--			module as an IRQ controller.
--- #interrupt-cells:	Should be two.  Defines the number of integer
--			cells required to specify an interrupt within
--			this interrupt controller.  The first cell
--			defines the pin number, the second cell
--			defines additional flags (trigger type,
--			trigger polarity).  Note that the available
--			set of trigger conditions supported by the
--			GPIO module depends on the actual SoC.
--
--Example of gpio-controller nodes for a MPC8347 SoC:
--
--	gpio1: gpio-controller@c00 {
--		#gpio-cells = <2>;
--		compatible = "fsl,mpc8347-gpio", "fsl,mpc8349-gpio";
--		reg = <0xc00 0x100>;
--		interrupt-parent = <&ipic>;
--		interrupts = <74 0x8>;
--		gpio-controller;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--
--	gpio2: gpio-controller@d00 {
--		#gpio-cells = <2>;
--		compatible = "fsl,mpc8347-gpio", "fsl,mpc8349-gpio";
--		reg = <0xd00 0x100>;
--		interrupt-parent = <&ipic>;
--		interrupts = <75 0x8>;
--		gpio-controller;
--	};
--
--Example of a peripheral using the GPIO module as an IRQ controller:
--
--	funkyfpga@0 {
--		compatible = "funky-fpga";
--		...
--		interrupt-parent = <&gpio1>;
--		interrupts = <4 3>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-index f1b60ab3f356..4cb2a6b9fabf 100644
---- a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-@@ -29,6 +29,13 @@ properties:
-               - fsl,ls1088a-gpio
-               - fsl,ls2080a-gpio
-           - const: fsl,qoriq-gpio
-+      - items:
-+          - enum:
-+              - fsl,mpc8308-gpio
-+              - fsl,mpc8377-gpio
-+              - fsl,mpc8378-gpio
-+              - fsl,mpc8379-gpio
-+          - const: fsl,mpc8349-gpio
- 
-   reg:
-     maxItems: 1
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+head:   2427d69c3dba3f9bce73d36c2c0adf37b5aee5d9
+commit: 1982621decaf788d0611fc291fe89b297b6e5510 [14/81] pinctrl: Allow compile testing for K210, TB10X and ZYNQ
+config: x86_64-buildonly-randconfig-006-20250715 (https://download.01.org/0day-ci/archive/20250715/202507150541.0WfZDWlE-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250715/202507150541.0WfZDWlE-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507150541.0WfZDWlE-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pinctrl/pinctrl-tb10x.c:815:34: warning: 'tb10x_pinctrl_dt_ids' defined but not used [-Wunused-const-variable=]
+     815 | static const struct of_device_id tb10x_pinctrl_dt_ids[] = {
+         |                                  ^~~~~~~~~~~~~~~~~~~~
+
+
+vim +/tb10x_pinctrl_dt_ids +815 drivers/pinctrl/pinctrl-tb10x.c
+
+5aad0db1c1ebb0f Christian Ruppert 2013-10-15  813  
+5aad0db1c1ebb0f Christian Ruppert 2013-10-15  814  
+5aad0db1c1ebb0f Christian Ruppert 2013-10-15 @815  static const struct of_device_id tb10x_pinctrl_dt_ids[] = {
+5aad0db1c1ebb0f Christian Ruppert 2013-10-15  816  	{ .compatible = "abilis,tb10x-iomux" },
+5aad0db1c1ebb0f Christian Ruppert 2013-10-15  817  	{ }
+5aad0db1c1ebb0f Christian Ruppert 2013-10-15  818  };
+5aad0db1c1ebb0f Christian Ruppert 2013-10-15  819  MODULE_DEVICE_TABLE(of, tb10x_pinctrl_dt_ids);
+5aad0db1c1ebb0f Christian Ruppert 2013-10-15  820  
+
+:::::: The code at line 815 was first introduced by commit
+:::::: 5aad0db1c1ebb0f5be79f0adbecc16a2f0259b21 pinctrl: add TB10x pin control driver
+
+:::::: TO: Christian Ruppert <christian.ruppert@abilis.com>
+:::::: CC: Linus Walleij <linus.walleij@linaro.org>
+
 -- 
-2.47.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
