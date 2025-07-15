@@ -1,125 +1,233 @@
-Return-Path: <linux-gpio+bounces-23297-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23298-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BA70B05CCF
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 15:36:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDE53B05FFC
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 16:11:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0076217016A
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 13:35:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6864A1C43ACE
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 14:03:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19CE32EB5AC;
-	Tue, 15 Jul 2025 13:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CkFrg3m+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DFDD2E92B1;
+	Tue, 15 Jul 2025 13:52:23 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3241A2E613E;
-	Tue, 15 Jul 2025 13:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F3A2E7BB6
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 13:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752586163; cv=none; b=XfhytAyGhTIFidrfkKWEOPPx1VZmgztryKUdum3fGtDPrZepx5ORyW2kbdfbRhEjpA7KRcP4jqTCTKnDp3nh/ukNOqsMWfc21DZTBMjH4KZ5xuKeW4lzH4HBSOkfQ79FC7P9TzUVlY5MhmlplHewu1KGDYmwe+wpYlF+tjdtblg=
+	t=1752587543; cv=none; b=GPhFznp3b/LAyJleyWwxPE98GA2kw+ku1Y3OC6udYsqks9vWvoiqaeuXd5ffPoCTLxdigBm6LgboZZh8xVAcmp0O/ExoorD0jiwXjA2PpL/nrX7fqOZO+SkhK9jbYlVcha250lHn7D4jA3CC5wn6hdjM/rgEq4Piy7/wklJdtEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752586163; c=relaxed/simple;
-	bh=IS0zMYjCeG1sUzA/o870BnonfbFqvWBqq05l3BrL5EM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hhukp+sU+A5Sw25n9zNXdKWpsTIxLNbPpRcFtaDKTS9Jf+TqQW0oUK63POSlH807aUTcW6AOb0gHsrxK+jtbmao5DLI/KcKbPglGD2BE+gADDKd9uqrrh1WearGc89uAZvI63EChu2ecxLDx/mgWon85MIvPi78yDCvXyl5RvFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CkFrg3m+; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752586162; x=1784122162;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IS0zMYjCeG1sUzA/o870BnonfbFqvWBqq05l3BrL5EM=;
-  b=CkFrg3m+tPBS2PbKpAfjvfDFC7+be8bcJ2XSXQ86ymv4XlcTNF05f+Gc
-   zyCGXcAOEnz4zds55Y9kq8GFzHqkvcfCqSWqo8Y+4WeTkDTLJv8ce4EcG
-   /2CfEQwINyMYqhgsvl4gyVs+LaYQKBXS0/oywvcCAD2U8cMrAyEgWEWy9
-   tWzCudx47faxG9/Qyv7sh52lShlEDj2lWDi2Jbv2IJ0ksyAVHxRophQAz
-   FRMB30iT3k+PcsrJuOae2i2fLDz949U/Xb/z6N+AnUCqaDCFLt0mWCegz
-   bRJ2LKAYWQv3YKeYZjZIvSDEDqZH0Zm/Y52lnBjV0KSzSEaiW2aZhpM3U
-   A==;
-X-CSE-ConnectionGUID: 3tIhMmgVQQ2JGuG68iB4Eg==
-X-CSE-MsgGUID: C4TFG/krROmx490N3y5FLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="54023333"
-X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
-   d="scan'208";a="54023333"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 06:29:22 -0700
-X-CSE-ConnectionGUID: tExs557lSFySzJsjo1bguQ==
-X-CSE-MsgGUID: /N6sNHUsRACGHIy570/EYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
-   d="scan'208";a="161534986"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 06:29:21 -0700
-Received: from [10.124.223.222] (unknown [10.124.223.222])
-	by linux.intel.com (Postfix) with ESMTP id 5FCBC20B571C;
-	Tue, 15 Jul 2025 06:29:20 -0700 (PDT)
-Message-ID: <3357db65-279f-4f43-880a-966b10e10287@linux.intel.com>
-Date: Tue, 15 Jul 2025 06:29:20 -0700
+	s=arc-20240116; t=1752587543; c=relaxed/simple;
+	bh=uTToH5GSSMpPtkbRpL7mnFGKBMGILkAjWUjlYXMcZ4c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=t9GBEl6OYis3G5vMDDGcYTozqrXO+viOUkZGecAE070rkl10hvYVF+B2ROaYwSXyYbt/G1ocRTwChr+eLSCjNzb/Y4w75T62JHftJJ4PL+0holZrQ0Dygx74WXln3j+LIxNiEgvYmg18wxZW3VkcLK0aPdj+6tKOe97HHn6aMtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1ubg4V-0000Zx-U7; Tue, 15 Jul 2025 15:51:51 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1ubg4S-008aWa-1W;
+	Tue, 15 Jul 2025 15:51:48 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1ubg4S-000MYS-1C;
+	Tue, 15 Jul 2025 15:51:48 +0200
+Message-ID: <e52bd959eea8a4284404f701d0519c4631a31238.camel@pengutronix.de>
+Subject: Re: [PATCH v2 09/10] PCI: aspeed: Add ASPEED PCIe RC driver
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com, 
+ lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org,  krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
+ andrew@codeconstruct.com.au, linux-aspeed@lists.ozlabs.org, 
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, BMC-SW@aspeedtech.com
+Date: Tue, 15 Jul 2025 15:51:48 +0200
+In-Reply-To: <20250715034320.2553837-10-jacky_chou@aspeedtech.com>
+References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
+	 <20250715034320.2553837-10-jacky_chou@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] gpio: wcove: use regmap_assign_bits() in .set()
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>,
- Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
- Srinivas Neeli <srinivas.neeli@amd.com>, Michal Simek <michal.simek@amd.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- patches@opensource.cirrus.com, linux-arm-kernel@lists.infradead.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250715-gpiochip-set-rv-gpio-remaining-v2-0-072b4cf06330@linaro.org>
- <20250715-gpiochip-set-rv-gpio-remaining-v2-1-072b4cf06330@linaro.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250715-gpiochip-set-rv-gpio-remaining-v2-1-072b4cf06330@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-
-On 7/15/25 1:19 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Replace the if-else with a direct call to the regmap_assign_bits()
-> helper and save a couple lines of code.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Di, 2025-07-15 at 11:43 +0800, Jacky Chou wrote:
+> Introduce PCIe Root Complex driver for ASPEED SoCs. Support RC
+> initialization, reset, clock, IRQ domain, and MSI domain setup.
+> Implement platform-specific setup and register configuration for
+> ASPEED. And provide PCI config space read/write and INTx/MSI
+> interrupt handling.
+>=20
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 > ---
+>  drivers/pci/controller/Kconfig       |   13 +
+>  drivers/pci/controller/Makefile      |    1 +
+>  drivers/pci/controller/pcie-aspeed.c | 1137 ++++++++++++++++++++++++++
+>  3 files changed, 1151 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-aspeed.c
+>=20
+[...]
+> diff --git a/drivers/pci/controller/pcie-aspeed.c b/drivers/pci/controlle=
+r/pcie-aspeed.c
+> new file mode 100644
+> index 000000000000..a7e679d5fb42
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-aspeed.c
+> @@ -0,0 +1,1137 @@
+[...]
+> +static int aspeed_pcie_parse_port(struct aspeed_pcie *pcie,
+> +				  struct device_node *node,
+> +				  int slot)
+> +{
+> +	struct aspeed_pcie_port *port;
+> +	struct device *dev =3D pcie->dev;
+> +
+> +	port =3D devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+> +	if (!port)
+> +		return -ENOMEM;
+> +
+> +	port->pciephy =3D syscon_regmap_lookup_by_phandle(node, "aspeed,pciephy=
+");
+> +	if (IS_ERR(port->pciephy))
+> +		return dev_err_probe(dev, PTR_ERR(port->pciephy),
+> +				     "Failed to map pcie%d pciephy base\n", slot);
+> +
+> +	port->clk =3D devm_get_clk_from_child(dev, node, NULL);
+> +	if (IS_ERR(port->clk))
+> +		return dev_err_probe(dev, PTR_ERR(port->clk),
+> +				     "Failed to get pcie%d clock\n", slot);
+> +
+> +	port->perst =3D of_reset_control_get_exclusive(node, "perst");
+> +	if (IS_ERR(port->perst))
+> +		return dev_err_probe(dev, PTR_ERR(port->perst),
+> +				     "Failed to get pcie%d reset control\n", slot);
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+How about registering a reset_control_put() via
+devm_add_action_or_reset()?
+Otherwise these reset controls are not released on .remove.
 
->   drivers/gpio/gpio-wcove.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-wcove.c b/drivers/gpio/gpio-wcove.c
-> index 1ec24f6f9300f33f5b3f0f8deb539e08392b8188..816fb8d113e66b27070f286755f3192b2a8f8512 100644
-> --- a/drivers/gpio/gpio-wcove.c
-> +++ b/drivers/gpio/gpio-wcove.c
-> @@ -208,10 +208,7 @@ static void wcove_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
->   	if (reg < 0)
->   		return;
->   
-> -	if (value)
-> -		regmap_set_bits(wg->regmap, reg, 1);
-> -	else
-> -		regmap_clear_bits(wg->regmap, reg, 1);
-> +	regmap_assign_bits(wg->regmap, reg, 1, value);
->   }
->   
->   static int wcove_gpio_set_config(struct gpio_chip *chip, unsigned int gpio,
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+[...]
+> +static int aspeed_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct pci_host_bridge *host;
+> +	struct aspeed_pcie *pcie;
+> +	struct aspeed_pcie_port *port;
+> +	struct device_node *node =3D dev->of_node;
+> +	const struct aspeed_pcie_rc_platform *md =3D of_device_get_match_data(d=
+ev);
+> +	int irq, ret;
+> +
+> +	if (!md)
+> +		return -ENODEV;
+> +
+> +	host =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+> +	if (!host)
+> +		return -ENOMEM;
+> +
+> +	pcie =3D pci_host_bridge_priv(host);
+> +	pcie->dev =3D dev;
+> +	pcie->tx_tag =3D 0;
+> +	platform_set_drvdata(pdev, pcie);
+> +
+> +	pcie->platform =3D md;
+> +	pcie->host =3D host;
+> +	INIT_LIST_HEAD(&pcie->ports);
+> +
+> +	pcie->reg =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(pcie->reg))
+> +		return PTR_ERR(pcie->reg);
+> +
+> +	of_property_read_u32(node, "linux,pci-domain", &pcie->domain);
+> +
+> +	pcie->cfg =3D syscon_regmap_lookup_by_phandle(dev->of_node, "aspeed,pci=
+ecfg");
+> +	if (IS_ERR(pcie->cfg))
+> +		return dev_err_probe(dev, PTR_ERR(pcie->cfg), "Failed to map pciecfg b=
+ase\n");
+> +
+> +	pcie->h2xrst =3D devm_reset_control_get_exclusive(dev, "h2x");
+> +	if (IS_ERR(pcie->h2xrst))
+> +		return dev_err_probe(dev, PTR_ERR(pcie->h2xrst), "Failed to get h2x re=
+set\n");
+> +
+> +	ret =3D devm_mutex_init(dev, &pcie->lock);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to init mutex\n");
+> +
+> +	ret =3D pcie->platform->setup(pdev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to setup PCIe RC\n");
+> +
+> +	ret =3D aspeed_pcie_parse_dt(pcie);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D aspeed_pcie_init_ports(pcie);
+> +	if (ret)
+> +		goto err_remove_resets;
+> +
+> +	host->sysdata =3D pcie;
+> +
+> +	ret =3D aspeed_pcie_init_irq_domain(pcie);
+> +	if (ret)
+> +		goto err_irq_init;
+> +
+> +	irq =3D platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		ret =3D irq;
+> +		goto err_irq;
+> +	}
+> +
+> +	ret =3D devm_request_irq(dev, irq, aspeed_pcie_intr_handler, IRQF_SHARE=
+D, dev_name(dev),
+> +			       pcie);
+> +	if (ret)
+> +		goto err_irq;
+> +
+> +	ret =3D pci_host_probe(host);
+> +	if (ret)
+> +		goto err_irq;
+> +
+> +	return 0;
+> +err_irq:
+> +	aspeed_pcie_irq_domain_free(pcie);
+
+If pci_host_probe() fails, aspeed_pcie_irq_domain_free() will be called
+before the IRQ requested with devm_request_irq() above is released.
+Also, this is never called on .remove. You can fix both with
+devm_add_action_or_reset().
+
+> +err_irq_init:
+> +err_remove_resets:
+> +	list_for_each_entry(port, &pcie->ports, list)
+> +		reset_control_put(port->perst);
+
+I suggest to let devres handle this (see above).
+
+regards
+Philipp
 
 
