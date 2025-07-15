@@ -1,89 +1,96 @@
-Return-Path: <linux-gpio+bounces-23310-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23319-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51EE5B065AB
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 20:07:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AF06B06605
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 20:31:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B5483A763C
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 18:07:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54566566F74
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 18:31:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 134CB29CB3A;
-	Tue, 15 Jul 2025 18:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81BDF2BE7A0;
+	Tue, 15 Jul 2025 18:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UyOIGzGI"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EHSkE1kV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CE729AAE7;
-	Tue, 15 Jul 2025 18:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E885226863
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 18:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752602835; cv=none; b=T56S07j6TJSy9+gxVJOOcFkbKqO45i2FLVKsHgOnX2lc4DUoj3HouH+Eg+5UDMuYgooeQZiIm+23+B14yrdVPFcfyu0v76O9Bl5VHWl73KG95G10dgtFS6425pUewLPUHkIegbRwzSj5bzXHnlAnp2J1xu9Kz8FDkyier2mdKSo=
+	t=1752604209; cv=none; b=RW0+yD3IS9kSMpEJ4JEcdorrTbKwOwABJfWkP1wUM2qjb1eqYkrva8cD1dTzFUzEP5ls7MqxCdtOzXGCi+f2kw7UrTVUGbJAkOkAwcKngqDEmASTBpoOiELj/9s4AwolISYpPi3dYHwlcEHDstHhoEoPEOEXry1vi4t3jgY1KTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752602835; c=relaxed/simple;
-	bh=rnwA//xzf2zxCkabUJBduwVqt/c2yY/NU93eOgLk5xA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aiu//LvbvYE/8BBv4jKnxLukrWhBAvhkGxygwfVL81EArXwU//41qs0LGP3EYCT3SLWgto5CvCf6xKFbTAXOCZUyQKcfGgg+IkVpAVVJA+lchKEGSYB1FMtQvV0wW7sgWtV4QEZWrkd/zic/w1mKz6BBE4fd8KH6g78dtjGC/4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UyOIGzGI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56FGDNZd017654;
-	Tue, 15 Jul 2025 18:07:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=ZhmcPkOZDjY
-	EsfWctxf+g+3ZwHjNsFr4IiFrtAta6iY=; b=UyOIGzGIaZpO1KlU9nmXGoi+Xw5
-	9AE1dYzvCnNgV/Pwwedwm05o/Zu2Bkhgx75Z6X41He+B6VZ2v1NCLZBs91LWIQeS
-	Vrg4v4fWtbySu8LxF8NInlBij60ia/76N6sFT3Bhkiax3U3Uw/3+BnUz8Q8k/TUD
-	E1dr6mCD2N1l+YqvGlaNEzzDSZpRfYZmOLQWZcBIwkK226wqUQIEc7OgdtqNJ5C4
-	hppPxjX8nNBDRJQYgHcItUiWLrom/UuK2JbosT2EUdjHD3MPYgIyWbeSRi6hxWPU
-	j2+1HGJa4jXoqj5tmAQf/vzWg9adIS4ALS+n5z5/XuIV+UJhL8K9XrNwyjA==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ufu894q0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Jul 2025 18:07:09 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 56FI75JG028694;
-	Tue, 15 Jul 2025 18:07:05 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 47ugskwywv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Jul 2025 18:07:05 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 56FI75Zv028670;
-	Tue, 15 Jul 2025 18:07:05 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-pkumpatl-hyd.qualcomm.com [10.147.245.204])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 56FI74Q1028664
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Jul 2025 18:07:05 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3914174)
-	id C9FDC5D2; Tue, 15 Jul 2025 23:30:52 +0530 (+0530)
-From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com,
-        Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v6 9/9] arm64: dts: qcom: qcm6490-idp: Add sound card
-Date: Tue, 15 Jul 2025 23:30:50 +0530
-Message-Id: <20250715180050.3920019-10-quic_pkumpatl@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250715180050.3920019-1-quic_pkumpatl@quicinc.com>
-References: <20250715180050.3920019-1-quic_pkumpatl@quicinc.com>
+	s=arc-20240116; t=1752604209; c=relaxed/simple;
+	bh=OG4SrjBpGcgo80E7iHJAxFbVbBSCrUzfqs/vGbjG08M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E/Tyiyvx1J+CLlrcgNHYOCu+oahgupbZyz3mcKxk/byrSaBiiqmIq6QNAisImlJJss0fIctf9Q2+hKfJbg5EFR2XySyEaWC9mefcRIeAjwxcPiPnEO4698pio5Pap1T8S1Uz9kVjtLGqcmvrUAy7zRlepClGl2eHGnPYO7uNUas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EHSkE1kV; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-ae0dad3a179so972959666b.1
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 11:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1752604204; x=1753209004; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uvjjouxvZp03dNr4GPQAUqRZmBS74KdM8wrzyT4z5C0=;
+        b=EHSkE1kV4wYDzENnn6RM9Ers8k2OzkMSxNoylFRKMumiUocZlJV8EtFDBbFOEbR+Xt
+         nmcm+bDjvVEFtvZhmPCnSJKeExFIZEkPouN3U5QCxFkjdVD62CWhu7yHlNjN5n+ft50R
+         FAU4WdZX34pUMKXT2Hc51y6uKP00G0j+JHfRrClu+90+d2nCyW1ihO2OitdY21qLlPdW
+         phStzFmovVtgEIncjUVQ83illZgGmf6fSX90RBP9gXBAsnIIwNb0rStfyaR08lIC7iea
+         /ksWhkSeEh0CStEwbIVhGEJHp2qVcdqHlFVisYBKT/imncXDCNTZfwWltBnSw2AaZ4AF
+         xmQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752604204; x=1753209004;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uvjjouxvZp03dNr4GPQAUqRZmBS74KdM8wrzyT4z5C0=;
+        b=j7eKV71GVFdqppUerN/SfNVjwFhKVI8Ka0WyK8I464QvJMKHD0oPWNq20LhW+Djmlc
+         1AiMzTZcpegmsZZVupL6hOQiDSr1pZrAPpSNP0+VO6IrYEgLum3jXgCnsrbm45dulJ2O
+         g11xgQInle4Gx7Nt8E49bOJ+GjEKlqolrbTRJ4snX37bPlLojikZnl4JCEHz2prRiXHf
+         wlyIZsYDFYL3kcppU/cPs02AOxRorcctM0WZmd2CsgAjOuyu7A8ufWmCJNBToiTZPtTO
+         DqwyNDSF3WpTKXTWbocIrE2LsnJ3vLUSwsATIkA/Ub+Ezbp/Rvk3g1/w/fHqN4ar73BE
+         tr2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWFqP+mhxVcTQ3c3D0ZC0pSjMQovPfvrNNpRlhYnn/PfxB9De7iTpjyxLWJk/h5QUauX9CmDVdXp+cN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRDqm6ydZriFrvYSJ2F4okvY/WPiMV/sopKAAqBbmL17CG+ahZ
+	+n96FwtveEmIrCMBVNRC5616KpIBsYtucQ38P9kqmLLxzg080wie2/KDDd3LKYglUN8=
+X-Gm-Gg: ASbGncuQTx+ikqyCf5100gEzuOCP4RNBb0YCMnKZ8NFDdblmdG6L6wPXit1Ow81115J
+	+BUGk8EYjzB+sPNKcrhvknqQygwhIP6EO9oyWoFzRl312Ku92HLrKQoZIkRDLikHsxedCYA9atO
+	KdmkrMo2FWl/YLKrmVfwxd7R8t7E451fbYOxiLb5G0H0pgFQh4s/DuweLeyhVsfVbkltgTn/AJS
+	q/95BOf4xItzsqG/MJYtJyaqnbJm4ffjRUSfwM7J+I4i1o3dnfPXQlpGZUx7vnNX2rtYlfFl/Rm
+	p/RmGfQnHzxhFbN6rqAzRGX5djURFsNcjDVAI3TWNIMpjHbR7wf4RKRBW84BhC2Ef2qwJjnSfAF
+	BLyZBkfLT//Ob/nGqfg8nAEaspz1pqJOOfkTOMEybEOrXS9BU7Otuol54sM1nNF1gGJch
+X-Google-Smtp-Source: AGHT+IGFJbWKXB+kQL0O549amLz17SFCU/R3WUlLT6+iJaf7qSYAHhdJnbOpegB9FUbKE3rnsTsc4w==
+X-Received: by 2002:a17:907:7f86:b0:ae6:f163:5d75 with SMTP id a640c23a62f3a-ae9c995443fmr57569466b.11.1752604203618;
+        Tue, 15 Jul 2025 11:30:03 -0700 (PDT)
+Received: from localhost (host-79-47-155-191.retail.telecomitalia.it. [79.47.155.191])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e82df56esm1041676366b.156.2025.07.15.11.30.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Jul 2025 11:30:03 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org
+Cc: conor+dt@kernel.org,
+	florian.fainelli@broadcom.com,
+	wahrenst@gmx.net,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	iivanov@suse.de,
+	svarbanov@suse.de,
+	mbrugger@suse.com,
+	Andrea della Porta <andrea.porta@suse.com>
+Subject: [PATCH 0/7] Add pin control driver for BCM2712 SoC
+Date: Tue, 15 Jul 2025 20:31:37 +0200
+Message-ID: <cover.1752584387.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -91,142 +98,158 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE1MDE2NiBTYWx0ZWRfX+5vFNp04G9gy
- fZWxQMA0yg1JZT2hjBXKyG3dcMUA6DZ+pnIZokkwMSLGnSEOqtsY7mUi9aC2CArSiyYrA3pvoYz
- 3qth+2FLKTM1VE58VCy9tAjci/YDfvHTdPmSgjARIBIgeJlp+QBwoBCLkJ/JeS14ikCJmBpsDpn
- ZVRkclzSSttSqvk6tTJ1lpwqYb25E0ypIDum9LXci9C9ykNwDhp2u0TrBCvOC3Dk95BdWfvc65T
- ARaScCPwkEitwjlmrlDXxrxcQ+VdDRHmfndHswDOulSgyRXvMx/JvPjbavXmrKLQ6htXIwv3PPx
- b0L7MWijmJiAb8/M7HyBrMIZDfno8nhQormBB2yvYRPbYbSoG+KKbT0sTA2guXRLdTnva3x1sRw
- V5KzM02fTZe6MbGHpHgtmzKpGUKC73DEgCnxn2yIJ2/LZP7OqsLZ34R2/o42JF6vvwtIiqZj
-X-Proofpoint-ORIG-GUID: HR7XFiNkIfjPjqORIQJUsOK0lYjqVSgA
-X-Proofpoint-GUID: HR7XFiNkIfjPjqORIQJUsOK0lYjqVSgA
-X-Authority-Analysis: v=2.4 cv=f59IBPyM c=1 sm=1 tr=0 ts=687698cd cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=yo8woGbAw4EISn_yZD4A:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-15_04,2025-07-15_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- bulkscore=0 suspectscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507150166
 
-From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+Hi,
 
-Add the sound card node with tested playback over WSA8835 speakers,
-digital on-board mics along with wcd9370 headset playabck and record.
+The following patches add a pin control driver for the BCM2712 SoC and few
+pin/gpio Devicetree nodes for Raspberry Pi 5.
 
-Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 84 ++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+Device driver is follow up version on what Andrea posted in April [1].
 
-diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-index 468f5f9c0779..acc338e9b60a 100644
---- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-@@ -757,6 +757,90 @@ &sdhc_2 {
- 	cd-gpios = <&tlmm 91 GPIO_ACTIVE_LOW>;
- };
- 
-+&sound {
-+	compatible = "qcom,qcm6490-idp-sndcard";
-+	model = "qcm6490-idp-snd-card";
-+
-+	audio-routing = "SpkrLeft IN", "WSA_SPK1 OUT",
-+			"SpkrRight IN", "WSA_SPK2 OUT",
-+			"IN1_HPHL", "HPHL_OUT",
-+			"IN2_HPHR", "HPHR_OUT",
-+			"AMIC2", "MIC BIAS2",
-+			"TX DMIC0", "MIC BIAS1",
-+			"TX DMIC1", "MIC BIAS2",
-+			"TX DMIC2", "MIC BIAS3",
-+			"TX SWR_ADC1", "ADC2_OUTPUT",
-+			"VA DMIC0", "VA MIC BIAS3",
-+			"VA DMIC1", "VA MIC BIAS3",
-+			"VA DMIC2", "VA MIC BIAS1",
-+			"VA DMIC3", "VA MIC BIAS1";
-+
-+	wsa-dai-link {
-+		link-name = "WSA Playback";
-+
-+		codec {
-+			sound-dai = <&left_spkr>, <&right_spkr>,
-+				    <&swr2 0>, <&lpass_wsa_macro 0>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6apm>;
-+		};
-+	};
-+
-+	wcd-playback-dai-link {
-+		link-name = "WCD Playback";
-+
-+		codec {
-+			sound-dai = <&wcd9370 0>, <&swr0 0>, <&lpass_rx_macro 0>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6apmbedai RX_CODEC_DMA_RX_0>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6apm>;
-+		};
-+	};
-+
-+	wcd-capture-dai-link {
-+		link-name = "WCD Capture";
-+
-+		codec {
-+			sound-dai = <&wcd9370 1>, <&swr1 0>, <&lpass_tx_macro 0>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6apmbedai TX_CODEC_DMA_TX_3>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6apm>;
-+		};
-+	};
-+
-+	va-dai-link {
-+		link-name = "VA Capture";
-+
-+		codec {
-+			sound-dai = <&lpass_va_macro 0>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6apmbedai VA_CODEC_DMA_TX_0>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6apm>;
-+		};
-+	};
-+};
-+
- &swr0 {
- 	status = "okay";
- 
+It is based on sources from here [2]. I just made few cosmetic changes
+and addressed review comments from earlier submission. I don't have
+documentation for this controller.
+
+Patch 4 wire up power button on RPi5.
+
+Patch 5 adds WiFi Devicetree node for RPi5.
+
+Patch 6 adds Bluetooth Devicetree node for RPi5.
+
+All this have been tested as kernel was directly booted RPi5 via
+kernel= config.txt option and cmdline.txt file with following content
+(Note I am using Tumbleweed RPi raw images)
+
+# cat /boot/efi/cmdline.txt
+root=/dev/mmcblk0p3 rootwait rw systemd.show_status=1 console=tty ignore_loglevel earlycon console=ttyAMA10,115200
+
+With all these patches Bluetooth and Wifi are working fine (tm) with
+firmware files provided by openSUSE Tumbleweed.
+
+All comments and suggestions are welcome!
+
+Happy hacking!
+Ivan and Andrea
+
+[1] https://lore.kernel.org/lkml/f6601f73-cb22-4ba3-88c5-241be8421fc3@broadcom.com/
+[2] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/drivers/pinctrl/bcm/pinctrl-bcm2712.c
+[3] https://lore.kernel.org/lkml/20240605120712.3523290-1-florian.fainelli@broadcom.com/#t
+[4] https://lore.kernel.org/all/bfc60a7e-54d2-48a6-a288-4fe76d66507a@gmx.net/
+
+
+CHANGES in V2: (all patchset is based upon linux-next/master)
+
+--- PINCTRL DRIVER ---
+
+- dropped bcm2712_c0_aon_sgpio_pin_funcs[] and bcm2712_d0_aon_sgpio_pin_funcs[]
+  struct array definitions since they are not used anywhere.
+
+- dropped 'arg' variable in brcmstb_pinconf_set() as it's not used.
+
+- updated copyright info at the top.
+
+- several changes in the declared macros. Renaming the macro name and the
+  macro parameters to better reflect the semantic.
+
+- reworked MUX_BIT() macro to be more streamlined and easy to
+  understand.
+
+- added PAD_BIT() macro to avoid code duplication.
+
+- renamed 'lock' variable to 'fsel_lock'.
+
+- added some comments about non-existent pins on D0 silicon revision pin
+  declarations.
+
+- brcmstb_pinctrl_fsel_set(), brcmstb_pull_config_set()  and
+  brcmstb_pinconf_set() (and functions that call them) can now return -EINVAL
+  as error.
+
+- added myself as MODULE_AUTHOR.
+
+- dropped the 'brcm,bcm2712-[aon-]pinctrl' fallback compatible. Only c0 or d0
+  compatibles are permitted now.
+
+
+--- DTS ---
+
+- moved 'clock-frequency' property from (uarta) board dts node to SoC dtsi node.
+
+- added 'brcm,sdhci-brcmstb' compatible and 'clock-names' property to mmc node
+  to avoid dt_binding_check errors.
+
+- added 'brcm,bcm7445-gpio' compatible to gpio node to avoid dt_binding_check
+  errors.
+
+- renamed all pinctrl pin nodes as per yaml schema (*-state and *-pins).
+
+- changed 'brcm,bcm2712-*pinctrl' to 'brcm,bcm2712c0-*pinctrl' since the
+  former was more of a fallback and does not reflect a real silicon revision.
+
+- moved status="okay" to the last entry in 'uarta' node.
+
+- removed 'local-*-address' property from everywhere.
+
+- dropped 'skip-init' property in 'uarta' node since it does not apply to
+  linux kernel.
+
+- renamed 'pwr-button' node to 'gpio-keys' and 'pwr_key' node to
+  'power_button'.
+
+- dropped an userspace related 'brcm,gpio-direct' property from gpio node.
+
+
+
+--- DT BINDINGS ---
+
+- binding schema file renamed to 'brcm,bcm2712c0-pinctrl.yaml' to reflect the
+  compatible name.
+
+- dropped the 'brcm,bcm2712-[aon-]pinctrl' fallback compatible. Only c0 or d0
+  compatibles are permitted now.
+
+- added example section.
+
+- moved allOf: block at the beginning of the schema.
+
+- dropped some unnecessary new lines.
+
+- replaced current layout to describe the pin subnodes with patternProperties
+  (nodes now end with -state and -pins).
+
+- expanded the schema description to give some context about STB family of pin
+  controller and added some details about C0 and D0 silicon variants. This is
+  also reflected in the commit message.
+
+
+--- MISC ---
+
+- enabled CONFIG_PINCTRL_BRCMSTB in arm64 defconfig.
+
+
+Andrea della Porta (1):
+  arm64: defconfig: Enable BCM2712 on-chip pin controller driver
+
+Ivan T. Ivanov (6):
+  dt-bindings: pinctrl: Add support for Broadcom STB pin controller
+  pinctrl: bcm: Add STB family pin controller driver
+  arm64: dts: broadcom: bcm2712: Add pin controller nodes
+  arm64: dts: broadcom: bcm2712: Add one more GPIO node
+  arm64: dts: broadcom: bcm2712: Add second SDHCI controller node
+  arm64: dts: broadcom: bcm2712: Add UARTA controller node
+
+ .../pinctrl/brcm,bcm2712c0-pinctrl.yaml       |  123 ++
+ .../dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts  |  134 ++
+ arch/arm64/boot/dts/broadcom/bcm2712.dtsi     |   48 +
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pinctrl/bcm/Kconfig                   |   13 +
+ drivers/pinctrl/bcm/Makefile                  |    1 +
+ drivers/pinctrl/bcm/pinctrl-brcmstb.c         | 1195 +++++++++++++++++
+ 7 files changed, 1515 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm2712c0-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-brcmstb.c
+
 -- 
-2.34.1
+2.35.3
 
 
