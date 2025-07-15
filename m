@@ -1,135 +1,145 @@
-Return-Path: <linux-gpio+bounces-23303-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23304-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55971B06344
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 17:42:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0C68B063B0
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 18:01:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B17514E7FE3
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 15:41:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5911E1AA7777
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 16:01:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 824AC24729A;
-	Tue, 15 Jul 2025 15:41:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CB57269AFB;
+	Tue, 15 Jul 2025 16:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="em5tJsih"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iZyPA/cy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314B1221F34;
-	Tue, 15 Jul 2025 15:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5A925DB0D
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 16:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752594107; cv=none; b=TfEbG8VSLg0udzFWzcsLJk4BYwxRV216UjyJSa6CvrIlUAiNzetcArRX56WzF7DmQJoKTdHMctJkJie2TxFrxW9l05hKcA/avVuKDXUMEvEgEHDnRluegt8F1QdxUjwbDpoVz1fUTpFrwFi+xXjjSSXCTfHUJL1KW4c6TRRO4Go=
+	t=1752595226; cv=none; b=XFt1PqluXqq3+msd1ZXK0JGMdb7ZpFZPKUj18eDSct3AnpGCvlYeV+pNEJhUn6BgQOhkr5uneWDDKftFBT6A3SBpsaGvXIKidMcGvyZLsbD16pBx46V3CPI2ALjQRnopm3+uy+KVBblfrXdOV4RzDQ44XXJBQY3onNRCODEuF5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752594107; c=relaxed/simple;
-	bh=5b56qrNXj/OfNJ271j1G/qJdm0poMtreLVVNIaR5qWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=gM48KaU2cpQqu8LmJ14BauhpXTcts9I5TMEFxIKA+U5lQtD9J7ow+gkWcc9xAnso9VlL+xTUeSHJlHPxJLOj998Ib9YsLx26RdSX8D8+GCSxfLTYR1491553tkaHDJJXPd2D6ajFbwpuwgSsy2tKJWWLju/skZ/Sc2f4GNJ2PlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=em5tJsih; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9445C4CEE3;
-	Tue, 15 Jul 2025 15:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752594107;
-	bh=5b56qrNXj/OfNJ271j1G/qJdm0poMtreLVVNIaR5qWg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=em5tJsihWZBOan5zIsQ+cSPCgN/Rzp4PaCrte3ake8mi3AWxsjrrCK82IG5RHPyd3
-	 QNuI2jxfMyfWMgyviwYRD5CjVdfWzVtyF9fUoMjIPN4q8876pn6mtbVehydcJoUA4B
-	 WUwoUbvxn6ip1JsTZTzJce5dAE+IYh9+ZgOBl3XzUfOlprqkrzlFDRLdGyINL/cJX1
-	 KmGccngAWOPzR+MRfSAvKVgFTFM2L8FUVYtxkYAEds6vLp3H7gliyxIIQIfpYv8WY5
-	 J/mLGzM5se86kFo2Q8RqS4AxPDLGe37gOLscWUJNDFq1gzFiNI0OhvEEEohYvd6R73
-	 CSVVVH/eWhvNQ==
-Date: Tue, 15 Jul 2025 10:41:45 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-	p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
-Subject: Re: [PATCH v2 08/10] PCI: Add FMT and TYPE definition for TLP header
-Message-ID: <20250715154145.GA2461632@bhelgaas>
+	s=arc-20240116; t=1752595226; c=relaxed/simple;
+	bh=FwKGIknOxh+BYltp8SEk1LfHTMUv5L9w2TSo790jjZk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qfIAj8sVuIyagbbxuMAWKetXiFlpDWuOb1tls8av5u5cAXXvxbV/nsHn+ve7w1wk12zKfC+Kr3TAV3r0IBUfXRB9LvBKfsd7gjr3OYbTlmmt6C7mNTxVRJBAbXVPiEOkkBKqwWf6+rMmf0iHP4s6azFQTTmCHdpDIVaxvOeCZ6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iZyPA/cy; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ae0d758c3a2so885082966b.2
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 09:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1752595222; x=1753200022; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aId3DDFPGB+h3w+ON2qqdC58+WHMZoja6dA/P+9SekE=;
+        b=iZyPA/cydMewOA+GtDKICPh5g9lijnMCOw1JgUETou7Qhx7NscwzV0+3PeQsWIkq28
+         Ia7sNszKkTbQBhrPZ6FazqWBB/zr/Tc0nwSc+rcgYiW8ECBrpbF9GOBdqjCncukNbQa7
+         U8Jwlq6MxMj+aQewiyL5r2DFbH/K3JU456UqqoDWZQl9gR04YifiC2TRon5NJfvovJrT
+         Xrbt5WTw+8j+69pTl4rRrFfyqBODNz2pDhreo/6MRTXLPjCejsD5rFJCD8Exe9jBTLhl
+         NKeXA/iy+CX8vAgWzqS4/TUEUqlPZbwArXbe9KkbfhNamY38ZnrJ06BbaPycE++hHG51
+         xTLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752595222; x=1753200022;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aId3DDFPGB+h3w+ON2qqdC58+WHMZoja6dA/P+9SekE=;
+        b=ESnJgJZagpCQyRIY5UlZX5cmirwFYHIyuYrgTur7SZu8C3uvTmCp6nDNlKGNX7XNPL
+         mLDOvS12IbAqvvnNuY85DvcDj4M+nPUBXDs9TWaXcizW3aUibHk5RKWk4DghNs75b1HP
+         5xvN8BNZbyQBN8FMnk1qHjuYquAXForoDrmY3nxTkhjDxILdB+YEpHDkNUOnYnrRU79G
+         hzFXhZIDg5wTJOMNkjhwOMebu0DQwFZ8xDV/ezWmBQ9GZp5HihV9YfEZMkYOXzmk5kEg
+         egHKGyGMFYDeYoYAHacWvIpJF8ge44OhYHZrFwhhDs3o0xlIATo51GZcOkh6GrRwHfXK
+         lyFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmCYqdG6DziReiAguMIRMBTJq5XAdw1sDcF5TD6ngCJf1UyZMfu6Q/0iVR6HygLN9a5z1XMFpXMlY+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ/gyOqlAb0Lw9P2x3UIT2IPG8EvZmfZfZ2G+oA0T6VIoiKbOX
+	nqsV2lx3q/EdyKsOmzcgNzJMYegyJIIH4iYSgsnyKi2q1W+IX6V8J9m0uZNvCM0rzuY=
+X-Gm-Gg: ASbGncsYk8X/q7jbw/57Pjn9saaQ4ScS0MN/Wawo13RO4k85WMcsGB3Br85vxWIDhRQ
+	Qf7SqpsEnhNsllrC8QU3pqDYgFp1NhShZWHK3oLeVkNypKoHq86loeDWJZUFEN0MmMkBWZvhCF9
+	7d0PowBZzbQZ5jrt9HybU2oVvi5OOXZAbDaFpKTIa/fVIVoxdV4kcdcyXXIX3e69Zt3sFgsYYNG
+	QQ2azFdit4HpjyMjZqRgAkkjUEk98dKOvUIvGbVkt9Q8Uf/y68o+3cxPbSYHPB6UE2SL9d041Mo
+	eymUGmi9oP0oLIEDkf08ZeCZy+Qi47TNHdKBqbD04LxJqpYXU+YCQc8uQMNQZGuhuY0pmGkK8DH
+	jqDSAV5huKL2mUp6qRXQ5eGfBrJiBD4/BqnQM4UnAStb/O3jDuYmgXtGx7sKaPqLL3vqxZds7QZ
+	lfmO7+pA==
+X-Google-Smtp-Source: AGHT+IG51AKX9vFVkuBm1+00mt3i3tOzwFI86M/7QAJodoZVtCy6p4XzXzhIC5eR6zzOJKjCXuCpUw==
+X-Received: by 2002:a17:907:7241:b0:ad8:9257:573a with SMTP id a640c23a62f3a-ae9c99825b2mr1392666b.5.1752595222422;
+        Tue, 15 Jul 2025 09:00:22 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e7f15803sm1024949166b.70.2025.07.15.09.00.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Jul 2025 09:00:21 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Tue, 15 Jul 2025 17:00:20 +0100
+Subject: [PATCH] gpiolib: devres: release GPIOs in devm_gpiod_put_array()
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250715034320.2553837-9-jacky_chou@aspeedtech.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250715-gpiolib-devres-put-array-fix-v1-1-970d82a8c887@linaro.org>
+X-B4-Tracking: v=1; b=H4sIABN7dmgC/x3MQQqEMAxA0atI1gZapTrMVcRFNVEDoiVVUcS7W
+ 1y+v/g3RFbhCP/sBuVDoqxLgs0z6Ce/jIxCyVCYwpnaOhyDrLN0SHwoRwz7hl7VXzjIiVR1ZeX
+ Ik7E/SIugnPK3b9rneQEFZRBUbgAAAA==
+X-Change-ID: 20250715-gpiolib-devres-put-array-fix-d6b365dad018
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Tue, Jul 15, 2025 at 11:43:18AM +0800, Jacky Chou wrote:
-> According to PCIe specification, add FMT and TYPE definition
-> for TLP header. And also add macro to combine FMT and TYPE to
-> 1 byte.
-> 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->  include/uapi/linux/pci_regs.h | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+devm_gpiod_put_array() is meant to undo the effects of
+devm_gpiod_get_array() - in particular, it should release the GPIOs
+contained in the array acquired with the latter. It is meant to be the
+resource-managed version of gpiod_put_array(), and it should behave
+similar to the non-array version devm_gpiod_put().
 
-I don't think these definitions are relevant to uapi users, so they
-could go in drivers/pci/pci.h, similar to the existing PCIE_MSG_*
-definitions.
+Since commit d1d52c6622a6 ("gpiolib: devres: Finish the conversion to
+use devm_add_action()") it doesn't do that anymore, it just removes the
+devres action and frees associated memory, but it doesn't actually
+release the GPIOs.
 
-Please follow the style of PCIE_MSG_*, including the brief spec
-citations and /* */ comments.
+Fix by switching from devm_remove_action() to devm_release_action(),
+which will in addition invoke the action to release the GPIOs.
 
-Not sure we need *all* of these; it looks like you only use:
+Fixes: d1d52c6622a6 ("gpiolib: devres: Finish the conversion to use devm_add_action()")
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+ drivers/gpio/gpiolib-devres.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  PCI_TLP_TYPE_CFG0_RD
-  PCI_TLP_TYPE_CFG0_WR
-  PCI_TLP_TYPE_CFG1_RD
-  PCI_TLP_TYPE_CFG1_WR
-  PCI_TLP_FMT_3DW_NO_DATA
-  PCI_TLP_FMT_3DW_DATA
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 4d5f83b17624eed04039b94ca6d095fea293e5cc..72422c5db3641e5609759e82ac2ab532fab81783 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -319,7 +319,7 @@ EXPORT_SYMBOL_GPL(devm_gpiod_unhinge);
+  */
+ void devm_gpiod_put_array(struct device *dev, struct gpio_descs *descs)
+ {
+-	devm_remove_action(dev, devm_gpiod_release_array, descs);
++	devm_release_action(dev, devm_gpiod_release_array, descs);
+ }
+ EXPORT_SYMBOL_GPL(devm_gpiod_put_array);
+ 
 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index a3a3e942dedf..700b915e00f5 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1230,4 +1230,36 @@
->  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
->  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
->  
-> +/* Fmt[2:0] encoding for TLP Header */
-> +#define PCI_TLP_FMT_3DW_NO_DATA		0x0  // 3DW header, no data
-> +#define PCI_TLP_FMT_4DW_NO_DATA		0x1  // 4DW header, no data
-> +#define PCI_TLP_FMT_3DW_DATA		0x2  // 3DW header, with data
-> +#define PCI_TLP_FMT_4DW_DATA		0x3  // 4DW header, with data
-> +#define PCI_TLP_FMT_PREFIX		0x4  // Prefix header
-> +
-> +/* Type[4:0] encoding for TLP Header */
-> +#define PCI_TLP_TYPE_MEM_RD		0x00 // Memory Read Request
-> +#define PCI_TLP_TYPE_MEM_RDLK		0x01 // Memory Read Lock Request
-> +#define PCI_TLP_TYPE_MEM_WR		0x00 // Memory Write Request (Fmt must be with data)
-> +#define PCI_TLP_TYPE_IO_RD		0x02 // IO Read Request
-> +#define PCI_TLP_TYPE_IO_WR		0x02 // IO Write Request (Fmt must be with data)
-> +#define PCI_TLP_TYPE_CFG0_RD		0x04 // Config Type 0 Read Request
-> +#define PCI_TLP_TYPE_CFG0_WR		0x04 // Config Type 0 Write Request (Fmt must be with data)
-> +#define PCI_TLP_TYPE_CFG1_RD		0x05 // Config Type 1 Read Request
-> +#define PCI_TLP_TYPE_CFG1_WR		0x05 // Config Type 1 Write Request (Fmt must be with data)
-> +#define PCI_TLP_TYPE_MSG		0x10 // Message Request (see routing field)
-> +#define PCI_TLP_TYPE_MSGD		0x11 // Message Request with Data (see routing field)
-> +#define PCI_TLP_TYPE_CPL		0x0A // Completion without Data
-> +#define PCI_TLP_TYPE_CPLD		0x0A // Completion with Data (Fmt must be with data)
-> +#define PCI_TLP_TYPE_CPLLCK		0x0B // Completion Locked
-> +#define PCI_TLP_TYPE_CPLDLCK		0x0B // Completion with Data Locked (Fmt must be with data)
-> +#define PCI_TLP_TYPE_FETCH_ADD		0x0C // Fetch and Add AtomicOp Request
-> +#define PCI_TLP_TYPE_SWAP		0x0D // Unconditional Swap AtomicOp Request
-> +#define PCI_TLP_TYPE_CMP_SWAP		0x0E // Compare and Swap AtomicOp Request
-> +#define PCI_TLP_TYPE_LOCAL_PREFIX	0x00 // Local TLP Prefix (Fmt = 0x4)
-> +#define PCI_TLP_TYPE_E2E_PREFIX		0x10 // End-to-End TLP Prefix (Fmt = 0x4)
-> +
-> +/* Macro to combine Fmt and Type into the 8-bit field */
-> +#define PCIE_TLP_FMT_TYPE(fmt, type)   (((fmt) << 5) | ((type) & 0x1F))
+---
+base-commit: 58ba80c4740212c29a1cf9b48f588e60a7612209
+change-id: 20250715-gpiolib-devres-put-array-fix-d6b365dad018
 
-This looks like it might be controller-specific and could go in
-pcie-aspeed.c.
+Best regards,
+-- 
+André Draszik <andre.draszik@linaro.org>
+
 
