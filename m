@@ -1,109 +1,144 @@
-Return-Path: <linux-gpio+bounces-23287-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23288-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A38CB054C0
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 10:23:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62267B056D4
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 11:41:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EDC207B5BE0
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 08:21:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8BDD162D4D
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 09:41:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02997274674;
-	Tue, 15 Jul 2025 08:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B82C527876E;
+	Tue, 15 Jul 2025 09:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CuBVObZz"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GQ7Qk/8E"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEE525F973;
-	Tue, 15 Jul 2025 08:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D01E34545
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 09:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752567753; cv=none; b=pUHODSe04ujh1tmAZNiu32i8ctHE/vAKHPFbSasMdsIhQOgxFJk+RUo/IaFjpdGyCHINh/JxeP39k77pUTrCQcANWc0uz2N5y1vlWIheDpxV/2UNlKPKuT6mlF39MAaq7gdxlZ2N1xHUuAa1eFwoZLD9T8EAKOrhRwVW+E1rpw0=
+	t=1752572470; cv=none; b=lpP75oekO2sVQKp9zPeH8dU6qbg9T8ljaM8z2fE9zcEm1W5NhSJkd9spu9SMZn7NA0S9HcY3wZHgFsa/6uRXT+i0KadNUNxSUNAV5NSyt4AQpVOxE33OpfJ35bQCdNxPQLOxM2oW9ymljWYfcAM3pErH1rf10Gu47RDHwE7+zNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752567753; c=relaxed/simple;
-	bh=a/QsrXQn2Q+8kG4obINj/xiE+3HXSCctW3/j44bjJvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pKu+kGzkxGfqqsDvEUpLNl63a8Sg2GpseyfAPYv0zU/XiWoSc/GwI/YBGUMfmokWvOo775DtpmZ/bm7o8425Bgx7hHqbsrEOWxDaTXviT3K5Sl2P/BS+QPXBCucX0HXJnBg1vr7DdcyOc0CFHKjEtmNDMC/aASk7SGXABnMFUAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CuBVObZz; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752567753; x=1784103753;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a/QsrXQn2Q+8kG4obINj/xiE+3HXSCctW3/j44bjJvA=;
-  b=CuBVObZzIIWqjbZehViJd+NfcfXqC2PzWS5AnWm0bv45ltQtcRdejKEt
-   1iOg76bygFLYPPZ0znhuom+/tjIvxBwH8f0QuknzD5yHEw6yfyQoh+nMf
-   R2o/UkYmPDkqmkgHxSFBMy6HS/kry/DNKNlVYsnRadlIUrCisyqmQqU+v
-   BczfAwGFO2B1Ji8KB+6SQDZV4k28gxvrC7OMm6TH0JMPM99LXncfgdYKo
-   YOsUwQJh/Ou83OSWFrt4JW3WgThLpvnmmn5kkEHscgSDX/+xuuKBQUyFJ
-   ucZY/BqH0DcJJBjq8dy8j8tDBmyE3KGs2M2CnP+6AVe664AUAKt2saR68
-   w==;
-X-CSE-ConnectionGUID: Ak+qCFB4TT+96rd9KjQQsQ==
-X-CSE-MsgGUID: 0FtRcuq+TxKhBSpRZyjnKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54649109"
-X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
-   d="scan'208";a="54649109"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 01:22:32 -0700
-X-CSE-ConnectionGUID: RV8tVbiwSt+C/N3N9A6KLQ==
-X-CSE-MsgGUID: l841zr9kQlyZeWDn3U8ydQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
-   d="scan'208";a="180864523"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 01:22:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1ubavh-0000000Fawi-3Sud;
-	Tue, 15 Jul 2025 11:22:25 +0300
-Date: Tue, 15 Jul 2025 11:22:25 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-arm-kernel@lists.infradead.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 1/2] gpio: wcove: use regmap_assign_bits() in .set()
-Message-ID: <aHYPweTatnLC3TUI@smile.fi.intel.com>
-References: <20250715-gpiochip-set-rv-gpio-remaining-v2-0-072b4cf06330@linaro.org>
- <20250715-gpiochip-set-rv-gpio-remaining-v2-1-072b4cf06330@linaro.org>
- <aHYPoR5JVP4OO0QZ@smile.fi.intel.com>
+	s=arc-20240116; t=1752572470; c=relaxed/simple;
+	bh=ZPnUYFeXte+wGcVrHku95wWnH+WOjYkhkT1NcGR9f4A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VDpPtdgGcv1URSwYKgAiauduJZ66OYRkPQaOmCBrgh7bHcWiNqYebtaSeud15c9906HKH+sw2iLi+eCHOHBgnJHZYekwkuix2W4e20NNNuhrs+WNNOdkyMeduCXYCZQXGrGvX0N1lfMLjD4TEZ7sd0u5PsO9Nu4XLbIRDyu60fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GQ7Qk/8E; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso5801861e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 02:41:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752572466; x=1753177266; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9frFAIY+V2SYHwvz5/wQBn91CDy5jKl/J419A9/KOeg=;
+        b=GQ7Qk/8EEJYUnD3FDFALrr/NWQhJteg2M+WGMaP0OJytsdaf5ex8iXWf1f5cnYsblR
+         yUCEbGcWGYy8Ga5l949Ngm1ggqCOzrUo4hO/jwdqfTaEGdun3i8ShN53BhYHBzFcGAKa
+         Dq93YB1iAgZEJOxBbq6MwKqhgDuQIseAfsZCfkWOKB/MTP5veZvI0EL3mfQb7JN/FNqg
+         V9+6PpqXNtR/KuSJjN9KhUssQv6rr6KAzy3X5r9HDbbB9bQnRxDiyNpLl+P8egUy0nqx
+         U4ZL/EAmyST4eLdnnXvNFIChiQuJlZvL8+mszrEAba0t6zJXOiF8o/qo2yb/u4cSDTtT
+         JJmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752572466; x=1753177266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9frFAIY+V2SYHwvz5/wQBn91CDy5jKl/J419A9/KOeg=;
+        b=aia9f9ALSADGbLUZgX7VpCbUjAHiHCsiuplHRQJKr8Mn+oYypAfkK2aMo21SN1nI94
+         50WU06bOsQp6rFkzHStJMTkzluk5oos0SzQIXx+2I/TL+OEmsiOtTtJjtZz5yl4Z41Dg
+         qbeLSrV4f9V2cd1wGvJtIM2duuaCMxvqFL11XcGSEUyVYEOVW5hmCujcSXhDeSp9uwd7
+         +cVQ1qhYFwQQR/xk9MU5olvepr1+mS8SD8uy6iYFH3bcoe3acr+WY9GXvsBBoRNYrE+q
+         d0FbPH2KWaiF4E0P6ylPqlMD+tHNfzegyi5m9wZj1C28TSp5JJblTPiaYRssiXVSj3GY
+         D2+A==
+X-Gm-Message-State: AOJu0Yz4KIWOTZZWZXzWc4XCu9St8Vs9d3CkH9amnogA5EXIcfPLE7mh
+	AvmV6exrDVqfmkX+wwHc524jU6sRrg/UaCKEonpD56meqajXMLzffOiFImP8mm4FTuZjXKiwuUU
+	IkpbfWSgPmK1RkerCbO1JfOo12C9qWQpwXqXy1AZQ+g==
+X-Gm-Gg: ASbGnct9c27kolereLTitMvErEQuwcBd1h7t5WZYRY/+fm9tW0Hk+KpMfrdQ4ThcTEf
+	PCB1cHuoN2bfkQtd3JYoTvGV+1AkqXfW8fgsTrlEB6GlOT+TmQJ+jLsVs2ndZ6ZOezHU/PYh/XN
+	e+8JZ2qtYQFTjEHDd8QsQAu3scFZNlookemGy05Vboc5VcE4IwguxzVy7ms1O8VcqRl14iNALgf
+	V6FrXJ6oMVOxyDaxBpMRxSTqtG69vHTnlcn8F4=
+X-Google-Smtp-Source: AGHT+IF7l+aCCh53vGqDZPEeYXjKfcKqcPTJgVzgqxX2aBf7xEZsPYAkQk4pp//wHlpjlPFXJK8omNM6lxfniJe8cCc=
+X-Received: by 2002:a05:6512:2386:b0:553:2e59:a104 with SMTP id
+ 2adb3069b0e04-55a0462c27amr5099913e87.37.1752572465964; Tue, 15 Jul 2025
+ 02:41:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aHYPoR5JVP4OO0QZ@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <aHTAs5TtETHMUw-Q@black.fi.intel.com>
+In-Reply-To: <aHTAs5TtETHMUw-Q@black.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 15 Jul 2025 11:40:55 +0200
+X-Gm-Features: Ac12FXyIZRy5-zjS6vp1S_r7Drnw57v79JO8iUTsnA2cPJfUMHUV0dRVv-maMXI
+Message-ID: <CAMRc=MfU4fpWvWbfAUi1fDju+rR64ztokq9aVrfW4bHu_7j6cg@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 6.16-2
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux GPIO <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 15, 2025 at 11:21:53AM +0300, Andy Shevchenko wrote:
-> On Tue, Jul 15, 2025 at 10:19:44AM +0200, Bartosz Golaszewski wrote:
+On Mon, Jul 14, 2025 at 10:32=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Hi Linux GPIO  maintainers,
+>
+> Only a single quirk for this cycle which was in Linux Next for a few week=
+s.
+> Please, pull.
+>
+> Thanks,
+>
+> With Best Regards,
+> Andy Shevchenko
+>
+> The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd13544=
+94:
+>
+>   Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git=
+ tags/intel-gpio-v6.16-2
+>
+> for you to fetch changes up to 9ab29ed505557bd106e292184fa4917955eb8e6e:
+>
+>   gpiolib: acpi: Add a quirk for Acer Nitro V15 (2025-06-09 23:09:24 +030=
+0)
+>
+> ----------------------------------------------------------------
+> intel-gpio for v6.16-2
+>
+> * Add a quirk for Acer Nitro V15 against wakeup capability
+>
+> The following is an automated git shortlog grouped by driver:
+>
+> gpiolib:
+>  -  acpi: Add a quirk for Acer Nitro V15
+>
+> ----------------------------------------------------------------
+> Mario Limonciello (1):
+>       gpiolib: acpi: Add a quirk for Acer Nitro V15
+>
+>  drivers/gpio/gpiolib-acpi-quirks.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
-> > Replace the if-else with a direct call to the regmap_assign_bits()
-> > helper and save a couple lines of code.
+Pulled, thanks!
 
-'...a couple of lines of code.'
-
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
