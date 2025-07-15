@@ -1,142 +1,221 @@
-Return-Path: <linux-gpio+bounces-23289-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23290-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A8D7B05768
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 12:04:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468C2B05847
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 13:03:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7AB8A56162F
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 10:04:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 663097A4A9B
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 11:01:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C039E248881;
-	Tue, 15 Jul 2025 10:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF04A241114;
+	Tue, 15 Jul 2025 11:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ODKNC9Sy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jb1mvT8w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD29213E7A
-	for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 10:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36AF6BB5B
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 11:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752573864; cv=none; b=EEP1jF7obXP4JMN3MNO59S53m2I5C9v13qto7uqrcQW6u7TH0c1NBX5iuWAP08Esxu3ztqdywd7f2wFuxUGXBxIPLVTbCCtiMCRxI/jP/ITj1WpERXNzPOQQ7mXkJPTky1rnBIzn48LCg5aqCjx/tP3U0c4bV2moamPgj1oNWbA=
+	t=1752577376; cv=none; b=PNo7JZTTrGnGAubbPIoAe+MiIzsBdm7ZPkUSPX+1PnKFxoJzDL4FXZDc3/NyByrHSD5lqXsNIUZ9ADAXbjCehH1cNlzkNGgRaKK0AXe2fRWmgXfUPSao/LwTXRmG2KUGUvu3LjUxA8T9AJwuRE/zYpg1eziwUu/BZSuQbUCGMhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752573864; c=relaxed/simple;
-	bh=SB5SCWzU4SrF0bpQDxGLNYlzODumqwqpchHlKL/3Y8I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rHKWG0HUkw6o0Pai4Iq/t8ktEJ8HeossDzzvF2m/i3E9HLAuuVZVhIs20iued7bwlCWaxuDHwPs4mXhvjCqehjgPTI77Bg6IWWFEjgK1rm2HYlAm1lDGEoAWZU4nOVHxuOCuJvZy+Bh5px++txvCkCCAYi71qpY/xu6I3uixzgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ODKNC9Sy; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4e575db1aso295277f8f.2
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 03:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752573860; x=1753178660; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h3GwjKh4XQxSRfwQPxwqnuf4H24N1Uv5D1O1oOMjSyM=;
-        b=ODKNC9Syvry0oOq7pYFH3Gro88yybGuhg2Jie6d38ZL/EmzVteEBvqJRoSkUqgonLq
-         5GJdBXGpsF3xnyJez3cnDMwfE1qLMww0yn1bRdlxwzaYiZvv3HSWZCIbIIJd6Fr1W0n3
-         w2JiCB5jNvLKzoFzE+sd3RTlCakGDY+5XY5DtC1t1rkTDdeNuPojOXtcZ2fTyCSqElV5
-         GlRR361P7QQKvZRrW/c7zaa4ZeXAw+Uy1RnU4slpSNv8ySzlK7Jjxy/2cTM2su4WbfjI
-         FGvg+P2J5dmZ9g3TPDqGEgeUW0Tc1u3dkmtvEW7a/6coX3bbIX9Ls9cl+weqg5Pi9sbc
-         lvUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752573860; x=1753178660;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h3GwjKh4XQxSRfwQPxwqnuf4H24N1Uv5D1O1oOMjSyM=;
-        b=Q6iuBlBcXkQK5s7hQe86V3fATmX+hTOLFLiemHTnUhJJp1YroAUxT+G/cgvAe9+F3J
-         p2uyh2v6eLvbYm3qMpiPnVLXClW2ZobiUtHPIOFlxdiOTg+Qm7dwRZC6GorvThJdnzP0
-         il18o9nFI+RjyIuaRAPpvBFxm413jgPh/Dkst6NbpGlKR6ONh2VCSQdmbsoxTF+HUz9M
-         zsIrv3duX2PNH0oIDgREKCPAWRfCaYSGQ6XiatDmrMLG9pv2v1QDVlvudqC4Of/F0x6h
-         yFxwO+u+y4n+Zx5a5LMhGTB7sM5I+8dqu2fspKMyJxSGDbtXXxwvhAJkS+zowBIRQYRO
-         N4nw==
-X-Forwarded-Encrypted: i=1; AJvYcCWgoJg290E0rnFNgiOYSehfvcQuTihODHrVR9dyo9T+F7NdxTJQ27K0xRFpLmKcKCnlAh5sL+YOlg2s@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb/n76qcqgv3ZKQlF/EHkM3y4jaRqIA7NREqNpE8rYJTNosjel
-	tII++tK0y9gzHCdHWYuRcoOQW1Gt1TjnJ3y0kffXHdc5rtbs0srl8TvU8qeVoFUFWaQ=
-X-Gm-Gg: ASbGnctIvZGueFPOVYGKcDNZDhDUb2fixlN+DzdXr98CxMuiF2IL/DXcmLFiBeW0/Zh
-	etMzOCxHIsfbVNqYgOGu8RlVnzqx3QH09soRWDlemj5reeepA8y71myBN7OF3C99fSp4S4UvG7y
-	Q2mugS5JjfBkvwKSEMUSWBbj/ODGEEmN7Dz6ZEj2LCJER6bATezVAkvTrOp64ZiGsP+7icYm2db
-	NFzdvfCLwFgvflI1jC+Pjuo/69tBn1zuu90whPEYaNgjJEdsVQT0ZYwtxiZkfKIgElJoAZAsQ4w
-	amcvvYtzgqQMbcGMAaE344VlXSgt7CSqoFk7H6yPjXzxaQ/dZ+owCQ1Ibon0A5rFCvyITB+KPUV
-	tJfyCE10xRdvWRrfapu3jOV6b8ESIfp9MWlDQpmgEPNLP6g==
-X-Google-Smtp-Source: AGHT+IHMrjY0VOQQ9jAAOgpScWai9DyRMoY9ri1wzCPDLxklTJKGMPp+lNZbCBa7EyLMTB8MbldPmg==
-X-Received: by 2002:a05:6000:22c4:b0:3a5:7991:fee with SMTP id ffacd0b85a97d-3b60b3affadmr360862f8f.14.1752573860331;
-        Tue, 15 Jul 2025 03:04:20 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.222.89])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e0d571sm14964623f8f.57.2025.07.15.03.04.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Jul 2025 03:04:19 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1752577376; c=relaxed/simple;
+	bh=uq31zZ2SNUyZHpcP+VU+tNorSABjjyGVlxh+BysqZec=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=GU0siLkAYHfTRPSCP/Cy2vsOHjc3m8fgtgeR2dWZ+a0bAMLqX7tFCBiFWokYpzaeLf2iVfkuShDJlqY9M+1CUn5ii5dcflvmhDDne1SkuTVJcsG5ZiSUdHsUvqAZvu3GB7G7oBGT/PWKoA5rb9a81dmx6VQIIAaja+lfJx/9psE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jb1mvT8w; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752577375; x=1784113375;
+  h=date:from:to:cc:subject:message-id;
+  bh=uq31zZ2SNUyZHpcP+VU+tNorSABjjyGVlxh+BysqZec=;
+  b=jb1mvT8wSCs4BFQapYEqn0aAxf2XV8ersM4fOMko1QUuEWiVHmjLaBXb
+   0RDS4TUtPsuKectBCQYnGvX0SGKwHDvq+0C2o/IKvC2+OUfp172L3gqC8
+   Dsy9FY2WY474FH3byMxsRWIo9n3lUShWHXKrZV7QwGbgol0GT4rMJvykW
+   zRDkCjJvOCrHOU0OaO9Ne5JWbuk5WXuW+MRstDaSLoFS7PQAj+IzipISD
+   E/50wfoiWIKM8o8wCBQJqfrnb6z4mtlJGs9Qxlgm9fWAhKAsGW4YQZE5K
+   Gx4nisSBz47h93Ob1H1vxxdv/v0ETbJ78Jd7bAWSGMeIJPUembejJLsy3
+   A==;
+X-CSE-ConnectionGUID: PJgtgTFgTU+6IURbRdN7WA==
+X-CSE-MsgGUID: RrFpYQcrQUa50W9uDgNynQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="65361923"
+X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
+   d="scan'208";a="65361923"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 04:02:54 -0700
+X-CSE-ConnectionGUID: FgrfygBBSpCHeyTiURrnfQ==
+X-CSE-MsgGUID: BwaPVYimRGCMYFRkEGuXsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
+   d="scan'208";a="157286461"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 15 Jul 2025 04:02:53 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ubdQx-0009yl-0O;
+	Tue, 15 Jul 2025 11:02:51 +0000
+Date: Tue, 15 Jul 2025 19:02:50 +0800
+From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Sylwester Nawrocki <snawrocki@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] pinctrl: samsung: drivers for v6.17
-Date: Tue, 15 Jul 2025 12:04:15 +0200
-Message-ID: <20250715100415.60487-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS WITH WARNING
+ 2427d69c3dba3f9bce73d36c2c0adf37b5aee5d9
+Message-ID: <202507151935.ZyP6qUl2-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1269; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=SB5SCWzU4SrF0bpQDxGLNYlzODumqwqpchHlKL/3Y8I=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBodiefBvfgeeH/sRvJWFZDCiNYk4oeYz1pS3qxy
- jayWCXCSCKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaHYnnwAKCRDBN2bmhouD
- 10t9D/wLdtc2naCJk+QxDqceFLLmw9n17tnaDNQLktCQYeD1Oj7BiPOYSnvKeu9IG72Ru6pTQom
- t0ivRHMXRkjNg71dTTq6hYzeNMwJw7aa9FLd5BmYivYmQ8v3LyLau7tVDwQp+mne+uKAwpI+DdA
- JaiOqgxoenmPLxUpOlHwwmTqqfeMoO+5ra9LsspbkIeXQrSZ/ZBnCz/OlCPFEVFmPUJ57vdJecC
- Ik7N5ll7va/s7Wze8FVj5nBAYVd3O4TrJyf1betn5N82xkdpYGpRTvzbjoBQNlco/7q/fJW73cb
- 8GCl5Y9NWoG4yUJjYwytEc7waT6sil08JcnWdOVSVdq7Ekcfmy2Ior8ooXXMjuLxvyKglJh1CWZ
- YU+VVpYaQmqpgn1Z6Njq6M2t6Yc+u4no6sRCd1s2gCDTVBPmtacsN/uIwMBpbYYbrH7Pi/0OBQw
- NJ5ryZM8Jw3oC3iIZDqfCD0c/D3NHkIZgXstzEC6CohnbvnARNNLWKKqMnFwwjuhwrNjlQjcbW8
- g51fowHAe4Bw+t3NtQn5u3+3iYHJc4oTHet5S4T6K617H8KMtk5gyEDc7v8aJ4ShnEPwBbp77EY
- n5IN7ezkxsmMrWi/AwRiA+TxofirQlpx01/rk9cS/qdOc+dFIjZW86wT/GZkAr7RImesc3ptZ/p i2w0gdEkgVu03hA==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 2427d69c3dba3f9bce73d36c2c0adf37b5aee5d9  Merge tag 'intel-pinctrl-v6.16-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into devel
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+Warning (recently discovered and may have been fixed):
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+    https://lore.kernel.org/oe-kbuild-all/202507150541.0WfZDWlE-lkp@intel.com
 
-are available in the Git repository at:
+    drivers/pinctrl/pinctrl-tb10x.c:815:34: warning: 'tb10x_pinctrl_dt_ids' defined but not used [-Wunused-const-variable=]
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-6.17
+Warning ids grouped by kconfigs:
 
-for you to fetch changes up to 683d532dfc9657ab8aae25204f378352ed144646:
+recent_errors
+`-- x86_64-buildonly-randconfig-006-20250715
+    `-- drivers-pinctrl-pinctrl-tb1.c:warning:tb1_pinctrl_dt_ids-defined-but-not-used
 
-  pinctrl: samsung: Fix gs101 irq chip (2025-07-05 09:35:22 +0200)
+elapsed time: 1101m
 
-----------------------------------------------------------------
-Samsung pinctrl drivers changes for v6.17
+configs tested: 119
+configs skipped: 4
 
-Add support for programming wake up for Google GS101 SoC pin
-controllers, so the SoC can be properly woken up from low power states.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250715    gcc-8.5.0
+arc                   randconfig-002-20250715    gcc-11.5.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                            mps2_defconfig    clang-21
+arm                   randconfig-001-20250715    clang-21
+arm                   randconfig-002-20250715    gcc-10.5.0
+arm                   randconfig-003-20250715    clang-21
+arm                   randconfig-004-20250715    gcc-12.4.0
+arm                        shmobile_defconfig    gcc-15.1.0
+arm                          sp7021_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250715    clang-16
+arm64                 randconfig-002-20250715    gcc-12.3.0
+arm64                 randconfig-003-20250715    gcc-8.5.0
+arm64                 randconfig-004-20250715    clang-21
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250715    gcc-9.3.0
+csky                  randconfig-002-20250715    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250715    clang-18
+hexagon               randconfig-002-20250715    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250715    gcc-12
+i386        buildonly-randconfig-002-20250715    gcc-12
+i386        buildonly-randconfig-003-20250715    gcc-12
+i386        buildonly-randconfig-004-20250715    clang-20
+i386        buildonly-randconfig-005-20250715    clang-20
+i386        buildonly-randconfig-006-20250715    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-21
+loongarch             randconfig-001-20250715    clang-21
+loongarch             randconfig-002-20250715    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                        mvme16x_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                        omega2p_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250715    gcc-11.5.0
+nios2                 randconfig-002-20250715    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250715    gcc-10.5.0
+parisc                randconfig-002-20250715    gcc-9.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                        icon_defconfig    gcc-15.1.0
+powerpc                   motionpro_defconfig    clang-21
+powerpc               randconfig-001-20250715    clang-21
+powerpc               randconfig-002-20250715    clang-21
+powerpc               randconfig-003-20250715    gcc-8.5.0
+powerpc                     tqm8540_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250715    clang-21
+powerpc64             randconfig-003-20250715    clang-17
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250715    clang-21
+riscv                 randconfig-002-20250715    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250715    gcc-8.5.0
+s390                  randconfig-002-20250715    gcc-12.4.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250715    gcc-11.5.0
+sh                    randconfig-002-20250715    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250715    gcc-8.5.0
+sparc                 randconfig-002-20250715    gcc-8.5.0
+sparc64               randconfig-001-20250715    clang-20
+sparc64               randconfig-002-20250715    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250715    gcc-12
+um                    randconfig-002-20250715    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250715    clang-20
+x86_64      buildonly-randconfig-002-20250715    gcc-12
+x86_64      buildonly-randconfig-003-20250715    gcc-12
+x86_64      buildonly-randconfig-004-20250715    gcc-11
+x86_64      buildonly-randconfig-005-20250715    gcc-12
+x86_64      buildonly-randconfig-006-20250715    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250715    gcc-8.5.0
+xtensa                randconfig-002-20250715    gcc-14.3.0
 
-----------------------------------------------------------------
-Peter Griffin (3):
-      pinctrl: samsung: rename exynosautov920_retention_data to no_retention_data
-      pinctrl: samsung: add support for gs101 wakeup mask programming
-      pinctrl: samsung: Fix gs101 irq chip
-
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |   6 +-
- drivers/pinctrl/samsung/pinctrl-exynos.c       | 103 +++++++++++++++++++++----
- drivers/pinctrl/samsung/pinctrl-samsung.h      |   4 +
- include/linux/soc/samsung/exynos-regs-pmu.h    |   1 +
- 4 files changed, 98 insertions(+), 16 deletions(-)
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
