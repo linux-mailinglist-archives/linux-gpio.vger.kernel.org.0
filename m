@@ -1,78 +1,79 @@
-Return-Path: <linux-gpio+bounces-23323-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23324-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B401EB0660E
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 20:31:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B25EB0660F
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 20:31:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F0FB505117
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 18:30:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE0AF50515F
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Jul 2025 18:30:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32BBD2BE64E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A012A2BE7D9;
 	Tue, 15 Jul 2025 18:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fnJNNirx"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Sc4ZkkWs"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF152BE631
-	for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 18:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E5B289E1E
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 18:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752604212; cv=none; b=DuuZ+aibD4DuyasVA1m2/5QxpVyN2yYsicEJv2EZLeMc7aq/Im880H6BXZogYnMjZRzkukltJtRq1Zep2LHHH3EBhInMrA1v1T2KYwplVFocp9j1lWEmqpDu6e+m6+Z7420Uk0GGMvN3aW+NfStSYdq3g5G/0T5zYgkDIf/eEiI=
+	t=1752604213; cv=none; b=mE55R3uZvColJV2B/nMu22rtXbQzrMcojmp0Sez8NQ9rhdeOnx3DFRPN3oMkogvdWq/rbzJAtzMRkZzgbHG62yO8fSL7+r9IPQq7w2gg0YLSQpDx0tA+zgMNoxKteQ//M8gzOh2STNbsqjh85MvcGZ1sC+D3GwSd3j//sB3TDV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752604212; c=relaxed/simple;
-	bh=FzNWUGZftbrMuwHzuM+w0xcycT2JYIJVMEBEM83DEvI=;
+	s=arc-20240116; t=1752604213; c=relaxed/simple;
+	bh=p3HBeHBoiugp02rTg0t0QV1sY9yaLHHpE/q9U8nTsWo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CEUY9g65i99sqA0QodRTbqrgoa1fuCD9AS5dC5MWplfVESJQTy0C5K2DFRx82M4BxUpg6fIyOzkRoSrkNdCpg24h8spr2Bin+fVkkIIWj/iBlE8xhqlG5Ys53gHj5mwpjNnoDDfLY5pSHYtON/4B8yr5bDPiuQ2TtUAh90xhypE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fnJNNirx; arc=none smtp.client-ip=209.85.208.48
+	 MIME-Version; b=SwOyDx6CeeLYfoA5bZOKtcvSC6Hb4zW97xA8Llxft0jPPCNHw3nv4o6kDqj+XeBE4snX/XgFurYDoJKX5m+XiNgWF0as95/1aL6qE9AZH48EArjHB07pXNybQw1zvUfxEoNJse/TniWIjf8bi91Bprtk3Ku9zGeacUT4jWMDut8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Sc4ZkkWs; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-607ec30df2bso11194581a12.1
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 11:30:10 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so10529531a12.2
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Jul 2025 11:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1752604209; x=1753209009; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1752604210; x=1753209010; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=618tBsP8+IuJgTKE3mRpRskhn0ekdTiWo3PqXAUnzZg=;
-        b=fnJNNirxXZrtjZgEbF5TG8Fc7B+AWv3RghW98IpmGQ0+0v6CKpTEFaZpGL/Nc3SYYU
-         2YrLvIQ6DYT5ru8EFgxCYzufW/Pr3R+X+bBGjX6c8A22o3ik4ekAs+JNIR2Zmf9UDd7y
-         UD5uA/0zCXNUWQZmRMuhUPhnD8kDj0v3sVuDlNI9dRzgemR9UXCiIwMPnIevQCHpjFQC
-         b8m6OdwvyqY/Lwz9sTJhY4cJ5rMqSWZWp4ownqrrHn+c3KsLudO3irCJgLUObV14wVhQ
-         LCx8nbwjDrhj6zPnJ6QETDXl5QCm01pIB9gd7driuit34U1+mcWid68z1qilSJfMLLLb
-         pcFA==
+        bh=I+h9xdmVtN8apGvD2fwppBr/rzlO/iwPyapASKqAoIo=;
+        b=Sc4ZkkWsV9edfTeQvWSkufdnN1Oz3XSIiebd8VMCcIhds0C4xrgmRKPdJE+g70M7Mj
+         M2a3twhArULF/FRX0mVn/zJBJbsKCl9WFqcFnIhcFN5sywy/CL2hVQ9uYkTIS2+XO7yq
+         8BPkke860jRJwJNyZpl8w71RvgISjURMcufL8spthapmg6jZDz3Jlp+dnw8gVPthsBIM
+         p8gPLJ+kGfMuc7u4l5oEiIEoKqHiDNEIIG+ETNpE3VHIbor1ntxF5g7EC07XFNwHb1RJ
+         yTbRiblwRAtf33jmTXkWRQn0BcGZWt8x9uylZKAYs2nSSWTbRRcLXoKgL8qJiKJNPZmh
+         44OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752604209; x=1753209009;
+        d=1e100.net; s=20230601; t=1752604210; x=1753209010;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=618tBsP8+IuJgTKE3mRpRskhn0ekdTiWo3PqXAUnzZg=;
-        b=KZW1Hhm+vNcwIdBAlG8BKnszazLfICQqOxhAXHHQeAPlBtuofS3GhAyBmriROtVQyn
-         4iBOF/sY0dQp0VkRPRyRQxkCKLTnMqt2xFfr+l328QblkEAWsUcR+NVGEHi/qUC80zAF
-         uN6TsrR7TEuvOafr/rRNqiMue3miTMSdTUaHXCYgoDN3RS0E3qFR8esI8Rhz+As9RWpk
-         Ham44zNoQQgjdCRBE1YxjWDX/llcF/wFI61hbs1/TpVwOXytbQ8x/Gbt9nFxgx/kEjCk
-         a+739f+5/s4gpqxCZu/0Bz6FHqaARxsUMnm4j2cjZoT3ZitT4JTp5ME5QVKs6cuvkCle
-         23VA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnF3X63xnzmbSgkCZlGWfOSCNPFxmhEH4seGjjpGN3EcfYlJ0KIDQ1mo9VWbZWZ8GdDmHvNcVGhMy+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7b+MhPKwGd7U6rwgUy9vz+X+oLoMIcsdtn2f2RNvn+EfuwuxM
-	LuxBPUBD+iwQQB3tue5YuiufpzaPGsGX/MxaFuyGrQH1XLK+mMyHwhuTYF1pyckurHo=
-X-Gm-Gg: ASbGncu5sbZOPxt67VGA8eU68k4NqgZGrhZFA/ydmiIaqr6NdqxviEw8q9Uh93x4ROo
-	kMk0nXAv2BjTPBlGNq2QrzA/E42P/JykHCl8wjaXRZuRmLL0agWK/5ZnW6ZWP3aHnh3EreoNq0N
-	88hz0EOS45uXY9BxZoT3d3BSDqwBA4rGgSxcymDw1V5nnSMQJpMiEsaIu4ezPq9N99v2qFCRn1/
-	FHvZldhmIN043Z8GzmR5EbkM01qwsWix4D4tqhue/eKeqf/Do0O5zv5fe5TARDZ8sTqBy4O76PR
-	jLfGnhGqdAk/xYvKdC8RPME8qf2BRwH64PIKiImITSMaOBcbeClt4mN49dnXdtiwsd66QvXX5iD
-	xfLO+1vcwt0ZNKHI3B/a8zn7LS0B76RwLXwmWu72L9IJN3slgMPX37AZXyRk1iQdSvUTr
-X-Google-Smtp-Source: AGHT+IHRNkalwwVztrQaJho64YzctIwHuAGK/cCl6dKnZ8rFmjfc9HeuD+awU1Jzf7RXVNYqFjgJlg==
-X-Received: by 2002:a17:907:8e8e:b0:ae0:da2d:1a53 with SMTP id a640c23a62f3a-ae9c9b23338mr48885466b.42.1752604208948;
-        Tue, 15 Jul 2025 11:30:08 -0700 (PDT)
+        bh=I+h9xdmVtN8apGvD2fwppBr/rzlO/iwPyapASKqAoIo=;
+        b=aWG26DC5VWyYBaS4IpcbbHTfz8nVdN8eO5k5rADHYXNBrJWjXCj1AXcGdWKV4+DBfm
+         V66rPcuMQw7eAECHtlHkdbuv4mlcuQVK3TKoUTVYQb2B+uuNEwR8XgCoUrgr8ooRu7L+
+         VNlVaFiuKmpDn5b49tZpy1Don6HsESOVukdGnflIqS5AoeCz5ScGybejXg2USRkEcz53
+         gl5viTKt3tgzAJPDd6q9O2CEKzb0LfOj90KPyo5BCrI1d8tcPtWOGeRfmbXxzgJ4xAuw
+         XLldV5YUVwNYPX7Yti0P4zIuyzm5rTZhOI+BYsH6k/Di6hVxhRYBw1Kx6aQ6Vyvahjrr
+         zn2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVg5amtj0x8J3pgyUYtWR/UrOWuG2C3kWJPXxrpJvk7xu7IQkhl9dMkaV0mN5nTcVZGS4jPXh/D7AP/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUNjtRQPaW1epRr66c/GMQlZpZlWfBR4d+OJhMoQUyPTCZkj2M
+	fFiIQ0jIUdho29OkZio70YAkWVEFLkiNR6jKONl4TU8X3Ksff+h7AG0JLNzrOTLUmdIZXy4ZiH4
+	mwIVAn3E=
+X-Gm-Gg: ASbGncvJu/Q4uhKgPOeBz9Wwq3QLWNGCxFaSG92aDd6AIrpF8seHFWWwGjyHW5JZxiC
+	b+o+qhXJYNi6p4SLiFdSMFBYOuwp5DrOgWzxfiHnMJG2lZYrN5FZ1kC8LQQQvLpFm+H+bKwKqCZ
+	hJNWwlQaIqQQbLbcFBWV/snnvcn3DM0xBRkWlpOM+2p1a5zpuM4IuoJYrhnkHk5IDefutDdGG2Y
+	hozogCioyynliWJTcNeh21MxRkeY94R8CmC7xWMW600IThix96lABNcrqTCk2Tmxq0iNHgSp7sx
+	wIc0/XP7rkYQyI9sYUEX9bzA0q1oXerT6A5rB31Z04L0jCTK+AJwd2lSo8JLHHh/Nvd3NKjOvza
+	IInMhlo2RK0NiNqKjJZO8pdGS5CWnGxaDzYoJATpC1n5l5Lgm28kojzA6Ls6PJxUr60+H
+X-Google-Smtp-Source: AGHT+IFCdfj/N/QSmKoz1idrwHiCdXZBpEWZQgqG6diApksw+uigpgY7MjvOB4GYk5GKnJVs8sBmFw==
+X-Received: by 2002:a05:6402:2710:b0:608:6734:7744 with SMTP id 4fb4d7f45d1cf-61281ea3216mr374571a12.7.1752604209875;
+        Tue, 15 Jul 2025 11:30:09 -0700 (PDT)
 Received: from localhost (host-79-47-155-191.retail.telecomitalia.it. [79.47.155.191])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e82669b5sm1052376566b.77.2025.07.15.11.30.08
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61253b999b7sm2257990a12.2.2025.07.15.11.30.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Jul 2025 11:30:08 -0700 (PDT)
+        Tue, 15 Jul 2025 11:30:09 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: linus.walleij@linaro.org,
 	robh@kernel.org,
@@ -89,9 +90,9 @@ Cc: conor+dt@kernel.org,
 	svarbanov@suse.de,
 	mbrugger@suse.com,
 	Andrea della Porta <andrea.porta@suse.com>
-Subject: [PATCH 5/7] arm64: dts: broadcom: bcm2712: Add second SDHCI controller node
-Date: Tue, 15 Jul 2025 20:31:42 +0200
-Message-ID: <5eab612fa761a5c936918b64263f2455c4bc91bc.1752584387.git.andrea.porta@suse.com>
+Subject: [PATCH 6/7] arm64: dts: broadcom: bcm2712: Add UARTA controller node
+Date: Tue, 15 Jul 2025 20:31:43 +0200
+Message-ID: <afd4b7c31aa11471e8f79f5fa6edcd2c93dbc8e5.1752584387.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1752584387.git.andrea.porta@suse.com>
 References: <cover.1752584387.git.andrea.porta@suse.com>
@@ -105,124 +106,112 @@ Content-Transfer-Encoding: 8bit
 
 From: "Ivan T. Ivanov" <iivanov@suse.de>
 
-Add SDIO2 node. On RPi5 it is connected to WiFi chip.
-Add related pin, gpio and regulator definitions and
-add WiFi node. With this and firmware already provided by
-distributions, at least on openSUSE Tumbleweed, this is
-sufficient to make WiFi operational on RPi5 \o/.
+On RPi5 device Bluetooth chips is connected to UARTA
+port. Add Bluetooth chips and related pin definitions.
+
+With this and firmware already provided by distributions,
+at least on openSUSE Tumbleweed, this is sufficient to make
+Bluetooth operational on RPi5 \o/.
 
 Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
 This patch is based on linux-next/master
 
- .../dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts  | 52 +++++++++++++++++++
- arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 15 ++++++
- 2 files changed, 67 insertions(+)
+ .../dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts  | 43 +++++++++++++++++++
+ arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 11 +++++
+ 2 files changed, 54 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts
-index f0883c903527..411b58c1dddf 100644
+index 411b58c1dddf..f869554fd8e9 100644
 --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts
 +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts
-@@ -66,6 +66,18 @@ sd_vcc_reg: sd-vcc-reg {
- 		enable-active-high;
- 		gpios = <&gio_aon 4 GPIO_ACTIVE_HIGH>;
- 	};
-+
-+	wl_on_reg: wl-on-reg {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wl-on-regulator";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		pinctrl-0 = <&wl_on_default>;
-+		pinctrl-names = "default";
-+		gpio = <&gio 28 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <150000>;
-+		enable-active-high;
-+	};
+@@ -81,6 +81,11 @@ wl_on_reg: wl-on-reg {
  };
  
  &pinctrl {
-@@ -79,6 +91,29 @@ pwr_button_default: pwr-button-default-state {
- 		pins = "gpio20";
- 		bias-pull-up;
- 	};
++	bt_shutdown_default: bt-shutdown-default-state {
++		function = "gpio";
++		pins = "gpio29";
++	};
 +
-+	sdio2_30_default: sdio2-30-default-state {
-+		clk-pins {
-+			function = "sd2";
-+			pins = "gpio30";
+ 	emmc_sd_default: emmc-sd-default-state {
+ 		pins = "emmc_cmd", "emmc_dat0", "emmc_dat1", "emmc_dat2", "emmc_dat3";
+ 		bias-pull-up;
+@@ -110,6 +115,29 @@ dat-pins {
+ 		};
+ 	};
+ 
++	uarta_24_default: uarta-24-default-state {
++		rts-pins {
++			function = "uart0";
++			pins = "gpio24";
 +			bias-disable;
 +		};
-+		cmd-pins {
-+			function = "sd2";
-+			pins = "gpio31";
++		cts-pins {
++			function = "uart0";
++			pins = "gpio25";
 +			bias-pull-up;
 +		};
-+		dat-pins {
-+			function = "sd2";
-+			pins = "gpio32", "gpio33", "gpio34", "gpio35";
++		txd-pins {
++			function = "uart0";
++			pins = "gpio26";
++			bias-disable;
++		};
++		rxd-pins {
++			function = "uart0";
++			pins = "gpio27";
 +			bias-pull-up;
 +		};
 +	};
 +
-+	wl_on_default: wl-on-default-state {
-+		function = "gpio";
-+		pins = "gpio28";
-+	};
+ 	wl_on_default: wl-on-default-state {
+ 		function = "gpio";
+ 		pins = "gpio28";
+@@ -188,6 +216,21 @@ power: power {
+ 	};
  };
  
- &pinctrl_aon {
-@@ -109,6 +144,23 @@ &sdio1 {
- 	cd-gpios = <&gio_aon 5 GPIO_ACTIVE_LOW>;
- };
- 
-+&sdio2 {
-+	pinctrl-0 = <&sdio2_30_default>;
++/* uarta communicates with the BT module */
++&uarta {
++	uart-has-rtscts;
++	auto-flow-control;
++	pinctrl-0 = <&uarta_24_default &bt_shutdown_default>;
 +	pinctrl-names = "default";
-+	bus-width = <4>;
-+	vmmc-supply = <&wl_on_reg>;
-+	sd-uhs-ddr50;
-+	non-removable;
 +	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
 +
-+	wifi: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
++	bluetooth: bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		max-speed = <3000000>;
++		shutdown-gpios = <&gio 29 GPIO_ACTIVE_HIGH>;
 +	};
 +};
 +
- &soc {
- 	firmware: firmware {
- 		compatible = "raspberrypi,bcm2835-firmware", "simple-mfd";
+ &hvs {
+ 	clocks = <&firmware_clocks 4>, <&firmware_clocks 16>;
+ 	clock-names = "core", "disp";
 diff --git a/arch/arm64/boot/dts/broadcom/bcm2712.dtsi b/arch/arm64/boot/dts/broadcom/bcm2712.dtsi
-index f70ec8d3dc4d..871537366e96 100644
+index 871537366e96..43cc4ee2a363 100644
 --- a/arch/arm64/boot/dts/broadcom/bcm2712.dtsi
 +++ b/arch/arm64/boot/dts/broadcom/bcm2712.dtsi
-@@ -285,6 +285,21 @@ gio_aon: gpio@7d517c00 {
- 			 */
+@@ -260,6 +260,17 @@ gio: gpio@7d508500 {
+ 			brcm,gpio-bank-widths = <32 22>;
  		};
  
-+		sdio2: mmc@1100000 {
-+			compatible = "brcm,bcm2712-sdhci",
-+				     "brcm,sdhci-brcmstb";
-+			reg = <0x01100000  0x260>,
-+			      <0x01100400  0x200>;
-+			reg-names = "host", "cfg";
-+			interrupts = <GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk_emmc2>;
-+			clock-names = "sw_sdio";
-+			sdhci-caps-mask = <0x0000C000 0x0>;
-+			sdhci-caps = <0x0 0x0>;
-+			mmc-ddr-3_3v;
++		uarta: serial@7d50c000 {
++			compatible = "brcm,bcm7271-uart";
++			reg = <0x7d50c000 0x20>;
++			reg-names = "uart";
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clock-frequency = <96000000>;
++			interrupts = <GIC_SPI 276 IRQ_TYPE_LEVEL_HIGH>;
 +			status = "disabled";
 +		};
 +
- 		gicv2: interrupt-controller@7fff9000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x7fff9000 0x1000>,
+ 		pinctrl_aon: pinctrl@7d510700 {
+ 			compatible = "brcm,bcm2712c0-aon-pinctrl";
+ 			reg = <0x7d510700 0x20>;
 -- 
 2.35.3
 
