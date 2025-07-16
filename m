@@ -1,62 +1,60 @@
-Return-Path: <linux-gpio+bounces-23340-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23341-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7ACB8B06F76
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jul 2025 09:52:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D89BFB07066
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jul 2025 10:23:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30B734A378A
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jul 2025 07:51:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0193E564B3B
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jul 2025 08:23:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85AC629344F;
-	Wed, 16 Jul 2025 07:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE48B2EAB9F;
+	Wed, 16 Jul 2025 08:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYCEkmNV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsuSqHmD"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31683292B42;
-	Wed, 16 Jul 2025 07:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696AC2EA727;
+	Wed, 16 Jul 2025 08:23:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752652280; cv=none; b=sAyJnAVoMclbVFieAEgBcLxQQhWJiVmVnaslsh65/+Ge5dbzJjZ8++5D65zUpUmzds6EcjIKZXMRMAED6tIen5DNIZ4V6GHTj+mvKjuve/cNLnMlP/oOaUbwyXYt7qgGpY7xzXxD5Q8+OFPvPZrnFWT51Q9aNubl2gjjP0IZHs0=
+	t=1752654221; cv=none; b=k8V2HnJhGSOBMWc5GbczBC1UbV2aYp6lbdBH9JPYPJXV1SE88T/jpRtbi3gGh7+GB3DXe5uaG9JIJKrHzN8wwSW9582Fua1cSBx4zl6UCerOva0QxQE1iNAiYzX8TUQADtNDFU5RLZOCSUi2CBGTqJ/7qi5HMzjHUxPJVGJvUi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752652280; c=relaxed/simple;
-	bh=JmE7m3bTLeo9xgxysdSDSxK0t03ujqlDmwZ928eeLqQ=;
+	s=arc-20240116; t=1752654221; c=relaxed/simple;
+	bh=cp2m1cQPpeNT2d53wsl0tGzY5ODL2sh/xGBe89ivRr4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QYQzINuO8kjz21hn4VIJ5D3oHFBlUZ/+q6FQ2uejmg7R9K84YAdn+X2P09jYfNRlQn98FPkOOJTmCLGlWSNxmd+XEbfN5CFRFjOCLPEcCLHxXXGsmmwbwV53SX+mIPDVdhdjo1R8DntBRXg1r6TqWrmSwitp0Z44k0763HP4rAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYCEkmNV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3378DC4CEF5;
-	Wed, 16 Jul 2025 07:51:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=TDeWA8hOYse2zp7wBL9zaaPzxBG0CzsX/JfIzj8qk+0bTiQZ0siGG300jtotrVWWBH0jm3hNqJfPwLSRLIAo+ZfX+U7A9O9bHv9DFnQmTMOvq+LHoLEjneUTUIiwbszmLGgUGYMN7u+jBfkc2X7MfF2dZr3XKoFjmbhOPH0o1Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsuSqHmD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A6F9C4CEF0;
+	Wed, 16 Jul 2025 08:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752652279;
-	bh=JmE7m3bTLeo9xgxysdSDSxK0t03ujqlDmwZ928eeLqQ=;
+	s=k20201202; t=1752654218;
+	bh=cp2m1cQPpeNT2d53wsl0tGzY5ODL2sh/xGBe89ivRr4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RYCEkmNV2+4vXXAfDGdpkg9HXHC44jDHTrK7WBRGncG1bD7owC5vAX84WA8xGR80F
-	 aRP/xZ2FDbY7lLyBAs1SKwSxe7fX8igMOvpuxxNfwM920v1Ze0sKCWtUSJ6EWkoyGi
-	 Lwwi0OgJHZ+P6MO2G0poGu/5qOMoMWOrMSTIPmJd07YRbZyqqKBtw82BOCu1vqiffg
-	 EmOkNgfFJjNdeTEtWlR/ypbO7bP6xwSTE7r4/dlAg9BTwP3jYrrBIGIXkPBGqdRBgu
-	 JMTa68W/5QPPXsSYrlJUnZzIuQ7N6Aq1ZANWpS4geOTRpmwdsdibf1jvrKm/8Wvu2w
-	 0DZw+7fwlrS5g==
-Date: Wed, 16 Jul 2025 09:51:17 +0200
+	b=OsuSqHmDg5QaUkjKR88pXkBRjXFiGTJmpqIR2xTr5Z9U1Ok9P/L5vM+a06yTG3toz
+	 at3wk0tkzeoEdt0BukhNBUIqcbPqs732/P+an+XUDciRV3hHnaPzyNPpyHmN8OXYWc
+	 BfRruYWHr+/kBdTkHGaGdfGb+meDtFsBpDNxR8r2f82JlPhK7gakGM2tsl+l0OjIcU
+	 sPZL6T47LdaQ43C70ikZe6EPoBxS36V78shXEYhmf5W5W03iRjAkjgrj8TRd3Atm+c
+	 WmPx1C5+9MA91F/pTTKGPiALFC+YTLSWiyrLEBh89IIL12Ks8wyLQ+BJCGLvU8rGQb
+	 MpkLR0taXi9CA==
+Date: Wed, 16 Jul 2025 10:23:36 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
-	kernel@oss.qualcomm.com, Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-Subject: Re: [PATCH v6 3/9] ASoC: dt-bindings: qcom,lpass-va-macro: Update
- bindings for clocks to support ADSP
-Message-ID: <20250716-spirited-sage-ibis-dcfeb1@krzk-bin>
-References: <20250715180050.3920019-1-quic_pkumpatl@quicinc.com>
- <20250715180050.3920019-4-quic_pkumpatl@quicinc.com>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	joel@jms.id.au, andrew@codeconstruct.com.au, linux-aspeed@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH v2 02/10] dt-bindings: soc: aspeed: Add ASPEED PCIe PHY
+ support
+Message-ID: <20250716-innocent-satisfied-pug-9ecc15@krzk-bin>
+References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
+ <20250715034320.2553837-3-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,79 +63,90 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250715180050.3920019-4-quic_pkumpatl@quicinc.com>
+In-Reply-To: <20250715034320.2553837-3-jacky_chou@aspeedtech.com>
 
-On Tue, Jul 15, 2025 at 11:30:44PM +0530, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+On Tue, Jul 15, 2025 at 11:43:12AM +0800, Jacky Chou wrote:
+> This PHY is used by many modules. In our design, our
+> PCIe has RC and EP funcitons. On the different function,
+> each driver will use configure and get some information
+> from the PHY interface to do somting that it wants to.
+> Getting link status, setting syscon credits and so on.
+> Therefore, define it as syscon for all modules.
 > 
-> Manage clock settings for ADSP solution. On Existing ADSP bypass
-> solutions, the macro and dcodec GDSCs are enabled using power domains
-> in lpass-va-macro which is not applicable for ADSP based platform.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 > ---
->  .../bindings/sound/qcom,lpass-va-macro.yaml   | 29 +++++++++++++++----
->  1 file changed, 23 insertions(+), 6 deletions(-)
+>  .../bindings/soc/aspeed/aspeed,pcie-phy.yaml  | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
+
+Phys go to phy, not soc directory. Soc is not a dumping ground.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> index f41deaa6f4df..aec654e6567e 100644
-> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> @@ -76,12 +76,29 @@ allOf:
->            contains:
->              const: qcom,sc7280-lpass-va-macro
->      then:
-> -      properties:
-> -        clocks:
-> -          maxItems: 1
-> -        clock-names:
-> -          items:
-> -            - const: mclk
-> +      if:
-> +        required:
-> +          - power-domains
-> +      then:
-> +        properties:
-> +          clocks:
-> +            minItems: 1
+> diff --git a/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml b/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
+> new file mode 100644
+> index 000000000000..5fa585d63ca6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/aspeed/aspeed,pcie-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED PCIe PHY
+> +
+> +maintainers:
+> +  - Jacky Chou <jacky_chou@aspeedtech.com>
+> +
+> +description:
+> +  The ASPEED PCIe PHY provides the physical layer interface for PCIe
+> +  controllers in the SoC. This node represents the register block for the PCIe
+> +  PHY, which is typically accessed by PCIe Root Complex or Endpoint drivers
+> +  via syscon. It is used to configure and get the status of the PCIe PHY
+> +  hardware, including power management, link training, and other PHY-specific
+> +  operations.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - aspeed,pcie-phy
 
-Drop minItems
+No, see writing bindings.
 
-> +            maxItems: 1
-> +          clock-names:
-> +            oneOf:
+> +      - const: syscon
 
-Drop oneOf
+It's not a syscon, but phy. I don't think you understood previous
+feedback. Go back to v1. You just send something to pass the review
+instead of reworking to make it correct.
 
-> +              - items:  # for ADSP based platforms
-> +                  - const: mclk
-> +      else:
-> +        properties:
-> +          clocks:
-> +            minItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    syscon@1e6ed200 {
 
-minItems: 3
+wrong name, that's a phy
 
-> +            maxItems: 3
-> +          clock-names:
-> +            oneOf:
+> +      compatible = "aspeed,pcie-phy", "syscon";
+> +      reg = <0x1e6ed200 0x100>;
 
-Drop oneOf
+Incomplete
 
-...  or rebase on top of my change and make it only min/maxItems:
-
-lore.kernel.org/r/20250716074957.102402-2-krzysztof.kozlowski@linaro.org
-
-(or whatever gets merged first, I can also rebase my patch later).
-
-> +              - items:  # for ADSP bypass based platforms
-> +                  - const: mclk
-> +                  - const: macro
-> +                  - const: dcodec
-
-Best regards,
-Krzysztof
-
+> +    };
+> -- 
+> 2.43.0
+> 
 
