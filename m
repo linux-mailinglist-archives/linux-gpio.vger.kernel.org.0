@@ -1,156 +1,177 @@
-Return-Path: <linux-gpio+bounces-23343-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23344-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30063B07074
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jul 2025 10:27:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 42EFAB0707B
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jul 2025 10:27:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39F623B9FFF
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jul 2025 08:26:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DABF4E4300
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Jul 2025 08:27:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F41E12EAB63;
-	Wed, 16 Jul 2025 08:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92B512EAD1D;
+	Wed, 16 Jul 2025 08:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Z8RocUg6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="be89xxRr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26A128E61E
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Jul 2025 08:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440182EACE9;
+	Wed, 16 Jul 2025 08:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752654419; cv=none; b=BnUCZBTmWK28/eJdzeU3m69Z2iWLhAhRrehrnWMxPGUaQGD7Bod6AE+cQTYE452Z77N1+ZcALgXoCJEtWfeLCwa2SdOzNkWnRbq6tnMjn2YT/iUa+JKOdQn6WVI1izQnVbze1Gh0/jxzKvuBhURej14q7nlNOJHVmkTqj3sZKFw=
+	t=1752654439; cv=none; b=CNhXlgErlM4YsP9/4PmkELu1Lv6SFL7laOdt2L9/vtCpwLx+YkEnGm9iA42DhCKWosDpDtTDaMpHybPqDW8Pfu4LR/um84UN4KM+MhYKGoSXGwgDN0mK5tJ+rQfZqeEAcOASMRf+8D/FbWM/cmfel88+CZ5nX4WNIHDCsdwowdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752654419; c=relaxed/simple;
-	bh=oZruOfLx6vYtvv9SzkE9hxxMTRFU83m0JHjiDSurRQ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y9QO+BxkH8k+skel/0LXhtGsQOachMFA36+1ooK0OknpJUJzeiYzE8xgTNR22StQoaL5Qg7fWAePtjOm6K6c+1ygGZt2YuICq131d0U3pOEkcmk5E4cndFDRfgpoSZWdTw7VQcAEzhcUPzPW0jsONv6AVXVSwMqG3KN7pBt6S+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Z8RocUg6; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-558f7472d64so620701e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Jul 2025 01:26:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752654416; x=1753259216; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oZruOfLx6vYtvv9SzkE9hxxMTRFU83m0JHjiDSurRQ4=;
-        b=Z8RocUg6LBNxFw0IT6L5cvymGYN0gfwL1wpqar6d7Si0N10t79CnpC9O8RWqyzDZZi
-         aiy+fhvEOXU75B4HJtNjq9KIhRV3hlOWiGY3eHUksW+8kcMasz+Mh5Qy79yFAMCtVMhH
-         cG3vdulu2qkEAADOxlwT6LUDcxh3Az+LqQU2LAI2n1zdC2qOSPPIHxEJPnlEN2Gb2TXN
-         vsfMlbQYFTzIsPoun1gfNtKgPIcvPi2b0UoLggqkw0ZZrF6+L9VlOT1/YgXprAyU0myb
-         Awm/VlauyQTO5cKEpYg74P5rVdIePJdBgI/lwyoa7AtggX1ZgRoBVQhETJHe7ukH3Beu
-         kd0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752654416; x=1753259216;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oZruOfLx6vYtvv9SzkE9hxxMTRFU83m0JHjiDSurRQ4=;
-        b=YjV0uy4RqPgQ/S2dEWMgvHDdKze/PP0bdSouqQ0NwU9hWAOjCsdzBJkBHvD56RwJnO
-         3ISuqXck134Gx4iph1wenQZuo2ZukG4+8u2DLU0K/t51e0Wcbat2QVCYONaShrQ+kg2q
-         pMfi8vwMxr9zT7h0DB1Owr19pd5hislJztk7MrjinqmQkuNjlUwUmsAGtOs0SpBw4JNS
-         n1m4l0UcrfMpTKSIDiEXjLaLxEnLEJHh49VLqIaMyzJezEo11x4+1/vg5i8aYyFE668m
-         X3HoQct6+Wc9qzz0o5G6kxGRztx8DiFWsr0TfcPOHV5RQkNBlOuU58yxxd9va3ok0Al3
-         dN5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVgM9LlRWHLNMtws5nrlF9SBWpMQ3S+2Dm+hkse7rdEhZCjLuu8GjMsT5u/IZY/fbmuP7sgl1H5SV1K@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKt2WS8xpdQxsRGgBh9DFvGUkYch651Ahx4WpRgtCUqGHVOZpJ
-	nBhx19Xnv7WP6ELVn8ZzKA9SSrB52vLY13soKjUJUYCcdV7aaSD+9P9lYf1SilK1Ji5AsUcWiKn
-	yK6UWFAq2BZtufiaq3obNm4gZ+TziEuc9uWHQIHDwVQ==
-X-Gm-Gg: ASbGncvaNfWDacnD6T4bSvShBDLcgxMl9JtajSPEAoTDUiqRJd4m/QSazbLlTEUXWOr
-	XCHZcImt2RKz3tREfunO3C5YCM6RnXDj7R5lf9YFhemCrJJUy19jbZEj9vW7Drb2sSjFOZHiACe
-	aHoMs+qH/bBqZaODxNbKJ+MYllORDRlDCi2Sux8VlR8imPbx6peLBFwhZmEWKhPqSxQevlOpj/f
-	kc+m62BRDhjzSUK0Q/wNe50wW/mYZxdgvqsWig=
-X-Google-Smtp-Source: AGHT+IFMU33bMlBg+SJGlu9Fd1Nu2AUbYMepUe+1nUovUoAemOaOJTZDwF5FiRr3lwqVEVPiugd2XbwVQxqB2INMLfo=
-X-Received: by 2002:a05:6512:3b8e:b0:553:2969:1d6d with SMTP id
- 2adb3069b0e04-55a238634dfmr630042e87.13.1752654415531; Wed, 16 Jul 2025
- 01:26:55 -0700 (PDT)
+	s=arc-20240116; t=1752654439; c=relaxed/simple;
+	bh=jA5FOSjFCNJGkBGVQ3T0NygKzKDwksb4u4k+DuY6Ba4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BxbMhNK6THbjHz+2JJTztjNFyZd1loQVIGWKoWc2YfxnoRqDQcV1mn4RvchTp7R5FsXsBDz5FDaE6DZK99NOG+OC/0ZB0LW2oltN73PO7GpsZgnMoQhzc3olRwQyYjB1tZZkI1HuCoEWdeV2HL5qyWt/NR8KGzo9c6THWaUTlac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=be89xxRr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F140C4CEF0;
+	Wed, 16 Jul 2025 08:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752654438;
+	bh=jA5FOSjFCNJGkBGVQ3T0NygKzKDwksb4u4k+DuY6Ba4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=be89xxRrv9xuxcIrfDxAYLIU64qDm+AhV8+M6ZIRIHCV6NppRf5AJ8o0NCluJ2xnX
+	 hSiKyhZD+ICPEpqMknx+RBzxKFD5dm6ESQ2smgvsBvzpQDiBzd+uOsuEKINp2NBc+4
+	 Ow9bH4ecBU8nxkuGEmi5Vm76U/1jskLNLgCK+j8iE9IcqlssP94zZCzNxubpn1bglP
+	 8QBH0Vaaf13M+t1q580dgn/uJViuDVecG6wZ2QfQpJP4eRa95IUBj1iMy0rXCPp1+u
+	 x/q8hOrqYIxVowZRisT94c+q6Wr+Jlzz9bc39vjnwJ2fUOJL4NLrvO8Vty7rZ0Kjdd
+	 gEwd8c0O2CWpw==
+Date: Wed, 16 Jul 2025 10:27:16 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	joel@jms.id.au, andrew@codeconstruct.com.au, linux-aspeed@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH v2 03/10] dt-bindings: PCI: Add ASPEED PCIe RC support
+Message-ID: <20250716-watchful-enigmatic-condor-0fc6b3@krzk-bin>
+References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
+ <20250715034320.2553837-4-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704-gpio-sysfs-chip-export-v4-0-9289d8758243@linaro.org>
- <CAMRc=Mc7HaVjchDWN_oWUuqgVZbj3ZVYvU-bwiA+ZUH+0gEXSQ@mail.gmail.com> <20250714013813.GA12284@rigel>
-In-Reply-To: <20250714013813.GA12284@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 16 Jul 2025 10:26:44 +0200
-X-Gm-Features: Ac12FXxUY_OHqWeT-LEYjNq-JhVtr5AVNAES-8xycaxtO2gXxWorpIyfgab_aOs
-Message-ID: <CAMRc=MeH=BB7QTOa5FoANLPS-BLutT87+E_guVjsWRvpEgDTnA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/10] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
-	Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250715034320.2553837-4-jacky_chou@aspeedtech.com>
 
-On Mon, Jul 14, 2025 at 3:38=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Sun, Jul 13, 2025 at 10:48:03AM +0200, Bartosz Golaszewski wrote:
-> > On Fri, Jul 4, 2025 at 2:58=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.=
-pl> wrote:
-> > >
-> > > Following our discussion[1], here's a proposal for extending the sysf=
-s
-> > > interface with attributes not referring to GPIO lines by their global
-> > > numbers in a backward compatible way.
-> > >
-> > > Long story short: there is now a new class device for each GPIO chip.
-> > > It's called chipX where X is the ID of the device as per the driver
-> > > model and it lives next to the old gpiochipABC where ABC is the GPIO
-> > > base. Each new chip class device has a pair of export/unexport
-> > > attributes which work similarly to the global ones under /sys/class/g=
-pio
-> > > but take hardware offsets within the chip as input, instead of the
-> > > global numbers. Finally, each exported line appears at the same time =
-as
-> > > the global /sys/class/gpio/gpioABC as well as per-chip
-> > > /sys/class/gpio/chipX/gpioY sysfs group except that the latter only
-> > > implements a minimal subset of the functionality of the former, namel=
-y:
-> > > only the 'direction' and 'value' attributes and it doesn't support ev=
-ent
-> > > polling.
-> > >
-> > > The series contains the implementation of a parallel GPIO chip entry =
-not
-> > > containing the base GPIO number in the name and the corresponding sys=
-fs
-> > > attribute group for each exported line that lives under the new chip
-> > > class device as well as a way to allow to compile out the legacy part=
-s
-> > > leaving only the new elements of the sysfs ABI.
-> > >
-> > > This series passes the compatibility tests I wrote while working on t=
-he
-> > > user-space compatibility layer for sysfs[2].
-> > >
-> > > [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjFo=
-ru4iKQ5npwXk6GXA@mail.gmail.com/
-> > > [2] https://github.com/brgl/gpio-sysfs-compat-tests
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > ---
-> >
-> > Alright, so what are we doing about this? Should I queue these patches
-> > for v6.17? Kent, any additional comments?
->
-> Nothing beyond what I've already said.
->
-> Cheers,
-> Kent.
+On Tue, Jul 15, 2025 at 11:43:13AM +0800, Jacky Chou wrote:
+> This binding describes the required and optional properties for
 
-Ok, let's queue them up for v6.17 then.
+No, describe the hardware, not "this binding".
 
-Bart
+> configuring the PCIe RC node, including support for syscon phandles,
+> MSI, clocks, resets, and interrupt mapping. The schema enforces strict
+> property validation and provides a comprehensive example for reference.
+
+Don't say what schema does or does not. It's completely redundant.
+Describe the hardware.
+
+Your entire commit is redundantn and not helpful at all.
+
+> 
+
+...
+
+> +
+> +  aspeed,ahbc:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the ASPEED AHB Controller (AHBC) syscon node.
+> +      This reference is used by the PCIe controller to access
+> +      system-level configuration registers related to the AHB bus.
+> +      To enable AHB access for the PCIe controller.
+> +
+> +  aspeed,pciecfg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the ASPEED PCIe configuration syscon node.
+> +      This reference allows the PCIe controller to access
+> +      SoC-specific PCIe configuration registers. There are the others
+> +      functions such PCIe RC and PCIe EP will use this common register
+> +      to configure the SoC interfaces.
+> +
+> +  aspeed,pciephy:
+
+No, phys are not syscons. I already told you that in v1.
+
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the ASPEED PCIe PHY syscon node.
+> +      This property provides access to the PCIe PHY control
+> +      registers required for link initialization and management.
+> +      The other functions such PCIe RC and PCIe EP will use this
+> +      common register to configure the PHY interfaces and get some
+> +      information from the PHY.
+> +
+> +  interrupt-controller:
+> +    description: Interrupt controller node for handling legacy PCI interrupts.
+> +    type: object
+> +    properties:
+> +      '#address-cells':
+> +        const: 0
+> +      '#interrupt-cells':
+> +        const: 1
+> +      interrupt-controller: true
+> +
+> +    required:
+> +      - '#address-cells'
+> +      - '#interrupt-cells'
+> +      - interrupt-controller
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus-common.yaml#
+
+No other binding references this. Don't write completely different code
+than all other SoCs. This entire binding is written such way.
+
+> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2600-pcie
+> +    then:
+> +      required:
+> +        - aspeed,ahbc
+> +    else:
+> +      properties:
+> +        aspeed,ahbc: false
+> +
+> +required:
+> +  - reg
+> +  - interrupts
+> +  - bus-range
+> +  - ranges
+> +  - resets
+> +  - reset-names
+> +  - msi-parent
+> +  - msi-controller
+> +  - aspeed,pciecfg
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - interrupt-controller
+> +
+> +unevaluatedProperties: false
+> +
+> +patternProperties:
+> +  "^pcie@[0-9a-f,]+$":
+
+Why do you need it? Also, order things according to example schema.
+
+Best regards,
+Krzysztof
+
 
