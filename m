@@ -1,115 +1,264 @@
-Return-Path: <linux-gpio+bounces-23414-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23415-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FA81B08FEB
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 16:53:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC7C4B0903F
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 17:11:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5724F3A4D98
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 14:51:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 362891892B31
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 15:11:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC34F2F7D04;
-	Thu, 17 Jul 2025 14:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 997222F85E9;
+	Thu, 17 Jul 2025 15:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lW3185EN"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dNsoLP4L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C0514E2E2;
-	Thu, 17 Jul 2025 14:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728472ED142
+	for <linux-gpio@vger.kernel.org>; Thu, 17 Jul 2025 15:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752763883; cv=none; b=s+7NYvZotLU93gtKeWDabdjA1waK7o1WMwdybP9l+KFBl6ESKw0FXzZORgan7lJERoYimZQwZjfnpqcizII6QnZOGeF4IyTeDWMmXe+HObr/Npc6H9gPbMreYsCoc6nKL/i45hLcBoArZXRI0Omdr3+/lulNW2O/vIT/ZlHu/eE=
+	t=1752765092; cv=none; b=pn3rDLq7QWLM7SbefJsnNYxBYftcEz/WTQnO8X0PuJ95zVCnQFL1uAKYe9QetGSF+0UwweuNOR8XIcQwQmONAAw6UrBTtS10WMOCRC5MgW/RYnX/OmRdolS8CE6MzC4D71uezCD7EldZrg9/BLc0KBMl51qTsi9onunvIhUWDww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752763883; c=relaxed/simple;
-	bh=MP9BmCbwpKpHjixUZfTCj8rTrM1iVy1gnis52tX8tgw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SlM3fV4R76YmY836F9t0t30Cm/ZbUKWGfm/7fH0ikylG2dzp6wPxmwjy0IbI+UuU4DDongTaIBTk/AJXdjeOanJ8UvpuXUSBDwoFpAKquLZZ1vI5ah9STYgqXqwcIdlxacCS4lbG7HgS5aczhfAH/6zjKFvMRIML0Z2AUxxu/KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lW3185EN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D3DCC4CEEB;
-	Thu, 17 Jul 2025 14:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752763883;
-	bh=MP9BmCbwpKpHjixUZfTCj8rTrM1iVy1gnis52tX8tgw=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=lW3185ENnwmrOFhKcU5lDziS9wvic8V3+AfQvu7fwITJIZFxVnpVoBR9XgNjUp8Nz
-	 BDCnB9pvRwLGFLxQEiZUpX1g4QSkPUdMNfkUIYfg4/zaZbWvHq/WEkxM+Rw6cRF6Rv
-	 FfpBZsxeJ+CQIzW8aU5FHTZe5d0XmFMUVSg+MKKxIFz3CVzroJBQFy3oZpEKb3eVuE
-	 M5f/ISBPKt+DXDbUKQu9J23Oy/p44EEsLxLJIwMjn46GNEoha3WGZ/Sq7PBkVZFiFU
-	 g9QkNO9Z3RoG16NdyGhWsBawdUOPGpImkMjt/XNl61wAmnkvZAbe6IsKDawXt2Fi0D
-	 1T/kXQCTeP+CA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229A8C83F34;
-	Thu, 17 Jul 2025 14:51:23 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Thu, 17 Jul 2025 15:51:34 +0100
-Subject: [PATCH] mfd: adp5585: Drop useless return statement
+	s=arc-20240116; t=1752765092; c=relaxed/simple;
+	bh=DxA7Uo2bgydq066TA4BQ4nfW+avkOMLq4UqXbccFa6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mlC7FUmPgardeDNKHCdSjMb+xSH6MgBbtLl4f8R1EA02w7kY6E4ec3yH4PPjEgmOCN+kKLQNjt6apErIYJ2PVpxBzHGlWY20Kzu7MJG5OsvooVU16tJqOdRrOYbbZFFACNKYP6Vy00rS6T2agKsRIxRU4io7uR/kRrEoJKAm5qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dNsoLP4L; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0dad3a179so172999766b.1
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jul 2025 08:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1752765087; x=1753369887; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mkGzIpKY/tGSwl5AOjdyjMvkHhU6MR0YhLrgC1nQA3U=;
+        b=dNsoLP4LXbDD0g0PCEalQ7RJqnmtXjQOfcai8kxewDI/Tv1InABCtGO2h/YQGgmlFh
+         A44nqq8Hy76RqaJZH0fJhlsy7EJDvAGctJu5UpB3jGgRiXWoIljZhZ9GIqgYtYRPuCML
+         dMoSro5HKaw7jFqnJbrAMsBI1SrUaU/ozzFei0HYPI4Z6jcG8HJi0ESTX1RU5JcFhB2u
+         S2Qw5sHBecOoxxoQcPKg9oZfpKuF3mrLkT07JZFXo1FrvoJe7iBwGq6pXD0NCfrOyunY
+         Ho36OSdAbKK49iFEwOOPW1livzg8+m94rcJKqKp+Xib1yuFAH8RoVcM6e9LF/ba1SAcM
+         N7wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752765087; x=1753369887;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mkGzIpKY/tGSwl5AOjdyjMvkHhU6MR0YhLrgC1nQA3U=;
+        b=Wqn49aEf62dmAKkZF/DE3Qs85T67DSbkJKHIiZZ+CC3ycuu6TFlfDmsxLP5hP6hJVd
+         LcP9GKsUYFzzYCxDQNxb+T+JZ03N+h42XmZn0hJ62C8vgj7zyNIuCPu3tiwPy4YJOYqa
+         uS9m/oETjgW2H0aALAn7jKs0FDlqVtymKZe6wjCtQ0e151B5pyd8FVU3JDvJV7K33MEZ
+         cToZduEPQQDqU97OQAXHtaOrXJAcbxjQ54cpF2BUo93q+W3KOvI9RJ7Gjkbs/FyPsQwY
+         8IJCuJXA5W3AZoQEjdpgQW26H0t2seuyYAHTgJavVlwle6Fr9pU/qdkUKic+0du07jsY
+         1pow==
+X-Forwarded-Encrypted: i=1; AJvYcCVEEU23dtH24YV6SeDZV9CiijXywvq3Xxz6UhtkI9epd6rv4U3g0lqczT8ioFwki6BcHTDXAZCqyg01@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7iEJxmhw74wAUGWF94lZmYDC7zU6U2tzQXecJCqBl8+tGnP2q
+	Cv3GBHb4QJJ9ZK1nPoSre0NYIqoqS3mNb5IqVOt5yNcOFU8vytM3xptcDkE91sLAfIU=
+X-Gm-Gg: ASbGncthzHjxxShBL9qfijf3s97sIU29UMUlWf1tRL5wI7/hXPLWex/pNDBlM05km0K
+	Ep1R8gXiDfUzWjGSMfuQUjwy/lkWdKDqhAJJIDbhnWYpy3BrzxKW9MjcAg3GTsnZcHiX53mSeN+
+	Jw9MmlyEwnuWnSPwXcokW2cZUjlBs5Dl17F0YyjtukVAsUQN1SqT4fqQIZOBD4WpEOw6Hej9TJF
+	V81Ix9alYSEAL0n1mSqGAO5y6phL90lXHf9LFJiHlqwztNfDu+X9NugiS/bSvIMNbpnBKEJZPKS
+	jbM5rt9KMWYqYickb9d5kri6cPHJQ/j9/FnLR0ZuSLBMeZxi43qzhBiN2eV/Gtlsja/Ghg7aKAd
+	WggqS8wjwy1UvFMilHuMMP99ULjo=
+X-Google-Smtp-Source: AGHT+IERPOIfyj7l1DEQPuZgN4vpBbXC9zNBzCJL1cwLdUtzmxru1RTSZe0XV/KnmctwihuJVpetBA==
+X-Received: by 2002:a17:906:f747:b0:ae0:d38e:5852 with SMTP id a640c23a62f3a-aec4fc40f88mr253516466b.39.1752765087329;
+        Thu, 17 Jul 2025 08:11:27 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-611f6f3be91sm8609102a12.26.2025.07.17.08.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Jul 2025 08:11:24 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Clemens Gruber <clemens.gruber@pqgruber.com>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v2] pwm: Provide a gpio device for waveform drivers
+Date: Thu, 17 Jul 2025 17:11:16 +0200
+Message-ID: <20250717151117.1828585-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4853; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=DxA7Uo2bgydq066TA4BQ4nfW+avkOMLq4UqXbccFa6I=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoeRKWi1khA7pl7JyL6cWX1b5KvPfEX8STf/qSD sAfMGtVpLeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaHkSlgAKCRCPgPtYfRL+ TmaiCACzSm6y/xKhbqHL35wb7I/ShaU7Py+TAyBgg/mW0UhigIZmutc4ATd2HFiOgn6wJZsX9lB 78lDtGH5VI4lGG8osqTnMeKzoRxj2Iqk8m7bdxDu3Z0Z3MUqsS5Gni2KMovbze1UXd2fc9F7uug BpGd1GPSxDuxyAuFECYs1Y5vDfzfaLqx6pyVCs1RHjlhpdPGfdAsRWnSX3pdeZwgX8gB0ich4i8 q6/h9MeH6XbA94aS7BcpDT1xUD5uOxv8Hv4cz8SJQFsJhmTyCRjBCQI0OD36LS5h4hwvf6ItI8n reCh+nuio90eYSos1Mb/QditIyd98m5Rta+fqtN1tCWwTAXL
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250717-adp5585-drop-ret-v1-1-2ae65bd780aa@analog.com>
-X-B4-Tracking: v=1; b=H4sIAPUNeWgC/x3MQQqAIBBA0avErBvQwKyuEi0sp5qNyRgRiHdPW
- r7F/xkSCVOCqckg9HDiK1TotoHtdOEgZF8NneqMstqi89GYwaCXK6LQjf2qtRqtdcp5qFkU2vn
- 9l/NSygfVjARQYgAAAA==
-X-Change-ID: 20250717-adp5585-drop-ret-6b110977a0ad
-To: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Lee Jones <lee@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1752763896; l=1199;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=fa2lU4nXFqoCVVCIfit96zG313AYsYjHUMW+fLWBw3E=;
- b=GiPWHTiCOaER8fe0hS7yssIfg0FKiPLqsOJf5qw/KWPP/gHcS0Kfr3Z8XPeTl0hrOj1aeyVKq
- k91h25x/INrBz+yG0MNRoZFWCp/XSIsuCDZfZmlNahBrcY3zchJ9HwH
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
 
-From: Nuno Sá <nuno.sa@analog.com>
+A PWM is a more general concept than an output-only GPIO. When using
+duty_length = period_length the PWM looks like an active GPIO, with
+duty_length = 0 like an inactive GPIO. With the waveform abstraction
+there is enough control over the configuration to ensure that PWMs that
+cannot generate a constant signal at both levels error out.
 
-In adp5585_reset_ev_parse(), when parsing the
-adi,reset-pulse-width-us property, we were returning in case it was
-found and valid. No point in doing that as we'll be returning anyways
-after the exiting the property scope. And it could actually lead to bugs
-if new properties happen to added after this one.
+The pwm-pca9685 driver already provides a gpio chip. When this driver is
+converted to the waveform callbacks, the gpio part can just be dropped.
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/linux-gpio/c85604d9e077511b8aa6ee0786579594cc0103d4.camel@gmail.com/T/#ma25557bd06ccd2531dc9c85ba6be74af781b81aa
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 ---
- drivers/mfd/adp5585.c | 1 -
- 1 file changed, 1 deletion(-)
+Hello,
 
-diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-index 58f7cebe2ea4f2c68f64370449f5fbce8a2f14ed..46b3ce3d7bae8981824a957f6b4ee471d803c981 100644
---- a/drivers/mfd/adp5585.c
-+++ b/drivers/mfd/adp5585.c
-@@ -432,7 +432,6 @@ static int adp5585_reset_ev_parse(struct adp5585_dev *adp5585)
- 					     "Invalid value(%u) for adi,reset-pulse-width-us\n",
- 					     prop_val);
- 		}
--		return ret;
- 	}
+I found some uncommitted changes in my tree that belong in this patch.
+This v2 actually compiles ...
+
+Best regards
+Uwe
+
+ drivers/pwm/Kconfig |  9 ++++++
+ drivers/pwm/core.c  | 72 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pwm.h |  2 ++
+ 3 files changed, 83 insertions(+)
+
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 3ef1757502eb..778168e71055 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -38,6 +38,15 @@ config PWM_DEBUG
+ 	  It is expected to introduce some runtime overhead and diagnostic
+ 	  output to the kernel log, so only enable while working on a driver.
  
++config PWM_PROVIDE_GPIO
++	bool "Provide a GPIO chip for each PWM chip"
++	depends on GPIOLIB
++	help
++	  Most PWMs can emit both a constant active high and a constant active
++	  low signal and so they can be used as GPIO. Say Y here to let each
++	  PWM chip provide a GPIO chip and so be easily plugged into consumers
++	  that know how to handle GPIOs but not PWMs.
++
+ config PWM_AB8500
+ 	tristate "AB8500 PWM support"
+ 	depends on AB8500_CORE && ARCH_U8500
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 0d66376a83ec..7f048e09b3ce 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -2383,6 +2383,51 @@ static const struct file_operations pwm_cdev_fileops = {
+ 
+ static dev_t pwm_devt;
+ 
++static int pwm_gpio_request(struct gpio_chip *gc, unsigned int offset)
++{
++	struct pwm_chip *chip = gpiochip_get_data(gc);
++	struct pwm_device *pwm;
++
++	pwm = pwm_request_from_chip(chip, offset, "pwm-gpio");
++	if (IS_ERR(pwm))
++		return PTR_ERR(pwm);
++
++	return 0;
++}
++
++static void pwm_gpio_free(struct gpio_chip *gc, unsigned int offset)
++{
++	struct pwm_chip *chip = gpiochip_get_data(gc);
++
++	pwm_put(&chip->pwms[offset]);
++}
++
++static int pwm_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
++{
++	return GPIO_LINE_DIRECTION_OUT;
++}
++
++static int pwm_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
++{
++	struct pwm_chip *chip = gpiochip_get_data(gc);
++	struct pwm_device *pwm = &chip->pwms[offset];
++	int ret;
++	struct pwm_waveform wf = {
++		.period_length_ns = 1,
++	};
++
++	ret = pwm_round_waveform_might_sleep(pwm, &wf);
++	if (ret < 0)
++		return ret;
++
++	if (value)
++		wf.duty_length_ns = wf.period_length_ns;
++	else
++		wf.duty_length_ns = 0;
++
++	return pwm_set_waveform_might_sleep(pwm, &wf, true);
++}
++
+ /**
+  * __pwmchip_add() - register a new PWM chip
+  * @chip: the PWM chip to add
+@@ -2449,9 +2494,33 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
+ 	if (ret)
+ 		goto err_device_add;
+ 
++	if (IS_ENABLED(CONFIG_PWM_PROVIDE_GPIO) && chip->ops->write_waveform) {
++		struct device *parent = pwmchip_parent(chip);
++
++		chip->gpio = (typeof(chip->gpio)){
++			.label = dev_name(parent),
++			.parent = parent,
++			.request = pwm_gpio_request,
++			.free = pwm_gpio_free,
++			.get_direction = pwm_gpio_get_direction,
++			.set_rv = pwm_gpio_set,
++			.base = -1,
++			.ngpio = chip->npwm,
++			.can_sleep = true,
++		};
++
++		ret = gpiochip_add_data(&chip->gpio, chip);
++		if (ret)
++			goto err_gpiochip_add;
++	}
++
  	return 0;
+ 
++err_gpiochip_add:
++
++	cdev_device_del(&chip->cdev, &chip->dev);
+ err_device_add:
++
+ 	scoped_guard(pwmchip, chip)
+ 		chip->operational = false;
+ 
+@@ -2472,6 +2541,9 @@ EXPORT_SYMBOL_GPL(__pwmchip_add);
+  */
+ void pwmchip_remove(struct pwm_chip *chip)
+ {
++	if (IS_ENABLED(CONFIG_PWM_PROVIDE_GPIO) && chip->ops->write_waveform)
++		gpiochip_remove(&chip->gpio);
++
+ 	pwmchip_sysfs_unexport(chip);
+ 
+ 	scoped_guard(mutex, &pwm_lock) {
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 8cafc483db53..6e7d02c24991 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -5,6 +5,7 @@
+ #include <linux/cdev.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
++#include <linux/gpio/driver.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+@@ -340,6 +341,7 @@ struct pwm_chip {
+ 	bool atomic;
+ 
+ 	/* only used internally by the PWM framework */
++	struct gpio_chip gpio;
+ 	bool uses_pwmchip_alloc;
+ 	bool operational;
+ 	union {
 
----
-base-commit: 8f3ef4da96dd3f3e12f6313cbe8cd16a39e9abae
-change-id: 20250717-adp5585-drop-ret-6b110977a0ad
---
-
-Thanks!
-- Nuno Sá
-
+base-commit: a582469541a3f39bed452c50c5d2744620b6db02
+-- 
+2.50.0
 
 
