@@ -1,171 +1,148 @@
-Return-Path: <linux-gpio+bounces-23420-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23421-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40243B095D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 22:40:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3556AB09642
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 23:06:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00CACA43A06
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 20:40:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 913F91C465FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 21:07:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BC2622A4F6;
-	Thu, 17 Jul 2025 20:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3040E22D4C8;
+	Thu, 17 Jul 2025 21:06:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XtqtllOa"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fIMVvM1b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2F42248AE;
-	Thu, 17 Jul 2025 20:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91361224B0E
+	for <linux-gpio@vger.kernel.org>; Thu, 17 Jul 2025 21:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752784835; cv=none; b=R3SoLgCLFCM6h4Mu0SWJKHfpT4ulsjSnmtRL8PXVs1Y7b9YucRCS7tR3bd4/jEYc/Xe02ZP/L3RN+AR+UCRXyHBYKMRNtkrwMi6vmnCvg6ejFrJ2Ptp0AamxxPfBrOW9YTcQ5aP7LW1Y5YemHlkjKtH68619oKI3oy+yb15UaPY=
+	t=1752786406; cv=none; b=YbkLY7yOTvd+rCSJyRXEy3kFw17HE/rR5nO+LOhXPe1boWgj9r23sNO4OpgYTNw+T+9sT5KLDy5az6+a3NssfXbuPpPuRFQ8pzMlfZL6Kwk3L5U2vVKL1M3QdG3yGzGHtpRyVioLl1fVtcbDgVv+9w/ap8k0L8YQmE4D/3AtpSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752784835; c=relaxed/simple;
-	bh=PdIbTdktWh/WBwrcyr3gCqj0Qy8ntRTyRqr3z/psMAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hiQwHLGhNYnCtb4rNcIFPP/ZCRLEiB5uaWoKgYOQeaOIwYg4ZYwPS+T3ZM/vpYEb2Ib+2ImPrl6NBhNPR24TfbNwXMHqXxbJIYMyGB5NYxQTXN52NPW9l25Abc35XJ9pm604u8iwgQTM8Wxr7rSZAm7+5hn2xEQGTHNA0VsQgX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XtqtllOa; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752784834; x=1784320834;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PdIbTdktWh/WBwrcyr3gCqj0Qy8ntRTyRqr3z/psMAs=;
-  b=XtqtllOaT7ptrwI6riTgpMLsAQN/HpFPsEWqZIr3r/QavIQ7ZCYzDBNx
-   p1Ohp/uKsfu95R3vseMgKzPxeiWbKNk7+0dZ5iK9NAx9pw1JRk2akb2tj
-   4Xi2A1y30rX8i2bmBeulaSMCqM7GdF0nPiOjyvWUMphl2mMllaUNt4WSR
-   ECXlaUoiI0+g9XtbwaDSjahfDYhP0x9ctRINIjmby3MkLhchBirRJfRzX
-   vpSudkr3tjE/ftWuLb2OiIEkS7CqbcR9X49+UYKR73OaKzlO/v0iNhFSb
-   mBHaxSrdGx4TnX0H6jNFHV+zxKIqX/Il+R92ZttdBKm1kJAScXUMzJrj7
-   w==;
-X-CSE-ConnectionGUID: kNeOfRNlQXi7UgpOGqXIRQ==
-X-CSE-MsgGUID: 7tCDUj5sSNSUCnx4mZ3IsQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11495"; a="55200007"
-X-IronPort-AV: E=Sophos;i="6.16,319,1744095600"; 
-   d="scan'208";a="55200007"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 13:40:34 -0700
-X-CSE-ConnectionGUID: IuN4fVvGSIalVbCR9aDz2Q==
-X-CSE-MsgGUID: BkOKgBq2Qm2hEkuq4K7EAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,319,1744095600"; 
-   d="scan'208";a="158585075"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 17 Jul 2025 13:40:29 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ucVP1-000E0Z-0X;
-	Thu, 17 Jul 2025 20:40:27 +0000
-Date: Fri, 18 Jul 2025 04:39:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v6 19/24] media: i2c: maxim-serdes: add MAX96724 driver
-Message-ID: <202507180433.nXvvwmFy-lkp@intel.com>
-References: <20250716193111.942217-20-demonsingur@gmail.com>
+	s=arc-20240116; t=1752786406; c=relaxed/simple;
+	bh=uhfsvd6ujR5IiuRkGHiGSpUgRbJAikw6tYn5QgEz+VY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XZPnVutYRFUUSYdY464zKSfX0MaahEpzWuGBUpsulYcACima/UDlKd4sx9w4A+mUaDlW1hcnk5C7LHJ5LsGJEkx9OrpPpzTaKmFKi6cSQq77I1swAxxq/7e8T2B7y1ZgcChumDgGhVMl2MgZ9YdADoLFsJFnnLovZJPl0QvNHGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fIMVvM1b; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56HCMQd1030480
+	for <linux-gpio@vger.kernel.org>; Thu, 17 Jul 2025 21:06:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gjye/euzJtJqLLETvGURwJ94G0Q37cEw/XWFQryemcE=; b=fIMVvM1bN1hE4eUK
+	WGzlKQawrUeXo7QK+Ku6DfRkL9mijak+Krr7T78veaG/n+2cu3v93hVr3JsQ5ME3
+	cXLeCvcFfBgaodGi5fGCWH6LSu6KmvUVMrvzmNI3+sn0hvy/6RF4XsxtvDzY51m+
+	kjvLDcteG81VEZOwVTB5gkcp26i7buKXYdP3h4qqW9pDz67Wb1JaThOwzNAhVruR
+	SWd7LGbo5HkjnpTs0FRDOSyuVu1fSs1L4OaHU6uz1gm1ABKhY0RyXq6ZTeKy/6Kz
+	G3cl1nZNOWZ230vSSGE22EyN2fimf8eiLR1KADQOvSBbrwiZgqE/qaD2L5kdgJ5y
+	04lUug==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47x8x7p0u0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Thu, 17 Jul 2025 21:06:43 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7deca3ef277so32279785a.1
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Jul 2025 14:06:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752786403; x=1753391203;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gjye/euzJtJqLLETvGURwJ94G0Q37cEw/XWFQryemcE=;
+        b=jcbMYXKXrQOrVcvOjPPltb20I2SPbPVH0sPS+0A6sy0lf6klqkGtjgJmUw0wBDbdTR
+         nlvzj2gWJHOCvt5Foyj5v5k8F/URI8zj+Sak73YTcNcF6OryhDn42XTvoPwhCgFTi6pC
+         LhLPmT+DJIBQS8YD0U/wPncoPRb/kFSMw1yvrUZtj4t2Xg0Sog+PTvhTNX9ZxaXh/iy9
+         c/xsP3rslla8EYOg9u8Xg3pC8PWXibgyPZye5gry2eGcjDlguFsR0bayj5N3bUG+D9oT
+         3iGBfmnG+/hJhgof3NXazcNpLqN41ktqyxXUx2mlYGa2rOFJ5wtEAKvDRyYWsBmXzm3U
+         4+Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTQJcnyOMC60JkQiRgSPGHEvP47IdgqGWhTnEJAWDTszAzkidEgymhVJlXNCjYeHZ5mrPUv+1QHAh4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/G73CCnMR1Nq25uG5svXpi7BqQxUSvyxA5g6K4YC6HfqDpTpA
+	5up+1FfoeAk+MnadW5x+GYDPwdbXtSLA1CGPlRuly+PuxTF+6OeuN8aEXBzadmZKNFPSytndbIK
+	J45/kSMkEapPKn/xbuKtsVLXtBClUEF2D9wkAQNFxz9O/vm4SFtWOwuN5IkIEB2Ki
+X-Gm-Gg: ASbGncvAPXixbMX/jMECcmJdBhNbYCAnl0Q0j1u00LK/DilA//QvbWajMyn/oaQX9E5
+	1P5vBe6T8pqU07ZZuhcJKgwsXQHcSr5cDCj7fOqLmLGhiuEGeF+NzF0yYkbjTWLjw0rtI8fVQ5w
+	xdq1cKJEdiPSvjSA9imtNeWE1/dWS5sQCl8LnKP8vbvyZgZ/05YhUytJOMTwx/ZSRXn2/Y02ZZj
+	W0U6q7igp3bnAfAI822Di3DNxnDlhf3iBjTe2BCtDOab3iRyQX2UF4c/cWS7JrszlTnD4mY6P/Z
+	7/iubR9uI7ygzFu4VWaECyBcZB58O9g43zR7EyASax9KeJGDwtokVe65eIq+dBJQfZIqd3SLmtA
+	QLCosfXhg8JztAQgEEpne
+X-Received: by 2002:a05:620a:192a:b0:7e2:ee89:205a with SMTP id af79cd13be357-7e342abd519mr451825785a.5.1752786402705;
+        Thu, 17 Jul 2025 14:06:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHuPa/yRCQICTQrA+jm+Q73xxpZUEJk2US/0cdFi63bdkyvw+FC7AgcXaKulKKmsTwOdsW8rg==
+X-Received: by 2002:a05:620a:192a:b0:7e2:ee89:205a with SMTP id af79cd13be357-7e342abd519mr451822985a.5.1752786402252;
+        Thu, 17 Jul 2025 14:06:42 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e826461esm1427290566b.100.2025.07.17.14.06.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Jul 2025 14:06:41 -0700 (PDT)
+Message-ID: <653da558-9dff-442d-acc7-65a1c0f84494@oss.qualcomm.com>
+Date: Thu, 17 Jul 2025 23:06:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250716193111.942217-20-demonsingur@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] arm64: dts: qcom: Add PM7550 PMIC
+To: Luca Weiss <luca.weiss@fairphone.com>, Lee Jones <lee@kernel.org>,
+        Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Fenglin Wu <quic_fenglinw@quicinc.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20250709-sm7635-pmxr2230-v2-0-09777dab0a95@fairphone.com>
+ <20250709-sm7635-pmxr2230-v2-5-09777dab0a95@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250709-sm7635-pmxr2230-v2-5-09777dab0a95@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE3MDE4NiBTYWx0ZWRfX0pGGigEtB95m
+ 4cj0LsmkvSTA6GP3bxVB5qnU+g4XhcZwmlq4tPYO5Z1v6NiXxSEMy2c3eS63i7hGGDa6bpENZX8
+ wddT2pjxZfnbCKQMB0fF0lT5Taq+Y6PhY6rzx4Lvk+cLXZ4lzFo9wz2MWEeYuZBGiFqdfmEag+e
+ a11kssCcqmDVm+Zdk7EqqgUSYV8UCjSIR2/XcpDfCF8dmNaVzpMXlQ6i848pQI76wDOE0CBq5nT
+ 0AcMkpUgYdpfmPeWcG2AuO8drOn6A9iUxCNvwG8DADL9GlyyaTywnnsf2Lq61W7Vx6oHEUue3Fm
+ q1xRNoktrGzjXlNv9t4G2OZZXpSiu/lmeftCY0/ds+GgJnmYAT5onNEgVEEdN/UnN46aMQz3sGq
+ 8+f90fw8q4sdB2HHzQ+gL7id46PdzyR+AAGlKmLS1Kn+Z6nZTlLjrOZ7d5vOOAyR+brYQkpd
+X-Proofpoint-GUID: iB0Atd49AllSSdBZ8K7jk8aWfCdmt-Hb
+X-Proofpoint-ORIG-GUID: iB0Atd49AllSSdBZ8K7jk8aWfCdmt-Hb
+X-Authority-Analysis: v=2.4 cv=N9YpF39B c=1 sm=1 tr=0 ts=687965e3 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8
+ a=WWQFUNGd85j635JlVwcA:9 a=QEXdDO2ut3YA:10 a=AYr37p2UDEkA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-17_04,2025-07-17_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 lowpriorityscore=0 mlxlogscore=884 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 suspectscore=0 impostorscore=0
+ phishscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507170186
 
-Hi Cosmin,
+On 7/9/25 1:46 PM, Luca Weiss wrote:
+> Add a dts for the PMIC used e.g. with Milos SoC-based devices.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-[auto build test ERROR on next-20250716]
-[also build test ERROR on v6.16-rc6]
-[cannot apply to robh/for-next staging/staging-testing staging/staging-next staging/staging-linus arm64/for-next/core linus/master v6.16-rc6 v6.16-rc5 v6.16-rc4]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Cosmin-Tanislav/media-mc-Add-INTERNAL-pad-flag/20250717-033901
-base:   next-20250716
-patch link:    https://lore.kernel.org/r/20250716193111.942217-20-demonsingur%40gmail.com
-patch subject: [PATCH v6 19/24] media: i2c: maxim-serdes: add MAX96724 driver
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20250718/202507180433.nXvvwmFy-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250718/202507180433.nXvvwmFy-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507180433.nXvvwmFy-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/media/i2c/maxim-serdes/max96724.c:273:6: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     273 |                                  FIELD_PREP(MAX96724_PWR1_RESET_ALL, 1));
-         |                                  ^
-   drivers/media/i2c/maxim-serdes/max96724.c:494:6: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     494 |                                  FIELD_PREP(MAX96724_MIPI_TX10_CSI2_LANE_CNT,
-         |                                  ^
-   drivers/media/i2c/maxim-serdes/max96724.c:693:7: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     693 |                            FIELD_PREP(MAX96724_MIPI_TX13_MAP_SRC_DT,
-         |                            ^
-   drivers/media/i2c/maxim-serdes/max96724.c:741:7: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     741 |                                   FIELD_PREP(MAX96724_MIPI_TX57_TUN_DEST,
-         |                                   ^
-   drivers/media/i2c/maxim-serdes/max96724.c:914:8: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     914 |                             FIELD_PREP(MAX96724_PATGEN_0_VTG_MODE,
-         |                             ^
-   drivers/media/i2c/maxim-serdes/max96724.c:957:6: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     957 |                                  FIELD_PREP(MAX96724_VPRBS_PATGEN_CLK_SRC,
-         |                                  ^
-   drivers/media/i2c/maxim-serdes/max96724.c:985:7: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     985 |                                   FIELD_PREP(MAX96724_PATGEN_1_PATGEN_MODE,
-         |                                   ^
-   7 errors generated.
-
-
-vim +/FIELD_PREP +273 drivers/media/i2c/maxim-serdes/max96724.c
-
-   262	
-   263	static int max96724_reset(struct max96724_priv *priv)
-   264	{
-   265		int ret;
-   266	
-   267		ret = max96724_wait_for_device(priv);
-   268		if (ret)
-   269			return ret;
-   270	
-   271		ret = regmap_update_bits(priv->regmap, MAX96724_PWR1,
-   272					 MAX96724_PWR1_RESET_ALL,
- > 273					 FIELD_PREP(MAX96724_PWR1_RESET_ALL, 1));
-   274		if (ret)
-   275			return ret;
-   276	
-   277		fsleep(10000);
-   278	
-   279		return max96724_wait_for_device(priv);
-   280	}
-   281	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Konrad
 
