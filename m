@@ -1,264 +1,144 @@
-Return-Path: <linux-gpio+bounces-23415-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC7C4B0903F
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 17:11:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AD33B09086
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 17:27:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 362891892B31
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 15:11:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FCD3583828
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Jul 2025 15:27:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 997222F85E9;
-	Thu, 17 Jul 2025 15:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB332F85CD;
+	Thu, 17 Jul 2025 15:27:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dNsoLP4L"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VjiNpk4f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728472ED142
-	for <linux-gpio@vger.kernel.org>; Thu, 17 Jul 2025 15:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F9B1E520F;
+	Thu, 17 Jul 2025 15:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752765092; cv=none; b=pn3rDLq7QWLM7SbefJsnNYxBYftcEz/WTQnO8X0PuJ95zVCnQFL1uAKYe9QetGSF+0UwweuNOR8XIcQwQmONAAw6UrBTtS10WMOCRC5MgW/RYnX/OmRdolS8CE6MzC4D71uezCD7EldZrg9/BLc0KBMl51qTsi9onunvIhUWDww=
+	t=1752766034; cv=none; b=EuL448qs4JX4+SwLNyoDAA/OR0ZT1PyrG537VD/zg7MSxR8MD9L30vDzVd93zUgjyAvN4lgpOyOs248pXdPiOhSxw3l5jM1p3zuGQhGPcS4lrfhAEC3F77/qWbvlfKrdESfn9i35J82wYgWJF1nV9H0FhPYN77VErZf7EEF+N/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752765092; c=relaxed/simple;
-	bh=DxA7Uo2bgydq066TA4BQ4nfW+avkOMLq4UqXbccFa6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mlC7FUmPgardeDNKHCdSjMb+xSH6MgBbtLl4f8R1EA02w7kY6E4ec3yH4PPjEgmOCN+kKLQNjt6apErIYJ2PVpxBzHGlWY20Kzu7MJG5OsvooVU16tJqOdRrOYbbZFFACNKYP6Vy00rS6T2agKsRIxRU4io7uR/kRrEoJKAm5qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dNsoLP4L; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0dad3a179so172999766b.1
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Jul 2025 08:11:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1752765087; x=1753369887; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mkGzIpKY/tGSwl5AOjdyjMvkHhU6MR0YhLrgC1nQA3U=;
-        b=dNsoLP4LXbDD0g0PCEalQ7RJqnmtXjQOfcai8kxewDI/Tv1InABCtGO2h/YQGgmlFh
-         A44nqq8Hy76RqaJZH0fJhlsy7EJDvAGctJu5UpB3jGgRiXWoIljZhZ9GIqgYtYRPuCML
-         dMoSro5HKaw7jFqnJbrAMsBI1SrUaU/ozzFei0HYPI4Z6jcG8HJi0ESTX1RU5JcFhB2u
-         S2Qw5sHBecOoxxoQcPKg9oZfpKuF3mrLkT07JZFXo1FrvoJe7iBwGq6pXD0NCfrOyunY
-         Ho36OSdAbKK49iFEwOOPW1livzg8+m94rcJKqKp+Xib1yuFAH8RoVcM6e9LF/ba1SAcM
-         N7wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752765087; x=1753369887;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mkGzIpKY/tGSwl5AOjdyjMvkHhU6MR0YhLrgC1nQA3U=;
-        b=Wqn49aEf62dmAKkZF/DE3Qs85T67DSbkJKHIiZZ+CC3ycuu6TFlfDmsxLP5hP6hJVd
-         LcP9GKsUYFzzYCxDQNxb+T+JZ03N+h42XmZn0hJ62C8vgj7zyNIuCPu3tiwPy4YJOYqa
-         uS9m/oETjgW2H0aALAn7jKs0FDlqVtymKZe6wjCtQ0e151B5pyd8FVU3JDvJV7K33MEZ
-         cToZduEPQQDqU97OQAXHtaOrXJAcbxjQ54cpF2BUo93q+W3KOvI9RJ7Gjkbs/FyPsQwY
-         8IJCuJXA5W3AZoQEjdpgQW26H0t2seuyYAHTgJavVlwle6Fr9pU/qdkUKic+0du07jsY
-         1pow==
-X-Forwarded-Encrypted: i=1; AJvYcCVEEU23dtH24YV6SeDZV9CiijXywvq3Xxz6UhtkI9epd6rv4U3g0lqczT8ioFwki6BcHTDXAZCqyg01@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7iEJxmhw74wAUGWF94lZmYDC7zU6U2tzQXecJCqBl8+tGnP2q
-	Cv3GBHb4QJJ9ZK1nPoSre0NYIqoqS3mNb5IqVOt5yNcOFU8vytM3xptcDkE91sLAfIU=
-X-Gm-Gg: ASbGncthzHjxxShBL9qfijf3s97sIU29UMUlWf1tRL5wI7/hXPLWex/pNDBlM05km0K
-	Ep1R8gXiDfUzWjGSMfuQUjwy/lkWdKDqhAJJIDbhnWYpy3BrzxKW9MjcAg3GTsnZcHiX53mSeN+
-	Jw9MmlyEwnuWnSPwXcokW2cZUjlBs5Dl17F0YyjtukVAsUQN1SqT4fqQIZOBD4WpEOw6Hej9TJF
-	V81Ix9alYSEAL0n1mSqGAO5y6phL90lXHf9LFJiHlqwztNfDu+X9NugiS/bSvIMNbpnBKEJZPKS
-	jbM5rt9KMWYqYickb9d5kri6cPHJQ/j9/FnLR0ZuSLBMeZxi43qzhBiN2eV/Gtlsja/Ghg7aKAd
-	WggqS8wjwy1UvFMilHuMMP99ULjo=
-X-Google-Smtp-Source: AGHT+IERPOIfyj7l1DEQPuZgN4vpBbXC9zNBzCJL1cwLdUtzmxru1RTSZe0XV/KnmctwihuJVpetBA==
-X-Received: by 2002:a17:906:f747:b0:ae0:d38e:5852 with SMTP id a640c23a62f3a-aec4fc40f88mr253516466b.39.1752765087329;
-        Thu, 17 Jul 2025 08:11:27 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-611f6f3be91sm8609102a12.26.2025.07.17.08.11.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jul 2025 08:11:24 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Clemens Gruber <clemens.gruber@pqgruber.com>,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v2] pwm: Provide a gpio device for waveform drivers
-Date: Thu, 17 Jul 2025 17:11:16 +0200
-Message-ID: <20250717151117.1828585-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1752766034; c=relaxed/simple;
+	bh=NQE218xM/uYai0NdPYpenB3Q0L2BAgSxW5TXcN9SoN8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ylnbkq8PYKrFq1z5PpiQGGgb+sgDHIq1j+9NhfJ+9m7Q7AGkT0/2eL01k0/l14fm8Z5FkVFloV56QGJCHSziDrrbYPOXZYG0EuEZzfYKvIosMGvXeMCNp8uaN+qb38Dc/u4HIvKMxTJRukYVTfijeZsyHjJSpYWZJIPTn6EwIKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VjiNpk4f; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7118B43A0F;
+	Thu, 17 Jul 2025 15:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1752766024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5NL0HDq/x0YbzoK0LOLm6d5hufR8+z/CcXms1AjNRP8=;
+	b=VjiNpk4fCmf82cJR2ZqX18tjYRN8oYbiIp2qIbRs/6CyL00Q3YyZwo605HMRj0aG5oRidi
+	PE99lhEO15h+58R0QkkxYSQvb138NQ689SkBEG1EgYDi1++GEu5dUshi9cd5Ls7O3rrOfg
+	zlPlYXDAdZowalqXxP0whOEfRxr1An36aVGQGZYn5gYaa9bCM7FkUOqDSDi0yvp+Yt7vaf
+	Gv5WuO8mxSiIIt8wzrNko9w19wi/lkHXzZNCoAgnk6qAfR/SOToS2rSs/2XGsG1l3psjVz
+	xBXjpvjg46BwEND9hMlMU/n4K2iU61Pc+8WyTPrmwGLvz3WnXLU4m5e/jIhwUg==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 1/2] misc: ti-fpc202: remove unneeded direction check
+Date: Thu, 17 Jul 2025 17:26:57 +0200
+Message-ID: <14379725.uLZWGnKmhe@fw-rgant>
+In-Reply-To: <20250717130357.53491-1-brgl@bgdev.pl>
+References: <20250717130357.53491-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4853; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=DxA7Uo2bgydq066TA4BQ4nfW+avkOMLq4UqXbccFa6I=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoeRKWi1khA7pl7JyL6cWX1b5KvPfEX8STf/qSD sAfMGtVpLeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaHkSlgAKCRCPgPtYfRL+ TmaiCACzSm6y/xKhbqHL35wb7I/ShaU7Py+TAyBgg/mW0UhigIZmutc4ATd2HFiOgn6wJZsX9lB 78lDtGH5VI4lGG8osqTnMeKzoRxj2Iqk8m7bdxDu3Z0Z3MUqsS5Gni2KMovbze1UXd2fc9F7uug BpGd1GPSxDuxyAuFECYs1Y5vDfzfaLqx6pyVCs1RHjlhpdPGfdAsRWnSX3pdeZwgX8gB0ich4i8 q6/h9MeH6XbA94aS7BcpDT1xUD5uOxv8Hv4cz8SJQFsJhmTyCRjBCQI0OD36LS5h4hwvf6ItI8n reCh+nuio90eYSos1Mb/QditIyd98m5Rta+fqtN1tCWwTAXL
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="nextPart3574599.e9J7NaK4W3";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeitdelgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfgggtsehgtderredttdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieekkeffvdeugfekjeegfefhvdetuefhtdelieduheeileduledvteelgefgffffnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehffidqrhhgrghnthdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhor
+ hhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggrrhhtohhsiidrghholhgrshiivgifshhkiheslhhinhgrrhhordhorhhg
+X-GND-Sasl: romain.gantois@bootlin.com
 
-A PWM is a more general concept than an output-only GPIO. When using
-duty_length = period_length the PWM looks like an active GPIO, with
-duty_length = 0 like an inactive GPIO. With the waveform abstraction
-there is enough control over the configuration to ensure that PWMs that
-cannot generate a constant signal at both levels error out.
+--nextPart3574599.e9J7NaK4W3
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+Date: Thu, 17 Jul 2025 17:26:57 +0200
+Message-ID: <14379725.uLZWGnKmhe@fw-rgant>
+In-Reply-To: <20250717130357.53491-1-brgl@bgdev.pl>
+References: <20250717130357.53491-1-brgl@bgdev.pl>
+MIME-Version: 1.0
 
-The pwm-pca9685 driver already provides a gpio chip. When this driver is
-converted to the waveform callbacks, the gpio part can just be dropped.
+Hi Bartosz,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Hello,
+On Thursday, 17 July 2025 15:03:55 CEST Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> As of commit 92ac7de3175e3 ("gpiolib: don't allow setting values on input
+> lines"), the GPIO core makes sure values cannot be set on input lines.
+> Remove the unnecessary check.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/misc/ti_fpc202.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/misc/ti_fpc202.c b/drivers/misc/ti_fpc202.c
+> index f7cde245ac95..ca415ef45cbe 100644
+> --- a/drivers/misc/ti_fpc202.c
+> +++ b/drivers/misc/ti_fpc202.c
+> @@ -125,9 +125,6 @@ static void fpc202_gpio_set(struct gpio_chip *chip,
+> unsigned int offset, int ret;
+>  	u8 val;
+> 
+> -	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_IN)
+> -		return;
+> -
+>  	ret = fpc202_read(priv, FPC202_REG_OUT_A_OUT_B_VAL);
+>  	if (ret < 0) {
+>  		dev_err(&priv->client->dev, "Failed to set GPIO %d value! err 
+%d\n",
+> offset, ret);
 
-I found some uncommitted changes in my tree that belong in this patch.
-This v2 actually compiles ...
+LGTM
 
-Best regards
-Uwe
+Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
 
- drivers/pwm/Kconfig |  9 ++++++
- drivers/pwm/core.c  | 72 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/pwm.h |  2 ++
- 3 files changed, 83 insertions(+)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 3ef1757502eb..778168e71055 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -38,6 +38,15 @@ config PWM_DEBUG
- 	  It is expected to introduce some runtime overhead and diagnostic
- 	  output to the kernel log, so only enable while working on a driver.
- 
-+config PWM_PROVIDE_GPIO
-+	bool "Provide a GPIO chip for each PWM chip"
-+	depends on GPIOLIB
-+	help
-+	  Most PWMs can emit both a constant active high and a constant active
-+	  low signal and so they can be used as GPIO. Say Y here to let each
-+	  PWM chip provide a GPIO chip and so be easily plugged into consumers
-+	  that know how to handle GPIOs but not PWMs.
-+
- config PWM_AB8500
- 	tristate "AB8500 PWM support"
- 	depends on AB8500_CORE && ARCH_U8500
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 0d66376a83ec..7f048e09b3ce 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -2383,6 +2383,51 @@ static const struct file_operations pwm_cdev_fileops = {
- 
- static dev_t pwm_devt;
- 
-+static int pwm_gpio_request(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct pwm_chip *chip = gpiochip_get_data(gc);
-+	struct pwm_device *pwm;
-+
-+	pwm = pwm_request_from_chip(chip, offset, "pwm-gpio");
-+	if (IS_ERR(pwm))
-+		return PTR_ERR(pwm);
-+
-+	return 0;
-+}
-+
-+static void pwm_gpio_free(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct pwm_chip *chip = gpiochip_get_data(gc);
-+
-+	pwm_put(&chip->pwms[offset]);
-+}
-+
-+static int pwm_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int pwm_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	struct pwm_chip *chip = gpiochip_get_data(gc);
-+	struct pwm_device *pwm = &chip->pwms[offset];
-+	int ret;
-+	struct pwm_waveform wf = {
-+		.period_length_ns = 1,
-+	};
-+
-+	ret = pwm_round_waveform_might_sleep(pwm, &wf);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (value)
-+		wf.duty_length_ns = wf.period_length_ns;
-+	else
-+		wf.duty_length_ns = 0;
-+
-+	return pwm_set_waveform_might_sleep(pwm, &wf, true);
-+}
-+
- /**
-  * __pwmchip_add() - register a new PWM chip
-  * @chip: the PWM chip to add
-@@ -2449,9 +2494,33 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
- 	if (ret)
- 		goto err_device_add;
- 
-+	if (IS_ENABLED(CONFIG_PWM_PROVIDE_GPIO) && chip->ops->write_waveform) {
-+		struct device *parent = pwmchip_parent(chip);
-+
-+		chip->gpio = (typeof(chip->gpio)){
-+			.label = dev_name(parent),
-+			.parent = parent,
-+			.request = pwm_gpio_request,
-+			.free = pwm_gpio_free,
-+			.get_direction = pwm_gpio_get_direction,
-+			.set_rv = pwm_gpio_set,
-+			.base = -1,
-+			.ngpio = chip->npwm,
-+			.can_sleep = true,
-+		};
-+
-+		ret = gpiochip_add_data(&chip->gpio, chip);
-+		if (ret)
-+			goto err_gpiochip_add;
-+	}
-+
- 	return 0;
- 
-+err_gpiochip_add:
-+
-+	cdev_device_del(&chip->cdev, &chip->dev);
- err_device_add:
-+
- 	scoped_guard(pwmchip, chip)
- 		chip->operational = false;
- 
-@@ -2472,6 +2541,9 @@ EXPORT_SYMBOL_GPL(__pwmchip_add);
-  */
- void pwmchip_remove(struct pwm_chip *chip)
- {
-+	if (IS_ENABLED(CONFIG_PWM_PROVIDE_GPIO) && chip->ops->write_waveform)
-+		gpiochip_remove(&chip->gpio);
-+
- 	pwmchip_sysfs_unexport(chip);
- 
- 	scoped_guard(mutex, &pwm_lock) {
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 8cafc483db53..6e7d02c24991 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -5,6 +5,7 @@
- #include <linux/cdev.h>
- #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/gpio/driver.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-@@ -340,6 +341,7 @@ struct pwm_chip {
- 	bool atomic;
- 
- 	/* only used internally by the PWM framework */
-+	struct gpio_chip gpio;
- 	bool uses_pwmchip_alloc;
- 	bool operational;
- 	union {
+--nextPart3574599.e9J7NaK4W3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-base-commit: a582469541a3f39bed452c50c5d2744620b6db02
--- 
-2.50.0
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEETFOGm0tqZfYwVxBymGofZEoxB4MFAmh5FkEACgkQmGofZEox
+B4Pudw//WmOIYd5K4bpyhceplO0TUalfRdIGrupHCJxlFk7zh4Ox2rAaisvAGNQK
+E92g9JBQ1G2Ph/G7odM60nfwAjxPIP8RPGHDBuZ5r1GcU99UBidsnlrFZr2n5+O4
+8EyMUfHhORnWAMGIuYjGGsUxsh2f9RZZkX+T5Nt4aJ95ORlAuBOaPeZtzaqQwnvi
+X+I/f47RrHX7Krv8lSootjQvJar5lQJJa620jx6ym8nDj5hYUNIj3SvxUBFM8os1
+t2wsRQ0ULP2CWriBEAfXOI7jttdm4zFjAb2tjNm55FFyv59WLZyfcUyEhPH1FIav
+NBRL4L741QuKQ+UAEW9ss/QUFDsqp8XM5ze511D0MEGhAUIBVn+KEK8+3RGhHncQ
+oI3rIpKo/r8urENkOyKwZLbve2U9BjehVbf+7owLIGEHzVW02UbzxXi0G3D9+2nc
+QW+4/A2aFKrwd6P/QG3kB+Zmqy3mIL035QaACRW5A6566+hS+npBi7Sjzqfv6Aqu
+dMOsRd1TCoAcLDyVgNzYmbCVA1Sugu611GrIKoP64TmMB3oUs7lelRAcHYtTeIWQ
+oWGGInNwAr6Xf2qzu0LTq32hAliNht+z90Wk8yj8+nXoCS4MUhTpwWZDyKT+3Fuv
+OlO8J2XPBD8JU7TQtnNHRan4V8VbZtrKm1UwJ/KpHjlq0fqtjaU=
+=KXp/
+-----END PGP SIGNATURE-----
+
+--nextPart3574599.e9J7NaK4W3--
+
+
 
 
