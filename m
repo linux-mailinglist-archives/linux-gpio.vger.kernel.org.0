@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-23492-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23493-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AFC3B0A77D
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 17:34:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0667B0A781
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 17:34:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C36D15C2C86
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 15:31:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A0613AFE0E
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 15:31:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C2352E610D;
-	Fri, 18 Jul 2025 15:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93822E7BAE;
+	Fri, 18 Jul 2025 15:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqpC1thc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Li76J3h4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AFB2E6124;
-	Fri, 18 Jul 2025 15:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5653A2E6D0C;
+	Fri, 18 Jul 2025 15:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752852369; cv=none; b=UmwL5qGRD7xxQ2TxdBNy2c3TJirnGPxIqr/GGfdGMpwBV02raoom6BD6VN7SYcbJrK94pzNXepDMrmR4C6l8FRBLSX/R5uT9s6hFiwrE5omJhi5F+WaywrCJqr3Z1RyRpB5nb6Md0sKIeIskn3YhiC3qUz6T4GWTVilgHfrnzxY=
+	t=1752852373; cv=none; b=SxeDstwNs0C8gdSuWH13MKjdu8L+iNfcOf48XpK4rePmkJkww+9g3UQMUmviLeXUJoO6y3NVZ/Cd92Z34UYSywo52H26bZR4/iEYeUZgO7Fm+dCG2IkYrRAvlhJ5evMlYBBtsSxt6kHurzO8x7EH5VSr+WZzUyOcfZ1hjDgMBA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752852369; c=relaxed/simple;
-	bh=0uwM97VcpyvVnvTvyB9BWoNXTFPNXspcmHda3ICIZYo=;
+	s=arc-20240116; t=1752852373; c=relaxed/simple;
+	bh=EpXkZ0NqK4PAcS20oG1hL/ZSCQDz6nGU/fV8vl5Dv/4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y4PxNbWu0TN6/lqU03xLGiMPNcjhdUvwG3h9BFvV7aboqvEnAy1cX1XzXL1p8+33CV2fZ6M5gU5SofSYTL7NmUl8bBiAfSQMA+rfq94WeyKE26pVBPXzyAlqJ2CbVgFPyy53Eqwck6HW9wXt9JN1fw2uoquBQHq5BPEwLFX64P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cqpC1thc; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version; b=pxLWLBy6Of1KhIWjUJW/1KsuaK8sE0+rVeM5rEJEqG6ZQwME2uAZIJui7q5QkChzPGJrILj2YBe9quRgs5fJ42hfRDC97KQpmhlRUDhvm1eNLwYUAqVlHCIX0keP7WIwoMIgyfsrCupv3MdQkA2IM3EwnJcXa2PaJKqADM2Loko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Li76J3h4; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45629703011so15941635e9.0;
-        Fri, 18 Jul 2025 08:26:06 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a582e09144so1213627f8f.1;
+        Fri, 18 Jul 2025 08:26:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752852364; x=1753457164; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1752852367; x=1753457167; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2DHTkrqao+/QM5QdOPQt6/Kn+Oelq4NVlNlZWZN2eW0=;
-        b=cqpC1thc0ut2wT6vv2k1sysbWx6qIL1YUcsmQllxDuR3Bg0OQNfsn42hUzIzIR0piy
-         crD1kJsrTAn6B5iSNmG9DnMT8KrO6mGbNebN4w3kX9/FpR8vA67Cv7I89cmdQe8BZJE7
-         UNzSfh18lKI6OPZBHASwwsjpJLILOkF77RzYvXato754IpKaRnC2OxyGU9bg8MIQRhtf
-         kZTSNTFJfdUfiWyOkvYcQoomPHQggga8tiWxLJiXmG7ttrRIp+q6fkkH8WclVgjyaaU4
-         h8RbihEK3dfBvNSibiV+ZQJr9aDLtCn/nWqI7k808wV4BuTormhRHkkiB91FCfx3Gsgl
-         rxyw==
+        bh=UyyUpFOdqizO7uPykjXufiqqr0hLMcwwCapej8jvSgQ=;
+        b=Li76J3h4W9t+8rxRJTKV+mNN777HJ8XfPg65FM+wryRlpINXr4GrjIoUBPZoIlKn3G
+         Amvpu5Z/UjZrTpUTc+5i9x199aX5ple32I84U3IPODIBRNBTbBIubM3vCS7DpCVWBGUg
+         lcXSOM35wEDoegpCyi0lRPu0h4JHFSf3fduGA/FR/fAVt4/p/Q5EgvKULkhEmYRWGSc1
+         d6JUxeHLQ57zwstcqhFZnc1+UazZaJt94EKeJrqs5ppqX7CBziHpSKbgQ9os8oyR9mEh
+         T+1tOQ3zPzK6CeP/ycC2H5+aMiUOMcLrxNznYjuq2v1NT9Cyr6QracGanRJjGNICxhul
+         1aBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752852364; x=1753457164;
+        d=1e100.net; s=20230601; t=1752852367; x=1753457167;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2DHTkrqao+/QM5QdOPQt6/Kn+Oelq4NVlNlZWZN2eW0=;
-        b=grQUPcJolKKXIViJfLZGV26Z/484m718Thkzno/ZxepI4YNO8ENH2PAX43R/Bb0vzY
-         NTKRoAUDipakPxLb9DbwBxdW+c79qGc9a+Thf8PnJraKHhVDOGVJbrDX7dbbT7Xn3jXN
-         N53+eBMKW6ErszE1a09IfhJTYz9pEJ/U9PLEYNrsvcBjU3DftxASZjsqqqCC/jQfdm9q
-         WHui8XOJ+iDeM9Tidsihhmf9vZXRwTh0ItzyARic79Y+YkoAirEcV0B7laquuU2bvMrz
-         7dPWMveytGoLNr6ymovq4n1Td3fXofjHCfcaBI/chF5CNmMJj8JfMBNjuM1lfgJ/6q5n
-         G/Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuqHYgulychLHcllrCFIob8tuyUoHohG5lczwhA/Wlw8oRTZzvMkzCGjZUVG22PwbNOT19hfJEEh3+UMk4@vger.kernel.org, AJvYcCWMF82xFh3esrRKiOn1ehLuJximRV1ghkDc19mD1Rcf+hWzrkiYzKN7QpatJSuZbx6D5IkX2QHWdF2Z@vger.kernel.org, AJvYcCXIEyMhfQRAbqvzm8hRoRDwNqXkNttjp9XmIZgMiP+5lhpyNXwd9Cp+IbmfnoVliZHVKmuF0sCFXAOnNQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcMVCfFyP7S3RuERdFAFNuWh3ncT4QW2H2r6TPELbLhpd823ex
-	LaORajx2ClZZLmN9eAMCmH7hSoYU0ZHhwplq8yMSXN0wSiCdDh9/B53Q
-X-Gm-Gg: ASbGncu0oZ+m9in7+n9vnJ0u5dG7Q91x/ORZD2YtqIgWJVfl6ErB9puuePBdWLNR9bP
-	N9+JqPvX0BM0w7E1UkQ65YPNKSuY3qtwEViPmqO1QFUI+UZOwbnd6TIMSdpFKmoDSQSGFUhG9AI
-	jApGe11j9Kb03edXocpr1O0Kq/1SYY1QQE2jwN9ycy2eHIVoSdxRXc/n++Ai3qSS17aHx5lGaHs
-	rlyVq7mtwVUhQn740BLKDyKqlQmTds9qYdRgAO/e0AvxWUx5Z+cD8Vh2TdIgNBEvTC10rThqQqr
-	QVPCeGeKgCf6QVV98tY0T/CSSb25zLOkiIOpVdCDWbmA/l6ImtMCwg9Hez9HdTzYBQcLGL4Q/8q
-	Uc7G+Id36Ljh4F9R+5qIlMg74MwngAn7cmoU=
-X-Google-Smtp-Source: AGHT+IFzTq+RpwV9EgYG0ag1pddk209xfzwVhHvs59I5pNL+K+n/Q08TLYRKD0Xr/ejT1gDk0XqTtg==
-X-Received: by 2002:a05:6000:248a:b0:3a4:eecf:b8cb with SMTP id ffacd0b85a97d-3b60dd95af6mr8673450f8f.28.1752852364001;
-        Fri, 18 Jul 2025 08:26:04 -0700 (PDT)
+        bh=UyyUpFOdqizO7uPykjXufiqqr0hLMcwwCapej8jvSgQ=;
+        b=p64aRsNtjXNqop9kfnuV74e12J6NNLza8rfMqGY58zhLXEZc9yzNqroDYKkQeGbZED
+         s2Z9OQZ2Bd4ByqTPKXe2bL06YhUHkzMCuhC/HDM9dY+rN1qayv0b10QTP8cttwsCufXe
+         7F2IPG9uW0cj7eh29A8KBmRrSOKQTss7fK49Q3BLFWL25Bbm8cuYRva+U7olhbQkKqTq
+         l2Hx8/xYyUMBiiIOAgqutX9owdB04Q8G48eAuMvkGAMxAY2U3GtIoms+LVQK34Nefecd
+         12YkLvytLp8ZqEpQVavNRX34d/TwJOMXWGIN5rMNhJvDki6zqDrmtbZA6Y46kBMlOKW7
+         cGGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUkzGQrDG6J22iMaVCOvmtVfN2zUgphD7Qrf+sK0DrA6w5dlDr46ojXuwMBHKPHd1Zl0a14KUW1hEZ+@vger.kernel.org, AJvYcCVifdxgycBU3BZ6c9+G9wMrirtW7wQPQAZ/2aAfZTZpSgyS7+4VXtl1rx8aAaJpCxIfKQLZ6apqRvoDY6uX@vger.kernel.org, AJvYcCX9lZYMhof1Br8+DJ1VJ6P2PZAajRsTY2MlX+GhKUbTpd1g3xZnbkMEEwqDuZDZ7Id9VLwtApwaq/yp6A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeG0itjMH5Ra1xgtdJAhRSPUoVpmBCTX2UMv2ppkJyWZQucXRA
+	eR2uLN5hVzdx6B6c0tffaHIoF88kHfztSecet9zjmbj53kFu7H2+CRlY
+X-Gm-Gg: ASbGnctp/rpNftmZpMGtxjNfj2zfL1ohEoiT2E833VB3AbLesudNkpVtNxUqv7oabRs
+	+2e9nXL4JFG7Ws6IRzvfeLs/6nmnV44IXNUGGwEk4ATx1dQWZ3eGhOWw8fLhgIxEVraRh5I8YHi
+	tGMKHTUNGvx4EDAy4P1L6C0QNhfRMbx70Bg4+N46uM45dUElVoYmepCn/RUJJXBTSrj4V14pbdw
+	mYfZx9a5iivW8hjK+LjkTZnwjV5dLxTu7tzAqORqpG5Qu5V6YeTmpmcwK/6nadOiWyaSlhG3ovK
+	g4h0jLeUbKSPcXCphneRDNf6Vp1J5+AkK6Q04dnCltvPJ+4h2sOZlvy1lucsoZKctevWwessVEy
+	AdSBbLoFrFDKDVw0vDQTkAk+JOz5X6Saca+k=
+X-Google-Smtp-Source: AGHT+IHbzP4j+YOwzdBB9pAGpx2rCo/sKgk6ooiPPhcnbTvHRLio7teEFI5qlOsG5UFDnClvBrBi4Q==
+X-Received: by 2002:a05:6000:2c0a:b0:3b4:9721:2b1b with SMTP id ffacd0b85a97d-3b60e4d1de9mr10044892f8f.9.1752852366176;
+        Fri, 18 Jul 2025 08:26:06 -0700 (PDT)
 Received: from demon-pc.localdomain ([86.121.79.159])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca4893fsm2195780f8f.52.2025.07.18.08.26.02
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca4893fsm2195780f8f.52.2025.07.18.08.26.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 08:26:03 -0700 (PDT)
+        Fri, 18 Jul 2025 08:26:05 -0700 (PDT)
 From: Cosmin Tanislav <demonsingur@gmail.com>
 To: Cosmin Tanislav <cosmin.tanislav@analog.com>,
 	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
@@ -90,11 +90,10 @@ Cc: linux-media@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-staging@lists.linux.dev,
 	linux-gpio@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v7 22/24] staging: media: remove MAX96712 driver
-Date: Fri, 18 Jul 2025 18:24:58 +0300
-Message-ID: <20250718152500.2656391-23-demonsingur@gmail.com>
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: [PATCH v7 23/24] media: i2c: remove MAX96717 driver
+Date: Fri, 18 Jul 2025 18:24:59 +0300
+Message-ID: <20250718152500.2656391-24-demonsingur@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250718152500.2656391-1-demonsingur@gmail.com>
 References: <20250718152500.2656391-1-demonsingur@gmail.com>
@@ -104,584 +103,1180 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Remove the staging MAX96712 driver.
-Its functionality has been moved to the MAX96724 driver which makes use
-of the Maxim GMSL2/3 deserializer framework.
+The previous MAX96717 driver has been removed and its functionality has
+been moved to a MAX96717 driver which makes use of the Maxim GMSL2/3
+serializer framework.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- MAINTAINERS                               |   1 -
- drivers/staging/media/Kconfig             |   2 -
- drivers/staging/media/Makefile            |   1 -
- drivers/staging/media/max96712/Kconfig    |  14 -
- drivers/staging/media/max96712/Makefile   |   2 -
- drivers/staging/media/max96712/max96712.c | 487 ----------------------
- 6 files changed, 507 deletions(-)
- delete mode 100644 drivers/staging/media/max96712/Kconfig
- delete mode 100644 drivers/staging/media/max96712/Makefile
- delete mode 100644 drivers/staging/media/max96712/max96712.c
+ MAINTAINERS                  |    1 -
+ drivers/media/i2c/Kconfig    |   17 -
+ drivers/media/i2c/Makefile   |    1 -
+ drivers/media/i2c/max96717.c | 1102 ----------------------------------
+ 4 files changed, 1121 deletions(-)
+ delete mode 100644 drivers/media/i2c/max96717.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 0c75a5c195c28..ff0c7fe22ce6e 100644
+index ff0c7fe22ce6e..c2e7c677f4652 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -14751,7 +14751,6 @@ M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
+@@ -14766,7 +14766,6 @@ M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
  L:	linux-media@vger.kernel.org
  S:	Maintained
- F:	Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
--F:	drivers/staging/media/max96712/max96712.c
+ F:	Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+-F:	drivers/media/i2c/max96717.c
  
- MAX96714 GMSL2 DESERIALIZER DRIVER
- M:	Julien Massot <julien.massot@collabora.com>
-diff --git a/drivers/staging/media/Kconfig b/drivers/staging/media/Kconfig
-index ab250c89cd4d4..edcec810433de 100644
---- a/drivers/staging/media/Kconfig
-+++ b/drivers/staging/media/Kconfig
-@@ -30,8 +30,6 @@ source "drivers/staging/media/ipu3/Kconfig"
+ MAX9860 MONO AUDIO VOICE CODEC DRIVER
+ M:	Peter Rosin <peda@axentia.se>
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index 801a712a31808..27fb7524f39bf 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -1669,23 +1669,6 @@ config VIDEO_MAX96714
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called max96714.
  
- source "drivers/staging/media/ipu7/Kconfig"
- 
--source "drivers/staging/media/max96712/Kconfig"
--
- source "drivers/staging/media/meson/vdec/Kconfig"
- 
- source "drivers/staging/media/starfive/Kconfig"
-diff --git a/drivers/staging/media/Makefile b/drivers/staging/media/Makefile
-index 4a073938b2b2d..e38421c81d0e7 100644
---- a/drivers/staging/media/Makefile
-+++ b/drivers/staging/media/Makefile
-@@ -2,7 +2,6 @@
- obj-$(CONFIG_VIDEO_ATMEL_ISC_BASE)	+= deprecated/atmel/
- obj-$(CONFIG_INTEL_ATOMISP)     += atomisp/
- obj-$(CONFIG_VIDEO_IMX_MEDIA)	+= imx/
--obj-$(CONFIG_VIDEO_MAX96712)	+= max96712/
- obj-$(CONFIG_VIDEO_MESON_VDEC)	+= meson/vdec/
- obj-$(CONFIG_VIDEO_STARFIVE_CAMSS)	+= starfive/
- obj-$(CONFIG_VIDEO_SUNXI)	+= sunxi/
-diff --git a/drivers/staging/media/max96712/Kconfig b/drivers/staging/media/max96712/Kconfig
-deleted file mode 100644
-index 117fadf81bd08..0000000000000
---- a/drivers/staging/media/max96712/Kconfig
-+++ /dev/null
-@@ -1,14 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--config VIDEO_MAX96712
--	tristate "Maxim MAX96712 Quad GMSL2 Deserializer support"
--	depends on I2C
--	depends on OF_GPIO
--	depends on VIDEO_DEV
+-config VIDEO_MAX96717
+-	tristate "Maxim MAX96717 GMSL2 Serializer support"
+-	depends on I2C && VIDEO_DEV && COMMON_CLK
+-	select I2C_MUX
+-	select MEDIA_CONTROLLER
+-	select GPIOLIB
+-	select V4L2_CCI_I2C
 -	select V4L2_FWNODE
 -	select VIDEO_V4L2_SUBDEV_API
--	select MEDIA_CONTROLLER
 -	help
--	  This driver supports the Maxim MAX96712 Quad GMSL2 Deserializer.
+-	  Device driver for the Maxim MAX96717 GMSL2 Serializer.
+-	  MAX96717 serializers convert video on a MIPI CSI-2
+-	  input to a GMSL2 output.
 -
 -	  To compile this driver as a module, choose M here: the
--	  module will be called max96712.
-diff --git a/drivers/staging/media/max96712/Makefile b/drivers/staging/media/max96712/Makefile
+-	  module will be called max96717.
+-
+ source "drivers/media/i2c/maxim-serdes/Kconfig"
+ 
+ endmenu
+diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+index 25a0093d40ecf..29ac7ea2bfa0b 100644
+--- a/drivers/media/i2c/Makefile
++++ b/drivers/media/i2c/Makefile
+@@ -69,7 +69,6 @@ obj-$(CONFIG_VIDEO_M52790) += m52790.o
+ obj-$(CONFIG_VIDEO_MAX9271_LIB) += max9271.o
+ obj-$(CONFIG_VIDEO_MAX9286) += max9286.o
+ obj-$(CONFIG_VIDEO_MAX96714) += max96714.o
+-obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
+ obj-$(CONFIG_VIDEO_MAXIM_SERDES) += maxim-serdes/
+ obj-$(CONFIG_VIDEO_ML86V7667) += ml86v7667.o
+ obj-$(CONFIG_VIDEO_MSP3400) += msp3400.o
+diff --git a/drivers/media/i2c/max96717.c b/drivers/media/i2c/max96717.c
 deleted file mode 100644
-index 70c1974ce3f05..0000000000000
---- a/drivers/staging/media/max96712/Makefile
+index 015e42fbe2462..0000000000000
+--- a/drivers/media/i2c/max96717.c
 +++ /dev/null
-@@ -1,2 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_VIDEO_MAX96712) += max96712.o
-diff --git a/drivers/staging/media/max96712/max96712.c b/drivers/staging/media/max96712/max96712.c
-deleted file mode 100644
-index 0751b2e048958..0000000000000
---- a/drivers/staging/media/max96712/max96712.c
-+++ /dev/null
-@@ -1,487 +0,0 @@
+@@ -1,1102 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0
 -/*
-- * Maxim MAX96712 Quad GMSL2 Deserializer Driver
+- * Maxim GMSL2 Serializer Driver
 - *
-- * Copyright (C) 2021 Renesas Electronics Corporation
-- * Copyright (C) 2021 Niklas Söderlund
+- * Copyright (C) 2024 Collabora Ltd.
 - */
 -
+-#include <linux/bitfield.h>
+-#include <linux/clk.h>
+-#include <linux/clk-provider.h>
 -#include <linux/delay.h>
+-#include <linux/gpio/driver.h>
+-#include <linux/i2c-mux.h>
 -#include <linux/i2c.h>
--#include <linux/module.h>
--#include <linux/of_graph.h>
+-#include <linux/property.h>
 -#include <linux/regmap.h>
 -
+-#include <media/v4l2-cci.h>
 -#include <media/v4l2-ctrls.h>
 -#include <media/v4l2-fwnode.h>
 -#include <media/v4l2-subdev.h>
 -
--#define DEBUG_EXTRA_REG			0x09
--#define DEBUG_EXTRA_PCLK_25MHZ		0x00
--#define DEBUG_EXTRA_PCLK_75MHZ		0x01
+-#define MAX96717_DEVICE_ID  0xbf
+-#define MAX96717F_DEVICE_ID 0xc8
+-#define MAX96717_PORTS      2
+-#define MAX96717_PAD_SINK   0
+-#define MAX96717_PAD_SOURCE 1
+-#define MAX96717_CSI_NLANES 4
 -
--enum max96712_pattern {
--	MAX96712_PATTERN_CHECKERBOARD = 0,
--	MAX96712_PATTERN_GRADIENT,
+-#define MAX96717_DEFAULT_CLKOUT_RATE	24000000UL
+-
+-/* DEV */
+-#define MAX96717_REG3    CCI_REG8(0x3)
+-#define MAX96717_RCLKSEL GENMASK(1, 0)
+-#define RCLKSEL_REF_PLL  CCI_REG8(0x3)
+-#define MAX96717_REG6    CCI_REG8(0x6)
+-#define RCLKEN           BIT(5)
+-#define MAX96717_DEV_ID  CCI_REG8(0xd)
+-#define MAX96717_DEV_REV CCI_REG8(0xe)
+-#define MAX96717_DEV_REV_MASK GENMASK(3, 0)
+-
+-/* VID_TX Z */
+-#define MAX96717_VIDEO_TX0 CCI_REG8(0x110)
+-#define MAX96717_VIDEO_AUTO_BPP BIT(3)
+-#define MAX96717_VIDEO_TX2 CCI_REG8(0x112)
+-#define MAX96717_VIDEO_PCLKDET BIT(7)
+-
+-/* VTX_Z */
+-#define MAX96717_VTX0                  CCI_REG8(0x24e)
+-#define MAX96717_VTX1                  CCI_REG8(0x24f)
+-#define MAX96717_PATTERN_CLK_FREQ      GENMASK(3, 1)
+-#define MAX96717_VTX_VS_DLY            CCI_REG24(0x250)
+-#define MAX96717_VTX_VS_HIGH           CCI_REG24(0x253)
+-#define MAX96717_VTX_VS_LOW            CCI_REG24(0x256)
+-#define MAX96717_VTX_V2H               CCI_REG24(0x259)
+-#define MAX96717_VTX_HS_HIGH           CCI_REG16(0x25c)
+-#define MAX96717_VTX_HS_LOW            CCI_REG16(0x25e)
+-#define MAX96717_VTX_HS_CNT            CCI_REG16(0x260)
+-#define MAX96717_VTX_V2D               CCI_REG24(0x262)
+-#define MAX96717_VTX_DE_HIGH           CCI_REG16(0x265)
+-#define MAX96717_VTX_DE_LOW            CCI_REG16(0x267)
+-#define MAX96717_VTX_DE_CNT            CCI_REG16(0x269)
+-#define MAX96717_VTX29                 CCI_REG8(0x26b)
+-#define MAX96717_VTX_MODE              GENMASK(1, 0)
+-#define MAX96717_VTX_GRAD_INC          CCI_REG8(0x26c)
+-#define MAX96717_VTX_CHKB_COLOR_A      CCI_REG24(0x26d)
+-#define MAX96717_VTX_CHKB_COLOR_B      CCI_REG24(0x270)
+-#define MAX96717_VTX_CHKB_RPT_CNT_A    CCI_REG8(0x273)
+-#define MAX96717_VTX_CHKB_RPT_CNT_B    CCI_REG8(0x274)
+-#define MAX96717_VTX_CHKB_ALT          CCI_REG8(0x275)
+-
+-/* GPIO */
+-#define MAX96717_NUM_GPIO         11
+-#define MAX96717_GPIO_REG_A(gpio) CCI_REG8(0x2be + (gpio) * 3)
+-#define MAX96717_GPIO_OUT         BIT(4)
+-#define MAX96717_GPIO_IN          BIT(3)
+-#define MAX96717_GPIO_RX_EN       BIT(2)
+-#define MAX96717_GPIO_TX_EN       BIT(1)
+-#define MAX96717_GPIO_OUT_DIS     BIT(0)
+-
+-/* FRONTTOP */
+-/* MAX96717 only have CSI port 'B' */
+-#define MAX96717_FRONTOP0     CCI_REG8(0x308)
+-#define MAX96717_START_PORT_B BIT(5)
+-
+-/* MIPI_RX */
+-#define MAX96717_MIPI_RX1       CCI_REG8(0x331)
+-#define MAX96717_MIPI_LANES_CNT GENMASK(5, 4)
+-#define MAX96717_MIPI_RX2       CCI_REG8(0x332) /* phy1 Lanes map */
+-#define MAX96717_PHY2_LANES_MAP GENMASK(7, 4)
+-#define MAX96717_MIPI_RX3       CCI_REG8(0x333) /* phy2 Lanes map */
+-#define MAX96717_PHY1_LANES_MAP GENMASK(3, 0)
+-#define MAX96717_MIPI_RX4       CCI_REG8(0x334) /* phy1 lane polarities */
+-#define MAX96717_PHY1_LANES_POL GENMASK(6, 4)
+-#define MAX96717_MIPI_RX5       CCI_REG8(0x335) /* phy2 lane polarities */
+-#define MAX96717_PHY2_LANES_POL GENMASK(2, 0)
+-
+-/* MIPI_RX_EXT */
+-#define MAX96717_MIPI_RX_EXT11 CCI_REG8(0x383)
+-#define MAX96717_TUN_MODE      BIT(7)
+-
+-/* REF_VTG */
+-#define REF_VTG0                CCI_REG8(0x3f0)
+-#define REFGEN_PREDEF_EN        BIT(6)
+-#define REFGEN_PREDEF_FREQ_MASK GENMASK(5, 4)
+-#define REFGEN_PREDEF_FREQ_ALT  BIT(3)
+-#define REFGEN_RST              BIT(1)
+-#define REFGEN_EN               BIT(0)
+-
+-/* MISC */
+-#define PIO_SLEW_1 CCI_REG8(0x570)
+-
+-enum max96717_vpg_mode {
+-	MAX96717_VPG_DISABLED = 0,
+-	MAX96717_VPG_CHECKERBOARD = 1,
+-	MAX96717_VPG_GRADIENT = 2,
 -};
 -
--struct max96712_info {
--	unsigned int dpllfreq;
--	bool have_debug_extra;
+-struct max96717_priv {
+-	struct i2c_client		  *client;
+-	struct regmap			  *regmap;
+-	struct i2c_mux_core		  *mux;
+-	struct v4l2_mbus_config_mipi_csi2 mipi_csi2;
+-	struct v4l2_subdev                sd;
+-	struct media_pad                  pads[MAX96717_PORTS];
+-	struct v4l2_ctrl_handler          ctrl_handler;
+-	struct v4l2_async_notifier        notifier;
+-	struct v4l2_subdev                *source_sd;
+-	u16                               source_sd_pad;
+-	u64			          enabled_source_streams;
+-	u8                                pll_predef_index;
+-	struct clk_hw                     clk_hw;
+-	struct gpio_chip                  gpio_chip;
+-	enum max96717_vpg_mode            pattern;
 -};
 -
--struct max96712_priv {
--	struct i2c_client *client;
--	struct regmap *regmap;
--	struct gpio_desc *gpiod_pwdn;
--
--	const struct max96712_info *info;
--
--	bool cphy;
--	struct v4l2_mbus_config_mipi_csi2 mipi;
--
--	struct v4l2_subdev sd;
--	struct v4l2_ctrl_handler ctrl_handler;
--	struct media_pad pads[1];
--
--	enum max96712_pattern pattern;
--};
--
--static int max96712_write(struct max96712_priv *priv, unsigned int reg, u8 val)
+-static inline struct max96717_priv *sd_to_max96717(struct v4l2_subdev *sd)
 -{
--	int ret;
--
--	ret = regmap_write(priv->regmap, reg, val);
--	if (ret)
--		dev_err(&priv->client->dev, "write 0x%04x failed\n", reg);
--
--	return ret;
+-	return container_of(sd, struct max96717_priv, sd);
 -}
 -
--static int max96712_update_bits(struct max96712_priv *priv, unsigned int reg,
--				u8 mask, u8 val)
+-static inline struct max96717_priv *clk_hw_to_max96717(struct clk_hw *hw)
 -{
--	int ret;
--
--	ret = regmap_update_bits(priv->regmap, reg, mask, val);
--	if (ret)
--		dev_err(&priv->client->dev, "update 0x%04x failed\n", reg);
--
--	return ret;
+-	return container_of(hw, struct max96717_priv, clk_hw);
 -}
 -
--static int max96712_write_bulk(struct max96712_priv *priv, unsigned int reg,
--			       const void *val, size_t val_count)
+-static int max96717_i2c_mux_select(struct i2c_mux_core *mux, u32 chan)
 -{
--	int ret;
--
--	ret = regmap_bulk_write(priv->regmap, reg, val, val_count);
--	if (ret)
--		dev_err(&priv->client->dev, "bulk write 0x%04x failed\n", reg);
--
--	return ret;
+-	return 0;
 -}
 -
--static int max96712_write_bulk_value(struct max96712_priv *priv,
--				     unsigned int reg, unsigned int val,
--				     size_t val_count)
+-static int max96717_i2c_mux_init(struct max96717_priv *priv)
 -{
--	unsigned int i;
--	u8 values[4];
+-	priv->mux = i2c_mux_alloc(priv->client->adapter, &priv->client->dev,
+-				  1, 0, I2C_MUX_LOCKED | I2C_MUX_GATE,
+-				  max96717_i2c_mux_select, NULL);
+-	if (!priv->mux)
+-		return -ENOMEM;
 -
--	for (i = 1; i <= val_count; i++)
--		values[i - 1] = (val >> ((val_count - i) * 8)) & 0xff;
--
--	return max96712_write_bulk(priv, reg, &values, val_count);
+-	return i2c_mux_add_adapter(priv->mux, 0, 0);
 -}
 -
--static void max96712_reset(struct max96712_priv *priv)
+-static inline int max96717_start_csi(struct max96717_priv *priv, bool start)
 -{
--	max96712_update_bits(priv, 0x13, 0x40, 0x40);
--	msleep(20);
+-	return cci_update_bits(priv->regmap, MAX96717_FRONTOP0,
+-			       MAX96717_START_PORT_B,
+-			       start ? MAX96717_START_PORT_B : 0, NULL);
 -}
 -
--static void max96712_mipi_enable(struct max96712_priv *priv, bool enable)
+-static int max96717_apply_patgen_timing(struct max96717_priv *priv,
+-					struct v4l2_subdev_state *state)
 -{
--	if (enable) {
--		max96712_update_bits(priv, 0x40b, 0x02, 0x02);
--		max96712_update_bits(priv, 0x8a0, 0x80, 0x80);
--	} else {
--		max96712_update_bits(priv, 0x8a0, 0x80, 0x00);
--		max96712_update_bits(priv, 0x40b, 0x02, 0x00);
--	}
--}
--
--static void max96712_mipi_configure(struct max96712_priv *priv)
--{
--	unsigned int i;
--	u8 phy5 = 0;
--
--	max96712_mipi_enable(priv, false);
--
--	/* Select 2x4 mode. */
--	max96712_write(priv, 0x8a0, 0x04);
--
--	/* TODO: Add support for 2-lane and 1-lane configurations. */
--	if (priv->cphy) {
--		/* Configure a 3-lane C-PHY using PHY0 and PHY1. */
--		max96712_write(priv, 0x94a, 0xa0);
--
--		/* Configure C-PHY timings. */
--		max96712_write(priv, 0x8ad, 0x3f);
--		max96712_write(priv, 0x8ae, 0x7d);
--	} else {
--		/* Configure a 4-lane D-PHY using PHY0 and PHY1. */
--		max96712_write(priv, 0x94a, 0xc0);
--	}
--
--	/* Configure lane mapping for PHY0 and PHY1. */
--	/* TODO: Add support for lane swapping. */
--	max96712_write(priv, 0x8a3, 0xe4);
--
--	/* Configure lane polarity for PHY0 and PHY1. */
--	for (i = 0; i < priv->mipi.num_data_lanes + 1; i++)
--		if (priv->mipi.lane_polarities[i])
--			phy5 |= BIT(i == 0 ? 5 : i < 3 ? i - 1 : i);
--	max96712_write(priv, 0x8a5, phy5);
--
--	/* Set link frequency for PHY0 and PHY1. */
--	max96712_update_bits(priv, 0x415, 0x3f,
--			     ((priv->info->dpllfreq / 100) & 0x1f) | BIT(5));
--	max96712_update_bits(priv, 0x418, 0x3f,
--			     ((priv->info->dpllfreq / 100) & 0x1f) | BIT(5));
--
--	/* Enable PHY0 and PHY1 */
--	max96712_update_bits(priv, 0x8a2, 0xf0, 0x30);
--}
--
--static void max96712_pattern_enable(struct max96712_priv *priv, bool enable)
--{
--	const u32 h_active = 1920;
+-	struct v4l2_mbus_framefmt *fmt =
+-		v4l2_subdev_state_get_format(state, MAX96717_PAD_SOURCE);
+-	const u32 h_active = fmt->width;
 -	const u32 h_fp = 88;
 -	const u32 h_sw = 44;
 -	const u32 h_bp = 148;
--	const u32 h_tot = h_active + h_fp + h_sw + h_bp;
--
--	const u32 v_active = 1080;
+-	u32 h_tot;
+-	const u32 v_active = fmt->height;
 -	const u32 v_fp = 4;
 -	const u32 v_sw = 5;
 -	const u32 v_bp = 36;
--	const u32 v_tot = v_active + v_fp + v_sw + v_bp;
+-	u32 v_tot;
+-	int ret = 0;
 -
--	if (!enable) {
--		max96712_write(priv, 0x1051, 0x00);
--		return;
--	}
+-	h_tot = h_active + h_fp + h_sw + h_bp;
+-	v_tot = v_active + v_fp + v_sw + v_bp;
 -
--	/* Set PCLK to 75MHz if device have DEBUG_EXTRA register. */
--	if (priv->info->have_debug_extra)
--		max96712_write(priv, DEBUG_EXTRA_REG, DEBUG_EXTRA_PCLK_75MHZ);
+-	/* 75 Mhz pixel clock */
+-	cci_update_bits(priv->regmap, MAX96717_VTX1,
+-			MAX96717_PATTERN_CLK_FREQ, 0xa, &ret);
 -
--	/* Configure Video Timing Generator for 1920x1080 @ 30 fps. */
--	max96712_write_bulk_value(priv, 0x1052, 0, 3);
--	max96712_write_bulk_value(priv, 0x1055, v_sw * h_tot, 3);
--	max96712_write_bulk_value(priv, 0x1058,
--				  (v_active + v_fp + + v_bp) * h_tot, 3);
--	max96712_write_bulk_value(priv, 0x105b, 0, 3);
--	max96712_write_bulk_value(priv, 0x105e, h_sw, 2);
--	max96712_write_bulk_value(priv, 0x1060, h_active + h_fp + h_bp, 2);
--	max96712_write_bulk_value(priv, 0x1062, v_tot, 2);
--	max96712_write_bulk_value(priv, 0x1064,
--				  h_tot * (v_sw + v_bp) + (h_sw + h_bp), 3);
--	max96712_write_bulk_value(priv, 0x1067, h_active, 2);
--	max96712_write_bulk_value(priv, 0x1069, h_fp + h_sw + h_bp, 2);
--	max96712_write_bulk_value(priv, 0x106b, v_active, 2);
+-	dev_info(&priv->client->dev, "height: %d width: %d\n", fmt->height,
+-		 fmt->width);
 -
--	/* Generate VS, HS and DE in free-running mode. */
--	max96712_write(priv, 0x1050, 0xfb);
+-	cci_write(priv->regmap, MAX96717_VTX_VS_DLY, 0, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_VS_HIGH, v_sw * h_tot, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_VS_LOW,
+-		  (v_active + v_fp + v_bp) * h_tot, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_HS_HIGH, h_sw, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_HS_LOW, h_active + h_fp + h_bp,
+-		  &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_V2D,
+-		  h_tot * (v_sw + v_bp) + (h_sw + h_bp), &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_HS_CNT, v_tot, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_DE_HIGH, h_active, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_DE_LOW, h_fp + h_sw + h_bp,
+-		  &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_DE_CNT, v_active, &ret);
+-	/* B G R */
+-	cci_write(priv->regmap, MAX96717_VTX_CHKB_COLOR_A, 0xfecc00, &ret);
+-	/* B G R */
+-	cci_write(priv->regmap, MAX96717_VTX_CHKB_COLOR_B, 0x006aa7, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_CHKB_RPT_CNT_A, 0x3c, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_CHKB_RPT_CNT_B, 0x3c, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_CHKB_ALT, 0x3c, &ret);
+-	cci_write(priv->regmap, MAX96717_VTX_GRAD_INC, 0x10, &ret);
 -
--	/* Configure Video Pattern Generator. */
--	if (priv->pattern == MAX96712_PATTERN_CHECKERBOARD) {
--		/* Set checkerboard pattern size. */
--		max96712_write(priv, 0x1074, 0x3c);
--		max96712_write(priv, 0x1075, 0x3c);
--		max96712_write(priv, 0x1076, 0x3c);
--
--		/* Set checkerboard pattern colors. */
--		max96712_write_bulk_value(priv, 0x106e, 0xfecc00, 3);
--		max96712_write_bulk_value(priv, 0x1071, 0x006aa7, 3);
--
--		/* Generate checkerboard pattern. */
--		max96712_write(priv, 0x1051, 0x10);
--	} else {
--		/* Set gradient increment. */
--		max96712_write(priv, 0x106d, 0x10);
--
--		/* Generate gradient pattern. */
--		max96712_write(priv, 0x1051, 0x20);
--	}
+-	return ret;
 -}
 -
--static int max96712_s_stream(struct v4l2_subdev *sd, int enable)
+-static int max96717_apply_patgen(struct max96717_priv *priv,
+-				 struct v4l2_subdev_state *state)
 -{
--	struct max96712_priv *priv = v4l2_get_subdevdata(sd);
+-	unsigned int val;
+-	int ret = 0;
 -
--	if (enable) {
--		max96712_pattern_enable(priv, true);
--		max96712_mipi_enable(priv, true);
--	} else {
--		max96712_mipi_enable(priv, false);
--		max96712_pattern_enable(priv, false);
--	}
+-	if (priv->pattern)
+-		ret = max96717_apply_patgen_timing(priv, state);
 -
--	return 0;
+-	cci_write(priv->regmap, MAX96717_VTX0, priv->pattern ? 0xfb : 0,
+-		  &ret);
+-
+-	val = FIELD_PREP(MAX96717_VTX_MODE, priv->pattern);
+-	cci_update_bits(priv->regmap, MAX96717_VTX29, MAX96717_VTX_MODE,
+-			val, &ret);
+-	return ret;
 -}
 -
--static const struct v4l2_subdev_video_ops max96712_video_ops = {
--	.s_stream = max96712_s_stream,
--};
--
--static int max96712_init_state(struct v4l2_subdev *sd,
--			       struct v4l2_subdev_state *state)
+-static int max96717_s_ctrl(struct v4l2_ctrl *ctrl)
 -{
--	static const struct v4l2_mbus_framefmt default_fmt = {
--		.width          = 1920,
--		.height         = 1080,
--		.code           = MEDIA_BUS_FMT_RGB888_1X24,
--		.colorspace     = V4L2_COLORSPACE_SRGB,
--		.field          = V4L2_FIELD_NONE,
--		.ycbcr_enc      = V4L2_YCBCR_ENC_DEFAULT,
--		.quantization   = V4L2_QUANTIZATION_DEFAULT,
--		.xfer_func      = V4L2_XFER_FUNC_DEFAULT,
--	};
--	struct v4l2_mbus_framefmt *fmt;
--
--	fmt = v4l2_subdev_state_get_format(state, 0);
--	*fmt = default_fmt;
--
--	return 0;
--}
--
--static const struct v4l2_subdev_internal_ops max96712_internal_ops = {
--	.init_state = max96712_init_state,
--};
--
--static const struct v4l2_subdev_pad_ops max96712_pad_ops = {
--	.get_fmt = v4l2_subdev_get_fmt,
--	.set_fmt = v4l2_subdev_get_fmt,
--};
--
--static const struct v4l2_subdev_ops max96712_subdev_ops = {
--	.video = &max96712_video_ops,
--	.pad = &max96712_pad_ops,
--};
--
--static const char * const max96712_test_pattern[] = {
--	"Checkerboard",
--	"Gradient",
--};
--
--static int max96712_s_ctrl(struct v4l2_ctrl *ctrl)
--{
--	struct max96712_priv *priv =
--		container_of(ctrl->handler, struct max96712_priv, ctrl_handler);
+-	struct max96717_priv *priv =
+-		container_of(ctrl->handler, struct max96717_priv, ctrl_handler);
+-	int ret;
 -
 -	switch (ctrl->id) {
 -	case V4L2_CID_TEST_PATTERN:
--		priv->pattern = ctrl->val ?
--			MAX96712_PATTERN_GRADIENT :
--			MAX96712_PATTERN_CHECKERBOARD;
+-		if (priv->enabled_source_streams)
+-			return -EBUSY;
+-		priv->pattern = ctrl->val;
 -		break;
+-	default:
+-		return -EINVAL;
 -	}
+-
+-	/* Use bpp from bpp register */
+-	ret = cci_update_bits(priv->regmap, MAX96717_VIDEO_TX0,
+-			      MAX96717_VIDEO_AUTO_BPP,
+-			      priv->pattern ? 0 : MAX96717_VIDEO_AUTO_BPP,
+-			      NULL);
+-
+-	/*
+-	 * Pattern generator doesn't work with tunnel mode.
+-	 * Needs RGB color format and deserializer tunnel mode must be disabled.
+-	 */
+-	return cci_update_bits(priv->regmap, MAX96717_MIPI_RX_EXT11,
+-			       MAX96717_TUN_MODE,
+-			       priv->pattern ? 0 : MAX96717_TUN_MODE, &ret);
+-}
+-
+-static const char * const max96717_test_pattern[] = {
+-	"Disabled",
+-	"Checkerboard",
+-	"Gradient"
+-};
+-
+-static const struct v4l2_ctrl_ops max96717_ctrl_ops = {
+-	.s_ctrl = max96717_s_ctrl,
+-};
+-
+-static int max96717_gpiochip_get(struct gpio_chip *gpiochip,
+-				 unsigned int offset)
+-{
+-	struct max96717_priv *priv = gpiochip_get_data(gpiochip);
+-	u64 val;
+-	int ret;
+-
+-	ret = cci_read(priv->regmap, MAX96717_GPIO_REG_A(offset),
+-		       &val, NULL);
+-	if (ret)
+-		return ret;
+-
+-	if (val & MAX96717_GPIO_OUT_DIS)
+-		return !!(val & MAX96717_GPIO_IN);
+-	else
+-		return !!(val & MAX96717_GPIO_OUT);
+-}
+-
+-static int max96717_gpiochip_set(struct gpio_chip *gpiochip,
+-				 unsigned int offset, int value)
+-{
+-	struct max96717_priv *priv = gpiochip_get_data(gpiochip);
+-
+-	return cci_update_bits(priv->regmap, MAX96717_GPIO_REG_A(offset),
+-			       MAX96717_GPIO_OUT, MAX96717_GPIO_OUT, NULL);
+-}
+-
+-static int max96717_gpio_get_direction(struct gpio_chip *gpiochip,
+-				       unsigned int offset)
+-{
+-	struct max96717_priv *priv = gpiochip_get_data(gpiochip);
+-	u64 val;
+-	int ret;
+-
+-	ret = cci_read(priv->regmap, MAX96717_GPIO_REG_A(offset), &val, NULL);
+-	if (ret < 0)
+-		return ret;
+-
+-	return !!(val & MAX96717_GPIO_OUT_DIS);
+-}
+-
+-static int max96717_gpio_direction_out(struct gpio_chip *gpiochip,
+-				       unsigned int offset, int value)
+-{
+-	struct max96717_priv *priv = gpiochip_get_data(gpiochip);
+-
+-	return cci_update_bits(priv->regmap, MAX96717_GPIO_REG_A(offset),
+-			       MAX96717_GPIO_OUT_DIS | MAX96717_GPIO_OUT,
+-			       value ? MAX96717_GPIO_OUT : 0, NULL);
+-}
+-
+-static int max96717_gpio_direction_in(struct gpio_chip *gpiochip,
+-				      unsigned int offset)
+-{
+-	struct max96717_priv *priv = gpiochip_get_data(gpiochip);
+-
+-	return cci_update_bits(priv->regmap, MAX96717_GPIO_REG_A(offset),
+-			       MAX96717_GPIO_OUT_DIS, MAX96717_GPIO_OUT_DIS,
+-			       NULL);
+-}
+-
+-static int max96717_gpiochip_probe(struct max96717_priv *priv)
+-{
+-	struct device *dev = &priv->client->dev;
+-	struct gpio_chip *gc = &priv->gpio_chip;
+-	int i, ret = 0;
+-
+-	gc->label = dev_name(dev);
+-	gc->parent = dev;
+-	gc->owner = THIS_MODULE;
+-	gc->ngpio = MAX96717_NUM_GPIO;
+-	gc->base = -1;
+-	gc->can_sleep = true;
+-	gc->get_direction = max96717_gpio_get_direction;
+-	gc->direction_input = max96717_gpio_direction_in;
+-	gc->direction_output = max96717_gpio_direction_out;
+-	gc->set_rv = max96717_gpiochip_set;
+-	gc->get = max96717_gpiochip_get;
+-
+-	/* Disable GPIO forwarding */
+-	for (i = 0; i < gc->ngpio; i++)
+-		cci_update_bits(priv->regmap, MAX96717_GPIO_REG_A(i),
+-				MAX96717_GPIO_RX_EN | MAX96717_GPIO_TX_EN,
+-				0, &ret);
+-
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpiochip_add_data(dev, gc, priv);
+-	if (ret) {
+-		dev_err(dev, "Unable to create gpio_chip\n");
+-		return ret;
+-	}
+-
 -	return 0;
 -}
 -
--static const struct v4l2_ctrl_ops max96712_ctrl_ops = {
--	.s_ctrl = max96712_s_ctrl,
--};
--
--static int max96712_v4l2_register(struct max96712_priv *priv)
+-static int _max96717_set_routing(struct v4l2_subdev *sd,
+-				 struct v4l2_subdev_state *state,
+-				 struct v4l2_subdev_krouting *routing)
 -{
--	long pixel_rate;
+-	static const struct v4l2_mbus_framefmt format = {
+-		.width = 1280,
+-		.height = 1080,
+-		.code = MEDIA_BUS_FMT_Y8_1X8,
+-		.field = V4L2_FIELD_NONE,
+-	};
 -	int ret;
 -
--	priv->sd.internal_ops = &max96712_internal_ops;
--	v4l2_i2c_subdev_init(&priv->sd, priv->client, &max96712_subdev_ops);
--	priv->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
--	priv->sd.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
+-	ret = v4l2_subdev_routing_validate(sd, routing,
+-					   V4L2_SUBDEV_ROUTING_ONLY_1_TO_1);
+-	if (ret)
+-		return ret;
 -
--	v4l2_ctrl_handler_init(&priv->ctrl_handler, 2);
+-	ret = v4l2_subdev_set_routing_with_fmt(sd, state, routing, &format);
+-	if (ret)
+-		return ret;
+-
+-	return 0;
+-}
+-
+-static int max96717_set_routing(struct v4l2_subdev *sd,
+-				struct v4l2_subdev_state *state,
+-				enum v4l2_subdev_format_whence which,
+-				struct v4l2_subdev_krouting *routing)
+-{
+-	struct max96717_priv *priv = sd_to_max96717(sd);
+-
+-	if (which == V4L2_SUBDEV_FORMAT_ACTIVE && priv->enabled_source_streams)
+-		return -EBUSY;
+-
+-	return _max96717_set_routing(sd, state, routing);
+-}
+-
+-static int max96717_set_fmt(struct v4l2_subdev *sd,
+-			    struct v4l2_subdev_state *state,
+-			    struct v4l2_subdev_format *format)
+-{
+-	struct max96717_priv *priv = sd_to_max96717(sd);
+-	struct v4l2_mbus_framefmt *fmt;
+-	u64 stream_source_mask;
+-
+-	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE &&
+-	    priv->enabled_source_streams)
+-		return -EBUSY;
+-
+-	/* No transcoding, source and sink formats must match. */
+-	if (format->pad == MAX96717_PAD_SOURCE)
+-		return v4l2_subdev_get_fmt(sd, state, format);
+-
+-	/* Set sink format */
+-	fmt = v4l2_subdev_state_get_format(state, format->pad, format->stream);
+-	if (!fmt)
+-		return -EINVAL;
+-
+-	*fmt = format->format;
+-
+-	/* Propagate to source format */
+-	fmt = v4l2_subdev_state_get_opposite_stream_format(state, format->pad,
+-							   format->stream);
+-	if (!fmt)
+-		return -EINVAL;
+-	*fmt = format->format;
+-
+-	stream_source_mask = BIT(format->stream);
+-
+-	return v4l2_subdev_state_xlate_streams(state, MAX96717_PAD_SOURCE,
+-					       MAX96717_PAD_SINK,
+-					       &stream_source_mask);
+-}
+-
+-static int max96717_init_state(struct v4l2_subdev *sd,
+-			       struct v4l2_subdev_state *state)
+-{
+-	struct v4l2_subdev_route routes[] = {
+-		{
+-			.sink_pad = MAX96717_PAD_SINK,
+-			.sink_stream = 0,
+-			.source_pad = MAX96717_PAD_SOURCE,
+-			.source_stream = 0,
+-			.flags = V4L2_SUBDEV_ROUTE_FL_ACTIVE,
+-		},
+-	};
+-	struct v4l2_subdev_krouting routing = {
+-		.num_routes = ARRAY_SIZE(routes),
+-		.routes = routes,
+-	};
+-
+-	return _max96717_set_routing(sd, state, &routing);
+-}
+-
+-static bool max96717_pipe_pclkdet(struct max96717_priv *priv)
+-{
+-	u64 val = 0;
+-
+-	cci_read(priv->regmap, MAX96717_VIDEO_TX2, &val, NULL);
+-
+-	return val & MAX96717_VIDEO_PCLKDET;
+-}
+-
+-static int max96717_log_status(struct v4l2_subdev *sd)
+-{
+-	struct max96717_priv *priv = sd_to_max96717(sd);
+-	struct device *dev = &priv->client->dev;
+-
+-	dev_info(dev, "Serializer: max96717\n");
+-	dev_info(dev, "Pipe: pclkdet:%d\n", max96717_pipe_pclkdet(priv));
+-
+-	return 0;
+-}
+-
+-static int max96717_enable_streams(struct v4l2_subdev *sd,
+-				   struct v4l2_subdev_state *state, u32 pad,
+-				   u64 streams_mask)
+-{
+-	struct max96717_priv *priv = sd_to_max96717(sd);
+-	u64 sink_streams;
+-	int ret;
+-
+-	if (!priv->enabled_source_streams)
+-		max96717_start_csi(priv, true);
+-
+-	ret = max96717_apply_patgen(priv, state);
+-	if (ret)
+-		goto stop_csi;
+-
+-	if (!priv->pattern) {
+-		sink_streams =
+-			v4l2_subdev_state_xlate_streams(state,
+-							MAX96717_PAD_SOURCE,
+-							MAX96717_PAD_SINK,
+-							&streams_mask);
+-
+-		ret = v4l2_subdev_enable_streams(priv->source_sd,
+-						 priv->source_sd_pad,
+-						 sink_streams);
+-		if (ret)
+-			goto stop_csi;
+-	}
+-
+-	priv->enabled_source_streams |= streams_mask;
+-
+-	return 0;
+-
+-stop_csi:
+-	if (!priv->enabled_source_streams)
+-		max96717_start_csi(priv, false);
+-
+-	return ret;
+-}
+-
+-static int max96717_disable_streams(struct v4l2_subdev *sd,
+-				    struct v4l2_subdev_state *state, u32 pad,
+-				    u64 streams_mask)
+-{
+-	struct max96717_priv *priv = sd_to_max96717(sd);
+-	u64 sink_streams;
 -
 -	/*
--	 * TODO: Once V4L2_CID_LINK_FREQ is changed from a menu control to an
--	 * INT64 control it should be used here instead of V4L2_CID_PIXEL_RATE.
+-	 * Stop the CSI receiver first then the source,
+-	 * otherwise the device may become unresponsive
+-	 * while holding the I2C bus low.
 -	 */
--	pixel_rate = priv->info->dpllfreq / priv->mipi.num_data_lanes * 1000000;
--	v4l2_ctrl_new_std(&priv->ctrl_handler, NULL, V4L2_CID_PIXEL_RATE,
--			  pixel_rate, pixel_rate, 1, pixel_rate);
+-	priv->enabled_source_streams &= ~streams_mask;
+-	if (!priv->enabled_source_streams)
+-		max96717_start_csi(priv, false);
 -
--	v4l2_ctrl_new_std_menu_items(&priv->ctrl_handler, &max96712_ctrl_ops,
--				     V4L2_CID_TEST_PATTERN,
--				     ARRAY_SIZE(max96712_test_pattern) - 1,
--				     0, 0, max96712_test_pattern);
+-	if (!priv->pattern) {
+-		int ret;
 -
--	priv->sd.ctrl_handler = &priv->ctrl_handler;
--	ret = priv->ctrl_handler.error;
--	if (ret)
--		goto error;
+-		sink_streams =
+-			v4l2_subdev_state_xlate_streams(state,
+-							MAX96717_PAD_SOURCE,
+-							MAX96717_PAD_SINK,
+-							&streams_mask);
 -
--	priv->pads[0].flags = MEDIA_PAD_FL_SOURCE;
--	ret = media_entity_pads_init(&priv->sd.entity, 1, priv->pads);
--	if (ret)
--		goto error;
--
--	v4l2_set_subdevdata(&priv->sd, priv);
--
--	priv->sd.state_lock = priv->ctrl_handler.lock;
--	ret = v4l2_subdev_init_finalize(&priv->sd);
--	if (ret)
--		goto error;
--
--	ret = v4l2_async_register_subdev(&priv->sd);
--	if (ret < 0) {
--		dev_err(&priv->client->dev, "Unable to register subdevice\n");
--		goto error;
+-		ret = v4l2_subdev_disable_streams(priv->source_sd,
+-						  priv->source_sd_pad,
+-						  sink_streams);
+-		if (ret)
+-			return ret;
 -	}
 -
 -	return 0;
--error:
+-}
+-
+-static const struct v4l2_subdev_pad_ops max96717_pad_ops = {
+-	.enable_streams = max96717_enable_streams,
+-	.disable_streams = max96717_disable_streams,
+-	.set_routing = max96717_set_routing,
+-	.get_fmt = v4l2_subdev_get_fmt,
+-	.set_fmt = max96717_set_fmt,
+-};
+-
+-static const struct v4l2_subdev_core_ops max96717_subdev_core_ops = {
+-	.log_status = max96717_log_status,
+-};
+-
+-static const struct v4l2_subdev_internal_ops max96717_internal_ops = {
+-	.init_state = max96717_init_state,
+-};
+-
+-static const struct v4l2_subdev_ops max96717_subdev_ops = {
+-	.core = &max96717_subdev_core_ops,
+-	.pad = &max96717_pad_ops,
+-};
+-
+-static const struct media_entity_operations max96717_entity_ops = {
+-	.link_validate = v4l2_subdev_link_validate,
+-};
+-
+-static int max96717_notify_bound(struct v4l2_async_notifier *notifier,
+-				 struct v4l2_subdev *source_subdev,
+-				 struct v4l2_async_connection *asd)
+-{
+-	struct max96717_priv *priv = sd_to_max96717(notifier->sd);
+-	struct device *dev = &priv->client->dev;
+-	int ret;
+-
+-	ret = media_entity_get_fwnode_pad(&source_subdev->entity,
+-					  source_subdev->fwnode,
+-					  MEDIA_PAD_FL_SOURCE);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to find pad for %s\n",
+-			source_subdev->name);
+-		return ret;
+-	}
+-
+-	priv->source_sd = source_subdev;
+-	priv->source_sd_pad = ret;
+-
+-	ret = media_create_pad_link(&source_subdev->entity, priv->source_sd_pad,
+-				    &priv->sd.entity, 0,
+-				    MEDIA_LNK_FL_ENABLED |
+-				    MEDIA_LNK_FL_IMMUTABLE);
+-	if (ret) {
+-		dev_err(dev, "Unable to link %s:%u -> %s:0\n",
+-			source_subdev->name, priv->source_sd_pad,
+-			priv->sd.name);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static const struct v4l2_async_notifier_operations max96717_notify_ops = {
+-	.bound = max96717_notify_bound,
+-};
+-
+-static int max96717_v4l2_notifier_register(struct max96717_priv *priv)
+-{
+-	struct device *dev = &priv->client->dev;
+-	struct v4l2_async_connection *asd;
+-	struct fwnode_handle *ep_fwnode;
+-	int ret;
+-
+-	ep_fwnode = fwnode_graph_get_endpoint_by_id(dev_fwnode(dev),
+-						    MAX96717_PAD_SINK, 0, 0);
+-	if (!ep_fwnode) {
+-		dev_err(dev, "No graph endpoint\n");
+-		return -ENODEV;
+-	}
+-
+-	v4l2_async_subdev_nf_init(&priv->notifier, &priv->sd);
+-
+-	asd = v4l2_async_nf_add_fwnode_remote(&priv->notifier, ep_fwnode,
+-					      struct v4l2_async_connection);
+-
+-	fwnode_handle_put(ep_fwnode);
+-
+-	if (IS_ERR(asd)) {
+-		dev_err(dev, "Failed to add subdev: %ld", PTR_ERR(asd));
+-		v4l2_async_nf_cleanup(&priv->notifier);
+-		return PTR_ERR(asd);
+-	}
+-
+-	priv->notifier.ops = &max96717_notify_ops;
+-
+-	ret = v4l2_async_nf_register(&priv->notifier);
+-	if (ret) {
+-		dev_err(dev, "Failed to register subdev_notifier");
+-		v4l2_async_nf_cleanup(&priv->notifier);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static int max96717_subdev_init(struct max96717_priv *priv)
+-{
+-	struct device *dev = &priv->client->dev;
+-	int ret;
+-
+-	v4l2_i2c_subdev_init(&priv->sd, priv->client, &max96717_subdev_ops);
+-	priv->sd.internal_ops = &max96717_internal_ops;
+-
+-	v4l2_ctrl_handler_init(&priv->ctrl_handler, 1);
+-	priv->sd.ctrl_handler = &priv->ctrl_handler;
+-
+-	v4l2_ctrl_new_std_menu_items(&priv->ctrl_handler,
+-				     &max96717_ctrl_ops,
+-				     V4L2_CID_TEST_PATTERN,
+-				     ARRAY_SIZE(max96717_test_pattern) - 1,
+-				     0, 0, max96717_test_pattern);
+-	if (priv->ctrl_handler.error) {
+-		ret = priv->ctrl_handler.error;
+-		goto err_free_ctrl;
+-	}
+-
+-	priv->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_STREAMS;
+-	priv->sd.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
+-	priv->sd.entity.ops = &max96717_entity_ops;
+-
+-	priv->pads[MAX96717_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
+-	priv->pads[MAX96717_PAD_SOURCE].flags = MEDIA_PAD_FL_SOURCE;
+-
+-	ret = media_entity_pads_init(&priv->sd.entity, 2, priv->pads);
+-	if (ret) {
+-		dev_err_probe(dev, ret, "Failed to init pads\n");
+-		goto err_free_ctrl;
+-	}
+-
+-	ret = v4l2_subdev_init_finalize(&priv->sd);
+-	if (ret) {
+-		dev_err_probe(dev, ret,
+-			      "v4l2 subdev init finalized failed\n");
+-		goto err_entity_cleanup;
+-	}
+-	ret = max96717_v4l2_notifier_register(priv);
+-	if (ret) {
+-		dev_err_probe(dev, ret,
+-			      "v4l2 subdev notifier register failed\n");
+-		goto err_free_state;
+-	}
+-
+-	ret = v4l2_async_register_subdev(&priv->sd);
+-	if (ret) {
+-		dev_err_probe(dev, ret, "v4l2_async_register_subdev error\n");
+-		goto err_unreg_notif;
+-	}
+-
+-	return 0;
+-
+-err_unreg_notif:
+-	v4l2_async_nf_unregister(&priv->notifier);
+-	v4l2_async_nf_cleanup(&priv->notifier);
+-err_free_state:
+-	v4l2_subdev_cleanup(&priv->sd);
+-err_entity_cleanup:
+-	media_entity_cleanup(&priv->sd.entity);
+-err_free_ctrl:
 -	v4l2_ctrl_handler_free(&priv->ctrl_handler);
 -
 -	return ret;
 -}
 -
--static int max96712_parse_dt(struct max96712_priv *priv)
+-static void max96717_subdev_uninit(struct max96717_priv *priv)
 -{
--	struct fwnode_handle *ep;
--	struct v4l2_fwnode_endpoint v4l2_ep = {
--		.bus_type = V4L2_MBUS_UNKNOWN,
--	};
--	unsigned int supported_lanes;
--	int ret;
+-	v4l2_async_unregister_subdev(&priv->sd);
+-	v4l2_async_nf_unregister(&priv->notifier);
+-	v4l2_async_nf_cleanup(&priv->notifier);
+-	v4l2_subdev_cleanup(&priv->sd);
+-	media_entity_cleanup(&priv->sd.entity);
+-	v4l2_ctrl_handler_free(&priv->ctrl_handler);
+-}
 -
--	ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(&priv->client->dev), 4,
--					     0, 0);
--	if (!ep) {
--		dev_err(&priv->client->dev, "Not connected to subdevice\n");
--		return -EINVAL;
+-struct max96717_pll_predef_freq {
+-	unsigned long freq;
+-	bool is_alt;
+-	u8 val;
+-};
+-
+-static const struct max96717_pll_predef_freq max96717_predef_freqs[] = {
+-	{ 13500000, true,  0 }, { 19200000, false, 0 },
+-	{ 24000000, true,  1 }, { 27000000, false, 1 },
+-	{ 37125000, false, 2 }, { 74250000, false, 3 },
+-};
+-
+-static unsigned long
+-max96717_clk_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+-{
+-	struct max96717_priv *priv = clk_hw_to_max96717(hw);
+-
+-	return max96717_predef_freqs[priv->pll_predef_index].freq;
+-}
+-
+-static unsigned int max96717_clk_find_best_index(struct max96717_priv *priv,
+-						 unsigned long rate)
+-{
+-	unsigned int i, idx = 0;
+-	unsigned long diff_new, diff_old = U32_MAX;
+-
+-	for (i = 0; i < ARRAY_SIZE(max96717_predef_freqs); i++) {
+-		diff_new = abs(rate - max96717_predef_freqs[i].freq);
+-		if (diff_new < diff_old) {
+-			diff_old = diff_new;
+-			idx = i;
+-		}
 -	}
 -
--	ret = v4l2_fwnode_endpoint_parse(ep, &v4l2_ep);
--	fwnode_handle_put(ep);
--	if (ret) {
--		dev_err(&priv->client->dev, "Could not parse v4l2 endpoint\n");
--		return -EINVAL;
+-	return idx;
+-}
+-
+-static long max96717_clk_round_rate(struct clk_hw *hw, unsigned long rate,
+-				    unsigned long *parent_rate)
+-{
+-	struct max96717_priv *priv = clk_hw_to_max96717(hw);
+-	struct device *dev = &priv->client->dev;
+-	unsigned int idx;
+-
+-	idx = max96717_clk_find_best_index(priv, rate);
+-
+-	if (rate != max96717_predef_freqs[idx].freq) {
+-		dev_warn(dev, "Request CLK freq:%lu, found CLK freq:%lu\n",
+-			 rate, max96717_predef_freqs[idx].freq);
 -	}
 -
--	switch (v4l2_ep.bus_type) {
--	case V4L2_MBUS_CSI2_DPHY:
--		supported_lanes = 4;
--		priv->cphy = false;
--		break;
--	case V4L2_MBUS_CSI2_CPHY:
--		supported_lanes = 3;
--		priv->cphy = true;
--		break;
--	default:
--		dev_err(&priv->client->dev, "Unsupported bus-type %u\n",
--			v4l2_ep.bus_type);
--		return -EINVAL;
--	}
+-	return max96717_predef_freqs[idx].freq;
+-}
 -
--	if (v4l2_ep.bus.mipi_csi2.num_data_lanes != supported_lanes) {
--		dev_err(&priv->client->dev, "Only %u data lanes supported\n",
--			supported_lanes);
--		return -EINVAL;
--	}
+-static int max96717_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+-				 unsigned long parent_rate)
+-{
+-	struct max96717_priv *priv = clk_hw_to_max96717(hw);
+-	unsigned int val, idx;
+-	int ret = 0;
 -
--	priv->mipi = v4l2_ep.bus.mipi_csi2;
+-	idx = max96717_clk_find_best_index(priv, rate);
+-
+-	val = FIELD_PREP(REFGEN_PREDEF_FREQ_MASK,
+-			 max96717_predef_freqs[idx].val);
+-
+-	if (max96717_predef_freqs[idx].is_alt)
+-		val |= REFGEN_PREDEF_FREQ_ALT;
+-
+-	val |= REFGEN_RST | REFGEN_PREDEF_EN;
+-
+-	cci_write(priv->regmap, REF_VTG0, val, &ret);
+-	cci_update_bits(priv->regmap, REF_VTG0, REFGEN_RST | REFGEN_EN,
+-			REFGEN_EN, &ret);
+-	if (ret)
+-		return ret;
+-
+-	priv->pll_predef_index = idx;
 -
 -	return 0;
 -}
 -
--static const struct regmap_config max96712_i2c_regmap = {
--	.reg_bits = 16,
--	.val_bits = 8,
--	.max_register = 0x1f00,
+-static int max96717_clk_prepare(struct clk_hw *hw)
+-{
+-	struct max96717_priv *priv = clk_hw_to_max96717(hw);
+-
+-	return cci_update_bits(priv->regmap, MAX96717_REG6, RCLKEN,
+-			       RCLKEN, NULL);
+-}
+-
+-static void max96717_clk_unprepare(struct clk_hw *hw)
+-{
+-	struct max96717_priv *priv = clk_hw_to_max96717(hw);
+-
+-	cci_update_bits(priv->regmap, MAX96717_REG6, RCLKEN, 0, NULL);
+-}
+-
+-static const struct clk_ops max96717_clk_ops = {
+-	.prepare     = max96717_clk_prepare,
+-	.unprepare   = max96717_clk_unprepare,
+-	.set_rate    = max96717_clk_set_rate,
+-	.recalc_rate = max96717_clk_recalc_rate,
+-	.round_rate  = max96717_clk_round_rate,
 -};
 -
--static int max96712_probe(struct i2c_client *client)
+-static int max96717_register_clkout(struct max96717_priv *priv)
 -{
--	struct max96712_priv *priv;
+-	struct device *dev = &priv->client->dev;
+-	struct clk_init_data init = { .ops = &max96717_clk_ops };
 -	int ret;
 -
--	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
+-	init.name = kasprintf(GFP_KERNEL, "max96717.%s.clk_out", dev_name(dev));
+-	if (!init.name)
+-		return -ENOMEM;
+-
+-	/* RCLKSEL Reference PLL output */
+-	ret = cci_update_bits(priv->regmap, MAX96717_REG3, MAX96717_RCLKSEL,
+-			      MAX96717_RCLKSEL, NULL);
+-	/* MFP4 fastest slew rate */
+-	cci_update_bits(priv->regmap, PIO_SLEW_1, BIT(5) | BIT(4), 0, &ret);
+-	if (ret)
+-		goto free_init_name;
+-
+-	priv->clk_hw.init = &init;
+-
+-	/* Initialize to 24 MHz */
+-	ret = max96717_clk_set_rate(&priv->clk_hw,
+-				    MAX96717_DEFAULT_CLKOUT_RATE, 0);
+-	if (ret < 0)
+-		goto free_init_name;
+-
+-	ret = devm_clk_hw_register(dev, &priv->clk_hw);
+-	kfree(init.name);
+-	if (ret)
+-		return dev_err_probe(dev, ret, "Cannot register clock HW\n");
+-
+-	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
+-					  &priv->clk_hw);
+-	if (ret)
+-		return dev_err_probe(dev, ret,
+-				     "Cannot add OF clock provider\n");
+-
+-	return 0;
+-
+-free_init_name:
+-	kfree(init.name);
+-	return ret;
+-}
+-
+-static int max96717_init_csi_lanes(struct max96717_priv *priv)
+-{
+-	struct v4l2_mbus_config_mipi_csi2 *mipi = &priv->mipi_csi2;
+-	unsigned long lanes_used = 0;
+-	unsigned int nlanes, lane, val = 0;
+-	int ret;
+-
+-	nlanes = mipi->num_data_lanes;
+-
+-	ret = cci_update_bits(priv->regmap, MAX96717_MIPI_RX1,
+-			      MAX96717_MIPI_LANES_CNT,
+-			      FIELD_PREP(MAX96717_MIPI_LANES_CNT,
+-					 nlanes - 1), NULL);
+-
+-	/* lanes polarity */
+-	for (lane = 0; lane < nlanes + 1; lane++) {
+-		if (!mipi->lane_polarities[lane])
+-			continue;
+-		/* Clock lane */
+-		if (lane == 0)
+-			val |= BIT(2);
+-		else if (lane < 3)
+-			val |= BIT(lane - 1);
+-		else
+-			val |= BIT(lane);
+-	}
+-
+-	cci_update_bits(priv->regmap, MAX96717_MIPI_RX5,
+-			MAX96717_PHY2_LANES_POL,
+-			FIELD_PREP(MAX96717_PHY2_LANES_POL, val), &ret);
+-
+-	cci_update_bits(priv->regmap, MAX96717_MIPI_RX4,
+-			MAX96717_PHY1_LANES_POL,
+-			FIELD_PREP(MAX96717_PHY1_LANES_POL,
+-				   val >> 3), &ret);
+-	/* lanes mapping */
+-	for (lane = 0, val = 0; lane < nlanes; lane++) {
+-		val |= (mipi->data_lanes[lane] - 1) << (lane * 2);
+-		lanes_used |= BIT(mipi->data_lanes[lane] - 1);
+-	}
+-
+-	/*
+-	 * Unused lanes need to be mapped as well to not have
+-	 * the same lanes mapped twice.
+-	 */
+-	for (; lane < MAX96717_CSI_NLANES; lane++) {
+-		unsigned int idx = find_first_zero_bit(&lanes_used,
+-						       MAX96717_CSI_NLANES);
+-
+-		val |= idx << (lane * 2);
+-		lanes_used |= BIT(idx);
+-	}
+-
+-	cci_update_bits(priv->regmap, MAX96717_MIPI_RX3,
+-			MAX96717_PHY1_LANES_MAP,
+-			FIELD_PREP(MAX96717_PHY1_LANES_MAP, val), &ret);
+-
+-	return cci_update_bits(priv->regmap, MAX96717_MIPI_RX2,
+-			       MAX96717_PHY2_LANES_MAP,
+-			       FIELD_PREP(MAX96717_PHY2_LANES_MAP, val >> 4),
+-			       &ret);
+-}
+-
+-static int max96717_hw_init(struct max96717_priv *priv)
+-{
+-	struct device *dev = &priv->client->dev;
+-	u64 dev_id, val;
+-	int ret;
+-
+-	ret = cci_read(priv->regmap, MAX96717_DEV_ID, &dev_id, NULL);
+-	if (ret)
+-		return dev_err_probe(dev, ret,
+-				     "Fail to read the device id\n");
+-
+-	if (dev_id != MAX96717_DEVICE_ID && dev_id != MAX96717F_DEVICE_ID)
+-		return dev_err_probe(dev, -EOPNOTSUPP,
+-				     "Unsupported device id got %x\n", (u8)dev_id);
+-
+-	ret = cci_read(priv->regmap, MAX96717_DEV_REV, &val, NULL);
+-	if (ret)
+-		return dev_err_probe(dev, ret,
+-				     "Fail to read device revision");
+-
+-	dev_dbg(dev, "Found %x (rev %lx)\n", (u8)dev_id,
+-		(u8)val & MAX96717_DEV_REV_MASK);
+-
+-	ret = cci_read(priv->regmap, MAX96717_MIPI_RX_EXT11, &val, NULL);
+-	if (ret)
+-		return dev_err_probe(dev, ret,
+-				     "Fail to read mipi rx extension");
+-
+-	if (!(val & MAX96717_TUN_MODE))
+-		return dev_err_probe(dev, -EOPNOTSUPP,
+-				     "Only supporting tunnel mode");
+-
+-	return max96717_init_csi_lanes(priv);
+-}
+-
+-static int max96717_parse_dt(struct max96717_priv *priv)
+-{
+-	struct device *dev = &priv->client->dev;
+-	struct v4l2_fwnode_endpoint vep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
+-	struct fwnode_handle *ep_fwnode;
+-	unsigned char num_data_lanes;
+-	int ret;
+-
+-	ep_fwnode = fwnode_graph_get_endpoint_by_id(dev_fwnode(dev),
+-						    MAX96717_PAD_SINK, 0, 0);
+-	if (!ep_fwnode)
+-		return dev_err_probe(dev, -ENOENT, "no endpoint found\n");
+-
+-	ret = v4l2_fwnode_endpoint_parse(ep_fwnode, &vep);
+-
+-	fwnode_handle_put(ep_fwnode);
+-
+-	if (ret < 0)
+-		return dev_err_probe(dev, ret, "Failed to parse sink endpoint");
+-
+-	num_data_lanes = vep.bus.mipi_csi2.num_data_lanes;
+-	if (num_data_lanes < 1 || num_data_lanes > MAX96717_CSI_NLANES)
+-		return dev_err_probe(dev, -EINVAL,
+-				     "Invalid data lanes must be 1 to 4\n");
+-
+-	priv->mipi_csi2 = vep.bus.mipi_csi2;
+-
+-	return 0;
+-}
+-
+-static int max96717_probe(struct i2c_client *client)
+-{
+-	struct device *dev = &client->dev;
+-	struct max96717_priv *priv;
+-	int ret;
+-
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
 -	if (!priv)
 -		return -ENOMEM;
 -
--	priv->info = of_device_get_match_data(&client->dev);
--
 -	priv->client = client;
+-	priv->regmap = devm_cci_regmap_init_i2c(client, 16);
+-	if (IS_ERR(priv->regmap)) {
+-		ret = PTR_ERR(priv->regmap);
+-		return dev_err_probe(dev, ret, "Failed to init regmap\n");
+-	}
 -
--	priv->regmap = devm_regmap_init_i2c(client, &max96712_i2c_regmap);
--	if (IS_ERR(priv->regmap))
--		return PTR_ERR(priv->regmap);
--
--	priv->gpiod_pwdn = devm_gpiod_get_optional(&client->dev, "enable",
--						   GPIOD_OUT_HIGH);
--	if (IS_ERR(priv->gpiod_pwdn))
--		return PTR_ERR(priv->gpiod_pwdn);
--
--	gpiod_set_consumer_name(priv->gpiod_pwdn, "max96712-pwdn");
--	gpiod_set_value_cansleep(priv->gpiod_pwdn, 1);
--
--	if (priv->gpiod_pwdn)
--		usleep_range(4000, 5000);
--
--	max96712_reset(priv);
--
--	ret = max96712_parse_dt(priv);
+-	ret = max96717_parse_dt(priv);
 -	if (ret)
--		return ret;
+-		return dev_err_probe(dev, ret, "Failed to parse the dt\n");
 -
--	max96712_mipi_configure(priv);
+-	ret = max96717_hw_init(priv);
+-	if (ret)
+-		return dev_err_probe(dev, ret,
+-				     "Failed to initialize the hardware\n");
 -
--	return max96712_v4l2_register(priv);
+-	ret = max96717_gpiochip_probe(priv);
+-	if (ret)
+-		return dev_err_probe(&client->dev, ret,
+-				     "Failed to init gpiochip\n");
+-
+-	ret = max96717_register_clkout(priv);
+-	if (ret)
+-		return dev_err_probe(dev, ret, "Failed to register clkout\n");
+-
+-	ret = max96717_subdev_init(priv);
+-	if (ret)
+-		return dev_err_probe(dev, ret,
+-				     "Failed to initialize v4l2 subdev\n");
+-
+-	ret = max96717_i2c_mux_init(priv);
+-	if (ret) {
+-		dev_err_probe(dev, ret, "failed to add remote i2c adapter\n");
+-		max96717_subdev_uninit(priv);
+-	}
+-
+-	return ret;
 -}
 -
--static void max96712_remove(struct i2c_client *client)
+-static void max96717_remove(struct i2c_client *client)
 -{
 -	struct v4l2_subdev *sd = i2c_get_clientdata(client);
--	struct max96712_priv *priv = container_of(sd, struct max96712_priv, sd);
+-	struct max96717_priv *priv = sd_to_max96717(sd);
 -
--	v4l2_async_unregister_subdev(&priv->sd);
--
--	gpiod_set_value_cansleep(priv->gpiod_pwdn, 0);
+-	max96717_subdev_uninit(priv);
+-	i2c_mux_del_adapters(priv->mux);
 -}
 -
--static const struct max96712_info max96712_info_max96712 = {
--	.dpllfreq = 1000,
--	.have_debug_extra = true,
+-static const struct of_device_id max96717_of_ids[] = {
+-	{ .compatible = "maxim,max96717f" },
+-	{ }
 -};
+-MODULE_DEVICE_TABLE(of, max96717_of_ids);
 -
--static const struct max96712_info max96712_info_max96724 = {
--	.dpllfreq = 1200,
--};
--
--static const struct of_device_id max96712_of_table[] = {
--	{ .compatible = "maxim,max96712", .data = &max96712_info_max96712 },
--	{ .compatible = "maxim,max96724", .data = &max96712_info_max96724 },
--	{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, max96712_of_table);
--
--static struct i2c_driver max96712_i2c_driver = {
+-static struct i2c_driver max96717_i2c_driver = {
 -	.driver	= {
--		.name = "max96712",
--		.of_match_table	= of_match_ptr(max96712_of_table),
+-		.name		= "max96717",
+-		.of_match_table	= max96717_of_ids,
 -	},
--	.probe = max96712_probe,
--	.remove = max96712_remove,
+-	.probe		= max96717_probe,
+-	.remove		= max96717_remove,
 -};
 -
--module_i2c_driver(max96712_i2c_driver);
+-module_i2c_driver(max96717_i2c_driver);
 -
--MODULE_DESCRIPTION("Maxim MAX96712 Quad GMSL2 Deserializer Driver");
--MODULE_AUTHOR("Niklas Söderlund <niklas.soderlund@ragnatech.se>");
+-MODULE_DESCRIPTION("Maxim GMSL2 MAX96717 Serializer Driver");
+-MODULE_AUTHOR("Julien Massot <julien.massot@collabora.com>");
 -MODULE_LICENSE("GPL");
 -- 
 2.50.1
