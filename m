@@ -1,134 +1,158 @@
-Return-Path: <linux-gpio+bounces-23458-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23460-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9447CB09E2E
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 10:38:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3451AB0A0F3
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 12:47:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC3DD17BAE3
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 08:38:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBAF23BEEEF
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 10:46:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 230DA293B48;
-	Fri, 18 Jul 2025 08:38:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB69E2BD595;
+	Fri, 18 Jul 2025 10:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zMyS19aQ"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N2Km+4oP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709F31E1A3B
-	for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 08:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088AC29E108
+	for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 10:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752827917; cv=none; b=aa9SvA+OdCfMoyVm+QMl8IUIb5Qv6OE/QlHJP1C5sDlNKyb4mja+p/epIG3nEyPL1FyAZ8u9EMiq9L8Wp/bw1Pi7zCI+zv4s983ECUhhJSC1HMprY04DRitVW3J+fcLbVuUUwHa9Tzqco8arT3VWNzb3XOzlluo00ucRCPp/lJw=
+	t=1752835614; cv=none; b=iGVvN+8mCzWVtBsuW2x8Qabu5zRxp5zU04TPwG2u03H6Z+vlCXcDxiHBh8n89GVhdgDAU0t50pXVj15Y5x1Jymtk67kmIbtfo7Iu8BBrX33YltgzRLuPQ0qtPtl7p2jN1XICL9iiD+i+t9qfCgiVhGzGxWKKqt/a5bh8XAZ4PQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752827917; c=relaxed/simple;
-	bh=0rnRywdj99vUjh7GmU3PmAiPRCJhenK4DLNxhtNGISg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dPxL5KYdoDy7J5VqEe0ECAY6zcJ3HztKdMnXudg5/3JkXa8RSGKbzE1+b0HE56RgzcqIKPYibFvUiE55cSwedWnTHe33FkUtCx58dagP79oipbmPD7BGjATQ0oSnAj3hH46O7pRPCXTa4E3nW29Lktg63KeP4HqAF0YyeVYQE2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zMyS19aQ; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-455b00283a5so11189695e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 01:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752827915; x=1753432715; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AXgOYTbgBt90IjpwJ0T6DCAurOotkArJw103biH/iBE=;
-        b=zMyS19aQtkIQuN1e0s093A6GhlSVA3kKqNnRzXUXH7zB7EyxnXDk/ih+Qk5EBvO6vH
-         CQ831dFv31NYGq8C5fjpvUExdsBGjEvfZtS7rDcvfDJsKanbHoM8LT8ji5XIAtA0axWq
-         aQV8JiCJclSvuIy2D/dkzoBmOWi+1j/ftaRQsM/EGY+3Cuj0jdz8cKnROz2U7uVziyaW
-         OvmwBweBpJjpe+3wPOLKg7Dahh8S5v78XDSVjb8nT7n2lU552ueHA2nByOUiqX5ecvu6
-         dj22E2XZpELZM9FwDcy5pbvVzW4ND/E6L70SoJ8rZt73RY3/1nPCQ0zbe/GWLlZCB53q
-         F0yA==
+	s=arc-20240116; t=1752835614; c=relaxed/simple;
+	bh=ZCzgqQ5wClK+CpOspY0xkNzERE+nZ0OAJ4Bui5yuNYE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IEd7VDqxtksFUOqk20eP72XtooSTr3EYWhjK84cM0mD8FpFed62pVcTelOE87L9Rzw9Rwj0SAjRdhQaSZ0ZpwZ5+NYlNSht783MPX6RzBAO2JuDqWOp5Cb8fDKjevnBnJtzqxmfHpNu62Yz9w0+8CcNw8JsHG87fPSz3gXzil5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N2Km+4oP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56I5WDOA000647
+	for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 10:46:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=Ii7gkbQDsBKlsIJbbjCqaJyes15tBplO58P
+	17UvUF84=; b=N2Km+4oPwfjpujrdM2mZ5jUpTNJuE0rWP6QSfUbBFuau6XKkLwc
+	nG8KQ16CcGbpEwVptjno9cwKyk40YkDjgQzExwu6MW4qCarwbhABvOOPojVwlZnQ
+	ieuOtDe+98BL78x58lW1NdVexVM8XB/hWzpqfaYt1KWyECZfUPrpXqifqPghOovU
+	8+VER+xCszmMJXwaNR46NW0a9yjc4znlpLnlq0JbjnM1/mXYkn9WyRsRJon32m4W
+	8FvFBfIN08vHnpp9l8LrhaP/oKBmQsJQvdphm6YSvmc7oyae5hkJtXmDiT5F10jU
+	Fr9sChhiYHn5p1S4wSvfZKZ/6nchUY4l1Dg==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47w5drx8hp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 10:46:50 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-74b29ee4f8bso1946942b3a.2
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 03:46:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752827915; x=1753432715;
+        d=1e100.net; s=20230601; t=1752835610; x=1753440410;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AXgOYTbgBt90IjpwJ0T6DCAurOotkArJw103biH/iBE=;
-        b=VDGNwaN02xeWJWyLBhL1CbLNXCFXwQ09yM5tokLa59Dp4Z03aDiXGsHODmPU/M375Q
-         7IIf+Nti726Mh1VWU5zVJlP2ut3uR5J0u2XTjXDEDDX/kKNYihg5oXOdQzhOL/rdImMm
-         e8p51sn6HuRRHusawgzNfqVxHj2wwjciTD5PJrVxehr+X2UVz6Ph0HlaEiu6/ClRvBex
-         JMvqAVU6Ok4ID3ty/VqRzxKQtySVvoV0gW4e2Q4QgJRT+RcA3hoKKN5kHoshoiqFplix
-         9Y9cW9jgBDJCxUq8kMG2z3/m5t+oaAIhhfGQRn1h9YopPxJ+YBcxsdxYPXpfdEGM9sUj
-         kDdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXho2FLg8mcfhOUT7Fj12WFwEUVm3vYNolDE+vDXVMT7hutAoANsT6t2uxtxrd5CEceBlm40fnmaNOS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiftsuJmamd8xkLfl1bd/BTMCJsFLTdi/RaUrxv0fdicgJ7jAP
-	IWNoHtds6tzvg+3lQhr/jc6Tq0K1k3iWI9Z8zmvwplVNk9S2Mz22uvecpwenIYWvTuuOGxMEaxy
-	2qehLx1I=
-X-Gm-Gg: ASbGncuX6iPDZQjZI6Lnvv2MlZFTZ8LtpZvPDGo/R7K4zuZx1E2M9fCKbH/ZvBp3LDt
-	K/HUerpVakpNBI9EuAG3Y8tnMiLdLNX2L7yY/QjdTKwdb7wAFd30UJ/0OB3u7ILvSc4jaVgWduN
-	G8/5OH10yB5y+DJqZF2afcZZG3QgXCHmdCbz7PvWCChsHa9mqjrG/ASrYNmp44FbICkOaxMKa56
-	/Gvm8phpW3vbyjZLAxdUPEZZaN8wG23QkccsBVzdBz8bday+dPaJFP/ywxqVLDaLBia2VkTjm19
-	8Q9DqpjVprc2gh11NZaoNziy5GRgML+wdIKqOru4Z4F9oRMGCby5QunsUsm21TBWZa85Eso5pi+
-	3jSwb4YrhCnQiO1Ap677S
-X-Google-Smtp-Source: AGHT+IFNocjEuc28rYTEh2nD7SaeEUsWN82H3W4NGv5/y7cD/uTzD8xEZbBDBcDw8hK3CoiOtNza6Q==
-X-Received: by 2002:a05:600c:1d84:b0:456:207e:fd86 with SMTP id 5b1f17b1804b1-4563b89f7c6mr16164375e9.2.1752827914610;
-        Fri, 18 Jul 2025 01:38:34 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:be63:a233:df8:a223])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e88476csm73582005e9.21.2025.07.18.01.38.34
+        bh=Ii7gkbQDsBKlsIJbbjCqaJyes15tBplO58P17UvUF84=;
+        b=RGffhFeAil8glHdLfS50lzT00Yc/qxwNbHC7+3KNdTVRnrGzh+96aHI5jvW7KJ90kP
+         U9WKH3cDLMq9A4p1Aa2mKf72mE+NAmBHdwnGzG1KSOjgsp1vlrFIuvUmHnXbmsTigr9F
+         83ZREVmX7jq9S1idnta22HnXBixi+6wnQQiTKhjEHhtXCB2fhlA8bj0EBgMCf4K2/CLu
+         OUxsJJW9hOVzTCifoCbq6LxxNnwZiBH2R1G78HbF/2daJVyu6+EYvfQzLbSYCQjqaxWp
+         QOD5N1PlYuG+S6DYTQkMW0Qh0w1EalDrX5exdji40eRjbuyfCRDGMHKoXGT7TFidpAjL
+         gLqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxpmM6/iQtd5FHQKkHKQbQofDjROlDRH8+mOfe1vZDgW8JwrMhrxEsgtqwF/3vdPn+1YAdBGqOrGo1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXznQ4ZDZibIs9FgSriZyoMZfz9zeXHp0pI5QXMAzk6zs50WkA
+	+UcSlSFr6+rWt6tu7tWC7yBL97CjFulhtGrg3dVeTR7IPJ0T9uDaj2NhW5ItNnqfYxl3OIXh0Ry
+	W0avHY7qlRRmGhH/owzRmYZb7+g/vFxTZTkhF6uDRI+TPHmGNpTy7Mi4ohm070Foz
+X-Gm-Gg: ASbGncv3LFGOATd2wbKAAyo9hMi5o/M6uwTjiQ4uoQbrgjrsGTcrW9CmjlDndoFA4uu
+	0l6IRvz254nmDZf2wYwT66yHgKTo19DxBzK/yrkyM9IFN7qMgHrq1R7BBDsqE2nhY1tfMtqT0DL
+	Y6zqdsMwvXRBm0qzJNn9jBezNKdFGrb7SahrGG1Vp5eknWGyYpLB5O4TPtdF5NQwjLlukI50ENf
+	PZZKfuiBQ4Nr6hoS7AHP9RNV6aLDyP4lTYCpk0QmLA/SE0/dC0y6jPNrzSIU4blUexVJYK/dnGF
+	5nCg3dpxhjvR42JPtcm9R2vjDUjvs5yS5eG9w7J4smQCrN98kyhFWmzHIHSNgNopRDM5DLU7c9V
+	6
+X-Received: by 2002:a05:6a21:648d:b0:231:6ba:881c with SMTP id adf61e73a8af0-23811d5b72fmr13279544637.6.1752835609912;
+        Fri, 18 Jul 2025 03:46:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE+oIQZv7zeP2XrajyPNGsv0HOcYRrzrBPX4o99YzxCFVD8DkN7dyHzSjoLscfcsLRkcELSfw==
+X-Received: by 2002:a05:6a21:648d:b0:231:6ba:881c with SMTP id adf61e73a8af0-23811d5b72fmr13279503637.6.1752835609468;
+        Fri, 18 Jul 2025 03:46:49 -0700 (PDT)
+Received: from hu-mohs-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-759cb678cdbsm1028989b3a.108.2025.07.18.03.46.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 01:38:34 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio fixes for v6.16-rc7
-Date: Fri, 18 Jul 2025 10:38:29 +0200
-Message-ID: <20250718083830.81316-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+        Fri, 18 Jul 2025 03:46:49 -0700 (PDT)
+From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+To: Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, quic_pkumpatl@quicinc.com,
+        kernel@oss.qualcomm.com
+Subject: [PATCH v2 0/2] Handle shared reset GPIO for WSA883x speakers
+Date: Fri, 18 Jul 2025 16:16:26 +0530
+Message-Id: <20250718104628.3732645-1-mohammad.rafi.shaik@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: z749Wjuj_hgnp-EB03OZr9hD1hTsJzBf
+X-Authority-Analysis: v=2.4 cv=D4xHKuRj c=1 sm=1 tr=0 ts=687a261b cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=sKMTf-CTBu6bTl4tlAcA:9
+ a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-GUID: z749Wjuj_hgnp-EB03OZr9hD1hTsJzBf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE4MDA4NCBTYWx0ZWRfX0fenPg6VoZr5
+ tIJUFviMFBK/SUu5LJZK7Y5iUXBqQ0jdLDnkoH0rpZelOe1lYgNBQNY7leWa/xs7HYCgACrDIOB
+ f5RZKNEVD3X26NMKGpU6+UIbwdHVgJKIDXT+fFlEdulQ0xcLYE+OTiGdfxz6LigRMcxkTFX3f/q
+ v8QUbl2HTYIkDHSvMFnGWrcgvkLyUmrSQr4RGA6JJDiAdErKi0AiTyX3x6VaGdfXnoRD4Jn05it
+ b++z7Dq4Qcb31dbRNNEQY+GyA+xfn8LUhaK2kJLo9DezSyAyrYzrgUGlLE0RsX5UOQxxHP+38mY
+ AVEn9JrKJijQuPZyxiSscLrjPQeKMYXCifkNxXeqCap1dJS5gHtX+3V+d9wJ5TC7oM8B20hFYL2
+ ajOFBBXKVB4wZaanar5eMdBz6R7Ef+PV7cDkZDXo0kiqxHCJvLSaAtbBVX7EjquVdoJvv8Fm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-18_02,2025-07-17_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxlogscore=913 impostorscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507180084
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On some Qualcomm platforms such as QCS6490-RB3Gen2, the multiple
+WSA8830/WSA8835 speakers share a common reset (shutdown) GPIO.
+To handle such cases, use the reset controller framework along with the
+"reset-gpio" driver.
 
-Linus,
+Tested on:
+	- QCS6490-RB3Gen2
 
-Please pull the following set of GPIO fixes for the next RC.
+changes in [v2]:
+	- Addressed the review comments from Krzysztof, Dmitry, Philipp.
+	- Used devm_reset_control_get_optional_shared_deasserted() api.
+	- created deasserts/asserts functions to handle reset gpios.
+	- Register devm action to safely disable the regulator on device removal.
+	- Link to V1: https://lore.kernel.org/linux-sound/20250620103012.360794-1-mohammad.rafi.shaik@oss.qualcomm.com/
+	
 
-Thanks,
-Bartosz
+Mohammad Rafi Shaik (2):
+  ASoC: dt-bindings: qcom,wsa8830: Add reset-gpios for shared line
+  ASoC: codecs: wsa883x: Handle shared reset GPIO for WSA883x speakers
 
-The following changes since commit 347e9f5043c89695b01e66b3ed111755afcf1911:
+ .../bindings/sound/qcom,wsa883x.yaml          | 11 ++-
+ sound/soc/codecs/wsa883x.c                    | 93 ++++++++++++++-----
+ 2 files changed, 81 insertions(+), 23 deletions(-)
 
-  Linux 6.16-rc6 (2025-07-13 14:25:58 -0700)
 
-are available in the Git repository at:
+base-commit: e8352908bdcd2d0bcf0aca8c69fae85fd5ea5edb
+-- 
+2.34.1
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.16-rc7
-
-for you to fetch changes up to 11ff5e06e02326a7c87aaa73dbffaed94918261d:
-
-  gpiolib: devres: release GPIOs in devm_gpiod_put_array() (2025-07-17 09:22:46 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v6.16-rc7
-
-- fix the devres release callback for devm_gpiod_put_array()
-- add an ACPI quirk for Acer Nitro V15 suspend & wakeup
-
-----------------------------------------------------------------
-André Draszik (1):
-      gpiolib: devres: release GPIOs in devm_gpiod_put_array()
-
-Bartosz Golaszewski (1):
-      Merge tag 'intel-gpio-v6.16-2' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-current
-
-Mario Limonciello (1):
-      gpiolib: acpi: Add a quirk for Acer Nitro V15
-
- drivers/gpio/gpiolib-acpi-quirks.c | 13 +++++++++++++
- drivers/gpio/gpiolib-devres.c      |  2 +-
- 2 files changed, 14 insertions(+), 1 deletion(-)
 
