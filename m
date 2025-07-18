@@ -1,113 +1,114 @@
-Return-Path: <linux-gpio+bounces-23455-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23456-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABAD5B09D8E
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 10:15:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12648B09DBE
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 10:21:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E796B168CEA
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 08:15:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9BECB189A5EE
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 08:21:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C82B2192EA;
-	Fri, 18 Jul 2025 08:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 894F6221F00;
+	Fri, 18 Jul 2025 08:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pgrt/Mfi"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wxAi4bhi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EE719E975
-	for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 08:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB46721A420
+	for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 08:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752826546; cv=none; b=Dl850jIY++EUIad+gXwfIpOyXhB1yHCvu487HrfL9puFth/MAhUokJj+17pSD1jpPfElZtfnnFhFpCAwOB7j5d++L7JTYAgXDRfmXNdtOYFd3+F3KNUnZUSbkGtthwFkR6B7tVOnR9Wn2GVocE9w1iyvIuQAD/Pn19qlcFziUbQ=
+	t=1752826886; cv=none; b=Qvy5MgGiCTnNMWLpODwHU9M51Y8tEC8OJNo57YNUfk2sGH2IwC0L7A4RbmZoOYRTBB0a3Qk+6ZPeQsnyWfWZ7qv25YNh4PJxdgcgVYRKWJdfY3gUkgNplckMCzkQs3cIwzTs2HfMAljm9Y8kBNehFtghdbxkpOyWfxT9o8czGoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752826546; c=relaxed/simple;
-	bh=LYG6dBi27owiZdJNQoV91+OmRsH3MroMWQm8w7WQq0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VSygJXmThKzzBmCySC3lMIleQm2LGao+hJyn9GF3PY+nXF+wl5eLf7ZT2oACFCaNGlJeFsIBZF62r2dFuMV7AfCVyvTbdx4ZGgsovxpC53lmAosuTp65SmbxUTHOlbHn483lr5EII+bpok/dEBQLRqcxckE1WDPPS+5aW4iGkis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pgrt/Mfi; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2350fc2591dso19161645ad.1
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 01:15:44 -0700 (PDT)
+	s=arc-20240116; t=1752826886; c=relaxed/simple;
+	bh=ehBRfidVMiTgGu4yqitjDYf9E4aZ2H0XQi7Akm7vD3s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u2Uu1kN/PbR/nuIJ8nmhR6WLSsIga7cxw76LNDfKgjsSKoFXqGLLb+6IVdrWVbtcP5jViVr9YG92wbTTgMo2pr8QIrZkd/dofR2RS9mQzGJCP4TPrzx+6zwYBxCAGRf6qDiSPXIHMgxk1ri8N2PgfJUntB6YGqINCpDlF2Kl5Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wxAi4bhi; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54b10594812so1805989e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Jul 2025 01:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752826544; x=1753431344; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZRoi/KdssEcNygdK/MFmLI3EXaQwQgEFjNwDzaC/Nps=;
-        b=Pgrt/MfiqRGN68PUAHXT5q7cMHfSF7zTjtbN8ovzvYd1Bol/g7bRsHQwI8id39jS3a
-         j1Z06zNMRtFLK9Rwrn4p6i3XzagyDuDFBoE2xemdsrR+PX4EyhPM/bhbQX7WJZ+ALLns
-         RYZcs14+PZQMMqxc6hzybqTX5Y1XrdDNNXZmH2rRoX2M9zarGAy1hZrwZbMsStpFoVNE
-         ZWpOSI91QF0vbywt593u3oI20uVbaYCsna8IyDabjb2FaASBxi8v29VsIufyUoyD1rpD
-         z69E5C6Fj8Q8hswk9CD0bhUNVMLUVnjFnrKCpL2pwXoGSsUkBrNfN8XZm7jrKGxjhBCY
-         yVtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752826544; x=1753431344;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752826883; x=1753431683; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZRoi/KdssEcNygdK/MFmLI3EXaQwQgEFjNwDzaC/Nps=;
-        b=ur4VGaA3VMIue7luVNKw7MUHBTdtGmPLj50gI749Rx499XTXNOsSQ0kwEnrxcwv9fs
-         hlixWNW/RnkJ8ohEEvhjHBgmGaF/wIcoYEDlBLJTopQk9DVMBft9Y8RdpHfOxyoqhMH3
-         ZNnDoTTFzmht9Ms6Qazp/C2/HRdmiA83Jv7t1TnvWkqLZUzMxOa6dhIoRRkV/Tbruz6u
-         W+D9mOGKJyKpp1tYh41b71uNHXCEwd8H/iTwFn+qAVBmpiymc24vuVzVDwVSablMwhWA
-         PLkSb74fTusabej0MKXsClcEIpYEKRnzamLJEsAoNYe/wV8GhV0zfkggHG+YJ+sz3b0A
-         EduA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJTkiAh8bVLfEQWrWQTWtO5q/4WqocazTloyyomyneDSCoKMqclAAm4HVxiFzdW1CZkNKqhlNBRVNy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz71o+AHeG7+JedcGOwC68UNjjhTwgYcLbnk7BnY3bnn/wwakaE
-	7itoyWqESSeeFS8pieHzJedlwwlnz3hH+MNrG3llmhYjYkxPCzUjAk4MoyXYPPIEUHo=
-X-Gm-Gg: ASbGncuay+Fj6l5U1n8pIoD8l3VKHmtA8QheZ41sckKKMXgkYxhP+qGpgIY04Wg2sPK
-	MbZwivLo9BKS26b0Voa4y59x/KuA6TqvKmCCPd5nPDfNKvdVsNu7GYCxIcpPTxL7ORn3tIoAAe+
-	afw2MdR6LIYospqon2oJthVW9iOFzzfsKXNPr1w0VfEpGgZPEtoGcWmrv0FHyoQtb8xLkgUTyR8
-	t76pRlZjBMI5Fo2PEZr0yv4u3Z5NNub59ddXBaz3JvheoUtZdMsDdAoKnLT/w2EgW6I56bwJtWt
-	A0Zk+4YKvWSpm6BIxqPHJZ5OnSb/St9zKS7H4NkP4OHKSDsQYidECZAFMNCRmejQx7/G/TlN9Bt
-	0xkDR57a9nVBzCx9luVSNjkQ=
-X-Google-Smtp-Source: AGHT+IEqHN85qJhRQ1PINudkBYmazt3d1yDiVwXAcZxkuOjtrSEpN31hW0gEWbObrF16B/ALKaw6eQ==
-X-Received: by 2002:a17:903:94e:b0:234:2d80:36 with SMTP id d9443c01a7336-23e38f7f902mr45233195ad.14.1752826543694;
-        Fri, 18 Jul 2025 01:15:43 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31c9153803esm3465900a91.0.2025.07.18.01.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 01:15:42 -0700 (PDT)
-Date: Fri, 18 Jul 2025 13:45:40 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Harald Mommer <harald.mommer@oss.qualcomm.com>
-Cc: Enrico Weigelt <info@metux.net>, Viresh Kumar <vireshk@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] gpio: virtio: Fix config space reading.
-Message-ID: <20250718081540.7n7wtl2sas4o7jz7@vireshk-i7>
-References: <20250717141000.41740-1-harald.mommer@oss.qualcomm.com>
- <20250717141000.41740-2-harald.mommer@oss.qualcomm.com>
+        bh=ehBRfidVMiTgGu4yqitjDYf9E4aZ2H0XQi7Akm7vD3s=;
+        b=wxAi4bhiOUU3MfYunI+AG6YzRVV5pig1KV5XWgiqVH1IylauN/Y4U23DDUspwOYm7g
+         7a5MDJfIL4N9CF5gJSO8bANSbpRvslHuGmzXsAv6TDRnvpWAdIfJfGEN/Ks5nQJhVFHE
+         daOqV5rncYKJC0TD+sUVY8K+HzWvZm95VHTe+JfW2Zj+wj6lH2ZPbyJcoIrN5JLDeXCB
+         owYeSXbP93Yusw7+8QXWjd3+Gxz4iqngm9UrnhHgKw8ZgeF8Ef318qNNdUKiSzqAe5K3
+         rZzONZge8NT424LlrteslQ//Mkkc8YbL/y2/CBdJ4kvaf444DUZYfaCDHLb+EehCfXO4
+         yKgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752826883; x=1753431683;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ehBRfidVMiTgGu4yqitjDYf9E4aZ2H0XQi7Akm7vD3s=;
+        b=jQfJUYGcFakaOFSuf5l8UXCvSSmvGqtgOUT74awFqGQxDb4ji53zed5TpVYIwVqcIy
+         Ig3tiZ/XMiSHKQ25kD7UE2tQ7jJhQby/0LgmBjGHH+hz0zhRV6ZxdxwK5EBE0diV37xB
+         CG7J5N9Qwtp8Lju8rEQjz8xdwvhTROqnWz4mSOEhe5OIvsPRE6ztql9T07CfpRxBSSHw
+         M3ZkqD/0aw9XPYSCPrzShOIRcptxvmDHchSo7vAAooquyUwhHBTNxlY3BkvkcdTgLSyJ
+         xV166HOOV/diAlmS/uUtMOWzkK4S0mYZ8GoB+0v5x6gn61gUjhk4oDsUOg/pbfZVoB2F
+         EBYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVV36n+WO5dSeW+0H/ALOAsP1fAMgQdV1KFMEt6ILW9HKvHC1jM1EYWRpI/b+whSZXsTHMmoUYlUyXA@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXb/38QXPdK+0IsMv/iuuyMChcHSDCHQNKPAlRuObCodV9dhD9
+	qubYQydG2n/AQAQUd/0lWudTdIVo1vT8y2UIPeUhzIfuDdGsNmm+tSq5XpO/nNmFpc4Lym3qb/d
+	ni93d13ZnI/hZPiewyqowpFzk+EA4oKtIWEOPHz1COA==
+X-Gm-Gg: ASbGncsTMY2jFVuwateHKgYE+OwEwQ5Mr2HkRdITzF2rFEzChZgwNnpK+xlxd02p2o7
+	E6KuAErAOVLc82gRVw7zm+/j7rUH4BhWJU615hCfhZLd1MLruq2xb4pwtBNkU/mhi0E82u7Rx+q
+	B1wXJ1elsLareYaKtj6AXKciBlxy1AB1d7sqUr5Kc+xe3B+Pt4lAIb4vRfNwNrX/uLXqqkfXPV3
+	VsGk2oF9KQXBigycFJfrHywph9iYA6s0vW+Aw==
+X-Google-Smtp-Source: AGHT+IEaWSG03ounh8FuQGPFdYkiUPh2qNisS32R9MoEM8O70oPinE1GtqhwtKAZTDuOeWMM/l/IcLkx1x4qZ+HIn40=
+X-Received: by 2002:ac2:5616:0:b0:553:a2c0:da70 with SMTP id
+ 2adb3069b0e04-55a23f563eamr2309934e87.26.1752826882698; Fri, 18 Jul 2025
+ 01:21:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250717141000.41740-2-harald.mommer@oss.qualcomm.com>
+References: <20250714202829.3011298-1-robh@kernel.org> <20250718101147.4906bd60@akair>
+In-Reply-To: <20250718101147.4906bd60@akair>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 18 Jul 2025 10:21:11 +0200
+X-Gm-Features: Ac12FXybEW0KgacJXEKotlpT_ULwdNJr0HEMAnGR1ZlrBw7Vllv0nLHyyPwCvSw
+Message-ID: <CAMRc=Md_r2J50EWFMyr=j+JU+LqcBZQ2z8SR8EbK3pkD_xQkEQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: Convert ti,twl4030-gpio to DT schema
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Kevin Hilman <khilman@baylibre.com>, 
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17-07-25, 16:09, Harald Mommer wrote:
-> Quote from the virtio specification chapter 4.2.2.2:
-> 
-> "For the device-specific configuration space, the driver MUST use 8 bit
-> wide accesses for 8 bit wide fields, 16 bit wide and aligned accesses
-> for 16 bit wide fields and 32 bit wide and aligned accesses for 32 and
-> 64 bit wide fields."
-> 
-> Signed-off-by: Harald Mommer <harald.mommer@oss.qualcomm.com>
-> ---
->  drivers/gpio/gpio-virtio.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+On Fri, Jul 18, 2025 at 10:11=E2=80=AFAM Andreas Kemnade <andreas@kemnade.i=
+nfo> wrote:
+>
+> Am Mon, 14 Jul 2025 15:28:28 -0500
+> schrieb "Rob Herring (Arm)" <robh@kernel.org>:
+>
+> > Convert the TI TWL4030 PMIC GPIO binding to DT schema format. The numbe=
+r
+> > of #interrupt-cells was wrong compared to what is in use. Correct it to
+> > be 1.
+> >
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+>
+> Thanks for taking care of it. Now it is in, but anyway:
+>
+> Reviewed-by: Andreas Kemnade <andreas@kemnade.info>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+No worries, I updated the tree with your tag.
 
--- 
-viresh
+Bart
 
