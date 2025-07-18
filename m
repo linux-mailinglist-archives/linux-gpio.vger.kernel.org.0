@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-23479-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23480-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA9E6B0A735
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 17:27:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD361B0A73C
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 17:28:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 590FF5A82E9
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 15:27:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E9415A83D3
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Jul 2025 15:27:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 681FD2E11CC;
-	Fri, 18 Jul 2025 15:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5372E1C55;
+	Fri, 18 Jul 2025 15:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTAcpocq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOL+6E5N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3FE2DE6E7;
-	Fri, 18 Jul 2025 15:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92612E1745;
+	Fri, 18 Jul 2025 15:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752852336; cv=none; b=E/FUHcIqIhgn8iHOXpQb+KNJYtubl41NEcE2uswS/E6GnkGk6sG+MvGDJfuzJOB6IoPogrE+urW0fiotzCHJ/TwIGatw7SeuYMp50XGlkHvn2EpV/nvsGjBwkI2DY7Sv+iVyCFSlqKXyk7JKAHeVcUNzjp0UFq5Bknb21PrRvOg=
+	t=1752852338; cv=none; b=EBVZP/grinsppnuVWatyeuhwCysx7K9brUMjAJtwYVbsSgDs6AGahuVzzqYbjUzu0VcQawOBaGUbn2rr31/vHBKtRuET/vHfbTq1URUmUON/oeyyot5wQdajM9YmBMMS+hpNkPeezt/Lq9IjuOKyiTx7q6qfrbBgaaHGXyGOaWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752852336; c=relaxed/simple;
-	bh=NSiAFSJxTXVeWHTLdSPMG/Gzwe3s9N0ySr8pok5YgEs=;
+	s=arc-20240116; t=1752852338; c=relaxed/simple;
+	bh=Tya7H69uCHv1F64bK9DJxRVSTo9tF9vvkubVhW3RXZc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nOBWpfx/cN18fiTA/CNv4QPCXurLVEvKWHeH5b3iqdN54wdJ+RdbsZjLF4m5kqD3VEtJwB8+6bFIL+uYNEz+hGLYRaChtNSEaEae2s6i0seRYqmiAGmaKzD6YAafpYQwnQRaRO8BZIvlZCpgsz7me7fkBvPsDpqTCH0v2T9Z5pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nTAcpocq; arc=none smtp.client-ip=209.85.221.44
+	 MIME-Version:Content-Type; b=dG6im8GhE6vz9VGStITWY8KRTRTj+hWIEDLpnrS880q0KZikWdWeRoF36926+baqPilmPQz83KfUUc9SIFNU2N4qxpxxKN4MUconXnxgWfRV1VvmvovIMucW1Wt6TnMpm6umyoTswIJz/F8XUcKOgzckE8Luvc1KZJ7oCK62NKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QOL+6E5N; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a582e09144so1213386f8f.1;
-        Fri, 18 Jul 2025 08:25:34 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so1779727f8f.0;
+        Fri, 18 Jul 2025 08:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752852333; x=1753457133; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1752852335; x=1753457135; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/9ZjlAULE2F6JwrtpvzjiapTBh1bKC7bsQfwLuPPxcE=;
-        b=nTAcpocq+IyR6nIhYQi5Fr0mjk+SZZrfR6OEqGQZNxDqEepEghqGWwg0yymEv+dR31
-         grJQFGZ6BU3Sq/WdNRsyT3AkdsHa1JPO/in8cp8qYHzFqYHPKxIlsbqY/9br9UTKpLTI
-         QlzeYV2Y1mhCt9dNRn7driB1u0twbRHWM0TR1OoUW/Mi/xekJzKpi9Ln7jQpe+KeaBeT
-         bV9+KXYI9E3sFqvLRB6xRYIblK0MFG8eswASk+4D0JJCoWkSnJb5cDyLykeyK2U0iAyS
-         8hgq+MBovggaWmT2cKtvvlNMy40NSloqC1He3DiZ5ucyhlLOEE0ggUUlY/TCu7cx2+Zp
-         GcWQ==
+        bh=1YhQAjQyJkWY6Jp3g1C7XqqcjfeJK/9/EyL1eyErKpI=;
+        b=QOL+6E5Ncf/WIPsAk4te4vouq/Y0SXT9q+ulQbT+KKMnC2HjWhnK+yI9qJ+B5HgtUn
+         bUoRM8xsQiCZUua39v9OP87LOaahq4I5m67wxtYGYQKdRZwK1/fbeT0vF1Jn6xmlkR6+
+         jepYs6i9MKdD9RDtfkOlXgpy4BeaRdp9saH+l6wvHncbbDrif8M6OY4L1zO3rULPyKbX
+         5YnBiUwW3E13nU5naoNPTjC5FxN3Afw4hj8SIfZSeXvCcltBlKFungrW+6XtwSEkY9r0
+         J6qd+GbuyMgNSuS0PpnrKWSLa6E5CioZwsK8exD0mfTUHRtOh8pzV2opWJKMtBb4652p
+         aTfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752852333; x=1753457133;
+        d=1e100.net; s=20230601; t=1752852335; x=1753457135;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/9ZjlAULE2F6JwrtpvzjiapTBh1bKC7bsQfwLuPPxcE=;
-        b=q2JG2BxV4xEXHHFQoErYDECW9opHT9E9ilMH8Di/80+HRJ1T0kRHFnDetUokEPGkvL
-         iljWgd7R8NmHONSmSor56MJ3tgr4NuLvlNuPDsqBraJG1zNTjoSGgrZiOkQWJ0YaMmlf
-         vWF6zLt2TrW3UtfgQbz2NOVBbuX9IxuhSQeKeSKAo9Qo5gQJ8fpbGoGQYvqTwSHnnsD3
-         KFRZQHuGJNuj4wecr0i3H+UFx60/sitlgd76sxUcz5Je5Aqz3POLPLb6j7UVtWj9T8Ry
-         tnwGAd5DsEqrVEKHgZdRUxxLKcQ1CUeiFdjIzm0ACxz8yf3Mutj+BHptdpPvOpIL5ZYg
-         4TAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPcxXBi4gjHVvNrVqCkd1lKOTzRODgbrp0o2Q8G8KRBk6sIzC8Zk4J0dcCjqbc7csETXw9TmS1aNd+@vger.kernel.org, AJvYcCUuFDFhwObBIg3/LcKhklUda9ziXUPw0DB9QXxaHVegSTOq1ZkmYUSIVubg330FjtmuQzxS/Y4dpDfyKdqf@vger.kernel.org, AJvYcCXsxSZDE0HsHtwsZTprR7NwTOOeZH/AS2OZHw3eM+sqnhsJbvDS2MV9hclAj1LquzoTJFIdh15smYstmA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRHGhWUDelP5lFq5wWU3CacJAU7AhwdgzpzsQf1ZULQVpVfNNo
-	DiF1BiPwLeNHhM3mSbWBdzD7sG8tbe7ClY+fMu7olC9Xr9xtrjGaeDQK
-X-Gm-Gg: ASbGncuGDIxJNJ3Y0MklPQqGfPLjei1h2OQZn7I2QeylolOkRmnPtKOA4PVcfK+EhI7
-	KG3ABpfWnDTjJceojdOr2M8vyJ8oHPl0VH3aQypCFZuhCSGWyaWkn1j/6dePkt2iS3WTiVrHb4d
-	kQTJ8X1KBzjtI830dKMc1K1NpeUUB2In7Tn7bFq0s3P7rtx5+fYwNS2VrR3ihBHwLDfgCRrv08U
-	liZqkaslc656De1QmqlVuXl+3+GhxzAEwpyN7oUEuqWcU2mZtX1ONni0c+20g36c7C5UOBvIuQt
-	kNmQujs01ckJHsHGdpLIio/j6KQJgXhrHBmc81Ugab09tn7HsJDKmiKGUUMp8WzkWFNnk1MQ0+n
-	/VBmZHN1CAj3R6ZDYqCtKgd3p1+srvdHaMRA=
-X-Google-Smtp-Source: AGHT+IFzz7pc5wk5uj/Vf6ChAPu/I9C+4m2I7UOzrY/KOAIRiI890eR3XGmgZ+/8iVZZm+uqUyK+nA==
-X-Received: by 2002:adf:b650:0:b0:3b6:136d:55de with SMTP id ffacd0b85a97d-3b6136d55efmr5039614f8f.7.1752852332639;
-        Fri, 18 Jul 2025 08:25:32 -0700 (PDT)
+        bh=1YhQAjQyJkWY6Jp3g1C7XqqcjfeJK/9/EyL1eyErKpI=;
+        b=Ywc2w1S4hv0eTQVQ/r119EjVbcUW22dNiBa1JKkbzoKO8jML0Mi4PZU4ULP3v8M8Bu
+         qtIx9/Ahb0tq+Q/gNQWuV6i5d5GjLahvhNHVU82y8LjuaFnQmwpnOP4touAyV5Blw4DU
+         BFWWmn8DspuuvxH4Xega3wELs67DmH7+nGKgFSnbxkqycRI383M+tFyJ0Gcyqe/P0puh
+         QOSi9HExZnC66rmONqUUkOKcS70/UDW4+uByZCeLmT3z8BO2j9bJYE2OwxWXt6bHpDDf
+         rfrxWI+nNO6nmjeu8UwbyfMwJsjBDGCmskJIUf1u+6GmbuBQdp1OqjCtswGfS4V/hiUx
+         ANkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVoMMtxgogo/jcxZMBSvNS1l6/gG+vFpqt8AZv/mEEqf1gGLtrG4h+3MRc8kwz+Xw9rndke+z2dEP3Vr9p7@vger.kernel.org, AJvYcCVuViCIOdj+wB52P1Fg/UZALDo+wNVOCHI8tNqkqOWX8YrSf1qNOrTRQGjPRDAbmInFKOxKovA7Ax/ulw==@vger.kernel.org, AJvYcCWPlmd3SyhPZC2Xz4/0NRLnOPGoz0ddS+5cXmWZsLVndZGtdLGNlpUSllFekJFV9+0+4/Cooi+3XZX3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLKP12R2jhVjl+TZGOrliyLpmYdJQ7oJdarRyKBp1cStu62Zl/
+	RlftnY2E4BMjh9JiTkISFMAA2lkU58Q15j+MIm2hTJdJPH8g2hQmRMo4
+X-Gm-Gg: ASbGncu+bWhmhqhXpBMIgk+byVtHC9A7UxHZ5jj4vyjQ5mxNZUMb0KXgCoewRRP4mAK
+	VP7VhoTUOnt9yEWd8Wxuf6IdIY3McEQWEUxjB/sYtMCj8hshDU+LmgFESaZySfUrj1ljbHpcN2t
+	Ef2Vv4FFxn4pIPepzz3OHOFiFuOm0g578WqTac/XyKETuuVphx3SCNWwZ/14jYcsMSAoTT2dEFx
+	W54Lt9c13dBeBsngo5TwyO6/8uWJe6JvfG6n/XXuN9TLNZjPiO5K/MGTD3ijk4raswE4BH801kH
+	n5nVuSkcmPrhjaIaZlbgZpDOFsBKH611Rp5WVSXkDw4Nu2l4QQyOouvPQfeRKGYCRuLPozXkn01
+	9ZJI1IqX0cs2Jivg/XxyjkrZvCs8PM6nMYOU=
+X-Google-Smtp-Source: AGHT+IHM9QE6OZP4eSrOZOx7KZfil3FjClDdGdknIIjf7C8wzDU4qPEPgS8586sPDWWAfqGicyvjew==
+X-Received: by 2002:a05:6000:4b04:b0:3a4:f7dd:6fad with SMTP id ffacd0b85a97d-3b613abf34emr7129638f8f.14.1752852334929;
+        Fri, 18 Jul 2025 08:25:34 -0700 (PDT)
 Received: from demon-pc.localdomain ([86.121.79.159])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca4893fsm2195780f8f.52.2025.07.18.08.25.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca4893fsm2195780f8f.52.2025.07.18.08.25.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 08:25:32 -0700 (PDT)
+        Fri, 18 Jul 2025 08:25:34 -0700 (PDT)
 From: Cosmin Tanislav <demonsingur@gmail.com>
 To: Cosmin Tanislav <cosmin.tanislav@analog.com>,
 	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
@@ -90,10 +90,11 @@ Cc: linux-media@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-staging@lists.linux.dev,
 	linux-gpio@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v7 09/24] dt-bindings: media: i2c: max96712: add support for I2C ATR
-Date: Fri, 18 Jul 2025 18:24:45 +0300
-Message-ID: <20250718152500.2656391-10-demonsingur@gmail.com>
+	Cosmin Tanislav <demonsingur@gmail.com>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH v7 10/24] dt-bindings: media: i2c: max96712: add support for POC supplies
+Date: Fri, 18 Jul 2025 18:24:46 +0300
+Message-ID: <20250718152500.2656391-11-demonsingur@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250718152500.2656391-1-demonsingur@gmail.com>
 References: <20250718152500.2656391-1-demonsingur@gmail.com>
@@ -103,74 +104,36 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-MAX96712 and MAX96724 have more than one GMSL2 link, and each link is
-capable of connecting to a separate serializer. If these serializers
-have the same CFG pins configuration, they will also have the same I2C
-address, causing conflicts unless the deserializer changes the address
-of the connected serializers.
-
-The MAX96712 and MAX96724 support changing the I2C address of the
-connected serializers.
+The GMSL links can carry power to the serializer when using coaxial
+cables.
 
 Document this capability.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- .../bindings/media/i2c/maxim,max96712.yaml    | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ .../devicetree/bindings/media/i2c/maxim,max96712.yaml         | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-index f712d7cfc35f5..758c0223977d4 100644
+index 758c0223977d4..b345305acc4c3 100644
 --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
 +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-@@ -37,6 +37,30 @@ properties:
+@@ -96,6 +96,10 @@ properties:
+       - required: [port@6]
+       - required: [port@7]
  
-   enable-gpios: true
- 
-+  i2c-alias-pool:
-+    maxItems: 4
++patternProperties:
++  '^port[0-3]-poc-supply$':
++    description: Regulator providing Power over Coax for GMSL ports
 +
-+  i2c-atr:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      '^i2c@[0-3]$':
-+        $ref: /schemas/i2c/i2c-controller.yaml#
-+        unevaluatedProperties: false
-+        properties:
-+          reg:
-+            items:
-+              minimum: 0
-+              maximum: 3
-+
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
- 
-@@ -79,6 +103,13 @@ required:
- 
- additionalProperties: false
- 
-+allOf:
-+  - $ref: /schemas/i2c/i2c-atr.yaml#
-+
-+dependentRequired:
-+  i2c-atr: [i2c-alias-pool]
-+  i2c-alias-pool: [i2c-atr]
-+
- examples:
-   - |
-     #include <dt-bindings/gpio/gpio.h>
+ required:
+   - compatible
+   - reg
 -- 
 2.50.1
 
