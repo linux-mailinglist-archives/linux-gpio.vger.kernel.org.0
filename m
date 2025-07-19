@@ -1,123 +1,214 @@
-Return-Path: <linux-gpio+bounces-23516-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23517-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0CFCB0B0DC
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 18:08:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33EF0B0B13E
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 20:09:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D0CA18925DF
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 16:08:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3199AA6451
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 18:08:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F9B622A7E5;
-	Sat, 19 Jul 2025 16:08:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1144E2236F2;
+	Sat, 19 Jul 2025 18:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FvguZnfM"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WblB879O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E135A207DFE
-	for <linux-gpio@vger.kernel.org>; Sat, 19 Jul 2025 16:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DEA42AA4;
+	Sat, 19 Jul 2025 18:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752941297; cv=none; b=H1gyoCHvBrwh5HMsSSXHg+6G9jbYjklMPGQsRCNjqoKZGgl38L+6XeTbg9e/L3w/gIKfR3Hmyf6Nf/V4eTvObeXKUhZmeuzChcbUv7kF6iKRJLcmvbeNvY2eXNY8W9a+C/I9pOvvZt2kult/6C/EnCysYslAC3AN69GR4oNd8Co=
+	t=1752948533; cv=none; b=Au5BffJwBJQcm3eD45/OIJl77sXQHpo5GweVqZJ5vM/wXn3kBrmCqBdRvmBP9PvuHy/d2F+lWzaAw7idltoQXKdp5TB0o6hJ/yx10tLKUJjvAAwtJj4U2ieJYYlLT3prxcl8XbuCCL+8Z7w3TOTO0IR4dk6HGNPuERPS9Ht8toY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752941297; c=relaxed/simple;
-	bh=5SiHkdSfMvJG/38SvtyuLJIKJ0dECiYN4f8f1myRAcI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mj7KKRiQ/0eFzqzTKpGFPoeVK2PkUT5CxLAz1ezt8GuyjgIEjkGJn0r+Z5zsmMaK3y3jcZeBjrzTSPzRjJUkIAcmLQXwQGO4iDCpsQ5m/wZ00mAmR7/QMw026JHyOMDtoRbauXg8fh6xlBdx98U5kwf4s5D8H2LOeRUuRDjqOY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FvguZnfM; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-455ecacfc32so13854005e9.3
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Jul 2025 09:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752941294; x=1753546094; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hTlKTKLRAHSXeKTWI+ECpHm9HjExYSOWdZ9iUWEg/Lw=;
-        b=FvguZnfM13nj2QfDtXK+0eshzwlkEOutWDDNgHGr8SzYta47xZK+5K+mXviNYe28Bl
-         RC4wpHZgSUYzOyPI743rCUhYrDj6p7EbP0IV1Ksoqz/+UVMuMr9WoJImMKtKOT7Nv72M
-         dkLvQnM46VMQb6Ef/fSyEFPR7fY5hcyv5kuXviZHhv9Gp8DMq+XQsBdlyxW38KWQuMA/
-         IqwQ3OmzJCMQhuMKvuJDU44yVMjrxY44PSwYCZCZY4dqvBl3ALhouS1DwURRNF6GaiA6
-         KH7sprE90Wk2Vn4IRBHVenWGErYiR9Yb4FJKokApUD6tnm/o13cuLcciocTrlZJn6Kx8
-         j7NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752941294; x=1753546094;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hTlKTKLRAHSXeKTWI+ECpHm9HjExYSOWdZ9iUWEg/Lw=;
-        b=VqAzHDWxsDAetXnXnAeq6WjW7JGqqjMynUTzoh9NnwklNGzuryPi7WNHGqSuiKvHPD
-         NLeZU8iQklR89ti4Ffbp2+lkBsmDpUeoiJQuaMaOj9uTDFqug84DJ5TR6QejMubj9IzS
-         aOgeW0DS27NTv939RPn9t6zaUiIZv+hUhG6k/jJYTBHpwM5GFzPzlX2GjMiMlpYzLPer
-         37S3BQcx1pSCcPOpBFscEipxEId/Xb7If171+uskoX8iNEIh0GkIO0zHClp1C7K7GOhk
-         eOWpkN3jVgoL+nUUPAm0HClVTKe5QC0QoamBtqjvJK8YGSAYIaW53XJ5BwmRw0eE+xqo
-         36cw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwEaLO7NClrxctrKiGM9hu/ulUw9gglQSmV/p+XIQgVOHXjGwAtNJMYwgAqKevB3a3gtnz5hYzYFp/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQtip2WNA2XRiJpPFWg32kCXFgco3hSfI3foA+4p8ecnudNp3M
-	sAXHlVprHZTuFy9rAXlQk0UaMVSP7vAVaquwzg2ivq04ypPhWOC5orRx/rL0q1rsUrINMfEVZHp
-	NhxNOgzA=
-X-Gm-Gg: ASbGncvMoGMAh9azniWdNdThE3ZeEvRq6xC7V8sNXGEE9owOdAjnmQdZkqkY3sKsYeF
-	mdaWRj6bcne7EIeIhz6KDV9BfN8zjj+Y9bq2+POoYxxmGUi7meUSLZcYswlurjfkWoMupILhqtk
-	mEgUZ9Xam1Z/ynHHqqc3KGxOU31E6C1qH6k1+AtXFao2boeOAc+wqmgRU12N0FfoASrB4Euc5HJ
-	IIEOWDvxU2OB8QxkwncHh2vLuU+m4ZfY4jzPyTZ3RU37S1whO6L3kGYMDWa3NNmWaIBkK5XA+VJ
-	a4cEJBxsiFfwXZqKVKEJ5T0RDBAGjfT8gR/F0xo+BRZSHfyypzszlMejuHqonnUeZhb8GX1U/zH
-	Np3f9CKKu073lscyBfxWR8A==
-X-Google-Smtp-Source: AGHT+IGnOBvW0E6NXV1F/jlGY1sueqHdOmWBvkE0ycL/8cWGRkeUGSG3bu+eguNmgts+kPclqi1RAw==
-X-Received: by 2002:a05:600c:64ca:b0:456:1d61:b0f2 with SMTP id 5b1f17b1804b1-45630b6d6dcmr139212165e9.30.1752941294010;
-        Sat, 19 Jul 2025 09:08:14 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:caa7:1023:8441:61fc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4563b74f8a9sm51500725e9.26.2025.07.19.09.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Jul 2025 09:08:13 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] gpio: sysfs: Fix an end of loop test in gpiod_unexport()
-Date: Sat, 19 Jul 2025 18:08:12 +0200
-Message-ID: <175294121708.8606.9732156006120686279.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <747545bf-05f0-4f89-ba77-cb96bf9041f1@sabinyo.mountain>
-References: <747545bf-05f0-4f89-ba77-cb96bf9041f1@sabinyo.mountain>
+	s=arc-20240116; t=1752948533; c=relaxed/simple;
+	bh=5GpsMRdyrK2RzrIyTvO0RbrD1wDBMKXPGZZHDGuHEiU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aZufQEaBiUVmnnhHQWpqWURhASIL5iL/nUbplWmjiPS3DK5EfjpATOPfztzu7f9OQJi8VSRhrd/9QFYfTfNA4sJNBayyUFNYx3j8H4sMqnxqiGBJiEKXmaxMoPA2aZkbl9obYJOtXHQ10OqVH6dcapZQp5PZX+bd6BcgB3zqrCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WblB879O; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56JFnsIM005737;
+	Sat, 19 Jul 2025 18:08:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LZ/tCuE9CuTWsikn6YA5ljEysek5Hs3V2swgrnmVlro=; b=WblB879O1G3jCvdb
+	lL1VZ8x0sTxaAxAZe0xnFp27oZq6bzWJGeS15l4NxlGcuSNjmadt8ewsDGUZLmNt
+	r8myZlPZRAZsGOL+MtI8ASNo7RoZ5gvs+ei6fFta1l1GpK8ssVV8QXxqNJU4IE3+
+	R/BNEToSmRUefoaiw1PtFqHI5IXQO5xcCxLB93hVi7KY8U5nMxLEdUMJVfFrKINi
+	bbzHSFor/6DMZfHrKkdFfr42rAudPLQSg9sjZL3+rJjpJuIgRLyt74y1jXCT78nZ
+	Tqm6LtAu/SvYkvKgmWFVEgVy0ky0iNkXXzILu4H7tC9lSudwHNptYzLL+qiMxYFz
+	mCwzxw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4804519162-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 19 Jul 2025 18:08:46 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56JI8j97000325
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 19 Jul 2025 18:08:45 GMT
+Received: from [10.216.11.131] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Sat, 19 Jul
+ 2025 11:08:32 -0700
+Message-ID: <9560a7d2-d54a-45de-a3ac-f752cd0d92f2@quicinc.com>
+Date: Sat, 19 Jul 2025 23:38:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/9] ASoC: dt-bindings: qcom,lpass-va-macro: Update
+ bindings for clocks to support ADSP
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Srinivas Kandagatla" <srini@kernel.org>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+        <kernel@oss.qualcomm.com>,
+        Mohammad Rafi Shaik
+	<mohammad.rafi.shaik@oss.qualcomm.com>
+References: <20250715180050.3920019-1-quic_pkumpatl@quicinc.com>
+ <20250715180050.3920019-4-quic_pkumpatl@quicinc.com>
+ <20250716-spirited-sage-ibis-dcfeb1@krzk-bin>
+Content-Language: en-US
+From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+In-Reply-To: <20250716-spirited-sage-ibis-dcfeb1@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EIMG00ZC c=1 sm=1 tr=0 ts=687bdf2e cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8
+ a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=QW-sMX8yjbW2LPJj644A:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: YbxCvnYrjqTcOvrALOQPJRXK0aUVK5BO
+X-Proofpoint-GUID: YbxCvnYrjqTcOvrALOQPJRXK0aUVK5BO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE5MDE4MSBTYWx0ZWRfX6AOeeRtpNK1c
+ IIkmQgQjPZ4pSeWacy6UWsa2LNx7AnCelB2SzIDAOPBFKUgiRUQkWJC8CWpX4WcfCsc6CJRm5XH
+ tspG9fzOnwLw0oqdvJ4C+K5BlbfrBwBaj29jwEvb+xGPr9EANfNDJ2pIz30Jkp4RnEtM69dcfIX
+ dA+RaH0p5LyM9tIKFCsaQZxgBfZEt1zisev+O1E4SkR3GWv2ETsVq+u7i7CcL1quZ5icKLvmpZz
+ rtTGCVhHWEhaV34BPoIT8p01vhu1H9YHxmyvk0ZIBIcyP5nSAEBIsXq1kRmvYMYN5mT3HtCrnVe
+ CbsfYjzxVM1DYyst7YB/7OKAMIuloeTXj2+fawdk6j/ssQlD/vRi1UQ2qwjfbJB5CXQwiuFLJ62
+ S/zBYPNUsLdloyVcUZszsBU1rdMZsh+G82vVq0xw/xGESWm9ePW8CIrsn2zodvouEcCaX+n8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-19_01,2025-07-17_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 clxscore=1015
+ suspectscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507190181
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Fri, 18 Jul 2025 16:22:15 -0500, Dan Carpenter wrote:
-> The test for "if (!desc_data)" does not work correctly because the list
-> iterator in a list_for_each_entry() loop is always non-NULL. If we don't
-> exit via a break, then it points to invalid memory.  Instead, use a tmp
-> variable for the list iterator and only set the "desc_data" when we have
-> found a match.
+On 7/16/2025 1:21 PM, Krzysztof Kozlowski wrote:
+> On Tue, Jul 15, 2025 at 11:30:44PM +0530, Prasad Kumpatla wrote:
+>> From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+>>
+>> Manage clock settings for ADSP solution. On Existing ADSP bypass
+>> solutions, the macro and dcodec GDSCs are enabled using power domains
+>> in lpass-va-macro which is not applicable for ADSP based platform.
+>>
+>> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+>> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> ---
+>>   .../bindings/sound/qcom,lpass-va-macro.yaml   | 29 +++++++++++++++----
+>>   1 file changed, 23 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
+>> index f41deaa6f4df..aec654e6567e 100644
+>> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
+>> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
+>> @@ -76,12 +76,29 @@ allOf:
+>>             contains:
+>>               const: qcom,sc7280-lpass-va-macro
+>>       then:
+>> -      properties:
+>> -        clocks:
+>> -          maxItems: 1
+>> -        clock-names:
+>> -          items:
+>> -            - const: mclk
+>> +      if:
+>> +        required:
+>> +          - power-domains
+>> +      then:
+>> +        properties:
+>> +          clocks:
+>> +            minItems: 1
 > 
+> Drop minItems
+
+Ack,
+
 > 
-> [...]
+>> +            maxItems: 1
+>> +          clock-names:
+>> +            oneOf:
+> 
+> Drop oneOf
 
-Thanks for catching it. This is not obvious because in normal circumstances
-we'll always find a matching descriptor and exit the loop via break so it's
-hard to trigger a bug this way. Anyway, the patch is correct so applied.
+Ack,
 
-[1/1] gpio: sysfs: Fix an end of loop test in gpiod_unexport()
-      https://git.kernel.org/brgl/linux/c/5607f5ed3c5f30f41e72ce09c8e616af0fc0d474
+> 
+>> +              - items:  # for ADSP based platforms
+>> +                  - const: mclk
+>> +      else:
+>> +        properties:
+>> +          clocks:
+>> +            minItems: 1
+> 
+> minItems: 3
+> 
+>> +            maxItems: 3
+>> +          clock-names:
+>> +            oneOf:
+> 
+> Drop oneOf
+> 
+> ...  or rebase on top of my change and make it only min/maxItems:
+> 
+> lore.kernel.org/r/20250716074957.102402-2-krzysztof.kozlowski@linaro.org
+> 
+> (or whatever gets merged first, I can also rebase my patch later).
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ACK, will make the changes and update.
+Thanks,
+Prasad
+
+> 
+>> +              - items:  # for ADSP bypass based platforms
+>> +                  - const: mclk
+>> +                  - const: macro
+>> +                  - const: dcodec
+> 
+> Best regards,
+> Krzysztof
+> 
+
 
