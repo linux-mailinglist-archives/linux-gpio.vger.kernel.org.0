@@ -1,144 +1,117 @@
-Return-Path: <linux-gpio+bounces-23514-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23515-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01DEEB0B0C9
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 17:58:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12414B0B0CD
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 18:02:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B5D8189769E
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 15:59:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A610A3B238A
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 16:02:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A58F92877DB;
-	Sat, 19 Jul 2025 15:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A50E2287242;
+	Sat, 19 Jul 2025 16:02:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VUn5E5He"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LE2BqCM5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83EA1A8F97
-	for <linux-gpio@vger.kernel.org>; Sat, 19 Jul 2025 15:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C2522422E
+	for <linux-gpio@vger.kernel.org>; Sat, 19 Jul 2025 16:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752940717; cv=none; b=RIdj8Ok+9ga9HQJO6lvyP0RAp08DdcYbJqDOvTXPdJXnFs801PpnBsNrxx2jn6bKgm3qs680C3Hi4MghQwvfj8FomSqZ6u3GPgiIfzuRvEtcah09Xlx09KUXXRkv62nIHeaBVUPuf4gSOAWgBWKGP7nooCX2MLztEd62d5GCsM0=
+	t=1752940950; cv=none; b=bdV9n3atvpSifZLcAvpOiKR2B1jNf7/N6yjc+hhLl+L3xwi8wqB7XHTiBEzgYjViaMlBV24dPylxhoXbovowFfg9icx19a1R4YIgUYEPV+jLgUcCJxYYaJorW3sEOULXbefLo87FuyMUnRAf8MVPht21PzOUcZ7Vb+eGoOYm66w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752940717; c=relaxed/simple;
-	bh=bEF47tufxZ6dSvdSGUWaE3klB8WZIOyovgVbPII9J2k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J3GHj7RjFB2irvmdaRJD3o9csZVbXMag4MsgOFFdBddYvQEv3ttvzrvW0Gvyf95jAsH/JrxkGVErl9ib19zIWD0vlYzhQMJFaHeYdbxNzg9si4NX+hmGrWJWbkE4foTMy0YggH2ISFNdmssoe7JhUywUz29R8D/NPF6PsNfEbJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VUn5E5He; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4560add6cd2so24419505e9.0
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Jul 2025 08:58:35 -0700 (PDT)
+	s=arc-20240116; t=1752940950; c=relaxed/simple;
+	bh=omxcvlFB5WsNU7W/SPacQy7pFjeWx/NXXRV3R/gNeMk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s0+76bRVwAgqtQcnl//8hQZmgQNbCvBqAAojNKJXmf8vaYTEBZz+a3lFVPNbZvZGrQPRGQOg6uvUFn+epliJyBtv1yN2Iu9Jm3DlXa/Haoa6FkLMBfy0FfsCNWA0sASsZzJMyy5RQgGENbwx6aV0DW1o9uIRFzo509ee8OXuulA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LE2BqCM5; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso3143547e87.0
+        for <linux-gpio@vger.kernel.org>; Sat, 19 Jul 2025 09:02:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752940714; x=1753545514; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZYyl5d+POA5pKdskZCzfbVSjJZF5xujhhOtF/207ebU=;
-        b=VUn5E5He3MLpOLbYs6e0RCb5cEdgg4ARKYdwBK9Iijdw0wPYjMCxZ6Bb8Xs29ouUFt
-         +cs6hUu8Z3odELLB7iluIBbuiFuJjpeRIWu16Mr/kQqnVsZahwTV/TZOyOKv4S+ZAGGO
-         oBRC86KmpRSxHsjFU/QKWtExpIyOZC1+5yKGQuGr41aIQN9GCe0UwwqjJAvmvffTABXM
-         efnrYNzJ3Hvw6uryERq1K3ZK8KUwzyVypBKGxA5vKI3EXay63+T2Z3Y5p2mikdNE1AV8
-         001c7vXixjXNPXiN6JwqzA6RAfjZtqb94hnkvD0a6HbA8UFWd8eP/aSK2dV2CAOrtwNE
-         Jz/A==
+        d=linaro.org; s=google; t=1752940947; x=1753545747; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WJxRZr7iN1QAKs2m80VW48YbRh0uObEphOGlhuo4nf8=;
+        b=LE2BqCM5hp9mS1GmvHga7NVq3laPX2EZtx69qWEeidhXmOCJyc+9rVO2IOpA3QoWfT
+         QVnut84cqtlhsWWrBDZ3x3BAzj3XlUkhVxA7VHWMvaeLpm5IFdqME/G60u3gl0SiPBpH
+         xPXWqwP4VpHqscqBsQ7I09Ed0w6/SOTXE2TpfyhJ3RBxnPJxNp9VBouWVBnTaT9JfPqi
+         7o+IaR+DdrgP+K/Avh90KxJQPkLoufmSqYGTkFY3B2ko0SxMDxiKEeIelC7stOdPTN6L
+         cm9E3HR0lmp+VXmp+Su6hDg9AfCfScwJHgQ9RPtpfi0m+YC/DSfKHnmntKDQcl70Hzs/
+         Pyig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752940714; x=1753545514;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZYyl5d+POA5pKdskZCzfbVSjJZF5xujhhOtF/207ebU=;
-        b=CsGBjAOWCNKBbaHJhvSeGJ1lFhUB2E7gBVhkGptFu0hnhAoj3vYBceo4mhLCmSUtee
-         FOx+0JDHK/1c6dMtlI79YR9Lheu/aZir4VThL7R5UBj5bgWvOfmf6GNffkLifVGhw1Lk
-         T7swHT7RtSD+DqRAs3alvM+u+f6qlQm00VlVdvMi1p02A84rFzHEr+ghtiYxWLapTfhA
-         fmhFXULhP0kjJvzWPzollDssX8k/SALZWckLZMi7apvH0690Cd73pO8pP8+N5cY3Evmd
-         VpAP8Y27IQViO/CXXGr9VG+l/57gNeq2vHiHhV2K3SeB3QpThd6EsQ6oStvP6w4LT+gJ
-         FZMg==
-X-Gm-Message-State: AOJu0YxS144Ko2lr7Ai+SYcesymn3/exAZfb6HEdA7LNwxK+0MzMZw4s
-	fVZuOg/dfZUTzfGHxUrUt0pCaRWwbX3fM4KMmpM0tzjirJedi2NUwQwjCN8qyabvV9E=
-X-Gm-Gg: ASbGncseEwCvczJaHzQXOpbNG3vZJRpQc6daiy1OwRvRwrY5EWFqVYbzb9nD8pqAVjM
-	Ro1qTpCjh7lYz6Tr6XjkzWThKTXzKCcct3cKzdCkR/wpHdlTN+OEdsJ8LuI94Sa4Jqv9qksgGuw
-	Etx6SiiTflbC4dwKQrkAfY/dcqMawK51DUm4UZiyZCqCEWoxxQP3f7+nANHk7bULVZJhbNIbbLW
-	ZSq8XYxUy3atMUX6BfSRRnmvRuea9VT/u5+3ed23jU89F6uDhSI5ItugXVDwVk0Y75Apw3LRHoD
-	4OBZWIsJ0gbKsZPbRV04SwXE29Mu2fNX8NgmyxhjsVndIOKwCMa4jai4D2iDQGqhmWf/jWIA+Hh
-	nh2R5m0uRfKqyMKHH18f6Bw==
-X-Google-Smtp-Source: AGHT+IETOfBgO76xVR+/uSR7+VdwifQBdFxnl3CWfU5pB1U7/a311WyFN5/D81L/dL9uc1nWhk49VA==
-X-Received: by 2002:a05:600c:a113:b0:456:18e:eb7f with SMTP id 5b1f17b1804b1-4563a4fcf8bmr60767305e9.3.1752940714233;
-        Sat, 19 Jul 2025 08:58:34 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:caa7:1023:8441:61fc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4563b740285sm51528875e9.20.2025.07.19.08.58.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Jul 2025 08:58:33 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [RESEND PATCH] pinctrl: rp1: use new GPIO line value setter callbacks
-Date: Sat, 19 Jul 2025 17:58:25 +0200
-Message-ID: <20250719155825.6938-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1752940947; x=1753545747;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WJxRZr7iN1QAKs2m80VW48YbRh0uObEphOGlhuo4nf8=;
+        b=qvgxSELxYvQWbWvkh/KgeUOdwr707LuLNsCsOw0Lf62O6BYyeLouwHgV4fvJC9qcca
+         dDEUHDfCtFSgcqNoVF/Aaa9H1LE2bL7yZrtPi2fl3Ct0rWEmhMh4UeDYS23GaMIIT4ro
+         OQAiOVg0KJMuOF3hE5JoJhvkyHdT7CzpeUzNAhKzKq+U3xs9RsyHqe1JohjcaYWyofKl
+         SKt7OZJxvVWPDYVIcMPcp7BuY9DM5BKiPt+selgZ9k8cz2tH1yUTWBkvNkCnSxyIXWy+
+         9N+CQqq2n/810xFVlBzGvZ0R1vTZ2hqERYQqOI7kQLJmrrGgO02kXEPqJ+puMc+e5MCk
+         OdiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfTHCZTlxgfnjjkG5xzB5IhpfOJRCDYrPTgE8+WeopJQ4Spq5xn/bL96BGVV/1jJg97BT/HNRoJUgF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzaw8PrAPSNqK6Rqj7KGCDTAe/YIK958HicGe/i5Ur7vMRPCGlN
+	lF7XXOboU4VfitSOeh/5uyW29A4A8vq0DpS/ji27hsYthY+K33QCgxjsbfzZvwUsRIfhiGYmkDj
+	WLEQXxvyCBFPcnJJ/v+oLnjOY0iabemGZVYLIsfp+XQ==
+X-Gm-Gg: ASbGncv1NmgDI5Rxn+wePj0WDLnaZ9VmPAhPm5rzra0djWCy/sbCrRadU1Oev23Hnpw
+	Hhs5iYaAe+Rm9ZiBhvGZq6u2Pn3NB7EpV+pNlqw7PxpZxNWVZgoUEUaSghfMWMSlcQE09R4/evU
+	UKcYCt4K+cebKMojdcvDD3yjIPwlC3lFVQ+Xy7eD3hckAaHZ1NquHcSfOo/xiH1PGvDi5wSw45O
+	j+e+mU=
+X-Google-Smtp-Source: AGHT+IEoUxfZHhjopPDobqn7dOjOmBm5Yh2lx21AMKQLkwO7yH4BlU0K80uOKrtvDizTOqyz64KGrJ56htRl33CUOe0=
+X-Received: by 2002:a05:6512:3406:b0:553:241d:4e7d with SMTP id
+ 2adb3069b0e04-55a23f6dd82mr3887668e87.42.1752940946812; Sat, 19 Jul 2025
+ 09:02:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250709-pinctrl-gpio-pinfuncs-v2-0-b6135149c0d9@linaro.org>
+In-Reply-To: <20250709-pinctrl-gpio-pinfuncs-v2-0-b6135149c0d9@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 19 Jul 2025 18:02:15 +0200
+X-Gm-Features: Ac12FXztrlt_TII82ZBIkZmMLTzLg24otRAxfGOCzM7K4BljVaj3bGcukozw-cQ
+Message-ID: <CACRpkdZN3qAJdvDkzvr0_=7grNHWFQ6M+_b=BvREq+PyosBmiA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] pinctrl: introduce the concept of a GPIO pin
+ function category
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Jul 9, 2025 at 4:39=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+> Bartosz Golaszewski (12):
+>       pinctrl: pinmux: open-code PINCTRL_FUNCTION_DESC()
+>       pinctrl: provide pinmux_generic_add_pinfunction()
+>       pinctrl: equilibrium: use pinmux_generic_add_pinfunction()
+>       pinctrl: airoha: use pinmux_generic_add_pinfunction()
+>       pinctrl: mediatek: moore: use pinmux_generic_add_pinfunction()
+>       pinctrl: keembay: use pinmux_generic_add_pinfunction()
+>       pinctrl: ingenic: use pinmux_generic_add_pinfunction()
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-This driver was not queued via the pinctrl tree as it should so it flew
-under my radar and it uses a deprecated interface that we *really* want
-to remove in v6.17. This patch addresses it. I would really appreciate
-it if it could be queued on top of the SoC tree before the merge window.
-Arnd: could you take it directly?
+Patches 1-7 applied!
 
- drivers/pinctrl/pinctrl-rp1.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Expect qcom to follow early in the next development cycle.
 
-diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
-index d300f28c52cd..6080b57a5d87 100644
---- a/drivers/pinctrl/pinctrl-rp1.c
-+++ b/drivers/pinctrl/pinctrl-rp1.c
-@@ -779,12 +779,14 @@ static int rp1_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	return ret;
- }
- 
--static void rp1_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-+static int rp1_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
- {
- 	struct rp1_pin_info *pin = rp1_get_pin(chip, offset);
- 
- 	if (pin)
- 		rp1_set_value(pin, value);
-+
-+	return 0;
- }
- 
- static int rp1_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-@@ -849,7 +851,7 @@ static const struct gpio_chip rp1_gpio_chip = {
- 	.direction_output = rp1_gpio_direction_output,
- 	.get_direction = rp1_gpio_get_direction,
- 	.get = rp1_gpio_get,
--	.set = rp1_gpio_set,
-+	.set_rv = rp1_gpio_set,
- 	.base = -1,
- 	.set_config = rp1_gpio_set_config,
- 	.ngpio = RP1_NUM_GPIOS,
--- 
-2.48.1
-
+Yours,
+Linus Walleij
 
