@@ -1,214 +1,155 @@
-Return-Path: <linux-gpio+bounces-23517-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23518-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33EF0B0B13E
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 20:09:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83B74B0B2F8
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Jul 2025 02:20:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3199AA6451
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Jul 2025 18:08:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DA973BB535
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Jul 2025 00:20:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1144E2236F2;
-	Sat, 19 Jul 2025 18:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B357125D6;
+	Sun, 20 Jul 2025 00:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WblB879O"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gp/L4yUe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DEA42AA4;
-	Sat, 19 Jul 2025 18:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C7815A8;
+	Sun, 20 Jul 2025 00:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752948533; cv=none; b=Au5BffJwBJQcm3eD45/OIJl77sXQHpo5GweVqZJ5vM/wXn3kBrmCqBdRvmBP9PvuHy/d2F+lWzaAw7idltoQXKdp5TB0o6hJ/yx10tLKUJjvAAwtJj4U2ieJYYlLT3prxcl8XbuCCL+8Z7w3TOTO0IR4dk6HGNPuERPS9Ht8toY=
+	t=1752970847; cv=none; b=bdliAp7R8+2mWdd8i+nVCKYxKVKj4mMfeaACMf1DFIJVBREUhSRI6jQNt5iPx028EyYUrq6zXbbTVxDIf1xr2KB9RwoOn7lQxgt1/f9YxkGoHsLO4zBuRSCNwJbyYb5Wwi6h9V540FdLkXaVScyI6tNmQALWf13Ga36EUFUxIFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752948533; c=relaxed/simple;
-	bh=5GpsMRdyrK2RzrIyTvO0RbrD1wDBMKXPGZZHDGuHEiU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aZufQEaBiUVmnnhHQWpqWURhASIL5iL/nUbplWmjiPS3DK5EfjpATOPfztzu7f9OQJi8VSRhrd/9QFYfTfNA4sJNBayyUFNYx3j8H4sMqnxqiGBJiEKXmaxMoPA2aZkbl9obYJOtXHQ10OqVH6dcapZQp5PZX+bd6BcgB3zqrCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WblB879O; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56JFnsIM005737;
-	Sat, 19 Jul 2025 18:08:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LZ/tCuE9CuTWsikn6YA5ljEysek5Hs3V2swgrnmVlro=; b=WblB879O1G3jCvdb
-	lL1VZ8x0sTxaAxAZe0xnFp27oZq6bzWJGeS15l4NxlGcuSNjmadt8ewsDGUZLmNt
-	r8myZlPZRAZsGOL+MtI8ASNo7RoZ5gvs+ei6fFta1l1GpK8ssVV8QXxqNJU4IE3+
-	R/BNEToSmRUefoaiw1PtFqHI5IXQO5xcCxLB93hVi7KY8U5nMxLEdUMJVfFrKINi
-	bbzHSFor/6DMZfHrKkdFfr42rAudPLQSg9sjZL3+rJjpJuIgRLyt74y1jXCT78nZ
-	Tqm6LtAu/SvYkvKgmWFVEgVy0ky0iNkXXzILu4H7tC9lSudwHNptYzLL+qiMxYFz
-	mCwzxw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4804519162-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 19 Jul 2025 18:08:46 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56JI8j97000325
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 19 Jul 2025 18:08:45 GMT
-Received: from [10.216.11.131] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Sat, 19 Jul
- 2025 11:08:32 -0700
-Message-ID: <9560a7d2-d54a-45de-a3ac-f752cd0d92f2@quicinc.com>
-Date: Sat, 19 Jul 2025 23:38:27 +0530
+	s=arc-20240116; t=1752970847; c=relaxed/simple;
+	bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oJTFZUSHxbx3356YFalhtkTTNo2d181UTWXY5Lln8e07Qw7tIf9QJJ3N2ZzODX8rMzAzWwCmfKYZv5Vyr8w6cOATA1TtzOrnICVr7sWtYPHdHQjnLOe75LStJIgguOLCr69LJvPJg0QZYyav3Wh3YvMelNM5qwe/vEZ7b+vNuM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gp/L4yUe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF514C4CEE3;
+	Sun, 20 Jul 2025 00:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752970846;
+	bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gp/L4yUeeuj6moNS7hE8ns2uEdOo4Nyg0bhcpd4SZ0ID+jaFjSLW4qjENp5xWKOxs
+	 ba8zlU3l729BseY5uWou352gHYh1h/FgxSDKWrIyUfnCsVExiTxOQCXPXTKSGHn04e
+	 Fr3B4B8EjJUZLppBfVeGODlDFcqnQerC6JLGlTJwFzDf40DACNofGhMJwffixr24qK
+	 FwoRyYbnlLpwGXOo84BbZQj899W/CBoVmQerDv65bcQvKrpeCxCNx0T8uYn5Lmm4MC
+	 jc7IQ/t1Ct51Hz605ZImGBeZZVVmGfcYGybqxA/S9eHoRo4jldYV/1sAIKwwqnd4gF
+	 2yghXXgl36L3w==
+From: William Breathitt Gray <wbg@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: William Breathitt Gray <wbg@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	kernel@collabora.com,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH v2 6/7] counter: Add rockchip-pwm-capture driver
+Date: Sun, 20 Jul 2025 09:20:15 +0900
+Message-ID: <20250720002024.696040-1-wbg@kernel.org>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250602-rk3576-pwm-v2-6-a6434b0ce60c@collabora.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/9] ASoC: dt-bindings: qcom,lpass-va-macro: Update
- bindings for clocks to support ADSP
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Srinivas Kandagatla" <srini@kernel.org>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <kernel@oss.qualcomm.com>,
-        Mohammad Rafi Shaik
-	<mohammad.rafi.shaik@oss.qualcomm.com>
-References: <20250715180050.3920019-1-quic_pkumpatl@quicinc.com>
- <20250715180050.3920019-4-quic_pkumpatl@quicinc.com>
- <20250716-spirited-sage-ibis-dcfeb1@krzk-bin>
-Content-Language: en-US
-From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-In-Reply-To: <20250716-spirited-sage-ibis-dcfeb1@krzk-bin>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EIMG00ZC c=1 sm=1 tr=0 ts=687bdf2e cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=QW-sMX8yjbW2LPJj644A:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: YbxCvnYrjqTcOvrALOQPJRXK0aUVK5BO
-X-Proofpoint-GUID: YbxCvnYrjqTcOvrALOQPJRXK0aUVK5BO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE5MDE4MSBTYWx0ZWRfX6AOeeRtpNK1c
- IIkmQgQjPZ4pSeWacy6UWsa2LNx7AnCelB2SzIDAOPBFKUgiRUQkWJC8CWpX4WcfCsc6CJRm5XH
- tspG9fzOnwLw0oqdvJ4C+K5BlbfrBwBaj29jwEvb+xGPr9EANfNDJ2pIz30Jkp4RnEtM69dcfIX
- dA+RaH0p5LyM9tIKFCsaQZxgBfZEt1zisev+O1E4SkR3GWv2ETsVq+u7i7CcL1quZ5icKLvmpZz
- rtTGCVhHWEhaV34BPoIT8p01vhu1H9YHxmyvk0ZIBIcyP5nSAEBIsXq1kRmvYMYN5mT3HtCrnVe
- CbsfYjzxVM1DYyst7YB/7OKAMIuloeTXj2+fawdk6j/ssQlD/vRi1UQ2qwjfbJB5CXQwiuFLJ62
- S/zBYPNUsLdloyVcUZszsBU1rdMZsh+G82vVq0xw/xGESWm9ePW8CIrsn2zodvouEcCaX+n8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-19_01,2025-07-17_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 clxscore=1015
- suspectscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507190181
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3362; i=wbg@kernel.org; h=from:subject; bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBk1ZoZ8Gz+aTdhw53D1hbVX5Nc3ZaxsPTyL8/YuN56Cw FKrq62WHaUsDGJcDLJiiiy95mfvPrikqvHjxfxtMHNYmUCGMHBxCsBEli5g+GcXl79B3f4I/867 8fImitd+ThGcE1JmLzIzvlMjR/6602qG/9H/Jmx+MC3/sEbhh10T7266ybuXNelCScrmxZ2RmW0 3XnMBAA==
+X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Transfer-Encoding: 8bit
 
+On Mon, Jun 02, 2025 at 06:19:17PM +0200, Nicolas Frattaroli wrote:
+> Among many other things, Rockchip's new PWMv4 IP in the RK3576 supports
+> PWM capture functionality.
+> 
+> Add a basic driver for this that works to capture period and duty cycle
+> values and return them as nanoseconds to the user. It's quite basic, but
+> works well enough to demonstrate the device function exclusion stuff
+> that mfpwm does, in order to eventually support all the functions of
+> this device in drivers within their appropriate subsystems, without them
+> interfering with each other.
+> 
+> Once enabled, the counter driver waits for enough high-to-low and
+> low-to-high interrupt signals to arrive, and then writes the cycle count
+> register values into some atomic members of the driver instance's state
+> struct. The read callback can then do the conversion from cycle count to
+> the more useful period and duty cycle nanosecond values, which require
+> knowledge of the clock rate, which requires a call that the interrupt
+> handler cannot make itself because said call may sleep.
+> 
+> To detect the condition of a PWM signal disappearing, i.e. turning off,
+> we modify the delay value of a delayed worker whose job it is to simply
+> set those atomic members to zero. Should the "timeout" so to speak be
+> reached, we assume the PWM signal is off. This isn't perfect; it
+> obviously introduces a latency between it being off and the counter
+> reporting it as such. Because there isn't a way to reset the internal
+> double-buffered cycle count in the hardware, we filter out unreliable
+> periods above the timeout value in the counter read callback.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
+Hi Nicolas,
 
-On 7/16/2025 1:21 PM, Krzysztof Kozlowski wrote:
-> On Tue, Jul 15, 2025 at 11:30:44PM +0530, Prasad Kumpatla wrote:
->> From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
->>
->> Manage clock settings for ADSP solution. On Existing ADSP bypass
->> solutions, the macro and dcodec GDSCs are enabled using power domains
->> in lpass-va-macro which is not applicable for ADSP based platform.
->>
->> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
->> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> ---
->>   .../bindings/sound/qcom,lpass-va-macro.yaml   | 29 +++++++++++++++----
->>   1 file changed, 23 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
->> index f41deaa6f4df..aec654e6567e 100644
->> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
->> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
->> @@ -76,12 +76,29 @@ allOf:
->>             contains:
->>               const: qcom,sc7280-lpass-va-macro
->>       then:
->> -      properties:
->> -        clocks:
->> -          maxItems: 1
->> -        clock-names:
->> -          items:
->> -            - const: mclk
->> +      if:
->> +        required:
->> +          - power-domains
->> +      then:
->> +        properties:
->> +          clocks:
->> +            minItems: 1
-> 
-> Drop minItems
+Would you help me understand the computations in this driver?
 
-Ack,
+If I understand the purpose of this driver correctly, it's meant to
+compute the period and duty cycle of a PWM signal. What do LPC and HPC
+represent? I'm guessing they are the low period count (LPC) and the high
+period count (HPC). So then you calculate the total period by adding
+LPC and HPC, whereas the duty cycle derives from HPC.
 
-> 
->> +            maxItems: 1
->> +          clock-names:
->> +            oneOf:
-> 
-> Drop oneOf
+Am I understanding the algorithm correctly? What are the units of HPC
+and LPC; are they ticks from the core clock? Are PWMV4_INT_LPC and
+PWM4_INT_HPC the change-of-state interrupts for LPC and HPC
+respectively?
 
-Ack,
+The Counter subsystem can be used to derive the period and duty cycle of
+a signal, but I believe there's a more idiomatic way to implement this.
+Existing counter drivers such as microchip-tcb-capture achieve this by
+leveraging Counter events exposed via the Counter chrdev interface.
 
-> 
->> +              - items:  # for ADSP based platforms
->> +                  - const: mclk
->> +      else:
->> +        properties:
->> +          clocks:
->> +            minItems: 1
-> 
-> minItems: 3
-> 
->> +            maxItems: 3
->> +          clock-names:
->> +            oneOf:
-> 
-> Drop oneOf
-> 
-> ...  or rebase on top of my change and make it only min/maxItems:
-> 
-> lore.kernel.org/r/20250716074957.102402-2-krzysztof.kozlowski@linaro.org
-> 
-> (or whatever gets merged first, I can also rebase my patch later).
+The basic idea would be:
+    * Expose LPC and HPC as count0 and count1;
+    * Push the PWMV4_INT_LPC and PWMV4_INT_HPC interrupts as
+      COUNTER_EVENT_CHANGE_OF_STATE events on channel 0 and channel 1
+      respectively;
+    * Register Counter watches in userspace to capture LPC and HPC on
+      each interrupt;
 
-ACK, will make the changes and update.
-Thanks,
-Prasad
+The Counter chrdev interface records a timestamp in nanoseconds with
+each event capture. So to compute period and duty cycle, you would
+subtract the difference between two HPC/LPC captures; the difference in
+the timestamps gives you the elapsed time between the two captures in
+nanoseconds.
 
-> 
->> +              - items:  # for ADSP bypass based platforms
->> +                  - const: mclk
->> +                  - const: macro
->> +                  - const: dcodec
-> 
-> Best regards,
-> Krzysztof
-> 
+Would that design work for your use case?
 
+William Breathitt Gray
 
