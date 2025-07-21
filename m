@@ -1,242 +1,127 @@
-Return-Path: <linux-gpio+bounces-23568-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23569-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4EB3B0BDE8
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:42:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 815DFB0BDFF
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:45:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 271873B2C7C
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:41:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 220F5189DCE7
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:46:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF758284687;
-	Mon, 21 Jul 2025 07:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09941D63E8;
+	Mon, 21 Jul 2025 07:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="e74ZBPDS"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="K4vho48R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E50280014
-	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 07:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BC8E555
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 07:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753083738; cv=none; b=lbgyzaFC1Uhsotey5tbo9ZRhH9eiPGGhktg2y0Gcp96CyypNQkj3YqPzxYGRPwLgfqtzQDlkUcvyvh2sfKMsPjg0UockMWXbtNRnjonWVylMt+Qo2+sP/5NXwKfvV4vHz6PcVs4H2dfycxMCd95m1lj5vapH2NQrjFKwLShYvLo=
+	t=1753083945; cv=none; b=O/QLnaKNyzh1U3fLw5+A1+EqgsbdtGIC8WxsWCtWN4lXvdBUblD5uVzIc0hHW6v4ZTv+ZO6KlWl+6dCXCroUczQMmeNGOLvPr6mVs3uQmterinf1Zo1l2xgTzsVNCMTXGkcm5gcZ4Y/w4eYeYdEfKbmI0yBP9faGqG+vJU8IEPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753083738; c=relaxed/simple;
-	bh=zz+1eWUo6cjJXBU2Mmii4yDSAmjqj8xU76JdjZ+41JU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nIKRSL0xgohXZO4et/ixE0SkqC5lrmYD8zqKFPIXMeqboEgvAY1tKTIOk0ZApi35j5l4JHv/5QsqwSNe9jvsNMtav9Vk873zxHUdR2ImmXedusWBTET3y9FzMgGD0SzkvaZdKlMI/9lqLGQmE/wU8sv3h81hVpRwHW1n99pp2w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=e74ZBPDS; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1753083945; c=relaxed/simple;
+	bh=TZNR4qgkd9OfIsqNVEcgXDdq8O+lx2AYFEFmvnKRiTc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=mRr/Zs2TSsTush4T8puKDhNHGiriIUGTe6zpi+UjPOUNX2KfasA4z/wMiPghScJsFtckPUSzELqkA2YKJpXKV0Yx09TDCEdvwZvGqoNnc0Xc4o1/sQ0wO4xIuTWlF71Ye25Wn3KG3e1SJMEJLEafZbn+c3j5F1akN2iNgfF2afs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=K4vho48R; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a57c8e247cso3709505f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 00:42:13 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae3be3eabd8so769202766b.1
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 00:45:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1753083732; x=1753688532; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F0Eo487yzY6HIIpcvkkt+fbwOU67JX2oiEUk87ASpvk=;
-        b=e74ZBPDSBRsysEVRaIeECFdj+FuvlZaDNNeWA347sZynMvLcLvY8uOEh2msTX7qX5b
-         iZzj551wFz1mo15oRtBZ4f+dB0t9OVFtbGMlv3CN6rZvI4GpYwlySgRUgQ4Snxou2vaL
-         0IG0XuLw6+kk8Yd2TKrjAK5Y5h2Oo1w6sbleQfYxVj0kDZpbSkkggIVFNMVBH8fwhNdj
-         vix/+ifTLYvBVH9JkNfVX4OmK9tNjmb8TK8J3wNFaJ/uj/jK9kr8ZKqJBpWfdI0jIdGP
-         BPy9ZiBBhDdRJ2Unhnvjp/R8+naIPVXLKTlhhonuUa9n99Q6OnPmhTqNSEOaq/ih+Seq
-         eMOA==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1753083942; x=1753688742; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uVlByqVECXSVvsFBpLueeWBVpAgbpTJdOYnjCweSLCY=;
+        b=K4vho48RnKOECyEfwk11LPvXqRSshDjRMiHyLEAeovQzFd9xzhIGMOrtn74GRf6cbm
+         4ldkzwa3zS675hc4lbRmJGv6bnAKA4qJgWCWTKNuHsfNEPilgK4m9X/Qoq2/3EgFbCxJ
+         wbf4gtmLDoO7KDa5jMtdVR8nSxp0uUSB4NNBk3B5OHAzSEVNjr7P6wNzc94rO2hJsCs0
+         Hol4lCKyr8tOsnTLpMDv0KRAtQ0tL02j1xlA/SxsvjGSZkq27CWeFyVu7FCxw13ktiwo
+         iV5fGAPsDfYcxWzQSmkEa99JRJoeBfTjYQ9zNuGVyltFcjHg/PH18Aq0QxTZiDyVDYAb
+         yqSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753083732; x=1753688532;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F0Eo487yzY6HIIpcvkkt+fbwOU67JX2oiEUk87ASpvk=;
-        b=RbFt4MvPww/49qCW3tKdpD9mnmFb1uHpcRKTulP6ADXGLYQK0S2rxXIq0Ze+tUTXd+
-         xwQOktffMcOV/mfdM6JSZJ7BxWhgNee0raZwnwIAetpVUm+vL8TkJkY0fx1X6WQNhGrX
-         Ao27nly7oTRKZIX4yae7RKqIC5pignUdHe1wkJWt9cKqXwejEReXlco0IA7EytDjP8cK
-         4daIPoLDcB7dWlVSG373kSYClCEOH835DZ4UcjQol2DBDl+H6pRfvxSz7Q4voeGgCdM7
-         Ww/fQGG8iWV9oJR0kvuRYFu3Z8pNoIlRDvU/dxqk6YWdRx6rJR4BzpW98ThPJWMoxhRZ
-         QbTA==
-X-Gm-Message-State: AOJu0Yz+zdRHFjAgvndRPLO0C60E0l8rKBC4kIdk2etiCwNDcI0KHYWN
-	Zjqpw0eKXrnyTzKpZg6LIUhMJ864L9GN5L3jTCfDDGtpUnl+JpImLsPXYrxqtvIUsAdzPG4k+NR
-	by8K6
-X-Gm-Gg: ASbGncvs/ytsEc8v6NwyIF0SGPnESv5CxEViq1Xn+0jVtz9VPKxfaANjqOvuqaE+GQt
-	VtkL2khx4ymdenq66aSJL5CEEYNO6S+RE+S4DHfrXFDXnMsXANyaqFkxFtDNvb0G594D41R8Ka0
-	1AwF5aueUKtScAuJLKCQi06/3JSNVW1VYnotw8VJfYzrw/28sNQq/HaqluyJp0KaeSqAJ0NtKNo
-	fjl2ZARAO+i1NpXYY3GRVb20bUvvCfxO+bK+lVrkAgbocYRfG/HC61oWBHRAwGkvao4oplfAwpx
-	bbB3/hzWUafEOUik3+KniEDLEFsTwOiE+cjt9alOoyhpxRNR2uO7kp8F2jaMkt8WqTofu83jtQS
-	s4BUWjQ==
-X-Google-Smtp-Source: AGHT+IHj7PF2GzmYVNwe00bID/xNzFhvrDiJ6SZ5kLkIiuyYPYQNzAVos4ZkyAJm6dl+UHInzm8eug==
-X-Received: by 2002:a5d:588f:0:b0:3a4:d64a:3df6 with SMTP id ffacd0b85a97d-3b60e4c914amr15881151f8f.3.1753083732290;
-        Mon, 21 Jul 2025 00:42:12 -0700 (PDT)
-Received: from [192.168.1.187] ([2001:9e8:d58e:7200::35e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4563b5bfa44sm90336215e9.13.2025.07.21.00.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jul 2025 00:42:11 -0700 (PDT)
-From: Erik Wierich <erik@riscstar.com>
-Date: Mon, 21 Jul 2025 09:41:54 +0200
-Subject: [PATCH libgpiod 2/2] bindings: rust: rename constructors that wrap
- raw objects to `from_raw`
+        d=1e100.net; s=20230601; t=1753083942; x=1753688742;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uVlByqVECXSVvsFBpLueeWBVpAgbpTJdOYnjCweSLCY=;
+        b=NjkEhl6MU4Y08EiUbRiJOVTSvhgEOQbCX9ZkJlNpgpbTwZvMtMcK/N3+Zdp7YAYaKJ
+         uZnWzZ8Z9fx6eYocabbIxay6d0xVVZI+muA7lwe8eJvyUWGKLppQ91is6XKXEmnowN9c
+         +skc1qqokbn6SP/yE65BC+y/08T6LA2Fc0GWIvOMZIYmU1ECfYdi0yAO8prf0LLvUC/g
+         noaOMN9wOi7n1CkvBv4dH8nVjjqwFuDKqItcVzmkU0Wlk3uMqUW8yy/7IAQ2yiB3+On/
+         nWxh7WSgJlVFOA+3Iy0PPI9DB7t0/ezPMXoOP8PI8ODW+H4u3BpEP9fBPm4kg7qT76zn
+         7ljw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZUvpuQyX0qEUeEhepV/TUELPGFCtzK3uCi87o5mjP0X5os6i06DeH1rBiZbozsyyhBAJGgtWVuDB6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy70+vtuNKffp7R463exD16GgxOi2pkHVN3FeIfLS/0PfxiTtZc
+	vvbXKifyOJGP0CI4Nm+IKRpHxUDdyROXL84QeJ3PmCNNnQWqnpUjgFYrue8Q7ZukYg0=
+X-Gm-Gg: ASbGncuJWFRhHpALAUHtvcdpwzlahvZyV2dpmxjabqcYGBWPWDLDbhHOBWwOJhrmNDT
+	J+yMQB5jbwC3fvkkaM2TjSs9gpW9WoJ6vFNC45FdjkKAQlZaixhmoxhUxp3Etoss9Ck5DvGjmqH
+	2aZnxFB5N2F0f7XnDqp4H/aVeigvfa2KbrfZKTEFiFwM9TOabCqcQ+EqorrEsfQd0ql23r7NvhZ
+	ecQlqrpWyg/tnD9JnOfrAw1vWmX/DWclf+g1zRenvAOMoKl8Hxa9r9AGFxkCXlo2Mkji0VAysHJ
+	0SzM36MmxSHRcu4R9gQvH7yaTMTPUi8mhLrVoWsO/GMWjBaGrPFDVhOIfVqvOz163LmHQz+J2OQ
+	=
+X-Google-Smtp-Source: AGHT+IE1xctQC7ikwT6yxDF0P8FZHTIIqdM6YJ8llSuFM5vh79Vg8rY/ExuGuZueqdhMN1mDq3S9PQ==
+X-Received: by 2002:a17:907:d70d:b0:ae3:6038:ad60 with SMTP id a640c23a62f3a-aec65abd497mr1089079266b.1.1753083942046;
+        Mon, 21 Jul 2025 00:45:42 -0700 (PDT)
+Received: from localhost ([2001:9e8:d58e:7200::35e])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aec6ca2efc1sm629952066b.83.2025.07.21.00.45.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Jul 2025 00:45:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250721-rust-unsafe-consistency-v1-2-aa1b42ed5983@riscstar.com>
-References: <20250721-rust-unsafe-consistency-v1-0-aa1b42ed5983@riscstar.com>
-In-Reply-To: <20250721-rust-unsafe-consistency-v1-0-aa1b42ed5983@riscstar.com>
-To: Linux-GPIO <linux-gpio@vger.kernel.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Erik Wierich <erik@riscstar.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753083730; l=6458;
- i=erik@riscstar.com; s=20250721; h=from:subject:message-id;
- bh=zz+1eWUo6cjJXBU2Mmii4yDSAmjqj8xU76JdjZ+41JU=;
- b=c4oMUSsVm9aijmmptaAYmIYJ3saCUcmgJSdn+pzYbYpCK7PbIQ4ILrOjwHfApwMKcjtMzzBen
- waxpTIHg5+vDQp3ncnfZVIFG9vx/94QJxSXGd9b00qq1DI9EkL0XdyG
-X-Developer-Key: i=erik@riscstar.com; a=ed25519;
- pk=gjm0pD1JkINoNzvT3vC2WZoAWUld0EyXuhsQ/i5Qz4I=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 21 Jul 2025 09:45:41 +0200
+Message-Id: <DBHKE4GL37MI.1Q2HBRTVT4ZW@riscstar.com>
+Subject: Re: [PATCH libgpiod] bindings: rust: make
+ Settings:new_with_settings() crate-private
+Cc: "Viresh Kumar" <viresh.kumar@linaro.org>, "Linus Walleij"
+ <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>, "Bartosz
+ Golaszewski" <bartosz.golaszewski@linaro.org>
+To: "Bartosz Golaszewski" <brgl@bgdev.pl>
+From: "Erik Schilling" <erik@riscstar.com>
+X-Mailer: aerc 0.20.1
+References: <20250720-new-with-settings-crate-v1-1-a51392bd5b13@linaro.org>
+ <DBHK5WGFR034.SME6DH80HYRV@riscstar.com>
+ <CAMRc=Mej2oAp7B3obnBv-pB1sg3P-1EQnUkpneoVqu2wCEwwCg@mail.gmail.com>
+In-Reply-To: <CAMRc=Mej2oAp7B3obnBv-pB1sg3P-1EQnUkpneoVqu2wCEwwCg@mail.gmail.com>
 
-This matches the stdlib conventions[1] and seems easier to read to me.
+On Mon Jul 21, 2025 at 9:36 AM CEST, Bartosz Golaszewski wrote:
+> On Mon, Jul 21, 2025 at 9:34=E2=80=AFAM Erik Schilling <erik@riscstar.com=
+> wrote:
+>>
+>> On Sun Jul 20, 2025 at 8:16 AM CEST, Bartosz Golaszewski wrote:
+>> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> >
+>> > This function takes a libgpiod raw pointer as argument, is not
+>> > documented and should not be part of the public API. Make it visible
+>> > only within the libgpiod crate.
+>> >
+>> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> > ---
+>> >  bindings/rust/libgpiod/src/line_settings.rs | 2 +-
+>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> Reviewed-by: Erik Wierich <erik@riscstar.com>
+>> [Changed my name a month ago]
+>>
+>> But, this should also be `unsafe`. Will post a patch for that.
+>
+> Feel free to supersede this one, thanks!
 
-[1] https://doc.rust-lang.org/stable/std/?search=from_raw
+Sent it as small series on top of this one. Let me know if you want me
+to resend with your patch included in the series.
 
-Signed-off-by: Erik Wierich <erik@riscstar.com>
----
- bindings/rust/libgpiod/src/chip.rs          | 4 ++--
- bindings/rust/libgpiod/src/info_event.rs    | 2 +-
- bindings/rust/libgpiod/src/line_config.rs   | 2 +-
- bindings/rust/libgpiod/src/line_request.rs  | 2 +-
- bindings/rust/libgpiod/src/line_settings.rs | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/bindings/rust/libgpiod/src/chip.rs b/bindings/rust/libgpiod/src/chip.rs
-index f39beab58363beaebe2ba2dcfb846178b7b595e5..df1cef3bdef5d2014e951437c9fe89c119bff48c 100644
---- a/bindings/rust/libgpiod/src/chip.rs
-+++ b/bindings/rust/libgpiod/src/chip.rs
-@@ -149,15 +149,15 @@ impl Chip {
-                 errno::errno(),
-             ));
-         }
- 
-         // SAFETY: `gpiod_chip_read_info_event` returned a standalone `event`
-         // over which we have sole ownership. We won't use the raw pointer
-         // directly after passing it here.
--        Ok(unsafe { info::Event::new(event) })
-+        Ok(unsafe { info::Event::from_raw(event) })
-     }
- 
-     /// Map a GPIO line's name to its offset within the chip.
-     pub fn line_offset_from_name(&self, name: &str) -> Result<Offset> {
-         let name = CString::new(name).map_err(|_| Error::InvalidString)?;
- 
-         // SAFETY: `gpiod_chip` is guaranteed to be valid here.
-@@ -197,15 +197,15 @@ impl Chip {
-                 errno::errno(),
-             ));
-         }
- 
-         // SAFETY: `gpiod_chip_request_lines` returned an object over which we
-         // have sole ownership. We never use it again after constructing the
-         // wrapper.
--        unsafe { request::Request::new(request) }
-+        unsafe { request::Request::from_raw(request) }
-     }
- }
- 
- impl Drop for Chip {
-     /// Close the chip and release all associated resources.
-     fn drop(&mut self) {
-         // SAFETY: `gpiod_chip` is guaranteed to be valid here.
-diff --git a/bindings/rust/libgpiod/src/info_event.rs b/bindings/rust/libgpiod/src/info_event.rs
-index e59de89a0507aa224fc5f473f321a0817fe29980..f23701ab43ce5c215bb5260cd608d8e46b927079 100644
---- a/bindings/rust/libgpiod/src/info_event.rs
-+++ b/bindings/rust/libgpiod/src/info_event.rs
-@@ -32,15 +32,15 @@ unsafe impl Send for Event {}
- impl Event {
-     /// Get a single chip's line's status change event.
-     ///
-     /// SAFETY: The pointer must point to an instance that is valid. After
-     /// constructing an [Event] the pointer MUST NOT be used for any other
-     /// purpose anymore. All interactions with the libgpiod API have to happen
-     /// through this object.
--    pub(crate) unsafe fn new(event: *mut gpiod::gpiod_info_event) -> Self {
-+    pub(crate) unsafe fn from_raw(event: *mut gpiod::gpiod_info_event) -> Self {
-         Self { event }
-     }
- 
-     /// Get the event type of the status change event.
-     pub fn event_type(&self) -> Result<InfoChangeKind> {
-         // SAFETY: `gpiod_info_event` is guaranteed to be valid here.
-         InfoChangeKind::new(unsafe { gpiod::gpiod_info_event_get_event_type(self.event) })
-diff --git a/bindings/rust/libgpiod/src/line_config.rs b/bindings/rust/libgpiod/src/line_config.rs
-index 09a65514748d0a85fb39a3d37a18f19fc9f4af1b..34b6c227b0c8e156ea1bac396cc19ea4f182012c 100644
---- a/bindings/rust/libgpiod/src/line_config.rs
-+++ b/bindings/rust/libgpiod/src/line_config.rs
-@@ -133,15 +133,15 @@ impl Config {
-                     errno::errno(),
-                 ));
-             }
- 
-             // SAFETY: The above `gpiod_line_config_get_line_settings` call
-             // returns a copy of the line_settings. We thus have sole ownership.
-             // We no longer use the pointer for any other purpose.
--            let settings = unsafe { Settings::new_with_settings(settings) };
-+            let settings = unsafe { Settings::from_raw(settings) };
- 
-             map.insert(*offset as u64, settings);
-         }
- 
-         Ok(map)
-     }
- }
-diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
-index c73943da9b42a12b35adf5234c80e62f4c7785a7..49fe56542ab876bd2360b5e846e18ced0de51fbd 100644
---- a/bindings/rust/libgpiod/src/line_request.rs
-+++ b/bindings/rust/libgpiod/src/line_request.rs
-@@ -28,15 +28,15 @@ unsafe impl Send for Request {}
- impl Request {
-     /// Request a set of lines for exclusive usage.
-     ///
-     /// SAFETY: The pointer must point to an instance that is valid. After
-     /// constructing a [Request] the pointer MUST NOT be used for any other
-     /// purpose anymore. All interactions with the libgpiod API have to happen
-     /// through this object.
--    pub(crate) unsafe fn new(request: *mut gpiod::gpiod_line_request) -> Result<Self> {
-+    pub(crate) unsafe fn from_raw(request: *mut gpiod::gpiod_line_request) -> Result<Self> {
-         Ok(Self { request })
-     }
- 
-     /// Get the name of the chip this request was made on.
-     #[cfg(feature = "v2_1")]
-     pub fn chip_name(&self) -> Result<&str> {
-         // SAFETY: The `gpiod_line_request` is guaranteed to be live as long
-diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rust/libgpiod/src/line_settings.rs
-index 6445a4756b1f12932e266148a4ac9528c7ac1d06..9ab8ea7173c4f214e6d513434435a144424ecc74 100644
---- a/bindings/rust/libgpiod/src/line_settings.rs
-+++ b/bindings/rust/libgpiod/src/line_settings.rs
-@@ -50,15 +50,15 @@ impl Settings {
-     ///
-     /// Assumes sole ownership over a [gpiod::gpiod_line_settings] instance.
-     ///
-     /// SAFETY: The pointer must point to an instance that is valid. After
-     /// constructing a [Settings] the pointer MUST NOT be used for any other
-     /// purpose anymore. All interactions with the libgpiod API have to happen
-     /// through this object.
--    pub(crate) unsafe fn new_with_settings(settings: *mut gpiod::gpiod_line_settings) -> Self {
-+    pub(crate) unsafe fn from_raw(settings: *mut gpiod::gpiod_line_settings) -> Self {
-         Self { settings }
-     }
- 
-     /// Resets the line settings object to its default values.
-     pub fn reset(&mut self) {
-         // SAFETY: `gpiod_line_settings` is guaranteed to be valid here.
-         unsafe { gpiod::gpiod_line_settings_reset(self.settings) }
-
--- 
-2.50.0
+- Erik
 
 
