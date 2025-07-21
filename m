@@ -1,127 +1,146 @@
-Return-Path: <linux-gpio+bounces-23587-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23588-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 473DDB0C576
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 15:47:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4E45B0C658
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 16:31:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C2CF17ECCC
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 13:47:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DCB03BF3D7
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 14:30:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B88D728DEF8;
-	Mon, 21 Jul 2025 13:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D915F1ADC90;
+	Mon, 21 Jul 2025 14:31:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="RiOj11eO"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L+WMDxcw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB0F223302
-	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 13:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23369149DFF
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 14:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753105653; cv=none; b=WmThhPr+Yz8Bj0WfB4KZkXveZhigIWmyOl/yRpXScpPva+EJImJ8MESyt3ARARgTBqOwhD23K8+QZc7Su7Kd/S0qamVLaPHjfH03CSUnbtQMgCFuy+a3sAApgZ8p+LQdghIjaBI6TFuIIxSB18DsWOqk6v8qbEbFERNoz6E8LCo=
+	t=1753108262; cv=none; b=ieR6TF7OLHP8/jG0DaQiCvtwQGu7SzT+iMwShMI7CAqJWafkQWPF68BrXvPZD5w2CTgct0I3a9CmIxD23LXSiO3X/w06hlbznAsb0MAMiUaCDW88r46XKgig+VSGA+/Nr8wp1LNSpRwdg9yQw6t4fFsQLETVeAvt3nXaq+y/5zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753105653; c=relaxed/simple;
-	bh=OxMAawqBaQCIZeXy7l3kRLuX9cZgEuweRCb/BTiS6gg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=BNOmYWmI1p6C6N+vvi27qH4K+kE08ODa0r30w+g6FUo9sQBdShGLXqSaq5F6mIj+chonnhylt9RzBdI2QMfXlr6w+0W+7l82s3PndxchMn6w0QkHf6JwfrerW2yko8q39S9GZalb9xBfZh5c0Fi6FRdqpk4rmqW2/z6Rqu7iTb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=RiOj11eO; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so7414691a12.2
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 06:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1753105649; x=1753710449; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OxMAawqBaQCIZeXy7l3kRLuX9cZgEuweRCb/BTiS6gg=;
-        b=RiOj11eONZ/wrv6tCptmTnbOLvXeQKZ9Dy0sQIf2qqrd6YXyMgw5mMGU93ESmGQ9E8
-         LAPu2yC3tnUWwacwb+e8x2eoJHgaIbHMz+CULmhsks6mkTa16Q+eR0aE8qk9pEKeRaad
-         zdPd2FU9tkEmy0LGk7jOvW7oM9zk1pZBFQV6FZY+FOjxIDt/u78lKEQK1+D8V96/tl7i
-         Sf+AhEQ4xP8WtKvtz33T/mhX+gaIjOAUc89uMpscLVh9Zzeg0RA6lGLWcn6LZ64U7Eih
-         D1AhWvYZ2uBpUN4msFdHpTxDVasHiOVB5iB6nmxQt+J1FhHlIQgtQ61Xa/QWcZ47LfCB
-         HL5A==
+	s=arc-20240116; t=1753108262; c=relaxed/simple;
+	bh=fZh+W/ZwxHCAw9UO9J/kStJAdZaEn8DxlAbvEqkaCIs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l3cq8xwx8s4t2yab4JsgJzUzgTUS9w3eW6ccp40WLnYAcbWUWVttPNqfEADGFtGVvEEKrglnmoHlKOHT8Zb5gcEu+O/HPTQQQ8/q8YAh4j/rTmSuQjzQmhv5JE2w9e1nuw52950lDtRPDz9tE0N0TotQYBc5lA1kEmvqkyr8H+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L+WMDxcw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56L9mWjm006230
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 14:30:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=fB17acm6tcauz9EWmhrWe24ExKFYj74gkCn
+	0R6MI3YU=; b=L+WMDxcwc2/AOpU7X4q3PWQ6UfG2odLvmQgoQ5CBCefVM23hI2G
+	nUg2FjsGEI4iE3ygzXqho+/6BRVqxyNjslqWbmHsggHzq5OA4ORsbXavHwfvLOXI
+	yeiRURCZ7iJ7hcpVTLDqnhgAuSkFLq6Yh/yI2uZ989aru0v8XZG5zdkVkFP3bYn/
+	n3C4hF0lNRKfbNdDDJRP3D3ZrhNx3z3UjiUVb7XHuEtiKyeYWA+0CkG4I01FPEJu
+	TQzWEeJBP67MCQrbETx6qPr6ROieyfPqPzZ98wkJObN3Iyf8AfcM0cT+Xj2Tbinn
+	is8TEITIYfGjLhu4tj+QBLYftbaKy1+Ik8Q==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48047q5mmm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 14:30:59 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7492da755a1so3332099b3a.1
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 07:30:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753105649; x=1753710449;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OxMAawqBaQCIZeXy7l3kRLuX9cZgEuweRCb/BTiS6gg=;
-        b=S3wfi6I6aUJClFYbJ/9GUHm0vnJBcT038hA3wMyrpEe4EkICvCo5g+jtfNzti4IbS+
-         Pe8mOq0lilCiPYRY8sshG9m1hR4a1/aUcIOkjHR87uVxwLx2Nnztn4GtXB4E0MU6vwxL
-         qzgV1DhjWQMkYK3jy4SGjin/1S1a1cER/5X7rgXpGEKo4wCxo+fViYTiSEQKnWv1lEJ8
-         O9rVpBdn74rCbvFilUmBUhK0C/KxorIWefTgbny6J40XBCe6UX88GEd9a2ebEhPhKj5T
-         7CuIcxWV0Hezw7BRu1WqxVKvYrteVaj5Xw+XRGHNWKfsmeg0tC2Jbcc1t2XqprsDlZjd
-         2/3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXEhO8iD4GyGzhEHpSpJhYWM17+S8cIzc1VJ9oc3Xg0EXFjnRAem4xxTnAsheeKQOrT96m2zdEsVf1E@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD4LKTEx+WteA6k/reZq4+yoYGfMIrqtBO1rvEcKL5hBauMWUs
-	WF1rEoOEmM7DqnubWypAqfl0Ad36Jowa8tAW7FDF/6Lt+Q3752xdkWu4A2ZvSXh/rGU=
-X-Gm-Gg: ASbGnct66CRCg+0Tt4tttcEfK6HRwOZCIHd/vWm0IG7frj5pHoVEx4mafjNy5LhNNFY
-	Co+xusMIVriz//yCSk3HiwZLf+8PaZ4KEhVcN80r0PAMSOa3yhXVuwwzK8kcppGVhE2PJbTXa9K
-	An6TRF0JtYLRt3H7ws6cGMh2WOnDkrR6IenWQ2MhemN5tOi4P7ohlNYgiT9BU4dUnBWKHxzCUnM
-	KmVcTMQXBcU6NcybtSpp+lDyM41t4q7Si1+33Cd98EIS5tF5SZes+Bmq4vmVQ2QlHDlGZHFHt/d
-	07Q0nQ+BSTJosPLI+6oXTsNRv1akzmweSV1xdqN7rJQlfudd/tuLV/B+mgTsF6n4oPFa6Jai+8s
-	=
-X-Google-Smtp-Source: AGHT+IFRvKb0nbgySkFUOSCTJVX3zHaKbQlNMuDHrOKJiszbYVoVtlex8VHXScHO+3m6mtC1Joc2ww==
-X-Received: by 2002:a17:907:2d8c:b0:ad8:8efe:3205 with SMTP id a640c23a62f3a-ae9ce1a88f2mr2096586866b.55.1753105649395;
-        Mon, 21 Jul 2025 06:47:29 -0700 (PDT)
-Received: from localhost ([2001:9e8:d595:c800::35e])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aec6c7d8fcasm685508166b.68.2025.07.21.06.47.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Jul 2025 06:47:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753108258; x=1753713058;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fB17acm6tcauz9EWmhrWe24ExKFYj74gkCn0R6MI3YU=;
+        b=AKE/zs7v8rRWtZHdpjU5CbaE4ysqyX9/KiDzKUVwsiQ4m9bnWSIWCUwa3+G2nZpBTJ
+         AJ9x9y7MqcHj2dbmp4N+ksGCh1S1hcV37NsM/jqdQknxK23mlMRHvkfwi0V090zrDTHE
+         0eGV1SCqaeKASeZZ96j/2z+i68p1JMPqZfh0sIUjOjY0e7Tf4sFl5PhT0/3YQKUqxNYr
+         E8lGrfdUKzUDS/EQGA6A2T5xlEFHLr6UXn1PlDnkz+K8hGF7Ge5KskhxgOYfDZx33hfy
+         Zk37EaE1Tk3ssNTBYhfpqSOIz1KqEUSfnQDA5m+2ROr/lFrV84IZpKhzW0F/BXnY9gKQ
+         Z55A==
+X-Forwarded-Encrypted: i=1; AJvYcCWPR3JTrGLatXFASV2UZqWgdHMlywtZjXPhO2r7aw3vKdvU4TgH8QyqwHmFmKAQYLejepL9/iCj7+pu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxii260mWSxnPwiBgH1d8sDhmEWdJRhYompTriOMMBkKQ6A54q9
+	kiV+OOosrYUH1FXfoFAoD8QPw51D28X3UDkoes5xe4ButXhuZZ/yxrh/p0T19sqcwnxuNCyXdVI
+	RxEqdJAx/lC6dKDNhPhOTzQpvIXP7FAi/n3RDuuphHvtNNsLx+BAvgP85ZyEhbuEK
+X-Gm-Gg: ASbGncuuqT/x35rSWYQv8OzxBCQ31CmKVqol33exAlrXgHUAHlPnCPpWfJLtaO0Aqjn
+	ZlYpx4qqbxjL6skqygNmLXc0RHyAZMJYZq5WKJOHSXD1v1DJpeko8nF9a0UqHQoQwVs5yK+Q0yy
+	5nHIv+xI0t1/QRjdc4xqYW9lgnbkg5/W5WrR/av0Dt3k8izaBhNGhNmUOle5VKfSFocpPe4pwWe
+	jLRo+I4AB+Dh2OB7xCr3DUuiookx94QfwzMF5j/pSvst6yy7FDniG4/wMdYJdVvCNrJYpyWijuw
+	PPnk4EwbI3tF0EehOGRYg38EotTx0OxHo5+VEgkVqbGZhlur4dNASd17I8440Q1T8g0NsKhMZSA
+	dEr2ZYIlPf+brYgP+BdY2XibsfQ+kLbS9fBe/tt9XxqGXuEapn0pmR//CnoBV
+X-Received: by 2002:a05:6a00:3392:b0:73e:10ea:b1e9 with SMTP id d2e1a72fcca58-75722869545mr25840335b3a.6.1753108257955;
+        Mon, 21 Jul 2025 07:30:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGG6I7/YN/GntNBhpwxtH5G52Yy/1kSXDgvLDtnnNoxskhMPb+YeGocnDXdtpvZVJoL8l6lgg==
+X-Received: by 2002:a05:6a00:3392:b0:73e:10ea:b1e9 with SMTP id d2e1a72fcca58-75722869545mr25840277b3a.6.1753108257287;
+        Mon, 21 Jul 2025 07:30:57 -0700 (PDT)
+Received: from hu-pankpati-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-759cb155e1asm5750110b3a.74.2025.07.21.07.30.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jul 2025 07:30:56 -0700 (PDT)
+From: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+To: andersson@kernel.org, linus.walleij@linaro.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, quic_rjendra@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] pinctrl: qcom: Introduce Pinctrl for Glymur
+Date: Mon, 21 Jul 2025 20:00:35 +0530
+Message-Id: <20250721143037.20983-1-pankaj.patil@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 21 Jul 2025 15:47:28 +0200
-Message-Id: <DBHS34OTX6PZ.18UJO5OLM72EY@riscstar.com>
-Cc: "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Linux-GPIO"
- <linux-gpio@vger.kernel.org>
-From: "Erik Schilling" <erik@riscstar.com>
-Subject: Re: [PATCH libgpiod] .mailmap: update Erik Wierich's name and
- address
-X-Mailer: aerc 0.20.1
-References: <20250721-mailmap-v1-1-ee45b82a01f7@riscstar.com>
- <175309950627.52365.7626415135686614244.b4-ty@linaro.org>
-In-Reply-To: <175309950627.52365.7626415135686614244.b4-ty@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIxMDEyOSBTYWx0ZWRfX4I1Aw+KQ8wmi
+ BR8BRp1lM/cuWOTYOUdkE84cQobZvymNcbggXvjzoJYyput94ZSEt9OzNyetxq7ePKsBjwJxRyD
+ 2r0Xq/cKkmkTgqHo4f4136TvcaaUGw61EQYeDAXIDGBrdlHWkqo5YK0WK84Iz0QHOPOQK+sP3+c
+ Ha+vyjH2svFmC3tYW5F7qUvU3mLeaXc9SFWXBCdTHpLqE3/9F6oLmZBEd+ycA3eAxNeH5kVGMy4
+ uuqqHcXXGKeWjU8qbaJA+fYCOpYotNuk6mH6z+maaol7VibCGtNuLJQtfhuPZSI3hkg/NBu58ll
+ HjjPS+EWD31zkeUp9+6aVcMuZwfRjGSuCX7gUWDEbHOmBsFUaJaceC32RDHJOFhWdUvcBFVzvFR
+ Mq+0eOZDRkx9BntYeIATFPtJ1M5jUVxCG5AGyAEhFwm5bZt+wzszOojaCWOk/TimrfQ1Mv94
+X-Proofpoint-ORIG-GUID: OfVw_qB0YZ_YzB8MkV7WhE4xHYSO2VNu
+X-Proofpoint-GUID: OfVw_qB0YZ_YzB8MkV7WhE4xHYSO2VNu
+X-Authority-Analysis: v=2.4 cv=IrMecK/g c=1 sm=1 tr=0 ts=687e4f23 cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=Wb1JkmetP80A:10 a=TVyXueylgh4vxAmsgxgA:9 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-21_04,2025-07-21_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=888 phishscore=0
+ impostorscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507210129
 
-On Mon Jul 21, 2025 at 3:20 PM CEST, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
->
-> On Mon, 21 Jul 2025 10:04:10 +0200, Erik Wierich wrote:
->> I got married and carry a new name now. Also have a new mail. So this
->> hopefully makes it a little bit less confusing.
->>=20
->>=20
->
-> Congratulations!
+Introduce Top Level Mode Multiplexer dt-binding and driver for
+Qualcomm's next gen compute SoC - Glymur.
 
-Thanks! :)
+--
+Changes in v2:
+Fixed dt-bindings error from example node's reg propery
+Fixed gpio-line-name maxItems
+Driver UFS_RESET macro updated
+Removed obsolete comment for pingroups
+Updated ngpio to include ufs_reset pin
 
-> I've sent the earlier rust patch for libgpiod because I finally forced my=
-self
-> to start learning rust and to that end wrote an actual rust program[1], w=
-hich
-> you may of course find silly but it allowed me to learn about traits,
-> lifetimes, closures and borrowing and I really enjoy this language. The
-> initial learning curve is very steep but it flattens out pretty quickly a=
-nd
-> after just a couple hours of coding in rust, all of a sudden the libgpiod
-> bindings - which previously looked like Chinese to me - started to make s=
-ense.
+Pankaj Patil (2):
+  dt-bindings: pinctrl: qcom: Add Glymur pinctrl bindings
+  pinctrl: qcom: Add glymur pinctrl driver
 
-Yes. It starts steep but quickly flattens out once you comfortably beat
-the compiler :->. Welcome to the party!
+ .../bindings/pinctrl/qcom,glymur-tlmm.yaml    |  128 ++
+ drivers/pinctrl/qcom/Kconfig.msm              |   10 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-glymur.c         | 1777 +++++++++++++++++
+ 4 files changed, 1916 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,glymur-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-glymur.c
 
-- Erik
+-- 
+2.34.1
+
 
