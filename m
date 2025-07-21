@@ -1,108 +1,150 @@
-Return-Path: <linux-gpio+bounces-23581-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23582-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE58CB0C424
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 14:30:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8C07B0C4F4
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 15:15:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 453297A872B
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 12:28:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 043483AA1A6
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 13:14:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5976D2D3EFF;
-	Mon, 21 Jul 2025 12:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55F632D8DA1;
+	Mon, 21 Jul 2025 13:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+K9aBxx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YUxC9lvL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0812A2D3EE5;
-	Mon, 21 Jul 2025 12:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC37290D83
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 13:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753101005; cv=none; b=SFBMuSJ8u0uRPkvXhjR/F16P4Ip7jJenuKV/OjWoKsk1XnTBpPLwVlBMg4MfrN1awQtNZwd4gbaGFFr8B3zg9p5cQgCYzXQaj2wO8z63Vs9U/Nxpk9OoMl0anNqz/4FX+g6/woPs1T6KN3OvCNBT/mB12Rh9TQ3f5abEA+djZcw=
+	t=1753103722; cv=none; b=peOtoLnXEnanKh/1LmVKmM8VbFqQ6z1ioFEAOfps7NRe/M6A3zmZb0fWB//9QqPQIHibb+KtlPbxy2WOS59OfV7srJRo4PCkGdzkR2r8esCY9BAkVPJDGAPWgREL8PU3MggLfg9J7msGIC/k7WXU+YCsjJ58hTuGTtKu54zjhSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753101005; c=relaxed/simple;
-	bh=3/Mp/bZdiCCi6LZfAbd65m+AvvUXI4xEDl+vBkRyuFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f8cAsJvgxr9lxBUCBFQ6A+D/LYT4gOORC/iBEHBzMaLmDJceq4/6jMvTBZK4DURTah3vnCaFT0WRkNJaRgXt0nTn1LhmFOfOlL9dYubN+D09+f7t+MXkvxir6traCG/LnuVhp46xgdypPSrRsDQG6s6RKbUAFFjXXfJ5UMTVw/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+K9aBxx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EDC7C4CEED;
-	Mon, 21 Jul 2025 12:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753101004;
-	bh=3/Mp/bZdiCCi6LZfAbd65m+AvvUXI4xEDl+vBkRyuFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q+K9aBxxeEfe6ql8kvSVGeQuzepLg/wW01yqaxnhUrqbEHylTeF3rN3YJFpy5mWXc
-	 yHewAQBFICtBu6MC/d0NG7d3SsgbCp7nepeKKPGDeTmsBJXdpYiDnC6rm+Ql2iNKbr
-	 HpnaC7P2Npe8SqqdHfWxO3YhLuZjheVIKut7kJesRLls9cr6MBCto+PCJtvhQ6RKyD
-	 at/okL098bmsMVQyuQ3uW6v+b0FdlAsCoA4qEKOoc1MFQ8fxQ8PRNdPtg662ZrSFrk
-	 ZD34bi/nb1qS7d7jfpqFE59LNOcrhU+ILSJWKnuqz3rITsxTfqsDIiJ2rnkhmeRrBb
-	 gjFuIeKo/oGlA==
-Date: Mon, 21 Jul 2025 13:29:58 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
+	s=arc-20240116; t=1753103722; c=relaxed/simple;
+	bh=OLFyRAWYVCojqMOaG4pRHzi1oiXlwO7AEnKO0IReBPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FfgDC1nx1C8C8iqqgpzbepvPRSf9gCTBGE1AY2kSEkYJRKGUp0VYjlfWdjMxzxYdTvpmXUZ5HeHXl9a9G1m5UR3T/dddV5Lz4j56DY2d6JMxXIqcaLt/gwmE63sqNm1Ya7KuuOarjKI++CmkiLrIOwE9VHE2MAhOkn/Kskie1d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YUxC9lvL; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d54214adso30821015e9.3
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 06:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753103719; x=1753708519; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TODX06Luzw1Bg3HrSiWsMUDdqd0hRUT9XELHjALG528=;
+        b=YUxC9lvL528yD1p5Pehs3jpGldRKS6H6OO97qa24H7c6/fCC0vVMn3Qo97jEqKjCw6
+         k8peAN+d31+0AblB+GVA/QEgGxgklA2PVGjebCIDZkED/3MLiGwd6sTq0zyMptv3HJwk
+         QKdm9Rht9aZWno6TUp5iGW60gYr+eCUWWxsrPfgGfjMZRM6FCDj5Bdt+bxOo64H7jGLn
+         qfHviwBEg/CrugDUA690oIhwh6Co1HYHt3if/+zaMnNR0SUwy6P/jfHFmMZHK/4kVfAD
+         lOhxRPUEwObLuT4gO+SDBVZ2pTn3eD/zB+b3d8FTkMjGgNx9zbOtBLDjbWnH9V4mvhFz
+         IaIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753103719; x=1753708519;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TODX06Luzw1Bg3HrSiWsMUDdqd0hRUT9XELHjALG528=;
+        b=UR0MFZlugNsKqoGLwTOGT/aG9byUKiuIjM97aKPSPU3x8CtM1VTHRkHeO8t+at74jG
+         W4b8HWUCCxzC2yUO8zIfSJHLbquRin9eAqR/pwN5sMvCnBoBQPNwTRSbghGcZaRYfdy8
+         azh+V7/WoxEcIhya4rSm2gQ1wXAELISC6opXRJ2GAKN0CxtMrJ9Tx4ULcDM0DuMdKLPQ
+         XzZaJ9sOLEkncIQCk6BgdpqHlpHPasx2I3b905Y9hVm02GDO14fGICvzJYKIOpIRrph/
+         v7npN3omWwnLFYSms9eHqdv7ZhEKB3ilbLakM4PzlebwE7lUR8oOIQm9mmK7wYHdSJlT
+         TAIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGFkqayJP7qgLb5RgRjzRifvg2ZMjIbMKclqpSi1DyKxJV0SretLfQMdn7IsZUup3+ig/moa/mYMTY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7ACpv4AAaeSoqHzQ59BaXR/gGaK3te5G8iwrEpKwljFHJamHc
+	R7kTiluMPshPvKijjzfsZcfKzYl8J3bZGNqbeX8ReN+R27y/kamoWNWbEv/p36VI2Ng=
+X-Gm-Gg: ASbGncuNeUg3gPLOOnT2alq4vb57iCkjeeiGR9pAXeY5Udb5SfMeHUNQKTs0VPRFqm/
+	7/Cbi6fZehTNXKno4glQx74SjfNqhWlX6ZlKwVshtrDEH50aVsRC14pFAuyTtePBoVbuTJvRAI5
+	dtf4Rh8GKuqk55g6d7vgxtLQenFXBV05VoEirAR9OLvdVcr7SqVvLMtrRKn/AyluhOmX1eRsp5f
+	AHmILGwiF2wC0LgFr7Cvdj5x2IvMw69ryA0PdlZ6VXBN1odgLnEPF9gMsmViEDSsDs0oTX9lghS
+	STKhAwiSPcOqtDzI/aYfOKcAb7ehOAoHxqmmbuJBFwlOBfdUgY0pdNJG7tHnWFcCOzIVQFzdfUV
+	yHflvq4taemrkubckCskSet4=
+X-Google-Smtp-Source: AGHT+IE6hSA6IgSYZzhjcHqll782tZfplfgYxnmAitmMV8tqIpsaPAw0Kw0vQ/HRkVaESo1pggEX6Q==
+X-Received: by 2002:a05:6000:430c:b0:3a4:d939:62f8 with SMTP id ffacd0b85a97d-3b613e984ccmr12169355f8f.32.1753103718407;
+        Mon, 21 Jul 2025 06:15:18 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a0b1:7516:7c6d:ded5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e818525sm159556685e9.16.2025.07.21.06.15.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jul 2025 06:15:18 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Qiang Zhao <qiang.zhao@nxp.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-	kernel@oss.qualcomm.com,
-	Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-Subject: Re: [PATCH v7 3/9] ASoC: dt-bindings: qcom,lpass-va-macro: Update
- bindings for clocks to support ADSP
-Message-ID: <33d963bd-c5a9-4b10-b348-bf713fbab8d5@sirena.org.uk>
-References: <20250720173215.3075576-1-quic_pkumpatl@quicinc.com>
- <20250720173215.3075576-4-quic_pkumpatl@quicinc.com>
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] soc: fsl: qe: convert set_multiple() to returning an integer
+Date: Mon, 21 Jul 2025 15:15:11 +0200
+Message-ID: <20250721131511.75316-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WQCEN1qteZ5BnNy0"
-Content-Disposition: inline
-In-Reply-To: <20250720173215.3075576-4-quic_pkumpatl@quicinc.com>
-X-Cookie: Falling rock.
+Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---WQCEN1qteZ5BnNy0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The conversion to using the new GPIO line setter callbacks missed the
+set_multiple() in this file. Convert it to using the new callback.
 
-On Sun, Jul 20, 2025 at 11:02:09PM +0530, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
->=20
-> Manage clock settings for ADSP solution. On Existing ADSP bypass
-> solutions, the macro and dcodec GDSCs are enabled using power domains
-> in lpass-va-macro which is not applicable for ADSP based platform.
+Fixes: 52ccf19527fd ("soc: fsl: qe: use new GPIO line value setter callbacks")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+This is a follow-up to commit 52ccf19527fd ("soc: fsl: qe: use new GPIO
+line value setter callbacks") in which I did not convert the second GPIO
+callback. Could you please apply it on top of Christophe's
+pull-request[1] and queue it for v6.17?
 
-This doesn't apply against current code, please check and resend.
+[1] https://patchwork.kernel.org/project/linux-soc/patch/c947d537-cae5-44f0-abd8-0c558bac46d2@csgroup.eu/
 
---WQCEN1qteZ5BnNy0
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/soc/fsl/qe/gpio.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
+index 5391cce4e6ef..710a3a03758b 100644
+--- a/drivers/soc/fsl/qe/gpio.c
++++ b/drivers/soc/fsl/qe/gpio.c
+@@ -79,8 +79,8 @@ static int qe_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+ 	return 0;
+ }
+ 
+-static void qe_gpio_set_multiple(struct gpio_chip *gc,
+-				 unsigned long *mask, unsigned long *bits)
++static int qe_gpio_set_multiple(struct gpio_chip *gc,
++				unsigned long *mask, unsigned long *bits)
+ {
+ 	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
+ 	struct qe_gpio_chip *qe_gc = gpiochip_get_data(gc);
+@@ -104,6 +104,8 @@ static void qe_gpio_set_multiple(struct gpio_chip *gc,
+ 	iowrite32be(qe_gc->cpdata, &regs->cpdata);
+ 
+ 	spin_unlock_irqrestore(&qe_gc->lock, flags);
++
++	return 0;
+ }
+ 
+ static int qe_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
+@@ -320,7 +322,7 @@ static int __init qe_add_gpiochips(void)
+ 		gc->direction_output = qe_gpio_dir_out;
+ 		gc->get = qe_gpio_get;
+ 		gc->set_rv = qe_gpio_set;
+-		gc->set_multiple = qe_gpio_set_multiple;
++		gc->set_multiple_rv = qe_gpio_set_multiple;
+ 
+ 		ret = of_mm_gpiochip_add_data(np, mm_gc, qe_gc);
+ 		if (ret)
+-- 
+2.48.1
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmh+MsUACgkQJNaLcl1U
-h9BWwgf+NWAI0d/I/aIa6eGJwgfNj2DSfG0PWklhpdlVWh3zEes+nP5dCSNDhbVK
-MWKkwY0gF5I4o3GnSUowpdHoXqijOacNQonhwWf2RNYOfHty0725BYt2PV42bsdY
-QBOovExEfFTtHgw2w1LF/Tqtwwx1qxDLrMWD9r4KI2LFHYM2vIlav7NgzYOJ2ECN
-RhXTWEmm57JhZu+Z9uTPy9FtOdBJM+UPWtqt4TCSn7VbWpisle9LLEQQOCXHULlv
-VeKyvkGkjgRO0T0afl77fqyDk7p794L+X3oxhlVKLCbEKffQfhNbuMO7IsHhIh7e
-qnxQ8X9o61wHTSFsxMyF/7cG8tUtWw==
-=rl5U
------END PGP SIGNATURE-----
-
---WQCEN1qteZ5BnNy0--
 
