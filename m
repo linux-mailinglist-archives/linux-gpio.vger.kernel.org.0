@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-23561-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23562-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 610C5B0BDAB
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:32:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2BA6B0BDB1
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:33:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E73CD3A920A
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:31:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5150162B14
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:33:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 868A728153C;
-	Mon, 21 Jul 2025 07:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF14283FD4;
+	Mon, 21 Jul 2025 07:33:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpYd+4wE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQVMx82I"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337821D540;
-	Mon, 21 Jul 2025 07:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8021C2836B4;
+	Mon, 21 Jul 2025 07:33:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753083122; cv=none; b=GmPpw92uKxrl/EraSP+2YuZrnGrTrSRws8glOKGpqNXtTg/VVJHQI2Jl+JxBmHZEWJjDBenFkuZKxiikqHzDZjTCkgn5UHR1Baibb+bk3LHgxjDufti/cRR3qkYVgnpukP9V2ztPQUrn/osegG/6/7xXpKyiOt4tHG3Z/cQmj90=
+	t=1753083186; cv=none; b=okJ4BYliiaAEONJe5PxoUmRZlXHxPJ3vbdjgGODnl5f1j/PG4Lz9upMWwubLUFKeHJeNPw5ebuam/e9eP2hyNOpjPmwDF7GwZeZCsZ2aq4HuLoxEMWQzd2hF3EIBb7V1x4SRRwZJh28ljrnnCzTrZlss1Untq8+CoqyxXSEJrd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753083122; c=relaxed/simple;
-	bh=v4jaJI+zODjIi7ygyiCAzyHL7gwrHh8tG2mTQ16ZT0k=;
+	s=arc-20240116; t=1753083186; c=relaxed/simple;
+	bh=mdw1CJUvpPFP7q0+Tbu+h7FrEywRakCiECzX+/r2WGE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aJ68PTZ2z4cMOoppbvvqeIyFz7JVpEcooylC0Fy0GLAYV+JuTa/czeEufSwALePVHyLC+ZVVsGxSEKFd1yoBzWmd5ymwZisoWH4gK1CNzD0JEp0uszjjy3Da77MNVYE2nx8AuvDaJVOkhkxyh66stcRFFUVtFOC1wsiK3DboW8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpYd+4wE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3943DC4CEED;
-	Mon, 21 Jul 2025 07:32:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gr9Q/cCP9PL5/vg4ZU7ahlHlm9P7/rPJgL8qYX7sjfiQwuH0Of60uFuVtNcfIspI+Mjw0hvs8FFtdlopdIcjIU4QtNkhlFnb0EDDC95m90JBYVtWaBVej7Cx5JTAk/2807mOgBr3kUQbEoBsUrVd3Ggo++GjKgRN44mfcW0OrWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQVMx82I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E6E1C4CEED;
+	Mon, 21 Jul 2025 07:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753083121;
-	bh=v4jaJI+zODjIi7ygyiCAzyHL7gwrHh8tG2mTQ16ZT0k=;
+	s=k20201202; t=1753083186;
+	bh=mdw1CJUvpPFP7q0+Tbu+h7FrEywRakCiECzX+/r2WGE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XpYd+4wEKCvEl0Yz/4VyHmP7R4RbBzDp/O6J6peUobimJcNxbQccxWseSj5l8zu/z
-	 /m9fDuH1kMncfLNSlE2xBuMfri/lm0cpK1rlbuIz9ztpeNiVj9DidYOK5D7gTO/TPh
-	 nlGVGD+iA3RBgN456Sdz7jXilfGBtckZIGSr5OcS0lZm62Z6RbAHu734G+LHtHvyuO
-	 enC+os5FxmKZDT9pMia4rkAksAaq83Q7KSSuvIfDH+dX5ccdTwMCnnzWQhl0qQFY59
-	 o+FPtYdWqWZWM/6Y8qZxOeZCvG9f3TjrwIy7QRNGmlt6XtFdi9N0YoksRr2Cq7zJby
-	 x+uwDrDDku4bg==
-Date: Mon, 21 Jul 2025 09:31:59 +0200
+	b=WQVMx82I8bVkS4iAB/XBcHjAZN+OhmUhogG2a6aPNGFZLGTIRUdJ+WBnlccVGR+8P
+	 LfxhMHXvqI8vOZ7ABVpKYeYoFLtLKhtW9T5yvCVp46/OM/CfrGPH1urmhIOAEWZSvX
+	 W2KZwAUGG/oTmXoaUgQ07oYeT+0gubuEN3FBGwfZWsmBQGS4vU8e2Jo1VAqehDPfqH
+	 J0e660hGsA067rNtYNL6MoNdw9AvRanwG93tWFmsX9hyJAI7qsg+74XlsaHZutiMVA
+	 ds9o1mVOzxHqahjQ2F2L5BBU+e0CuLzCqHO8O3IFZNypfMuE1lVKAPGq/v7Z8bnMYS
+	 BhZDW8+x+8IxA==
+Date: Mon, 21 Jul 2025 09:33:03 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
 Cc: Bjorn Andersson <andersson@kernel.org>, 
@@ -52,11 +52,11 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
 	kernel@oss.qualcomm.com, Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-Subject: Re: [PATCH v7 2/9] dt-bindings: pinctrl:
- qcom,sc7280-lpass-lpi-pinctrl: Document the clock property
-Message-ID: <20250721-guan-of-therapeutic-champagne-eee16f@kuoka>
+Subject: Re: [PATCH v7 3/9] ASoC: dt-bindings: qcom,lpass-va-macro: Update
+ bindings for clocks to support ADSP
+Message-ID: <20250721-fervent-panda-of-effort-f962b5@kuoka>
 References: <20250720173215.3075576-1-quic_pkumpatl@quicinc.com>
- <20250720173215.3075576-3-quic_pkumpatl@quicinc.com>
+ <20250720173215.3075576-4-quic_pkumpatl@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,25 +65,21 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250720173215.3075576-3-quic_pkumpatl@quicinc.com>
+In-Reply-To: <20250720173215.3075576-4-quic_pkumpatl@quicinc.com>
 
-On Sun, Jul 20, 2025 at 11:02:08PM +0530, Prasad Kumpatla wrote:
+On Sun, Jul 20, 2025 at 11:02:09PM +0530, Prasad Kumpatla wrote:
 > From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
 > 
-> Document the clock property in sc7280 LPASS LPI pinctrl node.
-> Clock settings required for Audioreach solution.
-> 
-> The existing SC7280 platform only supports non-ADSP audio solutions.
-> To enable audio functionality on ADSP with the AudioReach solution.
-> additional core and audio hardware clocks must be configured.
-> Without these clocks, the ADSP will crash.
+> Manage clock settings for ADSP solution. On Existing ADSP bypass
+> solutions, the macro and dcodec GDSCs are enabled using power domains
+> in lpass-va-macro which is not applicable for ADSP based platform.
 > 
 > Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
 > Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
 > Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
 > ---
->  .../pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml   | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  .../bindings/sound/qcom,lpass-va-macro.yaml   | 23 +++++++++++++++----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
