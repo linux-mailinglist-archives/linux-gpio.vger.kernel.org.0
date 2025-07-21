@@ -1,114 +1,126 @@
-Return-Path: <linux-gpio+bounces-23570-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23571-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA043B0BE0E
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:48:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F221AB0BE24
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:53:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B539C189DE4C
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:49:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB1D5189DFE9
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:53:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7716A222590;
-	Mon, 21 Jul 2025 07:48:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA37285057;
+	Mon, 21 Jul 2025 07:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zIWhq3nk"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="KRNk6iEM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D686CDF49
-	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 07:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F32E284694
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 07:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753084124; cv=none; b=QL2z38P+kpcsAGSbEsDI5snXopdlQxDr71DlXtg/TUOfIUY2b6A/JqsoPZ9YTB56MCFrMs569k53Q4O66s5xEwKR/6Y2WW2hJb+CKsl6Pf4+bLZlJ6eW9of5Ko+SYZj0FK8si3/c8cXvQ1MTZuBP/ytGSFI2iDy/Ea4SdVVLalY=
+	t=1753084398; cv=none; b=OD0Ujx0xncj0HLJnlnzRTOzEJW/7LqfjOUNs6sG8hEgTu3BYU0OPf9fgy36Fap9HNJ/bLPjfNmrj5e2DxUZwsdtdnGV6QVes+um/FrEmcJEfmn2cC9eCBLZmuSUIUdLo9hymp6qSYvDr0ijs3wblhDXYteTBviaMccYMFWtkQes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753084124; c=relaxed/simple;
-	bh=ztMopiLCjRw/wMOvrbPMx1UdGTtIJHC08Bw4fN87NlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOrUtI3njUPF10iBVqynpUyYBIHxgaO3d+oa6o0afs7iCWlQRXI4pAyvd2BiSDJxx/GtWOQWO1/CTx99mFeeQpFCK5uF/DW1qWqPkGKMjgoaTrB/OdCC7ERoN4gO37GZT2tE7DTaD86fYmshxeabsEz4ZP5eRMXbnEZHLRG2WR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zIWhq3nk; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-234bfe37cccso30184845ad.0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 00:48:39 -0700 (PDT)
+	s=arc-20240116; t=1753084398; c=relaxed/simple;
+	bh=LoWDVSU31UcCnuH78CgITVgj5AJTPkhcFZnr86mE6wg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hvzHWH5w3O+YEJ9KsbU7YZOFrD7xgpR6zvksuscdZeyNoG0Uy6JHuTr+K5RjOVryWpbbSKJduUnAlW49hZZ+bGV8VraeyL64zjvz/ysoE366L424iD1KTy62AeLbiy+bn6mnmJejcYCdFzsY2LV9FsSeaF34TVB2FDYHjIllUHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=KRNk6iEM; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-611f74c1837so7645872a12.3
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 00:53:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753084119; x=1753688919; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nY47hS80AjD0DswcO0FWDU1wZtZ/+9s0RlEjdS2SPZw=;
-        b=zIWhq3nkxvdft9+fuXwLIrKVnAJt8v4n1+Trd1wHaUXd0EYe4XURrdoXABXoyj4HbI
-         J2jDw01uC3e7HGQJ0aZhC08j4JsaQDLpNS6kDCmQSzDu5PIq41P2v4Leb587ZlHkYOT/
-         tNMuQ/8ZiRBd3EMwJFPBhpk9xWWvwn6lWCJJjZgXy8qHaC2gEEzGZRzAa5/pvtTao67t
-         n7YikIFKNwi3FzM+dSNJsB3imdqCGPvotAIH0EyUs+rE+DnaKPcSDoDHtzhiTKGJZtwh
-         tfc1afjguplY/V1nqxig/GGgfQygeWG75lp9eA6SxtbJpRKyJhXe5rJAI4ie+3brow9I
-         q+mA==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1753084394; x=1753689194; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RMSlb2UClc6cieNza+HJH2SCx/1I6Fa8CNpeX8gFEDA=;
+        b=KRNk6iEMxGPoaKs8SUTRL+a32HBfrCrtDeG0VHlE9JLvHemJQgw3xPaVrVeP5MPRyZ
+         VBnOPXmbjz05gcugwX+b2SRqQ0EC4/DnD3joOWkuUrtdCvGz1ki4twqXC3sFKm0ekoQw
+         RFw/wuU8kooHN+UGJ8yc9h1Sum+gEa+UwrTzE9pm8K4I5gl+saMy+ycquKC2NhJPHb5L
+         SkL7/0weVpxJ9l/aKXhu25rqHghkFtCPF30JK4wlV31h6dA0W1r/E8/JaciDuAFI2WmQ
+         eqIufrpDR4av/W61SgBSuvOv9xR9v7mvov/+XShgKDzb07T9S4TZnzwiV0rl392M4Pf1
+         LT+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753084119; x=1753688919;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nY47hS80AjD0DswcO0FWDU1wZtZ/+9s0RlEjdS2SPZw=;
-        b=GKdpq4B70522DDo3wJ+tNcM16k0UPlbYhyw9wNsHDpTEBRj/HPuCpqWOzrsH1t8jQq
-         ay3WRM89xJgHIvW+TqjvtPat7DsHQYNjHR67CtKkH8Eajvq/bSnrVNP0A9ig7XVN6ngF
-         PnGdxkThi5L+yxNjAAUtDkoIVJhyassGpGF/8I7+Hs95nAuEKouWR7KXZH609I1yN2LD
-         RFR/K5Pgp3VEQVckZLkCBAcQxpFL8ApTen6ut3oTBtwCBNuLT75Db5yw9KDLyjxW3zuv
-         1siD6JOxEK9K99LhBM6BwvDUzeY2wNzoJgpYOvAeW8Z0Q8gGgEBTHDeo8jH5SjPJl6dc
-         N/Jg==
-X-Gm-Message-State: AOJu0Yzhab2zbBxbtsVYTG9JoIvtKgEvt/BxDAWxmmdQbFx8GVUNIdey
-	zj7sQR4ZAuyvR1VRl7N4ikCzZAvOsO4N/GCuk0GwQL3TVoTwMFi7YQTv9tyyKmWz7xk=
-X-Gm-Gg: ASbGncsEu9mRr4aS0kA/lE+a4PqP5KTH1OpRlfDBRHf9N3F+Q4Q3Vmbes1NQEpNHn6z
-	qCz+NmlSxU9OWp1fFUptZrc8AhivgXo1REUkhMp595J1jQcp8LW/nI6NiPOtHS8t+oE32SCEzCE
-	Wq8kdHioTz/Wawx3Oh0PgNS3xlyN3gzKzFGr1Nbl4r6FQ0wmVZ5NmxJYGpFcrL8DwKis4fxZDrz
-	ka7aXm1dnZj2spDhXig5+tpfzR0FAROSgi8Zyxt85stt0byehbZNoamY98Dry5FX0Nv4oyXJfEz
-	ri6IHOH+rxlP+2zk6uPZOa5p4Mckt76FAMr9yhdAH22y7ev17zenisiC4E0Ff80ujZ0RcJqB0O4
-	QAouYqi6vYJpAiMo5TmddEFU=
-X-Google-Smtp-Source: AGHT+IG0tXGloiQljT6LkOw/qN/myiKbf4Y6q1bWyOlFqPLfZqV6DG3m/Lr3P4l0+FLF3PI5SHDrDw==
-X-Received: by 2002:a17:902:da8b:b0:235:ea0d:ae21 with SMTP id d9443c01a7336-23e3b84e12emr179028475ad.35.1753084119076;
-        Mon, 21 Jul 2025 00:48:39 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23e3b5e2d6fsm52479805ad.20.2025.07.21.00.48.36
+        d=1e100.net; s=20230601; t=1753084394; x=1753689194;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RMSlb2UClc6cieNza+HJH2SCx/1I6Fa8CNpeX8gFEDA=;
+        b=covb828VB/y1lsn723yw8IYLkeUJunyEy67T0cRUrZiDV33zjiYMFb4D+1mY8pH0IS
+         gvSdiKCe2/gGE54SqNtaDqTg558Bbg6Ov2n+ZJj//ADxHFpY2VEROQk28hwruSvwdBpv
+         ieDTH3W19L0QOU8TtwthN1ZsESt0VVNLx9sihMj2rnTZVLz1bWwuMfUTXxtAcJH7myYy
+         HUWAsYv5kkAj6ooZP1/8ZF/oqUttjBZVXd1Eu9s83A14IksSTQrsXVPwM8RL7l8G6HXI
+         +Ou9SEvR4yNBMm7czN/P0U3FwLXLmbXWv/DPq2CHpPx4D6bu9aiepoZcLInZfFfNLh1l
+         yUdg==
+X-Gm-Message-State: AOJu0YyY3bModSqcfaYm5/f5XnJty23XDlPhbJJ2GNHhAygWvRXw1QkH
+	CagQTWjWYIIIsF9WFhQgOb9JpwcnNYksdqEnWOSR4uvEuO90t/s1tEGy6ARC1brEajQ=
+X-Gm-Gg: ASbGncs1XpEe3c+2m1/2MXd4QpoJD31Z2UUi3FK8CGThAc5YcnJMsmaIA0ell0PlhXx
+	/gIho3fYHsRQPLDuhHvVpWxjS1zSnHaHkeOcpbVN62lCiwjLYg1hCSy7zvnMqHJMlJZOxnfpzuf
+	JdLU0SUYJfo5Ust1ATlUzR0IMlYcwMnO2MmUE9qQHRouM/uNPcpE9VGpuUL1qeJSsM+2hg7TupS
+	9uZDVVxgCS4/HubII/Me7tvN9K6qA3dTkKsA/1M7SjwvuxYiTjs3q0RLt39ovnsgMSE1F8sbcpC
+	u1IKnyWHcQRXtfhY+M4+pQ6mqw67koxBXxmbWAGUqYD+/yiwJQhNIH+1sLZka6w/fYmAsUDkiFh
+	X0Pv7LQ==
+X-Google-Smtp-Source: AGHT+IGboyeNPyNHaj4H3fcVPCLOCmO6HnLQj6iOlPA8khmm3ATDIxBx50XPai1ZI3pufW6e1IdLaw==
+X-Received: by 2002:a17:907:c24:b0:ae3:64ec:5eb0 with SMTP id a640c23a62f3a-aec6a4933efmr1204109466b.11.1753084393832;
+        Mon, 21 Jul 2025 00:53:13 -0700 (PDT)
+Received: from [192.168.1.187] ([2001:9e8:d58e:7200::35e])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aec6ca7d30csm628379966b.119.2025.07.21.00.53.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jul 2025 00:48:38 -0700 (PDT)
-Date: Mon, 21 Jul 2025 13:18:35 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Erik Wierich <erik@riscstar.com>
-Cc: Linux-GPIO <linux-gpio@vger.kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH libgpiod 0/2] bindings: rust: mark raw constructors as
- unsafe + rename to `from_raw`
-Message-ID: <20250721074835.kzf7gphujqqgr73h@vireshk-i7>
-References: <20250721-rust-unsafe-consistency-v1-0-aa1b42ed5983@riscstar.com>
+        Mon, 21 Jul 2025 00:53:13 -0700 (PDT)
+From: Erik Wierich <erik@riscstar.com>
+Subject: [PATCH libgpiod 0/2] bindings: rust: fix clippy warnings
+Date: Mon, 21 Jul 2025 09:53:06 +0200
+Message-Id: <20250721-rust-clippy-v1-0-2ac0198b2ea6@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250721-rust-unsafe-consistency-v1-0-aa1b42ed5983@riscstar.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOLxfWgC/x3MQQqAIBBA0avErBPMSqOrRIvSsQaiRCsK8e5Jy
+ 7f4P0JATxigLyJ4vCnQsWdUZQF6nfYFGZlsEFy0XImK+SucTG/k3MuMVXXbcSulaCAXzqOl578
+ NsNG8ODoMjCl9L8qrL2cAAAA=
+X-Change-ID: 20250721-rust-clippy-df73580f6624
+To: Linux-GPIO <linux-gpio@vger.kernel.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Erik Wierich <erik@riscstar.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753084393; l=1039;
+ i=erik@riscstar.com; s=20250721; h=from:subject:message-id;
+ bh=LoWDVSU31UcCnuH78CgITVgj5AJTPkhcFZnr86mE6wg=;
+ b=2o9Gcxxmd7NkTRuTQc3ODyn91Oq02KGhp0NE2DZVNMxxGob75CHi3ouJjio1P6OtbaqBJts8S
+ a44iYLEcuQeAizPujiBaNBJTIKmEhAJnzhzSdUxxjCu1VJFOcSnm1v9
+X-Developer-Key: i=erik@riscstar.com; a=ed25519;
+ pk=gjm0pD1JkINoNzvT3vC2WZoAWUld0EyXuhsQ/i5Qz4I=
 
-On 21-07-25, 09:41, Erik Wierich wrote:
-> This is based on top of:
-> https://lore.kernel.org/linux-gpio/20250720-new-with-settings-crate-v1-1-a51392bd5b13@linaro.org/
-> 
-> Signed-off-by: Erik Wierich <erik@riscstar.com>
-> ---
-> Erik Wierich (2):
->       bindings: rust: mark constructors that take raw pointers unsafe
->       bindings: rust: rename constructors that wrap raw objects to `from_raw`
-> 
->  bindings/rust/libgpiod/src/chip.rs          | 10 ++++++++--
->  bindings/rust/libgpiod/src/info_event.rs    |  7 ++++++-
->  bindings/rust/libgpiod/src/line_config.rs   |  7 ++++++-
->  bindings/rust/libgpiod/src/line_request.rs  |  7 ++++++-
->  bindings/rust/libgpiod/src/line_settings.rs | 10 +++++++++-
->  5 files changed, 35 insertions(+), 6 deletions(-)
+This fixes warnings reported by clippy 0.1.88.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Erik Wierich <erik@riscstar.com>
+---
+Erik Wierich (2):
+      bindings: rust: remove newline between attribute and attribute
+      bindings: rust: simplify format statements
 
+ bindings/rust/libgpiod-sys/src/lib.rs                          | 1 -
+ bindings/rust/libgpiod/examples/find_line_by_name.rs           | 2 +-
+ bindings/rust/libgpiod/examples/get_line_info.rs               | 3 +--
+ bindings/rust/libgpiod/examples/get_line_value.rs              | 2 +-
+ bindings/rust/libgpiod/examples/get_multiple_line_values.rs    | 2 +-
+ bindings/rust/libgpiod/examples/reconfigure_input_to_output.rs | 4 ++--
+ bindings/rust/libgpiod/examples/toggle_line_value.rs           | 2 +-
+ bindings/rust/libgpiod/src/lib.rs                              | 4 ++--
+ 8 files changed, 9 insertions(+), 11 deletions(-)
+---
+base-commit: e4427590d9d63a7104dd5df564dd6b7b0c784547
+change-id: 20250721-rust-clippy-df73580f6624
+
+Best regards,
 -- 
-viresh
+Erik Wierich <erik@riscstar.com>
+
 
