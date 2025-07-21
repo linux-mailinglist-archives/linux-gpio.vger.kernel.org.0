@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23556-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23557-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB8D6B0BCD1
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 08:40:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6169B0BD1E
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:00:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6666163E9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 06:40:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 903493B995F
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:00:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE72B27E7FC;
-	Mon, 21 Jul 2025 06:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C4F0283153;
+	Mon, 21 Jul 2025 07:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OAm2B0e2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/5ToINq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA4521A92F;
-	Mon, 21 Jul 2025 06:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA86028312F;
+	Mon, 21 Jul 2025 07:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753080002; cv=none; b=lW42oB0Qx9Er/ScD8/TYq7GtFO9ppebpHNHp/a4YuGB7Yb1jiV0NBnRGf8y3LgMhi25v+kHV8iHsXco5VGYVkILVXhGNkUjW9DdMFMclH/UjVs9Lei9pbILNUi9N8FC8fiHphO4QYmbPZzY7Eiv23s4kTo9jI0zH2QucCZG0nEc=
+	t=1753081228; cv=none; b=G51MO4mN5pp2lXX/Yz8dHMr0VGEXRqXAOqa7MMv98mS/NHIsJwOQN2QUlE4v6xj6aeBlM4EEQJalsPR5VDjoBg1jlLjyqfkDNLbnp5tPsqod7/K/Pndrz292o26aan/bX7+2SqqqJ9L9mXWUySyhHIE++tpcgQX6OljSAm/KpcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753080002; c=relaxed/simple;
-	bh=ziiq34GeIGmiORnWXKfFphxGRAPSfNCDjGeyjoK5urA=;
+	s=arc-20240116; t=1753081228; c=relaxed/simple;
+	bh=Aq6sqTvO2EJFyQZNPFUjG/kya8yXEfAE0I1DrQtAHzE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UDAmVlRTigRDt2gqtlIT+U06GxpG/xRkRBTaZPsJpxg39D0gcjQiy8ucn6KSPWH+Zd4hxUIUPiQ4ZyW7qTMU+ZU4/4rLoECJgdLyEBRP41t0JwcasrvvgIbcaJOXyihnu5zVjC464V8BUxgWYL68T0+uGvdeAUV3C09J0MhXVSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OAm2B0e2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60B11C4CEED;
-	Mon, 21 Jul 2025 06:39:54 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=TaOczFZmvRQuRNkpfFC7lsDR2T9DdP7xVif+Hu5KLbds5DhsqLjESYDIhfbM3F7TiuOyfyOHFFQL6FO2KhtKfWbeebxq4VzxXpfhBDWBtrHY4IzeYMEIExsNhVe7afQ6dWUimlRwSi+iNePfxgWtBjcJ8/MroCpGMJP+XOWi+mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/5ToINq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E249BC4CEED;
+	Mon, 21 Jul 2025 07:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753080002;
-	bh=ziiq34GeIGmiORnWXKfFphxGRAPSfNCDjGeyjoK5urA=;
+	s=k20201202; t=1753081228;
+	bh=Aq6sqTvO2EJFyQZNPFUjG/kya8yXEfAE0I1DrQtAHzE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OAm2B0e25RfRju2Ra80I7Y4/q7Fn7R8YzwLGQuZ23R4fytfiOpGZ7wgiT6yvrpLMx
-	 u6AxGpemuM2ApQ2GIfJJ2QmnKVtnTTx9+tsCUmmOytapowls2GVYUD9Rt7y06SEDTn
-	 nC3YDjVQSywuFfcIu/TBj1y3S5hvJTXDn4xXHfitYgDb1Lhb92ni+Z5p05Zm1ZhJ3h
-	 OKV0gpg6AJDc3PI811au35HSUM6fi83f0ykevyqPIFd/vt6/pS/t+qzyBYvevgsON6
-	 EdnhVNm5+AE7sRS3C+ljtjnr03NNLXcPw4ElZKpZN/KrR4dyLwpyaxyWBO/AdWxZr7
-	 U1zUPCHEg+Faw==
-Message-ID: <99977f38-f055-46ed-8eb0-4b757da2bcdd@kernel.org>
-Date: Mon, 21 Jul 2025 08:39:52 +0200
+	b=R/5ToINqDFunQxMIXOXkyeOJSkXuGvT3n29ixS8OfDMz+cmZdukN3ZKkp32dyV202
+	 nLAU317BNnhKJv9i7NVBKtbR8L8P8cXlVLQLjHWrFz3nmQWfAkUaY1Q7V8li1UmkOZ
+	 WURkrDv5wCsmpw2X78GzKOKXnBZiu4xsMRDCbpTUgwuT/vwSlt3+pcxOss81mc3MQN
+	 3MMu3z4KqzoMdM3qoPgFrZo6edK45mTyW/sncjC4QN3vX5dPCOOCFm5Oo4Z8ErM7Bn
+	 SekWmBpgdKQfpgdxh6DNyjHelUlrMR3JMcH40FF/IDAb1yg2ZTx9Hc3aL16P238G68
+	 Xc7ndcRFPZ2VQ==
+Message-ID: <61ced029-987e-4484-9a0a-7c911518ffd8@kernel.org>
+Date: Mon, 21 Jul 2025 09:00:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,30 +50,32 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/16] Add support for the Axis ARTPEC-8 SoC
-To: SeonGu Kang <ksk4725@coasia.com>, Jesper Nilsson
- <jesper.nilsson@axis.com>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa
- <tomasz.figa@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: kenkim <kenkim@coasia.com>, Jongshin Park <pjsin865@coasia.com>,
- GunWoo Kim <gwk1013@coasia.com>, HaGyeong Kim <hgkim05@coasia.com>,
- GyoungBo Min <mingyoungbo@coasia.com>, SungMin Park <smn1196@coasia.com>,
- Pankaj Dubey <pankaj.dubey@samsung.com>, Shradha Todi
- <shradha.t@samsung.com>, Ravi Patel <ravi.patel@samsung.com>,
- Inbaraj E <inbaraj.e@samsung.com>, Swathi K S <swathi.ks@samsung.com>,
- Hrishikesh <hrishikesh.d@samsung.com>, Dongjin Yang <dj76.yang@samsung.com>,
- Sang Min Kim <hypmean.kim@samsung.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-kernel@axis.com, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, soc@lists.linux.dev
-References: <20250710002047.1573841-1-ksk4725@coasia.com>
- <847e908b-1073-46ea-93f3-1f36cc93d8b8@kernel.org>
- <bfdc2eddde554e1d1808dd8399bc6a693f681c9b.camel@coasia.com>
+Subject: =?UTF-8?B?UmU6IOWbnuimhjogW1BBVENIIHYyIDAzLzEwXSBkdC1iaW5kaW5nczog?=
+ =?UTF-8?Q?PCI=3A_Add_ASPEED_PCIe_RC_support?=
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+ "mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>, "joel@jms.id.au"
+ <joel@jms.id.au>, "andrew@codeconstruct.com.au"
+ <andrew@codeconstruct.com.au>,
+ "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ BMC-SW <BMC-SW@aspeedtech.com>
+References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
+ <20250715034320.2553837-4-jacky_chou@aspeedtech.com>
+ <20250716-watchful-enigmatic-condor-0fc6b3@krzk-bin>
+ <SEYPR06MB5134F8732785F280CB4339309D5DA@SEYPR06MB5134.apcprd06.prod.outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -119,43 +121,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <bfdc2eddde554e1d1808dd8399bc6a693f681c9b.camel@coasia.com>
+In-Reply-To: <SEYPR06MB5134F8732785F280CB4339309D5DA@SEYPR06MB5134.apcprd06.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 21/07/2025 06:50, SeonGu Kang wrote:
-> 2025-07-10 (목), 09:07 +0200, Krzysztof Kozlowski:
->> On 10/07/2025 02:20, ksk4725@coasia.com wrote:
->>> From: SeonGu Kang <ksk4725@coasia.com>
->>>
->>> Add basic support for the Axis ARTPEC-8 SoC.
->>> This SoC contains four Cortex-A53 CPUs and other several IPs.
->>>
->>> Patches 1 to 10 provide the support for the clock controller,
->>> which is similar to other Samsung SoCs.
->>>
->> You should explain here (and in DTS patches or the bindings) the
->> hardware, that this is Samsung SoC.
+On 21/07/2025 05:44, Jacky Chou wrote:
+>>> +patternProperties:
+>>> +  "^pcie@[0-9a-f,]+$":
 >>
->> You could also explain the differences from Exynos and proposed
->> handling
->> of patches (because this is odd)
->>
->> Also, entire patchset has wrong and incomplete SoBs. Your SoB is
->> missing
->> everywhere, others have wrong order.
->>
->> Please read submitting patches first.
+>> Why do you need it? Also, order things according to example schema.
 >>
 > 
-> This Custom SoC is owned by the Axis (OEM) and manufactured by the
-> Samsung (ODM). It has standard Samsung specific IP blocks.
+> Thanks for your question.
+> 
+> In the v1 discussion, another reviewer suggested that we should support a
+> multi-port structure for the PCIe root complex, 
+> where each port is represented as a child node (e.g., pcie@...).
+> That's why patternProperties was added here — to explicitly allow such
+> subnodes and validate them properly.
 
-
-It is designed by Samsung. It is Samsung SoC.
-
-Anyway, don't explain to me, but in your patchset.
-
+And schema does not allow it already?
 
 Best regards,
 Krzysztof
