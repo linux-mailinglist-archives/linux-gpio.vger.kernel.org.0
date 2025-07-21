@@ -1,124 +1,116 @@
-Return-Path: <linux-gpio+bounces-23564-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23565-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14E69B0BDBF
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:35:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 539D5B0BDCA
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 09:37:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3302C168FA0
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:35:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB7A418863DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Jul 2025 07:37:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C73283FEA;
-	Mon, 21 Jul 2025 07:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D92E6126BF7;
+	Mon, 21 Jul 2025 07:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EsG1Er7O"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BrZXcSW6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF113C463
-	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 07:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A5427EFFB
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 07:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753083355; cv=none; b=uCogtbMSd8ZHXYtxAJEsDtg3WJZ4YNyPhT8Pk3n2Pf0x24BWzxGkKBnozvOEVYw4GT6rwal7X+dcolEJv4dx5rmyqvhkxFlwBun2NII6U5x91fNvobQjUzrbbusEyd2gTBbq7DGOhPO3sPsIwcjYwcc1vWk2Eb1Eh3QcjfUc/2o=
+	t=1753083418; cv=none; b=bxAhZe4REZbf/wGM4GpCuwywnDYSXGNDyDlBmdA3zXPIFIZiv6D9J9tBlCKdDYK++LGXkQAXZ4JyUI6UGuxFna/6LrzT431JidXEAzdxSHMg4mSQzBvFcxPUtSWndh26z7MG2O51f9dsu5Tb44XYqAigxqn0GPV0sOiQbQH0M2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753083355; c=relaxed/simple;
-	bh=JlEVGvJBHtlHNTDtO0w8jJyxUVu3Z22NNLdplU+xc/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CkFiqtx6ZfhV9itSEBlRo83Ba8Qcnlhe/4UoHtDxKecxdUk/YvgM81jImGJK+N9CnsaXpGpaoXTxwnul6eZITgfZFjA151Yb8FgXRu0R0igrQftnMyCO0GOZs+1r5PgLXhCbdXrCzzl+cu7POsWW6uJpIhDubx/191zNnYlBQOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EsG1Er7O; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-312e747d2d8so3351668a91.0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 00:35:53 -0700 (PDT)
+	s=arc-20240116; t=1753083418; c=relaxed/simple;
+	bh=W+3BVDyzmvGdFa1u6nD5JHSqNEgN5FIwnW/EGkuAndI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RSULPcu7buPl5Ict5TzY/FJB2paeOHdxGh0QBtmDdMeBmj5mTYtZZTTVU16oIW8dvMfSXioutbUPAJ8SwwmRyRcYpI5jr4UTiTfz/g5q9F1V+Dar+Vj2Ro69LOmiHxL2IXRZRGMkcOrHelHKV3k0/F2TdwOy/EWzPd29R0cdXtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BrZXcSW6; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55622414cf4so3480836e87.3
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Jul 2025 00:36:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753083353; x=1753688153; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=opejQY6aEiVoVxbjy6U9B6Te37ExtyGUXjhZ6UU9RtI=;
-        b=EsG1Er7O/TvfXRjYwY25rKm7yCwt3qyTZgPZYlvD8CbG57tTJuveVzAHwzY348uhV1
-         37Yd/SUMoj8vBTbfDsPxFBkfBeUhbifKk4kj7NTfK7iQJNXwFGA6eDE/dikBvBDCzhss
-         g+QxQzfIcg56LtVGfp8YLRW38654jIFErmw4YyAtX3Wk64sOehxzIRKIUKw+hwFzntzq
-         ymrRIPLCadQJzHuJczo9ZBddEE3Rp5c+lrp+qodaCBHSN2wO1FFMsqD/LQZmj3Gv51/Z
-         tfwLJNhgfekRAd/128sRrF7DNlCYh9PzpRbcqdIpo+NC1/bVSENGdbY4QmzwaR0VtKKO
-         c98Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753083353; x=1753688153;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753083415; x=1753688215; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=opejQY6aEiVoVxbjy6U9B6Te37ExtyGUXjhZ6UU9RtI=;
-        b=evOH5R4XF4rNf1ySDT6vfRmOIHvKKCutBflpvqyfsxFv7oqpBWG4VsHNTGpAg/6a8H
-         GMvVvN/ie5Mf/3AGh5QG9k+Othoe6J1Zm1Et1A+vRtkFslyqwkk9YoXOKn5QbUcHQkuR
-         bQH4ArOoVnFS4NK4Ee2YzFxwun/6WojIfD+Fv5a4x0JLG3DcVaDiwiZ8GjKwMb/YE8Pt
-         YhmWVvwO2dHrPtvbKDpAZJ+ajJSVrKDSQM4VK3jdcuS8mdvab3ZqzwzEN0syAcL2Kz/N
-         niT+j2tN2to9KqWltJJ1KyPASIvHjzx6+vHqQlKb7YpceZGqFByGOmXFCeuzT3lRaJ+E
-         0rog==
-X-Forwarded-Encrypted: i=1; AJvYcCUo2OSHKhry+szXQRV3o0HwgQ2izjEtzsx0oFZH+Cu5rjLz/NvbPXuT5gpvSIPIjHM5oL/84aa0Pr9A@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgun7Q78z7wNUnYcN6XpFLJ+xAEWIHkCq+tuJ6X4MLvvK/EnOD
-	d4Oxk3E9kyPrA1SGUaHkonzuPL/LPYZ+EhduSc/vzUGR7WTAFoLIch7DIRhpjQEkSqY=
-X-Gm-Gg: ASbGncskzO8XfiA/R83zndxV46GeRIop8/7xAvM9m84uuEGcYNHY2d+GEpVAjZO1BrG
-	isTQsl5ZeXFDh+RjCMMke85eynE3ISYOAUIjScIxBNwu532XpcRaDLiUnSZGLySgOirirawVjOo
-	lyY4c0n0mQD4UCqXROFdD4mhRxdx6NS7PTRj8ll6XpmbbAKwG0hehyPxhFYj3RQW4OdMjYwJ+mN
-	5kIDvROT1OUTXxdCxsUw8hxb8CyiAE5oDPNlt13bm7ySLVTJTq/l2Pnp5yK8w/GZDf/dXdkw+Rz
-	a29Gh42xYJinSeWghfal65T0rn4F1bZjfMgcTNstjxNQJWtwyfIOVqwAUBDUhwsq048XuutPCXY
-	w4MdYvHoiQG1i3AijlaedRJy9DyI+23svXQ==
-X-Google-Smtp-Source: AGHT+IGK+6HzSNcmFSThyhCNQrAKtbibXLnXPY44UCPOueKCYjgbvGzpUGfg57u47w+lHphH593XZA==
-X-Received: by 2002:a17:90b:548e:b0:31c:8e24:dfc3 with SMTP id 98e67ed59e1d1-31cc03c0048mr18979556a91.2.1753083353128;
-        Mon, 21 Jul 2025 00:35:53 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31c9f29ddcbsm9465067a91.36.2025.07.21.00.35.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jul 2025 00:35:52 -0700 (PDT)
-Date: Mon, 21 Jul 2025 13:05:50 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Erik Schilling <erik@riscstar.com>, linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH libgpiod] bindings: rust: make
- Settings:new_with_settings() crate-private
-Message-ID: <20250721073550.u6evy7ccehnrgyit@vireshk-i7>
-References: <20250720-new-with-settings-crate-v1-1-a51392bd5b13@linaro.org>
+        bh=kCcRznh7VYH4gZd2/W4WmK544xl9J9/zt9MYaOBbOVE=;
+        b=BrZXcSW6renMKdMZVhOGVSA+oxx1oOYcmyxurQ+pEJwjptvkMpOAlnfoAAwLWyDgE9
+         848rE+XTgX1+Sg9cJP2B0i4QilQ4bYR80yv4duC+71Hdsn3QEdn/qvXofaJepl7mQ0vr
+         gEIAHAoh7wIaJGdy45rcZRGGVCDuPDv8ks3IezsN6UCxasz0IVU2zDHpXtdUE1GKbEvl
+         t/td5JhyiSEEm3S+/EA/K/GrswSDGJL8F4HTviGnLHgRNT74+1ntxrpIrbwzbuezoxuu
+         pKyYFwldrU/f6krH4/H1VIeCci+E2fQpn66IU0EgKs18XBSqYIcV2TQ51rAOqEZQxQoT
+         0YBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753083415; x=1753688215;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kCcRznh7VYH4gZd2/W4WmK544xl9J9/zt9MYaOBbOVE=;
+        b=WFtkMZttvclm8iVrqcN1mUgQrpnBSMXcx7JALO6KlMTbnPvagqLxh/tP+3rdeYY1zB
+         hjIW3+DUe3M+npC+ZAoHj/SWqrGmxpwgL11M7zMxYuSUMiMNlUQ94Cfj8acA1aBpj53B
+         ha2dhokkk5EwLicBWtv8dziaf0K2ofk+DPZBI5NCcPXb0vFp11Lk87nyXh88mgYlr/BQ
+         1dS62TsyRY4ivK2gRYRxL1NKZlT8ekGuQndewZupjPaGMC/+KUPvkPPt3lueoisUuHHw
+         q8Tq+CbqPVL+DYFSxwAJrGIMzzLqpuYYz0eYsN3CmwRCrKJhzu8+LhZQdH29K2OV6b+C
+         Y5Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3w3gSg11dHtTzmwcCAJzB0m/Z784BSdt6pH5wWsSSCS30bKHGiCWNmO4H7fWmg797TtWRAMwowQYI@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYQTkG7XDzNQd65K0USmH7G9b8/NufaDqxlkUZV5YNtVRqc6Lm
+	C+awsyJj+aNzjKW5NmS8LSNuy1cQHxdrG+fXQqttmW6hxGLv4TEM1Mkbxa5ebIvHVPHTgaQi3AE
+	+6Xr535mBWxRux2YVYNEPNSKpdvWrk4ULFLU6b8F8+w==
+X-Gm-Gg: ASbGnctq8dVzxiDNaC8y05rXDn5TqGZY4H2dG55TXqtH32KzbIsqSHdu3+1AxD0RYuW
+	R5iZN0JuRfryyFSektOAkOhrSfVWSVsyeXVp5as04FIDTpODqbk3i8jLjpgqXaRa6dNqaiCFenH
+	i2FVUxUdInda4eCRUCt0xRuBEK7HV4RHr84tcDMx6uof/XeqGElfzenuQYS9xn8x5dew1nRowPk
+	n/NStx0E25Q85PZtNKYjLqJSaba3zT6qzlcrNE=
+X-Google-Smtp-Source: AGHT+IELv+QneN+tEu5OAmEa6/FLWzyGRa+zJ5LL19ln74h8R06F2aaiEp4Ksa0u2amUfj2fyyuMy+fewJdHo86WykY=
+X-Received: by 2002:a05:6512:3b2c:b0:553:d444:d4c4 with SMTP id
+ 2adb3069b0e04-55a3189eeb8mr2807153e87.50.1753083414855; Mon, 21 Jul 2025
+ 00:36:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250720-new-with-settings-crate-v1-1-a51392bd5b13@linaro.org>
+References: <20250720-new-with-settings-crate-v1-1-a51392bd5b13@linaro.org> <DBHK5WGFR034.SME6DH80HYRV@riscstar.com>
+In-Reply-To: <DBHK5WGFR034.SME6DH80HYRV@riscstar.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 21 Jul 2025 09:36:42 +0200
+X-Gm-Features: Ac12FXxVFPq3KA61nqAl8ITktzuhIR_zuk3Aa8pTBGnvKLoagEP3XQTb1geTb0E
+Message-ID: <CAMRc=Mej2oAp7B3obnBv-pB1sg3P-1EQnUkpneoVqu2wCEwwCg@mail.gmail.com>
+Subject: Re: [PATCH libgpiod] bindings: rust: make Settings:new_with_settings()
+ crate-private
+To: Erik Schilling <erik@riscstar.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20-07-25, 08:16, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> This function takes a libgpiod raw pointer as argument, is not
-> documented and should not be part of the public API. Make it visible
-> only within the libgpiod crate.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  bindings/rust/libgpiod/src/line_settings.rs | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rust/libgpiod/src/line_settings.rs
-> index 4ba20d4556e1d6a017910eb3961927437b157b3a..7f271c3b7397c81d4d2e15fc8050582306ad2b5b 100644
-> --- a/bindings/rust/libgpiod/src/line_settings.rs
-> +++ b/bindings/rust/libgpiod/src/line_settings.rs
-> @@ -46,7 +46,7 @@ impl Settings {
->          Ok(Self { settings })
->      }
->  
-> -    pub fn new_with_settings(settings: *mut gpiod::gpiod_line_settings) -> Self {
-> +    pub(crate) fn new_with_settings(settings: *mut gpiod::gpiod_line_settings) -> Self {
->          Self { settings }
->      }
+On Mon, Jul 21, 2025 at 9:34=E2=80=AFAM Erik Schilling <erik@riscstar.com> =
+wrote:
+>
+> On Sun Jul 20, 2025 at 8:16 AM CEST, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > This function takes a libgpiod raw pointer as argument, is not
+> > documented and should not be part of the public API. Make it visible
+> > only within the libgpiod crate.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> >  bindings/rust/libgpiod/src/line_settings.rs | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Reviewed-by: Erik Wierich <erik@riscstar.com>
+> [Changed my name a month ago]
+>
+> But, this should also be `unsafe`. Will post a patch for that.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Feel free to supersede this one, thanks!
 
--- 
-viresh
+Bart
 
