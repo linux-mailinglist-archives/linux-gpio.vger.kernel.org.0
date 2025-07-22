@@ -1,266 +1,281 @@
-Return-Path: <linux-gpio+bounces-23617-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23618-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2397B0D6D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 12:06:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A007AB0D795
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 12:56:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B657546873
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 10:03:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 56A1B1C23556
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 10:57:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB30528C5AC;
-	Tue, 22 Jul 2025 10:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959AB2E173E;
+	Tue, 22 Jul 2025 10:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ECXq4U9E"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="egWukgoF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311702E7198
-	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 10:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E062E11BA
+	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 10:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753178421; cv=none; b=VM/e2QJl+N5Ne3M4Vs2B0PVpoCudvoodXDcLKHgFlhqSvVDg0hXNO0AiSElFJjIvxZciOtCfwXVeZDrU8pQ2h5USLldoVDWSXS8tVeZ+HqoDVOM7I7d9JQgCuSJKLretz/z2P1NLwhzS+8Y3pvyKCv+lKhwk1j2rrALnyJ97Ptc=
+	t=1753181810; cv=none; b=LraeN0HPBvV4QBm8Mk4MibjgCQHukp/1zu/xbA9EAvK32Y52/q8KwOr/Ro/DjMvqm3AK37iinMRnwcezuLRfznQVMAGN/8KaopvP4LKqqkFwLRTTusoEPUOIkKca34Jgsq0HdoDi2YkrQyfpRj9/KibofHzt48sOu+7wI7a2T/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753178421; c=relaxed/simple;
-	bh=GO4fTpcA70KLXWXTwF/R+wWOcX84CBX2JoHlDUkOOFc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdBwmwHAh3I2nHMlqGQ+CLfOe6KpWS27e6szvqLJlBQnBsZr+pFIH7E2zZbPckfMn/mUQOPQVkh2i0itvqoVU19LnpLh/20B8Ov0bPjbLFByeNlYSlub2mbvzU4SwYuSprsMfqbVvSOiIOe2OFZbIhSvRBWwU2vLw9JNlElA4hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ECXq4U9E; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so10300070a12.3
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 03:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1753178417; x=1753783217; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VGtZBGKyhIZ2qBmToRF5pPNhe8YR+CyLhhQQdpkOTOg=;
-        b=ECXq4U9EqjiYoD92XY8txulV2656zxNWZBZNvecwO2Ox476zJvJdrxEI4XpspKPhBM
-         AjdpcYsxVQPOHgew4FB2dQ/fQVIeHjcMzbg9InaSoHJ1xz6BbUWo/j9xzPt9S51xLGU7
-         oZOFKieouTS/T6zidl9+3i0Pa3nllJUCtEG5Bup8hcEVp7NilOUP1n2ci/TE2OiVtkwg
-         DnO5B0Vp2gYYmT4IXSbXTi+9QBnXlkSlW2nGnodXwKYluxPx4nOZs8qpK8NhgH2JtigL
-         vqXnI9IRDPVtep3z9TlGIMj8WT1UyjWlyaQNK4GsHfznyTjNi/5IvMPc/3qSNPxIRzkC
-         ZeBA==
+	s=arc-20240116; t=1753181810; c=relaxed/simple;
+	bh=VmcMpMv1o/xrcqGxrBQh966G5LBlrvi8MJ4jNjqHCfY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tr4DYOY41QLxaG486rZX8SKoCQzJdu/SzC/MojWWlFXuKWtrhpNskqlhybuJ/58+S4p7C6I162uFBTcWSkqYfTbM/e7SJD7b0JfSIZJyl6As90lF5WNl9ZbSWmUfoKcPN2P2mkv6HIHuijqULLYOr1ecrlU43mW1nEgEPpIUdig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=egWukgoF; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56M3PnDq015848
+	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 10:56:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	g7qM0Z+wf2GStDuKTmGsX7zzLsTCMG5C7nE0l4CouW0=; b=egWukgoFgVppj7xX
+	iusTxAI5opKABbqQShMnS5QxJtmiE+cepNnCJG8n2YZCxjiTmxuzHbV2/k7xZDRL
+	1MOhybQeF1bz7jSSRCPPYVYaaljLZRLtAVUb6z6woTBBNCJ1vz07/9OIOvz5V3tD
+	oP3MPTUmvqTYonFhCAlIs933VYDZMAD8dDcII/2xGcQASb+RjU92bBxrZGJLU2xi
+	gTt+Dw2J4fTY21dneHK6uSbbelwU2xO7ken5tRtdqCIc7Pj4Ggdj7Zu008MrGKvR
+	tC8zbEYL2jZwVORAXrWZBnv9RkQ3MiAei/GeG2E0CijURnhJpcOIMY3FsxdhwHWI
+	t4Ar+Q==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 480451h0b9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 10:56:47 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2365ab89b52so47865185ad.2
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 03:56:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753178417; x=1753783217;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VGtZBGKyhIZ2qBmToRF5pPNhe8YR+CyLhhQQdpkOTOg=;
-        b=PdvzU/kldrdy+zqABIcyOn8ntEkR+9+KbjLwcUKWadALMzfQRTRXc79b979yAbYHhX
-         5gsXGzBeAQ60VqGKZI/Jie6jkjzcgppcFravLY3QeivuSUti5K6TmBv5tIpu5LVadikg
-         Kg6/A26a05TDHJoI+MO8rfz1E9zp3OU2PlIxMdVWoLIJcqz/EadSfeQM5cUG8BaNFMbq
-         94jnizaCKt9YkMzjO0hC3Br3MdJqPAr+NwZGjnKuSbzcSxlB+0cpD39UHkctp0Xs869D
-         s5bE8207yWBI5P+ir8d3th+XK8BrrLbSUYirCsTFjYRdWNAkqwPJYEArPOsadeER0ShG
-         AzfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWlXbb0sDmVt5VgkDyRSQsjoDnVYTS3Uw4UWGeWv97vZRfKz0u5m+hpbL4dgX+5xLmOwUqH2ywfu6B7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmOcx1ljwQvQUjLDW0p5cJbEUhnYijF4UDk+W0phqcyQOdMEdr
-	8U4Hk/1ouULquwTUlTnUI4p3yz5Y/qdqTxTsnEmNvuYTW4Lh/ldhGJ2h14gyukgF0wY=
-X-Gm-Gg: ASbGnctZC/VzUF2mcNPRoc7K8kE+rsaUi4qBDMnBy3g4o9/fwWK5wwQf0iZzvPXhH0i
-	J7w1sThbUzPX8V4hEc9/nviMs9Jrre7n52q6fyhSjpbyN/z6xitEHXS3bi2Z/7AS9jW0bF3y0OU
-	h9lD/mMqrv/EP11PYcWa/dPCU5SfnK6CJDSPEA4UsiWe40mHZs0qRTUTUDm6V3lXmEaB3EtpuAb
-	sDmwQoKQFR+TrTXF1N+tCLiDJZbNI5ayvpVAIlTFc54s979fCMDPu+XO6BXebwHxeO2R+aA0rjW
-	LeQcZFepmxHP4llwhAN4tlw7FVqofdup5kc6BjOeTN2Mqapq5innaTxYzNzvulOQLrAZyZXhbEN
-	oeUFYlH7PsL24Rkp7FfoVF5jV5Cs8L+h17gymDEcAwWRb5ZwFWmF9DT6kgBadWMuvHETEqT9WjS
-	bQekw=
-X-Google-Smtp-Source: AGHT+IEYByDblsbsdG7luqkRNEVSZPdXvQIlF7+Af1ARSZWqI4XkQYoHGoB5zzWSTWUWze1gc9PnFA==
-X-Received: by 2002:a05:6402:520c:b0:608:a7a0:48 with SMTP id 4fb4d7f45d1cf-6128262b18dmr22272866a12.28.1753178417281;
-        Tue, 22 Jul 2025 03:00:17 -0700 (PDT)
-Received: from localhost (host-79-47-155-191.retail.telecomitalia.it. [79.47.155.191])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-612c90a8937sm6723101a12.64.2025.07.22.03.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Jul 2025 03:00:16 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 22 Jul 2025 12:02:01 +0200
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, florian.fainelli@broadcom.com,
-	wahrenst@gmx.net, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, iivanov@suse.de, svarbanov@suse.de,
-	mbrugger@suse.com
-Subject: Re: [PATCH 0/7] Add pin control driver for BCM2712 SoC
-Message-ID: <aH9hmVA2cEJipYiU@apocalypse>
-References: <cover.1752584387.git.andrea.porta@suse.com>
+        d=1e100.net; s=20230601; t=1753181806; x=1753786606;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g7qM0Z+wf2GStDuKTmGsX7zzLsTCMG5C7nE0l4CouW0=;
+        b=cWTk1DFaBGV1dxoCV9hUymMs+YHG1pj3T7nY64N5OMpuY7M7mmL9I4nv4xJqwqY08o
+         Subk5IwCC5anQCVufphmaMAlNqb9kyJV7nxslGHbp8lI9HvniEYI0vGSigXdtFdqpZzd
+         DsAz7mBQrrvAG+OgRHYsz9HV5ibIx7wYxPbm6b01EdyKahD1/p2r+0wIaLErcYgWsolP
+         ZIPgywmmjPCZ0C2euh5fNhbfkOL1FAgKVuNI/QZ+tcQKVxmPwYy+0J5Q6HXGjYqyclk+
+         5WLisPnXL54ioHvqGDuYQjAPWVaTNXzB+KMxtvPMAOWTY+LHkMO6NTYTCgm8odhi8mbM
+         V1Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFuOqHdhKbzAhbL7Ep1f0QE8JpuO7Iji5FQyrdulpHkOudcguHlNIhHJqp+N4PYXAcZXVnP3sK9bIj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNT/bakbJ9dBtbGPp9hJV9iMXyH79exLvAv5CGRzOJkKga+LH+
+	O8DHFaza8bSctzfzheelV/CHh2XR3QsFnOXwb3Y/IHrhjZPNQrUKRuT0IXs7p21n7hm5DC6+Nhi
+	R3asxaL3SF29ZORJ/qNNILko7cHgEnIZ+ZzQiMSkd5I1JIU65Il9bSCNKxup1sepb
+X-Gm-Gg: ASbGncu3oUyi1Vx9RyPh6jiQ/Il2UCkYKQ9/wUCB0BDQrAqrqnITJV0/jbjCWeNtMHf
+	uMs4Cy3cpOLFFoyqjUdspNQEWUu9A00G3mr3MkpDb/jcE1ltfJNMgVGjXaULuQc24vN1G87yjDa
+	fMymr1MRkH/KDhpyriszLgbmDlEZvLJDxp6rKlsTqFrBkH1qgpg9NpxBumNrxzHG1qnNaEP570W
+	XDaniuloh6TlMI2WYPWxV/TBcRliZ0UvCg6rACtt79fDroFT4aefpso4sf8PWUOsJaMv4HON19p
+	BzADzRCI1xh5RuH1kyMT+ux+E3o0dqV2q/1rC78wS27Q6Mc0tGY3LLjyyLBYo9uF95ZpoZSoksg
+	1cbE=
+X-Received: by 2002:a17:903:3d0d:b0:234:f4da:7eed with SMTP id d9443c01a7336-23e3b84f72emr252315505ad.44.1753181806154;
+        Tue, 22 Jul 2025 03:56:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUt6A7hh/EP89XTAOzcg/lK9W717hw7dFv37fh4cCUg4RhbdxPMNKnk9K5jOdZTIMUErJkMw==
+X-Received: by 2002:a17:903:3d0d:b0:234:f4da:7eed with SMTP id d9443c01a7336-23e3b84f72emr252315085ad.44.1753181805624;
+        Tue, 22 Jul 2025 03:56:45 -0700 (PDT)
+Received: from [10.219.49.237] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23e3b60e9b4sm74000165ad.56.2025.07.22.03.56.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Jul 2025 03:56:45 -0700 (PDT)
+Message-ID: <d614d8e3-963d-4d34-9b15-1544c7a22cf0@oss.qualcomm.com>
+Date: Tue, 22 Jul 2025 16:26:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1752584387.git.andrea.porta@suse.com>
-
-On 20:31 Tue 15 Jul     , Andrea della Porta wrote:
-> Hi,
-> 
-> The following patches add a pin control driver for the BCM2712 SoC and few
-> pin/gpio Devicetree nodes for Raspberry Pi 5.
-> 
-> Device driver is follow up version on what Andrea posted in April [1].
-> 
-> It is based on sources from here [2]. I just made few cosmetic changes
-> and addressed review comments from earlier submission. I don't have
-> documentation for this controller.
-> 
-> Patch 4 wire up power button on RPi5.
-> 
-> Patch 5 adds WiFi Devicetree node for RPi5.
-> 
-> Patch 6 adds Bluetooth Devicetree node for RPi5.
-> 
-> All this have been tested as kernel was directly booted RPi5 via
-> kernel= config.txt option and cmdline.txt file with following content
-> (Note I am using Tumbleweed RPi raw images)
-> 
-> # cat /boot/efi/cmdline.txt
-> root=/dev/mmcblk0p3 rootwait rw systemd.show_status=1 console=tty ignore_loglevel earlycon console=ttyAMA10,115200
-> 
-> With all these patches Bluetooth and Wifi are working fine (tm) with
-> firmware files provided by openSUSE Tumbleweed.
-> 
-> All comments and suggestions are welcome!
-> 
-> Happy hacking!
-> Ivan and Andrea
-> 
-> [1] https://lore.kernel.org/lkml/f6601f73-cb22-4ba3-88c5-241be8421fc3@broadcom.com/
-> [2] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/drivers/pinctrl/bcm/pinctrl-bcm2712.c
-> [3] https://lore.kernel.org/lkml/20240605120712.3523290-1-florian.fainelli@broadcom.com/#t
-> [4] https://lore.kernel.org/all/bfc60a7e-54d2-48a6-a288-4fe76d66507a@gmx.net/
-> 
-> 
-> CHANGES in V2: (all patchset is based upon linux-next/master)
-
-Sorry, I've just realized this patchset has been sent with no V2 in the subject.
-Anyway, I'm preparing a new revision (which will be V3) after amending it after
-Rob's automated script warning.
-
-I'll also split the patchset into two, oen with binding / driver for SoC pin
-controller and another with thie remaining DTS related patches.
-
-Many thanks,
-Andrea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] ASoC: codecs: wsa883x: Handle shared reset GPIO
+ for WSA883x speakers
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+ <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org,
+        linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com
+References: <20250718104628.3732645-1-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20250718104628.3732645-3-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20250721-hairy-aardwolf-of-enterprise-bbc99f@kuoka>
+Content-Language: en-US
+From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+In-Reply-To: <20250721-hairy-aardwolf-of-enterprise-bbc99f@kuoka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=EIMG00ZC c=1 sm=1 tr=0 ts=687f6e6f cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=i4jCgTYSAnVeQ-bZYmQA:9
+ a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-ORIG-GUID: JeR0_BwyQhrPgqmtegn6gQ9sHd-ltB1O
+X-Proofpoint-GUID: JeR0_BwyQhrPgqmtegn6gQ9sHd-ltB1O
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIyMDA5MCBTYWx0ZWRfX+uM2v165r78e
+ YEruO9dUWBxz4UANcS1zrx5DYjYn+PI+XYazCj6nSdMFOAOpsZdltKNtSuCKEvvaFv/+1mDYwGo
+ ORmT1dP7ZDb7HGGvDkTiFPSSVDbJ09ek0dpAwT3gMtrVAnqwnqd/weo+Cm4/rNkEvubwJ/xBPGa
+ xDj52Wm/NPL0wrhqW8gDrVkIGSDlUp8hPkB7OucwH/EVOINFkcz1CstgcDh0uZUhJuAfFXUKo50
+ Bu41OVjOXP1+TMXRry6PtiJevmK3culyb0bz5ufpp8y00IsQYbMR99OQF+uqfkMmpuxqiyeE6ML
+ 9bho+gbx4JIraX5WL4lCTyeTbFUBvv6zN+3YFhEDmakjiZuM1mckPQrd9+W4jX0b5Z4jW0HF/qv
+ qAUXY9KVbqzD0wuC9X3BS1b4BwxkajycXgldgkXjQn+dohgy1Kf3hDztmoVzGxCU1nWuxinF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-22_02,2025-07-21_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 clxscore=1015
+ suspectscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507220090
 
 
+
+On 7/21/2025 1:53 PM, Krzysztof Kozlowski wrote:
+> On Fri, Jul 18, 2025 at 04:16:28PM +0530, Mohammad Rafi Shaik wrote:
+>> On some Qualcomm platforms such as QCS6490-RB3Gen2, the multiple
+>> WSA8830/WSA8835 speakers share a common reset (shutdown) GPIO.
+>> To handle such cases, use the reset controller framework along
+>> with the "reset-gpio" driver.
+>>
+>> Register devm action to safely disable the regulator on device removal
+>> to prevents a potential release warning from _regulator_put().
 > 
-> --- PINCTRL DRIVER ---
+> It is not possible to remove the device - suppress bind attrs. How did
+> you trigger that?
 > 
-> - dropped bcm2712_c0_aon_sgpio_pin_funcs[] and bcm2712_d0_aon_sgpio_pin_funcs[]
->   struct array definitions since they are not used anywhere.
+Ack,
+
+I encountered the warning as regulator was being released unexpectedly,
+triggering _regulator_put() warnings. While the device itself isn't 
+removed, Registering the devm action ensures safe cleanup without 
+triggering warnings.
+
+Please check the below logs.
+
+I could use some suggestions for this issue. please help with some 
+suggestions how i can approve this design.
+
+Thanks,
+Rafi.
+>>
+>> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+>> ---
+>>   sound/soc/codecs/wsa883x.c | 93 +++++++++++++++++++++++++++++---------
+>>   1 file changed, 71 insertions(+), 22 deletions(-)
 > 
-> - dropped 'arg' variable in brcmstb_pinconf_set() as it's not used.
+> ...
 > 
-> - updated copyright info at the top.
+>>   static int wsa883x_probe(struct sdw_slave *pdev,
+>>   			 const struct sdw_device_id *id)
+>>   {
+>> @@ -1566,13 +1615,18 @@ static int wsa883x_probe(struct sdw_slave *pdev,
+>>   	if (ret)
+>>   		return dev_err_probe(dev, ret, "Failed to enable vdd regulator\n");
+>>   
+>> -	wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
+>> -						GPIOD_FLAGS_BIT_NONEXCLUSIVE | GPIOD_OUT_HIGH);
+>> -	if (IS_ERR(wsa883x->sd_n)) {
+>> -		ret = dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
+>> -				    "Shutdown Control GPIO not found\n");
+>> -		goto err;
+>> -	}
+>> +	ret = wsa883x_get_reset(dev, wsa883x);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * Register devm action to safely disable the regulator on device removal.
+>> +	 * This prevents a potential release warning from _regulator_put().
+>> +	 */
+>> +	ret = devm_add_action_or_reset(dev, wsa883x_regulator_disable,
+>> +				       wsa883x);
 > 
-> - several changes in the declared macros. Renaming the macro name and the
->   macro parameters to better reflect the semantic.
+> If removal is possible (but then explain in commit msg how), then this
+> should be separate commit with fixes and cc-stable, because you are
+> fixing actual bug - lack of regulator release on unbind.
 > 
-> - reworked MUX_BIT() macro to be more streamlined and easy to
->   understand.
+Ack,
+
+The Reason to introduced this change in same patch,
+
+without devm_add_action_or_reset(dev, wsa883x_regulator_disable, wsa883x);
+
+if i try to enable ->devm_reset_control_get_optional_shared_deasserted()
+
+seeing below crash logs.  _regulator_put() release warning.
+
+logs
+-----
+[   10.679294][   T90] ------------[ cut here ]------------
+[   10.684772][   T90] WARNING: CPU: 1 PID: 90 at 
+/drivers/regulator/core.c:2450 _regulator_put+0x50/0x60
+[   10.694344][   T90] Modules linked in: snd_soc_hdmi_codec 
+phy_qcom_edp venus_dec venus_enc videobuf2_dma_contig rpmsg_ctrl 
+qrtr_smd fastrpc rpmsg_char videobuf2_memops qcom_pd_mapper nb7vpq904m 
+msm lontium_lt9611uxc ucsi_glink typec_ucsi pmic_glink_altmode 
+qcom_battmgr aux_hpd_bridge ath11k_ahb ath11k hci_uart rtc_pm8xxx btqca 
+coresight_stm bluetooth qcom_pon stm_core venus_core pwrseq_qcom_wcn 
+drm_exec mac80211 ocmem v4l2_mem2mem gpu_sched videobuf2_v4l2 videodev 
+nvmem_qcom_spmi_sdam qcom_spmi_adc_tm5 snd_soc_sc8280xp 
+drm_display_helper qcom_vadc_common snd_soc_qcom_sdw coresight_tmc 
+snd_soc_qcom_common videobuf2_common qcom_stats coresight_etm4x 
+qcom_q6v5_pas phy_qcom_qmp_combo usb_f_qdss mc drm_dp_aux_bus 
+ecdh_generic qcom_pil_info qcom_q6v5 ecc coresight_replicator aux_bridge 
+coresight_csr qcom_sysmon coresight_funnel pwrseq_core gpi typec 
+i2c_qcom_geni qcom_common coresight icc_bwmon llcc_qcom qcom_glink_smem 
+qcrypto pinctrl_sc7280_lpass_lpi mdt_loader snd_soc_lpass_wsa_macro 
+sha256_generic pinctrl_lpass_lpi
+[   10.694524][   T90]  snd_soc_lpass_va_macro display_connector 
+snd_soc_lpass_macro_common authenc drm_kms_helper libdes qrtr libarc4 
+icc_osm_l3 qcom_rng pmic_glink cfg80211 rfkill drm fuse ipv6
+[   10.804083][   T90] CPU: 1 UID: 0 PID: 90 Comm: kworker/u32:4 Not 
+tainted 6.14.0 #1
+[   10.811959][   T90] Hardware name: Qualcomm Technologies, Inc. 
+Robotics RB3gen2 (DT)
+[   10.819920][   T90] Workqueue: events_unbound deferred_probe_work_func
+[   10.826643][   T90] pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT 
+-SSBS BTYPE=--)
+[   10.834510][   T90] pc : _regulator_put+0x50/0x60
+[   10.839362][   T90] lr : regulator_put+0x30/0x48
+[   10.844118][   T90] sp : ffff8000809e3670
+[   10.848244][   T90] x29: ffff8000809e3670 x28: 0000000000000000 x27: 
+ffff70941a04a080
+[   10.856300][   T90] x26: 0000000000000000 x25: ffffbfa860a9bee8 x24: 
+ffffbfa860e79cb0
+[   10.864354][   T90] x23: ffff709406e62640 x22: ffff709418668808 x21: 
+ffff8000809e3710
+[   10.872409][   T90] x20: ffff709415e81840 x19: ffffbfa86119b680 x18: 
+00000000ffffffff
+[   10.880462][   T90] x17: ffffbfa86013d058 x16: ffffbfa8601cbac4 x15: 
+ffff709419a70b48
+[   10.888517][   T90] x14: 0000000000000000 x13: ffff709400032b10 x12: 
+0000000000000000
+[   10.896573][   T90] x11: 0000000000000000 x10: ffffbfa85fdbcc60 x9 : 
+ffffbfa85fdbc7e0
+[   10.904627][   T90] x8 : ffff709418668ab0 x7 : ffff709418668ab0 x6 : 
+ffff709418668ab0
+[   10.912676][   T90] x5 : ffff709418668ab0 x4 : ffff709418668ab0 x3 : 
+ffff709415e807c0
+[   10.920727][   T90] x2 : ffff709406e62640 x1 : 0000000000000001 x0 : 
+ffff709415e81840
+[   10.928781][   T90] Call trace:
+[   10.932024][   T90]  _regulator_put+0x50/0x60 (P)
+[   10.936877][   T90]  regulator_put+0x30/0x48
+-----------
+
+Thanks & Regards,
+Rafi.
+
+> Best regards,
+> Krzysztof
 > 
-> - added PAD_BIT() macro to avoid code duplication.
-> 
-> - renamed 'lock' variable to 'fsel_lock'.
-> 
-> - added some comments about non-existent pins on D0 silicon revision pin
->   declarations.
-> 
-> - brcmstb_pinctrl_fsel_set(), brcmstb_pull_config_set()  and
->   brcmstb_pinconf_set() (and functions that call them) can now return -EINVAL
->   as error.
-> 
-> - added myself as MODULE_AUTHOR.
-> 
-> - dropped the 'brcm,bcm2712-[aon-]pinctrl' fallback compatible. Only c0 or d0
->   compatibles are permitted now.
-> 
-> 
-> --- DTS ---
-> 
-> - moved 'clock-frequency' property from (uarta) board dts node to SoC dtsi node.
-> 
-> - added 'brcm,sdhci-brcmstb' compatible and 'clock-names' property to mmc node
->   to avoid dt_binding_check errors.
-> 
-> - added 'brcm,bcm7445-gpio' compatible to gpio node to avoid dt_binding_check
->   errors.
-> 
-> - renamed all pinctrl pin nodes as per yaml schema (*-state and *-pins).
-> 
-> - changed 'brcm,bcm2712-*pinctrl' to 'brcm,bcm2712c0-*pinctrl' since the
->   former was more of a fallback and does not reflect a real silicon revision.
-> 
-> - moved status="okay" to the last entry in 'uarta' node.
-> 
-> - removed 'local-*-address' property from everywhere.
-> 
-> - dropped 'skip-init' property in 'uarta' node since it does not apply to
->   linux kernel.
-> 
-> - renamed 'pwr-button' node to 'gpio-keys' and 'pwr_key' node to
->   'power_button'.
-> 
-> - dropped an userspace related 'brcm,gpio-direct' property from gpio node.
-> 
-> 
-> 
-> --- DT BINDINGS ---
-> 
-> - binding schema file renamed to 'brcm,bcm2712c0-pinctrl.yaml' to reflect the
->   compatible name.
-> 
-> - dropped the 'brcm,bcm2712-[aon-]pinctrl' fallback compatible. Only c0 or d0
->   compatibles are permitted now.
-> 
-> - added example section.
-> 
-> - moved allOf: block at the beginning of the schema.
-> 
-> - dropped some unnecessary new lines.
-> 
-> - replaced current layout to describe the pin subnodes with patternProperties
->   (nodes now end with -state and -pins).
-> 
-> - expanded the schema description to give some context about STB family of pin
->   controller and added some details about C0 and D0 silicon variants. This is
->   also reflected in the commit message.
-> 
-> 
-> --- MISC ---
-> 
-> - enabled CONFIG_PINCTRL_BRCMSTB in arm64 defconfig.
-> 
-> 
-> Andrea della Porta (1):
->   arm64: defconfig: Enable BCM2712 on-chip pin controller driver
-> 
-> Ivan T. Ivanov (6):
->   dt-bindings: pinctrl: Add support for Broadcom STB pin controller
->   pinctrl: bcm: Add STB family pin controller driver
->   arm64: dts: broadcom: bcm2712: Add pin controller nodes
->   arm64: dts: broadcom: bcm2712: Add one more GPIO node
->   arm64: dts: broadcom: bcm2712: Add second SDHCI controller node
->   arm64: dts: broadcom: bcm2712: Add UARTA controller node
-> 
->  .../pinctrl/brcm,bcm2712c0-pinctrl.yaml       |  123 ++
->  .../dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts  |  134 ++
->  arch/arm64/boot/dts/broadcom/bcm2712.dtsi     |   48 +
->  arch/arm64/configs/defconfig                  |    1 +
->  drivers/pinctrl/bcm/Kconfig                   |   13 +
->  drivers/pinctrl/bcm/Makefile                  |    1 +
->  drivers/pinctrl/bcm/pinctrl-brcmstb.c         | 1195 +++++++++++++++++
->  7 files changed, 1515 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm2712c0-pinctrl.yaml
->  create mode 100644 drivers/pinctrl/bcm/pinctrl-brcmstb.c
-> 
-> -- 
-> 2.35.3
-> 
+
 
