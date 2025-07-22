@@ -1,353 +1,310 @@
-Return-Path: <linux-gpio+bounces-23620-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23621-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC01EB0D7F4
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 13:12:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD76BB0D87E
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 13:43:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 061073A309B
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 11:11:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA505167129
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 11:43:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A618128BAB0;
-	Tue, 22 Jul 2025 11:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 749882E3373;
+	Tue, 22 Jul 2025 11:43:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VN1GIgCe"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="yJCQTldV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023120.outbound.protection.outlook.com [40.107.44.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FA52E424D
-	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 11:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753182703; cv=none; b=kmlUCY04OyfRuN6P8OaDfrR2ZUtfo6A6Kv0WJ/WEI8xiHUA+9SAeXz8TPITZSYv4Ir/LDBZPGJtNyHSv8z2N3j+QYGIzfc/h5jcFXkWEvp6mLgremqsaLTeisiGj0btb106AcLBUGpjpZT7xTZf/2Rvje/QCFNggqutabOdhfvk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753182703; c=relaxed/simple;
-	bh=7b1qh/dSogZFvxoYSJwQTetAmceccBgx4t1nS6JueJo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MYjGxKPN9sx0hRVDWQIkXvqirJYNVtQDT66o7TeeTSlKeBzAsKCBWSq/HgR9xFNR8u++YDHVzHJwu0Rwt0PWWBYQGceFXutwPoElt2o6On8eAX7121nTCYNCtQdtMAEJ/z/VjZaCq7J7ER/M5sQtlDdfa4vSYtf1nbsc8lFTl7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VN1GIgCe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56M3PnFi015848
-	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 11:11:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Oi53JRV3Vx8pK1+2DIKrj/tvup2GlNnWQRcDHigNxvk=; b=VN1GIgCeEgOMNW7R
-	rl90UYWSjqYLzpZJst5i/oNnzS2+YJm4hxij3KFwC1rs4uVnJ2kvevDtylePTc3t
-	2MibDyIbck2LKYEo38AHuqEicubnowr7Rtb1ajOD72iXX4uUZMolughWTplSTMe7
-	rxVhv7dJqD8ZcXi7gKh4u53Y9Nn7jewsmZq9rlJoh4A2DGu/dTFSYYb/RljPf34Z
-	xqH3SNp78F/IZzhjF0MQn/STwypElO8PQqE6M41mNKUP8YWgpnvHL2jibxfBer7E
-	WKgOF7UrB13XfAohrGiIXAKdtZzkuMi7ykuvNHnnWlphqgnpS1/JnbSMRGYxBD2X
-	s8QzWg==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 480451h1rk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 11:11:40 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-748f3613e6aso2684323b3a.0
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 04:11:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753182699; x=1753787499;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oi53JRV3Vx8pK1+2DIKrj/tvup2GlNnWQRcDHigNxvk=;
-        b=krTkd6hnamhio7NKafjVC1duoNDkrok8IOJcwvhmcdGSn/aXKVNwlK3rsexRxTKd3J
-         hKEq3k9fnBli7d0sXlb7XFAdMPsnoqIv4c7q173Yjju2ZAp5qv+MBXkzw5X41to+/Y8T
-         udaVLM48/N3VIrB+CiH+eVzzqCvKn3FIalMCZu4pZQaunqYgs+eiWhoCC2G/47TYh/pT
-         Hj/JmRqzI54psTkJp7wDtDxtFPj5WRa2shWi6+4Xeu/kp9+H7oN5Qoof4OeQ6lnqg33a
-         2xvkhXY2LrABK1OPxmvhUKeQVm+h+u94dlSxqoWMS7XdwEop027zePJsa5pt5ekFgJHd
-         FT2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWuLtm9zLZ6vHeXAYTpGGJUZb0p59uGgMITzD9ja5azMYpmfVRi2wHy5b974/3JYQlKPe/fXadJJIku@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtDEwYz4poQGpqEgw+xC15OjzRwyrb02NaB1AcVnW1NeYNGvh+
-	oQV0f+oXU/iuL3YEcpDhBXGs/eUO8QbvZGRfUlPd8oTD6Hl/BnlspncHBPnGvAAdA6et6FtgCD/
-	rqJKwQ6boHoJQIRJG2mo8rrHQ0ee6x38k0PBDmWecOkWbgJCp3wSp7dHjrbMKvHyc
-X-Gm-Gg: ASbGncvyoEg7JRii5OqiyON5vqNptNSdFLVEQJsGqcIXn3sG4gmW1YA+4+P6yYJAJsN
-	0pMXoRfj4IbkQ5/ocpDJAi36SJ+YRBr8ReQVQU/xs5GwXZraPSpLQ857xDsfQ+Ea9139yPFobOE
-	ZS5OHNXCLzosWk6YnxuxSrn1AhAutnfBN/HIlvXfm3zGhuwAq1oHjhKW9djBYgCcZTDqDovLbLD
-	fTTBXOHhkEfBOSrb1KrpcvpstU6V+QVUcoCW36BHTN6VHovGudZpOaMa27l09Wd8gCM5jGLjVzy
-	u4BOoRB2BY1l4wZLTh+qyYMx1uc75zIPwMDXA9Oeicb8boczYcT0MTvyv87OM7P6fZJCNS//63t
-	QzEc=
-X-Received: by 2002:a05:6a21:e85:b0:21f:ee3f:8ad5 with SMTP id adf61e73a8af0-23812c48c36mr39345045637.20.1753182699044;
-        Tue, 22 Jul 2025 04:11:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGzvWUcEPNXtNIE/BBj0biFMIcwHJBPX8MO6tw2I2eYccmF/S3eY5ug3RzJMiSa80xvG6s1rw==
-X-Received: by 2002:a05:6a21:e85:b0:21f:ee3f:8ad5 with SMTP id adf61e73a8af0-23812c48c36mr39344983637.20.1753182698520;
-        Tue, 22 Jul 2025 04:11:38 -0700 (PDT)
-Received: from [10.219.49.237] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-759cb678d9bsm7465223b3a.109.2025.07.22.04.11.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Jul 2025 04:11:38 -0700 (PDT)
-Message-ID: <8d488066-6f29-4ef8-8f09-26328b5213f1@oss.qualcomm.com>
-Date: Tue, 22 Jul 2025 16:41:31 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77D023A98E;
+	Tue, 22 Jul 2025 11:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753184605; cv=fail; b=OGw/U++QEPS2iKJk4ArJ4rymGtMrm7apR1pcP8sB3celUNdy7xrlc/7Cl3ROo4GY+QTvwRCga9ITCQkWMUQDf+n0q73/Q+t/XBD1u0riNyOXjSZFElqgtRwGr3z1WgfmL3CK3kWnuyBxXaS8s0gMe3rEWxmzIk3Pc3S2bSz0VrM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753184605; c=relaxed/simple;
+	bh=UENHWCVEf3dVjvmW7y3E3/ISONA9HXFvBZe1KZtYFa0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=j+M7g7LVOajkV0qcelPWDBu/ejOVys2NJ0Sun2VZxHp+QgjtL1gmPo1QmiB20Lw4gBRZzT9FbRZUWl+M2y+43JuSC7v74L3TQj/3oxoREzlpP7NXgWuZlliqZ4wkzWV4ILxza3QVe5K6/cw1uE0r+rKUzLpo7is6cl17PlyHJ+c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=yJCQTldV; arc=fail smtp.client-ip=40.107.44.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R+nM+XDZD08jKx9iWv54WTpeKQBjN4DnaEcUMBzTQOL4UjxWsEBg/lWcMeqM7j6pIe0s6clzdIsNEd4g0dcFPhMCqIhFia0ydYNr+fKrTZQOAJtQjXZ3iCJGfbeTVsl5+pYvcTLifh3ELRtT8UEyUJ+iGdqicj5tnGxWl5IY8qzvnavp5kC9JtzlXW/KRKcmQTvoaekBrXWH/9dpuIBnrmZaBNKN5SwO2vFrZbnf7CIiGexZUJ5Gy2xZBspqIsA+gIqXpYYxiXPvi8NK3+TkWLZgzMB55AOW9NKLENz+iAU+C+GTD7JjYh+nYSG/XtUFaEjTMDIhNV6ze9iMLpi0dA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dAUWyS4lro8AIdcdftogGOhGeqcsx9nGBgkxLGLykMg=;
+ b=WiypanyAYwSdKL2d5nPVrXnTQcUYvtB48s/eC/YxDENN4SJG7KlXxqFnGmaNcPgXcNGRwqgRAuD7nppM5expV6zrC6q4m9p8Qfbw0zPTLwSdXzGb08ityR6iOoz1WZM+UTqm2lh1s3tMnFrI45JDfcza1J0b0aklb8no67GVKRDcHZms27OvDd8GdP6zj/7/tA1mvXPRLNOGM53i5sLqUxtuL+SsFGFaZ9dMliuZm5Xn9YS6DEubfRdPc8ey109Kiyx10e1VqAXKUO4xx6HvmG19i4fkBMcipLThSLLVuia8/4TKOZlJ9+ZZs2sM+VU+HRJLKYtrzQElZglqE1F5Vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dAUWyS4lro8AIdcdftogGOhGeqcsx9nGBgkxLGLykMg=;
+ b=yJCQTldVSjBc05GaQTDsQzThaO1ENtSmEFRL4d4JyzOWnJ1hGTVS3mx5pKdQUyT/fOy1+u67YAiMbRCbLkRzww1XN3IzQt54B7wRaFsqTnjQcKgFWoLMPuZlJTv/yjx0+MYW4MMoVBITrLcdcW5BfXmdrS9Az/MI8PSdktsdE5Xb/DUJOMgBtaj0ndZkFpMKsBwqYOkM43fuyhD+Ndhqz/OW3KW33q62RHcMq63ofw0w1xefZEn1yL8xHd9xEyvtwlQm4IqioQNt3/60dw79wPUVFIkqMmrRbSaCgSAIUPVGCcXJiiKPmZAcgc87c9WBrYaobLIg321xN9oP971L9g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by SEZPR03MB8608.apcprd03.prod.outlook.com (2603:1096:101:228::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8922.39; Tue, 22 Jul
+ 2025 11:43:15 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%2]) with mapi id 15.20.8943.029; Tue, 22 Jul 2025
+ 11:43:14 +0000
+Message-ID: <84fc40eb-6911-4aaf-96b7-73604b1b71ed@amlogic.com>
+Date: Tue, 22 Jul 2025 19:43:09 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] dts: arm64: amlogic: add a5 pinctrl node
+Content-Language: en-US
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250403-a5-pinctrl-v3-0-a8c067e22295@amlogic.com>
+ <20250403-a5-pinctrl-v3-2-a8c067e22295@amlogic.com>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20250403-a5-pinctrl-v3-2-a8c067e22295@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR01CA0005.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::23) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] ASoC: codecs: wsa883x: Handle shared reset GPIO
- for WSA883x speakers
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
- <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org,
-        linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com
-References: <20250718104628.3732645-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250718104628.3732645-3-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250721-hairy-aardwolf-of-enterprise-bbc99f@kuoka>
- <d614d8e3-963d-4d34-9b15-1544c7a22cf0@oss.qualcomm.com>
- <a006f099-578f-45aa-b165-64e28b8f930e@kernel.org>
-Content-Language: en-US
-From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-In-Reply-To: <a006f099-578f-45aa-b165-64e28b8f930e@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=EIMG00ZC c=1 sm=1 tr=0 ts=687f71ec cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=yfeqtnweelXl-nV2tnwA:9
- a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-ORIG-GUID: Fxj3mQEcmO2aQRWqJP_geLILBfKpJHJW
-X-Proofpoint-GUID: Fxj3mQEcmO2aQRWqJP_geLILBfKpJHJW
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIyMDA5MSBTYWx0ZWRfX8XKyW6ZhGrA+
- H7tIvm4WkkBPbxr+IhhMieUkWFEEhWsmmwAygFpReqG/mp/zkkl6ALa47Wsbzzw9uxa0m7JO9TF
- 9JPKNIKE2GCyFOizTQe4lDXAI99NMaOFYtuugOJe8eMFA5MocUKsVZdJWRAs12VtyQ5iiQRYW4n
- ph2GXTTopwU2Yj9aGQygTUSayBRBtyuWA8eI5GMzy2Xxs5uPGt5NGmGTG36D7xM42/9OdI/tWtr
- gP19eLiwQpOUA+keZXXKg/MBEf6VvHyytAqFNsoZ/Qi5PXjZ0/4ayc7DjevEMeUiRZtZK4OkDF9
- n2STAFvItnv/2AjHGph98x4KpFd5y8gZr84W4o+LSCbYJwwGAzy3/FeNb81z/s25DeKglWyng6j
- OykNvxYKhGXabzXYqt841fm73AhzUU71xCkKluhPvuXk8dYIZrJ7/heKret6UHsSxPwtSvCB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-22_02,2025-07-21_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 clxscore=1015
- suspectscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507220091
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|SEZPR03MB8608:EE_
+X-MS-Office365-Filtering-Correlation-Id: 839b0b05-a9b8-40a1-9b79-08ddc914f188
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aEt3Z2ViSzBJM1crVWFuTTlWcXo0Zy9RaFRNSWlxNCtrRHc5WXhhaUFLUCti?=
+ =?utf-8?B?QWRaMVkvZUNoUnRuTHdmeExYeEFxMllNOXBIcEFKUTUycURUMDdhOENWSEV6?=
+ =?utf-8?B?MkZGN3hpZWNUMFEwUUlrMnluSXBleHFTV1IxVDV2bExVMUJLdXBObDJUUmJ5?=
+ =?utf-8?B?STlVZjJQYjJxSWlrd2pBQXdMeSthRElCQUtZYzZFTlkrYW9obk5Db1FYZFZP?=
+ =?utf-8?B?VlRFWHE1SWJXaEhVcG5QZldlb0ZFQTFvcTRSUlR0WXlzbi9QTkFoSG9LUy83?=
+ =?utf-8?B?dVQ5QmM2ZVpFK1dLOCs5eUEzSkVIS045WnhrL3NHYWxLNEhTUzQzNkhQRW1C?=
+ =?utf-8?B?RGxleHFHQUJFMURUTUlwTENVSWhCQ3htSFJwTGlBbmt6TmtXTUFmYStpcVZt?=
+ =?utf-8?B?bDU2b1pid3d6dEVGYVlaenUrSVVmczdiSTR3VTlEWFRxQ1M3K2taazkwTU1M?=
+ =?utf-8?B?YWF2aU9meE5WaEVFdDlaSHdjVW0vK2FhbkhOa1pPbVhJNlZqbmtyamlOR2Vl?=
+ =?utf-8?B?cHRaWE42ZjVCL3BtUmppUzRvNG5peDJjZStneDhUbUhOY0tGQlhZZXBNcFhN?=
+ =?utf-8?B?RXVLbDlTUVdqdmdVNWhhc3NTZml1VTV6SWVteVNTWkdXUkxTckFMa1M2TThW?=
+ =?utf-8?B?c1c0a2g5bFcxSmFUQ0pXQVRDWXNrS0FrLzJjNlpJK2dqT25QYzV5Y0ZTei81?=
+ =?utf-8?B?dnJMODVybjh0WWMyQ3pHQlhBYmdlOW1UZVRrNnVYTWtVOEtvOXFnekhuOUhI?=
+ =?utf-8?B?K0VyOHJXSmh6VFJlZ2FLbUdlL1RlQkFsd1MyMGlrNlliZlZDblBpQjJINlhj?=
+ =?utf-8?B?bTRHWE4ycHdxcFR3NXRlWjRpeEZGVjNOSVNmbFFWQ3p0czg5VkJydUxqNVFG?=
+ =?utf-8?B?N0xGbjlMKzdDS1ArcXlwdnNhYmZpOHA3cjZFQkNWZSt5aGRJNFgxUW5RNyt1?=
+ =?utf-8?B?NG5xeVNYK1pMS2wxUTRLc0NKdkZMcHJLdVMvQTgzM3dybk52ME44bVdoYlZx?=
+ =?utf-8?B?WXFLNk9BMU9zbEdOeG84TlVVYkxTQ0NCc044RXBWczdXYi91dGtvb0lud1lR?=
+ =?utf-8?B?QWFkWWhxUkJ6aTd3dEl0VDNrS0xJZTVaNnJkQis3TUlsYVRsQ0txaFpNajlw?=
+ =?utf-8?B?NDZsR2hjOG1OODBRb2dvbmRFdVY3L1c4dmJSRVlTOGRIbXFZVEhqSjlDYm5U?=
+ =?utf-8?B?cHZXYmZzNFpOckw5YU9nVW5DTzBEcXdRdnlMMUlhTHFiamdiWTRXKy9GNTRY?=
+ =?utf-8?B?SWJqM1hKYzBZVis4cWJIbWMrcmNiczhQRWVFcUFKWG82ZTM5dzNoYmJDUkNZ?=
+ =?utf-8?B?bmQzeDg1aElkMHZSbld4UjNhQStsRlBBWEtjaVdxYVY1cmlwVVpoYjZNZGVS?=
+ =?utf-8?B?WThyajF4Y1c0YS80UEoySGExeXVwQXdiNEJOUnN6M0Y4blZ2Vklkb1V2RzJJ?=
+ =?utf-8?B?ejU5ZnREQ1dyV29iYUNOSkx5ckNsQVAxalg2VmdaS1pRWGJkclNrL2dGek5M?=
+ =?utf-8?B?K24xbnVpNVB3dXN0Y2ZnRU5xSlA3UVlTRzRzQWZUdERNTmUvZUtKVytPaEF5?=
+ =?utf-8?B?NjhIZnF4bEhWZk5CdUpVL0FEbjRkUGNoZGVnRHh1dytiRmpmTUVNVXMxaE5j?=
+ =?utf-8?B?ZkNTVzkyWlc1U2FRN3ZXQXQ3VUtrcHpSRmk4V3JGY216a0crSVB4MnBTL3RQ?=
+ =?utf-8?B?ODYxZmZZUzh0SW5CS3JYbEhuT25nWmdEQzBidDNnTXJud1hqUFVPMk9oTnJz?=
+ =?utf-8?B?eUdsQ2NHblRmQTFVMTBlUERmNnZrT2FqY1Z3U1ZPTDhFU0dHYW5PN3NzUE1R?=
+ =?utf-8?B?Z09jQXpaOVpzcGFCOVIxVVgwc2lDYmpwRmNBRGE5UldKbHJIMURrcVRlcTdM?=
+ =?utf-8?B?dXRDSDIyUW9IRWE5cmhGejdGb0lEUXZUbUtFRkgrdEk2V3ZMRFVDc1Y3T1dB?=
+ =?utf-8?Q?/B5CWO/3UeQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T0RocmhEOW91WTNhbXM3SllxUSt6NXhUTC9KNHVuUkFER0Q4OEkrbDB1YWlz?=
+ =?utf-8?B?N2trYmNmaXhaK1hhZE03QTM2ZzIwOTQxMzRUVEsvZ0FWeXh1MUhCWUpRM05a?=
+ =?utf-8?B?WEZaelg5K01YVkQ4djRmS3pMUExnWGo5RnVUWU80K2J4RGwwbmorZ2FNUFNJ?=
+ =?utf-8?B?M2ZSNkFLYU5BcEFGTUVseC93VE5IbHRJMGExWVA1TCtSNG9UTUg3MzJrdUxm?=
+ =?utf-8?B?a3R6MVhFZzZTTmpPSldSY1djaXowSHBtWDFNSmFqU0JFQURra255ZUUxVWZp?=
+ =?utf-8?B?dTVRMUhsYlA4WXE1NURvU0RqWlR2T3FadlIrNjZYNSs1Z2tBRXZISkVFaWo5?=
+ =?utf-8?B?OEozK05JcHdpYjZRQWxpenE5T1Jsa01IaTRHKzAxY08yQWI1NmNLYkJMV2wz?=
+ =?utf-8?B?UnZXREV0TTlWYmxzNitJQ2tWdmxTd2pENVVKQ2RtK0tUYXRhaFdTeGVsVnV0?=
+ =?utf-8?B?bkw2RVhJWUY4WXFSVkRUTktuZmVqV0xXVUk5T0t2M2ttazVoL01QOStCSjA4?=
+ =?utf-8?B?cmVVTnBoME1lTEVFcmFxV0ZaQlpMS1VLK2JmS2V1YjBrTVl0WENzalpUam5x?=
+ =?utf-8?B?WEFBUVVRbWhGNnlXTVdDUFpzT2VIZExQVngvMWdHTnJ4cmx6bkdYYk5PVTlV?=
+ =?utf-8?B?azVHSXgzeW9lZzB5Mi9vVlUvaEhKUW81clV0VmhXT2UrMUdPL0dkNDh0N1FI?=
+ =?utf-8?B?UHdtR0EzSFp0REE4S2FnOU1saTZwWGVCSHhkTHJoODhNNzA5VysrOGRGcmZ4?=
+ =?utf-8?B?Vk9aYWZ1UmI4Qmp0dWkxREY3TnVyWU5TY29CVkswS2JIMGI5bW42d1JzSHht?=
+ =?utf-8?B?QXZRVXlCa2FxWTJSbnFLOWFxQVg3bnh1YjNMdnlvRG1lVENQRVEzUlBadWNG?=
+ =?utf-8?B?Ri9wbEpWeFRGS0RIT1djVzAwQWhvYjh6ekE1UUlMZ0FoWnpNZFd3aDRvNEVj?=
+ =?utf-8?B?THU4OS9Eck9JSnlxSVErWVZleXRoRGhsWjY4ek9CUm9LMWNiNjdkK0N5WWRM?=
+ =?utf-8?B?UzFBa1ltNktaa1pwdDZBZnN2T0lKVlRaL2czSGh2WG11amFodmNEK0Jtc1hX?=
+ =?utf-8?B?dk9SRmZYTXY3K0VhUE5pRVMxNDlaUSszeFNlM1BQbnMxUk13ODVGbThoT0tq?=
+ =?utf-8?B?QXdtaGtzc1BWSTRIT1ZLc2I4Q0k4WnJwQWpmYnN1SjJ0RXF0Nmh5ZDBzblZB?=
+ =?utf-8?B?czQzRHlUVld5ekJDOUhjRS9ZdXIyVGxrUTc1aWFIWGQ5T2VqQ2w1YTVSRnkw?=
+ =?utf-8?B?YnQ3NDYxdHRjbktQczF3SGVqUGVQMnhNTGUwL0M0WHdLajVaWmlWb0xwR0Ry?=
+ =?utf-8?B?WjI3QW1OcGNsanlXaStjbkFQRFMvVzBwQStFK1hPb0h5SXVRRnMralNZQXNh?=
+ =?utf-8?B?TXJYd09XcEpnbjYveExSTndDRlNTR1NUNUliSitUbFVpaDV4Y3hGRk9JNENn?=
+ =?utf-8?B?b281VGIwT0tyZVBNT3VuYUNzcVZMdGhLbTJRRVYvekFwcDZWNmpGT0dEYm5n?=
+ =?utf-8?B?MExPSTBZV0prZEVWdFZVMzFpSEpTbVJVYldiS3RMTGZXbmsvS2ZoSGg3Q0tw?=
+ =?utf-8?B?L3drc3NiL0J5emFMYnB3VHUrMG5NVUsxU2MvRm1LcE93QmltMU1hVzBETUY4?=
+ =?utf-8?B?aGVmWVV3VDhTSjNuMHdKQ1VZMDZIWmNsbGRTSHl1QnBPYjU1MkpORFo1SUly?=
+ =?utf-8?B?RVFONU56UU5ZbkJjTjRkRWpHZmFYT1dnVVZMQjhvQWh2bVZuVzFJNUw4T0ZM?=
+ =?utf-8?B?NXFwSE9IdVE4MWZFa214WFNJWlBkWjJrVHpCNHRxTFFxUDc4ZnhJRHZLZGdY?=
+ =?utf-8?B?c0J5SXV3SU0xZnBSSHFidTEyWERJQldLY2doTThDNVo3bmtaTE54RkRYMkJJ?=
+ =?utf-8?B?QlMzZW9lckk0RjBDcmFtcGthMHE1a01lbVdwazdEVGZLeTJmMU1vTVgzL1ph?=
+ =?utf-8?B?ZTlDMTU3R3pMWHBqYUthSm1GQ1VjTjV4WXZIQk1XMW8vQk9lNHE3MDJKOFpQ?=
+ =?utf-8?B?N01QOHJZWWFFUW9FNmRJWEFvWmNoWTlTdG1HYjRNNng1MkFQN1hFR3p0Q09U?=
+ =?utf-8?B?NTltTi84V0M5WHAvVkdhcmdBUWhFaGVzZnpuZ3MvUjUxanNhbENDZG5ZbHJW?=
+ =?utf-8?B?b0N0NzdwRHlnSVVKblJmd1RtV3hWM0w4VFZLemd1VmZlZ2NGSW9UWWtZQnc0?=
+ =?utf-8?B?dnc9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 839b0b05-a9b8-40a1-9b79-08ddc914f188
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2025 11:43:14.7572
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xETtI6lduAZCO3lYKbDzXpt5xyAvTf5kIRdn9hemKxbcRsGmZZ6ZD2XpvtXqTcsrUYjXGzUGRQ8PSE31UwvaEj9uJIeeE4YVELCdE3chZr0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB8608
 
+Hi Neil,
+    Do you have time to help check if there is anything else that needs 
+improvement in this submission.
 
-
-On 7/22/2025 4:36 PM, Krzysztof Kozlowski wrote:
-> On 22/07/2025 12:56, Mohammad Rafi Shaik wrote:
->>
->>
->> On 7/21/2025 1:53 PM, Krzysztof Kozlowski wrote:
->>> On Fri, Jul 18, 2025 at 04:16:28PM +0530, Mohammad Rafi Shaik wrote:
->>>> On some Qualcomm platforms such as QCS6490-RB3Gen2, the multiple
->>>> WSA8830/WSA8835 speakers share a common reset (shutdown) GPIO.
->>>> To handle such cases, use the reset controller framework along
->>>> with the "reset-gpio" driver.
->>>>
->>>> Register devm action to safely disable the regulator on device removal
->>>> to prevents a potential release warning from _regulator_put().
->>>
->>> It is not possible to remove the device - suppress bind attrs. How did
->>> you trigger that?
->>>
->> Ack,
->>
->> I encountered the warning as regulator was being released unexpectedly,
->> triggering _regulator_put() warnings. While the device itself isn't
->> removed, Registering the devm action ensures safe cleanup without
->> triggering warnings.
+On 2025/4/3 16:33, Xianwei Zhao via B4 Relay wrote:
+> [ EXTERNAL EMAIL ]
 > 
-> Logs are cut - you do not see the most important part, who puts the
-> regulator?
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > 
-> How unregistering regulator solves the incomplete get/put paths? It
-> feels like you are hiding real problem instead of fixing it.
+> Add pinctrl device to support Amlogic A5.
 > 
->>
->> Please check the below logs.
->>
->> I could use some suggestions for this issue. please help with some
->> suggestions how i can approve this design.
->>
->> Thanks,
->> Rafi.
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>   arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi | 90 +++++++++++++++++++++++++++++
+>   1 file changed, 90 insertions(+)
 > 
+> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
+> index 32ed1776891b..844302db2133 100644
+> --- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
+> @@ -4,6 +4,7 @@
+>    */
 > 
-> ...
+>   #include "amlogic-a4-common.dtsi"
+> +#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
+>   #include <dt-bindings/power/amlogic,a5-pwrc.h>
+>   / {
+>          cpus {
+> @@ -50,6 +51,95 @@ pwrc: power-controller {
+>   };
 > 
->> [   10.679294][   T90] ------------[ cut here ]------------
->> [   10.684772][   T90] WARNING: CPU: 1 PID: 90 at
->> /drivers/regulator/core.c:2450 _regulator_put+0x50/0x60
->> [   10.694344][   T90] Modules linked in: snd_soc_hdmi_codec
->> phy_qcom_edp venus_dec venus_enc videobuf2_dma_contig rpmsg_ctrl
->> qrtr_smd fastrpc rpmsg_char videobuf2_memops qcom_pd_mapper nb7vpq904m
->> msm lontium_lt9611uxc ucsi_glink typec_ucsi pmic_glink_altmode
->> qcom_battmgr aux_hpd_bridge ath11k_ahb ath11k hci_uart rtc_pm8xxx btqca
->> coresight_stm bluetooth qcom_pon stm_core venus_core pwrseq_qcom_wcn
->> drm_exec mac80211 ocmem v4l2_mem2mem gpu_sched videobuf2_v4l2 videodev
->> nvmem_qcom_spmi_sdam qcom_spmi_adc_tm5 snd_soc_sc8280xp
->> drm_display_helper qcom_vadc_common snd_soc_qcom_sdw coresight_tmc
->> snd_soc_qcom_common videobuf2_common qcom_stats coresight_etm4x
->> qcom_q6v5_pas phy_qcom_qmp_combo usb_f_qdss mc drm_dp_aux_bus
->> ecdh_generic qcom_pil_info qcom_q6v5 ecc coresight_replicator aux_bridge
->> coresight_csr qcom_sysmon coresight_funnel pwrseq_core gpi typec
->> i2c_qcom_geni qcom_common coresight icc_bwmon llcc_qcom qcom_glink_smem
->> qcrypto pinctrl_sc7280_lpass_lpi mdt_loader snd_soc_lpass_wsa_macro
->> sha256_generic pinctrl_lpass_lpi
->> [   10.694524][   T90]  snd_soc_lpass_va_macro display_connector
->> snd_soc_lpass_macro_common authenc drm_kms_helper libdes qrtr libarc4
->> icc_osm_l3 qcom_rng pmic_glink cfg80211 rfkill drm fuse ipv6
->> [   10.804083][   T90] CPU: 1 UID: 0 PID: 90 Comm: kworker/u32:4 Not
->> tainted 6.14.0 #1
->> [   10.811959][   T90] Hardware name: Qualcomm Technologies, Inc.
->> Robotics RB3gen2 (DT)
->> [   10.819920][   T90] Workqueue: events_unbound deferred_probe_work_func
->> [   10.826643][   T90] pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT
->> -SSBS BTYPE=--)
->> [   10.834510][   T90] pc : _regulator_put+0x50/0x60
->> [   10.839362][   T90] lr : regulator_put+0x30/0x48
->> [   10.844118][   T90] sp : ffff8000809e3670
->> [   10.848244][   T90] x29: ffff8000809e3670 x28: 0000000000000000 x27:
->> ffff70941a04a080
->> [   10.856300][   T90] x26: 0000000000000000 x25: ffffbfa860a9bee8 x24:
->> ffffbfa860e79cb0
->> [   10.864354][   T90] x23: ffff709406e62640 x22: ffff709418668808 x21:
->> ffff8000809e3710
->> [   10.872409][   T90] x20: ffff709415e81840 x19: ffffbfa86119b680 x18:
->> 00000000ffffffff
->> [   10.880462][   T90] x17: ffffbfa86013d058 x16: ffffbfa8601cbac4 x15:
->> ffff709419a70b48
->> [   10.888517][   T90] x14: 0000000000000000 x13: ffff709400032b10 x12:
->> 0000000000000000
->> [   10.896573][   T90] x11: 0000000000000000 x10: ffffbfa85fdbcc60 x9 :
->> ffffbfa85fdbc7e0
->> [   10.904627][   T90] x8 : ffff709418668ab0 x7 : ffff709418668ab0 x6 :
->> ffff709418668ab0
->> [   10.912676][   T90] x5 : ffff709418668ab0 x4 : ffff709418668ab0 x3 :
->> ffff709415e807c0
->> [   10.920727][   T90] x2 : ffff709406e62640 x1 : 0000000000000001 x0 :
+>   &apb {
+> +       periphs_pinctrl: pinctrl@4000 {
+> +               compatible = "amlogic,pinctrl-a5",
+> +                            "amlogic,pinctrl-a4";
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges = <0x0 0x0 0x0 0x4000 0x0 0x300>;
+> +
+> +               gpioz: gpio@c0 {
+> +                       reg = <0x0 0xc0 0x0 0x40>,
+> +                             <0x0 0x18 0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_Z<<8) 16>;
+> +               };
+> +
+> +               gpiox: gpio@100 {
+> +                       reg = <0x0 0x100 0x0 0x40>,
+> +                             <0x0 0xc   0x0 0xc>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 20>;
+> +               };
+> +
+> +               gpiot: gpio@140 {
+> +                       reg = <0x0 0x140 0x0 0x40>,
+> +                             <0x0 0x2c  0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 14>;
+> +               };
+> +
+> +               gpiod: gpio@180 {
+> +                       reg = <0x0 0x180 0x0 0x40>,
+> +                             <0x0 0x40  0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
+> +               };
+> +
+> +               gpioe: gpio@1c0 {
+> +                       reg = <0x0 0x1c0 0x0 0x40>,
+> +                             <0x0 0x48  0x0 0x4>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
+> +               };
+> +
+> +               gpioc: gpio@200 {
+> +                       reg = <0x0 0x200 0x0 0x40>,
+> +                             <0x0 0x24  0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_C<<8) 11>;
+> +               };
+> +
+> +               gpiob: gpio@240 {
+> +                       reg = <0x0 0x240 0x0 0x40>,
+> +                             <0x0 0x0   0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
+> +               };
+> +
+> +               gpioh: gpio@280 {
+> +                       reg = <0x0 0x280 0x0 0x40>,
+> +                             <0x0 0x4c  0x0 0x4>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_H<<8) 5>;
+> +               };
+> +
+> +               gpio_test_n: gpio@2c0 {
+> +                       reg = <0x0 0x2c0 0x0 0x40>,
+> +                             <0x0 0x3c  0x0 0x4>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
+> +               };
+> +       };
+> +
+>          gpio_intc: interrupt-controller@4080 {
+>                  compatible = "amlogic,a5-gpio-intc",
+>                               "amlogic,meson-gpio-intc";
 > 
-> Everything above is irrelevant.
-> 
->> ffff709415e81840
->> [   10.928781][   T90] Call trace:
->> [   10.932024][   T90]  _regulator_put+0x50/0x60 (P)
->> [   10.936877][   T90]  regulator_put+0x30/0x48
->> -----------
-> 
-> And this is only relevant information which tells nothing. Are you sure
-> you pasted FULL log?
-> 
-
-sharing the full crash logs
----------------------------
-[   10.679294][   T90] ------------[ cut here ]------------
-[   10.684772][   T90] WARNING: CPU: 1 PID: 90 at 
-/drivers/regulator/core.c:2450 _regulator_put+0x50/0x60
-[   10.694344][   T90] Modules linked in: snd_soc_hdmi_codec 
-phy_qcom_edp venus_dec venus_enc videobuf2_dma_contig rpmsg_ctrl 
-qrtr_smd fastrpc rpmsg_char videobuf2_memops qcom_pd_mapper nb7vpq904m 
-msm lontium_lt9611uxc ucsi_glink typec_ucsi pmic_glink_altmode 
-qcom_battmgr aux_hpd_bridge ath11k_ahb ath11k hci_uart rtc_pm8xxx btqca 
-coresight_stm bluetooth qcom_pon stm_core venus_core pwrseq_qcom_wcn 
-drm_exec mac80211 ocmem v4l2_mem2mem gpu_sched videobuf2_v4l2 videodev 
-nvmem_qcom_spmi_sdam qcom_spmi_adc_tm5 snd_soc_sc8280xp 
-drm_display_helper qcom_vadc_common snd_soc_qcom_sdw coresight_tmc 
-snd_soc_qcom_common videobuf2_common qcom_stats coresight_etm4x 
-qcom_q6v5_pas phy_qcom_qmp_combo usb_f_qdss mc drm_dp_aux_bus 
-ecdh_generic qcom_pil_info qcom_q6v5 ecc coresight_replicator aux_bridge 
-coresight_csr qcom_sysmon coresight_funnel pwrseq_core gpi typec 
-i2c_qcom_geni qcom_common coresight icc_bwmon llcc_qcom qcom_glink_smem 
-qcrypto pinctrl_sc7280_lpass_lpi mdt_loader snd_soc_lpass_wsa_macro 
-sha256_generic pinctrl_lpass_lpi
-[   10.694524][   T90]  snd_soc_lpass_va_macro display_connector 
-snd_soc_lpass_macro_common authenc drm_kms_helper libdes qrtr libarc4 
-icc_osm_l3 qcom_rng pmic_glink cfg80211 rfkill drm fuse ipv6
-[   10.804083][   T90] CPU: 1 UID: 0 PID: 90 Comm: kworker/u32:4 Not 
-tainted 6.14.0 #1
-[   10.811959][   T90] Hardware name: Qualcomm Technologies, Inc. 
-Robotics RB3gen2 (DT)
-[   10.819920][   T90] Workqueue: events_unbound deferred_probe_work_func
-[   10.826643][   T90] pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT 
--SSBS BTYPE=--)
-[   10.834510][   T90] pc : _regulator_put+0x50/0x60
-[   10.839362][   T90] lr : regulator_put+0x30/0x48
-[   10.844118][   T90] sp : ffff8000809e3670
-[   10.848244][   T90] x29: ffff8000809e3670 x28: 0000000000000000 x27: 
-ffff70941a04a080
-[   10.856300][   T90] x26: 0000000000000000 x25: ffffbfa860a9bee8 x24: 
-ffffbfa860e79cb0
-[   10.864354][   T90] x23: ffff709406e62640 x22: ffff709418668808 x21: 
-ffff8000809e3710
-[   10.872409][   T90] x20: ffff709415e81840 x19: ffffbfa86119b680 x18: 
-00000000ffffffff
-[   10.880462][   T90] x17: ffffbfa86013d058 x16: ffffbfa8601cbac4 x15: 
-ffff709419a70b48
-[   10.888517][   T90] x14: 0000000000000000 x13: ffff709400032b10 x12: 
-0000000000000000
-[   10.896573][   T90] x11: 0000000000000000 x10: ffffbfa85fdbcc60 x9 : 
-ffffbfa85fdbc7e0
-[   10.904627][   T90] x8 : ffff709418668ab0 x7 : ffff709418668ab0 x6 : 
-ffff709418668ab0
-[   10.912676][   T90] x5 : ffff709418668ab0 x4 : ffff709418668ab0 x3 : 
-ffff709415e807c0
-[   10.920727][   T90] x2 : ffff709406e62640 x1 : 0000000000000001 x0 : 
-ffff709415e81840
-[   10.928781][   T90] Call trace:
-[   10.932024][   T90]  _regulator_put+0x50/0x60 (P)
-[   10.936877][   T90]  regulator_put+0x30/0x48
-[   10.941276][   T90]  devm_regulator_release+0x14/0x20
-[   10.946486][   T90]  release_nodes+0x60/0xfc
-[   10.950886][   T90]  devres_release_all+0x90/0xe0
-[   10.955737][   T90]  device_unbind_cleanup+0x18/0x60
-[   10.960846][   T90]  really_probe+0x210/0x2c0
-[   10.965341][   T90]  __driver_probe_device+0x78/0x120
-[   10.970539][   T90]  driver_probe_device+0x3c/0x154
-[   10.975561][   T90]  __device_attach_driver+0xb8/0x140
-[   10.980854][   T90]  bus_for_each_drv+0x88/0xe8
-[   10.985520][   T90]  __device_attach+0xa0/0x190
-[   10.990185][   T90]  device_initial_probe+0x14/0x20
-[   10.995209][   T90]  bus_probe_device+0xb4/0xc0
-[   10.999876][   T90]  device_add+0x5a4/0x780
-[   11.004187][   T90]  device_register+0x20/0x30
-[   11.008767][   T90]  sdw_slave_add+0x1a4/0x244
-[   11.013352][   T90]  sdw_of_find_slaves+0x100/0x198
-[   11.018377][   T90]  sdw_bus_master_add+0x1c0/0x310
-[   11.023401][   T90]  qcom_swrm_probe+0x2a0/0x5a4
-[   11.028158][   T90]  platform_probe+0x68/0xdc
-[   11.032654][   T90]  really_probe+0xbc/0x2c0
-[   11.037052][   T90]  __driver_probe_device+0x78/0x120
-[   11.042249][   T90]  driver_probe_device+0x3c/0x154
-[   11.047273][   T90]  __device_attach_driver+0xb8/0x140
-[   11.052568][   T90]  bus_for_each_drv+0x88/0xe8
-[   11.057235][   T90]  __device_attach+0xa0/0x190
-[   11.061903][   T90]  device_initial_probe+0x14/0x20
-[   11.066926][   T90]  bus_probe_device+0xb4/0xc0
-[   11.071595][   T90]  deferred_probe_work_func+0x90/0xc8
-[   11.076974][   T90]  process_one_work+0x16c/0x3f4
-[   11.081828][   T90]  worker_thread+0x2c8/0x3e4
-[   11.086410][   T90]  kthread+0x12c/0x210
-[   11.090455][   T90]  ret_from_fork+0x10/0x20
-[   11.094857][   T90] ---[ end trace 0000000000000000 ]---
---------------------------
->>
->> Thanks & Regards,
->> Rafi.
->>
->>> Best regards,
->>> Krzysztof
->>>
->>
+> --
+> 2.37.1
 > 
 > 
-> Best regards,
-> Krzysztof
-
 
