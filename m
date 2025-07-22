@@ -1,132 +1,143 @@
-Return-Path: <linux-gpio+bounces-23622-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23623-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6E45B0D9B1
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 14:33:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E235B0D9D0
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 14:38:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5D5A188705D
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 12:33:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE1827ABAC3
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 12:36:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F5A72E03FB;
-	Tue, 22 Jul 2025 12:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D78B62E92C4;
+	Tue, 22 Jul 2025 12:38:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Z25gaQon"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2VFj8Wl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A90423ED75
-	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 12:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CAC2E1C61;
+	Tue, 22 Jul 2025 12:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753187615; cv=none; b=Vo++eexK/04qFfBBIdtC3dP/dNVBlnkN9GQxAGUrRUJidOKV+a3wB4XNsHEzL8THFg2FaD2elIRdL7rS9fyKwYjzCA7ORuyzP8ADCy/S5Mg9Gp+L6CBi1XGypBkKTvJxB8lHVSi2dugsvqmugATS3SRE+x7O6tA4ibYxHmFK1LI=
+	t=1753187894; cv=none; b=H5NI4L66X/yWvBe+WWe75Gzy00M4TZaKJ9YeOXBrtr3oGEFSAz/DnWadtq7ylNrIXD0T6govTjjUVt39SRiHFI+TwVHRdwf19mHmEoylUuZ9F+JFVgdr7GyKyhZu79GwBPXpeDEolpQ3d+oUgQ/8SVrP7CiMtfXMROu4OCDSF2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753187615; c=relaxed/simple;
-	bh=JQAmUAgM9/RaH27IaFC9XF/IxHkWyVVH3kpCZLC5sKc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uNeM29Hsk4NEgjNvXmIh4R4dtYM9Sg6mIqvvloE9F49Ckwl7bZk3AfttFhk6RnbR5CjjvIQ+og+XcZx6DV6hZDBsJNwxb9hCikUU5MQQah187H6pqO3eq0gU2wIVKKgpLfNCSO6jNNWc3pAFzz2X6zncOFRMSvk8vhag9OkrSAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Z25gaQon; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55a27e6da1cso4574830e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 05:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753187612; x=1753792412; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h+GKZahGmDdPv5L7LZQzaZ8ms1eU9iPtW5fE1sZ1rk4=;
-        b=Z25gaQonh2BcW45vaEJQp/HWqnl1+hy5QQwAsr4LcO7R1jD3F0lf9TJ9s8q3O0xoet
-         TfjqgSewMU3zg2g+PeW7xYdINxU5IKTkOIMOpfXJcnxAaNsTkcuwwGPhxqzhahmhXp+1
-         JN/NqyWtZnjcbRf5pud3bGg1Tp7jTN0QPHFRrVnHZ4lZ0yyhFBL7MjvYDqfQsYjrHPKO
-         jNoGjeEVgZUzuIItXUvk4Ghn82w+1VE1JntmAbO/BFMtgCeXpq36CbJXObzTnVkI6bFf
-         fFjSsYFy5IQvPm5ezJWhvKMYjtil04NRq8eajsJsksb23Dk7z7/mTHS8VtavSClNICTI
-         3Rtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753187612; x=1753792412;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h+GKZahGmDdPv5L7LZQzaZ8ms1eU9iPtW5fE1sZ1rk4=;
-        b=U07H/VDchREZdXhd0ln6F2pHqrB9b9t+uhHlEH8zYHn8DyySR9eTgVEDd/dKb5ki4r
-         iLSKyctOd5S5cFDvpUP76I8WolJwjU31NvA6x03Cw8IhjiiUD0seIipAHlxU6SeBe2jW
-         ShzjPHgU5eo/ojFfiqBC/v2YiHFMb4Lh6LcH95ACTxx0KnrwF5c3WK05t+4IbWwTI+79
-         py6i63GC7j9tvbKXOFI8skJJp4+1b5IdoCCwEAja50dxZ5l5Nij/odBY6o49UL89tisO
-         6jdS8WkoZrYs1MFQUuT8U1E/mxRftH52yfAWfGgLpmwFkZ1mFRcs44vK8W0nxJz+JnBI
-         j2hg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7/i5WS57OLMsNP5lVHzal5YD9FpLlAx0WqaHMocxgppvVcQW4yI9AnsI7gfdJbADY+N2+u8gtQXEy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKrD8bMS6LXN4+x00x/Dzqjxb1kc7ALA0ISiwZ9t3vRhL+vr0n
-	E6hDdic8pf58hDnuFWg+fbO+6S357jHWJz17vpD84wwZBKnUKaMJv9gYaFzYOvpAtbkd/+N9Skv
-	bmX0M2KBSCl0tfVef9DW6Bta6mqxlsln42bXrrlGpow==
-X-Gm-Gg: ASbGncsdUZo2PU3HqQxJW4bC+8wVx8g1oxlJP3aP2lhC5MdhBbBKLrA069qrRhrWP7B
-	IwhXn05Z84wUOEzrGAj86i/a/sQmjEzCB4aKxe74Lve+Zi8Iwo8hN8ZISEbJn+VAtFYoUJLt/Rx
-	f/azk5DIed5CSIcFYhSf3frIUfpbH6QEdN7rus4ExCaYKM2ZW4F2DlP++yBo5Jewq9tgNPSyG+D
-	ennqEmEdRgwSPOd/kI8IiZG8jo1IwTmoICmBw==
-X-Google-Smtp-Source: AGHT+IE4NLh74+eaL28wuve2GVp6Fz+dzUpqyQgftU5RDfIQz6VE0xFsh7GIWHtxc9eDY44fnzPlyDiXLFQXZa1zK+k=
-X-Received: by 2002:a05:651c:e13:b0:32a:6e20:7cdb with SMTP id
- 38308e7fff4ca-3308f526f69mr38693341fa.17.1753187611451; Tue, 22 Jul 2025
- 05:33:31 -0700 (PDT)
+	s=arc-20240116; t=1753187894; c=relaxed/simple;
+	bh=I3rviDa1O2L3b0pjuLc++5NqfNWR6zeybu3KptpK4Mw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pBF8cM3Ke0Mu7zjxfJLmGD0q3+qz15zNzrTPvADw/y7x5Zfck49VQre10lQlnZ7Cc9JO3CWymDLa1fKUy0yOE8TryzyIdUh/A5dM94P1Z6cjpIRenD4HPv59JpFqEz7m0mujFopQowCUs7ytBkc3ffL6a1wSIXz+Tw7NZ08YwgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2VFj8Wl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8702EC4CEF1;
+	Tue, 22 Jul 2025 12:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753187894;
+	bh=I3rviDa1O2L3b0pjuLc++5NqfNWR6zeybu3KptpK4Mw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=r2VFj8WlXA+xb6SpmAdz5ypeVpsdiJsh9JwD5rCFy3MPHrpiNO4eW9i9yWrMsQvEu
+	 6oOijUTe7VvhJBzzA8OWz2xY3gVC9TNyBf+nqzDj3Po4AjF9Jt5FwSlezqmGivVG0u
+	 C0ruySyeXRX+uSGCBnutZXa7uHJQ45vrBNIfLAxWKZHSMyTfyGzfWGS/VmJWZc9sIg
+	 jgYFeijLIuT/v70h51vCwj2ZpIhOzfeDvs9Ol0thGU8g0w4ZwoyW4Nq5OUDu7Wyrgm
+	 DVWTZfs9TjRIN2eX6wKGMyn03FtPr9MsCGNDiNKcWNvAqPT2/B+gfGQr9Dkqi/9io3
+	 /AvXRiUnbxcpg==
+Message-ID: <3ba94864-769c-4a73-8e70-a3904280317f@kernel.org>
+Date: Tue, 22 Jul 2025 14:38:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250721233146.962225-1-s-ramamoorthy@ti.com>
-In-Reply-To: <20250721233146.962225-1-s-ramamoorthy@ti.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 22 Jul 2025 14:33:20 +0200
-X-Gm-Features: Ac12FXw8rQB0btGgQIdOuuluV0bKj5UY1CC8pTxt_PxLMJg3hptyK0eG64L8UIU
-Message-ID: <CAMRc=McTJnTn1sf6Kc42yePvUyP87h1utJ7B_ynWjUxxm0E4Lw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] Add TI TPS65214 PMIC GPIO Support
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com, 
-	jcormier@criticallink.com, christophe.jaillet@wanadoo.fr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] ASoC: codecs: wsa883x: Handle shared reset GPIO
+ for WSA883x speakers
+To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+Cc: Srinivas Kandagatla <srini@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, quic_pkumpatl@quicinc.com,
+ kernel@oss.qualcomm.com
+References: <20250718104628.3732645-1-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20250718104628.3732645-3-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20250721-hairy-aardwolf-of-enterprise-bbc99f@kuoka>
+ <d614d8e3-963d-4d34-9b15-1544c7a22cf0@oss.qualcomm.com>
+ <a006f099-578f-45aa-b165-64e28b8f930e@kernel.org>
+ <8d488066-6f29-4ef8-8f09-26328b5213f1@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <8d488066-6f29-4ef8-8f09-26328b5213f1@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 22, 2025 at 1:32=E2=80=AFAM Shree Ramamoorthy <s-ramamoorthy@ti=
-.com> wrote:
->
-> The related MFD series was integrated in mainline during 6.15 cycle [0].
->
-> TPS65214 is a Power Management Integrated Circuit (PMIC) that has
-> significant register map overlap with TPS65219. The series introduces
-> TPS65214 and restructures the existing driver to support multiple devices=
-.
->
-> TPS65215's GPIO specs are the same as TPS65219, so the "tps65219-gpio"
-> compatible string is assigned to two devices in the TPS65219 MFD driver.
-> No additional support is required in the GPIO driver for TPS65215.
->
-> - TPS65214 has 1 GPIO & 1 GPO, whereas TPS65219/TPS65215 both have 1 GPIO=
- &
->   2 GPOs.
-> - TPS65214' GPIO direction can be changed with register GENERAL_CONFIG an=
-d
->   bit GPIO_CONFIG during device operation.
-> - TPS65219's MULTI_DEVICE_ENABLE bit in register MFP_1_CFG maps to
->   TPS65214's GPIO_VSEL_CONFIG bit.
->
-> TPS65214 Datasheet: https://www.ti.com/lit/gpn/TPS65214
-> TPS65214 TRM: https://www.ti.com/lit/pdf/slvud30
-> TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
->
-> Tested on Jon Cormier's AM62x platform with TPS65219.
-> GPIO offsets remained consistent and functional.
->
-> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-> Tested-by: Jonathan Cormier <jcormier@criticallink.com>
-> ---
+On 22/07/2025 13:11, Mohammad Rafi Shaik wrote:
 
-This doesn't apply on top of my gpio/for-next branch. Do you think you
-can quickly submit another iteration rebased on top of it?
+Again, trim the output from irrelevant parts.
 
-Bartosz
+> [   10.928781][   T90] Call trace:
+> [   10.932024][   T90]  _regulator_put+0x50/0x60 (P)
+> [   10.936877][   T90]  regulator_put+0x30/0x48
+> [   10.941276][   T90]  devm_regulator_release+0x14/0x20
+> [   10.946486][   T90]  release_nodes+0x60/0xfc
+> [   10.950886][   T90]  devres_release_all+0x90/0xe0
+> [   10.955737][   T90]  device_unbind_cleanup+0x18/0x60
+> [   10.960846][   T90]  really_probe+0x210/0x2c0
+> [   10.965341][   T90]  __driver_probe_device+0x78/0x120
+
+Although wsa probe function is not here, but this feels like it deferred
+or exited with failure and some cleanups were incomplete. Current code
+looks correct, so I suspect that whatever you did there introduced the
+errors. So bug in your code is the answer that you converted it to devm
+interface. That conversion should be rather separate patch.
+
+Best regards,
+Krzysztof
 
