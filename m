@@ -1,310 +1,132 @@
-Return-Path: <linux-gpio+bounces-23621-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23622-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD76BB0D87E
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 13:43:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6E45B0D9B1
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 14:33:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA505167129
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 11:43:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5D5A188705D
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 12:33:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 749882E3373;
-	Tue, 22 Jul 2025 11:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F5A72E03FB;
+	Tue, 22 Jul 2025 12:33:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="yJCQTldV"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Z25gaQon"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023120.outbound.protection.outlook.com [40.107.44.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77D023A98E;
-	Tue, 22 Jul 2025 11:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.120
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753184605; cv=fail; b=OGw/U++QEPS2iKJk4ArJ4rymGtMrm7apR1pcP8sB3celUNdy7xrlc/7Cl3ROo4GY+QTvwRCga9ITCQkWMUQDf+n0q73/Q+t/XBD1u0riNyOXjSZFElqgtRwGr3z1WgfmL3CK3kWnuyBxXaS8s0gMe3rEWxmzIk3Pc3S2bSz0VrM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753184605; c=relaxed/simple;
-	bh=UENHWCVEf3dVjvmW7y3E3/ISONA9HXFvBZe1KZtYFa0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=j+M7g7LVOajkV0qcelPWDBu/ejOVys2NJ0Sun2VZxHp+QgjtL1gmPo1QmiB20Lw4gBRZzT9FbRZUWl+M2y+43JuSC7v74L3TQj/3oxoREzlpP7NXgWuZlliqZ4wkzWV4ILxza3QVe5K6/cw1uE0r+rKUzLpo7is6cl17PlyHJ+c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=yJCQTldV; arc=fail smtp.client-ip=40.107.44.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R+nM+XDZD08jKx9iWv54WTpeKQBjN4DnaEcUMBzTQOL4UjxWsEBg/lWcMeqM7j6pIe0s6clzdIsNEd4g0dcFPhMCqIhFia0ydYNr+fKrTZQOAJtQjXZ3iCJGfbeTVsl5+pYvcTLifh3ELRtT8UEyUJ+iGdqicj5tnGxWl5IY8qzvnavp5kC9JtzlXW/KRKcmQTvoaekBrXWH/9dpuIBnrmZaBNKN5SwO2vFrZbnf7CIiGexZUJ5Gy2xZBspqIsA+gIqXpYYxiXPvi8NK3+TkWLZgzMB55AOW9NKLENz+iAU+C+GTD7JjYh+nYSG/XtUFaEjTMDIhNV6ze9iMLpi0dA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dAUWyS4lro8AIdcdftogGOhGeqcsx9nGBgkxLGLykMg=;
- b=WiypanyAYwSdKL2d5nPVrXnTQcUYvtB48s/eC/YxDENN4SJG7KlXxqFnGmaNcPgXcNGRwqgRAuD7nppM5expV6zrC6q4m9p8Qfbw0zPTLwSdXzGb08ityR6iOoz1WZM+UTqm2lh1s3tMnFrI45JDfcza1J0b0aklb8no67GVKRDcHZms27OvDd8GdP6zj/7/tA1mvXPRLNOGM53i5sLqUxtuL+SsFGFaZ9dMliuZm5Xn9YS6DEubfRdPc8ey109Kiyx10e1VqAXKUO4xx6HvmG19i4fkBMcipLThSLLVuia8/4TKOZlJ9+ZZs2sM+VU+HRJLKYtrzQElZglqE1F5Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dAUWyS4lro8AIdcdftogGOhGeqcsx9nGBgkxLGLykMg=;
- b=yJCQTldVSjBc05GaQTDsQzThaO1ENtSmEFRL4d4JyzOWnJ1hGTVS3mx5pKdQUyT/fOy1+u67YAiMbRCbLkRzww1XN3IzQt54B7wRaFsqTnjQcKgFWoLMPuZlJTv/yjx0+MYW4MMoVBITrLcdcW5BfXmdrS9Az/MI8PSdktsdE5Xb/DUJOMgBtaj0ndZkFpMKsBwqYOkM43fuyhD+Ndhqz/OW3KW33q62RHcMq63ofw0w1xefZEn1yL8xHd9xEyvtwlQm4IqioQNt3/60dw79wPUVFIkqMmrRbSaCgSAIUPVGCcXJiiKPmZAcgc87c9WBrYaobLIg321xN9oP971L9g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
- by SEZPR03MB8608.apcprd03.prod.outlook.com (2603:1096:101:228::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8922.39; Tue, 22 Jul
- 2025 11:43:15 +0000
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::ac4e:718:3b03:3123%2]) with mapi id 15.20.8943.029; Tue, 22 Jul 2025
- 11:43:14 +0000
-Message-ID: <84fc40eb-6911-4aaf-96b7-73604b1b71ed@amlogic.com>
-Date: Tue, 22 Jul 2025 19:43:09 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] dts: arm64: amlogic: add a5 pinctrl node
-Content-Language: en-US
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250403-a5-pinctrl-v3-0-a8c067e22295@amlogic.com>
- <20250403-a5-pinctrl-v3-2-a8c067e22295@amlogic.com>
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-In-Reply-To: <20250403-a5-pinctrl-v3-2-a8c067e22295@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR01CA0005.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::23) To TYZPR03MB6896.apcprd03.prod.outlook.com
- (2603:1096:400:289::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A90423ED75
+	for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 12:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753187615; cv=none; b=Vo++eexK/04qFfBBIdtC3dP/dNVBlnkN9GQxAGUrRUJidOKV+a3wB4XNsHEzL8THFg2FaD2elIRdL7rS9fyKwYjzCA7ORuyzP8ADCy/S5Mg9Gp+L6CBi1XGypBkKTvJxB8lHVSi2dugsvqmugATS3SRE+x7O6tA4ibYxHmFK1LI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753187615; c=relaxed/simple;
+	bh=JQAmUAgM9/RaH27IaFC9XF/IxHkWyVVH3kpCZLC5sKc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uNeM29Hsk4NEgjNvXmIh4R4dtYM9Sg6mIqvvloE9F49Ckwl7bZk3AfttFhk6RnbR5CjjvIQ+og+XcZx6DV6hZDBsJNwxb9hCikUU5MQQah187H6pqO3eq0gU2wIVKKgpLfNCSO6jNNWc3pAFzz2X6zncOFRMSvk8vhag9OkrSAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Z25gaQon; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55a27e6da1cso4574830e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Jul 2025 05:33:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753187612; x=1753792412; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h+GKZahGmDdPv5L7LZQzaZ8ms1eU9iPtW5fE1sZ1rk4=;
+        b=Z25gaQonh2BcW45vaEJQp/HWqnl1+hy5QQwAsr4LcO7R1jD3F0lf9TJ9s8q3O0xoet
+         TfjqgSewMU3zg2g+PeW7xYdINxU5IKTkOIMOpfXJcnxAaNsTkcuwwGPhxqzhahmhXp+1
+         JN/NqyWtZnjcbRf5pud3bGg1Tp7jTN0QPHFRrVnHZ4lZ0yyhFBL7MjvYDqfQsYjrHPKO
+         jNoGjeEVgZUzuIItXUvk4Ghn82w+1VE1JntmAbO/BFMtgCeXpq36CbJXObzTnVkI6bFf
+         fFjSsYFy5IQvPm5ezJWhvKMYjtil04NRq8eajsJsksb23Dk7z7/mTHS8VtavSClNICTI
+         3Rtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753187612; x=1753792412;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h+GKZahGmDdPv5L7LZQzaZ8ms1eU9iPtW5fE1sZ1rk4=;
+        b=U07H/VDchREZdXhd0ln6F2pHqrB9b9t+uhHlEH8zYHn8DyySR9eTgVEDd/dKb5ki4r
+         iLSKyctOd5S5cFDvpUP76I8WolJwjU31NvA6x03Cw8IhjiiUD0seIipAHlxU6SeBe2jW
+         ShzjPHgU5eo/ojFfiqBC/v2YiHFMb4Lh6LcH95ACTxx0KnrwF5c3WK05t+4IbWwTI+79
+         py6i63GC7j9tvbKXOFI8skJJp4+1b5IdoCCwEAja50dxZ5l5Nij/odBY6o49UL89tisO
+         6jdS8WkoZrYs1MFQUuT8U1E/mxRftH52yfAWfGgLpmwFkZ1mFRcs44vK8W0nxJz+JnBI
+         j2hg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7/i5WS57OLMsNP5lVHzal5YD9FpLlAx0WqaHMocxgppvVcQW4yI9AnsI7gfdJbADY+N2+u8gtQXEy@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKrD8bMS6LXN4+x00x/Dzqjxb1kc7ALA0ISiwZ9t3vRhL+vr0n
+	E6hDdic8pf58hDnuFWg+fbO+6S357jHWJz17vpD84wwZBKnUKaMJv9gYaFzYOvpAtbkd/+N9Skv
+	bmX0M2KBSCl0tfVef9DW6Bta6mqxlsln42bXrrlGpow==
+X-Gm-Gg: ASbGncsdUZo2PU3HqQxJW4bC+8wVx8g1oxlJP3aP2lhC5MdhBbBKLrA069qrRhrWP7B
+	IwhXn05Z84wUOEzrGAj86i/a/sQmjEzCB4aKxe74Lve+Zi8Iwo8hN8ZISEbJn+VAtFYoUJLt/Rx
+	f/azk5DIed5CSIcFYhSf3frIUfpbH6QEdN7rus4ExCaYKM2ZW4F2DlP++yBo5Jewq9tgNPSyG+D
+	ennqEmEdRgwSPOd/kI8IiZG8jo1IwTmoICmBw==
+X-Google-Smtp-Source: AGHT+IE4NLh74+eaL28wuve2GVp6Fz+dzUpqyQgftU5RDfIQz6VE0xFsh7GIWHtxc9eDY44fnzPlyDiXLFQXZa1zK+k=
+X-Received: by 2002:a05:651c:e13:b0:32a:6e20:7cdb with SMTP id
+ 38308e7fff4ca-3308f526f69mr38693341fa.17.1753187611451; Tue, 22 Jul 2025
+ 05:33:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|SEZPR03MB8608:EE_
-X-MS-Office365-Filtering-Correlation-Id: 839b0b05-a9b8-40a1-9b79-08ddc914f188
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aEt3Z2ViSzBJM1crVWFuTTlWcXo0Zy9RaFRNSWlxNCtrRHc5WXhhaUFLUCti?=
- =?utf-8?B?QWRaMVkvZUNoUnRuTHdmeExYeEFxMllNOXBIcEFKUTUycURUMDdhOENWSEV6?=
- =?utf-8?B?MkZGN3hpZWNUMFEwUUlrMnluSXBleHFTV1IxVDV2bExVMUJLdXBObDJUUmJ5?=
- =?utf-8?B?STlVZjJQYjJxSWlrd2pBQXdMeSthRElCQUtZYzZFTlkrYW9obk5Db1FYZFZP?=
- =?utf-8?B?VlRFWHE1SWJXaEhVcG5QZldlb0ZFQTFvcTRSUlR0WXlzbi9QTkFoSG9LUy83?=
- =?utf-8?B?dVQ5QmM2ZVpFK1dLOCs5eUEzSkVIS045WnhrL3NHYWxLNEhTUzQzNkhQRW1C?=
- =?utf-8?B?RGxleHFHQUJFMURUTUlwTENVSWhCQ3htSFJwTGlBbmt6TmtXTUFmYStpcVZt?=
- =?utf-8?B?bDU2b1pid3d6dEVGYVlaenUrSVVmczdiSTR3VTlEWFRxQ1M3K2taazkwTU1M?=
- =?utf-8?B?YWF2aU9meE5WaEVFdDlaSHdjVW0vK2FhbkhOa1pPbVhJNlZqbmtyamlOR2Vl?=
- =?utf-8?B?cHRaWE42ZjVCL3BtUmppUzRvNG5peDJjZStneDhUbUhOY0tGQlhZZXBNcFhN?=
- =?utf-8?B?RXVLbDlTUVdqdmdVNWhhc3NTZml1VTV6SWVteVNTWkdXUkxTckFMa1M2TThW?=
- =?utf-8?B?c1c0a2g5bFcxSmFUQ0pXQVRDWXNrS0FrLzJjNlpJK2dqT25QYzV5Y0ZTei81?=
- =?utf-8?B?dnJMODVybjh0WWMyQ3pHQlhBYmdlOW1UZVRrNnVYTWtVOEtvOXFnekhuOUhI?=
- =?utf-8?B?K0VyOHJXSmh6VFJlZ2FLbUdlL1RlQkFsd1MyMGlrNlliZlZDblBpQjJINlhj?=
- =?utf-8?B?bTRHWE4ycHdxcFR3NXRlWjRpeEZGVjNOSVNmbFFWQ3p0czg5VkJydUxqNVFG?=
- =?utf-8?B?N0xGbjlMKzdDS1ArcXlwdnNhYmZpOHA3cjZFQkNWZSt5aGRJNFgxUW5RNyt1?=
- =?utf-8?B?NG5xeVNYK1pMS2wxUTRLc0NKdkZMcHJLdVMvQTgzM3dybk52ME44bVdoYlZx?=
- =?utf-8?B?WXFLNk9BMU9zbEdOeG84TlVVYkxTQ0NCc044RXBWczdXYi91dGtvb0lud1lR?=
- =?utf-8?B?QWFkWWhxUkJ6aTd3dEl0VDNrS0xJZTVaNnJkQis3TUlsYVRsQ0txaFpNajlw?=
- =?utf-8?B?NDZsR2hjOG1OODBRb2dvbmRFdVY3L1c4dmJSRVlTOGRIbXFZVEhqSjlDYm5U?=
- =?utf-8?B?cHZXYmZzNFpOckw5YU9nVW5DTzBEcXdRdnlMMUlhTHFiamdiWTRXKy9GNTRY?=
- =?utf-8?B?SWJqM1hKYzBZVis4cWJIbWMrcmNiczhQRWVFcUFKWG82ZTM5dzNoYmJDUkNZ?=
- =?utf-8?B?bmQzeDg1aElkMHZSbld4UjNhQStsRlBBWEtjaVdxYVY1cmlwVVpoYjZNZGVS?=
- =?utf-8?B?WThyajF4Y1c0YS80UEoySGExeXVwQXdiNEJOUnN6M0Y4blZ2Vklkb1V2RzJJ?=
- =?utf-8?B?ejU5ZnREQ1dyV29iYUNOSkx5ckNsQVAxalg2VmdaS1pRWGJkclNrL2dGek5M?=
- =?utf-8?B?K24xbnVpNVB3dXN0Y2ZnRU5xSlA3UVlTRzRzQWZUdERNTmUvZUtKVytPaEF5?=
- =?utf-8?B?NjhIZnF4bEhWZk5CdUpVL0FEbjRkUGNoZGVnRHh1dytiRmpmTUVNVXMxaE5j?=
- =?utf-8?B?ZkNTVzkyWlc1U2FRN3ZXQXQ3VUtrcHpSRmk4V3JGY216a0crSVB4MnBTL3RQ?=
- =?utf-8?B?ODYxZmZZUzh0SW5CS3JYbEhuT25nWmdEQzBidDNnTXJud1hqUFVPMk9oTnJz?=
- =?utf-8?B?eUdsQ2NHblRmQTFVMTBlUERmNnZrT2FqY1Z3U1ZPTDhFU0dHYW5PN3NzUE1R?=
- =?utf-8?B?Z09jQXpaOVpzcGFCOVIxVVgwc2lDYmpwRmNBRGE5UldKbHJIMURrcVRlcTdM?=
- =?utf-8?B?dXRDSDIyUW9IRWE5cmhGejdGb0lEUXZUbUtFRkgrdEk2V3ZMRFVDc1Y3T1dB?=
- =?utf-8?Q?/B5CWO/3UeQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T0RocmhEOW91WTNhbXM3SllxUSt6NXhUTC9KNHVuUkFER0Q4OEkrbDB1YWlz?=
- =?utf-8?B?N2trYmNmaXhaK1hhZE03QTM2ZzIwOTQxMzRUVEsvZ0FWeXh1MUhCWUpRM05a?=
- =?utf-8?B?WEZaelg5K01YVkQ4djRmS3pMUExnWGo5RnVUWU80K2J4RGwwbmorZ2FNUFNJ?=
- =?utf-8?B?M2ZSNkFLYU5BcEFGTUVseC93VE5IbHRJMGExWVA1TCtSNG9UTUg3MzJrdUxm?=
- =?utf-8?B?a3R6MVhFZzZTTmpPSldSY1djaXowSHBtWDFNSmFqU0JFQURra255ZUUxVWZp?=
- =?utf-8?B?dTVRMUhsYlA4WXE1NURvU0RqWlR2T3FadlIrNjZYNSs1Z2tBRXZISkVFaWo5?=
- =?utf-8?B?OEozK05JcHdpYjZRQWxpenE5T1Jsa01IaTRHKzAxY08yQWI1NmNLYkJMV2wz?=
- =?utf-8?B?UnZXREV0TTlWYmxzNitJQ2tWdmxTd2pENVVKQ2RtK0tUYXRhaFdTeGVsVnV0?=
- =?utf-8?B?bkw2RVhJWUY4WXFSVkRUTktuZmVqV0xXVUk5T0t2M2ttazVoL01QOStCSjA4?=
- =?utf-8?B?cmVVTnBoME1lTEVFcmFxV0ZaQlpMS1VLK2JmS2V1YjBrTVl0WENzalpUam5x?=
- =?utf-8?B?WEFBUVVRbWhGNnlXTVdDUFpzT2VIZExQVngvMWdHTnJ4cmx6bkdYYk5PVTlV?=
- =?utf-8?B?azVHSXgzeW9lZzB5Mi9vVlUvaEhKUW81clV0VmhXT2UrMUdPL0dkNDh0N1FI?=
- =?utf-8?B?UHdtR0EzSFp0REE4S2FnOU1saTZwWGVCSHhkTHJoODhNNzA5VysrOGRGcmZ4?=
- =?utf-8?B?Vk9aYWZ1UmI4Qmp0dWkxREY3TnVyWU5TY29CVkswS2JIMGI5bW42d1JzSHht?=
- =?utf-8?B?QXZRVXlCa2FxWTJSbnFLOWFxQVg3bnh1YjNMdnlvRG1lVENQRVEzUlBadWNG?=
- =?utf-8?B?Ri9wbEpWeFRGS0RIT1djVzAwQWhvYjh6ekE1UUlMZ0FoWnpNZFd3aDRvNEVj?=
- =?utf-8?B?THU4OS9Eck9JSnlxSVErWVZleXRoRGhsWjY4ek9CUm9LMWNiNjdkK0N5WWRM?=
- =?utf-8?B?UzFBa1ltNktaa1pwdDZBZnN2T0lKVlRaL2czSGh2WG11amFodmNEK0Jtc1hX?=
- =?utf-8?B?dk9SRmZYTXY3K0VhUE5pRVMxNDlaUSszeFNlM1BQbnMxUk13ODVGbThoT0tq?=
- =?utf-8?B?QXdtaGtzc1BWSTRIT1ZLc2I4Q0k4WnJwQWpmYnN1SjJ0RXF0Nmh5ZDBzblZB?=
- =?utf-8?B?czQzRHlUVld5ekJDOUhjRS9ZdXIyVGxrUTc1aWFIWGQ5T2VqQ2w1YTVSRnkw?=
- =?utf-8?B?YnQ3NDYxdHRjbktQczF3SGVqUGVQMnhNTGUwL0M0WHdLajVaWmlWb0xwR0Ry?=
- =?utf-8?B?WjI3QW1OcGNsanlXaStjbkFQRFMvVzBwQStFK1hPb0h5SXVRRnMralNZQXNh?=
- =?utf-8?B?TXJYd09XcEpnbjYveExSTndDRlNTR1NUNUliSitUbFVpaDV4Y3hGRk9JNENn?=
- =?utf-8?B?b281VGIwT0tyZVBNT3VuYUNzcVZMdGhLbTJRRVYvekFwcDZWNmpGT0dEYm5n?=
- =?utf-8?B?MExPSTBZV0prZEVWdFZVMzFpSEpTbVJVYldiS3RMTGZXbmsvS2ZoSGg3Q0tw?=
- =?utf-8?B?L3drc3NiL0J5emFMYnB3VHUrMG5NVUsxU2MvRm1LcE93QmltMU1hVzBETUY4?=
- =?utf-8?B?aGVmWVV3VDhTSjNuMHdKQ1VZMDZIWmNsbGRTSHl1QnBPYjU1MkpORFo1SUly?=
- =?utf-8?B?RVFONU56UU5ZbkJjTjRkRWpHZmFYT1dnVVZMQjhvQWh2bVZuVzFJNUw4T0ZM?=
- =?utf-8?B?NXFwSE9IdVE4MWZFa214WFNJWlBkWjJrVHpCNHRxTFFxUDc4ZnhJRHZLZGdY?=
- =?utf-8?B?c0J5SXV3SU0xZnBSSHFidTEyWERJQldLY2doTThDNVo3bmtaTE54RkRYMkJJ?=
- =?utf-8?B?QlMzZW9lckk0RjBDcmFtcGthMHE1a01lbVdwazdEVGZLeTJmMU1vTVgzL1ph?=
- =?utf-8?B?ZTlDMTU3R3pMWHBqYUthSm1GQ1VjTjV4WXZIQk1XMW8vQk9lNHE3MDJKOFpQ?=
- =?utf-8?B?N01QOHJZWWFFUW9FNmRJWEFvWmNoWTlTdG1HYjRNNng1MkFQN1hFR3p0Q09U?=
- =?utf-8?B?NTltTi84V0M5WHAvVkdhcmdBUWhFaGVzZnpuZ3MvUjUxanNhbENDZG5ZbHJW?=
- =?utf-8?B?b0N0NzdwRHlnSVVKblJmd1RtV3hWM0w4VFZLemd1VmZlZ2NGSW9UWWtZQnc0?=
- =?utf-8?B?dnc9PQ==?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 839b0b05-a9b8-40a1-9b79-08ddc914f188
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2025 11:43:14.7572
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xETtI6lduAZCO3lYKbDzXpt5xyAvTf5kIRdn9hemKxbcRsGmZZ6ZD2XpvtXqTcsrUYjXGzUGRQ8PSE31UwvaEj9uJIeeE4YVELCdE3chZr0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB8608
+References: <20250721233146.962225-1-s-ramamoorthy@ti.com>
+In-Reply-To: <20250721233146.962225-1-s-ramamoorthy@ti.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 22 Jul 2025 14:33:20 +0200
+X-Gm-Features: Ac12FXw8rQB0btGgQIdOuuluV0bKj5UY1CC8pTxt_PxLMJg3hptyK0eG64L8UIU
+Message-ID: <CAMRc=McTJnTn1sf6Kc42yePvUyP87h1utJ7B_ynWjUxxm0E4Lw@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] Add TI TPS65214 PMIC GPIO Support
+To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
+	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, 
+	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com, 
+	jcormier@criticallink.com, christophe.jaillet@wanadoo.fr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Neil,
-    Do you have time to help check if there is anything else that needs 
-improvement in this submission.
-
-On 2025/4/3 16:33, Xianwei Zhao via B4 Relay wrote:
-> [ EXTERNAL EMAIL ]
-> 
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> 
-> Add pinctrl device to support Amlogic A5.
-> 
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Tue, Jul 22, 2025 at 1:32=E2=80=AFAM Shree Ramamoorthy <s-ramamoorthy@ti=
+.com> wrote:
+>
+> The related MFD series was integrated in mainline during 6.15 cycle [0].
+>
+> TPS65214 is a Power Management Integrated Circuit (PMIC) that has
+> significant register map overlap with TPS65219. The series introduces
+> TPS65214 and restructures the existing driver to support multiple devices=
+.
+>
+> TPS65215's GPIO specs are the same as TPS65219, so the "tps65219-gpio"
+> compatible string is assigned to two devices in the TPS65219 MFD driver.
+> No additional support is required in the GPIO driver for TPS65215.
+>
+> - TPS65214 has 1 GPIO & 1 GPO, whereas TPS65219/TPS65215 both have 1 GPIO=
+ &
+>   2 GPOs.
+> - TPS65214' GPIO direction can be changed with register GENERAL_CONFIG an=
+d
+>   bit GPIO_CONFIG during device operation.
+> - TPS65219's MULTI_DEVICE_ENABLE bit in register MFP_1_CFG maps to
+>   TPS65214's GPIO_VSEL_CONFIG bit.
+>
+> TPS65214 Datasheet: https://www.ti.com/lit/gpn/TPS65214
+> TPS65214 TRM: https://www.ti.com/lit/pdf/slvud30
+> TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
+>
+> Tested on Jon Cormier's AM62x platform with TPS65219.
+> GPIO offsets remained consistent and functional.
+>
+> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+> Tested-by: Jonathan Cormier <jcormier@criticallink.com>
 > ---
->   arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi | 90 +++++++++++++++++++++++++++++
->   1 file changed, 90 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-> index 32ed1776891b..844302db2133 100644
-> --- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-> @@ -4,6 +4,7 @@
->    */
-> 
->   #include "amlogic-a4-common.dtsi"
-> +#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
->   #include <dt-bindings/power/amlogic,a5-pwrc.h>
->   / {
->          cpus {
-> @@ -50,6 +51,95 @@ pwrc: power-controller {
->   };
-> 
->   &apb {
-> +       periphs_pinctrl: pinctrl@4000 {
-> +               compatible = "amlogic,pinctrl-a5",
-> +                            "amlogic,pinctrl-a4";
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges = <0x0 0x0 0x0 0x4000 0x0 0x300>;
-> +
-> +               gpioz: gpio@c0 {
-> +                       reg = <0x0 0xc0 0x0 0x40>,
-> +                             <0x0 0x18 0x0 0x8>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_Z<<8) 16>;
-> +               };
-> +
-> +               gpiox: gpio@100 {
-> +                       reg = <0x0 0x100 0x0 0x40>,
-> +                             <0x0 0xc   0x0 0xc>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 20>;
-> +               };
-> +
-> +               gpiot: gpio@140 {
-> +                       reg = <0x0 0x140 0x0 0x40>,
-> +                             <0x0 0x2c  0x0 0x8>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 14>;
-> +               };
-> +
-> +               gpiod: gpio@180 {
-> +                       reg = <0x0 0x180 0x0 0x40>,
-> +                             <0x0 0x40  0x0 0x8>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
-> +               };
-> +
-> +               gpioe: gpio@1c0 {
-> +                       reg = <0x0 0x1c0 0x0 0x40>,
-> +                             <0x0 0x48  0x0 0x4>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
-> +               };
-> +
-> +               gpioc: gpio@200 {
-> +                       reg = <0x0 0x200 0x0 0x40>,
-> +                             <0x0 0x24  0x0 0x8>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_C<<8) 11>;
-> +               };
-> +
-> +               gpiob: gpio@240 {
-> +                       reg = <0x0 0x240 0x0 0x40>,
-> +                             <0x0 0x0   0x0 0x8>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
-> +               };
-> +
-> +               gpioh: gpio@280 {
-> +                       reg = <0x0 0x280 0x0 0x40>,
-> +                             <0x0 0x4c  0x0 0x4>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_H<<8) 5>;
-> +               };
-> +
-> +               gpio_test_n: gpio@2c0 {
-> +                       reg = <0x0 0x2c0 0x0 0x40>,
-> +                             <0x0 0x3c  0x0 0x4>;
-> +                       reg-names = "gpio", "mux";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
-> +               };
-> +       };
-> +
->          gpio_intc: interrupt-controller@4080 {
->                  compatible = "amlogic,a5-gpio-intc",
->                               "amlogic,meson-gpio-intc";
-> 
-> --
-> 2.37.1
-> 
-> 
+
+This doesn't apply on top of my gpio/for-next branch. Do you think you
+can quickly submit another iteration rebased on top of it?
+
+Bartosz
 
