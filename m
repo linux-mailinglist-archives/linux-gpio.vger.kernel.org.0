@@ -1,155 +1,251 @@
-Return-Path: <linux-gpio+bounces-23630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23631-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECFE7B0E0AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 17:37:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83C59B0E1A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 18:24:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75D7F5610F7
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 15:36:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E6B61889BA0
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Jul 2025 16:24:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47642279327;
-	Tue, 22 Jul 2025 15:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62D727AC45;
+	Tue, 22 Jul 2025 16:24:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ea8/2Rlk"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SVZmiIAQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0060A278E5D;
-	Tue, 22 Jul 2025 15:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6479927A46F;
+	Tue, 22 Jul 2025 16:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753198604; cv=none; b=K2y9hxjto/aDlZNgU3NPf69WZPIF6oRbM/3G3ClRbCYv5QBhhngHrd17ODZIc6F9RyoUjdxSFGlKzUmgswvnrOAklJ2sU2O6U8WxgR4jGCp2FlvAMap05cIjrvvMMq/nRWN79zhPQTFP+Lt9wkbhwW7N+fCJ/fqIFMDl5bzKwEs=
+	t=1753201447; cv=none; b=KGYzS+wZo1KUwKhPhTSwU5UrZuhvyJnDxMHohnORo5jYHCfhMEqBWv3++0Tg5OSgkrUVFnjg6Jogc9Rdm7BjaIUD/tDT2D95fylG+g9WSx7L8mT8g1md7Hacuz51Gy89Xst3TKkVkaK/Pu/43B1wmLaUsfb3+lRAqg2eM6VZTWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753198604; c=relaxed/simple;
-	bh=sKE1I+XBnE0OVrhlro0vxqyA8Rd8ZCj8d4EvJPENldc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bCOdNW4+51HoeYXlHJYMD2T89/w9AZsSyhlC1czQmcLLxOG1jD0LS0DiV7CB2rroBWvWM+ULSPSxfh9ancr9zCq0eodTlus4UAsLyV6+sScgtdydApXrbxRrfQef8vtPg9P6NmvpQdNCaFdh1+YzrD5cHqoja02qm9+dmO0J8t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ea8/2Rlk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C05C4CEEB;
-	Tue, 22 Jul 2025 15:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753198603;
-	bh=sKE1I+XBnE0OVrhlro0vxqyA8Rd8ZCj8d4EvJPENldc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ea8/2Rlk91FRdAAqv98bM28Jq5h4boF22SuZ5+pwDxDpCGQ5NMS8djQ681nuT93fB
-	 evgaKLkPqHItRzR9X4M2LK3ZLRqu55YDSEfIQVVYFc57TFFODU+WRllrQb8KmaIYHc
-	 yiEz9sSG2EIIrOcSaxki4XlQ4Ipk4KuOXKFoydnprBTemcC+uVaKV4YNQ4MruKY04N
-	 5LSyZ2iiYEgrz2HCLei4+J1DqfPHCMZk3vYO+K8QRkwjDNxHzGT1Wr8Ue554ctn0HH
-	 ntX3JWLbTw4UQC4Wf3+/6tijbC66B20Nfe5W4MNJ3cJm4M63w87dyCZ44tKnqtGb7a
-	 Pzg9lLsp1qTUA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Peng Fan <peng.fan@nxp.com>,
-	Lee Jones <lee@kernel.org>,
-	Koichiro Den <koichiro.den@canonical.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpiolib: make legacy interfaces optional
-Date: Tue, 22 Jul 2025 17:35:43 +0200
-Message-Id: <20250722153634.3683927-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1753201447; c=relaxed/simple;
+	bh=6+QKmtXatEDMJmwweO5PBDyYQYZx7SbN1S02PCNHlT8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pWZadNxrK7dMSo5R5UfttdaP3pSVbw1Av298nl7mN9Y/Saw/VSr8p8HXkw8bVqfwe0f4ecgKHMVyTcDFYOdJ7AB9Eeu8hViKfNnBksb4w5IJOxr1UltLS128Wjrd+55MKgBGSdoLMq+OUFt62mm4pxKXrggVv9KV+TWWNSw/ZvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SVZmiIAQ; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BA0E243EB5;
+	Tue, 22 Jul 2025 16:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1753201442;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3S6rrfxuXZPbHMowkoW0rGpZN3lOeigWd6+vovDesCg=;
+	b=SVZmiIAQGutd9g5fnU18ktE4SZ84M8G3Sjfx/h5nRFScxMMdu6szuPH/unKjsyrF79I2ch
+	AymMPcQ2FvbR2C1vRHPEdfPxEX+sVVySuDzlswOgOY4f9nGQv6/JOjeyJ72X8YBjXHuu3t
+	Rl7ErC48YG9SAaSnlDNRFcFUsuj67Gtkt52zfG0A9Z/6OJsS0n6Og2e0UdMQ4p8W4XUbC3
+	zT+C2BS875uXI7ony1S2Ng7cap2UZ3VOlbiOZWtLNa7S96lRKKawrD34ixs4zgPQQVcxpr
+	d3HrjQa/G6gbPjCasK8h4WUT/HcqxE3TFsg/IJ/cOLR9l2uZr9sl7A3ep2QTqA==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: [PATCH v12 00/10] Add support for MAX7360
+Date: Tue, 22 Jul 2025 18:23:44 +0200
+Message-Id: <20250722-mdb-max7360-support-v12-0-3747721a8d02@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABC7f2gC/33SyWrDQAwA0F8JPtdFy6w99T9KD7PIjaGJg52al
+ JB/7zhQnGK7R4mZN5JG12qQvpWhetldq17Gdmi7YwmQnnZV2ofjh9RtLomKgBQS+vqQY30IF8s
+ G6uHrdOr6c03EwSVROgauys1TL017ubNv7yXet8O567/vr4w4Zf/3RqyhduIYrXbTsdfYdefP9
+ vicukM1iSM9KMTrChWFbXCZKLGRvFT4V9GAuKFwUbxGH1VIEeJKLWpWCNW6oqaOAutkcozemKW
+ iZ4XRrSu6KE0kiKHxNgdYKmZWFGxM1xTFBtKsnTXCfqnYB4U2arFFUQIGXIZgm2apuFnRW7W4o
+ sQoypnGxBTtUvEPCtG64qeOVJOANVpRK3+E8MAwbKwdFCcJRy8GgnZuxcHZsYgbzrS/qcEsQsF
+ mlf46t9vtB0G4gAF5AwAA
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753201440; l=6816;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=6+QKmtXatEDMJmwweO5PBDyYQYZx7SbN1S02PCNHlT8=;
+ b=bU2Bj3F6T+mJcs/O+7v2rxetsdZMFNziPU2gd+nlmkTTwg14bjU8X4T0vgphVvIJhNYwU9ZAH
+ f9WWqf3jrIEBnGhTonlaxLZXh9iwDnIqwg7lOD2dudIZYC1egpCyCkF
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdejheefiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfekffeugedvkeeihfefjeeuueekkeeggeejgeehgfdvkeevvedvkeeiteekleevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpudegqdhrtgdvrddqlhhinhhknecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepmhifrghll
+ hgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrghrthhoshiirdhgohhlrghsiigvfihskhhisehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhpfihmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-From: Arnd Bergmann <arnd@arndb.de>
+This series implements a set of drivers allowing to support the Maxim
+Integrated MAX7360 device.
 
-The traditional interfaces are only used on a small number of ancient
-boards. Make these optional now so they can be disabled by default.
+The MAX7360 is an I2C key-switch and led controller, with following
+functionalities:
+- Keypad controller for a key matrix of up to 8 rows and 8 columns.
+- Rotary encoder support, for a single rotary encoder.
+- Up to 8 PWM outputs.
+- Up to 8 GPIOs with support for interrupts and 6 GPOs.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Chipset pins are shared between all functionalities, so all cannot be
+used at the same time.
+
+Lee Jones suggested the whole series goes through MFD subsystem, once
+all patches got the needed Acks.
+
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
-This is the first patch of a series to turn off the legacy interfaces
-by default. If we can still have this one in linux-6.17, we can more
-easily merge the other patches for 6.18.
+Changes in v12:
+- Rebased on v6.16-rc6.
+- PWM: fixed rounding rules.
+- PWM: added a link to the datasheet and fixed case in two error
+  messages.
+- Link to v11: https://lore.kernel.org/r/20250711-mdb-max7360-support-v11-0-cf1dee2a7d4c@bootlin.com
 
-See for the longer series:
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=config-gpio-legacy
+Changes in v11:
+- Rebased on v6.16-rc5.
+- Small fixes in keypad and rotary encoder input drivers: typos and off
+  by one errors.
+- Various fixes in PWM driver and PWM Kconfig.
+- Link to v10: https://lore.kernel.org/r/20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com
 
-I'm sure there are still problems in the other patches, but it
-does pass my randconfig build tests on the three architectures
-I'm testing on. I plan to post them after some more testing
-once -rc1 is out.
+Changes in v10:
+- Rebased on v6.15
+- Do not use devm_ functions to allocate regmap-irq in gpio-remap.c
+- Link to v9: https://lore.kernel.org/r/20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com
 
- drivers/gpio/Kconfig  |  3 +++
- drivers/gpio/Makefile |  2 +-
- include/linux/gpio.h  | 10 ++++++----
- 3 files changed, 10 insertions(+), 5 deletions(-)
+Changes in v9:
+- Fix build issue with bad usage of array_size() on intermediate commit.
+- MFD: Fix error strings. Also fix #define style in the header file.
+- Pinctrl: Fix missing include.
+- PWM: Fix register writes in max7360_pwm_waveform() and
+  max7360_pwm_round_waveform_tohw().
+- GPIO: Fix GPIO valid mask initialization.
+- Link to v8: https://lore.kernel.org/r/20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 12bdf6e965f1..8bda3c9d47b4 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -14,6 +14,9 @@ menuconfig GPIOLIB
- 
- if GPIOLIB
- 
-+config GPIOLIB_LEGACY
-+	def_bool y
-+
- config GPIOLIB_FASTPATH_LIMIT
- 	int "Maximum number of GPIOs for fast path"
- 	range 32 512
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 88dedd298256..b01ff2b68bf6 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -5,7 +5,7 @@ ccflags-$(CONFIG_DEBUG_GPIO)	+= -DDEBUG
- 
- obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
- obj-$(CONFIG_GPIOLIB)		+= gpiolib-devres.o
--obj-$(CONFIG_GPIOLIB)		+= gpiolib-legacy.o
-+obj-$(CONFIG_GPIOLIB_LEGACY)	+= gpiolib-legacy.o
- obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
- obj-$(CONFIG_GPIO_CDEV)		+= gpiolib-cdev.o
- obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index ff99ed76fdc3..8f85ddb26429 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -13,6 +13,11 @@
- #define __LINUX_GPIO_H
- 
- #include <linux/types.h>
-+#ifdef CONFIG_GPIOLIB
-+#include <linux/gpio/consumer.h>
-+#endif
-+
-+#ifdef CONFIG_GPIOLIB_LEGACY
- 
- struct device;
- 
-@@ -22,9 +27,6 @@ struct device;
- #define GPIOF_OUT_INIT_HIGH	((0 << 0) | (1 << 1))
- 
- #ifdef CONFIG_GPIOLIB
--
--#include <linux/gpio/consumer.h>
--
- /*
-  * "valid" GPIO numbers are nonnegative and may be passed to
-  * setup routines like gpio_request().  Only some valid numbers
-@@ -170,5 +172,5 @@ static inline int devm_gpio_request_one(struct device *dev, unsigned gpio,
- }
- 
- #endif /* ! CONFIG_GPIOLIB */
--
-+#endif /* CONFIG_GPIOLIB_LEGACY */
- #endif /* __LINUX_GPIO_H */
+Changes in v8:
+- Small changes in drivers.
+- Rebased on v6.15-rc5
+- Link to v7: https://lore.kernel.org/r/20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com
+
+Changes in v7:
+- Add rotary encoder absolute axis support in device tree bindings and
+  driver.
+- Lot of small changes in keypad, rotary encoder and GPIO drivers.
+- Rebased on v6.15-rc4
+- Link to v6: https://lore.kernel.org/r/20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com
+
+Changes in v6:
+- Rebased on v6.15-rc1.
+- Use device_set_of_node_from_dev() instead of creating PWM and Pinctrl
+  on parent device.
+- Various small fixes in all drivers.
+- Fix pins property pattern in pinctrl dt bindings.
+- Link to v5: https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com
+
+Changes in v5:
+- Add pinctrl driver to replace the previous use of request()/free()
+  callbacks for PORT pins.
+- Dropping Reviewed-by tags on device-tree binding commit, because of
+  modifications related to the previous point.
+- Remove ngpios property from GPIO device tree bindings.
+- Use GPIO valid_mask to mark unusable keypad columns GPOs, instead of
+  changing ngpios.
+- Drop patches adding support for request()/free() callbacks in GPIO
+  regmap and gpio_regmap_get_ngpio().
+- Allow gpio_regmap_register() to create the associated regmap IRQ.
+- Various fixes in MFD, PWM, GPIO and KEYPAD drivers.
+- Link to v4: https://lore.kernel.org/r/20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com
+
+Changes in v4:
+- Modified the GPIO driver to use gpio-regmap and regmap-irq.
+- Add support for request()/free() callbacks in gpio-regmap.
+- Add support for status_is_level in regmap-irq.
+- Switched the PWM driver to waveform callbacks.
+- Various small fixes in MFD, PWM, GPIO drivers and dt bindings.
+- Rebased on v6.14-rc2.
+- Link to v3: https://lore.kernel.org/r/20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com
+
+Changes in v3:
+- Fix MFD device tree binding to add gpio child nodes.
+- Fix various small issues in device tree bindings.
+- Add missing line returns in error messages.
+- Use dev_err_probe() when possible.
+- Link to v2: https://lore.kernel.org/r/20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com
+
+Changes in v2:
+- Removing device tree subnodes for keypad, rotary encoder and pwm
+  functionalities.
+- Fixed dt-bindings syntax and naming.
+- Fixed missing handling of requested period in PWM driver.
+- Cleanup of the code
+- Link to v1: https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com
+
+---
+Kamel Bouhara (2):
+      mfd: Add max7360 support
+      pwm: max7360: Add MAX7360 PWM support
+
+Mathieu Dubois-Briand (8):
+      dt-bindings: mfd: gpio: Add MAX7360
+      pinctrl: Add MAX7360 pinctrl driver
+      gpio: regmap: Allow to allocate regmap-irq device
+      gpio: regmap: Allow to provide init_valid_mask callback
+      gpio: max7360: Add MAX7360 gpio support
+      input: keyboard: Add support for MAX7360 keypad
+      input: misc: Add support for MAX7360 rotary
+      MAINTAINERS: Add entry on MAX7360 driver
+
+ .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++
+ .../devicetree/bindings/mfd/maxim,max7360.yaml     | 191 +++++++++++++
+ MAINTAINERS                                        |  13 +
+ drivers/gpio/Kconfig                               |  12 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max7360.c                        | 257 +++++++++++++++++
+ drivers/gpio/gpio-regmap.c                         |  30 +-
+ drivers/input/keyboard/Kconfig                     |  12 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/max7360-keypad.c            | 308 +++++++++++++++++++++
+ drivers/input/misc/Kconfig                         |  10 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/max7360-rotary.c                | 192 +++++++++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max7360.c                              | 171 ++++++++++++
+ drivers/pinctrl/Kconfig                            |  11 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-max7360.c                  | 215 ++++++++++++++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-max7360.c                          | 206 ++++++++++++++
+ include/linux/gpio/regmap.h                        |  18 ++
+ include/linux/mfd/max7360.h                        | 109 ++++++++
+ 24 files changed, 1866 insertions(+), 2 deletions(-)
+---
+base-commit: 347e9f5043c89695b01e66b3ed111755afcf1911
+change-id: 20241219-mdb-max7360-support-223a8ce45ba3
+
+Best regards,
 -- 
-2.39.5
+Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 
 
