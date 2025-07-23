@@ -1,85 +1,140 @@
-Return-Path: <linux-gpio+bounces-23659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EC6FB0EAE8
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:46:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0F1CB0EB2A
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 09:02:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5260563A31
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 06:46:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB0DC189A068
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 07:02:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6675526C39F;
-	Wed, 23 Jul 2025 06:46:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89E6271A7B;
+	Wed, 23 Jul 2025 07:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Dtg8dBZE"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ZSmlLAXB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7E2191493;
-	Wed, 23 Jul 2025 06:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B5C25A659
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 07:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753253182; cv=none; b=WBu6Or3hI2agdV8mq8e8B6CqHk+wgTkt/AiHaVfpTDbag+J3MQNbQWN7bROjp05CDTe2pPvO2vVWQBHkNHyAcnEGHp0KkZKTGPO1iad42asacuD176t9s46MtaupB/d85kXImTOPwit2CknxrurO2Rpp+x+xSug2uiLYRy6lShY=
+	t=1753254128; cv=none; b=JpWffTI16ZHYFQK+FjaZd47/vX0NkjbPNECTbHyYZ7zneiCi/JpKoPvsr9sRZ573S/8KL9EIDh/uyBwe9ju3y6NZZiZdmJ1E8mhXB7PwIVf3YE04IIECBYyLJeQIzHvNUiJgsAl/ultRTbn3A772VK86wOOQqad7WM31n2EYcZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753253182; c=relaxed/simple;
-	bh=Viiejit+4wpmSf+d9B590lGDr4NMWF238qcEb8bf44c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nWc3Km7AUIJtXE+w4CU3tbIlQj1N3pEYo9HWb3tJu233Yw9IZKxfQVWFq6efbXKLdHuYbmemNS/rRrVndYRi1x+mMhiex5jC47vUmPUqy99D44Ok+oMboemah+yVh3FvTScb1xXyD4WYS+ggIGtWc0/3O4kDdzC4efv1gRZakwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Dtg8dBZE; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753253170; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=He9DDUO0xCzGw/bWMC1Vjhk8wpHXB42pGLbNtz3o6OQ=;
-	b=Dtg8dBZEMrpfMXTsdZy3EMrThDSg9E55x/5SfO5DFYWPH7UCbiSlzeLWhYPwKgvc/N3m41tH5qS+HnDxhOrPc4xCtR4hPieGTi/bYP+W36ALwWSvNxrNLl9X6WNzsxoN99dFWpKafFAUGYn89X3Rlt6dksK2ocHDBVaKv0D4AhU=
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0WjatQyL_1753253169 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 23 Jul 2025 14:46:10 +0800
-From: Yang Li <yang.lee@linux.alibaba.com>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] gpio: cadence: Remove duplicated include in gpio-cadence.c
-Date: Wed, 23 Jul 2025 14:46:08 +0800
-Message-ID: <20250723064608.2178024-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1753254128; c=relaxed/simple;
+	bh=4GU+tu8nzBuGyAsdEsa+Gls5HWp0DZA00S2gvtcxbKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aW8WQAsalMQ8kifO9fGT6Px1f8DHputXXef6n2G73VBthetcwM+eLqTDkwykgT8BUFt23e8/uEAtC+mKAU7fBZmWyM5Sxt73pjhl1ntD73oNyPnAjNTv6CgwtBjalzdzkd0phOe4Bv1CmvyASoLXEREzB/g5kCiVo/mRpWIPnlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ZSmlLAXB; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=mSr8
+	IKKs7FMIvqGwaTTFy3byBTfAKTTuwfKpgozIJWE=; b=ZSmlLAXB/xGj1J31D3Tg
+	CE+HwcVG7Yx4NJo6Kt/MqfIA/IByuvhOVKEC2IltTrPawTXRlBUOC8PNv0tiC+Sn
+	5rn1ZagotDeNhy1mowxHyMvekg64IgIVUgkxslHFGoH6GHSGR2FrtTwcVDMTgQ0M
+	goslmTh9E5rHuQ4At/VwN26aqy5UNmcMOkkm1e91vQi480RrEWQmm9lAfchMJK6q
+	dUvIMRRobnnTXr97szCLkeAtmVjBICXHZfZHJBKT46N6DnkfFD8x5L8EVkBzmuPA
+	uhUw+QCjunhmsw3f2XWkp8vJs+mTnTaNLHyjHofMUD+ic9V+SwQZxaWgVlmIc6EE
+	GA==
+Received: (qmail 1603188 invoked from network); 23 Jul 2025 09:02:01 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 Jul 2025 09:02:01 +0200
+X-UD-Smtp-Session: l3s3148p1@NpESSZM6sLgujnvr
+Date: Wed, 23 Jul 2025 09:02:00 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Magnus Damm <damm@opensource.se>
+Cc: linux-renesas-soc@vger.kernel.org, geert+renesas@glider.be,
+	linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: renesas: rza1: Check pin state before
+ configuring
+Message-ID: <aICI6M61N9_PH35L@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Magnus Damm <damm@opensource.se>, linux-renesas-soc@vger.kernel.org,
+	geert+renesas@glider.be, linux-gpio@vger.kernel.org,
+	linus.walleij@linaro.org, linux-kernel@vger.kernel.org
+References: <175233393885.19419.10468322450742766513.sendpatchset@Bjoern-Magnuss-MacBook-Pro.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3cOu1BoFFHlvuf5k"
+Content-Disposition: inline
+In-Reply-To: <175233393885.19419.10468322450742766513.sendpatchset@Bjoern-Magnuss-MacBook-Pro.local>
 
-The header files linux/gpio/driver.h is included twice in gpio-cadence.c,
-so one inclusion of each can be removed.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=22931
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
----
- drivers/gpio/gpio-cadence.c | 1 -
- 1 file changed, 1 deletion(-)
+--3cOu1BoFFHlvuf5k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpio/gpio-cadence.c b/drivers/gpio/gpio-cadence.c
-index 8243eddcd5bb..c647953521c7 100644
---- a/drivers/gpio/gpio-cadence.c
-+++ b/drivers/gpio/gpio-cadence.c
-@@ -12,7 +12,6 @@
- #include <linux/clk.h>
- #include <linux/gpio/driver.h>
- #include <linux/interrupt.h>
--#include <linux/gpio/driver.h>
- #include <linux/gpio/generic.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--- 
-2.43.5
+Hi Magnus,
 
+On Sat, Jul 12, 2025 at 05:25:38PM +0200, Magnus Damm wrote:
+> From: Magnus Damm <damm@opensource.se>
+>=20
+> Add code to the RZ/A1 pinctrl driver to check the state of the pin before
+> writing any registers. As it is without this patch, resetting the pin sta=
+te
+> for every pin regardless of preious state might negatively be affecting
+> certain shared pins like for instance address and data bus pins.
+>=20
+> Signed-off-by: Magnus Damm <damm@opensource.se>
+> ---
+>=20
+>   This makes the following patch work with Linux:
+>   [PATCH] Update r7s72100 Genmai DTS to include NOR Flash pinctrl
+
+True that.
+
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+I can't say if it is feasible to have this code in the driver. I leave
+this for Geert or the RZ team. But I can say it works with the above DTS
+patch.
+
+> +static int rza1_pin_mux_needs_update(struct rza1_pinctrl *rza1_pctl,
+> +				     struct rza1_mux_conf *mux_conf)
+
+Minor: I'd make this a bool, though...
+
+> +	if (!!(mux_flags & MUX_FLAGS_BIDIR) !=3D
+> +	  !!rza1_get_bit(port, RZA1_PBDC_REG, pin))
+> +		return 1;
+
+=2E.. and treturn true / false.
+
+Happy hacking,
+
+   Wolfram
+
+
+--3cOu1BoFFHlvuf5k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmiAiOQACgkQFA3kzBSg
+KbZKBQ/9FR2bjnbomSW9E3+np9pGJyrAgwLWKJnq14hW/pDiemH+TvGMFvQw1hTz
+9GzXaupFZwx4wf14QN7X3DPCoOqgd1qpQFwsvTWvpV9DoyilVzY5AgKWoohwxkS8
+EAsY052UAayrQJVI/CFOsjxPxAxgiWxEtM8vLjWyG4g/VII2CTADPRVeoFGPPJ0H
+CRjce9zAg85PsYjOhyyUeLRMhmsS01WkCzz+5sCtU+9xMB+6GhvtV6f5nIma89Ti
+6Ep8yb9iAviuxLze+4C5gGXn5bFs0wdNhF7BVQvZTc/4UEa3CBGA42psonvkMV8V
++hO87Fzto/DD9DBA4MzauyDBYRMrkOerX3qb6/m4MCEkVpTC1Ueb6QA3CzVzKAt1
+NygkSRwfRnQqG/vLsfpiSccka5HagxJdSreQhW2WmdlKDvPZBn/Fh7eMDobpGIeK
+hd2p3v/MIDUBQjIvCeepiBdeQKfA+WEP0bNUnsIC9v9gP2IafpvyThrMzB2XuoGw
+Eym0EU7NMLYYaHvRHNjEzulwz5xn4VVvqB/VNCU/LXySW5aYou1FVlqmQJigqeUT
+GyhaFZs3XKrzwHs9KtP4vh2Q7fWhAHqY/WoqzRZySFnYajRY86k13Irfi8bkbXe+
+ykvwFifqQecw8qqmWb/JLsRfo58Ifd20dkaZ9s7xDNn9hCPW5ps=
+=NZby
+-----END PGP SIGNATURE-----
+
+--3cOu1BoFFHlvuf5k--
 
