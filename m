@@ -1,116 +1,143 @@
-Return-Path: <linux-gpio+bounces-23673-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23674-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 962E8B0ED77
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 10:42:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2230B0ED80
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 10:43:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80BCA1C83169
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:42:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 809F31C82DAC
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:44:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE26A280CE5;
-	Wed, 23 Jul 2025 08:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959AE280A35;
+	Wed, 23 Jul 2025 08:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rnULUYYc"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Q+sheZCQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB7F1F4161
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 08:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5562258CE1
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 08:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753260114; cv=none; b=gMPJdILSxMkKzJaGrm2B2TGKbt4U1xVaAPJAniOzVCdsT5uGJqQH9EbGX1A5pPzefLQKdFziNDO9dD6nqUQQhug9Htp79A085WeTPQSEa/OoueWpZPS3CmPce7GAjEMl1JBgepRzZqshLDJjZVI+JLObEpVQT6Vh1DgruaktVzI=
+	t=1753260232; cv=none; b=mpKdOBXHNsVJpQKzMBz+TaKV68dXTr6n8bNLvPghffSrDv+P3HeO+//JENsJBsH+RWABj+nW66V5EM/lAZ2876qlrf9wSB1O9iwOYkM+yiWIsYI9SVlI1ruhEMH2cIU8CBurjKggPGy36DzMFa/7p7L1Ahij38hpRjuU39X52Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753260114; c=relaxed/simple;
-	bh=KPyVi5/nZIxHwgKBKEtm0zjwA8f1A+achXnMoLW2vT8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KhgS2bzAxBR+MEkdZxx8WJCm6H1lRihNOWytuDmK/yfURMPMg5BFjewnaXHQXdBreAAp5cuow8fC0tJGMF5m2jp7W2AOPkBt+RCxBRs6zytxsGaNWOkYlrQSC/yq6YcNZQKWf37XM23GYvnan9szPZIY9OWeb2w2JU2n29QH+pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rnULUYYc; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1753260232; c=relaxed/simple;
+	bh=6TC3UZ1CN3dH5mG1AHfrYHY2reYpGpU4IW7tdQuyJpk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QQUGDefmAFD/OO4csCQSaxfNG2rJat8G0aM1GVakNp+BUjRsuPuKOBz9VdBBNt9aXO5BsK4LixStM5yDMBW/CS8YrFn3L4Qeo7Hlw+gNEFExXjyCwP1Irc+jwtFzXXSsWL0TLTDFvn86J1RtV05ANzWc7lrxtK3BgIQix3y1uSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Q+sheZCQ; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-451d7b50815so48484855e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 01:41:51 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-32f2947ab0cso51526541fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 01:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753260110; x=1753864910; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753260229; x=1753865029; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IH2wjrzjfdJrOxGA250VAbjT2mkP9Bdn7D4A8cGWXR4=;
-        b=rnULUYYcg8/jtFdUraWVTX7g94L77SsKP9NMZQUDuePXW2SYPcVlih29fsLMU1h+QQ
-         wKRA2BzDYBfM+sEx11nJB3OB1Gnb47TzzOC8qrDTzNAe+cIYG4ChUrPVdm4k5xbIkTvm
-         WuO6u4v9glGhV5A2zf1GyFuj19DRKlQqu2Rx/rTatguR6kggdYTq7heZmv4SG4+I4+6Y
-         PKO1xbpO6xntn4f3knB2gxsGxg6+b1j8YQvYBpkyHrV2hLtVbqRmJgNYmoCsAmPxH7ur
-         3vPwTjZegba3vbI7F08O2MMm2tTJMdaBI1PkSn5EkTNCZST9G+rLJmEayuV2wY0SV7tI
-         6gIg==
+        bh=6TC3UZ1CN3dH5mG1AHfrYHY2reYpGpU4IW7tdQuyJpk=;
+        b=Q+sheZCQ6hecARGXA5vlJ/+cM/zS8w5QM6SKxxmZVmjqom2JvKJQCdG8LxeL3CkSOy
+         jBcOV9GJxxWnwZ2MG87fzzLapF25tGjRwNVzkvseA3nCrFpSU7us1gTwvQyarTDoZLsJ
+         DLH0WfzOaqzMlM1myHiznGh/bJWuEeNFttpEyqd6VxZzEh8rvvHMLTces1MaM7YJHOm+
+         uRRRYLCTlq99VaFQcZcPYtt0thuV7Kjz20ERDQDDaQJwx+CSkPEsmgpwo03EDI614gI6
+         M+HROCRsrxLwXfNYfSxG5xcBdrxUG5NsqYHHt3QT9EHiraaBpNEULnpQlMlXlGVwMIMN
+         ERDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753260110; x=1753864910;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1753260229; x=1753865029;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IH2wjrzjfdJrOxGA250VAbjT2mkP9Bdn7D4A8cGWXR4=;
-        b=QLG4PZ8IFrAT4PRewXAINT4HAfbKLYaZw7+NlNGC023z9L8dU+tOt8o821xt1a68IH
-         j8+1Kb1hZpv6/7/IpHrKrT/Mz2zCsXiG1VwA3l+Py7hprl4jF/bKdy5m8xHjoU91clhw
-         23zphJCrFTAUfazTYjO4RSEYIugxwl2mS/ncOx6A9pVkMzv3rE5/umseIZP7oJt95hIB
-         9brfGyfiE3H88X5gYIXp0i4GCJn7EcVCBMsrfsvjzw/OqxLMOL2fH0PRSTxCid2JV7fT
-         hrx/VODIMvGDKJgPzR+eVRTW2KiDmQWzVeJNjKP4T0yvCwPOiv9rXvD/FHmw4itctQGw
-         lqHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjRAEBBQmmibPR9Jan30KxdHDeN2I1sKTIdrs0x8X0oqe0cuo8t1jLPJoyGF90oWHc8e5zrBX+8cQc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4JX/EFyxld8pkaLfcL1FR3cWeJgq/+quxHkVX3klHy8UliL8i
-	DdICK4s6twbcaQcDluYQ+E4pSgZ1HSJvGNaRyWE3kGcGzcOtks/6QV+vjQ9dGERdQWY=
-X-Gm-Gg: ASbGnct/dAuydn2aYwgvQlmHvKYJ34Mw/t6hRC4XJbU4oHZu3Jcz81YbvojTazzAIO9
-	78kqYX7W6PnheRvHxSpgFzGXzKPmzfsMqcR4PFtOIRfdECQ9nCdcw+v3dr21Wrx08HaxxepCgRy
-	ITesEq31zQlC8dtpAgwVZLjMZXRPq1KrbATwiQhd7AJqpQBp7L3INF6/1Q4ejErafOoJ59vaDSj
-	Bbs9ejVek2kpKEutBp0JJORL8IPowIFa7SbvyqcePFXG4OAFtNeJyuILoyTqEV7Jzbh6kajsUjb
-	DFIFdCZZKSrPfDEO70rOmsJN1qkDafYTReWilqtsUBWUtDrS3oOhOGq+n7WIORwI4oSy8GBBiip
-	FRaMP3j362UkKFkaCnMAp/w==
-X-Google-Smtp-Source: AGHT+IEnkZ9kTvvy9gav3s0JzoKsMp4FgmfJDaesNEPydYLSgAB6l6bF9ogt0Gu+vaSL9hZoEPeqlw==
-X-Received: by 2002:a05:600c:a40e:b0:456:2698:d4d9 with SMTP id 5b1f17b1804b1-45868dcee82mr14396555e9.3.1753260110040;
-        Wed, 23 Jul 2025 01:41:50 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:34cd:b1d:d4f9:be03])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-458691aaec8sm16123955e9.23.2025.07.23.01.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jul 2025 01:41:49 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	Yang Li <yang.lee@linux.alibaba.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH -next] gpio: cadence: Remove duplicated include in gpio-cadence.c
-Date: Wed, 23 Jul 2025 10:41:48 +0200
-Message-ID: <175326010614.34828.11615771707320405154.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250723064608.2178024-1-yang.lee@linux.alibaba.com>
-References: <20250723064608.2178024-1-yang.lee@linux.alibaba.com>
+        bh=6TC3UZ1CN3dH5mG1AHfrYHY2reYpGpU4IW7tdQuyJpk=;
+        b=XGWo7gc+23QMrrarAx3geaRM4VTjb7HGos9eQk/8DEZwbsXAuzl2XVOr2LA85PPm8v
+         jeLEeuFOKzMCEotYDNkNZ88TjyXCNDNvYIPYOHOafGF26UMj0lZWd1Ct1qaNmk7HMiCI
+         uL4feZsSX2yCW2LJg2LYAYSH5aEMYnAjXE1k6zaf2ZHVBMRoQRsWjg1ksF2ysB9S1NAX
+         tDUKkRE8HcWQKHLmuxPpbQU5WqHIqoWyYFOc53m/2GTJ5XDbRryIZBJea2rwh9NnUvvq
+         wHwEIpwtOyUYC0XRJp4yNkyvcah5FlH8aAJjmtaTrtdBOveBEmtocQMv3dv10FV4cdYD
+         prfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKuIkDQaxjQ+BVe3atAiO6e6jNV38IQAjwvFXk2Hrpg4VSykO0oeRKJHSfFSzShXqOthIVLryFjcqh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+f/0QhpOiBy9qbI72SEWfWEX7R4UsKWpd/+Pw1soF1kojGSPc
+	MHo+dN2MZoun8Q8bshJfOFRRaLXIxYkuLPWigmPBO1TV5KbpwFRZbKExIUmmiMZKhNG1EJyZ9pF
+	O+mQCKDykFHOOmXLbuagkeSogsWFu1cTV9T+n+3dRUQ4GwvZuejGD
+X-Gm-Gg: ASbGncv76jhgKLapdJCKlIZgB3EwJJZZWBP1ZVTa9SXF9gXIXv4dAHjmuUz0xIUhAlJ
+	oEXw5zQ/V9wR9UgdmTRYvCnr7hR8TNgu/TbTtd6q6sGfJD9YOmsMmcFpDn2iNpmb+OghDbJdQJ0
+	1oNEqxV9IgprqxHcV4Gk8vNsmPzqVwdSkwongAdHVJx4meWyL5TgGGbFbpT84iJDWLWNre7b6dZ
+	MUXzRMu0fmGeBhnrckszZSoS3RQyNdbeHyc1A==
+X-Google-Smtp-Source: AGHT+IHAFBrQohHc/2BHWRgsaNp0FeUIp88x1fnp5TVgXj36+HqgTyzHYQ9aaWJAVlgJBvSW2exqJ6lon2LfY81mcuc=
+X-Received: by 2002:a2e:ae18:0:10b0:32b:a9a4:cd01 with SMTP id
+ 38308e7fff4ca-330dfd1fed3mr4451231fa.29.1753260228769; Wed, 23 Jul 2025
+ 01:43:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
+ <CAMRc=MfS5Em65n0fwbu8JtJsc3rTgQO5cv+PymSonJtf6_zRKQ@mail.gmail.com>
+ <824ec6d1-4272-44c7-b3bb-93d716ed3d43@bootlin.com> <CAMRc=McnU6TO5p7Jwy-DOg_8-=AS7rFRfaPD0yH1SERWXM8L+A@mail.gmail.com>
+In-Reply-To: <CAMRc=McnU6TO5p7Jwy-DOg_8-=AS7rFRfaPD0yH1SERWXM8L+A@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 23 Jul 2025 10:43:37 +0200
+X-Gm-Features: Ac12FXw1wjrtcFNe5Jsgn2117sH2qWPQ_2KZUL5ZF_HLG4DNwY0V5wirW6Lk63M
+Message-ID: <CAMRc=MeZ4HHJGkVBysLyusW5G-rM0iSQV1qqmFJUe1rsZrN2AA@mail.gmail.com>
+Subject: Re: [PATCH v8 00/10] Add pinctrl support for the AAEON UP board FPGA
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Jul 15, 2025 at 3:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> On Tue, Jul 15, 2025 at 3:13=E2=80=AFPM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+> >
+> > On 6/25/25 10:26 AM, Bartosz Golaszewski wrote:
+> > > On Wed, Jun 11, 2025 at 11:00=E2=80=AFAM Thomas Richard
+> > > <thomas.richard@bootlin.com> wrote:
+> > >>
+> > >> This is the eighth version of this series. I just added a missing he=
+ader
+> > >> file in gpio-aggregator driver to fix a build warning reported by a =
+kernel
+> > >> test robot [1].
+> > >>
+> > >> [1] https://lore.kernel.org/oe-kbuild-all/202506092324.XqSwWl1z-lkp@=
+intel.com/
+> > >>
+> > >> Best Regards,
+> > >>
+> > >> Thomas
+> > >>
+> > >> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> > >> ---
+> > >
+> > > This series looks pretty good now, any objections to picking it up? A=
+s
+> > > usual - I can take the GPIO patches and provide an immutable branch
+> > > for Linus to pull.
+> >
+> > Hi Bartosz,
+> >
+> > When do you plan to pick the patches? Will it be ok for next merge wind=
+ow?
+> >
+>
+> Well, nobody responded to my last email. This is a cross-tree series
+> so at least Linus must confirm he's ok.
+>
+> Bart
 
+Linus, I'm willing to queue at least the GPIO part for v6.17, does the
+pinctrl part look good to you?
 
-On Wed, 23 Jul 2025 14:46:08 +0800, Yang Li wrote:
-> The header files linux/gpio/driver.h is included twice in gpio-cadence.c,
-> so one inclusion of each can be removed.
-> 
-> 
-
-Applied, thanks!
-
-[1/1] gpio: cadence: Remove duplicated include in gpio-cadence.c
-      https://git.kernel.org/brgl/linux/c/ff4322b22f35c010643de16c6f13e285bf314d83
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Bart
 
