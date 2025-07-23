@@ -1,131 +1,119 @@
-Return-Path: <linux-gpio+bounces-23676-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23677-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D37FB0EDC7
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 10:56:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73B0FB0EDD0
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 10:57:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73D223BEFA3
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:56:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E63F177875
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:57:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 313FE281351;
-	Wed, 23 Jul 2025 08:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B739A284B3A;
+	Wed, 23 Jul 2025 08:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="mYqGRTG3"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="gZ/cAkFz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C771E26B09F
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 08:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099B7283FE4
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 08:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753260989; cv=none; b=NfreALaeF3TLCPoTqP7RC0ODiLHkve/HuXGHZ3z52Glc0R2PP2IZtH6kUyfuW3eLRp9dnXGd+dPrpsm79BnK6PIBgVilUmt85ZI+Noo5iPyk8Fino/i/9QA/IBSdfPsMbdFW4arp92nXd9L2G/8Ex+zWAZ5dp0fZAyTFY5u/rBU=
+	t=1753261036; cv=none; b=uMeOkWwdCZMq/JQNyvs8LzGn7W2hMnQw4DJWC/2MZfQJ8KG5lizlAIqnP616PC3eY4qyFKNlcIB7SehuFZkmgzplAoxbD6zEno3adOQz0NXmGKFq1DoZ8cBfQisNlgjJnjzSvbEu7srjUQzAvrG+qlOiBuJVYKz9o/1wFzay/HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753260989; c=relaxed/simple;
-	bh=ivWLfCcBXBkL/qNohL8sbSA9SuozOGDxvp7qPPHD6AU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=tRWvXnOLj2nSLX/IKtPfQUpSJkivuki0IloT1c1OlwX/LK5VmcjHGgn1weJyeu+Oi1BOdPy0Hes6IjKkK2/5JNOq9SNYJ2hhFSZ2dBWkAlXYRvcfOGDKrFWwUaOc6tw12VcDn4sBEDX7/dTh/NYkoBUTsmWCydFvvnHY+uP8KMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=mYqGRTG3; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so45278495e9.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 01:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1753260985; x=1753865785; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HUMIaGBXBNy4LdI9Q+WzJyZ11csBDew2kVd8Pw7L2AQ=;
-        b=mYqGRTG3v4mhl7vtF8ClMe4R6IiGIJOsp90xNxZX+2k+2MFyethG6uoGKbPPPXOFHf
-         TBBmOGDQlZZPUgoY7aG7LyEMlxUAXq6vNVvE38VBsigd8W7zeQrUgEP62IHZb1nrb3+S
-         YV//BbuYKLaErggeQuviM7dXgsjSn6ob7Ob8Bt6AtZ7SwzbUHg2QIkoi8iGgLRuXrsYV
-         CRmtavQJ0DzPkbQyVlDXNc5Sc+Qo3SU/4ZwUakRBaRMFTqVgeMU7YJsRquf6w+lf9ipo
-         EEFkwprlgjcq5/ItDfENnMZK8iqHSBvRa0YELkv+lw341Tvar7fyI2t5rAcOpsy98Emw
-         wOUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753260985; x=1753865785;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HUMIaGBXBNy4LdI9Q+WzJyZ11csBDew2kVd8Pw7L2AQ=;
-        b=ljYRyf1rpqGKrAYGG2liYsZnDmZC41Q8Dl5S/PD8zoPj4MlX7Ta5LuQRGb/Am2ZBgu
-         gTnf+Jyu4swv65RbJI6rTlXIRNTZU+BDVYYT20UzlZP3I7/0ExStbWAT0FX7JAobEFg9
-         y0mLbtqJFKLCbPf7vkr0ldmc+UcqmavdfHNM16sXGMVGTD0hrl6wdA5VOihaN7nPm4oz
-         fT03Q2QnrJXeDT08TFBoLJ427Bo+XGyPlXrrMQKjCf1HchTTLAPex06kejOZOZ9zVDQP
-         8f3G80kwGuq79wOZvN6mz2+OJajGfrG78P5K+BKQj7K6MxOE6ccP7J7gVY8kSzYRcf4t
-         1TXQ==
-X-Gm-Message-State: AOJu0YzUrm8HAE38o719rPTFS+CWJ7eWzP8M2jQZRWy+cU4MKIYM7dO5
-	W0XWm7w0UjvgbiV5dggKJkfetnpuhFMyIpYbroWuVY7cWzTDGUaTN0lerwv6HANM7JEYwwvkS4b
-	aG2X1
-X-Gm-Gg: ASbGncuJ3J5T94tWAKuvEVCmD/1xrK23kS812P5g/VpdyjcKkdtaYPshFMEPd2Yu8Yn
-	Pga5mNuP8KhuVBFGB9R204OZZIli/w2X1OJSiw209SfaFRo4MIGWZrKYwLTLwDkcgNTbZmpEG9e
-	Pbpz/G2wPbr3O69cy77DSepaxEjm3xYYpHd6LBYDE7yZpauUae0l/fnb7Pci0lXZyH22saGXrtk
-	gDvDatgqup0GIu2bdJxu9SUR+l8Y3tSwWD2eNY0ceQJrxm6hoSCVz/0LmLB9Q55zlIRIfGDzg+O
-	fqn8PZQ3m4hTufB71gcsWSKnuXbo8Gj0CFYIFXthETY4MLMe87NzR2Eq4fikWuZ3bKQcHAQYuQ=
-	=
-X-Google-Smtp-Source: AGHT+IHJlnR02qiE/YujGCs3DOYev/UBPr0KVTL1q4gEqoe6Dtnp3Ws0Yguiu3Sgs2qeoYY3wbDwNw==
-X-Received: by 2002:a05:6000:1885:b0:3a4:f70e:abda with SMTP id ffacd0b85a97d-3b768c98f5fmr1674241f8f.10.1753260984937;
-        Wed, 23 Jul 2025 01:56:24 -0700 (PDT)
-Received: from localhost ([2001:9e8:d59e:4100::f39])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b762bb4f6csm5329650f8f.4.2025.07.23.01.56.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Jul 2025 01:56:24 -0700 (PDT)
+	s=arc-20240116; t=1753261036; c=relaxed/simple;
+	bh=49hlALmvO3tf+FxtZgb/HogpsYZxbw25DjGIXxz7B+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c3GhCf381wxheQrp/7Ej7XtZmrP++vrpvfsLzOHU11lBF5clKcPbDnxX4MKesmgKa+QZ6bh6cIqRfdlq0YDZnPVCysDKdls+g/1cdsRR8efe/G9r8MGDMFlAuAcKeAkeQrBXt3Swt7chkEP1O5WGmMXU4O1Hidvf+m4tSfXk/fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=gZ/cAkFz; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
+ Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
+ t=1753261034; bh=PKSo/fJwr04VNmGVrbdVZ+djNyZPEPotepO7Vigj2G0=;
+ b=gZ/cAkFzBk4dAWEQEvopEKT960ozV4vhq862TUjFWC++4XivxeraSJ7N6w0Ut4H/v9evZnt/B
+ WZ6ea60xDPneIfGHXMR0x1N/ZjcPacmNFWO03qlG7tc/LIyhidPCQDFdxtSlNzrSGbLmjSXypz2
+ xOrc1WpoByNG9iGdmdYKysSp+4xynThh5S8LZicA0/oFrUx4dXUciWmpb2IwmCuc2W/r2uOZHxM
+ MOpZI6THaAVGcEya0LIY+T5i6h9JxhoE81bwMSglQqgyTYcRgUdpn0hvgaWKroaLV07O8+2LTf3
+ K0JYvr5NlivEwk1Hhtk3mMJ+xnmANB4VFc/Y3Db3hfng==
+X-Forward-Email-ID: 6880a3e0144dc4a5e5baee04
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.1.6
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Heiko Stuebner <heiko@sntech.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Yao Zi <ziyao@disroot.org>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	devicetree@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jonas Karlman <jonas@kwiboo.se>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v2 1/5] dt-bindings: gpio: rockchip: Allow use of a power-domain
+Date: Wed, 23 Jul 2025 08:56:43 +0000
+Message-ID: <20250723085654.2273324-2-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250723085654.2273324-1-jonas@kwiboo.se>
+References: <20250723085654.2273324-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 23 Jul 2025 10:56:24 +0200
-Message-Id: <DBJB5CVQSU1E.QPXNUCPNJGNH@riscstar.com>
-Subject: Re: [PATCH libgpiod 0/2] bindings: rust: update examples
-Cc: <linux-gpio@vger.kernel.org>, "Bartosz Golaszewski"
- <bartosz.golaszewski@linaro.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Viresh Kumar"
- <viresh.kumar@linaro.org>, "Linus Walleij" <linus.walleij@linaro.org>
-From: "Erik Schilling" <erik@riscstar.com>
-X-Mailer: aerc 0.20.1
-References: <20250723-rust-examples-imports-v1-0-4c87e07a9b79@linaro.org>
-In-Reply-To: <20250723-rust-examples-imports-v1-0-4c87e07a9b79@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed Jul 23, 2025 at 10:16 AM CEST, Bartosz Golaszewski wrote:
-> Here are two small updates to rust examples. Fix automatic formatting
-> with rustfmt and unify the way examples import modules.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
-> Bartosz Golaszewski (2):
->       bindings: rust: fix formatting in examples
->       bindings: rust: unify imports in examples
->
->  .../libgpiod/examples/buffered_event_lifetimes.rs  | 23 ++++++++++++----=
-----
->  .../rust/libgpiod/examples/find_line_by_name.rs    | 13 +++++------
->  bindings/rust/libgpiod/examples/get_chip_info.rs   |  4 ++--
->  bindings/rust/libgpiod/examples/get_line_info.rs   | 10 ++++-----
->  bindings/rust/libgpiod/examples/get_line_value.rs  | 19 ++++++++++------
->  .../libgpiod/examples/get_multiple_line_values.rs  | 17 +++++++++------
->  .../examples/reconfigure_input_to_output.rs        | 25 +++++++++++++---=
-------
->  .../rust/libgpiod/examples/toggle_line_value.rs    |  7 ++++--
->  .../examples/toggle_multiple_line_values.rs        |  7 ++++--
->  bindings/rust/libgpiod/examples/watch_line_info.rs |  6 +++---
->  .../rust/libgpiod/examples/watch_line_rising.rs    |  4 ++--
->  .../rust/libgpiod/examples/watch_line_value.rs     |  4 ++--
->  .../examples/watch_multiple_line_values.rs         |  4 ++--
->  13 files changed, 82 insertions(+), 61 deletions(-)
-> ---
-> base-commit: 74ca5ca5b71d281801a3353a3d7f0ff04a171c8a
-> change-id: 20250722-rust-examples-imports-261e098f12f6
->
-> Best regards,
-> --=20
-> Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The GPIO controllers in most Rockchip SoCs are part of power domains
+that are always powered on, i.e. PD_BUS or PD_PMU. These always powered
+on power domains have typically not been described in the device tree.
 
-Reviewed-by: Erik Wierich <erik@riscstar.com>
+Because these power domains have been left out of the device tree there
+has not been any real need to properly describe the GPIO controllers
+power domain.
+
+On RK3528 the GPIO controllers are spread out among the described
+PD_RKVENC, PD_VO and PD_VPU power domains. However, one GPIO controller
+belong to an undescribed always powered on power domain.
+
+Add support to describe an optional power-domains for the GPIO
+controllers in Rockchip SoCs.
+
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+v2: Update commit message
+---
+ Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+index d76987ce8e50..bdd83f42615c 100644
+--- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
++++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
+@@ -41,6 +41,9 @@ properties:
+   "#interrupt-cells":
+     const: 2
+ 
++  power-domains:
++    maxItems: 1
++
+ patternProperties:
+   "^.+-hog(-[0-9]+)?$":
+     type: object
+-- 
+2.50.1
+
 
