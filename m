@@ -1,134 +1,193 @@
-Return-Path: <linux-gpio+bounces-23671-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23672-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BE22B0ED31
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 10:28:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 009DEB0ED73
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 10:39:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10BC9177D40
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:28:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E0A4962721
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:39:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E59279DD6;
-	Wed, 23 Jul 2025 08:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5091928000C;
+	Wed, 23 Jul 2025 08:39:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tcNX9ZTf"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Pee1uEMv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5324E246776
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 08:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5F727FD49
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 08:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753259302; cv=none; b=iv6iC4+3z3SuX+tmgSzRfXm8VL9ZnuCBpdLxRPhp4ew9JU2MPlcr1AMp7VKc1vr//kVZWY90/DTvin7tIZTr5m/oe1tQzmyk4oZys7cJNrydtPvlDZ+ymX3U7/4in3KnMclrhPKTYf5d49v/d3cvWqGtC3Jalk1urKpXTrUN+Bs=
+	t=1753259988; cv=none; b=kdWKYD2lDZahTTOdO9oaEDroHqyjY5jUFxyvK1WG18EXluz7TUcaB2PaHotZrnAT9TbpSSeeuDuxCOGQtjj31dCkut+/yACygcd0PKP3Qt+d4Xrh1HEQ4O72t4ykzUtvvNqljs9PyTxE1gEYLbAMpN2vd6TeDeRa3y9VbtJj0JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753259302; c=relaxed/simple;
-	bh=6MvseLLstFmue4ctlegk00xpra/zAxh0ntDD9nuLHKw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IgEAxDpcT45d4wGtKuh+FxtXeHh80Jn93K2UpqT00qvL4zZytMf7AR45f6JA+bRD/Xsm6IIoHj9/cbSjdfqbxIbjLJF9ZC0QmrptQCEb5NRmmsXQuzXjUg9rPn60Z+QprdxddAVsNgZM6pUyteKgJDCvzRcyaIz5PoRgt1QJAG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tcNX9ZTf; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1753259988; c=relaxed/simple;
+	bh=1AjvjJS9v/RU79Y2L27EordX4bGQ6WagU8X+BGgVibg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qs3RRMlDVyJ0Myv3bcILjovFX2UPj5XxqMCG0gh21RGNZ0VmMOmN6ezZOLqctCXhdYSVviMSeR8XTMjpbFa3g/opzFbh5qLWi5J7gssk5XFukQ5YbWYHpd2alI2Uwix37Ynrjzw/NRlDChJ775fz+cj/muQFiWCATEV3sqbEXJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Pee1uEMv; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45617887276so42223905e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 01:28:21 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32f1df5703aso50621691fa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 01:39:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753259299; x=1753864099; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753259984; x=1753864784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2pc4bHJoJoj3aO2qd55BKMxrmnifl3uVSUSK3UCX05c=;
-        b=tcNX9ZTfqfYkN5GgXb1CjxNKTK+8gD213fjHDke4HfRdJCjgm5fiV2+86jidELOU0O
-         s/667/KO492whsqH6eNLXnNzqmd/s/QZeLX61yk7UdC0nwr61pWlgbWSl/jc8f0Kcwfj
-         muRqcggEN71r0tY24gyJNlhji0UUIw1wkzf02ZodHNaxMEbc/M4MNlpzCC1zXpJ14+Fi
-         3NHaYgR8h4TazZeMrNmJIhTqTUuqquRX8ZFBVUTnf2/uZFlzBzvMvQo8Co/YTQCKHxgY
-         kM/8jabCm7/Mh2q0C52okNLwxUSK3BBr2TE2kYVq0V5eXwQS+VlHsqZKMU4fnBUJymJ2
-         VBWw==
+        bh=BU3YHppfEwgLlzQmPzEMgC+cmd2aor7tnr8gGHNlsXI=;
+        b=Pee1uEMvjOYM3t38VIu1jxJgiB8icyqxHWvnSkPcGqD1HwAQ2gkLLzH1OmWAs2e95+
+         iOxc+2NY+0zX1ln/aOSmdrXa4lquogIi3sPFGgUnpMooZPXJ3N7duahoXJNTzXOlpy0x
+         ByTt7+EVSzeVTGETtTjTbWTmPfidScPUkvGy/pZpfwQipB0E+OJMmgFPDL03QtzhaEDN
+         /ejvVQj0D7Knu/ym4MQS7AWoqmRGgFRygMFtnqWaYogVPZrT2KaFGwghGWLZxOSq6jQp
+         tEkIkmITknd8/XuwSh5SUji25yZk5ajCqlwXez/gBLeDtjyqSd0/sXpf+T3Upb0sP8Tp
+         bvLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753259299; x=1753864099;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1753259984; x=1753864784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2pc4bHJoJoj3aO2qd55BKMxrmnifl3uVSUSK3UCX05c=;
-        b=DoJrFaZWpe4l+xeqrjP+cg/iQiHl0V26FYd5WE5QCgMu+VCW6y6xHpSUE2QX+vLDCy
-         CVfhCUUbD/WqVTitUIyzpUYk2apbuf4ZPSy2E8OvObSO6gSXhKOxPJMQaIujSyTOzMed
-         REgKGa5xEpr+VA1AFcdxG1Yj8UVXePMpNfMdu8PoBa+zn6B5FJGJIRbdLEhrEZrua8pZ
-         wiCrQZ0qzqUspGzbIUGLutG4HwVDeRPHCldyKe9hODPhdPgoSvq98iBg3ryNdARg1Css
-         3WACjrb4fcIWCLlOUdyeO6dy9lGwsELC2srZFYwLRioGwEpnasXmm/AKQ6ELTrEr5KTj
-         FlAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9wwW6u6iOF8n45KToDFg1OtUpqeGVJcPrqIt9KVZ/rHOCCRWlu5eK3H9v1bTmWwuMZrFCZ9deS+HJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg8N0oo4hpwOoFKuo6XdQNBj2SgyYcYzZoerPmCG3Dm27VoDwq
-	o8GweknDptlRdakJse5GpIQPG+P4UmnCYxzXQ4px83vF+lM2kgT4VwhFxRQe9rg1yjQ=
-X-Gm-Gg: ASbGncu+lqvYYNlr3GQR1bOplJED4lSpduapVciY6H6ATK+E4sRcg5/Qt5rd1DOPT4g
-	dr8g9JwKwidrGyxbt0sBn7CxP9EGfVpKmDJ1iyCeH4hhwXe/sGg54H9OLXv83wPHB/Yk/kTUdWN
-	qIScllX9SQYvBJid2oyFL1Sj5elZH3TCb78Rl5bctE//42KPHvBuMsnF7g9aXgA8hgUJyQXYgdO
-	dVjJLFyJNY4CzOMLYfIWQ8dn1o44pPaFjFkPEbvdQBwkH8OL0C489tFwbA7GkvWgva7mdLCBE7Z
-	d6jvQa2uU3reCtaFLnONhOGDa1bdI9x0MVlO3P0/1pRUpDZ/K4myAKUuXSgh9JLj0CdxQSBEEVb
-	SLGos/LYtD/i77sK66yxwNQ==
-X-Google-Smtp-Source: AGHT+IGK7N5pQ0+Y16nUh78stgbWDqftcQGNI/Gok59MRheVUKxpWDHp9OeWD2BQW29JilRfDWRv4w==
-X-Received: by 2002:a5d:588e:0:b0:3a4:eed9:755d with SMTP id ffacd0b85a97d-3b768caa1c0mr1809547f8f.3.1753259299570;
-        Wed, 23 Jul 2025 01:28:19 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:34cd:b1d:d4f9:be03])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca4d7efsm15696894f8f.67.2025.07.23.01.28.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jul 2025 01:28:19 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: aaro.koskinen@iki.fi,
-	andreas@kemnade.info,
-	khilman@baylibre.com,
-	rogerq@kernel.org,
-	tony@atomide.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	m-leonard@ti.com,
-	praneeth@ti.com,
-	jcormier@criticallink.com,
-	christophe.jaillet@wanadoo.fr
-Subject: Re: [PATCH v8 0/2] Add TI TPS65214 PMIC GPIO Support
-Date: Wed, 23 Jul 2025 10:28:17 +0200
-Message-ID: <175325929438.26908.5347574022964000296.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250722181609.1541739-1-s-ramamoorthy@ti.com>
-References: <20250722181609.1541739-1-s-ramamoorthy@ti.com>
+        bh=BU3YHppfEwgLlzQmPzEMgC+cmd2aor7tnr8gGHNlsXI=;
+        b=pV2z19KmicA0n8D5OsGor2DVeKGsODJahwZaaa6uERG64ZjH1JM7RsgDItwdAZgJqz
+         Bkht+tl2nvh4GKrnl3YBoU8wxU6me7wEfQYJdSTVOiz3fIbOK7mGOE48quE6QaOZvGES
+         BNS180oEZBydEniuTHFziBpEr61JPYYPM4MCKfFmh0udlWgvJUdA5v1Y0GlCCnwDpj+V
+         q8mW5xe/GZ8b0ySFMiBgcJ/u/qXxo4CPu+ov/gPEK+wh61/kQQOY0ITAMJvZ7ZTRJUvv
+         MLI66MyNuZc0JBOGGdx6Ofx8CL8RKt2gPxpY0Gh78kPV7+Cd6ZSze9azhu1e89mVdvnE
+         6vIA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7auT/73yCrtBTiCc3ZAv6WX5YdZq5ST7YG0YkE5nJ/GNUP938HQmJ0P9JFqULGdx90d1xF45tuYpx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwWOK41TgDYZuCUU6NlpfGywwrl8CgYI8PMtxbkplURgzNXjlv
+	ftY1gi9oOPUcfLmoYHPVgBee7nH/tZ6d/M593GM0qvcKA2FXVZActWGjqEH0D+sl/pE4e1X+t2Q
+	J4CNe5aszn6pGH0IStT6YBS2ibAF9quOy/HiUe2GH1PfTMmLjCE4+
+X-Gm-Gg: ASbGncvvm+naZgp6QA1EZ+C3IcI3/iCcNAhYUREV2EeEg/f8fk8GcOZ+slTSMdoSBSA
+	jKugOB+FOJwuzvPSAUafaESjzYGZFn5XbX8mO5CMXVceDrVqIwCcdZp97PvOLTYJR6SW+MRuasm
+	0ifrJaPzrVA4O1VLhlb250xB/ljOrWYr7xx6ET/gsj6ycNLjT4qh0Xq80AHKudriSCKIxkf2Alk
+	xHPrFW+OHAmYAN7s3LPWZtCvaynfo+wCzdJyw==
+X-Google-Smtp-Source: AGHT+IFugxx33V2IVP47SCGYIErHvS07pbcdF/mE/z9tJyMMD44yLv/pqTHyTGVndOZ3XhTEc+cnZUrA7NWAS69FBGM=
+X-Received: by 2002:a05:6512:4002:b0:54b:117b:b54e with SMTP id
+ 2adb3069b0e04-55a513e5ad2mr726883e87.57.1753259984459; Wed, 23 Jul 2025
+ 01:39:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250722153634.3683927-1-arnd@kernel.org>
+In-Reply-To: <20250722153634.3683927-1-arnd@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 23 Jul 2025 10:39:32 +0200
+X-Gm-Features: Ac12FXxdSKzhtSe3prQ9Qy5T-yWlCnomkS5z5uJ4MEj3ZIWOP-wTvZ2ujZX9cGM
+Message-ID: <CAMRc=Mejnr8UzN93X=CWcV5jDTt9-U+Nxcm3qb=6uVV0PMiZVQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: make legacy interfaces optional
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Peng Fan <peng.fan@nxp.com>, 
+	Lee Jones <lee@kernel.org>, Koichiro Den <koichiro.den@canonical.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Jul 22, 2025 at 5:36=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
+>
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> The traditional interfaces are only used on a small number of ancient
+> boards. Make these optional now so they can be disabled by default.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> This is the first patch of a series to turn off the legacy interfaces
+> by default. If we can still have this one in linux-6.17, we can more
+> easily merge the other patches for 6.18.
+>
+> See for the longer series:
+> https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?=
+h=3Dconfig-gpio-legacy
+>
+> I'm sure there are still problems in the other patches, but it
+> does pass my randconfig build tests on the three architectures
+> I'm testing on. I plan to post them after some more testing
+> once -rc1 is out.
+>
+>  drivers/gpio/Kconfig  |  3 +++
+>  drivers/gpio/Makefile |  2 +-
+>  include/linux/gpio.h  | 10 ++++++----
+>  3 files changed, 10 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 12bdf6e965f1..8bda3c9d47b4 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -14,6 +14,9 @@ menuconfig GPIOLIB
+>
+>  if GPIOLIB
+>
+> +config GPIOLIB_LEGACY
+> +       def_bool y
+> +
+>  config GPIOLIB_FASTPATH_LIMIT
+>         int "Maximum number of GPIOs for fast path"
+>         range 32 512
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 88dedd298256..b01ff2b68bf6 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -5,7 +5,7 @@ ccflags-$(CONFIG_DEBUG_GPIO)    +=3D -DDEBUG
+>
+>  obj-$(CONFIG_GPIOLIB)          +=3D gpiolib.o
+>  obj-$(CONFIG_GPIOLIB)          +=3D gpiolib-devres.o
+> -obj-$(CONFIG_GPIOLIB)          +=3D gpiolib-legacy.o
+> +obj-$(CONFIG_GPIOLIB_LEGACY)   +=3D gpiolib-legacy.o
+>  obj-$(CONFIG_OF_GPIO)          +=3D gpiolib-of.o
+>  obj-$(CONFIG_GPIO_CDEV)                +=3D gpiolib-cdev.o
+>  obj-$(CONFIG_GPIO_SYSFS)       +=3D gpiolib-sysfs.o
+> diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+> index ff99ed76fdc3..8f85ddb26429 100644
+> --- a/include/linux/gpio.h
+> +++ b/include/linux/gpio.h
+> @@ -13,6 +13,11 @@
+>  #define __LINUX_GPIO_H
+>
+>  #include <linux/types.h>
+> +#ifdef CONFIG_GPIOLIB
+> +#include <linux/gpio/consumer.h>
 
+I want to queue this ASAP but do we really need this guard here?
+consumer.h already guards against !CONFIG_GPIOLIB internally, right?
 
-On Tue, 22 Jul 2025 13:16:07 -0500, Shree Ramamoorthy wrote:
-> The related MFD series was integrated in mainline during 6.15 cycle [0].
-> 
-> TPS65214 is a Power Management Integrated Circuit (PMIC) that has
-> significant register map overlap with TPS65219. The series introduces
-> TPS65214 and restructures the existing driver to support multiple devices.
-> 
-> TPS65215's GPIO specs are the same as TPS65219, so the "tps65219-gpio"
-> compatible string is assigned to two devices in the TPS65219 MFD driver.
-> No additional support is required in the GPIO driver for TPS65215.
-> 
-> [...]
+Bart
 
-Applied, thanks!
-
-[1/2] gpio: tps65219: Update _IDX & _OFFSET macro prefix
-      https://git.kernel.org/brgl/linux/c/8206650c604687687bed5898b3bdb90e5d361ed4
-[2/2] gpio: tps65219: Add support for TI TPS65214 PMIC
-      https://git.kernel.org/brgl/linux/c/1b6ab07c0c800ed32ce417b71b32bb1baa91b493
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> +#endif
+> +
+> +#ifdef CONFIG_GPIOLIB_LEGACY
+>
+>  struct device;
+>
+> @@ -22,9 +27,6 @@ struct device;
+>  #define GPIOF_OUT_INIT_HIGH    ((0 << 0) | (1 << 1))
+>
+>  #ifdef CONFIG_GPIOLIB
+> -
+> -#include <linux/gpio/consumer.h>
+> -
+>  /*
+>   * "valid" GPIO numbers are nonnegative and may be passed to
+>   * setup routines like gpio_request().  Only some valid numbers
+> @@ -170,5 +172,5 @@ static inline int devm_gpio_request_one(struct device=
+ *dev, unsigned gpio,
+>  }
+>
+>  #endif /* ! CONFIG_GPIOLIB */
+> -
+> +#endif /* CONFIG_GPIOLIB_LEGACY */
+>  #endif /* __LINUX_GPIO_H */
+> --
+> 2.39.5
+>
 
