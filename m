@@ -1,127 +1,134 @@
-Return-Path: <linux-gpio+bounces-23669-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23671-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36942B0ED20
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 10:26:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BE22B0ED31
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 10:28:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20DF31C815BD
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:26:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10BC9177D40
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Jul 2025 08:28:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D11827780C;
-	Wed, 23 Jul 2025 08:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E59279DD6;
+	Wed, 23 Jul 2025 08:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WF2Xc2ES"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tcNX9ZTf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F9927780D
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 08:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5324E246776
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 08:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753259160; cv=none; b=T5KGT0F5ERTHi440c1as4JYgKXeD7U8ZjU8GvnD+XdbcH0kTvJHyffO+F+4XOKB6khinpQcGKuYD5u3Lio7Ybp7AX1W/UrbIv0ePaxCa5rnC2ULS5PbrDV6HD7jP8lOaQtKJ2dPlMSqd4ZliMTOw8IknljsHwHA+7ty8Mz/07V4=
+	t=1753259302; cv=none; b=iv6iC4+3z3SuX+tmgSzRfXm8VL9ZnuCBpdLxRPhp4ew9JU2MPlcr1AMp7VKc1vr//kVZWY90/DTvin7tIZTr5m/oe1tQzmyk4oZys7cJNrydtPvlDZ+ymX3U7/4in3KnMclrhPKTYf5d49v/d3cvWqGtC3Jalk1urKpXTrUN+Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753259160; c=relaxed/simple;
-	bh=vLCNSJ4DxVZDJPQ7cVNRDySeLw0NidDKviv2DX8YsFo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bsd53EtDroOfsRQrQzCqCXB66SkQUgGuR+QgTAcNCS21rLho9M40A2NUlBzajtvVTT/qYk9XbVS7Xw4P0dWh9Oxs/ILgf266RnI+YCREb/jiEQhon/Qm67y9M/yTTrZ+gbzEFNpB9QHnfYvnfEfQzVsuAyKfeFJy1A6oY/8OCaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WF2Xc2ES; arc=none smtp.client-ip=209.85.215.177
+	s=arc-20240116; t=1753259302; c=relaxed/simple;
+	bh=6MvseLLstFmue4ctlegk00xpra/zAxh0ntDD9nuLHKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IgEAxDpcT45d4wGtKuh+FxtXeHh80Jn93K2UpqT00qvL4zZytMf7AR45f6JA+bRD/Xsm6IIoHj9/cbSjdfqbxIbjLJF9ZC0QmrptQCEb5NRmmsXQuzXjUg9rPn60Z+QprdxddAVsNgZM6pUyteKgJDCvzRcyaIz5PoRgt1QJAG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tcNX9ZTf; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-879d2e419b9so4201140a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 01:25:58 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45617887276so42223905e9.2
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Jul 2025 01:28:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753259158; x=1753863958; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753259299; x=1753864099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vLCNSJ4DxVZDJPQ7cVNRDySeLw0NidDKviv2DX8YsFo=;
-        b=WF2Xc2ESZUXC3I4997szY/O/Q2b8sQFJDwGqigrANiJNjwrQgnWk/KgiUjPftfzFf2
-         YUADAbu9eIdyFhPrkqBiefiC1jjzmUhXODL5cM5E4M+gVRXQLQJNJCAbF5LQAI0FEefj
-         q8MxMVO9ld3BbUf/aaJqD6gt8F++fbHQ/OBNzs7YGg4l1EmRhzW/YAVxoXGzw4MRoUre
-         7p+327nZRUY2hjKCflgCpBZrPK8JaJWKKILr/859g7GVsWIzAzbdinzhOLaP/UOkmAp4
-         W3o0M+K6QAVSrxdF8uS6CNj2+NiV7wNwVJnNH7YJrUx58XVYBith9M8CmJspWHHkuxPW
-         E44Q==
+        bh=2pc4bHJoJoj3aO2qd55BKMxrmnifl3uVSUSK3UCX05c=;
+        b=tcNX9ZTfqfYkN5GgXb1CjxNKTK+8gD213fjHDke4HfRdJCjgm5fiV2+86jidELOU0O
+         s/667/KO492whsqH6eNLXnNzqmd/s/QZeLX61yk7UdC0nwr61pWlgbWSl/jc8f0Kcwfj
+         muRqcggEN71r0tY24gyJNlhji0UUIw1wkzf02ZodHNaxMEbc/M4MNlpzCC1zXpJ14+Fi
+         3NHaYgR8h4TazZeMrNmJIhTqTUuqquRX8ZFBVUTnf2/uZFlzBzvMvQo8Co/YTQCKHxgY
+         kM/8jabCm7/Mh2q0C52okNLwxUSK3BBr2TE2kYVq0V5eXwQS+VlHsqZKMU4fnBUJymJ2
+         VBWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753259158; x=1753863958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1753259299; x=1753864099;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vLCNSJ4DxVZDJPQ7cVNRDySeLw0NidDKviv2DX8YsFo=;
-        b=VpFu52AqFt/hFm+qOrXE5Q9XcXu8jkyxROi1xZIEpLfa/nHcSbW+tjB0zpbQQgnh2Z
-         40qUlspy9Dpo4VArF/iqoZ9C/ubC/hWyDgCKcQaHY5m8RvVzjWAPlPrPSvZSpfUAwYpp
-         35xHOglph28/vznZoinmtPYuxODquuva9LyoMwgGz0wOb3W0vJ3A/yl63fkuNyaxJnIx
-         tzqlG6+R1ciph2idsIH5QrAO2TVGRrdmLi37OALEAJL0PNZISFfwmpINH17l8DWeLu0d
-         7kSzSxjuPk71arAhFLt5NI5EplfnMDxnhwCNumy1PhWfuizomNxgkSbCCLzb2/kRMOga
-         w0CA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEmIVDfeC7u+L713MVnhJxF/91wwFTNIwWmdFNTTUvIGnoNc20hm6lRYQcm4uHvpc7g64wdAT3226H@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ5gXNxRF3EkNlq+OJjnusOSfUheVLlISIEaiTBo0wlK2r2lFy
-	d5oXIUV3VWt33UXT//M+qkihAzvGJHfzd/Sis9XWADCX3qw96gctG08P4KQRtbYatunpVt5LCoS
-	EZX9bVCSV6Kz9olfWdSBWdNMtdq1bwEZCxMZYqFoMPg==
-X-Gm-Gg: ASbGncuubm2cOxLuwLmtTEPiSucx80Ad0Lr5otHVjdM774rE9VMJlU03ZttS+OGl5jH
-	QIdyGzHxDRttJAuo3ubofGS701DG6eHxug/mVXZqiYb4taFV9dgT9lHCvZMFUZHWQS+oNzV3fGK
-	BiZCztf8xdyIxRDN2UVgf23XT1clewAO/0oSm7PfsJ0D9sirbdzyPMt+rj25L+jtb0W8DrFG3zv
-	12j8lwO2Mx4JRjD7VYPYNO6MkaVTmA/Qzp0z6Joxtti1GNm
-X-Google-Smtp-Source: AGHT+IFzwCafFosCdx131zbcEFY3D64m+7mo0loj5vAsYVkMFUgy5UAHuuRGjg5yAkxctR2cI5zO8+e+kqhHgdsFxCw=
-X-Received: by 2002:a17:90b:53d0:b0:315:aa28:9501 with SMTP id
- 98e67ed59e1d1-31e507dc7b4mr4498294a91.24.1753259157929; Wed, 23 Jul 2025
- 01:25:57 -0700 (PDT)
+        bh=2pc4bHJoJoj3aO2qd55BKMxrmnifl3uVSUSK3UCX05c=;
+        b=DoJrFaZWpe4l+xeqrjP+cg/iQiHl0V26FYd5WE5QCgMu+VCW6y6xHpSUE2QX+vLDCy
+         CVfhCUUbD/WqVTitUIyzpUYk2apbuf4ZPSy2E8OvObSO6gSXhKOxPJMQaIujSyTOzMed
+         REgKGa5xEpr+VA1AFcdxG1Yj8UVXePMpNfMdu8PoBa+zn6B5FJGJIRbdLEhrEZrua8pZ
+         wiCrQZ0qzqUspGzbIUGLutG4HwVDeRPHCldyKe9hODPhdPgoSvq98iBg3ryNdARg1Css
+         3WACjrb4fcIWCLlOUdyeO6dy9lGwsELC2srZFYwLRioGwEpnasXmm/AKQ6ELTrEr5KTj
+         FlAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9wwW6u6iOF8n45KToDFg1OtUpqeGVJcPrqIt9KVZ/rHOCCRWlu5eK3H9v1bTmWwuMZrFCZ9deS+HJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg8N0oo4hpwOoFKuo6XdQNBj2SgyYcYzZoerPmCG3Dm27VoDwq
+	o8GweknDptlRdakJse5GpIQPG+P4UmnCYxzXQ4px83vF+lM2kgT4VwhFxRQe9rg1yjQ=
+X-Gm-Gg: ASbGncu+lqvYYNlr3GQR1bOplJED4lSpduapVciY6H6ATK+E4sRcg5/Qt5rd1DOPT4g
+	dr8g9JwKwidrGyxbt0sBn7CxP9EGfVpKmDJ1iyCeH4hhwXe/sGg54H9OLXv83wPHB/Yk/kTUdWN
+	qIScllX9SQYvBJid2oyFL1Sj5elZH3TCb78Rl5bctE//42KPHvBuMsnF7g9aXgA8hgUJyQXYgdO
+	dVjJLFyJNY4CzOMLYfIWQ8dn1o44pPaFjFkPEbvdQBwkH8OL0C489tFwbA7GkvWgva7mdLCBE7Z
+	d6jvQa2uU3reCtaFLnONhOGDa1bdI9x0MVlO3P0/1pRUpDZ/K4myAKUuXSgh9JLj0CdxQSBEEVb
+	SLGos/LYtD/i77sK66yxwNQ==
+X-Google-Smtp-Source: AGHT+IGK7N5pQ0+Y16nUh78stgbWDqftcQGNI/Gok59MRheVUKxpWDHp9OeWD2BQW29JilRfDWRv4w==
+X-Received: by 2002:a5d:588e:0:b0:3a4:eed9:755d with SMTP id ffacd0b85a97d-3b768caa1c0mr1809547f8f.3.1753259299570;
+        Wed, 23 Jul 2025 01:28:19 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:34cd:b1d:d4f9:be03])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca4d7efsm15696894f8f.67.2025.07.23.01.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Jul 2025 01:28:19 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: aaro.koskinen@iki.fi,
+	andreas@kemnade.info,
+	khilman@baylibre.com,
+	rogerq@kernel.org,
+	tony@atomide.com,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	m-leonard@ti.com,
+	praneeth@ti.com,
+	jcormier@criticallink.com,
+	christophe.jaillet@wanadoo.fr
+Subject: Re: [PATCH v8 0/2] Add TI TPS65214 PMIC GPIO Support
+Date: Wed, 23 Jul 2025 10:28:17 +0200
+Message-ID: <175325929438.26908.5347574022964000296.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250722181609.1541739-1-s-ramamoorthy@ti.com>
+References: <20250722181609.1541739-1-s-ramamoorthy@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250722-axiado-ax3000-soc-and-evaluation-board-support-v6-0-543979a60ccf@axiado.com>
-In-Reply-To: <20250722-axiado-ax3000-soc-and-evaluation-board-support-v6-0-543979a60ccf@axiado.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 23 Jul 2025 10:25:43 +0200
-X-Gm-Features: Ac12FXyLbBDcOzrp8fBxUqR9jIu-gUOTaGAF4LxjwERQBqGacqdoGbliH_T9iv8
-Message-ID: <CAMRc=MdFoAa2omJgL__4mRqX5CYyhZ3VU_Uy-Tf1oPSuZdV93g@mail.gmail.com>
-Subject: Re: [PATCH v6 00/10] Axiado AX3000 SoC and Evaluation Board Support
-To: Harshit Shah <hshah@axiado.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Michal Simek <michal.simek@amd.com>, =?UTF-8?Q?Przemys=C5=82aw_Gaj?= <pgaj@cadence.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Frank Li <Frank.Li@nxp.com>, 
-	Boris Brezillon <bbrezillon@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, soc@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	Jan Kotas <jank@cadence.com>, linux-serial@vger.kernel.org, 
-	linux-i3c@lists.infradead.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 22, 2025 at 10:16=E2=80=AFPM Harshit Shah <hshah@axiado.com> wr=
-ote:
->
-> -------------------------------
-> Hello SoC maintainers,
->
-> This patch series adds initial support for the Axiado AX3000 SoC and its
-> evaluation board.
->
-> Change from v6
-> - Ran "b4 trailer -u" and add reviewed by Krzysztof
->
-> Add soc@lists.linux.dev in the to list and send this series again as per
-> suggestion by Krzysztof and Arnd. Thank you.
->
-> Checked locally and able to apply these patchset to soc git.
-> (git/soc/soc.git, for-next, checked commit: 7dfbf3176d886ff9a0c7786942d3a=
-89809d0641e)
->
-> Sorry for late request, please consider this series for the 6.17.
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I can't speak for the rest but do you want me to take the GPIO
-dt-bindings patches through the GPIO tree for v6.17 separately?
 
-Bartosz
+On Tue, 22 Jul 2025 13:16:07 -0500, Shree Ramamoorthy wrote:
+> The related MFD series was integrated in mainline during 6.15 cycle [0].
+> 
+> TPS65214 is a Power Management Integrated Circuit (PMIC) that has
+> significant register map overlap with TPS65219. The series introduces
+> TPS65214 and restructures the existing driver to support multiple devices.
+> 
+> TPS65215's GPIO specs are the same as TPS65219, so the "tps65219-gpio"
+> compatible string is assigned to two devices in the TPS65219 MFD driver.
+> No additional support is required in the GPIO driver for TPS65215.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/2] gpio: tps65219: Update _IDX & _OFFSET macro prefix
+      https://git.kernel.org/brgl/linux/c/8206650c604687687bed5898b3bdb90e5d361ed4
+[2/2] gpio: tps65219: Add support for TI TPS65214 PMIC
+      https://git.kernel.org/brgl/linux/c/1b6ab07c0c800ed32ce417b71b32bb1baa91b493
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
