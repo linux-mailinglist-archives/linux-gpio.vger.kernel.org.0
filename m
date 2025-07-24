@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-23728-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23729-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F1D3B10481
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:48:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D02E6B10488
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:49:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA1AF4E59DD
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:47:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BE624E62FE
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:47:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C882D0C6E;
-	Thu, 24 Jul 2025 08:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B02632D12E1;
+	Thu, 24 Jul 2025 08:40:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gNyq6E8V"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LBRcX8RJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDF62C3761;
-	Thu, 24 Jul 2025 08:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952082D0C7F;
+	Thu, 24 Jul 2025 08:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753346429; cv=none; b=RxkwYUMtx9kE15sGiCPtroR9zQEqiMIEj5McqaVRuuhx7pZvy76y9D2z/W2gci5YoDoCaJgvPHaY8VtPWALnl/qWtkYE61lkQooGZX0e7wvMIJgP5+wYZkNA7bWsYhiteKMaxzRZE9nF3TOqO9nfvifRNrM8VW2hyJ7qQ5RyFg0=
+	t=1753346432; cv=none; b=ItKViK1eppUOB2PG+NGoMCsq/q4l/Yz6PAxn2vSMUE75EyloNKrEmmDaFevzDOXMlzDidTcB72xPQVIeZpvUSefNscBN5P/Nndv2g1mM1f7kYnIju5l1RxbNfnb33QsHlpFBebi1ZcGutGJfmvHn0VR0zpcjArurn6p1t9NUe3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753346429; c=relaxed/simple;
-	bh=tywNfUc5hMA17GgyzX00W7JAF7OL9B5T8aE+/2RSWWE=;
+	s=arc-20240116; t=1753346432; c=relaxed/simple;
+	bh=0DgY9cU46pjIhmPm0+MTo+Bi+k/CtkPLKu052hg+mTE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WO0PVe/jA+KFb+LCP61MO2AV9eefO0UAR6uigil7vy1RzDayZ4s9aqe8+ZSkIS7JQvEGVU83bVzBGcZFPGdolecMm0nlQ5TZcHUp8uZJDxR1r62Cq0W+GuPoo77CVp1CiKvDej56SbGSPh7g4+2cOpgPoxpqD7FB/kV0i3UGy5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gNyq6E8V; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=YsqgI8RavtlErpFsRRFuvPJELAokeqW8wBZtFojfpw/vAbmgXAuFV2t8T0X0C9zUB07dt3OS/QFI0du8FSxcl/57ZWihT0B8oOmE4a9H/wbmrjo2cTHdXxO7DMko1Qdoyu/38lxJqeQabCxPG/aZbjAXzAknpk2hqfhhRVpaiLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LBRcX8RJ; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1753346426;
-	bh=tywNfUc5hMA17GgyzX00W7JAF7OL9B5T8aE+/2RSWWE=;
+	s=mail; t=1753346429;
+	bh=0DgY9cU46pjIhmPm0+MTo+Bi+k/CtkPLKu052hg+mTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gNyq6E8Vj3fgcYuIbvQjaLEmve4N2FgVaLzaQLVxQ0jEhimWKlbdGQGD3/fZW877l
-	 DkOSQEKUzNEaojXUjC7l3yHFTV0F6x54lD1ft0DjYgnYWf1FwRSkF7d9Al1Ri02+lB
-	 GZNNT3USU9B9aKflscPMqTgymt6TbFOAo8vwe/+u8CfI99tJKibx61ZM0UdzV72q88
-	 9/a/1Jifv3ZAJy9bjQkfopIPxbbEorurjD7EldiS7NptQBmIbTrjFxSX+CgzymFtpg
-	 fmNpJnlnFdSLaOmeHEeYYjQd4NYZe6Ov0YKi/E/oVRak2Pgm3513SVt+NePLtBOlbL
-	 8SLXVQKs3WRSQ==
+	b=LBRcX8RJRFSQT2v9ykuBE9DYadrEmw/VH4l4PViELy9uGyfu7sBNIYEyR3fsx1kiZ
+	 yTvrHatS5O6PJ+ii0OMChdf8AzMm0991NFmPobbKE+NoWWszZe2SWf/TXFcYbPs8me
+	 r2pv6TlaplaOtPvQKgPCv/j0Cxi/GS9NLiZeu5jESIZvaN6CNjHKFmEE/gTSyex+eX
+	 HPnFTVp+sbXcQodsiTdV0ag69QUbgzsuydtrfmkWT8OygG5/mWHQ14ZPG5Ib7icIG9
+	 aroAydfviw/i0f495KFi+ws5GHPFcvYGuc902otlo/U7muKMXmD5g9GRAvkpRiokrY
+	 u4KPQ8nfoh4rg==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E495217E0FC2;
-	Thu, 24 Jul 2025 10:40:23 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8E93B17E11EE;
+	Thu, 24 Jul 2025 10:40:26 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: linux-mediatek@lists.infradead.org,
 	robh@kernel.org
@@ -105,9 +105,9 @@ Cc: herbert@gondor.apana.org.au,
 	linux-gpio@vger.kernel.org,
 	linux-remoteproc@vger.kernel.org,
 	linux-sound@vger.kernel.org
-Subject: [PATCH 23/38] arm64: dts: mediatek: mt7986a: Fix PCI-Express T-PHY node address
-Date: Thu, 24 Jul 2025 10:38:59 +0200
-Message-ID: <20250724083914.61351-24-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH 24/38] arm64: dts: mediatek: mt7986a-bpi-r3: Fix SFP I2C node names
+Date: Thu, 24 Jul 2025 10:39:00 +0200
+Message-ID: <20250724083914.61351-25-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
@@ -119,48 +119,47 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The PCIe TPHY is under the soc bus, which provides MMIO, and all
-nodes under that must use the bus, otherwise those would clearly
-be out of place.
+The binding wants the node to be named "i2c-number", alternatively
+"i2c@address", but those are named "i2c-gpio-number" instead.
 
-Add ranges to the PCIe tphy and assign the address to the main
-node to silence a dtbs_check warning, and fix the children to
-use the MMIO range of t-phy.
+Rename those to i2c-0, i2c-1 to adhere to the binding and suppress
+dtbs_check warnings.
 
-Fixes: 963c3b0c47ec ("arm64: dts: mediatek: fix t-phy unit name")
-Fixes: 918aed7abd2d ("arm64: dts: mt7986: add pcie related device nodes")
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7986a.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-index 559990dcd1d1..3211905b6f86 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-@@ -428,16 +428,16 @@ pcie_intc: interrupt-controller {
- 			};
- 		};
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+index ed79ad1ae871..6d2762866a1a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+@@ -64,23 +64,19 @@ wps-key {
+ 	};
  
--		pcie_phy: t-phy {
-+		pcie_phy: t-phy@11c00000 {
- 			compatible = "mediatek,mt7986-tphy",
- 				     "mediatek,generic-tphy-v2";
--			ranges;
--			#address-cells = <2>;
--			#size-cells = <2>;
-+			ranges = <0 0 0x11c00000 0x20000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 			status = "disabled";
+ 	/* i2c of the left SFP cage (wan) */
+-	i2c_sfp1: i2c-gpio-0 {
++	i2c_sfp1: i2c-0 {
+ 		compatible = "i2c-gpio";
+ 		sda-gpios = <&pio 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 		scl-gpios = <&pio 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 		i2c-gpio,delay-us = <2>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 	};
  
--			pcie_port: pcie-phy@11c00000 {
--				reg = <0 0x11c00000 0 0x20000>;
-+			pcie_port: pcie-phy@0 {
-+				reg = <0 0x20000>;
- 				clocks = <&clk40m>;
- 				clock-names = "ref";
- 				#phy-cells = <1>;
+ 	/* i2c of the right SFP cage (lan) */
+-	i2c_sfp2: i2c-gpio-1 {
++	i2c_sfp2: i2c-1 {
+ 		compatible = "i2c-gpio";
+ 		sda-gpios = <&pio 18 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 		scl-gpios = <&pio 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 		i2c-gpio,delay-us = <2>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 	};
+ 
+ 	leds {
 -- 
 2.50.1
 
