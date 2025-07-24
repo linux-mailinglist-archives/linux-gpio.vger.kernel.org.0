@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23745-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23746-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98ACAB10542
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 11:10:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 76B5FB1055A
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 11:13:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D2BD4E838C
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 09:10:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73EA5AC3E4D
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 09:12:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74110275AE8;
-	Thu, 24 Jul 2025 09:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C54A027A92B;
+	Thu, 24 Jul 2025 09:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCZd+o0+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8WoU3TL"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151F02750F3;
-	Thu, 24 Jul 2025 09:10:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C427233704;
+	Thu, 24 Jul 2025 09:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753348238; cv=none; b=ExRK3XoODcrjDx6bd4FuGhPLJyYwIJwev/U5XOH0M27K5ln2FRRjcgbbKtF6SZnjkyfMgkz/5JBah7MESyJ8a1sLyTTSU3wQf2zKg+9Mi2+iYf25aTL3s4TobztMSh315z31ZSyhctGQb0idXA1QbNKabvWvp5OPiq8tesnvHcY=
+	t=1753348359; cv=none; b=qgZ1AToH+gduvKqk5n9/3r7Fgy5qg7+yuGUN9vj/hL9IiouCEtrvJB0VrED4JEuTUu/f9hnaUPkJKQYwFVBfWm2mbUXnDlaOVjgsxPNnxIm70I+cJuIzktBqb51qFR1lgoggVQlkpMoWCgUPuZBu0RnNayYBooQdVYjB5P1saFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753348238; c=relaxed/simple;
-	bh=Zd9OpEjRiIzb39t5LxgO0mowTxzXV9MUzTsMnRqyMR0=;
+	s=arc-20240116; t=1753348359; c=relaxed/simple;
+	bh=VfHGj9b2WOUFNsbslX9McB3nZJ+BtjApE8CBh+ZIpls=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aPl52PnBVfjDuqmyrd1DuBiFwicGO+fWVuB84e64Z6ow6EYIQvjk7P/+7l5J9ugzLKD3uXslKB9Qi202iZ9HuLn1tPW5p7vQ7YJj6qhHB9Ogrq7tzF2hwq69miCUKcLpXGiYGorB5buCsjWlsSM5k6VP0Yi7WqZWrMHfbZzc+Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCZd+o0+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05053C4CEED;
-	Thu, 24 Jul 2025 09:10:23 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=HYXiIZyiGI7kU2/1FtKqUy9UapAAQsUEkujIvw8rIN/hFpNl+E50CtDWhmziAcJ25KLgIwIQufD4KLnXDpxmUgkl7hxcHhynv900xSIuv951gmXASRu+kyJb0pKpFUG+dHU3PMS5V56UCGOjQR2H4/Q9BUJ1sZD/WXB7lOIItFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8WoU3TL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82816C4CEED;
+	Thu, 24 Jul 2025 09:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753348235;
-	bh=Zd9OpEjRiIzb39t5LxgO0mowTxzXV9MUzTsMnRqyMR0=;
+	s=k20201202; t=1753348357;
+	bh=VfHGj9b2WOUFNsbslX9McB3nZJ+BtjApE8CBh+ZIpls=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FCZd+o0+la8dDvf554+uYLsCDrmhuv9fQEAPLSc42ID/pQQJlkLk/yEkl/TAjyX+0
-	 /eY5csmQeU82/T2RqRT/wA40C2URTCrd9N3SxCqDrnjZ8vjHbzoEXObJNi/LGykLPy
-	 NbnKY81MTWRdBohRDumI1xKiTCRJVIF1XzWuB/gAAZztsl4fO06aoup5YNrzkefnv/
-	 IoWgsq2gRRQX7iY5gVJgsIRh9jyvjG2G+6BNwvistJ1zUfWNetCNM+bJHGXowBcPkU
-	 wIQA2Tdm4HpJFz6LjP4sL2xw0L7lBXV99nUck0ZQyzTrEG6LZ62jtzp/JaxGAlDT4w
-	 6J5Ha4n2gOr8g==
-Message-ID: <f4c00e80-5f1e-47d2-ad49-80343668ac3f@kernel.org>
-Date: Thu, 24 Jul 2025 11:10:22 +0200
+	b=S8WoU3TLnSRW4LXVCwwFvCr9P21ZmAddBoZQbufmufALRMQKzFBFJdCdyti4okj0y
+	 le2OlC0HqtFA53cWkTZgAzD3zJJ4JJ+kXgsaaL6vAjdWWGA8qeNfJrZfDrHEgS/8v4
+	 IZkDQZiGWzy35JI4VIpMjUKnNdQhMnosEBcn899kJQhkXIm4Y3I1ZMLf5ZB0eL/CLJ
+	 +b4wpcugBODPsDWcyjz7t4jjgS4mFjVOwE/YoZxEhVGbzXG7/WQCBih2scfv5afrc9
+	 zNPLxo9rqks+J5MkFHtWd/JJPVHBPFlHjErax/ksUHGPIefqLlNg8bffZOwMDalaM5
+	 +fwkfbNoZqKCA==
+Message-ID: <b7c9f6b8-4f29-4e38-9c93-e22cfed7229d@kernel.org>
+Date: Thu, 24 Jul 2025 11:12:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/38] dt-bindings: crypto: inside-secure,safexcel:
- Mandate only ring IRQs
+Subject: Re: [PATCH 04/38] ASoC: dt-bindings: mt8192-afe-pcm: Fix clocks and
+ clock-names
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
  linux-mediatek@lists.infradead.org, robh@kernel.org
 Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
@@ -75,7 +75,7 @@ Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
  linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
  linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
- <20250724083914.61351-6-angelogioacchino.delregno@collabora.com>
+ <20250724083914.61351-5-angelogioacchino.delregno@collabora.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -121,26 +121,45 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250724083914.61351-6-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250724083914.61351-5-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 24/07/2025 10:38, AngeloGioacchino Del Regno wrote:
-> Not all IP implementations of EIP97 and EIP197 have the EIP and
-> MEM interrupts hooked up to the SoC, and those are not required
-> for functionality as status for both can be polled (and anyway
-> there's even no real need to poll, but that's another story).
-> 
-> As an example of this, the MediaTek MT7968A and MT7986B SoCs do
-> not have those two interrupts hooked up to their irq controlller.
-> 
-> For this reason, make the EIP and MEM interrupt optional.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
+>  
+>    clock-names:
+>      items:
+>        - const: aud_afe_clk
+>        - const: aud_dac_clk
+>        - const: aud_dac_predis_clk
+> +      - const: aud_adc_clk
+> +      - const: aud_adda6_adc_clk
+> +      - const: aud_apll22m_clk
+> +      - const: aud_apll24m_clk
+> +      - const: aud_apll1_tuner_clk
+> +      - const: aud_apll2_tuner_clk
+> +      - const: aud_tdm_clk
+> +      - const: aud_tml_clk
+> +      - const: aud_nle
+> +      - const: aud_dac_hires_clk
+> +      - const: aud_adc_hires_clk
+> +      - const: aud_adc_hires_tml
+> +      - const: aud_adda6_adc_hires_clk
+> +      - const: aud_3rd_dac_clk
+> +      - const: aud_3rd_dac_predis_clk
+> +      - const: aud_3rd_dac_tml
+> +      - const: aud_3rd_dac_hires_clk
+>        - const: aud_infra_clk
+>        - const: aud_infra_26m_clk
 
-Same comments as for Aleksander patch doing the same. You solved second
-part of them, but first - missing SoC compatibles - needs to be addressed.
+
+You can only add to the end of lists, not in the middle.
+
+Also, please drop all _clk suffixes and aud/top prefixes. These are
+supposed to be clock inputs, so you name them based on this device. Not
+based on the provider's name.
+
+
 
 Best regards,
 Krzysztof
