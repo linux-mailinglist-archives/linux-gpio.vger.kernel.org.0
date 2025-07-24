@@ -1,215 +1,179 @@
-Return-Path: <linux-gpio+bounces-23792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D28C3B10A01
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 14:22:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F569B10BB6
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 15:39:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4A1A4E3B49
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 12:22:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E43C175214
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 13:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B53D22D12EA;
-	Thu, 24 Jul 2025 12:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ECAF2D8781;
+	Thu, 24 Jul 2025 13:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOMptOOI"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="8DuW1mVW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F982E36E3;
-	Thu, 24 Jul 2025 12:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1C913BC0C;
+	Thu, 24 Jul 2025 13:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753359753; cv=none; b=CS771sgrT4KrGXM6KavVFI1gtaYSlIqJ4UbvbYYvJR6GG7/WrFHDVpBgvVbJOiSFaNJFmdU+nFXx+/8YPpfHjHq08Gvtswi1JdPuMRYNHPku+Ke9iVekd2GnbPM8KwB14vFSFva8GDF/MeZV3U/IkH03W1UFk9VutlXQMckXNYg=
+	t=1753364355; cv=none; b=trk88nXrqw0haUHofEFcHgOkqLevii2b3N64T6hbLOjz0B8ey/Y6116mgp1YjTBPmeW/He/v2y2cO/GcRLj8R6Jw1+Z9oa2GIM5uQqtHTTQbKZ1F2zQMQv8b0mBfEZRRtk3Su/9uetYMX4BUgJXx4nR/Xw5mTkvUZibplFLY0tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753359753; c=relaxed/simple;
-	bh=SuuzfGDvzCnvi/bsKJ4BfINBu+QjHlhVEd84kJsyMAM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ueej2guU5yoyQwbFBkgjRRkCWSd64t/pzoOKr/qe6IsPwBpiNJYlASUgY6ix80LDzcqweURQSYU74/31KO13j4x6Y2Ty+Lq4GqRbB0ZapS8kfa8M4yIiCNva42IRRTFAlGDcM5hdCUChJcdREGoawcrfHfdpXS4F+JfhRhMozx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOMptOOI; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so1568513a12.2;
-        Thu, 24 Jul 2025 05:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753359750; x=1753964550; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PCH9wMZuCq9rz+O+tflGRTfcHTnRU43/VMnWUAJfNWE=;
-        b=WOMptOOI6OyxX8JFa+JXKvi9t5HPBRxQNjZv1aOjNq88l924KQ83C6dDIHLWRJMzkj
-         AhnzomiGe61BrR6vFzGDvoAANg8jMFnHBtU4wqG2cpgLg0d3fSbl3jy28IDv7PXxcFVr
-         1tTSrRecR2cnrvJBEwyGNGXRnH4D7yFnJTcOIZVa6eBApo5VG1DlxfuFELSxei+uI8MF
-         OvtM5zSNquSHwPc3EyoUzHB2EP9npI1UVa4vzMHwZ38sB3cQtuPXzf3rT5uqg4FmHUag
-         LDdYORZt246bDpuhQlP+mwDpIyYInxNYzzqwN3RG7aKSZyGSB/A/fqNkL0vp/VpW0cG4
-         PY9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753359750; x=1753964550;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PCH9wMZuCq9rz+O+tflGRTfcHTnRU43/VMnWUAJfNWE=;
-        b=r8nTFgEUTfS94C4tYB/GZ54NU0XQnuzDukS6pgsiZjA+gxRB/Pz96GY+lmNI2vefuw
-         jVFgN+VU3CZGU98g/pWCRE4kcSOEMJrUSAcYH7iB70bFLTLwMTAxn3id1AjwhqNcLgUP
-         FGYjWAuKp6gs4qcLLMyUhcZuqTf6Kx9XjpTzcsGCHyYlYToqWhIdwnRBiNeUzL1pRdX1
-         hxAP/dnWP67EeQK/F3xyKFHFcScLwFRMDT6f+Mf4EQIsdLXNdaXnPc69SjK5pfYfyrez
-         bfatceq0VQASXw9I/vRCb3b23jOAI8xKudhckIlOsP5c6mUcqIz6PeFQmv5zq9A4sDcH
-         vhnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCD+Mpnm1UFGnfqqaUG5qRBjKWeJCrw78u/f6cOKyC3QF6fIQJepWUGQGCyG40K5gxiIu91YW4xMyI7/38oCbQp5Y=@vger.kernel.org, AJvYcCUOIdmer+pt2B6HEW0UQyQF98tYReA3G+GaMy8DKAuTJmd4Di3gkkbNtJZ4YRlCn57qy3a6BY9LbFLHHw==@vger.kernel.org, AJvYcCUVDnuoFGSyj/Dy+Pck6CajX+OsP+/r8nPLLu6Fqz2rFIK+BV759YcD5+5SqGXLbWQVnNUoN14/ygWMpmum@vger.kernel.org, AJvYcCUj0umOhQJHYgmC5qcNw26n9PdlBTee3/TrO8Gp44+dM8fjltpxqz30GFFgQYZ2kUna1CRsSm6bLUnA4oxCSpsk@vger.kernel.org, AJvYcCW4i9HwrHUbDZmZPIdrV0oRZ+e9AUpxJ1ATa2kWHuqNlaFliR5QQGdCvRLxABiqdFVpJuqjUrPXjhpllw==@vger.kernel.org, AJvYcCWT8YtOTQoHVO1fuwWgCGqwQx8i6qua5/XKWNJt5YwmKU8fcsulQcp8+cTWG3y0VK8/8UDcOWa4z1WtJAr9@vger.kernel.org, AJvYcCWUVO1wd5lCx+cqGxbOaIwmfEB+6IlzIv4CQZveGyKVNYnPIcuO50Oc8beUrhn/FG9wJlkzZWM8KBAomg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPwVYLVlSKSPSXVYPvrcEY+IwWwAy6wZObJylJCdZW/OSyMfnG
-	QjRLFqYv79Cud2WTwOddM+I0YuAuY0JkUoT5qBdVAgWF0LoCzRM1oLkeyydJpeOTS9Pw3FdYwOd
-	sH7lUwGtBup17bfyixerXnWRHOKOI0Nk=
-X-Gm-Gg: ASbGnctvj6CfyFUWgCDClji0GkdjsQIRvnH1zdybaon1HtEigg9+8wjSTzV8TtUMPJD
-	S5vjWTwn0klzO3BT2zn57+AxC4819L+4Od3+HEVuAc0Zg+BL9mnwsBLsZGcflSDXy+a23rvvwqj
-	npdKA3r/whUg7Xo9yfDVGx+DeSP02EvX60FWmSZVGH2C5h70XtjpSpzvGfCpfr4bXtEsZWYl7T3
-	qvPgObEJg==
-X-Google-Smtp-Source: AGHT+IHK0IoDJ6PED5zWXfzDhpKgh5VZvydISu4XMaUvDPUT/I7krIj8dXVVfHCUqibcmSSRfe/rVr8gG8zy8ado+mw=
-X-Received: by 2002:a17:907:60cb:b0:aec:6600:dbe3 with SMTP id
- a640c23a62f3a-af2f9385acfmr671282766b.56.1753359749816; Thu, 24 Jul 2025
- 05:22:29 -0700 (PDT)
+	s=arc-20240116; t=1753364355; c=relaxed/simple;
+	bh=GGKPx34LBUi+sDBe9RnkRVW9eRR9QWY4VywRj+xNMhE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mSlrYnzcMWcPbbzuKmMDpI8pmyL8coS9BIM1tWG5CWHZKIJ8Al1XEU8OxAK9tFwM4kp6N6/RTynvLQH2BZUBNcmAAdSqYQMAbgCLelz6W3M49LfNMUcPqd4Qp3Jyms/AwOJ9YK7Kdpf60ie87xRp7wu7+z3GEgMq8BpbXOaJwY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=8DuW1mVW; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56ODAgol018828;
+	Thu, 24 Jul 2025 15:38:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	w9y6lMVKoGSGbAQ4r7YRTQAIypLEALnPa938lwZnu4s=; b=8DuW1mVWb5Zmz+q0
+	7RKe020XQCaScSNVrCjpPnmByr2ryfDEsJqHwQPObJeuAtdyS46qENjf789qB2Gn
+	Y9jkz0gnExfyBxnDdCXcKF/U1bvmXiPSL0WnENoFzkBrzJOHYylmsIvuGCerLywl
+	ZaA9oZ7lKwFoF195X342XP1lYemLrGWn/qjVkHL6zChh+CpYuigHX7/+E62GiSba
+	SVAHo4H6Hei4POCBjTIbbBtR678I3fMIdBg41DlglPcRw9/urX+wij9vSihPDcRp
+	TxPHyIN2JW2TvS5/OuWkzhrAFqWa9uAwPyPD4tuvxnn6RfeIub6Uo+oLKBm8zZIJ
+	H13+MA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4800g91e0a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Jul 2025 15:38:57 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4750C4005D;
+	Thu, 24 Jul 2025 15:37:50 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 594A6763978;
+	Thu, 24 Jul 2025 15:36:56 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Jul
+ 2025 15:36:55 +0200
+Message-ID: <99737d4f-488d-4208-91aa-83ce52957147@foss.st.com>
+Date: Thu, 24 Jul 2025 15:36:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org> <20250724-pinctrl-gpio-pinfuncs-v3-12-af4db9302de4@linaro.org>
-In-Reply-To: <20250724-pinctrl-gpio-pinfuncs-v3-12-af4db9302de4@linaro.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 24 Jul 2025 14:21:53 +0200
-X-Gm-Features: Ac12FXz2KOnsH_foq66JE5xieoDhq1Ik71OykKjuCvc1b-KzV3FeiggPCBwSd4M
-Message-ID: <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/15] pinctrl: allow to mark pin functions as
- requestable GPIOs
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH 0/2] Add pinctrl_pm_select_init_state helper
+ function
+To: Bjorn Helgaas <helgaas@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>
+CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+References: <20250723210753.GA2911683@bhelgaas>
+From: Christian Bruel <christian.bruel@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <20250723210753.GA2911683@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-24_02,2025-07-24_01,2025-03-28_01
 
-On Thu, Jul 24, 2025 at 11:25=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> The name of the pin function has no real meaning to pinctrl core and is
-> there only for human readability of device properties. Some pins are
-> muxed as GPIOs but for "strict" pinmuxers it's impossible to request
-> them as GPIOs if they're bound to a devide - even if their function name
-> explicitly says "gpio". Add a new field to struct pinfunction that
-> allows to pass additional flags to pinctrl core. While we could go with
 
-passing
-to the pinctrl
 
-> a boolean "is_gpio" field, a flags field is more future-proof.
->
-> If the PINFUNCTION_FLAG_GPIO is set for a given function, the pin muxed
-> to it can be requested as GPIO even on strict pin controllers. Add a new
+On 7/23/25 23:07, Bjorn Helgaas wrote:
+> On Wed, Jul 23, 2025 at 01:32:52PM +0200, Linus Walleij wrote:
+>> On Thu, Jul 17, 2025 at 8:33 AM Christian Bruel
+>> <christian.bruel@foss.st.com> wrote:
+>>
+>>> We have the helper functions pinctrl_pm_select_default_state and
+>>> pinctrl_pm_select_sleep_state.
+>>> This patch adds the missing pinctrl_pm_select_init_state function.
+>>>
+>>> The STM32MP2 needs to set the pinctrl to an initial state during
+>>> pm_resume, just like in probe. To achieve this, the function
+>>> pinctrl_pm_select_init_state is added.
+>>>
+>>> This allows a driver to balance pinctrl_pm_select_sleep_state()
+>>> with pinctrl_pm_select_default_state() and
+>>> pinctrl_pm_select_init_state() in pm_runtime_suspend and pm_runtime_resume.
+>>>
+>>> Christian Bruel (2):
+>>>    pinctrl: Add pinctrl_pm_select_init_state helper function
+>>>    PCI: stm32: use pinctrl_pm_select_init_state() in
+>>>      stm32_pcie_resume_noirq()
+>>
+>> If Bjorn Helgaas is OK with it I can apply this to the pinctrl tree.
+>>
+>> Otherwise I can also just apply patch 1/2, but that doesn't solve
+>> any problem.
+> 
+> The stm32 driver has been posted and is on this branch of the PCI
+> tree:
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dwc-stm32&id=5a972a01e24b
+> 
+> but it's not in mainline (or even in pci/next) yet, so you would only
+> be able to apply patch 2/2 if you took the whole driver, which is
+> probably more than you would want to do.
+> 
+> I haven't put it in pci/next yet because it doesn't build when
+> CONFIG_PINCTRL is not defined:
+> 
+>    https://lore.kernel.org/r/20250716192418.GA2550861@bhelgaas
+> 
+> I don't know enough about pinctrl to know why stm32 needs this when
+> nobody else seems to.  I doubt it's really unique, so maybe it's just
+> not doing the right thing here.
 
-"...the pin, which is muxed to it, ..."
+The STM32MP2 is unique because the core clock is gated on CLKREQ#. 
+Consequently, it is not possible to access the core registers from DBI 
+when no card is attached, causing the board to freeze. I don't know 
+another platform with this limitation
 
-> callback to struct pinmux_ops - function_is_gpio() - that allows pinmux
-> core to inspect a function and see if it's a GPIO one. Provide a generic
-> implementation of this callback.
+To fix this, we use a GPIO to de-assert CLKREQ# during probe and restore 
+the pin to its default AF mode afterward. This works perfectly for 
+probe, but we lack functionality for PM resume unless we explicitly 
+select the state with pinctrl_pm_select_XXX_state().
 
-...
+For reference, the init_state functionality was introduced in
+https://lkml.org/lkml/2015/10/21/1
 
-> -       if (ops->strict && desc->mux_usecount)
-> +       if (ops->function_is_gpio && mux_setting)
+If we prefer not to extend the pinctrl API in patch 1/2, I can fix the 
+case in patch 2/2 only with something like:
 
-Seems mux_setting presence is prior to the GPIO checks, I would swap
-the parameters of &&.
+in stm32_pcie_probe()
+      pinctrl = devm_pinctrl_get(dev);
 
-> +               func_is_gpio =3D ops->function_is_gpio(pctldev,
-> +                                                    mux_setting->func);
+      if(pinctrl!= -ENODEV) // PINCTRL is defined
+           pinctrl_init = pinctrl_lookup_state(stm32_pcie>pinctrl, 
+PINCTRL_STATE_IN
 
-One line is okay.
+in stm32_pcie_resume_noirq()
+    if (pinctrl) {
+           ret = pinctrl_select_state(stm32_pcie->pinctrl, 
+stm32_pcie->pinctrl_init);
 
-> +       if (ops->strict && desc->mux_usecount && !func_is_gpio)
->                 return false;
->
->         return !(ops->strict && !!desc->gpio_owner);
+What do you advise ?
 
-I think this whole if/return chain can be made slightly more readable,
-but I haven't had something to provide right now. Lemme think about
-it,
+thank you
 
-...
+Christian
 
-> +               if (ops->function_is_gpio && mux_setting)
-> +                       func_is_gpio =3D ops->function_is_gpio(pctldev,
-> +                                                            mux_setting-=
->func);
-> +               if ((!gpio_range || ops->strict) && !func_is_gpio &&
->                     desc->mux_usecount && strcmp(desc->mux_owner, owner))=
- {
 
-This is very similar to the above check, I think at bare minimum here
-can be a helper for both cases.
 
-...
+> 
+> Bjorn
 
-> +/**
-> + * pinmux_generic_function_is_gpio() - returns true if given function is=
- a GPIO
-> + * @pctldev: pin controller device
-> + * @selector: function number
-
-Missing Return section. Please run kernel-doc validator against new kernel-=
-docs.
-
-> + */
-> +bool pinmux_generic_function_is_gpio(struct pinctrl_dev *pctldev,
-> +                                    unsigned int selector)
-> +{
-> +       struct function_desc *function;
-> +
-> +       function =3D radix_tree_lookup(&pctldev->pin_function_tree,
-> +                                    selector);
-
-One line is okay.
-
-> +       if (!function)
-> +               return false;
-> +
-> +       return function->func->flags & PINFUNCTION_FLAG_GPIO;
-> +}
-
-...
-
->  struct pinfunction {
->         const char *name;
->         const char * const *groups;
->         size_t ngroups;
-> +       unsigned long flags;
-
-Not sure we need this. If the function is GPIO, pin control already
-knows about this. The pin muxing has gpio request / release callbacks
-that change the state. Why do we need an additional flag(s)?
-
->  };
-
---=20
-With Best Regards,
-Andy Shevchenko
 
