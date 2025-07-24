@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-23741-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23742-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2E37B104E9
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:54:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CD73B104E0
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:53:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 266E77B96E8
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:50:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15F053B69FE
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:51:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 502922DAFBE;
-	Thu, 24 Jul 2025 08:41:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1F212DE202;
+	Thu, 24 Jul 2025 08:41:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YPe5uV2p"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HymlcTuK"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75866279917;
-	Thu, 24 Jul 2025 08:41:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD93A2DC347;
+	Thu, 24 Jul 2025 08:41:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753346464; cv=none; b=B+eZpPStTuZmwkjc5SRX0Ine6s9bJlB0I8/df2rZ7FrNyunbVEp+jYflzMSMw+1OUJTFhX1Yofkf8T0R0367R4uzt+LkTVRjnrp6iBEpW3aA5vjkqiZuQMxfk5WLy3Db5DItLHyRpMyHP4vrJEPIj5SOqSrJIFXTQxQh9nY/rq4=
+	t=1753346466; cv=none; b=jZ/+n9sa2eTDpwasZHUqeItJFJGSh+0efzMxbRU6zfiHJU4PhJz901iteSJAFY2Iex0BPchrwkweg1PzGxg/y1YDCBooi86/lUgQEy6GZZBe5B8XxyuHjOtHg/G6Wu+yIlrmYpuXcj0KzALGBBaDkqM/5fCwdOldgCA8SSF8gE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753346464; c=relaxed/simple;
-	bh=isBcp22K4ow+WwdLtmfT8eS5RNhAYShdyGLUfi1Qu/k=;
+	s=arc-20240116; t=1753346466; c=relaxed/simple;
+	bh=Pel7h38bcUMPfE/D3HqIepQWXGSnvjnAoZZOpkysy0M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mE4p2Eju6yzsC+htDG04Ht1NvY6Z7gVbIyCQrOcMI7Kh/eKkgXVrCNzojIBmKjFgMyw5Jcy262zF3e0ANHZSwe4VYiN9nPMzqpWUvih1X7X7rkM9TFF4IY4YOgP8CVRwIwcszFxLQgpvsgyjyjqvprnwlN8OYrN6nffmSxtbFt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YPe5uV2p; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=Etcz6c74hVgWL0G47/py/0pY5aqrm6J1gy+fxHsGxfTdRSIiXII8RuRaF0AIr3mdw69Ku+amdgrm+yCbcgOP60Z7kNLIHqPnkKmIqDbg8wGzzaYXSA9J5/iS61JXKhyoU9xRBiHeVzY8UTF/p0zndR45QL9FhaQe5/0yE+50zbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HymlcTuK; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1753346460;
-	bh=isBcp22K4ow+WwdLtmfT8eS5RNhAYShdyGLUfi1Qu/k=;
+	s=mail; t=1753346463;
+	bh=Pel7h38bcUMPfE/D3HqIepQWXGSnvjnAoZZOpkysy0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YPe5uV2pDuw1U0jY1d+yJY6bMNp5dERWkNdlL0QglioHjCPsArwEd8SCpGPQWqTo+
-	 SYyhQJRBE3rDdl/X0TwKbAK1Q2LxbUrcBIfsRS/tcv1ZfleQVz5NJeycQkeWpc5laf
-	 CJaUbz5jXjGDXOdhYNHBgXrjwdqiWugCM+JwQA8PIa8pYSoqY55Jcoe421gxT75fzP
-	 ll8zcQEA7XpjYXvVHtT409AUyVdIoV31Hct0g3E+5Ol9bf9qjL4l8KEcGrEfPXzS5n
-	 gTN0A7Zi7EKqqiCbViC43QCktjNSZzZpGt83FIntyVCF52O+SWLYC8kznPUjdWoqCw
-	 H1i7Vlgwyr1Pg==
+	b=HymlcTuK7c/Bm3rlM5A2/bpPos7MG5VigxisyMResbZzyrX3Si6gHiNxYTjgPpZH2
+	 WSsj912RwYurKIeVl7ernFmlDS4bVobJfvv3TSVkhpBRl4hoYASx2QQDjQnFSP+Lov
+	 4gIiPuSAY1ImG6gM71MLaBwTtd1RvyLoxPcmym3IJ6QkGIvgC4OCv3LIN/HwE3Vn6b
+	 MXwb0oZZ5TzIXiRt6ZJNks9zCI+cHiQL74HyaUGaow2LIylkClfuUqkCasuRsSOMZ6
+	 dfVQVYFDRrqNkNfUqQdkbcgi/BsAM7hQ+IZRbhs6PIfK0VYscP1JZldAPp3lNuJ8v3
+	 MtLqDTdE3eu0Q==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4DFFC17E0C96;
-	Thu, 24 Jul 2025 10:40:58 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id ECB2117E1062;
+	Thu, 24 Jul 2025 10:41:00 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: linux-mediatek@lists.infradead.org,
 	robh@kernel.org
@@ -105,9 +105,9 @@ Cc: herbert@gondor.apana.org.au,
 	linux-gpio@vger.kernel.org,
 	linux-remoteproc@vger.kernel.org,
 	linux-sound@vger.kernel.org
-Subject: [PATCH 36/38] arm64: dts: mediatek: mt8195-cherry: Add missing regulators to rt5682
-Date: Thu, 24 Jul 2025 10:39:12 +0200
-Message-ID: <20250724083914.61351-37-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH 37/38] arm64: dts: mediatek: mt8395-kontron-i1200: Fix MT6360 regulator nodes
+Date: Thu, 24 Jul 2025 10:39:13 +0200
+Message-ID: <20250724083914.61351-38-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
@@ -119,32 +119,94 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the missing DBVDD and LDO1-IN power supplies to the codec
-node as both RT5682i and RT5682s require those.
+All of the MT6360 regulator nodes were wrong and would not probe
+because the regulator names are supposed to be lower case, but
+they are upper case in this devicetree.
 
-This commit only fixes a dtbs_check warning but doesn't produce
-any functional changes because the VIO18 LDO is already powered
-on because it's assigned as AVDD supply anyway.
+Change all nodes to be lower case to get working regulators.
 
+Fixes: 94aaf79a6af5 ("arm64: dts: mediatek: add Kontron 3.5"-SBC-i1200")
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ .../mediatek/mt8395-kontron-3-5-sbc-i1200.dts    | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-index d40f4c1b9766..b3761b80cac7 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-@@ -534,7 +534,9 @@ audio_codec: codec@1a {
- 		realtek,jd-src = <1>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts b/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+index 4985b65925a9..d16f545cbbb2 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+@@ -352,7 +352,7 @@ regulator {
+ 			LDO_VIN2-supply = <&vsys>;
+ 			LDO_VIN3-supply = <&vsys>;
  
- 		AVDD-supply = <&mt6359_vio18_ldo_reg>;
-+		DBVDD-supply = <&mt6359_vio18_ldo_reg>;
- 		MICVDD-supply = <&pp3300_z2>;
-+		LDO1-IN-supply = <&mt6359_vio18_ldo_reg>;
- 	};
- };
+-			mt6360_buck1: BUCK1 {
++			mt6360_buck1: buck1 {
+ 				regulator-name = "emi_vdd2";
+ 				regulator-min-microvolt = <600000>;
+ 				regulator-max-microvolt = <1800000>;
+@@ -362,7 +362,7 @@ MT6360_OPMODE_LP
+ 				regulator-always-on;
+ 			};
  
+-			mt6360_buck2: BUCK2 {
++			mt6360_buck2: buck2 {
+ 				regulator-name = "emi_vddq";
+ 				regulator-min-microvolt = <300000>;
+ 				regulator-max-microvolt = <1300000>;
+@@ -372,7 +372,7 @@ MT6360_OPMODE_LP
+ 				regulator-always-on;
+ 			};
+ 
+-			mt6360_ldo1: LDO1 {
++			mt6360_ldo1: ldo1 {
+ 				regulator-name = "mt6360_ldo1"; /* Test point */
+ 				regulator-min-microvolt = <1200000>;
+ 				regulator-max-microvolt = <3600000>;
+@@ -380,7 +380,7 @@ mt6360_ldo1: LDO1 {
+ 							   MT6360_OPMODE_LP>;
+ 			};
+ 
+-			mt6360_ldo2: LDO2 {
++			mt6360_ldo2: ldo2 {
+ 				regulator-name = "panel1_p1v8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+@@ -388,7 +388,7 @@ mt6360_ldo2: LDO2 {
+ 							   MT6360_OPMODE_LP>;
+ 			};
+ 
+-			mt6360_ldo3: LDO3 {
++			mt6360_ldo3: ldo3 {
+ 				regulator-name = "vmc_pmu";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+@@ -396,7 +396,7 @@ mt6360_ldo3: LDO3 {
+ 							   MT6360_OPMODE_LP>;
+ 			};
+ 
+-			mt6360_ldo5: LDO5 {
++			mt6360_ldo5: ldo5 {
+ 				regulator-name = "vmch_pmu";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+@@ -404,7 +404,7 @@ mt6360_ldo5: LDO5 {
+ 							   MT6360_OPMODE_LP>;
+ 			};
+ 
+-			mt6360_ldo6: LDO6 {
++			mt6360_ldo6: ldo6 {
+ 				regulator-name = "mt6360_ldo6"; /* Test point */
+ 				regulator-min-microvolt = <500000>;
+ 				regulator-max-microvolt = <2100000>;
+@@ -412,7 +412,7 @@ mt6360_ldo6: LDO6 {
+ 							   MT6360_OPMODE_LP>;
+ 			};
+ 
+-			mt6360_ldo7: LDO7 {
++			mt6360_ldo7: ldo7 {
+ 				regulator-name = "emi_vmddr_en";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
 -- 
 2.50.1
 
