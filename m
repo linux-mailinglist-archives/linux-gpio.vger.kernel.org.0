@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-23731-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23732-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0CC1B10493
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:49:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 997F0B10497
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:50:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6FE11609D5
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:48:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC6EEAC0738
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:48:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E28AC2D29AB;
-	Thu, 24 Jul 2025 08:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 943A32D321B;
+	Thu, 24 Jul 2025 08:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D/KhJ0/N"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Tn1pe5e+"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042932D191E;
-	Thu, 24 Jul 2025 08:40:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7658227877D;
+	Thu, 24 Jul 2025 08:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753346439; cv=none; b=N+JjtkHhQ/uhPC3f2Gx0Z2k/FOzvihoLBD5ArlZxvM+clOtDziUSdnHtbN25iYfJGVhmAlnfDhM9uZH7GTAGIGtPERZTpqRt7hiHD2hKue3QnVv5Nx17OZ5EmLIHs00lqTtxp1Dn8qu/fBKOsKINxKGc5QzJfsNRK4OyGwRNdEE=
+	t=1753346440; cv=none; b=YTnSrfxbhJk6OcnHDgquCDkl8588+vf6qpEYFbaA22qLQ5hx+I3GH2gO4xXkTZjtbBbHGo6QmDS7ra41n4jYXFKpK3C1A3Jzz8Po1LUY8AGLJAbjWW6iGBZgnBKh+rDKHlxKLLAQ/B3KhcPvrwfNWYhATh9t4Dqi5g9Cw8dgBWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753346439; c=relaxed/simple;
-	bh=3oy2CuNT3RTCa4KJqXicuZA1frxgjUVo175718v251A=;
+	s=arc-20240116; t=1753346440; c=relaxed/simple;
+	bh=ruOgG9NssRl3cdtPQRKeFueBDCD5QJFqdpNnG31ExK0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jpXMR4vmBjWwyep3gpr/ybzvVoD6cljlIcXlh9bkrjBZU1yvb+glEom8f94LHlvVxO7HpZsyg742VlByva8qLVaS0oqDFFihZYAciHZtBB1DIVI2CC8Lmvd+yRxhK+f+vTPptEILBhiqU2v7WP1K7frN6ewVc4zvL2HuDLfWCbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=D/KhJ0/N; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=nfZu6O0okAcXWSwO1lDWpUPxZ/Nqy4aFIaWPITrivqGpIn5txbPPF7FrpUpa8XuZ5Nx3R6yOS85zAdzx7IZOynRpAkdQwLDVX5oLddMmCWAQj3nABZxcNvTqQFmuLQ75TzCGVQkZgWZJaqAyICVPRm0H3T11Zoe6JRQfAUcLsyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Tn1pe5e+; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1753346434;
-	bh=3oy2CuNT3RTCa4KJqXicuZA1frxgjUVo175718v251A=;
+	s=mail; t=1753346437;
+	bh=ruOgG9NssRl3cdtPQRKeFueBDCD5QJFqdpNnG31ExK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D/KhJ0/N2soyqJ3ZqOmYVhqqZHCT9Vy60VEwKawrwaCLhukaDik/XOzjo0vB5/XT5
-	 MjPxIylpmTLWW73wtWzZ/rJxJD0Dx0DpF5AZgiv+Il/GWyYJMagVHlWpoLBNZmaUSt
-	 DjBWvKTNjGXOAip0wd4hI+2xq0MGR8FYECbpVHvuQY2k5TG130KGDeFx17ULUohZAz
-	 eH06sgnA6wUay+F11VKsiucFHqK9dCjxFxREydWDDHFg/kUgFqeeSJ6oDOi5OBQhN+
-	 G7tAK47wOATjwxsbSOSQQkaQ+bOCVNvTeoATur9dTfSsp9tKB3e3LwwgTQtwAINfkC
-	 cCveuzw+8zmEw==
+	b=Tn1pe5e+z2LgfCG3U+8FMElpCzMqRQJux/91By6ADwXQ2/UWjYu2xHgKoLApz3svN
+	 2ktXAMWE5p7vP7Mt3O6HCSs+daza/JUYfguhSDuQWzeLknoRL8uJfQjtDEebzbp11n
+	 Kn3bWuWiFFPNfGXDzNYdJXYhtQYZz5uRoXD0+Jqd3vbnIPL3Ev3AyQFlm51JulDlRI
+	 Hv7Ck83VvYN5/Ldc1BwUOjrJpetyxh9ZT152U7NEYuCa/qrjufAgqvHQ2YeUhsKWPb
+	 j6Syn8dY7Q+9YNiLnj1gNJb1IqSbsrQfRcI+9x6RLnpt6bjFZzkAo/+TxdV/OIoHKV
+	 OCH+htRjWrjLw==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D6D6317E1062;
-	Thu, 24 Jul 2025 10:40:31 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 83C1517E1110;
+	Thu, 24 Jul 2025 10:40:34 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: linux-mediatek@lists.infradead.org,
 	robh@kernel.org
@@ -105,9 +105,9 @@ Cc: herbert@gondor.apana.org.au,
 	linux-gpio@vger.kernel.org,
 	linux-remoteproc@vger.kernel.org,
 	linux-sound@vger.kernel.org
-Subject: [PATCH 26/38] arm64: dts: mediatek: acelink-ew-7886cax: Remove unnecessary cells in spi-nand
-Date: Thu, 24 Jul 2025 10:39:02 +0200
-Message-ID: <20250724083914.61351-27-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH 27/38] arm64: dts: mediatek: mt7988a: Fix PCI-Express T-PHY node address
+Date: Thu, 24 Jul 2025 10:39:03 +0200
+Message-ID: <20250724083914.61351-28-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
@@ -119,31 +119,80 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is no need to specify #address-cells and #size-cells in a
-node that has only one non-addressable subnode, and this is the
-case of the flash@0 node in this devicetree, as it has only one
-"partitions" subnode.
+The PCIe and USB TPHYs are under the soc bus, which provides MMIO,
+and all nodes under that must use the bus, otherwise those would
+clearly be out of place.
 
-Remove those to suppress an avoid_unnecessary_addr_size warning.
+Add ranges to both the tphy(s) and assign the address to the main
+node to silence a dtbs_check warning, and fix the children to
+use the MMIO range of t-phy.
 
+Fixes: ("f693e6ba55ae arm64: dts: mediatek: mt7988: Add t-phy for ssusb1")
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 28 +++++++++++------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts b/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
-index 08b3b0827436..30805a610262 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
-@@ -98,8 +98,6 @@ &spi0 {
- 	flash@0 {
- 		compatible = "spi-nand";
- 		reg = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		spi-max-frequency = <52000000>;
- 		spi-rx-bus-width = <4>;
- 		spi-tx-bus-width = <4>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+index 560ec86dbec0..cc0d3e3f4374 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+@@ -629,20 +629,20 @@ pcie_intc1: interrupt-controller {
+ 		tphy: t-phy@11c50000 {
+ 			compatible = "mediatek,mt7986-tphy",
+ 				     "mediatek,generic-tphy-v2";
+-			#address-cells = <2>;
+-			#size-cells = <2>;
+-			ranges;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0x11c50000 0x1000>;
+ 			status = "disabled";
+ 
+-			tphyu2port0: usb-phy@11c50000 {
+-				reg = <0 0x11c50000 0 0x700>;
++			tphyu2port0: usb-phy@0 {
++				reg = <0 0x700>;
+ 				clocks = <&infracfg CLK_INFRA_USB_UTMI_CK_P1>;
+ 				clock-names = "ref";
+ 				#phy-cells = <1>;
+ 			};
+ 
+-			tphyu3port0: usb-phy@11c50700 {
+-				reg = <0 0x11c50700 0 0x900>;
++			tphyu3port0: usb-phy@700 {
++				reg = <0 0x700 0 0x900>;
+ 				clocks = <&infracfg CLK_INFRA_USB_PIPE_CK_P1>;
+ 				clock-names = "ref";
+ 				#phy-cells = <1>;
+@@ -659,20 +659,20 @@ topmisc: system-controller@11d10084 {
+ 		xsphy: xs-phy@11e10000 {
+ 			compatible = "mediatek,mt7988-xsphy",
+ 				     "mediatek,xsphy";
+-			#address-cells = <2>;
+-			#size-cells = <2>;
+-			ranges;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0x11e10000 0x3900>;
+ 			status = "disabled";
+ 
+-			xphyu2port0: usb-phy@11e10000 {
+-				reg = <0 0x11e10000 0 0x400>;
++			xphyu2port0: usb-phy@0 {
++				reg = <0 0x400>;
+ 				clocks = <&infracfg CLK_INFRA_USB_UTMI>;
+ 				clock-names = "ref";
+ 				#phy-cells = <1>;
+ 			};
+ 
+-			xphyu3port0: usb-phy@11e13000 {
+-				reg = <0 0x11e13400 0 0x500>;
++			xphyu3port0: usb-phy@3400 {
++				reg = <0x3400 0x500>;
+ 				clocks = <&infracfg CLK_INFRA_USB_PIPE>;
+ 				clock-names = "ref";
+ 				#phy-cells = <1>;
 -- 
 2.50.1
 
