@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23746-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23747-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76B5FB1055A
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 11:13:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAD1FB1055D
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 11:13:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73EA5AC3E4D
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 09:12:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A851E1CC179D
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 09:13:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C54A027A92B;
-	Thu, 24 Jul 2025 09:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D66D927C869;
+	Thu, 24 Jul 2025 09:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8WoU3TL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiCkKB/K"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C427233704;
-	Thu, 24 Jul 2025 09:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF7CD2FB;
+	Thu, 24 Jul 2025 09:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753348359; cv=none; b=qgZ1AToH+gduvKqk5n9/3r7Fgy5qg7+yuGUN9vj/hL9IiouCEtrvJB0VrED4JEuTUu/f9hnaUPkJKQYwFVBfWm2mbUXnDlaOVjgsxPNnxIm70I+cJuIzktBqb51qFR1lgoggVQlkpMoWCgUPuZBu0RnNayYBooQdVYjB5P1saFw=
+	t=1753348412; cv=none; b=qurx9or2TH9ZY7bGezl49IIMnGth/xCMI9eec155A0ezE1E9zr7QP0eV12v58+JP9i3KIZm7UodlOc0xfNeYqqLzVQO8ZOCQX512p+RFIvFoWlnWvhXVuwTRfH9QrvnuMp4VO0vDDylw3BWWKmUsIpkKjhESoVtOOe+7xTd4EFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753348359; c=relaxed/simple;
-	bh=VfHGj9b2WOUFNsbslX9McB3nZJ+BtjApE8CBh+ZIpls=;
+	s=arc-20240116; t=1753348412; c=relaxed/simple;
+	bh=sWc0yEy6Cd35ZjpBpGmYfeV2qZHM+ODroGPwcwarzUU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HYXiIZyiGI7kU2/1FtKqUy9UapAAQsUEkujIvw8rIN/hFpNl+E50CtDWhmziAcJ25KLgIwIQufD4KLnXDpxmUgkl7hxcHhynv900xSIuv951gmXASRu+kyJb0pKpFUG+dHU3PMS5V56UCGOjQR2H4/Q9BUJ1sZD/WXB7lOIItFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8WoU3TL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82816C4CEED;
-	Thu, 24 Jul 2025 09:12:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=nytYdT7Xnmh/GcHPG0JKZQuSKrDWPuNnx8A9S+sf3mY8GV8b/I1nascNpd8QClYnGkPNYQXIqdYgifbsO0bBtroC+tk1WJTOPewNuN5iPiC+SIXiOTuUKIc8iUEAnsdz1kOOmS1Vr9GXZY6YpLvUKI1m+gthfqCcQ4SWJ3mt3ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiCkKB/K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B74C4CEF4;
+	Thu, 24 Jul 2025 09:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753348357;
-	bh=VfHGj9b2WOUFNsbslX9McB3nZJ+BtjApE8CBh+ZIpls=;
+	s=k20201202; t=1753348412;
+	bh=sWc0yEy6Cd35ZjpBpGmYfeV2qZHM+ODroGPwcwarzUU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S8WoU3TLnSRW4LXVCwwFvCr9P21ZmAddBoZQbufmufALRMQKzFBFJdCdyti4okj0y
-	 le2OlC0HqtFA53cWkTZgAzD3zJJ4JJ+kXgsaaL6vAjdWWGA8qeNfJrZfDrHEgS/8v4
-	 IZkDQZiGWzy35JI4VIpMjUKnNdQhMnosEBcn899kJQhkXIm4Y3I1ZMLf5ZB0eL/CLJ
-	 +b4wpcugBODPsDWcyjz7t4jjgS4mFjVOwE/YoZxEhVGbzXG7/WQCBih2scfv5afrc9
-	 zNPLxo9rqks+J5MkFHtWd/JJPVHBPFlHjErax/ksUHGPIefqLlNg8bffZOwMDalaM5
-	 +fwkfbNoZqKCA==
-Message-ID: <b7c9f6b8-4f29-4e38-9c93-e22cfed7229d@kernel.org>
-Date: Thu, 24 Jul 2025 11:12:24 +0200
+	b=tiCkKB/K/rkYwavuOfNvMUSI3XyhFZuvImxGEz8jQj0rKARnlQw1TpRfb/aA6A287
+	 ZEiVMdi/1M+PsvizRK+CojtNMSMDnGpys5AbgYVSx/aslQBh7BTblBOD+Vf8EhPTRZ
+	 rl6DcFs9MQtyIDH7rb+/uK2VyG5EWgh0mSOBxSqj515sMCMzb8t6Jqw+aI83bSl9Rp
+	 0rCLUtV6U/I+VuZ+gsGBaeVxocAr2TPUh1RX9wh6n/ddKGtPyFaeppNWafjkBfO4gz
+	 Nu9FciZorEJSADrCrFlpA5U8GHCz+/u9BCqYco4amDUP2AtHZhdoAIbq8mHwPcKaYO
+	 wBtzsg9rpFrIA==
+Message-ID: <a7962584-f6b4-40ca-ae11-c08b67b9f42d@kernel.org>
+Date: Thu, 24 Jul 2025 11:13:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/38] ASoC: dt-bindings: mt8192-afe-pcm: Fix clocks and
- clock-names
+Subject: Re: [PATCH 08/38] dt-bindings: pinctrl: mediatek,mt7622-pinctrl: Add
+ missing base reg
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
  linux-mediatek@lists.infradead.org, robh@kernel.org
 Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
@@ -75,7 +75,7 @@ Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
  linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
  linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
- <20250724083914.61351-5-angelogioacchino.delregno@collabora.com>
+ <20250724083914.61351-9-angelogioacchino.delregno@collabora.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -121,44 +121,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250724083914.61351-5-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250724083914.61351-9-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 24/07/2025 10:38, AngeloGioacchino Del Regno wrote:
->  
->    clock-names:
->      items:
->        - const: aud_afe_clk
->        - const: aud_dac_clk
->        - const: aud_dac_predis_clk
-> +      - const: aud_adc_clk
-> +      - const: aud_adda6_adc_clk
-> +      - const: aud_apll22m_clk
-> +      - const: aud_apll24m_clk
-> +      - const: aud_apll1_tuner_clk
-> +      - const: aud_apll2_tuner_clk
-> +      - const: aud_tdm_clk
-> +      - const: aud_tml_clk
-> +      - const: aud_nle
-> +      - const: aud_dac_hires_clk
-> +      - const: aud_adc_hires_clk
-> +      - const: aud_adc_hires_tml
-> +      - const: aud_adda6_adc_hires_clk
-> +      - const: aud_3rd_dac_clk
-> +      - const: aud_3rd_dac_predis_clk
-> +      - const: aud_3rd_dac_tml
-> +      - const: aud_3rd_dac_hires_clk
->        - const: aud_infra_clk
->        - const: aud_infra_26m_clk
+> The pin controller for both MT7622 and MT7629 need both a "base"
+> and an "eint" MMIO like the ones found on other MediaTek SoCs:
+> while devicetrees have always been correct, the binding is not,
+> as it only allows an "eint" reg.
+> 
+> Add "base" to reg-names and increment maxItems for reg to two.
 
 
-You can only add to the end of lists, not in the middle.
+Fixes tag, please.
 
-Also, please drop all _clk suffixes and aud/top prefixes. These are
-supposed to be clock inputs, so you name them based on this device. Not
-based on the provider's name.
-
+With that:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 
 Best regards,
