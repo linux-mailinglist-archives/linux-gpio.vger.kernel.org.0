@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23747-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23748-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAD1FB1055D
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 11:13:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20D50B10572
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 11:15:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A851E1CC179D
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 09:13:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 540A77A879B
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 09:13:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D66D927C869;
-	Thu, 24 Jul 2025 09:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B086C27D77D;
+	Thu, 24 Jul 2025 09:14:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiCkKB/K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6GRV9cY"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF7CD2FB;
-	Thu, 24 Jul 2025 09:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B91230BCC;
+	Thu, 24 Jul 2025 09:14:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753348412; cv=none; b=qurx9or2TH9ZY7bGezl49IIMnGth/xCMI9eec155A0ezE1E9zr7QP0eV12v58+JP9i3KIZm7UodlOc0xfNeYqqLzVQO8ZOCQX512p+RFIvFoWlnWvhXVuwTRfH9QrvnuMp4VO0vDDylw3BWWKmUsIpkKjhESoVtOOe+7xTd4EFM=
+	t=1753348497; cv=none; b=c5tTWs6n8+ai2/hzHsJ+jQV0+ci/yw6Ly+P1By9/Sr90bbi61CGsUWTMve8+oaZeaeljsuGVdMc6MAfGoiXulZ/T6Z22Pi0t087jHQ/xFZGIQTZEJDOwaXDtODvGWqBmM9X0oJFWll5tgwgmgd6J0MjZBRzbCNh3UfqpmR5Ulng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753348412; c=relaxed/simple;
-	bh=sWc0yEy6Cd35ZjpBpGmYfeV2qZHM+ODroGPwcwarzUU=;
+	s=arc-20240116; t=1753348497; c=relaxed/simple;
+	bh=HvehlH/2CLE3MGaL9UtFsif+bmgfGYTsR5JQ7GEt1p0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nytYdT7Xnmh/GcHPG0JKZQuSKrDWPuNnx8A9S+sf3mY8GV8b/I1nascNpd8QClYnGkPNYQXIqdYgifbsO0bBtroC+tk1WJTOPewNuN5iPiC+SIXiOTuUKIc8iUEAnsdz1kOOmS1Vr9GXZY6YpLvUKI1m+gthfqCcQ4SWJ3mt3ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiCkKB/K; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B74C4CEF4;
-	Thu, 24 Jul 2025 09:13:20 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=jIAc7zkSv0vUyVUhr0vuhLivHl6SifbtiIdv9HadYEpl9I/KJiqNaaxULv6RyZqOqSIe7tHy7WVC3ySkpdb414eOtH+4uU2fj6THKKL5vG6POcAJL9b+ExHoEeDxDm7/P1kpw0716gQ0n7lANI3Sh7HxgcXeArh5baFuwOhH5pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6GRV9cY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB83C4CEF4;
+	Thu, 24 Jul 2025 09:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753348412;
-	bh=sWc0yEy6Cd35ZjpBpGmYfeV2qZHM+ODroGPwcwarzUU=;
+	s=k20201202; t=1753348497;
+	bh=HvehlH/2CLE3MGaL9UtFsif+bmgfGYTsR5JQ7GEt1p0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tiCkKB/K/rkYwavuOfNvMUSI3XyhFZuvImxGEz8jQj0rKARnlQw1TpRfb/aA6A287
-	 ZEiVMdi/1M+PsvizRK+CojtNMSMDnGpys5AbgYVSx/aslQBh7BTblBOD+Vf8EhPTRZ
-	 rl6DcFs9MQtyIDH7rb+/uK2VyG5EWgh0mSOBxSqj515sMCMzb8t6Jqw+aI83bSl9Rp
-	 0rCLUtV6U/I+VuZ+gsGBaeVxocAr2TPUh1RX9wh6n/ddKGtPyFaeppNWafjkBfO4gz
-	 Nu9FciZorEJSADrCrFlpA5U8GHCz+/u9BCqYco4amDUP2AtHZhdoAIbq8mHwPcKaYO
-	 wBtzsg9rpFrIA==
-Message-ID: <a7962584-f6b4-40ca-ae11-c08b67b9f42d@kernel.org>
-Date: Thu, 24 Jul 2025 11:13:18 +0200
+	b=j6GRV9cY8JJjAsshQQczASZlfbPLxoOPeuumnGEhTmG1bf+islCdh1pt0NH/SZWHJ
+	 D3eI9TQ8eZsT2Kx2fCrTiCwCMYx21ExNTJqECq7o7PUbHH0KzQKL7jnSIyaQwqWVz2
+	 5p3evYUmAdvKhoN06V5EpvbN/gZCjWuZyDXE0WVhKytxSzrU6qLdYkfD7GwfmfepHD
+	 IIlE1v3cJaR7xL+0k5Vsb1FfIPhV94Z99cKISQHLT9Myj1PXYxzLMp1EWX7z7i73KK
+	 2Mc25V+caW5Vbd2Z4ypLj3g3fY973i4pYzDaGvsSszA0z9CGCF5jDofdpRxHN4t6c1
+	 ItqoHCvcdyvPQ==
+Message-ID: <70ae6787-ee0b-43a0-851e-1fb6c82f6c31@kernel.org>
+Date: Thu, 24 Jul 2025 11:14:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/38] dt-bindings: pinctrl: mediatek,mt7622-pinctrl: Add
- missing base reg
+Subject: Re: [PATCH 14/38] dt-bindings: media: mediatek,mt8195-jpeg: Allow
+ range number in node address
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
  linux-mediatek@lists.infradead.org, robh@kernel.org
 Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
@@ -75,7 +75,7 @@ Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
  linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
  linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
- <20250724083914.61351-9-angelogioacchino.delregno@collabora.com>
+ <20250724083914.61351-15-angelogioacchino.delregno@collabora.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -121,23 +121,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250724083914.61351-9-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250724083914.61351-15-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 24/07/2025 10:38, AngeloGioacchino Del Regno wrote:
-> The pin controller for both MT7622 and MT7629 need both a "base"
-> and an "eint" MMIO like the ones found on other MediaTek SoCs:
-> while devicetrees have always been correct, the binding is not,
-> as it only allows an "eint" reg.
+> The dual and triple core jpeg encoder and decoder (respectively)
+> on MT8195 are far apart: the only way to have this to make sense
+> is to split those in multiple address ranges in device trees as
+> one big range would overlap with other IP in at least the MT8195
+> SoC.
 > 
-> Add "base" to reg-names and increment maxItems for reg to two.
+> Change both the jpegdec and jpegenc bindings to allow specifying
+> children nodes such as "jpegdec@0,10000", "jpegdec@1,0" or for
+> encoder "jpegenc@0,0", "jpegenc@1,0" to resolve dtbs_check issues.
 
 
-Fixes tag, please.
+This should not be needed for standard MMIO/simple-bus nodes. I think
+DTS is wrong here.
 
-With that:
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Which cases really need the ','?
 
 
 Best regards,
