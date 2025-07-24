@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-23721-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23722-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1582B10458
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:46:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A197EB104AE
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:50:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DA19AC0B4D
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:45:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D24D77BB531
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:44:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DAF129ACDE;
-	Thu, 24 Jul 2025 08:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ACBA2BD5AF;
+	Thu, 24 Jul 2025 08:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lqXA9ki8"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="G8O3iaX5"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B2B29AAE7;
-	Thu, 24 Jul 2025 08:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3106929C32F;
+	Thu, 24 Jul 2025 08:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753346412; cv=none; b=GFqV2sIYtSexNB1mo8GoAFSXq66sktrawddcjkGKnVx36YJTJB3jI87dUL+0jwemvLCW2KIqOpY6lNY/H1UEKyhRV/P1brBc1a7ptPIF/zL0kOGFrGB6up7df1YLpA+9EZgL9l8lKSbiKWS7XG5u5dfmRCWKC0NzPKWbK4Zt1pA=
+	t=1753346414; cv=none; b=q+JptuTtuzB+Wpylxh3l7mgXeRtjAxvQLiYfNKEIPLZtRRPHBM90bvHUN/M1TQNwV+amO5ecIb7C231BnlrkJVJtFiCu/uli45QyScUnkqGreI9MW8IyFro8Y3sPqWF/CJSVReqR1lBMrjOLEhe/EgK5MTFJ1L0qk0do26KUU/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753346412; c=relaxed/simple;
-	bh=gf4raA9j+BGKXJSgdcYYQ5vEY6BH8O/FUlxlqXN71dU=;
+	s=arc-20240116; t=1753346414; c=relaxed/simple;
+	bh=D1HOyy4TBDGnhrbxI7GeEpBZEP1av0kTGOf7VJ9HZcg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SfpSRiQbCLPxAo/JdPRQnh0kHYfAffI2JYQc3lhFhC1+M1FWGXsPbVpo5Dk3zpoIo5Q3QzTsfSGNpnsMrjfRcakBSdkOPUSccC2M1IBH4AYSaoI1NuG0/hUcwD6ZiKwRj8fQW9I79HkDEKipAhqRny80ireOaDVmy8a5AbHdwwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lqXA9ki8; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=EHkXTl9icQxIONL46j4Sa0XWM/GQGF3GvQY5ygMVEmBEuX6w97cLWZQ66kypwgn2wz+PpX1TQlCaHYCMZccDApUqNbxZQgWRijbxSsebUn38Nn4qyxzvFU2E8jqYVU08RCULaEInuPr9JhlONE4D7xoP6bDlQX5oYHyp1xFDF6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=G8O3iaX5; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1753346407;
-	bh=gf4raA9j+BGKXJSgdcYYQ5vEY6BH8O/FUlxlqXN71dU=;
+	s=mail; t=1753346410;
+	bh=D1HOyy4TBDGnhrbxI7GeEpBZEP1av0kTGOf7VJ9HZcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lqXA9ki8jasg9cH7aH4lQyyCLQLCXwU9w46XhkSIqxrQB1khgkTVp4OabvSh24+Wv
-	 pbEqBl6+O2Z6lq7EHp0dpDyrUqn0Idf2EBkd4wvKdXNmMLzaHaAiaWUVPX8G4f564x
-	 gGQ87t4IqVzCIwjlCZ/sSqaZAfajlOb7O6thWifophHWR2fAgwcWEjiIb/kuqOMRnT
-	 Bvv+zXixGeEwNH+BLRCvFK77Rl2NQMtS9lTHcSZFBD/luE5rSMVLYPvR85vmoGugFm
-	 Ihgbv5oJytoh987L/n+iQlryDQSfXh4XElhDJ/sNWoLZBHtZ5de0PwaDdoSxdAvOfA
-	 Yj7x+H6qfXH3Q==
+	b=G8O3iaX5kWyIyxaCS94ng/7FIdaQ0ri+SUmHWoOUXGc3aw8AfWLLiRXZNuBZ/ZUS/
+	 qvl0Kvr2WHROs6zC3K0s0BOoK+u8uiuukfvNviYQmePPwD64MAMHy1Bzao6jDVCLBA
+	 BOpU5QMvlLKUyuMWiyptaOTSIyTS8cWp8fnkaG++LPLz1eQBP1KotY35w760t5x3re
+	 UZQ2Pbc4kDjGljeIZOkKeVovPfchtJbXbqj/4mvYHs5Fd5hiFbYIUw9x9MC8ca22CX
+	 +S34W/IzthZxgXdQsThsVZ/cpXNxA6zcRytz95N10eJcy5kO9WNG3XzNIG5Rck6tk2
+	 BqaBf/RD6QENQ==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6388817E128C;
-	Thu, 24 Jul 2025 10:40:05 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0EAF417E1110;
+	Thu, 24 Jul 2025 10:40:08 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: linux-mediatek@lists.infradead.org,
 	robh@kernel.org
@@ -105,9 +105,9 @@ Cc: herbert@gondor.apana.org.au,
 	linux-gpio@vger.kernel.org,
 	linux-remoteproc@vger.kernel.org,
 	linux-sound@vger.kernel.org
-Subject: [PATCH 16/38] arm64: dts: mediatek: mt6331: Fix pmic, regulators, rtc, keys node names
-Date: Thu, 24 Jul 2025 10:38:52 +0200
-Message-ID: <20250724083914.61351-17-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH 17/38] arm64: dts: mediatek: mt6797: Fix pinctrl node names
+Date: Thu, 24 Jul 2025 10:38:53 +0200
+Message-ID: <20250724083914.61351-18-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
@@ -119,57 +119,110 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The node names for "pmic", "regulators", "rtc", and "keys" are
-dictated by the PMIC MFD binding: change those to adhere to it.
+Change the pinctrl node names to adhere to the binding: the main
+nodes are now named like "uart0-pins" and the children "pins-bus".
 
-Fixes: aef783f3e0ca ("arm64: dts: mediatek: Add MT6331 PMIC devicetree")
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- arch/arm64/boot/dts/mediatek/mt6331.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi | 40 ++++++++++++------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt6331.dtsi b/arch/arm64/boot/dts/mediatek/mt6331.dtsi
-index d89858c73ab1..243afbffa21f 100644
---- a/arch/arm64/boot/dts/mediatek/mt6331.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6331.dtsi
-@@ -6,12 +6,12 @@
- #include <dt-bindings/input/input.h>
+diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+index 0e9d11b4585b..be401617dfd8 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+@@ -135,71 +135,71 @@ pio: pinctrl@10005000 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
  
- &pwrap {
--	pmic: mt6331 {
-+	pmic: pmic {
- 		compatible = "mediatek,mt6331";
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 
--		mt6331regulator: mt6331regulator {
-+		mt6331regulator: regulators {
- 			compatible = "mediatek,mt6331-regulator";
- 
- 			mt6331_vdvfs11_reg: buck-vdvfs11 {
-@@ -258,7 +258,7 @@ mt6331_vrtc_reg: ldo-vrtc {
- 			};
- 
- 			mt6331_vdig18_reg: ldo-vdig18 {
--				regulator-name = "dvdd18_dig";
-+				regulator-name = "vdig18";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
- 				regulator-ramp-delay = <0>;
-@@ -266,11 +266,11 @@ mt6331_vdig18_reg: ldo-vdig18 {
+-		uart0_pins_a: uart0 {
+-			pins0 {
++		uart0_pins_a: uart0-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO234__FUNC_UTXD0>,
+ 					 <MT6797_GPIO235__FUNC_URXD0>;
  			};
  		};
  
--		mt6331rtc: mt6331rtc {
-+		mt6331rtc: rtc {
- 			compatible = "mediatek,mt6331-rtc";
+-		uart1_pins_a: uart1 {
+-			pins1 {
++		uart1_pins_a: uart1-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO232__FUNC_URXD1>,
+ 					 <MT6797_GPIO233__FUNC_UTXD1>;
+ 			};
  		};
  
--		mt6331keys: mt6331keys {
-+		mt6331keys: keys {
- 			compatible = "mediatek,mt6331-keys";
- 			power {
- 				linux,keycodes = <KEY_POWER>;
+-		i2c0_pins_a: i2c0 {
+-			pins0 {
++		i2c0_pins_a: i2c0-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO37__FUNC_SCL0_0>,
+ 					 <MT6797_GPIO38__FUNC_SDA0_0>;
+ 			};
+ 		};
+ 
+-		i2c1_pins_a: i2c1 {
+-			pins1 {
++		i2c1_pins_a: i2c1-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO55__FUNC_SCL1_0>,
+ 					 <MT6797_GPIO56__FUNC_SDA1_0>;
+ 			};
+ 		};
+ 
+-		i2c2_pins_a: i2c2 {
+-			pins2 {
++		i2c2_pins_a: i2c2-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO96__FUNC_SCL2_0>,
+ 					 <MT6797_GPIO95__FUNC_SDA2_0>;
+ 			};
+ 		};
+ 
+-		i2c3_pins_a: i2c3 {
+-			pins3 {
++		i2c3_pins_a: i2c3-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO75__FUNC_SDA3_0>,
+ 					 <MT6797_GPIO74__FUNC_SCL3_0>;
+ 			};
+ 		};
+ 
+-		i2c4_pins_a: i2c4 {
+-			pins4 {
++		i2c4_pins_a: i2c4-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO238__FUNC_SDA4_0>,
+ 					 <MT6797_GPIO239__FUNC_SCL4_0>;
+ 			};
+ 		};
+ 
+-		i2c5_pins_a: i2c5 {
+-			pins5 {
++		i2c5_pins_a: i2c5-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO240__FUNC_SDA5_0>,
+ 					 <MT6797_GPIO241__FUNC_SCL5_0>;
+ 			};
+ 		};
+ 
+-		i2c6_pins_a: i2c6 {
+-			pins6 {
++		i2c6_pins_a: i2c6-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO152__FUNC_SDA6_0>,
+ 					 <MT6797_GPIO151__FUNC_SCL6_0>;
+ 			};
+ 		};
+ 
+-		i2c7_pins_a: i2c7 {
+-			pins7 {
++		i2c7_pins_a: i2c7-pins {
++			pins-bus {
+ 				pinmux = <MT6797_GPIO154__FUNC_SDA7_0>,
+ 					 <MT6797_GPIO153__FUNC_SCL7_0>;
+ 			};
 -- 
 2.50.1
 
