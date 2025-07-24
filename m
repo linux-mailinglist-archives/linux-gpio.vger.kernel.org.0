@@ -1,148 +1,109 @@
-Return-Path: <linux-gpio+bounces-23743-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23744-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43E7DB104DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:53:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3218BB10506
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 10:58:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E2875A334F
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:52:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C7114E7936
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 08:54:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 884182DEA8E;
-	Thu, 24 Jul 2025 08:41:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D0EB274FD3;
+	Thu, 24 Jul 2025 08:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="k4uXIOfO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtqYM+bt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D89E2DE70B;
-	Thu, 24 Jul 2025 08:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1495569D2B;
+	Thu, 24 Jul 2025 08:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753346469; cv=none; b=YeNbM80p716k/hjJ0vTRRq6EsXRBRJvpqMLtAHo6JQ76UW9Su9H2ijgdJDMDj9DwznRh00amUqVpG6u2E1/S99hOJIfurrLgJ9KJ3Dyx1Tq2qioAgcBoYBCBqM8MMJPAZPPWwa9VnsJBm7IaxMQTdDzhJGqA/F1+mhLMd2DBYz0=
+	t=1753346941; cv=none; b=IZOY1BaPUGj8fxM156R2HZzbh6zHBF7xuEZVKgFghcXA015jk0lE3rRQRby2eOPQl+X0M+JW3JOtDHyMvbw63vwiI4egL8HAuDggi7QV6wHRhak34u73ukcruZmSpfM7cIzPgaHsbAT2iwN24Q3ETrX3w/pScu1KtaFqx6k4ehs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753346469; c=relaxed/simple;
-	bh=B3CsW3fupLeNYb98MufEHqQnnbS1JREMQP80NpqoAvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LaVSKfB1dAmQHoa85UCe9ZKh1j8qpO1L3RMUYn38Weqe2Zub/YDwGMneNRxWACKgmsRkRBjts1WQet//Xz0Hi6NNpeIebp+5Ki/pi39mFOMkF7483nvA946Qff1jQAknNwrzjNFO2VKHFF0fkKh6f5pWMKq61EIK5cVETTIM2kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=k4uXIOfO; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1753346466;
-	bh=B3CsW3fupLeNYb98MufEHqQnnbS1JREMQP80NpqoAvM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k4uXIOfOiJfGvxbxd9tJwlQiHQnrACaUK133JcQoARmvOPlPu554K4W+kHlQPKNNz
-	 kU+iq3w5H8p62xWT+s2irE1YpD+Q45oSLpwIiuKBwAVRYVJetS89P3dFgOIfd97+qi
-	 UgZXxN3ee11t+obnIZ8ta0nJVNGPHGkSoyh/hMJCDbhBaXhZ3WGg/BQfzwpjycYYf9
-	 1Lt9KjIQIlbF92Qw8H+tWVP+YQ5gkpdhczsQxg+kBX+ouldOFXzOpZLg93nW6OHu1Q
-	 9pa2jozQDo6g+wQcPEMCMsDxTfqXzmXO+7cMGuW9NV97Nb1RpfQiv+sMGtypvfMpnu
-	 6QDan0Kv1YnFQ==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 92AD217E0FC2;
-	Thu, 24 Jul 2025 10:41:03 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-mediatek@lists.infradead.org,
-	robh@kernel.org
-Cc: herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	chunkuang.hu@kernel.org,
-	p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	jassisinghbrar@gmail.com,
-	mchehab@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	chunfeng.yun@mediatek.com,
-	vkoul@kernel.org,
-	kishon@kernel.org,
-	sean.wang@kernel.org,
-	linus.walleij@linaro.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	andersson@kernel.org,
-	mathieu.poirier@linaro.org,
-	daniel.lezcano@linaro.org,
-	tglx@linutronix.de,
-	atenart@kernel.org,
-	jitao.shi@mediatek.com,
-	ck.hu@mediatek.com,
-	houlong.wei@mediatek.com,
-	kyrie.wu@mediatek.corp-partner.google.com,
-	andy.teng@mediatek.com,
-	tinghan.shen@mediatek.com,
-	jiaxin.yu@mediatek.com,
-	shane.chien@mediatek.com,
-	olivia.wen@mediatek.com,
-	granquet@baylibre.com,
-	eugen.hristev@linaro.org,
-	arnd@arndb.de,
-	sam.shih@mediatek.com,
-	jieyy.yang@mediatek.com,
-	frank-w@public-files.de,
-	mwalle@kernel.org,
-	fparent@baylibre.com,
-	linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-phy@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-sound@vger.kernel.org
-Subject: [PATCH 38/38] arm64: dts: mediatek: mt8516-pumpkin: Fix machine compatible
-Date: Thu, 24 Jul 2025 10:39:14 +0200
-Message-ID: <20250724083914.61351-39-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
-References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
+	s=arc-20240116; t=1753346941; c=relaxed/simple;
+	bh=rzxMStLAEjWZwWfiymoUFIpQH/pUdeR+8sMJTcfv8OE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=qVeIwLukSkmzpsrLZxprzixAAtk5KCC/FTPQzKXvH6gwLS+1ljMe7IZIX9EvmJZQodhlRIEfqGck9iovTJw16WiDlz/HzHrqLos0PKVnhLhiMP4kd1fecF1qrQVAJAga011jdKpP1lBxKchiY9fcPriMCZqvb3ZuWoYS4Hrtdz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtqYM+bt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D828BC4CEF4;
+	Thu, 24 Jul 2025 08:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753346940;
+	bh=rzxMStLAEjWZwWfiymoUFIpQH/pUdeR+8sMJTcfv8OE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=gtqYM+bt0rJWWmE2lWvgCnN2A3qpmeG0oIFEbqqLFzwujcr8YPsfno7KzJT91vwVY
+	 8j7Aa564MdLlm5pGW1V9Gqta5CO4s++D5C9id1bs2bmf+7rgn7TtG+rpzHItOOxIAY
+	 27KBdW5WhEBTO8xpkkFs9HbfchUFOWfJu+cbMPkvk3kE65MqL2nylmXI5+22IWexnK
+	 /QLhCmPQXlXXRITRyCRoekNFCbBwGsF8MNmcE2tcaK6RES+u0yJK5lC8T2wlEpPDu6
+	 C4vjr6jLAHasL+37oQOTN4zh7ul4Ph0Pac7aZ7uIrR2K/1UmjZtq5J6BZCQRcx69fG
+	 8xCphYvvBRQ0w==
+From: Lee Jones <lee@kernel.org>
+To: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+ Sven Peter <sven@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+In-Reply-To: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
+References: <20250610-smc-6-15-v7-0-556cafd771d3@kernel.org>
+Subject: Re: (subset) [PATCH v7 00/10] Apple Mac System Management
+ Controller
+Message-Id: <175334693659.1935861.13683239351116261977.b4-ty@kernel.org>
+Date: Thu, 24 Jul 2025 09:48:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c81fc
 
-This devicetree contained only the SoC compatible but lacked the
-machine specific one: add a "mediatek,mt8516-pumpkin" compatible
-to the list to fix dtbs_check warnings.
+On Tue, 10 Jun 2025 15:29:41 +0000, Sven Peter wrote:
+> This series adds support for the System Management Controller found in
+> Apple Silicon devices which we model as a mfd. It also includes support
+> for the GPIO block and the power/reset block as sub-devices.
+> 
+> Changes between v6 and v7:
+>   - Rebased on 6.16-rc1
+>   - Dropped mfd- prefix from the macsmc driver name
+>   - Removed the check if the MBSE key exists in the reboot driver since
+>     we can rely on the device tree now
+>   - Changed my mail address to kernel.org
+> 
+> [...]
 
-Fixes: 9983822c8cf9 ("arm64: dts: mediatek: add pumpkin board dts")
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts b/arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts
-index cce642c53812..3d3db33a64dc 100644
---- a/arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts
-@@ -11,7 +11,7 @@
- 
- / {
- 	model = "Pumpkin MT8516";
--	compatible = "mediatek,mt8516";
-+	compatible = "mediatek,mt8516-pumpkin", "mediatek,mt8516";
- 
- 	memory@40000000 {
- 		device_type = "memory";
--- 
-2.50.1
+[01/10] dt-bindings: gpio: Add Apple Mac SMC GPIO block
+        commit: 0f0a7bd04e7e00cef6da5f4955749d6f1fc27b32
+[02/10] dt-bindings: power: reboot: Add Apple Mac SMC Reboot Controller
+        commit: 51bb1f6d4694cd84491847ea59eb194311b7d7f8
+[03/10] dt-bindings: mfd: Add Apple Mac System Management Controller
+        commit: dbad719958e162ac021716c223ba9df9071bca55
+[04/10] soc: apple: rtkit: Make shmem_destroy optional
+        commit: ba9ae011e8373b1ff34aa4175c79288013de7fc8
+[05/10] mfd: Add Apple Silicon System Management Controller
+        commit: e038d985c9823a12cd64fa077d0c5aca2c644b67
+[06/10] gpio: Add new gpio-macsmc driver for Apple Macs
+        commit: 9b21051b0885912f5bb2cc9d4f95c6fca697da4d
+[07/10] power: reset: macsmc-reboot: Add driver for rebooting via Apple SMC
+        commit: 819687eb28e501d21dabd6a3f52454638a815071
+
+--
+Lee Jones [李琼斯]
 
 
