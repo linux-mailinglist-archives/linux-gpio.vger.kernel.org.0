@@ -1,190 +1,117 @@
-Return-Path: <linux-gpio+bounces-23769-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23770-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0CCAB10681
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 11:39:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B764EB1069A
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 11:41:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D66FE162CE1
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 09:37:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83A1E189AD27
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Jul 2025 09:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD7F23645D;
-	Thu, 24 Jul 2025 09:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6568E23F42A;
+	Thu, 24 Jul 2025 09:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="He2ePwaN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="g6k04WOs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892A62D8DA6
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Jul 2025 09:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB622376F2
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Jul 2025 09:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753349421; cv=none; b=SLlJznpZFUperBMjvIriNRoZitLGVHp0tRFvaEPLqvGUXoISK70RvCtZ3LGc38RGQj0QJnRoIGqoa/VQ4VkIOUwxBL2O/LbtsIslgtP3wui1sg3OndQNRGsFv5q5z30hPJPthFr3xPPdALHaztQ5QsPhigmM9hUh2vTecIMUFqo=
+	t=1753349552; cv=none; b=He30pOeB89hWjEmZOd1K0cVKxaR+tw9Inx4mFeoH5UDuRbTgezMeKSxLWq/rRYO/4FAMHpAFo0m10zQDah0NBkDE9rs9+nEfZvrdbefjkFss42HhJGrwKYbLJ3MiezPaPT/dQeVetv4fEroE9uMspKL6hOHdI9tWF5O9ZNjP9oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753349421; c=relaxed/simple;
-	bh=MR4+0IGmwIsK+cxrpY4XhQYneMzF86b9Vmoxzw5wyjU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dc7jmsjorXsCTMfu4rpRH1g/T/8CCENY/x+4Kk/ejISAwG4E64IWUXa3bBYErJOK0brtahkfD8kALvuSlVR4gi3G8lp/dFfPGMeDeVvcXtOQIgSpX++/Dh51ZZGeJtkzXW3607dyHDnWVIIa1w0MaM+OOAZuDTVsjUo+vbm3y0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=He2ePwaN; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553d52cb80dso893179e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Jul 2025 02:30:19 -0700 (PDT)
+	s=arc-20240116; t=1753349552; c=relaxed/simple;
+	bh=NageZ7oYbdXesl0USVbE1SGRPSLpR2RCxmowtRfPNFc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=etpec5I0O+qrxde3NmrtgWdw52O8b8Cs/ZydeK8QPoZY0QqgTv6CJC8dTrpDGya+jq1r8ybS2WPYA8Y/C4ntU/vfzmtWIefeH2EtqTfc/R4aDiDe0rj1yZgsgmVlFZRU483sdV2vt4YyHblEXvLv3wkzopYPit5jRM0yOFmSM08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=g6k04WOs; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-451d54214adso4778315e9.3
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Jul 2025 02:32:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1753349418; x=1753954218; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753349549; x=1753954349; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UomwMYm6V80ZuZPrz7YKXe0vLuxIpqX7vRa+Pl5FCU8=;
-        b=He2ePwaNVcTjtMzHlJ0bZqq5qOjHan24UlRTTDm+fFIxVG8y1t7/BYitio1cI7p8qN
-         AQG+HDugO6tpjFiTLb9H9E6I+Lf0/Rzpu7M1EA9HtK63tNsICyEshlRaiBmlCdAT/Lvk
-         beQjO3h4ETQl4MgbP0fV4LjHNpvSK05ePjcMI=
+        bh=dTkemGUBWoGJ81ZV+e4KWAV9VuK8KryD4uecukSIjI8=;
+        b=g6k04WOsWBMOrXg3lYs1Ii3Z62ivBNOlypWahoJHp+TFCr2Mw27iSIuFa5m8YEIO60
+         9QO7uDfDmvIsDDKzIpyFukiPxvtvY1OsPiKvidV3CXlxNhCQj6MIVbA9PH16k+xgUgDj
+         FuFEUhLC+D73d6qjNTN93/gKahnJYdeeS0hdYSti1QgvEvFbRk7U5u1FQiY2+7V/+BS1
+         Q5TqV2o4X5t44AM/xh/bw4WoRPvmQeL7GUy49qMOFyU9Jj+z7mj+OrF8/dVmzIkvgtJ0
+         34JAdrBvaPVIusujxc71QGmTv76QA2uRN6VrZ2ORjdPQygyx7uBMj+iwtGh2KGDnRyAG
+         tb6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753349418; x=1753954218;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1753349549; x=1753954349;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UomwMYm6V80ZuZPrz7YKXe0vLuxIpqX7vRa+Pl5FCU8=;
-        b=NMyYjKVBx+FRKpM71Xr6yxGnnGtmvP0EQYKsCMZtthMTSYazgq8X+MB9OQCmRAWALh
-         hmi+fBQncQ0QsBrThvwJbmFBmfAAxykYodCTciV4j58spRGSfgLCiOXAKpTJESDBi9Vn
-         ZTgb1fHOAMlkVRUkYMNnXALbZ4Qfq6vIBdHH0vIQM3dlc0NKP7tGLCuLp/eJgibny2UW
-         7qOBvqE8qgz7lRf3da4l7YOASNbvvgBjNI5B/JhhjnCFb0Qdl7qR7sKZj+/u+IyPeI4/
-         hTI5SnzVk6SG85gQ27KSmeYrd8qbJmJqkKu/q52hMAjGuG8vOfMJwsBxr3wXEmTGMxn0
-         YegQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVToUbfEa1KGO1o7alIc7ZcELaAxFrEtSOi0W19E9H1OucN766hq2tcWk6pNoBUEObWjI+fvk/FXUON@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqsewfG6qZP0HMRPoM0E47BobN1uWcwsudQW5lxFxx12ybhpOo
-	SUz9By5J4ezWu3KRPn4Te1m0vpX98raZkKqjQbK/rkwM2dHMA9i/a1UqapLgVtiWtJ1uTBZXR18
-	yJ+Lm0WiBWiWq4+mjS4x3xFwazXp8meV8AmpHMPlL
-X-Gm-Gg: ASbGncsxFowRqvCwSt9YyspLd7AadQrNZ2FBrUu3SxCLSNXWXuACZoWpDF9CS1rXdVf
-	SbCW81S6WrZQU51t0LT1Y3FVEvKeDCR0GsOgXZsGie4FJWbJTvfK/vvkc1bz35U493q++2qVlz5
-	FdZLwb2cqLUJ+g6pE0ME8cqyTEqLoyuF1nPaLS1QKnxkbdu4igIApJeKJkhgzcQlC0j2K7pZQmm
-	xpMxr6rifNYXOpHBtHBms6VcqzRyfvmfl4ObU4ljMmaqg==
-X-Google-Smtp-Source: AGHT+IH1lXhOoKFIGLzswAaXQ/xdrKCcLg4Bs+hSUU/wAe3mRs3pt6lfFpYUUkDOjisZO/3IZcyl3MPX+Jll/FYr+/8=
-X-Received: by 2002:a05:6512:2c87:b0:55a:4e67:7cdb with SMTP id
- 2adb3069b0e04-55b5589a412mr400418e87.18.1753349417507; Thu, 24 Jul 2025
- 02:30:17 -0700 (PDT)
+        bh=dTkemGUBWoGJ81ZV+e4KWAV9VuK8KryD4uecukSIjI8=;
+        b=k9wc3WDbrhfG9Cmyg62CPec1d9zTdqnJEIomVH+6tjIP6QsDl0GMpGILF3g4HsbEv8
+         SVZwOOt67ks0vD0a4VzRP0adaBFlnVda5WlUi7bOx7Tu4jNgUZeaQRWPsU8OOXo9OfML
+         oU350IhgmesR9PSLFPqcQZ7/8m04y19/7HojPpaLas9l8M9uQqiPjNUis3oEf5pc9Q0n
+         rjrOQvYPF/njfjp0F8njSmCkp5ciwmpcne5LKYNJ2LJIG2bcIxTwi8LSAl7veH0drv8D
+         kj/u2ywDiSJAgr1iMkoTB7RpLQta30Xtdj7Pj07ujf7LMp+93+UEGEKx6pYTDWiASzoe
+         3cDw==
+X-Forwarded-Encrypted: i=1; AJvYcCVz6hShH6hgV0g26gZM73JLEE4z2xDWIGmRzQz4x/a6XgGHDdJnipCIOY3GaxxPqEWG08xWxZbLyN/W@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/0iqU0cMyKo3nrpkutBg4iDJUGsDHgiYTBjcotnBUxLnzTT3/
+	fUYdCjRmxmzTgo6CyeylXfvRfXQTJZm02MKNSQINYLEEmOwCtu9ZNlAUeA14L6zstls=
+X-Gm-Gg: ASbGncuerdtV1nJxPZWV0e52fQ9mofh2nSyOXkfSTn2hK5AWL92KuMI8FkXqFZ2pJpZ
+	TDnLYf9ykJpqcT+zZsrBd9FM7XRGHfJdPGXY2C4ILvzY6Uk3ZXWI5ukz4msswqNtJNCDtygkpZE
+	WIRqHf12jBC/47ITwXLGoKz8qc5kVt5+Nspams1FKwQaBaeEpkLi0oAEJl54QcEjIUwLvyo0Dpj
+	X8oHXdyJhyW+lP6skMwM39LtAonrZNUJC3KRHFsCtYdnoY+LsWS61SM56/tBrfUqAOtCzGwwli9
+	TfHxDbCEMxZu6YCAc03ZB4ksQrxjDhjfD9D5fzQCnM/C+U+lE+/dz3mjKTYfJ4WIcHiIdK8H8CR
+	8HF1p24R8zfTLH3VPpxAXsDDNtuq33aHBBQ==
+X-Google-Smtp-Source: AGHT+IFzCpTjvxHNAFJhSKZzdmRsQmJ8O4RApI1QN6WkNSjAh/0tVJ4j7YLcOiCp41q6wWUKz9LYdQ==
+X-Received: by 2002:a05:600c:34d1:b0:456:2020:166a with SMTP id 5b1f17b1804b1-45868d1bd14mr47498965e9.20.1753349548895;
+        Thu, 24 Jul 2025 02:32:28 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:f44c:20db:7ada:b556])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4587054c599sm12719475e9.11.2025.07.24.02.32.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Jul 2025 02:32:28 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Viresh Kumar <viresh.kumar@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Erik Wierich <erik@riscstar.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH libgpiod 0/2] bindings: rust: update examples
+Date: Thu, 24 Jul 2025 11:32:26 +0200
+Message-ID: <175334954445.20868.6666386614008401326.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250723-rust-examples-imports-v1-0-4c87e07a9b79@linaro.org>
+References: <20250723-rust-examples-imports-v1-0-4c87e07a9b79@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com> <20250724083914.61351-23-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250724083914.61351-23-angelogioacchino.delregno@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Thu, 24 Jul 2025 17:30:06 +0800
-X-Gm-Features: Ac12FXxWUOXitKh1quEjvg3RMxamDaOT0bnXe7uMSX2DfmXQwXv_3I70hIvhN2Q
-Message-ID: <CAGXv+5GBq5CqHAHWLMsZLU=NYVurAQZBgknsvOZoK_XhyUfxew@mail.gmail.com>
-Subject: Re: [PATCH 22/38] arm64: dts: mediatek: Fix node name for SYSIRQ
- controller on all SoCs
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-mediatek@lists.infradead.org, robh@kernel.org, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, chunkuang.hu@kernel.org, p.zabel@pengutronix.de, 
-	airlied@gmail.com, simona@ffwll.ch, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, jassisinghbrar@gmail.com, 
-	mchehab@kernel.org, matthias.bgg@gmail.com, chunfeng.yun@mediatek.com, 
-	vkoul@kernel.org, kishon@kernel.org, sean.wang@kernel.org, 
-	linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, 
-	andersson@kernel.org, mathieu.poirier@linaro.org, daniel.lezcano@linaro.org, 
-	tglx@linutronix.de, atenart@kernel.org, jitao.shi@mediatek.com, 
-	ck.hu@mediatek.com, houlong.wei@mediatek.com, 
-	kyrie.wu@mediatek.corp-partner.google.com, andy.teng@mediatek.com, 
-	tinghan.shen@mediatek.com, jiaxin.yu@mediatek.com, shane.chien@mediatek.com, 
-	olivia.wen@mediatek.com, granquet@baylibre.com, eugen.hristev@linaro.org, 
-	arnd@arndb.de, sam.shih@mediatek.com, jieyy.yang@mediatek.com, 
-	frank-w@public-files.de, mwalle@kernel.org, fparent@baylibre.com, 
-	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 24, 2025 at 4:40=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> The sysirq has "intpol-controller" as node name, but being this an
-> interrupt controller, it needs to be named "interrupt-controller"
-> as per what the bindings (correctly) expect.
->
-> This commit brings no functional changes, but fixes a dtbs_check
-> warning.
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
 
-> ---
->  arch/arm64/boot/dts/mediatek/mt6755.dtsi | 2 +-
->  arch/arm64/boot/dts/mediatek/mt6779.dtsi | 2 +-
->  arch/arm64/boot/dts/mediatek/mt6795.dtsi | 2 +-
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6755.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt6755.dtsi
-> index b55d3fac9bd4..8da5c0a56a02 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6755.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6755.dtsi
-> @@ -98,7 +98,7 @@ timer {
->                              (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW=
-)>;
->         };
->
-> -       sysirq: intpol-controller@10200620 {
-> +       sysirq: interrupt-controller@10200620 {
->                 compatible =3D "mediatek,mt6755-sysirq",
->                              "mediatek,mt6577-sysirq";
->                 interrupt-controller;
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6779.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt6779.dtsi
-> index 5c579e88e749..70f3375916e8 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> @@ -138,7 +138,7 @@ ppi_cluster1: interrupt-partition-1 {
->
->                 };
->
-> -               sysirq: intpol-controller@c53a650 {
-> +               sysirq: interrupt-controller@c53a650 {
->                         compatible =3D "mediatek,mt6779-sysirq",
->                                      "mediatek,mt6577-sysirq";
->                         interrupt-controller;
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6795.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt6795.dtsi
-> index 38f65aad2802..58833e5135c8 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> @@ -404,7 +404,7 @@ pwrap: pwrap@1000d000 {
->                         clock-names =3D "spi", "wrap";
->                 };
->
-> -               sysirq: intpol-controller@10200620 {
-> +               sysirq: interrupt-controller@10200620 {
->                         compatible =3D "mediatek,mt6795-sysirq",
->                                      "mediatek,mt6577-sysirq";
->                         interrupt-controller;
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt6797.dtsi
-> index f2d93bf6a055..8ac98a378fd6 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> @@ -228,7 +228,7 @@ apmixedsys: apmixed@1000c000 {
->                 #clock-cells =3D <1>;
->         };
->
-> -       sysirq: intpol-controller@10200620 {
-> +       sysirq: interrupt-controller@10200620 {
->                 compatible =3D "mediatek,mt6797-sysirq",
->                              "mediatek,mt6577-sysirq";
->                 interrupt-controller;
-> --
-> 2.50.1
->
+On Wed, 23 Jul 2025 10:16:46 +0200, Bartosz Golaszewski wrote:
+> Here are two small updates to rust examples. Fix automatic formatting
+> with rustfmt and unify the way examples import modules.
+> 
+> 
+
+Applied, thanks!
+
+[1/2] bindings: rust: fix formatting in examples
+      commit: 8da049f2d7eacac5a290af27a90a871685b35ee4
+[2/2] bindings: rust: unify imports in examples
+      commit: cd32f27dd550753488bff4918aef4e230ce01512
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
