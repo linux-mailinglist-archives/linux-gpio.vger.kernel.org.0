@@ -1,97 +1,98 @@
-Return-Path: <linux-gpio+bounces-23816-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23818-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF12DB11DFC
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jul 2025 13:56:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C20A1B11E3C
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jul 2025 14:11:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82E3A1C87571
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jul 2025 11:57:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC052170B91
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Jul 2025 12:11:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5CB22E7BA8;
-	Fri, 25 Jul 2025 11:56:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36914244684;
+	Fri, 25 Jul 2025 12:11:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kHzTTXtt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oR7CUhDt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC732E7180
-	for <linux-gpio@vger.kernel.org>; Fri, 25 Jul 2025 11:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758B017F4F6
+	for <linux-gpio@vger.kernel.org>; Fri, 25 Jul 2025 12:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753444607; cv=none; b=JdooZNV21SuLI0xHyj0+l/K51ci8Gml9dEQYI54/zbc015MHvW/bOONjpeCheiMesyz7yCNu6kJAnJQqDoh8/P+3nucsdi+xv+C6NRh12KyzIFX0cSZ3dpu/VfZ/32VNeow5jn9K1t/ifX0Wk7XPqaEinDUuwPVV5xx/cs6Rg9U=
+	t=1753445481; cv=none; b=EQ4lqt8zMAhiQPVbp8po7wVniz0x1ccoe4HhbzII1pSq7eLbriyr+N2SWXvqbHIaUny0EmfUIPtUGv67sAG6Sm0wdUKkA2fQwykAR4M+XblFMeefpABHHXInbyYy8maNQ93GAzUW4uzOTGE3gToJcww/rT++wFinKhC4y6vhhNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753444607; c=relaxed/simple;
-	bh=wuFFxAizy2X1aAZ/SF2x06cfnVSKnpsKMko3UN4we2M=;
+	s=arc-20240116; t=1753445481; c=relaxed/simple;
+	bh=yYEFudnuqhhtZ+sqQ+TFTlE2skKtiAAPYNG8FKAlAuU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kcGf7Q6D9pcVQyvw86obL80WeGC2ilGnkWUVe/4PMw78PjxGwPq/GwlrNXn0jN8sVbAGw4HB0hYdt1NgpAikRov8JyF3Kgr8W+VUnVTrYfnFSA1PQWhXNdvXm88mttOGA45kT3uaaooP01uFMTCD+6a0nJQlFISQNFB3Xt7YSX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kHzTTXtt; arc=none smtp.client-ip=209.85.219.53
+	 To:Cc:Content-Type; b=l8sBJ4An6b3n83PxuNc/bDzO8+V0XYvk2hKwnjmed7R37Urwi6bITtcSf+AYxKw6soLSCu+Zpuosn7eaGmWjbJMJgRSfQNA/P0L5hVI8+i0cRBbf0rLRjazwjIoEFPpZpnzpqhbImQqM7fuIraNQzWnO4SieJ4l8XUxnHzUDqaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oR7CUhDt; arc=none smtp.client-ip=209.85.160.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6fadb9a0325so16080266d6.2
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Jul 2025 04:56:45 -0700 (PDT)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-30194d82366so1206530fac.3
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Jul 2025 05:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1753444605; x=1754049405; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1753445478; x=1754050278; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IaRYlYWMnL5FdToAvFBY21N9TEhebXI6JAmJStjizl0=;
-        b=kHzTTXttKd+p4u6zawxLVNsWZFwQstnGS1fPNlk65yf//vG/L+S2al12IU1rohrG6q
-         Z0E5N2F16G1rVF7ih/X1iJLqli8yBykKwkKjh25gORJioFnqoCLynT3J5gIBSLZJCKZa
-         ljg73hwcW8NavNyaYxRNzQFZnr+pR/U9iiDMA=
+        bh=29HDb0CStjqCTbdMTaT8ki881uLabi0viRhzF0Cw5Io=;
+        b=oR7CUhDt8higNAT6hWfVSsHSH34/y9X7Jo/B6IXf0pjE33dXyRWuN+h8mYpbSdv86Z
+         qANYvd24Dj5IiqgkV5uST1tlFSILby8OSpFK8S8kgiNQtOUclrsQnZlpyT7u4L6eQmSX
+         oPPIXqh2O5vroYowOkYB2wUrOze3IP7cJZ0AA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753444605; x=1754049405;
+        d=1e100.net; s=20230601; t=1753445478; x=1754050278;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IaRYlYWMnL5FdToAvFBY21N9TEhebXI6JAmJStjizl0=;
-        b=fEmFasCvRPbWMnIWcD1Vny5hslGSbtXiBTEciG4bED2gcjULt33vdlLwKms4oji1Jz
-         ZUpeZVOc+4L3HqLUmcMjjJ6Qt4xLAnF492sC4Obqbv/Vfb0CqxmAEq7SPyBLFGr/Ry9I
-         4tqM5UEjknxV5jm9SDBTh1HSpwZsbogvjLPZLpi8hWu/r0S0DjLDFmGHKCtNvl/bbecm
-         6QUTvqOx674tN1Rog6sYRR/iUVUMcwxZ/YYR53yqMioEOqRjm3p9btCKy/ugCMH1jxuQ
-         ifskUA3U9qdXSFaJ4AFulv6JVJu3BrL6g9cmYuOglmzpcewdKVHk6+8wGwl0Yj1w3ZaM
-         sStQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEm3pr8bH6fs6hkvPMflq67T1Hp6DRFe5GZFHZtzQb/C9FJZYiyZYFinLlmeGVxUPEOdx5m/YqyO2s@vger.kernel.org
-X-Gm-Message-State: AOJu0YzES43wWWbaqbGdhP8vN3fzMZS1z6WsIhHcKVG2pondqt5LD6ad
-	udXzjIkX7j7scquXeWr9+KiDKlNwtYM3zsHx938Bz0uxGn4NeA5DavYHOoN6FooNlrywznIbRp1
-	Oo2g=
-X-Gm-Gg: ASbGncsbM7jYo0Z6aFP1lWsJooDn8femWr93+eLWqSeb1fLo+e8o83y0lkDImhPbCm5
-	W0g4S9o7rctvS590cEzCOx7L/nutb7QOb5e/Mo7FQ8/n8BitPiCE4rLXmXGj/hpi+DkrsqYgQ+B
-	VYoowAwim4wNT8v18EoGIvqFBlhejI6qmfIDjifA9eQ6C+chjJlvXdLyUSsP44L1Poe7/27fNG8
-	MMb57IfYHR2l/GAlS8Lx88tSQlQYyb0qvLlMDiFOiD/PmM54dCXAh6tRHcvkR8VtIEb8Lm9xDJ9
-	TTsxjaUL+wTK3cC8r2QwDRCnWjHqyk8eGCUb0AIO+FCTz3UjF9NLQccLqNUwUNSAnKg6/3zQeAG
-	lIpIbyn5oWo98bvpOy6XeKZCCEu7mfACggIaOZLaOzfl5VipdlIWsV5tXKA==
-X-Google-Smtp-Source: AGHT+IFCG7sPuwOfcqPr06iaO8yZbbAMK8eBjj4H1bc993Vku3HltkzUrtslO6i4mdVbBKmP3U9syw==
-X-Received: by 2002:a05:6214:29c9:b0:702:d63b:4c9f with SMTP id 6a1803df08f44-707205af355mr23151766d6.23.1753444604502;
-        Fri, 25 Jul 2025 04:56:44 -0700 (PDT)
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com. [209.85.219.46])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7070fcca403sm25527226d6.76.2025.07.25.04.56.44
+        bh=29HDb0CStjqCTbdMTaT8ki881uLabi0viRhzF0Cw5Io=;
+        b=INRFztc3UAAwxog+nnXsAcXOC6NeWqGDPXh7bgI0R2izmKonoGX5nAPY66nnQHbPk+
+         GO9vzCb5Or43mHnYTzSl4hm3ElUtnxljARbiI9HSyJmXenas/GysE7edILg8UqN7qxLM
+         BIPgfojQSCSkYmM+LSU3H4LM3fSo3tHxQTEBe/u03uufqFLPnDBrtn4OsEYre0U5ap+g
+         RqRQUH/DdtovBSkqZyGp0NQH4UsAZgco995r4Zbm52nB/aF3mm50VTE8CPeyOAFHEti3
+         APVv5hoj/Ly9BPoaNDA5EwlnfPpz7ANBpVfuI1rRviD7TLM50q1729OQka+m249D9LO6
+         +h+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUincT/c0wO/P5nvfCRuUPMnuMPIYTD/futhwYTfVzeiCdcNe00mePceZLtyr0PJ/HJQDHAyistFTQ5@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq8F2qLPWCVP4pXaZvS1m9pdDbWnLbiGm6vJUNhFClLGMVzA2+
+	Go3FRgjOi3JcjOgNG9/sLuKXb2ShkYIxzXUqxnD7+v5+3bcjG2l8CnX3G6ZJl3Mz+WSUgrfiBq3
+	DRbs=
+X-Gm-Gg: ASbGncsCibRG0hN3MU7yDuZqewhzMjl5OB99RspAoGdG4IZhffgOgOxMf2gpqxl23jx
+	Abu5kw64YVv2sWxD6V2xM8MKL6PDoGeKX/+cW8U0GLwNBGP2gGPXMh+29GCLVwjvZj52WrGun21
+	fP9ng6TF4XffsgPLu07rBno1qwDxoSv8dQkw87uwLxxczZS5KSlCiTTAx6rGtMjGGNc9w5C+P2e
+	JWocHDRxqDrPh1iNvXoy1vNN0SyFr59h9FdGAOeq0cyYnDIqtgK1MZtREP2+JAz3bqJBs61Lt3f
+	bWWvhjKlEhsqmZNEm4x9eFi17l3/Gx03z+bnyEQ5j+1LcS8n4PWw5vEIC16iKqtMnVq//6AuXHO
+	yG4Rp2BT4B/MXJRjQmIylQLrtiSoRNjbFNV926fg/VYGsxXO/WWTukDeZRwyXbg==
+X-Google-Smtp-Source: AGHT+IF524SAbmX46/wgEcRXFejw2mxCptPtO1bGCd8aqYtkRn8OotcM79xusbF9Em0MsKNWPghk1Q==
+X-Received: by 2002:a05:6871:516:b0:2d6:6688:a625 with SMTP id 586e51a60fabf-30702289a92mr890609fac.37.1753445478110;
+        Fri, 25 Jul 2025 05:11:18 -0700 (PDT)
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com. [209.85.167.178])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-306e1c94c71sm1032941fac.17.2025.07.25.05.11.17
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Jul 2025 04:56:44 -0700 (PDT)
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6fadb9a0325so16080156d6.2
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Jul 2025 04:56:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWoSLEfJyg8Qg7Sr0Qx9EJKh2LhGgTUDYhbnA1IFaNJ0N8/27rrKVO99wch6ItsQxSsjNNTgJQBUoGY@vger.kernel.org
-X-Received: by 2002:a05:6102:cce:b0:4e6:4e64:baeb with SMTP id
- ada2fe7eead31-4fa3ff55fbamr323634137.17.1753441040390; Fri, 25 Jul 2025
- 03:57:20 -0700 (PDT)
+        Fri, 25 Jul 2025 05:11:17 -0700 (PDT)
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-41cbc8da42aso1096407b6e.2
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Jul 2025 05:11:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWlpUIEvqRSr3pNX20/+lffngIws9Qg51ghgEcf+nmlJ/ESy1hjmLTMXCTtLXW1WRckC+pNjiJSkbL9@vger.kernel.org
+X-Received: by 2002:a05:6102:5799:b0:4e5:ade7:eb7c with SMTP id
+ ada2fe7eead31-4fa3fac29femr330925137.12.1753439652105; Fri, 25 Jul 2025
+ 03:34:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com> <20250724083914.61351-18-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250724083914.61351-18-angelogioacchino.delregno@collabora.com>
+References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com> <20250724083914.61351-35-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250724083914.61351-35-angelogioacchino.delregno@collabora.com>
 From: Fei Shao <fshao@chromium.org>
-Date: Fri, 25 Jul 2025 18:56:44 +0800
-X-Gmail-Original-Message-ID: <CAC=S1nh5bF6kZe7TFA_EGPGt8Xp_rfuc-rkeXgjRCU=QEtZQiw@mail.gmail.com>
-X-Gm-Features: Ac12FXw-hSTS0fHSbHXeHNK-nhzfyTLOXfpWf3gYQQXz8LA0IhEjugCIp682sPw
-Message-ID: <CAC=S1nh5bF6kZe7TFA_EGPGt8Xp_rfuc-rkeXgjRCU=QEtZQiw@mail.gmail.com>
-Subject: Re: [PATCH 17/38] arm64: dts: mediatek: mt6797: Fix pinctrl node names
+Date: Fri, 25 Jul 2025 18:33:36 +0800
+X-Gmail-Original-Message-ID: <CAC=S1nhfg_qD044bO8EOV=MckoNVtJXQ47XBeDFMPwJ9goHg-A@mail.gmail.com>
+X-Gm-Features: Ac12FXyYX3cOTb6n6096sUC59Z8DCV1ifB6_qbpW9gH46tmstAs2fiwwoJYhrGs
+Message-ID: <CAC=S1nhfg_qD044bO8EOV=MckoNVtJXQ47XBeDFMPwJ9goHg-A@mail.gmail.com>
+Subject: Re: [PATCH 34/38] arm64: dts: mediatek: mt8195: Fix ranges for jpeg
+ enc/decoder nodes
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Cc: linux-mediatek@lists.infradead.org, robh@kernel.org, 
 	daniel.lezcano@linaro.org, mwalle@kernel.org, devicetree@vger.kernel.org, 
@@ -116,118 +117,155 @@ Cc: linux-mediatek@lists.infradead.org, robh@kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 24, 2025 at 5:48=E2=80=AFPM AngeloGioacchino Del Regno
+On Thu, Jul 24, 2025 at 5:51=E2=80=AFPM AngeloGioacchino Del Regno
 <angelogioacchino.delregno@collabora.com> wrote:
 >
-> Change the pinctrl node names to adhere to the binding: the main
-> nodes are now named like "uart0-pins" and the children "pins-bus".
+> The jpeg decoder main node is under the soc bus but currently has
+> no ranges or reg specified, while the children do, and this is
+> wrong in multiple aspects.
+>
+> The very same is also valid for the jpeg encoder node.
+>
+> Rename the decoder and encoder nodes to "jpeg-decoder@1a040000"
+> and to "jpeg-encoder@1a030000" respectively, and change their
+> children to use the newly defined ranges.
 >
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
 abora.com>
 
+Despite now jpeg-encoder isn't sorted in order, I guess we all agree
+it's much easier to read in this way, so
+
 Reviewed-by: Fei Shao <fshao@chromium.org>
 
 > ---
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi | 40 ++++++++++++------------
->  1 file changed, 20 insertions(+), 20 deletions(-)
+>  arch/arm64/boot/dts/mediatek/mt8195.dtsi | 30 +++++++++++++-----------
+>  1 file changed, 16 insertions(+), 14 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt6797.dtsi
-> index 0e9d11b4585b..be401617dfd8 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> @@ -135,71 +135,71 @@ pio: pinctrl@10005000 {
->                 gpio-controller;
->                 #gpio-cells =3D <2>;
->
-> -               uart0_pins_a: uart0 {
-> -                       pins0 {
-> +               uart0_pins_a: uart0-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO234__FUNC_UTXD0>,
->                                          <MT6797_GPIO235__FUNC_URXD0>;
->                         };
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/d=
+ts/mediatek/mt8195.dtsi
+> index dd065b1bf94a..35b10082bb89 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> @@ -3014,7 +3014,7 @@ venc: video-codec@1a020000 {
+>                         #size-cells =3D <2>;
 >                 };
 >
-> -               uart1_pins_a: uart1 {
-> -                       pins1 {
-> +               uart1_pins_a: uart1-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO232__FUNC_URXD1>,
->                                          <MT6797_GPIO233__FUNC_UTXD1>;
+> -               jpgdec-master {
+> +               jpeg-decoder@1a040000 {
+>                         compatible =3D "mediatek,mt8195-jpgdec";
+>                         power-domains =3D <&spm MT8195_POWER_DOMAIN_VDEC1=
+>;
+>                         iommus =3D <&iommu_vdo M4U_PORT_L19_JPGDEC_WDMA0>=
+,
+> @@ -3025,11 +3025,12 @@ jpgdec-master {
+>                                  <&iommu_vdo M4U_PORT_L19_JPGDEC_BUFF_OFF=
+SET0>;
+>                         #address-cells =3D <2>;
+>                         #size-cells =3D <2>;
+> -                       ranges;
+> +                       ranges =3D <0 0 0 0x1a040000 0 0x20000>,
+> +                                <1 0 0 0x1b040000 0 0x10000>;
+>
+> -                       jpgdec@1a040000 {
+> +                       jpgdec@0,0 {
+>                                 compatible =3D "mediatek,mt8195-jpgdec-hw=
+";
+> -                               reg =3D <0 0x1a040000 0 0x10000>;/* JPGDE=
+C_C0 */
+> +                               reg =3D <0 0 0 0x10000>;/* JPGDEC_C0 */
+>                                 iommus =3D <&iommu_vdo M4U_PORT_L19_JPGDE=
+C_WDMA0>,
+>                                          <&iommu_vdo M4U_PORT_L19_JPGDEC_=
+BSDMA0>,
+>                                          <&iommu_vdo M4U_PORT_L19_JPGDEC_=
+WDMA1>,
+> @@ -3042,9 +3043,9 @@ jpgdec@1a040000 {
+>                                 power-domains =3D <&spm MT8195_POWER_DOMA=
+IN_VDEC0>;
 >                         };
+>
+> -                       jpgdec@1a050000 {
+> +                       jpgdec@0,10000 {
+>                                 compatible =3D "mediatek,mt8195-jpgdec-hw=
+";
+> -                               reg =3D <0 0x1a050000 0 0x10000>;/* JPGDE=
+C_C1 */
+> +                               reg =3D <0 0 0x10000 0x10000>;/* JPGDEC_C=
+1 */
+>                                 iommus =3D <&iommu_vdo M4U_PORT_L19_JPGDE=
+C_WDMA0>,
+>                                          <&iommu_vdo M4U_PORT_L19_JPGDEC_=
+BSDMA0>,
+>                                          <&iommu_vdo M4U_PORT_L19_JPGDEC_=
+WDMA1>,
+> @@ -3057,9 +3058,9 @@ jpgdec@1a050000 {
+>                                 power-domains =3D <&spm MT8195_POWER_DOMA=
+IN_VDEC1>;
+>                         };
+>
+> -                       jpgdec@1b040000 {
+> +                       jpgdec@1,0 {
+>                                 compatible =3D "mediatek,mt8195-jpgdec-hw=
+";
+> -                               reg =3D <0 0x1b040000 0 0x10000>;/* JPGDE=
+C_C2 */
+> +                               reg =3D <1 0 0 0x10000>;/* JPGDEC_C2 */
+>                                 iommus =3D <&iommu_vpp M4U_PORT_L20_JPGDE=
+C_WDMA0>,
+>                                          <&iommu_vpp M4U_PORT_L20_JPGDEC_=
+BSDMA0>,
+>                                          <&iommu_vpp M4U_PORT_L20_JPGDEC_=
+WDMA1>,
+> @@ -3088,7 +3089,7 @@ vdosys0: syscon@1c01a000 {
 >                 };
 >
-> -               i2c0_pins_a: i2c0 {
-> -                       pins0 {
-> +               i2c0_pins_a: i2c0-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO37__FUNC_SCL0_0>,
->                                          <MT6797_GPIO38__FUNC_SDA0_0>;
->                         };
->                 };
 >
-> -               i2c1_pins_a: i2c1 {
-> -                       pins1 {
-> +               i2c1_pins_a: i2c1-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO55__FUNC_SCL1_0>,
->                                          <MT6797_GPIO56__FUNC_SDA1_0>;
->                         };
->                 };
+> -               jpgenc-master {
+> +               jpeg-encoder@1a030000 {
+>                         compatible =3D "mediatek,mt8195-jpgenc";
+>                         power-domains =3D <&spm MT8195_POWER_DOMAIN_VENC_=
+CORE1>;
+>                         iommus =3D <&iommu_vpp M4U_PORT_L20_JPGENC_Y_RDMA=
+>,
+> @@ -3097,11 +3098,12 @@ jpgenc-master {
+>                                         <&iommu_vpp M4U_PORT_L20_JPGENC_B=
+SDMA>;
+>                         #address-cells =3D <2>;
+>                         #size-cells =3D <2>;
+> -                       ranges;
+> +                       ranges =3D <0 0 0 0x1a030000 0 0x10000>,
+> +                                <1 0 0 0x1b030000 0 0x10000>;
 >
-> -               i2c2_pins_a: i2c2 {
-> -                       pins2 {
-> +               i2c2_pins_a: i2c2-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO96__FUNC_SCL2_0>,
->                                          <MT6797_GPIO95__FUNC_SDA2_0>;
+> -                       jpgenc@1a030000 {
+> +                       jpgenc@0,0 {
+>                                 compatible =3D "mediatek,mt8195-jpgenc-hw=
+";
+> -                               reg =3D <0 0x1a030000 0 0x10000>;
+> +                               reg =3D <0 0 0 0x10000>;
+>                                 iommus =3D <&iommu_vdo M4U_PORT_L19_JPGEN=
+C_Y_RDMA>,
+>                                                 <&iommu_vdo M4U_PORT_L19_=
+JPGENC_C_RDMA>,
+>                                                 <&iommu_vdo M4U_PORT_L19_=
+JPGENC_Q_TABLE>,
+> @@ -3112,9 +3114,9 @@ jpgenc@1a030000 {
+>                                 power-domains =3D <&spm MT8195_POWER_DOMA=
+IN_VENC>;
 >                         };
->                 };
 >
-> -               i2c3_pins_a: i2c3 {
-> -                       pins3 {
-> +               i2c3_pins_a: i2c3-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO75__FUNC_SDA3_0>,
->                                          <MT6797_GPIO74__FUNC_SCL3_0>;
->                         };
->                 };
->
-> -               i2c4_pins_a: i2c4 {
-> -                       pins4 {
-> +               i2c4_pins_a: i2c4-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO238__FUNC_SDA4_0>,
->                                          <MT6797_GPIO239__FUNC_SCL4_0>;
->                         };
->                 };
->
-> -               i2c5_pins_a: i2c5 {
-> -                       pins5 {
-> +               i2c5_pins_a: i2c5-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO240__FUNC_SDA5_0>,
->                                          <MT6797_GPIO241__FUNC_SCL5_0>;
->                         };
->                 };
->
-> -               i2c6_pins_a: i2c6 {
-> -                       pins6 {
-> +               i2c6_pins_a: i2c6-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO152__FUNC_SDA6_0>,
->                                          <MT6797_GPIO151__FUNC_SCL6_0>;
->                         };
->                 };
->
-> -               i2c7_pins_a: i2c7 {
-> -                       pins7 {
-> +               i2c7_pins_a: i2c7-pins {
-> +                       pins-bus {
->                                 pinmux =3D <MT6797_GPIO154__FUNC_SDA7_0>,
->                                          <MT6797_GPIO153__FUNC_SCL7_0>;
->                         };
+> -                       jpgenc@1b030000 {
+> +                       jpgenc@1,0 {
+>                                 compatible =3D "mediatek,mt8195-jpgenc-hw=
+";
+> -                               reg =3D <0 0x1b030000 0 0x10000>;
+> +                               reg =3D <1 0 0 0x10000>;
+>                                 iommus =3D <&iommu_vpp M4U_PORT_L20_JPGEN=
+C_Y_RDMA>,
+>                                                 <&iommu_vpp M4U_PORT_L20_=
+JPGENC_C_RDMA>,
+>                                                 <&iommu_vpp M4U_PORT_L20_=
+JPGENC_Q_TABLE>,
 > --
 > 2.50.1
 >
