@@ -1,120 +1,133 @@
-Return-Path: <linux-gpio+bounces-23843-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23844-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3419EB12C90
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jul 2025 23:11:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 378E4B12CFE
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 00:40:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C89583AECC6
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jul 2025 21:10:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 096C57A6F6C
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jul 2025 22:39:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 281A2244668;
-	Sat, 26 Jul 2025 21:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2172D215198;
+	Sat, 26 Jul 2025 22:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvZDLUzT"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Iih954LT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gL3wCOhj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F0521A44C;
-	Sat, 26 Jul 2025 21:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37954A93D
+	for <linux-gpio@vger.kernel.org>; Sat, 26 Jul 2025 22:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753564259; cv=none; b=dUhOKm4YEH6R2O7dDZs+3k39YqtAkTgCLRV85MBLrpyxWOru/egAeLIsX87gc3HsHMAy3OY6dlf2jFs5xEf3EbHgmDcPmg25l93L9gUW7toIKZG6uh+EiMUlsert38bunikl4Tji4Mwx3QmUUHmpNVe3mCuqOAACvtgehS0dtT0=
+	t=1753569629; cv=none; b=D3ueBZ1Ou+s76vE2gj0zgCyTGiRjwqkof3l7G8stIsDrp5F4KKyGPJMuYxEM0lzzDPM/wuwLZsYmDpg1PfzxnFVHXXGXbxBxBT46QmQ1DsNebcgBVUvrPoVJrAGkIiKVBuFaP6dnkkyAC2NueHvg9xa+Y7rnDbp/Zw8YGoENGS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753564259; c=relaxed/simple;
-	bh=2u3S4e4rv5paFn9+5Na5ep0eYJteuUVXRknfB/8/yto=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bfXVPHyksDNhN/f1wj/1p2v3RTTd+KqpaiMMqLvRV5vGW700uh2PIN9Uh8A97jCy6CSBqCb2xKBCR5jB1sHXDNFZG6BC/dTNU5LlV3+lW5EPiq6PZwCFHawrqDORq4LHVSGyUXJkVeogq1SObnx+5LW75xljQUNk3mQtbOJlMQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvZDLUzT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA48C4CEED;
-	Sat, 26 Jul 2025 21:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753564259;
-	bh=2u3S4e4rv5paFn9+5Na5ep0eYJteuUVXRknfB/8/yto=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XvZDLUzTK6neBEqoL89w2V4qlUkmRfkzqs/Axl3PsuqDSlwetzA4RBBh6VY1hFLeo
-	 eidyk2DDW9u80+Bjq2L5kObXlF1S8U9Gb4I8YvySHcGGQmHmZEiqbi4S/byZCBy/Ng
-	 +TxRCLK1ws37vfbvWrMmoQrAEDcndL+zalReyg68txQjiPV9nVvZs48AkeWkSYVylp
-	 YL1svlG/NlYkagOs2gtlR7QKBygE9kZuyDYet929VwDI+TF+iCo1Oyi5ZRMHL3n4TT
-	 8Sk6jmwn1JqjzIdJ8/W/SmT6ZnVSk7f1dkfG0VZmpWlFRxwIvFxJblHT3JATxK6aS9
-	 AJg9IhfCoV2fQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: kernel test robot <lkp@intel.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	Koichiro Den <koichiro.den@canonical.com>,
-	Lee Jones <lee@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	=?UTF-8?q?Andr=C3=A9=20Draszik?= <andre.draszik@linaro.org>,
-	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>,
-	Thomas Richard <thomas.richard@bootlin.com>,
-	Yixun Lan <dlan@gentoo.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpiolib: enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB
-Date: Sat, 26 Jul 2025 23:10:43 +0200
-Message-Id: <20250726211053.2226857-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1753569629; c=relaxed/simple;
+	bh=Ob+g+dH0JZ8uIDC2KJzbhGUkLQr8BDya2ZnLxrBUIkY=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=dtPYf4xgoz+djLo/+eVRsH9sFwF8w0bWkNLbrEZawb1mzoUzX5OH2qcQg/EQ3Ecn8D22PDEzU3pm+u6Grsb6bthe+lwUZvJaYh83K9n/+kgmyyelUt3kIvpCEMRK2+hDRK7JVRZ+X2as3cX2bnFIZyCcupHjzW0CdIwgC5o2WDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Iih954LT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gL3wCOhj; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 3653D140009C;
+	Sat, 26 Jul 2025 18:40:26 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Sat, 26 Jul 2025 18:40:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1753569626;
+	 x=1753656026; bh=7TOyFViWa+YlDiIbVX3y0uajUcD4spFTnW1FKMUui7c=; b=
+	Iih954LT2369awhdra+2ARk4a8svGrXRkk6XaedIdVRUjyBUAWaytAWcDqfbLpHB
+	ifNQeXWbOKEmJVqYIqeXZgvlQi7eyGAYW9Xhb6U295rZBXe/E8UNB4ijV0QmjfCV
+	eFIeRF5yC8MvU5fT1cXdpJI1+xt9AWdoEXP5NfvcuBUuSV0BH8HIvtLPhbEaOoyw
+	9CQUl8N/eg2kZCKrfx3RW2SH3de96Mzu9wUdowYX7w6LRkgBhkt+IqGVJZS8wmWw
+	h7fHwrjaGLDvFQpcXNRhm3ye7+Y43+V6plNJvvA1M0iVZUZqJi0CzjBugM2p4kHX
+	kaTXd9rJhZoQj/dSTF2XXg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1753569626; x=
+	1753656026; bh=7TOyFViWa+YlDiIbVX3y0uajUcD4spFTnW1FKMUui7c=; b=g
+	L3wCOhjwnRET9HgcQnALJUuuR0+DkshbJzIQbKOJrYWDYTpkeb2PoIkW/Un9vRCO
+	kTZhZBBisWhL7gw0UFoB4KxE+Ann/A8pHTnCGGoKFr/P8BYxFRdeqfBiqWHtQETm
+	ASIN62qDt3ZzJEIEOpcdABdKXZPVuV0Wd1ZwvGheDz1hY4RHk5bHyLlL5DZQGOB2
+	zB3p/qhbLhfVP2CaT88nm6GcJeJl8ijmWQDklMVEDptCHDruFmWoz0LkD+MIjqtq
+	SvZOXVsvnBGmlvKVPCIfIxaSXezMB324WyeIFZtKKgjt7+Uf6oeL51LQ4Zx1kwUa
+	WYCx/09HPtBWqEkTinGcg==
+X-ME-Sender: <xms:WVmFaIeLPpEfWHAHdTUg9BaU5E_RmNU1GOhTHIt72SIbDmVbWnQmiw>
+    <xme:WVmFaKPOZgPEjkJ0AjHInoZydm0l2HAe1mKT5qidO1YaMzvA3H1OrIgwVDZgrCnuH
+    pNOTAKyxbmJsqjD2GU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdekjeeigecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeejvdefhedtgeegveehfeeljeen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdp
+    rhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheprghlvgigrghnug
+    gvrhdrshhvvghrughlihhnsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhkphesihhn
+    thgvlhdrtghomhdprhgtphhtthhopegsrghrthhoshiirdhgohhlrghsiigvfihskhhise
+    hlihhnrghrohdrohhrghdprhgtphhtthhopehovgdqkhgsuhhilhguqdgrlhhlsehlihhs
+    thhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrh
+    drkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:WVmFaPk9X5whA185rK7PRklpvlBETHwTdIKvIv1kq_5y-skAuFTIZQ>
+    <xmx:WVmFaKOPz0N2AbJdFNiMft4z2o6KV1yCPH1X18HUhrhd2WfPtNKj4w>
+    <xmx:WVmFaLOefh3x5YDA1rSupw8SpZkTOyHFpWTI9_8XSG5RCMNWqyKUcA>
+    <xmx:WVmFaDhAxsNvCMunvOKapDqAAy99EfwbhaMuKZc85s4W9HFkr4uzsw>
+    <xmx:WlmFaFpGxIKBXDvsjKnWmRX04i96-N3W-vwhLZdkkR08LtENqH8dd4ZS>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A7DB6700065; Sat, 26 Jul 2025 18:40:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T488fc92982b340b7
+Date: Sun, 27 Jul 2025 00:40:05 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "kernel test robot" <lkp@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+ "Alexander Sverdlin" <alexander.sverdlin@gmail.com>
+Message-Id: <8e74e833-87f3-43dc-a80b-4be7ff3b9ed1@app.fastmail.com>
+In-Reply-To: 
+ <CAMRc=Mc95SMBBjndi9EPUd+d0AftGaovfn0-uhoWQ+cf7SJ9Bw@mail.gmail.com>
+References: <202507261934.yIHeUuEQ-lkp@intel.com>
+ <CAMRc=Mc95SMBBjndi9EPUd+d0AftGaovfn0-uhoWQ+cf7SJ9Bw@mail.gmail.com>
+Subject: Re: [brgl:gpio/for-next 4/5] drivers/nfc/s3fwrn5/uart.c:147:15: error:
+ implicit declaration of function 'devm_gpio_request_one'
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Sat, Jul 26, 2025, at 14:23, Bartosz Golaszewski wrote:
+> On Sat, Jul 26, 2025 at 1:10=E2=80=AFPM kernel test robot <lkp@intel.c=
+om> wrote:
 
-A few drivers that use the legacy GPIOLIB interfaces can be enabled
-even when GPIOLIB is disabled entirely. With my previous patch this
-now causes build failures like:
+> Hi Arnd!
+>
+> Will you be able to address it quickly or should I drop this patch
+> from my queue? I would like to send my PR to Torvalds early next week,
+> Wednesday at the latest.
 
-   drivers/nfc/s3fwrn5/uart.c: In function 's3fwrn82_uart_parse_dt':
-        drivers/nfc/s3fwrn5/uart.c:100:14: error: implicit declaration of function 'gpio_is_valid'; did you mean 'uuid_is_valid'? [-Werror=implicit-function-declaration]
+I've sent a fix now, but feel free to drop the original patch
+instead if you think it's too risky. It took me a while to reproduce
+the problem with arch/um allmodconfig because there are so many
+other drivers that turn on gpiolib and end up hiding the issue.
 
-These did not show up in my randconfig tests because randconfig almost
-always has GPIOLIB selected by some other driver, and I did most
-of the testing with follow-up patches that address the failures
-properly.
+I also saw a few preexisting bugs in that config where drivers
+already fail to build when GPIOLIB is disabled.
 
-Move the symbol outside of the 'if CONFIG_GPIOLIB' block for the moment
-to avoid the build failures. It can be moved back and turned off by
-default once all the driver specific changes are merged.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202507261934.yIHeUuEQ-lkp@intel.com/
-Fixes: 678bae2eaa81 ("gpiolib: make legacy interfaces optional")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpio/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8bda3c9d47b4..c48f9badb513 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -12,11 +12,11 @@ menuconfig GPIOLIB
- 
- 	  If unsure, say N.
- 
--if GPIOLIB
--
- config GPIOLIB_LEGACY
- 	def_bool y
- 
-+if GPIOLIB
-+
- config GPIOLIB_FASTPATH_LIMIT
- 	int "Maximum number of GPIOs for fast path"
- 	range 32 512
--- 
-2.39.5
-
+     Arnd
 
