@@ -1,119 +1,120 @@
-Return-Path: <linux-gpio+bounces-23842-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23843-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1A81B12AED
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jul 2025 16:18:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3419EB12C90
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jul 2025 23:11:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 102E87B6720
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jul 2025 14:16:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C89583AECC6
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Jul 2025 21:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F7F286408;
-	Sat, 26 Jul 2025 14:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 281A2244668;
+	Sat, 26 Jul 2025 21:11:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W3phLuaq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvZDLUzT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C1D2F2E
-	for <linux-gpio@vger.kernel.org>; Sat, 26 Jul 2025 14:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F0521A44C;
+	Sat, 26 Jul 2025 21:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753539479; cv=none; b=eugssAjuC0xUHoGONEr4gBUV8L49wltuHnv6YygbfNSi4yrdHBHSgspRkQ3FnBfSvGk9369bqv6aqhhPydhoQKDocRrtGU1DJDklBSRqpldbhokKhrQualJ78VC1LPC6TMwa89aLfbFv9AEY3PnPDeum4TLslabjwmLk8f3OyqE=
+	t=1753564259; cv=none; b=dUhOKm4YEH6R2O7dDZs+3k39YqtAkTgCLRV85MBLrpyxWOru/egAeLIsX87gc3HsHMAy3OY6dlf2jFs5xEf3EbHgmDcPmg25l93L9gUW7toIKZG6uh+EiMUlsert38bunikl4Tji4Mwx3QmUUHmpNVe3mCuqOAACvtgehS0dtT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753539479; c=relaxed/simple;
-	bh=QsKCYgFN3Pl/637rAO4WBZp3QLVhOoRKIclRbpT1pQQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pf/qqdUiv7PcyFm441h13bQdUqvwqj2aDnEtMOqRDO4cvFJ+etPsOz5Eh2iMlJw9U9Jzd/YxRJmb9QTqbXmBI7Zoego9L6AxqPcgwnBj2zKRyWmuVH9Wey3zsAlDct6hfbNGkcnzniKSaUPp7pLZkBpTNN4KRycHcPB1dT1D2YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W3phLuaq; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-558facbc19cso2642209e87.3
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Jul 2025 07:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753539476; x=1754144276; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QsKCYgFN3Pl/637rAO4WBZp3QLVhOoRKIclRbpT1pQQ=;
-        b=W3phLuaq0RVVMNzRc9exL8O8cvPdzFYZxDXxvj/AeDazvwwlRvRGpWLdy13kQbTgc4
-         S61a8Sn8e4coANibRq5wFNwXxBLNIUzFXG6dAhpbX3cW+RNKQpMhs3lu/woLzZ2r3UjZ
-         QD56BsLYto7BaJF3JtSYuSJKsXS5ES9vXWdm4x4fePIAUiwLnJ8ByugA0oE5N0KV8fY1
-         e0+/zL1aMxMNW//hUUzRXDkpMXQ+prQyK2g+OWEZH867zHPr3w3LdbsL30ExWb4iJXQo
-         6AhTVmvWyqAjrepZklB7EefS6qNioFncIkTl21BZ5QDQ+pnTMl3v0JyRuVwiH1ffBazU
-         1N+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753539476; x=1754144276;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QsKCYgFN3Pl/637rAO4WBZp3QLVhOoRKIclRbpT1pQQ=;
-        b=Kwn8CXm6hWCCD7Y8TW8nEC/Xoilmrv6ZZNaCJUQfbjcYsCaWZxEBKd/KgAS8tKDC55
-         WQtg17MnFqAkTZo0hTOmfuwTFRE+VLVVMAhrqJeWDkZWoxIXMJnElAusXXKIe+FNN/EL
-         0juY95WPfckxBwhmxf8OqbUtUDLn69ZudwotF6JZpn4m5i5U8DNiXpTRTqWMsQyAjhq/
-         m21J0PpSDzQXzkw95oEHH0XrYkt1SFXbWhL0qv0uYtQvTzhfcVjlWTUJEWG40GnFuhsY
-         f0H7/U8TvsFEj1UEc7APLN79rg3fbJHw/cp7p17T157dXN99mk8V76pSetEUZkwNXkmy
-         6QQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyITId81CH5y0TXH/1dx0tQSKUFZKDLwHrPLmpKr+poS03YdnvpW1lA9QFha3mdNmj44W6Vx9XZE2j@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFjo5KRFiPrSmr8pAqBucO14lRANdjHxOSXxM4bepBLuAo6Pt1
-	J0HvY4tk4yYxcFDM5alVZD/N1PcnHhM32fkjjpOwp5AC4+BHbpE7hztAqni2qqUrpoEjarS2/ky
-	l1HXnNZ/63rdGG7+4pcohvplC3UwGETX72Vv63Nnq8A==
-X-Gm-Gg: ASbGncv6RzR0ZxZ1CULY1Moze+ltCT3hnH//ix8hn5ZOuaa2+mObYBCVuonsu4H457F
-	uOe3NNjVy3Lm+zUWrgzFY/JHrVjhvwmB7rNPkGtX/+F0OGpu85dk7SMkV0pQZl2JSD/YeiheSA9
-	+vVdYV/q3yGJ/KMaLY/mCCTFM68jXKCTQ7wbmuLDPwzHDjFdeLg4kbV+HiwFgTUVRGs4Vcwow44
-	pN7j9xpqD+M
-X-Google-Smtp-Source: AGHT+IH7DWpvL4/EaSvQrUXZxoed9pZpjosN4KFejpqR4sw55oFM2Lj6aw3IRkV89heBwtbytSWltY9kUm8IpC204jQ=
-X-Received: by 2002:a05:6512:3da7:b0:55a:4462:f9b5 with SMTP id
- 2adb3069b0e04-55b5f4c6d4bmr1362236e87.53.1753539475990; Sat, 26 Jul 2025
- 07:17:55 -0700 (PDT)
+	s=arc-20240116; t=1753564259; c=relaxed/simple;
+	bh=2u3S4e4rv5paFn9+5Na5ep0eYJteuUVXRknfB/8/yto=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bfXVPHyksDNhN/f1wj/1p2v3RTTd+KqpaiMMqLvRV5vGW700uh2PIN9Uh8A97jCy6CSBqCb2xKBCR5jB1sHXDNFZG6BC/dTNU5LlV3+lW5EPiq6PZwCFHawrqDORq4LHVSGyUXJkVeogq1SObnx+5LW75xljQUNk3mQtbOJlMQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvZDLUzT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA48C4CEED;
+	Sat, 26 Jul 2025 21:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753564259;
+	bh=2u3S4e4rv5paFn9+5Na5ep0eYJteuUVXRknfB/8/yto=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XvZDLUzTK6neBEqoL89w2V4qlUkmRfkzqs/Axl3PsuqDSlwetzA4RBBh6VY1hFLeo
+	 eidyk2DDW9u80+Bjq2L5kObXlF1S8U9Gb4I8YvySHcGGQmHmZEiqbi4S/byZCBy/Ng
+	 +TxRCLK1ws37vfbvWrMmoQrAEDcndL+zalReyg68txQjiPV9nVvZs48AkeWkSYVylp
+	 YL1svlG/NlYkagOs2gtlR7QKBygE9kZuyDYet929VwDI+TF+iCo1Oyi5ZRMHL3n4TT
+	 8Sk6jmwn1JqjzIdJ8/W/SmT6ZnVSk7f1dkfG0VZmpWlFRxwIvFxJblHT3JATxK6aS9
+	 AJg9IhfCoV2fQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: kernel test robot <lkp@intel.com>,
+	Peng Fan <peng.fan@nxp.com>,
+	Koichiro Den <koichiro.den@canonical.com>,
+	Lee Jones <lee@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	=?UTF-8?q?Andr=C3=A9=20Draszik?= <andre.draszik@linaro.org>,
+	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	Yixun Lan <dlan@gentoo.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] gpiolib: enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB
+Date: Sat, 26 Jul 2025 23:10:43 +0200
+Message-Id: <20250726211053.2226857-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
- <CAMRc=MfS5Em65n0fwbu8JtJsc3rTgQO5cv+PymSonJtf6_zRKQ@mail.gmail.com>
- <824ec6d1-4272-44c7-b3bb-93d716ed3d43@bootlin.com> <CAMRc=McnU6TO5p7Jwy-DOg_8-=AS7rFRfaPD0yH1SERWXM8L+A@mail.gmail.com>
- <CAMRc=MeZ4HHJGkVBysLyusW5G-rM0iSQV1qqmFJUe1rsZrN2AA@mail.gmail.com>
-In-Reply-To: <CAMRc=MeZ4HHJGkVBysLyusW5G-rM0iSQV1qqmFJUe1rsZrN2AA@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 26 Jul 2025 16:17:45 +0200
-X-Gm-Features: Ac12FXwQ27n_JGOOvHJ-jWxO2gK5gh1Sp4QaipYWDU0befizJdpmrsUresvZ2wg
-Message-ID: <CACRpkdbjQSns7a9EMx_5kdJ4Y2wsnocTLNsO2es7MQ=rKCBkQw@mail.gmail.com>
-Subject: Re: [PATCH v8 00/10] Add pinctrl support for the AAEON UP board FPGA
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Thomas Richard <thomas.richard@bootlin.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 23, 2025 at 10:43=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> On Tue, Jul 15, 2025 at 3:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> > Well, nobody responded to my last email. This is a cross-tree series
-> > so at least Linus must confirm he's ok.
-> >
-> > Bart
->
-> Linus, I'm willing to queue at least the GPIO part for v6.17, does the
-> pinctrl part look good to you?
+A few drivers that use the legacy GPIOLIB interfaces can be enabled
+even when GPIOLIB is disabled entirely. With my previous patch this
+now causes build failures like:
 
-Yes go ahead, sorry for late reply!
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+   drivers/nfc/s3fwrn5/uart.c: In function 's3fwrn82_uart_parse_dt':
+        drivers/nfc/s3fwrn5/uart.c:100:14: error: implicit declaration of function 'gpio_is_valid'; did you mean 'uuid_is_valid'? [-Werror=implicit-function-declaration]
 
-I was mainly waiting for Andy's review on this, so if Andy
-is OK, I'm OK with it.
+These did not show up in my randconfig tests because randconfig almost
+always has GPIOLIB selected by some other driver, and I did most
+of the testing with follow-up patches that address the failures
+properly.
 
-Yours,
-Linus Walleij
+Move the symbol outside of the 'if CONFIG_GPIOLIB' block for the moment
+to avoid the build failures. It can be moved back and turned off by
+default once all the driver specific changes are merged.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202507261934.yIHeUuEQ-lkp@intel.com/
+Fixes: 678bae2eaa81 ("gpiolib: make legacy interfaces optional")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpio/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8bda3c9d47b4..c48f9badb513 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -12,11 +12,11 @@ menuconfig GPIOLIB
+ 
+ 	  If unsure, say N.
+ 
+-if GPIOLIB
+-
+ config GPIOLIB_LEGACY
+ 	def_bool y
+ 
++if GPIOLIB
++
+ config GPIOLIB_FASTPATH_LIMIT
+ 	int "Maximum number of GPIOs for fast path"
+ 	range 32 512
+-- 
+2.39.5
+
 
