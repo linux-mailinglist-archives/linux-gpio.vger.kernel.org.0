@@ -1,227 +1,181 @@
-Return-Path: <linux-gpio+bounces-23853-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23854-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5C96B12F40
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 12:59:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1663BB12F48
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 13:01:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9CCFB1897478
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 10:59:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4404D1897A14
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 11:02:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5F541FC0E2;
-	Sun, 27 Jul 2025 10:59:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39BA620E715;
+	Sun, 27 Jul 2025 11:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XEqv/SbX"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Excewp4O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3CABA36
-	for <linux-gpio@vger.kernel.org>; Sun, 27 Jul 2025 10:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F52199924
+	for <linux-gpio@vger.kernel.org>; Sun, 27 Jul 2025 11:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753613971; cv=none; b=rVORLIgNQcwjxhqqeBN5keh+9OfeyWg5dzASgTa2S68Np5joXRLBS3bkKOHwwysygOL/A+1myWQ5IWrZSo1er9C/oSvQU0N9RWDdTaHKfUMMVcwOu8ZzBySlzHJoo2W9mjnrDMdCf3d37pE7fb2rpsNKSDMAB09RG9gN4btzg1c=
+	t=1753614109; cv=none; b=ttlQZzX1xNNZ5nsE9lQGwY5eTYRqIjTxaRDKQQ7Ly3pautYZlGoKToLnsAQGZUpMziw85+5XVTZI0ZXumB4P7uNOAjVweRnw2/jlK1d3yRoENIKRdV8DPlXp4dB1ZsI10jc0SpRUKCtjsjkLULvUz4yHiaqB/E6p+CtKmI4XvuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753613971; c=relaxed/simple;
-	bh=QjirKW9h4BuLCyfQ29d0PN80tmEVwTlFhgz7SabCIgc=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=OnUQK3vWCZ0kI1STW/hmcDIRMlJJei467fvIXiHTpYYKuIkNSCkrLsWwoXo4blsQbuSw2soSfPeL2jokXEdhpIWis5DfeoaW5AW8W9x996a5wrLKKN+JG08mcwGNPVxomejfoIC+KHmYbRwmVJE+MLqNUNBPxvHsLSRNd7xMqUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XEqv/SbX; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753613969; x=1785149969;
-  h=date:from:to:cc:subject:message-id;
-  bh=QjirKW9h4BuLCyfQ29d0PN80tmEVwTlFhgz7SabCIgc=;
-  b=XEqv/SbXZNiS0+hYbmmBGvIsGRyLeyc1jtnoIyATml/pOG2M5MKTIutF
-   dRJUjVWux3Z3ulYpPLjwh2sf1w6cEb1XKR6Z8tozcvytvx8RLYWXfJWWz
-   ISah/dnfSAhw6rdpwmpwFhcXCepEnUfGQOAjYuXcHB+c3NcVhl2QsrydH
-   y6HF1yk6bWFTMWgAk0wDYNMUZA/uY6v2s1NzumKWQMvwXH5nfVAzxYMaR
-   SYg9aTq54FnNbHcFpR2OymuBaBaKoC/jn3PGJ4OCEgFlrmQJIwlocJPjR
-   njfQKVPlfxvYHCy/QOytvfRi6+qlU1mVEIRsXpqa2IHsfGIKxttGhRpch
-   g==;
-X-CSE-ConnectionGUID: qnnKsF+PTo6D6tvVTqKERQ==
-X-CSE-MsgGUID: E0NpMJCgR3yRgmMsLyVWpA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11504"; a="56036083"
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="56036083"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2025 03:59:29 -0700
-X-CSE-ConnectionGUID: kM5NX3iBSa6Xf9tuw9vgVQ==
-X-CSE-MsgGUID: cus0tf2wRI24OcDE8PUuWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="162438506"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 27 Jul 2025 03:59:28 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ufz6D-000Mat-1b;
-	Sun, 27 Jul 2025 10:59:25 +0000
-Date: Sun, 27 Jul 2025 18:59:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- a3fe1324c3c5c292ec79bd756497c1c44ff247d2
-Message-ID: <202507271848.5e9Svm69-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1753614109; c=relaxed/simple;
+	bh=nN3Ms/yZrrzZVpF3SjzlSDqiMQmZVDjegD3fPcq3KYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLYHXMSawsjNYxeee8F1YUBFgwF/wl1r/pVUGLO2pXZGOVeaK/aXYcxswPb8Q/AGSR9gP92nQWAqvZ8OqZ/mNOypHiGsYuCvZrCayId8AJ+UzNrxTzvvCG58qXiPhkSmmZVOEqRs86MBHIBYRUVibg6/S9XLggZQ0uLvbjsdjgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Excewp4O; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Vkok
+	I86eRR+xGqtAv01g2Nm9BOh6wncFGDFW/1fZLAY=; b=Excewp4ORMSxA3uPhgS7
+	Ur+Nr9SeF9xCq+DMsEW1r/DtB+RPRx7cA2QqKu9Top6jZ8yxDIs3YqWtqY94pgTQ
+	tNbS7q7U42axcWCr1X7LuXRgQvMG/HrdgW28GkVw6zr1brL3tfBVuoSh7ziCq0wW
+	j6EttwBlfaFH8OtkYkKqfl+OtHReEmcUHKo8qx2Mci1tV9qDagSH1ACJkqg1lMdh
+	v/Xbk06thE1V2zguCyX/U6rsc72T+5CfYcGFZ0SDBewKNXT0+rbsM3xRiELfYu4k
+	nRO9/Ji+dtA3IBY0JjooLcNyv4uiinL7GH03rI5gngELCqyQ5Ca2Kl3VYL2vnTLY
+	zQ==
+Received: (qmail 3071984 invoked from network); 27 Jul 2025 13:01:35 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Jul 2025 13:01:35 +0200
+X-UD-Smtp-Session: l3s3148p1@wik4Gec6Is0ujnuu
+Date: Sun, 27 Jul 2025 13:01:35 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Phil Edworthy <phil.edworthy@renesas.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 0/6] gpio: renesas: Add support for GPIO and related
+ interrupts in RZ/N1 SoC
+Message-ID: <aIYHD5SEAqQNfDjD@ninjato>
+References: <20250725152618.32886-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="tGZeYYr7bFhEpP7L"
+Content-Disposition: inline
+In-Reply-To: <20250725152618.32886-1-herve.codina@bootlin.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: a3fe1324c3c5c292ec79bd756497c1c44ff247d2  pinctrl: mediatek: Add pinctrl driver for mt8189
 
-elapsed time: 728m
+--tGZeYYr7bFhEpP7L
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 134
-configs skipped: 5
+Hi Herv=C3=A9,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> This series adds support for GPIO and GPIO IRQ mux available in the
+> RZ/N1 SoCs.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250727    gcc-8.5.0
-arc                   randconfig-002-20250727    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                        neponset_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250727    gcc-11.5.0
-arm                   randconfig-002-20250727    gcc-14.3.0
-arm                   randconfig-003-20250727    clang-22
-arm                   randconfig-004-20250727    gcc-10.5.0
-arm                         socfpga_defconfig    gcc-15.1.0
-arm                        vexpress_defconfig    gcc-15.1.0
-arm                         wpcm450_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250727    gcc-11.5.0
-arm64                 randconfig-002-20250727    clang-18
-arm64                 randconfig-003-20250727    clang-17
-arm64                 randconfig-004-20250727    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250727    gcc-15.1.0
-csky                  randconfig-002-20250727    gcc-12.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250727    clang-22
-hexagon               randconfig-002-20250727    clang-22
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250727    gcc-12
-i386        buildonly-randconfig-002-20250727    gcc-12
-i386        buildonly-randconfig-003-20250727    clang-20
-i386        buildonly-randconfig-004-20250727    clang-20
-i386        buildonly-randconfig-005-20250727    clang-20
-i386        buildonly-randconfig-006-20250727    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250727    clang-22
-loongarch             randconfig-002-20250727    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                        m5307c3_defconfig    gcc-15.1.0
-m68k                        m5407c3_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                           ip30_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250727    gcc-8.5.0
-nios2                 randconfig-002-20250727    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250727    gcc-11.5.0
-parisc                randconfig-002-20250727    gcc-12.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                      bamboo_defconfig    clang-22
-powerpc                  iss476-smp_defconfig    gcc-15.1.0
-powerpc                         ps3_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250727    gcc-13.4.0
-powerpc               randconfig-002-20250727    clang-22
-powerpc               randconfig-003-20250727    clang-22
-powerpc64                        alldefconfig    clang-22
-powerpc64             randconfig-001-20250727    gcc-12.5.0
-powerpc64             randconfig-002-20250727    clang-22
-powerpc64             randconfig-003-20250727    clang-22
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20250727    clang-22
-riscv                 randconfig-002-20250727    clang-20
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20250727    clang-22
-s390                  randconfig-002-20250727    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                          polaris_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250727    gcc-15.1.0
-sh                    randconfig-002-20250727    gcc-11.5.0
-sh                           se7780_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250727    gcc-8.5.0
-sparc                 randconfig-002-20250727    gcc-8.5.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20250727    gcc-8.5.0
-sparc64               randconfig-002-20250727    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250727    clang-22
-um                    randconfig-002-20250727    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250727    gcc-12
-x86_64      buildonly-randconfig-002-20250727    clang-20
-x86_64      buildonly-randconfig-003-20250727    clang-20
-x86_64      buildonly-randconfig-004-20250727    clang-20
-x86_64      buildonly-randconfig-005-20250727    clang-20
-x86_64      buildonly-randconfig-006-20250727    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  audio_kc705_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250727    gcc-8.5.0
-xtensa                randconfig-002-20250727    gcc-11.5.0
+Yes, way cool! Very happy to see this upstreaming effort!
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> The first two patches of the series add support for GPIO (binding update
+> and device-tree description).
+
+So, I started simple and used the first two patches to enable LEDs on
+pins 92 and 93 on my board. I added this on top of patch 1+2:
+
+diff --git a/arch/arm/boot/dts/renesas/r9a06g032-rzn1d400-db.dts b/arch/arm=
+/boot/dts/renesas/r9a06g032-rzn1d400-db.dts
+index 3258b2e27434..4790ffad578f 100644
+--- a/arch/arm/boot/dts/renesas/r9a06g032-rzn1d400-db.dts
++++ b/arch/arm/boot/dts/renesas/r9a06g032-rzn1d400-db.dts
+@@ -185,6 +185,12 @@ fixed-link {
+ 	};
+ };
+=20
++&gpio1 {
++	pinctrl-0 =3D <&pins_gpio1>;
++	pinctrl-names =3D "default";
++	status =3D "okay";
++};
++
+ &i2c2 {
+ 	pinctrl-0 =3D <&pins_i2c2>;
+ 	pinctrl-names =3D "default";
+@@ -256,6 +262,11 @@ pins_cpld: pins-cpld {
+ 			 <RZN1_PINMUX(122, RZN1_FUNC_USB)>;
+ 	};
+=20
++	pins_gpio1: pins-gpio1 {
++		pinmux =3D <RZN1_PINMUX(92, RZN1_FUNC_GPIO)>,	/* GPIO1B[23] */
++			 <RZN1_PINMUX(93, RZN1_FUNC_GPIO)>;	/* GPIO1B[24] */
++	};
++
+ 	pins_eth3: pins_eth3 {
+ 		pinmux =3D <RZN1_PINMUX(36, RZN1_FUNC_CLK_ETH_MII_RGMII_RMII)>,
+ 			 <RZN1_PINMUX(37, RZN1_FUNC_CLK_ETH_MII_RGMII_RMII)>
+
+to my board dts. The controller gets probed but I can't control the
+LEDs. Neither with exported GPIOs (via sysfs) nor with a dedicated LED
+node. Am I missing something obvious? The LEDs are attached to PL_GPIO92
+and PL_GPIO93 which are mapped to GPIO1b[23] and GPIO1b[24]. That seems
+to be in accordance with the datasheet. I hope I just overlooked
+something simple. Some outputs, first /sys/kernel/debug/gpio:
+
+	...
+	gpiochip1: GPIOs 552-583, parent: platform/5000c000.gpio, 5000c000.gpio:
+
+	gpiochip2: GPIOs 584-615, parent: platform/5000c000.gpio, 5000c000.gpio:
+	 gpio-608 (                    |sysfs               ) out hi=20
+
+And /sys/kernel/debug/pinctrl/40067000.pinctrl/pinmux-pins:
+
+	Pinmux settings per pin
+	Format: pin (name): mux_owner gpio_owner hog?
+	...
+	pin 92 (pl_gpio92): 5000c000.gpio (GPIO UNCLAIMED) function pins-gpio1 gro=
+up pins-gpio1
+	pin 93 (pl_gpio93): 5000c000.gpio (GPIO UNCLAIMED) function pins-gpio1 gro=
+up pins-gpio1
+
+I wonder about the "(GPIO UNCLAIMED)" a little? How do you use it on
+your board?
+
+Thanks and happy hacking,
+
+   Wolfram
+
+
+--tGZeYYr7bFhEpP7L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmiGBwsACgkQFA3kzBSg
+KbYYQxAAnIpAzuXq6T3edvRLb/lDuFNyMoX8x0pJ77l+3whT20PiVkesBpCx0lDA
+ySWTo3lfb4E0TwyjtnLLShiHXHPDHfQL0EpZXA2mEQGmcLP+KIHJorg+laIVDyI3
+ILPOSPk71aT/X242kbVw+hdZHTS/vHDqJiOlf6cZ1doPm8xqurTgTzVtMP6k+bXD
+HFxTQtwAwC0RWC+ZIZlvfZ1+XSzIJIsjeM3eZGE2W47WrahaH2mqi/Lp91S6UVl/
+GSVB4uGHqOIY6UOTPYaHbz3dKMSqI4W7MVcHmVoNNfkpb07vuiRKO6v4/ST1rtDE
+bWIARiTFFMamfIiLvvqPy+flJKk/lZ6uMWVnJKbDYxTNnD4gYvjXBeFUzVJccW6x
+qghGX5Pchg3Vf2T/bgN7qAY5/Jrm+fnRp0sVVm1e72cI1QmgS1Nn575J8OSoFfvx
+TJdQ872i1xObZm6B9MR0DmBOjUYux+Xr6IUfISdZ4uaxGt03RDtMnRDb/3YjCgU7
+486zW4Kt5bGeTwL8d/4jIS49LsIDUFCMcy3/3iwGqytt7HcwDwduwX10I74LekOe
+azCxVmqS8afTRaUuwHIfaNEkG2eMSf1iq06ZnEXwaH+EfpTh0x8CFnbBF2U0JWVP
+DRNmMmGhZSJuQctFwZRm3bZlSx4TpQc354OX/q2m3gbBJw1S8B0=
+=7HK4
+-----END PGP SIGNATURE-----
+
+--tGZeYYr7bFhEpP7L--
 
