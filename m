@@ -1,142 +1,227 @@
-Return-Path: <linux-gpio+bounces-23852-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23853-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D074B12ED2
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 11:30:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5C96B12F40
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 12:59:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 946A8189A9FA
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 09:30:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9CCFB1897478
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Jul 2025 10:59:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5411FDA7B;
-	Sun, 27 Jul 2025 09:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5F541FC0E2;
+	Sun, 27 Jul 2025 10:59:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCB3pcy2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XEqv/SbX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943A19460;
-	Sun, 27 Jul 2025 09:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3CABA36
+	for <linux-gpio@vger.kernel.org>; Sun, 27 Jul 2025 10:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753608619; cv=none; b=OF/FRIvxmc2FDqxzunMZ6arjf9G5LkRLHoBcqTuQFWdqExTslhTWSCjI0+RWab2JcUv0v2V/6xiIMolcQCj0WRQyfZwN+YC5iQjmvEDpdGD7kulAyWJNWtmSyBmOQASZpE65yD2vCA+exgr+pn92aiSAMLTGWD4qBCQHQQMIXno=
+	t=1753613971; cv=none; b=rVORLIgNQcwjxhqqeBN5keh+9OfeyWg5dzASgTa2S68Np5joXRLBS3bkKOHwwysygOL/A+1myWQ5IWrZSo1er9C/oSvQU0N9RWDdTaHKfUMMVcwOu8ZzBySlzHJoo2W9mjnrDMdCf3d37pE7fb2rpsNKSDMAB09RG9gN4btzg1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753608619; c=relaxed/simple;
-	bh=1G8EBj+mLr6qao5CQ+yXFngGEjwUU5x6p8fIGY11ZQQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VNt92wn/eKoRnw8W3PiWBhv2/WSZWW2pA50VgdJcgbUXoBUPTnDTcGstHvBhLEmoGo56KHQcpJ0MkViIj9zUS5pEXgyETdswu/bAxeueRPweTuGASMK+/PVzHHM7r0C+w/gTHUXPABHLfpBdpiFfvoeMloBXExa507Mo0rhApdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCB3pcy2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD411C4CEEB;
-	Sun, 27 Jul 2025 09:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753608617;
-	bh=1G8EBj+mLr6qao5CQ+yXFngGEjwUU5x6p8fIGY11ZQQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dCB3pcy2zaJG7lj+TOpcxPdADFKlNfDLfLL0AB8tklII7BnnHxSX7LbhtbFzDrNrC
-	 23/F/ev4yKLXpy3gnLDwcE+J2euOLXdBu1+jIKAH5w7BUL5/9r2jNnrSWQDLAi/Xc5
-	 VjOeaqDJjS1c7QiGuveUf6Fb87X25aJoRP+Xz4y1f8FCyPMFWbgzX1Zn4udJjADXIM
-	 3mfwV5UPEL+1ywzVBfYyyjcbd8Jda1htwZkRt+DInzc+OET7ZGetS58gxRki01J5Vf
-	 PaP/wGoh7odeWGVDqzPQuXfX/0VQliroXA9yS6CCU9utdP9uxVO0McCFSNZjmD92zT
-	 wP7HQ5zMjfs8w==
-Message-ID: <07faf0cc-a8e6-426d-b397-dfc321a7f3df@kernel.org>
-Date: Sun, 27 Jul 2025 11:30:11 +0200
+	s=arc-20240116; t=1753613971; c=relaxed/simple;
+	bh=QjirKW9h4BuLCyfQ29d0PN80tmEVwTlFhgz7SabCIgc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=OnUQK3vWCZ0kI1STW/hmcDIRMlJJei467fvIXiHTpYYKuIkNSCkrLsWwoXo4blsQbuSw2soSfPeL2jokXEdhpIWis5DfeoaW5AW8W9x996a5wrLKKN+JG08mcwGNPVxomejfoIC+KHmYbRwmVJE+MLqNUNBPxvHsLSRNd7xMqUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XEqv/SbX; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753613969; x=1785149969;
+  h=date:from:to:cc:subject:message-id;
+  bh=QjirKW9h4BuLCyfQ29d0PN80tmEVwTlFhgz7SabCIgc=;
+  b=XEqv/SbXZNiS0+hYbmmBGvIsGRyLeyc1jtnoIyATml/pOG2M5MKTIutF
+   dRJUjVWux3Z3ulYpPLjwh2sf1w6cEb1XKR6Z8tozcvytvx8RLYWXfJWWz
+   ISah/dnfSAhw6rdpwmpwFhcXCepEnUfGQOAjYuXcHB+c3NcVhl2QsrydH
+   y6HF1yk6bWFTMWgAk0wDYNMUZA/uY6v2s1NzumKWQMvwXH5nfVAzxYMaR
+   SYg9aTq54FnNbHcFpR2OymuBaBaKoC/jn3PGJ4OCEgFlrmQJIwlocJPjR
+   njfQKVPlfxvYHCy/QOytvfRi6+qlU1mVEIRsXpqa2IHsfGIKxttGhRpch
+   g==;
+X-CSE-ConnectionGUID: qnnKsF+PTo6D6tvVTqKERQ==
+X-CSE-MsgGUID: E0NpMJCgR3yRgmMsLyVWpA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11504"; a="56036083"
+X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
+   d="scan'208";a="56036083"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2025 03:59:29 -0700
+X-CSE-ConnectionGUID: kM5NX3iBSa6Xf9tuw9vgVQ==
+X-CSE-MsgGUID: cus0tf2wRI24OcDE8PUuWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
+   d="scan'208";a="162438506"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 27 Jul 2025 03:59:28 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ufz6D-000Mat-1b;
+	Sun, 27 Jul 2025 10:59:25 +0000
+Date: Sun, 27 Jul 2025 18:59:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ a3fe1324c3c5c292ec79bd756497c1c44ff247d2
+Message-ID: <202507271848.5e9Svm69-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] ASoC: codecs: wsa883x: Add devm action to safely
- disable regulator on device removal
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
- Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, quic_pkumpatl@quicinc.com,
- kernel@oss.qualcomm.com
-References: <20250727083117.2415725-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250727083117.2415725-3-mohammad.rafi.shaik@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250727083117.2415725-3-mohammad.rafi.shaik@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 27/07/2025 10:31, Mohammad Rafi Shaik wrote:
-> To prevent potential warnings from _regulator_put() during device
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: a3fe1324c3c5c292ec79bd756497c1c44ff247d2  pinctrl: mediatek: Add pinctrl driver for mt8189
 
-Warning is either there or not. Either you fix real, specific issue or
-not. The code looks correct at first glance, so please describe exactly
-how these warnings happen or how what is the bug being fixed.
+elapsed time: 728m
 
-> removal, register a devm-managed cleanup action using
-> devm_add_action_or_reset() to safely disable the regulator
-> associated with the WSA883x codec, ensuring that the regulator
-> is properly disabled when the device is removed, even if the
+configs tested: 134
+configs skipped: 5
 
-Device cannot be removed/unloaded, AFAIK, because of suppressed bind.
-Regulator is already disabled during error paths, so that part of above
-sentences is just misleading.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-How can one trigger the warnings?
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250727    gcc-8.5.0
+arc                   randconfig-002-20250727    gcc-8.5.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                        neponset_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250727    gcc-11.5.0
+arm                   randconfig-002-20250727    gcc-14.3.0
+arm                   randconfig-003-20250727    clang-22
+arm                   randconfig-004-20250727    gcc-10.5.0
+arm                         socfpga_defconfig    gcc-15.1.0
+arm                        vexpress_defconfig    gcc-15.1.0
+arm                         wpcm450_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250727    gcc-11.5.0
+arm64                 randconfig-002-20250727    clang-18
+arm64                 randconfig-003-20250727    clang-17
+arm64                 randconfig-004-20250727    gcc-8.5.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250727    gcc-15.1.0
+csky                  randconfig-002-20250727    gcc-12.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon               randconfig-001-20250727    clang-22
+hexagon               randconfig-002-20250727    clang-22
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250727    gcc-12
+i386        buildonly-randconfig-002-20250727    gcc-12
+i386        buildonly-randconfig-003-20250727    clang-20
+i386        buildonly-randconfig-004-20250727    clang-20
+i386        buildonly-randconfig-005-20250727    clang-20
+i386        buildonly-randconfig-006-20250727    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20250727    clang-22
+loongarch             randconfig-002-20250727    clang-22
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                        m5307c3_defconfig    gcc-15.1.0
+m68k                        m5407c3_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                           ip30_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250727    gcc-8.5.0
+nios2                 randconfig-002-20250727    gcc-11.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250727    gcc-11.5.0
+parisc                randconfig-002-20250727    gcc-12.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                      bamboo_defconfig    clang-22
+powerpc                  iss476-smp_defconfig    gcc-15.1.0
+powerpc                         ps3_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20250727    gcc-13.4.0
+powerpc               randconfig-002-20250727    clang-22
+powerpc               randconfig-003-20250727    clang-22
+powerpc64                        alldefconfig    clang-22
+powerpc64             randconfig-001-20250727    gcc-12.5.0
+powerpc64             randconfig-002-20250727    clang-22
+powerpc64             randconfig-003-20250727    clang-22
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-22
+riscv                 randconfig-001-20250727    clang-22
+riscv                 randconfig-002-20250727    clang-20
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-22
+s390                  randconfig-001-20250727    clang-22
+s390                  randconfig-002-20250727    clang-22
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                          polaris_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250727    gcc-15.1.0
+sh                    randconfig-002-20250727    gcc-11.5.0
+sh                           se7780_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250727    gcc-8.5.0
+sparc                 randconfig-002-20250727    gcc-8.5.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250727    gcc-8.5.0
+sparc64               randconfig-002-20250727    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250727    clang-22
+um                    randconfig-002-20250727    clang-22
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250727    gcc-12
+x86_64      buildonly-randconfig-002-20250727    clang-20
+x86_64      buildonly-randconfig-003-20250727    clang-20
+x86_64      buildonly-randconfig-004-20250727    clang-20
+x86_64      buildonly-randconfig-005-20250727    clang-20
+x86_64      buildonly-randconfig-006-20250727    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  audio_kc705_defconfig    gcc-15.1.0
+xtensa                randconfig-001-20250727    gcc-8.5.0
+xtensa                randconfig-002-20250727    gcc-11.5.0
 
-
-> probe fails or the driver is unloaded unexpectedly.
-
-How driver can be unloaded unexpectedly?
-
-Best regards,
-Krzysztof
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
